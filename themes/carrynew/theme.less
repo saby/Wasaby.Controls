@@ -140,7 +140,7 @@ body {
   height: 3rem !important;
 }
 .control-Paging__btn  {
-  border: 2px solid #26b8ff;
+  border: 2px solid #0055BB;
 }
 .ws-moneyDecorator {
   &__integer{
@@ -340,7 +340,6 @@ body {
       }
       &.ws-infobox-direction-bottom {
          > .ws-info-box-balloon {
-            border-top-color: @link-text-color;
             &:after {
                border-right-color: @link-text-color;
                border-bottom-color: @link-text-color;
@@ -529,7 +528,7 @@ body .ws-window.ws-LoadingIndicator__window {
    }
 }
 
-.ws-LoadingIndicator__window {
+.ws-LoadingIndicator__window, .ws-loading {
    img, .ws-loadingimg > div:before{
       width: 2.75rem;
       height: 2.75rem;
@@ -578,7 +577,11 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls
   margin-left: -.857rem;
 }
 .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__years-currentYearBtn.controls-Link, .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__years-toggleChooseYearBtn.controls-Link {
-  padding-top: .8rem;
+  margin-top: .6rem;
+}
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__years-back.controls-IconButton .controls-Button__icon {
+    font-size: 1.78rem !important;
+    line-height: 2rem !important;
 }
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__header-rangeDash {
   border-bottom: 2px solid #ccc;
@@ -689,4 +692,37 @@ body .controls-Browser__breadCrumbs {
 }
 .controls-ToolBar .controls-ToolBar__menuIcon {
     vertical-align: baseline;
+}
+.controls-Suggest__picker {
+    border: 2px solid #26B8FF;
+    background: #fff;
+    color: #3a4951 !important;
+     .controls-DataGridView__columnValue {
+       line-height: 3rem;
+     }
+     .controls-ListView__hoveredItem {
+         .controls-DataGridView__td {
+             background-color: #d7e2ef !important;
+         }
+     }
+}
+.controls-FieldLink.controls-Picker__show {
+  .controls-Suggest__picker {
+    border-top-width: 0;
+
+  }
+
+  .controls-FieldLink__showSelector {
+      .icon-primary {
+        color: #26b7fd !important;
+      }
+  }
+
+   .controls-TextBox__field {
+      color: rgb(58, 73, 81) !important;
+   }
+}
+
+.controls-Menu__Popup .controls-Menu__header+.controls-Menu__itemsContainer {
+  padding-right: 2rem;
 }
