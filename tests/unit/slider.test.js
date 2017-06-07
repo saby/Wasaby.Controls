@@ -69,7 +69,7 @@ define([
                return 5;
             };
             slider._lineClick({});
-            assert.equal(1, slider.getEndValue());
+            assert.equal(5, slider.getEndValue());
          });
       });
 
