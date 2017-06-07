@@ -836,7 +836,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                            element: this._fieldHref,
                            linkedContext: context,
                            name: 'fre_link_href'
-                        }).getContainer().on('keydown', function(e) {
+                        });
+                        this._fieldHref.getContainer().on('keydown', function(e) {
                            if (e.which == cConstants.key.enter) {
                               e.preventDefault();
                               e.stopPropagation();
