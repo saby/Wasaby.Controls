@@ -3879,7 +3879,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   source = [];
                items.forEach(function (item) {
                   var projItem = this._getItemsProjection().getItemBySourceItem(item),
-                     domElement = $('.js-controls-ListView__item[data-hash="'+projItem.getHash()+'"]');
+                     domElement = this._getHtmlItemByProjectionItem(projItem);
                   source.push(this._makeDragEntity({
                      owner: this,
                      model: item,
