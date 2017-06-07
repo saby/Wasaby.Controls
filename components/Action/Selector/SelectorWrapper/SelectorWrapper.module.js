@@ -4,9 +4,8 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
    'tmpl!SBIS3.CONTROLS.SelectorWrapper',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'Core/helpers/collection-helpers',
-   'Core/helpers/functional-helpers',
    'Core/core-instance'
-], function (CompoundControl, dotTplFn, TemplateUtil, collectionHelpers, functionalHelpers, cInstance) {
+], function (CompoundControl, dotTplFn, TemplateUtil, collectionHelpers, cInstance) {
 
 
    /**
@@ -44,7 +43,9 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
             /**
              * @cfg {String} Фильтр выбранных записей
              */
-            selectedFilter: functionalHelpers.constant(true),
+            selectedFilter: function () {
+               return true;
+            },
             selectionType: 'all'
 
          },

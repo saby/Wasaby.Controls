@@ -1173,10 +1173,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
           }, '_showAllButton'),
 
           /* Заглушка, само поле связи не занимается отрисовкой */
-          redraw: fHelpers.nop,
-          /* Заглушка, само поле связи не занимается загрузкой списка */
-          reload: fHelpers.nop,
+          redraw: function () {
 
+          },
+          /* Заглушка, само поле связи не занимается загрузкой списка */
+          reload: function () {
+
+          },
 
           destroy: function() {
              if(this._linkCollection) {
