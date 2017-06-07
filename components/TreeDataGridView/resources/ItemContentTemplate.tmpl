@@ -1,6 +1,6 @@
 <ws:for data="index, column in columns">
     <ws:if data="{{(!foldersColspan || !isNode || (isNode && index < 1))}}">
-        <td colspan="{{(it.foldersColspan && isNode) ? columns.length : ''}}"
+        <td colspan="{{(foldersColspan && isNode) ? columns.length : ''}}"
             class="controls-DataGridView__td {{column.editor ? 'controls-DataGridView__edited-td' : ''}} {{column.className|orEmpty}} {{hasScroll ? (startScrollColumn <= index ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}} {{index == 0 ? 'controls-DataGridView__firstContentCell' : ''}}"
             style="{{startScrollColumn <= index ? 'left:' + currentScrollPosition + 'px;'}}">
             <ws:if data="{{index == 0}}">
