@@ -4195,20 +4195,23 @@ define('js!SBIS3.CONTROLS.ListView',
             //В таком случае и наш idArray изменится по ссылке, и в событие onEndDelete уйдут некорректные данные
             idArray = Array.isArray(idArray) ? cFunctions.clone(idArray) : [idArray];
             message = message || (idArray.length !== 1 ? rk("Удалить записи?", "ОперацииНадЗаписями") : rk("Удалить текущую запись?", "ОперацииНадЗаписями"));
-            return fcHelpers.question(message).addCallback(function(res) {
-               if (res) {
-                  beginDeleteResult = self._notify('onBeginDelete', idArray);
-                  if (beginDeleteResult instanceof Deferred) {
-                     beginDeleteResult.addCallback(function(result) {
-                        self._deleteRecords(idArray, result);
-                     }).addErrback(function (result) {
-                        fcHelpers.alert(result);
+            InformationPopupManager.showConfirmDialog({
+               message: message,
+               hasCancelButton: false,
+               opener: self
+            }, function() {
+               beginDeleteResult = self._notify('onBeginDelete', idArray);
+               if (beginDeleteResult instanceof Deferred) {
+                  beginDeleteResult.addCallback(function(result) {
+                     self._deleteRecords(idArray, result);
+                  }).addErrback(function (result) {
+                     InformationPopupManager.showNotification({
+                        caption: result
                      });
-                  } else {
-                     self._deleteRecords(idArray, beginDeleteResult);
-                  }
+                  });
+               } else {
+                  self._deleteRecords(idArray, beginDeleteResult);
                }
-               return res;
             });
          },
 
@@ -4226,7 +4229,9 @@ define('js!SBIS3.CONTROLS.ListView',
                      self._syncSelectedKeys();
                   }
                }).addErrback(function (result) {
-                  fcHelpers.alert(result)
+                  InformationPopupManager.showNotification({
+                     caption: result
+                  });
                }).addBoth(function (result) {
                   self._toggleIndicator(false);
                   self._notify('onEndDelete', idArray, result);
