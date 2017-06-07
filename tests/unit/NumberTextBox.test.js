@@ -9,6 +9,9 @@ define(['js!SBIS3.CONTROLS.NumberTextBox'], function (NumberTextBox) {
 
     describe('SBIS3.CONTROLS.NumberTextBox', function () {
         beforeEach(function() {
+            if (typeof $ === 'undefined') {
+                this.skip();
+            }
             $('#mocha').append('<div id="component"></div>');
             NTB = new NumberTextBox({
                 element: 'component',
