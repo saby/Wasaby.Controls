@@ -340,8 +340,13 @@ define('js!SBIS3.CONTROLS.Slider',
                var
                   value = this._calcValue(event.pageX),
                   side = this._calcSide(value);
+               value = this._prepareValue(value, side);
                if (this.isEnabled()) {
-                  this._drawValue(value, side);
+                  if (side === 'start') {
+                     this.setStartValue(value);
+                  } else {
+                     this.setEndValue(value);
+                  }
                   this._notify('onDrawValueChange', this._startValue, this._endValue)
                }
             }
