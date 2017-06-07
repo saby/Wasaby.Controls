@@ -4202,7 +4202,12 @@ define('js!SBIS3.CONTROLS.ListView',
                      dialogOptions: {
                         opener:this
                      },
-                     moveStrategy: this.getMoveStrategy()//todo пока передаем стратегию, после полного отказа от стратегий удалить
+                     moveStrategy: this.getMoveStrategy(),//todo пока передаем стратегию, после полного отказа от стратегий удалить
+                     handlers: {
+                        onExecuted: function () {
+                           this.destroy();
+                        }
+                     }
                   }),
                   items = this.getItems(),
                   movedItems;
