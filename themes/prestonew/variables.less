@@ -20,7 +20,7 @@
 @basic-block-bg-color:					          #2C3E50; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
 @default-height:								          1.7857rem;
 @icon-color-primary:                      @default-text-color;
-@highlight-text-bg:                       #354B62;
+@highlight-text-bg:                       #fffece;
 @icon-active-color:                       @default-hover-color;
 
 @icon-small-size:                         1.32rem;
@@ -675,7 +675,6 @@
 @combo-box-arrow-active-border-width:           0;
 @combo-box-arrow-active-border-color:           transparent transparent @primary-color transparent;
 @combo-box-field-text-color : 					@default-text-color;
-@text-box-border-color: #314559 #314559 #314559 #314559;;
 @combo-box-arrow-active-hover-border-width:     @combo-box-arrow-active-border-width;
 @combo-box-arrow-active-hover-border-style:     @combo-box-arrow-active-border-style;
 @combo-box-arrow-active-hover-border-color:     transparent transparent darken(@primary-color, 10%) transparent;
@@ -726,7 +725,7 @@
 // ----------- //
 
 @suggest-picker-border:                         0.07rem solid @gray-color;
-@suggest-picker-margin:                         -1px;
+@suggest-picker-margin:                         -3px;
 
 @suggest-list-item-hover-bg:                    #f3f3f3;
 @suggest-list-item-selected-bg:                 darken(@suggest-list-item-hover-bg, 5%);
@@ -760,8 +759,8 @@
 
 
 @controls-FieldLink-border:                           2px solid;
-@controls-FieldLink-border-color:                     #243548  #243548  #243548  #243548;
-@controls-FieldLink-border-color-focus-hover:         #314559;
+@controls-FieldLink-border-color:                     @text-box-border-color;
+@controls-FieldLink-border-color-focus-hover:         #26B8FF;
 @controls-FieldLink-link-color:                         #26B8FF;
 // --------- //
 // MonthView //
@@ -1156,7 +1155,7 @@
 //FieldLink
 @controls-FieldLink-showAllLinks-lineHeight:       3rem;
 @controls-FieldLink-linkItem-line-height:          3rem;
-@controls-FieldLink-showAllLinks-width:            20px;
+@controls-FieldLink-showAllLinks-width:            3.2rem;
 @controls-FieldLink-showAllLinks-marginRight:      -1.43rem;
 
 @controls-FieldLink-linkItem-margin:              .07rem 0;
@@ -1164,11 +1163,11 @@
 @controls-FieldLink-linkItem-caption-height:       1.75rem;
 @controls-FieldLink-linkItem-cross-width:          2.5rem;
 @controls-FieldLink-linkItem-cross-right:          0;
-@controls-FieldLink-linkItem-cross-top:            0;
+@controls-FieldLink-linkItem-cross-top:            -.14rem;
 @controls-FieldLink-linkItem-cross-padding:        0;
 @controls-FieldLink-showAllLinks-padding:          0 1rem 0 0.14rem;
 
-@controls-FieldLink-afterField-padding:            0 .14rem 0 0;
+@controls-FieldLink-afterField-padding:            0 .14rem 0.2rem 0;
 @controls-FieldLink-afterField-height:             3rem;
 
 @controls-FieldLink-disabled-item-single-padding:  0;
@@ -1336,7 +1335,7 @@
 @tab-buttons-border-bottom-height:          0.01rem;
 @controls-toolbar-item-margin-right:        0;
 @dropdownlist-item-text-color:              #202835;
-@controls-FieldLink-picker-show-color:		#243548;
+@controls-FieldLink-picker-show-color:		#F0F5FB;
 @controls-editInPlace-editor-bg:			transparent;
 @textbox-font-size:							1.43rem;
 @scroll-pager-bg:							transparent;
