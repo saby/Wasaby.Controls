@@ -14,7 +14,7 @@ define([
       var cfg = {
             command: "cmd",
             primary: true,
-            class: "1"
+            class: "testClass"
          };
 
 
@@ -114,11 +114,18 @@ define([
             button._onTouchEnd();
           });
 
-         it('addClassDisabled', function() {
-            button.setEnabled(false);
-            var classBefore = button._options.class;
+         it('mouseDownEnabled', function() {
+            button.setEnabled(true);
+            button._isActiveByClick = false;
             button._onMouseDown();
-            assert.equals(classBefore, button._options.class)
+            assert.isTrue(button._isActiveByClick);
+         });
+
+         it('mouseDownDisabled', function() {
+            button.setEnabled(false);
+            button._isActiveByClick = false;
+            button._onMouseDown();
+            assert.isTrue(!button._isActiveByClick);
          });
 
       });
