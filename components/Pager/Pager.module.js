@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.Pager', [
          //TODO Надо как-то по-другому понимать изменения в выделении listView
          opener = this.getOpener();
          if (cInstance.instanceOfMixin(opener, 'SBIS3.CONTROLS.MultiSelectable')){
-            opener.subscribe('onSelectedItemsChange', function(ev, array){
+            this.subscribeTo(opener, 'onSelectedItemsChange', function(ev, array){
                self.updateAmount(self._lastNumRecords, self._lastNextPage, array.length);
             });
          }

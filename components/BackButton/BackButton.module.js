@@ -35,6 +35,8 @@ define('js!SBIS3.CONTROLS.BackButton',
     * @ignoreEvents onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
     *
+    * @css controls-BackButton__alignment Класс для выравнивания кнопки-назад
+    *
     * @control
     * @public
     * @category Navigation

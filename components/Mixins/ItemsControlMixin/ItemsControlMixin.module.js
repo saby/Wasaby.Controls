@@ -971,8 +971,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          if (!this._itemData) {
             this._itemData = cFunctions.clone(buildArgsMethod.call(this, this._options));
+         } else {
+            this._updateItemData(this._itemData);
          }
          return this._itemData;
+      },
+
+      _updateItemData: function(itemData) {
+         /*Method must be implemented*/
       },
 
       _redrawItems : function(notRevive) {

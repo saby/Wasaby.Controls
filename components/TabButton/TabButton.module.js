@@ -21,10 +21,19 @@ define(
     * @author Крайнов Дмитрий Олегович
     */
 
-   var TAB_BUTTON__MAX_WIDTH = 630;
+   var prepareOrder = function(order) {
+      return '-webkit-box-ordinal-group:' +  order +
+      ';-moz-box-ordinal-group:' + order +
+      ';-ms-flex-order:' +  order +
+      ';-webkit-order:' + order +
+      ';order:' + order;
+   };
+
    var TabButton = RadioButtonBase.extend([IconMixin],/** @lends SBIS3.CONTROLS.TabButton.prototype */ {
       $protected: {
          _options: {
+            _order: undefined,
+            _prepareOrder: prepareOrder,
             /**
              * @cfg {String} С какой стороны контейнера отображать вкладку
              * @variant right с правой стороы
@@ -45,6 +54,7 @@ define(
          opts.sanitize = function(markup) {
             return Sanitize (markup.caption, {validNodes: {component: true}, validAttributes : {config: true} })
          };
+         opts._order = opts._prepareOrder(opts._order);
          return opts;
       },
 
