@@ -474,7 +474,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       },
       _setModal: function(isModal){
          var overlayContainer = ModalOverlay._overlay;
-         
+
          if (isModal){
             ModalOverlay.adjust();
             overlayContainer && overlayContainer.bind('mousedown', this._overlayClick);
