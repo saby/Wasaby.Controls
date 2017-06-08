@@ -1,4 +1,4 @@
 <div class="controls-CompositeView__foldersContainer {{ (tplData.viewMode === 'tile' && tplData.tileMode === 'dynamic') ? 'controls-CompositeView-tile__static'}}">
-    {{tplData.drawFolders(...)|sanitize}}
+    <ws:partial template="{{ tplData.drawFolders }} scope={{...}}"/>
 </div>
-    {{tplData.drawLeafs(...)|sanitize}}
+<ws:partial template="{{ tplData.drawLeafs }} scope={{...}}"/>
