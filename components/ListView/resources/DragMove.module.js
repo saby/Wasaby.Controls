@@ -337,12 +337,6 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
                   dropBySelf = true;
                }
             });
-            if (dropBySelf) {//TODO придрот для того, чтобы если перетащить элемент сам на себя не отработал его обработчик клика
-               var clickHandler = this._elemClickHandler;
-               this._elemClickHandler = function () {
-                  this._elemClickHandler = clickHandler;
-               };
-            }
             if (DragObject.getOwner() === this._getView()) {
                var position = target.getPosition(),
                   domItems = [];
