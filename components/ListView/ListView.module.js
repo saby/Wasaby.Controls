@@ -932,7 +932,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var dispatcher = CommandDispatcher;
 
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange', 'onBeginDelete', 'onEndDelete', 'onBeginMove', 'onEndMove');
-            //this._setScrollPagerPositionThrottled = throttle.call(this._setScrollPagerPosition, 100, true).bind(this);
+            this._setScrollPagerPositionThrottled = throttle.call(this._setScrollPagerPosition, 100, true).bind(this);
             this._eventProxyHdl = this._eventProxyHandler.bind(this);
             
             this._toggleEventHandlers(this._container, true);
