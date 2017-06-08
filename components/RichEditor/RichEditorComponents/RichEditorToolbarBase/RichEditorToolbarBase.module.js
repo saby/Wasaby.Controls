@@ -315,6 +315,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                ['title', 'subTitle', 'additionalText', 'forecolor'].forEach(function(stl){
                   this._options.linkedEditor._removeFormat(stl);
                }, this);
+               //необходимо сначала ставить размер шрифта, тк это сбивает каретку
+               this._options.linkedEditor.setFontSize(formats.fontsize);
                for ( var button in this._buttons) {
                   if (this._buttons.hasOwnProperty(button)) {
                      if (this._buttons[button] !== formats[button]) {
@@ -325,7 +327,6 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                if (formats.color !== 'black') {
                   this._options.linkedEditor.setFontColor(formats.color);
                }
-               this._options.linkedEditor.setFontSize(formats.fontsize);
             }
          },
          destroy: function() {
