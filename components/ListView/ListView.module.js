@@ -4205,9 +4205,13 @@ define('js!SBIS3.CONTROLS.ListView',
                   beginDeleteResult.addCallback(function(result) {
                      self._deleteRecords(idArray, result);
                   }).addErrback(function (result) {
-                     InformationPopupManager.showNotification({
-                        caption: result
-                     });
+                     InformationPopupManager.showMessageDialog(
+                        {
+                           message: result.message,
+                           opener: self,
+                           status: 'error'
+                        }
+                     );
                   });
                } else {
                   self._deleteRecords(idArray, beginDeleteResult);
@@ -4229,9 +4233,13 @@ define('js!SBIS3.CONTROLS.ListView',
                      self._syncSelectedKeys();
                   }
                }).addErrback(function (result) {
-                  InformationPopupManager.showNotification({
-                     caption: result
-                  });
+                  InformationPopupManager.showMessageDialog(
+                     {
+                        message: result.message,
+                        opener: self,
+                        status: 'error'
+                     }
+                  );
                }).addBoth(function (result) {
                   self._toggleIndicator(false);
                   self._notify('onEndDelete', idArray, result);
