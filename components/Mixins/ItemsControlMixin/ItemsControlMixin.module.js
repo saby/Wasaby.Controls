@@ -1633,7 +1633,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (!error.canceled) {
             this._toggleIndicator(false);
             if (this._notify('onDataLoadError', error) !== true && !error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
-               error.message = error.message.toString().replace('Error: ', '');
                InformationPopupManager.showMessageDialog(
                  {
                     message: error.message,
