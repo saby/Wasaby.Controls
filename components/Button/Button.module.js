@@ -89,6 +89,7 @@ define('js!SBIS3.CONTROLS.Button',
          _touchMoveCount: 0,
 
          constructor: function (cfg) {
+            cfg.tooltip = cfg.tooltip || cfg.caption;
             this.deprecatedContr(cfg);
             this._publish('onActivated');
          },
