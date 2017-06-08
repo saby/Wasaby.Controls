@@ -213,29 +213,29 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          }
          if (updateFilter) {
             this._updateFilterProperty();
-            if (this._contentInitialized) {
-               this._updateResetFilterButtons();
-            }
          }
       },
       _onFilterItemChange: function(event, model, index, changes) {
          this._updateState(changes.textValue !== undefined, changes.value !== undefined);
+         this._updateResetFilterButtons();
       },
       _updateResetFilterButtons: function() {
          var
             accordion = this._filterAccordion,
             disableResetButton = true,
             withoutChanges;
-         this._filterRecordSet.each(function(item) {
-            withoutChanges = FilterToStringUtil.isEqualValues(item.get(ITEM_FILTER_VALUE), item.get(ITEM_FILTER_RESET_VALUE));
-            if (!withoutChanges && disableResetButton) {
-               disableResetButton = false;
-            }
-            accordion._getItemContainer(accordion._getItemsContainer(), item)
-               .find('.controls-Spoiler__resetFilterField')
-               .toggleClass('ws-hidden', withoutChanges);
-         });
-         this.getChildControlByName('ResetFilterButton').setEnabled(!disableResetButton);
+         if (this._contentInitialized) {
+            this._filterRecordSet.each(function (item) {
+               withoutChanges = FilterToStringUtil.isEqualValues(item.get(ITEM_FILTER_VALUE), item.get(ITEM_FILTER_RESET_VALUE));
+               if (!withoutChanges && disableResetButton) {
+                  disableResetButton = false;
+               }
+               accordion._getItemContainer(accordion._getItemsContainer(), item)
+                  .find('.controls-Spoiler__resetFilterField')
+                  .toggleClass('ws-hidden', withoutChanges);
+            });
+            this.getChildControlByName('ResetFilterButton').setEnabled(!disableResetButton);
+         }
       },
       _updateFilterProperty: function() {
          this._options.filter = this._prepareFilter();
@@ -360,16 +360,22 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
        */
       _resetFilter: function() {
          // Отключаем нотификацию об изменениях, т.к. иначе событие onFilterChange будет стрелять на сброс каждого поля
-         // Так же обязательно вычисляем изменения. В противном случае проекция перегенерируется с новыми хэшами и вся логика пойдет крахом.
-         this._filterRecordSet.setEventRaising(false, true);
+         // Слушать изменения нельзя. Компонент работает с контекстом и рекордсетом. Если слушать изменения, то нотификация в контекст не произойдет, т.к. рекордсет будет тот же самый.
+         this._filterRecordSet.setEventRaising(false);
          this._filterRecordSet.each(function(item) {
             item.set(ITEM_FILTER_TEXT_VALUE, ''); // Вначале нужно поменять текстовое описание и лишь потом фильтр, т.к. при onFilterChange должно быть уже правильное текстовое значение
             item.set(ITEM_FILTER_VALUE, cFunctions.clone(item.get(ITEM_FILTER_RESET_VALUE)));
          });
-         this._filterRecordSet.setEventRaising(true, true);
+         this._filterRecordSet.setEventRaising(true);
          // После сброса - сами вызываем пересчёт текущего состояния фильтра и его текстового описания со всеми нотификациями
          this._updateState(true, true);
-         this._notify('onFilterReset', this.getFilter());
+         // Значения в RecordSet записываются асинхронно (debounce). Из-за этого приходится оборачивать в timeout перерисовку, иначе она произойдет по старому рекордсету
+         setTimeout(function() {
+            // Сама перерисовка нужна, т.к. выше мы отключаем eventRaising и проекция, смотрящая на этот рекордсет будет перегенерирована с новыми hash'ами.
+            this._filterAccordion.redraw();
+            this._updateResetFilterButtons();
+            this._notify('onFilterReset', this.getFilter());
+         }.bind(this));
       },
       /**
        * Сбрасывает поле результирующего фильтра (см. {@link filter}).
