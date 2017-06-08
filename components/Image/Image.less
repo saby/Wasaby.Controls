@@ -33,19 +33,13 @@
    }
    .controls-image__button {
       &-edit, &-upload, &-reset {
-         position: absolute;
-         bottom: @image-bar-button-bottom-padding;
          color: #0055BB;
-      }
-      &-edit {
-         right: 40px;
+         padding: @image-bar-vertical-padding @image-bar-horizontal-padding @image-bar-vertical-padding 0;
+         float: right;
       }
       &-upload {
-         left: 12px;
-         line-height:24px;
-      }
-      &-reset {
-         right: 12px;
+         float: left;
+         padding: @image-bar-vertical-padding 0 @image-bar-vertical-padding @image-bar-horizontal-padding;
       }
    }
    &__normal {
