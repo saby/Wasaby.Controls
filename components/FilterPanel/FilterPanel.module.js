@@ -360,12 +360,13 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
        */
       _resetFilter: function() {
          // Отключаем нотификацию об изменениях, т.к. иначе событие onFilterChange будет стрелять на сброс каждого поля
-         this._filterRecordSet.setEventRaising(false);
+         // Так же обязательно вычисляем изменения. В противном случае проекция перегенерируется с новыми хэшами и вся логика пойдет крахом.
+         this._filterRecordSet.setEventRaising(false, true);
          this._filterRecordSet.each(function(item) {
             item.set(ITEM_FILTER_TEXT_VALUE, ''); // Вначале нужно поменять текстовое описание и лишь потом фильтр, т.к. при onFilterChange должно быть уже правильное текстовое значение
             item.set(ITEM_FILTER_VALUE, cFunctions.clone(item.get(ITEM_FILTER_RESET_VALUE)));
          });
-         this._filterRecordSet.setEventRaising(true);
+         this._filterRecordSet.setEventRaising(true, true);
          // После сброса - сами вызываем пересчёт текущего состояния фильтра и его текстового описания со всеми нотификациями
          this._updateState(true, true);
          this._notify('onFilterReset', this.getFilter());

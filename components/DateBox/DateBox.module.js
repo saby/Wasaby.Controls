@@ -580,7 +580,8 @@ define(
             hh   = date ? date.getHours() : 0,
             ii   = date ? date.getMinutes() : 0,
             ss   = date ? date.getSeconds() : 0,
-            uuu  = date ? date.getMilliseconds() : 0;
+            uuu  = date ? date.getMilliseconds() : 0,
+            mask = this._options.mask;
          for (var i = 0; i < this._getFormatModel().model.length; i++) {
             item = this._getFormatModel().model[i];
             if ( !item.isGroup) {
@@ -628,18 +629,26 @@ define(
          if (this._getFormatModel().isFilled()) {
             return this._createDate(yyyy, mm, dd, hh, ii, ss, uuu, autoComplete);
          } else if (autoComplete) {
-
+            if (Array.indexOf(filled, "HH") !== -1 && Array.indexOf(notFilled, "II") !== -1) {
+               ii = this._getFormatModel().getGroupValueByMask("II", '0');
+               filled.push("II")
+            }
             return this._createAutocomplitedDate(
-               filled.indexOf("YY") !== -1 || filled.indexOf("YYYY") !== -1 ? yyyy : null,
-               filled.indexOf("MM") !== -1 ? mm : null,
-               filled.indexOf("DD") !== -1 ? dd : null,
-               hh, ii, ss, uuu, autoComplete
+               (filled.indexOf("YY") !== -1 || filled.indexOf("YYYY") !== -1 || mask.indexOf('Y') === -1) ? yyyy : null,
+               (filled.indexOf("MM") !== -1 || mask.indexOf('M') === -1) ? mm : null,
+               (filled.indexOf("DD") !== -1 || mask.indexOf('D') === -1) ? dd : null,
+               (filled.indexOf("HH") !== -1 || mask.indexOf('H') === -1) ? hh : null,
+               (filled.indexOf("II") !== -1 || mask.indexOf('I') === -1) ? ii : null,
+               (filled.indexOf("SS") !== -1 || mask.indexOf('S') === -1) ? ss : null,
+               (filled.indexOf("UU") !== -1 || mask.indexOf('U') === -1) ? uuu : null,
+               autoComplete
             );
          }
          return null;
       },
       _createAutocomplitedDate: function (year, month, date, hour, minute, second, millisecond) {
-         var now = new Date();
+         var now = new Date(),
+            controlType = this.getType();
 
          var getDate = function (autocompliteDefaultDate) {
             autocompliteDefaultDate = autocompliteDefaultDate || now.getDate()
@@ -652,56 +661,62 @@ define(
             }
          }.bind(this);
 
-         if (this._isRequired() && year === null && month === null && date === null) {
-            year = now.getFullYear();
-            month = now.getMonth();
-            date = now.getDate();
-         } else if (year !== null) {
-            if (year === now.getFullYear()) {
-               if (month !== null) {
-                  if (month === now.getMonth()) {
-                     // Заполнен текущий год и месяц
+         if (controlType === 'date' || controlType === 'datetime'){
+            if (this._isRequired() && year === null && month === null && date === null) {
+               year = now.getFullYear();
+               month = now.getMonth();
+               date = now.getDate();
+            } else if (year !== null) {
+               if (year === now.getFullYear()) {
+                  if (month !== null) {
+                     if (month === now.getMonth()) {
+                        // Заполнен текущий год и месяц
+                        if (date === null) {
+                           date = getDate();
+                        }
+                     } else {
+                        if (date === null) {
+                           date = getDate(1);
+                        }
+                     }
+                  } else {
+                     // Заполнен текущий год
+                     month = month !== null ? month : now.getMonth();
                      if (date === null) {
                         date = getDate();
                      }
-                  } else {
-                     if (date === null) {
-                        date = getDate(1);
-                     }
                   }
                } else {
-                  // Заполнен текущий год
-                  month = month !== null ? month : now.getMonth();
+                  // Заполнен год, отличный от текущего
+                  if (month === null) {
+                     if (this._options.autocompleteMode === 'end') {
+                        month = 11;
+                     } else {
+                        month = 0;
+                     }
+                  }
                   if (date === null) {
-                     date = getDate();
+                     if (this._options.autocompleteMode === 'end') {
+                        date = 31;
+                     } else {
+                        date = 1;
+                     }
                   }
                }
-            } else {
-               // Заполнен год, отличный от текущего
-               if (month === null) {
-                  if (this._options.autocompleteMode === 'end') {
-                     month = 11;
-                  } else {
-                     month = 0;
-                  }
-               }
-               if (date === null) {
-                  if (this._options.autocompleteMode === 'end') {
-                     date = 31;
-                  } else {
-                     date = 1;
-                  }
-               }
+            } else if (date !== null){
+               month = month !== null ? month : now.getMonth();
+               year = year!== null ? year : now.getFullYear();
             }
-         } else if (date !== null){
-            month = month !== null ? month : now.getMonth();
-            year = year!== null ? year : now.getFullYear();
-         }
-         if (year !== null && month !== null && date !== null) {
+            if (year !== null && month !== null && date !== null) {
+               return this._createDate(year, month, date, hour, minute, second, millisecond, true);
+            }
+         } else if (controlType === 'time'){
+            if (hour !== null && minute === null) {
+               minute = 0;
+            }
             return this._createDate(year, month, date, hour, minute, second, millisecond, true);
-         } else {
-            return null;
          }
+         return null;
       },
 
       _isRequired: function () {

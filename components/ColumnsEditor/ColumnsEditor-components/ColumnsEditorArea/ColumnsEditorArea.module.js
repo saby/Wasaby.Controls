@@ -13,7 +13,8 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea', [
    'js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.CheckBoxGroup',
    'css!SBIS3.CONTROLS.ColumnsEditorArea',
-   'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/groupTpl'
+   'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/groupTpl',
+   'js!SBIS3.CONTROLS.ScrollContainer'
  ],
    function(CompoundControl, CommandDispatcher, cHelpers, ItemsMoveController, dotTplFn, ItemContentTpl) {
 
