@@ -639,8 +639,20 @@ body .controls__filterButton__filterLine {
       }
    }
 }
-body .controls-DropdownList__picker .controls-DropdownList__item {
-  line-height: 3.25rem;
+body {
+   .controls-DropdownList__picker {
+      .controls-DropdownList__item {
+         line-height: 3.25rem;
+      }
+      .controls-DropdownList__body {
+         .controls-DropdownList__itemCheckBox {
+            align-self: center;
+         }
+         .controls-DropdownListFooter_select .controls-Button__icon.icon-16{
+            font-size: 2.3rem!important;
+         }
+      }
+   }
 }
 .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper {
   text-align: center;
