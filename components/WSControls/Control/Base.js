@@ -17,12 +17,15 @@ define('js!WSControls/Control/Base',
              ControlCompatible,
              AreaAbstractCompatible,
              BaseCompatible,
-             ButtonCompatible,
              InstantiableMixin) {
 
       'use strict';
 
-      var Base = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, InstantiableMixin],
+      var Base = extend.extend([AbstractCompatible,
+            ControlCompatible,
+            AreaAbstractCompatible,
+            BaseCompatible,
+            InstantiableMixin],
          {
             _controlName: 'WSControls/Control/Base',
             iWantVDOM: false,
