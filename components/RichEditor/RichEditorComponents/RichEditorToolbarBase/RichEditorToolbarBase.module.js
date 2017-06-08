@@ -280,7 +280,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                self = this;
             if (!this._stylesPanel) {
                this._stylesPanel = new StylesPanel({
-                  parent: button,
+                  parent: self.getLinkedEditor(), // при закрытии панеи необходимо чтобы фокус оставался в редакторе
                   target: button.getContainer(),
                   corner: 'tl',
                   verticalAlign: {
