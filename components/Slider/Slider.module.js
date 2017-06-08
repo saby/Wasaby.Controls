@@ -107,7 +107,11 @@ define('js!SBIS3.CONTROLS.Slider',
                    /**
                     * @cfg {Boolean} Устанавливает отображение больших ползунков слайдера.
                     */
-                  bigPoint: false//TODO:setter/getter
+                  bigPoint: false,//TODO:setter/getter,
+                  /**
+                   * @cfg {array} шкала под слайдером
+                   */
+                  scale: false
                },
                _endValue: 0,
                _startValue: 0,
@@ -277,12 +281,14 @@ define('js!SBIS3.CONTROLS.Slider',
             },
 
             _beginDragHandler: function(DragObject, event) {
+               var
+                  dotSizes = event.target.getBoundingClientRect();
                this._dragInProcess = true;
                this._container.find('.controls-Slider__point').removeClass('lastActivePoint');
                $(event.target).addClass('lastActivePoint');
                DragObject.setOwner(this);
                DragObject.setTarget(event.target);
-               this._shift =  event.pageX - event.target.getBoundingClientRect().left - pageXOffset;
+               this._shift =  event.pageX - dotSizes.left - dotSizes.width / 2 - pageXOffset;
             },
 
             _onDragHandler: function(DragObject, event) {
@@ -292,7 +298,7 @@ define('js!SBIS3.CONTROLS.Slider',
                      instance = DragObject.getOwner(),
                      rangeLength = instance._options.maxValue - instance._options.minValue,
                      side = $(DragObject.getTarget()).hasClass('controls-Slider__point__start') ? 'start' : 'end',
-                     percent = (event.pageX - instance._shift - instance._wrapper[0].getBoundingClientRect().left - pageXOffset) / (width - constants.pointWidth[instance._options.bigPoint ? 'big' : 'small']), //дробная часть от того что надо выделить
+                     percent = (event.pageX - instance._shift - instance._wrapper[0].getBoundingClientRect().left - pageXOffset) / width, //дробная часть от того что надо выделить
                      value = instance._options.minValue + percent * rangeLength;
                   if (instance._dragInProcess && instance.isEnabled()) {
                      instance._drawValue(value, side);
