@@ -10,10 +10,10 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
    "Core/helpers/string-helpers",
    "Core/Deferred",
    "Core/helpers/functional-helpers",
-   "Core/ConsoleLogger",
+   "Core/IoC",
    "Core/constants",
    "js!SBIS3.CORE.LocalStorage"
-], function(EventBus, cSessionStorage, SBISUserConfigStorage, SBISClientsGlobalConfigStorage, cAbstract, strHelpers, Deferred, fHelpers, ConsoleLogger, constants, LocalStorage ) {
+], function(EventBus, cSessionStorage, SBISUserConfigStorage, SBISClientsGlobalConfigStorage, cAbstract, strHelpers, Deferred, fHelpers, IoC, constants, LocalStorage ) {
 
    'use strict';
 
@@ -127,7 +127,7 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
             value = constants.userConfigSupport ? cSessionStorage.getItem(key) :  this._getLocalStorage().getItem(key);
             serializedValue = this._options.serialize(false, value);
          } catch (e) {
-            ConsoleLogger.error('HistoryController', e.message, e);
+            IoC.resolve('ILogger').error('HistoryController', e.message, e);
             serializedValue = null;
          }
 
