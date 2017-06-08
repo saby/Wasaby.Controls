@@ -32,8 +32,6 @@ define('js!SBIS3.CONTROLS.Image',
       var
          //Продолжительность анимации при отображения панели изображения
          ANIMATION_DURATION = 300,
-         MIN_TOOLBAR_WIDTH = 125, //минимальный размер тулбара для которого убирается  напись "загрузить" и кнопка "удалить"
-         MIN_TOOLBAR_WIDTH_WITH_EDIT = 155,// минимальный размер тулбара для которого убирается  напись "загрузить" и все оставльные кнопки
          /**
           * Класс контрол "Изображение". Позволяет отображать и редактировать изображения, полученные из источника данных.
           * В качестве источника данных допускается использовать только {@link WS.Data/Source/SbisService}.
@@ -393,10 +391,21 @@ define('js!SBIS3.CONTROLS.Image',
                   this._buttonEdit = this.getChildControlByName('ButtonEdit');
                   this._buttonUpload = this.getChildControlByName('ButtonUpload');
                   this._buttonReset = this.getChildControlByName('ButtonReset');
-                  if (width !==0 &&((width < MIN_TOOLBAR_WIDTH && !this._options.edit )||(this._options.edit && width < MIN_TOOLBAR_WIDTH_WITH_EDIT ))){
-                     this._buttonUpload.setCaption('');
-                     this._buttonUpload.setTooltip(rk('Загрузить', 'Image'));
+                  if (width !==0){
+                     this._imageBar.show();//показываем, чтобы можно было вычислить размеры
+                     this._buttonReset.toggle(true);//показываем, чтобы можно было вычислить размеры
+                     var
+                        uploadWidth = this._buttonUpload._container[0].getBoundingClientRect().width,
+                        resetWidth = this._buttonReset._container[0].getBoundingClientRect().width,
+                        minToolbar = uploadWidth + resetWidth + (this._options.edit ? resetWidth : 0) + 4;
+                     this._imageBar.hide();//скрываем после вычисления размеров
+                     this._buttonReset.toggle(false);//скрываем после вычисления размеров
+                     if ((width < minToolbar )){
+                        this._buttonUpload.setCaption('');
+                        this._buttonUpload.setTooltip(rk('Загрузить', 'Image'));
+                     }
                   }
+
                   this._bindToolbarEvents();
                   if (this._options.webCam) {
                      this._buttonUpload.once('onPickerOpen', function(){
