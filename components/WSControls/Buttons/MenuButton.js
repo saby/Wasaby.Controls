@@ -203,6 +203,7 @@ define('js!WSControls/Buttons/MenuButton', [
                side: 'left'
             },
             closeByExternalClick: true,
+            closeOnTargetMove: true,
             targetPart: true,
             footerTpl: this._options.footerTpl
          };

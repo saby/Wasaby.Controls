@@ -41,16 +41,6 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', [
          this._hasItems = this._container.hasClass('hasItems');
       },
 
-      setEnabled: function (enabled) {
-         ButtonGroupBase.superclass.setEnabled.call(this, enabled);
-         var itemsInstances = this.getItemsInstances();
-         for (var i in itemsInstances) {
-            if (itemsInstances.hasOwnProperty(i)) {
-               itemsInstances[i].setEnabled(enabled);
-            }
-         }
-      },
-
       _drawItemsCallback : function(){
          var
             controls = this.getItemsInstances(),

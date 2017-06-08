@@ -3,6 +3,8 @@
       caption="{{item[displayProperty]}}"
       align="{{item.get('align') || 'right'}}"
       icon="{{item.get('icon')}}"
+      _order="{{item.get('_order')}}"
+      _sideTab="{{item.get('_sideTab')}}"
       enabled="{{item.get('enabled') !== false}}"
       visible="{{item.get('visible') !== false}}"
       checked="{{item.getId() === selectedKey ? true : false}}"

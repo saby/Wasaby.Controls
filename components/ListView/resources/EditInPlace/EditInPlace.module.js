@@ -7,12 +7,13 @@ define('js!SBIS3.CONTROLS.EditInPlace',
    "Core/Deferred",
    "js!SBIS3.CORE.CompoundControl",
    "html!SBIS3.CONTROLS.EditInPlace",
+   "Core/constants",
    "js!SBIS3.CONTROLS.CompoundFocusMixin",
    "Core/core-instance",
    "Core/helpers/fast-control-helpers",
    'css!SBIS3.CONTROLS.EditInPlace'
 ],
-   function(Deferred, Control, dotTplFn, CompoundFocusMixin, cInstance, fcHelpers) {
+   function(Deferred, Control, dotTplFn, constants, CompoundFocusMixin, cInstance, fcHelpers) {
       'use strict';
 
       /**
@@ -50,7 +51,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             init: function() {
                this._publish('onItemValueChanged', 'onChangeHeight', 'onBeginEdit', 'onEndEdit', 'onKeyPress');
                EditInPlace.superclass.init.apply(this, arguments);
-               this._container.bind('keypress keydown', this._onKeyDown)
+               this._container.bind('keypress keydown', this._onKeyDown.bind(this))
                               .bind('keyup', this._onKeyUp.bind(this))
                               .bind('mousedown', this._onMouseDown.bind(this));
                this.subscribe('onChildControlFocusOut', this._onChildControlFocusOut);
@@ -116,10 +117,21 @@ define('js!SBIS3.CONTROLS.EditInPlace',
               return this._container; //Переопределяю метод getElementToFocus для того, чтобы не создавался fake focus div
             },
             _onKeyDown: function(e) {
+               // ESC обрабатываем именно на keydown, т.к. все ws-панели и окна работают по keydown.
+               // Иначе после нажатия ESC на FloatArea событие keyUp доплывет до редактирования по месту и оно тоже закроется.
+               // https://online.sbis.ru/opendoc.html?guid=9558878b-0207-4355-bf9b-2615a9abd58a
+               if (e.which === constants.key.esc) {
+                  this._notify('onKeyPress', e);
+               }
                e.stopPropagation();
             },
             _onKeyUp: function(e) {
-               this._notify('onKeyPress', e);
+               // ESC обрабатываем именно на keydown, т.к. все ws-панели и окна работают по keydown.
+               // Иначе после нажатия ESC на FloatArea событие keyUp доплывет до редактирования по месту и оно тоже закроется.
+               // https://online.sbis.ru/opendoc.html?guid=9558878b-0207-4355-bf9b-2615a9abd58a
+               if (e.which !== constants.key.esc) {
+                  this._notify('onKeyPress', e);
+               }
             },
             /**
              * Заполняем значениями отображаемую editInPlace область

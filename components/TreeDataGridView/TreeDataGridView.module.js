@@ -108,6 +108,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * @cssModifier controls-TreeDataGridView__withPhoto-M Устанавливает отступы с учетом расположения в верстке изображения, размера M.
     * @cssModifier controls-TreeDataGridView__withPhoto-L Устанавливает отступы с учетом расположения в верстке изображения, размера L.
     * @cssModifier controls-TreeView__withoutLevelPadding Устанавливает режим отображения дерева без иерархических отступов.
+    * @cssModifier controls-TreeView__hideExpands Устанавливает режим отображения дерева без иконок сворачивания/разворачивания узлов.
     *
     * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView Пример 1. Простое иерархическое представление данных в режиме множественного выбора записей.
     * @demo SBIS3.CONTROLS.DOCS.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
@@ -334,6 +335,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             this._editArrow = new IconButton({
                element: this._container.find('> .controls-TreeView__editArrow-container'),
                icon: 'icon-16 icon-View icon-primary action-hover icon-size',
+               cssClassName: 'ws-hidden',
                parent: this,
                allowChangeEnable: false,
                handlers: {
@@ -370,7 +372,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if(arrowContainer.length === 2) {
             /* Считаем, чтобы правая координата названия папки не выходила за ячейку,
                учитываем возможные отступы иерархии и ширину expander'a*/
-            if ( td[0].getBoundingClientRect().right - parseInt(td.css('padding-right'), 10) < folderTitle[0].getBoundingClientRect().right + this._getLevelPaddingWidth(hoveredItem.container)) {
+            if ( td[0].getBoundingClientRect().right - parseInt(td.css('padding-right'), 10) < folderTitle[0].getBoundingClientRect().right) {
                arrowContainer = arrowContainer[1];
             } else {
                arrowContainer = arrowContainer[0];
