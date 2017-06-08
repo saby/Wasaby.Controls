@@ -169,7 +169,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
              * Добавим проксирование данных для EngineBrowser
              * Этот костыль будет выпилен в 3.17.20
              */
-            if (this.getParent() && cInstance.instanceOfModule(this.getParent(), 'SBIS3.CONTROLS.Browser') ) {
+            if (this.getParent()) {
                var selfCtx = this._context,
                   prevContext = this._context.getPrevious();
                this._context.subscribe('onFieldChange', function (ev, name, value) {
@@ -180,11 +180,23 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   }
                });
 
+               this._context.subscribe('onFieldRemove', function (ev, name, value) {
+                  if (prevContext.getValueSelf(name) !== undefined) {
+                     prevContext.removeValue(name);
+                  }
+               });
+
                prevContext.subscribe('onFieldChange', function (ev, name, value) {
                   if (prevContext.getValueSelf(name) !== undefined) {
                      if (selfCtx.getValueSelf(name) !== value) {
                         selfCtx.setValue(name, value);
                      }
+                  }
+               });
+
+               prevContext.subscribe('onFieldRemove', function (ev, name, value) {
+                  if (selfCtx.getValueSelf(name) !== undefined) {
+                     selfCtx.removeValue(name);
                   }
                });
             }
