@@ -14,21 +14,17 @@ define([
          primary: true
       };
 
-
-      var iconButton = new IconButton(cfg);
-
-
       describe('Events', function () {
          it('tooltipFromCaption', function () {
             cfg.tooltip = "";
             cfg.caption = "caption";
-            iconButton = new IconButton(cfg)
+            var iconButton = new IconButton(cfg)
             assert.equal(iconButton._options.tooltip, cfg.caption);
          });
 
          it('tooltip', function () {
             cfg.tooltip = "tooltip";
-            iconButton = new IconButton(cfg)
+            var iconButton = new IconButton(cfg)
             assert.equal(iconButton._options.tooltip, cfg.tooltip);
          });
 
