@@ -76,6 +76,7 @@ define(
                      lastRightItem = item;
                      item.set('_order', baseOrder + order++);
                   }
+                  item.set('_sideTab', false);
                   item.set(opts.displayProperty, tmpl);
                });
 
