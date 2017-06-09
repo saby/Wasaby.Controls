@@ -312,7 +312,13 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          if (target === undefined || !isChangeOrder && !this._options.nodeProperty) {
             return false;
          }
-
+         if (isChangeOrder) {
+            var targetIndex = this.getItems().getIndex(target);
+            targetIndex = position == 'before' ? targetIndex - 1 : targetIndex + 1;
+            if (this.getItems().getIndex(movedItem) == targetIndex){
+               return false;
+            }
+         }
          if (this._options.parentProperty) {
             if (target !== null) {
                if (this._options.nodeProperty && !isChangeOrder && target.get(this._options.nodeProperty) === null) {
