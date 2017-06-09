@@ -914,6 +914,12 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @deprecated
                 */
                useSelectAll: false,
+               //это использется для отображения аватарки драгндропа, она должна быть жекорированной ссылкой
+               //временное решение пока не будет выпонена задача https://online.sbis.ru/debug/opendoc.html?guid=32162686-eee0-4206-873a-39bc7b4ca7d7&des=
+               linkTemplateConfig: null,
+               //включает плейсхолдер при перемещении записи мышкой, в 100 он работает только с плоскими списками,
+               //опция будет удалена при реализации перемещения по новому стандарту
+               useDragPlaceHolder: false,
                //TODO коммент ниже
                task1173941879: false
             },
@@ -932,8 +938,11 @@ define('js!SBIS3.CONTROLS.ListView',
             var dispatcher = CommandDispatcher;
 
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange', 'onBeginDelete', 'onEndDelete', 'onBeginMove', 'onEndMove');
+           
             this._setScrollPagerPositionThrottled = throttle.call(this._setScrollPagerPosition, 100, true).bind(this);
-            this._bindEventHandlers(this._container);
+            this._eventProxyHdl = this._eventProxyHandler.bind(this);
+            
+            this._toggleEventHandlers(this._container, true);
 
             this.initEditInPlace();
             this.setItemsDragNDrop(this._options.itemsDragNDrop);
@@ -946,6 +955,11 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._options.navigation && this._options.navigation.type == 'cursor') {
                this._listNavigation = new CursorNavigation(this._options.navigation);
             }
+         },
+
+         _updateItemData: function(itemData) {
+            itemData.selectedKey = this.getSelectedKey();
+            itemData.selectedKeys = this.getSelectedKeys();
          },
 
          getListNavigation: function() {
@@ -973,13 +987,8 @@ define('js!SBIS3.CONTROLS.ListView',
             this._initLoadMoreButton();
          },
 
-         _bindEventHandlers: function(container) {
-            this._eventProxyHdl = this._eventProxyHandler.bind(this);
-            container.on('swipe tap mousemove mouseleave touchend taphold touchstart contextmenu mousedown mouseup', this._eventProxyHdl);
-         },
-
-         _unbindEventHandlers: function(container) {
-            container.off('swipe tap mousemove mouseleave touchend taphold touchstart contextmenu mousedown mouseup', this._eventProxyHdl);
+         _toggleEventHandlers: function(container, bind) {
+            container[bind ? 'on' : 'off']('swipe tap mousemove mouseleave touchend taphold touchstart contextmenu mousedown mouseup', this._eventProxyHdl);
          },
 
          _modifyOptions : function(opts){
@@ -1743,20 +1752,22 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          //TODO: Временное решение для выделения "всех" (на самом деле первой тысячи) записей
          setSelectedAll: function() {
+            var MAX_SELECTED = 1000;
             var selectedItems = this.getSelectedItems();
-            if (this.isInfiniteScroll() && this.getItems().getCount() < 1000 && this.getItems().getMetaData().more){
+            if (this.isInfiniteScroll() && this.getItems().getCount() < MAX_SELECTED && this.getItems().getMetaData().more){
                this._loadFullData.apply(this, arguments)
                   .addCallback(function(dataSet) {
-                     //Ввостановим значение _limit, т.к. после вызова reload _limit стал равен 1000,
-                     //и следующие страницы будут грузиться тоже по 1000 записей
+                     //Ввостановим значение _limit, т.к. после вызова reload _limit стал равен MAX_SELECTED,
+                     //и следующие страницы будут грузиться тоже по MAX_SELECTED записей
                      this._limit = this._options.pageSize;
+                     this._scrollOffset.bottom = MAX_SELECTED;
                      //Очистим selectedItems чтобы при заполнении новыми элементами, не делать проверку на наличие элементов в коллекции
                      if (selectedItems && selectedItems.getCount()) {
                         selectedItems.clear();
                      }
                       this.setSelectedItemsAll.call(this);
-                     if (dataSet.getCount() == 1000 && dataSet.getMetaData().more){
-                        var message = 'Отмечено 1000 записей, максимально допустимое количество, обрабатываемое системой СБИС.';
+                     if (dataSet.getCount() == MAX_SELECTED && dataSet.getMetaData().more){
+                        var message = 'Отмечено ' + MAX_SELECTED + ' записей, максимально допустимое количество, обрабатываемое системой СБИС.';
 
                         var windowOptions = (constants.defaultOptions || {})['SBIS3.CORE.Window'] || {};
                         //TODO В 3.7.4.200 popupMixin не поддерживает анимацию, соответсвенно и информационные окна, сделанные на его основе
@@ -2025,7 +2036,7 @@ define('js!SBIS3.CONTROLS.ListView',
                ListView.superclass.setActive.apply(this, params);
             }
          },
-         
+
          _toggleEipHoveredHandlers: function(toggle) {
             var methodName = toggle ? 'subscribe' : 'unsubscribe';
             this[methodName]('onChangeHoveredItem', this._onChangeHoveredItemHandler);
@@ -3004,7 +3015,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      else {
                         hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
                      }
-         
+
                      this._updateScrollOffset();
                      //Нужно прокинуть наружу, иначе непонятно когда перестать подгружать
                      this.getItems().setMetaData(dataSet.getMetaData());
@@ -3752,7 +3763,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._mover) {
                this._mover.destroy();
             }
-            this._unbindEventHandlers(this._container);
+            this._toggleEventHandlers(this._container, false);
             ListView.superclass.destroy.call(this);
          },
          /**
@@ -3858,24 +3869,26 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _beginDragHandler: function(dragObject, e) {
-            var
-                target;
-            target = this._findItemByElement(dragObject.getTargetsDomElemet());
             //TODO: данный метод выполняется по селектору '.js-controls-ListView__item', но не всегда если запись есть в вёрстке
             //она есть в _items(например при добавлении или фейковый корень). Метод _findItemByElement в данном случае вернёт
             //пустой массив. В .150 править этот метод опасно, потому что он много где используется. В .200 переписать метод
             //_findItemByElement, без завязки на _items.
+            var target = this._findItemByElement(dragObject.getTargetsDomElemet());
             if (target.length) {
+               if (target.hasClass('controls-DragNDropMixin__notDraggable')) {
+                  return false;
+               }
                var  selectedItems = this.getSelectedItems(),
                   targetsItem = this._getItemProjectionByHash(target.data('hash')).getContents(),
                   items = this._getDragItems(targetsItem, selectedItems),
                   source = [];
                items.forEach(function (item) {
-                  var projItem = this._getItemsProjection().getItemBySourceItem(item);
+                  var projItem = this._getItemsProjection().getItemBySourceItem(item),
+                     domElement = this._getHtmlItemByProjectionItem(projItem);
                   source.push(this._makeDragEntity({
                      owner: this,
                      model: item,
-                     domElement: this._getHtmlItemByProjectionItem(projItem)
+                     domElement: domElement
                   }));
                }.bind(this));
 
@@ -3884,6 +3897,10 @@ define('js!SBIS3.CONTROLS.ListView',
                      items: source
                   })
                );
+               if (this._options.useDragPlaceHolder) {
+                  this._makeDragPlaceHolder(dragObject);
+                  this._toggleDragItems(dragObject, false)
+               }
                this._hideItemsToolbar();
                if (this._checkHorisontalDragndrop(target)) {
                   this._horisontalDragNDrop = true;
@@ -3899,7 +3916,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return false;
          },
          /**
-          * Определяет направление элементов в списке    
+          * Определяет направление элементов в списке
           * @param target
           * @returns {boolean}
           * @private
@@ -3926,39 +3943,65 @@ define('js!SBIS3.CONTROLS.ListView',
                   source.each(function (item) {
                      sourceModels.push(item.getModel());
                   });
-                  if (dragObject.getOwner() !== this || sourceModels.indexOf(targetsModel) < 0) {
-                     this._drawDragHighlight(target);
+
+                  //this._drawDragHighlight(target);
+                  if (this._options.useDragPlaceHolder) {
+                     var placeholder = this._getDragPlaceHolder(dragObject);
+                     placeholder.show();
+                     var item = this._getItemsProjection().getItemBySourceItem(targetsModel);
+                     if (target.getPosition() == 'before') {
+                        placeholder.insertBefore(target.getDomElement());
+                     } else {
+                        placeholder.insertAfter(target.getDomElement());
+                     }
+                  } else {
+                     if (dragObject.getOwner() !== this || sourceModels.indexOf(targetsModel) < 0) {
+                        this._drawDragHighlight(target);
+                     }
                   }
                }
+            }
+            if (dragObject.getTargetsControl() !== this && this._dragPlaceHolder) {
+               this._dragPlaceHolder.hide();
+            } else if (this._dragPlaceHolder) {
+               this._dragPlaceHolder.show();
             }
          },
 
          _canDragMove: function(dragObject) {
-            var source = dragObject.getSource();
-            return dragObject.getTarget() &&
+            var source = dragObject .getSource();
+            return dragObject .getTarget() &&
                source &&
                source.getCount() > 0 &&
-               dragObject.getTargetsControl() === this &&
+               dragObject .getTargetsControl() === this &&
                cInstance.instanceOfModule(source.at(0), 'SBIS3.CONTROLS.DragEntity.Row');
          },
 
          _getDragTarget: function(dragObject, e) {
-            var target = this._findItemByElement(dragObject.getTargetsDomElemet()),
+            var
                item,
-               projection = this._getItemsProjection();
+               projection = this._getItemsProjection(),
+               target = this._findItemByElement(dragObject.getTargetsDomElemet());
 
-            if (target.length > 0) {
-               item = projection.getByHash(target.data('hash'));
-            } else if (this._horisontalDragNDrop) {
-               var elements = document.elementsFromPoint(e.pageX+5, e.pageY+5);
-               target = this._findItemByElement($(elements[1]));
+            if(this._options.useDragPlaceHolder) {
+               var item;
                if (target.length > 0) {
                   item = projection.getByHash(target.data('hash'));
-               } else {
-                  item = projection.at(projection.getCount() - 1);
                }
-            }
+            } else {
+               if (target.length > 0) {
+                  item = projection.getByHash(target.data('hash'));
+               } else if (this._horisontalDragNDrop) {
+                  var elements = document.elementsFromPoint(e.pageX + 5, e.pageY + 5);
+                  target = this._findItemByElement($(elements[1]));
+                  if (target.length > 0) {
+                     item = projection.getByHash(target.data('hash'));
+                  } else {
+                     item = projection.at(projection.getCount() - 1);
+                  }
+               }
 
+            }
             return {
                item: item ? item.getContents() : undefined,
                domElement: target
@@ -3968,28 +4011,40 @@ define('js!SBIS3.CONTROLS.ListView',
          _updateDragTarget: function(dragObject, e) {
             var dragTarget = this._getDragTarget(dragObject, e),
                target;
-            if (dragTarget.item) {
-               var domElement = dragTarget.domElement,
-                  position = this._getDirectionOrderChange(e, domElement) || DRAG_META_INSERT.on;
-
-               if (position !== DRAG_META_INSERT.on && dragObject.getOwner() === this) {
-                  var neighborItem = this[position === DRAG_META_INSERT.after ? 'getNextItemById' : 'getPrevItemById'](dragTarget.item.getId()),
-                     sourceIds = [];
-                  dragObject.getSource().each(function (item) {
-                     sourceIds.push(item.getModel().getId());
-                  });
-                  if (neighborItem && sourceIds.indexOf(neighborItem.data('id')) > -1) {
-                     position = DRAG_META_INSERT.on;
-                  }
-               }
-               target = this._makeDragEntity({
-                  owner: this,
-                  domElement: domElement,
-                  model: dragTarget.item,
-                  position: position
+            if (dragTarget.item && !dragTarget.domElement.hasClass('controls-DragNDrop__placeholder')) {
+               var position = this._getDirectionOrderChange(e, dragTarget.domElement) || DRAG_META_INSERT.on,
+                  sourceIds = [],
+                  movedItems = [];
+               dragObject.getSource().each(function (item) {
+                  sourceIds.push(item.getModel().getId());
+                  movedItems.push(item.getModel());
                });
+               var projItem = this._getItemsProjection().getItemBySourceItem(dragTarget.item);
+               if (this._getMover()._checkRecordForMove(movedItems, dragTarget.item, position)) {
+                  target = this._makeDragEntity({
+                     owner: this,
+                     domElement: dragTarget.domElement,
+                     model: dragTarget.item,
+                     position: position
+                  });
+                  dragObject.setTarget(target);
+               } else if (this._options.useDragPlaceHolder && position == 'on' ) {
+                  if (this._horisontalDragNDrop) {
+                     position = (e.offsetX > dragTarget.domElement.height()/2) ? 'before' : 'after';
+                  } else {
+                     position = (e.offsetY > dragTarget.domElement.width()/2) ? 'before' : 'after';
+                  }
+                  target = this._makeDragEntity({
+                     owner: this,
+                     domElement: dragTarget.domElement,
+                     model: dragTarget.item,
+                     position: position
+                  });
+                  dragObject.setTarget(target);
+               } else if (!this._options.useDragPlaceHolder) {
+                  dragObject.setTarget(undefined);
+               }
             }
-            dragObject.setTarget(target);
          },
 
          _clearDragHighlight: function(dragObject) {
@@ -4003,19 +4058,46 @@ define('js!SBIS3.CONTROLS.ListView',
             domelement.toggleClass('controls-DragNDrop__insertBefore', target.getPosition() === DRAG_META_INSERT.before);
          },
          _getDirectionOrderChange: function(e, target) {
-            if (this._horisontalDragNDrop) {
-               return this._getOrderPosition(e.pageX - (target.offset() ? target.offset().left : 0), target.width(), 20);
+            if (this._options.useDragPlaceHolder) {
+               var position = this._getOrderPosition(e.pageY - (target.offset() ? target.offset().top : 0), target.height(), 10);
+               if (position == 'on') {
+                  position = this._getOrderPosition(e.pageX - (target.offset() ? target.offset().left : 0), target.width(), 20)
+               }
+               return position;
             } else {
-               return this._getOrderPosition(e.pageY - (target.offset() ? target.offset().top : 0), target.height(), 10);
+               if (this._horisontalDragNDrop) {
+                  return this._getOrderPosition(e.pageX - (target.offset() ? target.offset().left : 0), target.width(), 20);
+               } else {
+                  return this._getOrderPosition(e.pageY - (target.offset() ? target.offset().top : 0), target.height(), 10);
+               }
             }
          },
          _getOrderPosition: function(offset, metric, orderOffset) {
-            return offset < orderOffset ? DRAG_META_INSERT.before : offset > metric - orderOffset ? DRAG_META_INSERT.after : DRAG_META_INSERT.on;
+            if (this._options.useDragPlaceHolder) {
+               return offset < orderOffset ? DRAG_META_INSERT.after : offset > metric - orderOffset ? DRAG_META_INSERT.before : DRAG_META_INSERT.on;
+            } else {
+               return offset < orderOffset ? DRAG_META_INSERT.before : offset > metric - orderOffset ? DRAG_META_INSERT.after : DRAG_META_INSERT.on;
+            }
          },
 
          _createAvatar: function(dragObject) {
-            var count = dragObject.getSource().getCount();
-            return $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>');
+            if (!this._options.linkTemplateConfig) {
+               var count = dragObject.getSource().getCount();
+               return $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>');
+            } else {
+               var model = dragObject.getSource().at(0).getModel();
+               return $(
+                  '<div class="controls-dragNDrop-avatar controls-DragNDrop__draggedItem">' +
+                     '<div class="controls-dragNDrop-avatar__img-wrapper">' +
+                        '<img src="' + model.get(this._options.linkTemplateConfig.image) + '">' +
+                     '</div>' +
+                     '<div class="controls-dragNDrop-avatar__text-wrapper">' +
+                        '<div class="controls-dragNDrop-avatar__title">' + (model.get(this._options.linkTemplateConfig.title)||'') + '</div>' +
+                        '<div class="controls-dragNDrop-avatar__description">' + (model.get(this._options.linkTemplateConfig.description)||'') + '</div>' +
+                     '</div>' +
+                  '</div>'
+               );
+            }
          },
 
          _endDragHandler: function(dragObject, droppable, e) {
@@ -4023,6 +4105,7 @@ define('js!SBIS3.CONTROLS.ListView',
                var
                   target = dragObject.getTarget(),
                   models = [],
+                  dropBySelf = false,
                   source = dragObject.getSource();
 
                if (target && source) {
@@ -4030,14 +4113,38 @@ define('js!SBIS3.CONTROLS.ListView',
                   source.each(function(item) {
                      var model = item.getModel();
                      models.push(model);
+                     if (targetsModel == model) {
+                        dropBySelf = true;
+                     }
                   });
-
                   if (dragObject.getOwner() === this) {
-                     var position = target.getPosition();
-                     this._getMover().move(models, target.getModel(), position).addCallback(function(result){
+                     var position = target.getPosition(),
+                        domItems = [];
+
+                     dragObject.getSource().each(function (item) {
+                        domItems.push(item.getDomElement());
+                     });
+                     var isMove = this._getMover().checkRecordsForMove(models, target.getModel(), position);
+                     this.move(models, target.getModel(), position).addCallback(function(result){
                         if (result) {
                            this.removeItemsSelectionAll();
                         }
+                        if (this._options.useDragPlaceHolder && isMove) {
+                           this.once('onDrawItems', function () {
+                              //это нужно что бы изменения верстки произошли в одном "потоке", что бы не прыгали элементы
+                              //когда удалется плейсходер и переносится реальный элемент
+                              //здесь поможет виртуалдом
+                              this._clearDragHighlight(dragObject);
+                              domItems.forEach(function (elem) {
+                                 elem.removeClass('ws-hidden');
+                              });
+                              this._removeDragPlaceHolder();
+                           });
+                        } else {
+                           this._removeDragPlaceHolder();
+                        }
+                     }.bind(this)).addErrback(function () {
+                        this._removeDragPlaceHolder();
                      }.bind(this));
                   } else {
                      var currentDataSource = this.getDataSource(),
@@ -4049,21 +4156,31 @@ define('js!SBIS3.CONTROLS.ListView',
                      ) { //включаем перенос по умолчанию только если  контракты у источников данных равны
                         useDefaultMove = true;
                      }
-                     this._getMover().moveFromOutside(dragObject.getSource(),
-                        dragObject.getTarget(),
-                        dragOwner.getItems(),
-                        useDefaultMove
-                     ).addCallback(function (result) {
-                        if (result !== false && cInstance.instanceOfMixin(dragOwner, 'SBIS3.CONTROLS.MultiSelectable')) {
-                           dragOwner.removeItemsSelectionAll();//сбросим выделение у контрола с которого перемещаются элементы
-                        }
-                     });
+                     this._getMover().moveFromOutside(dragObject.getSource(), dragObject.getTarget(), dragOwner.getItems(), useDefaultMove);
                   }
                }
+               this._clearDragHighlight(dragObject);
             }
+         },
+         _getDragPlaceHolder: function(dragObject) {
+            if (!this._dragPlaceHolder) {
+               this._makeDragPlaceHolder(dragObject)
+            }
+            return this._dragPlaceHolder;
+         },
 
-            this._clearDragHighlight(dragObject);
-            this._updateItemsToolbar();
+         _makeDragPlaceHolder: function(dragObject) {
+            if (this._options.useDragPlaceHolder) {
+               var item = dragObject.getSource().at(0);
+               this._dragPlaceHolder = item.getDomElement().clone().removeAttr('data-hash').addClass('controls-DragNDrop__placeholder');
+               item.getDomElement().after(this._dragPlaceHolder);
+            }
+         },
+
+         _toggleDragItems: function (dragObject, show) {
+            dragObject.getSource().each(function (item) {
+               item.getDomElement().toggleClass('ws-hidden', !show);
+            });
          },
          /*DRAG_AND_DROP END*/
          //region moveMethods
@@ -4074,7 +4191,8 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          moveRecordsWithDialog: function(idArray) {
             require(['js!SBIS3.CONTROLS.Action.List.InteractiveMove','js!WS.Data/Utils'], function(InteractiveMove, Utils) {
-               Utils.logger.error(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed in 3.17. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"');
+               //Utils.logger.info(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"');
+               //В OperationMove ни как не передать инстанс экшена через шаблонизатор до решения этой проблемы перейти не получится
                var
                   action = new InteractiveMove({
                      linkedObject: this,
@@ -4083,7 +4201,12 @@ define('js!SBIS3.CONTROLS.ListView',
                      dialogOptions: {
                         opener:this
                      },
-                     moveStrategy: this.getMoveStrategy()//todo пока передаем стратегию, после полного отказа от стратегий удалить
+                     moveStrategy: this.getMoveStrategy(),//todo пока передаем стратегию, после полного отказа от стратегий удалить
+                     handlers: {
+                        onExecuted: function () {
+                           this.destroy();
+                        }
+                     }
                   }),
                   items = this.getItems(),
                   movedItems;
@@ -4114,7 +4237,13 @@ define('js!SBIS3.CONTROLS.ListView',
                });
             }.bind(this));
          },
-
+         _removeDragPlaceHolder: function () {
+            if (this._dragPlaceHolder) {
+               this._dragPlaceHolder.remove();
+               this._dragPlaceHolder = null;
+            }
+            this._updateItemsToolbar();
+         },
          /**
           * Перемещает выделенные записи.
           * @deprecated используйте метод move

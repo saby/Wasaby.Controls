@@ -390,12 +390,16 @@
          display: inline-block;
          visibility: hidden;
          position: relative;
+         bottom: @DropdownList-checkbox-bottom;
       }
 
       &.controls-DropdownList__buttonsBlock {
          height: @DropdownList-footer-multisel-buttonsBlock-h;
          .controls-DropdownListFooter_hasMore {
             top: 4px;
+         }
+         .controls-DropdownListFooter_hasMore {
+            left: @DropdownList-footer-hasMore-left-multiselect;
          }
       }
    }

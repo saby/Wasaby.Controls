@@ -86,6 +86,9 @@ define('js!SBIS3.CONTROLS.Button',
          _template: template,
          iWantVDOM: true,
          _isActiveByClick: false,
+         _isWaitingClick: false,
+         _isTouchEnded: false,
+         _touchMoveCount: 0,
 
          constructor: function (cfg) {
             this.deprecatedContr(cfg);
@@ -95,6 +98,11 @@ define('js!SBIS3.CONTROLS.Button',
          //<editor-fold desc="Event handlers">
 
          _onMouseClick: function (e) {
+            if (this._isTouchEnded) {
+               this._isTouchEnded = false;
+               return;
+            }
+            this._isWaitingClick = false;
             if (!this._options.enabled) {
                return;
             }
@@ -108,6 +116,36 @@ define('js!SBIS3.CONTROLS.Button',
 
          _onMouseUp: function () {
             this._isActiveByClick = false;
+         },
+
+         _onTouchStart: function(e) {
+            this._touchMoveCount = 0;
+            this._isWaitingClick = true;
+            this._isActiveByClick = true;
+            this._isTouchEnded = false;
+         },
+
+         _onTouchMove: function(e) {
+            this._touchMoveCount++;
+            if(this._touchMoveCount > 1) {
+               this._isWaitingClick = false;
+            }
+         },
+
+         _onTouchEnd: function(e) {
+            var self = this;
+            this._isActiveByClick = false;
+            /**
+             * ipad имеет специфическую систему событий связанных с touch
+             * onClick может произойти между onTouchStart и onTouchEnd, или
+             * в течение 300мс после onTouchEnd, или не произойти вообще
+             */
+            setTimeout(function() {
+               if(self._isWaitingClick) {
+                  self._onMouseClick();
+                  self._isTouchEnded = true;
+               }
+            }, 300);
          },
 
          _onKeyDown: function (e) {
