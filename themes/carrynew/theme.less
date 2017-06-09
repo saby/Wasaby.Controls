@@ -92,11 +92,13 @@ body {
       .controls-IconButton {
          background: @button-bg;
          padding: 0;
+         border: 2px solid #0055BB;
          .controls-Button__icon {
             font-size: 3rem!important;
             height: 3rem!important;
             width: 3rem!important;
             line-height: 3rem !important;
+            color: @button-text-color !important;
          }
          &.ws-disabled {
             border-color: #CCCCCC;
@@ -138,9 +140,6 @@ body {
 
 .controls-ListView__scrollPager {
   height: 3rem !important;
-}
-.control-Paging__btn  {
-  border: 2px solid #0055BB;
 }
 .ws-moneyDecorator {
   &__integer{
