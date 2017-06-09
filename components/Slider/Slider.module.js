@@ -323,7 +323,7 @@ define('js!SBIS3.CONTROLS.Slider',
                 var
                   width = this._container.width(),
                   rangeLength = this._options.maxValue - this._options.minValue,
-                  percent = (pageX - this._shift - this._wrapper[0].getBoundingClientRect().left - pageXOffset) / (width - constants.pointWidth[this._options.bigPoint ? 'big' : 'small']); //дробная часть от того что надо выделить
+                  percent = (pageX - this._shift - this._wrapper[0].getBoundingClientRect().left - pageXOffset) / width; //дробная часть от того что надо выделить
                 return this._options.minValue + percent * rangeLength;
             },
 
