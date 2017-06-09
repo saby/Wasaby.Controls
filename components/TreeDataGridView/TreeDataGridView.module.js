@@ -479,7 +479,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          container.attr('data-parent', parentKey);
 
          if (this._options.openedPath[key]) {
-            var hierarchy = this._getHierarchyRelation(),
+            var hierarchy = this._options._getHierarchyRelation(this._options),
                children = hierarchy.getChildren(key, this.getItems());
 
             if (children.length) {
