@@ -1,4 +1,4 @@
-/**
+   /**
  * Created by dv.zuev on 18.05.2017.
  */
 define([
@@ -13,7 +13,8 @@ define([
 
       var cfg = {
             command: "cmd",
-            primary: true
+            primary: true,
+            class: "testClass"
          };
 
 
@@ -112,6 +113,20 @@ define([
             clickEvent = 0;
             button._onTouchEnd();
           });
+
+         it('mouseDownEnabled', function() {
+            button.setEnabled(true);
+            button._isActiveByClick = false;
+            button._onMouseDown();
+            assert.isTrue(button._isActiveByClick);
+         });
+
+         it('mouseDownDisabled', function() {
+            button.setEnabled(false);
+            button._isActiveByClick = false;
+            button._onMouseDown();
+            assert.isTrue(!button._isActiveByClick);
+         });
 
       });
 
