@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          componentType: 'WSControls/Buttons/Button',
          tooltip: rk('Стили'),
          icon: 'sprite:icon-24 icon-TFCurtailRTE2 icon-primary',
-         className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
+         className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          handlers: {
             onActivated: function() {
                this.getParent()._openStylesPanel(this);
