@@ -772,11 +772,16 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          this._listReversed = reverse;
 
          if(list && list.setItemsSortMethod) {
-            list.setItemsSortMethod(
-               reverse ?
-                  function (a, b) { return b.collectionIndex - a.collectionIndex; } :
-                  null
-            );
+            if(reverse) {
+               /* Не надо устанавливать сортировку если он уже установлена, т.к.
+                  1) Повторное перестроение вызывает лишние перестроения
+                  2) Может быть установлена прикладная сортировка, её ломать нельзя */
+               if(!list.getProperty('itemsSortMethod')) {
+                  list.setItemsSortMethod(function (a, b) { return b.collectionIndex - a.collectionIndex; });
+               }
+            } else{
+               list.setItemsSortMethod(null);
+            }
          }
       }
    };
