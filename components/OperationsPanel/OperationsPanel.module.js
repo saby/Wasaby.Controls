@@ -316,10 +316,10 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          var self = this;
          if (this.isVisible()) {
             this.requireButtons().addCallback(function() {
-               OperationsPanel.superclass.redraw.call(self);
                self.once('onDrawItems', function() {
                   self._checkCapacity();
                });
+               OperationsPanel.superclass.redraw.call(self);
             });
          }
       },
