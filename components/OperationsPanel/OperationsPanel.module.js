@@ -6,13 +6,11 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
    'tmpl!SBIS3.CONTROLS.OperationsPanel',
    'js!SBIS3.CONTROLS.ItemsControlMixin',
    'Core/helpers/collection-helpers',
-   "Core/helpers/functional-helpers",
    'Core/core-instance',
-   'js!SBIS3.StickyHeaderManager',
    'tmpl!SBIS3.CONTROLS.OperationsPanel/resources/ItemTemplate',
    'Core/moduleStubs',
    'css!SBIS3.CONTROLS.OperationsPanel'
-], function(Control, dotTplFn, ItemsControlMixin, colHelpers, fHelpers, cInstance, StickyHeaderManager, ItemTemplate, moduleStubs) {
+], function(Control, dotTplFn, ItemsControlMixin, colHelpers, cInstance, ItemTemplate, moduleStubs) {
 
    var ITEMS_MENU_WIDTH = 28;
 
@@ -225,17 +223,9 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
             if (show) {
                this.redraw();
             }
-            // Если контрол находится в фиксированном заголовке, то обновляем размеры заголовков
-            if (this._isSticky()) {
-               StickyHeaderManager.checkStickyHeaderSize();
-            }
             this._notify('onToggle');
          }
       },
-
-      _isSticky: fHelpers.memoize(function () {
-         return !!this.getContainer().closest('.ws-sticky-header__block').length;
-      }, '_isSticky'),
 
       onSelectedItemsChange: function(idArray) {
          this._container.toggleClass('controls-operationsPanel__massMode', !idArray.length)
