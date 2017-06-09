@@ -86,7 +86,7 @@ define('js!SBIS3.CONTROLS.TextBoxUtils', ['Core/constants'], function(constants)
                    pickerContainer.style.minWidth = textBoxWidth + 'px';
                    pickerContainer.style.maxWidth = textBoxWidth + 'px';
                }
-               picker.recalcPosition(true, true);
+               picker.recalcPosition(true);
                if(needSetWidth) {
                    pickerContainer.style.width = textBoxWidth + 'px';
                    pickerContainer.style.minWidth = '';
