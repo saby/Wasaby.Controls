@@ -265,16 +265,21 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {WS.Data/Entity/Model} model Редактируемая запись.
           */
          /**
-          * @event onEndEdit Происходит перед окончанием редактирования (и перед валидацией области редактирования).
+          * @event onEndEdit Происходит перед окончанием редактирования или добавления по месту.
+          * @remark
+          * После события onEndEdit выполняется валидация значений для всех дочерних контролов, используемых в режиме редактирования или добавления по месту.
+          * Для валидации вызываются функции-валидаторы, которые устанавливает прикладной разработчик на каждый из контролов.
+          * В случае когда валидация не пройдена, контрол подсвечивается, а завершение редактирования или добавления по месту не происходит.
+          * Валидация контролов не происходит, когда из обработчика события возвращаются результаты "CANCEL" или "NotSave".
           * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {WS.Data/Entity/Model} model Редактируемая запись.
-          * @param {Boolean} withSaving Признак, по которому определяют тип завершения редактирования.
+          * @param {Boolean} withSaving Признак, соответствующий типу завершения редактирования:
           * <ul>
           *    <li>true - редактирование завершается сохранением изменений;</li>
-          *    <li>false - отмена сохранения изменений путём нажатия клавиши Esc или переводом фокуса на другой контрол.</li>
+          *    <li>false - сохранение изменений отменено; была нажата клавиша Esc или переведён фокус на другой контрол.</li>
           * </ul>
-          * @returns {EndEditResult} Когда из обработчика события возвращается константа, список которых приведён выше, происходит соответствующее действие.
-          * Когда возвращается любое другое значение, оно будет проигнорировано, и произойдёт сохранение изменений редактирования/добавления по месту.
+          * @returns {EndEditResult} Выше приведён список констант, которые можно возвращать из обработчка события для выполнения соответствующего действия.
+          * Если возвращается любое другое значение, не соответствующее константе, оно будет проигнорировано, в результате происходит сохранение изменений редактирования/добавления по месту.
           */
          /**
           * @event onAfterEndEdit Происходит после окончания редактирования по месту.
@@ -325,9 +330,9 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * @typedef {String} EndEditResult
           * @variant Cancel Отменить завершение редактирования/добавления.
-          * @variant Save Завершить редактирование/добавление с сохранением изменений логике, которая установленной по умолчанию.
-          * @variant NotSave Завершить редактирование/добавление без сохранения изменений. Использование данной константы в режиме добавления по месту приводит к автоудалению созданной записи.
-          * @variant CustomLogic Завершить редактирование/добавление с сохранением изменений по пользовательской логике. Используется, например, при добавлении по месту, когда разработчику необходимо самостоятельно обработать добавляемую запись.
+          * @variant Save Завершить редактирование/добавление с сохранением изменений согласно логике, которая установлена по умолчанию.
+          * @variant NotSave Завершить редактирование/добавление без сохранения изменений. <b>Внимание:</b> использование данной константы в режиме добавления по месту приводит к автоудалению созданной записи.
+          * @variant CustomLogic Завершить редактирование/добавление с сохранением изменений согласно логике, которая определена прикладным разработчиком. Используется, например, при добавлении по месту, когда разработчику необходимо самостоятельно обработать добавляемую запись.
           */
          /**
           * @typedef {String} BeginMoveResult
@@ -2584,6 +2589,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _hideItemsToolbar: function (animate) {
             if (this._itemsToolbar) {
                this._itemsToolbar.hide(animate);
+               this._touchSupport && this._clearHoveredItem();
             }
          },
          _getItemsToolbar: function() {
@@ -4431,20 +4437,27 @@ define('js!SBIS3.CONTROLS.ListView',
             //В таком случае и наш idArray изменится по ссылке, и в событие onEndDelete уйдут некорректные данные
             idArray = Array.isArray(idArray) ? cFunctions.clone(idArray) : [idArray];
             message = message || (idArray.length !== 1 ? rk("Удалить записи?", "ОперацииНадЗаписями") : rk("Удалить текущую запись?", "ОперацииНадЗаписями"));
-            return fcHelpers.question(message).addCallback(function(res) {
-               if (res) {
-                  beginDeleteResult = self._notify('onBeginDelete', idArray);
-                  if (beginDeleteResult instanceof Deferred) {
-                     beginDeleteResult.addCallback(function(result) {
-                        self._deleteRecords(idArray, result);
-                     }).addErrback(function (result) {
-                        fcHelpers.alert(result);
-                     });
-                  } else {
-                     self._deleteRecords(idArray, beginDeleteResult);
-                  }
+            InformationPopupManager.showConfirmDialog({
+               message: message,
+               hasCancelButton: false,
+               opener: self
+            }, function() {
+               beginDeleteResult = self._notify('onBeginDelete', idArray);
+               if (beginDeleteResult instanceof Deferred) {
+                  beginDeleteResult.addCallback(function(result) {
+                     self._deleteRecords(idArray, result);
+                  }).addErrback(function (result) {
+                     InformationPopupManager.showMessageDialog(
+                        {
+                           message: result.message,
+                           opener: self,
+                           status: 'error'
+                        }
+                     );
+                  });
+               } else {
+                  self._deleteRecords(idArray, beginDeleteResult);
                }
-               return res;
             });
          },
 
@@ -4462,7 +4475,13 @@ define('js!SBIS3.CONTROLS.ListView',
                      self._syncSelectedKeys();
                   }
                }).addErrback(function (result) {
-                  fcHelpers.alert(result)
+                  InformationPopupManager.showMessageDialog(
+                     {
+                        message: result.message,
+                        opener: self,
+                        status: 'error'
+                     }
+                  );
                }).addBoth(function (result) {
                   self._toggleIndicator(false);
                   self._notify('onEndDelete', idArray, result);

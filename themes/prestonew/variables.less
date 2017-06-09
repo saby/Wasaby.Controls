@@ -973,7 +973,7 @@
 @list-view-items-toolbar-vertical-locked-box-shadow: -2px 2px 5px @data-grid-row-hover-bg;
 @list-view-items-toolbar-line-height:                1.75rem;
 @list-view-items-toolbar-vertical-line-height:       0.86rem;
-@list-view-items-toolbar-locked-bg:                  transparent;
+@list-view-items-toolbar-locked-bg:                  @basic-block-bg-color;
 @list-view-items-toolbar-icon-size:                  1.785rem;
 @touch-mode-items-toolbar-icon-margin-top:           -0.86rem;
 @list-view-actions-active-bg: @data-grid-bg;
@@ -985,7 +985,6 @@
 @list-view-actions-menu-close-right:            .14rem;
 @list-view-actions-menu-close-height:           1.75rem;
 @list-view-actions-menu-close-width:            1.75rem;
-@list-view-actions-menu-padding:                @menu-padding;
 
 @listView-empty-data-color:                     #8991A9;
 @listView-empty-data-font-size:                1rem;
@@ -1158,7 +1157,7 @@
 
 @controls-filterButton-button-arrow-margin:       -.14rem;;
 
-@controls-filterButton-area-header-padding:       .35714rem 3rem 8px 12px;
+@controls-filterButton-area-header-padding:       .29rem 3rem .29rem .43rem;
 
 @controls-filterButton-area-text-size:            1.43rem;
 @controls-filterButton-area-text-color:           #e4e4e4;
@@ -1231,7 +1230,7 @@
 @breadcrumbs-top:                                  0;
 @breadcrumbs-smallItems-font-size:                 1.43rem;
 @breadcrumbs-arrow-top:                            0;
-@breadcrumbs-small-items-top:                      .3rem;
+@breadcrumbs-small-items-top:                      .4rem;
 
 // EditDialog
 @editdialog-applybutton-width:                     auto;
@@ -1367,12 +1366,8 @@
 @tab-buttons-border-bottom-height:          0.01rem;
 @controls-toolbar-item-margin-right:        0;
 @dropdownlist-item-text-color:              #202835;
+@controls-editInPlace-editor-bg:			   @basic-block-bg-color;
 @controls-FieldLink-picker-show-color:		#F0F5FB;
-@controls-editInPlace-editor-bg:			transparent;
-
- @list-view-loading-indicator-gradient-bg: url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to top,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
-  @list-view-loading-indicator-gradient-bg-up: url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to bottom,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
-
 @textbox-font-size:							1.43rem;
 @scroll-pager-bg:							transparent;
 
@@ -1485,14 +1480,14 @@
 
 @formatted-text-box-wrapper-padding:                 .3rem 0.57rem 0px 12px;
 @image-bar-height:                                  3.57rem;
+@image-bar-vertical-padding:                        0.245rem;
+@image-bar-horizontal-padding:                      0;
 @image-bar-bg-color:                      rgba(102,170,221, .5);
-@image-bar-button-bottom-padding:         1rem;
 @date-range-big-choose-bg-hovered-color:           rgba(0, 0, 0, 0.3);
 
 @money-text-box-decimals-padding: 0;
 @money-text-box-decimals-font-size: 1.43rem;
 @money-text-box-decimals-color: @default-text-color;
-@money-text-box-decimals-background-color: transparent;
 @header-color:                              #e4e4e4;
 
 @gray-lamantin-color:                               #8991A9;

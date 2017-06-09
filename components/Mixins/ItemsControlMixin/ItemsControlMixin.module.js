@@ -698,7 +698,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @see setItemsSortMethod
              * @see WS.Data/Display/Collection#setSort
              */
-            itemsSortMethod: undefined,
+            itemsSortMethod: null,
             itemsFilterMethod: undefined,
             easyGroup: false,
             task1173537554: false,
@@ -1633,7 +1633,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (!error.canceled) {
             this._toggleIndicator(false);
             if (this._notify('onDataLoadError', error) !== true && !error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
-               error.message = error.message.toString().replace('Error: ', '');
                InformationPopupManager.showMessageDialog(
                  {
                     message: error.message,

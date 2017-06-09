@@ -140,6 +140,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          _onBeforeCloseHandler: undefined,
          _onAfterShowHandler: undefined,
          _onRecordChangeHandler: undefined,
+         _needUpdateAlways: false, //Сохранять запись всегда, даже когда не было изменений
          _options: {
             /**
              * @cfg {String} Устанавливает первичный ключ записи {@link record}.
@@ -821,7 +822,7 @@ define('js!SBIS3.CONTROLS.FormController', [
             },
             self = this;
 
-         if (this._options.record.isChanged() || self._newRecord) {
+         if (this._options.record.isChanged() || self._newRecord || this._needUpdateAlways) {
             this._updateDeferred = this._dataSource.update(this._getRecordForUpdate()).addCallback(function (key) {
                self.getRecord().acceptChanges(); //Выпилить вообще весь функционал _getRecordForUpdate, задача с отправкой только измененных полей решается через опцию sbisService
                updateConfig.additionalData.key = key;

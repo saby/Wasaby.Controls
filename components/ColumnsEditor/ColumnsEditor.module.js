@@ -26,7 +26,8 @@ define('js!SBIS3.CONTROLS.ColumnsEditor', [
             _dotTplFn: dotTplFn,
             $protected: {
                _options: {
-                  title: 'Отображение колонок'
+                  title: 'Отображение колонок',
+                  moveColumns: true
                }
             },
             $constructor: function() {
@@ -61,6 +62,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditor', [
                      columns: this._columnsEditorConfig.columns,
                      selectedColumns: this._columnsEditorConfig.selectedColumns,
                      title: this._options.title,
+                     moveColumns: this._options.moveColumns,
                      handlers: {
                         onSelectedColumnsChange: function(event, selectedColumns) {
                            self._notify('onSelectedColumnsChange', selectedColumns);

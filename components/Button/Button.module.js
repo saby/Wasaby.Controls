@@ -5,6 +5,7 @@ define('js!SBIS3.CONTROLS.Button',
       'js!SBIS3.CORE.Control/Control.compatible',
       "js!SBIS3.CORE.AreaAbstract/AreaAbstract.compatible",
       'js!SBIS3.CORE.BaseCompatible',
+      'js!SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor',
       'js!SBIS3.CONTROLS.Button/Button.compatible',
       'js!WS.Data/Entity/InstantiableMixin',
       'tmpl!SBIS3.CONTROLS.Button',
@@ -18,6 +19,7 @@ define('js!SBIS3.CONTROLS.Button',
              ControlCompatible,
              AreaAbstractCompatible,
              BaseCompatible,
+             WsCompatibleConstructor,
              ButtonCompatible,
              InstantiableMixin,
              template,
@@ -80,7 +82,14 @@ define('js!SBIS3.CONTROLS.Button',
     *    <option name='caption' value='Кнопка'></option>
     * </component>
     */
-   var Button = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, ButtonCompatible, InstantiableMixin, ControlGoodCode],
+   var Button = extend.extend([AbstractCompatible,
+         ControlCompatible,
+         AreaAbstractCompatible,
+         BaseCompatible,
+         WsCompatibleConstructor,
+         ButtonCompatible,
+         InstantiableMixin,
+         ControlGoodCode],
       {
          _controlName: 'SBIS3.CONTROLS.Button',
          _template: template,
@@ -111,6 +120,9 @@ define('js!SBIS3.CONTROLS.Button',
          },
 
          _onMouseDown: function () {
+            if (!this._options.enabled) {
+               return;
+            }
             this._isActiveByClick = true;
          },
 
