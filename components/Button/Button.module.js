@@ -10,8 +10,9 @@ define('js!SBIS3.CONTROLS.Button',
       'js!WS.Data/Entity/InstantiableMixin',
       'tmpl!SBIS3.CONTROLS.Button',
       'Core/core-functions',
+      "js!SBIS3.CORE.Control/ControlGoodCode",
       'css!SBIS3.CONTROLS.Button'
-   ],
+         ],
 
    function (extend,
              AbstractCompatible,
@@ -22,7 +23,8 @@ define('js!SBIS3.CONTROLS.Button',
              ButtonCompatible,
              InstantiableMixin,
              template,
-             functions) {
+             functions,
+             ControlGoodCode) {
 
    'use strict';
 
@@ -86,7 +88,8 @@ define('js!SBIS3.CONTROLS.Button',
          BaseCompatible,
          WsCompatibleConstructor,
          ButtonCompatible,
-         InstantiableMixin],
+         InstantiableMixin,
+         ControlGoodCode],
       {
          _controlName: 'SBIS3.CONTROLS.Button',
          _template: template,
@@ -165,11 +168,25 @@ define('js!SBIS3.CONTROLS.Button',
          },
 
          _onMouseEnter: function(e){
+            this._showExtendedTooltipCompatible();
             this._notify('onMouseEnter', e);
          },
 
          _onMouseLeave: function(e){
+            if(this.isActive()) {
+               this._hideExtendedTooltipCompatible();
+            }
             this._notify('onMouseLeave', e);
+         },
+
+         _onFocusIn: function(e){
+            var self = this;
+            this._showExtendedTooltipCompatible();
+         },
+
+         _onFocusOut: function(e){
+            var self = this;
+            this._hideExtendedTooltipCompatible();
          }
          //</editor-fold>
       });
