@@ -945,7 +945,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._toggleEventHandlers(this._container, true);
 
             this.initEditInPlace();
-            this.setItemsDragNDrop(this._options.itemsDragNDrop);
+            this._setItemsDragNDrop(this._options.itemsDragNDrop);
             dispatcher.declareCommand(this, 'activateItem', this._activateItem);
             dispatcher.declareCommand(this, 'beginAdd', this._beginAdd);
             dispatcher.declareCommand(this, 'beginEdit', this._beginEdit);
@@ -3797,8 +3797,14 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see getItemsDragNDrop
           */
          setItemsDragNDrop: function(allowDragNDrop) {
+            if (this._options.itemsDragNDrop != allowDragNDrop) {
+               this._setItemsDragNDrop(allowDragNDrop)
+            }
+         },
+
+         _setItemsDragNDrop: function(allowDragNDrop) {
             this._options.itemsDragNDrop = allowDragNDrop;
-            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item',  this._getDragInitHandler());
+            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', this._getDragInitHandler());
          },
 
          /**
