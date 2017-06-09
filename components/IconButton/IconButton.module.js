@@ -65,6 +65,11 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
       iWantVDOM: false,
       _doNotSetDirty: true,
 
+      constructor: function(cfg) {
+         cfg.tooltip = cfg.tooltip || cfg.caption;
+         IconButton.superclass.constructor.call(this, cfg);
+      },
+
       /*TODO: Удалить при переходе на VDOM*/
       _containerReady:function(container){
          if (window) {
