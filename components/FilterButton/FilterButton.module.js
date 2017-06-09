@@ -163,7 +163,9 @@ define('js!SBIS3.CONTROLS.FilterButton',
                  /**
                   * @cfg {String}
                   */
-                internalContextFilterName : 'sbis3-controls-filter-button'
+                internalContextFilterName : 'sbis3-controls-filter-button',
+                
+                _fastFilterButton: false // FIXME временная опция, позже включить везде
              },
 
              _pickerContext: null,        /* Контекст пикера */
@@ -186,10 +188,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
              declareCmd('show-filter', showPicker);
              declareCmd('change-field-internal', this._changeFieldInternal.bind(this));
 
-             if(this._options.resetLinkText) {
-                this._filterLineInitialized = true;
-             }
-
              this._checkPickerContent = once.call(this._checkPickerContent);
              this.getContainer().on('click', '.controls__filterButton__filterLine-items, .controls__filterButton-button', showPicker);
           },
@@ -204,13 +202,19 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 FilterButton.superclass.showPicker.call(self);
              });
           },
+          
+          _modifyOptions: function() {
+              var opts = FilterButton.superclass._modifyOptions.apply(this, arguments);
+              opts._filterLineInitialized = opts.resetLinkText || !opts._fastFilterButton;
+              return opts;
+          },
 
           _recalcInternalContext: function () {
              FilterButton.superclass._recalcInternalContext.call(this);
-             if(!this._filterLineInitialized && this.getLinkedContext().getValue('filterChanged')) {
+             if(!this._options._filterLineInitialized && this.getLinkedContext().getValue('filterChanged')) {
                 this.getContainer().prepend(this._options._filterLineTpl(this._options));
                 this.reviveComponents();
-                this._filterLineInitialized = true;
+                this._options._filterLineInitialized = true;
              }
           },
 

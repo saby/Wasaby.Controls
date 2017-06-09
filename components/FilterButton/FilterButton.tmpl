@@ -1,5 +1,5 @@
 <div class="controls__filterButton {{ 'controls__filterButton-' + filterAlign }}">
-    <ws:if data="{{ resetLinkText }}">
+    <ws:if data="{{ resetLinkText || !_fastFilterButton}}">
         <ws:partial template="{{ _filterLineTpl }}" scope="{{...}}"/>
     </ws:if>
     <ws:SBIS3.CONTROLS.IconButton
