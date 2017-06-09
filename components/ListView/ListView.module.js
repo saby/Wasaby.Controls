@@ -521,18 +521,6 @@ define('js!SBIS3.CONTROLS.ListView',
                 * ![](/allowChangeEnable.png)
                 * Подробнее о настройке таких действий вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">Быстрый доступ к операциям по наведению курсора</a>.
                 *
-                * @faq Почему нет чекбоксов в режиме множественного выбора значений (активация режима производится опцией {@link SBIS3.CONTROLS.ListView#multiselect multiselect})?
-                * Для отрисовки чекбоксов необходимо в шаблоне отображения элемента коллекции обозначить их место.
-                * Для отображения чекбоксов необходимо обозначить их место в шаблоне отображения элемента коллекции.
-                * Сделать это можно используя CSS-классы "controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox".
-                * В данном примере тег span обозначает место отображения чекбокса:
-                * <pre>
-                *     <div class="listViewItem" style="height: 30px;">
-                *        <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></span>
-                *        {{=it.item.get("title")}}
-                *     </div>
-                * </pre>
-                *
                 * @example
                 * <b>Пример 1.</b> Конфигурация операций через вёрстку компонента.
                 * <pre>
