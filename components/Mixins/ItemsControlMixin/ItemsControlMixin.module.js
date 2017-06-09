@@ -698,7 +698,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @see setItemsSortMethod
              * @see WS.Data/Display/Collection#setSort
              */
-            itemsSortMethod: undefined,
+            itemsSortMethod: null,
             itemsFilterMethod: undefined,
             easyGroup: false,
             task1173537554: false,
