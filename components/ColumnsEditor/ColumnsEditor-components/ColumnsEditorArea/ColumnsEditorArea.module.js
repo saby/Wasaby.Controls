@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea', [
                   _selectableItems: [],
                   _selectableMarkedKeys: [],
                   _itemContentTpl: ItemContentTpl,
-                  moveMode: true,
+                  moveColumns: true,
                   columns: undefined,
                   selectedColumns: [],
                   title: ''
@@ -60,7 +60,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea', [
                ColumnsEditorArea.superclass.init.apply(this, arguments);
                this._fixedView = this.getChildControlByName('controls-ColumnsEditorArea__FixedView');
                this._selectableView = this.getChildControlByName('controls-ColumnsEditorArea__SelectableView');
-               if (this._options.moveMode) {
+               if (this._options.moveColumns) {
                   this._itemsMoveController = new ItemsMoveController({
                      linkedView: this._selectableView
                   });
