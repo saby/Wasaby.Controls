@@ -326,7 +326,8 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             target = DragObject.getTarget(),
             models = [],
             dropBySelf = false,
-            source = DragObject.getSource();
+            source = DragObject.getSource(),
+            isMove = false;
 
          if (target && source) {
             var  targetsModel = target.getModel();
@@ -344,28 +345,30 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
                DragObject.getSource().each(function (item) {
                   domItems.push(item.getDomElement());
                });
-               var isMove = this._getMover().checkRecordsForMove(models, target.getModel(), position);
-               this._getView().move(models, target.getModel(), position).addCallback(function(result){
-                  if (result) {
-                     this.removeItemsSelectionAll();
-                  }
-                  if (this._options.useDragPlaceHolder && isMove) {
-                     this._getView().once('onDrawItems', function () {
-                        //это нужно что бы изменения верстки произошли в одном "потоке", что бы не прыгали элементы
-                        //когда удалется плейсходер и переносится реальный элемент
-                        //здесь поможет виртуалдом
-                        this._clearDragHighlight();
-                        domItems.forEach(function (elem) {
-                           elem.removeClass('ws-hidden');
-                        });
+               isMove = this._getMover().checkRecordsForMove(models, target.getModel(), position);
+               if (isMove) {
+                  this._getView().move(models, target.getModel(), position).addCallback(function (result) {
+                     if (result) {
+                        this.removeItemsSelectionAll();
+                     }
+                     if (this._options.useDragPlaceHolder && isMove) {
+                        this._getView().once('onDrawItems', function () {
+                           //это нужно что бы изменения верстки произошли в одном "потоке", что бы не прыгали элементы
+                           //когда удалется плейсходер и переносится реальный элемент
+                           //здесь поможет виртуалдом
+                           this._clearDragHighlight();
+                           domItems.forEach(function (elem) {
+                              elem.removeClass('ws-hidden');
+                           });
+                           this._removeDragPlaceHolder();
+                        }.bind(this));
+                     } else {
                         this._removeDragPlaceHolder();
-                     }.bind(this));
-                  } else {
+                     }
+                  }.bind(this)).addErrback(function () {
                      this._removeDragPlaceHolder();
-                  }
-               }.bind(this)).addErrback(function () {
-                  this._removeDragPlaceHolder();
-               }.bind(this));
+                  }.bind(this));
+               }
             } else {
                var currentDataSource = this._getView().getDataSource(),
                   dragOwner = DragObject.getOwner(),
@@ -378,6 +381,10 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
                }
                this._getMover().moveFromOutside(DragObject.getSource(), DragObject.getTarget(), dragOwner.getItems(), useDefaultMove);
             }
+         }
+         if (!isMove) {
+            this._toggleDragItems(dragObject, true);
+            this._removeDragPlaceHolder();
          }
          this._clearDragHighlight();
       },
