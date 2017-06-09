@@ -2589,6 +2589,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _hideItemsToolbar: function (animate) {
             if (this._itemsToolbar) {
                this._itemsToolbar.hide(animate);
+               this._touchSupport && this._clearHoveredItem();
             }
          },
          _getItemsToolbar: function() {
