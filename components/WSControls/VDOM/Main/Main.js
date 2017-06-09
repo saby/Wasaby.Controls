@@ -31,6 +31,15 @@ define('js!WSControls/VDOM/Main/Main', [
          constructor: function(cfg) {
 
             this._list = cfg._list || new ObservableList({ items: [] });
+            if (cfg.arrItems) {
+               for(var i=0;i<cfg.arrItems.length;i++){
+                  this._list.add(new TODO({
+                     rawData: {
+                        title: cfg.arrItems[i]
+                     }
+                  }));
+               }
+            }
             Main.superclass.constructor.call(this, cfg);
             //Мы должны быть готовы к тому, что при оживлении компонента в браузере
             //он уже когда-то был оживлен и построен на сервере.
