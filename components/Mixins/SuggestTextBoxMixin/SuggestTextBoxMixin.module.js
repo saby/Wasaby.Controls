@@ -55,7 +55,11 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             /**
              * @cfg {Boolean} Использовать механизм смены неверной раскладки
              */
-            keyboardLayoutRevert: true
+            keyboardLayoutRevert: true,
+            /**
+             * @cfg {Boolean} Использовать механизм смены неверной раскладки по новому стандарту
+             */
+            keyboardLayoutRevertNew: true
          }
       },
       $constructor: function () {
@@ -147,7 +151,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                searchParamName: this._options.searchParam,
                doNotRespondOnReset: true,
                searchFormWithSuggest: true,
-               keyboardLayoutRevertNew: true
+               keyboardLayoutRevertNew: this._options.keyboardLayoutRevertNew
             });
             this._searchController.bindSearch();
          });
