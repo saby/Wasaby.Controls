@@ -1,7 +1,8 @@
 define('js!SBIS3.CONTROLS.FilterPanelItem', [
-   "Core/Context",
-   "js!SBIS3.CONTROLS.CompoundControl",
-   "tmpl!SBIS3.CONTROLS.FilterPanelItem"
+   'Core/Context',
+   'js!SBIS3.CONTROLS.CompoundControl',
+   'tmpl!SBIS3.CONTROLS.FilterPanelItem',
+   'tmpl!SBIS3.CONTROLS.FilterPanelItem/resources/FilterPanelItemSpoilerRightPartTitleTemplate'
 ], function (cContext, CompoundControl, dotTplFn) {
    /**
     * Миксин, задающий любому контролу поведение работы с набором фильтров.
@@ -36,6 +37,17 @@ define('js!SBIS3.CONTROLS.FilterPanelItem', [
             cfg = FilterPanelItem.superclass._modifyOptions.apply(this, arguments);
          this._prepareFilterContext(cfg);
          return cfg;
+      },
+
+      init: function() {
+         FilterPanelItem.superclass.init.apply(this, arguments);
+         if (this._options.item.get('template') !== 'js!SBIS3.CONTROLS.FilterPanelBoolean') {
+            this.getChildControlByName('FilterPanelItemSpoiler').subscribe('onExpandedChange', this._onExpandedChange.bind(this));
+         }
+      },
+
+      _onExpandedChange: function(event, expanded) {
+         this._options.item.set('expanded', expanded);
       },
 
       _prepareFilterContext: function(cfg) {

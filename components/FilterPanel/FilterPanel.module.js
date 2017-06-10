@@ -16,7 +16,6 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
    'tmpl!SBIS3.CONTROLS.FilterPanel/resources/FilterPanelItemContentTemplate',
    'tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser',
    'tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateDataRange',
-   'tmpl!SBIS3.CONTROLS.FilterPanel/resources/FilterPanelSpoilerRightPartTitleTemplate',
    'js!SBIS3.CONTROLS.Link',
    'js!SBIS3.CONTROLS.Accordion',
    'js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList',
