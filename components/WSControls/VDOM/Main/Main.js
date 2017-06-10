@@ -92,7 +92,8 @@ define('js!WSControls/VDOM/Main/Main', [
          },
          onToggleCompletedAll: function (event) {
             var needCompleted = this.activeCount() > 0;
-            this._list.each(item => item.set('completed', needCompleted));
+
+            this._list.each(function(item){ item.set('completed', needCompleted)});
             this._save();
          },
          onChangeFilter: function (event, filter) {
@@ -100,14 +101,15 @@ define('js!WSControls/VDOM/Main/Main', [
          },
          clearCompleted: function () {
             //можно заменить на мутабельный алгоритм
-            this._list.assign(Chain(this._list).filter(item => item.get('completed') != true).toArray());
+            this._list.assign(Chain(this._list).filter(function(item){return item.get('completed') != true}).toArray());
             this._save();
          },
          filteredList: function () {
             // todo ownerShip - Это костыль. он позволяет извещать старый list об измениях. чтобы этого не было надо заюзать
             // _removeObservableListeners и _addObservableListenters
-            return new ObservableList({ items: Chain(this._list).filter((item) => {
-               switch (this._filter) {
+            var self = this;
+            return new ObservableList({ items: Chain(this._list).filter(function(item) {
+               switch (self._filter) {
                   case 'active':
                      return item.get('completed') === false;
                   case 'completed':
@@ -120,7 +122,7 @@ define('js!WSControls/VDOM/Main/Main', [
             ownerShip: false});
          },
          activeCount: function () {
-            return Chain(this._list).reduce((count, item) => {
+            return Chain(this._list).reduce(function(count, item) {
                return item.get('completed') ? count : count + 1
             }, 0);
          },
