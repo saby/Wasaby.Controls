@@ -1,6 +1,8 @@
 .controls-Slider {
-   padding-top: 8px;
-
+   padding: 8px 6px 0 6px;
+   &.controls-Slider__big {
+      padding: 8px 10px 0 10px;
+   }
    &__withBorder {
 
       .controls-Slider__wrapper {
@@ -14,29 +16,23 @@
       position: relative;
       height: 12px;
       padding: 6px 0;
-      width: ~"calc(100% - 12px)";
 
       &.controls-Slider__big {
          height: 20px;
          padding: 2px 0;
-         width: ~"calc(100% - 20px)";
 
          .controls-Slider__point{
             width: 16px;
             height: 16px;
+            margin-left: -10px;
             border-radius:  10px;
          }
 
          .controls-Slider__line {
             margin-top: 9px;
-
-            &.controls-Slider__line__empty {
-              // padding-right: 20px; //todo: delete in 150
-            }
          }
          .controls-Slider__line__wrapper {
             height: 20px;
-            padding-right: 20px;//todo: delete in 150
          }
       }
    }
@@ -47,6 +43,7 @@
       display: inline-block;
       width: 8px;
       height: 8px;
+      margin-left: -6px;
       border: 2px solid #587AB0;
       border-radius:  6px;
       background-color: white;
@@ -74,7 +71,6 @@
 
       &__empty {
          background-color: #cccccc;
-         //padding-right: 12px;//todo: delete in 150
       }
 
       &__full {
@@ -86,7 +82,6 @@
          position: absolute;
          height: 12px;
          width: 100%;
-         padding-right: 12px;//todo: delete in 150
       }
    }
 
@@ -119,4 +114,37 @@
          background-color: #cccccc;
       }
    }
+   &__scale {
+      .flexbox();
+      .justify-content(space-between);
+      .align-items(baseline);
+   }
+   &__segment{
+      color:#cccccc;
+      font-size: 14px;
+      display: inline-flex;
+      justify-content: center;
+      width: 0;
+      position: relative;
+      &:after{
+         content: ' ';
+         position: absolute;
+         top: -12px;
+         width: 1px;
+         height: 4px;
+         display: block;
+         background-color: #ccc;
+         left: 0;
+      }
+      &:first-child {
+         justify-content: flex-start;
+      }
+      &:last-child{
+         &:after{
+            left: -1px;
+         }
+         justify-content: flex-end;
+      }
+   }
+
 }

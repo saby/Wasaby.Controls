@@ -107,7 +107,11 @@ define('js!SBIS3.CONTROLS.Slider',
                    /**
                     * @cfg {Boolean} Устанавливает отображение больших ползунков слайдера.
                     */
-                  bigPoint: false//TODO:setter/getter
+                  bigPoint: false,//TODO:setter/getter,
+                  /**
+                   * @cfg {array} шкала под слайдером
+                   */
+                  scale: false
                },
                _endValue: 0,
                _startValue: 0,
@@ -278,12 +282,14 @@ define('js!SBIS3.CONTROLS.Slider',
             },
 
             _beginDragHandler: function(DragObject, event) {
+               var
+                  dotSizes = event.target.getBoundingClientRect();
                this._dragInProcess = true;
                this._container.find('.controls-Slider__point').removeClass('lastActivePoint');
                $(event.target).addClass('lastActivePoint');
                DragObject.setOwner(this);
                DragObject.setTarget(event.target);
-               this._shift =  event.pageX - event.target.getBoundingClientRect().left - pageXOffset;
+               this._shift =  event.pageX - dotSizes.left - dotSizes.width / 2 - pageXOffset;
             },
 
             _onDragHandler: function(DragObject, event) {
@@ -317,7 +323,7 @@ define('js!SBIS3.CONTROLS.Slider',
                 var
                   width = this._container.width(),
                   rangeLength = this._options.maxValue - this._options.minValue,
-                  percent = (pageX - this._shift - this._wrapper[0].getBoundingClientRect().left - pageXOffset) / (width - constants.pointWidth[this._options.bigPoint ? 'big' : 'small']); //дробная часть от того что надо выделить
+                  percent = (pageX - this._shift - this._wrapper[0].getBoundingClientRect().left - pageXOffset) / width; //дробная часть от того что надо выделить
                 return this._options.minValue + percent * rangeLength;
             },
 
