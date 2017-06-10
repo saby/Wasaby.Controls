@@ -85,6 +85,18 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
                }
                //return false;
             });
+
+            container.on("mouseenter", function (e) {
+               self._showExtendedTooltipCompatible();
+               //return false;
+            });
+
+            container.on("mouseleave", function (e) {
+               if(self.isActive()) {
+                  self._hideExtendedTooltipCompatible();
+               }
+               //return false;
+            });
          }
          /*TODO оставляем добавку класса через jquery
           * чтобы избавиться - надо убрать зависимость от icons.css
