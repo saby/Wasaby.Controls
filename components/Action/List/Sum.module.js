@@ -7,10 +7,9 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
    "js!WS.Data/Source/SbisService",
    "js!WS.Data/Entity/Model",
    "Core/core-instance",
-   "Core/helpers/functional-helpers",
    "js!WS.Data/Adapter/Sbis"
 ],
-    function ( Deferred,ActionBase, ListMixin, DialogMixin, SbisService, Model, cInstance, fHelpers) {
+    function ( Deferred,ActionBase, ListMixin, DialogMixin, SbisService, Model, cInstance) {
         'use strict';
         /**
          * Класс суммирования полей в списке
