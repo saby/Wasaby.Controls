@@ -54,8 +54,8 @@ define('js!WSControls/Control/Base',
 
             _overrideChildrenOptions: function(childOptions) {
                var
-                  visible = this.visible!==undefined?this.visible:true,
-                  enabled = this.enabled!==undefined?this.enabled:true;
+                  visible = this._options.visible!==undefined?this._options.visible:true,
+                  enabled = this._options.enabled!==undefined?this._options.enabled:true;
 
                if (!visible || !enabled) {
                   if (!visible) {
@@ -104,8 +104,6 @@ define('js!WSControls/Control/Base',
             _getMarkup: function(rootKey) {
                var decOpts = this._prepareDecOptions();
                return this._template(this, decOpts, rootKey, true)[0];
-
-
             },
 
             _applyChangedOptions: function(newOptions) {
