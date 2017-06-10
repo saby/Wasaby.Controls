@@ -323,8 +323,12 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          }
       },
 
-      reload: fHelpers.nop,
-      _setSelectedItems: fHelpers.nop
+      reload: function () {
+         
+      },
+      _setSelectedItems: function () {
+         
+      }
    });
 
    return SelectorButton;
