@@ -231,7 +231,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          this._container.toggleClass('controls-operationsPanel__massMode', !idArray.length)
                         .toggleClass('controls-operationsPanel__selectionMode', !!idArray.length);
 
-         if (this._isVisible()) {
+         if (this.isVisible()) {
             this._onSelectedItemsChange(idArray);
          } else {
             this.once('onDrawItems', function() {
