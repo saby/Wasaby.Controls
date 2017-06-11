@@ -64,6 +64,9 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
       _useNativeAsMain: true,
       iWantVDOM: false,
       _doNotSetDirty: true,
+      _isWaitingClick: false,
+      _isTouchEnded: true,
+      _touchMoveCount: 0,
 
       /*TODO: Удалить при переходе на VDOM*/
       _containerReady:function(container){
@@ -79,11 +82,37 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
 
             });
 
-            container.on("touchstart  mousedown", function (e) {
-               if ((e.which == 1 || e.type == 'touchstart') && self.isEnabled()) {
+            container.on("touchstart", function (e) {
+               if (self.isEnabled()) {
+                  self._container.addClass('controls-Click__active');
+                  self._isTouchEnded = false;
+                  self._touchMoveCount = 0;
+                  self._isWaitingClick = true;
+               }
+            });
+
+            container.on("touchmove", function (e) {
+               self._touchMoveCount++;
+               if(self._touchMoveCount > 1) {
+                  self._isWaitingClick = false;
+               }
+            });
+
+            container.on("touchend", function (e) {
+               setTimeout(function() {
+                  if(self._isWaitingClick) {
+                     self._isWaitingClick = false;
+                     self._onClickHandler(e)
+                     self._isTouchEnded = true;
+                  }
+               }, 300);
+
+            });
+
+            container.on("mousedown", function (e) {
+               if (e.which == 1 && self.isEnabled()) {
                   self._container.addClass('controls-Click__active');
                }
-               //return false;
             });
 
             container.on("mouseenter", function (e) {
