@@ -1968,7 +1968,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _getCurrentPage: function() {
             var page = 0;
             if (this._scrollBinder) {
-               var scrollPage = this._scrollBinder._getScrollPage();
+               var scrollPage = this._scrollBinder._getScrollPage() || 0;
                page = Math.floor(scrollPage.element.index() / this._limit);
             }
             // прибавим к полученой странице количество еще не загруженных страниц
