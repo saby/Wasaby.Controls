@@ -1074,6 +1074,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             if (inlineStyles) {
                targetElement.replaceWith($(markup).attr('style', inlineStyles));
             } else {
+               if (targetElement.find($(document.activeElement)).length > 0){
+                  this.getContainer().find('.controls-ListView__fakeFocusElement').focus();
+               }
                targetElement.get(0).outerHTML = markup;
             }
 
