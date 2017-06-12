@@ -200,13 +200,22 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
        */
       _getCaretPosition : function(){
          var selection,
+             selectionRange,
              b,
              e,
              l;
+
          if(window.getSelection){
-            selection = window.getSelection().getRangeAt(0);
-            b = selection.startOffset;
-            e = selection.endOffset;
+            selection = window.getSelection();
+            selectionRange = selection.getRangeAt(0);
+            b = selectionRange.startOffset;
+            if(!constants.browser.firefox) {
+                e = selectionRange.endOffset;
+            }else {
+                // TODO перейти на общий механизм работы с FormattedTextBoxBase
+               e = b + selection.toString().length;
+            }
+
          }
          else if(document.selection){
             selection = document.selection.createRange();
