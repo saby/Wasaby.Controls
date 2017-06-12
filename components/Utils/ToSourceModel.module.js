@@ -68,7 +68,7 @@ define('js!SBIS3.CONTROLS.ToSourceModel', [
             отличный от поля с ключём, установленного в поле связи. Это связно с тем, что "связь" устанавливается по опеределённому полю,
             и не обязательному по первичному ключу у записей в списке. */
          Chain(items).each(function(rec) {
-            if(rec.getIdProperty() !== idProperty && rec.get(idProperty) !== undefined) {
+            if(cInstance.instanceOfModule(rec, 'WS.Data/Entity/Model') &&  rec.getIdProperty() !== idProperty && rec.get(idProperty) !== undefined) {
                rec.setIdProperty(idProperty);
             }
          });
