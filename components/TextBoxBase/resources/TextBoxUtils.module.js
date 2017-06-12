@@ -64,7 +64,7 @@ define('js!SBIS3.CONTROLS.TextBoxUtils', ['Core/constants'], function(constants)
       },
 
        setEqualPickerWidth: function(picker) {
-           var textBoxWidth = picker.getTarget()[0].clientWidth,
+           var textBoxWidth = picker.getTarget()[0].getBoundingClientRect().width,
                pickerContainer = picker.getContainer()[0],
                needSetWidth = true,
                minWidth;
