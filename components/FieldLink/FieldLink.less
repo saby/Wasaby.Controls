@@ -6,6 +6,7 @@
 }
 
 .controls-FieldLink__picker {
+  box-sizing: border-box;
    max-height: @controls-FieldLink-picker-max-height;
    min-height: @controls-FieldLink-picker-min-height;
    border: @controls-FieldLink-border @gray-ccc-color;
@@ -174,7 +175,7 @@
    }
 
    &.ws-disabled {
-      
+
       .controls-TextBox__placeholder, .controls-TextBox__afterFieldWrapper {
          display: none;
       }
@@ -195,7 +196,7 @@
          display: none;
       }
    }
-   
+
    .controls-FieldLink__dropAllLinks {
       color: @controls-FieldLink-link-color;
       display: none;
@@ -340,7 +341,7 @@
 .ws-is-firefox {
    .controls-FieldLink {
       vertical-align: middle;
-      
+
       .controls-FieldLink__item-cross {
          top: -1px;
       }
