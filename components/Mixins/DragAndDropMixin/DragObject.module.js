@@ -197,7 +197,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
                || constants.browser.firefox
             ) {
                //Для touch событий в таргете всегда лежит элемент над которым началось перемещение
-               //тоже самое для firefox
+               //firefox не всегда правильно определяет target
                //Когда курсор быстро двигается он может наезжать на аватар ищем элемент который в него не входит
                var elements = document.elementsFromPoint(this._jsEvent.pageX, this._jsEvent.pageY);
                for (var i=0,len = elements.length; i< len; i++) {
