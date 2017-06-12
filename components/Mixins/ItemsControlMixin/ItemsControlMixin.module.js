@@ -1078,7 +1078,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                 * Если фокус стоит внутри строки - мы его потеряем
                 */
                if (targetElement.find($(document.activeElement)).length > 0){
-                  this.getContainer().find('.controls-ListView__fakeFocusElement').focus();
+                  this._getElementToFocus().focus();
                }
                targetElement.get(0).outerHTML = markup;
             }
