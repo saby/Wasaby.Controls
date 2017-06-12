@@ -90,12 +90,6 @@ body {
     font-size: 1.43rem !important;
      border: none !important;
     color: #2D68B5 !important;
-    .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16, .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
-        font-size: 1.43rem !important;
-        color: #2D68B5 !important;
-        border: none !important;
-        left: 7px;
-    }
 
     .controls-DateBox {
       min-height: 3rem;
@@ -107,12 +101,9 @@ body {
   display: none;
 }
 
-.controls-DateRangeBigChoose .controls-DateRangeBigChoose__header {
-    height: 3.57rem;
-}
-
 .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__header-rangeDash {
-  border-color: #2c3e50;
+   border-color: rgba(96, 170, 221, 0.15);
+   border-width: 0.072rem;
 }
 
 .ws-enabled .icon-primary{
@@ -124,11 +115,6 @@ body {
 .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16 {
     font-size: inherit !important;
 
-}
-.controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
-         font-size: 1.43rem !important;
-        border: none !important;
-        left: 7px;
 }
 .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16 {
        font-size: 1.43rem !important;
@@ -149,7 +135,6 @@ body {
       margin-right: 3rem;
     }
     .controls-DateBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
-      height: 2.4rem;
       max-width: 4.4285rem;
     }
 
@@ -169,53 +154,19 @@ body {
       top: 50%
     }
 
-    .ws-info-box {
-      background: @basic-block-bg-color;
-      color: @default-text-color;
-      border: 2px solid @link-text-color;
-      padding: 0.285rem 1.428rem 0.285rem 0.38rem;
-      &.ws-infobox-direction-top {
-         > .ws-info-box-balloon {
-            border-bottom-color: @link-text-color;
-            &:after {
-               border-left-color: @link-text-color;
-               border-top-color: @link-text-color;
-            }
-         }
-      }
-      &.ws-infobox-direction-bottom {
-         > .ws-info-box-balloon {
-            border-top-color: @link-text-color;
-            &:after {
-               border-right-color: @link-text-color;
-               border-bottom-color: @link-text-color;
-            }
-         }
-      }
-
-      .ws-infobox-content {
-         color: @default-text-color;
-         p {
-            margin: 0 20px 8px 0;
-            font-size: 1.43rem;
-            color: @default-text-color;
-         }
-      }
-       .ws-info-box-close-button.icon-disabled{
-          top: -4px;
-          color: @link-text-color!important;
-          &:hover {
-             color: #B9E9FF!important;
-          }
-       }
-    }
-    .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn, body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton {
-      margin-right: 1rem;
+    .controls-IconButton {
+      vertical-align: baseline;
     }
    .controls-DropdownList .controls-DropdownList__selectedItem {
-        display: inline-block;
-
-    }
+      display: inline-block;
+   }
+   .controls-DropdownList__picker {
+      .controls-DropdownList__body {
+         .controls-DropdownListFooter_select .controls-Button__icon.icon-16{
+            font-size: 2.3rem!important;
+         }
+      }
+   }
 
     .ws-float-area-stack-panel-shadow {
         border-left: 2px solid #00a2ef;
@@ -234,7 +185,7 @@ body {
     .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
         font-size: 3rem!important;
         width: 24px;
-        margin-left: -3rem;
+        margin-left: -2.5rem;
         margin-top: initial;
     }
     .controls-DropdownList .controls-DropdownList__selectedItem {
@@ -394,8 +345,11 @@ body {
   background-color: #202835 !important;
 }
 
-.ws-window {
-  background-color: #293543 !important;
+body  .ws-window {
+   background-color: #293543 !important;
+   border-style: solid;
+   border-color: #00a2ef;
+   border-width: 2px;
 }
 .ws-window-content {
   background-color: #2C3E50 !important;
@@ -579,12 +533,6 @@ body {
      font-size: 1.43rem !important;
      border: none !important;
      color: #2D68B5 !important;
-     .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16, .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
-        font-size: 1.43rem !important;
-        color: #2D68B5 !important;
-        border: none !important;
-        left: 7px;
-     }
 
      .controls-DateBox {
         min-height: 3rem;
@@ -597,12 +545,9 @@ body {
 }
 
 .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header {
-    height: 3.57rem;
+    height: 3rem;
 }
 
-.controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__header-rangeDash {
-  border-color: #2c3e50;
-}
 .controls-IconButton.controls-TreeView__editArrow-container {
    margin-top: .07rem;
 }
@@ -618,7 +563,7 @@ body .controls-DateRangeChoose .controls-DateRangeBigChoose__homeBtn .icon-16 {
     border-color: #314559 #314559 #314559 #314559 !important;
  }
  .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateBox .controls-FormattedTextBox__fieldWrapper {
-      border-color: #314559 #314559 #314559 #314559 !important;
+      border-color: rgba(96, 170, 221, 0.15) !important;
  }
  .controls-Button .controls-Button__icon.icon-32 + .controls-Button__text {
      margin-left: 3rem !important;
@@ -642,9 +587,10 @@ body .controls-DateRangeChoose .controls-DateRangeBigChoose__homeBtn .icon-16 {
     background: @basic-block-bg-color;
 }
 
-.controls-DateBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
+.controls-DateBox.controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
     color: #cccccc;
-    height: 3rem;
+    height: 2.7rem;
+    line-height: 2.7rem;
 }
 .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field .controls-FormattedTextBox__field-symbol {
 
@@ -721,20 +667,9 @@ body .controls-DropdownList .controls-DropdownList__selectedItem {
     display: inline-block;
 
 }
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16 {
-    font-size: 3rem!important;
-    margin-left: -2.4rem;
-    margin-top: initial;
-}
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
-    font-size: 3rem!important;
-    width: 24px;
-    margin-left: -6rem;
-    margin-top: initial;
-}
 
 .controls-DateRangeBigChoose__datePickerEnd-wrapper .controls-DateBox {
-  margin-right:3.6rem;
+  margin-right: 1.6rem;
 }
 
 body .controls-DateRangeBigChoose-MonthRangePicker.controls-ListView .controls-DateRangeBigChoose-MonthView.controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableElement.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
@@ -796,7 +731,7 @@ body .controls-DropdownList .controls-DropdownList__selectedItem {
 }
 
 .controls__filter-button__apply-filter {
-    margin-right: 0.4rem;
+    margin-right: 0.29rem;
 }
 .controls__filter-button__clear-filter {
   .controls-Link__field {
@@ -877,8 +812,6 @@ body .ws-window.ws-LoadingIndicator__window {
 
 .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button {
   font-size: 1rem;
-  margin-bottom: 1.1rem;
-  margin-top: -.46rem;
 }
 
 .controls-ComboBox__picker {
@@ -886,7 +819,7 @@ body .ws-window.ws-LoadingIndicator__window {
 }
 .controls-ComboBox__arrowDown {
    &:before {
-      margin: .84rem;
+      margin: .5rem;
    }
 }
 body .controls__filterButton__filterLine {
@@ -914,9 +847,7 @@ body .controls__filterButton__filterLine {
 .controls-DropdownList__picker .controls-DropdownList__item {
   line-height: 3.25rem;
 }
-.controls-DatePicker .controls-DatePicker__calendarWrapper {
-  right: 1rem;
-}
+
 .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper {
   text-align: center;
 }
@@ -936,7 +867,7 @@ body .controls-Browser__filterButton .controls__filterButton__filterLine-text {
     height: 1.43rem;
 }
 body .controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__closeButton {
-    top: .36rem;
+    top: .29rem;
 }
 .controls-PopupMixin__closeButton {
   position: absolute;
@@ -956,36 +887,87 @@ body .controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__cl
 }
 
 body {
-  .ws-info-box {
-    padding: 1rem;
-    .ws-infobox-content {
-      font-size: 1rem;
-      margin-right: 1rem;
-    }
-    .ws-info-box .ws-info-box-close-button.icon-disabled {
-      position: absolute;
-      top: .7rem;
-      right: 6px;
-      cursor: pointer;
-    }
-    .ws-infobox-triangle.ws-infobox-triangle-bottom {
-      bottom: -.54rem;
-      border-right: 2px solid #2d68b5;
-      border-bottom: 2px solid #2d68b5;
-    }
-    .ws-infobox-triangle {
-      width: .857rem;
-      height: .857rem;
+   .ws-info-box {
       background: @basic-block-bg-color;
-    }
-  }
+      color: @default-text-color;
+      border: 2px solid @link-text-color;
+      padding: 0.285rem 1.428rem 0.285rem 0.38rem;
+      .ws-infobox-triangle {
+         width: .857rem;
+         height: .857rem;
+         background: @basic-block-bg-color;
+         &.ws-infobox-triangle-bottom {
+            bottom: -.54rem;
+            border-right: 2px solid @link-text-color;
+            border-bottom: 2px solid @link-text-color;
+         }
+         &.ws-infobox-triangle-top {
+            top: -.54rem;
+            border-left: 2px solid @link-text-color;
+            border-top: 2px solid @link-text-color;
+         }
+      }
+
+      .ws-infobox-content {
+         color: @default-text-color;
+         font-size: 1rem;
+         margin-right: 1rem;
+         p {
+            margin: 0 20px 8px 0;
+            font-size: 1.43rem;
+            color: @default-text-color;
+         }
+      }
+
+      .ws-info-box-close-button.icon-disabled{
+         top: -4px;
+         color: @link-text-color!important;
+         &:hover {
+            color: #B9E9FF!important;
+         }
+      }
+   }
 }
+
 .controls-BreadCrumbs__crumb {
    top: -0.18rem
 }
+.controls-image {
+   .controls-image__image-bar{
+      .icon-16{
+         font-size: 3rem !important;
+         height: 3rem !important;
+         width: 3rem !important;
+         line-height: 3rem !important;
+      }
+   }
+}
+
 
 body .controls-DateRangeChoose.controls-DateRangeChoose__showMonths.controls-DateRangeChoose__showHalfYears .controls-DateRangeChoose__home, .controls-DateRangeChoose.controls-DateRangeChoose__showMonths.controls-DateRangeChoose__showQuarters .controls-DateRangeChoose__home {
     width: 2rem;
+}
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__left, .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__right {
+   line-height: 3.57rem;
+   .icon-primary {
+      color: #26B8FF!important;
+   }
+}
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__dates .controls-DateRangeBigChoose__dates-months span.controls-Button {
+   padding-left: 0;
+   text-align: center;
+   &:hover {
+      background: transparent!important;
+      border-top: none!important;
+      border-left: none!important;
+      border-bottom: none!important;
+   }
+   .controls-Button__text {
+      width: 100%;
+   }
+}
+body .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__caption-text {
+   margin-left: 4.5rem;
 }
 .controls-ComboBox__picker .controls-ComboBox__scrollContainer {
     background: #f0f5fb;
@@ -999,13 +981,7 @@ body .controls-Browser__breadCrumbs {
 .controls-DateRangeBigChoose__noBorder {
   border: none !important;
 }
-.controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__years-currentYearBtn.controls-Link, .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__years-toggleChooseYearBtn.controls-Link {
-  margin-top: .6rem;
-}
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__years-back.controls-IconButton .controls-Button__icon {
-    font-size: 1.78rem !important;
-    line-height: 2rem !important;
-}
+
 .controls-Suggest__picker {
     border: 2px solid #26B8FF;
     background: #f0f5fb;
@@ -1042,6 +1018,16 @@ body .controls-FieldLink.ws-has-focus:not(.ws-disabled) {
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button:hover {
   color: #fff;
 }
-.controls-Menu__Popup .controls-Menu__header+.controls-Menu__itemsContainer {
-  padding-right: 2rem;
+.controls-Browser__breadCrumbs {
+  top: .18rem;
+}
+.ws-is-desktop-platform .controls-IconButton:not(.ws-disabled):not(.controls-Click__active):hover .controls-Button__icon.icon-primary {
+    color: #B9E9FF !important;
+}
+.controls-ToolBar .controls-ToolBar__menuIcon {
+    vertical-align: baseline;
+}
+
+body .controls-CommandsButton__picker .controls-MenuItem{
+   padding-right: 2.8rem!important; //38 = 24 (кнопка) + 8(отступ справа у кнопки) +6(отступ слева у кнопки)
 }

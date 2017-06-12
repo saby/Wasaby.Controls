@@ -5,8 +5,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
    "js!SBIS3.CONTROLS.PickerMixin",
    "Core/helpers/collection-helpers",
    "Core/core-instance",
-   "Core/helpers/functional-helpers"
-], function ( cFunctions, cMerge, Deferred,PickerMixin, colHelpers, cInstance, fHelpers) {
+], function ( cFunctions, cMerge, Deferred,PickerMixin, colHelpers, cInstance) {
    'use strict';
 
 
@@ -751,7 +750,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
       _setPickerContent: function () {
          /* Заглушка, picker автодополнения не должен вызывать расчёты авторазмеров, т.к. создаётся абсолютом в body */
-         this._picker._notifyOnSizeChanged = fHelpers.nop;
+         this._picker._notifyOnSizeChanged = function() {};
       },
 
       showPicker: function () {
@@ -772,11 +771,16 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          this._listReversed = reverse;
 
          if(list && list.setItemsSortMethod) {
-            list.setItemsSortMethod(
-               reverse ?
-                  function (a, b) { return b.collectionIndex - a.collectionIndex; } :
-                  null
-            );
+            if(reverse) {
+               /* Не надо устанавливать сортировку если он уже установлена, т.к.
+                  1) Повторное перестроение вызывает лишние перестроения
+                  2) Может быть установлена прикладная сортировка, её ломать нельзя */
+               if(!list.getProperty('itemsSortMethod')) {
+                  list.setItemsSortMethod(function (a, b) { return b.collectionIndex - a.collectionIndex; });
+               }
+            } else{
+               list.setItemsSortMethod(null);
+            }
          }
       }
    };

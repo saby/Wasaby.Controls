@@ -303,7 +303,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
 
                filterButton.setFilterStructure(preparedStructure);
                
-               if(browser) {
+               if(browser && browser._hasOption('filterButtonConfig')) {
                   browser.getProperty('filterButtonConfig').filterStructure = preparedStructure;
                }
             }

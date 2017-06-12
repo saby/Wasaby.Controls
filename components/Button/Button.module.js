@@ -5,22 +5,26 @@ define('js!SBIS3.CONTROLS.Button',
       'js!SBIS3.CORE.Control/Control.compatible',
       "js!SBIS3.CORE.AreaAbstract/AreaAbstract.compatible",
       'js!SBIS3.CORE.BaseCompatible',
+      'js!SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor',
       'js!SBIS3.CONTROLS.Button/Button.compatible',
       'js!WS.Data/Entity/InstantiableMixin',
       'tmpl!SBIS3.CONTROLS.Button',
       'Core/core-functions',
+      "js!SBIS3.CORE.Control/ControlGoodCode",
       'css!SBIS3.CONTROLS.Button'
-   ],
+         ],
 
    function (extend,
              AbstractCompatible,
              ControlCompatible,
              AreaAbstractCompatible,
              BaseCompatible,
+             WsCompatibleConstructor,
              ButtonCompatible,
              InstantiableMixin,
              template,
-             functions) {
+             functions,
+             ControlGoodCode) {
 
    'use strict';
 
@@ -78,7 +82,14 @@ define('js!SBIS3.CONTROLS.Button',
     *    <option name='caption' value='Кнопка'></option>
     * </component>
     */
-   var Button = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, ButtonCompatible, InstantiableMixin],
+   var Button = extend.extend([AbstractCompatible,
+         ControlCompatible,
+         AreaAbstractCompatible,
+         BaseCompatible,
+         WsCompatibleConstructor,
+         ButtonCompatible,
+         InstantiableMixin,
+         ControlGoodCode],
       {
          _controlName: 'SBIS3.CONTROLS.Button',
          _template: template,
@@ -109,6 +120,9 @@ define('js!SBIS3.CONTROLS.Button',
          },
 
          _onMouseDown: function () {
+            if (!this._options.enabled) {
+               return;
+            }
             this._isActiveByClick = true;
          },
 
@@ -154,11 +168,25 @@ define('js!SBIS3.CONTROLS.Button',
          },
 
          _onMouseEnter: function(e){
+            this._showExtendedTooltipCompatible();
             this._notify('onMouseEnter', e);
          },
 
          _onMouseLeave: function(e){
+            if(this.isActive()) {
+               this._hideExtendedTooltipCompatible();
+            }
             this._notify('onMouseLeave', e);
+         },
+
+         _onFocusIn: function(e){
+            var self = this;
+            this._showExtendedTooltipCompatible();
+         },
+
+         _onFocusOut: function(e){
+            var self = this;
+            this._hideExtendedTooltipCompatible();
          }
          //</editor-fold>
       });

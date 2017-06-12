@@ -52,6 +52,42 @@ define(
             tplOptions.allowChangeEnable = cfg.allowChangeEnable;
             tplOptions.selectedKey = cfg.selectedKey;
             return tplOptions;
+         },
+         getRecordsForRedraw = function(projection, opts) {
+            var order = 0,
+                baseOrder = 30,
+                firstLeftItem,
+                lastRightItem,
+                tmpl, item;
+            if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
+               projection.each(function (itemProj) {
+                  item = itemProj.getContents();
+                  tmpl = TemplateUtil.prepareTemplate(item.get(opts.displayProperty || ''))({
+                     item: item.getRawData(),
+                     options: opts
+                  });
+                  if (item.get('align') === 'left') {
+                     if (!firstLeftItem) {
+                        firstLeftItem = item;
+                     }
+                     item.set('_order', order++);
+                  }
+                  else {
+                     lastRightItem = item;
+                     item.set('_order', baseOrder + order++);
+                  }
+                  item.set('_sideTab', false);
+                  item.set(opts.displayProperty, tmpl);
+               });
+
+               if (firstLeftItem) {
+                  firstLeftItem.set('_sideTab', true);
+               }
+               if (lastRightItem) {
+                  lastRightItem.set('_sideTab', true);
+               }
+            }
+            return projection;
          };
       var TabButtons = RadioGroupBase.extend(/** @lends SBIS3.CONTROLS.TabButtons.prototype */ {
          $protected: {
@@ -72,6 +108,7 @@ define(
                 */
                tabSpaceTemplate: undefined,
                observeVisibleProperty: false, //Временное решение
+               _getRecordsForRedraw: getRecordsForRedraw,
                _buildTplArgs: buildTplArgs
             }
          },
@@ -79,38 +116,8 @@ define(
 
          _modifyOptions: function (opts) {
             opts = TabButtons.superclass._modifyOptions.apply(this, arguments);
-            var order = 0;
             if (opts.tabSpaceTemplate) {
                opts.tabSpaceTemplate = TemplateUtil.prepareTemplate(opts.tabSpaceTemplate);
-            }
-            var items = opts.items,
-                baseOrder = 30,
-                firstLeftIndex = -1,
-                lastRightIndex = -1;
-            if (items){
-               for (var i = 0, l = opts.items.length; i < l; i++){
-                  var tmpl = TemplateUtil.prepareTemplate(items[i][opts.displayProperty] || '')({
-                     item: items[i],
-                     options: opts
-                  });
-                  if (items[i]['align'] === 'left') {
-                     if (firstLeftIndex == -1) {
-                        firstLeftIndex = i;
-                     }
-                     items[i]['_order'] = order++;
-                  }
-                  else {
-                     lastRightIndex = i;
-                     items[i]['_order'] = baseOrder + order++;
-                  }
-                  items[i][opts.displayProperty] = tmpl;
-               }
-               if (firstLeftIndex > -1) {
-                  items[firstLeftIndex]._sideTab = true;
-               }
-               if (lastRightIndex > -1) {
-                  items[lastRightIndex]._sideTab = true;
-               }
             }
             return opts;
          },

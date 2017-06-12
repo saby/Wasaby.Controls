@@ -118,6 +118,7 @@
 @button-text-margin-right:                .57rem;
 @button-text-padding:                     0;                        // padding of text
 @button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
+@button-icon-color-hover:                 #B9E9FF;
 
 @FilterPanelButtonRightClose: url('img/FilterPanelButton.png') 0 0;
 @FilterPanelButtonLeftClose: url('img/FilterPanelButton.png') -35px 0;
@@ -841,6 +842,10 @@
 
 @date-range-line-height:                        0.86rem;
 @date-range-text-line-height:                   normal;
+@date-range-icon-button-top:                    0.536rem;
+@date-range-dash-width:                         0.286rem;
+@date-range-dash-margin:                        0 0.286rem 0.286rem 0.286rem;
+@date-range-dash-border-top:                    2px solid @date-range-dash-color;
 
 // ----------------- //
 // Data Range Slider //
@@ -900,12 +905,34 @@
 @controls-date-range-year-marginleft:                 0.4rem;
 @date-range-choose-year-prev-next-btns-color:   #ffffff;
 
+@date-range-big-choose-months-button-height:                         1.786rem;
+@date-range-big-choose-months-range-width:                           5.429rem;
+@date-range-big-choose-months-button-first-height:                   @date-range-big-choose-months-button-height;
+@date-range-big-choose-months-button-last-height:                    @date-range-big-choose-months-button-height;
+@date-range-big-choose-date-range-picker-table-element-height:       2.8rem;
+
+@date-range-big-choose-date-range-picker-left:                       @date-range-big-choose-months-range-width + 0.857rem;
+@date-range-big-choose-date-range-picker-caption-height:             2.42rem;
 // -------------- //
 // Date Range Big //
 // -------------- //
 
 @date-range-big-choose-years-height:                           3.57rem;
 @date-range-big-choose-font-family:                            'TensorFont Regular', 'TensorFont', sans-serif;
+
+@date-range-big-choose-header-padding:                               0.256rem 0 0.256rem 0.5rem;
+@date-range-big-choose-header-date-pickers-margin-right:             3.286rem;
+@date-range-big-choose-header-date-picker-margin-top:                0;
+@date-range-big-choose-header-range-dash-width:                      0.286rem;
+@date-range-big-choose-header-range-dash-margin:                     1.5rem 0.286rem 0.286rem;
+
+@date-range-big-choose-years-panel-toggle-choose-year-button-line-height:    3rem;
+@date-range-big-choose-years-panel-current-year-button-line-height:          3rem;
+@date-range-big-choose-years-panel-back-button-font-size:                    3rem;
+@date-range-big-choose-years-panel-back-button-line-height:                  3rem;
+
+@date-range-big-choose-body-height:                                  21.429rem;
+@date-range-big-choose-months-range-btn-height:                      5.071rem;
 
 @date-range-big-choose-quarters-half-years-font-size:                inherit;
 @date-range-big-choose-month-range-padding:                          8px;
@@ -947,7 +974,7 @@
 @list-view-items-toolbar-vertical-locked-box-shadow: -2px 2px 5px @data-grid-row-hover-bg;
 @list-view-items-toolbar-line-height:                1.75rem;
 @list-view-items-toolbar-vertical-line-height:       0.86rem;
-@list-view-items-toolbar-locked-bg:                  transparent;
+@list-view-items-toolbar-locked-bg:                  @basic-block-bg-color;
 @list-view-items-toolbar-icon-size:                  1.785rem;
 @touch-mode-items-toolbar-icon-margin-top:           -0.86rem;
 @list-view-actions-active-bg: @data-grid-bg;
@@ -959,7 +986,6 @@
 @list-view-actions-menu-close-right:            .14rem;
 @list-view-actions-menu-close-height:           1.75rem;
 @list-view-actions-menu-close-width:            1.75rem;
-@list-view-actions-menu-padding:                @menu-padding;
 
 @listView-empty-data-color:                     #8991A9;
 @listView-empty-data-font-size:                1rem;
@@ -1066,14 +1092,21 @@
 
 @controls-OperationsPanel-actions-padding-left:     0;
 
+//Пока нет стандарта, выписана подзадача https://online.sbis.ru/opendoc.html?guid=773fe3ec-edf2-434b-ab51-7fdafff585c5&des=
+@controls-OperationsPanel-separator-width:          0;
+
 // ----------------------- //
 // OperationsPanelButton  //
 // ----------------------- //
 
 @controls-OperationsPanelButton-width:             0.86rem;
 @controls-OperationsPanelButton-vert-height:       0.86rem;
-@controls-OperationsPanelButton-font:              1.14rem 'TensorFont Regular', 'TensorFont';
+@controls-OperationsPanelButton-font:              3rem 'carrypresto-icons', 'carrypresto';
 @controls-OperationsPanelButton-icon-left:         0;
+@controls-OperationsPanelButton-icon:              "\e9aa";
+@controls-OperationsPanelButton-icon-expand:       "\e9a8";
+@controls-OperationsPanelButton-active-icon-color: #B9E9FF;
+@controls-OperationsPanelButton-color:             #E4E4E4;
 
 // ----------------------- //
 //      EditInPlace        //
@@ -1132,7 +1165,7 @@
 
 @controls-filterButton-button-arrow-margin:       -.14rem;;
 
-@controls-filterButton-area-header-padding:       .35714rem 3rem 8px 12px;
+@controls-filterButton-area-header-padding:       .29rem 3rem .29rem .43rem;
 
 @controls-filterButton-area-text-size:            1.43rem;
 @controls-filterButton-area-text-color:           #e4e4e4;
@@ -1205,12 +1238,12 @@
 @breadcrumbs-top:                                  0;
 @breadcrumbs-smallItems-font-size:                 1.43rem;
 @breadcrumbs-arrow-top:                            0;
-@breadcrumbs-small-items-top:                      .3rem;
+@breadcrumbs-small-items-top:                      .4rem;
 
 // EditDialog
-@editdialog-applybutton-width:                     90px;
-@editdialog-applybutton-right:                     38px; //ширина кнопки закрытия окна 36px +.07rem; на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)
-@editdialog-window-title-margin-right:             128px; //ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить +.07rem; на небольшой отступ между ними
+@editdialog-applybutton-width:                     auto;
+@editdialog-applybutton-right:                     3rem; //ширина кнопки закрытия окна 36px +.07rem; на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)
+@editdialog-window-title-margin-right:             11rem; //ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить +.07rem; на небольшой отступ между ними
 @editdialog-template-minwidth:                     auto;
 @editdialog-applybutton-top:                       8px;
 
@@ -1314,20 +1347,16 @@
 @menu-header-bg-color:                    #23b8ff;
 
 @date-range-big-header-bg: #2c3e50;
-@date-range-big-choose-border-color:		#2c3e50;
+@date-range-big-choose-border-color:		#3f566d;
 @date-range-big-choose-width:				25.8rem;
 @date-range-big-choose-left-right-width:     3rem;
 @date-range-big-choose-years-panel-current-year-button-font-size: 1.43rem;
-@date-range-big-choose-years-panel-current-year-button-line-height: 1.43rem;
-@date-range-big-choose-date-range-picker-left:	 5.71rem;
-@date-range-big-choose-date-range-picker-right:  1.2857rem;
-@date-range-big-choose-date-range-picker-table-element-height:   84px;
+@date-range-big-choose-date-range-picker-right:  0.857rem;
 @date-range-big-choose-date-range-picker-table-element-width:   74px;
 @date-range-big-choose-date-range-picker-table-element-title-padding-top: .7857rem;
 @date-range-big-choose-date-range-picker-color:							#e4e4e4;
 @date-box-wrapper-border-radius: 0;
 @date-box-wrapper-border-color: #3b5e7a;
-@date-range-big-choose-header-range-dash-width: 4px;
 @tab-buttons-height:							3.57rem;
 @date-picker-calendar-icon-height: 				1.32rem;
 @date-picker-calendar-icon-width: 				2.3rem;
@@ -1345,12 +1374,8 @@
 @tab-buttons-border-bottom-height:          0.01rem;
 @controls-toolbar-item-margin-right:        0;
 @dropdownlist-item-text-color:              #202835;
+@controls-editInPlace-editor-bg:			   @basic-block-bg-color;
 @controls-FieldLink-picker-show-color:		#F0F5FB;
-@controls-editInPlace-editor-bg:			transparent;
-
- @list-view-loading-indicator-gradient-bg: url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to top,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
-  @list-view-loading-indicator-gradient-bg-up: url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to bottom,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
-
 @textbox-font-size:							1.43rem;
 @scroll-pager-bg:							transparent;
 
@@ -1449,8 +1474,6 @@
 
 @controls-filterButton-picker-border-color:         #26B8FF;
 @formatted-text-box-wrapper-padding:                 .3rem 0.57rem 0px 12px;
-@date-range-big-choose-header-range-dash-width:     10px;
-@date-range-big-choose-header-range-dash-margin:    2rem 8px 0 8px;
 
 @bottomStyle-items-toolbar-height:                  1.88rem;
 @bottomStyle-padding-bottom:              3rem;
@@ -1462,25 +1485,27 @@
 @controls-filterButton-picker-border-color:         #26B8FF;
 
 @formatted-text-box-wrapper-padding:                 .3rem 0.57rem 0px 12px;
-@date-range-big-choose-header-range-dash-width:     10px;
-@date-range-big-choose-header-range-dash-margin:    2rem 8px 0 8px;
-@date-range-big-choose-months-range-btn-height:     139px;
-@date-range-big-choose-body-height:                 22rem;
 @image-bar-height:                                  3.57rem;
+@image-bar-vertical-padding:                        0.245rem;
+@image-bar-horizontal-padding:                      0;
 @image-bar-bg-color:                      rgba(102,170,221, .5);
-@image-bar-button-bottom-padding:         1rem;
-@date-range-big-choose-bg-hovered-color:           @basic-block-bg-color;
+@date-range-big-choose-bg-hovered-color:           rgba(0, 0, 0, 0.3);
 
 @money-text-box-decimals-padding: 0;
 @money-text-box-decimals-font-size: 1.43rem;
 @money-text-box-decimals-color: @default-text-color;
-@money-text-box-decimals-background-color: transparent;
 @header-color:                              #e4e4e4;
 
 @gray-lamantin-color:                               #8991A9;
 
 @icon-color-disabled:                               #e4e4e4 !important;
 
-@date-range-big-choose-years-btn:               .5rem;
+@date-range-big-choose-date-range-picker-border-color:                 rgba(102, 170, 221, 0.7);
+@date-range-big-choose-date-range-picker-boundary-selected-color:      #e4e4e4;
+@date-range-big-choose-date-range-picker-bg-boundary-selected-color:   #26B8FF;
+@date-range-big-choose-date-range-picker-bg-selected-color:            @date-range-big-choose-bg-hovered-color;
+@date-range-big-choose-date-range-picker-bg-hovered-color:             @date-range-big-choose-bg-hovered-color;
 
 @controls-toolbar-item-vertical-align:              baseline;
+
+@date-range-big-choose-years-btn:               .5rem;

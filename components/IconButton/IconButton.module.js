@@ -65,6 +65,11 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
       iWantVDOM: false,
       _doNotSetDirty: true,
 
+      constructor: function(cfg) {
+         cfg.tooltip = cfg.tooltip || cfg.caption;
+         IconButton.superclass.constructor.call(this, cfg);
+      },
+
       /*TODO: Удалить при переходе на VDOM*/
       _containerReady:function(container){
          if (window) {
@@ -82,6 +87,18 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
             container.on("touchstart  mousedown", function (e) {
                if ((e.which == 1 || e.type == 'touchstart') && self.isEnabled()) {
                   self._container.addClass('controls-Click__active');
+               }
+               //return false;
+            });
+
+            container.on("mouseenter", function (e) {
+               self._showExtendedTooltipCompatible();
+               //return false;
+            });
+
+            container.on("mouseleave", function (e) {
+               if(self.isActive()) {
+                  self._hideExtendedTooltipCompatible();
                }
                //return false;
             });

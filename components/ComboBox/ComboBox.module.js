@@ -213,7 +213,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                if (self.isEnabled()) {
                   self.togglePicker();
                   // Что бы не открывалась клавиатура на айпаде при клике на стрелку
-                  if (isArrow) {
+                  if (isArrow || !self.isEditable()) {
                      e.preventDefault();
                   }
                }
@@ -280,7 +280,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _keyboardHover: function (e) {
          var
             selectedKey = this.getSelectedKey(),
-            selectedItem, newSelectedItem, newSelectedItemId;
+            selectedItem, newSelectedItem, newSelectedItemId, newSelectedItemHash;
          if (this._picker) {
             if(!this._picker.isVisible() && e.which === constants.key.esc ){
                return true;
@@ -298,8 +298,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             }
             if (newSelectedItem && newSelectedItem.length) {
                newSelectedItemId = newSelectedItem.data('id');
+               newSelectedItemHash = newSelectedItem.data('hash');
                this.setSelectedKey(newSelectedItemId);
-               this._scrollToItem(newSelectedItemId);
+               this._scrollToItem(newSelectedItemHash);
                this.setActive(true); // После подскролливания возвращаем фокус в контейнер компонента
             }
          }
@@ -733,16 +734,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          ComboBox.superclass.showPicker.call(this);
          TextBoxUtils.setEqualPickerWidth(this._picker);
          //После отображения пикера подскроливаем до выбранного элемента
-         var itemToScroll = this.getSelectedKey(),
-             item;
+         var projection = this._getItemsProjection(),
+             item = projection.at(this.getSelectedIndex()),
+             hash = item && item.getHash();
          
-         if(!itemToScroll) {
-            item = this.getItems().at(0);
-            if (item) {
-               itemToScroll = item.get(this._options.idProperty);
-            }
+         if(!hash && projection.getCount() > 0) {
+            hash = projection.at(0).getHash();
          }
-         this._scrollToItem(itemToScroll);
+         this._scrollToItem(hash);
       },
 
       _initializePicker: function(){
@@ -786,8 +785,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          ComboBox.superclass.setSelectedKey.apply(this, arguments);
       },
 
-      _scrollToItem: function(itemId) {
-         var itemContainer  = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
+      _scrollToItem: function(itemHash) {
+         var itemContainer  = $('.controls-ListView__item[data-hash="' + itemHash + '"]', this._getItemsContainer());
          if (itemContainer.length) {
             LayoutManager.scrollToElement(itemContainer, true);
          }

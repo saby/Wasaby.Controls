@@ -5,8 +5,7 @@
 define('js!SBIS3.CONTROLS.ContextMenu', [
    'js!SBIS3.CONTROLS.Menu',
    'js!SBIS3.CONTROLS.PopupMixin',
-   'Core/helpers/functional-helpers'
-], function(Menu, PopupMixin, fHelpers) {
+], function(Menu, PopupMixin) {
 
    'use strict';
 
@@ -50,7 +49,9 @@ define('js!SBIS3.CONTROLS.ContextMenu', [
       },
 
       /* Заглушка, ContextMenu не должно вызывать расчёты авторазмеров, т.к. создаётся абсолютом в body */
-      _notifyOnSizeChanged: fHelpers.nop
+      _notifyOnSizeChanged: function () {
+         
+      }
    });
 
    return ContextMenu;
