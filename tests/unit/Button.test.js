@@ -128,6 +128,33 @@ define([
             assert.isTrue(!button._isActiveByClick);
          });
 
+         it('addClassCompatible', function() {
+            var container = button.getContainer();
+            container.addClass('compatibleTest');
+            assert.isTrue(button._options.class.indexOf("compatibleTest") != -1);
+         });
+
+         it('removeClassCompatible', function() {
+            var container = button.getContainer();
+            button._options.class += 'compatible';
+            container.removeClass('compatibleTest');
+            assert.isTrue(button._options.class.indexOf('compatibleTest') == -1);
+         });
+
+         it('toggleClassCompatibleAdd', function() {
+            var container = button.getContainer();
+            button._options.class = '';
+            container.toggleClass('compatibleTest');
+            assert.isTrue(button._options.class.indexOf("compatibleTest") != -1);
+         });
+
+         it('toggleClassCompatibleRemove', function() {
+            var container = button.getContainer();
+            button._options.class = 'compatibleTest';
+            container.toggleClass('compatibleTest');
+            assert.isTrue(button._options.class.indexOf("compatibleTest") == -1);
+         });
+
       });
 
    });
