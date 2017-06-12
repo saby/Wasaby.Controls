@@ -1015,6 +1015,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._toggleEmptyData(this._needShowEmptyData(data.records));
 
          }
+         /* Класс вешаем после отрисовки, но до события onDrawItems,
+            почему так:
+            в событии onDrawItems могут производить замеры высоты/ширины,
+            а без этого класса к списку применяются стили для состояния, когда он "пустой" (например устанавливается минимальная высота),
+            что портит расчёты. */
+         this._container.addClass('controls-ListView__dataLoaded');
+
          if (notRevive) {
             this._revivePackageParams.revive = true;
             this._revivePackageParams.light = false;
@@ -1022,7 +1029,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          else {
             this._reviveItems();
          }
-         this._container.addClass('controls-ListView__dataLoaded');
       },
 
       _needShowEmptyData: function(items) {
