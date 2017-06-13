@@ -711,10 +711,12 @@ define(
                return this._createDate(year, month, date, hour, minute, second, millisecond, true);
             }
          } else if (controlType === 'time'){
-            if (hour !== null && minute === null) {
-               minute = 0;
+            if (hour !== null) {
+               if (minute === null) {
+                  minute = 0;
+               }
+               return this._createDate(year, month, date, hour, minute, second, millisecond, true);
             }
-            return this._createDate(year, month, date, hour, minute, second, millisecond, true);
          }
          return null;
       },
