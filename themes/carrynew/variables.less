@@ -30,8 +30,8 @@
 @default-text-color:                      #000;
 @primary-color:                           #FF7033;
 @secondary-color:                         #4e5762;
-@back-button-caption-hover-color : rgb(185, 233, 255);
-@back-button-caption-active-color: @back-button-caption-hover-color;
+@back-button-caption-hover-color :        @primary-color;
+@back-button-caption-active-color:        @back-button-caption-hover-color;
 @bg:                                      @secondary-color;
 @text-color:                              @white-color;
 @default-border-style:						solid;
@@ -372,8 +372,8 @@
 
 @text-box-field-hover-text-color:         @text-box-field-text-color;
 
-@text-box-border-color:                   rgb(234, 234, 234);
-@text-box-bottom-border-color:            rgb(204, 204, 204);
+@text-box-border-color:                   #EAEAEA;
+@text-box-bottom-border-color:            #CCCCCC;
 @text-box-bg:                             @default-bg-color;
 @text-box-editor-bg:                      #f3f3f3;
 @text-box-editor-text-color:              #999999;
@@ -383,12 +383,12 @@
 
 @compo-box-picker-show-color:             #fff;
 @text-box-focus-bg:                      #fff;
-@text-box-border-width:.07rem;
+@text-box-border-width:                 2px;
 @text-box-hover-border-width:             @text-box-border-width;
 @text-box-hover-border-style:             @text-box-border-style;
 @text-box-hover-border-color:             rgb(204, 204, 204);
 
-@text-box-disabled-border-bottom:         1px solid @check-box-disabled-color;
+@text-box-disabled-border-bottom:         .07rem solid @check-box-disabled-color;
 @text-box-focus-border-width:.07rem;
 @text-box-field-focus-text-color:         #000;
 @text-box-height: 3rem;
@@ -531,9 +531,9 @@
 
 
 
-@controls-FieldLink-border-color:                     #243548  #243548  #243548  #243548;
-@controls-FieldLink-border-color-focus-hover:         #314559;
 @controls-FieldLink-link-color:                         #2D68B5;
+@controls-FieldLink-FilterButton-color:            #2D68B5;
+@controls-FieldLink-FilterButton-color-hover:      #313E78;
 // --------- //
 // MonthView //
 // --------- //
@@ -667,12 +667,14 @@
 @date-range-big-choose-border-color:                           #eaeaea;
 
 @date-range-big-choose-header-padding:                               0.256rem 0 0.256rem 0.5rem;
-@date-range-big-choose-header-date-pickers-margin-right:             4.2rem;
+@date-range-big-choose-header-date-pickers-margin-right:             3.286rem;
 @date-range-big-choose-header-date-picker-margin-top:                0;
 @date-range-big-choose-header-range-dash-width:                      0.286rem;
 @date-range-big-choose-header-range-dash-margin:                     1.5rem 0.286rem 0.286rem;
 
-@date-range-big-choose-years-panel-toggle-choose-year-button-line-height:   3rem;
+@date-range-big-choose-years-panel-top-padding:                             0.286rem;
+@date-range-big-choose-years-panel-bottom-padding:                          0.286rem;
+@date-range-big-choose-years-panel-toggle-choose-year-button-line-height:   3.4rem;
 @date-range-big-choose-years-panel-current-year-button-line-height:         3rem;
 @date-range-big-choose-years-panel-back-button-font-size:                   3rem;
 @date-range-big-choose-years-panel-back-button-line-height:                 3rem;
@@ -832,7 +834,7 @@
 
 @controls-filterButton-area-text-weight:		   normal;
 
-@controls-filterButton-area-text-color:           #000;
+@controls-filterButton-area-text-color:           #313E78;
 
 @controls-filterButton-closeButton-top:           @controls-Popup-closeButton-top;
 

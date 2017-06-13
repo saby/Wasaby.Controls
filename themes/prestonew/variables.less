@@ -24,7 +24,7 @@
 @icon-active-color:                       @default-hover-color;
 
 @icon-small-size:                         1.32rem;
-@icon-medium-size:                        1.7857rem;
+@icon-medium-size:                        1.32rem;
 @icon-large-size:                         3rem;
 
 //=============
@@ -584,7 +584,7 @@
 @text-box-hover-border-style:             @text-box-border-style;
 @text-box-hover-border-color:             rgba(96,170,221, .3 );
 
-@text-box-disabled-border-bottom:         1px solid #333333;
+@text-box-disabled-border-bottom:         .07rem solid #333333;
 @text-box-focus-border-width:             2px;
 @text-box-field-focus-text-color:         #e4e4e4;
 @text-box-after-width:                    20px;
@@ -687,7 +687,6 @@
 @combo-box-disabled-border-color:               transparent;
 @combo-box-disabled-color:                      #38495B;
 
-@combo-box-picker-border:                      0rem solid #48bffc;
 @combo-box-picker-item-padding:                 1.14rem 0.57rem 1.14rem 0.57rem;
 @text-box-field-font-size: 1.43rem;
 @combo-box-picker-item-bg:                      #f0f5fb;
@@ -759,8 +758,8 @@
 
 
 @controls-FieldLink-border:                           2px solid;
-@controls-FieldLink-border-color:                     @text-box-border-color;
-@controls-FieldLink-border-color-focus-hover:         #26B8FF;
+@controls-FieldLink-border-color:                     @text-box-border-color @text-box-border-color @text-box-bottom-border-color @text-box-border-color;
+@controls-FieldLink-border-color-focus-hover:         @text-box-bottom-border-color;
 @controls-FieldLink-link-color:                         #26B8FF;
 // --------- //
 // MonthView //
@@ -926,7 +925,9 @@
 @date-range-big-choose-header-range-dash-width:                      0.286rem;
 @date-range-big-choose-header-range-dash-margin:                     1.5rem 0.286rem 0.286rem;
 
-@date-range-big-choose-years-panel-toggle-choose-year-button-line-height:    3rem;
+@date-range-big-choose-years-panel-top-padding:                              0.286rem;
+@date-range-big-choose-years-panel-bottom-padding:                           0.286rem;
+@date-range-big-choose-years-panel-toggle-choose-year-button-line-height:    3.4rem; // сделать по другому
 @date-range-big-choose-years-panel-current-year-button-line-height:          3rem;
 @date-range-big-choose-years-panel-back-button-font-size:                    3rem;
 @date-range-big-choose-years-panel-back-button-line-height:                  3rem;
@@ -959,7 +960,7 @@
 // --------- //
 // List view //
 // --------- //
-@list-view-min-height:                           90px;
+@list-view-min-height:                           5rem;
 
 @listView-check-box-left:                      0;
 @listView-check-box-top:                       0;
@@ -1051,7 +1052,7 @@
 @data-grid-row-hover-cell-text-color:           inherit;
 
 @data-grid-header-cell-height:                  1.14rem;
-@data-grid-cell-line-height:                    1.762rem;
+@data-grid-cell-line-height:                    1.562rem;
 @data-grid-header-cell-padding:                 0 10px;
 @data-grid-header-cell-padding-side:            10px;
 @data-grid-header-cell-font-size:               0.86rem;
@@ -1210,10 +1211,10 @@
 @controls-FieldLink-linkItem-cross-padding:        0;
 @controls-FieldLink-showAllLinks-padding:          0 1rem 0 0.14rem;
 
-@controls-FieldLink-afterField-padding:            0 .14rem 0.2rem 0;
+@controls-FieldLink-afterField-padding:            0 .14rem 0.14rem 0;
 @controls-FieldLink-afterField-height:             3rem;
 
-@controls-FieldLink-disabled-item-single-padding:  0;
+@controls-FieldLink-disabled-item-single-padding:  0,142rem;
 @controls-FieldLink-disabled-item-single-margin:  .07rem .14rem;
 
 @controls-FieldLink-afterField-background:         transparent;
@@ -1222,6 +1223,8 @@
 @controls-FieldLink-showAll-shadow-width:          20px;
 @controls-FieldLink-showAll-margin-right-ff:       -15px;
 @controls-FieldLink-showAll-top-ff:                -24px;
+@controls-FieldLink-FilterButton-color:            #26B8FF;
+@controls-FieldLink-FilterButton-color-hover:      #B9E9FF;
 
 //SelectorButton
 @controls-SelectorButton-align:                    middle;
@@ -1457,7 +1460,7 @@
 
 @DropdownList-footer-multisel-buttonsBlock-h: 3.57rem;
 @DropdownList-checkbox-bottom:                0;
-@DropdownList-picker-max-height: 16.57rem;
+@DropdownList-picker-max-height: 20rem;
 @DropdownList-footer-select-top: 0.28rem;
 @DropdownList-picker-menu-line-height: 3.57rem;
 @DropdownList-footer-hasMore-left:                    .28rem;
@@ -1509,3 +1512,10 @@
 @controls-toolbar-item-vertical-align:              baseline;
 
 @date-range-big-choose-years-btn:               .5rem;
+@DropdownList-picker-offset:                    0;
+@dropdown-list-item-padding:                      5px 38px 3px .57rem;
+@list-view-items-toolbar-bottom:                   0px;
+@list-view-items-toolbar-font-family:               'carrypresto-icons';
+@search-left-margin:                                  .57rem;
+@controls-view-padding-DEFAULT:                       .8rem;
+@combo-box-picker-border:                       2px solid #26B8FF;

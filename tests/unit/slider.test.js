@@ -6,17 +6,27 @@ define([
    'use strict';
 
    describe('SBIS3.CONTROLS.Slider', function () {
-
-      var cfg = {
-         minValue: "0",
-         maxValue: "5",
-         decimals: 2
-      };
-
-      var slider = new Slider(cfg);
-
+      var cfg, slider;
 
       describe('methods', function(){
+
+         before(function () {
+            if(typeof window !== 'undefined') {
+               cfg = {
+                  minValue: "0",
+                  maxValue: "5",
+                  decimals: 2
+               };
+               slider = new Slider(cfg);
+            }
+         });
+
+         beforeEach(function () {
+            if(typeof window === 'undefined') {
+               this.skip();
+            }
+         });
+
          it('setStartValue', function () {
             assert.equal(null, slider.getStartValue());
             slider.setStartValue(2);

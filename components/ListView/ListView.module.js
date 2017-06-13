@@ -1697,9 +1697,11 @@ define('js!SBIS3.CONTROLS.ListView',
                          //todo https://online.sbis.ru/opendoc.html?guid=0d1c1530-502c-4828-8c42-aeb330c014ab&des=
                          if (this._options.loadItemsStrategy == 'append') {
                             var tr = this._findItemByElement($(target));
-                            var hash = tr.attr('data-hash');
-                            var index = this._getItemsProjection().getIndex(this._getItemsProjection().getByHash(hash));
-                            self.setSelectedIndex(index);
+                            if (tr.length) {
+                               var hash = tr.attr('data-hash');
+                               var index = this._getItemsProjection().getIndex(this._getItemsProjection().getByHash(hash));
+                               self.setSelectedIndex(index);
+                            }
                          }
                          else {
                             self.setSelectedKey(id);
@@ -1960,7 +1962,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _getCurrentPage: function() {
             var page = 0;
             if (this._scrollBinder) {
-               var scrollPage = this._scrollBinder._getScrollPage();
+               var scrollPage = this._scrollBinder._getScrollPage() || 0;
                page = Math.floor(scrollPage.element.index() / this._limit);
             }
             // прибавим к полученой странице количество еще не загруженных страниц
@@ -2354,6 +2356,14 @@ define('js!SBIS3.CONTROLS.ListView',
                         this._toggleEmptyData(!this.getItems().getCount());
                         this._hideToolbar();
                         this._getItemsContainer().off('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
+                     }.bind(this),
+                     // В момент сохранения записи блокируем весь ListView чтобы побороть закликивание
+                     onBeginSave: function() {
+                        this._toggleIndicator(true);
+                     }.bind(this),
+                     // Использую именно beginSave и endSave, т.к. afterEndEdit в случае ошибки при сохранении не будет стрелять, а onEndSave стреляет всегда
+                     onEndSave: function() {
+                        this._toggleIndicator(false);
                      }.bind(this),
                      onDestroy: function() {
                         //При разрушении редактирования скрывает toolbar. Иначе это ни кто не сделает. А разрушение могло

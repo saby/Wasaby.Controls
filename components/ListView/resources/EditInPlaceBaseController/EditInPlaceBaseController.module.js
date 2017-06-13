@@ -94,7 +94,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                _isAdd: false
             },
             $constructor: function () {
-               this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onInitEditInPlace', 'onChangeHeight');
+               this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onInitEditInPlace', 'onChangeHeight', 'onBeginSave', 'onEndSave');
                this._createEip();
                this._savingDeferred = Deferred.success();
             },
@@ -404,6 +404,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      withSaving = false;
                   }
                   endEditResult = this._notify('onEndEdit', record, withSaving);
+                  this._notify('onBeginSave');
                   if (endEditResult instanceof Deferred) {
                      return endEditResult.addBoth(function(result) {
                         result = endEditResult.isSuccessful() ? result : EndEditResult.CANCEL;
@@ -431,6 +432,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   withSaving = endEditResult === EndEditResult.SAVE;
                }
                needValidate = withSaving || endEditResult === EndEditResult.CUSTOM_LOGIC;
+
+               this._notify('onEndSave');
 
                if (endEditResult === EndEditResult.CANCEL || needValidate && !eip.validate()) {
                   this._savingDeferred.errback();

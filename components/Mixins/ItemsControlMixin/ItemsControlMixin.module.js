@@ -80,19 +80,22 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       return proj;
    },
 
+   prepareGroupId = function(item, groupId, cfg) {
+      //делаем id группы строкой всегда, чтоб потом при обращении к id из верстки не ошибаться
+      return groupId + '';
+   },
+
    applyGroupingToProjection = function(projection, cfg) {
       if (cfg.groupBy && cfg.easyGroup) {
-         var method;
-         if (!cfg.groupBy.method) {
-            var field = cfg.groupBy.field;
-            method = function(item, index, projItem){
-               //делаем id группы строкой всегда, чтоб потом при обращении к id из верстки не ошибаться
-               return calcGroupHash(projItem) + item.get(field);
-            }
-         }
-         else {
-            method = cfg.groupBy.method
-         }
+         var
+            method = function(item) {
+               var
+                  groupId = cfg.groupBy.method ? cfg.groupBy.method.apply(this, arguments) : item.get(cfg.groupBy.field);
+               if (groupId !== false) {
+                  groupId = cfg._prepareGroupId(item, groupId, cfg);
+               }
+               return groupId;
+            };
          projection.setGroup(method);
       }
       else {
@@ -125,12 +128,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
    canApplyGrouping = function(projItem, cfg) {
       return !isEmpty(cfg.groupBy) && (!projItem.isNode || !projItem.isNode());
-   },
-
-   calcGroupHash = function(projItem) {
-      var
-         itemParent = projItem.getParent && projItem.getParent();
-      return itemParent ? itemParent.isRoot() ? '@' : itemParent.getContents().getHash() + calcGroupHash(itemParent) : '';
    },
 
    groupItemProcessing = function(groupId, records, item, cfg) {
@@ -340,6 +337,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             _serverRender: false,
             _defaultItemTemplate: '',
             _defaultItemContentTemplate: '',
+            _prepareGroupId: prepareGroupId,
             _createDefaultProjection : createDefaultProjection,
             _buildTplArgsSt: buildTplArgs,
             _buildTplArgs : buildTplArgs,
@@ -1015,6 +1013,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._toggleEmptyData(this._needShowEmptyData(data.records));
 
          }
+         /* Класс вешаем после отрисовки, но до события onDrawItems,
+            почему так:
+            в событии onDrawItems могут производить замеры высоты/ширины,
+            а без этого класса к списку применяются стили для состояния, когда он "пустой" (например устанавливается минимальная высота),
+            что портит расчёты. */
+         this._container.addClass('controls-ListView__dataLoaded');
+
          if (notRevive) {
             this._revivePackageParams.revive = true;
             this._revivePackageParams.light = false;
@@ -1022,7 +1027,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          else {
             this._reviveItems();
          }
-         this._container.addClass('controls-ListView__dataLoaded');
       },
 
       _needShowEmptyData: function(items) {
@@ -1074,6 +1078,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             if (inlineStyles) {
                targetElement.replaceWith($(markup).attr('style', inlineStyles));
             } else {
+               /**
+                * Если фокус стоит внутри строки - мы его потеряем
+                */
+               if (targetElement.find($(document.activeElement)).length > 0){
+                  this._getElementToFocus().focus();
+               }
                targetElement.get(0).outerHTML = markup;
             }
 
