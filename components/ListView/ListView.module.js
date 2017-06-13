@@ -4026,7 +4026,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   movedItems.push(item.getModel());
                });
                var projItem = this._getItemsProjection().getItemBySourceItem(dragTarget.item);
-               if (this._getMover()._checkRecordForMove(movedItems, dragTarget.item, position)) {
+               if (this._getMover().checkRecordsForMove(movedItems, dragTarget.item, position)) {
                   target = this._makeDragEntity({
                      owner: this,
                      domElement: dragTarget.domElement,
