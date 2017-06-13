@@ -12,6 +12,18 @@ define([
 
       var button = new Button({activableByClick:false});
 
+      /**
+       * Казалось бы, но приватные методы относительно кнопки переопределяются
+       * внутри платформы
+       */
+      var extClass = Button.extend({
+            iWantVDOM: false,
+            _clickWorked: false,
+            _onClick: function () {
+               this._clickWorked = true;
+            }
+         }),
+         extend = new extClass({});
 
       describe('Focus', function(){
 
@@ -20,6 +32,16 @@ define([
             button._onMouseClick();
             assert.isTrue(!button._isControlActive);
          });
+
+         it('redefenition _onClick', function () {
+            extend._onClickHandler();
+            assert.isTrue(extend._clickWorked);
+            extend._clickWorked = false;
+            extend.setEnabled(false);
+            extend._onClickHandler();
+            assert.isTrue(!extend._clickWorked);
+         });
+
 
       });
 

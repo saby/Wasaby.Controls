@@ -124,7 +124,9 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
       _onClickHandler: function(e)
       {
          this._baseClickAction(e);
-         this._onClick(e);
+         if (this._options.enabled) {
+            this._onClick(e);
+         }
       },
 
       _onClick: function (e) {
