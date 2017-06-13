@@ -71,6 +71,10 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
       },
 
       /*TODO: Удалить при переходе на VDOM*/
+      _onMouseClick: function(e) {
+         this._onClickHandler(e);
+      },
+
       _containerReady:function(container){
          if (window) {
             container.on('click', this._onClickHandler.bind(this));
@@ -81,14 +85,27 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
                if (e.which == cConstants.key.enter && result !== false ) {
                   self._onClickHandler(e);
                }
-
             });
 
-            container.on("touchstart  mousedown", function (e) {
-               if ((e.which == 1 || e.type == 'touchstart') && self.isEnabled()) {
+             container.on("touchstart", function (e) {
+               if (self.isEnabled()) {
+                  self._container.addClass('controls-Click__active');
+                  self._onTouchStart(e);
+               }
+            });
+
+            container.on("touchmove", function (e) {
+               self._onTouchMove(e);
+            });
+
+            container.on("touchend", function (e) {
+               self._onTouchEnd(e);
+            });
+
+            container.on("mousedown", function (e) {
+               if (e.which == 1 && self.isEnabled()) {
                   self._container.addClass('controls-Click__active');
                }
-               //return false;
             });
 
             container.on("mouseenter", function (e) {
