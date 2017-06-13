@@ -326,7 +326,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          }
          if (parentProperty) {
             if (target !== null) {
-               if (parentProperty && !isChangeOrder && target.get(parentProperty) === null) {
+               if (this._options.nodeProperty && !isChangeOrder && target.get(this._options.nodeProperty) === null) {
                   return false;
                }
                toMap = this._getParentsMap(target.getId());
