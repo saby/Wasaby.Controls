@@ -117,6 +117,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             };
             this._content = null;
             this._headerHeight = 0;
+            this._ctxSync = {
+               selfToPrev: {},
+               prevToSelf: {}
+            };
             this.deprecatedContr(cfg);
             // Что бы при встаке контрола (в качетве обертки) логика работы с контекстом не ломалась,
             // сделаем свой контекст прозрачным
@@ -172,27 +176,40 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
              * Этот костыль будет выпилен в 3.17.20
              */
             if (this.getParent()) {
-               var selfCtx = this._context,
+               var
+                  self = this,
+                  selfCtx = this._context,
                   prevContext = this._context.getPrevious();
+
                this._context.subscribe('onFieldChange', function (ev, name, value) {
                   if (this.getValueSelf(name) !== undefined) {
                      if (prevContext.getValueSelf(name) !== value) {
-                        prevContext.setValue(name, value);
+                        self._ctxSync.selfToPrev[name] = value;
                      }
-                  }
-               });
-
-               this._context.subscribe('onFieldRemove', function (ev, name, value) {
-                  if (prevContext.getValueSelf(name) !== undefined) {
-                     prevContext.removeValue(name);
                   }
                });
 
                prevContext.subscribe('onFieldChange', function (ev, name, value) {
                   if (prevContext.getValueSelf(name) !== undefined) {
                      if (selfCtx.getValueSelf(name) !== value) {
-                        selfCtx.setValue(name, value);
+                        self._ctxSync.prevToSelf[name] = value;
                      }
+                  }
+               });
+
+               this._context.subscribe('onFieldsChanged', function () {
+                  prevContext.setValue(self._ctxSync.selfToPrev);
+                  self._ctxSync.selfToPrev = {};
+               });
+
+               prevContext.subscribe('onFieldsChanged', function () {
+                  selfCtx.setValue(self._ctxSync.prevToSelf);
+                  self._ctxSync.prevToSelf = {};
+               });
+
+               this._context.subscribe('onFieldRemove', function (ev, name, value) {
+                  if (prevContext.getValueSelf(name) !== undefined) {
+                     prevContext.removeValue(name);
                   }
                });
 
