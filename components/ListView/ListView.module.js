@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'Core/IoC',
    'js!SBIS3.CORE.CompoundControl',
    'js!SBIS3.CORE.CompoundActiveFixMixin',
+   'js!SBIS3.StickyHeaderManager',
    'js!SBIS3.CONTROLS.ItemsControlMixin',
    'js!SBIS3.CONTROLS.MultiSelectable',
    'js!WS.Data/Query/Query',
@@ -64,7 +65,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
-   function (cMerge, cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record, 
+   function (cMerge, cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, CompoundActiveFixMixin, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, Pager, MassSelectionController, ImitateEvents,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
@@ -405,6 +406,7 @@ define('js!SBIS3.CONTROLS.ListView',
                bottom: null
             },
             _setScrollPagerPositionThrottled: null,
+            _updateScrollIndicatorTopThrottled: null,
             _options: {
                _canServerRender: true,
                _buildTplArgs: buildTplArgsLV,
@@ -938,6 +940,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange', 'onBeginDelete', 'onEndDelete', 'onBeginMove', 'onEndMove');
             this._setScrollPagerPositionThrottled = throttle.call(this._setScrollPagerPosition, 100, true).bind(this);
+            this._updateScrollIndicatorTopThrottled = throttle.call(this._updateScrollIndicatorTop, 100, true).bind(this);
             this._eventProxyHdl = this._eventProxyHandler.bind(this);
             
             this._toggleEventHandlers(this._container, true);
@@ -2968,10 +2971,23 @@ define('js!SBIS3.CONTROLS.ListView',
             //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
             this._container.toggleClass('controls-ListView__outside-scroll-loader', !hasScroll);
 
+            this._updateScrollIndicatorTopThrottled();
+
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && isContainerVisible && hasNextPage && !this.isLoading()) {
                this._loadNextPage();
             }
+         },
+         /**
+          * Обновлет положение ромашки что бы ее не перекрывал фиксированный заголовок
+          * @private
+          */
+         _updateScrollIndicatorTop: function () {
+            var top = '';
+            if (this._isScrollingUp()) {
+               top = StickyHeaderManager.getStickyHeaderIntersectionHeight(this.getContainer()) - this._scrollWatcher.getScrollContainer().scrollTop();
+            }
+            this._loadingIndicator.css('top', top);
          },
 
          _hasNextPage: function(more, offset) {
@@ -2991,10 +3007,14 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         _isScrollingUp: function () {
+            return this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse === true);
+         },
+
          _loadNextPage: function() {
             if (this._dataSource) {
                var offset = this._getNextOffset(),
-                  scrollingUp = this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse === true),
+                  scrollingUp = this._isScrollingUp(),
                   self = this;
                //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
                this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', scrollingUp);
