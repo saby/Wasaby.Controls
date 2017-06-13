@@ -1072,6 +1072,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             if (inlineStyles) {
                targetElement.replaceWith($(markup).attr('style', inlineStyles));
             } else {
+               /**
+                * Если фокус стоит внутри строки - мы его потеряем
+                */
+               if (targetElement.find($(document.activeElement)).length > 0){
+                  this._getElementToFocus().focus();
+               }
                targetElement.get(0).outerHTML = markup;
             }
 
