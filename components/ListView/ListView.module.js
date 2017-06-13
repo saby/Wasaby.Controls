@@ -4442,6 +4442,7 @@ define('js!SBIS3.CONTROLS.ListView',
          deleteRecords: function(idArray, message) {
             var
                 self = this,
+                res = new Deferred(),
                 beginDeleteResult;
             //Клонируем массив, т.к. он может являться ссылкой на selectedKeys, а после удаления мы сами вызываем removeItemsSelection.
             //В таком случае и наш idArray изменится по ссылке, и в событие onEndDelete уйдут некорректные данные
@@ -4457,18 +4458,22 @@ define('js!SBIS3.CONTROLS.ListView',
                   beginDeleteResult.addCallback(function(result) {
                      self._deleteRecords(idArray, result);
                   }).addErrback(function (result) {
-                     InformationPopupManager.showMessageDialog(
-                        {
-                           message: result.message,
-                           opener: self,
-                           status: 'error'
-                        }
-                     );
+                     InformationPopupManager.showMessageDialog({
+                        message: result.message,
+                        opener: self,
+                        status: 'error'
+                     });
                   });
                } else {
                   self._deleteRecords(idArray, beginDeleteResult);
                }
+               res.callback(true);
+            }, function() {
+               res.callback(false);
+            }, function() {
+               res.callback();
             });
+            return res;
          },
 
          _deleteRecords: function(idArray, beginDeleteResult) {
