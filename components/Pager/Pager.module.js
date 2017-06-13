@@ -46,7 +46,9 @@ define('js!SBIS3.CONTROLS.Pager', [
          _paging : undefined,
          _dropd: undefined,
          _lastNumRecords: undefined,
-         _lastNextPage: undefined
+         _lastNextPage: undefined,
+         // Флаг обозначаюий что была достигнута последняя страница
+         _lastPageReached: false
       },
       $constructor: function(){
          this._publish('onPageChange');
