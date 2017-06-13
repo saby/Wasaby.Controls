@@ -4,6 +4,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'js!SBIS3.CORE.Control/Control.compatible',
       "js!SBIS3.CORE.AreaAbstract/AreaAbstract.compatible",
       'js!SBIS3.CORE.BaseCompatible',
+      'js!SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor',
       'tmpl!SBIS3.CONTROLS.ScrollContainer',
       'js!SBIS3.CONTROLS.Scrollbar',
       'Core/detection',
@@ -20,6 +21,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
              ControlCompatible,
              AreaAbstractCompatible,
              BaseCompatible,
+             WsCompatibleConstructor,
              template,
              Scrollbar,
              cDetection,
@@ -77,7 +79,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        *     </option>
        * </component>
        */
-      var ScrollContainer = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible], {
+      var ScrollContainer = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, WsCompatibleConstructor], {
          _template: template,
 
          _controlName: 'SBIS3.CONTROLS.ScrollContainer',
