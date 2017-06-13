@@ -427,8 +427,6 @@
 // DateBox //
 // ----------- //
 @date-box-field-text-color:                           @default-text-color;
-@date-box-wrapper-border-color:                       #eaeaea;
-
 
 // ----------- //
 // Search form //
@@ -500,7 +498,7 @@
 // Suggest //
 // ----------- //
 
-@suggest-picker-border:                         1px solid @gray-color;
+@suggest-picker-border:                         0.07rem solid @gray-color;
 
 @suggest-list-item-hover-bg:                    #f3f3f3;
 @suggest-list-item-selected-bg:                 darken(@suggest-list-item-hover-bg, 5%);
@@ -614,6 +612,10 @@
 // ---------- //
 
 @date-range-text-line-height:                   normal;
+@date-range-icon-button-top:                    0.536rem;
+@date-range-dash-width:                         0.286rem;
+@date-range-dash-margin:                        0 0.286rem 0.286rem 0.286rem;
+@date-range-dash-border-top:                    2px solid @date-range-dash-color;
 
 // ----------------- //
 // Data Range Slider //
@@ -661,18 +663,35 @@
 // -------------- //
 
 @date-range-big-choose-font-family:                            'TensorFont Regular', 'TensorFont', sans-serif;
+@date-range-big-choose-border-color:                           #eaeaea;
+
+@date-range-big-choose-header-padding:                               0.256rem 0 0.256rem 0.5rem;
+@date-range-big-choose-header-date-pickers-margin-right:             4.2rem;
+@date-range-big-choose-header-date-picker-margin-top:                0;
+@date-range-big-choose-header-range-dash-width:                      0.286rem;
+@date-range-big-choose-header-range-dash-margin:                     1.5rem 0.286rem 0.286rem;
+
+@date-range-big-choose-years-panel-toggle-choose-year-button-line-height:   3rem;
+@date-range-big-choose-years-panel-current-year-button-line-height:         3rem;
+@date-range-big-choose-years-panel-back-button-font-size:                   3rem;
+@date-range-big-choose-years-panel-back-button-line-height:                 3rem;
 
 @date-range-big-choose-quarters-half-years-font-size:                inherit;
 
+@date-range-big-choose-body-height:                                  21.429rem;
+
 @date-range-big-choose-months-range-btn-height:                      5.071rem;
 
+@date-range-big-choose-months-color:                                 #2d68b5;
 @date-range-big-choose-months-button-height:                         1.786rem;
 @date-range-big-choose-months-range-width:                           5.429rem;
 @date-range-big-choose-months-button-first-height:                   @date-range-big-choose-months-button-height;
 @date-range-big-choose-months-button-last-height:                    @date-range-big-choose-months-button-height;
-@date-range-big-choose-date-range-picker-table-element-height:       2.97rem;
+@date-range-big-choose-date-range-picker-table-element-height:       2.8rem;
 
+@date-range-big-choose-date-range-picker-color:                      #000000;
 @date-range-big-choose-date-range-picker-left:                       @date-range-big-choose-months-range-width + 0.857rem;
+@date-range-big-choose-date-range-picker-caption-height:             2.42rem;
 
 // ------------- //
 // Edit at place //
@@ -690,7 +709,8 @@
 @list-view-actions-icon-top:                    1.497rem;
 @list-view-items-toolbar-vertical-locked-box-shadow: -2px .07rem 5px @data-grid-row-hover-bg;
 
-@list-view-items-toolbar-locked-bg:                  @controls-editInPlace-editor-bg;
+@list-view-items-toolbar-locked-bg:              @default-hover-color;
+@controls-editInPlace-editor-bg:                 @default-hover-color;
 
 @list-view-actions-active-bg: @data-grid-bg;
 @list-view-loading-indicator-gradient-bg:       url(@list-view-scroll-spritesheet)  no-repeat center;
@@ -753,6 +773,12 @@
 
 
 @data-grid-table-layot: 								fixed;
+
+// ----------- //
+// PrintDialog //
+// ----------- //
+@controls-printdialog-min-width:                700px;
+@controls-printdialog-activate-right:           89px;
 
 // --------------- //
 // OperationsPanel //
@@ -945,7 +971,7 @@
 @clock-picker-tick-hover-background-color:          #F0F5FB;
 @clock-picker-unit-time-color:                      @gray-ccc-color;@bottomStyle-items-toolbar-border-color:        #F3F3F3;
 
-@date-range-big-choose-bg-hovered-color:       rgb(239, 241, 242);
+@date-range-big-choose-bg-hovered-color:        rgb(240, 245, 251);
 @date-range-big-choose-month-range-picker-caption-text-hovered-bg: @date-range-big-choose-bg-hovered-color;
 @date-range-big-choose-header-apply-button-icon-margin-left: -1rem;
 
@@ -954,13 +980,12 @@
 @image-bar-bg-color:                      rgba(255, 255, 255, .5);
 @data-grid-row-hover-cell-bg:                 #E0ECF5;
 
-@bottomStyle-items-toolbar-border-color:        #F3F3F3;
-
-@controls-filterButton-picker-border-color:     #0055BB;
-
-@icon-active-color:                             #313E78;
-
 @gray-lamantin-color:                               #8991A9;
 @icon-color-disabled: #ccc !important;
 @text-box-placeholder-color:                   #CCCCCC;
-@date-range-big-choose-date-range-picker-color:   #000;
+
+@date-range-big-choose-date-range-picker-color:                         #000000;
+@date-range-big-choose-date-range-picker-border-color:                  #0055BB;
+@date-range-big-choose-date-range-picker-boundary-selected-color:       #fff;
+@date-range-big-choose-date-range-picker-bg-boundary-selected-color:    #0055BB;
+@highlight-text-bg:                          #fffecf;
