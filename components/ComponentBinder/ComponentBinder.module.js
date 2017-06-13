@@ -15,9 +15,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        'js!SBIS3.CONTROLS.FilterController',
        "Core/helpers/collection-helpers",
        "Core/core-instance",
-       "Core/helpers/functional-helpers"
+       "Core/helpers/functional-helpers",
+       "Core/helpers/Object/find"
     ],
-    function (cAbstract, cFunctions, cMerge, constants, HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController, FilterHistoryControllerUntil, DateRangeRelationController, FilterController, colHelpers, cInstance, fHelpers) {
+    function (cAbstract, cFunctions, cMerge, constants, HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController, FilterHistoryControllerUntil, DateRangeRelationController, FilterController, colHelpers, cInstance, fHelpers, find) {
    /**
     * Контроллер для осуществления базового взаимодействия между компонентами.
     *
@@ -304,7 +305,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
                filterButton.setFilterStructure(preparedStructure);
                
                if(browser && browser._hasOption('filterButtonConfig')) {
-                  browser.getProperty('filterButtonConfig').filterStructure = preparedStructure;
+                  /* Если была забиндена не сама структура фильтров,
+                     а конфиг фильтров (это происходит, когда конфиг передают объектом на новом шаблонизаторе, а не строкой),
+                     то надо дополнительно обновить опцию filterButtonConfig, иначе после синхронизации сбросится стркутура. */
+                  if(find(browser._getOptions().bindings, function(elem) { return elem.propName === "filterButtonConfig" })) {
+                     browser.getProperty('filterButtonConfig').filterStructure = preparedStructure;
+                     view.setFilter(cMerge(view.getFilter, filter.viewFilter), true);
+                  }
                }
             }
          }
