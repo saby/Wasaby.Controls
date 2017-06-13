@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
      * @extends SBIS3.CONTROLS.NumberTextBox
      * @public
      * @control
-     * @author Крайнов Дмитрий Олегович
+     * @author Роман Валерий Сергеевич
      *
      * @cssModifier controls-MoneyTextBox__ellipsis При нехватке ширины текст в поле ввода будет обрезаться. Если контрол неактивен, то оборвётся многоточием.
      */

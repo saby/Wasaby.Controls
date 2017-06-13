@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
     * @extends SBIS3.CONTROLS.WSButtonBase
     * @mixes SBIS3.CONTROLS.IconMixin
     * @demo SBIS3.CONTROLS.Demo.MyIconButton
-    * @author Борисов Петр Сергеевич
+    * @author Романов Валерий Сергеевич
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment

@@ -66,7 +66,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     *
     * @demo SBIS3.CONTROLS.Demo.MyOperationsPanel Пример 1. Типовые массовые операции над записями.
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Сухоручкин Андрей Сергеевич
     * @ignoreOptions contextRestriction independentContext
     *
     * @ignoreEvents onAfterLoad onChange onStateChange

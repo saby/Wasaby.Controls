@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.Button',
     * @extends WSControls/Buttons/ButtonBase
     * @demo SBIS3.CONTROLS.Demo.MyButton
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Романов Валерий Сергеевич
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers parent
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner record stateKey

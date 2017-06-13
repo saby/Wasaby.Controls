@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.Image',
           * В качестве источника данных допускается использовать только {@link WS.Data/Source/SbisService}.
           * @class SBIS3.CONTROLS.Image
           * @extends SBIS3.CORE.CompoundControl
-          * @author Крайнов Дмитрий Олегович
+          * @author Борисов Пётр Сергеевич
           *
           * @ignoreOptions validators
           * @ignoreEvents onAfterLoad onChange onStateChange

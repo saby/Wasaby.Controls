@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
     *
     * @mixes SBIS3.CONTROLS.CompositeViewMixin
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author
     *
     * @demo SBIS3.CONTROLS.Demo.MyTreeCompositeView
     *

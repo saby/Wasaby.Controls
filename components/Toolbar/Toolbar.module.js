@@ -128,7 +128,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
     * @class SBIS3.CONTROLS.Toolbar
     * @extends SBIS3.CONTROLS.ButtonGroupBase
     * @demo SBIS3.CONTROLS.Demo.MyToolbar
-    * @author Крайнов Дмитрий Олегович
+    * @author Сухоручкин Андрей Сергеевич
     *
     * @control
     * @public

@@ -114,7 +114,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * Инициировать добавление можно как по нажатию кнопок в футерах, так и по кнопке Enter из режима редактирования последней записи.
     * Подробное описание конфигурации компонента и футеров вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/add-in-place/"> Добавление по месту</a>.
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Авраменко Алексей Сергеевич
     *
     * @control
     * @public

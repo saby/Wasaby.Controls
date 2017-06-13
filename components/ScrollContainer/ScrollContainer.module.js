@@ -41,7 +41,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        * @class SBIS3.CONTROLS.ScrollContainer
        * @demo SBIS3.CONTROLS.Demo.MyScrollContainer
        * @extends SBIS3.CONTROLS.CompoundControl
-       * @author Крайнов Дмитрий Олегович
+       * @author Черемушкин Илья Вячеславович
        *
        * @example
        * Использование ScrollContainer с вложенным в него ListView, и настройкой автоподгрузки вниз.

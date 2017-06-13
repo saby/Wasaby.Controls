@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.RadioButton', ['js!SBIS3.CONTROLS.RadioButtonBase', 'h
     * @extends SBIS3.CONTROLS.RadioButtonBase
     * @cssModifier controls-Radio__primary акцентные кнопки
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Журавлев Максим Сергеевич
     *
     * @css controls-RadioButton__caption Класс для изменения отображения текста подписи у радиокнопки.
     */
