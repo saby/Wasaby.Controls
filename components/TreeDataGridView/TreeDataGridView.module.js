@@ -76,11 +76,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          config.classNodeType = ' controls-ListView__item-type-' + (config.nodePropertyValue == null ? 'leaf' : config.nodePropertyValue == true ? 'node' : 'hidden');
          config.classNodeState = config.nodePropertyValue !== null ? (' controls-TreeView__item-' + (cfg.projItem.isExpanded() ? 'expanded' : 'collapsed')) : '';
          config.classIsSelected = (cfg.selectedKey == cfg.item.getId()) ? ' controls-ListView__item__selected' : '';
-         config.isColumnScrolling = cfg.startScrollColumn === 0;
-         config.addClasses = 'controls-DataGridView__tr controls-ListView__item js-controls-ListView__item ' + (cfg.className ? cfg.className : '') + (config.isColumnScrolling ? ' controls-DataGridView__scrolledCell' : ' controls-DataGridView__notScrolledCell') + config.classNodeType + config.classNodeState + config.classIsLoaded + config.classHasLoadedChild + config.classIsSelected;
-         if (config.isColumnScrolling){
-            config.computedPadding = 'left: ' + cfg.columnsScrollPosition + 'px;';
-         }
+         config.isColumnScrolling = cfg.startScrollColumn !== undefined;
+         config.columnsShift = cfg.columnsShift;
+         config.addClasses = 'controls-DataGridView__tr controls-ListView__item js-controls-ListView__item ' + (cfg.className ? cfg.className : '') + config.classNodeType + config.classNodeState + config.classIsLoaded + config.classHasLoadedChild + config.classIsSelected;
+
          return config;
       },
       getItemContentTplData = function(cfg){
