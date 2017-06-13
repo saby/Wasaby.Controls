@@ -248,7 +248,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
              crumbs = $('.controls-BreadCrumbs__crumb', targetContainer),
              i = crumbs.length - 1;
 
-         if (!crumbs.length){
+         if (!crumbs.length || containerWidth == 0){
             return;
          }
          //Добавляем троеточие если пункты не убираются в контейнер
