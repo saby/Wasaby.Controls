@@ -968,7 +968,7 @@
 @listView-servicefooter-height:                1.47rem;
 
 @list-view-actions-item-height:                 1.75rem;
-@list-view-actions-margin:                      0 .14rem;
+@list-view-actions-margin:                      -.14rem .14rem;
 @list-view-actions-box-shadow:                  -2px -2px 5px #F3F3F3;
 @list-view-actions-icon-top:                    1.497rem;
 @list-view-actions-menu-text-margin:          .64rem 0px 6px 2.32rem;
@@ -1038,7 +1038,7 @@
 @tree-view-hier-wrapper-width:						20px;
 @tree-view-hier-wrapper-height: 						20px;
 
-@tree-view-copy-arrow-background:               @basic-block-bg-color;
+@tree-view-copy-arrow-background:               @default-bg-color;
 
 // --------- //
 // Data grid //
@@ -1519,3 +1519,9 @@
 @search-left-margin:                                  .57rem;
 @controls-view-padding-DEFAULT:                       .8rem;
 @combo-box-picker-border:                       2px solid #26B8FF;
+
+@data-grid-row-selected-main-bg:                @default-bg-color;
+@data-grid-row-selected-addit-bg:               rgba(29, 40, 52, 0);
+@tree-view-copy-arrow-add-background:           @data-grid-row-selected-addit-bg;
+@data-grid-row-hover-add-bg:                    rgba(41, 58, 75, 0);
+@data-grid-row-selected-add-bg:                 @data-grid-row-hover-add-bg;

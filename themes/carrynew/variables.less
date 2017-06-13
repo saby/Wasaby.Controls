@@ -95,8 +95,8 @@
 
 // Normal disabled button
 @button-disabled-text-color:              @gray-color;
-@button-disabled-border:                  @button-border;
-@button-disabled-bg:                      @gray-light-color;
+@button-disabled-border:                  0.07rem solid #CCCCCC;
+@button-disabled-bg:                      #F0F5FB;
 
 // Big button
 @button-big-border:                         .07rem solid #c1441b;
@@ -745,7 +745,7 @@
 @tree-view-expand-open-hover-bg:                @tree-view-expand-open-bg;
 
 
-@tree-view-copy-arrow-background:               #fff;
+@tree-view-copy-arrow-background:               @default-bg-color;
 
 // --------- //
 // Data grid //
@@ -984,3 +984,9 @@
 @date-range-big-choose-date-range-picker-boundary-selected-color:       #fff;
 @date-range-big-choose-date-range-picker-bg-boundary-selected-color:    #0055BB;
 @highlight-text-bg:                          #fffecf;
+
+@data-grid-row-selected-main-bg:                @default-bg-color;
+@data-grid-row-selected-addit-bg:               rgba(255, 255, 255, 0);
+@tree-view-copy-arrow-add-background:           @data-grid-row-selected-addit-bg;
+@data-grid-row-hover-add-bg:                    rgba(224, 236, 245, 0);
+@data-grid-row-selected-add-bg:                 @data-grid-row-hover-add-bg;
