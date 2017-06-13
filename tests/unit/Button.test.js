@@ -18,6 +18,12 @@ define([
          };
 
 
+      var buttonPartial = new Button({ caption: "some<br>caption", hasPartial: true});
+      describe('State', function() {
+         it('caption is function', function () {
+            assert.isTrue(typeof buttonPartial._options.caption === "function");
+         });
+      });
 
 
       var button = new Button(cfg);
