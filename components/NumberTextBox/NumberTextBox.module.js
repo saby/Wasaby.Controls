@@ -360,7 +360,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
       _updateCompatPlaceholderVisibility: function() {
          if (this._compatPlaceholder) {
             if (typeof this._options.numericValue === 'number' && !isNaN(this._options.numericValue)) {
-               this._compatPlaceholder.hide();
+                this._compatPlaceholder.addClass('ws-hidden');
             } else {
                NumberTextBox.superclass._updateCompatPlaceholderVisibility.apply(this, arguments);
             }
