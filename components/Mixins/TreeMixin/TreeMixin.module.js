@@ -171,6 +171,22 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
 
       return resRecords;
    },
+   prepareGroupId = function(item, groupId, cfg) {
+      var
+         hierarchyRelation = cfg._getHierarchyRelation(cfg);
+      function calcGroupId(item) {
+         var
+            itemParent;
+         // Обходим родителей именно через hierarchyRelation. Проекция на момент расчёта hash группы не построила иерархию и
+         // пробежаться по родителям с помощью проекции не получится.
+         // P.S. проекция не строит иерархию перед вычислением hash группы из-за оптимизации обхода (чтобы не делать его дважды, (c) Мальцев А.).
+         if (hierarchyRelation) {
+            itemParent = hierarchyRelation.hasParent(item, cfg._items) ? hierarchyRelation.getParent(item, cfg._items) : null;
+         }
+         return itemParent !== undefined ? itemParent === null ? '@' : itemParent.get(cfg.idProperty) + calcGroupId(itemParent) : '';
+      }
+      return calcGroupId(item) + groupId;
+   },
    getRecordsForRedraw = function(projection, cfg) {
       var
          prevItem,
@@ -332,6 +348,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    },
    hasNextPageInFolder = function(cfg, more, id) {
       return typeof (more) !== 'boolean' ? more > (cfg._folderOffsets[id || 'null'] + cfg.pageSize) : !!more;
+   },
+
+   getHierarchyRelation = function(cfg) {
+      var
+         items = cfg._items;
+      return new HierarchyRelation({
+         idProperty: items ? items.getIdProperty() : '',
+         parentProperty: cfg.parentProperty,
+         nodeProperty: cfg.nodeProperty
+      });
    };
 
    getItemTemplateData = function(cfg){
@@ -435,9 +461,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          _options: {
             _folderOffsets : {},
             _folderHasMore : {},
+            _prepareGroupId: prepareGroupId,
             _buildTplArgs: buildTplArgsTV,
             _buildTplArgsTV: buildTplArgsTV,
             _getItemTemplateData: getItemTemplateData,
+            _getHierarchyRelation: getHierarchyRelation,
             _defaultSearchRender: searchRender,
             _getSearchCfgTv: getSearchCfg,
             _getSearchCfg: getSearchCfg,
@@ -1092,15 +1120,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          });
       },
 
-      _getHierarchyRelation: function(idProperty) {
-         var items = this.getItems();
-         return new HierarchyRelation({
-            idProperty: idProperty || (items ? items.getIdProperty() : ''),
-            parentProperty: this._options.parentProperty,
-            nodeProperty: this._options.nodeProperty
-         });
-      },
-
       _afterAddItems: function() {
          // В виду проблем, возникающих в режиме поиска при разрыве путей до искомых записей - помочь в настоящий момент может только redraw
          if (this._options.hasNodes && this._isSearchMode()) {
@@ -1150,7 +1169,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          _dataLoadedCallback: function () {
             //this._options.openedPath = {};
             if (this._options.expand) {
-               var hierarchy = this._getHierarchyRelation(),
+               var hierarchy = this._options._getHierarchyRelation(this._options),
                   items = this.getItems(),
                   openedPath = this._options.openedPath;
                items.each(function(item) {
