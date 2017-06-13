@@ -208,7 +208,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                cfg.hasNodes = true;
             }
             if (!isEmpty(cfg.groupBy) && cfg.easyGroup && cfg._canApplyGrouping(item, cfg)) {
-               if (prevGroupId != group) {
+               if (prevGroupId != group && group !== false) {
                   cfg._groupItemProcessing(group, records, item, cfg);
                   prevGroupId = group;
                }
@@ -864,7 +864,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             var prevGroupId = undefined;  //тут groupId одинаковый для пачки данных, но группу надо вставить один раз, используем пермеенную как флаг
             for (var i = 0; i < items.length; i++) {
                if (!isEmpty(this._options.groupBy) && this._options.easyGroup) {
-                  if (this._canApplyGrouping(items[i]) && prevGroupId != groupId) {
+                  if (this._canApplyGrouping(items[i]) && prevGroupId != groupId && groupId !== false) {
                      prevGroupId = groupId;
                      if (this._getGroupItems(groupId).length <= items.length) {
                         this._options._groupItemProcessing(groupId, result, items[i], this._options);
