@@ -58,11 +58,12 @@ define(
                 baseOrder = 30,
                 firstLeftItem,
                 lastRightItem,
-                tmpl, item;
+                tmpl, itemTpl, item;
             if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
                projection.each(function (itemProj) {
                   item = itemProj.getContents();
-                  tmpl = TemplateUtil.prepareTemplate(item.get(opts.displayProperty || ''))({
+                  itemTpl = item.get(opts.displayProperty);
+                  tmpl = itemTpl && TemplateUtil.prepareTemplate(itemTpl)({
                      item: item.getRawData(),
                      options: opts
                   });
@@ -77,7 +78,7 @@ define(
                      item.set('_order', baseOrder + order++);
                   }
                   item.set('_sideTab', false);
-                  item.set(opts.displayProperty, tmpl);
+                  item.set(opts.displayProperty, tmpl || '');
                });
 
                if (firstLeftItem) {
