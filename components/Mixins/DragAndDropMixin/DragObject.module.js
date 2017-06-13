@@ -192,10 +192,11 @@ define('js!SBIS3.CONTROLS.DragObject', [
       getTargetsDomElemet: function(){
          if (this._jsEvent) {
             var avatar = this.getAvatar();
-            if ( avatar && avatar.find(this._jsEvent.target).length > 0 ||
+            if (typeof document.elementsFromPoint == 'function' && (
+               avatar && avatar.find(this._jsEvent.target).length > 0 ||
                this._jsEvent.type in {"touchmove":true, "touchend":true}
                || constants.browser.firefox
-            ) {
+            )) {
                //Для touch событий в таргете всегда лежит элемент над которым началось перемещение
                //firefox не всегда правильно определяет target
                //Когда курсор быстро двигается он может наезжать на аватар ищем элемент который в него не входит
