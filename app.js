@@ -111,10 +111,17 @@ var simpleProxy = function (proxyParams, req, res) {
    };
 
    var pass = function (cookies, setCookies) {
+      var reqPath = req.path;
+      if (reqPath.substring(0, proxyParams.host.length + 2) === '/' + proxyParams.host + '/') {
+         reqPath = reqPath.substring(proxyParams.host.length + 1);
+      }
+      if (req.route.path.charAt(req.route.path.length - 1) === '/' && reqPath.charAt(reqPath.length - 1) !== '/') {
+         reqPath = reqPath + '/';
+      }
       subReq(
          {
             method: req.method,
-            path: req.route.path.charAt(req.route.path.length - 1) === '/' && req.path.charAt(req.path.length - 1) !== '/' ? req.path + '/' : req.path,
+            path: reqPath,
             headers: Object.assign({}, req.headers, {
                cookie: Object.keys(cookies).map(function (n) { return n + '=' + cookies[n]; }).join('; ')
             })
@@ -188,3 +195,4 @@ var PROXY_PARAMS = {
 // Проксировать запросы по указанным роутам
 app.get('/!hash/', simpleProxy.bind(null, PROXY_PARAMS));
 app.post('/long-requests/service/', simpleProxy.bind(null, PROXY_PARAMS));
+app.post('/' + PROXY_PARAMS.host + '/service/', simpleProxy.bind(null, PROXY_PARAMS));
