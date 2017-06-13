@@ -314,8 +314,10 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             return false;
          }
          //проверять изменяется ли индекс у эелемента нужно только если не меняется родитель
-         var sameParents = (parentProperty ? target.get(parentProperty) == movedItem.get(parentProperty) : true);
-         if (isChangeOrder && sameParents) {
+         if (isChangeOrder && (
+            parentProperty && target.get(parentProperty) == movedItem.get(parentProperty) ||
+            !parentProperty
+         )) {
             var  targetIndex = this.getItems().getIndex(target);
             targetIndex = position == 'before' ? targetIndex - 1 : targetIndex + 1;
             if (this.getItems().getIndex(movedItem) == targetIndex) {
