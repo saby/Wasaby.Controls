@@ -133,7 +133,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             if (window && this._container && (typeof this._container.length === "number")) {
 
                this._content = $('> .controls-ScrollContainer__content', this.getContainer());
-               this._showScrollbar = !(cDetection.isMobileIOS || cDetection.isMobileAndroid || compatibility.touch && cDetection.isIE);
+               this._showScrollbar = !(cDetection.isMobileIOS || cDetection.isMobileAndroid || compatibility.touch && !cDetection.retailOffline && cDetection.isIE);
                this._bindOfflainEvents();
                //Под android оставляем нативный скролл
                if (this._showScrollbar){
@@ -246,7 +246,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _onResizeHandler: function(){
-            var headerHeight, scrollbarContainer;
+            var headerHeight, scrollbarContainer, scrollbarHeight;
             AreaAbstractCompatible._onResizeHandler.apply(this, arguments);
             if (this._scrollbar){
                this._scrollbar.setContentHeight(this._getScrollHeight());
@@ -255,11 +255,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   headerHeight = StickyHeaderManager.getStickyHeaderHeight(this._content);
                   if (this._headerHeight !== headerHeight) {
                      scrollbarContainer = this._scrollbar._container;
-                     this._headerHeight = headerHeight;
                      scrollbarContainer.css('margin-top', headerHeight);
-                     //У scrollbar изначально стоит height(calc(100% - 8px)). Поэтому нужно учесть эти 8px.
-                     headerHeight += 8;
                      scrollbarContainer.height('calc(100% - ' + headerHeight + 'px)');
+                     this._headerHeight = headerHeight;
                   }
                }
             }
