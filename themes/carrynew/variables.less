@@ -58,6 +58,7 @@
 // Normal button
 @button-font:                             @button-font-size @default-font-name;
 @button-text-alignment:                   center;
+@button-icon-color-hover:                 #313E78;
 
 @FilterPanelButtonRightClose: url('img/FilterPanelButton.png') 0 0;
 @FilterPanelButtonLeftClose: url('img/FilterPanelButton.png') -35px 0;
@@ -466,7 +467,7 @@
 @combo-box-disabled-border-color:               transparent;
 @combo-box-disabled-color:                      #38495B;
 
-@combo-box-picker-border:                      0rem solid #48bffc;
+@combo-box-picker-border:                       @combobox-picker-border-width solid @menu-border-color;
 @text-box-field-font-size: 1.14rem;
 @combo-box-picker-item-bg:                      #ffffff;
 @combo-box-picker-item-text-color               : #324352;
@@ -784,20 +785,13 @@
 // OperationsPanel //
 // --------------- //
 
-@controls-OperationsPanel-height:                   30px;
-
 @controls-OperationsPanel-bg:                       #354B62;
-
-
-@controls-OperationsPanel-separator-bg:             #CCCCCC;
-@controls-OperationsPanel-separator-height:         20px;
-@controls-OperationsPanel-separator-line-height:    30px;
-
-@controls-OperationsPanel-actions-padding-left:     0;
 
 // ----------------------- //
 // OperationsPanelButton  //
 // ----------------------- //
+
+@controls-OperationsPanelButton-color:             #FFFFFF;
 
 // --------------- //
 // OperationsMark //
@@ -984,7 +978,6 @@
 @icon-color-disabled: #ccc !important;
 @text-box-placeholder-color:                   #CCCCCC;
 
-@date-range-big-choose-date-range-picker-color:                         #000000;
 @date-range-big-choose-date-range-picker-border-color:                  #0055BB;
 @date-range-big-choose-date-range-picker-boundary-selected-color:       #fff;
 @date-range-big-choose-date-range-picker-bg-boundary-selected-color:    #0055BB;

@@ -5,7 +5,6 @@
 define('js!SBIS3.CONTROLS.FilterPanel', [
    'Core/core-functions',
    'Core/CommandDispatcher',
-   'Core/helpers/functional-helpers',
    'js!SBIS3.CONTROLS.CompoundControl',
    'js!SBIS3.CONTROLS.Expandable',
    'js!WS.Data/Collection/RecordSet',
@@ -16,7 +15,6 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
    'tmpl!SBIS3.CONTROLS.FilterPanel/resources/FilterPanelItemContentTemplate',
    'tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateChooser',
    'tmpl!SBIS3.CONTROLS.FilterPanel/resources/TemplateDataRange',
-   'tmpl!SBIS3.CONTROLS.FilterPanel/resources/FilterPanelSpoilerRightPartTitleTemplate',
    'js!SBIS3.CONTROLS.Link',
    'js!SBIS3.CONTROLS.Accordion',
    'js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList',
@@ -30,7 +28,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
    'js!SBIS3.CONTROLS.IconButton',
    'js!SBIS3.CONTROLS.ScrollContainer',
    'css!SBIS3.CONTROLS.FilterPanel'
-], function( cFunctions, CommandDispatcher, fHelpers, CompoundControl, Expandable, RecordSet, FilterPanelItem, FilterToStringUtil, dotTplFn, contentTpl, FilterPanelItemContentTemplate) {
+], function( cFunctions, CommandDispatcher, CompoundControl, Expandable, RecordSet, FilterPanelItem, FilterToStringUtil, dotTplFn, contentTpl, FilterPanelItemContentTemplate) {
 
    'use strict';
    /**

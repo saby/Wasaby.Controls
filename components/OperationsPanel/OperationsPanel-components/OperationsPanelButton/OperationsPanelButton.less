@@ -1,5 +1,5 @@
 .controls-OperationsPanelButton {
-   color: @default-color;
+   color: @controls-OperationsPanelButton-color;
    cursor: @controls-OperationsPanelButton-cursor;
 
    .controls-OperationsPanelButton__icon {
@@ -19,13 +19,13 @@
 
    &.controls-Checked__checked {
       .controls-OperationsPanelButton__icon:before {
-         content: "\e012";
+         content: @controls-OperationsPanelButton-icon-expand;
       }
    }
    .controls-OperationsPanelButton__icon {
       top: @controls-OperationsPanelButton-vertical-icon-top;
       &:before {
-         content: "\e011";
+         content: @controls-OperationsPanelButton-icon;
       }
    }
 }
