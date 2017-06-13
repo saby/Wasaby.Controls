@@ -174,7 +174,7 @@
    }
 
    &.ws-disabled {
-      
+
       .controls-TextBox__placeholder, .controls-TextBox__afterFieldWrapper {
          display: none;
       }
@@ -195,7 +195,7 @@
          display: none;
       }
    }
-   
+
    .controls-FieldLink__dropAllLinks {
       color: @controls-FieldLink-link-color;
       display: none;
@@ -253,11 +253,11 @@
    }
    &:not(.ws-disabled) {
       &.controls-FieldLink-Link__filterButton {
-         color: #0055bb;
+         color: @controls-FieldLink-FilterButton-color;
          text-decoration: none;
 
          &.ws-enabled:hover {
-            color: #0055bb;
+            color: @controls-FieldLink-FilterButton-color-hover;
             text-decoration: underline;
          }
       }
@@ -340,7 +340,7 @@
 .ws-is-firefox {
    .controls-FieldLink {
       vertical-align: middle;
-      
+
       .controls-FieldLink__item-cross {
          top: -1px;
       }

@@ -99,7 +99,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
             this._container.removeClass('controls-Click__active');
          }
 
-         if (!this._isControlActive) {
+         if (!this._isControlActive && this._options.activableByClick!==false) {
             //Прикрытие юнит-тестов. Внутри того setActive лезут в дом
             if (typeof window !== "undefined") {
                this.setActive(true);

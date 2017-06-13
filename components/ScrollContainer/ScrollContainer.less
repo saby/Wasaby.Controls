@@ -65,6 +65,14 @@
    }
 }
 
+// Для IE нужно оставить хак:
+// https://online.sbis.ru/opendoc.html?guid=bd8fad86-cab3-42e8-8914-d2309e35a865&des=
+// Ошибка в разработку 08.06.2017 Перенос: в ИЕ лишний вертикальный скролл в окне с периодами Как повторить: отчетность - в правом в…
+body.ws-is-ie .controls-ScrollContainer__content {
+   // Хак. IE не поддерживает isolation: isolate;
+   transform: scale(1);
+}
+
 .controls-ScrollContainer-overflow-scrolling-auto .controls-ScrollContainer__content {
    -webkit-overflow-scrolling: auto!important;
 }
