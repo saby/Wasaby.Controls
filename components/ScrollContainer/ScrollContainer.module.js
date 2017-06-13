@@ -119,8 +119,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             this._headerHeight = 0;
             this._ctxSync = {
                selfToPrev: {},
+               selfCtxRemoved: {},
                selfNeedSync: false,
                prevToSelf: {},
+               prevCtxRemoved: {},
                prevNeedSync: false
             };
             this.deprecatedContr(cfg);
@@ -171,6 +173,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             }
          },
 
+         bothIsNaN: function(a, b){
+            return (typeof a === "number") && (typeof b === "number") && isNaN(a) && isNaN(b);
+         },
+
          setContext: function(ctx){
             BaseCompatible.setContext.call(this, ctx);
             /**
@@ -185,7 +191,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
                this._context.subscribe('onFieldChange', function (ev, name, value) {
                   if (this.getValueSelf(name) !== undefined) {
-                     if (prevContext.getValueSelf(name) !== value && self._ctxSync.selfToPrev[name] !== value) {
+                     if (prevContext.getValueSelf(name) != value &&
+                        self._ctxSync.selfToPrev[name] != value &&
+                        !self.bothIsNaN(value, prevContext.getValueSelf(name)) &&
+                        !self.bothIsNaN(value, self._ctxSync.selfToPrev[name])) {
                         self._ctxSync.selfToPrev[name] = value;
                         self._ctxSync.selfNeedSync = true;
                      }
@@ -194,7 +203,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
                prevContext.subscribe('onFieldChange', function (ev, name, value) {
                   if (prevContext.getValueSelf(name) !== undefined) {
-                     if (selfCtx.getValueSelf(name) !== value && self._ctxSync.prevToSelf[name] !== value){
+                     if (selfCtx.getValueSelf(name) != value &&
+                        self._ctxSync.prevToSelf[name] != value &&
+                        !self.bothIsNaN(value, selfCtx.getValueSelf(name)) &&
+                        !self.bothIsNaN(value, self._ctxSync.prevToSelf[name])){
                         self._ctxSync.prevToSelf[name] = value;
                         self._ctxSync.prevNeedSync = true;
                      }
@@ -218,13 +230,18 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                });
 
                this._context.subscribe('onFieldRemove', function (ev, name, value) {
-                  if (prevContext.getValueSelf(name) !== undefined) {
+                  self._ctxSync.selfCtxRemoved[name] = false;
+                  if (prevContext.getValueSelf(name) !== undefined &&
+                        !self._ctxSync.prevCtxRemoved[name]) {
+                     self._ctxSync.prevCtxRemoved[name] = true;
                      prevContext.removeValue(name);
                   }
                });
 
                prevContext.subscribe('onFieldRemove', function (ev, name, value) {
-                  if (selfCtx.getValueSelf(name) !== undefined) {
+                  self._ctxSync.prevCtxRemoved[name] = false;
+                  if (selfCtx.getValueSelf(name) !== undefined && !self._ctxSync.selfCtxRemoved[name]) {
+                     self._ctxSync.selfCtxRemoved[name] = true;
                      selfCtx.removeValue(name);
                   }
                });
