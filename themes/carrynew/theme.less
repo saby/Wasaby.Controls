@@ -317,7 +317,7 @@ body {
   .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
       font-size: 3rem!important;
       width: 24px;
-      margin-left: 1.5rem;
+      margin-left: -2.5rem;
       margin-top: initial;
   }
     .controls-DateBox {
@@ -560,9 +560,34 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button {
   font-size: 1rem;
 }
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__left, .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__right {
-   line-height: inherit;
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__left,
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__right {
+   .icon-24 {
+       font-size: 3rem !important;
+       height: 3rem !important;
+       width: 3rem !important;
+       line-height: 3rem !important;
+   }
 }
+.controls-DateRangeBigChoose__years-toggleChooseYearBtn {
+   height: 3rem;
+}
+.controls-DateRangeBigChoose__header-date-pickers .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper{
+   padding: 0.1rem 0.57rem 0.1rem 0.57rem;
+}
+
+.controls-DateRangeBigChoose__datePickerEnd-wrapper .controls-DateBox {
+   margin-right: 1.6rem;
+}
+
+.controls-DateRangeBigChoose .controls-DateRangeBigChoose__years-prevYearBtn,
+.controls-DateRangeBigChoose .controls-DateRangeBigChoose__years-nextYearBtn {
+   // В теме престо у controls-IconButton стоит vertical-align: baseline, а в рознице нет..
+   &.controls-IconButton {
+      vertical-align: baseline;
+   }
+}
+
 .controls-ComboBox__picker {
   box-sizing: border-box;
 }
