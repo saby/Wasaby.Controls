@@ -232,7 +232,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
       _updateDragTarget: function(e) {
          var dragTarget = this._getDragTarget(e),
             target;
-         if (dragTarget.item && !dragTarget.domElement.hasClass('controls-DragNDrop__placeholder')) {
+         if (DragObject.getSource() && dragTarget.item && !dragTarget.domElement.hasClass('controls-DragNDrop__placeholder')) {
             var position = this._getDirectionOrderChange(e, dragTarget.domElement) || DRAG_META_INSERT.on,
                sourceIds = [],
                movedItems = [];
