@@ -747,7 +747,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _initializePicker: function(){
          var self = this;
          ComboBox.superclass._initializePicker.call(self);
-
+         this._scrollContainer = this.getChildControlByName('ComboBoxScroll');
          // пробрасываем события пикера в метод комбобокса, т.к. если значение выбрано, то при открытии пикера фокус
          // перейдет на него и комбобокс перестанет реагировать на нажатие клавиш, потому что он наследуется от AreaAbstract
          // TODO чтобы избежать этого нужно переписать Combobox на ItemsControlMixin, тогда метод _scrollToItem не будет переводить фокус на пикер
@@ -789,6 +789,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          var itemContainer  = $('.controls-ListView__item[data-hash="' + itemHash + '"]', this._getItemsContainer());
          if (itemContainer.length) {
             LayoutManager.scrollToElement(itemContainer, true);
+            //Устанавливаю скроллбар в нужную позицию
+            this._scrollContainer._initScrollbar();
+            this._scrollContainer._scrollbar.setPosition(itemContainer.position().top);
          }
       }
    });
