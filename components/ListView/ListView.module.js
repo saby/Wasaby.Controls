@@ -4027,7 +4027,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _updateDragTarget: function(dragObject, e) {
             var dragTarget = this._getDragTarget(dragObject, e),
                target;
-            if (dragTarget.item && !dragTarget.domElement.hasClass('controls-DragNDrop__placeholder')) {
+            if (dragObject.getSource() && dragTarget.item && !dragTarget.domElement.hasClass('controls-DragNDrop__placeholder')) {
                var position = this._getDirectionOrderChange(e, dragTarget.domElement) || DRAG_META_INSERT.on,
                   sourceIds = [],
                   movedItems = [];
@@ -4035,7 +4035,6 @@ define('js!SBIS3.CONTROLS.ListView',
                   sourceIds.push(item.getModel().getId());
                   movedItems.push(item.getModel());
                });
-               var projItem = this._getItemsProjection().getItemBySourceItem(dragTarget.item);
                if (this._getMover()._checkRecordForMove(movedItems, dragTarget.item, position)) {
                   target = this._makeDragEntity({
                      owner: this,
