@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
     * </component>
     */
 
-   function formatText(value, text, onlyInteger, decimals, integers, delimiters, onlyPositive, maxLength){
+   function formatText(value, text, onlyInteger, decimals, integers, delimiters, onlyPositive, maxLength, hideEmptyDecimals){
       var decimals = onlyInteger ? 0 : decimals,
           dotPos = (value = (value + "")).indexOf('.'),
           parsedVal = dotPos != -1 ? value.substr(dotPos) : '0',
@@ -75,7 +75,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
       if(isDotLast){
          value = value ? value + '.' : '.';
       }
-      if(value && decimals){
+      if(value && hideEmptyDecimals && decimals){
          dotPos = value.indexOf('.');
          if (parsedVal === '0') {
             value = (dotPos !== -1 ? value.substring(0, dotPos) : value) + '.0';
@@ -205,7 +205,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
                options.integers, 
                options.delimiters, 
                options.onlyPositive, 
-               options.maxLength
+               options.maxLength,
+               options.hideEmptyDecimals
             );
          }
 
@@ -382,7 +383,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
             this._options.integers, 
             this._options.delimiters, 
             this._options.onlyPositive, 
-            this._options.maxLength
+            this._options.maxLength,
+            this._options.hideEmptyDecimals
          );
       },
 
