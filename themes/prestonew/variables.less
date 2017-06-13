@@ -759,8 +759,8 @@
 
 
 @controls-FieldLink-border:                           2px solid;
-@controls-FieldLink-border-color:                     @text-box-border-color;
-@controls-FieldLink-border-color-focus-hover:         #26B8FF;
+@controls-FieldLink-border-color:                     @text-box-border-color @text-box-border-color @text-box-bottom-border-color @text-box-border-color;
+@controls-FieldLink-border-color-focus-hover:         @text-box-bottom-border-color;
 @controls-FieldLink-link-color:                         #26B8FF;
 // --------- //
 // MonthView //
@@ -1210,7 +1210,7 @@
 @controls-FieldLink-linkItem-cross-padding:        0;
 @controls-FieldLink-showAllLinks-padding:          0 1rem 0 0.14rem;
 
-@controls-FieldLink-afterField-padding:            0 .14rem 0.2rem 0;
+@controls-FieldLink-afterField-padding:            0 .14rem 0.14rem 0;
 @controls-FieldLink-afterField-height:             3rem;
 
 @controls-FieldLink-disabled-item-single-padding:  0,142rem;
