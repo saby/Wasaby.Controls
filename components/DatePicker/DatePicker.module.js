@@ -315,10 +315,10 @@ define(
       },
 
       setActive: function(active) {
+         DatePicker.superclass.setActive.apply(this, arguments);
          if (active) {
             this._initFocusInHandler();
          }
-         DatePicker.superclass.setActive.apply(this, arguments);
       },
 
       _initFocusInHandler: function() {
