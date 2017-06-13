@@ -1697,9 +1697,11 @@ define('js!SBIS3.CONTROLS.ListView',
                          //todo https://online.sbis.ru/opendoc.html?guid=0d1c1530-502c-4828-8c42-aeb330c014ab&des=
                          if (this._options.loadItemsStrategy == 'append') {
                             var tr = this._findItemByElement($(target));
-                            var hash = tr.attr('data-hash');
-                            var index = this._getItemsProjection().getIndex(this._getItemsProjection().getByHash(hash));
-                            self.setSelectedIndex(index);
+                            if (tr.length) {
+                               var hash = tr.attr('data-hash');
+                               var index = this._getItemsProjection().getIndex(this._getItemsProjection().getByHash(hash));
+                               self.setSelectedIndex(index);
+                            }
                          }
                          else {
                             self.setSelectedKey(id);
