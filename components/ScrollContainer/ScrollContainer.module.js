@@ -119,7 +119,11 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             this._headerHeight = 0;
             this._ctxSync = {
                selfToPrev: {},
-               prevToSelf: {}
+               selfCtxRemoved: {},
+               selfNeedSync: false,
+               prevToSelf: {},
+               prevCtxRemoved: {},
+               prevNeedSync: false
             };
             this.deprecatedContr(cfg);
             // Что бы при встаке контрола (в качетве обертки) логика работы с контекстом не ломалась,
@@ -169,6 +173,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             }
          },
 
+         bothIsNaN: function(a, b){
+            return (typeof a === "number") && (typeof b === "number") && isNaN(a) && isNaN(b);
+         },
+
          setContext: function(ctx){
             BaseCompatible.setContext.call(this, ctx);
             /**
@@ -183,38 +191,57 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
                this._context.subscribe('onFieldChange', function (ev, name, value) {
                   if (this.getValueSelf(name) !== undefined) {
-                     if (prevContext.getValueSelf(name) !== value) {
+                     if (prevContext.getValueSelf(name) != value &&
+                        self._ctxSync.selfToPrev[name] != value &&
+                        !self.bothIsNaN(value, prevContext.getValueSelf(name)) &&
+                        !self.bothIsNaN(value, self._ctxSync.selfToPrev[name])) {
                         self._ctxSync.selfToPrev[name] = value;
+                        self._ctxSync.selfNeedSync = true;
                      }
                   }
                });
 
                prevContext.subscribe('onFieldChange', function (ev, name, value) {
                   if (prevContext.getValueSelf(name) !== undefined) {
-                     if (selfCtx.getValueSelf(name) !== value) {
+                     if (selfCtx.getValueSelf(name) != value &&
+                        self._ctxSync.prevToSelf[name] != value &&
+                        !self.bothIsNaN(value, selfCtx.getValueSelf(name)) &&
+                        !self.bothIsNaN(value, self._ctxSync.prevToSelf[name])){
                         self._ctxSync.prevToSelf[name] = value;
+                        self._ctxSync.prevNeedSync = true;
                      }
                   }
                });
 
                this._context.subscribe('onFieldsChanged', function () {
-                  prevContext.setValue(self._ctxSync.selfToPrev);
-                  self._ctxSync.selfToPrev = {};
+                  if (self._ctxSync.selfNeedSync) {
+                     self._ctxSync.selfNeedSync = false;
+                     prevContext.setValue(self._ctxSync.selfToPrev);
+                     self._ctxSync.selfToPrev = {};
+                  }
                });
 
                prevContext.subscribe('onFieldsChanged', function () {
-                  selfCtx.setValue(self._ctxSync.prevToSelf);
-                  self._ctxSync.prevToSelf = {};
+                  if (self._ctxSync.prevNeedSync) {
+                     self._ctxSync.prevNeedSync = false;
+                     selfCtx.setValue(self._ctxSync.prevToSelf);
+                     self._ctxSync.prevToSelf = {};
+                  }
                });
 
                this._context.subscribe('onFieldRemove', function (ev, name, value) {
-                  if (prevContext.getValueSelf(name) !== undefined) {
+                  self._ctxSync.selfCtxRemoved[name] = false;
+                  if (prevContext.getValueSelf(name) !== undefined &&
+                        !self._ctxSync.prevCtxRemoved[name]) {
+                     self._ctxSync.prevCtxRemoved[name] = true;
                      prevContext.removeValue(name);
                   }
                });
 
                prevContext.subscribe('onFieldRemove', function (ev, name, value) {
-                  if (selfCtx.getValueSelf(name) !== undefined) {
+                  self._ctxSync.prevCtxRemoved[name] = false;
+                  if (selfCtx.getValueSelf(name) !== undefined && !self._ctxSync.selfCtxRemoved[name]) {
+                     self._ctxSync.selfCtxRemoved[name] = true;
                      selfCtx.removeValue(name);
                   }
                });
@@ -256,7 +283,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             scrollbarWidth = outer.offsetWidth - outer.clientWidth;
             document.body.removeChild(outer);
             return scrollbarWidth;
-          },
+         },
 
          _scrollbarDragHandler: function(event, position){
             if (position != this._getScrollTop()){
