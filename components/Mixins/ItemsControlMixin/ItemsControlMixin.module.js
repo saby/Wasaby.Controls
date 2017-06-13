@@ -80,19 +80,22 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       return proj;
    },
 
+   prepareGroupId = function(item, groupId, cfg) {
+      //делаем id группы строкой всегда, чтоб потом при обращении к id из верстки не ошибаться
+      return groupId + '';
+   },
+
    applyGroupingToProjection = function(projection, cfg) {
       if (cfg.groupBy && cfg.easyGroup) {
-         var method;
-         if (!cfg.groupBy.method) {
-            var field = cfg.groupBy.field;
-            method = function(item, index, projItem){
-               //делаем id группы строкой всегда, чтоб потом при обращении к id из верстки не ошибаться
-               return calcGroupHash(projItem) + item.get(field);
-            }
-         }
-         else {
-            method = cfg.groupBy.method
-         }
+         var
+            method = function(item) {
+               var
+                  groupId = cfg.groupBy.method ? cfg.groupBy.method.apply(this, arguments) : item.get(cfg.groupBy.field);
+               if (groupId !== false) {
+                  groupId = cfg._prepareGroupId(item, groupId, cfg);
+               }
+               return groupId;
+            };
          projection.setGroup(method);
       }
       else {
@@ -125,12 +128,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
    canApplyGrouping = function(projItem, cfg) {
       return !isEmpty(cfg.groupBy) && (!projItem.isNode || !projItem.isNode());
-   },
-
-   calcGroupHash = function(projItem) {
-      var
-         itemParent = projItem.getParent && projItem.getParent();
-      return itemParent ? itemParent.isRoot() ? '@' : itemParent.getContents().getHash() + calcGroupHash(itemParent) : '';
    },
 
    groupItemProcessing = function(groupId, records, item, cfg) {
@@ -340,6 +337,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             _serverRender: false,
             _defaultItemTemplate: '',
             _defaultItemContentTemplate: '',
+            _prepareGroupId: prepareGroupId,
             _createDefaultProjection : createDefaultProjection,
             _buildTplArgsSt: buildTplArgs,
             _buildTplArgs : buildTplArgs,
