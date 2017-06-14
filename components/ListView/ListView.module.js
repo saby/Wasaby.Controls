@@ -413,6 +413,7 @@ define('js!SBIS3.CONTROLS.ListView',
             },
             _setScrollPagerPositionThrottled: null,
             _updateScrollIndicatorTopThrottled: null,
+            _removedItemsCount: false, 
             _options: {
                _canServerRender: true,
                _buildTplArgs: buildTplArgsLV,
@@ -2791,6 +2792,27 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
             ListView.superclass._onCollectionAddMoveRemove.apply(this, arguments);
+
+            if (cDetection.firefox) {
+               this._firefoxFixScrollTop(action, newItems, newItemsIndex, oldItems, oldItemsIndex);
+            }
+         },
+
+         // Страшный хак для Firefox:
+         // в 110 из коллекции вместо события replace стали приходить remove и add
+         // из за этого в фф дергается скролл, так как сначала убирается элемент, скролл подвигается вверх
+         // затем добавляется элемент на место удаленного, но скролл остается на месте. 
+         // Поэтому компенсируем этот прыжок сами
+         _firefoxFixScrollTop: function(action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+            if (action == IBindCollection.ACTION_ADD) {
+               if (newItemsIndex === 0 && this._removedItemsCount == newItems.length && this.isScrollOnBottom()) {
+                  this._scrollWatcher.scrollTo('bottom');
+               }
+            } else if (action == IBindCollection.ACTION_REMOVE) {
+               if (oldItemsIndex === 0) {
+                  this._removedItemsCount = oldItems.length;
+               }
+            }
          },
 
          // Получить количество записей которые нужно вычесть/прибавить к _offset при удалении/добавлении элементов
