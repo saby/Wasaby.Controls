@@ -308,12 +308,23 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          var
             key,
             toMap = [],
-            isChangeOrder = position !== 'on';
+            isChangeOrder = position !== 'on',
+            parentProperty = this._options.parentProperty;
          if (target === undefined || !isChangeOrder && !this._options.nodeProperty) {
             return false;
          }
-
-         if (this._options.parentProperty) {
+         //проверять изменяется ли индекс у эелемента нужно только если не меняется родитель
+         if (isChangeOrder && (
+            parentProperty && target.get(parentProperty) == movedItem.get(parentProperty) ||
+            !parentProperty
+         )) {
+            var  targetIndex = this.getItems().getIndex(target);
+            targetIndex = position == 'before' ? targetIndex - 1 : targetIndex + 1;
+            if (this.getItems().getIndex(movedItem) == targetIndex) {
+               return false;
+            }
+         }
+         if (parentProperty) {
             if (target !== null) {
                if (this._options.nodeProperty && !isChangeOrder && target.get(this._options.nodeProperty) === null) {
                   return false;

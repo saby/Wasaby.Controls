@@ -50,7 +50,7 @@ body {
 
 .controls-PopupMixin__closeButton {
   position: absolute;
-  top: 10px;
+  top: 8px;
   right: @controls-Popup-closeButton-right;
   width: 3rem;
   height: 3rem;
@@ -77,6 +77,7 @@ body {
   height: 1.785rem;
   font-family: 'cbuc-icons24' !important;
 }
+
 @text-box-height-prestoBig:   50px;
 @text-box-height-prestoFont:  36px;
 
@@ -773,12 +774,23 @@ body .controls-Browser__breadCrumbs {
   top: .18rem;
 }
 
-body .controls-CommandsButton__picker .controls-MenuItem{
-   padding-right: 2.8rem!important; //38 = 24 (кнопка) + 8(отступ справа у кнопки) +6(отступ слева у кнопки)
+body .controls-CommandsButton__picker {
+   .controls-MenuItem {
+      padding-right: 2.8rem !important; //38 = 24 (кнопка) + 8(отступ справа у кнопки) +6(отступ слева у кнопки)
+   }
+
 }
 .controls-DropdownList__picker .controls-DropdownList__multiselect .controls-DropdownList__itemCheckBox {
   width: 2.286rem;
 }
 .controls-DropdownList__picker .controls-DropdownList__multiselect.controls-ListView__defaultItem, .controls-DropdownList__picker .controls-DropdownList__multiselect.controls-ListView__defaultItem.controls-DropdownList__item__selected {
   font-weight: 400;
+}
+
+.controls-BreadCrumbs .controls-BreadCrumbs__home {
+   font-size: 1.785rem;
+}
+  
+.controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
+   top: -0.1rem;
 }
