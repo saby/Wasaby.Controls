@@ -4062,7 +4062,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   sourceIds.push(item.getModel().getId());
                   movedItems.push(item.getModel());
                });
-               if (this._getMover()._checkRecordForMove(movedItems, dragTarget.item, position)) {
+               if (this._getMover().checkRecordsForMove(movedItems, dragTarget.item, position)) {
                   target = this._makeDragEntity({
                      owner: this,
                      domElement: dragTarget.domElement,
@@ -4143,6 +4143,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _endDragHandler: function(dragObject, droppable, e) {
+            var isMove = false;
             if (droppable) {
                var
                   target = dragObject.getTarget(),
@@ -4166,28 +4167,30 @@ define('js!SBIS3.CONTROLS.ListView',
                      dragObject.getSource().each(function (item) {
                         domItems.push(item.getDomElement());
                      });
-                     var isMove = this._getMover().checkRecordsForMove(models, target.getModel(), position);
-                     this.move(models, target.getModel(), position).addCallback(function(result){
-                        if (result) {
-                           this.removeItemsSelectionAll();
-                        }
-                        if (this._options.useDragPlaceHolder && isMove) {
-                           this.once('onDrawItems', function () {
-                              //это нужно что бы изменения верстки произошли в одном "потоке", что бы не прыгали элементы
-                              //когда удалется плейсходер и переносится реальный элемент
-                              //здесь поможет виртуалдом
-                              this._clearDragHighlight(dragObject);
-                              domItems.forEach(function (elem) {
-                                 elem.removeClass('ws-hidden');
+                     isMove = this._getMover().checkRecordsForMove(models, target.getModel(), position);
+                     if (isMove) {
+                        this.move(models, target.getModel(), position).addCallback(function (result) {
+                           if (result) {
+                              this.removeItemsSelectionAll();
+                           }
+                           if (this._options.useDragPlaceHolder) {
+                              this.once('onDrawItems', function () {
+                                 //это нужно что бы изменения верстки произошли в одном "потоке", что бы не прыгали элементы
+                                 //когда удалется плейсходер и переносится реальный элемент
+                                 //здесь поможет виртуалдом
+                                 this._clearDragHighlight(dragObject);
+                                 domItems.forEach(function (elem) {
+                                    elem.removeClass('ws-hidden');
+                                 });
+                                 this._removeDragPlaceHolder();
                               });
+                           } else {
                               this._removeDragPlaceHolder();
-                           });
-                        } else {
+                           }
+                        }.bind(this)).addErrback(function () {
                            this._removeDragPlaceHolder();
-                        }
-                     }.bind(this)).addErrback(function () {
-                        this._removeDragPlaceHolder();
-                     }.bind(this));
+                        }.bind(this));
+                     }
                   } else {
                      var currentDataSource = this.getDataSource(),
                         dragOwner = dragObject.getOwner(),
@@ -4202,6 +4205,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                }
                this._clearDragHighlight(dragObject);
+            }
+            if (!isMove) {
+               this._toggleDragItems(dragObject, true);
+               this._removeDragPlaceHolder();
             }
          },
          _getDragPlaceHolder: function(dragObject) {
