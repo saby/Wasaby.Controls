@@ -87,6 +87,9 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
                }
             });
 
+            // todo временное решение. нужно звать stopPropagation для всех компонентов, как это было раньше
+            // останавливаю всплытие, как это было раньше в Control.module.js, сейчас это ломает старую логику.
+            // например, при нажатии на кнопку в datepicker-е фокусируется его текстовое поле
             container.on("focusin", function (e) {
                e.stopPropagation();
             });
