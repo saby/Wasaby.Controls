@@ -1110,8 +1110,20 @@ define('js!SBIS3.CONTROLS.FieldLink',
              поэтому при перевороте проскролим вниз автодополнение */
           _scrollListToBottom: function() {
              if(this._picker && this._isSuggestPickerRevertedVertical()) {
-                var pickerContainer = this._picker.getContainer();
+                var pickerContainer = this._picker.getContainer(),
+                    list = this.getList(),
+                    newIndex;
+                
                 pickerContainer[0].scrollTop = pickerContainer[0].scrollHeight;
+                
+                /* При подскроле вниз всегда устанавливаем маркер на последнюю запись */
+                if(cInstance.instanceOfMixin(list, 'SBIS3.CONTROLS.Selectable')) {
+                   newIndex = list.getItems().getCount() - 1;
+                   
+                   if(newIndex !== list.getSelectedIndex()) {
+                      list.setSelectedIndex(list.getItems().getCount() - 1);
+                   }
+                }
              }
           },
           /* После перерисовки списка автодополнения, пикер может менять своё положение,
