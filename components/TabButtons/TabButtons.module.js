@@ -127,6 +127,7 @@ define(
             TabButtons.superclass._redrawItems.apply(this, arguments);
             var tabSpaceTpl = this._options._spaceTemplate(this._options);
             this.getContainer().append(tabSpaceTpl);
+            this.reviveComponents();
          },
 
          setItems: function (items) {
