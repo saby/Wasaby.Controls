@@ -348,7 +348,8 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                  marginRight = parentContainer.offsetWidth - (position.left + size.width),
                  marginTop = position.top,
                  marginBottom = parentContainer.offsetHeight - (position.top + size.height),
-                 $container = this.getContainer();
+                 $container = this.getContainer(),
+                 isHidden = !this.isVisible();
 
              if(marginRight < 0 && !isVertical) {
                 marginRight = 0;
@@ -356,7 +357,15 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
 
              if(this._cachedMargin || $parentContainer.hasClass('controls-ListView__bottomStyle')) {
                 if(!this._cachedMargin) {
+                   if (isHidden) {
+                      $container.addClass('ws-invisible').removeClass('ws-hidden');
+                   }
+                   
                    this._cachedMargin = $container.height() + parseInt($container.css('bottom'), 10) + parseInt($container.css('border-bottom-width'), 10);
+                   
+                   if (isHidden) {
+                      $container.removeClass('ws-invisible').addClass('ws-hidden');
+                   }
                 }
                 marginBottom -= this._cachedMargin;
              }
