@@ -87,7 +87,14 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
                }
             });
 
-             container.on("touchstart", function (e) {
+            // todo временное решение. нужно звать stopPropagation для всех компонентов, как это было раньше
+            // останавливаю всплытие, как это было раньше в Control.module.js, сейчас это ломает старую логику.
+            // например, при нажатии на кнопку в datepicker-е фокусируется его текстовое поле
+            container.on("focusin", function (e) {
+               e.stopPropagation();
+            });
+
+            container.on("touchstart", function (e) {
                if (self.isEnabled()) {
                   self._container.addClass('controls-Click__active');
                   self._onTouchStart(e);
