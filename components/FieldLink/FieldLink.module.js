@@ -631,7 +631,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           setMultiselect: function(multiselect) {
              FieldLink.superclass.setMultiselect.apply(this, arguments);
-             this.getContainer().toggleClass(classes.MULTISELECT, !!multiselect)
+             this.getContainer()
+                .toggleClass(classes.MULTISELECT, Boolean(multiselect))
+                .toggleClass(classes.INPUT_MIN_WIDTH, Boolean(multiselect || this._options.alwaysShowTextBox));
           },
 
           // FIXME костыль, выписана задача:
