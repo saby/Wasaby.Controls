@@ -1121,7 +1121,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                    newIndex = list.getItems().getCount() - 1;
                    
                    if(newIndex !== list.getSelectedIndex()) {
-                      list.setSelectedIndex(list.getItems().getCount() - 1);
+                      list.setSelectedIndex(newIndex);
                    }
                 }
              }
