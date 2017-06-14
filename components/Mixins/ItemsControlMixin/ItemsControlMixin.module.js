@@ -167,7 +167,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var prevGroupId = undefined;
          projection.each(function (item, index, group) {
             if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {
-               if (prevGroupId != group) {
+               if (prevGroupId != group && group !== false) {
                   cfg._groupItemProcessing(group, records, item,  cfg);
                   prevGroupId = group;
                }
@@ -328,9 +328,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _dataSet: null,
          _dotItemTpl: null,
          _propertyValueGetter: getPropertyValue,
-         _groupCollapsing: {},
          _revivePackageParams: {},
          _options: {
+            _groupCollapsing: {},
             _itemsTemplate: ItemsTemplate,
             _canServerRender: false,
             _canServerRenderOther : canServerRenderOther,
@@ -916,7 +916,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _toggleGroup: function(groupId, flag) {
-         this._groupCollapsing[groupId] = flag;
+         this._options._groupCollapsing[groupId] = flag;
          var containers = this._getGroupContainers(groupId);
          containers.toggleClass('ws-hidden', flag);
          $('.controls-GroupBy[data-group="' + groupId + '"] .controls-GroupBy__separatorCollapse', this._container).toggleClass('controls-GroupBy__separatorCollapse__collapsed', flag);
@@ -930,7 +930,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._toggleGroup(groupId, true);
       },
       toggleGroup: function(groupId) {
-         var state = this._groupCollapsing[groupId];
+         var state = this._options._groupCollapsing[groupId];
          this[state ? 'expandGroup' : 'collapseGroup'].call(this, groupId);
       },
 
@@ -1224,6 +1224,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      records: itemsToDraw,
                      tplData: this._prepareItemData()
                   };
+                  data.tplData.drawHiddenGroup = !!this._options._groupCollapsing[groupId] ;
                   markupExt = extendedMarkupCalculate(this._getItemsTemplate()(data), this._options);
                   markup = markupExt.markup;
                   this._optimizedInsertMarkup(markup, this._getInsertMarkupConfig(newItemsIndex, newItems, groupId));
