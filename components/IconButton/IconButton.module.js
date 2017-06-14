@@ -87,7 +87,11 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
                }
             });
 
-             container.on("touchstart", function (e) {
+            container.on("focusin", function (e) {
+               e.stopPropagation();
+            });
+
+            container.on("touchstart", function (e) {
                if (self.isEnabled()) {
                   self._container.addClass('controls-Click__active');
                   self._onTouchStart(e);
