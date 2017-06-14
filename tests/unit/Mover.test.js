@@ -274,28 +274,25 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
       });
       describe('_checkRecordForMove', function () {
          it('should return false if target undefined', function(){
-            var id = items.at(0).getId();
             assert.isFalse(mover._checkRecordForMove(items.at(0), undefined, 'before'));
          });
          it('should return false if target doesnt folder', function(){
-            var id = items.at(0).getId();
             assert.isFalse(mover._checkRecordForMove(items.at(0), items.at(1), 'on'));
          });
          it('should return false if move on himself', function(){
-            var id = items.at(0).getId();
             assert.isFalse(treeMover._checkRecordForMove(treeItems.at(0), treeItems.at(0), 'on'));
          });
          it('should return true if move on folder', function(){
-            var id = items.at(0).getId();
             assert.isTrue(treeMover._checkRecordForMove(treeItems.at(0), treeItems.at(1), 'on'));
          });
          it('should return true if move before item', function(){
-            var id = items.at(0).getId();
             assert.isTrue(mover._checkRecordForMove(items.at(1), items.at(0), 'before'));
          });
          it('should return true if move after item', function(){
-            var id = items.at(0).getId();
-            assert.isTrue(mover._checkRecordForMove(items.at(0), items.at(1), 'before'));
+            assert.isTrue(mover._checkRecordForMove(items.at(0), items.at(1), 'after'));
+         });
+         it('should return false if record stay in place', function(){
+            assert.isFalse(mover._checkRecordForMove(items.at(0), items.at(1), 'before'));
          });
       });
       describe('onEndMove', function () {
