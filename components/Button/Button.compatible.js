@@ -96,7 +96,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
             return;
 
          if (!this.iWantVDOM) {
-            this._container.removeClass('controls-Click__active');
+            this._container && this._container.removeClass('controls-Click__active');
          }
 
          if (!this._isControlActive && this._options.activableByClick!==false) {
