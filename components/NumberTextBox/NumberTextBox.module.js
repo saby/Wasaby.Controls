@@ -230,8 +230,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          });
 
          this._inputField.bind('blur', function(){
-            // Прятать нулевую дробную часть при потере фокуса
-            self._hideEmptyDecimals();
+            self._blurHandler();
          });
 
          if (typeof this._options.numericValue === 'number' && !isNaN(this._options.numericValue)) {
@@ -246,6 +245,11 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          NumberTextBox.superclass.init.apply(this, arguments);
          this._hideEmptyDecimals();
       },
+
+       _blurHandler: function() {
+            // Прятать нулевую дробную часть при потере фокуса
+           this._hideEmptyDecimals();
+       },
 
       _inputFocusInHandler: function() {
          // Показывать нулевую дробную часть при фокусировки не зависимо от опции hideEmptyDecimals

@@ -115,6 +115,15 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
          this._decimalsContainer.toggleClass('ws-hidden', enabled);
          MoneyTextBox.superclass._setEnabled.apply(this, arguments);
       },
+
+      _blurHandler: function() {
+         MoneyTextBox.superclass._blurHandler.apply(this, arguments);
+         // имитация стандартного поведения поля ввода
+         // т.к. браузер обрезает содержимое contenteditable контейнера без возвожности прокрутки
+         if(this._inputField) {
+             this._inputField[0].scrollLeft = 0;
+         }
+      },
       /**
        * Возвращает текущее значение денежного поля ввода.
        * @returns {String} Текущее значение денежного поля ввода.
