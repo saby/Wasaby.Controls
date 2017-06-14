@@ -193,6 +193,23 @@ body  .controls-DataGridView.controls-ListView__multiselect .controls-DataGridVi
       }
    }
 
+   .controls-DateRangeChoose {
+      .controls-DateRangeBigChoose__homeBtn .icon-16 {
+         font-size: 3rem !important;
+         line-height: 3rem !important;
+         width: 3rem;
+         height: 3rem;
+      }
+      &.controls-DateRangeChoose__showMonths {
+         &.controls-DateRangeChoose__showHalfYears,
+         &.controls-DateRangeChoose__showQuarters {
+            .controls-DateRangeChoose__home {
+               width: 2rem;
+            }
+         }
+      }
+   }
+
     .controls-DropdownList .controls-DropdownList__selectedItem {
       display: inline-block;
     }
