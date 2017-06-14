@@ -726,7 +726,7 @@ body {
    }
 }
 .controls-BreadCrumbs__crumb {
-   top: -0.18rem
+   top: 0.18rem
 }
 .controls-image {
    .controls-image__image-bar{
@@ -805,12 +805,17 @@ body .controls-CommandsButton__picker {
   font-weight: 400;
 }
 
-.controls-BreadCrumbs .controls-BreadCrumbs__home {
-   font-size: 1.785rem;
+.controls-BreadCrumbs .controls-BreadCrumbs {
+   &__home, &__arrow {
+      font-size: 1.785rem!important;
+      line-height: 1rem!important;
+      width: 1.785rem;
+      top:  0.0357rem;
+   }
 }
 
 .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
-   top: -0.1rem;
+   top: 0.26rem !important;
 }
 body .controls-ItemActions .controls-Button__icon.icon-size {
    line-height: 1.455rem!important;
