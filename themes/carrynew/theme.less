@@ -322,17 +322,25 @@ body {
 }
 
 body {
+   .controls-DateRangeBigChoose {
+      // в онлайне в большом выборе периода иконки разного размера, а тут одинаковые 3rem
+      .icon-16, .icon-24 {
+         font-size: 3rem !important;
+         line-height: 3rem !important;
+         width: 3rem;
+         height: 3rem;
+      }
+      .controls-IconButton.controls-IconButton__round-border {
+         border: none;
+         .controls-Button__icon {
+            &.icon-16, &.icon-24 {
+               margin-left: -1.5rem;
+               margin-top: -1.5rem;
+            }
+         }
+      }
+   }
 
-  .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn .controls-Button__icon.icon-16 {
-      font-size: 3rem!important;
-      margin-top: initial;
-  }
-  .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton .controls-Button__icon.icon-16 {
-      font-size: 3rem!important;
-      width: 24px;
-      margin-left: -2.5rem;
-      margin-top: initial;
-  }
     .controls-DateBox {
       min-height: 3rem;
     }
@@ -383,17 +391,6 @@ body {
 }
   }
 
-
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn, body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__ApplyButton {
-    border: none;
-  }
-
-body .controls-DateRangeChoose .controls-DateRangeBigChoose__homeBtn .icon-16 {
-   font-size: 3rem !important;
-   line-height: 3rem !important;
-   width: 3rem;
-   height: 3rem;
-}
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__dates .controls-DateRangeBigChoose__dates-months span.controls-Button {
    padding-left: 0;
    text-align: center;
@@ -562,10 +559,6 @@ body .ws-window.ws-LoadingIndicator__window {
    line-height: 2rem !important;
 }
 
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__homeBtn {
-  margin-left: -.857rem;
-}
-
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__header-rangeDash {
   border-bottom: 2px solid #ccc;
 }
@@ -589,13 +582,8 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-
    padding: 0.1rem 0.57rem 0.1rem 0.57rem;
 }
 
-.controls-DateRangeBigChoose__datePickerEnd-wrapper .controls-DateBox {
-   margin-right: 1.6rem;
-}
-
 .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years-prevYearBtn,
 .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years-nextYearBtn {
-   // В теме престо у controls-IconButton стоит vertical-align: baseline, а в рознице нет..
    &.controls-IconButton {
       vertical-align: baseline;
    }
