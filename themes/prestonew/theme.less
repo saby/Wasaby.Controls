@@ -146,8 +146,16 @@ body  .controls-DataGridView.controls-ListView__multiselect .controls-DataGridVi
       top: 50%
     }
 
-   .controls-DropdownList .controls-DropdownList__selectedItem {
-      display: inline-block;
+   .controls-DropdownList {
+      .controls-DropdownList__selectedItem {
+         display: inline-block;
+         .controls-DropdownList__afterCaptionWrapper .controls-DropdownList__crossIcon {
+            font-size: 2rem !important;
+            line-height: 1.32rem !important;
+            width: 2rem;
+            height: 2rem;
+         }
+      }
    }
    .controls-DropdownList__picker {
       .controls-DropdownList__body {
