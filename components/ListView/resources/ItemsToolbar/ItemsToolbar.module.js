@@ -349,7 +349,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                  marginTop = position.top,
                  marginBottom = parentContainer.offsetHeight - (position.top + size.height),
                  $container = this.getContainer(),
-                 isHidden;
+                 isHidden = !this.isVisible();
 
              if(marginRight < 0 && !isVertical) {
                 marginRight = 0;
@@ -357,8 +357,6 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
 
              if(this._cachedMargin || $parentContainer.hasClass('controls-ListView__bottomStyle')) {
                 if(!this._cachedMargin) {
-                   isHidden = $container.hasClass('ws-hidden');
-                   
                    if (isHidden) {
                       $container.addClass('ws-invisible').removeClass('ws-hidden');
                    }
