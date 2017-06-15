@@ -148,7 +148,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          icon: 'icon-24 icon-AlignmentLeft icon-primary',
          selectedKey: 'alignleft',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
-         pickerClassName: 'controls-Menu__hide-menu-header',
+         pickerClassName: 'controls-RichEditorToolbarMenu controls-MenuIcon__Menu controls-Menu__hide-menu-header',
          handlers: {
             onMenuItemActivate: function(event, key) {
                this.getParent()._setTextAlign(key);
@@ -205,7 +205,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          componentType: 'WSControls/Buttons/MenuButton',
          tooltip: rk('Вставить/Удалить список'),
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
-         pickerClassName: 'fre-list controls-RichEditorToolbarMenu controls-Menu__hide-menu-header',
+         pickerClassName: 'fre-list controls-RichEditorToolbarMenu controls-MenuIcon__Menu controls-Menu__hide-menu-header',
          icon   : 'sprite:icon-24 icon-ListMarked icon-primary',
          items: [
             { key: 'InsertUnorderedList', title: ' ', icon:'sprite:icon-24 icon-ListMarked icon-primary' },
