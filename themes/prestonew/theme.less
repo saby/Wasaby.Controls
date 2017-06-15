@@ -25,28 +25,46 @@ body {
             }
          }
          &.ws-paging-current{
-            border: 3px solid @primary-color !important;
+            border: 2px solid @primary-color !important;
             background:#354B62 !important;
             color: #E4E4E4 !important;
+         }
+         &.ws-paging-next, &.ws-paging-end, &.ws-paging-first, &.ws-paging-prev {
+            position:relative;
+            &:before {
+               text-indent: 0 !important;
+               font-size: 3rem;
+               position:absolute;
+               top:0;
+               left:0;
+               font-family: 'carrypresto-icons' !important;
+            }
          }
          &.ws-paging-next {
             &:before {
                content: "\e97e";
             }
          }
-         .ws-paging-end {
+         &.ws-paging-end {
+            &:before {
+               content: "\e97d";
 
+            }
          }
-         .ws-paging-first {
-
+         &.ws-paging-first {
+            &:before {
+               content: "\e980";
+            }
          }
-         .ws-paging-prev{
-
+         &.ws-paging-prev{
+            &:before {
+               content: "\e97f";
+            }
          }
       }
    }
    .controls-Pager{
-      .controls-Pager-block-amount, .controls-Pager-block-amount{
+      .controls-Pager-block-amount, .controls-Pager-block-amount, controls-Pager-block-paging{
          padding: 0;
       }
    }
