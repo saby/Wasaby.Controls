@@ -13,17 +13,35 @@ define('js!SBIS3.CONTROLS.TouchKeyboardHelper', [
 
    var TouchKeyboardHelper = {
       _keyboardVisible: false,
+      _keyboardAnimation: false,
 
       _keyboardShowHandler: function(){
          this._keyboardVisible = true;
+         this._keyboardHandler();
       },
 
       _keyboardHideHandler: function(){
          this._keyboardVisible = false;
+         this._keyboardHandler();
+      },
+
+      _keyboardHandler: function() {
+         var self = this;
+         if(!this._keyboardAnimation){
+            // из-за анимации клавиатуры на мобильных устройствах происходит сдвиг контента
+            // что приводит к скрытие меню. делаем задержку и на время анимации меню не закрываем
+            this._keyboardAnimation = setTimeout(function(){
+               self._keyboardAnimation = null;
+            }, 300);
+         }
       },
 
       isPortrait: function(){
          return window.innerHeight > window.innerWidth;
+      },
+
+      getKeyboardAnimation: function(){
+         return this._keyboardAnimation;
       },
 
       getKeyboardHeight: function(){
