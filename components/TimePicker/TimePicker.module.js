@@ -87,6 +87,7 @@ define('js!SBIS3.CONTROLS.TimePicker',
             this._header.subscribe('onChangeActiveTime', this._onChangeActiveTimeHandler.bind(this));
             this._body.subscribe('onChangeTime', this._onChangeTimeHandler.bind(this));
             this._body.subscribe('onChangeActiveTime', this._onChangeActiveTimeHandler.bind(this));
+            this._body.subscribe('onChangeTimeEnd', this._notifyChangeTimeEnd.bind(this));
 
             this.setTime(this.getTime());
          },
