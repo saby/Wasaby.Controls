@@ -8,19 +8,40 @@ body {
       .ws-paging-small{
          width: 3rem !important;
          height: 3rem !important;
-         border: 2px solid #26B8FF !important;
+         background: none !important;
+         border: 2px solid #8991A9 !important;
          font-size: 1.714285714285714rem !important;
          background-color: #354B62 !important;
          line-height:   3rem !important;
          margin: 0 8px 0 0 !important;
          padding: 0 !important;
          box-sizing: border-box !important;
-         color: #E4E4E4 !important;
-         &:hover{
-            background-color: #1b2530 !important;
+         color: #8991A9 !important;
+         &.ws-paging-active{
+            border: 2px solid #26B8FF !important;
+            color: #E4E4E4 !important;
+            &:hover{
+               background-color: #1b2530 !important;
+            }
          }
          &.ws-paging-current{
-            border-color: @primary-color !important;
+            border: 3px solid @primary-color !important;
+            background:#354B62 !important;
+            color: #E4E4E4 !important;
+         }
+         &.ws-paging-next {
+            &:before {
+               content: "\e97e";
+            }
+         }
+         .ws-paging-end {
+
+         }
+         .ws-paging-first {
+
+         }
+         .ws-paging-prev{
+
          }
       }
    }
