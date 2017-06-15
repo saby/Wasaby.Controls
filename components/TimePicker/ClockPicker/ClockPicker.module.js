@@ -253,7 +253,11 @@ define('js!SBIS3.CONTROLS.ClockPicker',
              * Организуем поведение при котором при окончательном выборе часов, происходила смена
              * представления на минуты.
              */
-            this.getActiveTime() === 'hours' && this.setActiveTime('minutes');
+            if (this.getActiveTime() === 'hours') {
+               this.setActiveTime('minutes')
+            } else {
+               this._notifyChangeTimeEnd();
+            }
          },
 
          _getArrowConfig: function(circle, deg) {
