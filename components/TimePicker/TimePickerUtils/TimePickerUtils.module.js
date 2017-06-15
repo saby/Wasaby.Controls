@@ -17,7 +17,13 @@ define('js!SBIS3.CONTROLS.TimePickerUtils',
          /**
           * @event onChangeActiveTime Происходит после смены активного времени.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Object} activeTime Текущее активное время.
+          * @param {String} activeTime Текущее активное время.
+          */
+
+         /**
+          * @event onChangeTimeEnd Происходит после окончательного выбора времени.
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Date|Object} time окончательное время.
           */
          $protected: {
             _options: {
@@ -70,7 +76,7 @@ define('js!SBIS3.CONTROLS.TimePickerUtils',
          },
 
          $constructor: function() {
-            this._publish('onChangeTime', 'onChangeActiveTime');
+            this._publish('onChangeTime', 'onChangeActiveTime', 'onChangeTimeEnd');
          },
 
          /**
@@ -143,6 +149,10 @@ define('js!SBIS3.CONTROLS.TimePickerUtils',
             this._setOption(name, value, silent);
             this._notify('onChange' + ucFirst.call(name), value);
             this._notifyOnPropertyChanged(name);
+         },
+
+         _notifyChangeTimeEnd: function () {
+            this._notify('onChangeTimeEnd', this.getTime());
          }
       };
 
