@@ -275,7 +275,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
       _onTargetMove: function (event, state, isInitial) {
          if (this.isVisible()) {
-            if(this._options.closeOnTargetMove && !isInitial) {
+            if(this._options.closeOnTargetMove && !isInitial && !TouchKeyboardHelper.getKeyboardAnimation()) {
                this.hide();
             } else {
                if (this.isFixed()) {
