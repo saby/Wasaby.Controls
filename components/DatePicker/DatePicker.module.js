@@ -204,6 +204,8 @@ define(
             if (this._picker.isVisible() && this.getDate()) {
                this._pickerContent.setTime(this.getDate());
             }
+
+            this._pickerContent.subscribe('onChangeTimeEnd', this.hidePicker.bind(this));
          }
       },
 
