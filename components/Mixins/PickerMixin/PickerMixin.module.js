@@ -65,12 +65,11 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
 
          // чтобы не нарушать выравнивание по базовой линии
          constants.$body.append(pickerContainer);
-         self._picker = self._createPicker(pickerContainer);
-         self._picker
-             .subscribe('onAlignmentChange', function(event, alignment){
+         this._picker = this._createPicker(pickerContainer);
+         this.subscribeTo(this._picker, 'onAlignmentChange', function(event, alignment){
                 self._onAlignmentChangeHandler(alignment);
-             })
-             .subscribe('onClose', function(){
+             });
+         this.subscribeTo(this._picker, 'onClose', function(){
                 container.removeClass('controls-Picker__show');
                 self._notify('onPickerClose');
              });
@@ -82,8 +81,8 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
                 pickerContainer.removeClass('controls-Picker__owner__hover');
              });
 
-         self._border = container.outerWidth() - container.innerWidth();
-         self._setPickerContent();
+         this._border = container.outerWidth() - container.innerWidth();
+         this._setPickerContent();
          pickerContainer.addClass('js-controls-Picker__initialized')
       },
 
@@ -237,6 +236,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
             if (this._picker) {
                this._picker.destroy();
             }
+            this.getContainer().off( "mouseenter mouseleave" );
          }
       },
 
