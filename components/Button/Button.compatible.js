@@ -96,10 +96,10 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
             return;
 
          if (!this.iWantVDOM) {
-            this._container.removeClass('controls-Click__active');
+            this._container && this._container.removeClass('controls-Click__active');
          }
 
-         if (!this._isControlActive) {
+         if (!this._isControlActive && this._options.activableByClick!==false) {
             //Прикрытие юнит-тестов. Внутри того setActive лезут в дом
             if (typeof window !== "undefined") {
                this.setActive(true);
@@ -124,7 +124,9 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
       _onClickHandler: function(e)
       {
          this._baseClickAction(e);
-         this._onClick(e);
+         if (this._options.enabled) {
+            this._onClick(e);
+         }
       },
 
       _onClick: function (e) {

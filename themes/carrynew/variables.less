@@ -30,8 +30,8 @@
 @default-text-color:                      #000;
 @primary-color:                           #FF7033;
 @secondary-color:                         #4e5762;
-@back-button-caption-hover-color : rgb(185, 233, 255);
-@back-button-caption-active-color: @back-button-caption-hover-color;
+@back-button-caption-hover-color :        @primary-color;
+@back-button-caption-active-color:        @back-button-caption-hover-color;
 @bg:                                      @secondary-color;
 @text-color:                              @white-color;
 @default-border-style:						solid;
@@ -58,6 +58,7 @@
 // Normal button
 @button-font:                             @button-font-size @default-font-name;
 @button-text-alignment:                   center;
+@button-icon-color-hover:                 #313E78;
 
 @FilterPanelButtonRightClose: url('img/FilterPanelButton.png') 0 0;
 @FilterPanelButtonLeftClose: url('img/FilterPanelButton.png') -35px 0;
@@ -94,8 +95,8 @@
 
 // Normal disabled button
 @button-disabled-text-color:              @gray-color;
-@button-disabled-border:                  @button-border;
-@button-disabled-bg:                      @gray-light-color;
+@button-disabled-border:                  0.07rem solid #CCCCCC;
+@button-disabled-bg:                      #F0F5FB;
 
 // Big button
 @button-big-border:                         .07rem solid #c1441b;
@@ -371,8 +372,8 @@
 
 @text-box-field-hover-text-color:         @text-box-field-text-color;
 
-@text-box-border-color:                   rgb(234, 234, 234);
-@text-box-bottom-border-color:            rgb(204, 204, 204);
+@text-box-border-color:                   #EAEAEA;
+@text-box-bottom-border-color:            #CCCCCC;
 @text-box-bg:                             @default-bg-color;
 @text-box-editor-bg:                      #f3f3f3;
 @text-box-editor-text-color:              #999999;
@@ -382,12 +383,12 @@
 
 @compo-box-picker-show-color:             #fff;
 @text-box-focus-bg:                      #fff;
-@text-box-border-width:.07rem;
+@text-box-border-width:                 2px;
 @text-box-hover-border-width:             @text-box-border-width;
 @text-box-hover-border-style:             @text-box-border-style;
 @text-box-hover-border-color:             rgb(204, 204, 204);
 
-@text-box-disabled-border-bottom:         1px solid @check-box-disabled-color;
+@text-box-disabled-border-bottom:         .07rem solid @check-box-disabled-color;
 @text-box-focus-border-width:.07rem;
 @text-box-field-focus-text-color:         #000;
 @text-box-height: 3rem;
@@ -466,7 +467,7 @@
 @combo-box-disabled-border-color:               transparent;
 @combo-box-disabled-color:                      #38495B;
 
-@combo-box-picker-border:                      0rem solid #48bffc;
+@combo-box-picker-border:                       @combobox-picker-border-width solid @menu-border-color;
 @text-box-field-font-size: 1.14rem;
 @combo-box-picker-item-bg:                      #ffffff;
 @combo-box-picker-item-text-color               : #324352;
@@ -483,7 +484,7 @@
 // Text area //
 // --------- //
 
-@text-area-field-line-height:                   @text-box-field-line-height;
+@text-area-field-line-height:                   1.4rem;
 
 
 @text-area-border-color:                        @gray-dark-color;
@@ -530,9 +531,9 @@
 
 
 
-@controls-FieldLink-border-color:                     #243548  #243548  #243548  #243548;
-@controls-FieldLink-border-color-focus-hover:         #314559;
 @controls-FieldLink-link-color:                         #2D68B5;
+@controls-FieldLink-FilterButton-color:            #2D68B5;
+@controls-FieldLink-FilterButton-color-hover:      #313E78;
 // --------- //
 // MonthView //
 // --------- //
@@ -665,13 +666,21 @@
 @date-range-big-choose-font-family:                            'TensorFont Regular', 'TensorFont', sans-serif;
 @date-range-big-choose-border-color:                           #eaeaea;
 
-@date-range-big-choose-header-padding:                               0.256rem 0 0.256rem 0.5rem;
-@date-range-big-choose-header-date-pickers-margin-right:             4.2rem;
+@date-range-big-choose-header-padding:                               0.256rem 0 0.256rem 0;
+@date-range-big-choose-header-home-button-size:                      3rem;
+@date-range-big-choose-header-home-button-font-size:                 @date-range-big-choose-header-home-button-size;
+@date-range-big-choose-header-home-button-margin-left:               0;
+@date-range-big-choose-header-date-pickers-margin-right:             3.286rem;
 @date-range-big-choose-header-date-picker-margin-top:                0;
+@date-range-big-choose-header-apply-button-size:                     3rem;
+@date-range-big-choose-header-apply-button-font-size:                @date-range-big-choose-header-apply-button-size;
+@date-range-big-choose-header-apply-button-margin-left:              0;
 @date-range-big-choose-header-range-dash-width:                      0.286rem;
 @date-range-big-choose-header-range-dash-margin:                     1.5rem 0.286rem 0.286rem;
 
-@date-range-big-choose-years-panel-toggle-choose-year-button-line-height:   3rem;
+@date-range-big-choose-years-panel-top-padding:                             0.286rem;
+@date-range-big-choose-years-panel-bottom-padding:                          0.286rem;
+@date-range-big-choose-years-panel-toggle-choose-year-button-line-height:   3.4rem;
 @date-range-big-choose-years-panel-current-year-button-line-height:         3rem;
 @date-range-big-choose-years-panel-back-button-font-size:                   3rem;
 @date-range-big-choose-years-panel-back-button-line-height:                 3rem;
@@ -742,7 +751,7 @@
 @tree-view-expand-open-hover-bg:                @tree-view-expand-open-bg;
 
 
-@tree-view-copy-arrow-background:               #fff;
+@tree-view-copy-arrow-background:               @default-bg-color;
 
 // --------- //
 // Data grid //
@@ -784,20 +793,13 @@
 // OperationsPanel //
 // --------------- //
 
-@controls-OperationsPanel-height:                   30px;
-
 @controls-OperationsPanel-bg:                       #354B62;
-
-
-@controls-OperationsPanel-separator-bg:             #CCCCCC;
-@controls-OperationsPanel-separator-height:         20px;
-@controls-OperationsPanel-separator-line-height:    30px;
-
-@controls-OperationsPanel-actions-padding-left:     0;
 
 // ----------------------- //
 // OperationsPanelButton  //
 // ----------------------- //
+
+@controls-OperationsPanelButton-color:             #FFFFFF;
 
 // --------------- //
 // OperationsMark //
@@ -838,7 +840,7 @@
 
 @controls-filterButton-area-text-weight:		   normal;
 
-@controls-filterButton-area-text-color:           #000;
+@controls-filterButton-area-text-color:           #313E78;
 
 @controls-filterButton-closeButton-top:           @controls-Popup-closeButton-top;
 
@@ -871,7 +873,6 @@
 @bread-crumb-title-hover-color:                   @primary-color;
 @bread-crumb-title-color:                          #8991A9;
 
-@breadcrumbs-small-items-top:                      .3rem;
 
 // EditDialog
 
@@ -984,8 +985,18 @@
 @icon-color-disabled: #ccc !important;
 @text-box-placeholder-color:                   #CCCCCC;
 
-@date-range-big-choose-date-range-picker-color:                         #000000;
 @date-range-big-choose-date-range-picker-border-color:                  #0055BB;
 @date-range-big-choose-date-range-picker-boundary-selected-color:       #fff;
 @date-range-big-choose-date-range-picker-bg-boundary-selected-color:    #0055BB;
 @highlight-text-bg:                          #fffecf;
+
+@data-grid-row-selected-main-bg:                @default-bg-color;
+@data-grid-row-selected-addit-bg:               rgba(255, 255, 255, 0);
+@tree-view-copy-arrow-add-background:           @data-grid-row-selected-addit-bg;
+@data-grid-row-hover-add-bg:                    rgba(224, 236, 245, 0);
+@data-grid-row-selected-add-bg:                 @data-grid-row-hover-add-bg;
+@list-view-scroll-bg:                           url('img/ajax-loader-indicator-big.gif') @default-bg-color 13px 13px  no-repeat;
+@list-view-items-toolbar-icon-button-border-font:  'carrypresto-icons';
+
+
+@controls-FieldLink-border-color-focus-hover:                           #0055BB;

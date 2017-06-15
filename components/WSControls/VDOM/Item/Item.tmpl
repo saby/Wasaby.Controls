@@ -1,0 +1,20 @@
+<li class="{{ completed ? 'completed' }} {{ _editing ? 'editing' }}" key="{{ index }}">
+    <div class="view">
+        <input
+                type="checkbox"
+                class="toggle {{ completed ? 'checked' }}"
+                checked="{{ completed ? 'checked' }}"
+                event:onchange="onToggle()"
+        />
+        <label event:ondblclick="onStartEditing()">{{ title }}</label>
+        <button class="destroy" event:onclick="onRemove()"></button>
+    </div>
+    <input
+            class="edit"
+            value="{{ title }}"
+            event:onblur="onBlur()"
+            event:onkeypress="onKeyPress()"
+            ws-autofocus="true"
+    />
+</li>
+

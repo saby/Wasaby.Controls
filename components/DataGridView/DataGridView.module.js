@@ -131,6 +131,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                escapeHtml: tplOptions.escapeHtml
             };
             tplOptions.startScrollColumn = cfg.startScrollColumn;
+            tplOptions.columnsShift = cfg._columnsShift;
             buildTplArgsLadder(tplOptions.cellData, cfg);
 
             return tplOptions;
@@ -407,6 +408,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             _buildTplArgs: buildTplArgsDG,
             _buildTplArgsDG: buildTplArgsDG,
             _groupTemplate: GroupTemplate,
+            _columnsShift: 0,
             /**
              * @typedef {Object} Columns
              * @property {String} title Заголовок колонки. Отображение заголовков можно изменять с помощью опции {@link showHead}. Также с помощью опции {@link allowToggleHead} можно скрывать заголовки при отсутствии в списке данных.
@@ -770,7 +772,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             escapeHtml: args.escapeHtml
          };
          args.startScrollColumn = cfg.startScrollColumn;
-         args.currentScrollPosition = this._getColumnsScrollPosition();
+         args.columnsShift = this._getColumnsScrollPosition();
          buildTplArgsLadder(args.cellData, cfg);
 
          return args;
@@ -794,7 +796,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._bindHead();
          }
          headData = prepareHeadData(this._options);
-         headData.columnsScrollPosition = this._getColumnsScrollPosition();
+         headData.columnsShift = this._getColumnsScrollPosition();
          headData.thumbPosition = this._currentScrollPosition;
          headMarkup = this._options.headTpl(headData);
          var body = $('.controls-DataGridView__tbody', this._container);
@@ -1244,10 +1246,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _moveThumbAndColumns: function(cords) {
          this._currentScrollPosition = this._checkThumbPosition(cords);
+         
+         var columnsShift = this._getColumnsScrollPosition(),
          /* Ячейки двигаем через translateX, т.к. IE не двиагает ячейки через left,
             если таблица лежит в контейнере с display: flex */
-         var movePosition = 'translateX(' + this._getColumnsScrollPosition() + 'px)';
+            movePosition = 'translateX(' + this._getColumnsScrollPosition() + 'px)';
 
+         /* Записываем в опцию, чтобы была возможность использовать в шаблоне */
+         this._options._columnsShift = columnsShift || 0;
          this._setThumbPosition(this._currentScrollPosition);
          for(var i= 0, len = this._movableElems.length; i < len; i++) {
             this._movableElems[i].style.transform = movePosition;

@@ -631,7 +631,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           setMultiselect: function(multiselect) {
              FieldLink.superclass.setMultiselect.apply(this, arguments);
-             this.getContainer().toggleClass(classes.MULTISELECT, !!multiselect)
+             this.getContainer()
+                .toggleClass(classes.MULTISELECT, Boolean(multiselect))
+                .toggleClass(classes.INPUT_MIN_WIDTH, Boolean(multiselect || this._options.alwaysShowTextBox));
           },
 
           // FIXME костыль, выписана задача:
@@ -798,6 +800,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                       /* Для multiselect'a и включённой опции alwaysShowTextBox
                        добавляем минимальную ширину поля ввода (т.к. оно не скрывается при выборе */
                       if (this._options.multiselect || this._options.alwaysShowTextBox) {
+                         /* Необходмо показать кнопку заранее для правильных замеров. */
+                         this._toggleShowAll(true);
                          //FireFox почему то иногда неверно считает ширину кнопки '...', выписана задача
                          showAllLinkWidth = this._getShowAllButton().outerWidth() + (constants.browser.firefox ? 2 : 0);
                          /* Если поле звязи задизейблено, то учитываем ширину кнопки отображения всех запией */
@@ -1108,8 +1112,20 @@ define('js!SBIS3.CONTROLS.FieldLink',
              поэтому при перевороте проскролим вниз автодополнение */
           _scrollListToBottom: function() {
              if(this._picker && this._isSuggestPickerRevertedVertical()) {
-                var pickerContainer = this._picker.getContainer();
+                var pickerContainer = this._picker.getContainer(),
+                    list = this.getList(),
+                    newIndex;
+                
                 pickerContainer[0].scrollTop = pickerContainer[0].scrollHeight;
+                
+                /* При подскроле вниз всегда устанавливаем маркер на последнюю запись */
+                if(cInstance.instanceOfMixin(list, 'SBIS3.CONTROLS.Selectable')) {
+                   newIndex = list.getItems().getCount() - 1;
+                   
+                   if(newIndex !== list.getSelectedIndex()) {
+                      list.setSelectedIndex(newIndex);
+                   }
+                }
              }
           },
           /* После перерисовки списка автодополнения, пикер может менять своё положение,
@@ -1175,10 +1191,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
           }, '_showAllButton'),
 
           /* Заглушка, само поле связи не занимается отрисовкой */
-          redraw: fHelpers.nop,
-          /* Заглушка, само поле связи не занимается загрузкой списка */
-          reload: fHelpers.nop,
+          redraw: function () {
 
+          },
+          /* Заглушка, само поле связи не занимается загрузкой списка */
+          reload: function () {
+
+          },
 
           destroy: function() {
              if(this._linkCollection) {

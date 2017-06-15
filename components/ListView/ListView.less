@@ -310,13 +310,13 @@
 
 @keyframes rightSwipe {
    0% {
-      right: 0;
+      .translate(0);
    }
    50% {
-      right: -16px;
+      .translate(16px);
    }
    100% {
-      right: 0
+      .translate(0);
    }
 }
 
@@ -395,6 +395,7 @@
       width: 100%;
       overflow: hidden;
       padding: 2px;
+      text-align: left;
       .controls-dragNDrop-avatar__title {
          color: #313E78;
          font-weight: bold;

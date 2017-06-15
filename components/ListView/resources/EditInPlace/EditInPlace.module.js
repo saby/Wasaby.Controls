@@ -150,6 +150,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this._deactivateActiveChildControl();
                return (this._editingDeferred || Deferred.success()).addCallback(function() {
                   this._model.merge(this._editingModel);
+                  this._model.acceptChanges();
                }.bind(this))
             },
             show: function(model, itemProj) {

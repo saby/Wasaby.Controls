@@ -64,7 +64,7 @@ define('js!SBIS3.CONTROLS.TextBoxUtils', ['Core/constants'], function(constants)
       },
 
        setEqualPickerWidth: function(picker) {
-           var textBoxWidth = picker.getTarget()[0].clientWidth,
+           var textBoxWidth = picker.getTarget()[0].getBoundingClientRect().width,
                pickerContainer = picker.getContainer()[0],
                needSetWidth = true,
                minWidth;
@@ -86,7 +86,7 @@ define('js!SBIS3.CONTROLS.TextBoxUtils', ['Core/constants'], function(constants)
                    pickerContainer.style.minWidth = textBoxWidth + 'px';
                    pickerContainer.style.maxWidth = textBoxWidth + 'px';
                }
-               picker.recalcPosition(true);
+               picker.recalcPosition(true, true);
                if(needSetWidth) {
                    pickerContainer.style.width = textBoxWidth + 'px';
                    pickerContainer.style.minWidth = '';
