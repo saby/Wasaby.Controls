@@ -17,7 +17,13 @@ define('js!SBIS3.CONTROLS.TimePickerUtils',
          /**
           * @event onChangeActiveTime Происходит после смены активного времени.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Object} activeTime Текущее активное время.
+          * @param {String} activeTime Текущее активное время.
+          */
+
+         /**
+          * @event onChangeTimeEnd Происходит после окончательного выбора времени.
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Date|Object} time окончательное время.
           */
          $protected: {
             _options: {
