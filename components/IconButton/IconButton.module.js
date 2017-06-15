@@ -72,12 +72,20 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
 
       /*TODO: Удалить при переходе на VDOM*/
       _onMouseClick: function(e) {
+         if (this._isTouchEnded) {
+            this._isTouchEnded = false;
+            return;
+         }
+         this._isWaitingClick = false;
+         if (!this._options.enabled) {
+            return;
+         }
          this._onClickHandler(e);
       },
 
       _containerReady:function(container){
          if (window) {
-            container.on('click', this._onClickHandler.bind(this));
+            container.on('click', this._onMouseClick.bind(this));
             var self = this;
 
             container.keydown(function(e) {
