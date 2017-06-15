@@ -191,10 +191,11 @@ define('js!SBIS3.CONTROLS.DragObject', [
        */
       getTargetsDomElemet: function(){
          if (this._jsEvent) {
-            var avatar = this.getAvatar();
+            var avatar = this.getAvatar(),
+               isTouchEvent = (this._jsEvent.type in {"touchmove":true, "touchend":true});
             if (typeof document.elementsFromPoint == 'function' && (
-               avatar && avatar.find(this._jsEvent.target).length > 0 ||
-               this._jsEvent.type in {"touchmove":true, "touchend":true}
+               avatar && avatar.find(this._jsEvent.target).length > 0
+               || isTouchEvent
                || constants.browser.firefox
             )) {
                //Для touch событий в таргете всегда лежит элемент над которым началось перемещение
@@ -206,6 +207,9 @@ define('js!SBIS3.CONTROLS.DragObject', [
                      return $(elements[i]);
                   }
                }
+            } else if (typeof document.elementFromPoint == 'function' && isTouchEvent) {
+               //на ipad'e нет метода elementsFromPoint
+               return $(document.elementFromPoint(this._jsEvent.pageX, this._jsEvent.pageY));
             } else {
                return $(this._jsEvent.target);
             }
