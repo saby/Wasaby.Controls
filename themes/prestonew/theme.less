@@ -4,6 +4,31 @@ html {
 }
 
 body {
+   .ws-paging{
+      .ws-paging-small{
+         width: 3rem !important;
+         height: 3rem !important;
+         border: 2px solid #26B8FF !important;
+         font-size: 1.714285714285714rem !important;
+         background-color: #354B62 !important;
+         line-height:   3rem !important;
+         margin: 0 8px 0 0 !important;
+         padding: 0 !important;
+         box-sizing: border-box !important;
+         color: #E4E4E4 !important;
+         &:hover{
+            background-color: #1b2530 !important;
+         }
+         &.ws-paging-current{
+            border-color: @primary-color !important;
+         }
+      }
+   }
+   .controls-Pager{
+      .controls-Pager-block-amount, .controls-Pager-block-amount{
+         padding: 0;
+      }
+   }
    .controls-DataGridView__results {
       font-size: @default-font-size;
       color: #FFCC99;
