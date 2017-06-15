@@ -388,7 +388,7 @@
 @menu-header-bg-color:                    #23b8ff;
 @menu-subpopup-margin:                    @menu-margin;
 @menu-border-width:                      .07rem;
-@menu-border-color:                       #0055BB;
+@menu-border-color:                       #26B8FF;
 @menu-header-caption-color:               #e4e4e4;
 @menu-expand-width:                       8px;
 @menu-expand-top-offset:                  20px;
@@ -761,7 +761,7 @@
 
 @controls-FieldLink-border:                           2px solid;
 @controls-FieldLink-border-color:                     @text-box-border-color @text-box-border-color @text-box-bottom-border-color @text-box-border-color;
-@controls-FieldLink-border-color-focus-hover:         @text-box-bottom-border-color;
+@controls-FieldLink-border-color-focus-hover:         #26B8FF;
 @controls-FieldLink-link-color:                         #26B8FF;
 // --------- //
 // MonthView //
@@ -921,9 +921,15 @@
 @date-range-big-choose-years-height:                           3.57rem;
 @date-range-big-choose-font-family:                            'TensorFont Regular', 'TensorFont', sans-serif;
 
-@date-range-big-choose-header-padding:                               0.256rem 0 0.256rem 0.5rem;
+@date-range-big-choose-header-padding:                               0.256rem 0 0.256rem 0;
+@date-range-big-choose-header-home-button-size:                      3rem;
+@date-range-big-choose-header-home-button-font-size:                 @date-range-big-choose-header-home-button-size;
+@date-range-big-choose-header-home-button-margin-left:               0;
 @date-range-big-choose-header-date-pickers-margin-right:             3.286rem;
 @date-range-big-choose-header-date-picker-margin-top:                0;
+@date-range-big-choose-header-apply-button-size:                     3rem;
+@date-range-big-choose-header-apply-button-font-size:                @date-range-big-choose-header-apply-button-size;
+@date-range-big-choose-header-apply-button-margin-left:              0;
 @date-range-big-choose-header-range-dash-width:                      0.286rem;
 @date-range-big-choose-header-range-dash-margin:                     1.5rem 0.286rem 0.286rem;
 
@@ -994,13 +1000,13 @@
 @listView-empty-data-font-size:                1rem;
 @listView-empty-data-padding-top:               46px;
 
-@list-view-scroll-bg:                           url('img/ajax-loader-indicator-big.gif') @basic-block-bg-color 13px 13px  no-repeat;
-@list-view-scroll-height:                       100px;
-@list-view-scroll-width:                        100px;
-@controls-AjaxLoader-indicator-padding-left:    100px;
-@controls-AjaxLoader-indicator-height:          100px;
-@controls-AjaxLoader-block-width:               100px;
-@controls-AjaxLoader-outer-height:              102px;
+@list-view-scroll-bg:                           url('img/ajax-loader-indicator-big.gif') @basic-block-bg-color 0.4642rem 0.4642rem  no-repeat;
+@list-view-scroll-height:                       3.5714rem;
+@list-view-scroll-width:                        3.5714rem;
+@controls-AjaxLoader-indicator-padding-left:    3.5714rem;
+@controls-AjaxLoader-indicator-height:          3.5714rem;
+@controls-AjaxLoader-block-width:               3.5714rem;
+@controls-AjaxLoader-outer-height:              3.5714rem;
 @controls-AjaxLoader-background:                none;
 
 @scrollPaging-padding:                          3rem;
@@ -1241,9 +1247,9 @@
 @back-button-arrow-paddingleft:                     16px;
 @bread-crumb-title-color:                          #8991A9;
 @breadcrumbs-top:                                  0;
-@breadcrumbs-smallItems-font-size:                 1.43rem;
+@breadcrumbs-smallItems-font-size:                 1rem;
 @breadcrumbs-arrow-top:                            0;
-@breadcrumbs-small-items-top:                      .4rem;
+@breadcrumbs-small-items-top:                      0;
 
 // EditDialog
 @editdialog-applybutton-width:                     auto;
@@ -1465,8 +1471,10 @@
 @DropdownList-picker-max-height: 20rem;
 @DropdownList-footer-select-top: 0.28rem;
 @DropdownList-picker-menu-line-height: 3.57rem;
+@DropdownList-after-caption-wrapper-top:              .4rem;
 @DropdownList-footer-hasMore-left:                    .28rem;
-@DropdownList-footer-hasMore-left-multiselect:        1.82rem;
+@DropdownList-footer-hasMore-left-multiselect:        2.35rem;
+@DropdownList-footer-hasMore-top-multiselect:         1rem;
 @DropdownList-footer-hasMore-top:                     1rem;
 
 @header-height:                        3rem;
@@ -1499,7 +1507,7 @@
 @money-text-box-decimals-padding: 0;
 @money-text-box-decimals-font-size: 1.43rem;
 @money-text-box-decimals-color: @default-text-color;
-@header-color:                              #e4e4e4;
+@header-color:                              #FC9;
 
 @gray-lamantin-color:                               #8991A9;
 
