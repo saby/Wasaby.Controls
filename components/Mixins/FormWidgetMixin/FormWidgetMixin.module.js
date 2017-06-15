@@ -216,7 +216,10 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
          }
 
          if (vResult.errors.length > 0) {
-            this.markControl(vResult.errors, true);
+            //Здесь не нужно звать markControl с отображением инфобокса
+            //ControlGoodCode.js на приход фокуса сам показывает подсказку.
+            //Иначе она будет пытаться показаться для всех контролов, проваливших валидацию
+            this.markControl(vResult.errors);
          }
          else {
             this.clearMark();
