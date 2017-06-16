@@ -1,6 +1,7 @@
 'use strict';
 var express = require('express'),
     path = require('path'),
+    http = require('http'),//###
     https = require('https'),
     cookieParser = require('cookie-parser'),
     fs = require('fs'),
@@ -17,7 +18,7 @@ app.use(cookieParser())
 app.use(express.static(path.resolve(__dirname)));
 
 var port = process.env.PORT || 666;
-app.listen(port);
+var server = app.listen(port);
 
 console.log('app available on port ' + port);
 console.log('collecting deps...');
@@ -80,14 +81,14 @@ app.post('/theme-preview/apply-theme/', function(req, res)  {
 
 // Простой прокси для перенаправления запросов от демо к сервисам Sbis.ru
 var simpleProxy = function (proxyParams, req, res) {
-   var subReq = function (args, content, onResult) {
-      args.host = proxyParams.host;
-      args.hostname = proxyParams.host;
+   var subReq = function (host, args, content, onResult) {
+      args.host = host;
+      args.hostname = host;
       args.port = req.port || 443;
       args.headers = args.headers || {};
-      args.headers.host = proxyParams.host;
-      args.headers.origin = 'https://' + proxyParams.host;
-      args.headers.referer = 'https://' + proxyParams.host + '/';
+      args.headers.host = host;
+      args.headers.origin = 'https://' + host;
+      args.headers.referer = 'https://' + host + '/';
       args.headers['x-requested-with'] = 'XMLHttpRequest';
       var data;
       if (content && typeof content === 'object' && Object.keys(content).length) {
@@ -99,9 +100,8 @@ var simpleProxy = function (proxyParams, req, res) {
          args,
          function (rs) {
             rs.on('data', function (data) {
-                  onResult.call(null, rs.statusCode, rs.headers, data);
-               }
-            );
+               onResult.call(null, rs.statusCode, rs.headers, data);
+            });
          });
       rq.on('error', function (err) {
          console.error('Subrequest error: ' + err);
@@ -110,15 +110,13 @@ var simpleProxy = function (proxyParams, req, res) {
       rq.end(data);
    };
 
-   var pass = function (cookies, setCookies) {
-      var reqPath = req.path;
-      if (reqPath.substring(0, proxyParams.host.length + 2) === '/' + proxyParams.host + '/') {
-         reqPath = reqPath.substring(proxyParams.host.length + 1);
-      }
+   var pass = function (cookies, setCookies, fixPath) {
+      var reqPath = fixPath ? fixPath(req.path, cookies) : req.path;
       if (req.route.path.charAt(req.route.path.length - 1) === '/' && reqPath.charAt(reqPath.length - 1) !== '/') {
          reqPath = reqPath + '/';
       }
       subReq(
+         proxyParams.host,
          {
             method: req.method,
             path: reqPath,
@@ -140,13 +138,27 @@ var simpleProxy = function (proxyParams, req, res) {
       );
    };
 
-   var cookies = proxyParams.cookies.reduce(function (acc, n) { var k = proxyParams.host + '-' + n; if (req.cookies[k]) { acc[n] = req.cookies[k]; } return acc;
-   }, {});
-   if (Object.keys(cookies).length === proxyParams.cookies.length) {
-      pass(cookies);
+   var cookieNames = ['sid', 's3tok-d1b2', 's3su', 'CpsUserId', 'did'];
+
+   var authHost = proxyParams.host.startsWith('stomp-') || proxyParams.host.startsWith('stomp.') ? proxyParams.host.substring(6) : proxyParams.host;
+
+   var cookies;
+   if (authHost === proxyParams.host) {
+      cookies = cookieNames.reduce(function (acc, n) { var k = authHost + '-' + n; if (req.cookies[k]) { acc[n] = req.cookies[k]; } return acc; }, {});
+      if (!simpleProxy.authCookies || !simpleProxy.authCookies[authHost]) {
+         (simpleProxy.authCookies = simpleProxy.authCookies || {})[authHost] = cookies;
+      }
+   }
+   else {
+      cookies = simpleProxy.authCookies ? simpleProxy.authCookies[authHost] : null;
+   }
+
+   if (cookies && Object.keys(cookies).length === cookieNames.length) {
+      pass(cookies, null, proxyParams.fixPath);
       return;
    }
    subReq(
+      authHost,
       {
          method: 'POST',
          path: '/auth/service/sbis-rpc-service300.dll',
@@ -166,16 +178,20 @@ var simpleProxy = function (proxyParams, req, res) {
                var line = ks[i].replace(re, '');
                var j = line.indexOf('=');
                var n = line.substring(0, j);
-               if (proxyParams.cookies.indexOf(n) !== -1) {
-                  lines.push(line, proxyParams.host + '-' + line);
+               if (cookieNames.indexOf(n) !== -1) {
+                  lines.push(line, authHost + '-' + line);
                   cookies[n] = line.substring(j + 1, line.indexOf(';', j + 1));
                }
             }
          }
-         if (Object.keys(cookies).length === proxyParams.cookies.length) {
-            pass(cookies, lines);
+         if (Object.keys(cookies).length === cookieNames.length) {
+            (simpleProxy.authCookies = simpleProxy.authCookies || {})[authHost] = cookies;
+            pass(cookies, lines, proxyParams.fixPath);
          }
          else {
+            if (simpleProxy.authCookies) {
+               delete simpleProxy.authCookies[authHost];
+            }
             res.sendStatus(401);
          }
       }
@@ -188,11 +204,26 @@ var simpleProxy = function (proxyParams, req, res) {
 var PROXY_PARAMS = {
    host: 'test-online.sbis.ru',
    user: 'Демо',
-   password: 'Демо123',
-   cookies: ['sid', 's3su', 'CpsUserId', 'did', 's3tok-d1b2']
+   password: 'Демо123'
 };
 
-// Проксировать запросы по указанным роутам
+// Проксировать запросы по этим роутам
 app.get('/!hash/', simpleProxy.bind(null, PROXY_PARAMS));
 app.post('/long-requests/service/', simpleProxy.bind(null, PROXY_PARAMS));
-app.post('/' + PROXY_PARAMS.host + '/service/', simpleProxy.bind(null, PROXY_PARAMS));
+app.post('/' + PROXY_PARAMS.host + '/service/', simpleProxy.bind(null, Object.assign({}, PROXY_PARAMS, {
+   fixPath: function (reqPath, cookies) {
+      return reqPath.substring(PROXY_PARAMS.host.length + 1);
+   }
+})));
+
+app.get('/stomp/s-:sid/info', simpleProxy.bind(null, {
+   host: 'stomp-test-online.sbis.ru',
+   fixPath: function (reqPath, cookies) {
+      return '/stomp/s-' + cookies['sid'] + '/info';
+   }
+}));
+
+
+
+/*server.on('upgrade', function (inMsg, socket, head) {
+});*/
