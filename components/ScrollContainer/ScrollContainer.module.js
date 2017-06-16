@@ -177,6 +177,19 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             return (typeof a === "number") && (typeof b === "number") && isNaN(a) && isNaN(b);
          },
 
+         nullOrUndefined: function(a){
+            return a === null || a === undefined;
+         },
+
+         compare: function(a, b){
+            /**
+             * Если одно из значений null или undefined то сравниваем с типами, чтобы null!==undefined
+             * Если оба значения не null и не undefined, то сравниваем без типов, чтобы 1=="1"
+             */
+            var temp = (this.nullOrUndefined(a) || this.nullOrUndefined(b))?(a===b):(a==b);
+            return this.bothIsNaN(a,b) || temp;
+         },
+
          setContext: function(ctx){
             BaseCompatible.setContext.call(this, ctx);
             /**
@@ -190,11 +203,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   prevContext = this._context.getPrevious();
 
                this._context.subscribe('onFieldChange', function (ev, name, value) {
-                  if (this.getValueSelf(name) !== undefined) {
-                     if (prevContext.getValueSelf(name) != value &&
-                        self._ctxSync.selfToPrev[name] != value &&
-                        !self.bothIsNaN(value, prevContext.getValueSelf(name)) &&
-                        !self.bothIsNaN(value, self._ctxSync.selfToPrev[name])) {
+                  //if (this.getValueSelf(name) !== undefined)
+                  {
+                     if (!self.compare(value, prevContext.getValueSelf(name)) &&
+                        !self.compare(value, self._ctxSync.selfToPrev[name])) {
                         self._ctxSync.selfToPrev[name] = value;
                         self._ctxSync.selfNeedSync = true;
                      }
@@ -202,11 +214,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                });
 
                prevContext.subscribe('onFieldChange', function (ev, name, value) {
-                  if (prevContext.getValueSelf(name) !== undefined) {
-                     if (selfCtx.getValueSelf(name) != value &&
-                        self._ctxSync.prevToSelf[name] != value &&
-                        !self.bothIsNaN(value, selfCtx.getValueSelf(name)) &&
-                        !self.bothIsNaN(value, self._ctxSync.prevToSelf[name])){
+                  //if (prevContext.getValueSelf(name) !== undefined)
+                  {
+                     if (!self.compare(value, selfCtx.getValueSelf(name)) &&
+                        !self.compare(value, self._ctxSync.prevToSelf[name])){
                         self._ctxSync.prevToSelf[name] = value;
                         self._ctxSync.prevNeedSync = true;
                      }
