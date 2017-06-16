@@ -22,7 +22,8 @@ define([
          }
       },
       _notifyOnPropertyChanged: function () {},
-      setShowLock: function () {}
+      setShowLock: function () {},
+      setLocked: function () {}
    });
 
    describe('SBIS3.CONTROLS.DateRangeRelationController', function () {
@@ -53,6 +54,18 @@ define([
                dates.push([new Date(year, month + i*step, 1), new Date(year, month + i*step + period, 0)])
             }
             return dates;
+         },
+         capacityIncreasingTest = function () {
+            it('should be reset steps on capacity increasing', function () {
+               controls[0]._notify('onLockedChanged', false);
+               controls[0].setRange(new Date(2011, 2, 1), new Date(2011, 2, 31));
+               controls[0]._notify('onLockedChanged', true);
+               controls[0].setRange(new Date(2012, 0, 1), new Date(2012, 11, 31));
+               let dates = createDates(new Date(2012, 0, 1), 12, 12);
+               for (let [i, control] of controls.entries()) {
+                  assertRangeControl(control, dates[i], `Control ${i}`);
+               }
+            });
          };
 
       it('should generate an event on date changed', function (done) {
@@ -74,6 +87,8 @@ define([
                assertRangeControl(control, dates[i], `Control ${i}`);
             }
          });
+
+         capacityIncreasingTest();
 
          describe('updating range with same period type', function () {
             let dates = createDates(new Date(2016, 0, 1), 1, 1);
@@ -111,6 +126,8 @@ define([
                assertRangeControl(control, dates[i], `Control ${i}`);
             }
          });
+
+         capacityIncreasingTest();
 
          describe('updating range with same period type', function () {
             let dates = createDates(new Date(2016, 0, 1), 6, 1);
@@ -195,6 +212,14 @@ define([
          //       });
          //    }
          // });
+
+
+      });
+
+      describe('step = 1, period = 1, onlyByCapacity = false', function () {
+         beforeEach(function() {
+            initControls(new Date(2015, 0, 1), 1);
+         });
 
 
       });
