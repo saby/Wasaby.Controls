@@ -31,9 +31,6 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
       'use strict';
 
       var showSubmitDialog = function(config, positiveHandler, negativeHandler, cancelHandler){
-         if (config.status === 'error') {
-            config.message = config.message.toString().replace('Error: ', '');
-         }
          var popup = new SubmitPopup(cMerge(config, {
             element: $('<div></div>'),
             isModal: true
