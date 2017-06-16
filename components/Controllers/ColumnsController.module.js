@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.ColumnsController', ['Core/Abstract', 'Core/helpers/co
             });
             cHelpers.forEach(this._state, function (colId) {
                column = columns.getRecordById(colId);
-               if (!column.get('fixed')) {
+               if (column && !column.get('fixed')) {
                   newColumns = newColumns.concat(column.get('columnConfig'));
                }
             });
