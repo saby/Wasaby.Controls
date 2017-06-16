@@ -2796,12 +2796,13 @@ define('js!SBIS3.CONTROLS.ListView',
          // затем добавляется элемент на место удаленного, но скролл остается на месте. 
          // Поэтому компенсируем этот прыжок сами
          _firefoxFixScrollTop: function(action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+            var count = this._getItemsProjection().getCount();
             if (action == IBindCollection.ACTION_ADD) {
-               if (newItemsIndex === 0 && this._removedItemsCount == newItems.length && this.isScrollOnBottom()) {
+               if (newItemsIndex === count - 1 && this._removedItemsCount == newItems.length && this.isScrollOnBottom()) {
                   this._scrollWatcher.scrollTo('bottom');
                }
             } else if (action == IBindCollection.ACTION_REMOVE) {
-               if (oldItemsIndex === 0) {
+               if (oldItemsIndex === count - 1) {
                   this._removedItemsCount = oldItems.length;
                }
             }
