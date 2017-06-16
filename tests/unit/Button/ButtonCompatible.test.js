@@ -43,6 +43,10 @@ define([
          });
 
 
+         it('destroy', function(){
+            button.destroy();
+            assert.isTrue(button.isDestroyed());
+         });
       });
 
    });
