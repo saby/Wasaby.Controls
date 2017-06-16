@@ -332,6 +332,7 @@ define(
        */
       setDate: function (date) {
          this._setDate(date);
+         this._notifyOnTextChange();
          this._notifyOnDateChanged();
          this._onTextChanged();
       },
