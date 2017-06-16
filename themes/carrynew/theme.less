@@ -85,6 +85,72 @@ body {
   font-size: 1rem;
 }
 body {
+
+   //TODO: удалить это когда будет нормальный пэйджинг, не из ws-a
+   .ws-paging{
+      .ws-paging-small{
+         width: 3rem !important;
+         height: 3rem !important;
+         background: none !important;
+         border: 2px solid #CCCCCC !important;
+         font-size: 1.714285714285714rem !important;
+         background-color: #F0F5FB !important;
+         line-height:   3rem !important;
+         margin: 0 8px 0 0 !important;
+         padding: 0 !important;
+         box-sizing: border-box !important;
+         color: #CCCCCC !important;
+         &.ws-paging-active{
+            border: 2px solid #0055BB !important;
+            color: #2C3E50 !important;
+            &:hover{
+               background-color: @default-hover-color !important;
+            }
+         }
+         &.ws-paging-current{
+            border: 2px solid @primary-color !important;
+            background:#F0F5FB !important;
+            color: #2C3E50 !important;
+         }
+         &.ws-paging-next, &.ws-paging-end, &.ws-paging-first, &.ws-paging-prev {
+            position:relative;
+            &:before {
+               text-indent: 0 !important;
+               font-size: 3rem;
+               position:absolute;
+               top:-2px;
+               left:-2px;
+               font-family: 'carrypresto-icons' !important;
+            }
+         }
+         &.ws-paging-next {
+            &:before {
+               content: "\e97e";
+            }
+         }
+         &.ws-paging-end {
+            &:before {
+               content: "\e97d";
+
+            }
+         }
+         &.ws-paging-first {
+            &:before {
+               content: "\e980";
+            }
+         }
+         &.ws-paging-prev{
+            &:before {
+               content: "\e97f";
+            }
+         }
+      }
+   }
+   .controls-Pager{
+      .controls-Pager-block-amount, .controls-Pager-block-amount, controls-Pager-block-paging{
+         padding: 0;
+      }
+   }
    .controls-DataGridView__results {
       font-size: @default-font-size;
       color: #313E78;
