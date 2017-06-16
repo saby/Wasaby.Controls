@@ -4,6 +4,71 @@ html {
 }
 
 body {
+   //TODO: удалить это когда будет нормальный пэйджинг, не из ws-a
+   .ws-paging{
+      .ws-paging-small{
+         width: 3rem !important;
+         height: 3rem !important;
+         background: none !important;
+         border: 2px solid #8991A9 !important;
+         font-size: 1.714285714285714rem !important;
+         background-color: #354B62 !important;
+         line-height:   3rem !important;
+         margin: 0 8px 0 0 !important;
+         padding: 0 !important;
+         box-sizing: border-box !important;
+         color: #8991A9 !important;
+         &.ws-paging-active{
+            border: 2px solid #26B8FF !important;
+            color: #E4E4E4 !important;
+            &:hover{
+               background-color: #1b2530 !important;
+            }
+         }
+         &.ws-paging-current{
+            border: 2px solid @primary-color !important;
+            background:#354B62 !important;
+            color: #E4E4E4 !important;
+         }
+         &.ws-paging-next, &.ws-paging-end, &.ws-paging-first, &.ws-paging-prev {
+            position:relative;
+            &:before {
+               text-indent: 0 !important;
+               font-size: 3rem;
+               position:absolute;
+               top:-2px;
+               left:-2px;
+               font-family: 'carrypresto-icons' !important;
+            }
+         }
+         &.ws-paging-next {
+            &:before {
+               content: "\e97e";
+            }
+         }
+         &.ws-paging-end {
+            &:before {
+               content: "\e97d";
+
+            }
+         }
+         &.ws-paging-first {
+            &:before {
+               content: "\e980";
+            }
+         }
+         &.ws-paging-prev{
+            &:before {
+               content: "\e97f";
+            }
+         }
+      }
+   }
+   .controls-Pager{
+      .controls-Pager-block-amount, .controls-Pager-block-amount, controls-Pager-block-paging{
+         padding: 0;
+      }
+   }
    .controls-DataGridView__results {
       font-size: @default-font-size;
       color: #FFCC99;
