@@ -75,15 +75,16 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
              });
 
          container
-             .hover(function(){
-                pickerContainer.addClass('controls-Picker__owner__hover');
-             }, function () {
-                pickerContainer.removeClass('controls-Picker__owner__hover');
-             });
+            .on('mouseenter', function() {
+               pickerContainer.addClass('controls-Picker__owner__hover');
+            })
+            .on('mouseleave', function () {
+               pickerContainer.removeClass('controls-Picker__owner__hover');
+            });
 
          this._border = container.outerWidth() - container.innerWidth();
          this._setPickerContent();
-         pickerContainer.addClass('js-controls-Picker__initialized')
+         pickerContainer.addClass('js-controls-Picker__initialized');
       },
 
       _createPicker: function(pickerContainer){
@@ -236,7 +237,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
             if (this._picker) {
                this._picker.destroy();
             }
-            this.getContainer().off( "mouseenter mouseleave" );
+            this.getContainer().off('mouseenter mouseleave');
          }
       },
 
