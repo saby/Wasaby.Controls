@@ -2791,6 +2791,11 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._scrollOffset.bottom -= this._getAdditionalOffset(oldItems);
                }
             }
+
+            if (cDetection.firefox) {
+               this._beforeFirefoxFixScrollTop(action, newItems, newItemsIndex, oldItems, oldItemsIndex);
+            }
+
             ListView.superclass._onCollectionAddMoveRemove.apply(this, arguments);
 
             if (cDetection.firefox) {
@@ -2803,17 +2808,23 @@ define('js!SBIS3.CONTROLS.ListView',
          // из за этого в фф дергается скролл, так как сначала убирается элемент, скролл подвигается вверх
          // затем добавляется элемент на место удаленного, но скролл остается на месте. 
          // Поэтому компенсируем этот прыжок сами
+         _beforeFirefoxFixScrollTop: function(action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+            if (action == IBindCollection.ACTION_REMOVE) {
+               this._ffScrollPosition = this._getScrollWatcher().getScrollContainer().scrollTop();
+               this._ffRemoveIndex = oldItemsIndex;
+            }
+         },
+         //продолжение хака
          _firefoxFixScrollTop: function(action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
-            var count = this._getItemsProjection().getCount();
             if (action == IBindCollection.ACTION_ADD) {
-               if (newItemsIndex === count - 1 && this._removedItemsCount == newItems.length && this.isScrollOnBottom()) {
-                  this._scrollWatcher.scrollTo('bottom');
-               }
-            } else if (action == IBindCollection.ACTION_REMOVE) {
-               if (oldItemsIndex === count - 1) {
-                  this._removedItemsCount = oldItems.length;
+               if (this._ffRemoveIndex == newItemsIndex) {
+                  this._scrollWatcher.scrollTo(this._ffScrollPosition);
                }
             }
+            setTimeout(function(){
+               this._ffScrollPosition = null;
+               this._ffRemoveIndex = null;
+            }.bind(this), 0);
          },
 
          // Получить количество записей которые нужно вычесть/прибавить к _offset при удалении/добавлении элементов
