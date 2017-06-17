@@ -289,10 +289,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          * @private
          */
         _showAvatar: function(e) {
-            if (!DragObject.getAvatar()) {
-               var avatar = this._createAvatar(DragObject, e);
-               DragObject.setAvatar(avatar);
-            }
+            var avatar = this._createAvatar(DragObject, e);
+            DragObject.setAvatar(avatar);
         },
         /**
          * Инициализирует перемещение. Должен быть вызван в пользовательских обработчиках событий onMouseDown и touchStart для тех элементов, которые можно перемещать.
@@ -392,6 +390,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
             }
             return true;
         },
+
         /**
          * Конец перемещения.
          * @param {Event} e Браузерное событие.

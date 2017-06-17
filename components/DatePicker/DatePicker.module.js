@@ -150,9 +150,7 @@ define(
             options.pickerIconShow = false;
             IoC.resolve('ILogger').log('DatePicker', 'В качестве опции isCalendarIconShown используйте pickerIconShow');
          }
-         if (options.pickerIconShow) {
-            this._checkTypeOfMask(options);
-         }
+         this._checkTypeOfMask(options);
 
          return options;
       },
@@ -170,7 +168,7 @@ define(
        * Инициализация пикера.
        * @private
        */
-      _pickerInit: function() {
+      _pickerInit: function(name) {
          if (this.isPickerIconShow()) {
             this.getChildControlByName('PickerButton').subscribe('onActivated', this._getPickerMethod('Init'));
          }

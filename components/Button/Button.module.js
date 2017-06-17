@@ -1,7 +1,13 @@
 define('js!SBIS3.CONTROLS.Button',
    [
-      'js!WSControls/Control/Base',
+      'Core/core-extend',
+      "Core/Abstract.compatible",
+      'js!SBIS3.CORE.Control/Control.compatible',
+      "js!SBIS3.CORE.AreaAbstract/AreaAbstract.compatible",
+      'js!SBIS3.CORE.BaseCompatible',
+      'js!SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor',
       'js!SBIS3.CONTROLS.Button/Button.compatible',
+      'js!WS.Data/Entity/InstantiableMixin',
       'tmpl!SBIS3.CONTROLS.Button',
       'Core/core-functions',
       'Core/tmpl/tmplstr',
@@ -9,8 +15,14 @@ define('js!SBIS3.CONTROLS.Button',
       'css!SBIS3.CONTROLS.Button'
          ],
 
-   function (Base,
+   function (extend,
+             AbstractCompatible,
+             ControlCompatible,
+             AreaAbstractCompatible,
+             BaseCompatible,
+             WsCompatibleConstructor,
              ButtonCompatible,
+             InstantiableMixin,
              template,
              functions,
              tmplstr,
@@ -72,8 +84,13 @@ define('js!SBIS3.CONTROLS.Button',
     *    <option name='caption' value='Кнопка'></option>
     * </component>
     */
-   var Button = Base.extend([
+   var Button = extend.extend([AbstractCompatible,
+         ControlCompatible,
+         AreaAbstractCompatible,
+         BaseCompatible,
+         WsCompatibleConstructor,
          ButtonCompatible,
+         InstantiableMixin,
          ControlGoodCode],
       {
          _controlName: 'SBIS3.CONTROLS.Button',
@@ -91,7 +108,7 @@ define('js!SBIS3.CONTROLS.Button',
                }
                cfg.caption = tmplstr.getFunction(cfg.caption);
             }
-            Button.superclass.constructor.call(this, cfg);
+            this.deprecatedContr(cfg);
             this._publish('onActivated');
          },
 
