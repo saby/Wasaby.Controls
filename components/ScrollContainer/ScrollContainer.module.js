@@ -120,10 +120,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             this._ctxSync = {
                selfToPrev: {},
                selfCtxRemoved: {},
-               selfNeedSync: false,
+               selfNeedSync: 0,
                prevToSelf: {},
                prevCtxRemoved: {},
-               prevNeedSync: false
+               prevNeedSync: 0
             };
             this.deprecatedContr(cfg);
          },
@@ -181,6 +181,18 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             return this.bothIsNaN(a,b) || temp;
          },
 
+         fixOpacityField: function(name){
+            if (this.compare(this._ctxSync.selfToPrev[name], this._ctxSync.prevToSelf[name])){
+               /**
+                * Если данные пролетают сквозь контекст самоятоятельно, то не нужно их синхронизировать
+                */
+               delete this._ctxSync.selfToPrev[name];
+               delete this._ctxSync.prevToSelf[name];
+               this._ctxSync.selfNeedSync--;
+               this._ctxSync.prevNeedSync--;
+            }
+         },
+
          setContext: function(ctx){
             BaseCompatible.setContext.call(this, ctx);
             /**
@@ -199,7 +211,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                      if (!self.compare(value, prevContext.getValueSelf(name)) &&
                         !self.compare(value, self._ctxSync.selfToPrev[name])) {
                         self._ctxSync.selfToPrev[name] = value;
-                        self._ctxSync.selfNeedSync = true;
+                        self._ctxSync.selfNeedSync++;
+                        self.fixOpacityField(name);
                      }
                   }
                });
@@ -210,14 +223,15 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                      if (!self.compare(value, selfCtx.getValueSelf(name)) &&
                         !self.compare(value, self._ctxSync.prevToSelf[name])){
                         self._ctxSync.prevToSelf[name] = value;
-                        self._ctxSync.prevNeedSync = true;
+                        self._ctxSync.prevNeedSync++;
+                        self.fixOpacityField(name);
                      }
                   }
                });
 
                this._context.subscribe('onFieldsChanged', function () {
                   if (self._ctxSync.selfNeedSync) {
-                     self._ctxSync.selfNeedSync = false;
+                     self._ctxSync.selfNeedSync = 0;
                      prevContext.setValue(self._ctxSync.selfToPrev);
                      self._ctxSync.selfToPrev = {};
                   }
@@ -225,7 +239,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
                prevContext.subscribe('onFieldsChanged', function () {
                   if (self._ctxSync.prevNeedSync) {
-                     self._ctxSync.prevNeedSync = false;
+                     self._ctxSync.prevNeedSync = 0;
                      selfCtx.setValue(self._ctxSync.prevToSelf);
                      self._ctxSync.prevToSelf = {};
                   }
