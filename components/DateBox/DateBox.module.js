@@ -332,7 +332,6 @@ define(
        */
       setDate: function (date) {
          this._setDate(date);
-         this._notifyOnTextChange();
          this._notifyOnDateChanged();
          this._onTextChanged();
       },
@@ -345,7 +344,7 @@ define(
          var oldText   = this._options.text;
          this._updateOptionsByDate(date);
          if (oldText !== this._options.text) {
-            this._notify('onTextChange', this._options.text);
+            this._notifyOnTextChange();
          }
          this._drawDate();
       },
