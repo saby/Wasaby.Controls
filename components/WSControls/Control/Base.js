@@ -150,18 +150,19 @@ define('js!WSControls/Control/Base',
 
             constructor: function (cfg) {
                this.logicParent = cfg.logicParent;
-               this._options = cFunctions.shallowClone(cfg);
-               this._parseDecOptions(cfg);
+               if (!this.deprecatedContr) {
+                  this._options = cFunctions.shallowClone(cfg);
+                  this._parseDecOptions(cfg);
 
-               this._handlers = {};
-               this._options.eventBusId = generate.randomId();
-               if (cfg.name) {
-                  EventBus.channel(cfg.eventBusId, {
-                     waitForPermit: true
-                  });
-               }
-
-               if (this.deprecatedContr) {
+                  this._handlers = {};
+                  this._options.eventBusId = generate.randomId();
+                  if (cfg.name) {
+                     EventBus.channel(cfg.eventBusId, {
+                        waitForPermit: true
+                     });
+                  }
+               } else {
+                  this._parseDecOptions(cfg);
                   this.deprecatedContr(cfg);
                }
             },
