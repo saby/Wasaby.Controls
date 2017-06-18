@@ -1,42 +1,60 @@
 /**
  * Created by dv.zuev on 02.06.2017.
  */
+var withoutLayout = window && window.location.href.indexOf("withoutLayout")>-1,
+   baseDeps = ['Core/core-extend',
+      'Core/core-functions',
+      'Core/helpers/generate-helpers',
+      'Core/EventBus',
+      'js!WS.Data/Entity/InstantiableMixin',
+      'Core/Abstract.compatible'];
+
 
 define('js!WSControls/Control/Base',
-   [
-      'Core/core-extend',
-      "Core/Abstract.compatible",
+   withoutLayout?baseDeps:baseDeps.concat([
       'js!SBIS3.CORE.Control/Control.compatible',
-      "js!SBIS3.CORE.AreaAbstract/AreaAbstract.compatible",
-      'js!SBIS3.CORE.BaseCompatible',
-      'js!WS.Data/Entity/InstantiableMixin'
-   ],
+      'js!SBIS3.CORE.AreaAbstract/AreaAbstract.compatible',
+      'js!SBIS3.CORE.BaseCompatible'
+   ]),
 
    function (extend,
+             cFunctions,
+             generate,
+             EventBus,
+             InstantiableMixin,
              AbstractCompatible,
              ControlCompatible,
              AreaAbstractCompatible,
-             BaseCompatible,
-             InstantiableMixin) {
+             BaseCompatible) {
 
       'use strict';
 
       var Base = extend.extend([AbstractCompatible,
-            ControlCompatible,
-            AreaAbstractCompatible,
-            BaseCompatible,
+            ControlCompatible||{},
+            AreaAbstractCompatible||{},
+            BaseCompatible||{},
             InstantiableMixin],
          {
             _controlName: 'WSControls/Control/Base',
-            iWantVDOM: false,
+            iWantVDOM: true,
+            VDOMReady: false,
+
 
             _sendCommandFn: null,
             parentSendCommand: null,
             logicParent: null,
+            _decOptions: null,
             _eventsPile: {},
             _transientProperties: ['rawData', 'data', 'parentSendCommand', 'focusing'],
             _overrideTemplateOptsFn: null,
             _commandHandlers: [],
+
+            _handlers: null,
+            /**
+             * basic states
+             */
+            enabled: true,
+            visible: true,
 
             _sendCommand: function(command) {
                var
@@ -101,8 +119,12 @@ define('js!WSControls/Control/Base',
                return newOptions;
             },
 
+            _getDecOptions: function(){
+               return this._decOptions;
+            },
+
             _getMarkup: function(rootKey) {
-               var decOpts = this._prepareDecOptions();
+               var decOpts = this._getDecOptions();
                return this._template(this, decOpts, rootKey, true)[0];
             },
 
@@ -113,9 +135,48 @@ define('js!WSControls/Control/Base',
                }, this);
             },
 
+            _parseDecOptions: function(cfg){
+               this._decOptions = {};
+               /**
+                * Опциями для декорирования могут быть лишь фиксированные опции
+                */
+               if (cfg['class']) {
+                  this._decOptions['class'] = cfg['class'];
+               }
+               if (cfg['style']) {
+                  this._decOptions['style'] = cfg['style'];
+               }
+            },
+
             constructor: function (cfg) {
                this.logicParent = cfg.logicParent;
-               this.deprecatedContr(cfg);
+               this._options = cFunctions.shallowClone(cfg);
+               this._parseDecOptions(cfg);
+
+               this._handlers = {};
+               this._options.eventBusId = generate.randomId();
+               if (cfg.name) {
+                  EventBus.channel(cfg.eventBusId, {
+                     waitForPermit: true
+                  });
+               }
+
+               if (this.deprecatedContr) {
+                  this.deprecatedContr(cfg);
+               }
+            },
+
+            _setDirty: function(){
+               this._notify('onPropertyChange');
+            },
+
+            //FROM COMPATIBLE
+            isBuildVDom: function(){
+               return true;//this.iWantVDOM && window && this.isGoodContainer();
+            },
+
+            isEnabled: function(){
+               return this._options.enabled;
             }
 
 
