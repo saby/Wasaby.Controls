@@ -1778,22 +1778,10 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                       this.setSelectedItemsAll.call(this);
                      if (dataSet.getCount() == MAX_SELECTED && dataSet.getMetaData().more){
-                        var message = 'Отмечено ' + MAX_SELECTED + ' записей, максимально допустимое количество, обрабатываемое системой СБИС.';
-
-                        var windowOptions = (constants.defaultOptions || {})['SBIS3.CORE.Window'] || {};
-                        //TODO В 3.7.4.200 popupMixin не поддерживает анимацию, соответсвенно и информационные окна, сделанные на его основе
-                        //TODO По этой причине проверяем, если включена настройка 'анимированные окна', то покажем старое окно.
-                        //TODO В 3.7.4.220 планируется поддержать анимацию -> выпилить этот костыль!
-                        if(windowOptions.animatedWindows){
-                           fcHelpers.message(message);
-                        }
-                        else {
-                           InformationPopupManager.showMessageDialog({
-                              status: 'default',
-                              message: message,
-                              parent: this
-                           });
-                        }
+                        InformationPopupManager.showMessageDialog({
+                           status: 'default',
+                           message: 'Отмечено 1000 записей, максимально допустимое количество, обрабатываемое системой СБИС.'
+                        });
                      }
                   }.bind(this));
             } else {
