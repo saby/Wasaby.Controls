@@ -1,10 +1,7 @@
 define('js!WSControls/Lists/ItemsControl', [
    'Core/core-extend',
    'Core/core-functions',
-   'Core/Abstract.compatible',
-   'js!SBIS3.CORE.Control/Control.compatible',
-   'js!SBIS3.CORE.AreaAbstract/AreaAbstract.compatible',
-   'js!SBIS3.CORE.BaseCompatible',
+   'js!WSControls/Control/Base',
    'js!WS.Data/Entity/InstantiableMixin',
    'tmpl!WSControls/Lists/ItemsControl',
    'js!WS.Data/Collection/RecordSet',
@@ -21,11 +18,7 @@ define('js!WSControls/Lists/ItemsControl', [
    'js!WSControls/Controllers/DataSourceController'
 ], function (extend,
              cFunctions,
-             AbstractCompatible,
-             ControlCompatible,
-             AreaAbstractCompatible,
-             BaseCompatible,
-             InstantiableMixin,
+             BaseControl,
              template,
              RecordSet,
              isEmpty,
@@ -42,7 +35,7 @@ define('js!WSControls/Lists/ItemsControl', [
 
    'use strict';
 
-   var ItemsControl = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, InstantiableMixin],
+   var ItemsControl = BaseControl.extend(
       {
          _controlName: 'WSControls/Lists/ItemsControl',
          _template: template,
@@ -87,7 +80,7 @@ define('js!WSControls/Lists/ItemsControl', [
                this._dataSourceController.reload();
             }
 
-            this.deprecatedContr(cfg);
+            ItemsControl.superclass.constructor.apply(this, arguments);
          },
 
          _prepareItems : function(items) {
