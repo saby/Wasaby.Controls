@@ -112,9 +112,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
              list,
              textArray = [];
          if (items && keys && keys.length > 0){
-            list = new List({
-               ownerShip: false
-            });
+            list = new List();
             items.each(function (record, index) {
                var id = record.get(cfg.idProperty);
                for (var i = 0, l = keys.length; i < l; i++) {
