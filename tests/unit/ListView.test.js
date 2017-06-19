@@ -57,24 +57,48 @@ define([
             view.move([rs.at(0)], rs.at(1), 'after');
          });
       });
-      it('should trigger onEndMove', function (done) {
-         var target = $('<div><div></div></div>'),
-            rs = new RecordSet({
-               rawData: [{id: 1},{id:2}]
-            }),
-            view = new ListView({
-               container: target,
-               items: rs,
-               idProperty: 'id'
+      describe('onEndMove', function () {
+         it('should trigger onEndMove', function (done) {
+            var target = $('<div><div></div></div>'),
+               rs = new RecordSet({
+                  rawData: [{id: 1}, {id: 2}]
+               }),
+               view = new ListView({
+                  container: target,
+                  items: rs,
+                  idProperty: 'id'
+               });
+            rs.setEventRaising(false);
+            view.subscribe('onEndMove', function (e, result, movedItems, target, position) {
+               assert.equal(movedItems[0], rs.at(1));
+               assert.equal(target, rs.at(0));
+               assert.equal(position, 'after');
+               done();
             });
-         rs.setEventRaising(false);
-         view.subscribe('onEndMove', function (e, result, movedItems, target, position) {
-            assert.equal(movedItems[0], rs.at(1));
-            assert.equal(target, rs.at(0));
-            assert.equal(position, 'after');
-            done();
+            view.move([rs.at(0)], rs.at(1), 'after');
          });
-         view.move([rs.at(0)], rs.at(1), 'after');
+      });
+      describe('setItemsDragNDrop', function () {
+         it('should set items dragnrop', function () {
+            var elem = $('<div></div>'),
+               view = new ListView({
+                  container: elem,
+                  items: []
+               });
+            view.setItemsDragNDrop(true);
+            assert.equal(view.getItemsDragNDrop(), true);
+         });
+      });
+      describe('getItemsDragNDrop', function () {
+         it('should return items dragnrop', function () {
+            var elem = $('<div></div>'),
+               view = new ListView({
+                  container: elem,
+                  itemsDragNDrop: 'allow',
+                  items: []
+               });
+            assert.equal(view.getItemsDragNDrop(), 'allow');
+         })
       });
    });
 });

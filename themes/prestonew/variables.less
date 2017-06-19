@@ -20,11 +20,11 @@
 @basic-block-bg-color:					          #2C3E50; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
 @default-height:								          1.7857rem;
 @icon-color-primary:                      @default-text-color;
-@highlight-text-bg:                       #fffece;
+@highlight-text-bg:                       #354B62;
 @icon-active-color:                       @default-hover-color;
 
 @icon-small-size:                         1.32rem;
-@icon-medium-size:                        1.7857rem;
+@icon-medium-size:                        1.79rem;
 @icon-large-size:                         3rem;
 
 //=============
@@ -94,6 +94,8 @@
 @icon-button-edit-round-border-height:             @icon-large-size;
 @icon-button-edit-round-border-width:              @icon-large-size;
 @icon-button-edit-round-border-line-height:        @icon-large-size;
+
+@list-view-items-toolbar-icon-button-border-font:  'carrypresto-icons';
 
 // ------ //
 // Button //
@@ -386,7 +388,7 @@
 @menu-header-bg-color:                    #23b8ff;
 @menu-subpopup-margin:                    @menu-margin;
 @menu-border-width:                      .07rem;
-@menu-border-color:                       #0055BB;
+@menu-border-color:                       #26B8FF;
 @menu-header-caption-color:               #e4e4e4;
 @menu-expand-width:                       8px;
 @menu-expand-top-offset:                  20px;
@@ -584,7 +586,7 @@
 @text-box-hover-border-style:             @text-box-border-style;
 @text-box-hover-border-color:             rgba(96,170,221, .3 );
 
-@text-box-disabled-border-bottom:         1px solid #333333;
+@text-box-disabled-border-bottom:         .07rem solid #333333;
 @text-box-focus-border-width:             2px;
 @text-box-field-focus-text-color:         #e4e4e4;
 @text-box-after-width:                    20px;
@@ -687,7 +689,6 @@
 @combo-box-disabled-border-color:               transparent;
 @combo-box-disabled-color:                      #38495B;
 
-@combo-box-picker-border:                      0rem solid #48bffc;
 @combo-box-picker-item-padding:                 1.14rem 0.57rem 1.14rem 0.57rem;
 @text-box-field-font-size: 1.43rem;
 @combo-box-picker-item-bg:                      #f0f5fb;
@@ -759,7 +760,7 @@
 
 
 @controls-FieldLink-border:                           2px solid;
-@controls-FieldLink-border-color:                     @text-box-border-color;
+@controls-FieldLink-border-color:                     @text-box-border-color @text-box-border-color @text-box-bottom-border-color @text-box-border-color;
 @controls-FieldLink-border-color-focus-hover:         #26B8FF;
 @controls-FieldLink-link-color:                         #26B8FF;
 // --------- //
@@ -920,13 +921,21 @@
 @date-range-big-choose-years-height:                           3.57rem;
 @date-range-big-choose-font-family:                            'TensorFont Regular', 'TensorFont', sans-serif;
 
-@date-range-big-choose-header-padding:                               0.256rem 0 0.256rem 0.5rem;
+@date-range-big-choose-header-padding:                               0.256rem 0 0.256rem 0;
+@date-range-big-choose-header-home-button-size:                      3rem;
+@date-range-big-choose-header-home-button-font-size:                 @date-range-big-choose-header-home-button-size;
+@date-range-big-choose-header-home-button-margin-left:               0;
 @date-range-big-choose-header-date-pickers-margin-right:             3.286rem;
 @date-range-big-choose-header-date-picker-margin-top:                0;
+@date-range-big-choose-header-apply-button-size:                     3rem;
+@date-range-big-choose-header-apply-button-font-size:                @date-range-big-choose-header-apply-button-size;
+@date-range-big-choose-header-apply-button-margin-left:              0;
 @date-range-big-choose-header-range-dash-width:                      0.286rem;
 @date-range-big-choose-header-range-dash-margin:                     1.5rem 0.286rem 0.286rem;
 
-@date-range-big-choose-years-panel-toggle-choose-year-button-line-height:    3rem;
+@date-range-big-choose-years-panel-top-padding:                              0.286rem;
+@date-range-big-choose-years-panel-bottom-padding:                           0.286rem;
+@date-range-big-choose-years-panel-toggle-choose-year-button-line-height:    3.4rem; // сделать по другому
 @date-range-big-choose-years-panel-current-year-button-line-height:          3rem;
 @date-range-big-choose-years-panel-back-button-font-size:                    3rem;
 @date-range-big-choose-years-panel-back-button-line-height:                  3rem;
@@ -959,7 +968,7 @@
 // --------- //
 // List view //
 // --------- //
-@list-view-min-height:                           90px;
+@list-view-min-height:                           5rem;
 
 @listView-check-box-left:                      0;
 @listView-check-box-top:                       0;
@@ -967,7 +976,7 @@
 @listView-servicefooter-height:                1.47rem;
 
 @list-view-actions-item-height:                 1.75rem;
-@list-view-actions-margin:                      0 .14rem;
+@list-view-actions-margin:                      -.14rem .14rem;
 @list-view-actions-box-shadow:                  -2px -2px 5px #F3F3F3;
 @list-view-actions-icon-top:                    1.497rem;
 @list-view-actions-menu-text-margin:          .64rem 0px 6px 2.32rem;
@@ -991,13 +1000,13 @@
 @listView-empty-data-font-size:                1rem;
 @listView-empty-data-padding-top:               46px;
 
-@list-view-scroll-bg:                           url('img/ajax-loader-indicator-big.gif') @basic-block-bg-color 13px 13px  no-repeat;
-@list-view-scroll-height:                       100px;
-@list-view-scroll-width:                        100px;
-@controls-AjaxLoader-indicator-padding-left:    100px;
-@controls-AjaxLoader-indicator-height:          100px;
-@controls-AjaxLoader-block-width:               100px;
-@controls-AjaxLoader-outer-height:              102px;
+@list-view-scroll-bg:                           url('img/ajax-loader-indicator-big.gif') @basic-block-bg-color 0.4642rem 0.4642rem  no-repeat;
+@list-view-scroll-height:                       3.5714rem;
+@list-view-scroll-width:                        3.5714rem;
+@controls-AjaxLoader-indicator-padding-left:    3.5714rem;
+@controls-AjaxLoader-indicator-height:          3.5714rem;
+@controls-AjaxLoader-block-width:               3.5714rem;
+@controls-AjaxLoader-outer-height:              3.5714rem;
 @controls-AjaxLoader-background:                none;
 
 @scrollPaging-padding:                          3rem;
@@ -1037,7 +1046,7 @@
 @tree-view-hier-wrapper-width:						20px;
 @tree-view-hier-wrapper-height: 						20px;
 
-@tree-view-copy-arrow-background:               @basic-block-bg-color;
+@tree-view-copy-arrow-background:               @default-bg-color;
 
 // --------- //
 // Data grid //
@@ -1051,7 +1060,7 @@
 @data-grid-row-hover-cell-text-color:           inherit;
 
 @data-grid-header-cell-height:                  1.14rem;
-@data-grid-cell-line-height:                    1.762rem;
+@data-grid-cell-line-height:                    1.562rem;
 @data-grid-header-cell-padding:                 0 10px;
 @data-grid-header-cell-padding-side:            10px;
 @data-grid-header-cell-font-size:               0.86rem;
@@ -1100,7 +1109,7 @@
 // ----------------------- //
 
 @controls-OperationsPanelButton-width:             0.86rem;
-@controls-OperationsPanelButton-vert-height:       0.86rem;
+@controls-OperationsPanelButton-vert-height:       3.57rem;
 @controls-OperationsPanelButton-font:              3rem 'carrypresto-icons', 'carrypresto';
 @controls-OperationsPanelButton-icon-left:         0;
 @controls-OperationsPanelButton-icon:              "\e9aa";
@@ -1145,6 +1154,7 @@
 
 //Pager
 @controls-Pager-amount-text :                     #999999;
+@controls-Pager-height:                            3.14rem; //3 rem - button + 2px *2 border
 
 //FilterButton
 @controls-filterButton-button-width:			2rem;
@@ -1210,10 +1220,10 @@
 @controls-FieldLink-linkItem-cross-padding:        0;
 @controls-FieldLink-showAllLinks-padding:          0 1rem 0 0.14rem;
 
-@controls-FieldLink-afterField-padding:            0 .14rem 0.2rem 0;
+@controls-FieldLink-afterField-padding:            0 .14rem 0.14rem 0;
 @controls-FieldLink-afterField-height:             3rem;
 
-@controls-FieldLink-disabled-item-single-padding:  0;
+@controls-FieldLink-disabled-item-single-padding:  0,142rem;
 @controls-FieldLink-disabled-item-single-margin:  .07rem .14rem;
 
 @controls-FieldLink-afterField-background:         transparent;
@@ -1222,6 +1232,8 @@
 @controls-FieldLink-showAll-shadow-width:          20px;
 @controls-FieldLink-showAll-margin-right-ff:       -15px;
 @controls-FieldLink-showAll-top-ff:                -24px;
+@controls-FieldLink-FilterButton-color:            #26B8FF;
+@controls-FieldLink-FilterButton-color-hover:      #B9E9FF;
 
 //SelectorButton
 @controls-SelectorButton-align:                    middle;
@@ -1236,9 +1248,9 @@
 @back-button-arrow-paddingleft:                     16px;
 @bread-crumb-title-color:                          #8991A9;
 @breadcrumbs-top:                                  0;
-@breadcrumbs-smallItems-font-size:                 1.43rem;
+@breadcrumbs-smallItems-font-size:                 1rem;
 @breadcrumbs-arrow-top:                            0;
-@breadcrumbs-small-items-top:                      .4rem;
+@breadcrumbs-small-items-top:                      0;
 
 // EditDialog
 @editdialog-applybutton-width:                     auto;
@@ -1374,7 +1386,7 @@
 @tab-buttons-border-bottom-height:          0.01rem;
 @controls-toolbar-item-margin-right:        0;
 @dropdownlist-item-text-color:              #202835;
-@controls-editInPlace-editor-bg:			   @basic-block-bg-color;
+@controls-editInPlace-editor-bg:			   @data-grid-row-hover-bg;
 @controls-FieldLink-picker-show-color:		#F0F5FB;
 @textbox-font-size:							1.43rem;
 @scroll-pager-bg:							transparent;
@@ -1457,11 +1469,13 @@
 
 @DropdownList-footer-multisel-buttonsBlock-h: 3.57rem;
 @DropdownList-checkbox-bottom:                0;
-@DropdownList-picker-max-height: 16.57rem;
+@DropdownList-picker-max-height: 20rem;
 @DropdownList-footer-select-top: 0.28rem;
 @DropdownList-picker-menu-line-height: 3.57rem;
+@DropdownList-after-caption-wrapper-top:              .4rem;
 @DropdownList-footer-hasMore-left:                    .28rem;
-@DropdownList-footer-hasMore-left-multiselect:        1.82rem;
+@DropdownList-footer-hasMore-left-multiselect:        2.35rem;
+@DropdownList-footer-hasMore-top-multiselect:         1rem;
 @DropdownList-footer-hasMore-top:                     1rem;
 
 @header-height:                        3rem;
@@ -1494,7 +1508,7 @@
 @money-text-box-decimals-padding: 0;
 @money-text-box-decimals-font-size: 1.43rem;
 @money-text-box-decimals-color: @default-text-color;
-@header-color:                              #e4e4e4;
+@header-color:                              #FC9;
 
 @gray-lamantin-color:                               #8991A9;
 
@@ -1509,3 +1523,18 @@
 @controls-toolbar-item-vertical-align:              baseline;
 
 @date-range-big-choose-years-btn:               .5rem;
+@DropdownList-picker-offset:                    0;
+@dropdown-list-item-padding:                      5px 38px 3px .57rem;
+@list-view-items-toolbar-bottom:                   0px;
+@list-view-items-toolbar-font-family:               'carrypresto-icons';
+@search-left-margin:                                  .57rem;
+@controls-view-padding-DEFAULT:                       .8rem;
+@combo-box-picker-border:                       2px solid #26B8FF;
+
+@data-grid-row-selected-main-bg:                @default-bg-color;
+@data-grid-row-selected-addit-bg:               rgba(29, 40, 52, 0);
+@tree-view-copy-arrow-add-background:           @data-grid-row-selected-addit-bg;
+@data-grid-row-hover-add-bg:                    rgba(41, 58, 75, 0);
+@data-grid-row-selected-add-bg:                 @data-grid-row-hover-add-bg;
+
+@items-toolbar-bottom-style-background: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDIwMDEwOTA0Ly9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+CjxzdmcgdmVyc2lvbj0iMS4wIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiB3aWR0aD0iMjU1LjAwMDAwMHB4IiBoZWlnaHQ9IjMwMC4wMDAwMDBweCIgdmlld0JveD0iMCAwIDI1NS4wMDAwMDAgMzAwLjAwMDAwMCIKIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwMDAwMCwzMDAuMDAwMDAwKSBzY2FsZSgwLjEwMDAwMCwtMC4xMDAwMDApIgpmaWxsPSIjMjkzYTRiIiBzdHJva2U9Im5vbmUiPgo8cGF0aCBkPSJNMTAgMjk4OSBjMCAtMTEgMTkgLTUxIDI5IC01OSA2IC01IDQ2IC02NCAyMTUgLTMxNSA0NCAtNjYgODMgLTEyMgo4NiAtMTI1IDMgLTMgMzcgLTUyIDc1IC0xMTAgMzkgLTU4IDcyIC0xMDcgNzUgLTExMCA2IC02IDY3IC05NSAyMDQgLTMwMCA1MAotNzQgOTMgLTEzNyA5NiAtMTQwIDMgLTMgMjMgLTMyIDQ1IC02NSAyMiAtMzMgNDIgLTYyIDQ1IC02NSAzIC0zIDQzIC02MSA4OQotMTMwIDQ2IC02OSAxMjEgLTE3OSAxNjYgLTI0NSA0NCAtNjYgMTA2IC0xNTYgMTM1IC0yMDAgMzAgLTQ0IDU3IC04MiA2MCAtODUKNSAtNSA0MSAtNTggMjQ0IC0zNjAgNjEgLTkxIDExMyAtMTY3IDExNiAtMTcwIDMgLTMgMjMgLTMyIDQ1IC02NSA0NyAtNzAgMzgKLTU4IDExNiAtMTY0IDU3IC03NiAxNzkgLTE5MSAyMDMgLTE5MSA2IDAgMjUgLTcgNDEgLTE2IDU4IC0zMiAyODcgLTc0IDQwMAotNzQgbDU1IDAgMCAxNTAwIDAgMTUwMCAtMTI3MCAwIGMtODkyIDAgLTEyNzAgLTMgLTEyNzAgLTExeiIvPgo8L2c+Cjwvc3ZnPgo=");

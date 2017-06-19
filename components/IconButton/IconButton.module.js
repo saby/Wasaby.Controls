@@ -71,9 +71,21 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
       },
 
       /*TODO: Удалить при переходе на VDOM*/
+      _onMouseClick: function(e) {
+         if (this._isTouchEnded) {
+            this._isTouchEnded = false;
+            return;
+         }
+         this._isWaitingClick = false;
+         if (!this._options.enabled) {
+            return;
+         }
+         this._onClickHandler(e);
+      },
+
       _containerReady:function(container){
          if (window) {
-            container.on('click', this._onClickHandler.bind(this));
+            container.on('click', this._onMouseClick.bind(this));
             var self = this;
 
             container.keydown(function(e) {
@@ -81,14 +93,34 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
                if (e.which == cConstants.key.enter && result !== false ) {
                   self._onClickHandler(e);
                }
-
             });
 
-            container.on("touchstart  mousedown", function (e) {
-               if ((e.which == 1 || e.type == 'touchstart') && self.isEnabled()) {
+            // todo временное решение. нужно звать stopPropagation для всех компонентов, как это было раньше
+            // останавливаю всплытие, как это было раньше в Control.module.js, сейчас это ломает старую логику.
+            // например, при нажатии на кнопку в datepicker-е фокусируется его текстовое поле
+            container.on("focusin", function (e) {
+               e.stopPropagation();
+            });
+
+            container.on("touchstart", function (e) {
+               if (self.isEnabled()) {
+                  self._container.addClass('controls-Click__active');
+                  self._onTouchStart(e);
+               }
+            });
+
+            container.on("touchmove", function (e) {
+               self._onTouchMove(e);
+            });
+
+            container.on("touchend", function (e) {
+               self._onTouchEnd(e);
+            });
+
+            container.on("mousedown", function (e) {
+               if (e.which == 1 && self.isEnabled()) {
                   self._container.addClass('controls-Click__active');
                }
-               //return false;
             });
 
             container.on("mouseenter", function (e) {

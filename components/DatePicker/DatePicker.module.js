@@ -150,9 +150,7 @@ define(
             options.pickerIconShow = false;
             IoC.resolve('ILogger').log('DatePicker', 'В качестве опции isCalendarIconShown используйте pickerIconShow');
          }
-         if (options.pickerIconShow) {
-            this._checkTypeOfMask(options);
-         }
+         this._checkTypeOfMask(options);
 
          return options;
       },
@@ -170,7 +168,7 @@ define(
        * Инициализация пикера.
        * @private
        */
-      _pickerInit: function() {
+      _pickerInit: function(name) {
          if (this.isPickerIconShow()) {
             this.getChildControlByName('PickerButton').subscribe('onActivated', this._getPickerMethod('Init'));
          }
@@ -206,6 +204,8 @@ define(
             if (this._picker.isVisible() && this.getDate()) {
                this._pickerContent.setTime(this.getDate());
             }
+
+            this._pickerContent.subscribe('onChangeTimeEnd', this.hidePicker.bind(this));
          }
       },
 
@@ -315,10 +315,10 @@ define(
       },
 
       setActive: function(active) {
+         DatePicker.superclass.setActive.apply(this, arguments);
          if (active) {
             this._initFocusInHandler();
          }
-         DatePicker.superclass.setActive.apply(this, arguments);
       },
 
       _initFocusInHandler: function() {

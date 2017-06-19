@@ -20,6 +20,12 @@
   &.controls-MoneyTextBox__ellipsis {
     .controls-TextBox__fieldWrapper {
       .text-overflow();
+      .controls-MoneyTextBox__input {
+        .text-overflow();
+        &:focus {
+          text-overflow: clip;
+        }
+      }
     }
   }
 

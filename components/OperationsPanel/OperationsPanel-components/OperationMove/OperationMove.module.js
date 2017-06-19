@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.OperationMove', [
              */
             caption: rk('Перенести'),
             /**
-             * @cfg {SBIS3.CONTROLS.Action.List.InteractiveMove} Экшен который будет перемещать записи
+             * @cfg {SBIS3.CONTROLS.Action.List.InteractiveMove} Action, который будет перемещать записи.
              */
             action: undefined
          }

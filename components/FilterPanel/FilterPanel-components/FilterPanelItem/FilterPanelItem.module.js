@@ -42,7 +42,8 @@ define('js!SBIS3.CONTROLS.FilterPanelItem', [
       init: function() {
          FilterPanelItem.superclass.init.apply(this, arguments);
          if (this._options.item.get('template') !== 'js!SBIS3.CONTROLS.FilterPanelBoolean') {
-            this.getChildControlByName('FilterPanelItemSpoiler').subscribe('onExpandedChange', this._onExpandedChange.bind(this));
+            // Называем компонент именно по ID, т.к. в дальнейшем ID может быть использован для определения конкретного фильтра
+            this.getChildControlByName(this._options.item.getId()).subscribe('onExpandedChange', this._onExpandedChange.bind(this));
          }
       },
 

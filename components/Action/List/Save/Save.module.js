@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.Action.List.Save', [
     var MAX_RECORDS_COUNT = 20000;
 
     /**
-     * Экшен для сохранения данных.
+     * Action для сохранения данных.
      * @class SBIS3.CONTROLS.Action.List.Save
      * @public
      * @extends SBIS3.CONTROLS.Action.Save

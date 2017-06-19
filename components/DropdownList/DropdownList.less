@@ -43,7 +43,7 @@
    .controls-DropdownList__afterCaptionWrapper {
       display: none;
       position: relative;
-      top: 2px;
+      top: @DropdownList-after-caption-wrapper-top;
       cursor: pointer;
       .flex-shrink(0);
    }
@@ -153,7 +153,7 @@
             }
          }
          .controls-DropdownList__item {
-            padding: 5px 38px 3px 12px;
+            padding: @dropdown-list-item-padding;
             position: relative;
             .controls-DropdownList__itemTextWrapper {
                position: relative;
@@ -397,7 +397,7 @@
       &.controls-DropdownList__buttonsBlock {
          height: @DropdownList-footer-multisel-buttonsBlock-h;
          .controls-DropdownListFooter_hasMore {
-            top: 4px;
+            top: @DropdownList-footer-hasMore-top-multiselect;
          }
          .controls-DropdownListFooter_hasMore {
             left: @DropdownList-footer-hasMore-left-multiselect;

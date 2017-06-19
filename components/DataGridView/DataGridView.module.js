@@ -131,6 +131,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                escapeHtml: tplOptions.escapeHtml
             };
             tplOptions.startScrollColumn = cfg.startScrollColumn;
+            tplOptions.columnsShift = cfg._columnsShift;
             buildTplArgsLadder(tplOptions.cellData, cfg);
 
             return tplOptions;
@@ -407,6 +408,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             _buildTplArgs: buildTplArgsDG,
             _buildTplArgsDG: buildTplArgsDG,
             _groupTemplate: GroupTemplate,
+            _columnsShift: 0,
             /**
              * @typedef {Object} Columns
              * @property {String} title Заголовок колонки. Отображение заголовков можно изменять с помощью опции {@link showHead}. Также с помощью опции {@link allowToggleHead} можно скрывать заголовки при отсутствии в списке данных.
@@ -770,7 +772,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             escapeHtml: args.escapeHtml
          };
          args.startScrollColumn = cfg.startScrollColumn;
-         args.currentScrollPosition = this._getColumnsScrollPosition();
+         args.columnsShift = this._getColumnsScrollPosition();
          buildTplArgsLadder(args.cellData, cfg);
 
          return args;
@@ -794,7 +796,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._bindHead();
          }
          headData = prepareHeadData(this._options);
-         headData.columnsScrollPosition = this._getColumnsScrollPosition();
+         headData.columnsShift = this._getColumnsScrollPosition();
          headData.thumbPosition = this._currentScrollPosition;
          headMarkup = this._options.headTpl(headData);
          var body = $('.controls-DataGridView__tbody', this._container);
@@ -1243,23 +1245,31 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _moveThumbAndColumns: function(cords) {
-         this._currentScrollPosition = this._checkThumbPosition(cords);
+         this._setPartScrollShift(cords);
+         
          /* Ячейки двигаем через translateX, т.к. IE не двиагает ячейки через left,
             если таблица лежит в контейнере с display: flex */
          var movePosition = 'translateX(' + this._getColumnsScrollPosition() + 'px)';
 
-         this._setThumbPosition(this._currentScrollPosition);
          for(var i= 0, len = this._movableElems.length; i < len; i++) {
             this._movableElems[i].style.transform = movePosition;
          }
       },
-
-      _getColumnsScrollPosition: function() {
-         return -this._currentScrollPosition*this._partScrollRatio;
+   
+      /**
+       * Устанавливает сдвиг для частичного скрола
+       * @param {Object|Number} position
+       * @private
+       */
+      _setPartScrollShift: function(position) {
+         this._currentScrollPosition = typeof position === 'object' ? this._checkThumbPosition(position) : this._checkThumbPosition({left: position});
+         /* Записываем в опцию, чтобы была возможность использовать в шаблоне */
+         this._options._columnsShift = -this._currentScrollPosition*this._partScrollRatio;
+         this._thumb[0].style.left = this._currentScrollPosition + 'px';
       },
 
-      _setThumbPosition: function(cords) {
-         this._thumb[0].style.left = cords + 'px';
+      _getColumnsScrollPosition: function() {
+         return this._options._columnsShift;
       },
 
       _updatePartScrollWidth: function() {
@@ -1337,7 +1347,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._isPartScrollVisible = false;
             this.getContainer().removeClass('controls-DataGridView__PartScroll__shown');
             if(this._currentScrollPosition !== 0) {
-               this._currentScrollPosition = 0;
                this._moveThumbAndColumns({left: 0});
             }
             // Вызываем для обновления классов у фиксированного заголовка и обновления размера скрола в ScrollContainer
@@ -1406,8 +1415,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
         */
        setColumns : function(columns) {
           this._options.columns = columns;
-          /* При установке колонок, надо сбросить частичный скролл */
-          this._currentScrollPosition = 0;
+          
+          if(this.hasPartScroll()) {
+             /* При установке колонок, надо сбросить частичный скролл */
+             this._setPartScrollShift(0);
+          }
           checkColumns(this._options);
           this._destroyEditInPlaceController();
        },

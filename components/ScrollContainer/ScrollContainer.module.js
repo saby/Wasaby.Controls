@@ -4,6 +4,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'js!SBIS3.CORE.Control/Control.compatible',
       "js!SBIS3.CORE.AreaAbstract/AreaAbstract.compatible",
       'js!SBIS3.CORE.BaseCompatible',
+      'js!SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor',
       'tmpl!SBIS3.CONTROLS.ScrollContainer',
       'js!SBIS3.CONTROLS.Scrollbar',
       'Core/detection',
@@ -20,6 +21,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
              ControlCompatible,
              AreaAbstractCompatible,
              BaseCompatible,
+             WsCompatibleConstructor,
              template,
              Scrollbar,
              cDetection,
@@ -77,7 +79,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        *     </option>
        * </component>
        */
-      var ScrollContainer = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible], {
+      var ScrollContainer = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, WsCompatibleConstructor], {
          _template: template,
 
          _controlName: 'SBIS3.CONTROLS.ScrollContainer',
@@ -115,16 +117,15 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             };
             this._content = null;
             this._headerHeight = 0;
+            this._ctxSync = {
+               selfToPrev: {},
+               selfCtxRemoved: {},
+               selfNeedSync: 0,
+               prevToSelf: {},
+               prevCtxRemoved: {},
+               prevNeedSync: 0
+            };
             this.deprecatedContr(cfg);
-            // Что бы при встаке контрола (в качетве обертки) логика работы с контекстом не ломалась,
-            // сделаем свой контекст прозрачным
-            if (cfg.parent && cfg.parent._template) {
-               /** Если scrollContainer вставлен в старое окружение, ему позже будет установлен
-                * правильный контекст, а сейчас ссылку на текущий терять нельзя
-                */
-               this._craftedContext = false;
-               this._context = this._context.getPrevious();
-            }
          },
 
 
@@ -133,7 +134,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             if (window && this._container && (typeof this._container.length === "number")) {
 
                this._content = $('> .controls-ScrollContainer__content', this.getContainer());
-               this._showScrollbar = !(cDetection.isMobileIOS || cDetection.isMobileAndroid || compatibility.touch && cDetection.isIE);
+               this._showScrollbar = !(cDetection.isMobileIOS || cDetection.isMobileAndroid);
                this._bindOfflainEvents();
                //Под android оставляем нативный скролл
                if (this._showScrollbar){
@@ -163,6 +164,35 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             }
          },
 
+         bothIsNaN: function(a, b){
+            return (typeof a === "number") && (typeof b === "number") && isNaN(a) && isNaN(b);
+         },
+
+         nullOrUndefined: function(a){
+            return a === null || a === undefined;
+         },
+
+         compare: function(a, b){
+            /**
+             * Если одно из значений null или undefined то сравниваем с типами, чтобы null!==undefined
+             * Если оба значения не null и не undefined, то сравниваем без типов, чтобы 1=="1"
+             */
+            var temp = (this.nullOrUndefined(a) || this.nullOrUndefined(b))?(a===b):(a==b);
+            return this.bothIsNaN(a,b) || temp;
+         },
+
+         fixOpacityField: function(name){
+            if (this.compare(this._ctxSync.selfToPrev[name], this._ctxSync.prevToSelf[name])){
+               /**
+                * Если данные пролетают сквозь контекст самоятоятельно, то не нужно их синхронизировать
+                */
+               delete this._ctxSync.selfToPrev[name];
+               delete this._ctxSync.prevToSelf[name];
+               this._ctxSync.selfNeedSync--;
+               this._ctxSync.prevNeedSync--;
+            }
+         },
+
          setContext: function(ctx){
             BaseCompatible.setContext.call(this, ctx);
             /**
@@ -170,32 +200,64 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
              * Этот костыль будет выпилен в 3.17.20
              */
             if (this.getParent()) {
-               var selfCtx = this._context,
+               var
+                  self = this,
+                  selfCtx = this._context,
                   prevContext = this._context.getPrevious();
-               this._context.subscribe('onFieldChange', function (ev, name, value) {
-                  if (this.getValueSelf(name) !== undefined) {
-                     if (prevContext.getValueSelf(name) !== value) {
-                        prevContext.setValue(name, value);
-                     }
-                  }
-               });
 
-               this._context.subscribe('onFieldRemove', function (ev, name, value) {
-                  if (prevContext.getValueSelf(name) !== undefined) {
-                     prevContext.removeValue(name);
+               this._context.subscribe('onFieldChange', function (ev, name, value) {
+                  //if (this.getValueSelf(name) !== undefined)
+                  {
+                     if (!self.compare(value, prevContext.getValueSelf(name)) &&
+                        !self.compare(value, self._ctxSync.selfToPrev[name])) {
+                        self._ctxSync.selfToPrev[name] = value;
+                        self._ctxSync.selfNeedSync++;
+                        self.fixOpacityField(name);
+                     }
                   }
                });
 
                prevContext.subscribe('onFieldChange', function (ev, name, value) {
-                  if (prevContext.getValueSelf(name) !== undefined) {
-                     if (selfCtx.getValueSelf(name) !== value) {
-                        selfCtx.setValue(name, value);
+                  //if (prevContext.getValueSelf(name) !== undefined)
+                  {
+                     if (!self.compare(value, selfCtx.getValueSelf(name)) &&
+                        !self.compare(value, self._ctxSync.prevToSelf[name])){
+                        self._ctxSync.prevToSelf[name] = value;
+                        self._ctxSync.prevNeedSync++;
+                        self.fixOpacityField(name);
                      }
                   }
                });
 
+               this._context.subscribe('onFieldsChanged', function () {
+                  if (self._ctxSync.selfNeedSync) {
+                     self._ctxSync.selfNeedSync = 0;
+                     prevContext.setValue(self._ctxSync.selfToPrev);
+                     self._ctxSync.selfToPrev = {};
+                  }
+               });
+
+               prevContext.subscribe('onFieldsChanged', function () {
+                  if (self._ctxSync.prevNeedSync) {
+                     self._ctxSync.prevNeedSync = 0;
+                     selfCtx.setValue(self._ctxSync.prevToSelf);
+                     self._ctxSync.prevToSelf = {};
+                  }
+               });
+
+               this._context.subscribe('onFieldRemove', function (ev, name, value) {
+                  self._ctxSync.selfCtxRemoved[name] = false;
+                  if (prevContext.getValueSelf(name) !== undefined &&
+                        !self._ctxSync.prevCtxRemoved[name]) {
+                     self._ctxSync.prevCtxRemoved[name] = true;
+                     prevContext.removeValue(name);
+                  }
+               });
+
                prevContext.subscribe('onFieldRemove', function (ev, name, value) {
-                  if (selfCtx.getValueSelf(name) !== undefined) {
+                  self._ctxSync.prevCtxRemoved[name] = false;
+                  if (selfCtx.getValueSelf(name) !== undefined && !self._ctxSync.selfCtxRemoved[name]) {
+                     self._ctxSync.selfCtxRemoved[name] = true;
                      selfCtx.removeValue(name);
                   }
                });
@@ -237,7 +299,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             scrollbarWidth = outer.offsetWidth - outer.clientWidth;
             document.body.removeChild(outer);
             return scrollbarWidth;
-          },
+         },
 
          _scrollbarDragHandler: function(event, position){
             if (position != this._getScrollTop()){

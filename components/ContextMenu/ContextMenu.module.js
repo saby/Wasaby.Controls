@@ -4,7 +4,7 @@
 
 define('js!SBIS3.CONTROLS.ContextMenu', [
    'js!SBIS3.CONTROLS.Menu',
-   'js!SBIS3.CONTROLS.PopupMixin',
+   'js!SBIS3.CONTROLS.PopupMixin'
 ], function(Menu, PopupMixin) {
 
    'use strict';

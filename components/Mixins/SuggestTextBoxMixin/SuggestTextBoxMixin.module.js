@@ -26,6 +26,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
 
    'use strict';
 
+   var HISTORY_LENGTH = 12;
+   
    function stopEvent(e) {
       e.stopPropagation();
       e.preventDefault();
@@ -172,7 +174,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          _observableControlFocusHandler: function(){
             if (this._options.historyId && !this._historyController){
                this._historyController = new HistoryList({
-                  historyId: this._options.historyId
+                  historyId: this._options.historyId,
+                  maxLength: HISTORY_LENGTH
                });
             }
             if (this._needShowHistory()){

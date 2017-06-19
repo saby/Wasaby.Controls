@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'Core/IoC',
    'js!SBIS3.CORE.CompoundControl',
    'js!SBIS3.CORE.CompoundActiveFixMixin',
+   'js!SBIS3.StickyHeaderManager',
    'js!SBIS3.CONTROLS.ItemsControlMixin',
    'js!SBIS3.CONTROLS.MultiSelectable',
    'js!WS.Data/Query/Query',
@@ -56,19 +57,20 @@ define('js!SBIS3.CONTROLS.ListView',
    'Core/helpers/Object/isEmpty',
    'Core/Sanitize',
    'Core/WindowManager',
-   'js!SBIS3.CONTROLS.ListView.DragMove',
    'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
+   'js!SBIS3.CONTROLS.DragEntity.Row',
    'js!WS.Data/Collection/RecordSet',
    'i18n!SBIS3.CONTROLS.ListView',
+   'js!SBIS3.CONTROLS.DragEntity.List',
    'js!WS.Data/MoveStrategy/Base',
    'css!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
-   function (cMerge, cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record, 
+   function (cMerge, cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, CompoundActiveFixMixin, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, Pager, MassSelectionController, ImitateEvents,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, DragMove) {
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager) {
 
      'use strict';
 
@@ -89,7 +91,12 @@ define('js!SBIS3.CONTROLS.ListView',
             return records;
          };
       var
-         NOT_EDITABLE_SELECTOR = '.js-controls-ListView__notEditable';
+         NOT_EDITABLE_SELECTOR = '.js-controls-ListView__notEditable',
+         DRAG_META_INSERT = {
+            on: 'on',
+            after: 'after',
+            before: 'before'
+         };
 
       var INDICATOR_DELAY = 750;
 
@@ -405,6 +412,8 @@ define('js!SBIS3.CONTROLS.ListView',
                bottom: null
             },
             _setScrollPagerPositionThrottled: null,
+            _updateScrollIndicatorTopThrottled: null,
+            _removedItemsCount: false, 
             _options: {
                _canServerRender: true,
                _buildTplArgs: buildTplArgsLV,
@@ -889,7 +898,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                dragEntityList: 'dragentity.list',
                /**
-                * @cfg {WS.Data/MoveStrategy/IMoveStrategy} Стратегия перемещения. Класс, который реализует перемещение записей. Подробнее тут {@link WS.Data/MoveStrategy/Base}.
+                * @cfg {WS.Data/MoveStrategy/IMoveStrategy) Стратегия перемещения. Класс, который реализует перемещение записей. Подробнее тут {@link WS.Data/MoveStrategy/Base}.
                 * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
                 * @see {@link WS.Data/MoveStrategy/Base}
                 * @see {@link WS.Data/MoveStrategy/IMoveStrategy}
@@ -937,13 +946,15 @@ define('js!SBIS3.CONTROLS.ListView',
             var dispatcher = CommandDispatcher;
 
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange', 'onBeginDelete', 'onEndDelete', 'onBeginMove', 'onEndMove');
+           
             this._setScrollPagerPositionThrottled = throttle.call(this._setScrollPagerPosition, 100, true).bind(this);
+            this._updateScrollIndicatorTopThrottled = throttle.call(this._updateScrollIndicatorTop, 100, true).bind(this);
             this._eventProxyHdl = this._eventProxyHandler.bind(this);
             
             this._toggleEventHandlers(this._container, true);
 
             this.initEditInPlace();
-            this.setItemsDragNDrop(this._options.itemsDragNDrop);
+            this._setItemsDragNDrop(this._options.itemsDragNDrop);
             dispatcher.declareCommand(this, 'activateItem', this._activateItem);
             dispatcher.declareCommand(this, 'beginAdd', this._beginAdd);
             dispatcher.declareCommand(this, 'beginEdit', this._beginEdit);
@@ -969,6 +980,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (cDetection.isMobilePlatform && window) {
                requirejs(['js!SBIS3.CONTROLS.EditInPlaceHoverController', 'js!SBIS3.CONTROLS.EditInPlaceClickController']);
             }
+
             if (typeof this._options.pageSize === 'string') {
                this._options.pageSize = this._options.pageSize * 1;
             }
@@ -1697,9 +1709,11 @@ define('js!SBIS3.CONTROLS.ListView',
                          //todo https://online.sbis.ru/opendoc.html?guid=0d1c1530-502c-4828-8c42-aeb330c014ab&des=
                          if (this._options.loadItemsStrategy == 'append') {
                             var tr = this._findItemByElement($(target));
-                            var hash = tr.attr('data-hash');
-                            var index = this._getItemsProjection().getIndex(this._getItemsProjection().getByHash(hash));
-                            self.setSelectedIndex(index);
+                            if (tr.length) {
+                               var hash = tr.attr('data-hash');
+                               var index = this._getItemsProjection().getIndex(this._getItemsProjection().getByHash(hash));
+                               self.setSelectedIndex(index);
+                            }
                          }
                          else {
                             self.setSelectedKey(id);
@@ -1961,7 +1975,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var page = 0;
             if (this._scrollBinder) {
                var scrollPage = this._scrollBinder._getScrollPage();
-               page = Math.floor(scrollPage.element.index() / this._limit);
+               page = scrollPage ? Math.floor(scrollPage.element.index() / this._limit) : 0;
             }
             // прибавим к полученой странице количество еще не загруженных страниц
             return page + Math.floor((this._scrollOffset.top) / this._limit);
@@ -2354,6 +2368,14 @@ define('js!SBIS3.CONTROLS.ListView',
                         this._toggleEmptyData(!this.getItems().getCount());
                         this._hideToolbar();
                         this._getItemsContainer().off('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
+                     }.bind(this),
+                     // В момент сохранения записи блокируем весь ListView чтобы побороть закликивание
+                     onBeginSave: function() {
+                        this._toggleIndicator(true);
+                     }.bind(this),
+                     // Использую именно beginSave и endSave, т.к. afterEndEdit в случае ошибки при сохранении не будет стрелять, а onEndSave стреляет всегда
+                     onEndSave: function() {
+                        this._toggleIndicator(false);
                      }.bind(this),
                      onDestroy: function() {
                         //При разрушении редактирования скрывает toolbar. Иначе это ни кто не сделает. А разрушение могло
@@ -2769,11 +2791,44 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._scrollOffset.bottom -= this._getAdditionalOffset(oldItems);
                }
             }
+
+            if (cDetection.firefox || cDetection.isMobileSafari) {
+               this._beforeFixScrollTop(action, newItems, newItemsIndex, oldItems, oldItemsIndex);
+            }
+
             ListView.superclass._onCollectionAddMoveRemove.apply(this, arguments);
+
+            if (cDetection.firefox || cDetection.isMobileSafari) {
+               this._fixScrollTop(action, newItems, newItemsIndex, oldItems, oldItemsIndex);
+            }
+         },
+
+         // Страшный хак для Firefox и ipad:
+         // в 110 из коллекции вместо события replace стали приходить remove и add
+         // из за этого в фф и на ipad дергается скролл, так как сначала убирается элемент, скролл подвигается вверх
+         // затем добавляется элемент на место удаленного, но скролл остается на месте. 
+         // Поэтому компенсируем этот прыжок сами
+         _beforeFixScrollTop: function(action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+            if (action == IBindCollection.ACTION_REMOVE) {
+               this._ffScrollPosition = this._getScrollWatcher().getScrollContainer().scrollTop();
+               this._ffRemoveIndex = oldItemsIndex;
+            }
+         },
+         //продолжение хака
+         _fixScrollTop: function(action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+            if (action == IBindCollection.ACTION_ADD) {
+               if (this._ffRemoveIndex == newItemsIndex) {
+                  this._scrollWatcher.scrollTo(this._ffScrollPosition);
+               }
+            }
+            setTimeout(function(){
+               this._ffScrollPosition = null;
+               this._ffRemoveIndex = null;
+            }.bind(this), 0);
          },
 
          // Получить количество записей которые нужно вычесть/прибавить к _offset при удалении/добавлении элементов
-         _getAdditionalOffset: function(items){
+         _getAdditionalOffset: function(items) {
             return items.length;
          },
 
@@ -2958,10 +3013,23 @@ define('js!SBIS3.CONTROLS.ListView',
             //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
             this._container.toggleClass('controls-ListView__outside-scroll-loader', !hasScroll);
 
+            this._updateScrollIndicatorTopThrottled();
+
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && isContainerVisible && hasNextPage && !this.isLoading()) {
                this._loadNextPage();
             }
+         },
+         /**
+          * Обновлет положение ромашки что бы ее не перекрывал фиксированный заголовок
+          * @private
+          */
+         _updateScrollIndicatorTop: function () {
+            var top = '';
+            if (this._isScrollingUp()) {
+               top = StickyHeaderManager.getStickyHeaderIntersectionHeight(this.getContainer()) - this._scrollWatcher.getScrollContainer().scrollTop();
+            }
+            this._loadingIndicator.css('top', top);
          },
 
          _hasNextPage: function(more, offset) {
@@ -2981,10 +3049,14 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         _isScrollingUp: function () {
+            return this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse === true);
+         },
+
          _loadNextPage: function() {
             if (this._dataSource) {
                var offset = this._getNextOffset(),
-                  scrollingUp = this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse === true),
+                  scrollingUp = this._isScrollingUp(),
                   self = this;
                //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
                this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', scrollingUp);
@@ -3392,12 +3464,13 @@ define('js!SBIS3.CONTROLS.ListView',
                         var more = self.getItems().getMetaData().more,
                             hasNextPage = self._hasNextPage(more, self._scrollOffset.bottom),
                             maxPage = self._pager.getPaging()._maxPage;
+                        self._pager._lastPageReached = self._pager._lastPageReached || !hasNextPage;
                         //Старый Paging при включенной частичной навигации по нажатию кнопки "Перейти к последней странице" возвращает pageNum = 0 (у него индексы страниц начинаются с 1)
                         //В новом Pager'e индексация страниц начинается с 0 и такое поведение здесь не подходит
                         //Так же в режиме частичной навигации нет возможности высчитать номер последней страницы, поэтому
                         //при переходе к последней странице делаем так, чтобы мы переключились на последнюю доступную страницу.
                         if (pageNum == 0 && self._pager._options.pagingOptions.onlyLeftSide){
-                           pageNum = hasNextPage ? (maxPage + 1) : maxPage;
+                           pageNum = self._pager._lastPageReached ? maxPage : (maxPage + 1);
                         }
 
                         self._setPageSave(pageNum);
@@ -3478,7 +3551,7 @@ define('js!SBIS3.CONTROLS.ListView',
          setPage: function (pageNumber, noLoad) {
             pageNumber = parseInt(pageNumber, 10);
             var offset = this._offset;
-            if(pageNumber == -1){
+            if (pageNumber == -1) {
                this._setLastPage(noLoad);
             } else {
                if (this.isInfiniteScroll() && this._isPageLoaded(pageNumber)){
@@ -3763,9 +3836,6 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             this._toggleEventHandlers(this._container, false);
             ListView.superclass.destroy.call(this);
-            if (this._dragMoveController) {
-               this._dragMoveController.destroy();
-            }
          },
          /**
           * двигает элемент
@@ -3798,28 +3868,24 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see getItemsDragNDrop
           */
          setItemsDragNDrop: function(allowDragNDrop) {
+            if (this._options.itemsDragNDrop != allowDragNDrop) {
+               this._setItemsDragNDrop(allowDragNDrop)
+            }
+         },
+
+         _setItemsDragNDrop: function(allowDragNDrop) {
             this._options.itemsDragNDrop = allowDragNDrop;
             this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', this._getDragInitHandler());
-
          },
+
          /**
           * возвращает метод который инициализирует dragndrop
           * @returns {function}
           * @private
           */
-         _getDragInitHandler: function() {
+         _getDragInitHandler: function(){
             return this._dragInitHandler ? this._dragInitHandler : this._dragInitHandler  = (function(e){
                if (this._canDragStart(e)) {
-                  if (!this._dragMoveController) {
-                     this._dragMoveController = new DragMove({
-                        view: this,
-                        mover: this._getMover(),
-                        projection: this._getItemsProjection(),
-                        useDragPlaceholder: this._options.useDragPlaceHolder,
-                        dragEntity: this._options.dragEntity,
-                        dragEntityList: this._options.dragEntityList
-                     })
-                  }
                   this._initDrag.call(this, e);
                   //TODO: Сейчас появилась проблема, что если к компьютеру подключен touch-телевизор он не вызывает
                   //preventDefault и при таскании элементов мышкой происходит выделение текста.
@@ -3843,6 +3909,30 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }).bind(this)
          },
+         /**
+          * Получить текущую конфигурацию перемещения элементов с помощью DragNDrop.
+          * @see itemsDragNDrop
+          * @see setItemsDragNDrop
+          */
+         getItemsDragNDrop: function() {
+            return this._options.itemsDragNDrop;
+         },
+         _findDragDropContainer: function() {
+            return this._getItemsContainer();
+         },
+         _getDragItems: function(dragItem, selectedItems) {
+            if (selectedItems) {
+               var array = [];
+               if (selectedItems.getIndex(dragItem) < 0) {
+                  array.push(dragItem);
+               }
+               selectedItems.each(function(item) {
+                  array.push(item);
+               });
+               return array;
+            }
+            return [dragItem];
+         },
          _canDragStart: function(e) {
             //TODO: При попытке выделить текст в поле ввода, вместо выделения начинается перемещения элемента.
             //Как временное решение добавлена проверка на SBIS3.CONTROLS.TextBoxBase.
@@ -3850,8 +3940,330 @@ define('js!SBIS3.CONTROLS.ListView',
             //сделать stopPropagation, тогда от данной проверки можно будет избавиться.
             return this._options.enabled && this._needProcessMouseEvent(e);
          },
+
          _needProcessMouseEvent: function(e) {
             return !cInstance.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase');
+         },
+
+         _beginDragHandler: function(dragObject, e) {
+            //TODO: данный метод выполняется по селектору '.js-controls-ListView__item', но не всегда если запись есть в вёрстке
+            //она есть в _items(например при добавлении или фейковый корень). Метод _findItemByElement в данном случае вернёт
+            //пустой массив. В .150 править этот метод опасно, потому что он много где используется. В .200 переписать метод
+            //_findItemByElement, без завязки на _items.
+            var target = this._findItemByElement(dragObject.getTargetsDomElemet());
+            if (target.length) {
+               if (target.hasClass('controls-DragNDropMixin__notDraggable')) {
+                  return false;
+               }
+               var  selectedItems = this.getSelectedItems(),
+                  targetsItem = this._getItemProjectionByHash(target.data('hash')).getContents(),
+                  items = this._getDragItems(targetsItem, selectedItems),
+                  source = [];
+               items.forEach(function (item) {
+                  var projItem = this._getItemsProjection().getItemBySourceItem(item),
+                     domElement = this._getHtmlItemByProjectionItem(projItem);
+                  source.push(this._makeDragEntity({
+                     owner: this,
+                     model: item,
+                     domElement: domElement
+                  }));
+               }.bind(this));
+
+               dragObject.setSource(
+                  this._makeDragEntityList({
+                     items: source
+                  })
+               );
+               if (this._options.useDragPlaceHolder) {
+                  this._makeDragPlaceHolder(dragObject);
+                  this._toggleDragItems(dragObject, false)
+               }
+               this._hideItemsToolbar();
+               if (this._checkHorisontalDragndrop(target)) {
+                  this._horisontalDragNDrop = true;
+                  this.getContainer().addClass('controls-ListView__horisontalDragNDrop');
+                  this.getContainer().removeClass('controls-ListView__verticalDragNDrop');
+               } else {
+                  this._horisontalDragNDrop = false;
+                  this.getContainer().removeClass('controls-ListView__horisontalDragNDrop');
+                  this.getContainer().addClass('controls-ListView__verticalDragNDrop');
+               }
+               return true;
+            }
+            return false;
+         },
+         /**
+          * Определяет направление элементов в списке
+          * @param target
+          * @returns {boolean}
+          * @private
+          */
+         _checkHorisontalDragndrop: function (target) {
+            if (target.css('display') == 'inline-block' || target.css('float') != 'none') {
+               return true;
+            }
+            var parent = target.parent();
+            if (parent.css('display') == 'flex' && parent.css('flex-direction') == 'row') {
+               return true;
+            }
+            return false;
+         },
+         _onDragHandler: function(dragObject, e) {
+            this._clearDragHighlight(dragObject);
+            if (this._canDragMove(dragObject)) {
+               var
+                  target = dragObject.getTarget(),
+                  targetsModel = target.getModel(),
+                  source = dragObject.getSource(),
+                  sourceModels = [];
+               if (targetsModel) {
+                  source.each(function (item) {
+                     sourceModels.push(item.getModel());
+                  });
+
+                  //this._drawDragHighlight(target);
+                  if (this._options.useDragPlaceHolder) {
+                     var placeholder = this._getDragPlaceHolder(dragObject);
+                     placeholder.show();
+                     var item = this._getItemsProjection().getItemBySourceItem(targetsModel);
+                     if (target.getPosition() == 'before') {
+                        placeholder.insertBefore(target.getDomElement());
+                     } else {
+                        placeholder.insertAfter(target.getDomElement());
+                     }
+                  } else {
+                     if (dragObject.getOwner() !== this || sourceModels.indexOf(targetsModel) < 0) {
+                        this._drawDragHighlight(target);
+                     }
+                  }
+               }
+            }
+            if (dragObject.getTargetsControl() !== this && this._dragPlaceHolder) {
+               this._dragPlaceHolder.hide();
+            } else if (this._dragPlaceHolder) {
+               this._dragPlaceHolder.show();
+            }
+         },
+
+         _canDragMove: function(dragObject) {
+            var source = dragObject .getSource();
+            return dragObject .getTarget() &&
+               source &&
+               source.getCount() > 0 &&
+               dragObject .getTargetsControl() === this &&
+               cInstance.instanceOfModule(source.at(0), 'SBIS3.CONTROLS.DragEntity.Row');
+         },
+
+         _getDragTarget: function(dragObject, e) {
+            var
+               item,
+               projection = this._getItemsProjection(),
+               target = this._findItemByElement(dragObject.getTargetsDomElemet());
+
+            if(this._options.useDragPlaceHolder) {
+               var item;
+               if (target.length > 0) {
+                  item = projection.getByHash(target.data('hash'));
+               }
+            } else {
+               if (target.length > 0) {
+                  item = projection.getByHash(target.data('hash'));
+               } else if (this._horisontalDragNDrop) {
+                  var elements = document.elementsFromPoint(e.pageX + 5, e.pageY + 5);
+                  target = this._findItemByElement($(elements[1]));
+                  if (target.length > 0) {
+                     item = projection.getByHash(target.data('hash'));
+                  } else {
+                     item = projection.at(projection.getCount() - 1);
+                  }
+               }
+
+            }
+            return {
+               item: item ? item.getContents() : undefined,
+               domElement: target
+            };
+         },
+
+         _updateDragTarget: function(dragObject, e) {
+            var dragTarget = this._getDragTarget(dragObject, e),
+               target;
+            if (dragObject.getSource() && dragTarget.item && !dragTarget.domElement.hasClass('controls-DragNDrop__placeholder')) {
+               var position = this._getDirectionOrderChange(e, dragTarget.domElement) || DRAG_META_INSERT.on,
+                  sourceIds = [],
+                  movedItems = [];
+               dragObject.getSource().each(function (item) {
+                  sourceIds.push(item.getModel().getId());
+                  movedItems.push(item.getModel());
+               });
+               if (this._getMover().checkRecordsForMove(movedItems, dragTarget.item, position)) {
+                  target = this._makeDragEntity({
+                     owner: this,
+                     domElement: dragTarget.domElement,
+                     model: dragTarget.item,
+                     position: position
+                  });
+                  dragObject.setTarget(target);
+               } else if (this._options.useDragPlaceHolder && position == 'on' ) {
+                  if (this._horisontalDragNDrop) {
+                     position = (e.offsetX > dragTarget.domElement.height()/2) ? 'before' : 'after';
+                  } else {
+                     position = (e.offsetY > dragTarget.domElement.width()/2) ? 'before' : 'after';
+                  }
+                  target = this._makeDragEntity({
+                     owner: this,
+                     domElement: dragTarget.domElement,
+                     model: dragTarget.item,
+                     position: position
+                  });
+                  dragObject.setTarget(target);
+               } else if (!this._options.useDragPlaceHolder) {
+                  dragObject.setTarget(undefined);
+               }
+            }
+         },
+
+         _clearDragHighlight: function(dragObject) {
+            this.getContainer()
+               .find('.controls-DragNDrop__insertBefore, .controls-DragNDrop__insertAfter')
+               .removeClass('controls-DragNDrop__insertBefore controls-DragNDrop__insertAfter');
+         },
+         _drawDragHighlight: function(target) {
+            var domelement = target.getDomElement();
+            domelement.toggleClass('controls-DragNDrop__insertAfter', target.getPosition() === DRAG_META_INSERT.after);
+            domelement.toggleClass('controls-DragNDrop__insertBefore', target.getPosition() === DRAG_META_INSERT.before);
+         },
+         _getDirectionOrderChange: function(e, target) {
+            if (this._options.useDragPlaceHolder) {
+               var position = this._getOrderPosition(e.pageY - (target.offset() ? target.offset().top : 0), target.height(), 10);
+               if (position == 'on') {
+                  position = this._getOrderPosition(e.pageX - (target.offset() ? target.offset().left : 0), target.width(), 20)
+               }
+               return position;
+            } else {
+               if (this._horisontalDragNDrop) {
+                  return this._getOrderPosition(e.pageX - (target.offset() ? target.offset().left : 0), target.width(), 20);
+               } else {
+                  return this._getOrderPosition(e.pageY - (target.offset() ? target.offset().top : 0), target.height(), 10);
+               }
+            }
+         },
+         _getOrderPosition: function(offset, metric, orderOffset) {
+            if (this._options.useDragPlaceHolder) {
+               return offset < orderOffset ? DRAG_META_INSERT.after : offset > metric - orderOffset ? DRAG_META_INSERT.before : DRAG_META_INSERT.on;
+            } else {
+               return offset < orderOffset ? DRAG_META_INSERT.before : offset > metric - orderOffset ? DRAG_META_INSERT.after : DRAG_META_INSERT.on;
+            }
+         },
+
+         _createAvatar: function(dragObject) {
+            if (!this._options.linkTemplateConfig) {
+               var count = dragObject.getSource().getCount();
+               return $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>');
+            } else {
+               var model = dragObject.getSource().at(0).getModel();
+               return $(
+                  '<div class="controls-dragNDrop-avatar controls-DragNDrop__draggedItem">' +
+                     '<div class="controls-dragNDrop-avatar__img-wrapper">' +
+                        '<img src="' + model.get(this._options.linkTemplateConfig.image) + '">' +
+                     '</div>' +
+                     '<div class="controls-dragNDrop-avatar__text-wrapper">' +
+                        '<div class="controls-dragNDrop-avatar__title">' + (model.get(this._options.linkTemplateConfig.title)||'') + '</div>' +
+                        '<div class="controls-dragNDrop-avatar__description">' + (model.get(this._options.linkTemplateConfig.description)||'') + '</div>' +
+                     '</div>' +
+                  '</div>'
+               );
+            }
+         },
+
+         _endDragHandler: function(dragObject, droppable, e) {
+            var isMove = false;
+            if (droppable) {
+               var
+                  target = dragObject.getTarget(),
+                  models = [],
+                  dropBySelf = false,
+                  source = dragObject.getSource();
+
+               if (target && source) {
+                  var  targetsModel = target.getModel();
+                  source.each(function(item) {
+                     var model = item.getModel();
+                     models.push(model);
+                     if (targetsModel == model) {
+                        dropBySelf = true;
+                     }
+                  });
+                  if (dragObject.getOwner() === this) {
+                     var position = target.getPosition(),
+                        domItems = [];
+
+                     dragObject.getSource().each(function (item) {
+                        domItems.push(item.getDomElement());
+                     });
+                     isMove = this._getMover().checkRecordsForMove(models, target.getModel(), position);
+                     if (isMove) {
+                        this.move(models, target.getModel(), position).addCallback(function (result) {
+                           if (result) {
+                              this.removeItemsSelectionAll();
+                           }
+                           if (this._options.useDragPlaceHolder) {
+                              this.once('onDrawItems', function () {
+                                 //это нужно что бы изменения верстки произошли в одном "потоке", что бы не прыгали элементы
+                                 //когда удалется плейсходер и переносится реальный элемент
+                                 //здесь поможет виртуалдом
+                                 this._clearDragHighlight(dragObject);
+                                 domItems.forEach(function (elem) {
+                                    elem.removeClass('ws-hidden');
+                                 });
+                                 this._removeDragPlaceHolder();
+                              });
+                           } else {
+                              this._removeDragPlaceHolder();
+                           }
+                        }.bind(this)).addErrback(function () {
+                           this._removeDragPlaceHolder();
+                        }.bind(this));
+                     }
+                  } else {
+                     var currentDataSource = this.getDataSource(),
+                        dragOwner = dragObject.getOwner(),
+                        ownersDataSource = dragOwner.getDataSource(),
+                        useDefaultMove = false;
+                     if (currentDataSource && dragOwner &&
+                        currentDataSource.getEndpoint().contract == ownersDataSource.getEndpoint().contract
+                     ) { //включаем перенос по умолчанию только если  контракты у источников данных равны
+                        useDefaultMove = true;
+                     }
+                     this._getMover().moveFromOutside(dragObject.getSource(), dragObject.getTarget(), dragOwner.getItems(), useDefaultMove);
+                  }
+               }
+               this._clearDragHighlight(dragObject);
+            }
+            if (!isMove) {
+               this._toggleDragItems(dragObject, true);
+               this._removeDragPlaceHolder();
+            }
+         },
+         _getDragPlaceHolder: function(dragObject) {
+            if (!this._dragPlaceHolder) {
+               this._makeDragPlaceHolder(dragObject)
+            }
+            return this._dragPlaceHolder;
+         },
+
+         _makeDragPlaceHolder: function(dragObject) {
+            if (this._options.useDragPlaceHolder) {
+               var item = dragObject.getSource().at(0);
+               this._dragPlaceHolder = item.getDomElement().clone().removeAttr('data-hash').addClass('controls-DragNDrop__placeholder');
+               item.getDomElement().after(this._dragPlaceHolder);
+            }
+         },
+
+         _toggleDragItems: function (dragObject, show) {
+            dragObject.getSource().each(function (item) {
+               item.getDomElement().toggleClass('ws-hidden', !show);
+            });
          },
          /*DRAG_AND_DROP END*/
          //region moveMethods
@@ -3907,6 +4319,13 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                });
             }.bind(this));
+         },
+         _removeDragPlaceHolder: function () {
+            if (this._dragPlaceHolder) {
+               this._dragPlaceHolder.remove();
+               this._dragPlaceHolder = null;
+            }
+            this._updateItemsToolbar();
          },
          /**
           * Перемещает выделенные записи.
@@ -4090,6 +4509,7 @@ define('js!SBIS3.CONTROLS.ListView',
          deleteRecords: function(idArray, message) {
             var
                 self = this,
+                res = new Deferred(),
                 beginDeleteResult;
             //Клонируем массив, т.к. он может являться ссылкой на selectedKeys, а после удаления мы сами вызываем removeItemsSelection.
             //В таком случае и наш idArray изменится по ссылке, и в событие onEndDelete уйдут некорректные данные
@@ -4105,18 +4525,22 @@ define('js!SBIS3.CONTROLS.ListView',
                   beginDeleteResult.addCallback(function(result) {
                      self._deleteRecords(idArray, result);
                   }).addErrback(function (result) {
-                     InformationPopupManager.showMessageDialog(
-                        {
-                           message: result.message,
-                           opener: self,
-                           status: 'error'
-                        }
-                     );
+                     InformationPopupManager.showMessageDialog({
+                        message: result.message,
+                        opener: self,
+                        status: 'error'
+                     });
                   });
                } else {
                   self._deleteRecords(idArray, beginDeleteResult);
                }
+               res.callback(true);
+            }, function() {
+               res.callback(false);
+            }, function() {
+               res.callback();
             });
+            return res;
          },
 
          _deleteRecords: function(idArray, beginDeleteResult) {
