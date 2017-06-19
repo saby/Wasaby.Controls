@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 19.01.2016.
  */
-define('js!SBIS3.CONTROLS.Utils.TemplateUtil', [], function() {
+define('js!SBIS3.CONTROLS.Utils.TemplateUtil', ['Core/tmpl/tmplstr'], function(tmplstr) {
 
     /**
      * @class SBIS3.CONTROLS.Utils.TemplateUtil
@@ -13,14 +13,13 @@ define('js!SBIS3.CONTROLS.Utils.TemplateUtil', [], function() {
         * @param tpl
         * @returns {*}
         */
-      prepareTemplate: function(tpl) {
+      prepareTemplate: function(tpl, logicless) {
          var template;
 
          switch (typeof tpl) {
             case 'string' :
                template = tpl.indexOf('html!') === 0 || tpl.indexOf('tmpl!') === 0 ?
-                   global.requirejs(tpl) :
-                   doT.template(tpl);
+                   global.requirejs(tpl) : ( logicless ? tmplstr.getFunction(tpl) : doT.template(tpl));
                break;
             case 'function' :
                template = tpl;
