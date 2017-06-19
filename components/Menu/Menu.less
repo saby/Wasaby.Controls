@@ -8,12 +8,7 @@
    border-style: @default-border-style;
    border-color: @menu-border-color;
    background-color: @white-color;
-   -webkit-touch-callout: none;
-   -webkit-user-select: none;
-   -khtml-user-select: none;
-   -moz-user-select: none;
-   -ms-user-select: none;
-   user-select: none;
+   .user-select(none);
 
    &.controls-Menu__breakWord {
       word-break: break-word;
@@ -47,7 +42,7 @@
       min-height: @menu-item-height;
       height: auto;
    }
-   .controls-Menu__header + .controls-Menu__itemsContainer {
+   .controls-Menu__itemsContainer {
       padding: @menu-link-menu-item-container-padding;
    }
    &.controls-popup-revert-vertical {

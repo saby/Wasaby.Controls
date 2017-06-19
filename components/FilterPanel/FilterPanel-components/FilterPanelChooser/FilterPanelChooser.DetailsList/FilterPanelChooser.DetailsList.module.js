@@ -34,10 +34,14 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
       },
 
       _toggleHierarchy: function(item, value) {
+         var
+            view = this._getListView(),
+            itemId = item.getId();
          item.set('hierarchy', value);
          // Согласно стандарту, при включении иерархии запись должна автоматически отмечаться
-         if (value) {
-            this._getListView().addItemsSelection([item.getId()]);
+         if (value && view.getSelectedKeys().indexOf(itemId) === -1) {
+            view.addItemsSelection([itemId]);
+            view.redrawItem(view.getItems().getRecordById(itemId));
          }
          this._updateValue();
       },
@@ -94,7 +98,8 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
          });
          properties.dataSource = new Memory({
             data: opts.properties.items.getRawData(),
-            idProperty: opts.properties.idProperty
+            idProperty: opts.properties.idProperty,
+            adapter: opts.properties.items.getAdapter()
          });
          properties.selectedKeys = this._prepareSelectedKeys(opts.value);
          return properties;

@@ -146,7 +146,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
          this._inputField.bind('focusout', function () {
             var text = self._inputField.val();
             if (self._options.trim) {
-               text = String.trim(text);
+               text = text.trim();
             }
             //Установим текст только если значения различны и оба не пустые
             if (text !== self._options.text && !(self._isEmptyValue(self._options.text) && !text.length)){

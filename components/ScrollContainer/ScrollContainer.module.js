@@ -1,16 +1,38 @@
 define('js!SBIS3.CONTROLS.ScrollContainer', [
-      'js!SBIS3.CONTROLS.CompoundControl',
+      'Core/core-extend',
+      "Core/Abstract.compatible",
+      'js!SBIS3.CORE.Control/Control.compatible',
+      "js!SBIS3.CORE.AreaAbstract/AreaAbstract.compatible",
+      'js!SBIS3.CORE.BaseCompatible',
+      'js!SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor',
+      'tmpl!SBIS3.CONTROLS.ScrollContainer',
       'js!SBIS3.CONTROLS.Scrollbar',
-      'html!SBIS3.CONTROLS.ScrollContainer',
       'Core/detection',
+      'Core/core-functions',
       'js!SBIS3.CORE.FloatAreaManager',
       'js!SBIS3.StickyHeaderManager',
+      "Core/core-instance",
       'Core/compatibility',
+      'Core/constants',
       'css!SBIS3.CONTROLS.ScrollContainer'
    ],
-   function(CompoundControl, Scrollbar, dotTplFn, cDetection, FloatAreaManager, StickyHeaderManager, compatibility) {
-
+   function (extend,
+             AbstractCompatible,
+             ControlCompatible,
+             AreaAbstractCompatible,
+             BaseCompatible,
+             WsCompatibleConstructor,
+             template,
+             Scrollbar,
+             cDetection,
+             functions,
+             FloatAreaManager,
+             StickyHeaderManager,
+             cInstance,
+             compatibility,
+             constants) {
       'use strict';
+
 
       /**
        * Контрол представляющий из себя контейнер для контента с тонким скроллом.
@@ -57,12 +79,16 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        *     </option>
        * </component>
        */
-      var ScrollContainer = CompoundControl.extend( /** @lends SBIS3.CONTROLS.ScrollContainer.prototype */{
+      var ScrollContainer = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, WsCompatibleConstructor], {
+         _template: template,
 
-         _dotTplFn: dotTplFn,
+         _controlName: 'SBIS3.CONTROLS.ScrollContainer',
+         _useNativeAsMain: true,
+         _doNotSetDirty: true,
 
-         $protected: {
-            _options: {
+         constructor: function (cfg) {
+
+            this._options = {
                /**
                 * @cfg {Content} Контент в ScrollContainer
                 * @remark
@@ -82,58 +108,160 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                 * @see getContent
                 */
                content: '',
-
                /**
                 * @cfg {Boolean} Включает фиксацию заголовоков в рамках контенера ScrollContainer
                 */
                stickyContainer: false,
 
                activableByClick: false
-            },
-            _content: null,
-            _headerHeight: 0
+            };
+            this._content = null;
+            this._headerHeight = 0;
+            this._ctxSync = {
+               selfToPrev: {},
+               selfCtxRemoved: {},
+               selfNeedSync: 0,
+               prevToSelf: {},
+               prevCtxRemoved: {},
+               prevNeedSync: 0
+            };
+            this.deprecatedContr(cfg);
          },
 
-         $constructor: function() {
-            // Что бы при встаке контрола (в качетве обертки) логика работы с контекстом не ломалась,
-            // сделаем свой контекст прозрачным
-            this._craftedContext = false;
-            this._context = this._context.getPrevious();
-         },
 
-         _modifyOptionsAfter: function(finalConfig) {
-            delete finalConfig.content;
-         },
+         _containerReady: function() {
+            
+            if (window && this._container && (typeof this._container.length === "number")) {
 
-         init: function() {
-            ScrollContainer.superclass.init.call(this);
-            this._content = $('> .controls-ScrollContainer__content', this.getContainer());
-            this._showScrollbar = !(cDetection.isMobileIOS || cDetection.isMobileAndroid || compatibility.touch);
-            //Под android оставляем нативный скролл
-            if (this._showScrollbar){
-               this._initScrollbar = this._initScrollbar.bind(this);
-               this._container[0].addEventListener('touchstart', this._initScrollbar, true);
-               this._container.one('mousemove', this._initScrollbar);
-               this._container.one('wheel', this._initScrollbar);
-               if (cDetection.IEVersion >= 10) {
-                  // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
-                  // 1px для скроллирования и чтобы мы не могли скроллить мы отменим это действие.
-                  this._content[0].onmousewheel = function(event) {
-                     if (this._content[0].scrollHeight - this._content[0].offsetHeight === 1) {
-                        event.preventDefault();
-                     }
-                  }.bind(this);
+               this._content = $('> .controls-ScrollContainer__content', this.getContainer());
+               this._showScrollbar = !(cDetection.isMobileIOS || cDetection.isMobileAndroid || compatibility.touch && cDetection.isIE);
+               this._bindOfflainEvents();
+               //Под android оставляем нативный скролл
+               if (this._showScrollbar){
+                  this._initScrollbar = this._initScrollbar.bind(this);
+                  this._container[0].addEventListener('touchstart', this._initScrollbar, true);
+                  this._container.one('mousemove', this._initScrollbar);
+                  this._container.one('wheel', this._initScrollbar);
+                  if (cDetection.IEVersion >= 10) {
+                     // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
+                     // 1px для скроллирования и чтобы мы не могли скроллить мы отменим это действие.
+                     this._content[0].onmousewheel = function(event) {
+                        if (this._content[0].scrollHeight - this._content[0].offsetHeight === 1) {
+                           event.preventDefault();
+                        }
+                     }.bind(this);
+                  }
+                  this._hideScrollbar();
                }
-               this._hideScrollbar();
+               this._subscribeOnScroll();
+
+               // Что бы до инициализации не было видно никаких скроллов
+               this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
+
+               // task: 1173330288
+               // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
+               FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer().find('.controls-ScrollContainer__content');
             }
-            this._subscribeOnScroll();
+         },
 
-            // Что бы до инициализации не было видно никаких скроллов
-            this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
+         bothIsNaN: function(a, b){
+            return (typeof a === "number") && (typeof b === "number") && isNaN(a) && isNaN(b);
+         },
 
-            // task: 1173330288
-            // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
-            FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer().find('.controls-ScrollContainer__content');
+         nullOrUndefined: function(a){
+            return a === null || a === undefined;
+         },
+
+         compare: function(a, b){
+            /**
+             * Если одно из значений null или undefined то сравниваем с типами, чтобы null!==undefined
+             * Если оба значения не null и не undefined, то сравниваем без типов, чтобы 1=="1"
+             */
+            var temp = (this.nullOrUndefined(a) || this.nullOrUndefined(b))?(a===b):(a==b);
+            return this.bothIsNaN(a,b) || temp;
+         },
+
+         fixOpacityField: function(name){
+            if (this.compare(this._ctxSync.selfToPrev[name], this._ctxSync.prevToSelf[name])){
+               /**
+                * Если данные пролетают сквозь контекст самоятоятельно, то не нужно их синхронизировать
+                */
+               delete this._ctxSync.selfToPrev[name];
+               delete this._ctxSync.prevToSelf[name];
+               this._ctxSync.selfNeedSync--;
+               this._ctxSync.prevNeedSync--;
+            }
+         },
+
+         setContext: function(ctx){
+            BaseCompatible.setContext.call(this, ctx);
+            /**
+             * Добавим проксирование данных для EngineBrowser
+             * Этот костыль будет выпилен в 3.17.20
+             */
+            if (this.getParent()) {
+               var
+                  self = this,
+                  selfCtx = this._context,
+                  prevContext = this._context.getPrevious();
+
+               this._context.subscribe('onFieldChange', function (ev, name, value) {
+                  //if (this.getValueSelf(name) !== undefined)
+                  {
+                     if (!self.compare(value, prevContext.getValueSelf(name)) &&
+                        !self.compare(value, self._ctxSync.selfToPrev[name])) {
+                        self._ctxSync.selfToPrev[name] = value;
+                        self._ctxSync.selfNeedSync++;
+                        self.fixOpacityField(name);
+                     }
+                  }
+               });
+
+               prevContext.subscribe('onFieldChange', function (ev, name, value) {
+                  //if (prevContext.getValueSelf(name) !== undefined)
+                  {
+                     if (!self.compare(value, selfCtx.getValueSelf(name)) &&
+                        !self.compare(value, self._ctxSync.prevToSelf[name])){
+                        self._ctxSync.prevToSelf[name] = value;
+                        self._ctxSync.prevNeedSync++;
+                        self.fixOpacityField(name);
+                     }
+                  }
+               });
+
+               this._context.subscribe('onFieldsChanged', function () {
+                  if (self._ctxSync.selfNeedSync) {
+                     self._ctxSync.selfNeedSync = 0;
+                     prevContext.setValue(self._ctxSync.selfToPrev);
+                     self._ctxSync.selfToPrev = {};
+                  }
+               });
+
+               prevContext.subscribe('onFieldsChanged', function () {
+                  if (self._ctxSync.prevNeedSync) {
+                     self._ctxSync.prevNeedSync = 0;
+                     selfCtx.setValue(self._ctxSync.prevToSelf);
+                     self._ctxSync.prevToSelf = {};
+                  }
+               });
+
+               this._context.subscribe('onFieldRemove', function (ev, name, value) {
+                  self._ctxSync.selfCtxRemoved[name] = false;
+                  if (prevContext.getValueSelf(name) !== undefined &&
+                        !self._ctxSync.prevCtxRemoved[name]) {
+                     self._ctxSync.prevCtxRemoved[name] = true;
+                     prevContext.removeValue(name);
+                  }
+               });
+
+               prevContext.subscribe('onFieldRemove', function (ev, name, value) {
+                  self._ctxSync.prevCtxRemoved[name] = false;
+                  if (selfCtx.getValueSelf(name) !== undefined && !self._ctxSync.selfCtxRemoved[name]) {
+                     self._ctxSync.selfCtxRemoved[name] = true;
+                     selfCtx.removeValue(name);
+                  }
+               });
+            }
          },
 
          _subscribeOnScroll: function(){
@@ -171,7 +299,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             scrollbarWidth = outer.offsetWidth - outer.clientWidth;
             document.body.removeChild(outer);
             return scrollbarWidth;
-          },
+         },
 
          _scrollbarDragHandler: function(event, position){
             if (position != this._getScrollTop()){
@@ -181,7 +309,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          _onResizeHandler: function(){
             var headerHeight, scrollbarContainer;
-            ScrollContainer.superclass._onResizeHandler.apply(this, arguments);
+            AreaAbstractCompatible._onResizeHandler.apply(this, arguments);
             if (this._scrollbar){
                this._scrollbar.setContentHeight(this._getScrollHeight());
                this._scrollbar.setPosition(this._getScrollTop());
@@ -238,13 +366,33 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          destroy: function(){
-            this._content.off('scroll', this._onScroll);
+            if (this._content) {
+               this._content.off('scroll', this._onScroll);
+            }
             this._container.off('mousemove', this._initScrollbar);
-            ScrollContainer.superclass.destroy.call(this);
+
+            BaseCompatible.destroy.call(this);
             // task: 1173330288
             // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
             delete FloatAreaManager._scrollableContainers[ this.getId() ];
+         },
+         //region retail_offlain
+         _bindOfflainEvents: function() {
+            if (constants.browser.retailOffline) {
+               this._content[0].addEventListener('touchstart', function (event) {
+                  this._startPos = this._content.scrollTop() + event.targetTouches[0].pageY;
+               }.bind(this), true);
+               // На движение пальцем - сдвигаем положение
+               this._content[0].addEventListener('touchmove', function (event) {
+                  this._moveScroll(this._startPos - event.targetTouches[0].pageY);
+                  event.preventDefault();
+               }.bind(this));
+            }
+         },
+         _moveScroll: function(top) {
+            this._content.scrollTop(top);
          }
+         //endregion retail_offlain
       });
 
       return ScrollContainer;

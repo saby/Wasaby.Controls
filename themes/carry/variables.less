@@ -2,6 +2,7 @@
 
 @globalDefaultFontSize:                         24px;
 @default-font-size:                             @globalDefaultFontSize;
+@default-text-size:                             @globalDefaultFontSize;
 @default-font-line-height:                      24px;
 @data-grid-basic-height:                        44px;
 
@@ -13,9 +14,9 @@
 @closeButtonImage:                              url('img/areaCloseButton.png') 0 0;
 @closeButtonImageHover:                         url('img/areaCloseButton.png') 0 -40px;
 
-@icon-small-size:                               24px;
-@icon-medium-size:                              32px;
-@icon-large-size:                               48px;
+@icon-small-size:                               16px;
+@icon-medium-size:                              24px;
+@icon-large-size:                               32px;
 
 // data grid
 @data-grid-cell-height:                         44px;;
@@ -33,6 +34,7 @@
 @data-grid-multiselect-notScrolledCell-Color:   @data-grid-row-selected-bg;
 
 // tree view
+@tree-view-expand-icon-size:                    16px;
 @font-folder-size:                              @globalDefaultFontSize;
 @tree-view-expand-margin:                       0 6px 8px 2px;
 @tree-view-editArrow-top:                       10px;
@@ -201,7 +203,6 @@
 @list-view-actions-menu-close-height:           24px;
 @list-view-actions-menu-close-width:            24px;
 
-@list-view-actions-menu-padding:                0;
 @list-view-actions-menu-margin:                 3px 0 0 0;
 @list-view-items-toolbar-vertical-line-height:  38px;
 @touch-mode-items-toolbar-icon-margin-top:      -38px;
@@ -429,6 +430,7 @@
 @DropdownList-linkStyleHoverColor:              @blue-dark-color;
 @DropdownList-footer-buttonsBlock-height:       @DropdownList-height;
 @DropdownList-footer-multisel-buttonsBlock-h:   32px;
+@DropdownList-checkbox-bottom:                  1px;
 @DropdownList-footer-hasMore-top:               6px;
 
 // -------- //
@@ -580,7 +582,7 @@
 // PrintDialog
 @controls-printdialog-activate-right:           @controls-movedialog-activate-right;
 @controls-printdialog-activate-margin-top:      @controls-movedialog-activate-top;
-@controls-printdialog-min-width:                450px;
+@controls-printdialog-min-width:                @controls-movedialog-min-width;
 
 // Big button
 @button-big-font:                               @globalDefaultFontSize;

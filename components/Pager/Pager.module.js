@@ -7,7 +7,7 @@
  */
 define('js!SBIS3.CONTROLS.Pager', [
    'js!SBIS3.CORE.CompoundControl',
-   'html!SBIS3.CONTROLS.Pager',
+   'tmpl!SBIS3.CONTROLS.Pager',
    'js!SBIS3.CONTROLS.DropdownList',
    'js!SBIS3.CORE.Paging',
    'Core/core-instance',
@@ -46,7 +46,9 @@ define('js!SBIS3.CONTROLS.Pager', [
          _paging : undefined,
          _dropd: undefined,
          _lastNumRecords: undefined,
-         _lastNextPage: undefined
+         _lastNextPage: undefined,
+         // Флаг обозначаюий что была достигнута последняя страница
+         _lastPageReached: false
       },
       $constructor: function(){
          this._publish('onPageChange');
@@ -90,7 +92,7 @@ define('js!SBIS3.CONTROLS.Pager', [
          //TODO Надо как-то по-другому понимать изменения в выделении listView
          opener = this.getOpener();
          if (cInstance.instanceOfMixin(opener, 'SBIS3.CONTROLS.MultiSelectable')){
-            opener.subscribe('onSelectedItemsChange', function(ev, array){
+            this.subscribeTo(opener, 'onSelectedItemsChange', function(ev, array){
                self.updateAmount(self._lastNumRecords, self._lastNextPage, array.length);
             });
          }

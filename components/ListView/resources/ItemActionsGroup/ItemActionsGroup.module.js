@@ -119,6 +119,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             /* Если открыто меню, то не меняем состояние кнопки меню */
             if(this.isItemActionsMenuVisible()) return;
 
+            //TODO: Это не будет работать с VDom
             this._itemActionsMenuButton[onlyMain ? 'addClass' : 'removeClass']('ws-hidden');
          },
 
@@ -168,6 +169,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
             menuClassName += parentContainer.hasClass('controls-ItemsToolbar__small') ? ' controls-ItemsToolbar__small' : '';
 
+            this.addedOnlyExtraNew = false;
+            
             this._itemActionsMenu = new ContextMenu({
                element: $('> .controls-ItemActions__menu-container', this._getItemsContainer()[0]).show(),
                items: items,

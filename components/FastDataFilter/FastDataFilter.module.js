@@ -3,20 +3,19 @@
  */
 define('js!SBIS3.CONTROLS.FastDataFilter',
    [
-   "Core/constants",
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CONTROLS.FilterMixin",
    "js!SBIS3.CONTROLS.ItemsControlMixin",
    'Core/Deferred',
    "js!SBIS3.CONTROLS.DropdownList",
-   "html!SBIS3.CONTROLS.FastDataFilter",
-   "html!SBIS3.CONTROLS.FastDataFilter/ItemTpl",
+   "tmpl!SBIS3.CONTROLS.FastDataFilter",
+   "tmpl!SBIS3.CONTROLS.FastDataFilter/ItemTpl",
    "Core/helpers/collection-helpers",
    "Core/helpers/dom&controls-helpers",
    'css!SBIS3.CONTROLS.FastDataFilter'
 ],
 
-   function( constants,CompoundControl, ItemsControlMixin, FilterMixin, cDeferred, DropdownList, dotTplFn, ItemTpl, colHelpers, dcHelpers) {
+   function(CompoundControl, ItemsControlMixin, FilterMixin, cDeferred, DropdownList, dotTplFn, ItemTpl, colHelpers, dcHelpers) {
 
       'use strict';
       /**
@@ -106,10 +105,6 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                items: []
             }
          },
-         init: function () {
-            FastDataFilter.superclass.init.apply(this, arguments);
-            
-         },
          _drawItemsCallbackSync: function(){
             this._setSelectionToItemsInstances();
          },
@@ -122,18 +117,6 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                }
             }
             this._recalcDropdownWidth();
-            this._setItemPositionForIE10();
-         },
-         _setItemPositionForIE10: function(){
-            //Дичайший баг в ie - если установлено несколько выпадающий списков - 1 из них визуально пропадает
-            //Не отдебагать, т.к. при любом взаимодействии с dom'ом идет перерисовка узлов и выпадающий список появляется
-            //Добавил костыль: вызываю перерисовку узла, взаимодействуя со свойтсвом top
-            if (constants.browser.isIE10){
-               this.getContainer().find('.controls-DropdownList').css({top: ''}); //Убираю top, чтобы когда выставится top: 0 браузер понял что значение изменилось и перерисовал узел
-               setTimeout(function(){
-                  this.getContainer().find('.controls-DropdownList').css({position: 'relative', top: '0'});
-               }.bind(this), 100);
-            }
          },
          _getCurrentContext : function(){
             return this.getLinkedContext();
@@ -170,49 +153,26 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                      return list;
                   }.bind(this));
                }
-               self._setItemPositionForIE10();
             });
          },
-         _recalcDropdownWidth: function(){
+         _recalcDropdownWidth: function () {
             this._resetMaxWidth();
-            if (constants.browser.isIE && constants.browser.IEVersion <= 9){
-               var ddlText = $('.controls-DropdownList__textWrapper', this.getContainer()),
-                   ieWidth = 2, //Отступ, чтобы ie правильно уместил содержимое в контейнер,
-                   containerWidth = this.getContainer().width() + ieWidth;
-               this._resizeDropdownContainersForIE(ddlText, containerWidth);
-            }
-            else{
-               var dropdownLists = $('.controls-DropdownList', this.getContainer());
-               dropdownLists.sort(function(el1, el2){
-                  return $(el1).width() > $(el2).width();
-               });
-               for (var i = 0, l = dropdownLists.length; i < l; i++){
-                  $(dropdownLists[i]).css('flex-shrink', i + 1);
-               }
+            var dropdownLists = $('.controls-DropdownList', this.getContainer());
+            dropdownLists.sort(function (el1, el2) {
+               return $(el1).width() > $(el2).width();
+            });
+            for (var i = 0, l = dropdownLists.length; i < l; i++) {
+               $(dropdownLists[i]).css('flex-shrink', i + 1);
             }
          },
 
          _resetMaxWidth: function(){
-            var dropdownContainer = $('.controls-DropdownList', this.getContainer()),
-               dropdownLimitProperty = 'flex-shrink';
-            if (constants.browser.isIE && constants.browser.IEVersion <= 9){
-               dropdownContainer = $('.controls-DropdownList__textWrapper', this.getContainer());
-               dropdownLimitProperty = 'max-width';
-            }
+            var dropdownContainer = $('.controls-DropdownList', this.getContainer());
             colHelpers.forEach(dropdownContainer, function(elem){
-               $(elem).css(dropdownLimitProperty, '');
+               $(elem).css('flex-shrink', '');
             });
          },
 
-         _resizeDropdownContainersForIE: function(dropdownText, containerWidth){
-            var ddlWidth = this._getDropdownListsWidth(),
-               maxDdl;
-            while (ddlWidth > containerWidth){
-               maxDdl = this._getDropdownMaxWidth(dropdownText);
-               maxDdl.css('max-width', (maxDdl.width() * 0.9)); //Уменьшаем ширину самого большого ddl на 10%
-               ddlWidth = this._getDropdownListsWidth();
-            }
-         },
          _getDropdownMaxWidth: function(dropdownText){
             var maxElem = $(dropdownText[0]);
             for (var i = 1, l = dropdownText.length; i < l; i++){

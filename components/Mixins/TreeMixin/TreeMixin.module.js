@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    "Core/CommandDispatcher",
    "Core/Deferred",
    "js!SBIS3.CONTROLS.BreadCrumbs",
-   "html!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
+   "tmpl!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
    "js!WS.Data/Display/Tree",
    "tmpl!SBIS3.CONTROLS.TreeMixin/resources/searchRender",
    "js!WS.Data/Entity/Model",
@@ -171,6 +171,22 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
 
       return resRecords;
    },
+   prepareGroupId = function(item, groupId, cfg) {
+      var
+         hierarchyRelation = cfg._getHierarchyRelation(cfg);
+      function calcGroupId(item) {
+         var
+            itemParent;
+         // Обходим родителей именно через hierarchyRelation. Проекция на момент расчёта hash группы не построила иерархию и
+         // пробежаться по родителям с помощью проекции не получится.
+         // P.S. проекция не строит иерархию перед вычислением hash группы из-за оптимизации обхода (чтобы не делать его дважды, (c) Мальцев А.).
+         if (hierarchyRelation) {
+            itemParent = hierarchyRelation.hasParent(item, cfg._items) ? hierarchyRelation.getParent(item, cfg._items) : null;
+         }
+         return itemParent !== undefined ? itemParent === null ? '@' : itemParent.get(cfg.idProperty) + calcGroupId(itemParent) : '';
+      }
+      return calcGroupId(item) + groupId;
+   },
    getRecordsForRedraw = function(projection, cfg) {
       var
          prevItem,
@@ -208,7 +224,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                cfg.hasNodes = true;
             }
             if (!isEmpty(cfg.groupBy) && cfg.easyGroup && cfg._canApplyGrouping(item, cfg)) {
-               if (prevGroupId != group) {
+               if (prevGroupId != group && group !== false) {
                   cfg._groupItemProcessing(group, records, item, cfg);
                   prevGroupId = group;
                }
@@ -322,6 +338,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       tplOptions.nodeProperty = cfg.nodeProperty;
       tplOptions.isSearch = cfg.hierarchyViewMode;
       tplOptions.hasNodes = cfg.hasNodes;
+      tplOptions.getItemTemplateData = cfg._getItemTemplateData;
       tplOptions.hierarchy = new HierarchyRelation({
          idProperty: cfg.idProperty,
          parentProperty: cfg.parentProperty
@@ -331,6 +348,24 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    },
    hasNextPageInFolder = function(cfg, more, id) {
       return typeof (more) !== 'boolean' ? more > (cfg._folderOffsets[id || 'null'] + cfg.pageSize) : !!more;
+   },
+
+   getHierarchyRelation = function(cfg) {
+      var
+         items = cfg._items;
+      return new HierarchyRelation({
+         idProperty: items ? items.getIdProperty() : '',
+         parentProperty: cfg.parentProperty,
+         nodeProperty: cfg.nodeProperty
+      });
+   };
+
+   getItemTemplateData = function(cfg){
+      return {
+         nodePropertyValue: cfg.item.get(cfg.nodeProperty),
+         projection: cfg.projItem.getOwner(),
+         padding: cfg.paddingSize * (cfg.projItem.getLevel() - 1) + cfg.originallPadding
+      };
    };
    /**
     * Миксин позволяет контролу отображать данные, которые имеют иерархическую структуру, и работать с ними.
@@ -426,8 +461,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          _options: {
             _folderOffsets : {},
             _folderHasMore : {},
+            _prepareGroupId: prepareGroupId,
             _buildTplArgs: buildTplArgsTV,
             _buildTplArgsTV: buildTplArgsTV,
+            _getItemTemplateData: getItemTemplateData,
+            _getHierarchyRelation: getHierarchyRelation,
             _defaultSearchRender: searchRender,
             _getSearchCfgTv: getSearchCfg,
             _getSearchCfg: getSearchCfg,
@@ -699,9 +737,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see expandNode
        * @see toggleNode
        */
-      collapseNode: function(id) {
-         var
+      collapseNode: function(id, hash) {
+         //todo https://online.sbis.ru/opendoc.html?guid=561eb028-84bd-4395-a19f-898c0e2d2b5e&des=
+         var item;
+         if (hash) {
+            item = this._getItemsProjection().getByHash(hash);
+         }
+         else {
             item = this._getItemProjectionByItemId(id);
+         }
          if (item) {
             item.setExpanded(false);
             return Deferred.success();
@@ -715,11 +759,17 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see collapseNode
        * @see expandNode
        */
-      toggleNode: function(id) {
-         var
+      toggleNode: function(id, hash) {
+         //todo https://online.sbis.ru/opendoc.html?guid=561eb028-84bd-4395-a19f-898c0e2d2b5e&des=
+         var item;
+         if (hash) {
+            item = this._getItemsProjection().getByHash(hash);
+         }
+         else {
             item = this._getItemProjectionByItemId(id);
+         }
          if (item) {
-            return this[item.isExpanded() ? 'collapseNode' : 'expandNode'](id);
+            return this[item.isExpanded() ? 'collapseNode' : 'expandNode'](id, hash);
          } else {
             return Deferred.fail();
          }
@@ -731,9 +781,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see collapseNode
        * @see toggleNode
        */
-      expandNode: function(id) {
-         var
+      expandNode: function(id, hash) {
+         //todo https://online.sbis.ru/opendoc.html?guid=561eb028-84bd-4395-a19f-898c0e2d2b5e&des=
+         var item;
+         if (hash) {
+            item = this._getItemsProjection().getByHash(hash);
+         }
+         else {
             item = this._getItemProjectionByItemId(id);
+         }
          if (item) {
             if (item.isExpanded()) {
                return Deferred.success();
@@ -744,7 +800,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                this._options.openedPath[id] = true;
                this._options._folderOffsets[id] = 0;
                return this._loadNode(id).addCallback(fHelpers.forAliveOnly(function() {
-                  this._getItemProjectionByItemId(id).setExpanded(true);
+                  var expItem;
+                  if (hash) {
+                     expItem = this._getItemsProjection().getByHash(hash);
+                  }
+                  else {
+                     expItem = this._getItemProjectionByItemId(id);
+                  }
+                  expItem.setExpanded(true);
                }).bind(this));
             }
          } else {
@@ -766,9 +829,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                   this._options._items.append(list);
                }
                this._getItemProjectionByItemId(id).setLoaded(true);
+               this._dataLoadedCallback();
             }).bind(this))
             .addBoth(function(error){
                this._toggleIndicator(false);
+               return error;
             }.bind(this));
          } else {
             return Deferred.success();
@@ -827,7 +892,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             var prevGroupId = undefined;  //тут groupId одинаковый для пачки данных, но группу надо вставить один раз, используем пермеенную как флаг
             for (var i = 0; i < items.length; i++) {
                if (!isEmpty(this._options.groupBy) && this._options.easyGroup) {
-                  if (this._canApplyGrouping(items[i]) && prevGroupId != groupId) {
+                  if (this._canApplyGrouping(items[i]) && prevGroupId != groupId && groupId !== false) {
                      prevGroupId = groupId;
                      if (this._getGroupItems(groupId).length <= items.length) {
                         this._options._groupItemProcessing(groupId, result, items[i], this._options);
@@ -937,9 +1002,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             if (this._isSearchMode()) {
                return true;
             }
-            var
-               itemParent = projItem.getParent();
-            return parentFn.call(this, projItem) && itemParent && itemParent.isRoot();
+            return parentFn.call(this, projItem);
          },
          /* ToDo. Используется для вызова перерисовки родительских элементов при изменении количества дочерних
           Удалить функцию, когда будет сделана нотификация по заданию: https://inside.tensor.ru/opendoc.html?guid=b53fc873-6355-4f06-b387-04df928a7681&description= */
@@ -1057,15 +1120,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          });
       },
 
-      _getHierarchyRelation: function(idProperty) {
-         var items = this.getItems();
-         return new HierarchyRelation({
-            idProperty: idProperty || (items ? items.getIdProperty() : ''),
-            parentProperty: this._options.parentProperty,
-            nodeProperty: this._options.nodeProperty
-         });
-      },
-
       _afterAddItems: function() {
          // В виду проблем, возникающих в режиме поиска при разрыве путей до искомых записей - помочь в настоящий момент может только redraw
          if (this._options.hasNodes && this._isSearchMode()) {
@@ -1115,7 +1169,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          _dataLoadedCallback: function () {
             //this._options.openedPath = {};
             if (this._options.expand) {
-               var hierarchy = this._getHierarchyRelation(),
+               var hierarchy = this._options._getHierarchyRelation(this._options),
                   items = this.getItems(),
                   openedPath = this._options.openedPath;
                items.each(function(item) {
@@ -1235,11 +1289,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          var
             filter = this.getFilter() || {};
          // Internet Explorer при удалении элемента сбрасывает фокус не выше по иерархии, а просто "в никуда" (document.activeElement === null).
-         // Для того, чтобы фокус при проваливании в папку не терялся - перед проваливанием устанавливаем его просто на контейнер таблицы, но
-         // только в том случае, если ранее фокус реально был на элементе таблицы.
+         // Для того, чтобы фокус при проваливании в папку не терялся - перед проваливанием устанавливаем его просто
+         // на контейнер на котором устанавливается фокус по умолчанию, но только в том случае,
+         // если ранее фокус реально был на элементе таблицы.
          // https://inside.tensor.ru/opendoc.html?guid=7b093780-dc30-4f90-b443-0d6f96992490&des=
+         // https://online.sbis.ru/opendoc.html?guid=2e08f9cc-d86b-411d-8eb4-344e5e0c00ec&des=
          if (constants.browser.isIE && $.contains(this._container[0], document.activeElement)) {
-            this._container.focus();
+            this._getElementToFocus();
          }
          // todo Удалить при отказе от режима "hover" у редактирования по месту [Image_2016-06-23_17-54-50_0108] https://inside.tensor.ru/opendoc.html?guid=5bcdb10f-9d69-49a0-9807-75925b726072&description=
          this._destroyEditInPlaceController();

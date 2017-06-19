@@ -1,4 +1,5 @@
 @import "header";
+@import "mixins";
 
 //body, html {
 //  font: @default-font-size @default-font-name;
@@ -12,6 +13,21 @@ input[type="submit"]::-moz-focus-inner,
 input[type="reset"]::-moz-focus-inner {
   padding: 0 !important;
   border: 0 none !important;
+}
+
+.line-overflow-blur {
+  position: relative;
+  float: right;
+  &:before {
+    background: @line-overflow-blur-gradient;
+    height: @line-overflow-blur-height;
+    width: @line-overflow-blur-height;
+    content: ' ';
+    display: block;
+    position: absolute;
+    top: -@line-overflow-blur-height;
+    right: 0;
+  }
 }
 
 /* ATTENTION styles */
@@ -39,7 +55,7 @@ input[type="reset"]::-moz-focus-inner {
 }
 
 /* DISABLED styles */
-.icon-disabled,
+.icon-disabled
 {
   color: @icon-color-disabled;
 }
@@ -158,4 +174,21 @@ input[type="reset"]::-moz-focus-inner {
   -webkit-user-select: none;
   -khtml-user-select: none;
   -ms-user-select: none;
+}
+
+.controls-LabelContainer {
+  .flexbox();
+
+  .controls-LabelContainer__label {
+    .flex-shrink(0);
+    margin-right: 8px;
+    white-space: nowrap;
+  }
+  .controls-LabelContainer__content {
+    .flex-grow(1);
+    width: 100%;
+    min-width: 0;
+    display: block;
+    position: relative;
+  }
 }

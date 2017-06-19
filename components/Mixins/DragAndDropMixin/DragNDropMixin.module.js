@@ -111,7 +111,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         after: {
             init: function () {
                 //touchend всегда срабатывает над тем контейнером с которого начали тащить, поэтому его тут нет
-                $(this.getContainer()).bind('mouseup', this._onMouseupInside.bind(this));
+                $(this._getDragContainer()).bind('mouseup', this._onMouseupInside.bind(this));
             },
 
             destroy: function() {
@@ -321,7 +321,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 self = this,
                 dragStrarter = function(bus, moveEvent){
                     self._preparePageXY(moveEvent);
-                    if ($(clickEvent.target).closest('.controls-DragNDropMixin__notDraggable', self.getContainer().context).length === 0) {
+                    if ($(clickEvent.target).closest('.controls-DragNDropMixin__notDraggable', self._getDragContainer().context).length === 0) {
                         if (self._isDrag(moveEvent, clickEvent)) {
                             self._beginDrag(clickEvent);
                             self._beginDragTarget = clickEvent.target;
@@ -493,6 +493,12 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                     this._endDrag(e, inside ? this._findDragDropContainer(e, DragObject.getTargetsDomElemet()) : false);
                 }
             }
+        },
+        /*
+        * Возвращает контейнер внутри которого находятся элементы, которые можно перетаскивать
+        */
+        _getDragContainer : function () {
+            return this.getContainer();
         },
         /**
          * Обработчик на событие перемещения курсора - Mousemove, Touchmove.

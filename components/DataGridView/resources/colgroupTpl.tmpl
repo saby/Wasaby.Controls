@@ -1,0 +1,9 @@
+<colgroup class="controls-DataGridView__colgroup">
+    <ws:if data="{{multiselect}}">
+        <col width="24px" />
+    </ws:if>
+
+    <ws:for data="index, column in columns">
+        <col width="{{column.width}}"/>
+    </ws:for>
+</colgroup>

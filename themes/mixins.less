@@ -36,21 +36,13 @@
   height: 32px;
   font-family: 'cbuc-icons' !important;
 }
-.icon-size(@size: 16px){
+
+.icon-size(@size: 16px, @fontFamily: 'cbuc-icons') {
   font-size: @size !important;
   line-height: @size !important;
   width: @size;
   height: @size;
-  font-family: 'cbuc-icons24' !important;
-  & when (@size > 24px) {
-  font-family: 'cbuc-icons' !important;
-  }
-  & when (@size < 24px) {
-    font-family: 'cbuc-icons' !important;
-  }
-  & when (@size = 24px) {
-    font-family: 'cbuc-icons24' !important;
-  }
+  font-family: @fontFamily !important;
 }
 
 .closedHandCursor() {
@@ -327,14 +319,6 @@
       -ms-flex-basis: @width;
           flex-basis: @width;
 }
-// Display Order
-// - applies to: flex items
-// <integer>
-.flex-order(@order: 0) {
-  -webkit-order: @order;
-      -ms-order: @order;
-          order: @order;
-}
 .flex-grow(@grow: 0) {
    -webkit-flex-grow: @grow;
    -ms-flex-positive: @grow;//ie10
@@ -511,6 +495,14 @@
     line-height: @size;
     top: @posY;
     left: @posX;
+    z-index: 1;
+
+    // На iPad при расчете высоты оказывается, что она на 1px больше, чем на других устройствах. Выравнивание галки по
+    // вертикали осуществляется через line-height равным высоте. Поэтому галка уезжает вверх. Чтобы это поправить мы
+    // увеличим line-height в iPad на 1px;
+    .ws-is-mobile-platform & {
+      line-height: calc(~"@{size} + 1px");
+    }
   }
 }
 

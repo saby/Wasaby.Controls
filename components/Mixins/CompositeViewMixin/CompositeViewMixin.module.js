@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    'Core/constants',
    'Core/helpers/collection-helpers',
-   'html!SBIS3.CONTROLS.CompositeViewMixin',
+   'tmpl!SBIS3.CONTROLS.CompositeViewMixin',
    'Core/IoC',
    'html!SBIS3.CONTROLS.CompositeViewMixin/resources/CompositeItemsTemplate',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
@@ -104,8 +104,6 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
             _invisibleItemsTemplate: InvisibleItemsTemplate,
             _canServerRender: true,
             _canServerRenderOther : canServerRenderOther,
-            /*TODO для лечения тестов пришлось закоппипастить шаблон*/
-            _itemsTemplate: ItemsTemplate,
             _compositeItemsTemplate : CompositeItemsTemplate,
             _buildTplArgs : buildTplArgs,
             _buildTplArgsComposite: buildTplArgsComposite,
@@ -372,13 +370,11 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
 
       _calcWidth: function(tiles, oldWidth){
          if (tiles.length){
-            var itemsContainerWidth =  this._getItemsContainer().outerWidth(),
+            var itemsContainerWidth =  this._getItemsContainer()[0].getBoundingClientRect().width,
                tilesCount = Math.floor(itemsContainerWidth / oldWidth),
                newTileWidth = itemsContainerWidth / tilesCount;
 
-            if (itemsContainerWidth - tiles.length * oldWidth < oldWidth) {
-               tiles.outerWidth(newTileWidth);
-            }
+            tiles.outerWidth(newTileWidth);
          }
       },
 
@@ -447,16 +443,16 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
             return parentOptions;
          },
 
-         expandNode: function(parentFunc, key) {
+         expandNode: function(parentFunc, key, hash) {
             if(this.getViewMode() === 'table') {
-               parentFunc.call(this, key);
+               parentFunc.call(this, key, hash);
 
             }
          },
 
-         collapseNode: function(parentFunc, key) {
+         collapseNode: function(parentFunc, key, hash) {
             if(this.getViewMode() === 'table') {
-               parentFunc.call(this, key);
+               parentFunc.call(this, key, hash);
             }
          },
 
@@ -497,6 +493,20 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
          destroy: function(parentFnc) {
             $(window).unbind('resize', this._calculateTileHandler);
             parentFnc.call(this);
+         },
+
+         _onCollectionAddMoveRemove: function(parentFnc) {
+            //TODO в плитке с деревом сложная логика при определении позиций контейнеров, которые необходимо вставлять
+            //а случаи в которых это требуются редкие, но все же есть, вызовем пока что полную перерисовку до внедрения VDOM
+            if (this._options.viewMode == 'table') {
+               //надо убрать первый аргумент parentFnc а остальное прокинуть.
+               //TODO убрать когда будем отказываться от before/after в миксинах
+               var args = Array.prototype.slice.call(arguments, 1);
+               parentFnc.apply(this, args);
+            }
+            else {
+               this.redraw();
+            }
          }
       }
 

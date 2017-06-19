@@ -1,0 +1,76 @@
+<div class="controls-Menu__Popup controls-ImageOptionsPanel  controls-FloatArea">
+   <ws:SBIS3.CONTROLS.Link
+      name="replaceButton"
+      class="controls-ImageOptionsPanel__changeButton"
+      tooltip="Заменить"
+      caption="Заменить"
+      icon="sprite:icon-16 icon-Picture icon-primary"
+   />
+   <ws:SBIS3.CONTROLS.CommandsButton name="commandsButton" class="controls-ImageOptionsPanel__commandsButton" pickerClassName="controls-ImageOptionsPanel__commandsButton__picker">
+      <ws:items>
+         <ws:Array>
+            <ws:Object>
+               <ws:id>
+                  <ws:String>template</ws:String>
+               </ws:id>
+               <ws:icon>
+                  <ws:String>sprite:icon-16 icon-TemplateNews8 icon-primary</ws:String>
+               </ws:icon>
+               <ws:title>
+                  <ws:String>Сменить шаблон</ws:String>
+               </ws:title>
+               <ws:visible>
+                  <ws:Boolean>{{ templates }}</ws:Boolean>
+               </ws:visible>
+            </ws:Object>
+            <ws:Object>
+               <ws:id>
+                  <ws:String>size</ws:String>
+               </ws:id>
+               <ws:icon>
+                  <ws:String>sprite:icon-16 icon-FullScrin icon-primary</ws:String>
+               </ws:icon>
+               <ws:title>
+                  <ws:String>Изменить размер</ws:String>
+               </ws:title>
+            </ws:Object>
+            <ws:Object>
+               <ws:id>
+                  <ws:String>edit</ws:String>
+               </ws:id>
+               <ws:icon>
+                  <ws:String>sprite:icon-16 icon-Edit icon-primary</ws:String>
+               </ws:icon>
+               <ws:title>
+                  <ws:String>Редактировать</ws:String>
+               </ws:title>
+               <ws:visible>
+                  <ws:Boolean>{{ richMode }}</ws:Boolean>
+               </ws:visible>
+            </ws:Object>
+            <ws:Object>
+               <ws:id>
+                  <ws:String>change</ws:String>
+               </ws:id>
+               <ws:icon>
+                  <ws:String>sprite:icon-16 icon-Picture icon-primary</ws:String>
+               </ws:icon>
+               <ws:title>
+                  <ws:String>Заменить</ws:String>
+               </ws:title>
+            </ws:Object>
+            <ws:Object>
+               <ws:id>
+                  <ws:String>delete</ws:String>
+               </ws:id>
+               <ws:icon>
+                  <ws:String>sprite:icon-16 icon-TFDelete icon-error</ws:String>
+               </ws:icon>
+               <ws:title>
+                  <ws:String>Удалить</ws:String>
+               </ws:title>
+            </ws:Object>
+         </ws:Array>
+      </ws:items>
+   </ws:SBIS3.CONTROLS.CommandsButton>
+</div>

@@ -85,7 +85,14 @@ module.exports = function less1by1Task(grunt) {
 
     grunt.registerMultiTask('less1by1', 'Компилит каждую лесску, ложит cssку рядом. Умеет в темы', function() {
 
+        let lessName = grunt.option('name')||'*',
+            foundFile = false;
+
         grunt.log.ok(`\n\n ${humanize.date('H:i:s')} : Запускается задача less1by1.`);
+
+        if (lessName !== '*') {
+            grunt.log.ok(`Ищем файл: ${lessName}.less`);
+        }
         let taskDone = this.async();
           var bar = new ProgressBar('  compiling [:bar] :file', {
             complete: '>',
@@ -95,7 +102,9 @@ module.exports = function less1by1Task(grunt) {
         });
         helpers.recurse(rootPath, function(filepath, cb) {
 
-          if (helpers.validateFile(filepath, [grunt.config.get('changed') || `components/**/*.less`]) || helpers.validateFile(filepath, [grunt.config.get('changed') || 'themes/**/*.less'])) {
+          if (helpers.validateFile(filepath, [grunt.config.get('changed') || `components/**/${lessName}.less`])
+              || helpers.validateFile(filepath, [grunt.config.get('changed') || `themes/**/${lessName}.less`])) {
+                foundFile = true;
                 fs.readFile(filepath, function readFileCb(readFileError, data) {
                   let theme = resolveThemeName(filepath);
                     if (itIsControl(filepath)) {
@@ -115,6 +124,10 @@ module.exports = function less1by1Task(grunt) {
             }
             cb();
         }, function() {
+
+            if(!foundFile) {
+                grunt.log.ok(`Файл не найден!`);
+            }
             grunt.log.ok(`${humanize.date('H:i:s')} : Задача less1by1 выполнена.`);
             errors.forEach((err) => {
                 grunt.log.error(err);

@@ -1,7 +1,9 @@
 define('js!SBIS3.CONTROLS.ComboBox', [
    "Core/constants",
    "Core/Deferred",
-   "js!SBIS3.CONTROLS.TextBox",
+   'js!SBIS3.CORE.LayoutManager',
+   'js!SBIS3.CONTROLS.TextBox',
+   'js!SBIS3.CONTROLS.TextBoxUtils',
    "tmpl!SBIS3.CONTROLS.ComboBox",
    "tmpl!SBIS3.CONTROLS.ComboBox/resources/ComboBoxPicker",
    "js!SBIS3.CONTROLS.PickerMixin",
@@ -17,7 +19,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "tmpl!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate",
    "Core/core-instance",
    'css!SBIS3.CONTROLS.ComboBox'
-], function ( constants, Deferred,TextBox, dotTplFn, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
+], function ( constants, Deferred, LayoutManager, TextBox, TextBoxUtils, dotTplFn, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
    'use strict';
    /**
     * Класс контрола "Комбинированный выпадающий список" с возможностью ввода значения с клавиатуры.
@@ -211,7 +213,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                if (self.isEnabled()) {
                   self.togglePicker();
                   // Что бы не открывалась клавиатура на айпаде при клике на стрелку
-                  if (isArrow) {
+                  if (isArrow || !self.isEditable()) {
                      e.preventDefault();
                   }
                }
@@ -278,7 +280,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _keyboardHover: function (e) {
          var
             selectedKey = this.getSelectedKey(),
-            selectedItem, newSelectedItem, newSelectedItemId;
+            selectedItem, newSelectedItem, newSelectedItemId, newSelectedItemHash;
          if (this._picker) {
             if(!this._picker.isVisible() && e.which === constants.key.esc ){
                return true;
@@ -296,8 +298,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             }
             if (newSelectedItem && newSelectedItem.length) {
                newSelectedItemId = newSelectedItem.data('id');
+               newSelectedItemHash = newSelectedItem.data('hash');
                this.setSelectedKey(newSelectedItemId);
-               this._scrollToItem(newSelectedItemId);
+               this._scrollToItem(newSelectedItemHash);
                this.setActive(true); // После подскролливания возвращаем фокус в контейнер компонента
             }
          }
@@ -520,6 +523,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
       },
 
+      setPlaceholder: function(placeholder) {
+         ComboBox.superclass.setPlaceholder.apply(this, arguments);
+         $('.controls-ComboBox__fieldNotEditable__placeholder', this._container.get(0)).text(placeholder);
+      },
+
       _getItemTemplate: function (projItem) {
          var
             item = projItem.getContents(),
@@ -724,34 +732,28 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       showPicker: function(){
          ComboBox.superclass.showPicker.call(this);
-         this._setWidth();
+         TextBoxUtils.setEqualPickerWidth(this._picker);
          //После отображения пикера подскроливаем до выбранного элемента
-         this._scrollToItem(this.getSelectedKey());
+         var projection = this._getItemsProjection(),
+             item = projection.at(this.getSelectedIndex()),
+             hash = item && item.getHash();
+         
+         if(!hash && projection.getCount() > 0) {
+            hash = projection.at(0).getHash();
+         }
+         this._scrollToItem(hash);
       },
 
       _initializePicker: function(){
          var self = this;
          ComboBox.superclass._initializePicker.call(self);
-
+         this._scrollContainer = this.getChildControlByName('ComboBoxScroll');
          // пробрасываем события пикера в метод комбобокса, т.к. если значение выбрано, то при открытии пикера фокус
          // перейдет на него и комбобокс перестанет реагировать на нажатие клавиш, потому что он наследуется от AreaAbstract
          // TODO чтобы избежать этого нужно переписать Combobox на ItemsControlMixin, тогда метод _scrollToItem не будет переводить фокус на пикер
          self._picker.subscribe('onKeyPressed', function (eventObject, event) {
             self._keyboardHover(event);
          });
-
-         self._setWidth();
-      },
-
-      _setWidth: function(){
-         var self = this,
-             target = self._picker.getTarget();
-         if (target){
-            //Борьба с полупикселями, устанавливаю ровно ту ширину, которая отрисовалась в таргете
-            this._picker.getContainer().css({
-               'min-width': target[0].getBoundingClientRect().width
-            });
-         }
       },
 
       //TODO заглушка
@@ -783,12 +785,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          ComboBox.superclass.setSelectedKey.apply(this, arguments);
       },
 
-      _scrollToItem: function(itemId) {
-         var itemContainer  = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
+      _scrollToItem: function(itemHash) {
+         var itemContainer  = $('.controls-ListView__item[data-hash="' + itemHash + '"]', this._getItemsContainer());
          if (itemContainer.length) {
-            itemContainer
-               .attr('tabindex', -1)
-               .focus();
+            LayoutManager.scrollToElement(itemContainer, true);
+            //Устанавливаю скроллбар в нужную позицию
+            this._scrollContainer._initScrollbar();
+            this._scrollContainer._scrollbar.setPosition(itemContainer.position().top);
          }
       }
    });

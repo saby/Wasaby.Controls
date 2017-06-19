@@ -12,7 +12,7 @@
       </div>
    </div>
    <div class="controls-ListView__virtualScrollTop"></div>
-   <table class="controls-DataGridView__table {{?it.stickyHeader && (it.showHead || (it.hasResults && it.resultsPosition === 'top'))}}ws-sticky-header__table{{?}}">
+   <table class="controls-DataGridView__table {{?it.stickyHeader && (it.showHead || it.groupBy || (it.hasResults && it.resultsPosition === 'top'))}}ws-sticky-header__table{{?}}{{?it.stickyHeader && it.groupBy}} ws-sticky-header__table-with-sticky-rows{{?}}">
       {{=it._colGroupTpl(it._colgroupData)}}
       {{=it.headTpl(it._headData)}}
       <tbody class="controls-DataGridView__tbody">

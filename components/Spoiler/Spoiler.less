@@ -17,25 +17,13 @@
       .user-select();
       .controls-Spoiler__title-caption { //middle
          overflow: hidden;
+         display: inline-block;
+         max-width: ~'calc(100% - 24px)';
          .controls-Spoiler__title-caption-text {
             padding-top: 6px;
             float: left;
             color: @controls-Spoiler-title-text-color;
             white-space: nowrap;
-         }
-         .controls-Spoiler__title-caption-blur { //blur
-            position: relative;
-            float: right;
-            &:before {
-               background: linear-gradient(to right, rgba(255,255,255,0), rgba(255,255,255,1));
-               height: 30px;
-               width: 30px;
-               content: ' ';
-               display: block;
-               position: absolute;
-               top: -30px;
-               right: 0;
-            }
          }
       }
    }

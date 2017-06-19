@@ -48,7 +48,7 @@
        }
        .controls-ComboBox__arrowDown {
          display: inline-block;
-         line-height: 1!important;
+         line-height: @combo-box-arrow-line-height!important;
          overflow: hidden;
          width: @combo-box-arrow-width;
          height: @combo-box-arrow-height;
@@ -138,15 +138,17 @@
    }
 }
 
-.controls-ComboBox__picker {
+.controls-ComboBox__picker.controls-FloatArea {
    overflow-y: hidden!important;/*Перебиваем inline стили пикера*/
+   border: @combo-box-picker-border;
+   box-sizing: border-box;
    .controls-ComboBox__body {
-     border: @combo-box-picker-border;
      height: calc(~"100% - 10px"); /* отступ от края экрана*/
      .border-radius(@combo-box-picker-border-radius);
      .controls-ComboBox__list {
         .flexbox();
         .flex-direction(column);
+        position: relative; //Для того, чтобы можно было высчитать scrollTop итема
      }
    }
    .controls-ComboBox__scrollContainer{
@@ -170,6 +172,7 @@
       }
    }
    &.controls-popup-revert-vertical {
+      margin-top: @text-box-border-width + 1!important;
       .controls-ComboBox__body{
          .controls-ComboBox__list {
             .flex-direction(column-reverse);

@@ -6,12 +6,17 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     app = express();
 
+
+//Run testing server
+require('./test-server');
+
 app.use(bodyParser.json());
 app.use(express.static(path.resolve(__dirname)));
 
-app.listen(process.env.PORT || 666);
+var port = process.env.PORT || 666;
+app.listen(port);
 
-console.log('app available on port 666');
+console.log('app available on port ' + port);
 console.log('collecting deps...');
 
 var collectDeps = spawn('node', ['depencyCollector']);

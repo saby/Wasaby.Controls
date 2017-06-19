@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [
        * Инициализирует drag-n-Drop
        */
       initializeDragAndDrop: function() {
-         this._dragContainers = this._getDragContainer();
+         this._dragContainers = this._getDragAndDropContainer();
 
          /* Выключим браузерный drag-n-drop для каждого элемента*/
          this._toggleNativeDragNDrop(false);
@@ -133,7 +133,7 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [
          this._startPosition.y = e.pageY - position.top + parseInt(style.marginTop);
       },
 
-      _getDragContainer: function() {
+      _getDragAndDropContainer: function() {
          throw new Error('Method _getDragContainer() must be implemented');
       },
       _getWithinElem: function() {

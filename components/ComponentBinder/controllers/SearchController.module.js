@@ -22,7 +22,8 @@ define('js!SBIS3.CONTROLS.SearchController',
             breadCrumbs: null,
             backButton: null,
             keyboardLayoutRevert: true,
-            hierarchyViewMode: true
+            hierarchyViewMode: true,
+            keyboardLayoutRevertNew: false
          },
          _kbLayoutRevertObserver: null,
          _firstSearch: true,
@@ -153,8 +154,6 @@ define('js!SBIS3.CONTROLS.SearchController',
             filter = view.getFilter();
 
          delete(filter[this._options.searchParamName]);
-         view.setHighlightText('', false);
-         view.setHighlightEnabled(false);
          view.reload(filter, view.getSorting(), 0);
       },
 
@@ -193,8 +192,6 @@ define('js!SBIS3.CONTROLS.SearchController',
          }
          view.setInfiniteScroll(this._isInfiniteScroll, true);
          this._isInfiniteScroll = undefined;
-         view.setHighlightText('', false);
-         view.setHighlightEnabled(false);
          this._firstSearch = true;
          if (this._searchReload) {
             //Нужно поменять фильтр и загрузить нужный корень.
@@ -234,7 +231,8 @@ define('js!SBIS3.CONTROLS.SearchController',
             this._kbLayoutRevertObserver = new KbLayoutRevertObserver({
                textBox: searchForm,
                view: view,
-               param: this._options.searchParamName
+               param: this._options.searchParamName,
+               newStandart: self._options.keyboardLayoutRevertNew
             })
          }
          else {
@@ -269,7 +267,9 @@ define('js!SBIS3.CONTROLS.SearchController',
          }
 
          this._subscribeOnSearchFormEvents();
-         searchForm.applySearch(false);
+         if(searchForm.getText()) {
+            searchForm.applySearch(false);
+         }
       },
 
       _subscribeOnSearchFormEvents: function() {
@@ -277,9 +277,15 @@ define('js!SBIS3.CONTROLS.SearchController',
             view = this._options.view,
             self = this,
             isTree = cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin');
+         
+         searchForm.subscribe('onReset', function() {
+            view.setHighlightText('', false);
+            view.setHighlightEnabled(false);
+            self._kbLayoutRevertObserver.stopObserve();
+         });
+   
          if (!this._options.doNotRespondOnReset) {
-            searchForm.subscribe('onReset', function(event, text) {
-               self._kbLayoutRevertObserver.stopObserve();
+            searchForm.subscribe('onReset', function() {
                if (isTree) {
                   self._resetGroup();
                } else {

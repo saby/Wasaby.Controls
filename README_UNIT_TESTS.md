@@ -4,14 +4,12 @@
 
    2) собрать зависимости:                node depencyCollector
 
-   3) собрать список тестов:              node tests/unit/list.build.js
+   4) поднять тестовый стенд:             node app
 
-   4) поднять тестовый стенд:             node app.js
-
-   5) перейти по адресу  http://localhost:666/tests/unit/browser.html
+   5) перейти по адресу  http://localhost:1025/
 
 Поздравляю!!! Вы великолепны.
 
 
-Свои тесты необходимо помещать в tests\unit\tests\ в файл *.test.js
+Свои тесты необходимо помещать в tests\unit\ в файл *.test.js
 Примеры тестов можно посмотреть в этом же каталоге

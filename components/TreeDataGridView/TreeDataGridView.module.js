@@ -5,12 +5,12 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'Core/CommandDispatcher',
    'Core/helpers/dom&controls-helpers',
    "js!SBIS3.CONTROLS.DataGridView",
-   "html!SBIS3.CONTROLS.TreeDataGridView",
+   "tmpl!SBIS3.CONTROLS.TreeDataGridView",
    "js!SBIS3.CONTROLS.TreeMixin",
    "js!SBIS3.CONTROLS.TreeViewMixin",
    "js!SBIS3.CONTROLS.IconButton",
-   "html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate",
-   "html!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate",
+   "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/ItemTemplate",
+   "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/ItemContentTemplate",
    "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/FooterWrapperTemplate",
    "tmpl!SBIS3.CONTROLS.TreeDataGridView/resources/searchRender",
    'js!SBIS3.CONTROLS.MassSelectionHierarchyController',
@@ -33,10 +33,13 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          cMerge(tplOptions, tvOptions);
          tplOptions.arrowActivatedHandler = cfg.arrowActivatedHandler;
          tplOptions.editArrow = cfg.editArrow;
+         tplOptions.hasScroll = tplOptions.startScrollColumn !== undefined;
          tplOptions.foldersColspan = cfg.foldersColspan;
+         tplOptions.getItemContentTplData = getItemContentTplData;
          tplOptions.cellData.isSearch = tvOptions.isSearch;
          return tplOptions;
       },
+
       getSearchCfg = function(cfg) {
          return {
             idProperty: cfg.idProperty,
@@ -59,6 +62,34 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          //Отключаем отрисовку футеров на сервере, потому что пока что нет возможности построить treePaging,
          //т.к. в момент отрисовки нет информации, есть ли ещё записи в открытой папке.
          return false;
+      },
+      getItemTemplateData = function (cfg) {
+         var config = {
+            nodePropertyValue: cfg.item.get(cfg.nodeProperty),
+            projection: cfg.projItem.getOwner()
+         };
+         config.children = cfg.hierarchy.getChildren(cfg.item, config.projection.getCollection());
+         config.isLoaded = cfg.projItem.isLoaded();
+         config.hasLoadedChild = config.children.length > 0;
+         config.classIsLoaded = config.isLoaded ? ' controls-ListView__item-loaded' : '';
+         config.classHasLoadedChild = config.hasLoadedChild ? ' controls-ListView__item-with-child' : ' controls-ListView__item-without-child';
+         config.classNodeType = ' controls-ListView__item-type-' + (config.nodePropertyValue == null ? 'leaf' : config.nodePropertyValue == true ? 'node' : 'hidden');
+         config.classNodeState = config.nodePropertyValue !== null ? (' controls-TreeView__item-' + (cfg.projItem.isExpanded() ? 'expanded' : 'collapsed')) : '';
+         config.classIsSelected = (cfg.selectedKey == cfg.item.getId()) ? ' controls-ListView__item__selected' : '';
+         config.isColumnScrolling = cfg.startScrollColumn !== undefined;
+         config.columnsShift = cfg.columnsShift;
+         config.addClasses = 'controls-DataGridView__tr controls-ListView__item js-controls-ListView__item ' + (cfg.className ? cfg.className : '') + config.classNodeType + config.classNodeState + config.classIsLoaded + config.classHasLoadedChild + config.classIsSelected;
+
+         return config;
+      },
+      getItemContentTplData = function(cfg){
+         var data = {};
+         data.hierField$ = cfg.projItem.getContents().get(cfg.parentProperty + '$');
+         data.hasScroll = cfg.startScrollColumn !== undefined;
+         data.itemLevel = cfg.projItem.getLevel() - 1;
+         data.isNode = cfg.projItem.getContents().get(cfg.nodeProperty);
+         data.hasChilds = cfg.hierarchy.getChildren(cfg.item, cfg.projItem.getOwner().getCollection()).length > 0;
+         return data;
       };
 
    'use strict';
@@ -72,6 +103,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * @mixes SBIS3.CONTROLS.TreeViewMixin
     *
     * @cssModifier controls-TreeDataGridView__hideExpandsOnHiddenNodes Скрывает треугольник рядом с записью типа "Скрытый узел" (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>). Для контрола SBIS3.CONTROLS.TreeCompositeView модификатор актуален только для режима отображения "Таблица" (см. {@link SBIS3.CONTROLS.CompositeViewMixin#viewMode viewMode}=table).
+    * @cssModifier controls-TreeDataGridView__withPhoto-S Устанавливает отступы с учетом расположения в верстке изображения, размера S.
+    * @cssModifier controls-TreeDataGridView__withPhoto-M Устанавливает отступы с учетом расположения в верстке изображения, размера M.
+    * @cssModifier controls-TreeDataGridView__withPhoto-L Устанавливает отступы с учетом расположения в верстке изображения, размера L.
+    * @cssModifier controls-TreeView__withoutLevelPadding Устанавливает режим отображения дерева без иерархических отступов.
+    * @cssModifier controls-TreeView__hideExpands Устанавливает режим отображения дерева без иконок сворачивания/разворачивания узлов.
     *
     * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView Пример 1. Простое иерархическое представление данных в режиме множественного выбора записей.
     * @demo SBIS3.CONTROLS.DOCS.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
@@ -101,29 +137,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
    var TreeDataGridView = DataGridView.extend([TreeMixin, TreeViewMixin], /** @lends SBIS3.CONTROLS.TreeDataGridView.prototype*/ {
       _dotTplFn : dotTplFn,
-       /**
-        * @event onDragMove Происходит при перемещении записей.
-        * @remark
-        * <ul>
-        *   <li>В режиме единичного выбора значения (опция {@link multiselect} установлена в значение false) возможно перемещать только одну запись.</li>
-        *   <li>В режиме множественного выбора значений (опция {@link multiselect} установлена в значение true) возможно перемещать несколько записей.</li>
-        * </ul>
-        * Перемещение производится через удержание ЛКМ на выделенных записях и перемещение их в нужный элемент списка.
-        * Событие будет происходить каждый раз, когда под курсором изменяется целевая запись списка, а удержание выделенных записей продолжается.
-        * @param {Core/EventObject} eventObject Дескриптор события.
-        * @param {Array.<Number|String>} key Массив идентификаторов перемещаемых записей.
-        * <ul>
-        *   <li>В режиме единичного выбора параметр возвращает либо строку, либо число.</li>
-        *   <li>В режиме множественного выбора параметр возвращает массив строки или чисел.</li>
-        * </ul>
-        * @param {Number|String} id Идентификатор целевой записи, куда производится перемещение.
-        * @param {Boolean|undefined} insertAfter Признак: куда были перемещены записи.
-        * <ul>
-        *   <li>undefined - перемещение произвели в папку;</li>
-        *   <li>false - перемещаемые записи были вставлены перед целевой записью;</li>
-        *   <li>true - перемещаемые записи были вставлены после целевой записи.</li>
-        * </ul>
-        */
       $protected: {
          _options: {
             _buildTplArgs: buildTplArgsTDG,
@@ -132,6 +145,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             _defaultItemTemplate: ItemTemplate,
             _defaultItemContentTemplate: ItemContentTemplate,
             _defaultSearchRender: searchRender,
+            _getItemTemplateData: getItemTemplateData,
             _footerWrapperTemplate: FooterWrapperTemplate,
             _getFolderFooterOptions: getFolderFooterOptions,
             _getSearchCfg: getSearchCfg,
@@ -259,8 +273,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             hasCheckbox = container.hasClass('controls-ListView__multiselect'),
             checkboxOffset = this._options.editingTemplate && hasCheckbox && !container.hasClass('controls-ListView__hideCheckBoxes') ? DEFAULT_SELECT_CHECKBOX_WIDTH : 0,
             // Считаем необходимый отступ слева-направо:
-            // отступ чекбокса + отступ строки + отступ иерархии (в режиме поиска 0) + ширина стрелки разворота
-            result = checkboxOffset + this._getRowPadding(target) + levelOffset + DEFAULT_EXPAND_ELEMENT_WIDTH;
+            // отступ чекбокса + отступ строки + отступ иерархии (в режиме поиска 0) + ширина стрелки разворота.
+            // Так же в режиме поиска не нужно учитывать DEFAULT_EXPAND_ELEMENT_WIDTH, т.к. expand { display: none; }
+            result = checkboxOffset + this._getRowPadding(target) + levelOffset + (this._isSearchMode() ? 0 : DEFAULT_EXPAND_ELEMENT_WIDTH);
          // Если не задан шаблон редактирования строки и отображаются чекбоксы - компенсируем разницу оступов в полях ввода и ячеек таблицы (в полях ввода 5px, в таблице - 6px)
          if (!this._options.editingTemplate && hasCheckbox) {
             result += DEFAULT_CELL_PADDING_DIFFERENCE;
@@ -301,11 +316,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          return parentResult;
       },
 
-      collapseNode: function (key) {
+      collapseNode: function (key, hash) {
          return TreeDataGridView.superclass.collapseNode.apply(this, arguments);
       },
 
-      expandNode: function (key) {
+      expandNode: function (key, hash) {
          return TreeDataGridView.superclass.expandNode.apply(this, arguments);
       },
 
@@ -319,6 +334,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             this._editArrow = new IconButton({
                element: this._container.find('> .controls-TreeView__editArrow-container'),
                icon: 'icon-16 icon-View icon-primary action-hover icon-size',
+               cssClassName: 'ws-hidden',
                parent: this,
                allowChangeEnable: false,
                handlers: {
@@ -355,7 +371,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if(arrowContainer.length === 2) {
             /* Считаем, чтобы правая координата названия папки не выходила за ячейку,
                учитываем возможные отступы иерархии и ширину expander'a*/
-            if ( td[0].getBoundingClientRect().right - parseInt(td.css('padding-right'), 10) < folderTitle[0].getBoundingClientRect().right + this._getLevelPaddingWidth(hoveredItem.container)) {
+            if ( td[0].getBoundingClientRect().right - parseInt(td.css('padding-right'), 10) < folderTitle[0].getBoundingClientRect().right) {
                arrowContainer = arrowContainer[1];
             } else {
                arrowContainer = arrowContainer[0];
@@ -462,7 +478,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          container.attr('data-parent', parentKey);
 
          if (this._options.openedPath[key]) {
-            var hierarchy = this._getHierarchyRelation(),
+            var hierarchy = this._options._getHierarchyRelation(this._options),
                children = hierarchy.getChildren(key, this.getItems());
 
             if (children.length) {
@@ -497,7 +513,14 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
          /* При клике по треугольнику надо просто раскрыть ветку */
          if (closestExpand.hasClass('js-controls-TreeView__expand')) {
-            this.toggleNode(id);
+            if (this._options.loadItemsStrategy == 'append') {
+               var tr = this._findItemByElement($(target));
+               var hash = tr.attr('data-hash');
+               this.toggleNode(id, hash);
+            }
+            else {
+               this.toggleNode(id);
+            }
             return;
          }
 

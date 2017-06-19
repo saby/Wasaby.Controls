@@ -280,7 +280,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                self = this;
             if (!this._stylesPanel) {
                this._stylesPanel = new StylesPanel({
-                  parent: button,
+                  parent: self.getLinkedEditor(), // при закрытии панеи необходимо чтобы фокус оставался в редакторе
                   target: button.getContainer(),
                   corner: 'tl',
                   verticalAlign: {
@@ -312,10 +312,10 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
 
          _applyFormats: function(formats){
             if (this._options.linkedEditor) {
-               ['title',  'subTitle','additionalText'].forEach(function(stl){
+               ['title', 'subTitle', 'additionalText', 'forecolor'].forEach(function(stl){
                   this._options.linkedEditor._removeFormat(stl);
                }, this);
-               this._options.linkedEditor.setFontColor(formats.color);
+               //необходимо сначала ставить размер шрифта, тк это сбивает каретку
                this._options.linkedEditor.setFontSize(formats.fontsize);
                for ( var button in this._buttons) {
                   if (this._buttons.hasOwnProperty(button)) {
@@ -323,6 +323,9 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                         this._options.linkedEditor.execCommand(button);
                      }
                   }
+               }
+               if (formats.color !== 'black') {
+                  this._options.linkedEditor.setFontColor(formats.color);
                }
             }
          },

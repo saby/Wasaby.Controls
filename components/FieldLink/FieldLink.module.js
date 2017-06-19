@@ -76,8 +76,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
        'use strict';
 
-       var SHOW_ALL_LINK_WIDTH = 22;
-
        var classes = {
           MULTISELECT: 'controls-FieldLink__multiselect',
           SELECTED: 'controls-FieldLink__selected',
@@ -92,6 +90,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 keys = [keys];
              }
              return keys;
+          },
+          
+          isSimplePlaceholder: function(placeholder) {
+             return typeof placeholder === 'string' && placeholder.indexOf('SBIS3.CONTROLS.FieldLink.Link') === -1;
           }
        };
 
@@ -112,7 +114,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
         *       <b>Через автодополнение.</b>
         *       Автодополнение - это функционал отображения возможных результатов поиска по введенным символам. По умолчанию для поля связи автодополнение отключено.
         *       Чтобы при печати в поле ввода отображались релевантные для выбора значения, нужно для поля связи установить конфигурацию автодополнения в опциях {@link list}, {@link listFilter} и {@link text}.
-        *       Чтобы установить временную задержку перед началом поиска релевантного значения, используют опцию {@link delay}.
         *       Чтобы отображать полный список значений автодополнения при переходе фокуса на контрол, используют опцию {@link autoShow}.
         *       Демонстрацию работы автодополнения с полем связи вы можете найти в блоке интерактивных примеров в описании к классу.
         *    </li>
@@ -157,10 +158,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
         * @cssModifier controls-FieldLink__hideSelector Скрывает отображение (устанавливает CSS-свойство "display:none") кнопки, с помощью которой производят открытие справочников.
         * @cssModifier controls-FieldLink__hiddenIfEmpty Скрывает отображение (устанавливает CSS-свойство "display:none") контрола "Поле связи", если выполнены два условия: опция {@link enabled}=false и отсутствуют выбранные записи.
         *
-        * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect
+        * @ignoreOptions tooltip alwaysShowExtendedTooltip loadingContainer observableControls pageSize usePicker filter saveFocusOnSelect selectedIndex
         * @ignoreOptions allowEmptySelection allowEmptyMultiSelection templateBinding includedTemplates resultBindings footerTpl emptyHTML groupBy
         * @ignoreMethods getTooltip setTooltip getExtendedTooltip setExtendedTooltip setEmptyHTML setGroupBy itemTpl
-        * @ignoreEvents onListItemSelect onDataLoad onDataLoadError onBeforeDataLoad onDrawItems
+        * @ignoreEvents onListItemSelect onDataLoad onDataLoadError onBeforeDataLoad onDrawItems onFilterBuild onItemsReady
         *
         * @control
         * @public
@@ -440,7 +441,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           _useNativePlaceHolder: function(text) {
              /* Если в placeholder положили компонент-ссылку, открывающую справочник,
                 то будем использовать не нативный placeholder */
-             return (text || this.getProperty('placeholder')).indexOf('SBIS3.CONTROLS.FieldLink.Link') === -1;
+             return _private.isSimplePlaceholder(text || this.getProperty('placeholder'));
           },
 
           _setPlaceholder: function() {
@@ -630,7 +631,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           setMultiselect: function(multiselect) {
              FieldLink.superclass.setMultiselect.apply(this, arguments);
-             this.getContainer().toggleClass(classes.MULTISELECT, !!multiselect)
+             this.getContainer()
+                .toggleClass(classes.MULTISELECT, Boolean(multiselect))
+                .toggleClass(classes.INPUT_MIN_WIDTH, Boolean(multiselect || this._options.alwaysShowTextBox));
           },
 
           // FIXME костыль, выписана задача:
@@ -756,7 +759,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
 
              /* Чтобы вёрстка сразу строилась с корректным placeholder'ом, в случае, если там лежит ссылка */
-             cfg._useNativePlaceholder = cfg.placeholder.indexOf('SBIS3.CONTROLS.FieldLink.Link') === -1;
+             cfg._useNativePlaceholder = _private.isSimplePlaceholder(cfg.placeholder);
              
              /* className вешаем через modifyOptions,
                 так меньше работы с DOM'ом */
@@ -779,7 +782,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  toAdd = [],
                  isEnabled = this.isEnabled(),
                  needResizeInput = this._isInputVisible() || this._options.alwaysShowTextBox,
-                 availableWidth, items, additionalWidth, itemWidth, itemsCount, item;
+                 availableWidth, items, additionalWidth, itemWidth, itemsCount, item, showAllLinkWidth;
 
              if(!linkCollection.isPickerVisible()) {
                 if (!this._isEmptySelection()) {
@@ -797,10 +800,14 @@ define('js!SBIS3.CONTROLS.FieldLink',
                       /* Для multiselect'a и включённой опции alwaysShowTextBox
                        добавляем минимальную ширину поля ввода (т.к. оно не скрывается при выборе */
                       if (this._options.multiselect || this._options.alwaysShowTextBox) {
+                         /* Необходмо показать кнопку заранее для правильных замеров. */
+                         this._toggleShowAll(true);
+                         //FireFox почему то иногда неверно считает ширину кнопки '...', выписана задача
+                         showAllLinkWidth = this._getShowAllButton().outerWidth() + (constants.browser.firefox ? 2 : 0);
                          /* Если поле звязи задизейблено, то учитываем ширину кнопки отображения всех запией */
                          additionalWidth += parseInt(this.isEnabled() ?
-                                  this._getInputMinWidth() + (itemsCount > 1 ? SHOW_ALL_LINK_WIDTH : 0) :
-                                  SHOW_ALL_LINK_WIDTH);
+                                  this._getInputMinWidth() + (itemsCount > 1 ? showAllLinkWidth : 0) :
+                                  showAllLinkWidth);
                       }
 
                       /* Высчитываем ширину, доступную для элементов */
@@ -1073,13 +1080,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
           _setPickerConfig: function () {
              return {
                 corner: 'bl',
-                target: this._container,
-                opener: this,
-                parent: this,
                 closeOnTargetMove: !constants.browser.isMobileIOS,
                 closeByExternalClick: true,
                 targetPart: true,
-                cssClassName: 'controls-FieldLink__picker',
                 _canScroll: true,
                 verticalAlign: {
                    side: 'top'
@@ -1097,16 +1100,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              if(!this._options.reverseItemsOnListRevert) {
                 return;
              }
-
-             if (this._isSuggestPickerRevertedVertical()) {
-                if (!this._listReversed) {
-                   this._reverseList();
-                }
-             } else {
-                if (this._listReversed) {
-                   this._reverseList();
-                }
-             }
+             this._reverseList(this._isSuggestPickerRevertedVertical());
           },
 
           _isSuggestPickerRevertedVertical: function() {
@@ -1118,8 +1112,20 @@ define('js!SBIS3.CONTROLS.FieldLink',
              поэтому при перевороте проскролим вниз автодополнение */
           _scrollListToBottom: function() {
              if(this._picker && this._isSuggestPickerRevertedVertical()) {
-                var pickerContainer = this._picker.getContainer();
+                var pickerContainer = this._picker.getContainer(),
+                    list = this.getList(),
+                    newIndex;
+                
                 pickerContainer[0].scrollTop = pickerContainer[0].scrollHeight;
+                
+                /* При подскроле вниз всегда устанавливаем маркер на последнюю запись */
+                if(cInstance.instanceOfMixin(list, 'SBIS3.CONTROLS.Selectable')) {
+                   newIndex = list.getItems().getCount() - 1;
+                   
+                   if(newIndex !== list.getSelectedIndex()) {
+                      list.setSelectedIndex(newIndex);
+                   }
+                }
              }
           },
           /* После перерисовки списка автодополнения, пикер может менять своё положение,
@@ -1176,15 +1182,22 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           _toggleShowAll: function(show) {
              if(this._options.multiselect) {
-                this.getContainer().find('.controls-FieldLink__showAllLinks').toggleClass(classes.HIDDEN, !show);
+                this._getShowAllButton().toggleClass(classes.HIDDEN, !show);
              }
           },
+          
+          _getShowAllButton: fHelpers.memoize(function () {
+             return this.getContainer().find('.controls-FieldLink__showAllLinks');
+          }, '_showAllButton'),
 
           /* Заглушка, само поле связи не занимается отрисовкой */
-          redraw: fHelpers.nop,
-          /* Заглушка, само поле связи не занимается загрузкой списка */
-          reload: fHelpers.nop,
+          redraw: function () {
 
+          },
+          /* Заглушка, само поле связи не занимается загрузкой списка */
+          reload: function () {
+
+          },
 
           destroy: function() {
              if(this._linkCollection) {

@@ -1,4 +1,4 @@
-<div class="controls-ListView{{ multiselect !== false ? ' controls-ListView__multiselect' : ' controls-ListView__multiselect__off'}}{{ _serverRender ? ' controls-ListView__dataLoaded'}}">
+<div class="controls-ListView {{multiselect !== false ? 'controls-ListView__multiselect' : 'controls-ListView__multiselect__off'}}{{ _serverRender ? ' controls-ListView__dataLoaded'}}">
     <div class="controls-ListView__fakeFocusElement" tabindex="-1"></div>
     <div class="controls-AjaxLoader ws-hidden">
         <div class="controls-AjaxLoader__outer">
@@ -19,7 +19,9 @@
     <ws:if data="{{ _serverRender && _resultsRecord && resultsPosition == 'bottom' && resultsTpl}}">
        <ws:partial template="{{resultsTpl}}" item="{{_resultsRecord}}" multiselect="{{multiselect}}" />
     </ws:if>
-    <div class="controls-ListView__EmptyData {{(!_serverRender || _records.length || !emptyHTML) ? 'ws-hidden'}}">{{emptyHTML|sanitize}}</div>
+    <div class="controls-ListView__EmptyData {{(!_serverRender || _records.length || !emptyHTML) ? 'ws-hidden'}}">
+        <ws:partial template="{{ emptyHTML }}"/>
+    </div>
     <ws:if data="{{ footerTpl }}">
         <div class="controls-ListView__footer">
             <ws:partial template="{{footerTpl}}" scope="{{...}}" />
@@ -30,14 +32,11 @@
     </ws:if>
     <ws:if data="{{ infiniteScroll == 'demand'}}">
        <div class="controls-ListView__serviceFooter">
-         <component data-component="SBIS3.CONTROLS.Link" name="loadMoreButton" class="controls-ListView__loadMoreButton">
-            <option name="caption">Еще...</option>
-            <option name="visible" type="boolean">false</option>
-         </component>
+         <ws:SBIS3.CONTROLS.Link name="loadMoreButton" class="controls-ListView__loadMoreButton" caption="Еще..." visible="false" />
        </div>
     </ws:if>
-    <div class="controls-ListView-scrollIndicator ws-hidden{{ infiniteScroll === 'up' ? ' controls-ListView-scrollIndicator__up'}}"></div>
+    <div class="controls-ListView-scrollIndicator ws-hidden {{infiniteScroll === 'up' ? 'controls-ListView-scrollIndicator__up' : ''}}"></div>
     <div class="controls-ListView__ItemsToolbar-container ws-hidden"></div>
     <div class="controls-ListView__virtualScrollBottom"></div>
-    <div class="controls-ListView__scrollPager{{ !infiniteScroll ? ' ws-hidden'}}"></div>
+    <div class="controls-ListView__scrollPager {{!infiniteScroll ? ' ws-hidden' : ''}}"></div>
 </div>

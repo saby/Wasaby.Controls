@@ -30,7 +30,9 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
                 this.sendCommand('close', meta);
              }
              
-             cfg.multiselect = metaConfig.multiselect;
+             if(metaConfig.hasOwnProperty('multiselect')) {
+                cfg.multiselect = metaConfig.multiselect;
+             }
              
              if(metaConfig.selectedItems) {
                 cfg.selectedItems = metaConfig.selectedItems.clone();
@@ -61,7 +63,7 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
                  initializingDeferred;
 
              function initializeComplete(items) {
-                var componentContext = config.context || new Context().setPrevious(Context.global);
+                var componentContext = config.context || Context.createContext(self, null, Context.global);
                 if(items) {
                    componentContext.setValue('items', items);
                    config.context = componentContext;
@@ -71,7 +73,7 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
 
              function errorProcess(err) {
                 OpenDialogUtil.errorProcess(err);
-;             }
+             }
 
              Indicator.setMessage('Загрузка...', true);
              require([config.template], function(component) {

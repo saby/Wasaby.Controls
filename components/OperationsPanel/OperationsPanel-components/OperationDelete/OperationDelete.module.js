@@ -15,24 +15,13 @@ define('js!SBIS3.CONTROLS.OperationDelete', [
     */
    var OperationDelete = IconButton.extend(/** @lends SBIS3.CONTROLS.OperationDelete.prototype */{
 
-      $protected: {
-         _options: {
-             /**
-              * @noShow
-              */
-            linkedView: undefined,
-             /**
-              * @cfg {String} Иконка кнопки удаления
-              * @editor icon ImageEditor
-              */
-            icon: 'sprite:icon-24 icon-Erase icon-error',
-            caption: rk('Удалить')
-         }
+      constructor: function(cfg) {
+         cfg.caption = cfg.caption || rk('Удалить');
+         cfg.icon = cfg.icon || 'sprite:icon-24 icon-Erase icon-error';
+         OperationDelete.superclass.constructor.call(this, cfg);
       },
 
-      $constructor: function() {
-      },
-      _clickHandler: function() {
+      _onClick: function() {
          var view = this._options.linkedView,
             selectedKeys = view.getSelectedKeys(),
             keys = selectedKeys.length ? selectedKeys : this._getAllKeys();

@@ -4,9 +4,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
    "Core/Deferred",
    "js!SBIS3.CONTROLS.PickerMixin",
    "Core/helpers/collection-helpers",
-   "Core/core-instance",
-   "Core/helpers/functional-helpers"
-], function ( cFunctions, cMerge, Deferred,PickerMixin, colHelpers, cInstance, fHelpers) {
+   "Core/core-instance"
+], function ( cFunctions, cMerge, Deferred,PickerMixin, colHelpers, cInstance) {
    'use strict';
 
 
@@ -619,37 +618,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * Вызывается после загрузки данных контролом списка сущностей
        * @private
        */
-      _onListDataLoad: function(e, dataSet) {
-         var list = this.getList();
-
+      _onListDataLoad: function() {
          this._hideLoadingIndicator();
-         this._listReversed = false;
-
-         if(list.hasChildControlByName('showAllButton')) {
-            var items = dataSet || list.getItems(),
-                button = list.getChildControlByName('showAllButton'),
-                showButton;
-
-            /* Изменяем видимость кнопки в зависимости от:
-             1) Записей не найдено вовсе - показываем (по стандарту).
-             2) Записи найдены, но есть ещё. */
-            if(!items || !items.getCount()) {
-               showButton = true;
-            } else {
-               showButton = list._hasNextPage(items.getMetaData().more);
-            }
-
-            if(showButton) {
-               /* Чтобы не подписываться лишний раз */
-               if(Array.indexOf(button.getEventHandlers('onActivated'), this._showAllButtonHandler) === -1) {
-                  this.subscribeTo(button, 'onActivated', this._showAllButtonHandler);
-               }
-               button.show();
-            } else {
-               this.unsubscribeFrom(button, 'onActivated', this._showAllButtonHandler);
-               button.hide();
-            }
-         }
       },
 
       _showAllButtonHandler: function() {
@@ -672,6 +642,32 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        */
       _onListDrawItems: function () {
          if (this._picker) {
+            var list = this.getList();
+            if(list.hasChildControlByName('showAllButton')) {
+               var items = list.getItems(),
+                  button = list.getChildControlByName('showAllButton'),
+                  showButton;
+      
+               /* Изменяем видимость кнопки в зависимости от:
+                1) Записей не найдено вовсе - показываем (по стандарту).
+                2) Записи найдены, но есть ещё. */
+               if(!items || !items.getCount()) {
+                  showButton = true;
+               } else {
+                  showButton = list._hasNextPage(items.getMetaData().more);
+               }
+      
+               if(showButton) {
+                  /* Чтобы не подписываться лишний раз */
+                  if(Array.indexOf(button.getEventHandlers('onActivated'), this._showAllButtonHandler) === -1) {
+                     this.subscribeTo(button, 'onActivated', this._showAllButtonHandler);
+                  }
+                  button.show();
+               } else {
+                  this.unsubscribeFrom(button, 'onActivated', this._showAllButtonHandler);
+                  button.hide();
+               }
+            }
             this._picker.getContainer().height('auto');
             this._picker.recalcPosition(true, true);
          }
@@ -754,7 +750,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
       _setPickerContent: function () {
          /* Заглушка, picker автодополнения не должен вызывать расчёты авторазмеров, т.к. создаётся абсолютом в body */
-         this._picker._notifyOnSizeChanged = fHelpers.nop;
+         this._picker._notifyOnSizeChanged = function() {};
       },
 
       showPicker: function () {
@@ -766,21 +762,25 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          }
       },
 
-      _reverseList: function() {
-         var items = this._getListItems(),
-             itemsArray = [];
+      _reverseList: function(reverse) {
+         if(this._listReversed === reverse) {
+            return;
+         }
+         
+         var list = this._list;
+         this._listReversed = reverse;
 
-         if(items) {
-            items.each(function (rec) {
-               itemsArray.push(rec);
-            });
-
-            this._listReversed = !this._listReversed;
-            /* Сбрасываем выбранную запись в списке, чтобы после перерисовки курсор установился на первую запись
-             и после переворота был на последней.
-             Если запись не сбрасывать курсор будет вверху после переворота. */
-            this.getList().setSelectedKey(null);
-            items.assign(itemsArray.reverse());
+         if(list && list.setItemsSortMethod) {
+            if(reverse) {
+               /* Не надо устанавливать сортировку если он уже установлена, т.к.
+                  1) Повторное перестроение вызывает лишние перестроения
+                  2) Может быть установлена прикладная сортировка, её ломать нельзя */
+               if(!list.getProperty('itemsSortMethod')) {
+                  list.setItemsSortMethod(function (a, b) { return b.collectionIndex - a.collectionIndex; });
+               }
+            } else{
+               list.setItemsSortMethod(null);
+            }
          }
       }
    };

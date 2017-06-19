@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
     * </component>
     */
 
-   function formatText(value, text, onlyInteger, decimals, integers, delimiters, onlyPositive, maxLength, newStandtart){
+   function formatText(value, text, onlyInteger, decimals, integers, delimiters, onlyPositive, maxLength, hideEmptyDecimals){
       var decimals = onlyInteger ? 0 : decimals,
           dotPos = (value = (value + "")).indexOf('.'),
           parsedVal = dotPos != -1 ? value.substr(dotPos) : '0',
@@ -75,7 +75,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
       if(isDotLast){
          value = value ? value + '.' : '.';
       }
-      if(value && newStandtart && decimals){
+      if(value && hideEmptyDecimals && decimals){
          dotPos = value.indexOf('.');
          if (parsedVal === '0') {
             value = (dotPos !== -1 ? value.substring(0, dotPos) : value) + '.0';
@@ -158,7 +158,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
              * <pre>
              * @see decimals
              */
-            hideEmptyDecimals: false,
+            hideEmptyDecimals: true,
             /**
              * @cfg {Boolean} Использовать ли кнопки для изменения значения
              * С помощью кнопок можно увеличивать/уменьшать целую часть числа на 1.
@@ -190,8 +190,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
              * </pre>
              * @see text
              */
-            numericValue: null,
-            newStandtart: false
+            numericValue: null
          }
       },
 
@@ -207,7 +206,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
                options.delimiters, 
                options.onlyPositive, 
                options.maxLength,
-               options.newStandtart
+               options.hideEmptyDecimals
             );
          }
 
@@ -230,13 +229,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
             }
          });
 
-         if(this._options.newStandtart){
-            this._options.hideEmptyDecimals = true;
-         }
-
          this._inputField.bind('blur', function(){
-            // Прятать нулевую дробную часть при потере фокуса
-            self._hideEmptyDecimals();
+            self._blurHandler();
          });
 
          if (typeof this._options.numericValue === 'number' && !isNaN(this._options.numericValue)) {
@@ -251,6 +245,11 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          NumberTextBox.superclass.init.apply(this, arguments);
          this._hideEmptyDecimals();
       },
+
+       _blurHandler: function() {
+            // Прятать нулевую дробную часть при потере фокуса
+           this._hideEmptyDecimals();
+       },
 
       _inputFocusInHandler: function() {
          // Показывать нулевую дробную часть при фокусировки не зависимо от опции hideEmptyDecimals
@@ -295,9 +294,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
                   }
                }
             }
-            if(this._options.newStandtart) {
-               this._options.text = value;
-            }
+            this._options.text = value;
+
             this._setInputValue(value);
          }
       },
@@ -366,7 +364,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
       _updateCompatPlaceholderVisibility: function() {
          if (this._compatPlaceholder) {
             if (typeof this._options.numericValue === 'number' && !isNaN(this._options.numericValue)) {
-               this._compatPlaceholder.hide();
+                this._compatPlaceholder.addClass('ws-hidden');
             } else {
                NumberTextBox.superclass._updateCompatPlaceholderVisibility.apply(this, arguments);
             }
@@ -390,7 +388,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
             this._options.delimiters, 
             this._options.onlyPositive, 
             this._options.maxLength,
-            this._options.newStandtart
+            this._options.hideEmptyDecimals
          );
       },
 

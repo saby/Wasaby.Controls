@@ -3,12 +3,13 @@
 /components/contents.json
 /components/contents.js
 /components/**/*.css
+/components/WS.Data/*
 /sbis3-ws
 /ws-data
 /node_modules
 /SBIS3.CONTROLS/*
 /themes/**/*.css
-/tests/unit/artifacts/*
+/artifacts/*
 /tests/int/.idea
 /tests/int/config.ini
 /tests/int/result.db

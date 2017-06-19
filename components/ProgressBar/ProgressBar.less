@@ -1,49 +1,37 @@
-.controls-ProgressBar {
-   height: @controls-ProgressBar-height;
+@heightProgressBar: @controls-ProgressBar-height - 2 * @default-border-width;
+@align-text: center, left, right;
+
+.controls-ProgressBar-align-progress-generator(@index: 1) when (@index <= length(@align-text)) {
+  @value: extract(@align-text, @index);
+  .controls-ProgressBar_align-@{value} {
+    .controls-ProgressBar__progress {
+      text-align: @value;
+    }
+  }
+  .controls-ProgressBar-align-progress-generator(@index: @index + 1);
 }
-.controls-ProgressBar__line {
-   height: 100%;
-   background: @controls-ProgressBar-empty-bg;
-   position: relative;
-   border-radius: @controls-ProgressBar-border-radius;
-}
-.controls-ProgressBar__backProgress {
-  height: 100%;
-  overflow: hidden;
+
+.controls-ProgressBar__progress_size {
+  width: calc(e("100% - 2 * (@{default-border-width} + @{controls-ProgressBar-value-padding})"));
+  height: @heightProgressBar;
+  border: @default-border-width @default-border-style @controls-ProgressBar-border-color;
   border-radius: @controls-ProgressBar-border-radius;
+  line-height: @heightProgressBar;
+  padding: @controls-ProgressBar-value-padding;
 }
-.controls-ProgressBar__progress {
-   height: 100%;
-   background: @controls-ProgressBar-progress-bg;
-   border-radius: @controls-ProgressBar-border-radius;
+
+.controls-ProgressBar__progress_color {
+  background-repeat: no-repeat;
+  background-color: @controls-ProgressBar-background-color;
+  background-image: linear-gradient(to right, @controls-ProgressBar-first-color, @controls-ProgressBar-last-color);
 }
-.controls-ProgressBar__progress {
-   background: @controls-ProgressBar-progress-bg-grad;
+
+.controls-ProgressBar__progress_sizeValue {
+  font-size: @controls-ProgressBar-value-font-size;
 }
-.controls-ProgressBar__value {
-   position: absolute;
-   width: 100%;
-   text-align: center;
+
+.controls-ProgressBar__progress_colorValue {
+  color: @controls-ProgressBar-value-color;
 }
-.controls-ProgressBar_align-left .controls-ProgressBar__line {
-   margin-left: @controls-ProgressBar-side-space;
-}
-.controls-ProgressBar_align-left .controls-ProgressBar__value{
-   width: auto;
-   left: -@controls-ProgressBar-side-space;
-}
-.controls-ProgressBar_align-right .controls-ProgressBar__line {
-   margin-right: @controls-ProgressBar-side-space;
-}
-.controls-ProgressBar_align-right .controls-ProgressBar__value{
-   width: auto;
-   right: -@controls-ProgressBar-side-space;
-}
-.ws-disabled {
-  .controls-ProgressBar__progress {
-    background: @button-disabled-bg;
-  }
-  .controls-ProgressBar__value {
-    color: @button-disabled-text-color;
-  }
-}
+
+.controls-ProgressBar-align-progress-generator();

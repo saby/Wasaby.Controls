@@ -4,7 +4,7 @@
 define('js!SBIS3.CONTROLS.ControlsValidators', [
    'js!SBIS3.CORE.CoreValidators',
    'Core/core-instance',
-   'Core/Enum',
+   'Deprecated/Enum',
    'i18n!SBIS3.CONTROLS.ControlsValidators'
 ],function(CoreValidators, cInstace, cEnum) {
 

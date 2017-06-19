@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.RichEditor.CodeSampleDialog',
 [
-   'html!SBIS3.CONTROLS.RichEditor.CodeSampleDialog',
+   'tmpl!SBIS3.CONTROLS.RichEditor.CodeSampleDialog',
    'js!SBIS3.CONTROLS.CompoundControl',
    'js!SBIS3.CONTROLS.PopupMixin',
    'js!SBIS3.CORE.LikeWindowMixin',

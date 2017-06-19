@@ -1,7 +1,7 @@
 /**
  * Created by ps.borisov on 08.10.2015.
  */
-define('js!SBIS3.CONTROLS.Utils.ImageUtil',[], function () {
+define('js!SBIS3.CONTROLS.Utils.ImageUtil',['Core/Deferred', 'Core/constants'], function (Deferred, constants) {
    'use strict';
    /**
     * @class SBIS3.CONTROLS.Utils.ImageUtil
@@ -76,6 +76,85 @@ define('js!SBIS3.CONTROLS.Utils.ImageUtil',[], function () {
          var img = new Image();
          img.src = DOMelement.src;
          return {width: img.width || DOMelement.naturalWidth, height: img.height || DOMelement.naturalHeight};
+      },
+      /**
+       * Помогает перегрузить картинку, если url не изменился, а картинка изменилась
+       * @param {String|jQuery|HTMLElement}img - картинка, которую надо перерисовать
+       * @param [url] - адрес, откуда брать картинку
+       * @param {Function} [errback]  - метод, выполняемый при возникновении ошибки
+       */
+      reloadImage: function (img, url) {
+         var
+            element,
+            xhr,
+            imgReady =  new Deferred();
+
+         imgReady.addErrback(function (e) {
+            return e;
+         });
+
+         if (img instanceof jQuery) {
+            element = img;
+         } else if (typeof img === 'string' || img instanceof HTMLElement) {
+            element = $(img);
+         } else {
+            // Неизвестный тип
+            return;
+         }
+
+         function loadImage(img, url) {
+            var
+               onLoadHandler = function(){
+                  imgReady.callback();
+                  img.removeEventListener('load',onLoadHandler);
+                  img.removeEventListener('error',onErrorHandler);
+               },
+               onErrorHandler = function(){
+                  imgReady.errback();
+                  img.removeEventListener('error',onErrorHandler);
+                  img.removeEventListener('load',onLoadHandler);
+               };
+            img.addEventListener('load', onLoadHandler);
+            img.addEventListener('error', onErrorHandler)
+            if (constants.browser.firefox || constants.browser.isIE12) {
+               if (url.indexOf('id=') > -1) {
+                  url = url.replace(/\?id=(.+?)&/, function (a, b) {
+                     return a.replace(b, (new Date().getTime()));
+                  });
+               } else {
+                  url += (url.indexOf('?') > -1 ? '&' : '?') + ('&t=' + (new Date().getTime()));
+               }
+               img.setAttribute('src', url);
+            } else {
+               xhr = new XMLHttpRequest();
+               xhr.open('GET', url, true);
+               xhr.responseType = 'blob';
+               xhr.onreadystatechange = function () {
+                  if (xhr.readyState === 4) {
+                     if (xhr.status >= 200 && xhr.status < 400) {
+                        img.setAttribute('originsrc', url);
+                        img.setAttribute('src', constants.browser.chrome ? url : URL.createObjectURL(xhr.response));
+                     } else {
+                        onErrorHandler();
+                     }
+                  }
+               };
+               xhr.send(null);
+            }
+         }
+
+         function reload(elem) {
+            url = url || element.attr('originsrc') || element.attr('src');
+            if (!/^(data:|blob:)/.test(url)) {
+               loadImage(elem, url);
+            }
+         }
+
+         for (var i = 0, len = element.length; i < len; i++) {
+            reload(element[i]);
+         }
+
+         return imgReady;
       }
    };
 

@@ -148,6 +148,7 @@ define('js!SBIS3.CONTROLS.Slider',
                if (this._options.startValue || this._options.endValue) {
                   this._redraw();
                }
+               this._container.find('.controls-Slider__line__wrapper').on('click', this._lineClick.bind(this));
             },
              /**
               * Устанавливает значение, в котором находится левый ползунок слайдера.
@@ -288,12 +289,9 @@ define('js!SBIS3.CONTROLS.Slider',
             _onDragHandler: function(DragObject, event) {
                if (DragObject.getOwner() === this) {
                   var
-                     width = this._container.width(),
                      instance = DragObject.getOwner(),
-                     rangeLength = instance._options.maxValue - instance._options.minValue,
                      side = $(DragObject.getTarget()).hasClass('controls-Slider__point__start') ? 'start' : 'end',
-                     percent = (event.pageX - instance._shift - instance._wrapper[0].getBoundingClientRect().left - pageXOffset) / (width - constants.pointWidth[instance._options.bigPoint ? 'big' : 'small']), //дробная часть от того что надо выделить
-                     value = instance._options.minValue + percent * rangeLength;
+                     value = instance._calcValue(event.pageX);
                   if (instance._dragInProcess && instance.isEnabled()) {
                      instance._drawValue(value, side);
                      this._notify('onDrawValueChange', this._startValue, this._endValue)
@@ -313,6 +311,43 @@ define('js!SBIS3.CONTROLS.Slider',
                      }
                   }
                   instance._dragInProcess = false;
+               }
+            },
+            _calcValue: function(pageX) {
+                var
+                  width = this._container.width(),
+                  rangeLength = this._options.maxValue - this._options.minValue,
+                  percent = (pageX - this._shift - this._wrapper[0].getBoundingClientRect().left - pageXOffset) / (width - constants.pointWidth[this._options.bigPoint ? 'big' : 'small']); //дробная часть от того что надо выделить
+                return this._options.minValue + percent * rangeLength;
+            },
+
+            _calcSide: function(value) {
+               var
+                  side ='end';
+               if (this._options.single) {
+                  side = "end";
+               } else if (value < this._startValue) {
+                  side = "start";
+               } else if (value > this._endValue) {
+                  side = "end";
+               } else {
+                  side = (this._endValue - this._startValue) / 2 + this._startValue > value ? "start" : 'end';
+               }
+               return side;
+            },
+            _lineClick: function(event){
+               this._shift = 0;
+               var
+                  value = this._calcValue(event.pageX),
+                  side = this._calcSide(value);
+               value = this._prepareValue(value, side);
+               if (this.isEnabled()) {
+                  if (side === 'start') {
+                     this.setStartValue(value);
+                  } else {
+                     this.setEndValue(value);
+                  }
+                  this._notify('onDrawValueChange', this._startValue, this._endValue)
                }
             }
          });

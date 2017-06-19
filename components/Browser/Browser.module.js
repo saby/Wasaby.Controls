@@ -77,7 +77,7 @@ define('js!SBIS3.CONTROLS.Browser', [
        * @returns {onColumnsChangeResult} Позволяет определить, что выполнять после установки колонок - перерисовку или перезагрузку.
        */
       /**
-       * @typedef {Object} СolumnsConfigObject
+       * @typedef {Object} ColumnsConfigObject
        * @property {WS.Data/Collection/RecordSet} columns Набор записей, каждая из которых описывает элемент панели редактирования колонок. <br/>
        * Поля записи:
        * <ol>
@@ -134,6 +134,14 @@ define('js!SBIS3.CONTROLS.Browser', [
              */
             keyboardLayoutRevert: true,
             /**
+             * @cfg {Boolean} Включает изменение раскладки по новому стандарту. Актуально при включённой опции {@link keyboardLayoutRevert}
+             * @example
+             * <pre>
+             *     <option name="keyboardLayoutRevertNew">true</option>
+             * </pre>
+             */
+            keyboardLayoutRevertNew: false,
+            /**
              * @cfg {String} Устанавливает Id для работы с историей фильтров.
              * @remark
              * Опция задает идентификатор, под которым будет сохраняться история фильтрации.
@@ -162,7 +170,7 @@ define('js!SBIS3.CONTROLS.Browser', [
             showCheckBoxes: false,
 	        contentTpl: null,
             /**
-             * @cfg {СolumnsConfigObject} Устанавливает параметры для Панели редактирования колонок.
+             * @cfg {ColumnsConfigObject} Устанавливает параметры для Панели редактирования колонок.
              * @remark
              * Вызов панели производят кликом по иконке с шестерёнкой, которая расположена справа от строки поиска.
              * Иконка отображается, когда в опции установлено значение.
@@ -339,8 +347,8 @@ define('js!SBIS3.CONTROLS.Browser', [
          }
          
          if( (this._filterButton || this._fastDataFilter) &&
-            /* Новый механизм включаем, только если нет биндов на структуру фильтров */
-            (!this._filterButton || this._filterButton && !cFind(this._filterButton._getOption('bindings'), function(obj) {return obj.propName === 'filterStructure'}))) {
+            /* Новый механизм включаем, только если нет биндов на структуру фильтров (такая проверка временно) */
+            (!this._filterButton || this._filterButton && !cFind(this._filterButton._getOptions().bindings, function(obj) {return obj.propName === 'filterStructure'}))) {
             this._componentBinder.bindFilters(this._filterButton, this._fastDataFilter, this._view);
          }
 

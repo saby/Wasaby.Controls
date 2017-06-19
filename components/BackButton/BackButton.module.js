@@ -1,4 +1,11 @@
-define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.BackButton','js!SBIS3.CONTROLS.Link', 'css!SBIS3.CONTROLS.BackButton'], function(CompoundControl, dotTpl) {
+define('js!SBIS3.CONTROLS.BackButton',
+   [
+    'js!SBIS3.CORE.CompoundControl',
+    'tmpl!SBIS3.CONTROLS.BackButton',
+    'js!SBIS3.CONTROLS.Link',
+    'css!SBIS3.CONTROLS.BackButton'
+   ],
+    function(CompoundControl, dotTpl) {
    'use strict';
    /**
     * Кнопка для реализации поведения возврата назад по истории.
@@ -27,6 +34,8 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
     * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
     * @ignoreEvents onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
+    *
+    * @css controls-BackButton__alignment Класс для выравнивания кнопки-назад
     *
     * @control
     * @public
@@ -118,10 +127,11 @@ define('js!SBIS3.CONTROLS.BackButton', ['js!SBIS3.CORE.CompoundControl', 'html!S
        * @param caption Текси
        */
       setCaption: function(caption){
+         var isEmptyCaption = (caption === null || caption === '' || typeof caption === 'undefined');
          this._link.setCaption(caption);
          this.setTooltip(caption);
          this._options.caption = caption;
-         this._container.toggleClass('controls-BackButton__empty', !caption);
+         this._container.toggleClass('controls-BackButton__empty', isEmptyCaption);
       },
       /**
        * Устанавливает изображение иконки кнопки.

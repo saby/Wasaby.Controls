@@ -10,8 +10,8 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
       'tmpl!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemContentTemplate',
       'Core/helpers/collection-helpers',
       'Core/core-instance',
-      'Core/helpers/functional-helpers'
-   ], function(CompoundControl, DSMixin, PickerMixin, dotTplFn, defaultItemTemplate, defaultItemContentTemplate, colHelpers, cInstance, fHelpers) {
+      'Core/helpers/Function/callNext'
+   ], function(CompoundControl, DSMixin, PickerMixin, dotTplFn, defaultItemTemplate, defaultItemContentTemplate, colHelpers, cInstance, callNext) {
 
       'use strict';
 
@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
 
             /* Запомним контейнер поля связи */
             this._parentFieldLink = this.getParent();
-            this._options._buildTplArgs = this._options._buildTplArgs.callNext(this._buildTplArgs);
+            this._options._buildTplArgs = callNext(this._options._buildTplArgs, this._buildTplArgs);
          },
 
          _onClickHandler: function(e) {
@@ -51,6 +51,10 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                deleteAction = $target.hasClass('controls-FieldLink__item-cross');
                id = this._getItemProjectionByHash(itemContainer.data('hash')).getContents().getId();
                this._notify(deleteAction ? 'onCrossClick' : 'onItemActivate', id);
+               
+               if(deleteAction && this.isPickerVisible()) {
+                  this.getPicker().recalcPosition(true, true);
+               }
             }
          },
 
@@ -111,8 +115,12 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          /* Контрол не должен принимать фокус ни по клику, ни по табу */
-         _initFocusCatch: fHelpers.nop,
-         canAcceptFocus: fHelpers.nop,
+         _initFocusCatch: function () {
+
+         },
+         canAcceptFocus: function () {
+
+         },
 
          /* Скрываем именно в синхронном drawItemsCallback'e,
             иначе пикер скрывается асинхронно и моргает */
@@ -140,7 +148,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             /* Зачем сделано:
                Не надо, чтобы пикер поля связи вызывал перерасчёт размеров,
                т.к. никаких расчётов при его показе не происходит, а просто отрисовываются элементы */
-            this._picker._notifyOnSizeChanged = fHelpers.nop;
+            this._picker._notifyOnSizeChanged = function () {};
          },
 
          _setPickerConfig: function () {

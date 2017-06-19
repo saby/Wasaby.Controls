@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.ScrollPagingController', 
-   ['js!SBIS3.StickyHeaderManager', 'Core/Abstract', 'Core/core-instance', 'Core/WindowManager'], 
+   ['js!SBIS3.StickyHeaderManager', 'Core/Abstract', 'Core/core-instance', 'Core/WindowManager', 'css!SBIS3.CONTROLS.ScrollPagingController'],
    function(StickyHeaderManager, cAbstract, cInstance, WindowManager) {
 
    var ScrollPagingController = cAbstract.extend({
@@ -201,9 +201,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
 
          var pagesCount = this._scrollPages.length;
 
-         if (pagesCount > 1){
-            this._options.view.getContainer().css('padding-bottom', '32px');
-         }
+         this._options.view.getContainer().toggleClass('controls-ScrollPaging__pagesPadding', pagesCount > 1);
          if (this._options.paging.getSelectedKey() > pagesCount){
             this._options.paging.setSelectedKey(pagesCount);
          }

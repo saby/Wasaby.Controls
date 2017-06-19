@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          name: 'undo',
          componentType: 'WSControls/Buttons/Button',
          tooltip: rk('Шаг назад'),
-          className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
+          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          icon: 'sprite:icon-24 icon-Undo2 icon-primary',
          handlers: {
             onActivated: onButtonClick
@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          name: 'redo',
          componentType: 'WSControls/Buttons/Button',
          tooltip: rk('Шаг вперед'),
-         className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
+         className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          icon: 'sprite:icon-24 icon-Redo2 icon-primary',
          handlers: {
             onActivated: onButtonClick
@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          componentType: 'WSControls/Buttons/Button',
          tooltip: rk('Стили'),
          icon: 'sprite:icon-24 icon-TFCurtailRTE2 icon-primary',
-         className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
+         className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          handlers: {
             onActivated: function() {
                this.getParent()._openStylesPanel(this);
@@ -76,7 +76,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
       {
          name: 'bold',
          componentType: 'WSControls/Buttons/ToggleButton',
-         className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
+         className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          tooltip: rk('Полужирный'),
          icon: 'sprite:icon-24 icon-Bold icon-primary',
          handlers: {
@@ -88,7 +88,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
       {
          name: 'italic',
          componentType: 'WSControls/Buttons/ToggleButton',
-         className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
+         className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          tooltip: rk('Курсив'),
          icon: 'sprite:icon-24 icon-Italic icon-primary',
          handlers: {
@@ -100,7 +100,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
       {
          name: 'underline',
          componentType: 'WSControls/Buttons/ToggleButton',
-         className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
+         className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          tooltip: rk('Подчеркнутый'),
          icon: 'sprite:icon-24 icon-Underline icon-primary',
          handlers: {
@@ -112,7 +112,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
       {
          name: 'strikethrough',
          componentType: 'WSControls/Buttons/ToggleButton',
-         className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
+         className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          tooltip: rk('Зачеркнутый'),
          icon: 'sprite:icon-24 icon-Stroked icon-primary',
          handlers: {
@@ -124,13 +124,12 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
       {
          name: 'mceBlockQuote',
          componentType: 'WSControls/Buttons/ToggleButton',
-         className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
+         className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          tooltip: rk('Цитата'),
          icon: 'sprite:icon-24 icon-Quote icon-primary',
          handlers: {
             onActivated: onButtonClick
          },
-         visible: false, //todo: цитата наславиается на обтекаемое избражение
          order: 65
       },
 
@@ -148,7 +147,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          editable: false,
          icon: 'icon-24 icon-AlignmentLeft icon-primary',
          selectedKey: 'alignleft',
-         className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
+         className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          pickerClassName: 'controls-RichEditorToolbarMenu controls-MenuIcon__Menu controls-Menu__hide-menu-header',
          handlers: {
             onMenuItemActivate: function(event, key) {
@@ -173,7 +172,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          componentType: 'WSControls/Buttons/MenuButton',
          tooltip: rk('Цвет текста'),
          icon: 'sprite:icon-24 icon-LetterA icon-primary',
-         className: 'fre-color controls-ToggleButton__square controls-ToggleButton-square__big',
+         className: 'fre-color controls-ToggleButton__square controls-ToggleButton-square__medium',
          pickerClassName: 'fre-color controls-MenuIcon__Menu controls-Menu__hide-menu-header',
          items: [
             { key: 'black', tooltip: rk('Черный'), title: '<div  unselectable ="on" class="controls-RichEditorToolbar__color controls-RichEditorToolbar__colorBlack"></div>'},
@@ -205,7 +204,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          name: 'list',
          componentType: 'WSControls/Buttons/MenuButton',
          tooltip: rk('Вставить/Удалить список'),
-         className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
+         className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          pickerClassName: 'fre-list controls-RichEditorToolbarMenu controls-MenuIcon__Menu controls-Menu__hide-menu-header',
          icon   : 'sprite:icon-24 icon-ListMarked icon-primary',
          items: [
@@ -233,7 +232,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
       {
          name: 'link',
          componentType: 'WSControls/Buttons/ToggleButton',
-         className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
+         className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          tooltip: rk('Вставить/редактировать ссылку'),
          icon: 'sprite:icon-24 icon-Link icon-primary',
          handlers:{
@@ -253,7 +252,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          componentType: 'WSControls/Buttons/Button',
          tooltip: rk('Убрать ссылку'),
          icon: 'sprite:icon-24 icon-Unlink icon-primary',
-         className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
+         className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          handlers: {
             onActivated: onButtonClick
          },
@@ -267,7 +266,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          componentType: 'WSControls/Buttons/Button',
          icon: 'sprite:icon-24 icon-Picture icon-primary',
          tooltip: 'Вставить изображение',
-         className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
+         className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          handlers: {
             onActivated: function() {
                this.getParent()._openImagePanel(this);
@@ -278,10 +277,11 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
 
       {
          name: 'smile',
+         tooltip: 'Вставить смайлик',
          componentType: 'WSControls/Buttons/MenuButton',
          icon: 'sprite:icon-24 icon-SmileBtr icon-primary',
          pickerClassName: 'fre-smiles controls-MenuButton__Menu controls-Menu__hide-menu-header',
-         className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
+         className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          items: smiles,
          handlers: {
             onMenuItemActivate: function(event, key) {
@@ -295,7 +295,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
       {
          name: 'paste',
          componentType: 'WSControls/Buttons/MenuButton',
-         className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
+         className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          pickerClassName: 'controls-MenuButton__Menu',
          caption: rk('Вставка'),
          tooltip: rk('Вставка'),
@@ -326,7 +326,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
       {
          name: 'source',
          componentType: 'WSControls/Buttons/ToggleButton',
-         className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
+         className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          tooltip: rk('html-разметка'),
          icon: 'sprite:icon-24 icon-Html icon-primary',
          handlers: {
@@ -343,7 +343,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          pickerClassName: 'controls-MenuIcon__Menu',
          icon: 'sprite:icon-24 icon-InputHistory icon-primary',
          multiselect: false,
-         className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
+         className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          handlers: {
             onMenuItemActivate: function(e, key) {
                this.getParent()._setText(this.getItems().getRecordById(key).get('value'));
@@ -368,13 +368,13 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          componentType: 'WSControls/Buttons/Button',
          icon: 'sprite:icon-24 icon-PasteCodeBtr icon-primary',
          multiselect: false,
-         className: 'controls-ToggleButton__square controls-ToggleButton-square__big',
+         className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          handlers: {
             onActivated: function() {
                this.getParent()._codeSample(this);
             }
          },
-         visible: false, //!constants.browser.isMobilePlatform && !constants.browser.isMacOSDesktop,
+         visible: false,//!constants.browser.isMobilePlatform && !constants.browser.isMacOSDesktop,
          order: 130
       }
    ];

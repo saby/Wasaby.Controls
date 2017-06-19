@@ -100,10 +100,10 @@
    &.controls-ListView__item__selected {
       .controls-DataGridView__td {
          .controls-TreeView__ellipsis-copyArrow {
-            background-color: @white-color;
+            background-color: @data-grid-row-selected-main-bg;
 
             &:after {
-               .horizontal-gradient(@white-color, rgba(255, 255, 255, 0), right);
+               .horizontal-gradient(@data-grid-row-selected-main-bg, @data-grid-row-selected-addit-bg, right);
                .copyArrowGradient();
             }
          }
@@ -116,7 +116,7 @@
             background-color: @data-grid-row-selected-bg;
 
             &:after {
-               .horizontal-gradient(@data-grid-row-selected-bg, rgba(255, 255, 255, 0), right);
+               .horizontal-gradient(@data-grid-row-selected-bg, @data-grid-row-selected-add-bg, right);
                .copyArrowGradient();
             }
          }
@@ -129,7 +129,7 @@
             background-color: @data-grid-row-hover-bg;
 
             &:after {
-               .horizontal-gradient(@data-grid-row-hover-bg, rgba(255, 255, 255, 0), right);
+               .horizontal-gradient(@data-grid-row-hover-bg, @data-grid-row-hover-add-bg, right);
                .copyArrowGradient();
             }
          }
@@ -156,7 +156,7 @@
          background-color: @tree-view-copy-arrow-background;
 
          &:after {
-            .horizontal-gradient(@tree-view-copy-arrow-background, rgba(255, 255, 255, 0), right);
+            .horizontal-gradient(@tree-view-copy-arrow-background, @tree-view-copy-arrow-add-background, right);
             .copyArrowGradient();
          }
 
@@ -174,15 +174,6 @@
    &.controls-TreeDataGridView {
       .controls-TreeView__expand {
          display: none;
-      }
-      .controls-DataGridView__firstContentCell > .controls-DataGridView__columnValue {
-         margin-left: @tree-view-firstCell-margin-searchMode;
-      }
-   }
-
-   &.controls-ListView__multiselect__off {
-      .controls-TreeView__searchBreadCrumbs {
-         margin-left: @tree-view-firstCell-margin-searchMode;
       }
    }
 }
@@ -260,6 +251,16 @@
 }
 .generate-photo-padding-class();
 
+.controls-TreeView__withoutLevelPadding > .controls-DataGridView__table > .controls-DataGridView__tbody > .controls-ListView__item {
+   > .controls-DataGridView__firstContentCell > .controls-TreeDataGridView__levelPaddingWrap > .controls-TreeDataGridView__levelPadding {
+      display: none;
+   }
+}
+.controls-TreeView__hideExpands {
+   .controls-TreeView__expand {
+      display: none;
+   }
+}
 .controls-TreeView__emptyIconInEmptyNode {
    .controls-ListView__item-type-node.controls-ListView__item-without-child {
       .controls-TreeView__expand {

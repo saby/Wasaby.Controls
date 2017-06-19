@@ -1,0 +1,31 @@
+<div class="controls-Menu__Popup controls-CodeSampleDialog  controls-FloatArea">
+   <div  class="controls-CodeSampleDialog__header">
+      <div class="controls-CodeSampleDialog__title" title="{{ windowTitle }}">{{ windowTitle }}</div>
+      <ws:SBIS3.CONTROLS.IconButton
+         class="controls-CodeSampleDialog__applyButton controls-IconButton__round-border controls-IconButton__round icon-size"
+         name="Apply"
+         icon="sprite:icon-16 icon-Yes icon-done"
+         activableByClick="false"
+      />
+   </div>
+   <div class="controls-CodeSampleDialog__type_wrap">
+      <ws:SBIS3.CONTROLS.ComboBox
+         class="controls-CodeSampleDialog__type" name="Type"
+         items="{{ languages}}"
+         idProperty="key"
+         displayProperty="title"
+         selectedKey="markup"
+         editable="false"
+         activableByClick="false"
+      />
+   </div>
+   <div class="controls-CodeSampleDialog__area_wrap">
+      <ws:SBIS3.CONTROLS.TextArea
+         class="controls-CodeSampleDialog__area"
+         name="Area"
+         minLinesCount="10"
+         maxLinesCount="15"
+         autoResize="true"
+      />
+   </div>
+</div>

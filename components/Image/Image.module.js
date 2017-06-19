@@ -3,8 +3,9 @@
  */
 define('js!SBIS3.CONTROLS.Image',
    [
-   "Transport/BLObject",
-   "Core/helpers/helpers",
+   'Transport/BLObject',
+   'js!SBIS3.CONTROLS.Utils.ImageUtil',
+   'Core/helpers/vital/processImagePath',
    "Core/Indicator",
    "Core/core-merge",
    "Core/CommandDispatcher",
@@ -21,18 +22,17 @@ define('js!SBIS3.CONTROLS.Image',
    "Core/helpers/transport-helpers",
    "js!SBIS3.CONTROLS.Utils.SourceUtil",
    'js!SBIS3.CONTROLS.ControlHierarchyManager',
+   'js!SBIS3.CONTROLS.Utils.InformationPopupManager',
    "js!SBIS3.CONTROLS.Link",
    'js!SBIS3.CONTROLS.MenuLink',
    "i18n!SBIS3.CONTROLS.Image",
    'css!SBIS3.CONTROLS.Image'
-], function(BLObject, cHelpers, cIndicator, cMerge, CommandDispatcher, Deferred, CompoundControl, SbisService, dotTplFn, Dialog, FileLoader, FileCamLoader, LoadingIndicator, cInstance, fcHelpers, transHelpers, SourceUtil, ControlHierarchyManager) {
+], function(BLObject, ImageUtil, processImagePath, cIndicator, cMerge, CommandDispatcher, Deferred, CompoundControl, SbisService, dotTplFn, Dialog, FileLoader, FileCamLoader, LoadingIndicator, cInstance, fcHelpers, transHelpers, SourceUtil, ControlHierarchyManager, InformationPopupManager) {
       'use strict';
       //TODO: Избавится от дублирования
       var
          //Продолжительность анимации при отображения панели изображения
          ANIMATION_DURATION = 300,
-         MIN_TOOLBAR_WIDTH = 125, //минимальный размер тулбара для которого убирается  напись "загрузить" и кнопка "удалить"
-         MIN_TOOLBAR_WIDTH_WITH_EDIT = 155,// минимальный размер тулбара для которого убирается  напись "загрузить" и все оставльные кнопки
          /**
           * Класс контрол "Изображение". Позволяет отображать и редактировать изображения, полученные из источника данных.
           * В качестве источника данных допускается использовать только {@link WS.Data/Source/SbisService}.
@@ -265,7 +265,7 @@ define('js!SBIS3.CONTROLS.Image',
                    *     <option name="defaultImage">/resources/SBIS3.CONTROLS/components/Image/resources/default-image.png</option>
                    * </pre>
                    */
-                  defaultImage: cHelpers.processImagePath('js!SBIS3.CONTROLS.Image/resources/default-image.png'),
+                  defaultImage: processImagePath('js!SBIS3.CONTROLS.Image/resources/default-image.png'),
                   /**
                    * @cfg {Object} Устанавливает связанный источник данных - {@link WS.Data/Source/SbisService}.
                    * @remark
@@ -392,18 +392,31 @@ define('js!SBIS3.CONTROLS.Image',
                   this._buttonEdit = this.getChildControlByName('ButtonEdit');
                   this._buttonUpload = this.getChildControlByName('ButtonUpload');
                   this._buttonReset = this.getChildControlByName('ButtonReset');
-                  if (width !==0 &&((width < MIN_TOOLBAR_WIDTH && !this._options.edit )||(this._options.edit && width < MIN_TOOLBAR_WIDTH_WITH_EDIT ))){
-                     this._buttonUpload.setCaption('');
-                     this._buttonUpload.setTooltip('Загрузить');
+                  if (width !==0){
+                     this._imageBar.show();//показываем, чтобы можно было вычислить размеры
+                     this._buttonReset.toggle(true);//показываем, чтобы можно было вычислить размеры
+                     var
+                        uploadWidth = this._buttonUpload._container[0].getBoundingClientRect().width,
+                        resetWidth = this._buttonReset._container[0].getBoundingClientRect().width,
+                        minToolbar = uploadWidth + resetWidth + (this._options.edit ? resetWidth : 0) + 4;
+                     this._imageBar.hide();//скрываем после вычисления размеров
+                     this._buttonReset.toggle(false);//скрываем после вычисления размеров
+                     if ((width < minToolbar )){
+                        this._buttonUpload.setCaption('');
+                        this._buttonUpload.setTooltip(rk('Загрузить', 'Image'));
+                     }
                   }
+
                   this._bindToolbarEvents();
                   if (this._options.webCam) {
-                     pickerContainer = this._buttonUpload.getPicker().getContainer();
-                     pickerContainer.mouseenter(function(){
-                        this._cursorInside = true;
-                     }.bind(this));
-                     pickerContainer.mouseleave(function(){
-                        this._cursorInside = false;
+                     this._buttonUpload.once('onPickerOpen', function(){
+                        pickerContainer = this._buttonUpload.getPicker().getContainer();
+                        pickerContainer.mouseenter(function(){
+                           this._cursorInside = true;
+                        }.bind(this));
+                        pickerContainer.mouseleave(function(){
+                           this._cursorInside = false;
+                        }.bind(this))
                      }.bind(this))
                   }
                }
@@ -494,7 +507,17 @@ define('js!SBIS3.CONTROLS.Image',
                   this._hideIndicator();
                   // игнорируем HTTPError офлайна, если они обработаны
                   if (!(error._isOfflineMode && error.processed)){
-                      fcHelpers.alert('При загрузке изображения возникла ошибка: ' + error.message);
+                     var
+                        config = error._isOfflineMode ? {
+                           message: "Отсутствует соединение с интернет",
+                           details: "Подключите интернет и повторите попытку.",
+                           status: "error"
+                        } : {
+                           status: 'error',
+                           details: error.message,
+                           message: 'При загрузке изображения возникла ошибка'
+                        };
+                     InformationPopupManager.showMessageDialog(config);
                   }
                   return imageInstance._onErrorLoad(error, true);
                }
@@ -558,7 +581,7 @@ define('js!SBIS3.CONTROLS.Image',
                   self = this;
                if (this._options.avoidCache) {
                   //Из-за проблем, связанных с кэшированием - перезагружаем картинку специальным хелпером
-                  cHelpers.reloadImage(this._image, url)
+                  ImageUtil.reloadImage(this._image, url)
                      .addCallback(function(){
                         self._image.hasClass('ws-hidden') && self._image.removeClass('ws-hidden');
                         self._onChangeImage();
@@ -624,7 +647,10 @@ define('js!SBIS3.CONTROLS.Image',
                         onOpenError: function(event){
                            fcHelpers.toggleLocalIndicator(self._container, false);
                            cIndicator.hide();
-                           fcHelpers.alert('При открытии изображения возникла ошибка');
+                           InformationPopupManager.showMessageDialog({
+                              status: 'error',
+                              message: 'При открытии изображения возникла ошибка'
+                           });
                            self._onErrorLoad(event, true);
                         }
                      }

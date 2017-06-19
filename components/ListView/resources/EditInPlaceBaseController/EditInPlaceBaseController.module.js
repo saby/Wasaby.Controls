@@ -17,9 +17,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    "js!WS.Data/Entity/Record",
    "Core/core-instance",
    "Core/helpers/fast-control-helpers",
+   'js!SBIS3.CONTROLS.Utils.InformationPopupManager',
    'css!SBIS3.CONTROLS.EditInPlaceBaseController'
+
 ],
-   function (cContext, constants, Deferred, IoC, CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, ControlHierarchyManager, Model, Record, cInstance, fcHelpers) {
+   function (cContext, constants, Deferred, IoC, CompoundControl, PendingOperationProducerMixin, AddRowTpl, EditInPlace, ControlHierarchyManager, Model, Record, cInstance, fcHelpers, InformationPopupManager) {
 
       'use strict';
 
@@ -92,7 +94,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                _isAdd: false
             },
             $constructor: function () {
-               this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onInitEditInPlace', 'onChangeHeight');
+               this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onInitEditInPlace', 'onChangeHeight', 'onBeginSave', 'onEndSave');
                this._createEip();
                this._savingDeferred = Deferred.success();
             },
@@ -181,7 +183,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _getContextForEip: function () {
                var
-                  ctx = new cContext({restriction: 'set'});
+                  ctx = cContext.createContext(this, {restriction: 'set'});
                ctx.subscribe('onFieldNameResolution', function (event, fieldName) {
                   var
                      record,
@@ -402,6 +404,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      withSaving = false;
                   }
                   endEditResult = this._notify('onEndEdit', record, withSaving);
+                  this._notify('onBeginSave');
                   if (endEditResult instanceof Deferred) {
                      return endEditResult.addBoth(function(result) {
                         result = endEditResult.isSuccessful() ? result : EndEditResult.CANCEL;
@@ -429,6 +432,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   withSaving = endEditResult === EndEditResult.SAVE;
                }
                needValidate = withSaving || endEditResult === EndEditResult.CUSTOM_LOGIC;
+
+               this._notify('onEndSave');
 
                if (endEditResult === EndEditResult.CANCEL || needValidate && !eip.validate()) {
                   this._savingDeferred.errback();
@@ -458,7 +463,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      deferred = this._options.dataSource.update(eipRecord).addCallback(function () {
                         self._acceptChanges(eip, eipRecord);
                      }).addErrback(function (error) {
-                        fcHelpers.alert(error);
+                       InformationPopupManager.showMessageDialog(
+                         {
+                            message: error.message,
+                            opener: self,
+                            status: 'error'
+                         }
+                       );
                         return error;
                      });
                   } else {

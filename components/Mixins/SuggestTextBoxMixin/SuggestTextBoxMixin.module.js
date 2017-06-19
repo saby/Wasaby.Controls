@@ -26,18 +26,20 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
 
    'use strict';
 
+   var HISTORY_LENGTH = 12;
+   
    function stopEvent(e) {
       e.stopPropagation();
       e.preventDefault();
    }
 
    /**
-    * Миксин, задающий любому полю ввода работу с автодополненем.
+    * Миксин, задающий любому полю ввода работу с автодополнением.
     * @mixin SBIS3.CONTROLS.SuggestTextBoxMixin
     * @public
     * @author Крайнов Дмитрий Олегович
     */
-   var SuggestTextBoxMixin = {
+   var SuggestTextBoxMixin = /**@lends SBIS3.CONTROLS.SuggestTextBoxMixin.prototype  */{
       $protected: {
          _changedByKeyboard: false,  /* {Boolean} Флаг, обозначающий, что изменения были вызваны действиями с клавиатуры */
          /* Т.к. при выборе из списка, фокус может находиться на нём, а не на поле ввода,
@@ -55,7 +57,11 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             /**
              * @cfg {Boolean} Использовать механизм смены неверной раскладки
              */
-            keyboardLayoutRevert: true
+            keyboardLayoutRevert: true,
+            /**
+             * @cfg {Boolean} Использовать механизм смены неверной раскладки по новому стандарту
+             */
+            keyboardLayoutRevertNew: true
          }
       },
       $constructor: function () {
@@ -146,7 +152,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                keyboardLayoutRevert: this._options.keyboardLayoutRevert,
                searchParamName: this._options.searchParam,
                doNotRespondOnReset: true,
-               searchFormWithSuggest: true
+               searchFormWithSuggest: true,
+               keyboardLayoutRevertNew: this._options.keyboardLayoutRevertNew
             });
             this._searchController.bindSearch();
          });
@@ -167,7 +174,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          _observableControlFocusHandler: function(){
             if (this._options.historyId && !this._historyController){
                this._historyController = new HistoryList({
-                  historyId: this._options.historyId
+                  historyId: this._options.historyId,
+                  maxLength: HISTORY_LENGTH
                });
             }
             if (this._needShowHistory()){
@@ -273,7 +281,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
 
             if(this._options.searchParam) {
                var togglePicker = function() {
-                     if(self._checkPickerState(!self._options.showEmptyList)) {
+                     if(self._checkPickerState(!self._options.showEmptyList) && !self.getList().isLoading()) {
                         self.showPicker();
                      } else {
                         self.hidePicker();

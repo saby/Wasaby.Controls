@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
    "js!SBIS3.CORE.CompoundControl",
    "tmpl!SBIS3.CONTROLS.FilterButton",
    "tmpl!SBIS3.CONTROLS.FilterButton/FilterComponentTemplate",
+   "tmpl!SBIS3.CONTROLS.FilterButton/FilterLineTemplate",
    "js!SBIS3.CONTROLS.FilterMixin",
    "js!SBIS3.CONTROLS.PickerMixin",
    "js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil",
@@ -28,6 +29,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
         CompoundControl,
         dotTplFn,
         dotTplForComp,
+        filterLineTpl,
         FilterMixin,
         PickerMixin,
         FilterToStringUtil,
@@ -74,6 +76,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
           _dotTplFn: dotTplFn,
           $protected: {
              _options: {
+                _filterLineTpl: filterLineTpl,
                 _areaTemplate: 'js!SBIS3.CONTROLS.FilterButtonArea',
                 /**
                  * @cfg {String} Устанавливает направление, в котором будет открываться всплывающая панель кнопки фильтров.
@@ -160,7 +163,9 @@ define('js!SBIS3.CONTROLS.FilterButton',
                  /**
                   * @cfg {String}
                   */
-                internalContextFilterName : 'sbis3-controls-filter-button'
+                internalContextFilterName : 'sbis3-controls-filter-button',
+                
+                _fastFilterButton: false // FIXME временная опция, позже включить везде
              },
 
              _pickerContext: null,        /* Контекст пикера */
@@ -168,7 +173,8 @@ define('js!SBIS3.CONTROLS.FilterButton',
              _historyController: null,    /* Контроллер для работы с историей */
              _filterTemplates: {},      /* Компонент, который будет отображаться на панели фильтрации */
              _dTemplatesReady: null,
-             _pickerHeight: null
+             _pickerHeight: null,
+             _filterLineInitialized: false
           },
 
           $constructor: function() {
@@ -195,6 +201,21 @@ define('js!SBIS3.CONTROLS.FilterButton',
              this._initTemplates().addCallback(function() {
                 FilterButton.superclass.showPicker.call(self);
              });
+          },
+          
+          _modifyOptions: function() {
+              var opts = FilterButton.superclass._modifyOptions.apply(this, arguments);
+              opts._filterLineInitialized = opts.resetLinkText || !opts._fastFilterButton;
+              return opts;
+          },
+
+          _recalcInternalContext: function () {
+             FilterButton.superclass._recalcInternalContext.call(this);
+             if(!this._options._filterLineInitialized && this.getLinkedContext().getValue('filterChanged')) {
+                this.getContainer().prepend(this._options._filterLineTpl(this._options));
+                this.reviveComponents();
+                this._options._filterLineInitialized = true;
+             }
           },
 
           _initTemplates: function() {
@@ -319,7 +340,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
           },
 
           _setPickerConfig: function () {
-             var context = new cContext({restriction: 'set'}),
+             var context = cContext.createContext(this, {restriction: 'set'}),
                  rootName = this._options.internalContextFilterName,
                  isRightAlign = this._options.filterAlign === 'right',
                  firstTime = true,

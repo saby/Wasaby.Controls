@@ -13,7 +13,6 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
          {
             name: 'toggle',
             componentType: 'SBIS3.CONTROLS.IconButton',
-            tooltip: rk('Стили'),
             icon: 'sprite:icon-16 icon-View icon-primary',
             handlers: {
                onActivated: function() {
@@ -87,6 +86,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
          {
             name: 'smile',
             basic: true,
+            tooltip: 'Вставить смайлик',
             componentType: 'SBIS3.CONTROLS.MenuIcon',
             icon: 'sprite:icon-16 icon-EmoiconSmile icon-primary',
             items: smiles,

@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.TabControl', [
    'js!SBIS3.CORE.CompoundControl',
-   'html!SBIS3.CONTROLS.TabControl',
+   'tmpl!SBIS3.CONTROLS.TabControl',
    "Core/IoC",
    'js!SBIS3.CONTROLS.SwitchableArea',
    'js!SBIS3.CONTROLS.TabButtons',

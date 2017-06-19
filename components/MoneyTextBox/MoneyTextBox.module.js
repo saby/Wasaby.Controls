@@ -36,6 +36,8 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
      * @public
      * @control
      * @author Крайнов Дмитрий Олегович
+     *
+     * @cssModifier controls-MoneyTextBox__ellipsis При нехватке ширины текст в поле ввода будет обрезаться. Если контрол неактивен, то оборвётся многоточием.
      */
    var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS.MoneyTextBox.prototype */ {
       $protected: {
@@ -113,6 +115,15 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
          this._decimalsContainer.toggleClass('ws-hidden', enabled);
          MoneyTextBox.superclass._setEnabled.apply(this, arguments);
       },
+
+      _blurHandler: function() {
+         MoneyTextBox.superclass._blurHandler.apply(this, arguments);
+         // имитация стандартного поведения поля ввода
+         // т.к. браузер обрезает содержимое contenteditable контейнера без возвожности прокрутки
+         if(this._inputField) {
+             this._inputField[0].scrollLeft = 0;
+         }
+      },
       /**
        * Возвращает текущее значение денежного поля ввода.
        * @returns {String} Текущее значение денежного поля ввода.
@@ -157,7 +168,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
       },
 
       _setInputValue: function(value) {
-         value = value + '';
+         var newText = (value === null ||typeof value === 'undefined') ? '' : value + '';
          this._updateCompatPlaceholderVisibility();
          if(!this.isEnabled()) {
             // Рассчеты и отрисовку нужно разделить
@@ -165,10 +176,10 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
             if(!this._decimalsContainer){
                this._decimalsContainer = this._getDecimalsContainer();
             }
-            this._decimalsContainer[0].innerHTML = value.substring(value.length - 3, value.length);
-            this._inputField[0].innerHTML = this._getIntegerPart(value);
+            this._decimalsContainer[0].innerHTML = newText.substring(newText.length - 3, newText.length);
+            this._inputField[0].innerHTML = this._getIntegerPart(newText);
          }else{
-            this._inputField[0].innerHTML = value;
+            this._inputField[0].innerHTML = newText;
          }
       },
 
@@ -198,13 +209,22 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
        */
       _getCaretPosition : function(){
          var selection,
+             selectionRange,
              b,
              e,
              l;
+
          if(window.getSelection){
-            selection = window.getSelection().getRangeAt(0);
-            b = selection.startOffset;
-            e = selection.endOffset;
+            selection = window.getSelection();
+            selectionRange = selection.getRangeAt(0);
+            b = selectionRange.startOffset;
+            if(!constants.browser.firefox) {
+                e = selectionRange.endOffset;
+            }else {
+                // TODO перейти на общий механизм работы с FormattedTextBoxBase
+               e = b + selection.toString().length;
+            }
+
          }
          else if(document.selection){
             selection = document.selection.createRange();

@@ -1,0 +1,22 @@
+<div class="controls-Paging">
+    <ws:SBIS3.CONTROLS.IconButton
+            cssClassName="control-Paging__btn control-Paging__begin"
+            name="PagingBegin"
+            icon="icon-16 icon-First icon-primary"/>
+    <ws:SBIS3.CONTROLS.IconButton
+            cssClassName="control-Paging__btn control-Paging__prev"
+            name="PagingPrev"
+            icon="icon-16 icon-Back2 icon-primary"/>
+    <div class="controls-Paging__itemsContainer">
+        <ws:partial template="{{ _itemsTemplate }}" if="{{ _records }}" records="{{ _records }}" tplData="{{_itemData}}"/>
+    </div>
+    <ws:SBIS3.CONTROLS.IconButton
+            cssClassName="control-Paging__btn control-Paging__end"
+            name="PagingEnd"
+            icon="icon-16 icon-Last icon-primary"
+            visible="{{ mode === 'full' }}"/>
+    <ws:SBIS3.CONTROLS.IconButton
+            cssClassName="control-Paging__btn control-Paging__next"
+            name="PagingNext"
+            icon="icon-16 icon-Forward icon-primary"/>
+</div>

@@ -15,9 +15,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        'js!SBIS3.CONTROLS.FilterController',
        "Core/helpers/collection-helpers",
        "Core/core-instance",
-       "Core/helpers/functional-helpers"
+       "Core/helpers/functional-helpers",
+       "Core/helpers/Object/find"
     ],
-    function (cAbstract, cFunctions, cMerge, constants, HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController, FilterHistoryControllerUntil, DateRangeRelationController, FilterController, colHelpers, cInstance, fHelpers) {
+    function (cAbstract, cFunctions, cMerge, constants, HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController, FilterHistoryControllerUntil, DateRangeRelationController, FilterController, colHelpers, cInstance, fHelpers, find) {
    /**
     * Контроллер для осуществления базового взаимодействия между компонентами.
     *
@@ -30,21 +31,21 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
 
    function toggleCheckBoxes(operationPanel, gridView, hideCheckBoxes) {
       var visible = operationPanel.isVisible();
-      if (gridView._options.multiselect) {
-         gridView._container.toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible());
-         if (hideCheckBoxes) {
-            gridView.toggleCheckboxes(operationPanel.isVisible());
-            if (!visible) {
-               if (gridView._options.useSelectAll) {
-                  gridView.setSelectedAllNew(false);
-               } else {
-                  gridView.removeItemsSelectionAll();
-               }
+      //Вешаем класс даже для браузеров с multiselect = false, т.к. multiselect может измениться динамически, и проще
+      //всегда тоглить классы, чем отслеживать изменение multiselect на браузере
+      gridView.getContainer().toggleClass('controls-ListView__showCheckBoxes', operationPanel.isVisible());
+      if (hideCheckBoxes) {
+         gridView.toggleCheckboxes(operationPanel.isVisible());
+         if (!visible) {
+            if (gridView._options.useSelectAll) {
+               gridView.setSelectedAllNew(false);
+            } else {
+               gridView.removeItemsSelectionAll();
             }
          }
-         if (gridView._options.startScrollColumn !== undefined) {
-            gridView.updateScrollAndColumns();
-         }
+      }
+      if (gridView._options.startScrollColumn !== undefined) {
+         gridView.updateScrollAndColumns();
       }
    }
    function drawItemsCallback(operationPanel, view) {
@@ -154,18 +155,27 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        */
       bindSearchGrid : function(searchParamName, searchCrumbsTpl, searchForm, searchMode, doNotRespondOnReset, keyboardLayoutRevert, hierarchyViewMode) {
          if (!this._searchController){
-            this._searchController = new SearchController({
-               view: this._options.view,
-               searchForm: searchForm || this._options.searchForm,
-               searchParamName: searchParamName,
-               searchCrumbsTpl: searchCrumbsTpl,
-               searchMode: searchMode,
-               doNotRespondOnReset: doNotRespondOnReset,
-               breadCrumbs: this._options.breadCrumbs,
-               backButton: this._options.backButton,
-               keyboardLayoutRevert: keyboardLayoutRevert === undefined ? true : keyboardLayoutRevert,
-               hierarchyViewMode: hierarchyViewMode === undefined ? true : hierarchyViewMode
-            });
+            var cfg;
+            
+            if(searchParamName instanceof Object) {
+               cfg = searchParamName;
+            } else {
+               cfg = {
+                  searchParamName: searchParamName,
+                  searchCrumbsTpl: searchCrumbsTpl,
+                  searchMode: searchMode,
+                  doNotRespondOnReset: doNotRespondOnReset
+               }
+            }
+            
+            cfg.view = this._options.view;
+            cfg.searchForm = searchForm || this._options.searchForm;
+            cfg.breadCrumbs = this._options.breadCrumbs;
+            cfg.backButton = this._options.backButton;
+            cfg.keyboardLayoutRevert = keyboardLayoutRevert === undefined ? true : keyboardLayoutRevert;
+            cfg.hierarchyViewMode = hierarchyViewMode === undefined ? true : hierarchyViewMode;
+            
+            this._searchController = new SearchController(cfg);
          }
          this._searchController.bindSearch();
       },
@@ -293,6 +303,16 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
                }
 
                filterButton.setFilterStructure(preparedStructure);
+               
+               if(browser && browser._hasOption('filterButtonConfig')) {
+                  /* Если была забиндена не сама структура фильтров,
+                     а конфиг фильтров (это происходит, когда конфиг передают объектом на новом шаблонизаторе, а не строкой),
+                     то надо дополнительно обновить опцию filterButtonConfig, иначе после синхронизации сбросится стркутура. */
+                  if(find(browser._getOptions().bindings, function(elem) { return elem.propName === "filterButtonConfig" })) {
+                     browser.getProperty('filterButtonConfig').filterStructure = preparedStructure;
+                     view.setFilter(cMerge(view.getFilter, filter.viewFilter), true);
+                  }
+               }
             }
          }
 
@@ -361,14 +381,16 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        * @param onlyByCapacity {Boolean} только по разрядности. Т.е., выбирая новый период в одном контроле,
        * новые значения присвоятся в других контролах только если произошла смена разрядности или нарушено
        * условие I < II < III < IV< ... .
+       * @param lockButton {SBIS3.CONTROLS.StateButton} кнопка включаящая/выключаящая связывание компонентов.
        */
-      bindDateRanges: function(dateRanges, step, showLock, onlyByCapacity) {
+      bindDateRanges: function(dateRanges, step, showLock, onlyByCapacity, lockButton) {
          if (!this._dateRangeRelationController) {
             this._dateRangeRelationController = new DateRangeRelationController({
                dateRanges: dateRanges || this._options.dateRanges,
                step: step,
                showLock: showLock,
-               onlyByCapacity: onlyByCapacity
+               onlyByCapacity: onlyByCapacity,
+               lockButton: lockButton
             });
             this._dateRangeRelationController.subscribe('onDatesChange', function () {
                this._notify('onDatesChange');

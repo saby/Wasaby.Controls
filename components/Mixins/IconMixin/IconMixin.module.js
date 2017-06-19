@@ -1,7 +1,7 @@
 /**
  * Created by cheremushkin iv on 19.01.2015.
  */
-define('js!SBIS3.CONTROLS.IconMixin', ['html!SBIS3.CONTROLS.IconMixin/IconTemplate'], function(IconTemplate) {
+define('js!SBIS3.CONTROLS.IconMixin', ['tmpl!SBIS3.CONTROLS.IconMixin/IconTemplate'], function(IconTemplate) {
 
    /**
     * Миксин, добавляющий иконку

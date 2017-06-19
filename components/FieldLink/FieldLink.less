@@ -68,7 +68,6 @@
 }
 
 .controls-FieldLink__item-caption {
-   position: relative;
    height: @controls-FieldLink-linkItem-caption-height;
 }
 
@@ -175,7 +174,7 @@
    }
 
    &.ws-disabled {
-      
+
       .controls-TextBox__placeholder, .controls-TextBox__afterFieldWrapper {
          display: none;
       }
@@ -196,7 +195,7 @@
          display: none;
       }
    }
-   
+
    .controls-FieldLink__dropAllLinks {
       color: @controls-FieldLink-link-color;
       display: none;
@@ -254,11 +253,11 @@
    }
    &:not(.ws-disabled) {
       &.controls-FieldLink-Link__filterButton {
-         color: #0055bb;
+         color: @controls-FieldLink-FilterButton-color;
          text-decoration: none;
 
          &.ws-enabled:hover {
-            color: #0055bb;
+            color: @controls-FieldLink-FilterButton-color-hover;
             text-decoration: underline;
          }
       }
@@ -292,7 +291,7 @@
    top: -@controls-FieldLink-showAllLinks-lineHeight;
    width: 16px;
    line-height: @controls-FieldLink-showAllLinks-lineHeight;
-   margin-right: -22px;
+   margin-right: @controls-FieldLink-showAllLinks-marginRight;
    text-align: center;
    background-color: @white-color;
    color: @link-text-color;
@@ -341,10 +340,7 @@
 .ws-is-firefox {
    .controls-FieldLink {
       vertical-align: middle;
-      
-      .controls-TextBox__beforeFieldWrapper, .controls-TextBox__fieldWrapper {
-         margin-top: -1px;
-      }
+
       .controls-FieldLink__item-cross {
          top: -1px;
       }

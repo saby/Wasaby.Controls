@@ -104,31 +104,25 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
       },
       _processMassOperations:function(title){
          var numOfRecords = this._getView().getItems().getCount(),
-            self = this,
-            ds = this._getView().getItems();
-         if (this._getView()._hasNextPage(this._getView().getItems().getMetaData().more)) {
-            //Показать диалог выбора записей
-            new Dialog ({
-               opener : this,
-               template: 'js!SBIS3.CONTROLS.MassAmountSelector',
-               caption : title,
-               cssClassName: 'controls-MassAmountSelector',
-               handlers: {
-                  onBeforeShow: function(){
-                     //this.getLinkedContext().setValue('NumOfRecords', self._getView()._dataSet.getCount()); Хочется, чтобы было так
-                     //TODO Но пришлось сделать так:
-                     this.getChildControlByName('controls-MassAmountSelector').getContext().setValue('NumOfRecords', numOfRecords);
-                  },
-                  onChange: function(event, pageSize){
-                     self.processSelectedPageSize(pageSize);
-                  }
+            self = this;
+
+         //Показать диалог выбора записей
+         new Dialog ({
+            opener : this,
+            template: 'js!SBIS3.CONTROLS.MassAmountSelector',
+            caption : title,
+            cssClassName: 'controls-MassAmountSelector',
+            handlers: {
+               onBeforeShow: function(){
+                  //this.getLinkedContext().setValue('NumOfRecords', self._getView()._dataSet.getCount()); Хочется, чтобы было так
+                  //TODO Но пришлось сделать так:
+                  this.getChildControlByName('controls-MassAmountSelector').getContext().setValue('NumOfRecords', numOfRecords);
+               },
+               onChange: function(event, pageSize){
+                  self.processSelectedPageSize(pageSize);
                }
-            });
-         }
-         else {
-            //self._applyOperation(ds);
-            self._applyMassOperation(ds);
-         }
+            }
+         });
 
       },
       /**

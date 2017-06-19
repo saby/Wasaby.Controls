@@ -5,8 +5,8 @@
   .controls-MoneyTextBox__decimals {
     padding: @money-text-box-decimals-padding;
     font-size: @money-text-box-decimals-font-size;
-    color: @gray-ccc-color;
-    background-color: @white-color;
+    color: @money-text-box-decimals-color; //@gray-ccc-color;
+    background-color: transparent;
   }
 
   .controls-MoneyTextBox__input {
@@ -14,9 +14,21 @@
     height: @text-box-height - 2 * @text-box-border-width;
     outline: none;
     white-space: nowrap;
-    overflow: hidden;
     display: inline-block;
   }
+
+  &.controls-MoneyTextBox__ellipsis {
+    .controls-TextBox__fieldWrapper {
+      .text-overflow();
+      .controls-MoneyTextBox__input {
+        .text-overflow();
+        &:focus {
+          text-overflow: clip;
+        }
+      }
+    }
+  }
+
   &.ws-disabled {
     .controls-MoneyTextBox__input {
       display: inline;

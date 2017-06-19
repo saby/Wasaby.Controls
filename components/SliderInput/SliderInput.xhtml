@@ -4,8 +4,8 @@
          <div class="controls-Slider__mainSlider {{?it.bigPoint}} controls-Slider__big{{?}}">
             <div class="controls-Slider__point controls-Slider__point__start{{?it.single}} ws-hidden{{?}}"></div>
             <div class="controls-Slider__point controls-Slider__point__end"></div>
-            <div class="controls-Slider__line controls-Slider__line__empty"></div>
-            <div class="controls-Slider__line controls-Slider__line__full"></div>
+            <div class="controls-Slider__line__wrapper"><div class="controls-Slider__line controls-Slider__line__empty"></div></div>
+            <div class="controls-Slider__line__wrapper"><div class="controls-Slider__line controls-Slider__line__full"></div></div>
          </div>
       </div>
    </div>
@@ -16,6 +16,7 @@
       <component class="controls-SliderInput__input controls-SliderInput__input__start" data-component="SBIS3.CONTROLS.NumberTextBox" name="StartTextBox" >
          <option name="text">{{=it.startValue}}</option>
          <option name="startCharacter">0</option>
+         <option name="delimiters">true</option>
          <option name="placeholder" type="string">{{=it.minValue}}</option>
          <option name="decimals">{{=it.decimals}}</option>
       </component>
@@ -25,6 +26,7 @@
       <component class="controls-SliderInput__input controls-SliderInput__input__end" data-component="SBIS3.CONTROLS.NumberTextBox" name="EndTextBox" >
          <option name="text">{{=it.endValue}}</option>
          <option name="startCharacter">0</option>
+         <option name="delimiters">true</option>
          <option name="placeholder" type="string">{{=it.maxValue}}</option>
          <option name="decimals">{{=it.decimals}}</option>
       </component>

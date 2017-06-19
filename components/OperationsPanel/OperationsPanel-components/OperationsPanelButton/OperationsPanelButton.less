@@ -1,27 +1,31 @@
 .controls-OperationsPanelButton {
-   color: @default-color;
+   color: @controls-OperationsPanelButton-color;
    cursor: @controls-OperationsPanelButton-cursor;
 
    .controls-OperationsPanelButton__icon {
       font: @controls-OperationsPanelButton-font;
       position: relative;
       left: @controls-OperationsPanelButton-icon-left;
+      line-height: @controls-OperationsPanelButton-vert-height;
    }
 
    width: @controls-OperationsPanelButton-width;
    height: @controls-OperationsPanelButton-vert-height;
-   line-height: @controls-OperationsPanelButton-vert-height;
    border-radius: @controls-OperationsPanelButton-vert-border-radius;
+
+   &:hover, &.ws-has-focus {
+      color: @controls-OperationsPanelButton-active-icon-color;
+   }
 
    &.controls-Checked__checked {
       .controls-OperationsPanelButton__icon:before {
-         content: "\e012";
+         content: @controls-OperationsPanelButton-icon-expand;
       }
    }
    .controls-OperationsPanelButton__icon {
       top: @controls-OperationsPanelButton-vertical-icon-top;
       &:before {
-         content: "\e011";
+         content: @controls-OperationsPanelButton-icon;
       }
    }
 }

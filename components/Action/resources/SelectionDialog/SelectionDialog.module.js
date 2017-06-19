@@ -1,14 +1,14 @@
 define('js!SBIS3.CONTROLS.SelectionDialog', [
    "Core/CommandDispatcher",
    'js!SBIS3.CONTROLS.SelectorController',
-   "html!SBIS3.CONTROLS.SelectionDialog",
+   "tmpl!SBIS3.CONTROLS.SelectionDialog",
    "Core/core-instance",
-   "html!SBIS3.CONTROLS.SelectionDialog/resources/FolderTitleTpl",
+   "tmpl!SBIS3.CONTROLS.SelectionDialog/resources/FolderTitleTpl",
    "js!SBIS3.CONTROLS.Button",
    "js!SBIS3.CONTROLS.TreeDataGridView",
    "i18n!SBIS3.CONTROLS.SelectionDialog",
    'css!SBIS3.CONTROLS.SelectionDialog'
-], function(CommandDispatcher, SelectorController, dotTplFn, cInstance) {
+], function(CommandDispatcher, SelectorController, dotTplFn, cInstance, FolderTitleTpl) {
 
    var SelectionDialog = SelectorController.extend({
       _dotTplFn: dotTplFn,
@@ -28,7 +28,9 @@ define('js!SBIS3.CONTROLS.SelectionDialog', [
             filter: undefined,
             infiniteScroll: null,
             pageSize: undefined,
-            buttonCaption: 'Выбрать'
+            buttonCaption: 'Выбрать',
+            rootValue: null,
+            folderTitleTpl: FolderTitleTpl
          },
          treeView: undefined
       },
@@ -40,8 +42,17 @@ define('js!SBIS3.CONTROLS.SelectionDialog', [
          var
              filter = this._options.filter || {};
          this._treeView = this.getChildControlByName('SelectionDialog-TreeDataGridView');
+         if (this._options.rootValue) {
+            filter[this._options.parentProperty] = this._options.rootValue;
+         }
+         var root = {};
+         root[this._options.idProperty] = this._options.rootValue;
+         root[this._options.displayProperty] = rk('Корень');
+         root[this._options.nodeProperty] = true;
+         this._treeView.setRoot(root);
          this._treeView.setFilter(filter, true);
          this._treeView.setDataSource(this.getDataSource());
+
          if (this._treeView.getMultiselect()) {
             //по стандарту кнопку выбора надо показывать только если включен мультеселект
             this.getChildControlByName('SelectorControllerButton').show()

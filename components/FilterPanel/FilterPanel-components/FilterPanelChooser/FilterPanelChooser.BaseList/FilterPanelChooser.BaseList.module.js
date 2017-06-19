@@ -82,6 +82,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.BaseList', [
       _elemClickHandler: function(e, id) {
          this._getListView().toggleItemsSelection([id]);
          this._updateValue();
+         e.setResult(false);
       },
 
       _updateValue: function() {

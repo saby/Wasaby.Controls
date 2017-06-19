@@ -15,14 +15,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "js!WS.Data/Display/Enum",
    "js!WS.Data/Display/Flags",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
-   "html!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate",
+   "tmpl!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate",
    "js!WS.Data/Utils",
    "js!WS.Data/Entity/Model",
    "Core/ParserUtilities",
    "Core/Sanitize",
    "js!SBIS3.CORE.LayoutManager",
    "Core/core-instance",
-   "Core/helpers/fast-control-helpers",
+   "js!SBIS3.CONTROLS.Utils.InformationPopupManager",
    "Core/helpers/functional-helpers",
    'Core/helpers/string-helpers',
    "js!SBIS3.CONTROLS.Utils.SourceUtil",
@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    Sanitize,
    LayoutManager,
    cInstance,
-   fcHelpers,
+   InformationPopupManager,
    fHelpers,
    strHelpers,
    SourceUtil,
@@ -80,19 +80,22 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       return proj;
    },
 
+   prepareGroupId = function(item, groupId, cfg) {
+      //делаем id группы строкой всегда, чтоб потом при обращении к id из верстки не ошибаться
+      return groupId + '';
+   },
+
    applyGroupingToProjection = function(projection, cfg) {
       if (cfg.groupBy && cfg.easyGroup) {
-         var method;
-         if (!cfg.groupBy.method) {
-            var field = cfg.groupBy.field;
-            method = function(item, index, projItem){
-               //делаем id группы строкой всегда, чтоб потом при обращении к id из верстки не ошибаться
-               return item.get(field) + '';
-            }
-         }
-         else {
-            method = cfg.groupBy.method
-         }
+         var
+            method = function(item) {
+               var
+                  groupId = cfg.groupBy.method ? cfg.groupBy.method.apply(this, arguments) : item.get(cfg.groupBy.field);
+               if (groupId !== false) {
+                  groupId = cfg._prepareGroupId(item, groupId, cfg);
+               }
+               return groupId;
+            };
          projection.setGroup(method);
       }
       else {
@@ -123,9 +126,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       }
    },
 
-   canApplyGrouping = function(projItem, cfg) {      var
-         itemParent = projItem.getParent && projItem.getParent();
-      return !isEmpty(cfg.groupBy) && (!itemParent || itemParent.isRoot());
+   canApplyGrouping = function(projItem, cfg) {
+      return !isEmpty(cfg.groupBy) && (!projItem.isNode || !projItem.isNode());
    },
 
    groupItemProcessing = function(groupId, records, item, cfg) {
@@ -165,7 +167,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var prevGroupId = undefined;
          projection.each(function (item, index, group) {
             if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {
-               if (prevGroupId != group) {
+               if (prevGroupId != group && group !== false) {
                   cfg._groupItemProcessing(group, records, item,  cfg);
                   prevGroupId = group;
                }
@@ -326,15 +328,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _dataSet: null,
          _dotItemTpl: null,
          _propertyValueGetter: getPropertyValue,
-         _groupCollapsing: {},
          _revivePackageParams: {},
          _options: {
+            _groupCollapsing: {},
             _itemsTemplate: ItemsTemplate,
             _canServerRender: false,
             _canServerRenderOther : canServerRenderOther,
             _serverRender: false,
             _defaultItemTemplate: '',
             _defaultItemContentTemplate: '',
+            _prepareGroupId: prepareGroupId,
             _createDefaultProjection : createDefaultProjection,
             _buildTplArgsSt: buildTplArgs,
             _buildTplArgs : buildTplArgs,
@@ -693,7 +696,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @see setItemsSortMethod
              * @see WS.Data/Display/Collection#setSort
              */
-            itemsSortMethod: undefined,
+            itemsSortMethod: null,
             itemsFilterMethod: undefined,
             easyGroup: false,
             task1173537554: false,
@@ -913,7 +916,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _toggleGroup: function(groupId, flag) {
-         this._groupCollapsing[groupId] = flag;
+         this._options._groupCollapsing[groupId] = flag;
          var containers = this._getGroupContainers(groupId);
          containers.toggleClass('ws-hidden', flag);
          $('.controls-GroupBy[data-group="' + groupId + '"] .controls-GroupBy__separatorCollapse', this._container).toggleClass('controls-GroupBy__separatorCollapse__collapsed', flag);
@@ -927,7 +930,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._toggleGroup(groupId, true);
       },
       toggleGroup: function(groupId) {
-         var state = this._groupCollapsing[groupId];
+         var state = this._options._groupCollapsing[groupId];
          this[state ? 'expandGroup' : 'collapseGroup'].call(this, groupId);
       },
 
@@ -966,8 +969,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          if (!this._itemData) {
             this._itemData = cFunctions.clone(buildArgsMethod.call(this, this._options));
+         } else {
+            this._updateItemData(this._itemData);
          }
          return this._itemData;
+      },
+
+      _updateItemData: function(itemData) {
+         /*Method must be implemented*/
       },
 
       _redrawItems : function(notRevive) {
@@ -1004,6 +1013,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._toggleEmptyData(this._needShowEmptyData(data.records));
 
          }
+         /* Класс вешаем после отрисовки, но до события onDrawItems,
+            почему так:
+            в событии onDrawItems могут производить замеры высоты/ширины,
+            а без этого класса к списку применяются стили для состояния, когда он "пустой" (например устанавливается минимальная высота),
+            что портит расчёты. */
+         this._container.addClass('controls-ListView__dataLoaded');
+
          if (notRevive) {
             this._revivePackageParams.revive = true;
             this._revivePackageParams.light = false;
@@ -1011,7 +1027,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          else {
             this._reviveItems();
          }
-         this._container.addClass('controls-ListView__dataLoaded');
       },
 
       _needShowEmptyData: function(items) {
@@ -1063,6 +1078,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             if (inlineStyles) {
                targetElement.replaceWith($(markup).attr('style', inlineStyles));
             } else {
+               /**
+                * Если фокус стоит внутри строки - мы его потеряем
+                */
+               if (targetElement.find($(document.activeElement)).length > 0){
+                  this._getElementToFocus().focus();
+               }
                targetElement.get(0).outerHTML = markup;
             }
 
@@ -1203,6 +1224,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      records: itemsToDraw,
                      tplData: this._prepareItemData()
                   };
+                  data.tplData.drawHiddenGroup = !!this._options._groupCollapsing[groupId] ;
                   markupExt = extendedMarkupCalculate(this._getItemsTemplate()(data), this._options);
                   markup = markupExt.markup;
                   this._optimizedInsertMarkup(markup, this._getInsertMarkupConfig(newItemsIndex, newItems, groupId));
@@ -1320,9 +1342,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             container.get(0).innerHTML = '';
          }
 
-         if (container.get(0) === this._getItemsContainer().get(0)) {
-            this._itemsInstances = {};
-         }
+         //Очищаем список инстансов, после удаления элеменов коллекции
+         this._itemsInstances = {};
+
          return compsArray;
       },
 
@@ -1568,10 +1590,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
           if (this._dataSource) {
              this._toggleIndicator(true);
-             //TODO удалить после 3.7.5
-             if (this.hasEventHandlers('onBeforeDataLoad') && !this._options.task1173770359) {
-                IoC.resolve('ILogger').error('3.7.5 onBeforeDataLoad', 'Событие устарело и вскоре будет удалено. Вместо него используйте onBeforeProviderCall из источника данных');
-             }
              this._notify('onBeforeDataLoad', this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit);
              def = this._callQuery(this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit)
                 .addCallback(fHelpers.forAliveOnly(function (list) {
@@ -1622,11 +1640,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       }),
 
       _loadErrorProcess: function(error) {
+        var self = this;
          if (!error.canceled) {
             this._toggleIndicator(false);
             if (this._notify('onDataLoadError', error) !== true && !error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
-               error.message = error.message.toString().replace('Error: ', '');
-               fcHelpers.alert(error);
+               InformationPopupManager.showMessageDialog(
+                 {
+                    message: error.message,
+                    opener: self,
+                    status: 'error'
+                 }
+               );
                error.processed = true;
             }
          }
@@ -2088,6 +2112,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         */
       getItemInstance: function (id) {
          var projItem = this._getItemProjectionByItemId(id);
+         if (!projItem) {
+            return undefined;
+         }
          var instances = this.getItemsInstances();
          return instances[projItem.getHash()];
       },
@@ -2373,9 +2400,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _canApplyGrouping: function(projItem) {
-         var
-             itemParent = projItem.getParent && projItem.getParent();
-         return !isEmpty(this._options.groupBy) && (!itemParent || itemParent.isRoot());
+         return !isEmpty(this._options.groupBy) && (!projItem.isNode || !projItem.isNode());
       },
 
       _getGroupItems: function(groupId) {

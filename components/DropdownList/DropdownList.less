@@ -43,7 +43,7 @@
    .controls-DropdownList__afterCaptionWrapper {
       display: none;
       position: relative;
-      top: 2px;
+      top: @DropdownList-after-caption-wrapper-top;
       cursor: pointer;
       .flex-shrink(0);
    }
@@ -109,6 +109,7 @@
 
 .controls-DropdownList__picker {
    .controls-DropdownList__scrollContainer {
+      background: @DropdownList-picker-bg;
       max-height: @DropdownList-picker-max-height - @DropdownList-footer-multisel-buttonsBlock-h;
       width: 100%; //Укажем явно для ie edge
    }
@@ -127,8 +128,6 @@
       }
       &.controls-DropdownList__withoutCross {
          .controls-DropdownList__item.controls-DropdownList__item__selected {
-            display: block;
-
             /* из-за display: block браузер растягивает контейнер на всю ширину, и чекбокс падает вниз,
                выписана задача на рефакторинг стилей
                https://online.sbis.ru/opendoc.html?guid=af8eda3e-27bf-40e3-adaf-96f97d7b1364&des=
@@ -154,7 +153,7 @@
             }
          }
          .controls-DropdownList__item {
-            padding: 7px 38px 6px 12px;
+            padding: @dropdown-list-item-padding;
             position: relative;
             .controls-DropdownList__itemTextWrapper {
                position: relative;
@@ -259,7 +258,7 @@
          .flexbox();
          .flex-direction(column);
          .controls-DropdownList__header {
-            align-self: flex-end;
+            .align-self(flex-end);
             .controls-DropdownList__selectedItem {
                padding: 0 4px;
             }
@@ -300,6 +299,7 @@
    }
    .controls-DropdownList__item {
       padding: @DropdownList-picker-menu-item-padding;
+      line-height: @DropdownList-picker-menu-line-height;
       background: @DropdownList-picker-menu-item-color;
       margin: @DropdownList-picker-menu-item-margin;
       font-size: @DropdownList-picker-menu-font-size;
@@ -367,7 +367,7 @@
       }
 
       &.controls-DropdownList__item__selected .controls-DropdownList__itemCheckBox {
-         background: @DropdownList-icon-checked-bg-pathFilter;
+         .checkbox-checked-size(@check-box-icon-successful-size, @check-box-icon-successful-left, @check-box-icon-successful-top);
          visibility: visible;
       }
       &.controls-ListView__defaultItem.controls-DropdownList__item__selected,
@@ -379,19 +379,28 @@
       }
 
       .controls-DropdownList__itemCheckBox {
-         width: 16px;
-         height: 16px;
+         .checkbox(@check-box-icon-size);
+         .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+         &:before {
+            color: @primary-color;
+         }
+         &:after {
+            color: @check-box-icon-box-color;
+         }
          cursor: pointer;
          display: inline-block;
-         background: @DropdownList-icon-bg-pathFilter;
          visibility: hidden;
          position: relative;
+         bottom: @DropdownList-checkbox-bottom;
       }
 
       &.controls-DropdownList__buttonsBlock {
          height: @DropdownList-footer-multisel-buttonsBlock-h;
          .controls-DropdownListFooter_hasMore {
-            top: 4px;
+            top: @DropdownList-footer-hasMore-top-multiselect;
+         }
+         .controls-DropdownListFooter_hasMore {
+            left: @DropdownList-footer-hasMore-left-multiselect;
          }
       }
    }

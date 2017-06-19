@@ -7,7 +7,6 @@ define('js!SBIS3.CONTROLS.FormController', [
    "Core/Deferred",
    "Core/IoC",
    "Core/ConsoleLogger",
-   "Core/helpers/fast-control-helpers",
    "Core/core-instance",
    "Core/helpers/functional-helpers",
    "js!SBIS3.CORE.CompoundControl",
@@ -21,7 +20,7 @@ define('js!SBIS3.CONTROLS.FormController', [
    "i18n!SBIS3.CONTROLS.FormController",
    'css!SBIS3.CONTROLS.FormController'
 ],
-   function( cContext, cFunctions, cMerge, CommandDispatcher, EventBus, Deferred, IoC, ConsoleLogger, fcHelpers, cInstance, fHelpers, CompoundControl, LoadingIndicator, Record, Model, SbisService, InformationPopupManager, OpenDialogUtil) {
+   function( cContext, cFunctions, cMerge, CommandDispatcher, EventBus, Deferred, IoC, ConsoleLogger, cInstance, fHelpers, CompoundControl, LoadingIndicator, Record, Model, SbisService, InformationPopupManager, OpenDialogUtil) {
    /**
     * Компонент, на основе которого создают диалог, данные которого инициализируются по записи.
     * В частном случае компонент применяется для создания <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/'>диалогов редактирования записи</a>.
@@ -141,6 +140,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          _onBeforeCloseHandler: undefined,
          _onAfterShowHandler: undefined,
          _onRecordChangeHandler: undefined,
+         _needUpdateAlways: false, //Сохранять запись всегда, даже когда не было изменений
          _options: {
             /**
              * @cfg {String} Устанавливает первичный ключ записи {@link record}.
@@ -374,7 +374,7 @@ define('js!SBIS3.CONTROLS.FormController', [
       },
 
       _setDefaultContextRecord: function(){
-         var ctx = new cContext({restriction: 'set'}).setPrevious(this.getLinkedContext());
+         var ctx = cContext.createContext(this, {restriction: 'set'}, this.getLinkedContext());
          ctx.setValue('record', this._options.record || new Record());
          this._context = ctx;
       },
@@ -498,11 +498,15 @@ define('js!SBIS3.CONTROLS.FormController', [
                eMessage = eResult;
             }
             if(eMessage) {
-               fcHelpers.alert(eMessage).addCallback(function(result){
+               var self = this;
+               InformationPopupManager.showMessageDialog({
+                  message: eMessage,
+                  status: 'error'
+               }, function(){
                   if (e.httpError == 403){
-                     this._closePanel();
+                     self._closePanel();
                   }
-               }.bind(this));
+               });
             }
          }
          e.processed = true;
@@ -818,7 +822,7 @@ define('js!SBIS3.CONTROLS.FormController', [
             },
             self = this;
 
-         if (this._options.record.isChanged() || self._newRecord) {
+         if (this._options.record.isChanged() || self._newRecord || this._needUpdateAlways) {
             this._updateDeferred = this._dataSource.update(this._getRecordForUpdate()).addCallback(function (key) {
                self.getRecord().acceptChanges(); //Выпилить вообще весь функционал _getRecordForUpdate, задача с отправкой только измененных полей решается через опцию sbisService
                updateConfig.additionalData.key = key;

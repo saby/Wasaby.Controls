@@ -1,0 +1,9 @@
+<div class="controls-ScrollContainer ws-scrolling-content {{ _options.stickyContainer?' ws-sticky-header__wrapper' }}">
+   <div class="controls-ScrollContainer__content ws-scrolling-content controls-ScrollContainer__content-overflowHidden{{_options.stickyContainer?' ws-sticky-header__scrollable-container'}} ">
+      <ws:partial template="{{_options.content}}"/>
+   </div>
+   <div class="controls-ScrollContainer__scrollbar"></div>
+   <ws:if data="{{_options.stickyContainer}}">
+      <div class="ws-sticky-header__header-container"></div>
+   </ws:if>
+</div>

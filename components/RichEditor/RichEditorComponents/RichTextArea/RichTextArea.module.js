@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "Core/constants",
    "Core/Deferred",
    "js!SBIS3.CONTROLS.TextBoxBase",
-   "html!SBIS3.CONTROLS.RichTextArea",
+   "tmpl!SBIS3.CONTROLS.RichTextArea",
    "js!SBIS3.CONTROLS.Utils.RichTextAreaUtil",
    "js!SBIS3.CONTROLS.RichTextArea/resources/smiles",
    'js!WS.Data/Di',
@@ -215,7 +215,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
          _modifyOptions: function(options) {
             options = RichTextArea.superclass._modifyOptions.apply(this, arguments);
-            options._prepareReviewContent = this._prepareReviewContent.bind(this);
+            options._prepareReviewContent = this._prepareReviewContent.bind({_options: options});
             options._prepareContent = this._prepareContent.bind(this);
             return options;
          },
@@ -294,6 +294,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   ' height="' + constants.defaultYoutubeHeight + '"',
                   ' style="min-width:' + constants.minYoutubeWidth + 'px; min-height:' + constants.minYoutubeHeight + 'px;"',
                   ' src="' + protocol + '//www.youtube.com/embed/' + id + '"',
+                  ' allowfullscreen',
                   ' frameborder="0" >',
                   '</iframe>'
                ].join('');
@@ -397,7 +398,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           *     }
           * </pre>
           * @see text
-          * @see getText
           */
          setText: function(text) {
             if (text !== this._curValue()) {
@@ -796,7 +796,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                anchor = editor.dom.getParent(element, 'a[href]'),
                href = anchor ? editor.dom.getAttrib(anchor, 'href') : '',
                fre = this,
-               context = new cContext(),
+               context = cContext.createContext(this),
                dom = editor.dom,
                protocol = /(https?|ftp|file):\/\//gi,
                dialogWidth = 440;
@@ -817,7 +817,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      onReady: function () {
                         var
                            self = this,
-                           hrefLabel = $('<div class="controls-RichEditor__insertLinkHrefLabel">Адрес</div>'),
+                           hrefLabel = $('<div class="controls-RichEditor__insertLinkHrefLabel">' + rk('Адрес') + '</div>'),
                            okButton = $('<div class="controls-RichEditor__insertLinkButton"></div>'),
                            linkAttrs = {
                               target: '_blank',
@@ -837,6 +837,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                            linkedContext: context,
                            name: 'fre_link_href'
                         });
+                        this._fieldHref.getContainer().on('keydown', function(e) {
+                           if (e.which == cConstants.key.enter) {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              return false;
+                           }
+                        });
                         this._titleBar
                            .prepend($('<a href="javascript:void(0)"></a>')
                               .addClass('ws-window-titlebar-action close')
@@ -847,7 +854,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                            .append(okButton);
                         new Button({
                            caption: 'ОК',
-                           defaultButton: true,
+                           primary: true,
                            parent: this,
                            handlers: {
                               onActivated: function () {
@@ -1084,7 +1091,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                               width = this.getChildControlByName('imageWidth').getValue(),
                               height = this.getChildControlByName('imageHeight').getValue();
                            width = width !== null ? width + (percentSizes ? '%' : 'px') : '';
-                           height = height !== null ? height + (percentSizes ? '%' : 'px') : '';
+                           height = (height !== null && !percentSizes) ? height + 'px' : ''; //не проставляем высоту если процентые размеры
                            $image.css({
                               width: width,
                               height: height
@@ -1181,7 +1188,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   });
                }
                this._notifyOnSizeChanged();
-
                if (!self._readyContolDeffered.isReady()) {
                   self._tinyReady.addCallback(function() {
                      self._readyContolDeffered.callback();
@@ -1233,7 +1239,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
                //upd: в костроме форматная вставка, не нужно вырезать лишние теги
                if (!self._mouseIsPressed && self._options.editorConfig.paste_as_text) {
-                  e.content = Sanitize(e.content, {validNodes: {img: false}, checkDataAttribute: false});
+                  e.content = Sanitize(e.content, {validNodes: {img: false}, checkDataAttribute: false, escapeInvalidTags: false});
                }
                self._mouseIsPressed = false;
                // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
@@ -1335,7 +1341,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             editor.on('keydown', function(e) {
                self._typeInProcess = true;
-
                if (e.which === cConstants.key.pageDown || e.which === cConstants.key.pageUp || (e.which === cConstants.key.insert && !e.shiftKey && !e.ctrlKey)) {
                   e.stopPropagation();
                   e.preventDefault();
@@ -1353,10 +1358,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   //после tab не происходит keyup => необходимо сбрасывать флаг нажатой кнопки
                   self._typeInProcess = false;
                   return false;
-               } else if (e.which === cConstants.key.enter && e.ctrlKey) {
-                  e.preventDefault();//по ctrl+enter отменяем дефолтное(чтобы не было перевода строки лишнего), разрешаем всплытие
-                  //по ctrl+enter может произойти перехват события( например главная кнопка) и keyup может не сработать
-                  //необходимо сбрасывать флаг зажатой кнопки, чтобы шло обновление опции text (сейчас обновление опции text не идёт при зажатаой клавише, чтобы не тормозило)
+               } else if (e.ctrlKey || (e.which >= cConstants.key.f1 && e.which <= cConstants.key.f12 ) ) {
+                  //сбрасываем флаг при любом горячем сочетании
+                  if (e.which === cConstants.key.enter) {
+                     e.preventDefault();//по ctrl+enter отменяем дефолтное(чтобы не было перевода строки лишнего), разрешаем всплытие
+                     //по ctrl+enter может произойти перехват события( например главная кнопка) и keyup может не сработать
+                     //необходимо сбрасывать флаг зажатой кнопки, чтобы шло обновление опции text (сейчас обновление опции text не идёт при зажатаой клавише, чтобы не тормозило)
+                  }
                   self._typeInProcess = false;
                }
                self._updateHeight();
@@ -1381,11 +1389,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   self._togglePlaceholder(self._getTinyEditorValue());
                }, 1);
             });
-
             editor.on('change', function(e) {
                self._setTrimmedText(self._getTinyEditorValue());
             });
-
             editor.on( 'cut',function(e){
                setTimeout(function() {
                   self._setTrimmedText(self._getTinyEditorValue());
@@ -1466,6 +1472,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                imageOptionsPanel = this._getImageOptionsPanel(target);
             imageOptionsPanel.show();
          },
+
          _changeImageTemplate: function(target, template) {
             var
                parent = target.parent();
@@ -1495,6 +1502,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             };
             this._setTrimmedText(this._getTinyEditorValue());
          },
+
          _getImageOptionsPanel: function(target){
             var
                self = this;
@@ -1555,7 +1563,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          },
             
          _prepareImageURL: function(fileobj) {
-            return'/previewer' + (fileobj.filePath ? fileobj.filePath : fileobj.url);
+            return'/previewer/r/512/512' + (fileobj.filePath ? fileobj.filePath : fileobj.url);
          },
             
          _replaceWhitespaces: function(text) {
@@ -1755,18 +1763,21 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                this._inputControl.html().indexOf('<blockquote>') < 0
             );
          },
+
          _replaceSmilesToCode: function(text) {
             smiles.forEach(function(smile){
                text = text.replace(new RegExp(String.fromCodePoint(smile.code), 'gi'), smile.title);
             });
             return text;
          },
+
          _replaceCodesToSmile: function(text) {
             smiles.forEach(function(smile) {
                text = text.replace(new RegExp(smile.title, 'gi'), String.fromCodePoint(smile.code));
             });
             return text;
          },
+
          _addToHistory: function(text) {
             return UserConfig.setParamValue(this._getNameForHistory(), this._replaceSmilesToCode(text));
          },
@@ -1813,8 +1824,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
          _updateHeight: function() {
             var
-               curHeight,
-               closestParagraph;
+               curHeight;
             if (this.isVisible()) {
                curHeight = this._container.height();
                //Производим подкрутку вверх если курсор провалился под клавиатуру на iPad
@@ -1828,6 +1838,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                }
             }
          },
+
          //Метод проверяет положение элемента отпосительно клавитуры на ipad (true - под клавитурой, false - над)
          _elementIsUnderKeyboard: function(target, side){
             var
@@ -1841,6 +1852,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                target.scrollIntoView(true);
             }
          },
+
          //метод осушествляет подрутку до места ввода ( параграфа) если его нижний край находится под клавитурой
          _backspinForIpad: function() {
             if (this._tinyEditor && this._tinyEditor.initialized && this._tinyEditor.selection && this._textChanged && (this._inputControl[0] === document.activeElement)) {
@@ -1866,20 +1878,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }
          },
 
-         _prepareReviewContent: function(text, it) {
+         _prepareReviewContent: function(text) {
             if (text && text[0] !== '<') {
                text = '<p>' + text.replace(/\n/gi, '<br/>') + '</p>';
             }
-            text = Sanitize(text, {
-               checkDataAttribute: false,
-               validNodes: {
-                  embed: {
-                     type: true,
-                     src: true
-                  }
-               }
-            });
-            return (this._options || it).highlightLinks ? LinkWrap.wrapURLs(LinkWrap.wrapFiles(text), true) : text;
+            text = Sanitize(text, {checkDataAttribute: false});
+            return this._options.highlightLinks ? LinkWrap.wrapURLs(LinkWrap.wrapFiles(text), true) : text;
          },
 
          //установка значения в редактор
@@ -1926,6 +1930,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             //тк на кнопках не случается focusout не происходит добавления состояния в историю
             this._tinyEditor.undoManager.add();
          },
+
          /**
           * Убрать формат выделенного текста
           * @param {string} format  имя формата
@@ -1949,6 +1954,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                this._inputControl.css('height', this._container.height());
             }
          },
+
          //метод взят из link плагина тини
          _isOnlyTextSelected: function() {
             var
@@ -1958,6 +1964,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }
             return true;
          },
+
          _getTextBeforePaste: function(){
             //Проблема:
             //          после вставки текста могут возникать пробелы после <br> в начале строки

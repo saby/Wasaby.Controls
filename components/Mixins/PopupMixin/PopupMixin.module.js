@@ -217,6 +217,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          }
 
          this._touchKeyboardMoveHandler = this._touchKeyboardMoveHandler.bind(this);
+         this._overlayClick = this._overlayClick.bind(this);
+
          EventBus.globalChannel().subscribe('MobileInputFocus', this._touchKeyboardMoveHandler);
 
          if (this._options.closeButton) {
@@ -273,7 +275,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
       _onTargetMove: function (event, state, isInitial) {
          if (this.isVisible()) {
-            if(this._options.closeOnTargetMove && !isInitial) {
+            if(this._options.closeOnTargetMove && !isInitial && !TouchKeyboardHelper.getKeyboardAnimation()) {
                this.hide();
             } else {
                if (this.isFixed()) {
@@ -471,23 +473,27 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          }
       },
       _setModal: function(isModal){
+         var overlayContainer = ModalOverlay._overlay;
+
          if (isModal){
             ModalOverlay.adjust();
-            var self = this;
-            ModalOverlay._overlay.bind('mousedown', function(){
-               if (self._options.closeByExternalClick && self.getId() == cWindowManager.getMaxZWindow().getId()) {
-                  ControlHierarchyManager.getTopWindow().hide();
-               }
-            });
+            overlayContainer && overlayContainer.bind('mousedown', this._overlayClick);
          }
          else {
             cWindowManager.releaseZIndex(this._zIndex);
             ModalOverlay.adjust();
+            overlayContainer && overlayContainer.unbind('mousedown', this._overlayClick);
          }
       },
 
       isModal: function(){
          return !!this._options.isModal;
+      },
+
+      _overlayClick: function() {
+         if (this._options.closeByExternalClick && this.getId() == cWindowManager.getMaxZWindow().getId()) {
+            ControlHierarchyManager.getTopWindow().hide();
+         }
       },
 
       moveToTop: function(){
@@ -557,7 +563,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       },
 
       _setOverflowY: function(value) {
-         this.getContainer().css('overflow-y', 'auto');
+         //Баг в firefox при overflow-y: auto - если высота контента больше высоты основного контейнера, то добавляется скролл
+         //Но от не расширяет контейнер на свою ширину, а ужимает текущий контейнер. При overflow-y: scroll такого нет, для ff юзаю его
+         //т.к. значение auto вешается только в том случае, если скролл нужно показать
+         this.getContainer().css('overflow-y', detection.firefox ? 'scroll' : 'auto');
          this.getContainer().height(value);
       },
 
@@ -944,7 +953,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          if (orientation == 'vertical') {
             if (offset.top <= 0) {
                this._overflowedV = true;
-               this._container.css('overflow-y', 'auto');
+               this._container.css('overflow-y', detection.firefox ? 'scroll' : 'auto');
                //Высота попапа не может быть больше высоты окна, поэтому ограничим его как минимум этой высотой 
                if (this._container.get(0).scrollHeight > this._windowSizes.height) {
                   height = this._windowSizes.height;
@@ -1195,6 +1204,10 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             // Освобождаем оверлей если забирали его
             if (this._options.isModal){
                this._setModal(false);
+            }
+
+            if(this._options.closeButton) {
+               this.getContainer().find('.controls-PopupMixin__closeButton').off();
             }
          },
          hide: function() {

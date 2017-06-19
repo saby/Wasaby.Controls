@@ -36,7 +36,9 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
              * @cfg {Boolean} включает или отключает отображение замка на всех связанных контроллах.
              * Если равен null, то оставляет отображение замочка без изменений.
              */
-            showLock: null
+            showLock: null,
+
+            lockButton: null
          },
          _updating: false,
          _steps: []
@@ -48,13 +50,16 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
          var dateRanges = arguments.length ? arguments : this._options.dateRanges,
             i;
 
+         if (this._options.lockButton) {
+            this._options.lockButton.setChecked(!this._options.onlyByCapacity);
+            this._options.lockButton.subscribe('onCheckedChange', this._onLockedChanged.bind(this, -1))
+         }
+
          for (i = 0; i < dateRanges.length; i++) {
             dateRanges[i].subscribe('onRangeChange', this._onRangeChanged.bind(this, i));
             dateRanges[i].subscribe('onLockedChanged', this._onLockedChanged.bind(this, i));
-            if (i !== 0) {
-               this._steps.push(this._options.step);
-            }
          }
+         this._resetSteps();
          if (typeof this._options.showLock  === 'boolean') {
             for (i = 0; i < dateRanges.length; i++) {
                dateRanges[i].setLocked(!this._options.onlyByCapacity);
@@ -75,6 +80,9 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
             return;
          }
          this._updating = true;
+         if (this._options.lockButton) {
+            this._options.lockButton.setChecked(locked);
+         }
          for (i = 0; i < dateRanges.length; i++) {
             if (i !== controlNumber) {
                dateRanges[i].setLocked(locked);
@@ -91,7 +99,8 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
       },
 
       _updateControls: function (controlNumber, start, end, oldStart, oldEnd) {
-         var changedControl, periodType, periodLength, step, capacityChanged, control, lastDate, i;
+         var changedControl, periodType, periodLength, oldPeriodType, oldPeriodLength,
+            step, capacityChanged, control, lastDate, i;
 
          var getStep = function (number) {
             var s = this._options.onlyByCapacity ? periodLength : this._steps[number] || periodLength;
@@ -117,11 +126,21 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
 
          periodType = dateHelpers.getPeriodType(start, end);
          periodLength = dateHelpers.getPeriodLengthInMonthByType(periodType);
-         capacityChanged = oldStart && oldEnd && dateHelpers.getPeriodType(oldStart, oldEnd) !== periodType;
+         oldPeriodType = (oldStart && oldEnd) ? dateHelpers.getPeriodType(oldStart, oldEnd) : null;
+         oldPeriodLength = oldPeriodType ? dateHelpers.getPeriodLengthInMonthByType(oldPeriodType) : null;
+         capacityChanged = oldPeriodType !== periodType;
 
          if (!periodLength) {
             this._updating = false;
             return;
+         }
+
+         // Если изменилась разрядность и используется
+         // тип связи с установленным шагом и разрядность увеличилась,
+         // или тип связи смежные периоды
+         // то сбрасываем установленные шаги.
+         if (capacityChanged && !this._options.onlyByCapacity && ((this._options.step && oldPeriodLength && periodLength > oldPeriodLength) || !this._options.step)) {
+            this._resetSteps();
          }
 
          // Перебираем и устанавливаем даты в контролых от текущего до первого
@@ -158,6 +177,13 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
 
          this._updating = false;
          this._notify('onDatesChange');
+      },
+
+      _resetSteps: function () {
+         this._steps = [];
+         for (var i = 0; i < this._options.dateRanges.length - 1; i++) {
+            this._steps.push(this._options.step);
+         }
       },
 
       _slideStartDate: function (date, monthDelta) {

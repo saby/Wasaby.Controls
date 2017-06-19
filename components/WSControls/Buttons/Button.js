@@ -4,8 +4,7 @@ define('js!WSControls/Buttons/Button', [
    'Core/Sanitize',
    'js!WSControls/Buttons/ButtonBase',
    'tmpl!WSControls/Buttons/Button',
-   'tmpl!WSControls/Buttons/resources/contentTemplate',
-   'css!WSControls/Buttons/resources/ButtonCommonStyles'
+   'tmpl!WSControls/Buttons/resources/contentTemplate'
 ], function(constants, Sanitize, ButtonBase, dotTplFn, contentTemplate) {
 
    'use strict';
@@ -103,11 +102,8 @@ define('js!WSControls/Buttons/Button', [
       },
 
       setCaption: function(caption){
-         caption = Sanitize(caption, {validNodes: {component: true}});
          Button.superclass.setCaption.call(this, caption);
-         var btnText = $('.js-controls-Button__text', this._container.get(0));
-         btnText.toggleClass('controls-Button__emptyCaption', !caption);
-         btnText.html(caption || '');
+         this._redrawButton();
       },
        /**
         * Метод установки кнопки по умолчанию.
@@ -160,6 +156,10 @@ define('js!WSControls/Buttons/Button', [
         * </pre>
         */
       _drawIcon: function() {
+          this._redrawButton();
+      },
+
+      _redrawButton: function() {
           this._container.get(0).innerHTML = contentTemplate(this._options);
       },
 

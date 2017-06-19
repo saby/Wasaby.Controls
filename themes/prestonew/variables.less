@@ -16,13 +16,15 @@
 @accent-color:							              #26B8FF;
 @default-hover-color:                     #B9E9FF;
 @innacent-color2:						              #999999; //Неакцентные элементы, заголовки таблиц, комментарии
+@acent-color2:                            #354B62;//Цвет акцентной плашки
 @basic-block-bg-color:					          #2C3E50; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
 @default-height:								          1.7857rem;
 @icon-color-primary:                      @default-text-color;
+@highlight-text-bg:                       #354B62;
 @icon-active-color:                       @default-hover-color;
 
 @icon-small-size:                         1.32rem;
-@icon-medium-size:                        1.7857rem;
+@icon-medium-size:                        1.79rem;
 @icon-large-size:                         3rem;
 
 //=============
@@ -37,18 +39,19 @@
 @date-range-big-bg:		#2c3e50;
 @text-color:                              @white-color;
 @default-border-style:						solid;
-@blue-dark-color: #FFCC99;
-@darkcyan-color: 							#8991A9;
+@blue-dark-color:                           #8991A9;
+@darkcyan-color: 						  #B9E9FF;
 @default-font-name:                       'TensorFont Regular', 'TensorFont', sans-serif;;
 @default-font-size:                       1.14rem;
-@default-border-width:					  0.072rem;
+
+@default-border-width:					         .07142rem;
+
 @font-popup-size:                         1.43rem;
 @font-folder-size:                        1.14rem;
 @default-font-line-height:                20px;
 @check-box-default-font-size:				1.14rem;
 @closeBigButtonImage:                     url('img/areaBigCloseButton.png') 0 0;
 @closeBigButtonImageHover:                url('img/areaBigCloseButton.png') 0 -3rem;
-@closeBigButtonWidth:                     60px;
 @closeBigButtonHeight:                    1.43rem;
 
 @default-itemHover-color:                 #1b2530;
@@ -63,20 +66,20 @@
 @link-text-color:                         #26B8FF;
 @link-line-height:                        normal;
 @link-font-size:                          1.43rem;
-@link-hover-text-color:                   #FFA34F;
+@link-hover-text-color:                   #B9E9FF;
 @link-icon-hover-icon:                    @link-hover-text-color;
 
 @link-icon-margin:                        -2px 0 0;
 
 @link-icon-field-margin:                  0 0 0 .14rem;
 
-@link-additional-color:                   @darkcyan-color;
+@link-additional-color:                   #8991A9;
 
 // ------------ //
 //  Icon Button //
 // ------------ //
 
-@icon-button-round-border-position:     relative;
+@icon-button-round-border-position:     absolute;
 @icon-button-round-border-width:        2.286rem;
 @icon-button-round-border-height:       2.286rem;
 @icon-button-round-border-line-height:  2.2rem;
@@ -91,6 +94,8 @@
 @icon-button-edit-round-border-height:             @icon-large-size;
 @icon-button-edit-round-border-width:              @icon-large-size;
 @icon-button-edit-round-border-line-height:        @icon-large-size;
+
+@list-view-items-toolbar-icon-button-border-font:  'carrypresto-icons';
 
 // ------ //
 // Button //
@@ -108,12 +113,14 @@
 @button-icon-text-margin:                 0 8px 0 28px;             // margin of text following 16x16 icon
 @button-icon-big-top-offset:              8px;                     // top offset of 24x24 icon
 @button-icon-big-left-offset:             @button-icon-left-offset;
+@button-icon-left-offset:                 0;
 @button-icon-big-text-margin:             0 8px 0 36px;             // margin of text following 24x24 icon
 @button-text-margin:                      0 0.57rem 0 0.57rem;
 @button-text-margin-left:                 .57rem;
 @button-text-margin-right:                .57rem;
 @button-text-padding:                     0;                        // padding of text
 @button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
+@button-icon-color-hover:                 #B9E9FF;
 
 @FilterPanelButtonRightClose: url('img/FilterPanelButton.png') 0 0;
 @FilterPanelButtonLeftClose: url('img/FilterPanelButton.png') -35px 0;
@@ -131,8 +138,8 @@
 // ------------------ //
 // FilterPanelChooser //
 // ------------------ //
-@controls-filterButton-area-header-height:							3.57rem;
- @controls-filterLine-items-line-height:							1rem;
+@controls-filterButton-area-header-height:							   3rem;
+@controls-filterLine-items-line-height:							      1rem;
 @filter-panel-chooser-default-color:                              #F9F9F9;
 @filter-panel-chooser-hovered-color:                              #EAECEE;
 @filter-panel-chooser-selected-color:                             #F3F3F3;
@@ -198,7 +205,7 @@
 
 // Normal disabled button
 @button-disabled-text-color:              #8991A9;
-@button-disabled-border:                  2px solid #8991A9;
+@button-disabled-border:                  0.07rem solid #8991A9;
 @button-disabled-bg:                      #354B62;
 
 // Big button
@@ -240,6 +247,7 @@
 // Normal default button
 @button-checked-text-color:               @button-active-text-color;
 @button-checked-border-width:             @button-border-width;
+@button-checked-line-height:              @button-line-height;
 @button-checked-font-weight:              normal;
 @button-checked-border:                   @button-active-border;
 @button-checked-bg:                       @button-active-bg;
@@ -282,29 +290,34 @@
 
 @radio-button-text-color:                       @default-text-color;
 
-@radio-button-hover-text-decoration:            none;
-
+@radio-button-hover-text-decoration:            underline;
+@radio-button-hover-text-color:                 @innacent-color;
 @radio-button-checked-text-color:               @radio-button-text-color;
-@radio-button-checked-hover-text-color:         @radio-button-hover-text-color;
+@radio-button-checked-hover-text-color:         @default-text-color;
 
 @radio-button-disabled-text-color:              @gray-color;
 @radio-button-disabled-hover-text-color:        @radio-button-disabled-text-color;
 
-@radio-button-icon-width:                       1.14rem;
-@radio-button-icon-height:                      1.14rem;
+@radio-button-icon-width:                       .71rem;
+@radio-button-icon-height:                      .71rem;
 @radio-button-icon-line-height:                 normal;
 
 @radio-button-icon-bg:                          transparent;
 
-@radio-button-icon-margin:                      0 8px 0 0 ;
-@radio-button-icon-border-color:                #ffffff;
+@radio-button-icon-margin:                      0.3rem;
+@radio-button-icon-border-color:                #2C4458;
 @radio-button-icon-border-color-checked:        @primary-color;
+@radio-button-hover-icon-border-color:          @primary-color;
 @radio-button-icon-border-color-disabled:       @radio-button-icon-border-color;
 
-@radio-button-icon-border-radius:               9px;
+@radio-button-icon-border-radius:               0.71rem;
 
-@radio-button-dot-size:                         8px;
+@radio-button-dot-size:                         0.71rem;
 @radio-button-dot-color:                        @primary-color;
+
+@radio-button-dot-margin:                        -0.1rem  0 0 -0.1rem;
+
+@radio-button-icon-border-width:                 0.1rem;
 
 // -------- //
 // Checkbox //
@@ -348,7 +361,7 @@
 @switcher-line-color-disabled:                  @gray-light-color;
 @switcher-btn-radius:							1rem;
 @switcher-btn-color-disabled:                   @gray-light-color;
-@switcher-btn-bg-color:                         #202835;
+@switcher-btn-bg-color:                         #FF7033;
 @switcher-btn-color-inactive:					#8991A9;
 @switcher-line-color:							#8991A9;
 @switcher-border:                               2px solid #2C4458;
@@ -363,7 +376,10 @@
 @switcher-btn-color:                            #FF7033;
 @switcher-do-horizontal-line-background-color:  #8991A9;
 @switcher-do-text-color:                        @white-color;
-@switcher-do-unselected-text-color:             #999999;
+@switcher-do-unselected-text-color:             #8991A9;
+@switcher-do-disabled-text-color:               #37536C;
+@switcher-do-disabled-line-color:               @switcher-do-disabled-text-color;
+@switcher-do-disabled-btn-background:           @switcher-do-disabled-text-color;
 
 // ---- //
 // Menu //
@@ -372,7 +388,7 @@
 @menu-header-bg-color:                    #23b8ff;
 @menu-subpopup-margin:                    @menu-margin;
 @menu-border-width:                      .07rem;
-@menu-border-color:                       #23b8ff;
+@menu-border-color:                       #26B8FF;
 @menu-header-caption-color:               #e4e4e4;
 @menu-expand-width:                       8px;
 @menu-expand-top-offset:                  20px;
@@ -409,7 +425,7 @@
 @menu-item-hover-bg:                      #e1ecf6;
 @menu-item-hover-icon-color:              @primary-color!important;
 
-@menu-item-icon-top-offset:               .2rem;
+@menu-item-icon-top-offset:               0.2805rem; // (3.57 - 3) /2
 
 @menu-item-icon-left-offset:              -.4232rem;
 
@@ -418,7 +434,7 @@
 
 @menu-item-icon24-left-offset:              -2px;
 @menu-item-icon24-left-offset-big:           0px;
-@menu-item-line-height:                  3rem;
+@menu-item-line-height:                  3.57rem;
 
 // ----------- //
 // Menu button //
@@ -527,7 +543,9 @@
 // --------- //
 
 // Menu
-@menu-icon-menu-margin:                   -7px 0 0 -4px;
+
+@menu-icon-menu-margin:                   -.32rem 0 0 -.2142rem;
+@menu-icon-big-menu-margin:               -10px 0 0 -14px;
 
 // Menu header
 @menu-icon-header-left-top-offset:        0;            // top offset of icon's left header part
@@ -542,7 +560,7 @@
 // Text box //
 // -------- //
 
-@text-box-wrapper-padding:                0 .14rem;
+@text-box-wrapper-padding:                0 .45rem;
 
 @text-box-field-min-height:               38px;
 @text-box-field-padding:                  0;
@@ -557,19 +575,19 @@
 @text-box-editor-bg:                      #f3f3f3;
 @text-box-editor-text-color:              #999999;
 @combobox-picker-border-width:            2px;
-@combo-box-picker-show-background-color: #f0f5fb;
+@combo-box-picker-show-background-color:  #f0f5fb;
 @combo-box-picker-show-border-color:	   #23b8ff;
 @text-box-focus-border-color:             @text-box-border-color;
 
 @compo-box-picker-show-color:             #324352;
 @text-box-focus-bg:                      #324352;
-@text-box-border-width:.07rem;
+@text-box-border-width:                   2px;
 @text-box-hover-border-width:             @text-box-border-width;
 @text-box-hover-border-style:             @text-box-border-style;
 @text-box-hover-border-color:             rgba(96,170,221, .3 );
 
-@text-box-disabled-border-bottom:         1px solid #333333;
-@text-box-focus-border-width:.07rem;
+@text-box-disabled-border-bottom:         .07rem solid #333333;
+@text-box-focus-border-width:             2px;
 @text-box-field-focus-text-color:         #e4e4e4;
 @text-box-after-width:                    20px;
 @text-box-height: 3rem;
@@ -581,7 +599,7 @@
 
 @formatted-text-box-wrapper-min-height:         @text-box-field-min-height;
 
-@formatted-text-box-field-padding:              12px 0 0;
+@formatted-text-box-field-padding:              0;
 
 // --------------- //
 // Number text box //
@@ -626,39 +644,39 @@
 @search-button-wrapper-padding:							0 .5rem 0 0;
 @search-buttons-wrapper-width:                        auto;
 @search-loop-size: 2rem;
-@search-background:                                   #2e3a45;
+@search-background:                                   rgba(150, 159, 168, 0.15);
 @search-disabled-background:                          @text-box-disabled-bg;
 @search-height:                                       3rem;
 @search-border-color:                                 transparent;
-@search-hover-border-color:                           #5d687b;
-@search-bottom-border-color:                          #2e3a45;
+@search-hover-border-color:                           rgba(150, 159, 168, 0.40);
+@search-bottom-border-color:                          transparent;;
 @search-form-border-disabled-width:                   @text-box-disabled-border-width;
 @search-form-icon-padding:                            .7rem .4rem .4rem 0;
 @search-form-icon-disabled-display:                   block;
 
-@search-focus-background:                             #2e3a45;
+@search-focus-background:                             rgba(150, 159, 168, 0.15);
 // --------- //
 // Combo box //
 // --------- //
 
 @combo-box-arrow-spritesheet:                   '';
 @combo-box-picker-item-font-size: 1.14rem;
-@combo-box-arrow-width:                         1.75rem;
-@combo-box-arrow-height:                        10px;
+@combo-box-arrow-width:                         3rem;
+@combo-box-arrow-height:                        3rem;
 @combo-box-arrow-margin:                        -2px 0 0;
 @combo-box-arrow-right-offset:                  .14rem;
 
-@combo-box-arrow-border-width:                  10px 10px 0 10px;
+@combo-box-arrow-border-width:                  0;
+@combo-box-arrow-line-height:                   3rem;
 @combo-box-arrow-border-color:                  @primary-color transparent transparent transparent;
 @combo-box-arrow-bg:                            transparent;
 
 @combo-box-arrow-hover-border-color:            darken(@primary-color, 10%) transparent transparent transparent;
 @combo-box-arrow-hover-bg:                      @combo-box-arrow-bg;
 
-@combo-box-arrow-active-border-width:           10px 10px 0 10px;
+@combo-box-arrow-active-border-width:           0;
 @combo-box-arrow-active-border-color:           transparent transparent @primary-color transparent;
 @combo-box-field-text-color : 					@default-text-color;
-@text-box-border-color: #314559 #314559 #314559 #314559;;
 @combo-box-arrow-active-hover-border-width:     @combo-box-arrow-active-border-width;
 @combo-box-arrow-active-hover-border-style:     @combo-box-arrow-active-border-style;
 @combo-box-arrow-active-hover-border-color:     transparent transparent darken(@primary-color, 10%) transparent;
@@ -671,18 +689,17 @@
 @combo-box-disabled-border-color:               transparent;
 @combo-box-disabled-color:                      #38495B;
 
-@combo-box-picker-border:                      0rem solid #48bffc;
 @combo-box-picker-item-padding:                 1.14rem 0.57rem 1.14rem 0.57rem;
 @text-box-field-font-size: 1.43rem;
-@combo-box-picker-item-bg:                      #e1ecf6;
+@combo-box-picker-item-bg:                      #f0f5fb;
 @combo-box-picker-item-text-color               : #324352;
 @combo-box-picker-item-hover-text-color:        @black-color;
-@combo-box-picker-item-hover-bg:                #f0f5fb;
+@combo-box-picker-item-hover-bg:                #e0ecf5;
 
 @combo-box-picker-item-selected-bg:             @combo-box-picker-item-bg;
 
-@compo-box-fieldWrapper-margin-right:           22px;
-@combo-box-after-width:                         @text-box-after-width;
+@compo-box-fieldWrapper-margin-right:           3rem;
+@combo-box-after-width:                         3rem;
 
 // TODO: check whether it's required
 
@@ -690,7 +707,7 @@
 // Text area //
 // --------- //
 
-@text-area-field-line-height:                   @text-box-field-line-height;
+@text-area-field-line-height:                   1.4rem;
 
 
 @text-area-border-color:                        @gray-dark-color;
@@ -708,8 +725,8 @@
 // Suggest //
 // ----------- //
 
-@suggest-picker-border:                         1px solid @gray-color;
-@suggest-picker-margin:                         -1px;
+@suggest-picker-border:                         0.07rem solid @gray-color;
+@suggest-picker-margin:                         -3px;
 
 @suggest-list-item-hover-bg:                    #f3f3f3;
 @suggest-list-item-selected-bg:                 darken(@suggest-list-item-hover-bg, 5%);
@@ -721,7 +738,7 @@
 // ----------- //
 
 @date-picker-calendar-icon-top-offset:          15px;
-@date-picker-calendar-icon-left-offset:         .14rem;
+@date-picker-calendar-icon-left-offset:         .24rem;
 
 // -------- //
 // Calendar //
@@ -742,9 +759,9 @@
 
 
 
-@controls-FieldLink-border:                            .07rem solid;
-@controls-FieldLink-border-color:                     #243548  #243548  #243548  #243548;
-@controls-FieldLink-border-color-focus-hover:         #314559;
+@controls-FieldLink-border:                           2px solid;
+@controls-FieldLink-border-color:                     @text-box-border-color @text-box-border-color @text-box-bottom-border-color @text-box-border-color;
+@controls-FieldLink-border-color-focus-hover:         #26B8FF;
 @controls-FieldLink-link-color:                         #26B8FF;
 // --------- //
 // MonthView //
@@ -826,6 +843,10 @@
 
 @date-range-line-height:                        0.86rem;
 @date-range-text-line-height:                   normal;
+@date-range-icon-button-top:                    0.536rem;
+@date-range-dash-width:                         0.286rem;
+@date-range-dash-margin:                        0 0.286rem 0.286rem 0.286rem;
+@date-range-dash-border-top:                    2px solid @date-range-dash-color;
 
 // ----------------- //
 // Data Range Slider //
@@ -846,11 +867,12 @@
 @date-range-choose-bg-active-color:             #e1ecf6;
 @date-range-choose-border-color:                #26b8ff;
 @date-range-choose-item-bg-color                :#2c3e50;
-@date-range-choose-bg-hover-color:              #2c3e50;
-@date-range-choose-border-hover-width:          .07rem  .07rem 0;
+@date-range-choose-bg-hover-color:              #293a4b;
+@date-range-choose-border-width:                0; // В theme.less прописан бордер у флоат арии
+@date-range-choose-border-hover-width:          0;
 @date-range-choose-border-hover:                  solid #26b8ff;
 @date-range-choose-month-height:                 1.85rem;
-@date-range-choose-short-width:                   11.78rem;
+@date-range-choose-short-width:                 16rem;
 @date-range-choose-font-family:                 'TensorFont Regular', 'TensorFont', sans-serif;
 @date-range-choose-font-size:                   1rem;
 @date-range-choose-hover-color:                 @blue-dark-color;
@@ -858,29 +880,68 @@
 @date-range-choose-years-only-bg-color :       #2c3e50;
 @date-range-choose-bg-color:                      #2c3e50;
 @date-range-choose-color:                       #E4E4E4;
+
 @date-range-choose-current-value-color:         #fff;
 @date-range-choose-current-value-bg-color:      #26b8ff;
 @date-range-choose-current-value-font-size:     1.14rem;
 @date-range-choose-current-value-font-weight:   normal;
 @date-range-choose-current-value-height:        3.57rem;
 @date-range-choose-current-value-line-height:   3.43rem;
-@date-range-choose-border-width:               .07rem;
-@date-range-choose-year-height:                 3.285rem;
+@date-range-choose-current-value-margin-bottom: 0.286rem;
 
-
+@date-range-choose-year-height:                 3rem;
 @date-range-choose-year-font-size:              1.14rem;
-@date-range-choose-year-prev-next-btns-font-size:     @date-range-choose-font-size;
-@date-range-choose-year-color:                #e4e4e4;
-@date-range-choose-year-line-height:        3.78rem;
-@controls-date-range-year-marginleft:       2.2rem;
+@date-range-choose-year-font-weight:            normal;
+@date-range-choose-year-margin-bottom:          0.286rem;
+@date-range-choose-year-prev-next-btns-font-size:     1.5rem;
+@date-range-choose-year-color:                  @date-range-choose-color;
+@date-range-choose-year-line-height:            3rem;
+
+@date-range-choose-year-prev-next-btns-width:         3rem;
+@date-range-choose-year-prev-next-btns-font-size:     1.5rem;
+@date-range-choose-year-prev-next-btns-color:         @date-range-choose-color;
+
+@date-range-choose-home-icon-width:                   3rem;
+
+@controls-date-range-year-marginleft:                 0.4rem;
 @date-range-choose-year-prev-next-btns-color:   #ffffff;
 
+@date-range-big-choose-months-button-height:                         1.786rem;
+@date-range-big-choose-months-range-width:                           5.429rem;
+@date-range-big-choose-months-button-first-height:                   @date-range-big-choose-months-button-height;
+@date-range-big-choose-months-button-last-height:                    @date-range-big-choose-months-button-height;
+@date-range-big-choose-date-range-picker-table-element-height:       2.8rem;
+
+@date-range-big-choose-date-range-picker-left:                       @date-range-big-choose-months-range-width + 0.857rem;
+@date-range-big-choose-date-range-picker-caption-height:             2.42rem;
 // -------------- //
 // Date Range Big //
 // -------------- //
 
 @date-range-big-choose-years-height:                           3.57rem;
 @date-range-big-choose-font-family:                            'TensorFont Regular', 'TensorFont', sans-serif;
+
+@date-range-big-choose-header-padding:                               0.256rem 0 0.256rem 0;
+@date-range-big-choose-header-home-button-size:                      3rem;
+@date-range-big-choose-header-home-button-font-size:                 @date-range-big-choose-header-home-button-size;
+@date-range-big-choose-header-home-button-margin-left:               0;
+@date-range-big-choose-header-date-pickers-margin-right:             3.286rem;
+@date-range-big-choose-header-date-picker-margin-top:                0;
+@date-range-big-choose-header-apply-button-size:                     3rem;
+@date-range-big-choose-header-apply-button-font-size:                @date-range-big-choose-header-apply-button-size;
+@date-range-big-choose-header-apply-button-margin-left:              0;
+@date-range-big-choose-header-range-dash-width:                      0.286rem;
+@date-range-big-choose-header-range-dash-margin:                     1.5rem 0.286rem 0.286rem;
+
+@date-range-big-choose-years-panel-top-padding:                              0.286rem;
+@date-range-big-choose-years-panel-bottom-padding:                           0.286rem;
+@date-range-big-choose-years-panel-toggle-choose-year-button-line-height:    3.4rem; // сделать по другому
+@date-range-big-choose-years-panel-current-year-button-line-height:          3rem;
+@date-range-big-choose-years-panel-back-button-font-size:                    3rem;
+@date-range-big-choose-years-panel-back-button-line-height:                  3rem;
+
+@date-range-big-choose-body-height:                                  21.429rem;
+@date-range-big-choose-months-range-btn-height:                      5.071rem;
 
 @date-range-big-choose-quarters-half-years-font-size:                inherit;
 @date-range-big-choose-month-range-padding:                          8px;
@@ -907,20 +968,22 @@
 // --------- //
 // List view //
 // --------- //
-@list-view-min-height:                           90px;
+@list-view-min-height:                           5rem;
 
 @listView-check-box-left:                      0;
 @listView-check-box-top:                       0;
 
+@listView-servicefooter-height:                1.47rem;
+
 @list-view-actions-item-height:                 1.75rem;
-@list-view-actions-margin:                      0 .14rem;
+@list-view-actions-margin:                      -.14rem .14rem;
 @list-view-actions-box-shadow:                  -2px -2px 5px #F3F3F3;
-@list-view-actions-icon-top:                    .857rem;
+@list-view-actions-icon-top:                    1.497rem;
 @list-view-actions-menu-text-margin:          .64rem 0px 6px 2.32rem;
-@list-view-items-toolbar-vertical-locked-box-shadow: -2px .07rem 5px @data-grid-row-hover-bg;
+@list-view-items-toolbar-vertical-locked-box-shadow: -2px 2px 5px @data-grid-row-hover-bg;
 @list-view-items-toolbar-line-height:                1.75rem;
 @list-view-items-toolbar-vertical-line-height:       0.86rem;
-@list-view-items-toolbar-locked-bg:                  transparent;
+@list-view-items-toolbar-locked-bg:                  @basic-block-bg-color;
 @list-view-items-toolbar-icon-size:                  1.785rem;
 @touch-mode-items-toolbar-icon-margin-top:           -0.86rem;
 @list-view-actions-active-bg: @data-grid-bg;
@@ -932,25 +995,39 @@
 @list-view-actions-menu-close-right:            .14rem;
 @list-view-actions-menu-close-height:           1.75rem;
 @list-view-actions-menu-close-width:            1.75rem;
-@list-view-actions-menu-padding:                @menu-padding;
 
 @listView-empty-data-color:                     #8991A9;
 @listView-empty-data-font-size:                1rem;
 @listView-empty-data-padding-top:               46px;
+
+@list-view-scroll-bg:                           url('img/ajax-loader-indicator-big.gif') @basic-block-bg-color 0.4642rem 0.4642rem  no-repeat;
+@list-view-scroll-height:                       3.5714rem;
+@list-view-scroll-width:                        3.5714rem;
+@controls-AjaxLoader-indicator-padding-left:    3.5714rem;
+@controls-AjaxLoader-indicator-height:          3.5714rem;
+@controls-AjaxLoader-block-width:               3.5714rem;
+@controls-AjaxLoader-outer-height:              3.5714rem;
+@controls-AjaxLoader-background:                none;
+
+@scrollPaging-padding:                          3rem;
 
 // --------- //
 // Tree view //
 // --------- //
 
 @tree-view-expand-spritesheet:                  '';
+@tree-view-expand-width:                        50px;
+@tree-view-expand-height:                       auto;
 
+@tree-view-expand-icon-size:                    1.7857rem;
 
-@tree-view-expand-height:                       21px;
-@tree-view-expand-margin:                        .07rem 0 -2px;
+@tree-view-level-padding:                       58px;
+
+@tree-view-expand-margin:                       0 8px 0 0;
 
 @tree-view-value-left-margin:                   @tree-view-expand-width;
 
-@tree-view-editArrow-top:                      .07rem;
+@tree-view-editArrow-top:                       0.176rem;
 
 @tree-view-expand-bg:                           transparent;
 
@@ -969,7 +1046,7 @@
 @tree-view-hier-wrapper-width:						20px;
 @tree-view-hier-wrapper-height: 						20px;
 
-@tree-view-copy-arrow-background:               #202835;
+@tree-view-copy-arrow-background:               @default-bg-color;
 
 // --------- //
 // Data grid //
@@ -977,13 +1054,13 @@
 
 @data-grid-bg:                                  transparent;
 
-@data-grid-row-hover-bg:                        #1b2530;
+@data-grid-row-hover-bg:                        #293A4B;
 @data-grid-row-selected-bg:                     @data-grid-row-bg;
 
-@data-grid-row-hover-cell-text-color:           #e4e4e4;
+@data-grid-row-hover-cell-text-color:           inherit;
 
 @data-grid-header-cell-height:                  1.14rem;
-@data-grid-cell-line-height:                    1.7857rem;
+@data-grid-cell-line-height:                    1.562rem;
 @data-grid-header-cell-padding:                 0 10px;
 @data-grid-header-cell-padding-side:            10px;
 @data-grid-header-cell-font-size:               0.86rem;
@@ -1012,9 +1089,9 @@
 // OperationsPanel //
 // --------------- //
 
-@controls-OperationsPanel-height:                   30px;
+@controls-OperationsPanel-height:                   3.57rem;
 
-@controls-OperationsPanel-bg:                       #38495B;
+@controls-OperationsPanel-bg:                       #F0F5FB;
 
 @controls-OperationsPanel-actions-margin:           0 .14rem;
 
@@ -1024,14 +1101,21 @@
 
 @controls-OperationsPanel-actions-padding-left:     0;
 
+//Пока нет стандарта, выписана подзадача https://online.sbis.ru/opendoc.html?guid=773fe3ec-edf2-434b-ab51-7fdafff585c5&des=
+@controls-OperationsPanel-separator-width:          0;
+
 // ----------------------- //
 // OperationsPanelButton  //
 // ----------------------- //
 
 @controls-OperationsPanelButton-width:             0.86rem;
-@controls-OperationsPanelButton-vert-height:       0.86rem;
-@controls-OperationsPanelButton-font:              1.14rem 'TensorFont Regular', 'TensorFont';
+@controls-OperationsPanelButton-vert-height:       3.57rem;
+@controls-OperationsPanelButton-font:              3rem 'carrypresto-icons', 'carrypresto';
 @controls-OperationsPanelButton-icon-left:         0;
+@controls-OperationsPanelButton-icon:              "\e9aa";
+@controls-OperationsPanelButton-icon-expand:       "\e9a8";
+@controls-OperationsPanelButton-active-icon-color: #B9E9FF;
+@controls-OperationsPanelButton-color:             #E4E4E4;
 
 // ----------------------- //
 //      EditInPlace        //
@@ -1058,35 +1142,46 @@
 // --------------- //
 @DropdownList-border-color:                   #e4e4e4;
 
+//ProgressBar
+@controls-ProgressBar-height:             37px;
+@controls-ProgressBar-first-color:        #26B8FF;
+@controls-ProgressBar-last-color:         @controls-ProgressBar-first-color;
+@controls-ProgressBar-border-color:       rgba(102, 170, 221, .15);;
+@controls-ProgressBar-background-color:   #354B62;
+@controls-ProgressBar-border-radius:      0;
+@controls-ProgressBar-value-font-size:    28px;
+@controls-ProgressBar-value-color:        @default-text-color;
+
 //Pager
 @controls-Pager-amount-text :                     #999999;
+@controls-Pager-height:                            3.14rem; //3 rem - button + 2px *2 border
 
 //FilterButton
 @controls-filterButton-button-width:			2rem;
 @filter-button-font-size:							2rem !important; //перебиваем .icon-24
 
- @controls-filterButton-button-height:			2rem;
+@controls-filterButton-button-height:			2rem;
 @controls-filterButton-picker-bg:                 #38495B;
 @controls-filterButton-picker-height:             auto !important; //Приходится использовать important, т.к. попап считает высоту и выставляет её в inline-styles
-@controls-filterButton-picker-border-width:       0;
+@controls-filterButton-picker-border-width:       2px;
 @controls-filterButton-picker-border-radius:      0;
 @controls-filterButton-picker-margin-top:         -1px;
 @controls-Popup-closeButton-top:                  1.75rem;
 
-@controls-filterButton-button-height:             0.86rem;
-@controls-filterButton-button-margin:             16px 8px 8px 0;
+@controls-filterButton-button-margin:             .2857rem 8px 8px 0;
+@controls-filterButton-button-margin-right-align: .2857rem 0 8px 8px;
 @controls-filterButton-button-margin-ff:          16px 32px 8px 0;
 @controls-filterButton-area-text-weight:		   normal;
 
 @controls-filterButton-button-arrow-margin:       -.14rem;;
 
-@controls-filterButton-area-header-padding:       8px 3rem 8px 12px;
+@controls-filterButton-area-header-padding:       .29rem 3rem .29rem .43rem;
 
 @controls-filterButton-area-text-size:            1.43rem;
 @controls-filterButton-area-text-color:           #e4e4e4;
 @controls-filterButton-clear-margin-right:        16px;
 
-@controls-filterButton-area-content-margin:       0 1.75rem 12px 1.75rem;
+@controls-filterButton-area-content-margin:       0  12px 0.75rem;
 @controls-filterButton-closeButton-top:           @controls-Popup-closeButton-top;
 @controls-filterButton-line-height:               41px;
 @controls-filterButton-apply-margin-right:        0;
@@ -1102,30 +1197,33 @@
 @controls-filterLine-items-display:               table-cell;
 @controls-filterLine-items-padding:               0;
 @controls-filterLine-arrow-height:                19px;
-@controls-filterLine-link-color:                  #0055bb;
+@controls-filterLine-link-color:                  #26B8FF;
 @controls-filterLine-link-hover-color:            @primary-color;
 
 @controls-filterLine-copyCross-top:               -28px;
 @controls-filterLine-copyCross-margin:            -1.75rem;
-@controls-filterLine-copyCross-shadow:            -8px 0px 10px.07rem @white-color;
+@controls-filterLine-copyCross-shadow:            -8px 0px 10px 2px @white-color;
 @controls-filterLine-copyCross-cross-top:         3px;
 
 //FieldLink
-@controls-FieldLink-showAllLinks-lineHeight:       22px;
-@controls-FieldLink-linkItem-line-height:          2.83rem;
-@controls-FieldLink-showAllLinks-width:            20px;
+@controls-FieldLink-showAllLinks-lineHeight:       3rem;
+@controls-FieldLink-linkItem-line-height:          3rem;
+@controls-FieldLink-showAllLinks-width:            3.2rem;
+@controls-FieldLink-showAllLinks-marginRight:      -1.43rem;
 
 @controls-FieldLink-linkItem-margin:              .07rem 0;
-@controls-FieldLink-linkItem-padding:              0 17px 0 .14rem;
+@controls-FieldLink-linkItem-padding:              0 3rem 0 .14rem;
 @controls-FieldLink-linkItem-caption-height:       1.75rem;
-@controls-FieldLink-linkItem-cross-width:          20px;
+@controls-FieldLink-linkItem-cross-width:          2.5rem;
 @controls-FieldLink-linkItem-cross-right:          0;
-@controls-FieldLink-linkItem-cross-top:            .5rem;
+@controls-FieldLink-linkItem-cross-top:            -.14rem;
+@controls-FieldLink-linkItem-cross-padding:        0;
+@controls-FieldLink-showAllLinks-padding:          0 1rem 0 0.14rem;
 
-@controls-FieldLink-afterField-padding:            0 .14rem 0 0;
+@controls-FieldLink-afterField-padding:            0 .14rem 0.14rem 0;
 @controls-FieldLink-afterField-height:             3rem;
 
-@controls-FieldLink-disabled-item-single-padding:  0;
+@controls-FieldLink-disabled-item-single-padding:  0,142rem;
 @controls-FieldLink-disabled-item-single-margin:  .07rem .14rem;
 
 @controls-FieldLink-afterField-background:         transparent;
@@ -1134,6 +1232,8 @@
 @controls-FieldLink-showAll-shadow-width:          20px;
 @controls-FieldLink-showAll-margin-right-ff:       -15px;
 @controls-FieldLink-showAll-top-ff:                -24px;
+@controls-FieldLink-FilterButton-color:            #26B8FF;
+@controls-FieldLink-FilterButton-color-hover:      #B9E9FF;
 
 //SelectorButton
 @controls-SelectorButton-align:                    middle;
@@ -1147,15 +1247,15 @@
 @bread-crumb-title-hover-color:                   @primary-color;
 @back-button-arrow-paddingleft:                     16px;
 @bread-crumb-title-color:                          #8991A9;
-@breadcrumbs-top:                                  .14rem;
-@breadcrumbs-smallItems-font-size:                 13px;
-@breadcrumbs-arrow-top:                           .07rem;
-@breadcrumbs-small-items-top:                      inherit;
+@breadcrumbs-top:                                  0;
+@breadcrumbs-smallItems-font-size:                 1rem;
+@breadcrumbs-arrow-top:                            0;
+@breadcrumbs-small-items-top:                      0;
 
 // EditDialog
-@editdialog-applybutton-width:                     90px;
-@editdialog-applybutton-right:                     38px; //ширина кнопки закрытия окна 36px +.07rem; на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)
-@editdialog-window-title-margin-right:             128px; //ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить +.07rem; на небольшой отступ между ними
+@editdialog-applybutton-width:                     auto;
+@editdialog-applybutton-right:                     3rem; //ширина кнопки закрытия окна 36px +.07rem; на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)
+@editdialog-window-title-margin-right:             11rem; //ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить +.07rem; на небольшой отступ между ними
 @editdialog-template-minwidth:                     auto;
 @editdialog-applybutton-top:                       8px;
 
@@ -1183,22 +1283,33 @@
 @controls-Scrollbar-light-active-thumb-color:      rgba(0, 0, 0, 0.15);
 
 //InformationPopup
-@controls-InformationPopup-bg:                  #293543;
-@controls-InformationPopup-border:              2px solid;
-@controls-InformationPopup-border-bottom:       @controls-InformationPopup-border;
-@controls-InformationPopup-border-top:          @controls-InformationPopup-border;
-@controls-InformationPopup-border-left:         @controls-InformationPopup-border;
-@controls-InformationPopup-border-right:        @controls-InformationPopup-border;
+@controls-InformationPopup-bg:                                #2C3E50;
+@controls-InformationPopup-default-status-border-color:       #26B8FF;
+@controls-InformationPopup-success-status-border-color:       #72BE44;
+@controls-InformationPopup-error-status-border-color:         #EF463A;
+@controls-InformationPopup-warning-status-border-color:       #FEC63F;
+@controls-InformationPopup-border:                            2px solid;
+@controls-InformationPopup-border-bottom:                     @controls-InformationPopup-border;
+@controls-InformationPopup-border-top:                        @controls-InformationPopup-border;
+@controls-InformationPopup-border-left:                       @controls-InformationPopup-border;
+@controls-InformationPopup-border-right:                      @controls-InformationPopup-border;
 
 //SubmitPopup
+@controls-SubmitPopup-size-standard-width:		28rem;
 @controls-SubmitPopup-button-min-width:         10rem;
 @controls-SubmitPopup-button-height:            3rem;
+@controls-SubmitPopup-button-margin:            0 8px;
 @controls-SubmitPopup-border-top:               none;
 @controls-SubmitPopup-border-bottom:            none;
 @controls-SubmitPopup-border-left:              none;
 @controls-SubmitPopup-border-right:             none;
-@controls-SubmitPopup-message-color:            #FFFFFF;
-@controls-SubmitPopup-details-color:            #999999;
+@controls-SubmitPopup-message-color:            #E4E4E4;
+@controls-SubmitPopup-message-font-size:        1.14285rem;
+@controls-SubmitPopup-message-font-weight:      normal;
+@controls-SubmitPopup-message-margin-bottom:    16px;
+@controls-SubmitPopup-details-color:            #8991A9;
+@controls-SubmitPopup-details-font-size:        1rem;
+@controls-SubmitPopup-body-padding:             45px;
 
 //NotificationPopup
 @controls-NotificationPopup-border-top:         none;
@@ -1224,12 +1335,16 @@
 @tab-button-checked-inner-font-size:            1.43rem;
 @tab-button-checked-inner-color:                rgb(255, 204, 153);
 @tab-button-simple-inner-checked-color:         rgb(255, 204, 153);
-@tab-button-simple-checked-bottomline-color:    rgb(255, 204, 153);
+@tab-button-simple-checked-bottomline-color:    @primary-color;
+@tab-button-simple-hover-bottomline-color:      @innacent-color;
 @tab-button-large-inner-max-width:				100%;
 @tab-button-inner-padding:                      0px .857rem 0 .857rem;
 
 
-@tab-button-inner-after-bg-color: transparent;
+@tab-button-inner-after-bg-color: rgba(102,170,221, .2);
+@tab-button-inner-after-height: 1.928rem;
+@tab-button-inner-after-bottom: 0.821rem;
+@tab-button-inner-after-width: 2px;
 //Browser
 @text-box-field-font-size: 1.14rem;
 
@@ -1239,49 +1354,187 @@
 
 @paging-font-size:                            1.71rem;
 @scrollpager-bg:                              transparent;
+@scrollpager-border:                          none;
 @closeBigButtonWidth:                         3rem;
 @menu-header-bg-color:                    #23b8ff;
 
 @date-range-big-header-bg: #2c3e50;
-@date-range-big-choose-border-color:		#2c3e50;
+@date-range-big-choose-border-color:		#3f566d;
 @date-range-big-choose-width:				25.8rem;
 @date-range-big-choose-left-right-width:     3rem;
 @date-range-big-choose-years-panel-current-year-button-font-size: 1.43rem;
-@date-range-big-choose-years-panel-current-year-button-line-height: 1.43rem;
-@date-range-big-choose-date-range-picker-left:	 5.71rem;
-@date-range-big-choose-date-range-picker-right:  1.2857rem;
-@date-range-big-choose-date-range-picker-table-element-height:   84px;
+@date-range-big-choose-date-range-picker-right:  0.857rem;
 @date-range-big-choose-date-range-picker-table-element-width:   74px;
 @date-range-big-choose-date-range-picker-table-element-title-padding-top: .7857rem;
 @date-range-big-choose-date-range-picker-color:							#e4e4e4;
 @date-box-wrapper-border-radius: 0;
 @date-box-wrapper-border-color: #3b5e7a;
-@date-range-big-choose-header-range-dash-width: 4px;
-@controls-SubmitPopup-size-standard-width:				28rem;
 @tab-buttons-height:							3.57rem;
 @date-picker-calendar-icon-height: 				1.32rem;
-@date-picker-calendar-icon-width: 				1.32rem;
+@date-picker-calendar-icon-width: 				2.3rem;
 @button-without-caption-min-width: 			     3rem;
-@controls-toolbar-menu-margin-left:				.5rem;
+@controls-toolbar-menu-margin-left:				0;
 @controls-SelectorButton-line-height:					1.43rem;
 @controls-SelectorButton-height:					1.43rem;
 @menu-item-icon-32-margin:							0 0 0 3rem;
 @menu-item-icon-24-margin:							0 0 0 1.78rem;
 @menu-item-icon-16-margin:							0 0 0 1.32rem;
 @text-box-error-bg:                       #472e35;
-@back-button-linheight-before:              3.2rem;
+@back-button-linheight-before:              3rem;
 @back-button-width-before:                  .7rem;
 @back-button-text-fontweight:               @default-font-weight;
 @tab-buttons-border-bottom-height:          0.01rem;
 @controls-toolbar-item-margin-right:        0;
 @dropdownlist-item-text-color:              #202835;
-@controls-FieldLink-picker-show-color:		#243548;
-@controls-editInPlace-editor-bg:			transparent;
+@controls-editInPlace-editor-bg:			   @data-grid-row-hover-bg;
+@controls-FieldLink-picker-show-color:		#F0F5FB;
 @textbox-font-size:							1.43rem;
 @scroll-pager-bg:							transparent;
 
-@DropdownList-height: 					3.57rem;
+@commands-button-close-icon:                @icon-large-size;
+@commands-button-close-font-family:         'carrypresto-icons';
+@commands-button-close-button-size:         @icon-large-size;
+@commands-button-close-button-top:          0;
+@commands-button-margin:                    -10px -64px 0 0;
+
+@DropdownList-height: 					3rem;
+@DropdownList-footer-buttonsBlock-height: 3.57rem;
+@DropdownList-footer-hasMore-top:         1.1rem;
 @list-view-loading-indicator-gradient-bg: url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to top,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
 @list-view-loading-indicator-gradient-bg-up: url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to bottom,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
-@text-box-placeholder-color: 				rgba(96,170,221, .2);
 
+@text-box-placeholder-color: 				rgba(96,170,221, .2);
+@DropdownList-picker-menu-item-height:  3rem;
+
+@tree-view-ellipsis-copyArrow-width:    1rem;
+
+@DropdownList-picker-bg:             #E1ECF6;
+
+@bread-crumbs-menu-padding:             0;
+@menu-subpopup-padding:               @bread-crumbs-menu-padding;
+
+//--------------//
+//  TimePicker  //
+//--------------//
+@time-picker-background-color:                      @basic-block-bg-color;
+
+//--------------//
+//  TimeHeader  //
+//--------------//
+@time-header-height:                                100px;
+@time-header-font-size:                             40px;
+@time-header-title-margin-left:                     24px;
+@time-header-toggle-time-margin-left:               32px;
+@time-header-home-button-margin-left:               8px;
+@time-header-background-color:                      @time-picker-background-color;
+@time-header-title-color:                           @innacent-color;
+
+// ---------- //
+// ToggleTime //
+// ---------- //
+@toggle-time-passive-hover-text-decoration:         none;
+@toggle-time-passive-color:                         @default-text-color;
+
+//---------------//
+//  ClockPicker  //
+//---------------//
+
+@clock-picker-height:                               19.357rem;
+@clock-picker-width:                                19.929rem;
+@clock-picker-background-color:                     @time-picker-background-color;
+
+@clock-picker-outer-tick-radius:                    1.25rem;
+@clock-picker-tick-hover-background-color:          #273B4D;
+
+@clock-picker-inner-tick-radius:                    1rem;
+@clock-picker-inner-tick-background-color:          #354B62;
+
+@clock-picker-outer-circle-radius:                  7.857rem;
+@clock-picker-outer-circle-border-color:            @clock-picker-inner-tick-background-color;
+
+@clock-picker-inner-circle-radius:                  5rem;
+
+@clock-picker-unit-time-font-size:                  1.714rem;
+@clock-picker-unit-time-z-index:                    16;
+@clock-picker-unit-time-color:                      @clock-picker-inner-tick-background-color;
+
+@clock-picker-arrow-width:                          0.036rem;
+@clock-picker-arrow-color:                          @accent-color;
+
+@clock-picker-inner-arrow-z-index:                  4;
+
+@clock-picker-arrow-tip-border-width:               0.072rem;
+@clock-picker-arrow-tip-color:                      @default-text-color;
+@clock-picker-arrow-tip-border-color:               @clock-picker-arrow-color;
+
+@DropdownList-footer-multisel-buttonsBlock-h: 3.57rem;
+@DropdownList-checkbox-bottom:                0;
+@DropdownList-picker-max-height: 20rem;
+@DropdownList-footer-select-top: 0.28rem;
+@DropdownList-picker-menu-line-height: 3.57rem;
+@DropdownList-after-caption-wrapper-top:              .4rem;
+@DropdownList-footer-hasMore-left:                    .28rem;
+@DropdownList-footer-hasMore-left-multiselect:        2.35rem;
+@DropdownList-footer-hasMore-top-multiselect:         1rem;
+@DropdownList-footer-hasMore-top:                     1rem;
+
+@header-height:                        3rem;
+@header-font:                                      400 1.43rem escape('/') @header-height @default-font-name;
+@header-padding-left: 0;
+
+@bottomStyle-items-toolbar-height:        1.88rem;
+@bottomStyle-items-toolbar-border-color:  #1b2530;
+@bottomStyle-items-toolbar-margin: 0px;
+
+@controls-filterButton-picker-border-color:         #26B8FF;
+@formatted-text-box-wrapper-padding:                 .3rem 0.57rem 0px 12px;
+
+@bottomStyle-items-toolbar-height:                  1.88rem;
+@bottomStyle-padding-bottom:              3rem;
+@bottomStyle-items-toolbar-border-color:            #1b2530;
+@bottomStyle-items-toolbar-margin:                  0px;
+
+@data-grid-row-hover-cell-bg:                       #293A4B;
+
+@controls-filterButton-picker-border-color:         #26B8FF;
+
+@formatted-text-box-wrapper-padding:                 .3rem 0.57rem 0px 12px;
+@image-bar-height:                                  3.57rem;
+@image-bar-vertical-padding:                        0.245rem;
+@image-bar-horizontal-padding:                      0;
+@image-bar-bg-color:                      rgba(102,170,221, .5);
+@date-range-big-choose-bg-hovered-color:           rgba(0, 0, 0, 0.3);
+
+@money-text-box-decimals-padding: 0;
+@money-text-box-decimals-font-size: 1.43rem;
+@money-text-box-decimals-color: @default-text-color;
+@header-color:                              #FC9;
+
+@gray-lamantin-color:                               #8991A9;
+
+@icon-color-disabled:                               #e4e4e4 !important;
+
+@date-range-big-choose-date-range-picker-border-color:                 rgba(102, 170, 221, 0.7);
+@date-range-big-choose-date-range-picker-boundary-selected-color:      #e4e4e4;
+@date-range-big-choose-date-range-picker-bg-boundary-selected-color:   #26B8FF;
+@date-range-big-choose-date-range-picker-bg-selected-color:            @date-range-big-choose-bg-hovered-color;
+@date-range-big-choose-date-range-picker-bg-hovered-color:             @date-range-big-choose-bg-hovered-color;
+
+@controls-toolbar-item-vertical-align:              baseline;
+
+@date-range-big-choose-years-btn:               .5rem;
+@DropdownList-picker-offset:                    0;
+@dropdown-list-item-padding:                      5px 38px 3px .57rem;
+@list-view-items-toolbar-bottom:                   0px;
+@list-view-items-toolbar-font-family:               'carrypresto-icons';
+@search-left-margin:                                  .57rem;
+@controls-view-padding-DEFAULT:                       .8rem;
+@combo-box-picker-border:                       2px solid #26B8FF;
+
+@data-grid-row-selected-main-bg:                @default-bg-color;
+@data-grid-row-selected-addit-bg:               rgba(29, 40, 52, 0);
+@tree-view-copy-arrow-add-background:           @data-grid-row-selected-addit-bg;
+@data-grid-row-hover-add-bg:                    rgba(41, 58, 75, 0);
+@data-grid-row-selected-add-bg:                 @data-grid-row-hover-add-bg;
+
+@items-toolbar-bottom-style-background: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDIwMDEwOTA0Ly9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+CjxzdmcgdmVyc2lvbj0iMS4wIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiB3aWR0aD0iMjU1LjAwMDAwMHB4IiBoZWlnaHQ9IjMwMC4wMDAwMDBweCIgdmlld0JveD0iMCAwIDI1NS4wMDAwMDAgMzAwLjAwMDAwMCIKIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwMDAwMCwzMDAuMDAwMDAwKSBzY2FsZSgwLjEwMDAwMCwtMC4xMDAwMDApIgpmaWxsPSIjMjkzYTRiIiBzdHJva2U9Im5vbmUiPgo8cGF0aCBkPSJNMTAgMjk4OSBjMCAtMTEgMTkgLTUxIDI5IC01OSA2IC01IDQ2IC02NCAyMTUgLTMxNSA0NCAtNjYgODMgLTEyMgo4NiAtMTI1IDMgLTMgMzcgLTUyIDc1IC0xMTAgMzkgLTU4IDcyIC0xMDcgNzUgLTExMCA2IC02IDY3IC05NSAyMDQgLTMwMCA1MAotNzQgOTMgLTEzNyA5NiAtMTQwIDMgLTMgMjMgLTMyIDQ1IC02NSAyMiAtMzMgNDIgLTYyIDQ1IC02NSAzIC0zIDQzIC02MSA4OQotMTMwIDQ2IC02OSAxMjEgLTE3OSAxNjYgLTI0NSA0NCAtNjYgMTA2IC0xNTYgMTM1IC0yMDAgMzAgLTQ0IDU3IC04MiA2MCAtODUKNSAtNSA0MSAtNTggMjQ0IC0zNjAgNjEgLTkxIDExMyAtMTY3IDExNiAtMTcwIDMgLTMgMjMgLTMyIDQ1IC02NSA0NyAtNzAgMzgKLTU4IDExNiAtMTY0IDU3IC03NiAxNzkgLTE5MSAyMDMgLTE5MSA2IDAgMjUgLTcgNDEgLTE2IDU4IC0zMiAyODcgLTc0IDQwMAotNzQgbDU1IDAgMCAxNTAwIDAgMTUwMCAtMTI3MCAwIGMtODkyIDAgLTEyNzAgLTMgLTEyNzAgLTExeiIvPgo8L2c+Cjwvc3ZnPgo=");
