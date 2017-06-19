@@ -852,11 +852,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
           },
           _onItemActivateItemsCollection: function(event, key) {
-             this.getSelectedItems(false).each(function(item) {
-                if(item.get(this._options.idProperty) == key) {
-                   this._notify('onItemActivate', {item: item, id: key});
-                }
-             }, this)
+             ItemsSelectionUtil.onItemClickNotify.call(key, this);
           },
           /**************************************************************/
 
