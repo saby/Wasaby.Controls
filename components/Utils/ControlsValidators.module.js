@@ -5,8 +5,9 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [
    'js!SBIS3.CORE.CoreValidators',
    'Core/core-instance',
    'Deprecated/Enum',
+   'Core/IoC',
    'i18n!SBIS3.CONTROLS.ControlsValidators'
-],function(CoreValidators, cInstace, cEnum) {
+],function(CoreValidators, cInstace, cEnum, IoC) {
 
    'use strict';
 
@@ -50,6 +51,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [
                break;
             case 'object' :
                if(option instanceof cEnum) {
+                  IoC.resolve('ILogger').error('SBIS3.CONTROLS.ControlsValidators', 'использует устаревший модуль Deprecated/Enum. Выпишите ошибку на Интерфейсный фреймворк со скриншотом.');
                   isEmpty = option.getCurrentValue() === null;
                } else if(cInstace.instanceOfModule(option, 'WS.Data/Collection/List')) {
                   isEmpty = !Boolean(option.getCount());
