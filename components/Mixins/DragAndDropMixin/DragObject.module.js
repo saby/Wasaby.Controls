@@ -194,7 +194,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
             var avatar = this.getAvatar(),
                isTouchEvent = (this._jsEvent.type in {"touchmove":true, "touchend":true});
             if (typeof document.elementsFromPoint == 'function' && (
-               avatar && avatar.find(this._jsEvent.target).length > 0
+               this._isAvatarElem(this._jsEvent.target)
                || isTouchEvent
                || constants.browser.firefox
             )) {
@@ -203,7 +203,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
                //Когда курсор быстро двигается он может наезжать на аватар ищем элемент который в него не входит
                var elements = document.elementsFromPoint(this._jsEvent.pageX, this._jsEvent.pageY);
                for (var i=0,len = elements.length; i< len; i++) {
-                  if ( !avatar || (avatar && avatar.find(elements[i]).length == 0) ) {
+                  if (!this._isAvatarElem(elements[i])) {
                      return $(elements[i]);
                   }
                }
@@ -215,7 +215,16 @@ define('js!SBIS3.CONTROLS.DragObject', [
             }
          }
       },
-
+      /**
+       * Возвращает true если переданный элемент входит в аватар
+       * @param elem
+       * @returns {Boolean}
+       * @private
+       */
+      _isAvatarElem: function (elem) {
+         var avatar = this.getAvatar();
+         return avatar && (avatar.find(elem).length > 0 || avatar[0] == elem);
+      },
       //region protected
       /**
        * Устанавливает признак перемещения вызывается только из {@link SBIS3.CONTROLS.DragNDropMixin}.
