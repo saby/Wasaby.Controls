@@ -53,7 +53,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             this._container.on('mousedown touchstart', this._onClickDragHandler.bind(this));
             this._containerHeight = this._container.height();
             this._containerOuterHeight = this._container.outerHeight(true);
-            this._calcBrowserScrollbarMinHeght();
+            this._setBrowserScrollbarMinHeght();
 
             this._setViewportRatio();
             this._setThumbHeight();
@@ -143,14 +143,14 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             return size * ratio;
          },
 
-         _calcBrowserScrollbarMinHeght: function() {
+         _setBrowserScrollbarMinHeght: function() {
             this._browserScrollbarMinHeght = parseFloat(getComputedStyle(this._thumb[0]).minHeight);
          },
 
          _onResizeHandler: function () {
             this._containerHeight = this._container.height();
             this._containerOuterHeight = this._container.outerHeight(true);
-            this._calcBrowserScrollbarMinHeght();
+            this._setBrowserScrollbarMinHeght();
             this._setThumbHeight();
          },
 
