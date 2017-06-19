@@ -142,7 +142,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             if (window && this._container && (typeof this._container.length === "number")) {
 
                this._content = $('> .controls-ScrollContainer__content', this.getContainer());
-               showScrollbar = !(cDetection.isMobileIOS || cDetection.isMobileAndroid || compatibility.touch && cDetection.isIE);
+               showScrollbar = !(cDetection.isMobileIOS || cDetection.isMobileAndroid);
                this._bindOfflainEvents();
                //Под android оставляем нативный скролл
                if (showScrollbar){
