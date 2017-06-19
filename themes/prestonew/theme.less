@@ -1,9 +1,13 @@
 @import "../fonts/carry-presto";
+
 html {
   color: #e4e4e4;
 }
-
 body {
+   font-size: 1rem !important;
+}
+body {
+
    //TODO: удалить это когда будет нормальный пэйджинг, не из ws-a
    .ws-paging{
       .ws-paging-small{
@@ -71,7 +75,7 @@ body {
    }
    .controls-DataGridView__results {
       font-size: @default-font-size;
-      color: #FFCC99;
+      color: @header-color;
    }
 
    .controls-TabButton {
@@ -191,7 +195,7 @@ body {
       .controls-BackButton {
         line-height: 3.64rem;
       }
-body  .controls-DataGridView.controls-ListView__multiselect .controls-DataGridView__table .controls-DataGridView__td.controls-DataGridView__firstContentCell {
+    .controls-DataGridView.controls-ListView__multiselect .controls-DataGridView__table .controls-DataGridView__td.controls-DataGridView__firstContentCell {
       padding-left: 1rem;
     }
     .ws-float-area-nostack-panel-shadow-standart {
@@ -291,6 +295,9 @@ body  .controls-DataGridView.controls-ListView__multiselect .controls-DataGridVi
          }
       }
    }
+   .controls-DateBox {
+      min-height: 3rem;
+   }
     .controls-DateRangeBigChoose-MonthRangePicker.controls-ListView .controls-DateRangeBigChoose-MonthView.controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableElement.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
       color: #fff;
       background: #3f566d;
@@ -298,8 +305,8 @@ body  .controls-DataGridView.controls-ListView__multiselect .controls-DataGridVi
   .controls-ToolBar__menuIcon .icon-24 {
     font-family: carrypresto-icons!important;
   }
-  font-size: 1rem !important;
-    .icon-16 {
+
+   .icon-16 {
     font-size: 1.32rem !important;
     line-height: 1.32rem !important;
     width: 1.32rem;
@@ -405,8 +412,8 @@ body  .controls-DataGridView.controls-ListView__multiselect .controls-DataGridVi
 
 .controls-Button__closeButton {
    display: inline-block;
-   width: 3rem !important;
-   height: 3rem !important;
+   width: @closeButtonWidth;
+   height: @closeButtonHeight;
    background: @closeBigButtonImage;
    &:hover {
      background: @closeBigButtonImageHover;
@@ -550,6 +557,20 @@ body {
       font-size: 1.43rem!important;
       font-weight: normal !important;
   }
+   .ws-window-titlebar-action.close {
+      width: 3rem !important;
+      height: 3rem !important;
+      background: @closeBigButtonImage;
+      &:hover, &:active {
+         background: @closeBigButtonImageHover;
+      }
+   }
+   .ws-window-title {
+      font-size: 1.43rem;
+      height: 3.57rem;
+      max-height: 3.57rem;
+      line-height: 3.57rem;
+   }
 }
 
 .controls-FloatArea {
@@ -645,8 +666,18 @@ body {
          height: auto;
       }
    }
+   .controls-Button__icon {
+      &.icon-size {
+         font-size: 2.5rem!important;
+         right: .3rem;
+         top: 0.2rem;
+      }
+   }
 }
-
+.ws-float-area-stack-scroll-wrapper .ws-float-area-stack-panel-shadow {
+   border-left-color: #0055BB;
+   border-left-width: 3px;
+}
 .controls-editInPlace .controls-editInPlace__editor {
   background: @data-grid-row-hover-bg;
 }
@@ -668,6 +699,16 @@ body {
     line-height: 3rem !important;
 
 }
+.controls-DateBox.controls-FormattedTextBox {
+   .controls-FormattedTextBox__fieldWrapper {
+      padding: 0 0.3rem;
+      .controls-FormattedTextBox__field {
+         height: 2.7rem;
+         line-height: 2.7rem;
+      }
+   }
+}
+
 
 .controls-Link__field {
   vertical-align: baseline;
@@ -728,15 +769,6 @@ body .controls-DateRangeBigChoose-MonthRangePicker.controls-ListView .controls-D
   background: #3f566d;
 }
 
-.controls__filterButton {
-   .controls-Button__icon {
-      &.icon-size {
-         font-size: 2.5rem!important;
-         right: .3rem;
-         top: 0.2rem;
-      }
-   }
-}
 .controls-ToolBar__menuIcon {
    .icon-24 {
       font-size: @icon-large-size !important;
