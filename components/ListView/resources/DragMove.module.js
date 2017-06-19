@@ -318,6 +318,8 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
       },
 
       _endDragHandler: function(buse, drag, e) {
+         //если быстро двинуть мышью и отпустить то dragmove может не сработать обновим таргет еще раз
+         this._updateDragTarget(e);
          var
             target = DragObject.getTarget(),
             models = [],
