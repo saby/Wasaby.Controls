@@ -204,6 +204,8 @@ define(
             if (this._picker.isVisible() && this.getDate()) {
                this._pickerContent.setTime(this.getDate());
             }
+
+            this._pickerContent.subscribe('onChangeTimeEnd', this.hidePicker.bind(this));
          }
       },
 
@@ -313,10 +315,10 @@ define(
       },
 
       setActive: function(active) {
+         DatePicker.superclass.setActive.apply(this, arguments);
          if (active) {
             this._initFocusInHandler();
          }
-         DatePicker.superclass.setActive.apply(this, arguments);
       },
 
       _initFocusInHandler: function() {

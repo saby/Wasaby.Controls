@@ -7,13 +7,12 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
    'js!SBIS3.CONTROLS.ItemsControlMixin',
    'Core/helpers/collection-helpers',
    "Core/helpers/functional-helpers",
-   'Core/helpers/markup-helpers',
    'Core/core-instance',
    'js!SBIS3.StickyHeaderManager',
    'tmpl!SBIS3.CONTROLS.OperationsPanel/resources/ItemTemplate',
    'Core/moduleStubs',
    'css!SBIS3.CONTROLS.OperationsPanel'
-], function(Control, dotTplFn, ItemsControlMixin, colHelpers, fHelpers, mkpHelpers, cInstance, StickyHeaderManager, ItemTemplate, moduleStubs) {
+], function(Control, dotTplFn, ItemsControlMixin, colHelpers, fHelpers, cInstance, StickyHeaderManager, ItemTemplate, moduleStubs) {
 
    var ITEMS_MENU_WIDTH = 28;
 
@@ -141,8 +140,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
              * @cfg {Boolean} Показывать ли кнопку с операциями, если операции не помещаются
              */
             hasItemsMenu: false
-         },
-         _itemsDrawn: false
+         }
       },
       $constructor: function() {
          this._publish('onToggle');
@@ -172,6 +170,13 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       getItems: function() {
          var items = OperationsPanel.superclass.getItems.call(this);
          return items ? items : this._options.items;
+      },
+
+      //После setItems нужно подгрузить недостающие кнопки, иначе вместо них отобразится текст. Для этого затирается Deferred,
+      //который возвращается requireButtons, чтобы requireButtons при следующей отрисовке ещё раз подгрузил кнопки.
+      setItems: function() {
+         this._itemsLoadDeferred = null;
+         OperationsPanel.superclass.setItems.apply(this, arguments);
       },
 
       _updateActionsMenuButtonItems: function(){
@@ -220,13 +225,13 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       _setVisibility: function(show) {
          if (this.isVisible() !== show) {
             this._isVisible = show;
-            if (!this._itemsDrawn && show) {
-               this.redraw();
-            }
             // убрал анимацию т.к. в Engine браузере панель находится в фиксированном заголовке и при анимации перекрывает контент
             // TODO вернуть анимацию, так чтобы контент в Engine браузере также был анимирован
             // на страницах с внутренними скролами панель операций может находиться не в фиксированном заголовке и для этого случая можно вернуть старый алгоритм анимации
             this._container.toggleClass('ws-hidden', !show);
+            if (show) {
+               this.redraw();
+            }
             // Если контрол находится в фиксированном заголовке, то обновляем размеры заголовков
             if (this._isSticky()) {
                StickyHeaderManager.checkStickyHeaderSize();
@@ -241,9 +246,9 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
 
       onSelectedItemsChange: function(idArray) {
          this._container.toggleClass('controls-operationsPanel__massMode', !idArray.length)
-                             .toggleClass('controls-operationsPanel__selectionMode', !!idArray.length);
+                        .toggleClass('controls-operationsPanel__selectionMode', !!idArray.length);
 
-         if (this._itemsDrawn) {
+         if (this.isVisible()) {
             this._onSelectedItemsChange(idArray);
          } else {
             this.once('onDrawItems', function() {
@@ -268,7 +273,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          });
       },
       _onResizeHandler: function(){
-         if(this._options.hasItemsMenu && this._itemsDrawn){
+         if(this.isVisible()){
             this._checkCapacity();
          }
       },
@@ -277,6 +282,9 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
        * Метод проверяет все ли операции умещаются, если нет, то показывает кнопку с меню
        * */
       _checkCapacity: function(){
+         if (!this._options.hasItemsMenu) {
+            return;
+         }
          var container = this.getContainer();
 
          /* Доступная под операции ширина = Ширина контейнера - ширина кнопки с меню*/
@@ -315,9 +323,10 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          var self = this;
          if (this.isVisible()) {
             this.requireButtons().addCallback(function() {
+               self.once('onDrawItems', function() {
+                  self._checkCapacity();
+               });
                OperationsPanel.superclass.redraw.call(self);
-               self._itemsDrawn = true;
-               self._checkCapacity();
             });
          }
       },
@@ -336,8 +345,8 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       _createItemsMenu: function() {
          var self = this;
 
-         if(!self._itemsMenu){
-            moduleStubs.require(['js!SBIS3.CONTROLS.MenuIcon']).addCallback(function (MenuIcon) {
+         if(!this._itemsMenuLoadDeferred){
+            this._itemsMenuLoadDeferred = moduleStubs.require(['js!SBIS3.CONTROLS.MenuIcon']).addCallback(function (MenuIcon) {
                self._itemsMenu = new MenuIcon[0]({
                   element: $('<span>').insertAfter(self._getItemsContainer()),
                   name: 'itemsMenu',
@@ -378,8 +387,8 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                self._updateActionsMenuButtonItems();
                self._itemsMenu.getContainer().toggleClass('ws-hidden', false);
             });
+            return this._itemsMenuLoadDeferred;
          }
-
       },
 
       _getItemsContainer: function() {

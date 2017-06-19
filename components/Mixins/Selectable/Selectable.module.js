@@ -154,9 +154,16 @@ define('js!SBIS3.CONTROLS.Selectable', [
       },
 
       before : {
-         setDataSource: function() {
-            this._options.selectedIndex = -1;
-            this._curHash = undefined;
+         setDataSource: function(source, noLoad) {
+            /* При установке источника без перезагрузки
+               не надо сбрасывать selectedIndex, иначе, при серверной вёрстке
+               не произойдёт выделения записи. Запись выделяется при создании проекции,
+               которая в обычном случае создаётся после загрузки, а при серверной вёрстке
+               она создаётся в конструкторе. */
+            if(!noLoad) {
+               this._options.selectedIndex = -1;
+               this._curHash = undefined;
+            }
          },
          setItems: function() {
             this._options.selectedIndex = -1;

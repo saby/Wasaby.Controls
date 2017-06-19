@@ -307,6 +307,7 @@
 @icon-button-edit-round-border-height:             24px;
 @icon-button-edit-round-border-width:              24px;
 @icon-button-edit-round-border-line-height:        24px;
+@list-view-items-toolbar-icon-button-border-font:       'cbuc-icons';
 
 
 // ------------- //
@@ -943,7 +944,6 @@
 @money-text-box-decimals-padding:     2px 0;
 @money-text-box-decimals-font-size:   12px;
 @money-text-box-decimals-color:                       @gray-ccc-color;
-@money-text-box-decimals-background-color:            @white-color;
 
 // ----------- //
 // Date box    //
@@ -2041,6 +2041,9 @@
 @controls-OperationsPanelButton-vertical-icon-top: 0;
 @controls-OperationsPanelButton-icon-left:         0;
 @controls-OperationsPanelButton-active-icon-color: #313E78;
+@controls-OperationsPanelButton-icon:              "\e011";
+@controls-OperationsPanelButton-icon-expand:       "\e012";
+@controls-OperationsPanelButton-color:             @default-color;
 
 // ----------------------- //
 //      EditInPlace        //
@@ -2108,7 +2111,7 @@
 @DropdownList-picker-menu-white-space:                nowrap;
 @DropdownList-picker-menu-item-padding:               5px 8px 3px 8px;
 @DropdownList-picker-menu-item-margin:                0;
-@DropdownList-picker-menu-item-height:                19px;
+@DropdownList-picker-menu-item-height:                24px;
 @DropdownList-picker-menu-item-multiselect-padding:   0;
 @DropdownList-picker-menu-item-color:                 @white-color;
 @DropdownList-picker-menu-item-color-blur:            rgba(255, 255, 255, 0);
@@ -2120,9 +2123,11 @@
 @DropdownList-footer-buttonsBlock-height:             24px;
 @DropdownList-footer-multisel-buttonsBlock-h:         32px;
 @DropdownList-checkbox-bottom:                        1px;
+@DropdownList-after-caption-wrapper-top:              2px;
 @DropdownList-footer-buttons-position:                absolute;
 @DropdownList-footer-hasMore-left:                    12px;
 @DropdownList-footer-hasMore-left-multiselect:        24px;
+@DropdownList-footer-hasMore-top-multiselect:         4px;
 @DropdownList-footer-hasMore-top:                     0;
 @DropdownList-footer-select-right:                    6px;
 @DropdownList-footer-select-top:                      @DropdownList-footer-select-right;
@@ -2312,6 +2317,8 @@
 
 @controls-FieldLink-big-fontSize:                  15px;
 @controls-FieldLink-big-fontSize-color:            #313E78;
+@controls-FieldLink-FilterButton-color:            #0055bb;
+@controls-FieldLink-FilterButton-color-hover:      @controls-FieldLink-FilterButton-color;
 
 //SelectorButton
 @controls-SelectorButton-height:                   24px;
@@ -2705,3 +2712,10 @@
 //  Label  //
 //---------//
 @label-text-margin:                                        0 8px 0 0;
+@dropdown-list-item-padding:               5px 38px 3px 12px;
+
+@data-grid-row-selected-main-bg:          @white-color;
+@data-grid-row-selected-addit-bg:         rgba(255,255,255,0);
+@data-grid-row-selected-add-bg:           @data-grid-row-selected-addit-bg;
+@data-grid-row-hover-add-bg:              @data-grid-row-selected-addit-bg;
+@tree-view-copy-arrow-add-background:     @data-grid-row-selected-addit-bg;

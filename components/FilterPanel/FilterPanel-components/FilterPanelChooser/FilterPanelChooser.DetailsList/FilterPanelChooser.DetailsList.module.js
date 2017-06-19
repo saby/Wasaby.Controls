@@ -98,7 +98,8 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
          });
          properties.dataSource = new Memory({
             data: opts.properties.items.getRawData(),
-            idProperty: opts.properties.idProperty
+            idProperty: opts.properties.idProperty,
+            adapter: opts.properties.items.getAdapter()
          });
          properties.selectedKeys = this._prepareSelectedKeys(opts.value);
          return properties;

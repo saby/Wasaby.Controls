@@ -10,9 +10,8 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
       'tmpl!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemContentTemplate',
       'Core/helpers/collection-helpers',
       'Core/core-instance',
-      'Core/helpers/functional-helpers',
       'Core/helpers/Function/callNext'
-   ], function(CompoundControl, DSMixin, PickerMixin, dotTplFn, defaultItemTemplate, defaultItemContentTemplate, colHelpers, cInstance, fHelpers, callNext) {
+   ], function(CompoundControl, DSMixin, PickerMixin, dotTplFn, defaultItemTemplate, defaultItemContentTemplate, colHelpers, cInstance, callNext) {
 
       'use strict';
 
@@ -116,8 +115,12 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          /* Контрол не должен принимать фокус ни по клику, ни по табу */
-         _initFocusCatch: fHelpers.nop,
-         canAcceptFocus: fHelpers.nop,
+         _initFocusCatch: function () {
+
+         },
+         canAcceptFocus: function () {
+
+         },
 
          /* Скрываем именно в синхронном drawItemsCallback'e,
             иначе пикер скрывается асинхронно и моргает */
@@ -145,7 +148,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             /* Зачем сделано:
                Не надо, чтобы пикер поля связи вызывал перерасчёт размеров,
                т.к. никаких расчётов при его показе не происходит, а просто отрисовываются элементы */
-            this._picker._notifyOnSizeChanged = fHelpers.nop;
+            this._picker._notifyOnSizeChanged = function () {};
          },
 
          _setPickerConfig: function () {

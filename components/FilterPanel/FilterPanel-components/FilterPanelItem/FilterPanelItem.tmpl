@@ -4,12 +4,12 @@
    </ws:if>
    <ws:else>
       <ws:SBIS3.CONTROLS.Spoiler
-              expanded="{{ item.expanded }}"
-              caption="{{ item.caption }}"
-              properties="{{ item.properties }}"
-              name="{{ item.id }}"
-              rightPartTitleTpl="tmpl!SBIS3.CONTROLS.FilterPanel/resources/FilterPanelSpoilerRightPartTitleTemplate"
-              contentTpl="{{ item.template }}" >
+         expanded="{{ item.expanded }}"
+         caption="{{ item.caption }}"
+         properties="{{ item.properties }}"
+         name="{{ item.id }}"
+         rightPartTitleTpl="tmpl!SBIS3.CONTROLS.FilterPanelItem/resources/FilterPanelItemSpoilerRightPartTitleTemplate"
+         contentTpl="{{ item.template }}" >
       </ws:SBIS3.CONTROLS.Spoiler>
    </ws:else>
 </div>
