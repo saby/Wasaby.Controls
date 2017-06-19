@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.Action.Save', [
 ], function (Action, cInstance, Di) {
 
     /**
-     * Базовый экшен для сохранения данных.
+     * Базовый action для сохранения данных.
      * @class SBIS3.CONTROLS.Action.Save
      * @public
      * @extends SBIS3.CONTROLS.Action.Action
