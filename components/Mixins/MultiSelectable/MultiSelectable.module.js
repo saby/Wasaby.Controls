@@ -835,9 +835,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
        * @noShow
        */
       initializeSelectedItems: function() {
-         this._options.selectedItems =  new List({
-            ownerShip: false
-         });
+         this._options.selectedItems =  new List();
       },
 
       _dataLoadedCallback : function(){
