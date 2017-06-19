@@ -404,9 +404,12 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
       },
 
       _toggleDragItems: function (show) {
-         DragObject.getSource().each(function (item) {
-            item.getDomElement().toggleClass('ws-hidden', !show);
-         });
+         var source = DragObject.getSource();
+         if (source) {
+            source.each(function (item) {
+               item.getDomElement().toggleClass('ws-hidden', !show);
+            });
+         }
       },
 
       _removeDragPlaceHolder: function () {
