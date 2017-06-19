@@ -1780,7 +1780,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      if (dataSet.getCount() == MAX_SELECTED && dataSet.getMetaData().more){
                         InformationPopupManager.showMessageDialog({
                            status: 'default',
-                           message: 'Отмечено 1000 записей, максимально допустимое количество, обрабатываемое системой СБИС.'
+                           message: rk('Отмечено 1000 записей, максимально допустимое количество, обрабатываемое системой СБИС.')
                         });
                      }
                   }.bind(this));
