@@ -251,13 +251,28 @@ define('js!SBIS3.CONTROLS.SelectorButton',
       },
 
       _clickHandler: function(e) {
-         var cfg = this.getDictionaries()[0];
+         var cfg = this.getDictionaries()[0],
+             $target = $(e.target),
+             itemContainer;
 
-         if($(e.target).hasClass('controls-SelectorButton__cross')) {
+         if($target.hasClass('controls-SelectorButton__cross')) {
             this.removeItemsSelectionAll();
+         } else if (!this.isEnabled()) {
+            itemContainer = $target.closest('.controls-ListView__item', this._getItemsContainer());
+            
+            if(itemContainer.length) {
+               ItemsSelectionUtil.onItemClickNotify.call(
+                  this,
+                  this._getItemProjectionByHash(itemContainer.data('hash')).getContents().get(this._options.idProperty)
+               );
+            }
          } else if(cfg) {
             this.showSelector(cfg);
          }
+      },
+   
+      _checkEnabledByClick: function () {
+         return true;
       },
 
       showSelector: function(cfg){
