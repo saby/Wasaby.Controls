@@ -148,33 +148,21 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             showOnControlsReady: false,
             autoCloseOnHide: true,
             needSetDocumentTitle: false,
-            opener: this._getOpener(),
+            opener: this._getOpener(), //opener по умолчанию
             template: meta.template || this._options.template,
             target: undefined,
             block_by_task_1173286428: false // временнное решение проблемы описанной в надзадаче
          }, this._options.dialogOptions || {});
       },
       _getOpener: function(){
-         //В 375 все прикладники не успеют указать у себя правильных opener'ов, пока нахожу opener за них.
-         //В идеале они должны делать это сами и тогда этот код не нужен
-         var popup = this.getContainer() && this.getContainer().closest('.controls-FloatArea'),
-             topParent,
-             floatArea,
-             floatAreaContainer;
+         var popup = this.getContainer() && this.getContainer().closest('.controls-FloatArea');
          //Указываем opener'ом всплывающую панель, в которой лежит action, это может быть либо controls.FloatArea, либо core.FloatArea
          //Нужно в ситуации, когда запись перерисовывается в уже открытой панели, чтобы по opener'aм добраться до панелей, которые открыты из той,
          //которую сейчас перерисовываем, и закрыть их.
          if (popup && popup.length) {
             return popup.wsControl();
          }
-         else {
-            topParent = this.getTopParent();
-            if (topParent !== this) {
-               floatAreaContainer = topParent.getContainer().closest('.ws-float-area');
-               floatArea = floatAreaContainer.length ? floatAreaContainer[0].wsControl : false;
-            }
-         }
-         return floatArea || this;
+         return this;
       },
       /**
        * Возвращает конфигурацию диалога - всплывающей панели или окна.
