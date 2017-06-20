@@ -2791,32 +2791,44 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._scrollOffset.bottom -= this._getAdditionalOffset(oldItems);
                }
             }
+
+            if (cDetection.firefox || cDetection.isMobileSafari) {
+               this._beforeFixScrollTop(action, newItems, newItemsIndex, oldItems, oldItemsIndex);
+            }
+
             ListView.superclass._onCollectionAddMoveRemove.apply(this, arguments);
 
-            if (cDetection.firefox) {
-               this._firefoxFixScrollTop(action, newItems, newItemsIndex, oldItems, oldItemsIndex);
+            if (cDetection.firefox || cDetection.isMobileSafari) {
+               this._fixScrollTop(action, newItems, newItemsIndex, oldItems, oldItemsIndex);
             }
          },
 
-         // Страшный хак для Firefox:
+         // Страшный хак для Firefox и ipad:
          // в 110 из коллекции вместо события replace стали приходить remove и add
-         // из за этого в фф дергается скролл, так как сначала убирается элемент, скролл подвигается вверх
+         // из за этого в фф и на ipad дергается скролл, так как сначала убирается элемент, скролл подвигается вверх
          // затем добавляется элемент на место удаленного, но скролл остается на месте. 
          // Поэтому компенсируем этот прыжок сами
-         _firefoxFixScrollTop: function(action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+         _beforeFixScrollTop: function(action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+            if (action == IBindCollection.ACTION_REMOVE) {
+               this._ffScrollPosition = this._getScrollWatcher().getScrollContainer().scrollTop();
+               this._ffRemoveIndex = oldItemsIndex;
+            }
+         },
+         //продолжение хака
+         _fixScrollTop: function(action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
             if (action == IBindCollection.ACTION_ADD) {
-               if (newItemsIndex === 0 && this._removedItemsCount == newItems.length && this.isScrollOnBottom()) {
-                  this._scrollWatcher.scrollTo('bottom');
-               }
-            } else if (action == IBindCollection.ACTION_REMOVE) {
-               if (oldItemsIndex === 0) {
-                  this._removedItemsCount = oldItems.length;
+               if (this._ffRemoveIndex == newItemsIndex) {
+                  this._scrollWatcher.scrollTo(this._ffScrollPosition);
                }
             }
+            setTimeout(function(){
+               this._ffScrollPosition = null;
+               this._ffRemoveIndex = null;
+            }.bind(this), 0);
          },
 
          // Получить количество записей которые нужно вычесть/прибавить к _offset при удалении/добавлении элементов
-         _getAdditionalOffset: function(items){
+         _getAdditionalOffset: function(items) {
             return items.length;
          },
 

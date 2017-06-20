@@ -120,21 +120,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             this._ctxSync = {
                selfToPrev: {},
                selfCtxRemoved: {},
-               selfNeedSync: false,
+               selfNeedSync: 0,
                prevToSelf: {},
                prevCtxRemoved: {},
-               prevNeedSync: false
+               prevNeedSync: 0
             };
             this.deprecatedContr(cfg);
-            // Что бы при встаке контрола (в качетве обертки) логика работы с контекстом не ломалась,
-            // сделаем свой контекст прозрачным
-            if (cfg.parent && cfg.parent._template) {
-               /** Если scrollContainer вставлен в старое окружение, ему позже будет установлен
-                * правильный контекст, а сейчас ссылку на текущий терять нельзя
-                */
-               this._craftedContext = false;
-               this._context = this._context.getPrevious();
-            }
          },
 
          _containerReady: function() {
@@ -210,6 +201,31 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             return (typeof a === "number") && (typeof b === "number") && isNaN(a) && isNaN(b);
          },
 
+         nullOrUndefined: function(a){
+            return a === null || a === undefined;
+         },
+
+         compare: function(a, b){
+            /**
+             * Если одно из значений null или undefined то сравниваем с типами, чтобы null!==undefined
+             * Если оба значения не null и не undefined, то сравниваем без типов, чтобы 1=="1"
+             */
+            var temp = (this.nullOrUndefined(a) || this.nullOrUndefined(b))?(a===b):(a==b);
+            return this.bothIsNaN(a,b) || temp;
+         },
+
+         fixOpacityField: function(name){
+            if (this.compare(this._ctxSync.selfToPrev[name], this._ctxSync.prevToSelf[name])){
+               /**
+                * Если данные пролетают сквозь контекст самоятоятельно, то не нужно их синхронизировать
+                */
+               delete this._ctxSync.selfToPrev[name];
+               delete this._ctxSync.prevToSelf[name];
+               this._ctxSync.selfNeedSync--;
+               this._ctxSync.prevNeedSync--;
+            }
+         },
+
          setContext: function(ctx){
             BaseCompatible.setContext.call(this, ctx);
             /**
@@ -223,32 +239,32 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   prevContext = this._context.getPrevious();
 
                this._context.subscribe('onFieldChange', function (ev, name, value) {
-                  if (this.getValueSelf(name) !== undefined) {
-                     if (prevContext.getValueSelf(name) != value &&
-                        self._ctxSync.selfToPrev[name] != value &&
-                        !self.bothIsNaN(value, prevContext.getValueSelf(name)) &&
-                        !self.bothIsNaN(value, self._ctxSync.selfToPrev[name])) {
+                  //if (this.getValueSelf(name) !== undefined)
+                  {
+                     if (!self.compare(value, prevContext.getValueSelf(name)) &&
+                        !self.compare(value, self._ctxSync.selfToPrev[name])) {
                         self._ctxSync.selfToPrev[name] = value;
-                        self._ctxSync.selfNeedSync = true;
+                        self._ctxSync.selfNeedSync++;
+                        self.fixOpacityField(name);
                      }
                   }
                });
 
                prevContext.subscribe('onFieldChange', function (ev, name, value) {
-                  if (prevContext.getValueSelf(name) !== undefined) {
-                     if (selfCtx.getValueSelf(name) != value &&
-                        self._ctxSync.prevToSelf[name] != value &&
-                        !self.bothIsNaN(value, selfCtx.getValueSelf(name)) &&
-                        !self.bothIsNaN(value, self._ctxSync.prevToSelf[name])){
+                  //if (prevContext.getValueSelf(name) !== undefined)
+                  {
+                     if (!self.compare(value, selfCtx.getValueSelf(name)) &&
+                        !self.compare(value, self._ctxSync.prevToSelf[name])){
                         self._ctxSync.prevToSelf[name] = value;
-                        self._ctxSync.prevNeedSync = true;
+                        self._ctxSync.prevNeedSync++;
+                        self.fixOpacityField(name);
                      }
                   }
                });
 
                this._context.subscribe('onFieldsChanged', function () {
                   if (self._ctxSync.selfNeedSync) {
-                     self._ctxSync.selfNeedSync = false;
+                     self._ctxSync.selfNeedSync = 0;
                      prevContext.setValue(self._ctxSync.selfToPrev);
                      self._ctxSync.selfToPrev = {};
                   }
@@ -256,7 +272,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
                prevContext.subscribe('onFieldsChanged', function () {
                   if (self._ctxSync.prevNeedSync) {
-                     self._ctxSync.prevNeedSync = false;
+                     self._ctxSync.prevNeedSync = 0;
                      selfCtx.setValue(self._ctxSync.prevToSelf);
                      self._ctxSync.prevToSelf = {};
                   }
@@ -334,11 +350,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   headerHeight = StickyHeaderManager.getStickyHeaderHeight(this._content);
                   if (this._headerHeight !== headerHeight) {
                      scrollbarContainer = this._scrollbar._container;
-                     this._headerHeight = headerHeight;
                      scrollbarContainer.css('margin-top', headerHeight);
-                     //У scrollbar изначально стоит height(calc(100% - 8px)). Поэтому нужно учесть эти 8px.
-                     headerHeight += 8;
                      scrollbarContainer.height('calc(100% - ' + headerHeight + 'px)');
+                     this._headerHeight = headerHeight;
                   }
                }
             }

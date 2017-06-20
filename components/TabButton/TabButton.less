@@ -94,6 +94,7 @@
       z-index: @tab-button-checked-z-index;
       cursor: @tab-button-checked-cursor;
       font-size: @tab-button-checked-font-size;
+      border-bottom-color: transparent;
       padding: 0;
       .controls-TabButton__bottomLine{
          position: absolute;
@@ -404,4 +405,15 @@
         line-height: 23px;
      }
   }
+}
+
+.ws-is-mobile-platform {
+   .controls-TabButton {
+      &.controls-TabButton__main-item.controls-TabButton__main-flex {
+         .controls-TabButton__additionalText {
+            position: relative;
+            top: 2px;
+         }
+      }
+   }
 }

@@ -344,7 +344,7 @@ define(
          var oldText   = this._options.text;
          this._updateOptionsByDate(date);
          if (oldText !== this._options.text) {
-            this._notify('onTextChange', this._options.text);
+            this._notifyOnTextChange();
          }
          this._drawDate();
       },

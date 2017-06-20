@@ -43,6 +43,14 @@ define([
          });
 
 
+         /**it('destroy', function(){
+
+             * TODO: вернуть тест при отрезе слоя compatible
+             *
+            button.destroy();
+            assert.isTrue(button.isDestroyed());
+         });
+          */
       });
 
    });

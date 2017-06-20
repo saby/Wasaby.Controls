@@ -13,15 +13,25 @@ body {
       box-sizing: border-box;
    }
 
-   .controls-ListView__bottomStyle > .controls-ItemsToolbar:before {
-     top: -1px;
-     left: -1.7rem;
-     width: 1.88rem;
-     height: 1.88rem;
-     background: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDIwMDEwOTA0Ly9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+CjxzdmcgdmVyc2lvbj0iMS4wIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiB3aWR0aD0iMjU1LjAwMDAwMHB4IiBoZWlnaHQ9IjMwMC4wMDAwMDBweCIgdmlld0JveD0iMCAwIDI1NS4wMDAwMDAgMzAwLjAwMDAwMCIKIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwMDAwMCwzMDAuMDAwMDAwKSBzY2FsZSgwLjEwMDAwMCwtMC4xMDAwMDApIgpmaWxsPSIjMjkzYTRiIiBzdHJva2U9Im5vbmUiPgo8cGF0aCBkPSJNMTAgMjk4OSBjMCAtMTEgMTkgLTUxIDI5IC01OSA2IC01IDQ2IC02NCAyMTUgLTMxNSA0NCAtNjYgODMgLTEyMgo4NiAtMTI1IDMgLTMgMzcgLTUyIDc1IC0xMTAgMzkgLTU4IDcyIC0xMDcgNzUgLTExMCA2IC02IDY3IC05NSAyMDQgLTMwMCA1MAotNzQgOTMgLTEzNyA5NiAtMTQwIDMgLTMgMjMgLTMyIDQ1IC02NSAyMiAtMzMgNDIgLTYyIDQ1IC02NSAzIC0zIDQzIC02MSA4OQotMTMwIDQ2IC02OSAxMjEgLTE3OSAxNjYgLTI0NSA0NCAtNjYgMTA2IC0xNTYgMTM1IC0yMDAgMzAgLTQ0IDU3IC04MiA2MCAtODUKNSAtNSA0MSAtNTggMjQ0IC0zNjAgNjEgLTkxIDExMyAtMTY3IDExNiAtMTcwIDMgLTMgMjMgLTMyIDQ1IC02NSA0NyAtNzAgMzgKLTU4IDExNiAtMTY0IDU3IC03NiAxNzkgLTE5MSAyMDMgLTE5MSA2IDAgMjUgLTcgNDEgLTE2IDU4IC0zMiAyODcgLTc0IDQwMAotNzQgbDU1IDAgMCAxNTAwIDAgMTUwMCAtMTI3MCAwIGMtODkyIDAgLTEyNzAgLTMgLTEyNzAgLTExeiIvPgo8L2c+Cjwvc3ZnPgo=") no-repeat 0 0;
-
-     background-size: 1.88rem 1.88rem;
-   }
+  .controls-ListView__bottomStyle > .controls-ItemsToolbar {
+    &:before {
+      top: -1px;
+      left: -1.7rem;
+      width: 1.88rem;
+      height: 1.88rem;
+      background-size: 1.88rem 1.88rem;
+    }
+    &.controls-ItemsToolbar__edit {
+      &:before {
+        top: 0;
+        left: -2.7rem;
+        width: 3rem;
+        height: 3rem;
+        background: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDIwMDEwOTA0Ly9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+CjxzdmcgdmVyc2lvbj0iMS4wIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiB3aWR0aD0iMjU1LjAwMDAwMHB4IiBoZWlnaHQ9IjMwMC4wMDAwMDBweCIgdmlld0JveD0iMCAwIDI1NS4wMDAwMDAgMzAwLjAwMDAwMCIKIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwMDAwMCwzMDAuMDAwMDAwKSBzY2FsZSgwLjEwMDAwMCwtMC4xMDAwMDApIgpmaWxsPSIjMjkzYTRiIiBzdHJva2U9Im5vbmUiPgo8cGF0aCBkPSJNMTAgMjk4OSBjMCAtMTEgMTkgLTUxIDI5IC01OSA2IC01IDQ2IC02NCAyMTUgLTMxNSA0NCAtNjYgODMgLTEyMgo4NiAtMTI1IDMgLTMgMzcgLTUyIDc1IC0xMTAgMzkgLTU4IDcyIC0xMDcgNzUgLTExMCA2IC02IDY3IC05NSAyMDQgLTMwMCA1MAotNzQgOTMgLTEzNyA5NiAtMTQwIDMgLTMgMjMgLTMyIDQ1IC02NSAyMiAtMzMgNDIgLTYyIDQ1IC02NSAzIC0zIDQzIC02MSA4OQotMTMwIDQ2IC02OSAxMjEgLTE3OSAxNjYgLTI0NSA0NCAtNjYgMTA2IC0xNTYgMTM1IC0yMDAgMzAgLTQ0IDU3IC04MiA2MCAtODUKNSAtNSA0MSAtNTggMjQ0IC0zNjAgNjEgLTkxIDExMyAtMTY3IDExNiAtMTcwIDMgLTMgMjMgLTMyIDQ1IC02NSA0NyAtNzAgMzgKLTU4IDExNiAtMTY0IDU3IC03NiAxNzkgLTE5MSAyMDMgLTE5MSA2IDAgMjUgLTcgNDEgLTE2IDU4IC0zMiAyODcgLTc0IDQwMAotNzQgbDU1IDAgMCAxNTAwIDAgMTUwMCAtMTI3MCAwIGMtODkyIDAgLTEyNzAgLTMgLTEyNzAgLTExeiIvPgo8L2c+Cjwvc3ZnPgo=") no-repeat 0 0;
+        background-size: 3rem 3rem;
+      }
+    }
+  }
 
    .engine-BrowserTabs__header {
       height: 3.57rem;
@@ -148,7 +158,6 @@ body  .controls-DataGridView.controls-ListView__multiselect .controls-DataGridVi
 
    .controls-DropdownList {
       .controls-DropdownList__selectedItem {
-         display: inline-block;
          .controls-DropdownList__afterCaptionWrapper .controls-DropdownList__crossIcon {
             font-size: 2rem !important;
             line-height: 1.32rem !important;
@@ -217,10 +226,6 @@ body  .controls-DataGridView.controls-ListView__multiselect .controls-DataGridVi
          }
       }
    }
-
-    .controls-DropdownList .controls-DropdownList__selectedItem {
-      display: inline-block;
-    }
     .controls-DateRangeBigChoose-MonthRangePicker.controls-ListView .controls-DateRangeBigChoose-MonthView.controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableElement.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
       color: #fff;
       background: #3f566d;
@@ -636,10 +641,6 @@ body {
 .controls-DropdownList__picker .controls-DropdownList__multiselect.controls-DropdownList__item * {
     font-size: 1.14rem;
 }
-body .controls-DropdownList .controls-DropdownList__selectedItem {
-    display: inline-flex;
-
-}
 body .ws-float-area-stack-panel-shadow {
     border-left: 2px solid #00a2ef;
     border-color: #00a4f0;
@@ -656,10 +657,6 @@ body .ws-float-area-stack-panel-shadow {
   background: #1D2834;
 }
 
-body .controls-DropdownList .controls-DropdownList__selectedItem {
-    display: inline-block;
-
-}
 
 body .controls-DateRangeBigChoose-MonthRangePicker.controls-ListView .controls-DateRangeBigChoose-MonthView.controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableElement.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
   color: #fff;
@@ -713,10 +710,6 @@ body .controls-ToolBar__menuIcon .icon-24 {
 
 .controls-TreeView__expand {
   font-size: 1rem !important;
-}
-
-body .controls-DropdownList .controls-DropdownList__selectedItem {
-    display: inline-flex;
 }
 
 .controls__filter-button__apply-filter {
@@ -909,8 +902,8 @@ body {
          }
       }
 
-      .ws-info-box-close-button.icon-disabled{
-         top: -4px;
+      .ws-infobox-close-button.icon-disabled{
+         top: .1rem;
          color: @link-text-color!important;
          &:hover {
             color: #B9E9FF!important;
