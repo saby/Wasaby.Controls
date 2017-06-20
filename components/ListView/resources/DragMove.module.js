@@ -391,7 +391,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             }
          }
          if (!isMove) {
-            this._toggleDragItems(ragObject, true);
+            this._toggleDragItems(dragObject, true);
             this._removeDragPlaceHolder();
          }
          this._clearDragHighlight();
