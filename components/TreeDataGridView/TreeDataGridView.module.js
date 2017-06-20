@@ -455,6 +455,14 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
          TreeDataGridView.superclass._onRightSwipeHandler.apply(this, arguments);
       },
+   
+      _mouseDownHandler: function(e) {
+         /* По стандарту отключаю выделение по двойному клику мышкой в дереве */
+         if(e.originalEvent.detail > 1) {
+            e.preventDefault();
+         }
+         TreeDataGridView.superclass._mouseDownHandler.apply(this, arguments);
+      },
 
       _isHoverControl: function(target) {
          var res = TreeDataGridView.superclass._isHoverControl.apply(this, arguments);
