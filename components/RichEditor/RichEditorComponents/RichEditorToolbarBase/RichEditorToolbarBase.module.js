@@ -301,14 +301,29 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                      {color:'grey'}
                   ],
                   presets:[
-                     { 'font-weight' : 'bold',
-                        'font-size' : '18px',
-                        'font-style': 'italic',
+                     {
+                        id: 'mainText',
                         name: 'Основной'
                      },
-                     {'font-size': '14px',
-                        'text-decoration': 'underline',
+                     {
+                        id: 'title',
+                        color: '#313E78',
+                        'font-size' : '18px',
+                        'font-weight': 'bold',
                         name: 'Заголовок'
+                     },
+                     {
+                        id: 'subTitle',
+                        color: '#313E78',
+                        'font-size' : '15px',
+                        'font-weight': 'bold',
+                        name: 'Подзаголовок'
+                     },
+                     {
+                        id: 'additionalText',
+                        color: '#999999',
+                        'font-size' : '12px',
+                        name: 'Дополнительный'
                      }
                   ],
                   activableByClick: false
@@ -323,20 +338,24 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
 
          _applyFormats: function(formats){
             if (this._options.linkedEditor) {
-               ['title', 'subTitle', 'additionalText', 'forecolor'].forEach(function(stl){
-                  this._options.linkedEditor._removeFormat(stl);
-               }, this);
-               //необходимо сначала ставить размер шрифта, тк это сбивает каретку
-               this._options.linkedEditor.setFontSize(formats.fontsize);
-               for ( var button in this._buttons) {
-                  if (this._buttons.hasOwnProperty(button)) {
-                     if (this._buttons[button] !== formats[button]) {
-                        this._options.linkedEditor.execCommand(button);
+               if (formats.id) {
+                  this._options.linkedEditor.setFontStyle(formats.id);
+               } else {
+                  ['title', 'subTitle', 'additionalText', 'forecolor'].forEach(function(stl){
+                     this._options.linkedEditor._removeFormat(stl);
+                  }, this);
+                  //необходимо сначала ставить размер шрифта, тк это сбивает каретку
+                  this._options.linkedEditor.setFontSize(formats.fontsize);
+                  for ( var button in this._buttons) {
+                     if (this._buttons.hasOwnProperty(button)) {
+                        if (this._buttons[button] !== formats[button]) {
+                           this._options.linkedEditor.execCommand(button);
+                        }
                      }
                   }
-               }
-               if (formats.color !== 'black') {
-                  this._options.linkedEditor.setFontColor(formats.color);
+                  if (formats.color !== 'black') {
+                     this._options.linkedEditor.setFontColor(formats.color);
+                  }
                }
             }
          },
