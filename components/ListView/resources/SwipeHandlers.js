@@ -2,7 +2,7 @@ define('js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers', [], function () {
    if (typeof $ != 'undefined') {
       $.event.special.swipe = {
 
-         xTreshold: 40,
+         xTreshold: 100,
          yTreshold: 25,
          scrollTreshold: 30,
          durTreshold: 600,
