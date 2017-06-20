@@ -317,11 +317,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   headerHeight = StickyHeaderManager.getStickyHeaderHeight(this._content);
                   if (this._headerHeight !== headerHeight) {
                      scrollbarContainer = this._scrollbar._container;
-                     this._headerHeight = headerHeight;
                      scrollbarContainer.css('margin-top', headerHeight);
-                     //У scrollbar изначально стоит height(calc(100% - 8px)). Поэтому нужно учесть эти 8px.
-                     headerHeight += 8;
                      scrollbarContainer.height('calc(100% - ' + headerHeight + 'px)');
+                     this._headerHeight = headerHeight;
                   }
                }
             }
