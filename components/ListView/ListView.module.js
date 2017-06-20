@@ -4261,9 +4261,12 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _toggleDragItems: function (dragObject, show) {
-            dragObject.getSource().each(function (item) {
-               item.getDomElement().toggleClass('ws-hidden', !show);
-            });
+            var source = dragObject.getSource();
+            if (source) {
+               source.each(function (item) {
+                  item.getDomElement().toggleClass('ws-hidden', !show);
+               });
+            }
          },
          /*DRAG_AND_DROP END*/
          //region moveMethods
