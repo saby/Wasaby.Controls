@@ -32,6 +32,7 @@ define('js!WSControls/Lists/ItemsControl', [
 
    'use strict';
 
+
    var ItemsControl = BaseControl.extend(
       {
          _controlName: 'WSControls/Lists/ItemsControl',
@@ -60,8 +61,7 @@ define('js!WSControls/Lists/ItemsControl', [
 
             this._onCollectionChange = onCollectionChange.bind(this);
             this._onSelectorChange = onSelectorChange.bind(this);
-            this._onDSBeforeReload = onDSBeforeReload.bind(this);
-            this._onDSAfterReload = onDSAfterReload.bind(this);
+
 
 
             if (this._options.items) {
@@ -94,8 +94,14 @@ define('js!WSControls/Lists/ItemsControl', [
                   dataSource : this._options.dataSource,
                   idProperty: this.idProperty
                });
-               this._dataSourceController.subscribe('onBeforeReload', this._onDSBeforeReload);
-               this._dataSourceController.subscribe('onAfterReload', this._onDSAfterReload);
+               if (!this._onDSBeforeReloadFnc) {
+                  this._onDSBeforeReloadFnc = this._onDSBeforeReload.bind(this);
+               }
+               if (!this._onDSAfterReloadFnc) {
+                  this._onDSAfterReloadFnc = this._onDSAfterReload.bind(this);
+               }
+               this._dataSourceController.subscribe('onBeforeReload', this._onDSBeforeReloadFnc);
+               this._dataSourceController.subscribe('onAfterReload', this._onDSAfterReloadFnc);
             }
          },
 
@@ -290,6 +296,16 @@ define('js!WSControls/Lists/ItemsControl', [
          _getFilterForReload: function () {
             return this._dataSourceController.getFilter();
          },
+         _onDSBeforeReload: function(e) {
+            this._toggleIndicator(true);
+            this._notify('onBeforeDataLoad', this._getFilterForReload.apply(this, arguments), this.getSorting(), this._dataSourceController.offset, this._dataSourceController.limit);
+            e.setResult({
+               filter : this._getFilterForReload()
+            });
+         },
+         _onDSAfterReload: function() {
+            debugger;
+         },
          //</editor-fold>
 
          destroy: function() {
@@ -315,14 +331,6 @@ define('js!WSControls/Lists/ItemsControl', [
       this._itemData = null;
       this.tplData = this._prepareItemData();
       this._setDirty();
-   };
-
-   var onDSBeforeReload = function(e) {
-      this._toggleIndicator(true);
-      this._notify('onBeforeDataLoad', this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit);
-      e.setResult({
-         filter : this._getFilterForReload()
-      });
    };
 
    var onDSAfterReload = function() {

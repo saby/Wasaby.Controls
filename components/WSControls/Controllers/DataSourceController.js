@@ -1,8 +1,9 @@
 define('js!WSControls/Controllers/DataSourceController', [
    'Core/Abstract',
    'js!SBIS3.CONTROLS.Utils.SourceUtil',
-   'js!WS.Data/Query/Query'
-], function(Abstract, SourceUtil, Query) {
+   'js!WS.Data/Query/Query',
+   'Core/helpers/functional-helpers'
+], function(Abstract, SourceUtil, Query, fHelpers) {
    var DataSourceController = Abstract.extend({
       _useNativeAsMain: true,
       constructor: function(cfg) {
@@ -43,8 +44,8 @@ define('js!WSControls/Controllers/DataSourceController', [
          if (sortingChanged) {
             this.setSorting(sorting, true);
          }
-         this._offset = offsetChanged ? offset : this._offset;
-         this._limit = limitChanged ? limit : this._limit;
+         this.offset = offsetChanged ? offset : this._offset;
+         this.limit = limitChanged ? limit : this._limit;
 
          if (this.dataSource) {
             var result = this._notify('onBeforeReload', this.filter, this.sorting, this.offset, this._limit);
@@ -52,11 +53,10 @@ define('js!WSControls/Controllers/DataSourceController', [
                this.filter = result['filter'] || this.filter;
                this.sorting = result['sorting'] || this.sorting;
                this.offset = result['offset'] || this.offset;
-               this._limit = result['_limit'] || this._limit;
+               this.limit = result['limit'] || this._limit;
             }
             def = this._callQuery(this.filter, this.sorting, this.offset, this._limit)
                .addCallback(fHelpers.forAliveOnly(function (list) {
-                  self._toggleIndicator(false);
                   self._notify('onDataLoad', list);
                   if (
                      this.getItems()
