@@ -4204,6 +4204,8 @@ define('js!SBIS3.CONTROLS.ListView',
                         status: 'error'
                      }
                   );
+                  //Прокидываем ошибку дальше, чтобы она дошла до addBoth и мы смогли отдать её в событие onEndDelete
+                  return result;
                }).addBoth(function (result) {
                   self._toggleIndicator(false);
                   self._notify('onEndDelete', idArray, result);
