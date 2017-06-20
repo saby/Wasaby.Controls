@@ -300,6 +300,17 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                      {color:'purple'},
                      {color:'grey'}
                   ],
+                  presets:[
+                     { 'font-weight' : 'bold',
+                        'font-size' : '18px',
+                        'font-style': 'italic',
+                        name: 'Основной'
+                     },
+                     {'font-size': '14px',
+                        'text-decoration': 'underline',
+                        name: 'Заголовок'
+                     }
+                  ],
                   activableByClick: false
                });
 
