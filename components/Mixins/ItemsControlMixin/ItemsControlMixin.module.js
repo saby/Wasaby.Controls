@@ -930,8 +930,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._toggleGroup(groupId, true);
       },
       toggleGroup: function(groupId) {
-         var state = this._options._groupCollapsing[groupId];
-         this[state ? 'expandGroup' : 'collapseGroup'].call(this, groupId);
+         this[this._isGroupCollapsed(groupId) ? 'expandGroup' : 'collapseGroup'].call(this, groupId);
+      },
+      _isGroupCollapsed: function (groupId) {
+         return this._options._groupCollapsing[groupId];
       },
 
       _prepareItemsData : function() {
