@@ -852,7 +852,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
           },
           _onItemActivateItemsCollection: function(event, key) {
-             ItemsSelectionUtil.onItemClickNotify.call(key, this);
+             ItemsSelectionUtil.onItemClickNotify.call(this, key);
           },
           /**************************************************************/
 
