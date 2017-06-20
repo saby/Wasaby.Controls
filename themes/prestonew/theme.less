@@ -476,41 +476,6 @@ body  .ws-window {
   border: 2px solid #26b8ff;
 }
 .ws-moneyDecorator {
-  &__integer{
-    font-size: @money-decorator-integer-font-size;
-    color: @money-decorator-integer-font-color;
-    &__AccentResults{
-      font-size: @money-decorator-integer-accent-results-font-size;
-      color: @money-decorator-integer-accent-results-font-color;
-      font-weight: @money-decorator-integer-accent-results-font-weight;
-    }
-    &__NoAccentResults{
-      font-size: @money-decorator-integer-no-accent-results-font-size;
-      color: @money-decorator-integer-no-accent-results-font-color;
-      font-weight: @money-decorator-integer-no-accent-results-font-weight;
-    }
-    &__Group{
-      font-size: @money-decorator-integer-group-font-size;
-      color: @money-decorator-integer-group-font-color;
-    }
-    &__BasicRegistry{
-
-    }
-    &__NoBasicRegistry{
-      font-size: @money-decorator-integer-no-basic-registry-font-size;
-      color: @money-decorator-integer-no-basic-registry-font-color;
-    }
-    &__AccentRegistry{
-      font-size: @money-decorator-integer-accent-registry-font-size;
-      color: @money-decorator-integer-accent-registry-font-color;
-      font-weight: @money-decorator-integer-accent-registry-font-weight;
-    }
-    &__NoAccentRegistry{
-      font-size: @money-decorator-integer-no-accent-registry-font-size;
-      color: @money-decorator-integer-no-accent-registry-font-color;
-      font-weight: @money-decorator-integer-no-accent-registry-font-weight;
-    }
-  }
   &__fraction{
     font-size: .857rem;
     color: #8991A9;
@@ -905,25 +870,7 @@ body .ws-window.ws-LoadingIndicator__window {
 body .controls__filterButton__filterLine {
   max-width: 100%;
 }
-&.controls-ListView__withoutMarker.controls-ListView {
-   .controls-ListView__item__selected,
-   .controls-ListView__item__multiSelected {
-      .controls-DataGridView__td:first-child,
-      .controls-CompositeView__tileTitle,
-      .controls-ListView__item-title,
-      &:not(.controls-CompositeView__verticalItemActions),
-      &:not(.controls-ListView__item-type-node) {
-         background-image: none !important;
-         border-left-color: transparent;
-      }
-      &.controls-ListView__item {
-         &:not(.controls-ListView__hoveredItem) {
-            border-color: transparent;
-            background-color: transparent;
-         }
-      }
-   }
-}
+
 .controls-DropdownList__picker .controls-DropdownList__item {
   line-height: 3.25rem;
 }
