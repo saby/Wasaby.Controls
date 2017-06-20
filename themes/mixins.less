@@ -54,19 +54,32 @@
 .placeholder() {
   &::-webkit-input-placeholder {
     color: @text-box-placeholder-color;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
   }
 
   &:-moz-placeholder {
      color: darken(@text-box-placeholder-color, 17%);
+    -moz-user-select: none;
   }
 
   &::-moz-placeholder {
      color: darken(@text-box-placeholder-color, 17%);
+    -moz-user-select: none;
   }
 
   &:-ms-input-placeholder {
      color: @text-box-placeholder-color;
+    -ms-user-select: none;
   }
+}
+
+.hiddenPlaceholder() {
+  &::-webkit-input-placeholder { opacity: 0 }
+  &:-moz-placeholder {  opacity: 0 }
+  &::-moz-placeholder {  opacity: 0 }
+  &:-ms-input-placeholder {  opacity: 0 }
 }
 
 .box-sizing(@type: border-box) {

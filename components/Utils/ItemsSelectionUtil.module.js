@@ -82,11 +82,21 @@ define('js!SBIS3.CONTROLS.Utils.ItemsSelection', ['Core/core-instance'], functio
       });
    }
    
+   function onItemClickNotify(key, crtl) {
+      crtl = crtl || this;
+      crtl.getSelectedItems(false).each(function(item) {
+         if(item.get(crtl.getProperty('idProperty')) == key) {
+            crtl._notify('onItemActivate', {item: item, id: key});
+         }
+      });
+   }
+   
    
    return {
       isEmptyItem: isEmptyItem,
       checkItemForSelect: checkItemForSelect,
       delayedNotify: delayedNotify,
-      initSelectorAction: initSelectorAction
+      initSelectorAction: initSelectorAction,
+      onItemClickNotify: onItemClickNotify
    }
 });

@@ -1053,6 +1053,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             data.projItem = item;
             data.item = item.getContents();
 
+            // Вычисляем drawHiddenGroup при перерисовке item'а, т.к. в текущей реализации это единственный способ скрыть элемент, если он расположен в свернутой группе
+            if (this._options.groupBy && this._options.easyGroup) {
+               data.drawHiddenGroup = !!this._options._groupCollapsing[this._options._prepareGroupId(data.item, data.item.get(this._options.groupBy.field), this._options)];
+            }
+
             //TODO: выпилить вместе декоратором лесенки
             if (data.decorators && data.decorators.ladder) {
                data.decorators.ladder.setRecord(data['item']);
@@ -1224,7 +1229,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                      records: itemsToDraw,
                      tplData: this._prepareItemData()
                   };
-                  data.tplData.drawHiddenGroup = !!this._options._groupCollapsing[groupId] ;
+                  // Вычисляем drawHiddenGroup при перерисовке item'а, т.к. в текущей реализации это единственный способ скрыть элемент, если он расположен в свернутой группе
+                  data.tplData.drawHiddenGroup = !!this._options._groupCollapsing[groupId];
                   markupExt = extendedMarkupCalculate(this._getItemsTemplate()(data), this._options);
                   markup = markupExt.markup;
                   this._optimizedInsertMarkup(markup, this._getInsertMarkupConfig(newItemsIndex, newItems, groupId));
