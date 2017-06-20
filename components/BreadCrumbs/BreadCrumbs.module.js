@@ -229,10 +229,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       },
 
       _onResizeHandler: function(){
-         var containerWidth = this._getContainerWidth()
-         if (this._prewContainerWidth != containerWidth) {
+         if(this._getTargetContainer().width() + this._homeIconWidth >= this._getContainerWidth()) {
             this.redraw();
-            this._prewContainerWidth = containerWidth;
          }
       },
 
