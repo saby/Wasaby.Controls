@@ -413,7 +413,9 @@ define('js!SBIS3.CONTROLS.ListView',
             },
             _setScrollPagerPositionThrottled: null,
             _updateScrollIndicatorTopThrottled: null,
-            _removedItemsCount: false, 
+            _removedItemsCount: false,
+            _loadQueue: {},
+            _loadId: 0,
             _options: {
                _canServerRender: true,
                _buildTplArgs: buildTplArgsLV,
@@ -3068,6 +3070,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
                }
 
+               var loadId = this._loadId++;
+               this._loadQueue[loadId] = this._infiniteScrollState;
+
                this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit)
                   .addBoth(fHelpers.forAliveOnly(function(res) {
                      this._loader = null;
@@ -3077,10 +3082,11 @@ define('js!SBIS3.CONTROLS.ListView',
                      //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
                      //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
                      //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
-                     var hasNextPage;
+                     var state = this._loadQueue[loadId],
+                        hasNextPage;
                      if (this._options.navigation && this._options.navigation.type == 'cursor') {
                         this._listNavigation.analizeResponceParams(dataSet);
-                        hasNextPage = this._listNavigation.hasNextPage(self._infiniteScrollState.mode)
+                        hasNextPage = this._listNavigation.hasNextPage(state.mode);
                      }
                      else {
                         hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
@@ -3100,7 +3106,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         if (this._isSlowDrawing(this._options.easyGroup)) {
                            this._needToRedraw = false;
                         }
-                        this._drawPage(dataSet);
+                        this._drawPage(dataSet, state);
 
                         if(this._dogNailSavedMode) {
                            this._setInfiniteScrollState(this._dogNailSavedMode);
@@ -3132,7 +3138,7 @@ define('js!SBIS3.CONTROLS.ListView',
                            //страхуемся от этой ситуации, чтоб ничего не сломать https://online.sbis.ru/opendoc.html?guid=8da97ce8-7112-4f3f-8d2a-c6c6be03c74d&des=
                            if (!this._dogNailSavedMode) {
                               if ((this._options.task1173941879) && (this.isScrollOnTop())) {
-                                 this._dogNailSavedMode = this._infiniteScrollState.mode;
+                                 this._dogNailSavedMode = state.mode;
                                  this._setInfiniteScrollState('up');
                                  this._scrollLoadNextPage();
                               }
@@ -3167,10 +3173,10 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         _drawPage: function(dataSet){
+         _drawPage: function(dataSet, state){
             var at = null;
             //добавляем данные в начало или в конец в зависимости от того мы скроллим вверх или вниз
-            if (this._infiniteScrollState.mode === 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse)) {
+            if (state.mode === 'up' || (state.mode == 'down' && state.reverse)) {
                this._needScrollCompensation = true;
                this._containerScrollHeight = this._scrollWatcher.getScrollHeight() - this._scrollWatcher.getScrollContainer().scrollTop();
                at = {at: 0};
@@ -3181,7 +3187,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._hideItemsToolbar();
             //Achtung! Добавляем именно dataSet, чтобы не проверялся формат каждой записи - это экономит кучу времени
             var items;
-            if (this._infiniteScrollState.mode == 'down') {
+            if (state.mode == 'down') {
                items = this.getItems().append(dataSet);
             } else {
                items = this.getItems().prepend(dataSet);
