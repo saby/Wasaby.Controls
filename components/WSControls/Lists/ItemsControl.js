@@ -2,8 +2,6 @@ define('js!WSControls/Lists/ItemsControl', [
    'Core/core-extend',
    'Core/core-functions',
    'js!WSControls/Control/Base',
-   'js!WS.Data/Entity/InstantiableMixin',
-   'tmpl!WSControls/Lists/ItemsControl',
    'js!WS.Data/Collection/RecordSet',
    "Core/helpers/Object/isEmpty",
    'Core/helpers/string-helpers',
@@ -19,7 +17,6 @@ define('js!WSControls/Lists/ItemsControl', [
 ], function (extend,
              cFunctions,
              BaseControl,
-             template,
              RecordSet,
              isEmpty,
              strHelpers,
@@ -38,7 +35,6 @@ define('js!WSControls/Lists/ItemsControl', [
    var ItemsControl = BaseControl.extend(
       {
          _controlName: 'WSControls/Lists/ItemsControl',
-         _template: template,
          iWantVDOM: true,
          _isActiveByClick: false,
          _hoveredItem: null,
