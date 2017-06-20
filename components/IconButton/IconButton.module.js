@@ -74,6 +74,13 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
       _onMouseClick: function(e) {
          if (this._isTouchEnded) {
             this._isTouchEnded = false;
+            /**
+             * Если клик обработали на touchend - надо его стопнуть
+             */
+            if (e && e.stopImmediatePropagation) {
+               // если не остановить, будет долетать до области, а у нее обработчик на клик - onBringToFront. фокус будет улетать не туда
+               e.stopImmediatePropagation();
+            }
             return;
          }
          this._isWaitingClick = false;

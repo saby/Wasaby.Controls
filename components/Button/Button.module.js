@@ -100,6 +100,13 @@ define('js!SBIS3.CONTROLS.Button',
          _onMouseClick: function (e) {
             if (this._isTouchEnded) {
                this._isTouchEnded = false;
+               /**
+                * Если клик обработали на touchend - надо его стопнуть
+                */
+               if (e && e.stopImmediatePropagation) {
+                  // если не остановить, будет долетать до области, а у нее обработчик на клик - onBringToFront. фокус будет улетать не туда
+                  e.stopImmediatePropagation();
+               }
                return;
             }
             this._isWaitingClick = false;
@@ -142,13 +149,14 @@ define('js!SBIS3.CONTROLS.Button',
              * ipad имеет специфическую систему событий связанных с touch
              * onClick может произойти между onTouchStart и onTouchEnd, или
              * в течение 300мс после onTouchEnd, или не произойти вообще
+             * + передаем контекст в setTimeout
              */
             setTimeout(function() {
-               if(self._isWaitingClick) {
-                  self._onMouseClick();
-                  self._isTouchEnded = true;
+               if(this._isWaitingClick) {
+                  this._onMouseClick();
+                  this._isTouchEnded = true;
                }
-            }, 300);
+            }.bind(this), 300);
          },
 
          _onKeyDown: function (e) {
