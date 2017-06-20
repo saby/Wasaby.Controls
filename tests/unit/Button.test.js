@@ -114,10 +114,10 @@ define([
                clickEvent++;
             });
             button._onTouchStart();
+            button._onTouchEnd();
             button._onMouseClick();
             assert.equal(clickEvent, 1);
             clickEvent = 0;
-            button._onTouchEnd();
           });
 
          it('mouseDownEnabled', function() {
