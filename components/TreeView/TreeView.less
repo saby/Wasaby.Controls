@@ -63,13 +63,13 @@
 
    font-family: 'cbuc-icons' !important;
    font-size: @tree-view-expand-icon-size;
-   color: @blue-dark-color;
+   color: @tree-view-expand-color;
 
    &:hover {
       border-width: @tree-view-expand-hover-border-width;
       border-style: @tree-view-expand-hover-border-style;
       border-color: @tree-view-expand-hover-border-color;
-      color: @darkcyan-color;
+      color: @tree-view-expand-hover-color;
    }
 
    &.controls-TreeView__expand__open {
@@ -81,7 +81,7 @@
          border-width: @tree-view-expand-open-hover-border-width;
          border-style: @tree-view-expand-open-hover-border-style;
          border-color: @tree-view-expand-open-hover-border-color;
-         color: @darkcyan-color;
+         color: @tree-view-expand-hover-color;
       }
    }
 
@@ -103,16 +103,16 @@
 }
 .controls-ListView__item-type-hidden {
    .controls-TreeView__expand {
-      color: @gray-lamantin-color;
+      color: @tree-view-expand-hidden-color;
       &:hover {
-         color: @darkcyan-color;
+         color: @tree-view-expand-color;
       }
       &:before {
          content: '\e9c2';
       }
       &.controls-TreeView__expand__open {
          &:hover {
-            color: @darkcyan-color;
+            color: @tree-view-expand-color;
          }
          &:before {
             content: '\e9c1';
