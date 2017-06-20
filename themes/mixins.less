@@ -69,6 +69,13 @@
   }
 }
 
+.hiddenPlaceholder() {
+  &::-webkit-input-placeholder { opacity: 0 }
+  &:-moz-placeholder {  opacity: 0 }
+  &::-moz-placeholder {  opacity: 0 }
+  &:-ms-input-placeholder {  opacity: 0 }
+}
+
 .box-sizing(@type: border-box) {
   -webkit-box-sizing: @type;
   -moz-box-sizing: @type;

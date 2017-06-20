@@ -133,7 +133,11 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                       if (self._isEditActionsHidden()) {
                          self.unlockToolbar();
                       }
-                      self._target ? self.show(self._target) : self.hide();
+                      if(self._target && !self._options.touchMode){
+                          self.show(self._target);
+                      }else {
+                          self.hide();
+                      }
                    }
                 }
              });
