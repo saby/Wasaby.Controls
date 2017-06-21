@@ -379,7 +379,15 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
                ) { //включаем перенос по умолчанию только если  контракты у источников данных равны
                   useDefaultMove = true;
                }
-               this._getMover().moveFromOutside(DragObject.getSource(), DragObject.getTarget(), dragOwner.getItems(), useDefaultMove);
+               this._getMover().moveFromOutside(DragObject.getSource(),
+                  DragObject.getTarget(),
+                  DragObject.getItems(),
+                  useDefaultMove
+               ).addCallback(function (result) {
+                  if (result !== false && cInstance.instanceOfMixin(DragObject, 'SBIS3.CONTROLS.MultiSelectable')) {
+                     DragObject.removeItemsSelectionAll();//сбросим выделение у контрола с которого перемещаются элементы
+                  }
+               })
             }
          }
          if (!isMove) {
@@ -407,7 +415,9 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
          var source = DragObject.getSource();
          if (source) {
             source.each(function (item) {
-               item.getDomElement().toggleClass('ws-hidden', !show);
+               if (item.getDomElement()) { //если элемент находится внутри закрытой папки для него не будет dom'а
+                  item.getDomElement().toggleClass('ws-hidden', !show);
+               }
             });
          }
       },
