@@ -141,3 +141,17 @@ body.ws-is-ie .controls-ScrollContainer__content {
 .controls-ScrollContainer.controls-ScrollContainer__flex > .controls-ScrollContainer__content {
    height:100%;
 }
+
+.controls-ScrollContainer__content {
+   // Desktop IE
+   body.ws-is-ie &, body.ws-is-firefox & {
+      margin-right: -17px;
+   }
+
+   // Планшет Win10 IE
+   body.ws-is-touch.ws-is-ie & {
+      margin-right: -12px;
+   }
+
+
+}
