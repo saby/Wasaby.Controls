@@ -134,6 +134,23 @@ define([
             assert.isTrue(!button._isActiveByClick);
          });
 
+         it('ipadShortTapTouchEnd', function() {
+            button._isActiveByClick = false;
+            button._onTouchStart();
+            button._onTouchEnd();
+            assert.isTrue(button._isActiveByClick);
+         });
+
+         it('ipadShortTapTimeout', function(done) {
+            button._isActiveByClick = false;
+            button._onTouchStart();
+            button._onTouchEnd();
+            setTimeout(function() {
+               assert.isTrue(!button._isActiveByClick);
+               done();
+            }, 300);
+         });
+
       });
 
    });
