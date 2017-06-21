@@ -3916,14 +3916,14 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          setItemsDragNDrop: function(allowDragNDrop) {
             if (this._options.itemsDragNDrop != allowDragNDrop) {
-               this._setItemsDragNDrop(allowDragNDrop)
+               this._setItemsDragNDrop(allowDragNDrop);
             }
          },
 
          _setItemsDragNDrop: function(allowDragNDrop) {
             this._options.itemsDragNDrop = allowDragNDrop;
             this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', this._getDragInitHandler());
-
+            this.once('onDragOver', this._makeDragMove.bind(this));//могут перетаскивать с другого контрола тогда _draginit не сработает
          },
          /**
           * возвращает метод который инициализирует dragndrop
@@ -3933,16 +3933,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _getDragInitHandler: function() {
             return this._dragInitHandler ? this._dragInitHandler : this._dragInitHandler  = (function(e){
                if (this._canDragStart(e)) {
-                  if (!this._dragMoveController) {
-                     this._dragMoveController = new DragMove({
-                        view: this,
-                        mover: this._getMover(),
-                        projection: this._getItemsProjection(),
-                        useDragPlaceholder: this._options.useDragPlaceHolder,
-                        dragEntity: this._options.dragEntity,
-                        dragEntityList: this._options.dragEntityList
-                     })
-                  }
+                  this._makeDragMove();
                   this._initDrag.call(this, e);
                   //TODO: Сейчас появилась проблема, что если к компьютеру подключен touch-телевизор он не вызывает
                   //preventDefault и при таскании элементов мышкой происходит выделение текста.
@@ -3965,6 +3956,23 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                }
             }).bind(this);
+         },
+         /**
+          * Создает контроллер который обрабатывает перемещение мышкой
+          * @returns {*}
+          * @private
+          */
+         _makeDragMove: function () {
+            if (!this._dragMoveController) {
+               this._dragMoveController = new DragMove({
+                  view: this,
+                  mover: this._getMover(),
+                  projection: this._getItemsProjection(),
+                  useDragPlaceholder: this._options.useDragPlaceHolder,
+                  dragEntity: this._options.dragEntity,
+                  dragEntityList: this._options.dragEntityList
+               });
+            }
          },
          _canDragStart: function(e) {
             //TODO: При попытке выделить текст в поле ввода, вместо выделения начинается перемещения элемента.
