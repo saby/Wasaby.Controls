@@ -586,7 +586,7 @@
 @text-box-hover-border-style:             @text-box-border-style;
 @text-box-hover-border-color:             rgba(96,170,221, .3 );
 
-@text-box-disabled-border-bottom:         .07rem solid #333333;
+@text-box-disabled-border-bottom:         .07rem solid rgba(102,170,221, .3);
 @text-box-focus-border-width:             2px;
 @text-box-field-focus-text-color:         #e4e4e4;
 @text-box-after-width:                    20px;
@@ -635,7 +635,8 @@
 // ----------- //
 // DateBox //
 // ----------- //
-@date-box-field-text-color:                           #cccccc;
+@date-box-wrapper-border-color:                       @text-box-border-color @text-box-border-color @text-box-bottom-border-color @text-box-border-color; // @default-border-color
+@date-box-field-text-color:                           @default-text-color;
 
 // ----------- //
 // Search form //
@@ -761,7 +762,7 @@
 
 @controls-FieldLink-border:                           2px solid;
 @controls-FieldLink-border-color:                     @text-box-border-color @text-box-border-color @text-box-bottom-border-color @text-box-border-color;
-@controls-FieldLink-border-color-focus-hover:         #26B8FF;
+@controls-FieldLink-border-color-focus-hover:         @text-box-bottom-border-color;
 @controls-FieldLink-link-color:                         #26B8FF;
 // --------- //
 // MonthView //
@@ -1019,6 +1020,10 @@
 @tree-view-expand-width:                        50px;
 @tree-view-expand-height:                       auto;
 
+@tree-view-expand-color:                        @gray-lamantin-color;
+@tree-view-expand-hover-color:                  @darkcyan-color;
+@tree-view-expand-hidden-color:                 @gray-lamantin-color;
+
 @tree-view-expand-icon-size:                    1.7857rem;
 
 @tree-view-level-padding:                       58px;
@@ -1154,6 +1159,7 @@
 
 //Pager
 @controls-Pager-amount-text :                     #999999;
+@controls-Pager-height:                            3.14rem; //3 rem - button + 2px *2 border
 
 //FilterButton
 @controls-filterButton-button-width:			2rem;
@@ -1279,7 +1285,7 @@
 @controls-Scrollbar-width:                         0.357rem;
 @controls-Scrollbar-thumb-border-radius:           0.179rem;
 @controls-Scrollbar-min-height:                    3.571rem;
-@controls-Scrollbar-thumb-margin:                  0.286rem 2px;
+@controls-Scrollbar-thumb-margin:                  0.286rem 0px;
 @controls-Scrollbar-dark-hover-thumb-color:        rgba(255, 255, 255, 0.10);
 @controls-Scrollbar-dark-active-thumb-color:       rgba(255, 255, 255, 0.15);
 
@@ -1371,8 +1377,6 @@
 @date-range-big-choose-date-range-picker-table-element-width:   74px;
 @date-range-big-choose-date-range-picker-table-element-title-padding-top: .7857rem;
 @date-range-big-choose-date-range-picker-color:							#e4e4e4;
-@date-box-wrapper-border-radius: 0;
-@date-box-wrapper-border-color: #3b5e7a;
 @tab-buttons-height:							3.57rem;
 @date-picker-calendar-icon-height: 				1.32rem;
 @date-picker-calendar-icon-width: 				2.3rem;
@@ -1390,7 +1394,7 @@
 @tab-buttons-border-bottom-height:          0.01rem;
 @controls-toolbar-item-margin-right:        0;
 @dropdownlist-item-text-color:              #202835;
-@controls-editInPlace-editor-bg:			   @data-grid-row-hover-bg;
+@controls-editInPlace-editor-bg:			#354B62 !important;
 @controls-FieldLink-picker-show-color:		#F0F5FB;
 @textbox-font-size:							1.43rem;
 @scroll-pager-bg:							transparent;
@@ -1542,3 +1546,4 @@
 @data-grid-row-selected-add-bg:                 @data-grid-row-hover-add-bg;
 
 @items-toolbar-bottom-style-background: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDIwMDEwOTA0Ly9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+CjxzdmcgdmVyc2lvbj0iMS4wIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiB3aWR0aD0iMjU1LjAwMDAwMHB4IiBoZWlnaHQ9IjMwMC4wMDAwMDBweCIgdmlld0JveD0iMCAwIDI1NS4wMDAwMDAgMzAwLjAwMDAwMCIKIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwMDAwMCwzMDAuMDAwMDAwKSBzY2FsZSgwLjEwMDAwMCwtMC4xMDAwMDApIgpmaWxsPSIjMjkzYTRiIiBzdHJva2U9Im5vbmUiPgo8cGF0aCBkPSJNMTAgMjk4OSBjMCAtMTEgMTkgLTUxIDI5IC01OSA2IC01IDQ2IC02NCAyMTUgLTMxNSA0NCAtNjYgODMgLTEyMgo4NiAtMTI1IDMgLTMgMzcgLTUyIDc1IC0xMTAgMzkgLTU4IDcyIC0xMDcgNzUgLTExMCA2IC02IDY3IC05NSAyMDQgLTMwMCA1MAotNzQgOTMgLTEzNyA5NiAtMTQwIDMgLTMgMjMgLTMyIDQ1IC02NSAyMiAtMzMgNDIgLTYyIDQ1IC02NSAzIC0zIDQzIC02MSA4OQotMTMwIDQ2IC02OSAxMjEgLTE3OSAxNjYgLTI0NSA0NCAtNjYgMTA2IC0xNTYgMTM1IC0yMDAgMzAgLTQ0IDU3IC04MiA2MCAtODUKNSAtNSA0MSAtNTggMjQ0IC0zNjAgNjEgLTkxIDExMyAtMTY3IDExNiAtMTcwIDMgLTMgMjMgLTMyIDQ1IC02NSA0NyAtNzAgMzgKLTU4IDExNiAtMTY0IDU3IC03NiAxNzkgLTE5MSAyMDMgLTE5MSA2IDAgMjUgLTcgNDEgLTE2IDU4IC0zMiAyODcgLTc0IDQwMAotNzQgbDU1IDAgMCAxNTAwIDAgMTUwMCAtMTI3MCAwIGMtODkyIDAgLTEyNzAgLTMgLTEyNzAgLTExeiIvPgo8L2c+Cjwvc3ZnPgo=");
+@text-box-disabled-border-color: transparent;

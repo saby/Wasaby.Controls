@@ -4,6 +4,71 @@ html {
 }
 
 body {
+   //TODO: удалить это когда будет нормальный пэйджинг, не из ws-a
+   .ws-paging{
+      .ws-paging-small{
+         width: 3rem !important;
+         height: 3rem !important;
+         background: none !important;
+         border: 2px solid #8991A9 !important;
+         font-size: 1.714285714285714rem !important;
+         background-color: #354B62 !important;
+         line-height:   3rem !important;
+         margin: 0 8px 0 0 !important;
+         padding: 0 !important;
+         box-sizing: border-box !important;
+         color: #8991A9 !important;
+         &.ws-paging-active{
+            border: 2px solid #26B8FF !important;
+            color: #E4E4E4 !important;
+            &:hover{
+               background-color: #1b2530 !important;
+            }
+         }
+         &.ws-paging-current{
+            border: 2px solid @primary-color !important;
+            background:#354B62 !important;
+            color: #E4E4E4 !important;
+         }
+         &.ws-paging-next, &.ws-paging-end, &.ws-paging-first, &.ws-paging-prev {
+            position:relative;
+            &:before {
+               text-indent: 0 !important;
+               font-size: 3rem;
+               position:absolute;
+               top:-2px;
+               left:-2px;
+               font-family: 'carrypresto-icons' !important;
+            }
+         }
+         &.ws-paging-next {
+            &:before {
+               content: "\e97e";
+            }
+         }
+         &.ws-paging-end {
+            &:before {
+               content: "\e97d";
+
+            }
+         }
+         &.ws-paging-first {
+            &:before {
+               content: "\e980";
+            }
+         }
+         &.ws-paging-prev{
+            &:before {
+               content: "\e97f";
+            }
+         }
+      }
+   }
+   .controls-Pager{
+      .controls-Pager-block-amount, .controls-Pager-block-amount, controls-Pager-block-paging{
+         padding: 0;
+      }
+   }
    .controls-DataGridView__results {
       font-size: @default-font-size;
       color: #FFCC99;
@@ -27,7 +92,7 @@ body {
         left: -2.7rem;
         width: 3rem;
         height: 3rem;
-        background: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDIwMDEwOTA0Ly9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+CjxzdmcgdmVyc2lvbj0iMS4wIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiB3aWR0aD0iMjU1LjAwMDAwMHB4IiBoZWlnaHQ9IjMwMC4wMDAwMDBweCIgdmlld0JveD0iMCAwIDI1NS4wMDAwMDAgMzAwLjAwMDAwMCIKIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwMDAwMCwzMDAuMDAwMDAwKSBzY2FsZSgwLjEwMDAwMCwtMC4xMDAwMDApIgpmaWxsPSIjMjkzYTRiIiBzdHJva2U9Im5vbmUiPgo8cGF0aCBkPSJNMTAgMjk4OSBjMCAtMTEgMTkgLTUxIDI5IC01OSA2IC01IDQ2IC02NCAyMTUgLTMxNSA0NCAtNjYgODMgLTEyMgo4NiAtMTI1IDMgLTMgMzcgLTUyIDc1IC0xMTAgMzkgLTU4IDcyIC0xMDcgNzUgLTExMCA2IC02IDY3IC05NSAyMDQgLTMwMCA1MAotNzQgOTMgLTEzNyA5NiAtMTQwIDMgLTMgMjMgLTMyIDQ1IC02NSAyMiAtMzMgNDIgLTYyIDQ1IC02NSAzIC0zIDQzIC02MSA4OQotMTMwIDQ2IC02OSAxMjEgLTE3OSAxNjYgLTI0NSA0NCAtNjYgMTA2IC0xNTYgMTM1IC0yMDAgMzAgLTQ0IDU3IC04MiA2MCAtODUKNSAtNSA0MSAtNTggMjQ0IC0zNjAgNjEgLTkxIDExMyAtMTY3IDExNiAtMTcwIDMgLTMgMjMgLTMyIDQ1IC02NSA0NyAtNzAgMzgKLTU4IDExNiAtMTY0IDU3IC03NiAxNzkgLTE5MSAyMDMgLTE5MSA2IDAgMjUgLTcgNDEgLTE2IDU4IC0zMiAyODcgLTc0IDQwMAotNzQgbDU1IDAgMCAxNTAwIDAgMTUwMCAtMTI3MCAwIGMtODkyIDAgLTEyNzAgLTMgLTEyNzAgLTExeiIvPgo8L2c+Cjwvc3ZnPgo=") no-repeat 0 0;
+        background: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDIwMDEwOTA0Ly9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+CjxzdmcgdmVyc2lvbj0iMS4wIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiB3aWR0aD0iMjU1LjAwMDAwMHB4IiBoZWlnaHQ9IjMwMC4wMDAwMDBweCIgdmlld0JveD0iMCAwIDI1NS4wMDAwMDAgMzAwLjAwMDAwMCIKIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwMDAwMCwzMDAuMDAwMDAwKSBzY2FsZSgwLjEwMDAwMCwtMC4xMDAwMDApIgpmaWxsPSIjMzU0YjYyIiBzdHJva2U9Im5vbmUiPgo8cGF0aCBkPSJNMTAgMjk4OSBjMCAtMTEgMTkgLTUxIDI5IC01OSA2IC01IDQ2IC02NCAyMTUgLTMxNSA0NCAtNjYgODMgLTEyMgo4NiAtMTI1IDMgLTMgMzcgLTUyIDc1IC0xMTAgMzkgLTU4IDcyIC0xMDcgNzUgLTExMCA2IC02IDY3IC05NSAyMDQgLTMwMCA1MAotNzQgOTMgLTEzNyA5NiAtMTQwIDMgLTMgMjMgLTMyIDQ1IC02NSAyMiAtMzMgNDIgLTYyIDQ1IC02NSAzIC0zIDQzIC02MSA4OQotMTMwIDQ2IC02OSAxMjEgLTE3OSAxNjYgLTI0NSA0NCAtNjYgMTA2IC0xNTYgMTM1IC0yMDAgMzAgLTQ0IDU3IC04MiA2MCAtODUKNSAtNSA0MSAtNTggMjQ0IC0zNjAgNjEgLTkxIDExMyAtMTY3IDExNiAtMTcwIDMgLTMgMjMgLTMyIDQ1IC02NSA0NyAtNzAgMzgKLTU4IDExNiAtMTY0IDU3IC03NiAxNzkgLTE5MSAyMDMgLTE5MSA2IDAgMjUgLTcgNDEgLTE2IDU4IC0zMiAyODcgLTc0IDQwMAotNzQgbDU1IDAgMCAxNTAwIDAgMTUwMCAtMTI3MCAwIGMtODkyIDAgLTEyNzAgLTMgLTEyNzAgLTExeiIvPgo8L2c+Cjwvc3ZnPgo=') no-repeat 0 0;
         background-size: 3rem 3rem;
       }
     }
@@ -453,6 +518,20 @@ body  .ws-window {
 
 
 body {
+  .ws-window-titlebar-action.close {
+     width: 3rem !important;
+     height: 3rem !important;
+     background: @closeBigButtonImage;
+     &:hover, &:active {
+        background: @closeBigButtonImageHover;
+     }
+  }
+  .ws-window-title {
+     font-size: 1.43rem;
+     height: 3.57rem;
+     max-height: 3.57rem;
+     line-height: 3.57rem;
+  }
   .engine-Browser__path-wrapper-in-head {
     height: auto;
   }
@@ -583,16 +662,20 @@ body {
 }
 
 .controls-editInPlace .controls-editInPlace__editor {
-  background: @data-grid-row-hover-bg;
+  background: @controls-editInPlace-editor-bg;
 }
 .controls-ListView .controls-ItemsToolbar__editActions {
-    background: @data-grid-row-hover-bg;
+  background: @controls-editInPlace-editor-bg;
 }
 
-.controls-DateBox.controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
-    color: #cccccc;
-    height: 2.7rem;
-    line-height: 2.7rem;
+.controls-DateBox.controls-FormattedTextBox {
+   .controls-FormattedTextBox__fieldWrapper {
+      padding: 0 0.3rem;
+      .controls-FormattedTextBox__field {
+         color: #cccccc;
+         height: 2.86rem;
+      }
+   }
 }
 .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field .controls-FormattedTextBox__field-symbol {
 
@@ -967,9 +1050,6 @@ body .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-
 }
 .controls-Picker__show a.js-controls-ComboBox__arrowDown.controls-ComboBox__arrowDown.icon-16.icon-ExpandLight.icon-size.icon-primary.icon-primary {
     color: #26b8ff!important;
-}
-body .controls-Browser__breadCrumbs {
-    top: .142rem;
 }
 .controls-DateRangeBigChoose__noBorder {
   border: none !important;
