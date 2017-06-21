@@ -12,7 +12,7 @@
       position: absolute;
       right: 0;
       top: 0;
-      opacity: 0;
+      display: none;
       height: 100%;
    }
    &.controls-ScrollContainer__top-gradient {
@@ -31,11 +31,8 @@
 }
 
 .controls-ScrollContainer {
-   .controls-Scrollbar.controls-Scrollbar__dragging {
-      opacity: 1
-   }
-   &:hover > .controls-Scrollbar {
-      opacity: 1;
+   .controls-Scrollbar.controls-Scrollbar__dragging, &:hover > .controls-Scrollbar {
+      display: initial;
    }
 }
 
@@ -130,6 +127,10 @@ body.ws-is-ie .controls-ScrollContainer__content {
 
 .controls-ScrollContainer__hiddenScrollbar .controls-Scrollbar {
    display: none;
+}
+
+.controls-ScrollContainer__showScrollbar .controls-Scrollbar {
+   display: initial;
 }
 
 .controls-ScrollContainer.controls-ScrollContainer__flex {
