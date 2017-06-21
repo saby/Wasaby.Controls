@@ -25,7 +25,7 @@ define([
       },
       _notifyOnPropertyChanged: function () {},
       setShowLock: function () {},
-      setLocked: function (locked) {this._locked = locked},
+      setLocked: function (locked) {this._locked = locked; this._notify('onLockedChanged', locked);},
       isLocked: function () {return this._locked}
    });
 
@@ -39,6 +39,7 @@ define([
                end = step ? new Date(start.getFullYear(), start.getMonth() + step, 0): endOrStep;
             options = options || {};
             controls = [];
+            count = count || 5;
             for (let i = 0; i < count; i++) {
                controls.push(new DateRangeControl({startValue: start, endValue: end}));
                if (step) {
@@ -224,6 +225,7 @@ define([
 
          it(`should update relation type if period type is month and onlyByCapacity = true and checked related periods`, function () {
             initControls(new Date(2015, 0, 1), 1, {onlyByCapacity: true}, 2);
+            controls[0].setLocked(false);
             controls[0].setRange(new Date(2014, 1, 1), new Date(2014, 2, 0));
             let dates = createDates(new Date(2014, 1, 1), 12, 1);
             for (let [i, control] of controls.entries()) {
@@ -233,6 +235,7 @@ define([
          });
          it(`should update relation type if period type is quarter and onlyByCapacity = true and checked related periods`, function () {
             initControls(new Date(2015, 0, 1), 3, {onlyByCapacity: true}, 2);
+            controls[0].setLocked(false);
             controls[0].setRange(new Date(2014, 3, 1), new Date(2014, 6, 0));
             let dates = createDates(new Date(2014, 3, 1), 12, 3, 2);
             for (let [i, control] of controls.entries()) {
@@ -242,6 +245,7 @@ define([
          });
          it(`should update relation type if period type is halfyear and onlyByCapacity = true and checked related periods`, function () {
             initControls(new Date(2015, 0, 1), 6, {onlyByCapacity: true}, 2);
+            controls[0].setLocked(false);
             controls[0].setRange(new Date(2014, 6, 1), new Date(2014, 12, 0));
             let dates = createDates(new Date(2014, 6, 1), 12, 6, 2);
             for (let [i, control] of controls.entries()) {
@@ -250,13 +254,34 @@ define([
             }
          });
 
+         it(`should update relation type if period type changed`, function () {
+            initControls(new Date(2015, 0, 1), 12, {onlyByCapacity: true}, 2);
+            controls[0].setLocked(false);
+            controls[0].setRange(new Date(2013, 0, 1), new Date(2013, 1, 0));
+            let dates = createDates(new Date(2013, 0, 1), 1, 1, 2);
+            for (let [i, control] of controls.entries()) {
+               assertRangeControl(control, dates[i], `Control ${i}`);
+               assert(control.isLocked());
+            }
+         });
+
+         it(`should not update relation type if period type and year does not changed `, function () {
+            initControls(new Date(2015, 2, 1), 1, {onlyByCapacity: true}, 2);
+            controls[0].setLocked(false);
+            controls[0].setRange(new Date(2015, 0, 1), new Date(2015, 1, 0));
+            let dates = createDates(new Date(2015, 0, 1), 3, 1, 2);
+            for (let [i, control] of controls.entries()) {
+               assertRangeControl(control, dates[i], `Control ${i}`);
+               assert(!control.isLocked());
+            }
+         });
+
          it(`should not update relation type if period type is year and onlyByCapacity = true and checked related periods`, function () {
             initControls(new Date(2015, 0, 1), 12, {onlyByCapacity: true}, 2);
+            controls[0].setLocked(false);
             controls[0].setRange(new Date(2013, 0, 1), new Date(2013, 12, 0));
             let dates = createDates(new Date(2013, 0, 1), 36, 12, 2);
             for (let [i, control] of controls.entries()) {
-               console.log(control.getStartValue() + ' ' + control.getEndValue());
-               console.log(dates[i]);
                assertRangeControl(control, dates[i], `Control ${i}`);
                assert(!control.isLocked());
             }

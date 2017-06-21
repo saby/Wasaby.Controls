@@ -119,8 +119,6 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
          }
          this._updating = true;
 
-         this._autoRelation(controlNumber);
-
          changedControl = this._options.dateRanges[controlNumber];
 
          start = start || changedControl.getStartValue();
@@ -140,6 +138,8 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
             this._updating = false;
             return;
          }
+
+         this._autoRelation(controlNumber, capacityChanged);
 
          // Если изменилась разрядность и используется
          // тип связи с установленным шагом и разрядность увеличилась,
@@ -185,10 +185,16 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
          this._notify('onDatesChange');
       },
 
-      _autoRelation: function (updatedControlNumber) {
+      _autoRelation: function (updatedControlNumber, capacityChanged) {
          if (!this._options.onlyByCapacity) {
             return;
          }
+
+         if (capacityChanged) {
+            this._options.onlyByCapacity = false;
+            this._updateLocked(-1, true);
+         }
+
          // Временно ограничиваем эту логику. Если связано больше 2х контролов, то не меняем тип связи.
          if (this._options.dateRanges.length > 2) {
             return;
