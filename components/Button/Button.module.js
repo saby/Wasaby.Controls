@@ -98,6 +98,7 @@ define('js!SBIS3.CONTROLS.Button',
          //<editor-fold desc="Event handlers">
 
          _onMouseClick: function (e) {
+            this._isActiveByClick = false;
             if (this._isTouchEnded) {
                this._isTouchEnded = false;
                /**
@@ -115,13 +116,14 @@ define('js!SBIS3.CONTROLS.Button',
             }
             this._onClickHandler(e);
             this._notify("onActivated", e);
+            this._setDirty();
          },
 
          _onMouseDown: function () {
             if (!this._options.enabled) {
                return;
             }
-            this._isActiveByClick = true;
+           this._isActiveByClick = true;
          },
 
          _onMouseUp: function () {
@@ -144,7 +146,6 @@ define('js!SBIS3.CONTROLS.Button',
 
          _onTouchEnd: function(e) {
             var self = this;
-            this._isActiveByClick = false;
             /**
              * ipad имеет специфическую систему событий связанных с touch
              * onClick может произойти между onTouchStart и onTouchEnd, или
