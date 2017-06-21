@@ -1122,6 +1122,7 @@ define('js!SBIS3.CONTROLS.ListView',
                visible: false,
                showPages: false,
                idProperty: 'id',
+               mode: (this._options.navigation && this._options.navigation.lastPage) ? 'full' : 'part',
                parent: this
             });
             // TODO: То, что ListView знает о компонентах в которые он может быть вставленн и то, что он переносит свои
