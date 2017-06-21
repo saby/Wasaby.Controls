@@ -173,6 +173,9 @@ define('js!SBIS3.CONTROLS.Button',
                   this._isTouchEnded = true;
                }
                this._isActiveByClick = false;
+               //т.к. появилась асинхронность, руками дернем флаг о перерисовке, чтобы кнопка
+               //не осталась "подвисшей"
+               this._setDirty();
             }.bind(this), 1000);
          },
 
