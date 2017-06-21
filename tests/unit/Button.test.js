@@ -101,13 +101,6 @@ define([
             assert.isTrue(!button.getIcon());
          });
 
-         it('touchClick', function(){
-            button._onTouchStart();
-            assert.isTrue(button._isActiveByClick);
-            button._onTouchEnd();
-            assert.isTrue(!button._isActiveByClick);
-         });
-
          it('touchClickOnce', function(){
             var clickEvent = 0;
             button.subscribe("onActivated", function() {
