@@ -128,18 +128,19 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             this.deprecatedContr(cfg);
          },
 
-
          _containerReady: function() {
-            
+            var showScrollbar;
             if (window && this._container && (typeof this._container.length === "number")) {
 
                this._content = $('> .controls-ScrollContainer__content', this.getContainer());
-               this._showScrollbar = !(cDetection.isMobileIOS || cDetection.isMobileAndroid);
+               showScrollbar = !(cDetection.isMobileIOS || cDetection.isMobileAndroid);
                this._bindOfflainEvents();
                //Под android оставляем нативный скролл
-               if (this._showScrollbar){
+               if (showScrollbar){
+                  this._hideScrollbar = this._hideScrollbar.bind(this);
+                  this._touchStartHandler = this._touchStartHandler.bind(this);
                   this._initScrollbar = this._initScrollbar.bind(this);
-                  this._container[0].addEventListener('touchstart', this._initScrollbar, true);
+                  this._container[0].addEventListener('touchstart', this._touchStartHandler, true);
                   this._container.one('mousemove', this._initScrollbar);
                   this._container.one('wheel', this._initScrollbar);
                   if (cDetection.IEVersion >= 10) {
@@ -151,6 +152,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                         }
                      }.bind(this);
                   }
+                  this._hideNativeScrollbar();
                }
                this._subscribeOnScroll();
 
@@ -161,6 +163,38 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
                FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer().find('.controls-ScrollContainer__content');
             }
+         },
+
+         _touchStartHandler: function() {
+            this._initScrollbar();
+            this._showScrollbar();
+         },
+
+         _initScrollbar: function(){
+            if (!this._scrollbar) {
+               this._scrollbar = new Scrollbar({
+                  element: $('> .controls-ScrollContainer__scrollbar', this._container),
+                  contentHeight: this._getScrollHeight(),
+                  parent: this
+               });
+
+               this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
+            }
+         },
+
+         // Показать скролл на touch устройствах
+         _showScrollbar: function() {
+            // Покажем скролл и подпишемся на touchend чтобы его снять. Подписываемся у document, потому что палец может
+            // уйти с элемента, но при этом скроллинг продолжается.
+            this._container.toggleClass('controls-ScrollContainer__showScrollbar', true);
+            document.addEventListener('touchend', this._hideScrollbar, true);
+         },
+
+         //Скрыть скролл на touch устройствах
+         _hideScrollbar: function() {
+            // Скроем скролл и отпишемся от touchend.
+            this._container.toggleClass('controls-ScrollContainer__showScrollbar', false);
+            document.removeEventListener('touchend', this._hideScrollbar);
          },
 
          bothIsNaN: function(a, b){
@@ -276,6 +310,30 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             this.getContainer().toggleClass('controls-ScrollContainer__top-gradient', scrollTop > 0);
          },
 
+         _hideNativeScrollbar: function(){
+            if (!cDetection.webkit && !cDetection.chrome){
+               var style = {
+                     marginRight: -this._getBrowserScrollbarWidth()
+                  };
+               this._content.css(style);
+            }
+         },
+
+         _getBrowserScrollbarWidth: function() {
+            var outer, outerStyle, scrollbarWidth;
+            outer = document.createElement('div');
+            outerStyle = outer.style;
+            outerStyle.position = 'absolute';
+            outerStyle.width = '100px';
+            outerStyle.height = '100px';
+            outerStyle.overflow = 'scroll';
+            outerStyle.top = '-9999px';
+            document.body.appendChild(outer);
+            scrollbarWidth = outer.offsetWidth - outer.clientWidth;
+            document.body.removeChild(outer);
+            return scrollbarWidth;
+         },
+
          _scrollbarDragHandler: function(event, position){
             if (position != this._getScrollTop()){
                this._scrollTo(position);
@@ -308,19 +366,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             this._content[0].scrollTop = value;
          },
 
-         _initScrollbar: function(){
-            if (!this._scrollbar) {
-               this._scrollbar = new Scrollbar({
-                  element: $('> .controls-ScrollContainer__scrollbar', this._container),
-                  contentHeight: this._getScrollHeight(),
-                  parent: this
-               });
-
-               this._container[0].removeEventListener('touchstart', this._initScrollbar);
-               this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
-            }
-         },
-
          _getScrollHeight: function(){
             var height;
             height = this._content[0].scrollHeight;
@@ -343,6 +388,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                this._content.off('scroll', this._onScroll);
             }
             this._container.off('mousemove', this._initScrollbar);
+            this._container[0].removeEventListener('touchstart', this._touchStartHandler);
 
             BaseCompatible.destroy.call(this);
             // task: 1173330288
