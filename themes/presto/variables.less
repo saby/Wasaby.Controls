@@ -165,10 +165,8 @@
 @button-big-text-margin:                  0 8px 0 8px;
 @button-big-text-margin-left:             8px;
 
-@button-big-hover-text-color:             @button-hover-text-color;
-@button-big-hover-border:                 @button-hover-border;
 
-@button-big-active-text-color:            @button-active-text-color;
+
 @button-big-active-border:                @button-active-border;
 
 @button-icon-32-top-offset:               0;
@@ -201,7 +199,7 @@
 @button-primary-checked-bg:               @button-primary-active-bg;
 
 // Big default button
-@button-big-checked-border:               @button-big-active-border;
+
 @button-big-checked-icon-top-offset:      @button-big-icon-top-offset;
 @button-big-checked-icon-left-offset:     @button-big-icon-left-offset;
 @button-big-checked-icon-big-top-offset:  @button-big-icon-big-top-offset;
@@ -273,16 +271,6 @@
 
 @check-box-icon-checked-bg:                     transparent url(@check-box-icon-spritesheet) -2px -5px;
 
-@check-box-icon-checked-hover-bg:               @check-box-icon-checked-bg;
-
-@check-box-icon-third-state-border:             @check-box-icon-border;;
-@check-box-icon-third-state-bg:                 lighten(@secondary-color, 10%) url(@check-box-icon-spritesheet) -2px -5px;
-
-@check-box-icon-disabled-border:                1px solid @gray-color;
-@check-box-icon-disabled-bg:                    transparent;
-@check-box-icon-disabled-checked-bg:            transparent url(@check-box-icon-spritesheet) -2px -5px;
-@check-box-icon-disabled-third-state-bg:        lighten(@secondary-color, 10%) url(@check-box-icon-spritesheet) -2px -5px;
-
 @check-box-icon-box-color:                      rgba(102, 170, 221, .4);
 
 // -------- //
@@ -308,7 +296,6 @@
 
 @menu-expand-width:                       8px;
 @menu-expand-top-offset:                  20px;
-@menu-expand-top-offset32:                20px;
 @menu-expand-right-offset:                12px;
 @menu-expand-spritesheet:                 '';
 
@@ -325,8 +312,6 @@
 // Menu item //
 // --------- //
 @menu-item-height:                        56px;
-@menu-big-item-height:                    32px;
-@menu-item-padding:                       0 32px 0 16px;
 
 @menu-item-text-color:                    @default-text-color;
 @menu-item-bg:                            @text-box-focus-bg;
@@ -345,71 +330,7 @@
 @menu-item-icon24-left-offset:              -2px;
 @menu-item-icon24-left-offset-big:           0px;
 @menu-item-line-height:                   56px;
-
-// ----------- //
-// Menu button //
-// ----------- //
-
-@menu-button-arrow-width:                               10px;
-@menu-button-arrow-height:                              5px;
-@menu-button-arrow-right-offset:                        12px;
-@menu-button-arrow-top-offset:                          24px;
-
-@menu-button-arrow-padding:                             0 36px 0 12px;          // padding for menu button containing dropdown arrow
-@menu-button-no-arrow-padding:                          @button-padding;        // padding for menu button when dropdown arrow is missed
-
-// Default menu button
-@menu-button-text-right-margin:                         30px;                   //this margin reserve space for arrow-down icon
-@menu-button-checked-text-right-margin:                 @menu-button-text-right-margin;
-@menu-button-arrow-spritesheet:                         '';
-
-@menu-button-arrow-border-width:                        8px 8px 0 8px;
-@menu-button-arrow-border-style:                        solid;
-@menu-button-arrow-border-color:                        @secondary-color transparent transparent transparent;
-@menu-button-arrow-bg:                                  transparent;
-
-@menu-button-arrow-hover-border-width:                  @menu-button-arrow-border-width;
-@menu-button-arrow-hover-border-style:                  @menu-button-arrow-border-style;
-@menu-button-arrow-hover-border-color:                  @white-color transparent transparent transparent;
-@menu-button-arrow-hover-bg:                            @menu-button-arrow-bg;
-
-@menu-button-arrow-checked-border-width:                @menu-button-arrow-border-width;
-@menu-button-arrow-checked-border-style:                @menu-button-arrow-border-style;
-@menu-button-arrow-checked-border-color:                @menu-button-arrow-border-color;
-
-@menu-button-arrow-checked-hover-border-width:          @menu-button-arrow-checked-border-width;
-@menu-button-arrow-checked-hover-border-style:          @menu-button-arrow-checked-border-style;
-@menu-button-arrow-checked-hover-border-color:          @menu-button-arrow-border-color;
-
-// Primary menu button
-@menu-button-primary-arrow-spritesheet:                 '';
-
-@menu-button-primary-arrow-border-width:                @menu-button-arrow-border-width;
-@menu-button-primary-arrow-border-style:                @menu-button-arrow-border-style;
-@menu-button-primary-arrow-border-color:                @white-color transparent transparent transparent;
-@menu-button-primary-arrow-bg:                          transparent;
-
-@menu-button-primary-arrow-hover-border-width:          @menu-button-primary-arrow-border-width;
-@menu-button-primary-arrow-hover-border-style:          @menu-button-primary-arrow-border-style;
-@menu-button-primary-arrow-hover-border-color:          @default-color transparent transparent transparent;
-@menu-button-primary-arrow-hover-bg:                    @menu-button-primary-arrow-bg;
-
-@menu-button-primary-arrow-checked-border-width:        @menu-button-primary-arrow-border-width;
-@menu-button-primary-arrow-checked-border-style:        @menu-button-primary-arrow-border-style;
-@menu-button-primary-arrow-checked-border-color:        @secondary-color transparent transparent transparent;
-
-@menu-button-primary-arrow-checked-hover-border-width:  @menu-button-primary-arrow-checked-border-width;
-@menu-button-primary-arrow-checked-hover-border-style:  @menu-button-primary-arrow-checked-border-style;
-@menu-button-primary-arrow-checked-hover-border-color:  @menu-button-primary-arrow-checked-border-color;
-
-// Disabled menu button
-@menu-button-arrow-disabled-border-width:               @menu-button-arrow-border-width;
-@menu-button-arrow-disabled-border-style:               @menu-button-arrow-border-style;
-@menu-button-arrow-disabled-border-color:               @gray-color transparent transparent transparent;
-@menu-button-arrow-disabled-bg:                         @menu-button-arrow-bg;
-
 // Menu
-@menu-button-menu-top-margin:                           3px;
 @menu-button-menu-border-width:                         @menu-border-width;
 @menu-button-menu-border-color:                         @menu-border-color;
 @menu-button-menu-bg:                                   @white-color;
@@ -417,22 +338,7 @@
 // --------- //
 // Menu link //
 // --------- //
-
-@menu-link-arrow-spritesheet:             @menu-button-arrow-spritesheet;
-
-@menu-link-arrow-width:                   none;
-@menu-link-arrow-height:                  6px;
-@menu-link-arrow-right-offset:            0;
-@menu-link-arrow-top-offset:              10px;
-@menu-link-arrow-top-offset-big:          14px;
 @menu-link-line-height:                   24px;
-
-@menu-link-arrow-padding:                 0 16px 0 0;
-@menu-link-no-arrow-padding:              0;
-
-@menu-link-arrow-bg:                      @menu-button-arrow-bg;
-
-@menu-link-hover-arrow-bg:                @menu-button-arrow-hover-bg;
 @menu-link-border-color: 						@primary-color transparent transparent transparent;
 @menu-link-border-style: 						solid;
 @menu-link-border-width: 						5px 5px 0 5px;
@@ -444,26 +350,12 @@
 @menu-link-header-bg-color:               @menu-button-menu-bg;
 @menu-link-menu-border-width:             @menu-border-width;
 @menu-link-icon-24-top:                   -4px;
-
-// Menu header
-@menu-link-header-padding:                6px;
-
 // --------- //
 // Menu icon //
 // --------- //
 
 // Menu
 @menu-icon-menu-margin:                   -5px 0 0 5px;
-
-// Menu header
-@menu-icon-header-left-top-offset:        0;            // top offset of icon's left header part
-@menu-icon-header-left-left-offset:       2px;          // left offset of icon's left header part
-@menu-icon-header-left-bg:                transparent;
-
-@menu-icon-header-right-top-offset:       0;            // top offset of icon's right header part
-@menu-icon-header-right-left-offset:      6px;          // left offset of icon's right header part
-@menu-icon-header-right-bg:               transparent;
-
 // -------- //
 // Text box //
 // -------- //
@@ -811,7 +703,6 @@
 @list-view-actions-box-shadow:                  -2px -2px 5px #F3F3F3;
 @list-view-actions-active-bg:                   #F3F3F3;
 
-@list-view-items-toolbar-vertical-locked-box-shadow: -2px  2px 5px @data-grid-row-hover-bg;
 @list-view-items-toolbar-line-height:                16px;
 @list-view-items-toolbar-vertical-line-height:       24px;
 @list-view-items-toolbar-locked-bg:                  @controls-editInPlace-editor-bg;
@@ -897,7 +788,6 @@
 @data-grid-td-visible-checkbox-width:           36px;
 @data-grid-check-box-top:                       0;
 @data-grid-check-box-left:                      0;
-@data-grid-folder-font-size: 							15px;
 
 @data-grid-table-layot: 								fixed;
 
@@ -930,12 +820,6 @@
 //      EditInPlace        //
 // ----------------------- //
 @controls-editInPlace-editor-padding:               3px 1px;
-
-// --------------- //
-// OperationsMark //
-// --------------- //
-
-@controls-OperationsMark-checkBox-margin:     0 4px;
 
 // --------------- //
 //    MultiView    //
@@ -978,12 +862,6 @@
 @controls-filterButton-closeButton-top:           @controls-Popup-closeButton-top;
 @controls-filterButton-line-height:               41px;
 @controls-filterButton-apply-margin-right:        0;
-
-//FilterButtonToggleButton
-@controls-filterButton-toggleButton-icon-down:    "\e902";
-@controls-filterButton-toggleButton-icon-up:      "\e904";
-@controls-filterButton-toggleButton-color:        #CCCCCC !important;
-
 //FilterLine
 @controls-filterLine-wrapper-height:              24px;
 @controls-filterLine-line-display:                table-row;
