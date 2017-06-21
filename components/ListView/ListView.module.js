@@ -3265,7 +3265,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (!this._loadingIndicator) {
                this._createLoadingIndicator();
             }
-            this._loadingIndicator.removeClass('ws-hidden');
+            this.getContainer().addClass('controls-ListView__indicatorVisible');
          },
          /**
           * Удаляет индикатор загрузки
@@ -3273,7 +3273,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _hideLoadingIndicator: function () {
             if (this._loadingIndicator && !this._loader) {
-               this._loadingIndicator.addClass('ws-hidden');
+               this.getContainer().removeClass('controls-ListView__indicatorVisible');
             }
          },
          _createLoadingIndicator : function () {
