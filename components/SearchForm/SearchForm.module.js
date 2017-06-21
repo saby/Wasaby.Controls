@@ -92,9 +92,13 @@ define('js!SBIS3.CONTROLS.SearchForm', [
        */
       _keyUpBind:function(event) {
          if (event.which === constants.key.enter) {
-            if (this._options.usePicker && this.isPickerVisible()) {
+            /* Реагируем на нажатие enter'a, только если в списке автодополнения есть записи */
+            if (this._options.usePicker && this.isPickerVisible() && this.getList().getItems().getCount()) {
                SearchForm.superclass._keyUpBind.apply(this, arguments);
             } else {
+               if (this.isPickerVisible()) {
+                  this.hidePicker();
+               }
                this._checkInputVal();
                this.applySearch(true);
             }
