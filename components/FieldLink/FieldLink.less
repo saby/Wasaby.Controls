@@ -227,7 +227,10 @@
 }
 
 .ws-enabled.controls-FieldLink__inputMinWidth .controls-TextBox__fieldWrapper {
-   min-width: @controls-FieldLink-fieldWrapper-minWidth;
+   /* https://developer.mozilla.org/en-US/docs/Web/CSS/--*
+      т.к. min-width нужен только для темизации, то делаю его
+      через custom property */
+   --min-width: @controls-FieldLink-fieldWrapper-minWidth;
 }
 
 .controls-FieldLink__selected:not(.controls-FieldLink__multiselect):not(.controls-FieldLink__inputMinWidth) .controls-TextBox__fieldWrapper {
@@ -364,6 +367,11 @@
 }
 
 .ws-is-ie10 {
+   /* ie10 не поддерживает custom property */
+   .ws-enabled.controls-FieldLink__inputMinWidth .controls-TextBox__fieldWrapper {
+      min-width: @controls-FieldLink-fieldWrapper-minWidth;
+   }
+   
    .controls-FieldLink__picker:not(.controls-Suggest__picker) .controls-FieldLink__item-caption {
       display: inline-block;
       max-width: ~'calc(100% - '@icon-width~');'
