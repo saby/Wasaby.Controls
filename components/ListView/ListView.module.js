@@ -1328,7 +1328,7 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass._onClickHandler.apply(this, arguments);
             var $target = $(e.target),
                 target = this._findItemByElement($target),
-                model;
+                model, $group;
 
             if (target.length && this._isViewElement(target)) {
                model = this._getItemsProjection().getByHash(target.data('hash')).getContents();
@@ -1347,6 +1347,14 @@ define('js!SBIS3.CONTROLS.ListView',
             if (!isEmpty(this._options.groupBy) && this._options.easyGroup && $(e.target).hasClass('controls-GroupBy__separatorCollapse')) {
                var idGroup = $(e.target).closest('.controls-GroupBy').attr('data-group');
                this.toggleGroup(idGroup);
+               if ($target.closest('.controls-ListView').parent().hasClass('ws-sticky-header__header-container')) {
+                  $group = this._getItemsContainer().find('.controls-GroupBy[data-group="' + idGroup + '"]');
+                  if (this._isGroupCollapsed(idGroup)) {
+                     this._getScrollWatcher().scrollToElement($group);
+                  } else {
+                     this._getScrollWatcher().scrollToElement($group.next());
+                  }
+               }
             }
          },
 
