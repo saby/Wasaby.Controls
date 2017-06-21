@@ -74,12 +74,17 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
       },
 
       _onLockedChanged: function (controlNumber, e, locked) {
+         this._updateLocked(controlNumber, locked);
+         this._options.onlyByCapacity = !locked;
+      },
+
+      _updateLocked: function (controlNumber, locked) {
          var dateRanges = this._options.dateRanges,
             i;
-         if (this._updating) {
+         if (this._updatingLock) {
             return;
          }
-         this._updating = true;
+         this._updatingLock = true;
          if (this._options.lockButton) {
             this._options.lockButton.setChecked(locked);
          }
@@ -94,8 +99,7 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
             }
          }
 
-         this._options.onlyByCapacity = !locked;
-         this._updating = false;
+         this._updatingLock = false;
       },
 
       _updateControls: function (controlNumber, start, end, oldStart, oldEnd) {
@@ -134,6 +138,8 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
             this._updating = false;
             return;
          }
+
+         this._autoRelation(controlNumber, capacityChanged);
 
          // Если изменилась разрядность и используется
          // тип связи с установленным шагом и разрядность увеличилась,
@@ -179,10 +185,55 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
          this._notify('onDatesChange');
       },
 
-      _resetSteps: function () {
+      _autoRelation: function (updatedControlNumber, capacityChanged) {
+         if (!this._options.onlyByCapacity) {
+            return;
+         }
+
+         if (capacityChanged) {
+            this._options.onlyByCapacity = false;
+            this._updateLocked(-1, true);
+         }
+
+         // Временно ограничиваем эту логику. Если связано больше 2х контролов, то не меняем тип связи.
+         if (this._options.dateRanges.length > 2) {
+            return;
+         }
+
+         var updatedControl = this._options.dateRanges[updatedControlNumber],
+            updatedStartValue = updatedControl.getStartValue(),
+            updatedEndValue = updatedControl.getEndValue(),
+            updatedPeriodType = dateHelpers.getPeriodType(updatedStartValue, updatedEndValue);
+
+         var updateRelation = function (controlNumber) {
+            var control = this._options.dateRanges[controlNumber],
+               startValue = control.getStartValue(),
+               endValue = control.getEndValue(),
+               periodType = dateHelpers.getPeriodType(startValue, endValue);
+
+            if ((updatedPeriodType === 'month' || updatedPeriodType === 'quarter' || updatedPeriodType === 'halfyear') &&
+                updatedPeriodType === periodType &&
+                updatedStartValue.getFullYear() !== startValue.getFullYear() &&
+                updatedStartValue.getMonth() === startValue.getMonth() &&
+                updatedStartValue.getDate() === startValue.getDate()) {
+               this._options.onlyByCapacity = false;
+               this._updateLocked(-1, true);
+               this._resetSteps(Math.abs(updatedStartValue.getFullYear() - startValue.getFullYear())*12);
+            }
+         }.bind(this);
+
+         if (updatedControlNumber < this._options.dateRanges.length - 1) {
+            updateRelation(updatedControlNumber + 1);
+         }
+         if (this._options.onlyByCapacity && updatedControlNumber > 0) {
+            updateRelation(updatedControlNumber - 1);
+         }
+      },
+
+      _resetSteps: function (step) {
          this._steps = [];
          for (var i = 0; i < this._options.dateRanges.length - 1; i++) {
-            this._steps.push(this._options.step);
+            this._steps.push(step || this._options.step);
          }
       },
 

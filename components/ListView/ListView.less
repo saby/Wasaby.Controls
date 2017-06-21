@@ -132,8 +132,8 @@
    }
 }
 
-.controls-ListView-scrollIndicator{
-   display: block;
+.controls-ListView-scrollIndicator {
+   display: none;
    margin: 0 auto;
    height: @list-view-scroll-height;
    bottom: 0;
@@ -145,6 +145,14 @@
    &.controls-ListView-scrollIndicator__up{
       top: 0;
       background: @list-view-loading-indicator-gradient-bg-up;
+   }
+}
+
+.controls-ListView__indicatorVisible {
+   min-height: @list-view-scroll-height;
+   
+   .controls-ListView-scrollIndicator {
+      display: block;
    }
 }
 

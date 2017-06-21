@@ -413,7 +413,9 @@ define('js!SBIS3.CONTROLS.ListView',
             },
             _setScrollPagerPositionThrottled: null,
             _updateScrollIndicatorTopThrottled: null,
-            _removedItemsCount: false, 
+            _removedItemsCount: false,
+            _loadQueue: {},
+            _loadId: 0,
             _options: {
                _canServerRender: true,
                _buildTplArgs: buildTplArgsLV,
@@ -1122,6 +1124,7 @@ define('js!SBIS3.CONTROLS.ListView',
                visible: false,
                showPages: false,
                idProperty: 'id',
+               mode: (this._options.navigation && this._options.navigation.lastPage) ? 'full' : 'part',
                parent: this
             });
             // TODO: То, что ListView знает о компонентах в которые он может быть вставленн и то, что он переносит свои
@@ -1327,7 +1330,7 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass._onClickHandler.apply(this, arguments);
             var $target = $(e.target),
                 target = this._findItemByElement($target),
-                model;
+                model, $group;
 
             if (target.length && this._isViewElement(target)) {
                model = this._getItemsProjection().getByHash(target.data('hash')).getContents();
@@ -1346,6 +1349,14 @@ define('js!SBIS3.CONTROLS.ListView',
             if (!isEmpty(this._options.groupBy) && this._options.easyGroup && $(e.target).hasClass('controls-GroupBy__separatorCollapse')) {
                var idGroup = $(e.target).closest('.controls-GroupBy').attr('data-group');
                this.toggleGroup(idGroup);
+               if ($target.closest('.controls-ListView').parent().hasClass('ws-sticky-header__header-container')) {
+                  $group = this._getItemsContainer().find('.controls-GroupBy[data-group="' + idGroup + '"]');
+                  if (this._isGroupCollapsed(idGroup)) {
+                     this._getScrollWatcher().scrollToElement($group);
+                  } else {
+                     this._getScrollWatcher().scrollToElement($group.next());
+                  }
+               }
             }
          },
 
@@ -1778,22 +1789,10 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                       this.setSelectedItemsAll.call(this);
                      if (dataSet.getCount() == MAX_SELECTED && dataSet.getMetaData().more){
-                        var message = 'Отмечено ' + MAX_SELECTED + ' записей, максимально допустимое количество, обрабатываемое системой СБИС.';
-
-                        var windowOptions = (constants.defaultOptions || {})['SBIS3.CORE.Window'] || {};
-                        //TODO В 3.7.4.200 popupMixin не поддерживает анимацию, соответсвенно и информационные окна, сделанные на его основе
-                        //TODO По этой причине проверяем, если включена настройка 'анимированные окна', то покажем старое окно.
-                        //TODO В 3.7.4.220 планируется поддержать анимацию -> выпилить этот костыль!
-                        if(windowOptions.animatedWindows){
-                           fcHelpers.message(message);
-                        }
-                        else {
-                           InformationPopupManager.showMessageDialog({
-                              status: 'default',
-                              message: message,
-                              parent: this
-                           });
-                        }
+                        InformationPopupManager.showMessageDialog({
+                           status: 'default',
+                           message: rk('Отмечено 1000 записей, максимально допустимое количество, обрабатываемое системой СБИС.')
+                        });
                      }
                   }.bind(this));
             } else {
@@ -3068,6 +3067,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
                }
 
+               var loadId = this._loadId++;
+               this._loadQueue[loadId] = this._infiniteScrollState;
+
                this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit)
                   .addBoth(fHelpers.forAliveOnly(function(res) {
                      this._loader = null;
@@ -3077,10 +3079,11 @@ define('js!SBIS3.CONTROLS.ListView',
                      //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
                      //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
                      //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
-                     var hasNextPage;
+                     var state = this._loadQueue[loadId],
+                        hasNextPage;
                      if (this._options.navigation && this._options.navigation.type == 'cursor') {
                         this._listNavigation.analizeResponceParams(dataSet);
-                        hasNextPage = this._listNavigation.hasNextPage(self._infiniteScrollState.mode)
+                        hasNextPage = this._listNavigation.hasNextPage(state.mode);
                      }
                      else {
                         hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
@@ -3100,7 +3103,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         if (this._isSlowDrawing(this._options.easyGroup)) {
                            this._needToRedraw = false;
                         }
-                        this._drawPage(dataSet);
+                        this._drawPage(dataSet, state);
 
                         if(this._dogNailSavedMode) {
                            this._setInfiniteScrollState(this._dogNailSavedMode);
@@ -3132,7 +3135,7 @@ define('js!SBIS3.CONTROLS.ListView',
                            //страхуемся от этой ситуации, чтоб ничего не сломать https://online.sbis.ru/opendoc.html?guid=8da97ce8-7112-4f3f-8d2a-c6c6be03c74d&des=
                            if (!this._dogNailSavedMode) {
                               if ((this._options.task1173941879) && (this.isScrollOnTop())) {
-                                 this._dogNailSavedMode = this._infiniteScrollState.mode;
+                                 this._dogNailSavedMode = state.mode;
                                  this._setInfiniteScrollState('up');
                                  this._scrollLoadNextPage();
                               }
@@ -3167,10 +3170,10 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         _drawPage: function(dataSet){
+         _drawPage: function(dataSet, state){
             var at = null;
             //добавляем данные в начало или в конец в зависимости от того мы скроллим вверх или вниз
-            if (this._infiniteScrollState.mode === 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse)) {
+            if (state.mode === 'up' || (state.mode == 'down' && state.reverse)) {
                this._needScrollCompensation = true;
                this._containerScrollHeight = this._scrollWatcher.getScrollHeight() - this._scrollWatcher.getScrollContainer().scrollTop();
                at = {at: 0};
@@ -3181,7 +3184,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._hideItemsToolbar();
             //Achtung! Добавляем именно dataSet, чтобы не проверялся формат каждой записи - это экономит кучу времени
             var items;
-            if (this._infiniteScrollState.mode == 'down') {
+            if (state.mode == 'down') {
                items = this.getItems().append(dataSet);
             } else {
                items = this.getItems().prepend(dataSet);
@@ -3277,7 +3280,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (!this._loadingIndicator) {
                this._createLoadingIndicator();
             }
-            this._loadingIndicator.removeClass('ws-hidden');
+            this.getContainer().addClass('controls-ListView__indicatorVisible');
          },
          /**
           * Удаляет индикатор загрузки
@@ -3285,7 +3288,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _hideLoadingIndicator: function () {
             if (this._loadingIndicator && !this._loader) {
-               this._loadingIndicator.addClass('ws-hidden');
+               this.getContainer().removeClass('controls-ListView__indicatorVisible');
             }
          },
          _createLoadingIndicator : function () {
@@ -4235,7 +4238,15 @@ define('js!SBIS3.CONTROLS.ListView',
                      ) { //включаем перенос по умолчанию только если  контракты у источников данных равны
                         useDefaultMove = true;
                      }
-                     this._getMover().moveFromOutside(dragObject.getSource(), dragObject.getTarget(), dragOwner.getItems(), useDefaultMove);
+                     this._getMover().moveFromOutside(dragObject.getSource(),
+                        dragObject.getTarget(),
+                        dragOwner.getItems(),
+                        useDefaultMove
+                     ).addCallback(function (result) {
+                        if (result !== false && cInstance.instanceOfMixin(dragOwner, 'SBIS3.CONTROLS.MultiSelectable')) {
+                           dragOwner.removeItemsSelectionAll();//сбросим выделение у контрола с которого перемещаются элементы
+                        }
+                     })
                   }
                }
                this._clearDragHighlight(dragObject);
@@ -4261,9 +4272,14 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _toggleDragItems: function (dragObject, show) {
-            dragObject.getSource().each(function (item) {
-               item.getDomElement().toggleClass('ws-hidden', !show);
-            });
+            var source = dragObject.getSource();
+            if (source) {
+               source.each(function (item) {
+                  if (item.getDomElement()) { //если элемент находится внутри закрытой папки для него не будет dom'а
+                     item.getDomElement().toggleClass('ws-hidden', !show);
+                  }
+               });
+            }
          },
          /*DRAG_AND_DROP END*/
          //region moveMethods
@@ -4564,6 +4580,8 @@ define('js!SBIS3.CONTROLS.ListView',
                         status: 'error'
                      }
                   );
+                  //Прокидываем ошибку дальше, чтобы она дошла до addBoth и мы смогли отдать её в событие onEndDelete
+                  return result;
                }).addBoth(function (result) {
                   self._toggleIndicator(false);
                   self._notify('onEndDelete', idArray, result);
