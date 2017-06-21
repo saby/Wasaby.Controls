@@ -208,7 +208,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _getSearchBreadCrumbsWidth: function(){
       	var
             firstCol = $('td:first', this._getItemsContainer()),
-      	   firstColWidth = this._options.multiselect ? firstCol.width() : 0,
+      	   firstColWidth = this._options.multiselect ? firstCol.outerWidth() : 0,
       		secondCol = firstCol.next('td'),
       		cellPadding = secondCol.outerWidth() - secondCol.width();
       	return this.getContainer().width() - cellPadding - firstColWidth;
