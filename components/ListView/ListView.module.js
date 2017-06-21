@@ -3190,7 +3190,11 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _getNextOffset: function(){
             if (this._infiniteScrollState.mode == 'down' || this._infiniteScrollState.mode == 'demand'){
-               return this._scrollOffset.bottom + this._limit;
+               if (this._getSourceNavigationType == 'Offset') {
+                  return Math.min(this._scrollOffset.bottom + this._limit, this._getItemsProjection().getCount());
+               } else {
+                  return this._scrollOffset.bottom + this._limit;
+               }
             } else {
                return this._scrollOffset.top - this._limit;
             }
