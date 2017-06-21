@@ -80,6 +80,7 @@
    .controls-TabButton__mainText, .controls-TabButton__mainText.controls-Link {
       color: @tab-button-color;
       font: @tab-button-font;
+      line-height: @tab-button-main-text-line-height;
       font-weight: @tab-button-large-inner-font-weight;
       text-overflow: @tab-button-large-inner-text-overflow;
       font-size: @tab-button-large-inner-font-size;
@@ -135,8 +136,7 @@
       }
       .controls-TabButton__mainText {
          .flex-shrink(1);
-         .align-self(center);
-         padding-top: 1px;
+         .align-self(baseline);
          overflow: hidden;
       }
    }
