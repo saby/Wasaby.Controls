@@ -156,6 +156,28 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          return Toolbar.superclass._modifyOptions.apply(this, arguments);
       },
 
+      //Метод является аналогом _destroyControls из ItemsControlMixin. Только разрушение компонентов происходит асинхронно.
+      //Из-за этого мы не теряем время и получаем быструю перерисовку. Если всё будет работать как надо,
+      //нужно перенести этот метод на уровень ItemsControlMixin. Выписана задача https://online.sbis.ru/opendoc.html?guid=7825a3e6-6748-41ea-9c1b-24912a6e3009
+      _destroyControls: function(container, easy){
+         var compsArray = [];
+         $('[data-component]', container).each(function (i, item) {
+            if (item.wsControl) {
+               compsArray.push(item.wsControl);
+            }
+         });
+
+         if (!easy) {
+            setTimeout(function() {
+               compsArray.forEach(function(inst) {
+                  inst.destroy(true);
+               });
+            }, 0);
+         }
+
+         return easy ? compsArray : [];
+      },
+
       $constructor: function() {
          this._publish('onToolbarItemActivate');
          this._itemsContainer = this.getContainer().find('.controls-ToolBar__itemsContainer');
