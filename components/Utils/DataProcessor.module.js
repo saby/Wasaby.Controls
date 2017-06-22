@@ -198,7 +198,13 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
                 endpoint: object
             });
          exportDeferred = source.call(methodName, cfg).addErrback(function(error) {
-            fcHelpers.alert(error);
+            require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager){
+               InformationPopupManager.showMessageDialog({
+                  message: error.message,
+                  status: 'error'
+               });
+            });
+
             return error;
          });
          if (object !== "Excel") {

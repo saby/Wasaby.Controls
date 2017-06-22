@@ -9,12 +9,11 @@ define('js!SBIS3.CONTROLS.HighCharts', [
    "html!SBIS3.CONTROLS.HighCharts",
    "Core/helpers/functional-helpers",
    "Core/helpers/dom&controls-helpers",
-   'Core/helpers/fast-control-helpers',
    "browser!/cdn/highcharts/4.2.7/highcharts-more.js",
    "css!SBIS3.CONTROLS.HighCharts",
    "i18n!SBIS3.CONTROLS.HighCharts"
 ],
-function( SbisService, Query, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTpl, fHelpers, dcHelpers, fcHelpers){
+function( SbisService, Query, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTpl, fHelpers, dcHelpers){
    'use strict';
 
    function ctxOnFieldChange(e, field, value, init) {
@@ -1175,9 +1174,12 @@ function( SbisService, Query, cHelpers, cFunctions, constants, Deferred,BaseCont
 
             if (error instanceof Error && !error.canceled) {
                if (!error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
-                  error.message = error.message.toString().replace('Error: ', '');
-                  fcHelpers.alert(error);
-                  error.processed = true;
+                  require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager){
+                     InformationPopupManager.showMessageDialog({
+                        message: error.message.toString().replace('Error: ', ''),
+                        status: 'error'
+                     });
+                  });
                }
             }
             throw new Error(rk('Ошибка получения данных для диаграммы'));

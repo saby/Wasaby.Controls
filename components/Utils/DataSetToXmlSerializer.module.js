@@ -11,10 +11,9 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
    "Core/IoC",
    "Core/ConsoleLogger",
    "Core/core-instance",
-   "Core/helpers/fast-control-helpers",
    "Core/helpers/string-helpers",
    "i18n!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer"
-], function( $ws, cXSLT, cReportPrinter, cHelpers, cExtend, constants, IoC, ConsoleLogger,cInstance, fcHelpers, strHelpers) {
+], function( $ws, cXSLT, cReportPrinter, cHelpers, cExtend, constants, IoC, ConsoleLogger,cInstance, strHelpers) {
    return cExtend({}, {
 
       _complexFields: {
@@ -71,7 +70,17 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
                rp = this._reportPrinter,
                xmlDoc = this.serialize(dataSet, rp.getColumns());
          return rp.prepareReport(dataSet, xsl, undefined, xmlDoc).addErrback(function(error){
-            fcHelpers.alert(error, { checkAlreadyProcessed: true }, self);
+
+            require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager){
+               if(!error.processed){
+                  error.processed = true;
+                  InformationPopupManager.showMessageDialog({
+                     message: error.message,
+                     status: 'error'
+                  });
+               }
+            });
+
             return error;
          });
       },

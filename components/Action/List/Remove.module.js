@@ -87,13 +87,23 @@ define('js!SBIS3.CONTROLS.List.Remove', [
                if (typeof confirmText === 'function') {
                   confirmText = confirmText.call(this, items);
                }
-               var self = this;
-               return fcHelpers.question(confirmText).addCallback(function (res) {
-                  if (!res) {
-                     return;
-                  }
-                  return self._callHandlerMethod([items], 'onRemove', '_remove');
+
+               var
+                  self = this,
+                  def = new Deferred();
+
+               require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager){
+                  InformationPopupManager.showConfirmDialog({
+                     message: confirmText
+                  }, function(){
+                     def.callback(true);
+                  }, function(){
+                     self._callHandlerMethod([items], 'onRemove', '_remove');
+                     def.callback(false);
+                  });
                });
+
+               return def;
             }
          },
          /**
@@ -118,7 +128,12 @@ define('js!SBIS3.CONTROLS.List.Remove', [
             });
          },
          _handleError: function (error) {
-            fcHelpers.alert(error);
+            require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager){
+               InformationPopupManager.showMessageDialog({
+                  message: error.message,
+                  status: 'error'
+               });
+            });
          },
          _getDefaultConfirmText: function(items) {
             return items.length > 1 ? 'Удалить записи?' : 'Удалить текущую запись?';
