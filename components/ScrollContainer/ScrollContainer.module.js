@@ -152,7 +152,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                         }
                      }.bind(this);
                   }
-                  this._hideNativeScrollbar();
                }
                this._subscribeOnScroll();
 
@@ -308,21 +307,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                this._scrollbar.setPosition(scrollTop);
             }
             this.getContainer().toggleClass('controls-ScrollContainer__top-gradient', scrollTop > 0);
-         },
-
-         _hideNativeScrollbar: function(){
-            if (!cDetection.webkit && !cDetection.chrome){
-               /**
-                * Перевели скрытие нативного скроллбара на css, но в 120 чтобы обезапасить себя от
-                * ситуаций, когда в каком-то браузере или устройстве забыли установить скрытие, оставим скрытие через js.
-                */
-               if (!parseFloat(getComputedStyle(this._content[0]).marginRight)) {
-                  var style = {
-                     marginRight: -this._getBrowserScrollbarWidth()
-                  };
-                  this._content.css(style);
-               }
-            }
          },
 
          _getBrowserScrollbarWidth: function() {
