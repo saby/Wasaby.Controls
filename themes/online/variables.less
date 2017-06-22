@@ -60,7 +60,7 @@
 @float-area-border:                       @default-border-width @default-border-style @float-area-border-color;
 @float-area-shadow:                       0 0 12px rgba(0, 0, 0, 0.4);
 @font-popup-size:                         14px;
-@bg:                                      transparent;
+@bg:                                      @secondary-color;
 @default-text-color:                      @black-color;
 @disabled-text-color:                     @gray-ccc-color;
 
@@ -106,7 +106,7 @@
 
 @link-font:                               @default-font-size @default-font-name;
 @link-cursor:                             pointer;
-@link-text-color:                         #05b;
+@link-text-color:                         @darkcyan-color;
 @link-disabled-text-color:                @gray-ccc-color;
 @link-text-decoration:                    none;
 @link-text-alignment:                     center;
@@ -304,9 +304,9 @@
 @list-view-items-toolbar-icon-button-border-width:      @icon-button-border-width;
 @list-view-items-toolbar-icon-button-border-radius:     @border-radius;
 @list-view-items-toolbar-icon-button-border-font-size:  16px;
-@icon-button-edit-round-border-height:             24px;
-@icon-button-edit-round-border-width:              24px;
-@icon-button-edit-round-border-line-height:        24px;
+@icon-button-edit-round-border-height:             @icon-medium-size;
+@icon-button-edit-round-border-width:              @icon-medium-size;
+@icon-button-edit-round-border-line-height:        @icon-medium-size;
 @list-view-items-toolbar-icon-button-border-font:       'cbuc-icons';
 
 
@@ -380,6 +380,7 @@
 @tab-button-overflow:                           hidden;
 @tab-button-color:                              @blue-dark-color;
 @tab-button-font:                               14px 'TensorFont', sans-serif;
+@tab-button-main-text-line-height:              27px;
 @tab-button-simple-checked-bottomline-color:    #0055BB;
 @tab-button-simple-hover-bottomline-color:      #E4E4E4;
 @tab-button-margin-top:                         0;
@@ -698,7 +699,7 @@
 @menu-expand-hover-border-width:          @menu-expand-border-width;
 @menu-expand-hover-border-style:          @menu-expand-border-style;
 @menu-expand-hover-border-color:          @menu-expand-border-color;
-@menu-expand-hover-bg:                    none;
+@menu-expand-hover-bg:                    @menu-expand-bg;
 @menu-header-caption-color:               @blue-dark-color;
 @menu-header-height:                      32px;
 @menu-header-box-sizing:                  border-box;
@@ -840,7 +841,7 @@
 @text-box-error-border-color:             #ff302b !important;
 @text-box-error-bg:                       #fadadd !important;
 
-@text-box-hover-border-width: @text-box-focus-border-width;
+@text-box-hover-border-width:             @text-box-focus-border-width;
 @text-box-hover-border-style:             @text-box-focus-border-style;
 @text-box-hover-border-color:             @text-box-focus-border-color;
 @text-box-hover-bg:                       @text-box-bg;
@@ -1637,10 +1638,9 @@
 // --------- //
 // List view //
 // --------- //
-@list-view-min-height:                           90px;
-
-@listView-check-box-left:                       0px;
-@listView-check-box-top:                        0px;
+@list-view-min-height:                          90px;
+@listView-check-box-left:                       0;
+@listView-check-box-top:                        0;
 
 @list-view-actions-cursor:                      pointer;
 @list-view-actions-height:                      20px;
@@ -1677,7 +1677,6 @@
 @list-view-items-toolbar-font-family:                @default-icon-medium-font;
 
 @bottomStyle-items-toolbar-margin-top:               2px;
-
 @list-view-actions-verAlign-margin:             8px 3px 0 0;
 @list-view-actions-verAlign-width:              25px;
 @list-view-actions-menu-icon:                   url('img/ItemActions-menu.png') no-repeat;
@@ -1800,6 +1799,10 @@
 @tree-view-expand-width:                        16px;
 @tree-view-expand-height:                       20px;
 @tree-view-expand-margin:                       0 6px 0 4px;
+
+@tree-view-expand-color:                        @blue-dark-color;
+@tree-view-expand-hover-color:                  @darkcyan-color;
+@tree-view-expand-hidden-color:                 @gray-lamantin-color;
 
 @tree-view-level-padding:                       26px;
 @tree-view-level-padding-photo:                 46px;
@@ -2117,7 +2120,7 @@
 @DropdownList-picker-menu-item-color-blur:            rgba(255, 255, 255, 0);
 @DropdownList-picker-menu-item-hover:                 #F0F5FB;
 @DropdownList-picker-menu-item-hover-blur:            rgba(240, 245, 251, 0);
-@DropdownList-linkStyleColor:                         #0055bb;
+@DropdownList-linkStyleColor:                         @link-text-color;
 @DropdownList-linkStyleHoverColor:                    #313E78;
 @DropdownList-footer-buttonsBlock-position:           relative;
 @DropdownList-footer-buttonsBlock-height:             24px;
@@ -2273,7 +2276,7 @@
 
 //FieldLink
 @controls-FieldLink-border-color:                  @text-area-border-color @text-area-border-color @gray-ccc-color @text-area-border-color;
-@controls-FieldLink-border-color-focus-hover:      @gray-ccc-color @gray-ccc-color @gray-ccc-color @gray-ccc-color;
+@controls-FieldLink-border-color-focus-hover:      @gray-ccc-color;
 @controls-FieldLink-border:                        1px solid;
 @controls-FieldLink-picker-show-color:             @white-color;
 
@@ -2451,9 +2454,16 @@
 @controls-Paging-btn-padding:                      8px 10px;
 @controls-Paging-btn-sprite:                       url('img/PagingArrows.png');
 
+//ScrollContainer
+@controls-ScrollContainer-top-gradient-height:     8px;
+@controls-ScrollContainer-top-gradient-background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+
 //Scrollbar
 @controls-Scrollbar-width:                         4px;
 @controls-Scrollbar-thumb-border-radius:           2px;
+@controls-Scrollbar-min-height:                    46px;
+@controls-Scrollbar-thumb-margin:                  4px 0px;
+@controls-Scrollbar-thumb-padding:                 0px 2px;
 @controls-Scrollbar-light-hover-thumb-color:       rgba(255, 255, 255, 0.20);
 @controls-Scrollbar-light-active-thumb-color:      rgba(255, 255, 255, 0.50);
 

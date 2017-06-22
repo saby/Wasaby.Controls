@@ -136,11 +136,13 @@
                   padding: 0 !important;
                   .controls-MonthView__dayTitle {
                      padding-top: @date-range-big-choose-date-range-picker-table-element-title-padding-top - 1 !important;
+                  }
+                  .controls-MonthView__dayBorder + .controls-MonthView__dayTitle {
                      left: 6px !important;
                   }
                   & +.controls-MonthView__tableElement {
                      border-left: 1px solid @date-range-big-choose-date-range-picker-today-border-color !important;
-                     .controls-MonthView__dayTitle {
+                     .controls-MonthView__dayBorder +.controls-MonthView__dayTitle {
                         left: 6px !important;
                      }
                   }

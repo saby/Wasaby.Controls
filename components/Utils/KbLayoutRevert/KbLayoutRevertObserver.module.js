@@ -235,6 +235,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
             }
 
             if(!searchValue || this._missSpellUsed) {
+               this._hideMissSpell();
                this._missSpellUsed = false;
                return;
             }

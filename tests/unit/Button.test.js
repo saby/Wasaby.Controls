@@ -101,23 +101,16 @@ define([
             assert.isTrue(!button.getIcon());
          });
 
-         it('touchClick', function(){
-            button._onTouchStart();
-            assert.isTrue(button._isActiveByClick);
-            button._onTouchEnd();
-            assert.isTrue(!button._isActiveByClick);
-         });
-
          it('touchClickOnce', function(){
             var clickEvent = 0;
             button.subscribe("onActivated", function() {
                clickEvent++;
             });
             button._onTouchStart();
+            button._onTouchEnd();
             button._onMouseClick();
             assert.equal(clickEvent, 1);
             clickEvent = 0;
-            button._onTouchEnd();
           });
 
          it('mouseDownEnabled', function() {
@@ -132,6 +125,28 @@ define([
             button._isActiveByClick = false;
             button._onMouseDown();
             assert.isTrue(!button._isActiveByClick);
+         });
+
+         it('ipadShortTapTouchEnd', function(done) {
+            button._isActiveByClick = false;
+            button._onTouchStart();
+            button._onTouchEnd();
+            assert.isTrue(button._isActiveByClick);
+            setTimeout(function() {
+               assert.isTrue(button._isActiveByClick);
+               done();
+            }, 500);
+         });
+
+         it('ipadShortTapTimeout', function(done) {
+            button._isActiveByClick = false;
+            button._onTouchStart();
+            button._onTouchEnd();
+
+            setTimeout(function() {
+               assert.isTrue(!button._isActiveByClick);
+               done();
+            }, 1100);
          });
 
       });

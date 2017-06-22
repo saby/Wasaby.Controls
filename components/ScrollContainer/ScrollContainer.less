@@ -12,9 +12,8 @@
       position: absolute;
       right: 0;
       top: 0;
-      opacity: 0;
-      padding: 4px 2px;
-      height: calc(~"100% - 8px");
+      display: none;
+      height: 100%;
    }
    &.controls-ScrollContainer__top-gradient {
       &:before{
@@ -22,21 +21,18 @@
          position: absolute;
          display: block;
          z-index: 1;
-         height: 8px;
+         height: @controls-ScrollContainer-top-gradient-height;
          top: 0;
          left: 0;
          width: 100%;
-         box-shadow: inset 0 11px 6px -8px rgba(0, 0, 0, 0.16);
+         background: @controls-ScrollContainer-top-gradient-background;
       }
    }
 }
 
 .controls-ScrollContainer {
-   .controls-Scrollbar.controls-Scrollbar__dragging {
-      opacity: 1
-   }
-   &:hover > .controls-Scrollbar {
-      opacity: 1;
+   .controls-Scrollbar.controls-Scrollbar__dragging, &:hover > .controls-Scrollbar {
+      display: initial;
    }
 }
 
@@ -133,6 +129,10 @@ body.ws-is-ie .controls-ScrollContainer__content {
    display: none;
 }
 
+.controls-ScrollContainer__showScrollbar .controls-Scrollbar {
+   display: initial;
+}
+
 .controls-ScrollContainer.controls-ScrollContainer__flex {
    .flexbox();
    .flex-direction(column);
@@ -141,4 +141,18 @@ body.ws-is-ie .controls-ScrollContainer__content {
 
 .controls-ScrollContainer.controls-ScrollContainer__flex > .controls-ScrollContainer__content {
    height:100%;
+}
+
+.controls-ScrollContainer__content {
+   // Desktop IE
+   body.ws-is-ie &, body.ws-is-firefox & {
+      margin-right: -17px;
+   }
+
+   // Планшет Win10 IE
+   body.ws-is-touch.ws-is-ie & {
+      margin-right: -12px;
+   }
+
+
 }
