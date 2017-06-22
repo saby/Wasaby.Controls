@@ -10,7 +10,6 @@ define('js!SBIS3.CONTROLS.Button',
       'js!WS.Data/Entity/InstantiableMixin',
       'tmpl!SBIS3.CONTROLS.Button',
       'Core/core-functions',
-      'Core/tmpl/tmplstr',
       "js!SBIS3.CORE.Control/ControlGoodCode",
       'css!SBIS3.CONTROLS.Button'
          ],
@@ -25,7 +24,6 @@ define('js!SBIS3.CONTROLS.Button',
              InstantiableMixin,
              template,
              functions,
-             tmplstr,
              ControlGoodCode) {
 
    'use strict';
@@ -102,12 +100,6 @@ define('js!SBIS3.CONTROLS.Button',
          _touchMoveCount: 0,
 
          constructor: function (cfg) {
-            if (cfg.hasPartial) {
-               if (!cfg.caption) {
-                  cfg.caption = '';
-               }
-               cfg.caption = tmplstr.getFunction(cfg.caption);
-            }
             this.deprecatedContr(cfg);
             this._publish('onActivated');
          },
