@@ -148,7 +148,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             showOnControlsReady: false,
             autoCloseOnHide: true,
             needSetDocumentTitle: false,
-            opener: this._getOpener(),
+            opener: meta.opener || this._getOpener(), //opener по умолчанию
             template: meta.template || this._options.template,
             target: undefined,
             block_by_task_1173286428: false // временнное решение проблемы описанной в надзадаче
