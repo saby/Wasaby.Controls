@@ -2,10 +2,9 @@
 define('js!SBIS3.CONTROLS.List.Remove', [
       'js!SBIS3.CONTROLS.Action.Action',
       'js!SBIS3.CONTROLS.Action.List.ListMixin',
-      'Core/helpers/fast-control-helpers',
       'Core/core-instance'
    ],
-   function (ActionBase, ListMixin, fcHelpers, cInstance) {
+   function (ActionBase, ListMixin, cInstance) {
       'use strict';
       /**
        * Action удаления записей
