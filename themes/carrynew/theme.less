@@ -524,6 +524,12 @@ body .controls-BackButton {
   line-height: 3.64rem;
 }
 
+.ws-is-sbis-desktop {
+  body .controls-BackButton {
+    line-height: 3rem;
+  }
+}
+
 body .ws-float-area-nostack-panel-shadow-standart {
     border: 1px solid #0055BB;
     background: #FFFFFF;
@@ -814,6 +820,13 @@ body {
 .controls-BreadCrumbs__crumb {
    top: 0.18rem
 }
+
+.ws-is-sbis-desktop {
+  .controls-BreadCrumbs__crumb {
+    top: -0.03rem
+  }
+}
+
 .controls-image {
    .controls-image__image-bar{
       .icon-16{
@@ -895,6 +908,12 @@ body .controls-CommandsButton__picker {
       width: 1.785rem;
       top:  0.0357rem;
    }
+}
+// TODO нужно костылять Engine т.к. он не поддерживает тематизацию, а не контролы
+.ws-is-sbis-desktop {
+  .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
+    top: 0.35rem !important;
+  }
 }
 
 .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
