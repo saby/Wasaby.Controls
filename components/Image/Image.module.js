@@ -14,7 +14,6 @@ define('js!SBIS3.CONTROLS.Image',
    "js!WS.Data/Source/SbisService",
    "html!SBIS3.CONTROLS.Image",
    "js!SBIS3.CORE.FileLoader",
-   'js!SBIS3.CORE.FileCamLoader',
    "Core/core-instance",
    "Core/helpers/fast-control-helpers",
    "Core/helpers/transport-helpers",
@@ -25,7 +24,7 @@ define('js!SBIS3.CONTROLS.Image',
    'js!SBIS3.CONTROLS.MenuLink',
    "i18n!SBIS3.CONTROLS.Image",
    'css!SBIS3.CONTROLS.Image'
-], function(BLObject, ImageUtil, processImagePath, cIndicator, cMerge, CommandDispatcher, Deferred, CompoundControl, SbisService, dotTplFn, FileLoader, FileCamLoader, cInstance, fcHelpers, transHelpers, SourceUtil, ControlHierarchyManager, InformationPopupManager) {
+], function(BLObject, ImageUtil, processImagePath, cIndicator, cMerge, CommandDispatcher, Deferred, CompoundControl, SbisService, dotTplFn, FileLoader, cInstance, fcHelpers, transHelpers, SourceUtil, ControlHierarchyManager, InformationPopupManager) {
       'use strict';
       //TODO: Избавится от дублирования
       var
@@ -929,34 +928,35 @@ define('js!SBIS3.CONTROLS.Image',
                if (this._fileCamLoader) {
                   return Deferred.success(this._fileCamLoader);
                }
-
-               //NB! Вероятно хотим отредактировать.
-               // Webkit не хочет открывать отрабатывать клик, если элемент создан из не загруженного скрипта
-               var self = this;
-               var cont = $('<div class="controls-image__file-cam-loader"></div>');
+               var
+                  self = this,
+                  def = new Deferred(),
+                  cont = $('<div class="controls-image__file-cam-loader"></div>');
                self.getContainer().append(cont);
-               self._fileCamLoader = new FileCamLoader({
-                  extensions: ['image'],
-                  element: cont,
-                  name: 'FileLoader',
-                  parent: self,
-                  showIndicator: false,
-                  handlers: {
-                     onLoadStarted: self._onBeginLoad,
-                     onLoaded: self._onEndLoad
+               require(['js!SBIS3.CORE.FileCamLoader'], function (FileCamLoader) {
+                  self._fileCamLoader = new FileCamLoader({
+                     extensions: ['image'],
+                     element: cont,
+                     name: 'FileLoader',
+                     parent: self,
+                     showIndicator: false,
+                     handlers: {
+                        onLoadStarted: self._onBeginLoad,
+                        onLoaded: self._onEndLoad
+                     }
+                  });
+
+                  //todo Удалить, временная опция для поддержки смены логотипа компании
+                  var dataSource = self.getDataSource();
+                  if (dataSource) {
+                     self._fileCamLoader.setMethod((
+                        self._options.linkedObject || dataSource.getEndpoint().contract) +
+                        '.' + dataSource.getBinding().create
+                     );
                   }
+                  def.callback(self._fileCamLoader);
                });
-
-               //todo Удалить, временная опция для поддержки смены логотипа компании
-               var dataSource = self.getDataSource();
-               if (dataSource) {
-                  self._fileCamLoader.setMethod((
-                     self._options.linkedObject || dataSource.getEndpoint().contract) +
-                     '.' + dataSource.getBinding().create
-                  );
-               }
-
-               return Deferred.success(self._fileCamLoader)
+               return def;
             }
          });
 
