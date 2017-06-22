@@ -19,7 +19,8 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             _notAddedAmount: 0,
             // количество не отображаемых страниц сверху списка
             _scrollableHeight: 0,
-            _DEBUG: true,
+            _DEBUG: false,
+            _con: null
          },
 
          init: function () {
@@ -31,6 +32,12 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             }
             if (this._options.viewport) {
                this._options.viewport[0].addEventListener('scroll', this._scrollHandler.bind(this), { passive: true });
+            }
+   
+            //FIXME заглушка
+            this._con = window && window.console;
+            if (!this._con) {
+               this._con = { log: function () {} };
             }
          },
 
@@ -71,11 +78,11 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             if (diff) {   
                   
                if (this._DEBUG) {
-                  console.log('page', pageNumber);
-                  console.log('Current widnow:', this._currentWindow[0], this._currentWindow[1], 'New widnow:', newWindow[0], newWindow[1]);
-                  console.log('add from', diff.add[0], 'to', diff.add[1], 'at', diff.addPosition);
-                  console.log('add from', diff.remove[0], 'to', diff.remove[1]);
-                  console.log('displayed from ', newWindow[0], 'to', newWindow[1]);
+                  this._con.log('page', pageNumber);
+                  this._con.log('Current widnow:', this._currentWindow[0], this._currentWindow[1], 'New widnow:', newWindow[0], newWindow[1]);
+                  this._con.log('add from', diff.add[0], 'to', diff.add[1], 'at', diff.addPosition);
+                  this._con.log('add from', diff.remove[0], 'to', diff.remove[1]);
+                  this._con.log('displayed from ', newWindow[0], 'to', newWindow[1]);
                }
 
                var wrappersHeights = this._getWrappersHeight(pageNumber);
@@ -111,8 +118,8 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             }
 
             if (this._DEBUG) {
-               console.log('top height', beginHeight);
-               console.log('bottom height', endHeight);
+               this._con.log('top height', beginHeight);
+               this._con.log('bottom height', endHeight);
             }
 
             return {
