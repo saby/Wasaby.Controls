@@ -24,7 +24,24 @@ define('js!SBIS3.CONTROLS.Image',
    'js!SBIS3.CONTROLS.MenuLink',
    "i18n!SBIS3.CONTROLS.Image",
    'css!SBIS3.CONTROLS.Image'
-], function(BLObject, ImageUtil, processImagePath, cIndicator, cMerge, CommandDispatcher, Deferred, CompoundControl, SbisService, dotTplFn, FileLoader, cInstance, fcHelpers, transHelpers, SourceUtil, ControlHierarchyManager, InformationPopupManager) {
+], function(
+   BLObject,
+   ImageUtil,
+   processImagePath,
+   cIndicator, cMerge,
+   CommandDispatcher,
+   Deferred,
+   CompoundControl,
+   SbisService,
+   dotTplFn,
+   FileLoader,
+   cInstance,
+   fcHelpers,
+   transHelpers,
+   SourceUtil,
+   ControlHierarchyManager,
+   InformationPopupManager
+) {
       'use strict';
       //TODO: Избавится от дублирования
       var
