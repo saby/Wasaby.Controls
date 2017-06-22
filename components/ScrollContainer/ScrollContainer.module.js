@@ -312,10 +312,16 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          _hideNativeScrollbar: function(){
             if (!cDetection.webkit && !cDetection.chrome){
-               var style = {
+               /**
+                * Перевели скрытие нативного скроллбара на css, но в 120 чтобы обезапасить себя от
+                * ситуаций, когда в каком-то браузере или устройстве забыли установить скрытие, оставим скрытие через js.
+                */
+               if (!parseFloat(getComputedStyle(this._content[0]).marginRight)) {
+                  var style = {
                      marginRight: -this._getBrowserScrollbarWidth()
                   };
-               this._content.css(style);
+                  this._content.css(style);
+               }
             }
          },
 
