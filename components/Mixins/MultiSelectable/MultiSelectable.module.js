@@ -1,6 +1,5 @@
 define('js!SBIS3.CONTROLS.MultiSelectable', [
    "Core/ParallelDeferred",
-   "Core/helpers/helpers",
    "Core/core-functions",
    "Core/Deferred",
    "Core/IoC",
@@ -10,7 +9,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
    "Core/helpers/collection-helpers",
    "Core/core-instance",
    "Core/helpers/functional-helpers"
-], function( ParallelDeferred, cHelpers, cFunctions, Deferred, IoC, ConsoleLogger,List, ArraySimpleValuesUtil, colHelpers, cInstance, fHelpers) {
+], function( ParallelDeferred, cFunctions, Deferred, IoC, ConsoleLogger,List, ArraySimpleValuesUtil, colHelpers, cInstance, fHelpers) {
 
    var EMPTY_SELECTION = [null],
        convertToKeys = function(list, keyField) {
@@ -678,7 +677,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
             }
 
             /* Если сорс грузит данные, то дожидаемся его */
-            cHelpers.callbackWrapper(dependDef, fHelpers.forAliveOnly(function(res) {
+            Deferred.callbackWrapper(dependDef, fHelpers.forAliveOnly(function(res) {
                items = self.getItems();
                for (var j = 0; loadKeysAmount > j; j++) {
                   item = items && items.at(items.getIndexByValue(self._options.idProperty, loadKeysArr[j]));
