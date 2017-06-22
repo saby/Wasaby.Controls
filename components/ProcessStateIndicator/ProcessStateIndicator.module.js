@@ -68,7 +68,7 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
    
    function calculateColorState(options) {
       var
-         sectorSize = (100 / options.numSectors) >> 0,
+         sectorSize = 100 / options.numSectors,
          state = options.state || [],
          colorValues = [],
          curSector = 0,
@@ -85,12 +85,7 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
             // Приводим к числу, отрицательные игнорируем 
             itemValue = Math.max(0, +state[i] || 0);
             color = colors[i];
-            itemNumSectors = (itemValue / sectorSize) >> 0;
-            if (itemValue > 0 && itemNumSectors === 0) {
-               // Если значение элемента не нулевое, 
-               // а количество секторов нулевое (из-за округления) то увеличим до 1 (см. спецификацию)
-               itemNumSectors = 1;
-            }
+            itemNumSectors = Math.round(itemValue / sectorSize);
             for(j = 0; j < itemNumSectors; j++) {
                colorValues[curSector++] = {
                   color: color,
