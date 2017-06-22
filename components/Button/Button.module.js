@@ -4,7 +4,6 @@ define('js!SBIS3.CONTROLS.Button',
       'js!SBIS3.CONTROLS.Button/Button.compatible',
       'tmpl!SBIS3.CONTROLS.Button',
       'Core/core-functions',
-      'Core/tmpl/tmplstr',
       "js!SBIS3.CORE.Control/ControlGoodCode",
       'css!SBIS3.CONTROLS.Button'
          ],
@@ -13,7 +12,6 @@ define('js!SBIS3.CONTROLS.Button',
              ButtonCompatible,
              template,
              functions,
-             tmplstr,
              ControlGoodCode) {
 
    'use strict';
@@ -85,12 +83,6 @@ define('js!SBIS3.CONTROLS.Button',
          _touchMoveCount: 0,
 
          constructor: function (cfg) {
-            if (cfg.hasPartial) {
-               if (!cfg.caption) {
-                  cfg.caption = '';
-               }
-               cfg.caption = tmplstr.getFunction(cfg.caption);
-            }
             Button.superclass.constructor.call(this, cfg);
             this._publish('onActivated');
          },
