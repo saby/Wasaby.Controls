@@ -8,75 +8,36 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController', 'Core/core-functions'], fun
                  10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20, 10, 20, 10, 20, 20];
    describe('SBIS3.CONTROLS.VirtualScrollController', function() {
       var controller = new VirtualScrollController();
-      describe('._getShownRange', function() {
+
+      describe('._getWrappersHeight', function() {
          controller._heights = cFunctions.clone(heights);
-         it('First page', function() {
-            newState = controller._getShownRange(0, 5);
-            assert.deepEqual(newState, [0, 100]);
+         it('First Page', function() {
+            newState = controller._getWrappersHeight(0);
+            assert.deepEqual(newState, { begin: 0, end: 3200 });
          });
-         it('Second page', function() {
-            newState = controller._getShownRange(1, 5);
-            assert.deepEqual(newState, [0, 100]);
+         it('Middle Page', function() {
+            newState = controller._getWrappersHeight(5);
+            assert.deepEqual(newState, { begin: 960 , end: 2240 });
          });
-         it('Fourth page', function() {
-            newState = controller._getShownRange(3, 5); 
-            assert.deepEqual(newState, [20, 120]);
-         });
-         it('Fifth page', function() {
-            newState = controller._getShownRange(4, 5);
-            assert.deepEqual(newState, [40, 140]);
-         });
-         it('Large page', function() {
-            newState = controller._getShownRange(12, 5);
-            assert.deepEqual(newState, [200, 299]);
+         it('Last Page', function() {
+            newState = controller._getWrappersHeight(13);
+            assert.deepEqual(newState, { begin: 3520, end: 20 });
          });
       });
 
-      describe('._calculateWrappersHeight', function() {
-         controller._heights = cFunctions.clone(heights);
-         it('From start', function() {
-            newState = controller._calculateWrappersHeight([0, 40]);
-            assert.deepEqual(newState, { begin: 0, end: 4160 });
-         });
-         it('All pages', function() {
-            newState = controller._calculateWrappersHeight([0, 300]);
-            assert.deepEqual(newState, { begin: 0, end: 0 });
-         });
-         it('From second page', function() {
-            newState = controller._calculateWrappersHeight([40, 60]);
-            assert.deepEqual(newState, { begin: 640, end: 3840 });
-         });
-         it('To last page', function() {
-            newState = controller._calculateWrappersHeight([220, 300]);
-            assert.deepEqual(newState, { begin: 3520, end: 0 });
-         });
-      });
-
-      describe('._calculateRangeToShow', function() {
+      describe('._getRangeToShow', function() {
          //pageNumber, pageSize, pagesCount
-         it('Simple [page size 1]', function() {
-            newState = controller._calculateRangeToShow(0, 1, 1);
-            assert.deepEqual(newState, [0, 0]);
+         it('Simple', function() {
+            newState = controller._getRangeToShow(0, 1);
+            assert.deepEqual(newState, [0, 20]);
          });
-         it('Simple [page size 10]', function() {
-            newState = controller._calculateRangeToShow(0, 10, 1);
-            assert.deepEqual(newState, [0, 9]);
+         it('Two pages', function() {
+            newState = controller._getRangeToShow(0, 2);
+            assert.deepEqual(newState, [0, 40]);
          });
-         it('Two pages [page size 1]', function() {
-            newState = controller._calculateRangeToShow(0, 1, 2);
-            assert.deepEqual(newState, [0, 1]);
-         });
-         it('Two pages [page size 10]', function() {
-            newState = controller._calculateRangeToShow(0, 10, 2);
-            assert.deepEqual(newState, [0, 19]);
-         });
-         it('Not from start [page size 1]', function() {
-            newState = controller._calculateRangeToShow(10, 1, 2);
-            assert.deepEqual(newState, [9, 11]);
-         });
-         it('Not from start [page size 10]', function() {
-            newState = controller._calculateRangeToShow(10, 10, 2);
-            assert.deepEqual(newState, [90, 119]);
+         it('Not from start', function() {
+            newState = controller._getRangeToShow(10, 10);
+            assert.deepEqual(newState, [120, 299]);
          });
       });
 
@@ -88,7 +49,7 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController', 'Core/core-functions'], fun
          });
          it('No intersection to top', function() {
             newState = controller._getDiff([0, 10], [20, 30]);
-            assert.deepEqual(newState, { add: [20, 30], remove: [0, 10], addPosition: 0 });
+            assert.deepEqual(newState, { add: [20, 30], remove: [0, 10], addPosition: 20 });
          });
          it('No intersection to bottom', function() {
             newState = controller._getDiff([20, 30], [0, 10]);
@@ -96,7 +57,7 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController', 'Core/core-functions'], fun
          });
          it('Intersection 1 element', function() {
             newState = controller._getDiff([0, 10], [10, 20]);
-            assert.deepEqual(newState, { add: [ 0, 9 ], remove: [ 11, 20 ], addPosition: 0 });
+            assert.deepEqual(newState, { add: [ 11, 20 ], remove: [ 0, 9 ], addPosition: 11 });
          });
          it('Intersection 10 elements', function() {
             newState = controller._getDiff([0, 20], [10, 30]);
@@ -122,61 +83,6 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController', 'Core/core-functions'], fun
          it('Last page', function() {
             newState = controller._getPage(99999999);
             assert.equal(newState, 14);
-         });
-      });
-
-      describe('._getItemsToRemove', function() {
-         //range, offset, projCount
-         it('1 element', function() {
-            newState = controller._getItemsToRemove([0, 0], 0, 100);
-            assert.deepEqual(newState, [0]);
-         });
-         it('5 elements', function() {
-            newState = controller._getItemsToRemove([0, 5], 0, 100);
-            assert.deepEqual(newState, [0, 1, 2, 3, 4, 5]);
-         });
-         it('Range bigger than count', function() {
-            newState = controller._getItemsToRemove([0, 5], 0, 1);
-            assert.deepEqual(newState, [0, 1]);
-         });
-      });
-
-      describe('._getItemsToAdd', function() {
-         //range, offset, projCount
-         it('1 element', function() {
-            newState = controller._getItemsToAdd([0, 0], 0, 100);
-            assert.deepEqual(newState, [0]);
-         });
-         it('5 elements', function() {
-            newState = controller._getItemsToAdd([0, 5], 0, 1);
-            assert.deepEqual(newState, [0, 1]);
-         });
-         it('Range bigger than count', function() {
-            newState = controller._getItemsToAdd([0, 5], 0, 1);
-            assert.deepEqual(newState, [0, 1]);
-         });
-      });
-
-      describe('._getDirection', function() {
-         //oldWindow, newWindow
-         it('To end', function() {
-            newState = controller._getDirection([0, 1], [2, 3]);
-            assert.equal(newState, false);
-         });
-         it('To begin', function() {
-            newState = controller._getDirection([2, 3], [0, 1]);
-            assert.equal(newState, true);
-         });
-      });
-      describe('._getPositionToAdd', function() {
-         //diff, direction, mode
-         it('To end [down]', function() {
-            newState = controller._getPositionToAdd({begin: [0, 20], end: [40, 60]}, true);
-            assert.equal(newState, 40);
-         });
-         it('To begin [down]', function() {
-            newState = controller._getPositionToAdd({begin: [0, 20], end: [40, 60]}, false);
-            assert.equal(newState, 0);
          });
       });
    });
