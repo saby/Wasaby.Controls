@@ -108,7 +108,7 @@ define('js!WSControls/Control/Base',
 
             _applyChangedOptions: function(newOptions) {
                Object.getOwnPropertyNames(newOptions).forEach(function (prop) {
-                  this._options[prop] = newOptions[prop];
+                  this[prop] = newOptions[prop];
 
                }, this);
             },
