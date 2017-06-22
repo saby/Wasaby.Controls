@@ -132,13 +132,14 @@ define('js!SBIS3.CONTROLS.Button',
             }
             this._onClickHandler(e);
             this._notify("onActivated", e);
+            this._setDirty();
          },
 
          _onMouseDown: function () {
             if (!this._options.enabled) {
                return;
             }
-            this._isActiveByClick = true;
+           this._isActiveByClick = true;
          },
 
          _onMouseUp: function () {
@@ -160,12 +161,10 @@ define('js!SBIS3.CONTROLS.Button',
          },
 
          _onTouchEnd: function(e) {
-            var self = this;
-            this._isActiveByClick = false;
             /**
              * ipad имеет специфическую систему событий связанных с touch
              * onClick может произойти между onTouchStart и onTouchEnd, или
-             * в течение 300мс после onTouchEnd, или не произойти вообще
+             * в течение 1000мс после onTouchEnd, или не произойти вообще
              * + передаем контекст в setTimeout
              */
             setTimeout(function() {
@@ -173,7 +172,11 @@ define('js!SBIS3.CONTROLS.Button',
                   this._onMouseClick();
                   this._isTouchEnded = true;
                }
-            }.bind(this), 300);
+               this._isActiveByClick = false;
+               //т.к. появилась асинхронность, руками дернем флаг о перерисовке, чтобы кнопка
+               //не осталась "подвисшей"
+               this._setDirty();
+            }.bind(this), 1000);
          },
 
          _onKeyDown: function (e) {

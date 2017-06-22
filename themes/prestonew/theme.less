@@ -209,7 +209,7 @@ body {
       margin-right: 3rem;
     }
     .controls-DateBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
-      max-width: 4.4285rem;
+      max-width: 4.8285rem;
     }
 
     .controls-DateRange .controls-DateRange__Button .controls-Button__icon {
@@ -489,6 +489,9 @@ body  .ws-window {
 
 
 body {
+   .controls-TabButtons .controls-TabButtons__tabSpace-template {
+      height: 100%;//Только для offline из-за старого webkit
+   }
   .ws-window-titlebar-action.close {
      width: 3rem !important;
      height: 3rem !important;
@@ -668,7 +671,7 @@ body {
       padding: 0 0.3rem;
       .controls-FormattedTextBox__field {
          color: #cccccc;
-         height: 2.86rem;
+         height: 2.73rem;
       }
    }
 }
@@ -1030,6 +1033,16 @@ body .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-
 }
 .controls-DateRangeBigChoose__noBorder {
   border: none !important;
+}
+
+.controls-IconButton.controls-IconButton__round-border:not(.ws-disabled) {
+  border-color: #26B8FF;
+}
+.controls-IconButton:not(.ws-disabled) .controls-Button__icon {
+  color: #26B8FF;
+}
+.ws-is-desktop-platform .controls-IconButton:not(.ws-disabled):not(.controls-Click__active).controls-IconButton__round-border:hover {
+  border-color: #B9E9FF;
 }
 
 .controls-Suggest__picker {

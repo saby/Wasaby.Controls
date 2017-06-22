@@ -57,6 +57,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'Core/helpers/Object/isEmpty',
    'Core/Sanitize',
    'Core/WindowManager',
+   'js!SBIS3.CONTROLS.VirtualScrollController',
    'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
    'js!SBIS3.CONTROLS.DragEntity.Row',
    'js!WS.Data/Collection/RecordSet',
@@ -70,8 +71,7 @@ define('js!SBIS3.CONTROLS.ListView',
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, Pager, MassSelectionController, ImitateEvents,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager) {
-
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController) {
      'use strict';
 
       var
@@ -924,6 +924,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @deprecated
                 */
                useSelectAll: false,
+               virtualScrolling: false,
                //это использется для отображения аватарки драгндропа, она должна быть жекорированной ссылкой
                //временное решение пока не будет выпонена задача https://online.sbis.ru/debug/opendoc.html?guid=32162686-eee0-4206-873a-39bc7b4ca7d7&des=
                linkTemplateConfig: null,
@@ -996,6 +997,43 @@ define('js!SBIS3.CONTROLS.ListView',
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
             this._initLoadMoreButton();
+         },
+
+         _initVirtualScrolling: function(){
+            this._virtualScrollController = new VirtualScrollController({
+               view: this,
+               projection: this._getItemsProjection(),
+               viewport: this._getScrollWatcher().getScrollContainer(),
+               viewContainer: this.getContainer(),
+               itemsContainer: this._getItemsContainer()
+            });
+
+            this._topWrapper = $('.controls-ListView__virtualScrollTop', this.getContainer());
+            this._bottomWrapper = $('.controls-ListView__virtualScrollBottom', this.getContainer());
+
+            this.subscribeTo(this._virtualScrollController, 'onWindowChange', function(event, config){
+               var itemsToAdd = [],
+                  itemsToRemove = [],
+                  item;
+               for (var i = config.add[0]; i <= config.add[1]; i++) {
+                  item = this._getItemsProjection().at(i);
+                  if (item) {
+                     itemsToAdd.push(item);
+                  }
+               }
+               for (var i = config.remove[0]; i <= config.remove[1]; i++) {
+                  item = this._getItemsProjection().at(i);
+                  if (item) {
+                     itemsToRemove.push(item);
+                  }
+               }
+               this._addItems(itemsToAdd, config.addPosition);
+               this._removeItems(itemsToRemove);
+
+               this._topWrapper.height(config.topWrapperHeight);
+               this._bottomWrapper.height(config.bottomWrapperHeight);
+
+            }.bind(this));
          },
 
          _toggleEventHandlers: function(container, bind) {
@@ -1166,7 +1204,6 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _onScrollHandler: function(event, scrollTop){
             var itemActions = this.getItemsActions();
-
             if (itemActions && itemActions.isItemActionsMenuVisible()){
                itemActions.hide();
             }
@@ -1545,7 +1582,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var hoveredItem = this.getHoveredItem(),
                 emptyHoveredItem;
 
-            if (hoveredItem.container === null) {
+            if (hoveredItem && hoveredItem.container === null) {
                return;
             }
 
@@ -2766,6 +2803,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._scrollBinder && this._scrollBinder._updateScrollPages();
                   this._setScrollPagerPositionThrottled();
                }
+               if (this._virtualScrollController){
+                  this._virtualScrollController.updateVirtualPages();
+               }
             }
             /* Т.к. для редактирования нет parent'a, надо ресайц звать руками */
             if(this.isEdit()) {
@@ -2796,6 +2836,11 @@ define('js!SBIS3.CONTROLS.ListView',
             }
 
             ListView.superclass._onCollectionAddMoveRemove.apply(this, arguments);
+            
+            if (this._virtualScrollController) {
+               this._virtualScrollController.addItems(newItems, newItemsIndex);
+               this._virtualScrollController.removeItems(oldItems, oldItemsIndex);
+            }
 
             if (cDetection.firefox || cDetection.isMobileSafari) {
                this._fixScrollTop(action, newItems, newItemsIndex, oldItems, oldItemsIndex);
@@ -3153,7 +3198,11 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _getNextOffset: function(){
             if (this._infiniteScrollState.mode == 'down' || this._infiniteScrollState.mode == 'demand'){
-               return this._scrollOffset.bottom + this._limit;
+               if (this._getSourceNavigationType == 'Offset') {
+                  return Math.min(this._scrollOffset.bottom + this._limit, this._getItemsProjection().getCount());
+               } else {
+                  return this._scrollOffset.bottom + this._limit;
+               }
             } else {
                return this._scrollOffset.top - this._limit;
             }
@@ -3398,6 +3447,10 @@ define('js!SBIS3.CONTROLS.ListView',
             this._observeResultsRecord(true);
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
             this._needScrollCompensation = false;
+
+            if (this._options.virtualScrolling && !this._virtualScrollController) {
+               this._initVirtualScrolling();
+            }
          },
          _toggleIndicator: function(show){
             var self = this,
@@ -3910,7 +3963,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                   }
                }
-            }).bind(this)
+            }).bind(this);
          },
          /**
           * Получить текущую конфигурацию перемещения элементов с помощью DragNDrop.
