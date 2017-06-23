@@ -173,7 +173,7 @@ define('js!WSControls/Control/Base',
 
             //FROM COMPATIBLE
             isBuildVDom: function(){
-               return true;//this.iWantVDOM && window && this.isGoodContainer();
+               return BaseCompatible?BaseCompatible.isBuildVDom():true;
             },
 
             isEnabled: function(){
