@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.Clickable', [
    "Core/constants"
-], function( constants) {
+], function(constants) {
 
    if (typeof window !== 'undefined') {
       $(document).on("touchend  mouseup", function () {
@@ -114,8 +114,9 @@ define('js!SBIS3.CONTROLS.Clickable', [
                if (!this._isControlActive && this._options.activableByClick) {
                   this.setActive(true);
                }
-               // в IE11 (и только в нескольких минорных версиях) originalEvent.detail при первом клике может быть равен 0
-               if(!this._options.clickThrottle || (this._options.clickThrottle && e.originalEvent.detail <= 1)) {
+               /* в IE (и только в нескольких минорных версиях) originalEvent.detail выдаёт просто рандомное число, вместо кол-ва кликов
+                  https://connect.microsoft.com/IE/feedback/details/789773/ie-increments-event-detail-on-clicks-over-different-locations */
+               if(!this._options.clickThrottle || (this._options.clickThrottle && (e.originalEvent.detail === 1 || constants.browser.isIE))) {
                   this._clickHandler(e);
                   this._notifyOnActivated(e);
                }
