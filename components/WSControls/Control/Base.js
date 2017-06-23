@@ -140,8 +140,8 @@ define('js!WSControls/Control/Base',
                /**
                 * Опциями для декорирования могут быть лишь фиксированные опции
                 */
-               if (cfg['class']) {
-                  this._decOptions['class'] = cfg['class'];
+               if (cfg['class'] || cfg['className']) {
+                  this._decOptions['class'] = (cfg['class']?cfg['class']+' ':'') + (cfg['className']?cfg['className']:'');
                }
                if (cfg['style']) {
                   this._decOptions['style'] = cfg['style'];
