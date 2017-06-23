@@ -2652,6 +2652,14 @@ define('js!SBIS3.CONTROLS.ListView',
                            self.setSelectedKey(hoveredKey);
                         }
                      },
+                     onCloseItemActionsMenu: function() {
+                        /* на тач-устройствах по закрытию меню скрывается тулбар
+                           поэтому необходимо очистить выделенный элемент
+                         */
+                        if(self._touchSupport) {
+                           self._clearHoveredItem();
+                        }
+                     },
                      onItemActionActivated: function(e, key) {
                         self.setSelectedKey(key);
                         if(self._touchSupport) {
