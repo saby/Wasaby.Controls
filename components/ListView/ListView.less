@@ -151,10 +151,10 @@
    }
 }
 
-.controls-ListView__indicatorVisible {
+.controls-ListView__indicatorVisible:not(.ws-sticky-header__table-header-copy) {
    min-height: @list-view-scroll-height;
 
-   .controls-ListView-scrollIndicator {
+    > .controls-ListView-scrollIndicator {
       display: block;
    }
 }

@@ -152,7 +152,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                         }
                      }.bind(this);
                   }
-                  this._hideNativeScrollbar();
                }
                this._subscribeOnScroll();
 
@@ -308,15 +307,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                this._scrollbar.setPosition(scrollTop);
             }
             this.getContainer().toggleClass('controls-ScrollContainer__top-gradient', scrollTop > 0);
-         },
-
-         _hideNativeScrollbar: function(){
-            if (!cDetection.webkit && !cDetection.chrome){
-               var style = {
-                     marginRight: -this._getBrowserScrollbarWidth()
-                  };
-               this._content.css(style);
-            }
          },
 
          _getBrowserScrollbarWidth: function() {
