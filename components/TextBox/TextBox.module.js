@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
     * </ol>
     * @class SBIS3.CONTROLS.TextBox
     * @extends SBIS3.CONTROLS.TextBoxBase
-    * @author Крайнов Дмитрий Олегович
+    * @author Роман Валерий Сергеевич
     * @demo SBIS3.CONTROLS.Demo.MyTextBox
     *
     * @ignoreOptions independentContext contextRestriction className horizontalAlignment

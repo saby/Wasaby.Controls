@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
     * Контрол для экспорта в Excel, PDF  подготовленных данных
     * @class SBIS3.CONTROLS.OperationUnload
     * @extends SBIS3.CONTROLS.PrintUnloadBase
-    * @author Крайнов Дмитрий Олегович
+    * @author Сухоручкин Андрей Сергеевич
     * @control
     * @public
     */

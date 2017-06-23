@@ -63,7 +63,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * @class SBIS3.CONTROLS.SelectorButton
     * @extends WSControls/Buttons/Button
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Герасимов Александр Максимович
     *
     * @mixes SBIS3.CONTROLS.IconMixin
     * @mixes SBIS3.CONTROLS.MultiSelectable

@@ -99,7 +99,7 @@ define('js!SBIS3.CONTROLS.ListView',
        *
        * @class SBIS3.CONTROLS.ListView
        * @extends SBIS3.CORE.CompoundControl
-       * @author Крайнов Дмитрий Олегович
+       * @author Герасимов Александр Максимович
        *
        * @mixes SBIS3.CORE.CompoundActiveFixMixin
        * @mixes SBIS3.CONTROLS.DecorableMixin
