@@ -5,13 +5,32 @@ define([
    'js!SBIS3.CONTROLS.ToSourceModel',
    'js!WS.Data/Collection/List',
    'js!WS.Data/Source/SbisService',
-   'js!WS.Data/Collection/RecordSet'
-], function (ToSourceModel, List, SbisService, RecordSet) {
+   'js!WS.Data/Collection/RecordSet',
+   'js!WS.Data/Entity/Model'
+], function (ToSourceModel, List, SbisService, RecordSet, Model) {
    'use strict';
    
-   let dataSource = new SbisService();
+   /* Сделаем кастомную модель,
+      чтобы не совпадал _moduleName */
+   let customModel = Model.extend({
+      _moduleName: 'customModel',
+      _$properties: {
+         isCustom: {
+            get: function() {
+               return true;
+            }
+         }
+      }
+   });
+   
+   let dataSource = new SbisService({model: customModel});
    let list = new List();
    let recordSet = new RecordSet();
+   let model = new Model();
+   
+   list.add(new Model());
+   model.set('recordSet', recordSet);
+   recordSet._getMediator().addRelationship(model, recordSet, 'customRelationship');
    
    describe('SBIS3.CONTROLS.ToSourceModel', function () {
    
@@ -21,7 +40,7 @@ define([
             var res = true;
             
             try {
-               ToSourceModel(list, dataSource, '', true);
+               ToSourceModel(list.clone(), dataSource, '', true);
             } catch (e) {
                res = false;
             }
@@ -33,7 +52,7 @@ define([
             var res = true;
    
             try {
-               ToSourceModel(recordSet, dataSource, '', true);
+               ToSourceModel(recordSet.clone(), dataSource, '', true);
             } catch (e) {
                res = false;
             }
@@ -41,7 +60,20 @@ define([
             assert.equal(res, true);
          });
          
-      })
+      });
+   
+      describe('to source model', function () {
+      
+         it('check model by step', function() {
+            assert.equal(model.isChanged(), true);
+            model.acceptChanges();
+            assert.equal(model.isChanged(), false);
+            assert.equal(list.at(0)._moduleName,  'WS.Data/Entity/Model');
+            assert.equal(ToSourceModel(list, dataSource, '', true).at(0)._moduleName, 'customModel');
+            assert.equal(model.isChanged(), false);
+         });
+      
+      });
    
    })
 });
