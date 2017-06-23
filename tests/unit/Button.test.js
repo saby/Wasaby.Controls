@@ -20,8 +20,8 @@ define([
 
       var buttonPartial = new Button({ caption: "some<br>caption", hasPartial: true});
       describe('State', function() {
-         it('caption is function', function () {
-            assert.isTrue(typeof buttonPartial._options.caption === "function");
+         it('caption is string', function () {
+            assert.isTrue(typeof buttonPartial._options.caption === "string");
          });
       });
 
@@ -139,12 +139,18 @@ define([
          });
 
          it('ipadShortTapTimeout', function(done) {
+            var testEvent = false,
+               tempFunc = function(){
+                  testEvent = true;
+               };
+            button.subscribe('onPropertyChange', tempFunc);
             button._isActiveByClick = false;
             button._onTouchStart();
             button._onTouchEnd();
 
             setTimeout(function() {
                assert.isTrue(!button._isActiveByClick);
+               assert.isTrue(testEvent);
                done();
             }, 1100);
          });

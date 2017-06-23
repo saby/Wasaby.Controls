@@ -1,8 +1,9 @@
 define('js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers', [], function () {
    if (typeof $ != 'undefined') {
       $.event.special.swipe = {
-
-         xTreshold: 100,
+         // свайп уменьшили до 50px т.к. есть места где невозможно сделать свайп длиной 100px
+         // например прикрепленные файлы в заметках имеют меньший размер
+         xTreshold: 50,
          yTreshold: 25,
          scrollTreshold: 30,
          durTreshold: 600,

@@ -70,7 +70,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             CommandDispatcher.declareCommand(this, 'showMenu', this.showItemActionsMenu);
 
             this.once('onInit', function() {
-               this._itemActionsMenuButton = this._container.find('.controls-ItemActions__menu-button');
+               this._itemActionsMenuButton = this.getChildControlByName('itemActionsMenuButton');
             }.bind(this));
          },
          /**
@@ -119,8 +119,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             /* Если открыто меню, то не меняем состояние кнопки меню */
             if(this.isItemActionsMenuVisible()) return;
 
-            //TODO: Это не будет работать с VDom
-            this._itemActionsMenuButton[onlyMain ? 'addClass' : 'removeClass']('ws-hidden');
+            this._itemActionsMenuButton.setVisible(!onlyMain);
          },
 
 
@@ -164,7 +163,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             } else {
                verticalAlign = STANDART_ALIGN.verticalAlign;
                horizontalAlign = STANDART_ALIGN.horizontalAlign;
-               target = this._itemActionsMenuButton;
+               target = this._itemActionsMenuButton.getContainer();
             }
 
             menuClassName += parentContainer.hasClass('controls-ItemsToolbar__small') ? ' controls-ItemsToolbar__small' : '';
@@ -344,7 +343,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                if(mode) {
                   this.setMenuAlign(TOUCH_ALIGN, this._container);
                } else {
-                  this.setMenuAlign(STANDART_ALIGN, this._itemActionsMenuButton);
+                  this.setMenuAlign(STANDART_ALIGN, this._itemActionsMenuButton.getContainer());
                }
             }
          },
@@ -357,7 +356,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                   this.setMenuAlign(align, undefined);
                   this._menuAlign = 'context';
                } else if(this._menuAlign != 'standart') {
-                  this.setMenuAlign(STANDART_ALIGN, this._itemActionsMenuButton);
+                  this.setMenuAlign(STANDART_ALIGN, this._itemActionsMenuButton.getContainer());
                   this._menuAlign = 'standart';
                }
             }
@@ -398,7 +397,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          destroy: function() {
             this._itemActionsButtons = {};
             this._activeItem = undefined;
-            this._itemActionsMenuButton = undefined;
+            this._itemActionsMenuButton.destroy();
             ItemActionsGroup.superclass.destroy.apply(this, arguments);
          }
       });

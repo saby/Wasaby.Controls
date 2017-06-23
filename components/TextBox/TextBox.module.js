@@ -501,7 +501,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _getInputValue: function() {
-         return this._inputField.val();
+         return this._inputField && this._inputField.val();
       },
       _setInputValue: function(value) {
          this._inputField.val(value);

@@ -98,6 +98,7 @@ define('js!WSControls/VDOM/Main/Main', [
          },
          onChangeFilter: function (event, filter) {
             this._filter = filter;
+            this._save();
          },
          clearCompleted: function () {
             //можно заменить на мутабельный алгоритм
