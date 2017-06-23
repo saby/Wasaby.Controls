@@ -3,9 +3,10 @@
  */
 define([
    'js!WSControls/Control/Base',
-   'Core/vdom/Synchronizer/resources/SyntheticEvent'
+   'Core/vdom/Synchronizer/resources/SyntheticEvent',
+   'js!WSControls/Tests/TestSubControls/TestSubControlParent'
 ], function (
-   Base, SyntheticEvent
+   Base, SyntheticEvent, Parent
 ) {
    'use strict';
 
@@ -53,6 +54,10 @@ define([
          it('_applyChangedOptions', function () {
             baseDis._applyChangedOptions({enabled: true});
             assert.isTrue(baseDis.isEnabled());
+         });
+
+         it('SubControls', function() {
+            var parentControl = new Parent({});
          });
 
       });
