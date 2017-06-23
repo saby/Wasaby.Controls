@@ -139,12 +139,18 @@ define([
          });
 
          it('ipadShortTapTimeout', function(done) {
+            var testEvent = false,
+               tempFunc = function(){
+                  testEvent = true;
+               };
+            button.subscribe('onPropertyChange', tempFunc);
             button._isActiveByClick = false;
             button._onTouchStart();
             button._onTouchEnd();
 
             setTimeout(function() {
                assert.isTrue(!button._isActiveByClick);
+               assert.isTrue(testEvent);
                done();
             }, 1100);
          });
