@@ -52,6 +52,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
                   this.getParent()._execCommand(key);
                }
             },
+            idProperty: 'key',
             order: 20
          },
 
@@ -98,6 +99,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
                   this.getParent()._insertSmile(key);
                }
             },
+            idProperty: 'key',
             order: 50
          },
          {
@@ -113,6 +115,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
                   this.getParent()._setText(this.getItems().getRecordById(key).get('value'));
                }
             },
+            idProperty: 'key',
             order: 60
          }
       ];
