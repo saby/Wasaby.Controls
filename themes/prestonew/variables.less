@@ -68,6 +68,7 @@
 @icon-button-edit-round-border-width:     @icon-large-size;
 @icon-button-edit-round-border-line-height:@icon-large-size;
 @list-view-items-toolbar-icon-button-border-font:'carrypresto-icons';
+@listView-empty-data-padding-top:         1.9285rem;
 //Button
 @button-height:                           3rem;
 @button-font-size:                        1.42rem;
@@ -190,7 +191,7 @@
 @switcher-height:                         1.7857rem;
 @switcher-btn-radius:							1rem;
 @switcher-btn-bg-color:                   #FF7033;
-@switcher-btn-color-inactive:					@disabled-color;
+@switcher-btn-color-inactive:					transparent;
 @switcher-line-color:							@disabled-color;
 @switcher-border:                         .07rem solid #2C4458;
 @switcherline-height:                     .1rem;
@@ -201,6 +202,7 @@
 @switcher-btn-margin:							.357rem;
 @switcher-border-radius:						1rem;
 @switcher-btn-color:                      #FF7033;
+@switcher-btn-bg-color-disabled:          @gray-color;
 @switcher-do-horizontal-line-background-color:@disabled-color;
 @switcher-do-text-color:                  @white-color;
 @switcher-do-unselected-text-color:       @disabled-color;
@@ -297,91 +299,66 @@
 @number-text-box-arrow-down-hover-border-color:darken(@primary-color, 10%) transparent transparent transparent;
 @number-text-box-arrow-down-disabled-bg:  @number-text-box-arrow-down-bg;
 @number-text-box-arrow-down-disabled-border-width:    0;
-
 // DateBox
-
-@date-box-wrapper-border-color:                       @text-box-border-color @text-box-border-color @text-box-bottom-border-color @text-box-border-color; // @default-border-color
-@date-box-field-text-color:                           @default-text-color;
-
-
+@date-box-wrapper-border-color:           @text-box-border-color @text-box-border-color @text-box-bottom-border-color @text-box-border-color; // @default-border-color
+@date-box-field-text-color:               @default-text-color;
 // Search form
-
-@search-form-field-wrapper-margin-right:              5.3rem;
-@search-button-wrapper-padding:							   0 .5rem 0 0;
-@search-buttons-wrapper-width:                        auto;
-@search-loop-size:                                    2rem;
-@search-background:                                   rgba(150, 159, 168, 0.15);
-@search-disabled-background:                          @text-box-disabled-bg;
-@search-border-color:                                 transparent;
-@search-hover-border-color:                           rgba(150, 159, 168, 0.40);
-@search-bottom-border-color:                          transparent;
-@search-form-icon-padding:                            .7rem .4rem .4rem 0;
-@search-focus-background:                             rgba(150, 159, 168, 0.15);
+@search-form-field-wrapper-margin-right:  5.3rem;
+@search-button-wrapper-padding:				0 .5rem 0 0;
+@search-buttons-wrapper-width:            auto;
+@search-loop-size:                        2rem;
+@search-background:                       rgba(150, 159, 168, 0.15);
+@search-disabled-background:              @text-box-disabled-bg;
+@search-border-color:                     transparent;
+@search-hover-border-color:               rgba(150, 159, 168, 0.40);
+@search-bottom-border-color:              transparent;
+@search-form-icon-padding:                .7rem .4rem .4rem 0;
+@search-focus-background:                 rgba(150, 159, 168, 0.15);
+@search-form-border-disabled-width:       @default-border-width;
+@search-form-icon-disabled-display:       block;
 //  Combo box
-
-
-@combo-box-arrow-spritesheet:                   '';
-@combo-box-picker-item-font-size: 1.14rem;
-@combo-box-arrow-width:                         3rem;
-@combo-box-arrow-height:                        3rem;
-@combo-box-arrow-line-height:                   3rem;
-@combo-box-arrow-border-color:                  @primary-color transparent transparent transparent;
-@combo-box-arrow-bg:                            transparent;
-
-@combo-box-arrow-hover-border-color:            darken(@primary-color, 10%) transparent transparent transparent;
-@combo-box-arrow-hover-bg:                      @combo-box-arrow-bg;
-
-
-@combo-box-arrow-active-border-color:           transparent transparent @primary-color transparent;
-@combo-box-field-text-color : 					@default-text-color;
-@combo-box-arrow-active-hover-border-color:     transparent transparent darken(@primary-color, 10%) transparent;
-@combo-box-arrow-active-hover-bg:               @combo-box-arrow-active-bg;
-
-
-@combo-box-arrow-disabled-border-color:         transparent;
-@combo-box-disabled-border-width:               0;
-@combo-box-disabled-border-bottom-color:        @default-text-color;
-@combo-box-disabled-color:                      #38495B;
-
-@combo-box-picker-item-padding:                 1.14rem 0.57rem 1.14rem 0.57rem;
-@text-box-field-font-size: 1.43rem;
-@combo-box-picker-item-bg:                      #f0f5fb;
-@combo-box-picker-item-text-color               : #324352;
-@combo-box-picker-item-hover-text-color:        @black-color;
-@combo-box-picker-item-hover-bg:                #e0ecf5;
-
-@combo-box-picker-item-selected-bg:             @combo-box-picker-item-bg;
-
-@compo-box-fieldWrapper-margin-right:           3rem;
-@combo-box-after-width:                         3rem;
-
-
+@combo-box-arrow-spritesheet:             '';
+@combo-box-picker-item-font-size:         1.14rem;
+@combo-box-arrow-width:                   3rem;
+@combo-box-arrow-height:                  3rem;
+@combo-box-arrow-line-height:             3rem;
+@combo-box-arrow-border-color:            @primary-color transparent transparent transparent;
+@combo-box-arrow-bg:                      transparent;
+@combo-box-arrow-hover-border-color:      darken(@primary-color, 10%) transparent transparent transparent;
+@combo-box-arrow-hover-bg:                @combo-box-arrow-bg;
+@combo-box-arrow-active-border-color:     transparent transparent @primary-color transparent;
+@combo-box-field-text-color : 				@default-text-color;
+@combo-box-arrow-active-hover-border-color:transparent transparent darken(@primary-color, 10%) transparent;
+@combo-box-arrow-active-hover-bg:         @combo-box-arrow-active-bg;
+@combo-box-arrow-disabled-border-color:   transparent;
+@combo-box-disabled-border-width:         0;
+@combo-box-disabled-border-bottom-color:  @default-text-color;
+@combo-box-disabled-color:                #38495B;
+@combo-box-picker-item-padding:           1.14rem 0.57rem 1.14rem 0.57rem;
+@text-box-field-font-size:                1.43rem;
+@combo-box-picker-item-bg:                #f0f5fb;
+@combo-box-picker-item-text-color:        #324352;
+@combo-box-picker-item-hover-text-color:  @black-color;
+@combo-box-picker-item-hover-bg:          #e0ecf5;
+@combo-box-picker-item-selected-bg:       @combo-box-picker-item-bg;
+@compo-box-fieldWrapper-margin-right:     3rem;
+@combo-box-after-width:                   3rem;
 // Text area
-
-
-@text-area-field-line-height:                   1.4rem;
-
-
-@text-area-border-color:                        @gray-dark-color;
-
-
-@text-area-focus-border-color:                  @gray-dark-color;
-@text-area-focus-bg:                            @text-box-focus-bg;
-
-
+@text-area-field-line-height:             1.4rem;
+@text-area-border-color:                  @gray-dark-color;
+@text-area-focus-border-color:            @gray-dark-color;
+@text-area-focus-bg:                      @text-box-focus-bg;
 // Suggest
-
-
-@suggest-picker-border:                         0.07rem solid @gray-color;
-@suggest-picker-margin:                         -.1rem;
+@suggest-picker-border:                   0.07rem solid @gray-color;
+@suggest-picker-margin:                   -.1rem;
 
 @suggest-list-item-hover-bg:              #f3f3f3;
 @suggest-list-item-selected-bg:           darken(@suggest-list-item-hover-bg, 5%);
 //Date picker
-@date-picker-calendar-icon-top-offset:          0;
-@date-picker-calendar-icon-left-offset:         0;
-@date-picker-calendar-icon-height: 				   3rem;
-@date-picker-calendar-icon-width: 				   2.786rem;
+@date-picker-calendar-icon-top-offset:    0;
+@date-picker-calendar-icon-left-offset:   0;
+@date-picker-calendar-icon-height: 			3rem;
+@date-picker-calendar-icon-width: 			2.786rem;
 //Calendar
 @calendar-width:                          auto;
 @calendar-bg:                             @basic-block-bg-color;
@@ -508,6 +485,8 @@
 @date-range-big-choose-month-range-picker-caption-font-size:1.14rem;
 @date-range-big-choose-month-range-picker-table-element-height:.57rem;
 @date-range-big-choose-month-range-picker-table-element-font-size:.43rem;
+@date-range-big-choose-month-range-padding:0.2857rem;
+@date-range-big-choose-quarters-half-years-font-size:inherit;
 //Edit at place
 @edit-at-place-wrapper-text-area-padding: 0 .1785rem;
 @edit-at-place-wrapper-border-width:      .0357rem;
@@ -549,9 +528,9 @@
 @tree-view-expand-spritesheet:            '';
 @tree-view-expand-width:                  1.7857rem;
 @tree-view-expand-height:                 auto;
-@tree-view-expand-color:                        @gray-lamantin-color;
-@tree-view-expand-hover-color:                  @darkcyan-color;
-@tree-view-expand-hidden-color:                 @gray-lamantin-color;
+@tree-view-expand-color:                  @gray-lamantin-color;
+@tree-view-expand-hover-color:            @darkcyan-color;
+@tree-view-expand-hidden-color:           @gray-lamantin-color;
 
 @tree-view-expand-icon-size:              1.7857rem;
 @tree-view-level-padding:                 2.0714rem;
@@ -696,7 +675,7 @@
 //Scrollbar
 @controls-Scrollbar-width:                .357rem;
 @controls-Scrollbar-thumb-border-radius:  .179rem;
-@controls-Scrollbar-min-height:            3.571rem;
+@controls-Scrollbar-min-height:           3.571rem;
 @controls-Scrollbar-thumb-margin:         0.286rem 0;
 @controls-Scrollbar-dark-hover-thumb-color:rgba(255, 255, 255, 0.10);
 @controls-Scrollbar-dark-active-thumb-color:rgba(255, 255, 255, 0.15);

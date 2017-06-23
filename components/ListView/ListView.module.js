@@ -27,7 +27,6 @@ define('js!SBIS3.CONTROLS.ListView',
    'tmpl!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'js!SBIS3.CONTROLS.CommonHandlers',
-   'js!SBIS3.CONTROLS.Pager',
    'js!SBIS3.CONTROLS.MassSelectionController',
    'js!SBIS3.CONTROLS.ImitateEvents',
    'js!SBIS3.CONTROLS.Link',
@@ -69,7 +68,7 @@ define('js!SBIS3.CONTROLS.ListView',
 ],
    function (cMerge, cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, CompoundActiveFixMixin, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
-    TemplateUtil, CommonHandlers, Pager, MassSelectionController, ImitateEvents,
+    TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
     Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController) {
      'use strict';
@@ -3113,7 +3112,7 @@ define('js!SBIS3.CONTROLS.ListView',
                }
 
                var loadId = this._loadId++;
-               this._loadQueue[loadId] = this._infiniteScrollState;
+               this._loadQueue[loadId] = cFunctions.clone(this._infiniteScrollState);
 
                this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit)
                   .addBoth(fHelpers.forAliveOnly(function(res) {
@@ -3495,49 +3494,58 @@ define('js!SBIS3.CONTROLS.ListView',
             this._processPagingStandart();
          },
          _processPagingStandart: function () {
+            var self = this;
+            
             if (!this._pager) {
-               var more = this.getItems().getMetaData().more,
-                  hasNextPage = this._hasNextPage(more),
-                  pagingOptions = {
-                     recordsPerPage: this._options.pageSize || more,
-                     currentPage: 1,
-                     recordsCount: more,
-                     pagesLeftRight: 1,
-                     onlyLeftSide: typeof more === 'boolean', // (this._options.display.usePaging === 'parts')
-                     rightArrow: hasNextPage
-                  },
-                  pagerContainer = this.getContainer().find('.controls-Pager-container').append('<div/>'),
-                  self = this;
-
-               this._pager = new Pager({
-                  pageSize: this._options.pageSize,
-                  opener: this,
-                  element: pagerContainer.find('div'),
-                  allowChangeEnable: false, //Запрещаем менять состояние, т.к. он нужен активный всегда
-                  pagingOptions: pagingOptions,
-                  handlers: {
-                     'onPageChange': function (event, pageNum, deferred) {
-                        var more = self.getItems().getMetaData().more,
-                            hasNextPage = self._hasNextPage(more, self._scrollOffset.bottom),
-                            maxPage = self._pager.getPaging()._maxPage;
-                        self._pager._lastPageReached = self._pager._lastPageReached || !hasNextPage;
-                        //Старый Paging при включенной частичной навигации по нажатию кнопки "Перейти к последней странице" возвращает pageNum = 0 (у него индексы страниц начинаются с 1)
-                        //В новом Pager'e индексация страниц начинается с 0 и такое поведение здесь не подходит
-                        //Так же в режиме частичной навигации нет возможности высчитать номер последней страницы, поэтому
-                        //при переходе к последней странице делаем так, чтобы мы переключились на последнюю доступную страницу.
-                        if (pageNum == 0 && self._pager._options.pagingOptions.onlyLeftSide){
-                           pageNum = self._pager._lastPageReached ? maxPage : (maxPage + 1);
-                        }
-
-                        self._setPageSave(pageNum);
-                        self.setPage(pageNum - 1);
-                        self._pageChangeDeferred = deferred;
-                     }
+               requirejs(['js!SBIS3.CONTROLS.Pager'], function(pagerCtr) {
+                  if(self._pager || self.isDestroyed()) {
+                     return;
                   }
+                  
+                  var more = self.getItems().getMetaData().more,
+                     hasNextPage = self._hasNextPage(more),
+                     pagingOptions = {
+                        recordsPerPage: self._options.pageSize || more,
+                        currentPage: 1,
+                        recordsCount: more,
+                        pagesLeftRight: 1,
+                        onlyLeftSide: typeof more === 'boolean', // (this._options.display.usePaging === 'parts')
+                        rightArrow: hasNextPage
+                     },
+                     pagerContainer = self.getContainer().find('.controls-Pager-container').append('<div/>');
+   
+                  self._pager = new pagerCtr({
+                     pageSize: self._options.pageSize,
+                     opener: self,
+                     element: pagerContainer.find('div'),
+                     allowChangeEnable: false, //Запрещаем менять состояние, т.к. он нужен активный всегда
+                     pagingOptions: pagingOptions,
+                     handlers: {
+                        'onPageChange': function (event, pageNum, deferred) {
+                           var more = self.getItems().getMetaData().more,
+                              hasNextPage = self._hasNextPage(more, self._scrollOffset.bottom),
+                              maxPage = self._pager.getPaging()._maxPage;
+                           self._pager._lastPageReached = self._pager._lastPageReached || !hasNextPage;
+                           //Старый Paging при включенной частичной навигации по нажатию кнопки "Перейти к последней странице" возвращает pageNum = 0 (у него индексы страниц начинаются с 1)
+                           //В новом Pager'e индексация страниц начинается с 0 и такое поведение здесь не подходит
+                           //Так же в режиме частичной навигации нет возможности высчитать номер последней страницы, поэтому
+                           //при переходе к последней странице делаем так, чтобы мы переключились на последнюю доступную страницу.
+                           if (pageNum == 0 && self._pager._options.pagingOptions.onlyLeftSide){
+                              pageNum = self._pager._lastPageReached ? maxPage : (maxPage + 1);
+                           }
+                     
+                           self._setPageSave(pageNum);
+                           self.setPage(pageNum - 1);
+                           self._pageChangeDeferred = deferred;
+                        }
+                     }
+                  });
+                  self._pagerContainer = self.getContainer().find('.controls-Pager-container');
+                  self._updatePaging();
                });
-               self._pagerContainer = self.getContainer().find('.controls-Pager-container');
+            } else {
+               this._updatePaging();
             }
-            this._updatePaging();
          },
          _getQueryForCall: function(filter, sorting, offset, limit){
             var
