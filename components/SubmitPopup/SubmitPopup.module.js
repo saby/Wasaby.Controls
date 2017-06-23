@@ -2,6 +2,7 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
    "Core/constants",
    "js!SBIS3.CONTROLS.InformationPopup",
    "html!SBIS3.CONTROLS.SubmitPopup/resources/template",
+   'Core/Sanitize',
    "js!SBIS3.CONTROLS.Button",
    "js!SBIS3.CONTROLS.Link",
    'css!SBIS3.CONTROLS.SubmitPopup'
@@ -16,7 +17,7 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
     * @public
     * @author Степин Павел Владимирович
     */
-   function( constants,InformationPopup, template){
+   function(constants, InformationPopup, template, sanitize){
       'use strict';
 
       var SubmitPopup = InformationPopup.extend(/** @lends SBIS3.CONTROLS.SubmitPopup.prototype */ {
@@ -55,12 +56,12 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
                 */
                status: 'default',
                /**
-                * @cfg {String} Устанавливает отображаемое в диалоге сообщение.
+                * @cfg {String} Устанавливает отображаемое в диалоге сообщение. (Не предназначено для верстки!)
                 * @see details
                 */
                message: '',
                /**
-                * @cfg {String} Устанавливает детали сообщения, которые отображаются под основным сообщением (см. {@link message}).
+                * @cfg {String} Устанавливает детали сообщения, которые отображаются под основным сообщением (см. {@link message}) (Не предназначено для верстки!).
                 * @see message
                 */
                details: '',
@@ -159,6 +160,15 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
          },
          $constructor : function(){
             this._publish('onChoose');
+         },
+
+         _modifyOptions: function(){
+            var options = SubmitPopup.superclass._modifyOptions.apply(this, arguments);
+
+            options.message = sanitize(options.message);
+            options.details = sanitize(options.details);
+
+            return options;
          },
 
          init : function() {

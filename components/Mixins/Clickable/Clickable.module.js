@@ -114,7 +114,8 @@ define('js!SBIS3.CONTROLS.Clickable', [
                if (!this._isControlActive && this._options.activableByClick) {
                   this.setActive(true);
                }
-               if(!this._options.clickThrottle || (this._options.clickThrottle && e.originalEvent.detail === 1)) {
+               // в IE11 (и только в нескольких минорных версиях) originalEvent.detail при первом клике может быть равен 0
+               if(!this._options.clickThrottle || (this._options.clickThrottle && e.originalEvent.detail >= 1)) {
                   this._clickHandler(e);
                   this._notifyOnActivated(e);
                }

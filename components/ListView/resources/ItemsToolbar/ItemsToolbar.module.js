@@ -133,7 +133,11 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                       if (self._isEditActionsHidden()) {
                          self.unlockToolbar();
                       }
-                      self._target ? self.show(self._target) : self.hide();
+                      if(self._target && !self._options.touchMode){
+                          self.show(self._target);
+                      }else {
+                          self.hide();
+                      }
                    }
                 }
              });
@@ -343,13 +347,11 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              var position = target.position,
                  size = target.size,
                  $parentContainer = this.getParent().getContainer(),
-                 parentContainer = $parentContainer[0],
                  isVertical = target.container.hasClass('js-controls-CompositeView__verticalItemActions'),
-                 marginRight = parentContainer.offsetWidth - (position.left + size.width),
-                 marginTop = position.top,
-                 marginBottom = parentContainer.offsetHeight - (position.top + size.height),
+                 marginRight = $parentContainer[0].offsetWidth - (position.left + size.width),
+                 marginBottom = $parentContainer[0].offsetHeight - (position.top + size.height),
                  $container = this.getContainer(),
-                 isHidden = !this.isVisible();
+                 containerHeight;
 
              if(marginRight < 0 && !isVertical) {
                 marginRight = 0;
@@ -357,14 +359,9 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
 
              if(this._cachedMargin || $parentContainer.hasClass('controls-ListView__bottomStyle')) {
                 if(!this._cachedMargin) {
-                   if (isHidden) {
-                      $container.addClass('ws-invisible').removeClass('ws-hidden');
-                   }
-                   
-                   this._cachedMargin = $container.height() + parseInt($container.css('bottom'), 10) + parseInt($container.css('border-bottom-width'), 10);
-                   
-                   if (isHidden) {
-                      $container.removeClass('ws-invisible').addClass('ws-hidden');
+                   containerHeight = $container.height();
+                   if(containerHeight) {
+                      this._cachedMargin = containerHeight + parseInt($container.css('bottom'), 10) + parseInt($container.css('border-bottom-width'), 10);
                    }
                 }
                 marginBottom -= this._cachedMargin;
@@ -373,7 +370,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              this.getContainer()[isVertical ? 'addClass' : 'removeClass']('controls-ItemsToolbar__vertical');
              return {
                 'marginRight' : marginRight,
-                'marginTop' : marginTop,
+                'marginTop' : position.top,
                 'marginBottom': marginBottom
              };
           },
@@ -386,7 +383,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              var container = this.getContainer()[0],
                  isActionsHidden = this._isItemsActionsHidden() && this._isEditActionsHidden(),
                  hasItemsActions = this._options.itemsActions.length,
-                 itemsActions, position, toolbarContent;
+                 itemsActions, toolbarContent;
 
              this._target = target;
              //Если тулбар зафиксирован или отсутствуют опции записи и кнопки редактирования по месту, то ничего не делаем
@@ -414,10 +411,10 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              if (hasItemsActions) {       // Если имеются опции записи, то создаем их и отображаем
                 this.showItemsActions(target);
              }
-             // Рассчитываем и устанавливаем позицию тулбара
-             position = this._getPosition(target);
-             this._setPosition(position);
+
              this.getContainer().removeClass('ws-hidden');
+             this._setPosition(this._getPosition(target));
+             
              this._isVisible = true;
              //Если режим touch, то отображаем тулбар с анимацией.
              if (this._options.touchMode) {

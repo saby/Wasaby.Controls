@@ -540,7 +540,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
              var actionCfg = {
                    selectionType: selectionType,
                    selectedItems: this.getSelectedItems(),
-                   multiselect: this.getMultiselect()
+                   multiselect: this.getMultiselect(),
+                   opener: this
                 },
                 cfg;
 
@@ -772,7 +773,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
           }, '_getLinkCollection'),
           
           _getInputMinWidth: fHelpers.memoize(function() {
-             return parseInt(this.getContainer().find('.controls-TextBox__fieldWrapper').css('min-width'));
+             var fieldWrapper = this.getContainer().find('.controls-TextBox__fieldWrapper');
+             return parseInt(window.getComputedStyle(fieldWrapper[0]).getPropertyValue('--min-width') || fieldWrapper.css('min-width'));
           }, '_getInputMinWidth'),
 
           /** Обработчики событий контрола отрисовки элементов **/
@@ -852,11 +854,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
           },
           _onItemActivateItemsCollection: function(event, key) {
-             this.getSelectedItems(false).each(function(item) {
-                if(item.get(this._options.idProperty) == key) {
-                   this._notify('onItemActivate', {item: item, id: key});
-                }
-             }, this)
+             ItemsSelectionUtil.onItemClickNotify.call(this, key);
           },
           /**************************************************************/
 

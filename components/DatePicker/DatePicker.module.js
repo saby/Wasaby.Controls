@@ -207,8 +207,14 @@ define(
                this._pickerContent.setTime(this.getDate());
             }
 
-            this._pickerContent.subscribe('onChangeTimeEnd', this.hidePicker.bind(this));
+            this._pickerContent.subscribe('onChangeTimeEnd', this._changeTimeEndHandler.bind(this));
          }
+      },
+
+      _changeTimeEndHandler: function() {
+      	this.hidePicker();
+      	// При выборе даты через TimePicker после его закрытия считаем, что закончили выбор даты. Значит нужно стрельнуть событием onDateSelect.
+      	this._notify('onDateSelect');
       },
 
       _setEnabled : function(enabled) {
