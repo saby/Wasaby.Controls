@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              _cachedMargin: null
           },
           $constructor: function() {
-             this._publish('onShowItemActionsMenu', 'onItemActionActivated');
+             this._publish('onShowItemActionsMenu', 'onCloseItemActionsMenu', 'onItemActionActivated');
           },
           /**
            * Создает или возвращает уже созданные кнопки редактирования
@@ -138,6 +138,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                       }else {
                           self.hide();
                       }
+                       self._notify('onCloseItemActionsMenu');
                    }
                 }
              });
