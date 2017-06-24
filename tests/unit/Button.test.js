@@ -128,29 +128,26 @@ define([
          });
 
          it('addClassCompatible', function() {
-            var container = button.getContainer();
-            container.addClass('compatibleTest');
+            button._options.class = '';
+            button._addClassCompatible('compatibleTest');
             assert.isTrue(button._options.class.indexOf("compatibleTest") != -1);
          });
 
          it('removeClassCompatible', function() {
-            var container = button.getContainer();
-            button._options.class += 'compatible';
-            container.removeClass('compatibleTest');
-            assert.isTrue(button._options.class.indexOf('compatibleTest') == -1);
+            button._options.class = 'compatibleTest2 compatibleTest';
+            button._removeClassCompatible('compatibleTest2');
+            assert.isTrue(button._options.class.indexOf('compatibleTest2') == -1);
          });
 
          it('toggleClassCompatibleAdd', function() {
-            var container = button.getContainer();
             button._options.class = '';
-            container.toggleClass('compatibleTest');
+            button._toggleClassCompatible('compatibleTest');
             assert.isTrue(button._options.class.indexOf("compatibleTest") != -1);
          });
 
          it('toggleClassCompatibleRemove', function() {
-            var container = button.getContainer();
             button._options.class = 'compatibleTest';
-            container.toggleClass('compatibleTest');
+            button._toggleClassCompatible('compatibleTest');
             assert.isTrue(button._options.class.indexOf("compatibleTest") == -1);
          });
 
