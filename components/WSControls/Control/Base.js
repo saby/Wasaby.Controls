@@ -124,6 +124,9 @@ define('js!WSControls/Control/Base',
             },
 
             _getMarkup: function(rootKey) {
+               if (BaseCompatible) {
+                  return BaseCompatible._getMarkup.call(this, rootKey);
+               }
                var decOpts = this._getDecOptions();
                return this._template(this, decOpts, rootKey, true)[0];
             },
@@ -145,6 +148,9 @@ define('js!WSControls/Control/Base',
                }
                if (cfg['style']) {
                   this._decOptions['style'] = cfg['style'];
+               }
+               if (cfg['data-component']) {
+                  this._decOptions['data-component'] = cfg['data-component'];
                }
             },
 
