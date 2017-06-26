@@ -128,8 +128,8 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
                   }
                   i++;
                }
-               href = linkChild ? getAttribute(linkChild, 'alt') : getAttribute(linkNode, 'href');
-               node = new Parser.Node({childNodes: [], parentNode: content, text : href , nodeType: 3});
+               href = (linkChild ? getAttribute(linkChild, 'alt') : getAttribute(linkNode, 'href')) || '';
+               node = new Parser.Node({childNodes: [], parentNode: content, text : href , nodeType: 3 , nodeValue: href});
                content.childNodes[index] = node;
             };
 
