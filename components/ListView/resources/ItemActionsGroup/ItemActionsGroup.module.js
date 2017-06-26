@@ -204,6 +204,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          showItemActionsMenu: function(align) {
             var self = this;
             
+            //TODO перейти на menuIcon при переводе операций на Vdom
             requirejs(["js!SBIS3.CONTROLS.ContextMenu"], function(menu) {
                /* Создадим меню операций над записью, если его ещё нет */
                if(!self._itemActionsMenu) {
