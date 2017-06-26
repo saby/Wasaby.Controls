@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
     * @extends SBIS3.CONTROLS.WSButtonBase
     * @mixes SBIS3.CONTROLS.IconMixin
     * @demo SBIS3.CONTROLS.Demo.MyIconButton
-    * @author Борисов Петр Сергеевич
+    * @author Романов Валерий Сергеевич
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
@@ -74,6 +74,13 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
       _onMouseClick: function(e) {
          if (this._isTouchEnded) {
             this._isTouchEnded = false;
+            /**
+             * Если клик обработали на touchend - надо его стопнуть
+             */
+            if (e && e.stopImmediatePropagation) {
+               // если не остановить, будет долетать до области, а у нее обработчик на клик - onBringToFront. фокус будет улетать не туда
+               e.stopImmediatePropagation();
+            }
             return;
          }
          this._isWaitingClick = false;

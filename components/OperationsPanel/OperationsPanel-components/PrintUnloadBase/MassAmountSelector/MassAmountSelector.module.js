@@ -5,12 +5,13 @@ define('js!SBIS3.CONTROLS.MassAmountSelector', [
    "Core/helpers/fast-control-helpers",
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.MassAmountSelector',
+   'js!SBIS3.CONTROLS.Utils.InformationPopupManager',
    'js!SBIS3.CONTROLS.RadioGroup',
    'js!SBIS3.CONTROLS.NumberTextBox',
    'js!SBIS3.CONTROLS.Button',
    'i18n!SBIS3.CONTROLS.MassAmountSelector',
    'css!SBIS3.CONTROLS.MassAmountSelector'
-], function(fcHelpers, Control, dotTplFn) {
+], function(fcHelpers, Control, dotTplFn, InformationPopupManager) {
 
    var MassAmountSelector = Control.extend({
 
@@ -46,7 +47,10 @@ define('js!SBIS3.CONTROLS.MassAmountSelector', [
                parent.setResult(numericValue);
                parent.ok();
             } else {
-               fcHelpers.alert(rk('Для завершения обработки команды вам необходимо указать количество записей'));
+               InformationPopupManager.showMessageDialog({
+                  message: rk('Для завершения обработки команды вам необходимо указать количество записей'),
+                  status: 'error'
+               });
             }
          });
       },

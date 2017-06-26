@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.Link', [
     *
     * @class SBIS3.CONTROLS.Link
     * @extends WSControls/Buttons/ButtonBase
-    * @author Крайнов Дмитрий Олегович
+    * @author Романов Валерий Сергеевич
     *
     * @demo SBIS3.CONTROLS.Demo.MyLink
     *

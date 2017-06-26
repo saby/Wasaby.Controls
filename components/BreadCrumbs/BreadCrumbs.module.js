@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
     * @class SBIS3.CONTROLS.BreadCrumbs
     * @extends SBIS3.CORE.CompoundControl
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Черемушкин Илья Вячеславович
     *
     * @mixes SBIS3.CONTROLS.DSMixin
     * @mixes SBIS3.CONTROLS.PickerMixin

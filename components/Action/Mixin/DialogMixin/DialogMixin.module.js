@@ -18,38 +18,48 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
     * @author Крайнов Дмитрий Олегович
     */
    var DialogMixin = /** @lends SBIS3.CONTROLS.Action.DialogMixin.prototype */{
+       /**
+        * @event onAfterShow Происходит перед отображением диалога.
+        * @see onBeforeShow
+        */
+       /**
+        * @event onBeforeShow Происходит после отображения диалога.
+        * @see onAfterShow
+        */
       $protected : {
          _options : {
             /**
-             * @deprecated используйте template
+             * @deprecated Используйте опцию {@link template}.
              * @cfg {String} Устанавливает компонент, который будет использован в качестве диалога редактирования записи.
              * @see template
+             * @see setDialogComponent
              */
             dialogComponent: '',
             /**
-             * @cfg {String} Устанавливает компонент, который будет использован в качестве диалога редактирования записи.
+             * @cfg {String} Устанавливает шаблон диалога редактирования.
              * @remark
-             * Компонент должен быть наследником класса {@link SBIS3.CONTROLS.FormController}.
-             * Подробнее о создании таких компонентов вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/editing-dialog/component/">Создание компонента для диалога редактирования</a>.
-             * Режим отображения диалога редактирования устанавливают с помощью опции {@link mode}.
+             * В качестве значения устанавливают имя компонента в виде "js!SBIS3.MyArea.MyName".
+             * Подробнее о создании шаблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/create/">Создание диалога редактирования</a>.
              * @see mode
              */
             template : '',
             /**
-             * @cfg {String} Устанавливает режим открытия диалога редактирования компонента.
-             * @variant dialog Открытие производится в новом диалоговом окне.
-             * @variant floatArea Открытие производится на всплывающей панели.
+             * @cfg {String} Устанавливает режим отображения диалога.
+             * @variant dialog Открытие диалога производится в новом модальном окне, которое создаётся на основе контрола {@link SBIS3.CORE.Dialog}.
+             * @variant floatArea Открытие диалога производится на всплывающей панели, которая создаётся на основе контрола {@link SBIS3.CORE.FloatArea}.
              * @remark
-             * Диалог редактирования устанавливают с помощью опции {@link template}.
+             * Для получения/изменения значения опции используйте методы {@link setMode} и {@link getMode}.
              * @see template
+             * @see setMode
+             * @see getMode
              */
             mode: 'dialog',
             /**
-             * @cfg {Object} Объект содержащий опции компонента.
+             * @cfg {Object} Объект с пользовательскими опциями, которые передаются в диалог редактирования в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/oop/#configuration-class-parameters">секцию _options</a>.
              */
             componentOptions: null,
             /**
-             * @cfg {Object} Объкт содержащий опции диалога 
+             * @cfg {Object} Объект с конфигурацией контрола, на основе которого создаётся диалог редактирования (см. {@link mode}).
              */
             dialogOptions: null
          },
@@ -62,16 +72,6 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          _linkedModelKey: undefined,
          _isExecuting: false //Открывается ли сейчас панель
       },
-      /**
-       * @typedef {Object} ExecuteMetaConfig
-       * @property {DataSource} dataSource Источник данных, который будет установлен для диалога редактирования.
-       * @property {String|Number} id Первичный ключ записи, которую нужно открыть на диалоге редактирования. Если свойство не задано, то нужно передать запись свойством record.
-       * @property {Boolean} newModel Признак: true - в диалоге редактирования открыта новая запись, которой не существует в источнике данных.
-       * @property {Object} filter Объект, данные которого будут использованы в качестве инициализирующих данных при создании новой записи.
-       * Название свойства - это название поля записи, а значение свойства - это значение для инициализации.
-       * @property {WS.Data/Entity/Model} record Редактируемая запись. Если передаётся ключ свойством key, то запись передавать необязательно.
-       * @property {CORE/Context} ctx Контекст, который нужно установить для диалога редактирования записи.
-       */
       $constructor: function() {
 
          if ( this._options.dialogComponent && !this._options.template) {
@@ -80,22 +80,6 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          }
          this._publish('onAfterShow', 'onBeforeShow');
       },
-      /**
-       * Открывает диалог редактирования записи.
-       * @param {ExecuteMetaConfig} meta Параметры, которые будут использованы для конфигурации диалога редактирования.
-       * @example
-       * Произведём открытие диалога с предустановленными полями для создаваемой папки:
-       * <pre>
-       * myAddFolderButton.subscribe('onActivated', function() { // Создаём обработчик нажатия кнопки
-       *    myDialogAction.execute({ // Инициируем вызов диалога для создания новой папки
-       *       filter: {
-       *          'Раздел': null, // Поле иерархии, папка создаётся в корне иерархической структуры
-       *          'Раздел@': true // Признак папки в иерархической структуре
-       *       }
-       *    });
-       * });
-       *
-      */
       _doExecute: function(meta) {
          this._openComponent(meta);
          return false;
@@ -148,7 +132,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             showOnControlsReady: false,
             autoCloseOnHide: true,
             needSetDocumentTitle: false,
-            opener: this._getOpener(),
+            opener: meta.opener || this._getOpener(), //opener по умолчанию
             template: meta.template || this._options.template,
             target: undefined,
             block_by_task_1173286428: false // временнное решение проблемы описанной в надзадаче
@@ -206,7 +190,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       },
 
       /**
-       * Установить режим открытия диалога редактирования компонента.
+       * Устана режим открытия диалога редактирования компонента.
        * @param {String} mode режим открытия диалога редактирования компонента {@link mode}.
        */
       setMode: function(mode) {

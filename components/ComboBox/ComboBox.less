@@ -34,7 +34,8 @@
    &.controls-TextBox {
       &.ws-has-focus, &:hover{
        .controls-ComboBox__arrowDown{
-         color: #313E78!important;
+          //todo: !important
+         color: @combo-box-arrowDown-color!important;
        }
      }
      .controls-TextBox__afterFieldWrapper {
@@ -111,6 +112,8 @@
 
       .controls-TextBox__afterFieldWrapper {
          .controls-ComboBox__arrowDown {
+            //todo !important;
+            color: @combo-box-arrowDown-color-hover !important;
             border-width: @combo-box-arrow-active-border-width;
             border-style: @combo-box-arrow-active-border-style;
             border-color: @combo-box-arrow-active-border-color;
@@ -172,7 +175,7 @@
       }
    }
    &.controls-popup-revert-vertical {
-      margin-top: @text-box-border-width + 1!important;
+      margin-top: calc(~"1px +"@default-border-width) !important;
       .controls-ComboBox__body{
          .controls-ComboBox__list {
             .flex-direction(column-reverse);

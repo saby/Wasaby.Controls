@@ -15,6 +15,7 @@
 }
 
 .controls-Scrollbar {
+   padding: @controls-Scrollbar-thumb-padding;
    width: @controls-Scrollbar-width;
    outline: none;
    .controls-Scrollbar__thumb {
@@ -22,6 +23,8 @@
       position: relative;
       border-radius: @controls-Scrollbar-thumb-border-radius;
       background-color: @controls-Scrollbar-dark-hover-thumb-color;
+      min-height: @controls-Scrollbar-min-height;
+      margin: @controls-Scrollbar-thumb-margin;
       &:hover {
          background-color: @controls-Scrollbar-dark-active-thumb-color;
       }

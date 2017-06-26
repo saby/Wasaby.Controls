@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
     * </ol>
     * @class SBIS3.CONTROLS.TextBox
     * @extends SBIS3.CONTROLS.TextBoxBase
-    * @author Крайнов Дмитрий Олегович
+    * @author Роман Валерий Сергеевич
     * @demo SBIS3.CONTROLS.Demo.MyTextBox
     *
     * @ignoreOptions independentContext contextRestriction className horizontalAlignment
@@ -216,23 +216,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
                window.setTimeout(function(){
                   self._pasteProcessing--;
                   if (!self._pasteProcessing) {
-                     var text = self._getInputValue(),
-                         inputRegExp = self._options.inputRegExp;
-                     if (inputRegExp){
-                         text = self._checkRegExp(text, inputRegExp);
-                     }
-                     text = self._formatText(text);
-                     self._drawText(text);
-                     /* Событие paste может срабатывать:
-                      1) При нажатии горячих клавиш
-                      2) При вставке из котекстного меню.
-
-                      Если текст вставлют через контекстное меню, то нет никакой возможности отловить это,
-                      но событие paste гарантированно срабатывает после действий пользователя. Поэтому мы
-                      можем предполагать, что это ввод с клавиатуры, чтобы правильно работали методы,
-                      которые на это рассчитывают.
-                      */
-                     self._setTextByKeyboard(text);
+                     self._pasteHandler(event);
                   }
                }, 100);
             }else {
@@ -243,9 +227,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
 
          this._inputField.on('drop', function(){
             window.setTimeout(function(){
-               // в момент события в поле ввода нет перенесенных данных,
-               // поэтому вставка выполняется с задержкой, чтобы позволить браузеру обработать перенесенные данные (картинка, верстка)
-               self._setTextByKeyboard(self._getInputValue());
+               self._pasteHandler(event);
             }, 100);
          });
 
@@ -501,7 +483,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _getInputValue: function() {
-         return this._inputField.val();
+         return this._inputField && this._inputField.val();
       },
       _setInputValue: function(value) {
          this._inputField.val(value);
@@ -551,6 +533,29 @@ define('js!SBIS3.CONTROLS.TextBox', [
             this._fromTouch = false;
          }
       },
+
+       _pasteHandler: function(event) {
+           var text = this._getInputValue(),
+               inputRegExp = this._options.inputRegExp;
+           if (inputRegExp){
+               text = this._checkRegExp(text, inputRegExp);
+           }
+           if (this._options.trim) {
+               text = text.trim();
+           }
+           text = this._formatText(text);
+           this._drawText(text);
+          /* Событие paste может срабатывать:
+           1) При нажатии горячих клавиш
+           2) При вставке из котекстного меню.
+
+           Если текст вставлют через контекстное меню, то нет никакой возможности отловить это,
+           но событие paste гарантированно срабатывает после действий пользователя. Поэтому мы
+           можем предполагать, что это ввод с клавиатуры, чтобы правильно работали методы,
+           которые на это рассчитывают.
+           */
+           this._setTextByKeyboard(text);
+       },
 
       _focusOutHandler: function(event, isDestroyed, focusedControl) {
          TextBox.superclass._focusOutHandler.apply(this, arguments);

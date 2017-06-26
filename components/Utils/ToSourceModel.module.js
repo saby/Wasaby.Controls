@@ -33,8 +33,13 @@ define('js!SBIS3.CONTROLS.ToSourceModel', [
              Удалить, как Леха Мальцев будет позволять описывать более гибко поля записи, и указывать в качестве типа прикладную модель.
              Задача:
              https://inside.tensor.ru/opendoc.html?guid=045b9c9e-f31f-455d-80ce-af18dccb54cf&description= */
-            if(saveParentRecordChanges || (!saveParentRecordChanges && cInstance.instanceOfMixin(items, 'WS.Data/Entity/OneToManyMixin'))) {
-               parent = items._getMediator().getParent(items);
+            if(cInstance.instanceOfMixin(items, 'WS.Data/Entity/ManyToManyMixin')) {
+               items._getMediator().belongsTo(items, function (master) {
+                  if(parent) {
+                     Utils.logger.error('ToSourceModel: у переданного рекордсета несколько родителей.')
+                  }
+                  parent = master;
+               });
 
                if (parent && cInstance.instanceOfModule(parent, 'WS.Data/Entity/Model')) {
                   if(saveParentRecordChanges) {

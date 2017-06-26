@@ -106,10 +106,8 @@ define('js!WSControls/VDOM/Main/Main', [
             this._save();
          },
          filteredList: function () {
-            // todo ownerShip - Это костыль. он позволяет извещать старый list об измениях. чтобы этого не было надо заюзать
-            // _removeObservableListeners и _addObservableListenters
             var self = this;
-            return new ObservableList({ items: Chain(this._list).filter(function(item) {
+            return Chain(this._list).filter(function(item) {
                switch (self._filter) {
                   case 'active':
                      return item.get('completed') === false;
@@ -119,8 +117,7 @@ define('js!WSControls/VDOM/Main/Main', [
                      return true;
                }
                throw new Error('Incorrect filter type')
-            }).toArray(),
-            ownerShip: false});
+            }).toArray();
          },
          activeCount: function () {
             return Chain(this._list).reduce(function(count, item) {

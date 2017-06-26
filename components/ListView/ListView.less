@@ -70,8 +70,11 @@
    }
 }
 // Убираем минимальную высоту установленную выше для таблиц вложенных в контейнер фиксированных заголовков.
-.ws-sticky-header__header-container > .controls-ListView:not(.controls-ListView__dataLoaded) {
-   min-height: initial;
+.ws-sticky-header__header-container > .controls-ListView {
+   &:not(.controls-ListView__dataLoaded),
+   &.controls-ListView__indicatorVisible {
+      min-height: initial;
+   }
 }
 
 //Данные стили обеспечивают правильное поведение ListView при активации.
@@ -132,8 +135,8 @@
    }
 }
 
-.controls-ListView-scrollIndicator{
-   display: block;
+.controls-ListView-scrollIndicator {
+   display: none;
    margin: 0 auto;
    height: @list-view-scroll-height;
    bottom: 0;
@@ -148,6 +151,14 @@
    }
 }
 
+.controls-ListView__indicatorVisible:not(.ws-sticky-header__table-header-copy) {
+   min-height: @list-view-scroll-height;
+
+    > .controls-ListView-scrollIndicator {
+      display: block;
+   }
+}
+
 .controls-ListView__scrollPager{
    position: fixed;
    bottom: 0;
@@ -158,9 +169,12 @@
 }
 
 .controls-ListView__serviceFooter {
+   padding: @listView-servicefooter-padding;
+}
+
+.controls-ListView__loadMoreButton {
    height: @listView-servicefooter-height;
    line-height: @listView-servicefooter-height;
-   padding: @listView-servicefooter-padding;
 }
 
 .controls-ListView__counter {
@@ -307,7 +321,8 @@
    animation-name: rightSwipe;
    animation-duration: 0.3s;
 }
-
+// при свайпе право одноврменно с анимацией происходил горизонтальный скролл на айпаде,
+// из-за этого дергался реестр. перешли с анимации через right, на анимацию через translate
 @keyframes rightSwipe {
    0% {
       .translate(0);

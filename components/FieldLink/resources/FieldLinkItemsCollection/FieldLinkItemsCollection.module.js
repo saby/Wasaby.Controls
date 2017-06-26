@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             itemContainer = $target.closest('.controls-FieldLink__item', this._container[0]);
             if (itemContainer.length) {
                deleteAction = $target.hasClass('controls-FieldLink__item-cross');
-               id = this._getItemProjectionByHash(itemContainer.data('hash')).getContents().getId();
+               id = this._getItemProjectionByHash(itemContainer.data('hash')).getContents().get(this._options.idProperty);
                this._notify(deleteAction ? 'onCrossClick' : 'onItemActivate', id);
                
                if(deleteAction && this.isPickerVisible()) {

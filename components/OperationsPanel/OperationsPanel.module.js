@@ -66,7 +66,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     *
     * @demo SBIS3.CONTROLS.Demo.MyOperationsPanel Пример 1. Типовые массовые операции над записями.
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Сухоручкин Андрей Сергеевич
     * @ignoreOptions contextRestriction independentContext
     *
     * @ignoreEvents onAfterLoad onChange onStateChange
@@ -168,6 +168,13 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       getItems: function() {
          var items = OperationsPanel.superclass.getItems.call(this);
          return items ? items : this._options.items;
+      },
+
+      //После setItems нужно подгрузить недостающие кнопки, иначе вместо них отобразится текст. Для этого затирается Deferred,
+      //который возвращается requireButtons, чтобы requireButtons при следующей отрисовке ещё раз подгрузил кнопки.
+      setItems: function() {
+         this._itemsLoadDeferred = null;
+         OperationsPanel.superclass.setItems.apply(this, arguments);
       },
 
       _updateActionsMenuButtonItems: function(){

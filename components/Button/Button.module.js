@@ -10,7 +10,6 @@ define('js!SBIS3.CONTROLS.Button',
       'js!WS.Data/Entity/InstantiableMixin',
       'tmpl!SBIS3.CONTROLS.Button',
       'Core/core-functions',
-      'Core/tmpl/tmplstr',
       "js!SBIS3.CORE.Control/ControlGoodCode",
       'css!SBIS3.CONTROLS.Button'
          ],
@@ -25,7 +24,6 @@ define('js!SBIS3.CONTROLS.Button',
              InstantiableMixin,
              template,
              functions,
-             tmplstr,
              ControlGoodCode) {
 
    'use strict';
@@ -45,7 +43,7 @@ define('js!SBIS3.CONTROLS.Button',
     * @extends WSControls/Buttons/ButtonBase
     * @demo SBIS3.CONTROLS.Demo.MyButton
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Романов Валерий Сергеевич
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers parent
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner record stateKey
@@ -102,12 +100,6 @@ define('js!SBIS3.CONTROLS.Button',
          _touchMoveCount: 0,
 
          constructor: function (cfg) {
-            if (cfg.hasPartial) {
-               if (!cfg.caption) {
-                  cfg.caption = '';
-               }
-               cfg.caption = tmplstr.getFunction(cfg.caption);
-            }
             this.deprecatedContr(cfg);
             this._publish('onActivated');
          },
@@ -117,6 +109,13 @@ define('js!SBIS3.CONTROLS.Button',
          _onMouseClick: function (e) {
             if (this._isTouchEnded) {
                this._isTouchEnded = false;
+               /**
+                * Если клик обработали на touchend - надо его стопнуть
+                */
+               if (e && e.stopImmediatePropagation) {
+                  // если не остановить, будет долетать до области, а у нее обработчик на клик - onBringToFront. фокус будет улетать не туда
+                  e.stopImmediatePropagation();
+               }
                return;
             }
             this._isWaitingClick = false;
@@ -125,13 +124,14 @@ define('js!SBIS3.CONTROLS.Button',
             }
             this._onClickHandler(e);
             this._notify("onActivated", e);
+            this._setDirty();
          },
 
          _onMouseDown: function () {
             if (!this._options.enabled) {
                return;
             }
-            this._isActiveByClick = true;
+           this._isActiveByClick = true;
          },
 
          _onMouseUp: function () {
@@ -153,19 +153,24 @@ define('js!SBIS3.CONTROLS.Button',
          },
 
          _onTouchEnd: function(e) {
-            var self = this;
-            this._isActiveByClick = false;
             /**
              * ipad имеет специфическую систему событий связанных с touch
              * onClick может произойти между onTouchStart и onTouchEnd, или
-             * в течение 300мс после onTouchEnd, или не произойти вообще
+             * в течение 1000мс после onTouchEnd, или не произойти вообще
+             * + передаем контекст в setTimeout
              */
             setTimeout(function() {
-               if(self._isWaitingClick) {
-                  self._onMouseClick();
-                  self._isTouchEnded = true;
+               if(this._isWaitingClick) {
+                  this._onMouseClick();
+                  this._isTouchEnded = true;
                }
-            }, 300);
+               this._isActiveByClick = false;
+               //т.к. появилась асинхронность, руками дернем флаг о перерисовке, чтобы кнопка
+               //не осталась "подвисшей"
+               if (this.iWantVDOM) {
+                  this._setDirty();
+               }
+            }.bind(this), 1000);
          },
 
          _onKeyDown: function (e) {

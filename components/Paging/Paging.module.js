@@ -81,7 +81,7 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'tmpl!SBIS3
             cfg.items.push({
                id : i,
                text : i.toString()
-            })
+            });
          }
       }
    };
