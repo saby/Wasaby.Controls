@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CORE.Control', 'html!SBIS3.CONTR
     * @extends SBIS3.CORE.Control
     * @mixes SBIS3.CONTROLS.Checkable
     * @mixes SBIS3.CONTROLS.Clickable
-    * @author Крайнов Дмитрий Олегович
+    * @author Журавлев Максим Сергеевич
     * @demo SBIS3.CONTROLS.Demo.MySwitcher
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers

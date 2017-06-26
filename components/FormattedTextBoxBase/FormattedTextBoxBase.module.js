@@ -889,6 +889,8 @@ define(
 
          //Если в поле ввода выделен текст
          if (positionIndexesBegin[0] != positionIndexesEnd[0] || positionIndexesBegin[1] != positionIndexesEnd[1]) {
+            // если текст выделен, то необходимо свдинуть позицию на 1 влево, т.к. в случае с delete возникает пустой отступ
+            positionOffset = -1;
             //проходим группы с конца, чтобы закончить самым левым символом выделенного текста и использовать его данные в keyInsertInfo о позиции курсора
             startGroupNum = positionIndexesBegin[0];
             endGroupNum   = positionIndexesEnd[0];

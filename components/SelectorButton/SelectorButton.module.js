@@ -59,11 +59,13 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * Контрол применяется в качестве альтернативы полю связи {@link SBIS3.CONTROLS.FieldLink}.
     *
     * Подробнее о поле связи и кнопке выбора вы можете прочитать в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/'>Поле связи</a>.
+    * Обратить внимание: метод <a href='https://wi.sbis.ru/docs/WSControls/Buttons/Button/methods/setCaption/'>setCaption</a>, устанавливающий текст на кнопке, не работает.
+    * caption проставляется только по выбору записи по displayProperty или же строится по шаблону.
     *
     * @class SBIS3.CONTROLS.SelectorButton
     * @extends WSControls/Buttons/Button
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Герасимов Александр Максимович
     *
     * @mixes SBIS3.CONTROLS.IconMixin
     * @mixes SBIS3.CONTROLS.MultiSelectable

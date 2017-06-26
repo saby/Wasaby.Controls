@@ -211,6 +211,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             { key: 'InsertUnorderedList', title: ' ', icon:'sprite:icon-24 icon-ListMarked icon-primary' },
             { key: 'InsertOrderedList', title: ' ',icon:'sprite:icon-24 icon-ListNumbered icon-primary' }
          ],
+         idProperty: 'key',
          handlers: {
             onMenuItemActivate: function(event, key) {
                this.getParent()._execCommand(key);
@@ -288,6 +289,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
                this.getParent()._insertSmile(key);
             }
          },
+         idProperty: 'key',
          visible: false,
          order: 150
       },
@@ -319,6 +321,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
                this.getParent()._pasteFromBufferWithStyles(false, this._container, key === 'style');
             }
          },
+         idProperty: 'key',
          visible: !constants.browser.isMobilePlatform && !constants.browser.isMacOSDesktop,
          order: 120
       },
@@ -349,6 +352,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
                this.getParent()._setText(this.getItems().getRecordById(key).get('value'));
             }
          },
+         idProperty: 'key',
          pickerConfig: {
             verticalAlign: {
                side: "top",

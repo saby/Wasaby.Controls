@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.CheckBox', [
     * @extends WSControls/Buttons/ButtonBase
     * @mixes SBIS3.CONTROLS.Checkable
     * @demo SBIS3.CONTROLS.Demo.MyCheckbox
-    * @author Крайнов Дмитрий Олегович
+    * @author Журавлев Максим Сергеевич
     *
     * @ignoreOptions icon extendedTooltip independentContext contextRestriction isContainerInsideParent stateKey subcontrol
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment verticalAlignment owner

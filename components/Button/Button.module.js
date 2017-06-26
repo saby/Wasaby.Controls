@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.Button',
     * @extends WSControls/Buttons/ButtonBase
     * @demo SBIS3.CONTROLS.Demo.MyButton
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Романов Валерий Сергеевич
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers parent
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner record stateKey
@@ -167,7 +167,9 @@ define('js!SBIS3.CONTROLS.Button',
                this._isActiveByClick = false;
                //т.к. появилась асинхронность, руками дернем флаг о перерисовке, чтобы кнопка
                //не осталась "подвисшей"
-               this._setDirty();
+               if (this.iWantVDOM) {
+                  this._setDirty();
+               }
             }.bind(this), 1000);
          },
 
