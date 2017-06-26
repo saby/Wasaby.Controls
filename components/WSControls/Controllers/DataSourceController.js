@@ -57,31 +57,7 @@ define('js!WSControls/Controllers/DataSourceController', [
             }
             def = this._callQuery(this.filter, this.sorting, this.offset, this._limit)
                .addCallback(fHelpers.forAliveOnly(function (list) {
-                  self._notify('onDataLoad', list);
-                  if (
-                     this.getItems()
-                     && (list.getModel() === this.getItems().getModel())
-                     && (Object.getPrototypeOf(list).constructor == Object.getPrototypeOf(list).constructor)
-                     && (Object.getPrototypeOf(list.getAdapter()).constructor == Object.getPrototypeOf(this.getItems().getAdapter()).constructor)
-                     ) {
-                     this._options._items.setMetaData(list.getMetaData());
-                     this._options._items.assign(list);
-                     self._drawItemsCallbackDebounce();
-                  } else {
-                     this._unsetItemsEventHandlers();
-                     this._options._items = list;
-                     this._options._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
-                     this._options._itemsProjection = this._options._applyGroupingToProjection(this._options._itemsProjection, this._options);
-                     this._setItemsEventHandlers();
-                     this._notify('onItemsReady');
-                     this._itemsReadyCallback();
-                     self.redraw();
-                  }
-
-                  self._checkIdProperty();
-
-                  this._dataLoadedCallback();
-                  //self._notify('onBeforeRedraw');
+                  self._notify('onReload', list);
                   return list;
                }, self))
                .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
@@ -94,10 +70,10 @@ define('js!WSControls/Controllers/DataSourceController', [
             def.callback();
          }
 
-         this._notifyOnPropertyChanged('filter');
-         this._notifyOnPropertyChanged('sorting');
-         this._notifyOnPropertyChanged('offset');
-         this._notifyOnPropertyChanged('limit');
+         //this._notifyOnPropertyChanged('filter');
+         //this._notifyOnPropertyChanged('sorting');
+         //this._notifyOnPropertyChanged('offset');
+         //this._notifyOnPropertyChanged('limit');
 
          return def;
       },

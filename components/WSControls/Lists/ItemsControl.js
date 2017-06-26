@@ -97,11 +97,11 @@ define('js!WSControls/Lists/ItemsControl', [
                if (!this._onDSBeforeReloadFnc) {
                   this._onDSBeforeReloadFnc = this._onDSBeforeReload.bind(this);
                }
-               if (!this._onDSAfterReloadFnc) {
-                  this._onDSAfterReloadFnc = this._onDSAfterReload.bind(this);
+               if (!this._onDSReloadFnc) {
+                  this._onDSReloadFnc = this._onDSReload.bind(this);
                }
                this._dataSourceController.subscribe('onBeforeReload', this._onDSBeforeReloadFnc);
-               this._dataSourceController.subscribe('onAfterReload', this._onDSAfterReloadFnc);
+               this._dataSourceController.subscribe('onReload', this._onDSReloadFnc);
             }
          },
 
@@ -303,8 +303,27 @@ define('js!WSControls/Lists/ItemsControl', [
                filter : this._getFilterForReload()
             });
          },
-         _onDSAfterReload: function() {
-            debugger;
+         _onDSReload: function(e, list) {
+            if (
+               this.getItems()
+                  && (list.getModel() === this.getItems().getModel())
+                  && (Object.getPrototypeOf(list).constructor == Object.getPrototypeOf(list).constructor)
+                  && (Object.getPrototypeOf(list.getAdapter()).constructor == Object.getPrototypeOf(this.getItems().getAdapter()).constructor)
+               ) {
+               this.getItems().setMetaData(list.getMetaData());
+               this.getItems().assign(list);
+               //this._drawItemsCallbackDebounce();
+            } else {
+               this._items = list;
+               this._itemsChangeCallback();
+               this._setDirty();
+            }
+            this._toggleIndicator(false);
+            //self._checkIdProperty();
+
+            //this._dataLoadedCallback();
+            //self._notify('onBeforeRedraw');
+            return list;
          },
          //</editor-fold>
 

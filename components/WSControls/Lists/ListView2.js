@@ -53,7 +53,7 @@ define('js!WSControls/Lists/ListView2', ['js!WSControls/Lists/ItemsControl',
             }, INDICATOR_DELAY);
          }
          else {
-            this.loading = true;
+            this.loading = show;
          }
          this._setDirty();
       }
