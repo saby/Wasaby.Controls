@@ -240,6 +240,12 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          _inputFocusInHandler: function(event) {
             this._observableControlFocusHandler(event);
          },
+         
+         _inputClickHandler: function(e) {
+            if(this.isActive()) {
+               this._observableControlFocusHandler(e);
+            }
+         },
          /**
           * Блочим события поднятия служебных клавиш,
           * нужно в основном при использовании в редактировании по месту

@@ -207,7 +207,6 @@ define('js!SBIS3.CONTROLS.TextBox', [
          this._publish('onPaste', 'onInformationIconMouseEnter', 'onInformationIconActivated');
          var self = this;
          this._inputField = this._getInputField();
-         this._container.bind('keypress keydown keyup', this._keyboardDispatcher.bind(this));
          this._inputField.on('paste', function(event){
             var userPasteResult = self._notify('onPaste', TextBoxUtils.getTextFromPasteEvent(event));
 
@@ -225,13 +224,13 @@ define('js!SBIS3.CONTROLS.TextBox', [
 
          });
 
-         this._inputField.on('drop', function(){
+         this._inputField
+            .on('drop', function(){
             window.setTimeout(function(){
                self._pasteHandler(event);
             }, 100);
-         });
-
-         this._inputField.change(function(){
+         })
+         .on('change',function(){
             var newText = $(this).val(),
                 inputRegExp = self._options.inputRegExp;
 
@@ -241,26 +240,23 @@ define('js!SBIS3.CONTROLS.TextBox', [
                }
                self.setText(newText);
             }
-         });
+         })
 
-         $(this._inputField).on('mousedown', function(){
+         .on('mousedown', function(){
             self._fromTab = false;
-         });
+         })
 
-         this._inputField.bind('focusin', this._inputFocusInHandler.bind(this))
-                         .bind('focusout', this._inputFocusOutHandler.bind(this));
-
-         this._container.on('touchstart', function(){
-            this._fromTouch = true;
-         }.bind(this));
+         .on('focusin', this._inputFocusInHandler.bind(this))
+                         .on('focusout', this._inputFocusOutHandler.bind(this)).on('click', this._inputClickHandler.bind(this));
+   
+         this._container
+            .on('keypress keydown keyup', this._keyboardDispatcher.bind(this))
+            .on('mouseenter', function() { self._applyTooltip(); })
+            .on('touchstart', function() { self._fromTouch = true;});
 
          if (this._options.placeholder && !this._useNativePlaceHolder()) {
             this._createCompatPlaceholder();
          }
-
-         this._container.bind('mouseenter', function(e){
-            self._applyTooltip();
-         });
       },
 
       _modifyOptions: function() {
@@ -564,6 +560,12 @@ define('js!SBIS3.CONTROLS.TextBox', [
             this._checkInputVal();
          }
       },
+      
+      _inputClickHandler: function (e) {
+         if (this.isEnabled() && this._compatPlaceholder) {
+            this._getInputField().focus();
+         }
+      },
 
       _inputFocusInHandler: function(e) {
          if (this._fromTouch){
@@ -587,8 +589,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _createCompatPlaceholder : function() {
-         var self = this,
-             compatPlaceholder = this.getContainer().find('.controls-TextBox__placeholder');
+         var compatPlaceholder = this.getContainer().find('.controls-TextBox__placeholder');
 
          if(compatPlaceholder.length) {
             this._compatPlaceholder = compatPlaceholder;
@@ -603,11 +604,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
             'left': this._inputField.position().left || parseInt(this._inputField.parent().css('padding-left'), 10),
             'right': this._inputField.position().right || parseInt(this._inputField.parent().css('padding-right'), 10)
          });
-         this._compatPlaceholder.click(function(){
-            if (self.isEnabled()) {
-               self._inputField.get(0).focus();
-            }
-         });
+         this._compatPlaceholder.on('click', this._inputClickHandler.bind(this));
       },
 
       _getAfterFieldWrapper: function() {
@@ -629,6 +626,12 @@ define('js!SBIS3.CONTROLS.TextBox', [
          this._beforeFieldWrapper = undefined;
          this._inputField.off('*');
          this._inputField = undefined;
+         
+         if(this._compatPlaceholder) {
+            this._compatPlaceholder.off('*');
+            this._compatPlaceholder = undefined;
+         }
+         
          if(this._informationIcon) {
             this._informationIcon.getContainer().off('*');
             this._informationIcon = undefined;
