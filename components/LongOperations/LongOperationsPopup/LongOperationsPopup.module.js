@@ -3,10 +3,9 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
       "Core/UserInfo",
       "Core/core-merge",
       'Core/Deferred',
-      "Core/helpers/string-helpers",
+      /*###"Core/helpers/string-helpers",*/
       'js!SBIS3.CORE.TabMessage',
       "js!SBIS3.CONTROLS.NotificationPopup",
-      'js!SBIS3.CONTROLS.LongOperationsManager',
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model',
       "html!SBIS3.CONTROLS.LongOperationsPopup/resources/headerTemplate",
@@ -14,12 +13,10 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
       "html!SBIS3.CONTROLS.LongOperationsPopup/resources/footerTemplate",
       "js!SBIS3.CORE.FloatArea",
       "css!SBIS3.CONTROLS.LongOperationsPopup",
-      "js!SBIS3.CONTROLS.LongOperationsList"/*###,
-      "js!SBIS3.CONTROLS.LongOperationHistory",
-      "js!SBIS3.CONTROLS.Link"*/
+      "js!SBIS3.CONTROLS.LongOperationsList"
    ],
 
-   function (UserInfo, cMerge, Deferred, strHelpers, TabMessage, NotificationPopup, longOperationsManager, LongOperationEntry, Model, headerTemplate, contentTpl, footerTpl, FloatArea) {
+   function (UserInfo, cMerge, Deferred, /*###strHelpers,*/ TabMessage, NotificationPopup, LongOperationEntry, Model, headerTemplate, contentTpl, footerTpl, FloatArea) {
       'use strict';
 
       var FILTER_HIDE_STOPPED = 3;
@@ -286,7 +283,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
           * @return {Core/Deferred}
           */
          reload: function () {
-            return this._longOpList.reload();//TODO: ### Может убрать ?
+            return this._longOpList.reload();
          },
 
          /**
@@ -334,11 +331,9 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
             if (this.getContainer().hasClass('engine-OperationNotificationPopup__hidden')) {
                this.getContainer().css('opacity', 0);
                this.getContainer().removeClass('engine-OperationNotificationPopup__hidden');
-               //###setTimeout(function () {
-                  self.getContainer().animate({
-                     opacity: 1
-                  }, 800);//1500
-               //###}, 1000);
+               self.getContainer().animate({
+                  opacity: 1
+               }, 800);//1500
             }
          },
 
@@ -495,7 +490,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                         }
                         break;
                      case 'progress':
-                        if (active && active.get('tabKey') === data.tabKey && active.get('producer') === data.producer && active.get('id') === data.operationId /*###&& !active.get('notification'*/) {
+                        if (active && active.get('tabKey') === data.tabKey && active.get('producer') === data.producer && active.get('id') === data.operationId) {
                            this._setProgress(data.progress.value, data.progress.total);
                         }
                         break;

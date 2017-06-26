@@ -1,6 +1,5 @@
 define('js!SBIS3.CONTROLS.LongOperationsList',
    [
-      /*###'Core/TimeInterval',*/
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model',
@@ -8,7 +7,6 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
       'js!SBIS3.CONTROLS.Utils.InformationPopupManager',
       'html!SBIS3.CONTROLS.LongOperationsList',
       'css!SBIS3.CONTROLS.LongOperationsList',
-      /*###'js!SBIS3.CONTROLS.DataGridView',*/
       'html!SBIS3.CONTROLS.LongOperationsList/resources/LongOperationsListStateTemplate',
       'html!SBIS3.CONTROLS.LongOperationsList/resources/LongOperationsListStartTimeTemplate',
       'html!SBIS3.CONTROLS.LongOperationsList/resources/LongOperationsListExecuteTimeTemplate',
@@ -17,7 +15,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
       'js!SBIS3.CONTROLS.DataGridView'
    ],
 
-   function (/*###TimeInterval,*/ CompoundControl, LongOperationEntry, Model, longOperationsManager, InformationPopupManager, dotTplFn) {
+   function (CompoundControl, LongOperationEntry, Model, longOperationsManager, InformationPopupManager, dotTplFn) {
       'use strict';
 
       /**
@@ -69,7 +67,6 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                listName: 'browserView',
                userId: null,
 
-               /*###notShowError: false,*/
                noLoad: false
             },
 
@@ -206,14 +203,6 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   }
                }
             });
-
-            /*###if (this._options.notShowError) {
-               //TODO Для того чтобы не показывался надоедливый алерт, в случае падения сервиса длительных операций. Актуально для всплывахи.
-               this.subscribeTo(self._view, 'onDataLoadError', function (e, error) {
-                  e.setResult(true);
-                  error.processed = true;
-               });
-            }*/
          },
 
          /**
@@ -389,7 +378,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   else {
                      args = [];
                   }
-                  (method ? module[method] : module).apply(/*###model*/method ? module : null, args);
+                  (method ? module[method] : module).apply(method ? module : null, args);
                });
                return true;
             }

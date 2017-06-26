@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.ILongOperationsHistoricalProducer',
    'use strict';
 
    /**
-    * Интерфейс продюсера истории длительных операций
+    * Интерфейс продюсера истории длительной операции
     * @interface SBIS3.CONTROLS.ILongOperationsHistoricalProducer
     * @public
     */

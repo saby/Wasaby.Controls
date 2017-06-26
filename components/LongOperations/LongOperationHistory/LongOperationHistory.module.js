@@ -11,8 +11,7 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
       'js!SBIS3.Engine.Browser',
       'html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryDateTemplate',
       'html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryTimeTemplate',
-      'html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryStatusTemplate'/*###,
-      'js!SBIS3.CONTROLS.DataGridView'*/
+      'html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryStatusTemplate'
    ],
 
    function (CompoundControl, longOperationsManager, LongOperationHistoryItem, DataSet, RecordSet, Record, dotTplFn) {
