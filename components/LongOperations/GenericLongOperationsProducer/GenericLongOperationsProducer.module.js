@@ -1,22 +1,22 @@
+/**
+ * Типовой продюсер длительных операций
+ *
+ * @class SBIS3.CONTROLS.GenericLongOperationsProducer
+ * @implements SBIS3.CONTROLS.ILongOperationsProducer
+ * @public
+ */
+
 define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
    [
       'Core/core-extend',
-      'js!WS.Data/Entity/ObservableMixin'/*###'Core/Abstract.compatible'*/,
+      'js!WS.Data/Entity/ObservableMixin',
       'Core/Deferred',
       'js!WS.Data/Types/Enum',
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.ILongOperationsProducer'
    ],
 
-   /**
-    * Класс, описывающий ...
-    *
-    * @class SBIS3.CONTROLS.GenericLongOperationsProducer
-    * @implements SBIS3.CONTROLS.ILongOperationsProducer
-    * @public
-    */
-
-   function (CoreExtend,  ObservableMixin/*###AbstractCompatible*/, Deferred, Enum, LongOperationEntry, ILongOperationsProducer) {
+   function (CoreExtend,  ObservableMixin, Deferred, Enum, LongOperationEntry, ILongOperationsProducer) {
       'use strict';
 
       /**
@@ -27,11 +27,11 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
       var _instances = {};
 
       /**
-       * Класс ### длительных операций
+       * Класс типового продюсера длительных операций
        * @public
        * @type {object}
        */
-      var GenericLongOperationsProducer = CoreExtend.extend({}, [ILongOperationsProducer, ObservableMixin/*###AbstractCompatible*/], /** @lends SBIS3.CONTROLS.GenericLongOperationsProducer.prototype */{
+      var GenericLongOperationsProducer = CoreExtend.extend({}, [ILongOperationsProducer, ObservableMixin], /** @lends SBIS3.CONTROLS.GenericLongOperationsProducer.prototype */{
          _moduleName: 'SBIS3.CONTROLS.GenericLongOperationsProducer',
 
          $protected: {
@@ -68,11 +68,6 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             }
             this._name = 'generic' + (key ? ':' + key : '');
             _instances[key] = this;
-            //////////////////////////////////////////////////
-            // TODO: ### Не забыть убрать это !
-            this.TMP_list = _list.bind(null, this);//###
-            this.TMP_clear = _clear.bind(null, this);//###
-            //////////////////////////////////////////////////
          },
 
          /**
@@ -110,7 +105,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                }
             }
             if (oIds.length) {
-               this._notify('onended', {producer:this._name, operationIds:oIds, status:STATUSES.error, error:'User left the page'/*###, title:o.Name*/});
+               this._notify('onended', {producer:this._name, operationIds:oIds, status:STATUSES.error, error:'User left the page'});
             }
          },
 
@@ -303,7 +298,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
          }
          var operationId = operation.id;
          GLOStorage.put(self._name, operationId, _toSnapshot(operation));
-         self._notify('onstarted', {producer:self._name, operationId:operationId/*###, title:operation.Name, operation:operation*/});
+         self._notify('onstarted', {producer:self._name, operationId:operationId});
          return operationId;
       };
 
@@ -449,7 +444,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                   break;
             }
             GLOStorage.put(self._name, operationId, _toSnapshot(operation));
-            var common = {producer:self._name, operationId:operationId, status:status/*###, title:operation.Name*/};
+            var common = {producer:self._name, operationId:operationId, status:status};
             self._notify(eventType, result ? ObjectAssign(common, result) : common);
          }
       };
@@ -477,7 +472,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
          }
          if (GLOStorage.remove(self._name, operationId)) {
             delete self._actions[operationId];
-            self._notify('ondeleted', {producer:self._name, operationId:operationId/*###, title:operation.Name*/});
+            self._notify('ondeleted', {producer:self._name, operationId:operationId});
          }
       };
 

@@ -106,6 +106,26 @@ define('js!SBIS3.CONTROLS.ILongOperationsProducer',
       },
 
       /**
+       * Подписаться на получение события
+       * @public
+       * @param {string} eventType Тип события
+       * @param {function} listener Обработчик события
+       */
+      subscribe: function (eventType, listener) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Отписаться от получения события
+       * @public
+       * @param {string} eventType Тип события
+       * @param {function} listener Обработчик события
+       */
+      unsubscribe: function (eventType, listener) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
        * Ликвидировать экземпляр класса
        * @public
        */

@@ -1,10 +1,9 @@
 define(
    [
-      'js!WS.Data/Entity/Model'/*###,
-      'Core/TimeInterval'*/
+      'js!WS.Data/Entity/Model'
    ],
 
-   function (Model/*###, TimeInterval*/) {
+   function (Model) {
 
       var LongOperationModel = Model.extend({
          $protected: {
@@ -68,38 +67,13 @@ define(
                   break;
                }
             }
-            /*###else
+            /*else
             if (spent.length) {
                // Не должно быть пропущенных элементов
                break;
             }*/
          }
          return spent.join(' ');
-
-         /*###if (!timeSpent) {
-          return '';
-          }
-          var secs2 = timeSpent;
-          var tInt = (new TimeInterval(secs2)).toObject();
-          if (500 <= tInt.milliseconds) {
-          tInt.seconds++;
-          }
-          var spent2 = [];
-          for (var i = 0, props = ['days', 'hours', 'minutes', 'seconds'], names = ['д.', 'ч.', 'мин.', 'сек.']; i < props.length; i++) {
-          var t = tInt[props[i]];
-          if (t) {
-          spent2.push(t + rk(names[i], 'ДлительныеОперации'));
-          if (1 < spent2.length) {
-          break;
-          }
-          }
-          /*###else
-          if (spent2.length) {
-          // Не должно быть пропущенных элементов
-          break;
-          }* /
-          }
-          return spent2.join(' ');*/
       };
 
       /**

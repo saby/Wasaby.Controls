@@ -9,8 +9,7 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
       'css!SBIS3.CONTROLS.LongOperationsRegistry',
       'js!SBIS3.Engine.SBISOpenDialogAction',
       'js!SBIS3.Engine.Browser',
-      'js!SBIS3.CONTROLS.LongOperationsFilter'/*###,
-      'js!SBIS3.CONTROLS.LongOperationsList'*/
+      'js!SBIS3.CONTROLS.LongOperationsFilter'
    ],
 
    function (CompoundControl, LongOperationEntry, RightsManager, groupTpl, emptyHTMLTpl, dotTplFn) {
