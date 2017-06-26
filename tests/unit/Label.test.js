@@ -12,19 +12,25 @@ define(
       'use strict';
 
       describe('SBIS3.CONTROLS.Label', function() {
-         var
-            caption = 'Метка <span></span>',
-            setCaption = 'Новая метка <div></div>',
-            owner = 'TextBox',
-            isEventClick = null,
-            eventClick = null,
-            label = new Label({
-               caption: caption,
-               owner: owner
-            }),
-            textBox = new TextBox({
-               name: owner
-            });
+         beforeEach(function () {
+            if (typeof $ === 'undefined') {
+               this.skip();
+            } else {
+               var
+                  caption = 'Метка <span></span>',
+                  setCaption = 'Новая метка <div></div>',
+                  owner = 'TextBox',
+                  isEventClick = null,
+                  eventClick = null,
+                  label = new Label({
+                     caption: caption,
+                     owner: owner
+                  }),
+                  textBox = new TextBox({
+                     name: owner
+                  });
+            }
+         });
 
          describe('State', function() {
             it('caption is string', function() {
