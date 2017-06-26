@@ -207,47 +207,43 @@ define('js!SBIS3.CONTROLS.TextBox', [
          this._publish('onPaste', 'onInformationIconMouseEnter', 'onInformationIconActivated');
          var self = this;
          this._inputField = this._getInputField();
-         this._inputField.on('paste', function(event){
-            var userPasteResult = self._notify('onPaste', TextBoxUtils.getTextFromPasteEvent(event));
-
-            if(userPasteResult !== false){
-               self._pasteProcessing++;
-               window.setTimeout(function(){
-                  self._pasteProcessing--;
-                  if (!self._pasteProcessing) {
-                     self._pasteHandler(event);
-                  }
-               }, 100);
-            }else {
-               event.preventDefault();
-            }
-
-         });
-
          this._inputField
-            .on('drop', function(){
-            window.setTimeout(function(){
-               self._pasteHandler(event);
-            }, 100);
-         })
-         .on('change',function(){
-            var newText = $(this).val(),
-                inputRegExp = self._options.inputRegExp;
-
-            if (newText != self._options.text) {
-               if(inputRegExp) {
-                  newText = self._checkRegExp(newText, inputRegExp);
+            .on('paste', function(event){
+               var userPasteResult = self._notify('onPaste', TextBoxUtils.getTextFromPasteEvent(event));
+      
+               if(userPasteResult !== false){
+                  self._pasteProcessing++;
+                  window.setTimeout(function(){
+                     self._pasteProcessing--;
+                     if (!self._pasteProcessing) {
+                        self._pasteHandler(event);
+                     }
+                  }, 100);
+               }else {
+                  event.preventDefault();
                }
-               self.setText(newText);
-            }
-         })
-
-         .on('mousedown', function(){
-            self._fromTab = false;
-         })
-
-         .on('focusin', this._inputFocusInHandler.bind(this))
-                         .on('focusout', this._inputFocusOutHandler.bind(this)).on('click', this._inputClickHandler.bind(this));
+      
+            })
+            .on('drop', function(event){
+               window.setTimeout(function(){
+                  self._pasteHandler(event);
+               }, 100);
+            })
+            .on('change',function(){
+               var newText = $(this).val(),
+                  inputRegExp = self._options.inputRegExp;
+         
+               if (newText != self._options.text) {
+                  if(inputRegExp) {
+                     newText = self._checkRegExp(newText, inputRegExp);
+                  }
+                  self.setText(newText);
+               }
+            })
+            .on('mousedown', function(){ self._fromTab = false; })
+            .on('focusin', this._inputFocusInHandler.bind(this))
+            .on('focusout', this._inputFocusOutHandler.bind(this))
+            .on('click', this._inputClickHandler.bind(this));
    
          this._container
             .on('keypress keydown keyup', this._keyboardDispatcher.bind(this))
