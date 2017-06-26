@@ -1,0 +1,130 @@
+<div class="engine-LongOperationsFilter">
+   <div class="engine-LongOperationsFilter__block">
+      <component data-component="SBIS3.CONTROLS.DropdownList" name="StateFilter" class="engine-LongOperationsFilter__stateDropdown controls-DropdownList__withoutArrow controls-DropdownList__linkStyle controls-DropdownList__withoutCross">
+         <opts name="items" type="array">
+            <opts>
+               <opt name="key" value="null" type="null"/>
+               <opt name="title" value="{[В любом состоянии]}"/>
+            </opts>
+            <opts>
+               <opt name="key" value="0" type="number"></opt>
+               <opt name="title" value="{[В процессе]}"/>
+            </opts>
+            <opts>
+               <opt name="key" value="2" type="number"></opt>
+               <opt name="title" value="{[Завершенные]}"/>
+            </opts>
+            <opts>
+               <opt name="key" value="4" type="number"></opt>
+               <opt name="title" value="{[Успешно]}"/>
+               <opt name="parent" value="2" type="number"/>
+            </opts>
+            <opts>
+               <opt name="key" value="5" type="number"></opt>
+               <opt name="title" value="{[С ошибками]}"/>
+               <opt name="parent" value="2" type="number"/>
+            </opts>
+            <opts>
+               <opt name="key" value="1" type="number"></opt>
+               <opt name="title" value="{[Прерванные]}"/>
+            </opts>
+         </opts>
+         <opt name="idProperty" value="key"/>
+         <opt name="displayProperty" value="title"/>
+         <opt name="multiselect" value="false"/>
+         <opt name="parentProperty" value="parent"/>
+         <opt name="mode" value="click"/>
+         <opts name="selectedKeys" type="array">
+            <opt bind="StateKey"/>
+         </opts>
+         <opt name="text" bind="StateTitle"/>
+      </component>
+      <component data-component="SBIS3.CONTROLS.DropdownList" name="PeriodFilter" class="controls-DropdownList__withoutArrow controls-DropdownList__linkStyle controls-DropdownList__withoutCross">
+         <opts name="items" type="array">
+            <opts>
+               <opt name="key" value="null" type="null"/>
+               <opt name="title" value="{[За все время]}"/>
+            </opts>
+            <opts>
+               <opt name="key" value="0"/>
+               <opt name="title" value="{[За час]}"/>
+            </opts>
+            <opts>
+               <opt name="key" value="1"/>
+               <opt name="title" value="{[За сегодня]}"/>
+            </opts>
+            <opts>
+               <opt name="key" value="2"/>
+               <opt name="title" value="{[За неделю]}"/>
+            </opts>
+            <opts>
+               <opt name="key" value="3"/>
+               <opt name="title" value="{[За месяц]}"/>
+            </opts>
+            <opts>
+               <opt name="key" value="4"/>
+               <opt name="title" value="{[За полгода]}"/>
+            </opts>
+         </opts>
+         <opt name="idProperty" value="key"/>
+         <opt name="displayProperty" value="title"/>
+         <opt name="multiselect" value="false"/>
+         <opt name="mode" value="click"/>
+         <opts name="selectedKeys" type="array">
+            <opt bind='PeriodKey'/>
+         </opts>
+         <opt name="text" bind="PeriodTitle"/>
+      </component>
+   </div>
+   <div class="engine-LongOperationsFilter__block">
+      <div class="engine-LongOperationsFilter__durationTitle">{[Длительность операции]}</div>
+      <component data-component="SBIS3.CONTROLS.DropdownList" name="DurationFilter" class="controls-DropdownList__withoutArrow controls-DropdownList__linkStyle controls-DropdownList__withoutCross">
+         <opts name="items" type="array">
+            <opts>
+               <opt name="key" value="null" type="null"/>
+               <opt name="title" value="{[Все]}"/>
+            </opts>
+            <opts>
+               <opt name="key" value="0" type="number"></opt>
+               <opt name="title" value="{[Дольше 5 минут]}"/>
+            </opts>
+            <opts>
+               <opt name="key" value="1" type="number"></opt>
+               <opt name="title" value="{[Дольше 10 минут]}"/>
+            </opts>
+            <opts>
+               <opt name="key" value="2" type="number"></opt>
+               <opt name="title" value="{[Дольше 30 минут]}"/>
+            </opts>
+            <opts>
+               <opt name="key" value="3" type="number"></opt>
+               <opt name="title" value="{[Дольше часа]}"/>
+            </opts>
+         </opts>
+         <opt name="idProperty" value="key"/>
+         <opt name="displayProperty" value="title"/>
+         <opt name="multiselect" value="false"/>
+         <opt name="mode" value="click"/>
+         <opts name="selectedKeys" type="array">
+            <opt bind="DurationKey"/>
+         </opts>
+         <opt name="text" bind="DurationTitle"/>
+      </component>
+   </div>
+   {{? !it.hideStaffFilter}}
+   <div class="engine-LongOperationsFilter__block">
+      <div class="engine-LongOperationsFilter__responsibleTitle">{[Ответственный]}</div>
+      <component data-component="SBIS3.Staff.Choice" name="FilterResponsibleFace" class="engine-LongOperationsFilter__responsibleChooser">
+         <opts name="selectedKeys" type="array">
+            <opt bind="UserId"/>
+         </opts>
+         <opt name="placeholder" value="{[укажите ФИО]}"/>
+         <opt name="caption" bind="UserName" direction="fromProperty" oneWay="true"/>
+         <opt name="multiselect" value="false"/>
+         <opt name="selectionType" value="leaf"/>
+         <opt name="entityType" value="Пользователь"/>
+         <opt name="withAccess" value="true"/>
+      </component>
+   </div>
+   {{?}}
+</div>

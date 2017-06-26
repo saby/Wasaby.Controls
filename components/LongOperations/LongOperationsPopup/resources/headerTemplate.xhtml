@@ -1,0 +1,17 @@
+<div class="controls-NotificationPopup__header_icon
+         {{? it.icon}}
+            icon-size {{=it.icon}}
+         {{?? it.state === 'success'}}
+            icon-size icon-24 icon-Yes icon-done
+         {{?? it.state === 'error'}}
+            icon-size icon-24 icon-Alert icon-error
+         {{?}}">
+</div>
+<div class="controls-NotificationPopup__header_caption engine-OperationNotificationPopup__header_caption">{{=it.caption}}</div>
+<component data-component="SBIS3.CONTROLS.Link" name="downloadButton" class="engine-OperationNotificationPopup__header_downloadButton">
+   <option name="caption">Скачать</option>
+</component>
+<div class="engine-OperationNotificationPopup__header_stoppedOperationsButton engine-OperationNotificationPopup__header_stoppedOperations-show">
+   <span class="engine-OperationNotificationPopup__header_hideStoppedOperations">Скрыть прерванные</span>
+   <span class="engine-OperationNotificationPopup__header_showStoppedOperations">Показывать прерванные</span>
+</div>
