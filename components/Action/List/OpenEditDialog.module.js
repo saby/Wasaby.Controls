@@ -16,8 +16,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
    'use strict';
 
    /**
-    * Класс, описывающий действие открытия окна с заданным шаблоном. Применяется для работы с диалогами редактирования списков.
-    * Подробнее об использовании класса вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/">этом разделе</a>.
+    * Класс, описывающий действие открытия окна с заданным шаблоном. Применяется для работы с <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/">диалогами редактирования списков</a>.
     * @class SBIS3.CONTROLS.Action.OpenEditDialog
     * @extends SBIS3.CONTROLS.Action.OpenDialog
     * @author Красильников Андрей Сергеевич
@@ -74,23 +73,22 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       $protected: {
          _options: {
             /**
-             * @cfg {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} Устанавливает связанный с диалогом список.
+             * @cfg {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} Устанавливает список, связанный с диалогом редактирования.
              * @remark
-             * Для связанного списка производится автоматическая <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/synchronization/">синхронизацию изменений</a> со списком.
+             * Для связанного списка автоматическиприменяется <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/synchronization/">синхронизация изменений</a>.
              * @see setLinkedObject
+             * @see getLinkedObject
              */
             linkedObject: undefined,
             /**
-             * @cfg {String} Устанавливает способ инициализации данных диалога редактирования.
-             * @remark
-             * Подробнее читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/dialogs/initializing-way/">Способы инициализации</a>.
+             * @cfg {String} Устанавливает <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/initializing-way/">способ инициализации данных</a> диалога редактирования.
              * @variant local
              * @variant remote
              * @variant delayedRemote
              */
             initializingWay: 'remote',
             /**
-             * @cfg {String} устанавливает поле записи, в котором хранится url-страницы с диалогом редактирования. При вызове {@link execute}, когда нажата клавиша Ctrl, будет открыта новая вкладка веб-браузера с указанным адресом. Создание url - это задача прикладного разработчика.
+             * @cfg {String} Устанавливает поле записи, в котором хранится erl-страницы с диалогом редактирования. При вызове {@link execute}, когда нажата клавиша Ctrl, будет открыта новая вкладка веб-браузера с указанным адресом. Создание url - это задача прикладного разработчика.
              */
             urlProperty: ''
          },
@@ -111,13 +109,24 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          $(document).bind('keydown keyup', this._setOpeningModeHandler);
       },
       /**
-       * Устанавливает связанный список, с которым будет производиться синхронизация изменений диалога.
+       * Устанавливает список, связанный с диалогом редактирования.
+       * @remark
+       * Для связанного списка автоматическиприменяется <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/synchronization/">синхронизация изменений</a>.
        * @param {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} linkedObject Экземпляр класса <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">списка</a>.
        * @see linkedObject
+       * @see getLinkedObject
        */
       setLinkedObject: function(linkedObject){
          this._options.linkedObject = linkedObject;
       },
+       /**
+        * Возвращает экземпляр класса списка, который связан с диалогом редактирования.
+        * @remark
+        * Для связанного списка автоматическиприменяется <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/synchronization/">синхронизация изменений</a>.
+        * @returns {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} linkedObject Экземпляр класса <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">списка</a>.
+        * @see linkedObject
+        * @see setLinkedObject
+        */
       getLinkedObject: function() {
          return this._options.linkedObject;
       },
@@ -280,7 +289,11 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
             return new Deferred().callback();
          }
       },
-
+      /**
+       *
+       * @param meta
+       * @returns {Deferred}
+       */
       getEditRecordDeferred: function(meta) {
          var deferred = new Deferred(),
              config = this._getDialogConfig(meta),

@@ -47,7 +47,7 @@ function( SbisService, Query, cHelpers, cFunctions, constants, Deferred,BaseCont
     * @control
     * @public
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Миронов Александр Юрьевич
     * @category Table
     * @designTime actions /design/design
     *

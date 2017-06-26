@@ -339,7 +339,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
     *
     * @class SBIS3.CONTROLS.DataGridView
     * @extends SBIS3.CONTROLS.ListView
-    * @author Крайнов Дмитрий Олегович
+    * @author Герасимов Александр Максимович
     * @mixes SBIS3.CONTROLS.DragAndDropMixin
     *
     *

@@ -18,7 +18,7 @@ function(RadioGroupBase, dotTpl, ItemTemplate, ITextValue) {
     * @class SBIS3.CONTROLS.RadioGroup
     * @extends SBIS3.CONTROLS.RadioGroupBase
     * @mixes SBIS3.CONTROLS.ITextValue
-    * @author Крайнов Дмитрий Олегович
+    * @author Журавлев Максим Сергеевич
     * @demo SBIS3.CONTROLS.Demo.MyRadioGroup
     *
     * @cssModifier controls-ButtonGroup__vertical Для вертикального расположения элементов в группе.
