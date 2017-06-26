@@ -283,7 +283,7 @@ define([
             let dates = createDates(new Date(2013, 0, 1), 36, 12, 2);
             for (let [i, control] of controls.entries()) {
                assertRangeControl(control, dates[i], `Control ${i}`);
-               assert(!control.isLocked());
+               assert(control.isLocked());
             }
          });
       });
