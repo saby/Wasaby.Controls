@@ -78,7 +78,9 @@
 @button-icon-gap:                         .14rem;                      // gap between icon and text
 @button-icon-text-margin:                 0 0.2857rem 0 1rem;             // margin of text following 16x16 icon
 @button-icon-big-top-offset:              0.2857rem;                     // top offset of 24x24 icon
-@button-icon-left-offset:                 0;
+@button-icon-left-offset:                 0.5rem;
+@button-icon-medium-left-offset:          0;
+@button-icon-large-left-offset:           0;
 @button-icon-big-text-margin:             0 0.2857rem 0 1.2857rem;             // margin of text following 24x24 icon
 @button-text-margin:                      0 0.57rem 0 0.57rem;
 @button-text-margin-left:                 .57rem;
@@ -102,7 +104,7 @@
 @button-border-width:                     .07rem;
 // Normal default button
 @button-border:                           @button-border-width solid #26b8ff;
-@button-line-height: 						   2.73rem;
+@button-line-height: 						   2.86rem;
 @button-active-bg:                        #1d2834;
 @button-hover-bg:                         #212e3d;
 @button-bg: 								      #324a62;
@@ -225,7 +227,7 @@
 @menu-expand-hover-border-color:          transparent transparent transparent @secondary-color;
 @menu-header-height:                      3.57rem;
 @menu-big-header-height:                  1.1428rem;
-@menu-header-padding:                     .14rem;
+@menu-header-padding:                     .14rem 0.5rem;
 @popup-header-font-weight:                normal;
 @popup-header-caption-color:              @default-text-color;
 //Menu item
@@ -242,8 +244,11 @@
 @menu-item-icon24-left-offset:            -.0714rem;
 @menu-item-icon24-left-offset-big:        0;
 @menu-item-line-height:                   3.57rem;
+@menu-item-padding-16:                    2rem;
+@menu-item-padding-24:                    2.5rem;
 // Menu
 @menu-button-menu-border-width:           .07rem;
+@menu-button-menu-margin:                 -10px 0 0 -2px;
 @menu-button-menu-border-color:           #23b8ff;
 @menu-link-header-bg-color:               #5bafe7;
 @menu-link-icon-24-top:                   -.14rem;
