@@ -3058,7 +3058,7 @@ define('js!SBIS3.CONTROLS.ListView',
                more = this.getItems().getMetaData().more,
                isContainerVisible = dcHelpers.isElementVisible(this.getContainer()),
                // отступ с учетом высоты loading-indicator
-               hasScroll = this._scrollWatcher.hasScroll(this._loadingIndicator.height()),
+               hasScroll = this._scrollWatcher.hasScroll(this._getLoadingIndicatorHeight()),
                hasNextPage = this._hasNextPage(more, this._scrollOffset.bottom);
 
             //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
@@ -3070,6 +3070,15 @@ define('js!SBIS3.CONTROLS.ListView',
             if (loadAllowed && isContainerVisible && hasNextPage && !this.isLoading()) {
                this._loadNextPage();
             }
+         },
+         _getLoadingIndicatorHeight: function () {
+            // Раньше высота считалась просто как this._loadingIndicator.height()
+            // Сломалось после https://online.sbis.ru/opendoc.html?guid=981cf035-1404-4429-a1b3-859a85510269&des=
+            // комит 4248b72d6c8994d4f94b2bfbd4d726705ef1e0da.
+            // метод height временно делает контейнер видимым из-за чего на ipad дергаются реестры.
+            // Если будут проблемы и надо будет срочно починить, то в крайнем случае можно попробовать
+            // .controls-ListView-scrollIndicator { display: none !important}
+            return this.getContainer().hasClass('controls-ListView__indicatorVisible') ? this._loadingIndicator.height() : 0;
          },
          /**
           * Обновлет положение ромашки что бы ее не перекрывал фиксированный заголовок
