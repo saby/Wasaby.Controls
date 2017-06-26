@@ -1,10 +1,3 @@
-.hiddenPlaceholder() {
-   &::-webkit-input-placeholder { opacity: 0 }
-   &:-moz-placeholder {  opacity: 0 }
-   &::-moz-placeholder {  opacity: 0 }
-   &:-ms-input-placeholder {  opacity: 0 }
-}
-
 .controls-FieldLink__picker {
    max-height: @controls-FieldLink-picker-max-height;
    min-height: @controls-FieldLink-picker-min-height;
@@ -174,7 +167,7 @@
    }
 
    &.ws-disabled {
-      
+
       .controls-TextBox__placeholder, .controls-TextBox__afterFieldWrapper {
          display: none;
       }
@@ -195,7 +188,7 @@
          display: none;
       }
    }
-   
+
    .controls-FieldLink__dropAllLinks {
       color: @controls-FieldLink-link-color;
       display: none;
@@ -234,7 +227,10 @@
 }
 
 .ws-enabled.controls-FieldLink__inputMinWidth .controls-TextBox__fieldWrapper {
-   min-width: @controls-FieldLink-fieldWrapper-minWidth;
+   /* https://developer.mozilla.org/en-US/docs/Web/CSS/--*
+      т.к. min-width нужен только для темизации, то делаю его
+      через custom property */
+   --min-width: @controls-FieldLink-fieldWrapper-minWidth;
 }
 
 .controls-FieldLink__selected:not(.controls-FieldLink__multiselect):not(.controls-FieldLink__inputMinWidth) .controls-TextBox__fieldWrapper {
@@ -253,11 +249,11 @@
    }
    &:not(.ws-disabled) {
       &.controls-FieldLink-Link__filterButton {
-         color: #0055bb;
+         color: @controls-FieldLink-FilterButton-color;
          text-decoration: none;
 
          &.ws-enabled:hover {
-            color: #0055bb;
+            color: @controls-FieldLink-FilterButton-color-hover;
             text-decoration: underline;
          }
       }
@@ -340,7 +336,7 @@
 .ws-is-firefox {
    .controls-FieldLink {
       vertical-align: middle;
-      
+
       .controls-FieldLink__item-cross {
          top: -1px;
       }
@@ -371,6 +367,11 @@
 }
 
 .ws-is-ie10 {
+   /* ie10 не поддерживает custom property */
+   .ws-enabled.controls-FieldLink__inputMinWidth .controls-TextBox__fieldWrapper {
+      min-width: @controls-FieldLink-fieldWrapper-minWidth;
+   }
+   
    .controls-FieldLink__picker:not(.controls-Suggest__picker) .controls-FieldLink__item-caption {
       display: inline-block;
       max-width: ~'calc(100% - '@icon-width~');'

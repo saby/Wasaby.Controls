@@ -44,7 +44,6 @@
                   height: 100% !important;
                   width: auto !important;
                   .controls-Button__icon {
-                     height: 100% !important;
                      font-size: 24px !important;
                   }
                }
@@ -81,10 +80,6 @@
          height: @closeButtonHeight;
          cursor: pointer;
          background: @closeButtonImage;
-         &:hover {
-            background: @closeButtonImageHover;
-            color: @default-color !important;
-         }
          &:active {
             background: @closeButtonImageHover;
          }
@@ -165,10 +160,6 @@
       cursor: @list-view-actions-cursor;
       color: @blue-dark-color !important;
       background: none;
-      &:hover {
-         color: @blue-dark-color !important;
-         background: none;
-      }
 
       .icon-size(@list-view-items-toolbar-icon-size, @list-view-items-toolbar-font-family);
    }
@@ -192,16 +183,38 @@
             content: "\e66c";
          }
 
-         &:hover {
-            color: @blue-dark-color !important;
-            background: none;
-         }
          .icon-24();
       }
       &.controls-popup-revert-vertical {
          .controls-PopupMixin__closeButton {
             top: @list-view-context-menu-close-top;
             bottom: auto;
+         }
+      }
+   }
+}
+.ws-is-desktop-platform {
+   .controls-ItemActions__menu-container {
+      .controls-PopupMixin__closeButton {
+         &:hover {
+            color: @blue-dark-color !important;
+            background: none;
+         }
+      }
+      &.controls-ItemActions__contextMenu {
+         .controls-PopupMixin__closeButton {
+            &:hover {
+               color: @blue-dark-color !important;
+               background: none;
+            }
+         }
+      }
+      &.controls-ItemActions__menu-touchMode {
+         .controls-PopupMixin__closeButton {
+            &:hover {
+               background: @closeButtonImageHover;
+               color: @default-color !important;
+            }
          }
       }
    }

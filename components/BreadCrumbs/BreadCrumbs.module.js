@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
     * @class SBIS3.CONTROLS.BreadCrumbs
     * @extends SBIS3.CORE.CompoundControl
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Черемушкин Илья Вячеславович
     *
     * @mixes SBIS3.CONTROLS.DSMixin
     * @mixes SBIS3.CONTROLS.PickerMixin
@@ -248,7 +248,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
              crumbs = $('.controls-BreadCrumbs__crumb', targetContainer),
              i = crumbs.length - 1;
 
-         if (!crumbs.length){
+         if (!crumbs.length || containerWidth == 0){
             return;
          }
          //Добавляем троеточие если пункты не убираются в контейнер
@@ -339,7 +339,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       _buildTplArgs: function(item) {
          var args = BreadCrumbs.superclass._buildTplArgs.apply(this, arguments);
          args.decorators = this._options._decorators;
-         args.escapeHtml = strHelpers.escapeHtml;  
+         args.escapeHtml = strHelpers.escapeHtml;
+         args.escapeUnicode = strHelpers.escapeUnicode;  
          return args;
       },
       

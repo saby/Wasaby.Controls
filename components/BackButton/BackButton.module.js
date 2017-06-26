@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.BackButton',
     * Пример использования - иерархические реестры
     * @class SBIS3.CONTROLS.BackButton
     * @extends SBIS3.CORE.CompoundControl
-    * @author Крайнов Дмитрий Олегович
+    * @author Черемушкин Илья Вячеславович
     * @demo SBIS3.CONTROLS.Demo.MyBackButton
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers parent

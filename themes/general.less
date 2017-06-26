@@ -1,12 +1,6 @@
 @import "header";
 @import "mixins";
 
-//body, html {
-//  font: @default-font-size @default-font-name;
-//  color: @text-color;
-//  background: @bg;
-//}
-
 button::-moz-focus-inner,
 input[type="button"]::-moz-focus-inner,
 input[type="submit"]::-moz-focus-inner,
@@ -191,4 +185,68 @@ input[type="reset"]::-moz-focus-inner {
     display: block;
     position: relative;
   }
+}
+.controls-ListView__withoutMarker {
+   .controls-ListView__item__selected,
+   .controls-ListView__item__multiSelected {
+      .controls-DataGridView__td:first-child,
+      .controls-CompositeView__tileTitle,
+      .controls-ListView__item-title,
+      &:not(.controls-CompositeView__verticalItemActions),
+      &:not(.controls-ListView__item-type-node) {
+         background-image: none !important;
+         border-left-color: transparent;
+      }
+      &.controls-ListView__item {
+         &:not(.controls-ListView__hoveredItem) {
+            border-left-color: transparent;
+            background-color: transparent;
+         }
+      }
+   }
+}
+
+.ws-moneyDecorator {
+   &__integer{
+      font-size: @money-decorator-integer-font-size;
+      color: @money-decorator-integer-font-color;
+      &__AccentResults{
+         font-size: @money-decorator-integer-accent-results-font-size;
+         color: @money-decorator-integer-accent-results-font-color;
+         font-weight: @money-decorator-integer-accent-results-font-weight;
+      }
+      &__NoAccentResults{
+         font-size: @money-decorator-integer-no-accent-results-font-size;
+         color: @money-decorator-integer-no-accent-results-font-color;
+         font-weight: @money-decorator-integer-no-accent-results-font-weight;
+      }
+      &__Group{
+         font-size: @money-decorator-integer-group-font-size;
+         color: @money-decorator-integer-group-font-color;
+      }
+      &__BasicRegistry{
+         font-size: @money-decorator-integer-basic-registry-font-size;
+         color: @money-decorator-integer-basic-registry-font-color;
+      }
+      &__NoBasicRegistry{
+         font-size: @money-decorator-integer-no-basic-registry-font-size;
+         color: @money-decorator-integer-no-basic-registry-font-color;
+      }
+      &__AccentRegistry{
+         font-size: @money-decorator-integer-accent-registry-font-size;
+         color: @money-decorator-integer-accent-registry-font-color;
+         font-weight: @money-decorator-integer-accent-registry-font-weight;
+      }
+      &__NoAccentRegistry{
+         font-size: @money-decorator-integer-no-accent-registry-font-size;
+         color: @money-decorator-integer-no-accent-registry-font-color;
+         font-weight: @money-decorator-integer-no-accent-registry-font-weight;
+      }
+   }
+   &__fraction{
+      font-size: @money-decorator-fraction-font-size;
+      color: @money-decorator-fraction-font-color;
+      line-height: normal;
+      font-weight: normal !important;
+   }
 }

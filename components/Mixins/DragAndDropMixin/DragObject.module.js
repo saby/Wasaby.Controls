@@ -2,8 +2,9 @@
 define('js!SBIS3.CONTROLS.DragObject', [
    'Core/Abstract',
    'Core/WindowManager',
-   'Core/core-instance'
-], function( cAbstract, cWindowManager, cInstance) {
+   'Core/core-instance',
+   'Core/constants'
+], function( cAbstract, cWindowManager, cInstance, constants) {
    'use strict';
    /**
     * Синглтон объект, в котором содержится информация о текущем состоянии Drag'n'drop:
@@ -190,21 +191,39 @@ define('js!SBIS3.CONTROLS.DragObject', [
        */
       getTargetsDomElemet: function(){
          if (this._jsEvent) {
-            if ($(this._jsEvent.target).hasClass('controls-DragNDrop__draggedItem')){
+            var avatar = this.getAvatar(),
+               isTouchEvent = (this._jsEvent.type in {"touchmove":true, "touchend":true});
+            if (typeof document.elementsFromPoint == 'function' && (
+               this._isAvatarElem(this._jsEvent.target)
+               || isTouchEvent
+               || constants.browser.firefox
+            )) {
+               //Для touch событий в таргете всегда лежит элемент над которым началось перемещение
+               //firefox не всегда правильно определяет target
+               //Когда курсор быстро двигается он может наезжать на аватар ищем элемент который в него не входит
                var elements = document.elementsFromPoint(this._jsEvent.pageX, this._jsEvent.pageY);
                for (var i=0,len = elements.length; i< len; i++) {
-                  if (!$(elements[i]).closest('.controls-DragNDrop__draggedItem').length) {
+                  if (!avatar || !this._isAvatarElem(elements[i])) {
                      return $(elements[i]);
                   }
                }
-            } else if (this._jsEvent.type in {"touchmove":true, "touchend":true}) {
-               //для touch событий в таргете всегда лежит элемент над которым началось перемещение
-               //тоже самое для firefox
+            } else if (typeof document.elementFromPoint == 'function' && isTouchEvent) {
+               //на ipad'e нет метода elementsFromPoint
                return $(document.elementFromPoint(this._jsEvent.pageX, this._jsEvent.pageY));
             } else {
                return $(this._jsEvent.target);
             }
          }
+      },
+      /**
+       * Возвращает true если переданный элемент входит в аватар
+       * @param elem
+       * @returns {Boolean}
+       * @private
+       */
+      _isAvatarElem: function (elem) {
+         var avatar = this.getAvatar();
+         return avatar && (avatar.find(elem).length > 0 || avatar[0] == elem);
       },
       //region protected
       /**

@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.FormattedTextBox',
     * @class SBIS3.CONTROLS.FormattedTextBox
     * @extends SBIS3.CONTROLS.FormattedTextBoxBase
     * @demo SBIS3.CONTROLS.Demo.MyFormattedTextBox
-    * @author Крайнов Дмитрий Олегович
+    * @author Роман Валерий Сергеевич
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment

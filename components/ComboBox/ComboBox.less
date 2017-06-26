@@ -34,7 +34,8 @@
    &.controls-TextBox {
       &.ws-has-focus, &:hover{
        .controls-ComboBox__arrowDown{
-         color: #313E78!important;
+          //todo: !important
+         color: @combo-box-arrowDown-color!important;
        }
      }
      .controls-TextBox__afterFieldWrapper {
@@ -111,6 +112,8 @@
 
       .controls-TextBox__afterFieldWrapper {
          .controls-ComboBox__arrowDown {
+            //todo !important;
+            color: @combo-box-arrowDown-color-hover !important;
             border-width: @combo-box-arrow-active-border-width;
             border-style: @combo-box-arrow-active-border-style;
             border-color: @combo-box-arrow-active-border-color;
@@ -138,15 +141,17 @@
    }
 }
 
-.controls-ComboBox__picker {
+.controls-ComboBox__picker.controls-FloatArea {
    overflow-y: hidden!important;/*Перебиваем inline стили пикера*/
    border: @combo-box-picker-border;
+   box-sizing: border-box;
    .controls-ComboBox__body {
      height: calc(~"100% - 10px"); /* отступ от края экрана*/
      .border-radius(@combo-box-picker-border-radius);
      .controls-ComboBox__list {
         .flexbox();
         .flex-direction(column);
+        position: relative; //Для того, чтобы можно было высчитать scrollTop итема
      }
    }
    .controls-ComboBox__scrollContainer{
@@ -170,6 +175,7 @@
       }
    }
    &.controls-popup-revert-vertical {
+      margin-top: calc(~"1px +"@default-border-width) !important;
       .controls-ComboBox__body{
          .controls-ComboBox__list {
             .flex-direction(column-reverse);

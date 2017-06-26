@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * @class SBIS3.CONTROLS.ComboBox
     * @extends SBIS3.CONTROLS.TextBox
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Красильников Андрей Сергеевич
     *
     * @demo SBIS3.CONTROLS.Demo.MyComboBox Пример 1. Выпадающий список, для которого установлен набора данных в опции items.
     * @demo SBIS3.CONTROLS.Demo.MyComboBoxDS Пример 2. Выпадающий список, для которого установлен источник данных в опции dataSource.
@@ -280,7 +280,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _keyboardHover: function (e) {
          var
             selectedKey = this.getSelectedKey(),
-            selectedItem, newSelectedItem, newSelectedItemId;
+            selectedItem, newSelectedItem, newSelectedItemId, newSelectedItemHash;
          if (this._picker) {
             if(!this._picker.isVisible() && e.which === constants.key.esc ){
                return true;
@@ -298,8 +298,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             }
             if (newSelectedItem && newSelectedItem.length) {
                newSelectedItemId = newSelectedItem.data('id');
+               newSelectedItemHash = newSelectedItem.data('hash');
                this.setSelectedKey(newSelectedItemId);
-               this._scrollToItem(newSelectedItemId);
+               this._scrollToItem(newSelectedItemHash);
                this.setActive(true); // После подскролливания возвращаем фокус в контейнер компонента
             }
          }
@@ -733,22 +734,20 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          ComboBox.superclass.showPicker.call(this);
          TextBoxUtils.setEqualPickerWidth(this._picker);
          //После отображения пикера подскроливаем до выбранного элемента
-         var itemToScroll = this.getSelectedKey(),
-             item;
+         var projection = this._getItemsProjection(),
+             item = projection.at(this.getSelectedIndex()),
+             hash = item && item.getHash();
          
-         if(!itemToScroll) {
-            item = this.getItems().at(0);
-            if (item) {
-               itemToScroll = item.get(this._options.idProperty);
-            }
+         if(!hash && projection.getCount() > 0) {
+            hash = projection.at(0).getHash();
          }
-         this._scrollToItem(itemToScroll);
+         this._scrollToItem(hash);
       },
 
       _initializePicker: function(){
          var self = this;
          ComboBox.superclass._initializePicker.call(self);
-
+         this._scrollContainer = this.getChildControlByName('ComboBoxScroll');
          // пробрасываем события пикера в метод комбобокса, т.к. если значение выбрано, то при открытии пикера фокус
          // перейдет на него и комбобокс перестанет реагировать на нажатие клавиш, потому что он наследуется от AreaAbstract
          // TODO чтобы избежать этого нужно переписать Combobox на ItemsControlMixin, тогда метод _scrollToItem не будет переводить фокус на пикер
@@ -786,10 +785,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          ComboBox.superclass.setSelectedKey.apply(this, arguments);
       },
 
-      _scrollToItem: function(itemId) {
-         var itemContainer  = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
+      _scrollToItem: function(itemHash) {
+         var itemContainer  = $('.controls-ListView__item[data-hash="' + itemHash + '"]', this._getItemsContainer());
          if (itemContainer.length) {
             LayoutManager.scrollToElement(itemContainer, true);
+            //Устанавливаю скроллбар в нужную позицию
+            this._scrollContainer._initScrollbar();
+            this._scrollContainer._scrollbar.setPosition(itemContainer.position().top);
          }
       }
    });

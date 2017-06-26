@@ -59,11 +59,13 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * Контрол применяется в качестве альтернативы полю связи {@link SBIS3.CONTROLS.FieldLink}.
     *
     * Подробнее о поле связи и кнопке выбора вы можете прочитать в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/'>Поле связи</a>.
+    * Обратить внимание: метод <a href='https://wi.sbis.ru/docs/WSControls/Buttons/Button/methods/setCaption/'>setCaption</a>, устанавливающий текст на кнопке, не работает.
+    * caption проставляется только по выбору записи по displayProperty или же строится по шаблону.
     *
     * @class SBIS3.CONTROLS.SelectorButton
     * @extends WSControls/Buttons/Button
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Герасимов Александр Максимович
     *
     * @mixes SBIS3.CONTROLS.IconMixin
     * @mixes SBIS3.CONTROLS.MultiSelectable
@@ -251,13 +253,28 @@ define('js!SBIS3.CONTROLS.SelectorButton',
       },
 
       _clickHandler: function(e) {
-         var cfg = this.getDictionaries()[0];
+         var cfg = this.getDictionaries()[0],
+             $target = $(e.target),
+             itemContainer;
 
-         if($(e.target).hasClass('controls-SelectorButton__cross')) {
+         if($target.hasClass('controls-SelectorButton__cross')) {
             this.removeItemsSelectionAll();
+         } else if (!this.isEnabled()) {
+            itemContainer = $target.closest('.controls-ListView__item', this._getItemsContainer());
+            
+            if(itemContainer.length) {
+               ItemsSelectionUtil.onItemClickNotify.call(
+                  this,
+                  this._getItemProjectionByHash(itemContainer.data('hash')).getContents().get(this._options.idProperty)
+               );
+            }
          } else if(cfg) {
             this.showSelector(cfg);
          }
+      },
+   
+      _checkEnabledByClick: function () {
+         return true;
       },
 
       showSelector: function(cfg){
@@ -323,8 +340,12 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          }
       },
 
-      reload: fHelpers.nop,
-      _setSelectedItems: fHelpers.nop
+      reload: function () {
+         
+      },
+      _setSelectedItems: function () {
+         
+      }
    });
 
    return SelectorButton;

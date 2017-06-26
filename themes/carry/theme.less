@@ -225,7 +225,8 @@
 }
 .ws-float-area-stack-cut-wrapper {
    .ws-window-titlebar, .ws-float-area-title {
-      background: @white-color !important;;
+      background: @white-color !important;
+      right: 65px;
    }
 }
 
@@ -239,6 +240,7 @@
       line-height: @carry-big-height !important;
       font-size: 32px !important;
       position: initial;
+      max-width: 100%;
    }
 }
 
@@ -322,7 +324,10 @@
    }
 }
 
-.ws-window-titlebar-action.close, .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled.ws-button-classic {
+.ws-window-titlebar-action.close,
+.ws-float-close.sbisname-window-title-close,
+// SBIS3.CORE.CloseButton используется в DateRangeSlider. Удалить этот селектор после того как выпилим SBIS3.CORE.CloseButton
+.ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled.ws-button-classic {
    width: 60px !important;
    height: 40px !important;
    background: @closeButtonImage !important;

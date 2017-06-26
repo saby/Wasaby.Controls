@@ -76,11 +76,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          config.classNodeType = ' controls-ListView__item-type-' + (config.nodePropertyValue == null ? 'leaf' : config.nodePropertyValue == true ? 'node' : 'hidden');
          config.classNodeState = config.nodePropertyValue !== null ? (' controls-TreeView__item-' + (cfg.projItem.isExpanded() ? 'expanded' : 'collapsed')) : '';
          config.classIsSelected = (cfg.selectedKey == cfg.item.getId()) ? ' controls-ListView__item__selected' : '';
-         config.isColumnScrolling = cfg.startScrollColumn === 0;
-         config.addClasses = 'controls-DataGridView__tr controls-ListView__item js-controls-ListView__item ' + (cfg.className ? cfg.className : '') + (config.isColumnScrolling ? ' controls-DataGridView__scrolledCell' : ' controls-DataGridView__notScrolledCell') + config.classNodeType + config.classNodeState + config.classIsLoaded + config.classHasLoadedChild + config.classIsSelected;
-         if (config.isColumnScrolling){
-            config.computedPadding = 'left: ' + cfg.columnsScrollPosition + 'px;';
-         }
+         config.isColumnScrolling = cfg.startScrollColumn !== undefined;
+         config.columnsShift = cfg.columnsShift;
+         config.addClasses = 'controls-DataGridView__tr controls-ListView__item js-controls-ListView__item ' + (cfg.className ? cfg.className : '') + config.classNodeType + config.classNodeState + config.classIsLoaded + config.classHasLoadedChild + config.classIsSelected;
+
          return config;
       },
       getItemContentTplData = function(cfg){
@@ -115,7 +114,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * Инициировать добавление можно как по нажатию кнопок в футерах, так и по кнопке Enter из режима редактирования последней записи.
     * Подробное описание конфигурации компонента и футеров вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/add-in-place/"> Добавление по месту</a>.
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Авраменко Алексей Сергеевич
     *
     * @control
     * @public
@@ -209,7 +208,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _getSearchBreadCrumbsWidth: function(){
       	var
             firstCol = $('td:first', this._getItemsContainer()),
-      	   firstColWidth = this._options.multiselect ? firstCol.width() : 0,
+      	   firstColWidth = this._options.multiselect ? firstCol.outerWidth() : 0,
       		secondCol = firstCol.next('td'),
       		cellPadding = secondCol.outerWidth() - secondCol.width();
       	return this.getContainer().width() - cellPadding - firstColWidth;
@@ -456,6 +455,14 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
          TreeDataGridView.superclass._onRightSwipeHandler.apply(this, arguments);
       },
+   
+      _mouseDownHandler: function(e) {
+         /* По стандарту отключаю выделение по двойному клику мышкой в дереве */
+         if(e.originalEvent.detail > 1) {
+            e.preventDefault();
+         }
+         TreeDataGridView.superclass._mouseDownHandler.apply(this, arguments);
+      },
 
       _isHoverControl: function(target) {
          var res = TreeDataGridView.superclass._isHoverControl.apply(this, arguments);
@@ -479,7 +486,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          container.attr('data-parent', parentKey);
 
          if (this._options.openedPath[key]) {
-            var hierarchy = this._getHierarchyRelation(),
+            var hierarchy = this._options._getHierarchyRelation(this._options),
                children = hierarchy.getChildren(key, this.getItems());
 
             if (children.length) {

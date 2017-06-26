@@ -171,7 +171,7 @@
          height: @icon-button-edit-round-border-height - 2 * @list-view-items-toolbar-icon-button-border-width !important;
          width: @icon-button-edit-round-border-width - 2 * @list-view-items-toolbar-icon-button-border-width !important;
          line-height: @icon-button-edit-round-border-line-height - 2 * @list-view-items-toolbar-icon-button-border-width !important;
-         font-family: 'cbuc-icons' !important;
+         font-family: @list-view-items-toolbar-icon-button-border-font !important;
       }
    }
 
@@ -201,12 +201,6 @@
    }
 }
 
-.ws-is-firefox {
-   .controls-ItemsToolbar {
-      bottom: @list-view-items-toolbar-bottom + 1;
-   }
-}
-
 .controls-ListView.controls-ListView__touchMode {
    &.controls-ListView__bottomStyle {
        > .controls-ItemsToolbar {
@@ -233,6 +227,7 @@
                   }
                   .controls-Button__text {
                      font-size: 14px;
+                     line-height: 14px;
                   }
                }
                .controls-ItemActions__menu-button {
@@ -274,6 +269,7 @@
                   display: block;
                   color: @hover-color;
                   font-size: 12px;
+                  line-height: 12px;
                }
             }
 

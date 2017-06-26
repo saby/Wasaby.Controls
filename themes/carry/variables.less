@@ -2,6 +2,7 @@
 
 @globalDefaultFontSize:                         24px;
 @default-font-size:                             @globalDefaultFontSize;
+@default-text-size:                             @globalDefaultFontSize;
 @default-font-line-height:                      24px;
 @data-grid-basic-height:                        44px;
 
@@ -13,9 +14,9 @@
 @closeButtonImage:                              url('img/areaCloseButton.png') 0 0;
 @closeButtonImageHover:                         url('img/areaCloseButton.png') 0 -40px;
 
-@icon-small-size:                               24px;
-@icon-medium-size:                              32px;
-@icon-large-size:                               48px;
+@icon-small-size:                               16px;
+@icon-medium-size:                              24px;
+@icon-large-size:                               32px;
 
 // data grid
 @data-grid-cell-height:                         44px;;
@@ -310,7 +311,6 @@
 // ----------- //
 
 // Menu
-@menu-button-menu-top-margin:                           0;
 @menu-button-menu-border-color:                         transparent;
 @menu-button-menu-bg:                                   #E1ECF6;
 
@@ -489,13 +489,7 @@
 @check-box-icon-bg:                             url(@check-box-icon-spritesheet) -4px -2px;
 @check-box-icon-hover-bg:                       url(@check-box-icon-spritesheet) -4px 28px;
 @check-box-icon-checked-bg:                     url(@check-box-icon-spritesheet) -4px 74px;
-@check-box-icon-checked-hover-bg:               url(@check-box-icon-spritesheet) -4px 74px;
 
-@check-box-icon-third-state-bg:                 url(@check-box-icon-spritesheet) -4px 51px;
-
-@check-box-icon-disabled-bg:                    url(@check-box-icon-spritesheet) 28px -2px;
-@check-box-icon-disabled-checked-bg:            url(@check-box-icon-spritesheet) 28px 74px;
-@check-box-icon-disabled-third-state-bg:        url(@check-box-icon-spritesheet) 28px 74px;
 
 // Переменные для нового стандарта
 @check-box-icon-size:                           36px;
@@ -581,7 +575,7 @@
 // PrintDialog
 @controls-printdialog-activate-right:           @controls-movedialog-activate-right;
 @controls-printdialog-activate-margin-top:      @controls-movedialog-activate-top;
-@controls-printdialog-min-width:                650px;
+@controls-printdialog-min-width:                @controls-movedialog-min-width;
 
 // Big button
 @button-big-font:                               @globalDefaultFontSize;
@@ -598,7 +592,6 @@
 @controls-OperationsPanel-actions-margin:       0 8px;
 @controls-OperationsPanel-actions-mark-margin:  @controls-OperationsPanel-actions-margin;
 @controls-OperationsPanel-actions-padding-left: 8px;
-@controls-OperationsMark-checkBox-margin:       0 8px 0 8px;
 @controls-OperationsPanel-bg:                   #E5ECF5;
 
 // ----------------------- //

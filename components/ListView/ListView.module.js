@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'Core/IoC',
    'js!SBIS3.CORE.CompoundControl',
    'js!SBIS3.CORE.CompoundActiveFixMixin',
+   'js!SBIS3.StickyHeaderManager',
    'js!SBIS3.CONTROLS.ItemsControlMixin',
    'js!SBIS3.CONTROLS.MultiSelectable',
    'js!WS.Data/Query/Query',
@@ -26,7 +27,6 @@ define('js!SBIS3.CONTROLS.ListView',
    'tmpl!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'js!SBIS3.CONTROLS.CommonHandlers',
-   'js!SBIS3.CONTROLS.Pager',
    'js!SBIS3.CONTROLS.MassSelectionController',
    'js!SBIS3.CONTROLS.ImitateEvents',
    'js!SBIS3.CONTROLS.Link',
@@ -56,6 +56,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'Core/helpers/Object/isEmpty',
    'Core/Sanitize',
    'Core/WindowManager',
+   'js!SBIS3.CONTROLS.VirtualScrollController',
    'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
    'js!SBIS3.CONTROLS.DragEntity.Row',
    'js!WS.Data/Collection/RecordSet',
@@ -65,12 +66,11 @@ define('js!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
-   function (cMerge, cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, CompoundActiveFixMixin, ItemsControlMixin, MultiSelectable, Query, Record, 
+   function (cMerge, cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, CompoundActiveFixMixin, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
-    TemplateUtil, CommonHandlers, Pager, MassSelectionController, ImitateEvents,
+    TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager) {
-
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController) {
      'use strict';
 
       var
@@ -105,7 +105,7 @@ define('js!SBIS3.CONTROLS.ListView',
        *
        * @class SBIS3.CONTROLS.ListView
        * @extends SBIS3.CORE.CompoundControl
-       * @author Крайнов Дмитрий Олегович
+       * @author Герасимов Александр Максимович
        *
        * @mixes SBIS3.CORE.CompoundActiveFixMixin
        * @mixes SBIS3.CONTROLS.DecorableMixin
@@ -411,6 +411,10 @@ define('js!SBIS3.CONTROLS.ListView',
                bottom: null
             },
             _setScrollPagerPositionThrottled: null,
+            _updateScrollIndicatorTopThrottled: null,
+            _removedItemsCount: false,
+            _loadQueue: {},
+            _loadId: 0,
             _options: {
                _canServerRender: true,
                _buildTplArgs: buildTplArgsLV,
@@ -520,18 +524,6 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Если опция {@link SBIS3.CORE.Control#enabled enabled} контрола установлена в false, то действия, доступные при наведении курсора мыши на запись, отображаться не будут. Однако с помощью опции {@link SBIS3.CORE.Control#allowChangeEnable allowChangeEnable} можно изменить это поведение.
                 * ![](/allowChangeEnable.png)
                 * Подробнее о настройке таких действий вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">Быстрый доступ к операциям по наведению курсора</a>.
-                *
-                * @faq Почему нет чекбоксов в режиме множественного выбора значений (активация режима производится опцией {@link SBIS3.CONTROLS.ListView#multiselect multiselect})?
-                * Для отрисовки чекбоксов необходимо в шаблоне отображения элемента коллекции обозначить их место.
-                * Для отображения чекбоксов необходимо обозначить их место в шаблоне отображения элемента коллекции.
-                * Сделать это можно используя CSS-классы "controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox".
-                * В данном примере тег span обозначает место отображения чекбокса:
-                * <pre>
-                *     <div class="listViewItem" style="height: 30px;">
-                *        <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></span>
-                *        {{=it.item.get("title")}}
-                *     </div>
-                * </pre>
                 *
                 * @example
                 * <b>Пример 1.</b> Конфигурация операций через вёрстку компонента.
@@ -919,6 +911,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @deprecated
                 */
                useSelectAll: false,
+               virtualScrolling: false,
                //это использется для отображения аватарки драгндропа, она должна быть жекорированной ссылкой
                //временное решение пока не будет выпонена задача https://online.sbis.ru/debug/opendoc.html?guid=32162686-eee0-4206-873a-39bc7b4ca7d7&des=
                linkTemplateConfig: null,
@@ -945,12 +938,13 @@ define('js!SBIS3.CONTROLS.ListView',
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange', 'onBeginDelete', 'onEndDelete', 'onBeginMove', 'onEndMove');
            
             this._setScrollPagerPositionThrottled = throttle.call(this._setScrollPagerPosition, 100, true).bind(this);
+            this._updateScrollIndicatorTopThrottled = throttle.call(this._updateScrollIndicatorTop, 100, true).bind(this);
             this._eventProxyHdl = this._eventProxyHandler.bind(this);
             
             this._toggleEventHandlers(this._container, true);
 
             this.initEditInPlace();
-            this.setItemsDragNDrop(this._options.itemsDragNDrop);
+            this._setItemsDragNDrop(this._options.itemsDragNDrop);
             dispatcher.declareCommand(this, 'activateItem', this._activateItem);
             dispatcher.declareCommand(this, 'beginAdd', this._beginAdd);
             dispatcher.declareCommand(this, 'beginEdit', this._beginEdit);
@@ -990,6 +984,43 @@ define('js!SBIS3.CONTROLS.ListView',
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
             this._initLoadMoreButton();
+         },
+
+         _initVirtualScrolling: function(){
+            this._virtualScrollController = new VirtualScrollController({
+               view: this,
+               projection: this._getItemsProjection(),
+               viewport: this._getScrollWatcher().getScrollContainer(),
+               viewContainer: this.getContainer(),
+               itemsContainer: this._getItemsContainer()
+            });
+
+            this._topWrapper = $('.controls-ListView__virtualScrollTop', this.getContainer());
+            this._bottomWrapper = $('.controls-ListView__virtualScrollBottom', this.getContainer());
+
+            this.subscribeTo(this._virtualScrollController, 'onWindowChange', function(event, config){
+               var itemsToAdd = [],
+                  itemsToRemove = [],
+                  item;
+               for (var i = config.add[0]; i <= config.add[1]; i++) {
+                  item = this._getItemsProjection().at(i);
+                  if (item) {
+                     itemsToAdd.push(item);
+                  }
+               }
+               for (var i = config.remove[0]; i <= config.remove[1]; i++) {
+                  item = this._getItemsProjection().at(i);
+                  if (item) {
+                     itemsToRemove.push(item);
+                  }
+               }
+               this._addItems(itemsToAdd, config.addPosition);
+               this._removeItems(itemsToRemove);
+
+               this._topWrapper.height(config.topWrapperHeight);
+               this._bottomWrapper.height(config.bottomWrapperHeight);
+
+            }.bind(this));
          },
 
          _toggleEventHandlers: function(container, bind) {
@@ -1118,6 +1149,7 @@ define('js!SBIS3.CONTROLS.ListView',
                visible: false,
                showPages: false,
                idProperty: 'id',
+               mode: (this._options.navigation && this._options.navigation.lastPage) ? 'full' : 'part',
                parent: this
             });
             // TODO: То, что ListView знает о компонентах в которые он может быть вставленн и то, что он переносит свои
@@ -1159,7 +1191,6 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _onScrollHandler: function(event, scrollTop){
             var itemActions = this.getItemsActions();
-
             if (itemActions && itemActions.isItemActionsMenuVisible()){
                itemActions.hide();
             }
@@ -1323,7 +1354,7 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass._onClickHandler.apply(this, arguments);
             var $target = $(e.target),
                 target = this._findItemByElement($target),
-                model;
+                model, $group;
 
             if (target.length && this._isViewElement(target)) {
                model = this._getItemsProjection().getByHash(target.data('hash')).getContents();
@@ -1342,6 +1373,14 @@ define('js!SBIS3.CONTROLS.ListView',
             if (!isEmpty(this._options.groupBy) && this._options.easyGroup && $(e.target).hasClass('controls-GroupBy__separatorCollapse')) {
                var idGroup = $(e.target).closest('.controls-GroupBy').attr('data-group');
                this.toggleGroup(idGroup);
+               if ($target.closest('.controls-ListView').parent().hasClass('ws-sticky-header__header-container')) {
+                  $group = this._getItemsContainer().find('.controls-GroupBy[data-group="' + idGroup + '"]');
+                  if (this._isGroupCollapsed(idGroup)) {
+                     this._getScrollWatcher().scrollToElement($group);
+                  } else {
+                     this._getScrollWatcher().scrollToElement($group.next());
+                  }
+               }
             }
          },
 
@@ -1530,7 +1569,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var hoveredItem = this.getHoveredItem(),
                 emptyHoveredItem;
 
-            if (hoveredItem.container === null) {
+            if (hoveredItem && hoveredItem.container === null) {
                return;
             }
 
@@ -1705,9 +1744,11 @@ define('js!SBIS3.CONTROLS.ListView',
                          //todo https://online.sbis.ru/opendoc.html?guid=0d1c1530-502c-4828-8c42-aeb330c014ab&des=
                          if (this._options.loadItemsStrategy == 'append') {
                             var tr = this._findItemByElement($(target));
-                            var hash = tr.attr('data-hash');
-                            var index = this._getItemsProjection().getIndex(this._getItemsProjection().getByHash(hash));
-                            self.setSelectedIndex(index);
+                            if (tr.length) {
+                               var hash = tr.attr('data-hash');
+                               var index = this._getItemsProjection().getIndex(this._getItemsProjection().getByHash(hash));
+                               self.setSelectedIndex(index);
+                            }
                          }
                          else {
                             self.setSelectedKey(id);
@@ -1772,22 +1813,10 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                       this.setSelectedItemsAll.call(this);
                      if (dataSet.getCount() == MAX_SELECTED && dataSet.getMetaData().more){
-                        var message = 'Отмечено ' + MAX_SELECTED + ' записей, максимально допустимое количество, обрабатываемое системой СБИС.';
-
-                        var windowOptions = (constants.defaultOptions || {})['SBIS3.CORE.Window'] || {};
-                        //TODO В 3.7.4.200 popupMixin не поддерживает анимацию, соответсвенно и информационные окна, сделанные на его основе
-                        //TODO По этой причине проверяем, если включена настройка 'анимированные окна', то покажем старое окно.
-                        //TODO В 3.7.4.220 планируется поддержать анимацию -> выпилить этот костыль!
-                        if(windowOptions.animatedWindows){
-                           fcHelpers.message(message);
-                        }
-                        else {
-                           InformationPopupManager.showMessageDialog({
-                              status: 'default',
-                              message: message,
-                              parent: this
-                           });
-                        }
+                        InformationPopupManager.showMessageDialog({
+                           status: 'default',
+                           message: rk('Отмечено 1000 записей, максимально допустимое количество, обрабатываемое системой СБИС.')
+                        });
                      }
                   }.bind(this));
             } else {
@@ -1969,7 +1998,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var page = 0;
             if (this._scrollBinder) {
                var scrollPage = this._scrollBinder._getScrollPage();
-               page = Math.floor(scrollPage.element.index() / this._limit);
+               page = scrollPage ? Math.floor(scrollPage.element.index() / this._limit) : 0;
             }
             // прибавим к полученой странице количество еще не загруженных страниц
             return page + Math.floor((this._scrollOffset.top) / this._limit);
@@ -2363,6 +2392,14 @@ define('js!SBIS3.CONTROLS.ListView',
                         this._hideToolbar();
                         this._getItemsContainer().off('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
                      }.bind(this),
+                     // В момент сохранения записи блокируем весь ListView чтобы побороть закликивание
+                     onBeginSave: function() {
+                        this._toggleIndicator(true);
+                     }.bind(this),
+                     // Использую именно beginSave и endSave, т.к. afterEndEdit в случае ошибки при сохранении не будет стрелять, а onEndSave стреляет всегда
+                     onEndSave: function() {
+                        this._toggleIndicator(false);
+                     }.bind(this),
                      onDestroy: function() {
                         //При разрушении редактирования скрывает toolbar. Иначе это ни кто не сделает. А разрушение могло
                         //произойти например из-за setEnabled(false) у ListView
@@ -2589,6 +2626,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _hideItemsToolbar: function (animate) {
             if (this._itemsToolbar) {
                this._itemsToolbar.hide(animate);
+               this._touchSupport && this._clearHoveredItem();
             }
          },
          _getItemsToolbar: function() {
@@ -2612,6 +2650,14 @@ define('js!SBIS3.CONTROLS.ListView',
                            строка у которой находятся оперции должна стать активной */
                         if(hoveredKey) {
                            self.setSelectedKey(hoveredKey);
+                        }
+                     },
+                     onCloseItemActionsMenu: function() {
+                        /* на тач-устройствах по закрытию меню скрывается тулбар
+                           поэтому необходимо очистить выделенный элемент
+                         */
+                        if(self._touchSupport) {
+                           self._clearHoveredItem();
                         }
                      },
                      onItemActionActivated: function(e, key) {
@@ -2752,6 +2798,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._scrollBinder && this._scrollBinder._updateScrollPages();
                   this._setScrollPagerPositionThrottled();
                }
+               if (this._virtualScrollController){
+                  this._virtualScrollController.updateVirtualPages();
+               }
             }
             /* Т.к. для редактирования нет parent'a, надо ресайц звать руками */
             if(this.isEdit()) {
@@ -2776,11 +2825,49 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._scrollOffset.bottom -= this._getAdditionalOffset(oldItems);
                }
             }
+
+            if (cDetection.firefox || cDetection.isMobileSafari) {
+               this._beforeFixScrollTop(action, newItems, newItemsIndex, oldItems, oldItemsIndex);
+            }
+
             ListView.superclass._onCollectionAddMoveRemove.apply(this, arguments);
+            
+            if (this._virtualScrollController) {
+               this._virtualScrollController.addItems(newItems, newItemsIndex);
+               this._virtualScrollController.removeItems(oldItems, oldItemsIndex);
+            }
+
+            if (cDetection.firefox || cDetection.isMobileSafari) {
+               this._fixScrollTop(action, newItems, newItemsIndex, oldItems, oldItemsIndex);
+            }
+         },
+
+         // Страшный хак для Firefox и ipad:
+         // в 110 из коллекции вместо события replace стали приходить remove и add
+         // из за этого в фф и на ipad дергается скролл, так как сначала убирается элемент, скролл подвигается вверх
+         // затем добавляется элемент на место удаленного, но скролл остается на месте. 
+         // Поэтому компенсируем этот прыжок сами
+         _beforeFixScrollTop: function(action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+            if (action == IBindCollection.ACTION_REMOVE) {
+               this._ffScrollPosition = this._getScrollWatcher().getScrollContainer().scrollTop();
+               this._ffRemoveIndex = oldItemsIndex;
+            }
+         },
+         //продолжение хака
+         _fixScrollTop: function(action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+            if (action == IBindCollection.ACTION_ADD) {
+               if (this._ffRemoveIndex == newItemsIndex) {
+                  this._scrollWatcher.scrollTo(this._ffScrollPosition);
+               }
+            }
+            setTimeout(function(){
+               this._ffScrollPosition = null;
+               this._ffRemoveIndex = null;
+            }.bind(this), 0);
          },
 
          // Получить количество записей которые нужно вычесть/прибавить к _offset при удалении/добавлении элементов
-         _getAdditionalOffset: function(items){
+         _getAdditionalOffset: function(items) {
             return items.length;
          },
 
@@ -2965,10 +3052,23 @@ define('js!SBIS3.CONTROLS.ListView',
             //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
             this._container.toggleClass('controls-ListView__outside-scroll-loader', !hasScroll);
 
+            this._updateScrollIndicatorTopThrottled();
+
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && isContainerVisible && hasNextPage && !this.isLoading()) {
                this._loadNextPage();
             }
+         },
+         /**
+          * Обновлет положение ромашки что бы ее не перекрывал фиксированный заголовок
+          * @private
+          */
+         _updateScrollIndicatorTop: function () {
+            var top = '';
+            if (this._isScrollingUp()) {
+               top = StickyHeaderManager.getStickyHeaderIntersectionHeight(this.getContainer()) - this._scrollWatcher.getScrollContainer().scrollTop();
+            }
+            this._loadingIndicator.css('top', top);
          },
 
          _hasNextPage: function(more, offset) {
@@ -2988,10 +3088,14 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         _isScrollingUp: function () {
+            return this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse === true);
+         },
+
          _loadNextPage: function() {
             if (this._dataSource) {
                var offset = this._getNextOffset(),
-                  scrollingUp = this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse === true),
+                  scrollingUp = this._isScrollingUp(),
                   self = this;
                //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
                this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', scrollingUp);
@@ -3003,6 +3107,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._notify('onBeforeDataLoad', this.getFilter(), this.getSorting(), offset, this._limit);
                }
 
+               var loadId = this._loadId++;
+               this._loadQueue[loadId] = cFunctions.clone(this._infiniteScrollState);
+
                this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit)
                   .addBoth(fHelpers.forAliveOnly(function(res) {
                      this._loader = null;
@@ -3012,10 +3119,11 @@ define('js!SBIS3.CONTROLS.ListView',
                      //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
                      //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
                      //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
-                     var hasNextPage;
+                     var state = this._loadQueue[loadId],
+                        hasNextPage;
                      if (this._options.navigation && this._options.navigation.type == 'cursor') {
                         this._listNavigation.analizeResponceParams(dataSet);
-                        hasNextPage = this._listNavigation.hasNextPage(self._infiniteScrollState.mode)
+                        hasNextPage = this._listNavigation.hasNextPage(state.mode);
                      }
                      else {
                         hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
@@ -3035,7 +3143,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         if (this._isSlowDrawing(this._options.easyGroup)) {
                            this._needToRedraw = false;
                         }
-                        this._drawPage(dataSet);
+                        this._drawPage(dataSet, state);
 
                         if(this._dogNailSavedMode) {
                            this._setInfiniteScrollState(this._dogNailSavedMode);
@@ -3067,7 +3175,7 @@ define('js!SBIS3.CONTROLS.ListView',
                            //страхуемся от этой ситуации, чтоб ничего не сломать https://online.sbis.ru/opendoc.html?guid=8da97ce8-7112-4f3f-8d2a-c6c6be03c74d&des=
                            if (!this._dogNailSavedMode) {
                               if ((this._options.task1173941879) && (this.isScrollOnTop())) {
-                                 this._dogNailSavedMode = this._infiniteScrollState.mode;
+                                 this._dogNailSavedMode = state.mode;
                                  this._setInfiniteScrollState('up');
                                  this._scrollLoadNextPage();
                               }
@@ -3085,7 +3193,11 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _getNextOffset: function(){
             if (this._infiniteScrollState.mode == 'down' || this._infiniteScrollState.mode == 'demand'){
-               return this._scrollOffset.bottom + this._limit;
+               if (this._getSourceNavigationType == 'Offset') {
+                  return Math.min(this._scrollOffset.bottom + this._limit, this._getItemsProjection().getCount());
+               } else {
+                  return this._scrollOffset.bottom + this._limit;
+               }
             } else {
                return this._scrollOffset.top - this._limit;
             }
@@ -3102,10 +3214,10 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         _drawPage: function(dataSet){
+         _drawPage: function(dataSet, state){
             var at = null;
             //добавляем данные в начало или в конец в зависимости от того мы скроллим вверх или вниз
-            if (this._infiniteScrollState.mode === 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse)) {
+            if (state.mode === 'up' || (state.mode == 'down' && state.reverse)) {
                this._needScrollCompensation = true;
                this._containerScrollHeight = this._scrollWatcher.getScrollHeight() - this._scrollWatcher.getScrollContainer().scrollTop();
                at = {at: 0};
@@ -3116,7 +3228,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._hideItemsToolbar();
             //Achtung! Добавляем именно dataSet, чтобы не проверялся формат каждой записи - это экономит кучу времени
             var items;
-            if (this._infiniteScrollState.mode == 'down') {
+            if (state.mode == 'down') {
                items = this.getItems().append(dataSet);
             } else {
                items = this.getItems().prepend(dataSet);
@@ -3212,7 +3324,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (!this._loadingIndicator) {
                this._createLoadingIndicator();
             }
-            this._loadingIndicator.removeClass('ws-hidden');
+            this.getContainer().addClass('controls-ListView__indicatorVisible');
          },
          /**
           * Удаляет индикатор загрузки
@@ -3220,7 +3332,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _hideLoadingIndicator: function () {
             if (this._loadingIndicator && !this._loader) {
-               this._loadingIndicator.addClass('ws-hidden');
+               this.getContainer().removeClass('controls-ListView__indicatorVisible');
             }
          },
          _createLoadingIndicator : function () {
@@ -3330,6 +3442,10 @@ define('js!SBIS3.CONTROLS.ListView',
             this._observeResultsRecord(true);
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
             this._needScrollCompensation = false;
+
+            if (this._options.virtualScrolling && !this._virtualScrollController) {
+               this._initVirtualScrolling();
+            }
          },
          _toggleIndicator: function(show){
             var self = this,
@@ -3374,48 +3490,58 @@ define('js!SBIS3.CONTROLS.ListView',
             this._processPagingStandart();
          },
          _processPagingStandart: function () {
+            var self = this;
+            
             if (!this._pager) {
-               var more = this.getItems().getMetaData().more,
-                  hasNextPage = this._hasNextPage(more),
-                  pagingOptions = {
-                     recordsPerPage: this._options.pageSize || more,
-                     currentPage: 1,
-                     recordsCount: more,
-                     pagesLeftRight: 1,
-                     onlyLeftSide: typeof more === 'boolean', // (this._options.display.usePaging === 'parts')
-                     rightArrow: hasNextPage
-                  },
-                  pagerContainer = this.getContainer().find('.controls-Pager-container').append('<div/>'),
-                  self = this;
-
-               this._pager = new Pager({
-                  pageSize: this._options.pageSize,
-                  opener: this,
-                  element: pagerContainer.find('div'),
-                  allowChangeEnable: false, //Запрещаем менять состояние, т.к. он нужен активный всегда
-                  pagingOptions: pagingOptions,
-                  handlers: {
-                     'onPageChange': function (event, pageNum, deferred) {
-                        var more = self.getItems().getMetaData().more,
-                            hasNextPage = self._hasNextPage(more, self._scrollOffset.bottom),
-                            maxPage = self._pager.getPaging()._maxPage;
-                        //Старый Paging при включенной частичной навигации по нажатию кнопки "Перейти к последней странице" возвращает pageNum = 0 (у него индексы страниц начинаются с 1)
-                        //В новом Pager'e индексация страниц начинается с 0 и такое поведение здесь не подходит
-                        //Так же в режиме частичной навигации нет возможности высчитать номер последней страницы, поэтому
-                        //при переходе к последней странице делаем так, чтобы мы переключились на последнюю доступную страницу.
-                        if (pageNum == 0 && self._pager._options.pagingOptions.onlyLeftSide){
-                           pageNum = hasNextPage ? (maxPage + 1) : maxPage;
-                        }
-
-                        self._setPageSave(pageNum);
-                        self.setPage(pageNum - 1);
-                        self._pageChangeDeferred = deferred;
-                     }
+               requirejs(['js!SBIS3.CONTROLS.Pager'], function(pagerCtr) {
+                  if(self._pager || self.isDestroyed()) {
+                     return;
                   }
+                  
+                  var more = self.getItems().getMetaData().more,
+                     hasNextPage = self._hasNextPage(more),
+                     pagingOptions = {
+                        recordsPerPage: self._options.pageSize || more,
+                        currentPage: 1,
+                        recordsCount: more,
+                        pagesLeftRight: 1,
+                        onlyLeftSide: typeof more === 'boolean', // (this._options.display.usePaging === 'parts')
+                        rightArrow: hasNextPage
+                     },
+                     pagerContainer = self.getContainer().find('.controls-Pager-container').append('<div/>');
+   
+                  self._pager = new pagerCtr({
+                     pageSize: self._options.pageSize,
+                     opener: self,
+                     element: pagerContainer.find('div'),
+                     allowChangeEnable: false, //Запрещаем менять состояние, т.к. он нужен активный всегда
+                     pagingOptions: pagingOptions,
+                     handlers: {
+                        'onPageChange': function (event, pageNum, deferred) {
+                           var more = self.getItems().getMetaData().more,
+                              hasNextPage = self._hasNextPage(more, self._scrollOffset.bottom),
+                              maxPage = self._pager.getPaging()._maxPage;
+                           self._pager._lastPageReached = self._pager._lastPageReached || !hasNextPage;
+                           //Старый Paging при включенной частичной навигации по нажатию кнопки "Перейти к последней странице" возвращает pageNum = 0 (у него индексы страниц начинаются с 1)
+                           //В новом Pager'e индексация страниц начинается с 0 и такое поведение здесь не подходит
+                           //Так же в режиме частичной навигации нет возможности высчитать номер последней страницы, поэтому
+                           //при переходе к последней странице делаем так, чтобы мы переключились на последнюю доступную страницу.
+                           if (pageNum == 0 && self._pager._options.pagingOptions.onlyLeftSide){
+                              pageNum = self._pager._lastPageReached ? maxPage : (maxPage + 1);
+                           }
+                     
+                           self._setPageSave(pageNum);
+                           self.setPage(pageNum - 1);
+                           self._pageChangeDeferred = deferred;
+                        }
+                     }
+                  });
+                  self._pagerContainer = self.getContainer().find('.controls-Pager-container');
+                  self._updatePaging();
                });
-               self._pagerContainer = self.getContainer().find('.controls-Pager-container');
+            } else {
+               this._updatePaging();
             }
-            this._updatePaging();
          },
          _getQueryForCall: function(filter, sorting, offset, limit){
             var
@@ -3485,7 +3611,7 @@ define('js!SBIS3.CONTROLS.ListView',
          setPage: function (pageNumber, noLoad) {
             pageNumber = parseInt(pageNumber, 10);
             var offset = this._offset;
-            if(pageNumber == -1){
+            if (pageNumber == -1) {
                this._setLastPage(noLoad);
             } else {
                if (this.isInfiniteScroll() && this._isPageLoaded(pageNumber)){
@@ -3802,8 +3928,14 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see getItemsDragNDrop
           */
          setItemsDragNDrop: function(allowDragNDrop) {
+            if (this._options.itemsDragNDrop != allowDragNDrop) {
+               this._setItemsDragNDrop(allowDragNDrop)
+            }
+         },
+
+         _setItemsDragNDrop: function(allowDragNDrop) {
             this._options.itemsDragNDrop = allowDragNDrop;
-            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item',  this._getDragInitHandler());
+            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', this._getDragInitHandler());
          },
 
          /**
@@ -3835,7 +3967,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                   }
                }
-            }).bind(this)
+            }).bind(this);
          },
          /**
           * Получить текущую конфигурацию перемещения элементов с помощью DragNDrop.
@@ -4016,7 +4148,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _updateDragTarget: function(dragObject, e) {
             var dragTarget = this._getDragTarget(dragObject, e),
                target;
-            if (dragTarget.item && !dragTarget.domElement.hasClass('controls-DragNDrop__placeholder')) {
+            if (dragObject.getSource() && dragTarget.item && !dragTarget.domElement.hasClass('controls-DragNDrop__placeholder')) {
                var position = this._getDirectionOrderChange(e, dragTarget.domElement) || DRAG_META_INSERT.on,
                   sourceIds = [],
                   movedItems = [];
@@ -4024,8 +4156,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   sourceIds.push(item.getModel().getId());
                   movedItems.push(item.getModel());
                });
-               var projItem = this._getItemsProjection().getItemBySourceItem(dragTarget.item);
-               if (this._getMover()._checkRecordForMove(movedItems, dragTarget.item, position)) {
+               if (this._getMover().checkRecordsForMove(movedItems, dragTarget.item, position)) {
                   target = this._makeDragEntity({
                      owner: this,
                      domElement: dragTarget.domElement,
@@ -4106,6 +4237,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _endDragHandler: function(dragObject, droppable, e) {
+            var isMove = false;
             if (droppable) {
                var
                   target = dragObject.getTarget(),
@@ -4129,28 +4261,30 @@ define('js!SBIS3.CONTROLS.ListView',
                      dragObject.getSource().each(function (item) {
                         domItems.push(item.getDomElement());
                      });
-                     var isMove = this._getMover().checkRecordsForMove(models, target.getModel(), position);
-                     this.move(models, target.getModel(), position).addCallback(function(result){
-                        if (result) {
-                           this.removeItemsSelectionAll();
-                        }
-                        if (this._options.useDragPlaceHolder && isMove) {
-                           this.once('onDrawItems', function () {
-                              //это нужно что бы изменения верстки произошли в одном "потоке", что бы не прыгали элементы
-                              //когда удалется плейсходер и переносится реальный элемент
-                              //здесь поможет виртуалдом
-                              this._clearDragHighlight(dragObject);
-                              domItems.forEach(function (elem) {
-                                 elem.removeClass('ws-hidden');
+                     isMove = this._getMover().checkRecordsForMove(models, target.getModel(), position);
+                     if (isMove) {
+                        this.move(models, target.getModel(), position).addCallback(function (result) {
+                           if (result) {
+                              this.removeItemsSelectionAll();
+                           }
+                           if (this._options.useDragPlaceHolder) {
+                              this.once('onDrawItems', function () {
+                                 //это нужно что бы изменения верстки произошли в одном "потоке", что бы не прыгали элементы
+                                 //когда удалется плейсходер и переносится реальный элемент
+                                 //здесь поможет виртуалдом
+                                 this._clearDragHighlight(dragObject);
+                                 domItems.forEach(function (elem) {
+                                    elem.removeClass('ws-hidden');
+                                 });
+                                 this._removeDragPlaceHolder();
                               });
+                           } else {
                               this._removeDragPlaceHolder();
-                           });
-                        } else {
+                           }
+                        }.bind(this)).addErrback(function () {
                            this._removeDragPlaceHolder();
-                        }
-                     }.bind(this)).addErrback(function () {
-                        this._removeDragPlaceHolder();
-                     }.bind(this));
+                        }.bind(this));
+                     }
                   } else {
                      var currentDataSource = this.getDataSource(),
                         dragOwner = dragObject.getOwner(),
@@ -4161,10 +4295,22 @@ define('js!SBIS3.CONTROLS.ListView',
                      ) { //включаем перенос по умолчанию только если  контракты у источников данных равны
                         useDefaultMove = true;
                      }
-                     this._getMover().moveFromOutside(dragObject.getSource(), dragObject.getTarget(), dragOwner.getItems(), useDefaultMove);
+                     this._getMover().moveFromOutside(dragObject.getSource(),
+                        dragObject.getTarget(),
+                        dragOwner.getItems(),
+                        useDefaultMove
+                     ).addCallback(function (result) {
+                        if (result !== false && cInstance.instanceOfMixin(dragOwner, 'SBIS3.CONTROLS.MultiSelectable')) {
+                           dragOwner.removeItemsSelectionAll();//сбросим выделение у контрола с которого перемещаются элементы
+                        }
+                     })
                   }
                }
                this._clearDragHighlight(dragObject);
+            }
+            if (!isMove) {
+               this._toggleDragItems(dragObject, true);
+               this._removeDragPlaceHolder();
             }
          },
          _getDragPlaceHolder: function(dragObject) {
@@ -4183,9 +4329,14 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _toggleDragItems: function (dragObject, show) {
-            dragObject.getSource().each(function (item) {
-               item.getDomElement().toggleClass('ws-hidden', !show);
-            });
+            var source = dragObject.getSource();
+            if (source) {
+               source.each(function (item) {
+                  if (item.getDomElement()) { //если элемент находится внутри закрытой папки для него не будет dom'а
+                     item.getDomElement().toggleClass('ws-hidden', !show);
+                  }
+               });
+            }
          },
          /*DRAG_AND_DROP END*/
          //region moveMethods
@@ -4431,6 +4582,7 @@ define('js!SBIS3.CONTROLS.ListView',
          deleteRecords: function(idArray, message) {
             var
                 self = this,
+                res = new Deferred(),
                 beginDeleteResult;
             //Клонируем массив, т.к. он может являться ссылкой на selectedKeys, а после удаления мы сами вызываем removeItemsSelection.
             //В таком случае и наш idArray изменится по ссылке, и в событие onEndDelete уйдут некорректные данные
@@ -4446,18 +4598,22 @@ define('js!SBIS3.CONTROLS.ListView',
                   beginDeleteResult.addCallback(function(result) {
                      self._deleteRecords(idArray, result);
                   }).addErrback(function (result) {
-                     InformationPopupManager.showMessageDialog(
-                        {
-                           message: result.message,
-                           opener: self,
-                           status: 'error'
-                        }
-                     );
+                     InformationPopupManager.showMessageDialog({
+                        message: result.message,
+                        opener: self,
+                        status: 'error'
+                     });
                   });
                } else {
                   self._deleteRecords(idArray, beginDeleteResult);
                }
+               res.callback(true);
+            }, function() {
+               res.callback(false);
+            }, function() {
+               res.callback();
             });
+            return res;
          },
 
          _deleteRecords: function(idArray, beginDeleteResult) {
@@ -4481,6 +4637,8 @@ define('js!SBIS3.CONTROLS.ListView',
                         status: 'error'
                      }
                   );
+                  //Прокидываем ошибку дальше, чтобы она дошла до addBoth и мы смогли отдать её в событие onEndDelete
+                  return result;
                }).addBoth(function (result) {
                   self._toggleIndicator(false);
                   self._notify('onEndDelete', idArray, result);

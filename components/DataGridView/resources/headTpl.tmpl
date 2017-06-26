@@ -5,7 +5,7 @@
             <tr>
                 <ws:if data="{{multiselect}}">
                    <th class="controls-DataGridView__th controls-DataGridView__td__checkBox
-                       {{startScrollColumn !== undefined ? (startScrollColumn === 0 ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}}" style="{{startScrollColumn === 0 ? 'left:' + columnsScrollPosition + 'px;' : ''}}">
+                       {{startScrollColumn !== undefined ? (startScrollColumn === 0 ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}}" style="{{(startScrollColumn !== undefined && startScrollColumn <= index) ? 'transform:translateX(' + columnsShift + 'px);'}}">
                    </th>
                 </ws:if>
 
@@ -13,7 +13,7 @@
                     <ws:if data="{{ !column.ignore || countRows == 1 }}">
                         <th class="{{index === 0 ? 'controls-DataGridView__firstContentCell' : ''}} controls-DataGridView__th {{startScrollColumn !== undefined ? ((startScrollColumn !== undefined && startScrollColumn <= index) ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}} {{ (i == 0 && !column.rowspan && column.colspan) ? 'controls-DataGridView__th__topRow' : ''}} {{column.className}}"
                             title="{{column.headTooltip ? column.headTooltip : column.title}}" colspan="{{column.colspan|orEmpty}}" rowspan="{{ countRows === 2 ? (column.rowspan|orEmpty) }}"
-                            style="{{(startScrollColumn !== undefined && startScrollColumn <= index) ? 'transform:translateX:(' + columnsScrollPosition + 'px);'}}">
+                            style="{{(startScrollColumn !== undefined && startScrollColumn <= index) ? 'transform:translateX(' + columnsShift + 'px);'}}">
                             <ws:partial template="{{sanitize}}" value="{{ column.value }}" />
                         </th>
                     </ws:if>

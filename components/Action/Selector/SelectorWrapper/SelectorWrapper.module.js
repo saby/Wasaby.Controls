@@ -4,9 +4,8 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
    'tmpl!SBIS3.CONTROLS.SelectorWrapper',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'Core/helpers/collection-helpers',
-   'Core/helpers/functional-helpers',
    'Core/core-instance'
-], function (CompoundControl, dotTplFn, TemplateUtil, collectionHelpers, functionalHelpers, cInstance) {
+], function (CompoundControl, dotTplFn, TemplateUtil, collectionHelpers, cInstance) {
 
 
    /**
@@ -24,7 +23,8 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
    var SELECTION_TYPE_CLASSES = {
       leaf: 'controls-ListView__hideCheckBoxes-node',
       node: 'controls-ListView__hideCheckBoxes-leaf',
-      all: ''
+      all: '',
+      allBySelectAction: ''
    };
 
    var SELECT_ACTION_NAME = 'controls.select';
@@ -44,7 +44,9 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
             /**
              * @cfg {String} Фильтр выбранных записей
              */
-            selectedFilter: functionalHelpers.constant(true),
+            selectedFilter: function () {
+               return true;
+            },
             selectionType: 'all'
 
          },
@@ -153,6 +155,10 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
             /* При единичном выборе запись всегда должна выбираться при клике,
              не важно, папка это или лист */
             if(isBranch) {
+               /* В режиме выбора по операции "Выбрать клик по папке должен приводить в проваливание */
+               if(this.getSelectionType() === 'allBySelectAction') {
+                  return;
+               }
                event.setResult(false);
             }
             this._applyItemSelect(item);

@@ -204,7 +204,15 @@ define(
             if (this._picker.isVisible() && this.getDate()) {
                this._pickerContent.setTime(this.getDate());
             }
+
+            this._pickerContent.subscribe('onChangeTimeEnd', this._changeTimeEndHandler.bind(this));
          }
+      },
+
+      _changeTimeEndHandler: function() {
+      	this.hidePicker();
+      	// При выборе даты через TimePicker после его закрытия считаем, что закончили выбор даты. Значит нужно стрельнуть событием onDateSelect.
+      	this._notify('onDateSelect');
       },
 
       _setEnabled : function(enabled) {
@@ -313,10 +321,10 @@ define(
       },
 
       setActive: function(active) {
+         DatePicker.superclass.setActive.apply(this, arguments);
          if (active) {
             this._initFocusInHandler();
          }
-         DatePicker.superclass.setActive.apply(this, arguments);
       },
 
       _initFocusInHandler: function() {

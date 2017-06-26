@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.List.Remove', [
    function (ActionBase, ListMixin, fcHelpers, cInstance) {
       'use strict';
       /**
-       * Экшен удаления записей
+       * Action удаления записей
        * @class SBIS3.CONTROLS.List.Remove
        * @public
        * @extends SBIS3.CONTROLS.Action.Action

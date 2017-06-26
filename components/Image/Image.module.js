@@ -13,10 +13,7 @@ define('js!SBIS3.CONTROLS.Image',
    "js!SBIS3.CORE.CompoundControl",
    "js!WS.Data/Source/SbisService",
    "html!SBIS3.CONTROLS.Image",
-   "js!SBIS3.CORE.Dialog",
    "js!SBIS3.CORE.FileLoader",
-   'js!SBIS3.CORE.FileCamLoader',
-   "js!SBIS3.CORE.LoadingIndicator",
    "Core/core-instance",
    "Core/helpers/fast-control-helpers",
    "Core/helpers/transport-helpers",
@@ -27,7 +24,24 @@ define('js!SBIS3.CONTROLS.Image',
    'js!SBIS3.CONTROLS.MenuLink',
    "i18n!SBIS3.CONTROLS.Image",
    'css!SBIS3.CONTROLS.Image'
-], function(BLObject, ImageUtil, processImagePath, cIndicator, cMerge, CommandDispatcher, Deferred, CompoundControl, SbisService, dotTplFn, Dialog, FileLoader, FileCamLoader, LoadingIndicator, cInstance, fcHelpers, transHelpers, SourceUtil, ControlHierarchyManager, InformationPopupManager) {
+], function(
+   BLObject,
+   ImageUtil,
+   processImagePath,
+   cIndicator, cMerge,
+   CommandDispatcher,
+   Deferred,
+   CompoundControl,
+   SbisService,
+   dotTplFn,
+   FileLoader,
+   cInstance,
+   fcHelpers,
+   transHelpers,
+   SourceUtil,
+   ControlHierarchyManager,
+   InformationPopupManager
+) {
       'use strict';
       //TODO: Избавится от дублирования
       var
@@ -38,7 +52,7 @@ define('js!SBIS3.CONTROLS.Image',
           * В качестве источника данных допускается использовать только {@link WS.Data/Source/SbisService}.
           * @class SBIS3.CONTROLS.Image
           * @extends SBIS3.CORE.CompoundControl
-          * @author Крайнов Дмитрий Олегович
+          * @author Борисов Пётр Сергеевич
           *
           * @ignoreOptions validators
           * @ignoreEvents onAfterLoad onChange onStateChange
@@ -621,51 +635,53 @@ define('js!SBIS3.CONTROLS.Image',
                } else if (showCropResult) {
                    filter = showCropResult;
                }
-               new Dialog({
-                  animatedWindows: false,
-                  template: 'js!SBIS3.CONTROLS.Image.EditDialog',
-                  opener: this,
-                  visible: false,
-                  minWidth: 390,
-                  cssClassName: 'controls-EditDialog__template',
-                  componentOptions: cMerge({
-                     dataSource: dataSource,
-                     filter: filter,
-                     cropAspectRatio: this._options.cropAspectRatio,
-                     cropAutoSelectionMode: this._options.cropAutoSelectionMode,
-                     cropSelection: this._options.cropSelection,
+               require(['js!SBIS3.CORE.Dialog'], function(Dialog) {
+                  new Dialog({
+                     animatedWindows: false,
+                     template: 'js!SBIS3.CONTROLS.Image.EditDialog',
+                     opener: self,
+                     visible: false,
+                     minWidth: 390,
+                     cssClassName: 'controls-EditDialog__template',
+                     componentOptions: cMerge({
+                        dataSource: dataSource,
+                        filter: filter,
+                        cropAspectRatio: self._options.cropAspectRatio,
+                        cropAutoSelectionMode: self._options.cropAutoSelectionMode,
+                        cropSelection: self._options.cropSelection,
+                        handlers: {
+                           onBeginSave: function (event, sendObject) {
+                              event.setResult(self._notify('onBeginSave', sendObject));
+                              self._toggleSaveIndicator(true);
+                           },
+                           onEndSave: function (event, result) {
+                              event.setResult(self._notify('onEndSave', result));
+                              self._toggleSaveIndicator(false);
+                              self._setImage(self._getSourceUrl());
+                           },
+                           onOpenError: function(event){
+                              fcHelpers.toggleLocalIndicator(self._container, false);
+                              cIndicator.hide();
+                              InformationPopupManager.showMessageDialog({
+                                 status: 'error',
+                                 message: 'При открытии изображения возникла ошибка'
+                              });
+                              self._onErrorLoad(event, true);
+                           }
+                        }
+                     }, self._options.editConfig),
                      handlers: {
-                        onBeginSave: function (event, sendObject) {
-                           event.setResult(self._notify('onBeginSave', sendObject));
-                           self._toggleSaveIndicator(true);
-                        },
-                        onEndSave: function (event, result) {
-                           event.setResult(self._notify('onEndSave', result));
-                           self._toggleSaveIndicator(false);
-                           self._setImage(self._getSourceUrl());
-                        },
-                        onOpenError: function(event){
+                        onAfterClose: function() {
                            fcHelpers.toggleLocalIndicator(self._container, false);
+                        },
+                        onBeforeControlsLoad: function() {
+                           cIndicator.setMessage('Открытие диалога редактирования...');
+                        },
+                        onAfterShow: function() {
                            cIndicator.hide();
-                           InformationPopupManager.showMessageDialog({
-                              status: 'error',
-                              message: 'При открытии изображения возникла ошибка'
-                           });
-                           self._onErrorLoad(event, true);
                         }
                      }
-                  }, this._options.editConfig),
-                  handlers: {
-                     onAfterClose: function() {
-                        fcHelpers.toggleLocalIndicator(self._container, false);
-                     },
-                     onBeforeControlsLoad: function() {
-                        cIndicator.setMessage('Открытие диалога редактирования...');
-                     },
-                     onAfterShow: function() {
-                        cIndicator.hide();
-                     }
-                  }
+                  });
                });
             },
             /**
@@ -674,10 +690,12 @@ define('js!SBIS3.CONTROLS.Image',
             _toggleSaveIndicator: function(state) {
                if (state) {
                   if (!this._saveIndicator) {
-                     this._saveIndicator = new LoadingIndicator({
-                        'message': rk('Сохранение'),
-                        'name': 'ws-load-indicator'
-                     });
+                     require(['js!SBIS3.CORE.LoadingIndicator'], function(LoadingIndicator) {
+                        this._saveIndicator = new LoadingIndicator({
+                           'message': rk('Сохранение'),
+                           'name': 'ws-load-indicator'
+                        });
+                     }.bind(this))
                   } else {
                      this._saveIndicator.show();
                   }
@@ -927,34 +945,35 @@ define('js!SBIS3.CONTROLS.Image',
                if (this._fileCamLoader) {
                   return Deferred.success(this._fileCamLoader);
                }
-
-               //NB! Вероятно хотим отредактировать.
-               // Webkit не хочет открывать отрабатывать клик, если элемент создан из не загруженного скрипта
-               var self = this;
-               var cont = $('<div class="controls-image__file-cam-loader"></div>');
+               var
+                  self = this,
+                  def = new Deferred(),
+                  cont = $('<div class="controls-image__file-cam-loader"></div>');
                self.getContainer().append(cont);
-               self._fileCamLoader = new FileCamLoader({
-                  extensions: ['image'],
-                  element: cont,
-                  name: 'FileLoader',
-                  parent: self,
-                  showIndicator: false,
-                  handlers: {
-                     onLoadStarted: self._onBeginLoad,
-                     onLoaded: self._onEndLoad
+               require(['js!SBIS3.CORE.FileCamLoader'], function (FileCamLoader) {
+                  self._fileCamLoader = new FileCamLoader({
+                     extensions: ['image'],
+                     element: cont,
+                     name: 'FileLoader',
+                     parent: self,
+                     showIndicator: false,
+                     handlers: {
+                        onLoadStarted: self._onBeginLoad,
+                        onLoaded: self._onEndLoad
+                     }
+                  });
+
+                  //todo Удалить, временная опция для поддержки смены логотипа компании
+                  var dataSource = self.getDataSource();
+                  if (dataSource) {
+                     self._fileCamLoader.setMethod((
+                        self._options.linkedObject || dataSource.getEndpoint().contract) +
+                        '.' + dataSource.getBinding().create
+                     );
                   }
+                  def.callback(self._fileCamLoader);
                });
-
-               //todo Удалить, временная опция для поддержки смены логотипа компании
-               var dataSource = self.getDataSource();
-               if (dataSource) {
-                  self._fileCamLoader.setMethod((
-                     self._options.linkedObject || dataSource.getEndpoint().contract) +
-                     '.' + dataSource.getBinding().create
-                  );
-               }
-
-               return Deferred.success(self._fileCamLoader)
+               return def;
             }
          });
 

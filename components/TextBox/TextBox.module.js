@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
     * </ol>
     * @class SBIS3.CONTROLS.TextBox
     * @extends SBIS3.CONTROLS.TextBoxBase
-    * @author Крайнов Дмитрий Олегович
+    * @author Роман Валерий Сергеевич
     * @demo SBIS3.CONTROLS.Demo.MyTextBox
     *
     * @ignoreOptions independentContext contextRestriction className horizontalAlignment
@@ -501,7 +501,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _getInputValue: function() {
-         return this._inputField.val();
+         return this._inputField && this._inputField.val();
       },
       _setInputValue: function(value) {
          this._inputField.val(value);

@@ -1,4 +1,4 @@
-/**
+   /**
  * Created by dv.zuev on 18.05.2017.
  */
 define([
@@ -13,10 +13,17 @@ define([
 
       var cfg = {
             command: "cmd",
-            primary: true
+            primary: true,
+            class: "testClass"
          };
 
 
+      var buttonPartial = new Button({ caption: "some<br>caption", hasPartial: true});
+      describe('State', function() {
+         it('caption is string', function () {
+            assert.isTrue(typeof buttonPartial._options.caption === "string");
+         });
+      });
 
 
       var button = new Button(cfg);
@@ -94,24 +101,83 @@ define([
             assert.isTrue(!button.getIcon());
          });
 
-         it('touchClick', function(){
-            button._onTouchStart();
-            assert.isTrue(button._isActiveByClick);
-            button._onTouchEnd();
-            assert.isTrue(!button._isActiveByClick);
-         });
-
          it('touchClickOnce', function(){
             var clickEvent = 0;
             button.subscribe("onActivated", function() {
                clickEvent++;
             });
             button._onTouchStart();
+            button._onTouchEnd();
             button._onMouseClick();
             assert.equal(clickEvent, 1);
             clickEvent = 0;
-            button._onTouchEnd();
           });
+
+         it('mouseDownEnabled', function() {
+            button.setEnabled(true);
+            button._isActiveByClick = false;
+            button._onMouseDown();
+            assert.isTrue(button._isActiveByClick);
+         });
+
+         it('mouseDownDisabled', function() {
+            button.setEnabled(false);
+            button._isActiveByClick = false;
+            button._onMouseDown();
+            assert.isTrue(!button._isActiveByClick);
+         });
+
+         it('addClassCompatible', function() {
+            button._options.class = '';
+            button._addClassCompatible('compatibleTest');
+            assert.isTrue(button._options.class.indexOf("compatibleTest") != -1);
+         });
+
+         it('removeClassCompatible', function() {
+            button._options.class = 'compatibleTest2 compatibleTest';
+            button._removeClassCompatible('compatibleTest2');
+            assert.isTrue(button._options.class.indexOf('compatibleTest2') == -1);
+         });
+
+         it('toggleClassCompatibleAdd', function() {
+            button._options.class = '';
+            button._toggleClassCompatible('compatibleTest');
+            assert.isTrue(button._options.class.indexOf("compatibleTest") != -1);
+         });
+
+         it('toggleClassCompatibleRemove', function() {
+            button._options.class = 'compatibleTest';
+            button._toggleClassCompatible('compatibleTest');
+            assert.isTrue(button._options.class.indexOf("compatibleTest") == -1);
+         });
+
+         it('ipadShortTapTouchEnd', function(done) {
+            button._isActiveByClick = false;
+            button._onTouchStart();
+            button._onTouchEnd();
+            assert.isTrue(button._isActiveByClick);
+            setTimeout(function() {
+               assert.isTrue(button._isActiveByClick);
+               done();
+            }, 500);
+         });
+
+         it('ipadShortTapTimeout', function(done) {
+            var testEvent = false,
+               tempFunc = function(){
+                  testEvent = true;
+               };
+            button.subscribe('onPropertyChange', tempFunc);
+            button._isActiveByClick = false;
+            button._onTouchStart();
+            button._onTouchEnd();
+
+            setTimeout(function() {
+               assert.isTrue(!button._isActiveByClick);
+               assert.isTrue(testEvent);
+               done();
+            }, 1100);
+         });
 
       });
 

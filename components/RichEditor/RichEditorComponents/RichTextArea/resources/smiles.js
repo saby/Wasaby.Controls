@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.RichTextArea/resources/smiles', ['i18n!SBIS3.CONTROLS.
    return [
       { key: 'first', code: '128514', title: '&#128514;'},
       { key: 'second', code: '128516', title: '&#128516;'},
-      { key: 'third', code: '128519', title: '&#128519;'},
+      { key: 'third', code: '128565', title: '&#128565;'},
       { key: 'fourth', code: '128520', title: '&#128520;'},
       { key: 'fifth', code: '128521', title: '&#128521;'},
       { key: 'sixth', code: '128523', title: '&#128523;'},

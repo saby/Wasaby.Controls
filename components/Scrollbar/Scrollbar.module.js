@@ -8,8 +8,6 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
 
       'use strict';
 
-      var BROWSER_SCROLLBAR_MIN_HEIGHT = 46;
-
       /**
        * Тонкий скролл.
        * @class SBIS3.CONTROLS.Scrollbar
@@ -39,7 +37,8 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             _containerHeight: undefined,
             _containerOuterHeight: undefined,
             //Является ли высота ползунка константой
-            _isConstThumb: undefined
+            _isConstThumb: undefined,
+            _browserScrollbarMinHeght: undefined
          },
 
          $constructor: function () {
@@ -54,6 +53,8 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             this._container.on('mousedown touchstart', this._onClickDragHandler.bind(this));
             this._containerHeight = this._container.height();
             this._containerOuterHeight = this._container.outerHeight(true);
+            this._browserScrollbarMinHeght = parseFloat(getComputedStyle(this._thumb[0]).minHeight);
+
             this._setViewportRatio();
             this._setThumbHeight();
             this._setScrollRatio();
@@ -126,14 +127,15 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             this.getContainer().toggleClass('ws-invisible', this._viewportRatio >= 1);
             this._thumbHeight = this._calcProjectionSize(this._containerHeight, this._viewportRatio);
             //Проверим не является ли высота ползунка меньше минимальной.
-            if (this._thumbHeight < BROWSER_SCROLLBAR_MIN_HEIGHT) {
-               this._thumbHeight = BROWSER_SCROLLBAR_MIN_HEIGHT;
+            if (this._thumbHeight < this._browserScrollbarMinHeght) {
+               this._thumbHeight = this._browserScrollbarMinHeght;
                this._isConstThumb = true;
             } else {
                this._isConstThumb = false;
             }
             if (this._thumb) {
                this._thumb.height(this._thumbHeight);
+               this._thumbHeight = this._thumb.outerHeight(true);
             }
          },
 
@@ -153,12 +155,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          },
 
          _setScrollRatio: function () {
-            //Если длинна ползунка константа, то мы расчитываем её по определению, иначе расчитываем по короткой формуле.
-            if (this._isConstThumb) {
-               this._scrollRatio = (this.getContainer().height() - this._thumbHeight) / (this.getContentHeight() - this._containerOuterHeight);
-            } else {
-               this._scrollRatio = this.getContainer().height() / this.getContentHeight();
-            }
+            this._scrollRatio = (this.getContainer().height() - this._thumbHeight) / (this.getContentHeight() - this._containerOuterHeight);
          },
 
          _beginDragHandler: function (dragObject, e) {
