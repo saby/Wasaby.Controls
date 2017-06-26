@@ -1,15 +1,14 @@
 @heightProgressBar: @controls-ProgressBar-height - 2 * @default-border-width;
-@align-text: center, left, right;
+@paddingLR: extract(@controls-ProgressBar-value-padding, 2);
+@alignText: center, left, right;
 
-.controls-ProgressBar-align-progress-generator(@index: 1) when (@index <= length(@align-text)) {
-  @value: extract(@align-text, @index);
-  .controls-ProgressBar_align-@{value} {
+.for(@alignText, {
+  .controls-ProgressBar_align-@{_item} {
     .controls-ProgressBar__progress {
-      text-align: @value;
+      text-align: @_item;
     }
   }
-  .controls-ProgressBar-align-progress-generator(@index: @index + 1);
-}
+});
 
 .controls-ProgressBar when not (ispercentage(@controls-ProgressBar-width)) {
   width: @controls-ProgressBar-width;
@@ -20,11 +19,13 @@
   border: @default-border-width @default-border-style @controls-ProgressBar-border-color;
   border-radius: @controls-ProgressBar-border-radius;
   line-height: @heightProgressBar;
+  padding: @controls-ProgressBar-value-padding;
+  font-size: @controls-ProgressBar-value-font-size;
   & when (ispercentage(@controls-ProgressBar-width)) {
-    width: calc(~"@{controls-ProgressBar-width} - @{default-border-width}");
+    width: calc(~"@{controls-ProgressBar-width} - 2 * (@{default-border-width} + @{paddingLR})");
   }
   & when not (ispercentage(@controls-ProgressBar-width)) {
-    width: @controls-ProgressBar-width - 2 * @default-border-width;
+    width: @controls-ProgressBar-width - 2 * (@default-border-width + @paddingLR);
   }
 }
 
@@ -37,5 +38,3 @@
 .controls-ProgressBar__progress_colorValue {
   color: @controls-ProgressBar-value-color;
 }
-
-.controls-ProgressBar-align-progress-generator();
