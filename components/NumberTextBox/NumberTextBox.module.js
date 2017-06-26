@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
     * </ol>
     * @class SBIS3.CONTROLS.NumberTextBox
     * @extends SBIS3.CONTROLS.TextBox
-    * @author Крайнов Дмитрий Олегович
+    * @author Роман Валерий Сергеевич
     * @demo SBIS3.CONTROLS.Demo.MyNumberTextBox
     *
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol textTransform

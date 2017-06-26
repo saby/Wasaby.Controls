@@ -105,7 +105,7 @@ define('js!SBIS3.CONTROLS.ListView',
        *
        * @class SBIS3.CONTROLS.ListView
        * @extends SBIS3.CORE.CompoundControl
-       * @author Крайнов Дмитрий Олегович
+       * @author Герасимов Александр Максимович
        *
        * @mixes SBIS3.CORE.CompoundActiveFixMixin
        * @mixes SBIS3.CONTROLS.DecorableMixin
@@ -524,18 +524,6 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Если опция {@link SBIS3.CORE.Control#enabled enabled} контрола установлена в false, то действия, доступные при наведении курсора мыши на запись, отображаться не будут. Однако с помощью опции {@link SBIS3.CORE.Control#allowChangeEnable allowChangeEnable} можно изменить это поведение.
                 * ![](/allowChangeEnable.png)
                 * Подробнее о настройке таких действий вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">Быстрый доступ к операциям по наведению курсора</a>.
-                *
-                * @faq Почему нет чекбоксов в режиме множественного выбора значений (активация режима производится опцией {@link SBIS3.CONTROLS.ListView#multiselect multiselect})?
-                * Для отрисовки чекбоксов необходимо в шаблоне отображения элемента коллекции обозначить их место.
-                * Для отображения чекбоксов необходимо обозначить их место в шаблоне отображения элемента коллекции.
-                * Сделать это можно используя CSS-классы "controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox".
-                * В данном примере тег span обозначает место отображения чекбокса:
-                * <pre>
-                *     <div class="listViewItem" style="height: 30px;">
-                *        <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></span>
-                *        {{=it.item.get("title")}}
-                *     </div>
-                * </pre>
                 *
                 * @example
                 * <b>Пример 1.</b> Конфигурация операций через вёрстку компонента.
@@ -2662,6 +2650,14 @@ define('js!SBIS3.CONTROLS.ListView',
                            строка у которой находятся оперции должна стать активной */
                         if(hoveredKey) {
                            self.setSelectedKey(hoveredKey);
+                        }
+                     },
+                     onCloseItemActionsMenu: function() {
+                        /* на тач-устройствах по закрытию меню скрывается тулбар
+                           поэтому необходимо очистить выделенный элемент
+                         */
+                        if(self._touchSupport) {
+                           self._clearHoveredItem();
                         }
                      },
                      onItemActionActivated: function(e, key) {

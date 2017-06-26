@@ -10,9 +10,9 @@ define('js!SBIS3.CONTROLS.ToggleButton', ['js!WSControls/Buttons/ToggleButton', 
    /**
     * Контрол, отображающий кнопку с залипанием.
     * @class SBIS3.CONTROLS.ToggleButton
-    * @extends SBIS3.CONTROLS.Button
+    * @extends WSControls/Buttons/ToggleButton
     * @demo SBIS3.CONTROLS.Demo.MyToggleButton
-    * @author Крайнов Дмитрий Олегович
+    * @author Романов Валерий Сергеевич
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip
     *

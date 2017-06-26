@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
        * @class SBIS3.CONTROLS.FastDataFilter
        * @extends SBIS3.CORE.CompoundControl
        *
-       * @author Герасимов Александр Максимович
+       * @author Красильников Андрей Сергеевич
        *
        * @mixes SBIS3.CONTROLS.ItemsControlMixin
        * @mixes SBIS3.CONTROLS.FilterMixin

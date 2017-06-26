@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * @class SBIS3.CONTROLS.ComboBox
     * @extends SBIS3.CONTROLS.TextBox
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Красильников Андрей Сергеевич
     *
     * @demo SBIS3.CONTROLS.Demo.MyComboBox Пример 1. Выпадающий список, для которого установлен набора данных в опции items.
     * @demo SBIS3.CONTROLS.Demo.MyComboBoxDS Пример 2. Выпадающий список, для которого установлен источник данных в опции dataSource.

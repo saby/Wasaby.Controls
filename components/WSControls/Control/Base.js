@@ -97,6 +97,8 @@ define('js!WSControls/Control/Base',
             },
 
             _afterApplyOptions: function(fromConstructor, oldOptions, newOptions) {
+               this._options = newOptions;
+               this.applyOptions();
             },
 
             _initializeCommandHandlers: function initializeCommandHandlers() {
@@ -124,15 +126,18 @@ define('js!WSControls/Control/Base',
             },
 
             _getMarkup: function(rootKey) {
+               if (BaseCompatible) {
+                  return BaseCompatible._getMarkup.call(this, rootKey);
+               }
                var decOpts = this._getDecOptions();
                return this._template(this, decOpts, rootKey, true)[0];
             },
 
-            _applyChangedOptions: function(newOptions) {
-               Object.getOwnPropertyNames(newOptions).forEach(function (prop) {
-                  this[prop] = newOptions[prop];
+            _applyChangedOptions: function() {
 
-               }, this);
+            },
+            applyOptions: function(){
+
             },
 
             _parseDecOptions: function(cfg){
@@ -140,11 +145,14 @@ define('js!WSControls/Control/Base',
                /**
                 * Опциями для декорирования могут быть лишь фиксированные опции
                 */
-               if (cfg['class']) {
-                  this._decOptions['class'] = cfg['class'];
+               if (cfg['class'] || cfg['className']) {
+                  this._decOptions['class'] = (cfg['class']?cfg['class']+' ':'') + (cfg['className']?cfg['className']:'');
                }
                if (cfg['style']) {
                   this._decOptions['style'] = cfg['style'];
+               }
+               if (cfg['data-component']) {
+                  this._decOptions['data-component'] = cfg['data-component'];
                }
             },
 
@@ -152,6 +160,7 @@ define('js!WSControls/Control/Base',
                this.logicParent = cfg.logicParent;
                if (!this.deprecatedContr) {
                   this._options = cFunctions.shallowClone(cfg);
+                  this.applyOptions();
                   this._parseDecOptions(cfg);
 
                   this._handlers = {};
