@@ -1,0 +1,104 @@
+/**
+ * Created by am.gerasimov on 27.06.2017.
+ */
+define(['js!SBIS3.CONTROLS.Utils.SearchMixin'], function (SearchMixinUtil) {
+   
+   'use strict';
+   describe('SBIS3.CONTROLS.Utils.SearchMixin', function () {
+      
+      
+      
+      describe('.needSearch', function (){
+         var startCharacter, emptyStartCharacter;
+         
+         before(function() {
+            startCharacter = 3;
+            emptyStartCharacter = null;
+         });
+         
+         it('.needSearch startCharacter, not force', function (){
+            assert.equal(SearchMixinUtil.needSearch('text', startCharacter, false), true);
+         });
+   
+         it('.needSearch startCharacter, force', function (){
+            assert.equal(SearchMixinUtil.needSearch('text', startCharacter, true), true);
+         });
+   
+         it('.needSearch startCharacter, not force, emptyText', function (){
+            assert.equal(SearchMixinUtil.needSearch('', startCharacter, false), false);
+         });
+   
+         it('.needSearch startCharacter, force, emptyText', function (){
+            assert.equal(SearchMixinUtil.needSearch('', startCharacter, true), false);
+         });
+   
+         it('.needSearch startCharacter, not force, short text', function (){
+            assert.equal(SearchMixinUtil.needSearch('t', startCharacter, false), false);
+         });
+   
+         it('.needSearch startCharacter, force, short text', function (){
+            assert.equal(SearchMixinUtil.needSearch('t', startCharacter, true), true);
+         });
+   
+         it('.needSearch empty startCharacter, not force, short text', function (){
+            assert.equal(SearchMixinUtil.needSearch('t', emptyStartCharacter, false), false);
+         });
+   
+         it('.needSearch empty startCharacter, force, short text', function (){
+            assert.equal(SearchMixinUtil.needSearch('t', emptyStartCharacter, true), true);
+         });
+         
+      });
+   
+      describe('.needReset', function (){
+         var startCharacter, emptyStartCharacter;
+      
+         before(function() {
+            startCharacter = 3;
+            emptyStartCharacter = null;
+         });
+      
+         it('.needReset startCharacter, not force', function (){
+            assert.equal(SearchMixinUtil.needReset('text', startCharacter, false), true);
+         });
+      
+         it('.needReset startCharacter, force', function (){
+            assert.equal(SearchMixinUtil.needReset('text', startCharacter, true), true);
+         });
+      
+         it('.needReset startCharacter, not force, emptyText', function (){
+            assert.equal(SearchMixinUtil.needReset('', startCharacter, false), true);
+         });
+      
+         it('.needReset startCharacter, force, emptyText', function (){
+            assert.equal(SearchMixinUtil.needReset('', startCharacter, true), true);
+         });
+      
+         it('.needReset startCharacter, not force, short text', function (){
+            assert.equal(SearchMixinUtil.needReset('t', startCharacter, false), true);
+         });
+      
+         it('.needReset startCharacter, force, short text', function (){
+            assert.equal(SearchMixinUtil.needReset('t', startCharacter, false), true);
+         });
+   
+         it('.needReset empty startCharacter, not force, text', function (){
+            assert.equal(SearchMixinUtil.needReset('text', emptyStartCharacter, false), false);
+         });
+   
+         it('.needReset empty startCharacter, force, text', function (){
+            assert.equal(SearchMixinUtil.needReset('text', emptyStartCharacter, true), true);
+         });
+   
+         it('.needReset empty startCharacter, not force, emptyText', function (){
+            assert.equal(SearchMixinUtil.needReset('', emptyStartCharacter, true), true);
+         });
+   
+         it('.needReset empty startCharacter, not force, emptyText', function (){
+            assert.equal(SearchMixinUtil.needReset('', emptyStartCharacter, false), true);
+         });
+      
+      });
+      
+   });
+});
