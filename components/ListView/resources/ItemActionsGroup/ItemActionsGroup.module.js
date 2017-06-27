@@ -14,9 +14,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
    "html!SBIS3.CONTROLS.ItemActionsGroup/ItemTpl",
    "Core/helpers/collection-helpers",
    "Core/helpers/markup-helpers",
-   'css!SBIS3.CONTROLS.ItemActionsGroup'
+   "Core/helpers/functional-helpers",
+   "css!SBIS3.CONTROLS.ItemActionsGroup"
 ],
-   function( CommandDispatcher, IoC, ConsoleLogger,ButtonGroupBaseDS, IconButton, Link, dotTplFn, dotTplFnForItem, colHelpers, mkpHelpers) {
+   function( CommandDispatcher, IoC, ConsoleLogger,ButtonGroupBaseDS, IconButton, Link, dotTplFn, dotTplFnForItem, colHelpers, mkpHelpers, fHelpers) {
 
       'use strict';
 
@@ -205,7 +206,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             var self = this;
             
             //TODO перейти на menuIcon при переводе операций на Vdom
-            requirejs(["js!SBIS3.CONTROLS.ContextMenu"], function(menu) {
+            requirejs(["js!SBIS3.CONTROLS.ContextMenu"], fHelpers.forAliveOnly(function(menu) {
                /* Создадим меню операций над записью, если его ещё нет */
                if(!self._itemActionsMenu) {
                   self._createItemActionMenu(menu);
@@ -218,7 +219,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
                self._itemActionsMenu.recalcPosition(true);
                /*TODO фикс теста, для операций над записью должна быть особая иконка*/
                $('.controls-PopupMixin__closeButton', self._itemActionsMenu.getContainer()).addClass('icon-size icon-ExpandUp icon-primary');
-            });
+            }));
          },
 
 

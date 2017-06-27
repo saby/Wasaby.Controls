@@ -11,7 +11,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
    'Core/helpers/string-helpers',
    "Core/IoC",
    'Core/helpers/functional-helpers',
-   'css!SBIS3.CONTROLS.BreadCrumbs'
+   'css!SBIS3.CONTROLS.BreadCrumbs',
+   'css!SBIS3.CONTROLS.Menu'
 ], function(CompoundControl, ItemsControlMixin, PickerMixin, DecorableMixin, dotTplFn, itemContentTpl, dotsTpl, itemTpl, menuItem, strHelpers, IoC, fHelpers) {
    /**
     * Класс контрола "Хлебные крошки". Основное применение - <a href='https://wi.sbis.ru/doc/platform/patterns-and-practices/typical-list/'>иерархические реестры</a>.
