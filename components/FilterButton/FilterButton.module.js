@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
         * Подробнее конфигурирование контрола описано в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterbutton/">Панель фильтров</a>.
         * @class SBIS3.CONTROLS.FilterButton
         * @extends SBIS3.CORE.CompoundControl
-        * @author Крайнов Дмитрий Олегович
+        * @author Герасимов Александр Максимович
         * @mixes SBIS3.CONTROLS.FilterMixin
         * @mixes SBIS3.CONTROLS.PickerMixin
         *
@@ -529,6 +529,14 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 this._historyController = null;
              }
 
+             if(this._dTemplatesReady) {
+                this._dTemplatesReady.getResult().cancel();
+                this._dTemplatesReady = null;
+             }
+             
+             this._filterTemplates = null;
+             this._pickerContext = null;
+             
              FilterButton.superclass.destroy.apply(this, arguments);
           }
 

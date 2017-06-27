@@ -374,6 +374,19 @@ body {
    }
 }
 
+// SBIS3.CORE.CloseButton используется в DateRangeSlider. Удалить после того как выпилим SBIS3.CORE.CloseButton
+.controls-DateRangeBigChoose .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled.ws-button-classic {
+   width: 3rem !important;
+   height: 3rem !important;
+   background: @closeBigButtonImage;
+   &:hover {
+      background: @closeBigButtonImageHover;
+   }
+   &:active {
+      background: @closeBigButtonImageHover;
+   }
+}
+
 .controls-Browser {
    .controls-Browser__tableCell-search {
       width: 19.44rem;
@@ -453,13 +466,13 @@ body {
 }
 
 body  .ws-window {
-   background-color: #293543 !important;
+   background-color: #293543;
    border-style: solid;
    border-color: #00a2ef;
    border-width: 2px;
 }
 .ws-window-content {
-  background-color: #2C3E50 !important;
+  background-color: @basic-block-bg-color !important;
 }
 .controls-listView td {
   font-size: 1rem;
@@ -474,14 +487,6 @@ body  .ws-window {
 }
 .control-Paging__btn  {
   border: 2px solid #26b8ff;
-}
-.ws-moneyDecorator {
-  &__fraction{
-    font-size: .857rem;
-    color: #8991A9;
-    line-height: normal;
-    font-weight: normal !important;
-  }
 }
 .controls-Link.controls__filter-button__clear-filter.ws-disabled {
   color: rgba(102, 170, 221, .2);
@@ -902,9 +907,6 @@ body .controls-image__button {
       color: #26B8FF !important;
    }
  }
-body .controls-ComboBox.controls-TextBox.controls-TextBox.ws-has-focus .controls-ComboBox__arrowDown, body .controls-ComboBox.controls-TextBox.controls-TextBox:hover .controls-ComboBox__arrowDown {
-  color: #e4e4e4 !important;
-}
 .controls-ComboBox.controls-TextBox.controls-TextBox .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
   font-size: 2rem !important;
 }
@@ -947,7 +949,7 @@ body {
             border-bottom: 2px solid @link-text-color;
          }
          &.ws-infobox-triangle-top {
-            top: -.54rem;
+            top: -.51rem;
             border-left: 2px solid @link-text-color;
             border-top: 2px solid @link-text-color;
          }
@@ -1034,9 +1036,6 @@ body .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-
 }
 .controls-ComboBox__picker .controls-ComboBox__scrollContainer {
     background: #f0f5fb;
-}
-.controls-Picker__show a.js-controls-ComboBox__arrowDown.controls-ComboBox__arrowDown.icon-16.icon-ExpandLight.icon-size.icon-primary.icon-primary {
-    color: #26b8ff!important;
 }
 .controls-DateRangeBigChoose__noBorder {
   border: none !important;

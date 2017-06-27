@@ -32,7 +32,7 @@ define('js!WSControls/Buttons/MenuButton', [
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.DSMixin
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Романов Валерий
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment

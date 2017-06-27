@@ -21,6 +21,7 @@
                 <ws:WSControls.VDOM.Item.Item
                         title="{{ item.title }}"
                         completed="{{ item.completed }}"
+                        item="{{ item }}"
                         event:onEdit="onEditItem(item)"
                         event:onRemove="onRemoveItem(item)"
                         event:onToggle="onToggleCompleted(item)"

@@ -105,7 +105,7 @@ define('js!SBIS3.CONTROLS.ListView',
        *
        * @class SBIS3.CONTROLS.ListView
        * @extends SBIS3.CORE.CompoundControl
-       * @author Крайнов Дмитрий Олегович
+       * @author Герасимов Александр Максимович
        *
        * @mixes SBIS3.CORE.CompoundActiveFixMixin
        * @mixes SBIS3.CONTROLS.DecorableMixin
@@ -524,18 +524,6 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Если опция {@link SBIS3.CORE.Control#enabled enabled} контрола установлена в false, то действия, доступные при наведении курсора мыши на запись, отображаться не будут. Однако с помощью опции {@link SBIS3.CORE.Control#allowChangeEnable allowChangeEnable} можно изменить это поведение.
                 * ![](/allowChangeEnable.png)
                 * Подробнее о настройке таких действий вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/fast/">Быстрый доступ к операциям по наведению курсора</a>.
-                *
-                * @faq Почему нет чекбоксов в режиме множественного выбора значений (активация режима производится опцией {@link SBIS3.CONTROLS.ListView#multiselect multiselect})?
-                * Для отрисовки чекбоксов необходимо в шаблоне отображения элемента коллекции обозначить их место.
-                * Для отображения чекбоксов необходимо обозначить их место в шаблоне отображения элемента коллекции.
-                * Сделать это можно используя CSS-классы "controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox".
-                * В данном примере тег span обозначает место отображения чекбокса:
-                * <pre>
-                *     <div class="listViewItem" style="height: 30px;">
-                *        <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></span>
-                *        {{=it.item.get("title")}}
-                *     </div>
-                * </pre>
                 *
                 * @example
                 * <b>Пример 1.</b> Конфигурация операций через вёрстку компонента.
@@ -2664,6 +2652,14 @@ define('js!SBIS3.CONTROLS.ListView',
                            self.setSelectedKey(hoveredKey);
                         }
                      },
+                     onCloseItemActionsMenu: function() {
+                        /* на тач-устройствах по закрытию меню скрывается тулбар
+                           поэтому необходимо очистить выделенный элемент
+                         */
+                        if(self._touchSupport) {
+                           self._clearHoveredItem();
+                        }
+                     },
                      onItemActionActivated: function(e, key) {
                         self.setSelectedKey(key);
                         if(self._touchSupport) {
@@ -3050,7 +3046,7 @@ define('js!SBIS3.CONTROLS.ListView',
                more = this.getItems().getMetaData().more,
                isContainerVisible = dcHelpers.isElementVisible(this.getContainer()),
                // отступ с учетом высоты loading-indicator
-               hasScroll = this._scrollWatcher.hasScroll(this._loadingIndicator.height()),
+               hasScroll = this._scrollWatcher.hasScroll(this._getLoadingIndicatorHeight()),
                hasNextPage = this._hasNextPage(more, this._scrollOffset.bottom);
 
             //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
@@ -3062,6 +3058,15 @@ define('js!SBIS3.CONTROLS.ListView',
             if (loadAllowed && isContainerVisible && hasNextPage && !this.isLoading()) {
                this._loadNextPage();
             }
+         },
+         _getLoadingIndicatorHeight: function () {
+            // Раньше высота считалась просто как this._loadingIndicator.height()
+            // Сломалось после https://online.sbis.ru/opendoc.html?guid=981cf035-1404-4429-a1b3-859a85510269&des=
+            // комит 4248b72d6c8994d4f94b2bfbd4d726705ef1e0da.
+            // метод height временно делает контейнер видимым из-за чего на ipad дергаются реестры.
+            // Если будут проблемы и надо будет срочно починить, то в крайнем случае можно попробовать
+            // .controls-ListView-scrollIndicator { display: none !important}
+            return this.getContainer().hasClass('controls-ListView__indicatorVisible') ? this._loadingIndicator.height() : 0;
          },
          /**
           * Обновлет положение ромашки что бы ее не перекрывал фиксированный заголовок
