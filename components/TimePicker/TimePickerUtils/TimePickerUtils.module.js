@@ -15,134 +15,35 @@ define('js!SBIS3.CONTROLS.TimePickerUtils',
           */
 
          /**
-          * @event onChangeActiveTime Происходит после смены активного времени.
+          * @event onChangeMode Происходит после смены активного времени.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {String} activeTime Текущее активное время.
+          * @param {String} mode Текущее активное время.
           */
 
          /**
-          * @event onChangeTimeEnd Происходит после окончательного выбора времени.
+          * @event onTimeSelect Происходит при окончании выбора времени.
+          * @remark
+          * Окончанием выбора времени является окончание работы со стрелкой выбора времени.
           * @param {$ws.proto.EventObject} eventObject Дескриптор события.
-          * @param {Date|Object} time окончательное время.
+          * @param {Date|Object} time Время, которое установили.
           */
-         $protected: {
-            _options: {
-               /**
-                * @cfg {Object} Время.
-                *
-                * @example
-                * Установить время 20:17.
-                * <pre>
-                *    <ws:time>
-                *       <ws:Object>
-                *          <ws:hours>
-                *             <ws:Number>20</ws:Number>
-                *          </ws:hours>
-                *          <ws:minutes>
-                *             <ws:Number>17</ws:Number>
-                *          </ws:minutes>
-                *       </ws:Object>
-                *    </ws:time>
-                * </pre>
-                *
-                * @see getTime
-                * @see setTime
-                */
-               time: {
-                  hours: 0,
-                  minutes: 0
-               },
-
-               /**
-                * @cfg {String} Активное время.
-                * <ol>
-                *    <li>Часы: hours.</li>
-                *    <li>Минуты: minutes.</li>
-                * </ol>
-                *
-                * @example
-                * Установить активное время minutes.
-                * <pre>
-                *    <ws:activeTime>
-                *       <ws:String>minutes</ws:String>
-                *    </ws:activeTime>
-                * </pre>
-                *
-                * @see getActiveTime
-                * @see setActiveTime
-                */
-               activeTime: 'hours'
-            }
-         },
-
-         $constructor: function() {
-            this._publish('onChangeTime', 'onChangeActiveTime', 'onChangeTimeEnd');
-         },
-
-         /**
-          * Получить положение стрелки.
-          * @returns {Object} положение стрелки в разных представлениях.
-          * @public
-          */
-         getTime: function() {
-            return this._getOption('time');
-         },
 
          /**
           * Изменить время.
           * @param {Object} time новое время.
-          * @returns {Array<Boolean>} изменилось ли активное время.
           * @public
           */
          setTime: function(time) {
-            var
-               setTime = coreFunctions.clone(this.getTime()),
-               //isSet - изменилось ли время, isSetView - изменилось ли время на активном представлении.
-               isSet, isSetActiveTime, system;
-
-            for (system in setTime) {
-               if (!(system in time) || this.getTime()[system] === time[system]) {
-                  continue;
-               }
-               setTime[system] = time[system];
-               isSet = true;
-               if (!isSetActiveTime) {
-                  isSetActiveTime = this.getActiveTime() === system;
-               }
-            }
-
-            //Проверим изменилось ли время.
-            if (isSet) {
-               this._setUtilOption('time', setTime);
-            }
-            return {
-               isSet: isSet,
-               isSetActiveTime: isSetActiveTime
-            };
+            TimePickerUtils._setUtilOption.call(this, 'time', time);
          },
 
          /**
-          * Получить активное время.
-          * @returns {String} активное время.
+          * Изменить режим.
+          * @param {String} mode новый режим.
           * @public
           */
-         getActiveTime: function() {
-            return this._getOption('activeTime');
-         },
-
-         /**
-          * Изменить активное время.
-          * @param {String} activeTime новое активное время.
-          * @returns {Boolean} изменилось ли активное время.
-          * @public
-          */
-         setActiveTime: function(activeTime) {
-            //Проверим можем ли мы установить новое представление или не совподает ли оно с текущим.
-            if (this.getActiveTime() === activeTime || !(activeTime === 'hours' || activeTime === 'minutes')) {
-               return false;
-            }
-            this._setUtilOption('activeTime', activeTime);
-            return true;
+         setMode: function(mode) {
+            TimePickerUtils._setUtilOption.call(this, 'mode', mode);
          },
 
          _setUtilOption: function(name, value, silent) {
@@ -151,8 +52,8 @@ define('js!SBIS3.CONTROLS.TimePickerUtils',
             this._notifyOnPropertyChanged(name);
          },
 
-         _notifyChangeTimeEnd: function () {
-            this._notify('onChangeTimeEnd', this.getTime());
+         _notifyTimeSelect: function() {
+            this._notify('onTimeSelect');
          }
       };
 
