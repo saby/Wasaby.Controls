@@ -109,7 +109,8 @@ define('js!SBIS3.CONTROLS.SearchMixin',
          if ( (hasStartCharacter && textTrimLength >= this._options.startCharacter) || (force && textTrimLength)) {
             this._notify('onSearch', text, force);
             this._onResetIsFired = false;
-         } else  {
+            /* Событие onReset не должно стрелять, если опция startCharacter выставлена в null и есть текст в строке поиска */
+         } else if(hasStartCharacter || (!hasStartCharacter && !textTrimLength) || force) {
             this._notifyOnReset();
          }
       },
