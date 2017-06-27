@@ -150,10 +150,17 @@ define('js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil', [],
                     if ((b <= dotPosition && e <= dotPosition) || dotPosition == -1) { //до точки
                         if (b == e) {
                             currentVal = currentVal.substr(0, b - step) + currentVal.substr(e);
+
                             // При удалении последнего символа целой части дроби каретку нужно оставить после 0
                             // т.к. если каретку установить перед 0, то при вводе 0 не затрется; было |0.12 стало 0|.12
                             if(this._getIntegersCount(currentVal) !== 0) {
                                 (delimiters && this._getIntegersCount(currentVal) % 3 == 0) ? newCaretPosition -= 2 : newCaretPosition--;
+                            }else {
+                                // 0.0| -> 0|. в итоге этот метод отдаст '.' которая отрендерится в '0.' что и правильно
+                                // поэтому если стираем последний 0 и у нас остается лишь точка, то необходимо
+                                if(currentVal.length === 1 && currentVal[0] === '.'){
+                                    currentVal = '';
+                                }
                             }
                         } else {
                             currentVal = currentVal.substr(0, b) + currentVal.substr(e);
