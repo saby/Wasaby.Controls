@@ -32,12 +32,18 @@
    }
 
    &.controls-TextBox {
-      &.ws-has-focus, &:hover{
-       .controls-ComboBox__arrowDown{
-          //todo: !important
-         color: @combo-box-arrowDown-color!important;
-       }
-     }
+      &.ws-has-focus{
+         .controls-ComboBox__arrowDown{
+            //todo: !important
+            color: @combo-box-arrowDown-color!important;
+         }
+      }
+      &:hover {
+         .controls-ComboBox__arrowDown {
+            //todo: !important
+            color: @combo-box-arrowDown-color-hover!important;
+         }
+      }
      .controls-TextBox__afterFieldWrapper {
        width: @combo-box-after-width;
        .flexbox();
@@ -113,7 +119,7 @@
       .controls-TextBox__afterFieldWrapper {
          .controls-ComboBox__arrowDown {
             //todo !important;
-            color: @combo-box-arrowDown-color-hover !important;
+            color: @combo-box-arrowDown-color-picker-show !important;
             border-width: @combo-box-arrow-active-border-width;
             border-style: @combo-box-arrow-active-border-style;
             border-color: @combo-box-arrow-active-border-color;
