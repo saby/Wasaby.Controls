@@ -234,7 +234,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
        * @see SBIS3.CONTROLS.DSMixin#idProperty
        */
       getSelectedKey : function() {
-         if (this._selectorInstance) {
+         if (this._selectorInstance && cInstance.instanceOfModule(this._selectorInstance, 'WSControls/Controllers/RecordsetListSelector')) {
             return this._selectorInstance.getSelectedKey();
          }
          else {
