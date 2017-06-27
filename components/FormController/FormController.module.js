@@ -16,11 +16,12 @@ define('js!SBIS3.CONTROLS.FormController', [
    "js!WS.Data/Source/SbisService",
    "js!SBIS3.CONTROLS.Utils.InformationPopupManager",
    "js!SBIS3.CONTROLS.Utils.OpenDialog",
+   "js!SBIS3.CONTROLS.TitleManager",
    "js!SBIS3.CONTROLS.OpenDialogAction",
    "i18n!SBIS3.CONTROLS.FormController",
    'css!SBIS3.CONTROLS.FormController'
 ],
-   function( cContext, cFunctions, cMerge, CommandDispatcher, EventBus, Deferred, IoC, ConsoleLogger, cInstance, fHelpers, CompoundControl, LoadingIndicator, Record, Model, SbisService, InformationPopupManager, OpenDialogUtil) {
+   function( cContext, cFunctions, cMerge, CommandDispatcher, EventBus, Deferred, IoC, ConsoleLogger, cInstance, fHelpers, CompoundControl, LoadingIndicator, Record, Model, SbisService, InformationPopupManager, OpenDialogUtil, TitleManager) {
    /**
     * Компонент, на основе которого создают диалог, данные которого инициализируются по записи.
     * В частном случае компонент применяется для создания <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/'>диалогов редактирования записи</a>.
@@ -383,10 +384,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          var record = this._options.record,
              newTitle = record && record.get('title');
          if (newTitle) {
-            if (!this._previousDocumentTitle){
-               this._previousDocumentTitle = document.title;
-            }
-            document.title = newTitle;
+            TitleManager.set(newTitle, this);
          }
       },
 
@@ -409,12 +407,6 @@ define('js!SBIS3.CONTROLS.FormController', [
          //Если fields пустой, значит установили новые сырые данные (вызывали setRawData)
          if (fields.title || Object.isEmpty(fields)) {
             this._updateDocumentTitle();
-         }
-      },
-
-      _resetTitle: function(){
-         if (this._previousDocumentTitle){
-            document.title = this._previousDocumentTitle;
          }
       },
 
@@ -975,7 +967,6 @@ define('js!SBIS3.CONTROLS.FormController', [
          this.unsubscribeFrom(EventBus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigateHandler);
          window.removeEventListener('beforeunload', this._onBeforeUnloadHandler);
          this._unsubscribeFromRecordChange();
-         this._resetTitle();
          FormController.superclass.destroy.apply(this, arguments);
       }
    });
