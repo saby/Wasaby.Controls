@@ -203,23 +203,21 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           * Показывает меню для операций над записью
           */
          showItemActionsMenu: function(align) {
-            var self = this;
-            
             //TODO перейти на menuIcon при переводе операций на Vdom
             requirejs(["js!SBIS3.CONTROLS.ContextMenu"], fHelpers.forAliveOnly(function(menu) {
                /* Создадим меню операций над записью, если его ещё нет */
-               if(!self._itemActionsMenu) {
-                  self._createItemActionMenu(menu);
+               if(!this._itemActionsMenu) {
+                  this._createItemActionMenu(menu);
                }
                // при открытии контекстного меню необходимо устанавливать координаты точки начала построения popup
-               self._setContextMenuMode(align);
-               self._onBeforeMenuShowHandler();
-               self._itemActionsMenu.show();
-               self._activeItem.container.addClass(self._activeCls);
-               self._itemActionsMenu.recalcPosition(true);
+               this._setContextMenuMode(align);
+               this._onBeforeMenuShowHandler();
+               this._itemActionsMenu.show();
+               this._activeItem.container.addClass(this._activeCls);
+               this._itemActionsMenu.recalcPosition(true);
                /*TODO фикс теста, для операций над записью должна быть особая иконка*/
-               $('.controls-PopupMixin__closeButton', self._itemActionsMenu.getContainer()).addClass('icon-size icon-ExpandUp icon-primary');
-            }));
+               $('.controls-PopupMixin__closeButton', this._itemActionsMenu.getContainer()).addClass('icon-size icon-ExpandUp icon-primary');
+            }, this));
          },
 
 
