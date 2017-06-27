@@ -14,7 +14,8 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
    'js!SBIS3.CONTROLS.ColorStyle',
    'js!SBIS3.CONTROLS.IconButton',
    'js!SBIS3.CONTROLS.CheckBox',
-   'css!SBIS3.CONTROLS.StylesPanelNew'
+   'css!SBIS3.CONTROLS.StylesPanelNew',
+   'css!SBIS3.CONTROLS.MenuItem'
 ], function(CommandDispatcher, CompoundControl, PopupMixin, HistoryController, colHelpers, genHelpers, dotTplFn, EventBus) {
 
 
