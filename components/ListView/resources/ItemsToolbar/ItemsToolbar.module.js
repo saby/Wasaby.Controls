@@ -240,7 +240,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            * @private
            */
           _trackingTarget: function() {
-             dcHelpers.trackElement(this._currentTarget.container, true).subscribe('onMove', this._recalculatePosition, this);
+             dcHelpers.trackElement(this._currentTarget.container, true).subscribe('onMove', this.recalculatePosition, this);
           },
           /**
            * Меняет режим отображения тулбара, если touch - то тулбар отображается с анимацией
@@ -300,7 +300,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            * Пересчитывает позицию тулбара при изменении позиции currentTarget
            * @private
            */
-          _recalculatePosition: function() {
+          recalculatePosition: function() {
              var parentContainer = this.getParent().getContainer()[0],
                  targetContainer = this._currentTarget.container[0],
                  parentCords = parentContainer.getBoundingClientRect(),
