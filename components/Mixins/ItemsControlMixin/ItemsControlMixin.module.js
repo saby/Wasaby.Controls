@@ -178,7 +178,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       return records;
    },
    buildTplArgs = function(cfg) {
-      var tplOptions = {}, itemTpl, itemContentTpl;
+      var tplOptions = {},
+          self = this,
+          timers = {},
+          itemTpl, itemContentTpl, logger;
 
       tplOptions.escapeHtml = strHelpers.escapeHtml;
       tplOptions.Sanitize = Sanitize;
@@ -187,6 +190,19 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       tplOptions.displayProperty = cfg.displayProperty;
       tplOptions.templateBinding = cfg.templateBinding;
       tplOptions.getPropertyValue = getPropertyValue;
+      
+      /* Для логирования */
+      if(typeof window === 'undefined') {
+         logger = IoC.resolve('ILogger');
+         tplOptions.timeLogger = function timeLogger(tag, start) {
+            if(start) {
+               timers[tag] = new Date();
+            } else {
+               logger.log(self._moduleName || cfg.name, tag + ' ' + ((new Date()) - timers[tag]));
+               delete timers[tag];
+            }
+         };
+      }
 
       if (cfg.itemContentTpl) {
          itemContentTpl = cfg.itemContentTpl;
