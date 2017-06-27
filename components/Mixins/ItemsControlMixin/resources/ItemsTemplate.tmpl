@@ -1,4 +1,6 @@
+<ws:if data="{{ tplData.timeLogger && tplData.timeLogger('ItemsRender', true) && false}}"></ws:if>
 <ws:for data="index,item in records">
+    <ws:if data="{{ tplData.timeLogger && tplData.timeLogger('SingleItemRender', true) && false}}"></ws:if>
     <ws:if data="{{ item.getContents }}">
         <ws:if data="{{tplData.decorators && tplData.decorators.ladder}}">{{tplData.decorators.ladder.setRecord(item.getContents()) || ''}}</ws:if>
         <ws:partial template="{{tplData.itemTpl}}" scope="{{tplData}}" item="{{item.getContents()}}" projItem="{{item}}" />
@@ -6,4 +8,6 @@
     <ws:else>
         <ws:partial template="{{ item.tpl }}" scope="{{ item.data }}" />
     </ws:else>
+    <ws:if data="{{ tplData.timeLogger && tplData.timeLogger('SingleItemRender', false) && false}}"></ws:if>
 </ws:for>
+<ws:if data="{{ tplData.timeLogger && tplData.timeLogger('ItemsRender', false) && false}}"></ws:if>
