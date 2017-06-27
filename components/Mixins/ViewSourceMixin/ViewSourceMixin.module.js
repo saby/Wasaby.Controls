@@ -31,7 +31,7 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
              historyFilter = {},
              resultDef = new Deferred(),
              applyFilterOnLoad = true,
-             queryDef, history, serializedHistory, queryFilter;
+             queryDef, historyController, history, serializedHistory, queryFilter;
 
          historyId = historyId || this._options.historyId;
 
@@ -44,7 +44,8 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
 
          /* Если есть historyId и разрешёно применение из истории, то попытаемся достать фильтр из истории */
          if(applyFilterOnLoad) {
-            history = (new HistoryController({historyId: historyId})).getHistory();
+            historyController = new HistoryController({historyId: historyId});
+            history = historyController.getHistory();
 
             if (history) {
                for(var i = 0, len = history.length; i < len; i++) {
@@ -54,6 +55,10 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
                   }
                }
             }
+   
+            this.once('onDestroy', function() {
+               historyController.destroy();
+            });
          }
 
          /* Фильтр перед сохранением в историю специально обрабатывается, и оттуда удаляются ключи, которые лежат в опции
@@ -80,7 +85,7 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
          });
 
          /* По готовности компонента установим данные */
-         this.subscribe('onInit', function() {
+         this.once('onInit', function() {
             var browser = browserName ? this.getChildControlByName(browserName) : this,
                 view = browser.getView();
 
