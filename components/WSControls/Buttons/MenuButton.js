@@ -4,8 +4,10 @@ define('js!WSControls/Buttons/MenuButton', [
    'js!SBIS3.CONTROLS.DSMixin',
    'Core/helpers/dom&controls-helpers',
    'Core/helpers/collection-helpers',
-   'Core/IoC'
-], function(Button, PickerMixin, DSMixin, dcHelpers, colHelpers, IoC) {
+   'Core/IoC',
+   'Core/Sanitize',
+   'Core/helpers/string-helpers'
+], function(Button, PickerMixin, DSMixin, dcHelpers, colHelpers, IoC, Sanitize, strHelpers) {
 
    'use strict';
    
@@ -281,6 +283,10 @@ define('js!WSControls/Buttons/MenuButton', [
 
        _drawMenuCaption: function(menuCaption) {
            if (this._picker && menuCaption){
+              if(this._options.escapeCaptionHtml){
+                  menuCaption = strHelpers.escapeHtml(menuCaption);
+              }
+              menuCaption = Sanitize(menuCaption, {validNodes: {component: true}});
               $('.controls-Menu__header-caption', this._picker._container).html(menuCaption);
            }
        },
