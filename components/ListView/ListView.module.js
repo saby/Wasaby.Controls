@@ -1986,6 +1986,11 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.setInfiniteScroll('both', true);
                }
             }
+            if (this._options.virtualScrolling) {
+               this._virtualScrollController.reset();
+               this._topWrapper.height(0);
+               this._bottomWrapper.height(0);
+            }
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
             // При перезагрузке нужно также почистить hoveredItem, иначе следующее отображение тулбара будет для элемента, которого уже нет (ведь именно из-за этого ниже скрывается тулбар).
@@ -2779,7 +2784,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             //FixMe: Из за этого при каждой подгрузке по скроллу пэйджинг пересчитывается полностью
             if (this._scrollBinder){
-               this._scrollBinder._updateScrollPages(true);
+               this._scrollBinder._updateScrollPages(!this._options.virtualScrolling);
             } else if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
                this._createScrollPager();
             }
@@ -3454,7 +3459,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._observeResultsRecord(true);
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
             this._needScrollCompensation = false;
-
+            this._options.virtualScrolling = this.getName() == 'browserView';
             if (this._options.virtualScrolling && !this._virtualScrollController) {
                this._initVirtualScrolling();
             }
