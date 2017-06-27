@@ -102,6 +102,16 @@ define(['js!WSControls/Controllers/BaseListSelector',
                assert.equal(3, selector.getSelectedKey(), 'Option allowEmptySelection doesn\'t work');
             });
 
+            it('false + key', function () {
+               var selector = new RecordsetListSelector({
+                  allowEmptySelection: false,
+                  selectedKey: 3,
+                  projection: projection
+               });
+               assert.equal(2, selector.getSelectedIndex(), 'Option allowEmptySelection doesn\'t work');
+               assert.equal(3, selector.getSelectedKey(), 'Option allowEmptySelection doesn\'t work');
+            });
+
             it('false', function () {
                var selector = new RecordsetListSelector({
                   allowEmptySelection: false,

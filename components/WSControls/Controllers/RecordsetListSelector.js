@@ -3,10 +3,12 @@ define('js!WSControls/Controllers/RecordsetListSelector', [
 ], function(BaseListSelector) {
    var RecordsetListSelector = BaseListSelector.extend({
       constructor: function(cfg) {
-         RecordsetListSelector.superclass.constructor.apply(this, arguments);
          /*Распихивание данных*/
-         this._options['selectedKey'] = cfg.selectedKey || null;
-         this.selectedKey = this._options.selectedKey;
+
+         this.selectedKey = cfg.selectedKey || null;
+
+         RecordsetListSelector.superclass.constructor.apply(this, arguments);
+         this._options['selectedKey'] = this.selectedKey; //TODO нужно ли запихивание в блок options
          this._prepareBothSelectedConfig(this.selectedIndex, this.selectedKey)
       },
 
@@ -89,6 +91,17 @@ define('js!WSControls/Controllers/RecordsetListSelector', [
 
       _notifySelectedItem : function(index, key) {
          this._notify('onSelectedItemChange', index, key);
+      },
+
+      _prepareOtherSelectedConfig: function() {
+         if (this.projection) {
+            //если после всех манипуляций выше индекс пустой, но задана опция, что пустое нельзя - выбираем первое
+            if (!this.allowEmptySelection && this._isEmptyIndex(this.selectedIndex) && (this.selectedKey == null)) {
+               if (this.projection.getCount()) {
+                  this.selectedIndex = 0;
+               }
+            }
+         }
       }
 
    });

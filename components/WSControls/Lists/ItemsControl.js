@@ -304,6 +304,7 @@ define('js!WSControls/Lists/ItemsControl', [
             });
          },
          _onDSReload: function(e, list) {
+            this._itemData = null;
             if (
                this.getItems()
                   && (list.getModel() === this.getItems().getModel())
@@ -350,10 +351,6 @@ define('js!WSControls/Lists/ItemsControl', [
       this._itemData = null;
       this.tplData = this._prepareItemData();
       this._setDirty();
-   };
-
-   var onDSAfterReload = function() {
-      debugger;
    };
 
    return ItemsControl;
