@@ -2794,6 +2794,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._virtualScrollController.updateVirtualPages();
                }
             }
+            if(this._itemsToolbar && this._itemsToolbar.isVisible() && this._touchSupport){
+                this._itemsToolbar.recalculatePosition();
+            }
             /* Т.к. для редактирования нет parent'a, надо ресайц звать руками */
             if(this.isEdit()) {
                this._getEditInPlace().addCallback(function(editInPlace) {
