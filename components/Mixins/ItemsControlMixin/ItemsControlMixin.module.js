@@ -1260,8 +1260,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              lastItemsIndex = projection.getCount() - newItems.length;
 
          // TODO: тут зависимость от virtualscrolling, которой быть не должно
-         var lastVirtualWindowIndex = this._virtualScrollController._currentWindow[1];
-         if (this._options.virtualScrolling && lastVirtualWindowIndex > 0) {
+         if (this._virtualScrollController && this._virtualScrollController._currentWindow[1] > 0) {
             lastItemsIndex = lastVirtualWindowIndex + 1;
          }
 
