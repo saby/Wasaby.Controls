@@ -3459,7 +3459,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._observeResultsRecord(true);
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
             this._needScrollCompensation = false;
-            this._options.virtualScrolling = this.getName() == 'browserView';
+
             if (this._options.virtualScrolling && !this._virtualScrollController) {
                this._initVirtualScrolling();
             }

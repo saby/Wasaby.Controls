@@ -1261,7 +1261,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          // TODO: тут зависимость от virtualscrolling, которой быть не должно
          if (this._virtualScrollController && this._virtualScrollController._currentWindow[1] > 0) {
-            lastItemsIndex = lastVirtualWindowIndex + 1;
+            lastItemsIndex = this._virtualScrollController._currentWindow[1] + 1;
          }
 
          if (this._options.groupBy && this._options.easyGroup) {
