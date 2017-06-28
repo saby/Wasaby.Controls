@@ -172,6 +172,19 @@ define('js!SBIS3.CONTROLS.Selectable', [
       },
 
       after : {
+         _modifyOptions: function(opts) {
+            var item, itemContents;
+            if(!opts.allowEmptySelection && opts._itemsProjection && !opts.selectedKey) {
+               item = opts._itemsProjection.at(0);
+               
+               if(item) {
+                  itemContents = item.getContents();
+                  if (cInstance.instanceOfModule(itemContents, 'WS.Data/Entity/Model')) {
+                     opts.selectedKey = itemContents.get(opts.idProperty);
+                  }
+               }
+            }
+         },
          _setItemsEventHandlers : function() {
             if (!this._onProjectionCurrentChange) {
                this._onProjectionCurrentChange = onProjectionCurrentChange.bind(this);
