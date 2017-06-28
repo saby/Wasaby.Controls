@@ -29,21 +29,21 @@
          .button-mixin(@button-icon-left-offset; @icon-small-size; @button-border-width; @button-text-margin-left; @button-text-margin-right);
       }
       &.icon-medium {
-         .button-mixin(@button-icon-left-offset; @icon-medium-size; @button-border-width; @button-text-margin-left; @button-text-margin-right);
+         .button-mixin(@button-icon-medium-left-offset; @icon-medium-size; @button-border-width; @button-text-margin-left; @button-text-margin-right);
       }
       &.icon-large {
-         .button-mixin(@button-icon-left-offset; @icon-large-size; @button-border-width; @button-text-margin-left; @button-text-margin-right);
+         .button-mixin(@button-icon-large-left-offset; @icon-large-size; @button-border-width; @button-text-margin-left; @button-text-margin-right);
       }
 
       // оставляем для совместимости
       &.icon-16 {
-         .button-mixin(@button-icon-left-offset; 16px; @button-border-width; @button-text-margin-left; @button-text-margin-right);
+         .button-mixin(@button-icon-left-offset; @icon-small-size; @button-border-width; @button-text-margin-left; @button-text-margin-right);
       }
       &.icon-24 {
-         .button-mixin(@button-icon-big-left-offset; 24px; @button-border-width; @button-text-margin-left; @button-text-margin-right);
+         .button-mixin(@button-icon-big-left-offset; @icon-medium-size; @button-border-width; @button-text-margin-left; @button-text-margin-right);
       }
       &.icon-32 {
-         .button-mixin(@button-icon-32-left-offset; 32px; @button-border-width; @button-text-margin-left; @button-text-margin-right);
+         .button-mixin(@button-icon-32-left-offset; @icon-large-size; @button-border-width; @button-text-margin-left; @button-text-margin-right);
       }
    }
    /* Start Button themes */

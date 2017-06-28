@@ -13,10 +13,11 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
    "js!SBIS3.CONTROLS.FilterHistoryControllerUntil",
    "Core/helpers/collection-helpers",
    "Core/helpers/generate-helpers",
-   "Core/helpers/Function/debounce"
+   "Core/helpers/Function/debounce",
+   "Core/helpers/functional-helpers"
 ],
 
-    function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, colHelpers, genHelpers, debounce) {
+    function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, colHelpers, genHelpers, debounce, fHelpers) {
 
        'use strict';
 
@@ -60,7 +61,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              this._listHistory = new List({items: this.getHistory() || []});
              this._prepareListHistory();
              this._changeHistoryFnc = this._changeHistoryHandler.bind(this);
-             this._applyHandlerDebounced = debounce.call(this._onApplyFilterHandler).bind(this);
+             this._applyHandlerDebounced = debounce.call(fHelpers.forAliveOnly(this._onApplyFilterHandler, this)).bind(this);
 
              if(this._options.filterButton) {
                 this._initFilterButton();

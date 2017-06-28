@@ -29,14 +29,22 @@ body {
 }
 
 body {
+  .controls-BackButton {
+     .controls-BackButton__caption.controls-Link {
+        color: #313E78;
+     }
+  }
   .ws-window-titlebar {
     color: #313E78;
   }
-   .controls-TabButtons .controls-TabButtons__tabSpace-template {
-      height: 100%; //Только для offline из-за старого webkit
-   }
   .ws-info-box {
       background: @default-bg-color;
+      .ws-infobox-triangle {
+         background: @default-bg-color;
+      }
+  }
+  .ws-infobox-triangle {
+    background: @default-bg-color;
   }
   .ws-window-title {
      font-size: 1.43rem;
@@ -168,4 +176,17 @@ body .ws-window {
 }
 .controls-ListView__ItemsToolbar-container {
     height: 1.2rem;
+}
+.ws-float-area-stack-panel-shadow {
+  background: @default-bg-color !important;
+}
+.ws-LoadingIndicator__window, .ws-loading {
+   .ws-loadingimg {
+      div:before {
+         background-image: url('img/ajax-loader-indicator-big.gif');
+      }
+   }
+}
+.ws-window-content {
+   background-color: @default-bg-color !important;
 }

@@ -4,8 +4,9 @@
 define('js!SBIS3.CONTROLS.SearchMixin',
     [
        'Core/helpers/functional-helpers',
-       'Core/CommandDispatcher'
-    ], function(fHelpers, CommandDispatcher) {
+       'Core/CommandDispatcher',
+       'js!SBIS3.CONTROLS.Utils.SearchMixin'
+    ], function(fHelpers, CommandDispatcher, SearchMixinUtil) {
 
    /**
     * Миксин, добавляющий иконку
@@ -95,21 +96,14 @@ define('js!SBIS3.CONTROLS.SearchMixin',
       },
 
       _applySearch : function(text, force) {
-         var hasStartCharacter = this._options.startCharacter !== null,
-             textTrimLength;
-   
-         /* Вырезаем символы < > только если они одиночные, т.е. не в составе какого-то слова,
-            т.к. декоратор в гриде при выделении цветом одиночных < > может поломать вёрстку */
-         text = (text || '').replace(/^([<|>][\s])|([\s][<|>][\s])|([\s][<|>])$/g, '');
-         textTrimLength = text.trim().length;
-         
+         var args = [text, this._options.startCharacter, force];
          /* Если поиск запущен, то надо отменить поиск с задержкой */
          this._clearSearchDelay();
-   
-         if ( (hasStartCharacter && textTrimLength >= this._options.startCharacter) || (force && textTrimLength)) {
+         
+         if (SearchMixinUtil.needSearch.apply(null, args)) {
             this._notify('onSearch', text, force);
             this._onResetIsFired = false;
-         } else  {
+         } else if (SearchMixinUtil.needReset.apply(null, args)) {
             this._notifyOnReset();
          }
       },

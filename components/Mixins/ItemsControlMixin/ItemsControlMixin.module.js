@@ -178,7 +178,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       return records;
    },
    buildTplArgs = function(cfg) {
-      var tplOptions = {}, itemTpl, itemContentTpl;
+      var tplOptions = {},
+          self = this,
+          timers = {},
+          itemTpl, itemContentTpl, logger;
 
       tplOptions.escapeHtml = strHelpers.escapeHtml;
       tplOptions.Sanitize = Sanitize;
@@ -187,6 +190,19 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       tplOptions.displayProperty = cfg.displayProperty;
       tplOptions.templateBinding = cfg.templateBinding;
       tplOptions.getPropertyValue = getPropertyValue;
+      
+      /* Для логирования */
+      if(typeof window === 'undefined') {
+         logger = IoC.resolve('ILogger');
+         tplOptions.timeLogger = function timeLogger(tag, start) {
+            if(start) {
+               timers[tag] = new Date();
+            } else {
+               logger.log(self._moduleName || cfg.name, tag + ' ' + ((new Date()) - timers[tag]));
+               delete timers[tag];
+            }
+         };
+      }
 
       if (cfg.itemContentTpl) {
          itemContentTpl = cfg.itemContentTpl;
@@ -1259,6 +1275,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              prevItem = projection.at(newItemsIndex - 1),
              lastItemsIndex = projection.getCount() - newItems.length;
 
+         // TODO: тут зависимость от virtualscrolling, которой быть не должно
+         if (this._virtualScrollController && this._virtualScrollController._currentWindow[1] > 0) {
+            lastItemsIndex = this._virtualScrollController._currentWindow[1] + 1;
+         }
+
          if (this._options.groupBy && this._options.easyGroup) {
             //в случае наличия группировки надо проверять соседние элементы, потому что
             //на месте вставки может быть разделитель, надо понимать, когда вставлять до разделителя, а когда после
@@ -1269,7 +1290,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                nextGroup = (nextItem && this._canApplyGrouping(nextItem)) ? projection.getGroupByIndex(newItemsIndex + newItems.length) : null;
                if ((prevGroup === undefined) || (prevGroup === null) || prevGroup != groupId) {
                   if (nextGroup !== undefined && nextGroup !== null && nextGroup == groupId) {
-                     beforeFlag = true
+                     beforeFlag = true;
                   }
                }
             }
