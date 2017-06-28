@@ -175,9 +175,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
          _modifyOptions: function(opts) {
             var item, itemContents;
             if(!opts.allowEmptySelection && opts._itemsProjection && !opts.selectedKey) {
-               opts.selectedIndex = 0;
-               
-               item = opts._itemsProjection.at(opts.selectedIndex);
+               item = opts._itemsProjection.at(0);
                
                if(item) {
                   itemContents = item.getContents();
