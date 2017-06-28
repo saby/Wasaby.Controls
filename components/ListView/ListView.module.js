@@ -3633,7 +3633,11 @@ define('js!SBIS3.CONTROLS.ListView',
             pageNumber = parseInt(pageNumber, 10);
             var offset = this._offset;
             if (pageNumber == -1) {
-               this._setLastPage(noLoad);
+               if (this._lastPageLoaded) {
+                  this._getScrollWatcher().scrollTo('bottom');
+               } else {
+                  this._setLastPage(noLoad);
+               }
             } else {
                if (this.isInfiniteScroll() && this._isPageLoaded(pageNumber)){
                   if (this._getItemsProjection() && this._getItemsProjection().getCount()){
@@ -3645,6 +3649,9 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                   }
                } else {
+                  if (pageNumber == 0) {
+                     this._setInfiniteScrollState('down');
+                  }
                   this._offset = this._options.pageSize * pageNumber;
                   this._scrollOffset.top = this._offset;
                   this._scrollOffset.bottom = this._offset;
