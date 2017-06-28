@@ -226,12 +226,11 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                button.toggleClass('engine-OperationNotificationPopup__header_stoppedOperations-show');
             });
 
-            // Убрано в соответстви со стандартом. Насовсем?
-            /*###this.subscribeTo(this._longOpList, 'onExecuteTimeUpdated', function () {
+            this.subscribeTo(this._longOpList, 'ontimespentchanged', function () {
                if (self._activeOperation) {
                   self._setFooterTimeSpent(self._activeOperation.get('shortTimeSpent'));
                }
-            });*/
+            });
          },
 
          /**
@@ -389,8 +388,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                   this._setProgress(model.get('progressCurrent'), model.get('progressTotal'));
                }
 
-               // Убрано в соответстви со стандартом. Насовсем?
-               /*###this._setFooterTimeSpent(model.get('shortTimeSpent'));*/
+               this._setFooterTimeSpent(model.get('shortTimeSpent') || '0сек.');
             }
          },
 
@@ -451,7 +449,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                   + ' ' + current + ' ' +
                   strHelpers.wordCaseByNumber(current, rk('операций'), rk('операция'), rk('операции')) + ' ' + rk('из') + ' ' + total;
             }*/
-            var message = current + ' ' + (100 <= total ? '/' : rk('из')) + ' ' + total + ' ' + rk('операций');
+            var message = Math.floor(current) + ' ' + (100 <= total ? '/' : rk('из')) + ' ' + total + ' ' + rk('операций');
             this.getContainer().find('.engine-OperationNotificationPopup__footer_execTasks').text(message);
             this.getContainer().find('.engine-OperationNotificationPopup__footer_progress').text(Math.floor(100*current/total) + '%');
          },
@@ -461,9 +459,9 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
             this._notificationContainer.text(message).removeClass('ws-hidden');
          },
 
-         /*###_setFooterTimeSpent: function (timeSpent) {
+         _setFooterTimeSpent: function (timeSpent) {
             this.getContainer().find('.engine-OperationNotificationPopup__footer_executeTime').text(timeSpent);
-         },*/
+         },
 
          /**
           * Обработать событие

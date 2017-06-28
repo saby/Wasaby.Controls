@@ -96,6 +96,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                   var operationId = o.id;
                   var handlers = this._actions ? this._actions[operationId] : null;
                   // Если обработчики действий пользователя установлены в этой вкладке
+                  // При разрушении продюсера обработчики будут утеряны, поэтому операции завершаем ошибкой
                   if (handlers) {
                      delete this._actions[operationId];
                      o.status = STATUSES.error;
@@ -526,10 +527,11 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
        * @protected
        * @type {string}
        */
-      var NS_PREFIX = 'wslongop-';
+      var NS_PREFIX = 'ws-lo-gen-';
 
       /**
        * Набор внутренних методов для манипуляций с локальным хранилищем
+       * (Модуль SBIS3.CORE.LocalStorage не имеет списочного метода)
        * @protected
        * @type {object}
        */
