@@ -344,6 +344,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          this._setModelId(meta);
          //Если запись в meta-информации отсутствует, то передаем null. Это нужно для правильной работы DataBoundMixin с контекстом и привязкой значений по имени компонента
          var record = (cInstance.instanceOfModule(meta.item, 'WS.Data/Entity/Record') ? meta.item.clone() : meta.item) || null,
+             baseConfig = OpenEditDialog.superclass._buildComponentConfig.apply(this, arguments),
              componentConfig = {
                isNewRecord: !!meta.isNewRecord,
                source: meta.source,
@@ -365,7 +366,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          if (meta.dataSource){
             componentConfig.dataSource = meta.dataSource;
          }
-         cMerge(componentConfig, meta.componentOptions);
+         cMerge(componentConfig, baseConfig);
          //Мы передаем клон записи из списка. После того, как мы изменим ее поля и сохраним, запись из связного списка будет помечена измененной,
          //т.к. при синхронизации мы изменили ее поля. При повторном открытии этой записи на редактирование, она уже будет помечена как измененная =>
          //ненужный вопрос о сохранении, если пользователь сразу нажмет на крест.

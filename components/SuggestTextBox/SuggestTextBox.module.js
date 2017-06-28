@@ -69,6 +69,13 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          opts.cssClassName += ' controls-SuggestTextBox';
          return opts;
       },
+      
+      _onResizeHandler: function() {
+         SuggestTextBox.superclass._onResizeHandler.apply(this, arguments);
+         if(this.isPickerVisible()) {
+            TextBoxUtils.setEqualPickerWidth(this._picker);
+         }
+      },
 
       showPicker: function() {
          SuggestTextBox.superclass.showPicker.apply(this, arguments);

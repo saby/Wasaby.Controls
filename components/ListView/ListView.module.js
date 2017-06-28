@@ -1974,6 +1974,11 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.setInfiniteScroll('both', true);
                }
             }
+            if (this._options.virtualScrolling) {
+               this._virtualScrollController.reset();
+               this._topWrapper.height(0);
+               this._bottomWrapper.height(0);
+            }
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
             // При перезагрузке нужно также почистить hoveredItem, иначе следующее отображение тулбара будет для элемента, которого уже нет (ведь именно из-за этого ниже скрывается тулбар).
@@ -2767,7 +2772,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             //FixMe: Из за этого при каждой подгрузке по скроллу пэйджинг пересчитывается полностью
             if (this._scrollBinder){
-               this._scrollBinder._updateScrollPages(true);
+               this._scrollBinder._updateScrollPages(!this._options.virtualScrolling);
             } else if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
                this._createScrollPager();
             }
@@ -2801,6 +2806,9 @@ define('js!SBIS3.CONTROLS.ListView',
                if (this._virtualScrollController){
                   this._virtualScrollController.updateVirtualPages();
                }
+            }
+            if(this._itemsToolbar && this._itemsToolbar.isVisible() && this._touchSupport){
+                this._itemsToolbar.recalculatePosition();
             }
             /* Т.к. для редактирования нет parent'a, надо ресайц звать руками */
             if(this.isEdit()) {
@@ -3046,7 +3054,7 @@ define('js!SBIS3.CONTROLS.ListView',
                more = this.getItems().getMetaData().more,
                isContainerVisible = dcHelpers.isElementVisible(this.getContainer()),
                // отступ с учетом высоты loading-indicator
-               hasScroll = this._scrollWatcher.hasScroll(this._loadingIndicator.height()),
+               hasScroll = this._scrollWatcher.hasScroll(this._getLoadingIndicatorHeight()),
                hasNextPage = this._hasNextPage(more, this._scrollOffset.bottom);
 
             //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
@@ -3058,6 +3066,15 @@ define('js!SBIS3.CONTROLS.ListView',
             if (loadAllowed && isContainerVisible && hasNextPage && !this.isLoading()) {
                this._loadNextPage();
             }
+         },
+         _getLoadingIndicatorHeight: function () {
+            // Раньше высота считалась просто как this._loadingIndicator.height()
+            // Сломалось после https://online.sbis.ru/opendoc.html?guid=981cf035-1404-4429-a1b3-859a85510269&des=
+            // комит 4248b72d6c8994d4f94b2bfbd4d726705ef1e0da.
+            // метод height временно делает контейнер видимым из-за чего на ipad дергаются реестры.
+            // Если будут проблемы и надо будет срочно починить, то в крайнем случае можно попробовать
+            // .controls-ListView-scrollIndicator { display: none !important}
+            return this.getContainer().hasClass('controls-ListView__indicatorVisible') ? this._loadingIndicator.height() : 0;
          },
          /**
           * Обновлет положение ромашки что бы ее не перекрывал фиксированный заголовок
@@ -3612,7 +3629,11 @@ define('js!SBIS3.CONTROLS.ListView',
             pageNumber = parseInt(pageNumber, 10);
             var offset = this._offset;
             if (pageNumber == -1) {
-               this._setLastPage(noLoad);
+               if (this._lastPageLoaded) {
+                  this._getScrollWatcher().scrollTo('bottom');
+               } else {
+                  this._setLastPage(noLoad);
+               }
             } else {
                if (this.isInfiniteScroll() && this._isPageLoaded(pageNumber)){
                   if (this._getItemsProjection() && this._getItemsProjection().getCount()){
@@ -3624,6 +3645,9 @@ define('js!SBIS3.CONTROLS.ListView',
                      }
                   }
                } else {
+                  if (pageNumber == 0) {
+                     this._setInfiniteScrollState('down');
+                  }
                   this._offset = this._options.pageSize * pageNumber;
                   this._scrollOffset.top = this._offset;
                   this._scrollOffset.bottom = this._offset;

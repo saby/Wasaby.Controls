@@ -1,21 +1,17 @@
 /**
  * Created by dv.zuev on 02.06.2017.
  */
-var withoutLayout = window && window.location.href.indexOf("withoutLayout")>-1,
-   baseDeps = ['Core/core-extend',
+define('js!WSControls/Control/Base',
+   ['Core/core-extend',
       'Core/core-functions',
       'Core/helpers/generate-helpers',
       'Core/EventBus',
       'js!WS.Data/Entity/InstantiableMixin',
-      'Core/Abstract.compatible'];
-
-
-define('js!WSControls/Control/Base',
-   withoutLayout?baseDeps:baseDeps.concat([
-      'js!SBIS3.CORE.Control/Control.compatible',
-      'js!SBIS3.CORE.AreaAbstract/AreaAbstract.compatible',
-      'js!SBIS3.CORE.BaseCompatible'
-   ]),
+      'Core/Abstract.compatible',
+      'is!compatibleLayer?js!SBIS3.CORE.Control/Control.compatible',
+      'is!compatibleLayer?js!SBIS3.CORE.AreaAbstract/AreaAbstract.compatible',
+      'is!compatibleLayer?js!SBIS3.CORE.BaseCompatible'
+   ],
 
    function (extend,
              cFunctions,

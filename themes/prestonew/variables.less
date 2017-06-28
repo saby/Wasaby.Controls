@@ -13,11 +13,11 @@
 @default-hover-color:                     #B9E9FF;
 @gray-lamantin-color:                     #8991A9;
 @acent-color2:                            #354B62;//Цвет акцентной плашки
-@basic-block-bg-color:					      #2C3E50; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
+@basic-block-bg-color:					  #2C3E50; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
 @default-height:								   1.7857rem;
 @icon-color-primary:                      @default-text-color;
 @highlight-text-bg:                       #354B62;
-@icon-active-color:                       @default-hover-color;
+@icon-active-color:                       #313e78;
 @icon-small-size:                         1.32rem;
 @icon-medium-size:                        1.79rem;
 @icon-large-size:                         3rem;
@@ -78,7 +78,9 @@
 @button-icon-gap:                         .14rem;                      // gap between icon and text
 @button-icon-text-margin:                 0 0.2857rem 0 1rem;             // margin of text following 16x16 icon
 @button-icon-big-top-offset:              0.2857rem;                     // top offset of 24x24 icon
-@button-icon-left-offset:                 0;
+@button-icon-left-offset:                 0.5rem;
+@button-icon-medium-left-offset:          0;
+@button-icon-large-left-offset:           0;
 @button-icon-big-text-margin:             0 0.2857rem 0 1.2857rem;             // margin of text following 24x24 icon
 @button-text-margin:                      0 0.57rem 0 0.57rem;
 @button-text-margin-left:                 .57rem;
@@ -102,7 +104,7 @@
 @button-border-width:                     .07rem;
 // Normal default button
 @button-border:                           @button-border-width solid #26b8ff;
-@button-line-height: 						   2.73rem;
+@button-line-height: 						   2.86rem;
 @button-active-bg:                        #1d2834;
 @button-hover-bg:                         #212e3d;
 @button-bg: 								      #324a62;
@@ -225,7 +227,7 @@
 @menu-expand-hover-border-color:          transparent transparent transparent @secondary-color;
 @menu-header-height:                      3.57rem;
 @menu-big-header-height:                  1.1428rem;
-@menu-header-padding:                     .14rem;
+@menu-header-padding:                     .14rem 0.5rem;
 @popup-header-font-weight:                normal;
 @popup-header-caption-color:              @default-text-color;
 //Menu item
@@ -242,8 +244,11 @@
 @menu-item-icon24-left-offset:            -.0714rem;
 @menu-item-icon24-left-offset-big:        0;
 @menu-item-line-height:                   3.57rem;
+@menu-item-padding-16:                    2rem;
+@menu-item-padding-24:                    2.5rem;
 // Menu
 @menu-button-menu-border-width:           .07rem;
+@menu-button-menu-margin:                 -10px 0 0 -2px;
 @menu-button-menu-border-color:           #23b8ff;
 @menu-link-header-bg-color:               #5bafe7;
 @menu-link-icon-24-top:                   -.14rem;
@@ -345,10 +350,11 @@
 @combo-box-picker-item-selected-bg:       @combo-box-picker-item-bg;
 @compo-box-fieldWrapper-margin-right:     3rem;
 @combo-box-after-width:                   3rem;
-@combo-box-arrowDown-color:              @default-text-color;
+@combo-box-arrowDown-color:               @default-text-color;
+@combo-box-arrowDown-color-hover:         @default-hover-color;
 // Text area
 @text-area-field-line-height:             1.4rem;
-@text-area-border-color:                  @gray-dark-color;
+@text-area-border-color:                  transparent;
 @text-area-focus-border-color:            @gray-dark-color;
 @text-area-focus-bg:                      @text-box-focus-bg;
 @text-area-left-padding:                  .1785rem;
@@ -554,7 +560,7 @@
 @tree-view-child-container-padding:       @tree-view-item-content-margin;
 @tree-view-hier-wrapper-width:				.7142rem;
 @tree-view-hier-wrapper-height: 				.7142rem;
-@tree-view-copy-arrow-background:         @default-bg-color;
+@tree-view-copy-arrow-background:         @basic-block-bg-color;
 //Data grid
 @data-grid-bg:                            transparent;
 @data-grid-row-hover-bg:                  #293A4B;
@@ -604,13 +610,15 @@
 @DropdownList-linkStyleHoverColor:		   rgb(187, 233, 255);
 //ProgressBar
 @controls-ProgressBar-height:             1.3214rem;
+@controls-ProgressBar-width:              14.286rem;
 @controls-ProgressBar-first-color:        #26B8FF;
 @controls-ProgressBar-last-color:         @controls-ProgressBar-first-color;
 @controls-ProgressBar-border-color:       rgba(102, 170, 221, .15);;
 @controls-ProgressBar-background-color:   #354B62;
 @controls-ProgressBar-border-radius:      0;
-@controls-ProgressBar-value-font-size:    1rem;
 @controls-ProgressBar-value-color:        @default-text-color;
+@controls-ProgressBar-value-padding:      0 0.214rem;
+@controls-ProgressBar-value-font-size:    1rem;
 //Pager
 @controls-Pager-amount-text:              #999999;
 @controls-Pager-height:                   3.14rem; //3 rem - button + 2px *2 border
@@ -831,6 +839,7 @@
 @DropdownList-footer-hasMore-top:         1rem;
 //sundry
 @header-height:                           3rem;
+@money-decorator-integer-basic-registry-font-color:inherit;
 @header-font:                             400 1.43rem escape('/') @header-height @default-font-name;
 @header-padding-left:                     0;
 @bottomStyle-items-toolbar-height:        1.88rem;
@@ -867,15 +876,17 @@
 @search-left-margin:                      .57rem;
 @controls-view-padding-DEFAULT:           .8rem;
 @combo-box-picker-border:                 0.07rem solid #26B8FF;
-@data-grid-row-selected-main-bg:          @default-bg-color;
-@data-grid-row-selected-addit-bg:         rgba(29, 40, 52, 0);
+@data-grid-row-selected-main-bg:          @basic-block-bg-color;
+@data-grid-row-selected-addit-bg:         rgba(44, 62, 80, 0);
 @tree-view-copy-arrow-add-background:     @data-grid-row-selected-addit-bg;
 @data-grid-row-hover-add-bg:              rgba(41, 58, 75, 0);
 @data-grid-row-selected-add-bg:           @data-grid-row-hover-add-bg;
 @items-toolbar-bottom-style-background:   url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDIwMDEwOTA0Ly9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+CjxzdmcgdmVyc2lvbj0iMS4wIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiB3aWR0aD0iMjU1LjAwMDAwMHB4IiBoZWlnaHQ9IjMwMC4wMDAwMDBweCIgdmlld0JveD0iMCAwIDI1NS4wMDAwMDAgMzAwLjAwMDAwMCIKIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwMDAwMCwzMDAuMDAwMDAwKSBzY2FsZSgwLjEwMDAwMCwtMC4xMDAwMDApIgpmaWxsPSIjMjkzYTRiIiBzdHJva2U9Im5vbmUiPgo8cGF0aCBkPSJNMTAgMjk4OSBjMCAtMTEgMTkgLTUxIDI5IC01OSA2IC01IDQ2IC02NCAyMTUgLTMxNSA0NCAtNjYgODMgLTEyMgo4NiAtMTI1IDMgLTMgMzcgLTUyIDc1IC0xMTAgMzkgLTU4IDcyIC0xMDcgNzUgLTExMCA2IC02IDY3IC05NSAyMDQgLTMwMCA1MAotNzQgOTMgLTEzNyA5NiAtMTQwIDMgLTMgMjMgLTMyIDQ1IC02NSAyMiAtMzMgNDIgLTYyIDQ1IC02NSAzIC0zIDQzIC02MSA4OQotMTMwIDQ2IC02OSAxMjEgLTE3OSAxNjYgLTI0NSA0NCAtNjYgMTA2IC0xNTYgMTM1IC0yMDAgMzAgLTQ0IDU3IC04MiA2MCAtODUKNSAtNSA0MSAtNTggMjQ0IC0zNjAgNjEgLTkxIDExMyAtMTY3IDExNiAtMTcwIDMgLTMgMjMgLTMyIDQ1IC02NSA0NyAtNzAgMzgKLTU4IDExNiAtMTY0IDU3IC03NiAxNzkgLTE5MSAyMDMgLTE5MSA2IDAgMjUgLTcgNDEgLTE2IDU4IC0zMiAyODcgLTc0IDQwMAotNzQgbDU1IDAgMCAxNTAwIDAgMTUwMCAtMTI3MCAwIGMtODkyIDAgLTEyNzAgLTMgLTEyNzAgLTExeiIvPgo8L2c+Cjwvc3ZnPgo=");
 @text-box-disabled-border-color:          transparent;
+
 @controls-NotificationPopup-border:       none;
 @controls-NotificationPopup-border-top:   @controls-NotificationPopup-border;
 @controls-NotificationPopup-border-right: @controls-NotificationPopup-border;
 @controls-NotificationPopup-border-left:  @controls-NotificationPopup-border;
 @back-button-text-color:                  #FFCC99;
+@controls-FieldLink-link-color-hover:     #B9E9FF;

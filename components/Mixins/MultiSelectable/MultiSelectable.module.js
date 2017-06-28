@@ -8,8 +8,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
    "js!SBIS3.CONTROLS.ArraySimpleValuesUtil",
    "Core/helpers/collection-helpers",
    "Core/core-instance",
-   "Core/helpers/functional-helpers"
-], function( ParallelDeferred, cFunctions, Deferred, IoC, ConsoleLogger,List, ArraySimpleValuesUtil, colHelpers, cInstance, fHelpers) {
+   "Core/helpers/functional-helpers",
+   "Core/helpers/Array/clone"
+], function( ParallelDeferred, cFunctions, Deferred, IoC, ConsoleLogger,List, ArraySimpleValuesUtil, colHelpers, cInstance, fHelpers, aClone) {
 
    var EMPTY_SELECTION = [null],
        convertToKeys = function(list, keyField) {
@@ -363,7 +364,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
          if (Array.isArray(idArray)) {
             if (idArray.length) {
                if (this._options.multiselect) {
-                  resultArray = Array.clone(this._options.selectedKeys);
+                  resultArray = aClone(this._options.selectedKeys);
                   for (var i = 0; i < idArray.length; i++) {
                      if (!this._isItemSelected(idArray[i])) {
                         resultArray.push(idArray[i]);
@@ -413,12 +414,12 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
 
       _removeItemsSelection : function(idArray) {
          var removedKeys = [],
-             selectedKeys = Array.clone(this._options.selectedKeys);
+             selectedKeys = aClone(this._options.selectedKeys);
 
          if (Array.isArray(idArray)) {
             for (var i = idArray.length - 1; i >= 0; i--) {
                if (this._isItemSelected(idArray[i])) {
-                  Array.remove(selectedKeys, this._getSelectedIndex(idArray[i], selectedKeys));
+                  selectedKeys.splice(this._getSelectedIndex(idArray[i], selectedKeys), 1);
                   removedKeys.push(idArray[i]);
                }
             }
