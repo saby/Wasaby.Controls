@@ -47,6 +47,8 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             }.bind(this));
          }
 
+         paging.subscribe('onFirstPageSet', this._scrollToFirstPage.bind(this));
+
          paging.subscribe('onLastPageSet', this._scrollToLastPage.bind(this));
 
          paging.subscribe('onSelectedItemChange', this._pagingSelectedChange.bind(this));
@@ -89,12 +91,16 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
       _scrollToPage: function(page){
          // Если первая страница - проскролим к самому верху, не считая оффсет
          var offset = page.offset ? this._offsetTop : 0;
-         var view = this._options.view
+         var view = this._options.view;
          view._getScrollWatcher().scrollTo(page.offset + offset);
       },
 
       _scrollToLastPage: function(){
          this._options.view.setPage(-1);
+      },
+
+      _scrollToFirstPage: function(){
+         this._options.view.setPage(0);
       },
 
       _isPageStartVisisble: function(page){
