@@ -89,7 +89,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                context.setValue('filter/NeedProfileData', true);
             }
 
-            this._publish('onoperationstarted', 'onoperationchanged', 'onoperationended', 'onoperationdeleted', 'onproducerregistered', 'onproducerunregistered'/*###, 'onExecuteTimeUpdated'*/);
+            this._publish('onoperationstarted', 'onoperationchanged', 'onoperationended', 'onoperationdeleted', 'onproducerregistered', 'onproducerunregistered', 'ontimespentchanged');
          },
 
          init: function () {
@@ -280,8 +280,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                });
                itemProjection.setEventRaising(true);
             }
-            // Убрано в соответстви со стандартом. Насовсем?
-            /*###this._notify('onExecuteTimeUpdated');*/
+            this._notify('ontimespentchanged');
          },
 
          /**
