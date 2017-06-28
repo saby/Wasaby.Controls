@@ -11,8 +11,6 @@ define('js!SBIS3.CONTROLS.ILongOperationsProducer',
     */
 
    return /** @lends SBIS3.CONTROLS.ILongOperationsProducer.prototype */{
-      //_sbis3EngineILongOperationsProducer: true,
-
       /**
        * @event onStarted Происходит при принятии на исполнение новой длительной операции
        * @param {Core/EventObject} evtName Дескриптор события

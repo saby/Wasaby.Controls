@@ -144,18 +144,20 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   switch (evtName.name) {
                      case 'onoperationchanged':
                         var items = self.getItems();
-                        var model = items ? items.getRecordById(Model.getFullId(evt.tabKey, evt.producer, evt.operationId)) : null;
-                        if (model) {
-                           if (evt.changed === 'progress') {
-                              model.set('progressCurrent', evt.progress.value);
-                              model.set('progressTotal', evt.progress.total);
+                        if (items && items.getCount()) {
+                           var model = items.getRecordById(Model.getFullId(evt.tabKey, evt.producer, evt.operationId));
+                           if (model) {
+                              if (evt.changed === 'progress') {
+                                 model.set('progressCurrent', evt.progress.value);
+                                 model.set('progressTotal', evt.progress.total);
+                              }
+                              else {
+                                 model.set(evt.changed, evt[evt.changed]);
+                              }
+                              self._setItems(items);
+                              dontReload = true;
                            }
-                           else {
-                              model.set(evt.changed, evt[evt.changed]);
-                           }
-                           self._setItems(items);
                         }
-                        dontReload = true;
                         break;
                      case 'onoperationended':
                         self._animationAdd(Model.getFullId(evt.tabKey, evt.producer, evt.operationId), evt.status === STATUSES.success);

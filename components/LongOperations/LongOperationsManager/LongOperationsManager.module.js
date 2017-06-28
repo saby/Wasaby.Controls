@@ -1265,6 +1265,9 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          _onComplete: function (count) {
             var operations;
             var calls = this._search({count:count});
+            var promises = this._promises[count];
+            this.remove({count:count});
+            delete this._promises[count];
             for (var i = 0; i < calls.length; i++) {
                var call = calls[i];
                if (call.error || !call.result) {
@@ -1318,14 +1321,11 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                   .value()
                );
             }
-            var promises = this._promises[count];
             if (promises) {
                for (var i = 0; i < promises.length; i++) {
                   promises[i].callback(results);
                }
             }
-            this.remove({count:count});
-            delete this._promises[count];
          },
 
          /**
