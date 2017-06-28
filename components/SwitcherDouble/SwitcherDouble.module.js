@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.SwitcherDouble', ['js!SBIS3.CORE.Control', 'html!SBIS3
     *
     * @demo SBIS3.Demo.MySwitcherDouble
     *
-    * @author Черемушкин Илья Вячеславович
+    * @author Журавлев Максим Сергеевич
     *
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers

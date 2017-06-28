@@ -379,7 +379,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
                }
                this._getMover().moveFromOutside(DragObject.getSource(),
                   DragObject.getTarget(),
-                  DragObject.getItems(),
+                  dragOwner.getItems(),
                   useDefaultMove
                ).addCallback(function (result) {
                   if (result !== false && cInstance.instanceOfMixin(DragObject, 'SBIS3.CONTROLS.MultiSelectable')) {

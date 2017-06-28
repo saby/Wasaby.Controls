@@ -497,7 +497,7 @@
   }
 }
 
-.checkbox-checked-size(@size, @posX, @posY) {
+.checkbox-checked-size(@size, @posX, @posY, @topIE: @check-box-icon-successful-top-ie) {
   &:before {
     font-family: 'cbuc-icons';
     content: '\e616';
@@ -515,6 +515,10 @@
     // увеличим line-height в iPad на 1px;
     .ws-is-mobile-platform & {
       line-height: calc(~"@{size} + 1px");
+    }
+    // В IE, если значения css свойст в rem, то top расчитывается неправильно, поэтому ставим для IE другой.
+    body.ws-is-ie & when not (@topIE = 0){
+      top: @topIE;
     }
   }
 }
@@ -547,3 +551,30 @@
     background-color: @disabledColor;
   }
 }
+
+//---------------Имитация цикла for---------------//
+.for(@_i, @_n, @callback) {
+  @callback();
+}
+
+.for(@_i, @_n, @callback) when not (@_i = @_n){
+  .for(@_i + 1, @_n, @callback);
+}
+
+.for(@array, @callback) when (isnumber(@array)) {
+  .for(1, @array, @callback);
+}
+
+.for(@array, @callback) when (default()) {
+  .for-recursive(length(@array));
+}
+
+.for-recursive(@_i) when (@_i > 1) {
+  .for-recursive((@_i - 1));
+}
+
+.for-recursive(@_i) {
+  @_item: extract(@array, @_i);
+  @callback();
+}
+//------------------------------------------------//

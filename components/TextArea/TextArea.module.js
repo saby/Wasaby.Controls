@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
     * </ul>
     * @class SBIS3.CONTROLS.TextArea
     * @extends SBIS3.CONTROLS.TextBoxBase
-    * @author Крайнов Дмитрий Олегович
+    * @author Роман Валерий Сергеевич
     * @css controls-TextArea Класс для изменения отображения текста в многострочном поле ввода.
     *
     * @ignoreOptions independentContext contextRestriction className
@@ -270,6 +270,15 @@ define('js!SBIS3.CONTROLS.TextArea', [
          TextArea.superclass.setText.call(this, text);
          this._updateDisabledWrapper();
       },
+
+       _onClickHandler: function(event){
+         // т.к. поле ввода находится внутри контейнера, то клик по внешнему контейнеру не ставит курсор в поле
+         // поэтому принудительно проставляем фокус в активное поле
+          if (this.isEnabled()) {
+             this._getElementToFocus().focus();
+          }
+          TextArea.superclass._onClickHandler.call(this, event);
+       },
 
       _updateDisabledWrapper: function() {
          if (this._disabledWrapper && !this.isEnabled()) {

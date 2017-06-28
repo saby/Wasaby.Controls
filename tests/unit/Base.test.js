@@ -52,7 +52,7 @@ define([
          });
 
          it('_applyChangedOptions', function () {
-            baseDis._applyChangedOptions({enabled: true});
+            baseDis._afterApplyOptions(false, {}, {enabled: true});
             assert.isTrue(baseDis.isEnabled());
          });
 

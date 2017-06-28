@@ -1382,7 +1382,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
 
       _onDragCallback: function(dragObject) {
          var target = dragObject.getTarget();
-         if (target) {
+         if (target && cInstance.instanceOfModule(target, 'SBIS3.CONTROLS.DragEntity.Row')) {
             var model = target.getModel(),
                itemsProjection = this._getItemsProjection(),
                projectionItem = itemsProjection.getItemBySourceItem(model);

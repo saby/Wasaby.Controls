@@ -92,7 +92,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          },
          getColumnVal = function (item, colName) {
             if (!colName || !(colName.indexOf("['") == 0 && colName.indexOf("']") == (colName.length - 2))){
-               return item.get(colName);
+               return strHelpers.escapeHtml(item.get(colName));
             }
             var colNameParts = colName.slice(2, -2).split('.'),
                curItem = item,
@@ -339,7 +339,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
     *
     * @class SBIS3.CONTROLS.DataGridView
     * @extends SBIS3.CONTROLS.ListView
-    * @author Крайнов Дмитрий Олегович
+    * @author Герасимов Александр Максимович
     * @mixes SBIS3.CONTROLS.DragAndDropMixin
     *
     *
@@ -740,23 +740,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _buildTplArgs : function(cfg) {
-         function getColumnVal(item, colName) {
-            if (!colName || !(colName.indexOf("['") == 0 && colName.indexOf("']") == (colName.length - 2))){
-               return item.get(colName);
-            }
-            var colNameParts = colName.slice(2, -2).split('.'),
-               curItem = item,
-               value;
-            for (var i = 0; i < colNameParts.length; i++){
-               if (i !== colNameParts.length - 1){
-                  curItem = curItem.get(colNameParts[i]);
-               }
-               else{
-                  value = curItem.get(colNameParts[i]);
-               }
-            }
-            return value;
-         }
          var args = DataGridView.superclass._buildTplArgs.apply(this, arguments);
          args.columns = _prepareColumns.call(this, cfg.columns, this._options);
          args.cellData = {
