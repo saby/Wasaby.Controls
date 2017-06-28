@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil', [],
              * @returns {boolean}
              */
             checkMaxLength: function (value, maxLength) {
-                var length = value ? value.replace(/[\s.-]/g, '').length : 0;
+                var length = this._getValueLength(value);
                 return !(maxLength && length > maxLength) && (this._getIntegersCount(value || '') < 16);
             },
             /**
@@ -37,6 +37,7 @@ define('js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil', [],
                     integerCount =  this._getIntegersCount(currentVal),
                     checkMaxLengthResult = this.checkMaxLength(currentVal, maxLength),
                     newCaretPosition = b,
+                    isFull = this._getValueLength(currentVal) === maxLength || this._getIntegersCount(currentVal) === integers,
                     replaceFirstZero = false;
 
                 if (((currentVal[0] == 0 && b == 1) || (currentVal[0] == '-' && currentVal[1] == 0 && b == 2)) && b == e ){ // заменяем первый ноль если курсор после него
@@ -46,11 +47,21 @@ define('js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil', [],
                 if ((b <= dotPosition && e <= dotPosition) || dotPosition == -1) { //до точки
                     if (b == e) {
                         if (checkMaxLengthResult) {
-                            if (integerCount == integers) {
-                                return {value: currentVal, caretPosition: b};
+                            if(delimiters && currentVal.length && currentVal[e] === ' '){
+                                newCaretPosition += 2;
+                                // если поле ввода заполнено и курсор установлен на разделитель, то необходимо сдвинуть крайнию позицию,
+                                // чтобы обновить цифру иначе заменится пробел
+                                if(isFull){
+                                    e+=1;
+                                }
+                            }else {
+                                newCaretPosition++;
                             }
-                            (delimiters && integerCount % 3 == 0 && currentVal.length) ? newCaretPosition += 2 : newCaretPosition++;
-                            currentVal = currentVal.substr(0, replaceFirstZero ? (this._isNumberPositive(currentVal) ? 0 : 1) : b) + symbol + currentVal.substr(e);
+                            if(currentVal[e] === ' ' && isFull){
+                                e+=1;
+                                newCaretPosition++;
+                            }
+                            currentVal = currentVal.substr(0, replaceFirstZero ? (this._isNumberPositive(currentVal) ? 0 : 1) : b) + symbol + currentVal.substr(isFull ? e + 1 : e);
                         }
                     } else {
                         currentVal = currentVal.substr(0, b) + symbol + currentVal.substr(e);
@@ -193,6 +204,10 @@ define('js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil', [],
                     return false;
                 }
                 return true;
+            },
+
+            _getValueLength: function(value) {
+                return value ? value.replace(/[\s.-]/g, '').length : 0;
             },
             
             _getZeroString: function(length){
