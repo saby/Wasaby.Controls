@@ -70,6 +70,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
        *
        * @ignoreOptions emptyHTML
        * @ignoreMethods setEmptyHTML
+       * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut onClick
        *
        * @cssModifier controls-DropdownList__withoutCross Скрывает крестик справа от выбранного значения.
        *
@@ -461,7 +462,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
             DropdownList.superclass._initializePicker.apply(this, arguments);
             this.redraw();// Отрисовываем записи в пикере
             this._setHasMoreButtonVisibility();
-            this._notify('onPickerInitializing');//Костыльное событие в 30 версию для быстрых фильтров. после перевода на новый стандарт оно будет не нужно
             // Предотвращаем всплытие focus и mousedown с контейнера меню, т.к. это приводит к потере фокуса
             this._picker.getContainer().on('mousedown focus', this._blockFocusEvents);
          },
