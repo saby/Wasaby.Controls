@@ -1817,9 +1817,11 @@ define('js!SBIS3.CONTROLS.ListView',
          //TODO: Временное решение для выделения "всех" (на самом деле первой тысячи) записей
          setSelectedAll: function() {
             var MAX_SELECTED = 1000;
-            var selectedItems = this.getSelectedItems();
+            var
+               result,
+               selectedItems = this.getSelectedItems();
             if (this.isInfiniteScroll() && this.getItems().getCount() < MAX_SELECTED && this.getItems().getMetaData().more){
-               this._loadFullData.apply(this, arguments)
+               result = this._loadFullData.apply(this, arguments)
                   .addCallback(function(dataSet) {
                      //Ввостановим значение _limit, т.к. после вызова reload _limit стал равен MAX_SELECTED,
                      //и следующие страницы будут грузиться тоже по MAX_SELECTED записей
@@ -1839,7 +1841,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   }.bind(this));
             } else {
                this.setSelectedItemsAll.call(this);
+               result = Deferred.success();
             }
+            return result;
          },
 
          /*MASS SELECTION START*/

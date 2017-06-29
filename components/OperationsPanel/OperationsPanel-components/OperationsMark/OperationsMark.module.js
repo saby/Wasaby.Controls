@@ -186,10 +186,17 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
        * Выбрать все элементы.
        */
       selectAll: function() {
+         var self = this;
          if (this._useSelectAll) {
             this._options.linkedView.setSelectedAllNew(true);
          } else if (this._options.useSelectAll) {
-            this._options.linkedView.setSelectedAll(this._options.deepReload);
+            //Заблокируем кнопку при отметке 1000 записей, а после выполнения отметки вернём её в исходное состояние.
+            this.setAllowChangeEnable(true);
+            this.setEnabled(false);
+            this._options.linkedView.setSelectedAll(this._options.deepReload).addBoth(function() {
+               self.setEnabled(true);
+               self.setAllowChangeEnable(false);
+            });
          } else {
             this._options.linkedView.setSelectedItemsAll();
          }
