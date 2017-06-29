@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    "js!WS.Data/Display/Collection",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "Core/core-instance",
-   "Core/helpers/fast-control-helpers"
+   "Core/helpers/functional-helpers"
 ], function ( cFunctions, Deferred, IoC, ConsoleLogger,MemorySource, SbisService, RecordSet, Query, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, cInstance, fHelpers) {
 
    /**
