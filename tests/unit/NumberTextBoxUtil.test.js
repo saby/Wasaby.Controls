@@ -32,6 +32,11 @@ define(['js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil'], function (NumberTextBoxUti
             assert.equal(newState.value, '143.12');
             assert.equal(newState.caretPosition, 2);
          });
+         it('567|.0 => 5 674|.0', function (){
+              newState = NumberTextBoxUtil.numberPress(3, 3, '567.0', true, 16, 2, 52, 10); // press digit 4
+              assert.equal(newState.value, '5674.0');
+              assert.equal(newState.caretPosition, 5);
+         });
          it('|12|3.12 => 43.12', function (){
             newState = NumberTextBoxUtil.numberPress(0, 2, '123.12', true, 16, 2, 52, 10); // press digit 4
             assert.equal(newState.value, '43.12');
