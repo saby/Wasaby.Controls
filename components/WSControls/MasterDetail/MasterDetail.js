@@ -13,17 +13,10 @@ define('js!WSControls/MasterDetail/MasterDetail',
    function (Control, template) {
       'use strict';
 
-      var MasterDetail = Control.extend({
+      return Control.extend({
          _controlName: 'WSControls/MasterDetail/MasterDetail',
          _template: template,
-         iWantVDOM: true,
-         selected: null,
-
-         constructor: function(cfg) {
-            MasterDetail.superclass.constructor.call(this, cfg);
-         }
+         _selected: null
       });
-
-      return MasterDetail;
    }
 );

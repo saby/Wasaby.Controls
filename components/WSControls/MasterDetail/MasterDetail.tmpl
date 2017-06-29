@@ -1,8 +1,8 @@
 <div class="controls-MasterDetailBrowser">
     <div class="masterContainer">
-        <ws:partial template="{{ _options.master }}" name="masterControl"  bind:selectedMasterField="selected" />
+        <ws:partial template="{{ _options.master }}" name="masterControl"  bind:selectedMasterField="_selected" />
     </div>
     <div class="detailContainer">
-        <ws:partial template="{{ _options.detail }}" name="detailControl" selectedMasterField="{{selected}}" />
+        <ws:partial template="{{ _options.detail }}" name="detailControl" selectedMasterField="{{ _selected }}" />
     </div>
 </div>
