@@ -410,7 +410,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
             if (res !== false) {
                 this._endDragHandler(DragObject, droppable, e);
             }
-            if (DragObject.getOwner() == this) {
+            if (DragObject.getOwner() == this) {//Драгндроп должен заканчивать тот кто начал
                DragObject.setDragging(false);
                DragObject.reset();
             }
