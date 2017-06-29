@@ -8,10 +8,12 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
    "Core/Deferred",
    "js!SBIS3.CONTROLS.MenuLink",
    "js!SBIS3.CORE.DialogSelector",
+   "js!WS.Data/Chain",
+   "js!WS.Data/Collection/Factory/RecordSet",
    "js!WS.Data/Adapter/Json",
    "js!WS.Data/Collection/RecordSet",
    "Core/helpers/fast-control-helpers"
-], function( Deferred,MenuLink, Dialog, SbisAdapter, RecordSet, fcHelpers) {
+], function( Deferred,MenuLink, Dialog, Chain, RecordSetFactory, SbisAdapter, RecordSet, fcHelpers) {
    //TODO: ограничение на максимальное количество записей, получаемое на клиент для печати/выгрузки.
    //Необходимо т.к. на сервере сейчас невозможно произвести xsl преобразование. Выписана задача:
    //(https://inside.tensor.ru/opendoc.html?guid=f852d5cc-b75e-4957-9635-3401e1832e80&description=)
@@ -174,9 +176,9 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
        * @param pageSize - количество записей, есди передать undefined, то значит, что нужны вообще все записи
        */
       processSelectedPageSize: function(pageSize){
-         var ds = this._getView().getItems(),
-            numOfRecords = ds.getCount(),
-            num = 0,
+         var
+            recordSet = this._getView().getItems(),
+            numOfRecords = recordSet.getCount(),
             self = this;
          if(pageSize > numOfRecords || !pageSize){
             this._loadFullData(pageSize || undefined).addCallback(function(dataSet){
@@ -186,14 +188,12 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
             });
          } else {
             if (pageSize < numOfRecords) {
-               num = 0;
-               //TODO здесь должен быть не filter, а что-то типа .range - получение первых N записей
                //Выберем pageSize записей из dataSet
-               ds = self._getView().getItems().filter(function(){
-                  return num++ < pageSize;
+               recordSet = Chain(recordSet).first(pageSize).value(RecordSetFactory, {
+                  adapter: recordSet.getAdapter()
                });
             }
-            self._applyOperation(ds);
+            self._applyOperation(recordSet);
          }
       },
       _loadFullData: function(pageSize){
