@@ -57,7 +57,7 @@ define('js!WSControls/VDOM/Main/Main', [
          //компоненты на базе TextBoxBase, при этом платформенная реализация TextBoxBase анализирует каждый введенный символ.
          //Двухсторонний data binding для свойств платформенных компонентов будет доступен.
          onCreateItem: function (event) {
-            if (event.nativeEvent.key === 'Enter') {
+            if (event.nativeEvent.keyCode === 13) {
                var value = event.target.value;
                if(value.trim()){
                   this._list.add(new TODO({
