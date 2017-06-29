@@ -4132,7 +4132,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   targetsModel = target.getModel(),
                   source = dragObject.getSource(),
                   sourceModels = [];
-               if (targetsModel) {
+               if (targetsModel &&  cInstance.instanceOfModule(source, 'SBIS3.CONTROLS.DragEntity.List')) {
                   source.each(function (item) {
                      sourceModels.push(item.getModel());
                   });
@@ -4301,7 +4301,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   dropBySelf = false,
                   source = dragObject.getSource();
 
-               if (target && source) {
+               if (target && source && cInstance.instanceOfModule(source, 'SBIS3.CONTROLS.DragEntity.List')) {
                   var  targetsModel = target.getModel();
                   source.each(function(item) {
                      var model = item.getModel();
