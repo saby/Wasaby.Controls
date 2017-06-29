@@ -531,7 +531,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
 
       /**
        * Набор внутренних методов для манипуляций с локальным хранилищем
-       * (Модуль SBIS3.CORE.LocalStorage не имеет списочного метода)
+       * (Модуль SBIS3.CORE.LocalStorage не имеет списочного метода - Задача 1174116054)
        * @protected
        * @type {object}
        */
