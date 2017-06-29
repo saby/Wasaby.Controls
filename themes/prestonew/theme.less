@@ -294,10 +294,6 @@ body {
    .controls-DateBox {
       min-height: 3rem;
    }
-    .controls-DateRangeBigChoose-MonthRangePicker.controls-ListView .controls-DateRangeBigChoose-MonthView.controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableElement.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
-      color: #fff;
-      background: #3f566d;
-    }
   .controls-ToolBar__menuIcon .icon-24 {
     font-family: carrypresto-icons!important;
   }
@@ -623,12 +619,6 @@ body {
    margin-top: .07rem;
 }
 
-.controls-DateBox.ws-has-focus .controls-FormattedTextBox__fieldWrapper {
-    border-color: #314559 #314559 #314559 #314559 !important;
- }
- .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateBox .controls-FormattedTextBox__fieldWrapper {
-      border-color: rgba(96, 170, 221, 0.15) !important;
- }
  .controls-Button .controls-Button__icon.icon-32 + .controls-Button__text {
      margin-left: 3rem !important;
  }
@@ -665,7 +655,6 @@ body {
    .controls-FormattedTextBox__fieldWrapper {
       padding: 0 0.3rem;
       .controls-FormattedTextBox__field {
-         color: #cccccc;
          height: 2.86rem;
       }
    }
@@ -727,12 +716,6 @@ body .ws-float-area-stack-panel-shadow {
 }
 .controls-ListView__scrollPager .controls-IconButton {
   background: #1D2834;
-}
-
-
-body .controls-DateRangeBigChoose-MonthRangePicker.controls-ListView .controls-DateRangeBigChoose-MonthView.controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableElement.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
-  color: #fff;
-  background: #3f566d;
 }
 
 .controls-ToolBar__menuIcon {
@@ -858,6 +841,13 @@ body .ws-window.ws-LoadingIndicator__window {
 
 .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button {
   font-size: 1rem;
+}
+
+.controls-DateRangeBigChoose__months-quarter-btn,
+.controls-DateRangeBigChoose__months-halfyear-btn {
+   &:hover {
+      background-color: transparent !important;
+   }
 }
 
 .controls-ComboBox__picker {
