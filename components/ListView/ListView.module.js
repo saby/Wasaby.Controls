@@ -29,6 +29,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.CommonHandlers',
    'js!SBIS3.CONTROLS.MassSelectionController',
    'js!SBIS3.CONTROLS.ImitateEvents',
+   'js!SBIS3.CORE.LayoutManager',
    'js!SBIS3.CONTROLS.Link',
    'js!SBIS3.CONTROLS.ScrollWatcher',
    'js!WS.Data/Collection/IBind',
@@ -67,7 +68,7 @@ define('js!SBIS3.CONTROLS.ListView',
 ],
    function (cMerge, cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, CompoundActiveFixMixin, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
-    TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents,
+    TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents, LayoutManager,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
     Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove) {
      'use strict';
@@ -351,6 +352,23 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {WS.Data/Entity/Model} target Запись относительно которой происходит перемещение.
           * @param {MovePosition} position Как перемещать записи.
           * @remark Событие не работает если используются стратегии перемещения
+          * @example
+          * Показать ошибку перемещения
+          * <pre>
+          * view.subscribe('onEndMove', function(e, result) {
+          *    if (result instanseOf Error) {
+          *       result.processed = true;//Надо поставить флаг что ошибка обработана;
+          *       require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(){
+          *          InformationPopupManager.showMessageDialog(
+          *             {
+          *                message: result.message,
+          *                status: 'error'
+          *             }
+          *          );
+          *       })
+          *    }
+          * })
+          * </pre>
           */
          $protected: {
             _floatCheckBox: null,
@@ -1791,9 +1809,11 @@ define('js!SBIS3.CONTROLS.ListView',
          //TODO: Временное решение для выделения "всех" (на самом деле первой тысячи) записей
          setSelectedAll: function() {
             var MAX_SELECTED = 1000;
-            var selectedItems = this.getSelectedItems();
+            var
+               result,
+               selectedItems = this.getSelectedItems();
             if (this.isInfiniteScroll() && this.getItems().getCount() < MAX_SELECTED && this.getItems().getMetaData().more){
-               this._loadFullData.apply(this, arguments)
+               result = this._loadFullData.apply(this, arguments)
                   .addCallback(function(dataSet) {
                      //Ввостановим значение _limit, т.к. после вызова reload _limit стал равен MAX_SELECTED,
                      //и следующие страницы будут грузиться тоже по MAX_SELECTED записей
@@ -1813,7 +1833,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   }.bind(this));
             } else {
                this.setSelectedItemsAll.call(this);
+               result = Deferred.success();
             }
+            return result;
          },
 
          /*MASS SELECTION START*/
@@ -2354,6 +2376,8 @@ define('js!SBIS3.CONTROLS.ListView',
                         event.setResult(this._notify('onBeginEdit', model));
                      }.bind(this),
                      onAfterBeginEdit: function(event, model) {
+                        var
+                           itemsToolbarContainer = this._itemsToolbar && this._itemsToolbar.getContainer();
                         /*Скрывать emptyData нужно перед показом тулбара, иначе тулбар спозиционируется с учётом emptyData,
                         * а после удаления emptyData, тулбар визуально подскочит вверх*/
                         this._toggleEmptyData(false);
@@ -2365,6 +2389,14 @@ define('js!SBIS3.CONTROLS.ListView',
                         }
                         else {
                            this.setSelectedKey(model.getId());
+                        }
+                        // Могут быть операции над записью с тулбаром под записью. В таком случае на ListView вешается класс с padding-bottom.
+                        // Этот отступ при скроле тоже должен учитываться.
+                        // Поэтому вначале подскролливаем к тулбару и затем скролим к элементу.
+                        // Такой порядок выбран исходя из того, что запись имеет бо́льший приоритет при отображении, чем тулбар
+                        // https://online.sbis.ru/opendoc.html?guid=0e0b1cad-2d09-45f8-b705-b1756b52ad99
+                        if (itemsToolbarContainer && this.getContainer().hasClass('controls-ListView__bottomStyle')) {
+                           LayoutManager.scrollToElement(itemsToolbarContainer, true);
                         }
                         this.scrollToItem(model);
                         event.setResult(this._notify('onAfterBeginEdit', model));

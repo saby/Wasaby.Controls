@@ -6,10 +6,10 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!WSControls/Buttons/MenuButton', 'css!S
     * Контрол, отображающий кнопку в виде ссылки и выпадающее из нее меню
     *
     * {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/buttons/button-link/ Демонстрационные примеры}.
-    * {@link http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html Спецификация}.
+    * <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Спецификация</a>.
     *
     * @class SBIS3.CONTROLS.MenuLink
-    * @extends SBIS3.CONTROLS.Link
+    * @extends WSControls/Buttons/MenuButton
 	*
     * @demo SBIS3.CONTROLS.Demo.MyMenuLink
     *

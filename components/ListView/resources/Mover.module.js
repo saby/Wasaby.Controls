@@ -5,9 +5,10 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
    "Core/Deferred",
    "Core/Abstract",
    'js!WS.Data/Utils',
-   'js!WS.Data/Source/ISource'
+   'js!WS.Data/Source/ISource',
+   'js!SBIS3.CONTROLS.Utils.InformationPopupManager'
 
-], function (Di, cInstance, Deferred, Abstract, Utils, ISource) {
+], function (Di, cInstance, Deferred, Abstract, Utils, ISource, InformationPopupManager) {
    'use strict';
    /**
     * Перемещает элементы
@@ -179,6 +180,15 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
                }
                result.addBoth(function (result) {
                   this._notify('onEndMove', result, movedItems, target, position);
+                  if (result instanceof Error && !result.processed) {
+                     InformationPopupManager.showMessageDialog(
+                        {
+                           message: result.message,
+                           status: 'error'
+                        }
+                     );
+                     result.processed = true;
+                  }
                   return result;
                }.bind(this));
             }

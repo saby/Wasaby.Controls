@@ -260,7 +260,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       var
           itemParent = itemProj.getParent(),
           itemParentContent = itemParent && itemParent.getContents();
-      return (cInstance.instanceOfModule(itemParentContent, 'WS.Data/Entity/Record') && itemParentContent.get(this.nodeProperty) !== false && this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj);
+      return (cInstance.instanceOfModule(itemParentContent, 'WS.Data/Entity/Record') && itemParentContent.get(this._options.nodeProperty) !== false && this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj);
    },
    projectionFilterOnlyFolders = function(item, index, itemProj) {
       return (this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj, true);
@@ -894,7 +894,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                if (!isEmpty(this._options.groupBy) && this._options.easyGroup) {
                   if (this._canApplyGrouping(items[i]) && prevGroupId != groupId && groupId !== false) {
                      prevGroupId = groupId;
-                     if (this._getGroupItems(groupId).length <= items.length) {
+                     if (this._options._groupItemsCount[groupId] === items.length) {
                         this._options._groupItemProcessing(groupId, result, items[i], this._options);
                      }
                   }
