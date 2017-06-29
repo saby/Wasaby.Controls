@@ -1,0 +1,11 @@
+<div class="controls-MasterDetailBrowser">
+
+    <div class="MasterDetailBrowser-vertical-separator"></div>
+    <div class="masterContainer">
+        <ws:partial template="{{ _options.master }}" name="masterControl"  bind:selectedMasterField="selected" />
+    </div>
+    <div class="detailContainer">
+        <ws:partial template="{{ _options.detail }}" name="detailControl" selectedMasterField="{{selected}}" />
+    </div>
+
+</div>

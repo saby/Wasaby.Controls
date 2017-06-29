@@ -1,0 +1,39 @@
+@border-params: 1px solid #dfdfdf;
+
+.masterDetailBrowser {
+  position: relative;
+  display: table;
+}
+
+.masterContainer, .detailContainer {
+  display: table-cell;
+}
+
+.detailContainer {
+  max-width: 70%;
+  min-width: 70%;
+  width: 70%;
+}
+
+.masterContainer {
+  max-width: 30%;
+  min-width: 30%;
+  width: 30%;
+  border-right: @border-params;
+}
+
+.masterContainer .controls-DataGridView .controls-DataGridView__table .controls-ListView__item__selected td {
+  border-bottom: @border-params;
+  border-top: @border-params;
+  right: -1px;
+  padding-left: 5px;
+}
+
+.masterContainer .controls-DataGridView .controls-DataGridView__table .controls-ListView__item__selected td:first-child {
+  padding-left: 7px;
+}
+
+
+.masterContainer .controls-DataGridView .controls-DataGridView__table .controls-ListView__item__selected td:last-child {
+  border-right: 1px solid white;
+}
