@@ -114,15 +114,12 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
                //Если есть бесконечный скролл то показываем кнопку "Все", иначе показываем кнопку "Всю страницу"
                self.getItemInstance('selectCurrentPage').toggle(!linkedView._options.infiniteScroll);
                self.getItemInstance('selectAll').toggle(linkedView._options.infiniteScroll);
+               self.getPicker().getContainer().find('.controls-MenuLink__header').toggleClass('ws-hidden', !self._options.caption);
             });
             this._updateMark();
          }
       },
-      //TODO: вынести данную логику в MenuLink
-      showPicker: function() {
-         OperationsMark.superclass.showPicker.apply(this);
-         this._picker._container.find('.controls-MenuLink__header').toggleClass('ws-hidden', !this._options.caption);
-      },
+
       _onMenuItemActivate: function(e, id) {
          if (this[id]) {
             this[id].apply(this);

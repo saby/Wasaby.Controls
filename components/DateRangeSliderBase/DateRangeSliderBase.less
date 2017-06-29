@@ -94,7 +94,7 @@
          font-size: @date-range-slider-prev-next-buttons-font-size;
          font-weight: @date-range-slider-prev-next-buttons-font-weight;
          text-align: center;
-         line-height: @date-range-slider-height;
+         line-height: ~"calc("@date-range-slider-height~" - "@date-range-slider-prev-next-buttons-font-size~" + "@date-range-slider-font-size~")";
          height: @date-range-slider-height;
          width: @date-range-slider-prev-next-buttons-width;
       }

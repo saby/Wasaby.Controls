@@ -93,6 +93,10 @@
 @text-box-field-focus-text-color:         #000;
 // DateBox
 @date-box-field-text-color:               @default-text-color;
+// Search form
+@search-form-icon-search-color:           @icon-color-primary;
+@search-form-icon-reset-color:            @icon-color-primary;
+@search-form-icon-search-hover-color:     @button-icon-color-hover;
 // Combo box
 @combo-box-field-text-color :             #314559;
 @combo-box-disabled-border-bottom-color:  #000;
@@ -115,6 +119,7 @@
 @month-view-bg:                           @white-color;
 @month-view-day-cell-text-color:          inherit;
 // Date Range Choose
+@date-range-choose-bg-active-color:       #e1ecf6;
 @date-range-choose-item-bg-color:         #FFF;
 @date-range-choose-bg-hover-color:        #f0f5fb;
 @date-range-choose-years-only-bg-color :  #FFF;
@@ -122,9 +127,17 @@
 @date-range-choose-color:                 #000;
 @date-range-choose-year-color:            #0055BB;
 @date-range-choose-year-prev-next-btns-color:#0055BB;
+
 // Date Range Big
-@date-range-big-choose-border-color:      #eaeaea;
-@date-range-big-choose-date-range-picker-color:#000000;
+@date-range-big-choose-border-color:                     #eaeaea;
+@date-range-big-choose-months-color:                     #2d68b5;
+@date-range-big-choose-date-range-picker-color:          #000000;
+@date-range-big-choose-bg-selected-color:                #F0F5FB;
+
+@date-range-big-choose-month-range-picker-color:         #000000;
+@date-range-big-choose-month-range-picker-bg-selected:   @date-range-big-choose-bg-selected-color;
+
+
 // List view
 @list-view-items-toolbar-locked-bg:       @default-hover-color;
 @controls-editInPlace-editor-bg:          #F5F5F5 !important;
@@ -145,7 +158,8 @@
 @controls-OperationsPanel-bg:             #354B62;
 // OperationsPanelButton
 @controls-OperationsPanelButton-color:    #FFFFFF;
-// DropdownList//
+// DropdownList
+@DropdownList-picker-menu-item-base-color: #000;
 @DropdownList-border-color:               #000;
 //ProgressBar
 @controls-ProgressBar-first-color:        #2D68B5;
@@ -172,6 +186,7 @@
 @tab-buttons-border-bottom:               1px solid #ccc;
 @tab-button-checked-inner-color:          rgb(44, 62, 80);
 @tab-button-simple-inner-checked-color:   rgb(44, 62, 80);
+@tab-button-simple-inner-color:           #8991A9;
 @tab-button-inner-after-bg-color:         #ccc;
 //Browser
 @data-grid-cell-separator-color:          #F5F5F5;
@@ -183,6 +198,7 @@
 @text-box-error-bg:                       #fadadd;
 @text-box-error-border-color:             @error-color;
 @header-color:                            #313e78;
+@header-color-hover:                      @header-color;
 //TimeHeader
 @time-header-title-color:                 @black-color;
 @toggle-time-passive-color:               #CCC;
@@ -214,3 +230,4 @@
 @DropdownList-linkStyleHoverColor:		      #313E78;
 @back-button-text-color:                     #313E78;
 @controls-FieldLink-link-color-hover:        #313E78;
+@icon-active-color:                          #313E78;

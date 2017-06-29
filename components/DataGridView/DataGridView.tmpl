@@ -11,7 +11,7 @@
     <ws:if data="{{ virtualScrolling }}">
         <div class="controls-ListView__virtualScrollTop"></div>
     </ws:if>
-    <table class="controls-DataGridView__table{{(stickyHeader && (showHead || groupBy || (hasResults && resultsPosition === 'top'))) ? ' ws-sticky-header__table' : ''}}{{(stickyHeader && groupBy) ? ' ws-sticky-header__table-with-sticky-rows' : ''}}">
+    <table class="controls-DataGridView__table{{(stickyHeader && (showHead || stickyGroup || (hasResults && resultsPosition === 'top'))) ? ' ws-sticky-header__table' : ''}}{{(stickyHeader && stickyGroup) ? ' ws-sticky-header__table-with-sticky-rows' : ''}}">
         <ws:partial template="{{_colGroupTpl}}" scope="{{_colgroupData}}" />
         <ws:partial template="{{headTpl}}" scope="{{_headData}}" />
         <tbody class="controls-DataGridView__tbody">
