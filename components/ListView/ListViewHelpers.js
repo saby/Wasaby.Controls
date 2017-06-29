@@ -11,7 +11,8 @@ define('js!SBIS3.CONTROLS.ListView/ListViewHelpers',
       'Core/helpers/string-helpers',
       "js!WS.Data/Collection/RecordSet",
       "Core/ParserUtilities",
-      "Core/Sanitize"
+      "Core/Sanitize",
+      "Core/IoC"
    ],
    function (Projection,
              Utils,
@@ -21,7 +22,8 @@ define('js!SBIS3.CONTROLS.ListView/ListViewHelpers',
              strHelpers,
              RecordSet,
              ParserUtilities,
-             Sanitize
+             Sanitize,
+             IoC
       ) {
 
       var objFunc = {
@@ -146,7 +148,7 @@ define('js!SBIS3.CONTROLS.ListView/ListViewHelpers',
                var prevGroupId = undefined;
                projection.each(function (item, index, group) {
                   if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {
-                     if (prevGroupId != group) {
+                     if (prevGroupId != group && group !== false) {
                         cfg._groupItemProcessing(group, records, item, cfg);
                         prevGroupId = group;
                      }
@@ -157,38 +159,51 @@ define('js!SBIS3.CONTROLS.ListView/ListViewHelpers',
             return records;
          },
          buildTplArgs: function (cfg) {
-            var tplOptions = {}, itemTpl, itemContentTpl;
-
+            var tplOptions = {},
+               self = this,
+               timers = {},
+               itemTpl, itemContentTpl, logger;
             tplOptions.escapeHtml = strHelpers.escapeHtml;
             tplOptions.Sanitize = Sanitize;
             tplOptions.idProperty = cfg.idProperty;
             tplOptions.displayField = cfg.displayProperty;
             tplOptions.displayProperty = cfg.displayProperty;
             tplOptions.templateBinding = cfg.templateBinding;
-            tplOptions.getPropertyValue = objFunc.getPropertyValue;
+            tplOptions.getPropertyValue = getPropertyValue;
 
+            /* Для логирования */
+            if (typeof window === 'undefined') {
+               logger = IoC.resolve('ILogger');
+               tplOptions.timeLogger = function timeLogger(tag, start) {
+                  if (start) {
+                     timers[tag] = new Date();
+                  } else {
+                     logger.log(self._moduleName || cfg.name, tag + ' ' + ((new Date()) - timers[tag]));
+                     delete timers[tag];
+                  }
+               };
+            }
             if (cfg.itemContentTpl) {
                itemContentTpl = cfg.itemContentTpl;
             }
             else {
-               itemContentTpl = this._defaultItemContentTemplate || cfg._defaultItemContentTemplate;
+               itemContentTpl = cfg._defaultItemContentTemplate;
             }
-            tplOptions.itemContent = TemplateUtil.prepareTemplate(itemContentTpl, !!cfg._template);
+            tplOptions.itemContent = TemplateUtil.prepareTemplate(itemContentTpl);
             if (cfg.itemTpl) {
                itemTpl = cfg.itemTpl;
             }
             else {
-               itemTpl = this._defaultItemTemplate || cfg._defaultItemTemplate;
+               itemTpl = cfg._defaultItemTemplate;
             }
-            tplOptions.itemTpl = TemplateUtil.prepareTemplate(itemTpl, !!cfg._template);
-            tplOptions.defaultItemTpl = TemplateUtil.prepareTemplate(cfg._defaultItemTemplate, !!cfg._template);
-
+            tplOptions.itemTpl = TemplateUtil.prepareTemplate(itemTpl);
+            tplOptions.defaultItemTpl = TemplateUtil.prepareTemplate(cfg._defaultItemTemplate);
             if (cfg.includedTemplates) {
                var tpls = cfg.includedTemplates;
                tplOptions.included = {};
                for (var j in tpls) {
                   if (tpls.hasOwnProperty(j)) {
-                     tplOptions.included[j] = TemplateUtil.prepareTemplate(tpls[j], !!cfg._template);
+                     tplOptions.included[j] = TemplateUtil.prepareTemplate(tpls[j]);
                   }
                }
             }
