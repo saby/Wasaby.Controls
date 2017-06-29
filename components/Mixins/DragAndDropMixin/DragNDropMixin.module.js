@@ -491,7 +491,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 target = target && cInstance.instanceOfMixin(target, 'SBIS3.CONTROLS.DragNDropMixin') ? target : null;
                 if (DragObject.isDragging() && ((target === this || DragObject.getOwner() === this) || inside)) {
                     //если есть таргет то запускаем _endDrag над таргетом иначе запускаем над тем кто начал
-                    this._endDrag(e, inside ? this._findDragDropContainer(e, DragObject.getTargetsDomElemet()) : false);
+                    this._endDrag(e, inside ? this._findDragDropContainer(e, DragObject.getTargetsDomElement()) : false);
                 }
             }
         },
