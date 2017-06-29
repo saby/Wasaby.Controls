@@ -407,13 +407,14 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 this._updateDragTarget(DragObject, e);
             }
             this._breakClickBySelf(e.target);
-            DragObject.setDragging(false);
             var res = this._notify('onEndDrag', DragObject, e);
             if (res !== false) {
                 this._endDragHandler(DragObject, droppable, e);
             }
-
-            DragObject.reset();
+            if (DragObject.getOwner() == this) {//Драгндроп должен заканчивать тот кто начал
+               DragObject.setDragging(false);
+               DragObject.reset();
+            }
             this._position = null;
             $('body').removeClass('dragdropBody cantDragDrop ws-unSelectable');
         },
@@ -489,7 +490,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 DragObject.onDragHandler(e);
                 var target = DragObject.getTargetsControl();
                 target = target && cInstance.instanceOfMixin(target, 'SBIS3.CONTROLS.DragNDropMixin') ? target : null;
-                if (DragObject.isDragging() && ((target === this || !target && DragObject.getOwner() === this) || inside)) {
+                if (DragObject.isDragging() && ((target === this || DragObject.getOwner() === this) || inside)) {
                     //если есть таргет то запускаем _endDrag над таргетом иначе запускаем над тем кто начал
                     this._endDrag(e, inside ? this._findDragDropContainer(e, DragObject.getTargetsDomElemet()) : false);
                 }
