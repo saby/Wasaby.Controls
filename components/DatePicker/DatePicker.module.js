@@ -119,7 +119,8 @@ define(
                   offset: -9
                },
                bodyBounds: true,
-               locationStrategy: 'bodyBounds'
+               locationStrategy: 'bodyBounds',
+               activateAfterShow: true
             }
          },
          _onFocusInHandler: undefined

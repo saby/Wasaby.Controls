@@ -52,7 +52,7 @@ define(
          //TODO костыль какой-то
          var opts = TabButton.superclass._modifyOptions.apply(this, arguments);
          opts.sanitize = function(markup) {
-            return Sanitize (markup.caption, {validNodes: {component: true}, validAttributes : {config: true} })
+            return Sanitize (markup.caption, {validNodes: {component: true, input: true, form: true, textarea: true}, validAttributes : {config: true} })
          };
          opts._order = opts._prepareOrder(opts._order);
          return opts;

@@ -57,7 +57,9 @@ define('js!WSControls/VDOM/Main/Main', [
          //компоненты на базе TextBoxBase, при этом платформенная реализация TextBoxBase анализирует каждый введенный символ.
          //Двухсторонний data binding для свойств платформенных компонентов будет доступен.
          onCreateItem: function (event) {
-            if (event.nativeEvent.key === 'Enter') {
+            //Автотесты в FireFox не умеют отправлять событие keypress с event  у которого указано свойство key
+            //Поэтому используем свойство keyCode и сравнение с кодом клавиши 'enter' - с числом 13.
+            if (event.nativeEvent.keyCode === 13) {
                var value = event.target.value;
                if(value.trim()){
                   this._list.add(new TODO({
