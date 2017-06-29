@@ -174,7 +174,11 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
 
          _clickHandler: function (e) {
             if (this.isEnabled()) {
-               e.stopPropagation();
+               // При редактировании во всплывашке сначала происходит активация нужного поля ввода
+               // а затем фокус уходит на то редактирование по месту по которому кликнули 
+               if (this._options.editInPopup){
+                  e.stopPropagation();
+               }
                this._iterateChildEditAtPlaces(function (child) {
                   child._saveOldText();
                });
