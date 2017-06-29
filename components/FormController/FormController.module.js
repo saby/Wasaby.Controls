@@ -359,9 +359,13 @@ define('js!SBIS3.CONTROLS.FormController', [
       },
 
       _onBeforeNavigate: function(event, activeElement, isIconClick){
-         //Если показан диалог о сохранении, то не даем перейти в другой раздел аккордеона, пока его не закроют
+         var isCanNavigate = !this._isConfirmDialogShowed();
          if (!isIconClick) {
-            event.setResult(!this._isConfirmDialogShowed());
+            if (isCanNavigate) {
+               this._restoreTitle();
+            }
+            //Если показан диалог о сохранении, то не даем перейти в другой раздел аккордеона, пока его не закроют
+            event.setResult(isCanNavigate);
          }
       },
 
@@ -412,9 +416,10 @@ define('js!SBIS3.CONTROLS.FormController', [
          }
       },
 
-      _resetTitle: function(){
+      _restoreTitle: function(){
          if (this._previousDocumentTitle){
             document.title = this._previousDocumentTitle;
+            this._previousDocumentTitle = null;
          }
       },
 
@@ -975,7 +980,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          this.unsubscribeFrom(EventBus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigateHandler);
          window.removeEventListener('beforeunload', this._onBeforeUnloadHandler);
          this._unsubscribeFromRecordChange();
-         this._resetTitle();
+         this._restoreTitle();
          FormController.superclass.destroy.apply(this, arguments);
       }
    });
