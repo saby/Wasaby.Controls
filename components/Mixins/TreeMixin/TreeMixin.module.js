@@ -894,7 +894,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                if (!isEmpty(this._options.groupBy) && this._options.easyGroup) {
                   if (this._canApplyGrouping(items[i]) && prevGroupId != groupId && groupId !== false) {
                      prevGroupId = groupId;
-                     if (this._getGroupItems(groupId).length <= items.length) {
+                     if (this._options._groupItemsCount[groupId] === items.length) {
                         this._options._groupItemProcessing(groupId, result, items[i], this._options);
                      }
                   }
