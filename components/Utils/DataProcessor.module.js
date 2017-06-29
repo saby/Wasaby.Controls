@@ -14,8 +14,9 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
    "js!WS.Data/Source/SbisService",
    "Core/helpers/transport-helpers",
    "Core/helpers/fast-control-helpers",
+   "js!SBIS3.CONTROLS.Utils.InformationPopupManager",
    "i18n!SBIS3.CONTROLS.Utils.DataProcessor"
-], function( cExtend, cFunctions, EventBus, IoC, ConsoleLogger, Record, Source, Serializer, LoadingIndicator, SbisService, transHelpers, fcHelpers) {
+], function( cExtend, cFunctions, EventBus, IoC, ConsoleLogger, Record, Source, Serializer, LoadingIndicator, SbisService, transHelpers, fcHelpers, InformationPopupManager) {
    /**
     * Обработчик данных для печати и выгрузки(экспорта) в Excel, PDF. Печать осуществляется по готову XSL-шаблону через XSLT-преобразование.
     * Экспорт в Excel и PDF можно выполнить несколькими способами:
@@ -198,13 +199,14 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
                 endpoint: object
             });
          exportDeferred = source.call(methodName, cfg).addErrback(function(error) {
-            require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager){
+            //Не показываем ошибку, если было прервано соединение с интернетом
+            if (!error._isOfflineMode) {
                InformationPopupManager.showMessageDialog({
                   message: error.message,
+                  opener: self,
                   status: 'error'
                });
-            });
-
+            }
             return error;
          });
          if (object !== "Excel") {
