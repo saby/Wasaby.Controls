@@ -967,7 +967,6 @@ define('js!SBIS3.CONTROLS.FormController', [
          this.unsubscribeFrom(EventBus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigateHandler);
          window.removeEventListener('beforeunload', this._onBeforeUnloadHandler);
          this._unsubscribeFromRecordChange();
-         this._resetTitle();
          FormController.superclass.destroy.apply(this, arguments);
       }
    });
