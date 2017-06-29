@@ -20,8 +20,8 @@ define([
 
       var buttonPartial = new Button({ caption: "some<br>caption", hasPartial: true});
       describe('State', function() {
-         it('caption is function', function () {
-            assert.isTrue(typeof buttonPartial._options.caption === "function");
+         it('caption is string', function () {
+            assert.isTrue(typeof buttonPartial._options.caption === "string");
          });
       });
 
@@ -127,6 +127,30 @@ define([
             assert.isTrue(!button._isActiveByClick);
          });
 
+         it('addClassCompatible', function() {
+            button._options.class = '';
+            button._addClassCompatible('compatibleTest');
+            assert.isTrue(button._options.class.indexOf("compatibleTest") != -1);
+         });
+
+         it('removeClassCompatible', function() {
+            button._options.class = 'compatibleTest2 compatibleTest';
+            button._removeClassCompatible('compatibleTest2');
+            assert.isTrue(button._options.class.indexOf('compatibleTest2') == -1);
+         });
+
+         it('toggleClassCompatibleAdd', function() {
+            button._options.class = '';
+            button._toggleClassCompatible('compatibleTest');
+            assert.isTrue(button._options.class.indexOf("compatibleTest") != -1);
+         });
+
+         it('toggleClassCompatibleRemove', function() {
+            button._options.class = 'compatibleTest';
+            button._toggleClassCompatible('compatibleTest');
+            assert.isTrue(button._options.class.indexOf("compatibleTest") == -1);
+         });
+
          it('ipadShortTapTouchEnd', function(done) {
             button._isActiveByClick = false;
             button._onTouchStart();
@@ -139,12 +163,18 @@ define([
          });
 
          it('ipadShortTapTimeout', function(done) {
+            var testEvent = false,
+               tempFunc = function(){
+                  testEvent = true;
+               };
+            button.subscribe('onPropertyChange', tempFunc);
             button._isActiveByClick = false;
             button._onTouchStart();
             button._onTouchEnd();
 
             setTimeout(function() {
                assert.isTrue(!button._isActiveByClick);
+               assert.isTrue(testEvent);
                done();
             }, 1100);
          });

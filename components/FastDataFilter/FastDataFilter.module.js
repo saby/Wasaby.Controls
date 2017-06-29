@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
        * @class SBIS3.CONTROLS.FastDataFilter
        * @extends SBIS3.CORE.CompoundControl
        *
-       * @author Герасимов Александр Максимович
+       * @author Красильников Андрей Сергеевич
        *
        * @mixes SBIS3.CONTROLS.ItemsControlMixin
        * @mixes SBIS3.CONTROLS.FilterMixin
@@ -171,27 +171,6 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             colHelpers.forEach(dropdownContainer, function(elem){
                $(elem).css('flex-shrink', '');
             });
-         },
-
-         _getDropdownMaxWidth: function(dropdownText){
-            var maxElem = $(dropdownText[0]);
-            for (var i = 1, l = dropdownText.length; i < l; i++){
-               if ($(dropdownText[i]).width() > maxElem.width()){
-                  maxElem = $(dropdownText[i]);
-               }
-            }
-            return maxElem;
-         },
-
-         _getDropdownListsWidth: function(){
-            var sumWidth = 0;
-            var dropdownContainer = $('.controls-DropdownList', this.getContainer());
-
-            for (var i = 0, l = dropdownContainer.length; i < l; i++){
-               sumWidth += $(dropdownContainer[i]).width();
-            }
-
-            return sumWidth;
          },
 
          _onResizeHandler: function(){

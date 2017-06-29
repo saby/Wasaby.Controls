@@ -34,17 +34,16 @@ define('js!WSControls/VDOM/Item/Item', [
       completed: null,
       title: null,
       constructor: function (cfg) {
-         this.completed = cfg.completed;
-         this.title = cfg.title;
          Item.superclass.constructor.call(this, cfg);
-         this._publish('event:onRemove', 'event:onToggle', 'event:onEdit');
+         this._publish('onRemove', 'onToggle', 'onEdit');
       },
       onToggle: function (event) {
          this.completed = !this.completed;
-         this._notify('onToggle', this.completed);
+         event.target.checked = false;
+         this._notify('onToggle', this.completed, this.item);
       },
       onRemove: function (event) {
-         this._notify('onRemove');
+         this._notify('onRemove', this.item);
       },
       onStartEditing: function (event){
          this._startEdit();
@@ -57,13 +56,18 @@ define('js!WSControls/VDOM/Item/Item', [
       onBlur: function (event) {
          this._completeEdit(event.target.value);
       },
+      applyOptions:function(){
+         this.completed = this._options.completed;
+         this.title = this._options.title;
+         this.item = this._options.item;
+      },
       _startEdit: function(){
          this._editing = true;
       },
       _completeEdit: function (value) {
          this._editing = false;
          this.title = value;
-         this._notify('onEdit', value);
+         this._notify('onEdit', value, this.item);
       }
    });
    

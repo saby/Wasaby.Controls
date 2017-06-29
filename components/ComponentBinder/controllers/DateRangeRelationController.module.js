@@ -211,8 +211,7 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
                endValue = control.getEndValue(),
                periodType = dateHelpers.getPeriodType(startValue, endValue);
 
-            if ((updatedPeriodType === 'month' || updatedPeriodType === 'quarter' || updatedPeriodType === 'halfyear') &&
-                updatedPeriodType === periodType &&
+            if (updatedPeriodType === periodType &&
                 updatedStartValue.getFullYear() !== startValue.getFullYear() &&
                 updatedStartValue.getMonth() === startValue.getMonth() &&
                 updatedStartValue.getDate() === startValue.getDate()) {

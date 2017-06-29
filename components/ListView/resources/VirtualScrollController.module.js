@@ -41,6 +41,13 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             }
          },
 
+         reset: function(){
+            this._currentVirtualPage = 0;
+            this._heights = [];
+            this._newItemsCount = 0,
+            this._removedItemsCount = 0;
+         },
+
          _scrollHandler: function (e, scrollTop) {
             clearTimeout(this._scrollTimeout);
             this._scrollTimeout = setTimeout(function () {

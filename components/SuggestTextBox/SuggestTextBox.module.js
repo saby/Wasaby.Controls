@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
     * @mixes SBIS3.CONTROLS.SearchMixin
     * @mixes SBIS3.CONTROLS.SuggestTextBoxMixin
     * @demo SBIS3.CONTROLS.Demo.MySuggestTextBox Поле ввода с автодополнением
-    * @author Крайнов Дмитрий Олегович
+    * @author Герасимов Александр Максимович
     *
     * @control
     * @public
@@ -68,6 +68,13 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          var opts = SuggestTextBox.superclass._modifyOptions.apply(this, arguments);
          opts.cssClassName += ' controls-SuggestTextBox';
          return opts;
+      },
+      
+      _onResizeHandler: function() {
+         SuggestTextBox.superclass._onResizeHandler.apply(this, arguments);
+         if(this.isPickerVisible()) {
+            TextBoxUtils.setEqualPickerWidth(this._picker);
+         }
       },
 
       showPicker: function() {

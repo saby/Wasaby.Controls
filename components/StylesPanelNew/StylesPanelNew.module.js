@@ -14,7 +14,8 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
    'js!SBIS3.CONTROLS.ColorStyle',
    'js!SBIS3.CONTROLS.IconButton',
    'js!SBIS3.CONTROLS.CheckBox',
-   'css!SBIS3.CONTROLS.StylesPanelNew'
+   'css!SBIS3.CONTROLS.StylesPanelNew',
+   'css!SBIS3.CONTROLS.MenuItem'
 ], function(CommandDispatcher, CompoundControl, PopupMixin, HistoryController, colHelpers, genHelpers, dotTplFn, EventBus) {
 
 
@@ -134,7 +135,9 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
          _italic: null,
          _underline: null,
          _strikethrough: null,
-         _pickerOpenHandler: undefined
+         _pickerOpenHandler: undefined,
+         // хранит ID предустановленного набора форматирования, необходимо для работы БТР
+         _currentPresetId: null
       },
 
       $constructor: function() {
@@ -268,6 +271,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
          if (this._options.historyId && !format) {
             this._saveHistory();
          }
+         this._currentPresetId = null;
       },
 
       saveHandlerForInstanceFireMode: function() {
@@ -309,6 +313,10 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
                id: genHelpers.randomId(),
                json: style
             };
+            if (style.name) {
+               preparedItem.name = style.name;
+               delete preparedItem.json.name;
+            }
             preparedPreset.push(preparedItem);
          });
          this._presetItems = preparedPreset;
@@ -324,6 +332,9 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
                id: item.id,
                style: self._getInlineStyle(item.json)
             };
+            if (item.name) {
+               preparedItem.name = item.name;
+            }
             preparedItems.push(preparedItem);
          });
          return preparedItems;
@@ -430,6 +441,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
          preset = colHelpers.find(this._options.presets ? this._presetItems : this._history, function(item) {
             return item.id == key;
          }, this, false);
+         this._currentPresetId = preset.json.id !== null ? preset.json.id : null;
          this.saveHandler(preset.json);
       },
 
@@ -466,6 +478,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
             }
          } else {
             styles = {
+               id: this._currentPresetId,
                fontsize: this._size.getSelectedKey(),
                color: this._palette.getSelectedKey(),
                bold: this._bold.isChecked(),

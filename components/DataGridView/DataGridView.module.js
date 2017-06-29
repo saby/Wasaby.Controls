@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/SortingTemplate",
    "Core/helpers/collection-helpers",
+   "Core/helpers/Object/isEmpty",
    "Core/helpers/string-helpers",
    "Core/helpers/dom&controls-helpers",
    'Core/Sanitize',
@@ -59,6 +60,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       GroupTemplate,
       SortingTemplate,
       colHelpers,
+      isEmpty,
       strHelpers,
       dcHelpers,
       Sanitize,
@@ -92,7 +94,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          },
          getColumnVal = function (item, colName) {
             if (!colName || !(colName.indexOf("['") == 0 && colName.indexOf("']") == (colName.length - 2))){
-               return item.get(colName);
+               return strHelpers.escapeHtml(item.get(colName));
             }
             var colNameParts = colName.slice(2, -2).split('.'),
                curItem = item,
@@ -339,7 +341,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
     *
     * @class SBIS3.CONTROLS.DataGridView
     * @extends SBIS3.CONTROLS.ListView
-    * @author Крайнов Дмитрий Олегович
+    * @author Герасимов Александр Максимович
     * @mixes SBIS3.CONTROLS.DragAndDropMixin
     *
     *
@@ -348,11 +350,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * @cssModifier controls-DataGridView__hasSeparator Устанавливает отображение линий-разделителей между строками.
     * При использовании контролов {@link SBIS3.CONTROLS.CompositeView} или {@link SBIS3.CONTROLS.TreeCompositeView} модификатор применяется только для режима отображения "Таблица".
     * @cssModifier controls-DataGridView__overflow-ellipsis Устанавливает обрезание троеточием текста во всех колонках таблицы.
-    * @cssModifier controls-ListView__padding-XS Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 24px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
-    * @cssModifier controls-ListView__padding-S Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 20px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
+    * @cssModifier controls-ListView__padding-XS Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 8px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
+    * @cssModifier controls-ListView__padding-S Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 12px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
     * @cssModifier controls-ListView__padding-M Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 16px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
-    * @cssModifier controls-ListView__padding-L Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 12px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
-    * @cssModifier controls-ListView__padding-XL Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 8px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
+    * @cssModifier controls-ListView__padding-L Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 20px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
+    * @cssModifier controls-ListView__padding-XL Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 24px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
     *
     * @control
     * @public
@@ -605,7 +607,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
              *     <option name="stickyHeader">true</option>
              * </pre>
              */
-            stickyHeader: false
+            stickyHeader: false,
+            /**
+             * @cfg {Boolean} Устанавливает фиксацию/прилипание группировки. Возможно будет удалена после доработок фиксации группировки.
+             * @noShow
+             */
+            stickyGroup: true
          }
       },
 
@@ -640,6 +647,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
             ladderInstance: cfg._ladderInstance
          });
          newCfg._decorators.add(newCfg._decorators.ladder);
+
+         if (isEmpty(newCfg.groupBy) || !newCfg.stickyHeader) {
+            newCfg.stickyGroup = false;
+         }
 
          return newCfg;
       },
@@ -740,23 +751,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _buildTplArgs : function(cfg) {
-         function getColumnVal(item, colName) {
-            if (!colName || !(colName.indexOf("['") == 0 && colName.indexOf("']") == (colName.length - 2))){
-               return item.get(colName);
-            }
-            var colNameParts = colName.slice(2, -2).split('.'),
-               curItem = item,
-               value;
-            for (var i = 0; i < colNameParts.length; i++){
-               if (i !== colNameParts.length - 1){
-                  curItem = curItem.get(colNameParts[i]);
-               }
-               else{
-                  value = curItem.get(colNameParts[i]);
-               }
-            }
-            return value;
-         }
          var args = DataGridView.superclass._buildTplArgs.apply(this, arguments);
          args.columns = _prepareColumns.call(this, cfg.columns, this._options);
          args.cellData = {
@@ -1473,7 +1467,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return data;
       },
       _addStickyToGroups: function (data) {
-         if (this._options.stickyHeader && this._options.groupBy) {
+         if (this._options.stickyHeader && !isEmpty(this._options.groupBy)) {
             data.forEach(function (item) {
                if (item.hasOwnProperty('data') && item.hasOwnProperty('tpl')) {
                   item.data.stickyHeader = this._options.stickyHeader;

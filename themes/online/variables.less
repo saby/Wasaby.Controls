@@ -7,15 +7,15 @@
 @default-color:                           #587AB0;
 @primary-color:                           #ff7033;
 @disabled-color:                          #CCC;
-@innacent-color:                     	  #8991A9;
+@innacent-color:                     	   #8991A9;
 @error-color:                             #EF463A;
 @warning-color:                           #FEC63F;
 @success-color:                           #72BE44;
 @default-bg-color:                        #FFFFFF;
-@accent-color:							  #313E78;
+@accent-color:							         #313E78;
 @default-hover-color:                     #F0F5FB;
-@innacent-color2:						  #999999; //Неакцентные элементы, заголовки таблиц, комментарии
-@basic-block-bg-color:					  #EAEAEA; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
+@innacent-color2:						         #999999; //Неакцентные элементы, заголовки таблиц, комментарии
+@basic-block-bg-color:					      #EAEAEA; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
 @default-font-weight:                     400;
 @bold-font-weight:                        700;
 @line-overflow-blur-height:               30px;
@@ -146,6 +146,8 @@
 @button-icon-color:                       @icon-color-primary;
 @button-icon-top-offset:                  4px;                      // top offset of 16x16 icon
 @button-icon-left-offset:                 12px;
+@button-icon-medium-left-offset:          @button-icon-left-offset;
+@button-icon-large-left-offset:           0;
 @button-icon-gap:                         6px;                      // gap between icon and text
 @button-icon-text-margin:                 0 12px 0 32px;            // margin of text following 16x16 icon
 @button-icon-big-top-offset:              0;                         // top offset of 24x24 icon
@@ -576,6 +578,7 @@
 @check-box-icon-box-color:                      @innacent-color2;
 @check-box-caption-margin-left:                 0;
 @check-box-disabled-color:                      @disabled-color;
+@check-box-icon-successful-top-ie:              0;
 
 // -------------- //
 // Checkbox group //
@@ -603,6 +606,7 @@
 @switcher-line-width:                           36px;
 @switcher-line-color-disabled:                  @gray-light-color;
 @switcher-btn-bg-color:                         @white-color;
+@switcher-btn-bg-color-disabled:                @white-color;
 @switcher-btn-color:                            @primary-color;
 @switcher-btn-color-inactive:                   @gray-color;
 @switcher-btn-color-disabled:                   @gray-light-color;
@@ -705,6 +709,7 @@
 @menu-header-box-sizing:                  border-box;
 @menu-header-padding:                     0 12px;
 @menu-header-icon-padding:                6px;
+@menu-header-icon-color:                  @icon-active-color;
 
 // --------- //
 // Menu item //
@@ -715,6 +720,9 @@
 @menu-item-line-height:                   20px;
 @menu-item-default-padding:               0 12px;
 @menu-item-expand-padding-right:          30px;
+@menu-item-padding-16:                    33px;
+@menu-item-padding-24:                    42px;
+
 
 @menu-item-text-color:                    @black-color;
 @menu-item-bg:                            @white-color;
@@ -746,6 +754,7 @@
 // ----------- //
 
 // Menu
+@menu-button-menu-margin:                               -5px 0 0 -1px;
 @menu-button-menu-border-width:                         1px;
 @menu-button-menu-border-style:                         @menu-border-style;
 @menu-button-menu-border-color:                         @menu-border-color;
@@ -993,6 +1002,9 @@
 @search-border-color:                                 @search-background;
 @search-hover-border-color:                           @search-background;
 @search-bottom-border-color:                          @search-background;
+@search-form-icon-reset-color:                        @innacent-color;
+@search-form-icon-search-color:                       @default-color;
+@search-form-icon-search-hover-color:                 @accent-color;
 @search-form-border-width:                            @text-box-border-width;
 @search-form-border-disabled-width:                   @text-box-disabled-border-width;
 @search-buttons-wrapper-width:                        20px + 20px;
@@ -1072,8 +1084,9 @@
 
 // TODO: check whether it's required
 @combo-box-input-wrapper-right-offset:          18px;
-
-
+@combo-box-arrowDown-color:                     @accent-color;
+@combo-box-arrowDown-color-hover:               @accent-color;
+@combo-box-arrowDown-color-picker-show:         @accent-color;
 
 // --------- //
 // Text area //
@@ -1089,7 +1102,7 @@
 @text-area-field-hover-text-color:              @text-area-field-text-color;
 @text-area-field-disabled-text-color:           @text-area-field-text-color;
 
-@text-area-border-width:                        1px;
+@text-area-border-width:                        @default-border-width;
 @text-area-border-style:                        solid;
 @text-area-border-color:                        #eaeaea #eaeaea #cccccc #eaeaea;
 @text-area-bg:                                  @text-box-bg;
@@ -1363,7 +1376,7 @@
 // ----------------- //
 // Data Range Slider //
 // ----------------- //
-@date-range-slider-margin-top:                  -4px;
+@date-range-slider-margin-top:                  -5px;
 
 @date-range-slider-font-family:                 @default-font-name;
 @date-range-slider-color:                       @darkcyan-color;
@@ -2110,6 +2123,7 @@
 @DropdownList-picker-list-left-border-radius:         4px 0 4px 4px;
 @DropdownList-picker-list-border-radius:              0;
 @DropdownList-picker-menu-font-size:                  15px;
+@DropdownList-picker-menu-item-base-color:            @default-text-color;
 @DropdownList-picker-menu-line-height:                24px;
 @DropdownList-picker-menu-white-space:                nowrap;
 @DropdownList-picker-menu-item-padding:               5px 8px 3px 8px;
@@ -2141,14 +2155,15 @@
 
 //ProgressBar
 @controls-ProgressBar-height:             16px;
+@controls-ProgressBar-width:              100%;
 @controls-ProgressBar-first-color:        @blue-dark-color;
 @controls-ProgressBar-last-color:         #61B1EE;
 @controls-ProgressBar-border-color:       @gray-light-color;
 @controls-ProgressBar-background-color:   @gray-f4f4f4-color;
 @controls-ProgressBar-border-radius:      3px;
-@controls-ProgressBar-value-padding:      0 6px;
 @controls-ProgressBar-value-font-size:    @small-text-size;
 @controls-ProgressBar-value-color:        @disabled-color;
+@controls-ProgressBar-value-padding:      0 6px;
 
 //Pager
 @controls-Pager-amount-text:              @gray-color;
@@ -2263,7 +2278,7 @@
 @controls-filterLine-copyCross-ff-top:            -25px;
 
 //DragNDropObject
-@drag-and-drop-object-bg:                          transparent url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAABHtJREFUeNqsV19MI0UY/7Zd0yJthRa8StJqjwgx2BKokBgTUSEUuT7wIJcjZ4xCcpdgfPDBF5N79MmY+MgdiZw+EMnFF+IfTMQcR0w4oAKVSIocBVFS6zW97baUttuu863dTbfdFrrXSb7M9Jv5vvnNb34zs6U2NjZ4ePxyu6ur6z01gZTP5+O7u7vLDuB5vqKPLAAoihJAuN3uqkHQuVyu7GTUj28AeH6uCIJlWejo6IDDw8N319bW2mmavl0wbJcwc7cSAA0CwGRo4XAYAoGAYLD8OvDP9EkTiWNEE32xWAwaGxvBZrMByfVyfX19v8vlgmw2i7/bCMOvncmAmNAUHoFM4x0wPRiB41w3WF+8gbPAq1/+DkyEAeYhA8FPPLIEyADGm81mSCQSuIjLVqt1L5lMgsPhgFAo9Oz6+nqbVqv15UMihJUDRQARzgkt8beBt1+CwEMvXMj7l955oew2IYDp6WkozNPT0yPUBAjU1dUJIIxGI0PA7RG9WAgrQPRyINMABicNH8Fx7FNg+SvQ0EBLfs+dIMRjcYg/Isb8b6HPR4T+8fFxGTiiA6E+OTkRapPJBMhGNBp1EbB7eb1YVldXobe394DGvRKRWywWSOhvgIG0yV5K/oW3njv3CRHz4XbMz89D4QJ1Op2gF/QhiJWVlRPZFhCawGAwKE6gNJmSH/Nt/s2C1fkKuO0Nkn9nZwe2t7eL9WKTAdjc3BRWkMlkgOM4yYp/F/owHm1iYkIC0NliKAGHeZX0IgPQ2dlZ1SWk5Md8/lACslwWODyKpO5xmIV+Jb3IROj3+1UzgMkxB7aPfHelVXq9XglYMXicS8aA0+lUdR0XMzA0NKToV9KLDABRpoCqGhPj+/v7paSzs7NS3/DwsNBP7gLA81+sF9kxtNvtqvdf7MN8Y2NjJeObm5thcHCwhBUZA/gWYFtEL1rxb9En7jnWooDx9+LiohRDbjyJgZmZmRK9yESIKNXsf6Ef8w0MDJT4m5qawOPxVGaAYRjZqsTVKrULazR8eMSkW1tbUl9ra6vgJ1exwEyxXuSvIbm31Z7/wlXhc1w8Hm9ZcveX6IVWOh5qQYgAgsGgNBG+iFjH43Hhpi3WS1kAlUAwbAKW1/wQ2D+CVDpTMsb34N7Hit9/1NEHhif1S2lKd+slZ/txiQjPAyL0bwS++mYBTlNpNd+gxmg65f1+8Ze+aJS5TijYld0DZ4F4xLDwxdfzaieXAbl3/9ebF1vMVxW3oByQn5bvCy9ajYox+Ff4mgzAU/9YiDRJgyP7hXW+Dfn2b/4PgcvoawWA5Er1yT7LmQuRsoOTp6cQS3xGWimoYTHKAJxVMpk01LoIAObm5s43OssJHxm1KuQPFUtPTk5SSp1TU1PXRkdHZb4/Do7fDx7+6aoVAL1et0SX61Ri5mmzcXl/n2sjLDy2ErUaDXvR5rhFVRNEWHFzvKbtux8WbhKARrWTa8jkl94cuk5TuV1NNYHIiobndjvan7/6BK39NstxLIffhuc0HI9xGI95MN9/AgwAe9CKFRkrHCkAAAAASUVORK5CYII=') no-repeat;
+@drag-and-drop-object-bg:                          transparent url('img/dragAvatar.png') no-repeat;
 @drag-and-drop-object-width:                       32px;
 @drag-and-drop-object-height:                      32px;
 @drag-and-drop-count-height:                       12px;
@@ -2277,6 +2292,7 @@
 //FieldLink
 @controls-FieldLink-border-color:                  @text-area-border-color @text-area-border-color @gray-ccc-color @text-area-border-color;
 @controls-FieldLink-border-color-focus-hover:      @gray-ccc-color;
+@controls-FieldLink-border-color-picker-show:      @controls-FieldLink-border-color-focus-hover;
 @controls-FieldLink-border:                        1px solid;
 @controls-FieldLink-picker-show-color:             @white-color;
 
@@ -2480,6 +2496,7 @@
 
 @header-font:                                      700 18px escape('/') @header-height @default-font-name;
 @header-color:                                     #D94700;
+@header-color-hover:                               @header-color;
 
 @bigHeader-font:                                   700 20px escape('/') @header-height @default-font-name;
 @bigHeader-color:                                  @header-color;
@@ -2545,36 +2562,36 @@
 //  moneyDecorator  //
 //----------------//
 
-@money-decorator-integer-font-size:                        14px;
+@money-decorator-integer-font-size:                        @default-text-size;
 @money-decorator-integer-font-color:                       #000000;
 
-@money-decorator-integer-accent-results-font-size:         15px;
+@money-decorator-integer-accent-results-font-size:         @large-text-size;
 @money-decorator-integer-accent-results-font-color:        @blue-dark-color;
 @money-decorator-integer-accent-results-font-weight:       bold;
 
-@money-decorator-integer-no-accent-results-font-size:      15px;
+@money-decorator-integer-no-accent-results-font-size:      @large-text-size;
 @money-decorator-integer-no-accent-results-font-color:     #999999;
 @money-decorator-integer-no-accent-results-font-weight:    bold;
 
-@money-decorator-integer-group-font-size:                  14px;
+@money-decorator-integer-group-font-size:                  @default-text-size;
 @money-decorator-integer-group-font-color:                 @gray-ccc-color;
 
-@money-decorator-integer-basic-registry-font-size:         14px;
-@money-decorator-integer-basic-registry-font-color:        #000000;
+@money-decorator-integer-basic-registry-font-size:         @default-text-size;
+@money-decorator-integer-basic-registry-font-color:        @default-text-color;
 
-@money-decorator-integer-no-basic-registry-font-size:      14px;
+@money-decorator-integer-no-basic-registry-font-size:      @default-text-size;
 @money-decorator-integer-no-basic-registry-font-color:     #999999;
 
-@money-decorator-integer-accent-registry-font-size:        15px;
+@money-decorator-integer-accent-registry-font-size:        @large-text-size;
 @money-decorator-integer-accent-registry-font-color:       @blue-dark-color;
 @money-decorator-integer-accent-registry-font-weight:      bold;
 
-@money-decorator-integer-no-accent-registry-font-size:     15px;
+@money-decorator-integer-no-accent-registry-font-size:     @large-text-size;
 @money-decorator-integer-no-accent-registry-font-color:    #999999;
 @money-decorator-integer-no-accent-registry-font-weight:   bold;
 
-@money-decorator-fraction-font-size:                       12px;
-@money-decorator-fraction-font-color:                      @gray-ccc-color;
+@money-decorator-fraction-font-size:                       @small-text-size;
+@money-decorator-fraction-font-color:                      @disabled-color;
 
 //Browser
 @back-button-caption-hover-color: @blue-dark-color;
@@ -2724,3 +2741,4 @@
 @data-grid-row-selected-add-bg:           @data-grid-row-selected-addit-bg;
 @data-grid-row-hover-add-bg:              @data-grid-row-selected-addit-bg;
 @tree-view-copy-arrow-add-background:     @data-grid-row-selected-addit-bg;
+@back-button-text-color:                  @blue-dark-color;

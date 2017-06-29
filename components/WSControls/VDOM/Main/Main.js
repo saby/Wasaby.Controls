@@ -57,7 +57,9 @@ define('js!WSControls/VDOM/Main/Main', [
          //компоненты на базе TextBoxBase, при этом платформенная реализация TextBoxBase анализирует каждый введенный символ.
          //Двухсторонний data binding для свойств платформенных компонентов будет доступен.
          onCreateItem: function (event) {
-            if (event.nativeEvent.key === 'Enter') {
+            //Автотесты в FireFox не умеют отправлять событие keypress с event  у которого указано свойство key
+            //Поэтому используем свойство keyCode и сравнение с кодом клавиши 'enter' - с числом 13.
+            if (event.nativeEvent.keyCode === 13) {
                var value = event.target.value;
                if(value.trim()){
                   this._list.add(new TODO({
@@ -98,6 +100,7 @@ define('js!WSControls/VDOM/Main/Main', [
          },
          onChangeFilter: function (event, filter) {
             this._filter = filter;
+            this._save();
          },
          clearCompleted: function () {
             //можно заменить на мутабельный алгоритм
@@ -106,7 +109,7 @@ define('js!WSControls/VDOM/Main/Main', [
          },
          filteredList: function () {
             var self = this;
-            return new ObservableList({ items: Chain(this._list).filter(function(item) {
+            return Chain(this._list).filter(function(item) {
                switch (self._filter) {
                   case 'active':
                      return item.get('completed') === false;
@@ -116,7 +119,7 @@ define('js!WSControls/VDOM/Main/Main', [
                      return true;
                }
                throw new Error('Incorrect filter type')
-            }).toArray()});
+            }).toArray();
          },
          activeCount: function () {
             return Chain(this._list).reduce(function(count, item) {

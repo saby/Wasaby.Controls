@@ -141,6 +141,7 @@
       }
    }
    &.controls-TabButton__main-item {
+      min-width: 0; //Нужно, чтобы flex правильно позиционировал ужимаемый контейнер
       .controls-TabButton__inner{
          font-size: @tab-button-large-inner-font-size;
          font-weight: @tab-button-large-inner-font-weight;
@@ -405,15 +406,4 @@
         line-height: 23px;
      }
   }
-}
-
-.ws-is-mobile-platform, .ws-is-desktop-safari {
-   .controls-TabButton {
-      &.controls-TabButton__main-item.controls-TabButton__main-flex {
-         .controls-TabButton__additionalText {
-            position: relative;
-            top: 2px;
-         }
-      }
-   }
 }

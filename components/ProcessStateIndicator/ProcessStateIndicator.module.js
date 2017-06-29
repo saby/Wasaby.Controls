@@ -72,8 +72,10 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
          state = options.state || [],
          colorValues = [],
          curSector = 0,
-         colors = options.colors, 
-         i, j, color, itemValue, itemNumSectors;
+         colors = options.colors,
+         totalSectorsUsed = 0,
+         maxSectorsPerValue = 0,
+         longestValueStart, i, j, color, itemValue, itemNumSectors, excess;
       
       if (!(state instanceof Array)) {
          state = [ +state ];
@@ -86,6 +88,16 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
             itemValue = Math.max(0, +state[i] || 0);
             color = colors[i];
             itemNumSectors = Math.round(itemValue / sectorSize);
+            if (itemValue > 0 && itemNumSectors === 0) {
+               // Если значение элемента не нулевое, 
+               // а количество секторов нулевое (из-за округления) то увеличим до 1 (см. спецификацию)
+               itemNumSectors = 1;
+            }
+            if (itemNumSectors > maxSectorsPerValue) {
+               longestValueStart = curSector;
+               maxSectorsPerValue = itemNumSectors
+            }
+            totalSectorsUsed += itemNumSectors;
             for(j = 0; j < itemNumSectors; j++) {
                colorValues[curSector++] = {
                   color: color,
@@ -94,6 +106,12 @@ define('js!SBIS3.CONTROLS.ProcessStateIndicator', [
             }
          }
       }   
+      
+      // Если собрали больше секторов чем есть - урежем самый длинный на величину превышения
+      if (totalSectorsUsed > options.numSectors) {
+         excess = totalSectorsUsed - options.numSectors;
+         colorValues.splice(longestValueStart, excess);
+      }
       
       return colorValues;
    }

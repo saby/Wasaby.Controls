@@ -22,8 +22,8 @@ define('js!WSControls/Buttons/MenuButton', [
 
    /**
     * Класс контрола "Кнопка с выпадающим меню".
-    * @class SBIS3.CONTROLS.MenuButton
-    * @extends SBIS3.CONTROLS.Button
+    * @class WSControls/Buttons/MenuButton
+    * @extends WSControls/Buttons/Button
     * @remark
     * !Важно: Если в меню задан только один пункт, то меню НЕ будет показано, а при нажатии на кнопку будет выполнено действие, соответствующее этому пункту.
     * Кнопка с меню - это кнопка с выбором варината действия, и если возможно только одно действие, то оно и будет выполнено по нажатию.
@@ -32,7 +32,7 @@ define('js!WSControls/Buttons/MenuButton', [
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.DSMixin
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Романов Валерий
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment

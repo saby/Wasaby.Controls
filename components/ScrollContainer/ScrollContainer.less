@@ -32,7 +32,7 @@
 
 .controls-ScrollContainer {
    .controls-Scrollbar.controls-Scrollbar__dragging, &:hover > .controls-Scrollbar {
-      display: initial;
+      display: block;
    }
 }
 
@@ -126,24 +126,26 @@ body.ws-is-ie .controls-ScrollContainer__content {
 }
 
 .controls-ScrollContainer__hiddenScrollbar .controls-Scrollbar {
-   display: none;
+   display: none !important;
 }
 
 .controls-ScrollContainer__showScrollbar .controls-Scrollbar {
-   display: initial;
+   display: block;
 }
 
 .controls-ScrollContainer.controls-ScrollContainer__flex {
    .flexbox();
+   .flex-grow(1);
    .flex-direction(column);
    .align-content(stretch);
 }
 
 .controls-ScrollContainer.controls-ScrollContainer__flex > .controls-ScrollContainer__content {
    height:100%;
+   .flex-grow(1);
 }
 
-.controls-ScrollContainer__content {
+.controls-ScrollContainer__content:not(.controls-ScrollContainer__content-overflowHidden) {
    // Desktop IE
    body.ws-is-ie &, body.ws-is-firefox & {
       margin-right: -17px;
@@ -152,7 +154,6 @@ body.ws-is-ie .controls-ScrollContainer__content {
    // Планшет Win10 IE
    body.ws-is-touch.ws-is-ie & {
       margin-right: -12px;
+      padding-right: -12px;
    }
-
-
 }

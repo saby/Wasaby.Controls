@@ -9,11 +9,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
    "js!SBIS3.CONTROLS.ControlHierarchyManager",
    "js!SBIS3.CORE.ModalOverlay",
    "js!SBIS3.CONTROLS.TouchKeyboardHelper",
-   "Core/helpers/helpers",
+   'Core/core-instance',
    "Core/helpers/dom&controls-helpers",
    "Core/detection",
    "Core/constants"
-], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, coreHelpers, dcHelpers, detection, constants) {
+], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, cInstance, dcHelpers, detection, constants) {
    'use strict';
    if (typeof window !== 'undefined') {
       var
@@ -243,7 +243,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          this._resetToDefault();
 
          var topParent = this.getTopParent();
-         if (topParent && coreHelpers.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')){
+         if (topParent && cInstance.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')){
             // на iPad при появлении всплывахи над FloatArea при проведении пальцем над всплывахой - скроллится FloatArea (бажное поведение iPad с инетным скроллом)
             // приходится отключать инертный скролл в момент показа всплывахи и включать обратно при скрытии
             this._parentFloatArea = topParent;
@@ -615,7 +615,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          //FloatArea теперь не может превентить событие, поэтому при клике по панели закрывается попап, из которого была открыта floatArea.
          //Если клик был по скроллу - то target.wsControl вернет null, т.к. скролл находится на родительском контейнере floatArea
          //Пытаюсь найти панель вручную. Использую closest, т.к. клик может быть в ws-float-area-panel-external-jeans, который лежит на 1 уровне с floatarea
-         var floatArea = $(target).closest('.ws-float-area-stack-scroll-wrapper').find('.ws-float-area');
+         var floatArea = $(target).closest('.ws-float-area-stack-cut-wrapper').find('.ws-float-area');
          if (floatArea.length){
             target = floatArea.wsControl().getOpener();
             return ControlHierarchyManager.checkInclusion(this, target && target.getContainer());
@@ -1253,7 +1253,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                    /* Хак для мобильных устройств (c touch), чтобы правильно работал скролл в пикере */
                    if(this._options._canScroll && constants.browser.isMobilePlatform) {
                       var topWindow = cWindowManager.getMaxZWindow(),
-                          isPopUp = coreHelpers.instanceOfMixin(topWindow, 'SBIS3.CONTROLS.PopupMixin');
+                          isPopUp = cInstance.instanceOfMixin(topWindow, 'SBIS3.CONTROLS.PopupMixin');
 
                       /* При скрытии popUp'a:
                          если ниже по стеку тоже popup вешаем на него класс, который фиксит скролл

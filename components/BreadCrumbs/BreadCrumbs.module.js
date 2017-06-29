@@ -11,14 +11,16 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
    'Core/helpers/string-helpers',
    "Core/IoC",
    'Core/helpers/functional-helpers',
-   'css!SBIS3.CONTROLS.BreadCrumbs'
+   'css!SBIS3.CONTROLS.BreadCrumbs',
+   'css!SBIS3.CONTROLS.Menu',
+   'css!SBIS3.CONTROLS.MenuItem'
 ], function(CompoundControl, ItemsControlMixin, PickerMixin, DecorableMixin, dotTplFn, itemContentTpl, dotsTpl, itemTpl, menuItem, strHelpers, IoC, fHelpers) {
    /**
     * Класс контрола "Хлебные крошки". Основное применение - <a href='https://wi.sbis.ru/doc/platform/patterns-and-practices/typical-list/'>иерархические реестры</a>.
     * @class SBIS3.CONTROLS.BreadCrumbs
     * @extends SBIS3.CORE.CompoundControl
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Черемушкин Илья Вячеславович
     *
     * @mixes SBIS3.CONTROLS.DSMixin
     * @mixes SBIS3.CONTROLS.PickerMixin
@@ -229,8 +231,10 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       },
 
       _onResizeHandler: function(){
-         if(this._getTargetContainer().width() + this._homeIconWidth >= this._getContainerWidth()) {
+         var containerWidth = this._getContainerWidth()
+         if (this._prewContainerWidth != containerWidth) {
             this.redraw();
+            this._prewContainerWidth = containerWidth;
          }
       },
 

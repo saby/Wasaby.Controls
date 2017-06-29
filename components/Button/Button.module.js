@@ -4,7 +4,6 @@ define('js!SBIS3.CONTROLS.Button',
       'js!SBIS3.CONTROLS.Button/Button.compatible',
       'tmpl!SBIS3.CONTROLS.Button',
       'Core/core-functions',
-      'Core/tmpl/tmplstr',
       "js!SBIS3.CORE.Control/ControlGoodCode",
       'css!SBIS3.CONTROLS.Button'
          ],
@@ -13,13 +12,13 @@ define('js!SBIS3.CONTROLS.Button',
              ButtonCompatible,
              template,
              functions,
-             tmplstr,
              ControlGoodCode) {
 
    'use strict';
 
    /**
     * Контрол, отображающий обычную кнопку
+    *
     * Можно настроить:
     * <ol>
     *    <li>{@link SBIS3.CORE.Control#allowChangeEnable возможность изменения доступности кнопки};</li>
@@ -29,11 +28,14 @@ define('js!SBIS3.CONTROLS.Button',
     *    <li>{@link primary по умолчанию ли кнопка};</li>
     *    <li>{@link SBIS3.CORE.Control#visible видимость кнопки};</li>
     * </ol>
+    *
+    * {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/buttons/button-line/#_2 Демонстрационные примеры}.
+    * <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Спецификация</a>.
+    *
     * @class SBIS3.CONTROLS.Button
-    * @extends WSControls/Buttons/ButtonBase
     * @demo SBIS3.CONTROLS.Demo.MyButton
     *
-    * @author Крайнов Дмитрий Олегович
+    * @author Романов Валерий Сергеевич
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers parent
     * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner record stateKey
@@ -85,12 +87,6 @@ define('js!SBIS3.CONTROLS.Button',
          _touchMoveCount: 0,
 
          constructor: function (cfg) {
-            if (cfg.hasPartial) {
-               if (!cfg.caption) {
-                  cfg.caption = '';
-               }
-               cfg.caption = tmplstr.getFunction(cfg.caption);
-            }
             Button.superclass.constructor.call(this, cfg);
             this._publish('onActivated');
          },
@@ -158,7 +154,9 @@ define('js!SBIS3.CONTROLS.Button',
                this._isActiveByClick = false;
                //т.к. появилась асинхронность, руками дернем флаг о перерисовке, чтобы кнопка
                //не осталась "подвисшей"
-               this._setDirty();
+               if (this.iWantVDOM) {
+                  this._setDirty();
+               }
             }.bind(this), 1000);
          },
 
