@@ -189,7 +189,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
        * Возвращает html элемент над которым сейчас находится курсор мыши.
        * @returns {*}
        */
-      getTargetsDomElemet: function(){
+      getTargetsDomElement: function(){
          if (this._jsEvent) {
             var avatar = this.getAvatar(),
                isTouchEvent = (this._jsEvent.type in {"touchmove":true, "touchend":true});
@@ -214,6 +214,9 @@ define('js!SBIS3.CONTROLS.DragObject', [
                return $(this._jsEvent.target);
             }
          }
+      },
+      getTargetsDomElemet: function () {
+         return this.getTargetsDomElement();
       },
       /**
        * Возвращает true если переданный элемент входит в аватар
@@ -259,7 +262,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
       },
 
       _getTargetsControl: function() {
-         var control = $(this.getTargetsDomElemet()).wsControl(),
+         var control = $(this.getTargetsDomElement()).wsControl(),
             found = function(control) {
                //такой поиск нужен что бы в таргете всегда был контрол с dnd миксином, кроме того на ipade контрол находит себя по таргету
                //если внутри контрола будут вложенные контролы то там драгндроп работать не будет.
