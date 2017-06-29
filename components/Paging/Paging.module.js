@@ -190,8 +190,10 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'tmpl!SBIS3
          }
          if (this.getItems() && (this.getSelectedKey() == this.getItems().getCount())) {
             this._nextBtn.setEnabled(false);
+            this._endBtn.setEnabled(false);
          }
          else {
+            this._endBtn.setEnabled(true);
             this._nextBtn.setEnabled(true);
          }
       },
@@ -229,11 +231,13 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'tmpl!SBIS3
       },
 
       _goToBegin: function() {
+         this._notify('onFirstPageSet');
          this.setSelectedKey(1);
       },
 
       _goToEnd: function() {
          this._notify('onLastPageSet');
+         this.setSelectedKey(this.getItems().getCount());
       }
    });
 

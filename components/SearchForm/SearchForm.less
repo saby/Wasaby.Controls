@@ -22,7 +22,7 @@
       border-width: @search-form-border-disabled-width;
       border-bottom: @search-form-border-disabled-width solid @search-background;
 
-      .controls-SearchForm__search, .controls-SearchForm__reset {
+      .controls-SearchForm__search {
         display: @search-form-icon-disabled-display;
         cursor: default;
         color: @icon-color-disabled !important;
@@ -35,7 +35,7 @@
       }
     }
 
-  & .controls-TextBox__fieldWrapper {
+  .controls-TextBox__fieldWrapper {
     margin: 0 @search-form-field-wrapper-margin-right 0 @search-left-margin;
     padding: 0;
   }
@@ -57,16 +57,28 @@
   top: 8px;
 }
 
-.controls-SearchForm {
-  .controls-SearchForm__search, .controls-SearchForm__reset {
-    display: block;
-    float: right;
-    cursor: pointer;
-    padding: @search-form-icon-padding;
-    width: @search-loop-size;
-    height: @search-loop-size;
+.controls-SearchForm__search,
+.controls-SearchForm__reset {
+  display: block;
+  float: right;
+  cursor: pointer;
+  padding: @search-form-icon-padding;
+  width: @search-loop-size;
+  height: @search-loop-size;
+}
+
+.controls-SearchForm__reset {
+  color: @search-form-icon-reset-color;
+}
+
+.controls-SearchForm__search {
+  color: @search-form-icon-search-color;
+  
+  &:hover {
+    color: @search-form-icon-search-hover-color;
   }
 }
+
 // хак для edge win10 выравнивает input и placeholder
 @supports (-ms-ime-align:auto) {
   .controls-SearchForm {

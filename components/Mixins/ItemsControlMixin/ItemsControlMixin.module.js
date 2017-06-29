@@ -1106,6 +1106,11 @@ var prepareGroupId = function(item, groupId, cfg) {
              prevItem = projection.at(newItemsIndex - 1),
              lastItemsIndex = projection.getCount() - newItems.length;
 
+         // TODO: тут зависимость от virtualscrolling, которой быть не должно
+         if (this._virtualScrollController && this._virtualScrollController._currentWindow[1] > 0) {
+            lastItemsIndex = this._virtualScrollController._currentWindow[1] + 1;
+         }
+
          if (this._options.groupBy && this._options.easyGroup) {
             //в случае наличия группировки надо проверять соседние элементы, потому что
             //на месте вставки может быть разделитель, надо понимать, когда вставлять до разделителя, а когда после
@@ -1116,7 +1121,7 @@ var prepareGroupId = function(item, groupId, cfg) {
                nextGroup = (nextItem && this._canApplyGrouping(nextItem)) ? projection.getGroupByIndex(newItemsIndex + newItems.length) : null;
                if ((prevGroup === undefined) || (prevGroup === null) || prevGroup != groupId) {
                   if (nextGroup !== undefined && nextGroup !== null && nextGroup == groupId) {
-                     beforeFlag = true
+                     beforeFlag = true;
                   }
                }
             }

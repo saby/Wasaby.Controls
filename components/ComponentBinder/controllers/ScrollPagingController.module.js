@@ -47,6 +47,8 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             }.bind(this));
          }
 
+         paging.subscribe('onFirstPageSet', this._scrollToFirstPage.bind(this));
+
          paging.subscribe('onLastPageSet', this._scrollToLastPage.bind(this));
 
          paging.subscribe('onSelectedItemChange', this._pagingSelectedChange.bind(this));
@@ -89,7 +91,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
       _scrollToPage: function(page){
          // Если первая страница - проскролим к самому верху, не считая оффсет
          var offset = page.offset ? this._offsetTop : 0;
-         var view = this._options.view
+         var view = this._options.view;
          view._getScrollWatcher().scrollTo(page.offset + offset);
       },
 
@@ -97,8 +99,16 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          this._options.view.setPage(-1);
       },
 
+      _scrollToFirstPage: function(){
+         this._options.view.setPage(0);
+      },
+
       _isPageStartVisisble: function(page){
          var top;
+         if (page.element.parents('html').length == 0) {
+            return false;
+         }
+
          if (this._options.view._getScrollWatcher().getScrollContainer()[0] == window) {
             top = page.element[0].getBoundingClientRect().bottom;
          } else {
@@ -158,11 +168,12 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
                viewportTop = viewport[0] == window ? 0 : viewport.get(0).getBoundingClientRect().top;
             this._offsetTop = viewTop - viewportTop;
          }
-         //Сбрасываем все для пересчета
+         //Cбрасываем все для пересчета
          if (reset){
             this._scrollPages = [];
             self._pageOffset = 0;
          }
+
          //Берем последнюю посчитаную страницу, если она есть
          if (this._scrollPages.length){
             lastPageStart = this._scrollPages[this._scrollPages.length - 1].element.index();
@@ -172,17 +183,20 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             if (view.getItems() && view.getItems().getCount() && element.length){
                this._scrollPages.push({
                   element: element,
-                  offset: self._pageOffset
+                  offset: self._pageOffset 
                });
             }
          }
+
+         var topWrapperHeight = $('.controls-ListView__virtualScrollTop', view.getContainer()).height() || 0
+
          //Считаем оффсеты страниц начиная с последней (если ее нет - сначала)
          listItems.slice(lastPageStart ? lastPageStart + 1 : 0).each(function(){
             var $this = $(this),
                $next = $this.next('.controls-ListView__item'),
                // Считаем через position, так как для плитки не подходит сложение высот
-               curBottom = $this.position().top + $this.outerHeight(true),
-               nextBottom = $next[0] ? $next.position().top + $next.outerHeight(true) : 0;
+               curBottom = $this.position().top + $this.outerHeight(true) + topWrapperHeight,
+               nextBottom = $next[0] ? $next.position().top + $next.outerHeight(true) : 0 + topWrapperHeight;
             curBottom = curBottom > pageOffset ? curBottom : pageOffset;
             nextBottom = nextBottom > curBottom ? nextBottom : curBottom;
             pageOffset = curBottom;

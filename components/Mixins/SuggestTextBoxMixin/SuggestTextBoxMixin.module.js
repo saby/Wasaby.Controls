@@ -240,6 +240,15 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          _inputFocusInHandler: function(event) {
             this._observableControlFocusHandler(event);
          },
+         
+         _inputClickHandler: function(e) {
+            /* По стандарту клик по полю с автодополнением или получение фокуса при включённом автопоказе (опция autoShow),
+               должен вызывать отображение автодополнения. Т.к. если в поле ввода уже стоит фокус, то клик не вызывает никаких
+               связанных с фокусом событий, поэтому при клике по полю ввода надо тоже показать автодополнение. */
+            if(this.isActive()) {
+               this._observableControlFocusHandler(e);
+            }
+         },
          /**
           * Блочим события поднятия служебных клавиш,
           * нужно в основном при использовании в редактировании по месту

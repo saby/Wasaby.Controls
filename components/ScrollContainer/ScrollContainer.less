@@ -126,7 +126,7 @@ body.ws-is-ie .controls-ScrollContainer__content {
 }
 
 .controls-ScrollContainer__hiddenScrollbar .controls-Scrollbar {
-   display: none;
+   display: none !important;
 }
 
 .controls-ScrollContainer__showScrollbar .controls-Scrollbar {
@@ -147,13 +147,16 @@ body.ws-is-ie .controls-ScrollContainer__content {
 
 .controls-ScrollContainer__content:not(.controls-ScrollContainer__content-overflowHidden) {
    // Desktop IE
+   @margin: -17px;
    body.ws-is-ie &, body.ws-is-firefox & {
-      margin-right: -17px;
+      margin-right: @margin;
    }
 
    // Планшет Win10 IE
+   @margin: -12px;
    body.ws-is-touch.ws-is-ie & {
-      margin-right: -12px;
+      margin-right: @margin;
+      padding-right: -@margin;
    }
 
 
