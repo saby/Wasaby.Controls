@@ -9,6 +9,7 @@ define('js!SBIS3.CONTROLS.FormController', [
    "Core/ConsoleLogger",
    "Core/core-instance",
    "Core/helpers/functional-helpers",
+   "Core/helpers/dom&controls-helpers",
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CORE.LoadingIndicator",
    "js!WS.Data/Entity/Record",
@@ -20,7 +21,7 @@ define('js!SBIS3.CONTROLS.FormController', [
    "i18n!SBIS3.CONTROLS.FormController",
    'css!SBIS3.CONTROLS.FormController'
 ],
-   function( cContext, cFunctions, cMerge, CommandDispatcher, EventBus, Deferred, IoC, ConsoleLogger, cInstance, fHelpers, CompoundControl, LoadingIndicator, Record, Model, SbisService, InformationPopupManager, OpenDialogUtil) {
+   function( cContext, cFunctions, cMerge, CommandDispatcher, EventBus, Deferred, IoC, ConsoleLogger, cInstance, fHelpers, domHelpers, CompoundControl, LoadingIndicator, Record, Model, SbisService, InformationPopupManager, OpenDialogUtil) {
    /**
     * Компонент, на основе которого создают диалог, данные которого инициализируются по записи.
     * В частном случае компонент применяется для создания <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/'>диалогов редактирования записи</a>.
@@ -302,7 +303,8 @@ define('js!SBIS3.CONTROLS.FormController', [
             this._toggleOverlay(false);
          }
          this._updateIndicatorZIndex();
-         this.activateFirstControl();
+         this._moveFocusToSelf();
+         domHelpers.doAutofocus(this._container);
          this._notifyOnAfterFormLoadEvent();
       },
 
@@ -955,7 +957,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        */
       _createChildControlActivatedDeferred: function(){
          this._activateChildControlDeferred = (new Deferred()).addCallback(function(){
-            this.activateFirstControl();
+            domHelpers.doAutofocus(this._container);
          }.bind(this));
          return this._activateChildControlDeferred;
       },
@@ -965,7 +967,7 @@ define('js!SBIS3.CONTROLS.FormController', [
             this._activateChildControlDeferred = undefined;
          }
          else{
-            this.activateFirstControl();
+            domHelpers.doAutofocus(this._container);
          }
       },
 
