@@ -173,27 +173,6 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             });
          },
 
-         _getDropdownMaxWidth: function(dropdownText){
-            var maxElem = $(dropdownText[0]);
-            for (var i = 1, l = dropdownText.length; i < l; i++){
-               if ($(dropdownText[i]).width() > maxElem.width()){
-                  maxElem = $(dropdownText[i]);
-               }
-            }
-            return maxElem;
-         },
-
-         _getDropdownListsWidth: function(){
-            var sumWidth = 0;
-            var dropdownContainer = $('.controls-DropdownList', this.getContainer());
-
-            for (var i = 0, l = dropdownContainer.length; i < l; i++){
-               sumWidth += $(dropdownContainer[i]).width();
-            }
-
-            return sumWidth;
-         },
-
          _onResizeHandler: function(){
             clearTimeout(this._resizeTimeout);
             var self = this;

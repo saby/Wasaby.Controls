@@ -14,7 +14,6 @@ body {
    .controls-ListView__scrollPager {
       .controls-IconButton {
          background: @button-bg;
-         border: 2px solid #0055BB;
          .controls-Button__icon {
             color: @button-text-color !important;
          }
@@ -29,14 +28,22 @@ body {
 }
 
 body {
+  .controls-BackButton {
+     .controls-BackButton__caption.controls-Link {
+        color: #313E78;
+     }
+  }
   .ws-window-titlebar {
     color: #313E78;
   }
-   .controls-TabButtons .controls-TabButtons__tabSpace-template {
-      height: 100%; //Только для offline из-за старого webkit
-   }
   .ws-info-box {
       background: @default-bg-color;
+      .ws-infobox-triangle {
+         background: @default-bg-color;
+      }
+  }
+  .ws-infobox-triangle {
+    background: @default-bg-color;
   }
   .ws-window-title {
      font-size: 1.43rem;
@@ -124,18 +131,17 @@ body .ws-float-area-nostack-panel-shadow-standart {
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__header-rangeDash {
   border-bottom: 2px solid #ccc;
 }
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__left,
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__right {
+   .icon-primary {
+      color: #2D68B5!important;
+   }
+}
 
 body .ws-window {
     background-color: #fff;
     border-color: #0055BB;
 }
-
-
-.controls-Suggest__picker {
-    border: 2px solid #0055BB;
-    background: #fff;
-}
-
 
 .controls-ListView {
   .controls-IconButton {
@@ -168,4 +174,17 @@ body .ws-window {
 }
 .controls-ListView__ItemsToolbar-container {
     height: 1.2rem;
+}
+.ws-float-area-stack-panel-shadow {
+  background: @default-bg-color !important;
+}
+.ws-LoadingIndicator__window, .ws-loading {
+   .ws-loadingimg {
+      div:before {
+         background-image: url('img/ajax-loader-indicator-big.gif');
+      }
+   }
+}
+.ws-window-content {
+   background-color: @default-bg-color !important;
 }

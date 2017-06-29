@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/SortingTemplate",
    "Core/helpers/collection-helpers",
+   "Core/helpers/Object/isEmpty",
    "Core/helpers/string-helpers",
    "Core/helpers/dom&controls-helpers",
    'Core/Sanitize',
@@ -59,6 +60,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       GroupTemplate,
       SortingTemplate,
       colHelpers,
+      isEmpty,
       strHelpers,
       dcHelpers,
       Sanitize,
@@ -92,7 +94,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          },
          getColumnVal = function (item, colName) {
             if (!colName || !(colName.indexOf("['") == 0 && colName.indexOf("']") == (colName.length - 2))){
-               return item.get(colName);
+               return strHelpers.escapeHtml(item.get(colName));
             }
             var colNameParts = colName.slice(2, -2).split('.'),
                curItem = item,
@@ -605,7 +607,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
              *     <option name="stickyHeader">true</option>
              * </pre>
              */
-            stickyHeader: false
+            stickyHeader: false,
+            /**
+             * @cfg {Boolean} Устанавливает фиксацию/прилипание группировки. Возможно будет удалена после доработок фиксации группировки.
+             * @noShow
+             */
+            stickyGroup: true
          }
       },
 
@@ -640,6 +647,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
             ladderInstance: cfg._ladderInstance
          });
          newCfg._decorators.add(newCfg._decorators.ladder);
+
+         if (isEmpty(newCfg.groupBy) || !newCfg.stickyHeader) {
+            newCfg.stickyGroup = false;
+         }
 
          return newCfg;
       },
@@ -740,23 +751,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _buildTplArgs : function(cfg) {
-         function getColumnVal(item, colName) {
-            if (!colName || !(colName.indexOf("['") == 0 && colName.indexOf("']") == (colName.length - 2))){
-               return item.get(colName);
-            }
-            var colNameParts = colName.slice(2, -2).split('.'),
-               curItem = item,
-               value;
-            for (var i = 0; i < colNameParts.length; i++){
-               if (i !== colNameParts.length - 1){
-                  curItem = curItem.get(colNameParts[i]);
-               }
-               else{
-                  value = curItem.get(colNameParts[i]);
-               }
-            }
-            return value;
-         }
          var args = DataGridView.superclass._buildTplArgs.apply(this, arguments);
          args.columns = _prepareColumns.call(this, cfg.columns, this._options);
          args.cellData = {
@@ -1473,7 +1467,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return data;
       },
       _addStickyToGroups: function (data) {
-         if (this._options.stickyHeader && this._options.groupBy) {
+         if (this._options.stickyHeader && !isEmpty(this._options.groupBy)) {
             data.forEach(function (item) {
                if (item.hasOwnProperty('data') && item.hasOwnProperty('tpl')) {
                   item.data.stickyHeader = this._options.stickyHeader;

@@ -529,6 +529,14 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 this._historyController = null;
              }
 
+             if(this._dTemplatesReady) {
+                this._dTemplatesReady.getResult().cancel();
+                this._dTemplatesReady = null;
+             }
+             
+             this._filterTemplates = null;
+             this._pickerContext = null;
+             
              FilterButton.superclass.destroy.apply(this, arguments);
           }
 

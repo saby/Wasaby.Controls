@@ -110,14 +110,15 @@ body {
       .controls-IconButton {
          background: #293D52;
          padding: 0;
+          border: @button-border;
          .controls-Button__icon {
             font-size: 3rem!important;
             height: 3rem!important;
             width: 3rem!important;
             line-height: 3rem !important;
             position: absolute;
-            top: -2px;
-            left: -2px;
+            top: -@default-border-width;
+            left: -@default-border-width;
          }
          &.ws-disabled {
             border-color: @disabled-color;
@@ -167,14 +168,6 @@ body {
          }
       }
    }
-
-  .ws-window .ws-float-area .ws-window-titlebar.ws-window-titlebar-custom {
-    height: 3.57rem;
-
-      .ws-float-area-title {
-        line-height: 3.57rem;
-      }
-  }
   .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableRow .controls-MonthView__tableElement {
 
     font-size: 1.14rem;
@@ -198,9 +191,6 @@ body {
       .controls-BackButton {
         line-height: 3.64rem;
       }
-    .controls-DataGridView.controls-ListView__multiselect .controls-DataGridView__table .controls-DataGridView__td.controls-DataGridView__firstContentCell {
-      padding-left: 1rem;
-    }
     .ws-float-area-nostack-panel-shadow-standart {
       border: 1px solid #2e404f;
       background: #2e404f;
@@ -297,10 +287,6 @@ body {
    .controls-DateBox {
       min-height: 3rem;
    }
-    .controls-DateRangeBigChoose-MonthRangePicker.controls-ListView .controls-DateRangeBigChoose-MonthView.controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableElement.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
-      color: #fff;
-      background: #3f566d;
-    }
   .controls-ToolBar__menuIcon .icon-24 {
     font-family: carrypresto-icons!important;
   }
@@ -341,28 +327,18 @@ body {
     background: #2e404f;
     box-shadow: none!important;
   }
-  &.ws-window-titlebar-custom {
-    position: relative;
-    height: 2rem !important;
-    .ws-float-area-title {
-      line-height: 1rem !important;
-    }
-  }
   .ws-float-area-title {
       font-size: 1.43rem!important;
       font-weight: normal !important;
   }
 
     .controls__filter-button__clear-filter {
-    font-size: 1.14rem;
-
-    &:hover {
-      color: #26b8ff !important;
+       font-size: 1.14rem;
     }
-  }
 }
 
-.ws-float-close.sbisname-window-title-close {
+.ws-float-close.sbisname-window-title-close,
+body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
    width: 3rem !important;
    height: 3rem !important;
    background: @closeBigButtonImage;
@@ -372,19 +348,19 @@ body {
    &:active {
       background: @closeBigButtonImageHover;
    }
+   // У нас сейчас есть один растровый бакграунд для кнопки закрытия.
+   // В средней теме он слишком большой. Но этот баг фиксится прикладными стилями.
+   // Если поедут регресионные тесты и кнопка закрытия буде отображаться криво, то после того как вы пофиксите это,
+   // обязательно проверьте не поехала ли она в результате ваших изменений на сайте в крупной и средней темах.
+   // Задача на стилизауию кнопки закрытия.
+   // https://online.sbis.ru/opendoc.html?guid=7447de01-2904-4d45-a5de-06699e99633e
 }
 
 // SBIS3.CORE.CloseButton используется в DateRangeSlider. Удалить после того как выпилим SBIS3.CORE.CloseButton
 .controls-DateRangeBigChoose .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled.ws-button-classic {
    width: 3rem !important;
    height: 3rem !important;
-   background: @closeBigButtonImage;
-   &:hover {
-      background: @closeBigButtonImageHover;
-   }
-   &:active {
-      background: @closeBigButtonImageHover;
-   }
+   // Перед тем как править стили для кнопки закрытия прочитай комментарий по .ws-float-close.sbisname-window-title-close
 }
 
 .controls-Browser {
@@ -401,9 +377,6 @@ body {
     font-size: 3rem !important;
     width: 2rem;
     height: 3rem;
-  }
-  &.ws-enabled .icon-primary:hover{
-    color: #B9E9FF !important;
   }
 }
 
@@ -458,7 +431,7 @@ body {
 }
 
 .ws-float-area-stack-panel-shadow {
-  background: #2C3E50 !important;
+  background: @basic-block-bg-color !important;
 }
 .ws-sticky-header__block.ws-sticky-header__fixed,
 .ws-sticky-header__table-header-copy {
@@ -466,13 +439,13 @@ body {
 }
 
 body  .ws-window {
-   background-color: #293543 !important;
+   background-color: #293543;
    border-style: solid;
    border-color: #00a2ef;
-   border-width: 2px;
+   border-width: @default-border-width;
 }
 .ws-window-content {
-  background-color: #2C3E50 !important;
+  background-color: @basic-block-bg-color !important;
 }
 .controls-listView td {
   font-size: 1rem;
@@ -484,17 +457,6 @@ body  .ws-window {
 }
 .controls-ListView__scrollPager {
   height: 3rem !important;
-}
-.control-Paging__btn  {
-  border: 2px solid #26b8ff;
-}
-.ws-moneyDecorator {
-  &__fraction{
-    font-size: .857rem;
-    color: #8991A9;
-    line-height: normal;
-    font-weight: normal !important;
-  }
 }
 .controls-Link.controls__filter-button__clear-filter.ws-disabled {
   color: rgba(102, 170, 221, .2);
@@ -538,13 +500,6 @@ body {
     -webkit-box-shadow: none!important;
     background: #2C3E50 !important;
     box-shadow: none!important;
-  }
-  &.ws-window-titlebar-custom {
-    position: relative;
-    height: 2rem !important;
-    .ws-float-area-title {
-      line-height: 1rem !important;
-    }
   }
   .ws-float-area-title {
       font-size: 1.43rem!important;
@@ -614,13 +569,14 @@ body {
   .ws-float-area-title {
     padding-left: .857rem;
   }
-  .ws-float-area .ws-window-titlebar.ws-window-titlebar-custom {
-    height: 3.57rem;
-
+   .ws-float-area .ws-window-titlebar.ws-window-titlebar-custom {
+      height: 3.57rem;
+      position: absolute;
+      top: 0;
       .ws-float-area-title {
-        line-height: 3.57rem;
+         line-height: 3.57rem;
       }
-  }
+   }
   .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableRow .controls-MonthView__tableElement {
 
     font-size: 1.14rem;
@@ -640,12 +596,6 @@ body {
    margin-top: .07rem;
 }
 
-.controls-DateBox.ws-has-focus .controls-FormattedTextBox__fieldWrapper {
-    border-color: #314559 #314559 #314559 #314559 !important;
- }
- .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateBox .controls-FormattedTextBox__fieldWrapper {
-      border-color: rgba(96, 170, 221, 0.15) !important;
- }
  .controls-Button .controls-Button__icon.icon-32 + .controls-Button__text {
      margin-left: 3rem !important;
  }
@@ -682,7 +632,6 @@ body {
    .controls-FormattedTextBox__fieldWrapper {
       padding: 0 0.3rem;
       .controls-FormattedTextBox__field {
-         color: #cccccc;
          height: 2.86rem;
       }
    }
@@ -692,44 +641,21 @@ body {
     line-height: 2rem;
 
   }
+  //TODO: придумать решение лучше, возможно на flex
 .controls-ComboBox.controls-TextBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
-    line-height: 3rem !important;
-
+     vertical-align: top; // чтобы блок располагался аналогично controls-ComboBox__field, но растягивал блок
 }
-.controls-DateBox.controls-FormattedTextBox {
-   .controls-FormattedTextBox__fieldWrapper {
-      padding: 0 0.3rem;
-      .controls-FormattedTextBox__field {
-         height: 2.7rem;
-         line-height: 2.7rem;
-      }
-   }
-}
-
 
 .controls-Link__field {
   vertical-align: baseline;
 }
 .controls-FieldLink, .controls-FieldLink__picker {
-   .controls-FieldLink__showSelector, .controls-FieldLink__dropAllLinks, .controls-FieldLink__item {
-      .icon-16{
-         font-size: @icon-large-size!important;
-         line-height: @icon-large-size!important;
-         width: @icon-large-size;
-         height: @icon-large-size;
-      }
-   }
-   .controls-FieldLinkItemsCollection, controls-FieldLink__item {
+   .controls-FieldLinkItemsCollection, .controls-FieldLink__item {
       height: 3rem;
    }
    .controls-FieldLink__showAllLinks {
       line-height: 3rem;
    }
-}
-
-.controls-Paging .control-Paging__btn .controls-Button__icon {
-    line-height: 2rem!important;
-    padding-right: 0.4rem;
 }
 
 .controls-Paging .control-Paging__btn .controls-Button__icon {
@@ -758,12 +684,6 @@ body .ws-float-area-stack-panel-shadow {
 }
 .controls-ListView__scrollPager .controls-IconButton {
   background: #1D2834;
-}
-
-
-body .controls-DateRangeBigChoose-MonthRangePicker.controls-ListView .controls-DateRangeBigChoose-MonthView.controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableElement.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
-  color: #fff;
-  background: #3f566d;
 }
 
 .controls-ToolBar__menuIcon {
@@ -891,6 +811,13 @@ body .ws-window.ws-LoadingIndicator__window {
   font-size: 1rem;
 }
 
+.controls-DateRangeBigChoose__months-quarter-btn,
+.controls-DateRangeBigChoose__months-halfyear-btn {
+   &:hover {
+      background-color: transparent !important;
+   }
+}
+
 .controls-ComboBox__picker {
    box-sizing: border-box;
 }
@@ -945,7 +872,7 @@ body {
    .ws-info-box {
       background: @basic-block-bg-color;
       color: @default-text-color;
-      border: 2px solid @link-text-color;
+      border: @button-border;
       padding: 0.285rem 1.428rem 0.285rem 0.38rem;
       .ws-infobox-triangle {
          width: .857rem;
@@ -953,13 +880,13 @@ body {
          background: @basic-block-bg-color;
          &.ws-infobox-triangle-bottom {
             bottom: -.54rem;
-            border-right: 2px solid @link-text-color;
-            border-bottom: 2px solid @link-text-color;
+            border-right: @button-border;
+            border-bottom: @button-border;
          }
          &.ws-infobox-triangle-top {
             top: -.51rem;
-            border-left: 2px solid @link-text-color;
-            border-top: 2px solid @link-text-color;
+            border-left: @button-border;
+            border-top: @button-border;
          }
       }
 
@@ -1022,7 +949,7 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-
 }
 
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateBox .controls-FormattedTextBox__fieldWrapper {
-    border-width: 2px;
+    border-width: @default-border-width;
     border-radius: 0;
 }
 
@@ -1050,9 +977,7 @@ body .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-
 }
 
 .controls-Suggest__picker {
-    border: 2px solid #26B8FF;
     background: #f0f5fb;
-    margin-top: -5px;
     color: #3a4951 !important;
      .controls-DataGridView__columnValue {
        line-height: 3rem;
@@ -1064,11 +989,6 @@ body .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-
      }
 }
 .controls-FieldLink.controls-Picker__show {
-  .controls-Suggest__picker {
-    border-top-width: 0;
-
-  }
-
   .controls-FieldLink__showSelector {
       .icon-primary {
         color: #26b7fd !important;
@@ -1084,9 +1004,6 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-
 }
 .controls-Browser__breadCrumbs {
   top: .18rem;
-}
-.ws-is-desktop-platform .controls-IconButton:not(.ws-disabled):not(.controls-Click__active):hover .controls-Button__icon.icon-primary {
-    color: #B9E9FF !important;
 }
 .controls-ToolBar .controls-ToolBar__menuIcon {
     vertical-align: baseline;

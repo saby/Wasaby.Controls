@@ -894,7 +894,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                if (!isEmpty(this._options.groupBy) && this._options.easyGroup) {
                   if (this._canApplyGrouping(items[i]) && prevGroupId != groupId && groupId !== false) {
                      prevGroupId = groupId;
-                     if (this._getGroupItems(groupId).length <= items.length) {
+                     if (this._options._groupItemsCount[groupId] === items.length) {
                         this._options._groupItemProcessing(groupId, result, items[i], this._options);
                      }
                   }
@@ -1382,7 +1382,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
 
       _onDragCallback: function(dragObject) {
          var target = dragObject.getTarget();
-         if (target) {
+         if (target && cInstance.instanceOfModule(target, 'SBIS3.CONTROLS.DragEntity.Row')) {
             var model = target.getModel(),
                itemsProjection = this._getItemsProjection(),
                projectionItem = itemsProjection.getItemBySourceItem(model);
