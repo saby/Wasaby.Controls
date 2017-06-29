@@ -351,6 +351,23 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param {WS.Data/Entity/Model} target Запись относительно которой происходит перемещение.
           * @param {MovePosition} position Как перемещать записи.
           * @remark Событие не работает если используются стратегии перемещения
+          * @example
+          * Показать ошибку перемещения
+          * <pre>
+          * view.subscribe('onEndMove', function(e, result) {
+          *    if (result instanseOf Error) {
+          *       result.processed = true;//Надо поставить флаг что ошибка обработана;
+          *       require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(){
+          *          InformationPopupManager.showMessageDialog(
+          *             {
+          *                message: result.message,
+          *                status: 'error'
+          *             }
+          *          );
+          *       })
+          *    }
+          * })
+          * </pre>
           */
          $protected: {
             _floatCheckBox: null,
