@@ -495,18 +495,30 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
             parentFnc.call(this);
          },
 
-         _onCollectionAddMoveRemove: function(parentFnc) {
+         _onCollectionAddMoveRemove: function(parentFnc, event, action, newItems, newItemsIndex) {
+            var args;
             //TODO в плитке с деревом сложная логика при определении позиций контейнеров, которые необходимо вставлять
             //а случаи в которых это требуются редкие, но все же есть, вызовем пока что полную перерисовку до внедрения VDOM
             if (this._options.viewMode == 'table') {
                //надо убрать первый аргумент parentFnc а остальное прокинуть.
                //TODO убрать когда будем отказываться от before/after в миксинах
-               var args = Array.prototype.slice.call(arguments, 1);
+               args = Array.prototype.slice.call(arguments, 1);
                parentFnc.apply(this, args);
             }
             else {
-               this.redraw();
+               var lastItemsIndex = this._getItemsProjection().getCount() - newItems.length;
+               if (lastItemsIndex == newItemsIndex) {
+                  args = Array.prototype.slice.call(arguments, 1);
+                  parentFnc.apply(this, args);
+               }
+               else {
+                  this.redraw();
+               }
+
             }
+         },
+         _getItemsTemplateForAdd: function() {
+
          }
       }
 
