@@ -355,7 +355,8 @@ body {
     }
 }
 
-.ws-float-close.sbisname-window-title-close {
+.ws-float-close.sbisname-window-title-close,
+body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
    width: 3rem !important;
    height: 3rem !important;
    background: @closeBigButtonImage;
@@ -365,19 +366,19 @@ body {
    &:active {
       background: @closeBigButtonImageHover;
    }
+   // У нас сейчас есть один растровый бакграунд для кнопки закрытия.
+   // В средней теме он слишком большой. Но этот баг фиксится прикладными стилями.
+   // Если поедут регресионные тесты и кнопка закрытия буде отображаться криво, то после того как вы пофиксите это,
+   // обязательно проверьте не поехала ли она в результате ваших изменений на сайте в крупной и средней темах.
+   // Задача на стилизауию кнопки закрытия.
+   // https://online.sbis.ru/opendoc.html?guid=7447de01-2904-4d45-a5de-06699e99633e
 }
 
 // SBIS3.CORE.CloseButton используется в DateRangeSlider. Удалить после того как выпилим SBIS3.CORE.CloseButton
 .controls-DateRangeBigChoose .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled.ws-button-classic {
    width: 3rem !important;
    height: 3rem !important;
-   background: @closeBigButtonImage;
-   &:hover {
-      background: @closeBigButtonImageHover;
-   }
-   &:active {
-      background: @closeBigButtonImageHover;
-   }
+   // Перед тем как править стили для кнопки закрытия прочитай комментарий по .ws-float-close.sbisname-window-title-close
 }
 
 .controls-Browser {
@@ -681,16 +682,6 @@ body {
     line-height: 3rem !important;
 
 }
-.controls-DateBox.controls-FormattedTextBox {
-   .controls-FormattedTextBox__fieldWrapper {
-      padding: 0 0.3rem;
-      .controls-FormattedTextBox__field {
-         height: 2.7rem;
-         line-height: 2.7rem;
-      }
-   }
-}
-
 
 .controls-Link__field {
   vertical-align: baseline;
