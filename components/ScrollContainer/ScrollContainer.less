@@ -147,17 +147,13 @@ body.ws-is-ie .controls-ScrollContainer__content {
 
 .controls-ScrollContainer__content:not(.controls-ScrollContainer__content-overflowHidden) {
    // Desktop IE
-   @margin: -17px;
    body.ws-is-ie &, body.ws-is-firefox & {
-      margin-right: @margin;
+      margin-right: -17px;
    }
 
    // Планшет Win10 IE
-   @margin: -12px;
    body.ws-is-touch.ws-is-ie & {
-      margin-right: @margin;
-      padding-right: -@margin;
+      margin-right: -12px;
+      padding-right: -12px;
    }
-
-
 }
