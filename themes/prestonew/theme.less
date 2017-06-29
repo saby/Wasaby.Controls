@@ -110,14 +110,15 @@ body {
       .controls-IconButton {
          background: #293D52;
          padding: 0;
+          border: @button-border;
          .controls-Button__icon {
             font-size: 3rem!important;
             height: 3rem!important;
             width: 3rem!important;
             line-height: 3rem !important;
             position: absolute;
-            top: -2px;
-            left: -2px;
+            top: -@default-border-width;
+            left: -@default-border-width;
          }
          &.ws-disabled {
             border-color: @disabled-color;
@@ -445,7 +446,7 @@ body  .ws-window {
    background-color: #293543;
    border-style: solid;
    border-color: #00a2ef;
-   border-width: 2px;
+   border-width: @default-border-width;
 }
 .ws-window-content {
   background-color: @basic-block-bg-color !important;
@@ -460,9 +461,6 @@ body  .ws-window {
 }
 .controls-ListView__scrollPager {
   height: 3rem !important;
-}
-.control-Paging__btn  {
-  border: 2px solid #26b8ff;
 }
 .controls-Link.controls__filter-button__clear-filter.ws-disabled {
   color: rgba(102, 170, 221, .2);
@@ -684,9 +682,8 @@ body {
     padding-right: 0.4rem;
 }
 
-.controls-Paging .control-Paging__btn .controls-Button__icon {
-    line-height: 2rem!important;
-    padding-right: 0.4rem;
+.controls-DropdownList__picker .controls-DropdownList__item .controls-DropdownList__itemTextWrapper .controls-DropdownList__item-text {
+    color: #273B4D;
 }
 
 .controls-DropdownList__picker .controls-DropdownList__multiselect.controls-DropdownList__item * {
@@ -893,7 +890,7 @@ body {
    .ws-info-box {
       background: @basic-block-bg-color;
       color: @default-text-color;
-      border: 2px solid @link-text-color;
+      border: @button-border;
       padding: 0.285rem 1.428rem 0.285rem 0.38rem;
       .ws-infobox-triangle {
          width: .857rem;
@@ -901,13 +898,13 @@ body {
          background: @basic-block-bg-color;
          &.ws-infobox-triangle-bottom {
             bottom: -.54rem;
-            border-right: 2px solid @link-text-color;
-            border-bottom: 2px solid @link-text-color;
+            border-right: @button-border;
+            border-bottom: @button-border;
          }
          &.ws-infobox-triangle-top {
             top: -.51rem;
-            border-left: 2px solid @link-text-color;
-            border-top: 2px solid @link-text-color;
+            border-left: @button-border;
+            border-top: @button-border;
          }
       }
 
@@ -970,7 +967,7 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-
 }
 
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateBox .controls-FormattedTextBox__fieldWrapper {
-    border-width: 2px;
+    border-width: @default-border-width;
     border-radius: 0;
 }
 
