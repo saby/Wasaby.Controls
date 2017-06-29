@@ -160,6 +160,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       }
    },
 
+   applyGroupItemsCount = function(groupId, count, cfg) {
+      cfg._groupItemsCount = cfg._groupItemsCount || {};
+      cfg._groupItemsCount[groupId] = cfg._groupItemsCount[groupId] || 0;
+      cfg._groupItemsCount[groupId] += count;
+   },
+
    getRecordsForRedraw = function(projection, cfg) {
       var
          records = [];
@@ -167,6 +173,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var prevGroupId = undefined;
          projection.each(function (item, index, group) {
             if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {
+               applyGroupItemsCount(group, 1, cfg);
                if (prevGroupId != group && group !== false) {
                   cfg._groupItemProcessing(group, records, item,  cfg);
                   prevGroupId = group;
@@ -1152,6 +1159,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _removeItems: function (items, groupId) {
          var removedElements = $([]), prev;
+
+         applyGroupItemsCount(groupId, -items.length, this._options);
+
          for (var i = 0; i < items.length; i++) {
             var item = items[i];
             var targetElement = this._getDomElementByItem(item);
@@ -1163,7 +1173,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                if (!isEmpty(this._options.groupBy)) {
 
                   if (this._options.easyGroup) {
-                     if (this._getGroupItems(groupId).length < 1) {
+                     if (this._options._groupItemsCount[groupId] < 1) {
                         $('[data-group="' + groupId + '"]', this._container.get(0)).remove();
                      }
                   }
@@ -1201,10 +1211,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var itemsToAdd = items;
          if (!isEmpty(this._options.groupBy) && this._options.easyGroup) {
 
-            //Если в группе один элемент (или меньше), то это значит что добавился элемент в группу, которая еще не отрисована
+            //Если в группе столько же элементов, сколько добавилось, то группа еще не отрисована
             //и надо ее отрисовать
             itemsToAdd = [];
-            if (this._getGroupItems(groupId).length <= items.length) {
+            if (this._options._groupItemsCount[groupId] === items.length) {
                this._options._groupItemProcessing(groupId, itemsToAdd, items[0], this._options);
             }
             itemsToAdd = itemsToAdd.concat(items);
@@ -1222,6 +1232,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _addItems: function(newItems, newItemsIndex, groupId) {
+         applyGroupItemsCount(groupId, newItems.length, this._options);
+
          this._itemData = null;
          var i;
          if (newItems && newItems.length) {
