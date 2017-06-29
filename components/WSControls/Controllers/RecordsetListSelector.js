@@ -99,6 +99,8 @@ define('js!WSControls/Controllers/RecordsetListSelector', [
             if (!this.allowEmptySelection && this._isEmptyIndex(this.selectedIndex) && (this.selectedKey == null)) {
                if (this.projection.getCount()) {
                   this.selectedIndex = 0;
+                  this._prepareSelectedKeyByIndex(this.selectedIndex);
+                  this._notifySelectedItem(this.selectedIndex, this.selectedKey);
                }
             }
          }

@@ -169,7 +169,7 @@ define('js!SBIS3.CONTROLS.ListView/ListViewHelpers',
             tplOptions.displayField = cfg.displayProperty;
             tplOptions.displayProperty = cfg.displayProperty;
             tplOptions.templateBinding = cfg.templateBinding;
-            tplOptions.getPropertyValue = getPropertyValue;
+            tplOptions.getPropertyValue = objFunc.getPropertyValue;
 
             /* Для логирования */
             if (typeof window === 'undefined') {

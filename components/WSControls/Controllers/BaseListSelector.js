@@ -55,6 +55,7 @@ define('js!WSControls/Controllers/BaseListSelector', [
             if (!this.allowEmptySelection && this._isEmptyIndex(this.selectedIndex)) {
                if (this.projection.getCount()) {
                   this.selectedIndex = 0;
+                  this._notifySelectedItem(this.selectedIndex);
                }
             }
          }

@@ -1,6 +1,6 @@
 <ws:for data="index,item in records">
     <ws:if data="{{ item.getContents }}">
-        <ws:partial template="{{tplData.itemTpl}}" scope="{{tplData}}" hoveredItem="{{hoveredItem}}" item="{{item.getContents()}}" projItem="{{item}}" />
+        <ws:partial template="{{tplData.itemTpl}}" scope="{{tplData}}" hoveredItem="{{hoveredItem}}" item="{{item.getContents()}}" projItem="{{item}}" selected="{{index == tplData.selectedIndex}}"/>
     </ws:if>
     <ws:else>
         <ws:partial template="{{ item.tpl }}" scope="{{ item.data }}" />

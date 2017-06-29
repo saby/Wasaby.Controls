@@ -40,8 +40,7 @@ define('js!WSControls/Lists/ItemsControl', [
          _isActiveByClick: false,
          _hoveredItem: null,
 
-         items: null,
-         itemTemplate: null,
+         _items: null,
          tplData: null,
          records: null,
 
@@ -54,10 +53,8 @@ define('js!WSControls/Lists/ItemsControl', [
 
          constructor: function (cfg) {
             this._options = cfg || {};
-            this.idProperty = cfg.idProperty;
-            this.displayProperty = cfg.displayProperty;
-            this.itemTpl = cfg.itemTpl || this._defaultItemTemplate;
-            this.itemContentTpl = cfg.itemContentTpl || this._defaultItemContentTemplate;
+            this._options.itemTpl = cfg.itemTpl || this._defaultItemTemplate;
+            this._options.itemContentTpl = cfg.itemContentTpl || this._defaultItemContentTemplate;
 
             this._onCollectionChange = onCollectionChange.bind(this);
             this._onSelectorChange = onSelectorChange.bind(this);
@@ -79,12 +76,6 @@ define('js!WSControls/Lists/ItemsControl', [
             ItemsControl.superclass.constructor.apply(this, arguments);
          },
 
-         _prepareItems : function(items) {
-            var calcItems = ListViewHelpers.calculateItems(items, this.idProperty);
-            this._items = calcItems.items;
-            this.idProperty = calcItems.idProperty;
-         },
-
          _initControllers: function() {
             if (this._dataSourceController) {
                this._dataSourceController.destroy();
@@ -92,7 +83,7 @@ define('js!WSControls/Lists/ItemsControl', [
             if (this._options.dataSource) {
                this._dataSourceController = new DataSourceController({
                   dataSource : this._options.dataSource,
-                  idProperty: this.idProperty
+                  idProperty: this._options.idProperty
                });
                if (!this._onDSBeforeReloadFnc) {
                   this._onDSBeforeReloadFnc = this._onDSBeforeReload.bind(this);
@@ -144,7 +135,7 @@ define('js!WSControls/Lists/ItemsControl', [
          },
 
          _prepareItemDataInner: function() {
-            return ListViewHelpers.buildTplArgs(this)
+            return ListViewHelpers.buildTplArgs(this._options)
          },
 
          _prepareItemData: function() {
@@ -165,33 +156,10 @@ define('js!WSControls/Lists/ItemsControl', [
             /*Must be implemented*/
          },
 
-         setItems: function(items){
-            this._prepareItems(items);
-
-            this._itemsChangeCallback();
-            this._setDirty();
-         },
-
-
-
-         getItems : function() {
-            return this._items;
-         },
          _getItemsProjection: function() {
             return this._itemsProjection;
          },
-         setSelectedKey: function(key){
-            if (this._selector) {
-               this._selector.setSelectedKey(key)
-            }
 
-         },
-
-         getSelectedKey: function() {
-            if (this._selector) {
-               return this._selector.getSelectedKey()
-            }
-         },
          /**
           * Метод получения проекции по ID итема
           */
@@ -307,9 +275,9 @@ define('js!WSControls/Lists/ItemsControl', [
             this._itemData = null;
             if (
                this.getItems()
-                  && (list.getModel() === this.getItems().getModel())
-                  && (Object.getPrototypeOf(list).constructor == Object.getPrototypeOf(list).constructor)
-                  && (Object.getPrototypeOf(list.getAdapter()).constructor == Object.getPrototypeOf(this.getItems().getAdapter()).constructor)
+               && (list.getModel() === this.getItems().getModel())
+               && (Object.getPrototypeOf(list).constructor == Object.getPrototypeOf(list).constructor)
+               && (Object.getPrototypeOf(list.getAdapter()).constructor == Object.getPrototypeOf(this.getItems().getAdapter()).constructor)
                ) {
                this.getItems().setMetaData(list.getMetaData());
                this.getItems().assign(list);
