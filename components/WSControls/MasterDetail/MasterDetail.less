@@ -1,39 +1,38 @@
 @border-params: 1px solid #dfdfdf;
 
-.masterDetailBrowser {
+.controls-MasterDetail {
   position: relative;
   display: table;
 }
 
-.masterContainer, .detailContainer {
+.controls-MasterDetail__masterContainer, .controls-MasterDetail__detailContainer {
   display: table-cell;
 }
 
-.detailContainer {
+.controls-MasterDetail__detailContainer {
   max-width: 70%;
   min-width: 70%;
   width: 70%;
 }
 
-.masterContainer {
+.controls-MasterDetail__masterContainer {
   max-width: 30%;
   min-width: 30%;
   width: 30%;
   border-right: @border-params;
 }
 
-.masterContainer .controls-DataGridView .controls-DataGridView__table .controls-ListView__item__selected td {
+.controls-MasterDetail__masterContainer .controls-ListView__item__selected td {
   border-bottom: @border-params;
   border-top: @border-params;
   right: -1px;
   padding-left: 5px;
-}
 
-.masterContainer .controls-DataGridView .controls-DataGridView__table .controls-ListView__item__selected td:first-child {
-  padding-left: 7px;
-}
+  &:first-child {
+    padding-left: 7px;
+  }
 
-
-.masterContainer .controls-DataGridView .controls-DataGridView__table .controls-ListView__item__selected td:last-child {
-  border-right: 1px solid white;
+  &:last-child {
+    border-right: 1px solid white;
+  }
 }
