@@ -1,92 +1,14 @@
 /**
  * Менеджер длительных операций
  *
- * Операции, требующие для своёго выполнения длительного времени должны отображаться пользователю не блокирующим способом. За ходом выполнения
- * длительных операций пользователь может следить в специализированных компонентах, таких как SBIS3.CONTROLS.LongOperationsPopup (информационное окно
- * длительных операций), SBIS3.CONTROLS.LongOperationsRegistry (реестр длительных операций) и других. Длительные операции могут иметь разную природу
- * и выполняться в разных программных модулях, как на стороне сервера, так и в браузере. Менеджер длительных операций
- * (SBIS3.CONTROLS.LongOperationsManager) собирает эту разнородную информацию и предоставляет её визуальным компонентам в унифицированном виде.
- * <br/>
- * Менеджер генерирует события обо всех известных ему изменениях в ходе выполнения длительных операций где-либо. Подписываясь на эти события
- * визуальные компоненты могут отображать эти изменения пользователю.
- * <br/>
- * Для получения списка текущих длительных операций от менеджера визуальные компоненты используют вызов его метода fetch. При обработке действий
- * пользователя с отображаемыми длительными операциями, такими как приостановить/возобновить выполнение операции или удалить операцию, визуальные
- * компоненты обращаются к методу менеджера callAction. При отображении истории выполнения какой-либо длительной операции визуальные компоненты
- * используют методы менеджера canHasHistory и history.
- * <br/>
- * Для сбора информации о длительных операциях и выполнения действий с ними менеджер использует продюсеры длительных операций. Продюсер длительных
- * операций - объект, реализующий интерфейс SBIS3.CONTROLS.ILongOperationsProducer. Каждый продюсер обычно отвечает за работу с длительными операциями
- * в какой-либо одной узкой предметной области. Например продюсер SBIS3.Engine.RemoteSbisLongOperationsProducer предоставляет доступ к длительным
- * операциям, с которыми работает сервис LRS (/long-requests/service/). Продюсер SBIS3.EDO.CD.UploadLongOperationsProducer предоставляет доступ к
- * информации о загрузке файлов менеджером загрузок. Другие продюсеры работают с длительными операциями иного характрера.
- * <br/>
- * Исключение составляет типовой продюсер (SBIS3.CONTROLS.GenericLongOperationsProducer), предоставляющий (несколько ограниченную) функциональность
- * для работы с любыми длительными операциями, когда более подробная обработка не требуется.
- * <br/>
- * Для того, чтобы менеджер начал работу с каким-нибудь продюсером, этот продюсер должен быть зарегистрирован в менеджере с использованием его метода
- * register или registerByName. Метод register регистрирует уже созданный экземпляр продюсера. Метод registerByName сначала попытается создать
- * экземпляр продюсера, и если это поличилось - зарегистрирует его. До тех пор, пока зарегистрированный продюсер не будет раз-регистрирован с помощью
- * метода unregister, менеджер будет "видеть" его длительные операции и работать с ними. Раз-регистрация производится также либо непосредственно по
- * экземпляру продюсера, либо по имени.
- * <br/>
- * Менеджер взаимодействует с продюсерами согласно интерфейсу SBIS3.CONTROLS.ILongOperationsProducer. Интерфейс содержит методы подписки на события
- * subscribe(event, listener) и unsubscribe(event, listener) для того, чтобы менеджер мог подписаться на события этого продюсера. Продюсер должен
- * генерировать следующие события:
- * <ul>
- *    <li>@event onStarted Происходит при начале исполнения новой длительной операции</li>
- *    <li>@event onChanged Происходит при изменении свойств длительной операции в процесе исполнения</li>
- *    <li>@event onEnded Происходит при завершении длительной операции по любой причине. При завершении вследствие ошибки предоставляется информация
- *    об ошибке в свойстве data.error</li>
- *    <li>@event onDeleted При удалении длительной операции</li>
- * </ul>
- * При генерации событий слушатель события, подписавшийся через метод subscribe должен получить два аргумента - дескриптор события evtName, содержащий
- * имя события и объект data, содержаший актуальные данные события:
- * <pre>
- *    producer.subscribe('onstarted', function (evtName, data) {
-       *       ...
-       *    });
- * </pre>
- * Каждое событие должно содержать имя продюсера в свойстве data.producer и идентификатор длительной операции, к которой относиться данное событие, в
- * свойстве data.operationId (возможен список идентификаторов в свойстве data.operationIds для событий onEnded и onDeleted).
- * <br/>
- * Идентификаторы длительных операций каждый продюсер устанавливает по собственному усмотрению, но они должны быть уникальны для всех операций одного
- * продюсера.
- * <br/>
- * Событие onStarted должно содержать количество подзадач в свойстве data.progress.total, если оно отлично от 1.
- * <br/>
- * Событие onChanged должно содержать имя изменённого свойства в свойстве data.changed, оно может принимать значения: 'status', 'progress' или
- * 'notification'. В соответствии с изменённым свойством указывается новое значение статуса в свойстве data.status, если изменился статус; новая
- * информация о прогресе выполнения в свойствах data.progress.total и data.progress.value, если изменился прогресс; сообщение о ходе выполнения в
- * свойстве data.notification, если получено сообщение.
- * <br/>
- * Событие onEnded должно содержать статус, равный константе LongOperationEntry.STATUSES.success или LongOperationEntry.STATUSES.error в свойстве
- * data.status. При успешном завершении событие может содержать данные о количестве подзадач в свойствах data.progress.total и data.progress.value,
- * если они отличны от 1. При завершении с ошибкой событие должно содержать сообщение об ошибке в свойстве data.error
- * <br/>
- * Событие onDeleted дополнителшьных свойств не имеет
- * <br/>
- *
-
- * //getName
- * //hasCrossTabEvents
- * //hasCrossTabData
- * //fetch: function (count) {
- * //callAction: function (action, operationId) {
- * //subscribe: function (eventType, listener) {
- * //unsubscribe: function (eventType, listener) {
- * //destroy
-
- *
- * @description file LongOperations.md
- *
  * @class SBIS3.CONTROLS.LongOperationsManager
  * @public
+ *
+ * @description file LongOperations.md
  *
  * @demo SBIS3.CONTROLS.Demo.MyLongOperations
  * @demo SBIS3.CONTROLS.Demo.MyLongOperationsSvc
  */
-
 define('js!SBIS3.CONTROLS.LongOperationsManager',
    [
       'Core/core-instance',
@@ -96,15 +18,17 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       'js!SBIS3.CORE.TabMessage',
       'js!WS.Data/Source/DataSet',
       'js!WS.Data/Collection/RecordSet',
-      'js!WS.Data/Adapter/Sbis',
+      /*###'js!WS.Data/Adapter/Sbis',*/
       'js!WS.Data/Chain',
+      'js!SBIS3.CONTROLS.LongOperationsTabCalls',
+      'js!SBIS3.CONTROLS.LongOperationsCallsPool',
+      'js!SBIS3.CONTROLS.ILongOperationsProducer',
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.LongOperationHistoryItem',
-      'js!SBIS3.CONTROLS.LongOperationsList/resources/model',
-      'js!SBIS3.CONTROLS.ILongOperationsProducer'
+      'js!SBIS3.CONTROLS.LongOperationsList/resources/model'
    ],
 
-   function (CoreInstance, Deferred, ParallelDeferred, EventBus, TabMessage, DataSet, RecordSet, AdapterSbis, Chain, LongOperationEntry, LongOperationHistoryItem, Model, ILongOperationsProducer) {
+   function (CoreInstance, Deferred, ParallelDeferred, EventBus, TabMessage, DataSet, RecordSet, /*###AdapterSbis,*/ Chain, LongOperationsTabCalls, LongOperationsCallsPool, ILongOperationsProducer, LongOperationEntry, LongOperationHistoryItem, Model) {
       'use strict';
 
       /**
@@ -141,6 +65,20 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
        * @type {object}
        */
       var _tabManagers = {};
+
+      /**
+       * Объект для выполнения методов менеджеров в других вкладках
+       * @protected
+       * @type {SBIS3.CONTROLS.LongOperationsTabCalls}
+       */
+      var _tabCalls;
+
+      /**
+       * Объект для сбора данных от разных продюсеров и менеджеров при выполнения методов fetch
+       * @protected
+       * @type {SBIS3.CONTROLS.LongOperationsCallsPool}
+       */
+      var _fetchCalls;
 
       /**
        * Признак того, что менеджер ликвидирован
@@ -251,12 +189,11 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             if (!(typeof count === 'number' && 0 < count)) {
                throw new TypeError('Argument "count" must be positive number' );
             }
-            var features = {count:count};
-            if (!_fetchCalls.has(features)) {
+            if (!_fetchCalls.has(count)) {
                // Если нет уже выполняющегося запроса
                if (Object.keys(_producers).length) {
                   for (var n in _producers) {
-                     _fetchCalls.add(_tabKey, n, count, _producers[n].fetch(count));
+                     _fetchCalls.add(count, {tab:_tabKey, producer:n}, _producers[n].fetch(count));
                   }
                }
                if (Object.keys(_tabManagers).length) {
@@ -265,13 +202,14 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                      targets = _tabTargets(targets, tabKey, _tabManagers[tabKey]);
                   }
                   if (targets) {
-                     _fetchCalls.addBatch(targets, count, _tabCalls.callBatch(targets, 'fetch', [count], LongOperationEntry));
+                     var params = Object.keys(targets).reduce(function (acc, v1) { acc.push.apply(acc, targets[v1].map(function (v2) { return {tab:v1, producer:v2}; })); return acc; }, []);//^^^
+                     _fetchCalls.addList(count, params, _tabCalls.callBatch(targets, 'fetch', [count], LongOperationEntry));
                   }
                }
             }
-            if (_fetchCalls.has(features)) {
+            if (_fetchCalls.has(count)) {
                // Если теперь есть
-               return _fetchCalls.onResult(count);
+               return _fetchCalls.getResult(count);
             }
             else {
                return Deferred.success(null);
@@ -443,12 +381,12 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                }
                if (_tabChannel) {
                   _tabChannel.notify('LongOperations:Manager:onActivity', {type:'die', tab:_tabKey});
-                  _tabChannel.unsubscribe('LongOperations:Manager:onCall', _tabCalls.onCall_b);
-                  _tabChannel.unsubscribe('LongOperations:Manager:onResult', _tabCalls.onResult_b);
                   _tabChannel.unsubscribe('LongOperations:Manager:onActivity', _tabListener);
                   _tabChannel.destroy();
                   _tabChannel = null;
                }
+               _tabCalls.destroy();
+               _tabCalls = null;
             }
          }
       });
@@ -539,9 +477,9 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
              // Уведомить другие вкладки
             _tabChannel.notify('LongOperations:Manager:onActivity', {type:'register', tab:_tabKey, producer:name, isCrossTab:producer.hasCrossTabData(), hasHistory:_canHasHistory(producer)});
             // Если есть уже выполняющиеся запросы данных - присоединиться к ним
-            var counts = _fetchCalls.listCounts();
+            var counts = _fetchCalls.listGroups();
             for (var i = 0; i < counts; i++) {
-               _fetchCalls.add(_tabKey, name, counts[i], _producers[name].fetch(counts[i]));
+               _fetchCalls.add(counts[i], {tab:_tabKey, producer:name}, _producers[name].fetch(counts[i]));
             }
             // И уведомить своих подписчиков
             _channel.notifyWithTarget('onproducerregistered', manager);
@@ -578,7 +516,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                _producers[name].unsubscribe(eventType, _eventListener);
             });
             // Если есть выполняющийся запрос данных - отсоединиться от него
-            _fetchCalls.remove({tab:_tabKey, producer:name});
+            _fetchCalls.remove(null, {tab:_tabKey, producer:name});
             // Удалить из списка
             delete _producers[name];
             done = true;
@@ -810,12 +748,13 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          }
          if (newProds) {
             // Если есть уже выполняющиеся запросы данных - присоединиться к ним
-            var counts = _fetchCalls.listCounts();
+            var counts = _fetchCalls.listGroups();
             if (counts.length) {
                var targets = _tabTargets(null, tabKey, newProds);
                if (targets) {
+                  var params = Object.keys(targets).reduce(function (acc, v1) { acc.push.apply(acc, targets[v1].map(function (v2) { return {tab:v1, producer:v2}; })); return acc; }, []);//^^^
                   for (var i = 0; i < counts; i++) {
-                     _fetchCalls.addBatch(targets, counts[i], _tabCalls.callBatch(targets, 'fetch', [counts[i]], LongOperationEntry));
+                     _fetchCalls.addList(counts[i], params, _tabCalls.callBatch(targets, 'fetch', [counts[i]], LongOperationEntry));
                   }
                }
             }
@@ -833,7 +772,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       var _unregTabProducer = function (tabKey, prodName) {
          if (tabKey in _tabManagers) {
             // Если есть выполняющийся запрос данных - отсоединиться от него
-            _fetchCalls.remove(prodName ? {tab:tabKey, producer:prodName} : {tab:tabKey});
+            _fetchCalls.remove(null, prodName ? {tab:tabKey, producer:prodName} : {tab:tabKey});
             if (prodName) {
                delete _tabManagers[tabKey][prodName];
             }
@@ -848,507 +787,107 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
 
 
       /**
-       * Подкласс с набором методов для выполнения методов менеджеров в других вкладках
+       * Сгенерировать случайную hex-строку указанной длины
        * @protected
-       * @type {object}
+       * @param {number} n Длина строки
+       * @return {string}
        */
-      var _tabCalls = {
+      var _uniqueHex = function(n){var l=[];for(var i=0;i<n;i++){l[i]=Math.round(15*Math.random()).toString(16)}return l.join('')};
+      //var _uniqueHex = function(n){return Math.round((Math.pow(16,n)-1)*Math.random()).toString(16).padStart(n,'0')};
+
+
+
+      // Установить ключ вкладки
+      _tabKey = _uniqueHex(50);
+
+      // Добавить обработчик на выгрузку для запуска метода destroy
+      window.addEventListener('beforeunload', function () {
+         manager.destroy();
+      });
+
+      // Создать каналы событий
+      _channel = EventBus.channel();
+      _tabChannel = new TabMessage();
+
+      // Создать объект межвкладочных вызовов
+      var _tabCalls = new LongOperationsTabCalls(_tabKey, manager.getByName, function (v) { return typeof v.toSnapshot === 'function' ? v.toSnapshot() : v;/*###^^^*/ }, _tabChannel);
+
+      // Создать пул вызовов методов fetch
+      var _fetchCalls = new LongOperationsCallsPool(
+         ['tab', 'producer'],
          /**
-          * Запросить выполнение метода у нескольких менеджеров во вкладках. Возвращает массив обещаний результатов
-          * @public
-          * @param {object} targets Списки имён продюсеров по вкладкам
-          * @param {string} method Имя вызываемого метода
-          * @param {any[]} [args] Массив аргументов вызова
-          * @param {function} [resultClass] Класс ожидаемого результата
-          * @return {Core/Deferred<any>[]}
+          * Обработчик одиночного результата вызова метода fetch локального продюсера или продюсера во вкладке
+          * @param {number} count Максимальное количество возвращаемых элементов
+          * @param {object} params Объект с идентифицирующими параметрами вызова - tab и producer
+          * @param {SBIS3.CONTROLS.LongOperationEntry[]|WS.Data/Source/DataSet|WS.Data/Collection/RecordSet} result Полученный результат
+          * @return {SBIS3.CONTROLS.LongOperationEntry[]}
           */
-         callBatch: function (targets, method, args, resultClass) {
-            var calls = [];
-            var promises = [];
-            for (var tabKey in targets) {
-               var prodNames = targets[tabKey];
-               for (var i = 0; i < prodNames.length; i++) {
-                  var call = {tab:tabKey, producer:prodNames[i], method:method, args:args, resultClass:resultClass, promise:new Deferred()};
-                  calls.push(call);
-                  promises.push(call.promise);
+         function (count, params, result) {
+            if (!(result == null || Array.isArray(result) || result instanceof DataSet || result instanceof RecordSet)) {
+               throw new Error('Unknown result type');
+            }
+            // Проверить, что продюсер есть и не был раз-регистрирован за время ожидания
+            var prodName = (params.tab === _tabKey ? _producers[params.producer] : params.tab in _tabManagers) ? params.producer : null;
+            // Если продюсер найден
+            if (prodName) {
+               var values = result instanceof DataSet ? result.getAll() : result;
+               var iterate;
+               var len;
+               if (Array.isArray(values)) {
+                  iterate = 'forEach';
+                  len = values.length;
+               }
+               else
+               if (values instanceof RecordSet) {
+                  iterate = 'each';
+                  len = values.getCount();
+               }
+               if (!iterate) {
+                  throw new Error('Unknown result type');
+               }
+               if (len) {
+                  var tabKey = params.tab !== _tabKey ? params.tab : null;
+                  values[iterate](function (v) {
+                     // Значение должно быть экземпляром SBIS3.CONTROLS.LongOperationEntry и иметь правилное имя продюсера
+                     if (!(v instanceof LongOperationEntry && v.producer === prodName)) {
+                        throw new Error('Invalid result');
+                     }
+                     v.tabKey = tabKey;
+                  });
+                  return values;
                }
             }
-            if (calls.length) {
-               this._list.push.apply(this._list, calls);
-               _tabChannel.notify('LongOperations:Manager:onCall', {from:_tabKey, targets:targets, method:method, args:args});
-            }
-            return promises;
+            return null;
          },
-
          /**
-          * Запросить выполнение метода у менеджера во вкладке. Возвращает обещание результата
-          * @protected
-          * @param {string} tabKey Ключ вкладки
-          * @param {string} prodName Имя продюсера
-          * @param {string} method Имя вызываемого метода
-          * @param {any[]} [args] Массив аргументов вызова
-          * @param {function} [resultClass] Класс ожидаемого результата
-          * @return {Core/Deferred<any>}
+          * Обработчик полного результата
+          * @param {number} count Максимальное количество возвращаемых элементов
+          * @param {SBIS3.CONTROLS.LongOperationEntry[][]} resultList Список результатов обработки одиночных результатов
+          * @return {WS.Data/Collection/RecordSet<SBIS3.CONTROLS.LongOperationEntry>}
           */
-         call: function (tabKey, prodName, method, args, resultClass) {
-            var call = {tab:tabKey, producer:prodName, method:method, args:args, resultClass:resultClass, promise:new Deferred()};
-            this._list.push(call);
-            var targets = {};
-            targets[tabKey] = [prodName];
-            _tabChannel.notify('LongOperations:Manager:onCall', {from:_tabKey, targets:targets, method:method, args:args});
-            return call.promise;
-         },
-
-         /**
-          * Слушатель извещений о запросах из менеджеров в других вкладках
-          * @protected
-          * @param {Core/EventObject} evtName Дескриптор события
-          * @param {object} evt Cобытие полностью
-          */
-         onCall: function (evtName, evt) {
-            if (!(evt && typeof evt === 'object'
-               && evt.from && typeof evt.from === 'string'
-               && evt.targets && typeof evt.targets === 'object'
-               && evt.method && typeof evt.method === 'string')) {
-               throw new TypeError('Unknown event');
-            }
-            if (_tabKey in evt.targets) {
-               var from = evt.from;
-               var method = evt.method;
-               var args = evt.args;
-               var prodNames = evt.targets[_tabKey];
-               for (var i = 0; i < prodNames.length; i++) {
-                  var prodName = prodNames[i];
-                  var err = null;
-                  if (prodName in _producers) {
-                     var producer = _producers[prodName];
-                     if (method in producer) {
-                        try {
-                           producer[method].apply(producer, args && Array.isArray(args) ? args : []).addBoth(
-                              function (result) {
-                                 var answer = {from:_tabKey, target:from, producer:prodName, method:method, args:args};
-                                 if (result instanceof Error) {
-                                    answer.error = result.message || '' + result;
-                                 }
-                                 else {
-                                    if (result && typeof result === 'object') {
-                                       var pack = function (v) { return typeof v.toSnapshot === 'function' ? v.toSnapshot() : v; };//###^^^
-                                       if (result instanceof DataSet) {
-                                          result = result.getAll();
-                                       }
-                                       if (result instanceof RecordSet) {
-                                          result = Chain(result).map(pack).values();
-                                       }
-                                       else
-                                       if (Array.isArray(result)) {
-                                          result = result.map(pack);
-                                       }
-                                       else {
-                                          result = pack(result);
-                                       }
-                                    }
-                                    answer.result = result;
-                                 }
-                                 _tabChannel.notify('LongOperations:Manager:onResult', answer);
-                              }
-                           );
-                        }
-                        catch (ex) {
-                           err = ex.message || '' + ex;
+         function (count, resultList) {
+            var operations;
+            if (resultList && resultList.length) {
+               for (var i = 0; i < resultList.length; i++) {
+                  var result = resultList[i];
+                  for (var j = 0, list = resultList[i]; j < list.length; j++) {
+                     var op = list[j];
+                     if (!operations) {
+                        operations = {};
+                     }
+                     if (!(op.producer in operations)) {
+                        operations[op.producer] = {};
+                     }
+                     if (op.id in operations[op.producer]) {
+                        // Есть одна и та же операция от разных продюсеров - выбрать
+                        var prev = operations[op.producer][op.id];
+                        if ((!prev.canSuspend && op.canSuspend) || (!prev.canDelete && op.canDelete)) {
+                           operations[op.producer][op.id] = op;
                         }
                      }
                      else {
-                        err = 'Method not found'
-                     }
-                  }
-                  else {
-                     err = 'Producer not found';
-                  }
-                  if (err) {
-                     _tabChannel.notify('LongOperations:Manager:onResult', {from:_tabKey, target:from, producer:prodName, method:method, args:args, error:err});
-                  }
-               }
-            }
-         },
-
-         /**
-          * Слушатель извещений о получении результата запроса из менеджеров в других вкладках
-          * @protected
-          * @param {Core/EventObject} evtName Дескриптор события
-          * @param {object} evt Cобытие полностью
-          */
-         onResult: function (evtName, evt) {
-            if (!(evt && typeof evt === 'object'
-               && evt.from && typeof evt.from === 'string'
-               && evt.target && typeof evt.target === 'string'
-               && evt.producer && typeof evt.producer === 'string'
-               && evt.method && typeof evt.method === 'string'
-               && (!evt.error || typeof evt.error === 'string'))) {
-               throw new TypeError('Unknown event');
-            }
-            if (evt.target === _tabKey) {
-               var call = this._get(evt.from, evt.producer, evt.method, evt.args, true);
-               if (!call) {
-                  throw new Error('Not found');
-               }
-               if (!evt.error) {
-                  var result = evt.result;
-                  var ctor = call.resultClass;
-                  if (ctor) {
-                     if (!result || typeof result !== 'object') {
-                        throw new Error('Result required');
-                     }
-                     var unpack = function (v) { return new ctor(v); };
-                     result = Array.isArray(result) ? result.map(unpack) : unpack(result);
-                  }
-                  call.promise.callback(result);
-               }
-               else {
-                  call.promise.errback(new Error(evt.error));
-               }
-            }
-         },
-
-         /**
-          * Получить запрос из списка выполняющихся во вкладках запросов
-          * @protected
-          * @param {string} tabKey Ключ вкладки
-          * @param {string} prodName Имя продюсера
-          * @param {string} method Имя вызываемого метода
-          * @param {object} args Аргументы вызова
-          * @param {boolean} andRemove Удалить возвращаемый запрос из списка
-          */
-         _get: function (tabKey, prodName, method, args, andRemove) {
-            for (var i = 0; i < this._list.length; i++) {
-               var call = this._list[i];
-               if (call.tab === tabKey && call.producer === prodName && call.method === method && this._isEq(call.args, args)) {
-                  if (andRemove) {
-                     this._list.splice(i, 1);
-                  }
-                  return call;
-               }
-            }
-         },
-
-         /**
-          * Проверить на равенство два значения
-          * @protected
-          * @param {object} v1 Сравниваемое значение
-          * @param {object} v2 Сравниваемое значение
-          * @return {boolean}
-          */
-         _isEq: function (v1, v2) {
-            if (v1 == null && v2 == null) {
-               return true;
-            }
-            if (!(v1 && typeof v1 === 'object' && v2 && typeof v2 === 'object')) {
-               return v1 === v2;
-            }
-            if (Array.isArray(v1)) {
-               if (!Array.isArray(v2) || v1.length !== v2.length) {
-                  return false;
-               }
-               for (var i = 0; i < v1.length; i++) {
-                  if (!this._isEq(v1[i], v2[i])) {
-                     return false;
-                  }
-               }
-            }
-            else {
-               if (Array.isArray(v2)) {
-                  return false;
-               }
-               var ns = Object.keys(v1);
-               if (ns.length != Object.keys(v2).length) {
-                  return false;
-               }
-               for (var i = 0; i < ns.length; i++) {
-                  var n = ns[i];
-                  if (!this._isEq(v1[n], v2[n])) {
-                     return false;
-                  }
-               }
-            }
-            return true;
-         },
-
-         /**
-          * Список вызовов
-          * @protected
-          * @type {object[]}
-          */
-         _list: []
-      };
-
-
-
-      /**
-       * Подкласс с набором методов для сбора данных от разных продюсеров и менеджеров при выполнения методов fetch. Содержит элементы в виде {tab, producer, count, promise}
-       * @protected
-       * @type {object}
-       */
-      var _fetchCalls = {
-         /**
-          * Добавить пакет запросов в список выполняющихся запросов. Возвращает список созданных элементов
-          * @public
-          * @param {object} targets Списки имён продюсеров по вкладкам
-          * @param {number} count Количество запрошеных элементов
-          * @param {Core/Deferred[]} promises Массив обещаний результатов
-          */
-         addBatch: function (targets, count, promises) {
-            var j = 0;
-            for (var tabKey in targets) {
-               var tabProds = targets[tabKey];
-               for (var i = 0; i < tabProds.length; i++) {
-                  var prodName = tabProds[i];
-                  var call = {tab:tabKey, producer:prodName, count:count};
-                  if (this.has(call)) {
-                     throw new Error('Already exists');
-                  }
-                  if (promises.length <= j) {
-                     throw new Error('Out of bounds');
-                  }
-                  call.promise = promises[j++];
-                  call.promise.addBoth(this._onPartial.bind(this, call));
-                  this._calls.push(call);
-               }
-            }
-            if (j !== promises.length) {
-               throw new Error('Out of bounds');
-            }
-
-         },
-
-         /**
-          * Добавить запрос в список выполняющихся запросов. Возвращает созданный элемент
-          * @public
-          * @param {string} tabKey Ключ вкладки
-          * @param {string} prodName Имя продюсера
-          * @param {number} count Количество запрошеных элементов
-          * @param {Core/Deferred} promise Обещание результата
-          */
-         add: function (tabKey, prodName, count, promise) {
-            var call = {tab:tabKey, producer:prodName, count:count};
-            if (this.has(call)) {
-               throw new Error('Already exists');
-            }
-            call.promise = promise;
-            call.promise.addBoth(this._onPartial.bind(this, call));
-            this._calls.push(call);
-         },
-
-         /**
-          * Добавить обещание, ожидающее результат
-          * @public
-          * @param {number} count Количество запрошеных элементов
-          * @return {Core/Deferred<WS.Data/Collection/RecordSet>}
-          */
-         onResult: function (count) {
-            var dfr = new Deferred();
-            if (!(count in this._promises)) {
-               this._promises[count] = [];
-            }
-            this._promises[count].push(dfr);
-            // Проверить, возможно все результаты уже получены сразу
-            if (this._isComplete(count)) {
-               // Все результаты теперь есть
-               this._onComplete(count);
-            }
-            return dfr;
-         },
-
-         /**
-          * Найти все запросы по критериям в списке выполняющихся запросов. Возвращает список найденных элементов
-          * @protected
-          * @param {object} features Критерии
-          * @return {object[]}
-          */
-         _search: function (features) {
-            var list = [];
-            for (var i = 0; i < this._calls.length; i++) {
-               var fc = this._calls[i];
-               if (this._hasProps(fc, features)) {
-                  list.push(fc);
-               }
-            }
-            return list;
-         },
-
-         /**
-          * Проверить, есть ли удовлетворяющие критериям запросы в списке выполняющихся запросов
-          * @public
-          * @param {object} features Критерии
-          * @return {boolean}
-          */
-         has: function (features) {
-            for (var i = 0; i < this._calls.length; i++) {
-               if (this._hasProps(this._calls[i], features)) {
-                  return true;
-               }
-            }
-            return false;
-         },
-
-         /**
-          * Удалить удовлетворяющие критериям запросы из списка выполняющихся запросов
-          * @public
-          * @param {object} features Критерии
-          */
-         remove: function (features) {
-            for (var i = this._calls.length - 1; 0 <= i; i--) {
-               var fc = this._calls[i];
-               if (this._hasProps(fc, features)) {
-                  // Удалить из списка
-                  this._calls.splice(i, 1);
-                  if (fc.promise && fc.promise.cancel) {
-                     fc.promise.cancel();
-                  }
-               }
-            }
-         },
-
-         /**
-          * Перечислить все количества, встречающиеся в списке выполняющихся запросов
-          * @public
-          * @return {number[]}
-          */
-         listCounts: function () {
-            var list = [];
-            for (var i = 0; i < this._calls.length; i++) {
-               var value = this._calls[i].count;
-               if (list.indexOf(value) === -1) {
-                  list.push(value);
-               }
-            }
-            return list;
-         },
-
-         /**
-          * Проверить, имеет ли указанный объект все указанные значения свойств
-          * @protected
-          * @param {object} obj Тестируемый объект
-          * @param {object} props Свойства
-          * @return {boolean}
-          */
-         _hasProps: function (obj, props) {
-            for (var n in props) {
-               if (!(n in obj && props[n] === obj[n])) {
-                  return false;
-               }
-            }
-            return true;
-         },
-
-         /**
-          * Обработчик одиночного результата
-          * @public
-          * @param {object} call Элемент
-          * @param {SBIS3.CONTROLS.LongOperationEntry[]|WS.Data/Source/DataSet|WS.Data/Collection/RecordSet|Error} result Результат или ошибка
-          */
-         _onPartial: function (call, result) {
-            if (!(result == null || Array.isArray(result) || result instanceof DataSet || result instanceof RecordSet || result instanceof Error)) {
-               throw new Error('Unknown result type');
-            }
-            delete call.promise;
-            if (result instanceof Error) {
-               call.error = result;
-            }
-            else {
-               call.result = null;
-               // Проверить, что продюсер есть и не был раз-регистрирован за время ожидания
-               var prodName = (call.tab === _tabKey ? _producers[call.producer] : call.tab in _tabManagers) ? call.producer : null;
-               // Если продюсер найден
-               if (prodName) {
-                  var values = result instanceof DataSet ? result.getAll() : result;
-                  var iterate;
-                  var len;
-                  if (Array.isArray(values)) {
-                     iterate = 'forEach';
-                     len = values.length;
-                  }
-                  else
-                  if (values instanceof RecordSet) {
-                     iterate = 'each';
-                     len = values.getCount();
-                  }
-                  if (!iterate) {
-                     throw new Error('Unknown result type');
-                  }
-                  if (len) {
-                     var tabKey = call.tab !== _tabKey ? call.tab : null;
-                     values[iterate](function (v) {
-                        // Значение должно быть экземпляром SBIS3.CONTROLS.LongOperationEntry и иметь правилное имя продюсера
-                        if (!(v instanceof LongOperationEntry && v.producer === prodName)) {
-                           throw new Error('Invalid result');
-                        }
-                        v.tabKey = tabKey;
-                     });
-                     call.result = values;
-                  }
-               }
-            }
-            var count = call.count;
-            // Если результат уже ожидается
-            // - проверить, все ли результаты получены или нужно ждать дальше
-            if (this._isComplete(count)) {
-               // Все результаты теперь есть
-               this._onComplete(count);
-            }
-         },
-
-         /**
-          * Проверить, все ли результаты получены или нужно ждать дальше
-          * @public
-          * @param {number} count Максимальное количество возвращаемых элементов
-          * @return {boolean}
-          */
-         _isComplete: function (count) {
-            if (count in this._promises && this._promises[count].length) {
-               for (var i = 0; i < this._calls.length; i++) {
-                  var fc = this._calls[i];
-                  if (fc.count === count && fc.promise) {
-                     return false;
-                  }
-               }
-               // Все результаты есть
-               return true;
-            }
-            return false;
-         },
-
-         /**
-          * Объединяет и сортирует полученные результаты и отправляет всем ожидающим рекордсет, содержащий указанное количество элементов
-          * @protected
-          * @param {number} count Максимальное количество возвращаемых элементов
-          */
-         _onComplete: function (count) {
-            var operations;
-            var calls = this._search({count:count});
-            var promises = this._promises[count];
-            this.remove({count:count});
-            delete this._promises[count];
-            for (var i = 0; i < calls.length; i++) {
-               var call = calls[i];
-               if (call.error || !call.result) {
-                  continue;
-               }
-               for (var j = 0, list = call.result; j < list.length; j++) {
-                  var op = list[j];
-                  if (!operations) {
-                     operations = {};
-                  }
-                  if (!(op.producer in operations)) {
-                     operations[op.producer] = {};
-                  }
-                  if (op.id in operations[op.producer]) {
-                     // Есть одна и та же операция от разных продюсеров - выбрать
-                     var prev = operations[op.producer][op.id];
-                     if ((!prev.canSuspend && op.canSuspend) || (!prev.canDelete && op.canDelete)) {
                         operations[op.producer][op.id] = op;
                      }
-                  }
-                  else {
-                     operations[op.producer][op.id] = op;
                   }
                }
             }
@@ -1380,59 +919,14 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                   .value()
                );
             }
-            if (promises) {
-               for (var i = 0; i < promises.length; i++) {
-                  promises[i].callback(results);
-               }
-            }
-         },
-
-         /**
-          * Список выполняющихся запросов в виде {tab, producer, count, promise}
-          * @protected
-          * @type {object[]}
-          */
-         _calls: [],
-
-         /**
-          * Список обещаний, ожидающих результаты
-          * @protected
-          * @type {object}
-          */
-         _promises: {}
-      };
-
-
-
-      /**
-       * Сгенерировать случайную hex-строку указанной длины
-       * @protected
-       * @param {number} n Длина строки
-       * @return {string}
-       */
-      var _uniqueHex = function(n){var l=[];for(var i=0;i<n;i++){l[i]=Math.round(15*Math.random()).toString(16)}return l.join('')};
-      //var _uniqueHex = function(n){return Math.round((Math.pow(16,n)-1)*Math.random()).toString(16).padStart(n,'0')};
-
-
-
-      // Установить ключ вкладки
-      _tabKey = _uniqueHex(50);
-
-      // Добавить обработчик на выгрузку для запуска метода destroy
-      window.addEventListener('beforeunload', function () {
-         manager.destroy();
-      });
-
-      // Создать каналы событий
-      _channel = EventBus.channel();
-      _tabChannel = new TabMessage();
+            return results;
+         }
+      );
 
       // Опубликовать свои события
       _channel.publish('onoperationstarted', 'onoperationchanged', 'onoperationended', 'onoperationdeleted');
 
       // И подписаться на события во вкладках
-      _tabChannel.subscribe('LongOperations:Manager:onCall', _tabCalls.onCall_b = _tabCalls.onCall.bind(_tabCalls));
-      _tabChannel.subscribe('LongOperations:Manager:onResult', _tabCalls.onResult_b = _tabCalls.onResult.bind(_tabCalls));
       _tabChannel.subscribe('LongOperations:Manager:onActivity', _tabListener);
       _tabChannel.notify('LongOperations:Manager:onActivity', {type:'born', tab:_tabKey});
 
