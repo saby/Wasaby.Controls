@@ -1266,7 +1266,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   };
                   // Вычисляем drawHiddenGroup при перерисовке item'а, т.к. в текущей реализации это единственный способ скрыть элемент, если он расположен в свернутой группе
                   data.tplData.drawHiddenGroup = !!this._options._groupCollapsing[groupId];
-                  markupExt = extendedMarkupCalculate(this._getItemsTemplateForAdd(data), this._options);
+                  markupExt = extendedMarkupCalculate(this._getItemsTemplateForAdd()(data), this._options);
                   markup = markupExt.markup;
                   this._optimizedInsertMarkup(markup, this._getInsertMarkupConfig(newItemsIndex, newItems, groupId));
                   this._revivePackageParams.revive = this._revivePackageParams.revive || markupExt.hasComponents;

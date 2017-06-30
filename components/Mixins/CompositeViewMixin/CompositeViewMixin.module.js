@@ -518,7 +518,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
             }
          },
          _getItemsTemplateForAdd: function() {
-
+            return ItemsTemplate;
          }
       }
 
