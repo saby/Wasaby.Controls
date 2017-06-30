@@ -516,8 +516,13 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
 
             }
          },
-         _getItemsTemplateForAdd: function() {
-            return ItemsTemplate;
+         _getItemsTemplateForAdd: function(parentFnc) {
+            if (this._options.viewMode == 'table') {
+               return parentFnc.call(this);
+            }
+            else {
+               return ItemsTemplate;
+            }
          }
       }
 
