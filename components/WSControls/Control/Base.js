@@ -178,7 +178,7 @@ define('js!WSControls/Control/Base',
 
             //FROM COMPATIBLE
             isBuildVDom: function(){
-               return BaseCompatible?BaseCompatible.isBuildVDom():true;
+               return BaseCompatible?BaseCompatible.isBuildVDom.call(this):true;
             },
 
             isEnabled: function(){

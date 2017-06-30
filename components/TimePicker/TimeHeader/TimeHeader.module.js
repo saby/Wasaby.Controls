@@ -4,7 +4,6 @@ define('js!SBIS3.CONTROLS.TimeHeader',
       'tmpl!SBIS3.CONTROLS.TimeHeader',
       'js!SBIS3.CONTROLS.TimePickerUtils',
       'js!SBIS3.CONTROLS.IconButton',
-      'js!SBIS3.CORE.CloseButton',
       'css!SBIS3.CONTROLS.TimeHeader'
    ],
    function(CompoundControl, dotTplFn, Utils) {
@@ -29,23 +28,88 @@ define('js!SBIS3.CONTROLS.TimeHeader',
        *          </ws:minutes>
        *       <ws:Object>
        *    </ws:time>
-       *    <ws:activeTime>
+       *    <ws:mode>
        *       <ws:String>minutes</ws:String>
-       *    </ws:activeTime>
+       *    </ws:mode>
        * </ws:SBIS3.CONTROLS.TimeHeader>
        *
        * @control
-       * @public
+       * @private
        * @author Крайнов Дмитрий Олегович
        */
-      var TimeHeader = CompoundControl.extend([Utils],/** @lends SBIS3.CONTROLS.TimeHeader.prototype */{
+      var TimeHeader = CompoundControl.extend(/** @lends SBIS3.CONTROLS.TimeHeader.prototype */{
          _dotTplFn: dotTplFn,
+
+         $protected: {
+            _options: {
+               /**
+                * @cfg {Object} Время.
+                *
+                * @example
+                * Установить время 20:17.
+                * <pre>
+                *    <ws:time>
+                *       <ws:Object>
+                *          <ws:hours>
+                *             <ws:Number>20</ws:Number>
+                *          </ws:hours>
+                *          <ws:minutes>
+                *             <ws:Number>17</ws:Number>
+                *          </ws:minutes>
+                *       </ws:Object>
+                *    </ws:time>
+                * </pre>
+                *
+                * @see getTime
+                * @see setTime
+                */
+               time: {
+                  hours: 0,
+                  minutes: 0
+               },
+               /**
+                * @cfg {String} Текущий режим.
+                * <ol>
+                *    <li>Часы: hours.</li>
+                *    <li>Минуты: minutes.</li>
+                * </ol>
+                *
+                * @example
+                * Установить режим minutes.
+                * <pre>
+                *    <ws:mode>
+                *       <ws:String>minutes</ws:String>
+                *    </ws:mode>
+                * </pre>
+                *
+                * @see getMode
+                * @see setMode
+                */
+               mode: 'hours'
+            }
+         },
+
+         /**
+          * @event onChangeTime Происходит после смены времени.
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {Object} time Текущее время.
+          */
+
+         /**
+          * @event onChangeMode Происходит после смены режима.
+          * @param {$ws.proto.EventObject} eventObject Дескриптор события.
+          * @param {String} mode Текущий режим.
+          */
+         $constructor: function() {
+            this._publish('onChangeTime', 'onChangeMode');
+         },
 
          init: function() {
             TimeHeader.superclass.init.call(this);
 
             //Инициализируем контекст
-            this._setContextActive();
+            this._isHoursMode = this._options.mode === 'hours';
+            this._setContextMode();
             this._setContextTime();
 
             //Найдем внутренние контролы
@@ -54,20 +118,15 @@ define('js!SBIS3.CONTROLS.TimeHeader',
             this._homeButton.subscribe('onActivated', this._onHomeButtonActivatedHandler.bind(this));
          },
 
-         setActiveTime: function(activeTime) {
-            var isSet = TimeHeader.superclass.setActiveTime.call(this, activeTime);
-            if (isSet) {
-               this._setContextActive(activeTime);
-            }
-         },
-
          /**
-          * Получить установленное время.
-          * @returns {Object} установленное время.
+          * Изменить режим
+          * @param mode новый режим
           * @public
           */
-         getTime: function() {
-            return this._options.time;
+         setMode: function(mode) {
+            Utils.setMode.call(this, mode);
+            this._isHoursMode = !this._isHoursMode;
+            this._setContextMode(mode);
          },
 
          /**
@@ -76,30 +135,32 @@ define('js!SBIS3.CONTROLS.TimeHeader',
           * @public
           */
          setTime: function(time) {
-            var isSet = TimeHeader.superclass.setTime.call(this, time).isSet;
-            if (isSet) {
-               this._setContextTime();
-            }
+            Utils.setTime.call(this, time);
+            this._setContextTime();
          },
 
          /**
-          * Изменение поля контекста отвечающего за активное время.
+          * Изменение поля контекста отвечающего за режим.
           * @private
           */
-         _setContextActive: function() {
-            var active = {
-               hours: this.getActiveTime() === 'hours',
-               minutes: this.getActiveTime() === 'minutes'
-            };
-            this.getLinkedContext().setValueSelf('active', active);
+         _setContextMode: function() {
+            this.getLinkedContext().setValueSelf('active', {
+               hours: this._isHoursMode,
+               minutes: !this._isHoursMode
+            });
          },
 
+         /**
+          * Изменение поля контекста отвечающего за время.
+          * @private
+          */
          _setContextTime: function() {
-            var time = {
-               hours: this._getStringTime(this.getTime().hours),
-               minutes: this._getStringTime(this.getTime().minutes)
-            };
-            this.getLinkedContext().setValueSelf('time', time);
+            var time = this._options.time;
+
+            this.getLinkedContext().setValueSelf('time', {
+               hours: this._getStringTime(time.hours),
+               minutes: this._getStringTime(time.minutes)
+            });
          },
 
          /**
@@ -108,17 +169,13 @@ define('js!SBIS3.CONTROLS.TimeHeader',
           * @private
           */
          _onClickHandler: function(event) {
-            var activeTime;
+            var mode;
 
             TimeHeader.superclass._onClickHandler.apply(this, arguments);
 
-            if (~event.target.className.indexOf('js-controls-TimeHeader__hours')) {
-               activeTime = 'hours';
-            } else if (~event.target.className.indexOf('js-controls-TimeHeader__minutes')) {
-               activeTime = 'minutes';
-            }
-            if (activeTime) {
-               this.setActiveTime(activeTime)
+            mode = (/js-controls-TimeHeader__(hours|minutes) controls-TimeHeader__time_passive$/.exec(event.target.className) || [])[1];
+            if (mode) {
+               this.setMode(mode);
             }
          },
 
