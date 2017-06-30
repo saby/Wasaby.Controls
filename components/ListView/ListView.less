@@ -133,22 +133,19 @@
    left: @listView-check-box-left;
    top: @listView-check-box-top;
 
-   &:after {
-      color: @primary-color;
-   }
    &:before {
       color: @check-box-icon-box-color;
    }
 }
 
 .controls-ListView__item__multiSelected {
-   .controls-ListView__itemCheckBox:before {
+   .controls-ListView__itemCheckBox:after {
       color: @primary-color;
    }
 }
 
 .controls-ListView__item__partiallySelected {
-   .controls-ListView__itemCheckBox:before {
+   .controls-ListView__itemCheckBox:after {
       background-color: @primary-color;
    }
 }
