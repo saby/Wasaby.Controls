@@ -8,6 +8,9 @@
       display: inline-block;
       margin: @radio-button-text-margin;
       color: @radio-button-text-color;
+      & when not (@radio-button-text-font-size = 0) {
+         font-size: @radio-button-text-font-size;
+      }
    }
 
    .controls-RadioButton__icon {
@@ -33,7 +36,7 @@
    }
 
    &:hover {
-      .controls-RadioButton__caption {
+      &:not(.controls-Checked__checked) .controls-RadioButton__caption {
          color: @radio-button-hover-text-color;
          text-decoration: @radio-button-hover-text-decoration;
       }
@@ -57,7 +60,7 @@
          }
       }
 
-      &:hover {
+      &:hover:not(.controls-Checked__checked) {
          .controls-RadioButton__caption {
             color: @radio-button-checked-hover-text-color;
          }
@@ -67,8 +70,6 @@
             border-color: @radio-button-icon-border-color-checked;
          }
       }
-
-
    }
 
    &.ws-disabled {
@@ -97,8 +98,9 @@
       }
 
       &:hover {
-         .controls-RadioButton__caption {
+         &:not(.controls-Checked__checked)  .controls-RadioButton__caption {
             color: @radio-button-disabled-hover-text-color;
+            text-decoration: @radio-button-hover-text-decoration-disabled;
          }
 
          .controls-RadioButton__icon {
