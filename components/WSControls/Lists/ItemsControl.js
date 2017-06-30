@@ -3,17 +3,19 @@ define('js!WSControls/Lists/ItemsControl', [
    'Core/core-functions',
    'js!WSControls/Control/Base',
    'js!WS.Data/Collection/RecordSet',
-   "Core/helpers/Object/isEmpty",
+   'Core/helpers/Object/isEmpty',
    'Core/helpers/string-helpers',
-   "Core/Sanitize",
-   "js!WS.Data/Utils",
-   "js!SBIS3.CONTROLS.Utils.TemplateUtil",
-   "tmpl!WSControls/Lists/resources/ItemsTemplate",
-   "tmpl!WSControls/Lists/resources/ItemTemplate",
+   'Core/Sanitize',
+   'js!WS.Data/Utils',
+   'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+   'tmpl!WSControls/Lists/resources/ItemsTemplate',
+   'tmpl!WSControls/Lists/resources/ItemTemplate',
    'tmpl!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
-   "js!WS.Data/Display/Display",
+   'js!WS.Data/Display/Display',
    'js!SBIS3.CONTROLS.ListView/ListViewHelpers',
-   'js!WSControls/Controllers/DataSourceController'
+   'js!WSControls/Controllers/DataSourceUtil',
+   'Core/helpers/functional-helpers',
+   'Core/Deferred'
 ], function (extend,
              cFunctions,
              BaseControl,
@@ -28,7 +30,10 @@ define('js!WSControls/Lists/ItemsControl', [
              ItemContentTemplate,
              Projection,
              ListViewHelpers,
-             DataSourceController) {
+             DataSourceUtil,
+             fHelpers,
+             Deferred
+   ) {
 
    'use strict';
 
@@ -41,6 +46,16 @@ define('js!WSControls/Lists/ItemsControl', [
          _hoveredItem: null,
 
          _items: null,
+
+         _dataSource: null,
+         _loader: null,
+
+         //TODO пока спорные параметры
+         _filter: undefined,
+         _sorting: undefined,
+         _limit: undefined,
+         _offset: undefined,
+
          tplData: null,
          records: null,
 
@@ -62,44 +77,31 @@ define('js!WSControls/Lists/ItemsControl', [
 
 
             if (this._options.items) {
-               this._prepareItems(this._options.items);
+               this._items = this._options.items;
+               this._itemsChangeCallback();
             }
 
-            this._initControllers();
+            if (this._options.dataSource) {
+               this._dataSource = DataSourceUtil.prepareSource(this._options.dataSource);
+            }
 
-            this._itemsChangeCallback();
+
 
             if (this._options.dataSource && this._options.dataSource.firstLoad !== false) {
-               this._dataSourceController.reload();
+               this.reload();
             }
 
             ItemsControl.superclass.constructor.apply(this, arguments);
          },
 
-         _initControllers: function() {
-            if (this._dataSourceController) {
-               this._dataSourceController.destroy();
-            }
-            if (this._options.dataSource) {
-               this._dataSourceController = new DataSourceController({
-                  dataSource : this._options.dataSource,
-                  idProperty: this._options.idProperty
-               });
-               if (!this._onDSBeforeReloadFnc) {
-                  this._onDSBeforeReloadFnc = this._onDSBeforeReload.bind(this);
-               }
-               if (!this._onDSReloadFnc) {
-                  this._onDSReloadFnc = this._onDSReload.bind(this);
-               }
-               this._dataSourceController.subscribe('onBeforeReload', this._onDSBeforeReloadFnc);
-               this._dataSourceController.subscribe('onReload', this._onDSReloadFnc);
-            }
+         _prepareItems: function(items){
+            this._items = items;
          },
 
          _initItemBasedControllers: function() {
-            if (this._items) {
-               if (this._itemsProjection) {
-                  this._itemsProjection.destroy();
+            if (this._getItems()) {
+               if (this._getItemsProjection()) {
+                  this._getItemsProjection().destroy();
                }
                this._itemsProjection = this._createDefaultProjection();
                this._itemsProjection.subscribe('onCollectionChange', this._onCollectionChange);
@@ -156,6 +158,10 @@ define('js!WSControls/Lists/ItemsControl', [
             /*Must be implemented*/
          },
 
+         _getItems: function() {
+            return this._items;
+         },
+
          _getItemsProjection: function() {
             return this._itemsProjection;
          },
@@ -164,7 +170,7 @@ define('js!WSControls/Lists/ItemsControl', [
           * Метод получения проекции по ID итема
           */
          _getItemProjectionByItemId: function(id) {
-            return this._getItemsProjection() ? this._getItemsProjection().getItemBySourceItem(this.getItems().getRecordById(id)) : null;
+            return this._getItemsProjection() ? this._getItemsProjection().getItemBySourceItem(this._getItems().getRecordById(id)) : null;
          },
 
          /**
@@ -201,7 +207,7 @@ define('js!WSControls/Lists/ItemsControl', [
          },
 
          itemActionActivated: function(number, evt) {
-            alert("clicked " + this._hoveredItem + " on button " + number);
+            alert('clicked ' + this._hoveredItem + ' on button ' + number);
          },
 
 
@@ -213,7 +219,7 @@ define('js!WSControls/Lists/ItemsControl', [
          },
 
          _getDataHashFromTarget: function (element) {
-            while(element && typeof element.className === "string" && element.className.indexOf('controls-ListView__item') == -1) {
+            while(element && typeof element.className === 'string' && element.className.indexOf('controls-ListView__item') == -1) {
                element = element.parentNode;
             }
             if(element) {
@@ -224,63 +230,73 @@ define('js!WSControls/Lists/ItemsControl', [
          },
 
 
-         //<editor-fold desc="DataSourceMethods">
+         //<editor-fold desc='DataSourceMethods'>
          reload: function() {
-            if (this._dataSourceController) {
-               return this._dataSourceController.reload();
+            if (this._dataSource) {
+               var
+                  def,
+                  self = this;
+
+               this._cancelLoading();
+
+               var filterForReload = this._getFilterForReload();
+               if (this._dataSource) {
+                  var result = this._notify('onBeforeDataLoad', filterForReload, this._sorting, this._offset, this._limit);
+                  if (result) {
+                     this._filter = result['filter'] || this._filter;
+                     this._sorting = result['sorting'] || this._sorting;
+                     this._offset = result['offset'] || this._offset;
+                     this._limit = result['limit'] || this._limit;
+                  }
+                  //TODO решить с параметрами
+                  def = DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, this._filter, this._sorting, this._offset, this._limit)
+                     .addCallback(fHelpers.forAliveOnly(function (list) {
+                        self._notify('onDataLoad', list);
+                        this._onDSReload(list);
+                        return list;
+                     }, self))
+                     .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
+                  this._loader = def;
+               } else {
+                  if (this._options._itemsProjection) {
+                     this._redraw();
+                  }
+                  def = new Deferred();
+                  def.callback();
+               }
             }
             else {
                console.error('Option dataSource is undefined. Can\'t reload view');
             }
          },
-         isLoading: function() {
-            if (this._dataSourceController) {
-               return this._dataSourceController.isLoading();
-            }
+
+         _isLoading: function(){
+            return this._loader && !this._loader.isReady();
          },
-         getFilter: function() {
-            if (this._dataSourceController) {
-               this._dataSourceController.getFilter();
+
+         _cancelLoading: function () {
+            if (this._isLoading()) {
+               this._loader.cancel();
             }
+            this._loader = null;
          },
-         setFilter: function(filter, noLoad) {
-            if (this._dataSourceController) {
-               this._dataSourceController.setFilter(filter, noLoad);
-            }
-         },
-         setSorting: function (sorting, noLoad) {
-            if (this._dataSourceController) {
-               this._dataSourceController.setSorting(sorting, noLoad);
-            }
-         },
-         getSorting: function() {
-            if (this._dataSourceController) {
-               this._dataSourceController.getSorting();
-            }
-         },
+
          _toggleIndicator: function () {
             /*Must be implemented*/
          },
          _getFilterForReload: function () {
-            return this._dataSourceController.getFilter();
+            return this._filter;
          },
-         _onDSBeforeReload: function(e) {
-            this._toggleIndicator(true);
-            this._notify('onBeforeDataLoad', this._getFilterForReload.apply(this, arguments), this.getSorting(), this._dataSourceController.offset, this._dataSourceController.limit);
-            e.setResult({
-               filter : this._getFilterForReload()
-            });
-         },
-         _onDSReload: function(e, list) {
+         _onDSReload: function(list) {
             this._itemData = null;
             if (
-               this.getItems()
-               && (list.getModel() === this.getItems().getModel())
+               this._getItems()
+               && (list.getModel() === this._getItems().getModel())
                && (Object.getPrototypeOf(list).constructor == Object.getPrototypeOf(list).constructor)
-               && (Object.getPrototypeOf(list.getAdapter()).constructor == Object.getPrototypeOf(this.getItems().getAdapter()).constructor)
+               && (Object.getPrototypeOf(list.getAdapter()).constructor == Object.getPrototypeOf(this._getItems().getAdapter()).constructor)
                ) {
-               this.getItems().setMetaData(list.getMetaData());
-               this.getItems().assign(list);
+               this._getItems().setMetaData(list.getMetaData());
+               this._getItems().assign(list);
                //this._drawItemsCallbackDebounce();
             } else {
                this._items = list;
@@ -298,8 +314,8 @@ define('js!WSControls/Lists/ItemsControl', [
 
          destroy: function() {
             ItemsControl.superclass.destroy.ally(this, arguments);
-            if (this._itemsProjection) {
-               this._itemsProjection.destroy();
+            if (this._getItemsProjection()) {
+               this._getItemsProjection().destroy();
             }
             if (this._selector) {
                this._selector.destroy();
