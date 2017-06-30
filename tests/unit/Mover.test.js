@@ -192,7 +192,12 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
             });
 
             it('should return false if move path exists this id', function(done){
-               treeItems.setMetaData({path:[{'id': 2}]});
+               treeItems.setMetaData({
+                  path: new RecordSet({
+                     rawData: [{'id': 2}],
+                     idProperty: 'id'
+                  })
+               });
                treeMover.move([treeItems.at(1)], treeItems.at(0), 'on').addCallback(function(result){
                   assert.isFalse(result);
                   done();
