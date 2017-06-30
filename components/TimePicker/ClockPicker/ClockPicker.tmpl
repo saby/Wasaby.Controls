@@ -1,12 +1,12 @@
-<div class="controls-ClockPicker controls-ClockPicker_{{activeTime}}">
-   <div class="controls-ClockPicker__unitTime" data-bind="html: unitTime"/>
+<div class="controls-ClockPicker controls-ClockPicker_{{mode}}">
    <ws:partial
       template="tmpl!SBIS3.CONTROLS.ClockPicker/resources/Circle"
-      activeTime="{{activeTime}}"
+      mode="{{mode}}"
       circleName="outer"
-      ticks="{{_ticks[activeTime].outer}}"
+      ticks="{{_ticks[mode].outer}}"
       animationTime="{{_animationTime}}"
    />
+   <div class="controls-ClockPicker__unitTime js-controls-ClockPicker__unitTime" data-bind="html: unitTime"/>
    <div
       class="controls-ClockPicker__arrow js-controls-ClockPicker__arrow"
       style="transition: opacity {{_animationTime}}ms;"
@@ -37,12 +37,12 @@
          }"
       ></div>
    </div>
-   <ws:if data="{{_ticks[activeTime].inner}}">
+   <ws:if data="{{_ticks[mode].inner}}">
       <ws:partial
          template="tmpl!SBIS3.CONTROLS.ClockPicker/resources/Circle"
-         activeTime="{{activeTime}}"
+         mode="{{mode}}"
          circleName="inner"
-         ticks="{{_ticks[activeTime].inner}}"
+         ticks="{{_ticks[mode].inner}}"
          animationTime="{{_animationTime}}"
       />
    </ws:if>
