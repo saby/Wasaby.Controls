@@ -72,6 +72,10 @@
    }
 }
 
+/* Для этих странных бразуеров делаю на flex-box'e,
+   т.к. у них max-width: calc (100%-someValue) считается некорректно, от текущий ширины контента берётся ширина,
+   а не от ширины родителя.
+   Когда будем перевёрстывать с коофицентами надо сделать везде на flex-box'e с обернутым div'ом. */
 .ws-is-ie10, .ws-is-ie11, .ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
    .controls__filterButton {
       .inline-flexbox();
@@ -81,5 +85,10 @@
       -ms-flex-negative: 1;
       max-width: none;
       min-width: 0;
+   }
+   
+   /* Т.к для flexbox'a не работает float, делаю через order */
+   .controls__filterButton-right .controls__filterButton-button {
+      .order(-1);
    }
 }
