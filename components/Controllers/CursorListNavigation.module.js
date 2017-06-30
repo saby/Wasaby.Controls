@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
                case 'both': sign = '~'; break;
             }
 
-            additionalFilter[this._options.config.field+'>='] = this._options.config.position;
+            additionalFilter[this._options.config.field + sign] = this._options.config.position;
             return {
                filter : additionalFilter
             }
