@@ -55,7 +55,6 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             _itemActionsButtons: {},
             _itemActionsMenu: undefined,
             _itemActionsMenuButton: undefined,
-            _itemActionsHiddenButton: [],
             _activeItem: undefined,
             _activeCls: 'controls-ItemActions__activeItem',
             _menuAlign: 'standart',
@@ -273,6 +272,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             if(this._activeItem && this._activeItem.container && this._options.touchMode) {
                this._activeItem.container.removeClass(this._activeCls);
             }
+            this._activeItem = null;
             this._itemActionsMenu && this.isItemActionsMenuVisible() && this._itemActionsMenu.hide();
             ItemActionsGroup.superclass.hide.call(this);
          },
@@ -400,8 +400,9 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
          destroy: function() {
             this._itemActionsButtons = {};
+            this._itemActionsMenuButton = undefined;
+            this._itemActionsMenu = undefined;
             this._activeItem = undefined;
-            this._itemActionsMenuButton.destroy();
             ItemActionsGroup.superclass.destroy.apply(this, arguments);
          }
       });
