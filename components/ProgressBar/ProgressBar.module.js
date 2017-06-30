@@ -20,8 +20,9 @@ define('js!SBIS3.CONTROLS.ProgressBar',
        * @public
        * @category Buttons
        *
-       * @cssModifier controls-ProgressBar_align-left отображение процентов слева
-       * @cssModifier controls-ProgressBar_align-right отображение процентов справа
+       * @cssModifier controls-ProgressBar_align-left отображение процентов слева.
+       * @cssModifier controls-ProgressBar_align-right отображение процентов справа.
+       * @cssModifier controls-ProgressBar_align-center отображение процентов в центре. Установлен по default.
        *
        * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers parent
        * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner record stateKey
