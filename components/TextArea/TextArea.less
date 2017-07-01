@@ -27,17 +27,6 @@
       // Internet Explorer 10+ placeholder
       .placeholder();
    }
-   &.ws-has-focus {
-      border-width: @text-area-focus-border-width;
-      border-style: @text-area-focus-border-style;
-      border-color: @text-area-focus-border-color;
-      background: @text-area-focus-bg;
-
-      .controls-TextArea__inputField {
-         color: @text-area-field-focus-text-color;
-      }
-   }
-
    &.ws-validation-error {
       border-width: @text-area-error-border-width;
       border-style: @text-area-error-border-style;
@@ -57,6 +46,17 @@
 
       .controls-TextArea__inputField {
          color: @text-area-field-hover-text-color;
+      }
+   }
+
+   &.ws-has-focus {
+      border-width: @text-area-focus-border-width;
+      border-style: @text-area-focus-border-style;
+      border-color: @text-area-focus-border-color;
+      background: @text-area-focus-bg;
+
+      .controls-TextArea__inputField {
+         color: @text-area-field-focus-text-color;
       }
    }
 
