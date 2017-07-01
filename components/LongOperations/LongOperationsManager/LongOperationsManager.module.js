@@ -125,14 +125,14 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             if (!prodNames) {
                throw new TypeError('Argument "prodName" must be a string or string array');
             }
-            var dfr = new Deferred();
+            var promise = new Deferred();
             var dfrs = new ParallelDeferred({maxRunningCount:prodNames.length, stopOnFirstError:true});
             for (var i = 0; i < prodNames.length; i++) {
                var n = prodNames[i];
                dfrs.push(_registerByName(n), n);
             }
-            dfrs.done().getResult().addCallback(dfr.callback.bind(dfr));
-            return dfr;
+            dfrs.done().getResult().addCallback(promise.callback.bind(promise));
+            return promise;
          },
 
          /**
@@ -202,8 +202,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                      targets = _tabTargets(targets, tabKey, _tabManagers[tabKey]);
                   }
                   if (targets) {
-                     var params = Object.keys(targets).reduce(function (acc, v1) { acc.push.apply(acc, targets[v1].map(function (v2) { return {tab:v1, producer:v2}; })); return acc; }, []);//^^^
-                     _fetchCalls.addList(count, params, _tabCalls.callBatch(targets, 'fetch', [count], LongOperationEntry));
+                     _fetchCalls.addList(count, _expandTargets(targets), _tabCalls.callBatch(targets, 'fetch', [count], LongOperationEntry));
                   }
                }
             }
@@ -248,8 +247,10 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                }
                return producer.callAction(action, operationId);
             }
-            else
-            if (tabKey in _tabManagers && prodName in _tabManagers[tabKey]) {
+            else {
+               if (!(tabKey in _tabManagers && prodName in _tabManagers[tabKey])) {
+                  throw new Error('Producer not found');
+               }
                // Если вкладка не закрыта и продюсер не раз-регистрирован
                return _tabCalls.call(tabKey, prodName, 'callAction', [action, operationId], null);
             }
@@ -409,7 +410,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          if (!inf) {
             throw new Error('Producer module not found');
          }
-         var dfr = new Deferred();
+         var promise = new Deferred();
          require([inf.module], function (module) {
             var producer;
             switch (typeof module) {
@@ -431,9 +432,9 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                   }
                   break;
             }
-            dfr[producer && producer.getName() === prodName ? 'callback' : 'errback'](producer || 'Unable to create producer')
+            promise[producer && producer.getName() === prodName ? 'callback' : 'errback'](producer || 'Unable to create producer')
          });
-         return dfr.addCallback(function (producer) {
+         return promise.addCallback(function (producer) {
             _register(producer, true);
             return producer;
          });
@@ -616,6 +617,20 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       };
 
       /**
+       * ###
+       * @protected
+       * @param {object} targets Списки имён продюсеров по вкладкам
+       * @return {object[]}
+       */
+      var _expandTargets = function (targets) {
+         var list = [];
+         for (var tabKey in targets) {
+            list.push.apply(list, targets[tabKey].map(function (v) { return {tab:tabKey, producer:v}; }));
+         }
+         return list;
+      };
+
+      /**
        * Слушатель событий продюсеров
        * @protected
        * @param {Core/EventObject} evtName Дескриптор события
@@ -752,7 +767,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             if (counts.length) {
                var targets = _tabTargets(null, tabKey, newProds);
                if (targets) {
-                  var params = Object.keys(targets).reduce(function (acc, v1) { acc.push.apply(acc, targets[v1].map(function (v2) { return {tab:v1, producer:v2}; })); return acc; }, []);//^^^
+                  var params = _expandTargets(targets);
                   for (var i = 0; i < counts; i++) {
                      _fetchCalls.addList(counts[i], params, _tabCalls.callBatch(targets, 'fetch', [counts[i]], LongOperationEntry));
                   }
@@ -780,6 +795,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                delete _tabManagers[tabKey];
             }
             // Уведомить своих подписчиков
+            //TODO: ### Если продюсер не отображаемый, можно (нужно?) игнорировать
             _channel.notifyWithTarget('onproducerunregistered', manager);
          }
       };
