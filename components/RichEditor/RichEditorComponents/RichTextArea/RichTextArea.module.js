@@ -210,7 +210,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             _lastReview: undefined,
             _fromTouch: false,
             _codeSampleDialog: undefined,
-            _beforeFocusOutRng: undefined
+            _beforeFocusOutRng: undefined,
+            _images: {}
          },
 
          _modifyOptions: function(options) {
@@ -261,6 +262,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                this._notifyTextChanged = this._notifyTextChanged.debounce(500);
             }
             this._lastReview = this.isEnabled() ? undefined : this.getText();
+            this._fillImages(false);
          },
          /*БЛОК ПУБЛИЧНЫХ МЕТОДОВ*/
 
@@ -990,6 +992,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                meta = fileobj.id || '',
                URL = this._prepareImageURL(fileobj);
+            if (meta) {
+               this._images[meta] = false;
+            }
             //TODO: придумтаь как сделать без without-margin
             switch (key) {
                case "1":
@@ -1045,6 +1050,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                this._beforeFocusOutRng = editor.selection.getRng(); // необходимо запоминать выделение пред открытием ддиалога, тк оно собьется при переходе в textarea
             codeDialog.setText(editor.plugins.codesample.getCurrentCode(editor) || '');
             codeDialog.show();
+         },
+         getImages: function() {
+            return this._fillImages(true);
          },
          /*БЛОК ПУБЛИЧНЫХ МЕТОДОВ*/
 
@@ -1531,6 +1539,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   this.getTarget().attr('alt', fileobj.id);
                   self._tinyEditor.undoManager.add();
                   self._setTrimmedText(self._getTinyEditorValue());
+                  if (fileobj.id) {
+                     self._images[fileobj.id] = false;
+                  }
                });
                this._imageOptionsPanel.subscribe('onImageDelete', function(){
                   var
@@ -1976,6 +1987,18 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                text = this._tinyEditor.plugins.paste.clipboard.prepareTextBeforePaste(this._clipboardText);
             return text;
+         },
+         _fillImages: function(state) {
+            var
+               temp = $('<div>' + this.getText() + '</div>');
+            temp.find('img').toArray().forEach(function(image){
+               var
+                  id = $(image).attr('alt');
+               if (id) {
+                  this._images[id] = state;
+               }
+            }, this);
+            return this._images;
          }
 
       });
