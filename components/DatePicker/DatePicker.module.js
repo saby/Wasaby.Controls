@@ -304,10 +304,12 @@ define(
             date.setSeconds(this._lastDate.getSeconds());
             date.setMilliseconds(this._lastDate.getMilliseconds());
          }
+         this.setActive(true);
          this.setDate(date);
          this.hidePicker();
       },
       _onChooserClose: function(event) {
+         this.setActive(true);
          this.hidePicker();
       },
 
