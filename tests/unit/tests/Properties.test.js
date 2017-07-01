@@ -92,7 +92,6 @@ define([
       function assertInitProperties() {
          assert.isTrue(Array.isArray(this._savedConfigs));
          assert.isTrue(typeof this._thisIsInstance === 'boolean');
-         assert.isTrue(typeof this._icanrulefocus === 'boolean');
          assert.isTrue(this.hasOwnProperty('_parent'));
          assert.isTrue(this.hasOwnProperty('_context'));
          assert.isTrue(typeof this._$independentContext === 'boolean');
