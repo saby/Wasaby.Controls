@@ -135,7 +135,7 @@
                   border-bottom-width: 2px;
                   padding: 0 !important;
                   .controls-MonthView__dayTitle {
-                     padding-top: @date-range-big-choose-date-range-picker-table-element-title-padding-top - 1 !important;
+                     padding-top: ~"calc("@date-range-big-choose-date-range-picker-table-element-title-padding-top~" - 1px) !important";
                   }
                   .controls-MonthView__dayBorder + .controls-MonthView__dayTitle {
                      left: 6px !important;
@@ -189,7 +189,7 @@
                   &.controls-DateRangeBigChoose-MonthView__border-top {
                      border-top-width: 1px;
                      & > .controls-MonthView__dayBorder + .controls-MonthView__dayTitle {
-                        padding-top: @date-range-big-choose-date-range-picker-table-element-title-padding-top - 1;
+                        padding-top: ~"calc("@date-range-big-choose-date-range-picker-table-element-title-padding-top~" - 1px) !important";
                      }
                   }
 
