@@ -1988,7 +1988,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.setInfiniteScroll('both', true);
                }
             }
-            if (this._options.virtualScrolling) {
+            if (this._options.virtualScrolling && this._virtualScrollController) {
                this._virtualScrollController.reset();
                this._topWrapper.height(0);
                this._bottomWrapper.height(0);
