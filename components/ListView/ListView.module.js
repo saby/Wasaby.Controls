@@ -4165,6 +4165,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var source = dragObject .getSource();
             return dragObject .getTarget() &&
                source &&
+               cInstance.instanceOfModule(source, 'SBIS3.CONTROLS.DragEntity.List') &&
                source.getCount() > 0 &&
                dragObject .getTargetsControl() === this &&
                cInstance.instanceOfModule(source.at(0), 'SBIS3.CONTROLS.DragEntity.Row');
@@ -4301,7 +4302,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   dropBySelf = false,
                   source = dragObject.getSource();
 
-               if (target && source) {
+               if (target && source && cInstance.instanceOfModule(source, 'SBIS3.CONTROLS.DragEntity.List')) {
                   var  targetsModel = target.getModel();
                   source.each(function(item) {
                      var model = item.getModel();
