@@ -29,7 +29,10 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoosePickerMixin', [
                },
                verticalAlign: {
                   side: 'top'
-               }
+               },
+               bodyBounds: true,
+               locationStrategy: 'bodyBounds',
+               activateAfterShow: true
             }
          },
 
