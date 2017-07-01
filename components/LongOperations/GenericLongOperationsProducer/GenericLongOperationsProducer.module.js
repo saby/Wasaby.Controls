@@ -209,6 +209,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
          /**
           * Начать отображение длительной операции. В аргумент stopper при его разрешении возвращаются результат операции для отображения.
           * Обработчики всех действий (onSuspend, onResume, onDelete) должны возвращать булево значение, показывающее успешность выполнения действия
+          * Перед вызовом метода нужно убедиться, что продюсер зарегистрирован в менеджере длительных операций
           * @public
           * @param {string} options Параметры для создания длительной операции
           * @param {string} options.title Отображаемое название операции (обязательный)
@@ -231,27 +232,21 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             if (!(stopper instanceof Deferred)) {
                throw new TypeError('Argument "stopper" must be a Deferred');
             }
-            // Для удобства использования сделаем авторегистрацию продюсера в менеджере
-            require(['js!SBIS3.CONTROLS.LongOperationsManager'], function (longOperationsManager) {
-               longOperationsManager.register(this);
-
-               // и продолжим создание операции
-               options.canSuspend = typeof options.onSuspend === 'function' && typeof options.onResume === 'function';
-               options.canDelete = typeof options.onDelete === 'function';
-               var operationId = _put(this, options);
-               var self = this;
-               stopper.addCallbacks(
-                  function (result) {
-                     if (result && typeof result !== 'object') {
-                        throw new TypeError('Invalid result');
-                     }
-                     _setStatus(self, operationId, 'success', result || null);
-                  },
-                  function (err) {
-                     _setStatus(self, operationId, 'error', err.message || 'Long operation error');
+            options.canSuspend = typeof options.onSuspend === 'function' && typeof options.onResume === 'function';
+            options.canDelete = typeof options.onDelete === 'function';
+            var operationId = _put(this, options);
+            var self = this;
+            stopper.addCallbacks(
+               function (result) {
+                  if (result && typeof result !== 'object') {
+                     throw new TypeError('Invalid result');
                   }
-               )
-            }.bind(this));
+                  _setStatus(self, operationId, 'success', result || null);
+               },
+               function (err) {
+                  _setStatus(self, operationId, 'error', err.message || 'Long operation error');
+               }
+            )
          }
       });
 

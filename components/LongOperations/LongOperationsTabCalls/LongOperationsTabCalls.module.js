@@ -255,7 +255,6 @@ define('js!SBIS3.CONTROLS.LongOperationsTabCalls',
                      result = Array.isArray(result) ? result.map(unpack) : unpack(result);
                   }
                   call.promise.callback(result);
-                  call.promise.TMP_resulted = true;
                }
                else {
                   call.promise.errback(new Error(evt.error));

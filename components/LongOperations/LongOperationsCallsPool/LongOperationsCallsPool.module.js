@@ -1,5 +1,7 @@
 /**
- * Класс, позволяющий выполнять несколько параллельных (асинхронных) вызовов и объединять результаты
+ * Класс, позволяющий выполнять группу из нескольких параллельных (асинхронных) вызовов и объединять их результаты. Уже в ходе выполнения к
+ * группе могут быть произвольно добавлены новые запросы либо удалено любые выполняющиеся. После выполнения всех запросов буден возвращён
+ * результат, включающий в себя все непустые и не ошибочные результаты по всем выполненным запросам
  *
  * @class SBIS3.CONTROLS.LongOperationsCallsPool
  * @public
@@ -14,7 +16,9 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
       'use strict';
 
       /**
-       * Класс, позволяющий выполнять несколько параллельных (асинхронных) вызовов и объединять результаты
+       * Класс, позволяющий выполнять группу из нескольких параллельных (асинхронных) вызовов и объединять их результаты. Уже в ходе выполнения к
+       * группе могут быть произвольно добавлены новые запросы либо удалено любые выполняющиеся. После выполнения всех запросов буден возвращён
+       * результат, включающий в себя все непустые и не ошибочные результаты по всем выполненным запросам
        * @public
        * @type {SBIS3.CONTROLS.LongOperationsCallsPool}
        */
@@ -118,12 +122,14 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
                throw new Error('Already exists');
             }
             var call = {group:group, params:ps, promise:promise};
-            call.promise.addBoth(_onPartial.bind(null, this, call));
             this._calls.push(call);
+            call.promise.addBoth(_onPartial.bind(null, this, call));
          },
 
          /**
-          * Получить обещание, ожидающее результат
+          * Получить обещание, ожидающее результат. Метод должен быть вызван только после того, как все необходимые запросы группы уже добавлены.
+          * После вызова этого метода могут быть добавлены дополнитльные запросы в эту же группу, но только до тех пор, пока другие запросы не успели
+          * завершиться. Иначе это будет новой группой и нужно вновь будет вызвать этот метод для получения обещания результата
           * @public
           * @param {number} group Идентификатор группы запросов
           * @return {Core/Deferred<any>}
@@ -137,11 +143,8 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
                this._promises[group] = [];
             }
             this._promises[group].push(promise);
-            // Проверить, возможно все результаты уже получены сразу
-            if (_isComplete(this, group)) {
-               // Все результаты теперь есть
-               _onComplete(this, group);
-            }
+            // Проверить, возможно все результаты уже сразу получены
+            _checkCompleteness(this, group);
             return promise;
          },
 
@@ -187,11 +190,17 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
                   // Удалить из списка
                   this._calls.splice(i, 1);
                   var p = c.promise;
-                  if (p && p.cancel) {
+                  if (p && p.cancel && !p.isReady()) {
+                     // В текущей реализации при наличии обработчика ошибок при вызове cancel он перейдёт в успешно разрешённое состояние (Задача 1174127408)
                      //p.cancel();
+                     //////////////////////////////////////////////////
+                     //console.log('DBG: LO_CallsPool.remove: p.isSuccessful()=', p.isSuccessful(), '; p._fired=', p._fired, '; p._results[1]=', p._results ? p._results[1] : p._results, ';');
+                     //////////////////////////////////////////////////
                   }
                }
             }
+            // Проверить, возможно после удаления уже не нужно ждать дальше
+            _checkCompleteness(this, group);
          },
 
          /**
@@ -285,11 +294,23 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
                call.error = ex;
             }
          }
-         // Если результат уже ожидается
-         // - проверить, все ли результаты получены или нужно ждать дальше
-         if (_isComplete(self, group)) {
-            // Все результаты теперь есть
-            _onComplete(self, group);
+         // Проверить, все ли результаты получены или нужно ждать дальше
+         _checkCompleteness(self, group);
+      };
+
+      /**
+       * Проверить, все ли результаты получены или нужно ждать дальше. Если все результаты получены - выполнение запросов завершается
+       * @protected
+       * @param {SBIS3.CONTROLS.LongOperationsCallsPool} self Этот объект
+       * @param {number} group Идентификатор группы запросов
+       */
+      var _checkCompleteness = function (self, group) {
+         for (var i = 0, groups = group ? [group] : self.listGroups(); i < groups.length; i++) {
+            var g = groups[i];
+            if (_isComplete(self, g)) {
+               // Все результаты группы есть, можно завершать
+               _onComplete(self, g);
+            }
          }
       };
 
@@ -301,7 +322,7 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
        * @return {boolean}
        */
       var _isComplete = function (self, group) {
-         if (!self._calls.length || !(group in self._promises && self._promises[group].length)) {
+         if (!self._calls.length || !(self._promises[group] && self._promises[group].length)) {
             return false;
          }
          for (var i = 0; i < self._calls.length; i++) {
@@ -315,7 +336,7 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
       };
 
       /**
-       * Объединяет и сортирует полученные результаты и отправляет всем ожидающим рекордсет, содержащий указанное количество элементов
+       * Объединяет все непустые и не ошибочные результаты и разрешает все обещания результатов
        * @protected
        * @param {SBIS3.CONTROLS.LongOperationsCallsPool} self Этот объект
        * @param {number} group Идентификатор группы запросов
