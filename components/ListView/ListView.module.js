@@ -3159,7 +3159,7 @@ define('js!SBIS3.CONTROLS.ListView',
                var loadId = this._loadId++;
                this._loadQueue[loadId] = cFunctions.clone(this._infiniteScrollState);
 
-               this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit)
+               this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit, this._infiniteScrollState.mode)
                   .addBoth(fHelpers.forAliveOnly(function(res) {
                      this._loader = null;
                      return res;
@@ -3592,7 +3592,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._updatePaging();
             }
          },
-         _getQueryForCall: function(filter, sorting, offset, limit){
+         _getQueryForCall: function(filter, sorting, offset, limit, direction){
             var
                query = new Query(),
                queryFilter = filter;
@@ -3600,11 +3600,10 @@ define('js!SBIS3.CONTROLS.ListView',
                var options = this._dataSource.getOptions();
                options.navigationType = SbisService.prototype.NAVIGATION_TYPE.POSITION;
                this._dataSource.setOptions(options);
-               if (this._getItemsProjection()) {
-                  queryFilter =  cFunctions.clone(filter);
-                  var addParams = this._listNavigation.prepareQueryParams(this._getItemsProjection(), this._infiniteScrollState.mode);
-                  cMerge(queryFilter, addParams.filter);
-               }
+
+               queryFilter =  cFunctions.clone(filter);
+               var addParams = this._listNavigation.prepareQueryParams(this._getItemsProjection(), direction);
+               cMerge(queryFilter, addParams.filter);
             }
             /*TODO перенос события для курсоров глубже, делаю под ифом, чтоб не сломать текущий функционал*/
             if (this._options.navigation && this._options.navigation.type == 'cursor') {

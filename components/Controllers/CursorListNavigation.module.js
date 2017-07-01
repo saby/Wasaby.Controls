@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
                case 'both': sign = '~'; break;
             }
 
-            additionalFilter[this._options.config.field+'>='] = this._options.config.position;
+            additionalFilter[this._options.config.field + sign] = this._options.config.position;
             return {
                filter : additionalFilter
             }
@@ -43,16 +43,18 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
 
          prepareQueryParams: function(projection, scrollDirection) {
             var edgeRecord, filterValue;
-            if (scrollDirection == 'up') {
-               this.setDirection('before');
-               edgeRecord = projection.at(0).getContents();
+            if (projection && projection.getCount() && scrollDirection) {
+               if (scrollDirection == 'up') {
+                  this.setDirection('before');
+                  edgeRecord = projection.at(0).getContents();
+               }
+               else {
+                  this.setDirection('after');
+                  edgeRecord = projection.at(projection.getCount() - 1).getContents();
+               }
+               filterValue = edgeRecord.get(this._options.config.field);
+               this.setPosition(filterValue);
             }
-            else {
-               this.setDirection('after');
-               edgeRecord = projection.at(projection.getCount() - 1).getContents();
-            }
-            filterValue = edgeRecord.get(this._options.config.field);
-            this.setPosition(filterValue);
 
             return this._getCalculatedParams();
          },

@@ -1702,12 +1702,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._options.filter;
       },
 
-      _callQuery: function (filter, sorting, offset, limit) {
+      _callQuery: function (filter, sorting, offset, limit, direction) {
          if (!this._dataSource) {
             return;
          }
 
-         var query = this._getQueryForCall(filter, sorting, offset, limit);
+         var query = this._getQueryForCall(filter, sorting, offset, limit, direction);
 
          return this._dataSource.query(query).addCallback((function(dataSet) {
             if (this._options.idProperty && this._options.idProperty !== dataSet.getIdProperty()) {
