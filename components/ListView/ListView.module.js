@@ -3256,9 +3256,19 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _drawPage: function(dataSet, state){
-            var at = null;
+            var at = null,
+                self = this,
+                toggleOverflowScrolling = function(on) {
+                   self._getScrollContainer().css({'-webkit-overflow-scrolling': on ? '' : 'initial'});
+                };
             //добавляем данные в начало или в конец в зависимости от того мы скроллим вверх или вниз
             if (state.mode === 'up' || (state.mode == 'down' && state.reverse)) {
+               /* Ipad c overflowScrolling: touch отложенно рендерит dom, что приводит к скачкам (т.к. у нас кордината считается на момент загрузки)
+                  https://stackoverflow.com/questions/8293978/single-finger-scroll-in-safari-not-rendering-html-until-scroll-finishes
+                  Поэтому надо отключать. скролл будет останавливаться, но не будет скачков, что более критично */
+               if(constants.browser.isMobileIOS) {
+                  toggleOverflowScrolling(false);
+               }
                this._needScrollCompensation = true;
                this._containerScrollHeight = this._scrollWatcher.getScrollHeight() - this._scrollWatcher.getScrollContainer().scrollTop();
                at = {at: 0};
@@ -3273,6 +3283,9 @@ define('js!SBIS3.CONTROLS.ListView',
                items = this.getItems().append(dataSet);
             } else {
                items = this.getItems().prepend(dataSet);
+            }
+            if(constants.browser.isMobileIOS) {
+               toggleOverflowScrolling(true);
             }
 
             if (this._isSlowDrawing(this._options.easyGroup)) {
