@@ -822,6 +822,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._options._itemsTemplate;
       },
 
+      //В композите элементы добавляются по другому шаблону. Решится с перходом на VDOM
+      _getItemsTemplateForAdd: function() {
+         return this._options._itemsTemplate;
+      },
+
       _prepareItemsConfig: function() {
          if (this._options.dataSource) {
             this._dataSource =  SourceUtil.prepareSource.call(this, this._options.dataSource);
@@ -1261,7 +1266,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   };
                   // Вычисляем drawHiddenGroup при перерисовке item'а, т.к. в текущей реализации это единственный способ скрыть элемент, если он расположен в свернутой группе
                   data.tplData.drawHiddenGroup = !!this._options._groupCollapsing[groupId];
-                  markupExt = extendedMarkupCalculate(this._getItemsTemplate()(data), this._options);
+                  markupExt = extendedMarkupCalculate(this._getItemsTemplateForAdd()(data), this._options);
                   markup = markupExt.markup;
                   this._optimizedInsertMarkup(markup, this._getInsertMarkupConfig(newItemsIndex, newItems, groupId));
                   this._revivePackageParams.revive = this._revivePackageParams.revive || markupExt.hasComponents;
