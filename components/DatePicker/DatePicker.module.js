@@ -236,6 +236,7 @@ define(
 
       _calendarShow: function() {
          this._pickerContent.setRange(this.getDate(), this.getDate());
+         this._pickerContent.updateViewAfterShow();
       },
 
       _timeShow: function() {

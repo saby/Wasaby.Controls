@@ -1165,6 +1165,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             this._lastDrawn = undefined;
             this._lastPath = [];
             this._loadedNodes = {};
+            // При перезагрузке приходят новые данные, т.ч. сбрасываем объект, хранящий список узлов с "есть ещё"
+            this._options._folderHasMore = {};
          },
          _dataLoadedCallback: function () {
             //this._options.openedPath = {};

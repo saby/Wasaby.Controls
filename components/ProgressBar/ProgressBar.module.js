@@ -71,7 +71,7 @@ define('js!SBIS3.CONTROLS.ProgressBar',
 
          _modifyOptions: function(options) {
             ProgressBar.superclass._modifyOptions.call(this, options);
-            if (!/controls-ProgressBar_align-(left|right)/.test(options.className)) {
+            if (!/ controls-ProgressBar_align-(left|right) /.test(options.className)) {
                options.className += ' controls-ProgressBar_align-center';
             }
 

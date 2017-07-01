@@ -13,6 +13,10 @@
    }
    &.engine-OperationNotificationPopup, .engine-OperationNotificationPopup__content {
       width: 600px;
+      max-width: 600px;
+   }
+   .engine-OperationNotificationPopup__content_list {
+      width: 600px;
    }
    &.engine-OperationNotificationPopup.engine-OperationNotificationPopup__hiddenContentMode {
       width: 420px;
@@ -23,7 +27,7 @@
    }
    &.engine-OperationNotificationPopup .controls-NotificationPopup__header_caption {
       font-size: 32px;
-      color: #FFF;
+      color: #313E78;
       line-height: 52px;
    }
    &.engine-OperationNotificationPopup.engine-OperationNotificationPopup__hiddenContentMode .controls-NotificationPopup__header_caption {
@@ -39,7 +43,7 @@
       }
    }
    .controls-NotificationPopup__header.controls-NotificationPopup__header-withCloseButton {
-      padding-right: 72px;
+      padding-right: 96px;
    }
    .controls-NotificationPopup__header.controls-NotificationPopup__header-withCloseButton, .engine-OperationNotificationPopup__header_downloadButton,
    .engine-OperationNotificationPopup__header_stoppedOperationsButton {
@@ -60,6 +64,10 @@
    .engine-LongOperationsList__groupTpl_title {
       color: #fff;
       background: #4e5762;
+   }
+
+   .engine-LongOperationsList__stateContainer {
+      margin-left: -16px;
    }
 }
 

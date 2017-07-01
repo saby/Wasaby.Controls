@@ -1996,7 +1996,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.setInfiniteScroll('both', true);
                }
             }
-            if (this._options.virtualScrolling) {
+            if (this._options.virtualScrolling && this._virtualScrollController) {
                this._virtualScrollController.reset();
                this._topWrapper.height(0);
                this._bottomWrapper.height(0);
@@ -3159,7 +3159,7 @@ define('js!SBIS3.CONTROLS.ListView',
                var loadId = this._loadId++;
                this._loadQueue[loadId] = cFunctions.clone(this._infiniteScrollState);
 
-               this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit)
+               this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit, this._infiniteScrollState.mode)
                   .addBoth(fHelpers.forAliveOnly(function(res) {
                      this._loader = null;
                      return res;
@@ -3264,9 +3264,19 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _drawPage: function(dataSet, state){
-            var at = null;
+            var at = null,
+                self = this,
+                toggleOverflowScrolling = function(on) {
+                   self._getScrollContainer().css({'-webkit-overflow-scrolling': on ? '' : 'initial'});
+                };
             //добавляем данные в начало или в конец в зависимости от того мы скроллим вверх или вниз
             if (state.mode === 'up' || (state.mode == 'down' && state.reverse)) {
+               /* Ipad c overflowScrolling: touch отложенно рендерит dom, что приводит к скачкам (т.к. у нас кордината считается на момент загрузки)
+                  https://stackoverflow.com/questions/8293978/single-finger-scroll-in-safari-not-rendering-html-until-scroll-finishes
+                  Поэтому надо отключать. скролл будет останавливаться, но не будет скачков, что более критично */
+               if(constants.browser.isMobileIOS) {
+                  toggleOverflowScrolling(false);
+               }
                this._needScrollCompensation = true;
                this._containerScrollHeight = this._scrollWatcher.getScrollHeight() - this._scrollWatcher.getScrollContainer().scrollTop();
                at = {at: 0};
@@ -3281,6 +3291,9 @@ define('js!SBIS3.CONTROLS.ListView',
                items = this.getItems().append(dataSet);
             } else {
                items = this.getItems().prepend(dataSet);
+            }
+            if(constants.browser.isMobileIOS) {
+               toggleOverflowScrolling(true);
             }
 
             if (this._isSlowDrawing(this._options.easyGroup)) {
@@ -3592,7 +3605,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._updatePaging();
             }
          },
-         _getQueryForCall: function(filter, sorting, offset, limit){
+         _getQueryForCall: function(filter, sorting, offset, limit, direction){
             var
                query = new Query(),
                queryFilter = filter;
@@ -3600,11 +3613,10 @@ define('js!SBIS3.CONTROLS.ListView',
                var options = this._dataSource.getOptions();
                options.navigationType = SbisService.prototype.NAVIGATION_TYPE.POSITION;
                this._dataSource.setOptions(options);
-               if (this._getItemsProjection()) {
-                  queryFilter =  cFunctions.clone(filter);
-                  var addParams = this._listNavigation.prepareQueryParams(this._getItemsProjection(), this._infiniteScrollState.mode);
-                  cMerge(queryFilter, addParams.filter);
-               }
+
+               queryFilter =  cFunctions.clone(filter);
+               var addParams = this._listNavigation.prepareQueryParams(this._getItemsProjection(), direction);
+               cMerge(queryFilter, addParams.filter);
             }
             /*TODO перенос события для курсоров глубже, делаю под ифом, чтоб не сломать текущий функционал*/
             if (this._options.navigation && this._options.navigation.type == 'cursor') {
@@ -4165,6 +4177,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var source = dragObject .getSource();
             return dragObject .getTarget() &&
                source &&
+               cInstance.instanceOfModule(source, 'SBIS3.CONTROLS.DragEntity.List') &&
                source.getCount() > 0 &&
                dragObject .getTargetsControl() === this &&
                cInstance.instanceOfModule(source.at(0), 'SBIS3.CONTROLS.DragEntity.Row');
@@ -4301,7 +4314,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   dropBySelf = false,
                   source = dragObject.getSource();
 
-               if (target && source) {
+               if (target && source && cInstance.instanceOfModule(source, 'SBIS3.CONTROLS.DragEntity.List')) {
                   var  targetsModel = target.getModel();
                   source.each(function(item) {
                      var model = item.getModel();

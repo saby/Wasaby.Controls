@@ -107,9 +107,10 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
             } else {
                children = parent.getChildControls();
             }
+            var eapIndex = 0;
             for (var i = 0; i < children.length; i++) {
                if (children[i] instanceof EditAtPlace) {
-                  var res = func(children[i], i);
+                  var res = func(children[i], eapIndex++);
                   if (res === false) {
                      break;
                   }
@@ -151,8 +152,12 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
 
          showPicker: function(){
             EditAtPlaceGroup.superclass.showPicker.call(this);
-            this._iterateChildEditAtPlaces(function(child){
+            var index = this._getActiveChildControlIndex();
+            this._iterateChildEditAtPlaces(function(child, i){
                child.setInPlaceEditMode(true);
+               if (i == index) {
+                  child.setActive(true);
+               }
             }, this._picker);
          },
 
@@ -167,21 +172,16 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
             return index;
          },
 
-         _clickHandler: function () {
+         _clickHandler: function (e) {
             if (this.isEnabled()) {
+               // При редактировании во всплывашке сначала происходит активация нужного поля ввода
+               // а затем фокус уходит на то редактирование по месту по которому кликнули 
+               if (this._options.editInPopup){
+                  e.stopPropagation();
+               }
                this._iterateChildEditAtPlaces(function (child) {
                   child._saveOldText();
                });
-               if (this._options.editInPopup) {
-                  var index = this._getActiveChildControlIndex();
-                  this.once('onPickerOpen', function(){
-                     this._iterateChildEditAtPlaces(function(child, i){
-                        if (i == index) {
-                           child.setActive(true);
-                        }
-                     }, this._picker);
-                  }.bind(this));
-               }
                if (this._options.editInPopup) {
                   this.showPicker();
                } else {
