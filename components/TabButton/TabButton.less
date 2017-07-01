@@ -212,6 +212,7 @@
       }
       .controls-TabButton__wrapper {
          .inline-flexbox();
+         width: 100%;
       }
       .controls-TabButton__icon {
          position: @tab-button-icon-position;
@@ -388,7 +389,7 @@
 .ws-is-firefox {
   .controls-TabButton {
      .controls-TabButton__inner{
-        line-height: 29px;
+        line-height: @tab-button-ff-inner-height;
      }
      &.controls-TabButton__main-item .controls-TabButton__inner{
         line-height: 26px;

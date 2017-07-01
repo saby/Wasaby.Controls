@@ -188,9 +188,7 @@ body {
       color: @bread-crumb-title-color !important;
    }
 }
-      .controls-BackButton {
-        line-height: 3.64rem;
-      }
+
     .ws-float-area-nostack-panel-shadow-standart {
       border: 1px solid #2e404f;
       background: #2e404f;
@@ -433,9 +431,15 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
 .ws-float-area-stack-panel-shadow {
   background: @basic-block-bg-color !important;
 }
-.ws-sticky-header__block.ws-sticky-header__fixed,
-.ws-sticky-header__table-header-copy {
-  background-color: #202835 !important;
+
+body {
+   .ws-sticky-header__block.ws-sticky-header__fixed,
+   .ws-sticky-header__table-header-copy {
+      // В престо в паре мест используется нестандартные цвета фона, чуть темнее или чуть светлее.
+      // В этих местах прикладники должны сами устанавливать цвет фона у зафиксированных заголовков.
+      // В большинстве реестров используется #2C3E50
+      background-color: #2C3E50;
+   }
 }
 
 body  .ws-window {
@@ -1083,5 +1087,5 @@ body .controls-ItemActions .controls-Button__icon.icon-size {
   }
 }
 .controls-ListView__ItemsToolbar-container {
-  height: 1.2rem;
+  height: 3rem;
 }

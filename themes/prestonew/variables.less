@@ -36,7 +36,7 @@
 @blue-dark-color:                         #8991A9;
 @darkcyan-color: 						         #B9E9FF;
 @default-font-size:                       1.14rem;
-@default-border-width:					      .07142rem;
+@default-border-width:					  2px;
 @font-popup-size:                         1.43rem;
 @font-folder-size:                        1.14rem;
 @check-box-default-font-size:				   1.14rem;
@@ -359,9 +359,10 @@
 @combo-box-arrowDown-color-hover:         @default-hover-color;
 // Text area
 @text-area-field-line-height:             1.4rem;
-@text-area-border-color:                  transparent;
-@text-area-focus-border-color:            @gray-dark-color;
+@text-area-border-color:                  @text-box-border-color;
+@text-area-focus-border-color:            @text-box-hover-border-color;
 @text-area-focus-bg:                      @text-box-focus-bg;
+@text-area-hover-bg:                      @text-box-hover-bg;
 @text-area-left-padding:                  .5714rem;
 @text-area-top-padding:                   0.75rem;
 @text-area-right-padding:                 @text-area-left-padding;
@@ -682,7 +683,6 @@
 @controls-FieldLink-linkItem-cross-padding:  0;
 @controls-FieldLink-showAllLinks-padding:    0 1rem 0 0.14rem;
 @controls-FieldLink-afterField-padding:      0 .14rem 0 0;
-@controls-FieldLink-afterField-height:       3rem;
 @controls-FieldLink-disabled-item-single-padding:0.142rem;
 @controls-FieldLink-disabled-item-single-margin:.07rem .14rem;
 @controls-FieldLink-afterField-background:   transparent;
@@ -741,6 +741,10 @@
 @controls-SubmitPopup-details-color:      @disabled-color;
 @controls-SubmitPopup-details-font-size:  1rem;
 @controls-SubmitPopup-body-padding:       1.6071rem;
+@controls-SubmitPopup-border-top:         none;
+@controls-SubmitPopup-border-bottom:      none;
+@controls-SubmitPopup-border-left:        none;
+@controls-SubmitPopup-border-right:       none;
 //TabButton
 @tab-buttons-border-bottom:               .0357rem solid #293543;
 @tab-button-height:                       3.57rem;
@@ -767,6 +771,7 @@
 @tab-button-inner-after-height:           1.928rem;
 @tab-button-inner-after-bottom:           0.821rem;
 @tab-button-inner-after-width:            .07rem;
+@tab-button-ff-inner-height:              @tab-button-inner-height;
 //Browser
 @text-box-field-font-size:                1.14rem;
 @controls-Paging-btn-width:               3rem;
@@ -796,7 +801,6 @@
 @menu-item-icon-24-margin:						0 0 0 1.78rem;
 @menu-item-icon-16-margin:						0 0 0 1.32rem;
 @text-box-error-bg:                       #472e35;
-@back-button-linheight-before:            3rem;
 @back-button-width-before:                .7rem;
 @back-button-text-fontweight:             @default-font-weight;
 @tab-buttons-border-bottom-height:        0.01rem;
@@ -869,13 +873,12 @@
 @header-font:                             400 1.43rem escape('/') @header-height @default-font-name;
 @header-padding-left:                     0;
 @bottomStyle-items-toolbar-height:        1.88rem;
-@bottomStyle-items-toolbar-border-color:  #1b2530;
 @bottomStyle-items-toolbar-margin:        0;
 @controls-filterButton-picker-border-color:@default-border-color;
-@formatted-text-box-wrapper-padding:      .3rem 0.57rem 0 .4285rem;
+@formatted-text-box-wrapper-padding:      0 0.57rem 0 .4285rem;
 @bottomStyle-items-toolbar-height:        1.88rem;
 @bottomStyle-padding-bottom:              3rem;
-@bottomStyle-items-toolbar-border-color:  #1b2530;
+@bottomStyle-items-toolbar-border-color:  #293A4B;
 @data-grid-row-hover-cell-bg:             #293A4B;
 @image-bar-height:                        3.57rem;
 @image-bar-vertical-padding:              0.245rem;
