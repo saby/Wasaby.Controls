@@ -898,7 +898,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                            //финт ушами, тк фокус с редактора убрать никак нельзя
                            //тк кнопки на которую нажали у нас в обработчике тоже нет
                            //ставим фокус на любой блок внутри нового диалогового окна, например на контейнер кнопки
-                           $('.controls-RichEditor__insertLinkButton').focus();
+                           this._fieldHref.getContainer().focus(); //убираем фокус с редактора
+                           $('.controls-RichEditor__insertLinkButton').focus();//убираем клавиатуру
                         }
                      },
                      onAfterClose: function() {
