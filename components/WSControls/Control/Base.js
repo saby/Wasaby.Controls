@@ -182,6 +182,9 @@ define('js!WSControls/Control/Base',
             },
 
             isEnabled: function(){
+               if (this._options.enabled === undefined) {
+                  return this._options.parentEnabled;
+               }
                return this._options.enabled;
             }
 
