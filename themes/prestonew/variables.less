@@ -22,6 +22,7 @@
 @icon-medium-size:                        1.79rem;
 @icon-large-size:                         3rem;
 //=============
+@default-border-color:                    @accent-color;
 @default-disabled-color:                  @disabled-color;
 @closeButtonWidth:                        3rem;
 @closeButtonHeight:                       3rem;
@@ -103,7 +104,7 @@
 @filter-panel-chooser-list-view-title-shadow-height:1.14rem;
 @button-border-width:                     @default-border-width;
 // Normal default button
-@button-border:                           @default-border-width solid #26b8ff;
+@button-border:                           @default-border-width solid @default-border-color;
 @button-line-height: 						   2.86rem;
 @button-active-bg:                        #1d2834;
 @button-hover-bg:                         #212e3d;
@@ -216,7 +217,7 @@
 @menu-header-bg-color:                    #23b8ff;
 @menu-subpopup-margin:                    @menu-margin;
 @menu-border-width:                       @default-border-width;
-@menu-border-color:                       #26B8FF;
+@menu-border-color:                       @default-border-color;
 @menu-header-caption-color:               #e4e4e4;
 @menu-expand-width:                       .2857rem;
 @menu-expand-top-offset:                  .7142rem;
@@ -428,9 +429,15 @@
 //Data Range
 @date-range-line-height:                  0.86rem;
 @date-range-icon-button-top:              0.536rem;
-@date-range-dash-width:                   0.286rem;
+@date-range-dash-width:                   0.5rem;
+@date-range-dash-color:                   rgba(96, 170, 221, 0.2);
 @date-range-dash-margin:                  0 0.286rem 0.286rem 0.286rem;
 @date-range-dash-border-top:              @default-border-width solid @date-range-dash-color;
+@date-range-icon-button-size:             3rem;
+@date-range-icon-button-line-height:      @date-range-icon-button-size;
+@date-range-icon-button-top:              0;
+@date-range-icon-button-margin:           0;
+
 //Data Range Slider
 @date-range-slider-color:                 #26B8FF;
 @date-range-slider-hover-color:           rgb(187, 233, 255);
@@ -438,12 +445,12 @@
 @date-range-slider-value-font-weight:     normal;
 @date-range-slider-prev-next-buttons-hover-color:@blue-dark-color;
 //Date Range Choose
-@date-range-choose-border-color:          #26b8ff;
+@date-range-choose-border-color:          @default-border-color;
 @date-range-choose-item-bg-color:         @basic-block-bg-color;
 @date-range-choose-bg-hover-color:        #293a4b;
 @date-range-choose-border-width:          0; // В theme.less прописан бордер у флоат арии
 @date-range-choose-border-hover-width:    0;
-@date-range-choose-border-hover:          solid #26b8ff;
+@date-range-choose-border-hover:          solid @default-border-color;
 @date-range-choose-month-height:          1.85rem;
 @date-range-choose-short-width:           16rem;
 @date-range-choose-font-size:             1rem;
@@ -471,8 +478,11 @@
 @controls-date-range-year-marginleft:     0.4rem;
 
 //Date Range Big
+@date-range-big-choose-bg-hovered-color:                 #293A4B;
 @date-range-big-choose-bg-selected-color:                #3f566d;
 
+@date-range-big-choose-months-color:                                     #26B8FF;
+@date-range-big-choose-months-font-size:                                 1rem;
 @date-range-big-choose-months-margin:                                    0.286rem;
 @date-range-big-choose-months-button-height:1.786rem;
 @date-range-big-choose-months-range-width:5.429rem;
@@ -504,7 +514,9 @@
 @date-range-big-choose-header-range-dash-margin:1.5rem 0.286rem 0.286rem;
 @date-range-big-choose-years-panel-top-padding:0.286rem;
 @date-range-big-choose-years-panel-bottom-padding:0.286rem;
-@date-range-big-choose-years-panel-toggle-choose-year-button-line-height:3.4rem; // сделать по другому
+@date-range-big-choose-years-panel-toggle-choose-year-button-font-size:    1.43rem;
+@date-range-big-choose-years-panel-wrapper-font-weight:                    normal;
+@date-range-big-choose-years-panel-toggle-choose-year-button-line-height:  3rem; // сделать по другому
 @date-range-big-choose-years-panel-current-year-button-line-height:3rem;
 @date-range-big-choose-years-panel-back-button-font-size:3rem;
 @date-range-big-choose-years-panel-back-button-line-height:3rem;
@@ -515,7 +527,7 @@
 @date-range-big-choose-month-range-picker-color:               #E4E4E4;
 @date-range-big-choose-month-range-picker-caption-height:      1.7857rem;
 @date-range-big-choose-month-range-picker-caption-font-size:   1.14rem;
-@date-range-big-choose-month-range-picker-table-element-height:.57rem;
+@date-range-big-choose-month-range-picker-table-element-height:.5rem;
 @date-range-big-choose-month-range-picker-table-element-font-size:.43rem;
 @date-range-big-choose-month-range-padding:0.2857rem;
 @date-range-big-choose-month-range-picker-bg-selected:  @date-range-big-choose-bg-selected-color;
@@ -670,7 +682,7 @@
 //FieldLink
 @controls-FieldLink-showAllLinks-lineHeight:3rem;
 @controls-FieldLink-border-color-picker-show: @accent-color;
-@controls-FieldLink-linkItem-line-height:    @text-box-height - @default-border-width; //высота - ширина ббордера
+@controls-FieldLink-linkItem-line-height:    calc(@text-box-height ~"-" @default-border-width); //высота - ширина ббордера
 @controls-FieldLink-showAllLinks-width:      3.2rem;
 @controls-FieldLink-showAllLinks-marginRight:-1.43rem;
 @controls-FieldLink-linkItem-margin:         0;
@@ -722,7 +734,7 @@
 @controls-Scrollbar-light-active-thumb-color:rgba(0, 0, 0, 0.15);
 //InformationPopup
 @controls-InformationPopup-bg:            #2C3E50;
-@controls-InformationPopup-default-status-border-color:#26B8FF;
+@controls-InformationPopup-default-status-border-color:@default-border-color;
 @controls-InformationPopup-border:        @default-border-width solid;
 @controls-InformationPopup-border-bottom: @controls-InformationPopup-border;
 @controls-InformationPopup-border-top:    @controls-InformationPopup-border;
@@ -813,7 +825,7 @@
 @commands-button-close-font-family:       'carrypresto-icons';
 @commands-button-close-button-size:       @icon-large-size;
 @commands-button-close-button-top:        0;
-@commands-button-margin:                  -.3571rem -2.2857rem 0 0;
+@commands-button-margin:                  -.3571rem -3.2857rem 0 0;
 @DropdownList-height: 					      3rem;
 @DropdownList-footer-buttonsBlock-height: 3.57rem;
 @DropdownList-footer-hasMore-top:         1.1rem;
@@ -873,7 +885,7 @@
 @header-padding-left:                     0;
 @bottomStyle-items-toolbar-height:        1.88rem;
 @bottomStyle-items-toolbar-margin:        0;
-@controls-filterButton-picker-border-color:#26B8FF;
+@controls-filterButton-picker-border-color:@default-border-color;
 @formatted-text-box-wrapper-padding:      0 0.57rem 0 .4285rem;
 @bottomStyle-items-toolbar-height:        1.88rem;
 @bottomStyle-padding-bottom:              3rem;
@@ -883,7 +895,6 @@
 @image-bar-vertical-padding:              0.245rem;
 @image-bar-horizontal-padding:            0;
 @image-bar-bg-color:                      rgba(102,170,221, .5);
-@date-range-big-choose-bg-hovered-color:  rgba(0, 0, 0, 0.3);
 @money-text-box-decimals-padding:         0;
 @money-text-box-decimals-font-size:       1.43rem;
 @money-text-box-decimals-color:           @default-text-color;
@@ -898,7 +909,7 @@
 @list-view-items-toolbar-font-family:     'carrypresto-icons';
 @search-left-margin:                      .57rem;
 @controls-view-padding-DEFAULT:           .857rem;
-@combo-box-picker-border:                 @default-border-width solid #26B8FF;
+@combo-box-picker-border:                 @default-border-width solid @default-border-color;
 @data-grid-row-selected-main-bg:          @basic-block-bg-color;
 @data-grid-row-selected-addit-bg:         rgba(44, 62, 80, 0);
 @tree-view-copy-arrow-add-background:     @data-grid-row-selected-addit-bg;

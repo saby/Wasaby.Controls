@@ -460,13 +460,13 @@
 }
 
 .button-mixin(@icon-left, @icon-width, @border-width, @margin-left, @margin-right) {
-  left: @icon-left - @border-width;
+  left: calc(@icon-left ~"-" @border-width);
   top: 50%;
   margin-top: -@icon-width/2;
 
   & + .controls-Button__text {
-    margin-right: @margin-right - @border-width;
-    margin-left: @margin-left + @icon-width + @button-icon-gap - @border-width;
+    margin-right: calc(@margin-right ~'-' @border-width);
+    margin-left: calc(@margin-left ~'+' @icon-width ~'+' @button-icon-gap ~'-' @border-width);
   }
 }
 
