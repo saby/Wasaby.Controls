@@ -27,10 +27,11 @@
                  idProperty="id"
                  itemsDragNDrop="{{ false }}"
                  displayProperty="title"
+                 itemsSortMethod="{{ _itemsSortMethod }}"
                  selectedKeys="{{ _preparedItems.selectableMarkedKeys }}"
                  itemContentTpl="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/itemContentTpl"
                  multiselect="{{ true }}">
-            <ws:handlers onItemClick="{{_onItemClick}}" />
+            <ws:handlers onItemClick="{{_onItemClick}}" onSelectedItemsChange="{{ _onSelectedItemsChange }}"/>
             <ws:groupBy field="group" contentTemplate="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/groupTpl" />
          </ws:SBIS3.CONTROLS.ListView>
       </ws:content>

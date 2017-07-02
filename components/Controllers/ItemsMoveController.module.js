@@ -16,10 +16,9 @@ define('js!SBIS3.CONTROLS.ItemsMoveController', [
 
       $constructor: function() {
          var
-            linkedView = this._options.linkedView; //getItemsActions().getItems().getRawData()
+            linkedView = this._options.linkedView;
          linkedView.setItemsActions(this._prepareItemsActions(linkedView._options.itemsActions));
          linkedView.subscribe('onChangeHoveredItem', this._onChangeHoveredItem.bind(this));
-
          this._publish('onItemMove');
       },
 
@@ -27,21 +26,9 @@ define('js!SBIS3.CONTROLS.ItemsMoveController', [
          var
             linkedView = this._options.linkedView,
             items = linkedView.getItems(),
-            moveTo = items.at(items.getIndex(item) + (at === 'before' ? -1 : 1)),
-            selectedKeys = linkedView.getSelectedKeys(),
-            newItemIndex = Array.indexOf(selectedKeys, moveTo.getId()),
-            currentItemIndex = Array.indexOf(selectedKeys, item.getId());
+            moveTo = items.at(items.getIndex(item) + (at === 'before' ? -1 : 1));
          // При перемещении записи необходимо менять её позицию в рекордсете
          linkedView.move([item], moveTo, at);
-         // и в списке выбранных записей (в случае если среди отмеченных присутствуют заменяемая запись)
-         if (newItemIndex !== -1 && currentItemIndex !== -1) {
-            selectedKeys[newItemIndex] = item.getId();
-            selectedKeys[currentItemIndex] = moveTo.getId();
-         }
-         // Перед установкой нового порядка выделенных записей - нужно обнулить выделение, иначе обновление массива выделенных ключей не произойдет
-         linkedView.getSelectedItems().clear();
-         linkedView.setSelectedKeys(selectedKeys);
-
          this._notify('onItemMove', item);
       },
 
