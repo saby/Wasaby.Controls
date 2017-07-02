@@ -18,6 +18,12 @@ define(['js!SBIS3.CONTROLS.TitleManager', 'js!SBIS3.CONTROLS.Control'], function
             TitleManager.set('title', (new Control({})));
             assert.equal(global.document.title, 'title');
          });
+         it('should not set title when control is destroyed', function () {
+            var control = new Control({});
+            control.destroy();
+            TitleManager.set('title', control);
+            assert.equal(global.document.title, oldTitle);
+         });
       });
       describe('_onDestroyHandler', function () {
          it('should revert to default title', function () {
