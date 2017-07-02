@@ -21,20 +21,22 @@ define('js!SBIS3.CONTROLS.TitleManager', [
        * @param {SBIS3.CONTROLS.Control} control Контрол на время жизни которого нужно установить заголовок
        */
       set: function (title, control) {
-         var index = this._getIndexById(control.getId());
-         if (this._store.length === 0 && document.title != this._defaultTitle) {
-            this._defaultTitle = document.title;
+         if (!control.isDestroyed()) {
+            var index = this._getIndexById(control.getId());
+            if (this._store.length === 0 && document.title != this._defaultTitle) {
+               this._defaultTitle = document.title;
+            }
+            if (index > -1) {
+               this._store[index].title = title;
+            } else {
+               this._store.push({'title': title, id: control.getId()});
+            }
+            var self = this;
+            control.subscribe('onDestroy', function () {
+               self._onDestroyHandler(this.getId());
+            });
+            this._setDocumentTitle();
          }
-         if (index > -1) {
-            this._store[index].title = title;
-         } else {
-            this._store.push({'title' : title, id: control.getId ()});
-         }
-         var self = this;
-         control.subscribe('onDestroy', function() {
-            self._onDestroyHandler(this.getId());
-         });
-         this._setDocumentTitle();
       },
 
       removeLastState: function () {
