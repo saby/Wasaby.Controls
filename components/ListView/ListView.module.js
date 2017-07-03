@@ -3571,7 +3571,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      pagingOptions = {
                         recordsPerPage: self._options.pageSize || more,
                         currentPage: 1,
-                        recordsCount: more,
+                        recordsCount: more || 0,
                         pagesLeftRight: 1,
                         onlyLeftSide: typeof more === 'boolean', // (this._options.display.usePaging === 'parts')
                         rightArrow: hasNextPage
