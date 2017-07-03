@@ -425,7 +425,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                   if(self._list === focusedControl || ~Array.indexOf(self._list.getChildControls(), focusedControl)) {
                      focusedControl.setActive(false, false, false, this);
                      this.setActive(true);
-                  } else {
+                  } else if(self._list.getItems()) {
                      /* Когда уходит фокус с поля ввода, необходимо очистить записи в списке, т.к. записи могут удалять/изменять */
                      self._list.getItems().clear();
                   }
