@@ -342,14 +342,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       $protected: {
          _itemData : null,
          _groupHash: {},
-         _itemsProjection: null,
-         _items : null,
          _itemsInstances: {},
          _offset: 0,
          _limit: undefined,
          _dataSource: undefined,
-         _dataSet: null,
-         _dotItemTpl: null,
          _propertyValueGetter: getPropertyValue,
          _revivePackageParams: {},
          _options: {
@@ -1463,6 +1459,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                this._options._itemsProjection = null;
             }
             this._clearItems();
+            this._itemData = null;
+            this._dataSource = null;
          }
       },
 

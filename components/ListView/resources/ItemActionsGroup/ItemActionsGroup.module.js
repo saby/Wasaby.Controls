@@ -55,7 +55,6 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             _itemActionsButtons: {},
             _itemActionsMenu: undefined,
             _itemActionsMenuButton: undefined,
-            _itemActionsHiddenButton: [],
             _activeItem: undefined,
             _activeCls: 'controls-ItemActions__activeItem',
             _menuAlign: 'standart',
@@ -400,8 +399,9 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
          destroy: function() {
             this._itemActionsButtons = {};
+            this._itemActionsMenuButton = undefined;
+            this._itemActionsMenu = undefined;
             this._activeItem = undefined;
-            this._itemActionsMenuButton.destroy();
             ItemActionsGroup.superclass.destroy.apply(this, arguments);
          }
       });
