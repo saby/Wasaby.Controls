@@ -4182,8 +4182,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _canDragMove: function(dragObject) {
             var source = dragObject .getSource();
             return dragObject .getTarget() &&
-               source &&
-               cInstance.instanceOfModule(source, 'SBIS3.CONTROLS.DragEntity.List') &&
+               this._isCorrectSource(source) &&
                source.getCount() > 0 &&
                dragObject .getTargetsControl() === this &&
                cInstance.instanceOfModule(source.at(0), 'SBIS3.CONTROLS.DragEntity.Row');
@@ -4223,7 +4222,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _updateDragTarget: function(dragObject, e) {
             var dragTarget = this._getDragTarget(dragObject, e),
                target;
-            if (dragObject.getSource() && dragTarget.item && !dragTarget.domElement.hasClass('controls-DragNDrop__placeholder')) {
+            if (this._isCorrectSource(dragObject.getSource()) && dragTarget.item && !dragTarget.domElement.hasClass('controls-DragNDrop__placeholder') ) {
                var position = this._getDirectionOrderChange(e, dragTarget.domElement) || DRAG_META_INSERT.on,
                   sourceIds = [],
                   movedItems = [];
@@ -4258,6 +4257,9 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         _isCorrectSource: function (source) {
+            return source &&  cInstance.instanceOfModule(source, 'SBIS3.CONTROLS.DragEntity.List');
+         },
          _clearDragHighlight: function(dragObject) {
             this.getContainer()
                .find('.controls-DragNDrop__insertBefore, .controls-DragNDrop__insertAfter')
@@ -4320,7 +4322,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   dropBySelf = false,
                   source = dragObject.getSource();
 
-               if (target && source && cInstance.instanceOfModule(source, 'SBIS3.CONTROLS.DragEntity.List')) {
+               if (target && this._isCorrectSource(source)) {
                   var  targetsModel = target.getModel();
                   source.each(function(item) {
                      var model = item.getModel();
@@ -4405,7 +4407,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _toggleDragItems: function (dragObject, show) {
             var source = dragObject.getSource();
-            if (source) {
+            if (this._isCorrectSource(source)) {
                source.each(function (item) {
                   if (item.getDomElement()) { //если элемент находится внутри закрытой папки для него не будет dom'а
                      item.getDomElement().toggleClass('ws-hidden', !show);
