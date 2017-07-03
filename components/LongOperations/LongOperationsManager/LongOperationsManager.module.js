@@ -13,12 +13,10 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
    [
       'Core/core-instance',
       'Core/Deferred',
-      'Core/ParallelDeferred',
       'Core/EventBus',
       'js!SBIS3.CORE.TabMessage',
       'js!WS.Data/Source/DataSet',
       'js!WS.Data/Collection/RecordSet',
-      /*###'js!WS.Data/Adapter/Sbis',*/
       'js!WS.Data/Chain',
       'js!SBIS3.CONTROLS.LongOperationsTabCalls',
       'js!SBIS3.CONTROLS.LongOperationsCallsPool',
@@ -28,7 +26,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model'
    ],
 
-   function (CoreInstance, Deferred, ParallelDeferred, EventBus, TabMessage, DataSet, RecordSet, /*###AdapterSbis,*/ Chain, LongOperationsTabCalls, LongOperationsCallsPool, ILongOperationsProducer, LongOperationEntry, LongOperationHistoryItem, Model) {
+   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsTabCalls, LongOperationsCallsPool, ILongOperationsProducer, LongOperationEntry, LongOperationHistoryItem, Model) {
       'use strict';
 
       /**
@@ -109,30 +107,6 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                throw new TypeError('Argument "prodName" must be a string');
             }
             return _producers[prodName];
-         },
-
-         /**
-          * Зарегистрировать продюсер(ы) длительных операций по его имени(именам)
-          * @public
-          * @param {string|string[]} prodName Имя(имена) продюсера(ов) длительных операций
-          * @return {Core/Deferred<object>}
-          */
-         registerByName: function (prodName) {
-            if (_isDestroyed) {
-               throw new Error('Manager is destroyed');
-            }
-            var prodNames = prodName ? (Array.isArray(prodName) ? prodName : [prodName]) : null;
-            if (!prodNames) {
-               throw new TypeError('Argument "prodName" must be a string or string array');
-            }
-            var promise = new Deferred();
-            var dfrs = new ParallelDeferred({maxRunningCount:prodNames.length, stopOnFirstError:true});
-            for (var i = 0; i < prodNames.length; i++) {
-               var n = prodNames[i];
-               dfrs.push(_registerByName(n), n);
-            }
-            dfrs.done().getResult().addCallback(promise.callback.bind(promise));
-            return promise;
          },
 
          /**
@@ -397,56 +371,11 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
        */
 
       /**
-       * Зарегистрировать продюсер длительных операций по его имени
-       * @public
-       * @param {string} prodName Имя продюсера длительных операций
-       * @return {Core/Deferred<SBIS3.CONTROLS.ILongOperationsProducer>}
-       */
-      var _registerByName = function (prodName) {
-         if (!prodName || typeof prodName !== 'string') {
-            throw new TypeError('Argument "prodName" must be a string');
-         }
-         var inf = _checkProducerName(prodName);
-         if (!inf) {
-            throw new Error('Producer module not found');
-         }
-         var promise = new Deferred();
-         require([inf.module], function (module) {
-            var producer;
-            switch (typeof module) {
-               case 'function':
-                  var args;
-                  if (inf.initer) {
-                     try {
-                        args = JSON.parse(inf.initer);
-                     }
-                     catch (ex) {
-                        args = inf.initer;
-                     }
-                  }
-                  producer = new module(args);
-                  break;
-               case 'object':
-                  if (!inf.initer) {
-                     producer = module;
-                  }
-                  break;
-            }
-            promise[producer && producer.getName() === prodName ? 'callback' : 'errback'](producer || 'Unable to create producer')
-         });
-         return promise.addCallback(function (producer) {
-            _register(producer, true);
-            return producer;
-         });
-      };
-
-      /**
        * Зарегистрировать продюсер длительных операций
        * @protected
        * @param {SBIS3.CONTROLS.ILongOperationsProducer} producer Продюсер длительных операций
-       * @param {boolean} dontCheckName Не проверять имя продюсера
        */
-      var _register = function (producer, dontCheckName) {
+      var _register = function (producer) {
          if (!producer || !CoreInstance.instanceOfMixin(producer, 'SBIS3.CONTROLS.ILongOperationsProducer')) {
             throw new TypeError('Argument "producer" must be SBIS3.CONTROLS.ILongOperationsProducer');
          }
@@ -454,12 +383,10 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          if (!name) {
             throw new Error('Producer has no name');
          }
-         if (!dontCheckName) {
-            var inf = _checkProducerName(name);
-            var module = inf && requirejs.defined(inf.module) ? require(inf.module) : null;
-            if (!module || !(typeof module === 'function' ? producer instanceof module : producer === module)) {
-               throw new Error('Producer name is invalid');
-            }
+         var inf = _checkProducerName(name);
+         var module = inf && requirejs.defined(inf.module) ? require(inf.module) : null;
+         if (!module || !(typeof module === 'function' ? producer instanceof module : producer === module)) {
+            throw new Error('Producer name is invalid');
          }
          var already = _producers[name] === producer;
          if (!already) {
