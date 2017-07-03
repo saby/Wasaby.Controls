@@ -234,7 +234,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
 
       _onMouseOver: function (e) {
          // TODO: перевести все на единую пописку
-         var target = $(event.target || event.srcElement),
+         var target = $(e.target),
             closestCssClass;
          if (target.hasClass(this._cssDateRangeChoose.yearButton)) {
             if (!this._options.showYears) {
