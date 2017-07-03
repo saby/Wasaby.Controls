@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
    'Core/core-merge',
    'css!SBIS3.CONTROLS.CompositeView',
    'css!SBIS3.CONTROLS.TreeCompositeView'
-], function( cFunctions, constants, Deferred, isEmpty, ParallelDeferred, TreeDataGridView, CompositeViewMixin, folderTpl, TreeCompositeItemsTemplate, FolderTemplate, ListFolderTemplate, FolderContentTemplate, StaticFolderContentTemplate, colHelpers, fcHelpers, TemplateUtil, cMerge) {
+], function( cFunctions, constants, Deferred, ParallelDeferred, isEmpty, TreeDataGridView, CompositeViewMixin, folderTpl, TreeCompositeItemsTemplate, FolderTemplate, ListFolderTemplate, FolderContentTemplate, StaticFolderContentTemplate, colHelpers, fcHelpers, TemplateUtil, cMerge) {
 
    'use strict';
 
