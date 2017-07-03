@@ -93,6 +93,10 @@
          box-sizing: content-box;
          height: calc(@icon-button-edit-round-border-height ~"-" 2 * @icon-button-border-width) !important;
          width: calc(@icon-button-edit-round-border-width ~"-" 2 * @icon-button-border-width) !important;
+         //graceful degradation pattern
+         //firefox 45 not support calc in line-height property
+         //https://bugzilla.mozilla.org/show_bug.cgi?id=594933
+         line-height: @icon-button-edit-round-border-line-height - 2 * @icon-button-border-width !important;
          line-height: calc(@icon-button-edit-round-border-line-height ~"-" 2 * @icon-button-border-width) !important;
       }
    }

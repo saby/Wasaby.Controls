@@ -53,6 +53,10 @@
 }
 
 .controls-Button.controls-Button__big.controls-Checked__checked:not(.ws-disabled) {
+    //graceful degradation pattern
+    //firefox 45 not support calc in line-height property
+    //https://bugzilla.mozilla.org/show_bug.cgi?id=594933
+    line-height: @button-big-height - 2 * @button-checked-border-width;
     line-height: calc(@button-big-height ~"-" 2 * @button-checked-border-width);
     .controls-Button__text {
       margin-left: @button-big-checked-text-margin-left;
