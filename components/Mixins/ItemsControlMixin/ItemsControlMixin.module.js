@@ -76,14 +76,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       findIdProperty = ListViewHelpers.findIdProperty,
       JSONToRecordset = ListViewHelpers.JSONToRecordset,
       extendedMarkupCalculate = ListViewHelpers.extendedMarkupCalculate;
-var prepareGroupId = function(item, groupId, cfg) {
+   var prepareGroupId = function(item, groupId, cfg) {
       //делаем id группы строкой всегда, чтоб потом при обращении к id из верстки не ошибаться
       return groupId + '';
-applyGroupItemsCount = function(groupId, count, cfg) {
+   },
+   applyGroupItemsCount = function(groupId, count, cfg) {
       cfg._groupItemsCount = cfg._groupItemsCount || {};
       cfg._groupItemsCount[groupId] = cfg._groupItemsCount[groupId] || 0;
       cfg._groupItemsCount[groupId] += count;
-   },
    };
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
