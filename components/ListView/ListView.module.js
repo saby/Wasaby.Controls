@@ -2839,7 +2839,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._virtualScrollController.updateVirtualPages();
                }
             }
-            if(this._itemsToolbar && this._itemsToolbar.isVisible() && this._touchSupport){
+            /* при изменении размера таблицы необходимо вызвать перерасчет позиции тулбара
+               позиция тулбара может сбиться например при появление пэйджинга */
+            if(this._itemsToolbar && this._itemsToolbar.isVisible()){
                 this._itemsToolbar.recalculatePosition();
             }
             /* Т.к. для редактирования нет parent'a, надо ресайц звать руками */

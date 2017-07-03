@@ -96,7 +96,11 @@ define('js!SBIS3.CONTROLS.SliderInput',
             },
 
             _setPreparedValue : function(value, side){
-               value = value || value === 0 ? this._prepareValue(value, side) : value;
+               value = value || value === 0 ?
+                  this._prepareValue(value, side) :
+                  this._options.single ?
+                     this._options.minValue :
+                     value;
                side === 'start' ? this.setStartValue(value) : this.setEndValue(value);
             },
 

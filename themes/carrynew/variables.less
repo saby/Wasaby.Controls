@@ -46,7 +46,7 @@
 @button-primary-active-bg:                #d94700;
 // Normal disabled button
 @button-disabled-text-color:              @gray-color;
-@button-disabled-border:                  0.07rem solid #CCCCCC;
+@button-disabled-border:                  @default-border-width solid #CCCCCC;
 @button-disabled-bg:                      #F0F5FB;
 // Big button
 @button-big-hover-bg:                     #ff7033;
@@ -65,6 +65,7 @@
 @check-box-disabled-color:                #CCC;
 @check-box-icon-border:                   1px solid #8991a9;
 // Switcher
+@switcher-btn-bg-color:                   #fff;
 @switcher-do-text-color:                  @black-color;
 @switcher-do-unselected-text-color:       #8991A9;
 @switcher-do-disabled-text-color:         @gray-ccc-color;
@@ -87,7 +88,7 @@
 @compo-box-picker-show-color:             #fff;
 @text-box-focus-bg:                       #fff;
 @text-box-hover-border-color:             rgb(204, 204, 204);
-@text-box-disabled-border-bottom:         .07rem solid @check-box-disabled-color;
+@text-box-disabled-border-bottom:         @default-border-width solid @check-box-disabled-color;
 @text-box-field-focus-text-color:         #000;
 // DateBox
 @date-box-field-text-color:               @default-text-color;
@@ -101,6 +102,7 @@
 @combo-box-picker-item-bg:                #ffffff;
 @combo-box-picker-item-hover-bg:          #f0f5fb;
 @combo-box-arrowDown-color:               @icon-color-primary;
+@combo-box-arrowDown-color-focus:         @button-icon-color-hover;
 @combo-box-arrowDown-color-picker-show:   @button-icon-color-hover;
 @combo-box-arrowDown-color-hover:         @button-icon-color-hover;
 // Calendar
@@ -153,6 +155,7 @@
 @tree-view-expand-color:                        @blue-dark-color;
 @tree-view-expand-hover-color:                  #0055BB;
 @tree-view-expand-hidden-color:                 @gray-lamantin-color;
+@tree-view-copy-arrow-background:               @white-color;
 // Data grid //
 @data-grid-row-hover-bg:                  @default-hover-color;
 @data-grid-row-hover-cell-bg:             @default-hover-color;
