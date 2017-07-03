@@ -76,7 +76,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
           */
          init: function () {
             //GenericLongOperationsProducer.superclass.init.apply(this, arguments);
-            this._publish('onstarted', 'onchanged', 'onended', 'ondeleted');
+            this._publish('onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted');
          },
 
          /**
@@ -106,7 +106,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                }
             }
             if (oIds.length) {
-               this._notify('onended', {producer:this._name, operationIds:oIds, status:STATUSES.error, error:'User left the page'});
+               this._notify('onlongoperationended', {producer:this._name, operationIds:oIds, status:STATUSES.error, error:'User left the page'});
             }
          },
 
@@ -294,7 +294,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
          }
          var operationId = operation.id;
          GLOStorage.put(self._name, operationId, _toSnapshot(operation));
-         self._notify('onstarted', {producer:self._name, operationId:operationId});
+         self._notify('onlongoperationstarted', {producer:self._name, operationId:operationId});
          return operationId;
       };
 
@@ -393,7 +393,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                   if (handler && !handler.call(null)) {
                      throw new Error('Action is not performed');
                   }
-                  eventType = 'onchanged';
+                  eventType = 'onlongoperationchanged';
                   result = {changed:'status'};
                   break;
                case STATUSES.success:
@@ -408,7 +408,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                   else {
                      delete self._actions[operationId];
                   }
-                  eventType = 'onended';
+                  eventType = 'onlongoperationended';
                   if (status === STATUSES.success) {
                      if (details) {
                         if (details.url && typeof details.url === 'string') {
@@ -468,7 +468,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
          }
          if (GLOStorage.remove(self._name, operationId)) {
             delete self._actions[operationId];
-            self._notify('ondeleted', {producer:self._name, operationId:operationId});
+            self._notify('onlongoperationdeleted', {producer:self._name, operationId:operationId});
          }
       };
 
@@ -480,7 +480,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
       var _clear = function (self) {
          var operationIds = GLOStorage.clear(self._name);
          if (operationIds.length) {
-            self._notify('ondeleted', {producer:self._name, operationIds:operationIds});
+            self._notify('onlongoperationdeleted', {producer:self._name, operationIds:operationIds});
          }
       };
 

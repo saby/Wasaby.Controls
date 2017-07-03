@@ -89,7 +89,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                context.setValue('filter/NeedProfileData', true);
             }
 
-            this._publish('onoperationstarted', 'onoperationchanged', 'onoperationended', 'onoperationdeleted', 'onproducerregistered', 'onproducerunregistered', 'ontimespentchanged');
+            this._publish('onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted', 'onproducerregistered', 'onproducerunregistered', 'ontimespentchanged');
          },
 
          init: function () {
@@ -138,11 +138,11 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
             var self = this;
             var STATUSES = LongOperationEntry.STATUSES;
 
-            ['onoperationstarted', 'onoperationchanged', 'onoperationended', 'onoperationdeleted', 'onproducerregistered', 'onproducerunregistered'].forEach(function (evtType) {
+            ['onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted', 'onproducerregistered', 'onproducerunregistered'].forEach(function (evtType) {
                self.subscribeTo(longOperationsManager, evtType, function (evtName, evt) {
                   var dontReload;
                   switch (evtName.name) {
-                     case 'onoperationchanged':
+                     case 'onlongoperationchanged':
                         var items = self.getItems();
                         if (items && items.getCount()) {
                            var model = items.getRecordById(Model.getFullId(evt.tabKey, evt.producer, evt.operationId));
@@ -159,7 +159,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                            }
                         }
                         break;
-                     case 'onoperationended':
+                     case 'onlongoperationended':
                         self._animationAdd(Model.getFullId(evt.tabKey, evt.producer, evt.operationId), evt.status === STATUSES.success);
                         self._animationRun();
                         break;

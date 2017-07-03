@@ -399,7 +399,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             // Добавить в список
             _producers[name] = producer;
             // Подписаться на события
-            ['onstarted', 'onchanged', 'onended', 'ondeleted'].forEach(function (eventType) {
+            ['onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted'].forEach(function (eventType) {
                producer.subscribe(eventType, _eventListener);
             });
              // Уведомить другие вкладки
@@ -440,7 +440,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          var done = false;
          if (name) {
             // Отцепить события
-            ['onstarted', 'onchanged', 'onended', 'ondeleted'].forEach(function (eventType) {
+            ['onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted'].forEach(function (eventType) {
                _producers[name].unsubscribe(eventType, _eventListener);
             });
             // Если есть выполняющийся запрос данных - отсоединиться от него
@@ -578,12 +578,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                throw new Error('Unknown event');
             }
          }
-         var eventType = {
-            onstarted: 'onoperationstarted',
-            onchanged: 'onoperationchanged',
-            onended: 'onoperationended',
-            ondeleted: 'onoperationdeleted'
-         }[typeof evtName === 'object' ? evtName.name : evtName];
+         var eventType = typeof evtName === 'object' ? evtName.name : evtName;
          if (data) {
             _channel.notifyWithTarget(eventType, manager, data);
          }
@@ -641,21 +636,16 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                _unregTabProducer(tab, evt.producer);
                break;
 
-            case 'onoperationstarted':
-            case 'onoperationchanged':
-            case 'onoperationended':
-            case 'onoperationdeleted':
+            case 'onlongoperationstarted':
+            case 'onlongoperationchanged':
+            case 'onlongoperationended':
+            case 'onlongoperationdeleted':
                var data = evt.data;
                if (!(data && typeof data === 'object' && data.producer && typeof data.producer === 'string' && 'isCrossTab' in evt && typeof evt.isCrossTab === 'boolean' && 'hasHistory' in evt && typeof evt.hasHistory === 'boolean')) {
                   throw new Error('Unknown event');
                }
                _regTabProducer(tab, data.producer, evt.isCrossTab, evt.hasHistory);
-               _eventListener({
-                  onoperationstarted: 'onstarted',
-                  onoperationchanged: 'onchanged',
-                  onoperationended: 'onended',
-                  onoperationdeleted: 'ondeleted'
-               }[type], data, true);
+               _eventListener(type, data, true);
                break;
          }
       };
@@ -867,7 +857,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       );
 
       // Опубликовать свои события
-      _channel.publish('onoperationstarted', 'onoperationchanged', 'onoperationended', 'onoperationdeleted');
+      _channel.publish('onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted');
 
       // И подписаться на события во вкладках
       _tabChannel.subscribe('LongOperations:Manager:onActivity', _tabListener);

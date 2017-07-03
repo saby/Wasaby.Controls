@@ -92,7 +92,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                }
             });
 
-            ['onoperationstarted', 'onoperationchanged', 'onoperationended', 'onoperationdeleted', 'onproducerregistered', 'onproducerunregistered'].forEach(function (evtType) {
+            ['onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted', 'onproducerregistered', 'onproducerunregistered'].forEach(function (evtType) {
                self.subscribeTo(self._longOpList, evtType, function (evtName, evt) {
                   self._onOperation(evtType, evt);
                });
@@ -471,12 +471,12 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
           */
          _onOperation: function (eventType, data) {
             switch (eventType) {
-               case 'onoperationstarted':
+               case 'onlongoperationstarted':
                   this._animationAtStart();
                   this._setProgress(0, data.progress ? data.progress.total : 1);
                   break;
 
-               case 'onoperationchanged':
+               case 'onlongoperationchanged':
                   var active = this._activeOperation;
                   switch (data.changed) {
                      case 'status':
@@ -500,7 +500,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                   }
                   break;
 
-               case 'onoperationended':
+               case 'onlongoperationended':
                   this._setProgress(data.progress ? data.progress.value : 1, data.progress ? data.progress.total : 1);
                   var items = this._longOpList.getItems();
                   var model = items ? items.getRecordById(Model.getFullId(data.tabKey, data.producer, data.operationId)) : null;
@@ -510,7 +510,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                   }
                   break;
 
-               case 'onoperationdeleted':
+               case 'onlongoperationdeleted':
                case 'onproducerregistered':
                case 'onproducerunregistered':
                   break;
