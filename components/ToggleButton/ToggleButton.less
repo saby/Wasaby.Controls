@@ -1,9 +1,9 @@
 .toggle-button-mixin(@icon-left, @icon-width, @border-width, @margin-left, @margin-right){
-  left: @icon-left - @border-width;
+  left: cacl(@icon-left ~"-" @border-width);
 
   & + .controls-Button__text {
-    margin-right: @margin-right - @border-width;
-    margin-left: @margin-left + @icon-width + @button-icon-gap - @border-width;
+    margin-right: calc(@margin-right ~"-" @border-width);
+    margin-left: calc(@margin-left ~"+" @icon-width ~"+" @button-icon-gap ~"-" @border-width);
   }
 }
 
@@ -53,7 +53,7 @@
 }
 
 .controls-Button.controls-Button__big.controls-Checked__checked:not(.ws-disabled) {
-    line-height: @button-big-height - 2 * @button-checked-border-width;
+    line-height: calc(@button-big-height ~"-" 2 * @button-checked-border-width);
     .controls-Button__text {
       margin-left: @button-big-checked-text-margin-left;
       margin-right: @button-big-checked-text-margin-right;
