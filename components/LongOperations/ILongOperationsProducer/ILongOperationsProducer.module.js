@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.ILongOperationsProducer',
 
    return /** @lends SBIS3.CONTROLS.ILongOperationsProducer.prototype */{
       /**
-       * @event onStarted Происходит при начале исполнения новой длительной операции
+       * @event onlongoperationstarted Происходит при начале исполнения новой длительной операции
        * @param {Core/EventObject} evtName Дескриптор события
        * @param {object} data Данные события
        * @param {string} data.producer Имя продюсера
@@ -21,12 +21,12 @@ define('js!SBIS3.CONTROLS.ILongOperationsProducer',
        * @param {number} [data.progress.value] Количество выполненых подзадач (Здесь всегда 0)
        * @example
        * <pre>
-       *    producer.subscribe('onstarted', function (evtName, data) {
+       *    producer.subscribe('onlongoperationstarted', function (evtName, data) {
        *       ...
        *    });
        * </pre>
        *
-       * @event onChanged Происходит при изменении свойств длительной операции в процесе исполнения
+       * @event onlongoperationchanged Происходит при изменении свойств длительной операции в процесе исполнения
        * @param {Core/EventObject} evtName Дескриптор события
        * @param {object} data Данные события
        * @param {string} data.producer Имя продюсера
@@ -38,12 +38,12 @@ define('js!SBIS3.CONTROLS.ILongOperationsProducer',
        * @param {string} [data.notification] Сообщение о ходе выполнения, если получено сообщение
        * @example
        * <pre>
-       *    producer.subscribe('onchanged', function (evtName, data) {
+       *    producer.subscribe('onlongoperationchanged', function (evtName, data) {
        *       ...
        *    });
        * </pre>
        *
-       * @event onEnded Происходит при завершении длительной операции по любой причине. При завершении вследствие ошибки предоставляется информация
+       * @event onlongoperationended Происходит при завершении длительной операции по любой причине. При завершении вследствие ошибки предоставляется информация
        * об ошибке в свойстве data.error
        * @param {Core/EventObject} evtName Дескриптор события
        * @param {object} data Данные события
@@ -54,19 +54,19 @@ define('js!SBIS3.CONTROLS.ILongOperationsProducer',
        * @param {number} [data.progress.value] Количество выполненых подзадач (Здесь всегда равно data.progress.total)
        * @example
        * <pre>
-       *    producer.subscribe('onended', function (evtName, data) {
+       *    producer.subscribe('onlongoperationended', function (evtName, data) {
        *       ...
        *    });
        * </pre>
        *
-       * @event onDeleted При удалении длительной операции
+       * @event onlongoperationdeleted При удалении длительной операции
        * @param {Core/EventObject} evtName Дескриптор события
        * @param {object} data Данные события
        * @param {string} data.producer Имя продюсера
        * @param {string} data.operationId Идентификатор операции (Возможен список идентификаторов в свойстве data.operationIds)
        * @example
        * <pre>
-       *    producer.subscribe('ondeleted', function (evtName, data) {
+       *    producer.subscribe('onlongoperationdeleted', function (evtName, data) {
        *       ...
        *    });
        * </pre>
