@@ -186,6 +186,13 @@ define('js!WSControls/Control/Base',
                   return this._options.parentEnabled;
                }
                return this._options.enabled;
+            },
+
+            isVisible: function(){
+               if (this._options.visible === undefined) {
+                  return this._options.parentVisible;
+               }
+               return this._options.visible;
             }
 
 
