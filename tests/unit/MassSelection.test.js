@@ -15,7 +15,7 @@ define(['js!SBIS3.CONTROLS.TreeDataGridView', 'js!WS.Data/Collection/RecordSet']
          testResult3 = { marked: [], excluded: [1] },
          testResult4 = { marked: [12], excluded: [] },
          testResult5 = { marked: [1, 11, 12, 13], excluded: [] },
-         testResult6 = { marked: [], excluded: [1, 11, 12, 13] },
+         testResult6 = { marked: [], excluded: [11, 12, 13] },
          testResult7 = { marked: [13, 131, 133], excluded: [132] };
 
       beforeEach(function() {
