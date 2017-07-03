@@ -162,7 +162,16 @@ define('js!WSControls/Buttons/MenuButton', [
                this.togglePicker();
             } else {
                if (this._items.getCount() == 1) {
-                  var id = this._items.at(0).getId();
+                  var id = this._items.at(0).getId(),
+                      command = this._items.at(0).get('command'),
+                      commandArgs, args;
+
+                  if(command){
+                     commandArgs = this._items.at(0).get('commandArgs');
+                     args = [command].concat(commandArgs ? commandArgs : []);
+                     this.sendCommand.apply(this, args);
+                  }
+
                   this._notify('onMenuItemActivate', id, event);
                }
             }
