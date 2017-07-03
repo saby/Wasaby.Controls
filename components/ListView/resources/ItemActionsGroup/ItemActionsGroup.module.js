@@ -272,7 +272,6 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             if(this._activeItem && this._activeItem.container && this._options.touchMode) {
                this._activeItem.container.removeClass(this._activeCls);
             }
-            this._activeItem = null;
             this._itemActionsMenu && this.isItemActionsMenuVisible() && this._itemActionsMenu.hide();
             ItemActionsGroup.superclass.hide.call(this);
          },
