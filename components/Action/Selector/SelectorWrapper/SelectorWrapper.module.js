@@ -54,10 +54,27 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
       },
       $constructor: function() {
          this.once('onInit', function() {
-            var linkedObject = this._getLinkedObject();
+            var linkedObject = this._getLinkedObject(),
+                self = this;
 
             this.subscribeTo(linkedObject, 'onSelectedItemsChange', this._onSelectedItemsChangeHandler.bind(this))
-                .subscribeTo(linkedObject, 'onItemClick', this._onItemClickHandler.bind(this));
+                .subscribeTo(linkedObject, 'onItemClick', function(e) {
+                   /* Если есть прикладные обработчики на onItemClick то они должны выполниться первыми,
+                      т.к. в них могут отменять обработку клика, и мы этому мешать не должны */
+                   if(linkedObject.getEventHandlers('onItemClick').length > 1) {
+                      var event = e,
+                          args = arguments;
+                      
+                      setTimeout(function () {
+                         if(event.getResult() !== false) {
+                            self._onItemClickHandler.apply(self, args);
+                         }
+                      }, 0);
+                   } else  {
+                      self._onItemClickHandler.apply(self, arguments);
+                   }
+                   event = e;
+                });
 
             /* Обработка кнопки "Выбрать" для иерархических представлений */
             if(cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.TreeMixin')) {
