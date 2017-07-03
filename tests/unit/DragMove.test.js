@@ -1,7 +1,8 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
-   'js!SBIS3.CONTROLS.ListView.DragMove'
-], function (DragMove) {
+   'js!SBIS3.CONTROLS.ListView.DragMove',
+   'js!SBIS3.CONTROLS.DragEntity.List'
+], function (DragMove, DragList) {
    describe('DragMove', function () {
       beforeEach(function () {
          if (typeof $ === 'undefined') {
@@ -32,6 +33,15 @@ define([
             parent = $('<div style="display: flex; flex-direction: column">');
             parent.html(target);
             assert.isFalse(DragMove.prototype._checkHorisontalDragndrop(target));
+         });
+      });
+      describe('_isCorrectSource', function () {
+         it('should return true when source is list', function () {
+            var list = new DragList({});
+            assert.isTrue(DragMove.prototype._isCorrectSource(list));
+         });
+         it('should return false when source is array', function () {
+            assert.isFalse(DragMove.prototype._isCorrectSource([]));
          });
       });
    });
