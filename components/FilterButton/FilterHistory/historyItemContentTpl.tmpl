@@ -1,0 +1,8 @@
+<div class="controls-filterButton__historyView-item">
+    <div class="controls-filterButton__historyView-pin icon-primary icon-16 icon-Pin {{ !item.get('isMarked') ? 'ws-hidden' }}"></div>
+    <div class="controls-filterButton__historyView-titleContainer" title="{{ item.get('linkText')|escapeTagsFromStr:'' }}">
+        <span class='controls-filterButton__historyView-item-title asLink'>
+            {{ item.get('linkText')|sanitize }}
+        </span>
+    </div>
+</div>

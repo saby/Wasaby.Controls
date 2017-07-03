@@ -154,7 +154,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
       },
 
       $constructor: function() {
-         this._publish('onSelectedItemsChange');
+         this._publish('onSelectedItemsChange', 'onBeforeSelectedItemsChange');
 
          if (this._options.selectedKeys && this._options.selectedKeys.length) {
             if (Array.isArray(this._options.selectedKeys)) {
@@ -810,6 +810,14 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
          if(this._loadItemsDeferred && (addedKeys.length || removedKeys.length)) {
             this._loadItemsDeferred.cancel();
          }
+
+         //TODO: событие нужно для массового выделения, чтобы до нотификации об изменении выделенных записей, можно было их подменить.
+         //Когда массовое выделение будет инкапсулироваться в проекции (во ViewModel) данное событие нужно будет удалить.
+         this._notify('onBeforeSelectedItemsChange', this._options.selectedKeys, {
+            added : addedKeys,
+            removed : removedKeys
+         });
+
          this._notifySelectedItems(this._options.selectedKeys, {
             added : addedKeys,
             removed : removedKeys

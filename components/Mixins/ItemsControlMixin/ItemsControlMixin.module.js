@@ -79,6 +79,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 var prepareGroupId = function(item, groupId, cfg) {
       //делаем id группы строкой всегда, чтоб потом при обращении к id из верстки не ошибаться
       return groupId + '';
+applyGroupItemsCount = function(groupId, count, cfg) {
+      cfg._groupItemsCount = cfg._groupItemsCount || {};
+      cfg._groupItemsCount[groupId] = cfg._groupItemsCount[groupId] || 0;
+      cfg._groupItemsCount[groupId] += count;
+   },
    };
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -646,6 +651,11 @@ var prepareGroupId = function(item, groupId, cfg) {
          return this._options._itemsTemplate;
       },
 
+      //В композите элементы добавляются по другому шаблону. Решится с перходом на VDOM
+      _getItemsTemplateForAdd: function() {
+         return this._options._itemsTemplate;
+      },
+
       _prepareItemsConfig: function() {
          if (this._options.dataSource) {
             this._dataSource =  SourceUtil.prepareSource.call(this, this._options.dataSource);
@@ -983,6 +993,9 @@ var prepareGroupId = function(item, groupId, cfg) {
 
       _removeItems: function (items, groupId) {
          var removedElements = $([]), prev;
+
+         applyGroupItemsCount(groupId, -items.length, this._options);
+
          for (var i = 0; i < items.length; i++) {
             var item = items[i];
             var targetElement = this._getDomElementByItem(item);
@@ -994,7 +1007,7 @@ var prepareGroupId = function(item, groupId, cfg) {
                if (!isEmpty(this._options.groupBy)) {
 
                   if (this._options.easyGroup) {
-                     if (this._getGroupItems(groupId).length < 1) {
+                     if (this._options._groupItemsCount[groupId] < 1) {
                         $('[data-group="' + groupId + '"]', this._container.get(0)).remove();
                      }
                   }
@@ -1032,10 +1045,10 @@ var prepareGroupId = function(item, groupId, cfg) {
          var itemsToAdd = items;
          if (!isEmpty(this._options.groupBy) && this._options.easyGroup) {
 
-            //Если в группе один элемент (или меньше), то это значит что добавился элемент в группу, которая еще не отрисована
+            //Если в группе столько же элементов, сколько добавилось, то группа еще не отрисована
             //и надо ее отрисовать
             itemsToAdd = [];
-            if (this._getGroupItems(groupId).length <= items.length) {
+            if (this._options._groupItemsCount[groupId] === items.length) {
                this._options._groupItemProcessing(groupId, itemsToAdd, items[0], this._options);
             }
             itemsToAdd = itemsToAdd.concat(items);
@@ -1053,6 +1066,8 @@ var prepareGroupId = function(item, groupId, cfg) {
       },
 
       _addItems: function(newItems, newItemsIndex, groupId) {
+         applyGroupItemsCount(groupId, newItems.length, this._options);
+
          this._itemData = null;
          var i;
          if (newItems && newItems.length) {
@@ -1080,7 +1095,7 @@ var prepareGroupId = function(item, groupId, cfg) {
                   };
                   // Вычисляем drawHiddenGroup при перерисовке item'а, т.к. в текущей реализации это единственный способ скрыть элемент, если он расположен в свернутой группе
                   data.tplData.drawHiddenGroup = !!this._options._groupCollapsing[groupId];
-                  markupExt = extendedMarkupCalculate(this._getItemsTemplate()(data), this._options);
+                  markupExt = extendedMarkupCalculate(this._getItemsTemplateForAdd()(data), this._options);
                   markup = markupExt.markup;
                   this._optimizedInsertMarkup(markup, this._getInsertMarkupConfig(newItemsIndex, newItems, groupId));
                   this._revivePackageParams.revive = this._revivePackageParams.revive || markupExt.hasComponents;
@@ -1521,12 +1536,12 @@ var prepareGroupId = function(item, groupId, cfg) {
          return this._options.filter;
       },
 
-      _callQuery: function (filter, sorting, offset, limit) {
+      _callQuery: function (filter, sorting, offset, limit, direction) {
          if (!this._dataSource) {
             return;
          }
 
-         var query = this._getQueryForCall(filter, sorting, offset, limit);
+         var query = this._getQueryForCall(filter, sorting, offset, limit, direction);
 
          return this._dataSource.query(query).addCallback((function(dataSet) {
             if (this._options.idProperty && this._options.idProperty !== dataSet.getIdProperty()) {

@@ -9,19 +9,20 @@
 @disabled-color:                          #8991A9;
 @warning-color:                           #FA9C33;
 @default-bg-color:                        #1D2834;
-@accent-color:							         #26B8FF;
+@accent-color:                            #26B8FF;
 @default-hover-color:                     #B9E9FF;
 @gray-lamantin-color:                     #8991A9;
 @acent-color2:                            #354B62;//Цвет акцентной плашки
-@basic-block-bg-color:					  #2C3E50; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
+@basic-block-bg-color:                    #2C3E50; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
 @default-height:								   1.7857rem;
-@icon-color-primary:                      @default-text-color;
+@icon-color-primary:                      #26B8FF;
 @highlight-text-bg:                       #354B62;
 @icon-active-color:                       #B9E9FF;
 @icon-small-size:                         1.32rem;
 @icon-medium-size:                        1.79rem;
 @icon-large-size:                         3rem;
 //=============
+@default-border-color:                    @accent-color;
 @default-disabled-color:                  @disabled-color;
 @closeButtonWidth:                        3rem;
 @closeButtonHeight:                       3rem;
@@ -35,7 +36,7 @@
 @blue-dark-color:                         #8991A9;
 @darkcyan-color: 						         #B9E9FF;
 @default-font-size:                       1.14rem;
-@default-border-width:					      .07142rem;
+@default-border-width:					  2px;
 @font-popup-size:                         1.43rem;
 @font-folder-size:                        1.14rem;
 @check-box-default-font-size:				   1.14rem;
@@ -51,7 +52,7 @@
 @link-font-size:                          1.43rem;
 @link-hover-text-color:                   #B9E9FF;
 @link-icon-hover-icon:                    @link-hover-text-color;
-@link-icon-margin:                        -.07rem 0 0;
+@link-icon-margin:                        -@default-border-width 0 0;
 @link-icon-field-margin:                  0 0 0 .14rem;
 @link-additional-color:                   #8991A9;
 //Icon Button
@@ -59,7 +60,7 @@
 @icon-button-round-border-height:         2.286rem;
 @icon-button-round-border-line-height:    2.2rem;
 @border-radius:                           2.4rem;
-@icon-button-border-width:                .072rem;
+@icon-button-border-width:                @default-border-width;
 //ListView
 @list-view-items-toolbar-icon-button-border-width:0;
 @list-view-items-toolbar-icon-button-border-radius:0;
@@ -101,23 +102,23 @@
 @filter-panel-chooser-list-view-check-box-left:.14rem;
 @filter-panel-chooser-list-view-title-max-height:5.14rem;
 @filter-panel-chooser-list-view-title-shadow-height:1.14rem;
-@button-border-width:                     .07rem;
+@button-border-width:                     @default-border-width;
 // Normal default button
-@button-border:                           @button-border-width solid #26b8ff;
+@button-border:                           @default-border-width solid @default-border-color;
 @button-line-height: 						   2.86rem;
 @button-active-bg:                        #1d2834;
 @button-hover-bg:                         #212e3d;
 @button-bg: 								      #324a62;
 // Normal primary button
-@button-primary-border:                   .07rem solid #d94700;
+@button-primary-border:                   @default-border-width solid #d94700;
 @button-primary-bg:                       @primary-color;
 @button-primary-hover-bg:                 #EC5B19;
 @button-primary-active-text-color:        @button-active-text-color;
-@button-primary-active-border:            0.07rem solid #d94700;
+@button-primary-active-border:            @default-border-width solid #d94700;
 @button-primary-active-bg:                #d94700;
 // Normal disabled button
 @button-disabled-text-color:              @disabled-color;
-@button-disabled-border:                  0.07rem solid @disabled-color;
+@button-disabled-border:                  @default-border-width solid @disabled-color;
 @button-disabled-bg:                      #354B62;
 // Big button
 @button-big-line-height:                  @button-line-height;
@@ -160,8 +161,8 @@
 @radio-button-checked-hover-text-color:   @default-text-color;
 @radio-button-disabled-text-color:        @gray-color;
 @radio-button-disabled-hover-text-color:  @gray-color;
-@radio-button-icon-width:                 .71rem;
-@radio-button-icon-height:                .71rem;
+@radio-button-icon-width:                 .928rem;
+@radio-button-icon-height:                .928rem;
 @radio-button-icon-line-height:           normal;
 @radio-button-icon-bg:                    transparent;
 @radio-button-icon-margin:                0.3rem;
@@ -169,11 +170,12 @@
 @radio-button-icon-border-color-checked:  @primary-color;
 @radio-button-hover-icon-border-color:    @primary-color;
 @radio-button-icon-border-color-disabled: @radio-button-icon-border-color;
-@radio-button-icon-border-radius:         0.71rem;
-@radio-button-dot-size:                   0.71rem;
+@radio-button-icon-border-radius:         .928rem;
+@radio-button-dot-size:                   .928rem;
 @radio-button-dot-color:                  @primary-color;
 @radio-button-dot-margin:                 -0.1rem  0 0 -0.1rem;
 @radio-button-icon-border-width:          0.1rem;
+@radio-button-text-font-size:             1.143rem;
 //Checkbox
 @check-box-icon-size:                     1.786rem;
 @check-box-icon-successful-size:          1.786rem;
@@ -188,17 +190,23 @@
 @check-box-disabled-color:                #37536C;
 @check-box-icon-border:                   .0357rem solid @default-color;
 @check-box-icon-hover-bg:                 transparent;
-@check-box-icon-checked-bg:               transparent url(@check-box-icon-spritesheet) 0 -0.07rem;
+@check-box-icon-checked-bg:               transparent url(@check-box-icon-spritesheet) 0 -@default-border-width;
 //Switcher
+@switcher-dot-width:                      100%;
+@switcher-dot-height:                     100%;
+@switcher-dot-margin:                     0;
+@switcher-dot-margin-hover:               0;
+@switcher-dot-radius:                     .2rem;
 @switcher-width:                          3.57rem;
 @switcher-height:                         1.7857rem;
 @switcher-btn-radius:							1rem;
-@switcher-btn-bg-color:                   @primary-color;
-@switcher-btn-color-inactive:					transparent;
+@switcher-btn-bg-color:                   @basic-block-bg-color;
+@switcher-btn-color-inactive:					@disabled-color;
 @switcher-line-color:							@disabled-color;
-@switcher-border:                         .07rem solid #2C4458;
+@switcher-border:                         @default-border-width solid #2C4458;
 @switcherline-height:                     .1rem;
-@switcher-btn-border-width:					.1rem;;
+@switcher-btn-border-width:					.1rem;
+@switcher-btn-border-hover:               .1rem;
 @switcher-do-vertical-toggle-width:			1.43rem;
 @switcher-do-horizontal-btn-size:			.93rem;
 @switcher-btn-size:								.93rem;
@@ -215,8 +223,8 @@
 @popup-font-size:                         1.43rem;
 @menu-header-bg-color:                    #23b8ff;
 @menu-subpopup-margin:                    @menu-margin;
-@menu-border-width:                       .07rem;
-@menu-border-color:                       #26B8FF;
+@menu-border-width:                       @default-border-width;
+@menu-border-color:                       @default-border-color;
 @menu-header-caption-color:               #e4e4e4;
 @menu-expand-width:                       .2857rem;
 @menu-expand-top-offset:                  .7142rem;
@@ -242,13 +250,13 @@
 @menu-item-icon-left-offset:              -.4232rem;
 @menu-item-icon24-top-offset:             0;
 @menu-item-icon24-top-offset-big:         0;
-@menu-item-icon24-left-offset:            -.0714rem;
+@menu-item-icon24-left-offset:            -.@default-border-width;
 @menu-item-icon24-left-offset-big:        0;
 @menu-item-line-height:                   3.57rem;
 @menu-item-padding-16:                    2rem;
 @menu-item-padding-24:                    2.5rem;
 // Menu
-@menu-button-menu-border-width:           .07rem;
+@menu-button-menu-border-width:           @default-border-width;
 @menu-button-menu-margin:                 -10px 0 0 -2px;
 @menu-button-menu-border-color:           #23b8ff;
 @menu-link-header-bg-color:               #5bafe7;
@@ -272,16 +280,16 @@
 @text-box-bg:                             transparent;
 @text-box-editor-bg:                      #f3f3f3;
 @text-box-editor-text-color:              #999999;
-@combobox-picker-border-width:            .07rem;
+@combobox-picker-border-width:            @default-border-width;
 @combo-box-picker-show-background-color:  #f0f5fb;
 @combo-box-picker-show-border-color:	   #23b8ff;
 @text-box-focus-border-color:             @text-box-border-color;
 @compo-box-picker-show-color:             #324352;
 @text-box-focus-bg:                       #324352;
-@text-box-border-width:                   .07rem;
+@text-box-border-width:                   @default-border-width;
 @text-box-hover-border-width:             @text-box-border-width;
 @text-box-hover-border-color:             rgba(96,170,221, .3 );
-@text-box-disabled-border-bottom:         .07rem solid rgba(102,170,221, .3);
+@text-box-disabled-border-bottom:         @default-border-width solid rgba(102,170,221, .3);
 @text-box-field-focus-text-color:         @default-text-color;
 @text-box-after-width:                    .7142rem;
 @text-box-height:                         3rem;
@@ -354,20 +362,22 @@
 @combo-box-picker-item-selected-bg:       @combo-box-picker-item-bg;
 @compo-box-fieldWrapper-margin-right:     3rem;
 @combo-box-after-width:                   3rem;
-@combo-box-arrowDown-color:               @default-text-color;
+@combo-box-arrowDown-color:               @icon-color-primary;
+@combo-box-arrowDown-color-focus:         @accent-color;
 @combo-box-arrowDown-color-hover:         @default-hover-color;
 // Text area
 @text-area-field-line-height:             1.4rem;
-@text-area-border-color:                  transparent;
-@text-area-focus-border-color:            @gray-dark-color;
+@text-area-border-color:                  @text-box-border-color;
+@text-area-focus-border-color:            @text-box-hover-border-color;
 @text-area-focus-bg:                      @text-box-focus-bg;
-@text-area-left-padding:                  .1785rem;
-@text-area-top-padding:                   0;
+@text-area-hover-bg:                      @text-box-hover-bg;
+@text-area-left-padding:                  .5714rem;
+@text-area-top-padding:                   0.75rem;
 @text-area-right-padding:                 @text-area-left-padding;
-@text-area-bottom-padding:                0;
+@text-area-bottom-padding:                @text-area-top-padding;
 // Suggest
-@suggest-picker-border:                   0.07rem solid @gray-color;
-@suggest-picker-margin:                   -.1rem;
+@suggest-picker-border:                   @default-border-width solid @gray-color;
+@suggest-picker-margin:                   -@default-border-width 0 0 0;
 
 @suggest-list-item-hover-bg:              #f3f3f3;
 @suggest-list-item-selected-bg:           darken(@suggest-list-item-hover-bg, 5%);
@@ -388,7 +398,7 @@
 @calendar-day-cell-active-hover-text-color:@calendar-day-cell-hover-text-color;
 @calendar-day-cell-active-hover-bg:       @calendar-day-cell-hover-bg;
 //fieldlink
-@controls-FieldLink-border:               .07rem solid;
+@controls-FieldLink-border:               @default-border-width solid;
 @controls-FieldLink-border-color:         @text-box-border-color @text-box-border-color @text-box-bottom-border-color @text-box-border-color;
 @controls-FieldLink-border-color-focus-hover:@text-box-bottom-border-color;
 @controls-FieldLink-link-color:           #26B8FF;
@@ -427,9 +437,15 @@
 //Data Range
 @date-range-line-height:                  0.86rem;
 @date-range-icon-button-top:              0.536rem;
-@date-range-dash-width:                   0.286rem;
+@date-range-dash-width:                   0.5rem;
+@date-range-dash-color:                   rgba(96, 170, 221, 0.2);
 @date-range-dash-margin:                  0 0.286rem 0.286rem 0.286rem;
-@date-range-dash-border-top:              .07rem solid @date-range-dash-color;
+@date-range-dash-border-top:              @default-border-width solid @date-range-dash-color;
+@date-range-icon-button-size:             3rem;
+@date-range-icon-button-line-height:      @date-range-icon-button-size;
+@date-range-icon-button-top:              0;
+@date-range-icon-button-margin:           0;
+
 //Data Range Slider
 @date-range-slider-color:                 #26B8FF;
 @date-range-slider-hover-color:           rgb(187, 233, 255);
@@ -437,12 +453,12 @@
 @date-range-slider-value-font-weight:     normal;
 @date-range-slider-prev-next-buttons-hover-color:@blue-dark-color;
 //Date Range Choose
-@date-range-choose-border-color:          #26b8ff;
+@date-range-choose-border-color:          @default-border-color;
 @date-range-choose-item-bg-color:         @basic-block-bg-color;
 @date-range-choose-bg-hover-color:        #293a4b;
 @date-range-choose-border-width:          0; // В theme.less прописан бордер у флоат арии
 @date-range-choose-border-hover-width:    0;
-@date-range-choose-border-hover:          solid #26b8ff;
+@date-range-choose-border-hover:          solid @default-border-color;
 @date-range-choose-month-height:          1.85rem;
 @date-range-choose-short-width:           16rem;
 @date-range-choose-font-size:             1rem;
@@ -468,6 +484,14 @@
 @date-range-choose-year-prev-next-btns-color:@date-range-choose-color;
 @date-range-choose-home-icon-width:       3rem;
 @controls-date-range-year-marginleft:     0.4rem;
+
+//Date Range Big
+@date-range-big-choose-bg-hovered-color:                 #293A4B;
+@date-range-big-choose-bg-selected-color:                #3f566d;
+
+@date-range-big-choose-months-color:                                     #26B8FF;
+@date-range-big-choose-months-font-size:                                 1rem;
+@date-range-big-choose-months-margin:                                    0.286rem;
 @date-range-big-choose-months-button-height:1.786rem;
 @date-range-big-choose-months-range-width:5.429rem;
 @date-range-big-choose-months-button-first-height:@date-range-big-choose-months-button-height;
@@ -475,35 +499,48 @@
 @date-range-big-choose-date-range-picker-table-element-height:2.8rem;
 @date-range-big-choose-date-range-picker-left: @date-range-big-choose-months-range-width + 0.857rem;
 @date-range-big-choose-date-range-picker-caption-height:2.42rem;
-//Date Range Big
+@date-range-big-choose-date-range-picker-border-color:                  rgba(102, 170, 221, 0.7);
+@date-range-big-choose-date-range-picker-boundary-selected-color:       #e4e4e4;
+@date-range-big-choose-date-range-picker-bg-boundary-selected-color:    #26B8FF;
+@date-range-big-choose-date-range-picker-bg-selected-color:             @date-range-big-choose-bg-hovered-color;
+@date-range-big-choose-date-range-picker-bg-hovered-color:              @date-range-big-choose-bg-hovered-color;
+
 @date-range-big-choose-years-height:      3.57rem;
 @date-range-big-choose-header-padding:    0.256rem 0 0.256rem 0;
 @date-range-big-choose-header-home-button-size:3rem;
 @date-range-big-choose-header-home-button-font-size:@date-range-big-choose-header-home-button-size;
 @date-range-big-choose-header-home-button-margin-left:0;
+@date-range-big-choose-header-date-box-border-color:           @text-box-border-color;
+@date-range-big-choose-header-date-box-border-selected-color:  @text-box-bottom-border-color;
 @date-range-big-choose-header-date-pickers-margin-right:3.286rem;
 @date-range-big-choose-header-date-picker-margin-top:0;
 @date-range-big-choose-header-apply-button-size:3rem;
 @date-range-big-choose-header-apply-button-font-size:@date-range-big-choose-header-apply-button-size;
+@date-range-big-choose-header-apply-button-icon-margin-left:   -1rem;
 @date-range-big-choose-header-apply-button-margin-left:0;
 @date-range-big-choose-header-range-dash-width:0.286rem;
 @date-range-big-choose-header-range-dash-margin:1.5rem 0.286rem 0.286rem;
 @date-range-big-choose-years-panel-top-padding:0.286rem;
 @date-range-big-choose-years-panel-bottom-padding:0.286rem;
-@date-range-big-choose-years-panel-toggle-choose-year-button-line-height:3.4rem; // сделать по другому
+@date-range-big-choose-years-panel-toggle-choose-year-button-font-size:    1.43rem;
+@date-range-big-choose-years-panel-wrapper-font-weight:                    normal;
+@date-range-big-choose-years-panel-toggle-choose-year-button-line-height:  3rem; // сделать по другому
 @date-range-big-choose-years-panel-current-year-button-line-height:3rem;
 @date-range-big-choose-years-panel-back-button-font-size:3rem;
 @date-range-big-choose-years-panel-back-button-line-height:3rem;
 @date-range-big-choose-body-height:       21.429rem;
-@date-range-big-choose-months-range-btn-height:5.071rem;
-@date-range-big-choose-month-range-picker-month-width:6.07rem;
-@date-range-big-choose-month-range-picker-month-height:5.07rem;
-@date-range-big-choose-month-range-picker-caption-height:1.7857rem;
-@date-range-big-choose-month-range-picker-caption-font-size:1.14rem;
-@date-range-big-choose-month-range-picker-table-element-height:.57rem;
+@date-range-big-choose-months-range-btn-height:                5.107rem;
+@date-range-big-choose-month-range-picker-month-width:         6.07rem;
+@date-range-big-choose-month-range-picker-month-height:        5.07rem;
+@date-range-big-choose-month-range-picker-color:               #E4E4E4;
+@date-range-big-choose-month-range-picker-caption-height:      1.7857rem;
+@date-range-big-choose-month-range-picker-caption-font-size:   1.14rem;
+@date-range-big-choose-month-range-picker-table-element-height:.5rem;
 @date-range-big-choose-month-range-picker-table-element-font-size:.43rem;
 @date-range-big-choose-month-range-padding:0.2857rem;
+@date-range-big-choose-month-range-picker-bg-selected:  @date-range-big-choose-bg-selected-color;
 @date-range-big-choose-quarters-half-years-font-size:inherit;
+
 //Edit at place
 @edit-at-place-wrapper-text-area-padding: 0 .1785rem;
 @edit-at-place-wrapper-border-width:      .0357rem;
@@ -571,7 +608,7 @@
 @data-grid-row-selected-bg:               @data-grid-row-bg;
 @data-grid-header-cell-height:            1.14rem;
 @data-grid-cell-line-height:              1.562rem;
-@data-grid-header-cell-padding:           0 .3571rem;
+@data-grid-header-cell-padding:           0 .571rem;
 @data-grid-header-cell-padding-side:      .3571rem;
 @data-grid-header-cell-font-size:         0.86rem;
 @data-grid-row-selected-cell-text-color:  @default-text-color;
@@ -583,10 +620,17 @@
 @data-grid-td-visible-checkbox-width:     1.75rem;
 @data-grid-check-box-top:                 0;
 @data-grid-cell-separator-color:          rgba(0, 0, 0, 0.1);
-@data-grid-cell-border-width:             .07rem 0;
+@data-grid-cell-border-width:             @default-border-width 0;
 // PrintDialog
 @controls-printdialog-min-width:          25rem;
 @controls-printdialog-activate-right:     3.1785rem;
+//MergeDialog
+@controls-MergeDialogTemplate-BreadCrumbs-line-height:   1.7857rem;
+@controls-MergeDialogTemplate-hint-font-size:            0.7rem;
+@controls-MergeDialogTemplate-radioButton-metric:        @radio-button-dot-size;
+@controls-MergeDialogTemplate-radioButton-border-radius: @radio-button-icon-border-radius;
+@controls-MergeDialogTemplate-radioButtonIcon-metric:    @radio-button-dot-size;
+@controls-MergeDialogTemplate-radioButtonIcon-margin:    @radio-button-dot-margin;
 //OperationsPanel
 @controls-OperationsPanel-height:         3.57rem;
 @controls-OperationsPanel-bg:             #F0F5FB;
@@ -632,7 +676,7 @@
 @filter-button-font-size:						2rem !important; //перебиваем .icon-24
 @controls-filterButton-button-height:		2rem;
 @controls-filterButton-picker-bg:         #38495B;
-@controls-filterButton-picker-border-width:.07rem;
+@controls-filterButton-picker-border-width:@default-border-width;
 @controls-Popup-closeButton-top:          1.75rem;
 @controls-filterButton-button-margin:     .2857rem .2857rem .2857rem 0;
 @controls-filterButton-button-margin-right-align:.2857rem 0 .2857rem .2857rem;
@@ -652,23 +696,23 @@
 @controls-filterLine-copyCross-margin:    -1.75rem;
 //FieldLink
 @controls-FieldLink-showAllLinks-lineHeight:3rem;
-@controls-FieldLink-linkItem-line-height: 3rem;
-@controls-FieldLink-showAllLinks-width:   3.2rem;
+@controls-FieldLink-border-color-picker-show: @accent-color;
+@controls-FieldLink-linkItem-line-height:    calc(@text-box-height ~"-" @default-border-width); //высота - ширина ббордера
+@controls-FieldLink-showAllLinks-width:      3.2rem;
 @controls-FieldLink-showAllLinks-marginRight:-1.43rem;
-@controls-FieldLink-linkItem-margin:      .07rem 0;
-@controls-FieldLink-linkItem-padding:     0 3rem 0 .14rem;
-@controls-FieldLink-linkItem-caption-height:1.75rem;
-@controls-FieldLink-linkItem-cross-width: 2.5rem;
-@controls-FieldLink-linkItem-cross-right: 0;
-@controls-FieldLink-linkItem-cross-top:   -.14rem;
-@controls-FieldLink-linkItem-cross-padding:0;
-@controls-FieldLink-showAllLinks-padding: 0 1rem 0 0.14rem;
-@controls-FieldLink-afterField-padding:   0 .14rem 0.14rem 0;
-@controls-FieldLink-afterField-height:    3rem;
+@controls-FieldLink-linkItem-margin:         0;
+@controls-FieldLink-linkItem-padding:        0 3rem 0 .56rem;
+@controls-FieldLink-linkItem-caption-height: 1.75rem;
+@controls-FieldLink-linkItem-cross-width:    2.5rem;
+@controls-FieldLink-linkItem-cross-right:    0;
+@controls-FieldLink-linkItem-cross-top:      -.14rem;
+@controls-FieldLink-linkItem-cross-padding:  0;
+@controls-FieldLink-showAllLinks-padding:    0 1rem 0 0.14rem;
+@controls-FieldLink-afterField-padding:      0 .14rem 0 0;
 @controls-FieldLink-disabled-item-single-padding:0.142rem;
-@controls-FieldLink-disabled-item-single-margin:.07rem .14rem;
-@controls-FieldLink-afterField-background:transparent;
-@controls-FieldLink-FilterButton-color:   #26B8FF;
+@controls-FieldLink-disabled-item-single-margin:@default-border-width .14rem;
+@controls-FieldLink-afterField-background:   transparent;
+@controls-FieldLink-FilterButton-color:      #26B8FF;
 @controls-FieldLink-FilterButton-color-hover:#B9E9FF;
 //SelectorButton
 @controls-SelectorButton-align:           middle;
@@ -676,7 +720,8 @@
 @back-button-font-size:                   1.43rem;
 // BreadCrumbs
 @back-button-arrow-paddingleft:           .5714rem;
-@bread-crumb-title-color:                 @disabled-color;
+@bread-crumb-title-color:                 @gray-lamantin-color;
+@bread-crumb-title-hover-color:           @default-hover-color;
 @breadcrumbs-top:                         0;
 @breadcrumbs-smallItems-font-size:        1rem;
 @breadcrumbs-arrow-top:                   0;
@@ -704,8 +749,8 @@
 @controls-Scrollbar-light-active-thumb-color:rgba(0, 0, 0, 0.15);
 //InformationPopup
 @controls-InformationPopup-bg:            #2C3E50;
-@controls-InformationPopup-default-status-border-color:#26B8FF;
-@controls-InformationPopup-border:        0.07rem solid;
+@controls-InformationPopup-default-status-border-color:@default-border-color;
+@controls-InformationPopup-border:        @default-border-width solid;
 @controls-InformationPopup-border-bottom: @controls-InformationPopup-border;
 @controls-InformationPopup-border-top:    @controls-InformationPopup-border;
 @controls-InformationPopup-border-left:   @controls-InformationPopup-border;
@@ -716,11 +761,16 @@
 @controls-SubmitPopup-button-height:      3rem;
 @controls-SubmitPopup-button-margin:      0 .2857rem;
 @controls-SubmitPopup-message-color:      @default-text-color;
+@controls-SubmitPopup-message-font-weight:normal;
 @controls-SubmitPopup-message-font-size:  1.14285rem;
 @controls-SubmitPopup-message-margin-bottom:.5714rem;
 @controls-SubmitPopup-details-color:      @disabled-color;
 @controls-SubmitPopup-details-font-size:  1rem;
 @controls-SubmitPopup-body-padding:       1.6071rem;
+@controls-SubmitPopup-border-top:         none;
+@controls-SubmitPopup-border-bottom:      none;
+@controls-SubmitPopup-border-left:        none;
+@controls-SubmitPopup-border-right:       none;
 //TabButton
 @tab-buttons-border-bottom:               .0357rem solid #293543;
 @tab-button-height:                       3.57rem;
@@ -746,7 +796,8 @@
 @tab-button-inner-after-bg-color:         rgba(102,170,221, .2);
 @tab-button-inner-after-height:           1.928rem;
 @tab-button-inner-after-bottom:           0.821rem;
-@tab-button-inner-after-width:            .07rem;
+@tab-button-inner-after-width:            @default-border-width;
+@tab-button-ff-inner-height:              @tab-button-inner-height;
 //Browser
 @text-box-field-font-size:                1.14rem;
 @controls-Paging-btn-width:               3rem;
@@ -776,7 +827,6 @@
 @menu-item-icon-24-margin:						0 0 0 1.78rem;
 @menu-item-icon-16-margin:						0 0 0 1.32rem;
 @text-box-error-bg:                       #472e35;
-@back-button-linheight-before:            3rem;
 @back-button-width-before:                .7rem;
 @back-button-text-fontweight:             @default-font-weight;
 @tab-buttons-border-bottom-height:        0.01rem;
@@ -790,7 +840,7 @@
 @commands-button-close-font-family:       'carrypresto-icons';
 @commands-button-close-button-size:       @icon-large-size;
 @commands-button-close-button-top:        0;
-@commands-button-margin:                  -.3571rem -2.2857 0 0;
+@commands-button-margin:                  -.3571rem -3.2857rem 0 0;
 @DropdownList-height: 					      3rem;
 @DropdownList-footer-buttonsBlock-height: 3.57rem;
 @DropdownList-footer-hasMore-top:         1.1rem;
@@ -830,7 +880,7 @@
 @clock-picker-unit-time-color:            @clock-picker-inner-tick-background-color;
 @clock-picker-arrow-width:                0.036rem;
 @clock-picker-arrow-color:                @accent-color;
-@clock-picker-arrow-tip-border-width:     0.072rem;
+@clock-picker-arrow-tip-border-width:     @default-border-width;
 @clock-picker-arrow-tip-color:            @default-text-color;
 //ddlist
 @DropdownList-footer-multisel-buttonsBlock-h:3.57rem;
@@ -849,39 +899,32 @@
 @header-font:                             400 1.43rem escape('/') @header-height @default-font-name;
 @header-padding-left:                     0;
 @bottomStyle-items-toolbar-height:        1.88rem;
-@bottomStyle-items-toolbar-border-color:  #1b2530;
 @bottomStyle-items-toolbar-margin:        0;
-@controls-filterButton-picker-border-color:#26B8FF;
-@formatted-text-box-wrapper-padding:      .3rem 0.57rem 0 .4285rem;
+@controls-filterButton-picker-border-color:@default-border-color;
+@formatted-text-box-wrapper-padding:      0 0.57rem 0 .4285rem;
 @bottomStyle-items-toolbar-height:        1.88rem;
 @bottomStyle-padding-bottom:              3rem;
-@bottomStyle-items-toolbar-border-color:  #1b2530;
+@bottomStyle-items-toolbar-border-color:  #293A4B;
 @data-grid-row-hover-cell-bg:             #293A4B;
 @image-bar-height:                        3.57rem;
 @image-bar-vertical-padding:              0.245rem;
 @image-bar-horizontal-padding:            0;
 @image-bar-bg-color:                      rgba(102,170,221, .5);
-@date-range-big-choose-bg-hovered-color:  rgba(0, 0, 0, 0.3);
 @money-text-box-decimals-padding:         0;
 @money-text-box-decimals-font-size:       1.43rem;
 @money-text-box-decimals-color:           @default-text-color;
 @header-color:                            #FC9;
+@header-color-hover:                      @default-hover-color;
 @icon-color-disabled:                     @disabled-color !important;
-@date-range-big-choose-header-apply-button-icon-margin-left:-1rem;
-@date-range-big-choose-date-range-picker-border-color:rgba(102, 170, 221, 0.7);
-@date-range-big-choose-date-range-picker-boundary-selected-color:#e4e4e4;
-@date-range-big-choose-date-range-picker-bg-boundary-selected-color:#26B8FF;
-@date-range-big-choose-date-range-picker-bg-selected-color:@date-range-big-choose-bg-hovered-color;
-@date-range-big-choose-date-range-picker-bg-hovered-color:@date-range-big-choose-bg-hovered-color;
 @controls-toolbar-item-vertical-align:    baseline;
 @date-range-big-choose-years-btn:         .5rem;
 @DropdownList-picker-offset:              0;
-@dropdown-list-item-padding:              .1785rem 1.3571ren .1071rem .57rem;
+@dropdown-list-item-padding:              .1785rem 1.3571rem .1071rem .57rem;
 @list-view-items-toolbar-bottom:          .2857rem;
 @list-view-items-toolbar-font-family:     'carrypresto-icons';
 @search-left-margin:                      .57rem;
-@controls-view-padding-DEFAULT:           .8rem;
-@combo-box-picker-border:                 0.07rem solid #26B8FF;
+@controls-view-padding-DEFAULT:           .857rem;
+@combo-box-picker-border:                 @default-border-width solid @default-border-color;
 @data-grid-row-selected-main-bg:          @basic-block-bg-color;
 @data-grid-row-selected-addit-bg:         rgba(44, 62, 80, 0);
 @tree-view-copy-arrow-add-background:     @data-grid-row-selected-addit-bg;
@@ -889,10 +932,9 @@
 @data-grid-row-selected-add-bg:           @data-grid-row-hover-add-bg;
 @items-toolbar-bottom-style-background:   url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDIwMDEwOTA0Ly9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+CjxzdmcgdmVyc2lvbj0iMS4wIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiB3aWR0aD0iMjU1LjAwMDAwMHB4IiBoZWlnaHQ9IjMwMC4wMDAwMDBweCIgdmlld0JveD0iMCAwIDI1NS4wMDAwMDAgMzAwLjAwMDAwMCIKIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwMDAwMCwzMDAuMDAwMDAwKSBzY2FsZSgwLjEwMDAwMCwtMC4xMDAwMDApIgpmaWxsPSIjMjkzYTRiIiBzdHJva2U9Im5vbmUiPgo8cGF0aCBkPSJNMTAgMjk4OSBjMCAtMTEgMTkgLTUxIDI5IC01OSA2IC01IDQ2IC02NCAyMTUgLTMxNSA0NCAtNjYgODMgLTEyMgo4NiAtMTI1IDMgLTMgMzcgLTUyIDc1IC0xMTAgMzkgLTU4IDcyIC0xMDcgNzUgLTExMCA2IC02IDY3IC05NSAyMDQgLTMwMCA1MAotNzQgOTMgLTEzNyA5NiAtMTQwIDMgLTMgMjMgLTMyIDQ1IC02NSAyMiAtMzMgNDIgLTYyIDQ1IC02NSAzIC0zIDQzIC02MSA4OQotMTMwIDQ2IC02OSAxMjEgLTE3OSAxNjYgLTI0NSA0NCAtNjYgMTA2IC0xNTYgMTM1IC0yMDAgMzAgLTQ0IDU3IC04MiA2MCAtODUKNSAtNSA0MSAtNTggMjQ0IC0zNjAgNjEgLTkxIDExMyAtMTY3IDExNiAtMTcwIDMgLTMgMjMgLTMyIDQ1IC02NSA0NyAtNzAgMzgKLTU4IDExNiAtMTY0IDU3IC03NiAxNzkgLTE5MSAyMDMgLTE5MSA2IDAgMjUgLTcgNDEgLTE2IDU4IC0zMiAyODcgLTc0IDQwMAotNzQgbDU1IDAgMCAxNTAwIDAgMTUwMCAtMTI3MCAwIGMtODkyIDAgLTEyNzAgLTMgLTEyNzAgLTExeiIvPgo8L2c+Cjwvc3ZnPgo=");
 @text-box-disabled-border-color:          transparent;
-
 @controls-NotificationPopup-border:       none;
 @controls-NotificationPopup-border-top:   @controls-NotificationPopup-border;
 @controls-NotificationPopup-border-right: @controls-NotificationPopup-border;
 @controls-NotificationPopup-border-left:  @controls-NotificationPopup-border;
 @back-button-text-color:                  #FFCC99;
-@controls-FieldLink-link-color-hover:     #B9E9FF;
+@controls-FieldLink-link-color-hover:     @default-hover-color;

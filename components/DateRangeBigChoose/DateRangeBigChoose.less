@@ -412,6 +412,7 @@
    .controls-DateRangeBigChoose__dates {
       height: @date-range-big-choose-body-height;
       position: relative;
+      overflow: hidden;
 
       .controls-DateRangeBigChoose__dates-months {
          position: absolute;
@@ -483,7 +484,7 @@
       float: left;
       > * {
          font-size: @date-range-big-choose-years-panel-wrapper-font-size;
-         font-weight: bold;
+         font-weight: @date-range-big-choose-years-panel-wrapper-font-weight;
          font-style: normal;
          display: block;
          margin: 0 20px;

@@ -14,7 +14,7 @@ body {
          width: 3rem !important;
          height: 3rem !important;
          background: none !important;
-         border: 2px solid #8991A9 !important;
+         border: @default-border-width solid #8991A9 !important;
          font-size: 1.714285714285714rem !important;
          background-color: #354B62 !important;
          line-height:   3rem !important;
@@ -23,14 +23,14 @@ body {
          box-sizing: border-box !important;
          color: #8991A9 !important;
          &.ws-paging-active{
-            border: 2px solid #26B8FF !important;
+            border: @default-border-width solid @default-border-color !important;
             color: #E4E4E4 !important;
             &:hover{
                background-color: #1b2530 !important;
             }
          }
          &.ws-paging-current{
-            border: 2px solid @primary-color !important;
+            border: @default-border-width @primary-color !important;
             background:#354B62 !important;
             color: #E4E4E4 !important;
          }
@@ -110,14 +110,15 @@ body {
       .controls-IconButton {
          background: #293D52;
          padding: 0;
+          border: @button-border;
          .controls-Button__icon {
             font-size: 3rem!important;
             height: 3rem!important;
             width: 3rem!important;
             line-height: 3rem !important;
             position: absolute;
-            top: -2px;
-            left: -2px;
+            top: -@default-border-width;
+            left: -@default-border-width;
          }
          &.ws-disabled {
             border-color: @disabled-color;
@@ -149,7 +150,7 @@ body {
          user-select: none;
          background-color: #ff7033;
          color: #fff;
-         border: 2px solid #d94700;
+         border: @default-border-width solid #d94700;
 
          &:hover {
             background-color: #EC5B19;
@@ -167,14 +168,6 @@ body {
          }
       }
    }
-
-  .ws-window .ws-float-area .ws-window-titlebar.ws-window-titlebar-custom {
-    height: 3.57rem;
-
-      .ws-float-area-title {
-        line-height: 3.57rem;
-      }
-  }
   .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableRow .controls-MonthView__tableElement {
 
     font-size: 1.14rem;
@@ -187,7 +180,7 @@ body {
 
 .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__header-rangeDash {
    border-color: rgba(96, 170, 221, 0.15);
-   border-width: 0.072rem;
+   border-width: @default-border-width;
 }
 
 .controls-BreadCrumbs__crumb {
@@ -195,9 +188,7 @@ body {
       color: @bread-crumb-title-color !important;
    }
 }
-      .controls-BackButton {
-        line-height: 3.64rem;
-      }
+
     .ws-float-area-nostack-panel-shadow-standart {
       border: 1px solid #2e404f;
       background: #2e404f;
@@ -209,11 +200,6 @@ body {
       max-width: 4.8285rem;
     }
 
-    .controls-DateRange .controls-DateRange__Button .controls-Button__icon {
-      font-size: 2rem !important;
-      width: auto !important;
-      height: auto !important;
-    }
     .controls-Button .controls-Button__icon.icon-32 {
       top: 20%
     }
@@ -240,9 +226,9 @@ body {
    }
 
     .ws-float-area-stack-panel-shadow {
-        border-left: 2px solid #00a2ef;
+        border-left: @default-border-width solid #00a2ef;
         border-color: #00a4f0;
-        border-width: 0 0 0 2px;
+        border-width: 0 0 0 @default-border-width;
         border-style: solid;
         -webkit-box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2);
         -moz-box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2);
@@ -294,10 +280,6 @@ body {
    .controls-DateBox {
       min-height: 3rem;
    }
-    .controls-DateRangeBigChoose-MonthRangePicker.controls-ListView .controls-DateRangeBigChoose-MonthView.controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableElement.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
-      color: #fff;
-      background: #3f566d;
-    }
   .controls-ToolBar__menuIcon .icon-24 {
     font-family: carrypresto-icons!important;
   }
@@ -337,13 +319,6 @@ body {
     -webkit-box-shadow: none!important;
     background: #2e404f;
     box-shadow: none!important;
-  }
-  &.ws-window-titlebar-custom {
-    position: relative;
-    height: 2rem !important;
-    .ws-float-area-title {
-      line-height: 1rem !important;
-    }
   }
   .ws-float-area-title {
       font-size: 1.43rem!important;
@@ -451,16 +426,22 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
 .ws-float-area-stack-panel-shadow {
   background: @basic-block-bg-color !important;
 }
-.ws-sticky-header__block.ws-sticky-header__fixed,
-.ws-sticky-header__table-header-copy {
-  background-color: #202835 !important;
+
+body {
+   .ws-sticky-header__block.ws-sticky-header__fixed,
+   .ws-sticky-header__table-header-copy {
+      // В престо в паре мест используется нестандартные цвета фона, чуть темнее или чуть светлее.
+      // В этих местах прикладники должны сами устанавливать цвет фона у зафиксированных заголовков.
+      // В большинстве реестров используется #2C3E50
+      background-color: #2C3E50;
+   }
 }
 
 body  .ws-window {
    background-color: #293543;
    border-style: solid;
    border-color: #00a2ef;
-   border-width: 2px;
+   border-width: @default-border-width;
 }
 .ws-window-content {
   background-color: @basic-block-bg-color !important;
@@ -475,9 +456,6 @@ body  .ws-window {
 }
 .controls-ListView__scrollPager {
   height: 3rem !important;
-}
-.control-Paging__btn  {
-  border: 2px solid #26b8ff;
 }
 .controls-Link.controls__filter-button__clear-filter.ws-disabled {
   color: rgba(102, 170, 221, .2);
@@ -519,15 +497,8 @@ body {
     white-space: nowrap;
     -moz-box-shadow: none!important;
     -webkit-box-shadow: none!important;
-    background: #2C3E50 !important;
+    background: transparent !important;
     box-shadow: none!important;
-  }
-  &.ws-window-titlebar-custom {
-    position: relative;
-    height: 2rem !important;
-    .ws-float-area-title {
-      line-height: 1rem !important;
-    }
   }
   .ws-float-area-title {
       font-size: 1.43rem!important;
@@ -550,7 +521,7 @@ body {
 }
 
 .controls-FloatArea {
-  border: .07rem solid #26B8FF;
+  border: @default-border-width solid @default-border-color;
   background: #2c3e50;
 }
 
@@ -597,13 +568,12 @@ body {
   .ws-float-area-title {
     padding-left: .857rem;
   }
-  .ws-float-area .ws-window-titlebar.ws-window-titlebar-custom {
-    height: 3.57rem;
-
+   .ws-float-area .ws-window-titlebar.ws-window-titlebar-custom {
+      height: 3.57rem;
       .ws-float-area-title {
-        line-height: 3.57rem;
+         line-height: 3.57rem;
       }
-  }
+   }
   .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableRow .controls-MonthView__tableElement {
 
     font-size: 1.14rem;
@@ -620,15 +590,9 @@ body {
 }
 
 .controls-IconButton.controls-TreeView__editArrow-container {
-   margin-top: .07rem;
+   margin-top: @default-border-width;
 }
 
-.controls-DateBox.ws-has-focus .controls-FormattedTextBox__fieldWrapper {
-    border-color: #314559 #314559 #314559 #314559 !important;
- }
- .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateBox .controls-FormattedTextBox__fieldWrapper {
-      border-color: rgba(96, 170, 221, 0.15) !important;
- }
  .controls-Button .controls-Button__icon.icon-32 + .controls-Button__text {
      margin-left: 3rem !important;
  }
@@ -651,8 +615,8 @@ body {
    }
 }
 .ws-float-area-stack-scroll-wrapper .ws-float-area-stack-panel-shadow {
-   border-left-color: #0055BB;
-   border-left-width: 3px;
+   border-left-color: @default-border-color;
+   border-left-width: 0.1rem;
 }
 .controls-editInPlace .controls-editInPlace__editor {
   background: @controls-editInPlace-editor-bg;
@@ -665,7 +629,6 @@ body {
    .controls-FormattedTextBox__fieldWrapper {
       padding: 0 0.3rem;
       .controls-FormattedTextBox__field {
-         color: #cccccc;
          height: 2.86rem;
       }
    }
@@ -684,15 +647,7 @@ body {
   vertical-align: baseline;
 }
 .controls-FieldLink, .controls-FieldLink__picker {
-   .controls-FieldLink__showSelector, .controls-FieldLink__dropAllLinks, .controls-FieldLink__item {
-      .icon-16{
-         font-size: @icon-large-size!important;
-         line-height: @icon-large-size!important;
-         width: @icon-large-size;
-         height: @icon-large-size;
-      }
-   }
-   .controls-FieldLinkItemsCollection, controls-FieldLink__item {
+   .controls-FieldLinkItemsCollection, .controls-FieldLink__item {
       height: 3rem;
    }
    .controls-FieldLink__showAllLinks {
@@ -705,34 +660,15 @@ body {
     padding-right: 0.4rem;
 }
 
-.controls-Paging .control-Paging__btn .controls-Button__icon {
-    line-height: 2rem!important;
-    padding-right: 0.4rem;
-}
-
 .controls-DropdownList__picker .controls-DropdownList__multiselect.controls-DropdownList__item * {
     font-size: 1.14rem;
 }
-body .ws-float-area-stack-panel-shadow {
-    border-left: 2px solid #00a2ef;
-    border-color: #00a4f0;
-    border-width: 0 0 0 2px;
-    border-style: solid;
-    -webkit-box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2);
-    -moz-box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2);
-    box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2);
-}
+
 .icon-large {
   vertical-align: middle !important;
 }
 .controls-ListView__scrollPager .controls-IconButton {
   background: #1D2834;
-}
-
-
-body .controls-DateRangeBigChoose-MonthRangePicker.controls-ListView .controls-DateRangeBigChoose-MonthView.controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableElement.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
-  color: #fff;
-  background: #3f566d;
 }
 
 .controls-ToolBar__menuIcon {
@@ -860,6 +796,17 @@ body .ws-window.ws-LoadingIndicator__window {
   font-size: 1rem;
 }
 
+// В теме онлайна фон у кнопки при наведении по умолчанию совпадает с цветом кнопок в панели выбора периода,
+// а тут не совпадает. Когда будем переделывать компонент под новую спецификацию, избавится от кнопок в пользу div.
+.ws-is-desktop-platform .controls-Button:not(.ws-disabled):not(.controls-Click__active).controls-Button__default {
+   &.controls-DateRangeBigChoose__months-quarter-btn,
+   &.controls-DateRangeBigChoose__months-halfyear-btn {
+      &:hover {
+         background-color: transparent;
+      }
+   }
+}
+
 .controls-ComboBox__picker {
    box-sizing: border-box;
 }
@@ -915,7 +862,7 @@ body {
    .ws-info-box {
       background: @basic-block-bg-color;
       color: @default-text-color;
-      border: 2px solid @link-text-color;
+      border: @button-border;
       padding: 0.285rem 1.428rem 0.285rem 0.38rem;
       .ws-infobox-triangle {
          width: .857rem;
@@ -923,13 +870,13 @@ body {
          background: @basic-block-bg-color;
          &.ws-infobox-triangle-bottom {
             bottom: -.54rem;
-            border-right: 2px solid @link-text-color;
-            border-bottom: 2px solid @link-text-color;
+            border-right: @button-border;
+            border-bottom: @button-border;
          }
          &.ws-infobox-triangle-top {
             top: -.51rem;
-            border-left: 2px solid @link-text-color;
-            border-top: 2px solid @link-text-color;
+            border-left: @button-border;
+            border-top: @button-border;
          }
       }
 
@@ -977,9 +924,6 @@ body {
 
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__left,
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__right {
-   .icon-primary {
-      color: #26B8FF!important;
-   }
    .icon-24 {
        font-size: 3rem !important;
        height: 3rem !important;
@@ -992,7 +936,7 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-
 }
 
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateBox .controls-FormattedTextBox__fieldWrapper {
-    border-width: 2px;
+    border-width: @default-border-width;
     border-radius: 0;
 }
 
@@ -1002,8 +946,8 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__dates .controls-
    &:hover {
       background: transparent!important;
       border-top: none!important;
-      border-left: none!important;
       border-bottom: none!important;
+      border-right-color: #3f566d!important;
    }
    .controls-Button__text {
       width: 100%;
@@ -1012,6 +956,17 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__dates .controls-
 body .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__caption-text {
    margin-left: 4.5rem;
 }
+
+body {
+   // В формулах в темах надо сделать что бы можно было задать нижний отступ отличный от верхнего
+   .controls-DateRangeBigChoose .controls-DateRangeBigChoose__months .controls-DateRangeBigChoose__months-quarterRange .controls-DateRangeBigChoose__months-range-btn-wrapper.controls-DateRangeBigChoose__months-range-btn-wrapper3 {
+       height: 5.9rem;
+   }
+   .controls-DateRangeBigChoose .controls-DateRangeBigChoose__months .controls-DateRangeBigChoose__months-halfyearRange .controls-DateRangeBigChoose__months-range-btn-wrapper.controls-DateRangeBigChoose__months-range-btn-wrapper1 {
+       height: 11rem;
+   }
+}
+
 .controls-ComboBox__picker .controls-ComboBox__scrollContainer {
     background: #f0f5fb;
 }
@@ -1020,9 +975,7 @@ body .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-
 }
 
 .controls-Suggest__picker {
-    border: 2px solid #26B8FF;
     background: #f0f5fb;
-    margin-top: -5px;
     color: #3a4951 !important;
      .controls-DataGridView__columnValue {
        line-height: 3rem;
@@ -1034,11 +987,6 @@ body .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-
      }
 }
 .controls-FieldLink.controls-Picker__show {
-  .controls-Suggest__picker {
-    border-top-width: 0;
-
-  }
-
   .controls-FieldLink__showSelector {
       .icon-primary {
         color: #26b7fd !important;
@@ -1131,6 +1079,11 @@ body .controls-ItemActions .controls-Button__icon.icon-size {
     background-color: #FFFECE;
   }
 }
+
+.controls-MergeDialogTemplate .controls-TreeDataGridView__levelPadding {
+   display: none;
+}
+
 .controls-ListView__ItemsToolbar-container {
   height: 1.2rem;
 }

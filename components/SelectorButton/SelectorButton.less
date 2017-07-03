@@ -1,7 +1,7 @@
 .controls-SelectorButton {
    line-height: @controls-SelectorButton-line-height;
    height: @controls-SelectorButton-height;
-   .button-default-style();
+   .button-default-style(@default-font-size);
    .inline-flexbox();
    .align-items(center);
 
@@ -30,6 +30,7 @@
 }
 
 .controls-SelectorButton__text {
+   display: inline-block; // display: inline-block кроссбраузерно гарантирует, что внутри flexbox контейра блок не выйдет за ширину родителя
    .text-overflow();
    .align-self(baseline);
 }

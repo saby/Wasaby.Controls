@@ -91,9 +91,9 @@
          top: 0;
          left: 0;
          box-sizing: content-box;
-         height: @icon-button-edit-round-border-height - 2 * @icon-button-border-width !important;
-         width: @icon-button-edit-round-border-width - 2 * @icon-button-border-width !important;
-         line-height: @icon-button-edit-round-border-line-height - 2 * @icon-button-border-width !important;
+         height: calc(@icon-button-edit-round-border-height ~"-" 2 * @icon-button-border-width) !important;
+         width: calc(@icon-button-edit-round-border-width ~"-" 2 * @icon-button-border-width) !important;
+         line-height: calc(@icon-button-edit-round-border-line-height ~"-" 2 * @icon-button-border-width) !important;
       }
    }
    &.controls-IconButton__round-border-32{

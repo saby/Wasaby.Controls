@@ -92,7 +92,6 @@ define([
       function assertInitProperties() {
          assert.isTrue(Array.isArray(this._savedConfigs));
          assert.isTrue(typeof this._thisIsInstance === 'boolean');
-         assert.isTrue(typeof this._icanrulefocus === 'boolean');
          assert.isTrue(this.hasOwnProperty('_parent'));
          assert.isTrue(this.hasOwnProperty('_context'));
          assert.isTrue(typeof this._$independentContext === 'boolean');
@@ -124,7 +123,7 @@ define([
          assert.isTrue(this.hasOwnProperty('_childsTabindex'));
          assert.isTrue(this.hasOwnProperty('_childsSizes'));
          assert.isTrue(this.hasOwnProperty('_maxTabindex'));
-         assert.isTrue(Array.isArray(this._keysWeHandle));
+         assert.isTrue(typeof this._keysWeHandle === "object");
          assert.isTrue(this.hasOwnProperty('_dChildReady'));
          assert.isTrue(this._isInitialized === true);
          assert.isTrue(this._isReady === true);

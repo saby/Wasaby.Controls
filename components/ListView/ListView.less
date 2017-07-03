@@ -99,10 +99,16 @@
          .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
       }
    }
-   .controls-ListView__item__multiSelected{
+   .controls-ListView__item__multiSelected:not(.controls-ListView__item__partiallySelected) {
       .controls-ListView__itemCheckBox {
          .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
          .checkbox-checked-size(@check-box-icon-successful-size, @check-box-icon-successful-left, @check-box-icon-successful-top);
+      }
+   }
+   .controls-ListView__item__partiallySelected {
+      .controls-ListView__itemCheckBox {
+         .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+         .checkbox-null-size(@check-box-icon-size, @check-box-icon-null-size);
       }
    }
 }
@@ -127,11 +133,20 @@
    left: @listView-check-box-left;
    top: @listView-check-box-top;
 
-   &:after {
-      color: @primary-color;
-   }
    &:before {
       color: @check-box-icon-box-color;
+   }
+}
+
+.controls-ListView__item__multiSelected {
+   .controls-ListView__itemCheckBox:after {
+      color: @primary-color;
+   }
+}
+
+.controls-ListView__item__partiallySelected {
+   .controls-ListView__itemCheckBox:after {
+      background-color: @primary-color;
    }
 }
 
@@ -373,6 +388,9 @@
       }
    }
 }
+.controls-GroupBy {
+   .user-select();
+}
 /*с включенной черезполосицей нужно отключать верхний бордер у строк, следующих за группой*/
 .ws-is-desktop-platform {
    .controls-GroupBy__separatorText {
@@ -433,6 +451,10 @@
          background-color: transparent;
       }
    }
+}
+
+:not(.ws-sticky-header__header-container) > .controls-ScrollPaging__pagesPadding.controls-ListView__bottomStyle {
+   padding-bottom: @scrollPaging-padding + @bottomStyle-padding-bottom;
 }
 
 /**/
