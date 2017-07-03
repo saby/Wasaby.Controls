@@ -721,7 +721,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       _tabKey = _uniqueHex(50);
 
       // Добавить обработчик на выгрузку для запуска метода destroy
-      window.addEventListener('beforeunload', function () {
+      window && window.addEventListener('beforeunload', function () {
          manager.destroy();
       });
 
