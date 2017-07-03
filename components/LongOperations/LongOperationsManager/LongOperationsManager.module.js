@@ -457,31 +457,18 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       };
 
       /**
-       * Найти имя модуля продюсера и проверить однозначность его определения.
-       * Указанное имя продюсера должно быть или непосредственно именем модуля, или быть его укороченным вариантом (возможно, с дефисами в качестве
-       * разделителей). Если указано укороченное имя, то искомое имя модуля должно ему соответствовать, а также содержать подстроки "LongOperations"
-       * и "Producer" (не зависимо от регистра) и быть единственным вариантом среди всех известных модулей, удовлетворяющим этим трём требованиям.
-       * Возвращает объект, содержащий имя модуля и строку инициализатора
+       * Проверить правильность имени продюсера
+       * Указанное имя продюсера должно быть или непосредственно именем модуля, или именем модуля и следующей после него через ":" опциональной инициализирующей строкой
+       * Возвращает объект, содержащий имя модуля и строку инициализатора если она есть
        * @protected
        * @param {string} prodName Имя продюсера длительных операций
        * @return {object}
        */
       var _checkProducerName = function (prodName) {
-         //TODO: ### Возможно, стоит кэшировать результаты в массив ?
          var i = prodName.indexOf(':');
-         // Извлечь (возможно укороченное) имя модуля
          var modName = i !== -1 ? prodName.substring(0, i) : prodName;
-         var initer = i !== -1 ? prodName.substring(i + 1) : null;
          var mods = require('Core/constants').jsModules;
-         if (modName in mods) {
-            // Модуль есть в списке - больше ничего не надо
-            return {module:modName, initer:initer};
-         }
-         // Если modName не оказался полным именем модуля
-         var patterns = [(modName.indexOf('.') === -1 ? 'controls.' : '') + modName.replace(/[_\-]+/, '').toLowerCase(), 'longoperations', 'producer'];
-         //###var patterns = [_dashed2Camel(modName).toLowerCase(), 'longoperations', 'producer'];
-         var list = Object.keys(mods).filter(function (v1) { var v2 = v1.toLowerCase(); return patterns.every(function (v3) { return v2.indexOf(v3) !== -1; }); });
-         return list.length === 1 ? {module:'js!' + list[0], initer:initer} : null;
+         return modName in mods ? {module:'js!' + modName, initer:i !== -1 ? prodName.substring(i + 1) : null} : null;
       };
 
       /**
@@ -490,9 +477,9 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
        * @param {string} name Имя с дефисом в качестве разделителя
        * @return {string}
        */
-      var _dashed2Camel = function (name) {
+      /*var _dashed2Camel = function (name) {
          return name.split('-').map(function (v) { return v.charAt(0).toUpperCase() + v.substring(1); }).join('');
-      };
+      };*/
 
       /**
        * Найти под каким именем зарегистрирован продюсер
