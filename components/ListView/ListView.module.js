@@ -924,7 +924,7 @@ define('js!SBIS3.CONTROLS.ListView',
                contextMenu: true,
                /**
                 * @cfg {Boolean} Использовать функционал выбора всех записей
-                * @remark Начиная с версии 3.7.5.100 данная опция будет удалена.
+                * @remark Начиная с версии 3.17.20 данная опция будет удалена.
                 * Стандартным будет считаться поведение, useSelectAll = true.
                 * @deprecated
                 */
@@ -954,11 +954,11 @@ define('js!SBIS3.CONTROLS.ListView',
             var dispatcher = CommandDispatcher;
 
             this._publish('onChangeHoveredItem', 'onItemClick', 'onItemActivate', 'onDataMerge', 'onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onPrepareFilterOnMove', 'onPageChange', 'onBeginDelete', 'onEndDelete', 'onBeginMove', 'onEndMove');
-           
+
             this._setScrollPagerPositionThrottled = throttle.call(this._setScrollPagerPosition, 100, true).bind(this);
             this._updateScrollIndicatorTopThrottled = throttle.call(this._updateScrollIndicatorTop, 100, true).bind(this);
             this._eventProxyHdl = this._eventProxyHandler.bind(this);
-            
+
             this._toggleEventHandlers(this._container, true);
 
             this.initEditInPlace();
@@ -1854,6 +1854,10 @@ define('js!SBIS3.CONTROLS.ListView',
 
          toggleSelectedAll: function() {
             this._getMassSelectionController().toggleSelectedAll();
+         },
+
+         getSelection: function() {
+            return this._getMassSelectionController().getSelection();
          },
 
          _getMassSelectionController: function() {
@@ -2873,7 +2877,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
 
             ListView.superclass._onCollectionAddMoveRemove.apply(this, arguments);
-            
+
             if (this._virtualScrollController) {
                this._virtualScrollController.addItems(newItems, newItemsIndex);
                this._virtualScrollController.removeItems(oldItems, oldItemsIndex);
@@ -2887,7 +2891,7 @@ define('js!SBIS3.CONTROLS.ListView',
          // Страшный хак для Firefox и ipad:
          // в 110 из коллекции вместо события replace стали приходить remove и add
          // из за этого в фф и на ipad дергается скролл, так как сначала убирается элемент, скролл подвигается вверх
-         // затем добавляется элемент на место удаленного, но скролл остается на месте. 
+         // затем добавляется элемент на место удаленного, но скролл остается на месте.
          // Поэтому компенсируем этот прыжок сами
          _beforeFixScrollTop: function(action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
             if (action == IBindCollection.ACTION_REMOVE) {
@@ -3555,13 +3559,13 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _processPagingStandart: function () {
             var self = this;
-            
+
             if (!this._pager) {
                requirejs(['js!SBIS3.CONTROLS.Pager'], function(pagerCtr) {
                   if(self._pager || self.isDestroyed()) {
                      return;
                   }
-                  
+
                   var more = self.getItems().getMetaData().more,
                      hasNextPage = self._hasNextPage(more),
                      pagingOptions = {
@@ -3573,7 +3577,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         rightArrow: hasNextPage
                      },
                      pagerContainer = self.getContainer().find('.controls-Pager-container').append('<div/>');
-   
+
                   self._pager = new pagerCtr({
                      pageSize: self._options.pageSize,
                      opener: self,
@@ -3593,7 +3597,7 @@ define('js!SBIS3.CONTROLS.ListView',
                            if (pageNum == 0 && self._pager._options.pagingOptions.onlyLeftSide){
                               pageNum = self._pager._lastPageReached ? maxPage : (maxPage + 1);
                            }
-                     
+
                            self._setPageSave(pageNum);
                            self.setPage(pageNum - 1);
                            self._pageChangeDeferred = deferred;
