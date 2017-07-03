@@ -20,6 +20,13 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
       'use strict';
 
       /**
+       * Имя продюсера
+       * @protected
+       * @type {string}
+       */
+      var PRODUCER_NAME = 'SBIS3.CONTROLS.GenericLongOperationsProducer';
+
+      /**
        * Экземпляры класса (синглетоны), различающиеся идентификаторами (ключами массива). Один идентификатор - один экземпляр
        * @rpoteced
        * @type {object}
@@ -32,7 +39,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
        * @type {object}
        */
       var GenericLongOperationsProducer = CoreExtend.extend({}, [ILongOperationsProducer, ObservableMixin], /** @lends SBIS3.CONTROLS.GenericLongOperationsProducer.prototype */{
-         _moduleName: 'SBIS3.CONTROLS.GenericLongOperationsProducer',
+         _moduleName: PRODUCER_NAME,
 
          $protected: {
             /*_options: {
@@ -66,7 +73,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             if (key in _instances) {
                return _instances[key];
             }
-            this._name = 'generic' + (key ? ':' + key : '');
+            this._name = PRODUCER_NAME + (key ? ':' + key : '');
             _instances[key] = this;
          },
 
