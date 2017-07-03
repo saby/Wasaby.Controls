@@ -3,7 +3,7 @@
  */
 define(['js!SBIS3.CONTROLS.TitleManager', 'js!SBIS3.CONTROLS.Control'], function (TitleManager, Control) {
    describe('SBIS3.CONTROLS.TitleManager', function () {
-      var oldTitle = global.document.title;
+      var oldTitle;
       beforeEach(function () {
          global.document = global.document || {title:''};
          TitleManager._store = [];
@@ -17,6 +17,12 @@ define(['js!SBIS3.CONTROLS.TitleManager', 'js!SBIS3.CONTROLS.Control'], function
          it('should set title', function () {
             TitleManager.set('title', (new Control({})));
             assert.equal(global.document.title, 'title');
+         });
+         it('should not set title when control is destroyed', function () {
+            var control = new Control({});
+            control.destroy();
+            TitleManager.set('title', control);
+            assert.equal(global.document.title, oldTitle);
          });
       });
       describe('_onDestroyHandler', function () {

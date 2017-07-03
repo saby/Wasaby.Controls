@@ -238,6 +238,7 @@ define(
 
       _calendarShow: function() {
          this._pickerContent.setRange(this.getDate(), this.getDate());
+         this._pickerContent.updateViewAfterShow();
       },
 
       _timeShow: function() {
@@ -305,10 +306,20 @@ define(
             date.setSeconds(this._lastDate.getSeconds());
             date.setMilliseconds(this._lastDate.getMilliseconds());
          }
+         /**
+          * Переведем активность обратно в контрол выбора даты,
+          * чтобы корректно работали табы и события фокусов
+          */
+         this.setActive(true);
          this.setDate(date);
          this.hidePicker();
       },
       _onChooserClose: function(event) {
+         /**
+          * Переведем активность обратно в контрол выбора даты,
+          * чтобы корректно работали табы и события фокусов
+          */
+         this.setActive(true);
          this.hidePicker();
       },
 

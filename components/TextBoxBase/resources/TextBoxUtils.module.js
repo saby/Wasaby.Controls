@@ -67,6 +67,8 @@ define('js!SBIS3.CONTROLS.TextBoxUtils', ['Core/constants'], function(constants)
            var textBoxWidth = picker.getTarget()[0].getBoundingClientRect().width,
                pickerContainer = picker.getContainer()[0],
                needSetWidth = true,
+               /* Необходимо восстанавливать scrollTop после перерасчётов пикера */
+               currentScrollTop = pickerContainer.scrollTop,
                minWidth;
 
            if (picker && textBoxWidth !== pickerContainer.clientWidth) {
@@ -91,6 +93,7 @@ define('js!SBIS3.CONTROLS.TextBoxUtils', ['Core/constants'], function(constants)
                    pickerContainer.style.width = textBoxWidth + 'px';
                    pickerContainer.style.minWidth = '';
                }
+              pickerContainer.scrollTop = currentScrollTop;
            }
        }
    }

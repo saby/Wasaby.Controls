@@ -75,7 +75,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   items: undefined,
                   itemsContainer: undefined,
                   getEditorOffset: undefined,
-                  parentProperty: undefined
+                  parentProperty: undefined,
+                  currentRoot: undefined
                },
                _eip: undefined,
                // Используется для хранения Deferred при сохранении в редактировании по месту.
@@ -538,7 +539,12 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      return self._prepareAdd(options).addCallback(function (createdModel) {
                         return self._prepareEdit(createdModel).addCallback(function(model) {
                            if (self._options.parentProperty) {
-                              model.set(self._options.parentProperty, options.target ? options.target.getContents().getId() : null);
+                              if (options.target) {
+                                 model.set(self._options.parentProperty, options.target.getContents().getId());
+                              } else {
+                                 // Берем именно currentRoot, ведь он может отличаться от null
+                                 model.set(self._options.parentProperty, self._options.currentRoot !== undefined ? self._options.currentRoot : null);
+                              }
                               model.acceptChanges([self._options.parentProperty]);
                            }
                            //Единственный надёжный способ при завершении добавления записи узнать, что происходит именно добавление, это запомнить флаг.
