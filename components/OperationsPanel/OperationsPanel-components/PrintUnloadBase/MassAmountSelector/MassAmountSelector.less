@@ -2,19 +2,16 @@
    min-width: @controls-printdialog-min-width;
 }
 .controls-PrintMassDialog {
-   left: 12px;
-   position: relative;
-   padding-bottom: 14px;
+   margin-left: 12px;
 
-   .controls-MassAmountSelector__numberTextBox .controls-NumberTextBox {
-      width: 80px;
-      .controls-TextBox__field {
-         text-align: right;
-      }
-      .controls-TextBox__fieldWrapper{
-         margin : 0;
-      }
+   .controls-RadioGroup, .controls-MassAmountSelector__numberTextBox {
+      margin-bottom: 14px;
    }
+
+   .controls-NumberTextBox {
+      width: 80px;
+   }
+
    .controls-PrintMassDialog__label{
       display: inline-block;
       color: #999999;
