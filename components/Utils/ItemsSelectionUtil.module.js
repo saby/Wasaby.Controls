@@ -5,7 +5,7 @@
 /**
  * Утилита для работы компонентов с интерфейсами selectable / multiselectable и асинхронной загрузкой записей.
  */
-define('js!SBIS3.CONTROLS.Utils.ItemsSelection', ['Core/core-instance'], function(cInstance) {
+define('js!SBIS3.CONTROLS.Utils.ItemsSelection', ['Core/core-instance', 'Core/detection'], function(cInstance, detection) {
    
    var delayedEvents = {
       onSelectedItemsChange: 'getSelectedItems'
@@ -70,9 +70,18 @@ define('js!SBIS3.CONTROLS.Utils.ItemsSelection', ['Core/core-instance'], functio
     */
    function initSelectorAction(action, ctrl) {
       ctrl.subscribeTo(action, 'onExecuted', function(event, meta, result) {
-         ctrl.setActive(true);
          if(result) {
             ctrl.setSelectedItems(result);
+         }
+         
+         if(ctrl.isActive()) {
+            /* Баг ipad, после изменения размеров input'a, курсор не меняет своё положение:
+               http://openradar.appspot.com/18819624
+               https://bugs.webkit.org/show_bug.cgi?id=138201 */
+            if(detection.isMobileSafari) {
+               window.getSelection().removeAllRanges();
+            }
+            ctrl.setActive(true);
          }
       });
    
