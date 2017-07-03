@@ -148,8 +148,12 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             records = {
                folders : [],
                leafs : []
-            };
+            },
+            useGroups = !isEmpty(cfg.groupBy) && cfg.easyGroup;
          projection.each(function (item, index, group) {
+            if (useGroups) {
+               cfg._applyGroupItemsCount(group, 1, cfg);
+            }
             if (item.isNode()) {
                records.folders.push(item);
             }
