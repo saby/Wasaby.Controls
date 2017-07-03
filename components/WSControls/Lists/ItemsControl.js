@@ -74,8 +74,6 @@ define('js!WSControls/Lists/ItemsControl', [
             this._onCollectionChange = onCollectionChange.bind(this);
             this._onSelectorChange = onSelectorChange.bind(this);
 
-
-
             if (this._options.items) {
                this._items = this._options.items;
                this._itemsChangeCallback();
@@ -85,17 +83,11 @@ define('js!WSControls/Lists/ItemsControl', [
                this._dataSource = DataSourceUtil.prepareSource(this._options.dataSource);
             }
 
-
-
             if (this._options.dataSource && this._options.dataSource.firstLoad !== false) {
                this.reload();
             }
 
             ItemsControl.superclass.constructor.apply(this, arguments);
-         },
-
-         _prepareItems: function(items){
-            this._items = items;
          },
 
          _initItemBasedControllers: function() {
