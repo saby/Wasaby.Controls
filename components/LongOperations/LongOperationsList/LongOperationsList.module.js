@@ -275,7 +275,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   if (model.get('status') === STATUSES.running) {
                      model.set('timeSpent', time - model.get('startedAt'));
                      $cont.find('.js-controls-ListView__item[data-id="' + model.getId() + '"]')
-                        .find('.engine-LongOperationsList__executeTimeContainer').html(model.get('strTimeSpent'));
+                        .find('.controls-LongOperationsList__executeTimeContainer').html(model.get('strTimeSpent'));
                   }
                });
                itemProjection.setEventRaising(true);
@@ -476,7 +476,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   if (needUp) {
                      item.remain++;
                   }
-                  $line.toggleClass(item.isSuccess ? 'engine-OperationNotificationPopup__successCompletedOperation' : 'engine-OperationNotificationPopup__errorCompletedOperation', item.remain%2 === 0);
+                  $line.toggleClass(item.isSuccess ? 'controls-LongOperationsPopup__successCompletedOperation' : 'controls-LongOperationsPopup__errorCompletedOperation', item.remain%2 === 0);
                   item.remain--;
                   if (item.remain <= 0) {
                      this._animQueue.splice(i, 1);
