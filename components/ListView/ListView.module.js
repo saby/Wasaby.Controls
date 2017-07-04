@@ -947,6 +947,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _dragInitHandler: undefined, //метод который инициализирует dragNdrop
             _inScrollContainerControl: false,
             _allowMouseMoveEvent: true,
+            _loadingIndicatorTimer: undefined, // Таймаут отображения крутилки в индикаторе загрузки
             _horisontalDragNDrop: false
          },
 
@@ -2293,7 +2294,13 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _getEditInPlace: function() {
-            return this._hasEditInPlace() ? Deferred.success(this._editInPlace) : this._createEditInPlace();
+            if (this._hasEditInPlace()) {
+               var
+                  d = new Deferred();
+               d.callback(this._editInPlace);
+               return d;
+            }
+            return this._createEditInPlace();
          },
 
          _hasEditInPlace: function() {
@@ -3525,26 +3532,28 @@ define('js!SBIS3.CONTROLS.ListView',
 
             this._showedLoading = show;
             if (show) {
-               setTimeout(function(){
-                  if (!self.isDestroyed() && self._showedLoading) {
-                     scrollContainer = self._getScrollContainer()[0];
-                     indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
-                     if(indicator.length && scrollContainer && scrollContainer.offsetHeight && container[0].scrollHeight > scrollContainer.offsetHeight) {
-                        /* Ищем кординату, которая находится по середине отображаемой области грида */
-                        centerCord =
-                           (Math.max(scrollContainer.getBoundingClientRect().bottom, 0) - Math.max(container[0].getBoundingClientRect().top, 0))/2;
-                        /* Располагаем индикатор, учитывая прокрутку */
-                        indicator[0].style.top = centerCord + scrollContainer.scrollTop + 'px';
-                     } else {
-                        /* Если скрола нет, то сбросим кординату, чтобы индикатор сам расположился по середине */
-                        indicator[0].style.top = '';
-                     }
-                     ajaxLoader.removeClass('ws-hidden');
+               if (!self.isDestroyed() && self._showedLoading) {
+                  scrollContainer = self._getScrollContainer()[0];
+                  indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
+                  if(indicator.length && scrollContainer && scrollContainer.offsetHeight && container[0].scrollHeight > scrollContainer.offsetHeight) {
+                     /* Ищем кординату, которая находится по середине отображаемой области грида */
+                     centerCord =
+                        (Math.max(scrollContainer.getBoundingClientRect().bottom, 0) - Math.max(container[0].getBoundingClientRect().top, 0))/2;
+                     /* Располагаем индикатор, учитывая прокрутку */
+                     indicator[0].style.top = centerCord + scrollContainer.scrollTop + 'px';
+                  } else {
+                     /* Если скрола нет, то сбросим кординату, чтобы индикатор сам расположился по середине */
+                     indicator[0].style.top = '';
                   }
+                  ajaxLoader.removeClass('ws-hidden');
+               }
+               this._loadingIndicatorTimer = setTimeout(function(){
+                  ajaxLoader.addClass('controls-AjaxLoader__showIndication');
                }, INDICATOR_DELAY);
             }
             else {
-               ajaxLoader.addClass('ws-hidden');
+               clearTimeout(this._loadingIndicatorTimer);
+               ajaxLoader.addClass('ws-hidden').removeClass('controls-AjaxLoader__showIndication');
             }
          },
          _toggleEmptyData: function(show) {
@@ -3928,11 +3937,13 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _commitEdit: function(checkAutoAdd) {
             var
-               self = this;
-            return this._getEditInPlace().addCallback(function(editInPlace) {
+               self = this,
+               eip = this._getEditInPlace();
+            eip.addCallback(function(editInPlace) {
                // При сохранении добавляемой записи через галку в тулбаре необходимо автоматически запускать добавление (естественно, если такой режим включен)
                return checkAutoAdd && editInPlace.isAdd() && self._isModeAutoAdd() ? editInPlace.editNextTarget(true) : editInPlace.endEdit(true);
             });
+            return eip;
          },
          destroy: function () {
             this._destroyEditInPlaceController();
