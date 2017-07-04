@@ -24,61 +24,61 @@
 
 
 
-.engine-OperationNotificationPopup.engine-OperationNotificationPopup__hidden{
+.controls-LongOperationsPopup.controls-LongOperationsPopup__hidden{
     visibility: hidden;
 }
 
-.controls-NotificationPopup_popup.engine-OperationNotificationPopup,
-.engine-OperationNotificationPopup {
+.controls-NotificationPopup_popup.controls-LongOperationsPopup,
+.controls-LongOperationsPopup {
     width: @long-operations-popup-exp-width;
     max-width: @long-operations-popup-exp-max-width;
 }
 
-.engine-OperationNotificationPopup__content {
+.controls-LongOperationsPopup__content {
     /*width: @long-operations-popup-exp-width;
     max-width: @long-operations-popup-exp-max-width;*/
 }
 
-.engine-OperationNotificationPopup .controls-NotificationPopup {
+.controls-LongOperationsPopup .controls-NotificationPopup {
     max-width: none;
     border-right: 0px none;
 }
 
-.engine-OperationNotificationPopup.engine-OperationNotificationPopup__hiddenContentMode {
+.controls-LongOperationsPopup.controls-LongOperationsPopup__hiddenContentMode {
     width: @long-operations-popup-collapsed-width;
 }
 
-.engine-OperationNotificationPopup__hiddenContentMode .engine-OperationNotificationPopup__content,
-.engine-OperationNotificationPopup__hiddenContentMode .engine-OperationNotificationPopup__header_stoppedOperationsButton{
+.controls-LongOperationsPopup__hiddenContentMode .controls-LongOperationsPopup__content,
+.controls-LongOperationsPopup__hiddenContentMode .controls-LongOperationsPopup__header_stoppedOperationsButton{
     display: none;
 }
 
 /* Header */
 
-.controls-NotificationPopup__header_icon.engine-OperationNotificationPopup__runOperationIcon {
+.controls-NotificationPopup__header_icon.controls-LongOperationsPopup__runOperationIcon {
     cursor: pointer;
 }
 
-.engine-OperationNotificationPopup .controls-NotificationPopup__header {
+.controls-LongOperationsPopup .controls-NotificationPopup__header {
     height: @long-operations-popup-header-height;
 }
 
-.engine-OperationNotificationPopup .controls-NotificationPopup__header.controls-NotificationPopup__header-withCloseButton {
+.controls-LongOperationsPopup .controls-NotificationPopup__header.controls-NotificationPopup__header-withCloseButton {
     padding-right: @long-operations-popup-header-pad-rt;
     line-height: @long-operations-popup-header-line-height;
 }
 
-.engine-OperationNotificationPopup .controls-NotificationPopup__header_icon.icon-24 {
+.controls-LongOperationsPopup .controls-NotificationPopup__header_icon.icon-24 {
     margin-right: 6px;
 }
 
-.engine-OperationNotificationPopup .controls-NotificationPopup__header_icon.icon-size {
-    font-size: 32px !important;
-    width: 32px;
-    height: 32px;
+.controls-LongOperationsPopup .controls-NotificationPopup__header_icon.icon-size {
+    width: @long-operations-popup-header-icon-size;
+    height: @long-operations-popup-header-icon-size;
+    font-size: @long-operations-popup-header-icon-size !important;
 }
 
-.engine-OperationNotificationPopup__header_stoppedOperationsButton {
+.controls-LongOperationsPopup__header_stoppedOperationsButton {
     margin-left: 16px;
     cursor: pointer;
     font-size: @long-operations-popup-header-stop-but-f-size;
@@ -86,29 +86,29 @@
     color: @long-operations-popup-header-stop-but-color;
 }
 
-.engine-OperationNotificationPopup__header_stoppedOperationsButton:hover {
+.controls-LongOperationsPopup__header_stoppedOperationsButton:hover {
     text-decoration: underline;
 }
 
-.engine-OperationNotificationPopup__header_stoppedOperations-show .engine-OperationNotificationPopup__header_showStoppedOperations,
-.engine-OperationNotificationPopup__header_hideStoppedOperations{
+.controls-LongOperationsPopup__header_stoppedOperations-show .controls-LongOperationsPopup__header_showStoppedOperations,
+.controls-LongOperationsPopup__header_hideStoppedOperations{
     display: none;
 }
 
-.engine-OperationNotificationPopup__header_stoppedOperations-show .engine-OperationNotificationPopup__header_hideStoppedOperations {
+.controls-LongOperationsPopup__header_stoppedOperations-show .controls-LongOperationsPopup__header_hideStoppedOperations {
     display: block;
 }
 
-.controls-NotificationPopup__header_icon.engine-OperationNotificationPopup__header_icon-customIcon {
+.controls-NotificationPopup__header_icon.controls-LongOperationsPopup__header_icon-customIcon {
     background: url('resources/load.gif');
     background-size: cover;
 }
 
-.engine-OperationNotificationPopup__header_downloadButton {
+.controls-LongOperationsPopup__header_downloadButton {
     margin-left: 8px;
 }
 
-.engine-OperationNotificationPopup .engine-OperationNotificationPopup__header_caption {
+.controls-LongOperationsPopup .controls-LongOperationsPopup__header_caption {
    font-size: @long-operations-popup-header-caption-f-size;
    line-height: @long-operations-popup-header-caption-line-height;
    color: @long-operations-popup-header-caption-color;
@@ -118,7 +118,7 @@
    word-wrap: normal;
 }
 
-.engine-OperationNotificationPopup.engine-OperationNotificationPopup__hiddenContentMode .engine-OperationNotificationPopup__header_caption {
+.controls-LongOperationsPopup.controls-LongOperationsPopup__hiddenContentMode .controls-LongOperationsPopup__header_caption {
     font-size: @long-operations-popup-collapsed-header-caption-f-size;
     line-height: @long-operations-popup-collapsed-header-caption-line-height;
     color: @long-operations-popup-collapsed-header-caption-color;
@@ -127,8 +127,8 @@
 
 /* End header  */
 
-.engine-OperationNotificationPopup__header_downloadButton,
-.engine-OperationNotificationPopup__header_stoppedOperationsButton {
+.controls-LongOperationsPopup__header_downloadButton,
+.controls-LongOperationsPopup__header_stoppedOperationsButton {
    margin-bottom: -2px;
    line-height: @long-operations-popup-header-line-height;
 }
@@ -136,46 +136,46 @@
 
 /* Content */
 
-.engine-OperationNotificationPopup__content .engine-LongOperationsList .engine-LongOperationsList__executeTimeContainer.controls-DataGridView__td,
-.engine-OperationNotificationPopup__content .engine-LongOperationsList .controls-DataGridView__tr.controls-ListView__hoveredItem .engine-LongOperationsList__executeTimeContainer.controls-DataGridView__td {
+.controls-LongOperationsPopup__content .controls-LongOperationsList .controls-LongOperationsList__executeTimeContainer.controls-DataGridView__td,
+.controls-LongOperationsPopup__content .controls-LongOperationsList .controls-DataGridView__tr.controls-ListView__hoveredItem .controls-LongOperationsList__executeTimeContainer.controls-DataGridView__td {
     color: #CCC;
     font-size: 12px;
 }
 
-.engine-OperationNotificationPopup__content .engine-LongOperationsList .controls-DataGridView__firstContentCell {
+.controls-LongOperationsPopup__content .controls-LongOperationsList .controls-DataGridView__firstContentCell {
     width: 25px;
     padding-left: 7px;
     padding-right: 2px;
 }
 
-.engine-OperationNotificationPopup__content .engine-LongOperationsList .engine-LongOperationsList__stateContainer {
+.controls-LongOperationsPopup__content .controls-LongOperationsList .controls-LongOperationsList__stateContainer {
     margin-left: 0px;
 }
 
-.engine-OperationNotificationPopup__content_showRegistryButtonContainer {
+.controls-LongOperationsPopup__content_showRegistryButtonContainer {
     height: @long-operations-popup-reg-but-ctr-height;
 }
 
-.engine-OperationNotificationPopup__content_showRegistryButton {
+.controls-LongOperationsPopup__content_showRegistryButton {
     float: right;
     margin-right: @long-operations-popup-reg-but-line-height;
 }
 
-.engine-OperationNotificationPopup__content_list {
+.controls-LongOperationsPopup__content_list {
     /*###width: calc(@long-operations-popup-exp-width - 1px);*/
     border-bottom: 1px solid #F5F5F5;
 }
 
-.engine-OperationNotificationPopup__content_list .engine-LongOperationsList__nameColumn {
+.controls-LongOperationsPopup__content_list .controls-LongOperationsList__nameColumn {
     height: 24px !important;
     line-height: 24px !important;
 }
 
-.engine-OperationNotificationPopup .engine-OperationNotificationPopup__successCompletedOperation.controls-DataGridView__tr {
+.controls-LongOperationsPopup .controls-LongOperationsPopup__successCompletedOperation.controls-DataGridView__tr {
     background: #EFFFED;
 }
 
-.engine-OperationNotificationPopup .engine-OperationNotificationPopup__errorCompletedOperation.controls-DataGridView__tr {
+.controls-LongOperationsPopup .controls-LongOperationsPopup__errorCompletedOperation.controls-DataGridView__tr {
     background: #FBEEEF;
 }
 
@@ -183,7 +183,7 @@
 
 /* Footer*/
 
-.engine-OperationNotificationPopup__footer {
+.controls-LongOperationsPopup__footer {
     height: @long-operations-popup-foot-height;
     padding-right: 24px;
     line-height: @long-operations-popup-foot-height;
@@ -191,47 +191,47 @@
     text-align: center;
 }
 
-.engine-OperationNotificationPopup__footer_execTasks,
-.engine-OperationNotificationPopup__footer_executeTime,
-.engine-OperationNotificationPopup__footer_progress,
-.engine-OperationNotificationPopup__footer_notification{
+.controls-LongOperationsPopup__footer_execTasks,
+.controls-LongOperationsPopup__footer_executeTime,
+.controls-LongOperationsPopup__footer_progress,
+.controls-LongOperationsPopup__footer_notification{
     font-size: @long-operations-popup-foot-f-size;
     color: @long-operations-popup-foot-color;
 }
 
-.engine-OperationNotificationPopup__footer_progress {
+.controls-LongOperationsPopup__footer_progress {
     margin-left: 5px;
 }
 
-.engine-OperationNotificationPopup__footer__actionsContainer {
+.controls-LongOperationsPopup__footer__actionsContainer {
     position: absolute;
     margin-right: 8px;
     right: 0;
 }
 
-.engine-OperationNotificationPopup__footer_pauseIcon,
-.engine-OperationNotificationPopup__hideContentIcon {
+.controls-LongOperationsPopup__footer_pauseIcon,
+.controls-LongOperationsPopup__hideContentIcon {
     margin-top: 7px;
     cursor: pointer;
 }
 
-.engine-OperationNotificationPopup__hideContentIcon:hover{
+.controls-LongOperationsPopup__hideContentIcon:hover{
     color: #313E78 !important;
 }
 
-.engine-OperationNotificationPopup__hiddenContentMode .engine-OperationNotificationPopup__hideContentIcon {
+.controls-LongOperationsPopup__hiddenContentMode .controls-LongOperationsPopup__hideContentIcon {
     transform: rotate(180deg);
 }
 
-.engine-OperationNotificationPopup__footer_pauseIcon {
+.controls-LongOperationsPopup__footer_pauseIcon {
     display: none;
 }
 
-.engine-OperationNotificationPopup__footer_firstOperationMode .engine-OperationNotificationPopup__footer_pauseIcon {
+.controls-LongOperationsPopup__footer_firstOperationMode .controls-LongOperationsPopup__footer_pauseIcon {
     display: inline-block;
 }
 
-.engine-OperationNotificationPopup__footer_firstOperationMode .engine-OperationNotificationPopup__hideContentIcon{
+.controls-LongOperationsPopup__footer_firstOperationMode .controls-LongOperationsPopup__hideContentIcon{
     display: none;
 }
 
