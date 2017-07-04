@@ -12,6 +12,13 @@ body {
     .controls-accent-text {
     	color: #FFCC99;
     }
+   // т.к. в редизайне используется одна кнопка без заголовка, то напишем для неё фикс выравнивания
+   // в онлайне такие кнопки завязаны на жесткие стили controls-IconButton__round-border-24, что неправильно
+   // для редизайна нужно перейти на относительные названия
+   .controls-MenuIcon__Menu.controls-Menu.controls-Menu__Popup.controls-Menu__hide-menu-header {
+     margin: -.39rem 0 0 -.106rem;
+   }
+
    //TODO: удалить это когда будет нормальный пэйджинг, не из ws-a
    .ws-paging{
       .ws-paging-small{
