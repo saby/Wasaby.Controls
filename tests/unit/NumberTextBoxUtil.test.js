@@ -57,6 +57,11 @@ define(['js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil'], function (NumberTextBoxUti
             assert.equal(newState.value, '-7.0');
             assert.equal(newState.caretPosition, 2);
          });
+         it('|. => 7|.', function (){
+            newState = NumberTextBoxUtil.numberPress(0, 0, '.', true, 16, -1, 55, 10); // press digit 7
+            assert.equal(newState.value, '7.');
+            assert.equal(newState.caretPosition, 1);
+         });
       });
       describe('.deletPressed', function (){
          it('1|23.12 => 1|3.12', function (){
