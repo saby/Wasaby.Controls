@@ -1215,7 +1215,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             //Если в группе столько же элементов, сколько добавилось, то группа еще не отрисована
             //и надо ее отрисовать
             itemsToAdd = [];
-            if (this._options._groupItemsCount[groupId] === items.length) {
+            if (this._options._groupItemsCount[groupId] === items.length && groupId !== false) {
                this._options._groupItemProcessing(groupId, itemsToAdd, items[0], this._options);
             }
             itemsToAdd = itemsToAdd.concat(items);
