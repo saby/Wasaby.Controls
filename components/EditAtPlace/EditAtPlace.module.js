@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
       'js!SBIS3.CONTROLS.EditAtPlaceMixin',
       'js!SBIS3.CONTROLS.FormWidgetMixin',
       'js!SBIS3.CONTROLS.Utils.HtmlDecorators.DateFormatDecorator',
-      'html!SBIS3.CONTROLS.EditAtPlace',
+      'tmpl!SBIS3.CONTROLS.EditAtPlace',
       'Core/helpers/string-helpers',
       'js!SBIS3.CONTROLS.ControlHierarchyManager',
       'i18n!SBIS3.CONTROLS.EditAtPlace',
@@ -17,6 +17,10 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
       var dateDecorator = null;
 
       function formatText(text) {
+         if (!text && Object.isEmpty(text)) {
+            return '';
+         }
+
          var getTextFromDate = function(date){
             if (!dateDecorator) {
                dateDecorator = new DateFormatDecorator();
