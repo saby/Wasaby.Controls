@@ -1,4 +1,4 @@
-<div class="engine-LongOperationsList">
+<div class="controls-LongOperationsList">
    <component data-component="SBIS3.CONTROLS.DataGridView" name="{{=it.listName}}" class="{{=it.className || ''}}">
       <opts name="filter" type="object" bind="filter"/>
       <opt name="idProperty" value="fullId"/>
@@ -22,7 +22,7 @@
             <opt name="field" value="startedAt"/>
             <opt name="cellTemplate" value="html!SBIS3.CONTROLS.LongOperationsList/resources/LongOperationsListStartTimeTemplate"/>
             <opt name="width" value="110"/>
-            <opt name="className" value="engine-LongOperationsList__startTimeContainer"/>
+            <opt name="className" value="controls-LongOperationsList__startTimeContainer"/>
          </opts>
          {{?}}
          {{? it.columns.title}}
@@ -30,7 +30,7 @@
             <opt name="field" value="title"/>
             <opt name="width" value="100%"/>
             <opt name="cellTemplate" value="html!SBIS3.CONTROLS.LongOperationsList/resources/LongOperationsListNameTemplate"/>
-            <opt name="className" value="engine-LongOperationsList__nameColumn controls-DataGridView-cell-overflow-ellipsis"/>
+            <opt name="className" value="controls-LongOperationsList__nameColumn controls-DataGridView-cell-overflow-ellipsis"/>
          </opts>
          {{?}}
          {{? it.columns.timeSpent}}
@@ -38,7 +38,7 @@
             <opt name="field" value="timeSpent"/>
             <opt name="cellTemplate" value="html!SBIS3.CONTROLS.LongOperationsList/resources/LongOperationsListExecuteTimeTemplate"/>
             <opt name="width" value="130"/>
-            <opt name="className" value="engine-LongOperationsList__executeTimeContainer"/>
+            <opt name="className" value="controls-LongOperationsList__executeTimeContainer"/>
          </opts>
          {{?}}
          {{? it.columns.userPic}}
