@@ -55,6 +55,7 @@
 @link-icon-margin:                        -@default-border-width 0 0;
 @link-icon-field-margin:                  0 0 0 .14rem;
 @link-additional-color:                   #8991A9;
+@link-disabled-text-color:                rgba(102,170,221, .2);
 //Icon Button
 @icon-button-round-border-width:          2.286rem;
 @icon-button-round-border-height:         2.286rem;
@@ -220,7 +221,7 @@
 @switcher-do-disabled-text-color:         #37536C;
 @switcher-do-disabled-btn-background:     @gray-color;
 //Menu
-@popup-font-size:                         1.43rem;
+@popup-font-size:                         1.14rem;
 @menu-header-bg-color:                    #23b8ff;
 @menu-subpopup-margin:                    @menu-margin;
 @menu-border-width:                       @default-border-width;
@@ -613,7 +614,7 @@
 @data-grid-header-cell-font-size:         0.86rem;
 @data-grid-row-selected-cell-text-color:  @default-text-color;
 @data-grid-cell-height:                   1.7857rem;
-@data-grid-cell-padding:                  @data-grid-header-cell-padding;
+@data-grid-cell-padding:                  0 .28571rem;
 @data-grid-ms-first-content-cell-padding-left:@data-grid-header-cell-padding-side;
 @data-grid-edge-cell-separator-color:     rgba(0, 0, 0, 0.1);
 @data-grid-td-checkbox-width:             1.75rem;
@@ -624,6 +625,7 @@
 // PrintDialog
 @controls-printdialog-min-width:          25rem;
 @controls-printdialog-activate-right:     3.1785rem;
+@controls-printdialog-activate-margin-top:8px;
 //MergeDialog
 @controls-MergeDialogTemplate-BreadCrumbs-line-height:   1.7857rem;
 @controls-MergeDialogTemplate-hint-font-size:            0.7rem;
@@ -672,15 +674,17 @@
 @controls-Pager-amount-text:              #999999;
 @controls-Pager-height:                   3.14rem; //3 rem - button + 2px *2 border
 //FilterButton
-@controls-filterButton-button-width:	   2rem;
-@filter-button-font-size:						2rem !important; //перебиваем .icon-24
-@controls-filterButton-button-height:		2rem;
+@controls-filterButton-button-width:	   3rem;
+@controls-filterButton-height:            3rem;
+@filter-button-font-size:						3rem !important; //перебиваем .icon-24
+@controls-filterButton-button-height:		3rem;
+@controls-filterButton-button-height:		3rem;
 @controls-filterButton-picker-bg:         #38495B;
 @controls-filterButton-picker-border-width:@default-border-width;
 @controls-Popup-closeButton-top:          1.75rem;
-@controls-filterButton-button-margin:     .2857rem .2857rem .2857rem 0;
+@controls-filterButton-button-margin:     0;
 @controls-filterButton-button-margin-right-align:.2857rem 0 .2857rem .2857rem;
-@controls-filterButton-button-margin-ff:  .5714rem 1.1428rem .2857rem 0;
+@controls-filterButton-button-margin-ff:  .5714rem 0 0 0;
 @controls-filterButton-area-text-weight:	normal;
 @controls-filterButton-button-arrow-margin:-.14rem;;
 @controls-filterButton-area-header-padding:.29rem 3rem .29rem .43rem;
@@ -689,6 +693,7 @@
 @controls-filterButton-clear-margin-right:.5714rem;
 @controls-filterButton-area-content-margin:0 .42857rem 0.75rem;
 @controls-filterButton-line-height:       1.4642rem;
+@controls-filterButton-filterLine-margin: 0;
 //FilterLine
 @controls-filterLine-wrapper-height:      0.86rem;
 @controls-filterLine-link-color:          #26B8FF;
@@ -697,7 +702,7 @@
 //FieldLink
 @controls-FieldLink-showAllLinks-lineHeight:3rem;
 @controls-FieldLink-border-color-picker-show: @accent-color;
-@controls-FieldLink-linkItem-line-height:    calc(@text-box-height ~"-" @default-border-width); //высота - ширина ббордера
+@controls-FieldLink-linkItem-line-height:    calc(@text-box-height ~"-" @default-border-width * 2); //высота - ширина ббордера
 @controls-FieldLink-showAllLinks-width:      3.2rem;
 @controls-FieldLink-showAllLinks-marginRight:-1.43rem;
 @controls-FieldLink-linkItem-margin:         0;
@@ -718,6 +723,7 @@
 @controls-SelectorButton-align:           middle;
 // BackButton
 @back-button-font-size:                   1.43rem;
+@back-button-line-height:                 @default-height;
 // BreadCrumbs
 @back-button-arrow-paddingleft:           .5714rem;
 @bread-crumb-title-color:                 @gray-lamantin-color;
@@ -734,7 +740,7 @@
 @controls-Paging-item-width:              0.86rem;
 @controls-Paging-btn-width:               1.75rem;
 @controls-Paging-btn-height:              1.75rem;
-@controls-Paging-btn-margin:              0 .2857rem 0;
+@controls-Paging-btn-margin:              0 .2857rem 0 0;
 @controls-Paging-btn-padding:             .2857rem;
 //ScrollContainer
 @controls-ScrollContainer-top-gradient-height:0.857rem;
@@ -814,8 +820,9 @@
 @tab-button-color:                        @disabled-color;
 @tab-control-padding-top:					   3.57rem;
 @tab-control-background-color:			   transparent;
-@tab-button-font:                         1.43rem 'TensorFont', sans-serif;
-@tab-button-main-text-line-height:              @tab-button-height;
+@tab-button-font-size:                    1.43rem;
+@tab-button-font:                         @tab-button-font-size 'TensorFont', sans-serif;
+@tab-button-main-text-line-height:        @tab-button-height;
 @tab-button-checked-font-size:            1.43rem;
 @tab-button-checked-inner-font-size:      1.43rem;
 @tab-button-checked-inner-color:          rgb(255, 204, 153);
@@ -870,8 +877,8 @@
 @commands-button-close-icon:              @icon-large-size;
 @commands-button-close-font-family:       'carrypresto-icons';
 @commands-button-close-button-size:       @icon-large-size;
-@commands-button-close-button-top:        0;
-@commands-button-margin:                  -.3571rem -3.2857rem 0 0;
+@commands-button-close-button-top:        0.125rem;
+@commands-button-margin:                  -.3571rem -3.1071rem 0 0;
 @DropdownList-height: 					      3rem;
 @DropdownList-footer-buttonsBlock-height: 3.57rem;
 @DropdownList-footer-hasMore-top:         1.1rem;
@@ -969,3 +976,5 @@
 @controls-NotificationPopup-border-left:  @controls-NotificationPopup-border;
 @back-button-text-color:                  #FFCC99;
 @controls-FieldLink-link-color-hover:     @default-hover-color;
+
+@commands-button-close-icon-color:        @icon-color-primary;

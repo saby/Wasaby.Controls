@@ -381,7 +381,8 @@
 @tab-button-position:                           relative;
 @tab-button-overflow:                           hidden;
 @tab-button-color:                              @blue-dark-color;
-@tab-button-font:                               14px 'TensorFont', sans-serif;
+@tab-button-font-size:                          14px;
+@tab-button-font:                               @tab-button-font-size 'TensorFont', sans-serif;
 @tab-button-main-text-line-height:              27px;
 @tab-button-simple-checked-bottomline-color:    #0055BB;
 @tab-button-simple-hover-bottomline-color:      #E4E4E4;
@@ -2218,6 +2219,8 @@
 @controls-filterButton-line-height:               @link-line-height;
 @controls-filterButton-apply-margin-right:        0;
 
+@controls-filterButton-filterLine-margin:         8px 0 8px 0;
+
 //FilterButtonHistory
 @controls-filterButton-history-wrapper-padding:   6px;
 @controls-filterButton-history-maxHeight-height:  120px;
@@ -2353,6 +2356,7 @@
 
 // BackButton
 @back-button-font-size:                            18px;
+@back-button-line-height:                          @default-height;
 @back-button-margin-before:                        0;
 @back-button-padding-before:                       0;
 @back-button-arrow-height:                         24px;
@@ -2613,6 +2617,7 @@
 
 @commands-button-close-icon:                               @icon-medium-size;
 @commands-button-close-font-family:                        @default-icon-medium-font;
+@commands-button-close-icon-color:                         @blue-dark-color;
 @commands-button-close-button-size:                        32px;
 @commands-button-close-button-top:                         4px;
 @commands-button-margin:                                   -9px -33px 0 0;
@@ -2666,6 +2671,7 @@
 @long-operations-popup-header-height: auto;
 @long-operations-popup-header-line-height: normal;
 @long-operations-popup-header-pad-rt: 41px;
+@long-operations-popup-header-icon-size: 24px;
 @long-operations-popup-header-caption-f-size: 15px;
 @long-operations-popup-header-caption-line-height: inherit;
 @long-operations-popup-header-caption-color: inherit;
