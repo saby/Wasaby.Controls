@@ -447,10 +447,11 @@
   }
 }
 
+//TODO костыль по месту. Стандарт должен быть поправлен
 .controls-DataGridView__headSorting {
    &.controls-Link {
-      .controls-Link__icon + .controls-Link__field {
-         margin: 0;
+      .controls-Button__icon + .controls-Link__field {
+         margin-left: 0;
       }
       font-size: @data-grid-header-cell-font-size;
    }
