@@ -3,7 +3,6 @@
    display: inline-block;
    line-height: @default-height;
    height: @default-height;
-   position: relative;
    white-space: nowrap;
    font-weight: 700;
    font-size: @back-button-font-size;
@@ -47,6 +46,8 @@
          }
       }
       &.controls-BackButton__hover-arrow{
+         position: relative;
+
          .controls-BackButton__arrow{
             position: absolute;
             top: 0;
