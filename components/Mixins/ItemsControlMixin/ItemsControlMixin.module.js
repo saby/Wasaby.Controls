@@ -1646,6 +1646,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                 .addCallback(fHelpers.forAliveOnly(function (list) {
                    self._toggleIndicator(false);
                    self._notify('onDataLoad', list);
+                   self._onDataLoad(list);
                    if (
                       this.getItems()
                       && (list.getModel() === this.getItems().getModel())
@@ -1689,6 +1690,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          return def;
       }),
+
+      _onDataLoad: function(){
+
+      },
 
       _loadErrorProcess: function(error) {
         var self = this;
