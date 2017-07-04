@@ -3093,7 +3093,14 @@ define('js!SBIS3.CONTROLS.ListView',
                isContainerVisible = dcHelpers.isElementVisible(this.getContainer()),
                // отступ с учетом высоты loading-indicator
                hasScroll = this._scrollWatcher.hasScroll(this._getLoadingIndicatorHeight()),
+               hasNextPage;
+
+            if (this._options.navigation && this._options.navigation.type == 'cursor') {
+               hasNextPage = this._listNavigation.hasNextPage(this._infiniteScrollState.mode);
+            }
+            else {
                hasNextPage = this._hasNextPage(more, this._scrollOffset.bottom);
+            }
 
             //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
             this._container.toggleClass('controls-ListView__outside-scroll-loader', !hasScroll);
@@ -3151,10 +3158,9 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._dataSource) {
                var offset = this._getNextOffset(),
                   scrollingUp = this._isScrollingUp(),
-                  hasNextTopPage = this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.top),
                   self = this;
                //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
-               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', scrollingUp && hasNextTopPage);
+               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', scrollingUp);
                this._showLoadingIndicator();
                this._toggleEmptyData(false);
 
@@ -3491,6 +3497,12 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             return (this._hoveredItem = emptyObject);
 
+         },
+
+         _onDataLoad: function(list) {
+            if (this._options.navigation && this._options.navigation.type == 'cursor') {
+               this._listNavigation.analizeResponceParams(list);
+            }
          },
 
          _dataLoadedCallback: function () {
