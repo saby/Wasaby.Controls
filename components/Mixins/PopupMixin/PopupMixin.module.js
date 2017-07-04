@@ -924,7 +924,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       },
 
       _isVerticalOverflow: function() {
-         var scrollY = this._fixed ? 0 : $(window).scrollTop();
+         var scrollableContainer = this._options.parentContainer ? this._options.parentContainer : $(window);
+         var scrollY = this._fixed ? 0 : $(scrollableContainer).scrollTop();
          return this._containerSizes.requiredOffset.top > this._windowSizes.height + scrollY;
       },
 
