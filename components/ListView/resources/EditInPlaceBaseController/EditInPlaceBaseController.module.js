@@ -526,7 +526,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   creatingDeferred,
                   modelOptions,
                   // Поддержал deferred в качестве результата onBeginAdd, что позволит самостоятельно создавать записи при добавлении по месту
-                  beginAddResult = this._notify('onBeginAdd');
+                  beginAddResult = this._notify('onBeginAdd', options);
                if (beginAddResult instanceof Deferred) {
                   creatingDeferred = beginAddResult;
                } else {
