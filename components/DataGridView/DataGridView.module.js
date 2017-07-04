@@ -1047,14 +1047,19 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }.bind(this),
             handlers: {
                onInitEditInPlace: function(e, eip) {
-                  var tds;
+                  var tds, scrolledColumns;
 
                   if(!self._options.editingTemplate && self.hasPartScroll()) {
                      tds = eip.getContainer().find('td');
+                     scrolledColumns = self._options.startScrollColumn;
+                     
+                     if(self._options.multiselect) {
+                        scrolledColumns += 1;
+                     }
 
                      /* Развесим классы для частичного скрола при инициализации редактирования по месту */
                      for (var i = 0, len = tds.length; i < len; i++) {
-                        tds.eq(i).addClass(self._options.startScrollColumn <= i ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell');
+                        tds.eq(i).addClass(scrolledColumns <= i ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell');
                      }
                      /* Подпишемся у рекдатирования по месту на смену фокуса дочерних элементов,
                         чтобы правильно позиционировать частичный скролл при изменении фокуса */

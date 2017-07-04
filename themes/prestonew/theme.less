@@ -12,6 +12,13 @@ body {
     .controls-accent-text {
     	color: #FFCC99;
     }
+   // т.к. в редизайне используется одна кнопка без заголовка, то напишем для неё фикс выравнивания
+   // в онлайне такие кнопки завязаны на жесткие стили controls-IconButton__round-border-24, что неправильно
+   // для редизайна нужно перейти на относительные названия
+   .controls-MenuIcon__Menu.controls-Menu.controls-Menu__Popup.controls-Menu__hide-menu-header {
+     margin: -.39rem 0 0 -.106rem;
+   }
+
    //TODO: удалить это когда будет нормальный пэйджинг, не из ws-a
    .ws-paging{
       .ws-paging-small{
@@ -616,9 +623,10 @@ body {
    }
    .controls-Button__icon {
       &.icon-size {
-         font-size: 2.5rem!important;
-         right: .3rem;
-         top: 0.2rem;
+         font-size: 3rem!important;
+         height: 3rem!important;
+         width: 3rem!important;
+         line-height: 3rem!important;
       }
    }
 }
@@ -870,7 +878,7 @@ body {
       background: @basic-block-bg-color;
       color: @default-text-color;
       border: @button-border;
-      padding: 0.285rem 1.6rem 0.285rem 0.38rem;
+      padding: 0.857rem 1.6rem 0.857rem 0.857rem;
       .ws-infobox-triangle {
          width: .857rem;
          height: .857rem;
