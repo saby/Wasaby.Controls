@@ -100,6 +100,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       }
       else {
          projection.setGroup(null);
+         resetGroupItemsCount(cfg);
       }
       return projection;
    },
@@ -164,6 +165,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       cfg._groupItemsCount = cfg._groupItemsCount || {};
       cfg._groupItemsCount[groupId] = cfg._groupItemsCount[groupId] || 0;
       cfg._groupItemsCount[groupId] += count;
+   },
+
+   resetGroupItemsCount = function(cfg) {
+      delete cfg._groupItemsCount;
    },
 
    getRecordsForRedraw = function(projection, cfg) {
@@ -362,6 +367,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             _buildTplArgs : buildTplArgs,
             _getRecordsForRedrawSt: getRecordsForRedraw,
             _getRecordsForRedraw: getRecordsForRedraw,
+            _applyGroupItemsCount: applyGroupItemsCount,
+            _resetGroupItemsCount: resetGroupItemsCount,
             _applyGroupingToProjection: applyGroupingToProjection,
             _applyFilterToProjection: applyFilterToProjection,
 
