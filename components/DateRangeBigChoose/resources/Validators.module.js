@@ -2,7 +2,7 @@
  * Created by am.gerasimov on 01.02.2016.
  */
 define('js!SBIS3.CONTROLS.DateRangeBigChoose.Validators', [
-   'js!Core/helpers/string-helpers',
+   'Core/helpers/string-helpers',
    'i18n!SBIS3.CONTROLS.DateRangeBigChoose'
 ], function (stringHelpers) {
    'use strict';
