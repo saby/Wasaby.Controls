@@ -1058,6 +1058,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   lvOpts.itemsDragNDrop = lvOpts.itemsDragNDrop ? 'allow' : '';
                }
             }
+            if(lvOpts.selectedKey && lvOpts._itemData) {
+               lvOpts._itemData.selectedKey = lvOpts.selectedKey;
+            }
             return lvOpts;
          },
 
