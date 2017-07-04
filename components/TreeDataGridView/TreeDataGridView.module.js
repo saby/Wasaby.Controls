@@ -573,6 +573,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var config = TreeDataGridView.superclass._getEditInPlaceConfig.apply(this, arguments);
          config.getEditorOffset = this._getEditorOffset.bind(this);
          config.parentProperty = this._options.parentProperty;
+         config.currentRoot = this.getCurrentRoot();
          return config;
       },
 

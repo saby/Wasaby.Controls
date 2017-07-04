@@ -14,7 +14,7 @@ body {
          width: 3rem !important;
          height: 3rem !important;
          background: none !important;
-         border: 2px solid #8991A9 !important;
+         border: @default-border-width solid #8991A9 !important;
          font-size: 1.714285714285714rem !important;
          background-color: #354B62 !important;
          line-height:   3rem !important;
@@ -23,14 +23,14 @@ body {
          box-sizing: border-box !important;
          color: #8991A9 !important;
          &.ws-paging-active{
-            border: 2px solid #26B8FF !important;
+            border: @default-border-width solid @default-border-color !important;
             color: #E4E4E4 !important;
             &:hover{
                background-color: #1b2530 !important;
             }
          }
          &.ws-paging-current{
-            border: 2px solid @primary-color !important;
+            border: @default-border-width @primary-color !important;
             background:#354B62 !important;
             color: #E4E4E4 !important;
          }
@@ -137,8 +137,12 @@ body {
 
    //Стили для CORE кнопки на диалоге печати PrintDialog
    .ws-window .ws-printdialog-titlebar {
+      .ws-window-title {
+         font-size: 1.43rem;
+      }
+
       .ws-printdialog-print-button {
-         right: 4rem;
+         right: 3.1785rem;
          font-size: 1.43rem;
          border-radius: 0;
          font-weight: 400;
@@ -150,7 +154,7 @@ body {
          user-select: none;
          background-color: #ff7033;
          color: #fff;
-         border: 2px solid #d94700;
+         border: @default-border-width solid #d94700;
 
          &:hover {
             background-color: #EC5B19;
@@ -180,7 +184,7 @@ body {
 
 .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__header-rangeDash {
    border-color: rgba(96, 170, 221, 0.15);
-   border-width: 0.072rem;
+   border-width: @default-border-width;
 }
 
 .controls-BreadCrumbs__crumb {
@@ -188,9 +192,7 @@ body {
       color: @bread-crumb-title-color !important;
    }
 }
-      .controls-BackButton {
-        line-height: 3.64rem;
-      }
+
     .ws-float-area-nostack-panel-shadow-standart {
       border: 1px solid #2e404f;
       background: #2e404f;
@@ -202,11 +204,6 @@ body {
       max-width: 4.8285rem;
     }
 
-    .controls-DateRange .controls-DateRange__Button .controls-Button__icon {
-      font-size: 2rem !important;
-      width: auto !important;
-      height: auto !important;
-    }
     .controls-Button .controls-Button__icon.icon-32 {
       top: 20%
     }
@@ -233,9 +230,9 @@ body {
    }
 
     .ws-float-area-stack-panel-shadow {
-        border-left: 2px solid #00a2ef;
+        border-left: @default-border-width solid #00a2ef;
         border-color: #00a4f0;
-        border-width: 0 0 0 2px;
+        border-width: 0 0 0 @default-border-width;
         border-style: solid;
         -webkit-box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2);
         -moz-box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2);
@@ -433,9 +430,15 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
 .ws-float-area-stack-panel-shadow {
   background: @basic-block-bg-color !important;
 }
-.ws-sticky-header__block.ws-sticky-header__fixed,
-.ws-sticky-header__table-header-copy {
-  background-color: #202835 !important;
+
+body {
+   .ws-sticky-header__block.ws-sticky-header__fixed,
+   .ws-sticky-header__table-header-copy {
+      // В престо в паре мест используется нестандартные цвета фона, чуть темнее или чуть светлее.
+      // В этих местах прикладники должны сами устанавливать цвет фона у зафиксированных заголовков.
+      // В большинстве реестров используется #2C3E50
+      background-color: #2C3E50;
+   }
 }
 
 body  .ws-window {
@@ -498,7 +501,7 @@ body {
     white-space: nowrap;
     -moz-box-shadow: none!important;
     -webkit-box-shadow: none!important;
-    background: #2C3E50 !important;
+    background: transparent !important;
     box-shadow: none!important;
   }
   .ws-float-area-title {
@@ -522,7 +525,7 @@ body {
 }
 
 .controls-FloatArea {
-  border: .07rem solid #26B8FF;
+  border: @default-border-width solid @default-border-color;
   background: #2c3e50;
 }
 
@@ -571,8 +574,6 @@ body {
   }
    .ws-float-area .ws-window-titlebar.ws-window-titlebar-custom {
       height: 3.57rem;
-      position: absolute;
-      top: 0;
       .ws-float-area-title {
          line-height: 3.57rem;
       }
@@ -593,7 +594,7 @@ body {
 }
 
 .controls-IconButton.controls-TreeView__editArrow-container {
-   margin-top: .07rem;
+   margin-top: @default-border-width;
 }
 
  .controls-Button .controls-Button__icon.icon-32 + .controls-Button__text {
@@ -618,8 +619,8 @@ body {
    }
 }
 .ws-float-area-stack-scroll-wrapper .ws-float-area-stack-panel-shadow {
-   border-left-color: #0055BB;
-   border-left-width: 3px;
+   border-left-color: @default-border-color;
+   border-left-width: 0.1rem;
 }
 .controls-editInPlace .controls-editInPlace__editor {
   background: @controls-editInPlace-editor-bg;
@@ -663,22 +664,10 @@ body {
     padding-right: 0.4rem;
 }
 
-.controls-DropdownList__picker .controls-DropdownList__item .controls-DropdownList__itemTextWrapper .controls-DropdownList__item-text {
-    color: #273B4D;
-}
-
 .controls-DropdownList__picker .controls-DropdownList__multiselect.controls-DropdownList__item * {
     font-size: 1.14rem;
 }
-body .ws-float-area-stack-panel-shadow {
-    border-left: 2px solid #00a2ef;
-    border-color: #00a4f0;
-    border-width: 0 0 0 2px;
-    border-style: solid;
-    -webkit-box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2);
-    -moz-box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2);
-    box-shadow: -8px 0 12px -4px rgba(0,0,0,0.2);
-}
+
 .icon-large {
   vertical-align: middle !important;
 }
@@ -811,10 +800,14 @@ body .ws-window.ws-LoadingIndicator__window {
   font-size: 1rem;
 }
 
-.controls-DateRangeBigChoose__months-quarter-btn,
-.controls-DateRangeBigChoose__months-halfyear-btn {
-   &:hover {
-      background-color: transparent !important;
+// В теме онлайна фон у кнопки при наведении по умолчанию совпадает с цветом кнопок в панели выбора периода,
+// а тут не совпадает. Когда будем переделывать компонент под новую спецификацию, избавится от кнопок в пользу div.
+.ws-is-desktop-platform .controls-Button:not(.ws-disabled):not(.controls-Click__active).controls-Button__default {
+   &.controls-DateRangeBigChoose__months-quarter-btn,
+   &.controls-DateRangeBigChoose__months-halfyear-btn {
+      &:hover {
+         background-color: transparent;
+      }
    }
 }
 
@@ -935,9 +928,6 @@ body {
 
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__left,
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__right {
-   .icon-primary {
-      color: #26B8FF!important;
-   }
    .icon-24 {
        font-size: 3rem !important;
        height: 3rem !important;
@@ -960,8 +950,8 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__dates .controls-
    &:hover {
       background: transparent!important;
       border-top: none!important;
-      border-left: none!important;
       border-bottom: none!important;
+      border-right-color: #3f566d!important;
    }
    .controls-Button__text {
       width: 100%;
@@ -970,6 +960,17 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__dates .controls-
 body .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__caption-text {
    margin-left: 4.5rem;
 }
+
+body {
+   // В формулах в темах надо сделать что бы можно было задать нижний отступ отличный от верхнего
+   .controls-DateRangeBigChoose .controls-DateRangeBigChoose__months .controls-DateRangeBigChoose__months-quarterRange .controls-DateRangeBigChoose__months-range-btn-wrapper.controls-DateRangeBigChoose__months-range-btn-wrapper3 {
+       height: 5.9rem;
+   }
+   .controls-DateRangeBigChoose .controls-DateRangeBigChoose__months .controls-DateRangeBigChoose__months-halfyearRange .controls-DateRangeBigChoose__months-range-btn-wrapper.controls-DateRangeBigChoose__months-range-btn-wrapper1 {
+       height: 11rem;
+   }
+}
+
 .controls-ComboBox__picker .controls-ComboBox__scrollContainer {
     background: #f0f5fb;
 }
@@ -1082,6 +1083,11 @@ body .controls-ItemActions .controls-Button__icon.icon-size {
     background-color: #FFFECE;
   }
 }
+
+.controls-MergeDialogTemplate .controls-TreeDataGridView__levelPadding {
+   display: none;
+}
+
 .controls-ListView__ItemsToolbar-container {
   height: 1.2rem;
 }

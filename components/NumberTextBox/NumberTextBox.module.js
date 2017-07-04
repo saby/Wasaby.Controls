@@ -55,9 +55,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
    function formatText(value, text, onlyInteger, decimals, integers, delimiters, onlyPositive, maxLength, hideEmptyDecimals){
       var decimals = onlyInteger ? 0 : decimals,
           dotPos = (value = (value + "")).indexOf('.'),
-          parsedVal = dotPos != -1 ? value.substr(dotPos) : '0',
           isDotLast = (value && value.length) ? dotPos === value.length - 1 : false,
-          decimalsPart;
+          decimalsPart, parsedVal;
 
       if (value == '-') {
          return value;
@@ -72,6 +71,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          maxLength,
          true
       );
+      parsedVal = dotPos != -1 ? value.substr(dotPos) : '0';
+      
       if(isDotLast){
          value = value ? value + '.' : '.';
       }
@@ -252,10 +253,13 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
        },
 
       _inputFocusInHandler: function() {
+         var text = this._getInputValue();
          // Показывать нулевую дробную часть при фокусировки не зависимо от опции hideEmptyDecimals
          if (this._options.enabled) {
             this._options.text = this._formatText(this._options.text);
-            this._setInputValue(this._options.text);
+            if(text !== this._options.text) {
+               this._setInputValue(this._options.text);
+            }
          }
          NumberTextBox.superclass._inputFocusInHandler.apply(this, arguments);
       },

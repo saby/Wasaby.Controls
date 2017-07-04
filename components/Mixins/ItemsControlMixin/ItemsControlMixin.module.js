@@ -342,14 +342,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       $protected: {
          _itemData : null,
          _groupHash: {},
-         _itemsProjection: null,
-         _items : null,
          _itemsInstances: {},
          _offset: 0,
          _limit: undefined,
          _dataSource: undefined,
-         _dataSet: null,
-         _dotItemTpl: null,
          _propertyValueGetter: getPropertyValue,
          _revivePackageParams: {},
          _options: {
@@ -822,6 +818,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._options._itemsTemplate;
       },
 
+      //В композите элементы добавляются по другому шаблону. Решится с перходом на VDOM
+      _getItemsTemplateForAdd: function() {
+         return this._options._itemsTemplate;
+      },
+
       _prepareItemsConfig: function() {
          if (this._options.dataSource) {
             this._dataSource =  SourceUtil.prepareSource.call(this, this._options.dataSource);
@@ -1261,7 +1262,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   };
                   // Вычисляем drawHiddenGroup при перерисовке item'а, т.к. в текущей реализации это единственный способ скрыть элемент, если он расположен в свернутой группе
                   data.tplData.drawHiddenGroup = !!this._options._groupCollapsing[groupId];
-                  markupExt = extendedMarkupCalculate(this._getItemsTemplate()(data), this._options);
+                  markupExt = extendedMarkupCalculate(this._getItemsTemplateForAdd()(data), this._options);
                   markup = markupExt.markup;
                   this._optimizedInsertMarkup(markup, this._getInsertMarkupConfig(newItemsIndex, newItems, groupId));
                   this._revivePackageParams.revive = this._revivePackageParams.revive || markupExt.hasComponents;
@@ -1458,6 +1459,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                this._options._itemsProjection = null;
             }
             this._clearItems();
+            this._itemData = null;
+            this._dataSource = null;
          }
       },
 
@@ -1702,12 +1705,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._options.filter;
       },
 
-      _callQuery: function (filter, sorting, offset, limit) {
+      _callQuery: function (filter, sorting, offset, limit, direction) {
          if (!this._dataSource) {
             return;
          }
 
-         var query = this._getQueryForCall(filter, sorting, offset, limit);
+         var query = this._getQueryForCall(filter, sorting, offset, limit, direction);
 
          return this._dataSource.query(query).addCallback((function(dataSet) {
             if (this._options.idProperty && this._options.idProperty !== dataSet.getIdProperty()) {

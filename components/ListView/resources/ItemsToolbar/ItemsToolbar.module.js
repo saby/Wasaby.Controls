@@ -484,6 +484,14 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
           },
           canAcceptFocus: function() {
              return false;
+          },
+          
+          destroy: function () {
+             this.unlockToolbar();
+             this.hide();
+             this._itemsActions = undefined;
+             this._editActions = undefined;
+             ItemsToolbar.superclass.destroy.apply(this, arguments);
           }
        });
        return ItemsToolbar;

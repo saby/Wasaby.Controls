@@ -918,7 +918,7 @@ define('js!SBIS3.CONTROLS.ListView',
                contextMenu: true,
                /**
                 * @cfg {Boolean} Использовать функционал выбора всех записей
-                * @remark Начиная с версии 3.7.5.100 данная опция будет удалена.
+                * @remark Начиная с версии 3.17.20 данная опция будет удалена.
                 * Стандартным будет считаться поведение, useSelectAll = true.
                 * @deprecated
                 */
@@ -951,7 +951,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._setScrollPagerPositionThrottled = throttle.call(this._setScrollPagerPosition, 100, true).bind(this);
             this._updateScrollIndicatorTopThrottled = throttle.call(this._updateScrollIndicatorTop, 100, true).bind(this);
             this._eventProxyHdl = this._eventProxyHandler.bind(this);
-            
+
             this._toggleEventHandlers(this._container, true);
 
             this.initEditInPlace();
@@ -1233,7 +1233,7 @@ define('js!SBIS3.CONTROLS.ListView',
                case constants.key.enter:
                   if(selectedKey !== undefined && selectedKey !== null) {
                      var selectedItem = $("[data-id='" + selectedKey + "']", this._getItemsContainer());
-                     this._elemClickHandler(selectedKey, this.getItems().getRecordById(selectedKey), selectedItem, e);
+                     this._elemClickHandler(selectedKey, this.getItems().getRecordById(selectedKey), selectedItem.get(0), e);
                   }
                   break;
                case constants.key.space:
@@ -1848,6 +1848,10 @@ define('js!SBIS3.CONTROLS.ListView',
             this._getMassSelectionController().toggleSelectedAll();
          },
 
+         getSelection: function() {
+            return this._getMassSelectionController().getSelection();
+         },
+
          _getMassSelectionController: function() {
             if (!this._massSelectionController) {
                this._makeMassSelectionController();
@@ -1988,7 +1992,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.setInfiniteScroll('both', true);
                }
             }
-            if (this._options.virtualScrolling) {
+            if (this._options.virtualScrolling && this._virtualScrollController) {
                this._virtualScrollController.reset();
                this._topWrapper.height(0);
                this._bottomWrapper.height(0);
@@ -2831,7 +2835,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._virtualScrollController.updateVirtualPages();
                }
             }
-            if(this._itemsToolbar && this._itemsToolbar.isVisible() && this._touchSupport){
+            /* при изменении размера таблицы необходимо вызвать перерасчет позиции тулбара
+               позиция тулбара может сбиться например при появление пэйджинга */
+            if(this._itemsToolbar && this._itemsToolbar.isVisible()){
                 this._itemsToolbar.recalculatePosition();
             }
             /* Т.к. для редактирования нет parent'a, надо ресайц звать руками */
@@ -2863,7 +2869,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
 
             ListView.superclass._onCollectionAddMoveRemove.apply(this, arguments);
-            
+
             if (this._virtualScrollController) {
                this._virtualScrollController.addItems(newItems, newItemsIndex);
                this._virtualScrollController.removeItems(oldItems, oldItemsIndex);
@@ -2877,7 +2883,7 @@ define('js!SBIS3.CONTROLS.ListView',
          // Страшный хак для Firefox и ipad:
          // в 110 из коллекции вместо события replace стали приходить remove и add
          // из за этого в фф и на ipad дергается скролл, так как сначала убирается элемент, скролл подвигается вверх
-         // затем добавляется элемент на место удаленного, но скролл остается на месте. 
+         // затем добавляется элемент на место удаленного, но скролл остается на месте.
          // Поэтому компенсируем этот прыжок сами
          _beforeFixScrollTop: function(action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
             if (action == IBindCollection.ACTION_REMOVE) {
@@ -3151,7 +3157,7 @@ define('js!SBIS3.CONTROLS.ListView',
                var loadId = this._loadId++;
                this._loadQueue[loadId] = cFunctions.clone(this._infiniteScrollState);
 
-               this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit)
+               this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit, this._infiniteScrollState.mode)
                   .addBoth(fHelpers.forAliveOnly(function(res) {
                      this._loader = null;
                      return res;
@@ -3256,9 +3262,19 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _drawPage: function(dataSet, state){
-            var at = null;
+            var at = null,
+                self = this,
+                toggleOverflowScrolling = function(on) {
+                   self._getScrollContainer().css({'-webkit-overflow-scrolling': on ? '' : 'initial'});
+                };
             //добавляем данные в начало или в конец в зависимости от того мы скроллим вверх или вниз
             if (state.mode === 'up' || (state.mode == 'down' && state.reverse)) {
+               /* Ipad c overflowScrolling: touch отложенно рендерит dom, что приводит к скачкам (т.к. у нас кордината считается на момент загрузки)
+                  https://stackoverflow.com/questions/8293978/single-finger-scroll-in-safari-not-rendering-html-until-scroll-finishes
+                  Поэтому надо отключать. скролл будет останавливаться, но не будет скачков, что более критично */
+               if(constants.browser.isMobileIOS) {
+                  toggleOverflowScrolling(false);
+               }
                this._needScrollCompensation = true;
                this._containerScrollHeight = this._scrollWatcher.getScrollHeight() - this._scrollWatcher.getScrollContainer().scrollTop();
                at = {at: 0};
@@ -3273,6 +3289,9 @@ define('js!SBIS3.CONTROLS.ListView',
                items = this.getItems().append(dataSet);
             } else {
                items = this.getItems().prepend(dataSet);
+            }
+            if(constants.browser.isMobileIOS) {
+               toggleOverflowScrolling(true);
             }
 
             if (this._isSlowDrawing(this._options.easyGroup)) {
@@ -3532,25 +3551,25 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _processPagingStandart: function () {
             var self = this;
-            
+
             if (!this._pager) {
                requirejs(['js!SBIS3.CONTROLS.Pager'], function(pagerCtr) {
                   if(self._pager || self.isDestroyed()) {
                      return;
                   }
-                  
+
                   var more = self.getItems().getMetaData().more,
                      hasNextPage = self._hasNextPage(more),
                      pagingOptions = {
                         recordsPerPage: self._options.pageSize || more,
                         currentPage: 1,
-                        recordsCount: more,
+                        recordsCount: more || 0,
                         pagesLeftRight: 1,
                         onlyLeftSide: typeof more === 'boolean', // (this._options.display.usePaging === 'parts')
                         rightArrow: hasNextPage
                      },
                      pagerContainer = self.getContainer().find('.controls-Pager-container').append('<div/>');
-   
+
                   self._pager = new pagerCtr({
                      pageSize: self._options.pageSize,
                      opener: self,
@@ -3570,7 +3589,7 @@ define('js!SBIS3.CONTROLS.ListView',
                            if (pageNum == 0 && self._pager._options.pagingOptions.onlyLeftSide){
                               pageNum = self._pager._lastPageReached ? maxPage : (maxPage + 1);
                            }
-                     
+
                            self._setPageSave(pageNum);
                            self.setPage(pageNum - 1);
                            self._pageChangeDeferred = deferred;
@@ -3584,7 +3603,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._updatePaging();
             }
          },
-         _getQueryForCall: function(filter, sorting, offset, limit){
+         _getQueryForCall: function(filter, sorting, offset, limit, direction){
             var
                query = new Query(),
                queryFilter = filter;
@@ -3592,11 +3611,10 @@ define('js!SBIS3.CONTROLS.ListView',
                var options = this._dataSource.getOptions();
                options.navigationType = SbisService.prototype.NAVIGATION_TYPE.POSITION;
                this._dataSource.setOptions(options);
-               if (this._getItemsProjection()) {
-                  queryFilter =  cFunctions.clone(filter);
-                  var addParams = this._listNavigation.prepareQueryParams(this._getItemsProjection(), this._infiniteScrollState.mode);
-                  cMerge(queryFilter, addParams.filter);
-               }
+
+               queryFilter =  cFunctions.clone(filter);
+               var addParams = this._listNavigation.prepareQueryParams(this._getItemsProjection(), direction);
+               cMerge(queryFilter, addParams.filter);
             }
             /*TODO перенос события для курсоров глубже, делаю под ифом, чтоб не сломать текущий функционал*/
             if (this._options.navigation && this._options.navigation.type == 'cursor') {

@@ -1,9 +1,10 @@
 .controls-MergeDialogTemplate {
 
   .controls-MergeDialogTemplate__applyBlock {
-    position: absolute;
-    bottom: @controls-MergeDialogTemplate-applyBlock-bottom;
-    right: @controls-MergeDialogTemplate-applyBlock-right;
+    .flexbox();
+    .justify-content(flex-end);
+    .align-items(center);
+    padding: @controls-MergeDialogTemplate-applyBlock-padding;
 
     .controls-MergeDialogTemplate__mergeButton {
       margin-left: @controls-MergeDialogTemplate-mergeButton-margin-left;

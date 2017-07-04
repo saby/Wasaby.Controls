@@ -260,7 +260,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       var
           itemParent = itemProj.getParent(),
           itemParentContent = itemParent && itemParent.getContents();
-      return (cInstance.instanceOfModule(itemParentContent, 'WS.Data/Entity/Record') && itemParentContent.get(this._options.nodeProperty) !== false && this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj);
+      return (cInstance.instanceOfModule(itemParentContent, 'WS.Data/Entity/Record') && itemParent.isNode() !== false && this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj);
    },
    projectionFilterOnlyFolders = function(item, index, itemProj) {
       return (this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj, true);
@@ -1165,6 +1165,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             this._lastDrawn = undefined;
             this._lastPath = [];
             this._loadedNodes = {};
+            // При перезагрузке приходят новые данные, т.ч. сбрасываем объект, хранящий список узлов с "есть ещё"
+            this._options._folderHasMore = {};
          },
          _dataLoadedCallback: function () {
             //this._options.openedPath = {};
@@ -1326,7 +1328,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             hierarchy = [];
          if (items && items.getCount()){
             // пока не дойдем до корня (корень может быть undefined)
-            while (key && key != this.getRoot()) {
+            while ((key !== null && key !== undefined) && key != this.getRoot()) {
                record = items.getRecordById(key);
                parentKey = record ? record.get(this._options.parentProperty) : null;
                if (record) {

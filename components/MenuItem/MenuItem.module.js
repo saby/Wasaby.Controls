@@ -13,7 +13,8 @@ define('js!SBIS3.CONTROLS.MenuItem', ['js!WSControls/Buttons/ButtonBase', 'html!
       _dotTplFn : dotTplFn,
       $protected: {
          _options: {
-            sanitize: Sanitize
+            sanitize: Sanitize,
+            fix165c4103: true
          },
          _iconContainer: undefined
       },
@@ -23,6 +24,7 @@ define('js!SBIS3.CONTROLS.MenuItem', ['js!WSControls/Buttons/ButtonBase', 'html!
          // Предотвращаем всплытие focus и mousedown с контейнера меню, т.к. это приводит к потере фокуса
          // при потере фокуса в богатом редакторе теряется текущее выделение текста  в IE8
          this._container.on('mousedown focus', this._blockFocusEvents);
+         this._oldIcon = this._options.icon && this._iconTemplate(this._options);
       },
       _blockFocusEvents: function(event) {
          var eventsChannel = EventBus.channel('WindowChangeChannel');

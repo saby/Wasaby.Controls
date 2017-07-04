@@ -11,11 +11,17 @@
   }
 
   .controls-MoneyTextBox__input {
+    position:relative;
     width: 100%;
     height: @text-box-height - 2 * @text-box-border-width;
     outline: none;
     white-space: nowrap;
     display: inline-block;
+    z-index: 1;
+  }
+
+  .controls-TextBox__placeholder {
+    z-index: 0;
   }
 
   &.controls-MoneyTextBox__ellipsis {
