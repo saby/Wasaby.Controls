@@ -54,8 +54,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
 
    function formatText(value, text, onlyInteger, decimals, integers, delimiters, onlyPositive, maxLength, hideEmptyDecimals){
       var decimals = onlyInteger ? 0 : decimals,
-          dotPos = (value = (value + "")).indexOf('.'),
-          parsedVal = dotPos != -1 ? value.substr(dotPos) : '0',
+          dotPos = (value = (value + '')).indexOf('.'),
+          parsedVal = dotPos != -1 ? value.substr(dotPos).replace(/[\s]/g, '') : '0',
           isDotLast = (value && value.length) ? dotPos === value.length - 1 : false,
           decimalsPart;
 
@@ -72,6 +72,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          maxLength,
          true
       );
+      
       if(isDotLast){
          value = value ? value + '.' : '.';
       }

@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                bodyTemplate: contentTpl,
                footerTemplate: footerTpl,
                caption: '',
-               className: 'engine-OperationNotificationPopup engine-OperationNotificationPopup__hidden engine-OperationNotificationPopup__hiddenContentMode',
+               className: 'controls-LongOperationsPopup controls-LongOperationsPopup__hidden controls-LongOperationsPopup__hiddenContentMode',
                withAnimation: null,
                waitIndicatorText: null
             },
@@ -68,8 +68,8 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
             }
 
             this._longOpList = this.getChildControlByName('operationList');
-            this._notificationContainer = this.getContainer().find('.engine-OperationNotificationPopup__footer_notification');
-            this._progressContainer = this.getContainer().find('.engine-OperationNotificationPopup__footer_progress_container');
+            this._notificationContainer = this.getContainer().find('.controls-LongOperationsPopup__footer_notification');
+            this._progressContainer = this.getContainer().find('.controls-LongOperationsPopup__footer_progress_container');
 
             this._tabChannel = new TabMessage();
 
@@ -190,14 +190,14 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
             });
 
             var container = this.getContainer();
-            container.find('.engine-OperationNotificationPopup__hideContentIcon').on('click', function () {
+            container.find('.controls-LongOperationsPopup__hideContentIcon').on('click', function () {
                //Показать / Скрыть контент
                self._toggleContent();
                //Возможно после раскрытия нужно известить о выполненых операциях
                self._longOpList[self._isContentHidden() ? 'animationClear' : 'animationStart']();
             });
 
-            container.find('.engine-OperationNotificationPopup__footer_pauseIcon').on('click', function () {
+            container.find('.controls-LongOperationsPopup__footer_pauseIcon').on('click', function () {
                //Остановить / Запустить операцию
                var model = self._activeOperation;
                if (model.get('canSuspend')) {//TODO: ### перенести проверку в лист ?
@@ -206,7 +206,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
             });
 
             //Иконку запуска сделаем кликабельной, по ней будет запускать остановленная операция
-            container.find('.controls-NotificationPopup__header').on('click', '.engine-OperationNotificationPopup__runOperationIcon', function () {
+            container.find('.controls-NotificationPopup__header').on('click', '.controls-LongOperationsPopup__runOperationIcon', function () {
                //Запустить операцию
                var model = self._activeOperation;
                if (model.get('canSuspend')) {//TODO: ### перенести проверку в лист ?
@@ -215,15 +215,15 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
             });
 
             //Обработчик, который применяет фильтр "Скрыть прерванные"
-            var button = container.find('.engine-OperationNotificationPopup__header_stoppedOperationsButton');
+            var button = container.find('.controls-LongOperationsPopup__header_stoppedOperationsButton');
             button.on('click', function () {
-               if (button.hasClass('engine-OperationNotificationPopup__header_stoppedOperations-show')) {
+               if (button.hasClass('controls-LongOperationsPopup__header_stoppedOperations-show')) {
                   self._longOpList.getLinkedContext().setValue('filter/State', FILTER_HIDE_STOPPED);
                }
                else {
                   self._longOpList.getLinkedContext().setValue('filter', {});
                }
-               button.toggleClass('engine-OperationNotificationPopup__header_stoppedOperations-show');
+               button.toggleClass('controls-LongOperationsPopup__header_stoppedOperations-show');
             });
 
             this.subscribeTo(this._longOpList, 'ontimespentchanged', function () {
@@ -327,9 +327,9 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
 
             var self = this;
             //TODO Вот этого быть не должно
-            if (this.getContainer().hasClass('engine-OperationNotificationPopup__hidden')) {
+            if (this.getContainer().hasClass('controls-LongOperationsPopup__hidden')) {
                this.getContainer().css('opacity', 0);
-               this.getContainer().removeClass('engine-OperationNotificationPopup__hidden');
+               this.getContainer().removeClass('controls-LongOperationsPopup__hidden');
                self.getContainer().animate({
                   opacity: 1
                }, 800);//1500
@@ -346,11 +346,11 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                var title = model.get('title');
 
                //Кнопка остановки / запуска операции
-               var pauseIcon = this.getContainer().find('.engine-OperationNotificationPopup__footer_pauseIcon');
+               var pauseIcon = this.getContainer().find('.controls-LongOperationsPopup__footer_pauseIcon');
 
                switch (model.get('status')) {
                   case STATUSES.running:
-                     this._setHeader(title, 'default', 'icon-size icon-24 engine-OperationNotificationPopup__header_icon-customIcon');
+                     this._setHeader(title, 'default', 'icon-size icon-24 controls-LongOperationsPopup__header_icon-customIcon');
                      if (model.get('canSuspend')) {
                         pauseIcon.removeClass('ws-hidden').addClass('icon-Pause').removeClass('icon-DayForward');
                      }
@@ -360,7 +360,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                      break;
 
                   case STATUSES.suspended:
-                     this._setHeader(title, 'default', 'icon-size icon-24 icon-DayForward icon-primary engine-OperationNotificationPopup__runOperationIcon');
+                     this._setHeader(title, 'default', 'icon-size icon-24 icon-DayForward icon-primary controls-LongOperationsPopup__runOperationIcon');
                      if (model.get('canSuspend')) {
                         pauseIcon.removeClass('ws-hidden').removeClass('icon-Pause').addClass('icon-DayForward');
                      }
@@ -396,14 +396,14 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
           * Проверить скрыт ли контент.
           */
          _isContentHidden: function () {
-            return this.getContainer().hasClass('engine-OperationNotificationPopup__hiddenContentMode');
+            return this.getContainer().hasClass('controls-LongOperationsPopup__hiddenContentMode');
          },
 
          /**
           * Изменить видимость контента.
           */
          _toggleContent: function (f) {
-            this.getContainer().toggleClass('engine-OperationNotificationPopup__hiddenContentMode', f === undefined ? undefined : !f);
+            this.getContainer().toggleClass('controls-LongOperationsPopup__hiddenContentMode', f === undefined ? undefined : !f);
             this._notify('onSizeChange');
          },
 
@@ -425,14 +425,14 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
           * Проверить включен ли режим одной операции.
           */
          _isFirstOperationMode: function () {
-            return this.getContainer().find('.engine-OperationNotificationPopup__footer').hasClass('engine-OperationNotificationPopup__footer_firstOperationMode');
+            return this.getContainer().find('.controls-LongOperationsPopup__footer').hasClass('controls-LongOperationsPopup__footer_firstOperationMode');
          },
 
          /**
           * Изменить режим одной операции.
           */
          _toggleFirstOperationMode: function () {
-            this.getContainer().find('.engine-OperationNotificationPopup__footer').toggleClass('engine-OperationNotificationPopup__footer_firstOperationMode');
+            this.getContainer().find('.controls-LongOperationsPopup__footer').toggleClass('controls-LongOperationsPopup__footer_firstOperationMode');
          },
 
          _setProgress: function (current, total) {
@@ -450,8 +450,8 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                   strHelpers.wordCaseByNumber(current, rk('операций'), rk('операция'), rk('операции')) + ' ' + rk('из') + ' ' + total;
             }*/
             var message = Math.floor(current) + ' ' + (100 <= total ? '/' : rk('из')) + ' ' + total + ' ' + rk('операций');
-            this.getContainer().find('.engine-OperationNotificationPopup__footer_execTasks').text(message);
-            this.getContainer().find('.engine-OperationNotificationPopup__footer_progress').text(Math.floor(100*current/total) + '%');
+            this.getContainer().find('.controls-LongOperationsPopup__footer_execTasks').text(message);
+            this.getContainer().find('.controls-LongOperationsPopup__footer_progress').text(Math.floor(100*current/total) + '%');
          },
 
          _setNotification: function (message) {
@@ -460,7 +460,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
          },
 
          _setFooterTimeSpent: function (timeSpent) {
-            this.getContainer().find('.engine-OperationNotificationPopup__footer_executeTime').text(timeSpent);
+            this.getContainer().find('.controls-LongOperationsPopup__footer_executeTime').text(timeSpent);
          },
 
          /**
@@ -583,10 +583,10 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
             var container = this.getContainer();
             [
                '.controls-NotificationPopup__header_caption',
-               '.engine-OperationNotificationPopup__hideContentIcon',
-               '.engine-OperationNotificationPopup__footer_pauseIcon',
+               '.controls-LongOperationsPopup__hideContentIcon',
+               '.controls-LongOperationsPopup__footer_pauseIcon',
                '.controls-NotificationPopup__header',
-               '.engine-OperationNotificationPopup__header_stoppedOperationsButton'
+               '.controls-LongOperationsPopup__header_stoppedOperationsButton'
             ].forEach(function (selector) {
                container.find(selector).off('click');
             });

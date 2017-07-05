@@ -38,7 +38,7 @@
    &.controls-DataGridView__hasSeparator{
       &.controls-ListView__dataLoaded {
          .controls-DataGridView__table {
-            border-width: 0 0 1px 0;
+            border-width: @data-grid-table-separator-border-width;
             border-color: @data-grid-edge-cell-separator-color;
          }
          .controls-DataGridView__tr {
@@ -441,16 +441,17 @@
   .ws-sticky-header__header-container {
     .controls-DataGridView.controls-DataGridView__hasSeparator.controls-ListView__dataLoaded {
        .controls-DataGridView__table {
-          border-width: 0 0 1px 0;
+          border-width: @data-grid-table-separator-border-width;
        }
     }
   }
 }
 
+//TODO костыль по месту. Стандарт должен быть поправлен https://online.sbis.ru/opendoc.html?guid=95b1ae2e-d43f-4b41-a373-ceecc6b01fb8&des=
 .controls-DataGridView__headSorting {
    &.controls-Link {
-      .controls-Link__icon + .controls-Link__field {
-         margin: 0;
+      .controls-Button__icon + .controls-Link__field {
+         margin-left: 0;
       }
       font-size: @data-grid-header-cell-font-size;
    }

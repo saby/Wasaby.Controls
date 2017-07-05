@@ -152,6 +152,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                         }
                      }.bind(this);
                   }
+                  this._hideNativeScrollbar();
                }
                this._subscribeOnScroll();
 
@@ -307,6 +308,22 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                this._scrollbar.setPosition(scrollTop);
             }
             this.getContainer().toggleClass('controls-ScrollContainer__top-gradient', scrollTop > 0);
+         },
+
+         _hideNativeScrollbar: function(){
+            var scrollbarWidth, style;
+            if (!cDetection.webkit && !cDetection.chrome){
+               /**
+                * Скрытие нативного скролла в IE, Firefox происходит через отрицательный margin = длине скролла.
+                */
+               scrollbarWidth = this._getBrowserScrollbarWidth();
+               if (scrollbarWidth) {
+                  style = {
+                     marginRight: -scrollbarWidth
+                  };
+                  this._content.css(style);
+               }
+            }
          },
 
          _getBrowserScrollbarWidth: function() {
