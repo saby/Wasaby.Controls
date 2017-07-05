@@ -113,6 +113,14 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          }
       },
       _getHistoryRecordSet: function () {
+         /**
+          * _clearDelayTimer описана в другом миксине,
+          * вдруг он где-то не подключен где подключен этот миксин
+          * вызвать нужно, потому что через эту задержку записи
+          * будут перечитаны
+          */
+         this._clearDelayTimer && this._clearDelayTimer();
+
          var listSource = this.getList().getDataSource(),
              query = new Query(),
              filter = {},
