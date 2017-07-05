@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
          else if (text instanceof Object && text.startDate && text.endDate){
             text = getTextByDateRange(text);
          }
-         return strHelpers.escapeHtml(text);
+         return text;
       }
 
       /**
