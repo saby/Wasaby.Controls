@@ -249,7 +249,8 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
           setTouchMode: function(mode) {
              this._options.touchMode = mode;
              if(!mode) {
-                this.getContainer()[0].style.height = 'auto';
+                // height='auto' win10 в режиме планшета растягивает контейнер и перекрывает строчку
+                this.getContainer()[0].style.height = '';
              }else {
                 this.setHeightInTouchMode();
              }
