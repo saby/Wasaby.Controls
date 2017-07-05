@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil', [],
                                     e+=1;
                                 }
                             }else {
-                                (delimiters && integerCount % 3 == 0 && integerCount !== integers && currentVal.length) ? newCaretPosition += 2 : newCaretPosition++;
+                                (delimiters && integerCount && integerCount % 3 == 0 && integerCount !== integers && currentVal.length) ? newCaretPosition += 2 : newCaretPosition++;
                             }
                             if(currentVal[e] === ' ' && isFull){
                                 e+=1;

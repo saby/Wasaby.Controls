@@ -193,7 +193,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                    index = -1;
 
                this._historyController.each(function(model, i) {
-                  var historyModelObject = model.get('data').toObject();
+                  var historyModelObject = model.get('data').getRawData();
                   var historyModelId;
                   //Проблема в адаптерах historyRecordSet и сохраняемой записи, они могут быть разными
                   //в таком случае, когда дергается var dataRecord = model.get('data'), то dataRecord приводится к типу Record (по формату), но

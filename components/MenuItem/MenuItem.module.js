@@ -13,7 +13,8 @@ define('js!SBIS3.CONTROLS.MenuItem', ['js!WSControls/Buttons/ButtonBase', 'html!
       _dotTplFn : dotTplFn,
       $protected: {
          _options: {
-            sanitize: Sanitize
+            sanitize: Sanitize,
+            fix165c4103: true
          },
          _iconContainer: undefined
       },

@@ -368,6 +368,10 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                 marginBottom -= this._cachedMargin;
              }
 
+             if(marginBottom < 0 && !isVertical) {
+                marginBottom = 0;
+             }
+
              this.getContainer()[isVertical ? 'addClass' : 'removeClass']('controls-ItemsToolbar__vertical');
              return {
                 'marginRight' : marginRight,
@@ -484,6 +488,14 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
           },
           canAcceptFocus: function() {
              return false;
+          },
+          
+          destroy: function () {
+             this.unlockToolbar();
+             this.hide();
+             this._itemsActions = undefined;
+             this._editActions = undefined;
+             ItemsToolbar.superclass.destroy.apply(this, arguments);
           }
        });
        return ItemsToolbar;

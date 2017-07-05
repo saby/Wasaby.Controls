@@ -447,10 +447,11 @@
   }
 }
 
+//TODO костыль по месту. Стандарт должен быть поправлен https://online.sbis.ru/opendoc.html?guid=95b1ae2e-d43f-4b41-a373-ceecc6b01fb8&des=
 .controls-DataGridView__headSorting {
    &.controls-Link {
-      .controls-Link__icon + .controls-Link__field {
-         margin: 0;
+      .controls-Button__icon + .controls-Link__field {
+         margin-left: 0;
       }
       font-size: @data-grid-header-cell-font-size;
    }

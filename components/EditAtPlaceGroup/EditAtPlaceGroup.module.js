@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
       'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.EditAtPlace',
       'js!SBIS3.CONTROLS.EditAtPlaceMixin',
-      'html!SBIS3.CONTROLS.EditAtPlaceGroup',
+      'tmpl!SBIS3.CONTROLS.EditAtPlaceGroup',
       'css!SBIS3.CONTROLS.EditAtPlaceGroup'],
    function (CompoundControl, PickerMixin, EditAtPlace, EditAtPlaceMixin, dotTplFn) {
       'use strict';
