@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.ProgressBar',
        * Контрол, индикатор прохождения процесса
        * @class SBIS3.CONTROLS.ProgressBar
        * @extends SBIS3.CORE.Control
+       * @demo SBIS3.CONTROLS.Demo.MyProgressBar
        * @control
        * @author Крайнов Дмитрий Олегович
        * @initial
