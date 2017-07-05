@@ -359,7 +359,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              containerCords = this._container[0].getBoundingClientRect(),
              /* в 3.7.3.200 сделать это публичным маркером для стрелки */
              arrowContainer = td.find('.js-controls-TreeView__editArrow'),
-             arrowCords;
+             tdPadding, arrowCords, leftOffset, toolbarLeft;
 
          if(!arrowContainer.length) {
             arrowContainer = td.find('.controls-TreeView__editArrow');
@@ -369,13 +369,13 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if(!arrowContainer.length) {
             return false;
          }
-
+         tdPadding = parseInt(td.css('padding-right'), 10);
          /* Т.к. у нас в вёрстке две иконки, то позиционируем в зависимости от той, которая показывается,
             в .200 переделаем на маркер */
          if(arrowContainer.length === 2) {
             /* Считаем, чтобы правая координата названия папки не выходила за ячейку,
                учитываем возможные отступы иерархии и ширину expander'a*/
-            if ( td[0].getBoundingClientRect().right - parseInt(td.css('padding-right'), 10) < folderTitle[0].getBoundingClientRect().right) {
+            if ( td[0].getBoundingClientRect().right - tdPadding < folderTitle[0].getBoundingClientRect().right) {
                arrowContainer = arrowContainer[1];
             } else {
                arrowContainer = arrowContainer[0];
@@ -385,20 +385,29 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
 
          arrowCords = arrowContainer.getBoundingClientRect();
-
+         leftOffset = arrowCords.left - containerCords.left;
+         
+         if(this._isSupportedItemsToolbar() && this._getItemsToolbar().isVisible()) {
+            toolbarLeft = this._getItemsToolbar().getContainer()[0].offsetLeft;
+            
+            if(toolbarLeft && (toolbarLeft < leftOffset)) {
+               leftOffset -= leftOffset - toolbarLeft + tdPadding;
+            }
+         }
+         
          return {
             top: arrowCords.top - containerCords.top + this._container[0].scrollTop,
-            left: arrowCords.left - containerCords.left
+            left: leftOffset
          }
       },
 
       _onChangeHoveredItem: function() {
+         TreeDataGridView.superclass._onChangeHoveredItem.apply(this, arguments);
          /* Т.к. механизм отображения стрелки и операций над записью на ipad'e релизован с помощью свайпов,
             а на PC через mousemove, то и скрывать/показывать их надо по-разному */
          if(!this._touchSupport || !this._hasHoveredItem()) {
             this._updateEditArrow();
          }
-         TreeDataGridView.superclass._onChangeHoveredItem.apply(this, arguments);
       },
 
       _updateEditArrow: function() {
