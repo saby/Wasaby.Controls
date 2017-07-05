@@ -2761,15 +2761,15 @@
 @clock-picker-inner-arrow-height:                   @clock-picker-inner-circle-radius - @clock-picker-inner-tick-radius - @clock-picker-arrow-tip-border-width;
 
 @bottomStyle-items-toolbar-height:                  30px;
-@bottomStyle-padding-bottom:              @bottomStyle-items-toolbar-height;
+@bottomStyle-padding-bottom:                        @bottomStyle-items-toolbar-height + @bottomStyle-items-toolbar-margin; //высота операций + маржин
 @bottomStyle-items-toolbar-border-color:            #F3F3F3;
-@bottomStyle-items-toolbar-margin:                  3px 0 0 0;
-@scroll-pager-bg:							@default-bg-color;
-@textbox-font-size:							@default-font-size;
-@image-bar-height:                        32px;
-@image-bar-vertical-padding:              4px;
-@image-bar-horizontal-padding:            12px;
-@image-bar-bg-color:                      #E7F0F9;
+@bottomStyle-items-toolbar-margin:                  3px;
+@scroll-pager-bg:							                @default-bg-color;
+@textbox-font-size:							             @default-font-size;
+@image-bar-height:                                  32px;
+@image-bar-vertical-padding:                        4px;
+@image-bar-horizontal-padding:                      12px;
+@image-bar-bg-color:                                #E7F0F9;
 
 //---------//
 //  Label  //
