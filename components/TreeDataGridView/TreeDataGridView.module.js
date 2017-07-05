@@ -390,6 +390,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if(this._isSupportedItemsToolbar() && this._getItemsToolbar().isVisible()) {
             toolbarLeft = this._getItemsToolbar().getContainer()[0].offsetLeft;
             
+            /* Если стрелка заползает на операции над записью -> увеличиваем отступ */
             if(toolbarLeft && (toolbarLeft < leftOffset)) {
                leftOffset -= leftOffset - toolbarLeft + tdPadding;
             }
