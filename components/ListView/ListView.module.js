@@ -3160,10 +3160,9 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._dataSource) {
                var offset = this._getNextOffset(),
                   scrollingUp = this._isScrollingUp(),
-                  hasNextTopPage = this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.top),
                   self = this;
                //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
-               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', scrollingUp && hasNextTopPage);
+               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', scrollingUp);
                this._showLoadingIndicator();
                this._toggleEmptyData(false);
 
