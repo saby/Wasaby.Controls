@@ -24,7 +24,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         $(document).bind('mouseup touchend', function(e) {
             EventBusChannel.notify('onMouseup', e);
             if (DragObject.isDragging()) {
-                //Сбрасывать драгндроп надо после того как выполнились все обработчики, потомучто неизвестен порядок выполнения обработчиков
+                //Сбрасывать драгндроп надо после того как выполнились все обработчики, нам неизвестен порядок выполнения
+               // обработчиков может быть что первым mouseup поймает владелец и сбросит драгндроп
                 DragObject.setDragging(false);
                 DragObject.reset();
             }
