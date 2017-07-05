@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             поэтому запоминаем, что выбор был произвёден, когда фокус был на списке, чтобы потом заблокировать всплытие события. */
          _selectedFromList: false,
          _historyController: null,
-
+         _historyDeferred: undefined, //Защита от множественных запросов
          _options: {
             /**
              * @cfg {String} Имя параметра фильтрации для поиска
@@ -122,7 +122,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          }
          filter[this._getListIdProperty()] = recordsId;
          query.where(filter).limit(12);
-         return this.getList().getDataSource().query(query).addCallback(function(rs) {
+         this._cancelHistoryDeferred();
+         this._historyDeferred = this.getList().getDataSource().query(query).addCallback(function(rs) {
             return new RecordSet({
                adapter: listSource.getAdapter(),
                rawData: rs.getRawData(),
@@ -130,6 +131,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                model: listSource.getModel()
             });
          }.bind(this));
+         return this._historyDeferred;
       },
       _getHistoryRecord: function(item){
          var list = this.getList();
@@ -144,6 +146,11 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
       },
       _getListIdProperty: function() {
          return this.getList().getDataSource().getIdProperty() || this.getList().getProperty('idProperty');
+      },
+      _cancelHistoryDeferred: function() {
+         if (this._historyDeferred){
+            this._historyDeferred.cancel();
+         }
       },
       _needShowHistory: function(){
          return this._historyController && !this.getText().length && this._options.startChar; //Если startChar = 0, историю показывать не нужно
@@ -212,6 +219,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
       },
 
       before: {
+         hidePicker: function() {
+            this._cancelHistoryDeferred();
+         },
          _setTextByKeyboard: function () {
             /* Этот флаг надо выставлять только когда текст изменён с клавиатуры,
                чтобы при изменнии текста из контекста не вызывался поиск в автодополнении */
@@ -360,7 +370,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             }
          },
          _resetSearch: function() {
-            if (this._needShowHistory()){
+            if (this._needShowHistory() && !this.getSelectedKeys().length){
                this._showHistory();
             }
 
