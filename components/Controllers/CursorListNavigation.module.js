@@ -15,8 +15,8 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
       var CursorListNavigation = Abstract.extend([IListNavigation],/**@lends SBIS3.CONTROLS.CursorListNavigation.prototype*/{
          $protected: {
             _hasMore: {
-               'up' : false,
-               'down' : false
+               'before' : false,
+               'after' : false
             },
             _options: {
                type: 'cursor',
@@ -80,10 +80,10 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
          hasNextPage: function(scrollDir) {
             var direction;
             if (scrollDir == 'up') {
-               direction = before;
+               direction = 'before';
             }
             else if (scrollDir == 'down') {
-               direction = after;
+               direction = 'after';
             }
             return this._hasMore[direction];
          }
