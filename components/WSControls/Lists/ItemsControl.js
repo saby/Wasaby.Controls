@@ -11,9 +11,9 @@ define('js!WSControls/Lists/ItemsControl', [
    'tmpl!WSControls/Lists/resources/ItemsTemplate',
    'tmpl!WSControls/Lists/resources/ItemTemplate',
    'tmpl!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
-   'js!WS.Data/Display/Display',
    'js!SBIS3.CONTROLS.ListView/ListViewHelpers',
-   'js!WSControls/Controllers/DataSourceUtil',
+   'js!WSControls/Lists/resources/utils/DataSourceUtil',
+   'js!WSControls/Lists/resources/utils/ItemsUtil',
    'Core/helpers/functional-helpers',
    'Core/Deferred'
 ], function (extend,
@@ -28,9 +28,9 @@ define('js!WSControls/Lists/ItemsControl', [
              ItemsTemplate,
              ItemTemplate,
              ItemContentTemplate,
-             Projection,
              ListViewHelpers,
              DataSourceUtil,
+             ItemsUtil,
              fHelpers,
              Deferred
    ) {
@@ -142,9 +142,8 @@ define('js!WSControls/Lists/ItemsControl', [
          },
 
          _createDefaultProjection: function() {
-            return ListViewHelpers.createDefaultProjection(this._items, this._options);
+            return ItemsUtil.getDefaultDisplayFlat(this._getItems(), this._options)
          },
-
 
          _createDefaultSelector: function() {
             /*Must be implemented*/

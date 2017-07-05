@@ -18,11 +18,11 @@ define(['js!WSControls/Lists/ItemsControl', 'js!WS.Data/Collection/RecordSet'],
                },
                {
                   id : 2,
-                  title : 'Первый'
+                  title : 'Второй'
                },
                {
                   id : 3,
-                  title : 'Первый'
+                  title : 'Третий'
                }
             ]
          });

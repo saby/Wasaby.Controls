@@ -1,10 +1,8 @@
-define('js!WSControls/Controllers/DataSourceUtil', [
+define('js!WSControls/Lists/resources/utils/DataSourceUtil', [
    'js!WS.Data/Query/Query',
    'Core/core-instance'
 ], function(Query, cInstance) {
    var DataSourceUtil = {
-      _useNativeAsMain: true,
-
       prepareSource: function(sourceOpt) {
          var result;
 
