@@ -323,7 +323,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             if (!text){
                text = '<span class="controls-EditAtPlace__placeholder">' + this._options.placeholder + '</span>';
             }
-            this._textField.html(text || '&nbsp;');
+            this._textField.html(strHelpers.escapeHtml(text) || '&nbsp;');
          }
 
       });
