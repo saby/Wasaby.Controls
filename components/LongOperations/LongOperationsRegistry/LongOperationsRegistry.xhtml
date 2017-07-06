@@ -1,5 +1,5 @@
 <div class="controls-LongOperationsRegistry {{? it.className}}{{=it.className}}{{?}}">
-   <component data-component="SBIS3.Engine.Browser" name="longOperationsBrowser" class="controls-Browser__view">
+   <component data-component="SBIS3.CONTROLS.Browser" name="longOperationsBrowser" class="controls-Browser__view">
       <opt name="searchParam" value="title"/>
       <opt name="searchConfig">
          <opt name="placeholder" value="{[искать@@найти...]}"/>
@@ -57,7 +57,7 @@
          </component>
       </opt>
    </component>
-   <component data-component="SBIS3.Engine.SBISOpenDialogAction" name="action">
+   <component data-component="SBIS3.CONTROLS.Action.OpenEditDialog" name="action">
       <opt name="dialogComponent" value="js!SBIS3.CONTROLS.LongOperationHistory"/>
       <opt name="mode" value="floatArea"/>
       <opt name="initializingWay" value="local"/>

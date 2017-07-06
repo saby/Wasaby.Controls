@@ -8,10 +8,11 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
       'js!WS.Data/Entity/Record',
       'html!SBIS3.CONTROLS.LongOperationHistory',
       'css!SBIS3.CONTROLS.LongOperationHistory',
-      'js!SBIS3.Engine.Browser',
+      'js!SBIS3.CONTROLS.Browser'/*###'js!SBIS3.Engine.Browser'*/,
       'html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryDateTemplate',
       'html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryTimeTemplate',
-      'html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryStatusTemplate'
+      'html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryStatusTemplate',
+      'js!SBIS3.CONTROLS.DataGridView'
    ],
 
    function (CompoundControl, longOperationsManager, LongOperationHistoryItem, DataSet, RecordSet, Record, dotTplFn) {
