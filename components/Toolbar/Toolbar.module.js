@@ -213,7 +213,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          //отправляем в меню обработанные элементы, в которых убраны с showType.TOOLBAR
          var menuItems = this._getMenuItems(items);
          this._menuIcon.setItems(menuItems);
-         this._menuIcon.toggle(!!menuItems.length);
+         this._menuIcon.toggle(!!menuItems.length && this._hasVisibleItems(menuItems));
       },
 
       //обработчик для меню
@@ -271,6 +271,14 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             }
          }
          return menuItems;
+      },
+
+      _hasVisibleItems: function(items) {
+         var hasVisibleItems = false;
+         for (var i = 0; i < items.length; i++) {
+            hasVisibleItems = hasVisibleItems || items[i].visible !== false
+         }
+         return hasVisibleItems;
       }
    });
 
