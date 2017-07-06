@@ -219,6 +219,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          records = searchProcessing(projection, cfg);
       }
       else {
+         cfg._resetGroupItemsCount(cfg);
          projection.each(function(item, index, group) {
             if (item.isNode()){
                cfg.hasNodes = true;

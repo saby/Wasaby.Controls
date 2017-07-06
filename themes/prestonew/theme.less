@@ -452,8 +452,8 @@ body {
    .ws-sticky-header__table-header-copy {
       // В престо в паре мест используется нестандартные цвета фона, чуть темнее или чуть светлее.
       // В этих местах прикладники должны сами устанавливать цвет фона у зафиксированных заголовков.
-      // В большинстве реестров используется #2C3E50
-      background-color: #2C3E50;
+      // В большинстве реестров используется #2C3E50 - @basic-block-bg-color
+      background-color: @basic-block-bg-color;
    }
 }
 
@@ -1004,15 +1004,24 @@ body {
          }
      }
 }
-.controls-FieldLink.controls-Picker__show {
-  .controls-FieldLink__showSelector {
-      .icon-primary {
-        color: #26b7fd !important;
+.controls-FieldLink {
+   .controls-FieldLink__showSelector {
+      /* По договорённости с прокетировщиками,
+         "костыль" для темы presto, т.к. там иконка не акцентная */
+      .icon-primary:not(:hover) {
+         color: @default-text-color !important;
       }
-  }
-
-   .controls-TextBox__field {
-      color: rgb(58, 73, 81) !important;
+   }
+   &.controls-Picker__show {
+      .controls-FieldLink__showSelector {
+         .icon-primary {
+            color: #26b7fd !important;
+         }
+      }
+      
+      .controls-TextBox__field {
+         color: rgb(58, 73, 81) !important;
+      }
    }
 }
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button:hover {

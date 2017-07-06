@@ -170,7 +170,6 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
             textValue: ''
          },
          _filterRecordSet: null,
-         _filterInitialized: false,
          _contentInitialized: false,
          _filterAccordion: null,
          _onFilterItemChangeFn: null
@@ -195,8 +194,8 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          if (this._options.items) {
             this._initializeFilter();
             if (this.isExpanded()) {
-               this._initializeFilterItems();
                this._contentInitialized = true;
+               this._initializeFilterItems();
             }
          }
       },
@@ -245,7 +244,6 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          this._updateFilterProperty();
          this._filterRecordSet.subscribe('onCollectionItemChange', this._onFilterItemChangeFn);
          this.setTextValue(this._prepareTextValue());
-         this._filterInitialized = true;
       },
       _prepareFilter: function() {
          var
@@ -346,8 +344,10 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          this._getContentContainer().html(this._options._contentTpl(this._options));
          this.reviveComponents();
          this._initializeFilter();
-         this._initializeFilterItems();
+         // Поведение должно быть аналогично тому, что в методе init у FilterPanel:
+         // проставляем флаг инициализации сразу после оживления верстки и расчёта фильтра
          this._contentInitialized = true;
+         this._initializeFilterItems();
       },
       /**
        * Сбрасывает результирующий фильтр (см. {@link filter}).
