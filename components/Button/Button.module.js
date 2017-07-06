@@ -187,6 +187,11 @@ define('js!SBIS3.CONTROLS.Button',
          _onFocusOut: function(e){
             var self = this;
             this._hideExtendedTooltipCompatible();
+         },
+
+         destroy: function() {
+            this._unregisterDefaultButton();
+            Button.superclass.destroy.call(this);
          }
          //</editor-fold>
       });

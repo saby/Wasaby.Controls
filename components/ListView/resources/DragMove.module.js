@@ -184,12 +184,13 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             this._dragPlaceHolder.show();
          }
       },
-
+      _isCorrectSource: function (source) {
+         return source && cInstance.instanceOfModule(source, 'SBIS3.CONTROLS.DragEntity.List');
+      },
       _canDragMove: function() {
          var source = DragObject.getSource();
          return DragObject.getTarget() &&
-            source &&
-            cInstance(source, 'SBIS3.CONTROLS.DragEntity.List') &&
+            this._isCorrectSource(source) &&
             source.getCount() > 0 &&
             DragObject.getTargetsControl() === this._getView() &&
             cInstance.instanceOfModule(source.at(0), 'SBIS3.CONTROLS.DragEntity.Row');
@@ -229,7 +230,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
       _updateDragTarget: function(e) {
          var dragTarget = this._getDragTarget(e),
             target;
-         if (DragObject.getSource() && dragTarget.item && !dragTarget.domElement.hasClass('controls-DragNDrop__placeholder')) {
+         if (this._isCorrectSource(DragObject.getSource()) && dragTarget.item && !dragTarget.domElement.hasClass('controls-DragNDrop__placeholder')) {
             var position = this._getDirectionOrderChange(e, dragTarget.domElement) || DRAG_META_INSERT.on,
                sourceIds = [],
                movedItems = [];
@@ -328,7 +329,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             source = DragObject.getSource(),
             isMove = false;
 
-         if (target && source && cInstance(source, 'SBIS3.CONTROLS.DragEntity.List')) {
+         if (target && this._isCorrectSource(source)) {
             var  targetsModel = target.getModel();
             source.each(function(item) {
                var model = item.getModel();

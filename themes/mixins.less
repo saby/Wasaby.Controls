@@ -482,8 +482,8 @@
     position: absolute;
     border-width: @borderWidth;
     border-style: solid;
-    width: @sizeContent - 2 * @borderWidth;
-    height: @sizeContent - 2 * @borderWidth;
+    width: calc(@sizeContent ~"-" 2 * @borderWidth);
+    height: calc(@sizeContent ~"-" 2 * @borderWidth);
     margin: (@sizeContainer - @sizeContent) / 2;
     & when (@borderRadius > 0) {
       .border-radius(@borderRadius);

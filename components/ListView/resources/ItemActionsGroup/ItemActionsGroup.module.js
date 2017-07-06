@@ -15,9 +15,10 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
    "Core/helpers/collection-helpers",
    "Core/helpers/markup-helpers",
    "Core/helpers/functional-helpers",
+   "Core/moduleStubs",
    "css!SBIS3.CONTROLS.ItemActionsGroup"
 ],
-   function( CommandDispatcher, IoC, ConsoleLogger,ButtonGroupBaseDS, IconButton, Link, dotTplFn, dotTplFnForItem, colHelpers, mkpHelpers, fHelpers) {
+   function( CommandDispatcher, IoC, ConsoleLogger,ButtonGroupBaseDS, IconButton, Link, dotTplFn, dotTplFnForItem, colHelpers, mkpHelpers, fHelpers, moduleStubs) {
 
       'use strict';
 
@@ -55,7 +56,6 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             _itemActionsButtons: {},
             _itemActionsMenu: undefined,
             _itemActionsMenuButton: undefined,
-            _itemActionsHiddenButton: [],
             _activeItem: undefined,
             _activeCls: 'controls-ItemActions__activeItem',
             _menuAlign: 'standart',
@@ -205,10 +205,14 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           */
          showItemActionsMenu: function(align) {
             //TODO перейти на menuIcon при переводе операций на Vdom
-            requirejs(["js!SBIS3.CONTROLS.ContextMenu"], fHelpers.forAliveOnly(function(menu) {
+            moduleStubs.require("js!SBIS3.CONTROLS.ContextMenu").addCallback(fHelpers.forAliveOnly(function(mods) {
+               /* Если за время загрузки меню операции скрылись, то и показывать меню не надо */
+               if(!this.isVisible()) {
+                  return;
+               }
                /* Создадим меню операций над записью, если его ещё нет */
                if(!this._itemActionsMenu) {
-                  this._createItemActionMenu(menu);
+                  this._createItemActionMenu(mods[0]);
                }
                // при открытии контекстного меню необходимо устанавливать координаты точки начала построения popup
                this._setContextMenuMode(align);
@@ -400,8 +404,9 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
          destroy: function() {
             this._itemActionsButtons = {};
+            this._itemActionsMenuButton = undefined;
+            this._itemActionsMenu = undefined;
             this._activeItem = undefined;
-            this._itemActionsMenuButton.destroy();
             ItemActionsGroup.superclass.destroy.apply(this, arguments);
          }
       });

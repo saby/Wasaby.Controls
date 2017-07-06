@@ -94,7 +94,7 @@ define('js!WSControls/Control/Base',
 
             _afterApplyOptions: function(fromConstructor, oldOptions, newOptions) {
                this._options = newOptions;
-               this.applyOptions();
+               this._applyOptions();
             },
 
             _initializeCommandHandlers: function initializeCommandHandlers() {
@@ -132,7 +132,7 @@ define('js!WSControls/Control/Base',
             _applyChangedOptions: function() {
 
             },
-            applyOptions: function(){
+            _applyOptions: function(){
 
             },
 
@@ -156,7 +156,7 @@ define('js!WSControls/Control/Base',
                this.logicParent = cfg.logicParent;
                if (!this.deprecatedContr) {
                   this._options = cFunctions.shallowClone(cfg);
-                  this.applyOptions();
+                  this._applyOptions();
                   this._parseDecOptions(cfg);
 
                   this._handlers = {};
@@ -193,10 +193,11 @@ define('js!WSControls/Control/Base',
                   return this._options.parentVisible;
                }
                return this._options.visible;
+            },
+
+            destroy: function() {
+               BaseCompatible.destroy.call(this);
             }
-
-
-
 
          });
 

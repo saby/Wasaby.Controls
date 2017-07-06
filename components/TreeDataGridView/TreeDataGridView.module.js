@@ -79,7 +79,11 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          config.isColumnScrolling = cfg.startScrollColumn !== undefined;
          config.columnsShift = cfg.columnsShift;
          config.addClasses = 'controls-DataGridView__tr controls-ListView__item js-controls-ListView__item ' + (cfg.className ? cfg.className : '') + config.classNodeType + config.classNodeState + config.classIsLoaded + config.classHasLoadedChild + config.classIsSelected;
-
+         
+         if(cfg.selectedKey === cfg.item.get(cfg.idProperty)) {
+            config.addClasses += ' controls-ListView__item__selected';
+         }
+         
          return config;
       },
       getItemContentTplData = function(cfg){
@@ -573,6 +577,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var config = TreeDataGridView.superclass._getEditInPlaceConfig.apply(this, arguments);
          config.getEditorOffset = this._getEditorOffset.bind(this);
          config.parentProperty = this._options.parentProperty;
+         config.currentRoot = this.getCurrentRoot();
          return config;
       },
 

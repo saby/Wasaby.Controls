@@ -32,10 +32,13 @@
    }
 
    &.controls-TextBox {
+     .controls-ComboBox__arrowDown {
+       color: @combo-box-arrowDown-color;
+     }
       &.ws-has-focus{
          .controls-ComboBox__arrowDown{
             //todo: !important
-            color: @combo-box-arrowDown-color!important;
+            color: @combo-box-arrowDown-color-focus !important;
          }
       }
       &:hover {
