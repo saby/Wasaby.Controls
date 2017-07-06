@@ -100,6 +100,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       }
       else {
          projection.setGroup(null);
+         resetGroupItemsCount(cfg);
       }
       return projection;
    },
@@ -164,6 +165,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       cfg._groupItemsCount = cfg._groupItemsCount || {};
       cfg._groupItemsCount[groupId] = cfg._groupItemsCount[groupId] || 0;
       cfg._groupItemsCount[groupId] += count;
+   },
+
+   resetGroupItemsCount = function(cfg) {
+      delete cfg._groupItemsCount;
    },
 
    getRecordsForRedraw = function(projection, cfg) {
@@ -362,6 +367,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             _buildTplArgs : buildTplArgs,
             _getRecordsForRedrawSt: getRecordsForRedraw,
             _getRecordsForRedraw: getRecordsForRedraw,
+            _applyGroupItemsCount: applyGroupItemsCount,
+            _resetGroupItemsCount: resetGroupItemsCount,
             _applyGroupingToProjection: applyGroupingToProjection,
             _applyFilterToProjection: applyFilterToProjection,
 
@@ -1215,7 +1222,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             //Если в группе столько же элементов, сколько добавилось, то группа еще не отрисована
             //и надо ее отрисовать
             itemsToAdd = [];
-            if (this._options._groupItemsCount[groupId] === items.length) {
+            if (this._options._groupItemsCount[groupId] === items.length && groupId !== false) {
                this._options._groupItemProcessing(groupId, itemsToAdd, items[0], this._options);
             }
             itemsToAdd = itemsToAdd.concat(items);
@@ -1639,6 +1646,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                 .addCallback(fHelpers.forAliveOnly(function (list) {
                    self._toggleIndicator(false);
                    self._notify('onDataLoad', list);
+                   self._onDataLoad(list);
                    if (
                       this.getItems()
                       && (list.getModel() === this.getItems().getModel())
@@ -1682,6 +1690,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          return def;
       }),
+
+      _onDataLoad: function(){
+
+      },
 
       _loadErrorProcess: function(error) {
         var self = this;

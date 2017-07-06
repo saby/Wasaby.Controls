@@ -368,6 +368,10 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                 marginBottom -= this._cachedMargin;
              }
 
+             if(marginBottom < 0 && !isVertical) {
+                marginBottom = 0;
+             }
+
              this.getContainer()[isVertical ? 'addClass' : 'removeClass']('controls-ItemsToolbar__vertical');
              return {
                 'marginRight' : marginRight,

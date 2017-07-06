@@ -7,6 +7,17 @@ body {
    font-size: 1rem !important;
 }
 body {
+    //Todo: сделать @accent-color - #FFCC99  https://online.sbis.ru/opendoc.html?guid=47bdafa8-88ab-4cb2-9383-89ffd7c9dcdd
+    //сейчас пока сделаем так, чтобы не разломать версию 3.7.5.150
+    .controls-accent-text {
+    	color: #FFCC99;
+    }
+   // т.к. в редизайне используется одна кнопка без заголовка, то напишем для неё фикс выравнивания
+   // в онлайне такие кнопки завязаны на жесткие стили controls-IconButton__round-border-24, что неправильно
+   // для редизайна нужно перейти на относительные названия
+   .controls-MenuIcon__Menu.controls-Menu.controls-Menu__Popup.controls-Menu__hide-menu-header {
+     margin: -.39rem 0 0 -.106rem;
+   }
 
    //TODO: удалить это когда будет нормальный пэйджинг, не из ws-a
    .ws-paging{
@@ -612,9 +623,10 @@ body {
    }
    .controls-Button__icon {
       &.icon-size {
-         font-size: 2.5rem!important;
-         right: .3rem;
-         top: 0.2rem;
+         font-size: 3rem!important;
+         height: 3rem!important;
+         width: 3rem!important;
+         line-height: 3rem!important;
       }
    }
 }
@@ -867,7 +879,7 @@ body {
       background: @basic-block-bg-color;
       color: @default-text-color;
       border: @button-border;
-      padding: 0.285rem 1.428rem 0.285rem 0.38rem;
+      padding: 0.857rem 1.6rem 0.857rem 0.857rem;
       .ws-infobox-triangle {
          width: .857rem;
          height: .857rem;
@@ -887,7 +899,6 @@ body {
       .ws-infobox-content {
          color: @default-text-color;
          font-size: 1rem;
-         margin-right: 1rem;
          p {
             margin: 0 20px 8px 0;
             font-size: 1.43rem;
@@ -896,7 +907,9 @@ body {
       }
 
       .ws-infobox-close-button.icon-disabled{
-         top: .1rem;
+         font-size: 3rem!important;
+         right: 0.7rem;
+         top: 0.3rem;
          color: @link-text-color!important;
          &:hover {
             color: #B9E9FF!important;
@@ -1015,11 +1028,6 @@ body .controls-CommandsButton__picker {
    .controls-MenuItem {
       padding-right: 2.8rem !important; //38 = 24 (кнопка) + 8(отступ справа у кнопки) +6(отступ слева у кнопки)
       .icon-primary {
-         color: @accent-color !important;
-      }
-   }
-   .controls-PopupMixin__closeButton {
-      &.icon-primary{
          color: @accent-color !important;
       }
    }

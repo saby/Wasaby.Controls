@@ -416,6 +416,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   }
                }
                //TODO: Надо обсудить c Витей, почему в стрельнувшем Deferred и если результат тоже был Deferred - нельзя делать addCallback.
+               /* Уточнение: вот это НЕ работает и никто не знает как это починить.
+                  var
+                     res = $ws.proto.Deferred.success(),
+                     d1 = $ws.proto.Deferred.success(),
+                     d2 = $ws.proto.Deferred.success();
+                  d1.addCallback(function(){ return res; });
+                  d2.addCallback(function(){ return res; }); */
                return this._savingDeferred.isReady() ? Deferred.success() : this._savingDeferred;
             },
             _endEdit: function(eip, withSaving, endEditResult) {
@@ -434,9 +441,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
                needValidate = withSaving || endEditResult === EndEditResult.CUSTOM_LOGIC;
 
-               this._notify('onEndSave');
-
                if (endEditResult === EndEditResult.CANCEL || needValidate && !eip.validate()) {
+                  this._notify('onEndSave');
                   this._savingDeferred.errback();
                   return Deferred.fail();
                } else if (endEditResult === EndEditResult.CUSTOM_LOGIC) {
@@ -491,6 +497,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _afterEndEdit: function(eip, withSaving) {
                var isAdd = this._isAdd;
+               this._notify('onEndSave');
                //После завершения редактирования, обязательно нужно удалить навешенный pending
                this._removePendingOperation();
                //При завершение редактирования, нужно сначала удалять фейковую строку, а потом скрывать редакторы.
@@ -519,7 +526,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   creatingDeferred,
                   modelOptions,
                   // Поддержал deferred в качестве результата onBeginAdd, что позволит самостоятельно создавать записи при добавлении по месту
-                  beginAddResult = this._notify('onBeginAdd');
+                  beginAddResult = this._notify('onBeginAdd', options);
                if (beginAddResult instanceof Deferred) {
                   creatingDeferred = beginAddResult;
                } else {
