@@ -93,6 +93,10 @@ define('js!WSControls/Lists/ItemsControl', [
             }
          },
 
+         _getItemPropertyValue : function(item, field) {
+            return ItemsUtil.getPropertyValue(item, field);
+         },
+
          _initItemBasedControllers: function() {
             if (this._getItems()) {
                if (this._getItemsProjection()) {
