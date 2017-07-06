@@ -1004,15 +1004,24 @@ body {
          }
      }
 }
-.controls-FieldLink.controls-Picker__show {
-  .controls-FieldLink__showSelector {
-      .icon-primary {
-        color: #26b7fd !important;
+.controls-FieldLink {
+   .controls-FieldLink__showSelector {
+      /* По договорённости с прокетировщиками,
+         "костыль" для темы presto, т.к. там иконка не акцентная */
+      .icon-primary:not(:hover) {
+         color: @default-text-color !important;
       }
-  }
-
-   .controls-TextBox__field {
-      color: rgb(58, 73, 81) !important;
+   }
+   &.controls-Picker__show {
+      .controls-FieldLink__showSelector {
+         .icon-primary {
+            color: #26b7fd !important;
+         }
+      }
+      
+      .controls-TextBox__field {
+         color: rgb(58, 73, 81) !important;
+      }
    }
 }
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button:hover {
