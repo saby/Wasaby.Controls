@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
          init: function () {
             moduleClass.superclass.init.call(this);
             this._view = this.getChildControlByName('browserView');
-            this.getChildControlByName('browserFastDataFilter').setItems(this._data);
+            //###this.getChildControlByName('browserFastDataFilter').setItems(this._data);
             this._bindEvents();
             this._reload();
          },
