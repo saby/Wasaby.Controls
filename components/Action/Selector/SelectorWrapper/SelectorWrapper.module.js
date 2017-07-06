@@ -4,8 +4,9 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
    'tmpl!SBIS3.CONTROLS.SelectorWrapper',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'Core/helpers/collection-helpers',
-   'Core/core-instance'
-], function (CompoundControl, dotTplFn, TemplateUtil, collectionHelpers, cInstance) {
+   'Core/core-instance',
+   'Core/Deferred'
+], function (CompoundControl, dotTplFn, TemplateUtil, collectionHelpers, cInstance, Deferred) {
 
 
    /**
@@ -55,25 +56,26 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
       $constructor: function() {
          this.once('onInit', function() {
             var linkedObject = this._getLinkedObject(),
-                self = this;
+                self = this,
+                clickDeferred, args;
 
             this.subscribeTo(linkedObject, 'onSelectedItemsChange', this._onSelectedItemsChangeHandler.bind(this))
-                .subscribeTo(linkedObject, 'onItemClick', function(e) {
-                   /* Если есть прикладные обработчики на onItemClick то они должны выполниться первыми,
-                      т.к. в них могут отменять обработку клика, и мы этому мешать не должны */
-                   if(linkedObject.getEventHandlers('onItemClick').length > 1) {
-                      var event = e,
-                          args = arguments;
+                .subscribeTo(linkedObject, 'onItemClick', function(e, item) {
+                   clickDeferred = new Deferred();
+                   args = arguments;
+   
+                   Deferred.fromTimer(0).addCallback(function(res) {
+                      if(!self.isDestroyed() && e.getResult() === clickDeferred) {
+                         clickDeferred.callback(self._onItemClickHandler.apply(self, args));
+                      }
                       
-                      setTimeout(function () {
-                         if(event.getResult() !== false) {
-                            self._onItemClickHandler.apply(self, args);
-                         }
-                      }, 0);
-                   } else  {
-                      self._onItemClickHandler.apply(self, arguments);
-                   }
-                   event = e;
+                      return res;
+                   });
+                   
+                   /* В качестве результата события передаём deferred,
+                      если прикладной программист будет обрабатывать событие, он сам может подменить результат.
+                      Если результат не был обработан, то включаем свою обработку. */
+                   e.setResult(clickDeferred);
                 });
 
             /* Обработка кнопки "Выбрать" для иерархических представлений */
@@ -173,10 +175,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
              не важно, папка это или лист */
             if(isBranch) {
                /* В режиме выбора по операции "Выбрать клик по папке должен приводить в проваливание */
-               if(this.getSelectionType() === 'allBySelectAction') {
-                  return;
-               }
-               event.setResult(false);
+               return this.getSelectionType() === 'allBySelectAction';
             }
             this._applyItemSelect(item);
          }
