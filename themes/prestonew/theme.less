@@ -7,6 +7,17 @@ body {
    font-size: 1rem !important;
 }
 body {
+    //Todo: сделать @accent-color - #FFCC99  https://online.sbis.ru/opendoc.html?guid=47bdafa8-88ab-4cb2-9383-89ffd7c9dcdd
+    //сейчас пока сделаем так, чтобы не разломать версию 3.7.5.150
+    .controls-accent-text {
+    	color: #FFCC99;
+    }
+   // т.к. в редизайне используется одна кнопка без заголовка, то напишем для неё фикс выравнивания
+   // в онлайне такие кнопки завязаны на жесткие стили controls-IconButton__round-border-24, что неправильно
+   // для редизайна нужно перейти на относительные названия
+   .controls-MenuIcon__Menu.controls-Menu.controls-Menu__Popup.controls-Menu__hide-menu-header {
+     margin: -.39rem 0 0 -.106rem;
+   }
 
    //TODO: удалить это когда будет нормальный пэйджинг, не из ws-a
    .ws-paging{
@@ -108,17 +119,17 @@ body {
 
    .controls-ListView__scrollPager {
       .controls-IconButton {
-         background: #293D52;
+         background: #354B62;
          padding: 0;
           border: @button-border;
          .controls-Button__icon {
-            font-size: 3rem!important;
             height: 3rem!important;
             width: 3rem!important;
             line-height: 3rem !important;
             position: absolute;
             top: -@default-border-width;
             left: -@default-border-width;
+            color: #E4E4E4 !important;
          }
          &.ws-disabled {
             border-color: @disabled-color;
@@ -137,8 +148,12 @@ body {
 
    //Стили для CORE кнопки на диалоге печати PrintDialog
    .ws-window .ws-printdialog-titlebar {
+      .ws-window-title {
+         font-size: 1.43rem;
+      }
+
       .ws-printdialog-print-button {
-         right: 4rem;
+         right: 3.1785rem;
          font-size: 1.43rem;
          border-radius: 0;
          font-weight: 400;
@@ -328,6 +343,10 @@ body {
     .controls__filter-button__clear-filter {
        font-size: 1.14rem;
     }
+
+   .controls-ListView__item__selected .controls-DataGridView__td:first-child {
+      background-size: 0.2142rem;
+   }
 }
 
 .ws-float-close.sbisname-window-title-close,
@@ -367,9 +386,10 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
 
 .controls-SearchForm {
   .icon-size {
-    font-size: 3rem !important;
-    width: 2rem;
-    height: 3rem;
+     font-size: 2.857rem !important;
+     line-height: 2.857rem !important;
+     width: 2.857rem;
+     height: 2.857rem;
   }
 }
 
@@ -608,9 +628,10 @@ body {
    }
    .controls-Button__icon {
       &.icon-size {
-         font-size: 2.5rem!important;
-         right: .3rem;
-         top: 0.2rem;
+         font-size: 3rem!important;
+         height: 3rem!important;
+         width: 3rem!important;
+         line-height: 3rem!important;
       }
    }
 }
@@ -705,10 +726,6 @@ body .controls-ToolBar__menuIcon .icon-24 {
   &.additionalLink__2 {
     font-size: .857rem;
   }
-}
-
-.controls-TreeView__expand {
-  font-size: 1rem !important;
 }
 
 .controls__filter-button__apply-filter {
@@ -863,7 +880,7 @@ body {
       background: @basic-block-bg-color;
       color: @default-text-color;
       border: @button-border;
-      padding: 0.285rem 1.428rem 0.285rem 0.38rem;
+      padding: 0.857rem 1.6rem 0.857rem 0.857rem;
       .ws-infobox-triangle {
          width: .857rem;
          height: .857rem;
@@ -883,7 +900,6 @@ body {
       .ws-infobox-content {
          color: @default-text-color;
          font-size: 1rem;
-         margin-right: 1rem;
          p {
             margin: 0 20px 8px 0;
             font-size: 1.43rem;
@@ -892,7 +908,9 @@ body {
       }
 
       .ws-infobox-close-button.icon-disabled{
-         top: .1rem;
+         font-size: 3rem!important;
+         right: 0.7rem;
+         top: 0.3rem;
          color: @link-text-color!important;
          &:hover {
             color: #B9E9FF!important;
@@ -1010,14 +1028,6 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-
 body .controls-CommandsButton__picker {
    .controls-MenuItem {
       padding-right: 2.8rem !important; //38 = 24 (кнопка) + 8(отступ справа у кнопки) +6(отступ слева у кнопки)
-      .icon-primary {
-         color: @accent-color !important;
-      }
-   }
-   .controls-PopupMixin__closeButton {
-      &.icon-primary{
-         color: @accent-color !important;
-      }
    }
 }
 body .controls-Link.controls-FieldLink__Link:not(.ws-disabled).controls-FieldLink-Link__filterButton {
@@ -1038,6 +1048,10 @@ body .controls-Link.controls-FieldLink__Link:not(.ws-disabled).controls-FieldLin
       width: 1.785rem;
       top:  0.0357rem;
    }
+}
+
+.ws-is-webkit .controls-BreadCrumbs .controls-BreadCrumbs__arrow {
+   top:  0.33rem;
 }
 
 .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
@@ -1086,4 +1100,10 @@ body .controls-ItemActions .controls-Button__icon.icon-size {
 
 .controls-ListView__ItemsToolbar-container {
   height: 1.2rem;
+}
+
+.controls-ListView:not(.controls-ListView__bottomStyle) {
+  .controls-ListView__ItemsToolbar-container.controls-ItemsToolbar__withEditActions {
+    height: 3rem;
+  }
 }

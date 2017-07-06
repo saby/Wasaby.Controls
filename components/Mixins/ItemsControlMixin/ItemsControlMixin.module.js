@@ -27,7 +27,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'Core/helpers/string-helpers',
    "js!SBIS3.CONTROLS.Utils.SourceUtil",
    "Core/helpers/Object/isEmpty",
-   'js!SBIS3.CONTROLS.ListView/ListViewHelpers',
    "Core/helpers/Function/debounce"
 ], function (
    cFunctions,
@@ -58,32 +57,209 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    strHelpers,
    SourceUtil,
    isEmpty,
-   ListViewHelpers,
    debounce) {
 
-   var propertyUpdateWrapper = ListViewHelpers.propertyUpdateWrapper,
-      createDefaultProjection = ListViewHelpers.createDefaultProjection,
-      applyGroupingToProjection = ListViewHelpers.applyGroupingToProjection,
-      applyFilterToProjection = ListViewHelpers.applyFilterToProjection,
-      _oldGroupByDefaultMethod = ListViewHelpers._oldGroupByDefaultMethod,
-      /*TODO метод нужен потому, что Лехина утилита не умеет работать с перечисляемым где contents имеет тип string*/
-      getPropertyValue = ListViewHelpers.getPropertyValue,
-      canApplyGrouping = ListViewHelpers.canApplyGrouping,
-      groupItemProcessing = ListViewHelpers.groupItemProcessing,
-      getRecordsForRedraw = ListViewHelpers.getRecordsForRedraw,
-      buildTplArgs = ListViewHelpers.buildTplArgs,
-      canServerRenderOther = ListViewHelpers.canServerRenderOther,
-      findIdProperty = ListViewHelpers.findIdProperty,
-      JSONToRecordset = ListViewHelpers.JSONToRecordset,
-      extendedMarkupCalculate = ListViewHelpers.extendedMarkupCalculate;
-   var prepareGroupId = function(item, groupId, cfg) {
+   function propertyUpdateWrapper(func) {
+      return function() {
+         return this.runInPropertiesUpdate(func, arguments);
+      };
+   }
+   var createDefaultProjection = function(items, cfg) {
+      var proj, projCfg = {};
+      projCfg.idProperty = cfg.idProperty || ((cfg.dataSource && typeof cfg.dataSource.getIdProperty === 'function') ? cfg.dataSource.getIdProperty() : '');
+      if (cfg.itemsSortMethod) {
+         projCfg.sort = cfg.itemsSortMethod;
+      }
+      if (cfg.itemsFilterMethod) {
+         projCfg.filter = cfg.itemsFilterMethod;
+      }
+      if (cfg.loadItemsStrategy == 'merge') {
+         projCfg.unique = true;
+      }
+      proj = Projection.getDefaultDisplay(items, projCfg);
+      return proj;
+   },
+
+   prepareGroupId = function(item, groupId, cfg) {
       //делаем id группы строкой всегда, чтоб потом при обращении к id из верстки не ошибаться
       return groupId + '';
    },
+
+   applyGroupingToProjection = function(projection, cfg) {
+      if (cfg.groupBy && cfg.easyGroup) {
+         var
+            method = function(item) {
+               var
+                  groupId = cfg.groupBy.method ? cfg.groupBy.method.apply(this, arguments) : item.get(cfg.groupBy.field);
+               if (groupId !== false) {
+                  groupId = cfg._prepareGroupId(item, groupId, cfg);
+               }
+               return groupId;
+            };
+         projection.setGroup(method);
+      }
+      else {
+         projection.setGroup(null);
+         resetGroupItemsCount(cfg);
+      }
+      return projection;
+   },
+   applyFilterToProjection = function(projection, cfg) {
+      if (cfg.itemsFilterMethod) {
+         projection.setFilter(cfg.itemsFilterMethod);
+      }
+   },
+
+   _oldGroupByDefaultMethod = function (record, at, last, item) {
+      var curField = record.get(this._options.groupBy.field),
+         result = curField !== this._previousGroupBy;
+      this._previousGroupBy = curField;
+      return result;
+   },
+
+   /*TODO метод нужен потому, что Лехина утилита не умеет работать с перечисляемым где contents имеет тип string*/
+   getPropertyValue = function(itemContents, field) {
+      if (typeof itemContents == 'string') {
+         return itemContents;
+      }
+      else {
+         return Utils.getItemPropertyValue(itemContents, field);
+      }
+   },
+
+   canApplyGrouping = function(projItem, cfg) {
+      return !isEmpty(cfg.groupBy) && (!projItem.isNode || !projItem.isNode());
+   },
+
+   groupItemProcessing = function(groupId, records, item, cfg) {
+      if (cfg._canApplyGrouping(item, cfg)) {
+         var groupBy = cfg.groupBy;
+
+         if (cfg._groupTemplate) {
+            var
+               tplOptions = {
+                  columns : cFunctions.clone(cfg.columns || []),
+                  multiselect : cfg.multiselect,
+                  hierField: cfg.hierField + '@',
+                  parentProperty: cfg.parentProperty,
+                  nodeProperty: cfg.nodeProperty,
+                  item: item.getContents(),
+                  groupContentTemplate: TemplateUtil.prepareTemplate(groupBy.contentTemplate || ''),
+                  groupId: groupId
+               },
+               groupTemplateFnc;
+            tplOptions.colspan = tplOptions.columns.length + cfg.multiselect;
+
+
+            groupTemplateFnc = TemplateUtil.prepareTemplate(cfg._groupTemplate);
+
+            records.push({
+               tpl: groupTemplateFnc,
+               data: tplOptions
+            })
+         }
+      }
+   },
+
    applyGroupItemsCount = function(groupId, count, cfg) {
       cfg._groupItemsCount = cfg._groupItemsCount || {};
       cfg._groupItemsCount[groupId] = cfg._groupItemsCount[groupId] || 0;
       cfg._groupItemsCount[groupId] += count;
+   },
+
+   resetGroupItemsCount = function(cfg) {
+      delete cfg._groupItemsCount;
+   },
+
+   getRecordsForRedraw = function(projection, cfg) {
+      var
+         records = [];
+      if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
+         var prevGroupId = undefined;
+         projection.each(function (item, index, group) {
+            if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {
+               applyGroupItemsCount(group, 1, cfg);
+               if (prevGroupId != group && group !== false) {
+                  cfg._groupItemProcessing(group, records, item,  cfg);
+                  prevGroupId = group;
+               }
+            }
+            records.push(item);
+         });
+      }
+      return records;
+   },
+   buildTplArgs = function(cfg) {
+      var tplOptions = {},
+          self = this,
+          timers = {},
+          itemTpl, itemContentTpl, logger;
+
+      tplOptions.escapeHtml = strHelpers.escapeHtml;
+      tplOptions.Sanitize = Sanitize;
+      tplOptions.idProperty = cfg.idProperty;
+      tplOptions.displayField = cfg.displayProperty;
+      tplOptions.displayProperty = cfg.displayProperty;
+      tplOptions.templateBinding = cfg.templateBinding;
+      tplOptions.getPropertyValue = getPropertyValue;
+      
+      /* Для логирования */
+      if(typeof window === 'undefined') {
+         logger = IoC.resolve('ILogger');
+         tplOptions.timeLogger = function timeLogger(tag, start) {
+            if(start) {
+               timers[tag] = new Date();
+            } else {
+               logger.log(self._moduleName || cfg.name, tag + ' ' + ((new Date()) - timers[tag]));
+               delete timers[tag];
+            }
+         };
+      }
+
+      if (cfg.itemContentTpl) {
+         itemContentTpl = cfg.itemContentTpl;
+      }
+      else {
+         itemContentTpl = cfg._defaultItemContentTemplate;
+      }
+      tplOptions.itemContent = TemplateUtil.prepareTemplate(itemContentTpl);
+      if (cfg.itemTpl) {
+         itemTpl = cfg.itemTpl;
+      }
+      else {
+         itemTpl = cfg._defaultItemTemplate;
+      }
+      tplOptions.itemTpl = TemplateUtil.prepareTemplate(itemTpl);
+      tplOptions.defaultItemTpl = TemplateUtil.prepareTemplate(cfg._defaultItemTemplate);
+
+      if (cfg.includedTemplates) {
+         var tpls = cfg.includedTemplates;
+         tplOptions.included = {};
+         for (var j in tpls) {
+            if (tpls.hasOwnProperty(j)) {
+               tplOptions.included[j] = TemplateUtil.prepareTemplate(tpls[j]);
+            }
+         }
+      }
+      return tplOptions;
+   },
+   canServerRenderOther = function(cfg) {
+      return !cfg.itemTemplate;
+   },
+   findIdProperty  = function(json){
+      var itemFirst = json[0];
+      if (itemFirst) {
+         return Object.keys(json[0])[0];
+      }
+   },
+   JSONToRecordset  = function(json, idProperty) {
+      return new RecordSet({
+         rawData : json,
+         idProperty : idProperty
+      })
+   },
+   extendedMarkupCalculate = function(markup, cfg) {
+      return ParserUtilities.buildInnerComponentsExtended(markup, cfg);
    };
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -171,14 +347,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       $protected: {
          _itemData : null,
          _groupHash: {},
-         _itemsProjection: null,
-         _items : null,
          _itemsInstances: {},
          _offset: 0,
          _limit: undefined,
          _dataSource: undefined,
-         _dataSet: null,
-         _dotItemTpl: null,
          _propertyValueGetter: getPropertyValue,
          _revivePackageParams: {},
          _options: {
@@ -195,6 +367,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             _buildTplArgs : buildTplArgs,
             _getRecordsForRedrawSt: getRecordsForRedraw,
             _getRecordsForRedraw: getRecordsForRedraw,
+            _applyGroupItemsCount: applyGroupItemsCount,
+            _resetGroupItemsCount: resetGroupItemsCount,
             _applyGroupingToProjection: applyGroupingToProjection,
             _applyFilterToProjection: applyFilterToProjection,
 
@@ -662,9 +836,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          /*Если уже вычислили все в modifyoptions а иначе все это стрельнет после reload*/
          if (this._options._itemsProjection) {
+            this._setItemsEventHandlers();
             this._notify('onItemsReady');
             this._itemsReadyCallback();
-            this._setItemsEventHandlers();
             this._dataLoadedCallback();
          }
          /*TODO Поддержка совместимости. Раньше если были заданы items массивом создавался сорс, осталась куча завязок на это*/
@@ -1048,7 +1222,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             //Если в группе столько же элементов, сколько добавилось, то группа еще не отрисована
             //и надо ее отрисовать
             itemsToAdd = [];
-            if (this._options._groupItemsCount[groupId] === items.length) {
+            if (this._options._groupItemsCount[groupId] === items.length && groupId !== false) {
                this._options._groupItemProcessing(groupId, itemsToAdd, items[0], this._options);
             }
             itemsToAdd = itemsToAdd.concat(items);
@@ -1292,6 +1466,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                this._options._itemsProjection = null;
             }
             this._clearItems();
+            this._itemData = null;
+            this._dataSource = null;
          }
       },
 
@@ -1470,6 +1646,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                 .addCallback(fHelpers.forAliveOnly(function (list) {
                    self._toggleIndicator(false);
                    self._notify('onDataLoad', list);
+                   self._onDataLoad(list);
                    if (
                       this.getItems()
                       && (list.getModel() === this.getItems().getModel())
@@ -1513,6 +1690,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          return def;
       }),
+
+      _onDataLoad: function(){
+
+      },
 
       _loadErrorProcess: function(error) {
         var self = this;

@@ -15,8 +15,9 @@ define(['js!SBIS3.CONTROLS.TreeDataGridView', 'js!WS.Data/Collection/RecordSet']
          testResult3 = { marked: [], excluded: [1] },
          testResult4 = { marked: [12], excluded: [] },
          testResult5 = { marked: [1, 11, 12, 13], excluded: [] },
-         testResult6 = { marked: [], excluded: [1, 11, 12, 13] },
-         testResult7 = { marked: [13, 131, 133], excluded: [132] };
+         testResult6 = { marked: [], excluded: [11, 12, 13] },
+         testResult7 = { marked: [13, 131, 133], excluded: [132] },
+         testResult8 = { marked: [11, 12], excluded: [] };
 
       beforeEach(function() {
          if (typeof window !== 'undefined') {
@@ -102,6 +103,12 @@ define(['js!SBIS3.CONTROLS.TreeDataGridView', 'js!WS.Data/Collection/RecordSet']
                testComponent.expandNode(13);
                testComponent.removeItemsSelection([132]);
                assert.deepEqual(sortSelection(testComponent.getSelection()), testResult7);
+            });
+            it('Select child and child', function () {
+               testComponent.expandNode(1);
+               testComponent.addItemsSelection([11]);
+               testComponent.addItemsSelection([12]);
+               assert.deepEqual(sortSelection(testComponent.getSelection()), testResult8);
             });
          }
       });

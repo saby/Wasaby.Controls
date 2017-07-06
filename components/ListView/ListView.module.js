@@ -941,6 +941,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _dragInitHandler: undefined, //метод который инициализирует dragNdrop
             _inScrollContainerControl: false,
             _allowMouseMoveEvent: true,
+            _loadingIndicatorTimer: undefined, // Таймаут отображения крутилки в индикаторе загрузки
             _horisontalDragNDrop: false
          },
 
@@ -1049,6 +1050,9 @@ define('js!SBIS3.CONTROLS.ListView',
                if (typeof lvOpts.itemsDragNDrop === 'boolean') {
                   lvOpts.itemsDragNDrop = lvOpts.itemsDragNDrop ? 'allow' : '';
                }
+            }
+            if(lvOpts.selectedKey && lvOpts._itemData) {
+               lvOpts._itemData.selectedKey = lvOpts.selectedKey;
             }
             return lvOpts;
          },
@@ -1233,7 +1237,7 @@ define('js!SBIS3.CONTROLS.ListView',
                case constants.key.enter:
                   if(selectedKey !== undefined && selectedKey !== null) {
                      var selectedItem = $("[data-id='" + selectedKey + "']", this._getItemsContainer());
-                     this._elemClickHandler(selectedKey, this.getItems().getRecordById(selectedKey), selectedItem, e);
+                     this._elemClickHandler(selectedKey, this.getItems().getRecordById(selectedKey), selectedItem.get(0), e);
                   }
                   break;
                case constants.key.space:
@@ -2285,7 +2289,13 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _getEditInPlace: function() {
-            return this._hasEditInPlace() ? Deferred.success(this._editInPlace) : this._createEditInPlace();
+            if (this._hasEditInPlace()) {
+               var
+                  d = new Deferred();
+               d.callback(this._editInPlace);
+               return d;
+            }
+            return this._createEditInPlace();
          },
 
          _hasEditInPlace: function() {
@@ -3085,7 +3095,14 @@ define('js!SBIS3.CONTROLS.ListView',
                isContainerVisible = dcHelpers.isElementVisible(this.getContainer()),
                // отступ с учетом высоты loading-indicator
                hasScroll = this._scrollWatcher.hasScroll(this._getLoadingIndicatorHeight()),
+               hasNextPage;
+
+            if (this._options.navigation && this._options.navigation.type == 'cursor') {
+               hasNextPage = this._listNavigation.hasNextPage(this._infiniteScrollState.mode);
+            }
+            else {
                hasNextPage = this._hasNextPage(more, this._scrollOffset.bottom);
+            }
 
             //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
             this._container.toggleClass('controls-ListView__outside-scroll-loader', !hasScroll);
@@ -3112,7 +3129,8 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _updateScrollIndicatorTop: function () {
             var top = '';
-            if (this._isScrollingUp()) {
+            // Если скролим вверх и есть что загружать сверху
+            if (this._isScrollingUp() && this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.top)) {
                top = StickyHeaderManager.getStickyHeaderIntersectionHeight(this.getContainer()) - this._scrollWatcher.getScrollContainer().scrollTop();
             }
             this._loadingIndicator.css('top', top);
@@ -3142,10 +3160,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _loadNextPage: function() {
             if (this._dataSource) {
                var offset = this._getNextOffset(),
-                  scrollingUp = this._isScrollingUp(),
                   self = this;
                //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
-               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', scrollingUp);
+               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', this._isScrollingUp());
                this._showLoadingIndicator();
                this._toggleEmptyData(false);
 
@@ -3484,6 +3501,12 @@ define('js!SBIS3.CONTROLS.ListView',
 
          },
 
+         _onDataLoad: function(list) {
+            if (this._options.navigation && this._options.navigation.type == 'cursor') {
+               this._listNavigation.analizeResponceParams(list);
+            }
+         },
+
          _dataLoadedCallback: function () {
             if (this._options.showPaging) {
                this._processPaging();
@@ -3516,26 +3539,28 @@ define('js!SBIS3.CONTROLS.ListView',
 
             this._showedLoading = show;
             if (show) {
-               setTimeout(function(){
-                  if (!self.isDestroyed() && self._showedLoading) {
-                     scrollContainer = self._getScrollContainer()[0];
-                     indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
-                     if(indicator.length && scrollContainer && scrollContainer.offsetHeight && container[0].scrollHeight > scrollContainer.offsetHeight) {
-                        /* Ищем кординату, которая находится по середине отображаемой области грида */
-                        centerCord =
-                           (Math.max(scrollContainer.getBoundingClientRect().bottom, 0) - Math.max(container[0].getBoundingClientRect().top, 0))/2;
-                        /* Располагаем индикатор, учитывая прокрутку */
-                        indicator[0].style.top = centerCord + scrollContainer.scrollTop + 'px';
-                     } else {
-                        /* Если скрола нет, то сбросим кординату, чтобы индикатор сам расположился по середине */
-                        indicator[0].style.top = '';
-                     }
-                     ajaxLoader.removeClass('ws-hidden');
+               if (!self.isDestroyed() && self._showedLoading) {
+                  scrollContainer = self._getScrollContainer()[0];
+                  indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
+                  if(indicator.length && scrollContainer && scrollContainer.offsetHeight && container[0].scrollHeight > scrollContainer.offsetHeight) {
+                     /* Ищем кординату, которая находится по середине отображаемой области грида */
+                     centerCord =
+                        (Math.max(scrollContainer.getBoundingClientRect().bottom, 0) - Math.max(container[0].getBoundingClientRect().top, 0))/2;
+                     /* Располагаем индикатор, учитывая прокрутку */
+                     indicator[0].style.top = centerCord + scrollContainer.scrollTop + 'px';
+                  } else {
+                     /* Если скрола нет, то сбросим кординату, чтобы индикатор сам расположился по середине */
+                     indicator[0].style.top = '';
                   }
+                  ajaxLoader.removeClass('ws-hidden');
+               }
+               this._loadingIndicatorTimer = setTimeout(function(){
+                  ajaxLoader.addClass('controls-AjaxLoader__showIndication');
                }, INDICATOR_DELAY);
             }
             else {
-               ajaxLoader.addClass('ws-hidden');
+               clearTimeout(this._loadingIndicatorTimer);
+               ajaxLoader.addClass('ws-hidden').removeClass('controls-AjaxLoader__showIndication');
             }
          },
          _toggleEmptyData: function(show) {
@@ -3563,7 +3588,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      pagingOptions = {
                         recordsPerPage: self._options.pageSize || more,
                         currentPage: 1,
-                        recordsCount: more,
+                        recordsCount: more || 0,
                         pagesLeftRight: 1,
                         onlyLeftSide: typeof more === 'boolean', // (this._options.display.usePaging === 'parts')
                         rightArrow: hasNextPage
@@ -3919,11 +3944,13 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _commitEdit: function(checkAutoAdd) {
             var
-               self = this;
-            return this._getEditInPlace().addCallback(function(editInPlace) {
+               self = this,
+               eip = this._getEditInPlace();
+            eip.addCallback(function(editInPlace) {
                // При сохранении добавляемой записи через галку в тулбаре необходимо автоматически запускать добавление (естественно, если такой режим включен)
                return checkAutoAdd && editInPlace.isAdd() && self._isModeAutoAdd() ? editInPlace.editNextTarget(true) : editInPlace.endEdit(true);
             });
+            return eip;
          },
          destroy: function () {
             this._destroyEditInPlaceController();

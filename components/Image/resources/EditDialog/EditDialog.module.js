@@ -70,8 +70,13 @@ define('js!SBIS3.CONTROLS.Image.EditDialog', [
          this._publish('onBeginSave', 'onEndSave', 'onOpenError');
          this._image = this._container.find('.controls-EditDialog__image');
          this._image.load(function() {
-            this.getTopParent().show();
-            this.getTopParent().setSize(ImageUtil.getDimensions(this._image[0]));
+            var
+               dimension = ImageUtil.getDimensions(this._image[0]),
+               parent = this.getTopParent(),
+               wrapperOffset = this._container.find('.controls-EditDialog__image-wrapper').css('left').replace('px','');
+            dimension.height += parent._titleBar.height() + wrapperOffset*2;
+            parent.show();
+            parent.setSize(dimension);
             this._cropPlugin = new CropPlugin(
                {
                   dataSource: this._options.dataSource,

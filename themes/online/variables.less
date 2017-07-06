@@ -381,7 +381,8 @@
 @tab-button-position:                           relative;
 @tab-button-overflow:                           hidden;
 @tab-button-color:                              @blue-dark-color;
-@tab-button-font:                               14px 'TensorFont', sans-serif;
+@tab-button-font-size:                          14px;
+@tab-button-font:                               @tab-button-font-size 'TensorFont', sans-serif;
 @tab-button-main-text-line-height:              27px;
 @tab-button-simple-checked-bottomline-color:    #0055BB;
 @tab-button-simple-hover-bottomline-color:      #E4E4E4;
@@ -582,6 +583,8 @@
 @check-box-caption-margin-left:                 0;
 @check-box-disabled-color:                      @disabled-color;
 @check-box-icon-successful-top-ie:              0;
+
+@check-box-caption-line-height:                 @check-box-icon-size - 2 * extract(@check-box-caption-padding, 1);
 
 // -------------- //
 // Checkbox group //
@@ -1951,6 +1954,7 @@
 @data-grid-check-box-left:                      0px;
 
 @data-grid-table-layot: 								fixed;
+@data-grid-table-separator-border-width:        0 0 @default-border-width 0;
 // ---------- //
 // PartScroll //
 // ---------- //
@@ -2218,6 +2222,8 @@
 @controls-filterButton-line-height:               @link-line-height;
 @controls-filterButton-apply-margin-right:        0;
 
+@controls-filterButton-filterLine-margin:         8px 0 8px 0;
+
 //FilterButtonHistory
 @controls-filterButton-history-wrapper-padding:   6px;
 @controls-filterButton-history-maxHeight-height:  120px;
@@ -2353,6 +2359,7 @@
 
 // BackButton
 @back-button-font-size:                            18px;
+@back-button-line-height:                          @default-height;
 @back-button-margin-before:                        0;
 @back-button-padding-before:                       0;
 @back-button-arrow-height:                         24px;
@@ -2447,7 +2454,7 @@
 //ListView AjaxIndicator
 @controls-AjaxLoader-background:                   none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
 @controls-AjaxLoader-default-cord:                 0;
-@controls-AjaxLoader-zIndex:                       2;
+@controls-AjaxLoader-zIndex:                       11;
 @controls-AjaxLoader-minHeight:                    32px;
 
 @controls-AjaxLoader-outer-height:                 36px;
@@ -2613,6 +2620,7 @@
 
 @commands-button-close-icon:                               @icon-medium-size;
 @commands-button-close-font-family:                        @default-icon-medium-font;
+@commands-button-close-icon-color:                         @blue-dark-color;
 @commands-button-close-button-size:                        32px;
 @commands-button-close-button-top:                         4px;
 @commands-button-margin:                                   -9px -33px 0 0;
@@ -2652,6 +2660,38 @@
 @wait-indicator-gradient-gray: rgb(234, 234, 234);
 
 
+//----------------//
+// LongOperations  //
+//----------------//
+
+@long-operations-list-group-title-bg: #ffffff;
+@long-operations-list-group-title-color: #999999;
+@long-operations-list-time-ctr-f-size: inherit;//12px
+@long-operations-list-state-ctr-margin-lf: 10px;
+@long-operations-popup-collapsed-width: 200px;
+@long-operations-popup-exp-width: 400px;
+@long-operations-popup-exp-max-width: 400px;
+@long-operations-popup-header-height: auto;
+@long-operations-popup-header-line-height: normal;
+@long-operations-popup-header-pad-rt: 41px;
+@long-operations-popup-header-icon-size: 24px;
+@long-operations-popup-header-caption-f-size: 15px;
+@long-operations-popup-header-caption-line-height: inherit;
+@long-operations-popup-header-caption-color: inherit;
+@long-operations-popup-collapsed-header-caption-f-size: @long-operations-popup-header-caption-f-size;
+@long-operations-popup-collapsed-header-caption-line-height: @long-operations-popup-header-caption-line-height;
+@long-operations-popup-collapsed-header-caption-color: @long-operations-popup-header-caption-color;
+@long-operations-popup-header-stop-but-f-size: inherit;
+@long-operations-popup-header-stop-but-color: #999999;
+@long-operations-popup-foot-height: 32px;
+@long-operations-popup-foot-bg: #F3F3F3;
+@long-operations-popup-foot-f-size: 12px;
+@long-operations-popup-foot-color: #999999;
+@long-operations-popup-reg-but-ctr-height: 24px;
+@long-operations-popup-reg-but-line-height: 12px;
+@long-operations-reg-filter-width: 150px;
+@long-operations-reg-filter-height: 30px;
+@long-operations-reg-filter-title-height: 24px;
 
 //--------------//
 //  TimePicker  //
@@ -2724,15 +2764,15 @@
 @clock-picker-inner-arrow-height:                   @clock-picker-inner-circle-radius - @clock-picker-inner-tick-radius - @clock-picker-arrow-tip-border-width;
 
 @bottomStyle-items-toolbar-height:                  30px;
-@bottomStyle-padding-bottom:              @bottomStyle-items-toolbar-height;
+@bottomStyle-padding-bottom:                        @bottomStyle-items-toolbar-height + @bottomStyle-items-toolbar-margin; //высота операций + маржин
 @bottomStyle-items-toolbar-border-color:            #F3F3F3;
-@bottomStyle-items-toolbar-margin:                  3px 0 0 0;
-@scroll-pager-bg:							@default-bg-color;
-@textbox-font-size:							@default-font-size;
-@image-bar-height:                        32px;
-@image-bar-vertical-padding:              4px;
-@image-bar-horizontal-padding:            12px;
-@image-bar-bg-color:                      #E7F0F9;
+@bottomStyle-items-toolbar-margin:                  3px;
+@scroll-pager-bg:							                @default-bg-color;
+@textbox-font-size:							             @default-font-size;
+@image-bar-height:                                  32px;
+@image-bar-vertical-padding:                        4px;
+@image-bar-horizontal-padding:                      12px;
+@image-bar-bg-color:                                #E7F0F9;
 
 //---------//
 //  Label  //

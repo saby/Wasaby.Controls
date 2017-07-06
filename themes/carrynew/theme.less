@@ -25,6 +25,10 @@ body {
          }
       }
    }
+    //Todo: https://online.sbis.ru/opendoc.html?guid=47bdafa8-88ab-4cb2-9383-89ffd7c9dcdd
+    .controls-accent-text {
+      color: #D94700;
+    }
 }
 
 body {
@@ -55,40 +59,6 @@ body {
       font-size: 1.43rem!important;
       font-weight: normal !important;
   }
-
-   //Стили для CORE кнопки на диалоге печати PrintDialog
-   .ws-window .ws-printdialog-titlebar {
-      .ws-printdialog-print-button {
-         right: 4rem;
-         font-size: 1.43rem;
-         border-radius: 0;
-         font-weight: 400;
-         width: auto;
-         min-width: .86rem;
-         height: 3rem;
-         line-height: 2.73rem;
-         box-sizing: border-box;
-         user-select: none;
-         background-color: #ff7033;
-         color: #fff;
-         border: @default-border-width solid #d94700;
-
-         &:hover {
-            background-color: #EC5B19;
-         }
-
-         &:active {
-            background-color: #d94700 !important;
-         }
-
-         .ws-button-caption {
-            display: block;
-            margin: 0 .57rem 0 .57rem;
-            border: none;
-            line-height: inherit;
-         }
-      }
-   }
 
 }
 .ws-float-close.sbisname-window-title-close {
@@ -192,4 +162,8 @@ body .ws-window {
 }
 .ws-window-content {
    background-color: @default-bg-color !important;
+}
+.controls-Link.controls__filter-button__clear-filter.ws-disabled {
+  color: #ccc;
+  font-size: 1.14rem;
 }

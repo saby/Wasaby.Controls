@@ -3,6 +3,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
    "Core/constants",
    "Core/Deferred",
    "Core/ParallelDeferred",
+   "Core/helpers/Object/isEmpty",
    "js!SBIS3.CONTROLS.TreeDataGridView",
    "js!SBIS3.CONTROLS.CompositeViewMixin",
    "tmpl!SBIS3.CONTROLS.TreeCompositeView/resources/CompositeView__folderTpl",
@@ -17,7 +18,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
    'Core/core-merge',
    'css!SBIS3.CONTROLS.CompositeView',
    'css!SBIS3.CONTROLS.TreeCompositeView'
-], function( cFunctions, constants, Deferred, ParallelDeferred, TreeDataGridView, CompositeViewMixin, folderTpl, TreeCompositeItemsTemplate, FolderTemplate, ListFolderTemplate, FolderContentTemplate, StaticFolderContentTemplate, colHelpers, fcHelpers, TemplateUtil, cMerge) {
+], function( cFunctions, constants, Deferred, ParallelDeferred, isEmpty, TreeDataGridView, CompositeViewMixin, folderTpl, TreeCompositeItemsTemplate, FolderTemplate, ListFolderTemplate, FolderContentTemplate, StaticFolderContentTemplate, colHelpers, fcHelpers, TemplateUtil, cMerge) {
 
    'use strict';
 
@@ -148,8 +149,12 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             records = {
                folders : [],
                leafs : []
-            };
+            },
+            useGroups = !isEmpty(cfg.groupBy) && cfg.easyGroup;
          projection.each(function (item, index, group) {
+            if (useGroups) {
+               cfg._applyGroupItemsCount(group, 1, cfg);
+            }
             if (item.isNode()) {
                records.folders.push(item);
             }
