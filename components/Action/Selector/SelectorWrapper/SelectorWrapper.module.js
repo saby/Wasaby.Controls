@@ -153,7 +153,8 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
        */
       _onItemClickHandler: function(event, id, item, target) {
          var linkedObject = this._getLinkedObject(),
-             isBranch = this._isBranch(item);
+             isBranch = this._isBranch(item),
+             clickResult = true;
 
          /* Если клик произошёл по стрелке разворота папки или запись выбрать нельзя,
             то не обрабатываем это событие */
@@ -176,11 +177,16 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
             /* При единичном выборе запись всегда должна выбираться при клике,
              не важно, папка это или лист */
             if(isBranch) {
-               /* В режиме выбора по операции "Выбрать клик по папке должен приводить в проваливание */
-               return this.getSelectionType() === 'allBySelectAction';
+               /* В режиме выбора по операции "Выбрать", клик по папке должен приводить к проваливанию,
+                  иначе папка должна выбираться. */
+               if(this.getSelectionType() === 'allBySelectAction') {
+                  return;
+               }
+               clickResult = false;
             }
             this._applyItemSelect(item);
          }
+         return clickResult;
       },
 
       /**
