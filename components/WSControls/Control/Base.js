@@ -1,21 +1,17 @@
 /**
  * Created by dv.zuev on 02.06.2017.
  */
-var withoutLayout = window && window.location.href.indexOf("withoutLayout")>-1,
-   baseDeps = ['Core/core-extend',
+define('js!WSControls/Control/Base',
+   ['Core/core-extend',
       'Core/core-functions',
       'Core/helpers/generate-helpers',
       'Core/EventBus',
       'js!WS.Data/Entity/InstantiableMixin',
-      'Core/Abstract.compatible'];
-
-
-define('js!WSControls/Control/Base',
-   withoutLayout?baseDeps:baseDeps.concat([
-      'js!SBIS3.CORE.Control/Control.compatible',
-      'js!SBIS3.CORE.AreaAbstract/AreaAbstract.compatible',
-      'js!SBIS3.CORE.BaseCompatible'
-   ]),
+      'Core/Abstract.compatible',
+      'is!compatibleLayer?js!SBIS3.CORE.Control/Control.compatible',
+      'is!compatibleLayer?js!SBIS3.CORE.AreaAbstract/AreaAbstract.compatible',
+      'is!compatibleLayer?js!SBIS3.CORE.BaseCompatible'
+   ],
 
    function (extend,
              cFunctions,
@@ -98,7 +94,7 @@ define('js!WSControls/Control/Base',
 
             _afterApplyOptions: function(fromConstructor, oldOptions, newOptions) {
                this._options = newOptions;
-               this.applyOptions();
+               this._applyOptions();
             },
 
             _initializeCommandHandlers: function initializeCommandHandlers() {
@@ -136,7 +132,7 @@ define('js!WSControls/Control/Base',
             _applyChangedOptions: function() {
 
             },
-            applyOptions: function(){
+            _applyOptions: function(){
 
             },
 
@@ -160,7 +156,7 @@ define('js!WSControls/Control/Base',
                this.logicParent = cfg.logicParent;
                if (!this.deprecatedContr) {
                   this._options = cFunctions.shallowClone(cfg);
-                  this.applyOptions();
+                  this._applyOptions();
                   this._parseDecOptions(cfg);
 
                   this._handlers = {};
@@ -182,7 +178,7 @@ define('js!WSControls/Control/Base',
 
             //FROM COMPATIBLE
             isBuildVDom: function(){
-               return BaseCompatible?BaseCompatible.isBuildVDom():true;
+               return BaseCompatible?BaseCompatible.isBuildVDom.call(this):true;
             },
 
             isEnabled: function(){

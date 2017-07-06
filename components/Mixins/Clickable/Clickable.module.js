@@ -97,10 +97,7 @@ define('js!SBIS3.CONTROLS.Clickable', [
 
       before : {
          _clickHandler: function() {
-            if (!!this._options.command) {
-               var args = [this._options.command].concat(this._options.commandArgs);
-               this.sendCommand.apply(this, args);
-            }
+
          }
       },
 
@@ -118,6 +115,10 @@ define('js!SBIS3.CONTROLS.Clickable', [
                   https://connect.microsoft.com/IE/feedback/details/789773/ie-increments-event-detail-on-clicks-over-different-locations */
                if(!this._options.clickThrottle || (this._options.clickThrottle && (e.originalEvent.detail === 1 || constants.browser.isIE))) {
                   this._clickHandler(e);
+                  if (!!this._options.command) {
+                     var args = [this._options.command].concat(this._options.commandArgs);
+                     this.sendCommand.apply(this, args);
+                  }
                   this._notifyOnActivated(e);
                }
             }

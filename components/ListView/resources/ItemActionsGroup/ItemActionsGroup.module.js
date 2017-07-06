@@ -10,14 +10,15 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
    "js!SBIS3.CONTROLS.ButtonGroupBaseDS",
    "js!SBIS3.CONTROLS.IconButton",
    "js!SBIS3.CONTROLS.Link",
-   "js!SBIS3.CONTROLS.ContextMenu",
    "html!SBIS3.CONTROLS.ItemActionsGroup",
    "html!SBIS3.CONTROLS.ItemActionsGroup/ItemTpl",
    "Core/helpers/collection-helpers",
    "Core/helpers/markup-helpers",
-   'css!SBIS3.CONTROLS.ItemActionsGroup'
+   "Core/helpers/functional-helpers",
+   "Core/moduleStubs",
+   "css!SBIS3.CONTROLS.ItemActionsGroup"
 ],
-   function( CommandDispatcher, IoC, ConsoleLogger,ButtonGroupBaseDS, IconButton, Link, ContextMenu, dotTplFn, dotTplFnForItem, colHelpers, mkpHelpers) {
+   function( CommandDispatcher, IoC, ConsoleLogger,ButtonGroupBaseDS, IconButton, Link, dotTplFn, dotTplFnForItem, colHelpers, mkpHelpers, fHelpers, moduleStubs) {
 
       'use strict';
 
@@ -55,7 +56,6 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
             _itemActionsButtons: {},
             _itemActionsMenu: undefined,
             _itemActionsMenuButton: undefined,
-            _itemActionsHiddenButton: [],
             _activeItem: undefined,
             _activeCls: 'controls-ItemActions__activeItem',
             _menuAlign: 'standart',
@@ -139,7 +139,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           * Создаёт меню для операций над записью
           * @private
           */
-         _createItemActionMenu: function() {
+         _createItemActionMenu: function(menu) {
             var self = this,
                 verticalAlign = {},
                 horizontalAlign = {},
@@ -170,7 +170,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
             this.addedOnlyExtraNew = false;
             
-            this._itemActionsMenu = new ContextMenu({
+            this._itemActionsMenu = new menu({
                element: $('> .controls-ItemActions__menu-container', this._getItemsContainer()[0]).show(),
                items: items,
                idProperty: this._options.idProperty,
@@ -204,18 +204,25 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           * Показывает меню для операций над записью
           */
          showItemActionsMenu: function(align) {
-            /* Создадим меню операций над записью, если его ещё нет */
-            if(!this._itemActionsMenu) {
-               this._createItemActionMenu();
-            }
-            // при открытии контекстного меню необходимо устанавливать координаты точки начала построения popup
-            this._setContextMenuMode(align);
-            this._onBeforeMenuShowHandler();
-            this._itemActionsMenu.show();
-            this._activeItem.container.addClass(this._activeCls);
-            this._itemActionsMenu.recalcPosition(true);
-            /*TODO фикс теста, для операций над записью должна быть особая иконка*/
-            $('.controls-PopupMixin__closeButton', this._itemActionsMenu.getContainer()).addClass('icon-size icon-ExpandUp icon-primary');
+            //TODO перейти на menuIcon при переводе операций на Vdom
+            moduleStubs.require("js!SBIS3.CONTROLS.ContextMenu").addCallback(fHelpers.forAliveOnly(function(mods) {
+               /* Если за время загрузки меню операции скрылись, то и показывать меню не надо */
+               if(!this.isVisible()) {
+                  return;
+               }
+               /* Создадим меню операций над записью, если его ещё нет */
+               if(!this._itemActionsMenu) {
+                  this._createItemActionMenu(mods[0]);
+               }
+               // при открытии контекстного меню необходимо устанавливать координаты точки начала построения popup
+               this._setContextMenuMode(align);
+               this._onBeforeMenuShowHandler();
+               this._itemActionsMenu.show();
+               this._activeItem.container.addClass(this._activeCls);
+               this._itemActionsMenu.recalcPosition(true);
+               /*TODO фикс теста, для операций над записью должна быть особая иконка*/
+               $('.controls-PopupMixin__closeButton', this._itemActionsMenu.getContainer()).addClass('icon-size icon-ExpandUp icon-primary');
+            }, this));
          },
 
 
@@ -397,8 +404,9 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
          destroy: function() {
             this._itemActionsButtons = {};
+            this._itemActionsMenuButton = undefined;
+            this._itemActionsMenu = undefined;
             this._activeItem = undefined;
-            this._itemActionsMenuButton.destroy();
             ItemActionsGroup.superclass.destroy.apply(this, arguments);
          }
       });

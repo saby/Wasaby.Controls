@@ -14,7 +14,6 @@ body {
    .controls-ListView__scrollPager {
       .controls-IconButton {
          background: @button-bg;
-         border: 2px solid #0055BB;
          .controls-Button__icon {
             color: @button-text-color !important;
          }
@@ -26,6 +25,10 @@ body {
          }
       }
    }
+    //Todo: https://online.sbis.ru/opendoc.html?guid=47bdafa8-88ab-4cb2-9383-89ffd7c9dcdd
+    .controls-accent-text {
+      color: #D94700;
+    }
 }
 
 body {
@@ -57,40 +60,6 @@ body {
       font-weight: normal !important;
   }
 
-   //Стили для CORE кнопки на диалоге печати PrintDialog
-   .ws-window .ws-printdialog-titlebar {
-      .ws-printdialog-print-button {
-         right: 4rem;
-         font-size: 1.43rem;
-         border-radius: 0;
-         font-weight: 400;
-         width: auto;
-         min-width: .86rem;
-         height: 3rem;
-         line-height: 2.73rem;
-         box-sizing: border-box;
-         user-select: none;
-         background-color: #ff7033;
-         color: #fff;
-         border: 2px solid #d94700;
-
-         &:hover {
-            background-color: #EC5B19;
-         }
-
-         &:active {
-            background-color: #d94700 !important;
-         }
-
-         .ws-button-caption {
-            display: block;
-            margin: 0 .57rem 0 .57rem;
-            border: none;
-            line-height: inherit;
-         }
-      }
-   }
-
 }
 .ws-float-close.sbisname-window-title-close {
    width: 3rem !important;
@@ -104,7 +73,6 @@ body {
    }
 }
 .controls-FloatArea {
-  border: .07rem solid #0055BB;
   background: #fff;
 }
 .controls-FloatArea.controls-InformationPopup.controls-InformationPopup__status-confirm {
@@ -130,20 +98,28 @@ body .ws-float-area-nostack-panel-shadow-standart {
 }
 
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__header-rangeDash {
-  border-bottom: 2px solid #ccc;
+  border-bottom: @default-border-width solid #ccc;
+}
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__dates .controls-DateRangeBigChoose__dates-months span.controls-Button {
+   &:hover {
+      border-right-color: #eaeaea!important;
+   }
+}
+
+body {
+   // В формулах в темах надо сделать что бы можно было задать нижний отступ отличный от верхнего
+   .controls-DateRangeBigChoose .controls-DateRangeBigChoose__months .controls-DateRangeBigChoose__months-quarterRange .controls-DateRangeBigChoose__months-range-btn-wrapper.controls-DateRangeBigChoose__months-range-btn-wrapper3 {
+       height: 5.9rem;
+   }
+   .controls-DateRangeBigChoose .controls-DateRangeBigChoose__months .controls-DateRangeBigChoose__months-halfyearRange .controls-DateRangeBigChoose__months-range-btn-wrapper.controls-DateRangeBigChoose__months-range-btn-wrapper1 {
+       height: 11rem;
+   }
 }
 
 body .ws-window {
     background-color: #fff;
     border-color: #0055BB;
 }
-
-
-.controls-Suggest__picker {
-    border: 2px solid #0055BB;
-    background: #fff;
-}
-
 
 .controls-ListView {
   .controls-IconButton {
@@ -174,9 +150,6 @@ body .ws-window {
       }
    }
 }
-.controls-ListView__ItemsToolbar-container {
-    height: 1.2rem;
-}
 .ws-float-area-stack-panel-shadow {
   background: @default-bg-color !important;
 }
@@ -189,4 +162,8 @@ body .ws-window {
 }
 .ws-window-content {
    background-color: @default-bg-color !important;
+}
+.controls-Link.controls__filter-button__clear-filter.ws-disabled {
+  color: #ccc;
+  font-size: 1.14rem;
 }

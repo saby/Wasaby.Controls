@@ -8,9 +8,11 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    'js!SBIS3.CONTROLS.ControlHierarchyManager',
    'js!WS.Data/Collection/RecordSet',
    'js!WS.Data/Di',
+   "js!WS.Data/Query/Query",
    "Core/core-instance",
    "Core/CommandDispatcher",
    "Core/core-functions",
+   "Core/IoC",
    "Core/helpers/Function/once"
 ], function (
    constants,
@@ -19,9 +21,11 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    ControlHierarchyManager,
    RecordSet,
    Di,
+   Query,
    cInstance,
    CommandDispatcher,
    cFunctions,
+   IoC,
    once) {
 
    'use strict';
@@ -48,7 +52,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             поэтому запоминаем, что выбор был произвёден, когда фокус был на списке, чтобы потом заблокировать всплытие события. */
          _selectedFromList: false,
          _historyController: null,
-
+         _historyDeferred: undefined, //Защита от множественных запросов
          _options: {
             /**
              * @cfg {String} Имя параметра фильтрации для поиска
@@ -90,11 +94,79 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
 
       _showHistory: function () {
          if (this._historyController.getCount()) {
-            this.getList().setItems(this._getHistoryRecordSet());
-            this.showPicker();
+            this._getHistoryRecordSet().addCallback(function(rs) {
+               if (rs.getCount()) {
+                  this.getList().setItems(rs);
+               }
+               else {
+                  this.getList().setItems(this._getHistoryRecordSetSync()); //В рамках совместимости оставляю старое поведение
+               }
+               this.showPicker();
+            }.bind(this)).addErrback(function(err){
+               //В рамках совместимости оставляю старое поведение
+               if (!err.processed) {
+                  IoC.resolve('ILogger').log(this._moduleName, 'Списочный метод не смог вычитать записи по массиву идентификаторов');
+               }
+               this.getList().setItems(this._getHistoryRecordSetSync());
+               this.showPicker();
+            }.bind(this));
          }
       },
-      _getHistoryRecordSet: function(){
+      _getHistoryRecordSet: function () {
+         /**
+          * _clearDelayTimer описана в другом миксине,
+          * вдруг он где-то не подключен где подключен этот миксин
+          * вызвать нужно, потому что через эту задержку записи
+          * будут перечитаны
+          */
+         this._clearDelayTimer && this._clearDelayTimer();
+
+         var listSource = this.getList().getDataSource(),
+             query = new Query(),
+             filter = {},
+             recordsId = [];
+         for (var i = 0, l = this._historyController.getCount(); i < l; i++) {
+            recordsId.push(this._getHistoryRecordId(this._historyController.at(i).get('data')));
+         }
+         filter[this._getListIdProperty()] = recordsId;
+         query.where(filter).limit(12);
+         this._cancelHistoryDeferred();
+         this._historyDeferred = this.getList().getDataSource().query(query).addCallback(function(rs) {
+            return new RecordSet({
+               adapter: listSource.getAdapter(),
+               rawData: rs.getRawData(),
+               idProperty: this._list.getProperty('idProperty'),
+               model: listSource.getModel()
+            });
+         }.bind(this));
+         return this._historyDeferred;
+      },
+      _getHistoryRecord: function(item){
+         var list = this.getList();
+         return Di.resolve(list.getDataSource().getModel(), {
+            adapter: list.getDataSource().getAdapter(),
+            idProperty: list.getProperty('idProperty'),
+            rawData: item.getRawData()
+         });
+      },
+      _getHistoryRecordId: function(record) {
+         return this._getHistoryRecord(record).get(this._getListIdProperty());
+      },
+      _getListIdProperty: function() {
+         return this.getList().getDataSource().getIdProperty() || this.getList().getProperty('idProperty');
+      },
+      _cancelHistoryDeferred: function() {
+         if (this._historyDeferred){
+            this._historyDeferred.cancel();
+         }
+      },
+      _needShowHistory: function(){
+         return this._historyController && !this.getText().length && this._options.startChar; //Если startChar = 0, историю показывать не нужно
+      },
+
+      //TODO Выпилить _getHistoryRecordSetSync и _prepareHistoryData после выполнения задачи, когда будет поддержан списочный метод
+      //https://online.sbis.ru/opendoc.html?guid=501e09cc-5d9f-4cc4-841f-1723aa8d8d40&des=
+      _getHistoryRecordSetSync: function(){
          var listSource = this.getList().getDataSource(),
             historyRecordSet = new RecordSet({
                adapter: listSource.getAdapter(),
@@ -112,17 +184,6 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             rawData.push(this._getHistoryRecord(history.at(i).get('data')));
          }
          return rawData;
-      },
-      _getHistoryRecord: function(item){
-         var list = this.getList();
-         return Di.resolve(list.getDataSource().getModel(), {
-            adapter: list.getDataSource().getAdapter(),
-            idProperty: list.getProperty('idProperty'),
-            rawData: item.getRawData()
-         });
-      },
-      _needShowHistory: function(){
-         return this._historyController && !this.getText().length && this._options.startChar; //Если startChar = 0, историю показывать не нужно
       },
 
       /**
@@ -166,6 +227,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
       },
 
       before: {
+         hidePicker: function() {
+            this._cancelHistoryDeferred();
+         },
          _setTextByKeyboard: function () {
             /* Этот флаг надо выставлять только когда текст изменён с клавиатуры,
                чтобы при изменнии текста из контекста не вызывался поиск в автодополнении */
@@ -193,7 +257,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                    index = -1;
 
                this._historyController.each(function(model, i) {
-                  var historyModelObject = model.get('data').toObject();
+                  var historyModelObject = model.get('data').getRawData();
                   var historyModelId;
                   //Проблема в адаптерах historyRecordSet и сохраняемой записи, они могут быть разными
                   //в таком случае, когда дергается var dataRecord = model.get('data'), то dataRecord приводится к типу Record (по формату), но
@@ -314,7 +378,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             }
          },
          _resetSearch: function() {
-            if (this._needShowHistory()){
+            if (this._needShowHistory() && !this.getSelectedKeys().length){
                this._showHistory();
             }
 

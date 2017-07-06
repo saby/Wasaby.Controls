@@ -30,7 +30,7 @@
    }
 }
 
-.controls-ScrollContainer {
+.controls-ScrollContainer:not(.controls-ScrollContainer__hiddenScrollbar) {
    .controls-Scrollbar.controls-Scrollbar__dragging, &:hover > .controls-Scrollbar {
       display: block;
    }
@@ -154,7 +154,6 @@ body.ws-is-ie .controls-ScrollContainer__content {
    // Планшет Win10 IE
    body.ws-is-touch.ws-is-ie & {
       margin-right: -12px;
+      padding-right: 12px;
    }
-
-
 }

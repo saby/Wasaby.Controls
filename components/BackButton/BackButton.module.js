@@ -1,11 +1,12 @@
 define('js!SBIS3.CONTROLS.BackButton',
    [
     'js!SBIS3.CORE.CompoundControl',
+    'Core/helpers/string-helpers',
     'tmpl!SBIS3.CONTROLS.BackButton',
     'js!SBIS3.CONTROLS.Link',
     'css!SBIS3.CONTROLS.BackButton'
    ],
-    function(CompoundControl, dotTpl) {
+    function(CompoundControl, strHelpers, dotTpl) {
    'use strict';
    /**
     * Кнопка для реализации поведения возврата назад по истории.
@@ -129,7 +130,7 @@ define('js!SBIS3.CONTROLS.BackButton',
       setCaption: function(caption){
          var isEmptyCaption = (caption === null || caption === '' || typeof caption === 'undefined');
          this._link.setCaption(caption);
-         this.setTooltip(caption);
+         this.setTooltip(strHelpers.htmlToText(caption || ''));
          this._options.caption = caption;
          this._container.toggleClass('controls-BackButton__empty', isEmptyCaption);
       },

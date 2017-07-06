@@ -5,6 +5,7 @@
    position: @tab-button-position;
    color: @tab-button-color;
    font: @tab-button-font;
+   font-size: @tab-button-font-size; //for ie 10
    margin-top: @tab-button-margin-top;
    z-index: @tab-button-z-index;
    display: @tab-button-display;
@@ -141,10 +142,18 @@
       }
    }
    &.controls-TabButton__main-item {
+      min-width: 0; //Нужно, чтобы flex правильно позиционировал ужимаемый контейнер
       .controls-TabButton__inner{
          font-size: @tab-button-large-inner-font-size;
          font-weight: @tab-button-large-inner-font-weight;
          line-height: 27px;
+         vertical-align: top;
+
+         .controls-TabButton__wrapper {
+            //mainItem имеет flex-shrink:1, tabSpaceTemplate - 9999.
+            //Из-за этого mainItem ужимается на доли пикселя, из-за чего текст троеточится
+            width: ~'calc(100% + 1px)';
+         }
 
          .controls-MenuLink {
             font-size: @tab-button-large-inner-font-size;
@@ -387,7 +396,7 @@
 .ws-is-firefox {
   .controls-TabButton {
      .controls-TabButton__inner{
-        line-height: 29px;
+        line-height: @tab-button-ff-inner-height;
      }
      &.controls-TabButton__main-item .controls-TabButton__inner{
         line-height: 26px;

@@ -4,8 +4,10 @@ define('js!WSControls/Buttons/MenuButton', [
    'js!SBIS3.CONTROLS.DSMixin',
    'Core/helpers/dom&controls-helpers',
    'Core/helpers/collection-helpers',
-   'Core/IoC'
-], function(Button, PickerMixin, DSMixin, dcHelpers, colHelpers, IoC) {
+   'Core/IoC',
+   'Core/Sanitize',
+   'Core/helpers/string-helpers'
+], function(Button, PickerMixin, DSMixin, dcHelpers, colHelpers, IoC, Sanitize, strHelpers) {
 
    'use strict';
    
@@ -22,8 +24,8 @@ define('js!WSControls/Buttons/MenuButton', [
 
    /**
     * Класс контрола "Кнопка с выпадающим меню".
-    * @class SBIS3.CONTROLS.MenuButton
-    * @extends SBIS3.CONTROLS.Button
+    * @class WSControls/Buttons/MenuButton
+    * @extends WSControls/Buttons/Button
     * @remark
     * !Важно: Если в меню задан только один пункт, то меню НЕ будет показано, а при нажатии на кнопку будет выполнено действие, соответствующее этому пункту.
     * Кнопка с меню - это кнопка с выбором варината действия, и если возможно только одно действие, то оно и будет выполнено по нажатию.
@@ -160,7 +162,16 @@ define('js!WSControls/Buttons/MenuButton', [
                this.togglePicker();
             } else {
                if (this._items.getCount() == 1) {
-                  var id = this._items.at(0).getId();
+                  var id = this._items.at(0).getId(),
+                      command = this._items.at(0).get('command'),
+                      commandArgs, args;
+
+                  if(command){
+                     commandArgs = this._items.at(0).get('commandArgs');
+                     args = [command].concat(commandArgs ? commandArgs : []);
+                     this.sendCommand.apply(this, args);
+                  }
+
                   this._notify('onMenuItemActivate', id, event);
                }
             }
@@ -281,6 +292,10 @@ define('js!WSControls/Buttons/MenuButton', [
 
        _drawMenuCaption: function(menuCaption) {
            if (this._picker && menuCaption){
+              if(this._options.escapeCaptionHtml){
+                  menuCaption = strHelpers.escapeHtml(menuCaption);
+              }
+              menuCaption = Sanitize(menuCaption, {validNodes: {component: true}});
               $('.controls-Menu__header-caption', this._picker._container).html(menuCaption);
            }
        },

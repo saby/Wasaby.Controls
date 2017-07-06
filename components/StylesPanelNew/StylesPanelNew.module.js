@@ -14,7 +14,8 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
    'js!SBIS3.CONTROLS.ColorStyle',
    'js!SBIS3.CONTROLS.IconButton',
    'js!SBIS3.CONTROLS.CheckBox',
-   'css!SBIS3.CONTROLS.StylesPanelNew'
+   'css!SBIS3.CONTROLS.StylesPanelNew',
+   'css!SBIS3.CONTROLS.MenuItem'
 ], function(CommandDispatcher, CompoundControl, PopupMixin, HistoryController, colHelpers, genHelpers, dotTplFn, EventBus) {
 
 
@@ -146,6 +147,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
 
          this._publish('changeFormat');
          CommandDispatcher.declareCommand(this, 'saveStylesPanel', this.saveHandler);
+         CommandDispatcher.declareCommand(this, 'stylesPanelColorPicked', this._paletteClickHandler);
 
          if (this._options.paletteRenderStyle) {
             /* В режиме палитры нужно отображать цвета так, чтобы не было пустот при построении, либо пустот было минимально.
@@ -211,7 +213,6 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
 
          if (self._options.paletteRenderStyle) {
             /* В случае палитру нужно подписаться на смену цвета, т.к. выбор происходит без подтверждения*/
-            self._palette.subscribe('onSelectedItemChange', this._paletteClickHandler.bind(self));
             self._palette.getContainer().width(self._palleteWidth);
          } else {
             /* находим контролы отвечающие за начертание шрифта */
@@ -445,10 +446,12 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
       },
 
       /* выбор цвета в режиме палитры нужно передать лишь цвет */
-      _paletteClickHandler: function(e, color) {
-         this.saveHandler({
-            'color': color
-         });
+      _paletteClickHandler: function(color) {
+         if(this._options.paletteRenderStyle) {
+            this.saveHandler({
+               'color': color
+            });
+         }
       },
 
       /* сохраняет в историю не более 5 элементов */

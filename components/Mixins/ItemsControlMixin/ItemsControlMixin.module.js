@@ -100,6 +100,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       }
       else {
          projection.setGroup(null);
+         resetGroupItemsCount(cfg);
       }
       return projection;
    },
@@ -160,6 +161,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       }
    },
 
+   applyGroupItemsCount = function(groupId, count, cfg) {
+      cfg._groupItemsCount = cfg._groupItemsCount || {};
+      cfg._groupItemsCount[groupId] = cfg._groupItemsCount[groupId] || 0;
+      cfg._groupItemsCount[groupId] += count;
+   },
+
+   resetGroupItemsCount = function(cfg) {
+      delete cfg._groupItemsCount;
+   },
+
    getRecordsForRedraw = function(projection, cfg) {
       var
          records = [];
@@ -167,6 +178,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var prevGroupId = undefined;
          projection.each(function (item, index, group) {
             if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {
+               applyGroupItemsCount(group, 1, cfg);
                if (prevGroupId != group && group !== false) {
                   cfg._groupItemProcessing(group, records, item,  cfg);
                   prevGroupId = group;
@@ -335,14 +347,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       $protected: {
          _itemData : null,
          _groupHash: {},
-         _itemsProjection: null,
-         _items : null,
          _itemsInstances: {},
          _offset: 0,
          _limit: undefined,
          _dataSource: undefined,
-         _dataSet: null,
-         _dotItemTpl: null,
          _propertyValueGetter: getPropertyValue,
          _revivePackageParams: {},
          _options: {
@@ -359,6 +367,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             _buildTplArgs : buildTplArgs,
             _getRecordsForRedrawSt: getRecordsForRedraw,
             _getRecordsForRedraw: getRecordsForRedraw,
+            _applyGroupItemsCount: applyGroupItemsCount,
+            _resetGroupItemsCount: resetGroupItemsCount,
             _applyGroupingToProjection: applyGroupingToProjection,
             _applyFilterToProjection: applyFilterToProjection,
 
@@ -815,6 +825,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._options._itemsTemplate;
       },
 
+      //В композите элементы добавляются по другому шаблону. Решится с перходом на VDOM
+      _getItemsTemplateForAdd: function() {
+         return this._options._itemsTemplate;
+      },
+
       _prepareItemsConfig: function() {
          if (this._options.dataSource) {
             this._dataSource =  SourceUtil.prepareSource.call(this, this._options.dataSource);
@@ -1152,6 +1167,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _removeItems: function (items, groupId) {
          var removedElements = $([]), prev;
+
+         applyGroupItemsCount(groupId, -items.length, this._options);
+
          for (var i = 0; i < items.length; i++) {
             var item = items[i];
             var targetElement = this._getDomElementByItem(item);
@@ -1163,7 +1181,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                if (!isEmpty(this._options.groupBy)) {
 
                   if (this._options.easyGroup) {
-                     if (this._getGroupItems(groupId).length < 1) {
+                     if (this._options._groupItemsCount[groupId] < 1) {
                         $('[data-group="' + groupId + '"]', this._container.get(0)).remove();
                      }
                   }
@@ -1201,10 +1219,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var itemsToAdd = items;
          if (!isEmpty(this._options.groupBy) && this._options.easyGroup) {
 
-            //Если в группе один элемент (или меньше), то это значит что добавился элемент в группу, которая еще не отрисована
+            //Если в группе столько же элементов, сколько добавилось, то группа еще не отрисована
             //и надо ее отрисовать
             itemsToAdd = [];
-            if (this._getGroupItems(groupId).length <= items.length) {
+            if (this._options._groupItemsCount[groupId] === items.length && groupId !== false) {
                this._options._groupItemProcessing(groupId, itemsToAdd, items[0], this._options);
             }
             itemsToAdd = itemsToAdd.concat(items);
@@ -1222,6 +1240,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _addItems: function(newItems, newItemsIndex, groupId) {
+         applyGroupItemsCount(groupId, newItems.length, this._options);
+
          this._itemData = null;
          var i;
          if (newItems && newItems.length) {
@@ -1249,7 +1269,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   };
                   // Вычисляем drawHiddenGroup при перерисовке item'а, т.к. в текущей реализации это единственный способ скрыть элемент, если он расположен в свернутой группе
                   data.tplData.drawHiddenGroup = !!this._options._groupCollapsing[groupId];
-                  markupExt = extendedMarkupCalculate(this._getItemsTemplate()(data), this._options);
+                  markupExt = extendedMarkupCalculate(this._getItemsTemplateForAdd()(data), this._options);
                   markup = markupExt.markup;
                   this._optimizedInsertMarkup(markup, this._getInsertMarkupConfig(newItemsIndex, newItems, groupId));
                   this._revivePackageParams.revive = this._revivePackageParams.revive || markupExt.hasComponents;
@@ -1275,6 +1295,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              prevItem = projection.at(newItemsIndex - 1),
              lastItemsIndex = projection.getCount() - newItems.length;
 
+         // TODO: тут зависимость от virtualscrolling, которой быть не должно
+         if (this._virtualScrollController && this._virtualScrollController._currentWindow[1] > 0) {
+            lastItemsIndex = this._virtualScrollController._currentWindow[1] + 1;
+         }
+
          if (this._options.groupBy && this._options.easyGroup) {
             //в случае наличия группировки надо проверять соседние элементы, потому что
             //на месте вставки может быть разделитель, надо понимать, когда вставлять до разделителя, а когда после
@@ -1285,7 +1310,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                nextGroup = (nextItem && this._canApplyGrouping(nextItem)) ? projection.getGroupByIndex(newItemsIndex + newItems.length) : null;
                if ((prevGroup === undefined) || (prevGroup === null) || prevGroup != groupId) {
                   if (nextGroup !== undefined && nextGroup !== null && nextGroup == groupId) {
-                     beforeFlag = true
+                     beforeFlag = true;
                   }
                }
             }
@@ -1441,6 +1466,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                this._options._itemsProjection = null;
             }
             this._clearItems();
+            this._itemData = null;
+            this._dataSource = null;
          }
       },
 
@@ -1619,6 +1646,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                 .addCallback(fHelpers.forAliveOnly(function (list) {
                    self._toggleIndicator(false);
                    self._notify('onDataLoad', list);
+                   self._onDataLoad(list);
                    if (
                       this.getItems()
                       && (list.getModel() === this.getItems().getModel())
@@ -1663,6 +1691,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return def;
       }),
 
+      _onDataLoad: function(){
+
+      },
+
       _loadErrorProcess: function(error) {
         var self = this;
          if (!error.canceled) {
@@ -1685,12 +1717,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return this._options.filter;
       },
 
-      _callQuery: function (filter, sorting, offset, limit) {
+      _callQuery: function (filter, sorting, offset, limit, direction) {
          if (!this._dataSource) {
             return;
          }
 
-         var query = this._getQueryForCall(filter, sorting, offset, limit);
+         var query = this._getQueryForCall(filter, sorting, offset, limit, direction);
 
          return this._dataSource.query(query).addCallback((function(dataSet) {
             if (this._options.idProperty && this._options.idProperty !== dataSet.getIdProperty()) {

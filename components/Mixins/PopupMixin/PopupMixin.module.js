@@ -661,21 +661,21 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
             /* task:1173219692
             im.dubrovin на Chrome on Android при получении offset необходимо учитывать scrollTop , scrollLeft */
-            if(detection.isMobileAndroid){
+            if (detection.isMobileAndroid){
                this._targetSizes.offset.top-=$(window).scrollTop();
                this._targetSizes.offset.left-=$(window).scrollLeft();
-            };
+            }
 
             // Для фиксированого таргета считаем оффсеты как boundingClientRect
             // Но на айпаде это неправильно, так как fixed слой там сдвигается вместе с клавиатурой
             if (this._fixed && !detection.isMobileIOS) {
-               this._targetSizes.offset = this._targetSizes.boundingClientRect
+               this._targetSizes.offset = this._targetSizes.boundingClientRect;
             }
          }
          this._containerSizes.border = (container.outerWidth() - container.innerWidth()) / 2;
          var buff;
          if (saveSide) {
-            buff = this._getGeneralOffset(this._options.verticalAlign.side, this._options.horizontalAlign.side, this._options.corner, true);
+            buff = this._getGeneralOffset(this._options.verticalAlign.side, this._defaultHorizontalAlignSide, this._options.corner, true);
          } else {
             buff = this._getGeneralOffset(this._defaultVerticalAlignSide, this._defaultHorizontalAlignSide, this._defaultCorner, true);
          }
@@ -924,7 +924,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       },
 
       _isVerticalOverflow: function() {
-         var scrollY = this._fixed ? 0 : $(window).scrollTop();
+         var scrollableContainer = this._options.parentContainer ? this._getParentContainer() : $(window);
+         var scrollY = this._fixed ? 0 : scrollableContainer.scrollTop();
          return this._containerSizes.requiredOffset.top > this._windowSizes.height + scrollY;
       },
 
