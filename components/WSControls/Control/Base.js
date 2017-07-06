@@ -183,10 +183,11 @@ define('js!WSControls/Control/Base',
 
             isEnabled: function(){
                return this._options.enabled;
+            },
+
+            destroy: function() {
+               BaseCompatible.destroy.call(this);
             }
-
-
-
 
          });
 
