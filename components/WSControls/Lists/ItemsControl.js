@@ -15,7 +15,8 @@ define('js!WSControls/Lists/ItemsControl', [
    'js!WSControls/Lists/resources/utils/DataSourceUtil',
    'js!WSControls/Lists/resources/utils/ItemsUtil',
    'Core/helpers/functional-helpers',
-   'Core/Deferred'
+   'Core/Deferred',
+   'Core/core-instance'
 ], function (extend,
              cFunctions,
              BaseControl,
@@ -32,7 +33,8 @@ define('js!WSControls/Lists/ItemsControl', [
              DataSourceUtil,
              ItemsUtil,
              fHelpers,
-             Deferred
+             Deferred,
+             cInstance
    ) {
 
    'use strict';
@@ -67,9 +69,10 @@ define('js!WSControls/Lists/ItemsControl', [
          _selector: null,
 
          constructor: function (cfg) {
-            this._options = cfg || {};
-            this._options.itemTpl = cfg.itemTpl || this._defaultItemTemplate;
-            this._options.itemContentTpl = cfg.itemContentTpl || this._defaultItemContentTemplate;
+            cfg.itemTpl = cfg.itemTpl || this._defaultItemTemplate;
+            cfg.itemContentTpl = cfg.itemContentTpl || this._defaultItemContentTemplate;
+
+            ItemsControl.superclass.constructor.apply(this, arguments);
 
             this._onCollectionChange = onCollectionChange.bind(this);
             this._onSelectorChange = onSelectorChange.bind(this);
@@ -83,11 +86,11 @@ define('js!WSControls/Lists/ItemsControl', [
                this._dataSource = DataSourceUtil.prepareSource(this._options.dataSource);
             }
 
+            this._publish('onDataLoad');
+
             if (this._options.dataSource && this._options.dataSource.firstLoad !== false) {
                this.reload();
             }
-
-            ItemsControl.superclass.constructor.apply(this, arguments);
          },
 
          _initItemBasedControllers: function() {
@@ -281,7 +284,7 @@ define('js!WSControls/Lists/ItemsControl', [
          _onDSReload: function(list) {
             this._itemData = null;
             if (
-               this._getItems()
+               this._getItems() && cInstance.instanceOfModule(this._getItems(), 'js!WS.Data/Collection/RecordSet')
                && (list.getModel() === this._getItems().getModel())
                && (Object.getPrototypeOf(list).constructor == Object.getPrototypeOf(list).constructor)
                && (Object.getPrototypeOf(list.getAdapter()).constructor == Object.getPrototypeOf(this._getItems().getAdapter()).constructor)

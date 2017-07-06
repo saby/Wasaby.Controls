@@ -87,10 +87,13 @@ define(['js!WSControls/Lists/resources/utils/DataSourceUtil', 'js!WSControls/Lis
          });
          describe('ItemsUtil', function () {
             var proj;
-            /*it('Flat display Array', function () {
+            it('Flat display Array', function () {
                proj = ItemsUtil.getDefaultDisplayFlat(data, cfg1);
-               debugger;
-            });*/
+
+               assert.equal(proj.getSort()[0], sortFnc, 'ItemsSortMethod doesn\'t transfer to projection');
+               assert.equal(proj.getFilter()[0], filterFnc, 'itemsFilterMethod doesn\'t transfer to projection');
+               assert.equal(proj.getGroup(), groupFnc, 'groupBy doesn\'t transfer to projection');
+            });
 
             it('Flat display Recordset', function () {
                var rs = new RecordSet({
