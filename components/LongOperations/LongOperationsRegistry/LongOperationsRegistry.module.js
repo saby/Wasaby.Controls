@@ -89,7 +89,7 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
             var self = this;
             var view = this.getChildControlByName('browserView');
 
-            this.getChildControlByName('browserFastDataFilter').setItems(this._data);
+            //###this.getChildControlByName('browserFastDataFilter').setItems(this._data);
 
             view.setGroupBy(
                {
