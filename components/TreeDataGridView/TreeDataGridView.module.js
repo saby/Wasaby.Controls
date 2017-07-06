@@ -359,7 +359,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              containerCords = this._container[0].getBoundingClientRect(),
              /* в 3.7.3.200 сделать это публичным маркером для стрелки */
              arrowContainer = td.find('.js-controls-TreeView__editArrow'),
-             tdPadding, arrowCords, leftOffset, toolbarLeft;
+             tdPadding, arrowCords, leftOffset, toolbarLeft, needCorrect;
 
          if(!arrowContainer.length) {
             arrowContainer = td.find('.controls-TreeView__editArrow');
@@ -389,11 +389,14 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          
          if(this._isSupportedItemsToolbar() && this._getItemsToolbar().isVisible()) {
             toolbarLeft = this._getItemsToolbar().getContainer()[0].offsetLeft;
-            
+            needCorrect = toolbarLeft && (toolbarLeft < leftOffset);
             /* Если стрелка заползает на операции над записью -> увеличиваем отступ */
-            if(toolbarLeft && (toolbarLeft < leftOffset)) {
+            if(needCorrect) {
                leftOffset -= leftOffset - toolbarLeft + tdPadding;
             }
+            /* backgorund'a у стрелки быть не должно, т.к. она может отображаться на фоне разного цвета,
+               но если мы корректрируем положение, то надо навесить background, чтобы она затемняла текст */
+            this.getEditArrow().getContainer().toggleClass('controls-TreeView__editArrow-background', needCorrect);
          }
          
          return {
