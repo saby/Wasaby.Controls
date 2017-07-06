@@ -3,11 +3,11 @@
  *
  * Author: Ivan Uvarov (is.uvarov@tensor.ru)
  */
-define('js!WSControls/MasterDetail/MasterDetail',
+define('js!WSControls/Containers/MasterDetail',
    [
       'js!WSControls/Control/Base',
-      'tmpl!WSControls/MasterDetail/MasterDetail',
-      'css!WSControls/MasterDetail/MasterDetail'
+      'tmpl!WSControls/Containers/MasterDetail',
+      'css!WSControls/Containers/MasterDetail'
    ],
 
    function (Base, template) {

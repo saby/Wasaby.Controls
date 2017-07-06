@@ -501,7 +501,10 @@ define('js!SBIS3.CONTROLS.TextBox', [
          } else {
             this._inputField.attr('readonly', 'readonly')
          }
-         this._setPlaceholder(enabled ? this._options.placeholder : '');
+         /* Когда дизейблят поле ввода, ставлю placeholder в виде пробела, в старом webkit'e есть баг,
+            из-за коготорого, если во flex контейнере лежит input без placeholder'a ломается базовая линия.
+            placeholder с пустой строкой и так будет не веден, т.ч. проблем быть не должно */
+         this._setPlaceholder(enabled ? this._options.placeholder : ' ');
       },
 
       _inputRegExp: function (e, regexp) {

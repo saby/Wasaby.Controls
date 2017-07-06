@@ -205,9 +205,14 @@ define('js!SBIS3.CONTROLS.MassSelectionHierarchyController',
                          result['removed'].push(parentId);
                          this._removeFromArray(selectedKeys, [parentId]);
                          this._removeFromPartiallySelected([parentId]);
-                      } else if (!ArraySimpleValuesUtil.hasInArray(this._partiallySelectedFull, parentId) &&
-                                 !ArraySimpleValuesUtil.hasInArray(this._partiallySelected, parentId)) {
-                         this._addToArray(ArraySimpleValuesUtil.hasInArray(selectedKeys, parentId) ? this._partiallySelectedFull : this._partiallySelected, [parentId])
+                      } else if (!ArraySimpleValuesUtil.hasInArray(this._partiallySelectedFull, parentId) && !ArraySimpleValuesUtil.hasInArray(this._partiallySelected, parentId)) {
+                         if (ArraySimpleValuesUtil.hasInArray(selectedKeys, parentId)) {
+                            this._addToArray(this._partiallySelectedFull, [parentId]);
+                         } else {
+                            this._addToArray(this._partiallySelected, [parentId]);
+                         }
+                         result['added'].push(parentId);
+                         this._addToArray(selectedKeys, [parentId]);
                       }
                       return [parent];
                    }
