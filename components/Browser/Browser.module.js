@@ -345,12 +345,14 @@ define('js!SBIS3.CONTROLS.Browser', [
          } else {
             this._notifyOnFiltersReady();
          }
-         
-         if( (this._filterButton || this._fastDataFilter) &&
-            /* Новый механизм включаем, только если нет биндов на структуру фильтров (такая проверка временно) */
-            (!this._filterButton || this._filterButton && !cFind(this._filterButton._getOptions().bindings, function(obj) {return obj.propName === 'filterStructure'}))) {
-            this._componentBinder.bindFilters(this._filterButton, this._fastDataFilter, this._view);
-         }
+         //Необходимо вызывать bindFilters, который выполняет подписку на applyFilter, позже, иначе произойдет неверная синхронизация фильтров при биндинге структуры
+         this.subscribe('onInit', function() {
+            if( (this._filterButton || this._fastDataFilter) &&
+               /* Новый механизм включаем, только если нет биндов на структуру фильтров (такая проверка временно) */
+               (!this._filterButton || this._filterButton && !cFind(this._filterButton._getOptions().bindings, function(obj) {return obj.propName === 'filterStructure'}))) {
+               this._componentBinder.bindFilters(this._filterButton, this._fastDataFilter, this._view);
+            }
+         }.bind(this));
 
          if(this._options.pagingId && this._view.getProperty('showPaging')) {
             this._componentBinder.bindPagingHistory(this._view, this._options.pagingId);
