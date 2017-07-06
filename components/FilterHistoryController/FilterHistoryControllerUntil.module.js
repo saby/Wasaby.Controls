@@ -59,7 +59,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
        оригинальная структура кнопки фильтров может меняться прикладными разработчиками,
        и чтобы не нарушать целостность этой структуры, структура из истории аккуртано вмерживается
        в оригинальную, заменяя лишь value и resetValue, и при необходимости сбрасывает value в resetValue */
-      prepareStructureToApply: function(structure, currentStructure) {
+      prepareStructureToApply: function(structure, currentStructure, doNotResetIfFound) {
          /* Чтобы не портить текущую историю, сделаем копию (иначе не применится фильтр) */
          var currentStructureCopy = cFunctions.clone(currentStructure);
 
@@ -96,7 +96,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
                if(elemFromHistory.visibilityValue !== undefined) {
                   elem.visibilityValue = elemFromHistory.visibilityValue;
                }
-            } else if(elem.hasOwnProperty('value') && elem.hasOwnProperty('resetValue') && !colHelpers.isEqualObject(elem.value, elem.resetValue)) {
+            } else if(!doNotResetIfFound && elem.hasOwnProperty('value') && elem.hasOwnProperty('resetValue') && !colHelpers.isEqualObject(elem.value, elem.resetValue)) {
                resetField('value', elem);
             }
          });
