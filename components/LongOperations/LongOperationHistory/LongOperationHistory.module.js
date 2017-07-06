@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
                var container = self._view.getContainer();
                self._view.getItems().each(function (item, id) {
                   if (item.get('isFailed')) {
-                     container.find('.js-controls-ListView__item[data-id="' + item.getId() + '"]').addClass('engine-LongOperationHistory__view_errorOperation engine-OperationRegistry__view_errorOperation');//TODO: ### Убрать одни класс!
+                     container.find('.js-controls-ListView__item[data-id="' + item.getId() + '"]').addClass('controls-LongOperationHistory__view_errorOperation');
                   }
                });
             });
