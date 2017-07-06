@@ -76,11 +76,15 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
 
          container
             .on('mouseenter', function() {
-               self.getPicker().getContainer().addClass('controls-Picker__owner__hover');
+               pickerContainer.addClass('controls-Picker__owner__hover');
             })
             .on('mouseleave', function () {
-               self.getPicker().getContainer().removeClass('controls-Picker__owner__hover');
+               pickerContainer.removeClass('controls-Picker__owner__hover');
             });
+
+         this.subscribeTo(this._picker, 'onDestroy', function(){
+            self.getContainer().off('mouseenter mouseleave');
+         });
 
          this._border = container.outerWidth() - container.innerWidth();
          this._setPickerContent();
