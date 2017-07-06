@@ -836,10 +836,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          /*Если уже вычислили все в modifyoptions а иначе все это стрельнет после reload*/
          if (this._options._itemsProjection) {
-            this._setItemsEventHandlers();
             this._notify('onItemsReady');
             this._itemsReadyCallback();
             this._dataLoadedCallback();
+            this._setItemsEventHandlers();
          }
          /*TODO Поддержка совместимости. Раньше если были заданы items массивом создавался сорс, осталась куча завязок на это*/
          if (this._options.items instanceof Array) {
