@@ -38,7 +38,7 @@
    &.controls-DataGridView__hasSeparator{
       &.controls-ListView__dataLoaded {
          .controls-DataGridView__table {
-            border-width: 0 0 1px 0;
+            border-width: @data-grid-table-separator-border-width;
             border-color: @data-grid-edge-cell-separator-color;
          }
          .controls-DataGridView__tr {
@@ -441,7 +441,7 @@
   .ws-sticky-header__header-container {
     .controls-DataGridView.controls-DataGridView__hasSeparator.controls-ListView__dataLoaded {
        .controls-DataGridView__table {
-          border-width: 0 0 1px 0;
+          border-width: @data-grid-table-separator-border-width;
        }
     }
   }

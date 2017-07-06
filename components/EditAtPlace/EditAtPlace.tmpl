@@ -1,17 +1,19 @@
 <div class="controls-EditAtPlace controls-TextBox {{ multiline ? 'controls-EditAtPlace__autoHeight' }}" title="{{tooltip}}">
-   <div class="js-controls-EditAtPlace__fieldWrapper controls-EditAtPlace__fieldWrapper controls-TextBox__fieldWrapper {{displayAsEditor ? 'ws-hidden' }}">
+   <div class="js-controls-EditAtPlace__fieldWrapper controls-EditAtPlace__fieldWrapper controls-TextBox__fieldWrapper {{ displayAsEditor ? 'ws-hidden' }}">
       <div class="controls-EditAtPlace__textField controls-TextBox__field  {{ multiline ? 'controls-EditAtPlace__multiline' }}">
          <ws:if data="{{ text }}">
             {{ formattedText() }}
          </ws:if>
-         <ws:if data="{{ placeholder }}">
-            <span class="controls-EditAtPlace__placeholder">
-               {{ placeholder }}
-            </span>
-         </ws:if>
+         <ws:else>
+            <ws:if data="{{ placeholder }}">
+               <span class="controls-EditAtPlace__placeholder">
+                  {{ placeholder }}
+               </span>
+            </ws:if>
+         </ws:else>
       </div>
    </div>
-   <div class="js-controls-EditAtPlace__editor controls-EditAtPlace__editor {{ !displayAsEditor ? 'ws-hidden' }}">
+   <div class="js-controls-EditAtPlace__editor controls-EditAtPlace__editor{{ !displayAsEditor ? ' ws-hidden' }}">
       <ws:partial template="{{editorTpl}}" />
    </div>
 </div>

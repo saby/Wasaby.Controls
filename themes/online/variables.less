@@ -584,6 +584,8 @@
 @check-box-disabled-color:                      @disabled-color;
 @check-box-icon-successful-top-ie:              0;
 
+@check-box-caption-line-height:                 @check-box-icon-size - 2 * extract(@check-box-caption-padding, 1);
+
 // -------------- //
 // Checkbox group //
 // -------------- //
@@ -1681,7 +1683,7 @@
 
 @list-view-items-toolbar-bottom:                     3px;
 @list-view-items-toolbar-right:                      8px;
-@list-view-items-toolbar-zindex:                     3;
+@list-view-items-toolbar-zindex:                     10;
 @list-view-items-toolbar-line-height:                24px;
 @list-view-items-toolbar-vertical-line-height:       24px;
 @list-view-items-toolbar-bg:                         @data-grid-row-hover-bg;
@@ -1952,6 +1954,7 @@
 @data-grid-check-box-left:                      0px;
 
 @data-grid-table-layot: 								fixed;
+@data-grid-table-separator-border-width:        0 0 @default-border-width 0;
 // ---------- //
 // PartScroll //
 // ---------- //
@@ -2451,7 +2454,7 @@
 //ListView AjaxIndicator
 @controls-AjaxLoader-background:                   none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
 @controls-AjaxLoader-default-cord:                 0;
-@controls-AjaxLoader-zIndex:                       4;
+@controls-AjaxLoader-zIndex:                       11;
 @controls-AjaxLoader-minHeight:                    32px;
 
 @controls-AjaxLoader-outer-height:                 36px;
@@ -2761,15 +2764,15 @@
 @clock-picker-inner-arrow-height:                   @clock-picker-inner-circle-radius - @clock-picker-inner-tick-radius - @clock-picker-arrow-tip-border-width;
 
 @bottomStyle-items-toolbar-height:                  30px;
-@bottomStyle-padding-bottom:              @bottomStyle-items-toolbar-height;
+@bottomStyle-padding-bottom:                        @bottomStyle-items-toolbar-height + @bottomStyle-items-toolbar-margin; //высота операций + маржин
 @bottomStyle-items-toolbar-border-color:            #F3F3F3;
-@bottomStyle-items-toolbar-margin:                  3px 0 0 0;
-@scroll-pager-bg:							@default-bg-color;
-@textbox-font-size:							@default-font-size;
-@image-bar-height:                        32px;
-@image-bar-vertical-padding:              4px;
-@image-bar-horizontal-padding:            12px;
-@image-bar-bg-color:                      #E7F0F9;
+@bottomStyle-items-toolbar-margin:                  3px;
+@scroll-pager-bg:							                @default-bg-color;
+@textbox-font-size:							             @default-font-size;
+@image-bar-height:                                  32px;
+@image-bar-vertical-padding:                        4px;
+@image-bar-horizontal-padding:                      12px;
+@image-bar-bg-color:                                #E7F0F9;
 
 //---------//
 //  Label  //

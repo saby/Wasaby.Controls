@@ -3137,7 +3137,8 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _updateScrollIndicatorTop: function () {
             var top = '';
-            if (this._isScrollingUp()) {
+            // Если скролим вверх и есть что загружать сверху
+            if (this._isScrollingUp() && this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.top)) {
                top = StickyHeaderManager.getStickyHeaderIntersectionHeight(this.getContainer()) - this._scrollWatcher.getScrollContainer().scrollTop();
             }
             this._loadingIndicator.css('top', top);
@@ -3167,10 +3168,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _loadNextPage: function() {
             if (this._dataSource) {
                var offset = this._getNextOffset(),
-                  scrollingUp = this._isScrollingUp(),
                   self = this;
                //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
-               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', scrollingUp);
+               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', this._isScrollingUp());
                this._showLoadingIndicator();
                this._toggleEmptyData(false);
 
