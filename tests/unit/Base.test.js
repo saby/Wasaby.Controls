@@ -2,8 +2,7 @@
  * Created by dv.zuev on 18.05.2017.
  */
 define([
-   'js!WSControls/Control/Base',
-   'Core/vdom/Synchronizer/resources/SyntheticEvent',
+   'js!WSControls/Control/Base'
 ], function (
    Base, SyntheticEvent
 ) {

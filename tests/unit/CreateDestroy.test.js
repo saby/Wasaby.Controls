@@ -2,7 +2,6 @@
  * Created by dv.zuev on 18.05.2017.
  */
 define([
-   'Core/vdom/Synchronizer/resources/SyntheticEvent',
    'js!WSDemo/TestSubControls/TestSubControlParent'
 ], function (
    SyntheticEvent, ParentControl
