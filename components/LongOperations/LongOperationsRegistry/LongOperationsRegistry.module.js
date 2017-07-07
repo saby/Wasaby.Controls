@@ -9,6 +9,9 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
       'css!SBIS3.CONTROLS.LongOperationsRegistry',
       'js!SBIS3.CONTROLS.Action.OpenEditDialog'/*###'js!SBIS3.Engine.SBISOpenDialogAction'*/,
       'js!SBIS3.CONTROLS.Browser'/*###'js!SBIS3.Engine.Browser'*/,
+      'js!SBIS3.CONTROLS.SearchForm',/*###*/
+      'js!SBIS3.CONTROLS.FilterButton',/*###*/
+      'js!SBIS3.CONTROLS.FastDataFilter',/*###*/
       'js!SBIS3.CONTROLS.LongOperationsList',
       'js!SBIS3.CONTROLS.LongOperationsFilter'
    ],
@@ -89,7 +92,7 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
             var self = this;
             var view = this.getChildControlByName('browserView');
 
-            //###this.getChildControlByName('browserFastDataFilter').setItems(this._data);
+            this.getChildControlByName('browserFastDataFilter').setItems(this._data);
 
             view.setGroupBy(
                {

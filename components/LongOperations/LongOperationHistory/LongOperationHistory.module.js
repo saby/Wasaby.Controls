@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
       'html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryDateTemplate',
       'html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryTimeTemplate',
       'html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryStatusTemplate',
+      'js!SBIS3.CONTROLS.FastDataFilter',/*###*/
       'js!SBIS3.CONTROLS.DataGridView'
    ],
 
@@ -55,7 +56,7 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
          init: function () {
             moduleClass.superclass.init.call(this);
             this._view = this.getChildControlByName('browserView');
-            //###this.getChildControlByName('browserFastDataFilter').setItems(this._data);
+            this.getChildControlByName('browserFastDataFilter').setItems(this._data);
             this._bindEvents();
             this._reload();
          },

@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                bodyTemplate: contentTpl,
                footerTemplate: footerTpl,
                caption: '',
-               className: 'controls-LongOperationsPopup controls-LongOperationsPopup__hidden controls-LongOperationsPopup__hiddenContentMode',
+               className: 'controls-LongOperations controls-LongOperationsPopup controls-LongOperationsPopup__hidden controls-LongOperationsPopup__hiddenContentMode',
                withAnimation: null,
                waitIndicatorText: null
             },
