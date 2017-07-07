@@ -226,6 +226,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
       },
 
       destroy: function(){
+         clearTimeout(this._windowResizeTimeout);
          $(window).off('resize.wsScrollPaging');
          WindowManager.releaseZIndex(this._options.zIndex);
          ScrollPagingController.superclass.destroy.apply(this, arguments);
