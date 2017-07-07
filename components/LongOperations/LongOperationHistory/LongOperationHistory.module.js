@@ -63,10 +63,8 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
 
          _bindEvents: function () {
             var self = this;
-            this.subscribeTo(this._view, 'onPropertyChanged', function (evt, property) {
-               if (property === 'filter') {
-                  self._reload();
-               }
+            this.subscribeTo(this._view, 'onBeforeDataLoad', function (evtName, filter, sorters, offset, limit) {
+               self._reload();
             });
 
             //У невыполненых операций нужно менять цвет текста на красный, поэтому навешиваем класс
@@ -92,21 +90,14 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
                );
             }
             else {
-               var data = new RecordSet({
-                  idProperty: 'id'
-               });
-               data.assign([new Record({
-                  rawData: new LongOperationHistoryItem({
-                     title: failedOperation.get('title'),
-                     id: failedOperation.get('id'),
-                     //producer: failedOperation.get('producer'),
-                     endedAt: new Date(failedOperation.get('startedAt').getTime() + (failedOperation.get('timeSpent') || 0)),
-                     errorMessage: failedOperation.get('resultMessage') || 'Ошибка',
-                     isFailed: true
-                  }),
-                  idProperty: 'id'
+               this._view.setItems([new LongOperationHistoryItem({
+                  title: failedOperation.get('title'),
+                  id: failedOperation.get('id'),
+                  //producer: failedOperation.get('producer'),
+                  endedAt: new Date(failedOperation.get('startedAt').getTime() + (failedOperation.get('timeSpent') || 0)),
+                  errorMessage: failedOperation.get('resultMessage') || 'Ошибка',
+                  isFailed: true
                })]);
-               this._view.setItems(data);
             }
          }
       });
