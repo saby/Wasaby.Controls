@@ -1845,15 +1845,21 @@ define('js!SBIS3.CONTROLS.ListView',
          /*MASS SELECTION START*/
          /*TODO: После перехода на новый механизм переименовать метод в setSelectedAll и удалить старый метод, выделяющий 1000 записей*/
          setSelectedAllNew: function(selected) {
-            this._getMassSelectionController().setSelectedAll(selected);
+            if (this._options.useSelectAll) {
+               this._getMassSelectionController().setSelectedAll(selected);
+            }
          },
 
          toggleSelectedAll: function() {
-            this._getMassSelectionController().toggleSelectedAll();
+            if (this._options.useSelectAll) {
+               this._getMassSelectionController().toggleSelectedAll();
+            }
          },
 
          getSelection: function() {
-            return this._getMassSelectionController().getSelection();
+            if (this._options.useSelectAll) {
+               return this._getMassSelectionController().getSelection();
+            }
          },
 
          _getMassSelectionController: function() {
