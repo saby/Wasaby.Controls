@@ -103,16 +103,27 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                }
                this.showPicker();
             }.bind(this)).addErrback(function(err){
-               //В рамках совместимости оставляю старое поведение
-               if (!err.processed) {
-                  IoC.resolve('ILogger').log(this._moduleName, 'Списочный метод не смог вычитать записи по массиву идентификаторов');
+               //Если запрос был прерван нами, то ничего не делаем
+               if (!err.canceled) {
+                  //В рамках совместимости оставляю старое поведение
+                  if (!err.processed) {
+                     IoC.resolve('ILogger').log(this._moduleName, 'Списочный метод не смог вычитать записи по массиву идентификаторов');
+                  }
+                  this.getList().setItems(this._getHistoryRecordSetSync());
+                  this.showPicker();
                }
-               this.getList().setItems(this._getHistoryRecordSetSync());
-               this.showPicker();
             }.bind(this));
          }
       },
       _getHistoryRecordSet: function () {
+         /**
+          * _clearDelayTimer описана в другом миксине,
+          * вдруг он где-то не подключен где подключен этот миксин
+          * вызвать нужно, потому что через эту задержку записи
+          * будут перечитаны
+          */
+         this._clearDelayTimer && this._clearDelayTimer();
+
          var listSource = this.getList().getDataSource(),
              query = new Query(),
              filter = {},
@@ -235,6 +246,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                });
             }
             if (this._needShowHistory()){
+               //historyId и autoShow взаимоисключающий функционал. В 150 просто отключаю, в 17.10 вывожу ошибку
+               //Если есть история, то не показываю случайную выборку
+               this._options.autoShow = false;
                this._showHistory();
             }
          },

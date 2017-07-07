@@ -452,6 +452,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   this._updateModel(eip, withSaving).addCallback(function () {
                      self._afterEndEdit(eip, withSaving);
                   }).addErrback(function() {
+                     self._notify('onEndSave');
                      self._savingDeferred.errback();
                   });
                   return this._savingDeferred;
