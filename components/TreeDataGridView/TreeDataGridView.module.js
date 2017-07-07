@@ -392,7 +392,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             needCorrect = toolbarLeft && (toolbarLeft < leftOffset);
             /* Если стрелка заползает на операции над записью -> увеличиваем отступ */
             if(needCorrect) {
-               leftOffset -= leftOffset - toolbarLeft + tdPadding;
+               leftOffset -= leftOffset - toolbarLeft + tdPadding * 2; //Левая граница тулбара + паддинги
             }
             /* backgorund'a у стрелки быть не должно, т.к. она может отображаться на фоне разного цвета,
                но если мы корректрируем положение, то надо навесить background, чтобы она затемняла текст */
