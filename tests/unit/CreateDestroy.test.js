@@ -4,7 +4,7 @@
 define([
    'js!WSDemo/TestSubControls/TestSubControlParent'
 ], function (
-   SyntheticEvent, ParentControl
+   ParentControl
 ) {
    'use strict';
 
