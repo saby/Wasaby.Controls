@@ -113,7 +113,11 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                 */
                stickyContainer: false,
 
-               activableByClick: false
+               activableByClick: false,
+
+               isPaging: false,
+
+               navigationToolbar: [false, false, false, false, false]
             };
             this._content = null;
             this._headerHeight = 0;
@@ -162,6 +166,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                // task: 1173330288
                // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
                FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer().find('.controls-ScrollContainer__content');
+
+               this._initPaging();
             }
          },
 
@@ -306,8 +312,22 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
             if (this._scrollbar){
                this._scrollbar.setPosition(scrollTop);
+               this._calcPagingSelectedKey(scrollTop);
             }
             this.getContainer().toggleClass('controls-ScrollContainer__top-gradient', scrollTop > 0);
+         },
+
+         _calcPagingSelectedKey: function(position) {
+            var page = position / this._container.height();
+            if (!(page % 1)) {
+               page += 1;
+            } else {
+               page = Math.ceil(page);
+            }
+            if (this._page !== page) {
+               this._page = page;
+               this._paging.setSelectedKey(page);
+            }
          },
 
          _hideNativeScrollbar: function(){
@@ -344,6 +364,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          _scrollbarDragHandler: function(event, position){
             if (position != this._getScrollTop()){
                this._scrollTo(position);
+               this._calcPagingSelectedKey(position);
             }
          },
 
@@ -362,6 +383,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                      this._headerHeight = headerHeight;
                   }
                }
+            }
+
+            if (this._paging) {
+               this._setPagesCount(Math.floor(this._getScrollHeight() / this._container.height()));
             }
          },
 
@@ -397,6 +422,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             this._container.off('mousemove', this._initScrollbar);
             this._container[0].removeEventListener('touchstart', this._touchStartHandler);
 
+            this._paging.unsubscribe('onSelectedItemChange');
+
             BaseCompatible.destroy.call(this);
             // task: 1173330288
             // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
@@ -417,8 +444,40 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
          _moveScroll: function(top) {
             this._content.scrollTop(top);
-         }
+         },
          //endregion retail_offlain
+
+         _initPaging: function() {
+            if (this._options.isPaging) {
+               requirejs(['js!SBIS3.CONTROLS.Paging'], function(paging) {
+                  this._paging = new paging({
+                     element: this._container.find('.js-controls-ScrollContainer__paging'),
+                     className: 'controls-ScrollContainer__paging',
+                     navigationToolbar: this._options.navigationToolbar
+                  });
+                  this._setPagesCount(Math.floor(this._getScrollHeight() / this._container.height()));
+                  this._paging.subscribe('onSelectedItemChange', this._pageChangeHandler.bind(this));
+                  this._page = 1;
+               }.bind(this));
+            }
+         },
+
+         _setPagesCount: function(count) {
+            this._paging.setPagesCount(count);
+            if (count === 1) {
+               this._paging.hide();
+            } else {
+               this._paging.show();
+            }
+         },
+
+         _pageChangeHandler: function(event, nPage) {
+            var scrollTop = this._container.height() * (nPage - 1);
+            if (this._page !==  nPage) {
+               this._page = nPage;
+               this._scrollTo(scrollTop);
+            }
+         }
       });
 
       return ScrollContainer;

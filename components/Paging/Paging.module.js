@@ -106,7 +106,8 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'tmpl!SBIS3
             allowEmptySelection: false,
             mode: 'part',
             pagesCount: null,
-            showPages: true
+            showPages: true,
+            navigationToolbar: [true, true, true, true, false]
          }
       },
       $constructor: function(){
@@ -117,7 +118,17 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'tmpl!SBIS3
          var newCfg = Pager.superclass._modifyOptions.apply(this, arguments);
          newCfg._itemsTemplate = ItemsTemplate;
 
-         return newCfg
+         /**
+          * Опция navigationToolbar должна будет заменить mode и pagesCount. Пока поддерживаем совместимость.
+          */
+         if (!cfg.navigationToolbar) {
+            if (cfg.mode === 'full') {
+               cfg.navigationToolbar[4] = true;
+            }
+            cfg.navigationToolbar[2] = cfg.showPages;
+         }
+
+         return newCfg;
       },
       init: function(){
          Pager.superclass.init.call(this);
