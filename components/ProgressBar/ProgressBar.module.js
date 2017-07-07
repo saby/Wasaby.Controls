@@ -5,24 +5,29 @@ define('js!SBIS3.CONTROLS.ProgressBar',
    [
       'js!WSControls/Control/Base',
       'tmpl!SBIS3.CONTROLS.ProgressBar',
+      'js!SBIS3.CONTROLS.ProgressBar.compatibility',
       'css!SBIS3.CONTROLS.ProgressBar'
    ],
-   function(LightControl, template){
+   function(LightControl, template, Compatibility) {
       /**
        * Контрол, индикатор прохождения процесса
        * @class SBIS3.CONTROLS.ProgressBar
        * @extends WSControls/Control/Base
+       * @demo SBIS3.CONTROLS.Demo.MyProgressBar
+       *
        * @control
-       * @author Крайнов Дмитрий Олегович
+       * @author Журавлев Максим Сергеевич
+       *
        * @initial
        * <pre>
        *    <ws:SBIS3.CONTROLS.ProgressBar
-       *       progress="50"
+       *       progress="{{50}}"
+       *       minimum="{{-100}}"
+       *       maximum="{{100}}"
        *    />
        * </pre>
        *
        * @public
-       * @category Buttons
        *
        * @cssModifier controls-ProgressBar_align-left отображение процентов слева.
        * @cssModifier controls-ProgressBar_align-right отображение процентов справа.
@@ -32,155 +37,62 @@ define('js!SBIS3.CONTROLS.ProgressBar',
        * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner record stateKey
        * @ignoreOptions subcontrol verticalAlignment
        */
-      var ProgressBar = LightControl.extend({
+      var ProgressBar = LightControl.extend([Compatibility], {
          _template: template,
 
          _controlName: 'SBIS3.CONTROLS.ProgressBar',
 
-         applyOptions: function() {
+         _applyOptions: function() {
+            var options = this._options;
             /**
              * @cfg {Number} Минимальное значение, которое можно задать в прогресс бар, может быть отрицательным
-             * @see setMinimum
              */
-            this.minimum = 0;
+            this.minimum = options.minimum || 0;
             /**
              * @cfg {Number} Максимальное значение, которое можно задать в прогресс бар
-             * @see setMaximum
              */
-            this.maximum = 100;
+            this.maximum = options.maximum || 100;
             /**
              * @cfg {Number} Шаг между ближайшими значениями.
-             * @see setMaximum
              */
-            this.step = 'step' in this._options ? this._options.step : 1;
+            this.step = options.step || 1;
             /**
              * @cfg {Number}  Текущее состояние процесса в процентах
-             * Данный текст должен отображать смысл действия клика по кнопке или побуждать к действию.
-             * @example
-             * <pre>
-             *     <ws:progress>
-             *        <ws:Number>30</ws:Number>
-             *     </ws:progress>
-             * </pre>
-             * @see setProgress
-             * @see getProgress
              */
-            this.progress = 0;
+            this.progress = options.progress || 0;
             /**
              * @cfg {String} Текущее состояние расропожения текста процесса.
              * 1.center;
              * 2.left;
              * 3.right;
-             * @example
-             * <pre>
-             *     <ws:progressPosition>
-             *        <ws:Srting>left</ws:String>
-             *     </ws:progressPosition>
-             * </pre>
-             * @see setProgressPosition
              */
-            this.progressPosition = this._options.progressPosition || 'center';
+            this.progressPosition = options.progressPosition || 'center';
 
-            if ('minimum' in this._options) {
-               this.setMinimum(this._options.minimum);
-            }
-
-            if ('maximum' in this._options) {
-               this.setMaximum(this._options.maximum);
-            }
-
-            this.step = 'step' in this._options ? this._options.step : 1;
-
-            if ('progress' in this._options) {
-               this.setProgress(this._options.progress);
-            }
-
-            this._errorText = null;
-
-            this._calcProgressPercent();
+            this._checkRanges();
+            // Текст на ProgressBar.
+            this.progressPercent = this._getProgressPercent();
          },
 
          _checkRanges: function() {
+            var tmp;
             this.progress = parseFloat(this.progress);
             if (isNaN(this.progress)) {
-               this._errorText = 'Значение прогресса не является числом';
-               return false;
+               options.progress = 0;
             }
             if (this.progress < this.minimum) {
-               this._errorText = 'Значение прогресса меньше минимума';
-               return false;
-            }
-            if (this.maximum < this.minimum) {
-               this._errorText = 'Значение максимума меньше минимума';
-               return false;
+               this.progress = this.minimum;
             }
             if (this.progress > this.maximum) {
-               this._errorText = 'Значение прогресса превышает максимальное значение';
-               return false;
+               this.progress = this.maximum;
             }
-            return true;
-         },
-
-         /**
-          * Устанавливает текущее состояние расропожения текста процесса.
-          * @param {String} progress Позиция текст на шкале прогресса.
-          * @see progress
-          * @see getProgress
-          */
-         setProgressPosition: function(progressPosition) {
-            this.progressPosition = progressPosition;
-            this._setDirty();
-         },
-
-         /**
-          * Устанавливает текущее состояние процесса в процентах
-          * @param {Number} progress Состояние процесса.
-          * @see progress
-          * @see getProgress
-          */
-         setProgress: function(progress) {
-            this.progress = progress;
-            if (!this._checkRanges()) {
-               throw new Error('setProgress. ' + this._errorText);
+            if (this.maximum < this.minimum) {
+               tmp = options.minimum;
+               this.minimum = this.maximum;
+               this.maximum = tmp;
             }
-            this._calcProgressPercent()
          },
 
-         /**
-          * Получает текущее состояние процесса в процентах
-          * @returns {Number} текущее состояние процесса в процентах
-          * @see progress
-          * @see setProgress
-          */
-         getProgress: function() {
-            return this.progress;
-         },
-
-         /**
-          * Задает максимальное значение
-          * @param max {Number}
-          */
-         setMaximum: function(max) {
-            this.maximum = max;
-            if (!this._checkRanges()) {
-               throw new Error('setMaximum. ' + this._errorText);
-            }
-            this._calcProgressPercent()
-         },
-
-         /**
-          * Задает минимальное возможное значение
-          * @param min {Number}
-          */
-         setMinimum: function(min) {
-            this.minimum = min;
-            if (!this._checkRanges()) {
-               throw new Error('setMinimum. ' + this._errorText);
-            }
-            this._calcProgressPercent();
-         },
-
-         _calcProgressPercent: function() {
+         _getProgressPercent: function() {
             var
                progress = this.progress,
                minimum = this.minimum,
@@ -190,11 +102,9 @@ define('js!SBIS3.CONTROLS.ProgressBar',
 
             if (progress !== length) {
                progress = Math.floor(progress / step) * step;
-               this.progress = progress;
             }
-            this.progressPercent = Math.round((progress - minimum) / length * 100) + '%';
-            this._setDirty();
+            return Math.round((progress - minimum) / length * 100) + '%';
          }
-   });
+      });
    return ProgressBar;
 });
