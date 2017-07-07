@@ -32,18 +32,16 @@ define([
          });
 
          it('Parents', function(done) {
-            var parentControl = new ParentControl({
+            var logicParentTestControl = new LogicParentTestControl({
                element: $('<div></div>')
             });
-            setTimeout(function () {
-               assert.isTrue(!!parentControl.children.child);
-               var a = parentControl.children.child;
-
-               parentControl.destroy();
-               assert.isTrue(a.isDestroyed());
+            setTimeout(function() {
+               var ch1 = logicParentTestControl.children.ch1,
+                  ch2 = logicParentTestControl.children.ch2;
+               assert.isTrue(ch1 !== undefined);
+               assert.isTrue(ch2.logicParent === logicParentTestControl);
                done();
-            }, 0)
-
+            }, 0);
          });
 
       });
