@@ -4,9 +4,10 @@ define('js!SBIS3.CONTROLS.Label',
       'js!SBIS3.CONTROLS.Clickable',
       'Core/Sanitize',
       'tmpl!SBIS3.CONTROLS.Label',
+      'js!SBIS3.CONTROLS.Label.compatibility',
       'css!SBIS3.CONTROLS.Label'
    ],
-   function(LightControl, Clickable, Sanitize, template) {
+   function(LightControl, Clickable, Sanitize, template, Compatibility) {
 
       'use strict';
 
@@ -42,30 +43,13 @@ define('js!SBIS3.CONTROLS.Label',
        * @public
        *
        */
-      var Label = LightControl.extend([Clickable], /** @lends SBIS3.CONTROLS.Label.prototype */{
+      var Label = LightControl.extend([Clickable, Compatibility], /** @lends SBIS3.CONTROLS.Label.prototype */{
          _controlName: 'SBIS3.CONTROLS.Label',
 
          _template: template,
 
-         applyOptions: function() {
+         _applyOptions: function() {
             this.caption = this._options.caption || '';
-         },
-
-         /**
-          * Вернуть текст метки
-          * @returns {String}
-          */
-         getCaption: function() {
-            return this.caption;
-         },
-
-         /**
-          * Изменить текст метки
-          * @param caption новый текст метки
-          */
-         setCaption: function(caption) {
-            this.caption = caption;
-            this._setDirty();
          },
 
          _clickCaptionHandler: function() {
