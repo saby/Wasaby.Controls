@@ -11,7 +11,7 @@
          </opts>
       </opt>
       <opt name="content">
-         <component data-component="SBIS3.CONTROLS.DataGridView" name="browserView" class="controls-Browser__view controls-DataGridView__hasSeparator controls-DataGridView__overflow-ellipsis">
+         <component data-component="SBIS3.CONTROLS.DataGridView" name="browserView" class="controls-Browser__view controls-DataGridView__hasSeparator">
             <opts name="filter" type="object" bind="filter"/>
             <opt name="idProperty" value="id"/>
             <opt name="displayProperty" value="title"/>
@@ -34,11 +34,13 @@
                   <opt name="title" value="{[ОперацииНадЗаписями@@Наименование]}"/>
                   <opt name="field" value="title"/>
                   <opt name="width" value="100%"/>
+                  <opt name="className" value="controls-OperationRegistry__td-break-word"></opt>
                </opts>
                <opts>
                   <opt name="title" value="Статус"/>
                   <opt name="cellTemplate" value="html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryStatusTemplate"/>
                   <opt name="width" value="200"/>
+                  <opt name="className" value="controls-OperationRegistry__td-break-word"></opt>
                </opts>
             </opts>
             <opts name="ladder" type="array">
