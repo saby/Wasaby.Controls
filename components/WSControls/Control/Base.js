@@ -182,7 +182,17 @@ define('js!WSControls/Control/Base',
             },
 
             isEnabled: function(){
+               if (this._options.enabled === undefined) {
+                  return this._options.parentEnabled;
+               }
                return this._options.enabled;
+            },
+
+            isVisible: function(){
+               if (this._options.visible === undefined) {
+                  return this._options.parentVisible;
+               }
+               return this._options.visible;
             },
 
             destroy: function() {
