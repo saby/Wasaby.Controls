@@ -117,7 +117,13 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
                isPaging: false,
 
-               navigationToolbar: [false, false, false, false, false]
+               navigationToolbar: {
+                  begin: false,
+                  prev: false,
+                  pages: false,
+                  next: false,
+                  end: false
+               }
             };
             this._content = null;
             this._headerHeight = 0;
@@ -453,7 +459,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   this._paging = new paging({
                      element: this._container.find('.js-controls-ScrollContainer__paging'),
                      className: 'controls-ScrollContainer__paging',
-                     navigationToolbar: this._options.navigationToolbar
+                     visiblePath: this._options.navigationToolbar
                   });
                   this._setPagesCount(Math.floor(this._getScrollHeight() / this._container.height()));
                   this._paging.subscribe('onSelectedItemChange', this._pageChangeHandler.bind(this));
