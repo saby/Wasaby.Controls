@@ -4,7 +4,7 @@
 define([
    'js!WSControls/Control/Base'
 ], function (
-   Base, SyntheticEvent
+   Base
 ) {
    'use strict';
 
