@@ -1,4 +1,4 @@
-<span name="{{_options.name}}" sbisname="{{_options.sbisname||_options.name}}" newconfig="{{_options.config}}"
+<a name="{{_options.name}}" sbisname="{{_options.sbisname||_options.name}}" newconfig="{{_options.config}}"
       event:onclick="_onMouseClick()"
       event:onmousedown="_onMouseDown()"
       event:onmouseup="_onMouseUp()"
@@ -9,11 +9,21 @@
       event:ontouchend="_onTouchEnd()"
       event:ontouchmove="_onTouchMove()"
       tabindex="{{_options.tabindex}}"
-      class="controls-Button controls-ButtonBase{{_isActiveByClick?' controls-Click__active'}}{{!isVisible() ? ' ws-hidden'}}{{!isEnabled() ? ' ws-disabled':' ws-enabled'}}{{_options.primary ? ' controls-Button__primary':' controls-Button__default'}}"
+      class="controls-Button controls-ButtonBase
+ controls-Button-size__{{!!_options.size ? _options.size : 'default'}}
+ controls-Button-color__{{_options.primary ? 'primary':'default'}}
+{{_isActiveByClick?' controls-Click__active'}}
+{{!isVisible() ? ' ws-hidden'}}
+{{!isEnabled() ? ' ws-disabled':' ws-enabled'}}"
       title="{{_options.tooltip}}"
+      href="{{_options.href}}"
       disabled="{{!isEnabled() ? 'disabled'}}">
-    <ws:if data="{{!!_options.icon||!!_options._iconClass}}">
-       <i class="controls-Button__icon js-controls-Button__icon {{_options._iconClass?_options._iconClass:_options.icon}}"></i>
-    </ws:if>
-    <span class="controls-Button__text js-controls-Button__text{{!_options.caption ? ' controls-Button__emptyCaption'}} {{_options._textClass}}"><ws:if data="{{!!_options.caption}}"><ws:partial template="{{_options.caption}}" /></ws:if><ws:else>{{'&nbsp;'|sanitize}}</ws:else></span>
-</span>
+    <span class="controls-Button__wrapper">
+        <ws:if data="{{!!_options.icon||!!_options._iconClass}}">
+           <i class="controls-Button__icon js-controls-Button__icon {{_options._iconClass?_options._iconClass:_options.icon}}"></i>
+        </ws:if>
+        <ws:if data="{{!!_options.caption}}">
+            <span class="controls-Button__text js-controls-Button__text {{_options._textClass}}"><ws:partial template="{{_options.caption}}" /></span>
+        </ws:if>
+    </span>
+</a>

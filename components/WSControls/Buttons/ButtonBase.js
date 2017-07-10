@@ -10,7 +10,8 @@ define('js!WSControls/Buttons/ButtonBase', [
    'js!SBIS3.CONTROLS.FormWidgetMixin',
    'js!SBIS3.CONTROLS.DataBindMixin',
    'js!SBIS3.CONTROLS.IconMixin',
-   'Core/helpers/String/escapeHtml'
+   'Core/helpers/String/escapeHtml',
+   'css!WSControls/Buttons/resources/ButtonBase'
 ], function( constants,Control, Clickable, FormWidgetMixin, DataBindMixin, IconMixin, escapeHtml) {
 
    'use strict';

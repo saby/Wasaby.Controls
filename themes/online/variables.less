@@ -62,6 +62,8 @@
 @bold-font-weight:                        700;
 
 
+@default-height:                          24px;
+
 @default-hover-cursor:                    pointer;
 @disabled-hover-cursor:                   default;
 
@@ -92,8 +94,9 @@
 @link-line-height:                        24px;
 @link-padding:                            0;
 @link-font-size:                          @default-font-size;
+@link-cursor:                             pointer;
 
-@link-hover-text-color:                   @hover-color;
+@link-hover-text-color:                   @icon-color-primary-hover;
 @link-hover-text-decoration:              underline;
 
 @link-active-text-color:                  @link-hover-text-color;
@@ -118,10 +121,10 @@
 @button-min-width:                        24px;
 @button-height:                           24px;
 @button-line-height:                      22px;
-@button-padding:                          0 12px;
+@button-padding:                          0 11px;
 @button-margin:                           auto;
 @button-border-radius:                    16px;
-@button-icon-color-hover:                 @hover-color;
+@button-icon-color-hover:                 @icon-color-primary-hover;
 @button-icon-color:                       @icon-color-primary;
 @button-icon-top-offset:                  4px;                      // top offset of 16x16 icon
 @button-icon-left-offset:                 12px;
@@ -194,10 +197,11 @@
 
 // Normal default button
 @button-border-width:                     1px;
-@button-border:                           @button-border-width solid @default-color;
+@button-border:                           @button-border-width solid @button-border-color;
 @button-font-size:                        @default-font-size;
 @button-shadow:                           none;
-@button-bg:                               transparent;
+@button-bg-color:                         transparent;
+@button-border-color:                     @default-color;
 
 @button-hover-text-color:                 @default-text-color;
 @button-hover-border:                     @button-border;
@@ -207,13 +211,14 @@
 @button-active-text-color:                @default-text-color;
 @button-active-border:                    @button-border;
 @button-active-shadow:                    @button-shadow;
-@button-active-bg:                        #E1ECF6;
+@button-bg-active:                        #E1ECF6;
 
 // Normal primary button
 @button-primary-text-color:               @default-text-color;
-@button-primary-border:                   1px solid @primary-color;
+@button-primary-border:                   1px solid @button-primary-border-color;
+@button-primary-border-color:             @primary-color;
 @button-primary-shadow:                   @button-shadow;
-@button-primary-bg:                       @button-bg;
+@button-primary-bg-color:                 @button-bg-color;
 
 @button-primary-hover-text-color:         @button-primary-text-color;
 @button-primary-hover-border:             @button-primary-border;
@@ -223,13 +228,13 @@
 @button-primary-active-text-color:        @button-primary-text-color;
 @button-primary-active-border:            @button-primary-border;
 @button-primary-active-shadow:            @button-primary-shadow;
-@button-primary-active-bg:                #fdd2c0;
+@button-primary-bg-active:                #fdd2c0;
 
 // Normal disabled button
 @button-disabled-text-color:              @gray-color;
 @button-disabled-border:                  1px solid @default-disabled-color;
 @button-disabled-shadow:                  @button-shadow;
-@button-disabled-bg:                      @button-bg;
+@button-disabled-bg:                      @button-bg-color;
 
 
 
@@ -239,7 +244,7 @@
 @button-big-min-width:                    @button-min-width;
 @button-big-height:                       48px;
 @button-big-line-height:                  normal;
-@button-big-padding:                      15px 24px;
+@button-big-padding:                      0 23px;
 @button-big-border-radius:                24px;
 @button-big-icon-top-offset:              15px;                              // top offset of 16x16 icon
 @button-big-icon-left-offset:             24px;
@@ -260,6 +265,10 @@
 
 @button-big-icon-32-top-offset:           0;
 @button-big-icon-32-left-offset:          0;
+
+@button-large-height:                                                                                                   48px;
+@button-large-border-radius:                                                                                            24px;
+@button-large-font-size:                                                                                                18px;
 
 
 // ------------ //
@@ -289,7 +298,7 @@
 @list-view-items-toolbar-icon-button-border-font-size:  16px;
 @icon-button-edit-round-border-height:             @icon-medium-size;
 @icon-button-edit-round-border-width:              @icon-medium-size;
-@icon-button-edit-round-border-line-height:        @icon-medium-size;
+@icon-button-edit-round-border-line-height:        @icon-medium-size - 2 * @default-border-width;
 @list-view-items-toolbar-icon-button-border-font:       'cbuc-icons';
 
 
@@ -305,6 +314,7 @@
 @button-checked-font-weight:              normal;
 @button-checked-shadow:                   @button-active-shadow;
 @button-checked-bg:                       @button-hover-bg;
+@button-checked-padding:                  0 10px;
 @button-checked-text-margin-left:         @button-text-margin-left - 1px;
 @button-checked-text-margin-right:        @button-text-margin-right - 1px;
 @button-checked-text-icon-margin:         0 @button-text-margin-right - @button-checked-border-width 0 @button-icon-gap;
@@ -322,7 +332,8 @@
 // Big default button
 @button-big-checked-text-margin-left:     @button-big-text-margin-left - 1px;
 @button-big-checked-text-margin-right:    @button-big-text-margin-right - 1px;
-@button-big-checked-text-icon-margin:    0 @button-big-text-margin-right - @button-checked-border-width 0 @button-icon-gap;
+@button-big-checked-padding:              0 22px;
+@button-big-checked-text-icon-margin:     0 @button-big-text-margin-right - @button-checked-border-width 0 @button-icon-gap;
 @button-big-checked-icon-top-offset:      @button-big-icon-top-offset - 1px;
 @button-big-checked-icon-left-offset:     @button-big-icon-left-offset - 1px;
 @button-big-checked-icon-big-top-offset:  @button-big-icon-big-top-offset - 1px;
@@ -1406,7 +1417,7 @@
 @date-range-big-choose-years-panel-current-year-button-font-size:           @date-range-big-choose-years-panel-wrapper-font-size;
 @date-range-big-choose-years-panel-current-year-button-line-height:         24px;
 @date-range-big-choose-years-panel-back-button-font-size:                   @date-range-big-choose-years-panel-wrapper-font-size;
-@date-range-big-choose-years-panel-back-button-line-height:                 22px;
+@date-range-big-choose-years-panel-back-button-line-height:                 23px;
 @date-range-big-choose-years-range-font-size:                  15px;
 
 @date-range-big-choose-body-height:                                  403px;
@@ -1420,6 +1431,8 @@
 @date-range-big-choose-months-button-first-height:                   36px;
 @date-range-big-choose-months-button-last-padding-bottom:            4px;
 @date-range-big-choose-months-button-last-height:                    37px;
+@date-range-big-choose-months-text-align:                            flex-start;
+@date-range-big-choose-months-padding:                               8px;
 
 @date-range-big-choose-go-to-boundary-button-bg-color:               @dodgerblue-color;
 

@@ -126,7 +126,7 @@ body {
             color: #E4E4E4 !important;
          }
          &.controls-Click__active {
-           background: @button-active-bg;
+           background: @button-bg-active;
          }
          &.ws-disabled {
             border-color: @disabled-color;
@@ -252,21 +252,6 @@ body {
          width: 3rem;
          height: 3rem;
       }
-      .controls-IconButton.controls-IconButton__round-border {
-         .controls-Button__icon {
-            &.icon-16, &.icon-24 {
-               margin-left: -1.5rem;
-               margin-top: -1.5rem;
-            }
-         }
-      }
-
-      .controls-DateRangeBigChoose__years-prevYearBtn,
-      .controls-DateRangeBigChoose__years-nextYearBtn {
-         &.controls-IconButton {
-            vertical-align: baseline;
-         }
-      }
    }
 
    // Выпилить как будем делать новые темы.
@@ -299,28 +284,6 @@ body {
 
   .controls-ToolBar__menuIcon .icon-24 {
     font-family: carrypresto-icons!important;
-  }
-
-   .icon-16 {
-    font-size: 1.32rem !important;
-    line-height: 1.32rem !important;
-    width: 1.32rem;
-    height: 1.32rem;
-  }
-  .icon-24 {
-    font-size: 1.7857rem !important;
-    height: 1.7857rem !important;
-    width: 1.7857rem !important;
-    line-height: 1.7857rem !important;
-
-  }
-  .icon-32 {
-
-        font-size: 3rem!important;
-        height: 3rem!important;
-        width: 3rem!important;
-        line-height: 3rem !important;
-
   }
 
   .ws-float-area-title {
@@ -588,13 +551,6 @@ body {
     .icon-size(@icon-medium-size, @icon-font);
   }
 }
-
- .controls-Button .controls-Button__icon.icon-32 + .controls-Button__text {
-     margin-left: 3rem !important;
- }
-  .controls-Button .controls-Button__icon.icon-large + .controls-Button__text {
-      margin-left: 3rem !important;
-  }
 
 .controls__filterButton {
    .controls__filterButton__filterLine {
