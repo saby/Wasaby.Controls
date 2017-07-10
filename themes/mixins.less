@@ -554,6 +554,13 @@
   }
 }
 
+.hyphens(@hyphenation) {
+  -webkit-hyphens: @hyphenation;
+  -moz-hyphens: @hyphenation;
+  -ms-hyphens: @hyphenation;
+  hyphens: @hyphenation;
+}
+
 //---------------Имитация цикла for---------------//
 .for(@_i, @_n, @callback) when not (@_i = (@_n + 1)){
   @callback();
