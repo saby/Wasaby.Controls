@@ -757,7 +757,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          /* Для DataGridView дополняем событие клика информацией о колонке и ячейке */
          if(this._hoveredColumn.columnIndex  !== null) {
             clickedCell = {
-               cell: this._getCellContainerByElement(e.target),
+               cellContainer: this._getCellContainerByElement(e.target),
                cellIndex: this._hoveredColumn.columnIndex
             };
          }
