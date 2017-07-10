@@ -1845,15 +1845,21 @@ define('js!SBIS3.CONTROLS.ListView',
          /*MASS SELECTION START*/
          /*TODO: После перехода на новый механизм переименовать метод в setSelectedAll и удалить старый метод, выделяющий 1000 записей*/
          setSelectedAllNew: function(selected) {
-            this._getMassSelectionController().setSelectedAll(selected);
+            if (this._options.useSelectAll) {
+               this._getMassSelectionController().setSelectedAll(selected);
+            }
          },
 
          toggleSelectedAll: function() {
-            this._getMassSelectionController().toggleSelectedAll();
+            if (this._options.useSelectAll) {
+               this._getMassSelectionController().toggleSelectedAll();
+            }
          },
 
          getSelection: function() {
-            return this._getMassSelectionController().getSelection();
+            if (this._options.useSelectAll) {
+               return this._getMassSelectionController().getSelection();
+            }
          },
 
          _getMassSelectionController: function() {
@@ -3129,7 +3135,8 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _updateScrollIndicatorTop: function () {
             var top = '';
-            if (this._isScrollingUp()) {
+            // Если скролим вверх и есть что загружать сверху
+            if (this._isScrollingUp() && this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.top)) {
                top = StickyHeaderManager.getStickyHeaderIntersectionHeight(this.getContainer()) - this._scrollWatcher.getScrollContainer().scrollTop();
             }
             this._loadingIndicator.css('top', top);
@@ -3159,10 +3166,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _loadNextPage: function() {
             if (this._dataSource) {
                var offset = this._getNextOffset(),
-                  scrollingUp = this._isScrollingUp(),
                   self = this;
                //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
-               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', scrollingUp);
+               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', this._isScrollingUp());
                this._showLoadingIndicator();
                this._toggleEmptyData(false);
 

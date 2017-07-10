@@ -125,7 +125,8 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
 
          try {
             value = constants.userConfigSupport ? cSessionStorage.getItem(key) :  this._getLocalStorage().getItem(key);
-            serializedValue = this._options.serialize(false, value);
+            /* В хранилище уже может лежать сериализованое значение, а не строка */
+            serializedValue = (!value || typeof value === "string") ? this._options.serialize(false, value) : value;
          } catch (e) {
             IoC.resolve('ILogger').error('HistoryController', e.message, e);
             serializedValue = null;

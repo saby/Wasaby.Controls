@@ -106,7 +106,7 @@ define('js!SBIS3.CONTROLS.Button',
                return;
             }
             this._isWaitingClick = false;
-            if (!this._options.enabled) {
+            if (!this.isEnabled()) {
                return;
             }
             this._onClickHandler(e);
@@ -115,7 +115,7 @@ define('js!SBIS3.CONTROLS.Button',
          },
 
          _onMouseDown: function () {
-            if (!this._options.enabled) {
+            if (!this.isEnabled()) {
                return;
             }
            this._isActiveByClick = true;
@@ -187,6 +187,11 @@ define('js!SBIS3.CONTROLS.Button',
          _onFocusOut: function(e){
             var self = this;
             this._hideExtendedTooltipCompatible();
+         },
+
+         destroy: function() {
+            this._unregisterDefaultButton();
+            Button.superclass.destroy.call(this);
          }
          //</editor-fold>
       });

@@ -11,57 +11,52 @@ define(
 
       'use strict';
 
+      var
+         caption = 'Метка <span></span>',
+         setCaption = 'Новая метка <div></div>',
+         owner = 'TextBox',
+         isEventClick = null,
+         eventClick = null, label, textBox;
+
       describe('SBIS3.CONTROLS.Label', function() {
          beforeEach(function () {
             if (typeof $ === 'undefined') {
                this.skip();
             }
+            $('#mocha').append('<div id="component-Label"></div><div class="component-TB"></div>');
+            label = new Label({
+               element: 'component-Label',
+               caption: caption,
+               owner: owner
+            });
+            textBox = new TextBox({
+               element: 'component-TB',
+               name: owner
+            });
          });
 
-         var
-            caption = 'Метка <span></span>',
-            setCaption = 'Новая метка <div></div>',
-            owner = 'TextBox',
-            isEventClick = null,
-            eventClick = null, label, textBox;
+         afterEach(function () {
+            label.destroy();
+            textBox.destroy();
+         });
 
          describe('State', function() {
             it('caption is string', function() {
-               label = new Label({
-                  caption: caption,
-                  owner: owner
-               });
                assert.isTrue(typeof label._options.caption === "string");
             });
             it('caption is true value', function() {
-               label = new Label({
-                  caption: caption,
-                  owner: owner
-               });
                assert.isTrue(label._options.caption === caption);
             });
             it('owner is string', function() {
-               label = new Label({
-                  caption: caption,
-                  owner: owner
-               });
                assert.isTrue(typeof label._options.owner === "string");
             });
             it('owner is true value', function() {
-               label = new Label({
-                  caption: caption,
-                  owner: owner
-               });
                assert.isTrue(label._options.owner === owner);
             });
          });
 
          describe('Setter', function() {
             it('setCaption', function() {
-               label = new Label({
-                  caption: caption,
-                  owner: owner
-               });
                label.setCaption(setCaption);
                assert.isTrue(label._options.caption === setCaption);
             });
@@ -69,13 +64,6 @@ define(
 
          describe('Event', function() {
             it('Enabled/Click', function() {
-               label = new Label({
-                  caption: caption,
-                  owner: owner
-               });
-               textBox = new TextBox({
-                  name: owner
-               });
                textBox.subscribe('onFocusIn', function() {
                   isEventClick = true;
                });
@@ -92,13 +80,6 @@ define(
                isEventClick = false;
             });
             it('Disabled/Click', function() {
-               label = new Label({
-                  caption: caption,
-                  owner: owner
-               });
-               textBox = new TextBox({
-                  name: owner
-               });
                textBox.subscribe('onFocusIn', function() {
                   isEventClick = true;
                });

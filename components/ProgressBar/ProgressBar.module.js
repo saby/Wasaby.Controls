@@ -4,7 +4,7 @@
 define('js!SBIS3.CONTROLS.ProgressBar',
    [
       'js!WSControls/Control/Base',
-      'tmpl!SBIS3.CONTROLS.ProgressBar',
+      'templ!SBIS3.CONTROLS.ProgressBar',
       'js!SBIS3.CONTROLS.ProgressBar.compatibility',
       'css!SBIS3.CONTROLS.ProgressBar'
    ],
@@ -45,19 +45,19 @@ define('js!SBIS3.CONTROLS.ProgressBar',
          _applyOptions: function() {
             var options = this._options;
             /**
-             * @cfg {Number} Минимальное значение, которое можно задать в прогресс бар, может быть отрицательным
+             * @cfg {Number} Минимальное значение прогресса.
              */
             this.minimum = options.minimum || 0;
             /**
-             * @cfg {Number} Максимальное значение, которое можно задать в прогресс бар
+             * @cfg {Number} Максимальное значение прогресса.
              */
             this.maximum = options.maximum || 100;
             /**
-             * @cfg {Number} Шаг между ближайшими значениями.
+             * @cfg {Number} Шаг между ближайшими возможными значениями прогресса в процентах.
              */
             this.step = options.step || 1;
             /**
-             * @cfg {Number}  Текущее состояние процесса в процентах
+             * @cfg {Number}  Текущее состояние прогресса.
              */
             this.progress = options.progress || 0;
             /**
@@ -69,13 +69,16 @@ define('js!SBIS3.CONTROLS.ProgressBar',
             this.progressPosition = options.progressPosition || 'center';
 
             this._checkRanges();
-            // Текст на ProgressBar.
+            /**
+             * @cfg {Number} Текущее состояние прогресса в процентах.
+             */
             this.progressPercent = this._getProgressPercent();
          },
 
          _checkRanges: function() {
-            var tmp;
+            var temp;
             this.progress = parseFloat(this.progress);
+            // Если нельзя привести
             if (isNaN(this.progress)) {
                options.progress = 0;
             }
@@ -86,9 +89,9 @@ define('js!SBIS3.CONTROLS.ProgressBar',
                this.progress = this.maximum;
             }
             if (this.maximum < this.minimum) {
-               tmp = options.minimum;
+               temp = options.minimum;
                this.minimum = this.maximum;
-               this.maximum = tmp;
+               this.maximum = temp;
             }
          },
 
@@ -103,7 +106,7 @@ define('js!SBIS3.CONTROLS.ProgressBar',
             if (progress !== length) {
                progress = Math.floor(progress / step) * step;
             }
-            return Math.round((progress - minimum) / length * 100) + '%';
+            return Math.round((progress - minimum) / length * 100);
          }
       });
    return ProgressBar;

@@ -145,6 +145,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          return cfg._getRecordsForRedrawTree.call(this, projection, cfg)
       }
       else {
+         cfg._resetGroupItemsCount(cfg);
          var
             records = {
                folders : [],

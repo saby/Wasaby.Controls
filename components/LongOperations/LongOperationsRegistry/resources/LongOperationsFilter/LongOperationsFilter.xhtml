@@ -1,6 +1,6 @@
-<div class="engine-LongOperationsFilter">
-   <div class="engine-LongOperationsFilter__block">
-      <component data-component="SBIS3.CONTROLS.DropdownList" name="StateFilter" class="engine-LongOperationsFilter__stateDropdown controls-DropdownList__withoutArrow controls-DropdownList__linkStyle controls-DropdownList__withoutCross">
+<div class="controls-LongOperationsFilter">
+   <div class="controls-LongOperationsFilter__block">
+      <component data-component="SBIS3.CONTROLS.DropdownList" name="StateFilter" class="controls-LongOperationsFilter__stateDropdown controls-DropdownList__withoutArrow controls-DropdownList__linkStyle controls-DropdownList__withoutCross">
          <opts name="items" type="array">
             <opts>
                <opt name="key" value="null" type="null"/>
@@ -76,8 +76,8 @@
          <opt name="text" bind="PeriodTitle"/>
       </component>
    </div>
-   <div class="engine-LongOperationsFilter__block">
-      <div class="engine-LongOperationsFilter__durationTitle">{[Длительность операции]}</div>
+   <div class="controls-LongOperationsFilter__block">
+      <div class="controls-LongOperationsFilter__durationTitle">{[Длительность операции]}</div>
       <component data-component="SBIS3.CONTROLS.DropdownList" name="DurationFilter" class="controls-DropdownList__withoutArrow controls-DropdownList__linkStyle controls-DropdownList__withoutCross">
          <opts name="items" type="array">
             <opts>
@@ -112,9 +112,9 @@
       </component>
    </div>
    {{? !it.hideStaffFilter}}
-   <div class="engine-LongOperationsFilter__block">
-      <div class="engine-LongOperationsFilter__responsibleTitle">{[Ответственный]}</div>
-      <component data-component="SBIS3.Staff.Choice" name="FilterResponsibleFace" class="engine-LongOperationsFilter__responsibleChooser">
+   <div class="controls-LongOperationsFilter__block">
+      <div class="controls-LongOperationsFilter__responsibleTitle">{[Ответственный]}</div>
+      <component data-component="SBIS3.Staff.Choice" name="FilterResponsibleFace" class="controls-LongOperationsFilter__responsibleChooser">
          <opts name="selectedKeys" type="array">
             <opt bind="UserId"/>
          </opts>

@@ -22,6 +22,7 @@
 @icon-medium-size:                        1.79rem;
 @icon-large-size:                         3rem;
 //=============
+@icon-font:                               'carrypresto-icons';
 @default-border-color:                    @accent-color;
 @default-disabled-color:                  @disabled-color;
 @closeButtonWidth:                        3rem;
@@ -56,6 +57,7 @@
 @link-icon-field-margin:                  0 0 0 .14rem;
 @link-additional-color:                   #8991A9;
 @link-disabled-text-color:                rgba(102,170,221, .2);
+@link-header-hover-color:                 @default-hover-color;
 //Icon Button
 @icon-button-round-border-width:          2.286rem;
 @icon-button-round-border-height:         2.286rem;
@@ -192,6 +194,8 @@
 @check-box-icon-border:                   .0357rem solid @default-color;
 @check-box-icon-hover-bg:                 transparent;
 @check-box-icon-checked-bg:               transparent url(@check-box-icon-spritesheet) 0 -@default-border-width;
+
+@check-box-caption-line-height:           1.143rem;
 //Switcher
 @switcher-dot-width:                      100%;
 @switcher-dot-height:                     100%;
@@ -272,7 +276,7 @@
 @menu-link-checked-text-color:            @secondary-color;
 @menu-link-menu-border-width:             @default-border-width;
 //Text box
-@text-box-wrapper-padding:                0 .45rem;
+@text-box-wrapper-padding:                0 .57rem;
 @text-box-field-min-height:               1.3571rem;
 @text-box-field-padding:                  0;
 @text-box-field-text-color:               @default-text-color;
@@ -320,8 +324,8 @@
 @date-box-wrapper-border-color:           @text-box-border-color @text-box-border-color @text-box-bottom-border-color @text-box-border-color; // @default-border-color
 @date-box-field-text-color:               @default-text-color;
 // Search form
-@search-form-field-wrapper-margin-right:  5.3rem;
-@search-button-wrapper-padding:				0 .5rem 0 0;
+@search-form-field-wrapper-margin-right:  5.8rem;
+@search-button-wrapper-padding:				0;
 @search-buttons-wrapper-width:            auto;
 @search-loop-size:                        2rem;
 @search-background:                       rgba(150, 159, 168, 0.15);
@@ -329,7 +333,7 @@
 @search-border-color:                     transparent;
 @search-hover-border-color:               rgba(150, 159, 168, 0.40);
 @search-bottom-border-color:              transparent;
-@search-form-icon-padding:                .7rem .4rem .4rem 0;
+@search-form-icon-padding:                0;
 @search-focus-background:                 rgba(150, 159, 168, 0.15);
 @search-form-border-disabled-width:       @default-border-width;
 @search-form-icon-disabled-display:       block;
@@ -368,7 +372,7 @@
 @combo-box-arrowDown-color-hover:         @default-hover-color;
 // Text area
 @text-area-field-line-height:             1.4rem;
-@text-area-border-color:                  @text-box-border-color;
+@text-area-border-color:                  @controls-FieldLink-border-color;
 @text-area-focus-border-color:            @text-box-hover-border-color;
 @text-area-focus-bg:                      @text-box-focus-bg;
 @text-area-hover-bg:                      @text-box-hover-bg;
@@ -607,9 +611,9 @@
 @data-grid-bg:                            transparent;
 @data-grid-row-hover-bg:                  #293A4B;
 @data-grid-row-selected-bg:               @data-grid-row-bg;
-@data-grid-header-cell-height:            1.14rem;
+@data-grid-header-cell-height:            1.7857rem;
 @data-grid-cell-line-height:              1.562rem;
-@data-grid-header-cell-padding:           0 .571rem;
+@data-grid-header-cell-padding:           @data-grid-cell-padding;
 @data-grid-header-cell-padding-side:      .3571rem;
 @data-grid-header-cell-font-size:         0.86rem;
 @data-grid-row-selected-cell-text-color:  @default-text-color;
@@ -746,6 +750,9 @@
 @controls-ScrollContainer-top-gradient-height:0.857rem;
 //Scrollbar
 @controls-Scrollbar-width:                .357rem;
+@controls-Scrollbar-animated-width:       @controls-Scrollbar-width;
+@controls-Scrollbar-animated-right:       0;
+@controls-Scrollbar-animate-duration:     0;
 @controls-Scrollbar-thumb-border-radius:  .179rem;
 @controls-Scrollbar-min-height:           3.571rem;
 @controls-Scrollbar-thumb-margin:         0.286rem 0;
@@ -843,7 +850,7 @@
 @controls-Paging-btn-height:              3rem;
 @controls-Paging-item-width:              3rem;
 //sundry
-@paging-font-size:                        1.71rem;
+@paging-font-size:                        3rem;
 @scrollpager-bg:                          transparent;
 @scrollpager-border:                      none;
 @closeBigButtonWidth:                     3rem;
@@ -883,6 +890,8 @@
 @DropdownList-height: 					      3rem;
 @DropdownList-footer-buttonsBlock-height: 3.57rem;
 @DropdownList-footer-hasMore-top:         1.1rem;
+@DropdownList-picker-menu-item-color:     #F0F5FB;
+@DropdownList-picker-menu-item-hover:     #E0ECF5;
 @list-view-loading-indicator-gradient-bg: url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to top,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
 @list-view-loading-indicator-gradient-bg-up:url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to bottom,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
 @text-box-placeholder-color: 				   rgba(96,170,221, .2);
