@@ -758,7 +758,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if(this._hoveredColumn.columnIndex !== null) {
             clickedCell = {
                cell: this._getCellContainerByElement(e.target),
-               column: this.getColumns()[this._hoveredColumn.columnIndex + (this.getMultiselect() ? 1 : 0)]
+               column: this.getColumns()[this._hoveredColumn.columnIndex]
             };
          }
          
