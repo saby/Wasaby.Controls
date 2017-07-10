@@ -683,11 +683,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _updateHeadAfterInit: function() {
          this._bindHead();
       },
+      
+      _getCellContainerByElement: function(element) {
+         element = element instanceof jQuery ? element : $(element);
+         return element.closest('.controls-DataGridView__td, .controls-DataGridView__th', this.getContainer());
+      },
 
       _mouseMoveHandler: function(e) {
          DataGridView.superclass._mouseMoveHandler.apply(this, arguments);
 
-         var td = $(e.target).closest('.controls-DataGridView__td, .controls-DataGridView__th', this._container[0]),
+         var td = this._getCellContainerByElement(e.target),
              columns = this.getColumns(),
              trs = [],
              cells = [],
@@ -744,6 +749,20 @@ define('js!SBIS3.CONTROLS.DataGridView',
             hoveredColumn.cells = null;
             hoveredColumn.columnIndex = null;
          }
+      },
+   
+      _notifyOnItemClick: function(id, data, target, e) {
+         var clickedCell = {};
+         
+         /* Для DataGridView дополняем событие клика информацией о колонке и ячейке */
+         if(this._hoveredColumn.columnIndex !== null) {
+            clickedCell = {
+               cell: this._getCellContainerByElement(e.target),
+               column: this.getColumns()[this._hoveredColumn.columnIndex + (this.getMultiselect() ? 1 : 0)]
+            };
+         }
+         
+         return this._notify('onItemClick', id, data, target, e, clickedCell);
       },
 
       _getItemsContainer: function(){
