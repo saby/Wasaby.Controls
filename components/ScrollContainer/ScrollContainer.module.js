@@ -308,6 +308,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                this._scrollbar.setPosition(scrollTop);
             }
             this.getContainer().toggleClass('controls-ScrollContainer__top-gradient', scrollTop > 0);
+            this.getContainer().toggleClass('controls-ScrollContainer__bottom-gradient', scrollTop < this._getScrollHeight() -  this._container.height());
          },
 
          _hideNativeScrollbar: function(){
