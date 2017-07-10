@@ -195,10 +195,15 @@ define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!WS.Data/Entity/Model', 'C
                асинхронный getSelectedItems, который либо сразу вернёт набор, либо когда загрузятся все записи */
             this.getSelectedItems(true).addCallback(function (selectedItems) {
                if(selectedItems) {
+                  /* Необходимо делать clone, иначе по ссылке изменения произойдут и в оригинальном рекордсете,
+                     что может вызвать преждевременное срабатывание биндингов */
+                  selectedItems = selectedItems.clone();
+                  
                   if(!self._options.multiselect) {
                      selectedItems.clear();
                   }
                   selectedItems.append(newItems);
+                  self._options.selectedItems = selectedItems;
                } else {
                   self._options.selectedItems = self._makeList(newItems);
                }
