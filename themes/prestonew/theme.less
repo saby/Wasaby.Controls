@@ -1004,13 +1004,6 @@ body {
      }
 }
 .controls-FieldLink {
-   .controls-FieldLink__showSelector {
-      /* По договорённости с прокетировщиками,
-         "костыль" для темы presto, т.к. там иконка не акцентная */
-      .icon-primary:not(:hover) {
-         color: @default-text-color !important;
-      }
-   }
    &.controls-Picker__show {
       .controls-FieldLink__showSelector {
          .icon-primary {
@@ -1037,9 +1030,6 @@ body .controls-CommandsButton__picker {
    .controls-MenuItem {
       padding-right: 2.8rem !important; //38 = 24 (кнопка) + 8(отступ справа у кнопки) +6(отступ слева у кнопки)
    }
-}
-body .controls-Link.controls-FieldLink__Link:not(.ws-disabled).controls-FieldLink-Link__filterButton {
-  color: #26B8FF;
 }
 
 .controls-DropdownList__picker .controls-DropdownList__multiselect .controls-DropdownList__itemCheckBox {
