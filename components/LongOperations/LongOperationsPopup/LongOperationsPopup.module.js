@@ -199,19 +199,13 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
 
             container.find('.controls-LongOperationsPopup__footer_pauseIcon').on('click', function () {
                //Остановить / Запустить операцию
-               var model = self._activeOperation;
-               if (model.get('canSuspend')) {//TODO: ### перенести проверку в лист ?
-                  self._longOpList.applyUserAction($(this).hasClass('icon-Pause') ? 'suspend' : 'resume', model, true);
-               }
+               self._longOpList.applyUserAction($(this).hasClass('icon-Pause') ? 'suspend' : 'resume', self._activeOperation, true);
             });
 
             //Иконку запуска сделаем кликабельной, по ней будет запускать остановленная операция
             container.find('.controls-NotificationPopup__header').on('click', '.controls-LongOperationsPopup__runOperationIcon', function () {
                //Запустить операцию
-               var model = self._activeOperation;
-               if (model.get('canSuspend')) {//TODO: ### перенести проверку в лист ?
-                  self._longOpList.applyUserAction('resume', model, true);
-               }
+               self._longOpList.applyUserAction('resume', self._activeOperation, true);
             });
 
             //Обработчик, который применяет фильтр "Скрыть приостановленные"

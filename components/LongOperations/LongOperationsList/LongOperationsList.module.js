@@ -325,6 +325,9 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
           * @returns {Core/Deferred}
           */
          applyUserAction: function (action, model, reload) {
+            if (!(action === 'suspend' || action === 'resume' ? model.get('canSuspend') : (action === 'delete' ? model.get('canDelete') : null))) {
+               return Deferred.fail('Action not allowed');
+            }
             var promise = longOperationsManager.callAction(action, model.get('tabKey'), model.get('producer'), model.get('id'));
             if (reload) {
                promise.addCallback(this.reload.bind(this));
