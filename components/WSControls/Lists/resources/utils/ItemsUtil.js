@@ -18,9 +18,10 @@ define('js!WSControls/Lists/resources/utils/ItemsUtil', [
             var method;
             if (!cfg.groupBy.method) {
                var field = cfg.groupBy.field;
+
                method = function (item, index, projItem) {
                   //делаем id группы строкой всегда, чтоб потом при обращении к id из верстки не ошибаться
-                  return this.getPropertyValue(item, field) + '';
+                  return DataSourceUtil.getPropertyValue(item, field) + '';
                }
             }
             else {
