@@ -172,6 +172,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                target: fieldLinkContainer,
                opener: this._parentFieldLink,
                closeByExternalClick: true,
+               closeOnTargetMove: true,
                targetPart: true,
                cssClassName: pickerClasses.join(' '),
                activableByClick: false,

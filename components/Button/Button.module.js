@@ -4,6 +4,7 @@ define('js!SBIS3.CONTROLS.Button',
       'js!SBIS3.CONTROLS.Button/Button.compatible',
       'tmpl!SBIS3.CONTROLS.Button',
       'Core/core-functions',
+      'js!SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor',
       "js!SBIS3.CORE.Control/ControlGoodCode",
       'css!SBIS3.CONTROLS.Button'
          ],
@@ -12,6 +13,7 @@ define('js!SBIS3.CONTROLS.Button',
              ButtonCompatible,
              template,
              functions,
+             WsCompatibleConstructor,
              ControlGoodCode) {
 
    'use strict';
@@ -76,6 +78,7 @@ define('js!SBIS3.CONTROLS.Button',
     */
    var Button = Base.extend([
          ButtonCompatible,
+         WsCompatibleConstructor,
          ControlGoodCode],
       {
          _controlName: 'SBIS3.CONTROLS.Button',
@@ -106,7 +109,7 @@ define('js!SBIS3.CONTROLS.Button',
                return;
             }
             this._isWaitingClick = false;
-            if (!this._options.enabled) {
+            if (!this.isEnabled()) {
                return;
             }
             this._onClickHandler(e);
@@ -115,7 +118,7 @@ define('js!SBIS3.CONTROLS.Button',
          },
 
          _onMouseDown: function () {
-            if (!this._options.enabled) {
+            if (!this.isEnabled()) {
                return;
             }
            this._isActiveByClick = true;
@@ -187,6 +190,11 @@ define('js!SBIS3.CONTROLS.Button',
          _onFocusOut: function(e){
             var self = this;
             this._hideExtendedTooltipCompatible();
+         },
+
+         destroy: function() {
+            this._unregisterDefaultButton();
+            Button.superclass.destroy.call(this);
          }
          //</editor-fold>
       });

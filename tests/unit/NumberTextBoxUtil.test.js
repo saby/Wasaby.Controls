@@ -62,6 +62,11 @@ define(['js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil'], function (NumberTextBoxUti
             assert.equal(newState.value, '7.');
             assert.equal(newState.caretPosition, 1);
          });
+         it('|123 456 789 123 456.0 => 7|23 456 789 123 456.0', function (){
+            newState = NumberTextBoxUtil.numberPress(0, 0, '123 456 789 123 456.0', true, 16, -1, 55, 20); // press digit 7
+            assert.equal(newState.value, '723456789123456.0');
+            assert.equal(newState.caretPosition, 1);
+         });
       });
       describe('.deletPressed', function (){
          it('1|23.12 => 1|3.12', function (){

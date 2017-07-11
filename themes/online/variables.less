@@ -584,6 +584,8 @@
 @check-box-disabled-color:                      @disabled-color;
 @check-box-icon-successful-top-ie:              0;
 
+@check-box-caption-line-height:                 @check-box-icon-size - 2 * extract(@check-box-caption-padding, 1);
+
 // -------------- //
 // Checkbox group //
 // -------------- //
@@ -731,6 +733,7 @@
 
 @menu-item-text-color:                    @black-color;
 @menu-item-bg:                            @white-color;
+@menu-item-font-size:                     @popup-font-size;
 @menu-item-disabled-text-color:           #ccc;
 
 @menu-item-hover-text-color:              @menu-item-text-color;
@@ -1952,6 +1955,7 @@
 @data-grid-check-box-left:                      0px;
 
 @data-grid-table-layot: 								fixed;
+@data-grid-table-separator-border-width:        0 0 @default-border-width 0;
 // ---------- //
 // PartScroll //
 // ---------- //
@@ -2038,6 +2042,10 @@
 @controls-MergeDialogTemplate-radioButton-margin-top:             6px;
 @controls-MergeDialogTemplate-mergeButton-margin-left:            5px;
 @controls-MergeDialogTemplate-applyBlock-padding:                 0 12px 12px 0;
+@controls-MergeDialogTemplate-hint-font-size-color:               @gray-color;
+@controls-MergeDialogTemplate-BreadCrumbs-main-title-color:       @bread-crumb-title-color;
+@controls-MergeDialogTemplate-treeDataGridView-first-cell-padding-left: @controls-view-padding-DEFAULT;
+@controls-MergeDialogTemplate-DataGridView-column-value-line-height: @data-grid-cell-line-height;
 
 // --------------- //
 //   OperationSum  //
@@ -2158,6 +2166,8 @@
 @DropdownList-icon-spritesheet:                       'img/CheckBox.png';
 @DropdownList-icon-bg-pathFilter:                     url(@DropdownList-icon-spritesheet) 0 1px;
 @DropdownList-icon-checked-bg-pathFilter:             url(@DropdownList-icon-spritesheet) 0 49px;
+
+@DropdownList-disabled-text:                          #CCC;
 
 //ProgressBar
 @controls-ProgressBar-height:             16px;
@@ -2363,6 +2373,7 @@
 @icon-size:                                        16px;
 @icon-width:                                       16px;
 @icon-height:                                      16px;
+@back-button-arrow-hover-color:                    @primary-color;
 
 // BreadCrumbs
 @back-button-arrow-paddingleft:                    4px;
@@ -2451,7 +2462,7 @@
 //ListView AjaxIndicator
 @controls-AjaxLoader-background:                   none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
 @controls-AjaxLoader-default-cord:                 0;
-@controls-AjaxLoader-zIndex:                       2;
+@controls-AjaxLoader-zIndex:                       11;
 @controls-AjaxLoader-minHeight:                    32px;
 
 @controls-AjaxLoader-outer-height:                 36px;
@@ -2484,7 +2495,10 @@
 
 //Scrollbar
 @controls-Scrollbar-width:                         4px;
-@controls-Scrollbar-thumb-border-radius:           2px;
+@controls-Scrollbar-animate-duration:              0.3s;
+@controls-Scrollbar-animated-width:                12px;
+@controls-Scrollbar-animated-right:                8px;
+@controls-Scrollbar-thumb-border-radius:           6px;
 @controls-Scrollbar-min-height:                    46px;
 @controls-Scrollbar-thumb-margin:                  4px 0px;
 @controls-Scrollbar-thumb-padding:                 0px 2px;
@@ -2657,6 +2671,38 @@
 @wait-indicator-gradient-gray: rgb(234, 234, 234);
 
 
+//----------------//
+// LongOperations  //
+//----------------//
+
+@long-operations-list-group-title-bg: #ffffff;
+@long-operations-list-group-title-color: #999999;
+@long-operations-list-time-ctr-f-size: inherit;//12px
+@long-operations-list-state-ctr-margin-lf: 10px;
+@long-operations-popup-collapsed-width: 200px;
+@long-operations-popup-exp-width: 400px;
+@long-operations-popup-exp-max-width: 400px;
+@long-operations-popup-header-height: auto;
+@long-operations-popup-header-line-height: normal;
+@long-operations-popup-header-pad-rt: 41px;
+@long-operations-popup-header-icon-size: 24px;
+@long-operations-popup-header-caption-f-size: 15px;
+@long-operations-popup-header-caption-line-height: inherit;
+@long-operations-popup-header-caption-color: inherit;
+@long-operations-popup-collapsed-header-caption-f-size: @long-operations-popup-header-caption-f-size;
+@long-operations-popup-collapsed-header-caption-line-height: @long-operations-popup-header-caption-line-height;
+@long-operations-popup-collapsed-header-caption-color: @long-operations-popup-header-caption-color;
+@long-operations-popup-header-stop-but-f-size: inherit;
+@long-operations-popup-header-stop-but-color: #999999;
+@long-operations-popup-foot-height: 32px;
+@long-operations-popup-foot-bg: #F3F3F3;
+@long-operations-popup-foot-f-size: 12px;
+@long-operations-popup-foot-color: #999999;
+@long-operations-popup-reg-but-ctr-height: 24px;
+@long-operations-popup-reg-but-line-height: 12px;
+@long-operations-reg-filter-width: 150px;
+@long-operations-reg-filter-height: 30px;
+@long-operations-reg-filter-title-height: 24px;
 
 //--------------//
 //  TimePicker  //
@@ -2729,15 +2775,15 @@
 @clock-picker-inner-arrow-height:                   @clock-picker-inner-circle-radius - @clock-picker-inner-tick-radius - @clock-picker-arrow-tip-border-width;
 
 @bottomStyle-items-toolbar-height:                  30px;
-@bottomStyle-padding-bottom:              @bottomStyle-items-toolbar-height;
+@bottomStyle-padding-bottom:                        @bottomStyle-items-toolbar-height + @bottomStyle-items-toolbar-margin; //высота операций + маржин
 @bottomStyle-items-toolbar-border-color:            #F3F3F3;
-@bottomStyle-items-toolbar-margin:                  3px 0 0 0;
-@scroll-pager-bg:							@default-bg-color;
-@textbox-font-size:							@default-font-size;
-@image-bar-height:                        32px;
-@image-bar-vertical-padding:              4px;
-@image-bar-horizontal-padding:            12px;
-@image-bar-bg-color:                      #E7F0F9;
+@bottomStyle-items-toolbar-margin:                  3px;
+@scroll-pager-bg:							                @default-bg-color;
+@textbox-font-size:							             @default-font-size;
+@image-bar-height:                                  32px;
+@image-bar-vertical-padding:                        4px;
+@image-bar-horizontal-padding:                      12px;
+@image-bar-bg-color:                                #E7F0F9;
 
 //---------//
 //  Label  //
