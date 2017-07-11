@@ -33,22 +33,6 @@ define([
             assert.isTrue(childOpt.visible);
          });
 
-         it('getDefaultOptions', function () {
-            var def = baseDis.getDefaultOptions();
-            assert.isTrue(Object.isEmpty(def));
-         });
-
-
-         it('_overrideTemplateOpts', function () {
-            var def = baseDis._overrideTemplateOpts('dontchangethis');
-            assert.isTrue(def === 'dontchangethis');
-         });
-
-         it('_validateOptions', function () {
-            var def = baseDis._validateOptions('dontchangethis');
-            assert.isTrue(def === 'dontchangethis');
-         });
-
          it('_applyChangedOptions', function () {
             baseDis._afterApplyOptions(false, {}, {enabled: true});
             assert.isTrue(baseDis.isEnabled());
