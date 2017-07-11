@@ -432,7 +432,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             this._container.off('mousemove', this._initScrollbar);
             this._container[0].removeEventListener('touchstart', this._touchStartHandler);
 
-            this._paging.unsubscribe('onSelectedItemChange');
+            if (this._paging) {
+               this._paging.unsubscribe('onSelectedItemChange');
+            }
 
             BaseCompatible.destroy.call(this);
             // task: 1173330288
