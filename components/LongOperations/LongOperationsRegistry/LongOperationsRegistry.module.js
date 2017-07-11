@@ -19,13 +19,14 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
    function (CompoundControl, LongOperationEntry, RightsManager, groupTpl, emptyHTMLTpl, dotTplFn) {
       'use strict';
 
-      var stateFilterHashMap = {
+      var FILTER_STATUSES = {
          'null': rk('В любом состоянии'),
-         0: rk('В процессе'),
-         1: rk('Приостановленные'),
-         2: rk('Завершенные'),
-         4: rk('Успешно'),
-         5: rk('С ошибками')
+         /*0*/'running': rk('В процессе'),
+         /*1*/'suspended': rk('Приостановленные'),
+         /*3'not-suspended': rk('Не приостановленные'),*/
+         /*2*/'ended': rk('Завершенные'),
+         /*4*/'success-ended': rk('Успешно'),
+         /*5*/'error-ended': rk('С ошибками')
       };
 
       /**
@@ -51,30 +52,30 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
                parentProperty: 'parent',
                values:[
                   {
-                     key : null,
-                     title : stateFilterHashMap[null]
+                     key: null,
+                     title: FILTER_STATUSES[null]
                   },
                   {
-                     key : 0,
-                     title : stateFilterHashMap[0]
+                     key: /*0*/'running',
+                     title: FILTER_STATUSES['running']
                   },
                   {
-                     key : 2,
-                     title : stateFilterHashMap[2]
+                     key: /*2*/'ended',
+                     title: FILTER_STATUSES['ended']
                   },
                   {
-                     key : 4,
-                     title : stateFilterHashMap[4],
-                     parent: 2
+                     key: /*4*/'success-ended',
+                     title: FILTER_STATUSES['success-ended'],
+                     parent: /*2*/'ended'
                   },
                   {
-                     key : 5,
-                     title : stateFilterHashMap[5],
-                     parent: 2
+                     key: /*5*/'error-ended',
+                     title: FILTER_STATUSES['error-ended'],
+                     parent: /*2*/'ended'
                   },
                   {
-                     key : 1,
-                     title : stateFilterHashMap[1]
+                     key: /*1*/'suspended',
+                     title: FILTER_STATUSES['suspended']
                   }
                ]
             }],
@@ -133,12 +134,6 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
             var longOperationsBrowser = this.getChildControlByName('longOperationsBrowser');
             var view = this._longOpList.getView();//###longOperationsBrowser.getChildControlByName('browserView')
 
-            this.subscribeTo(view, 'onPropertiesChanged'/*'onPropertyChanged'*/, function (evtName, property) {
-               /*if (property === 'filter') {*/
-                  self._longOpList.reload();
-               /*}*/
-            });
-
             //Открываем ссылку, если она есть, иначе открываем журнал выполнения операции
             this.subscribeTo(longOperationsBrowser, 'onEdit', function (e, meta) {
                if (!self._longOpList.applyResultAction(meta.item)) {
@@ -165,8 +160,8 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
 
             this.subscribeTo(view, 'onItemsReady', function () {
                self._previousGroupBy = null;
-               var state = self._longOpList.getLinkedContext().getValue('filter/status');
-               view.setEmptyHTML(emptyHTMLTpl({title: stateFilterHashMap[state === undefined ? null : state]}));
+               var status = self._longOpList.getLinkedContext().getValue('filter/status');
+               view.setEmptyHTML(emptyHTMLTpl({title:FILTER_STATUSES[status === undefined ? null : status]}));
             });
          }
       });

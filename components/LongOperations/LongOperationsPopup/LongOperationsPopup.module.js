@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
    function (UserInfo, cMerge, Deferred, /*###strHelpers,*/ TabMessage, NotificationPopup, LongOperationEntry, Model, headerTemplate, contentTpl, footerTpl, FloatArea) {
       'use strict';
 
-      var FILTER_HIDE_STOPPED = 3;
+      var FILTER_NOT_SUSPENDED = /*3*/'not-suspended';
 
       var DEFAULT_INDICATOR_MESSAGE = rk('Пожалуйста, подождите…');
 
@@ -212,7 +212,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
             var button = container.find('.controls-LongOperationsPopup__header_stoppedOperationsButton');
             button.on('click', function () {
                if (button.hasClass('controls-LongOperationsPopup__header_stoppedOperations-show')) {
-                  self._longOpList.getLinkedContext().setValue('filter/status', FILTER_HIDE_STOPPED);
+                  self._longOpList.getLinkedContext().setValue('filter/status', FILTER_NOT_SUSPENDED);
                }
                else {
                   self._longOpList.getLinkedContext().setValue('filter', {});

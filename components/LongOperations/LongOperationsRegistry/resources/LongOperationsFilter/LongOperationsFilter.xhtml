@@ -7,25 +7,25 @@
                <opt name="title" value="{[В любом состоянии]}"/>
             </opts>
             <opts>
-               <opt name="key" value="0" type="number"></opt>
+               <opt name="key" value="running" type="string"></opt>
                <opt name="title" value="{[В процессе]}"/>
             </opts>
             <opts>
-               <opt name="key" value="2" type="number"></opt>
+               <opt name="key" value="ended" type="string"></opt>
                <opt name="title" value="{[Завершенные]}"/>
             </opts>
             <opts>
-               <opt name="key" value="4" type="number"></opt>
+               <opt name="key" value="success-ended" type="string"></opt>
                <opt name="title" value="{[Успешно]}"/>
-               <opt name="parent" value="2" type="number"/>
+               <opt name="parent" value="ended" type="string"/>
             </opts>
             <opts>
-               <opt name="key" value="5" type="number"></opt>
+               <opt name="key" value="error-ended" type="string"></opt>
                <opt name="title" value="{[С ошибками]}"/>
-               <opt name="parent" value="2" type="number"/>
+               <opt name="parent" value="ended" type="string"/>
             </opts>
             <opts>
-               <opt name="key" value="1" type="number"></opt>
+               <opt name="key" value="suspended" type="string"></opt>
                <opt name="title" value="{[Приостановленные]}"/>
             </opts>
          </opts>

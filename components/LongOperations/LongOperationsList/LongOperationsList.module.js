@@ -169,6 +169,12 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                });
             });
 
+            this.subscribeTo(this._view, 'onPropertiesChanged'/*'onPropertyChanged'*/, function (evtName/*, property*/) {
+               /*if (property === 'filter') {*/
+                  self.reload();
+               /*}*/
+            });
+
             //У приостановленных операций нужно менять цвет текста, поэтому навешиваем класс
             this.subscribeTo(this._view, 'onDrawItems', function () {
                var items = self.getItems();
