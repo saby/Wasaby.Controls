@@ -331,6 +331,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                page += 1;
             } else {
                page = Math.ceil(page);
+               if (page + 1 === this._paging.getPagesCount()) {
+                  page += 1;
+               }
             }
             if (this._page !== page) {
                this._page = page;
