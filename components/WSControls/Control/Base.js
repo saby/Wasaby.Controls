@@ -180,7 +180,9 @@ define('js!WSControls/Control/Base',
              * Точка разрушения компонента
              */
             destroy: function() {
-               BaseCompatible?BaseCompatible.destroy.call(this);
+               if (BaseCompatible) {
+                  BaseCompatible.destroy.call(this);
+               }
             }
 
             //</editor-fold>
