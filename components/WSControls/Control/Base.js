@@ -33,33 +33,35 @@ define('js!WSControls/Control/Base',
          {
             _controlName: 'WSControls/Control/Base',
 
-            iWantVDOM: true,
-            VDOMReady: false,
-
+            /**
+             * Состояния режима совместимости
+             */
+            iWantVDOM: true, //позволяет сделать из VDOM контрола не VDOM контрол, не АПИ
+            VDOMReady: false, //состояние, которое используется в bootup для принятия решения маунтить контрол или он уже привязан к дому
+            /**
+             * Состояния с которыми не докнца ясно, что делать.
+             * НЕ АПИ.
+             * logicParent хранит ссылку на логического родителя для регистрации в нем
+             * _decOptions - набор атрибутов, которые были на теге при создании
+             * (контрол могли создать через new и положить на контейнер, у которого есть класс или какие-нибудь другие атрибуты)
+             */
             logicParent: null,
             _decOptions: null,
-
-            applyNewOptions: function(newOptions) {
-               this._options = newOptions;
-               this._applyOptions();
-            },
-
+            /**
+             * Логика вынесена в функцию для переопределения поведения легкого инстанса
+             * @returns {null}
+             * @private
+             * @deprecated
+             */
             _getDecOptions: function(){
                return this._decOptions;
             },
-
-            _getMarkup: function(rootKey) {
-               if (BaseCompatible) {
-                  return BaseCompatible._getMarkup.call(this, rootKey);
-               }
-               var decOpts = this._getDecOptions();
-               return this._template(this, decOpts, rootKey, true)[0];
-            },
-
-            _applyOptions: function(){
-
-            },
-
+            /**
+             * Создание объекта с опциями для декорирования
+             * @param cfg
+             * @private
+             * @deprecated
+             */
             _parseDecOptions: function(cfg){
                this._decOptions = {};
                /**
@@ -75,6 +77,38 @@ define('js!WSControls/Control/Base',
                   this._decOptions['data-component'] = cfg['data-component'];
                }
             },
+            /**
+             * Метод для bootup, который показвает на то какого типа будет результат функции шаблонизации компонента
+             * @returns {boolean}
+             */
+            isBuildVDom: function(){
+               return BaseCompatible?BaseCompatible.isBuildVDom.call(this):true;
+            },
+
+            /**
+             * Применяем новый набор опций для компонента. Вызывается из DirtyChecking
+             * @param newOptions
+             */
+            applyNewOptions: function(newOptions) {
+               this._options = newOptions;
+               this._applyOptions();
+            },
+
+            /**
+             * Метод, который возвращает разметку для компонента
+             * @param rootKey
+             * @returns {*}
+             * @private
+             */
+            _getMarkup: function(rootKey) {
+               if (BaseCompatible) {
+                  return BaseCompatible._getMarkup.call(this, rootKey);
+               }
+               var decOpts = this._getDecOptions();
+               return this._template(this, decOpts, rootKey, true)[0];
+            },
+
+
 
             constructor: function (cfg) {
                this.logicParent = cfg.logicParent;
@@ -96,15 +130,20 @@ define('js!WSControls/Control/Base',
                }
             },
 
+            //<editor-fold desc="API">
+
+            /**
+             * Запланировать перерисовку компонента
+             * @private
+             */
             _setDirty: function(){
                this._notify('onPropertyChange');
             },
 
-            //FROM COMPATIBLE
-            isBuildVDom: function(){
-               return BaseCompatible?BaseCompatible.isBuildVDom.call(this):true;
-            },
-
+            /**
+             * Рассчетное свойство, если свое не определено - берем родительское свойство
+             * @returns {parentEnabled|*}
+             */
             isEnabled: function(){
                if (this._options.enabled === undefined) {
                   return this._options.parentEnabled;
@@ -112,6 +151,10 @@ define('js!WSControls/Control/Base',
                return this._options.enabled;
             },
 
+            /**
+             * Рассчетное свойство, если свое не определено - берем родительское свойство
+             * @returns {parentVisible|*}
+             */
             isVisible: function(){
                if (this._options.visible === undefined) {
                   return this._options.parentVisible;
@@ -119,10 +162,28 @@ define('js!WSControls/Control/Base',
                return this._options.visible;
             },
 
+            /**
+             * Точка входа перед шаблонизацией
+             * @private
+             */
+            _applyOptions: function(){
+            },
+
+            /**
+             * Точка завершения шаблонизации
+             */
+            buildComplete: function(){
+
+            },
+
+            /**
+             * Точка разрушения компонента
+             */
             destroy: function() {
-               BaseCompatible.destroy.call(this);
+               BaseCompatible?BaseCompatible.destroy.call(this);
             }
 
+            //</editor-fold>
          });
 
       return Base;
