@@ -318,6 +318,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
             if (this._scrollbar){
                this._scrollbar.setPosition(scrollTop);
+            }
+            if (this._paging) {
                this._calcPagingSelectedKey(scrollTop);
             }
             this.getContainer().toggleClass('controls-ScrollContainer__top-gradient', scrollTop > 0);
@@ -370,7 +372,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          _scrollbarDragHandler: function(event, position){
             if (position != this._getScrollTop()){
                this._scrollTo(position);
-               this._calcPagingSelectedKey(position);
+               if (this._paging) {
+                  this._calcPagingSelectedKey(position);
+               }
             }
          },
 
