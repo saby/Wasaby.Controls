@@ -38,7 +38,8 @@ define('js!SBIS3.CONTROLS.FilterController', [
             /* Синхронизация кнопки фильтров и быстрого фильтра */
             var syncFilters = function(from, to) {
                if(from && to) {
-                  to.setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(cFunctions.clone(from.getFilterStructure()), to.getFilterStructure()));
+                  //Не нужно сбрасывать value в resetValue, если элемента стукруры из from нет в эл.структуры из to
+                  to.setFilterStructure(FilterHistoryControllerUntil.prepareStructureToApply(cFunctions.clone(from.getFilterStructure()), to.getFilterStructure(), true));
                }
             };
       

@@ -452,8 +452,8 @@ body {
    .ws-sticky-header__table-header-copy {
       // В престо в паре мест используется нестандартные цвета фона, чуть темнее или чуть светлее.
       // В этих местах прикладники должны сами устанавливать цвет фона у зафиксированных заголовков.
-      // В большинстве реестров используется #2C3E50
-      background-color: #2C3E50;
+      // В большинстве реестров используется #2C3E50 - @basic-block-bg-color
+      background-color: @basic-block-bg-color;
    }
 }
 
@@ -900,17 +900,12 @@ body {
       .ws-infobox-content {
          color: @default-text-color;
          font-size: 1rem;
-         p {
-            margin: 0 20px 8px 0;
-            font-size: 1.43rem;
-            color: @default-text-color;
-         }
       }
 
       .ws-infobox-close-button.icon-disabled{
          font-size: 3rem!important;
-         right: 0.7rem;
-         top: 0.3rem;
+         right: 0.6rem;
+         top: 0.41rem;
          color: @link-text-color!important;
          &:hover {
             color: #B9E9FF!important;
@@ -1004,15 +999,17 @@ body {
          }
      }
 }
-.controls-FieldLink.controls-Picker__show {
-  .controls-FieldLink__showSelector {
-      .icon-primary {
-        color: #26b7fd !important;
+.controls-FieldLink {
+   &.controls-Picker__show {
+      .controls-FieldLink__showSelector {
+         .icon-primary {
+            color: #26b7fd !important;
+         }
       }
-  }
-
-   .controls-TextBox__field {
-      color: rgb(58, 73, 81) !important;
+      
+      .controls-TextBox__field {
+         color: rgb(58, 73, 81) !important;
+      }
    }
 }
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button:hover {
@@ -1029,9 +1026,6 @@ body .controls-CommandsButton__picker {
    .controls-MenuItem {
       padding-right: 2.8rem !important; //38 = 24 (кнопка) + 8(отступ справа у кнопки) +6(отступ слева у кнопки)
    }
-}
-body .controls-Link.controls-FieldLink__Link:not(.ws-disabled).controls-FieldLink-Link__filterButton {
-  color: #26B8FF;
 }
 
 .controls-DropdownList__picker .controls-DropdownList__multiselect .controls-DropdownList__itemCheckBox {

@@ -57,6 +57,7 @@
 @link-icon-field-margin:                  0 0 0 .14rem;
 @link-additional-color:                   #8991A9;
 @link-disabled-text-color:                rgba(102,170,221, .2);
+@link-header-hover-color:                 @default-hover-color;
 //Icon Button
 @icon-button-round-border-width:          2.286rem;
 @icon-button-round-border-height:         2.286rem;
@@ -247,6 +248,7 @@
 @menu-item-height:                        3.57rem;
 @menu-item-text-color:                    #273B4D;
 @menu-item-bg:                            #f0f5fb;
+@menu-item-font-size:                     @default-font-size;
 @menu-item-icon-16-margin:					   0.2142rem 0 0.2142rem 2.2857rem;
 @menu-item-hover-bg:                      #e1ecf6;
 @menu-item-hover-icon-color:              @primary-color!important;
@@ -382,6 +384,9 @@
 // Suggest
 @suggest-picker-border:                   @default-border-width solid @gray-color;
 @suggest-picker-margin:                   -@default-border-width 0 0 0;
+
+@suggest-list-footer-height:              3.143rem;
+@suggest-list-footer-padding:             0 0.857rem;
 
 @suggest-list-item-hover-bg:              #f3f3f3;
 @suggest-list-item-selected-bg:           darken(@suggest-list-item-hover-bg, 5%);
@@ -554,7 +559,7 @@
 @edit-at-place-editor-overlay-border-radius:.1071rem;
 @edit-at-place-editor-overlay-bg:         darken(@secondary-color, 5%) !important;
 //List view
-@list-view-min-height:                    5rem;
+@list-view-min-height:                    8rem;
 @listView-servicefooter-height:           1.47rem;
 @listView-servicefooter-padding:          0 0.8rem;
 @list-view-actions-item-height:           1.75rem;
@@ -727,6 +732,7 @@
 // BackButton
 @back-button-font-size:                   1.43rem;
 @back-button-line-height:                 @default-height;
+@back-button-arrow-hover-color:           @default-hover-color;
 // BreadCrumbs
 @back-button-arrow-paddingleft:           .5714rem;
 @bread-crumb-title-color:                 @gray-lamantin-color;
@@ -749,6 +755,9 @@
 @controls-ScrollContainer-top-gradient-height:0.857rem;
 //Scrollbar
 @controls-Scrollbar-width:                .357rem;
+@controls-Scrollbar-animated-width:       @controls-Scrollbar-width;
+@controls-Scrollbar-animated-right:       0;
+@controls-Scrollbar-animate-duration:     0;
 @controls-Scrollbar-thumb-border-radius:  .179rem;
 @controls-Scrollbar-min-height:           3.571rem;
 @controls-Scrollbar-thumb-margin:         0.286rem 0;
@@ -886,6 +895,8 @@
 @DropdownList-height: 					      3rem;
 @DropdownList-footer-buttonsBlock-height: 3.57rem;
 @DropdownList-footer-hasMore-top:         1.1rem;
+@DropdownList-picker-menu-item-color:     #F0F5FB;
+@DropdownList-picker-menu-item-hover:     #E0ECF5;
 @list-view-loading-indicator-gradient-bg: url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to top,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
 @list-view-loading-indicator-gradient-bg-up:url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to bottom,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
 @text-box-placeholder-color: 				   rgba(96,170,221, .2);
@@ -982,3 +993,13 @@
 @controls-FieldLink-link-color-hover:     @default-hover-color;
 
 @commands-button-close-icon-color:        @icon-color-primary;
+
+// --------------- //
+// OperationMerge  //
+// --------------- //
+@controls-MergeDialogTemplate-treeDataGridView-padding-bottom:             .8571rem;
+@controls-MergeDialogTemplate-hint-font-size-color:                        @default-text-color;
+@controls-MergeDialogTemplate-BreadCrumbs-main-title-color:                #FFCC99;
+@controls-MergeDialogTemplate-treeDataGridView-first-cell-padding-left:    .3333rem;
+@controls-MergeDialogTemplate-DataGridView-column-value-line-height:       .928rem;
+@controls-MergeDialogTemplate-DataGridView-td-border-bottom:               1px solid #283848 !important;
