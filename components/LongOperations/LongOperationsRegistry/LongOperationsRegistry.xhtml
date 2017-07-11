@@ -9,7 +9,7 @@
             <~opts>
                <~opt name="internalValueField" value="PeriodKey"/>
                <~opt name="internalCaptionField" value="PeriodTitle"/>
-               <~opt name="value" bind="filter/Period"/>
+               <~opt name="value" bind="filter/period"/>
                <~opt name="resetValue" value="null" type="null"/>
             <~/opts>
             <~opts>
@@ -22,7 +22,7 @@
             <~opts>
                <~opt name="internalValueField" value="DurationKey"/>
                <~opt name="internalCaptionField" value="DurationTitle"/>
-               <~opt name="value" bind="filter/Duration"/>
+               <~opt name="value" bind="filter/duration"/>
                <~opt name="resetValue" value="null" type="null"/>
             <~/opts>
             {~{? !it.userId}~}
@@ -55,7 +55,7 @@
                <component data-component="SBIS3.CONTROLS.SearchForm" name="browserSearch" class="controls-Browser__search ws-bootup-autofocus">
                   <opt name="tabindex" value="2"/>
                   <opt name="allowChangeEnable" value="false"/>
-                  <opt name="searchParam" value="title"/>
+                  <!--<opt name="searchParam" value="title"/>-->
                   <opt name="placeholder" value="{[искать@@найти...]}"/>
                </component>
             </div>
@@ -67,7 +67,7 @@
                         <opts>
                            <opt name="internalValueField" value="PeriodKey"/>
                            <opt name="internalCaptionField" value="PeriodTitle"/>
-                           <opt name="value" bind="filter/Period"/>
+                           <opt name="value" bind="filter/period"/>
                            <opt name="resetValue" value="null" type="null"/>
                         </opts>
                         <opts>
@@ -80,7 +80,7 @@
                         <opts>
                            <opt name="internalValueField" value="DurationKey"/>
                            <opt name="internalCaptionField" value="DurationTitle"/>
-                           <opt name="value" bind="filter/Duration"/>
+                           <opt name="value" bind="filter/duration"/>
                            <opt name="resetValue" value="null" type="null"/>
                         </opts>
                         {{? !it.userId}}

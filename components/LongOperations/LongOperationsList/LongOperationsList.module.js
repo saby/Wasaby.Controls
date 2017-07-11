@@ -1,5 +1,6 @@
 define('js!SBIS3.CONTROLS.LongOperationsList',
    [
+      'Core/TimeInterval',
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model',
@@ -15,7 +16,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
       'js!SBIS3.CONTROLS.DataGridView'
    ],
 
-   function (CompoundControl, LongOperationEntry, Model, longOperationsManager, InformationPopupManager, dotTplFn) {
+   function (TimeInterval, CompoundControl, LongOperationEntry, Model, longOperationsManager, InformationPopupManager, dotTplFn) {
       'use strict';
 
       /**
@@ -71,7 +72,6 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
             },
 
             _view: null,
-            _reloading: null,
             _spentTiming: null,
             _animQueue: [],
             _animating: null,
@@ -293,23 +293,59 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
           * @return {Core/Deferred}
           */
          reload: function () {
-            if (this._reloading) {
-               // Ничего не делать, запрос уже выполняется, результат вскоре и так придёт
-               return this._reloading;
+            var options = {};
+            var filter = this._view.getFilter();
+            if (filter) {
+               var where = {};
+               if (filter.status) {
+                  var STATUSES = LongOperationEntry.STATUSES;
+                  var map = {
+                     /*0*/'running': STATUSES.running,
+                     /*1*/'suspended': STATUSES.suspended,
+                     /*3*/'not-suspended': [STATUSES.running, STATUSES.success, STATUSES.error],
+                     /*2*/'ended': [STATUSES.success, STATUSES.error],
+                     /*4*/'success-ended': STATUSES.success,
+                     /*5*/'error-ended': STATUSES.error
+                  };
+                  if (filter.status in map) {
+                     where.status = map[filter.status];
+                  }
+               }
+               if (filter.period) {
+                  where.period = new TimeInterval(filter.period);
+               }
+               if (filter.duration) {
+                  where.duration = new TimeInterval(filter.duration);
+               }
+               if (filter['СтрокаПоиска']) {
+                  where.search = filter['СтрокаПоиска'];
+                  if (filter.usePages) {
+                  }
+               }
+               if (Object.keys(where).length) {
+                  options.where = where;
+               }
             }
-            var promise = longOperationsManager.fetch(this._getOption('pageSize') || 10)
+            var sorting = this._view.getSorting();
+            if (sorting && sorting.length) {
+               options.orderBy = sorting;
+            }
+            var offset = this._view.getOffset();
+            if (0 <= offset) {
+               options.offset = offset;
+            }
+            var limit = this._view.getPageSize();
+            if (0 < limit) {
+               options.limit = limit;
+            }
+            return longOperationsManager.fetch(Object.keys(options).length ? options : null)
                .addCallback(function (results) {
                   if (this._isDestroyed) {
                      return;
                   }
+                  this._view._notify('onDataLoad', results);
                   this._setItems(results);
                }.bind(this));
-            this._reloading = promise;
-            // Обещание может быть сразу разрешённым, поэтому отдельно и только в конце
-            promise.addBoth(function () {
-               this._reloading = null;
-            }.bind(this));
-            return promise;
          },
 
          /**

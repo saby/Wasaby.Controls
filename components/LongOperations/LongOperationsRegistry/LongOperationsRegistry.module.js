@@ -21,12 +21,11 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
 
       var FILTER_STATUSES = {
          'null': rk('В любом состоянии'),
-         /*0*/'running': rk('В процессе'),
-         /*1*/'suspended': rk('Приостановленные'),
-         /*3'not-suspended': rk('Не приостановленные'),*/
-         /*2*/'ended': rk('Завершенные'),
-         /*4*/'success-ended': rk('Успешно'),
-         /*5*/'error-ended': rk('С ошибками')
+         'running': rk('В процессе'),
+         'suspended': rk('Приостановленные'),
+         'ended': rk('Завершенные'),
+         'success-ended': rk('Успешно'),
+         'error-ended': rk('С ошибками')
       };
 
       /**
@@ -133,6 +132,13 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
             var self = this;
             var longOperationsBrowser = this.getChildControlByName('longOperationsBrowser');
             var view = this._longOpList.getView();//###longOperationsBrowser.getChildControlByName('browserView')
+
+            /*var searh = self.getChildControlByName('browserSearch');
+            this.subscribeTo(searh, 'onSearch', function (evtName, text, force) {
+               if (!force) {
+                  searh._hideLoadingIndicator();
+               }
+            });*/
 
             //Открываем ссылку, если она есть, иначе открываем журнал выполнения операции
             this.subscribeTo(longOperationsBrowser, 'onEdit', function (e, meta) {

@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
    function (UserInfo, cMerge, Deferred, /*###strHelpers,*/ TabMessage, NotificationPopup, LongOperationEntry, Model, headerTemplate, contentTpl, footerTpl, FloatArea) {
       'use strict';
 
-      var FILTER_NOT_SUSPENDED = /*3*/'not-suspended';
+      var FILTER_NOT_SUSPENDED = 'not-suspended';
 
       var DEFAULT_INDICATOR_MESSAGE = rk('Пожалуйста, подождите…');
 

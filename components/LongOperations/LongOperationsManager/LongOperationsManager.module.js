@@ -18,6 +18,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       'js!WS.Data/Source/DataSet',
       'js!WS.Data/Collection/RecordSet',
       'js!WS.Data/Chain',
+      'js!WS.Data/Query/Query',
       'js!SBIS3.CONTROLS.LongOperationsTabCalls',
       'js!SBIS3.CONTROLS.LongOperationsCallsPool',
       'js!SBIS3.CONTROLS.ILongOperationsProducer',
@@ -26,7 +27,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model'
    ],
 
-   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsTabCalls, LongOperationsCallsPool, ILongOperationsProducer, LongOperationEntry, LongOperationHistoryItem, Model) {
+   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, Query, LongOperationsTabCalls, LongOperationsCallsPool, ILongOperationsProducer, LongOperationEntry, LongOperationHistoryItem, Model) {
       'use strict';
 
       /**
@@ -151,18 +152,42 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          },
 
          /**
-          * Запросить набор последних длительных операций (отсортированных в обратном хронологическом порядке) из всех зарегистрированных продюсеров
+          * Запросить набор последних длительных операций из всех зарегистрированных продюсеров
           * @public
-          * @param {number} count Максимальное количество возвращаемых элементов
+          * @param {object|WS.Data/Query/Query} [options] Параметры запроса (опционально)
+          * @param {object} [options.where] Параметры фильтрации (опционально)
+          * @param {string[]|WS.Data/Query/Order[]} [options.orderBy] Параметры сортировки. По умолчанию используется обратный хронологический порядок (опционально)
+          * @param {number} [options.offset] Количество пропущенных элементов в начале. По умолчанию 0 (опционально)
+          * @param {number} [options.limit] Максимальное количество возвращаемых элементов. По умолчанию ^^^10 (опционально)
           * @return {Core/Deferred<WS.Data/Collection/RecordSet<SBIS3.CONTROLS.LongOperationEntry>>}
           */
-         fetch: function (count) {
+         fetch: function (options) {
+            //////////////////////////////////////////////////
+            console.log('DBG: LO_Man.fetch: options=', options, ';');
+            //////////////////////////////////////////////////
             if (_isDestroyed) {
                return Deferred.fail('User left the page');
             }
-            if (!(typeof count === 'number' && 0 < count)) {
-               throw new TypeError('Argument "count" must be positive number' );
+            if (options && typeof options !== 'object') {
+               throw new TypeError('Argument "options" must be an object if present');
             }
+            if (!(options instanceof Query)) {
+               if (options.where && typeof options.where !== 'object') {
+                  throw new TypeError('Argument "options.where" must be an object');
+               }
+               if ('orderBy' in options && !Array.isArray(options.orderBy)) {
+                  throw new TypeError('Argument "options.orderBy" must be an array');
+               }
+               if ('offset' in options && !(typeof options.offset === 'number' && 0 <= options.offset)) {
+                  throw new TypeError('Argument "options.offset" must be not negative number');
+               }
+               if ('limit' in options && !(typeof options.limit === 'number' && 0 < options.limit)) {
+                  throw new TypeError('Argument "options.limit" must be positive number');
+               }
+            }
+            //////////////////////////////////////////////////
+            var count = options.limit || 10;//^^^
+            //////////////////////////////////////////////////
             if (!_fetchCalls.has(count)) {
                // Если нет уже выполняющегося запроса
                if (Object.keys(_producers).length) {
@@ -287,7 +312,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                throw new TypeError('Argument "operationId" must be string or number');
             }
             if (!(typeof count === 'number' && 0 < count)) {
-               throw new TypeError('Argument "count" must be positive number' );
+               throw new TypeError('Argument "count" must be positive number');
             }
             if (filter && typeof filter !== 'object') {
                throw new TypeError('Argument "filter" must be an object if present');
