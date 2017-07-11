@@ -129,7 +129,10 @@ body {
             position: absolute;
             top: -@default-border-width;
             left: -@default-border-width;
-            color: #E4E4E4 !important;
+            color: #E4E4E4;
+         }
+         &.controls-Click__active {
+           background: @button-active-bg;
          }
          &.ws-disabled {
             border-color: @disabled-color;
@@ -1077,6 +1080,7 @@ body .controls-ItemActions .controls-Button__icon.icon-size {
       }
     }
   }
+
 }
 .controls-Suggest__picker {
   .controls-HtmlDecorators-highlight {
