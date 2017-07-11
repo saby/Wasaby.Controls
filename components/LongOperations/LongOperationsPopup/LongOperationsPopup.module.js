@@ -214,11 +214,11 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                }
             });
 
-            //Обработчик, который применяет фильтр "Скрыть прерванные"
+            //Обработчик, который применяет фильтр "Скрыть приостановленные"
             var button = container.find('.controls-LongOperationsPopup__header_stoppedOperationsButton');
             button.on('click', function () {
                if (button.hasClass('controls-LongOperationsPopup__header_stoppedOperations-show')) {
-                  self._longOpList.getLinkedContext().setValue('filter/State', FILTER_HIDE_STOPPED);
+                  self._longOpList.getLinkedContext().setValue('filter/status', FILTER_HIDE_STOPPED);
                }
                else {
                   self._longOpList.getLinkedContext().setValue('filter', {});

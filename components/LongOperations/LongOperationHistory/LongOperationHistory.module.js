@@ -63,8 +63,10 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
 
          _bindEvents: function () {
             var self = this;
-            this.subscribeTo(this._view, 'onBeforeDataLoad', function (evtName, filter, sorters, offset, limit) {
-               self._reload();
+            this.subscribeTo(this._view, 'onPropertiesChanged'/*'onPropertyChanged'*/, function (evtName, property) {
+               /*if (property === 'filter') {*/
+                  self._reload();
+               /*}*/
             });
 
             //У невыполненых операций нужно менять цвет текста на красный, поэтому навешиваем класс
@@ -90,14 +92,27 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
                );
             }
             else {
-               this._view.setItems([new LongOperationHistoryItem({
+               // Если не использовать RecordSet, то в DataGridView будет создан оборачивающий источник данных класса Memory и события
+               // onPropertyChange:filter начнут удваиваться (в реализации 3.7.5.150)
+               // (ItemsControlMixin:1634 и затем ItemsControlMixin:1686 вместо одного ItemsControlMixin:1803)
+               var data = new RecordSet({
+                  idProperty: 'id'
+               });
+               var item = new LongOperationHistoryItem({
                   title: failedOperation.get('title'),
                   id: failedOperation.get('id'),
                   //producer: failedOperation.get('producer'),
                   endedAt: new Date(failedOperation.get('startedAt').getTime() + (failedOperation.get('timeSpent') || 0)),
                   errorMessage: failedOperation.get('resultMessage') || 'Ошибка',
                   isFailed: true
+               });
+               data.assign([new Record({
+                  rawData: item,
+                  idProperty: 'id'
                })]);
+               this._view.setItems(data);
+
+
             }
          }
       });

@@ -81,14 +81,12 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
          $constructor: function () {
             var context = this.getLinkedContext();
             context.setValue('filter', {});
-
             if (this._options.userId) {
                context.setValue('filter/UserId', this._options.userId);
             }
             if (this._options.columns.userPic) {
                context.setValue('filter/NeedProfileData', true);
             }
-
             this._publish('onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted', 'onproducerregistered', 'onproducerunregistered', 'ontimespentchanged');
          },
 

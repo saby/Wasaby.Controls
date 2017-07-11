@@ -52,7 +52,7 @@
       <opt name="content">
          <div class="controls-Browser__table controls-Browser__table-fullFilterBlock">
             <div class="controls-Browser__tableCell-search">
-               <component data-component="SBIS3.CONTROLS.SearchForm" class="controls-Browser__search ws-bootup-autofocus">
+               <component data-component="SBIS3.CONTROLS.SearchForm" name="browserSearch" class="controls-Browser__search ws-bootup-autofocus">
                   <opt name="tabindex" value="2"/>
                   <opt name="allowChangeEnable" value="false"/>
                   <opt name="searchParam" value="title"/>
@@ -61,7 +61,7 @@
             </div>
             <div class="controls-Browser__tableRow">
                <div class="controls-Browser__tableCell-filterButton">
-                  <component data-component="SBIS3.CONTROLS.FilterButton" class="controls-Browser__filterButton">
+                  <component data-component="SBIS3.CONTROLS.FilterButton" name="browserFilterButton" class="controls-Browser__filterButton">
                      <opt name="tabindex" value="0"/>
                      <opts name="filterStructure" type="array">
                         <opts>
@@ -73,7 +73,7 @@
                         <opts>
                            <opt name="internalValueField" value="StateKey"/>
                            <opt name="internalCaptionField" value="StateTitle"/>
-                           <opt name="value" bind="filter/State"/>
+                           <opt name="value" bind="filter/status"/>
                            <opt name="itemTemplate" type="null"/>
                            <opt name="resetValue" value="null" type="null"/>
                         </opts>
@@ -105,11 +105,16 @@
                         <opts>
                            <opt name="internalValueField" value="key"/>
                            <opt name="internalCaptionField" value="title"/>
-                           <opt name="value" bind="filter/State"/>
+                           <opt name="value" bind="filter/status"/>
                            <opt name="resetValue" value="null" type="null"/>
                         </opts>
                      </opts>
-                  </component>
+                     <opts name="items" type="array">
+                        <opts>
+                           <opt name="idProperty" value="key"/>
+                        </opts>
+                     </opts>
+                   </component>
                </div>
             </div>
          </div>
@@ -123,7 +128,7 @@
       </opt>
    </component>
    <component data-component="SBIS3.CONTROLS.Action.OpenEditDialog" name="action">
-      <opt name="dialogComponent" value="js!SBIS3.CONTROLS.LongOperationHistory"/>
+      <opt name="template" value="js!SBIS3.CONTROLS.LongOperationHistory"/>
       <opt name="mode" value="floatArea"/>
       <opt name="initializingWay" value="local"/>
    </component>

@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
       var stateFilterHashMap = {
          'null': rk('В любом состоянии'),
          0: rk('В процессе'),
-         1: rk('Прерванные'),
+         1: rk('Приостановленные'),
          2: rk('Завершенные'),
          4: rk('Успешно'),
          5: rk('С ошибками')
@@ -83,14 +83,20 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
          },
 
          $constructor: function () {
-            this.getLinkedContext().setValue('filter', {});
+            var context = this.getLinkedContext();
+            context.setValue('filter/status', null);
+            if ('userId' in this._options) {
+               context.setValue('filter/UserId', this._options.userId);
+            }
          },
 
          init: function () {
+            //###require('Core/ContextBinder').setDebugMode(true);
             LongOperationsRegistry.superclass.init.call(this);
 
             var self = this;
-            var view = this.getChildControlByName('browserView');
+            this._longOpList = this.getChildControlByName('operationList');
+            var view = this._longOpList.getView();//###this.getChildControlByName('browserView')
 
             this.getChildControlByName('browserFastDataFilter').setItems(this._data);
 
@@ -113,8 +119,6 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
             );
 
             this._bindEvents();
-
-            this._longOpList = self.getChildControlByName('operationList');
             this._longOpList.reload();
          },
 
@@ -127,7 +131,13 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
          _bindEvents: function () {
             var self = this;
             var longOperationsBrowser = this.getChildControlByName('longOperationsBrowser');
-            var action = this.getChildControlByName('action');
+            var view = this._longOpList.getView();//###longOperationsBrowser.getChildControlByName('browserView')
+
+            this.subscribeTo(view, 'onPropertiesChanged'/*'onPropertyChanged'*/, function (evtName, property) {
+               /*if (property === 'filter') {*/
+                  self._longOpList.reload();
+               /*}*/
+            });
 
             //Открываем ссылку, если она есть, иначе открываем журнал выполнения операции
             this.subscribeTo(longOperationsBrowser, 'onEdit', function (e, meta) {
@@ -148,15 +158,14 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
                      } : {
                         failedOperation: meta.item
                      };
-                     action.execute(meta);
+                     self.getChildControlByName('action').execute(meta);
                   }
                }
             });
 
-            var view = longOperationsBrowser.getChildControlByName('browserView');
             this.subscribeTo(view, 'onItemsReady', function () {
                self._previousGroupBy = null;
-               var state = self._longOpList.getLinkedContext().getValue('filter/State');
+               var state = self._longOpList.getLinkedContext().getValue('filter/status');
                view.setEmptyHTML(emptyHTMLTpl({title: stateFilterHashMap[state === undefined ? null : state]}));
             });
          }
