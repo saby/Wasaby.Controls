@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
              * @protected
              * @type {object}
              */
-            _actions: {},
+            _actions: {}
          },
 
          /**
