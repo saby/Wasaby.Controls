@@ -109,6 +109,16 @@ define(['js!WSControls/Lists/resources/utils/DataSourceUtil', 'js!WSControls/Lis
 
             });
 
+            it('getPropertyValue', function () {
+               var rs = new RecordSet({
+                  rawData: data,
+                  idProperty : 'id'
+               });
+
+               var value = ItemsUtil.getPropertyValue(rs.at(0), 'title');
+               debugger;
+            });
+
          });
       });
    });
