@@ -1,13 +1,39 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
    'js!SBIS3.CONTROLS.ListView.DragMove',
-   'js!SBIS3.CONTROLS.DragEntity.List'
-], function (DragMove, DragList) {
+   'js!SBIS3.CONTROLS.DragEntity.List',
+   'js!SBIS3.CONTROLS.DragObject',
+   'js!SBIS3.CONTROLS.ListView'
+], function (DragMove, DragList, DragObject, ListView) {
+   'use strict';
    describe('DragMove', function () {
+      var list, element, view, dragMove, event;
       beforeEach(function () {
          if (typeof $ === 'undefined') {
             this.skip();
+            return;
          }
+         list = new DragList({});
+         element = $(
+            '<div class="view">' +
+            '</div>'
+         );
+         view = new ListView({
+            element: element,
+            items: [{id:1},{id:2},{id:3},{id:4}],
+            displayProperty: 'id',
+            idProperty: 'id'
+         });
+         dragMove = view._getDragMove();
+         event = {
+            type: "mouseUp",
+            target: view.getContainer().find('[data-id=1]'),
+            pageX: 0,
+            pageY: 0
+         };
+      });
+      afterEach(function () {
+         DragObject.reset();
       });
       describe('_checkHorisontalDragndrop', function () {
          it('should return true if target has display inline-block', function () {
@@ -44,5 +70,31 @@ define([
             assert.isFalse(DragMove.prototype._isCorrectSource([]));
          });
       });
+      describe('beginDrag', function () {
+         it('should not begin drag', function () {
+            var dragMove = new DragMove({
+                  view: new ListView()
+               });
+            assert.isFalse(dragMove.beginDrag());
+         });
+         it('should begin drag', function () {
+            DragObject._jsEvent = event;
+            assert.isTrue(dragMove.beginDrag());
+         });
+         it('should set source 1 element', function () {
+            DragObject._jsEvent = event;
+            dragMove.beginDrag();
+            assert.equal(DragObject.getSource().getCount(), 1);
+            assert.equal(DragObject.getSource().at(0).getModel().getId(), 1);
+         });
+         it('should set source 2 element', function () {
+            DragObject._jsEvent = event;
+            view.setSelectedKey(2);
+            dragMove.beginDrag();
+            assert.equal(DragObject.getSource().getCount(), 2);
+            assert.equal(DragObject.getSource().at(0).getModel().getId(), 1);
+            assert.equal(DragObject.getSource().at(1).getModel().getId(), 2);
+         });
+      })
    });
 });

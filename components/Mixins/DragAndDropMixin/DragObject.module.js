@@ -177,7 +177,9 @@ define('js!SBIS3.CONTROLS.DragObject', [
       isDragging: function () {
          return this._dragging;
       },
-
+      getEvent: function () {
+         return this._jsEvent;
+      },
       /**
        * Возвращает контрол над которым сейчас находится курсор мыши.
        * @returns {SBIS3.CONTROLS.Control}
