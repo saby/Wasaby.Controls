@@ -107,13 +107,7 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'tmpl!SBIS3
             mode: 'part',
             pagesCount: null,
             showPages: true,
-            visiblePath: {
-               begin: true,
-               prev: true,
-               pages: true,
-               next: true,
-               end: false
-            }
+            visiblePath: null
          }
       },
       $constructor: function(){
@@ -128,10 +122,13 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'tmpl!SBIS3
           * Опция navigationToolbar должна будет заменить mode и pagesCount. Пока поддерживаем совместимость.
           */
          if (!cfg.visiblePath) {
-            if (cfg.mode === 'full') {
-               cfg.visiblePath.end = true;
-            }
-            cfg.navigationToolbar.pages = cfg.showPages;
+            cfg.visiblePath = {
+               begin: true,
+               prev: true,
+               pages: cfg.showPages,
+               next: true,
+               end: cfg.mode === 'full'
+            };
          }
 
          return newCfg;
