@@ -156,12 +156,20 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                }
                this._subscribeOnScroll();
 
+               this._addGradient();
+
                // Что бы до инициализации не было видно никаких скроллов
                this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
 
                // task: 1173330288
                // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
                FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer().find('.controls-ScrollContainer__content');
+            }
+         },
+
+         _addGradient: function() {
+            if (this._getScrollHeight() >  this._container.height()) {
+               this._container.addClass('controls-ScrollContainer__bottom-gradient');
             }
          },
 
@@ -364,6 +372,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   }
                }
             }
+            this._addGradient();
          },
 
          _getScrollTop: function(){
