@@ -213,6 +213,10 @@ define('js!SBIS3.CONTROLS.TextBox', [
       
                if(userPasteResult !== false){
                   self._pasteProcessing++;
+                  /* зачем делаем setTimeout?
+                     в момент события в поле ввода нет перенесенных данных,
+                     поэтому вставка выполняется с задержкой, чтобы браузер самостоятельно обработал данные из буфера обмена(изображение, верстка)
+                   */
                   window.setTimeout(function(){
                      self._pasteProcessing--;
                      if (!self._pasteProcessing) {
