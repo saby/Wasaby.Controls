@@ -1536,7 +1536,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          sorting = this.getSorting();
 
          //при режиме сортировки отличному от single либо когда сортируют по уже отсортированной колонке, но в другом направлении выполняем обычную логику
-         if ((sortingtype != 'true') || ((sorting.length == 1 && sorting[0][colName]))) {
+         if ((sortingtype != 'single') || ((sorting.length == 1 && sorting[0][colName]))) {
             newSorting = sorting.filter(function (sortElem) {
                if (sortElem[colName] == 'ASC') {
                   wasNoneSorting = false;
