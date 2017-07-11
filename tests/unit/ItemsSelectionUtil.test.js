@@ -72,6 +72,14 @@ define([
       });
    
       context('need JQ', function() {
+         var getContainer = function() {
+               var elem = $('<div class="selectorButtonContainer"/>');
+               elem.appendTo('body');
+               return elem;
+         },
+         removeContainer = function() {
+            $('.selectorButtonContainer').remove();
+         };
          describe('ItemsSelection::initSelectorAction', function () {
             var action, selectorButton;
             
@@ -80,9 +88,13 @@ define([
                   this.skip();
                } else {
                   action = new SelectorAction();
-                  selectorButton = new SelectorButton();
+                  selectorButton = new SelectorButton({element: getContainer()});
                   ItemsSelection.initSelectorAction(action, selectorButton);
                }
+            });
+   
+            after(function() {
+               removeContainer();
             });
             
             it('has event handler for onExecuted', function () {
@@ -91,6 +103,56 @@ define([
       
             it('has event handler for onExecute', function () {
                assert.isTrue(action.hasEventHandlers('onExecute'))
+            });
+      
+         });
+   
+         describe('ItemsSelection::itemClickHandler', function () {
+            var selectorButton;
+      
+            before(function() {
+               if(typeof window === 'undefined') {
+                  this.skip();
+               } else {
+                  selectorButton = new SelectorButton({
+                     element: getContainer(),
+                     displayProperty: 'title',
+                     idProperty: 'id',
+                     selectedItem: {id: 123, title: 'title'}
+                  });
+               }
+            });
+   
+            after(function() {
+               removeContainer();
+            });
+   
+            it('cross click check', function () {
+               var crossClicked;
+   
+               ItemsSelection.clickHandler.call(selectorButton, selectorButton.getContainer().find('.js-controls__item-cross'),
+                  function() {
+                     crossClicked = true;
+                  },
+                  function() {
+                     crossClicked = false;
+                  }
+               );
+               assert.isTrue(crossClicked);
+            });
+   
+            it('item click check', function () {
+               var itemClicked;
+      
+               ItemsSelection.clickHandler.call(selectorButton, selectorButton.getContainer().find('.js-controls-ListView__item'),
+                  function() {
+                     itemClicked = false;
+                  },
+                  function(id) {
+                     itemClicked = id && true;
+                  }
+               );
+               assert.isTrue(itemClicked);
             });
       
          });
