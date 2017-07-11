@@ -8,6 +8,8 @@ define('js!SBIS3.CONTROLS.FilterController', [
    'js!SBIS3.CONTROLS.FilterHistoryControllerUntil'
 ], function(cAbstract, cMerge, cFunctions, FilterHistoryControllerUntil) {
    
+   var BROWSER_FILTER_FIELD = 'browser.filter';
+   
    return cAbstract.extend({
       /**
        * @cfg {SBIS3.CONTROLS.FilterButton} Кнопка фильтров
@@ -45,11 +47,17 @@ define('js!SBIS3.CONTROLS.FilterController', [
       
             /* Обработчик на применение / сборс кнопки фильтров и быстрого фильтра */
             var filterChangeHandler = function() {
+                  var resultFilter = {};
                   if (this === filterButton && fastDataFilter) {
                      syncFilters(filterButton, fastDataFilter);
                   } else if (filterButton) {
                      syncFilters(fastDataFilter, filterButton);
                   }
+      
+                  resultFilter = cMerge(
+                     filterButton ? filterButton.getFilter() : {},
+                     fastDataFilter ? fastDataFilter.getFilter() : {}
+                  );
          
                   /* Почему сделано через контекст:
                    1) Контекст даёт возможность удалять занчения по-умолчанию,
@@ -60,10 +68,13 @@ define('js!SBIS3.CONTROLS.FilterController', [
                    2) фильтр переиспользуются (например фильтры ЭДО) и могут быть ненужные для фильтрации элементы структуры,
                    через контекст можно четко указать, какие фильтр требуется для фильтрации.
                    */
-                  parentContext.setValue('browser.filter', cMerge(
-                     filterButton ? filterButton.getFilter() : {},
-                     fastDataFilter ? fastDataFilter.getFilter() : {}
-                  ));
+                  if(parentContext.getValue(BROWSER_FILTER_FIELD)) {
+                     /* Необходимо подмерживать фильтр, иначе,
+                        если на это поле забиндена вьюха могут пропадать служебные фильтры,
+                        такие как: иерархия, поиск и тд */
+                     resultFilter = cMerge(cFunctions.clone(parentContext.getValue(BROWSER_FILTER_FIELD)), resultFilter);
+                  }
+                  parentContext.setValue(BROWSER_FILTER_FIELD, resultFilter);
                },
                subscribeFilter = function(filter) {
                   filter.subscribe('onApplyFilter', filterChangeHandler)
