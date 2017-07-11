@@ -3,8 +3,9 @@ define([
    'js!SBIS3.CONTROLS.ListView.DragMove',
    'js!SBIS3.CONTROLS.DragEntity.List',
    'js!SBIS3.CONTROLS.DragObject',
-   'js!SBIS3.CONTROLS.ListView'
-], function (DragMove, DragList, DragObject, ListView) {
+   'js!SBIS3.CONTROLS.ListView',
+   'js!WS.Data/Collection/RecordSet'
+], function (DragMove, DragList, DragObject, ListView, RecordSet) {
    'use strict';
    describe('DragMove', function () {
       var list, element, view, dragMove, event;
@@ -20,7 +21,11 @@ define([
          );
          view = new ListView({
             element: element,
-            items: [{id:1},{id:2},{id:3},{id:4}],
+            items: new RecordSet({
+               rawData: [{id: 1}, {id: 2}, {id: 3}, {id: 4}],
+               idProperty: 'id'
+            }),
+            multiselect: true,
             displayProperty: 'id',
             idProperty: 'id'
          });
@@ -75,6 +80,12 @@ define([
             var dragMove = new DragMove({
                   view: new ListView()
                });
+            DragObject._jsEvent = {
+               type: "mouseUp",
+               target: $('<div/>'),
+               pageX: 0,
+               pageY: 0
+            };
             assert.isFalse(dragMove.beginDrag());
          });
          it('should begin drag', function () {
@@ -89,11 +100,19 @@ define([
          });
          it('should set source 2 element', function () {
             DragObject._jsEvent = event;
-            view.setSelectedKey(2);
+            view.setSelectedKeys([1,2]);
             dragMove.beginDrag();
             assert.equal(DragObject.getSource().getCount(), 2);
-            assert.equal(DragObject.getSource().at(0).getModel().getId(), 1);
-            assert.equal(DragObject.getSource().at(1).getModel().getId(), 2);
+            assert.include([1, 2], DragObject.getSource().at(0).getModel().getId());
+            assert.include([1, 2], DragObject.getSource().at(1).getModel().getId());
+         });
+         it('should set source ', function () {
+            DragObject._jsEvent = event;
+            view.setSelectedKeys([1,2]);
+            dragMove.beginDrag();
+            assert.equal(DragObject.getSource().getCount(), 2);
+            assert.include([1, 2], DragObject.getSource().at(0).getModel().getId());
+            assert.include([1, 2], DragObject.getSource().at(1).getModel().getId());
          });
       })
    });

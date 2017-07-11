@@ -121,7 +121,6 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
                if (this._options.useDragPlaceHolder) {
                   var placeholder = this._getDragPlaceHolder(DragObject);
                   placeholder.show();
-                  var item = this._getItemsProjection().getItemBySourceItem(targetsModel);
                   if (target.getPosition() == 'before') {
                      placeholder.insertBefore(target.getDomElement());
                   } else {
