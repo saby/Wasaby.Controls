@@ -396,7 +396,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             }
 
             if (this._paging) {
-               this._setPagesCount(Math.floor(this._getScrollHeight() / this._container.height()));
+               this._setPagesCount(Math.ceil(this._getScrollHeight() / this._container.height()));
             }
          },
 
@@ -432,10 +432,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             this._container.off('mousemove', this._initScrollbar);
             this._container[0].removeEventListener('touchstart', this._touchStartHandler);
 
-            if (this._paging) {
-               this._paging.unsubscribe('onSelectedItemChange');
-            }
-
             BaseCompatible.destroy.call(this);
             // task: 1173330288
             // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
@@ -464,10 +460,11 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                requirejs(['js!SBIS3.CONTROLS.Paging'], function(paging) {
                   this._paging = new paging({
                      element: this._container.find('.js-controls-ScrollContainer__paging'),
-                     className: 'controls-ScrollContainer__paging',
-                     visiblePath: this._options.navigationToolbar
+                     className: 'controls-ScrollContainer__paging controls-ListView__scrollPager',
+                     visiblePath: this._options.navigationToolbar,
+                     parent: this
                   });
-                  this._setPagesCount(Math.floor(this._getScrollHeight() / this._container.height()));
+                  this._setPagesCount(Math.ceil(this._getScrollHeight() / this._container.height()));
                   this._paging.subscribe('onSelectedItemChange', this._pageChangeHandler.bind(this));
                   this._page = 1;
                }.bind(this));
