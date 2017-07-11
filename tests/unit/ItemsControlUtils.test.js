@@ -116,7 +116,13 @@ define(['js!WSControls/Lists/resources/utils/DataSourceUtil', 'js!WSControls/Lis
                });
 
                var value = ItemsUtil.getPropertyValue(rs.at(0), 'title');
-               debugger;
+               assert.equal('Первый', value, 'getPropertyValue doesn\'t return value of the record field');
+
+               value = ItemsUtil.getPropertyValue(data[0], 'title');
+               assert.equal('Первый', value, 'getPropertyValue doesn\'t return value of the native object field');
+
+               value = ItemsUtil.getPropertyValue('Первый', 'title');
+               assert.equal('Первый', value, 'getPropertyValue doesn\'t return value of the flag/enum item');
             });
 
          });
