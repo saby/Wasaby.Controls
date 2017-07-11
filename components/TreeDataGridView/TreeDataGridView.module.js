@@ -248,11 +248,21 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       _getInsertMarkupConfig: function(newItemsIndex, newItems) {
          var
             cfg = TreeDataGridView.superclass._getInsertMarkupConfig.apply(this, arguments),
-            lastItem = this._options._itemsProjection.at(newItemsIndex - 1);
+            lastItem = this._options._itemsProjection.at(newItemsIndex - 1),
+            lastItemParent, newItemsParent;
 
          if (cfg.inside && !cfg.prepend) {
             cfg.inside = false;
-            cfg.container = this._getDomElementByItem(lastItem);
+            // В режиме поиска может возникнуть ситуация, когда предыдущий элемент расположен в других хлебных крошках.
+            // Этот сценарий происходит в случае перерисовки первой записи в хлебных крошках.
+            // В таком случае контейнером, ЗА которым будут добавлены записи должна стать правильная хлебная крошка.
+            lastItemParent = lastItem.getContents().get(this._options.parentProperty);
+            newItemsParent = newItems[0].getContents().get(this._options.parentProperty);
+            if (this._isSearchMode() && lastItemParent !== newItemsParent) {
+               cfg.container = this._getItemsContainer().find('.controls-DataGridView__tr.controls-HierarchyDataGridView__path[data-id="' + newItemsParent + '"]');
+            } else {
+               cfg.container = this._getDomElementByItem(lastItem);
+            }
          }
 
          // Если в режиме поиска контейнер для вставки так и не был определен и lastItem - хлебная крошка (isNode), то ищем tr-ку в которой она лежит.
