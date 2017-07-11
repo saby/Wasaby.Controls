@@ -304,8 +304,6 @@ define('js!SBIS3.CONTROLS.FormController', [
             this._toggleOverlay(false);
          }
          this._updateIndicatorZIndex();
-         this._moveFocusToSelf();
-         domHelpers.doAutofocus(this._container);
          this._notifyOnAfterFormLoadEvent();
       },
 
