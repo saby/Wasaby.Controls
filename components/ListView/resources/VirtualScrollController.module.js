@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
          reset: function(){
             this._currentVirtualPage = 0;
             this._heights = [];
-            this._newItemsCount = 0;
+            this._newItemsCount = 0,
             this._removedItemsCount = 0;
          },
 
@@ -235,26 +235,16 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             });
          },
 
-         _getItemHeight: function(item) {
-            var hash = item.getHash();
-            return $('[data-hash="' + hash + '"]', this._options.viewContainer).height();
-         },
-
          // Добавление новых элементов, когда они добавляются не через подгрузку по скроллу
          // TODO: пока не работает для элементов которые в данный момент не нужно вставлять в DOM
          addItems: function (items, at) {
             var hash;
 
-            // добавили в начало
-            if (at === 0 && this._heights.length !== 0) {
-               for (var i = items.length - 1; i >= 0; i--) {
-                  this._heights.unshift(this._getItemHeight(items[i]));
-               }
-            }
-
             // Пока рассчитываем, что добавляется один элемент за раз
             for (var i = 0; i < items.length; i++) {
-               this._heights.push(this._getItemHeight(items[i]));
+               hash = items[i].getHash();
+               var itemHeight = $('[data-hash="' + hash + '"]', this._options.viewContainer).height();
+               this._heights.push(itemHeight);
             }
             
             this._newItemsCount += items.length;
