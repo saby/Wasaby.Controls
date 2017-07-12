@@ -816,6 +816,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
          headData = prepareHeadData(this._options);
          headData.columnsShift = this._getColumnsScrollPosition();
          headData.thumbPosition = this._currentScrollPosition;
+         /* Чтобы не было дёрганий интерфейса сразу создаём шапку с актуальным состоянием видимости */
+         headData.isVisible = !(this._options.allowToggleHead && this._getItemsProjection() && !this._getItemsProjection().getCount());
          headMarkup = this._options.headTpl(headData);
          var body = $('.controls-DataGridView__tbody', this._container);
 

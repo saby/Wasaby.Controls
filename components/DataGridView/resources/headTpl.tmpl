@@ -1,4 +1,4 @@
-<thead class="controls-DataGridView__thead">
+<thead class="controls-DataGridView__thead {{!isVisible ? 'ws-hidden'}}">
 <ws:if data="{{showHead}}">
     <ws:for data="i, row in content">
         <ws:if data="{{row.length && (countRows === 1 ? i === 1 : true)}}">
