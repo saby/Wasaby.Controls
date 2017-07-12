@@ -3,7 +3,6 @@
  */
 define('js!WSControls/Control/Base',
    ['Core/core-extend',
-      'Core/core-functions',
       'Core/helpers/generate-helpers',
       'Core/EventBus',
       'js!WS.Data/Entity/InstantiableMixin',
@@ -14,7 +13,6 @@ define('js!WSControls/Control/Base',
    ],
 
    function (extend,
-             cFunctions,
              generate,
              EventBus,
              InstantiableMixin,
@@ -37,15 +35,17 @@ define('js!WSControls/Control/Base',
              * Состояния режима совместимости
              */
             iWantVDOM: true, //позволяет сделать из VDOM контрола не VDOM контрол, не АПИ
+                              //TODO: удалить через 1 доброску: следующая должна быть в WS - определить там iWantVDOM в BaseCompatible
+                              //TODO: после этого можно убрать здесь. Инчае разъедутся стенды
             VDOMReady: false, //состояние, которое используется в bootup для принятия решения маунтить контрол или он уже привязан к дому
             /**
              * Состояния с которыми не докнца ясно, что делать.
              * НЕ АПИ.
-             * logicParent хранит ссылку на логического родителя для регистрации в нем
+             * _logicParent хранит ссылку на логического родителя для регистрации в нем
              * _decOptions - набор атрибутов, которые были на теге при создании
              * (контрол могли создать через new и положить на контейнер, у которого есть класс или какие-нибудь другие атрибуты)
              */
-            logicParent: null,
+            _logicParent: null,
             _decOptions: null,
             /**
              * Логика вынесена в функцию для переопределения поведения легкого инстанса
@@ -90,8 +90,10 @@ define('js!WSControls/Control/Base',
              * @param newOptions
              */
             applyNewOptions: function(newOptions) {
+               var oldOptions = this._options;
                this._options = newOptions;
-               this._applyOptions();
+               this._applyOptions && this._applyOptions(oldOptions); //TODO: удалить после согласования ЖЦ вместе с переименованием метода во всех контролах
+               this._beforeTemplate && this._beforeTemplate(oldOptions);
             },
 
             /**
@@ -111,9 +113,9 @@ define('js!WSControls/Control/Base',
 
 
             constructor: function (cfg) {
-               this.logicParent = cfg.logicParent;
+               this._logicParent = cfg._logicParent;
                if (!this.deprecatedContr) {
-                  this._options = cFunctions.shallowClone(cfg);
+                  this._options = cfg;
                   this._applyOptions();
                   this._parseDecOptions(cfg);
 
@@ -127,6 +129,16 @@ define('js!WSControls/Control/Base',
                } else {
                   this._parseDecOptions(cfg);
                   this.deprecatedContr(cfg);
+               }
+            },
+
+            /**
+             * Точка разрушения компонента
+             */
+            destroy: function() {
+               this._beforeDestroy();
+               if (BaseCompatible) {
+                  BaseCompatible.destroy.call(this);
                }
             },
 
@@ -163,26 +175,30 @@ define('js!WSControls/Control/Base',
             },
 
             /**
-             * Точка входа перед шаблонизацией
+             * Точка входа перед шаблонизацией. _beforeTemplate точка применения новых
+             * опций для компонента.
+             * @param oldOptions - предыдущие опции компонента
              * @private
              */
-            _applyOptions: function(){
+            _beforeTemplate: function(oldOptions){
             },
 
             /**
-             * Точка завершения шаблонизации
+             * Точка завершения шаблонизации. Здесь доступен DOM и
+             * объект this.children
+             * @private
              */
-            buildComplete: function(){
+            _buildComplete: function(){
 
             },
 
             /**
-             * Точка разрушения компонента
+             * Перед разрушением. Последняя точка, когда компонент жив.
+             * Здесь нужно разрушить объекты, которые были созданы в _applyOptions
+             * @private
              */
-            destroy: function() {
-               if (BaseCompatible) {
-                  BaseCompatible.destroy.call(this);
-               }
+            _beforeDestroy: function(){
+
             }
 
             //</editor-fold>
