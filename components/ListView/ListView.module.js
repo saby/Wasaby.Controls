@@ -4077,7 +4077,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   projection: this._getItemsProjection(),
                   useDragPlaceholder: this._options.useDragPlaceHolder,
                   dragEntity: this._options.dragEntity,
-                  dragEntityList: this._options.dragEntityList
+                  dragEntityList: this._options.dragEntityList,
+                  itemsDragNDrop: this.getItemsDragNDrop()
                });
             }
             return this._dragMoveController;

@@ -111,7 +111,7 @@
 @button-line-height: 						   2.86rem;
 @button-active-bg:                        #1B2A3B;
 @button-hover-bg:                         #293D52;
-@button-bg: 							  #26B8FF;
+@button-bg: 							  #354B62;
 // Normal primary button
 @button-primary-border:                   @default-border-width solid #d94700;
 @button-primary-bg:                       @primary-color;
@@ -241,7 +241,7 @@
 @menu-header-height:                      3.57rem;
 @menu-big-header-height:                  1.1428rem;
 @menu-header-icon-color:                  @default-hover-color;
-@menu-header-padding:                     .14rem 0.5rem;
+@menu-header-padding:                     .14rem 0.57rem;
 @popup-header-font-weight:                normal;
 @popup-header-caption-color:              @default-text-color;
 //Menu item
@@ -252,6 +252,7 @@
 @menu-item-icon-16-margin:					   0.2142rem 0 0.2142rem 2.2857rem;
 @menu-item-hover-bg:                      #e1ecf6;
 @menu-item-hover-icon-color:              @primary-color!important;
+@menu-item-default-padding:               0 .57rem;
 @menu-item-icon-top-offset:               0.2805rem; // (3.57 - 3) /2
 @menu-item-icon-left-offset:              -.4232rem;
 @menu-item-icon24-top-offset:             0;
@@ -263,7 +264,7 @@
 @menu-item-padding-24:                    2.5rem;
 // Menu
 @menu-button-menu-border-width:           @default-border-width;
-@menu-button-menu-margin:                 -10px 0 0 -2px;
+@menu-button-menu-margin:                 -10px 0 0 0;
 @menu-button-menu-border-color:           #23b8ff;
 @menu-link-header-bg-color:               #5bafe7;
 @menu-link-icon-24-top:                   -.14rem;
@@ -620,6 +621,7 @@
 @data-grid-header-cell-padding:           @data-grid-cell-padding;
 @data-grid-header-cell-padding-side:      .3571rem;
 @data-grid-header-cell-font-size:         0.86rem;
+@data-grid-header-cell-sorting-icon-size: 1rem;
 @data-grid-row-selected-cell-text-color:  @default-text-color;
 @data-grid-cell-height:                   1.7857rem;
 @data-grid-cell-padding:                  0 .28571rem;
@@ -667,6 +669,7 @@
 
 @DropdownList-border-color:               @default-text-color;
 @DropdownList-linkStyleHoverColor:		   rgb(187, 233, 255);
+@DropdownList-disabled-text:              rgba(102, 170, 221, 0.2);
 //ProgressBar
 @controls-ProgressBar-height:             1.3214rem;
 @controls-ProgressBar-width:              14.286rem;
@@ -885,6 +888,7 @@
 @dropdownlist-item-text-color:            #202835;
 @controls-editInPlace-editor-bg:			   #354B62 !important;
 @controls-FieldLink-picker-show-color:		#F0F5FB;
+@controls-FieldLink-picker-show-field-color:   rgb(58, 73, 81);
 @textbox-font-size:							   1.43rem;
 @scroll-pager-bg:							      transparent;
 @commands-button-close-icon:              @icon-large-size;
@@ -897,8 +901,8 @@
 @DropdownList-footer-hasMore-top:         1.1rem;
 @DropdownList-picker-menu-item-color:     #F0F5FB;
 @DropdownList-picker-menu-item-hover:     #E0ECF5;
-@list-view-loading-indicator-gradient-bg: url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to top,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
-@list-view-loading-indicator-gradient-bg-up:url(@list-view-scroll-spritesheet) no-repeat center,linear-gradient(to bottom,#1d2834 0,rgba(29, 40, 52, 0.58) 50%,rgba(29, 40, 52, 0.68) 51%,rgba(29, 40, 52, 0.62) 100%);
+@list-view-loading-indicator-gradient-bg: url(@list-view-scroll-spritesheet) no-repeat center;
+@list-view-loading-indicator-gradient-bg-up:url(@list-view-scroll-spritesheet) no-repeat center;
 @text-box-placeholder-color: 				   rgba(96,170,221, .2);
 @DropdownList-picker-menu-item-height:    3rem;
 @DropdownList-picker-menu-item-base-color: @menu-item-text-color;

@@ -507,7 +507,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
             else {
                //TODO когда идет догрузка по скроллу, все перерисовывать слишком дорого - возникли тормоза в контактах, до VDOM вставляем такую проверку
                var lastItemsIndex = this._getItemsProjection().getCount() - newItems.length;
-               if (lastItemsIndex == newItemsIndex) {
+               if ((lastItemsIndex == newItemsIndex) || action == 'rm') {//Если случается событие replace то срабатывает сначала удаление, потом добавление. Если по удалению перерисовывать все, то потом добавление дублирует запись, поэтому проверка на удалени обязательна
                   parentFnc.apply(this, args);
                }
                else {

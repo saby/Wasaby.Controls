@@ -194,7 +194,9 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
             var trg = dcHelpers.trackElement(this._container, true);
 
-            this._autosizeTextArea();
+            if(this.isVisible()){
+               this._autosizeTextArea();
+            }
 
             trg.subscribe('onVisible', function (event, visible) {
                if (visible) {
