@@ -112,7 +112,7 @@ define('js!SBIS3.CONTROLS.Utils.ItemsSelection', ['Core/core-instance', 'Core/de
       
       if(target.hasClass('js-controls__item-cross')) {
          crossClickHandler(id);
-      } else if(itemContainer.length) {
+      } else {
          itemClickHandler(id);
       }
    }

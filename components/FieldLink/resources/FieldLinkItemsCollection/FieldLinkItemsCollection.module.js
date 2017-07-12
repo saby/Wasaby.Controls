@@ -54,7 +54,9 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                   }
                },
                function (id) {
-                  self._notify('onItemActivate', id);
+                  if (id !== undefined) {
+                     self._notify('onItemActivate', id);
+                  }
                }
             );
          },
