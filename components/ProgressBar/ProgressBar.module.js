@@ -4,7 +4,7 @@
 define('js!SBIS3.CONTROLS.ProgressBar',
    [
       'js!WSControls/Control/Base',
-      'templ!SBIS3.CONTROLS.ProgressBar',
+      'tmpl!SBIS3.CONTROLS.ProgressBar',
       'js!SBIS3.CONTROLS.ProgressBar.compatibility',
       'css!SBIS3.CONTROLS.ProgressBar'
    ],
@@ -51,17 +51,21 @@ define('js!SBIS3.CONTROLS.ProgressBar',
             /**
              * @cfg {Number} Максимальное значение прогресса.
              */
-            this.maximum = options.maximum || 100;
+            if ('maximum' in options) {
+               this.maximum = options.maximum;
+            } else {
+               this.maximum = 100;
+            }
             /**
              * @cfg {Number} Шаг между ближайшими возможными значениями прогресса в процентах.
              */
             this.step = options.step || 1;
             /**
-             * @cfg {Number}  Текущее состояние прогресса.
+             * @cfg {Number} Текущее состояние прогресса.
              */
             this.progress = options.progress || 0;
             /**
-             * @cfg {String} Текущее состояние расропожения текста процесса.
+             * @cfg {String} Текущее состояние расположения текста процесса.
              * 1.center;
              * 2.left;
              * 3.right;
@@ -76,22 +80,28 @@ define('js!SBIS3.CONTROLS.ProgressBar',
          },
 
          _checkRanges: function() {
-            var temp;
-            this.progress = parseFloat(this.progress);
+            var
+               progress = parseFloat(this.progress),
+               minimum = this.minimum,
+               maximum = this.maximum;
+
             // Если нельзя привести
-            if (isNaN(this.progress)) {
-               options.progress = 0;
+            if (isNaN(progress)) {
+               this.progress = 0;
+            } else {
+               this.progress = progress;
             }
-            if (this.progress < this.minimum) {
-               this.progress = this.minimum;
+            if (progress < minimum) {
+               this.progress = minimum;
             }
-            if (this.progress > this.maximum) {
-               this.progress = this.maximum;
+            if (progress > maximum) {
+               this.progress = maximum;
             }
-            if (this.maximum < this.minimum) {
-               temp = options.minimum;
-               this.minimum = this.maximum;
-               this.maximum = temp;
+            if (maximum < minimum) {
+               maximum ^= minimum ^= maximum;
+               minimum ^= maximum;
+               this.minimum = minimum;
+               this.maximum = maximum;
             }
          },
 
@@ -99,14 +109,14 @@ define('js!SBIS3.CONTROLS.ProgressBar',
             var
                progress = this.progress,
                minimum = this.minimum,
-               maximum = this.maximum,
                step = this.step,
-               length = maximum - minimum;
+               length = this.maximum - minimum,
+               progressPercent = Math.round((progress - minimum) / length * 100);
 
-            if (progress !== length) {
-               progress = Math.floor(progress / step) * step;
+            if (progressPercent !== 100) {
+               progressPercent = Math.floor(progressPercent / step) * step;
             }
-            return Math.round((progress - minimum) / length * 100);
+            return progressPercent;
          }
       });
    return ProgressBar;
