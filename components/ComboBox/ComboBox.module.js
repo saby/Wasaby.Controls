@@ -229,7 +229,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                emptyItemProjection,
                rs;
             rawData[cfg.idProperty] = null;
-            rawData[cfg.displayProperty] = 'Не выбрано';
+            rawData[cfg.displayProperty] = rk('Не выбрано');
             rawData.isEmptyValue = true;
 
             rs = new RecordSet({
