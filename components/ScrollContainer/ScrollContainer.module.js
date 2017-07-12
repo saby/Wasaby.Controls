@@ -166,6 +166,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                }
                this._subscribeOnScroll();
 
+               this._addGradient();
+
                // Что бы до инициализации не было видно никаких скроллов
                this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
 
@@ -174,6 +176,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer().find('.controls-ScrollContainer__content');
 
                this._initPaging();
+            }
+         },
+
+         _addGradient: function() {
+            if (this._getScrollHeight() >  this._container.height()) {
+               this._container.addClass('controls-ScrollContainer__bottom-gradient');
             }
          },
 
@@ -323,6 +331,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                this._calcPagingSelectedKey(scrollTop);
             }
             this.getContainer().toggleClass('controls-ScrollContainer__top-gradient', scrollTop > 0);
+            this.getContainer().toggleClass('controls-ScrollContainer__bottom-gradient', scrollTop < this._getScrollHeight() -  this._container.height());
          },
 
          _calcPagingSelectedKey: function(position) {
@@ -397,6 +406,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   }
                }
             }
+            this._addGradient();
 
             if (this._paging) {
                this._setPagesCount(Math.ceil(this._getScrollHeight() / this._container.height()));
