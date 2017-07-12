@@ -266,11 +266,6 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
             if (property === 'expanded') {
                this._onChangeItemExpanded(item);
             }
-         },
-         _getDirectionOrderChange: function(parentFunc, e, target) {
-            if (this._options.itemsDragNDrop !== 'onlyChangeParent') {
-               return parentFunc.call(this, e, target);
-            }
          }
       },
 

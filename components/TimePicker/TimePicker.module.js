@@ -160,16 +160,11 @@ define('js!SBIS3.CONTROLS.TimePicker',
             this.getLinkedContext().setValueSelf('mode', mode);
          },
 
-         hide: function() {
-            TimePicker.superclass.hide.call(this);
-            this._body.hide();
-         },
-
-         show: function() {
-            TimePicker.superclass.show.call(this);
-            // Всегда открываемся в режиме часов.
+         defaultMode: function() {
+            // Всегда открываемся в режиме часов без анимации.
+            this._body.toggleAnimation(false);
             this.setMode('hours');
-            this._body.show();
+            this._body.toggleAnimation(true);
          },
 
          _fieldChangeHandler: function(wsEvent, name, value) {

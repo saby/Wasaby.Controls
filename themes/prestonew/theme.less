@@ -129,7 +129,10 @@ body {
             position: absolute;
             top: -@default-border-width;
             left: -@default-border-width;
-            color: #E4E4E4 !important;
+            color: #E4E4E4;
+         }
+         &.controls-Click__active {
+           background: @button-active-bg;
          }
          &.ws-disabled {
             border-color: @disabled-color;
@@ -499,9 +502,6 @@ body {
      max-height: 3.57rem;
      line-height: 3.57rem;
   }
-  .engine-Browser__path-wrapper-in-head {
-    height: auto;
-  }
   .engine-Browser__path {
     max-height: 2rem;
     height: auto !important;
@@ -537,6 +537,7 @@ body {
       height: 3.57rem;
       max-height: 3.57rem;
       line-height: 3.57rem;
+      font-weight: normal;
    }
 }
 
@@ -709,9 +710,6 @@ body .controls-TextArea {
    min-height: 3rem;
 }
 
-.ws-enabled.controls-Checked__checked>.controls-CheckBox__icon:before {
-    z-index: 2;
-}
 body .controls-ToolBar__menuIcon .icon-24 {
   font-family: carrypresto-icons!important;
 }
@@ -900,17 +898,12 @@ body {
       .ws-infobox-content {
          color: @default-text-color;
          font-size: 1rem;
-         p {
-            margin: 0 20px 8px 0;
-            font-size: 1.43rem;
-            color: @default-text-color;
-         }
       }
 
       .ws-infobox-close-button.icon-disabled{
          font-size: 3rem!important;
-         right: 0.7rem;
-         top: 0.3rem;
+         right: 0.6rem;
+         top: 0.41rem;
          color: @link-text-color!important;
          &:hover {
             color: #B9E9FF!important;
@@ -1000,18 +993,11 @@ body {
      }
      .controls-ListView__hoveredItem {
          .controls-DataGridView__td {
-             background-color: #d7e2ef !important;
+             background-color:  #E0ECF5 !important;
          }
      }
 }
 .controls-FieldLink {
-   .controls-FieldLink__showSelector {
-      /* По договорённости с прокетировщиками,
-         "костыль" для темы presto, т.к. там иконка не акцентная */
-      .icon-primary:not(:hover) {
-         color: @default-text-color !important;
-      }
-   }
    &.controls-Picker__show {
       .controls-FieldLink__showSelector {
          .icon-primary {
@@ -1038,9 +1024,6 @@ body .controls-CommandsButton__picker {
    .controls-MenuItem {
       padding-right: 2.8rem !important; //38 = 24 (кнопка) + 8(отступ справа у кнопки) +6(отступ слева у кнопки)
    }
-}
-body .controls-Link.controls-FieldLink__Link:not(.ws-disabled).controls-FieldLink-Link__filterButton {
-  color: #26B8FF;
 }
 
 .controls-DropdownList__picker .controls-DropdownList__multiselect .controls-DropdownList__itemCheckBox {
@@ -1096,6 +1079,7 @@ body .controls-ItemActions .controls-Button__icon.icon-size {
       }
     }
   }
+
 }
 .controls-Suggest__picker {
   .controls-HtmlDecorators-highlight {

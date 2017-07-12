@@ -109,9 +109,9 @@
 // Normal default button
 @button-border:                           @default-border-width solid @default-border-color;
 @button-line-height: 						   2.86rem;
-@button-active-bg:                        #1d2834;
-@button-hover-bg:                         #212e3d;
-@button-bg: 								      #324a62;
+@button-active-bg:                        #1B2A3B;
+@button-hover-bg:                         #293D52;
+@button-bg: 							  #354B62;
 // Normal primary button
 @button-primary-border:                   @default-border-width solid #d94700;
 @button-primary-bg:                       @primary-color;
@@ -241,16 +241,18 @@
 @menu-header-height:                      3.57rem;
 @menu-big-header-height:                  1.1428rem;
 @menu-header-icon-color:                  @default-hover-color;
-@menu-header-padding:                     .14rem 0.5rem;
+@menu-header-padding:                     .14rem 0.57rem;
 @popup-header-font-weight:                normal;
 @popup-header-caption-color:              @default-text-color;
 //Menu item
 @menu-item-height:                        3.57rem;
 @menu-item-text-color:                    #273B4D;
 @menu-item-bg:                            #f0f5fb;
+@menu-item-font-size:                     @default-font-size;
 @menu-item-icon-16-margin:					   0.2142rem 0 0.2142rem 2.2857rem;
 @menu-item-hover-bg:                      #e1ecf6;
 @menu-item-hover-icon-color:              @primary-color!important;
+@menu-item-default-padding:               0 .57rem;
 @menu-item-icon-top-offset:               0.2805rem; // (3.57 - 3) /2
 @menu-item-icon-left-offset:              -.4232rem;
 @menu-item-icon24-top-offset:             0;
@@ -262,7 +264,7 @@
 @menu-item-padding-24:                    2.5rem;
 // Menu
 @menu-button-menu-border-width:           @default-border-width;
-@menu-button-menu-margin:                 -10px 0 0 -2px;
+@menu-button-menu-margin:                 -10px 0 0 0;
 @menu-button-menu-border-color:           #23b8ff;
 @menu-link-header-bg-color:               #5bafe7;
 @menu-link-icon-24-top:                   -.14rem;
@@ -383,6 +385,9 @@
 // Suggest
 @suggest-picker-border:                   @default-border-width solid @gray-color;
 @suggest-picker-margin:                   -@default-border-width 0 0 0;
+
+@suggest-list-footer-height:              3.143rem;
+@suggest-list-footer-padding:             0 0.857rem;
 
 @suggest-list-item-hover-bg:              #f3f3f3;
 @suggest-list-item-selected-bg:           darken(@suggest-list-item-hover-bg, 5%);
@@ -555,7 +560,7 @@
 @edit-at-place-editor-overlay-border-radius:.1071rem;
 @edit-at-place-editor-overlay-bg:         darken(@secondary-color, 5%) !important;
 //List view
-@list-view-min-height:                    5rem;
+@list-view-min-height:                    8rem;
 @listView-servicefooter-height:           1.47rem;
 @listView-servicefooter-padding:          0 0.8rem;
 @list-view-actions-item-height:           1.75rem;
@@ -616,6 +621,7 @@
 @data-grid-header-cell-padding:           @data-grid-cell-padding;
 @data-grid-header-cell-padding-side:      .3571rem;
 @data-grid-header-cell-font-size:         0.86rem;
+@data-grid-header-cell-sorting-icon-size: 1rem;
 @data-grid-row-selected-cell-text-color:  @default-text-color;
 @data-grid-cell-height:                   1.7857rem;
 @data-grid-cell-padding:                  0 .28571rem;
@@ -663,6 +669,7 @@
 
 @DropdownList-border-color:               @default-text-color;
 @DropdownList-linkStyleHoverColor:		   rgb(187, 233, 255);
+@DropdownList-disabled-text:              rgba(102, 170, 221, 0.2);
 //ProgressBar
 @controls-ProgressBar-height:             1.3214rem;
 @controls-ProgressBar-width:              14.286rem;
@@ -718,8 +725,8 @@
 @controls-FieldLink-linkItem-cross-padding:  0;
 @controls-FieldLink-showAllLinks-padding:    0 1rem 0 0.14rem;
 @controls-FieldLink-afterField-padding:      0 .14rem 0 0;
-@controls-FieldLink-disabled-item-single-padding:0.142rem;
-@controls-FieldLink-disabled-item-single-margin:@default-border-width .14rem;
+@controls-FieldLink-disabled-item-single-padding:  0 0 0 .56rem;
+@controls-FieldLink-disabled-item-single-margin: 0;
 @controls-FieldLink-afterField-background:   transparent;
 @controls-FieldLink-FilterButton-color:      #26B8FF;
 @controls-FieldLink-FilterButton-color-hover:#B9E9FF;
@@ -728,6 +735,7 @@
 // BackButton
 @back-button-font-size:                   1.43rem;
 @back-button-line-height:                 @default-height;
+@back-button-arrow-hover-color:           @default-hover-color;
 // BreadCrumbs
 @back-button-arrow-paddingleft:           .5714rem;
 @bread-crumb-title-color:                 @gray-lamantin-color;
@@ -988,3 +996,13 @@
 @controls-FieldLink-link-color-hover:     @default-hover-color;
 
 @commands-button-close-icon-color:        @icon-color-primary;
+
+// --------------- //
+// OperationMerge  //
+// --------------- //
+@controls-MergeDialogTemplate-treeDataGridView-padding-bottom:             .8571rem;
+@controls-MergeDialogTemplate-hint-font-size-color:                        @default-text-color;
+@controls-MergeDialogTemplate-BreadCrumbs-main-title-color:                #FFCC99;
+@controls-MergeDialogTemplate-treeDataGridView-first-cell-padding-left:    .3333rem;
+@controls-MergeDialogTemplate-DataGridView-column-value-line-height:       .928rem;
+@controls-MergeDialogTemplate-DataGridView-td-border-bottom:               1px solid #283848 !important;
