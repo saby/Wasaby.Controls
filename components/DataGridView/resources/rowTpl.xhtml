@@ -1,7 +1,7 @@
 <tr class="controls-DataGridView__tr" style="{{=it.decorators.apply(it.color, 'color')}}">
    {{?it.multiselect}}
     <td class="controls-DataGridView__td controls-DataGridView__td__checkBox{{?it.startScrollColumn!== undefined}}{{?it.startScrollColumn === 0}} controls-DataGridView__scrolledCell{{??}} controls-DataGridView__notScrolledCell{{?}}{{?}}">
-        <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"/>
+        <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></span>
     </td>
    {{?}}
    {{~it.columns :column:index}}
