@@ -265,7 +265,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
                   if(cfg) {
                      self.showSelector(cfg);
                   }
-               } else {
+               } else if (id !== undefined) {
                   ItemsSelectionUtil.onItemClickNotify.call(self, id);
                }
             }
