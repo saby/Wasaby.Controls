@@ -282,6 +282,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          var
             selectedKey = this.getSelectedKey(),
             selectedItem, newSelectedItem, newSelectedItemId, newSelectedItemHash;
+
+         // горячая комбинация клавиш
+         if(e.ctrlKey && e.which === constants.key.enter) {
+            return true;
+         }
+
          if (this._picker) {
             if(!this._picker.isVisible() && e.which === constants.key.esc ){
                return true;
