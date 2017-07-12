@@ -4076,6 +4076,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   mover: this._getMover(),
                   projection: this._getItemsProjection(),
                   useDragPlaceholder: this._options.useDragPlaceHolder,
+                  linkTemplateConfig: this._options.linkTemplateConfig,
                   dragEntity: this._options.dragEntity,
                   dragEntityList: this._options.dragEntityList,
                   itemsDragNDrop: this.getItemsDragNDrop()
