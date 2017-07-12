@@ -3009,11 +3009,13 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _setInfiniteScrollState: function(mode, reverse){
-            if (mode) {
-               this._infiniteScrollState.mode = mode;
-            }
-            if (reverse){
-               this._infiniteScrollState.reverse = reverse;
+            if (this._options.infiniteScroll) {
+               if (mode) {
+                  this._infiniteScrollState.mode = mode;
+               }
+               if (reverse){
+                  this._infiniteScrollState.reverse = reverse;
+               }
             }
          },
 
@@ -3752,7 +3754,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.getFilter()['СлужебныйКоличествоЗаписей'] = items.getCount();
                   this._scrollOffset.top = more - items.getCount();
                   this.setPage(pageNumber, true);
-                  this._scrollWatcher.scrollTo('bottom');
+                  this._getScrollWatcher().scrollTo('bottom');
                }
                this._lastPageLoaded = true;
             }.bind(this);
