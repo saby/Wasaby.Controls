@@ -67,11 +67,8 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
       getItemsDragNDrop: function() {
          return this._options.itemsDragNDrop;
       },
+
       beginDrag: function() {
-         //TODO: данный метод выполняется по селектору '.js-controls-ListView__item', но не всегда если запись есть в вёрстке
-         //она есть в _items(например при добавлении или фейковый корень). Метод _findItemByElement в данном случае вернёт
-         //пустой массив. В .150 править этот метод опасно, потому что он много где используется. В .200 переписать метод
-         //_findItemByElement, без завязки на _items.
          var target = this._findItemByElement(DragObject.getTargetsDomElemet());
          if (target.length) {
             var  selectedItems = this._getView().getSelectedItems(),
@@ -83,7 +80,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
                source.push(this._makeDragEntity({
                   owner: this,
                   model: item,
-                  domElement: projItem ? $('.js-controls-ListView__item[data-hash="'+projItem.getHash()+'"]') : undefined
+                  domElement: projItem ? $('.js-controls-ListView__item[data-hash="'+projItem.getHash()+'"]', this.getContainer()) : undefined
                }));
             }.bind(this));
 
@@ -102,6 +99,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
          }
          return false;
       },
+
       drag: function () {
          this._clearDragHighlight();
          if (this._canDragMove()) {
@@ -139,6 +137,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             this._dragPlaceHolder.show();
          }
       },
+
       updateTarget: function() {
          var dragTarget = this._getDragTarget(),
             target;
@@ -150,7 +149,6 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
                sourceIds.push(item.getModel().getId());
                movedItems.push(item.getModel());
             });
-            var projItem = this._getItemsProjection().getItemBySourceItem(dragTarget.item);
             if (this._getMover().checkRecordsForMove(movedItems, dragTarget.item, position)) {
                target = this._makeDragEntity({
                   owner: this,
@@ -178,7 +176,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
          }
       },
 
-      endDrag: function (e) {
+      endDrag: function () {
          var
             target = DragObject.getTarget(),
             models = [],
@@ -204,8 +202,9 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
                });
                isMove = this._getMover().checkRecordsForMove(models, target.getModel(), position);
                if (isMove) {
+                  //определять будет перемещение или нет нужно только для того что бы синхронно скрыть плейсхолдер
                   this._getView().move(models, target.getModel(), position).addCallback(function (result) {
-                     if (result) {
+                     if (result !== false) {
                         this._getView().removeItemsSelectionAll();
                      }
                      if (this._options.useDragPlaceHolder && isMove) {
@@ -229,9 +228,9 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             } else {
                var currentDataSource = this._getView().getDataSource(),
                   dragOwner = DragObject.getOwner(),
-                  ownersDataSource = dragOwner.getDataSource(),
+                  ownersDataSource = dragOwner.getDataSource ? dragOwner.getDataSource() : undefined,
                   useDefaultMove = false;
-               if (currentDataSource && dragOwner &&
+               if (currentDataSource && dragOwner && ownersDataSource &&
                   currentDataSource.getEndpoint().contract == ownersDataSource.getEndpoint().contract
                ) { //включаем перенос по умолчанию только если  контракты у источников данных равны
                   useDefaultMove = true;
@@ -252,6 +251,13 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             this._removeDragPlaceHolder();
          }
          this._clearDragHighlight();
+      },
+      /**
+       * возвращает контейнер контрола
+       * @return {*|Element|jQuery}
+       */
+      getContainer: function () {
+         return this._getView().getContainer();
       },
       //endregion public
       //region private
@@ -292,6 +298,11 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
       _isCorrectSource: function (source) {
          return source && cInstance.instanceOfModule(source, 'SBIS3.CONTROLS.DragEntity.List');
       },
+      /**
+       * Проверяет можно ли перемещать
+       * @return {boolean}
+       * @private
+       */
       _canDragMove: function() {
          var source = DragObject.getSource();
          return DragObject.getTarget() &&
@@ -300,7 +311,11 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             DragObject.getTargetsControl() === this._getView() &&
             cInstance.instanceOfModule(source.at(0), 'SBIS3.CONTROLS.DragEntity.Row');
       },
-
+      /**
+       * возвращает Dom элемент и рекорд элемента над которым находится курсор
+       * @return {{item: undefined, domElement: *}}
+       * @private
+       */
       _getDragTarget: function() {
          var
             item,
@@ -308,7 +323,6 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             target = this._findItemByElement(DragObject.getTargetsDomElemet());
 
          if(this._options.useDragPlaceHolder) {
-            var item;
             if (target.length > 0) {
                item = projection.getByHash(target.data('hash'));
             }
@@ -332,19 +346,31 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             domElement: target
          };
       },
-
-
-
+      /**
+       * очищает подсвечивание драгндропа
+       * @private
+       */
       _clearDragHighlight: function() {
          this.getContainer()
             .find('.controls-DragNDrop__insertBefore, .controls-DragNDrop__insertAfter')
             .removeClass('controls-DragNDrop__insertBefore controls-DragNDrop__insertAfter');
       },
+      /**
+       * рисует подстветку драгндропа
+       * @param target
+       * @private
+       */
       _drawDragHighlight: function(target) {
          var domelement = target.getDomElement();
          domelement.toggleClass('controls-DragNDrop__insertAfter', target.getPosition() === DRAG_META_INSERT.after);
          domelement.toggleClass('controls-DragNDrop__insertBefore', target.getPosition() === DRAG_META_INSERT.before);
       },
+      /**
+       * определяет направление перемещения
+       * @param target
+       * @return {*}
+       * @private
+       */
       _getDirectionOrderChange: function(target) {
          var event = DragObject.getEvent();
          if (this._options.useDragPlaceHolder) {
@@ -361,6 +387,14 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             }
          }
       },
+      /**
+       * определяет направление перемещения
+       * @param offset смещение
+       * @param metric размер
+       * @param orderOffset отступ относительно которого определяется как перемещять
+       * @return {string}
+       * @private
+       */
       _getOrderPosition: function(offset, metric, orderOffset) {
          if (this._options.useDragPlaceHolder) {
             return offset < orderOffset ? DRAG_META_INSERT.after : offset > metric - orderOffset ? DRAG_META_INSERT.before : DRAG_META_INSERT.on;
@@ -368,7 +402,11 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             return offset < orderOffset ? DRAG_META_INSERT.before : offset > metric - orderOffset ? DRAG_META_INSERT.after : DRAG_META_INSERT.on;
          }
       },
-
+      /**
+       * создает аватар
+       * @return {*|jQuery|HTMLElement}
+       * @private
+       */
       _createAvatar: function() {
          if (!this._options.linkTemplateConfig) {
             var count = DragObject.getSource().getCount();
@@ -388,15 +426,21 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             );
          }
       },
-
-
+      /**
+       * возвращает плейсхолдер
+       * @return {null|*}
+       * @private
+       */
       _getDragPlaceHolder: function() {
          if (!this._dragPlaceHolder) {
             this._makeDragPlaceHolder()
          }
          return this._dragPlaceHolder;
       },
-
+      /**
+       * создает плейсхолдер
+       * @private
+       */
       _makeDragPlaceHolder: function() {
          if (this._options.useDragPlaceHolder) {
             var item = DragObject.getSource().at(0);
@@ -404,7 +448,11 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             item.getDomElement().after(this._dragPlaceHolder);
          }
       },
-
+      /**
+       * скрывает перемещаемые элементы
+       * @param show
+       * @private
+       */
       _toggleDragItems: function (show) {
          var source = DragObject.getSource();
          if (source) {
@@ -415,14 +463,22 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             });
          }
       },
-
+      /**
+       * Удаляет плейсхолдер
+       * @private
+       */
       _removeDragPlaceHolder: function () {
          if (this._dragPlaceHolder) {
             this._dragPlaceHolder.remove();
             this._dragPlaceHolder = null;
          }
       },
-
+      /**
+       * Находи строку к которой принадлежит элемент
+       * @param target
+       * @return {*}
+       * @private
+       */
       _findItemByElement: function(target){
          if(!target.length) {
             return [];
@@ -435,19 +491,20 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
          }
          return domElem;
       },
-
+      /**
+       * Возвращает проэкцию
+       * @private
+       */
       _getItemsProjection: function () {
          return this._options.projection;
       },
-
+      /**
+       * Возвращает котрол
+       * @private
+       */
       _getView: function () {
          return this._options.view;
       },
-
-      getContainer: function () {
-         return this._getView().getContainer();
-      },
-
       /**
        * Создает сущность перемещения.
        * @param {Object} options Объект с опциями которые будут переданы в конструктор сущности.
@@ -466,11 +523,18 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
       _makeDragEntityList: function(options) {
          return Di.resolve(this._options.dragEntityList, options)
       },
-
+      /**
+       * возвращает перемещатор
+       * @private
+       */
       _getMover: function () {
          return this._options.mover;
       },
-
+      /**
+       * Вешает класс горизонтального - обыный список или вертикального - плитка
+       * @param target
+       * @private
+       */
       _addClassDragndrop: function (target) {
          if (this._checkHorisontalDragndrop(target)) {
             this._horisontalDragNDrop = true;
