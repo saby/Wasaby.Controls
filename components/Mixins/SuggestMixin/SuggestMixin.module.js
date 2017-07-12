@@ -363,7 +363,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          }
 
          for(var i = 0, len = changedFields.length; i < len; i++) {
-            if(String(this._options.listFilter[changedFields[i]]).length >= this._options.startChar) {
+            if(String(this._options.listFilter[changedFields[i]] || '').length >= this._options.startChar) {
                this._startListSearch();
                return;
             }
