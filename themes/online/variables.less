@@ -733,6 +733,7 @@
 
 @menu-item-text-color:                    @black-color;
 @menu-item-bg:                            @white-color;
+@menu-item-font-size:                     @popup-font-size;
 @menu-item-disabled-text-color:           #ccc;
 
 @menu-item-hover-text-color:              @menu-item-text-color;
@@ -1911,6 +1912,7 @@
 @data-grid-header-cell-padding:                 4px 6px;
 @data-grid-header-cell-padding-side:            12px;
 @data-grid-header-cell-font-size:               12px;
+@data-grid-header-cell-sorting-icon-size:       16px;
 
 @data-grid-header-cell-border-width:            1px 0 0 0;
 @data-grid-header-cell-border-style:            solid;
@@ -2019,6 +2021,8 @@
 
 @controls-OperationsPanel-actions-padding-left:     0;
 
+@controls-OperationsPanel-actions-align:            center;
+
 // --------------- //
 // OperationsMark  //
 // --------------- //
@@ -2041,6 +2045,10 @@
 @controls-MergeDialogTemplate-radioButton-margin-top:             6px;
 @controls-MergeDialogTemplate-mergeButton-margin-left:            5px;
 @controls-MergeDialogTemplate-applyBlock-padding:                 0 12px 12px 0;
+@controls-MergeDialogTemplate-hint-font-size-color:               @gray-color;
+@controls-MergeDialogTemplate-BreadCrumbs-main-title-color:       @bread-crumb-title-color;
+@controls-MergeDialogTemplate-treeDataGridView-first-cell-padding-left: @controls-view-padding-DEFAULT;
+@controls-MergeDialogTemplate-DataGridView-column-value-line-height: @data-grid-cell-line-height;
 
 // --------------- //
 //   OperationSum  //
@@ -2161,6 +2169,8 @@
 @DropdownList-icon-spritesheet:                       'img/CheckBox.png';
 @DropdownList-icon-bg-pathFilter:                     url(@DropdownList-icon-spritesheet) 0 1px;
 @DropdownList-icon-checked-bg-pathFilter:             url(@DropdownList-icon-spritesheet) 0 49px;
+
+@DropdownList-disabled-text:                          #CCC;
 
 //ProgressBar
 @controls-ProgressBar-height:             16px;
@@ -2366,6 +2376,7 @@
 @icon-size:                                        16px;
 @icon-width:                                       16px;
 @icon-height:                                      16px;
+@back-button-arrow-hover-color:                    @primary-color;
 
 // BreadCrumbs
 @back-button-arrow-paddingleft:                    4px;

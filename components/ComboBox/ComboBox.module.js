@@ -18,6 +18,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "html!SBIS3.CONTROLS.ComboBox/resources/ItemTemplate",
    "tmpl!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate",
    "Core/core-instance",
+   "i18n!SBIS3.CONTROLS.СomboBox",
    'css!SBIS3.CONTROLS.ComboBox'
 ], function ( constants, Deferred, LayoutManager, TextBox, TextBoxUtils, dotTplFn, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
    'use strict';
@@ -478,12 +479,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   return;
                }
                index = self._getItemsProjection().getIndex(projItem);
-               self.hidePicker();
-               // чтобы не было выделения текста, когда фокус вернули в выпадашку
-               self._fromTab = false;
+               //Перевожу фокус на поле ввода до закрытия пикера
+               //Иначе при закрытии фокус может улететь непонятно куда, что мешает редактированию по месту
                if (self._options.activableByClick) {
                   self.setActive(true);
                }
+               self.hidePicker();
+               // чтобы не было выделения текста, когда фокус вернули в выпадашку
+               self._fromTab = false;
                self.setSelectedIndex(index);
                if (self._options.autocomplete){
                   self._getItemsProjection().setFilter(null);

@@ -209,8 +209,7 @@ define(
             }
 
             this._pickerContent.subscribe('onTimeSelect', this._timeSelectHandler.bind(this));
-            this._picker.subscribe('onClose', this._pickerContent.hide.bind(this._pickerContent));
-            this._picker.subscribe('onShow', this._pickerContent.show.bind(this._pickerContent));
+            this._picker.subscribe('onClose', this._notify.bind(this, 'onDateSelect'));
          }
       },
 
@@ -218,7 +217,6 @@ define(
          // Если закончили выбор времени на минутах, то нужно закрыть пикер.
          if (this._pickerContent.getMode() === 'minutes') {
             this.hidePicker();
-            //this._pickerContent.hide();
             // При выборе даты через TimePicker после его закрытия считаем, что закончили выбор даты.
             this._notify('onDateSelect');
          }
@@ -245,7 +243,7 @@ define(
          var timeControl = this._pickerContent;
 
          timeControl.setTime(this.getDate());
-         timeControl.show();
+         timeControl.defaultMode();
       },
 
       /**
