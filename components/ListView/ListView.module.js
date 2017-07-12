@@ -4033,6 +4033,9 @@ define('js!SBIS3.CONTROLS.ListView',
             this._options.itemsDragNDrop = allowDragNDrop;
             this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', this._getDragInitHandler());
             this.once('onDragOver', this._makeDragMove.bind(this));//могут перетаскивать с другого контрола тогда _draginit не сработает
+            if (this._dragMoveController) {
+               this._dragMoveController.setItemsDragNDrop(allowDragNDrop);
+            }
          },
          /**
           * возвращает метод который инициализирует dragndrop
@@ -4079,7 +4082,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   projection: this._getItemsProjection(),
                   useDragPlaceholder: this._options.useDragPlaceHolder,
                   dragEntity: this._options.dragEntity,
-                  dragEntityList: this._options.dragEntityList
+                  dragEntityList: this._options.dragEntityList,
+                  itemsDragNDrop: this.getItemsDragNDrop()
                });
             }
          },
