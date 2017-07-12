@@ -94,7 +94,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
              emptyItemProjection,
              rs;
          rawData[cfg.idProperty] = null;
-         rawData[cfg.displayProperty] = 'Не выбрано';
+         rawData[cfg.displayProperty] = rk('Не выбрано');
          rawData.isEmptyValue = true;
 
          rs = new RecordSet({
@@ -321,7 +321,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             _buttonChoose : null,
             _buttonHasMore: null,
             _currentSelection: [],
-            _emptyText: 'Не выбрано'
+            _emptyText: rk('Не выбрано')
          },
          $constructor: function() {
             this._publish('onClickMore');
