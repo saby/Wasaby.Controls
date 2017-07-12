@@ -72,7 +72,7 @@ define('js!SBIS3.CONTROLS.FilterController', [
                      /* Необходимо подмерживать фильтр, иначе,
                         если на это поле забиндена вьюха могут пропадать служебные фильтры,
                         такие как: иерархия, поиск и тд */
-                     resultFilter = cMerge(cFunctions.clone(parentContext.getValue(BROWSER_FILTER_FIELD)), resultFilter);
+                     resultFilter = cMerge(cFunctions.clone(parentContext.getValue(BROWSER_FILTER_FIELD)), resultFilter, {rec: false}); //При рекурсивном мерже некорректно мержатся массивы
                   }
                   parentContext.setValue(BROWSER_FILTER_FIELD, resultFilter);
                },
