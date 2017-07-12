@@ -94,7 +94,9 @@ define([
             });
    
             after(function() {
-               removeContainer();
+               if(typeof window === 'undefined') {
+                  removeContainer();
+               }
             });
             
             it('has event handler for onExecuted', function () {
