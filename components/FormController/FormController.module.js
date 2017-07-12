@@ -205,8 +205,6 @@ define('js!SBIS3.CONTROLS.FormController', [
       },
 
       $constructor: function() {
-         var dataSource = this._options.dataSource;
-
          this._publish('onFail', 'onReadModel', 'onBeforeUpdateModel', 'onUpdateModel', 'onDestroyModel', 'onCreateModel', 'onAfterFormLoad');
          this._declareCommands();
          this._panel = this.getTopParent();
@@ -230,11 +228,12 @@ define('js!SBIS3.CONTROLS.FormController', [
 
          //TODO в рамках совместимости
          this._dataSource = this._options.source;
+         var dataSource = this._options.dataSource;
          if (dataSource && dataSource.endpoint) {
             
             // Установка режима dataSource.updateOnlyChanged происходит, только если он не задан напрямую в опциях
             dataSource.options = dataSource.options || {};
-            if (typeof dataSource.options.updateOnlyChanged === 'undefined') {
+            if (dataSource.options.updateOnlyChanged === undefined) {
                dataSource.options.updateOnlyChanged = !!this._options.diffOnly;
             }
             
