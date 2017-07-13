@@ -59,6 +59,9 @@ define([
 
       });
       afterEach(function() {
+         if (typeof $ === 'undefined') {
+            this.skip();
+         }
          $('#component').remove();
       });
 
