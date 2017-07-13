@@ -62,11 +62,8 @@ define(['js!WSControls/Lists/ItemsControl', 'js!WS.Data/Collection/RecordSet', '
                   items : data,
                   dataSource : source,
                   handlers : {
-                     'onDataLoad' : function() {
+                     'onItemsReady' : function(e, list) {
                         assert.isTrue(cInstance.instanceOfModule(this._getItems(), 'WS.Data/Collection/RecordSet'), 'ItemsControl getItems() after reload() must returns Recordset');
-
-                        var drawedItems = ctrl._records;
-                        assert.equal(data.length, drawedItems.length, 'Count of drawed items is not equal to count of src items');
                      }
                   }
                });
@@ -87,11 +84,8 @@ define(['js!WSControls/Lists/ItemsControl', 'js!WS.Data/Collection/RecordSet', '
                   items : rs,
                   dataSource : source,
                   handlers : {
-                     'onDataLoad' : function() {
+                     'onItemsReady' : function(e, list) {
                         assert.equal(rs, this._getItems(), 'After reload getItems() must return instance of initial recordset');
-
-                        var drawedItems = ctrl._records;
-                        assert.equal(data.length, drawedItems.length, 'Count of drawed items is not equal to count of src items');
                      }
                   }
                });

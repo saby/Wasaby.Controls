@@ -86,7 +86,7 @@ define('js!WSControls/Lists/ItemsControl', [
                this._dataSource = DataSourceUtil.prepareSource(this._options.dataSource);
             }
 
-            this._publish('onDataLoad');
+            this._publish('onItemsReady', 'onDataLoad');
 
             if (this._options.dataSource && this._options.dataSource.firstLoad !== false) {
                this.reload();
@@ -132,6 +132,7 @@ define('js!WSControls/Lists/ItemsControl', [
          _itemsChangeCallback: function() {
             this._initItemBasedControllers();
             this._records = ListViewHelpers.getRecordsForRedraw(this._itemsProjection, this._options);
+            this._notify('onItemsReady');
             this.tplData = this._prepareItemData( this._options );
          },
 
@@ -288,7 +289,7 @@ define('js!WSControls/Lists/ItemsControl', [
          _onDSReload: function(list) {
             this._itemData = null;
             if (
-               this._getItems() && cInstance.instanceOfModule(this._getItems(), 'js!WS.Data/Collection/RecordSet')
+               this._getItems() && cInstance.instanceOfModule(this._getItems(), 'WS.Data/Collection/RecordSet')
                && (list.getModel() === this._getItems().getModel())
                && (Object.getPrototypeOf(list).constructor == Object.getPrototypeOf(list).constructor)
                && (Object.getPrototypeOf(list.getAdapter()).constructor == Object.getPrototypeOf(this._getItems().getAdapter()).constructor)
