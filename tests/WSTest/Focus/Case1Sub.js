@@ -6,9 +6,6 @@ define('js!WSTest/Focus/Case1Sub',
 
       var moduleClass = CompoundControl.extend({
          _dotTplFn: dotTplFn,
-         $protected: {
-            _options: {}
-         },
 
       });
 

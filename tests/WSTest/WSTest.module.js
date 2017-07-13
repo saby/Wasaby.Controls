@@ -7,6 +7,6 @@ define('js!WSTest', [], function () {
    return {
       name: 'WSTest',
       version: '3.17.10',
-      description: 'Web-components Demos'
+      description: 'Components for test'
    };
 });

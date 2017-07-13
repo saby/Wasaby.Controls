@@ -62,7 +62,7 @@ define([
          if (typeof $ === 'undefined') {
             this.skip();
          }
-         $('#component').remove();
+         case1.destroy();
       });
 
    });
