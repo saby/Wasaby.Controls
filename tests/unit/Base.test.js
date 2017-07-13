@@ -19,22 +19,12 @@ define([
 
       Base.iWantVDOM = true;
       var baseDis = new Base(cfg);
-      var base = new Base({});
 
 
       describe('VDom API for Control', function(){
-         it('_overrideChildrenOptions', function () {
-
-            var childOpt = baseDis._overrideChildrenOptions({enabled: true, visible: true});
-            assert.isTrue(childOpt.enabled===false);
-            assert.isTrue(childOpt.visible===false);
-            childOpt = base._overrideChildrenOptions({enabled: true, visible: true});
-            assert.isTrue(childOpt.enabled);
-            assert.isTrue(childOpt.visible);
-         });
-
          it('_applyChangedOptions', function () {
-            baseDis._afterApplyOptions(false, {}, {enabled: true});
+            assert.isTrue(!baseDis.isEnabled());
+            baseDis.applyNewOptions({enabled: true});
             assert.isTrue(baseDis.isEnabled());
          });
 
