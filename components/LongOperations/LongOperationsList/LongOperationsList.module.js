@@ -241,10 +241,13 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                var STATUSES = LongOperationEntry.STATUSES;
                var from = !this._notFirst ? (new Date()).getTime() - ANIM_NOTEARLY : null;
                items.each(function (model) {
-                  if (!this._notFirst && from < model.get('startedAt').getTime() + model.get('timeSpent')) {
-                     this._animationAdd(model.getId(), model.get('status') === STATUSES.success);
+                  var status = model.get('status');
+                  if (!this._notFirst
+                        && (status === STATUSES.success || status === STATUSES.error)
+                        && from < model.get('startedAt').getTime() + model.get('timeSpent')) {
+                     this._animationAdd(model.getId(), status === STATUSES.success);
                   }
-                  if (!hasRun && model.get('status') === STATUSES.running) {
+                  if (!hasRun && status === STATUSES.running) {
                      hasRun = true;
                   }
                }.bind(this));

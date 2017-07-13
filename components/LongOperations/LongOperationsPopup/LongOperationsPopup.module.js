@@ -275,9 +275,9 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
           * Метод перезагружает список и обновляет состояние
           * @return {Core/Deferred}
           */
-         reload: function () {
+         /*###reload: function () {
             return this._longOpList.reload();
-         },
+         },*/
 
          /**
           * Изменить заголовок, иконку и статус
