@@ -2,8 +2,8 @@
  * Created by dv.zuev on 18.05.2017.
  */
 define([
-   'js!WSDemo/TestSubControls/TestSubControlParent',
-   'js!WSDemo/TestSubControls/LogicParentTestControl'
+   'js!WSTest/TestSubControls/TestSubControlParent',
+   'js!WSTest/TestSubControls/LogicParentTestControl'
 ], function (
    ParentControl, LogicParentTestControl
 ) {
@@ -41,7 +41,7 @@ define([
                assert.isTrue(ch1 !== undefined);
                assert.isTrue(ch2.logicParent === logicParentTestControl);
                done();
-            }, 0);
+            }, 100);
          });
 
       });
