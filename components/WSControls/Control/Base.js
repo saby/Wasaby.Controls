@@ -93,7 +93,7 @@ define('js!WSControls/Control/Base',
                var oldOptions = this._options;
                this._options = newOptions;
                this._applyOptions && this._applyOptions(oldOptions); //TODO: удалить после согласования ЖЦ вместе с переименованием метода во всех контролах
-               this._beforeTemplate && this._beforeTemplate(oldOptions);
+               this._beforeUpdate && this._beforeUpdate(oldOptions);
             },
 
             /**
@@ -140,6 +140,7 @@ define('js!WSControls/Control/Base',
                if (BaseCompatible) {
                   BaseCompatible.destroy.call(this);
                }
+               this._afterDestroy();
             },
 
             //<editor-fold desc="API">
@@ -174,31 +175,60 @@ define('js!WSControls/Control/Base',
                return this._options.visible;
             },
 
+
             /**
-             * Точка входа перед шаблонизацией. _beforeTemplate точка применения новых
-             * опций для компонента.
+             * Перед отрисовкой контрола, перед mount контрола в DOM
+             * Выполняется как на клиенте, так и на сервере. Здесь мы можем скорректировать наше состояние
+             * в зависимости от параметров конструктора, которые были сохранены в _options
+             * Вызывается один раз в течение жизненного цикла
+             * @private
+             */
+            _beforeRender: function(){
+            },
+
+            /**
+             * После отрисовки контрола. Выполняется на клиенте после синхронизации VDom с реальным Dom
+             * Здесь мы можем впервые обратиться к DOMу, сделать какие-то асинхронные операции,
+             * и при необходимости запланировать перерисовку
+             * Вызывается один раз в течение жизненного цикла
+             * @private
+             */
+            _afterRender: function () {
+            },
+
+            /**
+             * Точка входа перед шаблонизацией. _beforeUpdate точка применения новых
+             * опций для компонента. Здесь мы можем понять измененные опции и как-то повлиять на состяние
+             * Вызывается множество раз за жизненный цикл
              * @param oldOptions - предыдущие опции компонента
              * @private
              */
-            _beforeTemplate: function(oldOptions){
+            _beforeUpdate: function(oldOptions){
             },
 
             /**
-             * Точка завершения шаблонизации. Здесь доступен DOM и
+             * Точка завершения шаблонизации и синхронизации. Здесь доступен DOM и
              * объект this.children
+             * Здесь мы можем выполнить асинхронные операции, потрогать DOM
+             * Вызывается каждый раз после шаблонизации после _beforeUpdate
              * @private
              */
-            _buildComplete: function(){
-
+            _afterUpdate: function(oldOptions){
             },
 
             /**
-             * Перед разрушением. Последняя точка, когда компонент жив.
+             * Перед разрушением. Точка, когда компонент жив.
              * Здесь нужно разрушить объекты, которые были созданы в _applyOptions
              * @private
              */
             _beforeDestroy: function(){
+            },
 
+            /**
+             * После разрушением. Точка, когда компонент более не в DOMе и все ресурсы высвобождены
+             * @private
+             */
+            _afterDestroy: function(){
             }
 
             //</editor-fold>
