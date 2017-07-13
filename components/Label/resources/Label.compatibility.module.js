@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.Label.compatibility', [],
        setCaption: function(caption) {
           this.caption = caption;
           this._setDirty();
-       },
+       }
     }
    }
 );

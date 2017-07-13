@@ -2,11 +2,10 @@
 define('js!SBIS3.CONTROLS.MenuItem', [
    'js!WSControls/Buttons/ButtonBase',
    'tmpl!SBIS3.CONTROLS.MenuItem',
-   'Core/Sanitize',
    'Core/EventBus',
    'Core/helpers/string-helpers',
    'css!SBIS3.CONTROLS.MenuItem'
-], function(WSButtonBase, dotTplFn, Sanitize, EventBus, strelpers) {
+], function(WSButtonBase, dotTplFn, EventBus, strelpers) {
 
    'use strict';
    /**
@@ -20,7 +19,9 @@ define('js!SBIS3.CONTROLS.MenuItem', [
       _dotTplFn : dotTplFn,
       $protected: {
          _options: {
-            sanitize: Sanitize
+            _sanitizeOpts: {
+               validNodes: { component: true }
+            }
          },
          _iconContainer: undefined
       },
