@@ -82,8 +82,10 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
          switch (cfg.viewMode) {
             case 'tile':
                parentOptions.itemTpl = tileTpl;
+               break;
             case 'list':
                parentOptions.itemTpl = listTpl;
+               break;
          }
       }
       return parentOptions
