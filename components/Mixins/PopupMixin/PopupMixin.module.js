@@ -1143,7 +1143,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                this._parentFloatArea.setHasPopupInside(true);
             }
             if (this._options.activateAfterShow) {
-               this.activateFirstControl();
+               dcHelpers.doAutofocus(this._container);
             }
          }
       },
