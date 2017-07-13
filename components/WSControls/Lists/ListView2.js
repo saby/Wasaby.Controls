@@ -3,13 +3,15 @@ define('js!WSControls/Lists/ListView2', ['js!WSControls/Lists/ItemsControl',
       'js!WSControls/Controllers/BaseListSelector',
       'js!WSControls/Controllers/RecordsetListSelector',
       'tmpl!WSControls/Lists/ListView2',
-      "tmpl!WSControls/Lists/resources/ItemTemplate"],
+      'tmpl!WSControls/Lists/resources/ItemTemplate',
+      'tmpl!WSControls/Lists/resources/GroupTemplate'],
 
-   function(ItemsControl, cInstance, BaseListSelector, RecordsetListSelector, template, ItemTemplate) {
+   function(ItemsControl, cInstance, BaseListSelector, RecordsetListSelector, template, ItemTemplate, groupTemplate) {
       var INDICATOR_DELAY = 2000;
       var ListView = ItemsControl.extend({
          _template: template,
          _needSelector: true,
+         _defaultGroupTemplate: groupTemplate,
          _defaultItemTemplate: ItemTemplate,
          _createDefaultSelector : function() {
             if (cInstance.instanceOfModule(this._items, 'WS.Data/Collection/RecordSet')) {
@@ -29,8 +31,8 @@ define('js!WSControls/Lists/ListView2', ['js!WSControls/Lists/ItemsControl',
             }
 
          },
-         _prepareItemDataInner: function() {
-            var data = ListView.superclass._prepareItemDataInner.apply(this, arguments);
+         _getItemData: function() {
+            var data = ListView.superclass._getItemData.apply(this, arguments);
             data.selectedIndex = this._selector.getSelectedIndex();
             return data;
          },

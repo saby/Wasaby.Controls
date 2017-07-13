@@ -11,7 +11,6 @@ define('js!WSControls/Lists/ItemsControl', [
    'tmpl!WSControls/Lists/resources/ItemsTemplate',
    'tmpl!WSControls/Lists/resources/ItemTemplate',
    'tmpl!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
-   'js!SBIS3.CONTROLS.ListView/ListViewHelpers',
    'js!WSControls/Lists/resources/utils/DataSourceUtil',
    'js!WSControls/Lists/resources/utils/ItemsUtil',
    'Core/helpers/functional-helpers',
@@ -29,16 +28,13 @@ define('js!WSControls/Lists/ItemsControl', [
              ItemsTemplate,
              ItemTemplate,
              ItemContentTemplate,
-             ListViewHelpers,
              DataSourceUtil,
              ItemsUtil,
              fHelpers,
              Deferred,
              cInstance
    ) {
-
    'use strict';
-
 
    var ItemsControl = BaseControl.extend(
       {
@@ -62,17 +58,26 @@ define('js!WSControls/Lists/ItemsControl', [
          records: null,
 
          _itemData: null,
+         _itemContentTpl: null,
          _defaultItemContentTemplate: ItemContentTemplate,
+         _itemTpl: null,
          _defaultItemTemplate: ItemTemplate,
+         _groupTemplate: null,
+         _defaultGroupTemplate: null,
+
          _itemsTemplate: ItemsTemplate,
+
+
          _needSelector: false,
          _selector: null,
 
          constructor: function (cfg) {
-            cfg.itemTpl = cfg.itemTpl || this._defaultItemTemplate;
-            cfg.itemContentTpl = cfg.itemContentTpl || this._defaultItemContentTemplate;
 
             ItemsControl.superclass.constructor.apply(this, arguments);
+
+            this._itemTpl = cfg.itemTpl || this._defaultItemTemplate;
+            this._itemContentTpl = cfg.itemContentTpl || this._defaultItemContentTemplate;
+            this._groupTemplate = cfg.groupTemplate || this._defaultGroupTemplate;
 
             this._onCollectionChange = onCollectionChange.bind(this);
             this._onSelectorChange = onSelectorChange.bind(this);
@@ -93,9 +98,6 @@ define('js!WSControls/Lists/ItemsControl', [
             }
          },
 
-         _getItemPropertyValue : function(item, field) {
-            return ItemsUtil.getPropertyValue(item, field);
-         },
 
          _initItemBasedControllers: function() {
             if (this._getItems()) {
@@ -112,41 +114,106 @@ define('js!WSControls/Lists/ItemsControl', [
                   this._selector = this._createDefaultSelector();
                   this._selector.subscribe('onSelectedItemChange', this._onSelectorChange)
                }
-
-
-               //proj = cfg._applyGroupingToProjection(proj, cfg);
-
-               /*if (cfg._canServerRender && cfg._canServerRenderOther(cfg)) {
-                if (isEmpty(cfg.groupBy) || (cfg.easyGroup)) {
-                newCfg._serverRender = true;
-                newCfg._records = cfg._getRecordsForRedraw(cfg._itemsProjection, cfg);
-                if (cfg._items && cInstance.instanceOfModule(cfg._items, 'WS.Data/Collection/RecordSet')) {
-                newCfg._resultsRecord = cfg._items.getMetaData().results;
-                }
-                newCfg._itemData = cfg._buildTplArgs(cfg);
-                }
-                }*/
             }
          },
 
          _itemsChangeCallback: function() {
             this._initItemBasedControllers();
-            this._records = ListViewHelpers.getRecordsForRedraw(this._itemsProjection, this._options);
+            this._records = this._getRecordsForView();
             this._notify('onItemsReady');
-            this.tplData = this._prepareItemData( this._options );
+            this.tplData = this._getItemData();
          },
 
-         _prepareItemDataInner: function() {
-            return ListViewHelpers.buildTplArgs(this._options)
-         },
 
-         _prepareItemData: function() {
-            var tplArgs = {};
-            if (!this._itemData) {
-               tplArgs = this._prepareItemDataInner();
-               this._itemData = cFunctions.clone(tplArgs);
+         _getItemData: function () {
+            var tplOptions = {},
+               self = this,
+               timers = {},
+               logger;
+            tplOptions.escapeHtml = strHelpers.escapeHtml;//todo ?
+            tplOptions.Sanitize = Sanitize;//todo ?
+            tplOptions.idProperty = this._options.idProperty;
+            tplOptions.displayProperty = this._options.displayProperty;
+            tplOptions.templateBinding = this._options.templateBinding;
+            tplOptions.getPropertyValue = ItemsUtil.getPropertyValue;
+
+            /* Для логирования */
+            if (typeof window === 'undefined') {
+               logger = IoC.resolve('ILogger');
+               tplOptions.timeLogger = function timeLogger(tag, start) {
+                  if (start) {
+                     timers[tag] = new Date();
+                  } else {
+                     logger.log(self._moduleName || cfg.name, tag + ' ' + ((new Date()) - timers[tag]));
+                     delete timers[tag];
+                  }
+               };
             }
-            return this._itemData;
+            tplOptions.itemContent = TemplateUtil.prepareTemplate(this._itemContentTpl);
+            tplOptions.itemTpl = TemplateUtil.prepareTemplate(this._itemTpl);
+            tplOptions.defaultItemTpl = TemplateUtil.prepareTemplate(this._defaultItemTemplate);
+            if (this._options.includedTemplates) {
+               var tpls = this._options.includedTemplates;
+               tplOptions.included = {};
+               for (var j in tpls) {
+                  if (tpls.hasOwnProperty(j)) {
+                     tplOptions.included[j] = TemplateUtil.prepareTemplate(tpls[j]);
+                  }
+               }
+            }
+            return tplOptions;
+         },
+
+
+         _getGroupData: function() {
+            var
+               groupBy = this._options.groupBy,
+               groupData;
+            groupData = {
+               multiselect : this._options.multiselect,
+               groupContentTemplate: TemplateUtil.prepareTemplate(groupBy.contentTemplate || '', true)
+            };
+            return groupData;
+         },
+
+         _getGroupItem : function(groupId, item) {
+            var groupData, groupTemplate;
+            if (this._groupTemplate) {
+               groupData = this._getGroupData();
+               groupData.item = item;
+               groupData.groupId = groupId;
+               groupTemplate = TemplateUtil.prepareTemplate(this._groupTemplate, true)
+            }
+            return {
+               data : groupData,
+               tpl : groupTemplate
+            }
+         },
+
+         _getRecordsForViewFlat: function() {
+            var
+               projection = this._getItemsProjection(),
+               ctrl = this,
+               records = [];
+            if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
+               var prevGroupId = undefined;
+               projection.each(function (item, index, group) {
+                  if (!isEmpty(ctrl._options.groupBy)) {
+                     if (prevGroupId != group && group !== false) {
+                        records.push(ctrl._getGroupItem(group, item));
+                        prevGroupId = group;
+                     }
+                  }
+                  records.push(item);
+               });
+            }
+            return records;
+         },
+
+
+
+         _getRecordsForView: function(projection, cfg) {
+            return this._getRecordsForViewFlat.apply(this, arguments)
          },
 
          _createDefaultProjection: function() {
@@ -332,7 +399,7 @@ define('js!WSControls/Lists/ItemsControl', [
 
    var onSelectorChange = function() {
       this._itemData = null;
-      this.tplData = this._prepareItemData();
+      this.tplData = this._getItemData();
       this._setDirty();
    };
 

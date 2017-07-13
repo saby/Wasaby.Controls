@@ -3,7 +3,7 @@ define('js!WSControls/Lists/resources/utils/ItemsUtil', [
    'Core/core-instance',
    'js!WS.Data/Utils'
 ], function(Display, cInstance, DataUtils) {
-   var DataSourceUtil = {
+   var ItemsUtil = {
 
       getDefaultDisplayFlat: function(items, cfg) {
          var projCfg = {};
@@ -21,7 +21,7 @@ define('js!WSControls/Lists/resources/utils/ItemsUtil', [
 
                method = function (item, index, projItem) {
                   //делаем id группы строкой всегда, чтоб потом при обращении к id из верстки не ошибаться
-                  return DataSourceUtil.getPropertyValue(item, field) + '';
+                  return ItemsUtil.getPropertyValue(item, field) + '';
                }
             }
             else {
@@ -34,6 +34,7 @@ define('js!WSControls/Lists/resources/utils/ItemsUtil', [
          }
          return Display.getDefaultDisplay(items, projCfg);
       },
+
       getPropertyValue: function (itemContents, field) {
          if (typeof itemContents == 'string') {
             return itemContents;
@@ -43,5 +44,5 @@ define('js!WSControls/Lists/resources/utils/ItemsUtil', [
          }
       }
    };
-   return DataSourceUtil;
+   return ItemsUtil;
 });
