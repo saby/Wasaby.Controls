@@ -169,10 +169,10 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                });
             });
 
-            this.subscribeTo(this._view, 'onPropertiesChanged'/*'onPropertyChanged'*/, function (evtName/*, property*/) {
-               /*if (property === 'filter') {*/
+            this.subscribeTo(this._view, /*'onPropertiesChanged'*/'onPropertyChanged', function (evtName, property) {
+               if (property === 'filter') {
                   self.reload();
-               /*}*/
+               }
             });
 
             //У приостановленных операций нужно менять цвет текста, поэтому навешиваем класс
@@ -300,27 +300,27 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                if (filter.status) {
                   var STATUSES = LongOperationEntry.STATUSES;
                   var map = {
-                     /*0*/'running': STATUSES.running,
-                     /*1*/'suspended': STATUSES.suspended,
-                     /*3*/'not-suspended': [STATUSES.running, STATUSES.success, STATUSES.error],
-                     /*2*/'ended': [STATUSES.success, STATUSES.error],
-                     /*4*/'success-ended': STATUSES.success,
-                     /*5*/'error-ended': STATUSES.error
+                     'running': STATUSES.running,
+                     'suspended': STATUSES.suspended,
+                     'not-suspended': [STATUSES.running, STATUSES.success, STATUSES.error],
+                     'ended': [STATUSES.success, STATUSES.error],
+                     'success-ended': STATUSES.success,
+                     'error-ended': STATUSES.error
                   };
                   if (filter.status in map) {
                      where.status = map[filter.status];
                   }
                }
                if (filter.period) {
-                  where.period = new TimeInterval(filter.period);
+                  where.startedAt = {condition:'>=', value:(new TimeInterval(filter.period)).subFromDate(new Date())};
                }
                if (filter.duration) {
-                  where.duration = new TimeInterval(filter.duration);
+                  where.timeSpent = {condition:'>=', value:(new TimeInterval(filter.duration)).getTotalMilliseconds()};
                }
                if (filter['СтрокаПоиска']) {
-                  where.search = filter['СтрокаПоиска'];
-                  if (filter.usePages) {
-                  }
+                  where.title = {condition:'contains', value:filter['СтрокаПоиска'], sensitive:false};
+                  /*if (filter.usePages) {
+                  }*/
                }
                if (Object.keys(where).length) {
                   options.where = where;

@@ -107,6 +107,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                   if (handlers) {
                      delete this._actions[operationId];
                      o.status = STATUSES.error;
+                     o.timeSpent = (new Date()).getTime() - o.startedAt;
                      GLOStorage.put(this._name, operationId, o);
                      oIds.push(operationId);
                   }
@@ -147,16 +148,32 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
          },
 
          /**
-          * Запросить набор последних длительных операций (отсортированных в обратном хронологическом порядке)
+          * Запросить набор последних длительных операций
           * @public
-          * @param {number} count Максимальное количество возвращаемых элементов
+          * @param {object} where Параметры фильтрации
+          * @param {object} orderBy Параметры сортировки. По умолчанию используется обратный хронологический порядок
+          * @param {number} offset Количество пропущенных элементов в начале
+          * @param {number} limit Максимальное количество возвращаемых элементов
           * @return {Core/Deferred<SBIS3.CONTROLS.LongOperationEntry[]>}
           */
-         fetch: function (count) {
-            if (!(typeof count === 'number' && 0 < count)) {
-               throw new TypeError('Argument "count" must be positive number' );
+         fetch: function (where, orderBy, offset, limit) {
+            if (where != null && typeof where !== 'object') {
+               throw new TypeError('Argument "where" must be an object');
             }
-            return Deferred.success(_list(this, count, 0).map(function (operation) {
+            if (orderBy != null && (typeof orderBy !== 'object'
+                  && Object.keys(orderBy).every(function (v) { var b = orderBy[v]; return b == null || typeof b === 'boolean'; }))) {
+               throw new TypeError('Argument "orderBy" must be an array');
+            }
+            if (!(typeof offset === 'number' && 0 <= offset)) {
+               throw new TypeError('Argument "offset" must be not negative number');
+            }
+            if (!(typeof limit === 'number' && 0 < limit)) {
+               throw new TypeError('Argument "limit" must be positive number');
+            }
+            if (!orderBy) {
+               orderBy = {startedAt:false};
+            }
+            return Deferred.success(_list(this, where, orderBy, offset, limit).map(function (operation) {
                var handlers = this._actions ? this._actions[operation.id] : null;
                // Если обработчики действий пользователя остались в другой вкладке
                if (!(handlers && handlers.onSuspend && handlers.onResume)) {
@@ -273,9 +290,9 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
        * @return {number}
        */
       var _put = function (self, operation) {
-         if (!operation || typeof operation !== 'object') {
+         /*###if (!operation || typeof operation !== 'object') {
             throw new TypeError('Argument "operation" must be object');
-         }
+         }*/
          if (operation instanceof LongOperationEntry) {
             if (operation.producer !== self._name) {
                throw new Error('Argument "operation" has invalid producer');
@@ -313,9 +330,9 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
        * @return {SBIS3.CONTROLS.LongOperationEntry}
        */
       var _get = function (self, operationId) {
-         if (!(typeof operationId === 'number' && 0 < operationId)) {
+         /*###if (!(typeof operationId === 'number' && 0 < operationId)) {
             throw new TypeError('Argument "operationId" must be positive number');
-         }
+         }*/
          var snapshot = GLOStorage.get(self._name, operationId);
          return snapshot ? _fromSnapshot(snapshot, self._name) : null;
       };
@@ -324,24 +341,83 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
        * Получить список длительных операций
        * @protected
        * @param {SBIS3.CONTROLS.GenericLongOperationsProducer} self Экземпляр класса
-       * @param {number} count Количество элементов
-       * @param {number} offset Отступ
+       * @param {object} where Параметры фильтрации
+       * @param {object} orderBy Параметры сортировки. По умолчанию используется обратный хронологический порядок
+       * @param {number} offset Количество пропущенных элементов в начале
+       * @param {number} limit Максимальное количество возвращаемых элементов
        * @return {SBIS3.CONTROLS.LongOperationEntry[]}
        */
-      var _list = function (self, count, offset) {
-         if (count && !(typeof count === 'number' && 0 < count)) {
-            throw new TypeError('Argument "count" must be positive number or null');
-         }
-         if (offset && !(typeof offset === 'number' && 0 < offset)) {
-            throw new TypeError('Argument "offset" must be positive number or null');
-         }
+      var _list = function (self, where, orderBy, offset, limit) {
          var snapshots = GLOStorage.list(self._name);
-         snapshots.sort(function (a, b) { return a.startedAt < b.startedAt ? +1 : (a.startedAt === b.startedAt ? 0 : -1); });
-         if (count || offset) {
-            snapshots = snapshots.slice(offset || 0, count ? (offset || 0) + count : snapshots.length);
+         if (!snapshots.length) {
+            return snapshots;
          }
-         var name = self._name;
-         return snapshots.map(function (v) { return _fromSnapshot(v, name); });
+         if (where) {
+            var DEFAULTS = LongOperationEntry.DEFAULTS;
+            snapshots = snapshots.filter(function (snapshot) {
+               for (var p in where) {
+                  if (!_isSatisfied(p in snapshot ? snapshot[p] : DEFAULTS[p], where[p])) {
+                     return false;
+                  }
+               }
+               return true;
+            });
+         }
+         var sorter = orderBy || {startedAt:false};
+         snapshots.sort(function (a, b) {
+            for (var p in sorter) {
+               var va = a[p];
+               var vb = b[p];
+               // Для сравниваемых значений могут иметь смысл операции < и >, но не иметь смысла != и ==, как например для Date. Поэтому:
+               if (va < vb) {
+                  return sorter[p] ? -1 : +1;
+               }
+               else
+               if (vb < va) {
+                  return sorter[p] ? +1 : -1;
+               }
+            }
+            return 0;
+         });
+         if (limit || offset) {
+            snapshots = snapshots.slice(offset || 0, limit ? (offset || 0) + limit : snapshots.length);
+         }
+         return snapshots.map(function (v) { return _fromSnapshot(v, self._name); });
+      };
+
+      /**
+       * Проверить, что занчение удовлетворяет условию
+       * @protected
+       * @param {any} value Занчение
+       * @param {any} condition Условие
+       * @return {boolean}
+       */
+      var _isSatisfied = function (value, condition) {
+         if (condition == null || typeof condition !== 'object') {
+            return value === condition;
+         }
+         if (Array.isArray(condition)) {
+            return condition.indexOf(value) !== -1;
+         }
+         if (!(condition.condition && typeof condition.condition === 'string') || !('value' in condition)) {
+            throw new TypeError('Wrong condition object');
+         }
+         switch (condition.condition) {
+            case '<':
+               return value < condition.value;
+            case '<=':
+               return value <= condition.value;
+            case '>=':
+               return value >= condition.value;
+            case '>':
+               return value > condition.value;
+            case 'contains':
+               if (typeof value !== 'string' || typeof condition.value !== 'string') {
+                  throw new TypeError('Value and condition is incompatible');
+               }
+               return (condition.sensitive ? value : value.toLowerCase()).indexOf(condition.sensitive ? condition.value : condition.value.toLowerCase()) !== -1;
+         }
+         return false;
       };
 
       /**
@@ -484,12 +560,12 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
        * @protected
        * @param {SBIS3.CONTROLS.GenericLongOperationsProducer} self Экземпляр класса
        */
-      var _clear = function (self) {
+      /*var _clear = function (self) {
          var operationIds = GLOStorage.clear(self._name);
          if (operationIds.length) {
             self._notify('onlongoperationdeleted', {producer:self._name, operationIds:operationIds});
          }
-      };
+      };*/
 
       /**
        * Создать снимок состояния (плоский объект) длительной операции
