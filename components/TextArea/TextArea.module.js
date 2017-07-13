@@ -194,7 +194,9 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
             var trg = dcHelpers.trackElement(this._container, true);
 
-            this._autosizeTextArea();
+            if(this.isVisible()){
+               this._autosizeTextArea();
+            }
 
             trg.subscribe('onVisible', function (event, visible) {
                if (visible) {
@@ -395,9 +397,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
       },
 
       destroy: function() {
-         if (this._options.autoResize.state) {
-            this._inputField instanceof $ && this._inputField.trigger('autosize.destroy');
-         }
+         this._inputField instanceof $ && this._inputField.trigger('autosize.destroy');
          dcHelpers.trackElement(this._container, false);
          this._inputField = undefined;
          TextArea.superclass.destroy.apply(this, arguments);

@@ -161,7 +161,7 @@ define(
                   def.addCallback(function(){
                      return '_exec2';
                   });
-                  window.setTimeout(function(){
+                  global.setTimeout(function(){
                      def.callback(true);
                   },0);
                   return e.setResult(def);
@@ -180,7 +180,7 @@ define(
                   def.addCallback(function(){
                      return false;
                   });
-                  window.setTimeout(function(){
+                  global.setTimeout(function(){
                      def.callback(true);
                   },0);
                   return e.setResult(def);
@@ -201,7 +201,7 @@ define(
                   def.addCallback(function(){
                      return ActionBase.ACTION_CUSTOM;
                   });
-                  window.setTimeout(function(){
+                  global.setTimeout(function(){
                      def.callback(true);
                   },0);
                   return e.setResult(def);

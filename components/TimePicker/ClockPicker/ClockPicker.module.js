@@ -185,6 +185,7 @@ define('js!SBIS3.CONTROLS.ClockPicker',
             if (this._animationEnabled) {
                this.getLinkedContext().setValueSelf('arrow/visible', false);
                this.getLinkedContext().setValueSelf('arrow/hidden', true);
+               this._container.removeClass('controls-ClockPicker_animationOff');
                setTimeout(function() {
                   this._setMode(mode);
                   this.getLinkedContext().setValueSelf('arrow/visible', true);
@@ -192,6 +193,7 @@ define('js!SBIS3.CONTROLS.ClockPicker',
                }.bind(this), ANIMATION_TIME);
             } else {
                this._setMode(mode);
+               this._container.addClass('controls-ClockPicker_animationOff');
             }
          },
 
@@ -202,14 +204,8 @@ define('js!SBIS3.CONTROLS.ClockPicker',
             this.getLinkedContext().setValueSelf('unitTime', this._unitTime[mode]);
          },
 
-         hide: function() {
-            ClockPicker.superclass.hide.call(this);
-            this._animationEnabled = false;
-         },
-
-         show: function() {
-            ClockPicker.superclass.show.call(this);
-            this._animationEnabled = true;
+         toggleAnimation: function(isAnimation) {
+            this._animationEnabled = isAnimation;
          },
 
          _mouseupHandler: function() {
@@ -317,6 +313,7 @@ define('js!SBIS3.CONTROLS.ClockPicker',
                this._isEndDrag = false;
                return;
             } else {
+               this._preparePageXY(event);
                this._beginDragHandler();
                this._onDragHandler(null, event);
             }
@@ -342,8 +339,8 @@ define('js!SBIS3.CONTROLS.ClockPicker',
          //SBIS3.CONTROLS.DragNDropMixin
          _onDragHandler: function(dragObject, e) {
             var
-               x = e.clientX - this._centerX,
-               y = e.clientY - this._centerY,
+               x = e.pageX - this._centerX,
+               y = e.pageY - this._centerY,
                mode = this._options.mode,
                angularOffset = 30 / this._tickOffset[mode],
                time, circle, deg, tick, arrowConfig;

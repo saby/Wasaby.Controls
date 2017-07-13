@@ -1091,18 +1091,6 @@ define('js!SBIS3.CONTROLS.ListView',
                 originalEvent = e.originalEvent,
                 mobFix = 'controls-ListView__mobileSelected-fix',
                 isTouchEvent = originalEvent ? ((!originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform)) || (originalEvent.sourceCapabilities && originalEvent.sourceCapabilities.firesTouchEvents)) : true;
-            this._setTouchSupport(
-               /* touch события - однозначно включаем touch режим */
-               Array.indexOf(['swipe', 'tap', 'touchend'], e.type) !== -1 ||
-               /* IOS - однозначно включаем touch режим */
-               constants.browser.isMobileIOS ||
-               /* Для остальных устройств из-за большого количества неожиданных багов, таких как:
-                  - mousemove срабатывает при клике пальцем (после touchStart), можно определить по координатам сдвига 0.0
-                  - mousemove срабатывает через случайный промежуток времени после touchEnd
-                  - mousemove бывает проскакивает между touchmove, особенно часто повторяется на android и windows устройствах
-                  написана специальная проверка */
-               (e.type === 'mousemove' && isTouchEvent)
-            );
 
 
             switch (e.type) {
@@ -1845,15 +1833,21 @@ define('js!SBIS3.CONTROLS.ListView',
          /*MASS SELECTION START*/
          /*TODO: После перехода на новый механизм переименовать метод в setSelectedAll и удалить старый метод, выделяющий 1000 записей*/
          setSelectedAllNew: function(selected) {
-            this._getMassSelectionController().setSelectedAll(selected);
+            if (this._options.useSelectAll) {
+               this._getMassSelectionController().setSelectedAll(selected);
+            }
          },
 
          toggleSelectedAll: function() {
-            this._getMassSelectionController().toggleSelectedAll();
+            if (this._options.useSelectAll) {
+               this._getMassSelectionController().toggleSelectedAll();
+            }
          },
 
          getSelection: function() {
-            return this._getMassSelectionController().getSelection();
+            if (this._options.useSelectAll) {
+               return this._getMassSelectionController().getSelection();
+            }
          },
 
          _getMassSelectionController: function() {
@@ -2574,6 +2568,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _onLeftSwipeHandler: function() {
             if (this._isSupportedItemsToolbar()) {
                if (this._hasHoveredItem()) {
+                  this._setTouchSupport(true);
                   this._showItemsToolbar(this._hoveredItem);
                   this.setSelectedKey(this._hoveredItem.key);
                } else {
@@ -2707,6 +2702,11 @@ define('js!SBIS3.CONTROLS.ListView',
                         self.setSelectedKey(key);
                         if(self._touchSupport) {
                            self._clearHoveredItem();
+                        }
+                     },
+                     onItemsToolbarHide: function() {
+                        if(self._touchSupport) {
+                           self._setTouchSupport(false);
                         }
                      }
 
@@ -3001,11 +3001,13 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _setInfiniteScrollState: function(mode, reverse){
-            if (mode) {
-               this._infiniteScrollState.mode = mode;
-            }
-            if (reverse){
-               this._infiniteScrollState.reverse = reverse;
+            if (this._options.infiniteScroll){
+               if (mode) {
+                  this._infiniteScrollState.mode = mode;
+               }
+               if (reverse){
+                  this._infiniteScrollState.reverse = reverse;
+               }
             }
          },
 
@@ -3744,7 +3746,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.getFilter()['СлужебныйКоличествоЗаписей'] = items.getCount();
                   this._scrollOffset.top = more - items.getCount();
                   this.setPage(pageNumber, true);
-                  this._scrollWatcher.scrollTo('bottom');
+                  this._getScrollWatcher().scrollTo('bottom');
                }
                this._lastPageLoaded = true;
             }.bind(this);
@@ -4033,6 +4035,9 @@ define('js!SBIS3.CONTROLS.ListView',
             this._options.itemsDragNDrop = allowDragNDrop;
             this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', this._getDragInitHandler());
             this.once('onDragOver', this._makeDragMove.bind(this));//могут перетаскивать с другого контрола тогда _draginit не сработает
+            if (this._dragMoveController) {
+               this._dragMoveController.setItemsDragNDrop(allowDragNDrop);
+            }
          },
          /**
           * возвращает метод который инициализирует dragndrop
@@ -4079,7 +4084,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   projection: this._getItemsProjection(),
                   useDragPlaceholder: this._options.useDragPlaceHolder,
                   dragEntity: this._options.dragEntity,
-                  dragEntityList: this._options.dragEntityList
+                  dragEntityList: this._options.dragEntityList,
+                  itemsDragNDrop: this.getItemsDragNDrop()
                });
             }
          },

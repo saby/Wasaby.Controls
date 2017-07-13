@@ -8,10 +8,11 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
       'js!WS.Data/Entity/Record',
       'html!SBIS3.CONTROLS.LongOperationHistory',
       'css!SBIS3.CONTROLS.LongOperationHistory',
-      'js!SBIS3.Engine.Browser',
+      'js!SBIS3.CONTROLS.Browser'/*###'js!SBIS3.Engine.Browser'*/,
       'html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryDateTemplate',
       'html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryTimeTemplate',
-      'html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryStatusTemplate'
+      'html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryStatusTemplate',
+      'js!SBIS3.CONTROLS.DataGridView'
    ],
 
    function (CompoundControl, longOperationsManager, LongOperationHistoryItem, DataSet, RecordSet, Record, dotTplFn) {
@@ -54,7 +55,7 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
          init: function () {
             moduleClass.superclass.init.call(this);
             this._view = this.getChildControlByName('browserView');
-            this.getChildControlByName('browserFastDataFilter').setItems(this._data);
+            //###this.getChildControlByName('browserFastDataFilter').setItems(this._data);
             this._bindEvents();
             this._reload();
          },
@@ -72,7 +73,7 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
                var container = self._view.getContainer();
                self._view.getItems().each(function (item, id) {
                   if (item.get('isFailed')) {
-                     container.find('.js-controls-ListView__item[data-id="' + item.getId() + '"]').addClass('engine-LongOperationHistory__view_errorOperation engine-OperationRegistry__view_errorOperation');//TODO: ### Убрать одни класс!
+                     container.find('.js-controls-ListView__item[data-id="' + item.getId() + '"]').addClass('controls-LongOperationHistory__view_errorOperation');
                   }
                });
             });

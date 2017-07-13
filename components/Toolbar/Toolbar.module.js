@@ -141,11 +141,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          _options: {
             _canServerRender: true,
             _buildTplArgs: buildTplArgs,
-            _defaultItemTemplate: ItemTemplate,
-            /** @cfg {Boolean} Асинхронное разрушение дочерних контролов при перерисовке.
-             * @deprecated
-             **/
-            asyncDestroyControls: false
+            _defaultItemTemplate: ItemTemplate
          }
       },
 
@@ -158,35 +154,6 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             cfg.nodeProperty = cfg.parentProperty + '@';
          }
          return Toolbar.superclass._modifyOptions.apply(this, arguments);
-      },
-
-      //Метод является аналогом _destroyControls из ItemsControlMixin. Только разрушение компонентов происходит асинхронно.
-      //Из-за этого мы не теряем время и получаем быструю перерисовку. Если всё будет работать как надо,
-      //нужно перенести этот метод на уровень ItemsControlMixin. Выписана задача https://online.sbis.ru/opendoc.html?guid=7825a3e6-6748-41ea-9c1b-24912a6e3009
-      _destroyControls: function(container, easy){
-         var
-            result,
-            compsArray = [];
-         if (this._options.asyncDestroyControls) {
-            $('[data-component]', container).each(function (i, item) {
-               if (item.wsControl) {
-                  compsArray.push(item.wsControl);
-               }
-            });
-
-            if (!easy) {
-               setTimeout(function () {
-                  compsArray.forEach(function (inst) {
-                     inst.destroy(true);
-                  });
-               }, 0);
-            }
-
-            result = easy ? compsArray : [];
-         } else {
-            result = Toolbar.superclass._destroyControls.apply(this, arguments);
-         }
-         return result;
       },
 
       $constructor: function() {
@@ -213,7 +180,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          //отправляем в меню обработанные элементы, в которых убраны с showType.TOOLBAR
          var menuItems = this._getMenuItems(items);
          this._menuIcon.setItems(menuItems);
-         this._menuIcon.toggle(!!menuItems.length);
+         this._menuIcon.toggle(!!menuItems.length && this._hasVisibleItems(menuItems));
       },
 
       //обработчик для меню
@@ -271,6 +238,14 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             }
          }
          return menuItems;
+      },
+
+      _hasVisibleItems: function(items) {
+         var hasVisibleItems = false;
+         for (var i = 0; i < items.length; i++) {
+            hasVisibleItems = hasVisibleItems || items[i].visible !== false
+         }
+         return hasVisibleItems;
       }
    });
 
