@@ -37,10 +37,6 @@
    
    &.controls-DataGridView__hasSeparator{
       &.controls-ListView__dataLoaded {
-         .controls-DataGridView__table {
-            border-width: @data-grid-table-separator-border-width;
-            border-color: @data-grid-edge-cell-separator-color;
-         }
          .controls-DataGridView__tr {
             .controls-DataGridView__td {
                border-top-color: @data-grid-cell-separator-color;
@@ -56,9 +52,18 @@
                }
             }
          }
+         .controls-DataGridView__tr:nth-last-child(1){
+            .controls-DataGridView__td {
+               border-bottom-color: @data-grid-edge-cell-separator-color;
+            }
+         }
          &.controls-DataGridView__resultsBottom {
             .controls-DataGridView__table {
-               border-width: 0;
+               .controls-DataGridView__tr:nth-last-child(1){
+                  .controls-DataGridView__td {
+                     border-bottom-color: transparent;
+                  }
+               }
             }
             .controls-DataGridView__results {
                td {
@@ -67,11 +72,6 @@
                   border-style: solid;
                }
             }
-         }
-      }
-      &.controls-DataGridView__emptyTable {
-         .controls-DataGridView__table {
-            border-width: 0;
          }
       }
    }
