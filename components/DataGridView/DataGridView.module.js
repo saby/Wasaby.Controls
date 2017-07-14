@@ -817,7 +817,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
          headData.columnsShift = this._getColumnsScrollPosition();
          headData.thumbPosition = this._currentScrollPosition;
          /* Чтобы не было дёрганий интерфейса сразу создаём шапку с актуальным состоянием видимости */
-         headData.isVisible = !(this._options.allowToggleHead && this._getItemsProjection() && !this._getItemsProjection().getCount());
+         if (this._options.allowToggleHead) {
+            headData.isVisible =  this._getItemsProjection() && this._getItemsProjection().getCount();
+         } else {
+            headData.isVisible = true;
+         }
          headMarkup = this._options.headTpl(headData);
          var body = $('.controls-DataGridView__tbody', this._container);
 
