@@ -161,9 +161,10 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
           * @param {object} orderBy Параметры сортировки
           * @param {number} offset Количество пропущенных элементов в начале
           * @param {number} limit Максимальное количество возвращаемых элементов
+          * @param {object} [extra] Дополнительные параметры, если есть (опционально)
           * @return {Core/Deferred<SBIS3.CONTROLS.LongOperationEntry[]>}
           */
-         fetch: function (where, orderBy, offset, limit) {
+         fetch: function (where, orderBy, offset, limit, extra) {
             if (where != null && typeof where !== 'object') {
                throw new TypeError('Argument "where" must be an object');
             }
@@ -176,6 +177,9 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             }
             if (!(typeof limit === 'number' && 0 < limit)) {
                throw new TypeError('Argument "limit" must be positive number');
+            }
+            if (extra != null && typeof extra !== 'object') {
+               throw new TypeError('Argument "extra" must be an object if present');
             }
             if (!orderBy) {
                orderBy = DEFAULT_FETCH_SORTING;

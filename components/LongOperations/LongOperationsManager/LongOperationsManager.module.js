@@ -178,6 +178,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
           * @param {object} [options.orderBy] Параметры сортировки. По умолчанию будет использована константа DEFAULT_FETCH_SORTING (опционально)
           * @param {number} [options.offset] Количество пропущенных элементов в начале. По умолчанию 0 (опционально)
           * @param {number} [options.limit] Максимальное количество возвращаемых элементов. По умолчанию будет использована константа DEFAULT_FETCH_LIMIT (опционально)
+          * @param {object} [options.extra] Дополнительные параметры, если есть (опционально)
           * @return {Core/Deferred<WS.Data/Collection/RecordSet<SBIS3.CONTROLS.LongOperationEntry>>}
           */
          fetch: function (options) {
@@ -192,11 +193,12 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                where: null,
                orderBy: DEFAULT_FETCH_SORTING,
                offset: 0,
-               limit: DEFAULT_FETCH_LIMIT
+               limit: DEFAULT_FETCH_LIMIT,
+               extra: null
             };
             var names = Object.keys(query);
             var len = arguments.length;
-            if (len === 4) {
+            if (4 <= len) {
                var args = arguments;
                names.forEach(function (v, i) { if (ars[i]) query[v] = ars[i]; });
             }
@@ -213,6 +215,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             if (len !== 0) {
                throw new Error('Wrong arguments number');
             }
+
             if (query.where != null && typeof query.where !== 'object') {
                throw new TypeError('Argument "where" must be an object');
             }
@@ -226,11 +229,14 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             if (!(typeof query.limit === 'number' && 0 < query.limit)) {
                throw new TypeError('Argument "limit" must be positive number');
             }
+            if (query.extra != null && typeof query.extra !== 'object') {
+               throw new TypeError('Argument "extra" must be an object');
+            }
             if (!_fetchCalls.has(query)) {
                // Если нет уже выполняющегося запроса
                if (Object.keys(_producers).length) {
                   for (var n in _producers) {
-                     _fetchCalls.add(query, {tab:_tabKey, producer:n}, _producers[n].fetch(query.where, query.orderBy, query.offset, query.limit));
+                     _fetchCalls.add(query, {tab:_tabKey, producer:n}, _producers[n].fetch(query.where, query.orderBy, query.offset, query.limit, query.extra));
                   }
                }
                if (Object.keys(_tabManagers).length) {
@@ -239,7 +245,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                      targets = _tabTargets(targets, tabKey, _tabManagers[tabKey]);
                   }
                   if (targets) {
-                     _fetchCalls.addList(query, _expandTargets(targets), _tabCalls.callBatch(targets, 'fetch', [query.where, query.orderBy, query.offset, query.limit], LongOperationEntry));
+                     _fetchCalls.addList(query, _expandTargets(targets), _tabCalls.callBatch(targets, 'fetch', [query.where, query.orderBy, query.offset, query.limit, query.extra], LongOperationEntry));
                   }
                }
             }
@@ -471,7 +477,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             var queries = _fetchCalls.listPools();
             for (var i = 0; i < queries.length; i++) {
                var q = queries[i];
-               _fetchCalls.add(q, {tab:_tabKey, producer:name}, _producers[name].fetch(q.where, q.orderBy, q.offset, q.limit));
+               _fetchCalls.add(q, {tab:_tabKey, producer:name}, _producers[name].fetch(q.where, q.orderBy, q.offset, q.limit, q.extra));
             }
             // И уведомить своих подписчиков
             _channel.notifyWithTarget('onproducerregistered', manager);
@@ -738,7 +744,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                   var member = _expandTargets(targets);
                   for (var i = 0; i < queries.length; i++) {
                      var q = queries[i];
-                     _fetchCalls.addList(q, member, _tabCalls.callBatch(targets, 'fetch', [q.where, q.orderBy, q.offset, q.limit], LongOperationEntry));
+                     _fetchCalls.addList(q, member, _tabCalls.callBatch(targets, 'fetch', [q.where, q.orderBy, q.offset, q.limit, q.extra], LongOperationEntry));
                   }
                }
             }

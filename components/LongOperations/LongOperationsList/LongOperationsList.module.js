@@ -341,6 +341,9 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
             if (0 < limit) {
                options.limit = limit;
             }
+            if (filter.NeedProfileData) {
+               options.extra = {NeedProfileData:true};
+            }
             return longOperationsManager.fetch(Object.keys(options).length ? options : null)
                .addCallback(function (results) {
                   if (this._isDestroyed) {

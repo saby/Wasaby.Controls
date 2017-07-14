@@ -107,6 +107,7 @@ define('js!SBIS3.CONTROLS.ILongOperationsProducer',
        * @param {object} orderBy Параметры сортировки
        * @param {number} offset Количество пропущенных элементов в начале
        * @param {number} limit Максимальное количество возвращаемых элементов
+       * @param {object} [extra] Дополнительные параметры, если есть (опционально)
        * @return {Core/Deferred<SBIS3.CONTROLS.LongOperationEntry[]>}
        */
       fetch: function (where, orderBy, offset, limit) {
