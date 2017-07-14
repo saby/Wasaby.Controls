@@ -1,5 +1,6 @@
 <div>
-   <ws:WSTest.TestSubControls.TestSubControlChild name="ch1">
+   <ws:WSTest.Invisible.Action name="testAction" someProp="{{_options.testText}}" />
+   <ws:WSTest.TestSubControls.TestSubControlChild name="ch1" event:onMyEvent="testAction.execute(callback)">
       <ws:content>
          <ws:WSTest.TestSubControls.TestSubControlChild name="ch2"></ws:WSTest.TestSubControls.TestSubControlChild>
       </ws:content>
