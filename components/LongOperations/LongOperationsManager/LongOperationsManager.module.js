@@ -889,17 +889,17 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                   }
                   if (query.orderBy) {
                      var sorter = query.orderBy;
-                     chain.sort(function (a, b) {
-                        for (var p in orderBy) {
+                     chain = chain.sort(function (a, b) {
+                        for (var p in sorter) {
                            var va = a[p];
                            var vb = b[p];
                            // Для сравниваемых значений могут иметь смысл операции < и >, но не иметь смысла != и ==, как например для Date. Поэтому:
                            if (va < vb) {
-                              return orderBy[p] ? -1 : +1;
+                              return sorter[p] ? -1 : +1;
                            }
                            else
                            if (vb < va) {
-                              return orderBy[p] ? +1 : -1;
+                              return sorter[p] ? +1 : -1;
                            }
                         }
                         return 0;
