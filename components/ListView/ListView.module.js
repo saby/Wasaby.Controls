@@ -1810,7 +1810,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      //Ввостановим значение _limit, т.к. после вызова reload _limit стал равен MAX_SELECTED,
                      //и следующие страницы будут грузиться тоже по MAX_SELECTED записей
                      this._limit = this._options.pageSize;
-                     this._scrollOffset.bottom = MAX_SELECTED;
+                     this._scrollOffset.bottom = MAX_SELECTED - this._limit;
                      //Очистим selectedItems чтобы при заполнении новыми элементами, не делать проверку на наличие элементов в коллекции
                      if (selectedItems && selectedItems.getCount()) {
                         selectedItems.clear();
