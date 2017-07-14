@@ -69,7 +69,8 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
             _oldSearchValue: '',
             _timer: null,
             _missSpell: null,
-            _missSpellUsed: false
+            _missSpellUsed: false,
+            _currentItems: null
          },
 
          $constructor: function() {
@@ -252,13 +253,15 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
           чтобы избежать моргания данных, обработка событий включается,
           когда поиск точно закончен (уже была сменена раскладка, если требуется) */
          _toggleItemsEventRising: function(enable, analyze) {
-            var items = this._options.view.getItems();
+            var items = this._currentItems || this._options.view.getItems();
 
             if(items) {
                var isEqual = items.isEventRaising() === enable;
 
                if(!isEqual) {
                   items.setEventRaising(enable, analyze);
+                  /* Запоминаем рекордсет, чтобы потом у него же и включить обработку событий */
+                  this._currentItems = this._currentItems  ? null : items;
                }
             }
          },
