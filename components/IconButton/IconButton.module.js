@@ -87,7 +87,7 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
             return;
          }
          this._isWaitingClick = false;
-         if (!this._options.enabled) {
+         if (!this.isEnabled()) {
             return;
          }
          this._onClickHandler(e);
