@@ -14,15 +14,18 @@ define(['js!WSControls/Lists/ItemsControl', 'js!WS.Data/Collection/RecordSet', '
             data = [
                {
                   id : 1,
-                  title : 'Первый'
+                  title : 'Первый',
+                  type: 1
                },
                {
                   id : 2,
-                  title : 'Второй'
+                  title : 'Второй',
+                  type: 2
                },
                {
                   id : 3,
-                  title : 'Третий'
+                  title : 'Третий',
+                  type: 2
                }
             ]
          });
@@ -50,6 +53,23 @@ define(['js!WSControls/Lists/ItemsControl', 'js!WS.Data/Collection/RecordSet', '
 
                var drawedItems = ctrl._records;
                assert.equal(rs.getCount(), drawedItems.length, 'Count of drawed items is not equal to count of src items');
+            });
+
+            it('Group', function () {
+               var rs = new RecordSet({
+                     rawData: data,
+                     idProperty : 'id'
+                  }),
+                  ctrl = new ItemsControl({
+                     items : rs,
+                     idProperty: 'id',
+                     groupBy : {
+                        field : 'type'
+                     }
+                  });
+
+               var drawedItems = ctrl._records;
+               assert.equal(rs.getCount() + 2, drawedItems.length, 'Count of drawed items is not equal to count of src items + count of groups');
             });
 
             it('Array.Simple + Source', function () {
@@ -92,5 +112,25 @@ define(['js!WSControls/Lists/ItemsControl', 'js!WS.Data/Collection/RecordSet', '
             });
 
          });
+
+         describe('GetData', function(){
+            it('GetItemData', function () {
+               var rs = new RecordSet({
+                     rawData: data,
+                     idProperty : 'id'
+                  }),
+                  ctrl = new ItemsControl({
+                     items : rs,
+                     idProperty: 'id',
+                     displayProperty: 'title'
+                  });
+               var itemData = ctrl._getItemData();
+               assert.equal('id', itemData.idProperty, 'idProperty in itemData in sot equal to config');
+               assert.equal('title', itemData.displayProperty, 'displayProperty in itemData in sot equal to config');
+               assert.equal(ctrl._defaultItemTemplate, itemData.defaultItemTpl, 'defaultItemTpl in itemData in sot equal to own component');
+               assert.equal(ctrl._itemContentTpl, itemData.itemContent, 'itemContent in itemData in sot equal to own component');
+               assert.equal(ctrl._itemTpl, itemData.itemTpl, 'itemTpl in itemData in sot equal to own component');
+            })
+         })
       });
    });

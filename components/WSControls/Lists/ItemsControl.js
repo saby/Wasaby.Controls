@@ -130,11 +130,9 @@ define('js!WSControls/Lists/ItemsControl', [
                self = this,
                timers = {},
                logger;
-            tplOptions.escapeHtml = strHelpers.escapeHtml;//todo ?
-            tplOptions.Sanitize = Sanitize;//todo ?
             tplOptions.idProperty = this._options.idProperty;
             tplOptions.displayProperty = this._options.displayProperty;
-            tplOptions.templateBinding = this._options.templateBinding;
+            tplOptions.templateBinding = this._options.templateBinding; //TODO ??
             tplOptions.getPropertyValue = ItemsUtil.getPropertyValue;
 
             /* Для логирования */
