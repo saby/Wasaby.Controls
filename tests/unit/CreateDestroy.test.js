@@ -43,8 +43,8 @@ define([
 
                assert.isTrue( ch2.isEnabled() );
                assert.isTrue( ch2._options.enabled === undefined );
-               logicParentTestControl._options.enabled = false;
-               logicParentTestControl._setDirty();
+               ch1._options.enabled = false;
+               ch1._setDirty();
                setTimeout(function(){
                   assert.isTrue( !ch2.isEnabled() );
                   assert.isTrue( ch2._options.enabled === undefined );
