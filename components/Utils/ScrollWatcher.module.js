@@ -215,7 +215,8 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
       },
 
       destroy: function(){
-         this._options.element.unbind('scroll.wsScrollWatcher', this._onContainerScroll);
+         var element = this._findScrollElement() || $(window);
+         element.unbind('scroll.wsScrollWatcher', this._onContainerScroll);
          ScrollWatcher.superclass.destroy.call(this);
       }
 
