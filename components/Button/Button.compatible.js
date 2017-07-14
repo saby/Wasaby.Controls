@@ -92,7 +92,7 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
             e.stopImmediatePropagation();
          }
 
-         if (!this._options.enabled)
+         if (!this.isEnabled())
             return;
 
          if (!this.iWantVDOM) {
@@ -124,13 +124,13 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
       _onClickHandler: function(e)
       {
          this._baseClickAction(e);
-         if (this._options.enabled) {
+         if (this.isEnabled()) {
             this._onClick(e);
          }
       },
 
       _onClick: function (e) {
-         if (!this._options.enabled || this.iWantVDOM)
+         if (!this.isEnabled() || this.iWantVDOM)
             return;
          return this._notify("onActivated", e);
       }
