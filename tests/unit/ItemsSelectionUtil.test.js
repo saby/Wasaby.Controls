@@ -94,7 +94,7 @@ define([
             });
    
             after(function() {
-               if(typeof window === 'undefined') {
+               if(typeof window !== 'undefined') {
                   removeContainer();
                }
             });
@@ -126,7 +126,9 @@ define([
             });
    
             after(function() {
-               removeContainer();
+               if(typeof window !== 'undefined') {
+                  removeContainer();
+               }
             });
    
             it('cross click check', function () {

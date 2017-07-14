@@ -86,7 +86,6 @@ body {
    }
    .controls-DataGridView__results {
       font-size: @default-font-size;
-      color: @header-color;
    }
 
    .controls-TabButton {
@@ -129,7 +128,7 @@ body {
             position: absolute;
             top: -@default-border-width;
             left: -@default-border-width;
-            color: #E4E4E4;
+            color: #E4E4E4 !important;
          }
          &.controls-Click__active {
            background: @button-active-bg;
@@ -747,7 +746,7 @@ body .controls-ToolBar__menuIcon .icon-24 {
 
 .controls-Browser {
    .controls-Browser__topTemplate {
-      height: 3.88rem
+      height: auto;
    }
 }
 
@@ -996,19 +995,6 @@ body {
              background-color:  #E0ECF5 !important;
          }
      }
-}
-.controls-FieldLink {
-   &.controls-Picker__show {
-      .controls-FieldLink__showSelector {
-         .icon-primary {
-            color: #26b7fd !important;
-         }
-      }
-      
-      .controls-TextBox__field {
-         color: rgb(58, 73, 81) !important;
-      }
-   }
 }
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button:hover {
   color: #fff;
