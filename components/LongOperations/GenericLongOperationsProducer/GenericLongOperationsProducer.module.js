@@ -184,7 +184,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             if (!orderBy) {
                orderBy = DEFAULT_FETCH_SORTING;
             }
-            return Deferred.success(_list(this, where, orderBy, offset, limit).map(function (operation) {
+            var operations = _list(this, where, orderBy, offset, limit).map(function (operation) {
                var handlers = this._actions ? this._actions[operation.id] : null;
                // Если обработчики действий пользователя остались в другой вкладке
                if (!(handlers && handlers.onSuspend && handlers.onResume)) {
@@ -194,7 +194,8 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                   operation.canDelete = false;
                }*/
                return operation;
-            }.bind(this)));
+            }.bind(this));
+            return operations.length && extra && extra.NeedProfileData ? _fillUserInfo(operations) : Deferred.success(operations);
          },
 
          /**
@@ -269,6 +270,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             }
             options.canSuspend = typeof options.onSuspend === 'function' && typeof options.onResume === 'function';
             options.canDelete = typeof options.onDelete === 'function';
+            options.userId = require('Core/UserInfo').get('ИдентификаторСервисаПрофилей') || $.cookie('CpsUserId');
             var operationId = _put(this, options);
             var self = this;
             stopper.addCallbacks(
@@ -606,6 +608,50 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             throw new TypeError('Argument "snapshot" must be an object');
          }
          return new LongOperationEntry(ObjectAssign({producer:producerName}, snapshot));
+      };
+
+      /**
+       * Заполнить длительные операции информацией о пользователях
+       * @protected
+       * @param {SBIS3.CONTROLS.LongOperationEntry[]} operations Список длительных операций
+       * @return {Core/Deferred<SBIS3.CONTROLS.LongOperationEntry[]>}
+       */
+      var _fillUserInfo = function (operations) {
+         var oIds = operations.reduce(function (r, v) { if (v.userId) r.push(v.userId); return r; }, []);
+         if (!oIds.length) {
+            return Deferred.success(operations);
+         }
+         var promise = new Deferred();
+         //TODO: ### Переделать на SbisService
+         require(['Transport/BLObject'], function (BLObject) {
+            (new BLObject('Персона')).call('ПодробнаяИнформация', {
+               'Персоны': oIds,
+               'ДляДокумента': null,
+               'ПроверитьЧерныйСписок': false
+            }, BLObject.RETURN_TYPE_RECORDSET)
+               .addCallbacks(
+                  function (answer) {
+                     var results = answer.getRecords();
+                     var indexes = oIds.reduce(function (r, v, i) { r[v] = i; return r; }, {});
+                     results.forEach(function (record) {
+                        var userId = record.get('Персона');
+                        var i = indexes[userId];
+                        if (0 <= i) {
+                           var o = operations[i];
+                           o.userFirstName = record.get('Имя');
+                           o.userPatronymicName = record.get('Отчество');
+                           o.userLastName = record.get('Фамилия');
+                           o.userPic = '/service/?id=0&method=PProfileServicePerson.GetPhoto&protocol=4&params=' + window.btoa(JSON.stringify({person:userId, kind:'mini'}));//'default'
+                        }
+                     });
+                     promise.callback(operations);
+                  },
+                  function (err) {
+                     promise.callback(operations);
+                  }
+               );
+         });
+         return promise;
       };
 
       var ObjectAssign = Object.assign || function (dst, src) { return Object.keys(src).reduce(function (o, n) { o[n] = src[n]; return o; }, dst); };

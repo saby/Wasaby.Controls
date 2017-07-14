@@ -55,6 +55,7 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
          progressCurrent: 'number',
          canSuspend: 'boolean',
          canDelete: 'boolean',
+         userId: ['string', 'number'],
          userFirstName: 'string',
          userPatronymicName: 'string',
          userLastName: 'string',
@@ -95,6 +96,7 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
           * @param {number}        [options.progress.current] Текущая стадия выполнения - альтернативно
           * @param {boolean}       [options.canSuspend] Можно ли приостановить операцию (опционально, если не указано, будет использовано true)
           * @param {boolean}       [options.canDelete] Можно ли удалить операцию (опционально, если не указано, будет использовано true)
+          * @param {string}        [options.userId] Идентификатор пользователя (опционально)
           * @param {string}        [options.userFirstName] Имя пользователя (опционально)
           * @param {string}        [options.user.firstName] Имя пользователя - альтернативно
           * @param {string}        [options.userPatronymicName] Отчество пользователя (опционально)
