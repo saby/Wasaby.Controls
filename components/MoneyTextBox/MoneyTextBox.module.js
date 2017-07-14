@@ -76,8 +76,8 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
              * @see text
              */
              moneyValue: null,
-             _decimalsPart: '00',
-             _integersPart: '0'
+             _decimalsPart: null,
+             _integersPart: null
          }
       },
 

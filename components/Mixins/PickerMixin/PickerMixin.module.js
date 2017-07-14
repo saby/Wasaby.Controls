@@ -104,6 +104,8 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
                      if(pickerConfig[key][handlerKey]) {
                         pickerConfig[key][handlerKey] = [pickerConfig[key][handlerKey]];
                         pickerConfig[key][handlerKey].push(handlerVal);
+                     } else {
+                        pickerConfig[key][handlerKey] = handlerVal;
                      }
                   });
                   return;

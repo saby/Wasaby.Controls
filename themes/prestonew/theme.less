@@ -86,7 +86,6 @@ body {
    }
    .controls-DataGridView__results {
       font-size: @default-font-size;
-      color: @header-color;
    }
 
    .controls-TabButton {
@@ -129,7 +128,7 @@ body {
             position: absolute;
             top: -@default-border-width;
             left: -@default-border-width;
-            color: #E4E4E4;
+            color: #E4E4E4 !important;
          }
          &.controls-Click__active {
            background: @button-active-bg;
@@ -262,7 +261,6 @@ body {
          height: 3rem;
       }
       .controls-IconButton.controls-IconButton__round-border {
-         border: none;
          .controls-Button__icon {
             &.icon-16, &.icon-24 {
                margin-left: -1.5rem;
@@ -747,7 +745,7 @@ body .controls-ToolBar__menuIcon .icon-24 {
 
 .controls-Browser {
    .controls-Browser__topTemplate {
-      height: 3.88rem
+      height: auto;
    }
 }
 

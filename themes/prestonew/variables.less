@@ -50,7 +50,7 @@
 //Link
 @link-text-color:                         #26B8FF;
 @link-line-height:                        normal;
-@link-font-size:                          1.43rem;
+@link-font-size:                          1.14rem;
 @link-hover-text-color:                   #B9E9FF;
 @link-icon-hover-icon:                    @link-hover-text-color;
 @link-icon-margin:                        -@default-border-width 0 0;
@@ -59,11 +59,12 @@
 @link-disabled-text-color:                rgba(102,170,221, .2);
 @link-header-hover-color:                 @default-hover-color;
 //Icon Button
-@icon-button-round-border-width:          2.286rem;
+@icon-button-round-border-width:          0;
 @icon-button-round-border-height:         2.286rem;
 @icon-button-round-border-line-height:    2.2rem;
-@border-radius:                           2.4rem;
-@icon-button-border-width:                @default-border-width;
+@border-radius:                           0;
+@icon-button-round-icon-color-hover:      @icon-active-color;
+@icon-button-border-width:                0;
 //ListView
 @list-view-items-toolbar-icon-button-border-width:0;
 @list-view-items-toolbar-icon-button-border-radius:0;
@@ -257,7 +258,7 @@
 @menu-item-icon-left-offset:              -.4232rem;
 @menu-item-icon24-top-offset:             0;
 @menu-item-icon24-top-offset-big:         0;
-@menu-item-icon24-left-offset:            -.@default-border-width;
+@menu-item-icon24-left-offset:            -@default-border-width;
 @menu-item-icon24-left-offset-big:        0;
 @menu-item-line-height:                   3.57rem;
 @menu-item-padding-16:                    2rem;
@@ -517,7 +518,7 @@
 
 @date-range-big-choose-years-height:      3.57rem;
 @date-range-big-choose-header-padding:    0.256rem 0 0.256rem 0;
-@date-range-big-choose-header-home-button-size:3rem;
+@date-range-big-choose-header-home-button-size: 3rem;
 @date-range-big-choose-header-home-button-font-size:@date-range-big-choose-header-home-button-size;
 @date-range-big-choose-header-home-button-margin-left:0;
 @date-range-big-choose-header-date-box-border-color:           @text-box-border-color;
@@ -632,6 +633,8 @@
 @data-grid-check-box-top:                 0;
 @data-grid-cell-separator-color:          rgba(0, 0, 0, 0.1);
 @data-grid-cell-border-width:             @default-border-width 0;
+@data-grid-partScroll-notScrolledCell-Color:    @basic-block-bg-color;
+@data-grid-results-color:                 #FFCC99;
 // PrintDialog
 @controls-printdialog-min-width:          25rem;
 @controls-printdialog-activate-right:     3.1785rem;
