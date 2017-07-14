@@ -1575,7 +1575,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          },
             
          _prepareImageURL: function(fileobj) {
-            return'/previewer/r/512/512' + (fileobj.filePath ? fileobj.filePath : fileobj.url);
+            return'/previewer/r/768/768' + (fileobj.filePath ? fileobj.filePath : fileobj.url);
          },
             
          _replaceWhitespaces: function(text) {
