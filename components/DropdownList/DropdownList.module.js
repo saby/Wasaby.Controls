@@ -73,6 +73,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
        * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut onClick
        *
        * @cssModifier controls-DropdownList__withoutCross Скрывает крестик справа от выбранного значения.
+       * @cssModifier controls-DropdownList__hideText Скрывает текст выбранной записи. Нужно использоваться, когда требуется отобразить только иконку.
+       * @cssModifier controls-DropdownList__hideIcon Скрываем иконку выбранной записи. Нужно использоваться, когда требуется отобразить только текст.
        *
        * @control
        * @public
@@ -136,6 +138,12 @@ define('js!SBIS3.CONTROLS.DropdownList',
             return textValue[0] + ' и еще ' + (textValue.length - 1);
          }
          return textValue.join('');
+      }
+
+      function prepareHeadTemplateIcon(config) {
+         if (!config.multiselect && config.selectedItems && config.selectedItems.at(0)) {
+            config._selectedItemIcon = config.selectedItems.at(0).get('icon');
+         }
       }
 
       var DropdownList = Control.extend([PickerMixin, ItemsControlMixin, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DropdownList.prototype */{
@@ -346,6 +354,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if (!cfg.selectedItems) {
                prepareSelectedItems(cfg);
             }
+
+            prepareHeadTemplateIcon(cfg);
 
             if (cfg.type == 'duplicateHeader'){
                cfg.pickerClassName += ' controls-DropdownList__type-duplicateHeader';
@@ -865,6 +875,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _redrawHead: function(isDefaultIdSelected){
+            prepareHeadTemplateIcon(this._options);
             var pickerHeadContainer,
                 headTpl = TemplateUtil.prepareTemplate(this._options.headTemplate.call(this, this._options))();
             if (this._picker) {
