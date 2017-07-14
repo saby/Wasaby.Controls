@@ -104,7 +104,7 @@ define('js!SBIS3.CONTROLS.Utils.ItemsSelection', ['Core/core-instance', 'Core/de
       var itemContainer, id;
       
       target = target instanceof jQuery ? target : $(target);
-      itemContainer = target.closest('.js-controls-ListView__item', this.getContainer());
+      itemContainer = target.closest('.js-controls-ListView__item', this.getContainer()[0]);
       
       if(itemContainer.length) {
          id = this._getItemProjectionByHash(itemContainer.data('hash')).getContents().get(this._options.idProperty);
