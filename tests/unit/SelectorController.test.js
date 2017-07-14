@@ -4,10 +4,12 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define(['js!WSControls/Controllers/BaseListSelector',
    'js!WSControls/Controllers/RecordsetListSelector',
-   'js!SBIS3.CONTROLS.ListView/ListViewHelpers'],
+      'js!WS.Data/Collection/RecordSet',
+      'js!WSControls/Lists/resources/utils/ItemsUtil'],
    function (BaseListSelector,
              RecordsetListSelector,
-             ListViewHelpers) {
+             RecordSet,
+             ItemsUtil) {
 
    'use strict';
 
@@ -21,8 +23,12 @@ define(['js!WSControls/Controllers/BaseListSelector',
             {id : 3, title : 'Третий'},
             {id : 4, title : 'Четвертый'}
          ];
-         dataRs = ListViewHelpers.calculateItems(data, 'id').items;
-         projection = ListViewHelpers.createDefaultProjection(dataRs, {idProperty : 'id'});
+         dataRs = new RecordSet({
+            rawData: data,
+            idProperty : 'id'
+         });
+
+         projection = ItemsUtil.getDefaultDisplayFlat(dataRs, {});
       });
 
       describe('Base', function () {
