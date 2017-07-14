@@ -104,7 +104,7 @@ define('js!SBIS3.CONTROLS.ILongOperationsProducer',
        * При имплементации в возвращаем Deferrred-е нужно использовать опцию cancelCallback, если это применимо с точки зрения природы данных
        * @public
        * @param {object} where Параметры фильтрации
-       * @param {object} orderBy Параметры сортировки. По умолчанию используется обратный хронологический порядок
+       * @param {object} orderBy Параметры сортировки
        * @param {number} offset Количество пропущенных элементов в начале
        * @param {number} limit Максимальное количество возвращаемых элементов
        * @return {Core/Deferred<SBIS3.CONTROLS.LongOperationEntry[]>}

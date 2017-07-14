@@ -27,6 +27,13 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
       var PRODUCER_NAME = 'SBIS3.CONTROLS.GenericLongOperationsProducer';
 
       /**
+       * "Константа" - сортировка возвращаемых методом fetch элементов по умолчанию
+       * @protected
+       * @type {number}
+       */
+      var DEFAULT_FETCH_SORTING = {/*###status:true,*/ startedAt:false};
+
+      /**
        * Экземпляры класса (синглетоны), различающиеся идентификаторами (ключами массива). Один идентификатор - один экземпляр
        * @rpoteced
        * @type {object}
@@ -151,7 +158,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
           * Запросить набор последних длительных операций
           * @public
           * @param {object} where Параметры фильтрации
-          * @param {object} orderBy Параметры сортировки. По умолчанию используется обратный хронологический порядок
+          * @param {object} orderBy Параметры сортировки
           * @param {number} offset Количество пропущенных элементов в начале
           * @param {number} limit Максимальное количество возвращаемых элементов
           * @return {Core/Deferred<SBIS3.CONTROLS.LongOperationEntry[]>}
@@ -171,7 +178,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                throw new TypeError('Argument "limit" must be positive number');
             }
             if (!orderBy) {
-               orderBy = {startedAt:false};
+               orderBy = DEFAULT_FETCH_SORTING;
             }
             return Deferred.success(_list(this, where, orderBy, offset, limit).map(function (operation) {
                var handlers = this._actions ? this._actions[operation.id] : null;
@@ -363,22 +370,23 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                return true;
             });
          }
-         var sorter = orderBy || {startedAt:false};
-         snapshots.sort(function (a, b) {
-            for (var p in sorter) {
-               var va = a[p];
-               var vb = b[p];
-               // Для сравниваемых значений могут иметь смысл операции < и >, но не иметь смысла != и ==, как например для Date. Поэтому:
-               if (va < vb) {
-                  return sorter[p] ? -1 : +1;
+         if (orderBy) {
+            snapshots.sort(function (a, b) {
+               for (var p in orderBy) {
+                  var va = a[p];
+                  var vb = b[p];
+                  // Для сравниваемых значений могут иметь смысл операции < и >, но не иметь смысла != и ==, как например для Date. Поэтому:
+                  if (va < vb) {
+                     return orderBy[p] ? -1 : +1;
+                  }
+                  else
+                  if (vb < va) {
+                     return orderBy[p] ? +1 : -1;
+                  }
                }
-               else
-               if (vb < va) {
-                  return sorter[p] ? +1 : -1;
-               }
-            }
-            return 0;
-         });
+               return 0;
+            });
+         }
          if (limit || offset) {
             snapshots = snapshots.slice(offset || 0, limit ? (offset || 0) + limit : snapshots.length);
          }

@@ -30,6 +30,13 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       'use strict';
 
       /**
+       * "Константа" - сортировка возвращаемых методом fetch элементов по умолчанию
+       * @protected
+       * @type {number}
+       */
+      var DEFAULT_FETCH_SORTING = {/*###status:true,*/ startedAt:false};
+
+      /**
        * "Константа" - максимальное количество возвращаемых методом fetch элементов по умолчанию
        * @protected
        * @type {number}
@@ -101,6 +108,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          _moduleName: 'SBIS3.CONTROLS.LongOperationsManager',
 
          // Раскрыть константы
+         DEFAULT_FETCH_SORTING: DEFAULT_FETCH_SORTING,
          DEFAULT_FETCH_LIMIT: DEFAULT_FETCH_LIMIT,
 
          /**
@@ -167,7 +175,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
           * @public
           * @param {object} [options] Параметры запроса (опционально)
           * @param {object} [options.where] Параметры фильтрации. По умолчанию null (опционально)
-          * @param {object} [options.orderBy] Параметры сортировки. По умолчанию используется обратный хронологический порядок (опционально)
+          * @param {object} [options.orderBy] Параметры сортировки. По умолчанию будет использована константа DEFAULT_FETCH_SORTING (опционально)
           * @param {number} [options.offset] Количество пропущенных элементов в начале. По умолчанию 0 (опционально)
           * @param {number} [options.limit] Максимальное количество возвращаемых элементов. По умолчанию будет использована константа DEFAULT_FETCH_LIMIT (опционально)
           * @return {Core/Deferred<WS.Data/Collection/RecordSet<SBIS3.CONTROLS.LongOperationEntry>>}
@@ -182,14 +190,15 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             }
             var query = {
                where: null,
-               orderBy: {startedAt:false},
+               orderBy: DEFAULT_FETCH_SORTING,
                offset: 0,
                limit: DEFAULT_FETCH_LIMIT
             };
             var names = Object.keys(query);
             var len = arguments.length;
             if (len === 4) {
-               query = names.reduce(function (r, v, i) { r[v] = argumnets[i]; return r; }, {});
+               var args = arguments;
+               names.forEach(function (v, i) { if (ars[i]) query[v] = ars[i]; });
             }
             else
             if (len === 1) {
@@ -197,7 +206,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                   if (typeof options !== 'object') {
                      throw new TypeError('Argument "options" must be an object if present');
                   }
-                  query = names.reduce(function (r, v) { if (v in options) r[v] = options[v]; return r; }, {});
+                  names.forEach(function (v) { if (options[v]) query[v] = options[v]; });
                }
             }
             else
@@ -878,21 +887,28 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                      });
                      chain = !chain ? Chain(list) : chain.concat(list);
                   }
-                  var STATUSES = LongOperationEntry.STATUSES;
+                  if (query.orderBy) {
+                     var sorter = query.orderBy;
+                     chain.sort(function (a, b) {
+                        for (var p in orderBy) {
+                           var va = a[p];
+                           var vb = b[p];
+                           // Для сравниваемых значений могут иметь смысл операции < и >, но не иметь смысла != и ==, как например для Date. Поэтому:
+                           if (va < vb) {
+                              return orderBy[p] ? -1 : +1;
+                           }
+                           else
+                           if (vb < va) {
+                              return orderBy[p] ? +1 : -1;
+                           }
+                        }
+                        return 0;
+                     });
+                  }
                   results.assign(chain
                      //////////////////////////////////////////////////
                      //^^^TODO: ### Здесь нужно правильно провести query !
                      //////////////////////////////////////////////////
-                     .sort(function (a, b) {
-                        var s1 = a.status === STATUSES.running || a.status === STATUSES.suspended,
-                           s2 = b.status === STATUSES.running || b.status === STATUSES.suspended;
-                        if (s1 !== s2) {
-                           return s1 ? -1 : 1;
-                        }
-                        var a1 = a.startedAt,
-                           b1 = b.startedAt;
-                        return a1 < b1 ? 1 : (a1 === b1 ? 0 : -1);
-                     })
                      .first(query.limit)
                      .map(function (v) {
                         return new Model({rawData: v, idProperty: 'fullId'});
