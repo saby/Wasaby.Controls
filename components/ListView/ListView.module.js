@@ -3746,6 +3746,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.getFilter()['СлужебныйКоличествоЗаписей'] = items.getCount();
                   this._scrollOffset.top = more - items.getCount();
                   this.setPage(pageNumber, true);
+                  // Сейчас обновление пэйджинга происходит в _dataLoadedCallback, который происходит раньше этой функции
+                  // Поэтому обновим пейджинг еще раз, что бы он правильно отобразился, с правильным offset
+                  this._updatePaging();
                   this._getScrollWatcher().scrollTo('bottom');
                }
                this._lastPageLoaded = true;
