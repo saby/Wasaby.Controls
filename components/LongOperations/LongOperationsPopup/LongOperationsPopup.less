@@ -1,0 +1,245 @@
+
+// Required these variables from theme:
+
+//@long-operations-popup-collapsed-width: 200px;
+//@long-operations-popup-exp-width: 400px;
+//@long-operations-popup-exp-max-width: 400px;
+//@long-operations-popup-header-height: auto;
+//@long-operations-popup-header-line-height: normal;
+//@long-operations-popup-header-pad-rt: 41px;
+//@long-operations-popup-header-caption-f-size: 15px;
+//@long-operations-popup-header-caption-line-height: inherit;
+//@long-operations-popup-header-caption-color: inherit;
+//@long-operations-popup-collapsed-header-caption-f-size: //@long-operations-popup-header-caption-f-size;
+//@long-operations-popup-collapsed-header-caption-line-height: //@long-operations-popup-header-caption-line-height;
+//@long-operations-popup-collapsed-header-caption-color: //@long-operations-popup-header-caption-color;
+//@long-operations-popup-header-stop-but-f-size: inherit;
+//@long-operations-popup-header-stop-but-color: #999999;
+//@long-operations-popup-foot-height: 32px;
+//@long-operations-popup-foot-bg: #F3F3F3;
+//@long-operations-popup-foot-f-size: 12px;
+//@long-operations-popup-foot-color: #999999;
+//@long-operations-popup-reg-but-ctr-height: 24px;
+//@long-operations-popup-reg-but-line-height: 12px;
+
+
+
+.controls-LongOperationsPopup.controls-LongOperationsPopup__hidden{
+    visibility: hidden;
+}
+
+.controls-NotificationPopup_popup.controls-LongOperationsPopup,
+.controls-LongOperationsPopup {
+    width: @long-operations-popup-exp-width;
+    max-width: @long-operations-popup-exp-max-width;
+}
+
+.controls-LongOperationsPopup__content {
+    /*width: @long-operations-popup-exp-width;
+    max-width: @long-operations-popup-exp-max-width;*/
+}
+
+.controls-LongOperationsPopup .controls-NotificationPopup {
+    max-width: none;
+    border-right: 0px none;
+}
+
+.controls-LongOperationsPopup.controls-LongOperationsPopup__hiddenContentMode {
+    width: @long-operations-popup-collapsed-width;
+}
+
+.controls-LongOperationsPopup__hiddenContentMode .controls-LongOperationsPopup__content,
+.controls-LongOperationsPopup__hiddenContentMode .controls-LongOperationsPopup__header_stoppedOperationsButton{
+    display: none;
+}
+
+/* Header */
+
+.controls-NotificationPopup__header_icon.controls-LongOperationsPopup__runOperationIcon {
+    cursor: pointer;
+}
+
+.controls-LongOperationsPopup .controls-NotificationPopup__header {
+    height: @long-operations-popup-header-height;
+}
+
+.controls-LongOperationsPopup .controls-NotificationPopup__header.controls-NotificationPopup__header-withCloseButton {
+    padding-right: @long-operations-popup-header-pad-rt;
+    line-height: @long-operations-popup-header-line-height;
+}
+
+.controls-LongOperationsPopup .controls-NotificationPopup__header_icon.icon-24 {
+    margin-right: 6px;
+}
+
+.controls-LongOperationsPopup .controls-NotificationPopup__header_icon.icon-size {
+    width: @long-operations-popup-header-icon-size;
+    height: @long-operations-popup-header-icon-size;
+    font-size: @long-operations-popup-header-icon-size !important;
+}
+
+.controls-LongOperationsPopup__header_stoppedOperationsButton {
+    margin-left: 16px;
+    cursor: pointer;
+    font-size: @long-operations-popup-header-stop-but-f-size;
+    white-space: nowrap;
+    color: @long-operations-popup-header-stop-but-color;
+}
+
+.controls-LongOperationsPopup__header_stoppedOperationsButton:hover {
+    text-decoration: underline;
+}
+
+.controls-LongOperationsPopup__header_stoppedOperations-show .controls-LongOperationsPopup__header_showStoppedOperations,
+.controls-LongOperationsPopup__header_hideStoppedOperations{
+    display: none;
+}
+
+.controls-LongOperationsPopup__header_stoppedOperations-show .controls-LongOperationsPopup__header_hideStoppedOperations {
+    display: block;
+}
+
+.controls-NotificationPopup__header_icon.controls-LongOperationsPopup__header_icon-customIcon {
+    background: url('resources/load.gif');
+    background-size: cover;
+}
+
+.controls-LongOperationsPopup__header_downloadButton {
+    margin-left: 8px;
+}
+
+.controls-LongOperationsPopup .controls-LongOperationsPopup__header_caption {
+   font-size: @long-operations-popup-header-caption-f-size;
+   line-height: @long-operations-popup-header-caption-line-height;
+   color: @long-operations-popup-header-caption-color;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+   word-wrap: normal;
+}
+
+.controls-LongOperationsPopup.controls-LongOperationsPopup__hiddenContentMode .controls-LongOperationsPopup__header_caption {
+    font-size: @long-operations-popup-collapsed-header-caption-f-size;
+    line-height: @long-operations-popup-collapsed-header-caption-line-height;
+    color: @long-operations-popup-collapsed-header-caption-color;
+}
+
+
+/* End header  */
+
+.controls-LongOperationsPopup__header_downloadButton,
+.controls-LongOperationsPopup__header_stoppedOperationsButton {
+   margin-bottom: -2px;
+   line-height: @long-operations-popup-header-line-height;
+}
+
+
+/* Content */
+
+.controls-LongOperationsPopup__content .controls-LongOperationsList .controls-LongOperationsList__executeTimeContainer.controls-DataGridView__td,
+.controls-LongOperationsPopup__content .controls-LongOperationsList .controls-DataGridView__tr.controls-ListView__hoveredItem .controls-LongOperationsList__executeTimeContainer.controls-DataGridView__td {
+    color: #CCC;
+    font-size: 12px;
+}
+
+.controls-LongOperationsPopup__content .controls-LongOperationsList .controls-DataGridView__firstContentCell {
+    width: 25px;
+    padding-left: 7px;
+    padding-right: 2px;
+}
+
+.controls-LongOperationsPopup__content .controls-LongOperationsList .controls-LongOperationsList__stateContainer {
+    margin-left: 0px;
+}
+
+.controls-LongOperationsPopup__content_showRegistryButtonContainer {
+    height: @long-operations-popup-reg-but-ctr-height;
+}
+
+.controls-LongOperationsPopup__content_showRegistryButton {
+    float: right;
+    margin-right: @long-operations-popup-reg-but-line-height;
+}
+
+.controls-LongOperationsPopup__content_list {
+    /*###width: calc(@long-operations-popup-exp-width - 1px);*/
+    border-bottom: 1px solid #F5F5F5;
+}
+
+.controls-LongOperationsPopup__content_list .controls-LongOperationsList__nameColumn {
+    height: 24px !important;
+    line-height: 24px !important;
+}
+
+.controls-LongOperationsPopup .controls-LongOperationsPopup__successCompletedOperation.controls-DataGridView__tr {
+    background: #EFFFED;
+}
+
+.controls-LongOperationsPopup .controls-LongOperationsPopup__errorCompletedOperation.controls-DataGridView__tr {
+    background: #FBEEEF;
+}
+
+/* End content */
+
+/* Footer*/
+
+.controls-LongOperationsPopup__footer {
+    height: @long-operations-popup-foot-height;
+    padding-right: 24px;
+    line-height: @long-operations-popup-foot-height;
+    background: @long-operations-popup-foot-bg;
+    text-align: center;
+}
+
+.controls-LongOperationsPopup__footer_execTasks,
+.controls-LongOperationsPopup__footer_executeTime,
+.controls-LongOperationsPopup__footer_progress,
+.controls-LongOperationsPopup__footer_notification{
+    font-size: @long-operations-popup-foot-f-size;
+    color: @long-operations-popup-foot-color;
+}
+
+.controls-LongOperationsPopup__footer_progress {
+    margin-left: 5px;
+}
+
+.controls-LongOperationsPopup__footer__actionsContainer {
+    position: absolute;
+    margin-right: 8px;
+    right: 0;
+}
+
+.controls-LongOperationsPopup__footer_pauseIcon,
+.controls-LongOperationsPopup__hideContentIcon {
+    margin-top: 7px;
+    cursor: pointer;
+}
+
+.controls-LongOperationsPopup__hideContentIcon:hover{
+    color: #313E78 !important;
+}
+
+.controls-LongOperationsPopup__hiddenContentMode .controls-LongOperationsPopup__hideContentIcon {
+    transform: rotate(180deg);
+}
+
+.controls-LongOperationsPopup__footer_pauseIcon {
+    display: none;
+}
+
+.controls-LongOperationsPopup__footer_firstOperationMode .controls-LongOperationsPopup__footer_pauseIcon {
+    display: inline-block;
+}
+
+.controls-LongOperationsPopup__footer_firstOperationMode .controls-LongOperationsPopup__hideContentIcon{
+    display: none;
+}
+
+/* End footer */
+
+
+
+.controls-InformationPopup {
+
+
+}

@@ -37,10 +37,6 @@
    
    &.controls-DataGridView__hasSeparator{
       &.controls-ListView__dataLoaded {
-         .controls-DataGridView__table {
-            border-width: 0 0 1px 0;
-            border-color: @data-grid-edge-cell-separator-color;
-         }
          .controls-DataGridView__tr {
             .controls-DataGridView__td {
                border-top-color: @data-grid-cell-separator-color;
@@ -56,9 +52,18 @@
                }
             }
          }
+         .controls-DataGridView__tr:nth-last-child(1){
+            .controls-DataGridView__td {
+               border-bottom-color: @data-grid-edge-cell-separator-color;
+            }
+         }
          &.controls-DataGridView__resultsBottom {
             .controls-DataGridView__table {
-               border-width: 0;
+               .controls-DataGridView__tr:nth-last-child(1){
+                  .controls-DataGridView__td {
+                     border-bottom-color: transparent;
+                  }
+               }
             }
             .controls-DataGridView__results {
                td {
@@ -67,11 +72,6 @@
                   border-style: solid;
                }
             }
-         }
-      }
-      &.controls-DataGridView__emptyTable {
-         .controls-DataGridView__table {
-            border-width: 0;
          }
       }
    }
@@ -147,6 +147,12 @@
          }
       }
    }
+
+   .controls-DataGridView__th {
+      &.controls-DataGrid__column__type-money{
+         padding-right:@data-grid-money-header-cell-padding;
+      }
+   }
 }
 
 
@@ -205,7 +211,7 @@
    background: @data-grid-row-bg;
    font-weight: bold;
    font-size: 14px;
-   color: @accent-color;
+   color: @data-grid-results-color;
 }
 
 .controls-DataGridView__results .controls-DataGridView__td{
@@ -254,9 +260,6 @@
       &.controls-DataGridView__th__checkBox__checked{
          .checkbox-checked-size(@check-box-icon-successful-size, @check-box-icon-successful-left, @check-box-icon-successful-top);
       }
-   }
-   &.controls-DataGrid__column__type-money {
-      padding-right:20px;
    }
 }
 
@@ -441,18 +444,22 @@
   .ws-sticky-header__header-container {
     .controls-DataGridView.controls-DataGridView__hasSeparator.controls-ListView__dataLoaded {
        .controls-DataGridView__table {
-          border-width: 0 0 1px 0;
+          border-width: @data-grid-table-separator-border-width;
        }
     }
   }
 }
 
+//TODO костыль по месту. Стандарт должен быть поправлен https://online.sbis.ru/opendoc.html?guid=95b1ae2e-d43f-4b41-a373-ceecc6b01fb8&des=
 .controls-DataGridView__headSorting {
    &.controls-Link {
-      .controls-Link__icon + .controls-Link__field {
-         margin: 0;
+      .controls-Button__icon + .controls-Link__field {
+         margin-left: 0;
       }
       font-size: @data-grid-header-cell-font-size;
+      .controls-Button__icon {
+         .icon-size(@data-grid-header-cell-sorting-icon-size);
+      }
    }
 }
 

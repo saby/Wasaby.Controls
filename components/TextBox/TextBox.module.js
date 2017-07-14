@@ -213,6 +213,10 @@ define('js!SBIS3.CONTROLS.TextBox', [
       
                if(userPasteResult !== false){
                   self._pasteProcessing++;
+                  /* зачем делаем setTimeout?
+                     в момент события в поле ввода нет перенесенных данных,
+                     поэтому вставка выполняется с задержкой, чтобы браузер самостоятельно обработал данные из буфера обмена(изображение, верстка)
+                   */
                   window.setTimeout(function(){
                      self._pasteProcessing--;
                      if (!self._pasteProcessing) {
@@ -478,7 +482,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
          return this._inputField && this._inputField.val();
       },
       _setInputValue: function(value) {
-         this._inputField.val(value);
+         this._inputField && this._inputField.val(value);
       },
       _getInputField: function() {
          return $('.js-controls-TextBox__field', this.getContainer().get(0));
@@ -501,7 +505,10 @@ define('js!SBIS3.CONTROLS.TextBox', [
          } else {
             this._inputField.attr('readonly', 'readonly')
          }
-         this._setPlaceholder(enabled ? this._options.placeholder : '');
+         /* Когда дизейблят поле ввода, ставлю placeholder в виде пробела, в старом webkit'e есть баг,
+            из-за коготорого, если во flex контейнере лежит input без placeholder'a ломается базовая линия.
+            placeholder с пустой строкой и так будет не веден, т.ч. проблем быть не должно */
+         this._setPlaceholder(enabled ? this._options.placeholder : ' ');
       },
 
       _inputRegExp: function (e, regexp) {

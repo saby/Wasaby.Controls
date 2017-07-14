@@ -58,7 +58,9 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
           },
 
           $constructor: function() {
-             this._listHistory = new List({items: this.getHistory() || []});
+             /* Делаем клон, т.к. сериализация производится один раз, и создаётся лишь один экземпляр объекта,
+                и его портить нельзя */
+             this._listHistory = new List({items: cFunctions.clone(this.getHistory()) || []});
              this._prepareListHistory();
              this._changeHistoryFnc = this._changeHistoryHandler.bind(this);
              this._applyHandlerDebounced = debounce.call(fHelpers.forAliveOnly(this._onApplyFilterHandler, this)).bind(this);

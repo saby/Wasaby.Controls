@@ -147,6 +147,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
 
          this._publish('changeFormat');
          CommandDispatcher.declareCommand(this, 'saveStylesPanel', this.saveHandler);
+         CommandDispatcher.declareCommand(this, 'stylesPanelColorPicked', this._paletteClickHandler);
 
          if (this._options.paletteRenderStyle) {
             /* В режиме палитры нужно отображать цвета так, чтобы не было пустот при построении, либо пустот было минимально.
@@ -212,7 +213,6 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
 
          if (self._options.paletteRenderStyle) {
             /* В случае палитру нужно подписаться на смену цвета, т.к. выбор происходит без подтверждения*/
-            self._palette.subscribe('onSelectedItemChange', this._paletteClickHandler.bind(self));
             self._palette.getContainer().width(self._palleteWidth);
          } else {
             /* находим контролы отвечающие за начертание шрифта */
@@ -231,6 +231,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
                   /* т.к. предустановленные стили приходят в формате JSON, то нужно их подготовить для отображения в ListView */
                   self._preparePreset();
                   self._presetView.setItems(this._prepareItems(this._presetItems));
+                  self._presetView._container.on('mousedown focus', self._blockFocusEvents);
                }
                if (self._options.historyId) {
                   self._historyInit();
@@ -446,10 +447,12 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
       },
 
       /* выбор цвета в режиме палитры нужно передать лишь цвет */
-      _paletteClickHandler: function(e, color) {
-         this.saveHandler({
-            'color': color
-         });
+      _paletteClickHandler: function(color) {
+         if(this._options.paletteRenderStyle) {
+            this.saveHandler({
+               'color': color
+            });
+         }
       },
 
       /* сохраняет в историю не более 5 элементов */

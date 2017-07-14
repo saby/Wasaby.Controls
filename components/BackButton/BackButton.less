@@ -1,9 +1,8 @@
 .controls-BackButton {
    cursor: pointer;
    display: inline-block;
-   line-height: @default-height;
+   line-height: @back-button-line-height;
    height: @default-height;
-   position: relative;
    white-space: nowrap;
    font-weight: 700;
    font-size: @back-button-font-size;
@@ -24,6 +23,9 @@
          overflow: hidden;
          text-overflow: ellipsis;
       }
+   }
+   &:not(.ws-disabled):hover:before {
+      color: @back-button-arrow-hover-color;
    }
    &:before {
       width: @back-button-width-before;
@@ -97,6 +99,10 @@
       vertical-align: top;
    }
 
+}
+
+.controls-BackButton__hover-arrow {
+   position: relative;
 }
 
 .ws-is-mobile-platform{

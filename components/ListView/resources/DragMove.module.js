@@ -54,7 +54,11 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             /**
              * @cfg {Object} Конфиг декорированной ссылки
              */
-            linkTemplateConfig: null
+            linkTemplateConfig: null,
+            /**
+             * @cfg {String|Boolean} Устанавливает возможность перемещения элементов с помощью курсора мыши.
+             */
+            itemsDragNDrop: true
          },
          _dragPlaceHolder: null
       },
@@ -238,7 +242,6 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
                sourceIds.push(item.getModel().getId());
                movedItems.push(item.getModel());
             });
-            var projItem = this._getItemsProjection().getItemBySourceItem(dragTarget.item);
             if (this._getMover().checkRecordsForMove(movedItems, dragTarget.item, position)) {
                target = this._makeDragEntity({
                   owner: this,
@@ -277,17 +280,19 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
          domelement.toggleClass('controls-DragNDrop__insertBefore', target.getPosition() === DRAG_META_INSERT.before);
       },
       _getDirectionOrderChange: function(e, target) {
-         if (this._options.useDragPlaceHolder) {
-            var position = this._getOrderPosition(e.pageY - (target.offset() ? target.offset().top : 0), target.height(), 10);
-            if (position == 'on') {
-               position = this._getOrderPosition(e.pageX - (target.offset() ? target.offset().left : 0), target.width(), 20)
-            }
-            return position;
-         } else {
-            if (this._horisontalDragNDrop) {
-               return this._getOrderPosition(e.pageX - (target.offset() ? target.offset().left : 0), target.width(), 20);
+         if (this._options.itemsDragNDrop !== 'onlyChangeParent') {
+            if (this._options.useDragPlaceHolder) {
+               var position = this._getOrderPosition(e.pageY - (target.offset() ? target.offset().top : 0), target.height(), 10);
+               if (position == 'on') {
+                  position = this._getOrderPosition(e.pageX - (target.offset() ? target.offset().left : 0), target.width(), 20)
+               }
+               return position;
             } else {
-               return this._getOrderPosition(e.pageY - (target.offset() ? target.offset().top : 0), target.height(), 10);
+               if (this._horisontalDragNDrop) {
+                  return this._getOrderPosition(e.pageX - (target.offset() ? target.offset().left : 0), target.width(), 20);
+               } else {
+                  return this._getOrderPosition(e.pageY - (target.offset() ? target.offset().top : 0), target.height(), 10);
+               }
             }
          }
       },

@@ -350,11 +350,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * @cssModifier controls-DataGridView__hasSeparator Устанавливает отображение линий-разделителей между строками.
     * При использовании контролов {@link SBIS3.CONTROLS.CompositeView} или {@link SBIS3.CONTROLS.TreeCompositeView} модификатор применяется только для режима отображения "Таблица".
     * @cssModifier controls-DataGridView__overflow-ellipsis Устанавливает обрезание троеточием текста во всех колонках таблицы.
-    * @cssModifier controls-ListView__padding-XS Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 8px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
+    * @cssModifier controls-ListView__padding-XS Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 0px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
     * @cssModifier controls-ListView__padding-S Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 12px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
     * @cssModifier controls-ListView__padding-M Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 16px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
     * @cssModifier controls-ListView__padding-L Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 20px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
     * @cssModifier controls-ListView__padding-XL Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 24px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
+    *
+    * @ignoreOptions _handlers activableByClick alwaysShowExtendedTooltip buildMarkupWithContext className ignoreTabCycles linkedContext modal
+    * @ignoreMethods addPendingOperation applyEmptyState applyState getAlignment getAllPendingInfo getClassName getMinHeight getMinSize getMinWidth getResizer getStateKey
+    * @ignoreMethods getToolBarCount increaseToolBarCount isPage makeOwnerName onBringToFront onDropDownList setActivationIndex setSize waitAllPendingOperations
+    * @ignoreEvents onStateChanged onTooltipContentRequest
     *
     * @control
     * @public
@@ -411,6 +416,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
             _buildTplArgsDG: buildTplArgsDG,
             _groupTemplate: GroupTemplate,
             _columnsShift: 0,
+            /**
+             * @typedef {Object} columnSorting
+             * @variant single при сортировке по этой колонке, сортировка по остальным колонкам будет сброшена
+             * @variant multi сортировка по этой колонке не вызывает сброс сортировки по другим колонкам
+             */
             /**
              * @typedef {Object} Columns
              * @property {String} title Заголовок колонки. Отображение заголовков можно изменять с помощью опции {@link showHead}. Также с помощью опции {@link allowToggleHead} можно скрывать заголовки при отсутствии в списке данных.
@@ -683,11 +693,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _updateHeadAfterInit: function() {
          this._bindHead();
       },
+      
+      _getCellContainerByElement: function(element) {
+         element = element instanceof jQuery ? element : $(element);
+         return element.closest('.controls-DataGridView__td, .controls-DataGridView__th', this.getContainer());
+      },
 
       _mouseMoveHandler: function(e) {
          DataGridView.superclass._mouseMoveHandler.apply(this, arguments);
 
-         var td = $(e.target).closest('.controls-DataGridView__td, .controls-DataGridView__th', this._container[0]),
+         var td = this._getCellContainerByElement(e.target),
              columns = this.getColumns(),
              trs = [],
              cells = [],
@@ -744,6 +759,20 @@ define('js!SBIS3.CONTROLS.DataGridView',
             hoveredColumn.cells = null;
             hoveredColumn.columnIndex = null;
          }
+      },
+   
+      _notifyOnItemClick: function(id, data, target, e) {
+         var clickedCell = {};
+         
+         /* Для DataGridView дополняем событие клика информацией о колонке и ячейке */
+         if(this._hoveredColumn.columnIndex  !== null) {
+            clickedCell = {
+               cellContainer: this._getCellContainerByElement(e.target),
+               cellIndex: this._hoveredColumn.columnIndex
+            };
+         }
+         
+         return this._notify('onItemClick', id, data, target, e, clickedCell);
       },
 
       _getItemsContainer: function(){
@@ -1047,14 +1076,19 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }.bind(this),
             handlers: {
                onInitEditInPlace: function(e, eip) {
-                  var tds;
+                  var tds, scrolledColumns;
 
                   if(!self._options.editingTemplate && self.hasPartScroll()) {
                      tds = eip.getContainer().find('td');
+                     scrolledColumns = self._options.startScrollColumn;
+                     
+                     if(self._options.multiselect) {
+                        scrolledColumns += 1;
+                     }
 
                      /* Развесим классы для частичного скрола при инициализации редактирования по месту */
                      for (var i = 0, len = tds.length; i < len; i++) {
-                        tds.eq(i).addClass(self._options.startScrollColumn <= i ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell');
+                        tds.eq(i).addClass(scrolledColumns <= i ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell');
                      }
                      /* Подпишемся у рекдатирования по месту на смену фокуса дочерних элементов,
                         чтобы правильно позиционировать частичный скролл при изменении фокуса */
@@ -1426,6 +1460,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
       setMultiselect: function() {
          DataGridView.superclass.setMultiselect.apply(this, arguments);
 
+         // При установке multiselect создается отдельная td'шка под checkbox, которая не учитывается при редактировании по месту.
+         // Уничтожаем контроллер редактирования по месту, чтобы пересоздать его с новым набором колонок.
+         this._destroyEditInPlaceController();
+
          if(this.getItems()) {
             this.redraw();
          } else if(this._options.showHead) {
@@ -1502,25 +1540,32 @@ define('js!SBIS3.CONTROLS.DataGridView',
          
          DataGridView.superclass.destroy.call(this);
       },
-      _setColumnSorting: function(colName) {
+      _setColumnSorting: function(colName, sortingtype) {
          var sorting, newSorting, wasNoneSorting = true;
          sorting = this.getSorting();
 
-         newSorting = sorting.filter(function(sortElem){
-            if (sortElem[colName] == 'ASC') {
-               wasNoneSorting = false;
-               return false;
-            }
-            else if (sortElem[colName] == 'DESC') {
-               sortElem[colName] = 'ASC';
-               wasNoneSorting = false;
-               return true;
-            }
-            else {
-               return true;
-            }
+         //при режиме сортировки отличному от single либо когда сортируют по уже отсортированной колонке, но в другом направлении выполняем обычную логику
+         if ((sortingtype != 'single') || ((sorting.length == 1 && sorting[0][colName]))) {
+            newSorting = sorting.filter(function (sortElem) {
+               if (sortElem[colName] == 'ASC') {
+                  wasNoneSorting = false;
+                  return false;
+               }
+               else if (sortElem[colName] == 'DESC') {
+                  sortElem[colName] = 'ASC';
+                  wasNoneSorting = false;
+                  return true;
+               }
+               else {
+                  return true;
+               }
 
-         });
+            });
+         }
+         //в противном случае всю сортировку надо сбросить
+         else {
+            newSorting = [];
+         }
 
          if (wasNoneSorting) {
             var addSortObj = {};

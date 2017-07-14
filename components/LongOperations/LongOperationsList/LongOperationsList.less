@@ -1,0 +1,89 @@
+
+// Required these variables from theme:
+
+//@long-operations-list-group-title-bg: #ffffff;
+//@long-operations-list-group-title-color: #999999;
+//@long-operations-list-time-ctr-f-size: inherit;//12px
+//@long-operations-list-state-ctr-margin-lf: 10px;
+
+
+
+.controls-LongOperationsList__startTime_time {
+    margin-left: 8px;
+}
+
+.controls-LongOperationsList__startTime_time,
+.controls-LongOperationsList__view_stoppedOperation,
+.controls-LongOperationsList .controls-LongOperationsList__executeTimeContainer.controls-DataGridView__td,
+.controls-LongOperationsList .controls-DataGridView__tr.controls-ListView__hoveredItem .controls-LongOperationsList__executeTimeContainer.controls-DataGridView__td{
+    color: #999999;
+}
+
+.controls-LongOperationsList .controls-LongOperationsList__executeTimeContainer.controls-DataGridView__td {
+   text-align: right;
+}
+
+.controls-LongOperationsList .controls-LongOperationsList__startTimeContainer,
+.controls-LongOperationsList .controls-LongOperationsList__executeTimeContainer {
+   font-size: @long-operations-list-time-ctr-f-size;
+}
+
+.controls-LongOperationsList__user_image{
+    float: left;
+    border-radius: 6px;
+    width: 34px;
+    height: 34px;
+}
+
+.controls-LongOperationsList__user_userNameContainer {
+    line-height: 32px;
+    margin-left: 4px;
+}
+
+.controls-LongOperationsList__groupTpl_separator {
+    border-top: 1px solid #EAEAEA;
+    position: relative;
+    top: -8px;
+}
+
+.controls-LongOperationsList__groupTpl_title {
+    position: relative;
+    display: inline-block;
+    margin: 0 auto;
+    padding: 0 8px;
+    z-index: 10;
+    background: @long-operations-list-group-title-bg;
+    color: @long-operations-list-group-title-color;
+    text-align: center;
+    font-size: 14px;
+}
+
+.controls-LongOperationsList__groupTpl_td {
+    text-align: center;
+}
+
+.controls-LongOperationsList__stateContainer {
+    margin-left: @long-operations-list-state-ctr-margin-lf;
+    margin-top: 4px;
+}
+
+.controls-LongOperationsList .controls-LongOperationsList__nameColumn.controls-DataGridView__td {
+    height: 34px;
+    line-height: 34px;
+}
+
+.controls-LongOperationsList__emptyHTMLTpl_separatorBlock {
+    text-align: center;
+}
+
+.controls-LongOperationsList__emptyHTMLTpl_title {
+    color: black;
+}
+
+.controls-LongOperationsList__nameContainer {
+   width: ~"calc(100% - 24px)";
+   float: left;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
