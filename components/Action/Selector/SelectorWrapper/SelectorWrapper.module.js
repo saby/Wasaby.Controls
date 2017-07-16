@@ -217,7 +217,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
             /* Показываем по стандарту кнопку "Выбрать" у папок при множественном выборе или при поиске у крошек в единичном выборе */
             if (hoveredItem.container && selectAction) {
                if (this._isBranch(hoveredItem.record) && this.getSelectionType() !== 'leaf') {
-                  if (!linkedObject.getSelectedKeys().length && (linkedObject.getMultiselect() || linkedObject._isSearchMode())) {
+                  if (!linkedObject.getSelectedKeys().length && (linkedObject.getMultiselect() ||  this.getSelectionType() === 'allBySelectAction' || linkedObject._isSearchMode())) {
                      selectAction.show();
                   } else {
                      selectAction.hide()
