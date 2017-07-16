@@ -11,6 +11,9 @@ define('js!WSTest/TestSubControls/TestSubControlChild',
          _template: template,
          constructor: function(cfg) {
             TestSubControlChild.superclass.constructor.call(this, cfg);
+         },
+         launchTestEvent: function(){
+            this._notify('onMyEvent');
          }
       });
 
