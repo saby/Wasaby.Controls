@@ -241,6 +241,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
                headColumns = prepareHeadColumns(cfg);
 
             cfg.headTpl = TemplateUtil.prepareTemplate(cfg.headTpl);
+            /* Чтобы не было дёрганий интерфейса сразу создаём шапку с актуальным состоянием видимости */
+            if (cfg.allowToggleHead) {
+               headData.isVisible =  cfg._itemsProjection && cfg._itemsProjection.getCount();
+            } else {
+               headData.isVisible = true;
+            }
             cMerge(headData, headColumns);
             for (var i = 0; i < headData.content[1].length; i++) {
                columnTop = headData.content[0][i];
@@ -816,12 +822,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          headData = prepareHeadData(this._options);
          headData.columnsShift = this._getColumnsScrollPosition();
          headData.thumbPosition = this._currentScrollPosition;
-         /* Чтобы не было дёрганий интерфейса сразу создаём шапку с актуальным состоянием видимости */
-         if (this._options.allowToggleHead) {
-            headData.isVisible =  this._getItemsProjection() && this._getItemsProjection().getCount();
-         } else {
-            headData.isVisible = true;
-         }
          headMarkup = this._options.headTpl(headData);
          var body = $('.controls-DataGridView__tbody', this._container);
 
