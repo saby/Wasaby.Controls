@@ -11,7 +11,6 @@ define('js!SBIS3.CONTROLS.ListView',
    'Core/Deferred',
    'Core/IoC',
    'js!SBIS3.CORE.CompoundControl',
-   'js!SBIS3.CORE.CompoundActiveFixMixin',
    'js!SBIS3.StickyHeaderManager',
    'js!SBIS3.CONTROLS.ItemsControlMixin',
    'js!SBIS3.CONTROLS.MultiSelectable',
@@ -66,7 +65,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
-   function (cMerge, cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, CompoundActiveFixMixin, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
+   function (cMerge, cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents, LayoutManager,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
@@ -102,7 +101,6 @@ define('js!SBIS3.CONTROLS.ListView',
        * @extends SBIS3.CORE.CompoundControl
        * @author Герасимов Александр Максимович
        *
-       * @mixes SBIS3.CORE.CompoundActiveFixMixin
        * @mixes SBIS3.CONTROLS.DecorableMixin
        * @mixes SBIS3.CONTROLS.ItemsControlMixin
        * @mixes SBIS3.CONTROLS.FormWidgetMixin
@@ -139,7 +137,7 @@ define('js!SBIS3.CONTROLS.ListView',
        */
 
       /*TODO CommonHandlers тут в наследовании не нужны*/
-      var ListView = CompoundControl.extend([CompoundActiveFixMixin, DecorableMixin, ItemsControlMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DragNDropMixin, CommonHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
+      var ListView = CompoundControl.extend([DecorableMixin, ItemsControlMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DragNDropMixin, CommonHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
          _dotTplFn: dotTplFn,
          /**
           * @event onChangeHoveredItem Происходит при переводе курсора мыши на другой элемент коллекции списка.
