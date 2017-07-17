@@ -423,8 +423,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              */
             /**
              * @typedef {Object} Columns
-             * @property {String} title Заголовок колонки. Отображение заголовков можно изменять с помощью опции {@link SBIS3.CONTROLS.DataGridView#showHead}. Также с помощью опции {@link SBIS3.CONTROLS.DataGridView#allowToggleHead} можно скрывать заголовки при отсутствии в списке данных.
-             * Если данных в списке много и применяется скролл, то для "прилипания" заголовков применяется опция {@link SBIS3.CONTROLS.DataGridView#stickyHeader}. Преобразование заголовков списка производится с помощью опции {@link SBIS3.CONTROLS.DataGridView#transformHead}.
+             * @property {String} title Заголовок колонки.
              * @property {String} field Название поля (из формата записи), значения которого будут отображены в данной колонке.
              * @property {String} width Ширина колонки. Значение необходимо устанавливать для колонок с фиксированной шириной.
              * Значение можно установить как в px (суффикс устанавливать не требуется), так и в %.
@@ -440,7 +439,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              *    <li><b>controls-DataGridView-cell-verticalAlignMiddle</b>. Класс устанавливает выравнивание текста по центру.</li>
              *    <li><b>controls-DataGridView-cell-verticalAlignBottom</b>. Класс устанавливает выравнивание текста по нижнему краю.</li>
              * </ul>
-             * Текст в заголовка и ячейках колонки по умолчанию выравнивается по левому краю.
+             * Текст в заголовке и ячейках колонки по умолчанию выравнивается по левому краю.
              * @property {String} [headTemplate] Шаблон отображения шапки колонки. Подробнее о создании такого шаблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/columns/head-template/">Шаблон отображения заголовка</a>.
              * @property {String} [headTooltip] Всплывающая подсказка, отображаемая при наведении курсора на шапку колонки.
              * @property {String} [editor] Устанавливает редактор колонки для режима редактирования по месту.
@@ -470,7 +469,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              *    {{=it.ladder.get(it.item, it.field)}}
              * </pre>
              * @remark
-             * Если в настройке колонки имя поля соответствует шаблону ['Name1.Name2'], то при подготовке полей для рендеринга строки считаем, что в .get('Name1') находится рекорд и значение получаем уже у этого рекорда через .get('Name2')
+             * Если в настройке колонки имя поля соответствует шаблону ['Name1.Name2'], то при подготовке полей для рендеринга строки считаем, что в .get('Name1') находится рекорд, и значение получаем уже у этого рекорда через .get('Name2')
              * @property {Object.<String,String>} [templateBinding] Соответствие опций шаблона полям в рекорде.
              * @property {Object.<String,String>} [includedTemplates] Подключаемые внешние шаблоны, ключу соответствует поле it.included.<...>, которое будет функцией в шаблоне ячейки.
              *
