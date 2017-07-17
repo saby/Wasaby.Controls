@@ -317,7 +317,8 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
                   }
                }
             });
-            mover.subscribe('onEndMove', function () {
+            mover.subscribe('onEndMove', function (e, result) {
+               result.processed = true;//не надо показывать окно с ошибкой в тестах
                done();
             });
             mover.move([items.at(0)], items.at(2), 'after');
