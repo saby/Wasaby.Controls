@@ -1,5 +1,5 @@
 <div class="controls-filterButton__history-area ws-hidden">
-   <span class="controls-filterButton__secondary-title">Ранее отбирались</span>
+   <span class="controls-filterButton__secondary-title">{[Ранее отбирались]}</span>
    <div class="controls-filterButton__footerAreas-wrapper controls-filterButton__footerAreas-maxHeight">
       <ws:SBIS3.CONTROLS.ListView
          name="historyView"
@@ -11,9 +11,6 @@
          <ws:itemContentTpl>
             <ws:String>tmpl!SBIS3.CONTROLS.FilterHistory/historyItemContentTpl</ws:String>
          </ws:itemContentTpl>
-         <ws:itemTpl>
-            <ws:String>html!SBIS3.CONTROLS.FilterHistory/historyItemTpl</ws:String>
-         </ws:itemTpl>
          <ws:handlers>
             <ws:Object>
                <ws:onChangeHoveredItem>
