@@ -8,13 +8,15 @@
                   tplData="{{tplData}}" scope="{{...}}"/>
    </div>
 
-   <div class="controls-AjaxLoader{{!loading ? ' ws-hidden'}}">
-      <div class="controls-AjaxLoader__outer">
-         <div class="controls-AjaxLoader__block">
-            <div class="controls-AjaxLoader__LoadingIndicator"></div>
+   <ws:if data="{{loading}}">
+      <div class="controls-AjaxLoader">
+         <div class="controls-AjaxLoader__outer">
+            <div class="controls-AjaxLoader__block">
+               <div class="controls-AjaxLoader__LoadingIndicator"></div>
+            </div>
          </div>
       </div>
-   </div>
+   </ws:if>
 
    <div
       event:onmouseenter="mouseEnter()"

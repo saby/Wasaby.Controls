@@ -100,9 +100,9 @@ define('js!WSControls/Lists/ItemsControl', [
 
 
          _initItemBasedControllers: function() {
-            if (this._getItems()) {
-               if (this._getItemsProjection()) {
-                  this._getItemsProjection().destroy();
+            if (this._items) {
+               if (this._itemsProjection) {
+                  this._itemsProjection.destroy();
                }
                this._itemsProjection = this._createDefaultProjection();
                this._itemsProjection.subscribe('onCollectionChange', this._onCollectionChange);
@@ -132,7 +132,6 @@ define('js!WSControls/Lists/ItemsControl', [
                logger;
             tplOptions.idProperty = this._options.idProperty;
             tplOptions.displayProperty = this._options.displayProperty;
-            tplOptions.templateBinding = this._options.templateBinding; //TODO ??
             tplOptions.getPropertyValue = ItemsUtil.getPropertyValue;
 
             /* Для логирования */
@@ -150,15 +149,6 @@ define('js!WSControls/Lists/ItemsControl', [
             tplOptions.itemContent = TemplateUtil.prepareTemplate(this._itemContentTpl);
             tplOptions.itemTpl = TemplateUtil.prepareTemplate(this._itemTpl);
             tplOptions.defaultItemTpl = TemplateUtil.prepareTemplate(this._defaultItemTemplate);
-            if (this._options.includedTemplates) {
-               var tpls = this._options.includedTemplates;
-               tplOptions.included = {};
-               for (var j in tpls) {
-                  if (tpls.hasOwnProperty(j)) {
-                     tplOptions.included[j] = TemplateUtil.prepareTemplate(tpls[j]);
-                  }
-               }
-            }
             return tplOptions;
          },
 
@@ -190,7 +180,7 @@ define('js!WSControls/Lists/ItemsControl', [
 
          _getRecordsForViewFlat: function() {
             var
-               projection = this._getItemsProjection(),
+               projection = this._itemsProjection,
                ctrl = this,
                records = [];
             if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
@@ -215,33 +205,25 @@ define('js!WSControls/Lists/ItemsControl', [
          },
 
          _createDefaultProjection: function() {
-            return ItemsUtil.getDefaultDisplayFlat(this._getItems(), this._options)
+            return ItemsUtil.getDefaultDisplayFlat(this._items, this._options)
          },
 
          _createDefaultSelector: function() {
             /*Must be implemented*/
          },
 
-         _getItems: function() {
-            return this._items;
-         },
-
-         _getItemsProjection: function() {
-            return this._itemsProjection;
-         },
-
          /**
           * Метод получения проекции по ID итема
           */
          _getItemProjectionByItemId: function(id) {
-            return this._getItemsProjection() ? this._getItemsProjection().getItemBySourceItem(this._getItems().getRecordById(id)) : null;
+            return this._itemsProjection ? this._itemsProjection.getItemBySourceItem(this._items.getRecordById(id)) : null;
          },
 
          /**
           * Метод получения проекции по hash итема
           */
          _getItemProjectionByHash: function(hash) {
-            return this._getItemsProjection().getByHash(hash);
+            return this._itemsProjection.getByHash(hash);
          },
 
          eventsHandlers: function(event){
@@ -322,7 +304,7 @@ define('js!WSControls/Lists/ItemsControl', [
                      .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
                   this._loader = def;
                } else {
-                  if (this._options._itemsProjection) {
+                  if (this._itemsProjection) {
                      this._redraw();
                   }
                   def = new Deferred();
@@ -354,13 +336,13 @@ define('js!WSControls/Lists/ItemsControl', [
          _onDSReload: function(list) {
             this._itemData = null;
             if (
-               this._getItems() && cInstance.instanceOfModule(this._getItems(), 'WS.Data/Collection/RecordSet')
-               && (list.getModel() === this._getItems().getModel())
+               this._items && cInstance.instanceOfModule(this._items, 'WS.Data/Collection/RecordSet')
+               && (list.getModel() === this._items.getModel())
                && (Object.getPrototypeOf(list).constructor == Object.getPrototypeOf(list).constructor)
-               && (Object.getPrototypeOf(list.getAdapter()).constructor == Object.getPrototypeOf(this._getItems().getAdapter()).constructor)
+               && (Object.getPrototypeOf(list.getAdapter()).constructor == Object.getPrototypeOf(this._items.getAdapter()).constructor)
                ) {
-               this._getItems().setMetaData(list.getMetaData());
-               this._getItems().assign(list);
+               this._items.setMetaData(list.getMetaData());
+               this._items.assign(list);
                //this._drawItemsCallbackDebounce();
             } else {
                this._items = list;
@@ -378,8 +360,8 @@ define('js!WSControls/Lists/ItemsControl', [
 
          destroy: function() {
             ItemsControl.superclass.destroy.ally(this, arguments);
-            if (this._getItemsProjection()) {
-               this._getItemsProjection().destroy();
+            if (this._itemsProjection) {
+               this._itemsProjection.destroy();
             }
             if (this._selector) {
                this._selector.destroy();

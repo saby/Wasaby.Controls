@@ -83,7 +83,7 @@ define(['js!WSControls/Lists/ItemsControl', 'js!WS.Data/Collection/RecordSet', '
                   dataSource : source,
                   handlers : {
                      'onItemsReady' : function(e, list) {
-                        assert.isTrue(cInstance.instanceOfModule(this._getItems(), 'WS.Data/Collection/RecordSet'), 'ItemsControl getItems() after reload() must returns Recordset');
+                        assert.isTrue(cInstance.instanceOfModule(this._items, 'WS.Data/Collection/RecordSet'), 'ItemsControl getItems() after reload() must returns Recordset');
                      }
                   }
                });
@@ -105,7 +105,7 @@ define(['js!WSControls/Lists/ItemsControl', 'js!WS.Data/Collection/RecordSet', '
                   dataSource : source,
                   handlers : {
                      'onItemsReady' : function(e, list) {
-                        assert.equal(rs, this._getItems(), 'After reload getItems() must return instance of initial recordset');
+                        assert.equal(rs, this._items, 'After reload getItems() must return instance of initial recordset');
                      }
                   }
                });
