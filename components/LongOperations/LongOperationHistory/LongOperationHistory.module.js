@@ -63,10 +63,10 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
 
          _bindEvents: function () {
             var self = this;
-            this.subscribeTo(this._view, 'onPropertiesChanged'/*'onPropertyChanged'*/, function (evtName, property) {
-               /*if (property === 'filter') {*/
+            this.subscribeTo(this._view, /*'onPropertiesChanged'*/'onPropertyChanged', function (evtName, property) {
+               if (property === 'filter') {
                   self._reload();
-               /*}*/
+               }
             });
 
             //У невыполненых операций нужно менять цвет текста на красный, поэтому навешиваем класс
