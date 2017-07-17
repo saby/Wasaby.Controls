@@ -2,71 +2,60 @@ define('js!WSControls/Controllers/RecordsetListSelector', [
    'js!WSControls/Controllers/BaseListSelector'
 ], function(BaseListSelector) {
    var RecordsetListSelector = BaseListSelector.extend({
-      constructor: function(cfg) {
-         /*Распихивание данных*/
 
-         this.selectedKey = cfg.selectedKey || null;
 
-         RecordsetListSelector.superclass.constructor.apply(this, arguments);
-         this._options['selectedKey'] = this.selectedKey; //TODO нужно ли запихивание в блок options
-         this._prepareBothSelectedConfig(this.selectedIndex, this.selectedKey)
-      },
+      _prepareData: function(cfg) {
+         RecordsetListSelector.superclass._prepareData.apply(this, arguments);
+         this._options.selectedKey = cfg.selectedKey;
+         this.selectedKey = this._options.selectedKey || null;
 
-      _prepareBothSelectedConfig: function(index, key) {
-         if (this.projection) {
-            //Вычисляем индекс или по ключ по известному другому параметру, в приоритете индекс
-            if (this._isEmptyIndex(index)) {
-               //Если передали пустой индекс и ключ, определяем индекс по ключу
-               this._prepareSelectedIndexByKey(key)
-            }
-            else {
-               //если индекс передали - вычисляем ключ
-               this._prepareSelectedKeyByIndex(index)
-            }
+         if (this._isEmptyIndex(this.selectedIndex)) {
+            //Если передали пустой индекс и ключ, определяем индекс по ключу
+            this._prepareSelectedIndexByKey(this.selectedKey)
+         }
+         else {
+            //если индекс передали - вычисляем ключ
+            this._prepareSelectedKeyByIndex(this.selectedIndex)
          }
       },
 
       _prepareSelectedIndexByKey: function(key) {
          //Вычисляем индекс по известному ключу
-         if (this.projection) {
-            if (typeof key === 'undefined') {
-               this.selectedIndex = -1;
-            }
-            else {
-               this.selectedIndex = this._getItemIndexByKey(key);
-            }
-            this._prepareOtherSelectedConfig();
+         if (typeof key === 'undefined') {
+            this.selectedIndex = -1;
          }
+         else {
+            this.selectedIndex = this._getItemIndexByKey(key);
+         }
+         this._allowEmptyApply();
       },
 
       _prepareSelectedKeyByIndex: function(index) {
          //Вычисляем ключ по известному индексу
-         if (this.projection) {
-            if (this._isEmptyIndex(index)) {
-               this.selectedKey = null;
-            }
-            else {
-               this.selectedKey = this._getKeyByIndex(this.selectedIndex);
-            }
-            this._prepareOtherSelectedConfig();
+         if (this._isEmptyIndex(index)) {
+            this.selectedKey = null;
          }
+         else {
+            this.selectedKey = this._getKeyByIndex(this.selectedIndex);
+         }
+         this._allowEmptyApply();
       },
 
       _getKeyByIndex: function(index) {
          if(this._hasItemByIndex(index)) {
-            var itemContents = this.projection.at(index).getContents();
+            var itemContents = this._options.projection.at(index).getContents();
             return itemContents.getId();
          }
       },
 
       _getItemIndexByKey: function(id) {
-         var recordset = this.projection.getCollection();
-         var projItem = this.projection.getItemBySourceItem(recordset.getRecordById(id));
-         return this.projection.getIndex(projItem);
+         var recordset = this._options.projection.getCollection();
+         var projItem = this._options.projection.getItemBySourceItem(recordset.getRecordById(id));
+         return this._options.projection.getIndex(projItem);
       },
 
       _hasItemByIndex: function(index) {
-         return (typeof index != 'undefined') && (index !== null) && (typeof this.projection.at(index) != 'undefined');
+         return (typeof index != 'undefined') && (index !== null) && (typeof this._options.projection.at(index) != 'undefined');
       },
 
       setSelectedKey: function(id) {
@@ -91,21 +80,7 @@ define('js!WSControls/Controllers/RecordsetListSelector', [
 
       _notifySelectedItem : function(index, key) {
          this._notify('onSelectedItemChange', index, key);
-      },
-
-      _prepareOtherSelectedConfig: function() {
-         if (this.projection) {
-            //если после всех манипуляций выше индекс пустой, но задана опция, что пустое нельзя - выбираем первое
-            if (!this.allowEmptySelection && this._isEmptyIndex(this.selectedIndex) && (this.selectedKey == null)) {
-               if (this.projection.getCount()) {
-                  this.selectedIndex = 0;
-                  this._prepareSelectedKeyByIndex(this.selectedIndex);
-                  this._notifySelectedItem(this.selectedIndex, this.selectedKey);
-               }
-            }
-         }
       }
-
    });
    return RecordsetListSelector;
 });

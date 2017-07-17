@@ -7,22 +7,28 @@ define('js!WSControls/Controllers/BaseListSelector', [
    var BaseListSelector = Abstract.extend({
       _useNativeAsMain: true,
       constructor: function(cfg) {
-
-         /*Распихивание данных*/
-         this._options = {
-            selectedIndex : (cfg.selectedIndex !== undefined && cfg.selectedIndex !== null) ? cfg.selectedIndex : -1,
-            allowEmptySelection : (cfg.allowEmptySelection !== undefined && cfg.allowEmptySelection !== null) ? cfg.allowEmptySelection : true,
-            projection: cfg.projection || null
-         };
-         this.selectedIndex = this._options.selectedIndex;
-         this.projection = this._options.projection;
-         this.allowEmptySelection = this._options.allowEmptySelection;
-
-         this._prepareOtherSelectedConfig();
-
-         //TODO
          BaseListSelector.superclass.constructor.apply(this, arguments);
+         this._prepareData(cfg);
+         this._allowEmptyApply();
          this._publish('onSelectedItemChange');
+      },
+
+      _prepareData: function(cfg) {
+         this._options = {
+            selectedIndex : cfg.selectedIndex,
+            allowEmptySelection : cfg.allowEmptySelection,
+            projection: cfg.projection
+         };
+         this.selectedIndex = (this._options.selectedIndex !== undefined && this._options.selectedIndex !== null) ? this._options.selectedIndex : -1;
+         this.allowEmptySelection = (this._options.allowEmptySelection !== undefined && this._options.allowEmptySelection !== null) ? this._options.allowEmptySelection: true;
+      },
+
+      _allowEmptyApply: function() {
+         if (!this.allowEmptySelection && this._isEmptyIndex(this.selectedIndex)) {
+            if (this._options.projection.getCount()) {
+               this.setSelectedIndex(0)
+            }
+         }
       },
 
       setSelectedIndex: function(index) {
@@ -35,10 +41,8 @@ define('js!WSControls/Controllers/BaseListSelector', [
       },
 
       setSelectedByHash: function(hash) {
-         if (this.projection) {
-            var elem = this.projection.getByHash(hash);
-            this.setSelectedIndex(this.projection.getIndex(elem));
-         }
+         var elem = this._options.projection.getByHash(hash);
+         this.setSelectedIndex(this._options.projection.getIndex(elem));
       },
 
       _isEmptyIndex: function(index) {
@@ -47,18 +51,6 @@ define('js!WSControls/Controllers/BaseListSelector', [
 
       _notifySelectedItem : function(index) {
          this._notify('onSelectedItemChange', index);
-      },
-
-      _prepareOtherSelectedConfig: function() {
-         if (this.projection) {
-            //если после всех манипуляций выше индекс пустой, но задана опция, что пустое нельзя - выбираем первое
-            if (!this.allowEmptySelection && this._isEmptyIndex(this.selectedIndex)) {
-               if (this.projection.getCount()) {
-                  this.selectedIndex = 0;
-                  this._notifySelectedItem(this.selectedIndex);
-               }
-            }
-         }
       }
    });
    return BaseListSelector;
