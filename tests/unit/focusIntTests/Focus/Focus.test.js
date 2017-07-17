@@ -6,22 +6,8 @@ define([
    'js!SBIS3.CORE.CompoundControl',
    'css!WSTest/Focus/FocusTests'
 ], function (cConstants,
-             focusTestControl,
-             fHelpers) {
+             focusTestControl) {
    'use strict';
-
-   var scenario = [
-
-      function (testControl) {//Case11 //
-         setChildActive(testControl, 'TextBox0', true);
-         childHasFocus(testControl, 'TextBox0');
-         childIsActive(testControl, 'TextBox0');
-
-         setChildActive(testControl, "TextBox1", true);
-         // checkFocusOnBody();
-      }
-
-   ];
 
    describe('Focus-tests', function () {
       var testControl;
@@ -34,7 +20,7 @@ define([
 
       });
 
-      for (var i = 1; i < 11; i++) {
+      for (var i = 1; i < 13; i++) {
          (function (i) {
             it('Case' + (i), function (done) {
                require(['tmpl!WSTest/Focus/Case' + i, 'js!WSTest/Focus/Scenario/' + i], function (caseTmpl, func) {
@@ -44,7 +30,6 @@ define([
                   testControl = new comp({
                      element: 'component'
                   });
-                  //scenario[i]
                   func(testControl); //Запускаем функцию проверки
                   done();
                });
