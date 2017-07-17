@@ -1,9 +1,10 @@
 
 // Required these variables from theme:
 
-//@long-operations-popup-collapsed-width: 200px;
+//@long-operations-popup-collapsed-width: 260px;
+//@long-operations-popup-collapsed-max-width: 400px;
 //@long-operations-popup-exp-width: 400px;
-//@long-operations-popup-exp-max-width: 400px;
+//@long-operations-popup-exp-max-width: 500px;
 //@long-operations-popup-header-height: auto;
 //@long-operations-popup-header-line-height: normal;
 //@long-operations-popup-header-pad-rt: 41px;
@@ -24,19 +25,18 @@
 
 
 
-.controls-LongOperationsPopup.controls-LongOperationsPopup__hidden{
+.controls-LongOperationsPopup.controls-LongOperationsPopup__hidden {
     visibility: hidden;
 }
 
-.controls-NotificationPopup_popup.controls-LongOperationsPopup,
-.controls-LongOperationsPopup {
-    width: @long-operations-popup-exp-width;
-    max-width: @long-operations-popup-exp-max-width;
+.controls-LongOperationsPopup.controls-LongOperationsPopup__hiddenContentMode {
+    min-width: @long-operations-popup-collapsed-width;
+    max-width: @long-operations-popup-collapsed-max-width;
 }
 
-.controls-LongOperationsPopup__content {
-    /*width: @long-operations-popup-exp-width;
-    max-width: @long-operations-popup-exp-max-width;*/
+.controls-LongOperationsPopup:not(.controls-LongOperationsPopup__hiddenContentMode) {
+    min-width: @long-operations-popup-exp-width;
+    max-width: @long-operations-popup-exp-max-width;
 }
 
 .controls-LongOperationsPopup .controls-NotificationPopup {
@@ -44,12 +44,8 @@
     border-right: 0px none;
 }
 
-.controls-LongOperationsPopup.controls-LongOperationsPopup__hiddenContentMode {
-    width: @long-operations-popup-collapsed-width;
-}
-
 .controls-LongOperationsPopup__hiddenContentMode .controls-LongOperationsPopup__content,
-.controls-LongOperationsPopup__hiddenContentMode .controls-LongOperationsPopup__header_stoppedOperationsButton{
+.controls-LongOperationsPopup__hiddenContentMode .controls-LongOperationsPopup__header_stoppedOperationsButton {
     display: none;
 }
 
@@ -124,17 +120,35 @@
     color: @long-operations-popup-collapsed-header-caption-color;
 }
 
+.controls-LongOperationsPopup__header_downloadButton,
+.controls-LongOperationsPopup__header_stoppedOperationsButton {
+    margin-bottom: -2px;
+    line-height: @long-operations-popup-header-line-height;
+}
 
 /* End header  */
 
-.controls-LongOperationsPopup__header_downloadButton,
-.controls-LongOperationsPopup__header_stoppedOperationsButton {
-   margin-bottom: -2px;
-   line-height: @long-operations-popup-header-line-height;
-}
-
 
 /* Content */
+
+.controls-LongOperationsPopup__content {
+}
+
+.controls-LongOperationsPopup__content .controls-DataGridView__table {
+    width: auto;
+    min-width: 100%;
+}
+
+.controls-LongOperationsPopup__content .controls-DataGridView__firstContentCell {
+    width: 26px;
+}
+
+.controls-LongOperationsPopup__content .controls-LongOperationsList__nameColumn {
+}
+
+.controls-LongOperationsPopup__content .controls-LongOperationsList__executeTimeContainer {
+    width: 92px;
+}
 
 .controls-LongOperationsPopup__content .controls-LongOperationsList .controls-LongOperationsList__executeTimeContainer.controls-DataGridView__td,
 .controls-LongOperationsPopup__content .controls-LongOperationsList .controls-DataGridView__tr.controls-ListView__hoveredItem .controls-LongOperationsList__executeTimeContainer.controls-DataGridView__td {
