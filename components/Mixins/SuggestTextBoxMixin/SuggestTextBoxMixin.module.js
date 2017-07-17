@@ -116,17 +116,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          }
       },
       _getHistoryRecordSet: function () {
-         var listSource = this.getList().getDataSource(),
-             query = new Query(),
-             filter = {},
-             recordsId = [];
-         for (var i = 0, l = this._historyController.getCount(); i < l; i++) {
-            recordsId.push(this._getHistoryRecordId(this._historyController.at(i).get('data')));
-         }
-         filter[this._getListIdProperty()] = recordsId;
-         query.where(filter).limit(12);
+         var listSource = this.getList().getDataSource();
          this._cancelHistoryDeferred();
-         this._historyDeferred = this.getList().getDataSource().query(query).addCallback(function(rs) {
+         this._historyDeferred = this.getList().getDataSource().query(this._getQueryForHistory()).addCallback(function(rs) {
             return new RecordSet({
                adapter: listSource.getAdapter(),
                rawData: rs.getRawData(),
@@ -135,6 +127,18 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             });
          }.bind(this));
          return this._historyDeferred;
+      },
+      _getQueryForHistory: function() {
+         var query = new Query(),
+            filter = {},
+            recordsId = [];
+
+         for (var i = 0, l = this._historyController.getCount(); i < l; i++) {
+            recordsId.push(this._getHistoryRecordId(this._historyController.at(i).get('data')));
+         }
+         filter[this._getListIdProperty()] = recordsId;
+         query.where(filter).limit(12);
+         return query;
       },
       _getHistoryRecord: function(item){
          var list = this.getList();
@@ -245,14 +249,19 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             }
          },
          _onListItemSelectNotify: function(item){
+            this._addItemToHistory(item);
+         },
+
+         _addItemToHistory: function(item) {
             if (this._historyController) {
                //Определяем наличие записи в истории по ключу: стандартная логика контроллера не подходит,
                //т.к. проверка наличия добавляемой записи в истории производится по полному сравнению всех полей записи.
                //В записи поля могут задаваться динамически, либо просто измениться, к примеру значение полей может быть привязано к текущему времени
                //Это приводит к тому, что historyController не найдет текущую запись в истории и добавит ее заново. Получится дублирование записей в истории
-               var idProp = this.getList().getItems().getIdProperty(),
-                   itemId = item.get(idProp),
-                   index = -1;
+               var items = this.getList().getItems(),
+                  idProp = items ? items.getIdProperty() : this.getList().getProperty('idProperty'),
+                  itemId = item.get(idProp),
+                  index = -1;
 
                this._historyController.each(function(model, i) {
                   var historyModelObject = model.get('data').getRawData();
