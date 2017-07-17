@@ -142,7 +142,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
           _prepareListHistory: function() {
              var toDelete = [],
                  currentStructure = this._options.filterButton.getFilterStructure(),
-                 self = this;
+                 self = this,
+                 needUpdateHistory = false;
 
              this._listHistory.each(function(historyElem) {
                 FilterHistoryControllerUntil.prepareNewStructure(currentStructure, historyElem.filter);
@@ -151,6 +152,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 if(linkText) {
                    if(historyElem.linkText !== linkText) {
                       historyElem.linkText = linkText;
+                      needUpdateHistory = true;
                    }
                 } else {
                    toDelete.push(historyElem);
@@ -160,7 +162,14 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              if(toDelete.length) {
                 colHelpers.forEach(toDelete, function(elem) {
                    self._listHistory.remove(elem);
+                   needUpdateHistory = true;
                 });
+             }
+             
+             /* Обновим историю,
+                чтобы остальные контролы, использующие эту же историю подхватили изменения */
+             if(needUpdateHistory) {
+                this.setHistory(listToArray(this._listHistory), true);
              }
           },
 
