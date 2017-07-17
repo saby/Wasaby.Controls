@@ -241,6 +241,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
                headColumns = prepareHeadColumns(cfg);
 
             cfg.headTpl = TemplateUtil.prepareTemplate(cfg.headTpl);
+            /* Чтобы не было дёрганий интерфейса сразу создаём шапку с актуальным состоянием видимости */
+            if (cfg.allowToggleHead && cfg.emptyHTML) {
+               headData.isVisible =  cfg._itemsProjection && cfg._itemsProjection.getCount();
+            } else {
+               headData.isVisible = true;
+            }
             cMerge(headData, headColumns);
             for (var i = 0; i < headData.content[1].length; i++) {
                columnTop = headData.content[0][i];
