@@ -252,34 +252,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         _updateDragTarget: function(dragObject, e) {
 
         },
-        /**
-         * Возвращает контейнер, в котором лежат элементы.
-         * @remark Если элемент бросили за пределами этого контейнера, то target (DragObject.getDragTarget()) будет пустой. Определяется в модуле, который подмешивает миксин.
-         * @example
-         * Пусть у нашего контрола такая верcтка:
-         * <pre>
-         *    <div>
-         *       <h2>Заголовок</h2>
-         *       <ul class="items-list">
-         *          <li>Первый</li>
-         *          <li>Второй</li>
-         *       </ul>
-         *    </div>
-         * </pre>
-         * тогда этот метод должен вернуть ul:
-         * <pre>
-         *    _findDragDropContainer (){
-          *       return this.getContainer().find('ul');
-          *    }
-         * </pre>
-         * @param {Event} e Браузерное событие.
-         * @param {html} target DOM объект в котором надо искать Drag'n'drop контейнер.
-         * @returns {html}
-         * @private
-         */
-        _findDragDropContainer: function (e, target) {
-
-        },
         //endregion handlers
 
         //region protected
