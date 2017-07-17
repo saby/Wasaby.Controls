@@ -145,7 +145,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                   var status = item.get('status');
                   var canHasHistory = self._longOpList.canHasHistory(item);
                   //Открыть журнал операций только для завершенных составных операций или ошибок
-                  if ((status === STATUSES.success && canHasHistory && 1 < item.get('progressTotal')) || status === STATUSES.error) {
+                  if (status === STATUSES.ended && (item.get('isFailed') || (canHasHistory && 1 < item.get('progressTotal')))) {
                      var options = {};
                      self._showFloatArea({
                         title: rk('Журнал выполнения операции'),
@@ -292,24 +292,24 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
 
             var STATUSES = LongOperationEntry.STATUSES;
             var model = this._activeOperation;
-            var status = model.get('status');
             var butCaption;
-            if (status === STATUSES.success) {
-               if (model.get('resultUrl')) {
-                  butCaption = 'Скачать';
+            if (model.get('status') === STATUSES.ended) {
+               if (!model.get('isFailed')) {
+                  if (model.get('resultUrl')) {
+                     butCaption = 'Скачать';
+                  }
+                  else
+                  if (model.get('resultHandler')) {
+                     butCaption = 'Открыть';
+                  }
+                  else
+                  if (1 < model.get('progressTotal') && this._longOpList.canHasHistory(model)) {
+                     butCaption = 'Журнал';
+                  }
                }
-               else
-               if (model.get('resultHandler')) {
-                  butCaption = 'Открыть';
-               }
-               else
-               if (1 < model.get('progressTotal') && this._longOpList.canHasHistory(model)) {
+               else {
                   butCaption = 'Журнал';
                }
-            }
-            else
-            if (status === STATUSES.error) {
-               butCaption = 'Журнал';
             }
 
             var hasButton = !!butCaption;
@@ -363,13 +363,9 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                      }
                      break;
 
-                  case STATUSES.success:
-                     this._setHeader(title, 'success', 'icon-size icon-24 icon-Yes icon-done');
-                     pauseIcon.addClass('ws-hidden');
-                     break;
-
-                  case STATUSES.error:
-                     this._setHeader(title, 'error', 'icon-size icon-24 icon-Alert icon-error');
+                  case STATUSES.ended:
+                     var isSuccess = !model.get('isFailed');
+                     this._setHeader(title, isSuccess ? 'success' : 'error', isSuccess ? 'icon-size icon-24 icon-Yes icon-done' : 'icon-size icon-24 icon-Alert icon-error');
                      pauseIcon.addClass('ws-hidden');
                      break;
                }

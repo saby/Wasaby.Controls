@@ -20,8 +20,7 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
       var STATUSES = {
          running:   0,
          suspended: 1,
-         success:   2,
-         error:     3,
+         ended:     2,
          deleted:   4
       };
 
@@ -51,6 +50,7 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
          startedAt: 'Date',
          timeSpent: 'number',
          status: 'number',
+         isFailed: 'boolean',
          progressTotal: 'number',
          progressCurrent: 'number',
          canSuspend: 'boolean',
@@ -88,8 +88,9 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
           * @param {string}        options.producer Имя продюсера операции (обязательный)
           * @param {Date|number|string} options.startedAt Время начала операции (обязательный)
           * @param {number}        [options.timeSpent] Общее время выполнения (опционально, если не указано, будет использован 0)
-          * @param {string|number} [options.status] Статус операции. Возможные значения: 'running', 0, 'suspended', 1, 'success', 2, 'error', 3.
+          * @param {string|number} [options.status] Статус операции. Возможные значения: 'running', 0, 'suspended', 1, 'ended', 2.
           *                                         (опционально, если не указано, будет использовано 'running')
+          * @param {boolean}       [options.isFailed] Показывает, что операция завершена с ошибкой (опционально)
           * @param {number}        [options.progressTotal] Общее количество стадий выполнения (опционально, если не указано, будет использована 1)
           * @param {number}        [options.progress.total] Общее количество стадий выполнения - альтернативно
           * @param {number}        [options.progressCurrent] Текущая стадия выполнения (опционально, если не указано, будет использован 0)
@@ -186,7 +187,7 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
                }
                this[name] = value;
             }
-            if (!this.progressCurrent && (this.status === STATUSES.success || this.status === STATUSES.error)) {
+            if (!this.progressCurrent && this.status === STATUSES.ended) {
                this.progressCurrent = this.progressTotal;
             }
             this.tabKey = null;

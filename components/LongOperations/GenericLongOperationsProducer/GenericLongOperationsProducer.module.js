@@ -11,12 +11,11 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
       'Core/core-extend',
       'js!WS.Data/Entity/ObservableMixin',
       'Core/Deferred',
-      'js!WS.Data/Types/Enum',
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.ILongOperationsProducer'
    ],
 
-   function (CoreExtend,  ObservableMixin, Deferred, Enum, LongOperationEntry, ILongOperationsProducer) {
+   function (CoreExtend,  ObservableMixin, Deferred, LongOperationEntry, ILongOperationsProducer) {
       'use strict';
 
       /**
@@ -31,7 +30,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
        * @protected
        * @type {number}
        */
-      var DEFAULT_FETCH_SORTING = {/*###status:true,*/ startedAt:false};
+      var DEFAULT_FETCH_SORTING = {status:true, startedAt:false};
 
       /**
        * Экземпляры класса (синглетоны), различающиеся идентификаторами (ключами массива). Один идентификатор - один экземпляр
@@ -108,6 +107,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             //GenericLongOperationsProducer.superclass.destroy.apply(this, arguments);
             var STATUSES = LongOperationEntry.STATUSES;
             var DEFAULTS = LongOperationEntry.DEFAULTS;
+            var ERR = 'User left the page';
             var snapshots = GLOStorage.list(this._name);
             var oIds = [];
             for (var i = 0; i < snapshots.length; i++) {
@@ -120,7 +120,9 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                   // При разрушении продюсера обработчики будут утеряны, поэтому операции завершаем ошибкой
                   if (handlers) {
                      delete this._actions[operationId];
-                     o.status = STATUSES.error;
+                     o.status = STATUSES.ended;
+                     o.isFailed = true;
+                     o.resultMessage = ERR;
                      o.timeSpent = (new Date()).getTime() - o.startedAt;
                      GLOStorage.put(this._name, operationId, o);
                      oIds.push(operationId);
@@ -128,7 +130,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                }
             }
             if (oIds.length) {
-               this._notify('onlongoperationended', {producer:this._name, operationIds:oIds, status:STATUSES.error, error:'User left the page'});
+               this._notify('onlongoperationended', {producer:this._name, operationIds:oIds, error:ERR});
             }
          },
 
@@ -257,9 +259,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
           * @param {string} options Параметры для создания длительной операции
           * @param {string} options.title Отображаемое название операции (обязательный)
           * @param {Date|number} [options.startedAt] Время начала операции (опционально, если не указано, будет использовано текущее)
-          * @param {string|number|object} [options.status] Статус операции. Возможные значения: 'running', 0, 'suspended', 1, 'success', 2, 'error', 3.
-          *                                                Также принимается объект json-сериализации из Enum.
-          *                                                (опционально, если не указано, будет использовано 'running')
+          * @param {string|number|object} [options.status] Статус операции. Возможные значения: 'running', 0, 'suspended', 1, 'ended', 2.
           * @param {function} [options.onSuspend] Обработчик действия пользователя. Должен возвращать успешность выполнения. Если не представлен, значит действие не разрешено
           * @param {function} [options.onResume] Обработчик действия пользователя. Должен возвращать успешность выполнения. Если не представлен, значит действие не разрешено
           * @param {function} [options.onDelete] Обработчик действия пользователя. Должен возвращать успешность выполнения. Если не представлен, значит действие не разрешено
@@ -285,10 +285,10 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                   if (result && typeof result !== 'object') {
                      throw new TypeError('Invalid result');
                   }
-                  _setStatus(self, operationId, 'success', result || null);
+                  _setStatus(self, operationId, 'ended', result || null);
                },
                function (err) {
-                  _setStatus(self, operationId, 'error', err.message || 'Long operation error');
+                  _setStatus(self, operationId, 'ended', {error:err.message || 'Long operation error'});
                }
             )
          }
@@ -415,7 +415,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
        */
       var _isSatisfied = function (value, condition) {
          if (condition == null || typeof condition !== 'object') {
-            return value === condition;
+            return condition != null ? value === condition : value == null;
          }
          if (Array.isArray(condition)) {
             return condition.indexOf(value) !== -1;
@@ -446,7 +446,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
        * @protected
        * @param {SBIS3.CONTROLS.GenericLongOperationsProducer} self Экземпляр класса
        * @param {number} operationId Идентификатор длительной операции
-       * @param {string|number} status Новый статус операции. Возможные значения: 'running', 0, 'suspended', 1, 'success', 2, 'error', 3.
+       * @param {string|number} status Новый статус операции. Возможные значения: 'running', 0, 'suspended', 1, 'ended', 2.
        * @param {any} details Дополнительная информация при завершении. Для успешного завершения - результат, для завершения с ошибкой -
        *                      сообщение об ошибке. Для приостановки/возобновления может быть обработчик действия пользователя (опционально)
        */
@@ -480,8 +480,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                case STATUSES.suspended:
                   isAllowed = prev === STATUSES.running;
                   break;
-               case STATUSES.success:
-               case STATUSES.error:
+               case STATUSES.ended:
                   isAllowed = prev === STATUSES.running || prev === STATUSES.suspended;
                   break;
             }
@@ -500,8 +499,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                   eventType = 'onlongoperationchanged';
                   result = {changed:'status'};
                   break;
-               case STATUSES.success:
-               case STATUSES.error:
+               case STATUSES.ended:
                   operation.progressCurrent = operation.progressTotal;
                   operation.timeSpent = (new Date()).getTime() - operation.startedAt;
                   if (operation.canDelete) {
@@ -513,7 +511,8 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                      delete self._actions[operationId];
                   }
                   eventType = 'onlongoperationended';
-                  if (status === STATUSES.success) {
+                  var err = details ? details.error : null;
+                  if (!err) {
                      if (details) {
                         if (details.url && typeof details.url === 'string') {
                            operation.resultUrl = details.url;
@@ -536,10 +535,9 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                         }
                      }
                   }
-                  else
-                  if (status === STATUSES.error) {
-                     operation.resultMessage = details;
-                     result = {error:details};
+                  else {
+                     operation.resultMessage = err;
+                     result = {error:err};
                   }
                   break;
             }

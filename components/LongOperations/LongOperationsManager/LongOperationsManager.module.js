@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
        * @protected
        * @type {number}
        */
-      var DEFAULT_FETCH_SORTING = {/*###status:true,*/ startedAt:false};
+      var DEFAULT_FETCH_SORTING = {status:true, startedAt:false};
 
       /**
        * "Константа" - максимальное количество возвращаемых методом fetch элементов по умолчанию

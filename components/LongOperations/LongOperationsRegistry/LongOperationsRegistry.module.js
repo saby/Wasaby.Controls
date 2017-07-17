@@ -109,7 +109,7 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
                      var prev = self._previousGroupBy;
                      if (prev === null
                            || (status === STATUSES.suspended && prev === STATUSES.running)
-                           || ((status === STATUSES.success || status === STATUSES.error) && (prev === STATUSES.running || prev === STATUSES.suspended))) {
+                           || (status === STATUSES.ended && (prev === STATUSES.running || prev === STATUSES.suspended))) {
                         self._previousGroupBy = status;
                         return true;
                      }
@@ -142,22 +142,23 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
 
             //Открываем ссылку, если она есть, иначе открываем журнал выполнения операции
             this.subscribeTo(longOperationsBrowser, 'onEdit', function (e, meta) {
-               if (!self._longOpList.applyResultAction(meta.item)) {
+               var item = meta.item;
+               if (!self._longOpList.applyResultAction(item)) {
                   // Если действие ещё не обработано
                   var STATUSES = LongOperationEntry.STATUSES;
-                  var status = meta.item.get('status');
-                  var canHasHistory = self._longOpList.canHasHistory(meta.item);
+                  var status = item.get('status');
+                  var canHasHistory = self._longOpList.canHasHistory(item);
                   //Открыть журнал операций только для завершенных составных операций или ошибок
-                  if ((status === STATUSES.success && canHasHistory && 1 < meta.item.get('progressTotal')) || status === STATUSES.error) {
+                  if (status === STATUSES.ended && (item.get('isFailed') || (canHasHistory && 1 < item.get('progressTotal')))) {
                      meta.dialogOptions = {
                         title: rk('Журнал выполнения операции')
                      };
                      meta.componentOptions = canHasHistory ? {
-                        tabKey: meta.item.get('tabKey'),
-                        producer: meta.item.get('producer'),
-                        operationId: meta.item.get('id')
+                        tabKey: item.get('tabKey'),
+                        producer: item.get('producer'),
+                        operationId: item.get('id')
                      } : {
-                        failedOperation: meta.item
+                        failedOperation: item
                      };
                      self.getChildControlByName('action').execute(meta);
                   }

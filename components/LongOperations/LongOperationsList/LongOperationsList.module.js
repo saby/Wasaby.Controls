@@ -158,7 +158,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                         }
                         break;
                      case 'onlongoperationended':
-                        self._animationAdd(Model.getFullId(evt.tabKey, evt.producer, evt.operationId), evt.status === STATUSES.success);
+                        self._animationAdd(Model.getFullId(evt.tabKey, evt.producer, evt.operationId), !evt.error);
                         self._animationRun();
                         break;
                   }
@@ -197,7 +197,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                         var status = item.record.get('status');
 
                         var hide = (itemAction === 'resume' || itemAction === 'suspend')
-                                    && (status === STATUSES.success || status === STATUSES.error || status === STATUSES.running && itemAction === 'resume' || status === STATUSES.suspended && itemAction === 'suspend');
+                                    && (status === STATUSES.ended || status === STATUSES.running && itemAction === 'resume' || status === STATUSES.suspended && itemAction === 'suspend');
 
                         /*Прикладной разработчик может запретить показывать операции удаления и остановки*/
                         if (!hide) {
@@ -243,9 +243,9 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                items.each(function (model) {
                   var status = model.get('status');
                   if (!this._notFirst
-                        && (status === STATUSES.success || status === STATUSES.error)
+                        && status === STATUSES.ended
                         && from < model.get('startedAt').getTime() + model.get('timeSpent')) {
-                     this._animationAdd(model.getId(), status === STATUSES.success);
+                     this._animationAdd(model.getId(), !model.get('isFailed'));
                   }
                   if (!hasRun && status === STATUSES.running) {
                      hasRun = true;
@@ -302,16 +302,23 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                var where = {};
                if (filter.status) {
                   var STATUSES = LongOperationEntry.STATUSES;
-                  var map = {
-                     'running': STATUSES.running,
-                     'suspended': STATUSES.suspended,
-                     'not-suspended': [STATUSES.running, STATUSES.success, STATUSES.error],
-                     'ended': [STATUSES.success, STATUSES.error],
-                     'success-ended': STATUSES.success,
-                     'error-ended': STATUSES.error
-                  };
-                  if (filter.status in map) {
-                     where.status = map[filter.status];
+                  switch (filter.status) {
+                     case 'running':
+                     case 'suspended':
+                     case 'ended':
+                        where.status = STATUSES[filter.status];
+                        break;
+                     case 'not-suspended':
+                        where.status = [STATUSES.running, STATUSES.ended];
+                        break;
+                     case 'success-ended':
+                        where.status = STATUSES.ended;
+                        where.isFailed = null;
+                        break;
+                     case 'error-ended':
+                        where.status = STATUSES.ended;
+                        where.isFailed = true;
+                        break;
                   }
                }
                if (filter.period) {
@@ -390,7 +397,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
           * @return {boolean}
           */
          applyResultAction: function (model) {
-            if (model.get('status') !== LongOperationEntry.STATUSES.success) {
+            if (model.get('status') !== LongOperationEntry.STATUSES.ended && !model.get('isFailed')) {
                return false;
             }
             var handler = model.get('resultHandler');

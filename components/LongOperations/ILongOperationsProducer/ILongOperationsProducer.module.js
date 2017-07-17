@@ -49,9 +49,9 @@ define('js!SBIS3.CONTROLS.ILongOperationsProducer',
        * @param {object} data Данные события
        * @param {string} data.producer Имя продюсера
        * @param {string} data.operationId Идентификатор операции (Возможен список идентификаторов в свойстве data.operationIds)
-       * @param {number} data.status Статус операции, может быть только LongOperationEntry.STATUSES.success или LongOperationEntry.STATUSES.error
        * @param {number} [data.progress.total] Общее количество подзадач, по умолчанию 1
        * @param {number} [data.progress.value] Количество выполненых подзадач (Здесь всегда равно data.progress.total)
+       * @param {string} [data.error] Сообщение об ошибке, если завершено с ошибкой
        * @example
        * <pre>
        *    producer.subscribe('onlongoperationended', function (evtName, data) {
