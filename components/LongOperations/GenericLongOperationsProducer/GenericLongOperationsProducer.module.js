@@ -41,6 +41,13 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
       var _instances = {};
 
       /**
+       * Сервис - источник данных о пользователях, когда это потребуется в методе fetch
+       * @rpoteced
+       * @type {WS.Data/Source/SbisService}
+       */
+      var _userInfoSource;
+
+      /**
        * Класс типового продюсера длительных операций
        * @public
        * @type {object}
@@ -195,7 +202,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                }*/
                return operation;
             }.bind(this));
-            return operations.length && extra && extra.NeedProfileData ? _fillUserInfo(operations) : Deferred.success(operations);
+            return operations.length && extra && extra.needUserInfo ? _fillUserInfo(operations) : Deferred.success(operations);
          },
 
          /**
@@ -617,41 +624,63 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
        * @return {Core/Deferred<SBIS3.CONTROLS.LongOperationEntry[]>}
        */
       var _fillUserInfo = function (operations) {
-         var oIds = operations.reduce(function (r, v) { if (v.userId) r.push(v.userId); return r; }, []);
-         if (!oIds.length) {
+         var uIds = operations.reduce(function (r, v) { if (v.userId && r.indexOf(v.userId) === -1) r.push(v.userId); return r; }, []);
+         if (!uIds.length) {
             return Deferred.success(operations);
          }
          var promise = new Deferred();
-         //TODO: ### Переделать на SbisService
-         require(['Transport/BLObject'], function (BLObject) {
-            (new BLObject('Персона')).call('ПодробнаяИнформация', {
-               'Персоны': oIds,
+         require(['js!WS.Data/Source/SbisService', 'js!WS.Data/Chain'], function (SbisService, Chain) {
+            if (!_userInfoSource) {
+               var _userInfoSource = new SbisService({
+                  endpoint: {
+                     address: '/service/',
+                     contract: 'Персона'
+                  }/*,
+                  binding: {
+                     query:
+                  },
+                   model: */
+               });
+            }
+            _userInfoSource.call('ПодробнаяИнформация', {
+               'Персоны': uIds,
                'ДляДокумента': null,
                'ПроверитьЧерныйСписок': false
-            }, BLObject.RETURN_TYPE_RECORDSET)
-               .addCallbacks(
-                  function (answer) {
-                     var results = answer.getRecords();
-                     var indexes = oIds.reduce(function (r, v, i) { r[v] = i; return r; }, {});
-                     results.forEach(function (record) {
-                        var userId = record.get('Персона');
-                        var i = indexes[userId];
-                        if (0 <= i) {
-                           var o = operations[i];
+            })
+            .addCallbacks(
+               function (dataSet) {
+                  var indexes = operations.reduce(function (r, v, i) { if (v.userId) { if (!r[v.userId]) r[v.userId] = []; r[v.userId].push(i); } return r; }, {});
+                  Chain(dataSet.getAll()).each(function (record) {
+                     var userId = record.get('Персона');
+                     var list = indexes[userId];
+                     if (list) {
+                        for (var i = 0; i < list.length; i++) {
+                           var o = operations[list[i]];
                            o.userFirstName = record.get('Имя');
                            o.userPatronymicName = record.get('Отчество');
                            o.userLastName = record.get('Фамилия');
-                           o.userPic = '/service/?id=0&method=PProfileServicePerson.GetPhoto&protocol=4&params=' + window.btoa(JSON.stringify({person:userId, kind:'mini'}));//'default'
+                           o.userPic = _getUserPic(userId);
                         }
-                     });
-                     promise.callback(operations);
-                  },
-                  function (err) {
-                     promise.callback(operations);
-                  }
-               );
+                     }
+                  });
+                  promise.callback(operations);
+               },
+               function (err) {
+                  promise.callback(operations);
+               }
+            );
          });
          return promise;
+      };
+
+      /**
+       * Получить url изображения пользователя (аватарки)
+       * @protected
+       * @param {string} userId Идентификатор пользователя в сервисе пользовательских профайлов
+       * @return {string}
+       */
+      var _getUserPic = function (userId) {
+         return '/service/?id=0&method=PProfileServicePerson.GetPhoto&protocol=4&params=' + window.btoa(JSON.stringify({person:userId, kind:'mini'}));//'default'
       };
 
       var ObjectAssign = Object.assign || function (dst, src) { return Object.keys(src).reduce(function (o, n) { o[n] = src[n]; return o; }, dst); };

@@ -85,7 +85,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                context.setValue('filter/UserId', this._options.userId);
             }
             if (this._options.columns.userPic) {
-               context.setValue('filter/NeedProfileData', true);
+               context.setValue('filter/needUserInfo', true);
             }
             this._publish('onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted', 'onproducerregistered', 'onproducerunregistered', 'ontimespentchanged');
          },
@@ -341,8 +341,8 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
             if (0 < limit) {
                options.limit = limit;
             }
-            if (filter.NeedProfileData) {
-               options.extra = {NeedProfileData:true};
+            if (filter.needUserInfo) {
+               options.extra = {needUserInfo:true};
             }
             return longOperationsManager.fetch(Object.keys(options).length ? options : null)
                .addCallback(function (results) {
