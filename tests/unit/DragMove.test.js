@@ -118,15 +118,6 @@ define([
             dragMove.beginDrag();
             assert.isTrue(cInstance.instanceOfModule(DragObject.getSource(), 'SBIS3.CONTROLS.DragEntity.List'));
          });
-         it('should create avatar', function () {
-            dragMove.beginDrag();
-            assert.isTrue(DragObject.getAvatar().length > 0);
-         });
-         it('should set counter in avatar', function () {
-            view.setSelectedKeys([1,2]);
-            dragMove.beginDrag();
-            assert.equal(DragObject.getAvatar().find('.controls-DragNDrop__draggedCount').html(), 2);
-         });
       });
       describe('._getDragTarget', function () {
          it('should return drag target', function () {
@@ -277,6 +268,17 @@ define([
                done();
             };
             dragMove.endDrag();
+         });
+      });
+      describe('createAvatar', function () {
+         it('should create avatar', function () {
+            dragMove.beginDrag();
+            assert.isTrue(dragMove.createAvatar().length > 0);
+         });
+         it('should set counter in avatar', function () {
+            view.setSelectedKeys([1,2]);
+            dragMove.beginDrag();
+            assert.equal(dragMove.createAvatar().find('.controls-DragNDrop__draggedCount').html(), 2);
          });
       });
    });

@@ -98,7 +98,6 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
                this._toggleDragItems(false)
             }
             this._addClassDragndrop(target);
-            DragObject.setAvatar(this._createAvatar());
             return true;
          }
          return false;
@@ -257,6 +256,30 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
          this._clearDragHighlight();
       },
       /**
+       * создает аватар
+       * @return {*|jQuery|HTMLElement}
+       * @private
+       */
+      createAvatar: function() {
+         if (!this._options.linkTemplateConfig) {
+            var count = DragObject.getSource().getCount();
+            return $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>');
+         } else {
+            var model = DragObject.getSource().at(0).getModel();
+            return $(
+               '<div class="controls-dragNDrop-avatar controls-DragNDrop__draggedItem">' +
+               '<div class="controls-dragNDrop-avatar__img-wrapper">' +
+               '<img src="' + model.get(this._options.linkTemplateConfig.image) + '">' +
+               '</div>' +
+               '<div class="controls-dragNDrop-avatar__text-wrapper">' +
+               '<div class="controls-dragNDrop-avatar__title">' + (model.get(this._options.linkTemplateConfig.title)||'') + '</div>' +
+               '<div class="controls-dragNDrop-avatar__description">' + (model.get(this._options.linkTemplateConfig.description)||'') + '</div>' +
+               '</div>' +
+               '</div>'
+            );
+         }
+      },
+      /**
        * возвращает контейнер контрола
        * @return {*|Element|jQuery}
        */
@@ -406,30 +429,6 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             return offset < orderOffset ? DRAG_META_INSERT.after : offset > metric - orderOffset ? DRAG_META_INSERT.before : DRAG_META_INSERT.on;
          } else {
             return offset < orderOffset ? DRAG_META_INSERT.before : offset > metric - orderOffset ? DRAG_META_INSERT.after : DRAG_META_INSERT.on;
-         }
-      },
-      /**
-       * создает аватар
-       * @return {*|jQuery|HTMLElement}
-       * @private
-       */
-      _createAvatar: function() {
-         if (!this._options.linkTemplateConfig) {
-            var count = DragObject.getSource().getCount();
-            return $('<div class="controls-DragNDrop__draggedItem"><span class="controls-DragNDrop__draggedCount">' + count + '</span></div>');
-         } else {
-            var model = DragObject.getSource().at(0).getModel();
-            return $(
-               '<div class="controls-dragNDrop-avatar controls-DragNDrop__draggedItem">' +
-               '<div class="controls-dragNDrop-avatar__img-wrapper">' +
-               '<img src="' + model.get(this._options.linkTemplateConfig.image) + '">' +
-               '</div>' +
-               '<div class="controls-dragNDrop-avatar__text-wrapper">' +
-               '<div class="controls-dragNDrop-avatar__title">' + (model.get(this._options.linkTemplateConfig.title)||'') + '</div>' +
-               '<div class="controls-dragNDrop-avatar__description">' + (model.get(this._options.linkTemplateConfig.description)||'') + '</div>' +
-               '</div>' +
-               '</div>'
-            );
          }
       },
       /**
