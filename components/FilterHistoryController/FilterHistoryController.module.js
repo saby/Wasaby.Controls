@@ -14,7 +14,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
    "Core/helpers/collection-helpers",
    "Core/helpers/generate-helpers",
    "Core/helpers/Function/debounce",
-   "Core/helpers/functional-helpers"
+   "Core/helpers/functional-helpers",
+   "Core/Date"
 ],
 
     function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, colHelpers, genHelpers, debounce, fHelpers) {
@@ -282,7 +283,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 а не стандартный ISO формат, то использую наш специальный метод для приведения даты в строку */
              colHelpers.forEach(viewFilter, function(val, key, obj) {
                 if(val instanceof Date) {
-                   obj[key] = val.toSQL(true);
+                   obj[key] = val.toSQL(Date.SQL_SERIALIZE_MODE_AUTO);
                 }
              });
 
