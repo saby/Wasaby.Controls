@@ -242,7 +242,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
             cfg.headTpl = TemplateUtil.prepareTemplate(cfg.headTpl);
             /* Чтобы не было дёрганий интерфейса сразу создаём шапку с актуальным состоянием видимости */
-            if (cfg.allowToggleHead) {
+            if (cfg.allowToggleHead && cfg.emptyHTML) {
                headData.isVisible =  cfg._itemsProjection && cfg._itemsProjection.getCount();
             } else {
                headData.isVisible = true;
