@@ -2,8 +2,8 @@
  * Created by dv.zuev on 18.05.2017.
  */
 define([
-   'js!WSDemo/TestSubControls/TestSubControlParent',
-   'js!WSDemo/TestSubControls/LogicParentTestControl'
+   'js!WSTest/TestSubControls/TestSubControlParent',
+   'js!WSTest/TestSubControls/LogicParentTestControl'
 ], function (
    ParentControl, LogicParentTestControl
 ) {
@@ -40,8 +40,20 @@ define([
                   ch2 = logicParentTestControl.children.ch2;
                assert.isTrue(ch1 !== undefined);
                assert.isTrue(ch2.logicParent === logicParentTestControl);
-               done();
-            }, 0);
+
+               assert.isTrue( ch2.isEnabled() );
+               assert.isTrue( ch2._options.enabled === undefined );
+               ch1._options.enabled = false;
+               ch1._setDirty();
+               setTimeout(function(){
+                  assert.isTrue( !ch2.isEnabled() );
+                  assert.isTrue( ch2._options.enabled === undefined );
+
+                  done();
+
+               }, 50);
+
+            }, 50);
          });
 
       });

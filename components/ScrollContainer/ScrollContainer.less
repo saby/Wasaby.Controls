@@ -8,13 +8,7 @@
    position: relative;
    outline: none;
    z-index: 0;
-   .controls-ScrollContainer__scrollbar{
-      position: absolute;
-      right: 0;
-      top: 0;
-      display: none;
-      height: 100%;
-   }
+   
    &.controls-ScrollContainer__top-gradient:before, &.controls-ScrollContainer__bottom-gradient:after {
       content: '';
       position: absolute;
@@ -32,6 +26,15 @@
       bottom: 0;
       background: linear-gradient(to top, @controls-ScrollContainer-gradient-background);
    }
+}
+
+.controls-ScrollContainer__scrollbar{
+   position: absolute;
+   right: 0;
+   top: 0;
+   display: none;
+   height: 100%;
+   contain: strict;
 }
 
 .controls-ScrollContainer:not(.controls-ScrollContainer__hiddenScrollbar) {

@@ -261,7 +261,6 @@ body {
          height: 3rem;
       }
       .controls-IconButton.controls-IconButton__round-border {
-         border: none;
          .controls-Button__icon {
             &.icon-16, &.icon-24 {
                margin-left: -1.5rem;
@@ -901,11 +900,16 @@ body {
 
       .ws-infobox-close-button.icon-disabled{
          font-size: 3rem!important;
-         right: 0.6rem;
+         right: 0;
          top: 0.41rem;
          color: @link-text-color!important;
+         overflow: hidden;
          &:hover {
             color: #B9E9FF!important;
+         }
+         &:before {
+            position: relative;
+            right: 0.6rem;
          }
       }
    }
