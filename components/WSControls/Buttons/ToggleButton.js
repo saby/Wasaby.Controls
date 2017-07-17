@@ -9,10 +9,14 @@ define('js!WSControls/Buttons/ToggleButton', ['js!WSControls/Buttons/Button', 'j
 
    /**
     * Контрол, отображающий кнопку с залипанием.
+    *
     * @class WSControls/Buttons/ToggleButton
     * @extends WSControls/Buttons/Button
     * @demo SBIS3.CONTROLS.Demo.MyToggleButton
+    *
     * @author Крайнов Дмитрий Олегович
+    *
+    * @mixes SBIS3.CONTROLS.Checkable
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip
     *
@@ -35,12 +39,12 @@ define('js!WSControls/Buttons/ToggleButton', ['js!WSControls/Buttons/Button', 'j
     * @control
     * @category Buttons
     * @initial
-    * <component data-component='SBIS3.CONTROLS.ToggleButton'>
+    * <component data-component='WSControls/Buttons/ToggleButton'>
     *    <option name='caption' value='Кнопка с залипанием'></option>
     * </component>
     */
 
-   var WSToggleButton = WSButton.extend([Checkable], /** @lends SBIS3.CONTROLS.ToggleButton.prototype */ {
+   var WSToggleButton = WSButton.extend([Checkable], /** @lends WSControls/Buttons/ToggleButton.prototype */ {
       $protected: {
          _options: {
 
