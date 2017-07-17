@@ -65,3 +65,18 @@
       }
    }
 }
+
+body:not(.ws-is-chrome) {
+   .controls-FilterPanelChooser {
+      .controls-ListView {
+         .controls-ListView__itemsContainer {
+            .controls-ListView__item {
+               .controls-FilterPanelChooser__title {
+                  word-break: normal;
+                  .hyphens(auto);
+               }
+            }
+         }
+      }
+   }
+}
