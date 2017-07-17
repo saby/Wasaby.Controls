@@ -22,10 +22,12 @@ define('js!WSControls/Buttons/ButtonBase', [
     * @class WSControls/Buttons/ButtonBase
     * @public
     * @extends SBIS3.CORE.CompoundControl
+    *
     * @mixes SBIS3.CONTROLS.Clickable
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
     * @mixes SBIS3.CONTROLS.DataBindMixin
     * @mixes SBIS3.CONTROLS.IconMixin
+    *
     * @author Крайнов Дмитрий Олегович
     *
     *

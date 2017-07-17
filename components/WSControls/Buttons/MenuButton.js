@@ -55,7 +55,7 @@ define('js!WSControls/Buttons/MenuButton', [
     * @public
     * @category Buttons
     * @initial
-    * <component data-component='SBIS3.CONTROLS.MenuButton'>
+    * <component data-component='WSControls/Buttons/MenuButton'>
     *    <option name='caption' value='Кнопка с меню'></option>
     *    <options name="items" type="array">
     *        <options>
@@ -70,7 +70,13 @@ define('js!WSControls/Buttons/MenuButton', [
     * </component>
     */
 
-   var MenuButton = Button.extend( [PickerMixin, DSMixin], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
+   var MenuButton = Button.extend( [PickerMixin, DSMixin], /** @lends WSControls/Buttons/MenuButton.prototype */ {
+      /**
+       * @event onMenuItemActivate Происходит при клике по пункту меню.
+       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {String} id Идентификатор пункта.
+       * @param {Object} mEvent Объект, который содержит более полную информацию о событии (по сравнению с объектом события eventObject).
+       */
       $protected: {
          _options: {
             /**
