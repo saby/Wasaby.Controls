@@ -1172,8 +1172,7 @@ define('js!SBIS3.CONTROLS.ListView',
                pagingZIndex: this._pagingZIndex
             });
             this._scrollBinder.bindScrollPaging();
-            dcHelpers.trackElement(this.getContainer(), true).subscribe('onVisible', this._onVisibleChange.bind(this));
-
+            
             if (!this._inScrollContainerControl) {
                // Отлавливаем изменение масштаба
                // Когда страница увеличена на мобильных платформах или если на десктопе установить ширину браузера меньше 1024рх,
@@ -1182,10 +1181,10 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         _onVisibleChange: function(event, visible){
+         _updateScrollPagerVisibility: function(){
             if (this._scrollPager) {
                // покажем если ListView показалось и есть страницы и скроем если скрылось
-               this._scrollPager.setVisible(visible && this._scrollPager.getPagesCount());
+               this._scrollPager.setVisible(this.isVisible() && this._scrollPager.getPagesCount());
             }
          },
 
@@ -2829,6 +2828,7 @@ define('js!SBIS3.CONTROLS.ListView',
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
          _onResizeHandler: function(){
             ListView.superclass._onResizeHandler.call(this);
+            this._updateScrollPagerVisibility();
             if (this.getItems()){
                //Мог поменяться размер окна или смениться ориентация на планшете - тогда могут влезть еще записи, надо попробовать догрузить
                if (this.isInfiniteScroll() && this._scrollWatcher && !this._scrollWatcher.hasScroll()){
@@ -3978,7 +3978,6 @@ define('js!SBIS3.CONTROLS.ListView',
                if (!this._inScrollContainerControl) {
                   $(window).off('resize scroll', this._setScrollPagerPositionThrottled);
                }
-               dcHelpers.trackElement(this.getContainer(), false).unsubscribe('onVisible', this._onVisibleChange);
                this._scrollPager.destroy();
             }
             if (this._listNavigation) {
