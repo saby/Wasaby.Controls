@@ -236,7 +236,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                // Если нет уже выполняющегося запроса
                if (Object.keys(_producers).length) {
                   for (var n in _producers) {
-                     _fetchCalls.add(query, {tab:_tabKey, producer:n}, _producers[n].fetch(query.where, query.orderBy, query.offset, query.limit, query.extra));
+                     _fetchCalls.add(query, {tab:_tabKey, producer:n}, _producers[n].fetch(query));
                   }
                }
                if (Object.keys(_tabManagers).length) {
@@ -245,7 +245,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                      targets = _tabTargets(targets, tabKey, _tabManagers[tabKey]);
                   }
                   if (targets) {
-                     _fetchCalls.addList(query, _expandTargets(targets), _tabCalls.callBatch(targets, 'fetch', [query.where, query.orderBy, query.offset, query.limit, query.extra], LongOperationEntry));
+                     _fetchCalls.addList(query, _expandTargets(targets), _tabCalls.callBatch(targets, 'fetch', [query], LongOperationEntry));
                   }
                }
             }

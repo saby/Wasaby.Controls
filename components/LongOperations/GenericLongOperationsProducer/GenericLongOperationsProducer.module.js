@@ -164,34 +164,34 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
          /**
           * Запросить набор последних длительных операций
           * @public
-          * @param {object} where Параметры фильтрации
-          * @param {object} orderBy Параметры сортировки
-          * @param {number} offset Количество пропущенных элементов в начале
-          * @param {number} limit Максимальное количество возвращаемых элементов
-          * @param {object} [extra] Дополнительные параметры, если есть (опционально)
+          * @param {object} options Параметры запроса (опционально)
+          * @param {object} options.where Параметры фильтрации
+          * @param {object} options.orderBy Параметры сортировки
+          * @param {number} options.offset Количество пропущенных элементов в начале
+          * @param {number} options.limit Максимальное количество возвращаемых элементов
+          * @param {object} [options.extra] Дополнительные параметры, если есть (опционально)
           * @return {Core/Deferred<SBIS3.CONTROLS.LongOperationEntry[]>}
           */
-         fetch: function (where, orderBy, offset, limit, extra) {
-            if (where != null && typeof where !== 'object') {
-               throw new TypeError('Argument "where" must be an object');
+         fetch: function (options) {
+            if (!options || typeof options !== 'object') {
+               throw new TypeError('Argument "options" must be an object');
             }
-            if (orderBy != null && (typeof orderBy !== 'object'
-                  && Object.keys(orderBy).every(function (v) { var b = orderBy[v]; return b == null || typeof b === 'boolean'; }))) {
-               throw new TypeError('Argument "orderBy" must be an array');
+            if ('where' in options && typeof options.where !== 'object') {
+               throw new TypeError('Argument "options.where" must be an object');
             }
-            if (!(typeof offset === 'number' && 0 <= offset)) {
-               throw new TypeError('Argument "offset" must be not negative number');
+            if ('orderBy' in options && typeof options.orderBy !== 'object') {
+               throw new TypeError('Argument "options.orderBy" must be an array');
             }
-            if (!(typeof limit === 'number' && 0 < limit)) {
-               throw new TypeError('Argument "limit" must be positive number');
+            if ('offset' in options && !(typeof options.offset === 'number' && 0 <= options.offset)) {
+               throw new TypeError('Argument "options.offset" must be not negative number');
             }
-            if (extra != null && typeof extra !== 'object') {
-               throw new TypeError('Argument "extra" must be an object if present');
+            if ('limit' in options && !(typeof options.limit === 'number' && 0 < options.limit)) {
+               throw new TypeError('Argument "options.limit" must be positive number');
             }
-            if (!orderBy) {
-               orderBy = DEFAULT_FETCH_SORTING;
+            if ('extra' in options && typeof options.extra !== 'object') {
+               throw new TypeError('Argument "options.extra" must be an object if present');
             }
-            var operations = _list(this, where, orderBy, offset, limit).map(function (operation) {
+            var operations = _list(this, options.where, options.orderBy || DEFAULT_FETCH_SORTING, options.offset, options.limit).map(function (operation) {
                var handlers = this._actions ? this._actions[operation.id] : null;
                // Если обработчики действий пользователя остались в другой вкладке
                if (!(handlers && handlers.onSuspend && handlers.onResume)) {
@@ -202,7 +202,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                }*/
                return operation;
             }.bind(this));
-            return operations.length && extra && extra.needUserInfo ? _fillUserInfo(operations) : Deferred.success(operations);
+            return operations.length && options.extra && options.extra.needUserInfo ? _fillUserInfo(operations) : Deferred.success(operations);
          },
 
          /**

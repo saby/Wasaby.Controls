@@ -103,14 +103,15 @@ define('js!SBIS3.CONTROLS.ILongOperationsProducer',
        * Запросить набор последних длительных операций
        * При имплементации в возвращаем Deferrred-е нужно использовать опцию cancelCallback, если это применимо с точки зрения природы данных
        * @public
-       * @param {object} where Параметры фильтрации
-       * @param {object} orderBy Параметры сортировки
-       * @param {number} offset Количество пропущенных элементов в начале
-       * @param {number} limit Максимальное количество возвращаемых элементов
-       * @param {object} [extra] Дополнительные параметры, если есть (опционально)
+       * @param {object} options Параметры запроса (опционально)
+       * @param {object} options.where Параметры фильтрации
+       * @param {object} options.orderBy Параметры сортировки
+       * @param {number} options.offset Количество пропущенных элементов в начале
+       * @param {number} options.limit Максимальное количество возвращаемых элементов
+       * @param {object} [options.extra] Дополнительные параметры, если есть (опционально)
        * @return {Core/Deferred<SBIS3.CONTROLS.LongOperationEntry[]>}
        */
-      fetch: function (where, orderBy, offset, limit) {
+      fetch: function (options) {
          throw new Error('Method must be implemented');
       },
 
