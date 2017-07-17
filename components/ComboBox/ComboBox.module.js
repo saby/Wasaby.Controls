@@ -58,9 +58,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * @mixes SBIS3.CONTROLS.DataBindMixin
     * @mixes SBIS3.CONTROLS.SearchMixin
     *
-    * @cssModifier controls-ComboBox__ellipsis При нехватке ширины текст в поле ввода оборвётся многоточием.
-    * <b>Важно:</b> при добавлении этого класса сломается "Базовая линия".
-    *
     * @public
     * @control
     * @category Inputs

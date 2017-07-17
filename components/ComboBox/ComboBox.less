@@ -16,7 +16,10 @@
    .controls-TextBox__fieldWrapper {
       position: relative;
       white-space: nowrap;
+      .flexbox();
       .controls-TextBox__field {
+         .flex-shrink(0);
+         overflow: hidden;
          &.controls-ComboBox__field {
             font: @combo-box-field-font;
             font-size: @text-box-field-font-size;
@@ -138,16 +141,6 @@
          }
       }
    }
-
-   &.controls-ComboBox__ellipsis {
-      .controls-TextBox__fieldWrapper {
-         .controls-TextBox__field {
-            &.controls-ComboBox__fieldNotEditable {
-               .text-overflow();
-            }
-         }
-      }
-   }
 }
 
 .controls-ComboBox__picker.controls-FloatArea {
@@ -191,12 +184,6 @@
          }
       }
    }
-}
-
-// TODO: what is it - modifier?
-.controls-ComboBox__inputWrapper {
-   height: 100%;
-   margin-right: @combo-box-input-wrapper-right-offset;
 }
 
 .ws-is-ie10 {
