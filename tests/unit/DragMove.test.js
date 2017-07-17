@@ -156,8 +156,10 @@ define([
       });
       describe('.updateTarget', function () {
          beforeEach(function () {
-            dragMove.beginDrag();
-            dragMove._horisontalDragNDrop = false;
+            if (dragMove) {
+               dragMove.beginDrag();
+               dragMove._horisontalDragNDrop = false;
+            }
          });
          it('should set target', function () {
             dragMove.updateTarget();
