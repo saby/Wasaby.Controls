@@ -72,8 +72,11 @@ define([
       });
    
       context('need JQ', function() {
-         var getContainer = function() {
+         var getContainer = function(isInsideItem) {
                var elem = $('<div class="selectorButtonContainer"/>');
+               if(isInsideItem) {
+                  elem = $('<div class="js-controls-ListView__item controls-ListView__item"/>').append(elem);
+               }
                elem.appendTo('body');
                return elem;
          },
@@ -117,7 +120,7 @@ define([
                   this.skip();
                } else {
                   selectorButton = new SelectorButton({
-                     element: getContainer(),
+                     element: getContainer(true),
                      displayProperty: 'title',
                      idProperty: 'id',
                      selectedItem: {id: 123, title: 'title'}

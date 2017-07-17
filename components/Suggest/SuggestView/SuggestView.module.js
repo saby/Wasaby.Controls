@@ -10,6 +10,7 @@ define('js!SBIS3.CONTROLS.SuggestView',
        'Core/ParallelDeferred',
        'Core/IoC',
        'js!SBIS3.CONTROLS.IItemsControl',
+       'js!SBIS3.CONTROLS.ScrollContainer',
        'css!SBIS3.CONTROLS.SuggestView'
     ], function(CompoundControl, dotTplFn, TabControl, ParallelDeferred, IoC, IItemsControl) {
 

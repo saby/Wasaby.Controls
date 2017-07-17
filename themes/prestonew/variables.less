@@ -64,7 +64,7 @@
 @icon-button-round-border-line-height:    2.2rem;
 @border-radius:                           0;
 @icon-button-round-icon-color-hover:      @icon-active-color;
-@icon-button-border-width:                @default-border-width;
+@icon-button-border-width:                0px;
 //ListView
 @list-view-items-toolbar-icon-button-border-width:0;
 @list-view-items-toolbar-icon-button-border-radius:0;
@@ -152,7 +152,7 @@
 @button-big-checked-icon-big-top-offset:  @button-big-icon-big-top-offset;
 @button-big-checked-icon-big-left-offset: @button-big-icon-big-left-offset;
 //Text box
-@text-box-field-line-height:              2.7rem !important;
+@text-box-field-line-height:              2.64rem !important;
 // Tab button
 @tab-button-large-secondAddText-font-size:0.4642rem;
 //Radio button
@@ -298,7 +298,6 @@
 @text-box-hover-border-width:             @text-box-border-width;
 @text-box-hover-border-color:             rgba(96,170,221, .3 );
 @text-box-disabled-border-bottom:         @default-border-width solid rgba(102,170,221, .3);
-@text-box-field-focus-text-color:         @default-text-color;
 @text-box-after-width:                    .7142rem;
 @text-box-height:                         3rem;
 @text-box-overflow:                       initial;
@@ -518,7 +517,7 @@
 
 @date-range-big-choose-years-height:      3.57rem;
 @date-range-big-choose-header-padding:    0.256rem 0 0.256rem 0;
-@date-range-big-choose-header-home-button-size: 0;
+@date-range-big-choose-header-home-button-size: 3rem;
 @date-range-big-choose-header-home-button-font-size:@date-range-big-choose-header-home-button-size;
 @date-range-big-choose-header-home-button-margin-left:0;
 @date-range-big-choose-header-date-box-border-color:           @text-box-border-color;
@@ -633,7 +632,8 @@
 @data-grid-check-box-top:                 0;
 @data-grid-cell-separator-color:          rgba(0, 0, 0, 0.1);
 @data-grid-cell-border-width:             @default-border-width 0;
-@data-grid-partScroll-notScrolledCell-Color:    @basic-block-bg-color;
+@data-grid-partScroll-notScrolledCell-Color:@basic-block-bg-color;
+@data-grid-money-header-cell-padding:     1rem;
 @data-grid-results-color:                 #FFCC99;
 // PrintDialog
 @controls-printdialog-min-width:          25rem;
@@ -717,7 +717,7 @@
 //FieldLink
 @controls-FieldLink-showAllLinks-lineHeight:3rem;
 @controls-FieldLink-border-color-picker-show: @accent-color;
-@controls-FieldLink-linkItem-line-height:    calc(@text-box-height ~"-" @default-border-width * 2); //высота - ширина ббордера
+@controls-FieldLink-linkItem-line-height:    calc(@text-box-field-line-height ~"+" @default-border-width);
 @controls-FieldLink-showAllLinks-width:      3.2rem;
 @controls-FieldLink-showAllLinks-marginRight:-1.43rem;
 @controls-FieldLink-linkItem-margin:         0;
@@ -758,6 +758,7 @@
 @controls-Paging-btn-height:              1.75rem;
 @controls-Paging-btn-margin:              0 .2857rem 0 0;
 @controls-Paging-btn-padding:             .2857rem;
+@controls-Paging-padding:                 0;
 //ScrollContainer
 @controls-ScrollContainer-top-gradient-height:0.857rem;
 //Scrollbar
@@ -954,9 +955,16 @@
 @DropdownList-footer-hasMore-left-multiselect:2.35rem;
 @DropdownList-footer-hasMore-top-multiselect:1rem;
 @DropdownList-footer-hasMore-top:         1rem;
+//money
+@money-decorator-integer-accent-results-font-color:#FFCC99;
+@money-decorator-integer-no-accent-results-font-color:@disabled-color;
+@money-decorator-integer-group-font-color:@disabled-color;
+@money-decorator-integer-no-basic-registry-font-color:@disabled-color;
+@money-decorator-integer-accent-registry-font-color:#FFCC99;
+@money-decorator-integer-no-accent-registry-font-color:@disabled-color;
+@money-decorator-fraction-font-size:0.8571rem;
 //sundry
 @header-height:                           3rem;
-@money-decorator-integer-basic-registry-font-color:inherit;
 @header-font:                             400 1.43rem escape('/') @header-height @default-font-name;
 @header-padding-left:                     0;
 @bottomStyle-items-toolbar-height:        1.88rem;
