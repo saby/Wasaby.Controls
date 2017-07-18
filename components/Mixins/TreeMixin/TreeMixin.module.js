@@ -22,7 +22,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
 
    var createDefaultProjection = function(items, cfg) {
       var
-         root, projection, rootAsNode;
+         root, projection, rootAsNode,
+         filter = [];
       if (typeof cfg._curRoot != 'undefined') {
          root = cfg._curRoot;
       }
@@ -40,8 +41,17 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          root.setIdProperty(cfg.idProperty);
       }
 
+      if (cfg.displayType == 'folders') {
+         filter.push(projectionFilterOnlyFolders.bind(this));
+      } else {
+         filter.push(projectionFilter.bind(this));
+      }
+
+      if (cfg.itemsFilterMethod) {
+         filter.push(cfg.itemsFilterMethod);
+      }
+
       var
-         filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders.bind(this) : projectionFilter.bind(this),
          projOptions = {
             collection: items,
             idProperty: cfg.idProperty || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
@@ -52,7 +62,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             unique: true,
             root: root,
             rootEnumerable: rootAsNode,
-            filter: filterCallBack,
+            filter: filter,
             sort: cfg.itemsSortMethod
          };
 
@@ -306,12 +316,17 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       }
    },
    applyFilterToProjection = function(projection, cfg) {
+      var
+         filter = [];
       if (cfg.displayType == 'folders') {
-         projection.setFilter(projectionFilterOnlyFolders.bind(this));
+         filter.push(projectionFilterOnlyFolders.bind(this));
+      } else {
+         filter.push(projectionFilter.bind(this));
       }
-      else {
-         projection.setFilter(projectionFilter.bind(this));
+      if (cfg.itemsFilterMethod) {
+         filter.push(cfg.itemsFilterMethod);
       }
+      projection.setFilter(filter);
    },
    expandAllItems = function(projection) {
       var
