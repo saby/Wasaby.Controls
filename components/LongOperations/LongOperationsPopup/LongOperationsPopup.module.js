@@ -280,6 +280,17 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
          },*/
 
          /**
+          * Установливает заголовок нотификационного уведомления.
+          * @param {String} caption Текст заголовка.
+          */
+         setCaption: function (caption) {
+            LongOperationsPopup.superclass.setCaption.call(this, caption);
+            if(typeof caption === 'string'){
+               this.getContainer().find('.controls-NotificationPopup__header_caption').attr('title', caption);
+            }
+         },
+
+         /**
           * Изменить заголовок, иконку и статус
           * @param {string} title Заголовок
           * @param {string} statusName Название статуса

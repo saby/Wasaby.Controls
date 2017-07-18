@@ -1,9 +1,9 @@
 <div class="controls-NotificationPopup__header_icon
          {{? it.icon}}
             icon-size {{=it.icon}}
-         {{?? it.state === 'success'}}
+         {{?? it.status === 'success'}}
             icon-size icon-24 icon-Yes icon-done
-         {{?? it.state === 'error'}}
+         {{?? it.status === 'error'}}
             icon-size icon-24 icon-Alert icon-error
          {{?}}">
 </div>
