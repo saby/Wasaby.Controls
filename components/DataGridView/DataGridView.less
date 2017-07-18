@@ -186,8 +186,17 @@
    &.controls-DataGridView__th__topRow{
       text-align: center;
       &.controls-DataGridView__th__topRow-has_text{
-         border-bottom: 1px solid @data-grid-edge-cell-separator-color;
+         border-bottom: 1px solid transparent;
          padding-bottom: 3px;
+         &:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 4px;
+            right: 4px;
+            height: 1px;
+            background: @data-grid-edge-cell-separator-color;
+         }
       }
    }
    &.controls-DataGridView__notScrolledCell {

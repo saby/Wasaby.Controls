@@ -629,7 +629,7 @@
 @data-grid-edge-cell-separator-color:     rgba(0, 0, 0, 0.1);
 @data-grid-td-checkbox-width:             1.75rem;
 @data-grid-td-visible-checkbox-width:     1.75rem;
-@data-grid-check-box-top:                 0;
+@data-grid-check-box-top:                 -@default-border-width;
 @data-grid-cell-separator-color:          rgba(0, 0, 0, 0.1);
 @data-grid-cell-border-width:             @default-border-width 0;
 @data-grid-partScroll-notScrolledCell-Color:@basic-block-bg-color;
@@ -656,7 +656,8 @@
 //OperationsPanelButton
 @controls-OperationsPanelButton-width:    0.86rem;
 @controls-OperationsPanelButton-vert-height:3.57rem;
-@controls-OperationsPanelButton-font:     3rem 'carrypresto-icons', 'carrypresto';
+@controls-OperationsPanelButton-font-family: @icon-font;
+@controls-OperationsPanelButton-font-size: @icon-large-size;
 @controls-OperationsPanelButton-icon:     "\e9aa";
 @controls-OperationsPanelButton-icon-expand:"\e9a8";
 @controls-OperationsPanelButton-active-icon-color:#B9E9FF;
@@ -960,7 +961,7 @@
 @money-decorator-integer-no-accent-results-font-color:@disabled-color;
 @money-decorator-integer-group-font-color:@disabled-color;
 @money-decorator-integer-no-basic-registry-font-color:@disabled-color;
-@money-decorator-integer-accent-registry-font-color:#FFCC99;
+@money-decorator-integer-accent-registry-font-color:@default-text-color;
 @money-decorator-integer-no-accent-registry-font-color:@disabled-color;
 @money-decorator-fraction-font-size:0.8571rem;
 //sundry

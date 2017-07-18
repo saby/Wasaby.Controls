@@ -14,7 +14,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
    "Core/helpers/collection-helpers",
    "Core/helpers/generate-helpers",
    "Core/helpers/Function/debounce",
-   "Core/helpers/functional-helpers"
+   "Core/helpers/functional-helpers",
+   "Core/Date"
 ],
 
     function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, colHelpers, genHelpers, debounce, fHelpers) {
@@ -142,7 +143,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
           _prepareListHistory: function() {
              var toDelete = [],
                  currentStructure = this._options.filterButton.getFilterStructure(),
-                 self = this;
+                 self = this,
+                 needUpdateHistory = false;
 
              this._listHistory.each(function(historyElem) {
                 FilterHistoryControllerUntil.prepareNewStructure(currentStructure, historyElem.filter);
@@ -151,6 +153,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 if(linkText) {
                    if(historyElem.linkText !== linkText) {
                       historyElem.linkText = linkText;
+                      needUpdateHistory = true;
                    }
                 } else {
                    toDelete.push(historyElem);
@@ -160,7 +163,14 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              if(toDelete.length) {
                 colHelpers.forEach(toDelete, function(elem) {
                    self._listHistory.remove(elem);
+                   needUpdateHistory = true;
                 });
+             }
+             
+             /* Обновим историю,
+                чтобы остальные контролы, использующие эту же историю подхватили изменения */
+             if(needUpdateHistory) {
+                this.setHistory(listToArray(this._listHistory), true);
              }
           },
 
@@ -282,7 +292,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 а не стандартный ISO формат, то использую наш специальный метод для приведения даты в строку */
              colHelpers.forEach(viewFilter, function(val, key, obj) {
                 if(val instanceof Date) {
-                   obj[key] = val.toSQL(true);
+                   obj[key] = val.toSQL(Date.SQL_SERIALIZE_MODE_AUTO);
                 }
              });
 

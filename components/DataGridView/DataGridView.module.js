@@ -241,6 +241,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
                headColumns = prepareHeadColumns(cfg);
 
             cfg.headTpl = TemplateUtil.prepareTemplate(cfg.headTpl);
+            /* Чтобы не было дёрганий интерфейса сразу создаём шапку с актуальным состоянием видимости */
+            if (cfg.allowToggleHead && cfg.emptyHTML) {
+               headData.isVisible =  cfg._itemsProjection && cfg._itemsProjection.getCount();
+            } else {
+               headData.isVisible = true;
+            }
             cMerge(headData, headColumns);
             for (var i = 0; i < headData.content[1].length; i++) {
                columnTop = headData.content[0][i];
@@ -423,22 +429,23 @@ define('js!SBIS3.CONTROLS.DataGridView',
              */
             /**
              * @typedef {Object} Columns
-             * @property {String} title Заголовок колонки. Отображение заголовков можно изменять с помощью опции {@link showHead}. Также с помощью опции {@link allowToggleHead} можно скрывать заголовки при отсутствии в списке данных.
-             * Если данных в списке много и применяется скролл, то для "прилипания" заголовков применяется опция {@link stickyHeader}. Преобразование заголовков списка производится с помощью опции {@link transformHead}.
+             * @property {String} title Заголовок колонки.
              * @property {String} field Название поля (из формата записи), значения которого будут отображены в данной колонке.
              * @property {String} width Ширина колонки. Значение необходимо устанавливать для колонок с фиксированной шириной.
              * Значение можно установить как в px (суффикс устанавливать не требуется), так и в %.
              * @property {Boolean} [highlight=true] Признак подсвечивания фразы при поиске. Если установить значение в false, то при поиске данных по таблице не будет производиться подсветка совпадений.
              * @property {String} [resultTemplate] Шаблон отображения колонки в строке итогов. Подробнее о создании такого шиблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/">Строка итогов</a>.
-             * @property {String} [className] Имя класса, который будет применён к каждой ячейке колонки.
-             * Стилевые классы:
+             * @property {String} [className] Имя CSS-класса, который будет применён к заголовку и всем ячейкам колонки.
+             * Список классов:
              * <ul>
-             *    <li><b>controls-DataGridView-cell-overflow-ellipsis</b> - текст внутри ячейки будет обрезаться троеточием (актуально для однострочных ячеек);</li>
-             *    <li><b>controls-DataGridView__td__textAlignRight</b> - текст внутри ячейки будет выровнен по правой стороне;</li>
-             *    <li><b>controls-DataGridView-cell-verticalAlignTop</b> - содержимое ячейки будет выравниваться по верхнему краю;</li>
-             *    <li><b>controls-DataGridView-cell-verticalAlignMiddle</b> - содержимое ячейки будет выравниваться по середине;</li>
-             *    <li><b>controls-DataGridView-cell-verticalAlignBottom</b> - содержимое ячейки будет выравниваться по нижнему краю.</li>
+             *    <li><b>controls-DataGridView-cell-overflow-ellipsis</b>. Класс устанавливает обрезание текста троеточием, когда он не помещается в ячейке. Актуально для однострочных ячеек.</li>
+             *    <li><b>controls-DataGrid__column__type-money</b>. Класс применяют для колонок, предназначенных для денежных полей с дробной частью (копейками). Заголовок колонки, для которой применён такой класс, будет выровнен по правому краю по целой части значения (см. <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">Правила выравнивания</a>).
+             *    <li><b>controls-DataGridView__td__textAlignRight</b>. Класс устанавливает выравнивание текста по правому краю.</li>
+             *    <li><b>controls-DataGridView-cell-verticalAlignTop</b>. Класс устанавливает выравнивание текста по верхнему краю.</li>
+             *    <li><b>controls-DataGridView-cell-verticalAlignMiddle</b>. Класс устанавливает выравнивание текста по центру.</li>
+             *    <li><b>controls-DataGridView-cell-verticalAlignBottom</b>. Класс устанавливает выравнивание текста по нижнему краю.</li>
              * </ul>
+             * Текст в заголовке и ячейках колонки по умолчанию выравнивается по левому краю.
              * @property {String} [headTemplate] Шаблон отображения шапки колонки. Подробнее о создании такого шаблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/columns/head-template/">Шаблон отображения заголовка</a>.
              * @property {String} [headTooltip] Всплывающая подсказка, отображаемая при наведении курсора на шапку колонки.
              * @property {String} [editor] Устанавливает редактор колонки для режима редактирования по месту.
@@ -468,8 +475,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              *    {{=it.ladder.get(it.item, it.field)}}
              * </pre>
              * @remark
-             * Если в настройке колонки имя поля соответствует шаблону ['Name1.Name2'] то при подготовке полей для рендеринга
-             * строки считаем, что в .get('Name1') находится рекорд и значение получаем уже у этого рекорда через .get('Name2')
+             * Если в настройке колонки имя поля соответствует шаблону ['Name1.Name2'], то при подготовке полей для рендеринга строки считаем, что в .get('Name1') находится рекорд, и значение получаем уже у этого рекорда через .get('Name2')
              * @property {Object.<String,String>} [templateBinding] Соответствие опций шаблона полям в рекорде.
              * @property {Object.<String,String>} [includedTemplates] Подключаемые внешние шаблоны, ключу соответствует поле it.included.<...>, которое будет функцией в шаблоне ячейки.
              *

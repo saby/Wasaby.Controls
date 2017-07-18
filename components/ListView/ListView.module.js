@@ -4111,6 +4111,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _updateDragTarget: function () {
             return this._getDragMove().updateTarget();
          },
+         _createAvatar: function () {
+            return this._getDragMove().createAvatar();
+         },
          /*DRAG_AND_DROP END*/
          //region moveMethods
          /**
