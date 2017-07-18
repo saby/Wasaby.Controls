@@ -3861,9 +3861,12 @@ define('js!SBIS3.CONTROLS.ListView',
           * Производится создание элемента коллекции внутри узла иерархии, в который установлено проваливание. Предустановлено значение для поля "Наименование". Отображение созданного элемента коллекции в режиме редактирования происходит в начале списка.
           * <pre>
           * var commandParams = {
-          *     parentId: myView.getCurrentRoot(),
-          *     preparedModel: {
-          *         'Наименование': 'ООО "Тензор"',
+          *     options: {
+          *         parentId: myView.getCurrentRoot(),
+          *         addPosition: 'top',
+          *         preparedModel: {
+          *             'Наименование': 'ООО "Тензор"',
+          *         },
           *     },
           *     withoutActivateEditor: true
           * };
