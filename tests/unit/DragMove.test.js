@@ -118,6 +118,11 @@ define([
             dragMove.beginDrag();
             assert.isTrue(cInstance.instanceOfModule(DragObject.getSource(), 'SBIS3.CONTROLS.DragEntity.List'));
          });
+         it('sshould be return the view from source owner', function () {
+            view.setSelectedKeys([1,2]);
+            dragMove.beginDrag();
+            assert.equal(DragObject.getSource().at(0).getOwner(), view);
+         });
       });
       describe('._getDragTarget', function () {
          it('should return drag target', function () {
@@ -179,6 +184,11 @@ define([
             assert.doesNotThrow(function () {
                dragMove.updateTarget();
             });
+         });
+         it('should be return the view from targets owner', function () {
+            dragMove.updateTarget();
+            var target = DragObject.getTarget();
+            assert.equal(target.getOwner(), view);
          });
       });
       describe('._canDragMove', function () {
