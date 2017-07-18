@@ -118,13 +118,12 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
           * @return {SBIS3.CONTROLS.ILongOperationsProducer}
           */
          getByName: function (prodName) {
-            if (_isDestroyed) {
-               throw new Error('Manager is destroyed');
-            }
             if (!prodName || typeof prodName !== 'string') {
                throw new TypeError('Argument "prodName" must be a string');
             }
-            return _producers[prodName];
+            if (!_isDestroyed) {
+               return _producers[prodName];
+            }
          },
 
          /**
@@ -133,10 +132,9 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
           * @param {SBIS3.CONTROLS.ILongOperationsProducer} producer Продюсер длительных операций
           */
          register: function (producer) {
-            if (_isDestroyed) {
-               throw new Error('Manager is destroyed');
+            if (!_isDestroyed) {
+               _register(producer);
             }
-            _register(producer);
          },
 
          /**
@@ -146,10 +144,9 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
           * @return {boolean}
           */
          unregister: function (producer) {
-            if (_isDestroyed) {
-               throw new Error('Manager is destroyed');
+            if (!_isDestroyed) {
+               return _unregister(producer);
             }
-            return _unregister(producer);
          },
 
          /**
@@ -159,13 +156,12 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
           * @return {boolean}
           */
          isRegistered: function (producer) {
-            if (_isDestroyed) {
-               throw new Error('Manager is destroyed');
-            }
             if (!producer || !(typeof producer === 'string' || CoreInstance.instanceOfMixin(producer, 'SBIS3.CONTROLS.ILongOperationsProducer'))) {
                throw new TypeError('Argument "producer" must be string or  SBIS3.CONTROLS.ILongOperationsProducer');
             }
-            return typeof producer === 'string' ? !!_producers[producer] : !!_searchName(producer);
+            if (!_isDestroyed) {
+               return typeof producer === 'string' ? !!_producers[producer] : !!_searchName(producer);
+            }
          },
 
          /**
@@ -268,9 +264,6 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
           * @return {Core/Deferred}
           */
          callAction: function (action, tabKey, prodName, operationId) {
-            if (_isDestroyed) {
-               throw new Error('Manager is destroyed');
-            }
             if (!action || typeof action !== 'string') {
                throw new TypeError('Argument "action" must be a string');
             }
@@ -282,6 +275,9 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             }
             if (!operationId || !(typeof operationId === 'string' || typeof operationId === 'number')) {
                throw new TypeError('Argument "operationId" must be string or number');
+            }
+            if (_isDestroyed) {
+               return Deferred.fail('User left the page');
             }
             if (!tabKey || tabKey === _tabKey) {
                var producer = _producers[prodName];
@@ -307,28 +303,27 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
           * @return {boolean}
           */
          canHasHistory: function (tabKey, prodName) {
-            if (_isDestroyed) {
-               throw new Error('Manager is destroyed');
-            }
             if (tabKey && typeof tabKey !== 'string') {
                throw new TypeError('Argument "tabKey" must be a string');
             }
             if (!prodName || typeof prodName !== 'string') {
                throw new TypeError('Argument "prodName" must be a string');
             }
-            if (!tabKey || tabKey === _tabKey) {
-               var producer = _producers[prodName];
-               if (!producer) {
-                  throw new Error('Producer not found');
+            if (!_isDestroyed) {
+               if (!tabKey || tabKey === _tabKey) {
+                  var producer = _producers[prodName];
+                  if (!producer) {
+                     throw new Error('Producer not found');
+                  }
+                  return _canHasHistory(producer);
                }
-               return _canHasHistory(producer);
+               else
+               if (tabKey in _tabManagers && prodName in _tabManagers[tabKey]) {
+                  // Если вкладка не закрыта и продюсер не раз-регистрирован
+                  return _tabManagers[tabKey][prodName].canHasHistory;
+               }
+               return false;
             }
-            else
-            if (tabKey in _tabManagers && prodName in _tabManagers[tabKey]) {
-               // Если вкладка не закрыта и продюсер не раз-регистрирован
-               return _tabManagers[tabKey][prodName].canHasHistory;
-            }
-            return false;
          },
 
          /**
@@ -343,9 +338,6 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
           * @return {Core/Deferred<WS.Data/Collection/RecordSet<SBIS3.CONTROLS.LongOperationHistoryItem>>}
           */
          history: function (tabKey, prodName, operationId, count, filter) {
-            if (_isDestroyed) {
-               throw new Error('Manager is destroyed');
-            }
             if (tabKey && typeof tabKey !== 'string') {
                throw new TypeError('Argument "tabKey" must be a string');
             }
@@ -360,6 +352,9 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             }
             if (filter && typeof filter !== 'object') {
                throw new TypeError('Argument "filter" must be an object if present');
+            }
+            if (_isDestroyed) {
+               return Deferred.fail('User left the page');
             }
             if (!tabKey || tabKey === _tabKey) {
                var producer = _producers[prodName];
@@ -387,10 +382,9 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
           * @param {Object} [ctx] Контекст выполнения
           */
          subscribe: function (eventType, listener, ctx) {
-            if (_isDestroyed) {
-               throw new Error('Manager is destroyed');
+            if (!_isDestroyed) {
+               _channel.subscribe(eventType, listener, ctx);
             }
-            _channel.subscribe(eventType, listener, ctx);
          },
 
          /**
@@ -401,10 +395,9 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
           * @param {Object} [ctx] Контекст выполнения
           */
          unsubscribe: function (eventType, listener, ctx) {
-            if (_isDestroyed) {
-               throw new Error('Manager is destroyed');
+            if (!_isDestroyed) {
+               _channel.unsubscribe(eventType, listener, ctx);
             }
-            _channel.unsubscribe(eventType, listener, ctx);
          },
 
          /**
