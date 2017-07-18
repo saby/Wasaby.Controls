@@ -286,11 +286,9 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
       getContainer: function () {
          return this._getView().getContainer();
       },
+
       //endregion public
       //region private
-      _findDragDropContainer: function() {
-         return this._getItemsContainer();
-      },
       _getDragItems: function(dragItem, selectedItems) {
          if (selectedItems) {
             var array = [];
@@ -502,6 +500,13 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
        */
       _getItemsProjection: function () {
          return this._options.projection;
+      },
+      /**
+       * Устанавливает проекцию
+       * @param projection
+       */
+      setItemsProjection: function (projection) {
+         this._options.projection = projection;
       },
       /**
        * Возвращает котрол

@@ -31,7 +31,7 @@ define([
             displayProperty: 'id',
             idProperty: 'id'
          });
-         dragMove = view._getDragMove();
+         dragMove = view._getDragMove(true);
          event = {
             type: "mouseUp",
             target: view.getContainer().find('[data-id=1]'),
@@ -83,6 +83,18 @@ define([
             dragMove.beginDrag();
             assert.isTrue(dragMove._isCorrectSource(DragObject.getSource()));
          });
+      });
+      describe('_getItemsProjection', function () {
+         it('should return projection', function () {
+            assert.equal(dragMove._getItemsProjection(), view._getItemsProjection());
+         })
+      });
+      describe('setItemsProjection', function () {
+         it('should set projection', function () {
+            var projection = [];
+            dragMove.setItemsProjection(projection);
+            assert.equal(dragMove._getItemsProjection(), projection);
+         })
       });
       describe('.beginDrag', function () {
          it('should not begin drag', function () {
