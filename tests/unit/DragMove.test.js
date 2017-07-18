@@ -282,6 +282,7 @@ define([
             dragMove.endDrag();
          });
       });
+
       describe('createAvatar', function () {
          it('should create avatar', function () {
             dragMove.beginDrag();
@@ -291,6 +292,20 @@ define([
             view.setSelectedKeys([1,2]);
             dragMove.beginDrag();
             assert.equal(dragMove.createAvatar().find('.controls-DragNDrop__draggedCount').html(), 2);
+         });
+      });
+      describe('setItemsDragNDrop', function () {
+         it('setItemsDragNDrop', function () {
+            dragMove.setItemsDragNDrop('allow');
+            assert.equal(dragMove.getItemsDragNDrop(), 'allow');
+         });
+      });
+      describe('setItemsDragNDrop', function () {
+         it('setItemsDragNDrop', function () {
+            new DragMove({
+               itemsDragNDrop: 'allow'
+            });
+            assert.equal(dragMove.getItemsDragNDrop(), 'allow');
          });
       });
    });
