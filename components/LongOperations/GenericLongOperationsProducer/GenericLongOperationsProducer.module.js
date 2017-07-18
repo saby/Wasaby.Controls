@@ -193,18 +193,24 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             if ('extra' in options && typeof options.extra !== 'object') {
                throw new TypeError('Argument "options.extra" must be an object if present');
             }
-            var operations = _list(this, options.where, options.orderBy || DEFAULT_FETCH_SORTING, options.offset, options.limit).map(function (operation) {
-               var handlers = this._actions ? this._actions[operation.id] : null;
-               // Если обработчики действий пользователя остались в другой вкладке
-               if (!(handlers && handlers.onSuspend && handlers.onResume)) {
-                  operation.canSuspend = false;
+            var operations = _list(this, options.where, options.orderBy || DEFAULT_FETCH_SORTING, options.offset, options.limit);
+            if (operations.length) {
+               operations = operations.map(function (operation) {
+                  var handlers = this._actions ? this._actions[operation.id] : null;
+                  // Если обработчики действий пользователя остались в другой вкладке
+                  if (!(handlers && handlers.onSuspend && handlers.onResume)) {
+                     operation.canSuspend = false;
+                  }
+                  /*if (!(handlers && handlers.onDelete)) {
+                   operation.canDelete = false;
+                   }*/
+                  return operation;
+               }.bind(this));
+               if (options.extra && options.extra.needUserInfo) {
+                  return _fillUserInfo(operations);
                }
-               /*if (!(handlers && handlers.onDelete)) {
-                  operation.canDelete = false;
-               }*/
-               return operation;
-            }.bind(this));
-            return operations.length && options.extra && options.extra.needUserInfo ? _fillUserInfo(operations) : Deferred.success(operations);
+            }
+            return Deferred.success(operations);
          },
 
          /**
@@ -382,6 +388,9 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                }
                return true;
             });
+            if (!snapshots.length) {
+               return snapshots;
+            }
          }
          if (orderBy) {
             snapshots.sort(function (a, b) {
@@ -407,7 +416,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
       };
 
       /**
-       * Проверить, что занчение удовлетворяет условию
+       * Проверить, что значение удовлетворяет условию
        * @protected
        * @param {any} value Занчение
        * @param {any} condition Условие
