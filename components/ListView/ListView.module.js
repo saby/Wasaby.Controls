@@ -4034,6 +4034,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _setItemsDragNDrop: function(allowDragNDrop) {
             this._options.itemsDragNDrop = allowDragNDrop;
             this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', this._getDragInitHandler());
+            if (this._dragMoveController) {
+               this._dragMoveController.setItemsDragNDrop(allowDragNDrop)
+            }
          },
          /**
           * возвращает метод который инициализирует dragndrop

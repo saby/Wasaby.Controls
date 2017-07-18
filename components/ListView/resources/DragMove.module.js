@@ -72,6 +72,10 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
          return this._options.itemsDragNDrop;
       },
 
+      setItemsDragNDrop: function (itemsDragNDrop) {
+         this._options.itemsDragNDrop = itemsDragNDrop;
+      },
+
       beginDrag: function() {
          var target = this._findItemByElement(DragObject.getTargetsDomElemet());
          if (target.length) {
