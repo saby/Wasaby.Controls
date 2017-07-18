@@ -452,8 +452,14 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                   + ' ' + current + ' ' +
                   strHelpers.wordCaseByNumber(current, rk('операций'), rk('операция'), rk('операции')) + ' ' + rk('из') + ' ' + total;
             }*/
-            var message = Math.floor(current) + ' ' + (100 <= total ? '/' : rk('из')) + ' ' + total + ' ' + rk('операций');
-            this.getContainer().find('.controls-LongOperationsPopup__footer_execTasks').text(message);
+            var needMsg = total !== 1;
+            var $tasks = this.getContainer().find('.controls-LongOperationsPopup__footer_execTasks');
+            $tasks[needMsg ? 'removeClass' : 'addClass']('ws-hidden');
+            if (needMsg) {
+               $tasks.text(
+                  Math.floor(current) + ' ' + (100 <= total ? '/' : rk('из')) + ' ' + total + ' ' + rk('операций')
+               );
+            }
             this.getContainer().find('.controls-LongOperationsPopup__footer_progress').text(Math.floor(100*current/total) + '%');
          },
 
