@@ -5,7 +5,7 @@
 define('js!SBIS3.CONTROLS.ButtonGroupBase', [
    'js!SBIS3.CORE.CompoundControl',
    'js!SBIS3.CONTROLS.ItemsControlMixin',
-   'html!SBIS3.CONTROLS.ButtonGroupBase/resources/ItemTemplate'
+   'tmpl!SBIS3.CONTROLS.ButtonGroupBase/resources/ItemTemplate'
 ], function(CompoundControl, ItemsControlMixin, ItemTemplate) {
 
    'use strict';

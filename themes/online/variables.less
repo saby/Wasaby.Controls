@@ -836,7 +836,6 @@
 @text-box-field-after-margin:             0 19px 0 0;
 
 @text-box-field-text-color:               inherit;
-@text-box-field-focus-text-color:         #000;
 @text-box-field-error-text-color:         @text-box-field-text-color;
 @text-box-field-hover-text-color:         @text-box-field-text-color;
 @text-box-field-disabled-text-color:      @text-box-field-text-color;
@@ -1959,6 +1958,8 @@
 @data-grid-table-layot: 								fixed;
 @data-grid-table-separator-border-width:        0 0 @default-border-width 0;
 
+@data-grid-money-header-cell-padding:           20px;
+
 @data-grid-results-color:                       @accent-color;
 // ---------- //
 // PartScroll //
@@ -2072,7 +2073,9 @@
 @controls-OperationsPanelButton-width:             24px;
 @controls-OperationsPanelButton-vert-height:       24px;
 @controls-OperationsPanelButton-vert-border-radius: 7px;
-@controls-OperationsPanelButton-font:              18px 'TensorFont', sans-serif;
+@controls-OperationsPanelButton-font-family:       'TensorFont', sans-serif;
+@controls-OperationsPanelButton-font-size:         18px;
+@controls-OperationsPanelButton-font-style:        normal;
 @controls-OperationsPanelButton-cursor:            pointer;
 @controls-OperationsPanelButton-vertical-icon-top: 0;
 @controls-OperationsPanelButton-icon-left:         0;
@@ -2594,7 +2597,7 @@
 //----------------//
 
 @money-decorator-integer-font-size:                        @default-text-size;
-@money-decorator-integer-font-color:                       #000000;
+@money-decorator-integer-font-color:                       @default-text-color;
 
 @money-decorator-integer-accent-results-font-size:         @large-text-size;
 @money-decorator-integer-accent-results-font-color:        @blue-dark-color;

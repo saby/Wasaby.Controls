@@ -1,12 +1,16 @@
-<div>
-    <ws:SBIS3.CONTROLS.TabControl
-        name="SuggestTabControl"
-        items="{{items}}"
-        selectedKey="{{selectedKey}}"
-        tabsDisplayProperty="{{displayProperty}}"
-        idProperty="{{idProperty}}"
-        loadType="all"
-        className="controls-TabButtons__simple-view"
-        tabindex="0"
-    />
+<div class="controls-suggestView">
+    <ws:SBIS3.CONTROLS.ScrollContainer>
+        <ws:content>
+            <ws:SBIS3.CONTROLS.TabControl
+                name="SuggestTabControl"
+                items="{{items}}"
+                selectedKey="{{selectedKey}}"
+                tabsDisplayProperty="{{displayProperty}}"
+                idProperty="{{idProperty}}"
+                loadType="all"
+                className="controls-TabButtons__simple-view"
+                tabindex="0"
+            />
+        </ws:content>
+    </ws:SBIS3.CONTROLS.ScrollContainer>
 </div>
