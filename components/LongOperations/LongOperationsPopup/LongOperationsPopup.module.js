@@ -5,6 +5,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
       'Core/Deferred',
       /*###"Core/helpers/string-helpers",*/
       'js!SBIS3.CORE.TabMessage',
+      /*###'js!SBIS3.CONTROLS.WaitIndicator',*/
       "js!SBIS3.CONTROLS.NotificationPopup",
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model',
@@ -16,12 +17,12 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
       "js!SBIS3.CONTROLS.LongOperationsList"
    ],
 
-   function (UserInfo, cMerge, Deferred, /*###strHelpers,*/ TabMessage, NotificationPopup, LongOperationEntry, Model, headerTemplate, contentTpl, footerTpl, FloatArea) {
+   function (UserInfo, cMerge, Deferred, /*###strHelpers,*/ TabMessage, /*###WaitIndicator,*/ NotificationPopup, LongOperationEntry, Model, headerTemplate, contentTpl, footerTpl, FloatArea) {
       'use strict';
 
       var FILTER_NOT_SUSPENDED = 'not-suspended';
 
-      var DEFAULT_INDICATOR_MESSAGE = rk('Пожалуйста, подождите…');
+      var DEFAULT_WAITINDICATOR_TEXT = rk('Пожалуйста, подождите…');
 
       /**
        * Класс всплывающего информационное окна длительных операций
@@ -53,7 +54,8 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
 
             _tabChannel: null,
 
-            _loadingIndicator: null
+            _loadingIndicator: null,
+            _isInStartAnimation: null
          },
 
          $constructor: function () {
@@ -525,17 +527,21 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
             var TIME_GLIDING = 800;//1500
             /*Время однократного мигания иконки в заголовке*/
             var TIME_BLINKING = 600;//600
+            if (this._isInStartAnimation) {
+               return;
+            }
+            this._isInStartAnimation = true;
             var self = this;
             var promise = new Deferred();
             if (!this._loadingIndicator) {
                require(['js!SBIS3.CORE.LoadingIndicator'], function (LoadingIndicator) {
-                  self._loadingIndicator = new LoadingIndicator({message:self._options.waitIndicatorText || DEFAULT_INDICATOR_MESSAGE});
+                  self._loadingIndicator = new LoadingIndicator({message:self._options.waitIndicatorText || DEFAULT_WAITINDICATOR_TEXT});
                   self._loadingIndicator.show();
                   promise.callback();
                });
             }
             else {
-               this._loadingIndicator.setMessage(this._options.waitIndicatorText || DEFAULT_INDICATOR_MESSAGE);
+               this._loadingIndicator.setMessage(this._options.waitIndicatorText || DEFAULT_WAITINDICATOR_TEXT);
                this._loadingIndicator.show();
                promise.callback();
             }
@@ -560,6 +566,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                               left: offset.left - 4
                            }, TIME_GLIDING, function () {
                               $(this).remove();
+                              self._isInStartAnimation = null;
                               $target.animate({
                                  opacity: 0
                               }, TIME_BLINKING/2, function () {
