@@ -279,5 +279,19 @@ define([
             dragMove.endDrag();
          });
       });
+      describe('setItemsDragNDrop', function () {
+         it('setItemsDragNDrop', function () {
+            dragMove.setItemsDragNDrop('allow');
+            assert.equal(dragMove.getItemsDragNDrop(), 'allow');
+         });
+      });
+      describe('setItemsDragNDrop', function () {
+         it('setItemsDragNDrop', function () {
+            new DragMove({
+               itemsDragNDrop: 'allow'
+            });
+            assert.equal(dragMove.getItemsDragNDrop(), 'allow');
+         });
+      });
    });
 });
