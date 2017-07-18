@@ -87,6 +87,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                return _instances[key];
             }
             this._name = PRODUCER_NAME + (key ? ':' + key : '');
+            this._isDestroyed = null;
             _instances[key] = this;
          },
 
@@ -104,33 +105,37 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
           * @public
           */
          destroy: function () {
-            //GenericLongOperationsProducer.superclass.destroy.apply(this, arguments);
-            var STATUSES = LongOperationEntry.STATUSES;
-            var DEFAULTS = LongOperationEntry.DEFAULTS;
-            var ERR = 'User left the page';
-            var snapshots = GLOStorage.list(this._name);
-            var oIds = [];
-            for (var i = 0; i < snapshots.length; i++) {
-               var o = snapshots[i];
-               var status = 'status' in o ? o.status : DEFAULTS.status;
-               if (status === STATUSES.running || status === STATUSES.suspended) {
-                  var operationId = o.id;
-                  var handlers = this._actions ? this._actions[operationId] : null;
-                  // Если обработчики действий пользователя установлены в этой вкладке
-                  // При разрушении продюсера обработчики будут утеряны, поэтому операции завершаем ошибкой
-                  if (handlers) {
-                     delete this._actions[operationId];
-                     o.status = STATUSES.ended;
-                     o.isFailed = true;
-                     o.resultMessage = ERR;
-                     o.timeSpent = (new Date()).getTime() - o.startedAt;
-                     GLOStorage.put(this._name, operationId, o);
-                     oIds.push(operationId);
+            if (!this._isDestroyed) {
+               this._isDestroyed = true;
+               //GenericLongOperationsProducer.superclass.destroy.apply(this, arguments);
+               var STATUSES = LongOperationEntry.STATUSES;
+               var DEFAULTS = LongOperationEntry.DEFAULTS;
+               var ERR = 'User left the page';
+               var snapshots = GLOStorage.list(this._name);
+               var oIds = [];
+               for (var i = 0; i < snapshots.length; i++) {
+                  var o = snapshots[i];
+                  var status = 'status' in o ? o.status : DEFAULTS.status;
+                  if (status === STATUSES.running || status === STATUSES.suspended) {
+                     var operationId = o.id;
+                     var handlers = this._actions ? this._actions[operationId] : null;
+                     // Если обработчики действий пользователя установлены в этой вкладке
+                     // При разрушении продюсера обработчики будут утеряны, поэтому операции завершаем ошибкой
+                     if (handlers) {
+                        delete this._actions[operationId];
+                        o.status = STATUSES.ended;
+                        o.isFailed = true;
+                        o.resultMessage = ERR;
+                        o.timeSpent = (new Date()).getTime() - o.startedAt;
+                        GLOStorage.put(this._name, operationId, o);
+                        oIds.push(operationId);
+                     }
                   }
                }
-            }
-            if (oIds.length) {
-               this._notify('onlongoperationended', {producer:this._name, operationIds:oIds, error:ERR});
+               if (oIds.length) {
+                  this._notify('onlongoperationended', {producer:this._name, operationIds:oIds, error:ERR});
+               }
+               Object.keys(_instances).some(function (v) { if (this === _instances[v]) { delete _instances[v]; return true;} }.bind(this));
             }
          },
 
@@ -142,7 +147,9 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
           * @return {string}
           */
          getName: function () {
-            return this._name;
+            if (!this._isDestroyed) {
+               return this._name;
+            }
          },
 
          /**
@@ -193,6 +200,9 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             if ('extra' in options && typeof options.extra !== 'object') {
                throw new TypeError('Argument "options.extra" must be an object if present');
             }
+            if (this._isDestroyed) {
+               return Deferred.fail('User left the page');
+            }
             var operations = _list(this, options.where, options.orderBy || DEFAULT_FETCH_SORTING, options.offset, options.limit);
             if (operations.length) {
                operations = operations.map(function (operation) {
@@ -224,15 +234,18 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             if (!action || typeof action !== 'string') {
                throw new TypeError('Argument "action" must be a string');
             }
+            if (this._isDestroyed) {
+               return Deferred.fail('User left the page');
+            }
+            var handlers = {
+               suspend: 'onSuspend',
+               resume: 'onResume',
+               delete: 'onDelete'
+            };
+            if (!(action in handlers)) {
+               throw new Error('Unknown action');
+            }
             try {
-               var handlers = {
-                  suspend: 'onSuspend',
-                  resume: 'onResume',
-                  delete: 'onDelete'
-               };
-               if (!(action in handlers)) {
-                  throw new Error('Unknown action');
-               }
                var handler = this._actions && operationId in this._actions && action in handlers ? this._actions[operationId][handlers[action]] : null;
                if (action !== 'delete' && !handler) {
                   throw new Error('Action not found or not applicable');
@@ -280,6 +293,9 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             }
             if (!(stopper instanceof Deferred)) {
                throw new TypeError('Argument "stopper" must be a Deferred');
+            }
+            if (this._isDestroyed) {
+               return;
             }
             options.canSuspend = typeof options.onSuspend === 'function' && typeof options.onResume === 'function';
             options.canDelete = typeof options.onDelete === 'function';
@@ -577,10 +593,9 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
          if (!('canDelete' in snapshot ? snapshot.canDelete : LongOperationEntry.DEFAULTS.canDelete)) {
             throw new Error('Action is not allowed');
          }
-         if (GLOStorage.remove(self._name, operationId)) {
-            delete self._actions[operationId];
-            self._notify('onlongoperationdeleted', {producer:self._name, operationId:operationId});
-         }
+         GLOStorage.remove(self._name, operationId);
+         delete self._actions[operationId];
+         self._notify('onlongoperationdeleted', {producer:self._name, operationId:operationId});
       };
 
       /**
