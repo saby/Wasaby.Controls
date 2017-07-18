@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              _cachedMargin: null
           },
           $constructor: function() {
-             this._publish('onShowItemActionsMenu', 'onCloseItemActionsMenu', 'onItemActionActivated');
+             this._publish('onShowItemActionsMenu', 'onCloseItemActionsMenu', 'onItemActionActivated', 'onItemsToolbarHide');
           },
           /**
            * Создает или возвращает уже созданные кнопки редактирования
@@ -462,11 +462,13 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                       complete: function() {
                          container.addClass('ws-hidden');
                          self.hideItemsActions();
+                         self._notify('onItemsToolbarHide');
                       }
                    });
                 } else {
                    container.addClass('ws-hidden');
                    this.hideItemsActions();
+                   this._notify('onItemsToolbarHide');
                 }
                 this._currentTarget = null;
              }

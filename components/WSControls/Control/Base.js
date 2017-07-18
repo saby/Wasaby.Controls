@@ -32,89 +32,16 @@ define('js!WSControls/Control/Base',
             InstantiableMixin],
          {
             _controlName: 'WSControls/Control/Base',
+
             iWantVDOM: true,
             VDOMReady: false,
 
-
-            _sendCommandFn: null,
-            parentSendCommand: null,
             logicParent: null,
             _decOptions: null,
-            _eventsPile: {},
-            _transientProperties: ['rawData', 'data', 'parentSendCommand', 'focusing'],
-            _overrideTemplateOptsFn: null,
-            _commandHandlers: [],
 
-            _handlers: null,
-            /**
-             * basic states
-             */
-            enabled: true,
-            visible: true,
-
-            _sendCommand: function(command) {
-               var
-                  handlers = this._commandHandlers,
-                  parentSend = this.get('parentSendCommand'),
-                  result;
-
-               if (handlers[command]) {
-                  result = handlers[command].apply(this, functionalHelpers.argumentsToArray(arguments).slice(1));
-               } else if (parentSend) {
-                  result = parentSend.apply(this, arguments);
-               }
-               return result;
-            },
-
-            _overrideChildrenOptions: function(childOptions) {
-               var
-                  visible = this._options.visible!==undefined?this._options.visible:true,
-                  enabled = this._options.enabled!==undefined?this._options.enabled:true;
-
-               if (!visible || !enabled) {
-                  if (!visible) {
-                     childOptions.visible = false;
-                  }
-
-                  if (!enabled) {
-                     childOptions.enabled = false;
-                  }
-               }
-
-               childOptions.parentSendCommand = this._sendCommandFn;
-
-               return childOptions;
-            },
-
-            _addObservableListenters: function (newOptions) {},
-
-            getDefaultOptions: function () {
-               return {};
-            },
-
-            _afterApplyOptions: function(fromConstructor, oldOptions, newOptions) {
+            applyNewOptions: function(newOptions) {
                this._options = newOptions;
                this._applyOptions();
-            },
-
-            _initializeCommandHandlers: function initializeCommandHandlers() {
-               if (this.commands) {
-                  for (var command in this.commands) {
-                     this._declareCommand(command, this.commands[command]);
-                  }
-               }
-            },
-
-            _declareCommand: function(command, handler) {
-               this._commandHandlers[command] = handler.bind(this);
-            },
-
-            _overrideTemplateOpts: function(model) {
-               return model;
-            },
-
-            _validateOptions: function(newOptions) {
-               return newOptions;
             },
 
             _getDecOptions: function(){
@@ -129,9 +56,6 @@ define('js!WSControls/Control/Base',
                return this._template(this, decOpts, rootKey, true)[0];
             },
 
-            _applyChangedOptions: function() {
-
-            },
             _applyOptions: function(){
 
             },
@@ -182,7 +106,17 @@ define('js!WSControls/Control/Base',
             },
 
             isEnabled: function(){
+               if (this._options.enabled === undefined) {
+                  return this._options.parentEnabled;
+               }
                return this._options.enabled;
+            },
+
+            isVisible: function(){
+               if (this._options.visible === undefined) {
+                  return this._options.parentVisible;
+               }
+               return this._options.visible;
             },
 
             destroy: function() {

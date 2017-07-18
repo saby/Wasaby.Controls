@@ -5,7 +5,7 @@
 }
 
 .controls-Link {
-  .button-default-style();
+  .button-default-style(@link-font-size);
   color: @link-text-color;
   text-decoration: @link-text-decoration;
   line-height: @link-line-height;
@@ -13,16 +13,18 @@
   background: transparent;
 
 
-  &.controls-Click__active {
+  &.controls-Click__active:not(.controls-Link__disabledHover) {
     cursor: @link-cursor;
     color: @link-active-text-color;
-    .controls-Button__text {
-      text-decoration: @link-active-text-decoration;
-    }
     .controls-Button__icon {
       &.icon-primary {
         color: @link-active-text-color !important;
       }
+    }
+  }
+  &.controls-Click__active {
+    .controls-Button__text {
+      text-decoration: @link-active-text-decoration;
     }
   }
 

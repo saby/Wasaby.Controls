@@ -14,7 +14,7 @@
     }
   }
   .controls-MergeDialogTemplate__hint {
-    color: @gray-color;
+    color: @controls-MergeDialogTemplate-hint-font-size-color;
     font-size: @controls-MergeDialogTemplate-hint-font-size;
     margin: @controls-MergeDialogTemplate-hint-margin;
     display: inline-block;
@@ -25,6 +25,9 @@
     .controls-DataGridView__th {
       font-size: @default-font-size;
     }
+    .controls-DataGridView__firstContentCell {
+      padding-left: @controls-MergeDialogTemplate-treeDataGridView-first-cell-padding-left !important;
+    }
     .controls-DataGridView__td, .controls-DataGridView__th {
       border-bottom: @controls-MergeDialogTemplate-DataGridView-td-border-bottom;
       .controls-TreeView__expand {
@@ -32,6 +35,7 @@
       }
       .controls-DataGridView__columnValue {
         margin-left: 0;
+        line-height: @controls-MergeDialogTemplate-DataGridView-column-value-line-height;
       }
     }
 
@@ -63,6 +67,7 @@
             &:first-child {
               .controls-BreadCrumbs__title {
                 font-size: @popup-font-size;
+                color: @controls-MergeDialogTemplate-BreadCrumbs-main-title-color;
               }
             }
           }

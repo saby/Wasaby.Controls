@@ -145,6 +145,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          return cfg._getRecordsForRedrawTree.call(this, projection, cfg)
       }
       else {
+         cfg._resetGroupItemsCount(cfg);
          var
             records = {
                folders : [],
@@ -657,17 +658,6 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             }
          }
          return Deferred.success();
-      },
-      //Переопределим метод определения направления изменения порядкового номера, так как если элементы отображаются в плиточном режиме,
-      //нужно подвести DragNDrop объект не к верхней(нижней) части элемента, а к левой(правой)
-      _getDirectionOrderChange: function(e, target) {
-         if (this.getViewMode() === 'tile' || (this.getViewMode() === 'list' && target.hasClass('controls-ListView__item-type-node'))) {
-            if (target.length) {
-               return this._getOrderPosition(e.pageX - target.offset().left, target.width());
-            }
-         } else {
-            return TreeCompositeView.superclass._getDirectionOrderChange.apply(this, arguments);
-         }
       },
 
       _reloadViewAfterDelete: function(idArray) {

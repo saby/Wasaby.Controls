@@ -1,19 +1,20 @@
 define('js!SBIS3.CONTROLS.Label',
    [
-      'js!SBIS3.CONTROLS.CompoundControl',
+      'js!WSControls/Control/Base',
       'js!SBIS3.CONTROLS.Clickable',
       'Core/Sanitize',
       'tmpl!SBIS3.CONTROLS.Label',
+      'js!SBIS3.CONTROLS.Label.compatibility',
       'css!SBIS3.CONTROLS.Label'
    ],
-   function(CompoundControl, Clickable, Sanitize, template) {
+   function(LightControl, Clickable, Sanitize, template, Compatibility) {
 
       'use strict';
 
       /**
        * Компонент метка. Работает как тег label. Должен использоваться совместно с {@link SBIS3.CONTROLS.TextBox}.
        * @class SBIS3.CONTROLS.Label
-       * @extends SBIS3.CONTROLS.CompoundControl
+       * @extends WSControls/Control/Base
        *
        * @demo SBIS3.CONTROLS.Demo.MyLabelStandart Пример работы Label с TextBox.
        * Для взаимодействия метки и поля ввода(при клике на метку фокус переходит в поле ввода) нужно задать имя полю ввода
@@ -42,54 +43,18 @@ define('js!SBIS3.CONTROLS.Label',
        * @public
        *
        */
-      var Label = CompoundControl.extend([Clickable], /** @lends SBIS3.CONTROLS.Label.prototype */{
-         _dotTplFn: template,
+      var Label = LightControl.extend([Clickable, Compatibility], /** @lends SBIS3.CONTROLS.Label.prototype */{
+         _controlName: 'SBIS3.CONTROLS.Label',
 
-         $protected: {
-            _options: {
-               /**
-                * @cfg {String} Текст метки
-                *
-                * @example
-                * <pre>
-                *    <ws:caption>
-                *       <ws:String>Метка</ws:String>
-                *    </ws:caption>
-                * </pre>
-                */
-               caption: null
-            },
-            _caption: null
+         _template: template,
+
+         _applyOptions: function() {
+            this.caption = this._options.caption || '';
          },
 
-         init: function() {
-            Label.superclass.init.call(this);
-
-            this._caption = this.getContainer().find('.js-controls-Label__text');
-         },
-
-         /**
-          * Вернуть текст метки
-          * @returns {String}
-          */
-         getCaption: function() {
-            return this._getOption('caption');
-         },
-
-         /**
-          * Изменить текст метки
-          * @param caption новый текст метки
-          */
-         setCaption: function(caption) {
-            this._setOption('caption', caption);
-            this._caption.html(Sanitize(caption));
-         },
-
-         _onClickHandler: function(event) {
-            var owner;
-            Label.superclass._onClickHandler.call(this, event);
-
-            if (this.isEnabled() && /js-controls-Label__text/.test(event.target.className) && (owner = this.getOwner())) {
+         _clickCaptionHandler: function() {
+            var owner = this.getOwner();
+            if (this.isEnabled() && owner) {
                owner.setActive(true);
             }
          }

@@ -362,6 +362,9 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
          destroy: function() {
             this._unbindEditor();
             this._handlersInstances = null;
+            if (this._stylesPanel) {
+               this._stylesPanel.destroy();
+            }
             RichEditorToolbarBase.superclass.destroy.apply(this, arguments);
             this._itemsContainer = null;
          }

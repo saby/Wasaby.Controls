@@ -175,6 +175,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       var
          records = [];
       if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
+         resetGroupItemsCount(cfg);
          var prevGroupId = undefined;
          projection.each(function (item, index, group) {
             if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {

@@ -219,6 +219,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          records = searchProcessing(projection, cfg);
       }
       else {
+         cfg._resetGroupItemsCount(cfg);
          projection.each(function(item, index, group) {
             if (item.isNode()){
                cfg.hasNodes = true;
@@ -1158,7 +1159,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          },
          reload: function() {
             // сохраняем текущую страницу при проваливании в папку
-            if (this._options.saveReloadPosition && this._previousRoot !== this._options._curRoot) {  
+            if (this._options.saveReloadPosition) {  
                this._hierPages[this._previousRoot] = this._getCurrentPage();
             }
             this._options._folderOffsets['null'] = 0;

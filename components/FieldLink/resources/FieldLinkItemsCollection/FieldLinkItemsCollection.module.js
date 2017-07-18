@@ -10,8 +10,9 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
       'tmpl!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemContentTemplate',
       'Core/helpers/collection-helpers',
       'Core/core-instance',
-      'Core/helpers/Function/callNext'
-   ], function(CompoundControl, DSMixin, PickerMixin, dotTplFn, defaultItemTemplate, defaultItemContentTemplate, colHelpers, cInstance, callNext) {
+      'Core/helpers/Function/callNext',
+      'js!SBIS3.CONTROLS.Utils.ItemsSelection'
+   ], function(CompoundControl, DSMixin, PickerMixin, dotTplFn, defaultItemTemplate, defaultItemContentTemplate, colHelpers, cInstance, callNext, ItemsSelection) {
 
       'use strict';
 
@@ -41,21 +42,23 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          _onClickHandler: function(e) {
+            var self = this;
             FieldLinkItemsCollection.superclass._onClickHandler.apply(this, arguments);
-            var $target = $(e.target),
-                deleteAction = false,
-                itemContainer, id;
-
-            itemContainer = $target.closest('.controls-FieldLink__item', this._container[0]);
-            if (itemContainer.length) {
-               deleteAction = $target.hasClass('controls-FieldLink__item-cross');
-               id = this._getItemProjectionByHash(itemContainer.data('hash')).getContents().get(this._options.idProperty);
-               this._notify(deleteAction ? 'onCrossClick' : 'onItemActivate', id);
-               
-               if(deleteAction && this.isPickerVisible()) {
-                  this.getPicker().recalcPosition(true, true);
+   
+            ItemsSelection.clickHandler.call(self, e.target,
+               function (id) {
+                  self._notify('onCrossClick', id);
+   
+                  if(self.isPickerVisible()) {
+                     self.getPicker().recalcPosition(true, true);
+                  }
+               },
+               function (id) {
+                  if (id !== undefined) {
+                     self._notify('onItemActivate', id);
+                  }
                }
-            }
+            );
          },
 
          /**

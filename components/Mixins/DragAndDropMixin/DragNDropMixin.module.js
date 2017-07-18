@@ -115,11 +115,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         },
 
         after: {
-            init: function () {
-                //touchend всегда срабатывает над тем контейнером с которого начали тащить, поэтому его тут нет
-                $(this._getDragContainer()).bind('mouseup', this._onMouseupInside.bind(this));
-            },
-
             destroy: function() {
                 EventBus.channel('DragAndDropChannel').unsubscribe('onMouseup', this._onMouseupOutside, this);
                 EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', this._onMousemove, this);
@@ -255,34 +250,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          * @see SBIS3.CONTROLS.DragObject
          */
         _updateDragTarget: function(dragObject, e) {
-
-        },
-        /**
-         * Возвращает контейнер, в котором лежат элементы.
-         * @remark Если элемент бросили за пределами этого контейнера, то target (DragObject.getDragTarget()) будет пустой. Определяется в модуле, который подмешивает миксин.
-         * @example
-         * Пусть у нашего контрола такая верcтка:
-         * <pre>
-         *    <div>
-         *       <h2>Заголовок</h2>
-         *       <ul class="items-list">
-         *          <li>Первый</li>
-         *          <li>Второй</li>
-         *       </ul>
-         *    </div>
-         * </pre>
-         * тогда этот метод должен вернуть ul:
-         * <pre>
-         *    _findDragDropContainer (){
-          *       return this.getContainer().find('ul');
-          *    }
-         * </pre>
-         * @param {Event} e Браузерное событие.
-         * @param {html} target DOM объект в котором надо искать Drag'n'drop контейнер.
-         * @returns {html}
-         * @private
-         */
-        _findDragDropContainer: function (e, target) {
 
         },
         //endregion handlers
@@ -463,13 +430,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
             }
         },
         /**
-         * Срабывает когда отпустили мышь внутри контрола.
-         * @param {Event} e Браузерное событие.
-         */
-        _onMouseupInside: function (e) {
-            this._mouseUp(e, true);
-        },
-        /**
          * Срабывает когда отпустили мышь за пределами контрола.
          * @param {Core/EventObject} buse Дескриптор события.
          * @param {Event} e Браузерное событие.
@@ -482,7 +442,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          * @param {Event} e Браузерное событие.
          * @param {Boolean} inside Признак того что перемещение закончилось внутри контрола.
          */
-        _mouseUp: function(e, inside) {
+        _mouseUp: function(e) {
             //todo разобраться с опцией выключения dragndrop
             //https://inside.tensor.ru/opendoc.html?guid=55df5f10-14b3-465d-b53e-3783fc9085a0&description=
             //Задача в разработку 22.03.2016 /** * @cfg {String} Разрешено или нет перемещение элементов 'Drag-and-Drop' ...
@@ -492,9 +452,11 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 DragObject.onDragHandler(e);
                 var target = DragObject.getTargetsControl();
                 target = target && cInstance.instanceOfMixin(target, 'SBIS3.CONTROLS.DragNDropMixin') ? target : null;
-                if (DragObject.isDragging() && ((target === this || DragObject.getOwner() === this) || inside)) {
+                if (DragObject.isDragging() && ((target === this || DragObject.getOwner() === this))) {
                     //если есть таргет то запускаем _endDrag над таргетом иначе запускаем над тем кто начал
-                    this._endDrag(e, inside ? this._findDragDropContainer(e, DragObject.getTargetsDomElement()) : false);
+                    var container = this._getDragContainer(e, DragObject.getTargetsDomElement()),
+                        inside = container.find(DragObject.getTargetsDomElement()).length > 0 ? true :false;
+                    this._endDrag(e, inside);
                 }
             }
         },

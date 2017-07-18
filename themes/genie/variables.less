@@ -173,6 +173,7 @@
 // Normal default button
 @button-border-width:                     1px;
 @button-border:                           @button-border-width solid @gray-light-color;
+@button-font-size:                        @default-font-size;
 @button-shadow:                           none;
 @button-bg:                               @default-color;
 
@@ -258,6 +259,7 @@
 @icon-button-round-border-width:        28px;
 @icon-button-round-border-height:       28px;
 @icon-button-round-border-line-height:  26px;
+@icon-button-round-icon-color-hover:    @default-color;
 @border-radius:                         14px;
 @icon-button-border-width:              1px;
 
@@ -666,6 +668,7 @@
 
 @menu-item-text-color:                    @black-color;
 @menu-item-bg:                            @white-color;
+@menu-item-font-size:                     @popup-font-size;
 @menu-item-disabled-text-color:           #ccc;
 
 @menu-item-hover-text-color:              @white-color;
@@ -753,7 +756,6 @@
 @text-box-field-after-margin:             0 21px 0 0;
 
 @text-box-field-text-color:               inherit;
-@text-box-field-focus-text-color:         @text-box-field-text-color;
 @text-box-field-error-text-color:         @text-box-field-text-color;
 @text-box-field-hover-text-color:         @text-box-field-text-color;
 @text-box-field-disabled-text-color:      @text-box-field-text-color;
@@ -1692,6 +1694,8 @@
 @data-grid-check-box-left:                      6px;
 
 @data-grid-table-layot: 								fixed;
+
+@data-grid-results-color:                       @accent-color;
 // ---------- //
 // PartScroll //
 // ---------- //
@@ -1764,7 +1768,6 @@
 @controls-OperationsPanelButton-width:             24px;
 @controls-OperationsPanelButton-vert-height:       24px;
 @controls-OperationsPanelButton-vert-border-radius: 7px;
-@controls-OperationsPanelButton-font:              18px 'TensorFont', sans-serif;
 @controls-OperationsPanelButton-cursor:            pointer;
 @controls-OperationsPanelButton-vertical-icon-top: 0;
 @controls-OperationsPanelButton-icon-left:         0;
@@ -1870,7 +1873,6 @@
 @DropdownList-picker-menu-item-multiselect-padding:   0;
 @DropdownList-picker-menu-item-color:                 @white-color;
 @DropdownList-picker-menu-item-color-blur:            rgba(255, 255, 255, 0);
-@DropdownList-picker-menu-item-hover:                 #F0F5FB;
 @DropdownList-picker-menu-item-hover-blur:            rgba(240, 245, 251, 0);
 @DropdownList-linkStyleColor:                         #0055bb;
 @DropdownList-linkStyleHoverColor:                    #313E78;
@@ -2017,6 +2019,7 @@
 @controls-FieldLink-border-color-focus-hover:      @gray-ccc-color @gray-ccc-color @gray-ccc-color @gray-ccc-color;
 @controls-FieldLink-border:                        1px solid;
 @controls-FieldLink-picker-show-color:             @white-color;
+@controls-FieldLink-picker-show-field-color:       @default-text-color;
 
 @controls-FieldLink-fieldWrapper-margin:           0;
 @controls-FieldLink-fieldWrapper-minWidth:         108px;

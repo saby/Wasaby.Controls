@@ -106,7 +106,8 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'tmpl!SBIS3
             allowEmptySelection: false,
             mode: 'part',
             pagesCount: null,
-            showPages: true
+            showPages: true,
+            visiblePath: null
          }
       },
       $constructor: function(){
@@ -117,7 +118,20 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'tmpl!SBIS3
          var newCfg = Pager.superclass._modifyOptions.apply(this, arguments);
          newCfg._itemsTemplate = ItemsTemplate;
 
-         return newCfg
+         /**
+          * Опция navigationToolbar должна будет заменить mode и pagesCount. Пока поддерживаем совместимость.
+          */
+         if (!cfg.visiblePath) {
+            cfg.visiblePath = {
+               begin: true,
+               prev: true,
+               pages: cfg.showPages,
+               next: true,
+               end: cfg.mode === 'full'
+            };
+         }
+
+         return newCfg;
       },
       init: function(){
          Pager.superclass.init.call(this);
@@ -168,15 +182,14 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'tmpl!SBIS3
 
       setSelectedKey: function() {
          Pager.superclass.setSelectedKey.apply(this, arguments);
-         this.redraw();
+         this._toggleItemsEnabled();
       },
 
       _getItemsContainer: function() {
          return $('.controls-Paging__itemsContainer', this._container.get(0));
       },
-
-      _drawItemsCallback: function() {
-         Pager.superclass._drawItemsCallback.apply(this, arguments);
+      
+      _toggleItemsEnabled: function() {
          if (!this._prevBtn) {
             this._bindControls();
          }
@@ -196,6 +209,11 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'tmpl!SBIS3
             this._endBtn.setEnabled(true);
             this._nextBtn.setEnabled(true);
          }
+      },
+
+      _drawItemsCallback: function() {
+         Pager.superclass._drawItemsCallback.apply(this, arguments);
+         this._toggleItemsEnabled();
       },
 
       destroy: function() {

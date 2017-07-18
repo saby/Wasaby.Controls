@@ -231,6 +231,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
                   /* т.к. предустановленные стили приходят в формате JSON, то нужно их подготовить для отображения в ListView */
                   self._preparePreset();
                   self._presetView.setItems(this._prepareItems(this._presetItems));
+                  self._presetView._container.on('mousedown focus', self._blockFocusEvents);
                }
                if (self._options.historyId) {
                   self._historyInit();

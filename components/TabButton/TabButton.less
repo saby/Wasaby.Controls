@@ -139,6 +139,7 @@
          .flex-shrink(1);
          .align-self(baseline);
          overflow: hidden;
+         display: block;
       }
    }
    &.controls-TabButton__main-item {
@@ -414,4 +415,19 @@
         line-height: 23px;
      }
   }
+}
+
+.ws-is-ie12 {
+   .controls-TabButton {
+      .controls-TabButton__caption {
+         height: @tab-button-height;
+         > * {
+            vertical-align: top;
+         }
+      }
+      .controls-TabButton__additionalText2 .controls-EditAtPlace {
+         position: relative;
+         top: -1px;
+      }
+   }
 }

@@ -321,7 +321,9 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
 
          _drawText: function(text){
             if (!text){
-               text = '<span class="controls-EditAtPlace__placeholder">' + this._options.placeholder + '</span>';
+               text = '<span class="controls-EditAtPlace__placeholder">' + strHelpers.escapeHtml(this._options.placeholder) + '</span>';
+            } else {
+               text = strHelpers.escapeHtml(text);
             }
             this._textField.html(text || '&nbsp;');
          }

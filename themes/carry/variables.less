@@ -383,6 +383,7 @@
 
 //FilterButton
 @controls-filterButton-button-margin:           14px 8px 8px 8px;
+@controls-filterButton-button-margin-right-align:  14px 0 8px 8px;
 @controls-filterButton-area-header-padding:     24px 76px 16px 12px;
 @controls-filterButton-area-header-height:      40px;
 @controls-filterButton-area-header-width:       429px;
@@ -444,7 +445,6 @@
 @text-box-border-color:                         #EAEAEA;
 @text-box-focus-bg:                             #F0F5FB;
 @text-box-bottom-border-color:                  #CCCCCC;
-@text-box-field-focus-text-color:               @black-color;
 @text-box-hover-border-color:                   @text-box-bottom-border-color;
 @text-box-field-hover-text-color:               @default-text-color;
 @text-box-focus-border-color:                   @text-box-bottom-border-color;
@@ -605,7 +605,7 @@
 @controls-OperationsPanelButton-width:          32px;
 @controls-OperationsPanelButton-vert-height:    32px;
 @controls-OperationsPanelButton-icon-left:      2px;
-@controls-OperationsPanelButton-font:           24px 'TensorFont', sans-serif;
+@controls-OperationsPanelButton-font-size:      24px;
 
 // --------- //
 // Menu link //
@@ -678,6 +678,9 @@
 
 //Scrollbar
 @controls-Scrollbar-width:                         4px;
+@controls-Scrollbar-animated-width:                @controls-Scrollbar-width;
+@controls-Scrollbar-animated-right:                0;
+@controls-Scrollbar-animate-duration:              0;
 @controls-Scrollbar-thumb-border-radius:           2px;
 @controls-Scrollbar-dark-hover-thumb-color:        rgba(255, 255, 255, 0.20);
 @controls-Scrollbar-dark-active-thumb-color:       rgba(255, 255, 255, 0.50);

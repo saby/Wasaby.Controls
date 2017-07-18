@@ -65,7 +65,9 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
                this._hasMore[this._options.config.direction] = more;
             }
             else {
-               this._hasMore = more;
+               if (more instanceof Object) {
+                  this._hasMore = more;
+               }
             }
          },
 

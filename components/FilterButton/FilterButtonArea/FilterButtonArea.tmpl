@@ -20,9 +20,9 @@
     <ws:SBIS3.CONTROLS.ScrollContainer className="controls__filterButton__area-scrollContainer">
         <ws:content type="string">
             <div class="controls__filterButton__area-content">
-                <ws:partial if="{{ template }}" template="{{ template }}"/>
+                <ws:partial if="{{ template }}" template="{{ template }}" scope="{{ componentOptions }}"/>
             </div>
-            <div class="controls__filterButton__area-footer {{ (!historyController && !additionalFilterParamsTemplate) ? 'ws-hidden' }}">
+            <div class="controls__filterButton__area-footer {{ ((!historyController || !historyController.getHistory()) && !additionalFilterParamsTemplate) ? 'ws-hidden' }}">
                 <ws:SBIS3.CONTROLS.AdditionalFilterParams
                         if="{{ additionalFilterParamsTemplate }}"
                         template="{{ additionalFilterParamsTemplate }}"

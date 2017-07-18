@@ -22,7 +22,7 @@ define('js!WSControls/Containers/MasterDetail',
        *    <li>detail - component for detail column.</li>
        * </ol>
        *
-       * @class WSControls/MasterDetail/MasterDetail
+       * @class WSControls/Containers/MasterDetail
        * @extends WSControls/Control/Base
        * @demo WSDemo/MasterDetail/MasterDetailDemo
        * @author Uvarov Ivan (is.uvarov)
@@ -35,7 +35,7 @@ define('js!WSControls/Containers/MasterDetail',
        */
 
       return Base.extend({
-         _controlName: 'WSControls/MasterDetail/MasterDetail',
+         _controlName: 'WSControls/Containers/MasterDetail',
          _template: template,
          _selected: null
       });
