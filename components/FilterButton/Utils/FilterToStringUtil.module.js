@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
                 /* Некорректно сравнивать elem.value и elem.resetValue, когда нет value,
                    поэтому считаем, что это значение по-умолчанию */
                 if (elem.caption && elem.hasOwnProperty('value') && !isEqualValues(elem.value, elem.resetValue)) {
-                   res.push(rk(elem.caption));
+                   res.push(typeof elem.caption === 'string' ? rk(elem.caption) : elem.caption);
                 }
                 return res;
              }, []);
