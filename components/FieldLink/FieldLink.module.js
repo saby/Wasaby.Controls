@@ -779,7 +779,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           }, '_getLinkCollection'),
           
           _getInputMinWidth: fHelpers.memoize(function() {
-             var fieldWrapper = this.getContainer().find('.controls-TextBox__fieldWrapper');
+             var fieldWrapper = this.getContainer().find('.controls-FieldLink__fieldWrapper');
              return parseInt(window.getComputedStyle(fieldWrapper[0]).getPropertyValue('--min-width') || fieldWrapper.css('min-width'));
           }, '_getInputMinWidth'),
 
@@ -1186,7 +1186,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           _toggleShowAll: function(show) {
              if(this._options.multiselect) {
-                this._getShowAllButton().toggleClass(classes.HIDDEN, !show);
+                this._getShowAllButton().toggleClass(classes.HIDDEN, !show); //todo
              }
           },
           
