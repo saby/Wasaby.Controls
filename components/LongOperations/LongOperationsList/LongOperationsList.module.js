@@ -96,12 +96,17 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
             var self = this;
             this._view = this.getChildControlByName(this._options.listName);
 
+            var titles = {
+               resume: rk('Возобновить'),
+               suspend: rk('Приостановить', 'ДлительныеОперации'),
+               'delete': rk('Удалить')
+            };
             this._view.setItemsActions([
                {
                   name: 'resume',
                   icon: 'sprite:icon-16 icon-DayForward icon-primary action-hover',
-                  caption: rk('Возобновить'),
-                  tooltip: rk('Возобновить'),
+                  caption: titles.resume,
+                  tooltip: titles.resume,
                   isMainAction: true,
                   onActivated: function ($item, id, model) {
                      self.applyUserAction('resume',  model, true);
@@ -110,8 +115,8 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                {
                   name: 'suspend',
                   icon: 'sprite:icon-16 icon-Pause icon-primary action-hover',
-                  caption: rk('Приостановить', 'ДлительныеОперации'),
-                  tooltip: rk('Приостановить', 'ДлительныеОперации'),
+                  caption: titles.suspend,
+                  tooltip: titles.suspend,
                   isMainAction: true,
                   onActivated: function ($item, id, model) {
                      self.applyUserAction('suspend', model, true);
@@ -120,8 +125,8 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                {
                   name: 'delete',
                   icon: 'sprite:icon-16 icon-Erase icon-error',
-                  caption: rk('Отменить'),
-                  tooltip: rk('Отменить'),
+                  caption: titles['delete'],
+                  tooltip: titles['delete'],
                   isMainAction: true,
                   onActivated: function ($item, id, model) {
                      self.applyUserAction('delete',  model, true);
