@@ -9,27 +9,36 @@ define([
              focusTestControl) {
    'use strict';
 
+   var testNum = 1, skipNum = 13;
+
+   var skipComponent = [13];
+
    describe('Focus-tests', function () {
       var testControl;
       beforeEach(function () {
-         if (typeof $ === 'undefined') {
+         // if (typeof $ === 'undefined') {
+         //    this.skip();
+         // }
+         if(testNum != skipNum) {
+            testNum++;
             this.skip();
          }
          $('#mocha').append('<div id="component"></div>');
-         $('#mocha').append('<div id="freeArea"></div>');
-
       });
 
-      for (var i = 1; i < 13; i++) {
+      for (var i = 1; i < 14; i++) {
          (function (i) {
             it('Case' + (i), function (done) {
                require(['tmpl!WSTest/Focus/Case' + i, 'js!WSTest/Focus/Scenario/' + i], function (caseTmpl, func) {
-                  var comp = focusTestControl.extend({
-                     _dotTplFn: caseTmpl
-                  });
-                  testControl = new comp({
-                     element: 'component'
-                  });
+                  if(!~skipComponent.indexOf(i)) {
+                     var comp = focusTestControl.extend({
+                        _dotTplFn: caseTmpl
+                     });
+
+                     testControl = new comp({
+                        element: 'component'
+                     });
+                  }
                   func(testControl); //Запускаем функцию проверки
                   done();
                });

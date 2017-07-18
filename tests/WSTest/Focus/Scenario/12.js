@@ -8,7 +8,11 @@ define('js!WSTest/Focus/Scenario/12', [
              fHelpers) {
    'use strict';
    return function scenario12(testControl) {//TODO Jquery
-      $('#move').append('#AA1');
+      $('.moveTb').prependTo('.AA1');
+      fHelpers.fireClick(testControl.getChildControlByName('TextBox0'));
+      fHelpers.childHasFocus(testControl, 'TextBox0');
 
+      fHelpers.fireTab(testControl.getChildControlByName('TextBox0'));
+      fHelpers.childHasFocus(testControl, 'TextBox1');
    };
 });
