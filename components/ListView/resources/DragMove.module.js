@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             items.forEach(function (item) {
                var projItem = this._getItemsProjection().getItemBySourceItem(item);
                source.push(this._makeDragEntity({
-                  owner: this,
+                  owner: this._getView(),
                   model: item,
                   domElement: projItem ? $('.js-controls-ListView__item[data-hash="'+projItem.getHash()+'"]', this.getContainer()) : undefined
                }));
@@ -154,7 +154,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             });
             if (this._getMover().checkRecordsForMove(movedItems, dragTarget.item, position)) {
                target = this._makeDragEntity({
-                  owner: this,
+                  owner: this._getView(),
                   domElement: dragTarget.domElement,
                   model: dragTarget.item,
                   position: position
@@ -167,7 +167,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
                   position = (e.offsetY > dragTarget.domElement.width()/2) ? 'before' : 'after';
                }
                target = this._makeDragEntity({
-                  owner: this,
+                  owner: this._getView(),
                   domElement: dragTarget.domElement,
                   model: dragTarget.item,
                   position: position
