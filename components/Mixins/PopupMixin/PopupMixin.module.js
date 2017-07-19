@@ -1156,7 +1156,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             if (event.which === constants.key.esc) {
                this.close();
             }
-         },
+         }
       },
 
       before: {

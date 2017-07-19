@@ -127,9 +127,25 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
          });
       });
 
-      describe('.getProjection', function (){
+      describe('.setItems', function (){
+         it('should set items', function(){
+            var items = [];
+            mover.setItems(items);
+            assert.equal(mover.getItems(), items);
+         });
+      });
+
+      describe('.getItemsProjection', function (){
          it('should return the own projection', function(){
-            assert.equal(moverWithMS.getProjection(), projection);
+            assert.equal(mover.getItemsProjection(), projection);
+         });
+      });
+
+      describe('.setItemsProjection', function (){
+         it('should return the own projection', function(){
+            var projection = [];
+            mover.setItemsProjection(projection);
+            assert.equal(mover.getItemsProjection(), projection);
          });
       });
 

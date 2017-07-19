@@ -2109,6 +2109,14 @@ define('js!SBIS3.CONTROLS.ListView',
                   editInPlace.setItemsProjection(this._getItemsProjection());
                }.bind(this));
             }
+            if (this._hasDragMove()) {
+               this._getDragMove().setItemsProjection(this._getItemsProjection());
+            }
+            if (this._hasMover()) {
+               this._getMover().setItems(this.getItems());
+               this._getMover().setItemsProjection(this._getItemsProjection());
+            }
+
          },
          beforeNotifyOnItemClick: function() {
             var handler = this._notifyOnItemClick;
@@ -3861,9 +3869,12 @@ define('js!SBIS3.CONTROLS.ListView',
           * Производится создание элемента коллекции внутри узла иерархии, в который установлено проваливание. Предустановлено значение для поля "Наименование". Отображение созданного элемента коллекции в режиме редактирования происходит в начале списка.
           * <pre>
           * var commandParams = {
-          *     parentId: myView.getCurrentRoot(),
-          *     preparedModel: {
-          *         'Наименование': 'ООО "Тензор"',
+          *     options: {
+          *         parentId: myView.getCurrentRoot(),
+          *         addPosition: 'top',
+          *         preparedModel: {
+          *             'Наименование': 'ООО "Тензор"',
+          *         },
           *     },
           *     withoutActivateEditor: true
           * };
@@ -3991,8 +4002,8 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             this._toggleEventHandlers(this._container, false);
             ListView.superclass.destroy.call(this);
-            if (this._dragMoveController) {
-               this._dragMoveController.destroy();
+            if (this._hasDragMove()) {
+               this._getDragMove().destroy();
             }
          },
          /**
@@ -4034,6 +4045,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _setItemsDragNDrop: function(allowDragNDrop) {
             this._options.itemsDragNDrop = allowDragNDrop;
             this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', this._getDragInitHandler());
+            if (this._dragMoveController) {
+               this._dragMoveController.setItemsDragNDrop(allowDragNDrop)
+            }
          },
          /**
           * возвращает метод который инициализирует dragndrop
@@ -4085,6 +4099,9 @@ define('js!SBIS3.CONTROLS.ListView',
                });
             }
             return this._dragMoveController;
+         },
+         _hasDragMove: function () {
+            return !!this._dragMoveController
          },
          _canDragStart: function(e) {
             //TODO: При попытке выделить текст в поле ввода, вместо выделения начинается перемещения элемента.
@@ -4250,6 +4267,14 @@ define('js!SBIS3.CONTROLS.ListView',
                });
             }
             return this._mover
+         },
+         /**
+          * возвращает true если есть мувер
+          * @return {boolean}
+          * @private
+          */
+         _hasMover: function () {
+            return !!this._mover;
          },
          /**
           * Перемещает переданные записи
