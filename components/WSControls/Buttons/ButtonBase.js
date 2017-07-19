@@ -59,8 +59,7 @@ define('js!WSControls/Buttons/ButtonBase', [
          _maxTouchCount:2,
          _options: {
             /**
-             * @cfg {String}  Текст на кнопке
-             * Данный текст должен отображать смысл действия клика по кнопке или побуждать к действию.
+             * @cfg {String} Устанавливает надпись на кнопке.
              * @example
              * <pre class="brush:xml">
              *     <option name="caption">Сохранить</option>
@@ -70,6 +69,24 @@ define('js!WSControls/Buttons/ButtonBase', [
              * @see getCaption
              */
             caption: undefined,
+             /**
+              * @cfg {Boolean} Устанавливает признак, от которого зависит будут ли экранированы html-теги в надписи кнопки (см. {@link caption}).
+              * @remark
+              * Значение опции влияет только на результат вызова метода {@link setCaption}.
+              * По умолчанию значение установлено в true, что означает экранирование любых тегов в надписи кнопки.
+              * @example
+              * 1) Когда опция `escapeCaptionHtml=true`
+              * <pre>
+              * myButton.setCaption('<div>Войти</div>');
+              * // надпись на кнопке - "Войти"
+              * </pre>
+              * 2) Когда опция `escapeCaptionHtml=false`
+              * <pre>
+              * myButton.setCaption('<div>Войти</div>');
+              * // надпись на кнопке - "<div>Войти</div>"
+              * </pre>
+              * @see caption
+              */
             escapeCaptionHtml: true
          }
       },
