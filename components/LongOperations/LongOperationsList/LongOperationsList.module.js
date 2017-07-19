@@ -419,12 +419,8 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                }
             }
             if (handler) {
-               var i = handler.indexOf(':');
-               require([i !== -1 ? handler.substring(0, i) : handler], function (module) {
-                  var method = i !== -1 ? handler.substring(i + 1) : null;
-                  if (typeof (method ? module[method] : module) !== 'function') {
-                     throw new Error('Handler not found or not valid');
-                  }
+               var path = handler.split(':');
+               require([path.shift()], function (module) {
                   var args = model.get('resultHandlerArgs');
                   if (args) {
                      if (typeof args === 'string') {
@@ -440,7 +436,28 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   else {
                      args = [];
                   }
-                  (method ? module[method] : module).apply(method ? module : null, args);
+                  if (1 < path.length && !(args.length === 0 || args.length === path.length)) {
+                     throw new Error('Handler and its arguments are not compatible');
+                  }
+                  if (path.length) {
+                     for (var subject = module; path.length; ) {
+                        if (!subject || typeof subject !== 'object') {
+                           throw new Error('Subhandler is or not valid');
+                        }
+                        var method = path.shift();
+                        if (typeof subject[method] !== 'function') {
+                           throw new Error('Handler method is or not valid');
+                        }
+                        var arg = args.length ? args.shift() : [];
+                        subject = subject[method].apply(subject, Array.isArray(arg) ? arg : [arg]);
+                     }
+                  }
+                  else {
+                     if (!module || typeof module !== 'function') {
+                        throw new Error('Handler is or not valid');
+                     }
+                     module.apply(null, args);
+                  }
                });
                return true;
             }
