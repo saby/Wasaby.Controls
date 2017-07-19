@@ -87,7 +87,7 @@
 }
 
 .controls-LongOperationsPopup__header_stoppedOperations-show .controls-LongOperationsPopup__header_showStoppedOperations,
-.controls-LongOperationsPopup__header_hideStoppedOperations{
+.controls-LongOperationsPopup__header_hideStoppedOperations {
     display: none;
 }
 
@@ -140,10 +140,11 @@
 }
 
 .controls-LongOperationsPopup__content .controls-DataGridView__firstContentCell {
-    width: 26px;
 }
 
 .controls-LongOperationsPopup__content .controls-LongOperationsList__nameColumn {
+    max-width: @long-operations-popup-exp-max-width - 26px - 92px;
+    overflow: hidden;
 }
 
 .controls-LongOperationsPopup__content .controls-LongOperationsList__executeTimeContainer {
@@ -157,7 +158,7 @@
 }
 
 .controls-LongOperationsPopup__content .controls-LongOperationsList .controls-DataGridView__firstContentCell {
-    width: 25px;
+    width: 26px;
     padding-left: 7px;
     padding-right: 2px;
 }
@@ -208,7 +209,7 @@
 .controls-LongOperationsPopup__footer_execTasks,
 .controls-LongOperationsPopup__footer_executeTime,
 .controls-LongOperationsPopup__footer_progress,
-.controls-LongOperationsPopup__footer_notification{
+.controls-LongOperationsPopup__footer_notification {
     font-size: @long-operations-popup-foot-f-size;
     color: @long-operations-popup-foot-color;
 }
@@ -229,7 +230,7 @@
     cursor: pointer;
 }
 
-.controls-LongOperationsPopup__hideContentIcon:hover{
+.controls-LongOperationsPopup__hideContentIcon:hover {
     color: #313E78 !important;
 }
 
@@ -245,7 +246,7 @@
     display: inline-block;
 }
 
-.controls-LongOperationsPopup__footer_firstOperationMode .controls-LongOperationsPopup__hideContentIcon{
+.controls-LongOperationsPopup__footer_firstOperationMode .controls-LongOperationsPopup__hideContentIcon {
     display: none;
 }
 
