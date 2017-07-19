@@ -11,12 +11,11 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
       'Core/core-extend',
       'js!WS.Data/Entity/ObservableMixin',
       'Core/Deferred',
-      'js!WS.Data/Types/Enum',
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.ILongOperationsProducer'
    ],
 
-   function (CoreExtend,  ObservableMixin, Deferred, Enum, LongOperationEntry, ILongOperationsProducer) {
+   function (CoreExtend,  ObservableMixin, Deferred, LongOperationEntry, ILongOperationsProducer) {
       'use strict';
 
       /**
@@ -27,11 +26,25 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
       var PRODUCER_NAME = 'SBIS3.CONTROLS.GenericLongOperationsProducer';
 
       /**
+       * "Константа" - сортировка возвращаемых методом fetch элементов по умолчанию
+       * @protected
+       * @type {number}
+       */
+      var DEFAULT_FETCH_SORTING = {status:true, startedAt:false};
+
+      /**
        * Экземпляры класса (синглетоны), различающиеся идентификаторами (ключами массива). Один идентификатор - один экземпляр
        * @rpoteced
        * @type {object}
        */
       var _instances = {};
+
+      /**
+       * Сервис - источник данных о пользователях, когда это потребуется в методе fetch
+       * @rpoteced
+       * @type {WS.Data/Source/SbisService}
+       */
+      var _userInfoSource;
 
       /**
        * Класс типового продюсера длительных операций
@@ -74,6 +87,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                return _instances[key];
             }
             this._name = PRODUCER_NAME + (key ? ':' + key : '');
+            this._isDestroyed = null;
             _instances[key] = this;
          },
 
@@ -91,29 +105,37 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
           * @public
           */
          destroy: function () {
-            //GenericLongOperationsProducer.superclass.destroy.apply(this, arguments);
-            var STATUSES = LongOperationEntry.STATUSES;
-            var DEFAULTS = LongOperationEntry.DEFAULTS;
-            var snapshots = GLOStorage.list(this._name);
-            var oIds = [];
-            for (var i = 0; i < snapshots.length; i++) {
-               var o = snapshots[i];
-               var status = 'status' in o ? o.status : DEFAULTS.status;
-               if (status === STATUSES.running || status === STATUSES.suspended) {
-                  var operationId = o.id;
-                  var handlers = this._actions ? this._actions[operationId] : null;
-                  // Если обработчики действий пользователя установлены в этой вкладке
-                  // При разрушении продюсера обработчики будут утеряны, поэтому операции завершаем ошибкой
-                  if (handlers) {
-                     delete this._actions[operationId];
-                     o.status = STATUSES.error;
-                     GLOStorage.put(this._name, operationId, o);
-                     oIds.push(operationId);
+            if (!this._isDestroyed) {
+               this._isDestroyed = true;
+               //GenericLongOperationsProducer.superclass.destroy.apply(this, arguments);
+               var STATUSES = LongOperationEntry.STATUSES;
+               var DEFAULTS = LongOperationEntry.DEFAULTS;
+               var ERR = 'User left the page';
+               var snapshots = GLOStorage.list(this._name);
+               var oIds = [];
+               for (var i = 0; i < snapshots.length; i++) {
+                  var o = snapshots[i];
+                  var status = 'status' in o ? o.status : DEFAULTS.status;
+                  if (status === STATUSES.running || status === STATUSES.suspended) {
+                     var operationId = o.id;
+                     var handlers = this._actions ? this._actions[operationId] : null;
+                     // Если обработчики действий пользователя установлены в этой вкладке
+                     // При разрушении продюсера обработчики будут утеряны, поэтому операции завершаем ошибкой
+                     if (handlers) {
+                        delete this._actions[operationId];
+                        o.status = STATUSES.ended;
+                        o.isFailed = true;
+                        o.resultMessage = ERR;
+                        o.timeSpent = (new Date()).getTime() - o.startedAt;
+                        GLOStorage.put(this._name, operationId, o);
+                        oIds.push(operationId);
+                     }
                   }
                }
-            }
-            if (oIds.length) {
-               this._notify('onlongoperationended', {producer:this._name, operationIds:oIds, status:STATUSES.error, error:'User left the page'});
+               if (oIds.length) {
+                  this._notify('onlongoperationended', {producer:this._name, operationIds:oIds, error:ERR});
+               }
+               Object.keys(_instances).some(function (v) { if (this === _instances[v]) { delete _instances[v]; return true;} }.bind(this));
             }
          },
 
@@ -125,7 +147,9 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
           * @return {string}
           */
          getName: function () {
-            return this._name;
+            if (!this._isDestroyed) {
+               return this._name;
+            }
          },
 
          /**
@@ -147,26 +171,56 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
          },
 
          /**
-          * Запросить набор последних длительных операций (отсортированных в обратном хронологическом порядке)
+          * Запросить набор последних длительных операций
           * @public
-          * @param {number} count Максимальное количество возвращаемых элементов
+          * @param {object} options Параметры запроса (опционально)
+          * @param {object} options.where Параметры фильтрации
+          * @param {object} options.orderBy Параметры сортировки
+          * @param {number} options.offset Количество пропущенных элементов в начале
+          * @param {number} options.limit Максимальное количество возвращаемых элементов
+          * @param {object} [options.extra] Дополнительные параметры, если есть (опционально)
           * @return {Core/Deferred<SBIS3.CONTROLS.LongOperationEntry[]>}
           */
-         fetch: function (count) {
-            if (!(typeof count === 'number' && 0 < count)) {
-               throw new TypeError('Argument "count" must be positive number' );
+         fetch: function (options) {
+            if (!options || typeof options !== 'object') {
+               throw new TypeError('Argument "options" must be an object');
             }
-            return Deferred.success(_list(this, count, 0).map(function (operation) {
-               var handlers = this._actions ? this._actions[operation.id] : null;
-               // Если обработчики действий пользователя остались в другой вкладке
-               if (!(handlers && handlers.onSuspend && handlers.onResume)) {
-                  operation.canSuspend = false;
+            if ('where' in options && typeof options.where !== 'object') {
+               throw new TypeError('Argument "options.where" must be an object');
+            }
+            if ('orderBy' in options && typeof options.orderBy !== 'object') {
+               throw new TypeError('Argument "options.orderBy" must be an array');
+            }
+            if ('offset' in options && !(typeof options.offset === 'number' && 0 <= options.offset)) {
+               throw new TypeError('Argument "options.offset" must be not negative number');
+            }
+            if ('limit' in options && !(typeof options.limit === 'number' && 0 < options.limit)) {
+               throw new TypeError('Argument "options.limit" must be positive number');
+            }
+            if ('extra' in options && typeof options.extra !== 'object') {
+               throw new TypeError('Argument "options.extra" must be an object if present');
+            }
+            if (this._isDestroyed) {
+               return Deferred.fail('User left the page');
+            }
+            var operations = _list(this, options.where, options.orderBy || DEFAULT_FETCH_SORTING, options.offset, options.limit);
+            if (operations.length) {
+               operations = operations.map(function (operation) {
+                  var handlers = this._actions ? this._actions[operation.id] : null;
+                  // Если обработчики действий пользователя остались в другой вкладке
+                  if (!(handlers && handlers.onSuspend && handlers.onResume)) {
+                     operation.canSuspend = false;
+                  }
+                  /*if (!(handlers && handlers.onDelete)) {
+                   operation.canDelete = false;
+                   }*/
+                  return operation;
+               }.bind(this));
+               if (options.extra && options.extra.needUserInfo) {
+                  return _fillUserInfo(operations);
                }
-               /*if (!(handlers && handlers.onDelete)) {
-                  operation.canDelete = false;
-               }*/
-               return operation;
-            }.bind(this)));
+            }
+            return Deferred.success(operations);
          },
 
          /**
@@ -180,15 +234,18 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             if (!action || typeof action !== 'string') {
                throw new TypeError('Argument "action" must be a string');
             }
+            if (this._isDestroyed) {
+               return Deferred.fail('User left the page');
+            }
+            var handlers = {
+               suspend: 'onSuspend',
+               resume: 'onResume',
+               delete: 'onDelete'
+            };
+            if (!(action in handlers)) {
+               throw new Error('Unknown action');
+            }
             try {
-               var handlers = {
-                  suspend: 'onSuspend',
-                  resume: 'onResume',
-                  delete: 'onDelete'
-               };
-               if (!(action in handlers)) {
-                  throw new Error('Unknown action');
-               }
                var handler = this._actions && operationId in this._actions && action in handlers ? this._actions[operationId][handlers[action]] : null;
                if (action !== 'delete' && !handler) {
                   throw new Error('Action not found or not applicable');
@@ -221,9 +278,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
           * @param {string} options Параметры для создания длительной операции
           * @param {string} options.title Отображаемое название операции (обязательный)
           * @param {Date|number} [options.startedAt] Время начала операции (опционально, если не указано, будет использовано текущее)
-          * @param {string|number|object} [options.status] Статус операции. Возможные значения: 'running', 0, 'suspended', 1, 'success', 2, 'error', 3.
-          *                                                Также принимается объект json-сериализации из Enum.
-          *                                                (опционально, если не указано, будет использовано 'running')
+          * @param {string|number|object} [options.status] Статус операции. Возможные значения: 'running', 0, 'suspended', 1, 'ended', 2.
           * @param {function} [options.onSuspend] Обработчик действия пользователя. Должен возвращать успешность выполнения. Если не представлен, значит действие не разрешено
           * @param {function} [options.onResume] Обработчик действия пользователя. Должен возвращать успешность выполнения. Если не представлен, значит действие не разрешено
           * @param {function} [options.onDelete] Обработчик действия пользователя. Должен возвращать успешность выполнения. Если не представлен, значит действие не разрешено
@@ -239,8 +294,12 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             if (!(stopper instanceof Deferred)) {
                throw new TypeError('Argument "stopper" must be a Deferred');
             }
+            if (this._isDestroyed) {
+               return;
+            }
             options.canSuspend = typeof options.onSuspend === 'function' && typeof options.onResume === 'function';
             options.canDelete = typeof options.onDelete === 'function';
+            options.userId = require('Core/UserInfo').get('ИдентификаторСервисаПрофилей') || $.cookie('CpsUserId');
             var operationId = _put(this, options);
             var self = this;
             stopper.addCallbacks(
@@ -248,10 +307,10 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                   if (result && typeof result !== 'object') {
                      throw new TypeError('Invalid result');
                   }
-                  _setStatus(self, operationId, 'success', result || null);
+                  _setStatus(self, operationId, 'ended', result || null);
                },
                function (err) {
-                  _setStatus(self, operationId, 'error', err.message || 'Long operation error');
+                  _setStatus(self, operationId, 'ended', {error:err.message || 'Long operation error'});
                }
             )
          }
@@ -273,9 +332,9 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
        * @return {number}
        */
       var _put = function (self, operation) {
-         if (!operation || typeof operation !== 'object') {
+         /*###if (!operation || typeof operation !== 'object') {
             throw new TypeError('Argument "operation" must be object');
-         }
+         }*/
          if (operation instanceof LongOperationEntry) {
             if (operation.producer !== self._name) {
                throw new Error('Argument "operation" has invalid producer');
@@ -313,9 +372,9 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
        * @return {SBIS3.CONTROLS.LongOperationEntry}
        */
       var _get = function (self, operationId) {
-         if (!(typeof operationId === 'number' && 0 < operationId)) {
+         /*###if (!(typeof operationId === 'number' && 0 < operationId)) {
             throw new TypeError('Argument "operationId" must be positive number');
-         }
+         }*/
          var snapshot = GLOStorage.get(self._name, operationId);
          return snapshot ? _fromSnapshot(snapshot, self._name) : null;
       };
@@ -324,24 +383,87 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
        * Получить список длительных операций
        * @protected
        * @param {SBIS3.CONTROLS.GenericLongOperationsProducer} self Экземпляр класса
-       * @param {number} count Количество элементов
-       * @param {number} offset Отступ
+       * @param {object} where Параметры фильтрации
+       * @param {object} orderBy Параметры сортировки. По умолчанию используется обратный хронологический порядок
+       * @param {number} offset Количество пропущенных элементов в начале
+       * @param {number} limit Максимальное количество возвращаемых элементов
        * @return {SBIS3.CONTROLS.LongOperationEntry[]}
        */
-      var _list = function (self, count, offset) {
-         if (count && !(typeof count === 'number' && 0 < count)) {
-            throw new TypeError('Argument "count" must be positive number or null');
-         }
-         if (offset && !(typeof offset === 'number' && 0 < offset)) {
-            throw new TypeError('Argument "offset" must be positive number or null');
-         }
+      var _list = function (self, where, orderBy, offset, limit) {
          var snapshots = GLOStorage.list(self._name);
-         snapshots.sort(function (a, b) { return a.startedAt < b.startedAt ? +1 : (a.startedAt === b.startedAt ? 0 : -1); });
-         if (count || offset) {
-            snapshots = snapshots.slice(offset || 0, count ? (offset || 0) + count : snapshots.length);
+         if (!snapshots.length) {
+            return snapshots;
          }
-         var name = self._name;
-         return snapshots.map(function (v) { return _fromSnapshot(v, name); });
+         if (where) {
+            var DEFAULTS = LongOperationEntry.DEFAULTS;
+            snapshots = snapshots.filter(function (snapshot) {
+               for (var p in where) {
+                  if (!_isSatisfied(p in snapshot ? snapshot[p] : DEFAULTS[p], where[p])) {
+                     return false;
+                  }
+               }
+               return true;
+            });
+            if (!snapshots.length) {
+               return snapshots;
+            }
+         }
+         if (orderBy) {
+            snapshots.sort(function (a, b) {
+               for (var p in orderBy) {
+                  var va = a[p];
+                  var vb = b[p];
+                  // Для сравниваемых значений могут иметь смысл операции < и >, но не иметь смысла != и ==, как например для Date. Поэтому:
+                  if (va < vb) {
+                     return orderBy[p] ? -1 : +1;
+                  }
+                  else
+                  if (vb < va) {
+                     return orderBy[p] ? +1 : -1;
+                  }
+               }
+               return 0;
+            });
+         }
+         if (limit || offset) {
+            snapshots = snapshots.slice(offset || 0, limit ? (offset || 0) + limit : snapshots.length);
+         }
+         return snapshots.map(function (v) { return _fromSnapshot(v, self._name); });
+      };
+
+      /**
+       * Проверить, что значение удовлетворяет условию
+       * @protected
+       * @param {any} value Занчение
+       * @param {any} condition Условие
+       * @return {boolean}
+       */
+      var _isSatisfied = function (value, condition) {
+         if (condition == null || typeof condition !== 'object') {
+            return condition != null ? value === condition : value == null;
+         }
+         if (Array.isArray(condition)) {
+            return condition.indexOf(value) !== -1;
+         }
+         if (!(condition.condition && typeof condition.condition === 'string') || !('value' in condition)) {
+            throw new TypeError('Wrong condition object');
+         }
+         switch (condition.condition) {
+            case '<':
+               return value < condition.value;
+            case '<=':
+               return value <= condition.value;
+            case '>=':
+               return value >= condition.value;
+            case '>':
+               return value > condition.value;
+            case 'contains':
+               if (typeof value !== 'string' || typeof condition.value !== 'string') {
+                  throw new TypeError('Value and condition is incompatible');
+               }
+               return (condition.sensitive ? value : value.toLowerCase()).indexOf(condition.sensitive ? condition.value : condition.value.toLowerCase()) !== -1;
+         }
+         return false;
       };
 
       /**
@@ -349,7 +471,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
        * @protected
        * @param {SBIS3.CONTROLS.GenericLongOperationsProducer} self Экземпляр класса
        * @param {number} operationId Идентификатор длительной операции
-       * @param {string|number} status Новый статус операции. Возможные значения: 'running', 0, 'suspended', 1, 'success', 2, 'error', 3.
+       * @param {string|number} status Новый статус операции. Возможные значения: 'running', 0, 'suspended', 1, 'ended', 2.
        * @param {any} details Дополнительная информация при завершении. Для успешного завершения - результат, для завершения с ошибкой -
        *                      сообщение об ошибке. Для приостановки/возобновления может быть обработчик действия пользователя (опционально)
        */
@@ -383,8 +505,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                case STATUSES.suspended:
                   isAllowed = prev === STATUSES.running;
                   break;
-               case STATUSES.success:
-               case STATUSES.error:
+               case STATUSES.ended:
                   isAllowed = prev === STATUSES.running || prev === STATUSES.suspended;
                   break;
             }
@@ -403,8 +524,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                   eventType = 'onlongoperationchanged';
                   result = {changed:'status'};
                   break;
-               case STATUSES.success:
-               case STATUSES.error:
+               case STATUSES.ended:
                   operation.progressCurrent = operation.progressTotal;
                   operation.timeSpent = (new Date()).getTime() - operation.startedAt;
                   if (operation.canDelete) {
@@ -416,7 +536,8 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                      delete self._actions[operationId];
                   }
                   eventType = 'onlongoperationended';
-                  if (status === STATUSES.success) {
+                  var err = details ? details.error : null;
+                  if (!err) {
                      if (details) {
                         if (details.url && typeof details.url === 'string') {
                            operation.resultUrl = details.url;
@@ -439,10 +560,10 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                         }
                      }
                   }
-                  else
-                  if (status === STATUSES.error) {
-                     operation.resultMessage = details;
-                     result = {error:details};
+                  else {
+                     operation.isFailed = true;
+                     operation.resultMessage = err;
+                     result = {error:err};
                   }
                   break;
             }
@@ -473,10 +594,9 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
          if (!('canDelete' in snapshot ? snapshot.canDelete : LongOperationEntry.DEFAULTS.canDelete)) {
             throw new Error('Action is not allowed');
          }
-         if (GLOStorage.remove(self._name, operationId)) {
-            delete self._actions[operationId];
-            self._notify('onlongoperationdeleted', {producer:self._name, operationId:operationId});
-         }
+         GLOStorage.remove(self._name, operationId);
+         delete self._actions[operationId];
+         self._notify('onlongoperationdeleted', {producer:self._name, operationId:operationId});
       };
 
       /**
@@ -484,12 +604,12 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
        * @protected
        * @param {SBIS3.CONTROLS.GenericLongOperationsProducer} self Экземпляр класса
        */
-      var _clear = function (self) {
+      /*var _clear = function (self) {
          var operationIds = GLOStorage.clear(self._name);
          if (operationIds.length) {
             self._notify('onlongoperationdeleted', {producer:self._name, operationIds:operationIds});
          }
-      };
+      };*/
 
       /**
        * Создать снимок состояния (плоский объект) длительной операции
@@ -518,6 +638,72 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             throw new TypeError('Argument "snapshot" must be an object');
          }
          return new LongOperationEntry(ObjectAssign({producer:producerName}, snapshot));
+      };
+
+      /**
+       * Заполнить длительные операции информацией о пользователях
+       * @protected
+       * @param {SBIS3.CONTROLS.LongOperationEntry[]} operations Список длительных операций
+       * @return {Core/Deferred<SBIS3.CONTROLS.LongOperationEntry[]>}
+       */
+      var _fillUserInfo = function (operations) {
+         var uIds = operations.reduce(function (r, v) { if (v.userId && r.indexOf(v.userId) === -1) r.push(v.userId); return r; }, []);
+         if (!uIds.length) {
+            return Deferred.success(operations);
+         }
+         var promise = new Deferred();
+         require(['js!WS.Data/Source/SbisService', 'js!WS.Data/Chain'], function (SbisService, Chain) {
+            if (!_userInfoSource) {
+               var _userInfoSource = new SbisService({
+                  endpoint: {
+                     address: '/service/',
+                     contract: 'Персона'
+                  }/*,
+                  binding: {
+                     query:
+                  },
+                   model: */
+               });
+            }
+            _userInfoSource.call('ПодробнаяИнформация', {
+               'Персоны': uIds,
+               'ДляДокумента': null,
+               'ПроверитьЧерныйСписок': false
+            })
+            .addCallbacks(
+               function (dataSet) {
+                  var indexes = operations.reduce(function (r, v, i) { if (v.userId) { if (!r[v.userId]) r[v.userId] = []; r[v.userId].push(i); } return r; }, {});
+                  Chain(dataSet.getAll()).each(function (record) {
+                     var userId = record.get('Персона');
+                     var list = indexes[userId];
+                     if (list) {
+                        for (var i = 0; i < list.length; i++) {
+                           var o = operations[list[i]];
+                           o.userFirstName = record.get('Имя');
+                           o.userPatronymicName = record.get('Отчество');
+                           o.userLastName = record.get('Фамилия');
+                           o.userPic = _getUserPic(userId);
+                        }
+                     }
+                  });
+                  promise.callback(operations);
+               },
+               function (err) {
+                  promise.callback(operations);
+               }
+            );
+         });
+         return promise;
+      };
+
+      /**
+       * Получить url изображения пользователя (аватарки)
+       * @protected
+       * @param {string} userId Идентификатор пользователя в сервисе пользовательских профайлов
+       * @return {string}
+       */
+      var _getUserPic = function (userId) {
+         return '/service/?id=0&method=PProfileServicePerson.GetPhoto&protocol=4&params=' + window.btoa(JSON.stringify({person:userId, kind:'mini'}));//'default'
       };
 
       var ObjectAssign = Object.assign || function (dst, src) { return Object.keys(src).reduce(function (o, n) { o[n] = src[n]; return o; }, dst); };
