@@ -16,6 +16,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
    "Core/helpers/collection-helpers",
    "Core/IoC",
    "Core/helpers/Function/once",
+   "Core/detection",
    "js!SBIS3.CONTROLS.IconButton",
    "js!SBIS3.CONTROLS.FilterButton.FilterLine",
    "i18n!SBIS3.CONTROLS.FilterButton",
@@ -37,7 +38,8 @@ define('js!SBIS3.CONTROLS.FilterButton',
         ParallelDeferred,
         colHelpers,
         IoC,
-        once
+        once,
+        detection
     ) {
 
        'use strict';
@@ -438,7 +440,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 },
                 closeButton: true,
                 closeByExternalClick: true,
-                closeOnTargetMove: true,
+                closeOnTargetMove: !detection.isMobilePlatform,
                 context: context,
                 cssClassName: 'controls__filterButton__picker',
                 template: 'js!SBIS3.CONTROLS.FilterButtonArea',
