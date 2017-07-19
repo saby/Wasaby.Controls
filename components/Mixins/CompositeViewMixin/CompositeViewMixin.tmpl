@@ -29,7 +29,7 @@
       </tbody>
       <ws:partial template="{{_footTpl}}" scope="{{...}}" />
    </table>
-   <div class="controls-ListView__EmptyData ws-hidden">
+   <div class="controls-ListView__EmptyData {{(!_serverRender || _records.length) ? 'ws-hidden' : ''}}">
       <ws:partial template="{{ emptyHTML }}"/>
    </div>
    <ws:if data="{{ footerTpl }}">
