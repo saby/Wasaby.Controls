@@ -120,7 +120,11 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
        * @private
        */
       _onExpandItem: function(expandedItem) {
-         this._createFolderFooter(expandedItem.getContents().getId());
+         var item = expandedItem.getContents();
+         
+         if(this._needCreateFolderFooter(item)) {
+            this._createFolderFooter(item.getId());
+         }
          this._drawExpandedItem(expandedItem);
       },
       _drawExpandedItem: function(expandedItem) {
