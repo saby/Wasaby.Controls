@@ -60,14 +60,14 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
          userPatronymicName: 'string',
          userLastName: 'string',
          userPic: 'string',
-         workflow: 'number',
-         notification: 'string',
          resultMessage: 'string',
          resultUrl: 'string',
          resultUrlAsDownload: 'boolean',
          resultValidUntil: 'Date',
          resultHandler: 'string',
-         resultHandlerArgs: ['string', 'object']
+         resultHandlerArgs: ['string', 'object'],
+         extra: 'object',
+         notification: 'string'
       };
 
       /**
@@ -106,8 +106,6 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
           * @param {string}        [options.user.lastName] Фамилия пользователя - альтернативно
           * @param {string}        [options.userPic] Урл изображения, если применимо к данной операции (опционально)
           * @param {string}        [options.user.pic] Урл изображения, если применимо к данной операции - альтернативно
-          * @param {number}        [options.workflow] Идентификатор рабочего процесса, если применим (опционально)
-          * @param {string}        [options.notification] Уведомление, если применимо (опционально)
           * @param {string}        [options.resultMessage] Сообщение о результате операции (опционально)
           * @param {string}        [options.result.message] Сообщение о результате операции - альтернативно
           * @param {string}        [options.resultUrl] Ссылка на результат операции (опционально)
@@ -120,6 +118,8 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
           * @param {string}        [options.result.handler] Строка модуль-метод для отображения результата операции - альтернативно
           * @param {string|object} [options.resultHandlerArgs] Аргументы обработчика отображения результата операции (объект или json-строка) (опционально)
           * @param {string|object} [options.result.handlerArgs] Аргументы обработчика отображения результата операции (объект или json-строка) - альтернативно
+          * @param {object}        [options.extra] Дополнительная информация, определяемая конкретным продюсером, если необходимо (опционально)
+          * @param {string}        [options.notification] Уведомление, если применимо (опционально)
           */
          constructor: function LongOperationEntry (options) {
             if (!options || typeof options !== 'object') {
