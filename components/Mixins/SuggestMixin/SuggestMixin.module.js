@@ -667,6 +667,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                   if(Array.indexOf(button.getEventHandlers('onActivated'), this._showAllButtonHandler) === -1) {
                      this.subscribeTo(button, 'onActivated', this._showAllButtonHandler);
                   }
+                  /* Чтобы кнопка не принимала фокус по табу, иначе клик enter'a, когда автодополнение открыто,
+                     будет вызывать открытие справочника, а не выбор записи */
+                  button.setTabindex(0);
                   button.show();
                } else {
                   this.unsubscribeFrom(button, 'onActivated', this._showAllButtonHandler);
