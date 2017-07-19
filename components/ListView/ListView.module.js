@@ -2464,7 +2464,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._changeHoveredItem(editedContainer);
                //Отображаем кнопки редактирования
                itemsToolbar.showEditActions();
-               if (!this.getItems().getRecordById(model.getId())) {
+               if (!this.getItems() || !this.getItems().getRecordById(model.getId())) {
                   if (this.getItemsActions()) {
                      itemsInstances = this.getItemsActions().getItemsInstances();
                      if (itemsInstances['delete']) {
