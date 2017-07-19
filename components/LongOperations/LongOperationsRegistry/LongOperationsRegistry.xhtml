@@ -1,54 +1,5 @@
 <div class="controls-LongOperations controls-LongOperationsRegistry {{? it.className}}{{=it.className}}{{?}}">
    <component data-component="SBIS3.CONTROLS.Browser" name="longOperationsBrowser" class="controls-Browser__view">
-      {{/*<~opt name="searchParam" value="title"/>
-      <~opt name="searchConfig">
-         <~opt name="placeholder" value="{~[искать@@найти...]~}"/>
-      <~/opt>*/}}
-      {{/*<~opt name="filterButtonConfig">
-         <~opts name="filterStructure" type="array">
-            <~opts>
-               <~opt name="internalValueField" value="PeriodKey"/>
-               <~opt name="internalCaptionField" value="PeriodTitle"/>
-               <~opt name="value" bind="filter/period"/>
-               <~opt name="resetValue" value="null" type="null"/>
-            <~/opts>
-            <~opts>
-               <~opt name="internalValueField" value="StateKey"/>
-               <~opt name="internalCaptionField" value="StateTitle"/>
-               <~opt name="value" bind="filter/State"/>
-               <~opt name="itemTemplate" type="null"/>
-               <~opt name="resetValue" value="null" type="null"/>
-            <~/opts>
-            <~opts>
-               <~opt name="internalValueField" value="DurationKey"/>
-               <~opt name="internalCaptionField" value="DurationTitle"/>
-               <~opt name="value" bind="filter/duration"/>
-               <~opt name="resetValue" value="null" type="null"/>
-            <~/opts>
-            {~{? !it.userId}~}
-            <~opts>
-               <~opt name="internalValueField" value="UserId"/>
-               <~opt name="internalCaptionField" value="UserName"/>
-               <~opt name="value" bind="filter/UserId"/>
-            <~/opts>
-            {~{?}~}
-         <~/opts>
-         <~opt name="template">
-            <~component data-component="SBIS3.CONTROLS.LongOperationsFilter">
-               <~opt name="hideStaffFilter" value="{~{=it.hideStaffFilter}~}"/>
-            <~/component>
-         <~/opt>
-      <~/opt>*/}}
-      {{/*<~opt name="fastDataFilterConfig">
-         <~opts name="filterStructure" type="array">
-            <~opts>
-               <~opt name="internalValueField" value="key"/>
-               <~opt name="internalCaptionField" value="title"/>
-               <~opt name="value" bind="filter/State"/>
-               <~opt name="resetValue" value="null" type="null"/>
-            <~/opts>
-         <~/opts>
-      <~/opt>*/}}
       <opt name="content">
          <div class="controls-Browser__table controls-Browser__table-fullFilterBlock">
             <div class="controls-Browser__tableCell-search">
