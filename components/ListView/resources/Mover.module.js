@@ -79,8 +79,12 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          return this._options.items;
       },
 
+      setItems: function (items) {
+         this._options.items = items;
+      },
+
       _moveToOneRow: function(record, position) {
-         var projection = this.getProjection(),
+         var projection = this.getItemsProjection(),
             item = projection.getItemBySourceItem(record),
             targetItem = position == 'after' ? projection.getNext(item) : projection.getPrevious(item);
          if(targetItem) {
@@ -88,10 +92,16 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          }
       },
 
-      getProjection: function() {
+      getItemsProjection: function() {
          return this._options.projection;
       },
-
+      /**
+       * устанавливает проекцию элементов
+       * @param projection
+       */
+      setItemsProjection: function(projection) {
+         this._options.projection = projection;
+      },
       /**
        * Перемещает записи из внешнего контрола, через drag'n'drop
        * @param {SBIS3.CONTROLS.DragEntity.List} dragSource Объект содержащий данные
@@ -227,7 +237,6 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
       setMoveStrategy: function (moveStrategy) {
          this._options.moveStrategy = moveStrategy;
       },
-
       /**
        * Вызывает метод перемещения на источнике данных
        * @param movedItems
