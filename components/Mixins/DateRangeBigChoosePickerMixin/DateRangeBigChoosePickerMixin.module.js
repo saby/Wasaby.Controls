@@ -72,13 +72,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoosePickerMixin', [
 
             this._picker.getContainer().empty();
             // Преобразуем контейнер в контролл DateRangeChoose и запоминаем
-            self._chooserControl = new DateRangeBigChoose({
-               parent: this._picker,
-               element: element,
-               startValue: this.getStartValue(),
-               endValue: this.getEndValue(),
-               rangeselect: this._options.selectionMode === 'range'
-            });
+            self._chooserControl = new DateRangeBigChoose(this._getDateRangeBigChooseConfig(element));
 
             // Добавляем в пикер
             this._picker.getContainer().append(element);
@@ -115,6 +109,16 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoosePickerMixin', [
                this.setStartValue(value, silent);
             }
             return changed;
+         }
+      },
+
+      _getDateRangeBigChooseConfig: function (element) {
+         return {
+            parent: this._picker,
+            element: element,
+            startValue: this.getStartValue(),
+            endValue: this.getEndValue(),
+            rangeselect: this._options.selectionMode === 'range'
          }
       },
 
