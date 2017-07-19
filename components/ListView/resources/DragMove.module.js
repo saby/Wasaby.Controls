@@ -60,7 +60,8 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
              */
             itemsDragNDrop: true
          },
-         _dragPlaceHolder: null
+         _dragPlaceHolder: null,
+         _dragPositioner: null
       },
       //region public
       /**
@@ -84,7 +85,8 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
                source.push(this._makeDragEntity({
                   owner: this,
                   model: item,
-                  domElement: projItem ? $('.js-controls-ListView__item[data-hash="'+projItem.getHash()+'"]', this.getContainer()) : undefined
+                  domElement: projItem ? $('.js-controls-ListView__item[data-hash="'+projItem.getHash()+'"]', this.getContainer()) : undefined,
+                  projectionItem: projItem
                }));
             }.bind(this));
 
@@ -134,7 +136,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
                }
             }
          }
-         if (DragObject.getTargetsControl() !== this && this._dragPlaceHolder) {
+         if (DragObject.getTargetsControl() !== this._getView() && this._dragPlaceHolder) {
             this._dragPlaceHolder.hide();
          } else if (this._dragPlaceHolder) {
             this._dragPlaceHolder.show();
@@ -145,35 +147,25 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
          var dragTarget = this._getDragTarget(),
             target;
          if (this._isCorrectSource(DragObject.getSource()) && dragTarget.item && !dragTarget.domElement.hasClass('controls-DragNDrop__placeholder')) {
-            var position = this._getDirectionOrderChange(dragTarget.domElement) || DRAG_META_INSERT.on,
+            var position,
                sourceIds = [],
-               movedItems = [];
+               movedItems = [],
+               targetsModel = dragTarget.item.getContents();
             DragObject.getSource().each(function (item) {
                sourceIds.push(item.getModel().getId());
                movedItems.push(item.getModel());
             });
-            if (this._getMover().checkRecordsForMove(movedItems, dragTarget.item, position)) {
+            position = this._getDirectionOrderChange(dragTarget);
+            if (this._options.useDragPlaceHolder || this._getMover().checkRecordsForMove(movedItems, targetsModel, position)) {
                target = this._makeDragEntity({
                   owner: this,
                   domElement: dragTarget.domElement,
-                  model: dragTarget.item,
-                  position: position
+                  model: targetsModel,
+                  position: position,
+                  projectionItem: this._getItemsProjection().getItemBySourceItem(targetsModel)
                });
                DragObject.setTarget(target);
-            } else if (this._options.useDragPlaceHolder && position == 'on' ) {
-               if (this._horisontalDragNDrop) {
-                  position = (e.offsetX > dragTarget.domElement.height()/2) ? 'before' : 'after';
-               } else {
-                  position = (e.offsetY > dragTarget.domElement.width()/2) ? 'before' : 'after';
-               }
-               target = this._makeDragEntity({
-                  owner: this,
-                  domElement: dragTarget.domElement,
-                  model: dragTarget.item,
-                  position: position
-               });
-               DragObject.setTarget(target);
-            } else if (!this._options.useDragPlaceHolder) {
+            } else  {
                DragObject.setTarget(undefined);
             }
          }
@@ -253,6 +245,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             this._toggleDragItems(DragObject, true);
             this._removeDragPlaceHolder();
          }
+         this._dragPositioner = null;
          this._clearDragHighlight();
       },
       /**
@@ -369,7 +362,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
 
          }
          return {
-            item: item ? item.getContents() : undefined,
+            item: item,
             domElement: target
          };
       },
@@ -399,37 +392,29 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
        * @private
        */
       _getDirectionOrderChange: function(target) {
-         if (this._options.itemsDragNDrop !== 'onlyChangeParent') {
-            var event = DragObject.getEvent();
-            if (this._options.useDragPlaceHolder) {
-               var position = this._getOrderPosition(event.pageY - (target.offset() ? target.offset().top : 0), target.height(), 10);
-               if (position == 'on') {
-                  position = this._getOrderPosition(event.pageX - (target.offset() ? target.offset().left : 0), target.width(), 20)
-               }
-               return position;
-            } else {
-               if (this._horisontalDragNDrop) {
-                  return this._getOrderPosition(event.pageX - (target.offset() ? target.offset().left : 0), target.width(), 20);
-               } else {
-                  return this._getOrderPosition(event.pageY - (target.offset() ? target.offset().top : 0), target.height(), 10);
-               }
-            }
-         }
-      },
-      /**
-       * определяет направление перемещения
-       * @param offset смещение
-       * @param metric размер
-       * @param orderOffset отступ относительно которого определяется как перемещять
-       * @return {string}
-       * @private
-       */
-      _getOrderPosition: function(offset, metric, orderOffset) {
-         if (this._options.useDragPlaceHolder) {
-            return offset < orderOffset ? DRAG_META_INSERT.after : offset > metric - orderOffset ? DRAG_META_INSERT.before : DRAG_META_INSERT.on;
+         var offset, size,
+            domElement = target.domElement,
+            event = DragObject.getEvent();
+         if (this._horisontalDragNDrop) {
+            offset = event.pageX - (domElement.offset() ? domElement.offset().left : 0);
+            size =  domElement.width();
          } else {
-            return offset < orderOffset ? DRAG_META_INSERT.before : offset > metric - orderOffset ? DRAG_META_INSERT.after : DRAG_META_INSERT.on;
+            offset = event.pageY - (domElement.offset() ? domElement.offset().top : 0);
+            size = domElement.height();
          }
+         return this._getDragPositioner().get(offset, size, target.item);
+      },
+
+      _getDragPositioner: function() {
+         if (!this._dragPositioner) {
+            this._dragPositioner = new DragPositioner({
+               itemsDragNDrop: this._options.itemsDragNDrop,
+               projection: this._getItemsProjection(),
+               mover: this._getMover(),
+               useDragPlaceHolder: this._options.useDragPlaceHolder
+            });
+         }
+         return this._dragPositioner;
       },
       /**
        * возвращает плейсхолдер
@@ -553,5 +538,69 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
       }
       //endregion private
    });
+
+   var DragPositioner = function (cfg) {
+      this._projection = cfg.projection;
+      this._sourceExistNode = false;
+      this._sourseItems = [];
+      this._mover = cfg.mover;
+      if (cInstance.instanceOfModule(this._projection, 'WS.Data/Display/Tree')) {
+         var source = DragObject.getSource();
+         if (source && cInstance.instanceOfModule(source, 'SBIS3.CONTROLS.DragEntity.List')) {
+            source.forEach(function (item) {
+               var projItem = item.getProjectionItem();
+               if (projItem.isNode && projItem.isNode()) {
+                  this._sourceExistNode = true
+               }
+               this._sourseItems.push(item.getModel());
+            }.bind(this));
+         }
+      }
+      switch (cfg.itemsDragndrop) {
+         case 'onlyChangeOrder':
+            this.get = this._onlyChangeOrder;
+            break;
+         case  'onlyChangeParent':
+            this.get = this._onlyChangeParent;
+         case 'separateParent':
+            this.get = this._separateParent;
+            break;
+         case 'allow':
+         default:
+            if (cInstance.instanceOfModule(this._projection, 'WS.Data/Display/Tree')) {
+               this.get = this._allow;
+            } else if (cfg.useDragPlaceHolder) {
+               this.get = this._withDragPlaceHolder;
+            } else {
+               this.get = this._onlyChangeOrder;
+            }
+            break;
+      }
+   };
+   DragPositioner.prototype.get = function (offset, size, target) {};
+   DragPositioner.prototype._onlyChangeOrder = function (offset, size) {
+      return (size/2 - offset > 0) ? DRAG_META_INSERT.before : DRAG_META_INSERT.after;
+   };
+   DragPositioner.prototype._onlyChangeParent = function () {
+      return DRAG_META_INSERT.on;
+   };
+   DragPositioner.prototype._separateParent = function (offset, size, target) {
+      if (target.isNode() && !this._sourceExistNode) {
+         return DRAG_META_INSERT.on;
+      } else if(!target.isNode() && this._sourceExistNode) {
+         return DRAG_META_INSERT.on;
+      }
+      return this._allow(offset, size);
+   };
+   DragPositioner.prototype._allow = function (offset, size, target) {
+      var position = offset < 10 ? DRAG_META_INSERT.before : offset > size - 10 ? DRAG_META_INSERT.after : DRAG_META_INSERT.on;
+      if (target && !this._mover.checkRecordsForMove(this._sourseItems, target.getContents(), position)) {
+         position = this._onlyChangeOrder(offset, size)
+      }
+      return position;
+   };
+   DragPositioner.prototype._withDragPlaceHolder = function (offset, size) {
+      return this._onlyChangeOrder(offset, size) == DRAG_META_INSERT.before ? DRAG_META_INSERT.after : DRAG_META_INSERT.before;
+   };
    return DragMove;
 });

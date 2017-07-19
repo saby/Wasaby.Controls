@@ -122,7 +122,7 @@ define([
       describe('._getDragTarget', function () {
          it('should return drag target', function () {
             var target = dragMove._getDragTarget();
-            assert.equal(target.item.getId(), 1);
+            assert.equal(target.item.getContents().getId(), 1);
             assert.equal(target.domElement.html(), 1);
          })
       });
