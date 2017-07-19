@@ -561,6 +561,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                      }
                   }
                   else {
+                     operation.isFailed = true;
                      operation.resultMessage = err;
                      result = {error:err};
                   }
