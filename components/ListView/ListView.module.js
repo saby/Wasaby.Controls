@@ -2109,6 +2109,14 @@ define('js!SBIS3.CONTROLS.ListView',
                   editInPlace.setItemsProjection(this._getItemsProjection());
                }.bind(this));
             }
+            if (this._hasDragMove()) {
+               this._getDragMove().setItemsProjection(this._getItemsProjection());
+            }
+            if (this._hasMover()) {
+               this._getMover().setItems(this.getItems());
+               this._getMover().setItemsProjection(this._getItemsProjection());
+            }
+
          },
          beforeNotifyOnItemClick: function() {
             var handler = this._notifyOnItemClick;
@@ -3994,8 +4002,8 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             this._toggleEventHandlers(this._container, false);
             ListView.superclass.destroy.call(this);
-            if (this._dragMoveController) {
-               this._dragMoveController.destroy();
+            if (this._hasDragMove()) {
+               this._getDragMove().destroy();
             }
          },
          /**
@@ -4091,6 +4099,9 @@ define('js!SBIS3.CONTROLS.ListView',
                });
             }
             return this._dragMoveController;
+         },
+         _hasDragMove: function () {
+            return !!this._dragMoveController
          },
          _canDragStart: function(e) {
             //TODO: При попытке выделить текст в поле ввода, вместо выделения начинается перемещения элемента.
@@ -4256,6 +4267,14 @@ define('js!SBIS3.CONTROLS.ListView',
                });
             }
             return this._mover
+         },
+         /**
+          * возвращает true если есть мувер
+          * @return {boolean}
+          * @private
+          */
+         _hasMover: function () {
+            return !!this._mover;
          },
          /**
           * Перемещает переданные записи
