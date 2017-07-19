@@ -876,7 +876,7 @@ body {
       background: @basic-block-bg-color;
       color: @default-text-color;
       border: @button-border;
-      padding: 0.857rem 1.6rem 0.857rem 0.857rem;
+      padding: 0.857rem 3rem 0.857rem 0.857rem;
       .ws-infobox-triangle {
          width: .857rem;
          height: .857rem;
@@ -900,16 +900,17 @@ body {
 
       .ws-infobox-close-button.icon-disabled{
          font-size: 3rem!important;
+         width: 3rem!important;
+         height: 3rem!important;
          right: 0;
-         top: 0.41rem;
+         top: 0;
          color: @link-text-color!important;
          overflow: hidden;
          &:hover {
             color: #B9E9FF!important;
          }
          &:before {
-            position: relative;
-            right: 0.6rem;
+            line-height: 2.7rem!important;
          }
       }
    }
