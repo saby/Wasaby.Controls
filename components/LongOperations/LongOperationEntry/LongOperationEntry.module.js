@@ -60,6 +60,7 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
          userPatronymicName: 'string',
          userLastName: 'string',
          userPic: 'string',
+         resultWayOfUse: 'string',
          resultMessage: 'string',
          resultUrl: 'string',
          resultUrlAsDownload: 'boolean',
@@ -106,6 +107,7 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
           * @param {string}        [options.user.lastName] Фамилия пользователя - альтернативно
           * @param {string}        [options.userPic] Урл изображения, если применимо к данной операции (опционально)
           * @param {string}        [options.user.pic] Урл изображения, если применимо к данной операции - альтернативно
+          * @param {string}        [options.resultWayOfUse] Название способа использования результата ("Скачать", "Открыть" и т.д.) (опционально)
           * @param {string}        [options.resultMessage] Сообщение о результате операции (опционально)
           * @param {string}        [options.result.message] Сообщение о результате операции - альтернативно
           * @param {string}        [options.resultUrl] Ссылка на результат операции (опционально)

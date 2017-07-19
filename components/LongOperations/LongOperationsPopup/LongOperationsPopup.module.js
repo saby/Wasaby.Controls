@@ -307,21 +307,22 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
             var model = this._activeOperation;
             var butCaption;
             if (model.get('status') === STATUSES.ended) {
+               var wayOfUse = model.get('resultWayOfUse');
                if (!model.get('isFailed')) {
                   if (model.get('resultUrl')) {
-                     butCaption = 'Скачать';
+                     butCaption = wayOfUse || 'Скачать';
                   }
                   else
                   if (model.get('resultHandler')) {
-                     butCaption = 'Открыть';
+                     butCaption = wayOfUse || 'Открыть';
                   }
                   else
                   if (1 < model.get('progressTotal') && this._longOpList.canHasHistory(model)) {
-                     butCaption = 'Журнал';
+                     butCaption = wayOfUse || 'Журнал';
                   }
                }
                else {
-                  butCaption = 'Журнал';
+                  butCaption = wayOfUse || 'Журнал';
                }
             }
 
