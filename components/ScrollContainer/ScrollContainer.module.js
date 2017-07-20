@@ -406,7 +406,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   }
                }
             }
-            this._addGradient();
+            //ресайз может позваться до инита контейнера
+            if (this._content) {
+               this._addGradient();
+            }
 
             if (this._paging) {
                this._setPagesCount(Math.ceil(this._getScrollHeight() / this._container.height()));
