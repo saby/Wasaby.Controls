@@ -22,6 +22,29 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBig', [
          opts = DateRangeSliderBig.superclass._modifyOptions.apply(this, arguments);
          opts._caption = this._getCaption(opts);
          return opts;
+      },
+
+      _getDateRangeBigChooseConfig: function (element) {
+         var config = DateRangeSliderBig.superclass._getDateRangeBigChooseConfig.apply(this, arguments),
+            getValidator = function (validator) {
+               return {
+                  option: 'text',
+                  validator: validator.validator,
+                  errorMessage: validator.errorMessage,
+                  params: validator.params
+               };
+            };
+         // Пробрасываем required валидаторы полей startValue и endValue в выпадашку.
+         config.startValueValidators = this._options.validators.filter(function (validator) {
+            return validator.option === 'startValue' && validator.validator &&
+               validator.validator.wsHandlerPath === 'js!SBIS3.CONTROLS.ControlsValidators:required';
+         }).map(getValidator);
+
+         config.endValueValidators = this._options.validators.filter(function (validator) {
+            return validator.option === 'endValue' && validator.validator &&
+               validator.validator.wsHandlerPath === 'js!SBIS3.CONTROLS.ControlsValidators:required';
+         }).map(getValidator);
+         return config;
       }
    });
    return DateRangeSliderBig;

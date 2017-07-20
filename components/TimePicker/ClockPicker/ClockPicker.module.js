@@ -446,6 +446,10 @@ define('js!SBIS3.CONTROLS.ClockPicker',
                this.getLinkedContext().setValueSelf('arrowTip/tick', this._getStringTick(tick));
             }
 
+            if (this._isHoursMode) {
+               return;
+            }
+
             nearestDistance = 2;
             tickOffset = this._tickOffset[mode];
 
