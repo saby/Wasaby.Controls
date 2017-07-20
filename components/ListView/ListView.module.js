@@ -660,22 +660,6 @@ define('js!SBIS3.CONTROLS.ListView',
                 * </pre>
                 */
                itemsDragNDrop: 'allow',
-               /**
-                * @cfg {Function} Устанавливает функцию, которая будет выполнена при клике на строку.
-                * @remark
-                * Аргументы функции:
-                * <ol>
-                *    <li>id - идентификатор элемента коллекции - строки, по которой был произведён клик.</li>
-                *    <li>item - элемент коллекции, по строке отображения которого был произведён клик; экземпляр класса {@link WS.Data/Entity/Record} с данными выбранной записи.</li>
-                *    <li>target - контейнер визуального отображения (DOM-элемент) строки, по которой был произведён клик.</li>
-                * </ol>
-                * Установить или заменить функцию - обработчик клика на строку можно с помощью метода {@link setElemClickHandler}
-                * @example
-                * <pre class="brush: xml">
-                *     <option name="elemClickHandler" type="function">js!SBIS3.Contacts.LatestThemes:prototype.elemClickHandler</option>
-                * </pre>
-                * @see setElemClickHandler
-                */
                elemClickHandler: null,
                /**
                 * @cfg {Boolean} Устанавливает режим множественного выбора элементов коллекции.
@@ -2021,18 +2005,6 @@ define('js!SBIS3.CONTROLS.ListView',
             // прибавим к полученой странице количество еще не загруженных страниц
             return page + Math.floor((this._scrollOffset.top) / this._limit);
          },
-         /**
-          * Метод установки/замены обработчика клика по строке.
-          * @param method Имя новой функции обработчика клика по строке.
-          * @example
-          * <pre>
-          *     var myElemClickHandler = function(id, data, target){
-           *        console.log(id, data, target)
-           *     }
-          *     DataGridView.setElemClickHandler(myElemClickHandler);
-          * </pre>
-          * @see elemClickHandler
-          */
          setElemClickHandler: function (method) {
             this._options.elemClickHandler = method;
          },
