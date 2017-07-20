@@ -7,26 +7,26 @@
                <opt name="title" value="{[В любом состоянии]}"/>
             </opts>
             <opts>
-               <opt name="key" value="0" type="number"></opt>
+               <opt name="key" value="running"></opt>
                <opt name="title" value="{[В процессе]}"/>
             </opts>
             <opts>
-               <opt name="key" value="2" type="number"></opt>
+               <opt name="key" value="ended"></opt>
                <opt name="title" value="{[Завершенные]}"/>
             </opts>
             <opts>
-               <opt name="key" value="4" type="number"></opt>
+               <opt name="key" value="success-ended"></opt>
                <opt name="title" value="{[Успешно]}"/>
-               <opt name="parent" value="2" type="number"/>
+               <opt name="parent" value="ended"/>
             </opts>
             <opts>
-               <opt name="key" value="5" type="number"></opt>
+               <opt name="key" value="error-ended"></opt>
                <opt name="title" value="{[С ошибками]}"/>
-               <opt name="parent" value="2" type="number"/>
+               <opt name="parent" value="ended"/>
             </opts>
             <opts>
-               <opt name="key" value="1" type="number"></opt>
-               <opt name="title" value="{[Прерванные]}"/>
+               <opt name="key" value="suspended"></opt>
+               <opt name="title" value="{[Приостановленные]}"/>
             </opts>
          </opts>
          <opt name="idProperty" value="key"/>
@@ -46,23 +46,23 @@
                <opt name="title" value="{[За все время]}"/>
             </opts>
             <opts>
-               <opt name="key" value="0"/>
+               <opt name="key" value="PT1H"/>
                <opt name="title" value="{[За час]}"/>
             </opts>
             <opts>
-               <opt name="key" value="1"/>
+               <opt name="key" value="P1D"/>
                <opt name="title" value="{[За сегодня]}"/>
             </opts>
             <opts>
-               <opt name="key" value="2"/>
+               <opt name="key" value="P7D"/>
                <opt name="title" value="{[За неделю]}"/>
             </opts>
             <opts>
-               <opt name="key" value="3"/>
+               <opt name="key" value="P30D"/>
                <opt name="title" value="{[За месяц]}"/>
             </opts>
             <opts>
-               <opt name="key" value="4"/>
+               <opt name="key" value="P180D"/>
                <opt name="title" value="{[За полгода]}"/>
             </opts>
          </opts>
@@ -85,19 +85,19 @@
                <opt name="title" value="{[Все]}"/>
             </opts>
             <opts>
-               <opt name="key" value="0" type="number"></opt>
+               <opt name="key" value="PT5M"></opt>
                <opt name="title" value="{[Дольше 5 минут]}"/>
             </opts>
             <opts>
-               <opt name="key" value="1" type="number"></opt>
+               <opt name="key" value="PT10M"></opt>
                <opt name="title" value="{[Дольше 10 минут]}"/>
             </opts>
             <opts>
-               <opt name="key" value="2" type="number"></opt>
+               <opt name="key" value="PT30M"></opt>
                <opt name="title" value="{[Дольше 30 минут]}"/>
             </opts>
             <opts>
-               <opt name="key" value="3" type="number"></opt>
+               <opt name="key" value="PT1H"></opt>
                <opt name="title" value="{[Дольше часа]}"/>
             </opts>
          </opts>

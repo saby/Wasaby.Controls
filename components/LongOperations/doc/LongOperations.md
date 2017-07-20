@@ -59,8 +59,7 @@
  * информация о прогресе выполнения в свойствах data.progress.total и data.progress.value, если изменился прогресс; сообщение о ходе выполнения в
  * свойстве data.notification, если получено сообщение.
  * <br/>
- * Событие onEnded должно содержать статус, равный константе LongOperationEntry.STATUSES.success или LongOperationEntry.STATUSES.error в свойстве
- * data.status. При успешном завершении событие может содержать данные о количестве подзадач в свойствах data.progress.total и data.progress.value,
+ * Событие onEnded при успешном завершении может содержать данные о количестве подзадач в свойствах data.progress.total и data.progress.value,
  * если они отличны от 1. При завершении с ошибкой событие должно содержать сообщение об ошибке в свойстве data.error
  * <br/>
  * Событие onDeleted дополнителшьных свойств не имеет

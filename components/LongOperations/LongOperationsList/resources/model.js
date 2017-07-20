@@ -17,13 +17,13 @@ define(
 
                   strTimeSpent: {
                      get: function () {
-                        return LongOperationModel.timeSpentAsString(this.get('timeSpent'), 2);
+                        return LongOperationModel.timeSpentAsString(this.get('timeSpent') || (new Date()).getTime() - this.get('startedAt'), 2);
                      }
                   },
 
                   shortTimeSpent: {
                      get: function () {
-                        return LongOperationModel.timeSpentAsString(this.get('timeSpent'), 1);
+                        return LongOperationModel.timeSpentAsString(this.get('timeSpent') || (new Date()).getTime() - this.get('startedAt'), 1);
                      }
                   },
 

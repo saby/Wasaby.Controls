@@ -1,5 +1,6 @@
 define('js!SBIS3.CONTROLS.LongOperationsList',
    [
+      'Core/TimeInterval',
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model',
@@ -15,7 +16,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
       'js!SBIS3.CONTROLS.DataGridView'
    ],
 
-   function (CompoundControl, LongOperationEntry, Model, longOperationsManager, InformationPopupManager, dotTplFn) {
+   function (TimeInterval, CompoundControl, LongOperationEntry, Model, longOperationsManager, InformationPopupManager, dotTplFn) {
       'use strict';
 
       /**
@@ -71,7 +72,6 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
             },
 
             _view: null,
-            _reloading: null,
             _spentTiming: null,
             _animQueue: [],
             _animating: null,
@@ -81,14 +81,12 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
          $constructor: function () {
             var context = this.getLinkedContext();
             context.setValue('filter', {});
-
             if (this._options.userId) {
                context.setValue('filter/UserId', this._options.userId);
             }
             if (this._options.columns.userPic) {
-               context.setValue('filter/NeedProfileData', true);
+               context.setValue('filter/needUserInfo', true);
             }
-
             this._publish('onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted', 'onproducerregistered', 'onproducerunregistered', 'ontimespentchanged');
          },
 
@@ -98,12 +96,17 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
             var self = this;
             this._view = this.getChildControlByName(this._options.listName);
 
+            var titles = {
+               resume: rk('Возобновить'),
+               suspend: rk('Приостановить', 'ДлительныеОперации'),
+               'delete': rk('Удалить')
+            };
             this._view.setItemsActions([
                {
                   name: 'resume',
                   icon: 'sprite:icon-16 icon-DayForward icon-primary action-hover',
-                  caption: rk('Возобновить'),
-                  tooltip: rk('Возобновить'),
+                  caption: titles.resume,
+                  tooltip: titles.resume,
                   isMainAction: true,
                   onActivated: function ($item, id, model) {
                      self.applyUserAction('resume',  model, true);
@@ -112,8 +115,8 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                {
                   name: 'suspend',
                   icon: 'sprite:icon-16 icon-Pause icon-primary action-hover',
-                  caption: rk('Приостановить', 'ДлительныеОперации'),
-                  tooltip: rk('Приостановить', 'ДлительныеОперации'),
+                  caption: titles.suspend,
+                  tooltip: titles.suspend,
                   isMainAction: true,
                   onActivated: function ($item, id, model) {
                      self.applyUserAction('suspend', model, true);
@@ -122,8 +125,8 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                {
                   name: 'delete',
                   icon: 'sprite:icon-16 icon-Erase icon-error',
-                  caption: rk('Отменить'),
-                  tooltip: rk('Отменить'),
+                  caption: titles['delete'],
+                  tooltip: titles['delete'],
                   isMainAction: true,
                   onActivated: function ($item, id, model) {
                      self.applyUserAction('delete',  model, true);
@@ -160,7 +163,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                         }
                         break;
                      case 'onlongoperationended':
-                        self._animationAdd(Model.getFullId(evt.tabKey, evt.producer, evt.operationId), evt.status === STATUSES.success);
+                        self._animationAdd(Model.getFullId(evt.tabKey, evt.producer, evt.operationId), !evt.error);
                         self._animationRun();
                         break;
                   }
@@ -169,6 +172,12 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                      self.reload();
                   }
                });
+            });
+
+            this.subscribeTo(this._view, /*'onPropertiesChanged'*/'onPropertyChanged', function (evtName, property) {
+               if (property === 'filter') {
+                  self.reload();
+               }
             });
 
             //У приостановленных операций нужно менять цвет текста, поэтому навешиваем класс
@@ -193,7 +202,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                         var status = item.record.get('status');
 
                         var hide = (itemAction === 'resume' || itemAction === 'suspend')
-                                    && (status === STATUSES.success || status === STATUSES.error || status === STATUSES.running && itemAction === 'resume' || status === STATUSES.suspended && itemAction === 'suspend');
+                                    && (status === STATUSES.ended || status === STATUSES.running && itemAction === 'resume' || status === STATUSES.suspended && itemAction === 'suspend');
 
                         /*Прикладной разработчик может запретить показывать операции удаления и остановки*/
                         if (!hide) {
@@ -237,10 +246,13 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                var STATUSES = LongOperationEntry.STATUSES;
                var from = !this._notFirst ? (new Date()).getTime() - ANIM_NOTEARLY : null;
                items.each(function (model) {
-                  if (!this._notFirst && from < model.get('startedAt').getTime() + model.get('timeSpent')) {
-                     this._animationAdd(model.getId(), model.get('status') === STATUSES.success);
+                  var status = model.get('status');
+                  if (!this._notFirst
+                        && status === STATUSES.ended
+                        && from < model.get('startedAt').getTime() + model.get('timeSpent')) {
+                     this._animationAdd(model.getId(), !model.get('isFailed'));
                   }
-                  if (!hasRun && model.get('status') === STATUSES.running) {
+                  if (!hasRun && status === STATUSES.running) {
                      hasRun = true;
                   }
                }.bind(this));
@@ -289,23 +301,69 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
           * @return {Core/Deferred}
           */
          reload: function () {
-            if (this._reloading) {
-               // Ничего не делать, запрос уже выполняется, результат вскоре и так придёт
-               return this._reloading;
+            var options = {};
+            var filter = this._view.getFilter();
+            if (filter) {
+               var where = {};
+               if (filter.status) {
+                  var STATUSES = LongOperationEntry.STATUSES;
+                  switch (filter.status) {
+                     case 'running':
+                     case 'suspended':
+                     case 'ended':
+                        where.status = STATUSES[filter.status];
+                        break;
+                     case 'not-suspended':
+                        where.status = [STATUSES.running, STATUSES.ended];
+                        break;
+                     case 'success-ended':
+                        where.status = STATUSES.ended;
+                        where.isFailed = null;
+                        break;
+                     case 'error-ended':
+                        where.status = STATUSES.ended;
+                        where.isFailed = true;
+                        break;
+                  }
+               }
+               if (filter.period) {
+                  where.startedAt = {condition:'>=', value:(new TimeInterval(filter.period)).subFromDate(new Date())};
+               }
+               if (filter.duration) {
+                  where.timeSpent = {condition:'>=', value:(new TimeInterval(filter.duration)).getTotalMilliseconds()};
+               }
+               if (filter['СтрокаПоиска']) {
+                  where.title = {condition:'contains', value:filter['СтрокаПоиска'], sensitive:false};
+                  /*if (filter.usePages) {
+                  }*/
+               }
+               if (Object.keys(where).length) {
+                  options.where = where;
+               }
             }
-            var promise = longOperationsManager.fetch(this._getOption('pageSize') || 10)
+            var sorting = this._view.getSorting();
+            if (sorting && sorting.length) {
+               options.orderBy = sorting;
+            }
+            var offset = this._view.getOffset();
+            if (0 <= offset) {
+               options.offset = offset;
+            }
+            var limit = this._view.getPageSize();
+            if (0 < limit) {
+               options.limit = limit;
+            }
+            if (filter.needUserInfo) {
+               options.extra = {needUserInfo:true};
+            }
+            return longOperationsManager.fetch(Object.keys(options).length ? options : null)
                .addCallback(function (results) {
                   if (this._isDestroyed) {
                      return;
                   }
+                  //###this._view._notify('onDataLoad', results);
                   this._setItems(results);
                }.bind(this));
-            this._reloading = promise;
-            // Обещание может быть сразу разрешённым, поэтому отдельно и только в конце
-            promise.addBoth(function () {
-               this._reloading = null;
-            }.bind(this));
-            return promise;
          },
 
          /**
@@ -327,6 +385,9 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
           * @returns {Core/Deferred}
           */
          applyUserAction: function (action, model, reload) {
+            if (!(action === 'suspend' || action === 'resume' ? model.get('canSuspend') : (action === 'delete' ? model.get('canDelete') : null))) {
+               return Deferred.fail('Action not allowed');
+            }
             var promise = longOperationsManager.callAction(action, model.get('tabKey'), model.get('producer'), model.get('id'));
             if (reload) {
                promise.addCallback(this.reload.bind(this));
@@ -341,7 +402,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
           * @return {boolean}
           */
          applyResultAction: function (model) {
-            if (model.get('status') !== LongOperationEntry.STATUSES.success) {
+            if (model.get('status') !== LongOperationEntry.STATUSES.ended && !model.get('isFailed')) {
                return false;
             }
             var handler = model.get('resultHandler');
@@ -358,12 +419,8 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                }
             }
             if (handler) {
-               var i = handler.indexOf(':');
-               require([i !== -1 ? handler.substring(0, i) : handler], function (module) {
-                  var method = i !== -1 ? handler.substring(i + 1) : null;
-                  if (typeof (method ? module[method] : module) !== 'function') {
-                     throw new Error('Handler not found or not valid');
-                  }
+               var path = handler.split(':');
+               require([path.shift()], function (module) {
                   var args = model.get('resultHandlerArgs');
                   if (args) {
                      if (typeof args === 'string') {
@@ -379,7 +436,28 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   else {
                      args = [];
                   }
-                  (method ? module[method] : module).apply(method ? module : null, args);
+                  if (1 < path.length && !(args.length === 0 || args.length === path.length)) {
+                     throw new Error('Handler and its arguments are not compatible');
+                  }
+                  if (path.length) {
+                     for (var subject = module; path.length; ) {
+                        if (!subject || typeof subject !== 'object') {
+                           throw new Error('Subhandler is or not valid');
+                        }
+                        var method = path.shift();
+                        if (typeof subject[method] !== 'function') {
+                           throw new Error('Handler method is or not valid');
+                        }
+                        var arg = args.length ? args.shift() : [];
+                        subject = subject[method].apply(subject, Array.isArray(arg) ? arg : [arg]);
+                     }
+                  }
+                  else {
+                     if (!module || typeof module !== 'function') {
+                        throw new Error('Handler is or not valid');
+                     }
+                     module.apply(null, args);
+                  }
                });
                return true;
             }
