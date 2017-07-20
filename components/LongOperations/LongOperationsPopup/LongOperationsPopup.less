@@ -131,6 +131,9 @@
 
 /* Content */
 
+@loc-popup-column-icon-width: 26px;
+@loc-popup-column-time-width: 92px;
+
 .controls-LongOperationsPopup__content {
 }
 
@@ -143,12 +146,12 @@
 }
 
 .controls-LongOperationsPopup__content .controls-LongOperationsList__nameColumn {
-    max-width: @long-operations-popup-exp-max-width - 26px - 92px;
+    max-width: @long-operations-popup-exp-max-width - @loc-popup-column-icon-width - @loc-popup-column-time-width;
     overflow: hidden;
 }
 
 .controls-LongOperationsPopup__content .controls-LongOperationsList__executeTimeContainer {
-    width: 92px;
+    width: @loc-popup-column-time-width;
 }
 
 .controls-LongOperationsPopup__content .controls-LongOperationsList .controls-LongOperationsList__executeTimeContainer.controls-DataGridView__td,
@@ -158,7 +161,7 @@
 }
 
 .controls-LongOperationsPopup__content .controls-LongOperationsList .controls-DataGridView__firstContentCell {
-    width: 26px;
+    width: @loc-popup-column-icon-width;
     padding-left: 7px;
     padding-right: 2px;
 }
