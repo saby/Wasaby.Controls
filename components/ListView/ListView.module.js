@@ -177,7 +177,7 @@ define('js!SBIS3.CONTROLS.ListView',
            * @event onItemClick Происходит при любом клике по записи.
            * @remark
            * При работе с иерархическими списками при клике по папке (узлу) по умолчанию происходит проваливание в узел или его развертывание.
-           * Чтобы отменить поведение, установленное по умолчанию, в обработчике события установите результат false.
+           * Чтобы отменить такое поведение в обработчике события установите результат false.
            * <pre>
            *    myListView.subscribe('onItemClick', function(eventObject) {
            *        eventObject.setResult(false);
@@ -186,8 +186,12 @@ define('js!SBIS3.CONTROLS.ListView',
            * </pre>
            * @param {Core/EventObject} eventObject Дескриптор события.
            * @param {String} id Первичный ключ записи.
-           * @param {WS.Data/Entity/Model} data Экземпляр класса записи, по которой произвели клик.
-           * @param {jQuery} target DOM-элемент, на который кликнули.
+           * @param {WS.Data/Entity/Model} data Экземпляр класса записи.
+           * @param {jQuery} target DOM-элемент, на который кликнули. Например, это может быть DOM-элемент ячейки (&lt;td class="controls-DataGridView__td"&gt;...&lt;/td&gt;) или её содержимого (&lt;div class="controls-DataGridView__columnValue"&gt;...&lt;/div&gt;).
+           * @param {Object} e Объект события.
+           * @param {Object} clickedCell Объект с расширенной информацией о ячейке, по которой произвели клик.
+           * @param {jQuery} clickedCell.cellContainer DOM-элемент ячейки.
+           * @param {Number} clickedCell.cellIndex Индекс колонки, в которой находится ячейка.
            */
           /**
           * @event onItemActivate Происходит при смене записи (активации) под курсором мыши (например, клик с целью редактирования или выбора).
