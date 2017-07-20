@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
       var dateDecorator = null;
 
       function formatText(text) {
-         if (!text && Object.isEmpty(text)) {
+         if (!text || Object.isEmpty(text)) {
             return '';
          }
 
@@ -37,8 +37,12 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             text = getTextFromDate(text);
          }
          //Если пришел период - склеиваем из дат строку
-         else if (text instanceof Object && text.startDate && text.endDate){
-            text = getTextByDateRange(text);
+         else if (text instanceof Object){
+            if (text.startDate && text.endDate) {
+               text = getTextByDateRange(text);
+            } else {
+               text = '';
+            }
          }
          return text;
       }
