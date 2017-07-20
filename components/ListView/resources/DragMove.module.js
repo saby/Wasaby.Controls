@@ -397,14 +397,8 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
          var offset, size,
             domElement = target.domElement,
             event = DragObject.getEvent();
-         if (this._horisontalDragNDrop) {
-            offset = event.pageX - (domElement.offset() ? domElement.offset().left : 0);
-            size =  domElement.width();
-         } else {
-            offset = event.pageY - (domElement.offset() ? domElement.offset().top : 0);
-            size = domElement.height();
-         }
-         return this._getDragPositioner().get(offset, size, target.item);
+
+         return this._getDragPositioner().get(target.domElement, target.item);
       },
 
       _getDragPositioner: function() {
@@ -413,6 +407,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
                itemsDragNDrop: this._options.itemsDragNDrop,
                projection: this._getItemsProjection(),
                mover: this._getMover(),
+               horisontalDragNDrop: this._horisontalDragNDrop,
                useDragPlaceHolder: this._options.useDragPlaceHolder
             });
          }
@@ -553,6 +548,10 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
       this._sourceExistNode = false;
       this._sourseItems = [];
       this._mover = cfg.mover;
+      this._itemsDragndrop = cfg.itemsDragndrop;
+      this._useDragPlaceHolder = cfg.useDragPlaceHolder;
+      this._horisontalDragNDrop = cfg.horisontalDragNDrop;
+      this._isTree = cInstance.instanceOfModule(this._projection, 'WS.Data/Display/Tree');
       if (cInstance.instanceOfModule(this._projection, 'WS.Data/Display/Tree')) {
          var source = DragObject.getSource();
          if (source && cInstance.instanceOfModule(source, 'SBIS3.CONTROLS.DragEntity.List')) {
@@ -565,28 +564,40 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             }.bind(this));
          }
       }
-      switch (cfg.itemsDragndrop) {
+
+   };
+   DragPositioner.prototype.get = function (domElement, target) {
+      var offset,
+         size,
+         event = DragObject.getEvent();
+      if (this._horisontalDragNDrop) {
+         offset = event.pageX - (domElement.offset() ? domElement.offset().left : 0);
+         size =  domElement.width();
+      } else {
+         offset = event.pageY - (domElement.offset() ? domElement.offset().top : 0);
+         size = domElement.height();
+      }
+      switch (this._itemsDragndrop) {
          case 'onlyChangeOrder':
-            this.get = this._onlyChangeOrder;
+            return this._onlyChangeOrder(offset, size);
             break;
          case  'onlyChangeParent':
-            this.get = this._onlyChangeParent;
+            return this._onlyChangeParent(offset, size);
          case 'separateParent':
-            this.get = this._separateParent;
+            return this._separateParent(offset, size);
             break;
          case 'allow':
          default:
-            if (cInstance.instanceOfModule(this._projection, 'WS.Data/Display/Tree')) {
-               this.get = this._allow;
-            } else if (cfg.useDragPlaceHolder) {
-               this.get = this._withDragPlaceHolder;
+            if (this._isTree) {
+               return this._allow(offset, size);
+            } else if (this._useDragPlaceHolder) {
+               return this._withDragPlaceHolder(offset, size, domElement, event);
             } else {
-               this.get = this._onlyChangeOrder;
+               return this._onlyChangeOrder(offset, size);
             }
             break;
       }
    };
-   DragPositioner.prototype.get = function (offset, size, target) {};
    DragPositioner.prototype._onlyChangeOrder = function (offset, size) {
       return (size/2 - offset > 0) ? DRAG_META_INSERT.before : DRAG_META_INSERT.after;
    };
@@ -601,15 +612,27 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
       }
       return this._allow(offset, size);
    };
+   DragPositioner.prototype._default = function (offset, size) {
+      return offset < 10 ? DRAG_META_INSERT.before : offset > size - 10 ? DRAG_META_INSERT.after : DRAG_META_INSERT.on;
+   };
    DragPositioner.prototype._allow = function (offset, size, target) {
-      var position = offset < 10 ? DRAG_META_INSERT.before : offset > size - 10 ? DRAG_META_INSERT.after : DRAG_META_INSERT.on;
-      if (target && !this._mover.checkRecordsForMove(this._sourseItems, target.getContents(), position)) {
+      var position = this._default(offset, size);
+      if (target && position == DRAG_META_INSERT.on && !this._mover.checkRecordsForMove(this._sourseItems, target.getContents(), position)) {
          position = this._onlyChangeOrder(offset, size)
       }
       return position;
    };
-   DragPositioner.prototype._withDragPlaceHolder = function (offset, size) {
-      return this._onlyChangeOrder(offset, size) == DRAG_META_INSERT.before ? DRAG_META_INSERT.after : DRAG_META_INSERT.before;
+   DragPositioner.prototype._withDragPlaceHolder = function (offset, size, domElement, event) {
+      var position;
+      if (this._horisontalDragNDrop) {
+         var  offsetY = event.pageY - (domElement.offset() ? domElement.offset().top : 0),
+            sizeY = domElement.height();
+         position = this._default(offsetY, sizeY);
+      }
+      if (!position || position == DRAG_META_INSERT.on) {
+         position =  this._onlyChangeOrder(offset, size);
+      }
+      return  position == DRAG_META_INSERT.before ? DRAG_META_INSERT.after : DRAG_META_INSERT.before;
    };
    return DragMove;
 });
