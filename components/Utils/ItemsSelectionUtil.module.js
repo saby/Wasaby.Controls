@@ -100,12 +100,30 @@ define('js!SBIS3.CONTROLS.Utils.ItemsSelection', ['Core/core-instance', 'Core/de
       });
    }
    
+   function itemClickHandler(target, crossClickHandler, itemClickHandler) {
+      var itemContainer, id;
+      
+      target = target instanceof jQuery ? target : $(target);
+      itemContainer = target.closest('.js-controls-ListView__item', this.getContainer()[0]);
+      
+      if(itemContainer.length) {
+         id = this._getItemProjectionByHash(itemContainer.data('hash')).getContents().get(this._options.idProperty);
+      }
+      
+      if(target.hasClass('js-controls__item-cross')) {
+         crossClickHandler(id);
+      } else {
+         itemClickHandler(id);
+      }
+   }
+   
    
    return {
       isEmptyItem: isEmptyItem,
       checkItemForSelect: checkItemForSelect,
       delayedNotify: delayedNotify,
       initSelectorAction: initSelectorAction,
-      onItemClickNotify: onItemClickNotify
+      onItemClickNotify: onItemClickNotify,
+      clickHandler: itemClickHandler
    }
 });

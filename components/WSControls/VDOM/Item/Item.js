@@ -56,7 +56,7 @@ define('js!WSControls/VDOM/Item/Item', [
       onBlur: function (event) {
          this._completeEdit(event.target.value);
       },
-      applyOptions:function(){
+      _applyOptions:function(){
          this.completed = this._options.completed;
          this.title = this._options.title;
          this.item = this._options.item;

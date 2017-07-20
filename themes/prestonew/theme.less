@@ -86,7 +86,6 @@ body {
    }
    .controls-DataGridView__results {
       font-size: @default-font-size;
-      color: @header-color;
    }
 
    .controls-TabButton {
@@ -119,17 +118,20 @@ body {
 
    .controls-ListView__scrollPager {
       .controls-IconButton {
-         background: #293D52;
+         background: #354B62;
          padding: 0;
           border: @button-border;
          .controls-Button__icon {
-            font-size: 3rem!important;
             height: 3rem!important;
             width: 3rem!important;
             line-height: 3rem !important;
             position: absolute;
             top: -@default-border-width;
             left: -@default-border-width;
+            color: #E4E4E4 !important;
+         }
+         &.controls-Click__active {
+           background: @button-active-bg;
          }
          &.ws-disabled {
             border-color: @disabled-color;
@@ -259,7 +261,6 @@ body {
          height: 3rem;
       }
       .controls-IconButton.controls-IconButton__round-border {
-         border: none;
          .controls-Button__icon {
             &.icon-16, &.icon-24 {
                margin-left: -1.5rem;
@@ -343,6 +344,10 @@ body {
     .controls__filter-button__clear-filter {
        font-size: 1.14rem;
     }
+
+   .controls-ListView__item__selected .controls-DataGridView__td:first-child {
+      background-size: 0.2142rem;
+   }
 }
 
 .ws-float-close.sbisname-window-title-close,
@@ -382,9 +387,10 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
 
 .controls-SearchForm {
   .icon-size {
-    font-size: 3rem !important;
-    width: 2rem;
-    height: 3rem;
+     font-size: 2.857rem !important;
+     line-height: 2.857rem !important;
+     width: 2.857rem;
+     height: 2.857rem;
   }
 }
 
@@ -447,8 +453,8 @@ body {
    .ws-sticky-header__table-header-copy {
       // В престо в паре мест используется нестандартные цвета фона, чуть темнее или чуть светлее.
       // В этих местах прикладники должны сами устанавливать цвет фона у зафиксированных заголовков.
-      // В большинстве реестров используется #2C3E50
-      background-color: #2C3E50;
+      // В большинстве реестров используется #2C3E50 - @basic-block-bg-color
+      background-color: @basic-block-bg-color;
    }
 }
 
@@ -494,9 +500,6 @@ body {
      max-height: 3.57rem;
      line-height: 3.57rem;
   }
-  .engine-Browser__path-wrapper-in-head {
-    height: auto;
-  }
   .engine-Browser__path {
     max-height: 2rem;
     height: auto !important;
@@ -532,6 +535,7 @@ body {
       height: 3.57rem;
       max-height: 3.57rem;
       line-height: 3.57rem;
+      font-weight: normal;
    }
 }
 
@@ -704,9 +708,6 @@ body .controls-TextArea {
    min-height: 3rem;
 }
 
-.ws-enabled.controls-Checked__checked>.controls-CheckBox__icon:before {
-    z-index: 2;
-}
 body .controls-ToolBar__menuIcon .icon-24 {
   font-family: carrypresto-icons!important;
 }
@@ -721,10 +722,6 @@ body .controls-ToolBar__menuIcon .icon-24 {
   &.additionalLink__2 {
     font-size: .857rem;
   }
-}
-
-.controls-TreeView__expand {
-  font-size: 1rem !important;
 }
 
 .controls__filter-button__apply-filter {
@@ -748,7 +745,7 @@ body .controls-ToolBar__menuIcon .icon-24 {
 
 .controls-Browser {
    .controls-Browser__topTemplate {
-      height: 3.88rem
+      height: auto;
    }
 }
 
@@ -879,7 +876,7 @@ body {
       background: @basic-block-bg-color;
       color: @default-text-color;
       border: @button-border;
-      padding: 0.857rem 1.6rem 0.857rem 0.857rem;
+      padding: 0.857rem 3rem 0.857rem 0.857rem;
       .ws-infobox-triangle {
          width: .857rem;
          height: .857rem;
@@ -899,20 +896,21 @@ body {
       .ws-infobox-content {
          color: @default-text-color;
          font-size: 1rem;
-         p {
-            margin: 0 20px 8px 0;
-            font-size: 1.43rem;
-            color: @default-text-color;
-         }
       }
 
       .ws-infobox-close-button.icon-disabled{
          font-size: 3rem!important;
-         right: 0.7rem;
-         top: 0.3rem;
+         width: 3rem!important;
+         height: 3rem!important;
+         right: 0;
+         top: 0;
          color: @link-text-color!important;
+         overflow: hidden;
          &:hover {
             color: #B9E9FF!important;
+         }
+         &:before {
+            line-height: 2.7rem!important;
          }
       }
    }
@@ -999,20 +997,9 @@ body {
      }
      .controls-ListView__hoveredItem {
          .controls-DataGridView__td {
-             background-color: #d7e2ef !important;
+             background-color:  #E0ECF5 !important;
          }
      }
-}
-.controls-FieldLink.controls-Picker__show {
-  .controls-FieldLink__showSelector {
-      .icon-primary {
-        color: #26b7fd !important;
-      }
-  }
-
-   .controls-TextBox__field {
-      color: rgb(58, 73, 81) !important;
-   }
 }
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button:hover {
   color: #fff;
@@ -1027,13 +1014,7 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-
 body .controls-CommandsButton__picker {
    .controls-MenuItem {
       padding-right: 2.8rem !important; //38 = 24 (кнопка) + 8(отступ справа у кнопки) +6(отступ слева у кнопки)
-      .icon-primary {
-         color: @accent-color !important;
-      }
    }
-}
-body .controls-Link.controls-FieldLink__Link:not(.ws-disabled).controls-FieldLink-Link__filterButton {
-  color: #26B8FF;
 }
 
 .controls-DropdownList__picker .controls-DropdownList__multiselect .controls-DropdownList__itemCheckBox {
@@ -1050,6 +1031,10 @@ body .controls-Link.controls-FieldLink__Link:not(.ws-disabled).controls-FieldLin
       width: 1.785rem;
       top:  0.0357rem;
    }
+}
+
+.ws-is-webkit .controls-BreadCrumbs .controls-BreadCrumbs__arrow {
+   top:  0.33rem;
 }
 
 .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
@@ -1085,6 +1070,7 @@ body .controls-ItemActions .controls-Button__icon.icon-size {
       }
     }
   }
+
 }
 .controls-Suggest__picker {
   .controls-HtmlDecorators-highlight {
@@ -1098,4 +1084,21 @@ body .controls-ItemActions .controls-Button__icon.icon-size {
 
 .controls-ListView__ItemsToolbar-container {
   height: 1.2rem;
+}
+
+.controls-ListView:not(.controls-ListView__bottomStyle) {
+  .controls-ListView__ItemsToolbar-container.controls-ItemsToolbar__withEditActions {
+    height: 3rem;
+  }
+}
+
+.controls-TreePager-container {
+    cursor: pointer;
+    display: inline-block;
+    font-size: .8571rem;
+    color: @link-text-color; //todo
+    text-decoration: none;
+    &:hover{
+     color: @link-hover-text-color;
+    }
 }

@@ -1,11 +1,11 @@
-<thead class="controls-DataGridView__thead">
+<thead class="controls-DataGridView__thead {{!isVisible ? 'ws-hidden'}}">
 <ws:if data="{{showHead}}">
     <ws:for data="i, row in content">
         <ws:if data="{{row.length && (countRows === 1 ? i === 1 : true)}}">
             <tr>
                 <ws:if data="{{multiselect}}">
                    <th class="controls-DataGridView__th controls-DataGridView__td__checkBox
-                       {{startScrollColumn !== undefined ? (startScrollColumn === 0 ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}}" style="{{(startScrollColumn !== undefined && startScrollColumn <= index) ? 'transform:translateX(' + columnsShift + 'px);'}}">
+                       {{startScrollColumn !== undefined ? (startScrollColumn === 0 ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}}" style="{{ startScrollColumn === 0 ? ('transform:translateX(' + columnsShift + 'px);') }}">
                    </th>
                 </ws:if>
 

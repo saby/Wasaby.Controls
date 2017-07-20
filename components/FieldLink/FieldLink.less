@@ -140,6 +140,9 @@
 
    &.controls-Picker__show {
       background: @controls-FieldLink-picker-show-color;
+      .controls-TextBox__field {
+         color: @controls-FieldLink-picker-show-field-color
+      }
    }
 
    .controls-TextBox__fieldWrapper {
@@ -241,7 +244,7 @@
       color: @controls-FieldLink-link-color;
       text-decoration: underline;
 
-      &:hover {
+      &:hover:not(.controls-Link__disabledHover) {
          color: @controls-FieldLink-link-color-hover;
       }
    }
@@ -250,7 +253,7 @@
          color: @controls-FieldLink-FilterButton-color;
          text-decoration: none;
 
-         &.ws-enabled:hover {
+         &.ws-enabled:hover:not(.controls-Link__disabledHover) {
             color: @controls-FieldLink-FilterButton-color-hover;
             text-decoration: underline;
          }

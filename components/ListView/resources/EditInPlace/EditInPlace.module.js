@@ -297,7 +297,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             },
             getTarget: function() {
                var id = this._model.getId();
-               return this._options.itemsContainer.find('.js-controls-ListView__item[data-id="' + (id === undefined ? '' : id) + '"]:not(".controls-editInPlace")');
+               return this._options.itemsContainer.find('>.js-controls-ListView__item[data-id="' + (id === undefined ? '' : id) + '"]:not(".controls-editInPlace")');
             },
             _deactivateActiveChildControl: function() {
                var activeChild = this.getActiveChildControl(undefined, true);

@@ -1,6 +1,7 @@
 define('js!SBIS3.CONTROLS.TreeMixin', [
    "Core/core-functions",
    "Core/core-merge",
+   'js!SBIS3.CONTROLS.Utils.TreeDataReload',
    "Core/constants",
    "Core/CommandDispatcher",
    "Core/Deferred",
@@ -18,7 +19,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    "Core/helpers/Object/isEmpty",
    "Core/helpers/Object/isPlainObject",
    "js!WS.Data/Adapter/Sbis"
-], function ( cFunctions, cMerge, constants, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, colHelpers, cInstance, TemplateUtil, fHelpers, IoC, isEmpty, isPlainObject) {
+], function ( cFunctions, cMerge, TreeDataReload, constants, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, colHelpers, cInstance, TemplateUtil, fHelpers, IoC, isEmpty, isPlainObject) {
 
    var createDefaultProjection = function(items, cfg) {
       var
@@ -219,6 +220,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          records = searchProcessing(projection, cfg);
       }
       else {
+         cfg._resetGroupItemsCount(cfg);
          projection.each(function(item, index, group) {
             if (item.isNode()){
                cfg.hasNodes = true;
@@ -981,6 +983,60 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          }
       },
       around: {
+         /**
+          * Позволяет перезагрузить данные как одной модели, так и всей иерархии из дочерних элементов этой записи.
+          * @param {Number} id Идентификатор записи
+          * @param {Object|WS.Data/Entity/Model} meta Мета информация
+          * @param {String} direction Направление при иерархическом обходе дочерних узлов.
+          * Варианты значений:
+          * <ul>
+          *    <li>undefined || "" (не задано, пустая строка) - осуществляется перезагрузка одной конкретной записи.</li>
+          *    <li>"inside" - перезагрузка данных по иерархии внутрь.</li>
+          * </ul>
+          * В случае, когда direction принимает значение "inside" будет сформирован фильтр для перезагрузки данных.
+          * Фильтр будет состоять из дополненного текущего фильтра представления:
+          * <b>Поле иерархии (например, "Раздел")</b> будет содержать ID узла, перезагрузка которого осуществляется.
+          * <b>Поле "reloadableNodes"</b> будет содержать объект, свойствами которого будут ID узлов, для которых необходимо обновить данные.
+          * Для обновления данных самого перезагружаемого узла - достаточно вернуть его в результах запроса вместе с остальными данными.
+          * @returns {Deferred}
+          */
+         reloadItem: function(parentFn, id, meta, direction) {
+            var
+               items = this.getItems(),
+               item = items.getRecordById(id),
+               hierarchyRelation = this._options._getHierarchyRelation(this._options),
+               nodeProperty = this.getNodeProperty(),
+               filter;
+            if (direction === 'inside') {
+               if (item) {
+                  filter = cFunctions.clone(this.getFilter());
+                  filter[this.getParentProperty()] = id === 'null' ? null : id;
+                  filter.reloadableNodes = TreeDataReload.prepareReloadableNodes({
+                     direction: direction,
+                     hierarchyRelation: hierarchyRelation,
+                     item: item,
+                     items: items,
+                     nodeProperty: nodeProperty
+                  });
+                  this._notify('onBeforeDataLoad', filter, this.getSorting(), this._offset, this._limit);
+                  return this._callQuery(filter, this.getSorting(), this._offset, this._limit)
+                     .addCallback(function (updatedItems) {
+                        TreeDataReload.applyUpdatedData({
+                           direction: direction,
+                           hierarchyRelation: hierarchyRelation,
+                           item: item,
+                           items: items,
+                           nodeProperty: nodeProperty,
+                           updatedItems: updatedItems
+                        });
+                     });
+               } else {
+                  return Deferred.success();
+               }
+            } else {
+               return parentFn.call(this, id, meta);
+            }
+         },
          _getItemProjectionByItemId: function(parentFn, id) {
             var root;
             if (isPlainObject(this._options.root)) {
@@ -1158,7 +1214,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          },
          reload: function() {
             // сохраняем текущую страницу при проваливании в папку
-            if (this._options.saveReloadPosition && this._previousRoot !== this._options._curRoot) {  
+            if (this._options.saveReloadPosition) {  
                this._hierPages[this._previousRoot] = this._getCurrentPage();
             }
             this._options._folderOffsets['null'] = 0;

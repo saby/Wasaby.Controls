@@ -114,6 +114,9 @@
       // обрезает операциями над записью по ширине справа, чтобы контейнер операций над записью не перекрывал скролл
       margin-right: -4px;
    }
+   // Хак выше решает задачу, но вызывает появление горизонтального скрола, из-за отрицательного маржина,
+   // поэтому вешаю overflow: hidden, чтобы скрола не было
+   overflow: hidden;
 
    .controls-Button__icon.icon-size {
       .icon-size(@list-view-items-toolbar-icon-size, @list-view-items-toolbar-font-family);

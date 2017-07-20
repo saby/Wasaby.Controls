@@ -3,14 +3,14 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    'Core/helpers/collection-helpers',
    'tmpl!SBIS3.CONTROLS.CompositeViewMixin',
    'Core/IoC',
-   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/CompositeItemsTemplate',
+   'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/CompositeItemsTemplate',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/TileTemplate',
-   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/TileContentTemplate',
-   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/ListTemplate',
-   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/ListContentTemplate',
-   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/ItemsTemplate',
-   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/InvisibleItemsTemplate',
+   'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/TileTemplate',
+   'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/TileContentTemplate',
+   'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/ListTemplate',
+   'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/ListContentTemplate',
+   'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/ItemsTemplate',
+   'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/InvisibleItemsTemplate',
    'Core/core-merge',
    'js!SBIS3.CONTROLS.Link'
 ], function(constants, collection, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate, ItemsTemplate, InvisibleItemsTemplate, cMerge) {
@@ -78,6 +78,15 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
          }
          parentOptions.listTpl = TemplateUtil.prepareTemplate(listTpl);
          parentOptions.defaultListTpl = TemplateUtil.prepareTemplate(cfg._defaultListTemplate);
+
+         switch (cfg.viewMode) {
+            case 'tile':
+               parentOptions.itemTpl = tileTpl;
+               break;
+            case 'list':
+               parentOptions.itemTpl = listTpl;
+               break;
+         }
       }
       return parentOptions
    },
@@ -507,7 +516,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
             else {
                //TODO когда идет догрузка по скроллу, все перерисовывать слишком дорого - возникли тормоза в контактах, до VDOM вставляем такую проверку
                var lastItemsIndex = this._getItemsProjection().getCount() - newItems.length;
-               if (lastItemsIndex == newItemsIndex) {
+               if ((lastItemsIndex == newItemsIndex) || action == 'rm') {//Если случается событие replace то срабатывает сначала удаление, потом добавление. Если по удалению перерисовывать все, то потом добавление дублирует запись, поэтому проверка на удалени обязательна
                   parentFnc.apply(this, args);
                }
                else {

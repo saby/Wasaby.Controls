@@ -4,8 +4,8 @@
 define('js!SBIS3.CONTROLS.FastDataFilter',
    [
    "js!SBIS3.CORE.CompoundControl",
-   "js!SBIS3.CONTROLS.FilterMixin",
    "js!SBIS3.CONTROLS.ItemsControlMixin",
+   "js!SBIS3.CONTROLS.FilterMixin",
    'Core/Deferred',
    "js!SBIS3.CONTROLS.DropdownList",
    "tmpl!SBIS3.CONTROLS.FastDataFilter",
@@ -253,6 +253,11 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                return true;
             }
             return false;
+         },
+
+         setFilter: function() {
+            //Избавляюсь от гонки миксинов, на ItemsControlM и FilterM есть методы setFilter. На компоненте должен вызываться метод с ICM
+            ItemsControlMixin.setFilter.apply(this, arguments);
          }
       });
       return FastDataFilter;

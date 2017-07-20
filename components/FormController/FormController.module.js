@@ -9,6 +9,7 @@ define('js!SBIS3.CONTROLS.FormController', [
    "Core/ConsoleLogger",
    "Core/core-instance",
    "Core/helpers/functional-helpers",
+   "Core/helpers/dom&controls-helpers",
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CORE.LoadingIndicator",
    "js!WS.Data/Entity/Record",
@@ -21,7 +22,7 @@ define('js!SBIS3.CONTROLS.FormController', [
    "i18n!SBIS3.CONTROLS.FormController",
    'css!SBIS3.CONTROLS.FormController'
 ],
-   function( cContext, cFunctions, cMerge, CommandDispatcher, EventBus, Deferred, IoC, ConsoleLogger, cInstance, fHelpers, CompoundControl, LoadingIndicator, Record, Model, SbisService, InformationPopupManager, OpenDialogUtil, TitleManager) {
+   function( cContext, cFunctions, cMerge, CommandDispatcher, EventBus, Deferred, IoC, ConsoleLogger, cInstance, fHelpers, domHelpers, CompoundControl, LoadingIndicator, Record, Model, SbisService, InformationPopupManager, OpenDialogUtil, TitleManager) {
    /**
     * Компонент, на основе которого создают диалог, данные которого инициализируются по записи.
     * В частном случае компонент применяется для создания <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/'>диалогов редактирования записи</a>.
@@ -164,7 +165,7 @@ define('js!SBIS3.CONTROLS.FormController', [
             /**
              * @cfg {Boolean} Устанавливает сохранение только изменённых полей.
              */
-            diffOnly: false,
+            diffOnly: true,
             /**
              * @cfg {Object} Устанавливает ассоциативный массив, который используют только при создании новой записи для инициализации её начальными значениями.
              */
@@ -228,7 +229,15 @@ define('js!SBIS3.CONTROLS.FormController', [
 
          //TODO в рамках совместимости
          this._dataSource = this._options.source;
-         if (this._options.dataSource && this._options.dataSource.endpoint) {
+         var dataSource = this._options.dataSource;
+         if (dataSource && dataSource.endpoint) {
+            
+            // Установка режима dataSource.updateOnlyChanged происходит, только если он не задан напрямую в опциях
+            dataSource.options = dataSource.options || {};
+            if (dataSource.options.updateOnlyChanged === undefined) {
+               dataSource.options.updateOnlyChanged = !!this._options.diffOnly;
+            }
+            
             this._dataSource = this._dataSource || FormController.prototype.createDataSource(this._options);
             if (!this._options.record && !cInstance.instanceOfModule(this._options._receiptRecordDeferred, 'Core/Deferred')) {
                this._getRecordFromSource({});
@@ -303,7 +312,6 @@ define('js!SBIS3.CONTROLS.FormController', [
             this._toggleOverlay(false);
          }
          this._updateIndicatorZIndex();
-         this.activateFirstControl();
          this._notifyOnAfterFormLoadEvent();
       },
 
@@ -408,36 +416,6 @@ define('js!SBIS3.CONTROLS.FormController', [
          if (fields.title || Object.isEmpty(fields)) {
             this._updateDocumentTitle();
          }
-      },
-
-      _getRecordForUpdate: function () {
-         if (!this._options.diffOnly){
-            return this._options.record;
-         }
-
-         var record = this._options.record,
-            changedRec = new Model({
-               idProperty: record.getIdProperty(),
-               adapter: record.getAdapter()
-            }),
-            changedFields = record.getChanged();
-         if (changedFields.indexOf(record.getIdProperty()) === -1){
-            changedFields.push(record.getIdProperty());
-         }
-
-         $.each(changedFields, function(i, key){
-            var formatIndex = record.getFormat().getFieldIndex(key);
-            if (formatIndex > -1) {
-               changedRec.addField(record.getFormat().at(formatIndex), undefined, record.get(key));
-               if (cInstance.instanceOfModule(record.getAdapter(), 'WS.Data/Adapter/Sbis')) {
-                  var newFormatIndex = changedRec.getFormat().getFieldIndex(key);
-                  //todo сделать нормальную сериализацию формата, щас не сериализуется поле связь и при копировании уходит как строка
-                  changedRec.getRawData().s[newFormatIndex] = cFunctions.clone(record.getRawData().s[formatIndex]);
-               }
-            }
-         });
-
-         return changedRec;
       },
 
       _setContextRecord: function(record){
@@ -815,8 +793,7 @@ define('js!SBIS3.CONTROLS.FormController', [
             self = this;
 
          if (this._options.record.isChanged() || self._newRecord || this._needUpdateAlways) {
-            this._updateDeferred = this._dataSource.update(this._getRecordForUpdate()).addCallback(function (key) {
-               self.getRecord().acceptChanges(); //Выпилить вообще весь функционал _getRecordForUpdate, задача с отправкой только измененных полей решается через опцию sbisService
+            this._updateDeferred = this._dataSource.update(this._options.record).addCallback(function (key) {
                updateConfig.additionalData.key = key;
                self._newRecord = false;
                return key;
@@ -947,7 +924,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        */
       _createChildControlActivatedDeferred: function(){
          this._activateChildControlDeferred = (new Deferred()).addCallback(function(){
-            this.activateFirstControl();
+            domHelpers.doAutofocus(this._container);
          }.bind(this));
          return this._activateChildControlDeferred;
       },
@@ -957,7 +934,7 @@ define('js!SBIS3.CONTROLS.FormController', [
             this._activateChildControlDeferred = undefined;
          }
          else{
-            this.activateFirstControl();
+            domHelpers.doAutofocus(this._container);
          }
       },
 

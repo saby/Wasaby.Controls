@@ -7,7 +7,7 @@
 
 .controls-CheckBox__caption {
   word-wrap: break-word;
-  line-height: @check-box-icon-size - 2 * extract(@check-box-caption-padding, 1);
+  line-height: @check-box-caption-line-height;
 }
 
 .controls-CheckBox__icon {
@@ -70,7 +70,7 @@
     cursor: @disabled-hover-cursor;
   }
   .controls-CheckBox__caption {
-    color: @disabled-text-color;
+    color: @check-box-disabled-color;
   }
 }
 

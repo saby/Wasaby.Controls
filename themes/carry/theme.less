@@ -251,6 +251,9 @@
          .controls-TextBox__field {
             font-size: @text-box-height-carryFont;
          }
+         .controls-TextBox__field__fixIE {
+          font-size: 28px;
+         }
       }
    }
 }
@@ -446,6 +449,15 @@
        top: 0;
    }
 }
+
+.ws-is-ie {
+   .engine-Browser__path-wrapper {
+      .controls-Browser__breadCrumbs {
+         top: 3px;
+      }
+   }
+}
+
 .controls-BreadCrumbs {
    .controls-BreadCrumbs__itemsContainer{
       vertical-align: top;
@@ -469,10 +481,6 @@
 // ReportPrinter старое окно печати
 .ws-window-titlebar-custom {
    &.ws-printdialog-titlebar {
-      .ws-window-title {
-         margin-top: -30px !important;
-      }
-
       .ws-printdialog-print-button {
          right: 76px;
          width: 152px;

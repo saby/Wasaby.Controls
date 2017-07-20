@@ -10,7 +10,7 @@
             </ws:for>
             <ws:if data="{{footerTpl}}">
                <div class="controls-TreeDataGridView__folderFooterTmpl">
-                  <ws:partial template="{{footerTpl}}" scope="{{...}}"></ws:partial>
+                  <ws:partial template="{{footerTpl}}" scope="{{...}}"  item="{{item}}" projItem="{{projItem}}" ></ws:partial>
                </div>
             </ws:if>
             <ws:SBIS3.CONTROLS.TreePaging scope="{{pagerOptions}}"></ws:SBIS3.CONTROLS.TreePaging>

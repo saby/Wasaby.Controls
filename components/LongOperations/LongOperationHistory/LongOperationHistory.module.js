@@ -8,10 +8,12 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
       'js!WS.Data/Entity/Record',
       'html!SBIS3.CONTROLS.LongOperationHistory',
       'css!SBIS3.CONTROLS.LongOperationHistory',
-      'js!SBIS3.Engine.Browser',
+      'js!SBIS3.CONTROLS.Browser'/*###'js!SBIS3.Engine.Browser'*/,
       'html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryDateTemplate',
       'html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryTimeTemplate',
-      'html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryStatusTemplate'
+      'html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryStatusTemplate',
+      'js!SBIS3.CONTROLS.FastDataFilter',/*###*/
+      'js!SBIS3.CONTROLS.DataGridView'
    ],
 
    function (CompoundControl, longOperationsManager, LongOperationHistoryItem, DataSet, RecordSet, Record, dotTplFn) {
@@ -61,7 +63,7 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
 
          _bindEvents: function () {
             var self = this;
-            this.subscribeTo(this._view, 'onPropertyChanged', function (evt, property) {
+            this.subscribeTo(this._view, /*'onPropertiesChanged'*/'onPropertyChanged', function (evtName, property) {
                if (property === 'filter') {
                   self._reload();
                }
@@ -72,7 +74,7 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
                var container = self._view.getContainer();
                self._view.getItems().each(function (item, id) {
                   if (item.get('isFailed')) {
-                     container.find('.js-controls-ListView__item[data-id="' + item.getId() + '"]').addClass('engine-LongOperationHistory__view_errorOperation engine-OperationRegistry__view_errorOperation');//TODO: ### Убрать одни класс!
+                     container.find('.js-controls-ListView__item[data-id="' + item.getId() + '"]').addClass('controls-LongOperationHistory__view_errorOperation');
                   }
                });
             });
@@ -90,21 +92,27 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
                );
             }
             else {
+               // Если не использовать RecordSet, то в DataGridView будет создан оборачивающий источник данных класса Memory и события
+               // onPropertyChange:filter начнут удваиваться (в реализации 3.7.5.150)
+               // (ItemsControlMixin:1634 и затем ItemsControlMixin:1686 вместо одного ItemsControlMixin:1803)
                var data = new RecordSet({
                   idProperty: 'id'
                });
+               var item = new LongOperationHistoryItem({
+                  title: failedOperation.get('title'),
+                  id: failedOperation.get('id'),
+                  //producer: failedOperation.get('producer'),
+                  endedAt: new Date(failedOperation.get('startedAt').getTime() + (failedOperation.get('timeSpent') || 0)),
+                  errorMessage: failedOperation.get('resultMessage') || 'Ошибка',
+                  isFailed: true
+               });
                data.assign([new Record({
-                  rawData: new LongOperationHistoryItem({
-                     title: failedOperation.get('title'),
-                     id: failedOperation.get('id'),
-                     //producer: failedOperation.get('producer'),
-                     endedAt: new Date(failedOperation.get('startedAt').getTime() + (failedOperation.get('timeSpent') || 0)),
-                     errorMessage: failedOperation.get('resultMessage') || 'Ошибка',
-                     isFailed: true
-                  }),
+                  rawData: item,
                   idProperty: 'id'
                })]);
                this._view.setItems(data);
+
+
             }
          }
       });

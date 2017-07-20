@@ -37,7 +37,7 @@ define('js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil', [],
                     integerCount =  this._getIntegersCount(currentVal),
                     checkMaxLengthResult = this.checkMaxLength(currentVal, maxLength),
                     newCaretPosition = b,
-                    isFull = this._getValueLength(currentVal) === maxLength || this._getIntegersCount(currentVal) === integers,
+                    isFull = this._getValueLength(currentVal) === maxLength || integerCount === integers || integerCount === 15,
                     replaceFirstZero = false;
 
                 if (((currentVal[0] == 0 && b == 1) || (currentVal[0] == '-' && currentVal[1] == 0 && b == 2)) && b == e ){ // заменяем первый ноль если курсор после него
@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil', [],
                                     e+=1;
                                 }
                             }else {
-                                (delimiters && integerCount && integerCount % 3 == 0 && integerCount !== integers && currentVal.length) ? newCaretPosition += 2 : newCaretPosition++;
+                                (delimiters && integerCount && integerCount % 3 == 0 && integerCount !== integers && currentVal.length && !isFull) ? newCaretPosition += 2 : newCaretPosition++;
                             }
                             if(currentVal[e] === ' ' && isFull){
                                 e+=1;

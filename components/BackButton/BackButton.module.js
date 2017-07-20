@@ -130,7 +130,7 @@ define('js!SBIS3.CONTROLS.BackButton',
       setCaption: function(caption){
          var isEmptyCaption = (caption === null || caption === '' || typeof caption === 'undefined');
          this._link.setCaption(caption);
-         this.setTooltip(strHelpers.htmlToText(caption));
+         this.setTooltip(strHelpers.htmlToText(caption || ''));
          this._options.caption = caption;
          this._container.toggleClass('controls-BackButton__empty', isEmptyCaption);
       },

@@ -170,7 +170,6 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
             textValue: ''
          },
          _filterRecordSet: null,
-         _filterInitialized: false,
          _contentInitialized: false,
          _filterAccordion: null,
          _onFilterItemChangeFn: null
@@ -195,8 +194,8 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          if (this._options.items) {
             this._initializeFilter();
             if (this.isExpanded()) {
-               this._initializeFilterItems();
                this._contentInitialized = true;
+               this._initializeFilterItems();
             }
          }
       },
@@ -245,7 +244,6 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          this._updateFilterProperty();
          this._filterRecordSet.subscribe('onCollectionItemChange', this._onFilterItemChangeFn);
          this.setTextValue(this._prepareTextValue());
-         this._filterInitialized = true;
       },
       _prepareFilter: function() {
          var
@@ -346,8 +344,10 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          this._getContentContainer().html(this._options._contentTpl(this._options));
          this.reviveComponents();
          this._initializeFilter();
-         this._initializeFilterItems();
+         // Поведение должно быть аналогично тому, что в методе init у FilterPanel:
+         // проставляем флаг инициализации сразу после оживления верстки и расчёта фильтра
          this._contentInitialized = true;
+         this._initializeFilterItems();
       },
       /**
        * Сбрасывает результирующий фильтр (см. {@link filter}).
@@ -361,19 +361,29 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
          // Слушать изменения нельзя. Компонент работает с контекстом и рекордсетом. Если слушать изменения, то нотификация в контекст не произойдет, т.к. рекордсет будет тот же самый.
          this._filterRecordSet.setEventRaising(false);
          this._filterRecordSet.each(function(item) {
-            item.set(ITEM_FILTER_TEXT_VALUE, ''); // Вначале нужно поменять текстовое описание и лишь потом фильтр, т.к. при onFilterChange должно быть уже правильное текстовое значение
-            item.set(ITEM_FILTER_VALUE, cFunctions.clone(item.get(ITEM_FILTER_RESET_VALUE)));
-         });
+            // До 3.17.20 метод установки значения в контекст оборачивался в debounce и изменения property прилетали в обратном порядке.
+            // Приходилось менять местами установку textValue и value, чтобы в итоге изменения property происходили правильно.
+            // item.set(ITEM_FILTER_VALUE, cFunctions.clone(item.get(ITEM_FILTER_RESET_VALUE)));
+            // item.set(ITEM_FILTER_TEXT_VALUE, '');
+            // С 3.17.20 debounce убран и теперь порядок, в котором обновляются property, правильный. Костыль можно убрать.
+            this._resetItemFilterFields(item);
+         }.bind(this));
          this._filterRecordSet.setEventRaising(true);
          // После сброса - сами вызываем пересчёт текущего состояния фильтра и его текстового описания со всеми нотификациями
          this._updateState(true, true);
-         // Значения в RecordSet записываются асинхронно (debounce). Из-за этого приходится оборачивать в timeout перерисовку, иначе она произойдет по старому рекордсету
-         setTimeout(function() {
-            // Сама перерисовка нужна, т.к. выше мы отключаем eventRaising и проекция, смотрящая на этот рекордсет будет перегенерирована с новыми hash'ами.
+         // Сама перерисовка нужна, т.к. выше мы отключаем eventRaising и проекция, смотрящая на этот рекордсет будет перегенерирована с новыми hash'ами.
+         if (this._filterAccordion) {
             this._filterAccordion.redraw();
             this._updateResetFilterButtons();
-            this._notify('onFilterReset', this.getFilter());
-         }.bind(this));
+         }
+         this._notify('onFilterReset', this.getFilter());
+      },
+      _resetItemFilterFields: function(item) {
+         var
+            resetValues = {};
+         resetValues[ITEM_FILTER_VALUE] = cFunctions.clone(item.get(ITEM_FILTER_RESET_VALUE));
+         resetValues[ITEM_FILTER_TEXT_VALUE] = '';
+         item.set(resetValues);
       },
       /**
        * Сбрасывает поле результирующего фильтра (см. {@link filter}).
@@ -382,16 +392,10 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
        * @command resetFilterField
        */
       _resetFilterField: function(fieldName) {
-         var
-            item = this._filterRecordSet.at(this._filterRecordSet.getIndexByValue(ITEM_FILTER_ID, fieldName));
-         item.set(ITEM_FILTER_TEXT_VALUE, ''); // Вначале нужно поменять текстовое описание и лишь потом фильтр, т.к. при onFilterChange должно быть уже правильное текстовое значение
-         item.set(ITEM_FILTER_VALUE, cFunctions.clone(item.get(ITEM_FILTER_RESET_VALUE)));
+         this._resetItemFilterFields(this._filterRecordSet.at(this._filterRecordSet.getIndexByValue(ITEM_FILTER_ID, fieldName)))
       },
       _getContentContainer: function() {
          return $('.controls-FilterPanel__contentContainer', this.getContainer());
-      },
-      _getHeadContainer: function() {
-         return $('.controls-FilterPanel__headContainer', this.getContainer());
       },
       destroy: function() {
          this._filterRecordSet.unsubscribe('onCollectionItemChange', this._onFilterItemChangeFn);

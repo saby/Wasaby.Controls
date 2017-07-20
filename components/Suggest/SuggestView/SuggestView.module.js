@@ -9,7 +9,9 @@ define('js!SBIS3.CONTROLS.SuggestView',
        'js!SBIS3.CONTROLS.TabControl',
        'Core/ParallelDeferred',
        'Core/IoC',
-       'js!SBIS3.CONTROLS.IItemsControl'
+       'js!SBIS3.CONTROLS.IItemsControl',
+       'js!SBIS3.CONTROLS.ScrollContainer',
+       'css!SBIS3.CONTROLS.SuggestView'
     ], function(CompoundControl, dotTplFn, TabControl, ParallelDeferred, IoC, IItemsControl) {
 
        'use strict';

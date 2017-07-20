@@ -298,7 +298,7 @@
 // ------------- //
 
 // Normal default button
-@button-checked-border-width:                   0;
+@button-checked-border-width:                   0px;//calc (0 - 2px) - invalid, calc(0px - 2px) - valid
 @button-checked-font-weight:                    bold;
 @button-checked-text-color:                     @blue-dark-color;
 @button-checked-border:                         @button-checked-border-width solid transparent;
@@ -383,6 +383,7 @@
 
 //FilterButton
 @controls-filterButton-button-margin:           14px 8px 8px 8px;
+@controls-filterButton-button-margin-right-align:  14px 0 8px 8px;
 @controls-filterButton-area-header-padding:     24px 76px 16px 12px;
 @controls-filterButton-area-header-height:      40px;
 @controls-filterButton-area-header-width:       429px;
@@ -393,6 +394,7 @@
 @controls-filterButton-apply-margin-right:      30px;
 @controls-filterLine-link-hover-color:          @controls-filterLine-link-color;
 @controls-filterButton-button-height:           40px;
+@controls-filterButton-picker-close-top:        24px;
 @controls-filterLine-wrapper-height:            @controls-filterButton-button-height;
 @controls-filterLine-items-line-height:         40px;
 
@@ -444,7 +446,6 @@
 @text-box-border-color:                         #EAEAEA;
 @text-box-focus-bg:                             #F0F5FB;
 @text-box-bottom-border-color:                  #CCCCCC;
-@text-box-field-focus-text-color:               @black-color;
 @text-box-hover-border-color:                   @text-box-bottom-border-color;
 @text-box-field-hover-text-color:               @default-text-color;
 @text-box-focus-border-color:                   @text-box-bottom-border-color;
@@ -605,7 +606,7 @@
 @controls-OperationsPanelButton-width:          32px;
 @controls-OperationsPanelButton-vert-height:    32px;
 @controls-OperationsPanelButton-icon-left:      2px;
-@controls-OperationsPanelButton-font:           24px 'TensorFont', sans-serif;
+@controls-OperationsPanelButton-font-size:      24px;
 
 // --------- //
 // Menu link //
@@ -678,6 +679,9 @@
 
 //Scrollbar
 @controls-Scrollbar-width:                         4px;
+@controls-Scrollbar-animated-width:                @controls-Scrollbar-width;
+@controls-Scrollbar-animated-right:                0;
+@controls-Scrollbar-animate-duration:              0;
 @controls-Scrollbar-thumb-border-radius:           2px;
 @controls-Scrollbar-dark-hover-thumb-color:        rgba(255, 255, 255, 0.20);
 @controls-Scrollbar-dark-active-thumb-color:       rgba(255, 255, 255, 0.50);
@@ -691,6 +695,7 @@
 
 @long-operations-list-time-ctr-f-size: 16px;
 @long-operations-popup-collapsed-width: 420px;
+@long-operations-popup-collapsed-max-width: 420px;
 @long-operations-popup-exp-width: 600px;
 @long-operations-popup-exp-max-width: 600px;
 @long-operations-popup-header-height: 60px;

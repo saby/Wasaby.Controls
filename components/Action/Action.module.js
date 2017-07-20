@@ -155,6 +155,12 @@ define('js!SBIS3.CONTROLS.Action.Action',
          _handleError: function (error, meta) {
          },
          /**
+          * Запрещаем принимать фокус экшенам
+          */
+         canAcceptFocus: function(){
+            return false;
+         },
+         /**
           * 
           * @private
           */

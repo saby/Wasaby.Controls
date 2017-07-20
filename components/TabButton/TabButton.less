@@ -139,6 +139,7 @@
          .flex-shrink(1);
          .align-self(baseline);
          overflow: hidden;
+         display: block;
       }
    }
    &.controls-TabButton__main-item {
@@ -148,6 +149,12 @@
          font-weight: @tab-button-large-inner-font-weight;
          line-height: 27px;
          vertical-align: top;
+
+         .controls-TabButton__wrapper {
+            //mainItem имеет flex-shrink:1, tabSpaceTemplate - 9999.
+            //Из-за этого mainItem ужимается на доли пикселя, из-за чего текст троеточится
+            width: ~'calc(100% + 1px)';
+         }
 
          .controls-MenuLink {
             font-size: @tab-button-large-inner-font-size;
@@ -183,6 +190,9 @@
             color: @black-color;
             font-size: @default-font-size;
          }
+         .controls-EditAtPlace__fieldWrapper{
+            padding: 0;
+         }
          .controls-TextBox {
             .controls-TextBox__fieldWrapper {
                padding-top: 1px;
@@ -202,7 +212,6 @@
       overflow: @tab-button-inner-overflow;
       height: @tab-button-inner-height;
       max-width: @tab-button-large-inner-max-width;
-      .inline-flexbox();
       &:before {
         content: @tab-button-inner-after-content;
         display: @tab-button-inner-after-display;
@@ -214,8 +223,7 @@
         z-index: @tab-button-inner-after-z-index;
       }
       .controls-TabButton__wrapper {
-         .inline-flexbox();
-         width: 100%;
+         .flexbox();
       }
       .controls-TabButton__icon {
          position: @tab-button-icon-position;
@@ -410,4 +418,19 @@
         line-height: 23px;
      }
   }
+}
+
+.ws-is-ie12 {
+   .controls-TabButton {
+      .controls-TabButton__caption {
+         height: @tab-button-height;
+         > * {
+            vertical-align: top;
+         }
+      }
+      .controls-TabButton__additionalText2 .controls-EditAtPlace {
+         position: relative;
+         top: -1px;
+      }
+   }
 }

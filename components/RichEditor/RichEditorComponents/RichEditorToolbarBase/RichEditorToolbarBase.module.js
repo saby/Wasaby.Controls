@@ -4,7 +4,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
    "Core/EventBus",
    "js!SBIS3.CONTROLS.ButtonGroupBase",
    'Core/helpers/string-helpers',
-   'js!SBIS3.CONTROLS.StylesPanelNew'
+   'js!SBIS3.CONTROLS.StylesPanelNew',
+   'css!SBIS3.CONTROLS.RichEditorToolbarBase'
 ], function( cFunctions, cMerge, EventBus, ButtonGroupBase, strHelpers, StylesPanel) {
 
    'use strict';
@@ -362,6 +363,9 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
          destroy: function() {
             this._unbindEditor();
             this._handlersInstances = null;
+            if (this._stylesPanel) {
+               this._stylesPanel.destroy();
+            }
             RichEditorToolbarBase.superclass.destroy.apply(this, arguments);
             this._itemsContainer = null;
          }

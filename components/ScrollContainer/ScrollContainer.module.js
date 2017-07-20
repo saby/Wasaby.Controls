@@ -113,7 +113,17 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                 */
                stickyContainer: false,
 
-               activableByClick: false
+               activableByClick: false,
+
+               isPaging: false,
+
+               navigationToolbar: {
+                  begin: false,
+                  prev: false,
+                  pages: false,
+                  next: false,
+                  end: false
+               }
             };
             this._content = null;
             this._headerHeight = 0;
@@ -156,12 +166,22 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                }
                this._subscribeOnScroll();
 
+               this._addGradient();
+
                // Что бы до инициализации не было видно никаких скроллов
                this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
 
                // task: 1173330288
                // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
                FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer().find('.controls-ScrollContainer__content');
+
+               this._initPaging();
+            }
+         },
+
+         _addGradient: function() {
+            if (this._getScrollHeight() >  this._container.height()) {
+               this._container.addClass('controls-ScrollContainer__bottom-gradient');
             }
          },
 
@@ -307,7 +327,27 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             if (this._scrollbar){
                this._scrollbar.setPosition(scrollTop);
             }
+            if (this._paging) {
+               this._calcPagingSelectedKey(scrollTop);
+            }
             this.getContainer().toggleClass('controls-ScrollContainer__top-gradient', scrollTop > 0);
+            this.getContainer().toggleClass('controls-ScrollContainer__bottom-gradient', scrollTop < this._getScrollHeight() -  this._container.height());
+         },
+
+         _calcPagingSelectedKey: function(position) {
+            var page = position / this._container.height();
+            if (!(page % 1)) {
+               page += 1;
+            } else {
+               page = Math.ceil(page);
+               if (page + 1 === this._paging.getPagesCount()) {
+                  page += 1;
+               }
+            }
+            if (this._page !== page) {
+               this._page = page;
+               this._paging.setSelectedKey(page);
+            }
          },
 
          _hideNativeScrollbar: function(){
@@ -344,6 +384,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          _scrollbarDragHandler: function(event, position){
             if (position != this._getScrollTop()){
                this._scrollTo(position);
+               if (this._paging) {
+                  this._calcPagingSelectedKey(position);
+               }
             }
          },
 
@@ -362,6 +405,14 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                      this._headerHeight = headerHeight;
                   }
                }
+            }
+            //ресайз может позваться до инита контейнера
+            if (this._content) {
+               this._addGradient();
+            }
+
+            if (this._paging) {
+               this._setPagesCount(Math.ceil(this._getScrollHeight() / this._container.height()));
             }
          },
 
@@ -417,8 +468,41 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
          _moveScroll: function(top) {
             this._content.scrollTop(top);
-         }
+         },
          //endregion retail_offlain
+
+         _initPaging: function() {
+            if (this._options.isPaging) {
+               requirejs(['js!SBIS3.CONTROLS.Paging'], function(paging) {
+                  this._paging = new paging({
+                     element: this._container.find('.js-controls-ScrollContainer__paging'),
+                     className: 'controls-ScrollContainer__paging controls-ListView__scrollPager',
+                     visiblePath: this._options.navigationToolbar,
+                     parent: this
+                  });
+                  this._setPagesCount(Math.ceil(this._getScrollHeight() / this._container.height()));
+                  this._paging.subscribe('onSelectedItemChange', this._pageChangeHandler.bind(this));
+                  this._page = 1;
+               }.bind(this));
+            }
+         },
+
+         _setPagesCount: function(count) {
+            this._paging.setPagesCount(count);
+            if (count === 1) {
+               this._paging.hide();
+            } else {
+               this._paging.show();
+            }
+         },
+
+         _pageChangeHandler: function(event, nPage) {
+            var scrollTop = this._container.height() * (nPage - 1);
+            if (this._page !==  nPage) {
+               this._page = nPage;
+               this._scrollTo(scrollTop);
+            }
+         }
       });
 
       return ScrollContainer;

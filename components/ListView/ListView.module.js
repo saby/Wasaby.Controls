@@ -11,7 +11,6 @@ define('js!SBIS3.CONTROLS.ListView',
    'Core/Deferred',
    'Core/IoC',
    'js!SBIS3.CORE.CompoundControl',
-   'js!SBIS3.CORE.CompoundActiveFixMixin',
    'js!SBIS3.StickyHeaderManager',
    'js!SBIS3.CONTROLS.ItemsControlMixin',
    'js!SBIS3.CONTROLS.MultiSelectable',
@@ -65,7 +64,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
-   function (cMerge, cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, CompoundActiveFixMixin, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
+   function (cMerge, cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents, LayoutManager,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
@@ -101,7 +100,6 @@ define('js!SBIS3.CONTROLS.ListView',
        * @extends SBIS3.CORE.CompoundControl
        * @author Герасимов Александр Максимович
        *
-       * @mixes SBIS3.CORE.CompoundActiveFixMixin
        * @mixes SBIS3.CONTROLS.DecorableMixin
        * @mixes SBIS3.CONTROLS.ItemsControlMixin
        * @mixes SBIS3.CONTROLS.FormWidgetMixin
@@ -138,7 +136,7 @@ define('js!SBIS3.CONTROLS.ListView',
        */
 
       /*TODO CommonHandlers тут в наследовании не нужны*/
-      var ListView = CompoundControl.extend([CompoundActiveFixMixin, DecorableMixin, ItemsControlMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DragNDropMixin, CommonHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
+      var ListView = CompoundControl.extend([DecorableMixin, ItemsControlMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DragNDropMixin, CommonHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
          _dotTplFn: dotTplFn,
          /**
           * @event onChangeHoveredItem Происходит при переводе курсора мыши на другой элемент коллекции списка.
@@ -1090,18 +1088,6 @@ define('js!SBIS3.CONTROLS.ListView',
                 originalEvent = e.originalEvent,
                 mobFix = 'controls-ListView__mobileSelected-fix',
                 isTouchEvent = originalEvent ? ((!originalEvent.movementX && !originalEvent.movementY && constants.compatibility.touch && (originalEvent.touches || constants.browser.isMobilePlatform)) || (originalEvent.sourceCapabilities && originalEvent.sourceCapabilities.firesTouchEvents)) : true;
-            this._setTouchSupport(
-               /* touch события - однозначно включаем touch режим */
-               Array.indexOf(['swipe', 'tap', 'touchend'], e.type) !== -1 ||
-               /* IOS - однозначно включаем touch режим */
-               constants.browser.isMobileIOS ||
-               /* Для остальных устройств из-за большого количества неожиданных багов, таких как:
-                  - mousemove срабатывает при клике пальцем (после touchStart), можно определить по координатам сдвига 0.0
-                  - mousemove срабатывает через случайный промежуток времени после touchEnd
-                  - mousemove бывает проскакивает между touchmove, особенно часто повторяется на android и windows устройствах
-                  написана специальная проверка */
-               (e.type === 'mousemove' && isTouchEvent)
-            );
 
 
             switch (e.type) {
@@ -1185,8 +1171,7 @@ define('js!SBIS3.CONTROLS.ListView',
                pagingZIndex: this._pagingZIndex
             });
             this._scrollBinder.bindScrollPaging();
-            dcHelpers.trackElement(this.getContainer(), true).subscribe('onVisible', this._onVisibleChange.bind(this));
-
+            
             if (!this._inScrollContainerControl) {
                // Отлавливаем изменение масштаба
                // Когда страница увеличена на мобильных платформах или если на десктопе установить ширину браузера меньше 1024рх,
@@ -1195,10 +1180,10 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         _onVisibleChange: function(event, visible){
+         _updateScrollPagerVisibility: function(){
             if (this._scrollPager) {
                // покажем если ListView показалось и есть страницы и скроем если скрылось
-               this._scrollPager.setVisible(visible && this._scrollPager.getPagesCount());
+               this._scrollPager.setVisible(this.isVisible() && this._scrollPager.getPagesCount());
             }
          },
 
@@ -1821,7 +1806,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      //Ввостановим значение _limit, т.к. после вызова reload _limit стал равен MAX_SELECTED,
                      //и следующие страницы будут грузиться тоже по MAX_SELECTED записей
                      this._limit = this._options.pageSize;
-                     this._scrollOffset.bottom = MAX_SELECTED;
+                     this._scrollOffset.bottom = MAX_SELECTED - this._limit;
                      //Очистим selectedItems чтобы при заполнении новыми элементами, не делать проверку на наличие элементов в коллекции
                      if (selectedItems && selectedItems.getCount()) {
                         selectedItems.clear();
@@ -1844,15 +1829,21 @@ define('js!SBIS3.CONTROLS.ListView',
          /*MASS SELECTION START*/
          /*TODO: После перехода на новый механизм переименовать метод в setSelectedAll и удалить старый метод, выделяющий 1000 записей*/
          setSelectedAllNew: function(selected) {
-            this._getMassSelectionController().setSelectedAll(selected);
+            if (this._options.useSelectAll) {
+               this._getMassSelectionController().setSelectedAll(selected);
+            }
          },
 
          toggleSelectedAll: function() {
-            this._getMassSelectionController().toggleSelectedAll();
+            if (this._options.useSelectAll) {
+               this._getMassSelectionController().toggleSelectedAll();
+            }
          },
 
          getSelection: function() {
-            return this._getMassSelectionController().getSelection();
+            if (this._options.useSelectAll) {
+               return this._getMassSelectionController().getSelection();
+            }
          },
 
          _getMassSelectionController: function() {
@@ -2117,6 +2108,14 @@ define('js!SBIS3.CONTROLS.ListView',
                   editInPlace.setItemsProjection(this._getItemsProjection());
                }.bind(this));
             }
+            if (this._hasDragMove()) {
+               this._getDragMove().setItemsProjection(this._getItemsProjection());
+            }
+            if (this._hasMover()) {
+               this._getMover().setItems(this.getItems());
+               this._getMover().setItemsProjection(this._getItemsProjection());
+            }
+
          },
          beforeNotifyOnItemClick: function() {
             var handler = this._notifyOnItemClick;
@@ -2464,7 +2463,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._changeHoveredItem(editedContainer);
                //Отображаем кнопки редактирования
                itemsToolbar.showEditActions();
-               if (!this.getItems().getRecordById(model.getId())) {
+               if (!this.getItems() || !this.getItems().getRecordById(model.getId())) {
                   if (this.getItemsActions()) {
                      itemsInstances = this.getItemsActions().getItemsInstances();
                      if (itemsInstances['delete']) {
@@ -2573,6 +2572,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _onLeftSwipeHandler: function() {
             if (this._isSupportedItemsToolbar()) {
                if (this._hasHoveredItem()) {
+                  this._setTouchSupport(true);
                   this._showItemsToolbar(this._hoveredItem);
                   this.setSelectedKey(this._hoveredItem.key);
                } else {
@@ -2707,6 +2707,11 @@ define('js!SBIS3.CONTROLS.ListView',
                         if(self._touchSupport) {
                            self._clearHoveredItem();
                         }
+                     },
+                     onItemsToolbarHide: function() {
+                        if(self._touchSupport) {
+                           self._setTouchSupport(false);
+                        }
                      }
 
                   }
@@ -2830,6 +2835,7 @@ define('js!SBIS3.CONTROLS.ListView',
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
          _onResizeHandler: function(){
             ListView.superclass._onResizeHandler.call(this);
+            this._updateScrollPagerVisibility();
             if (this.getItems()){
                //Мог поменяться размер окна или смениться ориентация на планшете - тогда могут влезть еще записи, надо попробовать догрузить
                if (this.isInfiniteScroll() && this._scrollWatcher && !this._scrollWatcher.hasScroll()){
@@ -3000,11 +3006,13 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _setInfiniteScrollState: function(mode, reverse){
-            if (mode) {
-               this._infiniteScrollState.mode = mode;
-            }
-            if (reverse){
-               this._infiniteScrollState.reverse = reverse;
+            if (this._options.infiniteScroll){
+               if (mode) {
+                  this._infiniteScrollState.mode = mode;
+               }
+               if (reverse){
+                  this._infiniteScrollState.reverse = reverse;
+               }
             }
          },
 
@@ -3128,7 +3136,8 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _updateScrollIndicatorTop: function () {
             var top = '';
-            if (this._isScrollingUp()) {
+            // Если скролим вверх и есть что загружать сверху
+            if (this._isScrollingUp() && this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.top)) {
                top = StickyHeaderManager.getStickyHeaderIntersectionHeight(this.getContainer()) - this._scrollWatcher.getScrollContainer().scrollTop();
             }
             this._loadingIndicator.css('top', top);
@@ -3158,10 +3167,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _loadNextPage: function() {
             if (this._dataSource) {
                var offset = this._getNextOffset(),
-                  scrollingUp = this._isScrollingUp(),
                   self = this;
                //показываем индикатор вверху, если подгрузка вверх или вниз но перевернутая
-               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', scrollingUp);
+               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator__up', this._isScrollingUp());
                this._showLoadingIndicator();
                this._toggleEmptyData(false);
 
@@ -3743,7 +3751,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.getFilter()['СлужебныйКоличествоЗаписей'] = items.getCount();
                   this._scrollOffset.top = more - items.getCount();
                   this.setPage(pageNumber, true);
-                  this._scrollWatcher.scrollTo('bottom');
+                  // Сейчас обновление пэйджинга происходит в _dataLoadedCallback, который происходит раньше этой функции
+                  // Поэтому обновим пейджинг еще раз, что бы он правильно отобразился, с правильным offset
+                  this._updatePaging();
+                  this._getScrollWatcher().scrollTo('bottom');
                }
                this._lastPageLoaded = true;
             }.bind(this);
@@ -3857,9 +3868,12 @@ define('js!SBIS3.CONTROLS.ListView',
           * Производится создание элемента коллекции внутри узла иерархии, в который установлено проваливание. Предустановлено значение для поля "Наименование". Отображение созданного элемента коллекции в режиме редактирования происходит в начале списка.
           * <pre>
           * var commandParams = {
-          *     parentId: myView.getCurrentRoot(),
-          *     preparedModel: {
-          *         'Наименование': 'ООО "Тензор"',
+          *     options: {
+          *         parentId: myView.getCurrentRoot(),
+          *         addPosition: 'top',
+          *         preparedModel: {
+          *             'Наименование': 'ООО "Тензор"',
+          *         },
           *     },
           *     withoutActivateEditor: true
           * };
@@ -3974,7 +3988,6 @@ define('js!SBIS3.CONTROLS.ListView',
                if (!this._inScrollContainerControl) {
                   $(window).off('resize scroll', this._setScrollPagerPositionThrottled);
                }
-               dcHelpers.trackElement(this.getContainer(), false).unsubscribe('onVisible', this._onVisibleChange);
                this._scrollPager.destroy();
             }
             if (this._listNavigation) {
@@ -3988,8 +4001,8 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             this._toggleEventHandlers(this._container, false);
             ListView.superclass.destroy.call(this);
-            if (this._dragMoveController) {
-               this._dragMoveController.destroy();
+            if (this._hasDragMove()) {
+               this._getDragMove().destroy();
             }
          },
          /**
@@ -4031,7 +4044,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _setItemsDragNDrop: function(allowDragNDrop) {
             this._options.itemsDragNDrop = allowDragNDrop;
             this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', this._getDragInitHandler());
-            this.once('onDragOver', this._makeDragMove.bind(this));//могут перетаскивать с другого контрола тогда _draginit не сработает
+            if (this._dragMoveController) {
+               this._dragMoveController.setItemsDragNDrop(allowDragNDrop)
+            }
          },
          /**
           * возвращает метод который инициализирует dragndrop
@@ -4041,7 +4056,6 @@ define('js!SBIS3.CONTROLS.ListView',
          _getDragInitHandler: function() {
             return this._dragInitHandler ? this._dragInitHandler : this._dragInitHandler  = (function(e){
                if (this._canDragStart(e)) {
-                  this._makeDragMove();
                   this._initDrag.call(this, e);
                   //TODO: Сейчас появилась проблема, что если к компьютеру подключен touch-телевизор он не вызывает
                   //preventDefault и при таскании элементов мышкой происходит выделение текста.
@@ -4070,17 +4084,23 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {*}
           * @private
           */
-         _makeDragMove: function () {
+         _getDragMove: function () {
             if (!this._dragMoveController) {
                this._dragMoveController = new DragMove({
                   view: this,
                   mover: this._getMover(),
                   projection: this._getItemsProjection(),
                   useDragPlaceholder: this._options.useDragPlaceHolder,
+                  linkTemplateConfig: this._options.linkTemplateConfig,
                   dragEntity: this._options.dragEntity,
-                  dragEntityList: this._options.dragEntityList
+                  dragEntityList: this._options.dragEntityList,
+                  itemsDragNDrop: this.getItemsDragNDrop()
                });
             }
+            return this._dragMoveController;
+         },
+         _hasDragMove: function () {
+            return !!this._dragMoveController
          },
          _canDragStart: function(e) {
             //TODO: При попытке выделить текст в поле ввода, вместо выделения начинается перемещения элемента.
@@ -4091,6 +4111,21 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          _needProcessMouseEvent: function(e) {
             return !cInstance.instanceOfModule($(e.target).wsControl(), 'SBIS3.CONTROLS.TextBoxBase');
+         },
+         _beginDragHandler: function () {
+            return this._getDragMove().beginDrag();
+         },
+         _endDragHandler: function () {
+            return this._getDragMove().endDrag();
+         },
+         _onDragHandler: function () {
+            return this._getDragMove().drag();
+         },
+         _updateDragTarget: function () {
+            return this._getDragMove().updateTarget();
+         },
+         _createAvatar: function () {
+            return this._getDragMove().createAvatar();
          },
          /*DRAG_AND_DROP END*/
          //region moveMethods
@@ -4231,6 +4266,14 @@ define('js!SBIS3.CONTROLS.ListView',
                });
             }
             return this._mover
+         },
+         /**
+          * возвращает true если есть мувер
+          * @return {boolean}
+          * @private
+          */
+         _hasMover: function () {
+            return !!this._mover;
          },
          /**
           * Перемещает переданные записи

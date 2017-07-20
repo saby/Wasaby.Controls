@@ -82,6 +82,10 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
                pickerContainer.removeClass('controls-Picker__owner__hover');
             });
 
+         this.subscribeTo(this._picker, 'onDestroy', function(){
+            self.getContainer().off('mouseenter mouseleave');
+         });
+
          this._border = container.outerWidth() - container.innerWidth();
          this._setPickerContent();
          pickerContainer.addClass('js-controls-Picker__initialized');
@@ -100,6 +104,8 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
                      if(pickerConfig[key][handlerKey]) {
                         pickerConfig[key][handlerKey] = [pickerConfig[key][handlerKey]];
                         pickerConfig[key][handlerKey].push(handlerVal);
+                     } else {
+                        pickerConfig[key][handlerKey] = handlerVal;
                      }
                   });
                   return;

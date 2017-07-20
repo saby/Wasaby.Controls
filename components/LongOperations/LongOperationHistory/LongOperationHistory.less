@@ -1,16 +1,101 @@
-.engine-LongOperationHistory__view_errorOperation,
-.engine-LongOperationHistory__view_errorOperation .engine-LongOperationHistory__view_time{
+.controls-LongOperationHistory__view_errorOperation,
+.controls-LongOperationHistory__view_errorOperation .controls-LongOperationHistory__view_time{
     color: #EF463A;
 }
 
-.engine-LongOperationHistory__view_time {
+.controls-LongOperationHistory__view_time {
     color: #999999;
 }
 
-.engine-LongOperationHistory .controls-DataGridView__tr {
+.controls-LongOperationHistory .controls-DataGridView__tr {
     height: 40px;
 }
 
-.engine-LongOperationHistory .controls-ListView__ItemsToolbar-container {
+.controls-LongOperationHistory .controls-ListView__ItemsToolbar-container {
     margin-bottom: 12px;
+}
+
+.controls-LongOperationHistory .controls-DataGridView__tr .controls-DataGridView__td .controls-DataGridView__columnValue {
+    white-space: normal;
+}
+
+/*Это вероятно лишнее, но пока так*/
+
+.controls-LongOperationHistory .controls-Browser {
+    &,
+    .controls-Browser__view {
+        min-height: 0;
+        height: 100%;
+        clear: both;
+        .flexbox();
+        .flex-direction(column);
+    }
+
+    .controls-Browser__table {
+        .flex-shrink(0);
+    }
+}
+
+.ws-is-webkit, .ws-is-mobile-chrome-ios {
+    .controls-LongOperationHistory .controls-Browser {
+        &,
+        .controls-Browser__view {
+            .flex-basis(0);
+            .flex-grow(1);
+        }
+    }
+}
+
+.ws-is-ie {
+    .controls-LongOperationHistory .controls-Browser {
+        &,
+        .controls-Browser__view {
+            .flex-shrink(1);
+        }
+    }
+}
+
+.controls-LongOperationHistory {
+    .controls-Browser__table {
+        width: 100%;
+        .flexbox();
+    }
+
+    .controls-Browser__tableRow {
+        height: auto;
+        .inline-flexbox();
+        .justify-content(flex-end);
+        white-space: nowrap;
+        overflow: hidden;
+        width: 100%;
+        .flex-shrink(1);
+    }
+
+    .controls-Browser__tableCell-fastDataFilter {
+        .order(2);
+        overflow: hidden;
+        min-width: 30px;
+        max-width: 100%;
+        margin-right: 8px;
+    }
+
+    .controls-Browser__table.controls-Browser__table-fullFilterBlock .controls-Browser__tableCell-fastDataFilter {
+        margin-right: 4px;
+    }
+
+    .controls-Browser__table .controls-Browser__fastDataFilter {
+        .flexbox();
+        -webkit-box-pack: start;
+        .justify-content(flex-start);
+        .flex-shrink(1);
+    }
+
+    .controls-Browser__fastDataFilter .controls-DropdownList {
+        margin-top: 8px;
+        overflow: hidden;
+    }
+
+    .ws-sticky-header__block.ws-sticky-header__fixed.controls-Browser__table {
+        z-index: 3;
+    }
 }

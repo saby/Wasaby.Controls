@@ -13,8 +13,9 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    "js!WS.Data/Display/Collection",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "Core/core-instance",
-   "Core/helpers/functional-helpers"
-], function ( cFunctions, Deferred, IoC, ConsoleLogger,MemorySource, SbisService, RecordSet, Query, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, cInstance, fHelpers) {
+   "Core/helpers/functional-helpers",
+   "Core/helpers/Object/isEmpty"
+], function ( cFunctions, Deferred, IoC, ConsoleLogger,MemorySource, SbisService, RecordSet, Query, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, cInstance, fHelpers, isEmptyObject) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -1127,7 +1128,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
       _clearItems: function (container) {
          container = container || this._getItemsContainer();
          /*Удаляем компоненты-инстансы элементов*/
-         if (!Object.isEmpty(this._itemsInstances)) {
+         if (!isEmptyObject(this._itemsInstances)) {
             for (var i in this._itemsInstances) {
                if (this._itemsInstances.hasOwnProperty(i)) {
                   this._itemsInstances[i].destroy();
@@ -1222,7 +1223,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                resultGroup,
                drawGroup,
                drawItem = true;
-         if (!Object.isEmpty(groupBy)){
+         if (!isEmptyObject(groupBy)){
             resultGroup = groupBy.method.apply(this, [item, at, last]);
             drawGroup = typeof resultGroup === 'boolean' ? resultGroup : (resultGroup instanceof Object && resultGroup.hasOwnProperty('drawGroup') ? !!resultGroup.drawGroup : false);
             drawItem = resultGroup instanceof Object && resultGroup.hasOwnProperty('drawItem') ? !!resultGroup.drawItem : true;
@@ -1293,7 +1294,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          //TODO может перерисовку надо по-другому делать
          this._options.groupBy = group;
          // запросим данные из источника
-         if (!Object.isEmpty(this._options.groupBy)){
+         if (!isEmptyObject(this._options.groupBy)){
             if (!this._options.groupBy.hasOwnProperty('method')){
                this._options.groupBy.method = this._groupByDefaultMethod;
             }
@@ -1410,7 +1411,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
         * </pre>
         */
       getItemsInstances: function () {
-         if ( this.addedOnlyExtraNew || Object.isEmpty(this._itemsInstances)) {
+         if ( this.addedOnlyExtraNew || isEmptyObject(this._itemsInstances)) {
             this._fillItemInstances();
          }
          return this._itemsInstances;
@@ -1488,7 +1489,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var previousGroupBy = this._previousGroupBy;//После добавления записи восстанавливаем это значение, чтобы не сломалась группировка
          /*TODO отдельно обрабатываем случай с группировкой*/
          var flagAfter = false;
-         if (!Object.isEmpty(this._options.groupBy)) {
+         if (!isEmptyObject(this._options.groupBy)) {
             var
                meth = this._options.groupBy.method,
                prev = this._itemsProjection.getPrevious(item),
@@ -1545,7 +1546,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          item = item.getContents();
          var container = this._getItemContainer(this._getTargetContainer(item), item);
          /*TODO отдельно обрабатываем случай с группировкой*/
-         if (!Object.isEmpty(this._options.groupBy)) {
+         if (!isEmptyObject(this._options.groupBy)) {
             var
                prevContainer = container.prev(),
                nextContainer = container.next();

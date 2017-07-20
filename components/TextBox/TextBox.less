@@ -16,8 +16,8 @@
   &.ws-validation-error {
     border-width: @text-box-error-border-width;
     border-style: @text-box-error-border-style;
-    border-color: @text-box-error-border-color;
-    background: @text-box-error-bg;
+    border-color: @text-box-error-border-color!important;
+    background: @text-box-error-bg!important;
     .controls-TextBox__fieldWrapper {
       .controls-TextBox__field {
         color: @text-box-field-error-text-color;
@@ -42,11 +42,6 @@
     border-style: @text-box-focus-border-style;
     border-color: @text-box-focus-border-color;
     background: @text-box-focus-bg;
-    .controls-TextBox__fieldWrapper {
-      .controls-TextBox__field {
-        color: @text-box-field-focus-text-color;
-      }
-    }
   }
 
   &.ws-disabled {

@@ -1,0 +1,38 @@
+@border-params: 1px solid #dfdfdf;
+
+.controls-MasterDetail {
+  position: relative;
+  display: table;
+}
+
+.controls-MasterDetail__masterContainer, .controls-MasterDetail__detailContainer {
+  display: table-cell;
+}
+
+.controls-MasterDetail__detailContainer {
+  max-width: 70%;
+  min-width: 70%;
+  width: 70%;
+}
+
+.controls-MasterDetail__masterContainer {
+  max-width: 30%;
+  min-width: 30%;
+  width: 30%;
+  border-right: @border-params;
+}
+
+.controls-MasterDetail__masterContainer .controls-ListView__item__selected td {
+  border-bottom: @border-params;
+  border-top: @border-params;
+  right: -1px;
+  padding-left: 5px;
+
+  &:first-child {
+    padding-left: 7px;
+  }
+
+  &:last-child {
+    border-right: 1px solid white;
+  }
+}

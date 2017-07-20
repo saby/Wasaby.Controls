@@ -78,7 +78,7 @@
       color: #ccc;
       cursor: default !important;
      .controls-DropdownList__selectedItem .controls-DropdownList__textWrapper {
-        color: #ccc;
+        color: @DropdownList-disabled-text;
         cursor: default !important;
         text-decoration: none;
       }
@@ -99,7 +99,7 @@
 
    &.controls-DropdownList__defaultItem{
      .controls-DropdownList__selectedItem .controls-DropdownList__textWrapper{
-       color: #999;
+       color: @DropdownList-default-item-color;
        &:hover{
          text-decoration: underline;
        }
@@ -237,7 +237,6 @@
          margin-top: -1px;
       }
       .controls-DropdownList__pickerHead {
-         text-align: center;
          background: #f4f4f4;
       }
 
@@ -315,6 +314,11 @@
          padding: 3px 8px 2px 8px;
          .controls-DropdownList__itemTextWrapper {
             padding-left: 16px;
+         }
+      }
+      &.controls-DropdownList__defaultItem {
+         .controls-DropdownList__item-text {
+            color: @DropdownList-picker-default-item-color;
          }
       }
       &:hover {
