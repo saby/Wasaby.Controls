@@ -4,7 +4,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
    "Core/EventBus",
    "js!SBIS3.CONTROLS.ButtonGroupBase",
    'Core/helpers/string-helpers',
-   'js!SBIS3.CONTROLS.StylesPanelNew'
+   'js!SBIS3.CONTROLS.StylesPanelNew',
+   'css!SBIS3.CONTROLS.RichEditorToolbarBase'
 ], function( cFunctions, cMerge, EventBus, ButtonGroupBase, strHelpers, StylesPanel) {
 
    'use strict';
