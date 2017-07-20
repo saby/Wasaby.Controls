@@ -143,24 +143,43 @@ define([
             assert.equal(target.domElement.html(), 1);
          })
       });
-      describe('._getDirectionOrderChange', function () {
-         it('should return before', function () {
-            assert.equal(dragMove._getDirectionOrderChange(event.target), 'before');
-         });
-         it('should return after', function () {
-            event.pageY = 11;
-            assert.equal(dragMove._getDirectionOrderChange(event.target), 'after');
-         });
-         it('should return before', function () {
-            dragMove._horisontalDragNDrop = true;
-            assert.equal(dragMove._getDirectionOrderChange(event.target), 'before');
-         });
-         it('should return after', function () {
-            dragMove._horisontalDragNDrop = true;
-            event.pageX = 21;
-            assert.equal(dragMove._getDirectionOrderChange(event.target), 'after');
-         });
+      describe('DragPositioner', function () {
+         var dragPositioner, domElement;
+         beforeEach(function () {
+            if (dragMove) {
+               dragMove.beginDrag();
+               dragMove._horisontalDragNDrop = false;
+               dragPositioner = dragMove._getDragPositioner();
+               domElement = {
+                  offset: function () {
+                     return {left: 0, top: 0};
+                  },
+                  width: function () {
+                     return 50;
+                  },
+                  height: function () {
+                     return 100;
+                  }
+               };
+            }
 
+         });
+         it('should return before', function () {
+            assert.equal(dragPositioner.get(domElement), 'before');
+         });
+         it('should return after', function () {
+            event.pageY = 51;
+            assert.equal(dragPositioner.get(domElement), 'after');
+         });
+         it('should return before for horizontal', function () {
+            dragPositioner._horisontalDragNDrop = true;
+            assert.equal(dragPositioner.get(domElement), 'before');
+         });
+         it('should return after', function () {
+            dragPositioner._horisontalDragNDrop = true;
+            event.pageX = 26;
+            assert.equal(dragPositioner.get(domElement), 'after');
+         });
       });
       describe('.updateTarget', function () {
          beforeEach(function () {
@@ -177,6 +196,9 @@ define([
          });
          it('should not set target', function () {
             event.target = view.getContainer().find('[data-id=2]');
+            dragMove._getDirectionOrderChange = function () {
+               return 'before';
+            }
             dragMove.updateTarget();
             assert.isUndefined(DragObject.getTarget());
          });
@@ -246,14 +268,14 @@ define([
             dragMove.beginDrag();
             dragMove.updateTarget();
             dragMove.drag();
-            assert.isTrue(DragObject.getTarget().getDomElement().hasClass('controls-DragNDrop__insertBefore'));
+            assert.isTrue(DragObject.getTarget().getDomElement().hasClass('controls-DragNDrop__insertAfter'));
          });
          it('should add hilight if another drag owner', function () {
             dragMove.beginDrag();
             dragMove.updateTarget();
             DragObject.setOwner({});
             dragMove.drag();
-            assert.isTrue(DragObject.getTarget().getDomElement().hasClass('controls-DragNDrop__insertBefore'));
+            assert.isTrue(DragObject.getTarget().getDomElement().hasClass('controls-DragNDrop__insertAfter'));
          });
       });
       describe('.endDrag', function () {
@@ -261,10 +283,9 @@ define([
             dragMove.beginDrag();
             event.target = view.getContainer().find('[data-id=3]');
             dragMove.updateTarget();
-            view.move = function (moved, target, position) {
+            view.move = function (moved, target) {
                assert.equal(moved[0].getId(), 1);
                assert.equal(target.getId(), 3);
-               assert.equal(position, 'before');
                done();
             };
             dragMove.endDrag();

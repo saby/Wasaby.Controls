@@ -589,7 +589,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
          case 'allow':
          default:
             if (this._isTree) {
-               return this._allow(offset, size);
+               return this._allow(offset, size, target);
             } else if (this._useDragPlaceHolder) {
                return this._withDragPlaceHolder(offset, size, domElement, event);
             } else {
