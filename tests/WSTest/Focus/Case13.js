@@ -4,12 +4,7 @@ define('js!WSTest/Focus/Case13', [
 ], function(dotTplFn, CompoundControl) {
 
    var moduleClass = CompoundControl.extend({
-      _dotTplFn: dotTplFn,
-      $protected: {
-         _options: {
-
-         }
-      },
+      _dotTplFn: dotTplFn
    });
    return moduleClass;
 });

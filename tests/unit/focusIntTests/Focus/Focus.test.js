@@ -38,9 +38,11 @@ define([
                      testControl = new comp({
                         element: 'component'
                      });
+                     func(testControl); //Запускаем функцию проверки
+                     done();
+                  } else {
+                     func(done);
                   }
-                  func(testControl); //Запускаем функцию проверки
-                  done();
                });
             });
          })(i);
