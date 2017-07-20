@@ -11,11 +11,12 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
       'Core/core-extend',
       'js!WS.Data/Entity/ObservableMixin',
       'Core/Deferred',
+      'Core/UserInfo',
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.ILongOperationsProducer'
    ],
 
-   function (CoreExtend,  ObservableMixin, Deferred, LongOperationEntry, ILongOperationsProducer) {
+   function (CoreExtend,  ObservableMixin, Deferred, UserInfo, LongOperationEntry, ILongOperationsProducer) {
       'use strict';
 
       /**
@@ -299,7 +300,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             }
             options.canSuspend = typeof options.onSuspend === 'function' && typeof options.onResume === 'function';
             options.canDelete = typeof options.onDelete === 'function';
-            options.userId = require('Core/UserInfo').get('ИдентификаторСервисаПрофилей') || $.cookie('CpsUserId');
+            options.userId = UserInfo.get('ИдентификаторСервисаПрофилей') || $.cookie('CpsUserId');
             var operationId = _put(this, options);
             var self = this;
             stopper.addCallbacks(

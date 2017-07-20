@@ -361,7 +361,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   if (this._isDestroyed) {
                      return;
                   }
-                  this._view._notify('onDataLoad', results);
+                  //###this._view._notify('onDataLoad', results);
                   this._setItems(results);
                }.bind(this));
          },
