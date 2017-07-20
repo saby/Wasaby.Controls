@@ -58,7 +58,13 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             /**
              * @cfg {String|Boolean} Устанавливает возможность перемещения элементов с помощью курсора мыши.
              */
-            itemsDragNDrop: true
+            itemsDragNDrop: true,
+            /**
+             * @cfg {String} Устанавливает поле в котором хранится признак типа записи в иерархии
+             * @remark
+             * null - лист, false - скрытый узел, true - узел
+             */
+            nodeProperty: null
          },
          _dragPlaceHolder: null,
          _dragPositioner: null
@@ -408,7 +414,8 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
                projection: this._getItemsProjection(),
                mover: this._getMover(),
                horisontalDragNDrop: this._horisontalDragNDrop,
-               useDragPlaceHolder: this._options.useDragPlaceHolder
+               useDragPlaceHolder: this._options.useDragPlaceHolder,
+               nodeProperty: this._options.nodeProperty
             });
          }
          return this._dragPositioner;
@@ -548,23 +555,25 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
       this._sourceExistNode = false;
       this._sourseItems = [];
       this._mover = cfg.mover;
-      this._itemsDragndrop = cfg.itemsDragndrop;
+      this._itemsDragNDrop = cfg.itemsDragNDrop;
       this._useDragPlaceHolder = cfg.useDragPlaceHolder;
       this._horisontalDragNDrop = cfg.horisontalDragNDrop;
+      this._nodeProperty = cfg.nodeProperty;
       this._isTree = cInstance.instanceOfModule(this._projection, 'WS.Data/Display/Tree');
-      if (cInstance.instanceOfModule(this._projection, 'WS.Data/Display/Tree')) {
+      if (this._isTree) {
          var source = DragObject.getSource();
-         if (source && cInstance.instanceOfModule(source, 'SBIS3.CONTROLS.DragEntity.List')) {
+         if (source && this._nodeProperty) {
             source.forEach(function (item) {
-               var projItem = item.getProjectionItem();
-               if (projItem.isNode && projItem.isNode()) {
-                  this._sourceExistNode = true
+               if (cInstance.instanceOfModule(item, 'SBIS3.CONTROLS.DragEntity.Row')) {
+                  var item = item.getModel();
+                  if (item.get(this._nodeProperty) !== null) {
+                     this._sourceExistNode = true
+                  }
+                  this._sourseItems.push(item);
                }
-               this._sourseItems.push(item.getModel());
             }.bind(this));
          }
       }
-
    };
    DragPositioner.prototype.get = function (domElement, target) {
       var offset,
@@ -577,7 +586,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
          offset = event.pageY - (domElement.offset() ? domElement.offset().top : 0);
          size = domElement.height();
       }
-      switch (this._itemsDragndrop) {
+      switch (this._itemsDragNDrop) {
          case 'onlyChangeOrder':
             return this._onlyChangeOrder(offset, size);
             break;

@@ -4095,7 +4095,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   linkTemplateConfig: this._options.linkTemplateConfig,
                   dragEntity: this._options.dragEntity,
                   dragEntityList: this._options.dragEntityList,
-                  itemsDragNDrop: this.getItemsDragNDrop()
+                  itemsDragNDrop: this.getItemsDragNDrop(),
+                  nodeProperty: this._options.nodeProperty
                });
             }
             return this._dragMoveController;
