@@ -18,6 +18,8 @@
    padding: @controls-Scrollbar-thumb-padding;
    width: @controls-Scrollbar-width;
    outline: none;
+   animation-delay: @controls-Scrollbar-animate-duration;
+   transition: width @controls-Scrollbar-animate-duration ease-in-out;
    .controls-Scrollbar__thumb {
       cursor: pointer;
       position: relative;
@@ -28,23 +30,13 @@
       &:hover {
          background-color: @controls-Scrollbar-dark-active-thumb-color;
       }
-      width: @controls-Scrollbar-width;
-      right: 0;
-      animation-delay: @controls-Scrollbar-animate-duration;
-      transition: width @controls-Scrollbar-animate-duration ease-in-out, right @controls-Scrollbar-animate-duration;
    }
-   &:hover {
-      .controls-Scrollbar__thumb {
-         width: @controls-Scrollbar-animated-width;
-         right: @controls-Scrollbar-animated-right;
-
-      }
+   &:hover, &.controls-Scrollbar__dragging {
+      width: @controls-Scrollbar-animated-width;
    }
    &.controls-Scrollbar__dragging {
       .controls-Scrollbar__thumb {
          background-color: @controls-Scrollbar-dark-active-thumb-color;
-         width: @controls-Scrollbar-animated-width;
-         right: @controls-Scrollbar-animated-right;
       }
    }
 }

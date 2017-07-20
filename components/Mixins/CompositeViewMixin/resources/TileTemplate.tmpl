@@ -1,0 +1,17 @@
+<ws:template name="tileTemplate">
+   <div class="controls-CompositeView__tileItem controls-ListView__item js-controls-ListView__item{{tileMode ? '' : ' controls-CompositeView__verticalItemActions js-controls-CompositeView__verticalItemActions'}}{{className}}"
+        data-hash="{{projItem.getHash()}}"
+        data-id="{{item.getId()}}"
+        style="{{viewMode === 'tile' && tileMode === 'dynamic' ? 'max-width: ' + width + 'px;' + ' flex-basis: ' + (width + minWidth) / 2 + 'px;'}}"
+   >
+      <div class="controls-CompositeView__tileContainer">
+         <ws:partial template="{{tileContent}}" scope="{{...}}"/>
+      </div>
+   </div>
+</ws:template>
+
+<ws:partial
+   scope="{{...}}"
+   template="tileTemplate"
+   width="{{item.get(widthProperty) > maxWidth ? maxWidth : (item.get(widthProperty) < minWidth ? minWidth : item.get(widthProperty))}}"
+/>

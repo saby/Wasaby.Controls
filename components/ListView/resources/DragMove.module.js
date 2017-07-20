@@ -72,6 +72,10 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
          return this._options.itemsDragNDrop;
       },
 
+      setItemsDragNDrop: function (itemsDragNDrop) {
+         this._options.itemsDragNDrop = itemsDragNDrop;
+      },
+
       beginDrag: function() {
          var target = this._findItemByElement(DragObject.getTargetsDomElemet());
          if (target.length) {
@@ -82,7 +86,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             items.forEach(function (item) {
                var projItem = this._getItemsProjection().getItemBySourceItem(item);
                source.push(this._makeDragEntity({
-                  owner: this,
+                  owner: this._getView(),
                   model: item,
                   domElement: projItem ? $('.js-controls-ListView__item[data-hash="'+projItem.getHash()+'"]', this.getContainer()) : undefined
                }));
@@ -154,7 +158,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             });
             if (this._getMover().checkRecordsForMove(movedItems, dragTarget.item, position)) {
                target = this._makeDragEntity({
-                  owner: this,
+                  owner: this._getView(),
                   domElement: dragTarget.domElement,
                   model: dragTarget.item,
                   position: position
@@ -167,7 +171,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
                   position = (e.offsetY > dragTarget.domElement.width()/2) ? 'before' : 'after';
                }
                target = this._makeDragEntity({
-                  owner: this,
+                  owner: this._getView(),
                   domElement: dragTarget.domElement,
                   model: dragTarget.item,
                   position: position
@@ -286,11 +290,9 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
       getContainer: function () {
          return this._getView().getContainer();
       },
+
       //endregion public
       //region private
-      _findDragDropContainer: function() {
-         return this._getItemsContainer();
-      },
       _getDragItems: function(dragItem, selectedItems) {
          if (selectedItems) {
             var array = [];
@@ -502,6 +504,13 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
        */
       _getItemsProjection: function () {
          return this._options.projection;
+      },
+      /**
+       * Устанавливает проекцию
+       * @param projection
+       */
+      setItemsProjection: function (projection) {
+         this._options.projection = projection;
       },
       /**
        * Возвращает котрол

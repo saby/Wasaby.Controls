@@ -31,7 +31,7 @@ define([
             displayProperty: 'id',
             idProperty: 'id'
          });
-         dragMove = view._getDragMove();
+         dragMove = view._getDragMove(true);
          event = {
             type: "mouseUp",
             target: view.getContainer().find('[data-id=1]'),
@@ -84,6 +84,18 @@ define([
             assert.isTrue(dragMove._isCorrectSource(DragObject.getSource()));
          });
       });
+      describe('_getItemsProjection', function () {
+         it('should return projection', function () {
+            assert.equal(dragMove._getItemsProjection(), view._getItemsProjection());
+         })
+      });
+      describe('setItemsProjection', function () {
+         it('should set projection', function () {
+            var projection = [];
+            dragMove.setItemsProjection(projection);
+            assert.equal(dragMove._getItemsProjection(), projection);
+         })
+      });
       describe('.beginDrag', function () {
          it('should not begin drag', function () {
             var dragMove = new DragMove({
@@ -117,6 +129,11 @@ define([
          it('should create drag list', function () {
             dragMove.beginDrag();
             assert.isTrue(cInstance.instanceOfModule(DragObject.getSource(), 'SBIS3.CONTROLS.DragEntity.List'));
+         });
+         it('sshould be return the view from source owner', function () {
+            view.setSelectedKeys([1,2]);
+            dragMove.beginDrag();
+            assert.equal(DragObject.getSource().at(0).getOwner(), view);
          });
       });
       describe('._getDragTarget', function () {
@@ -179,6 +196,11 @@ define([
             assert.doesNotThrow(function () {
                dragMove.updateTarget();
             });
+         });
+         it('should be return the view from targets owner', function () {
+            dragMove.updateTarget();
+            var target = DragObject.getTarget();
+            assert.equal(target.getOwner(), view);
          });
       });
       describe('._canDragMove', function () {
@@ -272,6 +294,7 @@ define([
             dragMove.endDrag();
          });
       });
+
       describe('createAvatar', function () {
          it('should create avatar', function () {
             dragMove.beginDrag();
@@ -281,6 +304,20 @@ define([
             view.setSelectedKeys([1,2]);
             dragMove.beginDrag();
             assert.equal(dragMove.createAvatar().find('.controls-DragNDrop__draggedCount').html(), 2);
+         });
+      });
+      describe('setItemsDragNDrop', function () {
+         it('setItemsDragNDrop', function () {
+            dragMove.setItemsDragNDrop('allow');
+            assert.equal(dragMove.getItemsDragNDrop(), 'allow');
+         });
+      });
+      describe('setItemsDragNDrop', function () {
+         it('setItemsDragNDrop', function () {
+            new DragMove({
+               itemsDragNDrop: 'allow'
+            });
+            assert.equal(dragMove.getItemsDragNDrop(), 'allow');
          });
       });
    });
