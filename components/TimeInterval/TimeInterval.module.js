@@ -352,6 +352,9 @@ define(
          },
 
          setText: function(text){
+            if (!text) {
+               text = this._getFormatModel().getStrMask(this._getMaskReplacer());
+            }
             var lackMaskLength = text.length - this._options.mask.length;
             //Увеличиваем маску на допустимое кол-во символов, если того требует устанавливаемый текст
             if (lackMaskLength){
@@ -411,6 +414,7 @@ define(
           */
          _getSectionValues: function () {
             var intervalValues = this.timeInterval.toObject(),
+               isEmpty = true,
                sectionArray = [];
 
             if (this._hasMaskSection(this._sections.days)) {
@@ -425,10 +429,22 @@ define(
             }
 
             $.each(sectionArray, function(i, value){
+               if (value !== 0) {
+                  isEmpty = false;
+               }
                if (value < 10){
                   sectionArray[i] = "0" + value;
                }
             });
+
+            //Если все по нулям - показываю пустую маску
+            if (isEmpty) {
+               var emptySectionValue = this._getMaskReplacer() + this._getMaskReplacer();
+               sectionArray.forEach(function (elem, i) {
+                  sectionArray[i] = emptySectionValue;
+               });
+            }
+
             return sectionArray;
          },
          /**
