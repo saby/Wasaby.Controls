@@ -158,9 +158,11 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             }
             if (item.isNode()) {
                records.folders.push(item);
+               cfg._hideEmpty = true;
             }
             else {
                records.leafs.push(item);
+               cfg._hideEmpty = true;
             }
          });
          return records;
