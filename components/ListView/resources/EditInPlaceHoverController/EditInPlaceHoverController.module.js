@@ -48,11 +48,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                   }
                })
             },
-            _onChangeHeight: function() {
+            _onHeightChange: function() {
                if (this._hoveredEip) {
                   this._hoveredEip.hide();
                }
-               EditInPlaceHoverController.superclass._onChangeHeight.apply(this, arguments)
+               EditInPlaceHoverController.superclass._onHeightChange.apply(this, arguments)
             },
             _getCurrentTarget: function() {
                return this._getEditingEip().getTarget();
