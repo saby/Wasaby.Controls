@@ -258,7 +258,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
    
          /* Из-за того, что историю фильтрации надо обновлять (из-за серверного рендеринга),
             надо и все синхронизации производить после вычитки новых параметров */
-         this._dFiltersReady.addCallback(fHelpers.forAliveOnly(function(res) {
+         (this._dFiltersReady || Deferred.success()).addCallback(fHelpers.forAliveOnly(function(res) {
             self._filterController.bindFilters();
             return res;
          }, view));
