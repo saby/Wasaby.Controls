@@ -1511,19 +1511,17 @@ define('js!SBIS3.CONTROLS.ListView',
          _getElementData: function(target) {
             if (target.length){
                var cont = this._container[0],
-                   containerCords = cont.getBoundingClientRect(),
                    targetKey = target[0].getAttribute('data-id'),
                    item = this.getItems() ? this.getItems().getRecordById(targetKey) : undefined,
-                   correctTarget = target.hasClass('controls-editInPlace') ? this._getDomElementByItem(this._options._itemsProjection.getItemBySourceItem(item)) : target,
-                   targetCords = correctTarget[0].getBoundingClientRect();
+                   correctTarget = target.hasClass('controls-editInPlace') ? this._getDomElementByItem(this._options._itemsProjection.getItemBySourceItem(item)) : target;
 
                return {
                   key: targetKey,
                   record: item,
                   container: correctTarget,
                   get position() {
-                     targetCords = correctTarget[0].getBoundingClientRect();
-                     containerCords = cont.getBoundingClientRect();
+                     var targetCords = correctTarget[0].getBoundingClientRect(),
+                         containerCords = cont.getBoundingClientRect();
                      return {
                         /* При расчётах координат по вертикали учитываем прокрутку */
                          top: targetCords.top - containerCords.top + cont.scrollTop,
