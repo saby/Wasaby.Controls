@@ -1,0 +1,14 @@
+<span
+   class="controls-SwitcherDouble{{checked ? ' controls-Checked__checked' : ''}}{{disposition === 'vertical' ? ' controls-SwitcherDouble_vertical' : ''}}"
+   title="{{tooltip}}">
+   <span class="controls-SwitcherDouble__empty">&nbsp;</span>
+   <span class="js-controls-Switcher__toggle controls-SwitcherDouble__toggle {{checked ? 'controls-SwitcherDouble-on-toggled' : 'controls-SwitcherDouble-off-toggled'}}">
+      &nbsp;
+      <span class="controls-SwitcherDouble__line"></span>
+      <span class="controls-SwitcherDouble__btn"></span>
+   </span>
+   <span class="controls-SwitcherDouble__textBlock">
+      <span class="js-controls-SwitcherDouble__textOn controls-SwitcherDouble__text controls-SwitcherDouble__textOn{{checked ? '' : ' controls-SwitcherDouble__unselected'}}">{{stateOn}}</span>
+      <span class="js-controls-SwitcherDouble__textOff controls-SwitcherDouble__text controls-SwitcherDouble__textOff{{checked ? ' controls-SwitcherDouble__unselected' : ''}}">{{stateOff}}</span>
+   </span>
+</span>

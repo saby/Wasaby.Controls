@@ -24,11 +24,12 @@
 }
 
 .controls-Switcher {
-   display: inline-block;
    position: relative;
+   display: inline-block;
    width: @switcher-width;
    height: @switcher-height;
-   border-color: @gray-light-color;
+   line-height: @switcher-height;
+   border-color: @switcher-border-color;
    border-style: @default-border-style;
    border-radius: @switcher-border-radius;
    .box-sizing();
@@ -53,8 +54,8 @@
    position: absolute;
    width: @switcher-btn-size;
    height: @switcher-btn-size;
-   border-style: @default-border-style;
    background: @default-bg-color;
+   border-style: @default-border-style;
    border-width: @switcher-btn-border-width;
    .border-radius(100%);
    .box-sizing();
@@ -111,11 +112,11 @@ body:not(.ws-is-mobile-platform) .ws-enabled.controls-Switcher:hover {
 }
 & when not (@switcher-hover-border-width = @default-border-width) {
    .controls-Switcher {
-      &:not(:hover) {
+      &:not(:hover), .ws-disabled&:hover {
          border-width: @default-border-width;
          .switcherBorder(@default-border-width);
       }
-      &:hover {
+      .ws-enabled&:hover {
          border-width: @switcher-hover-border-width;
          .switcherBorder(@switcher-hover-border-width);
       }
