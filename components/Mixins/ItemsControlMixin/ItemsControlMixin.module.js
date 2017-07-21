@@ -105,9 +105,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       return projection;
    },
    applyFilterToProjection = function(projection, cfg) {
-      if (cfg.itemsFilterMethod) {
-         projection.setFilter(cfg.itemsFilterMethod);
-      }
+      projection.setFilter(cfg.itemsFilterMethod);
    },
 
    _oldGroupByDefaultMethod = function (record, at, last, item) {
