@@ -13,15 +13,15 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController', 'Core/core-functions'], fun
          controller._heights = cFunctions.clone(heights);
          it('First Page', function() {
             newState = controller._getWrappersHeight(0);
-            assert.deepEqual(newState, { begin: 0, end: 3200 });
+            assert.deepEqual(newState, { begin: 0, end: 3180 });
          });
          it('Middle Page', function() {
             newState = controller._getWrappersHeight(5);
-            assert.deepEqual(newState, { begin: 960 , end: 2240 });
+            assert.deepEqual(newState, { begin: 960 , end: 2220 });
          });
          it('Last Page', function() {
             newState = controller._getWrappersHeight(13);
-            assert.deepEqual(newState, { begin: 3520, end: 20 });
+            assert.deepEqual(newState, { begin: 3520, end: 0 });
          });
       });
 
