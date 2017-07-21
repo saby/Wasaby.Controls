@@ -95,9 +95,8 @@ define('js!SBIS3.CONTROLS.List.Remove', [
                   InformationPopupManager.showConfirmDialog({
                      message: confirmText
                   }, function(){
-                     def.callback(true);
+                     def.callback(self._callHandlerMethod([items], 'onRemove', '_remove'));
                   }, function(){
-                     self._callHandlerMethod([items], 'onRemove', '_remove');
                      def.callback(false);
                   });
                });
