@@ -599,18 +599,19 @@
 // -------- //
 // Switcher //
 // -------- //
-
-@switcher-cursor:                               pointer;
-@switcher-cursor-disabled:                      default;
 @switcher-width:                                46px;
 @switcher-height:                               24px;
-@switcher-line-height:                          @switcher-height;
-@switcherline-height:                           2px;
-
-@switcher-line-color:							@gray-color;
-@switcher-border:                               1px solid @gray-light-color;
 @switcher-border-radius:                        30px;
-@switcher-line-width:                           36px;
+@switcher-hover-border-width:                   @default-border-width;
+@switcherline-height:                           2px;
+@switcherline-width:                            34px;
+@switcher-btn-size:                             12px;
+@switcher-btn-border-width:                     2px;
+@switcher-btn-hover-border-width:               3px;
+@switcher-dot-size:                             4px;
+@switcher-border-color:                         @gray-light-color;
+@switcher-disabled-color:                       @gray-light-color;
+
 @switcher-line-color-disabled:                  @gray-light-color;
 @switcher-btn-bg-color:                         @white-color;
 @switcher-btn-bg-color-disabled:                @white-color;
@@ -618,10 +619,7 @@
 @switcher-btn-color-inactive:                   @gray-color;
 @switcher-btn-color-disabled:                   @gray-light-color;
 @switcher-dot-radius:                           0;
-@switcher-btn-border-width:                     2px;
-@switcher-btn-border-hover:                     3px;
 @switcher-btn-radius:                           6px;
-@switcher-btn-size:                             12px;
 @switcher-btn-margin:                           5px;
 @switcher-dot-width:                            2px;
 @switcher-dot-height:                           4px;
@@ -635,7 +633,7 @@
 
 @switcher-do-margin:                            0 0 0 8px;
 
-@switcher-do-text-cursor:                       @switcher-cursor;
+@switcher-do-text-cursor:                       @default-hover-cursor;
 @switcher-do-text-color:                        @black-color;
 @switcher-do-decoration:                        none;
 @swithcer-do-font-weight:                       normal;
@@ -645,7 +643,7 @@
 @switcher-do-unselected-text-decoration:        none;
 @switcher-do-unselected-text-decoration-hover:  underline;
 
-@switcher-do-disabled-toggle-cursor:            @switcher-cursor-disabled;
+@switcher-do-disabled-toggle-cursor:            @disabled-hover-cursor;
 @switcher-do-disabled-text-cursor:              text;
 @switcher-do-disabled-text-color:               @gray-light-color;
 @switcher-do-disabled-toggle-border-color:      @switcher-do-disabled-text-color;
@@ -655,17 +653,17 @@
 
 @switcher-do-horizontal-toggle-width:           @switcher-width;
 @switcher-do-horizontal-toggle-height:          @switcher-height;
-@switcher-do-horizontal-toggle-line-height:     @switcher-line-height;
+@switcher-do-horizontal-toggle-line-height:     @switcher-height;
 @switcher-do-horizontal-toggle-margin:          0 6px;
 
 @switcher-do-vertical-toggle-width:             24px;
 @switcher-do-vertical-toggle-height:            48px;
 @switcher-do-vertical-toggle-margin:            0 12px 0 0;
 
-@switcher-do-border:                            @switcher-border;
+@switcher-do-border:                            @default-border-width @default-border-style @gray-light-color;
 @switcher-do-border-radius:                     @switcher-border-radius;
 
-@switcher-do-horizontal-line-width:             @switcher-line-width;
+@switcher-do-horizontal-line-width:             @switcherline-width;
 @switcher-do-vertical-line-width:               38px;
 @switcher-do-horizontal-line-background-color:  @gray-color;
 @switcher-do-horizontal-disabled-line-color:    @gray-light-color;
@@ -678,7 +676,7 @@
 @switcher-do-horizontal-btn-margin:             @switcher-btn-margin;
 @switcher-do-horizontal-btn-bg-color:           @switcher-btn-bg-color;
 @switcher-do-horizontal-btn-color-disabled:     @switcher-btn-color-disabled;
-@switcher-do-horizontal-btn-border-width-hover: @switcher-btn-border-hover;
+@switcher-do-horizontal-btn-border-width-hover: @switcher-btn-hover-border-width;
 
 
 
