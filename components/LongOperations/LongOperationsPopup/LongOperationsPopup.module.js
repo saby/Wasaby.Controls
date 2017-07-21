@@ -32,7 +32,6 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
       var LongOperationsPopup = NotificationPopup.extend({
          $protected: {
             _options: {
-               closeButton: true,
                isHint: false,
                headerTemplate: headerTemplate,
                bodyTemplate: contentTpl,
