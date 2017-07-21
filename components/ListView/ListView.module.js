@@ -2415,7 +2415,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         event.setResult(this._notify('onAfterBeginEdit', model));
                         this._getItemsContainer().on('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
                      }.bind(this),
-                     onChangeHeight: function(event, model) {
+                     onHeightChange: function(event, model) {
                         if (this._options.editMode.indexOf('toolbar') !== -1 && this._getItemsToolbar().isToolbarLocking()) {
                            this._showItemsToolbar(this._getElementData(this._getElementByModel(model)));
                         }
