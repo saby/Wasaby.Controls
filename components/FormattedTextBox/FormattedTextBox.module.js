@@ -2,7 +2,8 @@ define('js!SBIS3.CONTROLS.FormattedTextBox',
    [
       'js!SBIS3.CONTROLS.FormattedTextBoxBase',
       'tmpl!SBIS3.CONTROLS.FormattedTextBox',
-      'css!SBIS3.CONTROLS.FormattedTextBox'
+      'css!SBIS3.CONTROLS.FormattedTextBox',
+      'css!SBIS3.CONTROLS.TextBox'
    ],
    function (FormattedTextBoxBase, dotTplFn) {
 

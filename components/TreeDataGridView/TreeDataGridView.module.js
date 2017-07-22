@@ -214,7 +214,15 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             firstCol = $('td:first', this._getItemsContainer()),
       	   firstColWidth = this._options.multiselect ? firstCol.outerWidth() : 0,
       		secondCol = firstCol.next('td'),
-      		cellPadding = secondCol.outerWidth() - secondCol.width();
+      		cellPadding;
+   
+      	/* Второй колонки может и не быть, тогда считаем паддинг по первой */
+         if(!secondCol.length) {
+            secondCol = firstCol;
+         }
+   
+         cellPadding = secondCol.outerWidth() - secondCol.width();
+      	
       	return this.getContainer().width() - cellPadding - firstColWidth;
       },
 

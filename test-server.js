@@ -13,6 +13,6 @@ app.run(process.env.test_server_port || config.test_server_port, {
    root: process.cwd(),
    ws: config.ws,
    resources: config.resources,
-   shared: ['demo'],
+   shared: ['tests'],
    tests: config.tests
 });

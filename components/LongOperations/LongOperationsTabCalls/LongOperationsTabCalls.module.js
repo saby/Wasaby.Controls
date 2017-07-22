@@ -135,7 +135,7 @@ define('js!SBIS3.CONTROLS.LongOperationsTabCalls',
             }
             if (calls.length) {
                this._list.push.apply(this._list, calls);
-               this._channel.notify('LongOperations:TabCalls:onCall', {from:this._tabKey, targets:targets, method:method, args:args});
+               this._channel.notify('LongOperations:TabCalls:onCall', {from:this._tabKey, targets:targets, method:method, args:_pack(args)});
             }
             return promises;
          },
@@ -170,7 +170,7 @@ define('js!SBIS3.CONTROLS.LongOperationsTabCalls',
             this._list.push(call);
             var targets = {};
             targets[tabKey] = [target];
-            this._channel.notify('LongOperations:TabCalls:onCall', {from:this._tabKey, targets:targets, method:method, args:args});
+            this._channel.notify('LongOperations:TabCalls:onCall', {from:this._tabKey, targets:targets, method:method, args:_pack(args)});
             return call.promise;
          },
 
@@ -190,7 +190,7 @@ define('js!SBIS3.CONTROLS.LongOperationsTabCalls',
             if (this._tabKey in evt.targets) {
                var from = evt.from;
                var method = evt.method;
-               var args = evt.args;
+               var args;
                for (var i = 0, list = evt.targets[this._tabKey]; i < list.length; i++) {
                   var target = list[i];
                   var doer = this._router(target);
@@ -203,13 +203,16 @@ define('js!SBIS3.CONTROLS.LongOperationsTabCalls',
                         err = 'Method not found'
                      }
                      else {
+                        if (!args) {
+                           args = evt.args && Array.isArray(evt.args) ? _unpack(evt.args) : [];
+                        }
                         try {
-                           var result = doer[method].apply(doer, args && Array.isArray(args) ? args : []);
+                           var result = doer[method].apply(doer, args);
                            if (result instanceof Deferred) {
-                              result.addBoth(_sendResult.bind(null, this, from, target, method, args));
+                              result.addBoth(_sendResult.bind(null, this, from, target, method, evt.args));
                            }
                            else {
-                              _sendResult(this, from, target, method, args, result);
+                              _sendResult(this, from, target, method, evt.args, result);
                            }
                         }
                         catch (ex) {
@@ -218,7 +221,7 @@ define('js!SBIS3.CONTROLS.LongOperationsTabCalls',
                      }
                   }
                   if (err) {
-                     this._channel.notify('LongOperations:TabCalls:onResult', {from:this._tabKey, to:from, target:target, method:method, args:args, error:err});
+                     this._channel.notify('LongOperations:TabCalls:onResult', {from:this._tabKey, to:from, target:target, method:method, args:evt.args, error:err});
                   }
                }
             }
@@ -240,7 +243,7 @@ define('js!SBIS3.CONTROLS.LongOperationsTabCalls',
                throw new TypeError('Unknown event');
             }
             if (evt.to === this._tabKey) {
-               var call = _get(this, evt.from, evt.target, evt.method, evt.args, true);
+               var call = _get(this, evt.from, evt.target, evt.method, _unpack(evt.args), true);
                if (!call) {
                   throw new Error('Not found');
                }
@@ -321,6 +324,52 @@ define('js!SBIS3.CONTROLS.LongOperationsTabCalls',
                }
                return call;
             }
+         }
+      };
+
+      /**
+       * Упаковать значение для передачи
+       * @protected
+       * @param {any} value Упаковыемое значение
+       * @return {any}
+       */
+      var _pack = function (value) {
+         if (!value || typeof value !== 'object') {
+            return value;
+         }
+         else
+         if (Array.isArray(value)) {
+            return value.map(function (v) { return _pack(v); });
+         }
+         else
+         if (value instanceof Date) {
+            return {':dt':value.getTime()};
+         }
+         else {
+            return Object.keys(value).reduce(function (r, v) { r[v] = _pack(value[v]); return r; }, {});
+         }
+      };
+
+      /**
+       * Распаковать значение после передачи
+       * @protected
+       * @param {any} value Распаковыемое значение
+       * @return {any}
+       */
+      var _unpack = function (value) {
+         if (!value || typeof value !== 'object') {
+            return value;
+         }
+         else
+         if (Array.isArray(value)) {
+            return value.map(function (v) { return _unpack(v); });
+         }
+         else
+         if (typeof value[':dt'] === 'number' && Object.keys(value).length === 1) {
+            return new Date(value[':dt']);
+         }
+         else {
+            return Object.keys(value).reduce(function (r, v) { r[v] = _unpack(value[v]); return r; }, {});
          }
       };
 

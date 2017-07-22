@@ -37,10 +37,6 @@
    
    &.controls-DataGridView__hasSeparator{
       &.controls-ListView__dataLoaded {
-         .controls-DataGridView__table {
-            border-width: @data-grid-table-separator-border-width;
-            border-color: @data-grid-edge-cell-separator-color;
-         }
          .controls-DataGridView__tr {
             .controls-DataGridView__td {
                border-top-color: @data-grid-cell-separator-color;
@@ -56,9 +52,18 @@
                }
             }
          }
+         .controls-DataGridView__tr:nth-last-child(1){
+            .controls-DataGridView__td {
+               border-bottom-color: @data-grid-edge-cell-separator-color;
+            }
+         }
          &.controls-DataGridView__resultsBottom {
             .controls-DataGridView__table {
-               border-width: 0;
+               .controls-DataGridView__tr:nth-last-child(1){
+                  .controls-DataGridView__td {
+                     border-bottom-color: transparent;
+                  }
+               }
             }
             .controls-DataGridView__results {
                td {
@@ -67,11 +72,6 @@
                   border-style: solid;
                }
             }
-         }
-      }
-      &.controls-DataGridView__emptyTable {
-         .controls-DataGridView__table {
-            border-width: 0;
          }
       }
    }
@@ -147,6 +147,12 @@
          }
       }
    }
+
+   .controls-DataGridView__th {
+      &.controls-DataGrid__column__type-money{
+         padding-right:@data-grid-money-header-cell-padding;
+      }
+   }
 }
 
 
@@ -180,8 +186,17 @@
    &.controls-DataGridView__th__topRow{
       text-align: center;
       &.controls-DataGridView__th__topRow-has_text{
-         border-bottom: 1px solid @data-grid-edge-cell-separator-color;
+         border-bottom: 1px solid transparent;
          padding-bottom: 3px;
+         &:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 4px;
+            right: 4px;
+            height: 1px;
+            background: @data-grid-edge-cell-separator-color;
+         }
       }
    }
    &.controls-DataGridView__notScrolledCell {
@@ -205,7 +220,7 @@
    background: @data-grid-row-bg;
    font-weight: bold;
    font-size: 14px;
-   color: @accent-color;
+   color: @data-grid-results-color;
 }
 
 .controls-DataGridView__results .controls-DataGridView__td{
@@ -254,9 +269,6 @@
       &.controls-DataGridView__th__checkBox__checked{
          .checkbox-checked-size(@check-box-icon-successful-size, @check-box-icon-successful-left, @check-box-icon-successful-top);
       }
-   }
-   &.controls-DataGrid__column__type-money {
-      padding-right:20px;
    }
 }
 

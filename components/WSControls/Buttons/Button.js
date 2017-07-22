@@ -59,7 +59,7 @@ define('js!WSControls/Buttons/Button', [
     * @category Buttons
     * @public
     * @initial
-    * <component data-component='SBIS3.CONTROLS.Button'>
+    * <component data-component='WSControls/Buttons/Button'>
     *    <option name='caption' value='Кнопка'></option>
     * </component>
     */

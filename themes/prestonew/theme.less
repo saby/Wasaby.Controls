@@ -86,7 +86,6 @@ body {
    }
    .controls-DataGridView__results {
       font-size: @default-font-size;
-      color: @header-color;
    }
 
    .controls-TabButton {
@@ -129,7 +128,7 @@ body {
             position: absolute;
             top: -@default-border-width;
             left: -@default-border-width;
-            color: #E4E4E4;
+            color: #E4E4E4 !important;
          }
          &.controls-Click__active {
            background: @button-active-bg;
@@ -262,7 +261,6 @@ body {
          height: 3rem;
       }
       .controls-IconButton.controls-IconButton__round-border {
-         border: none;
          .controls-Button__icon {
             &.icon-16, &.icon-24 {
                margin-left: -1.5rem;
@@ -294,9 +292,6 @@ body {
             }
          }
       }
-   }
-   .controls-DateBox {
-      min-height: 3rem;
    }
   .controls-ToolBar__menuIcon .icon-24 {
     font-family: carrypresto-icons!important;
@@ -649,11 +644,17 @@ body {
 
 .controls-DateBox.controls-FormattedTextBox {
    .controls-FormattedTextBox__fieldWrapper {
-      padding: 0 0.3rem;
       .controls-FormattedTextBox__field {
          height: 2.86rem;
       }
    }
+}
+
+// В теме онлайна кнопка выравнивается маргинами. Но в темах престы и розницы размер иконки другой и из-за них
+// появляются лишние отступы внизу контрола. Обнуляем маргины и меняем vertical-align у кнопки.
+// Если везде все будет хорошо, то в онлайне сделать подобным образом. Возможно проще сделать через flex.
+.controls-DateRange .controls-DateRange__Button {
+   vertical-align: top;
 }
 .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field .controls-FormattedTextBox__field-symbol {
 
@@ -747,7 +748,7 @@ body .controls-ToolBar__menuIcon .icon-24 {
 
 .controls-Browser {
    .controls-Browser__topTemplate {
-      height: 3.88rem
+      height: auto;
    }
 }
 
@@ -805,10 +806,6 @@ body .ws-window.ws-LoadingIndicator__window {
 }
 .controls-ComboBox.controls-Picker__show.controls-TextBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
   color: #324352;
-}
-
-.controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button {
-  font-size: 1rem;
 }
 
 // В теме онлайна фон у кнопки при наведении по умолчанию совпадает с цветом кнопок в панели выбора периода,
@@ -878,7 +875,7 @@ body {
       background: @basic-block-bg-color;
       color: @default-text-color;
       border: @button-border;
-      padding: 0.857rem 1.6rem 0.857rem 0.857rem;
+      padding: 0.857rem 3rem 0.857rem 0.857rem;
       .ws-infobox-triangle {
          width: .857rem;
          height: .857rem;
@@ -902,11 +899,17 @@ body {
 
       .ws-infobox-close-button.icon-disabled{
          font-size: 3rem!important;
-         right: 0.6rem;
-         top: 0.41rem;
+         width: 3rem!important;
+         height: 3rem!important;
+         right: 0;
+         top: 0;
          color: @link-text-color!important;
+         overflow: hidden;
          &:hover {
             color: #B9E9FF!important;
+         }
+         &:before {
+            line-height: 2.7rem!important;
          }
       }
    }
@@ -1086,4 +1089,15 @@ body .controls-ItemActions .controls-Button__icon.icon-size {
   .controls-ListView__ItemsToolbar-container.controls-ItemsToolbar__withEditActions {
     height: 3rem;
   }
+}
+
+.controls-TreePager-container {
+    cursor: pointer;
+    display: inline-block;
+    font-size: .8571rem;
+    color: @link-text-color; //todo
+    text-decoration: none;
+    &:hover{
+     color: @link-hover-text-color;
+    }
 }

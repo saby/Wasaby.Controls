@@ -50,7 +50,7 @@
 //Link
 @link-text-color:                         #26B8FF;
 @link-line-height:                        normal;
-@link-font-size:                          1.43rem;
+@link-font-size:                          1.14rem;
 @link-hover-text-color:                   #B9E9FF;
 @link-icon-hover-icon:                    @link-hover-text-color;
 @link-icon-margin:                        -@default-border-width 0 0;
@@ -59,11 +59,12 @@
 @link-disabled-text-color:                rgba(102,170,221, .2);
 @link-header-hover-color:                 @default-hover-color;
 //Icon Button
-@icon-button-round-border-width:          2.286rem;
+@icon-button-round-border-width:          0;
 @icon-button-round-border-height:         2.286rem;
 @icon-button-round-border-line-height:    2.2rem;
-@border-radius:                           2.4rem;
-@icon-button-border-width:                @default-border-width;
+@border-radius:                           0;
+@icon-button-round-icon-color-hover:      @icon-active-color;
+@icon-button-border-width:                0px;
 //ListView
 @list-view-items-toolbar-icon-button-border-width:0;
 @list-view-items-toolbar-icon-button-border-radius:0;
@@ -151,7 +152,7 @@
 @button-big-checked-icon-big-top-offset:  @button-big-icon-big-top-offset;
 @button-big-checked-icon-big-left-offset: @button-big-icon-big-left-offset;
 //Text box
-@text-box-field-line-height:              2.7rem !important;
+@text-box-field-line-height:              2.64rem !important;
 // Tab button
 @tab-button-large-secondAddText-font-size:0.4642rem;
 //Radio button
@@ -168,7 +169,7 @@
 @radio-button-icon-height:                .928rem;
 @radio-button-icon-line-height:           normal;
 @radio-button-icon-bg:                    transparent;
-@radio-button-icon-margin:                0.3rem;
+@radio-button-icon-margin:                -1px 0.3rem;
 @radio-button-icon-border-color:          #2C4458;
 @radio-button-icon-border-color-checked:  @primary-color;
 @radio-button-hover-icon-border-color:    @primary-color;
@@ -218,7 +219,7 @@
 @switcher-btn-margin:							.357rem;
 @switcher-border-radius:						1rem;
 @switcher-btn-color:                      @primary-color;
-@switcher-btn-bg-color-disabled:          @gray-color;
+@switcher-btn-bg-color-disabled:          @basic-block-bg-color;
 @switcher-do-horizontal-line-background-color:@disabled-color;
 @switcher-do-text-color:                  @white-color;
 @switcher-do-unselected-text-color:       @disabled-color;
@@ -257,7 +258,7 @@
 @menu-item-icon-left-offset:              -.4232rem;
 @menu-item-icon24-top-offset:             0;
 @menu-item-icon24-top-offset-big:         0;
-@menu-item-icon24-left-offset:            -.@default-border-width;
+@menu-item-icon24-left-offset:            -@default-border-width;
 @menu-item-icon24-left-offset-big:        0;
 @menu-item-line-height:                   3.57rem;
 @menu-item-padding-16:                    2rem;
@@ -278,7 +279,7 @@
 @menu-link-checked-text-color:            @secondary-color;
 @menu-link-menu-border-width:             @default-border-width;
 //Text box
-@text-box-wrapper-padding:                0 .57rem;
+@text-box-wrapper-padding:                0 .5rem;
 @text-box-field-min-height:               1.3571rem;
 @text-box-field-padding:                  0;
 @text-box-field-text-color:               @default-text-color;
@@ -297,7 +298,6 @@
 @text-box-hover-border-width:             @text-box-border-width;
 @text-box-hover-border-color:             rgba(96,170,221, .3 );
 @text-box-disabled-border-bottom:         @default-border-width solid rgba(102,170,221, .3);
-@text-box-field-focus-text-color:         @default-text-color;
 @text-box-after-width:                    .7142rem;
 @text-box-height:                         3rem;
 @text-box-overflow:                       initial;
@@ -445,7 +445,8 @@
 @month-picker-item-active-text-color:     @secondary-color;
 @month-picker-item-active-bg:             @primary-color;
 //Data Range
-@date-range-line-height:                  0.86rem;
+@date-range-font-size:                    1.14rem;
+@date-range-line-height:                  normal;
 @date-range-icon-button-top:              0.536rem;
 @date-range-dash-width:                   0.5rem;
 @date-range-dash-color:                   rgba(96, 170, 221, 0.2);
@@ -517,7 +518,7 @@
 
 @date-range-big-choose-years-height:      3.57rem;
 @date-range-big-choose-header-padding:    0.256rem 0 0.256rem 0;
-@date-range-big-choose-header-home-button-size:3rem;
+@date-range-big-choose-header-home-button-size: 3rem;
 @date-range-big-choose-header-home-button-font-size:@date-range-big-choose-header-home-button-size;
 @date-range-big-choose-header-home-button-margin-left:0;
 @date-range-big-choose-header-date-box-border-color:           @text-box-border-color;
@@ -538,6 +539,7 @@
 @date-range-big-choose-years-panel-current-year-button-line-height:3rem;
 @date-range-big-choose-years-panel-back-button-font-size:3rem;
 @date-range-big-choose-years-panel-back-button-line-height:3rem;
+@date-range-big-choose-years-range-font-size:                  1rem;
 @date-range-big-choose-body-height:       21.429rem;
 @date-range-big-choose-months-range-btn-height:                5.107rem;
 @date-range-big-choose-month-range-picker-month-width:         6.07rem;
@@ -560,6 +562,7 @@
 @edit-at-place-editor-overlay-border-radius:.1071rem;
 @edit-at-place-editor-overlay-bg:         darken(@secondary-color, 5%) !important;
 //List view
+@controls-view-padding-S:                 .3333rem;
 @list-view-min-height:                    8rem;
 @listView-servicefooter-height:           1.47rem;
 @listView-servicefooter-padding:          0 0.8rem;
@@ -580,7 +583,7 @@
 @list-view-actions-menu-close-width:      1.75rem;
 @listView-empty-data-color:               @disabled-color;
 @listView-empty-data-font-size:           1rem;
-@list-view-scroll-bg:                     url('img/ajax-loader-indicator-big.gif') @basic-block-bg-color 0.4642rem 0.4642rem  no-repeat;
+@list-view-scroll-bg:                     url('img/ajax-loader-indicator-big.gif') no-repeat center;
 @list-view-scroll-height:                 3.5714rem;
 @list-view-scroll-width:                  3.5714rem;
 @controls-AjaxLoader-indicator-padding-left:3.5714rem;
@@ -588,7 +591,7 @@
 @controls-AjaxLoader-block-width:         3.5714rem;
 @controls-AjaxLoader-outer-height:        3.5714rem;
 @controls-AjaxLoader-background:          none;
-@scrollPaging-padding:                    3rem;
+@scrollPaging-padding:                    3.6666rem;
 //Tree view
 @tree-view-expand-spritesheet:            '';
 @tree-view-expand-width:                  1.7857rem;
@@ -629,9 +632,12 @@
 @data-grid-edge-cell-separator-color:     rgba(0, 0, 0, 0.1);
 @data-grid-td-checkbox-width:             1.75rem;
 @data-grid-td-visible-checkbox-width:     1.75rem;
-@data-grid-check-box-top:                 0;
+@data-grid-check-box-top:                 -@default-border-width;
 @data-grid-cell-separator-color:          rgba(0, 0, 0, 0.1);
 @data-grid-cell-border-width:             @default-border-width 0;
+@data-grid-partScroll-notScrolledCell-Color:@basic-block-bg-color;
+@data-grid-money-header-cell-padding:     1rem;
+@data-grid-results-color:                 #FFCC99;
 // PrintDialog
 @controls-printdialog-min-width:          25rem;
 @controls-printdialog-activate-right:     3.1785rem;
@@ -653,7 +659,8 @@
 //OperationsPanelButton
 @controls-OperationsPanelButton-width:    0.86rem;
 @controls-OperationsPanelButton-vert-height:3.57rem;
-@controls-OperationsPanelButton-font:     3rem 'carrypresto-icons', 'carrypresto';
+@controls-OperationsPanelButton-font-family: @icon-font;
+@controls-OperationsPanelButton-font-size: @icon-large-size;
 @controls-OperationsPanelButton-icon:     "\e9aa";
 @controls-OperationsPanelButton-icon-expand:"\e9a8";
 @controls-OperationsPanelButton-active-icon-color:#B9E9FF;
@@ -693,7 +700,8 @@
 @controls-filterButton-button-height:		3rem;
 @controls-filterButton-picker-bg:         #38495B;
 @controls-filterButton-picker-border-width:@default-border-width;
-@controls-Popup-closeButton-top:          1.75rem;
+@controls-Popup-closeButton-top:          8px;
+@controls-filterButton-picker-close-top:  .29rem;
 @controls-filterButton-button-margin:     0;
 @controls-filterButton-button-margin-right-align:.2857rem 0 .2857rem .2857rem;
 @controls-filterButton-button-margin-ff:  .5714rem 0 0 0;
@@ -714,7 +722,7 @@
 //FieldLink
 @controls-FieldLink-showAllLinks-lineHeight:3rem;
 @controls-FieldLink-border-color-picker-show: @accent-color;
-@controls-FieldLink-linkItem-line-height:    calc(@text-box-height ~"-" @default-border-width * 2); //высота - ширина ббордера
+@controls-FieldLink-linkItem-line-height:    calc(@text-box-field-line-height ~"+" @default-border-width);
 @controls-FieldLink-showAllLinks-width:      3.2rem;
 @controls-FieldLink-showAllLinks-marginRight:-1.43rem;
 @controls-FieldLink-linkItem-margin:         0;
@@ -755,6 +763,8 @@
 @controls-Paging-btn-height:              1.75rem;
 @controls-Paging-btn-margin:              0 .2857rem 0 0;
 @controls-Paging-btn-padding:             .2857rem;
+@controls-Paging-padding:                 0;
+@controls-movedialog-min-height:          3.5714rem;
 //ScrollContainer
 @controls-ScrollContainer-top-gradient-height:0.857rem;
 //Scrollbar
@@ -765,6 +775,7 @@
 @controls-Scrollbar-thumb-border-radius:  .179rem;
 @controls-Scrollbar-min-height:           3.571rem;
 @controls-Scrollbar-thumb-margin:         0.286rem 0;
+@controls-Scrollbar-thumb-padding:        0px 0.25rem;
 @controls-Scrollbar-dark-hover-thumb-color:rgba(255, 255, 255, 0.10);
 @controls-Scrollbar-dark-active-thumb-color:rgba(255, 255, 255, 0.15);
 @controls-Scrollbar-light-hover-thumb-color:rgba(0, 0, 0, 0.10);
@@ -786,7 +797,7 @@
 @controls-SubmitPopup-message-font-weight:normal;
 @controls-SubmitPopup-message-font-size:  1.14285rem;
 @controls-SubmitPopup-message-margin-bottom:.5714rem;
-@controls-SubmitPopup-details-color:      @disabled-color;
+@controls-SubmitPopup-details-color:      #8991A9;
 @controls-SubmitPopup-details-font-size:  1rem;
 @controls-SubmitPopup-body-padding:       1.6071rem;
 @controls-SubmitPopup-border-top:         none;
@@ -803,6 +814,7 @@
 @long-operations-list-time-ctr-f-size: 16px;
 @long-operations-list-state-ctr-margin-lf: -16px;
 @long-operations-popup-collapsed-width: 420px;
+@long-operations-popup-collapsed-max-width: 420px;
 @long-operations-popup-exp-width: 600px;
 @long-operations-popup-exp-max-width: 600px;
 @long-operations-popup-header-height: 60px;
@@ -862,6 +874,7 @@
 @paging-font-size:                        3rem;
 @scrollpager-bg:                          transparent;
 @scrollpager-border:                      none;
+@scrollpager-bottom:                      .3333rem;
 @closeBigButtonWidth:                     3rem;
 @menu-header-bg-color:                    #23b8ff;
 @date-range-big-header-bg:                #2c3e50;
@@ -919,6 +932,8 @@
 @time-header-title-margin-left:           .8571rem;
 @time-header-toggle-time-margin-left:     1.1428rem;
 @time-header-home-button-margin-left:     .2857rem;
+@time-header-margin:                      0;
+@time-header-offset-start-block:          0;
 @time-header-background-color:            @time-picker-background-color;
 @time-header-title-color:                 @innacent-color;
 //ToggleTime
@@ -945,23 +960,30 @@
 @DropdownList-checkbox-bottom:            0;
 @DropdownList-picker-max-height:          20rem;
 @DropdownList-footer-select-top:          0.28rem;
-@DropdownList-picker-menu-line-height:    3.57rem;
+@DropdownList-picker-menu-line-height:    3.24rem;
 @DropdownList-after-caption-wrapper-top:  .4rem;
 @DropdownList-footer-hasMore-left:        .28rem;
 @DropdownList-footer-hasMore-left-multiselect:2.35rem;
 @DropdownList-footer-hasMore-top-multiselect:1rem;
 @DropdownList-footer-hasMore-top:         1rem;
+//money
+@money-decorator-integer-accent-results-font-color:#FFCC99;
+@money-decorator-integer-no-accent-results-font-color:@disabled-color;
+@money-decorator-integer-group-font-color:@disabled-color;
+@money-decorator-integer-no-basic-registry-font-color:@disabled-color;
+@money-decorator-integer-accent-registry-font-color:@default-text-color;
+@money-decorator-integer-no-accent-registry-font-color:@disabled-color;
+@money-decorator-fraction-font-size:0.8571rem;
 //sundry
 @header-height:                           3rem;
-@money-decorator-integer-basic-registry-font-color:inherit;
 @header-font:                             400 1.43rem escape('/') @header-height @default-font-name;
 @header-padding-left:                     0;
 @bottomStyle-items-toolbar-height:        1.88rem;
 @bottomStyle-items-toolbar-margin:        0;
 @controls-filterButton-picker-border-color:@default-border-color;
-@formatted-text-box-wrapper-padding:      0 0.57rem 0 .4285rem;
+@formatted-text-box-wrapper-padding:      0 0.57rem;
 @bottomStyle-items-toolbar-height:        1.88rem;
-@bottomStyle-padding-bottom:              3rem;
+@bottomStyle-padding-bottom:              2rem;
 @bottomStyle-items-toolbar-border-color:  #293A4B;
 @data-grid-row-hover-cell-bg:             #293A4B;
 @image-bar-height:                        3.57rem;

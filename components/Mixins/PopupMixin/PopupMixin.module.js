@@ -88,6 +88,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          _zIndex: null,
          _currentAlignment: {},
          _parentFloatArea: null,
+          _keysWeHandle: [
+             constants.key.tab,
+             constants.key.enter,
+             constants.key.esc
+          ],
          _options: {
             visible: false,
             /**
@@ -1143,7 +1148,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                this._parentFloatArea.setHasPopupInside(true);
             }
             if (this._options.activateAfterShow) {
-               this.activateFirstControl();
+               dcHelpers.doAutofocus(this._container);
+            }
+         },
+
+         _keyboardHover: function(event) {
+            if (event.which === constants.key.esc) {
+               this.close();
             }
          }
       },

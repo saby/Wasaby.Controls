@@ -200,6 +200,10 @@ define(
       _timeInit: function() {
          if (this.isEnabled()) {
             this._options.pickerConfig.closeButton = true;
+
+            //TODO: Убрать, когда у FloatArea будет бордер.
+            this._options.pickerConfig.cssClassName = 'controls-DatePicker__timePicker-border';
+
             this.togglePicker();
 
             this._initFocusInHandler();

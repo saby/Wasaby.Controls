@@ -5,6 +5,9 @@ define(['js!SBIS3.CONTROLS.TabButtons'], function (TabButtons) {
 
    'use strict';
    describe('SBIS3.CONTROLS.TabButtons', function () {
+      if (typeof window === 'undefined') {
+         return;
+      }
       let config = {
          idProperty: 'id',
          displayProperty: 'title',

@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
    'js!SBIS3.CONTROLS.PickerMixin',
    'js!SBIS3.CONTROLS.DecorableMixin',
    'tmpl!SBIS3.CONTROLS.BreadCrumbs',
-   'html!SBIS3.CONTROLS.BreadCrumbs/resources/itemContentTpl',
+   'tmpl!SBIS3.CONTROLS.BreadCrumbs/resources/itemContentTpl',
    'tmpl!SBIS3.CONTROLS.BreadCrumbs/resources/dotsTpl',
    'tmpl!SBIS3.CONTROLS.BreadCrumbs/resources/itemTpl',
    'tmpl!SBIS3.CONTROLS.BreadCrumbs/resources/menuItem',

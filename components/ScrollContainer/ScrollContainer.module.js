@@ -166,6 +166,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                }
                this._subscribeOnScroll();
 
+               this._addGradient();
+
                // Что бы до инициализации не было видно никаких скроллов
                this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
 
@@ -175,6 +177,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
                this._initPaging();
             }
+         },
+
+         _addGradient: function() {
+         	var maxScrollTop = this._getScrollHeight() - this._container.height();
+            
+            this._container.toggleClass('controls-ScrollContainer__bottom-gradient', maxScrollTop > 0 && this._getScrollTop() < maxScrollTop);
          },
 
          _touchStartHandler: function() {
@@ -323,6 +331,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                this._calcPagingSelectedKey(scrollTop);
             }
             this.getContainer().toggleClass('controls-ScrollContainer__top-gradient', scrollTop > 0);
+            this.getContainer().toggleClass('controls-ScrollContainer__bottom-gradient', scrollTop < this._getScrollHeight() -  this._container.height());
          },
 
          _calcPagingSelectedKey: function(position) {
@@ -396,6 +405,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                      this._headerHeight = headerHeight;
                   }
                }
+            }
+            //ресайз может позваться до инита контейнера
+            if (this._content) {
+               this._addGradient();
             }
 
             if (this._paging) {

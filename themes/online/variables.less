@@ -41,7 +41,6 @@
 
 @blue-dark-color:                         #313E78;
 
-@default-color:                           #587AB0;
 @default-disabled-color:                  @gray-ccc-color;
 @primary-color:                           #ff7033;
 @secondary-color:                         transparent;
@@ -216,6 +215,7 @@
 // Normal default button
 @button-border-width:                     1px;
 @button-border:                           @button-border-width solid @default-color;
+@button-font-size:                        @default-font-size;
 @button-shadow:                           none;
 @button-bg:                               transparent;
 
@@ -300,6 +300,7 @@
 @icon-button-round-border-width:        28px;
 @icon-button-round-border-height:       28px;
 @icon-button-round-border-line-height:  26px;
+@icon-button-round-icon-color-hover:    @default-color;
 @border-radius:                         14px;
 @icon-button-border-width:              1px;
 
@@ -525,7 +526,7 @@
 @radio-button-icon-disabled-checked-bg:         @radio-button-icon-bg;
 @radio-button-icon-disabled-checked-hover-bg:   @radio-button-icon-bg;
 
-@radio-button-icon-margin:                      8px 6px 0 6px;
+@radio-button-icon-margin:                      -1px 6px;
 @radio-button-icon-border-style:                solid;
 @radio-button-icon-border-color:                @gray-color;
 @radio-button-icon-border-color-checked:        @radio-button-hover-text-color;
@@ -835,7 +836,6 @@
 @text-box-field-after-margin:             0 19px 0 0;
 
 @text-box-field-text-color:               inherit;
-@text-box-field-focus-text-color:         #000;
 @text-box-field-error-text-color:         @text-box-field-text-color;
 @text-box-field-hover-text-color:         @text-box-field-text-color;
 @text-box-field-disabled-text-color:      @text-box-field-text-color;
@@ -1562,6 +1562,7 @@
 @date-range-big-choose-years-panel-current-year-button-line-height:         24px;
 @date-range-big-choose-years-panel-back-button-font-size:                   @date-range-big-choose-years-panel-wrapper-font-size;
 @date-range-big-choose-years-panel-back-button-line-height:                 22px;
+@date-range-big-choose-years-range-font-size:                  15px;
 
 @date-range-big-choose-body-height:                                  403px;
 @date-range-big-choose-months-color:                                 @darkcyan-color;
@@ -1957,6 +1958,10 @@
 
 @data-grid-table-layot: 								fixed;
 @data-grid-table-separator-border-width:        0 0 @default-border-width 0;
+
+@data-grid-money-header-cell-padding:           20px;
+
+@data-grid-results-color:                       @accent-color;
 // ---------- //
 // PartScroll //
 // ---------- //
@@ -2069,7 +2074,9 @@
 @controls-OperationsPanelButton-width:             24px;
 @controls-OperationsPanelButton-vert-height:       24px;
 @controls-OperationsPanelButton-vert-border-radius: 7px;
-@controls-OperationsPanelButton-font:              18px 'TensorFont', sans-serif;
+@controls-OperationsPanelButton-font-family:       'TensorFont', sans-serif;
+@controls-OperationsPanelButton-font-size:         18px;
+@controls-OperationsPanelButton-font-style:        normal;
 @controls-OperationsPanelButton-cursor:            pointer;
 @controls-OperationsPanelButton-vertical-icon-top: 0;
 @controls-OperationsPanelButton-icon-left:         0;
@@ -2200,6 +2207,7 @@
 @controls-filterButton-picker-border-color:       @gray-ccc-color;
 @controls-filterButton-picker-border-radius:      0;
 @controls-filterButton-picker-margin-top:         -1px;
+@controls-filterButton-picker-close-top:          12px;
 @controls-Popup-closeButton-top:                  10px;
 @controls-Popup-closeButton-right:                0;
 
@@ -2497,7 +2505,7 @@
 
 //ScrollContainer
 @controls-ScrollContainer-top-gradient-height:     8px;
-@controls-ScrollContainer-top-gradient-background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+@controls-ScrollContainer-gradient-background:     rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0);
 
 //Scrollbar
 @controls-Scrollbar-width:                         4px;
@@ -2591,7 +2599,7 @@
 //----------------//
 
 @money-decorator-integer-font-size:                        @default-text-size;
-@money-decorator-integer-font-color:                       #000000;
+@money-decorator-integer-font-color:                       @default-text-color;
 
 @money-decorator-integer-accent-results-font-size:         @large-text-size;
 @money-decorator-integer-accent-results-font-color:        @blue-dark-color;
@@ -2646,6 +2654,7 @@
 
 @paging-font-size:                                      18px;
 @scrollpager-bg:                                         white;
+@scrollpager-bottom:                                     0px;
 @scrollpager-border:                                     1px solid @default-color;
 @date-range-big-header-bg:								#f9f9f9;
 @date-range-big-bg:										#fff;
@@ -2685,9 +2694,10 @@
 @long-operations-list-group-title-color: #999999;
 @long-operations-list-time-ctr-f-size: inherit;//12px
 @long-operations-list-state-ctr-margin-lf: 10px;
-@long-operations-popup-collapsed-width: 200px;
+@long-operations-popup-collapsed-width: 260px;
+@long-operations-popup-collapsed-max-width: 400px;
 @long-operations-popup-exp-width: 400px;
-@long-operations-popup-exp-max-width: 400px;
+@long-operations-popup-exp-max-width: 500px;
 @long-operations-popup-header-height: auto;
 @long-operations-popup-header-line-height: normal;
 @long-operations-popup-header-pad-rt: 41px;
@@ -2718,9 +2728,11 @@
 //--------------//
 //  TimeHeader  //
 //--------------//
-@time-header-height:                                40px;
+@time-header-height:                                44px;
 @time-header-font-size:                             18px;
 @time-header-title-margin-left:                     12px;
+@time-header-margin:                                0 2px;
+@time-header-offset-start-block:                    2px;
 @time-header-toggle-time-margin-left:               @time-header-title-margin-left;
 @time-header-home-button-margin-left:               @time-header-title-margin-left;
 @time-header-background-color:                      @gray-f4f4f4-color;

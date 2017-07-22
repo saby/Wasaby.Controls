@@ -137,7 +137,7 @@
   box-sizing: border-box;
 }
 
-.button-default-style(@button-font-size: @link-font-size) {
+.button-default-style(@button-font-size: @button-font-size) {
   cursor: pointer;
   display: inline-block;
   outline: none;
@@ -430,7 +430,7 @@
   &:hover {
     border-color: @default-color;
     .controls-Button__icon {
-      color: @default-color;
+      color: @icon-button-round-icon-color-hover;
     }
     &.controls-IconButton__errorBorder {
       border-color: @icon-button-error-color;
@@ -519,7 +519,7 @@
       line-height: calc(~"@{size} + 1px");
     }
     // В IE, если значения css свойст в rem, то top расчитывается неправильно, поэтому ставим для IE другой.
-    body.ws-is-ie & when not (@topIE = 0){
+    body.ws-is-ie:not(.ws-is-windows-10) & when not (@topIE = 0){
       top: @topIE;
     }
   }
@@ -552,6 +552,13 @@
   .ws-disabled.controls-ToggleButton__null>.@{selector}:after {
     background-color: @disabledColor;
   }
+}
+
+.hyphens(@hyphenation) {
+  -webkit-hyphens: @hyphenation;
+  -moz-hyphens: @hyphenation;
+  -ms-hyphens: @hyphenation;
+  hyphens: @hyphenation;
 }
 
 //---------------Имитация цикла for---------------//

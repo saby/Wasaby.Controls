@@ -482,7 +482,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
          return this._inputField && this._inputField.val();
       },
       _setInputValue: function(value) {
-         this._inputField.val(value);
+         this._inputField && this._inputField.val(value);
       },
       _getInputField: function() {
          return $('.js-controls-TextBox__field', this.getContainer().get(0));

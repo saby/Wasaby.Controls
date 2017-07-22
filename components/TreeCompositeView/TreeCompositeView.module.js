@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
    'tmpl!SBIS3.CONTROLS.TreeCompositeView/resources/FolderTemplate',
    'tmpl!SBIS3.CONTROLS.TreeCompositeView/resources/ListFolderTemplate',
    'tmpl!SBIS3.CONTROLS.TreeCompositeView/resources/FolderContentTemplate',
-   'html!SBIS3.CONTROLS.TreeCompositeView/resources/StaticFolderContentTemplate',
+   'tmpl!SBIS3.CONTROLS.TreeCompositeView/resources/StaticFolderContentTemplate',
    "Core/helpers/collection-helpers",
    "Core/helpers/fast-control-helpers",
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
@@ -158,9 +158,11 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             }
             if (item.isNode()) {
                records.folders.push(item);
+               cfg._hideEmpty = true;
             }
             else {
                records.leafs.push(item);
+               cfg._hideEmpty = true;
             }
          });
          return records;
@@ -658,17 +660,6 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             }
          }
          return Deferred.success();
-      },
-      //Переопределим метод определения направления изменения порядкового номера, так как если элементы отображаются в плиточном режиме,
-      //нужно подвести DragNDrop объект не к верхней(нижней) части элемента, а к левой(правой)
-      _getDirectionOrderChange: function(e, target) {
-         if (this.getViewMode() === 'tile' || (this.getViewMode() === 'list' && target.hasClass('controls-ListView__item-type-node'))) {
-            if (target.length) {
-               return this._getOrderPosition(e.pageX - target.offset().left, target.width());
-            }
-         } else {
-            return TreeCompositeView.superclass._getDirectionOrderChange.apply(this, arguments);
-         }
       },
 
       _reloadViewAfterDelete: function(idArray) {

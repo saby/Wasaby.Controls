@@ -153,6 +153,11 @@ define('js!SBIS3.CONTROLS.Browser', [
              */
             historyId : '',
             /**
+             * Обновлять историю или брать из текущей сессии (SessionStorage/LocalStorage).
+             * @remark Данные в SessionStorage могут потерять актуальность при работе одновременно в нескольких вкладках. Опция актуальна при построении реестра на сервере.
+             */
+            updateFilterHistory: false,
+            /**
              * @cfg {Boolean} Применять последний активный фильтр при загрузке реестра.
              */
             applyHistoryFilterOnLoad: true,
@@ -447,7 +452,8 @@ define('js!SBIS3.CONTROLS.Browser', [
                this._options.historyId,
                this._options.ignoreFiltersList,
                this._options.applyHistoryFilterOnLoad,
-               this);
+               this,
+               this._options.updateFilterHistory);
          }
       },
 
