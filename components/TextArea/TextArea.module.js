@@ -141,6 +141,12 @@ define('js!SBIS3.CONTROLS.TextArea', [
          var self = this;
          this._inputField = $('.controls-TextArea__inputField', this._container);
          this._disabledWrapper = $('.controls-TextArea__disabled-wrapper', this._container);
+   
+         /* В textArea есть баг при вставке в дом, иногда могут теряться переносы строк.
+            В этом случае надо обновить текст и отрисовать его заного.
+            Перевставка текста произойдёт только если text отличается от значения в textArea .*/
+         this._drawText(this.getText());
+         
          // При потере фокуса делаем trim, если нужно
          // TODO Переделать на платформенное событие потери фокуса
          this._inputField.bind('focusout', function () {
