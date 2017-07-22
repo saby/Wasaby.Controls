@@ -1,7 +1,8 @@
 define('js!WSControls/Lists/resources/utils/ItemsUtil', [
    'js!WS.Data/Display/Display',
    'Core/core-instance',
-   'js!WS.Data/Utils'
+   'js!WS.Data/Utils',
+   'js!WS.Data/Display/Enum'
 ], function(Display, cInstance, DataUtils) {
    var ItemsUtil = {
 
@@ -41,6 +42,23 @@ define('js!WSControls/Lists/resources/utils/ItemsUtil', [
          }
          else {
             return DataUtils.getItemPropertyValue(itemContents, field);
+         }
+      },
+
+      //TODO это наверное к Лехе должно уехать
+      getItemById: function(projection, id, idProperty) {
+         var list = projection.getCollection();
+         if (cInstance.instanceOfModule(list, 'WS.Data/Collection/RecordSet')) {
+            return projection.getItemBySourceItem(list.getRecordById(id));
+         }
+         else {
+            var resItem;
+            projection.each(function(item, i){
+               if (ItemsUtil.getPropertyValue(item.getContents(), idProperty) == id) {
+                  resItem = item;
+               }
+            });
+            return resItem;
          }
       }
    };

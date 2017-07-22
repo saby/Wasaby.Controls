@@ -3,8 +3,8 @@
  */
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define(['js!WSControls/Lists/resources/utils/DataSourceUtil', 'js!WSControls/Lists/resources/utils/ItemsUtil', 'js!WS.Data/Collection/RecordSet'
-   , 'js!WS.Data/Source/Memory', 'Core/core-instance'],
-   function (DataSourceUtil, ItemsUtil, RecordSet, MemorySource, cInstance) {
+   , 'js!WS.Data/Source/Memory', 'Core/core-instance', 'js!WS.Data/Types/Enum'],
+   function (DataSourceUtil, ItemsUtil, RecordSet, MemorySource, cInstance, Enum) {
 
       'use strict';
 
@@ -123,6 +123,29 @@ define(['js!WSControls/Lists/resources/utils/DataSourceUtil', 'js!WSControls/Lis
 
                value = ItemsUtil.getPropertyValue('Первый', 'title');
                assert.equal('Первый', value, 'getPropertyValue doesn\'t return value of the flag/enum item');
+            });
+
+            it('getItemById', function () {
+               var rs = new RecordSet({
+                  rawData: data,
+                  idProperty : 'id'
+               }),
+               myEnum = new Enum({
+                  dictionary: ['Первый', 'Второй', 'Третий']
+               });
+
+               var projectionRs = ItemsUtil.getDefaultDisplayFlat(rs, {}),
+               projectionArray = ItemsUtil.getDefaultDisplayFlat(data, {}),
+               projectionEnum = ItemsUtil.getDefaultDisplayFlat(myEnum, {});
+
+               var value = ItemsUtil.getItemById(projectionRs, 2);
+               assert.equal(rs.getRecordById(2), value.getContents(), 'getItemById doesn\'t return record from recordset');
+
+               value = ItemsUtil.getItemById(projectionArray, 2, 'id');
+               assert.equal(data[1], value.getContents(), 'getItemById doesn\'t return object from array');
+
+               value = ItemsUtil.getItemById(projectionEnum, 'Второй');
+               assert.equal('Второй', value.getContents(), 'getPropertyValue doesn\'t return value of Enum');
             });
 
          });

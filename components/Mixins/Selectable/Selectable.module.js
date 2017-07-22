@@ -6,9 +6,8 @@ define('js!SBIS3.CONTROLS.Selectable', [
    'js!WS.Data/Utils',
    'js!WS.Data/Collection/IBind',
    'Core/core-instance',
-   'js!WSControls/Controllers/BaseListSelector',
-   'js!WSControls/Controllers/RecordsetListSelector'
-], function(Utils, IBindCollection, cInstance, BaseListSelector, RecordsetListSelector) {
+   'js!WSControls/Controllers/ListSelector'
+], function(Utils, IBindCollection, cInstance, ListSelector) {
 
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного.
@@ -160,21 +159,14 @@ define('js!SBIS3.CONTROLS.Selectable', [
          },
          _itemsReadyCallback: function() {
 
-            if (this.getItems() && cInstance.instanceOfModule(this.getItems(), 'WS.Data/Collection/RecordSet')) {
-               this._selectorInstance = new RecordsetListSelector({
-                  selectedIndex : this._options.selectedIndex,
-                  selectedKey : this._options.selectedKey,
-                  allowEmptySelection: this._options.allowEmptySelection,
-                  projection: this._getItemsProjection()
-               });
-            }
-            else {
-               this._selectorInstance = new BaseListSelector({
-                  selectedIndex : this._options.selectedIndex,
-                  allowEmptySelection: this._options.allowEmptySelection,
-                  projection: this._getItemsProjection()
-               });
-            }
+            this._selectorInstance = new ListSelector({
+               selectedIndex : this._options.selectedIndex,
+               selectedKey : this._options.selectedKey,
+               allowEmptySelection: this._options.allowEmptySelection,
+               projection: this._getItemsProjection(),
+               idProperty: this._options.idProperty
+            });
+
          },
          destroy : function() {
             this._selectorInstance.destroy();
@@ -247,7 +239,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
        * @see SBIS3.CONTROLS.DSMixin#idProperty
        */
       getSelectedKey : function() {
-         if (this._selectorInstance && cInstance.instanceOfModule(this._selectorInstance, 'WSControls/Controllers/RecordsetListSelector')) {
+         if (this._selectorInstance && cInstance.instanceOfModule(this._selectorInstance, 'WSControls/Controllers/ListSelector')) {
             return this._selectorInstance.getSelectedKey();
          }
          else {
