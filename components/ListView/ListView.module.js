@@ -1193,6 +1193,9 @@ define('js!SBIS3.CONTROLS.ListView',
             if (itemActions && itemActions.isItemActionsMenuVisible()){
                itemActions.hide();
             }
+            if (this._virtualScrollController){
+              this._virtualScrollController._scrollHandler(event, scrollTop);
+            }
          },
          _setScrollPagerPosition: function(){
             var right;
@@ -2829,6 +2832,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._moveTopScroll();
                }
             }
+            if (this._virtualScrollController){
+               this._virtualScrollController.initHeights();
+            }
             this._updateHoveredItemAfterRedraw();
          },
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
@@ -2844,9 +2850,6 @@ define('js!SBIS3.CONTROLS.ListView',
                   //TODO: Это возможно очень долго, надо как то убрать. Нужно для случев, когда ListView создается скрытым, а потом показывается
                   this._scrollBinder && this._scrollBinder._updateScrollPages();
                   this._setScrollPagerPositionThrottled();
-               }
-               if (this._virtualScrollController){
-                  this._virtualScrollController.updateVirtualPages();
                }
             }
             /* при изменении размера таблицы необходимо вызвать перерасчет позиции тулбара
