@@ -52,7 +52,7 @@ define(
        */
       LongOperationModel.timeSpentAsString = function (timeSpent, details) {
          if (!timeSpent) {
-            return '';
+            return '0сек';
          }
          details = 1 < details ? details : 1;
          var secs = Math.round(timeSpent/1000);
