@@ -4,8 +4,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
    "Core/Deferred",
    "js!SBIS3.CONTROLS.PickerMixin",
    "Core/helpers/collection-helpers",
-   "Core/core-instance"
-], function ( cFunctions, cMerge, Deferred,PickerMixin, colHelpers, cInstance) {
+   "Core/core-instance",
+   "js!SBIS3.CONTROLS.ControlHierarchyManager"
+], function ( cFunctions, cMerge, Deferred, PickerMixin, colHelpers, cInstance, ControlHierarchyManager) {
    'use strict';
 
 
@@ -425,9 +426,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                   if (self._list === focusedControl || ~Array.indexOf(self._list.getChildControls(), focusedControl)) {
                      focusedControl.setActive(false, false, false, this);
                      this.setActive(true);
-                  } else if (self._list.getItems() && self._options.autoShow) {
+                  } else if (self._options.autoShow && focusedControl && !ControlHierarchyManager.checkInclusion(this, focusedControl.getContainer()[0])) {
                      /* Когда уходит фокус с поля ввода, необходимо очистить записи в списке, т.к. записи могут удалять/изменять */
-                     self._list.getItems().clear();
+                     self._list.getItems() && self._list.getItems().clear();
                   }
                }
             });

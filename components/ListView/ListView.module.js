@@ -43,7 +43,6 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.ComponentBinder',
    'js!WS.Data/Di',
    'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
-   'Core/helpers/fast-control-helpers',
    'Core/helpers/collection-helpers',
    'Core/core-instance',
    'Core/helpers/functional-helpers',
@@ -69,7 +68,7 @@ define('js!SBIS3.CONTROLS.ListView',
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents, LayoutManager,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove) {
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove) {
      'use strict';
 
       var
@@ -177,7 +176,7 @@ define('js!SBIS3.CONTROLS.ListView',
            * @event onItemClick Происходит при любом клике по записи.
            * @remark
            * При работе с иерархическими списками при клике по папке (узлу) по умолчанию происходит проваливание в узел или его развертывание.
-           * Чтобы отменить поведение, установленное по умолчанию, в обработчике события установите результат false.
+           * Чтобы отменить такое поведение, в обработчике события установите результат false.
            * <pre>
            *    myListView.subscribe('onItemClick', function(eventObject) {
            *        eventObject.setResult(false);
@@ -186,8 +185,12 @@ define('js!SBIS3.CONTROLS.ListView',
            * </pre>
            * @param {Core/EventObject} eventObject Дескриптор события.
            * @param {String} id Первичный ключ записи.
-           * @param {WS.Data/Entity/Model} data Экземпляр класса записи, по которой произвели клик.
-           * @param {jQuery} target DOM-элемент, на который кликнули.
+           * @param {WS.Data/Entity/Model} data Экземпляр класса записи.
+           * @param {jQuery} target DOM-элемент, на который кликнули. Например, это может быть DOM-элемент ячейки (&lt;td class="controls-DataGridView__td"&gt;...&lt;/td&gt;) или её содержимого (&lt;div class="controls-DataGridView__columnValue"&gt;...&lt;/div&gt;).
+           * @param {Object} e Объект события.
+           * @param {Object} clickedCell Объект с расширенной информацией о ячейке, по которой произвели клик.
+           * @param {jQuery} clickedCell.cellContainer DOM-элемент ячейки.
+           * @param {Number} clickedCell.cellIndex Индекс колонки, в которой находится ячейка.
            */
           /**
           * @event onItemActivate Происходит при смене записи (активации) под курсором мыши (например, клик с целью редактирования или выбора).
@@ -660,22 +663,6 @@ define('js!SBIS3.CONTROLS.ListView',
                 * </pre>
                 */
                itemsDragNDrop: 'allow',
-               /**
-                * @cfg {Function} Устанавливает функцию, которая будет выполнена при клике на строку.
-                * @remark
-                * Аргументы функции:
-                * <ol>
-                *    <li>id - идентификатор элемента коллекции - строки, по которой был произведён клик.</li>
-                *    <li>item - элемент коллекции, по строке отображения которого был произведён клик; экземпляр класса {@link WS.Data/Entity/Record} с данными выбранной записи.</li>
-                *    <li>target - контейнер визуального отображения (DOM-элемент) строки, по которой был произведён клик.</li>
-                * </ol>
-                * Установить или заменить функцию - обработчик клика на строку можно с помощью метода {@link setElemClickHandler}
-                * @example
-                * <pre class="brush: xml">
-                *     <option name="elemClickHandler" type="function">js!SBIS3.Contacts.LatestThemes:prototype.elemClickHandler</option>
-                * </pre>
-                * @see setElemClickHandler
-                */
                elemClickHandler: null,
                /**
                 * @cfg {Boolean} Устанавливает режим множественного выбора элементов коллекции.
@@ -2019,18 +2006,6 @@ define('js!SBIS3.CONTROLS.ListView',
             // прибавим к полученой странице количество еще не загруженных страниц
             return page + Math.floor((this._scrollOffset.top) / this._limit);
          },
-         /**
-          * Метод установки/замены обработчика клика по строке.
-          * @param method Имя новой функции обработчика клика по строке.
-          * @example
-          * <pre>
-          *     var myElemClickHandler = function(id, data, target){
-           *        console.log(id, data, target)
-           *     }
-          *     DataGridView.setElemClickHandler(myElemClickHandler);
-          * </pre>
-          * @see elemClickHandler
-          */
          setElemClickHandler: function (method) {
             this._options.elemClickHandler = method;
          },

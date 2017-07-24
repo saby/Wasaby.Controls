@@ -14,9 +14,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "Core/core-instance",
    "Core/helpers/functional-helpers",
-   "Core/helpers/fast-control-helpers",
-    "Core/helpers/Object/isEmpty"
-], function ( cFunctions, Deferred, IoC, ConsoleLogger,MemorySource, SbisService, RecordSet, Query, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, cInstance, fHelpers, fcHelpers, isEmptyObject) {
+   "Core/helpers/Object/isEmpty"
+], function ( cFunctions, Deferred, IoC, ConsoleLogger,MemorySource, SbisService, RecordSet, Query, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, cInstance, fHelpers, isEmptyObject) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -822,7 +821,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                    if (!error.canceled) {
                       self._toggleIndicator(false);
                       if (self._notify('onDataLoadError', error) !== true) {
-                         fcHelpers.message(error.message.toString().replace('Error: ', ''));
+                         require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager){
+                            InformationPopupManager.showMessageDialog({
+                               message: error.message.toString().replace('Error: ', ''),
+                               status: 'success'
+                            });
+                         });
                       }
                    }
                    return error;

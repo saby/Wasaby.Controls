@@ -604,7 +604,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
          this._updateCompatPlaceholderVisibility();
          this._inputField.attr('placeholder', '');
          this._compatPlaceholder.css({
-            'left': this._inputField.position().left || parseInt(this._inputField.parent().css('padding-left'), 10),
+            'left': (this._inputField.position().left || parseInt(this._inputField.parent().css('padding-left'), 10)) + 1, //отступ 1px под курсор, иначе курсор появляется под подсказкой
             'right': this._inputField.position().right || parseInt(this._inputField.parent().css('padding-right'), 10)
          });
          this._compatPlaceholder.on('click', this._inputClickHandler.bind(this));

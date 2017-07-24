@@ -153,18 +153,22 @@ define('js!SBIS3.CONTROLS.Action.List.Save', [
             var
                 self = this,
                 result = new Deferred();
-            fcHelpers.question(rk('Операция займет продолжительное время. Провести операцию?'), {}, self).addCallback(function(answer) {
-                if (answer) {
-                    fcHelpers.toggleIndicator(true);
-                    dataSource.query(query).addCallback(function (recordSet) {
-                        result.callback(recordSet.getAll())
-                    }).addBoth(function() {
-                        fcHelpers.toggleIndicator(false);
-                    });
-                } else {
-                    result.errback();
-                }
-            });
+
+           require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager){
+              InformationPopupManager.showConfirmDialog({
+                 message: rk('Операция займет продолжительное время. Провести операцию?')
+              }, function(){
+                 fcHelpers.toggleIndicator(true);
+                 dataSource.query(query).addCallback(function (recordSet) {
+                    result.callback(recordSet.getAll())
+                 }).addBoth(function() {
+                    fcHelpers.toggleIndicator(false);
+                 });
+              }, function(){
+                 result.errback();
+              });
+           });
+
             return result;
         }
 
