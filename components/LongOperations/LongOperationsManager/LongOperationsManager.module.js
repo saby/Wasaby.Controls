@@ -927,7 +927,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          _tabChannel.notify('LongOperations:Manager:onActivity', {type: 'born', tab: _tabKey});
 
          // Добавить обработчик на выгрузку для запуска метода destroy
-         window.addEventListener('beforeunload', function () {
+         window.addEventListener('unload', function () {
             manager.destroy();
          });
       }
