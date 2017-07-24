@@ -5,9 +5,10 @@ define('js!WSControls/Buttons/MenuButton', [
    'Core/helpers/dom&controls-helpers',
    'Core/helpers/collection-helpers',
    'Core/IoC',
+   'Core/detection',
    'Core/Sanitize',
    'Core/helpers/string-helpers'
-], function(Button, PickerMixin, DSMixin, dcHelpers, colHelpers, IoC, Sanitize, strHelpers) {
+], function(Button, PickerMixin, DSMixin, dcHelpers, colHelpers, IoC, detection, Sanitize, strHelpers) {
 
    'use strict';
    
@@ -260,6 +261,27 @@ define('js!WSControls/Buttons/MenuButton', [
             self._notify('onMenuItemActivate', id, mEvent);
          });
          this._setWidth();
+
+         //В ie и ff баг с flex-direction: column-reverse: С overflow: hidden скролл на контейнере не появляется
+         //Убрал flex с основного контейнера, меню перемещаю через изменение положения узла в dom-дереве
+         //https://stackoverflow.com/questions/34249501/flexbox-column-reverse-and-overflow-in-firefox-ie
+         //https://bugzilla.mozilla.org/show_bug.cgi?id=1042151
+         if (detection.firefox || detection.isIE) {
+            this.getPicker().subscribe('onAlignmentChange', function() {
+               var picker = this.getPicker(),
+                  isVerticalRevert = picker.getContainer().hasClass('controls-popup-revert-vertical'),
+                  header = $('.controls-Menu__header', picker.getContainer());
+               if (header.length) {
+                  if (isVerticalRevert) {
+                     picker.getContainer().append(header);
+                  }
+                  else {
+                     picker.getContainer().prepend(header);
+                  }
+               }
+
+            }.bind(this));
+         }
       },
 
       setEnabled: function (enabled) {
