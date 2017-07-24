@@ -3,6 +3,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
       "Core/UserInfo",
       "Core/core-merge",
       'Core/Deferred',
+      'Core/EventBus',
       /*###"Core/helpers/string-helpers",*/
       'js!SBIS3.CORE.TabMessage',
       /*###'js!SBIS3.CONTROLS.WaitIndicator',*/
@@ -225,6 +226,13 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
             this.subscribeTo(this._longOpList, 'ontimespentchanged', function () {
                if (self._activeOperation) {
                   self._setFooterTimeSpent(self._activeOperation.get('shortTimeSpent'));
+               }
+            });
+
+            // Обновить попап после разблокировки девайса
+            this.subscribeTo(EventBus.globalChannel(), 'onwakeup', function () {
+               if(!self.isDestroyed() && self.isVisible()) {
+                  self.reload();
                }
             });
          },
