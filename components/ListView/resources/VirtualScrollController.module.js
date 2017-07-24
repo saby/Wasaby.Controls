@@ -120,7 +120,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
                beginHeight += this._heights[i];
             }
 
-            for (i = shownRange[1]; i < this._heights.length; i++) {
+            for (i = shownRange[1]; i < this._heights.length - 1; i++) {
                endHeight += this._heights[i];
             }
 

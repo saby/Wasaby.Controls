@@ -389,8 +389,10 @@ define('js!SBIS3.CONTROLS.DateRange', [
          return date;
       },
 
-      _focusOutHandler: function () {
-         this.validate()
+      _focusOutHandler: function (event, destroyed) {
+         if (!destroyed){
+            this.validate();
+         }
       }
    });
    return DateRange;

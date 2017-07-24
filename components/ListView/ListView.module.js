@@ -1511,19 +1511,17 @@ define('js!SBIS3.CONTROLS.ListView',
          _getElementData: function(target) {
             if (target.length){
                var cont = this._container[0],
-                   containerCords = cont.getBoundingClientRect(),
                    targetKey = target[0].getAttribute('data-id'),
                    item = this.getItems() ? this.getItems().getRecordById(targetKey) : undefined,
-                   correctTarget = target.hasClass('controls-editInPlace') ? this._getDomElementByItem(this._options._itemsProjection.getItemBySourceItem(item)) : target,
-                   targetCords = correctTarget[0].getBoundingClientRect();
+                   correctTarget = target.hasClass('controls-editInPlace') ? this._getDomElementByItem(this._options._itemsProjection.getItemBySourceItem(item)) : target;
 
                return {
                   key: targetKey,
                   record: item,
                   container: correctTarget,
                   get position() {
-                     targetCords = correctTarget[0].getBoundingClientRect();
-                     containerCords = cont.getBoundingClientRect();
+                     var targetCords = correctTarget[0].getBoundingClientRect(),
+                         containerCords = cont.getBoundingClientRect();
                      return {
                         /* При расчётах координат по вертикали учитываем прокрутку */
                          top: targetCords.top - containerCords.top + cont.scrollTop,
@@ -2415,7 +2413,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         event.setResult(this._notify('onAfterBeginEdit', model));
                         this._getItemsContainer().on('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
                      }.bind(this),
-                     onChangeHeight: function(event, model) {
+                     onHeightChange: function(event, model) {
                         if (this._options.editMode.indexOf('toolbar') !== -1 && this._getItemsToolbar().isToolbarLocking()) {
                            this._showItemsToolbar(this._getElementData(this._getElementByModel(model)));
                         }
@@ -2446,7 +2444,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         //При разрушении редактирования скрывает toolbar. Иначе это ни кто не сделает. А разрушение могло
                         //произойти например из-за setEnabled(false) у ListView
                         this._hideToolbar();
-                        this._toggleEmptyData(!this.getItems().getCount());
+                        this._toggleEmptyData(!this.getItems() || !this.getItems().getCount());
                         this._notifyOnSizeChanged(true);
                      }.bind(this)
                   }
@@ -2464,7 +2462,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._changeHoveredItem(editedContainer);
                //Отображаем кнопки редактирования
                itemsToolbar.showEditActions();
-               if (!this.getItems().getRecordById(model.getId())) {
+               if (!this.getItems() || !this.getItems().getRecordById(model.getId())) {
                   if (this.getItemsActions()) {
                      itemsInstances = this.getItemsActions().getItemsInstances();
                      if (itemsInstances['delete']) {

@@ -1,14 +1,24 @@
 .controls-TimeHeader {
   height: @time-header-height;
   background-color: @time-header-background-color;
+}
+
+.controls-TimeHeader__containerBlock {
+  & when (get-unit(@icon-button-round-border-height) = rem) {
+    @iconHomeHeight: 3rem;
+    padding-top: calc(~"@{controls-Popup-closeButton-top} + (@{closeButtonHeight} - @{iconHomeHeight}) / 2");
+  }
+  & when not (get-unit(@icon-button-round-border-height) = rem) {
+    @iconHomeHeight: @icon-button-round-border-height;
+    padding-top: @controls-Popup-closeButton-top + (@closeButtonHeight - @iconHomeHeight) / 2;
+  }
   .flexbox();
   .justify-content(space-between);
   .align-items(center);
 }
 
-.controls-TimeHeader__endBlock {
-  .flexbox();
-  .align-items(center);
+.controls-TimeHeader__startBlock {
+  padding-bottom: 2 * @time-header-offset-start-block;
 }
 
 .controls-TimeHeader__title {
@@ -37,6 +47,7 @@
   display: inline-block;
   font-size: @time-header-font-size;
   font-weight: @bold-font-weight;
+  margin: @time-header-margin;
 }
 
 .controls-TimeHeader__time_active {

@@ -21,7 +21,7 @@
         </tbody>
         <ws:partial template="{{_footTpl}}" scope="{{...}}" />
     </table>
-    <div class="controls-ListView__EmptyData {{(!_serverRender || _records.length) ? 'ws-hidden' : ''}}">
+    <div class="controls-ListView__EmptyData {{(!_serverRender || _records.length || !emptyHTML) ? 'ws-hidden' : ''}}">
         <ws:partial template="{{ emptyHTML }}"/>
     </div>
     <ws:if data="{{showPaging}}">

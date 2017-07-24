@@ -105,9 +105,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       return projection;
    },
    applyFilterToProjection = function(projection, cfg) {
-      if (cfg.itemsFilterMethod) {
-         projection.setFilter(cfg.itemsFilterMethod);
-      }
+      projection.setFilter(cfg.itemsFilterMethod);
    },
 
    _oldGroupByDefaultMethod = function (record, at, last, item) {
@@ -2596,7 +2594,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       setItemsFilterMethod: function(filter) {
          this._options.itemsFilterMethod = filter;
          if(this._options._itemsProjection) {
-            this._options._itemsProjection.setFilter(filter);
+            this._options._applyFilterToProjection(this._getItemsProjection(), this._options);
          }
       },
       /**
