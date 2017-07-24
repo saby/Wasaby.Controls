@@ -549,7 +549,9 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
       }
       //endregion private
    });
-
+   /**
+    * Опеределяет позицию перемещения в зависимости от типа драгнгдропа itemsDragNDrop и вида связанного отображения плоский список/дерево
+    */
    var DragPositioner = function (cfg) {
       this._projection = cfg.projection;
       this._sourceExistNode = false;
@@ -591,9 +593,9 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             return this._onlyChangeOrder(offset, size);
             break;
          case  'onlyChangeParent':
-            return this._onlyChangeParent(offset, size);
+            return this._onlyChangeParent();
          case 'separateParent':
-            return this._separateParent(offset, size);
+            return this._separateParent(offset, size, target);
             break;
          case 'allow':
          default:
@@ -619,7 +621,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
       } else if(!target.isNode() && this._sourceExistNode) {
          return DRAG_META_INSERT.on;
       }
-      return this._allow(offset, size);
+      return this._allow(offset, size, target);
    };
    DragPositioner.prototype._default = function (offset, size) {
       return offset < 10 ? DRAG_META_INSERT.before : offset > size - 10 ? DRAG_META_INSERT.after : DRAG_META_INSERT.on;
