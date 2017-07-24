@@ -556,6 +556,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
              this.hidePicker();
              this._getLinkCollection().hidePicker();
+             
+             /* При открытии диалога выбора необходимо очистить список в автодополнении,
+                т.к. на диалоге выбора могут производить изменения / удаление записей */
+             if(this._list && this._list.getItems() && this._getOption('autoShow')) {
+                this._list.getItems().clear();
+             }
 
              if(this._options.useSelectorAction) {
                 this._getSelectorAction().execute(wsCoreMerge(actionCfg, cfg));
