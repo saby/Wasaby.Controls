@@ -246,6 +246,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       },
       
       bindFilters: function(filterButton, fastDataFilter, view) {
+         var self = this;
+         
          if(!this._filterController) {
             this._filterController = new FilterController({
                view: view,
@@ -254,7 +256,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             });
          }
    
-         this._filterController.bindFilters();
+         /* Из-за того, что историю фильтрации надо обновлять (из-за серверного рендеринга),
+            надо и все синхронизации производить после вычитки новых параметров */
+         (this._dFiltersReady || Deferred.success()).addCallback(fHelpers.forAliveOnly(function(res) {
+            self._filterController.bindFilters();
+            return res;
+         }, view));
       },
       
       /**
@@ -268,6 +275,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
              dReady = loadHistory && historyId ? UserConfig.getParam(historyId) : Deferred.success(),
              self = this,
              view, filter, preparedStructure;
+            
+         this._dFiltersReady = dReady;
 
          if(browser) {
             view = browser.getView();

@@ -2,7 +2,14 @@
  * Created by iv.cheremushkin on 12.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.FloatArea', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS3.CONTROLS.PopupMixin', 'js!SBIS3.CORE.LikeWindowMixin', 'html!SBIS3.CONTROLS.FloatArea', 'css!SBIS3.CONTROLS.FloatArea'], function(CompoundControl, PopupMixin, LikeWindowMixin, dotTpl) {
+define('js!SBIS3.CONTROLS.FloatArea', [
+   'js!SBIS3.CORE.CompoundControl',
+   'js!SBIS3.CONTROLS.PopupMixin',
+   'js!SBIS3.CORE.LikeWindowMixin',
+   'tmpl!SBIS3.CONTROLS.FloatArea',
+   'js!SBIS3.CONTROLS.Utils.TemplateUtil',
+   'css!SBIS3.CONTROLS.FloatArea'
+], function(CompoundControl, PopupMixin, LikeWindowMixin, dotTpl, TemplateUtil) {
 
    'use strict';
 
@@ -33,14 +40,18 @@ define('js!SBIS3.CONTROLS.FloatArea', ['js!SBIS3.CORE.CompoundControl', 'js!SBIS
               * @remark
               * Имя компонента устанавливают в формате "js!SBIS3.MyArea.MyComponent".
               */
-            template: null
+            template: null,
+            /** @cfg {Object} Опции для компонента, отображаемого внутри {@link template}
+             */
+            componentOptions: {}
          }
       },
 
       _modifyOptions: function(options) {
          options = FloatArea.superclass._modifyOptions.apply(this, arguments);
-         if (options.template && options.template.indexOf('js!') === 0) {
-            require([options.template], function(){});
+         //В рамках совместимости, делаю функцию, если прислали верстку
+         if (typeof options.template == 'string' && options.template.indexOf('js!') !== 0) {
+            options.template = TemplateUtil.prepareTemplate(options.template);
          }
          return options;
       },

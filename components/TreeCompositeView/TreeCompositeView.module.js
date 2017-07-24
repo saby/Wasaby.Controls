@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
    'tmpl!SBIS3.CONTROLS.TreeCompositeView/resources/FolderTemplate',
    'tmpl!SBIS3.CONTROLS.TreeCompositeView/resources/ListFolderTemplate',
    'tmpl!SBIS3.CONTROLS.TreeCompositeView/resources/FolderContentTemplate',
-   'html!SBIS3.CONTROLS.TreeCompositeView/resources/StaticFolderContentTemplate',
+   'tmpl!SBIS3.CONTROLS.TreeCompositeView/resources/StaticFolderContentTemplate',
    "Core/helpers/collection-helpers",
    "Core/helpers/fast-control-helpers",
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
@@ -158,9 +158,11 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             }
             if (item.isNode()) {
                records.folders.push(item);
+               cfg._hideEmpty = true;
             }
             else {
                records.leafs.push(item);
+               cfg._hideEmpty = true;
             }
          });
          return records;

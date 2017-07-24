@@ -3,6 +3,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
       "Core/UserInfo",
       "Core/core-merge",
       'Core/Deferred',
+      'Core/EventBus',
       /*###"Core/helpers/string-helpers",*/
       'js!SBIS3.CORE.TabMessage',
       /*###'js!SBIS3.CONTROLS.WaitIndicator',*/
@@ -17,7 +18,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
       "js!SBIS3.CONTROLS.LongOperationsList"
    ],
 
-   function (UserInfo, cMerge, Deferred, /*###strHelpers,*/ TabMessage, /*###WaitIndicator,*/ NotificationPopup, LongOperationEntry, Model, headerTemplate, contentTpl, footerTpl, FloatArea) {
+   function (UserInfo, cMerge, Deferred, EventBus, /*###strHelpers,*/ TabMessage, /*###WaitIndicator,*/ NotificationPopup, LongOperationEntry, Model, headerTemplate, contentTpl, footerTpl, FloatArea) {
       'use strict';
 
       var FILTER_NOT_SUSPENDED = 'not-suspended';
@@ -225,6 +226,13 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
             this.subscribeTo(this._longOpList, 'ontimespentchanged', function () {
                if (self._activeOperation) {
                   self._setFooterTimeSpent(self._activeOperation.get('shortTimeSpent'));
+               }
+            });
+
+            // Обновить попап после разблокировки девайса
+            this.subscribeTo(EventBus.globalChannel(), 'onwakeup', function () {
+               if(!self.isDestroyed() && self.isVisible()) {
+                  self.reload();
                }
             });
          },
