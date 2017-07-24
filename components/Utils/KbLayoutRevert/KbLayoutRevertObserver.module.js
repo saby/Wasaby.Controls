@@ -96,6 +96,18 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                this._toggleItemsEventRising(true, true);
             }
          },
+   
+         /**
+          * Установить параметр по которому фильтруются данные
+          * @param {String} param
+          */
+         setParam: function(param) {
+            this._options.param = param
+         },
+         
+         getParam: function() {
+            return this._options.param;
+         },
 
          _toggleViewEvents: function (toggle) {
             var view = this._options.view,
