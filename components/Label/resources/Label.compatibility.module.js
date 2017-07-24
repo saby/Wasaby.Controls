@@ -16,6 +16,23 @@ define('js!SBIS3.CONTROLS.Label.compatibility', [],
        setCaption: function(caption) {
           this.caption = caption;
           this._setDirty();
+       },
+
+       /**
+        * Вернуть текст подсказки
+        * @returns {String}
+        */
+       getTooltip: function() {
+          return this.tooltip;
+       },
+
+       /**
+        * Изменить текст подсказки
+        * @param caption новый текст метки
+        */
+       setTooltip: function(tooltip) {
+          this.tooltip = tooltip;
+          this._setDirty();
        }
     }
    }
