@@ -100,10 +100,6 @@
     background-size: cover;
 }
 
-.controls-LongOperationsPopup__header_downloadButton {
-    margin-left: 8px;
-}
-
 .controls-LongOperationsPopup .controls-LongOperationsPopup__header_caption {
    font-size: @long-operations-popup-header-caption-f-size;
    line-height: @long-operations-popup-header-caption-line-height;
@@ -120,10 +116,20 @@
     color: @long-operations-popup-collapsed-header-caption-color;
 }
 
+.controls-LongOperationsPopup__header_downloadButton {
+    max-width: 150px;
+    margin-left: 8px;
+    text-overflow: ellipsis;
+}
+
 .controls-LongOperationsPopup__header_downloadButton,
 .controls-LongOperationsPopup__header_stoppedOperationsButton {
     margin-bottom: -2px;
     line-height: @long-operations-popup-header-line-height;
+}
+
+.controls-LongOperationsPopup__header_downloadButton .controls-Button__text {
+    white-space: nowrap;
 }
 
 /* End header  */
@@ -254,10 +260,3 @@
 }
 
 /* End footer */
-
-
-
-.controls-InformationPopup {
-
-
-}
