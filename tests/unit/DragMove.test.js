@@ -149,129 +149,6 @@ define([
             assert.equal(target.domElement.html(), 1);
          })
       });
-      describe('DragPositioner', function () {
-         var dragPositioner, domElement, targetLeaf, targetNode;
-         beforeEach(function () {
-            if (dragMove) {
-               var tree = new Tree({
-                  collection: items,
-                  idProperty: 'id',
-                  parentProperty: 'parent',
-                  nodeProperty: 'isnode',
-                  root: {
-                     id: null,
-                     title: 'Root'
-                  }
-               });
-               dragMove._options.nodeProperty = 'isnode';
-               dragMove.setItemsProjection(tree);
-               var row = dragMove._makeDragEntity({
-                  owner: view,
-                  model: tree.at(3).getContents(),
-                  projectionItem: tree.at(3)
-               });
-               DragObject.setSource(
-                  dragMove._makeDragEntityList({
-                     items: [row]
-                  })
-               );
-               dragMove._horisontalDragNDrop = false;
-
-               dragPositioner = dragMove._getDragPositioner();
-               domElement = {
-                  offset: function () {
-                     return {left: 0, top: 0};
-                  },
-                  width: function () {
-                     return 50;
-                  },
-                  height: function () {
-                     return 100;
-                  }
-               };
-               targetLeaf = tree.at(1);
-               targetNode = dragMove._getItemsProjection().at(0);
-
-            }
-         });
-         context('flat list', function () {
-            beforeEach(function () {
-               if (dragMove) {
-                  dragPositioner._isTree = false;
-               }
-            });
-            it('should return before', function () {
-               assert.equal(dragPositioner.get(domElement), 'before');
-            });
-            it('should return after', function () {
-               event.pageY = 51;
-               assert.equal(dragPositioner.get(domElement), 'after');
-            });
-            it('should return before for horizontal', function () {
-               dragPositioner._horisontalDragNDrop = true;
-               dragPositioner._isTree = false;
-               assert.equal(dragPositioner.get(domElement), 'before');
-            });
-            it('should return after for horizonta', function () {
-               dragPositioner._horisontalDragNDrop = true;
-               dragPositioner._isTree = false;
-               event.pageX = 26;
-               assert.equal(dragPositioner.get(domElement), 'after');
-            });
-            it('should save source items', function () {
-               dragMove.setItemsProjection(view._getItemsProjection());
-               dragMove._dragPositioner = null;
-               
-               assert.equal(dragPositioner._sourseItems.length, 1);
-            });
-         });
-         context('tree', function () {
-            it('should return before', function () {
-               assert.equal(dragPositioner.get(domElement), 'before');
-            });
-            it('should return on', function () {
-               event.pageY = 51;
-               assert.equal(dragPositioner.get(domElement), 'on');
-            });
-            it('should return after', function () {
-               event.pageY = 91;
-               assert.equal(dragPositioner.get(domElement), 'after');
-            });
-            it('should return before for horizontal list', function () {
-               dragPositioner._horisontalDragNDrop = true;
-               assert.equal(dragPositioner.get(domElement), 'before');
-            });
-            it('should return on for horizontal list', function () {
-               dragPositioner._horisontalDragNDrop = true;
-               event.pageX = 26;
-               assert.equal(dragPositioner.get(domElement), 'on');
-            });
-            it('should return after for horizontal list', function () {
-               dragPositioner._horisontalDragNDrop = true;
-               event.pageX = 46;
-               assert.equal(dragPositioner.get(domElement), 'after');
-            });
-            it('should return on when the itemsdragndrop onlychangeparent', function () {
-               dragPositioner._itemsDragNDrop = 'onlyChangeParent';
-               event.pageX = 26;
-               assert.equal(dragPositioner.get(domElement), 'on');
-            });
-            it('should return on when the itemsdragndrop separateParent and target is folder', function () {
-               dragPositioner._itemsDragNDrop = 'separateParent';
-               event.pageY = 26;
-               assert.equal(dragPositioner.get(domElement, targetNode), 'on');
-            });
-            it('should return on when the itemsdragndrop separateParent and target is targetLeaf', function () {
-               dragPositioner._itemsDragNDrop = 'separateParent';
-               event.pageY = 26;
-               assert.equal(dragPositioner.get(domElement, targetLeaf), 'before');
-            });
-            it('should save source items', function () {
-               assert.equal(dragPositioner._sourseItems.length, 1);
-            });
-
-         });
-      });
       describe('.updateTarget', function () {
          beforeEach(function () {
             if (dragMove) {
@@ -406,8 +283,7 @@ define([
             dragMove.endDrag();
          });
       });
-
-      describe('createAvatar', function () {
+      describe('.createAvatar', function () {
          it('should create avatar', function () {
             dragMove.beginDrag();
             assert.isTrue(dragMove.createAvatar().length > 0);
@@ -418,18 +294,138 @@ define([
             assert.equal(dragMove.createAvatar().find('.controls-DragNDrop__draggedCount').html(), 2);
          });
       });
-      describe('setItemsDragNDrop', function () {
+      describe('.setItemsDragNDrop', function () {
          it('setItemsDragNDrop', function () {
             dragMove.setItemsDragNDrop('allow');
             assert.equal(dragMove.getItemsDragNDrop(), 'allow');
          });
       });
-      describe('setItemsDragNDrop', function () {
+      describe('.setItemsDragNDrop', function () {
          it('setItemsDragNDrop', function () {
             new DragMove({
                itemsDragNDrop: 'allow'
             });
             assert.equal(dragMove.getItemsDragNDrop(), 'allow');
+         });
+      });
+      describe('DragPositioner', function () {
+         var dragPositioner, domElement, targetLeaf, targetNode;
+         beforeEach(function () {
+            if (dragMove) {
+               var tree = new Tree({
+                  collection: items,
+                  idProperty: 'id',
+                  parentProperty: 'parent',
+                  nodeProperty: 'isnode',
+                  root: {
+                     id: null,
+                     title: 'Root'
+                  }
+               });
+               dragMove._options.nodeProperty = 'isnode';
+               dragMove.setItemsProjection(tree);
+               var row = dragMove._makeDragEntity({
+                  owner: view,
+                  model: tree.at(3).getContents(),
+                  projectionItem: tree.at(3)
+               });
+               DragObject.setSource(
+                  dragMove._makeDragEntityList({
+                     items: [row]
+                  })
+               );
+               dragMove._horisontalDragNDrop = false;
+
+               dragPositioner = dragMove._getDragPositioner();
+               domElement = {
+                  offset: function () {
+                     return {left: 0, top: 0};
+                  },
+                  width: function () {
+                     return 50;
+                  },
+                  height: function () {
+                     return 100;
+                  }
+               };
+               targetLeaf = tree.at(1);
+               targetNode = dragMove._getItemsProjection().at(0);
+            }
+         });
+         context('flat list', function () {
+            beforeEach(function () {
+               if (dragMove) {
+                  dragPositioner._isTree = false;
+               }
+            });
+            it('should return before', function () {
+               assert.equal(dragPositioner.get(domElement), 'before');
+            });
+            it('should return after', function () {
+               event.pageY = 51;
+               assert.equal(dragPositioner.get(domElement), 'after');
+            });
+            it('should return before for horizontal', function () {
+               dragPositioner._horisontalDragNDrop = true;
+               dragPositioner._isTree = false;
+               assert.equal(dragPositioner.get(domElement), 'before');
+            });
+            it('should return after for horizonta', function () {
+               dragPositioner._horisontalDragNDrop = true;
+               dragPositioner._isTree = false;
+               event.pageX = 26;
+               assert.equal(dragPositioner.get(domElement), 'after');
+            });
+            it('should save source items', function () {
+               dragMove.setItemsProjection(view._getItemsProjection());
+               dragMove._dragPositioner = null;
+               assert.equal(dragPositioner._sourseItems.length, 1);
+            });
+         });
+         context('tree', function () {
+            it('should return before', function () {
+               assert.equal(dragPositioner.get(domElement), 'before');
+            });
+            it('should return on', function () {
+               event.pageY = 51;
+               assert.equal(dragPositioner.get(domElement), 'on');
+            });
+            it('should return after', function () {
+               event.pageY = 91;
+               assert.equal(dragPositioner.get(domElement), 'after');
+            });
+            it('should return before for horizontal list', function () {
+               dragPositioner._horisontalDragNDrop = true;
+               assert.equal(dragPositioner.get(domElement), 'before');
+            });
+            it('should return on for horizontal list', function () {
+               dragPositioner._horisontalDragNDrop = true;
+               event.pageX = 26;
+               assert.equal(dragPositioner.get(domElement), 'on');
+            });
+            it('should return after for horizontal list', function () {
+               dragPositioner._horisontalDragNDrop = true;
+               event.pageX = 46;
+               assert.equal(dragPositioner.get(domElement), 'after');
+            });
+            it('should return on when the itemsdragndrop onlychangeparent', function () {
+               dragPositioner._itemsDragNDrop = 'onlyChangeParent';
+               event.pageX = 26;
+               assert.equal(dragPositioner.get(domElement), 'on');
+            });
+            it('should return on when the itemsdragndrop separateParent and target is folder', function () {
+               dragPositioner._itemsDragNDrop = 'separateParent';
+               event.pageY = 26;
+               assert.equal(dragPositioner.get(domElement, targetNode), 'on');
+            });
+            it('should return on when the itemsdragndrop separateParent and target is targetLeaf', function () {
+               dragPositioner._itemsDragNDrop = 'separateParent';
+               event.pageY = 26;
+               assert.equal(dragPositioner.get(domElement, targetLeaf), 'before');
+            });
+            it('should save source items', function () {
+               assert.equal(dragPositioner._sourseItems.length, 1);
+            });
          });
       });
    });
