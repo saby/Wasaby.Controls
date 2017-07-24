@@ -37,7 +37,7 @@ define('js!WSControls/Lists/resources/utils/ItemsUtil', [
       },
 
       getPropertyValue: function (itemContents, field) {
-         if (typeof itemContents == 'string') {
+         if (!(itemContents instanceof Object)) {
             return itemContents;
          }
          else {
