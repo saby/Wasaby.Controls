@@ -606,7 +606,14 @@ body {
 }
 
 .controls-IconButton.controls-TreeView__editArrow-container {
-   margin-top: @default-border-width;
+  @offset: round((1.785 - 1.32) / 2rem, 4);
+  margin-top: calc(~"@{default-border-width} - @{offset}");
+  .icon-16 {
+    font-size: 1.785rem !important;
+    line-height: 1.785rem !important;
+    width: 1.785rem;
+    height: 1.785rem;
+  }
 }
 
  .controls-Button .controls-Button__icon.icon-32 + .controls-Button__text {
