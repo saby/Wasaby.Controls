@@ -73,8 +73,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
        * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut onClick
        *
        * @cssModifier controls-DropdownList__withoutCross Скрывает крестик справа от выбранного значения.
-       * @cssModifier controls-DropdownList__hideText Скрывает текст выбранной записи. Нужно использоваться, когда требуется отобразить только иконку.
-       * @cssModifier controls-DropdownList__hideIcon Скрываем иконку выбранной записи. Нужно использоваться, когда требуется отобразить только текст.
        *
        * @control
        * @public
