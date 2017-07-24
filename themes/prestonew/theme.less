@@ -1010,17 +1010,21 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-
     vertical-align: baseline;
 }
 
-body .controls-CommandsButton__picker {
-   .controls-MenuItem {
-      padding-right: 2.8rem !important; //38 = 24 (кнопка) + 8(отступ справа у кнопки) +6(отступ слева у кнопки)
+body {
+   .controls-CommandsButton__picker {
+      .controls-MenuItem {
+         padding-right: 2.8rem !important; //38 = 24 (кнопка) + 8(отступ справа у кнопки) +6(отступ слева у кнопки)
+      }
    }
-}
+   .controls-DropdownList__picker {
+      .controls-DropdownList__multiselect .controls-DropdownList__itemCheckBox {
+         width: 2.286rem;
+      }
+      .controls-DropdownList__multiselect.controls-ListView__defaultItem, .controls-DropdownList__multiselect.controls-ListView__defaultItem.controls-DropdownList__item__selected {
+         font-weight: 400;
+      }
+   }
 
-.controls-DropdownList__picker .controls-DropdownList__multiselect .controls-DropdownList__itemCheckBox {
-  width: 2.286rem;
-}
-.controls-DropdownList__picker .controls-DropdownList__multiselect.controls-ListView__defaultItem, .controls-DropdownList__picker .controls-DropdownList__multiselect.controls-ListView__defaultItem.controls-DropdownList__item__selected {
-  font-weight: 400;
 }
 
 .controls-BreadCrumbs .controls-BreadCrumbs {
