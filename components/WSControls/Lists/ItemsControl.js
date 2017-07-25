@@ -1,6 +1,7 @@
 define('js!WSControls/Lists/ItemsControl', [
    'Core/core-extend',
    'Core/core-functions',
+   'js!WS.Data/Collection/IBind',
    'js!WSControls/Control/Base',
    'js!WS.Data/Collection/RecordSet',
    'Core/helpers/Object/isEmpty',
@@ -19,6 +20,7 @@ define('js!WSControls/Lists/ItemsControl', [
    'js!WSControls/DOMHelpers/DOMHelpers'
 ], function (extend,
              cFunctions,
+             IBindCollection,
              BaseControl,
              RecordSet,
              isEmpty,
@@ -86,7 +88,7 @@ define('js!WSControls/Lists/ItemsControl', [
 
             if (this._options.items) {
                this._items = this._options.items;
-               this._itemsChangeCallback();
+               this._itemsChangeCallback(true);
             }
 
             if (this._options.dataSource) {
@@ -119,8 +121,10 @@ define('js!WSControls/Lists/ItemsControl', [
             }
          },
 
-         _itemsChangeCallback: function() {
-            this._initItemBasedControllers();
+         _itemsChangeCallback: function(initBaseControllers) {
+            if (initBaseControllers) {
+               this._initItemBasedControllers();
+            }
             this._records = this._getRecordsForView();
             this._notify('onItemsReady');
             this._updateTplData();
@@ -338,7 +342,7 @@ define('js!WSControls/Lists/ItemsControl', [
                //this._drawItemsCallbackDebounce();
             } else {
                this._items = list;
-               this._itemsChangeCallback();
+               this._itemsChangeCallback(true);
                this._setDirty();
             }
             this._toggleIndicator(false);
@@ -365,7 +369,7 @@ define('js!WSControls/Lists/ItemsControl', [
       });
 
    var onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
-      this._itemsChangeCallback();
+      this._itemsChangeCallback(action === IBindCollection.ACTION_RESET);
       this._setDirty();
    };
 
