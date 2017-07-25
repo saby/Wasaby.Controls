@@ -1,6 +1,5 @@
 <div class="controls-ListView {{multiselect !== false ? 'controls-ListView__multiselect' : 'controls-ListView__multiselect__off'}}{{ _serverRender ? ' controls-ListView__dataLoaded'}}"
-      event:onclick="onClick()"
-     event:onmouseenter="mouseEnter()"
+     event:onclick="onClick()"
      event:onmouseleave="mouseLeave()"
      event:onmousemove="mouseMove()">
    <div class="controls-ListView__itemsContainer">
@@ -18,15 +17,14 @@
       </div>
    </ws:if>
 
-   <div
-      event:onmouseenter="mouseEnter()"
-      event:onmouseleave="mouseLeave()"
-      class="{{!showToolbar ? 'ws-hidden'}}"
-      style="position: absolute; width: 100px;
-                  background: red; top: {{toolbarTop}}px; left: {{toolbarLeft}}px;">
-      <ws:SBIS3.CONTROLS.Button event:onActivated="itemActionActivated(1)" caption="click me"/>
-      <ws:SBIS3.CONTROLS.Button event:onActivated="itemActionActivated(2)" caption="don't click me"/>
-   </div>
+   <ws:if data="{{ _options.itemsActions }}">
+      <ws:WSControls.Lists.ItemsToolbar.ItemsToolbarCompatible
+              name="itemsToolbar"
+              idProperty="{{ _options.idProperty }}"
+              itemsActions="{{ _options.itemsActions }}"
+              activeItem="{{ { 'parentContainer': _container, 'itemsProjection': _itemsProjection, 'hoveredIndex': hoveredIndex } }}"
+      />
+   </ws:if>
 
 </div>
 

@@ -3,10 +3,18 @@ define('js!WSControls/Lists/ListView2', ['js!WSControls/Lists/ItemsControl',
       'js!WSControls/Controllers/ListSelector',
       'tmpl!WSControls/Lists/ListView2',
       'tmpl!WSControls/Lists/resources/ItemTemplate',
-      'tmpl!WSControls/Lists/resources/GroupTemplate'],
+      'tmpl!WSControls/Lists/resources/GroupTemplate',
+      'js!WSControls/Lists/ItemsToolbar/ItemsToolbarCompatible'],
 
    function(ItemsControl, cInstance, ListSelector, template, ItemTemplate, groupTemplate) {
+      
       var INDICATOR_DELAY = 2000;
+   
+      // TODO удалить при переводе на новый toolbar, он будет лежать в строке, и этот код будет не нужен.
+      var isItemActions = function(target) {
+         return this._options.itemsActions.length ? this.getChildControlByName('itemsToolbar').getContainer()[0].contains(target) : false;
+      };
+      
       var ListView = ItemsControl.extend({
          _template: template,
          _needSelector: true,
@@ -25,6 +33,27 @@ define('js!WSControls/Lists/ListView2', ['js!WSControls/Lists/ItemsControl',
             var data = ListView.superclass._getItemData.apply(this, arguments);
             data.selectedKey = this._selector.getSelectedKey();
             return data;
+         },
+   
+         mouseMove: function(e) {
+            var hash = this._getDataHashFromTarget(e.target),
+                index = hash && this._itemsProjection ? this._itemsProjection.getIndexByHash(hash) : -1;
+            
+            if (isItemActions.call(this, e.target)) {
+               return;
+            }
+            
+            if (this.hoveredIndex !== index) {
+               this.hoveredIndex = index;
+               this._updateTplData();
+               this._setDirty();
+            }
+         },
+   
+         mouseLeave: function () {
+            this.hoveredIndex = -1;
+            this._updateTplData();
+            this._setDirty();
          },
 
 

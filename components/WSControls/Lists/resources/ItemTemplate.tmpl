@@ -1,4 +1,4 @@
-<div class="controls-ListView__item js-controls-ListView__item {{selected ? 'controls-ListView__item__selected'}} {{ className }}"
+<div class="controls-ListView__item js-controls-ListView__item {{selected ? 'controls-ListView__item__selected'}} {{ hovered ? 'controls-ListView__item__hovered' }} {{ className }}"
      data-hash="{{ projItem.getHash() }}">
     <ws:partial template="{{itemContent}}" scope="{{...}}" attributes="{{ attributes }}"></ws:partial>
 </div>

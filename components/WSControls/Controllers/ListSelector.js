@@ -81,7 +81,6 @@ define('js!WSControls/Controllers/ListSelector', [
          if (this._selectedKey != id) {
             this._selectedKey = id;
             this._prepareSelectedIndexByKey(id);
-            this._notifySelectedItem(this._selectedIndex, this._selectedKey);
          }
       },
 
@@ -106,7 +105,6 @@ define('js!WSControls/Controllers/ListSelector', [
          if (this._selectedIndex != index) {
             this._selectedIndex = index;
             this._prepareSelectedKeyByIndex(index);
-            this._notifySelectedItem(this._selectedIndex, this._selectedKey);
          }
       },
 
