@@ -232,7 +232,8 @@ define('js!WSControls/Lists/ItemsControl', [
 
          onClick: function (evt) {
             if (this._selector) {
-               return this._selector.setSelectedByHash(this._getDataHashFromTarget(evt.nativeEvent.target));
+               this._selector.setSelectedByHash(this._getDataHashFromTarget(evt.nativeEvent.target));
+               onSelectorChange.apply(this)
             }
          },
 
