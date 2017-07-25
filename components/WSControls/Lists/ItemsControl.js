@@ -15,7 +15,8 @@ define('js!WSControls/Lists/ItemsControl', [
    'js!WSControls/Lists/resources/utils/ItemsUtil',
    'Core/helpers/functional-helpers',
    'Core/Deferred',
-   'Core/core-instance'
+   'Core/core-instance',
+   'js!WSControls/DOMHelpers/DOMHelpers'
 ], function (extend,
              cFunctions,
              BaseControl,
@@ -32,7 +33,8 @@ define('js!WSControls/Lists/ItemsControl', [
              ItemsUtil,
              fHelpers,
              Deferred,
-             cInstance
+             cInstance,
+             DOMHelpers
    ) {
    'use strict';
 
@@ -121,7 +123,7 @@ define('js!WSControls/Lists/ItemsControl', [
             this._initItemBasedControllers();
             this._records = this._getRecordsForView();
             this._notify('onItemsReady');
-            this.tplData = this._getItemData();
+            this._updateTplData();
          },
 
 
@@ -150,6 +152,10 @@ define('js!WSControls/Lists/ItemsControl', [
             tplOptions.itemTpl = TemplateUtil.prepareTemplate(this._itemTpl);
             tplOptions.defaultItemTpl = TemplateUtil.prepareTemplate(this._defaultItemTemplate);
             return tplOptions;
+         },
+         
+         _updateTplData: function() {
+            this.tplData = this._getItemData();
          },
 
 
@@ -225,11 +231,28 @@ define('js!WSControls/Lists/ItemsControl', [
          _getItemProjectionByHash: function(hash) {
             return this._itemsProjection.getByHash(hash);
          },
-
-         eventsHandlers: function(event){
-            this._eventProxyHandler(event.nativeEvent);
+   
+         /**
+          * Метод получение hash итема по DOM элементу
+          * @param element
+          * @returns {*}
+          * @private
+          */
+         _getDataHashFromTarget: function (element) {
+            var itemContainer = DOMHelpers.closest(element, '.controls-ListView__item', this._container[0]),
+                hash;
+            
+            /* У item'a могут быть вложенные ItemsControl'ы, учитываем это */
+            if(itemContainer) {
+               hash = itemContainer.getAttribute('data-hash');
+               return this._getItemProjectionByHash(hash) ? hash : this._getDataHashFromTarget(itemContainer.parentElement);
+            } else {
+               return null;
+            }
          },
-
+   
+         //<editor-fold desc='EventHandlers'>
+         
          onClick: function (evt) {
             if (this._selector) {
                this._selector.setSelectedByHash(this._getDataHashFromTarget(evt.nativeEvent.target));
@@ -237,44 +260,12 @@ define('js!WSControls/Lists/ItemsControl', [
             }
          },
 
-         mouseEnter: function(ev){
-            this.showToolbar = true;
-         },
-
-         mouseLeave: function(ev){
-            var self = this;
-            this.showToolbar = false;
-            setTimeout(function() {
-               if(!self.showToolbar) {
-                  self._hoveredItem = null;
-                  self._setDirty();
-               }
-            }, 0);
-
-         },
-
          itemActionActivated: function(number, evt) {
             alert('clicked ' + this._hoveredItem + ' on button ' + number);
          },
-
-
-         mouseMove: function(ev){
-            var element = ev.nativeEvent.target;
-            this._hoveredItem = this._getDataHashFromTarget(element);
-            this.toolbarTop = ev.nativeEvent.target.offsetTop;
-            this.toolbarLeft = this._container[0].offsetWidth - 100;
-         },
-
-         _getDataHashFromTarget: function (element) {
-            while(element && typeof element.className === 'string' && element.className.indexOf('controls-ListView__item') == -1) {
-               element = element.parentNode;
-            }
-            if(element) {
-               return element.attributes['data-hash'].value;
-            } else {
-               return null;
-            }
-         },
+         
+   
+         //</editor-fold>
 
 
          //<editor-fold desc='DataSourceMethods'>
@@ -380,7 +371,7 @@ define('js!WSControls/Lists/ItemsControl', [
 
    var onSelectorChange = function() {
       this._itemData = null;
-      this.tplData = this._getItemData();
+      this._updateTplData();
       this._setDirty();
    };
 
