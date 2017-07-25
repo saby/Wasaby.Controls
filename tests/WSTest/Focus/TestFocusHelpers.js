@@ -45,6 +45,10 @@ define('js!WSTest/Focus/TestFocusHelpers', [
          control.getContainer().trigger('click');
       },
 
+      focusOn: function (element) {
+         element.focus ? element.focus() : $(element).focus();
+      },
+
       fireKeypress: function (control, keyCode) {
          var el = control.getContainer();
          var e = $.Event('keydown');
@@ -66,6 +70,14 @@ define('js!WSTest/Focus/TestFocusHelpers', [
 
       setControlActive: function (control, active) {
          control.setActive(active);
+      },
+
+      focusOnLastDiv: function () {
+         assert.isTrue(document.activeElement === $('.ws-focus-out')[0]);
+      },
+
+      focusOnFirstDiv: function () {
+         assert.isTrue(document.activeElement === $('.ws-focus-in')[0]);
       }
    }
    return helper;

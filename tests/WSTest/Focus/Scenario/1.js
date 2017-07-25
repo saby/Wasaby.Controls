@@ -24,8 +24,8 @@ define('js!WSTest/Focus/Scenario/1', [
 
       fHelpers.fireClick(testControl.getChildControlByName('AreaAbstract1'));
       fHelpers.childHasFocus(testControl, 'TextBox3');
-
-      fHelpers.fireTab(testControl.getChildControlByName('TextBox3'));
+      //
+      // fHelpers.fireTab(testControl.getChildControlByName('TextBox3'));
       // fHelpers.childIsNotInFocus(testControl, 'TextBox2');
       // fHelpers.childIsNotActive(testControl, 'AreaAbstract1');
       // fHelpers.notActive(testControl);

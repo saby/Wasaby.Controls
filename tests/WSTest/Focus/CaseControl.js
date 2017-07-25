@@ -1,13 +1,12 @@
-define('js!WSTest/Focus/Case13', [
-   'tmpl!WSTest/Focus/Case13',
+define('js!WSTest/Focus/CaseControl', [
    'js!SBIS3.CORE.CompoundControl'
-], function(dotTplFn, CompoundControl) {
+], function(CompoundControl) {
 
    var moduleClass = CompoundControl.extend({
-      _dotTplFn: dotTplFn,
       constructor: function(cfg) {
          moduleClass.superclass.constructor.call(this, cfg);
       }
    });
+
    return moduleClass;
 });
