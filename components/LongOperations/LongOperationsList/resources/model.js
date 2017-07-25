@@ -51,7 +51,7 @@ define(
        * @return {string}
        */
       LongOperationModel.timeSpentAsString = function (timeSpent, details) {
-         if (!timeSpent) {
+         if (!(typeof timeSpent === 'number' && 0 < timeSpent)) {
             return '0 сек.';
          }
          details = 1 < details ? details : 1;
