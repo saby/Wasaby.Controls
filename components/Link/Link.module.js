@@ -17,7 +17,6 @@ define('js!SBIS3.CONTROLS.Link', [
     * @extends WSControls/Buttons/ButtonBase
     * @author Романов Валерий Сергеевич
     *
-    * @demo SBIS3.CONTROLS.Demo.MyLink
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment

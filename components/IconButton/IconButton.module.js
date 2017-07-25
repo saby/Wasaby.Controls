@@ -22,7 +22,6 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
     * @class SBIS3.CONTROLS.IconButton
     * @extends SBIS3.CONTROLS.Button
     *
-    * @demo SBIS3.CONTROLS.Demo.MyIconButton
     * @author Романов Валерий Сергеевич
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
