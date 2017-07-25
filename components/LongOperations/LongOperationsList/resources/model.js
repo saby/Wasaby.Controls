@@ -52,7 +52,7 @@ define(
        */
       LongOperationModel.timeSpentAsString = function (timeSpent, details) {
          if (!timeSpent) {
-            return '0сек';
+            return '0 сек.';
          }
          details = 1 < details ? details : 1;
          var secs = Math.round(timeSpent/1000);
@@ -62,7 +62,7 @@ define(
             var t = Math.floor(secs/period);
             secs = secs%period;
             if (t) {
-               spent.push(t + rk(names[i], 'ДлительныеОперации'));
+               spent.push(t + ' ' + rk(names[i], 'ДлительныеОперации'));
                if (details <= spent.length) {
                   break;
                }
