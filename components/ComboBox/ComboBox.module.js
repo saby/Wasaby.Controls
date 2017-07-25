@@ -270,12 +270,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._getItemsProjection().setFilter(this._searchFilter.bind(this));
          this.redraw();
          this.showPicker();
+         this._setKeyByText();
       },
 
       _onResetSearch: function(){
          this.setSelectedIndex(-1);
          this._getItemsProjection().setFilter(null);
          this.redraw();
+         this._setKeyByText();
       },
 
       _keyboardHover: function (e) {
@@ -362,7 +364,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       setText: function (text) {
          ComboBox.superclass.setText.call(this, text);
-         this._setKeyByText();
       },
 
       _drawText: function(text) {
@@ -579,10 +580,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          var keys = constants.key;
          /*по изменению текста делаем то же что и в текстбоксе*/
          ComboBox.superclass._keyUpBind.apply(this, arguments);
-         /*не делаем смену значения при нажатии на стрелки вверх вниз. Иначе событие смены ключа срабатывает два раза*/
-         if ((e.which != keys.down) && (e.which != keys.up)) {
-            this._setKeyByText();
-         }
+
          /*при нажатии enter или escape, событие должно всплывать. Возможно эти кнопки являются управляющими командами (например в редактировании по месту)*/
          if ((e.which != keys.enter) && (e.which != keys.esc)) {
             e.stopPropagation();
