@@ -10,7 +10,7 @@ define('js!WSControls/Lists/ItemsControl', [
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'tmpl!WSControls/Lists/resources/ItemsTemplate',
    'tmpl!WSControls/Lists/resources/ItemTemplate',
-   'tmpl!SBIS3.CONTROLS.ListView/resources/ItemContentTemplate',
+   'tmpl!WSControls/Lists/resources/ItemContentTemplate',
    'js!WSControls/Lists/resources/utils/DataSourceUtil',
    'js!WSControls/Lists/resources/utils/ItemsUtil',
    'Core/helpers/functional-helpers',

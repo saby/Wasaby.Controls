@@ -23,7 +23,7 @@ define('js!WSControls/Lists/ListView2', ['js!WSControls/Lists/ItemsControl',
          },
          _getItemData: function() {
             var data = ListView.superclass._getItemData.apply(this, arguments);
-            data.selectedIndex = this._selector.getSelectedIndex();
+            data.selectedKey = this._selector.getSelectedKey();
             return data;
          },
 
