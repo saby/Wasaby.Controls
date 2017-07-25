@@ -15,7 +15,7 @@
                    </ws:else>
                    <div class="lvl{{projItem.getLevel()}} controls-TreeView__expand js-controls-TreeView__expand {{projItem.isExpanded() ? 'controls-TreeView__expand__open':''}} {{(isNode === null || (isNode === false && hierField_d === false && !hasChilds) || (displayType === 'folders' && hierField_d === false && !hasChilds)) ? 'controls-TreeView__expand__leaf' : 'has-child'}}"></div>
                    <ws:if data="{{projItem.isNode()}}">
-                       <ws:if data="{{arrowActivatedHandler || editArrow}}">
+                       <ws:if data="{{arrowActivatedHandler || (editArrow && editArrow !== 'custom'}}">
                            <div class="controls-TreeView__ellipsis-wrapper">
                                <div class="controls-TreeView__ellipsis-container">
                                    <div class="controls-TreeView__folderTitle">
