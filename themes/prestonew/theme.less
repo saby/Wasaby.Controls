@@ -293,6 +293,13 @@ body {
          }
       }
    }
+   // У кнопок нестандартный цвет, перебиваем его. В новом дизайне либо добьюсь что бы цвета были стандартные,
+   // либо буду устанавливать его через переменные.
+   // В теме розницы есть такой же хак перебивающий этот хак на стандартный цвет
+   .controls-DateRangeChoose__home .icon-primary {
+      color: #e4e4e4;
+   }
+
   .controls-ToolBar__menuIcon .icon-24 {
     font-family: carrypresto-icons!important;
   }
@@ -453,6 +460,11 @@ body {
       // В большинстве реестров используется #2C3E50 - @basic-block-bg-color
       background-color: @basic-block-bg-color;
    }
+   .ws-sticky-header__gradient {
+      height: 0.857rem;
+      box-shadow: none;
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+   }
 }
 
 body  .ws-window {
@@ -606,7 +618,14 @@ body {
 }
 
 .controls-IconButton.controls-TreeView__editArrow-container {
-   margin-top: @default-border-width;
+  @offset: round((1.785 - 1.32) / 2rem, 4);
+  margin-top: calc(~"@{default-border-width} - @{offset}");
+  .icon-16 {
+    font-size: 1.785rem !important;
+    line-height: 1.785rem !important;
+    width: 1.785rem;
+    height: 1.785rem;
+  }
 }
 
  .controls-Button .controls-Button__icon.icon-32 + .controls-Button__text {
@@ -1010,17 +1029,21 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-
     vertical-align: baseline;
 }
 
-body .controls-CommandsButton__picker {
-   .controls-MenuItem {
-      padding-right: 2.8rem !important; //38 = 24 (кнопка) + 8(отступ справа у кнопки) +6(отступ слева у кнопки)
+body {
+   .controls-CommandsButton__picker {
+      .controls-MenuItem {
+         padding-right: 2.8rem !important; //38 = 24 (кнопка) + 8(отступ справа у кнопки) +6(отступ слева у кнопки)
+      }
    }
-}
+   .controls-DropdownList__picker {
+      .controls-DropdownList__multiselect .controls-DropdownList__itemCheckBox {
+         width: 2.286rem;
+      }
+      .controls-DropdownList__multiselect.controls-ListView__defaultItem, .controls-DropdownList__multiselect.controls-ListView__defaultItem.controls-DropdownList__item__selected {
+         font-weight: 400;
+      }
+   }
 
-.controls-DropdownList__picker .controls-DropdownList__multiselect .controls-DropdownList__itemCheckBox {
-  width: 2.286rem;
-}
-.controls-DropdownList__picker .controls-DropdownList__multiselect.controls-ListView__defaultItem, .controls-DropdownList__picker .controls-DropdownList__multiselect.controls-ListView__defaultItem.controls-DropdownList__item__selected {
-  font-weight: 400;
 }
 
 .controls-BreadCrumbs .controls-BreadCrumbs {
