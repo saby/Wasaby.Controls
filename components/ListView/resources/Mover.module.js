@@ -397,6 +397,9 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
       * Проверяет можно ли переместить элементы
       */
       checkRecordsForMove: function (movedItems, target, position) {
+         if (this.getItems().getIndex(target) === -1){
+            return false;
+         }
          for (var i=0, len = movedItems.length; i < len; i++){
             if (!this._checkRecordForMove(movedItems[i], target, position)){
                return false;
