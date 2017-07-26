@@ -396,7 +396,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 this._endDragHandler(DragObject, droppable, e);
             }
             this._position = null;
-            $('body').removeClass('dragdropBody cantDragDrop ws-unSelectable');
         },
 
         /**
@@ -427,11 +426,15 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         _onDrag: function (e) {
             var
                 targetsControl = DragObject.getTargetsControl(),
-                res;
+                res,
+                container = this._getDragContainer();
 
             if (targetsControl === this) {
+                container.addClass('controls-dragndrop');
                 this._updateDragTarget(DragObject, e);
                 res = this._notify('onDragOver', DragObject, e);
+            } else if (container.hasClass('controls-dragndrop')) {
+                container.removeClass('controls-dragndrop')
             }
             if (DragObject.getOwner() === this) {
                 this._notify('onDragMove', DragObject, e);
