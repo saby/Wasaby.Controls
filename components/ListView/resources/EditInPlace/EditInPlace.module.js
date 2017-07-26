@@ -247,8 +247,12 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                  в следствии изменения высоты записей(лежащих выше или ниже редактируемой) или добавления/удаления записей.*/
                this._beginTargetTracking();
                this._editing = true;
-               if (!withoutActivateFirstControl && !this.hasActiveChildControl()) {
-                  this.activateFirstControl();
+               if (!withoutActivateFirstControl) {
+                  if(!this.hasActiveChildControl()) {
+                     this.activateFirstControl();
+                  } else {
+                     this.getActiveChildControl(true, true).setActive(true);
+                  }
                }
                this._notify('onBeginEdit');
             },
