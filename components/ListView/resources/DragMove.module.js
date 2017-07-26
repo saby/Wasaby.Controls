@@ -449,7 +449,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
        */
       _toggleDragItems: function (show) {
          var source = DragObject.getSource();
-         if (source) {
+         if (this._isCorrectSource(source)) {
             source.each(function (item) {
                if (item.getDomElement()) { //если элемент находится внутри закрытой папки для него не будет dom'а
                   item.getDomElement().toggleClass('ws-hidden', !show);
@@ -564,7 +564,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
       this._isTree = cInstance.instanceOfModule(this._projection, 'WS.Data/Display/Tree');
       if (this._isTree) {
          var source = DragObject.getSource();
-         if (source && this._nodeProperty) {
+         if (source && cInstance.instanceOfModule(source, 'SBIS3.CONTROLS.DragEntity.List') && this._nodeProperty) {
             source.forEach(function (item) {
                if (cInstance.instanceOfModule(item, 'SBIS3.CONTROLS.DragEntity.Row')) {
                   var item = item.getModel();
