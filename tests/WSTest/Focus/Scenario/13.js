@@ -11,7 +11,8 @@ define('js!WSTest/Focus/Scenario/13', [
    'css!' + wsConfig.wsRoot + 'css/themes/wi_scheme.css'
 ], function (fHelpers,
              W,
-             caseTemplate) {
+             caseTemplate,
+             caseControl) {
    'use strict';
    return function scenario13(done) {//TODO Jquery
       var wnd = new W({

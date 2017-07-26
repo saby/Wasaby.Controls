@@ -11,7 +11,7 @@ define([
 
    var testNum = 1;
 
-   var skipTests = [21, 22, ];
+   var skipTests = [21];
    var skipComponent = [13, 14, 15, 16, 17, 18, 19, 20];
 
    describe('Focus-tests', function () {
@@ -21,13 +21,16 @@ define([
          //    this.skip();
          // }
          if(~skipTests.indexOf(testNum)) {
+            testNum++;
             this.skip();
          }
-         testNum++;
-         $('#mocha').append('<div id="component"></div>');
+         else {
+            testNum++;
+            $('#mocha').append('<div id="component"></div>');
+         }
       });
 
-      for (var i = 1; i < 22; i++) {
+      for (var i = 1; i < 23; i++) {
          (function (i) {
             it('Case' + (i), function (done) {
                require(['tmpl!WSTest/Focus/Case' + i, 'js!WSTest/Focus/Scenario/' + i], function (caseTmpl, func) {
