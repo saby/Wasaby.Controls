@@ -399,7 +399,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                   this._setProgress(model.get('progressCurrent'), model.get('progressTotal'));
                }
 
-               this._setFooterTimeSpent(model.get('shortTimeSpent') || '0сек.');
+               this._setFooterTimeSpent(model.get('shortTimeSpent'));
             }
          },
 
