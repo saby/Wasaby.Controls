@@ -185,7 +185,7 @@ define('js!WSControls/Control/Base',
              * После выполнения шаблонизации контрол будет разрушен и будет вызван _beforeDestroy
              * @private
              */
-            _beforeRender: function(){
+            _beforeMount: function(options, receivedState){
             },
 
             /**
@@ -196,7 +196,7 @@ define('js!WSControls/Control/Base',
              * Вызывается только на клиенте
              * @private
              */
-            _afterRender: function () {
+            _afterMount: function () {
             },
 
             /**
@@ -207,7 +207,16 @@ define('js!WSControls/Control/Base',
              * @param oldOptions - предыдущие опции компонента
              * @private
              */
-            _beforeUpdate: function(oldOptions){
+            _beforeUpdate: function(newOptions){
+            },
+
+            /**
+             * Если возвращает false, то рендеринга не происходит
+             * @param newOptions
+             * @private
+             */
+
+            _shouldUpdate: function(newOptions) {
             },
 
             /**
@@ -218,6 +227,7 @@ define('js!WSControls/Control/Base',
              * Вызывается только на клиенте
              * @private
              */
+
             _afterUpdate: function(oldOptions){
             },
 
@@ -227,16 +237,8 @@ define('js!WSControls/Control/Base',
              * Вызывается и на клиенте и на сервере
              * @private
              */
-            _beforeDestroy: function(){
+            _beforeUnmount: function(){
             },
-
-            /**
-             * После разрушением. Точка, когда компонент более не в DOMе и все ресурсы высвобождены
-             * Вызывается и на клиенте и на сервере
-             * @private
-             */
-            _afterDestroy: function(){
-            }
 
             //</editor-fold>
          });
