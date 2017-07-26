@@ -1987,6 +1987,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             //Если элемента в проекции нет, то и не надо перерисовывать запись
             if (projItem) {
                this._redrawItem(projItem);
+               this._notifyOnDrawItems();
             }
          }
          else {
