@@ -3,27 +3,43 @@ define('js!WSControls/Lists/TreeView2', [
       'js!WSControls/Lists/resources/utils/ItemsUtil',
       'js!WSControls/Lists/resources/utils/TreeItemsUtil',
       'js!WSControls/Lists/resources/utils/DataSourceUtil',
+      'Core/helpers/Object/isPlainObject',
       'Core/Deferred',
+      'Core/helpers/collection-helpers',
       'Core/core-functions',
       'js!WS.Data/Relation/Hierarchy',
       'Core/helpers/functional-helpers',
       'tmpl!WSControls/Lists/resources/TreeView/ItemTemplate',
       'css!SBIS3.CONTROLS.TreeView'
-   ], function(ListView, ItemsUtil, TreeItemsUtil, DataSourceUtil, Deferred, cFunctions, HierarchyRelation, functionalHelpers, ItemTemplate) {
+   ], function(ListView, ItemsUtil, TreeItemsUtil, DataSourceUtil, isPlainObject, Deferred, collectionHelpers, cFunctions, HierarchyRelation, FunctionalHelpers, ItemTemplate) {
 
    var TreeView = ListView.extend({
       _defaultItemTemplate: ItemTemplate,
 
-      _expandedItems: undefined,  // Состояние развернутости элементов
-      _loadingType: undefined,    // Тип загрузки данных
+      _expandedItems: undefined,  // Состояние развернутости элементов ( Object )
+      _loadMode: undefined,       // Режим загрузки данных ( "partial" / "full" )
+      _expandMode: undefined,     // Режим разворота узлов ( "multiple" / "single" )
 
       _prepareInitalState: function() {
-         this._expandedItems = this._options.expandedItems || {};
-         this._loadingType = this._options.loadingType || 'partial';
+         if (isPlainObject(this._options.expandedItems)) {
+            this._expandedItems = cFunctions.clone(this._options.expandedItems);
+         } else {
+            this._expandedItems = {};
+         }
+         if (this._options.loadMode === 'full') { // Режим загрузки может быть либо partial, либо full. По умолчанию partial.
+            this._loadMode = this._options.loadMode;
+         } else {
+            this._loadMode = 'partial';
+         }
+         if (this._options.expandMode === 'single') { // Режим разворота может быть либо multiple, либо single. По умолчанию multiple.
+            this._expandMode = this._options.expandMode;
+         } else {
+            this._expandMode = 'multiple';
+         }
       },
       constructor: function() {
          TreeView.superclass.constructor.apply(this, arguments);
-         this._publish('onExpandItem', 'onCollapseItem');
+         this._publish('onExpandItem', 'onCollapseItem', 'onChangeExpandedItems');
          this._prepareInitalState();
       },
       _getItemData: function() {
@@ -51,7 +67,16 @@ define('js!WSControls/Lists/TreeView2', [
          }
       },
 
-      /****************************** dataSource ******************************/
+      _collapseItems: function(notCollapseItemId, expandedItems) {
+         this._itemsProjection.setEventRaising(false, true);
+         collectionHelpers.forEach(expandedItems, function(expanded, id) {
+            if (!notCollapseItemId || id !== notCollapseItemId) {
+               this.collapseItem(ItemsUtil.getItemById(this._itemsProjection, id, this._options.idProperty).getHash());
+            }
+         }, this);
+         this._itemsProjection.setEventRaising(true, true);
+      },
+
       toggleItem: function(itemHash) {
          var
             item = this._itemsProjection.getByHash(itemHash);
@@ -64,18 +89,19 @@ define('js!WSControls/Lists/TreeView2', [
 
       expandItem: function(itemHash) {
          var
-            item = this._itemsProjection.getByHash(itemHash);
+            item = this._itemsProjection.getByHash(itemHash),
+            itemId;
          if (item) {
             if (item.isExpanded()) {
                return Deferred.success();
             } else {
-               /*if (this._options.singleExpand) {
-                this._collapseNodes(this.getOpenedPath(), id);
-                }*/
-               //this._options._folderOffsets[id] = 0;
-               return this._loadItem(item).addCallback(functionalHelpers.forAliveOnly(function() {
+               itemId = ItemsUtil.getPropertyValue(item.getContents(), this._options.idProperty);
+               if (this._expandMode === 'single') {
+                  this._collapseItems(itemId, this._expandedItems);
+               }
+               return this._loadItem(item).addCallback(FunctionalHelpers.forAliveOnly(function() {
                   this._itemsProjection.getByHash(itemHash).setExpanded(true);
-                  this._expandedItems[ItemsUtil.getPropertyValue(item.getContents(), this._options.idProperty)] = true;
+                  this._expandedItems[itemId] = true;
                   this._notify('onExpandItem', itemHash);
                }).bind(this));
             }
@@ -114,9 +140,9 @@ define('js!WSControls/Lists/TreeView2', [
       _loadItem: function(item) {
          var
             itemId = ItemsUtil.getPropertyValue(item.getContents(), this._options.idProperty);
-         if (this._dataSource && !item.isLoaded() && this._loadingType === 'partial') {
+         if (this._dataSource && !item.isLoaded() && this._loadMode === 'partial') {
             return DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, this._prepareQueryFilter(itemId), this._sorting, this._offset, this._limit)
-               .addCallback(functionalHelpers.forAliveOnly(function (list) {
+               .addCallback(FunctionalHelpers.forAliveOnly(function (list) {
                   // Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
                   this._notify('onDataMerge', list);
                   if (this._options.loadItemsStrategy === 'merge') {
@@ -130,7 +156,7 @@ define('js!WSControls/Lists/TreeView2', [
                   this._notify('onDataLoad', list);
                   return list;
                }, this))
-               .addErrback(functionalHelpers.forAliveOnly(this._loadErrorProcess, this));
+               .addErrback(FunctionalHelpers.forAliveOnly(this._loadErrorProcess, this));
          }
          return Deferred.success();
       }
