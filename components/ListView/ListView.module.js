@@ -4089,11 +4089,12 @@ define('js!SBIS3.CONTROLS.ListView',
                   view: this,
                   mover: this._getMover(),
                   projection: this._getItemsProjection(),
-                  useDragPlaceholder: this._options.useDragPlaceHolder,
+                  useDragPlaceHolder: this._options.useDragPlaceHolder,
                   linkTemplateConfig: this._options.linkTemplateConfig,
                   dragEntity: this._options.dragEntity,
                   dragEntityList: this._options.dragEntityList,
-                  itemsDragNDrop: this.getItemsDragNDrop()
+                  itemsDragNDrop: this.getItemsDragNDrop(),
+                  nodeProperty: this._options.nodeProperty
                });
             }
             return this._dragMoveController;
