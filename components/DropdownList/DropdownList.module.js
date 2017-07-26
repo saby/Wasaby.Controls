@@ -138,6 +138,12 @@ define('js!SBIS3.CONTROLS.DropdownList',
          return textValue.join('');
       }
 
+      function prepareHeadTemplateIcon(config) {
+         if (!config.multiselect && config.selectedItems && config.selectedItems.at(0)) {
+            config._selectedItemIcon = config.selectedItems.at(0).get('icon');
+         }
+      }
+
       var DropdownList = Control.extend([PickerMixin, ItemsControlMixin, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.DropdownList.prototype */{
          _dotTplFn: dotTplFn,
          /**
@@ -346,6 +352,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if (!cfg.selectedItems) {
                prepareSelectedItems(cfg);
             }
+
+            prepareHeadTemplateIcon(cfg);
 
             if (cfg.type == 'duplicateHeader'){
                cfg.pickerClassName += ' controls-DropdownList__type-duplicateHeader';
@@ -865,6 +873,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
          },
          _redrawHead: function(isDefaultIdSelected){
+            prepareHeadTemplateIcon(this._options);
             var pickerHeadContainer,
                 headTpl = TemplateUtil.prepareTemplate(this._options.headTemplate.call(this, this._options))();
             if (this._picker) {
