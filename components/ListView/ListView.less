@@ -267,42 +267,40 @@
   font-size: 10px;
 }
 
-.dragdropBody {
-   .controls-ListView {
-      .controls-DragNDrop__placeholder {
-         opacity: 0.35;
-         background-color: @default-itemHover-color;
-      }
-      .controls-DragNDrop__hierarchy_move {
-         outline: @drag-and-drop-border;
-      }
+
+.controls-ListView {
+   .controls-DragNDrop__placeholder {
+      opacity: 0.35;
+      background-color: @default-itemHover-color;
+   }
+   .controls-DragNDrop__hierarchy_move {
+      outline: @drag-and-drop-border;
    }
 }
 
-.dragdropBody {
-   .controls-ListView__verticalDragNDrop {
-      .controls-DragNDrop__insertBefore {
-         &, > td {
-            border-top: @drag-and-drop-border;
-         }
-      }
-      .controls-DragNDrop__insertAfter {
-         &, > td {
-            border-bottom: @drag-and-drop-border;
-         }
+
+.controls-ListView__verticalDragNDrop {
+   .controls-DragNDrop__insertBefore {
+      &, > td {
+         border-top: @drag-and-drop-border;
       }
    }
-  .controls-ListView__horisontalDragNDrop {
-     .controls-DragNDrop__insertBefore{
-        border-left: @drag-and-drop-border;
-     }
-     .controls-DragNDrop__insertAfter {
-        border-right: @drag-and-drop-border;
-     }
+   .controls-DragNDrop__insertAfter {
+      &, > td {
+         border-bottom: @drag-and-drop-border;
+      }
+   }
+}
+.controls-ListView__horisontalDragNDrop {
+  .controls-DragNDrop__insertBefore{
+     border-left: @drag-and-drop-border;
   }
-  .controls-ItemsToolbar {
-     display: none !important;
+  .controls-DragNDrop__insertAfter {
+     border-right: @drag-and-drop-border;
   }
+}
+.controls-ItemsToolbar {
+  display: none !important;
 }
 
 .controls-ListView__results{
