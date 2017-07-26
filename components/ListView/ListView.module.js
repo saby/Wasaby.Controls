@@ -122,8 +122,14 @@ define('js!SBIS3.CONTROLS.ListView',
        * @css controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
        * @css js-controls-ListView__notEditable Клик по элементу с данным классом не будет приводить к запуску редактирования по месту.
        *
-       * @ignoreEvents onAfterLoad onChange onStateChange
-       * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
+       *
+       * @ignoreOptions _handlers activableByClick alwaysShowExtendedTooltip buildMarkupWithContext className ignoreTabCycles linkedContext modal
+       *
+       * @ignoreMethods addPendingOperation applyEmptyState applyState getAlignment getAllPendingInfo getClassName getMinHeight getMinSize getMinWidth getResizer getStateKey
+       * @ignoreMethods getToolBarCount getEventBusOf getNamedGroup getNearestChildControlByName getOwnerId initializeProperty isAllReady increaseToolBarCount isPage
+       * @ignoreMethods makeOwnerName onBringToFront onDropDownList setActivationIndex setSize setItemTemplate setOwner setStateKey waitAllPendingOperations
+       *
+       * @ignoreEvents onStateChanged onTooltipContentRequest onAfterLoad onChange onStateChange onDragStop onDragIn onDragOut onDragStart
        *
        * @control
        * @public
