@@ -698,7 +698,8 @@ define(
          // Проверяем, является ли маска, с которой создается контролл, допустимой
          this._checkPossibleMask();
          this._inputField = $('.js-controls-FormattedTextBox__field', this.getContainer().get(0));
-         this._container.bind('focusin', function () {
+         //Control.module прерывает focusin, сюда он не долетает. нужно отлавливать наше событие, которое стрельнет после setActive
+         this.subscribe('onFocusIn', function () {
             //В FireFox если фокус находтся не в блоке, куда мы хотим заколапсить курсор, то этого сделать не получится.
             //Поэтому перед созданием курсора, установим фокус в contenteditable блок.
             if (constants.browser.firefox) {
