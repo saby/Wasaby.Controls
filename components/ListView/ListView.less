@@ -263,7 +263,7 @@
   font-size: 10px;
 }
 .controls-dragndrop {
-   .controls-ListView {
+   &.controls-ListView {
       .controls-DragNDrop__placeholder {
          opacity: 0.35;
          background-color: @default-itemHover-color;
@@ -273,7 +273,7 @@
       }
    }
 
-   .controls-ListView__verticalDragNDrop {
+   &.controls-ListView__verticalDragNDrop {
       .controls-DragNDrop__insertBefore {
          &, > td {
             border-top: @drag-and-drop-border;
@@ -287,7 +287,7 @@
    }
 
 
-   .controls-ListView__horisontalDragNDrop {
+   &.controls-ListView__horisontalDragNDrop {
      .controls-DragNDrop__insertBefore{
         border-left: @drag-and-drop-border;
      }
