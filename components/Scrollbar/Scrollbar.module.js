@@ -118,8 +118,10 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
 
          //Сдвигаем ползунок на нужную позицию
          _setThumbPosition: function () {
-            this._thumbPosition = this._calcProjectionSize(this.getPosition(), this._scrollRatio);
-            this._thumb.get(0).style.top = this._thumbPosition + 'px';
+            if (this._thumb) {
+               this._thumbPosition = this._calcProjectionSize(this.getPosition(), this._scrollRatio);
+               this._thumb.get(0).style.top = this._thumbPosition + 'px';
+            }
          },
 
          //Высчитываем и задаём высоту ползунка

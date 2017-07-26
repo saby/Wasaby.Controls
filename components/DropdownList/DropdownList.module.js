@@ -801,10 +801,15 @@ define('js!SBIS3.CONTROLS.DropdownList',
                      });
                   }
 
-                  if(!textValues.length && self._checkEmptySelection()) {
-                     item = self.getItems() && self.getItems().at(0);
-                     if(item) {
-                        textValues.push(item.get(self._options.displayProperty));
+                  if(!textValues.length) {
+                     if (self._checkEmptySelection()) {
+                        item = self.getItems() && self.getItems().at(0);
+                        if(item) {
+                           textValues.push(item.get(self._options.displayProperty));
+                        }
+                     }
+                     else if (self._options.emptyValue) {
+                        textValues.push(self._emptyText);
                      }
                   }
 

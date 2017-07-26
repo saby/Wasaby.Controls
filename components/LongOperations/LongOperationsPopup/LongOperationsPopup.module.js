@@ -3,8 +3,10 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
       "Core/UserInfo",
       "Core/core-merge",
       'Core/Deferred',
+      'Core/EventBus',
       /*###"Core/helpers/string-helpers",*/
       'js!SBIS3.CORE.TabMessage',
+      /*###'js!SBIS3.CONTROLS.WaitIndicator',*/
       "js!SBIS3.CONTROLS.NotificationPopup",
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model',
@@ -16,12 +18,12 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
       "js!SBIS3.CONTROLS.LongOperationsList"
    ],
 
-   function (UserInfo, cMerge, Deferred, /*###strHelpers,*/ TabMessage, NotificationPopup, LongOperationEntry, Model, headerTemplate, contentTpl, footerTpl, FloatArea) {
+   function (UserInfo, cMerge, Deferred, EventBus, /*###strHelpers,*/ TabMessage, /*###WaitIndicator,*/ NotificationPopup, LongOperationEntry, Model, headerTemplate, contentTpl, footerTpl, FloatArea) {
       'use strict';
 
-      var FILTER_HIDE_STOPPED = 3;
+      var FILTER_NOT_SUSPENDED = 'not-suspended';
 
-      var DEFAULT_INDICATOR_MESSAGE = rk('Пожалуйста, подождите…');
+      var DEFAULT_WAITINDICATOR_TEXT = rk('Пожалуйста, подождите…');
 
       /**
        * Класс всплывающего информационное окна длительных операций
@@ -31,13 +33,12 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
       var LongOperationsPopup = NotificationPopup.extend({
          $protected: {
             _options: {
-               closeButton: true,
                isHint: false,
                headerTemplate: headerTemplate,
                bodyTemplate: contentTpl,
                footerTemplate: footerTpl,
                caption: '',
-               className: 'controls-LongOperationsPopup controls-LongOperationsPopup__hidden controls-LongOperationsPopup__hiddenContentMode',
+               className: 'controls-LongOperations controls-LongOperationsPopup controls-LongOperationsPopup__hidden controls-LongOperationsPopup__hiddenContentMode',
                withAnimation: null,
                waitIndicatorText: null
             },
@@ -53,7 +54,8 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
 
             _tabChannel: null,
 
-            _loadingIndicator: null
+            _loadingIndicator: null,
+            _isInStartAnimation: null
          },
 
          $constructor: function () {
@@ -145,7 +147,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                   var status = item.get('status');
                   var canHasHistory = self._longOpList.canHasHistory(item);
                   //Открыть журнал операций только для завершенных составных операций или ошибок
-                  if ((status === STATUSES.success && canHasHistory && 1 < item.get('progressTotal')) || status === STATUSES.error) {
+                  if (status === STATUSES.ended && (item.get('isFailed') || (canHasHistory && 1 < item.get('progressTotal')))) {
                      var options = {};
                      self._showFloatArea({
                         title: rk('Журнал выполнения операции'),
@@ -199,26 +201,20 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
 
             container.find('.controls-LongOperationsPopup__footer_pauseIcon').on('click', function () {
                //Остановить / Запустить операцию
-               var model = self._activeOperation;
-               if (model.get('canSuspend')) {//TODO: ### перенести проверку в лист ?
-                  self._longOpList.applyUserAction($(this).hasClass('icon-Pause') ? 'suspend' : 'resume', model, true);
-               }
+               self._longOpList.applyUserAction($(this).hasClass('icon-Pause') ? 'suspend' : 'resume', self._activeOperation, true);
             });
 
             //Иконку запуска сделаем кликабельной, по ней будет запускать остановленная операция
             container.find('.controls-NotificationPopup__header').on('click', '.controls-LongOperationsPopup__runOperationIcon', function () {
                //Запустить операцию
-               var model = self._activeOperation;
-               if (model.get('canSuspend')) {//TODO: ### перенести проверку в лист ?
-                  self._longOpList.applyUserAction('resume', model, true);
-               }
+               self._longOpList.applyUserAction('resume', self._activeOperation, true);
             });
 
-            //Обработчик, который применяет фильтр "Скрыть прерванные"
+            //Обработчик, который применяет фильтр "Скрыть приостановленные"
             var button = container.find('.controls-LongOperationsPopup__header_stoppedOperationsButton');
             button.on('click', function () {
                if (button.hasClass('controls-LongOperationsPopup__header_stoppedOperations-show')) {
-                  self._longOpList.getLinkedContext().setValue('filter/State', FILTER_HIDE_STOPPED);
+                  self._longOpList.getLinkedContext().setValue('filter/status', FILTER_NOT_SUSPENDED);
                }
                else {
                   self._longOpList.getLinkedContext().setValue('filter', {});
@@ -229,6 +225,13 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
             this.subscribeTo(this._longOpList, 'ontimespentchanged', function () {
                if (self._activeOperation) {
                   self._setFooterTimeSpent(self._activeOperation.get('shortTimeSpent'));
+               }
+            });
+
+            // Обновить попап после разблокировки девайса
+            this.subscribeTo(EventBus.globalChannel(), 'onwakeup', function () {
+               if(!self.isDestroyed() && self.isVisible()) {
+                  self.reload();
                }
             });
          },
@@ -281,8 +284,19 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
           * Метод перезагружает список и обновляет состояние
           * @return {Core/Deferred}
           */
-         reload: function () {
+         /*###reload: function () {
             return this._longOpList.reload();
+         },*/
+
+         /**
+          * Установливает заголовок нотификационного уведомления.
+          * @param {String} caption Текст заголовка.
+          */
+         setCaption: function (caption) {
+            LongOperationsPopup.superclass.setCaption.call(this, caption);
+            if(typeof caption === 'string'){
+               this.getContainer().find('.controls-NotificationPopup__header_caption').attr('title', caption);
+            }
          },
 
          /**
@@ -298,24 +312,25 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
 
             var STATUSES = LongOperationEntry.STATUSES;
             var model = this._activeOperation;
-            var status = model.get('status');
             var butCaption;
-            if (status === STATUSES.success) {
-               if (model.get('resultUrl')) {
-                  butCaption = 'Скачать';
+            if (model.get('status') === STATUSES.ended) {
+               var wayOfUse = model.get('resultWayOfUse');
+               if (!model.get('isFailed')) {
+                  if (model.get('resultUrl')) {
+                     butCaption = wayOfUse || 'Скачать';
+                  }
+                  else
+                  if (model.get('resultHandler')) {
+                     butCaption = wayOfUse || 'Открыть';
+                  }
+                  else
+                  if (1 < model.get('progressTotal') && this._longOpList.canHasHistory(model)) {
+                     butCaption = wayOfUse || 'Журнал';
+                  }
                }
-               else
-               if (model.get('resultHandler')) {
-                  butCaption = 'Открыть';
+               else {
+                  butCaption = wayOfUse || 'Журнал';
                }
-               else
-               if (1 < model.get('progressTotal') && this._longOpList.canHasHistory(model)) {
-                  butCaption = 'Журнал';
-               }
-            }
-            else
-            if (status === STATUSES.error) {
-               butCaption = 'Журнал';
             }
 
             var hasButton = !!butCaption;
@@ -369,13 +384,9 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                      }
                      break;
 
-                  case STATUSES.success:
-                     this._setHeader(title, 'success', 'icon-size icon-24 icon-Yes icon-done');
-                     pauseIcon.addClass('ws-hidden');
-                     break;
-
-                  case STATUSES.error:
-                     this._setHeader(title, 'error', 'icon-size icon-24 icon-Alert icon-error');
+                  case STATUSES.ended:
+                     var isSuccess = !model.get('isFailed');
+                     this._setHeader(title, isSuccess ? 'success' : 'error', isSuccess ? 'icon-size icon-24 icon-Yes icon-done' : 'icon-size icon-24 icon-Alert icon-error');
                      pauseIcon.addClass('ws-hidden');
                      break;
                }
@@ -388,7 +399,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                   this._setProgress(model.get('progressCurrent'), model.get('progressTotal'));
                }
 
-               this._setFooterTimeSpent(model.get('shortTimeSpent') || '0сек.');
+               this._setFooterTimeSpent(model.get('shortTimeSpent'));
             }
          },
 
@@ -449,8 +460,14 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                   + ' ' + current + ' ' +
                   strHelpers.wordCaseByNumber(current, rk('операций'), rk('операция'), rk('операции')) + ' ' + rk('из') + ' ' + total;
             }*/
-            var message = Math.floor(current) + ' ' + (100 <= total ? '/' : rk('из')) + ' ' + total + ' ' + rk('операций');
-            this.getContainer().find('.controls-LongOperationsPopup__footer_execTasks').text(message);
+            var needMsg = total !== 1;
+            var $tasks = this.getContainer().find('.controls-LongOperationsPopup__footer_execTasks');
+            $tasks[needMsg ? 'removeClass' : 'addClass']('ws-hidden');
+            if (needMsg) {
+               $tasks.text(
+                  Math.floor(current) + ' ' + (100 <= total ? '/' : rk('из')) + ' ' + total + ' ' + rk('операций')
+               );
+            }
             this.getContainer().find('.controls-LongOperationsPopup__footer_progress').text(Math.floor(100*current/total) + '%');
          },
 
@@ -524,17 +541,21 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
             var TIME_GLIDING = 800;//1500
             /*Время однократного мигания иконки в заголовке*/
             var TIME_BLINKING = 600;//600
+            if (this._isInStartAnimation) {
+               return;
+            }
+            this._isInStartAnimation = true;
             var self = this;
             var promise = new Deferred();
             if (!this._loadingIndicator) {
                require(['js!SBIS3.CORE.LoadingIndicator'], function (LoadingIndicator) {
-                  self._loadingIndicator = new LoadingIndicator({message:self._options.waitIndicatorText || DEFAULT_INDICATOR_MESSAGE});
+                  self._loadingIndicator = new LoadingIndicator({message:self._options.waitIndicatorText || DEFAULT_WAITINDICATOR_TEXT});
                   self._loadingIndicator.show();
                   promise.callback();
                });
             }
             else {
-               this._loadingIndicator.setMessage(this._options.waitIndicatorText || DEFAULT_INDICATOR_MESSAGE);
+               this._loadingIndicator.setMessage(this._options.waitIndicatorText || DEFAULT_WAITINDICATOR_TEXT);
                this._loadingIndicator.show();
                promise.callback();
             }
@@ -559,6 +580,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                               left: offset.left - 4
                            }, TIME_GLIDING, function () {
                               $(this).remove();
+                              self._isInStartAnimation = null;
                               $target.animate({
                                  opacity: 0
                               }, TIME_BLINKING/2, function () {

@@ -1,0 +1,49 @@
+/* Блок смайлов */
+.controls-RichEditorToolbar__smilesPicker {
+   &.controls-Menu {
+      width: 200px;
+      padding: 0 0 4px 0 !important;
+      .controls-ListView__item.controls-MenuItem {
+         color: #587ab0;
+         font-size: 24px;
+         display: inline-block;
+         padding: 2px 4px 0 4px;
+         height: 20px;
+         vertical-align: bottom;
+         width: 33px; // 25 ширина смайла на 10 ios + 8 отступ
+         &:hover {
+            color: #313E78
+         }
+      }
+   }
+   //необходимо сдвигать picker на 2px тк в тулбаре нестандартная menuButton
+   &.controls-popup-revert-vertical {
+      margin-top: 2px !important; //important тк margin 0 прописывается inline стилем при расчете picker`a
+   }
+}
+
+.ws-is-desktop-platform {
+   .controls-RichEditorToolbar__smilesPicker {
+      width: 192px;
+      font-family: 'EmojiFont','TensorFont', sans-serif;
+      &.controls-Menu {
+         .controls-ListView__item {
+            font-size: 18px;
+            width: 31px;// 23 ширина смайла на desktop`e 10 ios + 8 отступ
+         }
+      }
+   }
+}
+
+.ws-is-windows-8, .ws-is-windows-10, .ws-is-firefox {
+   .controls-RichEditorToolbar__smilesPicker {
+      width: 200px;
+      font-family: 'TensorFont', sans-serif;
+      &.controls-Menu {
+         .controls-ListView__item {
+            font-size: 24px;
+            width: 33px;// 23 ширина смайла на desktop`e 10 ios + 8 отступ
+         }
+      }
+   }
+}

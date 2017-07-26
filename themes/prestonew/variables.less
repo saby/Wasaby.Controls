@@ -169,7 +169,7 @@
 @radio-button-icon-height:                .928rem;
 @radio-button-icon-line-height:           normal;
 @radio-button-icon-bg:                    transparent;
-@radio-button-icon-margin:                0.3rem;
+@radio-button-icon-margin:                -1px 0.3rem;
 @radio-button-icon-border-color:          #2C4458;
 @radio-button-icon-border-color-checked:  @primary-color;
 @radio-button-hover-icon-border-color:    @primary-color;
@@ -279,7 +279,7 @@
 @menu-link-checked-text-color:            @secondary-color;
 @menu-link-menu-border-width:             @default-border-width;
 //Text box
-@text-box-wrapper-padding:                0 .57rem;
+@text-box-wrapper-padding:                0 .5rem;
 @text-box-field-min-height:               1.3571rem;
 @text-box-field-padding:                  0;
 @text-box-field-text-color:               @default-text-color;
@@ -412,6 +412,7 @@
 @controls-FieldLink-border-color:         @text-box-border-color @text-box-border-color @text-box-bottom-border-color @text-box-border-color;
 @controls-FieldLink-border-color-focus-hover:@text-box-bottom-border-color;
 @controls-FieldLink-link-color:           #26B8FF;
+@controls-FieldLink-showSelector-color:   @default-text-color;
 //MonthView
 @data-grid-cell-hover-bg:                 #1b2530;
 @month-view-bg:                           #2c3e50;
@@ -445,7 +446,8 @@
 @month-picker-item-active-text-color:     @secondary-color;
 @month-picker-item-active-bg:             @primary-color;
 //Data Range
-@date-range-line-height:                  0.86rem;
+@date-range-font-size:                    1.14rem;
+@date-range-line-height:                  normal;
 @date-range-icon-button-top:              0.536rem;
 @date-range-dash-width:                   0.5rem;
 @date-range-dash-color:                   rgba(96, 170, 221, 0.2);
@@ -475,6 +477,7 @@
 @date-range-choose-years-only-bg-color:   @basic-block-bg-color;
 @date-range-choose-bg-color:              @basic-block-bg-color;
 @date-range-choose-color:                 @default-text-color;
+@date-range-choose-hover-color:           @button-icon-color-hover;
 @date-range-choose-current-value-color:   #fff;
 @date-range-choose-current-value-bg-color:#26b8ff;
 @date-range-choose-current-value-font-size:1.14rem;
@@ -538,6 +541,7 @@
 @date-range-big-choose-years-panel-current-year-button-line-height:3rem;
 @date-range-big-choose-years-panel-back-button-font-size:3rem;
 @date-range-big-choose-years-panel-back-button-line-height:3rem;
+@date-range-big-choose-years-range-font-size:                  1rem;
 @date-range-big-choose-body-height:       21.429rem;
 @date-range-big-choose-months-range-btn-height:                5.107rem;
 @date-range-big-choose-month-range-picker-month-width:         6.07rem;
@@ -581,7 +585,7 @@
 @list-view-actions-menu-close-width:      1.75rem;
 @listView-empty-data-color:               @disabled-color;
 @listView-empty-data-font-size:           1rem;
-@list-view-scroll-bg:                     url('img/ajax-loader-indicator-big.gif') @basic-block-bg-color 0.4642rem 0.4642rem  no-repeat;
+@list-view-scroll-bg:                     url('img/ajax-loader-indicator-big.gif') no-repeat center;
 @list-view-scroll-height:                 3.5714rem;
 @list-view-scroll-width:                  3.5714rem;
 @controls-AjaxLoader-indicator-padding-left:3.5714rem;
@@ -589,7 +593,7 @@
 @controls-AjaxLoader-block-width:         3.5714rem;
 @controls-AjaxLoader-outer-height:        3.5714rem;
 @controls-AjaxLoader-background:          none;
-@scrollPaging-padding:                    3.3333rem;
+@scrollPaging-padding:                    3.6666rem;
 //Tree view
 @tree-view-expand-spritesheet:            '';
 @tree-view-expand-width:                  1.7857rem;
@@ -634,7 +638,7 @@
 @data-grid-cell-separator-color:          rgba(0, 0, 0, 0.1);
 @data-grid-cell-border-width:             @default-border-width 0;
 @data-grid-partScroll-notScrolledCell-Color:@basic-block-bg-color;
-@data-grid-money-header-cell-padding:     1rem;
+@data-grid-money-header-cell-padding:     1.43rem;
 @data-grid-results-color:                 #FFCC99;
 // PrintDialog
 @controls-printdialog-min-width:          25rem;
@@ -762,6 +766,7 @@
 @controls-Paging-btn-margin:              0 .2857rem 0 0;
 @controls-Paging-btn-padding:             .2857rem;
 @controls-Paging-padding:                 0;
+@controls-movedialog-min-height:          3.5714rem;
 //ScrollContainer
 @controls-ScrollContainer-top-gradient-height:0.857rem;
 //Scrollbar
@@ -772,6 +777,7 @@
 @controls-Scrollbar-thumb-border-radius:  .179rem;
 @controls-Scrollbar-min-height:           3.571rem;
 @controls-Scrollbar-thumb-margin:         0.286rem 0;
+@controls-Scrollbar-thumb-padding:        0px 0.25rem;
 @controls-Scrollbar-dark-hover-thumb-color:rgba(255, 255, 255, 0.10);
 @controls-Scrollbar-dark-active-thumb-color:rgba(255, 255, 255, 0.15);
 @controls-Scrollbar-light-hover-thumb-color:rgba(0, 0, 0, 0.10);
@@ -793,7 +799,7 @@
 @controls-SubmitPopup-message-font-weight:normal;
 @controls-SubmitPopup-message-font-size:  1.14285rem;
 @controls-SubmitPopup-message-margin-bottom:.5714rem;
-@controls-SubmitPopup-details-color:      @disabled-color;
+@controls-SubmitPopup-details-color:      #8991A9;
 @controls-SubmitPopup-details-font-size:  1rem;
 @controls-SubmitPopup-body-padding:       1.6071rem;
 @controls-SubmitPopup-border-top:         none;
@@ -810,6 +816,7 @@
 @long-operations-list-time-ctr-f-size: 16px;
 @long-operations-list-state-ctr-margin-lf: -16px;
 @long-operations-popup-collapsed-width: 420px;
+@long-operations-popup-collapsed-max-width: 420px;
 @long-operations-popup-exp-width: 600px;
 @long-operations-popup-exp-max-width: 600px;
 @long-operations-popup-header-height: 60px;
@@ -869,6 +876,7 @@
 @paging-font-size:                        3rem;
 @scrollpager-bg:                          transparent;
 @scrollpager-border:                      none;
+@scrollpager-bottom:                      .3333rem;
 @closeBigButtonWidth:                     3rem;
 @menu-header-bg-color:                    #23b8ff;
 @date-range-big-header-bg:                #2c3e50;
@@ -950,16 +958,18 @@
 @clock-picker-arrow-tip-border-width:     @default-border-width;
 @clock-picker-arrow-tip-color:            @default-text-color;
 //ddlist
-@DropdownList-footer-multisel-buttonsBlock-h:3.57rem;
-@DropdownList-checkbox-bottom:            0;
-@DropdownList-picker-max-height:          20rem;
-@DropdownList-footer-select-top:          0.28rem;
-@DropdownList-picker-menu-line-height:    3.57rem;
-@DropdownList-after-caption-wrapper-top:  .4rem;
-@DropdownList-footer-hasMore-left:        .28rem;
-@DropdownList-footer-hasMore-left-multiselect:2.35rem;
-@DropdownList-footer-hasMore-top-multiselect:1rem;
-@DropdownList-footer-hasMore-top:         1rem;
+@DropdownList-footer-multisel-buttonsBlock-h:         3.57rem;
+@DropdownList-checkbox-bottom:                        0;
+@DropdownList-picker-max-height:                      20rem;
+@DropdownList-footer-select-top:                      0.28rem;
+@DropdownList-picker-menu-line-height:                3.24rem;
+@DropdownList-after-caption-wrapper-top:              .4rem;
+@DropdownList-footer-hasMore-left:                    .28rem;
+@DropdownList-footer-hasMore-left-multiselect:        2.35rem;
+@DropdownList-footer-hasMore-top-multiselect:         1rem;
+@DropdownList-footer-hasMore-top:                     1rem;
+@DropdownList-footer-select-icon-container-size:      3rem;
+@DropdownList-footer-select-icon-size:                3rem;
 //money
 @money-decorator-integer-accent-results-font-color:#FFCC99;
 @money-decorator-integer-no-accent-results-font-color:@disabled-color;
@@ -975,7 +985,7 @@
 @bottomStyle-items-toolbar-height:        1.88rem;
 @bottomStyle-items-toolbar-margin:        0;
 @controls-filterButton-picker-border-color:@default-border-color;
-@formatted-text-box-wrapper-padding:      0 0.57rem 0 .4285rem;
+@formatted-text-box-wrapper-padding:      0 0.57rem;
 @bottomStyle-items-toolbar-height:        1.88rem;
 @bottomStyle-padding-bottom:              2rem;
 @bottomStyle-items-toolbar-border-color:  #293A4B;

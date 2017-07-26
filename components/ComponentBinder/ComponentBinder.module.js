@@ -246,6 +246,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       },
       
       bindFilters: function(filterButton, fastDataFilter, view) {
+         var self = this;
+         
          if(!this._filterController) {
             this._filterController = new FilterController({
                view: view,
@@ -254,20 +256,31 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             });
          }
    
-         this._filterController.bindFilters();
+         /* Из-за того, что историю фильтрации надо обновлять (из-за серверного рендеринга),
+            надо и все синхронизации производить после вычитки новых параметров */
+         (this._dFiltersReady || Deferred.success()).addCallback(fHelpers.forAliveOnly(function(res) {
+            self._filterController.bindFilters();
+            return res;
+         }, view));
       },
       
       /**
        * Метод для связывания истории фильтров с представлением данных
        */
       bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, ignoreFiltersList, applyOnLoad, browser, loadHistory) {
+            /* Этот параметр необходим для возможности делать запрос в конструкторе,
+               когда мы не можем сделать соответствие фильтров по биндингам и нам нужен фильтр списка,
+               но применять надо не все фильтры */
          var noSaveFilters = ['Разворот', 'ВидДерева'],
             /* Т.к. параметры вычитываются один раз на сессию, то они могут "протухнуть" в случае,
                если страница строится на сервере открыта на разных вкладках / тачках,
                поэтому историю надо всегда актуализировать. */
              dReady = loadHistory && historyId ? UserConfig.getParam(historyId) : Deferred.success(),
              self = this,
+             byFilterButtonConfig = browser && browser._hasOption('filterButtonConfig') && find(browser._getOptions().bindings, function(elem) { return elem.propName && (elem.propName.indexOf("filterButtonConfig") !== -1); }),
              view, filter, preparedStructure;
+            
+         this._dFiltersReady = dReady;
 
          if(browser) {
             view = browser.getView();
@@ -310,22 +323,30 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
                      FilterHistoryControllerUntil.resetStructureElementsByFilterKeys(filterButton, preparedStructure, ignoreFiltersList);
                   }
          
-                  filterButton.setFilterStructure(preparedStructure);
-         
-                  if(browser && browser._hasOption('filterButtonConfig')) {
-                     /* Если была забиндена не сама структура фильтров,
-                      а конфиг фильтров (это происходит, когда конфиг передают объектом на новом шаблонизаторе, а не строкой),
-                      то надо дополнительно обновить опцию filterButtonConfig, иначе после синхронизации сбросится стркутура. */
-                     if(find(browser._getOptions().bindings, function(elem) { return elem.propName === "filterButtonConfig" })) {
-                        browser.getProperty('filterButtonConfig').filterStructure = preparedStructure;
-                        view.setFilter(cMerge(view.getFilter, filter.viewFilter), true);
-                     }
+                  if (!byFilterButtonConfig) {
+                     filterButton.setFilterStructure(preparedStructure);
                   }
                }
             }
    
             if(browser) {
                setTimeout(fHelpers.forAliveOnly(function () {
+                  /* Через timeout, т.к. необходимо, чтобы уже работали бинды,
+                     иначе перетрётся опция после синхронизации из контекста. + это позволяет не проставлять фильтр,
+                     он проставится по биндам */
+                  if(byFilterButtonConfig && filter && applyOnLoad) {
+                     /* Если была забиндена не сама структура фильтров,
+                        а конфиг фильтров (это происходит, когда конфиг передают объектом на новом шаблонизаторе, а не строкой),
+                        то надо дополнительно обновить опцию filterButtonConfig, иначе после синхронизации сбросится стркутура. */
+                     var filterButtonConfig =  browser.getProperty('filterButtonConfig');
+   
+                     filterButtonConfig.filterStructure = preparedStructure;
+                     browser.setFilterButtonConfig(filterButtonConfig);
+                     
+                     if(!view.isLoading() && (!view.getItems() || !view.getItems().getCount())) {
+                        filterButton.applyFilter();
+                     }
+                  }
                   // Через timeout, чтобы можно было подписаться на соыбтие, уйдёт с серверным рендерингом
                   browser._notifyOnFiltersReady();
                }, view), 0);

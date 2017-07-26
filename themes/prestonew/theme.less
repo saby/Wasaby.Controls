@@ -293,9 +293,13 @@ body {
          }
       }
    }
-   .controls-DateBox {
-      min-height: 3rem;
+   // У кнопок нестандартный цвет, перебиваем его. В новом дизайне либо добьюсь что бы цвета были стандартные,
+   // либо буду устанавливать его через переменные.
+   // В теме розницы есть такой же хак перебивающий этот хак на стандартный цвет
+   .controls-DateRangeChoose__home .icon-primary {
+      color: #e4e4e4;
    }
+
   .controls-ToolBar__menuIcon .icon-24 {
     font-family: carrypresto-icons!important;
   }
@@ -456,6 +460,11 @@ body {
       // В большинстве реестров используется #2C3E50 - @basic-block-bg-color
       background-color: @basic-block-bg-color;
    }
+   .ws-sticky-header__gradient {
+      height: 0.857rem;
+      box-shadow: none;
+      background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
+   }
 }
 
 body  .ws-window {
@@ -609,7 +618,14 @@ body {
 }
 
 .controls-IconButton.controls-TreeView__editArrow-container {
-   margin-top: @default-border-width;
+  @offset: round((1.785 - 1.32) / 2rem, 4);
+  margin-top: calc(~"@{default-border-width} - @{offset}");
+  .icon-16 {
+    font-size: 1.785rem !important;
+    line-height: 1.785rem !important;
+    width: 1.785rem;
+    height: 1.785rem;
+  }
 }
 
  .controls-Button .controls-Button__icon.icon-32 + .controls-Button__text {
@@ -647,11 +663,17 @@ body {
 
 .controls-DateBox.controls-FormattedTextBox {
    .controls-FormattedTextBox__fieldWrapper {
-      padding: 0 0.3rem;
       .controls-FormattedTextBox__field {
          height: 2.86rem;
       }
    }
+}
+
+// В теме онлайна кнопка выравнивается маргинами. Но в темах престы и розницы размер иконки другой и из-за них
+// появляются лишние отступы внизу контрола. Обнуляем маргины и меняем vertical-align у кнопки.
+// Если везде все будет хорошо, то в онлайне сделать подобным образом. Возможно проще сделать через flex.
+.controls-DateRange .controls-DateRange__Button {
+   vertical-align: top;
 }
 .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field .controls-FormattedTextBox__field-symbol {
 
@@ -805,10 +827,6 @@ body .ws-window.ws-LoadingIndicator__window {
   color: #324352;
 }
 
-.controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button {
-  font-size: 1rem;
-}
-
 // В теме онлайна фон у кнопки при наведении по умолчанию совпадает с цветом кнопок в панели выбора периода,
 // а тут не совпадает. Когда будем переделывать компонент под новую спецификацию, избавится от кнопок в пользу div.
 .ws-is-desktop-platform .controls-Button:not(.ws-disabled):not(.controls-Click__active).controls-Button__default {
@@ -907,7 +925,7 @@ body {
          color: @link-text-color!important;
          overflow: hidden;
          &:hover {
-            color: #B9E9FF!important;
+            color: @link-hover-text-color!important;
          }
          &:before {
             line-height: 2.7rem!important;
@@ -1011,17 +1029,21 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-
     vertical-align: baseline;
 }
 
-body .controls-CommandsButton__picker {
-   .controls-MenuItem {
-      padding-right: 2.8rem !important; //38 = 24 (кнопка) + 8(отступ справа у кнопки) +6(отступ слева у кнопки)
+body {
+   .controls-CommandsButton__picker {
+      .controls-MenuItem {
+         padding-right: 2.8rem !important; //38 = 24 (кнопка) + 8(отступ справа у кнопки) +6(отступ слева у кнопки)
+      }
    }
-}
+   .controls-DropdownList__picker {
+      .controls-DropdownList__multiselect .controls-DropdownList__itemCheckBox {
+         width: 2.286rem;
+      }
+      .controls-DropdownList__multiselect.controls-ListView__defaultItem, .controls-DropdownList__multiselect.controls-ListView__defaultItem.controls-DropdownList__item__selected {
+         font-weight: 400;
+      }
+   }
 
-.controls-DropdownList__picker .controls-DropdownList__multiselect .controls-DropdownList__itemCheckBox {
-  width: 2.286rem;
-}
-.controls-DropdownList__picker .controls-DropdownList__multiselect.controls-ListView__defaultItem, .controls-DropdownList__picker .controls-DropdownList__multiselect.controls-ListView__defaultItem.controls-DropdownList__item__selected {
-  font-weight: 400;
 }
 
 .controls-BreadCrumbs .controls-BreadCrumbs {

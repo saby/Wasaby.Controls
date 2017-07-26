@@ -174,6 +174,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       //который возвращается requireButtons, чтобы requireButtons при следующей отрисовке ещё раз подгрузил кнопки.
       setItems: function() {
          this._itemsLoadDeferred = null;
+         this._itemsWidth = null;
          OperationsPanel.superclass.setItems.apply(this, arguments);
       },
 
@@ -277,8 +278,33 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
        * */
       _checkCapacity: function(){
          if (!this._options.hasItemsMenu) {
+
+            /*
+               TODO Очередное хреновое решение для ПМО.
+               Если Не влезают операции, и нельзя заюзать механизм с меню,
+               то будем скрывать caption на операциях с классом controls-operationsPanel__action-withoutCaption
+             */
+            if(!this._itemsWidth){
+               this._itemsWidth = this._getItemsContainer().width();
+            }
+
+            var containerWidth = this.getContainer().width();
+
+            if(this._withoutCaptionsMode){
+               if(containerWidth > this._itemsWidth){
+                  this._toggleWithoutCaptionsMode(false);
+               }
+            }
+            else {
+               if(containerWidth <= this._itemsWidth){
+                  this._toggleWithoutCaptionsMode(true);
+               }
+            }
+            /*TODO Конец*/
+
             return;
          }
+
          var container = this.getContainer();
 
          /* Доступная под операции ширина = Ширина контейнера - ширина кнопки с меню*/
@@ -311,6 +337,11 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          if (this._itemsMenu) {
             this._itemsMenu.getContainer().toggleClass('ws-hidden', !isMenuNecessary);
          }
+      },
+
+      _toggleWithoutCaptionsMode: function(f){
+         this._withoutCaptionsMode = f;
+         this.getContainer().toggleClass('controls-operationsPanel__mode-withoutCaptions', f);
       },
 
       redraw: function() {

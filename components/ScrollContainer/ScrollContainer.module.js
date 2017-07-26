@@ -180,9 +180,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _addGradient: function() {
-            if (this._getScrollHeight() >  this._container.height()) {
-               this._container.addClass('controls-ScrollContainer__bottom-gradient');
-            }
+         	var maxScrollTop = this._getScrollHeight() - this._container.height();
+            
+            this._container.toggleClass('controls-ScrollContainer__bottom-gradient', maxScrollTop > 0 && this._getScrollTop() < maxScrollTop);
          },
 
          _touchStartHandler: function() {

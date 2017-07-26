@@ -519,7 +519,7 @@
       line-height: calc(~"@{size} + 1px");
     }
     // В IE, если значения css свойст в rem, то top расчитывается неправильно, поэтому ставим для IE другой.
-    body.ws-is-ie:not(.ws-is-ie12) & when not (@topIE = 0){
+    body.ws-is-ie:not(.ws-is-windows-10) & when not (@topIE = 0){
       top: @topIE;
     }
   }
