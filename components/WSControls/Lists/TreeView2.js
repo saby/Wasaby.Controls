@@ -58,10 +58,10 @@ define('js!WSControls/Lists/TreeView2', [
       _createDefaultProjection: function() {
          return TreeItemsUtil.getDefaultTreeDisplay(this._items, this._options);
       },
-      onClick: function(event) {
+      _onClickFn: function(event) {
          var
             target = $(event.target);
-         TreeView.superclass.onClick.apply(this, arguments);
+         TreeView.superclass._onClickFn.apply(this, arguments);
          if (target.closest('.js-controls-TreeView__expand').length) {
             this.toggleItem(target.closest('.js-controls-ListView__item').attr('data-hash'));
          }
@@ -151,8 +151,6 @@ define('js!WSControls/Lists/TreeView2', [
                      this._items.append(list);
                   }
                   item.setLoaded(true);
-                  //this._dataLoadedCallback();
-
                   this._notify('onDataLoad', list);
                   return list;
                }, this))

@@ -256,8 +256,8 @@ define('js!WSControls/Lists/ItemsControl', [
          },
    
          //<editor-fold desc='EventHandlers'>
-         
-         onClick: function (evt) {
+
+         _onClickFn: function (evt) {
             if (this._selector) {
                this._selector.setSelectedByHash(this._getDataHashFromTarget(evt.nativeEvent.target));
                onSelectorChange.apply(this)

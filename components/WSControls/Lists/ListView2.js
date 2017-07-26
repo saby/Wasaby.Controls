@@ -49,7 +49,7 @@ define('js!WSControls/Lists/ListView2', ['js!WSControls/Lists/ItemsControl',
                this._setDirty();
             }
          },
-   
+
          mouseLeave: function () {
             this.hoveredIndex = -1;
             this._updateTplData();
