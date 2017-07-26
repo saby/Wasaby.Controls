@@ -395,6 +395,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
             if (res !== false) {
                 this._endDragHandler(DragObject, droppable, e);
             }
+            this._getDragContainer().removeClass('controls-dragndrop');
             this._position = null;
         },
 
