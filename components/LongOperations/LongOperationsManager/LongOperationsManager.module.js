@@ -924,6 +924,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                      })
                      .value()
                   );
+                  results.setMetaData({more:true});
                }
                return results;
             }
