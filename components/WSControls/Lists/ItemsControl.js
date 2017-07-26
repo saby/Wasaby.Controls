@@ -271,6 +271,9 @@ define('js!WSControls/Lists/ItemsControl', [
    
          //</editor-fold>
 
+         _prepareQueryFilter: function() {
+            return this._filter;
+         },
 
          //<editor-fold desc='DataSourceMethods'>
          reload: function() {
@@ -291,7 +294,7 @@ define('js!WSControls/Lists/ItemsControl', [
                      this._limit = result['limit'] || this._limit;
                   }
                   //TODO решить с параметрами
-                  def = DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, this._filter, this._sorting, this._offset, this._limit)
+                  def = DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, this._prepareQueryFilter(), this._sorting, this._offset, this._limit)
                      .addCallback(fHelpers.forAliveOnly(function (list) {
                         self._notify('onDataLoad', list);
                         this._onDSReload(list);

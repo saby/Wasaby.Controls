@@ -55,10 +55,6 @@ define('js!WSControls/Lists/resources/utils/TreeItemsUtil', [
             filter.push(cfg.itemsFilterMethod);
          }
 
-         if (cfg.loadItemsStrategy == 'append') {
-            displayProperties.unique = false;
-         }
-
          displayProperties = {
             collection: items,
             idProperty: cfg.idProperty,
@@ -72,7 +68,31 @@ define('js!WSControls/Lists/resources/utils/TreeItemsUtil', [
             sort: cfg.itemsSortMethod
          };
 
+         if (cfg.loadItemsStrategy == 'append') {
+            displayProperties.unique = false;
+         }
+
          return new TreeDisplay(displayProperties);
+      },
+
+      getTemplateData: function(data) {
+         var
+            templateData = {},
+            collection = data.projItem.getOwner().getCollection(),
+            idPropertyValue = data.getPropertyValue(data.item, data.idProperty),
+            nodePropertyValue = data.getPropertyValue(data.item, data.nodeProperty),
+            collectionItem = collection.at(collection.getIndexByValue(data.idProperty, idPropertyValue));
+
+         templateData.children = data.hierarchyRelation.getChildren(collectionItem, collection);
+         templateData.isLoaded = data.projItem.isLoaded();
+         templateData.itemLevel = data.projItem.getLevel() - 1;
+         templateData.hasLoadedChild = templateData.children.length > 0;
+         templateData.classIsLoaded = templateData.isLoaded ? ' controls-ListView__item-loaded' : '';
+         templateData.classHasLoadedChild = templateData.hasLoadedChild ? ' controls-ListView__item-with-child' : ' controls-ListView__item-without-child';
+         templateData.classNodeType = ' controls-ListView__item-type-' + (nodePropertyValue === null ? 'leaf' : nodePropertyValue === true ? 'node' : 'hidden');
+         templateData.classNodeState = nodePropertyValue !== null ? (' controls-TreeView__item-' + (data.projItem.isExpanded() ? 'expanded' : 'collapsed')) : '';
+         templateData.addClasses = templateData.classNodeType + templateData.classNodeState + templateData.classIsLoaded + templateData.classHasLoadedChild;
+         return templateData;
       }
    };
 });

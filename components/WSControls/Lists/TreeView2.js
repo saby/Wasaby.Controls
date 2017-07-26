@@ -2,50 +2,34 @@ define('js!WSControls/Lists/TreeView2', [
       'js!WSControls/Lists/ListView2',
       'js!WSControls/Lists/resources/utils/ItemsUtil',
       'js!WSControls/Lists/resources/utils/TreeItemsUtil',
+      'js!WSControls/Lists/resources/utils/DataSourceUtil',
       'Core/Deferred',
+      'Core/core-functions',
       'js!WS.Data/Relation/Hierarchy',
       'Core/helpers/functional-helpers',
-      'tmpl!WSControls/Lists/TreeView2',
       'tmpl!WSControls/Lists/resources/TreeView/ItemTemplate',
-      'tmpl!WSControls/Lists/resources/TreeView/ItemContentTemplate',
-      'css!WSControls/Lists/TreeView'
-   ], function(ListView, ItemsUtil, TreeItemsUtil, Deferred, HierarchyRelation, functionalHelpers, ViewTemplate, ItemTemplate, ItemContentTemplate) {
-
-   function getTemplateData(data) {
-      var
-         templateData = {},
-         collection = data.projItem.getOwner().getCollection(),
-         idPropertyValue = data.getPropertyValue(data.item, data.idProperty),
-         nodePropertyValue = data.getPropertyValue(data.item, data.nodeProperty),
-         collectionItem = collection.at(collection.getIndexByValue(data.idProperty, idPropertyValue));
-
-      templateData.children = data.hierarchyRelation.getChildren(collectionItem, collection);
-      templateData.isLoaded = data.projItem.isLoaded();
-      templateData.itemLevel = data.projItem.getLevel() - 1;
-      templateData.hasLoadedChild = templateData.children.length > 0;
-      templateData.classIsLoaded = templateData.isLoaded ? ' controls-ListView__item-loaded' : '';
-      templateData.classHasLoadedChild = templateData.hasLoadedChild ? ' controls-ListView__item-with-child' : ' controls-ListView__item-without-child';
-      templateData.classNodeType = ' controls-ListView__item-type-' + (nodePropertyValue === null ? 'leaf' : nodePropertyValue === true ? 'node' : 'hidden');
-      templateData.classNodeState = nodePropertyValue !== null ? (' controls-TreeView__item-' + (data.projItem.isExpanded() ? 'expanded' : 'collapsed')) : '';
-      templateData.addClasses = templateData.classNodeType + templateData.classNodeState + templateData.classIsLoaded + templateData.classHasLoadedChild;
-      return templateData;
-   }
+      'css!SBIS3.CONTROLS.TreeView'
+   ], function(ListView, ItemsUtil, TreeItemsUtil, DataSourceUtil, Deferred, cFunctions, HierarchyRelation, functionalHelpers, ItemTemplate) {
 
    var TreeView = ListView.extend({
-      _template: ViewTemplate,
       _defaultItemTemplate: ItemTemplate,
-      _defaultItemContentTemplate: ItemContentTemplate,
+
+      _expandedItems: undefined,  // Состояние развернутости элементов
+      _loadingType: undefined,    // Тип загрузки данных
+
+      _prepareInitalState: function() {
+         this._expandedItems = this._options.expandedItems || {};
+         this._loadingType = this._options.loadingType || 'partial';
+      },
       constructor: function() {
          TreeView.superclass.constructor.apply(this, arguments);
          this._publish('onExpandItem', 'onCollapseItem');
-         if (!this._options.expandedItems) {
-            this._options.expandedItems = {};
-         }
+         this._prepareInitalState();
       },
       _getItemData: function() {
          var
             itemData = TreeView.superclass._getItemData.apply(this, arguments);
-         itemData.getTemplateData = getTemplateData;
+         itemData.getTemplateData = TreeItemsUtil.getTemplateData;
          itemData.nodeProperty = this._options.nodeProperty;
          itemData.parentProperty = this._options.parentProperty;
          itemData.hierarchyRelation = new HierarchyRelation({
@@ -91,7 +75,7 @@ define('js!WSControls/Lists/TreeView2', [
                //this._options._folderOffsets[id] = 0;
                return this._loadItem(item).addCallback(functionalHelpers.forAliveOnly(function() {
                   this._itemsProjection.getByHash(itemHash).setExpanded(true);
-                  this._options.expandedItems[ItemsUtil.getPropertyValue(item.getContents(), this._options.idProperty)] = true;
+                  this._expandedItems[ItemsUtil.getPropertyValue(item.getContents(), this._options.idProperty)] = true;
                   this._notify('onExpandItem', itemHash);
                }).bind(this));
             }
@@ -108,7 +92,7 @@ define('js!WSControls/Lists/TreeView2', [
                return Deferred.success();
             } else {
                this._itemsProjection.getByHash(itemHash).setExpanded(false);
-               delete this._options.expandedItems[ItemsUtil.getPropertyValue(item.getContents(), this._options.idProperty)];
+               delete this._expandedItems[ItemsUtil.getPropertyValue(item.getContents(), this._options.idProperty)];
                this._notify('onExpandItem', itemHash);
             }
          } else {
@@ -116,28 +100,38 @@ define('js!WSControls/Lists/TreeView2', [
          }
       },
 
+      _prepareQueryFilter: function(root) {
+         var
+            filter = cFunctions.clone(this._filter) || {};
+         if (this._options.expand) {
+            filter['Разворот'] = 'С разворотом';
+            filter['ВидДерева'] = 'Узлы и листья';
+         }
+         filter[this._options.parentProperty] = root;
+         return filter;
+      },
+
       _loadItem: function(item) {
-         /*if (this._dataSource && !item.isLoaded() && this._options.partialyReload) {
-            this._toggleIndicator(true);
-            this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), 0, this._limit);
-            return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(functionalHelpers.forAliveOnly(function (list) {
-               this._options._folderHasMore[id] = list.getMetaData().more;
-               this._loadedNodes[id] = true;
-               this._notify('onDataMerge', list); // Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
-               if (this._options.loadItemsStrategy == 'merge') {
-                  this._options._items.merge(list, {remove: false});
-               }
-               else {
-                  this._options._items.append(list);
-               }
-               this._getItemProjectionByItemId(id).setLoaded(true);
-               this._dataLoadedCallback();
-            }).bind(this))
-               .addBoth(function(error){
-                  this._toggleIndicator(false);
-                  return error;
-               }.bind(this));
-         }*/
+         var
+            itemId = ItemsUtil.getPropertyValue(item.getContents(), this._options.idProperty);
+         if (this._dataSource && !item.isLoaded() && this._loadingType === 'partial') {
+            return DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, this._prepareQueryFilter(itemId), this._sorting, this._offset, this._limit)
+               .addCallback(functionalHelpers.forAliveOnly(function (list) {
+                  // Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
+                  this._notify('onDataMerge', list);
+                  if (this._options.loadItemsStrategy === 'merge') {
+                     this._items.merge(list, {remove: false});
+                  } else {
+                     this._items.append(list);
+                  }
+                  item.setLoaded(true);
+                  //this._dataLoadedCallback();
+
+                  this._notify('onDataLoad', list);
+                  return list;
+               }, this))
+               .addErrback(functionalHelpers.forAliveOnly(this._loadErrorProcess, this));
+         }
          return Deferred.success();
       }
    });
