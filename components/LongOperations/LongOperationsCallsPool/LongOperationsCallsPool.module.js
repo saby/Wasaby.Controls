@@ -192,12 +192,22 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
          /**
           * Перечислить все группы, встречающиеся в списке выполняющихся запросов
           * @public
+          * @param {object} [member] Идентифицирующие параметры (опционально)
+          * @param {boolean} [completedOnly] Только завершённые (опционально)
           * @return {object[]}
           */
-         listPools: function () {
+         listPools: function (member, completedOnly) {
+            if (member && typeof member !== 'object') {
+               throw new TypeError('Argument "member" must be an object or null');
+            }
+            if (completedOnly && typeof completedOnly !== 'boolean') {
+               throw new TypeError('Argument "completedOnly" must be boolean or null');
+            }
             var list = [];
-            for (var gId in this._calls) {
-               list.push(this._calls[gId].pool);
+            for (var poolId in this._calls) {
+               if (!member || (_has(this, poolId, member) && (!completedOnly || this._calls[poolId].list.some(function (v) { return !v.promise; })))) {
+                  list.push(this._calls[poolId].pool);
+               }
             }
             return list;
          }
