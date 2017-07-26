@@ -129,7 +129,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             items = this.getItems();
          position = target.getPosition() != 'after' ? position : position +1;
          def.addCallback(function(result) {
-            if (result !== false) {
+            if (result !== false && result !== Mover.ON_BEGIN_MOVE_RESULT.CUSTOM) {
                dragSource.each(function(movedItem) {
                   var model = movedItem.getModel();
                   if (operation === 'add' || operation === 'move') {
