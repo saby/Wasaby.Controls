@@ -162,16 +162,16 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
 
          _beginDragHandler: function (dragObject, e) {
             this._container.addClass('controls-Scrollbar__dragging');
-            this._beginClient = e.clientY;
+            this._beginClient = e.pageY;
          },
 
          _onDragHandler: function (dragObject, e) {
-            var newThumbPosition = this._thumbPosition + e.clientY - this._beginClient;
+            var newThumbPosition = this._thumbPosition + e.pageY - this._beginClient;
 
             this.setPosition(newThumbPosition / this._scrollRatio);
             this._notify('onScrollbarDrag', this.getPosition());
 
-            this._beginClient = e.clientY - newThumbPosition + this._thumbPosition;
+            this._beginClient = e.pageY - newThumbPosition + this._thumbPosition;
          },
 
          _endDragHandler: function (dragObject, droppable, e) {
