@@ -46,6 +46,7 @@ define('js!WSControls/Control/Base',
              * (контрол могли создать через new и положить на контейнер, у которого есть класс или какие-нибудь другие атрибуты)
              */
             _logicParent: null,
+            _mounted: false,
             _decOptions: null,
             /**
              * Логика вынесена в функцию для переопределения поведения легкого инстанса
@@ -90,10 +91,10 @@ define('js!WSControls/Control/Base',
              * @param newOptions
              */
             applyNewOptions: function(newOptions) {
+               this._beforeUpdate && this._beforeUpdate(newOptions);
                var oldOptions = this._options;
                this._options = newOptions;
                this._applyOptions && this._applyOptions(oldOptions); //TODO: удалить после согласования ЖЦ вместе с переименованием метода во всех контролах
-               this._beforeUpdate && this._beforeUpdate(oldOptions);
             },
 
             /**
@@ -136,11 +137,10 @@ define('js!WSControls/Control/Base',
              * Точка разрушения компонента
              */
             destroy: function() {
-               this._beforeDestroy();
+               this._beforeUnmount();
                if (BaseCompatible) {
                   BaseCompatible.destroy.call(this);
                }
-               this._afterDestroy();
             },
 
             //<editor-fold desc="API">
@@ -173,7 +173,7 @@ define('js!WSControls/Control/Base',
                   return this._options.parentVisible;
                }
                return this._options.visible;
-            },
+               },
 
 
             /**
@@ -217,6 +217,7 @@ define('js!WSControls/Control/Base',
              */
 
             _shouldUpdate: function(newOptions) {
+               return true;
             },
 
             /**
