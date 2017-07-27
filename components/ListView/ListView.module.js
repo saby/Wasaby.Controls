@@ -990,6 +990,9 @@ define('js!SBIS3.CONTROLS.ListView',
                this._pagingZIndex = WindowManager.acquireZIndex();
                WindowManager.setVisible(this._pagingZIndex);
             }
+            if (this._options.virtualScrolling || this._options.scrollPaging) {
+               this._getScrollWatcher().subscribe('onScroll', this._onScrollHandler.bind(this));
+            }
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
             this._initLoadMoreButton();
@@ -1143,7 +1146,6 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _createScrollPager: function(){
             var scrollContainer = this._scrollWatcher.getScrollContainer();
-            this._scrollWatcher.subscribe('onScroll', this._onScrollHandler.bind(this));
             this._scrollPager = new Paging({
                element: $('> .controls-ListView__scrollPager', this._container),
                visible: false,
@@ -1193,7 +1195,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (itemActions && itemActions.isItemActionsMenuVisible()){
                itemActions.hide();
             }
-            if (this._virtualScrollController){
+            if (this._virtualScrollController) {
               this._virtualScrollController._scrollHandler(event, scrollTop);
             }
          },
