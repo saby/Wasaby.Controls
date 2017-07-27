@@ -5,9 +5,8 @@
 define('js!SBIS3.CONTROLS.Selectable', [
    'js!WS.Data/Utils',
    'js!WS.Data/Collection/IBind',
-   'Core/core-instance',
-   'js!WSControls/Controllers/ListSelector'
-], function(Utils, IBindCollection, cInstance, ListSelector) {
+   'Core/core-instance'
+], function(Utils, IBindCollection, cInstance) {
 
    /**
     * Миксин, добавляющий поведение хранения выбранного элемента. Всегда только одного.
@@ -38,7 +37,6 @@ define('js!SBIS3.CONTROLS.Selectable', [
           _isMove: false,
           _isMoveKey: null,
           _curHash: undefined,
-          _selectorInstance: null,
           _options: {
              /**
               * @cfg {String} Устанавливает выбранным элемент коллекции по переданному индексу (порядковому номеру).
@@ -99,6 +97,62 @@ define('js!SBIS3.CONTROLS.Selectable', [
          this._publish('onSelectedItemChange');
       },
 
+
+      _prepareSelectedKeyByIndex: function(index) {
+         //Вычисляем ключ по известному индексу
+         if (this._isEmptyIndex(index)) {
+            this._options.selectedKey = null;
+         }
+         else {
+            if (this.getItems() && cInstance.instanceOfModule(this.getItems(), 'WS.Data/Collection/RecordSet')) {
+               this._options.selectedKey = this._getKeyByIndex(this._options.selectedIndex);
+            }
+         }
+         this._prepareOtherSelectedConfig();
+      },
+
+      _prepareSelectedIndexByKey: function(key) {
+         //Вычисляем индекс по известному ключу
+         if (typeof key === 'undefined') {
+            this._options.selectedIndex = -1;
+         }
+         else {
+            if (this.getItems() && cInstance.instanceOfModule(this.getItems(), 'WS.Data/Collection/RecordSet')) {
+               this._options.selectedIndex = this._getItemIndexByKey(key);
+            }
+         }
+         this._prepareOtherSelectedConfig();
+      },
+
+      _prepareBothSelectedConfig: function(index, key) {
+         //Вычисляем индекс или по ключ по известному другому параметру, в приоритете индекс
+         if (this._isEmptyIndex(index)) {
+            //Если передали пустой индекс и ключ, определяем индекс по ключу
+            this._prepareSelectedIndexByKey(key)
+         }
+         else {
+            //если индекс передали - вычисляем ключ
+            this._prepareSelectedKeyByIndex(index)
+         }
+      },
+
+      _prepareOtherSelectedConfig: function() {
+         if (this._getItemsProjection()) {
+            //если после всех манипуляций выше индекс пустой, но задана опция, что пустое нельзя - выбираем первое
+            if (!this._options.allowEmptySelection && this._isEmptyIndex(this._options.selectedIndex)) {
+               if (this._getItemsProjection().getCount()) {
+                  this._options.selectedIndex = 0;
+                  this._options.selectedKey = this._getKeyByIndex(this._options.selectedIndex);
+               }
+            }
+            var curItem = this._getItemsProjection().at(this._options.selectedIndex);
+            if (curItem) {
+               this._curHash = curItem.getHash();
+            }
+         }
+
+      },
+
       before : {
          setDataSource: function(source, noLoad) {
             /* При установке источника без перезагрузки
@@ -132,10 +186,10 @@ define('js!SBIS3.CONTROLS.Selectable', [
             }
          },
          _setItemsEventHandlers : function() {
-            if (!this._onSelectorCurrentChange) {
-               this._onSelectorCurrentChange = onSelectorCurrentChange.bind(this);
+            if (!this._onProjectionCurrentChange) {
+               this._onProjectionCurrentChange = onProjectionCurrentChange.bind(this);
             }
-            this.subscribeTo(this._selectorInstance, 'onSelectedItemChange', this._onSelectorCurrentChange);
+            this.subscribeTo(this._getItemsProjection(), 'onCurrentChange', this._onProjectionCurrentChange);
 
             if (!this._onProjectionChange) {
                this._onProjectionChange = onCollectionChange.bind(this);
@@ -146,30 +200,32 @@ define('js!SBIS3.CONTROLS.Selectable', [
             //Медленная отрисовка настолько медленная, что в некоторых случаях успевают задестроить компонент, который сейчас отрисовывается
             //Подробности в https://inside.tensor.ru/opendoc.html?guid=9a83c03c-1058-48ef-8f62-d3f6cf32d793&des=
             if (!this.isDestroyed()){
-               this._drawSelectedItem(this.getSelectedKey(), this.getSelectedIndex(), lightVer);
+               this._drawSelectedItem(this._options.selectedKey, this._options.selectedIndex, lightVer);
             }
          },
          _unsetItemsEventHandlers : function() {
-            if (this._onSelectorCurrentChange && this._onSelectorCurrentChange) {
-               this.unsubscribeFrom(this._onSelectorCurrentChange, 'onSelectedItemChange', this._onSelectorCurrentChange);
+            if (this._getItemsProjection() && this._onProjectionCurrentChange) {
+               this.unsubscribeFrom(this._getItemsProjection(), 'onCurrentChange', this._onProjectionCurrentChange);
             }
             if (this._getItemsProjection() && this._onProjectionChange) {
                this.unsubscribeFrom(this._getItemsProjection(), 'onCollectionChange', this._onProjectionChange);
             }
          },
          _itemsReadyCallback: function() {
+            if (this._isEmptyIndex(this._options.selectedIndex)){
+               var projPos = this._getItemsProjection().getCurrentPosition();
+               if (!this._isEmptyIndex(projPos)) {
+                  this._options.selectedIndex = projPos;
+               }
+            }
 
-            this._selectorInstance = new ListSelector({
-               selectedIndex : this._options.selectedIndex,
-               selectedKey : this._options.selectedKey,
-               allowEmptySelection: this._options.allowEmptySelection,
-               projection: this._getItemsProjection(),
-               idProperty: this._options.idProperty
-            });
-
-         },
-         destroy : function() {
-            this._selectorInstance.destroy();
+            //Если в результату вычисления параметров индекс поменялся, надо установить его в проекцию с сигнализированием изменений
+            var oldIndex = this._options.selectedIndex;
+            this._prepareBothSelectedConfig(this._options.selectedIndex, this._options.selectedKey);
+            //Необходимо для простановки начального значения при инициализации, чтобы значение можно было сбросить
+            if (this._isEmptyIndex(this._getItemsProjection().getCurrentPosition()) && !this._isEmptyIndex(this._options.selectedIndex) && (this._getItemsProjection().getCount() > this._options.selectedIndex)) {
+               this._getItemsProjection().setCurrentPosition(this._options.selectedIndex, oldIndex == this._options.selectedIndex);
+            }
          }
       },
 
@@ -199,8 +255,9 @@ define('js!SBIS3.CONTROLS.Selectable', [
        */
       setSelectedKey : function(id) {
          this._options.selectedKey = id;
-         if (this._selectorInstance) {
-            this._selectorInstance.setSelectedKey(id);
+         this._prepareSelectedIndexByKey(this._options.selectedKey);
+         if (this._getItemsProjection()) {
+            this._selectInProjection();
          }
       },
 
@@ -218,8 +275,9 @@ define('js!SBIS3.CONTROLS.Selectable', [
        */
       setSelectedIndex: function(index) {
          this._options.selectedIndex = index;
-         if (this._selectorInstance) {
-            this._selectorInstance.setSelectedIndex(index);
+         this._prepareSelectedKeyByIndex(index);
+         if (this._getItemsProjection()) {
+            this._selectInProjection();
          }
       },
       /**
@@ -239,12 +297,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
        * @see SBIS3.CONTROLS.DSMixin#idProperty
        */
       getSelectedKey : function() {
-         if (this._selectorInstance && cInstance.instanceOfModule(this._selectorInstance, 'WSControls/Controllers/ListSelector')) {
-            return this._selectorInstance.getSelectedKey();
-         }
-         else {
-            return this._options.selectedKey;
-         }
+         return this._options.selectedKey;
       },
 
       /**
@@ -262,12 +315,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
        * @see onSelectedItemChange
        */
       getSelectedIndex : function() {
-         if (this._selectorInstance) {
-            return this._selectorInstance.getSelectedIndex();
-         }
-         else {
-            return this._options.selectedIndex;
-         }
+         return this._options.selectedIndex;
       },
 
       /**
@@ -328,6 +376,14 @@ define('js!SBIS3.CONTROLS.Selectable', [
 
       _isEmptyIndex: function(index) {
          return index === null || typeof index == 'undefined' || index == -1;
+      },
+
+      _selectInProjection: function (){
+         if (this._hasItemByIndex(this._options.selectedIndex)) {
+            this._getItemsProjection().setCurrentPosition(this._options.selectedIndex);
+         } else {
+            this._getItemsProjection().setCurrentPosition(-1);
+         }
       }
    };
 
@@ -396,8 +452,11 @@ define('js!SBIS3.CONTROLS.Selectable', [
       }
    };
 
-   var onSelectorCurrentChange = function (event, index, key) {
-      this._setSelectedIndex(index, key);
+   var onProjectionCurrentChange = function (event, newCurrent, oldCurrent, newPosition) {
+      this._setSelectedIndex(
+         newPosition,
+         this._getKeyByIndex(newPosition)
+      );
    };
 
    return Selectable;

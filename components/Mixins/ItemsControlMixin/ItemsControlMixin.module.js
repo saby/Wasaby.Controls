@@ -835,10 +835,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          /*Если уже вычислили все в modifyoptions а иначе все это стрельнет после reload*/
          if (this._options._itemsProjection) {
+            this._setItemsEventHandlers();
             this._notify('onItemsReady');
             this._itemsReadyCallback();
             this._dataLoadedCallback();
-            this._setItemsEventHandlers();
          }
          /*TODO Поддержка совместимости. Раньше если были заданы items массивом создавался сорс, осталась куча завязок на это*/
          if (this._options.items instanceof Array) {
@@ -890,10 +890,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             this._options._itemsProjection = this._options._createDefaultProjection.call(this, this._options._items, this._options);
             this._options._itemsProjection = this._options._applyGroupingToProjection(this._options._itemsProjection, this._options);
-
+            this._setItemsEventHandlers();
             this._notify('onItemsReady');
             this._itemsReadyCallback();
-            this._setItemsEventHandlers();
          }
 
          this._checkIdProperty();
@@ -1988,6 +1987,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             //Если элемента в проекции нет, то и не надо перерисовывать запись
             if (projItem) {
                this._redrawItem(projItem);
+               this._notifyOnDrawItems();
             }
          }
          else {
