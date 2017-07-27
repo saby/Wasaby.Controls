@@ -436,6 +436,13 @@ define([
             it('should save source items', function () {
                assert.equal(dragPositioner._sourseItems.length, 1);
             });
+            it('should not throw error when source is an array', function () {
+               DragObject.setSource([{mr:'trololo'}]);
+               dragMove._dragPositioner = null;
+               assert.doesNotThrow(function(){
+                  dragMove._getDragPositioner();
+               });
+            })
          });
       });
    });
