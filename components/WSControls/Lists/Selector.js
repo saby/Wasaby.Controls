@@ -18,6 +18,12 @@ define('js!WSControls/Lists/Selector', [
          }
       },
 
+      _getItemData: function() {
+         var data = Selector.superclass._getItemData.apply(this, arguments);
+         data.selectedKey = this.getSelectedKey();
+         return data;
+      },
+
       _prepareSelectedIndexByKey: function (key) {
          //Вычисляем индекс по известному ключу
          this._selectedIndex = this._getItemIndexByKey(key);

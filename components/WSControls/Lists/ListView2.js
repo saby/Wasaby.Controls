@@ -1,12 +1,11 @@
 define('js!WSControls/Lists/ListView2', ['js!WSControls/Lists/Selector',
-      'Core/core-instance',
       'tmpl!WSControls/Lists/ListView2',
       'tmpl!WSControls/Lists/resources/ItemTemplate',
       'tmpl!WSControls/Lists/resources/GroupTemplate',
       'js!WSControls/Controllers/ListMultiSelector',
       'js!WSControls/Lists/ItemsToolbar/ItemsToolbarCompatible'],
 
-   function(Selector, cInstance, template, ItemTemplate, groupTemplate, ListMultiSelector) {
+   function(Selector, template, ItemTemplate, groupTemplate, ListMultiSelector) {
       
       var INDICATOR_DELAY = 2000;
       
@@ -25,11 +24,6 @@ define('js!WSControls/Lists/ListView2', ['js!WSControls/Lists/Selector',
                selectedKeys: this._options.selectedKeys,
                multiSelect: this._options.multiSelect
             })
-         },
-         _getItemData: function() {
-            var data = ListView.superclass._getItemData.apply(this, arguments);
-            data.selectedKey = this.getSelectedKey();
-            return data;
          },
 
          _onClickInner: function(e, hash) {
