@@ -51,7 +51,7 @@ define('js!WSControls/Lists/ListView2', ['js!WSControls/Lists/ItemsControl',
                this.hoveredIndex = index;
             }
          },
-   
+
          _mouseLeave: function () {
             this.hoveredIndex = -1;
          },
