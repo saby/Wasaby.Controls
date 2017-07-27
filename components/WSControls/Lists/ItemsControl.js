@@ -1,13 +1,8 @@
 define('js!WSControls/Lists/ItemsControl', [
    'Core/core-extend',
-   'Core/core-functions',
-   'js!WS.Data/Collection/IBind',
    'js!WSControls/Control/Base',
-   'js!WS.Data/Collection/RecordSet',
    'Core/helpers/Object/isEmpty',
-   'Core/helpers/string-helpers',
    'Core/Sanitize',
-   'js!WS.Data/Utils',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'tmpl!WSControls/Lists/resources/ItemsTemplate',
    'tmpl!WSControls/Lists/resources/ItemTemplate',
@@ -19,14 +14,9 @@ define('js!WSControls/Lists/ItemsControl', [
    'Core/core-instance',
    'js!WSControls/DOMHelpers/DOMHelpers'
 ], function (extend,
-             cFunctions,
-             IBindCollection,
              BaseControl,
-             RecordSet,
              isEmpty,
-             strHelpers,
              Sanitize,
-             Utils,
              TemplateUtil,
              ItemsTemplate,
              ItemTemplate,
@@ -105,6 +95,7 @@ define('js!WSControls/Lists/ItemsControl', [
 
          _initItemBasedControllers: function() {
             if (this._items) {
+               //TODO убрать дестрой, проверить утечки памяти
                if (this._itemsProjection) {
                   this._itemsProjection.destroy();
                }
@@ -122,11 +113,14 @@ define('js!WSControls/Lists/ItemsControl', [
          },
 
          _itemsChangeCallback: function(initBaseControllers) {
-            if (initBaseControllers) {
-               this._initItemBasedControllers();
-            }
-            this._records = this._getRecordsForView();
+            this._initItemBasedControllers();
+            this._displayChangeCallback();
             this._notify('onItemsReady');
+         },
+
+         //при изменениях в проекции
+         _displayChangeCallback: function() {
+            this._records = this._getRecordsForView();
             this._updateTplData();
          },
 
@@ -159,6 +153,7 @@ define('js!WSControls/Lists/ItemsControl', [
          },
          
          _updateTplData: function() {
+            //TODO Возможно вычисление можно сделать прямо в шаблоне
             this.tplData = this._getItemData();
          },
 
@@ -372,7 +367,7 @@ define('js!WSControls/Lists/ItemsControl', [
       });
 
    var onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
-      this._itemsChangeCallback(action === IBindCollection.ACTION_RESET);
+      this._displayChangeCallback();
       this._setDirty();
    };
 
