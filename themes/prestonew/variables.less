@@ -644,7 +644,8 @@
 @data-grid-money-header-cell-padding:     1.43rem;
 @data-grid-results-color:                 #FFCC99;
 // PrintDialog
-@controls-printdialog-min-width:          25rem;
+//По какой-то причине Firefox берёт font-size не из html, а свой, причем только при расчёте этой ширины
+@controls-printdialog-min-width:          25em;
 @controls-printdialog-activate-right:     3.1785rem;
 @controls-printdialog-activate-margin-top:8px;
 //MergeDialog
