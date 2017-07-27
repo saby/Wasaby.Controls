@@ -55,7 +55,7 @@ define('js!WSControls/Lists/TreeView2', [
          });
          return itemData;
       },
-      _createDefaultProjection: function() {
+      _createDefaultDisplay: function() {
          return TreeItemsUtil.getDefaultTreeDisplay(this._items, this._options);
       },
       _onClick: function(event) {
@@ -68,18 +68,18 @@ define('js!WSControls/Lists/TreeView2', [
       },
 
       _collapseItems: function(notCollapseItemId, expandedItems) {
-         this._itemsProjection.setEventRaising(false, true);
+         this._display.setEventRaising(false, true);
          collectionHelpers.forEach(expandedItems, function(expanded, id) {
             if (!notCollapseItemId || id !== notCollapseItemId) {
-               this.collapseItem(ItemsUtil.getItemById(this._itemsProjection, id, this._options.idProperty).getHash());
+               this.collapseItem(ItemsUtil.getItemById(this._display, id, this._options.idProperty).getHash());
             }
          }, this);
-         this._itemsProjection.setEventRaising(true, true);
+         this._display.setEventRaising(true, true);
       },
 
       toggleItem: function(itemHash) {
          var
-            item = this._itemsProjection.getByHash(itemHash);
+            item = this._display.getByHash(itemHash);
          if (item) {
             this[item.isExpanded() ? 'collapseItem' : 'expandItem'](itemHash);
          } else {
@@ -89,7 +89,7 @@ define('js!WSControls/Lists/TreeView2', [
 
       expandItem: function(itemHash) {
          var
-            item = this._itemsProjection.getByHash(itemHash),
+            item = this._display.getByHash(itemHash),
             itemId;
          if (item && ItemsUtil.getPropertyValue(item.getContents(), this._options.nodeProperty) !== null) {
             if (item.isExpanded()) {
@@ -100,7 +100,7 @@ define('js!WSControls/Lists/TreeView2', [
                   this._collapseItems(itemId, this._expandedItems);
                }
                return this._loadItem(item).addCallback(FunctionalHelpers.forAliveOnly(function() {
-                  this._itemsProjection.getByHash(itemHash).setExpanded(true);
+                  this._display.getByHash(itemHash).setExpanded(true);
                   this._expandedItems[itemId] = true;
                   this._notify('onExpandItem', itemHash);
                }, this));
@@ -111,10 +111,10 @@ define('js!WSControls/Lists/TreeView2', [
 
       collapseItem: function(itemHash) {
          var
-            item = this._itemsProjection.getByHash(itemHash);
+            item = this._display.getByHash(itemHash);
          if (item) {
             if (item.isExpanded()) {
-               this._itemsProjection.getByHash(itemHash).setExpanded(false);
+               this._display.getByHash(itemHash).setExpanded(false);
                delete this._expandedItems[ItemsUtil.getPropertyValue(item.getContents(), this._options.idProperty)];
                this._notify('onExpandItem', itemHash);
             }

@@ -16,18 +16,18 @@ define(['js!WSControls/Controllers/ListMultiSelector', 'js!WS.Data/Display/Displ
          
          multiSelectorMultiSelect = new ListMultiSelector({
             multiSelect: true,
-            projection: getProj()
+            display: getProj()
          });
    
          multiSelectorSingleSelect = new ListMultiSelector({
             multiSelect: false,
-            projection: getProj()
+            display: getProj()
          });
    
          multiSelectorAllowEmptyFalse = new ListMultiSelector({
             multiSelect: true,
             allowEmptyMultiSelection: false,
-            projection: getProj()
+            display: getProj()
          });
       });
       
@@ -50,7 +50,7 @@ define(['js!WSControls/Controllers/ListMultiSelector', 'js!WS.Data/Display/Displ
             assert.deepEqual(multiSelectorMultiSelect.getSelectedKeys(), ['кот', 'собака']);
             multiSelectorMultiSelect.setSelectedKeys(['крыса']);
             assert.deepEqual(multiSelectorMultiSelect.getSelectedKeys(), ['крыса']);
-            assert.equal(multiSelectorMultiSelect._options.projection.at(2).isSelected(), true);
+            assert.equal(multiSelectorMultiSelect._options.display.at(2).isSelected(), true);
             
             multiSelectorMultiSelect.setSelectedKeys([]);
          });
@@ -62,8 +62,8 @@ define(['js!WSControls/Controllers/ListMultiSelector', 'js!WS.Data/Display/Displ
             multiSelectorMultiSelect.addSelectedKeys(['собака']);
             assert.deepEqual(multiSelectorMultiSelect.getSelectedKeys(), ['кот', 'собака']);
       
-            assert.equal(multiSelectorMultiSelect._options.projection.at(0).isSelected(), true);
-            assert.equal(multiSelectorMultiSelect._options.projection.at(1).isSelected(), true);
+            assert.equal(multiSelectorMultiSelect._options.display.at(0).isSelected(), true);
+            assert.equal(multiSelectorMultiSelect._options.display.at(1).isSelected(), true);
    
             multiSelectorMultiSelect.setSelectedKeys([]);
          });
@@ -76,8 +76,8 @@ define(['js!WSControls/Controllers/ListMultiSelector', 'js!WS.Data/Display/Displ
             multiSelectorMultiSelect.toggleSelectedKeys(['кот']);
             assert.deepEqual(multiSelectorMultiSelect.getSelectedKeys(), ['собака', 'кот']);
    
-            assert.equal(multiSelectorMultiSelect._options.projection.at(0).isSelected(), true);
-            assert.equal(multiSelectorMultiSelect._options.projection.at(1).isSelected(), true);
+            assert.equal(multiSelectorMultiSelect._options.display.at(0).isSelected(), true);
+            assert.equal(multiSelectorMultiSelect._options.display.at(1).isSelected(), true);
    
             multiSelectorMultiSelect.setSelectedKeys([]);
          });
@@ -86,8 +86,8 @@ define(['js!WSControls/Controllers/ListMultiSelector', 'js!WS.Data/Display/Displ
             multiSelectorMultiSelect.setSelectedKeys(['кот', 'собака']);
             multiSelectorMultiSelect.removeSelectedKeys(['кот']);
             assert.deepEqual(multiSelectorMultiSelect.getSelectedKeys(), ['собака']);
-            assert.equal(multiSelectorMultiSelect._options.projection.at(0).isSelected(), false);
-            assert.equal(multiSelectorMultiSelect._options.projection.at(1).isSelected(), true);
+            assert.equal(multiSelectorMultiSelect._options.display.at(0).isSelected(), false);
+            assert.equal(multiSelectorMultiSelect._options.display.at(1).isSelected(), true);
    
             multiSelectorMultiSelect.removeSelectedKeys(['собака']);
             assert.deepEqual(multiSelectorMultiSelect.getSelectedKeys(), []);
@@ -116,8 +116,8 @@ define(['js!WSControls/Controllers/ListMultiSelector', 'js!WS.Data/Display/Displ
          it('check setSelectedKeys', function() {
             multiSelectorSingleSelect.setSelectedKeys(['кот', 'собака']);
             assert.deepEqual(multiSelectorSingleSelect.getSelectedKeys(), ['кот']);
-            assert.equal(multiSelectorSingleSelect._options.projection.at(0).isSelected(), true);
-            assert.equal(multiSelectorSingleSelect._options.projection.at(1).isSelected(), false);
+            assert.equal(multiSelectorSingleSelect._options.display.at(0).isSelected(), true);
+            assert.equal(multiSelectorSingleSelect._options.display.at(1).isSelected(), false);
    
             multiSelectorSingleSelect.setSelectedKeys([]);
          });
@@ -129,8 +129,8 @@ define(['js!WSControls/Controllers/ListMultiSelector', 'js!WS.Data/Display/Displ
             multiSelectorSingleSelect.addSelectedKeys(['кот', 'собака']);
             assert.deepEqual(multiSelectorSingleSelect.getSelectedKeys(), ['кот']);
    
-            assert.equal(multiSelectorSingleSelect._options.projection.at(0).isSelected(), true);
-            assert.equal(multiSelectorSingleSelect._options.projection.at(1).isSelected(), false);
+            assert.equal(multiSelectorSingleSelect._options.display.at(0).isSelected(), true);
+            assert.equal(multiSelectorSingleSelect._options.display.at(1).isSelected(), false);
    
             multiSelectorSingleSelect.setSelectedKeys([]);
          });
@@ -153,13 +153,13 @@ define(['js!WSControls/Controllers/ListMultiSelector', 'js!WS.Data/Display/Displ
          
          it('check selectedKeys', function() {
             assert.deepEqual(multiSelectorAllowEmptyFalse.getSelectedKeys(), ['кот']);
-            assert.equal(multiSelectorAllowEmptyFalse._options.projection.at(0).isSelected(), true);
+            assert.equal(multiSelectorAllowEmptyFalse._options.display.at(0).isSelected(), true);
          });
    
          it('check selectedKeys after set', function() {
             multiSelectorAllowEmptyFalse.setSelectedKeys([]);
             assert.deepEqual(multiSelectorAllowEmptyFalse.getSelectedKeys(), ['кот']);
-            assert.equal(multiSelectorAllowEmptyFalse._options.projection.at(0).isSelected(), true);
+            assert.equal(multiSelectorAllowEmptyFalse._options.display.at(0).isSelected(), true);
          });
          
       });

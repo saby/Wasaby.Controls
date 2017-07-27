@@ -12,7 +12,7 @@ define('js!WSControls/Lists/Selector', [
 
       _applyAllowEmpty: function () {
          if (!this._allowEmptySelection && this._isEmptyIndex(this._selectedIndex)) {
-            if (this._itemsProjection.getCount()) {
+            if (this._display.getCount()) {
                this.setSelectedIndex(0)
             }
          }
@@ -38,7 +38,7 @@ define('js!WSControls/Lists/Selector', [
 
       _getKeyByIndex: function (index) {
          if (this._hasItemByIndex(index) && !this._isEmptyIndex(index)) {
-            var itemContents = this._itemsProjection.at(index).getContents();
+            var itemContents = this._display.at(index).getContents();
             return ItemsUtil.getPropertyValue(itemContents, this._options.idProperty);
          }
          else {
@@ -50,12 +50,12 @@ define('js!WSControls/Lists/Selector', [
          if (id === undefined) {
             return -1;
          }
-         var projItem = ItemsUtil.getItemById(this._itemsProjection, id, this._options.idProperty);
-         return this._itemsProjection.getIndex(projItem);
+         var projItem = ItemsUtil.getItemById(this._display, id, this._options.idProperty);
+         return this._display.getIndex(projItem);
       },
 
       _hasItemByIndex: function (index) {
-         return (typeof index != 'undefined') && (index !== null) && (typeof this._itemsProjection.at(index) != 'undefined');
+         return (typeof index != 'undefined') && (index !== null) && (typeof this._display.at(index) != 'undefined');
       },
 
       setSelectedKey: function (id) {
@@ -74,8 +74,8 @@ define('js!WSControls/Lists/Selector', [
       },
 
       setSelectedByHash: function (hash) {
-         var elem = this._itemsProjection.getByHash(hash);
-         this.setSelectedIndex(this._itemsProjection.getIndex(elem));
+         var elem = this._display.getByHash(hash);
+         this.setSelectedIndex(this._display.getIndex(elem));
       },
 
       _isEmptyIndex: function (index) {

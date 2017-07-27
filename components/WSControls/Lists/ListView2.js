@@ -18,7 +18,7 @@ define('js!WSControls/Lists/ListView2', ['js!WSControls/Lists/Selector',
 
          _createDefaultMultiSelector: function() {
             return new ListMultiSelector({
-               projection: this._itemsProjection,
+               display: this._display,
                idProperty: this._options.idProperty,
                allowEmptyMultiSelection: this._options.allowEmptySelection,
                selectedKeys: this._options.selectedKeys,
@@ -33,7 +33,7 @@ define('js!WSControls/Lists/ListView2', ['js!WSControls/Lists/Selector',
 
          _mouseMove: function(e) {
             var hash = this._getDataHashFromTarget(e.target),
-                index = hash && this._itemsProjection ? this._itemsProjection.getIndexByHash(hash) : -1;
+                index = hash && this._display ? this._display.getIndexByHash(hash) : -1;
             
             if (this.hoveredIndex !== index) {
                this.hoveredIndex = index;

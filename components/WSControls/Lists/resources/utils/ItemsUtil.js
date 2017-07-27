@@ -46,14 +46,14 @@ define('js!WSControls/Lists/resources/utils/ItemsUtil', [
       },
 
       //TODO это наверное к Лехе должно уехать
-      getItemById: function(projection, id, idProperty) {
-         var list = projection.getCollection();
+      getItemById: function(display, id, idProperty) {
+         var list = display.getCollection();
          if (cInstance.instanceOfModule(list, 'WS.Data/Collection/RecordSet')) {
-            return projection.getItemBySourceItem(list.getRecordById(id));
+            return display.getItemBySourceItem(list.getRecordById(id));
          }
          else {
             var resItem;
-            projection.each(function(item, i){
+            display.each(function(item, i){
                if (ItemsUtil.getPropertyValue(item.getContents(), idProperty) == id) {
                   resItem = item;
                }

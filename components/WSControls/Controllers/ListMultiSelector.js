@@ -21,13 +21,13 @@ define('js!WSControls/Controllers/ListMultiSelector',
           * @param added[]
           * @param removed[]
           */
-         selectInProjection: function(added, removed) {
+         selectInDisplay: function(added, removed) {
             if(added.length || removed.length) {
-               var projection = this._getOption('projection'),
+               var display = this._getOption('display'),
                    self = this,
                    itemId;
-      
-               projection.each(function (projItem) {
+
+               display.each(function (projItem) {
                   itemId = ItemsUtil.getPropertyValue(projItem.getContents(), self._options.idProperty);
          
                   if (added.indexOf(itemId) !== -1) {
@@ -52,15 +52,15 @@ define('js!WSControls/Controllers/ListMultiSelector',
                 });
             
             if(added.length || removed.length) {
-               _private.selectInProjection.call(this, added, removed);
+               _private.selectInDisplay.call(this, added, removed);
             }
    
             if (!this.allowEmptyMultiSelection && !newArray.length) {
-               var projection = this._getOption('projection');
+               var display = this._getOption('display');
                
-               if (projection.getCount()) {
-                  newArray = [ItemsUtil.getPropertyValue(projection.at(0).getContents(), this._getOption('idProperty'))];
-                  _private.selectInProjection.call(this, newArray, []);
+               if (display.getCount()) {
+                  newArray = [ItemsUtil.getPropertyValue(display.at(0).getContents(), this._getOption('idProperty'))];
+                  _private.selectInDisplay.call(this, newArray, []);
                }
             }
             
@@ -75,7 +75,7 @@ define('js!WSControls/Controllers/ListMultiSelector',
             ListMultiSelector.superclass.constructor.call(this, cfg);
             
             this._options = {
-               projection: cfg.projection,
+               display: cfg.display,
                idProperty: cfg.idProperty,
                allowEmptyMultiSelection: cfg.allowEmptyMultiSelection,
                selectedKeys: cfg.selectedKeys,

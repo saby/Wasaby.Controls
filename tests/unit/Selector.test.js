@@ -14,7 +14,7 @@ define(['js!WSControls/Lists/Selector',
    'use strict';
 
    describe('WSControls.Selector', function () {
-      var data, dataRs, myEnum, projectionRs, projectionArray, projectionEnum;
+      var data, dataRs, myEnum;
 
       beforeEach(function() {
          data = [

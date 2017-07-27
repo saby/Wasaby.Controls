@@ -92,11 +92,11 @@ define('js!WSControls/Lists/ItemsControl', [
          _initItemBasedControllers: function() {
             if (this._items) {
                //TODO убрать дестрой, проверить утечки памяти
-               if (this._itemsProjection) {
-                  this._itemsProjection.destroy();
+               if (this._display) {
+                  this._display.destroy();
                }
-               this._itemsProjection = this._createDefaultProjection();
-               this._itemsProjection.subscribe('onCollectionChange', this._onCollectionChange);
+               this._display = this._createDefaultDisplay();
+               this._display.subscribe('onCollectionChange', this._onCollectionChange);
 
                if (this._multiSelector) {
                   this._multiSelector.destroy();
@@ -181,12 +181,12 @@ define('js!WSControls/Lists/ItemsControl', [
 
          _getRecordsForViewFlat: function() {
             var
-               projection = this._itemsProjection,
+               display = this._display,
                ctrl = this,
                records = [];
-            if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
+            if (display) {     //У таблицы могут позвать перерисовку, когда данных еще нет
                var prevGroupId = undefined;
-               projection.each(function (item, index, group) {
+               display.each(function (item, index, group) {
                   if (!isEmpty(ctrl._options.groupBy)) {
                      if (prevGroupId != group && group !== false) {
                         records.push(ctrl._getGroupItem(group, item));
@@ -201,11 +201,11 @@ define('js!WSControls/Lists/ItemsControl', [
 
 
 
-         _getRecordsForView: function(projection, cfg) {
+         _getRecordsForView: function(display, cfg) {
             return this._getRecordsForViewFlat.apply(this, arguments)
          },
 
-         _createDefaultProjection: function() {
+         _createDefaultDisplay: function() {
             return ItemsUtil.getDefaultDisplayFlat(this._items, this._options)
          },
    
@@ -216,15 +216,15 @@ define('js!WSControls/Lists/ItemsControl', [
          /**
           * Метод получения проекции по ID итема
           */
-         _getItemProjectionByItemId: function(id) {
-            return this._itemsProjection ? this._itemsProjection.getItemBySourceItem(this._items.getRecordById(id)) : null;
+         _getDisplayItemByItemId: function(id) {
+            return this._display ? this._display.getItemBySourceItem(this._items.getRecordById(id)) : null;
          },
 
          /**
           * Метод получения проекции по hash итема
           */
-         _getItemProjectionByHash: function(hash) {
-            return this._itemsProjection.getByHash(hash);
+         _getDisplayItemByHash: function(hash) {
+            return this._display.getByHash(hash);
          },
    
          /**
@@ -240,7 +240,7 @@ define('js!WSControls/Lists/ItemsControl', [
             /* У item'a могут быть вложенные ItemsControl'ы, учитываем это */
             if(itemContainer) {
                hash = itemContainer.getAttribute('data-hash');
-               return this._getItemProjectionByHash(hash) ? hash : this._getDataHashFromTarget(itemContainer.parentElement);
+               return this._getDisplayItemByHash(hash) ? hash : this._getDataHashFromTarget(itemContainer.parentElement);
             } else {
                return null;
             }
@@ -255,7 +255,7 @@ define('js!WSControls/Lists/ItemsControl', [
 
             //FIXME Временно, надо будет делать только при клике на чекбокс
             if (this._multiSelector) {
-               this._multiSelector.toggleSelectedKeys([ItemsUtil.getPropertyValue(this._getItemProjectionByHash(hash).getContents(), this._getOption('idProperty'))]);
+               this._multiSelector.toggleSelectedKeys([ItemsUtil.getPropertyValue(this._getDisplayItemByHash(hash).getContents(), this._getOption('idProperty'))]);
             }
             
          },
@@ -299,7 +299,7 @@ define('js!WSControls/Lists/ItemsControl', [
                      .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
                   this._loader = def;
                } else {
-                  if (this._itemsProjection) {
+                  if (this._display) {
                      this._redraw();
                   }
                   def = new Deferred();
@@ -352,8 +352,8 @@ define('js!WSControls/Lists/ItemsControl', [
 
          destroy: function() {
             ItemsControl.superclass.destroy.ally(this, arguments);
-            if (this._itemsProjection) {
-               this._itemsProjection.destroy();
+            if (this._display) {
+               this._display.destroy();
             }
             if (this._selector) {
                this._selector.destroy();

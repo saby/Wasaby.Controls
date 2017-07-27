@@ -16,7 +16,7 @@ define('js!WSControls/Lists/ItemsToolbar/ItemsToolbarCompatible',
          this.activeItem = cfg;
          
          if(cfg.hoveredIndex !== -1) {
-            var projItem = cfg.itemsProjection.at(cfg.hoveredIndex),
+            var projItem = cfg.display.at(cfg.hoveredIndex),
                 item = projItem.getContents(),
                 itemContainer = cfg.parentContainer.find('[data-hash=' + projItem.getHash() + ']'),
                 parentContainerCords = cfg.parentContainer[0].getBoundingClientRect();

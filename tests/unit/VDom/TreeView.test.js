@@ -4,7 +4,7 @@ define(['js!WSControls/Lists/TreeView2', 'js!WS.Data/Source/Memory'], function (
 
    function prepareCheckExpandData(treeView) {
       return {
-         itemsCount: treeView._itemsProjection.getCount(),
+         itemsCount: treeView._display.getCount(),
          _expandedItems: treeView._expandedItems
       }
    }
@@ -99,15 +99,15 @@ define(['js!WSControls/Lists/TreeView2', 'js!WS.Data/Source/Memory'], function (
             assert.deepEqual(prepareCheckExpandData(treeView), resultExpandUnknownItem);
          });
          it('Check expand correct node (item at 0)', function () {
-            treeView.expandItem(treeView._itemsProjection.at(0).getHash());
+            treeView.expandItem(treeView._display.at(0).getHash());
             assert.deepEqual(prepareCheckExpandData(treeView), resultExpandCorrectItemNode);
          });
          it('Check expand correct item hidden node (at 5)', function () {
-            treeView.expandItem(treeView._itemsProjection.at(5).getHash());
+            treeView.expandItem(treeView._display.at(5).getHash());
             assert.deepEqual(prepareCheckExpandData(treeView), resultExpandCorrectItemHiddenNode);
          });
          it('Check expand correct item leaf (at 8)', function () {
-            treeView.expandItem(treeView._itemsProjection.at(8).getHash());
+            treeView.expandItem(treeView._display.at(8).getHash());
             assert.deepEqual(prepareCheckExpandData(treeView), resultExpandCorrectItemLeaf);
          });
       });
@@ -117,15 +117,15 @@ define(['js!WSControls/Lists/TreeView2', 'js!WS.Data/Source/Memory'], function (
             assert.deepEqual(prepareCheckExpandData(treeView), resultCollapseUnknownItem);
          });
          it('Check collapse correct node (item at 0)', function () {
-            treeView.collapseItem(treeView._itemsProjection.at(0).getHash());
+            treeView.collapseItem(treeView._display.at(0).getHash());
             assert.deepEqual(prepareCheckExpandData(treeView), resultCollapseCorrectItemNode);
          });
          it('Check collapse correct item hidden node (at 2)', function () {
-            treeView.collapseItem(treeView._itemsProjection.at(2).getHash());
+            treeView.collapseItem(treeView._display.at(2).getHash());
             assert.deepEqual(prepareCheckExpandData(treeView), resultCollapseCorrectItemHiddenNode);
          });
          it('Check collapse correct item leaf (at 4)', function () {
-            treeView.collapseItem(treeView._itemsProjection.at(4).getHash());
+            treeView.collapseItem(treeView._display.at(4).getHash());
             assert.deepEqual(prepareCheckExpandData(treeView), resultCollapseCorrectItemLeaf);
          });
       });
@@ -135,23 +135,23 @@ define(['js!WSControls/Lists/TreeView2', 'js!WS.Data/Source/Memory'], function (
             assert.deepEqual(prepareCheckExpandData(treeView), resultToggleOrigin);
          });
          it('Check toggle [true] correct node (item at 0)', function () {
-            treeView.toggleItem(treeView._itemsProjection.at(0).getHash());
+            treeView.toggleItem(treeView._display.at(0).getHash());
             assert.deepEqual(prepareCheckExpandData(treeView), resultToggleCorrectItemNode);
          });
          it('Check toggle [false] correct node (item at 0)', function () {
-            treeView.toggleItem(treeView._itemsProjection.at(0).getHash());
+            treeView.toggleItem(treeView._display.at(0).getHash());
             assert.deepEqual(prepareCheckExpandData(treeView), resultToggleOrigin);
          });
          it('Check toggle [true] correct item hidden node (at 2)', function () {
-            treeView.toggleItem(treeView._itemsProjection.at(2).getHash());
+            treeView.toggleItem(treeView._display.at(2).getHash());
             assert.deepEqual(prepareCheckExpandData(treeView), resultToggleCorrectItemHiddenNode);
          });
          it('Check toggle [false] correct item hidden node (at 2)', function () {
-            treeView.toggleItem(treeView._itemsProjection.at(2).getHash());
+            treeView.toggleItem(treeView._display.at(2).getHash());
             assert.deepEqual(prepareCheckExpandData(treeView), resultToggleOrigin);
          });
          it('Check toggle correct item leaf (at 4)', function () {
-            treeView.toggleItem(treeView._itemsProjection.at(4).getHash());
+            treeView.toggleItem(treeView._display.at(4).getHash());
             assert.deepEqual(prepareCheckExpandData(treeView), resultToggleOrigin);
          });
       });

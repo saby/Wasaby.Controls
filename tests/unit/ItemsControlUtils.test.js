@@ -90,9 +90,9 @@ define(['js!WSControls/Lists/resources/utils/DataSourceUtil', 'js!WSControls/Lis
             it('Flat display Array', function () {
                proj = ItemsUtil.getDefaultDisplayFlat(data, cfg1);
 
-               assert.equal(proj.getSort()[0], sortFnc, 'ItemsSortMethod doesn\'t transfer to projection');
-               assert.equal(proj.getFilter()[0], filterFnc, 'itemsFilterMethod doesn\'t transfer to projection');
-               assert.equal(proj.getGroup(), groupFnc, 'groupBy doesn\'t transfer to projection');
+               assert.equal(proj.getSort()[0], sortFnc, 'ItemsSortMethod doesn\'t transfer to display');
+               assert.equal(proj.getFilter()[0], filterFnc, 'itemsFilterMethod doesn\'t transfer to display');
+               assert.equal(proj.getGroup(), groupFnc, 'groupBy doesn\'t transfer to display');
             });
 
             it('Flat display Recordset', function () {
@@ -101,9 +101,9 @@ define(['js!WSControls/Lists/resources/utils/DataSourceUtil', 'js!WSControls/Lis
                   idProperty : 'id'
                });
                proj = ItemsUtil.getDefaultDisplayFlat(rs, cfg1);
-               assert.equal(proj.getSort()[0], sortFnc, 'ItemsSortMethod doesn\'t transfer to projection');
-               assert.equal(proj.getFilter()[0], filterFnc, 'itemsFilterMethod doesn\'t transfer to projection');
-               assert.equal(proj.getGroup(), groupFnc, 'groupBy doesn\'t transfer to projection');
+               assert.equal(proj.getSort()[0], sortFnc, 'ItemsSortMethod doesn\'t transfer to display');
+               assert.equal(proj.getFilter()[0], filterFnc, 'itemsFilterMethod doesn\'t transfer to display');
+               assert.equal(proj.getGroup(), groupFnc, 'groupBy doesn\'t transfer to display');
 
                proj = ItemsUtil.getDefaultDisplayFlat(rs, cfg2);
 
@@ -134,17 +134,17 @@ define(['js!WSControls/Lists/resources/utils/DataSourceUtil', 'js!WSControls/Lis
                   dictionary: ['Первый', 'Второй', 'Третий']
                });
 
-               var projectionRs = ItemsUtil.getDefaultDisplayFlat(rs, {}),
-               projectionArray = ItemsUtil.getDefaultDisplayFlat(data, {}),
-               projectionEnum = ItemsUtil.getDefaultDisplayFlat(myEnum, {});
+               var displayRs = ItemsUtil.getDefaultDisplayFlat(rs, {}),
+               displayArray = ItemsUtil.getDefaultDisplayFlat(data, {}),
+               displayEnum = ItemsUtil.getDefaultDisplayFlat(myEnum, {});
 
-               var value = ItemsUtil.getItemById(projectionRs, 2);
+               var value = ItemsUtil.getItemById(displayRs, 2);
                assert.equal(rs.getRecordById(2), value.getContents(), 'getItemById doesn\'t return record from recordset');
 
-               value = ItemsUtil.getItemById(projectionArray, 2, 'id');
+               value = ItemsUtil.getItemById(displayArray, 2, 'id');
                assert.equal(data[1], value.getContents(), 'getItemById doesn\'t return object from array');
 
-               value = ItemsUtil.getItemById(projectionEnum, 'Второй');
+               value = ItemsUtil.getItemById(displayEnum, 'Второй');
                assert.equal('Второй', value.getContents(), 'getPropertyValue doesn\'t return value of Enum');
             });
 
