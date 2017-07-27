@@ -242,6 +242,8 @@
    height: @controls-AjaxLoader-indicator-height;
 }
 
+//region dragndrop
+
 .controls-DragNDrop__draggedItem {
   position: absolute;
   width: @drag-and-drop-object-width;
@@ -260,9 +262,8 @@
   font-family: @default-font-name;
   font-size: 10px;
 }
-
-.dragdropBody {
-   .controls-ListView {
+.controls-dragndrop {
+   &.controls-ListView {
       .controls-DragNDrop__placeholder {
          opacity: 0.35;
          background-color: @default-itemHover-color;
@@ -271,10 +272,8 @@
          outline: @drag-and-drop-border;
       }
    }
-}
 
-.dragdropBody {
-   .controls-ListView__verticalDragNDrop {
+   &.controls-ListView__verticalDragNDrop {
       .controls-DragNDrop__insertBefore {
          &, > td {
             border-top: @drag-and-drop-border;
@@ -286,18 +285,22 @@
          }
       }
    }
-  .controls-ListView__horisontalDragNDrop {
+
+
+   &.controls-ListView__horisontalDragNDrop {
      .controls-DragNDrop__insertBefore{
         border-left: @drag-and-drop-border;
      }
      .controls-DragNDrop__insertAfter {
         border-right: @drag-and-drop-border;
      }
-  }
-  .controls-ItemsToolbar {
+   }
+
+   .controls-ItemsToolbar {
      display: none !important;
-  }
+   }
 }
+//endregion dragndrop
 
 .controls-ListView__results{
   background: #FFF;
