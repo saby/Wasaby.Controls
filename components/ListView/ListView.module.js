@@ -3245,13 +3245,17 @@ define('js!SBIS3.CONTROLS.ListView',
          _getNextOffset: function(){
             if (this._infiniteScrollState.mode == 'down' || this._infiniteScrollState.mode == 'demand'){
                if (this._getSourceNavigationType == 'Offset') {
-                  return Math.min(this._scrollOffset.bottom + this._limit, this._getItemsProjection().getCount());
+                  return Math.min(this._scrollOffset.bottom + this._limit, this._getRootCount());
                } else {
                   return this._scrollOffset.bottom + this._limit;
                }
             } else {
                return this._scrollOffset.top - this._limit;
             }
+         },
+
+         _getRootCount: function(){
+            return this._getItemsProjection().getCount();
          },
 
          _updateScrollOffset: function(){ 
