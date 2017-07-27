@@ -2,11 +2,11 @@
  * Created by am.gerasimov on 06.03.2017.
  */
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
-define(['js!WSControls/Controllers/ListSelector',
+define(['js!WSControls/Lists/Selector',
       'js!WS.Data/Collection/RecordSet',
       'js!WSControls/Lists/resources/utils/ItemsUtil',
       'js!WS.Data/Types/Enum'],
-   function (ListSelector,
+   function (Selector,
              RecordSet,
              ItemsUtil,
                Enum) {
@@ -31,33 +31,30 @@ define(['js!WSControls/Controllers/ListSelector',
             idProperty : 'id'
          });
 
-         projectionRs = ItemsUtil.getDefaultDisplayFlat(dataRs, {});
-         projectionArray = ItemsUtil.getDefaultDisplayFlat(data, {});
-         projectionEnum = ItemsUtil.getDefaultDisplayFlat(myEnum, {});
       });
 
       describe('Base Func', function () {
 
          it('SelectedIndex', function () {
-            var selector = new ListSelector({
+            var selector = new Selector({
                selectedIndex : 2,
-               projection: projectionRs,
+               items: dataRs,
                idProperty: 'id'
             });
             assert.equal(2, selector.getSelectedIndex(), 'Option selectedIndex doesn\'t work (RS)');
             assert.equal(3, selector.getSelectedKey(), 'Option selectedIndex doesn\'t work (RS)');
 
-            selector = new ListSelector({
+            selector = new Selector({
                selectedIndex : 2,
-               projection: projectionArray,
+               items: data,
                idProperty: 'id'
             });
             assert.equal(2, selector.getSelectedIndex(), 'Option selectedIndex doesn\'t work (Array)');
             assert.equal(3, selector.getSelectedKey(), 'Option selectedIndex doesn\'t work (Array)');
 
-            selector = new ListSelector({
+            selector = new Selector({
                selectedIndex : 2,
-               projection: projectionEnum,
+               items: myEnum,
                idProperty: 'id'
             });
             assert.equal(2, selector.getSelectedIndex(), 'Option selectedIndex doesn\'t work (Enum)');
@@ -66,9 +63,9 @@ define(['js!WSControls/Controllers/ListSelector',
 
          describe('AllowEmpty', function () {
             it('true', function () {
-               var selector = new ListSelector({
+               var selector = new Selector({
                   allowEmptySelection: true,
-                  projection: projectionRs,
+                  items: dataRs,
                   idProperty: 'id'
                });
                assert.equal(-1, selector.getSelectedIndex(), 'Option allowEmptySelection doesn\'t work');
@@ -76,10 +73,10 @@ define(['js!WSControls/Controllers/ListSelector',
             });
 
             it('false + index', function () {
-               var selector = new ListSelector({
+               var selector = new Selector({
                   allowEmptySelection: false,
                   selectedIndex: 2,
-                  projection: projectionRs,
+                  items: dataRs,
                   idProperty: 'id'
                });
                assert.equal(2, selector.getSelectedIndex(), 'Option allowEmptySelection doesn\'t work');
@@ -87,10 +84,10 @@ define(['js!WSControls/Controllers/ListSelector',
             });
 
             it('false + key', function () {
-               var selector = new ListSelector({
+               var selector = new Selector({
                   allowEmptySelection: false,
                   selectedKey: 3,
-                  projection: projectionRs,
+                  items: dataRs,
                   idProperty: 'id'
                });
                assert.equal(2, selector.getSelectedIndex(), 'Option allowEmptySelection doesn\'t work');
@@ -98,9 +95,9 @@ define(['js!WSControls/Controllers/ListSelector',
             });
 
             it('false', function () {
-               var selector = new ListSelector({
+               var selector = new Selector({
                   allowEmptySelection: false,
-                  projection: projectionRs,
+                  items: dataRs,
                   idProperty: 'id'
                });
                assert.equal(0, selector.getSelectedIndex(), 'Option allowEmptySelection doesn\'t work');
@@ -108,9 +105,9 @@ define(['js!WSControls/Controllers/ListSelector',
             })
          });
          it('SetSelectedIndex', function () {
-            var selector = new ListSelector({
+            var selector = new Selector({
                selectedIndex : 2,
-               projection: projectionRs,
+               items: dataRs,
                idProperty: 'id'
             });
             selector.setSelectedIndex(3);
@@ -119,25 +116,25 @@ define(['js!WSControls/Controllers/ListSelector',
          });
 
          it('SelectedKey', function () {
-            var selector = new ListSelector({
+            var selector = new Selector({
                selectedKey : 2,
-               projection: projectionRs,
+               items: dataRs,
                idProperty: 'id'
             });
             assert.equal(2, selector.getSelectedKey(), 'Option selectedKey doesn\'t work (RS)');
             assert.equal(1, selector.getSelectedIndex(), 'Option selectedKey doesn\'t work (RS)');
 
-            selector = new ListSelector({
+            selector = new Selector({
                selectedKey : 2,
-               projection: projectionArray,
+               items: data,
                idProperty: 'id'
             });
             assert.equal(2, selector.getSelectedKey(), 'Option selectedKey doesn\'t work (Array)');
             assert.equal(1, selector.getSelectedIndex(), 'Option selectedKey doesn\'t work (Array)');
 
-            selector = new ListSelector({
+            selector = new Selector({
                selectedKey : 'Второй',
-               projection: projectionEnum,
+               items: myEnum,
                idProperty: 'id'
             });
             assert.equal('Второй', selector.getSelectedKey(), 'Option selectedKey doesn\'t work (Enum)');
@@ -145,9 +142,9 @@ define(['js!WSControls/Controllers/ListSelector',
          });
 
          it('SetSelectedKey', function () {
-            var selector = new ListSelector({
+            var selector = new Selector({
                selectedIndex : 2,
-               projection: projectionRs,
+               items: dataRs,
                idProperty: 'id'
             });
             selector.setSelectedKey(3);

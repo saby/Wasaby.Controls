@@ -58,10 +58,10 @@ define('js!WSControls/Lists/TreeView2', [
       _createDefaultProjection: function() {
          return TreeItemsUtil.getDefaultTreeDisplay(this._items, this._options);
       },
-      _onClickFn: function(event) {
+      _onClick: function(event) {
          var
             target = $(event.target);
-         TreeView.superclass._onClickFn.apply(this, arguments);
+         TreeView.superclass._onClick.apply(this, arguments);
          if (target.closest('.js-controls-TreeView__expand').length) {
             this.toggleItem(target.closest('.js-controls-ListView__item').attr('data-hash'));
          }

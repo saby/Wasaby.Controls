@@ -1,33 +1,22 @@
-define('js!WSControls/Lists/ListView2', ['js!WSControls/Lists/ItemsControl',
+define('js!WSControls/Lists/ListView2', ['js!WSControls/Lists/Selector',
       'Core/core-instance',
-      'js!WSControls/Controllers/ListSelector',
       'tmpl!WSControls/Lists/ListView2',
       'tmpl!WSControls/Lists/resources/ItemTemplate',
       'tmpl!WSControls/Lists/resources/GroupTemplate',
       'js!WSControls/Controllers/ListMultiSelector',
       'js!WSControls/Lists/ItemsToolbar/ItemsToolbarCompatible'],
 
-   function(ItemsControl, cInstance, ListSelector, template, ItemTemplate, groupTemplate, ListMultiSelector) {
+   function(Selector, cInstance, template, ItemTemplate, groupTemplate, ListMultiSelector) {
       
       var INDICATOR_DELAY = 2000;
       
-      var ListView = ItemsControl.extend({
+      var ListView = Selector.extend({
          _template: template,
-         
-         _needSelector: true,
          _needMultiSelector: true,
          
          _defaultGroupTemplate: groupTemplate,
          _defaultItemTemplate: ItemTemplate,
-         _createDefaultSelector : function() {
-            return new ListSelector({
-               selectedIndex : this._options.selectedIndex,
-               selectedKey : this._options.selectedKey,
-               allowEmptySelection: this._options.allowEmptySelection,
-               projection: this._itemsProjection,
-               idProperty: this._options.idProperty
-            })
-         },
+
          _createDefaultMultiSelector: function() {
             return new ListMultiSelector({
                projection: this._itemsProjection,
@@ -39,10 +28,15 @@ define('js!WSControls/Lists/ListView2', ['js!WSControls/Lists/ItemsControl',
          },
          _getItemData: function() {
             var data = ListView.superclass._getItemData.apply(this, arguments);
-            data.selectedKey = this._selector.getSelectedKey();
+            data.selectedKey = this.getSelectedKey();
             return data;
          },
-   
+
+         _onClickInner: function(e, hash) {
+            this.setSelectedByHash(hash);
+            this._onSelectedItemChange();
+         },
+
          _mouseMove: function(e) {
             var hash = this._getDataHashFromTarget(e.target),
                 index = hash && this._itemsProjection ? this._itemsProjection.getIndexByHash(hash) : -1;

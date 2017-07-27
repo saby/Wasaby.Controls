@@ -1,43 +1,18 @@
-define('js!WSControls/Controllers/ListSelector', [
-   'Core/Abstract',
+define('js!WSControls/Lists/Selector', [
+   'js!WSControls/Lists/ItemsControl',
    'js!WSControls/Lists/resources/utils/ItemsUtil'
-], function(Abstract, ItemsUtil) {
-   var ListSelector;
-   ListSelector = Abstract.extend({
-      _useNativeAsMain: true,
+], function(ItemsControl, ItemsUtil) {
+   var Selector;
+   Selector = ItemsControl.extend({
+      _controlName: 'WSControls/Lists/Selector',
       constructor: function (cfg) {
-         ListSelector.superclass.constructor.apply(this, arguments);
-         this._prepareData(cfg);
-         this._applyAllowEmpty();
+         Selector.superclass.constructor.apply(this, arguments);
          this._publish('onSelectedItemChange');
       },
 
-      _prepareData: function (cfg) {
-         this._options = {
-            selectedIndex: cfg.selectedIndex,
-            allowEmptySelection: cfg.allowEmptySelection,
-            selectedKey: cfg.selectedKey,
-            projection: cfg.projection,
-            idProperty: cfg.idProperty
-
-         };
-         this._selectedIndex = (this._options.selectedIndex !== undefined && this._options.selectedIndex !== null) ? this._options.selectedIndex : -1;
-         this.allowEmptySelection = this._options.allowEmptySelection !== false;
-         this._selectedKey = this._options.selectedKey || null;
-
-         if (this._isEmptyIndex(this._selectedIndex)) {
-            //Если передали пустой индекс и ключ, определяем индекс по ключу
-            this._prepareSelectedIndexByKey(this._selectedKey)
-         }
-         else {
-            //если индекс передали - вычисляем ключ
-            this._prepareSelectedKeyByIndex(this._selectedIndex)
-         }
-      },
-
       _applyAllowEmpty: function () {
-         if (!this.allowEmptySelection && this._isEmptyIndex(this._selectedIndex)) {
-            if (this._options.projection.getCount()) {
+         if (!this._allowEmptySelection && this._isEmptyIndex(this._selectedIndex)) {
+            if (this._itemsProjection.getCount()) {
                this.setSelectedIndex(0)
             }
          }
@@ -57,7 +32,7 @@ define('js!WSControls/Controllers/ListSelector', [
 
       _getKeyByIndex: function (index) {
          if (this._hasItemByIndex(index) && !this._isEmptyIndex(index)) {
-            var itemContents = this._options.projection.at(index).getContents();
+            var itemContents = this._itemsProjection.at(index).getContents();
             return ItemsUtil.getPropertyValue(itemContents, this._options.idProperty);
          }
          else {
@@ -69,12 +44,12 @@ define('js!WSControls/Controllers/ListSelector', [
          if (id === undefined) {
             return -1;
          }
-         var projItem = ItemsUtil.getItemById(this._options.projection, id, this._options.idProperty);
-         return this._options.projection.getIndex(projItem);
+         var projItem = ItemsUtil.getItemById(this._itemsProjection, id, this._options.idProperty);
+         return this._itemsProjection.getIndex(projItem);
       },
 
       _hasItemByIndex: function (index) {
-         return (typeof index != 'undefined') && (index !== null) && (typeof this._options.projection.at(index) != 'undefined');
+         return (typeof index != 'undefined') && (index !== null) && (typeof this._itemsProjection.at(index) != 'undefined');
       },
 
       setSelectedKey: function (id) {
@@ -93,8 +68,8 @@ define('js!WSControls/Controllers/ListSelector', [
       },
 
       setSelectedByHash: function (hash) {
-         var elem = this._options.projection.getByHash(hash);
-         this.setSelectedIndex(this._options.projection.getIndex(elem));
+         var elem = this._itemsProjection.getByHash(hash);
+         this.setSelectedIndex(this._itemsProjection.getIndex(elem));
       },
 
       _isEmptyIndex: function (index) {
@@ -110,7 +85,31 @@ define('js!WSControls/Controllers/ListSelector', [
 
       _notifySelectedItem: function (index, key) {
          this._notify('onSelectedItemChange', index, key);
+      },
+
+      _onSelectedItemChange: function() {
+         this._updateTplData();
+         this._setDirty();
+      },
+
+      _displayChangeCallback: function() {
+         this._selectedIndex = (this._options.selectedIndex !== undefined && this._options.selectedIndex !== null) ? this._options.selectedIndex : -1;
+         this._allowEmptySelection = this._options.allowEmptySelection !== false;
+         this._selectedKey = this._options.selectedKey || null;
+
+         if (this._isEmptyIndex(this._selectedIndex)) {
+            //Если передали пустой индекс и ключ, определяем индекс по ключу
+            this._prepareSelectedIndexByKey(this._selectedKey)
+         }
+         else {
+            //если индекс передали - вычисляем ключ
+            this._prepareSelectedKeyByIndex(this._selectedIndex)
+         }
+
+         this._applyAllowEmpty();
+         Selector.superclass._displayChangeCallback.apply(this, arguments);
       }
    });
-   return ListSelector;
+
+   return Selector;
 });

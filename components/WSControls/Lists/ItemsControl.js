@@ -61,20 +61,17 @@ define('js!WSControls/Lists/ItemsControl', [
 
          _itemsTemplate: ItemsTemplate,
 
-
-         _needSelector: false,
          _selector: null,
 
          constructor: function (cfg) {
 
             ItemsControl.superclass.constructor.apply(this, arguments);
 
-            this._itemTpl = cfg.itemTpl || this._defaultItemTemplate;
-            this._itemContentTpl = cfg.itemContentTpl || this._defaultItemContentTemplate;
-            this._groupTemplate = cfg.groupTemplate || this._defaultGroupTemplate;
+            this._itemTpl = this._options.itemTpl || this._defaultItemTemplate;
+            this._itemContentTpl = this._options.itemContentTpl || this._defaultItemContentTemplate;
+            this._groupTemplate = this._options.groupTemplate || this._defaultGroupTemplate;
 
             this._onCollectionChange = onCollectionChange.bind(this);
-            this._onSelectorChange = onSelectorChange.bind(this);
 
             if (this._options.items) {
                this._items = this._options.items;
@@ -92,7 +89,6 @@ define('js!WSControls/Lists/ItemsControl', [
             }
          },
 
-
          _initItemBasedControllers: function() {
             if (this._items) {
                //TODO убрать дестрой, проверить утечки памяти
@@ -102,17 +98,10 @@ define('js!WSControls/Lists/ItemsControl', [
                this._itemsProjection = this._createDefaultProjection();
                this._itemsProjection.subscribe('onCollectionChange', this._onCollectionChange);
 
-               if (this._selector) {
-                  this._selector.destroy();
-               }
                if (this._multiSelector) {
                   this._multiSelector.destroy();
                }
-               
-               if (this._needSelector) {
-                  this._selector = this._createDefaultSelector();
-                  this._selector.subscribe('onSelectedItemChange', this._onSelectorChange)
-               }
+
                if(this._needMultiSelector) {
                   this._multiSelector = this._createDefaultMultiSelector();
                }
@@ -219,10 +208,6 @@ define('js!WSControls/Lists/ItemsControl', [
          _createDefaultProjection: function() {
             return ItemsUtil.getDefaultDisplayFlat(this._items, this._options)
          },
-
-         _createDefaultSelector: function() {
-            /*Must be implemented*/
-         },
    
          _createDefaultMultiSelector: function() {
             /*Must be implemented*/
@@ -263,13 +248,11 @@ define('js!WSControls/Lists/ItemsControl', [
    
          //<editor-fold desc='EventHandlers'>
 
-         _onClickFn: function (evt) {
+         _onClick: function (evt) {
             var hash = this._getDataHashFromTarget(evt.nativeEvent.target);
-            
-            if (this._selector) {
-               this._selector.setSelectedByHash(hash);
-               onSelectorChange.apply(this)
-            }
+
+            this._onClickInner(evt, hash);
+
             //FIXME Временно, надо будет делать только при клике на чекбокс
             if (this._multiSelector) {
                this._multiSelector.toggleSelectedKeys([ItemsUtil.getPropertyValue(this._getItemProjectionByHash(hash).getContents(), this._getOption('idProperty'))]);
@@ -386,12 +369,6 @@ define('js!WSControls/Lists/ItemsControl', [
 
    var onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
       this._displayChangeCallback();
-      this._setDirty();
-   };
-
-   var onSelectorChange = function() {
-      this._itemData = null;
-      this._updateTplData();
       this._setDirty();
    };
 
