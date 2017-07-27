@@ -1,4 +1,5 @@
-.genie-showEmptyElements .controls-Panel{
-   min-width: 75px;
-   min-height: 24px;
+/*group*/
+.genie-showEmptyElements .controls-Panel {
+  min-width: 75px;
+  min-height: 24px;
 }
