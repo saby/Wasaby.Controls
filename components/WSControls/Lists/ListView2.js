@@ -33,7 +33,8 @@ define('js!WSControls/Lists/ListView2', ['js!WSControls/Lists/ItemsControl',
                projection: this._itemsProjection,
                idProperty: this._options.idProperty,
                allowEmptyMultiSelection: this._options.allowEmptySelection,
-               selectedKeys: this._options.selectedKeys
+               selectedKeys: this._options.selectedKeys,
+               multiSelect: this._options.multiSelect
             })
          },
          _getItemData: function() {

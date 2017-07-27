@@ -79,7 +79,7 @@ define('js!WSControls/Controllers/ListMultiSelector',
                idProperty: cfg.idProperty,
                allowEmptyMultiSelection: cfg.allowEmptyMultiSelection,
                selectedKeys: cfg.selectedKeys,
-               multiSelect: cfg.multiSelect
+               multiSelect: cfg.multiSelect !== undefined ? cfg.multiSelect : true
             };
             
             this.selectedKeys = cfg.selectedKeys || [];
