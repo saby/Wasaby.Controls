@@ -700,10 +700,14 @@ define(
          this._inputField = $('.js-controls-FormattedTextBox__field', this.getContainer().get(0));
          //Control.module прерывает focusin, сюда он не долетает. нужно отлавливать наше событие, которое стрельнет после setActive
          this.subscribe('onFocusIn', function () {
+            //событие onFocusIn не гарантирует, что нативный фокус уже стоит в компоненте. Для правильной работы установки каретки, переводим фокус вручную
             //В FireFox если фокус находтся не в блоке, куда мы хотим заколапсить курсор, то этого сделать не получится.
             //Поэтому перед созданием курсора, установим фокус в contenteditable блок.
             if (constants.browser.firefox) {
                self._inputField.focus();
+            }
+            else {
+               self.getContainer().focus();
             }
             self._focusHandler();
          });
