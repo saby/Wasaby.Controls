@@ -1,13 +1,8 @@
 define('js!WSControls/Lists/ItemsControl', [
    'Core/core-extend',
-   'Core/core-functions',
-   'js!WS.Data/Collection/IBind',
    'js!WSControls/Control/Base',
-   'js!WS.Data/Collection/RecordSet',
    'Core/helpers/Object/isEmpty',
-   'Core/helpers/string-helpers',
    'Core/Sanitize',
-   'js!WS.Data/Utils',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'tmpl!WSControls/Lists/resources/ItemsTemplate',
    'tmpl!WSControls/Lists/resources/ItemTemplate',
@@ -19,14 +14,9 @@ define('js!WSControls/Lists/ItemsControl', [
    'Core/core-instance',
    'js!WSControls/DOMHelpers/DOMHelpers'
 ], function (extend,
-             cFunctions,
-             IBindCollection,
              BaseControl,
-             RecordSet,
              isEmpty,
-             strHelpers,
              Sanitize,
-             Utils,
              TemplateUtil,
              ItemsTemplate,
              ItemTemplate,
@@ -105,6 +95,7 @@ define('js!WSControls/Lists/ItemsControl', [
 
          _initItemBasedControllers: function() {
             if (this._items) {
+               //TODO убрать дестрой, проверить утечки памяти
                if (this._itemsProjection) {
                   this._itemsProjection.destroy();
                }
@@ -114,19 +105,29 @@ define('js!WSControls/Lists/ItemsControl', [
                if (this._selector) {
                   this._selector.destroy();
                }
+               if (this._multiSelector) {
+                  this._multiSelector.destroy();
+               }
+               
                if (this._needSelector) {
                   this._selector = this._createDefaultSelector();
                   this._selector.subscribe('onSelectedItemChange', this._onSelectorChange)
+               }
+               if(this._needMultiSelector) {
+                  this._multiSelector = this._createDefaultMultiSelector();
                }
             }
          },
 
          _itemsChangeCallback: function(initBaseControllers) {
-            if (initBaseControllers) {
-               this._initItemBasedControllers();
-            }
-            this._records = this._getRecordsForView();
+            this._initItemBasedControllers();
+            this._displayChangeCallback();
             this._notify('onItemsReady');
+         },
+
+         //при изменениях в проекции
+         _displayChangeCallback: function() {
+            this._records = this._getRecordsForView();
             this._updateTplData();
          },
 
@@ -159,6 +160,7 @@ define('js!WSControls/Lists/ItemsControl', [
          },
          
          _updateTplData: function() {
+            //TODO Возможно вычисление можно сделать прямо в шаблоне
             this.tplData = this._getItemData();
          },
 
@@ -221,6 +223,10 @@ define('js!WSControls/Lists/ItemsControl', [
          _createDefaultSelector: function() {
             /*Must be implemented*/
          },
+   
+         _createDefaultMultiSelector: function() {
+            /*Must be implemented*/
+         },
 
          /**
           * Метод получения проекции по ID итема
@@ -258,10 +264,17 @@ define('js!WSControls/Lists/ItemsControl', [
          //<editor-fold desc='EventHandlers'>
 
          _onClickFn: function (evt) {
+            var hash = this._getDataHashFromTarget(evt.nativeEvent.target);
+            
             if (this._selector) {
-               this._selector.setSelectedByHash(this._getDataHashFromTarget(evt.nativeEvent.target));
+               this._selector.setSelectedByHash(hash);
                onSelectorChange.apply(this)
             }
+            //FIXME Временно, надо будет делать только при клике на чекбокс
+            if (this._multiSelector) {
+               this._multiSelector.toggleSelectedKeys([ItemsUtil.getPropertyValue(this._getItemProjectionByHash(hash).getContents(), this._getOption('idProperty'))]);
+            }
+            
          },
 
          itemActionActivated: function(number, evt) {
@@ -362,6 +375,9 @@ define('js!WSControls/Lists/ItemsControl', [
             if (this._selector) {
                this._selector.destroy();
             }
+            if (this._multiSelector) {
+               this._multiSelector.destroy();
+            }
             if (this._dataSourceController) {
                this._dataSourceController.destroy();
             }
@@ -369,7 +385,7 @@ define('js!WSControls/Lists/ItemsControl', [
       });
 
    var onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
-      this._itemsChangeCallback(action === IBindCollection.ACTION_RESET);
+      this._displayChangeCallback();
       this._setDirty();
    };
 

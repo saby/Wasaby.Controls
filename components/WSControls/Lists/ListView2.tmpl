@@ -1,9 +1,9 @@
 <div class="controls-ListView {{multiselect !== false ? 'controls-ListView__multiselect' : 'controls-ListView__multiselect__off'}}{{ _serverRender ? ' controls-ListView__dataLoaded'}}"
      event:onclick="_onClickFn()"
-     event:onmouseleave="mouseLeave()"
-     event:onmousemove="mouseMove()">
+     event:onmouseleave="_mouseLeave()"
+     event:onmousemove="_mouseMove()">
    <div class="controls-ListView__itemsContainer">
-      <ws:partial template="{{_itemsTemplate}}" hoveredItem="{{_hoveredItem}}" records="{{_records}}"
+      <ws:partial template="{{_itemsTemplate}}" hoveredIndex="{{hoveredIndex}}" records="{{_records}}"
                   tplData="{{tplData}}" scope="{{...}}"/>
    </div>
 
