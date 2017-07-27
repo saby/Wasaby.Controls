@@ -4,7 +4,7 @@
      event:onmousemove="_mouseMove()">
    <div class="controls-ListView__itemsContainer">
       <ws:partial template="{{_itemsTemplate}}" hoveredIndex="{{hoveredIndex}}" records="{{_records}}"
-                  tplData="{{tplData}}" scope="{{...}}"/>
+                  tplData="{{_tplData}}" scope="{{...}}"/>
    </div>
 
    <ws:if data="{{loading}}">

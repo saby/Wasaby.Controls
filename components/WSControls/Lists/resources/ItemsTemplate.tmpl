@@ -1,11 +1,11 @@
 <ws:for data="index,item in records">
     <ws:if data="{{ item.getContents }}">
         <ws:partial
-                template="{{tplData.itemTpl}}"
-                scope="{{tplData}}"
+                template="{{_tplData.itemTpl}}"
+                scope="{{_tplData}}"
                 item="{{item.getContents()}}"
                 projItem="{{item}}"
-                selected="{{tplData.selectedKey == tplData.getPropertyValue(item.getContents(), tplData.idProperty)}}"
+                selected="{{_tplData.selectedKey == _tplData.getPropertyValue(item.getContents(), _tplData.idProperty)}}"
                 multiSelected="{{ item.isSelected() }}"
                 hovered="{{index === hoveredIndex}}"/>
     </ws:if>

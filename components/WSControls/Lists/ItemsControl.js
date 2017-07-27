@@ -48,8 +48,8 @@ define('js!WSControls/Lists/ItemsControl', [
          _limit: undefined,
          _offset: undefined,
 
-         tplData: null,
-         records: null,
+         _tplData: null,
+         _records: null,
 
          _itemData: null,
          _itemContentTpl: null,
@@ -161,7 +161,7 @@ define('js!WSControls/Lists/ItemsControl', [
          
          _updateTplData: function() {
             //TODO Возможно вычисление можно сделать прямо в шаблоне
-            this.tplData = this._getItemData();
+            this._tplData = this._getItemData();
          },
 
 
