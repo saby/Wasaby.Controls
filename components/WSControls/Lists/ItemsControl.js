@@ -284,9 +284,9 @@ define('js!WSControls/Lists/ItemsControl', [
 
                this._cancelLoading();
 
-               var filterForReload = this._getFilterForReload();
+               var queryFilter = this._prepareQueryFilter();
                if (this._dataSource) {
-                  var result = this._notify('onBeforeDataLoad', filterForReload, this._sorting, this._offset, this._limit);
+                  var result = this._notify('onBeforeDataLoad', queryFilter, this._sorting, this._offset, this._limit);
                   if (result) {
                      this._filter = result['filter'] || this._filter;
                      this._sorting = result['sorting'] || this._sorting;
@@ -328,9 +328,6 @@ define('js!WSControls/Lists/ItemsControl', [
 
          _toggleIndicator: function () {
             /*Must be implemented*/
-         },
-         _getFilterForReload: function () {
-            return this._filter;
          },
          _onDSReload: function(list) {
             this._itemData = null;
