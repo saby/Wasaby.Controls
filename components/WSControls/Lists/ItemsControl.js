@@ -114,9 +114,16 @@ define('js!WSControls/Lists/ItemsControl', [
                if (this._selector) {
                   this._selector.destroy();
                }
+               if (this._multiSelector) {
+                  this._multiSelector.destroy();
+               }
+               
                if (this._needSelector) {
                   this._selector = this._createDefaultSelector();
                   this._selector.subscribe('onSelectedItemChange', this._onSelectorChange)
+               }
+               if(this._needMultiSelector) {
+                  this._multiSelector = this._createDefaultMultiSelector();
                }
             }
          },
@@ -221,6 +228,10 @@ define('js!WSControls/Lists/ItemsControl', [
          _createDefaultSelector: function() {
             /*Must be implemented*/
          },
+   
+         _createDefaultMultiSelector: function() {
+            /*Must be implemented*/
+         },
 
          /**
           * Метод получения проекции по ID итема
@@ -258,10 +269,17 @@ define('js!WSControls/Lists/ItemsControl', [
          //<editor-fold desc='EventHandlers'>
          
          onClick: function (evt) {
+            var hash = this._getDataHashFromTarget(evt.nativeEvent.target);
+            
             if (this._selector) {
-               this._selector.setSelectedByHash(this._getDataHashFromTarget(evt.nativeEvent.target));
+               this._selector.setSelectedByHash(hash);
                onSelectorChange.apply(this)
             }
+            //FIXME Временно, надо будет делать только при клике на чекбокс
+            if (this._multiSelector) {
+               this._multiSelector.toggleSelectedKeys([ItemsUtil.getPropertyValue(this._getItemProjectionByHash(hash).getContents(), this._getOption('idProperty'))]);
+            }
+            
          },
 
          itemActionActivated: function(number, evt) {
@@ -364,6 +382,9 @@ define('js!WSControls/Lists/ItemsControl', [
             }
             if (this._selector) {
                this._selector.destroy();
+            }
+            if (this._multiSelector) {
+               this._multiSelector.destroy();
             }
             if (this._dataSourceController) {
                this._dataSourceController.destroy();
