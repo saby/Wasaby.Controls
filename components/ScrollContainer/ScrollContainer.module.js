@@ -422,7 +422,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             }
 
             if (this._paging) {
-               this._setPagesCount(Math.ceil(this._getScrollHeight() / this._container.height()));
+               if (this._container.height()) {
+                  this._setPagesCount(Math.ceil(this._getScrollHeight() / this._container.height()));
+               }
             }
          },
 
