@@ -40,10 +40,10 @@ define([
                   control.destroy();
                   setTimeout(function() {
                      assert.isTrue(control.checkHooks[5] === 'beforeUnmount');
+                     done();
                   }, 50);
                }, 50);
 
-               done();
             }, 50);
 
          });

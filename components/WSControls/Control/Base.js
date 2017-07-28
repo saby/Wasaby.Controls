@@ -239,7 +239,7 @@ define('js!WSControls/Control/Base',
              * @private
              */
             _beforeUnmount: function(){
-            },
+            }
 
             //</editor-fold>
          });
