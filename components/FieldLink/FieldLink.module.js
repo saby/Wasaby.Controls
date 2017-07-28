@@ -393,7 +393,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  .subscribeTo(linkCollection, 'onFocusIn', function() {
                      // Из за того, что фокус устанавливается программно, нужно выставить флаг fromTouch - 
                      // так как нажатие произошло на поле связи, но не на поле ввода, но фокус остался в поле ввода
-                     if (constants.browser.isMobileIOS && self._isInputVisible()) {
+                     if (constants.browser.isMobilePlatform && self._isInputVisible()) {
                         self._fromTouch = true;
                      }
                      self.setActive(true);

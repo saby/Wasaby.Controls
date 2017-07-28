@@ -51,29 +51,28 @@ define(
        * @return {string}
        */
       LongOperationModel.timeSpentAsString = function (timeSpent, details) {
-         if (!timeSpent) {
-            return '0сек';
-         }
-         details = 1 < details ? details : 1;
-         var secs = Math.round(timeSpent/1000);
          var spent = [];
-         for (var i = 0, periods = [86400, 3600, 60, 1], names = ['д.', 'ч.', 'мин.', 'сек.']; i < periods.length; i++) {
-            var period = periods[i];
-            var t = Math.floor(secs/period);
-            secs = secs%period;
-            if (t) {
-               spent.push(t + rk(names[i], 'ДлительныеОперации'));
-               if (details <= spent.length) {
-                  break;
+         if (typeof timeSpent === 'number' && 0 < timeSpent) {
+            details = 1 < details ? details : 1;
+            var secs = Math.round(timeSpent/1000);
+            for (var i = 0, periods = [86400, 3600, 60, 1], names = ['д.', 'ч.', 'мин.', 'сек.']; i < periods.length; i++) {
+               var period = periods[i];
+               var t = Math.floor(secs/period);
+               secs = secs%period;
+               if (t) {
+                  spent.push(t + ' ' + rk(names[i], 'ДлительныеОперации'));
+                  if (details <= spent.length) {
+                     break;
+                  }
                }
+               /*else
+                if (spent.length) {
+                // Не должно быть пропущенных элементов
+                break;
+                }*/
             }
-            /*else
-            if (spent.length) {
-               // Не должно быть пропущенных элементов
-               break;
-            }*/
          }
-         return spent.join(' ');
+         return spent.length ? spent.join(' ') : '0 сек.';
       };
 
       /**

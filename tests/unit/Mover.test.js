@@ -488,6 +488,15 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
             treeMover.moveFromOutside(list, targetRow, outsideRs, false);
             assert.equal(count, treeItems.getCount());
          });
+         it('should not move the source row if a onbeginmove returns cutsom', function(){
+            targetRow.setPosition('after');
+            var count = treeItems.getCount();
+            treeMover.subscribe('onBeginMove', function (e) {
+               e.setResult('Custom');
+            });
+            treeMover.moveFromOutside(list, targetRow, outsideRs, true);
+            assert.equal(count, treeItems.getCount());
+         });
       });
       describe('._getDataSource', function () {
          it('should return datasource', function() {
