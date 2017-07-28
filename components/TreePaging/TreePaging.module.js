@@ -1,9 +1,9 @@
 define('js!SBIS3.CONTROLS.TreePaging', [
-   "js!SBIS3.CORE.Control",
+   "js!SBIS3.CORE.CompoundControl",
    "tmpl!SBIS3.CONTROLS.TreePaging",
    'i18n!SBIS3.CONTROLS.TreePaging'
-], function(Control, tmplFn) {
-   var TreePaging = Control.Control.extend({
+], function(CompoundControl, tmplFn) {
+   var TreePaging = CompoundControl.extend({
       _dotTplFn: tmplFn,
       $protected :{
          _options : {
