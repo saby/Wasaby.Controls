@@ -313,10 +313,16 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
           * @return {Core/Deferred}
           */
          _reload: function (force) {
+            var view = this._view;
+            if (force) {
+               var side = view._infiniteScrollState.mode == 'down' || view._infiniteScrollState.mode == 'demand' ? 'bottom' : 'top';
+               if (0 < view._scrollOffset[side]) {
+                  view._scrollOffset[side] = 0;
+               }
+            }
             return longOperationsManager.fetch(this._gatherFetchOptions(force))
                .addCallback(function (results) {
                   if (!this._isDestroyed) {
-                     var view = this._view;
                      //###view._notify('onDataLoad', results);
                      var has = !!results.getCount();
                      var items = results;
@@ -331,7 +337,6 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                      }
                      if (force || has) {
                         this._setItems(items);
-                        //###view.setOffset(force ? 0 : items.getCount() - results.getCount());
                      }
                      if (!force && has) {
                         view._updateScrollOffset();

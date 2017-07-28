@@ -20,13 +20,14 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       'js!WS.Data/Chain',
       'js!SBIS3.CONTROLS.LongOperationsTabCalls',
       'js!SBIS3.CONTROLS.LongOperationsCallsPool',
+      'js!SBIS3.CONTROLS.LongOperationsBunch',
       'js!SBIS3.CONTROLS.ILongOperationsProducer',
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.LongOperationHistoryItem',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model'
    ],
 
-   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsTabCalls, LongOperationsCallsPool, ILongOperationsProducer, LongOperationEntry, LongOperationHistoryItem, Model) {
+   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsTabCalls, LongOperationsCallsPool, LongOperationsBunch, ILongOperationsProducer, LongOperationEntry, LongOperationHistoryItem, Model) {
       'use strict';
 
       /**
@@ -91,6 +92,13 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
        * @type {SBIS3.CONTROLS.LongOperationsCallsPool}
        */
       var _fetchCalls;
+
+      /**
+       * Счётчики текщих отступов по продюсерам
+       * @protected
+       * @type {SBIS3.CONTROLS.LongOperationsBunch}
+       */
+      var _offsetBunch;
 
       /**
        * Признак того, что менеджер ликвидирован
@@ -233,10 +241,20 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                var hasProducers = !!Object.keys(_producers).length;
                var hasTabManagers = !!Object.keys(_tabManagers).length;
                if (hasProducers || hasTabManagers) {
-                  var rQuery = 0 < query.offset ? ObjectAssign({}, rQuery, {offset:0, limit:query.offset + query.limit}) : query;
+                  var useOffsets = 0 < query.offset;
+                  var offsetPattern = {where:query.where, orderBy:query.orderBy, limit:query.limit};
+                  var offsetIds;
+                  if (useOffsets) {
+                     offsetIds = _offsetBunch.searchIds(offsetPattern);
+                     //var prevOffset = offsetIds && offsetIds.length ? _offsetBunch.listByIds(offsetIds).reduce(function (r, v) { r += v; return r; }, 0) : 0;
+                  }
+                  else {
+                     _offsetBunch.removeAll(offsetPattern);
+                  }
                   if (hasProducers) {
                      for (var n in _producers) {
-                        _fetchCalls.add(query, {tab:_tabKey, producer:n}, _producers[n].fetch(rQuery));
+                        var member = {tab:_tabKey, producer:n};
+                        _fetchCalls.add(query, member, _producers[n].fetch(useOffsets ? ObjectAssign({}, query, {offset:_offsetBunch.search(member, offsetIds).shift() || 0}) : query));
                      }
                   }
                   if (hasTabManagers) {
@@ -245,7 +263,21 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                         targets = _tabTargets(targets, tabKey, _tabManagers[tabKey]);
                      }
                      if (targets) {
-                        _fetchCalls.addList(query, _expandTargets(targets), _tabCalls.callBatch(targets, 'fetch', [rQuery], LongOperationEntry));
+                        var promises;
+                        if (useOffsets) {
+                           promises = [];
+                           for (var tabKey in targets) {
+                              for (var list = targets[tabKey], i = 0; i < list.length; i++) {
+                                 var n = list[i];
+                                 var member = {tab:tabKey, producer:n};
+                                 promises.push(_tabCalls.call(tabKey, n, 'fetch', [ObjectAssign({}, query, {offset:_offsetBunch.search(member, offsetIds).shift() || 0})], LongOperationEntry));
+                              }
+                           }
+                        }
+                        else {
+                           promises = _tabCalls.callBatch(targets, 'fetch', [query], LongOperationEntry);
+                        }
+                        _fetchCalls.addList(query, _expandTargets(targets), promises);
                      }
                   }
                }
@@ -515,6 +547,8 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             _fetchCalls.remove(null, {tab:_tabKey, producer:name});
             // Удалить из списка
             delete _producers[name];
+            // Почистить _offsetBunch
+            _offsetBunch.removeAll({tab:_tabKey, producer:name});
             done = true;
             // Уведомить другие вкладки
             _tabChannel.notify('LongOperations:Manager:onActivity', {type:'unregister', tab:_tabKey, producer:name});
@@ -749,10 +783,20 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             if (queries.length) {
                var targets = _tabTargets(null, tabKey, newProds);
                if (targets) {
-                  var member = _expandTargets(targets);
+                  var members = _expandTargets(targets);
                   for (var i = 0; i < queries.length; i++) {
                      var q = queries[i];
-                     _fetchCalls.addList(q, member, _tabCalls.callBatch(targets, 'fetch', [q.where, q.orderBy, 0, 0 < q.offset ? q.offset + q.limit : q.limit, q.extra], LongOperationEntry));
+                     var promises;
+                     if (0 < q.offset) {
+                        promises = [];
+                        for (var list = targets[tabKey], i = 0; i < list.length; i++) {
+                           promises.push(_tabCalls.call(tabKey, list[i], 'fetch', [ObjectAssign({}, q, {offset:0})], LongOperationEntry));
+                        }
+                     }
+                     else {
+                        promises = _tabCalls.callBatch(targets, 'fetch', [q], LongOperationEntry);
+                     }
+                     _fetchCalls.addList(q, members, promises);
                   }
                }
             }
@@ -777,6 +821,8 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             else {
                delete _tabManagers[tabKey];
             }
+            // Почистить _offsetBunch
+            _offsetBunch.removeAll(prodName ? {tab:tabKey, producer:prodName} : {tab:tabKey});
             // Уведомить своих подписчиков
             //TODO: ### Если продюсер не отображаемый, можно (нужно?) игнорировать
             _channel.notifyWithTarget('onproducerunregistered', manager);
@@ -929,19 +975,24 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                         return 0;
                      });
                   }
+                  var obKey = {where:query.where, orderBy:query.orderBy, limit:query.limit, tab:null, producer:null};
                   results.assign(chain
-                     .first(query.offset + query.limit)
-                     .last(query.limit)
+                     .first(query.limit)
                      .map(function (v) {
+                        obKey.tab = v.tabKey || _tabKey;
+                        obKey.producer = v.producer;
+                        _offsetBunch.set(obKey, (_offsetBunch.get(obKey) || 0) + 1);
                         return new Model({rawData: v, idProperty: 'fullId'});
                      })
                      .value()
                   );
-                  results.setMetaData({more:query.offset + query.limit <= count});
+                  results.setMetaData({more:query.limit <= count});
                }
                return results;
             }
          );
+
+         _offsetBunch = new LongOperationsBunch();
 
          // Опубликовать свои события
          _channel.publish('onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted');
