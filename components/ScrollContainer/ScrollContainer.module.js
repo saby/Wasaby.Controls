@@ -256,63 +256,73 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                var
                   self = this,
                   selfCtx = this._context,
-                  prevContext = this._context.getPrevious();
-
-               this._context.subscribe('onFieldChange', function (ev, name, value) {
-                  //if (this.getValueSelf(name) !== undefined)
-                  {
-                     if (!self.compare(value, prevContext.getValueSelf(name)) &&
-                        !self.compare(value, self._ctxSync.selfToPrev[name])) {
-                        self._ctxSync.selfToPrev[name] = value;
-                        self._ctxSync.selfNeedSync++;
-                        self.fixOpacityField(name);
+                  prevContext = this._context.getPrevious(),
+                  onFieldChange = function(ev, name, value) {
+                     //if (this.getValueSelf(name) !== undefined)
+                     {
+                        if (!self.compare(value, prevContext.getValueSelf(name)) &&
+                           !self.compare(value, self._ctxSync.selfToPrev[name])) {
+                           self._ctxSync.selfToPrev[name] = value;
+                           self._ctxSync.selfNeedSync++;
+                           self.fixOpacityField(name);
+                        }
                      }
-                  }
-               });
-
-               prevContext.subscribe('onFieldChange', function (ev, name, value) {
-                  //if (prevContext.getValueSelf(name) !== undefined)
-                  {
-                     if (!self.compare(value, selfCtx.getValueSelf(name)) &&
-                        !self.compare(value, self._ctxSync.prevToSelf[name])){
-                        self._ctxSync.prevToSelf[name] = value;
-                        self._ctxSync.prevNeedSync++;
-                        self.fixOpacityField(name);
+                  },
+                  prevOnFieldChange = function(ev, name, value) {
+                     //if (prevContext.getValueSelf(name) !== undefined)
+                     {
+                        if (!self.compare(value, selfCtx.getValueSelf(name)) &&
+                           !self.compare(value, self._ctxSync.prevToSelf[name])){
+                           self._ctxSync.prevToSelf[name] = value;
+                           self._ctxSync.prevNeedSync++;
+                           self.fixOpacityField(name);
+                        }
                      }
-                  }
-               });
-
-               this._context.subscribe('onFieldsChanged', function () {
-                  if (self._ctxSync.selfNeedSync) {
-                     self._ctxSync.selfNeedSync = 0;
-                     prevContext.setValue(self._ctxSync.selfToPrev);
-                     self._ctxSync.selfToPrev = {};
-                  }
-               });
-
-               prevContext.subscribe('onFieldsChanged', function () {
-                  if (self._ctxSync.prevNeedSync) {
-                     self._ctxSync.prevNeedSync = 0;
-                     selfCtx.setValue(self._ctxSync.prevToSelf);
-                     self._ctxSync.prevToSelf = {};
-                  }
-               });
-
-               this._context.subscribe('onFieldRemove', function (ev, name, value) {
-                  self._ctxSync.selfCtxRemoved[name] = false;
-                  if (prevContext.getValueSelf(name) !== undefined &&
+                  },
+                  onFieldsChanged = function() {
+                     if (self._ctxSync.selfNeedSync) {
+                        self._ctxSync.selfNeedSync = 0;
+                        prevContext.setValue(self._ctxSync.selfToPrev);
+                        self._ctxSync.selfToPrev = {};
+                     }
+                  },
+                  prevOnFieldsChanged = function() {
+                     if (self._ctxSync.prevNeedSync) {
+                        self._ctxSync.prevNeedSync = 0;
+                        selfCtx.setValue(self._ctxSync.prevToSelf);
+                        self._ctxSync.prevToSelf = {};
+                     }
+                  },
+                  onFieldRemove = function(ev, name, value) {
+                     self._ctxSync.selfCtxRemoved[name] = false;
+                     if (prevContext.getValueSelf(name) !== undefined &&
                         !self._ctxSync.prevCtxRemoved[name]) {
-                     self._ctxSync.prevCtxRemoved[name] = true;
-                     prevContext.removeValue(name);
-                  }
-               });
+                        self._ctxSync.prevCtxRemoved[name] = true;
+                        prevContext.removeValue(name);
+                     }
+                  },
+                  prevOnFieldRemove = function(ev, name, value) {
+                     self._ctxSync.prevCtxRemoved[name] = false;
+                     if (selfCtx.getValueSelf(name) !== undefined && !self._ctxSync.selfCtxRemoved[name]) {
+                        self._ctxSync.selfCtxRemoved[name] = true;
+                        selfCtx.removeValue(name);
+                     }
+                  };
 
-               prevContext.subscribe('onFieldRemove', function (ev, name, value) {
-                  self._ctxSync.prevCtxRemoved[name] = false;
-                  if (selfCtx.getValueSelf(name) !== undefined && !self._ctxSync.selfCtxRemoved[name]) {
-                     self._ctxSync.selfCtxRemoved[name] = true;
-                     selfCtx.removeValue(name);
-                  }
+               this._context.subscribe('onFieldChange', onFieldChange);
+               prevContext.subscribe('onFieldChange', prevOnFieldChange);
+               this._context.subscribe('onFieldsChanged', onFieldsChanged);
+               prevContext.subscribe('onFieldsChanged', prevOnFieldsChanged);
+               this._context.subscribe('onFieldRemove', onFieldRemove);
+               prevContext.subscribe('onFieldRemove', prevOnFieldRemove);
+
+               this.once('onDestroy', function(){
+                  this._context.unsubscribe('onFieldChange', onFieldChange);
+                  prevContext.unsubscribe('onFieldChange', prevOnFieldChange);
+                  this._context.unsubscribe('onFieldsChanged', onFieldsChanged);
+                  prevContext.unsubscribe('onFieldsChanged', prevOnFieldsChanged);
+                  this._context.unsubscribe('onFieldRemove', onFieldRemove);
+                  prevContext.unsubscribe('onFieldRemove', prevOnFieldRemove);
                });
             }
          },
