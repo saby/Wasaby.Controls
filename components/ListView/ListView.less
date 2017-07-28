@@ -161,7 +161,7 @@
 }
 
 .controls-ListView__indicatorVisible:not(.ws-sticky-header__table-header-copy) {
-   min-height: @list-view-scroll-height;
+   min-height: @list-view-scroll-height + @data-grid-header-cell-height; // Высота индикатор скрола + высота ячейки шапки, чтобы при подгрузке скролл не скрывался под шапкой
 
     > .controls-ListView-scrollIndicator {
       display: block;
