@@ -4346,7 +4346,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._destroyControls(footerContainer);
                newFooter = $(this._options.footerTpl(this._options));
                footerContainer.empty().append(newFooter);
-               this.reviveComponents(newFooter);
+               this.reviveComponents(footerContainer);
             }
          },
 
