@@ -124,6 +124,9 @@ define(['js!WSControls/Lists/Selector',
             assert.equal(2, selector.getSelectedKey(), 'Option selectedKey doesn\'t work (RS)');
             assert.equal(1, selector.getSelectedIndex(), 'Option selectedKey doesn\'t work (RS)');
 
+            var itemData = selector._getItemData();
+            assert.equal(2, itemData.selectedKey, 'ItemData doesn\'t contain correct selectedKey');
+
             selector = new Selector({
                selectedKey : 2,
                items: data,
@@ -152,6 +155,19 @@ define(['js!WSControls/Lists/Selector',
             assert.equal(3, selector.getSelectedKey(), 'Method setSelectedKey doesn\'t work');
          });
 
+         it('SetSelectedByHash', function () {
+            var selector = new Selector({
+               selectedIndex : 2,
+               items: dataRs,
+               idProperty: 'id'
+            });
+
+            var display = selector._display;
+            var hash = display.at(1).getHash();
+            selector.setSelectedByHash(hash);
+            assert.equal(1, selector.getSelectedIndex(), 'Method setSelectedByHash doesn\'t work');
+            assert.equal(2, selector.getSelectedKey(), 'Method setSelectedByHash doesn\'t work');
+         });
 
 
       });

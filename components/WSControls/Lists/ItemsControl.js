@@ -108,7 +108,7 @@ define('js!WSControls/Lists/ItemsControl', [
             }
          },
 
-         _itemsChangeCallback: function(initBaseControllers) {
+         _itemsChangeCallback: function() {
             this._initItemBasedControllers();
             this._displayChangeCallback();
             this._notify('onItemsReady');
@@ -130,21 +130,10 @@ define('js!WSControls/Lists/ItemsControl', [
             tplOptions.displayProperty = this._options.displayProperty;
             tplOptions.getPropertyValue = ItemsUtil.getPropertyValue;
 
-            /* Для логирования */
-            if (typeof window === 'undefined') {
-               logger = IoC.resolve('ILogger');
-               tplOptions.timeLogger = function timeLogger(tag, start) {
-                  if (start) {
-                     timers[tag] = new Date();
-                  } else {
-                     logger.log(self._moduleName || cfg.name, tag + ' ' + ((new Date()) - timers[tag]));
-                     delete timers[tag];
-                  }
-               };
-            }
-            tplOptions.itemContent = TemplateUtil.prepareTemplate(this._itemContentTpl);
-            tplOptions.itemTpl = TemplateUtil.prepareTemplate(this._itemTpl);
-            tplOptions.defaultItemTpl = TemplateUtil.prepareTemplate(this._defaultItemTemplate);
+
+            tplOptions.itemContent = TemplateUtil.prepareTemplate(this._itemContentTpl, true);
+            tplOptions.itemTpl = TemplateUtil.prepareTemplate(this._itemTpl, true);
+            tplOptions.defaultItemTpl = TemplateUtil.prepareTemplate(this._defaultItemTemplate, true);
             return tplOptions;
          },
          
@@ -346,9 +335,6 @@ define('js!WSControls/Lists/ItemsControl', [
             ItemsControl.superclass.destroy.ally(this, arguments);
             if (this._display) {
                this._display.destroy();
-            }
-            if (this._selector) {
-               this._selector.destroy();
             }
             if (this._multiSelector) {
                this._multiSelector.destroy();

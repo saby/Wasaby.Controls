@@ -9,6 +9,7 @@ define('js!WSControls/Lists/ListView2', ['js!WSControls/Lists/Selector',
       var INDICATOR_DELAY = 2000;
       
       var ListView = Selector.extend({
+         _controlName: 'WSControls/Lists/ListView',
          _template: template,
          _needMultiSelector: true,
          
