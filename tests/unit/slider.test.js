@@ -1,7 +1,9 @@
 define([
-   'js!SBIS3.CONTROLS.Slider'
+   'js!SBIS3.CONTROLS.Slider',
+   'js!SBIS3.CONTROLS.SliderInput'
 ], function (
-   Slider
+   Slider,
+   SliderInput
 ) {
    'use strict';
 
@@ -84,5 +86,45 @@ define([
       });
 
    });
+   describe('SBIS3.CONTROLS.SliderInput', function () {
+      var cfg, slider;
+
+      describe('methods', function(){
+
+         before(function () {
+            SliderInput = SliderInput.extend({
+               _initInputs: function(){
+                  this._startTextBox = this._endTextBox = {
+                     setText: function(){}
+                  };
+               },
+            });
+
+            if(typeof window !== 'undefined') {
+               cfg = {
+                  minValue: "0",
+                  maxValue: "5",
+                  decimals: 2,
+                  single: true
+               };
+               slider = new SliderInput(cfg);
+            }
+         });
+
+         beforeEach(function () {
+            if (typeof window === 'undefined') {
+               this.skip();
+            }
+         });
+
+
+         it('_setPreparedValue', function () {
+            slider._setPreparedValue(undefined);
+            assert.equal(0, slider.getEndValue());
+         });
+      });
+
+   });
+
 
 });

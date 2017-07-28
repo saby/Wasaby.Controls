@@ -50,14 +50,9 @@ define('js!SBIS3.CONTROLS.SliderInput',
 
             init: function() {
                SliderInput.superclass.init.call(this);
-               this._endTextBox = this.getChildControlByName('EndTextBox');
-               this._startTextBox = this.getChildControlByName('StartTextBox');
-               this._startTextBox.subscribe('onFocusOut', this._textBoxStartFocusOut.bind(this));
-               this._endTextBox.subscribe('onFocusOut', this._textBoxEndFocusOut.bind(this));
-               this.subscribe('onDrawValueChange', this._sliderDrawChange.bind(this));
-               this._startTextBox.subscribe('onKeyPressed', this._textBoxKeyDown.bind(this));
-               this._endTextBox.subscribe('onKeyPressed', this._textBoxKeyDown.bind(this));
+               this._initInputs();
             },
+
 
             setStartValue: function(value) {
                SliderInput.superclass.setStartValue.apply(this, [value]);
@@ -67,6 +62,16 @@ define('js!SBIS3.CONTROLS.SliderInput',
             setEndValue: function(value) {
                SliderInput.superclass.setEndValue.apply(this, [value]);
                this._endTextBox.setText(value);
+            },
+
+            _initInputs: function(){
+               this._endTextBox = this.getChildControlByName('EndTextBox');
+               this._startTextBox = this.getChildControlByName('StartTextBox');
+               this._startTextBox.subscribe('onFocusOut', this._textBoxStartFocusOut.bind(this));
+               this._endTextBox.subscribe('onFocusOut', this._textBoxEndFocusOut.bind(this));
+               this.subscribe('onDrawValueChange', this._sliderDrawChange.bind(this));
+               this._startTextBox.subscribe('onKeyPressed', this._textBoxKeyDown.bind(this));
+               this._endTextBox.subscribe('onKeyPressed', this._textBoxKeyDown.bind(this));
             },
 
             _textBoxStartFocusOut: function () {
