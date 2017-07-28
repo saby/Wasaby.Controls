@@ -1,11 +1,11 @@
 <div class="controls-MergeDialogTemplate">
     <span class="controls-MergeDialogTemplate__hint">{{=it.hint}}</span>
-    <component data-component="SBIS3.CONTROLS.TreeDataGridView" class="controls-MergeDialogTemplate__treeDataGridView controls-ListView__withoutMarker controls-GridView__searchMode">
+    <component data-component="SBIS3.CONTROLS.TreeDataGridView" class="controls-MergeDialogTemplate__treeDataGridView controls-ListView__withoutMarker controls-GridView__searchMode controls-TreeView__withoutExpands controls-DataGridView__hasSeparator">
         <option name="name" value="MergeDialogTemplate__treeDataGridView"></option>
         <option name="itemsDragNDrop" type="boolean">false</option>
         <option name="showPaging" type="boolean">false</option>
         <option name="allowEmptySelection" type="boolean">true</option>
-        <option name="itemTpl">html!SBIS3.CONTROLS.MergeDialogTemplate/resources/rowTpl</option>
+        <option name="itemTpl">tmpl!SBIS3.CONTROLS.MergeDialogTemplate/resources/rowTpl</option>
         <option name="displayProperty">{{=it.displayProperty}}</option>
         <option name="parentProperty">{{=it.parentProperty}}</option>
         <option name="nodeProperty">{{=it.nodeProperty}}</option>
@@ -14,8 +14,7 @@
         <options name="itemsActions" type="array"></options>
         <options name="columns" type="array">
             <options>
-                <option name="cellTemplate">html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellRadioButtonTpl</option>
-                <option name="width">52</option>
+                <option name="cellTemplate">tmpl!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellRadioButtonTpl</option>
             </options>
             <options>
                 <option name="title">Наименование</option>
@@ -25,7 +24,7 @@
                 {{?it.titleCellTemplate}}
                     {{=it.titleCellTemplate}}
                 {{??}}
-                    html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellTitleTpl
+                    tmpl!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellTitleTpl
                 {{?}}
                 </option>
                 <option name="className">controls-DataGridView-cell-overflow-ellipsis</option>
@@ -33,7 +32,7 @@
             <options>
                 <option name="title">Комментарий</option>
                 <option name="field">Comment</option>
-                <option name="cellTemplate">html!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellCommentTpl</option>
+                <option name="cellTemplate">tmpl!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellCommentTpl</option>
                 <option name="className">controls-DataGridView-cell-overflow-ellipsis</option>
             </options>
         </options>
