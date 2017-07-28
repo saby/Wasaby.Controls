@@ -249,19 +249,7 @@ define('js!WSControls/Lists/ItemsControl', [
          //<editor-fold desc='EventHandlers'>
 
          _onItemClick: function (evt) {
-            var hash = this._getDataHashFromTarget(evt.nativeEvent.target);
-
-            this._onItemClickInner(evt, hash);
-
-            //FIXME Временно, надо будет делать только при клике на чекбокс
-            if (this._multiSelector) {
-               this._multiSelector.toggleSelectedKeys([ItemsUtil.getPropertyValue(this._getDisplayItemByHash(hash).getContents(), this._getOption('idProperty'))]);
-            }
-            
-         },
-
-         _onItemClickInner: function() {
-
+            //Method must be implemented
          },
 
          itemActionActivated: function(number, evt) {

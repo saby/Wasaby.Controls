@@ -24,7 +24,7 @@ define('js!WSControls/Lists/ListView2', ['js!WSControls/Lists/Selector',
             })
          },
 
-         _onItemClickInner: function(e, hash) {
+         _onItemClick: function(e, hash) {
             this.setSelectedByHash(hash);
             this._onSelectedItemChange();
          },
