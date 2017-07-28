@@ -1,11 +1,10 @@
 define('js!WSControls/Lists/ListView2', ['js!WSControls/Lists/Selector',
       'tmpl!WSControls/Lists/ListView2',
-      'tmpl!WSControls/Lists/resources/ItemTemplate',
       'tmpl!WSControls/Lists/resources/GroupTemplate',
       'js!WSControls/Controllers/ListMultiSelector',
       'js!WSControls/Lists/ItemsToolbar/ItemsToolbarCompatible'],
 
-   function(Selector, template, ItemTemplate, groupTemplate, ListMultiSelector) {
+   function(Selector, template, groupTemplate, ListMultiSelector) {
       
       var INDICATOR_DELAY = 2000;
       
@@ -14,7 +13,6 @@ define('js!WSControls/Lists/ListView2', ['js!WSControls/Lists/Selector',
          _needMultiSelector: true,
          
          _defaultGroupTemplate: groupTemplate,
-         _defaultItemTemplate: ItemTemplate,
 
          _createDefaultMultiSelector: function() {
             return new ListMultiSelector({
@@ -26,7 +24,7 @@ define('js!WSControls/Lists/ListView2', ['js!WSControls/Lists/Selector',
             })
          },
 
-         _onClickInner: function(e, hash) {
+         _onItemClickInner: function(e, hash) {
             this.setSelectedByHash(hash);
             this._onSelectedItemChange();
          },

@@ -248,10 +248,10 @@ define('js!WSControls/Lists/ItemsControl', [
    
          //<editor-fold desc='EventHandlers'>
 
-         _onClick: function (evt) {
+         _onItemClick: function (evt) {
             var hash = this._getDataHashFromTarget(evt.nativeEvent.target);
 
-            this._onClickInner(evt, hash);
+            this._onItemClickInner(evt, hash);
 
             //FIXME Временно, надо будет делать только при клике на чекбокс
             if (this._multiSelector) {
@@ -260,7 +260,7 @@ define('js!WSControls/Lists/ItemsControl', [
             
          },
 
-         _onClickInner: function() {
+         _onItemClickInner: function() {
 
          },
 

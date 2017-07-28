@@ -1,4 +1,4 @@
 <div class="controls-ListView__item js-controls-ListView__item {{selected ? 'controls-ListView__item__selected'}} {{ hovered ? 'controls-ListView__item__hovered' }} {{ multiSelected ? 'controls-ListView__item__multiSelected' }} {{ className }} "
-     data-hash="{{ projItem.getHash() }}">
+     data-hash="{{ projItem.getHash() }}" event:onclick="_onItemClick(item, 'onMoreArg')">
     <ws:partial template="{{itemContent}}" scope="{{...}}" attributes="{{ attributes }}"></ws:partial>
 </div>
