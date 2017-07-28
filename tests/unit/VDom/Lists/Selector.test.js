@@ -41,24 +41,24 @@ define(['js!WSControls/Lists/Selector',
                items: dataRs,
                idProperty: 'id'
             });
-            assert.equal(2, selector.getSelectedIndex(), 'Option selectedIndex doesn\'t work (RS)');
-            assert.equal(3, selector.getSelectedKey(), 'Option selectedIndex doesn\'t work (RS)');
+            assert.equal(2, selector._selectedIndex, 'Option selectedIndex doesn\'t work (RS)');
+            assert.equal(3, selector._selectedKey, 'Option selectedIndex doesn\'t work (RS)');
 
             selector = new Selector({
                selectedIndex : 2,
                items: data,
                idProperty: 'id'
             });
-            assert.equal(2, selector.getSelectedIndex(), 'Option selectedIndex doesn\'t work (Array)');
-            assert.equal(3, selector.getSelectedKey(), 'Option selectedIndex doesn\'t work (Array)');
+            assert.equal(2, selector._selectedIndex, 'Option selectedIndex doesn\'t work (Array)');
+            assert.equal(3, selector._selectedKey, 'Option selectedIndex doesn\'t work (Array)');
 
             selector = new Selector({
                selectedIndex : 2,
                items: myEnum,
                idProperty: 'id'
             });
-            assert.equal(2, selector.getSelectedIndex(), 'Option selectedIndex doesn\'t work (Enum)');
-            assert.equal('Третий', selector.getSelectedKey(), 'Option selectedIndex doesn\'t work (Enum)');
+            assert.equal(2, selector._selectedIndex, 'Option selectedIndex doesn\'t work (Enum)');
+            assert.equal('Третий', selector._selectedKey, 'Option selectedIndex doesn\'t work (Enum)');
          });
 
          describe('AllowEmpty', function () {
@@ -68,8 +68,8 @@ define(['js!WSControls/Lists/Selector',
                   items: dataRs,
                   idProperty: 'id'
                });
-               assert.equal(-1, selector.getSelectedIndex(), 'Option allowEmptySelection doesn\'t work');
-               assert.equal(null, selector.getSelectedKey(), 'Option allowEmptySelection doesn\'t work');
+               assert.equal(-1, selector._selectedIndex, 'Option allowEmptySelection doesn\'t work');
+               assert.equal(null, selector._selectedKey, 'Option allowEmptySelection doesn\'t work');
             });
 
             it('false + index', function () {
@@ -79,8 +79,8 @@ define(['js!WSControls/Lists/Selector',
                   items: dataRs,
                   idProperty: 'id'
                });
-               assert.equal(2, selector.getSelectedIndex(), 'Option allowEmptySelection doesn\'t work');
-               assert.equal(3, selector.getSelectedKey(), 'Option allowEmptySelection doesn\'t work');
+               assert.equal(2, selector._selectedIndex, 'Option allowEmptySelection doesn\'t work');
+               assert.equal(3, selector._selectedKey, 'Option allowEmptySelection doesn\'t work');
             });
 
             it('false + key', function () {
@@ -90,8 +90,8 @@ define(['js!WSControls/Lists/Selector',
                   items: dataRs,
                   idProperty: 'id'
                });
-               assert.equal(2, selector.getSelectedIndex(), 'Option allowEmptySelection doesn\'t work');
-               assert.equal(3, selector.getSelectedKey(), 'Option allowEmptySelection doesn\'t work');
+               assert.equal(2, selector._selectedIndex, 'Option allowEmptySelection doesn\'t work');
+               assert.equal(3, selector._selectedKey, 'Option allowEmptySelection doesn\'t work');
             });
 
             it('false', function () {
@@ -100,19 +100,9 @@ define(['js!WSControls/Lists/Selector',
                   items: dataRs,
                   idProperty: 'id'
                });
-               assert.equal(0, selector.getSelectedIndex(), 'Option allowEmptySelection doesn\'t work');
-               assert.equal(1, selector.getSelectedKey(), 'Option allowEmptySelection doesn\'t work');
+               assert.equal(0, selector._selectedIndex, 'Option allowEmptySelection doesn\'t work');
+               assert.equal(1, selector._selectedKey, 'Option allowEmptySelection doesn\'t work');
             })
-         });
-         it('SetSelectedIndex', function () {
-            var selector = new Selector({
-               selectedIndex : 2,
-               items: dataRs,
-               idProperty: 'id'
-            });
-            selector.setSelectedIndex(3);
-            assert.equal(3, selector.getSelectedIndex(), 'Method setSelectedIndex doesn\'t work');
-            assert.equal(4, selector.getSelectedKey(), 'Method setSelectedIndex doesn\'t work');
          });
 
          it('SelectedKey', function () {
@@ -121,8 +111,8 @@ define(['js!WSControls/Lists/Selector',
                items: dataRs,
                idProperty: 'id'
             });
-            assert.equal(2, selector.getSelectedKey(), 'Option selectedKey doesn\'t work (RS)');
-            assert.equal(1, selector.getSelectedIndex(), 'Option selectedKey doesn\'t work (RS)');
+            assert.equal(2, selector._selectedKey, 'Option selectedKey doesn\'t work (RS)');
+            assert.equal(1, selector._selectedIndex, 'Option selectedKey doesn\'t work (RS)');
 
             var itemData = selector._getItemData();
             assert.equal(2, itemData.selectedKey, 'ItemData doesn\'t contain correct selectedKey');
@@ -132,30 +122,20 @@ define(['js!WSControls/Lists/Selector',
                items: data,
                idProperty: 'id'
             });
-            assert.equal(2, selector.getSelectedKey(), 'Option selectedKey doesn\'t work (Array)');
-            assert.equal(1, selector.getSelectedIndex(), 'Option selectedKey doesn\'t work (Array)');
+            assert.equal(2, selector._selectedKey, 'Option selectedKey doesn\'t work (Array)');
+            assert.equal(1, selector._selectedIndex, 'Option selectedKey doesn\'t work (Array)');
 
             selector = new Selector({
                selectedKey : 'Второй',
                items: myEnum,
                idProperty: 'id'
             });
-            assert.equal('Второй', selector.getSelectedKey(), 'Option selectedKey doesn\'t work (Enum)');
-            assert.equal(1, selector.getSelectedIndex(), 'Option selectedKey doesn\'t work (Enum)');
+            assert.equal('Второй', selector._selectedKey, 'Option selectedKey doesn\'t work (Enum)');
+            assert.equal(1, selector._selectedIndex, 'Option selectedKey doesn\'t work (Enum)');
          });
 
-         it('SetSelectedKey', function () {
-            var selector = new Selector({
-               selectedIndex : 2,
-               items: dataRs,
-               idProperty: 'id'
-            });
-            selector.setSelectedKey(3);
-            assert.equal(2, selector.getSelectedIndex(), 'Method setSelectedKey doesn\'t work');
-            assert.equal(3, selector.getSelectedKey(), 'Method setSelectedKey doesn\'t work');
-         });
 
-         it('SetSelectedByHash', function () {
+         it('_SetSelectedByHash', function () {
             var selector = new Selector({
                selectedIndex : 2,
                items: dataRs,
@@ -164,9 +144,9 @@ define(['js!WSControls/Lists/Selector',
 
             var display = selector._display;
             var hash = display.at(1).getHash();
-            selector.setSelectedByHash(hash);
-            assert.equal(1, selector.getSelectedIndex(), 'Method setSelectedByHash doesn\'t work');
-            assert.equal(2, selector.getSelectedKey(), 'Method setSelectedByHash doesn\'t work');
+            selector._setSelectedByHash(hash);
+            assert.equal(1, selector._selectedIndex, 'Method _setSelectedByHash doesn\'t work');
+            assert.equal(2, selector._selectedKey, 'Method _setSelectedByHash doesn\'t work');
          });
 
 

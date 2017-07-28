@@ -13,14 +13,15 @@ define('js!WSControls/Lists/Selector', [
       _applyAllowEmpty: function () {
          if (!this._allowEmptySelection && this._isEmptyIndex(this._selectedIndex)) {
             if (this._display.getCount()) {
-               this.setSelectedIndex(0)
+               this._selectedIndex = 0;
+               this._prepareSelectedKeyByIndex();
             }
          }
       },
 
       _getItemData: function() {
          var data = Selector.superclass._getItemData.apply(this, arguments);
-         data.selectedKey = this.getSelectedKey();
+         data.selectedKey = this._selectedKey;
          return data;
       },
 
@@ -30,7 +31,7 @@ define('js!WSControls/Lists/Selector', [
          this._applyAllowEmpty();
       },
 
-      _prepareSelectedKeyByIndex: function (index) {
+      _prepareSelectedKeyByIndex: function () {
          //Вычисляем ключ по известному индексу
          this._selectedKey = this._getKeyByIndex(this._selectedIndex);
          this._applyAllowEmpty();
@@ -58,35 +59,14 @@ define('js!WSControls/Lists/Selector', [
          return (typeof index != 'undefined') && (index !== null) && (typeof this._display.at(index) != 'undefined');
       },
 
-      setSelectedKey: function (id) {
-         if (this._selectedKey != id) {
-            this._selectedKey = id;
-            this._prepareSelectedIndexByKey(id);
-         }
-      },
-
-      getSelectedKey: function (id) {
-         return this._selectedKey;
-      },
-
-      getSelectedIndex: function () {
-         return this._selectedIndex;
-      },
-
-      setSelectedByHash: function (hash) {
+      _setSelectedByHash: function (hash) {
          var elem = this._display.getByHash(hash);
-         this.setSelectedIndex(this._display.getIndex(elem));
+         this._selectedIndex = this._display.getIndex(elem);
+         this._prepareSelectedKeyByIndex()
       },
 
       _isEmptyIndex: function (index) {
          return index === null || typeof index == 'undefined' || index == -1;
-      },
-
-      setSelectedIndex: function (index) {
-         if (this._selectedIndex != index) {
-            this._selectedIndex = index;
-            this._prepareSelectedKeyByIndex(index);
-         }
       },
 
       _notifySelectedItem: function (index, key) {
