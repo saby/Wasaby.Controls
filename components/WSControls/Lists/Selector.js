@@ -99,9 +99,10 @@ define('js!WSControls/Lists/Selector', [
       },
 
       _displayChangeCallback: function() {
-         this._selectedIndex = (this._options.selectedIndex !== undefined && this._options.selectedIndex !== null) ? this._options.selectedIndex : -1;
-         this._allowEmptySelection = this._options.allowEmptySelection !== false;
-         this._selectedKey = this._options.selectedKey || null;
+         //TODO жду жизненного цикла и понимания, как сказать родителю об изменении состояния пока тут г-код
+         this._selectedIndex = this._isEmptyIndex(this._selectedIndex) ? (this._isEmptyIndex(this._options.selectedIndex) ? -1 : this._options.selectedIndex) : this._selectedIndex;
+         this._allowEmptySelection = this._options.allowEmptySelection || this._options.allowEmptySelection !== false;
+         this._selectedKey = this._selectedKey || this._options.selectedKey || null;
 
          if (this._isEmptyIndex(this._selectedIndex)) {
             //Если передали пустой индекс и ключ, определяем индекс по ключу

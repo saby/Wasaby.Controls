@@ -260,6 +260,10 @@ define('js!WSControls/Lists/ItemsControl', [
             
          },
 
+         _onClickInner: function() {
+
+         },
+
          itemActionActivated: function(number, evt) {
             alert('clicked ' + this._hoveredItem + ' on button ' + number);
          },
