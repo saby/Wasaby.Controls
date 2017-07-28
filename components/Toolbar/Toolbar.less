@@ -1,18 +1,18 @@
 .controls-ToolBar {
    .inline-block-bug-fix();
-   display: @controls-toolbar-display;
+   display: inline-block;
 
    .controls-ToolBar__itemsContainer {
-      display: @controls-toolbar-display;
-      margin-right: @controls-toolbar-container-margin-right;
+      display: inline-block;
+      margin-right: @controls-toolbar-default-margin;
    }
 
    .controls-ToolBar__menuIcon {
-      margin-left: @controls-toolbar-menu-margin-left;
+      margin-left: @controls-toolbar-default-margin;
    }
 
    .controls-ToolBar__item {
-      margin-right: @controls-toolbar-item-margin-right;
-      vertical-align: @controls-toolbar-item-vertical-align;
+      margin-right: -@controls-toolbar-default-margin;
+      vertical-align: middle;
    }
 }
