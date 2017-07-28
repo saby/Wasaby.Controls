@@ -153,7 +153,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          * @remark Определяется в модуле, который подмешивает миксин.
          * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
          * @param {Boolean} droppable Cработал внутри droppable контейнера см {@link _findDragDropContainer}
-         * @param {Event} e Браузерное событие.
+         * @param {Event} e Браузерное событие. На touch устройствах в полях pageX, pageY находятся координаты touch.
          * @see SBIS3.CONTROLS.DragObject
          * @see _findDragDropContainer
          * @example
@@ -180,7 +180,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          * Срабатывает при перемещении (на каждое перемещение).
          * @remark Определяется в модуле, который подмешивает миксин.
          * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
-         * @param {Event} e Браузерное событие.
+         * @param {Event} e Браузерное событие. На touch устройствах в полях pageX, pageY находятся координаты touch.
          * @see SBIS3.CONTROLS.DragObject
          */
         _onDragHandler: function(dragObject, e) {
@@ -191,7 +191,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          * @remark Определяется в модуле, который подмешивает миксин. Если контрол взамодействует с другими контролами через Drag'n'drop
          * то этот метод должен определить, что перемещает пользователь и установить в dragObject (см метод {@link SBIS3.CONTROLS.DragObject#setSource}).
          * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
-         * @param {Event} e Браузерное событие.
+         * @param {Event} e Браузерное событие. На touch устройствах в полях pageX, pageY находятся координаты touch.
          * @see SBIS3.CONTROLS.DragObject
          * @returns {Boolean} если вернуть false перемещение не начнется
          */
