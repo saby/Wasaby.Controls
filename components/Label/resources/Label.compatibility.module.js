@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.Label.compatibility', [],
          getVisible: function(visible) {
             this.visible = visible !== false;
             this._setDirty();
-         }
+         },
          /**
           * Изменить видимость контрола
           * @param visible видимость
