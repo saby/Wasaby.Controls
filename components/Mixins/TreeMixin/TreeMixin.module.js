@@ -1209,6 +1209,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          return offset;
       },
 
+      _getRootCount: function(){
+         return this._getItemsProjection().getChildren(this._getItemsProjection().getRoot()).getCount();
+      },
+
       before: {
          _modifyOptions: function(cfg) {
             cfg._curRoot = cfg.root;
