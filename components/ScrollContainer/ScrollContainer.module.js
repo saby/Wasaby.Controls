@@ -309,6 +309,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                      }
                   };
 
+               //Необходимо для возможности устанавливать значение себе в контекст
+               this._context.setRestriction('setget');
+
                this._context.subscribe('onFieldChange', onFieldChange);
                prevContext.subscribe('onFieldChange', prevOnFieldChange);
                this._context.subscribe('onFieldsChanged', onFieldsChanged);
