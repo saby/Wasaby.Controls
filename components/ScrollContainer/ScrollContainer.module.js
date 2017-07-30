@@ -282,14 +282,14 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   onFieldsChanged = function() {
                      if (self._ctxSync.selfNeedSync) {
                         self._ctxSync.selfNeedSync = 0;
-                        prevContext.setValue(self._ctxSync.selfToPrev);
+                        prevContext.setValueSelf(self._ctxSync.selfToPrev);
                         self._ctxSync.selfToPrev = {};
                      }
                   },
                   prevOnFieldsChanged = function() {
                      if (self._ctxSync.prevNeedSync) {
                         self._ctxSync.prevNeedSync = 0;
-                        selfCtx.setValue(self._ctxSync.prevToSelf);
+                        selfCtx.setValueSelf(self._ctxSync.prevToSelf);
                         self._ctxSync.prevToSelf = {};
                      }
                   },
@@ -308,9 +308,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                         selfCtx.removeValue(name);
                      }
                   };
-
-               //Необходимо для возможности устанавливать значение себе в контекст
-               this._context.setRestriction('setget');
 
                this._context.subscribe('onFieldChange', onFieldChange);
                prevContext.subscribe('onFieldChange', prevOnFieldChange);
