@@ -20,19 +20,20 @@ define('js!WSControls/Lists/TreeView2', [
       _loadMode: undefined,       // Режим загрузки данных ( "partial" / "full" )
       _expandMode: undefined,     // Режим разворота узлов ( "multiple" / "single" )
 
-      _prepareInitalState: function() {
-         if (isPlainObject(this._options.expandedItems)) {
-            this._expandedItems = cFunctions.clone(this._options.expandedItems);
+      _beforeMount: function(cfg) {
+         TreeView.superclass._beforeMount.apply(this, arguments);
+         if (isPlainObject(cfg.expandedItems)) {
+            this._expandedItems = cFunctions.clone(cfg.expandedItems);
          } else {
             this._expandedItems = {};
          }
-         if (this._options.loadMode === 'full') { // Режим загрузки может быть либо partial, либо full. По умолчанию partial.
-            this._loadMode = this._options.loadMode;
+         if (cfg.loadMode === 'full') { // Режим загрузки может быть либо partial, либо full. По умолчанию partial.
+            this._loadMode = cfg.loadMode;
          } else {
             this._loadMode = 'partial';
          }
-         if (this._options.expandMode === 'single') { // Режим разворота может быть либо multiple, либо single. По умолчанию multiple.
-            this._expandMode = this._options.expandMode;
+         if (cfg.expandMode === 'single') { // Режим разворота может быть либо multiple, либо single. По умолчанию multiple.
+            this._expandMode = cfg.expandMode;
          } else {
             this._expandMode = 'multiple';
          }
@@ -40,7 +41,6 @@ define('js!WSControls/Lists/TreeView2', [
       constructor: function() {
          TreeView.superclass.constructor.apply(this, arguments);
          this._publish('onExpandItem', 'onCollapseItem');
-         this._prepareInitalState();
       },
       _getItemData: function() {
          var

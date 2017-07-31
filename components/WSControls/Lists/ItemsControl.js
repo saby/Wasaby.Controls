@@ -64,29 +64,37 @@ define('js!WSControls/Lists/ItemsControl', [
          _selector: null,
 
          constructor: function (cfg) {
-
             ItemsControl.superclass.constructor.apply(this, arguments);
+            this._publish('onItemsReady', 'onDataLoad');
+         },
 
-            this._itemTpl = this._options.itemTpl || this._defaultItemTemplate;
-            this._itemContentTpl = this._options.itemContentTpl || this._defaultItemContentTemplate;
-            this._groupTemplate = this._options.groupTemplate || this._defaultGroupTemplate;
+         _prepareMountingData: function(cfg) {
+            this._itemTpl = cfg.itemTpl || this._defaultItemTemplate;
+            this._itemContentTpl = cfg.itemContentTpl || this._defaultItemContentTemplate;
+            this._groupTemplate = cfg.groupTemplate || this._defaultGroupTemplate;
 
-            this._onCollectionChange = onCollectionChange.bind(this);
-
-            if (this._options.items) {
-               this._items = this._options.items;
+            //TODO тут надо раскомментить чтоб не было зацикливания
+            if (cfg.items /*&& this._items != cfg.items*/) {
+               this._items = cfg.items;
                this._itemsChangeCallback(true);
             }
 
-            if (this._options.dataSource) {
-               this._dataSource = DataSourceUtil.prepareSource(this._options.dataSource);
+            if (cfg.dataSource) {
+               this._dataSource = DataSourceUtil.prepareSource(cfg.dataSource);
             }
 
-            this._publish('onItemsReady', 'onDataLoad');
-
-            if (this._options.dataSource && this._options.dataSource.firstLoad !== false) {
+            if (cfg.dataSource && cfg.dataSource.firstLoad !== false) {
                this.reload();
             }
+         },
+
+         _beforeMount: function(cfg) {
+            this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
+            this._prepareMountingData(cfg);
+         },
+
+         _beforeUpdate: function(cfg) {
+            this._prepareMountingData(cfg);
          },
 
          _initItemBasedControllers: function() {
@@ -96,7 +104,7 @@ define('js!WSControls/Lists/ItemsControl', [
                   this._display.destroy();
                }
                this._display = this._createDefaultDisplay();
-               this._display.subscribe('onCollectionChange', this._onCollectionChange);
+               this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
 
                if (this._multiSelector) {
                   this._multiSelector.destroy();
@@ -106,6 +114,11 @@ define('js!WSControls/Lists/ItemsControl', [
                   this._multiSelector = this._createDefaultMultiSelector();
                }
             }
+         },
+
+         _onCollectionChange: function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
+            this._displayChangeCallback();
+            this._setDirty();
          },
 
          _itemsChangeCallback: function() {
@@ -122,10 +135,7 @@ define('js!WSControls/Lists/ItemsControl', [
 
 
          _getItemData: function () {
-            var tplOptions = {},
-               self = this,
-               timers = {},
-               logger;
+            var tplOptions = {};
             tplOptions.idProperty = this._options.idProperty;
             tplOptions.displayProperty = this._options.displayProperty;
             tplOptions.getPropertyValue = ItemsUtil.getPropertyValue;
@@ -332,23 +342,14 @@ define('js!WSControls/Lists/ItemsControl', [
          //</editor-fold>
 
          destroy: function() {
-            ItemsControl.superclass.destroy.ally(this, arguments);
+            ItemsControl.superclass.destroy.apply(this, arguments);
             if (this._display) {
                this._display.destroy();
             }
             if (this._multiSelector) {
                this._multiSelector.destroy();
             }
-            if (this._dataSourceController) {
-               this._dataSourceController.destroy();
-            }
          }
       });
-
-   var onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
-      this._displayChangeCallback();
-      this._setDirty();
-   };
-
    return ItemsControl;
 });

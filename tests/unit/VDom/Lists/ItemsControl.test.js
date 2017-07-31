@@ -37,7 +37,7 @@ define(['js!WSControls/Lists/ItemsControl', 'js!WS.Data/Collection/RecordSet', '
                   items : data
                });
 
-               var drawedItems = ctrl._records;
+               var drawedItems = ctrl._getRecordsForView();
                assert.equal(data.length, drawedItems.length, 'Count of drawed items is not equal to count of src items');
             });
 
@@ -51,7 +51,7 @@ define(['js!WSControls/Lists/ItemsControl', 'js!WS.Data/Collection/RecordSet', '
                      idProperty: 'id'
                   });
 
-               var drawedItems = ctrl._records;
+               var drawedItems = ctrl._getRecordsForView();
                assert.equal(rs.getCount(), drawedItems.length, 'Count of drawed items is not equal to count of src items');
             });
 
@@ -68,7 +68,7 @@ define(['js!WSControls/Lists/ItemsControl', 'js!WS.Data/Collection/RecordSet', '
                      }
                   });
 
-               var drawedItems = ctrl._records;
+               var drawedItems = ctrl._getRecordsForView();
                assert.equal(rs.getCount() + 2, drawedItems.length, 'Count of drawed items is not equal to count of src items + count of groups');
             });
 
