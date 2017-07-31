@@ -422,7 +422,14 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             }
 
             if (this._paging) {
-               this._setPagesCount(Math.ceil(this._getScrollHeight() / this._container.height()));
+               /**
+                * Меняем количество страниц, если высота не 0.
+                * Если высота стала 0, то менять количество страниц не нужно, потому что определить сколько их нельзя, а
+                * значит и определить на сколько прокручивать при переходе на другую страницу нельзя.
+                */
+               if (this._container.height()) {
+                  this._setPagesCount(Math.ceil(this._getScrollHeight() / this._container.height()));
+               }
             }
          },
 
