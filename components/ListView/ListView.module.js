@@ -996,6 +996,9 @@ define('js!SBIS3.CONTROLS.ListView',
                this._pagingZIndex = WindowManager.acquireZIndex();
                WindowManager.setVisible(this._pagingZIndex);
             }
+            if (this._options.virtualScrolling || this._options.scrollPaging) {
+               this._getScrollWatcher().subscribe('onScroll', this._onScrollHandler.bind(this));
+            }
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
             this._initLoadMoreButton();
@@ -1149,7 +1152,6 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _createScrollPager: function(){
             var scrollContainer = this._scrollWatcher.getScrollContainer();
-            this._scrollWatcher.subscribe('onScroll', this._onScrollHandler.bind(this));
             this._scrollPager = new Paging({
                element: $('> .controls-ListView__scrollPager', this._container),
                visible: false,
@@ -1198,6 +1200,9 @@ define('js!SBIS3.CONTROLS.ListView',
             var itemActions = this.getItemsActions();
             if (itemActions && itemActions.isItemActionsMenuVisible()){
                itemActions.hide();
+            }
+            if (this._virtualScrollController) {
+              this._virtualScrollController._scrollHandler(event, scrollTop);
             }
          },
          _setScrollPagerPosition: function(){
@@ -2835,6 +2840,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._moveTopScroll();
                }
             }
+            if (this._virtualScrollController){
+               this._virtualScrollController.initHeights();
+            }
             this._updateHoveredItemAfterRedraw();
          },
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
@@ -2850,9 +2858,6 @@ define('js!SBIS3.CONTROLS.ListView',
                   //TODO: Это возможно очень долго, надо как то убрать. Нужно для случев, когда ListView создается скрытым, а потом показывается
                   this._scrollBinder && this._scrollBinder._updateScrollPages();
                   this._setScrollPagerPositionThrottled();
-               }
-               if (this._virtualScrollController){
-                  this._virtualScrollController.updateVirtualPages();
                }
             }
             /* при изменении размера таблицы необходимо вызвать перерасчет позиции тулбара
