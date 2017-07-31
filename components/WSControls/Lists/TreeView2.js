@@ -20,8 +20,8 @@ define('js!WSControls/Lists/TreeView2', [
       _loadMode: undefined,       // Режим загрузки данных ( "partial" / "full" )
       _expandMode: undefined,     // Режим разворота узлов ( "multiple" / "single" )
 
-      _beforeMount: function(cfg) {
-         TreeView.superclass._beforeMount.apply(this, arguments);
+      _prepareMountingData: function(cfg) {
+         TreeView.superclass._prepareMountingData.apply(this, arguments);
          if (isPlainObject(cfg.expandedItems)) {
             this._expandedItems = cFunctions.clone(cfg.expandedItems);
          } else {

@@ -65,6 +65,8 @@ define('js!WSControls/Lists/ItemsControl', [
 
          constructor: function (cfg) {
             ItemsControl.superclass.constructor.apply(this, arguments);
+            this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
+            this._prepareMountingData(cfg);
             this._publish('onItemsReady', 'onDataLoad');
          },
 
@@ -73,8 +75,7 @@ define('js!WSControls/Lists/ItemsControl', [
             this._itemContentTpl = cfg.itemContentTpl || this._defaultItemContentTemplate;
             this._groupTemplate = cfg.groupTemplate || this._defaultGroupTemplate;
 
-            //TODO тут надо раскомментить чтоб не было зацикливания
-            if (cfg.items /*&& this._items != cfg.items*/) {
+            if (cfg.items && (this._items != cfg.items)) {
                this._items = cfg.items;
                this._itemsChangeCallback(true);
             }
@@ -82,19 +83,17 @@ define('js!WSControls/Lists/ItemsControl', [
             if (cfg.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(cfg.dataSource);
             }
+         },
 
-            if (cfg.dataSource && cfg.dataSource.firstLoad !== false) {
+         _beforeMount: function(cfg) {
+            if (this._dataSource && cfg.dataSource.firstLoad !== false) {
                this.reload();
             }
          },
 
-         _beforeMount: function(cfg) {
-            this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
-            this._prepareMountingData(cfg);
-         },
-
          _beforeUpdate: function(cfg) {
             this._prepareMountingData(cfg);
+            //TODO обработать смену фильтров и т.д. позвать релоад если надо
          },
 
          _initItemBasedControllers: function() {
