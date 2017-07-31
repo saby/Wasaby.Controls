@@ -11,9 +11,18 @@ define('js!WSTest/Focus/Scenario/19', [
              fHelpers,
              W) {
    'use strict';
+   /*
+      FloatArea
+         content
+            AreaAbstract0 enabled=false
+               Textbox0 enabled=true, class=ws-autofocus
+
+      открываем панель - фокус уходит в Textbox0
+    */
+   var caseControlName = 'WSTest/Focus/Case19';
    return function scenario19(done) {//TODO Фокус остается на TextBox1
       var wnd = new W({
-         template: 'js!WSTest/Focus/Case19',
+         template: 'js!' + caseControlName,
          top: 0,
          showOnControlsReady: true,
          width: '500px',
@@ -23,6 +32,7 @@ define('js!WSTest/Focus/Scenario/19', [
       setTimeout(function() {
          fHelpers.childHasFocus(wnd, 'TextBox0');
          wnd.destroy();
+         delete window[caseControlName];
          done();
       }, 100);
 

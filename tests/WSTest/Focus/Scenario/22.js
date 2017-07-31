@@ -7,7 +7,21 @@ define('js!WSTest/Focus/Scenario/22', [
 ], function (cConstants,
              fHelpers) {
    'use strict';
-   return function scenario22(testControl) {//TODO Фокус на textbox0
+   /*
+      AreaAbstract0
+         AreaAbstract1
+            Textbox1
+            Textbox2, tabindex=3
+            Textbox3, tabindex=1
+            Textbox4, tabindex=2
+            Textbox5
+            Textbox6, tabindex=5
+
+      AreaAbstract0.setActive(true), tab,tab,tab,tab,tab
+      переходы фокуса - Textbox1, Textbox3, Textbox2, Textbox4, Textbox5, Textbox6
+      табиндексы равны 1 4 2 3 5 6 соответственно
+    */
+   return function scenario22(testControl) {
       fHelpers.setControlActive(testControl.getChildControlByName('AreaAbstract1'), true);
       fHelpers.childHasFocus(testControl, 'TextBox1');
 

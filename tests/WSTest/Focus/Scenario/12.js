@@ -7,6 +7,15 @@ define('js!WSTest/Focus/Scenario/12', [
 ], function (cConstants,
              fHelpers) {
    'use strict';
+   /*
+      AreaAbstract1
+         Textbox0, parent=AreaAbstract2
+         AreaAbstract2
+            Textbox1
+
+      клик на Textbox0 - фокус ушел на него
+      таб - фокус ушел на Textbox1
+    */
    return function scenario12(testControl) {//TODO Jquery
       $('.moveTb').prependTo('.AA1');
       fHelpers.fireClick(testControl.getChildControlByName('TextBox0'));

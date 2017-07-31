@@ -12,10 +12,22 @@ define('js!WSTest/Focus/Scenario/14', [
              fHelpers,
              W) {
    'use strict';
+   /*
+      FloatArea
+         header
+            textbox1
+            textbox2
+         content
+            textbox3, class=ws-autofocus
+            textbox4
+
+      Открываем панель - фокус уходит на textbox3
+    */
+   var caseControlName = 'WSTest/Focus/Case14';
    return function scenario14(done) {
       var wnd = new W({
          element: $('#component'),
-         template: 'js!WSTest/Focus/Case14',
+         template: 'js!' + caseControlName,
          top: 0,
          width: '500px',
          height: '200px',
@@ -24,6 +36,7 @@ define('js!WSTest/Focus/Scenario/14', [
       setTimeout(function() {
          fHelpers.childHasFocus(wnd, 'TextBox3');
          wnd.destroy();
+         delete window[caseControlName];
          done();
       }, 10);
    };

@@ -7,6 +7,18 @@ define('js!WSTest/Focus/Scenario/5', [
 ], function (cConstants,
              fHelpers) {
    'use strict';
+   /*
+      AreaAbstract0
+         AreaAbstract1
+            Textbox0
+            AreaAbstract2
+               AreaAbstract3
+                  Textbox1
+
+      кликаем на Textbox0 - Textbox0 в фокусе, он и всего его паренты активны, остальные неактивны
+      кликаем на AreaAbstract2 - Textbox1 в фокусе, он и всего его паренты активны
+      кликаем на Textbox0 - Textbox0 в фокусе, он и всего его паренты активны, остальные неактивны
+    */
    return function scenario5(testControl) {
       fHelpers.fireClick(testControl.getChildControlByName('TextBox0'));
       fHelpers.childHasFocus(testControl, 'TextBox0');

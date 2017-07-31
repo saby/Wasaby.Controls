@@ -46,7 +46,7 @@ define('js!WSTest/Focus/TestFocusHelpers', [
       },
 
       focusOn: function (element) {
-         element.focus ? element.focus() : $(element).focus();
+         element.focusin ? element.focusin() : $(element).focusin();
       },
 
       fireKeypress: function (control, keyCode) {
@@ -78,6 +78,10 @@ define('js!WSTest/Focus/TestFocusHelpers', [
 
       focusOnFirstDiv: function () {
          assert.isTrue(document.activeElement === $('.ws-focus-in')[0]);
+      },
+
+      checkFocusOn: function (className) {
+         assert.isTrue(document.activeElement === $("." + className)[0]);
       }
    }
    return helper;

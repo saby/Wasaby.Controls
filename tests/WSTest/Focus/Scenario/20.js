@@ -11,9 +11,18 @@ define('js!WSTest/Focus/Scenario/20', [
              fHelpers,
              W) {
    'use strict';
+   /*
+      FloatArea
+         content
+            AreaAbstract0
+               Textbox0 class=ws-autofocus,ws-hidden
+
+      открываем панель - ???
+    */
+   var caseControlName = 'WSTest/Focus/Case20';
    return function scenario20(done) {//TODO Фокус остается на TextBox1
       var wnd = new W({
-         template: 'js!WSTest/Focus/Case20',
+         template: 'js!' + caseControlName,
          top: 0,
          width: '500px',
          height: '200px'
@@ -22,6 +31,7 @@ define('js!WSTest/Focus/Scenario/20', [
       setTimeout(function() {
          fHelpers.hasFocus(wnd);
          wnd.destroy();
+         delete window[caseControlName];
          done();
       }, 100);
 
