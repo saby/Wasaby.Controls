@@ -526,7 +526,7 @@
 @radio-button-icon-disabled-checked-bg:         @radio-button-icon-bg;
 @radio-button-icon-disabled-checked-hover-bg:   @radio-button-icon-bg;
 
-@radio-button-icon-margin:                      -1px 6px;
+@radio-button-icon-margin:                      8px 6px 0 6px;
 @radio-button-icon-border-style:                solid;
 @radio-button-icon-border-color:                @gray-color;
 @radio-button-icon-border-color-checked:        @radio-button-hover-text-color;
@@ -1179,6 +1179,7 @@
 @suggest-picker-margin-reverted:                1px 0 0 0;
 @suggest-picker-standard-width:                 500px;
 @suggest-picker-standard-height:                500px;
+@suggest-picker-color:                          initial;
 
 @suggest-picker-item-font:                      @suggest-field-font;
 @suggest-picker-item-text-color:                @suggest-field-text-color;
@@ -1959,7 +1960,8 @@
 @data-grid-table-layot: 								fixed;
 @data-grid-table-separator-border-width:        0 0 @default-border-width 0;
 
-@data-grid-money-header-cell-padding:           20px;
+@data-grid-money-header-cell-padding:           22px;
+@data-grid-money-header-cell-padding-last:      24px;
 
 @data-grid-results-color:                       @accent-color;
 // ---------- //
@@ -2160,12 +2162,14 @@
 @DropdownList-picker-menu-item-color-blur:            rgba(255, 255, 255, 0);
 @DropdownList-picker-menu-item-hover:                 #F0F5FB;
 @DropdownList-picker-menu-item-hover-blur:            rgba(240, 245, 251, 0);
+@DropdownList-after-caption-top:                      3px;
 @DropdownList-linkStyleColor:                         @link-text-color;
 @DropdownList-linkStyleHoverColor:                    #313E78;
 @DropdownList-footer-buttonsBlock-position:           relative;
 @DropdownList-footer-buttonsBlock-height:             24px;
 @DropdownList-footer-multisel-buttonsBlock-h:         32px;
 @DropdownList-checkbox-bottom:                        1px;
+@DropdownList-before-caption-wrapper-top:             2px;
 @DropdownList-after-caption-wrapper-top:              2px;
 @DropdownList-footer-buttons-position:                absolute;
 @DropdownList-footer-hasMore-left:                    12px;
@@ -2368,6 +2372,9 @@
 @controls-FieldLink-showAll-shadow-width:          20px;
 @controls-FieldLink-showAll-margin-right-ff:       -15px;
 @controls-FieldLink-showAll-top-ff:                -24px;
+
+@controls-FieldLink-showSelector-color:            @icon-color-primary;
+@controls-FieldLink-showSelector-color-hover:      @link-hover-text-color;
 
 @controls-FieldLink-big-fontSize:                  15px;
 @controls-FieldLink-big-fontSize-color:            #313E78;

@@ -122,8 +122,14 @@ define('js!SBIS3.CONTROLS.ListView',
        * @css controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
        * @css js-controls-ListView__notEditable Клик по элементу с данным классом не будет приводить к запуску редактирования по месту.
        *
-       * @ignoreEvents onAfterLoad onChange onStateChange
-       * @ignoreEvents onDragStop onDragIn onDragOut onDragStart
+       *
+       * @ignoreOptions _handlers activableByClick alwaysShowExtendedTooltip buildMarkupWithContext className ignoreTabCycles linkedContext modal
+       *
+       * @ignoreMethods addPendingOperation applyEmptyState applyState getAlignment getAllPendingInfo getClassName getMinHeight getMinSize getMinWidth getResizer getStateKey
+       * @ignoreMethods getToolBarCount getEventBusOf getNamedGroup getNearestChildControlByName getOwnerId initializeProperty isAllReady increaseToolBarCount isPage
+       * @ignoreMethods makeOwnerName onBringToFront onDropDownList setActivationIndex setSize setItemTemplate setOwner setStateKey waitAllPendingOperations
+       *
+       * @ignoreEvents onStateChanged onTooltipContentRequest onAfterLoad onChange onStateChange onDragStop onDragIn onDragOut onDragStart
        *
        * @control
        * @public
@@ -2428,7 +2434,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      onAfterEndEdit: function(event, model, target, withSaving) {
                         this.setSelectedKey(model.getId());
                         event.setResult(this._notify('onAfterEndEdit', model, target, withSaving));
-                        this._toggleEmptyData(!this.getItems().getCount());
+                        this._toggleEmptyData(!this.getItems() || !this.getItems().getCount());
                         this._hideToolbar();
                         this._getItemsContainer().off('mousedown', '.js-controls-ListView__item', this._editInPlaceMouseDownHandler);
                      }.bind(this),
@@ -3264,13 +3270,17 @@ define('js!SBIS3.CONTROLS.ListView',
          _getNextOffset: function(){
             if (this._infiniteScrollState.mode == 'down' || this._infiniteScrollState.mode == 'demand'){
                if (this._getSourceNavigationType == 'Offset') {
-                  return Math.min(this._scrollOffset.bottom + this._limit, this._getItemsProjection().getCount());
+                  return Math.min(this._scrollOffset.bottom + this._limit, this._getRootCount());
                } else {
                   return this._scrollOffset.bottom + this._limit;
                }
             } else {
                return this._scrollOffset.top - this._limit;
             }
+         },
+
+         _getRootCount: function(){
+            return this._getItemsProjection().getCount();
          },
 
          _updateScrollOffset: function(){ 
@@ -4056,25 +4066,6 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._dragInitHandler ? this._dragInitHandler : this._dragInitHandler  = (function(e){
                if (this._canDragStart(e)) {
                   this._initDrag.call(this, e);
-                  //TODO: Сейчас появилась проблема, что если к компьютеру подключен touch-телевизор он не вызывает
-                  //preventDefault и при таскании элементов мышкой происходит выделение текста.
-                  //Раньше тут была проверка !constants.compatibility.touch и preventDefault не вызывался для touch устройств
-                  //данная проверка была добавлена, потому что когда в строке были отрендерены кнопки, при нажатии на них
-                  //и выполнении preventDefault впоследствии не вызывался click. Написал демку https://jsfiddle.net/9uwphct4/
-                  //с воспроизведением сценария, на iPad и Android click отрабатывает. Возможно причина была ещё в какой-то
-                  //ошибке. При возникновении ошибок на мобильных устройствах нужно будет добавить проверку !constants.browser.isMobilePlatform.
-                  //Кроме того в мозилле не правильно определяется event.target без preventDefault и србатывает клик
-                  //над элементом который перетаскивается https://bugzilla.mozilla.org/show_bug.cgi?id=1259357#a24470849_540189
-                  e.preventDefault();
-                  //снимаем выделение с текста иначе не будут работать клики а выделение не будет сниматься по клику на строку из за preventDefault
-                  var sel = window.getSelection();
-                  if (sel) {
-                     if (sel.removeAllRanges) {
-                        sel.removeAllRanges();
-                     } else if (sel.empty) {
-                        sel.empty();
-                     }
-                  }
                }
             }).bind(this);
          },
@@ -4089,11 +4080,12 @@ define('js!SBIS3.CONTROLS.ListView',
                   view: this,
                   mover: this._getMover(),
                   projection: this._getItemsProjection(),
-                  useDragPlaceholder: this._options.useDragPlaceHolder,
+                  useDragPlaceHolder: this._options.useDragPlaceHolder,
                   linkTemplateConfig: this._options.linkTemplateConfig,
                   dragEntity: this._options.dragEntity,
                   dragEntityList: this._options.dragEntityList,
-                  itemsDragNDrop: this.getItemsDragNDrop()
+                  itemsDragNDrop: this.getItemsDragNDrop(),
+                  nodeProperty: this._options.nodeProperty
                });
             }
             return this._dragMoveController;
@@ -4335,7 +4327,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._destroyControls(footerContainer);
                newFooter = $(this._options.footerTpl(this._options));
                footerContainer.empty().append(newFooter);
-               this.reviveComponents(newFooter);
+               this.reviveComponents(footerContainer);
             }
          },
 

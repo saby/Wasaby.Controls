@@ -27,16 +27,6 @@
       // Internet Explorer 10+ placeholder
       .placeholder();
    }
-   &.ws-validation-error {
-      border-width: @text-area-error-border-width;
-      border-style: @text-area-error-border-style;
-      border-color: @text-area-error-border-color;
-      background: @text-area-error-bg;
-
-      .controls-TextArea__inputField {
-         color: @text-area-field-error-text-color;
-      }
-   }
 
    &:hover {
       border-width: @text-area-hover-border-width;
@@ -57,6 +47,17 @@
 
       .controls-TextArea__inputField {
          color: @text-area-field-focus-text-color;
+      }
+   }
+
+   &.ws-validation-error {
+      border-width: @text-area-error-border-width;
+      border-style: @text-area-error-border-style;
+      border-color: @text-area-error-border-color;
+      background: @text-area-error-bg;
+
+      .controls-TextArea__inputField {
+         color: @text-area-field-error-text-color;
       }
    }
 
