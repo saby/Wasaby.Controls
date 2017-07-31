@@ -5,6 +5,9 @@ define('js!WSTest/Focus/TestFocusHelpers', [
    'Core/constants'
 ], function (cConstants) {
    'use strict';
+   /*
+      Хелпер для работы с DOM
+    */
    var helper = {
       notInFocus: function (control) {
          assert.isTrue(document.activeElement !== control._getElementToFocus()[0])
