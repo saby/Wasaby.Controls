@@ -53,6 +53,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
     */
 
    function formatText(value, text, onlyInteger, decimals, integers, delimiters, onlyPositive, maxLength, hideEmptyDecimals){
+      // Вырезаем переносы строк и теги.
+      value = typeof value === 'string' ? value.replace(/\n/gm, '').replace(/<.*?>/g, '') : value;
       var decimals = onlyInteger ? 0 : decimals,
           dotPos = (value = (value + '')).indexOf('.'),
           parsedVal = dotPos != -1 ? '.' + value.substr(dotPos + 1).replace(/[^0-9]/g, '') : '0',

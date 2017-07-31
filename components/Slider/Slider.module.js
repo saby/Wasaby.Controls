@@ -214,6 +214,7 @@ define('js!SBIS3.CONTROLS.Slider',
                this._options.maxValue = max;
                this.setMinValue(min);
                this.setMaxValue(max);
+               this._redrawValues();
             },
 
             _prepareValue: function(value, side) {
@@ -267,9 +268,13 @@ define('js!SBIS3.CONTROLS.Slider',
                   optionName = side === 'min' ? 'minValue' : 'maxValue';
                if (this._options[optionName] != value) {
                   this._options[optionName] = value;
-                  this._drawValue(this._options.startValue, 'start');
-                  this._drawValue(this._options.endValue, 'end');
+                  this._redrawValues();
                }
+            },
+
+            _redrawValues: function(){
+               this._drawValue(this._options.startValue, 'start');
+               this._drawValue(this._options.endValue, 'end');
             },
             //DragNDropMixin методы
             _initDrag: function(event) {

@@ -118,7 +118,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
 
          //Сдвигаем ползунок на нужную позицию
          _setThumbPosition: function () {
-            if (thumb) {
+            if (this._thumb) {
                this._thumbPosition = this._calcProjectionSize(this.getPosition(), this._scrollRatio);
                this._thumb.get(0).style.top = this._thumbPosition + 'px';
             }
@@ -160,20 +160,23 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             this._scrollRatio = (this.getContainer().height() - this._thumbHeight) / (this.getContentHeight() - this._containerOuterHeight);
          },
 
+         // Не использовать e.clientY, потому что его нет на touch устройствах.
          _beginDragHandler: function (dragObject, e) {
             this._container.addClass('controls-Scrollbar__dragging');
-            this._beginClient = e.clientY;
+            this._beginClient = e.pageY;
          },
 
+         // Не использовать e.clientY, потому что его нет на touch устройствах.
          _onDragHandler: function (dragObject, e) {
-            var newThumbPosition = this._thumbPosition + e.clientY - this._beginClient;
+            var newThumbPosition = this._thumbPosition + e.pageY - this._beginClient;
 
             this.setPosition(newThumbPosition / this._scrollRatio);
             this._notify('onScrollbarDrag', this.getPosition());
 
-            this._beginClient = e.clientY - newThumbPosition + this._thumbPosition;
+            this._beginClient = e.pageY - newThumbPosition + this._thumbPosition;
          },
 
+         // Не использовать e.clientY, потому что его нет на touch устройствах.
          _endDragHandler: function (dragObject, droppable, e) {
             this._container.removeClass('controls-Scrollbar__dragging');
          },

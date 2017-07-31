@@ -99,7 +99,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 /**
                  * @cfg {Boolean} Признак, возможножности перемещения элементов с помощью DragNDrop.
                  */
-                itemsDragNDrop: true
+                itemsDragNDrop: true,
+                dragClasses: 'dragdropBody ws-unSelectable'
             },
             /**
              * @member {Number} Константа, показывающая на сколько пикселей надо сдвинуть мышь, чтобы началось перемещение.
@@ -152,7 +153,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          * @remark Определяется в модуле, который подмешивает миксин.
          * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
          * @param {Boolean} droppable Cработал внутри droppable контейнера см {@link _findDragDropContainer}
-         * @param {Event} e Браузерное событие.
+         * @param {Event} e Браузерное событие. На touch устройствах в полях pageX, pageY находятся координаты touch.
          * @see SBIS3.CONTROLS.DragObject
          * @see _findDragDropContainer
          * @example
@@ -179,7 +180,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          * Срабатывает при перемещении (на каждое перемещение).
          * @remark Определяется в модуле, который подмешивает миксин.
          * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
-         * @param {Event} e Браузерное событие.
+         * @param {Event} e Браузерное событие. На touch устройствах в полях pageX, pageY находятся координаты touch.
          * @see SBIS3.CONTROLS.DragObject
          */
         _onDragHandler: function(dragObject, e) {
@@ -190,7 +191,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          * @remark Определяется в модуле, который подмешивает миксин. Если контрол взамодействует с другими контролами через Drag'n'drop
          * то этот метод должен определить, что перемещает пользователь и установить в dragObject (см метод {@link SBIS3.CONTROLS.DragObject#setSource}).
          * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
-         * @param {Event} e Браузерное событие.
+         * @param {Event} e Браузерное событие. На touch устройствах в полях pageX, pageY находятся координаты touch.
          * @see SBIS3.CONTROLS.DragObject
          * @returns {Boolean} если вернуть false перемещение не начнется
          */
@@ -321,7 +322,17 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 DragObject.onDragHandler(e);
                 if (this._beginDragHandler(DragObject, e) !== false) {
                     if (this._notify('onBeginDrag', DragObject, e) !== false) {
-                        $('body').addClass('dragdropBody ws-unSelectable');
+                        //preventDefault делаем что бы запретить выделение текста
+                        e.preventDefault();
+                        //снимаем выделение с текста иначе не будут работать клики а выделение не снимется сниматься по клику из за preventDefault
+                        var sel = window.getSelection();
+                        if (sel) {
+                            if (sel.removeAllRanges) {
+                               sel.removeAllRanges();
+                            } else if (sel.empty) {
+                               sel.empty();
+                            }
+                        }
                         this._showAvatar(e);
                         DragObject.setOwner(this);
                         DragObject.setDragging(true);
@@ -384,8 +395,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
             if (res !== false) {
                 this._endDragHandler(DragObject, droppable, e);
             }
+            this._getDragContainer().removeClass('controls-dragndrop');
             this._position = null;
-            $('body').removeClass('dragdropBody cantDragDrop ws-unSelectable');
         },
 
         /**
@@ -416,11 +427,15 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         _onDrag: function (e) {
             var
                 targetsControl = DragObject.getTargetsControl(),
-                res;
+                res,
+                container = this._getDragContainer();
 
             if (targetsControl === this) {
+                container.addClass('controls-dragndrop');
                 this._updateDragTarget(DragObject, e);
                 res = this._notify('onDragOver', DragObject, e);
+            } else if (container.hasClass('controls-dragndrop')) {
+                container.removeClass('controls-dragndrop')
             }
             if (DragObject.getOwner() === this) {
                 this._notify('onDragMove', DragObject, e);

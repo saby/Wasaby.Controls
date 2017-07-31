@@ -66,6 +66,10 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
              */
             model: undefined,
             /**
+             * @cfg {WS.Data/Display/CollectionItem} Модель по которой строится строка.
+             */
+            projectionItem: undefined,
+            /**
              * @cfg {DragPosition} Позиция элемента после перемещения.
              */
             position: undefined,
@@ -118,6 +122,19 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
        */
       setDomElement: function (element) {
          this._options.domElement = element;
+      },
+      /**
+       * Устанавливает элемент проекции
+       */
+      setProjectioItem: function (item) {
+         this._options.projectionItem = item;
+      },
+      /**
+       * Возвращает элемент проекции
+       * @return {WS.Data/Display/CollectionItem}
+       */
+      getProjectionItem: function () {
+         return this._options.projectionItem;
       }
    });
    Di.register('dragentity.row', Row);

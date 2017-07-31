@@ -751,6 +751,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @param {String} smile название смайла
           */
          insertSmile: function(smile) {
+            //Если редактор не был активным контролом необходимо вначале проставить активность
+            //поле связи если было активно при потере фокуса дестроит содержимое саггеста
+            //если в нем был какой либо контрол, то он вызывает onBringToFront, который в свою очередь вернет фокус в поле связи
+            //после чего смайл вставится в поле связи
+            if (!this.isActive()) {
+               this.setActive(true);
+            }
             if (typeof smile === 'string') {
                $.each(smiles, function(i, obj) {
                   if (obj.key === smile) {
