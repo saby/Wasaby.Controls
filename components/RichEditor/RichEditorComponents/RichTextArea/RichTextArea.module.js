@@ -1255,7 +1255,48 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
                //upd: в костроме форматная вставка, не нужно вырезать лишние теги
                if (!self._mouseIsPressed && self._options.editorConfig.paste_as_text) {
-                  e.content = Sanitize(e.content, {validNodes: {img: false}, checkDataAttribute: false, escapeInvalidTags: false});
+                  e.content = Sanitize(e.content,
+                     {
+                        validNodes: {
+                           img: false
+                        },
+                        validAttributes: {
+                           'class' : function(content, attributeName) {
+                              var
+                                 currentValue = content.attributes[attributeName].value,
+                                 classes = currentValue.split(' '),
+                                 whiteList =  [
+                                    'titleText',
+                                    'subTitleText',
+                                    'additionalText',
+                                    'controls-RichEditor__noneditable',
+                                    'without-margin',
+                                    'image-template-left',
+                                    'image-template-center',
+                                    'image-template-right',
+                                    'mce-object-iframe',
+                                    'ws-hidden'
+                                 ],
+                                 index = classes.length - 1;
+
+                              while (index >= 0) {
+                                 if (!(classes[index] in whiteList)) {
+                                    classes.splice(index, 1);
+                                 }
+                                 index -= 1;
+                              }
+                              currentValue = classes.join(' ');
+                              if (currentValue) {
+                                 content.attributes[attributeName].value = currentValue;
+                              } else {
+                                 delete content.attributes[attributeName];
+                              }
+
+                           },
+                        },
+                        checkDataAttribute: false,
+                        escapeInvalidTags: false
+                     });
                }
                self._mouseIsPressed = false;
                // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
