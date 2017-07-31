@@ -51,6 +51,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             this._thumb = this._container.find('.js-controls-Scrollbar__thumb');
             this._container.on('mousedown touchstart', '.js-controls-Scrollbar__thumb', this._getDragInitHandler());
             this._container.on('mousedown touchstart', this._onClickDragHandler.bind(this));
+            this._container.on('wheel', this._wheelHandler.bind(this));
             this._containerHeight = this._container.height();
             this._containerOuterHeight = this._container.outerHeight(true);
             this._browserScrollbarMinHeght = parseFloat(getComputedStyle(this._thumb[0]).minHeight);
@@ -65,10 +66,11 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          },
 
          setPosition: function (position) {
-            var maxPosition = this.getContentHeight() - this._containerOuterHeight;
-
-            position = this._calcPosition(position, 0, maxPosition);
-            this._options.position = position;
+            position = this._calcPosition(position, 0, this._getMaxPosition());
+            if (position !== this._options.position) {
+               this._options.position = position;
+               this._notify('onScrollbarDrag', position);
+            }
             this._setThumbPosition();
          },
 
@@ -99,6 +101,10 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             }
 
             return position;
+         },
+
+         _getMaxPosition: function() {
+            return this.getContentHeight() - this._containerOuterHeight;
          },
 
          _onClickDragHandler: function (e) {
@@ -181,11 +187,15 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             this._container.removeClass('controls-Scrollbar__dragging');
          },
 
-         destroy: function () {
-            Scrollbar.superclass.destroy.call(this);
+         _wheelHandler: function(event) {
+            this.setPosition(this.getPosition() + event.originalEvent.deltaY);
+         },
 
+         destroy: function () {
             this.getContainer().off('mousedown touchstart');
             this._thumb = undefined;
+
+            Scrollbar.superclass.destroy.call(this);
          }
       });
 
