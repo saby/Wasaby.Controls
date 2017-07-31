@@ -14,8 +14,6 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             },
             _currentVirtualPage: 0,
             _heights: [],
-            _newItemsCount: 0,
-            _removedItemsCount: 0,
             _notAddedAmount: 0,
             // количество не отображаемых страниц сверху списка
             _viewportHeight: 0,
@@ -46,8 +44,6 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             this._currentVirtualPage = 0;
             this._currentWindow = this._getRangeToShow(0, PAGES_COUNT);
             this._heights = [];
-            this._newItemsCount = 0;
-            this._removedItemsCount = 0;
          },
 
          _scrollHandler: function (e, scrollTop) {
@@ -112,11 +108,11 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
                endHeight = 0;
 
             for (var i = 0; i < shownRange[0]; i++) {
-               beginHeight += this._heights[i];
+               beginHeight += this._getHeightByIndex(i);
             }
 
             for (i = shownRange[1]; i < this._heights.length - 1; i++) {
-               endHeight += this._heights[i];
+               endHeight += this._getHeightByIndex(i);
             }
 
             if (this._DEBUG) {
@@ -128,6 +124,14 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
                begin: beginHeight, 
                end: endHeight
             };
+         },
+
+         _getHeightByIndex: function(index){
+            if (!this._heights[index]) {
+               var item = this._options.projection.at(index);
+               this._heights[index] = this._getItemHeight(item);
+            }
+            return this._heights[index];
          },
 
          /**
@@ -229,24 +233,19 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
 
             for (i = 0; i < items.length; i++) {
                this._heights.splice(at + i, 0, this._getItemHeight(items[i]));
-               if (i + at < this._currentWindow[0]) { // Удалили до видимого окна
+               if (i + at < this._currentWindow[0]) { // Добавили до видимого окна
                   this._currentWindow[0] += 1;
-               } else if (i + at <= this._currentWindow[1] + 1) { // Удалили в видимом окне
+               } else if (i + at <= this._currentWindow[1] + 1) { // Добавили в видимом окне
                   this._currentWindow[1] += 1;
                }
             }
             
-            this._newItemsCount += items.length;
-
-            if (this._newItemsCount >= BATCH_SIZE) {
-               this._onVirtualPageChange(this._currentVirtualPage);
-               this._newItemsCount -= BATCH_SIZE;
-            }
+            // текущее окно поменялось - пересчитаем отображаемые записи
+            this._onVirtualPageChange(this._currentVirtualPage);
          },
 
          removeItems: function(items, at) {
             this._heights.splice(at, items.length);
-            this._removedItemsCount += items.length;
 
             for (i = 0; i < items.length; i++) {
                if (i + at < this._currentWindow[0]) { // Удалили до видимого окна
@@ -255,11 +254,9 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
                   this._currentWindow[1] -= 1;
                } 
             }
-
-            if (this._removedItemsCount >= BATCH_SIZE) {
-               this._onVirtualPageChange(this._currentVirtualPage);
-               this._removedItemsCount -= BATCH_SIZE;
-            }
+            
+            // текущее окно поменялось - пересчитаем отображаемые записи
+            this._onVirtualPageChange(this._currentVirtualPage);
          }
 
       });
