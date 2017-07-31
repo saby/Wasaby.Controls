@@ -25,7 +25,9 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             var view = this._options.view;
             VirtualScrollController.superclass.init.call(this);
 
-            this.initHeights();
+            if (this._options.viewport) {
+               this.initHeights();
+            }
 
             if (this._options.projection) {
                this._currentWindow = this._getRangeToShow(0, PAGES_COUNT);
