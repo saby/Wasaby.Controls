@@ -226,6 +226,28 @@ define([
             assert.isFalse(dragMove._canDragMove());
          });
       });
+      describe('._findItemByElement', function () {
+         it('should return item', function () {
+            var item = dragMove._findItemByElement(view.getContainer().find('[data-id=1]'));
+            assert.equal(item.data('id'), 1);
+         });
+         it('should return item when target inside item', function () {
+            var target = $('<div/>');
+            view.getContainer().find('[data-id=1]').html(target);
+            var item = dragMove._findItemByElement(target);
+            assert.equal(item.data('id'), 1);
+         });
+         it('should not return item if target ', function () {
+            var item = dragMove._findItemByElement($('<div/>'));
+            assert.equal(item.length, 0);
+         });
+         it('should return item if target inside listview item inside another listview item ', function () {
+            var target = $('<div/>'),
+               anotherItem = $('<div class="js-controls-ListView__item" data-id="1555" data-hash="55582"></div>').html(target),
+               item = view.getContainer().find('[data-id=1]').html(anotherItem);
+            assert.equal(item.data('id'), 1);
+         });
+      });
       describe('.getContainer', function () {
          it('should return container', function () {
             assert.equal(dragMove.getContainer(), view.getContainer());

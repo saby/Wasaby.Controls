@@ -477,11 +477,15 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
          if(!target.length) {
             return [];
          }
-         var domElem;
+         var domElem,
+            projection = this._getItemsProjection();
          if (target.hasClass('.js-controls-ListView__item')) {
             domElem = target;
          } else {
             domElem = target.closest('.js-controls-ListView__item', this.getContainer()[0]);
+         }
+         if (projection && !projection.getByHash(domElem.data('hash'))) {
+            return this._findItemByElement(domElem.parent());
          }
          return domElem;
       },
