@@ -3,6 +3,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
       "Core/UserInfo",
       "Core/core-merge",
       'Core/Deferred',
+      'Core/EventBus',
       /*###"Core/helpers/string-helpers",*/
       'js!SBIS3.CORE.TabMessage',
       /*###'js!SBIS3.CONTROLS.WaitIndicator',*/
@@ -17,7 +18,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
       "js!SBIS3.CONTROLS.LongOperationsList"
    ],
 
-   function (UserInfo, cMerge, Deferred, /*###strHelpers,*/ TabMessage, /*###WaitIndicator,*/ NotificationPopup, LongOperationEntry, Model, headerTemplate, contentTpl, footerTpl, FloatArea) {
+   function (UserInfo, cMerge, Deferred, EventBus, /*###strHelpers,*/ TabMessage, /*###WaitIndicator,*/ NotificationPopup, LongOperationEntry, Model, headerTemplate, contentTpl, footerTpl, FloatArea) {
       'use strict';
 
       var FILTER_NOT_SUSPENDED = 'not-suspended';
@@ -32,7 +33,6 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
       var LongOperationsPopup = NotificationPopup.extend({
          $protected: {
             _options: {
-               closeButton: true,
                isHint: false,
                headerTemplate: headerTemplate,
                bodyTemplate: contentTpl,
@@ -227,6 +227,13 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                   self._setFooterTimeSpent(self._activeOperation.get('shortTimeSpent'));
                }
             });
+
+            // Обновить попап после разблокировки девайса
+            this.subscribeTo(EventBus.globalChannel(), 'onwakeup', function () {
+               if(!self.isDestroyed() && self.isVisible()) {
+                  self.reload();
+               }
+            });
          },
 
          /**
@@ -392,7 +399,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                   this._setProgress(model.get('progressCurrent'), model.get('progressTotal'));
                }
 
-               this._setFooterTimeSpent(model.get('shortTimeSpent') || '0сек.');
+               this._setFooterTimeSpent(model.get('shortTimeSpent'));
             }
          },
 

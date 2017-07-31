@@ -78,6 +78,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
              * @variant allow Разрешено
              * @variant onlyChangeOrder Разрешено только изменение порядка
              * @variant onlyChangeParent Разрешено только перемещение в папку
+             * @variant separateParent Нельзя перемещать лист между папками и папку между листами
              * @example
              * <pre>
              *     <option name="itemsDragNDrop">onlyChangeParent</option>
@@ -120,7 +121,11 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
        * @private
        */
       _onExpandItem: function(expandedItem) {
-         this._createFolderFooter(expandedItem.getContents().getId());
+         var item = expandedItem.getContents();
+         
+         if(this._needCreateFolderFooter(expandedItem)) {
+            this._createFolderFooter(item.getId());
+         }
          this._drawExpandedItem(expandedItem);
       },
       _drawExpandedItem: function(expandedItem) {

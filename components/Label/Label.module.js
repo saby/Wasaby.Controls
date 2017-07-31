@@ -50,6 +50,8 @@ define('js!SBIS3.CONTROLS.Label',
 
          _applyOptions: function() {
             this.caption = this._options.caption || '';
+            this.tooltip = this._options.tooltip || '';
+            this.visible = this._options.visible !== false;
          },
 
          _clickCaptionHandler: function() {

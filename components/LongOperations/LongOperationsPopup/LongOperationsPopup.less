@@ -100,10 +100,6 @@
     background-size: cover;
 }
 
-.controls-LongOperationsPopup__header_downloadButton {
-    margin-left: 8px;
-}
-
 .controls-LongOperationsPopup .controls-LongOperationsPopup__header_caption {
    font-size: @long-operations-popup-header-caption-f-size;
    line-height: @long-operations-popup-header-caption-line-height;
@@ -120,10 +116,22 @@
     color: @long-operations-popup-collapsed-header-caption-color;
 }
 
+.controls-LongOperationsPopup__header_downloadButton {
+    max-width: 150px;
+    min-width: 48px;
+    margin-left: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .controls-LongOperationsPopup__header_downloadButton,
 .controls-LongOperationsPopup__header_stoppedOperationsButton {
     margin-bottom: -2px;
     line-height: @long-operations-popup-header-line-height;
+}
+
+.controls-LongOperationsPopup__header_downloadButton .controls-Button__text {
+    white-space: nowrap;
 }
 
 /* End header  */
@@ -132,7 +140,7 @@
 /* Content */
 
 @loc-popup-column-icon-width: 26px;
-@loc-popup-column-time-width: 92px;
+@loc-popup-column-time-width: 94px;
 
 .controls-LongOperationsPopup__content {
 }
@@ -218,7 +226,10 @@
 }
 
 .controls-LongOperationsPopup__footer_progress {
+    display: inline-block;
+    width: 30px;
     margin-left: 5px;
+    text-align: right;
 }
 
 .controls-LongOperationsPopup__footer__actionsContainer {
@@ -254,10 +265,3 @@
 }
 
 /* End footer */
-
-
-
-.controls-InformationPopup {
-
-
-}

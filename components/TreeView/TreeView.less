@@ -164,18 +164,17 @@
 }
 .generate-padding-class-TV();
 
-.dragdropBody {
-   .controls-TreeView {
-      .controls-ListView__item-type-node.controls-ListView__hoveredItem {
-         &:not(.controls-ListView__item__selected):not(.controls-DragNDrop__insertAfter):not(.controls-DragNDrop__insertBefore) {
+.controls-TreeView {
+   .controls-ListView__item-type-node.controls-ListView__hoveredItem {
+      &:not(.controls-ListView__item__selected):not(.controls-DragNDrop__insertAfter):not(.controls-DragNDrop__insertBefore) {
+         background: @drag-and-drop-hover-bg;
+         > td {
             background: @drag-and-drop-hover-bg;
-            > td {
-               background: @drag-and-drop-hover-bg;
-            }
          }
       }
    }
 }
+
 
 .controls-TreeView__item {
    line-height: 24px;

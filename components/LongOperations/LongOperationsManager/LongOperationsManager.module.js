@@ -627,6 +627,16 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             if (!producer) {
                throw new Error('Unknown event');
             }
+            // Если произошло событие в продюсере и есть выполняющиеся fetch запросы - выполнить незавершённые запросы к этому продюсеру повторно
+            var member = {tab:_tabKey, producer:data.producer};
+            var queries = _fetchCalls.listPools(member, true);
+            if (queries && queries.length) {
+               for (var i = 0; i < queries.length; i++) {
+                  var query = queries[i];
+                  _fetchCalls.remove(query, member);
+                  _fetchCalls.add(query, member, producer.fetch(query));
+               }
+            }
          }
          var eventType = typeof evtName === 'object' ? evtName.name : evtName;
          if (data) {
@@ -927,7 +937,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          _tabChannel.notify('LongOperations:Manager:onActivity', {type: 'born', tab: _tabKey});
 
          // Добавить обработчик на выгрузку для запуска метода destroy
-         window.addEventListener('beforeunload', function () {
+         window.addEventListener('unload', function () {
             manager.destroy();
          });
       }
