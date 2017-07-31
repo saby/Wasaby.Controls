@@ -136,7 +136,7 @@ define([
             dragMove.beginDrag();
             assert.isTrue(cInstance.instanceOfModule(DragObject.getSource(), 'SBIS3.CONTROLS.DragEntity.List'));
          });
-         it('sshould be return the view from source owner', function () {
+         it('should be return the view from source owner', function () {
             view.setSelectedKeys([1,2]);
             dragMove.beginDrag();
             assert.equal(DragObject.getSource().at(0).getOwner(), view);
@@ -282,6 +282,16 @@ define([
             };
             dragMove.endDrag();
          });
+         it('should not throw error when source is array', function () {
+            dragMove.beginDrag();
+            event.target = view.getContainer().find('[data-id=3]');
+            dragMove.updateTarget();
+            DragObject.setSource([{mr:'trololo'}]);
+            DragObject.setOwner({});
+            assert.doesNotThrow(function () {
+               dragMove.endDrag();
+            });
+         });
       });
       describe('.createAvatar', function () {
          it('should create avatar', function () {
@@ -426,6 +436,13 @@ define([
             it('should save source items', function () {
                assert.equal(dragPositioner._sourseItems.length, 1);
             });
+            it('should not throw error when source is an array', function () {
+               DragObject.setSource([{mr:'trololo'}]);
+               dragMove._dragPositioner = null;
+               assert.doesNotThrow(function(){
+                  dragMove._getDragPositioner();
+               });
+            })
          });
       });
    });

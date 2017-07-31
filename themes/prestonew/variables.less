@@ -169,7 +169,7 @@
 @radio-button-icon-height:                .928rem;
 @radio-button-icon-line-height:           normal;
 @radio-button-icon-bg:                    transparent;
-@radio-button-icon-margin:                -1px 0.3rem;
+@radio-button-icon-margin:                0.3rem;
 @radio-button-icon-border-color:          #2C4458;
 @radio-button-icon-border-color-checked:  @primary-color;
 @radio-button-hover-icon-border-color:    @primary-color;
@@ -258,7 +258,7 @@
 @menu-item-icon-left-offset:              -.4232rem;
 @menu-item-icon24-top-offset:             0;
 @menu-item-icon24-top-offset-big:         0;
-@menu-item-icon24-left-offset:            -@default-border-width;
+@menu-item-icon24-left-offset:            -.57rem;;
 @menu-item-icon24-left-offset-big:        0;
 @menu-item-line-height:                   3.57rem;
 @menu-item-padding-16:                    2rem;
@@ -363,8 +363,8 @@
 @combo-box-picker-item-padding:           1.14rem 0.57rem 1.14rem 0.57rem;
 @text-box-field-font-size:                1.43rem;
 @combo-box-picker-item-bg:                #f0f5fb;
-@combo-box-picker-item-text-color:        #324352;
-@combo-box-picker-item-hover-text-color:  @black-color;
+@combo-box-picker-item-text-color:        #273B4D;
+@combo-box-picker-item-hover-text-color:  #273B4D;
 @combo-box-picker-item-hover-bg:          #e0ecf5;
 @combo-box-picker-item-selected-bg:       @combo-box-picker-item-bg;
 @compo-box-fieldWrapper-margin-right:     3rem;
@@ -383,7 +383,8 @@
 @text-area-right-padding:                 @text-area-left-padding;
 @text-area-bottom-padding:                @text-area-top-padding;
 // Suggest
-@suggest-picker-border:                   @default-border-width solid @gray-color;
+@suggest-picker-border:                   @default-border-width solid @default-border-color;
+@suggest-picker-color:                    #273B4D;
 @suggest-picker-margin:                   -@default-border-width 0 0 0;
 
 @suggest-list-footer-height:              3.143rem;
@@ -484,7 +485,7 @@
 @date-range-choose-current-value-font-weight:normal;
 @date-range-choose-current-value-height:  3.57rem;
 @date-range-choose-current-value-line-height:3.43rem;
-@date-range-choose-current-value-margin-bottom:0.286rem;
+@date-range-choose-current-value-margin-bottom: 0;
 @date-range-choose-year-height:           3rem;
 @date-range-choose-year-font-size:        1.14rem;
 @date-range-choose-year-font-weight:      normal;
@@ -570,8 +571,8 @@
 @listView-servicefooter-padding:          0 0.8rem;
 @list-view-actions-item-height:           1.75rem;
 @list-view-actions-margin:                -.14rem .14rem;
-@list-view-actions-icon-top:              1.497rem;
-@list-view-actions-menu-text-margin:      .64rem 0 .2142rem 2.32rem;
+@list-view-actions-icon-top:              .82rem;
+@list-view-actions-menu-text-margin:      .64rem 0 .2142rem 2.92rem;
 @list-view-items-toolbar-line-height:     1.75rem;
 @list-view-items-toolbar-vertical-line-height:0.86rem;
 @list-view-items-toolbar-locked-bg:       @basic-block-bg-color;
@@ -592,6 +593,8 @@
 @controls-AjaxLoader-indicator-height:    3.5714rem;
 @controls-AjaxLoader-block-width:         3.5714rem;
 @controls-AjaxLoader-outer-height:        3.5714rem;
+@controls-AjaxLoader-minHeight:           3.5714rem;
+@controls-AjaxLoader-block-padding:       0;
 @controls-AjaxLoader-background:          none;
 @scrollPaging-padding:                    3.6666rem;
 //Tree view
@@ -639,9 +642,11 @@
 @data-grid-cell-border-width:             @default-border-width 0;
 @data-grid-partScroll-notScrolledCell-Color:@basic-block-bg-color;
 @data-grid-money-header-cell-padding:     1.43rem;
+@data-grid-money-header-cell-padding-last:1.92rem;
 @data-grid-results-color:                 #FFCC99;
 // PrintDialog
-@controls-printdialog-min-width:          25rem;
+//По какой-то причине Firefox берёт font-size не из html, а свой, причем только при расчёте этой ширины
+@controls-printdialog-min-width:          25em;
 @controls-printdialog-activate-right:     3.1785rem;
 @controls-printdialog-activate-margin-top:8px;
 //MergeDialog
@@ -912,7 +917,7 @@
 @commands-button-close-button-size:       @icon-large-size;
 @commands-button-close-button-top:        0.125rem;
 @commands-button-margin:                  -.3571rem -3.1071rem 0 0;
-@DropdownList-height: 					      3rem;
+@DropdownList-height: 					      2.97rem;
 @DropdownList-footer-buttonsBlock-height: 3.57rem;
 @DropdownList-footer-hasMore-top:         1.1rem;
 @DropdownList-picker-menu-item-color:     #F0F5FB;
@@ -922,6 +927,7 @@
 @text-box-placeholder-color: 				   rgba(96,170,221, .2);
 @DropdownList-picker-menu-item-height:    3rem;
 @DropdownList-picker-menu-item-base-color: @menu-item-text-color;
+@DropdownList-after-caption-top:          0.47rem;
 @tree-view-ellipsis-copyArrow-width:      1rem;
 @DropdownList-picker-bg:                  #E1ECF6;
 @bread-crumbs-menu-padding:               0;
@@ -963,6 +969,7 @@
 @DropdownList-picker-max-height:                      20rem;
 @DropdownList-footer-select-top:                      0.28rem;
 @DropdownList-picker-menu-line-height:                3.24rem;
+@DropdownList-before-caption-wrapper-top:             0.16rem;
 @DropdownList-after-caption-wrapper-top:              .4rem;
 @DropdownList-footer-hasMore-left:                    .28rem;
 @DropdownList-footer-hasMore-left-multiselect:        2.35rem;

@@ -7,10 +7,13 @@ body {
    font-size: 1rem !important;
 }
 body {
+   .ws-validation-error > textarea {
+      background-color: @text-box-error-bg !important; // перебиваю стили fieldAbstract
+   }
     //Todo: сделать @accent-color - #FFCC99  https://online.sbis.ru/opendoc.html?guid=47bdafa8-88ab-4cb2-9383-89ffd7c9dcdd
     //сейчас пока сделаем так, чтобы не разломать версию 3.7.5.150
     .controls-accent-text {
-    	color: #FFCC99;
+    	color: #FFCC99 !important;
     }
    // т.к. в редизайне используется одна кнопка без заголовка, то напишем для неё фикс выравнивания
    // в онлайне такие кнопки завязаны на жесткие стили controls-IconButton__round-border-24, что неправильно
@@ -41,7 +44,7 @@ body {
             }
          }
          &.ws-paging-current{
-            border: @default-border-width @primary-color !important;
+            border: @default-border-width solid @primary-color !important;
             background:#354B62 !important;
             color: #E4E4E4 !important;
          }
@@ -213,9 +216,6 @@ body {
     .ws-float-area-title-generated {
       margin-right: 3rem;
     }
-    .controls-DateBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
-      max-width: 4.8285rem;
-    }
 
     .controls-Button .controls-Button__icon.icon-32 {
       top: 20%
@@ -275,6 +275,11 @@ body {
             vertical-align: baseline;
          }
       }
+   }
+
+   // Выпилить как будем делать новые темы.
+   .controls-DateRangeChoose__bodyWrapper {
+      padding-top: 0.286rem;
    }
 
    .controls-DateRangeChoose {
@@ -841,11 +846,6 @@ body .ws-window.ws-LoadingIndicator__window {
 .controls-ComboBox__picker {
    box-sizing: border-box;
 }
-.controls-ComboBox__arrowDown {
-   &:before {
-      margin: .5rem;
-   }
-}
 body .controls__filterButton__filterLine {
   max-width: 100%;
 }
@@ -864,7 +864,7 @@ body .controls-image__button {
    }
  }
 .controls-ComboBox.controls-TextBox.controls-TextBox .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
-  font-size: 2rem !important;
+  font-size: 3rem !important;
 }
 body .controls-Browser__filterButton .controls__filterButton__filterLine-text {
     height: 1.43rem;
@@ -905,7 +905,7 @@ body {
             border-bottom: @button-border;
          }
          &.ws-infobox-triangle-top {
-            top: -.51rem;
+            top: -.53rem;
             border-left: @button-border;
             border-top: @button-border;
          }
@@ -1009,7 +1009,6 @@ body {
 
 .controls-Suggest__picker {
     background: #f0f5fb;
-    color: #3a4951 !important;
      .controls-DataGridView__columnValue {
        line-height: 3rem;
      }
@@ -1123,4 +1122,12 @@ body .controls-ItemActions .controls-Button__icon.icon-size {
     &:hover{
      color: @link-hover-text-color;
     }
+}
+
+//Костыль, т.к. в престо иконки в ПМО большие, а на онлайне средние
+.controls-operationsPanel__actions .icon-24 {
+    font-size: 3rem !important;
+    height: 3rem !important;
+    width: 3rem !important;
+    line-height: 3rem !important;
 }

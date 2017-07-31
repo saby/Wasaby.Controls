@@ -37,7 +37,7 @@
    .controls-DropdownList__beforeCaptionWrapper {
       display: none;
       position: relative;
-      top: 2px;
+      top: @DropdownList-before-caption-wrapper-top;
       .flex-shrink(0);
    }
    .controls-DropdownList__afterCaptionWrapper {
@@ -104,6 +104,12 @@
          text-decoration: underline;
        }
      }
+   }
+}
+
+.controls-DropdownList, .controls-DropdownList__picker {
+   .controls-DropdownList__icon {
+      margin-right: 5px;
    }
 }
 
@@ -433,7 +439,7 @@
       }
    }
    .controls-DropdownList__afterCaptionWrapper {
-      top: 3px;
+      top: @DropdownList-after-caption-top;
    }
 }
 
