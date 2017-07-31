@@ -936,6 +936,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                }
                editor.selection.select(nodeForSelect, true);
                editor.selection.collapse(false);
+               //code from tinyMCE.init method
+               try {
+                  editor.lastRng = editor.selection.getRng();
+               } catch (ex) {
+                  // IE throws "Unexcpected call to method or property access" some times so lets ignore it
+               }
             }
          },
 
