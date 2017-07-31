@@ -2503,7 +2503,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var id = item.getId();
             // Даже не думать удалять ":not(...)". Это связано с тем, что при редактировании по месту может возникнуть задача перерисовать строку
             // DataGridView. В виду одинакового атрибута "data-id", это единственный способ отличить строку DataGridView от строки EditInPlace.
-            return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + (id === undefined ? '' : id) + '"]:not(".controls-editInPlace")');
+            return this._getItemsContainer().find('>.js-controls-ListView__item[data-id="' + (id === undefined ? '' : id) + '"]:not(".controls-editInPlace")');
          },
          /**
           * Возвращает признак, по которому можно установить: активно или нет редактирование по месту в данный момент.
