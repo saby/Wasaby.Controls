@@ -105,11 +105,11 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
                   items: source
                })
             );
+            this._addClassDragndrop(target);
             if (this._options.useDragPlaceHolder) {
                this._makeDragPlaceHolder();
                this._toggleDragItems(false)
             }
-            this._addClassDragndrop(target);
             return true;
          }
          return false;
@@ -389,9 +389,11 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
        * @private
        */
       _drawDragHighlight: function(target) {
-         var domelement = target.getDomElement();
-         domelement.toggleClass('controls-DragNDrop__insertAfter', target.getPosition() === DRAG_META_INSERT.after);
-         domelement.toggleClass('controls-DragNDrop__insertBefore', target.getPosition() === DRAG_META_INSERT.before);
+         if (!this._options.useDragPlaceHolder) {
+            var domelement = target.getDomElement();
+            domelement.toggleClass('controls-DragNDrop__insertAfter', target.getPosition() === DRAG_META_INSERT.after);
+            domelement.toggleClass('controls-DragNDrop__insertBefore', target.getPosition() === DRAG_META_INSERT.before);
+         }
       },
       /**
        * определяет направление перемещения
