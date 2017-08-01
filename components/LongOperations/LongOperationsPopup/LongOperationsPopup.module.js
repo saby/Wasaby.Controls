@@ -124,6 +124,18 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                      }
                   }
                   self._updateState();
+
+                  var cls = 'controls-LongOperationsPopup__hidden';
+                  var $ctr = self.getContainer();
+                  if ($ctr.hasClass(cls)) {
+                     $ctr.css('opacity', 0);
+                     $ctr.removeClass(cls);
+                     $ctr.animate({opacity:1}, 800);//1500
+                  }
+               }
+               else {
+                  //Если операций нет, просто закрываем попап
+                  self.close();
                }
             });
 
@@ -133,10 +145,6 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                if (count) {
                   //При перерисовке размеры могут меняться
                   self._notify('onSizeChange');
-               }
-               else {
-                  //Если операций нет, просто закрываем попап
-                  self.close();
                }
             });
 
@@ -338,16 +346,6 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
             button.setVisible(hasButton);
             if (hasButton) {
                button.setCaption(rk(butCaption));
-            }
-
-            var self = this;
-            //TODO Вот этого быть не должно
-            if (this.getContainer().hasClass('controls-LongOperationsPopup__hidden')) {
-               this.getContainer().css('opacity', 0);
-               this.getContainer().removeClass('controls-LongOperationsPopup__hidden');
-               self.getContainer().animate({
-                  opacity: 1
-               }, 800);//1500
             }
          },
 
