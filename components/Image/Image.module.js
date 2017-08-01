@@ -370,6 +370,11 @@ define('js!SBIS3.CONTROLS.Image',
                _pickerIsOpen: false,
                _cursorInside: false
             },
+            _modifyOptions: function(options) {
+               options = Image.superclass._modifyOptions.apply(this, arguments);
+               options._templateImage = this._getSourceUrl(options);
+               return options;
+            },
             $constructor: function() {
                this._publish('onBeginLoad', 'onEndLoad', 'onErrorLoad', 'onChangeImage', 'onResetImage', 'onShowEdit', 'onBeginSave', 'onEndSave', 'onDataLoaded');
                //Debounce перебиваем в конструкторе, чтобы не было debounce на прототипе, тк если несколько инстансов сработает только для одного
@@ -483,14 +488,13 @@ define('js!SBIS3.CONTROLS.Image',
             /* ------------------------------------------------------------
                Блок приватных методов
                ------------------------------------------------------------ */
-            _getSourceUrl: function() {
-               var
-                  dataSource = this.getDataSource();
-               if (dataSource) {
-                  return transHelpers.prepareGetRPCInvocationURL(dataSource.getEndpoint().contract,
-                     dataSource.getBinding().read, this._options.filter);
+            _getSourceUrl: function(options) {
+               options = options ? options : this._options;
+               if (options.dataSource) {
+                  return transHelpers.prepareGetRPCInvocationURL(options.dataSource.getEndpoint().contract,
+                     options.dataSource.getBinding().read, options.filter);
                } else {
-                  return this._options.defaultImage;
+                  return options.defaultImage;
                }
             },
             _bindToolbarEvents: function(){
