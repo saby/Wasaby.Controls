@@ -231,7 +231,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
             // Обновить попап после разблокировки девайса
             this.subscribeTo(EventBus.globalChannel(), 'onwakeup', function () {
                if(!self.isDestroyed() && self.isVisible()) {
-                  self.reload();
+                  self._longOpList.reload();
                }
             });
          },
@@ -591,9 +591,13 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                            });
                      };
                      var $cnt = self.getContainer();
-                     _moveTo($cnt.find('.controls-NotificationPopup__header_icon'), $cnt.css('z-index') + 1, self._loadingIndicator.getWindow().getContainer().find('.ws-loadingimg'));
+                     _moveTo($cnt.find('.controls-NotificationPopup__header_icon'), +$cnt.css('z-index') + 1, self._loadingIndicator.getWindow().getContainer().find('.ws-loadingimg'));
                   }
-                  self._loadingIndicator.hide();
+                  var zIndex = +self._loadingIndicator.getWindow().getContainer().closest('.ws-LoadingIndicator__window').css('z-index');
+                  self._loadingIndicator.close();
+                  self._loadingIndicator = null;
+                  require('Core/WindowManager').releaseZIndex(zIndex);
+                  self.moveToTop();
                }, TIME_EXPOSITION);
             });
          },
