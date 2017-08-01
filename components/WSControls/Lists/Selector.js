@@ -19,9 +19,9 @@ define('js!WSControls/Lists/Selector', [
          }
       },
 
-      _calculateItemData: function() {
-         var data = Selector.superclass._calculateItemData.apply(this, arguments);
-         data.selectedKey = this._selectedKey;
+      _getItemData: function(projItem, index) {
+         var data = Selector.superclass._getItemData.apply(this, arguments);
+         data.selected = this._selectedKey == this._getPropertyValue(projItem.getContents(), this._options.idProperty);
          return data;
       },
 

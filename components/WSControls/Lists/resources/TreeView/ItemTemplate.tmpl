@@ -13,10 +13,10 @@
     <ws:partial template="{{itemContent}}" scope="{{...}}" />
 </div>-->
 
-<div class="js-controls-ListView__item controls-ListView__item js-controls-TreeView__item controls-TreeView__item {{getTemplateData(...).addClasses}} {{selected ? 'controls-ListView__item__selected'}} {{ className }}"
+<div class="js-controls-ListView__item controls-ListView__item js-controls-TreeView__item controls-TreeView__item {{_getItemData(projItem).addClasses}} {{selected ? 'controls-ListView__item__selected'}} {{ className }}"
      data-hash="{{ projItem.getHash() }}">
     <ws:if data="{{ true }}"><!--!isSearch-->
-        <ws:for data="i in getTemplateData(...).itemLevel">
+        <ws:for data="i in _getItemData(projItem).itemLevel">
             <div class="controls-TreeView__levelPadding">&nbsp;</div>
         </ws:for>
         <div  event:onclick="_onExpandClick(projItem)" class="controls-TreeView__expand js-controls-TreeView__expand {{projItem.isExpanded() ? 'controls-TreeView__expand__open' : ''}}"></div>

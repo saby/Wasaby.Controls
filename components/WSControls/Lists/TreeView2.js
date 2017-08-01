@@ -15,7 +15,7 @@ define('js!WSControls/Lists/TreeView2', [
 
    var TreeView = ListView.extend({
       _defaultItemTemplate: ItemTemplate,
-
+      _hierRel:  null,
       _expandedItems: undefined,  // Состояние развернутости элементов ( Object )
       _loadMode: undefined,       // Режим загрузки данных ( "partial" / "full" )
       _expandMode: undefined,     // Режим разворота узлов ( "multiple" / "single" )
@@ -38,22 +38,36 @@ define('js!WSControls/Lists/TreeView2', [
             this._expandMode = 'multiple';
          }
       },
-      constructor: function() {
+      constructor: function(cfg) {
          TreeView.superclass.constructor.apply(this, arguments);
+         this._hierRel = new HierarchyRelation({
+            idProperty: cfg.idProperty,
+            parentProperty: cfg.parentProperty,
+            nodeProperty: cfg.nodeProperty
+         });
          this._publish('onExpandItem', 'onCollapseItem');
       },
-      _calculateItemData: function() {
+
+      _getItemData: function(projItem) {
+         //TODO возможно большую часть этого надо перенести на проекцию
          var
-            itemData = TreeView.superclass._calculateItemData.apply(this, arguments);
-         itemData.getTemplateData = TreeItemsUtil.getTemplateData;
-         itemData.nodeProperty = this._options.nodeProperty;
-         itemData.parentProperty = this._options.parentProperty;
-         itemData.hierarchyRelation = new HierarchyRelation({
-            idProperty: itemData.idProperty,
-            parentProperty: itemData.parentProperty,
-            nodeProperty: itemData.nodeProperty
-         });
-         return itemData;
+            templateData = {},
+            item = projItem.getContents(),
+            collection = projItem.getOwner().getCollection(),
+            idPropertyValue = this._getPropertyValue(item, this._options.idProperty),
+            nodePropertyValue = this._getPropertyValue(item, this._options.nodeProperty),
+            collectionItem = collection.at(collection.getIndexByValue(this._options.idProperty, idPropertyValue));
+
+         templateData.children = this._hierRel.getChildren(collectionItem, collection);
+         templateData.isLoaded = projItem.isLoaded();
+         templateData.itemLevel = projItem.getLevel() - 1;
+         templateData.hasLoadedChild = templateData.children.length > 0;
+         templateData.classIsLoaded = templateData.isLoaded ? ' controls-ListView__item-loaded' : '';
+         templateData.classHasLoadedChild = templateData.hasLoadedChild ? ' controls-ListView__item-with-child' : ' controls-ListView__item-without-child';
+         templateData.classNodeType = ' controls-ListView__item-type-' + (nodePropertyValue === null ? 'leaf' : nodePropertyValue === true ? 'node' : 'hidden');
+         templateData.classNodeState = nodePropertyValue !== null ? (' controls-TreeView__item-' + (projItem.isExpanded() ? 'expanded' : 'collapsed')) : '';
+         templateData.addClasses = templateData.classNodeType + templateData.classNodeState + templateData.classIsLoaded + templateData.classHasLoadedChild;
+         return templateData;
       },
       _createDefaultDisplay: function() {
          return TreeItemsUtil.getDefaultTreeDisplay(this._items, this._options);

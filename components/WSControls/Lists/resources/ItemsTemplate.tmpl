@@ -4,10 +4,9 @@
                 template="{{_getItemTpl()}}"
                 contentTemplate="{{_getItemContentTpl()}}"
                 defaultItemTpl="{{_defaultItemTemplate}}"
-                scope="{{_getItemData()}}"
+                scope="{{...}}"
                 item="{{item.getContents()}}"
                 projItem="{{item}}"
-                selected="{{_getItemData().selectedKey == _getItemData().getPropertyValue(item.getContents(), _getItemData().idProperty)}}"
                 multiSelected="{{ item.isSelected() }}"
                 hovered="{{index === hoveredIndex}}"/>
     </ws:if>

@@ -114,9 +114,6 @@ define(['js!WSControls/Lists/Selector',
             assert.equal(2, selector._selectedKey, 'Option selectedKey doesn\'t work (RS)');
             assert.equal(1, selector._selectedIndex, 'Option selectedKey doesn\'t work (RS)');
 
-            var itemData = selector._calculateItemData();
-            assert.equal(2, itemData.selectedKey, 'ItemData doesn\'t contain correct selectedKey');
-
             selector = new Selector({
                selectedKey : 2,
                items: data,
@@ -132,6 +129,28 @@ define(['js!WSControls/Lists/Selector',
             });
             assert.equal('Второй', selector._selectedKey, 'Option selectedKey doesn\'t work (Enum)');
             assert.equal(1, selector._selectedIndex, 'Option selectedKey doesn\'t work (Enum)');
+         });
+
+         describe('GetData', function(){
+            it('calculateItemData', function () {
+               var rs = new RecordSet({
+                     rawData: data,
+                     idProperty : 'id'
+                  }),
+                  ctrl = new Selector({
+                     items : rs,
+                     idProperty: 'id',
+                     displayProperty: 'title',
+                     selectedIndex: 1
+                  });
+               var proj = ctrl._display;
+               var itemData = ctrl._getItemData(proj.at(0));
+               assert.isFalse(itemData.selected, 'selected in itemData in not correct');
+               itemData = ctrl._getItemData(proj.at(1));
+               assert.isTrue(itemData.selected, 'selected in itemData in not correct');
+               //assert.equal('id', itemData.idProperty, 'idProperty in itemData in sot equal to config');
+               //assert.equal('title', itemData.displayProperty, 'displayProperty in itemData in sot equal to config');
+            })
          });
 
 

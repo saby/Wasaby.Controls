@@ -137,20 +137,12 @@ define('js!WSControls/Lists/ItemsControl', [
             return TemplateUtil.prepareTemplate(this._options.itemContentTpl || this._defaultItemContentTemplate, true);
          },
 
-         _getItemData: function() {
-            //кэширует, чтоб не выполнять код для каждого итема
-            if (!this._tplData) {
-               this._tplData = this._calculateItemData();
-            }
-            return this._tplData;
+         _getPropertyValue: function(itemContents, field) {
+            return ItemsUtil.getPropertyValue(itemContents, field);
          },
 
-         _calculateItemData: function () {
-            var tplOptions = {};
-            tplOptions.idProperty = this._options.idProperty;
-            tplOptions.displayProperty = this._options.displayProperty;
-            tplOptions.getPropertyValue = ItemsUtil.getPropertyValue;
-            return tplOptions;
+         _getItemData: function(projItem, index) {
+            return {};
          },
 
          _getGroupData: function() {

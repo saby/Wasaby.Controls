@@ -112,22 +112,5 @@ define(['js!WSControls/Lists/ItemsControl', 'js!WS.Data/Collection/RecordSet', '
             });
 
          });
-
-         describe('GetData', function(){
-            it('calculateItemData', function () {
-               var rs = new RecordSet({
-                     rawData: data,
-                     idProperty : 'id'
-                  }),
-                  ctrl = new ItemsControl({
-                     items : rs,
-                     idProperty: 'id',
-                     displayProperty: 'title'
-                  });
-               var itemData = ctrl._calculateItemData();
-               assert.equal('id', itemData.idProperty, 'idProperty in itemData in sot equal to config');
-               assert.equal('title', itemData.displayProperty, 'displayProperty in itemData in sot equal to config');
-            })
-         })
       });
    });
