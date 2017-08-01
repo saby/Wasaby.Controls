@@ -17,9 +17,9 @@ define([
    describe('Focus-tests', function () {
       var testControl;
       beforeEach(function () {
-         // if (typeof $ === 'undefined') {
-         //    this.skip();
-         // }
+         if (typeof $ === 'undefined') {
+            this.skip();
+         }
          if(~skipTests.indexOf(testNum)) {
             testNum++;
             this.skip();
