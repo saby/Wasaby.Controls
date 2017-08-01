@@ -15,9 +15,6 @@ define('js!WSTest/Sync/Sync',
          k:0,
          constructor: function(cfg) {
             Sync.superclass.constructor.call(this, cfg);
-            this.callback = function(toProp){
-               this._callbackresult = toProp;
-            }.bind(this);
          },
 
          eventBut: function(){
