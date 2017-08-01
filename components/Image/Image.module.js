@@ -19,6 +19,7 @@ define('js!SBIS3.CONTROLS.Image',
    "js!SBIS3.CONTROLS.Utils.SourceUtil",
    'js!SBIS3.CONTROLS.ControlHierarchyManager',
    'js!SBIS3.CONTROLS.Utils.InformationPopupManager',
+   'Core/helpers/Function/debounce',
    "js!SBIS3.CONTROLS.Link",
    'js!SBIS3.CONTROLS.MenuLink',
    "i18n!SBIS3.CONTROLS.Image",
@@ -38,7 +39,8 @@ define('js!SBIS3.CONTROLS.Image',
    transHelpers,
    SourceUtil,
    ControlHierarchyManager,
-   InformationPopupManager
+   InformationPopupManager,
+   debounce
 ) {
       'use strict';
       //TODO: Избавится от дублирования
@@ -376,7 +378,7 @@ define('js!SBIS3.CONTROLS.Image',
                //Оборачиваем именно в debounce, т.к. могут последовательно задать filter, dataSource и тогда изображения загрузка произойдет дважды.
                //Опция avoidCache = false означает что если нет изщображения то setDS будет вызываться с reload = false следоватьельно debounce не нужен
                if (this._options.avoidCache) {
-                  this._setImage = this._setImage.debounce(0);
+                  this._setImage = debounce(this._setImage, 0);
                }
                CommandDispatcher.declareCommand(this, 'uploadImage', this._uploadImage);
                CommandDispatcher.declareCommand(this, 'uploadFileCam', this._uploadFileCam);
