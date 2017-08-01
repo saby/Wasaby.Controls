@@ -591,12 +591,10 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
       switch (this._itemsDragNDrop) {
          case 'onlyChangeOrder':
             return this._onlyChangeOrder(offset, size);
-            break;
          case  'onlyChangeParent':
             return this._onlyChangeParent();
          case 'separateParent':
             return this._separateParent(offset, size, target);
-            break;
          case 'allow':
          default:
             if (this._isTree) {
@@ -606,7 +604,6 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             } else {
                return this._onlyChangeOrder(offset, size);
             }
-            break;
       }
    };
    DragPositioner.prototype._onlyChangeOrder = function (offset, size) {
