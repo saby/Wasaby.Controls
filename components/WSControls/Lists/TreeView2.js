@@ -42,9 +42,9 @@ define('js!WSControls/Lists/TreeView2', [
          TreeView.superclass.constructor.apply(this, arguments);
          this._publish('onExpandItem', 'onCollapseItem');
       },
-      _getItemData: function() {
+      _calculateItemData: function() {
          var
-            itemData = TreeView.superclass._getItemData.apply(this, arguments);
+            itemData = TreeView.superclass._calculateItemData.apply(this, arguments);
          itemData.getTemplateData = TreeItemsUtil.getTemplateData;
          itemData.nodeProperty = this._options.nodeProperty;
          itemData.parentProperty = this._options.parentProperty;

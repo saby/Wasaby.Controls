@@ -52,9 +52,7 @@ define('js!WSControls/Lists/ItemsControl', [
          _records: null,
 
          _itemData: null,
-         _itemContentTpl: null,
          _defaultItemContentTemplate: ItemContentTemplate,
-         _itemTpl: null,
          _defaultItemTemplate: ItemTemplate,
          _groupTemplate: null,
          _defaultGroupTemplate: null,
@@ -71,8 +69,7 @@ define('js!WSControls/Lists/ItemsControl', [
          },
 
          _prepareMountingData: function(cfg) {
-            this._itemTpl = cfg.itemTpl || this._defaultItemTemplate;
-            this._itemContentTpl = cfg.itemContentTpl || this._defaultItemContentTemplate;
+            //this._itemContentTpl = cfg.itemContentTpl || this._defaultItemContentTemplate;
             this._groupTemplate = cfg.groupTemplate || this._defaultGroupTemplate;
 
             if (cfg.items && (this._items != cfg.items)) {
@@ -129,28 +126,32 @@ define('js!WSControls/Lists/ItemsControl', [
          //при изменениях в проекции
          _displayChangeCallback: function() {
             this._records = this._getRecordsForView();
-            this._updateTplData();
+            this._tplData = null;
          },
 
+         _getItemTpl: function() {
+            return TemplateUtil.prepareTemplate(this._options.itemTpl || this._defaultItemTemplate, true);
+         },
 
-         _getItemData: function () {
+         _getItemContentTpl: function() {
+            return TemplateUtil.prepareTemplate(this._options.itemContentTpl || this._defaultItemContentTemplate, true);
+         },
+
+         _getItemData: function() {
+            //кэширует, чтоб не выполнять код для каждого итема
+            if (!this._tplData) {
+               this._tplData = this._calculateItemData();
+            }
+            return this._tplData;
+         },
+
+         _calculateItemData: function () {
             var tplOptions = {};
             tplOptions.idProperty = this._options.idProperty;
             tplOptions.displayProperty = this._options.displayProperty;
             tplOptions.getPropertyValue = ItemsUtil.getPropertyValue;
-
-
-            tplOptions.itemContent = TemplateUtil.prepareTemplate(this._itemContentTpl, true);
-            tplOptions.itemTpl = TemplateUtil.prepareTemplate(this._itemTpl, true);
-            tplOptions.defaultItemTpl = TemplateUtil.prepareTemplate(this._defaultItemTemplate, true);
             return tplOptions;
          },
-         
-         _updateTplData: function() {
-            //TODO Возможно вычисление можно сделать прямо в шаблоне
-            this._tplData = this._getItemData();
-         },
-
 
          _getGroupData: function() {
             var

@@ -114,7 +114,7 @@ define(['js!WSControls/Lists/ItemsControl', 'js!WS.Data/Collection/RecordSet', '
          });
 
          describe('GetData', function(){
-            it('GetItemData', function () {
+            it('calculateItemData', function () {
                var rs = new RecordSet({
                      rawData: data,
                      idProperty : 'id'
@@ -124,12 +124,9 @@ define(['js!WSControls/Lists/ItemsControl', 'js!WS.Data/Collection/RecordSet', '
                      idProperty: 'id',
                      displayProperty: 'title'
                   });
-               var itemData = ctrl._getItemData();
+               var itemData = ctrl._calculateItemData();
                assert.equal('id', itemData.idProperty, 'idProperty in itemData in sot equal to config');
                assert.equal('title', itemData.displayProperty, 'displayProperty in itemData in sot equal to config');
-               assert.equal(ctrl._defaultItemTemplate, itemData.defaultItemTpl, 'defaultItemTpl in itemData in sot equal to own component');
-               assert.equal(ctrl._itemContentTpl, itemData.itemContent, 'itemContent in itemData in sot equal to own component');
-               assert.equal(ctrl._itemTpl, itemData.itemTpl, 'itemTpl in itemData in sot equal to own component');
             })
          })
       });

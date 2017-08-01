@@ -114,7 +114,7 @@ define(['js!WSControls/Lists/Selector',
             assert.equal(2, selector._selectedKey, 'Option selectedKey doesn\'t work (RS)');
             assert.equal(1, selector._selectedIndex, 'Option selectedKey doesn\'t work (RS)');
 
-            var itemData = selector._getItemData();
+            var itemData = selector._calculateItemData();
             assert.equal(2, itemData.selectedKey, 'ItemData doesn\'t contain correct selectedKey');
 
             selector = new Selector({

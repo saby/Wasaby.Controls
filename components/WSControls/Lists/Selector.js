@@ -19,8 +19,8 @@ define('js!WSControls/Lists/Selector', [
          }
       },
 
-      _getItemData: function() {
-         var data = Selector.superclass._getItemData.apply(this, arguments);
+      _calculateItemData: function() {
+         var data = Selector.superclass._calculateItemData.apply(this, arguments);
          data.selectedKey = this._selectedKey;
          return data;
       },
@@ -74,7 +74,7 @@ define('js!WSControls/Lists/Selector', [
       },
 
       _onSelectedItemChange: function() {
-         this._updateTplData();
+         this._tplData = null;
          this._setDirty();
       },
 
