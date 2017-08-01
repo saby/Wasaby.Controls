@@ -29,6 +29,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.MassSelectionController',
    'js!SBIS3.CONTROLS.ImitateEvents',
    'js!SBIS3.CORE.LayoutManager',
+   'Core/helpers/markup-helpers',
    'js!SBIS3.CONTROLS.Link',
    'js!SBIS3.CONTROLS.ScrollWatcher',
    'js!WS.Data/Collection/IBind',
@@ -67,7 +68,7 @@ define('js!SBIS3.CONTROLS.ListView',
 ],
    function (cMerge, cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
-    TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents, LayoutManager,
+    TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents, LayoutManager, mHelpers,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
     Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove) {
      'use strict';
@@ -2375,6 +2376,23 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _getEditInPlaceConfig: function() {
+            /**
+             * Объект _savedConfigs содержит конфигурации компонентов, которые описаны
+             * внутри контентной опции с type='string'
+             * Раскладываем их обратно в configStorage перед созданием
+             * редактирования по месту
+             */
+            if (this._savedConfigs) {
+               for (var i=0;i<this._savedConfigs.length;i++){
+                  var conf = this._savedConfigsMaps[i],
+                     temp = this._savedConfigs[i][conf],
+                     obj = {};
+                  if (!temp._thisIsInstance) {
+                     obj[conf] = cFunctions.shallowClone(temp);
+                     mHelpers.mergeConfigStorage(obj);
+                  }
+               }
+            }
             var
                config = {
                   items: this.getItems(),
