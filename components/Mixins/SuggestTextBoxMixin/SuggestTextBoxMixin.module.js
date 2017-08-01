@@ -125,7 +125,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             }
          }.bind(this)).addErrback(function (err) {
             //Если запрос был прерван нами, то ничего не делаем
-            if (!err.canceled) {
+            if (!err.canceled && err.message !== "Cancel") { //Из parallelDeferred возвращается ошибка с текстом "Cancel" при превранном запросе
                //В рамках совместимости оставляю старое поведение
                if (!err.processed) {
                   IoC.resolve('ILogger').log(this._moduleName, 'Списочный метод не смог вычитать записи по массиву идентификаторов');
