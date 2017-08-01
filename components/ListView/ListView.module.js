@@ -2371,6 +2371,12 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _getEditInPlaceConfig: function() {
+            /**
+             * Объект _savedConfigs содержит конфигурации компонентов, которые описаны
+             * внутри контентной опции с type='string'
+             * Раскладываем их обратно в configStorage перед созданием
+             * редактирования по месту
+             */
             if (this._savedConfigs) {
                for (var i=0;i<this._savedConfigs.length;i++){
                   var conf = this._savedConfigsMaps[i],
