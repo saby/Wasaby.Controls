@@ -644,17 +644,17 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                   //Загружаем содержимое веток
                   deferred.push(getBranch(branchId)
                      .addCallback(function(branchDataSet) {
-                  if(branchDataSet){
-                     colHelpers.forEach(branch, function(record, idx) {
-                        currentRecord = currentDataSet.getRecordById(record);
-                        dependentRecords = findDependentRecords(record, branchId);
-                        needRedraw = !!branchDataSet.getRecordById(record);
-                        //Удаляем то, что надо удалить и перерисовываем то, что надо перерисовать
-                        removeAndRedraw(dependentRecords, branch.length - idx);
-                     });
-                     if(String(curRoot) == branchId)
-                        self.getItems().setMetaData(branchDataSet.getMetaData());
-                  }
+                        if (branchDataSet) {
+                           colHelpers.forEach(branch, function(record, idx) {
+                              currentRecord = currentDataSet.getRecordById(record);
+                              dependentRecords = findDependentRecords(record, branchId);
+                              needRedraw = !!branchDataSet.getRecordById(record);
+                              //Удаляем то, что надо удалить и перерисовываем то, что надо перерисовать
+                              removeAndRedraw(dependentRecords, branch.length - idx);
+                           });
+                           if(String(curRoot) == branchId)
+                              self.getItems().setMetaData(branchDataSet.getMetaData());
+                        }
                      })
                      .addBoth(function() {
                         fcHelpers.toggleIndicator(false);
