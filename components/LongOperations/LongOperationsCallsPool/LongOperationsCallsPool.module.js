@@ -122,6 +122,24 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
          },
 
          /**
+          * Заменить запрос в списке выполняющихся запросов
+          * @public
+          * @param {object} pool Составной указатель группы запросов
+          * @param {object} member Идентифицирующие параметры
+          * @param {Core/Deferred} promise Обещание результата
+          */
+         replace: function (pool, member, promise) {
+            if (!pool || typeof pool !== 'object') {
+               throw new TypeError('Argument "pool" must be an object');
+            }
+            var poolId = _getPoolId(this, pool);
+            if (!poolId) {
+               throw new TypeError('Pool not found');
+            }
+            _add(this, poolId, member, promise, true);
+         },
+
+         /**
           * Получить обещание, ожидающее результат. Метод должен быть вызван только после того, как все необходимые запросы группы уже добавлены.
           * После вызова этого метода могут быть добавлены дополнитльные запросы в эту же группу, но только до тех пор, пока другие запросы не успели
           * завершиться. Иначе это будет новой группой и нужно вновь будет вызвать этот метод для получения обещания результата
@@ -221,9 +239,10 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
        * @param {SBIS3.CONTROLS.LongOperationsCallsPool} self Этот объект
        * @param {number} poolId Идентификатор группы
        * @param {object} member Идентифицирующие параметры
+       * @param {boolean} isReplace Произвести не добавление нового, а замену существующего
        * @param {Core/Deferred} promise Обещание результата
        */
-      var _add = function (self, poolId, member, promise) {
+      var _add = function (self, poolId, member, promise, isReplace) {
          if (!(promise instanceof Deferred)) {
             throw new TypeError('Argument "promise" must be a Deferred');
          }
@@ -231,12 +250,33 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
             throw new TypeError('Argument "member" must be an object and have specified fields');
          }
          var m = self._fields.reduce(function (r, v) { r[v] = member[v]; return r; }, {});
-         if (_has(self, poolId, m)) {
-            throw new Error('Already exists');
+         var call;
+         if (!isReplace) {
+            if (_has(self, poolId, m)) {
+               throw new Error('Already exists');
+            }
+            call = {member:m, promise:promise};
+            self._calls[poolId].list.push(call);
          }
-         var call = {member:m, promise:promise};
-         self._calls[poolId].list.push(call);
-         call.promise.addBoth(_onPartial.bind(null, self, poolId, call));
+         else {
+            for (var list = self._calls[poolId].list, i = 0; i < list.length; i++) {
+               var c = list[i];
+               if (_isEq(c.member, m)) {
+                  _cancel(c.promise);
+                  c.promise = promise;
+                  call = c;
+                  break;
+               }
+            }
+            if (!call) {
+               throw new Error('Not found');
+            }
+         }
+         promise.addBoth(_onPartial.bind(null, self, poolId, call));
+         /*###if (isReplace) {
+            // Проверить, возможно после замены уже не нужно ждать дальше
+            _checkCompleteness(self, poolId);
+         }*/
       };
 
       /**
@@ -276,26 +316,19 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
          /*###if (member && typeof member !== 'object') {
             throw new TypeError('Argument "member" must be an object');
          }*/
-         for (var i = 0, gIds = poolId ? [poolId] : Object.keys(self._calls); i < gIds.length; i++) {
-            var gId = gIds[i];
-            var calls = self._calls[gId].list;
+         for (var i = 0, pIds = poolId ? [poolId] : Object.keys(self._calls); i < pIds.length; i++) {
+            var pId = pIds[i];
+            var calls = self._calls[pId].list;
             for (var j = calls.length - 1; 0 <= j; j--) {
                var c = calls[j];
                if (!member || _hasProps(c.member, self._fields, member)) {
                   // Удалить из списка
                   calls.splice(j, 1);
-                  var p = c.promise;
-                  if (p && p.cancel && !p.isReady()) {
-                     // В текущей реализации при наличии обработчика ошибок при вызове cancel он перейдёт в успешно разрешённое состояние (Задача 1174127408)
-                     //p.cancel();
-                     //////////////////////////////////////////////////
-                     //console.log('DBG: LO_CallsPool.remove: p.isSuccessful()=', p.isSuccessful(), '; p._fired=', p._fired, '; p._results[1]=', p._results ? p._results[1] : p._results, ';');
-                     //////////////////////////////////////////////////
-                  }
+                  _cancel(c.promise);
                }
             }
             if (!calls.length) {
-               delete self._calls[gId];
+               delete self._calls[pId];
             }
          }
          // Проверить, возможно после удаления уже не нужно ждать дальше
@@ -361,11 +394,11 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
        * @param {number} [poolId] Идентификатор группы (опционально)
        */
       var _checkCompleteness = function (self, poolId) {
-         for (var i = 0, gIds = poolId ? [poolId] : Object.keys(self._calls); i < gIds.length; i++) {
-            var gId = gIds[i];
-            if (_isComplete(self, gId)) {
+         for (var i = 0, pIds = poolId ? [poolId] : Object.keys(self._calls); i < pIds.length; i++) {
+            var pId = pIds[i];
+            if (_isComplete(self, pId)) {
                // Все результаты группы есть, можно завершать
-               _onComplete(self, gId);
+               _onComplete(self, pId);
             }
          }
       };
@@ -430,6 +463,22 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
       };
 
 
+
+      /**
+       * Отказаться от дальнейшего ожидания исполнения обещания
+       * @protected
+       * @param {Core/Deferred} promise Обещание
+       * @return {boolean}
+       */
+      var _cancel = function (promise) {
+         if (promise && promise.cancel && !promise.isReady()) {
+            // В текущей реализации при наличии обработчика ошибок при вызове cancel он перейдёт в успешно разрешённое состояние (Задача 1174127408)
+            //promise.cancel();
+            //////////////////////////////////////////////////
+            //console.log('DBG: LO_CallsPool._cancel: promise.isSuccessful()=', promise.isSuccessful(), '; promise._fired=', promise._fired, '; promise._results[1]=', promise._results ? promise._results[1] : promise._results, ';');
+            //////////////////////////////////////////////////
+         }
+      };
 
       /**
        * Проверить, имеет ли указанный объект все указанные значения свойств

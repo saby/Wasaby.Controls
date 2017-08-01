@@ -672,8 +672,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             if (queries && queries.length) {
                for (var i = 0; i < queries.length; i++) {
                   var query = queries[i];
-                  _fetchCalls.remove(query, member);
-                  _fetchCalls.add(query, member, producer.fetch(query));
+                  _fetchCalls.replace(query, member, producer.fetch(query));
                }
             }
          }
