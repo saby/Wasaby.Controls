@@ -353,7 +353,10 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                if (filter['СтрокаПоиска']) {
                   where.title = {condition:'contains', value:filter['СтрокаПоиска'], sensitive:false};
                   /*if (filter.usePages) {
-                  }*/
+                   }*/
+               }
+               if (filter.UserId) {
+                  where.UserId = filter.UserId;
                }
                if (Object.keys(where).length) {
                   options.where = where;
