@@ -109,6 +109,18 @@ define([
             it('has event handler for onExecute', function () {
                assert.isTrue(action.hasEventHandlers('onExecute'))
             });
+   
+            it('config is not changed', function () {
+               let cfg = {
+                  componentsOptions: {
+                     handlers: {
+                        onSelectComplete: function () {}
+                     }
+                  }
+               };
+               action._buildComponentConfig(cfg);
+               assert.isTrue(typeof cfg.componentsOptions.handlers.onSelectComplete === "function");
+            });
       
          });
    

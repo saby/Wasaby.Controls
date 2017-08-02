@@ -174,9 +174,15 @@ define(
          },
 
          _onDayTitleMouseClick: function (element, event) {
+            var date;
             if (!this.isSelectionProcessing()) {
                this._setSelectionType(selectionTypes.DAY);
-               this._onRangeItemElementClick(this._getItemDate(element));
+               date = this._getItemDate(element);
+               if (this.isRangeselect()) {
+                  this._onRangeItemElementClick(date);
+               } else {
+                  this._onRangeItemElementClick(date, date);
+               }
             }
          },
 
