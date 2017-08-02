@@ -926,7 +926,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Стандартным будет считаться поведение, useSelectAll = true.
                 * @deprecated
                 */
-               useSelectAll: false,
+               useSelectAll: true,
                virtualScrolling: false,
                //это использется для отображения аватарки драгндропа, она должна быть жекорированной ссылкой
                //временное решение пока не будет выпонена задача https://online.sbis.ru/debug/opendoc.html?guid=32162686-eee0-4206-873a-39bc7b4ca7d7&des=
