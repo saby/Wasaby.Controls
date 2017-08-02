@@ -17,16 +17,13 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [
             y: 0
          },
          _dragStartEventHandler: undefined,
-         _eventHandlers: isMobile ?
-            {
-               touchmove: '_moveAt',
-               touchend: '_moveEnd',
-               touchcancel: '_moveEnd'
-            }  :
-            mouseHandlers = {
-               mousemove: '_moveAt',
-               mouseup: '_moveEnd'
-            }
+         _eventHandlers: {
+            touchmove: '_moveAt',
+            touchend: '_moveEnd',
+            touchcancel: '_moveEnd',
+            mousemove: '_moveAt',
+            mouseup: '_moveEnd'
+         }
       },
 	   $constructor: function () {
 		   this._dragStartEventHandler = this._startEventHandler.bind(this);
@@ -81,7 +78,7 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [
        */
       _startEventHandler: function(e) {
          /* Если нажали не левой клавишей мыши, то не будем обрабатывать перенос */
-         if(isMobile ? e.originalEvent.touches.length > 1 : e.which !== 1) return;
+         if(e.originalEvent.touches ? e.originalEvent.touches.length > 1 : e.which !== 1) return;
 
          /* Найдём родителя, относительно которого происходит позиционирование */
          this._withinElement = e.target.offsetParent;
