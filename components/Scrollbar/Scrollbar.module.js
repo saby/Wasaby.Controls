@@ -67,10 +67,8 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
 
          setPosition: function (position) {
             position = this._calcPosition(position, 0, this._getMaxPosition());
-            if (position !== this._options.position) {
-               this._options.position = position;
-               this._notify('onScrollbarDrag', position);
-            }
+            this._options.position = position;
+            this._notify('onScrollbarDrag', position);
             this._setThumbPosition();
          },
 
@@ -177,7 +175,6 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             var newThumbPosition = this._thumbPosition + e.pageY - this._beginClient;
 
             this.setPosition(newThumbPosition / this._scrollRatio);
-            this._notify('onScrollbarDrag', this.getPosition());
 
             this._beginClient = e.pageY - newThumbPosition + this._thumbPosition;
          },
