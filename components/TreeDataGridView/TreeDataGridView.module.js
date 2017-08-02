@@ -345,10 +345,12 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       collapseNode: function (key, hash) {
+         this._hideItemsToolbar();
          return TreeDataGridView.superclass.collapseNode.apply(this, arguments);
       },
 
       expandNode: function (key, hash) {
+         this._hideItemsToolbar();
          return TreeDataGridView.superclass.expandNode.apply(this, arguments);
       },
 
