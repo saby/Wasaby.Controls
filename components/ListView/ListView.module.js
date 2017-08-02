@@ -29,6 +29,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.MassSelectionController',
    'js!SBIS3.CONTROLS.ImitateEvents',
    'js!SBIS3.CORE.LayoutManager',
+   'Core/helpers/markup-helpers',
    'js!SBIS3.CONTROLS.Link',
    'js!SBIS3.CONTROLS.ScrollWatcher',
    'js!WS.Data/Collection/IBind',
@@ -67,7 +68,7 @@ define('js!SBIS3.CONTROLS.ListView',
 ],
    function (cMerge, cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
-    TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents, LayoutManager,
+    TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents, LayoutManager, mHelpers,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
     Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove) {
      'use strict';
@@ -996,6 +997,9 @@ define('js!SBIS3.CONTROLS.ListView',
                this._pagingZIndex = WindowManager.acquireZIndex();
                WindowManager.setVisible(this._pagingZIndex);
             }
+            if (this._options.virtualScrolling || this._options.scrollPaging) {
+               this._getScrollWatcher().subscribe('onScroll', this._onScrollHandler.bind(this));
+            }
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
             this._initLoadMoreButton();
@@ -1149,7 +1153,6 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _createScrollPager: function(){
             var scrollContainer = this._scrollWatcher.getScrollContainer();
-            this._scrollWatcher.subscribe('onScroll', this._onScrollHandler.bind(this));
             this._scrollPager = new Paging({
                element: $('> .controls-ListView__scrollPager', this._container),
                visible: false,
@@ -1198,6 +1201,9 @@ define('js!SBIS3.CONTROLS.ListView',
             var itemActions = this.getItemsActions();
             if (itemActions && itemActions.isItemActionsMenuVisible()){
                itemActions.hide();
+            }
+            if (this._virtualScrollController) {
+              this._virtualScrollController._scrollHandler(event, scrollTop);
             }
          },
          _setScrollPagerPosition: function(){
@@ -2370,6 +2376,23 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _getEditInPlaceConfig: function() {
+            /**
+             * Объект _savedConfigs содержит конфигурации компонентов, которые описаны
+             * внутри контентной опции с type='string'
+             * Раскладываем их обратно в configStorage перед созданием
+             * редактирования по месту
+             */
+            if (this._savedConfigs) {
+               for (var i=0;i<this._savedConfigs.length;i++){
+                  var conf = this._savedConfigsMaps[i],
+                     temp = this._savedConfigs[i][conf],
+                     obj = {};
+                  if (!temp._thisIsInstance) {
+                     obj[conf] = cFunctions.shallowClone(temp);
+                     mHelpers.mergeConfigStorage(obj);
+                  }
+               }
+            }
             var
                config = {
                   items: this.getItems(),
@@ -2523,7 +2546,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var id = item.getId();
             // Даже не думать удалять ":not(...)". Это связано с тем, что при редактировании по месту может возникнуть задача перерисовать строку
             // DataGridView. В виду одинакового атрибута "data-id", это единственный способ отличить строку DataGridView от строки EditInPlace.
-            return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + (id === undefined ? '' : id) + '"]:not(".controls-editInPlace")');
+            return this._getItemsContainer().find('>.js-controls-ListView__item[data-id="' + (id === undefined ? '' : id) + '"]:not(".controls-editInPlace")');
          },
          /**
           * Возвращает признак, по которому можно установить: активно или нет редактирование по месту в данный момент.
@@ -2835,6 +2858,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._moveTopScroll();
                }
             }
+            if (this._virtualScrollController){
+               this._virtualScrollController.initHeights();
+            }
             this._updateHoveredItemAfterRedraw();
          },
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
@@ -2850,9 +2876,6 @@ define('js!SBIS3.CONTROLS.ListView',
                   //TODO: Это возможно очень долго, надо как то убрать. Нужно для случев, когда ListView создается скрытым, а потом показывается
                   this._scrollBinder && this._scrollBinder._updateScrollPages();
                   this._setScrollPagerPositionThrottled();
-               }
-               if (this._virtualScrollController){
-                  this._virtualScrollController.updateVirtualPages();
                }
             }
             /* при изменении размера таблицы необходимо вызвать перерасчет позиции тулбара
