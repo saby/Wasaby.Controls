@@ -4,9 +4,6 @@
    border: @controls-FieldLink-border @gray-ccc-color;
    margin-top: 0;
    overflow: auto;
-}
-
-.controls-FieldLink__picker:not(.controls-Suggest__picker) {
    padding: @controls-FieldLink-linkContainer-padding;
    border-top: none;
    .flexbox();
@@ -33,6 +30,10 @@
          .text-overflow();
          height: @controls-FieldLink-linkItem-line-height;
       }
+   }
+   
+   &.ws-disabled .controls-FieldLink__item-caption {
+      margin-right: @controls-FieldLink-disabled-item-picker-margin;
    }
 
    &.controls-popup-revert-vertical {
