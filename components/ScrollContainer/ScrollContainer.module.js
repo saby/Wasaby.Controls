@@ -419,6 +419,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             //ресайз может позваться до инита контейнера
             if (this._content) {
                this._addGradient();
+               if (cDetection.isIE && cDetection.firefox) {
+                  this._content.toggleClass('controls-ScrollContainer__content-overflowHidden', !this._getChildContentHeight());
+               }
             }
 
             if (this._paging) {
@@ -431,6 +434,15 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   this._setPagesCount(Math.ceil(this._getScrollHeight() / this._container.height()));
                }
             }
+         },
+
+         _getChildContentHeight: function() {
+            var height = 0;
+            this._content.children().forEach(function(item) {
+               height += item.offsetHeight;
+            });
+
+            return height;
          },
 
          _getScrollTop: function(){
