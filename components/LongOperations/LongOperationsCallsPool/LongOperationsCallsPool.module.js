@@ -455,9 +455,12 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
          results = self._handleComplete(node.pool, results);
          for (var i = 0; i < outs.length; i++) {
             var o = outs[i];
-            // Разрешить только последнее или "защищённые" обещания
+            // Разрешить только "защищённые" или последнее обещание
             if (o.dontSkip || i === outs.length - 1) {
                o.promise.callback(results);
+            }
+            else {
+               o.promise.errback(new Error('Call is outdated'));
             }
          }
       };
