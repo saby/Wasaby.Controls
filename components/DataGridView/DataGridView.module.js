@@ -712,7 +712,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if(td.length) {
             index = td.index();
             hoveredColumn = this._hoveredColumn;
-            colIndex = index + (this.getMultiselect() ? 1 : 0);
+            colIndex = index - (this.getMultiselect() ? 1 : 0);
 
             if(columns[colIndex] && !columns[colIndex].cellTemplate && !td[0].getAttribute('title')) {
                colValue = td.find('.controls-DataGridView__columnValue')[0];
