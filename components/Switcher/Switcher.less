@@ -28,7 +28,6 @@
    display: inline-block;
    width: @switcher-width;
    height: @switcher-height;
-   line-height: @switcher-height;
    border-color: @switcher-border-color;
    border-style: @default-border-style;
    border-radius: @switcher-border-radius;
@@ -107,6 +106,7 @@ body:not(.ws-is-mobile-platform) .ws-enabled.controls-Switcher:hover {
 & when (@switcher-hover-border-width = @default-border-width) {
    .controls-Switcher {
       border-width: @default-border-width;
+      line-height: calc(~"@{switcher-height} - 2 * @{default-border-width}");
       .switcherBorder(@default-border-width);
    }
 }
@@ -114,10 +114,12 @@ body:not(.ws-is-mobile-platform) .ws-enabled.controls-Switcher:hover {
    .controls-Switcher {
       &:not(:hover), .ws-disabled&:hover {
          border-width: @default-border-width;
+         line-height: calc(~"@{switcher-height} - 2 * @{default-border-width}");
          .switcherBorder(@default-border-width);
       }
       .ws-enabled&:hover {
          border-width: @switcher-hover-border-width;
+         line-height: calc(~"@{switcher-height} - 2 * @{switcher-hover-border-width}");
          .switcherBorder(@switcher-hover-border-width);
       }
    }
