@@ -24,7 +24,8 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
        */
        var SelectorAction = Action.extend([DialogMixin], /** @lends SBIS3.CONTROLS.Action.SelectorAction.prototype */{
           _buildComponentConfig: function(metaConfig) {
-             var cfg = SelectorAction.superclass._buildComponentConfig.call(this, metaConfig);
+             /* Необходимо клонировать metaConfig, чтобы не испортить оригинальный объект */
+             var cfg = cMerge({}, SelectorAction.superclass._buildComponentConfig.call(this, metaConfig), {clone: true});
 
              function onSelectComplete(event, meta) {
                 this.sendCommand('close', meta);
