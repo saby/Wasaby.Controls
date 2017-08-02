@@ -1,12 +1,12 @@
 /**
  * Created by nv.belotelov on 14.07.2017.
  */
-define('js!WSTest/Focus/Scenario/30', [
+define('js!WSTest/Focus/Scenario/32', [
    'Core/constants',
    'js!WSTest/Focus/TestFocusHelpers',
    'js!SBIS3.CORE.Button',
    'js!SBIS3.CORE.Window',
-   'tmpl!WSTest/Focus/Case30',
+   'tmpl!WSTest/Focus/Case32',
    'js!SBIS3.CORE.CompoundControl',
    'js!SBIS3.CORE.CompoundActiveFixMixin',
    'js!WSTest/Focus/Case13'
@@ -14,7 +14,7 @@ define('js!WSTest/Focus/Scenario/30', [
              fHelpers,
              Button,
              W,
-             Case30,
+             Case32,
              CompoundControl,
              CompoundActiveFixMixin) {
    'use strict';
@@ -27,7 +27,7 @@ define('js!WSTest/Focus/Scenario/30', [
 
     кликаем на Textbox0, кликаем на кнопку, открылась панель, нажимаем esc, активность должна уйти на Textbox0
     */
-   return function scenario30(done) {
+   return function scenario32(done) {
       var wnd,
          testControlName = 'WSTest/Focus/Case13';
 
@@ -41,24 +41,25 @@ define('js!WSTest/Focus/Scenario/30', [
       }
 
       var Control = CompoundControl.extend({
-            _dotTplFn: Case30
+            _dotTplFn: Case32
          }),
          control = new Control({
             element: $('#component')
          });
-      Button = Button.extend([CompoundActiveFixMixin], {});
+      // Button = Button.extend([CompoundActiveFixMixin], {});
       var button = new Button({
-         element: $('<div></div>').appendTo('.Case30Control'),
+         element: $('.Button3'),
          handlers: {
-            'onActivated': onActivated,
             'onClick': onActivated
          },
          img: 'sprite:icon-16 icon-Search icon-primary'
       });
+      fHelpers.fireClick(control.getChildControlByName('Button1'));
+      fHelpers.fireClick(control.getChildControlByName('Button2'));
       fHelpers.fireClick(button);
       setTimeout(function () {
          fHelpers.fireEsc(wnd);
-         fHelpers.childHasFocus(control, 'TextBox0');
+         fHelpers.childHasFocus(control, 'Button2');
          delete window[testControlName];
          control.destroy();
          done();
