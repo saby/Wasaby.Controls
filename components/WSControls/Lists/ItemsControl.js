@@ -50,15 +50,12 @@ define('js!WSControls/Lists/ItemsControl', [
 
          _records: null,
 
-         _itemData: null,
          _defaultItemContentTemplate: ItemContentTemplate,
          _defaultItemTemplate: ItemTemplate,
          _groupTemplate: null,
          _defaultGroupTemplate: null,
 
          _itemsTemplate: ItemsTemplate,
-
-         _selector: null,
 
          constructor: function (cfg) {
             ItemsControl.superclass.constructor.apply(this, arguments);
