@@ -151,9 +151,7 @@ define(
             options.pickerIconShow = false;
             IoC.resolve('ILogger').log('DatePicker', 'В качестве опции isCalendarIconShown используйте pickerIconShow');
          }
-         if (options.pickerIconShow) {
-            this._checkTypeOfMask(options);
-         }
+         this._checkTypeOfMask(options);
 
          return options;
       },
@@ -335,12 +333,16 @@ define(
             pickerName;
          if (/[DMY]/.test(mask)) {
             pickerName = 'calendar';
-         } else if (mask === 'HH:II' && options.timePickerIconShow) {
+         } else if (mask === 'HH:II') {
             pickerName = 'time';
          }
          if (pickerName) {
             options._pickerName = pickerName;
          } else {
+            options.pickerIconShow = false;
+         }
+         // Выпилить с опцией timePickerIconShow
+         if (options._pickerName === 'time' && !options.timePickerIconShow) {
             options.pickerIconShow = false;
          }
       },

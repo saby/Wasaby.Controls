@@ -282,14 +282,14 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   onFieldsChanged = function() {
                      if (self._ctxSync.selfNeedSync) {
                         self._ctxSync.selfNeedSync = 0;
-                        prevContext.setValue(self._ctxSync.selfToPrev);
+                        prevContext.setValueSelf(self._ctxSync.selfToPrev);
                         self._ctxSync.selfToPrev = {};
                      }
                   },
                   prevOnFieldsChanged = function() {
                      if (self._ctxSync.prevNeedSync) {
                         self._ctxSync.prevNeedSync = 0;
-                        selfCtx.setValue(self._ctxSync.prevToSelf);
+                        selfCtx.setValueSelf(self._ctxSync.prevToSelf);
                         self._ctxSync.prevToSelf = {};
                      }
                   },
@@ -422,7 +422,14 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             }
 
             if (this._paging) {
-               this._setPagesCount(Math.ceil(this._getScrollHeight() / this._container.height()));
+               /**
+                * Меняем количество страниц, если высота не 0.
+                * Если высота стала 0, то менять количество страниц не нужно, потому что определить сколько их нельзя, а
+                * значит и определить на сколько прокручивать при переходе на другую страницу нельзя.
+                */
+               if (this._container.height()) {
+                  this._setPagesCount(Math.ceil(this._getScrollHeight() / this._container.height()));
+               }
             }
          },
 

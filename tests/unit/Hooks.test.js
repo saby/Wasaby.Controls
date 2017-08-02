@@ -3,7 +3,7 @@
  */
 define([
    'js!SBIS3.CONTROLS.Button',
-   'js!WSDemo/Hooks/HookTest'
+   'js!WSTest/Hooks/HookTest'
 ], function (
    Button,
    Control
@@ -24,7 +24,7 @@ define([
             var control = new Control({
                childText: 'text',
                element:$('#component')
-            })
+            });
 
             setTimeout(function () {
                assert.isTrue(control.checkHooks[0] === 'beforeMount');

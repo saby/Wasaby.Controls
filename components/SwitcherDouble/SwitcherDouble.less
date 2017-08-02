@@ -1,153 +1,155 @@
-.controls-SwitcherDouble {
-   display: inline-block;
-   margin: @switcher-do-margin;
+@import (reference) "../Switcher/Switcher";
 
-   .controls-SwitcherDouble__toggle {
-      display: inline-block;
-      cursor: @switcher-cursor;
-      width: @switcher-do-horizontal-toggle-width;
-      height: @switcher-do-horizontal-toggle-height;
-      margin: @switcher-do-horizontal-toggle-margin;
-      border: @switcher-do-border;
-      border-radius: @switcher-do-border-radius;
-      line-height: @switcher-do-horizontal-toggle-line-height;
-      position: relative;
-      &.controls-SwitcherDouble-on-toggled {
-         .controls-SwitcherDouble__btn {
-            right: @switcher-do-horizontal-btn-margin;
-            left: auto;
+.controls-SwitcherDouble__toggle {
+   &:extend(.controls-Switcher);
+   &:not(:hover) {
+      &:extend(.controls-Switcher:not(:hover));
+   }
+}
+.ws-enabled.controls-SwitcherDouble .controls-SwitcherDouble__toggle {
+   &:hover {
+      &:extend(.ws-enabled.controls-Switcher:hover);
+   }
+   &.controls-SwitcherDouble-on-toggled, &.controls-SwitcherDouble-off-toggled {
+      .controls-SwitcherDouble__btn {
+         &:extend(.ws-enabled.controls-Switcher.controls-Checked__checked .controls-Switcher__btn);
+         &:before {
+            &:extend(.ws-enabled.controls-Switcher.controls-Checked__checked .controls-Switcher__btn:before);
          }
       }
    }
    .controls-SwitcherDouble__line {
-      position: absolute;
-      height: 2px;
-      left: 50%;
-      width: @switcher-do-horizontal-line-width;
-      margin-left: -@switcher-do-horizontal-line-width / 2;
-      margin-top: -1px;
-      top: 50%;
-      background-color: @switcher-do-horizontal-line-background-color;
+      &:extend(.ws-enabled.controls-Switcher .controls-Switcher__line);
+   }
+}
+.ws-disabled.controls-SwitcherDouble .controls-SwitcherDouble__toggle {
+   &:hover {
+      &:extend(.ws-disabled.controls-Switcher:hover);
    }
    .controls-SwitcherDouble__btn {
-      display: block;
-      position: absolute;
-      box-sizing: border-box;
-      border-style: solid;
-      background: @switcher-do-horizontal-btn-bg-color;
-      border-color: @switcher-do-horizontal-btn-color;
-      border-width: @switcher-do-horizontal-btn-border-width;
-      border-radius: @switcher-do-horizontal-btn-radius;
-
-      width: @switcher-do-horizontal-btn-size;
-      height: @switcher-do-horizontal-btn-size;
-      left: @switcher-do-horizontal-btn-margin;
-      right: auto;
-      top: (@switcher-do-horizontal-toggle-height - @switcher-do-horizontal-btn-size) / 2;
-   }
-
-   .controls-SwitcherDouble__text {
-      display: inline-block;
-      cursor: @switcher-do-text-cursor;
-      color: @switcher-do-text-color;
-      text-decoration: @switcher-do-decoration;
-      font-weight: @swithcer-do-font-weight;
-
-      &.controls-SwitcherDouble__unselected {
-         cursor: @switcher-do-unselected-text-cursor;
-         color: @switcher-do-unselected-text-color;
-         text-decoration: @switcher-do-unselected-text-decoration;
-         font-weight: @swithcer-do-unselected-font-weight;
-
-         &:hover {
-            color: @switcher-do-horizontal-text-hover-color;
-            text-decoration: @switcher-do-unselected-text-decoration-hover;
-         }
-      }
-
-   }
-
-   &.controls-SwitcherDouble-vertical {
-      vertical-align: top;
-
-      .controls-SwitcherDouble__toggle {
-         display: inline-block;
-         vertical-align: top;
-         cursor: @switcher-cursor;
-         width: @switcher-do-vertical-toggle-width;
-         height: @switcher-do-vertical-toggle-height;
-         margin: @switcher-do-vertical-toggle-margin;
-         &.controls-SwitcherDouble-on-toggled {
-            .controls-SwitcherDouble__btn {
-               top: @switcher-do-horizontal-btn-margin;
-               bottom: auto;
-               left: (@switcher-do-vertical-toggle-width - @switcher-do-horizontal-btn-size) / 2;
-            }
-         }
-
-      }
-      .controls-SwitcherDouble__line {
-         height: @switcher-do-vertical-line-width;
-         width: 2px;
-         margin-top: -@switcher-do-vertical-line-width / 2;
-         margin-left: -1px;
-      }
-
-      .controls-SwitcherDouble__text-block {
-         display: inline-block;
-         height: 100%;
-
-         .controls-SwitcherDouble__text {
-            display: block;
-            height: @switcher-do-vertical-toggle-height / 2;
-            line-height: @switcher-do-vertical-toggle-height / 2;
-         }
-      }
-      .controls-SwitcherDouble__btn {
-         bottom: @switcher-do-horizontal-btn-margin;
-         top: auto;
-         left: (@switcher-do-vertical-toggle-width - @switcher-do-horizontal-btn-size) / 2;
+      &:extend(.ws-disabled.controls-Switcher .controls-Switcher__btn);
+      &:before {
+         &:extend(.ws-disabled.controls-Switcher.controls-Checked__checked .controls-Switcher__btn:before);
       }
    }
-
-   &:hover {
-      .controls-SwitcherDouble__btn {
-         border-width: @switcher-do-horizontal-btn-border-width-hover;
-      }
+   .controls-SwitcherDouble__line {
+      &:extend(.ws-disabled.controls-Switcher .controls-Switcher__line);
    }
-
-   &.ws-disabled {
-      .controls-SwitcherDouble__toggle {
-         cursor: @switcher-do-disabled-toggle-cursor;
-         border-color:  @switcher-do-disabled-toggle-border-color;
-      }
-      .controls-SwitcherDouble__line {
-         background: @switcher-do-disabled-line-color;
-      }
-
-      .controls-SwitcherDouble__text {
-         cursor: @switcher-do-disabled-text-cursor;
-         color: @switcher-do-disabled-text-color;
-         text-decoration: @switcher-do-disabled-text-decoration;
-         &:hover {
-            color: @switcher-do-disabled-text-color;
-            text-decoration: @switcher-do-disabled-text-decoration;
-         }
-      }
-      .controls-SwitcherDouble__btn {
-         border-color: @switcher-do-horizontal-btn-color-disabled;
-         border-width: @switcher-do-horizontal-btn-border-width;
-         background: @switcher-do-disabled-btn-background;
-      }
-   }
-
 }
-.ws-is-mobile-platform {
-   .controls-SwitcherDouble {
-      &:hover {
-         .controls-SwitcherDouble__btn {
-            border-width: @switcher-do-horizontal-btn-border-width;
-         }
+body:not(.ws-is-mobile-platform) .ws-enabled.controls-SwitcherDouble .controls-SwitcherDouble__toggle:hover {
+   &:extend(body:not(.ws-is-mobile-platform) .ws-enabled.controls-Switcher:hover);
+   .controls-SwitcherDouble__btn {
+      &:extend(body:not(.ws-is-mobile-platform) .ws-enabled.controls-Switcher:hover .controls-Switcher__btn);
+   }
+   &.controls-SwitcherDouble-on-toggled, &.controls-SwitcherDouble-off-toggled {
+      .controls-SwitcherDouble__btn:before {
+         &:extend(body:not(.ws-is-mobile-platform) .ws-enabled.controls-Switcher:hover.controls-Checked__checked .controls-Switcher__btn:before);
       }
    }
+}
+.controls-SwitcherDouble__btn {
+   &:extend(.controls-Switcher__btn);
+}
+.controls-SwitcherDouble__line {
+   &:extend(.controls-Switcher__line);
+}
+.controls-SwitcherDouble-on-toggled, .controls-SwitcherDouble-off-toggled {
+   .controls-SwitcherDouble__btn:before {
+      &:extend(.controls-Switcher.controls-Checked__checked .controls-Switcher__btn:before);
+   }
+}
+
+.controls-SwitcherDouble_vertical {
+   position: relative;
+   height: @switcher-width;
+   vertical-align: top;
+   & > .controls-SwitcherDouble__toggle {
+      @offset: (@switcher-width - @switcher-height) / 2;
+      .rotate(-90deg);
+      margin: @offset -@offset @offset calc(~"-@{offset} - 1px");
+   }
+   & > .controls-SwitcherDouble__textBlock {
+      display: inline-block;
+      height: 100%;
+      vertical-align: top;
+      margin-left: @switcher-do-text-margin;
+      & > .controls-SwitcherDouble__textOn, & > .controls-SwitcherDouble__textOff {
+         display: block;
+         margin: 0;
+      }
+   }
+}
+
+.controls-SwitcherDouble__empty {
+   font-size: 1px;
+}
+
+.switcherDoubleBorder(@border) {
+   &.controls-SwitcherDouble-on-toggled .controls-SwitcherDouble__btn {
+      .get-size(right, @switcher-width, -@switcherline-width, @border);
+   }
+   &.controls-SwitcherDouble-off-toggled .controls-SwitcherDouble__btn {
+      .get-size(left, @switcher-width, -@switcherline-width, @border);
+   }
+   & .controls-SwitcherDouble__line {
+      .get-size(top, @switcher-height, -@switcherline-height, @border);
+      .get-size(left, @switcher-width, -@switcherline-width, @border);
+   }
+   & .controls-SwitcherDouble__btn {
+      .get-size(top, @switcher-height, -@switcher-btn-size, @border);
+   }
+}
+
+& when (@switcher-hover-border-width = @default-border-width) {
+   .controls-SwitcherDouble .controls-SwitcherDouble__toggle {
+      border-width: @default-border-width;
+      .switcherDoubleBorder(@default-border-width);
+   }
+}
+& when not (@switcher-hover-border-width = @default-border-width) {
+   .controls-SwitcherDouble .controls-SwitcherDouble__toggle {
+      &:not(:hover), .ws-disabled&:hover {
+         border-width: @default-border-width;
+         .switcherDoubleBorder(@default-border-width);
+      }
+      .ws-enabled&:hover {
+         border-width: @switcher-hover-border-width;
+         .switcherDoubleBorder(@switcher-hover-border-width);
+      }
+   }
+}
+.controls-SwitcherDouble {
+   display: inline-block;
+}
+
+.controls-SwitcherDouble__text {
+   display: inline-block;
+   height: @switcher-height;
+   line-height: @switcher-height;
+   .ws-enabled.controls-SwitcherDouble & {
+      &.controls-SwitcherDouble__unselected {
+         cursor: @default-hover-cursor;
+      }
+      &:not(controls-SwitcherDouble__unselected) {
+         cursor: @switcher-do-text-selected-cursor;
+      }
+   }
+}
+
+.controls-SwitcherDouble__textOn {
+   margin-left: @switcher-do-text-margin;
+}
+.controls-SwitcherDouble__textOff {
+   margin-right: @switcher-do-text-margin;
+}
+.ws-enabled.controls-SwitcherDouble .controls-SwitcherDouble__unselected {
+   color: @innacent-color2;
+   &:hover {
+      text-decoration: @switcher-do-text-unselected-decoration;
+   }
+}
+
+.ws-disabled.controls-SwitcherDouble .controls-SwitcherDouble__text {
+   color: @disabled-color;
+   cursor: @switcher-do-text-selected-cursor;
 }

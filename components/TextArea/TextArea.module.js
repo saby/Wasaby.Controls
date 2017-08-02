@@ -67,7 +67,6 @@ define('js!SBIS3.CONTROLS.TextArea', [
          _cachedH: null,
          _pasteCommand: 'insertText',
          _compatPlaceholder: null,
-         _autoSizeInitialized: false,
          _options: {
             wrapUrls: LinkWrap.wrapURLs,
             escapeHtml: strHelpers.escapeHtml,
@@ -202,7 +201,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
             var trg = dcHelpers.trackElement(this._container, true);
 
             if(this.isVisible()){
-               this._autosizeTextArea(false, true);
+               this._autosizeTextArea();
             }
 
             trg.subscribe('onVisible', function (event, visible) {
@@ -212,7 +211,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
                   if (w != self._cachedW || h != self._cachedH) {
                      self._cachedW = w;
                      self._cachedH = h;
-                     self._autosizeTextArea(true, true);
+                     self._autosizeTextArea(true);
                   }
                }
             });
@@ -249,29 +248,15 @@ define('js!SBIS3.CONTROLS.TextArea', [
          this._container.addClass('controls-TextArea__heightInit');
       },
 
-      _onResizeHandler: function() {
-         //надо переинитить autosize при изменении размеров родителя, потому что текстарея могла стать уже, и нужно пересчитаться
-         TextArea.superclass._onResizeHandler.apply(this, arguments);
-         if (this._autoSizeInitialized) {
-            this._autosizeTextArea(true, false);
-         }
-      },
-
-      _autosizeTextArea: function(hard, notifyAboutSizes){
-         //Появилась необходимость при изменении размеров родителя вызывать пересчет текстэрии. Для этого сделан второй параметр и в этом случае не будет оповещать всех об изменении размеров в обратную сторону
-         var self = this, autosizeOpts;
-         autosizeOpts = {
+      _autosizeTextArea: function(hard){
+         var self = this;
+         this._inputField.autosize({
+            callback: self._notifyOnSizeChanged(self, self),
             hard: hard
-         };
-         if (notifyAboutSizes) {
-            autosizeOpts.callback = self._notifyOnSizeChanged(self, self);
-         }
-         this._inputField.autosize(autosizeOpts);
+         });
 
 
          this._removeAutoSizeDognail();
-
-         this._autoSizeInitialized = true;
       },
 
       _getElementToFocus: function() {
@@ -405,7 +390,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
          this._updateCompatPlaceholderVisibility();
          if (this._inputField.val() != text) {
             this._inputField.val(text || '');
-            this._autosizeTextArea(true, true);
+            this._autosizeTextArea(true);
          }
          if (this._options.autoResize.state) {
             this._inputField.trigger('autosize.resize');
