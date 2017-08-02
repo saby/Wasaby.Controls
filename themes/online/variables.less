@@ -526,7 +526,7 @@
 @radio-button-icon-disabled-checked-bg:         @radio-button-icon-bg;
 @radio-button-icon-disabled-checked-hover-bg:   @radio-button-icon-bg;
 
-@radio-button-icon-margin:                      8px 6px 0 6px;
+@radio-button-icon-margin:                      7px 6px 0 6px;
 @radio-button-icon-border-style:                solid;
 @radio-button-icon-border-color:                @gray-color;
 @radio-button-icon-border-color-checked:        @radio-button-hover-text-color;
@@ -599,18 +599,19 @@
 // -------- //
 // Switcher //
 // -------- //
-
-@switcher-cursor:                               pointer;
-@switcher-cursor-disabled:                      default;
 @switcher-width:                                46px;
 @switcher-height:                               24px;
-@switcher-line-height:                          @switcher-height;
-@switcherline-height:                           2px;
-
-@switcher-line-color:							@gray-color;
-@switcher-border:                               1px solid @gray-light-color;
 @switcher-border-radius:                        30px;
-@switcher-line-width:                           36px;
+@switcher-hover-border-width:                   @default-border-width;
+@switcherline-height:                           2px;
+@switcherline-width:                            34px;
+@switcher-btn-size:                             12px;
+@switcher-btn-border-width:                     2px;
+@switcher-btn-hover-border-width:               3px;
+@switcher-dot-size:                             4px;
+@switcher-border-color:                         @gray-light-color;
+@switcher-disabled-color:                       @gray-light-color;
+
 @switcher-line-color-disabled:                  @gray-light-color;
 @switcher-btn-bg-color:                         @white-color;
 @switcher-btn-bg-color-disabled:                @white-color;
@@ -618,10 +619,7 @@
 @switcher-btn-color-inactive:                   @gray-color;
 @switcher-btn-color-disabled:                   @gray-light-color;
 @switcher-dot-radius:                           0;
-@switcher-btn-border-width:                     2px;
-@switcher-btn-border-hover:                     3px;
 @switcher-btn-radius:                           6px;
-@switcher-btn-size:                             12px;
 @switcher-btn-margin:                           5px;
 @switcher-dot-width:                            2px;
 @switcher-dot-height:                           4px;
@@ -632,10 +630,13 @@
 // ---------------------- //
 // Double online switcher //
 // ---------------------- //
+@switcher-do-text-margin:                       6px;
+@switcher-do-text-selected-cursor:              text;
+@switcher-do-text-unselected-decoration:        underline;
 
 @switcher-do-margin:                            0 0 0 8px;
 
-@switcher-do-text-cursor:                       @switcher-cursor;
+@switcher-do-text-cursor:                       @default-hover-cursor;
 @switcher-do-text-color:                        @black-color;
 @switcher-do-decoration:                        none;
 @swithcer-do-font-weight:                       normal;
@@ -645,7 +646,7 @@
 @switcher-do-unselected-text-decoration:        none;
 @switcher-do-unselected-text-decoration-hover:  underline;
 
-@switcher-do-disabled-toggle-cursor:            @switcher-cursor-disabled;
+@switcher-do-disabled-toggle-cursor:            @disabled-hover-cursor;
 @switcher-do-disabled-text-cursor:              text;
 @switcher-do-disabled-text-color:               @gray-light-color;
 @switcher-do-disabled-toggle-border-color:      @switcher-do-disabled-text-color;
@@ -655,17 +656,17 @@
 
 @switcher-do-horizontal-toggle-width:           @switcher-width;
 @switcher-do-horizontal-toggle-height:          @switcher-height;
-@switcher-do-horizontal-toggle-line-height:     @switcher-line-height;
+@switcher-do-horizontal-toggle-line-height:     @switcher-height;
 @switcher-do-horizontal-toggle-margin:          0 6px;
 
 @switcher-do-vertical-toggle-width:             24px;
 @switcher-do-vertical-toggle-height:            48px;
 @switcher-do-vertical-toggle-margin:            0 12px 0 0;
 
-@switcher-do-border:                            @switcher-border;
+@switcher-do-border:                            @default-border-width @default-border-style @gray-light-color;
 @switcher-do-border-radius:                     @switcher-border-radius;
 
-@switcher-do-horizontal-line-width:             @switcher-line-width;
+@switcher-do-horizontal-line-width:             @switcherline-width;
 @switcher-do-vertical-line-width:               38px;
 @switcher-do-horizontal-line-background-color:  @gray-color;
 @switcher-do-horizontal-disabled-line-color:    @gray-light-color;
@@ -678,7 +679,7 @@
 @switcher-do-horizontal-btn-margin:             @switcher-btn-margin;
 @switcher-do-horizontal-btn-bg-color:           @switcher-btn-bg-color;
 @switcher-do-horizontal-btn-color-disabled:     @switcher-btn-color-disabled;
-@switcher-do-horizontal-btn-border-width-hover: @switcher-btn-border-hover;
+@switcher-do-horizontal-btn-border-width-hover: @switcher-btn-hover-border-width;
 
 
 
@@ -818,6 +819,7 @@
 // -------- //
 
 @text-box-height:                         24px;
+@text-box-line-height:                    22px;
 @text-box-wrapper-padding:                0 4px;
 @text-box-border-radius:                  0;
 @text-box-color:                          @default-text-color;
@@ -1804,13 +1806,7 @@
 // --------- //
 //  ToolBar  //
 // --------- //
-
-@controls-toolbar-display:                      inline-block;
 @controls-toolbar-default-margin:               12px;
-@controls-toolbar-item-margin-right:            @controls-toolbar-default-margin;
-@controls-toolbar-menu-margin-left:             @controls-toolbar-default-margin;
-@controls-toolbar-container-margin-right:       -@controls-toolbar-default-margin;
-@controls-toolbar-item-vertical-align:          middle;
 
 // --------- //
 // Tree view //
@@ -1960,7 +1956,8 @@
 @data-grid-table-layot: 								fixed;
 @data-grid-table-separator-border-width:        0 0 @default-border-width 0;
 
-@data-grid-money-header-cell-padding:           24px;
+@data-grid-money-header-cell-padding:           22px;
+@data-grid-money-header-cell-padding-last:      24px;
 
 @data-grid-results-color:                       @accent-color;
 // ---------- //
@@ -2136,6 +2133,8 @@
 @DropdownList-picker-offset:                          0 0 0 1px;
 @DropdownList-picker-fastdatafilter-offset:           1px 0 0 1px;
 @DropdownList-picker-margin-top:                      -1px;
+@DropdownList-picker-close-btn-top:                   4px;
+@DropdownList-picker-close-btn-right:                 6px;
 @DropdownList-picker-head-margin:                     0;
 @DropdownList-picker-head-padding:                    4px 8px;
 @DropdownList-picker-head-duplicate-type-top-padding: 4px;
@@ -2168,6 +2167,7 @@
 @DropdownList-footer-buttonsBlock-height:             24px;
 @DropdownList-footer-multisel-buttonsBlock-h:         32px;
 @DropdownList-checkbox-bottom:                        1px;
+@DropdownList-before-caption-wrapper-top:             2px;
 @DropdownList-after-caption-wrapper-top:              2px;
 @DropdownList-footer-buttons-position:                absolute;
 @DropdownList-footer-hasMore-left:                    12px;
@@ -2448,6 +2448,7 @@
 @controls-InformationPopup-closeButton-font-size:             24px;
 @controls-InformationPopup-closeButton-color:                 #CCCCCC;
 @controls-InformationPopup-closeButton-hover-color:           @icon-active-color;
+@controls-InformationPopup-closeButton-font-family:           'cbuc-icons24';
 
 //NotificationPopup
 @controls-NotificationPopup-border:                                          @float-area-border;
