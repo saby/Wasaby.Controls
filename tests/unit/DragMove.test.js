@@ -225,6 +225,33 @@ define([
             }));
             assert.isFalse(dragMove._canDragMove());
          });
+         it('should addclass when it use placehoder', function () {
+            view.getContainer().find('[data-id=1]').css('display', 'inline-block');
+            dragMove.beginDrag();
+            assert.isTrue(dragMove._horisontalDragNDrop);
+         });
+      });
+      describe('._findItemByElement', function () {
+         it('should return item', function () {
+            var item = dragMove._findItemByElement(view.getContainer().find('[data-id=1]'));
+            assert.equal(item.data('id'), 1);
+         });
+         it('should return item when target inside item', function () {
+            var target = $('<div/>');
+            view.getContainer().find('[data-id=1]').html(target);
+            var item = dragMove._findItemByElement(target);
+            assert.equal(item.data('id'), 1);
+         });
+         it('should not return item if target ', function () {
+            var item = dragMove._findItemByElement($('<div/>'));
+            assert.equal(item.length, 0);
+         });
+         it('should return item if target inside listview item inside another listview item ', function () {
+            var target = $('<div/>'),
+               anotherItem = $('<div class="js-controls-ListView__item" data-id="1555" data-hash="55582"></div>').html(target),
+               item = view.getContainer().find('[data-id=1]').html(anotherItem);
+            assert.equal(item.data('id'), 1);
+         });
       });
       describe('.getContainer', function () {
          it('should return container', function () {
@@ -305,17 +332,44 @@ define([
          });
       });
       describe('.setItemsDragNDrop', function () {
-         it('setItemsDragNDrop', function () {
+         it('should set itemsDragnDrop', function () {
             dragMove.setItemsDragNDrop('allow');
             assert.equal(dragMove.getItemsDragNDrop(), 'allow');
          });
       });
-      describe('.setItemsDragNDrop', function () {
-         it('setItemsDragNDrop', function () {
+      describe('.getItemsDragNDrop', function () {
+         it('should return itemsDragnDrop', function () {
             new DragMove({
                itemsDragNDrop: 'allow'
             });
             assert.equal(dragMove.getItemsDragNDrop(), 'allow');
+         });
+      });
+      describe('._drawDragHighlight', function () {
+         var dragTarget;
+         beforeEach(function () {
+            if (dragMove) {
+               dragMove.beginDrag();
+               dragMove.updateTarget();
+               dragTarget = DragObject.getTarget();
+            }
+         });
+         it('should add class insertBefore', function () {
+            dragTarget.setPosition('before');
+            dragMove._drawDragHighlight(dragTarget);
+            assert.isTrue(dragTarget.getDomElement().hasClass('controls-DragNDrop__insertBefore'));
+         });
+         it('should add class insertAfter', function () {
+            dragTarget.setPosition('after');
+            dragMove._drawDragHighlight(dragTarget);
+            assert.isTrue(dragTarget.getDomElement().hasClass('controls-DragNDrop__insertAfter'));
+         });
+         it('should not add any class', function () {
+            dragTarget.setPosition('before');
+            dragMove._options.useDragPlaceHolder;
+            dragMove._drawDragHighlight(dragTarget);
+            assert.isFalse(dragTarget.getDomElement().hasClass('controls-DragNDrop__insertAfter'));
+            assert.isFalse(dragTarget.getDomElement().hasClass('controls-DragNDrop__insertAfter'));
          });
       });
       describe('DragPositioner', function () {

@@ -153,6 +153,7 @@
 @button-big-checked-icon-big-left-offset: @button-big-icon-big-left-offset;
 //Text box
 @text-box-field-line-height:              2.64rem !important;
+@text-box-line-height:                    @text-box-field-line-height;
 // Tab button
 @tab-button-large-secondAddText-font-size:0.4642rem;
 //Radio button
@@ -225,6 +226,22 @@
 @switcher-do-unselected-text-color:       @disabled-color;
 @switcher-do-disabled-text-color:         #37536C;
 @switcher-do-disabled-btn-background:     @gray-color;
+
+@switcher-width:                                3.571rem;
+@switcher-height:                               1.786rem;
+@switcher-border-radius:                        2.143rem;
+@switcher-hover-border-width:                   0.107rem;
+@switcherline-height:                           0.107rem;
+@switcherline-width:                            2.5rem;
+@switcher-btn-size:                             0.929rem;
+@switcher-btn-border-width:                     0.107rem;
+@switcher-btn-hover-border-width:               @switcher-btn-border-width;
+@switcher-dot-size:                             @switcher-btn-size;
+@switcher-border-color:                         #37536C;
+@switcher-disabled-color:                       #37536C;
+
+//SwitcherDouble
+@switcher-do-text-margin:                       0.571rem;
 //Menu
 @popup-font-size:                         1.43rem; // откатил размер из-за того, что меню стало меньше чем кнпока т.к. в самих кнопках размер шрифта используется больший
 @menu-header-bg-color:                    #23b8ff;
@@ -646,7 +663,7 @@
 @data-grid-results-color:                 #FFCC99;
 // PrintDialog
 //По какой-то причине Firefox берёт font-size не из html, а свой, причем только при расчёте этой ширины
-@controls-printdialog-min-width:          25em;
+@controls-printdialog-min-width:          27em;
 @controls-printdialog-activate-right:     3.1785rem;
 @controls-printdialog-activate-margin-top:8px;
 //MergeDialog
@@ -788,13 +805,21 @@
 @controls-Scrollbar-light-hover-thumb-color:rgba(0, 0, 0, 0.10);
 @controls-Scrollbar-light-active-thumb-color:rgba(0, 0, 0, 0.15);
 //InformationPopup
-@controls-InformationPopup-bg:            #2C3E50;
-@controls-InformationPopup-default-status-border-color:@default-border-color;
-@controls-InformationPopup-border:        @default-border-width solid;
-@controls-InformationPopup-border-bottom: @controls-InformationPopup-border;
-@controls-InformationPopup-border-top:    @controls-InformationPopup-border;
-@controls-InformationPopup-border-left:   @controls-InformationPopup-border;
-@controls-InformationPopup-border-right:  @controls-InformationPopup-border;
+@controls-InformationPopup-bg:                           #2C3E50;
+@controls-InformationPopup-default-status-border-color:  @default-border-color;
+@controls-InformationPopup-border:                       1px solid;
+@controls-InformationPopup-border-bottom:                @controls-InformationPopup-border;
+@controls-InformationPopup-border-top:                   @controls-InformationPopup-border;
+@controls-InformationPopup-border-left:                  @controls-InformationPopup-border;
+@controls-InformationPopup-border-right:                 @controls-InformationPopup-border;
+@controls-InformationPopup-closeButton-top:              6px;
+@controls-InformationPopup-closeButton-right:            6px;
+@controls-InformationPopup-closeButton-width:            1.7857rem;
+@controls-InformationPopup-closeButton-height:           1.7857rem;
+@controls-InformationPopup-closeButton-color:            #8991A9;
+@controls-InformationPopup-closeButton-hover-color:      #B9E9FF;
+@controls-InformationPopup-closeButton-font-size:        1.7857rem;
+@controls-InformationPopup-closeButton-font-family:      @icon-font;
 //SubmitPopup
 @controls-SubmitPopup-size-standard-width:28rem;
 @controls-SubmitPopup-button-min-width:   10rem;
@@ -872,6 +897,7 @@
 @tab-button-inner-after-bottom:           0.821rem;
 @tab-button-inner-after-width:            @default-border-width;
 @tab-button-ff-inner-height:              @tab-button-inner-height;
+@tab-button-checked-inner-bg:             transparent;
 //Browser
 @text-box-field-font-size:                1.14rem;
 @controls-Paging-btn-width:               3rem;
@@ -895,7 +921,7 @@
 @date-range-big-choose-date-range-picker-color:							#e4e4e4;
 @tab-buttons-height:							   3.57rem;
 @button-without-caption-min-width: 			3rem;
-@controls-toolbar-menu-margin-left:			0;
+@controls-toolbar-default-margin:			0;
 @controls-SelectorButton-line-height:		1.43rem;
 @controls-SelectorButton-height:				1.43rem;
 @menu-item-icon-32-margin:						0 0 0 3rem;
@@ -905,7 +931,6 @@
 @back-button-width-before:                .7rem;
 @back-button-text-fontweight:             @default-font-weight;
 @tab-buttons-border-bottom-height:        0.01rem;
-@controls-toolbar-item-margin-right:      0;
 @dropdownlist-item-text-color:            #202835;
 @controls-editInPlace-editor-bg:			   #354B62 !important;
 @controls-FieldLink-picker-show-color:		#F0F5FB;
@@ -922,6 +947,8 @@
 @DropdownList-footer-hasMore-top:         1.1rem;
 @DropdownList-picker-menu-item-color:     #F0F5FB;
 @DropdownList-picker-menu-item-hover:     #E0ECF5;
+@DropdownList-picker-close-btn-top:       0;
+@DropdownList-picker-close-btn-right:     0;
 @list-view-loading-indicator-gradient-bg: url(@list-view-scroll-spritesheet) no-repeat center;
 @list-view-loading-indicator-gradient-bg-up:url(@list-view-scroll-spritesheet) no-repeat center;
 @text-box-placeholder-color: 				   rgba(96,170,221, .2);
@@ -1007,7 +1034,6 @@
 @header-color:                            #FC9;
 @header-color-hover:                      @default-hover-color;
 @icon-color-disabled:                     @disabled-color !important;
-@controls-toolbar-item-vertical-align:    baseline;
 @date-range-big-choose-years-btn:         .5rem;
 @DropdownList-picker-offset:              0;
 @dropdown-list-item-padding:              .1785rem 1.3571rem .1071rem .57rem;
@@ -1027,6 +1053,8 @@
 @controls-NotificationPopup-border-top:   @controls-NotificationPopup-border;
 @controls-NotificationPopup-border-right: @controls-NotificationPopup-border;
 @controls-NotificationPopup-border-left:  @controls-NotificationPopup-border;
+@controls-NotificationPopup-header-padding:                   0.2857rem;
+@controls-NotificationPopup-header-padding-with-close-button: @controls-NotificationPopup-header-padding 2.0714rem @controls-NotificationPopup-header-padding 8px;
 @back-button-text-color:                  #FFCC99;
 @controls-FieldLink-link-color-hover:     @default-hover-color;
 

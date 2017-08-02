@@ -297,20 +297,20 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 self = this,
                 dragStrarter = function(bus, moveEvent){
                     self._preparePageXY(moveEvent);
-                    if ($(clickEvent.target).closest('.controls-DragNDropMixin__notDraggable', self._getDragContainer().context).length === 0) {
-                        if (self._isDrag(moveEvent, clickEvent)) {
-                            self._beginDrag(clickEvent);
-                            self._beginDragTarget = clickEvent.target;
-                            EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
-                        }
+                    if (self._isDrag(moveEvent, clickEvent)) {
+                        self._beginDrag(clickEvent);
+                        self._beginDragTarget = clickEvent.target;
+                        EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
                     }
                 };
-            this._preparePageXY(clickEvent);
-            EventBus.channel('DragAndDropChannel').subscribe('onMousemove', dragStrarter);
-            EventBus.channel('DragAndDropChannel').once('onMouseup', function(){
-                EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
-            });
-
+            if ($(clickEvent.target).closest('.controls-DragNDropMixin__notDraggable', self._getDragContainer().context).length === 0) {
+               this._preparePageXY(clickEvent);
+               EventBus.channel('DragAndDropChannel').subscribe('onMousemove', dragStrarter);
+               EventBus.channel('DragAndDropChannel').once('onMouseup', function () {
+                  EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
+               });
+               this._preventClickEvent(clickEvent);
+            }
         },
         /**
          * Начало перемещения.
@@ -322,17 +322,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 DragObject.onDragHandler(e);
                 if (this._beginDragHandler(DragObject, e) !== false) {
                     if (this._notify('onBeginDrag', DragObject, e) !== false) {
-                        //preventDefault делаем что бы запретить выделение текста
-                        e.preventDefault();
-                        //снимаем выделение с текста иначе не будут работать клики а выделение не снимется сниматься по клику из за preventDefault
-                        var sel = window.getSelection();
-                        if (sel) {
-                            if (sel.removeAllRanges) {
-                               sel.removeAllRanges();
-                            } else if (sel.empty) {
-                               sel.empty();
-                            }
-                        }
+
                         this._showAvatar(e);
                         DragObject.setOwner(this);
                         DragObject.setDragging(true);
@@ -516,6 +506,22 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                    return false;
                });
            }
+       },
+       /**
+        * Отменяет действие по умолчанию для клика что бы запретить выделение текста
+        * @private
+        */
+       _preventClickEvent: function (e) {
+          e.preventDefault();
+          //снимаем выделение с текста иначе не будут работать клики а выделение не будет сниматься по клику из за preventDefault
+          var sel = window.getSelection();
+          if (sel) {
+             if (sel.removeAllRanges) {
+                sel.removeAllRanges();
+             } else if (sel.empty) {
+                sel.empty();
+             }
+          }
        }
     };
 
