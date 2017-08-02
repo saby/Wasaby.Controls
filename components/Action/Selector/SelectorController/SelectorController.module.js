@@ -13,9 +13,10 @@ define('js!SBIS3.CONTROLS.SelectorController', [
    "js!SBIS3.CONTROLS.Utils.Query",
    "js!SBIS3.CONTROLS.Utils.OpenDialog",
    "js!WS.Data/Collection/List",
+   "js!WS.Data/Chain",
    "js!SBIS3.CONTROLS.SelectorWrapper"
 ],
-    function (CommandDispatcher, CompoundControl, Di, collectionHelpers, cInstance, cMerge, Record, SbisService, Query, OpenDialogUtil, List) {
+    function (CommandDispatcher, CompoundControl, Di, collectionHelpers, cInstance, cMerge, Record, SbisService, Query, OpenDialogUtil, List, Chain) {
 
        'use strict';
 
