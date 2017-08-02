@@ -37,6 +37,11 @@ define('js!WSControls/Lists/Selector', [
          this._applyAllowEmpty();
       },
 
+      _onItemClick: function(e, displayItem) {
+         this._setSelectedByHash(displayItem.getHash());
+         this._onSelectedItemChange();
+      },
+
       _getKeyByIndex: function (index) {
          if (this._hasItemByIndex(index) && !this._isEmptyIndex(index)) {
             var itemContents = this._display.at(index).getContents();
@@ -74,15 +79,14 @@ define('js!WSControls/Lists/Selector', [
       },
 
       _onSelectedItemChange: function() {
-         this._tplData = null;
          this._setDirty();
       },
 
-      _displayChangeCallback: function() {
+      _displayChangeCallback: function(display, cfg) {
          //TODO жду жизненного цикла и понимания, как сказать родителю об изменении состояния пока тут г-код
-         this._selectedIndex = this._isEmptyIndex(this._selectedIndex) ? (this._isEmptyIndex(this._options.selectedIndex) ? -1 : this._options.selectedIndex) : this._selectedIndex;
-         this._allowEmptySelection = this._options.allowEmptySelection || this._options.allowEmptySelection !== false;
-         this._selectedKey = this._selectedKey || this._options.selectedKey || null;
+         this._selectedIndex = this._isEmptyIndex(this._selectedIndex) ? (this._isEmptyIndex(cfg.selectedIndex) ? -1 : cfg.selectedIndex) : this._selectedIndex;
+         this._allowEmptySelection = cfg.allowEmptySelection || cfg.allowEmptySelection !== false;
+         this._selectedKey = this._selectedKey || cfg.selectedKey || null;
 
          if (this._isEmptyIndex(this._selectedIndex)) {
             //Если передали пустой индекс и ключ, определяем индекс по ключу

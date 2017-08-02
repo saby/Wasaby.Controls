@@ -20,20 +20,20 @@ define('js!WSControls/Lists/TreeView2', [
       _loadMode: undefined,       // Режим загрузки данных ( "partial" / "full" )
       _expandMode: undefined,     // Режим разворота узлов ( "multiple" / "single" )
 
-      _prepareMountingData: function(cfg) {
+      _prepareMountingData: function(newOptions) {
          TreeView.superclass._prepareMountingData.apply(this, arguments);
-         if (isPlainObject(cfg.expandedItems)) {
-            this._expandedItems = cFunctions.clone(cfg.expandedItems);
+         if (isPlainObject(newOptions.expandedItems)) {
+            this._expandedItems = cFunctions.clone(newOptions.expandedItems);
          } else {
             this._expandedItems = {};
          }
-         if (cfg.loadMode === 'full') { // Режим загрузки может быть либо partial, либо full. По умолчанию partial.
-            this._loadMode = cfg.loadMode;
+         if (newOptions.loadMode === 'full') { // Режим загрузки может быть либо partial, либо full. По умолчанию partial.
+            this._loadMode = newOptions.loadMode;
          } else {
             this._loadMode = 'partial';
          }
-         if (cfg.expandMode === 'single') { // Режим разворота может быть либо multiple, либо single. По умолчанию multiple.
-            this._expandMode = cfg.expandMode;
+         if (newOptions.expandMode === 'single') { // Режим разворота может быть либо multiple, либо single. По умолчанию multiple.
+            this._expandMode = newOptions.expandMode;
          } else {
             this._expandMode = 'multiple';
          }

@@ -48,7 +48,6 @@ define('js!WSControls/Lists/ItemsControl', [
          _limit: undefined,
          _offset: undefined,
 
-         _tplData: null,
          _records: null,
 
          _itemData: null,
@@ -68,38 +67,38 @@ define('js!WSControls/Lists/ItemsControl', [
             this._publish('onItemsReady', 'onDataLoad');
          },
 
-         _prepareMountingData: function(cfg) {
+         _prepareMountingData: function(newOptions) {
             //this._itemContentTpl = cfg.itemContentTpl || this._defaultItemContentTemplate;
-            this._groupTemplate = cfg.groupTemplate || this._defaultGroupTemplate;
+            this._groupTemplate = newOptions.groupTemplate || this._defaultGroupTemplate;
 
-            if (cfg.items && (this._items != cfg.items)) {
-               this._items = cfg.items;
-               this._itemsChangeCallback(true);
+            if (newOptions.items && (this._items != newOptions.items)) {
+               this._items = newOptions.items;
+               this._itemsChangeCallback(this._items, newOptions);
             }
 
-            if (cfg.dataSource) {
-               this._dataSource = DataSourceUtil.prepareSource(cfg.dataSource);
+            if (newOptions.dataSource) {
+               this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
             }
          },
 
-         _beforeMount: function(cfg) {
+         _beforeMount: function(newOptions) {
             if (this._dataSource && cfg.dataSource.firstLoad !== false) {
                this.reload();
             }
          },
 
-         _beforeUpdate: function(cfg) {
-            this._prepareMountingData(cfg);
+         _beforeUpdate: function(newOptions) {
+            this._prepareMountingData(newOptions);
             //TODO обработать смену фильтров и т.д. позвать релоад если надо
          },
 
-         _initItemBasedControllers: function() {
+         _initItemBasedControllers: function(items, cfg) {
             if (this._items) {
                //TODO убрать дестрой, проверить утечки памяти
                if (this._display) {
                   this._display.destroy();
                }
-               this._display = this._createDefaultDisplay();
+               this._display = this._createDefaultDisplay(items, cfg);
                this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
 
                if (this._multiSelector) {
@@ -117,16 +116,15 @@ define('js!WSControls/Lists/ItemsControl', [
             this._setDirty();
          },
 
-         _itemsChangeCallback: function() {
-            this._initItemBasedControllers();
-            this._displayChangeCallback();
+         _itemsChangeCallback: function(items, cfg) {
+            this._initItemBasedControllers(items, cfg);
+            this._displayChangeCallback(this._display, cfg);
             this._notify('onItemsReady');
          },
 
          //при изменениях в проекции
-         _displayChangeCallback: function() {
-            this._records = this._getRecordsForView();
-            this._tplData = null;
+         _displayChangeCallback: function(display, cfg) {
+            this._records = this._getRecordsForView(display, cfg);
          },
 
          _getItemTpl: function() {
@@ -170,15 +168,14 @@ define('js!WSControls/Lists/ItemsControl', [
             }
          },
 
-         _getRecordsForViewFlat: function() {
+         _getRecordsForViewFlat: function(display, cfg) {
             var
-               display = this._display,
                ctrl = this,
                records = [];
             if (display) {     //У таблицы могут позвать перерисовку, когда данных еще нет
                var prevGroupId = undefined;
                display.each(function (item, index, group) {
-                  if (!isEmpty(ctrl._options.groupBy)) {
+                  if (!isEmpty(cfg.groupBy)) {
                      if (prevGroupId != group && group !== false) {
                         records.push(ctrl._getGroupItem(group, item));
                         prevGroupId = group;
@@ -196,20 +193,14 @@ define('js!WSControls/Lists/ItemsControl', [
             return this._getRecordsForViewFlat.apply(this, arguments)
          },
 
-         _createDefaultDisplay: function() {
-            return ItemsUtil.getDefaultDisplayFlat(this._items, this._options)
+         _createDefaultDisplay: function(items, cfg) {
+            return ItemsUtil.getDefaultDisplayFlat(items, cfg)
          },
    
          _createDefaultMultiSelector: function() {
             /*Must be implemented*/
          },
 
-         /**
-          * Метод получения проекции по ID итема
-          */
-         _getDisplayItemByItemId: function(id) {
-            return this._display ? this._display.getItemBySourceItem(this._items.getRecordById(id)) : null;
-         },
 
          /**
           * Метод получения проекции по hash итема
@@ -321,7 +312,7 @@ define('js!WSControls/Lists/ItemsControl', [
                //this._drawItemsCallbackDebounce();
             } else {
                this._items = list;
-               this._itemsChangeCallback(true);
+               this._itemsChangeCallback(this._items, this._options);
                this._setDirty();
             }
             this._toggleIndicator(false);

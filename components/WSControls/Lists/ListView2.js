@@ -25,11 +25,6 @@ define('js!WSControls/Lists/ListView2', ['js!WSControls/Lists/Selector',
             })
          },
 
-         _onItemClick: function(e, displayItem) {
-            this._setSelectedByHash(displayItem.getHash());
-            this._onSelectedItemChange();
-         },
-
          _mouseMove: function(e) {
             var hash = this._getDataHashFromTarget(e.target),
                 index = hash && this._display ? this._display.getIndexByHash(hash) : -1;
