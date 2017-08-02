@@ -7,6 +7,9 @@ body {
    font-size: 1rem !important;
 }
 body {
+   .ws-validation-error > textarea {
+      background-color: @text-box-error-bg !important; // перебиваю стили fieldAbstract
+   }
     //Todo: сделать @accent-color - #FFCC99  https://online.sbis.ru/opendoc.html?guid=47bdafa8-88ab-4cb2-9383-89ffd7c9dcdd
     //сейчас пока сделаем так, чтобы не разломать версию 3.7.5.150
     .controls-accent-text {
@@ -272,6 +275,11 @@ body {
             vertical-align: baseline;
          }
       }
+   }
+
+   // Выпилить как будем делать новые темы.
+   .controls-DateRangeChoose__bodyWrapper {
+      padding-top: 0.286rem;
    }
 
    .controls-DateRangeChoose {
@@ -897,7 +905,7 @@ body {
             border-bottom: @button-border;
          }
          &.ws-infobox-triangle-top {
-            top: -.51rem;
+            top: -.53rem;
             border-left: @button-border;
             border-top: @button-border;
          }
