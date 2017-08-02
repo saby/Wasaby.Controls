@@ -135,8 +135,6 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                }
             ]);
 
-            this._view._loadNextPage = this._reload.bind(this, false);
-
             this._bindEvents();
          },
 
@@ -304,58 +302,22 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
           * @return {Core/Deferred}
           */
          reload: function () {
-            return this._reload(true);
-         },
-
-         /**
-          * Запросить и отобразить (по получению) все элементы списка заново
-          * @protected
-          * @param {boolean} force Начать заново, а не загружать следующую страницу
-          * @return {Core/Deferred}
-          */
-         _reload: function (force) {
-            var view = this._view;
-            if (force) {
-               var side = view._infiniteScrollState.mode == 'down' || view._infiniteScrollState.mode == 'demand' ? 'bottom' : 'top';
-               if (0 < view._scrollOffset[side]) {
-                  view._scrollOffset[side] = 0;
-               }
-            }
-            return longOperationsManager.fetch(this._gatherFetchOptions(force))
+            return longOperationsManager.fetch(this._gatherFetchOptions())
                .addCallback(function (results) {
-                  if (!this._isDestroyed) {
-                     //###view._notify('onDataLoad', results);
-                     var has = !!results.getCount();
-                     var items = results;
-                     if (!force) {
-                        var prev = view.getItems();
-                        if (prev && prev.getCount() && has) {
-                           view._toggleEmptyData(false);
-                           prev.append(results);
-                           items = prev;
-                           items.setMetaData(results.getMetaData());
-                        }
-                     }
-                     if (force || has) {
-                        this._setItems(items);
-                     }
-                     if (!force && has) {
-                        view._updateScrollOffset();
-                        if (!view._hasNextPage(items.getMetaData().more/*, view._scrollOffset.bottom*/)) {
-                           view._toggleEmptyData(!items.getCount());
-                        }
-                     }
+                  if (this._isDestroyed) {
+                     return;
                   }
+                  //###view._notify('onDataLoad', results);
+                  this._setItems(results);
                }.bind(this));
          },
 
          /**
           * Собрать параметры запроса данных
           * @protected
-          * @param {boolean} force Начать заново, а не загружать следующую страницу
           * @returns {object}
           */
-         _gatherFetchOptions: function (force) {
+         _gatherFetchOptions: function () {
             var options = {};
             var view = this._view;
             var filter = view.getFilter();
@@ -401,7 +363,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
             if (sorting && sorting.length) {
                options.orderBy = sorting;
             }
-            var offset = force ? view.getOffset()/*0*/ : view._getNextOffset()/*view.getOffset() + view.getPageSize()*/;
+            var offset = view.getOffset();
             if (0 <= offset) {
                options.offset = offset;
             }
