@@ -522,6 +522,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 sel.empty();
              }
           }
+          //останавливаем распрастранение, что бы его не поймал дргой контрол с DragNDropMixin
           e.stopPropagation();
        }
     };
