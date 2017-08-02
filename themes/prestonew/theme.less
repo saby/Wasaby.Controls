@@ -388,6 +388,9 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
 .controls-Browser {
    .controls-Browser__tableCell-search {
       width: 19.44rem;
+      .controls-Browser__selectAllCheckBox {
+         .align-self(center);
+      }
    }
    .controls-Browser__search {
       width: 18.61rem;
@@ -531,6 +534,7 @@ body {
     -webkit-box-shadow: none!important;
     background: transparent !important;
     box-shadow: none!important;
+    font-weight: normal;
   }
   .ws-float-area-title {
       font-size: 1.43rem!important;
@@ -1017,6 +1021,16 @@ body {
              background-color:  #E0ECF5 !important;
          }
      }
+  & .ws-moneyDecorator .ws-moneyDecorator__integer__BasicRegistry {
+    color: #273B4D;
+  }
+}
+.controls-SuggestTextBox.controls-TextBox.controls-Picker__show {
+  border-color: #26B8FF;
+  background: #f0f5fb;
+  & .controls-TextBox__field {
+    color: #273B4D;
+  }
 }
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button:hover {
   color: #fff;
@@ -1035,6 +1049,12 @@ body {
       }
    }
    .controls-DropdownList__picker {
+      .controls-DropdownList__close-picker.icon-24 {
+         font-size: 3rem !important;
+         height: 3rem !important;
+         width: 3rem !important;
+         line-height: 3rem !important;
+      }
       .controls-DropdownList__multiselect .controls-DropdownList__itemCheckBox {
          width: 2.286rem;
       }
