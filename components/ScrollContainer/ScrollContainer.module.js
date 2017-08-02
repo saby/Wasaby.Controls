@@ -419,7 +419,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             //ресайз может позваться до инита контейнера
             if (this._content) {
                this._addGradient();
-               if (cDetection.isIE && cDetection.firefox) {
+               if (cDetection.firefox) {
                   this._content.toggleClass('controls-ScrollContainer__content-overflowHidden', !this._getChildContentHeight());
                }
             }
@@ -438,8 +438,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          _getChildContentHeight: function() {
             var height = 0;
-            this._content.children().forEach(function(item) {
-               height += item.offsetHeight;
+            Array.prototype.forEach.call(this._content.children(), function(item) {
+               height += $(item).outerHeight(true);
             });
 
             return height;
