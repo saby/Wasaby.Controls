@@ -522,6 +522,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 sel.empty();
              }
           }
+          e.stopPropagation();
        }
     };
 
