@@ -109,7 +109,7 @@ define('js!WSControls/Lists/ItemsControl', [
          },
 
          _onCollectionChange: function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
-            this._displayChangeCallback();
+            this._displayChangeCallback(this._display, this._options);
             this._setDirty();
          },
 
