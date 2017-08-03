@@ -840,6 +840,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                this._options._folderHasMore[id] = list.getMetaData().more;
                this._loadedNodes[id] = true;
                this._notify('onDataMerge', list); // Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
+               this._onDataMergeCallback(list);
                if (this._options.loadItemsStrategy == 'merge') {
                   this._options._items.merge(list, {remove: false});
                }
@@ -1158,6 +1159,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
             self._notify('onDataMerge', dataSet);
+            self._onDataMergeCallback(dataSet);
             self._loader = null;
             //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
             if (id) {
@@ -1244,23 +1246,29 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             // При перезагрузке приходят новые данные, т.ч. сбрасываем объект, хранящий список узлов с "есть ещё"
             this._options._folderHasMore = {};
          },
-         _dataLoadedCallback: function () {
-            //this._options.openedPath = {};
+         _applyExpandToItems: function(items) {
+            var hierarchy = this._options._getHierarchyRelation(this._options),
+               openedPath = this._options.openedPath;
+            items.each(function(item) {
+               var id = item.getId(),
+                  children = hierarchy.getChildren(item, items);
+               if (children.length && id != 'null' && id != this._curRoot) {
+                  openedPath[id] = true;
+               }
+            });
+         },
+         _onDataMergeCallback: function(items) {
             if (this._options.expand) {
-               var hierarchy = this._options._getHierarchyRelation(this._options),
-                  items = this.getItems(),
-                  openedPath = this._options.openedPath;
-               items.each(function(item) {
-                  var id = item.getId(),
-                     children = hierarchy.getChildren(item, items);
-                  if (children.length && id != 'null' && id != this._curRoot) {
-                     openedPath[id] = true;
-                  }
-               });
+               this._applyExpandToItems(items);
             }
+         },
+         _dataLoadedCallback: function () {
             var path = this._options._items.getMetaData().path,
                hierarchy = cFunctions.clone(this._hier),
                item;
+            if (this._options.expand) {
+               this._applyExpandToItems(this.getItems());
+            }
             if (path) {
                hierarchy = this._getHierarchy(path, this._options._curRoot);
             }

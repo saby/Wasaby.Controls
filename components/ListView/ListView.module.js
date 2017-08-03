@@ -3227,6 +3227,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         this._toggleEmptyData(!this.getItems().getCount());
                      }
                      this._notify('onDataMerge', dataSet);
+                     this._onDataMergeCallback(dataSet);
                      //Если данные пришли, нарисуем
                      if (dataSet.getCount()) {
                         //TODO: вскрылась проблема  проекциями, когда нужно рисовать какие-то определенные элементы и записи
@@ -3308,7 +3309,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollOffset.top -= this._limit;
             }
          },
-
+         _onDataMergeCallback: function(dataSet) {},
          _drawPage: function(dataSet, state){
             var at = null,
                 self = this,
