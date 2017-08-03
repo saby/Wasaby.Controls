@@ -195,6 +195,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                this._scrollbar = new Scrollbar({
                   element: $('> .controls-ScrollContainer__scrollbar', this._container),
                   contentHeight: this._getScrollHeight(),
+                  position: this._getScrollTop(),
                   parent: this
                });
 
