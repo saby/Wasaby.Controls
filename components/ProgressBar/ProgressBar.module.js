@@ -42,75 +42,55 @@ define('js!SBIS3.CONTROLS.ProgressBar',
 
          _controlName: 'SBIS3.CONTROLS.ProgressBar',
 
-         _applyOptions: function() {
-            var options = this._options;
-            /**
-             * @cfg {Number} Минимальное значение прогресса.
-             */
-            this.minimum = options.minimum || 0;
-            /**
-             * @cfg {Number} Максимальное значение прогресса.
-             */
-            if ('maximum' in options) {
-               this.maximum = options.maximum;
-            } else {
-               this.maximum = 100;
-            }
-            /**
-             * @cfg {Number} Шаг между ближайшими возможными значениями прогресса в процентах.
-             */
-            this.step = options.step || 1;
-            /**
-             * @cfg {Number} Текущее состояние прогресса.
-             */
-            this.progress = options.progress || 0;
-            /**
-             * @cfg {String} Текущее состояние расположения текста процесса.
-             * 1.center;
-             * 2.left;
-             * 3.right;
-             */
-            this.progressPosition = options.progressPosition || 'center';
-
-            this._checkRanges();
-            /**
-             * @cfg {Number} Текущее состояние прогресса в процентах.
-             */
-            this.progressPercent = this._getProgressPercent();
+         _beforeMount: function(options) {
+            this._beforeUpdate(options);
          },
 
-         _checkRanges: function() {
-            var
-               progress = parseFloat(this.progress),
-               minimum = this.minimum,
-               maximum = this.maximum;
+         _afterMount: function() {
+            this._afterUpdate();
+         },
 
-            // Если нельзя привести
-            if (isNaN(progress)) {
-               this.progress = 0;
-            } else {
-               this.progress = progress;
-            }
+         _beforeUpdate: function(newOptions) {
+            // TODO: убрать после согласования опций по умолчанию.
+            Compatibility._beforeUpdate.call(this, newOptions);
+
+            this._checkRanges(newOptions);
+            /**
+             * @cfg {String} Текущее состояние прогресса в процентах на момен рендера.
+             */
+            this._progressPercent = this._getProgressPercent(newOptions) + '%';
+         },
+
+         _afterUpdate: function() {
+            delete this._progressPercent;
+         },
+
+         _checkRanges: function(options) {
+            var
+               progress = options.progress,
+               minimum = options.minimum,
+               maximum = options.maximum;
+
             if (progress < minimum) {
-               this.progress = minimum;
+               options.progress = minimum;
             }
             if (progress > maximum) {
-               this.progress = maximum;
+               options.progress = maximum;
             }
             if (maximum < minimum) {
                maximum ^= minimum ^= maximum;
                minimum ^= maximum;
-               this.minimum = minimum;
-               this.maximum = maximum;
+               options.minimum = minimum;
+               options.maximum = maximum;
             }
          },
 
-         _getProgressPercent: function() {
+         _getProgressPercent: function(options) {
             var
-               progress = this.progress,
-               minimum = this.minimum,
-               step = this.step,
-               length = this.maximum - minimum,
+               progress = options.progress,
+               minimum = options.minimum,
+               step = options.step,
+               length = options.maximum - minimum,
                progressPercent = Math.round((progress - minimum) / length * 100);
 
             if (progressPercent !== 100) {

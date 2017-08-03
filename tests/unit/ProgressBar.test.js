@@ -7,21 +7,45 @@ define(
       'use strict';
 
       describe('SBIS3.CONTROLS.ProgressBar', () => {
-         let progressBar;
+         let progressBar, optionsPB, container;
+
+         beforeEach(() => {
+            if ($ === 'undefined') {
+               this.skip();
+            } else {
+               progressBar = new ProgressBar({
+                  element: $('<div id="progressBar-test"></div>').appendTo('#mocha')
+               });
+               optionsPB = progressBar._options;
+            }
+         });
+         afterEach(() => {
+            progressBar.destroy();
+         });
 
          describe('State', () => {
-            it('default', () => {
-               progressBar = new ProgressBar({});
-
-               assert.equal(progressBar.minimum, 0);
-               assert.equal(progressBar.maximum, 100);
-               assert.equal(progressBar.step, 1);
-               assert.equal(progressBar.progress, 0);
-               assert.equal(progressBar.progressPosition, 'center');
-               assert.equal(progressBar.progressPercent, 0);
+            beforeEach(() => {
+               progressBar.destroy();
+               container = $('<div id="progressBar-test"></div>').appendTo('#mocha');
             });
-            it('config', () => {
+            afterEach(() => {
+               progressBar.destroy();
+            });
+
+            it('default', () => {
                progressBar = new ProgressBar({
+                  element: container
+               });
+
+               assert.equal(progressBar._options.minimum, 0);
+               assert.equal(progressBar._options.maximum, 100);
+               assert.equal(progressBar._options.step, 1);
+               assert.equal(progressBar._options.progress, 0);
+               assert.equal(progressBar._options.progressPosition, 'center');
+            });
+            it('myConfig', () => {
+               progressBar = new ProgressBar({
+                  element: container,
                   minimum: -100,
                   maximum: 0,
                   step: 2,
@@ -29,69 +53,45 @@ define(
                   progressPosition: 'left'
                });
 
-               assert.equal(progressBar.minimum, -100);
-               assert.equal(progressBar.maximum, 0);
-               assert.equal(progressBar.step, 2);
-               assert.equal(progressBar.progress, -50);
-               assert.equal(progressBar.progressPosition, 'left');
-               assert.equal(progressBar.progressPercent, 50);
+               assert.equal(progressBar._options.minimum, -100);
+               assert.equal(progressBar._options.maximum, 0);
+               assert.equal(progressBar._options.step, 2);
+               assert.equal(progressBar._options.progress, -50);
+               assert.equal(progressBar._options.progressPosition, 'left');
             });
          });
          describe('_checkRanges', () => {
-            beforeEach(() => {
-               progressBar = new ProgressBar({});
-            });
-
             it('min-progress', () => {
-               progressBar.progress = -100;
-               progressBar._checkRanges();
-               assert.equal(progressBar.progress, 0);
+               optionsPB.progress = -100;
+               progressBar._checkRanges(optionsPB);
+               assert.equal(optionsPB.progress, 0);
             });
             it('max-progress', () => {
-               progressBar.progress = 200;
-               progressBar._checkRanges();
-               assert.equal(progressBar.progress, 100);
-            });
-            it('NaN-progress', () => {
-               progressBar.progress = 'a200';
-               progressBar._checkRanges();
-               assert.equal(progressBar.progress, 0);
+               optionsPB.progress = 200;
+               progressBar._checkRanges(optionsPB);
+               assert.equal(optionsPB.progress, 100);
             });
             it('minimum<=>maximum', () => {
-               progressBar.minimum = 100;
-               progressBar.maximum = -100;
-               progressBar._checkRanges();
-               assert.equal(progressBar.minimum, -100);
-               assert.equal(progressBar.maximum, 100);
+               optionsPB.minimum = 100;
+               optionsPB.maximum = -100;
+               progressBar._checkRanges(optionsPB);
+               assert.equal(optionsPB.minimum, -100);
+               assert.equal(optionsPB.maximum, 100);
             });
          });
          describe('_getProgressPercent', () => {
             it('return', () => {
-               progressBar = new ProgressBar({
-                  progress: 50
-               });
-               assert.equal(progressBar._getProgressPercent(), 50);
+               optionsPB.progress = 50;
+               assert.equal(progressBar._getProgressPercent(optionsPB), 50);
 
-               progressBar = new ProgressBar({
-                  progress: 50,
-                  maximum: 200
-               });
-               assert.equal(progressBar._getProgressPercent(), 25);
+               optionsPB.maximum = 200;
+               assert.equal(progressBar._getProgressPercent(progressBar._options), 25);
 
-               progressBar = new ProgressBar({
-                  progress: 50,
-                  minimum: -100,
-                  maximum: 100
-               });
-               assert.equal(progressBar._getProgressPercent(), 75);
+               optionsPB.minimum = -100;
+               assert.equal(progressBar._getProgressPercent(progressBar._options), 50);
 
-               progressBar = new ProgressBar({
-                  progress: 50,
-                  minimum: -100,
-                  maximum: 100,
-                  step: 50
-               });
-               assert.equal(progressBar._getProgressPercent(), 50);
+               optionsPB.step = 40;
+               assert.equal(progressBar._getProgressPercent(progressBar._options), 40);
             });
          });
       });

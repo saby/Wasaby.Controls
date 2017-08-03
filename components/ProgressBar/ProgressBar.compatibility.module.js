@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.ProgressBar.compatibility',
           * @see getProgress
           */
          setProgressPosition: function(progressPosition) {
-            this.progressPosition = progressPosition;
+            this._options.progressPosition = progressPosition;
             this._setDirty();
          },
 
@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.ProgressBar.compatibility',
           * @see getProgress
           */
          setProgress: function(progress) {
-            this.progress = progress;
+            this._options.progress = progress;
             this._calcProgressPercent()
          },
 
@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.ProgressBar.compatibility',
           * @param max {Number}
           */
          setMaximum: function(max) {
-            this.maximum = max;
+            this._options.maximum = max;
             this._calcProgressPercent()
          },
 
@@ -51,14 +51,53 @@ define('js!SBIS3.CONTROLS.ProgressBar.compatibility',
           * @param min {Number}
           */
          setMinimum: function(min) {
-            this.minimum = min;
+            this._options.minimum = min;
             this._calcProgressPercent();
          },
 
          _calcProgressPercent: function() {
-            this._checkRanges();
-            this.progressPercent = this._getProgressPercent();
+            var options = this._options;
+            this._checkRanges(options);
+            this.progressPercent = this._getProgressPercent(options);
             this._setDirty();
+         },
+
+         _beforeUpdate: function(newOptions) {
+            var defaultOptions = {
+               /**
+                * @cfg {Number} Минимальное значение прогресса.
+                */
+               minimum: 0,
+               /**
+                * @cfg {Number} Максимальное значение прогресса.
+                */
+               maximum: 100,
+               /**
+                * @cfg {Number} Текущей значени прогресс.
+                */
+               progress: 0,
+               /**
+                * @cfg {Number} Шаг между ближайшими возможными значениями прогресса в процентах.
+                */
+               step: 1,
+               /**
+                * @cfg {String} Расположения текста процесса.
+                * 1.center;
+                * 2.left;
+                * 3.right;
+                */
+               progressPosition: 'center'
+            };
+            this._mergeDefaultOptions(newOptions, defaultOptions);
+         },
+
+         _mergeDefaultOptions: function(options, defaultOptions) {
+            var defaultOptionName;
+            for (defaultOptionName in defaultOptions) {
+               if (!(defaultOptionName in options)) {
+                  options[defaultOptionName] = defaultOptions[defaultOptionName];
+               }
+            }
          }
       }
    }
