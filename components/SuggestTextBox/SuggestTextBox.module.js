@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
          _crossContainer: null
       },
       $constructor: function() {
-         this._crossContainer =  $('.js-controls-SuggestTextBox__reset', this._getAfterFieldWrapper());
+         this._crossContainer =  $('.js-controls-SuggestTextBox__reset', this._container);
 
          this.subscribe('onTextChange', function(e, text) {
             this._crossContainer.toggleClass('ws-hidden', !text);

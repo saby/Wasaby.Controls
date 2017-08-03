@@ -1,14 +1,14 @@
 define('js!SBIS3.CONTROLS.TextArea', [
    "Core/constants",
-   "js!SBIS3.CONTROLS.TextBoxBase",
-   "html!SBIS3.CONTROLS.TextArea",
+   "js!SBIS3.CONTROLS.TextBox",
+   'tmpl!SBIS3.CONTROLS.TextArea/resources/inputField',
    "Core/helpers/string-helpers",
    'js!SBIS3.CONTROLS.Utils.LinkWrap',
    "Core/IoC",
    "Core/helpers/dom&controls-helpers",
    "browser!js!SBIS3.CORE.FieldText/resources/Autosize-plugin",
    'css!SBIS3.CONTROLS.TextArea'
-], function( constants,TextBoxBase, dotTplFn, strHelpers, LinkWrap, IoC, dcHelpers) {
+], function( constants,TextBox, inputField, strHelpers, LinkWrap, IoC, dcHelpers) {
 
    'use strict';
 
@@ -16,13 +16,13 @@ define('js!SBIS3.CONTROLS.TextArea', [
       if (!max || max < min) {
          max = min;
       }
-      return 'controls-TextArea__inputField__minheight-' + min + ' controls-TextArea__inputField__maxheight-' + max;
+      return 'controls-TextArea__field__minheight-' + min + ' controls-TextArea__field__maxheight-' + max;
    }
 
    function modifyHeightClasses(container, addClasses) {
       var curClasses = container.className, newClasses = '';
-      newClasses = curClasses.replace(/controls\-TextArea__inputField__maxheight\-[0-9]*/g, '');
-      newClasses = newClasses.replace(/controls\-TextArea__inputField__minheight\-[0-9]*/g, '');
+      newClasses = curClasses.replace(/controls\-TextArea__field__maxheight\-[0-9]*/g, '');
+      newClasses = newClasses.replace(/controls\-TextArea__field__minheight\-[0-9]*/g, '');
       newClasses = newClasses + ' ' + addClasses;
       container.className = newClasses;
    }
@@ -59,16 +59,16 @@ define('js!SBIS3.CONTROLS.TextArea', [
     * @category Inputs
     */
 
-   var TextArea = TextBoxBase.extend( /** @lends SBIS3.CONTROLS.TextArea.prototype */ {
-      _dotTplFn: dotTplFn,
+   var TextArea = TextBox.extend( /** @lends SBIS3.CONTROLS.TextArea.prototype */ {
+      //_dotTplFn: dotTplFn,
       $protected: {
          _inputField: null,
          _cachedW: null,
          _cachedH: null,
          _pasteCommand: 'insertText',
-         _compatPlaceholder: null,
          _autoSizeInitialized: false,
          _options: {
+            textFieldWrapper: inputField,
             wrapUrls: LinkWrap.wrapURLs,
             escapeHtml: strHelpers.escapeHtml,
              /**
@@ -106,10 +106,6 @@ define('js!SBIS3.CONTROLS.TextArea', [
              */
             maxLinesCount: 0,
             /**
-             * @deprecated
-             */
-            autoResize: {},
-            /**
              * @cfg {String} Режим перехода на новую строку
              * @variant enter По нажатию клавиши <enter>
              * @variant shiftEnter По сочетанию клавиш <shift> + <enter>
@@ -131,23 +127,25 @@ define('js!SBIS3.CONTROLS.TextArea', [
          if (cfg.autoResize && cfg.autoResize.state && !cfg.maxLinesCount) {
             cfg.maxLinesCount = 10;
          }
+
          if (cfg.minLinesCount > cfg.maxLinesCount) {
             cfg.maxLinesCount = cfg.minLinesCount;
          }
          newCfg.heightclassName = generateClassesName(cfg.minLinesCount, cfg.maxLinesCount);
+         newCfg.cssClassName += ' controls-TextArea';
          return newCfg;
       },
 
       $constructor: function() {
          var self = this;
-         this._inputField = $('.controls-TextArea__inputField', this._container);
-         this._disabledWrapper = $('.controls-TextArea__disabled-wrapper', this._container);
-   
+         this._inputField = $('.controls-TextArea__field', this._container);
+         this._disabledWrapper = $('.controls-TextArea__view', this._container);
+
          /* В textArea есть баг при вставке в дом, иногда могут теряться переносы строк.
             В этом случае надо обновить текст и отрисовать его заного.
             Перевставка текста произойдёт только если text отличается от значения в textArea .*/
          this._drawText(this.getText());
-         
+
          // При потере фокуса делаем trim, если нужно
          // TODO Переделать на платформенное событие потери фокуса
          this._inputField.bind('focusout', function () {
@@ -188,9 +186,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
       init :function(){
          TextArea.superclass.init.call(this);
          var self = this;
-         if (this._options.placeholder && !constants.compatibility.placeholder) {
-            this._createCompatPlaceholder();
-         }
+
          if (this._options.maxLinesCount != this._options.minLinesCount) {
 
             this._inputField.data('minLinesCount', this._options.minLinesCount);
@@ -202,7 +198,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
             var trg = dcHelpers.trackElement(this._container, true);
 
             if(this.isVisible()){
-               this._autosizeTextArea(false, true);
+               this._autosizeTextArea();
             }
 
             trg.subscribe('onVisible', function (event, visible) {
@@ -212,7 +208,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
                   if (w != self._cachedW || h != self._cachedH) {
                      self._cachedW = w;
                      self._cachedH = h;
-                     self._autosizeTextArea(true, true);
+                     self._autosizeTextArea(true);
                   }
                }
             });
@@ -236,11 +232,11 @@ define('js!SBIS3.CONTROLS.TextArea', [
             this._inputField.removeClass('ws-hidden').addClass('ws-invisible');
          }
          else {
-            $('.controls-TextArea__disabled-wrapper', this._container.get(0)).removeClass('ws-invisible').addClass('ws-hidden');
+            $('.controls-TextArea__view', this._container.get(0)).removeClass('ws-invisible').addClass('ws-hidden');
             this._inputField.removeClass('ws-hidden').removeClass('ws-invisible');
             if (!this._options.text) {
-               $('.controls-TextArea__disabled-wrapper', this._container.get(0)).empty();
-               $('.controls-TextArea__disabled-wrapper', this._container.get(0)).removeClass('controls-TextArea__disabled-wrapper-empty');
+               $('.controls-TextArea__view', this._container.get(0)).empty();
+               $('.controls-TextArea__view', this._container.get(0)).removeClass('controls-TextArea__view-empty'); //todo:
             }
          }
          //нельзя классы, ограничивающие высоту ставить сразу в шаблоне, потому что из-за них некорректно считается высота, т.к. оин сразу добавляют скролл, а считать высоту надо без скролла
@@ -249,29 +245,15 @@ define('js!SBIS3.CONTROLS.TextArea', [
          this._container.addClass('controls-TextArea__heightInit');
       },
 
-      _onResizeHandler: function() {
-         //надо переинитить autosize при изменении размеров родителя, потому что текстарея могла стать уже, и нужно пересчитаться
-         TextArea.superclass._onResizeHandler.apply(this, arguments);
-         if (this._autoSizeInitialized) {
-            this._autosizeTextArea(true, false);
-         }
-      },
-
-      _autosizeTextArea: function(hard, notifyAboutSizes){
-         //Появилась необходимость при изменении размеров родителя вызывать пересчет текстэрии. Для этого сделан второй параметр и в этом случае не будет оповещать всех об изменении размеров в обратную сторону
-         var self = this, autosizeOpts;
-         autosizeOpts = {
+      _autosizeTextArea: function(hard){
+         var self = this;
+         this._inputField.autosize({
+            callback: self._notifyOnSizeChanged(self, self),
             hard: hard
-         };
-         if (notifyAboutSizes) {
-            autosizeOpts.callback = self._notifyOnSizeChanged(self, self);
-         }
-         this._inputField.autosize(autosizeOpts);
+         });
 
 
          this._removeAutoSizeDognail();
-
-         this._autoSizeInitialized = true;
       },
 
       _getElementToFocus: function() {
@@ -283,12 +265,8 @@ define('js!SBIS3.CONTROLS.TextArea', [
          this._inputField.toggleClass('ws-invisible', !state);
          this._disabledWrapper.toggleClass('ws-hidden', state);
          this._updateDisabledWrapper();
-         if (!state){
-            this._inputField.attr('readonly', 'readonly')
-         } else {
-            this._inputField.removeAttr('readonly');
-         }
       },
+
       setText: function(text){
          TextArea.superclass.setText.call(this, text);
          this._updateDisabledWrapper();
@@ -308,7 +286,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
             var
                newText = strHelpers.escapeHtml(this.getText());
             this._disabledWrapper.html(LinkWrap.wrapURLs(newText));
-            this._disabledWrapper.toggleClass('controls-TextArea__disabled-wrapper-empty', !newText);
+            this._disabledWrapper.toggleClass('controls-TextArea__view-empty', !newText);
          }
       },
 
@@ -337,49 +315,6 @@ define('js!SBIS3.CONTROLS.TextArea', [
          }
       },
       /**
-       * Установить подсказку, отображаемую внутри многострочного поля ввода.
-       * Метод установки или замены текста подсказки, заданного опцией {@link placeholder}.
-       * @param {String} text Текст подсказки.
-       * @example
-       * <pre>
-       *     if (control.getText() == "") {
-        *        control.setPlaceholder("Введите ФИО полностью");
-        *     }
-       * </pre>
-       * @see placeholder
-       */
-      setPlaceholder: function(text){
-         if (!constants.compatibility.placeholder) {
-            if (!this._compatPlaceholder) {
-               this._createCompatPlaceholder();
-            }
-            this._compatPlaceholder.text(text || '');
-         }
-         else {
-            this._inputField.attr('placeholder', text);
-         }
-      },
-      _createCompatPlaceholder : function() {
-         var self = this;
-         this._compatPlaceholder = $('<div class="controls-TextArea__placeholder">' + this._options.placeholder + '</div>');
-         this._updateCompatPlaceholderVisibility();
-         this._inputField.after(this._compatPlaceholder);
-         this._compatPlaceholder.css({
-            'left': this._inputField.position().left || parseInt(this._inputField.parent().css('padding-left'), 10),
-            'right': this._inputField.position().right || parseInt(this._inputField.parent().css('padding-right'), 10)
-         });
-         this._compatPlaceholder.click(function(){
-            if (self.isEnabled()) {
-               self._inputField.get(0).focus();
-            }
-         });
-      },
-      _updateCompatPlaceholderVisibility: function() {
-         if (this._compatPlaceholder) {
-            this._compatPlaceholder.toggle(!this._options.text);
-         }
-      },
-      /**
        * Метод установки минимального количества строк.
        * @param count Количество строк, меньше которого высота не уменьшается.
        * @example
@@ -402,13 +337,9 @@ define('js!SBIS3.CONTROLS.TextArea', [
       },
 
       _drawText: function(text) {
-         this._updateCompatPlaceholderVisibility();
          if (this._inputField.val() != text) {
             this._inputField.val(text || '');
-            this._autosizeTextArea(true, true);
-         }
-         if (this._options.autoResize.state) {
-            this._inputField.trigger('autosize.resize');
+            this._autosizeTextArea(true);
          }
       },
 

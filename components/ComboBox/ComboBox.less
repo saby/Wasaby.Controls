@@ -1,161 +1,73 @@
-.controls-ComboBox.controls-TextBox {
-   line-height: normal;
-   cursor: @combo-box-cursor;
-   padding-right: @combo-box-right-padding;
-
-   &.controls-ComboBox_emptyValue.controls-TextBox {
-     .controls-TextBox__fieldWrapper {
-       .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
-         color: #ccc;
-       }
-     }
-     .controls-TextBox__afterFieldWrapper{
-       color: #587AB0!important;
-     }
-   }
-   .controls-TextBox__fieldWrapper {
-      position: relative;
-      white-space: nowrap;
-      .controls-TextBox__field {
-         &.controls-ComboBox__field {
-            font: @combo-box-field-font;
-            font-size: @text-box-field-font-size;
-            color: @combo-box-field-text-color;
-         }
-         &.controls-ComboBox__fieldNotEditable {
-            display: none;
-         }
-         &.controls-ComboBox__fieldNotEditable__placeholder {
-            color: @text-box-placeholder-color;
-         }
+.controls-ComboBox {
+   .controls-ComboBox__fieldNotEditable {
+      display: none;
+      line-height: @default-base-line-height;
+      &.controls-ComboBox__fieldNotEditable__placeholder {
+         color: @default-placeholder-color;
       }
    }
-
-   &.controls-TextBox {
-     .controls-ComboBox__arrowDown {
-       color: @combo-box-arrowDown-color;
-     }
-      &.ws-has-focus{
-         .controls-ComboBox__arrowDown{
-            //todo: !important
-            color: @combo-box-arrowDown-color-focus !important;
-         }
+   &.controls-ComboBox_emptyValue {
+      .controls-ComboBox__fieldNotEditable {
+         color: @default-placeholder-color;
       }
-      &:hover {
-         .controls-ComboBox__arrowDown {
-            //todo: !important
-            color: @combo-box-arrowDown-color-hover!important;
-         }
+   }
+   .controls-TextBox__field {
+      padding-right: 0;
+   }
+   .controls-TextBox__afterFieldWrapper {
+      .inline-flexbox();
+      .align-items(center);
+      .icon-size(@combo-box-icon-size, @default-icon-font);
+      height:100%;
+      cursor: pointer;
+      padding: @combo-box-arrow-padding;
+      color: @combo-box-arrowDown-color;
+   }
+   &.ws-has-focus{
+      .controls-TextBox__afterFieldWrapper {
+         color: @combo-box-arrowDown-color-focus;
       }
-     .controls-TextBox__afterFieldWrapper {
-       width: @combo-box-after-width;
-       .flexbox();
-       .align-items(center);
-       .justify-content(center);
-       + .controls-TextBox__fieldWrapper{
-         margin-right: @compo-box-fieldWrapper-margin-right;
-         padding-right: 0;
-       }
-       .controls-ComboBox__arrowDown {
-         display: inline-block;
-         line-height: @combo-box-arrow-line-height!important;
-         overflow: hidden;
-         width: @combo-box-arrow-width;
-         height: @combo-box-arrow-height;
-         text-decoration: none;
-         border-width: @combo-box-arrow-border-width;
-         border-style: @combo-box-arrow-border-style;
-         border-color: @combo-box-arrow-border-color;
-         .box-sizing(border-box);
-         &:hover {
-           text-decoration: none;
-           border-width: @combo-box-arrow-hover-border-width;
-           border-style: @combo-box-arrow-hover-border-style;
-           border-color: @combo-box-arrow-hover-border-color;
-         }
-       }
-     }
-     &.ws-disabled,
-     &.ws-disabled:hover {
-       cursor: @combo-box-disabled-cursor;
-       .controls-TextBox__afterFieldWrapper {
-         .controls-ComboBox__arrowDown {
-           display: none;
-         }
-       }
-     }
+   }
+   &:hover {
+      .controls-TextBox__afterFieldWrapper {
+         color: @combo-box-arrowDown-color-hover;
+      }
+   }
+   &.ws-disabled {
+      cursor: default;
+      .controls-TextBox__afterFieldWrapper {
+         visibility: hidden;
+      }
    }
    &.controls-ComboBox__editable-false {
-      .controls-TextBox__fieldWrapper {
-         .controls-TextBox__field {
-            &.controls-ComboBox__field {
-               position: absolute;
-               top: 0;
-               left: 0;
-               visibility: hidden;
-            }
-            &.controls-ComboBox__fieldNotEditable {
-               font: @combo-box-field-font;
-               font-size: @text-box-field-font-size;
-               display: inline-block;
-               color: @combo-box-field-text-color;
-            }
-         }
+      .controls-TextBox__field {
+         display: none;
       }
-      &:hover {
-         .controls-TextBox__afterFieldWrapper {
-            .controls-ComboBox__arrowDown {
-               text-decoration: none;
-               border-width: @combo-box-arrow-hover-border-width;
-               border-style: @combo-box-arrow-hover-border-style;
-               border-color: @combo-box-arrow-hover-border-color;
-            }
-         }
+      .controls-ComboBox__fieldNotEditable {
+         display: inline-block;
       }
    }
+}
+.controls-ComboBox.controls-TextBox {
+   cursor: pointer;
+
+   //todo:
    &.controls-Picker__show {
       background-color: @combo-box-picker-show-background-color;
       color: @compo-box-picker-show-color;
       border: @combobox-picker-border-width solid @combo-box-picker-show-border-color;
 
-
       .controls-TextBox__afterFieldWrapper {
-         .controls-ComboBox__arrowDown {
-            //todo !important;
-            color: @combo-box-arrowDown-color-picker-show !important;
-            border-width: @combo-box-arrow-active-border-width;
-            border-style: @combo-box-arrow-active-border-style;
-            border-color: @combo-box-arrow-active-border-color;
-         }
-      }
-      &:hover {
-         .controls-TextBox__afterFieldWrapper {
-            .controls-ComboBox__arrowDown {
-               border-width: @combo-box-arrow-active-hover-border-width;
-               border-style: @combo-box-arrow-active-hover-border-style;
-               border-color: @combo-box-arrow-active-hover-border-color;
-            }
-         }
-      }
-   }
-
-   &.controls-ComboBox__ellipsis {
-      .controls-TextBox__fieldWrapper {
-         .controls-TextBox__field {
-            &.controls-ComboBox__fieldNotEditable {
-               .text-overflow();
-            }
-         }
+            color: @combo-box-arrowDown-color-picker-show;
       }
    }
 }
-
 .controls-ComboBox__picker.controls-FloatArea {
-   overflow-y: hidden!important;/*Перебиваем inline стили пикера*/
+   overflow-y: hidden !important;
    border: @combo-box-picker-border;
    box-sizing: border-box;
    .controls-ComboBox__body {
-     height: calc(~"100% - 10px"); /* отступ от края экрана*/
+     height: calc(~"100% - 10px");
      .border-radius(@combo-box-picker-border-radius);
      .controls-ComboBox__list {
         .flexbox();
@@ -175,7 +87,7 @@
       font: @combo-box-picker-item-font;
       font-size: @combo-box-picker-item-font-size;
       padding: @combo-box-picker-item-padding;
-      cursor: @combo-box-cursor;
+      cursor: pointer;
       color: @combo-box-picker-item-text-color;
       background: @combo-box-picker-item-bg;
       &:hover {
@@ -192,13 +104,7 @@
       }
    }
 }
-
-// TODO: what is it - modifier?
-.controls-ComboBox__inputWrapper {
-   height: 100%;
-   margin-right: @combo-box-input-wrapper-right-offset;
-}
-
+/*
 .ws-is-ie10 {
    .controls-ComboBox .controls-TextBox__afterFieldWrapper {
       margin-top: -1px;
@@ -210,3 +116,4 @@
       height: 100%; //ie10 падает, если высота рассчитывается через calc. Теперь для ie10 выпадающий список прибит к краю экрана без отступа, если контейнер имеет достаточную высоту.
    }
 }
+*/

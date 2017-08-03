@@ -359,7 +359,6 @@
 @tab-button-checked-inner-font-weight:          bold;
 @tab-button-checked-inner-font-size:            15px;
 @tab-button-checked-inner-color:                #D94700;
-@tab-button-checked-inner-bg:                   #FFFFFF;
 @tab-button-checked-inner-border-left:          1px solid @tab-button-checked-border-color;
 @tab-button-checked-inner-border-right:         1px solid @tab-button-checked-border-color;
 @tab-button-checked-inner-after-display:        none;
@@ -738,6 +737,7 @@
 // -------- //
 
 @text-box-height:                         24px;
+@text-box-line-height:                    22px;
 @text-box-wrapper-padding:                0 7px;
 @text-box-border-radius:                  2px;
 @text-box-color:                          @default-text-color;
@@ -806,7 +806,6 @@
 // Formatted text box //
 // ------------------ //
 
-@formatted-text-box-line-height:                normal;
 
 @formatted-text-box-wrapper-min-height:         22px;
 @formatted-text-box-wrapper-padding:            @text-box-wrapper-padding;
@@ -1019,7 +1018,6 @@
 @text-area-field-text-color:                    inherit;
 @text-area-field-focus-text-color:              @text-area-field-text-color;
 @text-area-field-error-text-color:              @text-box-field-error-text-color;
-@text-area-field-hover-text-color:              @text-area-field-text-color;
 @text-area-field-disabled-text-color:           @text-area-field-text-color;
 
 @text-area-border-width:                        1px;
@@ -1476,6 +1474,7 @@
 @list-view-items-toolbar-right-tile:                 1px;
 @list-view-items-toolbar-bottom-tile:                2px;
 @list-view-items-toolbar-icon-size:                  24px;
+@list-view-items-toolbar-menu-icon-size:             @list-view-items-toolbar-icon-size;
 @list-view-items-toolbar-font-family:                @default-icon-medium-font;
 
 @bottomStyle-items-toolbar-margin-top:               2px;
@@ -1555,12 +1554,7 @@
 //  ToolBar  //
 // --------- //
 
-@controls-toolbar-display:                      inline-block;
 @controls-toolbar-default-margin:               8px;
-@controls-toolbar-item-margin-right:            @controls-toolbar-default-margin;
-@controls-toolbar-menu-margin-left:             @controls-toolbar-default-margin;
-@controls-toolbar-container-margin-right:       -@controls-toolbar-default-margin;
-@controls-toolbar-item-vertical-align:          middle;
 
 // --------- //
 // Tree view //

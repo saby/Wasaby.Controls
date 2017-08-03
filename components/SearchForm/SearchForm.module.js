@@ -64,7 +64,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
              afterFieldWrapper = this._getAfterFieldWrapper();
 
          this.subscribe('onTextChange', function(e, text) {
-            $('.js-controls-SearchForm__reset', afterFieldWrapper).toggleClass('ws-hidden', text == '');
+            $('.js-controls-SearchForm__reset', afterFieldWrapper).toggleClass('ws-invisible', text == '');
          });
 
          afterFieldWrapper.on('click', '.js-controls-SearchForm__reset', function() {

@@ -8,9 +8,10 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
       'Core/core-merge',
       'Core/IoC',
       'Core/core-instance',
-      'Core/constants'
+      'Core/constants',
+      'js!SBIS3.CONTROLS.Utils.InformationPopupManager'
    ],
-   function (ListMove, DialogMixin, strHelpers, Di, Indicator, cMerge, IoC, cInstance, constants) {
+   function (ListMove, DialogMixin, strHelpers, Di, Indicator, cMerge, IoC, cInstance, constants, InformationPopupManager) {
       'use strict';
       /**
        * Действие перемещения по иерархии с выбором места перемещения через диалог.
@@ -135,6 +136,15 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
          _doExecute: function(meta) {
             meta = meta || {};
             meta.movedItems = meta.movedItems || meta.records || this.getSelectedItems();
+            if (!meta.movedItems || meta.movedItems instanceof Array && meta.movedItems.length == 0) {
+               InformationPopupManager.showMessageDialog(
+                  {
+                     message: rk('Не выбрано ни одной записи для перемещения.'),
+                     status: 'default'
+                  }
+               );
+               return;
+            }
             return InteractiveMove.superclass._doExecute.call(this, meta);
          },
 
@@ -177,6 +187,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
             if (target && target.getId() == null) {
                target = null; //selectorwrapper возвращает корень как модель с идентификатором null
             }
+
             return this._getMover().move(movedItems, target, 'on').addCallback(function (result) {
                if (result !== false && this._getListView()) {
                   this._getListView().removeItemsSelectionAll();
