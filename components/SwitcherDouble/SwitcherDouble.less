@@ -62,20 +62,25 @@ body:not(.ws-is-mobile-platform) .ws-enabled.controls-SwitcherDouble .controls-S
 .controls-SwitcherDouble_vertical {
    position: relative;
    height: @switcher-width;
-   vertical-align: top;
    & > .controls-SwitcherDouble__toggle {
       @offset: (@switcher-width - @switcher-height) / 2;
+      vertical-align: top;
       .rotate(-90deg);
       margin: @offset -@offset @offset calc(~"-@{offset} - 1px");
    }
    & > .controls-SwitcherDouble__textBlock {
       display: inline-block;
-      height: 100%;
-      vertical-align: top;
       margin-left: @switcher-do-text-margin;
       & > .controls-SwitcherDouble__textOn, & > .controls-SwitcherDouble__textOff {
          display: block;
          margin: 0;
+      }
+      & > .controls-SwitcherDouble__textOff {
+         float: left;
+      }
+      & > .controls-SwitcherDouble__text {
+         height: @switcher-width / 2;
+         line-height: @switcher-width / 2;
       }
    }
 }
@@ -143,7 +148,7 @@ body:not(.ws-is-mobile-platform) .ws-enabled.controls-SwitcherDouble .controls-S
    margin-right: @switcher-do-text-margin;
 }
 .ws-enabled.controls-SwitcherDouble .controls-SwitcherDouble__unselected {
-   color: @innacent-color2;
+   color: @switcher-do-unselected-text-color;
    &:hover {
       text-decoration: @switcher-do-text-unselected-decoration;
    }
