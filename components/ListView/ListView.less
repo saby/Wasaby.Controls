@@ -395,6 +395,11 @@
 }
 .controls-GroupBy {
    .user-select();
+   &.controls-GroupBy__collapsed.controls-GroupBy__separatorText .controls-GroupBy__separatorCollapse {
+      &:before {
+         content: '\e013';
+      }
+   }
 }
 /*с включенной черезполосицей нужно отключать верхний бордер у строк, следующих за группой*/
 .ws-is-desktop-platform {

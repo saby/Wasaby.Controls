@@ -143,7 +143,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   nodeProperty: cfg.nodeProperty,
                   item: item.getContents(),
                   groupContentTemplate: TemplateUtil.prepareTemplate(groupBy.contentTemplate || ''),
-                  groupId: groupId
+                  groupId: groupId,
+                  groupCollapsing: cfg._groupCollapsing
                },
                groupTemplateFnc;
             tplOptions.colspan = tplOptions.columns.length + cfg.multiselect;
