@@ -66,9 +66,10 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          },
 
          setPosition: function (position) {
-            position = this._calcPosition(position, 0, this._getMaxPosition());
+            var maxPosition = this.getContentHeight() - this._containerOuterHeight;
+
+            position = this._calcPosition(position, 0, maxPosition);
             this._options.position = position;
-            this._notify('onScrollbarDrag', position);
             this._setThumbPosition();
          },
 
@@ -99,10 +100,6 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             }
 
             return position;
-         },
-
-         _getMaxPosition: function() {
-            return this.getContentHeight() - this._containerOuterHeight;
          },
 
          _onClickDragHandler: function (e) {
@@ -175,6 +172,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             var newThumbPosition = this._thumbPosition + e.pageY - this._beginClient;
 
             this.setPosition(newThumbPosition / this._scrollRatio);
+            this._notify('onScrollbarDrag', this.getPosition());
 
             this._beginClient = e.pageY - newThumbPosition + this._thumbPosition;
          },
@@ -186,13 +184,14 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
 
          _wheelHandler: function(event) {
             this.setPosition(this.getPosition() + event.originalEvent.deltaY);
+            this._notify('onScrollbarDrag', this.getPosition());
          },
 
          destroy: function () {
+            Scrollbar.superclass.destroy.call(this);
+
             this.getContainer().off('mousedown touchstart');
             this._thumb = undefined;
-
-            Scrollbar.superclass.destroy.call(this);
          }
       });
 
