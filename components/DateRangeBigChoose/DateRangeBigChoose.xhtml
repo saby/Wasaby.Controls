@@ -141,7 +141,7 @@
 
    <div class="controls-DateRangeBigChoose__dates ws-hidden">
       <div class="controls-DateRangeBigChoose__dates-months">
-         {{~['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'] :monthCaption:monthIndex}}
+         {{~ it._monthsNames :monthCaption:monthIndex}}
          <component data-component="SBIS3.CONTROLS.Button" name="MonthRangeBtn{{=monthIndex}}" data-selected-range-id="{{=monthIndex}}" class="controls-DateRangeBigChoose__dates-month-btn controls-RangeSelectable__item">
             <option name="caption">{{=monthCaption}}</option>
             <option name="activableByClick" type="boolean">false</option>
