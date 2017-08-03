@@ -1,8 +1,8 @@
 <div class="controls-ListView {{multiselect !== false ? 'controls-ListView__multiselect' : 'controls-ListView__multiselect__off'}}{{ _serverRender ? ' controls-ListView__dataLoaded'}}"
-     event:onmouseleave="_mouseLeave()"
-     event:onmousemove="_mouseMove()">
+     event:onmouseleave="_mouseLeave()">
    <div class="controls-ListView__itemsContainer">
-      <ws:partial template="{{_itemsTemplate}}" hoveredIndex="{{hoveredIndex}}" records="{{_records}}"
+      <ws:partial template="{{_itemsTemplate}}"
+                  records="{{_records}}"
                   scope="{{...}}"/>
    </div>
 
@@ -21,7 +21,7 @@
               name="itemsToolbar"
               idProperty="{{ _options.idProperty }}"
               itemsActions="{{ _options.itemsActions }}"
-              activeItem="{{ { 'parentContainer': _container, 'display': _display, 'hoveredIndex': hoveredIndex } }}"
+              activeItem="{{ { 'parentContainer': _container, 'display': _display, 'hoveredIndex': _hoveredIndex } }}"
       />
    </ws:if>
 
