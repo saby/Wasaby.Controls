@@ -5,9 +5,8 @@
 define('js!SBIS3.CONTROLS.PasswordTextBox', [
    "Core/constants",
    "js!SBIS3.CONTROLS.TextBox",
-   "tmpl!SBIS3.CONTROLS.PasswordTextBox",
    'css!SBIS3.CONTROLS.PasswordTextBox'
-], function ( constants,TextBox, dotTplFn) {
+], function ( constants,TextBox) {
 
    'use strict';
    /**
@@ -35,7 +34,11 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', [
     */
    var PasswordTextBox;
    PasswordTextBox = TextBox.extend(/** @lends SBIS3.CONTROLS.PasswordTextBox.prototype */ {
-      _dotTplFn: dotTplFn,
+      $protected: {
+         _options: {
+            type: "password"
+         }
+      },
       $constructor: function() {
          //TODO: избавиться от фикса высоты поля ввода пароля в IE>8
          if (constants.browser.isIE) {

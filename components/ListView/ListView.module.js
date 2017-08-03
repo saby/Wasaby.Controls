@@ -2671,7 +2671,6 @@ define('js!SBIS3.CONTROLS.ListView',
          _hideItemsToolbar: function (animate) {
             if (this._itemsToolbar) {
                this._itemsToolbar.hide(animate);
-               this._touchSupport && this._clearHoveredItem();
             }
          },
          _getItemsToolbar: function() {
@@ -2697,14 +2696,6 @@ define('js!SBIS3.CONTROLS.ListView',
                            self.setSelectedKey(hoveredKey);
                         }
                      },
-                     onCloseItemActionsMenu: function() {
-                        /* на тач-устройствах по закрытию меню скрывается тулбар
-                           поэтому необходимо очистить выделенный элемент
-                         */
-                        if(self._touchSupport) {
-                           self._clearHoveredItem();
-                        }
-                     },
                      onItemActionActivated: function(e, key) {
                         self.setSelectedKey(key);
                         if(self._touchSupport) {
@@ -2714,6 +2705,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      onItemsToolbarHide: function() {
                         if(self._touchSupport) {
                            self._setTouchSupport(false);
+                           self._clearHoveredItem();
                         }
                      }
 

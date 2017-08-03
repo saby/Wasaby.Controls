@@ -363,7 +363,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                 if(!this._cachedMargin) {
                    containerHeight = $container.height();
                    if(containerHeight) {
-                      this._cachedMargin = containerHeight + parseInt($container.css('bottom'), 10) + parseInt($container.css('border-bottom-width'), 10);
+                      this._cachedMargin = containerHeight + parseInt($container.css('bottom'), 10);
                    }
                 }
                 marginBottom -= this._cachedMargin;
