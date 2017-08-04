@@ -1,7 +1,7 @@
 /**
  * Created by as.krasilnikov on 12.07.17.
  */
-define(['js!SBIS3.CONTROLS.SuggestTextBox', 'js!WS.Data/Entity/Record', 'js!WS.Data/Source/SbisService'], function (SuggestTextBox, Record, SbisService) {
+define(['js!SBIS3.CONTROLS.SuggestTextBox', 'js!WS.Data/Entity/Record', 'js!WS.Data/Source/Memory'], function (SuggestTextBox, Record, Memory) {
 
    'use strict';
    describe('SBIS3.CONTROLS.SuggestTextBox', function () {
@@ -33,7 +33,7 @@ define(['js!SBIS3.CONTROLS.SuggestTextBox', 'js!WS.Data/Entity/Record', 'js!WS.D
          SuggestTB.setText('text');
          SuggestTB._observableControlFocusHandler(); //Для создания historyController'a
          SuggestTB._historyController.clearHistory();
-         var dataSource = new SbisService({
+         let dataSource = new Memory({
             endpoint: 'test',
             idProperty: 'id'
          });
