@@ -58,6 +58,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             this._setViewportRatio();
             this._setThumbHeight();
             this._setScrollRatio();
+            this._setThumbPosition();
          },
 
          getPosition: function () {
