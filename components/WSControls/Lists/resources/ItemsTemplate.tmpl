@@ -7,8 +7,8 @@
                 scope="{{...}}"
                 item="{{item.getContents()}}"
                 projItem="{{item}}"
-                multiSelected="{{ item.isSelected() }}"
-                hovered="{{index === hoveredIndex}}"/>
+                index="{{index}}"
+                itemData="{{_getItemData(item, index)}}"/>
     </ws:if>
     <ws:else>
         <ws:partial template="{{ item.tpl }}" scope="{{ item.data }}" />

@@ -25,17 +25,20 @@ define('js!WSControls/Lists/ListView2', ['js!WSControls/Lists/Selector',
             })
          },
 
-         _mouseMove: function(e) {
-            var hash = this._getDataHashFromTarget(e.target),
-                index = hash && this._display ? this._display.getIndexByHash(hash) : -1;
-            
-            if (this.hoveredIndex !== index) {
-               this.hoveredIndex = index;
+         _mouseMove: function(e, index) {
+            if (this._hoveredIndex !== index) {
+               this._hoveredIndex = index;
             }
          },
 
          _mouseLeave: function () {
-            this.hoveredIndex = -1;
+            this._hoveredIndex = -1;
+         },
+   
+         _getItemData: function(displayItem, index) {
+            var data = ListView.superclass._getItemData.apply(this, arguments);
+            data.hovered = this._hoveredIndex === index;
+            return data;
          },
 
 

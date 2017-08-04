@@ -35,8 +35,6 @@ define('js!WSControls/Lists/ItemsControl', [
          _controlName: 'WSControls/Lists/ItemsControl',
          iWantVDOM: true,
          _isActiveByClick: false,
-         _hoveredItem: null,
-
          _items: null,
 
          _dataSource: null,
@@ -204,25 +202,6 @@ define('js!WSControls/Lists/ItemsControl', [
           */
          _getDisplayItemByHash: function(hash) {
             return this._display.getByHash(hash);
-         },
-   
-         /**
-          * Метод получение hash итема по DOM элементу
-          * @param element
-          * @returns {*}
-          * @private
-          */
-         _getDataHashFromTarget: function (element) {
-            var itemContainer = DOMHelpers.closest(element, '.controls-ListView__item', this._container[0]),
-                hash;
-            
-            /* У item'a могут быть вложенные ItemsControl'ы, учитываем это */
-            if(itemContainer) {
-               hash = itemContainer.getAttribute('data-hash');
-               return this._getDisplayItemByHash(hash) ? hash : this._getDataHashFromTarget(itemContainer.parentElement);
-            } else {
-               return null;
-            }
          },
    
          //<editor-fold desc='EventHandlers'>

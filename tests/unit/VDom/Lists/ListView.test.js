@@ -41,6 +41,30 @@ define(['js!WSControls/Lists/ListView2', 'js!WS.Data/Collection/RecordSet', 'js!
                assert.equal(2, ctrl._selectedKey, 'itemClick doesn\'t select key');
                assert.equal(1, ctrl._selectedIndex, 'itemClick doesn\'t select index');
             });
+   
+            it('mousemove', function () {
+               var ctrl = new ListView({
+                  items : data,
+                  idProperty: 'id'
+               });
+      
+               ctrl._mouseMove({}, ctrl._display.at(1));
+               assert.equal(1, ctrl._hoveredIndex);
+               
+               ctrl._mouseMove({}, ctrl._display.at(0));
+               assert.equal(0, ctrl._hoveredIndex);
+            });
+   
+            it('mouseleave', function () {
+               var ctrl = new ListView({
+                  items : data,
+                  idProperty: 'id'
+               });
+   
+               ctrl._mouseMove({}, ctrl._display.at(1));
+               ctrl._mouseLeave({});
+               assert.equal(-1, ctrl._hoveredIndex);
+            });
 
          });
 
