@@ -513,6 +513,14 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
                }
             }
          }
+         else if (cInstance.instanceOfModule(result, 'WS.Data/Entity/Record')) {
+            if (additionalData.isNewRecord) { //Создание
+               self._createRecord(result, 0, additionalData);
+            }
+            else {
+               self._mergeRecords(result, null, additionalData);
+            }
+         }
          else {
             genericMethod = result || genericMethod;
             if (this[genericMethod]) {
