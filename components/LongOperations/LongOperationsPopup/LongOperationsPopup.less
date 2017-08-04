@@ -14,14 +14,23 @@
 //@long-operations-popup-collapsed-header-caption-f-size: //@long-operations-popup-header-caption-f-size;
 //@long-operations-popup-collapsed-header-caption-line-height: //@long-operations-popup-header-caption-line-height;
 //@long-operations-popup-collapsed-header-caption-color: //@long-operations-popup-header-caption-color;
-//@long-operations-popup-header-stop-but-f-size: inherit;
-//@long-operations-popup-header-stop-but-color: #999999;
+//@long-operations-popup-header-result-max-width: 150px;
+//@long-operations-popup-header-result-min-width: 48px;
+//@long-operations-popup-header-but-f-size: inherit;
+//@long-operations-popup-header-but-gap-top: 2px;
+//@long-operations-popup-collapsed-header-but-gap-top: @long-operations-popup-header-but-gap-top;
+//@long-operations-popup-header-suspended-color: #999999;
+//@long-operations-popup-list-time-f-size: 12px;
+//@long-operations-popup-list-border-bot: 1px solid #F5F5F5;
+//@long-operations-popup-reg-but-ctr-height: 24px;
+//@long-operations-popup-reg-but-line-height: 12px;
 //@long-operations-popup-foot-height: 32px;
 //@long-operations-popup-foot-bg: #F3F3F3;
 //@long-operations-popup-foot-f-size: 12px;
+//@long-operations-popup-foot-but-gap-top: 8px;
 //@long-operations-popup-foot-color: #999999;
-//@long-operations-popup-reg-but-ctr-height: 24px;
-//@long-operations-popup-reg-but-line-height: 12px;
+//@long-operations-popup-foot-accent-color: #333333;
+//@long-operations-popup-foot-but-hover-color: #313E78 !important;
 
 
 
@@ -72,9 +81,9 @@
 }
 
 .controls-LongOperationsPopup .controls-NotificationPopup__header.controls-NotificationPopup__header-withCloseButton {
-    padding-top: 7px;
+    padding-top: 8px;
     padding-right: @long-operations-popup-header-pad-rt;
-    padding-bottom: 9px;
+    padding-bottom: 8px;
     line-height: @long-operations-popup-header-line-height;
 }
 
@@ -86,27 +95,6 @@
     width: @long-operations-popup-header-icon-size;
     height: @long-operations-popup-header-icon-size;
     font-size: @long-operations-popup-header-icon-size !important;
-}
-
-.controls-LongOperationsPopup__header_stoppedOperationsButton {
-    margin-left: 16px;
-    cursor: pointer;
-    font-size: @long-operations-popup-header-stop-but-f-size;
-    white-space: nowrap;
-    color: @long-operations-popup-header-stop-but-color;
-}
-
-.controls-LongOperationsPopup__header_stoppedOperationsButton:hover {
-    text-decoration: underline;
-}
-
-.controls-LongOperationsPopup__header_stoppedOperations-show .controls-LongOperationsPopup__header_showStoppedOperations,
-.controls-LongOperationsPopup__header_hideStoppedOperations {
-    display: none;
-}
-
-.controls-LongOperationsPopup__header_stoppedOperations-show .controls-LongOperationsPopup__header_hideStoppedOperations {
-    display: block;
 }
 
 .controls-NotificationPopup__header_icon.controls-LongOperationsPopup__header_icon-customIcon {
@@ -130,22 +118,48 @@
     color: @long-operations-popup-collapsed-header-caption-color;
 }
 
+.controls-LongOperationsPopup__header_downloadButton,
+.controls-LongOperationsPopup__header_stoppedOperationsButton {
+    padding-top: @long-operations-popup-header-but-gap-top;
+    line-height: @long-operations-popup-header-line-height;
+    font-size: @long-operations-popup-header-but-f-size;
+}
+
+.controls-LongOperationsPopup.controls-LongOperationsPopup__hiddenContentMode .controls-LongOperationsPopup__header_downloadButton,
+.controls-LongOperationsPopup.controls-LongOperationsPopup__hiddenContentMode .controls-LongOperationsPopup__header_stoppedOperationsButton {
+    padding-top: @long-operations-popup-collapsed-header-but-gap-top;
+}
+
 .controls-LongOperationsPopup__header_downloadButton {
-    max-width: 150px;
-    min-width: 48px;
+    max-width: @long-operations-popup-header-result-max-width;
+    min-width: @long-operations-popup-header-result-min-width;
     margin-left: 8px;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.controls-LongOperationsPopup__header_downloadButton,
-.controls-LongOperationsPopup__header_stoppedOperationsButton {
-    margin-bottom: -2px;
-    line-height: @long-operations-popup-header-line-height;
-}
-
 .controls-LongOperationsPopup__header_downloadButton .controls-Button__text {
     white-space: nowrap;
+}
+
+.controls-LongOperationsPopup__header_stoppedOperationsButton {
+    margin-left: 16px;
+    cursor: pointer;
+    white-space: nowrap;
+    color: @long-operations-popup-header-suspended-color;
+}
+
+.controls-LongOperationsPopup__header_stoppedOperationsButton:hover {
+    text-decoration: underline;
+}
+
+.controls-LongOperationsPopup__header_stoppedOperations-show .controls-LongOperationsPopup__header_showStoppedOperations,
+.controls-LongOperationsPopup__header_hideStoppedOperations {
+    display: none;
+}
+
+.controls-LongOperationsPopup__header_stoppedOperations-show .controls-LongOperationsPopup__header_hideStoppedOperations {
+    display: block;
 }
 
 /* End header  */
@@ -179,7 +193,7 @@
 .controls-LongOperationsPopup__content .controls-LongOperationsList .controls-LongOperationsList__executeTimeContainer.controls-DataGridView__td,
 .controls-LongOperationsPopup__content .controls-LongOperationsList .controls-DataGridView__tr.controls-ListView__hoveredItem .controls-LongOperationsList__executeTimeContainer.controls-DataGridView__td {
     color: #CCC;
-    font-size: 12px;
+    font-size: @long-operations-popup-list-time-f-size;
 }
 
 .controls-LongOperationsPopup__content .controls-LongOperationsList .controls-DataGridView__firstContentCell {
@@ -203,7 +217,7 @@
 
 .controls-LongOperationsPopup__content_list {
     /*###width: calc(@long-operations-popup-exp-width - 1px);*/
-    border-bottom: 1px solid #F5F5F5;
+    border-bottom: @long-operations-popup-list-border-bot;
 }
 
 .controls-LongOperationsPopup__content_list .controls-LongOperationsList__nameColumn {
@@ -231,12 +245,16 @@
     text-align: center;
 }
 
-.controls-LongOperationsPopup__footer_execTasks,
 .controls-LongOperationsPopup__footer_executeTime,
-.controls-LongOperationsPopup__footer_progress,
-.controls-LongOperationsPopup__footer_notification {
+.controls-LongOperationsPopup__footer_execTasks,
+.controls-LongOperationsPopup__footer_notification,
+.controls-LongOperationsPopup__footer_progress {
     font-size: @long-operations-popup-foot-f-size;
     color: @long-operations-popup-foot-color;
+}
+
+.controls-LongOperationsPopup__footer_progress {
+    color: @long-operations-popup-foot-accent-color;
 }
 
 .controls-LongOperationsPopup__footer_progress {
@@ -254,12 +272,12 @@
 
 .controls-LongOperationsPopup__footer_pauseIcon,
 .controls-LongOperationsPopup__hideContentIcon {
-    margin-top: 7px;
+    margin-top: @long-operations-popup-foot-but-gap-top;
     cursor: pointer;
 }
 
 .controls-LongOperationsPopup__hideContentIcon:hover {
-    color: #313E78 !important;
+    color: @long-operations-popup-foot-but-hover-color;
 }
 
 .controls-LongOperationsPopup__hiddenContentMode .controls-LongOperationsPopup__hideContentIcon {
