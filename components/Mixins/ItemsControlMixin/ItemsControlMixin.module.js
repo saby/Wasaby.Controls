@@ -132,7 +132,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    groupItemProcessing = function(groupId, records, item, cfg) {
       if (cfg._canApplyGrouping(item, cfg)) {
          var groupBy = cfg.groupBy;
-
          if (cfg._groupTemplate) {
             var
                tplOptions = {
@@ -174,16 +173,22 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          records = [];
       if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
          resetGroupItemsCount(cfg);
-         var prevGroupId = undefined;
-         projection.each(function (item, index, group) {
-            if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {
-               applyGroupItemsCount(group, 1, cfg);
-               if (prevGroupId != group && group !== false) {
-                  cfg._groupItemProcessing(group, records, item,  cfg);
-                  prevGroupId = group;
-               }
+         var needGroup = false, groupId;
+         projection.each(function (item, index) {
+            if (cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
+               groupId = item.getContents();
+               needGroup = true;
             }
-            records.push(item);
+            else {
+               if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {
+                  applyGroupItemsCount(groupId, 1, cfg);
+                  if (needGroup && groupId) {
+                     cfg._groupItemProcessing(groupId, records, item, cfg);
+                     needGroup = false;
+                  }
+               }
+               records.push(item);
+            }
          });
       }
       return records;
@@ -1176,26 +1181,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                this._clearItems(targetElement);
                /*TODO С этим отдельно разобраться*/
 
-            /*TODO Особое поведение при группировке*/
-               if (!isEmpty(this._options.groupBy)) {
-
-                  if (this._options.easyGroup) {
-                     if (this._options._groupItemsCount[groupId] < 1) {
-                        $('[data-group="' + groupId + '"]', this._container.get(0)).remove();
-                     }
-                  }
-                  else {
-                     if (!prev)
-                        prev = targetElement.prev();
-                     if (prev.length && prev.hasClass('controls-GroupBy')) {
-                        var next = targetElement.next();
-                        if (!next.length || next.hasClass('controls-GroupBy')) {
-                           prev.remove();
-                           prev = undefined;
-                        }
-                     }
-                  }
-               }
                removedElements.push(targetElement.get(0));
                /* TODO внештатная ситуация, при поиске могли удалить папку/путь, сейчас нет возможности найти это в гриде и удалить
                   поэтому просто перерисуем весь грид. Как переведём группировку на item'ы, это можно удалить */
@@ -1333,7 +1318,18 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _getDomElementByItem : function(item) {
-         return this._getItemsContainer().find('.js-controls-ListView__item[data-hash="' + item.getHash() + '"]')
+         var container;
+         if (cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
+            container = this._getItemsContainer().find('.controls-GroupBy[data-group="' + item.getContents() + '"]');
+         }
+         else {
+            container = this._getRecordElemByItem(item);
+         }
+         return container;
+      },
+
+      _getRecordElemByItem: function(item) {
+         return this._getItemsContainer().find('.js-controls-ListView__item[data-hash="' + item.getHash() + '"]');
       },
 
       _reviveItems : function(lightVer) {
