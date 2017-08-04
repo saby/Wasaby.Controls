@@ -304,27 +304,27 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                   presets:[
                      {
                         id: 'mainText',
-                        name: 'Основной'
+                        name: rk('Основной')
                      },
                      {
                         id: 'title',
                         color: '#313E78',
                         'font-size' : '18px',
                         'font-weight': 'bold',
-                        name: 'Заголовок'
+                        name: rk('Заголовок')
                      },
                      {
                         id: 'subTitle',
                         color: '#313E78',
                         'font-size' : '15px',
                         'font-weight': 'bold',
-                        name: 'Подзаголовок'
+                        name: rk('Подзаголовок')
                      },
                      {
                         id: 'additionalText',
                         color: '#999999',
                         'font-size' : '12px',
-                        name: 'Дополнительный'
+                        name: rk('Дополнительный')
                      }
                   ],
                   activableByClick: false
