@@ -5,7 +5,8 @@ define([
    'js!WSControls/Control/Base',
    'Core/vdom/Synchronizer/resources/SyntheticEvent'
 ], function (
-   Base, SyntheticEvent
+   Base,
+   SyntheticEvent
 ) {
    'use strict';
 
@@ -16,14 +17,11 @@ define([
          visible: false
       };
 
-
-
       Base.iWantVDOM = true;
       var baseDis = new Base(cfg);
       var base = new Base({});
 
       /* Список всех опций
-       this._savedConfigs;
        this._thisIsInstance;
        this._icanrulefocus;
        this._parent;
@@ -90,7 +88,6 @@ define([
        */
 
       function assertInitProperties() {
-         assert.isTrue(Array.isArray(this._savedConfigs));
          assert.isTrue(typeof this._thisIsInstance === 'boolean');
          assert.isTrue(this.hasOwnProperty('_parent'));
          assert.isTrue(this.hasOwnProperty('_context'));
