@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
    [
    "Core/Deferred",
    "js!SBIS3.CORE.CompoundControl",
-   "html!SBIS3.CONTROLS.EditInPlace",
+   "tmpl!SBIS3.CONTROLS.EditInPlace",
    "Core/constants",
    "js!SBIS3.CONTROLS.CompoundFocusMixin",
    "Core/core-instance",

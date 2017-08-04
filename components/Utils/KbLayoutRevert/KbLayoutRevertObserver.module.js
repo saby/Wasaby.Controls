@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                this._observed = false;
                this._oldSearchValue = '';
                this._hideMissSpell();
-               this._toggleItemsEventRising(true, true);
+               this._toggleItemsEventRaising(true);
             }
          },
    
@@ -157,7 +157,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                         return res;
                      })
                   } else {
-                     self._toggleItemsEventRising(false, false);
+                     self._toggleItemsEventRaising(false);
                      /* Для того, чтобы индикатор не моргал между запросами, если запрос работает > INDICATOR_DELAY */
                      if (self._getTimer().getTime() > INDICATOR_DELAY) {
                         view.getContainer().find('.controls-AjaxLoader').eq(0).removeClass('ws-hidden');
@@ -177,7 +177,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
 
             function showMissSpellValue(value) {
                self._showMissSpell(value);
-               self._toggleItemsEventRising(true, true);
+               self._toggleItemsEventRaising(true);
             }
 
             function successSearch() {
@@ -212,7 +212,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                         view.setHighlightText(searchValue, false);
                      }
                      self._textBeforeTranslate = null;
-                     self._toggleItemsEventRising(true, true);
+                     self._toggleItemsEventRaising(true);
                   }
                } else {
                   if(self._options.newStandart) {
@@ -234,13 +234,13 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                         data.setMetaData(self._itemsBeforeTranslate.getMetaData());
                      }
                      backOldSearchValue();
-                     self._toggleItemsEventRising(true, true);
+                     self._toggleItemsEventRaising(true);
                      self._hideMissSpell();
                   } else {
                      viewFilter[searchParam] = self._textBeforeTranslate;
                      view.setFilter(viewFilter, true);
                      self._textBeforeTranslate = null;
-                     self._toggleItemsEventRising(true, true);
+                     self._toggleItemsEventRaising(true);
                   }
                } else {
                   reloadWithRevert();
@@ -264,16 +264,16 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
          /* Требуется отключать обработку событий проекции при поиске со сменой раскладки,
           чтобы избежать моргания данных, обработка событий включается,
           когда поиск точно закончен (уже была сменена раскладка, если требуется) */
-         _toggleItemsEventRising: function(enable, analyze) {
+         _toggleItemsEventRaising: function(enable) {
             var items = this._currentItems || this._options.view.getItems();
 
             if(items) {
                var isEqual = items.isEventRaising() === enable;
 
                if(!isEqual) {
-                  items.setEventRaising(enable, analyze);
+                  items.setEventRaising(enable, true);
                   /* Запоминаем рекордсет, чтобы потом у него же и включить обработку событий */
-                  this._currentItems = this._currentItems  ? null : items;
+                  this._currentItems = !enable ? items : null;
                }
             }
          },
@@ -335,7 +335,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
          if(searchValue && oldSearchValue) {
             if (searchValue.length > oldSearchValue.length) {
                // ищем разницу между старым и текущим значением поискового запроса
-               symbolsDifference = strHelpers.searchSymbolsDifference(searchValue, self._oldSearchValue);
+               symbolsDifference = strHelpers.searchSymbolsDifference(searchValue, oldSearchValue);
             }
          }
 

@@ -806,7 +806,6 @@
 // Formatted text box //
 // ------------------ //
 
-@formatted-text-box-line-height:                normal;
 
 @formatted-text-box-wrapper-min-height:         22px;
 @formatted-text-box-wrapper-padding:            @text-box-wrapper-padding;
@@ -1019,7 +1018,6 @@
 @text-area-field-text-color:                    inherit;
 @text-area-field-focus-text-color:              @text-area-field-text-color;
 @text-area-field-error-text-color:              @text-box-field-error-text-color;
-@text-area-field-hover-text-color:              @text-area-field-text-color;
 @text-area-field-disabled-text-color:           @text-area-field-text-color;
 
 @text-area-border-width:                        1px;
@@ -1476,6 +1474,7 @@
 @list-view-items-toolbar-right-tile:                 1px;
 @list-view-items-toolbar-bottom-tile:                2px;
 @list-view-items-toolbar-icon-size:                  24px;
+@list-view-items-toolbar-menu-icon-size:             @list-view-items-toolbar-icon-size;
 @list-view-items-toolbar-font-family:                @default-icon-medium-font;
 
 @bottomStyle-items-toolbar-margin-top:               2px;
@@ -1524,6 +1523,8 @@
 @listView-servicefooter-padding:                0 8px;
 @listView-servicefooter-height:                 32px;
 @listView-servicefooter-fontsize:               12px;
+
+@listView-loadmorebutton-font-size:             @link-font-size;
 
 // ItemsToolbar small
 @list-view-small-items-toolbar-line-height:         16px;
@@ -1620,7 +1621,7 @@
 // Data grid //
 // --------- //
 
-@data-grid-bg:                                  @white-color;
+@data-grid-bg:                                  transparent;
 @data-grid-border-spacing:                      0;
 @data-grid-border-collapse:                     separate;
 @data-grid-border-width:                        0;

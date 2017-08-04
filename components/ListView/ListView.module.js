@@ -944,6 +944,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._setScrollPagerPositionThrottled = throttle.call(this._setScrollPagerPosition, 100, true).bind(this);
             this._updateScrollIndicatorTopThrottled = throttle.call(this._updateScrollIndicatorTop, 100, true).bind(this);
             this._eventProxyHdl = this._eventProxyHandler.bind(this);
+            this._onScrollHandler = this._onScrollHandler.bind(this);
 
             this._toggleEventHandlers(this._container, true);
 
@@ -985,7 +986,7 @@ define('js!SBIS3.CONTROLS.ListView',
                WindowManager.setVisible(this._pagingZIndex);
             }
             if (this._options.virtualScrolling || this._options.scrollPaging) {
-               this._getScrollWatcher().subscribe('onScroll', this._onScrollHandler.bind(this));
+               this._getScrollWatcher().subscribe('onScroll', this._onScrollHandler);
             }
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
@@ -2400,7 +2401,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         this.setSelectedKey(model.getId());
                         if (model.getState() === Record.RecordState.DETACHED) {
                            $(".controls-ListView__item", this._getItemsContainer()).removeClass('controls-ListView__item__selected');
-                           $('.controls-ListView__item[data-id="' + model.getId() + '"]', this._container).addClass('controls-ListView__item__selected');
+                           $('.controls-ListView__item[data-id="' +  (model.getId() === undefined ? '' : model.getId()) + '"]', this._container).addClass('controls-ListView__item__selected');
                         }
                         else {
                            this.setSelectedKey(model.getId());
@@ -2671,7 +2672,6 @@ define('js!SBIS3.CONTROLS.ListView',
          _hideItemsToolbar: function (animate) {
             if (this._itemsToolbar) {
                this._itemsToolbar.hide(animate);
-               this._touchSupport && this._clearHoveredItem();
             }
          },
          _getItemsToolbar: function() {
@@ -2697,14 +2697,6 @@ define('js!SBIS3.CONTROLS.ListView',
                            self.setSelectedKey(hoveredKey);
                         }
                      },
-                     onCloseItemActionsMenu: function() {
-                        /* на тач-устройствах по закрытию меню скрывается тулбар
-                           поэтому необходимо очистить выделенный элемент
-                         */
-                        if(self._touchSupport) {
-                           self._clearHoveredItem();
-                        }
-                     },
                      onItemActionActivated: function(e, key) {
                         self.setSelectedKey(key);
                         if(self._touchSupport) {
@@ -2714,6 +2706,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      onItemsToolbarHide: function() {
                         if(self._touchSupport) {
                            self._setTouchSupport(false);
+                           self._clearHoveredItem();
                         }
                      }
 

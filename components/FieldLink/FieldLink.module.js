@@ -779,7 +779,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           }, '_getLinkCollection'),
           
           _getInputMinWidth: fHelpers.memoize(function() {
-             var fieldWrapper = this.getContainer().find('.controls-TextBox__fieldWrapper');
+             var fieldWrapper = this.getContainer().find('.controls-FieldLink__fieldWrapper');
              return parseInt(window.getComputedStyle(fieldWrapper[0]).getPropertyValue('--min-width') || fieldWrapper.css('min-width'));
           }, '_getInputMinWidth'),
 
@@ -887,7 +887,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 поэтому нельзя отдавать поле ввода в качестве элемента для фокуса, т.к. браузер не может проставить
                 фокус на скрытый элемент, и он улетит на body. Но оставить фокус на компоненте необходимо для обработки событий,
                 для этого переводим фокус на контейнер поля связи */
-             return this._isInputVisible() ? FieldLink.superclass._getElementToFocus.apply(this, arguments) : this._container;
+             return this._isInputVisible() || this._options.alwaysShowTextBox ? FieldLink.superclass._getElementToFocus.apply(this, arguments) : this._container;
           },
 
           /**
@@ -1186,7 +1186,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           _toggleShowAll: function(show) {
              if(this._options.multiselect) {
-                this._getShowAllButton().toggleClass(classes.HIDDEN, !show);
+                this._getShowAllButton().toggleClass(classes.HIDDEN, !show); //todo
              }
           },
           

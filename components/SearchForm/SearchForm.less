@@ -1,51 +1,71 @@
 .controls-SearchForm.controls-TextBox {
   .border-radius(@search-border-radius);
-  border-color: @search-border-color;
-  border-bottom-color: @search-bottom-border-color;
-  border-width: @search-form-border-width;
+  border-color: transparent;
+  border-bottom-color: transparent;
   background: @search-background;
-  height: @search-height;
-  font-size: @text-box-field-font-size;
   position: relative;
 
-    &:hover {
-      border-color: @search-hover-border-color;
+    &:hover,
+    &.ws-has-focus{
+      border-color: @search-border-color-active;
       background: @search-background;
     }
-
-    &.ws-has-focus {
-      border-color: @search-hover-border-color;
-      background: @search-focus-background;
-    }
     &.ws-disabled {
-      background: @search-disabled-background;
-      border-width: @search-form-border-disabled-width;
-      border-bottom: @search-form-border-disabled-width solid @search-background;
-
+      background: @search-background-disabled;
+      border-color:@default-border-color-disabled;
       .controls-SearchForm__search {
-        display: @search-form-icon-disabled-display;
         cursor: default;
-        color: @icon-color-disabled !important;
+        color: @icon-color-disabled;
         &:hover {
-          color: @icon-color-disabled !important;
+          color: @icon-color-disabled;
         }
       }
       .controls-SearchForm__reset{
-        display: none;
+        visibility: hidden;
       }
     }
-
-  .controls-TextBox__fieldWrapper {
-    margin: 0 @search-form-field-wrapper-margin-right 0 @search-left-margin;
-    padding: 0;
+  .controls-TextBox__field {
+    padding: @search-field-padding;
   }
 
   .controls-TextBox__afterFieldWrapper {
-    width: @search-buttons-wrapper-width;
-    padding: @search-button-wrapper-padding;
+    .inline-flexbox();
+    padding: @search-button-wrapper-padding;//по стандарту - 8, но 8 - 1(бордер) - 2(паддинг иконки) = 5
+  }
+  //данный стили находятся внутри .controls-SearchForm.controls-TextBox чтобы в пакетированном режиме их не перебивали стили иконок icon-size{ display: inline-block }
+  .controls-SearchForm__search,
+  .controls-SearchForm__reset {
+    .flexbox();
+    .align-items(center) ;
+    .icon-size(@search-loop-size);
+    cursor: pointer;
+    height: 100%;
+    overflow: hidden;
+    color: @search-form-icon-color;
+    padding: @search-form-icon-padding;
+  }
+  .controls-SearchForm__reset {
+    color: @search-form-icon-reset-color;
+  }
+  .controls-SearchForm__search {
+    &:hover {
+      color: @search-form-icon-search-hover-color;
+    }
   }
 }
 
+// хак для edge win10 выравнивает input и placeholder
+@supports (-ms-ime-align:auto) {
+  .controls-SearchForm {
+    &.controls-TextBox {
+      .controls-TextBox__field {
+        line-height: 0 !important;
+      }
+    }
+  }
+}
+
+//todo
 .controls-Suggest__picker.controls-searchForm__suggest {
   margin-left: -8px;
   margin-top: -32px;
@@ -55,39 +75,4 @@
 
 .controls-searchForm__suggest .controls-PopupMixin__closeButton {
   top: 8px;
-}
-
-.controls-SearchForm__search,
-.controls-SearchForm__reset {
-  display: block;
-  float: right;
-  cursor: pointer;
-  padding: @search-form-icon-padding;
-  width: @search-loop-size;
-  height: @search-loop-size;
-}
-
-.controls-SearchForm__reset {
-  color: @search-form-icon-reset-color;
-}
-
-.controls-SearchForm__search {
-  color: @search-form-icon-search-color;
-  
-  &:hover {
-    color: @search-form-icon-search-hover-color;
-  }
-}
-
-// хак для edge win10 выравнивает input и placeholder
-@supports (-ms-ime-align:auto) {
-  .controls-SearchForm {
-    &.controls-TextBox {
-      .controls-TextBox__fieldWrapper {
-        .controls-TextBox__field {
-          line-height: 0 !important;
-        }
-      }
-    }
-  }
 }
