@@ -143,7 +143,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   nodeProperty: cfg.nodeProperty,
                   item: item.getContents(),
                   groupContentTemplate: TemplateUtil.prepareTemplate(groupBy.contentTemplate || ''),
-                  groupId: groupId
+                  groupId: groupId,
+                  groupCollapsing: cfg._groupCollapsing
                },
                groupTemplateFnc;
             tplOptions.colspan = tplOptions.columns.length + cfg.multiselect;
@@ -1281,7 +1282,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _afterAddItems: function() {},
 
+      //Выделяем отдельный метод _getInsertMarkupConfigICM т.к. в TreeView метод _getInsertMarkupConfig переопределяется,
+      //а в TreeCompositeView в зависимости от вида отображения нужно звать разные методы, в режиме плитки нужно звать
+      //стандартный метод _getInsertMarkupConfigICM а в режиме таблицы переопределённый метод из TreeView
       _getInsertMarkupConfig: function(newItemsIndex, newItems, groupId) {
+         return this._getInsertMarkupConfigICM.apply(this, arguments);
+      },
+
+      _getInsertMarkupConfigICM: function(newItemsIndex, newItems, groupId) {
          var
              nextItem,
              prevGroup,
@@ -2654,6 +2662,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        */
       onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
          if (this._isNeedToRedraw()) {
+            if (newItems.length > 0) {
+               //TODO проекция отдает неправильные индексы выписана ошибка https://online.sbis.ru/opendoc.html?guid=ccb6214b-70ab-45d3-b5e3-e2e15ddeb639&des=
+               newItemsIndex = this._getItemsProjection().getIndex(newItems[0]);
+            }
 	         switch (action) {
 	            case IBindCollection.ACTION_ADD:
                case IBindCollection.ACTION_MOVE:

@@ -1110,7 +1110,6 @@
 @text-area-field-text-color:                    inherit;
 @text-area-field-focus-text-color:              @text-area-field-text-color;
 @text-area-field-error-text-color:              @text-box-field-error-text-color;
-@text-area-field-hover-text-color:              @text-area-field-text-color;
 @text-area-field-disabled-text-color:           @text-area-field-text-color;
 
 @text-area-border-width:                        @default-border-width;
@@ -1701,6 +1700,7 @@
 @list-view-items-toolbar-right-tile:                 1px;
 @list-view-items-toolbar-bottom-tile:                2px;
 @list-view-items-toolbar-icon-size:                  24px;
+@list-view-items-toolbar-menu-icon-size:             @list-view-items-toolbar-icon-size;
 @list-view-items-toolbar-font-family:                @default-icon-medium-font;
 
 @bottomStyle-items-toolbar-margin-top:               2px;
@@ -1749,6 +1749,8 @@
 @listView-servicefooter-padding:                0 8px;
 @listView-servicefooter-height:                 32px;
 @listView-servicefooter-fontsize:               12px;
+
+@listView-loadmorebutton-font-size:             @link-font-size;
 
 @scrollPaging-padding:                          32px;
 
@@ -2221,8 +2223,8 @@
 @controls-filterButton-button-image-disabled:     -48px 0;
 @controls-filterButton-button-height:             24px;
 @controls-filterButton-button-width:              24px;
-@controls-filterButton-button-margin:             8px 8px 8px 0;
-@controls-filterButton-button-margin-right-align: 8px 0 8px 8px;
+@controls-filterButton-button-margin:             8px;
+@controls-filterButton-button-margin-right-align: @controls-filterButton-button-margin;
 @controls-filterButton-button-margin-ff:          8px 32px 8px 0;
 @controls-filterButton-height:                    40px;
 
@@ -2363,6 +2365,7 @@
 
 @controls-FieldLink-disabled-item-single-padding:  0;
 @controls-FieldLink-disabled-item-single-margin:   2px 4px;
+@controls-FieldLink-disabled-item-picker-margin:   0 4px 0 0;
 
 @controls-FieldLink-afterField-background:         @white-color;
 @controls-FieldLink-link-color:                    #8991A9;
@@ -2810,7 +2813,7 @@
 @bottomStyle-items-toolbar-height:                  30px;
 @bottomStyle-padding-bottom:                        @bottomStyle-items-toolbar-height + @bottomStyle-items-toolbar-margin; //высота операций + маржин
 @bottomStyle-items-toolbar-border-color:            #F3F3F3;
-@bottomStyle-items-toolbar-margin:                  3px;
+@bottomStyle-items-toolbar-margin:                  4px;
 @scroll-pager-bg:							                @default-bg-color;
 @textbox-font-size:							             @default-font-size;
 @image-bar-height:                                  32px;

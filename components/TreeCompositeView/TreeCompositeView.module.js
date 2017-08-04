@@ -238,6 +238,16 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          }
       },
 
+      _getInsertMarkupConfig: function() {
+         var result;
+         if (this._options.viewMode === 'table') {
+            result = TreeCompositeView.superclass._getInsertMarkupConfig.apply(this, arguments);
+         } else {
+            result = this._getInsertMarkupConfigICM.apply(this, arguments);
+         }
+         return result;
+      },
+
       _getEditArrowPositionTile: function(hoveredItem) {
          var
             top, left,

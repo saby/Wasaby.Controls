@@ -195,6 +195,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                this._scrollbar = new Scrollbar({
                   element: $('> .controls-ScrollContainer__scrollbar', this._container),
                   contentHeight: this._getScrollHeight(),
+                  position: this._getScrollTop(),
                   parent: this
                });
 
@@ -260,7 +261,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   onFieldChange = function(ev, name, value) {
                      //if (this.getValueSelf(name) !== undefined)
                      {
-                        if (!self.compare(value, prevContext.getValueSelf(name)) &&
+                        if (!self.compare(value, prevContext.getValue(name)) &&
                            !self.compare(value, self._ctxSync.selfToPrev[name])) {
                            self._ctxSync.selfToPrev[name] = value;
                            self._ctxSync.selfNeedSync++;
@@ -271,7 +272,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   prevOnFieldChange = function(ev, name, value) {
                      //if (prevContext.getValueSelf(name) !== undefined)
                      {
-                        if (!self.compare(value, selfCtx.getValueSelf(name)) &&
+                        if (!self.compare(value, selfCtx.getValue(name)) &&
                            !self.compare(value, self._ctxSync.prevToSelf[name])){
                            self._ctxSync.prevToSelf[name] = value;
                            self._ctxSync.prevNeedSync++;
@@ -282,14 +283,14 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   onFieldsChanged = function() {
                      if (self._ctxSync.selfNeedSync) {
                         self._ctxSync.selfNeedSync = 0;
-                        prevContext.setValueSelf(self._ctxSync.selfToPrev);
+                        prevContext.setValue(self._ctxSync.selfToPrev);
                         self._ctxSync.selfToPrev = {};
                      }
                   },
                   prevOnFieldsChanged = function() {
                      if (self._ctxSync.prevNeedSync) {
                         self._ctxSync.prevNeedSync = 0;
-                        selfCtx.setValueSelf(self._ctxSync.prevToSelf);
+                        selfCtx.setValue(self._ctxSync.prevToSelf);
                         self._ctxSync.prevToSelf = {};
                      }
                   },
@@ -419,6 +420,14 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             //ресайз может позваться до инита контейнера
             if (this._content) {
                this._addGradient();
+               /**
+                * В firefox при высоте = 0 на дочерних элементах, нативный скролл не пропадает.
+                * В такой ситуации content имеет высоту скролла, а должен быть равен 0.
+                * Поэтому мы вешаем класс, который убирает нативный скролл, если произойдет такая ситуация.
+                */
+               if (cDetection.firefox) {
+                  this._content.toggleClass('controls-ScrollContainer__content-overflowHidden', !this._getChildContentHeight());
+               }
             }
 
             if (this._paging) {
@@ -431,6 +440,15 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   this._setPagesCount(Math.ceil(this._getScrollHeight() / this._container.height()));
                }
             }
+         },
+
+         _getChildContentHeight: function() {
+            var height = 0;
+            Array.prototype.forEach.call(this._content.children(), function(item) {
+               height += $(item).outerHeight(true);
+            });
+
+            return height;
          },
 
          _getScrollTop: function(){
