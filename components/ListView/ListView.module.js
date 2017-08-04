@@ -1515,6 +1515,12 @@ define('js!SBIS3.CONTROLS.ListView',
                    item = this.getItems() ? this.getItems().getRecordById(targetKey) : undefined,
                    correctTarget = target.hasClass('controls-editInPlace') ? this._getDomElementByItem(this._options._itemsProjection.getItemBySourceItem(item)) : target;
 
+               //В некоторых версиях 11 IE не успевает рассчитаться ширина узла, вследствие чего correctTarget.offsetWidth == 0
+               //Это вызывает неправильное позиционирование тулбара
+               if (cDetection.isIE) {
+                  correctTarget.width();
+               }
+
                return {
                   key: targetKey,
                   record: item,
