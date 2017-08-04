@@ -4,9 +4,8 @@
 define('js!WSControls/Lists/ItemsToolbar/ItemsToolbarCompatible',
    [
       'js!SBIS3.CONTROLS.ItemsToolbar',
-      'js!WSControls/DOMHelpers/DOMHelpers',
       'js!WS.Data/Utils'
-   ], function (ItemsToolbar, DOMHelpers, dataUtils) {
+   ], function (ItemsToolbar, dataUtils) {
    
    /* Слой совместимости между старым тулбаром и новым ListView.
       Новый тулбар будем позиционировать с строке, а не позициаонировать с помощью координат.

@@ -11,8 +11,7 @@ define('js!WSControls/Lists/ItemsControl', [
    'js!WSControls/Lists/resources/utils/ItemsUtil',
    'Core/helpers/functional-helpers',
    'Core/Deferred',
-   'Core/core-instance',
-   'js!WSControls/DOMHelpers/DOMHelpers'
+   'Core/core-instance'
 ], function (extend,
              BaseControl,
              isEmpty,
@@ -25,8 +24,7 @@ define('js!WSControls/Lists/ItemsControl', [
              ItemsUtil,
              fHelpers,
              Deferred,
-             cInstance,
-             DOMHelpers
+             cInstance
    ) {
    'use strict';
 
