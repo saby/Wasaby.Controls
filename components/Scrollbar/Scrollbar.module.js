@@ -51,6 +51,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             this._thumb = this._container.find('.js-controls-Scrollbar__thumb');
             this._container.on('mousedown touchstart', '.js-controls-Scrollbar__thumb', this._getDragInitHandler());
             this._container.on('mousedown touchstart', this._onClickDragHandler.bind(this));
+            this._container.on('wheel', this._wheelHandler.bind(this));
             this._containerHeight = this._container.height();
             this._containerOuterHeight = this._container.outerHeight(true);
             this._browserScrollbarMinHeght = parseFloat(getComputedStyle(this._thumb[0]).minHeight);
@@ -58,6 +59,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             this._setViewportRatio();
             this._setThumbHeight();
             this._setScrollRatio();
+            this._setThumbPosition();
          },
 
          getPosition: function () {
@@ -179,6 +181,11 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          // Не использовать e.clientY, потому что его нет на touch устройствах.
          _endDragHandler: function (dragObject, droppable, e) {
             this._container.removeClass('controls-Scrollbar__dragging');
+         },
+
+         _wheelHandler: function(event) {
+            this.setPosition(this.getPosition() + event.originalEvent.deltaY);
+            this._notify('onScrollbarDrag', this.getPosition());
          },
 
          destroy: function () {

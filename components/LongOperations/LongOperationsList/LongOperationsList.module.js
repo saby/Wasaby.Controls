@@ -301,8 +301,25 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
           * @return {Core/Deferred}
           */
          reload: function () {
+            return longOperationsManager.fetch(this._gatherFetchOptions())
+               .addCallback(function (results) {
+                  if (this._isDestroyed) {
+                     return;
+                  }
+                  //###view._notify('onDataLoad', results);
+                  this._setItems(results);
+               }.bind(this));
+         },
+
+         /**
+          * Собрать параметры запроса данных
+          * @protected
+          * @returns {object}
+          */
+         _gatherFetchOptions: function () {
             var options = {};
-            var filter = this._view.getFilter();
+            var view = this._view;
+            var filter = view.getFilter();
             if (filter) {
                var where = {};
                if (filter.status) {
@@ -341,29 +358,22 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   options.where = where;
                }
             }
-            var sorting = this._view.getSorting();
+            var sorting = view.getSorting();
             if (sorting && sorting.length) {
                options.orderBy = sorting;
             }
-            var offset = this._view.getOffset();
+            var offset = view.getOffset();
             if (0 <= offset) {
                options.offset = offset;
             }
-            var limit = this._view.getPageSize();
+            var limit = view.getPageSize();
             if (0 < limit) {
                options.limit = limit;
             }
             if (filter.needUserInfo) {
                options.extra = {needUserInfo:true};
             }
-            return longOperationsManager.fetch(Object.keys(options).length ? options : null)
-               .addCallback(function (results) {
-                  if (this._isDestroyed) {
-                     return;
-                  }
-                  //###this._view._notify('onDataLoad', results);
-                  this._setItems(results);
-               }.bind(this));
+            return Object.keys(options).length ? options : null;
          },
 
          /**
