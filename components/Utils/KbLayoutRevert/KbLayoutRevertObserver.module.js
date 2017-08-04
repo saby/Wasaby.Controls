@@ -335,7 +335,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
          if(searchValue && oldSearchValue) {
             if (searchValue.length > oldSearchValue.length) {
                // ищем разницу между старым и текущим значением поискового запроса
-               symbolsDifference = strHelpers.searchSymbolsDifference(searchValue, self._oldSearchValue);
+               symbolsDifference = strHelpers.searchSymbolsDifference(searchValue, oldSearchValue);
             }
          }
 
