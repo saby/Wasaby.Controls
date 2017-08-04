@@ -16,7 +16,9 @@
 //@long-operations-popup-collapsed-header-caption-color: //@long-operations-popup-header-caption-color;
 //@long-operations-popup-header-result-max-width: 150px;
 //@long-operations-popup-header-result-min-width: 48px;
-//@long-operations-popup-header-suspended-f-size: inherit;
+//@long-operations-popup-header-but-f-size: inherit;
+//@long-operations-popup-header-but-gap-top: 2px;
+//@long-operations-popup-collapsed-header-but-gap-top: @long-operations-popup-header-but-gap-top;
 //@long-operations-popup-header-suspended-color: #999999;
 //@long-operations-popup-list-time-f-size: 12px;
 //@long-operations-popup-list-border-bot: 1px solid #F5F5F5;
@@ -25,8 +27,10 @@
 //@long-operations-popup-foot-height: 32px;
 //@long-operations-popup-foot-bg: #F3F3F3;
 //@long-operations-popup-foot-f-size: 12px;
+//@long-operations-popup-foot-but-gap-top: 8px;
 //@long-operations-popup-foot-color: #999999;
 //@long-operations-popup-foot-accent-color: #333333;
+//@long-operations-popup-foot-but-hover-color: #313E78 !important;
 
 
 
@@ -77,9 +81,9 @@
 }
 
 .controls-LongOperationsPopup .controls-NotificationPopup__header.controls-NotificationPopup__header-withCloseButton {
-    padding-top: 7px;
+    padding-top: 8px;
     padding-right: @long-operations-popup-header-pad-rt;
-    padding-bottom: 9px;
+    padding-bottom: 8px;
     line-height: @long-operations-popup-header-line-height;
 }
 
@@ -91,27 +95,6 @@
     width: @long-operations-popup-header-icon-size;
     height: @long-operations-popup-header-icon-size;
     font-size: @long-operations-popup-header-icon-size !important;
-}
-
-.controls-LongOperationsPopup__header_stoppedOperationsButton {
-    margin-left: 16px;
-    cursor: pointer;
-    font-size: @long-operations-popup-header-suspended-f-size;
-    white-space: nowrap;
-    color: @long-operations-popup-header-suspended-color;
-}
-
-.controls-LongOperationsPopup__header_stoppedOperationsButton:hover {
-    text-decoration: underline;
-}
-
-.controls-LongOperationsPopup__header_stoppedOperations-show .controls-LongOperationsPopup__header_showStoppedOperations,
-.controls-LongOperationsPopup__header_hideStoppedOperations {
-    display: none;
-}
-
-.controls-LongOperationsPopup__header_stoppedOperations-show .controls-LongOperationsPopup__header_hideStoppedOperations {
-    display: block;
 }
 
 .controls-NotificationPopup__header_icon.controls-LongOperationsPopup__header_icon-customIcon {
@@ -135,6 +118,18 @@
     color: @long-operations-popup-collapsed-header-caption-color;
 }
 
+.controls-LongOperationsPopup__header_downloadButton,
+.controls-LongOperationsPopup__header_stoppedOperationsButton {
+    padding-top: @long-operations-popup-header-but-gap-top;
+    line-height: @long-operations-popup-header-line-height;
+    font-size: @long-operations-popup-header-but-f-size;
+}
+
+.controls-LongOperationsPopup.controls-LongOperationsPopup__hiddenContentMode .controls-LongOperationsPopup__header_downloadButton,
+.controls-LongOperationsPopup.controls-LongOperationsPopup__hiddenContentMode .controls-LongOperationsPopup__header_stoppedOperationsButton {
+    padding-top: @long-operations-popup-collapsed-header-but-gap-top;
+}
+
 .controls-LongOperationsPopup__header_downloadButton {
     max-width: @long-operations-popup-header-result-max-width;
     min-width: @long-operations-popup-header-result-min-width;
@@ -143,14 +138,28 @@
     text-overflow: ellipsis;
 }
 
-.controls-LongOperationsPopup__header_downloadButton,
-.controls-LongOperationsPopup__header_stoppedOperationsButton {
-    margin-bottom: -2px;
-    line-height: @long-operations-popup-header-line-height;
-}
-
 .controls-LongOperationsPopup__header_downloadButton .controls-Button__text {
     white-space: nowrap;
+}
+
+.controls-LongOperationsPopup__header_stoppedOperationsButton {
+    margin-left: 16px;
+    cursor: pointer;
+    white-space: nowrap;
+    color: @long-operations-popup-header-suspended-color;
+}
+
+.controls-LongOperationsPopup__header_stoppedOperationsButton:hover {
+    text-decoration: underline;
+}
+
+.controls-LongOperationsPopup__header_stoppedOperations-show .controls-LongOperationsPopup__header_showStoppedOperations,
+.controls-LongOperationsPopup__header_hideStoppedOperations {
+    display: none;
+}
+
+.controls-LongOperationsPopup__header_stoppedOperations-show .controls-LongOperationsPopup__header_hideStoppedOperations {
+    display: block;
 }
 
 /* End header  */
@@ -263,12 +272,12 @@
 
 .controls-LongOperationsPopup__footer_pauseIcon,
 .controls-LongOperationsPopup__hideContentIcon {
-    margin-top: 7px;
+    margin-top: @long-operations-popup-foot-but-gap-top;
     cursor: pointer;
 }
 
 .controls-LongOperationsPopup__hideContentIcon:hover {
-    color: #313E78 !important;
+    color: @long-operations-popup-foot-but-hover-color;
 }
 
 .controls-LongOperationsPopup__hiddenContentMode .controls-LongOperationsPopup__hideContentIcon {
