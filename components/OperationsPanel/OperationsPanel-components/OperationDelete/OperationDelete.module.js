@@ -28,12 +28,13 @@ define('js!SBIS3.CONTROLS.OperationDelete', [
          view.deleteRecords(keys);
       },
       _getAllKeys: function() {
-         var keys = [],
+         //Элементы могут иметь одинаковые ключи, поэтому сначала добавляем их в объект и возвращаем массив, сделанный из этого объекта
+         var keys = {},
              view = this._options.linkedView;
          view.getItems().each(function(item) {
-            keys.push(item.getId());
+            keys[item.getId()] = 1;
          });
-         return keys;
+         return Object.keys(keys);
       }
    });
 
