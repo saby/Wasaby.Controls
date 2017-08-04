@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       if (cfg.displayType == 'folders') {
          filter.push(projectionFilterOnlyFolders.bind(this));
       } else {
-         filter.push(projectionFilter.bind(this));
+         filter.push(projectionFilter.bind(cfg));
       }
 
       if (cfg.itemsFilterMethod) {
@@ -273,7 +273,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       var
           itemParent = itemProj.getParent(),
           itemParentContent = itemParent && itemParent.getContents();
-      return (cInstance.instanceOfModule(itemParentContent, 'WS.Data/Entity/Record') && itemParent.isNode() !== false && this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj);
+      // Т.к. скрытые узлы не выводятся в режиме поиска, то добавил костыль-проверку на task1174261549.
+      // Используется в админке, будет убрано, когда будет согласован стандарт на отображение скрытых узлов в режиме поиска.
+      // Ошибка: https://online.sbis.ru/opendoc.html?guid=aac1226b-64f1-4b45-bb95-b44f2eb68ada
+      // Поручение на проектировщиков: https://online.sbis.ru/opendoc.html?guid=9b93b078-a432-4550-86bc-1a7b2c4bac5c
+      return (this.hierarchyViewMode && cInstance.instanceOfModule(itemParentContent, 'WS.Data/Entity/Record') && (itemParent.isNode() !== false || this.task1174261549)) || isVisibleItem(itemProj);
    },
    projectionFilterOnlyFolders = function(item, index, itemProj) {
       return (this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj, true);
@@ -322,7 +326,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       if (cfg.displayType == 'folders') {
          filter.push(projectionFilterOnlyFolders.bind(this));
       } else {
-         filter.push(projectionFilter.bind(this));
+         filter.push(projectionFilter.bind(cfg));
       }
       if (cfg.itemsFilterMethod) {
          filter.push(cfg.itemsFilterMethod);
@@ -663,7 +667,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              * @variant append - добавлять, при этом записи с одинаковыми id будут выводиться в списке
              *
              */
-            loadItemsStrategy: 'merge'
+            loadItemsStrategy: 'merge',
+            task1174261549: true
          },
          _lastParent : undefined,
          _lastDrawn : undefined,
