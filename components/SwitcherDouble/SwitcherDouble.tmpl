@@ -13,13 +13,13 @@
    <ws:if data="{{disposition === 'vertical'}}">
       <ws:partial template="toggle" scope="{{...}}"/>
       <span class="controls-SwitcherDouble__textBlock">
-         <span class="js-controls-SwitcherDouble__textOn controls-SwitcherDouble__text controls-SwitcherDouble__textOn{{checked ? '' : ' controls-SwitcherDouble__unselected'}}">{{stateOn}}</span>
-         <span class="js-controls-SwitcherDouble__textOff controls-SwitcherDouble__text controls-SwitcherDouble__textOff{{checked ? ' controls-SwitcherDouble__unselected' : ''}}">{{stateOff}}</span>
+         <span class="js-controls-SwitcherDouble__textOn controls-SwitcherDouble__text controls-SwitcherDouble__textOn{{checked ? '' : ' controls-SwitcherDouble__unselected'}}">{{stateOn|sanitize}}</span>
+         <span class="js-controls-SwitcherDouble__textOff controls-SwitcherDouble__text controls-SwitcherDouble__textOff{{checked ? ' controls-SwitcherDouble__unselected' : ''}}">{{stateOff|sanitize}}</span>
       </span>
    </ws:if>
    <ws:else>
-      <span class="js-controls-SwitcherDouble__textOff controls-SwitcherDouble__text controls-SwitcherDouble__textOff{{checked ? ' controls-SwitcherDouble__unselected' : ''}}">{{stateOff}}</span>
+      <span class="js-controls-SwitcherDouble__textOff controls-SwitcherDouble__text controls-SwitcherDouble__textOff{{checked ? ' controls-SwitcherDouble__unselected' : ''}}">{{stateOff|sanitize}}</span>
       <ws:partial template="toggle" scope="{{...}}"/>
-      <span class="js-controls-SwitcherDouble__textOn controls-SwitcherDouble__text controls-SwitcherDouble__textOn{{checked ? '' : ' controls-SwitcherDouble__unselected'}}">{{stateOn}}</span>
+      <span class="js-controls-SwitcherDouble__textOn controls-SwitcherDouble__text controls-SwitcherDouble__textOn{{checked ? '' : ' controls-SwitcherDouble__unselected'}}">{{stateOn|sanitize}}</span>
    </ws:else>
 </span>
