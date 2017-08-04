@@ -20,13 +20,14 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       'js!WS.Data/Chain',
       'js!SBIS3.CONTROLS.LongOperationsTabCalls',
       'js!SBIS3.CONTROLS.LongOperationsCallsPool',
+      'js!SBIS3.CONTROLS.LongOperationsBunch',
       'js!SBIS3.CONTROLS.ILongOperationsProducer',
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.LongOperationHistoryItem',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model'
    ],
 
-   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsTabCalls, LongOperationsCallsPool, ILongOperationsProducer, LongOperationEntry, LongOperationHistoryItem, Model) {
+   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsTabCalls, LongOperationsCallsPool, LongOperationsBunch, ILongOperationsProducer, LongOperationEntry, LongOperationHistoryItem, Model) {
       'use strict';
 
       /**
@@ -91,6 +92,13 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
        * @type {SBIS3.CONTROLS.LongOperationsCallsPool}
        */
       var _fetchCalls;
+
+      /**
+       * Счётчики текщих отступов по продюсерам
+       * @protected
+       * @type {SBIS3.CONTROLS.LongOperationsBunch}
+       */
+      var _offsetBunch;
 
       /**
        * Признак того, что менеджер ликвидирован
@@ -230,18 +238,47 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             }
             if (!_fetchCalls.has(query)) {
                // Если нет уже выполняющегося запроса
-               if (Object.keys(_producers).length) {
-                  for (var n in _producers) {
-                     _fetchCalls.add(query, {tab:_tabKey, producer:n}, _producers[n].fetch(query));
+               var hasProducers = !!Object.keys(_producers).length;
+               var hasTabManagers = !!Object.keys(_tabManagers).length;
+               if (hasProducers || hasTabManagers) {
+                  var useOffsets = 0 < query.offset;
+                  var offsetPattern = {where:query.where, orderBy:query.orderBy, limit:query.limit};
+                  var offsetIds;
+                  if (useOffsets) {
+                     offsetIds = _offsetBunch.searchIds(offsetPattern);
+                     //var prevOffset = offsetIds && offsetIds.length ? _offsetBunch.listByIds(offsetIds).reduce(function (r, v) { r += v; return r; }, 0) : 0;
                   }
-               }
-               if (Object.keys(_tabManagers).length) {
-                  var targets;
-                  for (var tabKey in _tabManagers) {
-                     targets = _tabTargets(targets, tabKey, _tabManagers[tabKey]);
+                  else {
+                     _offsetBunch.removeAll(offsetPattern);
                   }
-                  if (targets) {
-                     _fetchCalls.addList(query, _expandTargets(targets), _tabCalls.callBatch(targets, 'fetch', [query], LongOperationEntry));
+                  if (hasProducers) {
+                     for (var n in _producers) {
+                        var member = {tab:_tabKey, producer:n};
+                        _fetchCalls.add(query, member, _producers[n].fetch(useOffsets ? ObjectAssign({}, query, {offset:_offsetBunch.search(member, offsetIds).shift() || 0}) : query));
+                     }
+                  }
+                  if (hasTabManagers) {
+                     var targets;
+                     for (var tabKey in _tabManagers) {
+                        targets = _tabTargets(targets, tabKey, _tabManagers[tabKey]);
+                     }
+                     if (targets) {
+                        var promises;
+                        if (useOffsets) {
+                           promises = [];
+                           for (var tabKey in targets) {
+                              for (var list = targets[tabKey], i = 0; i < list.length; i++) {
+                                 var n = list[i];
+                                 var member = {tab:tabKey, producer:n};
+                                 promises.push(_tabCalls.call(tabKey, n, 'fetch', [ObjectAssign({}, query, {offset:_offsetBunch.search(member, offsetIds).shift() || 0})], LongOperationEntry));
+                              }
+                           }
+                        }
+                        else {
+                           promises = _tabCalls.callBatch(targets, 'fetch', [query], LongOperationEntry);
+                        }
+                        _fetchCalls.addList(query, _expandTargets(targets), promises);
+                     }
                   }
                }
             }
@@ -510,6 +547,8 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             _fetchCalls.remove(null, {tab:_tabKey, producer:name});
             // Удалить из списка
             delete _producers[name];
+            // Почистить _offsetBunch
+            _offsetBunch.removeAll({tab:_tabKey, producer:name});
             done = true;
             // Уведомить другие вкладки
             _tabChannel.notify('LongOperations:Manager:onActivity', {type:'unregister', tab:_tabKey, producer:name});
@@ -744,10 +783,20 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             if (queries.length) {
                var targets = _tabTargets(null, tabKey, newProds);
                if (targets) {
-                  var member = _expandTargets(targets);
+                  var members = _expandTargets(targets);
                   for (var i = 0; i < queries.length; i++) {
                      var q = queries[i];
-                     _fetchCalls.addList(q, member, _tabCalls.callBatch(targets, 'fetch', [q.where, q.orderBy, q.offset, q.limit, q.extra], LongOperationEntry));
+                     var promises;
+                     if (0 < q.offset) {
+                        promises = [];
+                        for (var list = targets[tabKey], i = 0; i < list.length; i++) {
+                           promises.push(_tabCalls.call(tabKey, list[i], 'fetch', [ObjectAssign({}, q, {offset:0})], LongOperationEntry));
+                        }
+                     }
+                     else {
+                        promises = _tabCalls.callBatch(targets, 'fetch', [q], LongOperationEntry);
+                     }
+                     _fetchCalls.addList(q, members, promises);
                   }
                }
             }
@@ -772,6 +821,8 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             else {
                delete _tabManagers[tabKey];
             }
+            // Почистить _offsetBunch
+            _offsetBunch.removeAll(prodName ? {tab:tabKey, producer:prodName} : {tab:tabKey});
             // Уведомить своих подписчиков
             //TODO: ### Если продюсер не отображаемый, можно (нужно?) игнорировать
             _channel.notifyWithTarget('onproducerunregistered', manager);
@@ -789,6 +840,8 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       var _uniqueHex = function(n){var l=[];for(var i=0;i<n;i++){l[i]=Math.round(15*Math.random()).toString(16)}return l.join('')};
       //var _uniqueHex = function(n){return Math.round((Math.pow(16,n)-1)*Math.random()).toString(16).padStart(n,'0')};
 
+      var ObjectAssign = Object.assign || function(d){return [].slice.call(arguments,1).reduce(function(r,s){return Object.keys(s).reduce(function(o,n){o[n]=s[n];return o},r)},d)};
+
 
 
       if (typeof window !== 'undefined') {
@@ -800,13 +853,19 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          _tabChannel = new TabMessage();
 
          // Создать объект межвкладочных вызовов
-         var _tabCalls = new LongOperationsTabCalls(_tabKey, manager.getByName, function (v) {
-            return typeof v.toSnapshot === 'function' ? v.toSnapshot() : v;/*###^^^*/
-         }, _tabChannel);
+         var _tabCalls = new LongOperationsTabCalls(
+            /*tabKey:*/_tabKey,
+            /*router:*/manager.getByName,
+            /*packer:*/function (v) {
+               // Упаковщик для отправки. Ожидается, что все объекты будут экземплярами SBIS3.CONTROLS.LongOperationEntry
+               return v && typeof v.toSnapshot === 'function' ? v.toSnapshot() : v;
+            },
+            /*channel:*/_tabChannel
+         );
 
          // Создать пул вызовов методов fetch
          var _fetchCalls = new LongOperationsCallsPool(
-            ['tab', 'producer'],
+            /*fields:*/['tab', 'producer'],
             /**
              * Обработчик одиночного результата вызова метода fetch локального продюсера или продюсера во вкладке
              * @param {object} query Параметры выполнявшегося запроса
@@ -814,7 +873,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
              * @param {SBIS3.CONTROLS.LongOperationEntry[]|WS.Data/Source/DataSet|WS.Data/Collection/RecordSet} result Полученный результат
              * @return {SBIS3.CONTROLS.LongOperationEntry[]}
              */
-            /*handlePartial*/function (query, member, result) {
+            /*handlePartial:*/function (query, member, result) {
                if (!(result == null || Array.isArray(result) || result instanceof DataSet || result instanceof RecordSet)) {
                   throw new Error('Unknown result type');
                }
@@ -857,7 +916,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
              * @param {SBIS3.CONTROLS.LongOperationEntry[][]} resultList Список результатов обработки одиночных результатов
              * @return {WS.Data/Collection/RecordSet<SBIS3.CONTROLS.LongOperationEntry>}
              */
-            /*handleComplete*/function (query, resultList) {
+            /*handleComplete:*/function (query, resultList) {
                var operations;
                if (resultList && resultList.length) {
                   for (var i = 0; i < resultList.length; i++) {
@@ -871,7 +930,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                            operations[op.producer] = {};
                         }
                         if (op.id in operations[op.producer]) {
-                           // Есть одна и та же операция от разных продюсеров - выбрать
+                           // Есть одна и та же операция от разных вкладок - выбрать
                            var prev = operations[op.producer][op.id];
                            if ((!prev.canSuspend && op.canSuspend) || (!prev.canDelete && op.canDelete)) {
                               operations[op.producer][op.id] = op;
@@ -889,12 +948,14 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                });
                if (operations) {
                   var chain;
+                  var count = 0;
                   for (var p in operations) {
                      var list = operations[p];
                      list = Object.keys(list).map(function (v) {
                         return list[v];
                      });
                      chain = !chain ? Chain(list) : chain.concat(list);
+                     count += list.length;
                   }
                   if (query.orderBy) {
                      var sorter = query.orderBy;
@@ -914,20 +975,24 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                         return 0;
                      });
                   }
+                  var obKey = {where:query.where, orderBy:query.orderBy, limit:query.limit, tab:null, producer:null};
                   results.assign(chain
-                     //////////////////////////////////////////////////
-                     //^^^TODO: ### Здесь нужно правильно провести query !
-                     //////////////////////////////////////////////////
                      .first(query.limit)
                      .map(function (v) {
+                        obKey.tab = v.tabKey || _tabKey;
+                        obKey.producer = v.producer;
+                        _offsetBunch.set(obKey, (_offsetBunch.get(obKey) || 0) + 1);
                         return new Model({rawData: v, idProperty: 'fullId'});
                      })
                      .value()
                   );
+                  results.setMetaData({more:query.limit <= count});
                }
                return results;
             }
          );
+
+         _offsetBunch = new LongOperationsBunch();
 
          // Опубликовать свои события
          _channel.publish('onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted');
