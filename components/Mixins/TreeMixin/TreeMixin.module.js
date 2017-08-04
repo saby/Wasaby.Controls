@@ -668,7 +668,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              *
              */
             loadItemsStrategy: 'merge',
-            task1174261549: true
+            task1174261549: false
          },
          _lastParent : undefined,
          _lastDrawn : undefined,
