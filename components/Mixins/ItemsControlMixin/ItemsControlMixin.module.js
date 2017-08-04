@@ -143,7 +143,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   nodeProperty: cfg.nodeProperty,
                   item: item.getContents(),
                   groupContentTemplate: TemplateUtil.prepareTemplate(groupBy.contentTemplate || ''),
-                  groupId: groupId
+                  groupId: groupId,
+                  groupCollapsing: cfg._groupCollapsing
                },
                groupTemplateFnc;
             tplOptions.colspan = tplOptions.columns.length + cfg.multiselect;
@@ -1281,7 +1282,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _afterAddItems: function() {},
 
+      //Выделяем отдельный метод _getInsertMarkupConfigICM т.к. в TreeView метод _getInsertMarkupConfig переопределяется,
+      //а в TreeCompositeView в зависимости от вида отображения нужно звать разные методы, в режиме плитки нужно звать
+      //стандартный метод _getInsertMarkupConfigICM а в режиме таблицы переопределённый метод из TreeView
       _getInsertMarkupConfig: function(newItemsIndex, newItems, groupId) {
+         return this._getInsertMarkupConfigICM.apply(this, arguments);
+      },
+
+      _getInsertMarkupConfigICM: function(newItemsIndex, newItems, groupId) {
          var
              nextItem,
              prevGroup,

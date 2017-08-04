@@ -55,7 +55,8 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          _options: {
             mask: 'DD.MM.YY',
             startValueValidators: [],
-            endValueValidators: []
+            endValueValidators: [],
+            _monthsNames: constants.Date.longMonths
          },
           _keysWeHandle: [
              constants.key.tab,
