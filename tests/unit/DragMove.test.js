@@ -141,6 +141,13 @@ define([
             dragMove.beginDrag();
             assert.equal(DragObject.getSource().at(0).getOwner(), view);
          });
+         it('should set sourse dom elemet if listview has a editinplace', function () {
+            var eip = $('<div class="controls-editInPlace controls-ListView__item js-controls-ListView__item"></div>');
+            eip.data('hash', view._getItemsProjection().at(0).getHash());
+            view.getContainer().find('[data-id=1]').after(eip);
+            dragMove.beginDrag();
+            assert.isFalse(DragObject.getSource().at(0).getDomElement().hasClass('controls-editInPlace'));
+         });
       });
       describe('._getDragTarget', function () {
          it('should return drag target', function () {
