@@ -25,6 +25,18 @@
 
 
 
+.controls-LongOperationsPopup.controls-InformationPopup.controls-FloatArea .controls-PopupMixin__closeButton {
+    top: 8px;
+    right: 0;
+    width: 36px;
+    height: 24px;
+    background: url('../../../themes/@{themeName}/img/areaCloseButton.png') 0 -1px;
+}
+
+.controls-LongOperationsPopup.controls-InformationPopup.controls-FloatArea .controls-PopupMixin__closeButton:before {
+    content: none;
+}
+
 .controls-LongOperationsPopup.controls-LongOperationsPopup__hidden {
     visibility: hidden;
 }
@@ -60,7 +72,9 @@
 }
 
 .controls-LongOperationsPopup .controls-NotificationPopup__header.controls-NotificationPopup__header-withCloseButton {
+    padding-top: 7px;
     padding-right: @long-operations-popup-header-pad-rt;
+    padding-bottom: 9px;
     line-height: @long-operations-popup-header-line-height;
 }
 
@@ -140,7 +154,7 @@
 /* Content */
 
 @loc-popup-column-icon-width: 26px;
-@loc-popup-column-time-width: 94px;
+@loc-popup-column-time-width: 98px;
 
 .controls-LongOperationsPopup__content {
 }
