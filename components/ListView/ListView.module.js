@@ -944,6 +944,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._setScrollPagerPositionThrottled = throttle.call(this._setScrollPagerPosition, 100, true).bind(this);
             this._updateScrollIndicatorTopThrottled = throttle.call(this._updateScrollIndicatorTop, 100, true).bind(this);
             this._eventProxyHdl = this._eventProxyHandler.bind(this);
+            this._onScrollHandler = this._onScrollHandler.bind(this);
 
             this._toggleEventHandlers(this._container, true);
 
@@ -985,7 +986,7 @@ define('js!SBIS3.CONTROLS.ListView',
                WindowManager.setVisible(this._pagingZIndex);
             }
             if (this._options.virtualScrolling || this._options.scrollPaging) {
-               this._getScrollWatcher().subscribe('onScroll', this._onScrollHandler.bind(this));
+               this._getScrollWatcher().subscribe('onScroll', this._onScrollHandler);
             }
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);

@@ -420,6 +420,14 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             //ресайз может позваться до инита контейнера
             if (this._content) {
                this._addGradient();
+               /**
+                * В firefox при высоте = 0 на дочерних элементах, нативный скролл не пропадает.
+                * В такой ситуации content имеет высоту скролла, а должен быть равен 0.
+                * Поэтому мы вешаем класс, который убирает нативный скролл, если произойдет такая ситуация.
+                */
+               if (cDetection.firefox) {
+                  this._content.toggleClass('controls-ScrollContainer__content-overflowHidden', !this._getChildContentHeight());
+               }
             }
 
             if (this._paging) {
@@ -432,6 +440,15 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   this._setPagesCount(Math.ceil(this._getScrollHeight() / this._container.height()));
                }
             }
+         },
+
+         _getChildContentHeight: function() {
+            var height = 0;
+            Array.prototype.forEach.call(this._content.children(), function(item) {
+               height += $(item).outerHeight(true);
+            });
+
+            return height;
          },
 
          _getScrollTop: function(){
