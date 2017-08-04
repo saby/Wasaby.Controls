@@ -3,7 +3,7 @@
  */
 define('js!WSTest/Invisible/Action',
    [
-      'js!WSControls/Control/Base'
+      'Core/Control'
    ],
    function(Base) {
 

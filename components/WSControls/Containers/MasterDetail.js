@@ -5,7 +5,7 @@
  */
 define('js!WSControls/Containers/MasterDetail',
    [
-      'js!WSControls/Control/Base',
+      'Core/Control',
       'tmpl!WSControls/Containers/MasterDetail',
       'css!WSControls/Containers/MasterDetail'
    ],
@@ -23,7 +23,7 @@ define('js!WSControls/Containers/MasterDetail',
        * </ol>
        *
        * @class WSControls/Containers/MasterDetail
-       * @extends WSControls/Control/Base
+       * @extends Core/Control
        * @demo WSDemo/MasterDetail/MasterDetailDemo
        * @author Uvarov Ivan (is.uvarov)
        *

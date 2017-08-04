@@ -1,5 +1,5 @@
 define('js!WSControls/VDOM/Item/Item', [
-   'js!WSControls/Control/Base',
+   'Core/Control',
    'tmpl!WSControls/VDOM/Item/Item'
 ], function (Control, ItemTpl) {
    'use strict';
