@@ -887,7 +887,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 поэтому нельзя отдавать поле ввода в качестве элемента для фокуса, т.к. браузер не может проставить
                 фокус на скрытый элемент, и он улетит на body. Но оставить фокус на компоненте необходимо для обработки событий,
                 для этого переводим фокус на контейнер поля связи */
-             return this._isInputVisible() ? FieldLink.superclass._getElementToFocus.apply(this, arguments) : this._container;
+             return this._isInputVisible() || this._options.alwaysShowTextBox ? FieldLink.superclass._getElementToFocus.apply(this, arguments) : this._container;
           },
 
           /**

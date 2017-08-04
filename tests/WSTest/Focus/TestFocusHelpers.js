@@ -6,7 +6,7 @@ define('js!WSTest/Focus/TestFocusHelpers', [
 ], function (cConstants) {
    'use strict';
    /*
-      Хелпер для работы с DOM
+    Хелпер для работы с DOM
     */
    var helper = {
       notInFocus: function (control) {
@@ -52,15 +52,16 @@ define('js!WSTest/Focus/TestFocusHelpers', [
          element.focusin ? element.focusin() : $(element).focusin();
       },
 
-      fireKeypress: function (control, keyCode) {
+      fireKeypress: function (control, keyCode, shift) {
          var el = control.getContainer();
          var e = $.Event('keydown');
          e.which = keyCode;
+         e.shiftKey = shift;
          el.trigger(e);
       },
 
       fireTab: function (control) {
-         helper.fireKeypress(control, cConstants.key.tab);
+         helper.fireKeypress(control, cConstants.key.tab, false);
       },
 
       dropFocus: function () {
@@ -85,7 +86,17 @@ define('js!WSTest/Focus/TestFocusHelpers', [
 
       checkFocusOn: function (className) {
          assert.isTrue(document.activeElement === $("." + className)[0]);
+      },
+
+      fireShiftTab: function (control) {
+         helper.fireKeypress(control, cConstants.key.tab, true);
+      },
+
+      fireEsc: function (control) {
+         helper.fireKeypress(control, cConstants.key.esc, true);
       }
+
+
    }
    return helper;
 });

@@ -238,6 +238,16 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          }
       },
 
+      _getInsertMarkupConfig: function() {
+         var result;
+         if (this._options.viewMode === 'table') {
+            result = TreeCompositeView.superclass._getInsertMarkupConfig.apply(this, arguments);
+         } else {
+            result = this._getInsertMarkupConfigICM.apply(this, arguments);
+         }
+         return result;
+      },
+
       _getEditArrowPositionTile: function(hoveredItem) {
          var
             top, left,
@@ -614,6 +624,8 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                      .addCallback(function(dataSet) {
                         branchesData[branchId] = dataSet;
                         return dataSet;
+                     }).addErrback(function(error){
+                      self._notify('onDataLoadError', error)
                      });
                }
             };
@@ -642,15 +654,17 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                   //Загружаем содержимое веток
                   deferred.push(getBranch(branchId)
                      .addCallback(function(branchDataSet) {
-                        colHelpers.forEach(branch, function(record, idx) {
-                           currentRecord = currentDataSet.getRecordById(record);
-                           dependentRecords = findDependentRecords(record, branchId);
-                           needRedraw = !!branchDataSet.getRecordById(record);
-                           //Удаляем то, что надо удалить и перерисовываем то, что надо перерисовать
-                           removeAndRedraw(dependentRecords, branch.length - idx);
-                        });
-                        if(String(curRoot) == branchId)
-                           self.getItems().setMetaData(branchDataSet.getMetaData());
+                        if (branchDataSet) {
+                           colHelpers.forEach(branch, function(record, idx) {
+                              currentRecord = currentDataSet.getRecordById(record);
+                              dependentRecords = findDependentRecords(record, branchId);
+                              needRedraw = !!branchDataSet.getRecordById(record);
+                              //Удаляем то, что надо удалить и перерисовываем то, что надо перерисовать
+                              removeAndRedraw(dependentRecords, branch.length - idx);
+                           });
+                           if(String(curRoot) == branchId)
+                              self.getItems().setMetaData(branchDataSet.getMetaData());
+                        }
                      })
                      .addBoth(function() {
                         fcHelpers.toggleIndicator(false);

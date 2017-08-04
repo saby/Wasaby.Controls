@@ -37,5 +37,17 @@ define('js!WSTest/Focus/Scenario/21', [
 
       fHelpers.fireTab(testControl.getChildControlByName('TextBox3'));
       fHelpers.focusOnLastDiv();
+
+      fHelpers.focusOn($('.ws-focus-in'));
+      fHelpers.childHasFocus(testControl, 'TextBox4');
+
+      fHelpers.fireTab(testControl.getChildControlByName('TextBox4'));
+      fHelpers.childHasFocus(testControl, 'TextBox6');
+
+      fHelpers.fireShiftTab(testControl.getChildControlByName('TextBox6'));
+      fHelpers.childHasFocus(testControl, 'TextBox4');
+
+      fHelpers.fireShiftTab(testControl.getChildControlByName('TextBox4'));
+      fHelpers.focusOn($('.ws-focus-in'));
    };
 });
