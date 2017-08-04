@@ -132,7 +132,7 @@ define(['js!WSControls/Lists/Selector',
          });
 
          describe('GetData', function(){
-            it('calculateItemData', function () {
+            it('_isItemSelected', function () {
                var rs = new RecordSet({
                      rawData: data,
                      idProperty : 'id'
@@ -144,12 +144,10 @@ define(['js!WSControls/Lists/Selector',
                      selectedIndex: 1
                   });
                var proj = ctrl._display;
-               var itemData = ctrl._getItemData(proj.at(0));
-               assert.isFalse(itemData.selected, 'selected in itemData in not correct');
-               itemData = ctrl._getItemData(proj.at(1));
-               assert.isTrue(itemData.selected, 'selected in itemData in not correct');
-               //assert.equal('id', itemData.idProperty, 'idProperty in itemData in sot equal to config');
-               //assert.equal('title', itemData.displayProperty, 'displayProperty in itemData in sot equal to config');
+               var isSel = ctrl._isItemSelected(proj.at(0));
+               assert.isFalse(isSel, 'selected in itemData in not correct');
+               isSel = ctrl._isItemSelected(proj.at(1));
+               assert.isTrue(isSel, 'selected in itemData in not correct');
             })
          });
 
