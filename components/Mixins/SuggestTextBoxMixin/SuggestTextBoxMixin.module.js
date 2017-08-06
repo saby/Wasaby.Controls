@@ -15,7 +15,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    "Core/CommandDispatcher",
    "Core/core-functions",
    "Core/IoC",
-   "Core/helpers/Function/once"
+   "Core/helpers/Function/once",
+   "Core/detection"
 ], function (
    constants,
    SearchController,
@@ -30,7 +31,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    CommandDispatcher,
    cFunctions,
    IoC,
-   once) {
+   once,
+   detection) {
 
    'use strict';
 
@@ -481,7 +483,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             var parentConfig = parentFunc.apply(this, arguments);
             parentConfig.tabindex = 0;
             parentConfig.targetPart = true;
-            parentConfig.closeOnTargetMove = true;
+            parentConfig.closeOnTargetMove = !detection.isMobileIOS;
             return parentConfig;
          },
 
