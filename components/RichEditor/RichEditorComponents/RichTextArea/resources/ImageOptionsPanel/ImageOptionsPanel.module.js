@@ -18,6 +18,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
       var
          imagePanelhOffset = 24,// 32 - 6 - 2*1?  height - input padding - 2 * border
          imagePanelhOffsetBottom = 4,// 6 - 2*1? input padding - 2 * border
+         imagePanelHeight = 32,
          ImageOptionsPanel =  CompoundControl.extend([PopupMixin], {
             _dotTplFn: dotTplFn,
             $protected: {
@@ -60,15 +61,15 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                   inputHeight = linkedContainer.height();
                this._container.css('width',this.getTarget().width());
                this._container.css('max-width', this.getParent().getInputContainer().width() - imagePanelhOffset);
-               this._container.css('height','32px'); // dich3000
+               this._container.css('height',imagePanelHeight + 'px'); // dich3000
                this._container.css('overflow-y','hidden'); // dich3000
                if (this._container.hasClass('controls-popup-revert-vertical')) {
-                  if (panelOffset + imagePanelhOffset < inputOffset) {
+                  if (panelOffset + imagePanelhOffset < inputOffset - imagePanelHeight / 2) {
                      this._container.css('top', inputOffset - imagePanelhOffset);
                   }
                } else {
                   if (panelOffset > inputOffset + inputHeight + imagePanelhOffsetBottom) {
-                     this._container.css('top', inputOffset + inputHeight);
+                     this._container.css('top', inputOffset + inputHeight - imagePanelHeight / 2);
                   }
                }
             },
