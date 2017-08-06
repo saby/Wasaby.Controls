@@ -294,6 +294,7 @@ define('js!SBIS3.CONTROLS.Image',
                    *     });
                    *     image.SetDataSource(mySource);
                    * </pre>
+                   * Если задать источник данных через вёрстку, то контрол постороится с проставленным адресом в scr атрибуте тега img
                    * Конфигурация источника данных контрола "Изображение" через вёрстку:
                    * <pre>
                    *     <options name="dataSource">
@@ -372,6 +373,7 @@ define('js!SBIS3.CONTROLS.Image',
             },
             _modifyOptions: function(options) {
                options = Image.superclass._modifyOptions.apply(this, arguments);
+               //если источник данных задан из вёрстки, то необходимо построить теш Img с уже заданным src атрибутом
                options._templateImage = this._getSourceUrl(options);
                return options;
             },
