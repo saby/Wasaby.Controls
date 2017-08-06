@@ -292,7 +292,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
          getImagePanel: function(button){
             var
                self = this;
-            if (!this._imagePanel) {
+            if (!this._imagePanel || this._imagePanel.isDestroyed()) {
                this._imagePanel = new ImagePanel({
                   parent: button,
                   target: button.getContainer(),
