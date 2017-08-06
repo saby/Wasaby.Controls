@@ -54,8 +54,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
             recalcPosition: function() {
                ImageOptionsPanel.superclass.recalcPosition.apply(this, arguments);
                var
-                  scrollContainer = this.getTarget().closest('.controls-ScrollContainer'),
-                  linkedContainer = scrollContainer.length ? scrollContainer : this.getParent().getInputContainer(),
+                  linkedContainer = this.getParent().getInputContainer(), // всегда считаем  показ панели от поля ввода редактора
                   inputOffset = linkedContainer.offset().top,
                   panelOffset = this._container.offset().top,
                   inputHeight = linkedContainer.height();
