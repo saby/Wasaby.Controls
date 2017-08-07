@@ -11,7 +11,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    "tmpl!SBIS3.CONTROLS.TreeMixin/resources/searchRender",
    "js!WS.Data/Entity/Model",
    "js!WS.Data/Relation/Hierarchy",
-   "Core/helpers/collection-helpers",
    "Core/core-instance",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "Core/helpers/functional-helpers",
@@ -19,7 +18,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    "Core/helpers/Object/isEmpty",
    "Core/helpers/Object/isPlainObject",
    "js!WS.Data/Adapter/Sbis"
-], function ( cFunctions, cMerge, TreeDataReload, constants, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, colHelpers, cInstance, TemplateUtil, fHelpers, IoC, isEmpty, isPlainObject) {
+], function ( cFunctions, cMerge, TreeDataReload, constants, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, cInstance, TemplateUtil, fHelpers, IoC, isEmpty, isPlainObject) {
 
    var createDefaultProjection = function(items, cfg) {
       var
@@ -132,7 +131,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       //может прийти массив или проекция
       if (src instanceof Array) {
          iterator = function(func){
-            colHelpers.forEach(src, func);
+            src.forEach(func);
          };
       }
       else {
@@ -957,11 +956,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @private
        */
       _collapseNodes: function(openedPath, ignoreKey) {
-         colHelpers.forEach(openedPath, function(value, key) {
-            if (!ignoreKey || key != ignoreKey) {
-               this.collapseNode(key);
+         for (var key in openedPath) {
+            if (openedPath.hasOwnProperty(key)) {
+               if (!ignoreKey || key != ignoreKey) {
+                  this.collapseNode(key);
+               }
             }
-         }, this);
+         }
       },
       /**
        * Получить текущий набор открытых элементов иерархии.

@@ -9,8 +9,7 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
    "js!SBIS3.CONTROLS.Utils.Query",
    "Core/helpers/string-helpers",
    "js!SBIS3.CONTROLS.HistoryController",
-   "Core/helpers/collection-helpers"
-], function( cSessionStorage, cMerge, Deferred,Query, strHelpers, HistoryController, cHelpers) {
+], function( cSessionStorage, cMerge, Deferred,Query, strHelpers, HistoryController) {
 
    var ViewSourceMixin = /**@lends SBIS3.CONTROLS.ViewSourceMixin.prototype  */{
 
@@ -65,7 +64,7 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
             ignoreFiltersList. Но опцию ignoreFiltersList могут менять динамически, поэтому перед запросом надо
             удалить ключи из фильтра, которые указаны в ignoreFiltersList. */
          if(this._options.ignoreFiltersList && this._options.ignoreFiltersList.length) {
-            cHelpers.forEach(this._options.ignoreFiltersList, function(key) {
+            this._options.ignoreFiltersList.forEach(function(key) {
                if(historyFilter.hasOwnProperty(key)) {
                   delete historyFilter[key];
                }

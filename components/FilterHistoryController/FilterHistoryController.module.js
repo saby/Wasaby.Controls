@@ -11,14 +11,14 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
    "js!WS.Data/Collection/List",
    "js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil",
    "js!SBIS3.CONTROLS.FilterHistoryControllerUntil",
-   "Core/helpers/collection-helpers",
+   "Core/helpers/Object/isEqual",
    "Core/helpers/generate-helpers",
    "Core/helpers/Function/debounce",
    "Core/helpers/functional-helpers",
    "Core/Date"
 ],
 
-    function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, colHelpers, genHelpers, debounce, fHelpers) {
+    function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, isEqualObject, genHelpers, debounce, fHelpers) {
 
        'use strict';
 
@@ -85,13 +85,13 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 return;
              }
 
-             var isHistoryEqual = colHelpers.isEqualObject(this.getHistoryArr(), listToArray(newHistory)),
+             var isHistoryEqual = isEqualObject(this.getHistoryArr(), listToArray(newHistory)),
                  filterButton = this._options.filterButton,
                  currentActiveFilter = this.getActiveFilter();
 
              /* Если при изменении активные фильтры или вся история одинаковы,
                 то не надо запускать механизм синхронизации истории */
-             if (isHistoryEqual || (currentActiveFilter && activeFilter && colHelpers.isEqualObject(currentActiveFilter, activeFilter))) {
+             if (isHistoryEqual || (currentActiveFilter && activeFilter && isEqualObject(currentActiveFilter, activeFilter))) {
                 /* Для случая, когда фильтр был синхронизирован из внешнего контекста (т.е. его в истории нет),
                    при сбросе фильтра, мы должны синхронизировать и другие фильтры, которые подписаны на канал изменения с одинаковым id,
                    т.е. вызвать у них сброс фильтра */
@@ -161,7 +161,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              });
 
              if(toDelete.length) {
-                colHelpers.forEach(toDelete, function(elem) {
+                toDelete.forEach(function(elem) {
                    self._listHistory.remove(elem);
                    needUpdateHistory = true;
                 });
@@ -229,8 +229,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
            * @param filterObject
            */
           saveToHistory: function(filterObject) {
-             var equalFilter = colHelpers.find(this.getHistoryArr(), function(item) {
-                    return colHelpers.isEqualObject(item.filter, filterObject.filter) || item.linkText === filterObject.linkText;
+             var equalFilter = this.getHistoryArr().find(function(item) {
+                    return isEqualObject(item.filter, filterObject.filter) || item.linkText === filterObject.linkText;
                  }),
                  activeFilter = this.getActiveFilter();
 
@@ -281,7 +281,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                    там по кнопке фильтров фильтруется набор из несколькх view */
                  viewFilter = cFunctions.clone(filter || (view ? view.getFilter() : {}));
 
-             colHelpers.forEach(this._options.noSaveFilters, function(filter) {
+             this._options.noSaveFilters.forEach(function(filter) {
                 if(viewFilter[filter]) {
                    delete viewFilter[filter];
                 }
@@ -290,11 +290,13 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              /* Т.к. в реестре задач (возможно где-то ещё)
                 в поле фильтра с типом "Дата" ожидают строку даты со сдвигом(чтобы её обработать),
                 а не стандартный ISO формат, то использую наш специальный метод для приведения даты в строку */
-             colHelpers.forEach(viewFilter, function(val, key, obj) {
-                if(val instanceof Date) {
-                   obj[key] = val.toSQL(Date.SQL_SERIALIZE_MODE_AUTO);
+             for (var key in viewFilter) {
+                if(viewFilter.hasOwnProperty(key)) {
+                   if(viewFilter[key] instanceof Date) {
+                      viewFilter[key] = viewFilter[key].toSQL(Date.SQL_SERIALIZE_MODE_AUTO);
+                   }
                 }
-             });
+             }
 
              return viewFilter;
           },
@@ -315,9 +317,9 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
            * @private
            */
           getActiveFilter: function() {
-             return colHelpers.find(this.getHistoryArr(), function(item) {
+             return this.getHistoryArr().find(function(item) {
                 return item.isActiveFilter;
-             }, this, false);
+             });
           },
 
           /**
@@ -326,9 +328,9 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
            * @private
            */
           findFilterByKey: function(key) {
-             return colHelpers.find(this.getHistoryArr(), function(item) {
+             return this.getHistoryArr().find(function(item) {
                 return item.id == key;
-             }, this, false);
+             });
           },
 
           /**

@@ -12,13 +12,12 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
    'tmpl!SBIS3.CONTROLS.TreeCompositeView/resources/ListFolderTemplate',
    'tmpl!SBIS3.CONTROLS.TreeCompositeView/resources/FolderContentTemplate',
    'tmpl!SBIS3.CONTROLS.TreeCompositeView/resources/StaticFolderContentTemplate',
-   "Core/helpers/collection-helpers",
    "Core/helpers/fast-control-helpers",
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'Core/core-merge',
    'css!SBIS3.CONTROLS.CompositeView',
    'css!SBIS3.CONTROLS.TreeCompositeView'
-], function( cFunctions, constants, Deferred, ParallelDeferred, isEmpty, TreeDataGridView, CompositeViewMixin, folderTpl, TreeCompositeItemsTemplate, FolderTemplate, ListFolderTemplate, FolderContentTemplate, StaticFolderContentTemplate, colHelpers, fcHelpers, TemplateUtil, cMerge) {
+], function( cFunctions, constants, Deferred, ParallelDeferred, isEmpty, TreeDataGridView, CompositeViewMixin, folderTpl, TreeCompositeItemsTemplate, FolderTemplate, ListFolderTemplate, FolderContentTemplate, StaticFolderContentTemplate, fcHelpers, TemplateUtil, cMerge) {
 
    'use strict';
 
@@ -585,7 +584,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             removeAndRedraw = function(row, recordOffset) {
                //Если есть дочерние, то для каждого из них тоже зовем removeAndRedraw
                if (row.childs && row.childs.length) {
-                  colHelpers.forEach(row.childs, function(childRow, idx) {
+                  row.childs.forEach(function(childRow, idx) {
                      removeAndRedraw(childRow, row.childs.length - idx);
                   });
                   //Если не нужна перерисовка, то просто удалим строку
@@ -634,7 +633,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             currentDataSet = this.getItems();
             filter = cFunctions.clone(this.getFilter());
             //Группируем записи по веткам (чтобы как можно меньше запросов делать)
-            colHelpers.forEach(items, function(id) {
+            items.forEach(function(id) {
                item = this._options._items.getRecordById(id);
                if (item) {
                   parentBranchId = this.getParentKey(undefined, this._options._items.getRecordById(id));
@@ -650,17 +649,17 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                fcHelpers.toggleIndicator(false);
             } else {
                deferred = new ParallelDeferred();
-               colHelpers.forEach(recordsGroup, function(branch, branchId) {
+               Object.keys(recordsGroup).forEach(function(branchId) {
                   //Загружаем содержимое веток
                   deferred.push(getBranch(branchId)
                      .addCallback(function(branchDataSet) {
                         if (branchDataSet) {
-                           colHelpers.forEach(branch, function(record, idx) {
+                           recordsGroup[branchId].forEach(function(record, idx) {
                               currentRecord = currentDataSet.getRecordById(record);
                               dependentRecords = findDependentRecords(record, branchId);
                               needRedraw = !!branchDataSet.getRecordById(record);
                               //Удаляем то, что надо удалить и перерисовываем то, что надо перерисовать
-                              removeAndRedraw(dependentRecords, branch.length - idx);
+                              removeAndRedraw(dependentRecords, recordsGroup[branchId].length - idx);
                            });
                            if(String(curRoot) == branchId)
                               self.getItems().setMetaData(branchDataSet.getMetaData());

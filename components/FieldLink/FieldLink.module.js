@@ -7,7 +7,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "Core/helpers/functional-helpers",
        'Deprecated/helpers/dom&controls-helpers',
        "Core/helpers/string-helpers",
-       "Core/helpers/collection-helpers",
        "Core/ParserUtilities",
        'js!SBIS3.CONTROLS.ControlHierarchyManager',
        "js!SBIS3.CONTROLS.SuggestTextBox",
@@ -43,7 +42,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
         fHelpers,
         domHelpers,
         strHelpers,
-        colHelpers,
         ParserUtilities,
         ControlHierarchyManager,
         SuggestTextBox,
@@ -582,7 +580,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              var config;
 
              if(key) {
-                config = colHelpers.find(this._options.dictionaries, function (elem) {
+                config = this._options.dictionaries.find(function (elem) {
                    return elem.name === key;
                 });
              } else {

@@ -13,7 +13,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
    "js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "Core/ParallelDeferred",
-   "Core/helpers/collection-helpers",
    "Core/IoC",
    "Core/helpers/Function/once",
    "Core/detection",
@@ -36,7 +35,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
         FilterToStringUtil,
         TemplateUtil,
         ParallelDeferred,
-        colHelpers,
         IoC,
         once,
         detection
@@ -241,9 +239,11 @@ define('js!SBIS3.CONTROLS.FilterButton',
 
              this._dTemplatesReady = new ParallelDeferred();
 
-             colHelpers.forEach(TEMPLATES, function(template) {
-                processTemplate(self.getProperty(template), template);
-             });
+             for (var key in TEMPLATES) {
+                if (TEMPLATES.hasOwnProperty(key)) {
+                   processTemplate(self.getProperty(TEMPLATES[key]), TEMPLATES[key]);
+                }
+             }
 
              return this._dTemplatesReady.done().getResult();
           },
@@ -306,10 +306,12 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 return prepTpl(tpl);
              }
 
-             colHelpers.forEach(TEMPLATES, function(template) {
-                templateProperty = self.getProperty(template);
-                config[template] = components[template] ? getCompTpl(templateProperty) : getTpl(templateProperty);
-             });
+             for (var key in TEMPLATES) {
+                if (TEMPLATES.hasOwnProperty(key)) {
+                   templateProperty = self.getProperty(TEMPLATES[key]);
+                   config[TEMPLATES[key]] = components[TEMPLATES[key]] ? getCompTpl(templateProperty) : getTpl(templateProperty);
+                }
+             }
 
              return config;
           },
@@ -361,11 +363,11 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 var visibility = context.getValue(rootName + '/visibility');
 
                 if(!Object.isEmpty(visibility)) {
-                   var showAdittionalBlock = colHelpers.reduce(context.getValue(rootName + '/visibility'), function (result, element) {
-                      return result || element === false;
+                   var showAdditionalBlock = Object.keys(visibility).reduce(function(result, element) {
+                      return result || visibility[element] === false;
                    }, false);
 
-                   context.setValue('additionalFilterVisible', showAdittionalBlock);
+                   context.setValue('additionalFilterVisible', showAdditionalBlock);
                 }
              }
 
@@ -403,7 +405,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
              });
 
              context.subscribe('onFieldsChanged', function() {
-                var changed = colHelpers.reduce(self._filterStructure, function(result, element) {
+                var changed = self._filterStructure.reduce(function(result, element) {
                        return result || !isFieldResetValue(element, element.internalValueField, context.getValue(rootName + '/filter'));
                     }, false);
                 self._changeFieldInternal(rootName + '/filterChanged', changed);

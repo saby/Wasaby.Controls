@@ -7,9 +7,8 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
    "Core/core-merge",
    "Core/Deferred",
    "js!WS.Data/Entity/Model",
-   "js!WS.Data/Adapter/Sbis",
-   "Core/helpers/collection-helpers"
-], function( cContext, cFunctions, cMerge, Deferred,Model, SbisAdapter, colHelpers) {
+   "js!WS.Data/Adapter/Sbis"
+], function( cContext, cFunctions, cMerge, Deferred,Model, SbisAdapter) {
    /**
     * Миксин, добавляющий интерфейс для открытия окна выбора.
     * @mixin SBIS3.CONTROLS.ChooserMixin
@@ -116,8 +115,8 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
             if(this && this !== window && this.close) {
                this.close();
             }
-            self._chooseCallback(colHelpers.reduce(result, function(res, elem) {
-               if(elem !== null) {
+            self._chooseCallback(result.reduce(function(res, elem) {
+               if (elem !== null) {
                   res.push(recordConverter.call(self, elem));
                   return res;
                }
