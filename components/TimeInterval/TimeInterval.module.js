@@ -367,7 +367,7 @@ define(
             TimeInterval.superclass.setText.call(this, text);
          },
          _setText: function(text){
-            text = this._getCorrectText(text);
+            text = this._getCorrectText(text, !text || this._getFormatModel().getStrMask(this._getMaskReplacer()) === text);
             TimeInterval.superclass._setText.call(this, text);
          },
          _getCorrectText: function(text, isEmptyText){
