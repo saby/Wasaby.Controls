@@ -345,7 +345,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
              var context = cContext.createContext(this, {restriction: 'set'}),
                  rootName = this._options.internalContextFilterName,
                  isRightAlign = this._options.filterAlign === 'right',
-                 firstTime = true,
                  self = this,
                  byFilter, byCaption, byVisibility;
 
@@ -399,24 +398,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
              });
 
              context.subscribe('onFieldChange', function(ev, fieldChanged, value) {
-                var fieldByValue = self._findFilterStructureElement(function(elem) {
-                       return elem.internalValueField === fieldChanged;
-                    }),
-                    fieldByVisibility = self._findFilterStructureElement(function(elem) {
-                       return elem.internalVisibilityField === fieldChanged;
-                    }),
-                   showAdittionalBlock = false;
-
-                /* Скрытие/отображние фильтров по значению */
-                if(fieldByValue && fieldByValue.internalVisibilityField) {
-                   /* Скрытие при работе с фильтров по заначению надо производить при выполнении двух условий:
-                      1) Фильтр сброшен
-                      2) Значение структуры тоже сброшено */
-                   if(FilterToStringUtil.isEqualValues(value, fieldByValue.resetValue) && FilterToStringUtil.isEqualValues(self.getResetFilter(), context.getValue(rootName + '/filter'))) {
-                      self._changeFieldInternal(rootName + '/visibility/' + fieldByValue.internalVisibilityField, false);
-                   }
-                }
-
                 /* Скрытие/отображние блока дополнительных параметров по состоянию видимости, которое пишется в контекст */
                 updatePickerVisibility();
              });
