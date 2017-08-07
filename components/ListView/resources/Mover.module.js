@@ -190,7 +190,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
                }
                result.addBoth(function (result) {
                   this._notify('onEndMove', result, movedItems, target, position);
-                  if (result instanceof Error && !result.processed) {
+                  if (result instanceof Error && !result.processed && !result._isOfflineMode ) {
                      InformationPopupManager.showMessageDialog(
                         {
                            message: result.message,
