@@ -368,7 +368,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   this._tinyEditor.insertContent(html);
                   //вставка контента может быть инициирована любым контролом,
                   //необходимо нотифицировать о появлении клавиатуры в любом случае
-                  EventBus.globalChannel().notify('MobileInputFocus');
+                  if (cConstants.browser.isMobilePlatform) {
+                     EventBus.globalChannel().notify('MobileInputFocus');
+                  }
                }.bind(this));
             }
          },
