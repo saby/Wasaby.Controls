@@ -77,10 +77,10 @@ define(
                   }
                }
                /*else
-                if (spent.length) {
-                // Не должно быть пропущенных элементов
-                break;
-                }*/
+               if (spent.length) {
+               // Не должно быть пропущенных элементов
+                  break;
+               }*/
             }
          }
          return spent.length ? spent.join(' ') : '0 сек.';
@@ -94,7 +94,7 @@ define(
        */
       LongOperationModel.getFullId = function (tabKey, producer, id) {
          return (tabKey || '') + ':' + producer + ':' + id;
-      }
+      };
 
       return LongOperationModel;
    }
