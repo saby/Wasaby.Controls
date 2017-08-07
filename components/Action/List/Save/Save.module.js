@@ -150,22 +150,25 @@ define('js!SBIS3.CONTROLS.Action.List.Save', [
         },
 
         _loadData: function(dataSource, query) {
-            var
-                self = this,
-                result = new Deferred();
-            fcHelpers.question(rk('Операция займет продолжительное время. Провести операцию?'), {}, self).addCallback(function(answer) {
-                if (answer) {
+            var result = new Deferred();
+
+           require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(manager){
+              manager.showConfirmDialog({message: 'Операция займет продолжительное время. Провести операцию?'},
+                 function (){
                     fcHelpers.toggleIndicator(true);
                     dataSource.query(query).addCallback(function (recordSet) {
-                        result.callback(recordSet.getAll())
+                       result.callback(recordSet.getAll())
                     }).addBoth(function() {
-                        fcHelpers.toggleIndicator(false);
+                       fcHelpers.toggleIndicator(false);
                     });
-                } else {
+                 },
+                 function(){
                     result.errback();
-                }
-            });
-            return result;
+                 }
+              )
+           });
+
+           return result;
         }
 
     });
