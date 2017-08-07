@@ -655,19 +655,20 @@
 @controls-printdialog-activate-right:     3.1785rem;
 @controls-printdialog-activate-margin-top:8px;
 //MergeDialog
-@controls-MergeDialogTemplate-BreadCrumbs-line-height:   1.7857rem;
-@controls-MergeDialogTemplate-hint-font-size:            0.7rem;
-@controls-MergeDialogTemplate-radioButton-metric:        @radio-button-dot-size;
-@controls-MergeDialogTemplate-radioButton-border-radius: @radio-button-icon-border-radius;
-@controls-MergeDialogTemplate-radioButtonIcon-metric:    @radio-button-dot-size;
-@controls-MergeDialogTemplate-radioButtonIcon-margin:    @radio-button-dot-margin;
+@controls-MergeDialogTemplate-hint-font-size:                               @small-text-size;
+@controls-MergeDialogTemplate-treeDataGridView-padding-bottom:              .8571rem;
+@controls-MergeDialogTemplate-hint-font-color:                              @default-text-color;
+@controls-MergeDialogTemplate-DataGridView-td-border-bottom:                1px solid #283848 !important;
+@controls-MergeDialogTemplate-treeDataGridView-first-cell-width:            1rem;
 //OperationsPanel
 @controls-OperationsPanel-height:         3.57rem;
 @controls-OperationsPanel-bg:             #F0F5FB;
 @controls-OperationsPanel-actions-margin: 0 .14rem;
 @controls-OperationsPanel-actions-align:  baseline;
-//Пока нет стандарта, выписана подзадача https://online.sbis.ru/opendoc.html?guid=773fe3ec-edf2-434b-ab51-7fdafff585c5&des=
-@controls-OperationsPanel-separator-width:0;
+@controls-OperationsPanel-separator-width:  2px;
+@controls-OperationsPanel-separator-height: 1.9285rem;
+@controls-OperationsPanel-separator-line-height: 2.5rem;
+@controls-OperationsPanel-separator-bg:   #38546C;
 //OperationsPanelButton
 @controls-OperationsPanelButton-width:    0.86rem;
 @controls-OperationsPanelButton-vert-height:3.57rem;
@@ -838,21 +839,30 @@
 @long-operations-popup-exp-width: 600px;
 @long-operations-popup-exp-max-width: 600px;
 @long-operations-popup-header-height: 60px;
-@long-operations-popup-header-pad-rt: 96px;
+@long-operations-popup-header-pad-rt: 54px;
 @long-operations-popup-header-icon-size: 32px;
 @long-operations-popup-header-caption-f-size: 32px;
 @long-operations-popup-header-caption-line-height: 52px;
-@long-operations-popup-header-caption-color: #313E78;
+@long-operations-popup-header-caption-color: @default-text-color;
 @long-operations-popup-collapsed-header-caption-f-size: 24px;
 @long-operations-popup-collapsed-header-caption-color: @long-operations-popup-header-caption-color;
-@long-operations-popup-header-stop-but-f-size: 24px;
-@long-operations-popup-header-stop-but-color: #a8acc3;
-@long-operations-popup-foot-height: 50px;
-@long-operations-popup-foot-bg: #293543;
-@long-operations-popup-foot-f-size: 16px;
-@long-operations-popup-foot-color: #ffffff;
+@long-operations-popup-header-result-max-width: 210px;
+@long-operations-popup-header-result-min-width: 64px;
+@long-operations-popup-header-but-f-size: 24px;
+@long-operations-popup-header-but-gap-top: 7px;
+@long-operations-popup-collapsed-header-but-gap-top: 0px;
+@long-operations-popup-header-suspended-color: @disabled-color;
+@long-operations-popup-list-time-f-size: 21px;
+@long-operations-popup-list-border-bot: 0px none;
 @long-operations-popup-reg-but-ctr-height: 50px;
 @long-operations-popup-reg-but-line-height: 50px;
+@long-operations-popup-foot-height: 50px;
+@long-operations-popup-foot-bg: #354b62;
+@long-operations-popup-foot-f-size: 16px;
+@long-operations-popup-foot-but-gap-top: 12px;
+@long-operations-popup-foot-color: @disabled-color;
+@long-operations-popup-foot-accent-color: @default-text-color;
+@long-operations-popup-foot-but-hover-color: #b9e9ff !important;
 @long-operations-reg-filter-width: 220px;
 @long-operations-reg-filter-height: 46px;
 @long-operations-reg-filter-title-height: 40px;
@@ -1047,13 +1057,3 @@
 @controls-FieldLink-link-color-hover:     @default-hover-color;
 
 @commands-button-close-icon-color:        @icon-color-primary;
-
-// --------------- //
-// OperationMerge  //
-// --------------- //
-@controls-MergeDialogTemplate-treeDataGridView-padding-bottom:             .8571rem;
-@controls-MergeDialogTemplate-hint-font-size-color:                        @default-text-color;
-@controls-MergeDialogTemplate-BreadCrumbs-main-title-color:                #FFCC99;
-@controls-MergeDialogTemplate-treeDataGridView-first-cell-padding-left:    .3333rem;
-@controls-MergeDialogTemplate-DataGridView-column-value-line-height:       .928rem;
-@controls-MergeDialogTemplate-DataGridView-td-border-bottom:               1px solid #283848 !important;

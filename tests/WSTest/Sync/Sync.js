@@ -3,7 +3,7 @@
  */
 define('js!WSTest/Sync/Sync',
    [
-      'js!WSControls/Control/Base',
+      'Core/Control',
       'tmpl!WSTest/Sync/Sync'
    ],
    function(Base, template) {

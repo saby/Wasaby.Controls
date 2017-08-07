@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.Label',
    [
-      'js!WSControls/Control/Base',
+      'Core/Control',
       'js!SBIS3.CONTROLS.Clickable',
       'Core/Sanitize',
       'tmpl!SBIS3.CONTROLS.Label',

@@ -1,5 +1,6 @@
 define('js!SBIS3.CONTROLS.LongOperationsList',
    [
+      'Core/Deferred',
       'Core/TimeInterval',
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.LongOperationEntry',
@@ -16,7 +17,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
       'js!SBIS3.CONTROLS.DataGridView'
    ],
 
-   function (TimeInterval, CompoundControl, LongOperationEntry, Model, longOperationsManager, InformationPopupManager, dotTplFn) {
+   function (Deferred, TimeInterval, CompoundControl, LongOperationEntry, Model, longOperationsManager, InformationPopupManager, dotTplFn) {
       'use strict';
 
       /**
@@ -353,6 +354,9 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   where.title = {condition:'contains', value:filter['СтрокаПоиска'], sensitive:false};
                   /*if (filter.usePages) {
                   }*/
+               }
+               if (filter.UserId) {
+                  where.userId = filter.UserId;
                }
                if (Object.keys(where).length) {
                   options.where = where;

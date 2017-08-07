@@ -440,7 +440,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * Обрабочик на приход фокуса в отслеживаемый компонент
        */
       _observableControlFocusHandler: function() {
-         if(this._options.autoShow) {
+         if(this._options.autoShow && !this.isPickerVisible()) {
             this._checkPickerState(true) ? this.showPicker() : this._startListSearch();
          }
       },

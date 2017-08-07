@@ -95,7 +95,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
                source.push(this._makeDragEntity({
                   owner: this._getView(),
                   model: item,
-                  domElement: projItem ? $('.js-controls-ListView__item[data-hash="'+projItem.getHash()+'"]', this.getContainer()) : undefined,
+                  domElement: projItem ? $('.js-controls-ListView__item[data-hash="'+projItem.getHash()+'"]:not(.controls-editInPlace)', this.getContainer()) : undefined,
                   projectionItem: projItem
                }));
             }.bind(this));

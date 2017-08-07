@@ -557,6 +557,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                this._notify('onItemsReady');
                this._itemsReadyCallback();
             } else if(cInstance.instanceOfModule(itemsOpt, 'WS.Data/Collection/RecordSet')) {
+               // необходимо обновить dataSource т.к. данные в меню берутся из dataSource
+               if(this._dataSource) {
+                  this._dataSource = new MemorySource({
+                     data: itemsOpt.getRawData(),
+                     idProperty: this._options.idProperty
+                  });
+               }
                this._processingData(itemsOpt);
             } else if (itemsOpt instanceof Array) {
                /*TODO уменьшаем количество ошибок с key*/

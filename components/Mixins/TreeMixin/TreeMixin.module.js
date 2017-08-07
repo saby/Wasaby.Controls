@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       if (cfg.displayType == 'folders') {
          filter.push(projectionFilterOnlyFolders.bind(this));
       } else {
-         filter.push(projectionFilter.bind(this));
+         filter.push(projectionFilter.bind(cfg));
       }
 
       if (cfg.itemsFilterMethod) {
@@ -273,7 +273,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       var
           itemParent = itemProj.getParent(),
           itemParentContent = itemParent && itemParent.getContents();
-      return (cInstance.instanceOfModule(itemParentContent, 'WS.Data/Entity/Record') && itemParent.isNode() !== false && this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj);
+      // Т.к. скрытые узлы не выводятся в режиме поиска, то добавил костыль-проверку на task1174261549.
+      // Используется в админке, будет убрано, когда будет согласован стандарт на отображение скрытых узлов в режиме поиска.
+      // Ошибка: https://online.sbis.ru/opendoc.html?guid=aac1226b-64f1-4b45-bb95-b44f2eb68ada
+      // Поручение на проектировщиков: https://online.sbis.ru/opendoc.html?guid=9b93b078-a432-4550-86bc-1a7b2c4bac5c
+      return (this.hierarchyViewMode && cInstance.instanceOfModule(itemParentContent, 'WS.Data/Entity/Record') && (itemParent.isNode() !== false || this.task1174261549)) || isVisibleItem(itemProj);
    },
    projectionFilterOnlyFolders = function(item, index, itemProj) {
       return (this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj, true);
@@ -322,7 +326,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       if (cfg.displayType == 'folders') {
          filter.push(projectionFilterOnlyFolders.bind(this));
       } else {
-         filter.push(projectionFilter.bind(this));
+         filter.push(projectionFilter.bind(cfg));
       }
       if (cfg.itemsFilterMethod) {
          filter.push(cfg.itemsFilterMethod);
@@ -663,7 +667,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              * @variant append - добавлять, при этом записи с одинаковыми id будут выводиться в списке
              *
              */
-            loadItemsStrategy: 'merge'
+            loadItemsStrategy: 'merge',
+            task1174261549: false
          },
          _lastParent : undefined,
          _lastDrawn : undefined,
@@ -840,6 +845,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                this._options._folderHasMore[id] = list.getMetaData().more;
                this._loadedNodes[id] = true;
                this._notify('onDataMerge', list); // Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
+               this._onDataMergeCallback(list);
                if (this._options.loadItemsStrategy == 'merge') {
                   this._options._items.merge(list, {remove: false});
                }
@@ -1158,6 +1164,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
             self._notify('onDataMerge', dataSet);
+            self._onDataMergeCallback(dataSet);
             self._loader = null;
             //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
             if (id) {
@@ -1244,23 +1251,29 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             // При перезагрузке приходят новые данные, т.ч. сбрасываем объект, хранящий список узлов с "есть ещё"
             this._options._folderHasMore = {};
          },
-         _dataLoadedCallback: function () {
-            //this._options.openedPath = {};
+         _applyExpandToItems: function(items) {
+            var hierarchy = this._options._getHierarchyRelation(this._options),
+               openedPath = this._options.openedPath;
+            items.each(function(item) {
+               var id = item.getId(),
+                  children = hierarchy.getChildren(item, items);
+               if (children.length && id != 'null' && id != this._curRoot) {
+                  openedPath[id] = true;
+               }
+            });
+         },
+         _onDataMergeCallback: function(items) {
             if (this._options.expand) {
-               var hierarchy = this._options._getHierarchyRelation(this._options),
-                  items = this.getItems(),
-                  openedPath = this._options.openedPath;
-               items.each(function(item) {
-                  var id = item.getId(),
-                     children = hierarchy.getChildren(item, items);
-                  if (children.length && id != 'null' && id != this._curRoot) {
-                     openedPath[id] = true;
-                  }
-               });
+               this._applyExpandToItems(items);
             }
+         },
+         _dataLoadedCallback: function () {
             var path = this._options._items.getMetaData().path,
                hierarchy = cFunctions.clone(this._hier),
                item;
+            if (this._options.expand) {
+               this._applyExpandToItems(this.getItems());
+            }
             if (path) {
                hierarchy = this._getHierarchy(path, this._options._curRoot);
             }

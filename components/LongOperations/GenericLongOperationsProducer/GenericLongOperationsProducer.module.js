@@ -300,7 +300,8 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             }
             options.canSuspend = typeof options.onSuspend === 'function' && typeof options.onResume === 'function';
             options.canDelete = typeof options.onDelete === 'function';
-            options.userId = UserInfo.get('ИдентификаторСервисаПрофилей') || $.cookie('CpsUserId');
+            options.userId = UserInfo.get('Пользователь');
+            options.userUuId = UserInfo.get('ИдентификаторСервисаПрофилей') || $.cookie('CpsUserId');
             var operationId = _put(this, options);
             var self = this;
             stopper.addCallbacks(
@@ -648,8 +649,8 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
        * @return {Core/Deferred<SBIS3.CONTROLS.LongOperationEntry[]>}
        */
       var _fillUserInfo = function (operations) {
-         var uIds = operations.reduce(function (r, v) { if (v.userId && r.indexOf(v.userId) === -1) r.push(v.userId); return r; }, []);
-         if (!uIds.length) {
+         var uuIds = operations.reduce(function (r, v) { if (v.userUuId && r.indexOf(v.userUuId) === -1) r.push(v.userUuId); return r; }, []);
+         if (!uuIds.length) {
             return Deferred.success(operations);
          }
          var promise = new Deferred();
@@ -663,27 +664,27 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                   binding: {
                      query:
                   },
-                   model: */
+                  model: */
                });
             }
             _userInfoSource.call('ПодробнаяИнформация', {
-               'Персоны': uIds,
+               'Персоны': uuIds,
                'ДляДокумента': null,
                'ПроверитьЧерныйСписок': false
             })
             .addCallbacks(
                function (dataSet) {
-                  var indexes = operations.reduce(function (r, v, i) { if (v.userId) { if (!r[v.userId]) r[v.userId] = []; r[v.userId].push(i); } return r; }, {});
+                  var indexes = operations.reduce(function (r, v, i) { if (v.userUuId) { if (!r[v.userUuId]) r[v.userUuId] = []; r[v.userUuId].push(i); } return r; }, {});
                   Chain(dataSet.getAll()).each(function (record) {
-                     var userId = record.get('Персона');
-                     var list = indexes[userId];
+                     var userUuId = record.get('Персона');
+                     var list = indexes[userUuId];
                      if (list) {
                         for (var i = 0; i < list.length; i++) {
                            var o = operations[list[i]];
                            o.userFirstName = record.get('Имя');
                            o.userPatronymicName = record.get('Отчество');
                            o.userLastName = record.get('Фамилия');
-                           o.userPic = _getUserPic(userId);
+                           o.userPic = _getUserPic(userUuId);
                         }
                      }
                   });
@@ -700,11 +701,11 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
       /**
        * Получить url изображения пользователя (аватарки)
        * @protected
-       * @param {string} userId Идентификатор пользователя в сервисе пользовательских профайлов
+       * @param {string} userUuId Идентификатор пользователя в сервисе пользовательских профайлов
        * @return {string}
        */
-      var _getUserPic = function (userId) {
-         return '/service/?id=0&method=PProfileServicePerson.GetPhoto&protocol=4&params=' + window.btoa(JSON.stringify({person:userId, kind:'mini'}));//'default'
+      var _getUserPic = function (userUuId) {
+         return '/service/?id=0&method=PProfileServicePerson.GetPhoto&protocol=4&params=' + window.btoa(JSON.stringify({person:userUuId, kind:'mini'}));//'default'
       };
 
       var ObjectAssign = Object.assign || function (dst, src) { return Object.keys(src).reduce(function (o, n) { o[n] = src[n]; return o; }, dst); };
@@ -716,7 +717,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
        * @protected
        * @type {string}
        */
-      var NS_PREFIX = 'ws-lo-gen-';
+      var NS_PREFIX = 'wslop-gen-';
 
       /**
        * Набор внутренних методов для манипуляций с локальным хранилищем

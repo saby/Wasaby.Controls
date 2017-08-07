@@ -292,7 +292,9 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
          getImagePanel: function(button){
             var
                self = this;
-            if (!this._imagePanel) {
+            //todo: https://online.sbis.ru/opendoc.html?guid=2842f4a3-d4b7-4454-a034-4051337f0e25&des=
+            //кдалить проверку на destroyed после выполнения задачи
+            if (!this._imagePanel || this._imagePanel.isDestroyed()) {
                this._imagePanel = new ImagePanel({
                   parent: button,
                   target: button.getContainer(),

@@ -27,7 +27,7 @@
 }
 
 .controls__filterButton__filterLine {
-   max-width: calc(~"100% - @{controls-filterButton-button-width} - 2 * @{controls-filterButton-button-margin}");
+   max-width: calc(~"100% - @{controls-filterButton-button-width} - @{controls-filterButton-margin-value} * 2");
    height: @controls-filterButton-button-height;
    margin: @controls-filterButton-filterLine-margin;
    cursor: pointer;
@@ -54,6 +54,10 @@
             cursor: default;
          }
       }
+   }
+   
+   &.ws-hidden + .controls__filterButton-button {
+      margin-left: @controls-filterButton-margin-value;
    }
 }
 .controls__filterButton__filterLine-items, .controls__filterButton__filterLine-text {
