@@ -483,6 +483,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             var parentConfig = parentFunc.apply(this, arguments);
             parentConfig.tabindex = 0;
             parentConfig.targetPart = true;
+            /* Для устройств на ios не надо скрывать автодополнение при скроле,
+               т.к. на ios'e при клике в поле ввода происходит скролл к полю ввода,
+               и получается что автодополнение не открыть. На Android'e такого не происходит. */
             parentConfig.closeOnTargetMove = !detection.isMobileIOS;
             return parentConfig;
          },
