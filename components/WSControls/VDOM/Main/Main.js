@@ -1,5 +1,5 @@
 define('js!WSControls/VDOM/Main/Main', [
-      'js!WSControls/Control/Base',
+      'Core/Control',
       'tmpl!WSControls/VDOM/Main/Main',
       'js!WSControls/VDOM/TodoModel',
       'js!WS.Data/Collection/ObservableList',

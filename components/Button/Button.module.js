@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.Button',
    [
-      'js!WSControls/Control/Base',
+      'Core/Control',
       'js!SBIS3.CONTROLS.Button/Button.compatible',
       'tmpl!SBIS3.CONTROLS.Button',
       'Core/core-functions',
