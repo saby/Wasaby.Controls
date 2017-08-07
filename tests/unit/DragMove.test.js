@@ -154,6 +154,11 @@ define([
             var target = dragMove._getDragTarget();
             assert.equal(target.item.getContents().getId(), 1);
             assert.equal(target.domElement.html(), 1);
+         });
+         it('should not return drag target when horisontal dragndrop', function () {
+            event.target = $('<div/>');
+            var target = dragMove._getDragTarget();
+            assert.isTrue(!target.item);
          })
       });
       describe('.updateTarget', function () {
