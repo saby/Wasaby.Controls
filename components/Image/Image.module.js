@@ -3,7 +3,6 @@
  */
 define('js!SBIS3.CONTROLS.Image',
    [
-   'Transport/BLObject',
    'js!SBIS3.CONTROLS.Utils.ImageUtil',
    'Core/helpers/vital/processImagePath',
    "Core/Indicator",
@@ -20,12 +19,12 @@ define('js!SBIS3.CONTROLS.Image',
    "js!SBIS3.CONTROLS.Utils.SourceUtil",
    'js!SBIS3.CONTROLS.ControlHierarchyManager',
    'js!SBIS3.CONTROLS.Utils.InformationPopupManager',
+   'Core/helpers/Function/debounce',
    "js!SBIS3.CONTROLS.Link",
    'js!SBIS3.CONTROLS.MenuLink',
    "i18n!SBIS3.CONTROLS.Image",
    'css!SBIS3.CONTROLS.Image'
 ], function(
-   BLObject,
    ImageUtil,
    processImagePath,
    cIndicator, cMerge,
@@ -40,7 +39,8 @@ define('js!SBIS3.CONTROLS.Image',
    transHelpers,
    SourceUtil,
    ControlHierarchyManager,
-   InformationPopupManager
+   InformationPopupManager,
+   debounce
 ) {
       'use strict';
       //TODO: Избавится от дублирования
@@ -378,7 +378,7 @@ define('js!SBIS3.CONTROLS.Image',
                //Оборачиваем именно в debounce, т.к. могут последовательно задать filter, dataSource и тогда изображения загрузка произойдет дважды.
                //Опция avoidCache = false означает что если нет изщображения то setDS будет вызываться с reload = false следоватьельно debounce не нужен
                if (this._options.avoidCache) {
-                  this._setImage = this._setImage.debounce(0);
+                  this._setImage = debounce(this._setImage, 0);
                }
                CommandDispatcher.declareCommand(this, 'uploadImage', this._uploadImage);
                CommandDispatcher.declareCommand(this, 'uploadFileCam', this._uploadFileCam);
@@ -490,7 +490,7 @@ define('js!SBIS3.CONTROLS.Image',
                   dataSource = this.getDataSource();
                if (dataSource) {
                   return transHelpers.prepareGetRPCInvocationURL(dataSource.getEndpoint().contract,
-                     dataSource.getBinding().read, this._options.filter, BLObject.RETURN_TYPE_ASIS);
+                     dataSource.getBinding().read, this._options.filter);
                } else {
                   return this._options.defaultImage;
                }
@@ -769,8 +769,9 @@ define('js!SBIS3.CONTROLS.Image',
                      var
                         dataSource = self.getDataSource(),
                         sendFilter = filter && Object.prototype.toString.call(filter) === '[object Object]' ? filter : self.getFilter();
-                     new BLObject(dataSource.getEndpoint().contract)
-                        .call(dataSource.getBinding().destroy, sendFilter, BLObject.RETURN_TYPE_ASIS)
+                     new SbisService({
+                       endpoint: dataSource.getEndpoint().contract
+                     }).call(dataSource.getBinding().destroy, sendFilter)
                         .addBoth(function() {
                            self._setImage(self._options.defaultImage);
                            if (self._options.defaultImage === '') {

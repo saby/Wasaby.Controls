@@ -1,4 +1,5 @@
 @import "../prestonew/variables";
+@import "colors";
 
 // Default vars
 @default-text-color:                      #000;
@@ -8,19 +9,15 @@
 @error-color:                             #EF463A;
 @warning-color:                           #FA9C33;
 @success-color:                           #72BE44;
-@default-bg-color:                        #fff;
 @accent-color:							         #26B8FF;
 @acent-color2:                            #F8F8F8;//Цвет акцентной плашки
 @default-hover-color:                     #E0ECF5;
 @innacent-color2:						         #999999; //Неакцентные элементы, заголовки таблиц, комментарии
 @basic-block-bg-color:					      #f3f3f3; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
-@default-height:								   1.7857rem;
 //=============
-@default-border-color:                    #0055BB;
 @black-color:                             #333;
 @gray-color:                              #3b5d79;
 @gray-light-color:                        #eee;
-@default-text-color:                      #000;
 @primary-color:                           #FF7033;
 @secondary-color:                         #4e5762;
 @back-button-caption-hover-color :        @primary-color;
@@ -77,6 +74,9 @@
 @switcher-do-disabled-btn-background:     @gray-ccc-color;
 @switcher-do-horizontal-line-background-color:@innacent-color;
 @switcher-do-disabled-line-color:         @gray-ccc-color;
+
+@switcher-border-color:                   #E4E4E4;
+@switcher-disabled-color:                 @disabled-color;
 // Menu
 @menu-header-caption-color:               #000;
 @popup-header-caption-color:              #fff;
@@ -120,6 +120,7 @@
 @controls-FieldLink-FilterButton-color-hover:#313E78;
 @controls-FieldLink-border-color-focus-hover:@gray-ccc-color;
 @controls-FieldLink-border-color-picker-show:#0055BB;
+@controls-FieldLink-showSelector-color:   #2D68B5;
 // MonthView //
 @month-view-bg:                           @white-color;
 @month-view-day-cell-text-color:          inherit;
@@ -174,6 +175,7 @@
 @data-grid-results-color:                 #313E78;
 // OperationsPanel
 @controls-OperationsPanel-bg:                       #354B62;
+@controls-OperationsPanel-separator-bg:             #CCC;
 // OperationsPanelButton
 @controls-OperationsPanelButton-color:    #FFFFFF;
 // DropdownList
@@ -196,7 +198,9 @@
 @controls-Scrollbar-light-hover-thumb-color:rgba(0, 0, 0, 0.10);
 @controls-Scrollbar-light-active-thumb-color:rgba(0, 0, 0, 0.15);
 //InformationPopup
-@controls-InformationPopup-bg:            #fff;
+@controls-InformationPopup-bg:                           #fff;
+@controls-InformationPopup-closeButton-color:            #CCCCCC;
+@controls-InformationPopup-closeButton-hover-color:      #313E78;
 //SubmitPopup
 @controls-SubmitPopup-message-color:      #000;
 //TabButton
@@ -271,21 +275,30 @@
 @long-operations-popup-exp-max-width: 600px;
 @long-operations-popup-header-height: 60px;
 @long-operations-popup-header-line-height: 60px;
-@long-operations-popup-header-pad-rt: 96px;
+@long-operations-popup-header-pad-rt: 54px;
 @long-operations-popup-header-icon-size: 32px;
 @long-operations-popup-header-caption-f-size: 32px;
 @long-operations-popup-header-caption-line-height: 52px;
 @long-operations-popup-header-caption-color: #313E78;
 @long-operations-popup-collapsed-header-caption-f-size: 24px;
 @long-operations-popup-collapsed-header-caption-color: @long-operations-popup-header-caption-color;
-@long-operations-popup-header-stop-but-f-size: 24px;
-@long-operations-popup-header-stop-but-color: #a8acc3;
-@long-operations-popup-foot-height: 50px;
-@long-operations-popup-foot-bg: #293543;
-@long-operations-popup-foot-f-size: 16px;
-@long-operations-popup-foot-color: #ffffff;
+@long-operations-popup-header-result-max-width: 210px;
+@long-operations-popup-header-result-min-width: 64px;
+@long-operations-popup-header-but-f-size: 24px;
+@long-operations-popup-header-but-gap-top: 7px;
+@long-operations-popup-collapsed-header-but-gap-top: 0px;
+@long-operations-popup-header-suspended-color: #a8acc3;
+@long-operations-popup-list-time-f-size: 21px;
+@long-operations-popup-list-border-bot: 0px none;
 @long-operations-popup-reg-but-ctr-height: 50px;
 @long-operations-popup-reg-but-line-height: 50px;
+@long-operations-popup-foot-height: 50px;
+@long-operations-popup-foot-bg: #354b62;
+@long-operations-popup-foot-f-size: 16px;
+@long-operations-popup-foot-but-gap-top: 12px;
+@long-operations-popup-foot-color: #ffffff;
+@long-operations-popup-foot-accent-color: #ffffff;
+@long-operations-popup-foot-but-hover-color: #b9e9ff !important;
 @long-operations-reg-filter-width: 220px;
 @long-operations-reg-filter-height: 46px;
 @long-operations-reg-filter-title-height: 40px;
@@ -293,7 +306,6 @@
 // --------------- //
 // OperationMerge  //
 // --------------- //
-@controls-MergeDialogTemplate-BreadCrumbs-main-title-color:    #313E78;
 @controls-MergeDialogTemplate-DataGridView-td-border-bottom:   1px solid @gray-light-color !important;
 
 

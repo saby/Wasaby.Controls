@@ -8,13 +8,15 @@ define('js!SBIS3.CONTROLS.SelectorController', [
    "Core/helpers/collection-helpers",
    "Core/core-instance",
    "Core/core-merge",
+   "Core/core-functions",
+   "js!WS.Data/Entity/Record",
    "js!WS.Data/Source/SbisService",
    "js!SBIS3.CONTROLS.Utils.Query",
    "js!SBIS3.CONTROLS.Utils.OpenDialog",
-   "js!SBIS3.CONTROLS.SelectorWrapper",
-   "js!WS.Data/Collection/List"
+   "js!WS.Data/Collection/List",
+   "js!SBIS3.CONTROLS.SelectorWrapper"
 ],
-    function (CommandDispatcher, CompoundControl, Di, collectionHelpers, cInstance, cMerge, SbisService, Query, OpenDialogUtil) {
+    function (CommandDispatcher, CompoundControl, Di, collectionHelpers, cInstance, cMerge, cFunctions, Record, SbisService, Query, OpenDialogUtil, List) {
 
        'use strict';
 
@@ -82,6 +84,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
                  */
                 filter: null
              },
+             _linkedObject: undefined,
              _selectButton: null
           },
           $constructor: function () {
@@ -137,6 +140,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
                 selectedItems: this._options.selectedItems,
                 selectionType: this._options.selectionType
              });
+             this._linkedObject = chooserWrapper._getLinkedObject();
           },
 
           /**
@@ -196,7 +200,23 @@ define('js!SBIS3.CONTROLS.SelectorController', [
             * @see selectorWrapperSelectionChanged
             */
           _selectComplete: function() {
-             this._notify('onSelectComplete', this._options.selectedItems.clone());
+             var
+                list,
+                filter,
+                dataSource,
+                self = this;
+             if (this._linkedObject._options.useSelectAll) {
+                filter = cFunctions.clone(this._linkedObject.getFilter());
+                dataSource = this._linkedObject.getDataSource();
+                filter['selection'] = Record.fromObject(this._linkedObject.getSelection(), dataSource.getAdapter());
+                Query(dataSource, [filter]).addCallback(function(recordSet) {
+                   list = new List();
+                   list.assign(recordSet.getAll());
+                   self._notify('onSelectComplete', list);
+                });
+             } else {
+                this._notify('onSelectComplete', this._options.selectedItems.clone());
+             }
           },
 
           _setContextItems: function(items){

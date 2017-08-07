@@ -1,9 +1,20 @@
 define(
    [
-      'js!WS.Data/Entity/Model'
+      'js!WS.Data/Entity/Model',
+      'js!SBIS3.CONTROLS.LongOperationEntry'
    ],
 
-   function (Model) {
+   function (Model, LongOperationEntry) {
+
+      var _timeSpent = function (model) {
+         var timeSpent = model.get('timeSpent');
+         if (typeof timeSpent !== 'number' || timeSpent < 0) {
+            var STATUSES = LongOperationEntry.STATUSES;
+            var status = model.get('status');
+            timeSpent = status === STATUSES.running || status === STATUSES.suspended ? (new Date()).getTime() - model.get('startedAt') : 0;
+         }
+         return timeSpent;
+      };
 
       var LongOperationModel = Model.extend({
          $protected: {
@@ -17,13 +28,13 @@ define(
 
                   strTimeSpent: {
                      get: function () {
-                        return LongOperationModel.timeSpentAsString(this.get('timeSpent') || (new Date()).getTime() - this.get('startedAt'), 2);
+                        return LongOperationModel.timeSpentAsString(_timeSpent(this), 2);
                      }
                   },
 
                   shortTimeSpent: {
                      get: function () {
-                        return LongOperationModel.timeSpentAsString(this.get('timeSpent') || (new Date()).getTime() - this.get('startedAt'), 1);
+                        return LongOperationModel.timeSpentAsString(_timeSpent(this), 1);
                      }
                   },
 

@@ -1,4 +1,13 @@
-define('js!SBIS3.CONTROLS.SwitcherDouble', ['js!SBIS3.CORE.Control', 'html!SBIS3.CONTROLS.SwitcherDouble', 'js!SBIS3.CONTROLS.Clickable', 'js!SBIS3.CONTROLS.FormWidgetMixin', 'js!SBIS3.CONTROLS.Checkable', 'css!SBIS3.CONTROLS.SwitcherDouble'], function(Control, dotTplFn, Clickable, FormWidgetMixin, Checkable) {
+define('js!SBIS3.CONTROLS.SwitcherDouble',
+   [
+      'js!SBIS3.CORE.Control',
+      'tmpl!SBIS3.CONTROLS.SwitcherDouble',
+      'js!SBIS3.CONTROLS.Clickable',
+      'js!SBIS3.CONTROLS.FormWidgetMixin',
+      'js!SBIS3.CONTROLS.Checkable',
+      'css!SBIS3.CONTROLS.SwitcherDouble'
+   ],
+   function(Control, dotTplFn, Clickable, FormWidgetMixin, Checkable) {
 
    'use strict';
    /**

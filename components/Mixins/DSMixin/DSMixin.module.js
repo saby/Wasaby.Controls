@@ -14,9 +14,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "Core/core-instance",
    "Core/helpers/functional-helpers",
-   "Core/helpers/fast-control-helpers",
-    "Core/helpers/Object/isEmpty"
-], function ( cFunctions, Deferred, IoC, ConsoleLogger,MemorySource, SbisService, RecordSet, Query, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, cInstance, fHelpers, fcHelpers, isEmptyObject) {
+   "Core/helpers/Object/isEmpty"
+], function ( cFunctions, Deferred, IoC, ConsoleLogger,MemorySource, SbisService, RecordSet, Query, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, cInstance, fHelpers, isEmptyObject) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -558,6 +557,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                this._notify('onItemsReady');
                this._itemsReadyCallback();
             } else if(cInstance.instanceOfModule(itemsOpt, 'WS.Data/Collection/RecordSet')) {
+               // необходимо обновить dataSource т.к. данные в меню берутся из dataSource
+               if(this._dataSource) {
+                  this._dataSource = new MemorySource({
+                     data: itemsOpt.getRawData(),
+                     idProperty: this._options.idProperty
+                  });
+               }
                this._processingData(itemsOpt);
             } else if (itemsOpt instanceof Array) {
                /*TODO уменьшаем количество ошибок с key*/
@@ -822,7 +828,12 @@ define('js!SBIS3.CONTROLS.DSMixin', [
                    if (!error.canceled) {
                       self._toggleIndicator(false);
                       if (self._notify('onDataLoadError', error) !== true) {
-                         fcHelpers.message(error.message.toString().replace('Error: ', ''));
+                         require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager){
+                            InformationPopupManager.showMessageDialog({
+                               message: error.message.toString().replace('Error: ', ''),
+                               status: 'success'
+                            });
+                         });
                       }
                    }
                    return error;

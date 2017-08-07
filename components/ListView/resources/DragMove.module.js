@@ -95,7 +95,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
                source.push(this._makeDragEntity({
                   owner: this._getView(),
                   model: item,
-                  domElement: projItem ? $('.js-controls-ListView__item[data-hash="'+projItem.getHash()+'"]', this.getContainer()) : undefined,
+                  domElement: projItem ? $('.js-controls-ListView__item[data-hash="'+projItem.getHash()+'"]:not(.controls-editInPlace)', this.getContainer()) : undefined,
                   projectionItem: projItem
                }));
             }.bind(this));
@@ -105,11 +105,11 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
                   items: source
                })
             );
+            this._addClassDragndrop(target);
             if (this._options.useDragPlaceHolder) {
                this._makeDragPlaceHolder();
                this._toggleDragItems(false)
             }
-            this._addClassDragndrop(target);
             return true;
          }
          return false;
@@ -389,9 +389,11 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
        * @private
        */
       _drawDragHighlight: function(target) {
-         var domelement = target.getDomElement();
-         domelement.toggleClass('controls-DragNDrop__insertAfter', target.getPosition() === DRAG_META_INSERT.after);
-         domelement.toggleClass('controls-DragNDrop__insertBefore', target.getPosition() === DRAG_META_INSERT.before);
+         if (!this._options.useDragPlaceHolder) {
+            var domelement = target.getDomElement();
+            domelement.toggleClass('controls-DragNDrop__insertAfter', target.getPosition() === DRAG_META_INSERT.after);
+            domelement.toggleClass('controls-DragNDrop__insertBefore', target.getPosition() === DRAG_META_INSERT.before);
+         }
       },
       /**
        * определяет направление перемещения
@@ -477,11 +479,15 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
          if(!target.length) {
             return [];
          }
-         var domElem;
+         var domElem,
+            projection = this._getItemsProjection();
          if (target.hasClass('.js-controls-ListView__item')) {
             domElem = target;
          } else {
             domElem = target.closest('.js-controls-ListView__item', this.getContainer()[0]);
+         }
+         if (projection && !projection.getByHash(domElem.data('hash'))) {
+            return this._findItemByElement(domElem.parent());
          }
          return domElem;
       },

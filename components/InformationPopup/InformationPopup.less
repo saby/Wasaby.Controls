@@ -15,9 +15,11 @@
       &:before {
          content: '';
          font-size: @controls-InformationPopup-closeButton-font-size;
-         font-family: "cbuc-icons24 Regular", cbuc-icons24;
+         font-family: @controls-InformationPopup-closeButton-font-family;
          color: @controls-InformationPopup-closeButton-color;
-         &:hover {
+      }
+      &:hover {
+         &:before {
             color: @controls-InformationPopup-closeButton-hover-color;
          }
       }

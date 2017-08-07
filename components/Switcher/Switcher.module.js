@@ -1,5 +1,12 @@
-
-define('js!SBIS3.CONTROLS.Switcher', ['js!SBIS3.CORE.Control', 'html!SBIS3.CONTROLS.Switcher', 'js!SBIS3.CONTROLS.Checkable', 'js!SBIS3.CONTROLS.Clickable', 'css!SBIS3.CONTROLS.Switcher'], function(Control, dotTplFn, Checkable, Clickable) {
+define('js!SBIS3.CONTROLS.Switcher',
+   [
+      'js!SBIS3.CORE.Control',
+      'tmpl!SBIS3.CONTROLS.Switcher',
+      'js!SBIS3.CONTROLS.Checkable',
+      'js!SBIS3.CONTROLS.Clickable',
+      'css!SBIS3.CONTROLS.Switcher'
+   ],
+   function(Control, dotTplFn, Checkable, Clickable) {
 
    'use strict';
 

@@ -3,9 +3,10 @@ define('js!SBIS3.CONTROLS.MenuItem', [
    'js!WSControls/Buttons/ButtonBase',
    'tmpl!SBIS3.CONTROLS.MenuItem',
    'Core/EventBus',
+   'Core/Sanitize',
    'Core/helpers/string-helpers',
    'css!SBIS3.CONTROLS.MenuItem'
-], function(WSButtonBase, dotTplFn, EventBus, strelpers) {
+], function(WSButtonBase, dotTplFn, EventBus, Sanitize, strelpers) {
 
    'use strict';
    /**
@@ -19,6 +20,7 @@ define('js!SBIS3.CONTROLS.MenuItem', [
       _dotTplFn : dotTplFn,
       $protected: {
          _options: {
+            escapeCaptionHtml: false,
             _sanitizeOpts: {
                validNodes: { component: true }
             }
@@ -45,11 +47,11 @@ define('js!SBIS3.CONTROLS.MenuItem', [
 
       setCaption: function(caption){
          MenuItem.superclass.setCaption.call(this, caption);
-         caption = this._options.caption;
+         this._options.caption = Sanitize(this._options.caption, {validNodes: {component: true}});
          var $caption = $('.js-controls-MenuItem__text', this._container);
          if (this._options.caption) {
             if ($caption.length){
-               $caption.html(caption);
+               $caption.html(this._options.caption);
             }
          }
       },

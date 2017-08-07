@@ -4,10 +4,10 @@
 
 define('js!SBIS3.CONTROLS.ColumnsEditorArea', [
    'js!SBIS3.CONTROLS.CompoundControl',
-   'js!Core/CommandDispatcher',
+   'js!SBIS3.CONTROLS.ColumnsEditorUtils',
+   'Core/CommandDispatcher',
    'Core/helpers/collection-helpers',
    'js!SBIS3.CONTROLS.ItemsMoveController',
-   'js!WS.Data/Entity/Model',
    'js!WS.Data/Collection/RecordSet',
    'js!WS.Data/Functor/Compute',
    'tmpl!SBIS3.CONTROLS.ColumnsEditorArea',
@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea', [
    'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/groupTpl',
    'js!SBIS3.CONTROLS.ScrollContainer'
  ],
-   function(CompoundControl, CommandDispatcher, cHelpers, ItemsMoveController, Model, RecordSet, ComputeFunctor, dotTplFn, ItemContentTpl) {
+   function(CompoundControl, ColumnsEditorUtils, CommandDispatcher, cHelpers, ItemsMoveController, RecordSet, ComputeFunctor, dotTplFn, ItemContentTpl) {
 
       'use strict';
       /**
@@ -30,27 +30,6 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea', [
        * @public
        * @extends SBIS3.CONTROLS.CompoundControl
        */
-      var
-         SelectableViewModel = Model.extend({
-            _isSelected: false,
-            $protected: {
-               _options: {
-                  properties: {
-                     selected: {
-                        get: function() {
-                           return this._isSelected;
-                        },
-                        set: function(value) {
-                           this._isSelected = value;
-                           this._notifyChange({
-                              selected: value
-                           });
-                        }
-                     }
-                  }
-               }
-            }
-         });
       var
          ColumnsEditorArea = CompoundControl.extend(/** @lends SBIS3.CONTROLS.ColumnsEditorArea.prototype */ {
             _dotTplFn: dotTplFn,
@@ -72,11 +51,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea', [
                cfg._onItemClick = this._onItemClick;
                if (!cfg.moveColumns) {
                   // Добавляем автосортировку отмеченных элементов - они должны отображаться перед неотмеченными
-                  cfg._itemsSortMethod = new ComputeFunctor(function(el1, el2) {
-                     // Смещаем отмеченные элементы в начало списка по правилу:
-                     // отображаем первый элемент ПЕРЕД вторым если первый отмечен или второй НЕ отмечен
-                     return el1.collectionItem.get('selected') || !el2.collectionItem.get('selected') ? -1 : 1;
-                  }, ['selected']);
+                  cfg._itemsSortMethod = ColumnsEditorUtils.getSortMethod();
                   cfg._onSelectedItemsChange = this._onSelectedItemsChange;
                }
                return cfg;
@@ -140,11 +115,9 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea', [
                   result.selectableItems = new RecordSet({
                      rawData: preparingItems,
                      idProperty: 'id',
-                     model: SelectableViewModel
+                     model: ColumnsEditorUtils.getSelectableViewModel()
                   });
-                  result.selectableMarkedKeys.forEach(function(id) {
-                     result.selectableItems.getRecordById(id).set('selected', true);
-                  });
+                  ColumnsEditorUtils.applySelectedToItems(result.selectableMarkedKeys, result.selectableItems);
                }
                return result;
             },

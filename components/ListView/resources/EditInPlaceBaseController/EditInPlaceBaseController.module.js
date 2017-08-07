@@ -585,7 +585,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   return this._options.dataSource.create(modelOptions).addCallback(function(model) {
                      return model;
                   }).addErrback(function (error) {
-                     fcHelpers.alert(error);
+                     InformationPopupManager.showMessageDialog({
+                        message: error.message,
+                        status: 'error'
+                     });
                      return error;
                   });
                }
