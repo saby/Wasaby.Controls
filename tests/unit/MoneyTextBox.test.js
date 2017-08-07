@@ -3,7 +3,8 @@ define(['js!SBIS3.CONTROLS.MoneyTextBox'], function (NumberTextBox) {
     'use strict';
     var
         MTB,
-        inputField;
+        inputField,
+        formattedValue;
 
     describe('SBIS3.CONTROLS.MoneyTextBox', function () {
         beforeEach(function() {
@@ -31,6 +32,12 @@ define(['js!SBIS3.CONTROLS.MoneyTextBox'], function (NumberTextBox) {
                         mso-hansi-theme-font:minor-latin;mso-bidi-font-family:Aharoni;mso-ansi-language:\n\
                         EN-US;mso-fareast-language:EN-US;mso-bidi-language:AR-SA">1</span>');
              assert.equal(MTB._getInputValue(), '10.10');
+          });
+
+          it('check value outside', function() {
+             MTB.setProperty('text', '1234.56');
+             formattedValue = MTB._formatText('9999999999999999.99');
+             assert.equal(formattedValue, '1 234.56');
           });
        });
 
