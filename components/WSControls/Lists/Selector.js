@@ -10,11 +10,11 @@ define('js!WSControls/Lists/Selector', [
          this._publish('onSelectedItemChange');
       },
 
-      _applyAllowEmpty: function () {
-         if (!this._allowEmptySelection && this._isEmptyIndex(this._selectedIndex)) {
+      _applyAllowEmpty: function (cfg) {
+         if ((cfg.allowEmptySelection === false) && this._isEmptyIndex(this._selectedIndex)) {
             if (this._display.getCount()) {
                this._selectedIndex = 0;
-               this._prepareSelectedKeyByIndex();
+               this._selectedKey = this._getKeyByIndex(0, cfg);
             }
          }
       },
@@ -40,21 +40,18 @@ define('js!WSControls/Lists/Selector', [
          this._onSelectedItemChange();
       },
 
-      _getKeyByIndex: function (index) {
-         if (this._hasItemByIndex(index) && !this._isEmptyIndex(index)) {
+      _getKeyByIndex: function (index, cfg) {
+         if (this._hasItemByIndex(index)) {
             var itemContents = this._display.at(index).getContents();
-            return ItemsUtil.getPropertyValue(itemContents, this._options.idProperty);
+            return ItemsUtil.getPropertyValue(itemContents, cfg.idProperty);
          }
          else {
             return null
          }
       },
 
-      _getItemIndexByKey: function (id) {
-         if (id === undefined) {
-            return -1;
-         }
-         var projItem = ItemsUtil.getItemById(this._display, id, this._options.idProperty);
+      _getItemIndexByKey: function (id, cfg) {
+         var projItem = ItemsUtil.getItemById(this._display, id, cfg.idProperty);
          return this._display.getIndex(projItem);
       },
 
@@ -65,7 +62,7 @@ define('js!WSControls/Lists/Selector', [
       _setSelectedByHash: function (hash) {
          var elem = this._display.getByHash(hash);
          this._selectedIndex = this._display.getIndex(elem);
-         this._prepareSelectedKeyByIndex()
+         this._selectedKey = this._getItemIndexByKey(this._selectedIndex, this._options);
       },
 
       _isEmptyIndex: function (index) {
@@ -81,21 +78,24 @@ define('js!WSControls/Lists/Selector', [
       },
 
       _displayChangeCallback: function(display, cfg) {
-         //TODO жду жизненного цикла и понимания, как сказать родителю об изменении состояния пока тут г-код
-         this._selectedIndex = this._isEmptyIndex(this._selectedIndex) ? (this._isEmptyIndex(cfg.selectedIndex) ? -1 : cfg.selectedIndex) : this._selectedIndex;
-         this._allowEmptySelection = cfg.allowEmptySelection || cfg.allowEmptySelection !== false;
-         this._selectedKey = this._selectedKey || cfg.selectedKey || null;
-
-         if (this._isEmptyIndex(this._selectedIndex)) {
-            //Если передали пустой индекс и ключ, определяем индекс по ключу
-            this._prepareSelectedIndexByKey(this._selectedKey)
+         if ((cfg.selectedIndex !== this._options.selectedIndex) && !this._isEmptyIndex(cfg.selectedIndex)) { //Новые опции пришли из родителя
+            this._selectedIndex = cfg.selectedIndex;
+            this._selectedKey = this._getKeyByIndex(this._selectedIndex, cfg);
          }
          else {
-            //если индекс передали - вычисляем ключ
-            this._prepareSelectedKeyByIndex(this._selectedIndex)
+            if ((cfg.selectedKey !== this._options.selectedKey) && (cfg.selectedKey !== undefined)) { //Новые опции пришли из родителя
+               this._selectedKey = cfg.selectedKey;
+               this._selectedIndex = this._getItemIndexByKey(this._selectedKey, cfg);
+               this._applyAllowEmpty(cfg);
+            }
+            else {
+               this._selectedIndex = -1;
+               this._selectedKey = undefined;
+               this._applyAllowEmpty(cfg);
+            }
          }
 
-         this._applyAllowEmpty();
+
          Selector.superclass._displayChangeCallback.apply(this, arguments);
       }
    });
