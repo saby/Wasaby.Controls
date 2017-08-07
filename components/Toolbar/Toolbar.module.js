@@ -101,7 +101,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             }
             options['visible'] = isToolbarItem && (item.get('visible') !== false);
             options['idProperty'] = idProperty;
-            ['commandArgs', 'className', 'icon', 'name', 'caption', 'command'].forEach(function(optName) {
+            ['commandArgs', 'className', 'icon', 'name', 'caption', 'command', 'enabled'].forEach(function(optName) {
                optionValue = item.get(optName);
                if (optionValue !== undefined) {
                   options[optName] = optionValue;
