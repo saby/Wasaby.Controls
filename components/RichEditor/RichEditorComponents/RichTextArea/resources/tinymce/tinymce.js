@@ -37805,7 +37805,7 @@
 
             handleTouchSelect(editor);
 
-            editor.on('mousedown', function(e) {
+            editor.on('mousedown touchstart', function(e) {
                var contentEditableRoot;
 
                contentEditableRoot	= getContentEditableRoot(e.target);
