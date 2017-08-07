@@ -521,6 +521,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             _canScroll: true,
             targetPart: true,
             activableByClick: false,
+            closeOnTargetMove: true,
             template : this._dotTplFnPicker({})
          };
       },
