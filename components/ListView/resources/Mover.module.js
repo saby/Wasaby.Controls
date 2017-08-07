@@ -190,7 +190,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
                }
                result.addBoth(function (result) {
                   this._notify('onEndMove', result, movedItems, target, position);
-                  if (result instanceof Error && !result.processed) {
+                  if (result instanceof Error && !result.processed && !result._isOfflineMode ) {
                      InformationPopupManager.showMessageDialog(
                         {
                            message: result.message,
@@ -337,9 +337,10 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             parentProperty && target.get(parentProperty) == movedItem.get(parentProperty) ||
             !parentProperty
          )) {
-            var  targetIndex = this.getItems().getIndex(target);
+            var  targetIndex = this.getItems().getIndex(target),
+               sourceIndex = this.getItems().getIndex(movedItem);
             targetIndex = position == 'before' ? targetIndex - 1 : targetIndex + 1;
-            if (this.getItems().getIndex(movedItem) == targetIndex) {
+            if (sourceIndex > -1 && sourceIndex == targetIndex) {//если элемента нет то не сравниваем индексы
                return false;
             }
          }
