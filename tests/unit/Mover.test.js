@@ -315,9 +315,6 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
          it('should return false if record stay in place', function(){
             assert.isFalse(mover._checkRecordForMove(items.at(0), items.at(1), 'before'));
          });
-         it('should return true if record has not existed from recordset', function(){
-            assert.isTrue(mover._checkRecordForMove(items.at(0), items.at(1).clone(), 'before'));
-         });
       });
       describe('onEndMove', function () {
          it('should trigger onEndMove', function(done) {
