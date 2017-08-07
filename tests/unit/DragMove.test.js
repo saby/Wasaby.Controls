@@ -199,6 +199,12 @@ define([
             var target = DragObject.getTarget();
             assert.equal(target.getOwner(), view);
          });
+         it('should be clear target if view cant found target and old targets owner this view', function () {
+            dragMove.updateTarget();
+            event.target = $('<div/>');
+            dragMove.updateTarget();
+            assert.isUndefined(DragObject.getTarget());
+         });
       });
       describe('._canDragMove', function () {
          it('should return true', function () {
