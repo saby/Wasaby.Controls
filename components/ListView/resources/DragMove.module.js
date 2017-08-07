@@ -366,11 +366,8 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
                target = this._findItemByElement($(elements[1]));
                if (target.length > 0) {
                   item = projection.getByHash(target.data('hash'));
-               } else {
-                  item = projection.at(projection.getCount() - 1);
                }
             }
-
          }
          return {
             item: item,
