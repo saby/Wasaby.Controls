@@ -200,8 +200,10 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
           * @private
           */
          _choose: function(value){
-            this._notify('onChoose', value);
-            this.close();
+            //Если вернут false, не будем закрывать окно
+            if(this._notify('onChoose', value) !== false){
+               this.close();
+            }
          },
 
          _switchButton: function(index, next){
