@@ -2978,7 +2978,9 @@ define('js!SBIS3.CONTROLS.ListView',
                 self = this;
 
             if (this.isInfiniteScroll()) {
-               this._createScrollWatcher();
+               if (!this._scrollWatcher) {
+                  this._createScrollWatcher();
+               }
 
                this._createLoadingIndicator();
                if (this._options.infiniteScroll == 'demand'){
