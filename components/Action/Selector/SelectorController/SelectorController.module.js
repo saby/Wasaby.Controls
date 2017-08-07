@@ -8,15 +8,15 @@ define('js!SBIS3.CONTROLS.SelectorController', [
    "Core/helpers/collection-helpers",
    "Core/core-instance",
    "Core/core-merge",
+   "Core/core-functions",
    "js!WS.Data/Entity/Record",
    "js!WS.Data/Source/SbisService",
    "js!SBIS3.CONTROLS.Utils.Query",
    "js!SBIS3.CONTROLS.Utils.OpenDialog",
    "js!WS.Data/Collection/List",
-   "js!WS.Data/Chain",
    "js!SBIS3.CONTROLS.SelectorWrapper"
 ],
-    function (CommandDispatcher, CompoundControl, Di, collectionHelpers, cInstance, cMerge, Record, SbisService, Query, OpenDialogUtil, List, Chain) {
+    function (CommandDispatcher, CompoundControl, Di, collectionHelpers, cInstance, cMerge, cFunctions, Record, SbisService, Query, OpenDialogUtil, List) {
 
        'use strict';
 
@@ -206,7 +206,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
                 dataSource,
                 self = this;
              if (this._linkedObject._options.useSelectAll) {
-                filter = this._linkedObject.getFilter();
+                filter = cFunctions.clone(this._linkedObject.getFilter());
                 dataSource = this._linkedObject.getDataSource();
                 filter['selection'] = Record.fromObject(this._linkedObject.getSelection(), dataSource.getAdapter());
                 Query(dataSource, [filter]).addCallback(function(recordSet) {
