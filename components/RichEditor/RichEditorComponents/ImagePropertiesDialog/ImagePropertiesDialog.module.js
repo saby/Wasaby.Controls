@@ -91,7 +91,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePropertiesDialog', ['js!SBIS3.CORE.Com
          }
       }
    });
-   moduleClass.title = 'Свойства';
+   moduleClass.title = rk('Свойства');
    moduleClass.dimensions = {"autoWidth":false,"autoHeight":false,"resizable":false,"width":260,"height":84};
    return moduleClass;
 });
