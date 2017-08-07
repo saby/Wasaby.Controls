@@ -296,6 +296,7 @@ define('js!SBIS3.CONTROLS.Image',
                    *     });
                    *     image.SetDataSource(mySource);
                    * </pre>
+                   * Если задать источник данных через вёрстку, то контрол постороится с проставленным адресом в scr атрибуте тега img
                    * Конфигурация источника данных контрола "Изображение" через вёрстку:
                    * <pre>
                    *     <options name="dataSource">
@@ -371,6 +372,12 @@ define('js!SBIS3.CONTROLS.Image',
                _firstLoaded: false,
                _pickerIsOpen: false,
                _cursorInside: false
+            },
+            _modifyOptions: function(options) {
+               options = Image.superclass._modifyOptions.apply(this, arguments);
+               //если источник данных задан из вёрстки, то необходимо построить теш Img с уже заданным src атрибутом
+               options._templateImage = this._getSourceUrl(options);
+               return options;
             },
             $constructor: function() {
                this._publish('onBeginLoad', 'onEndLoad', 'onErrorLoad', 'onChangeImage', 'onResetImage', 'onShowEdit', 'onBeginSave', 'onEndSave', 'onDataLoaded');
@@ -485,14 +492,13 @@ define('js!SBIS3.CONTROLS.Image',
             /* ------------------------------------------------------------
                Блок приватных методов
                ------------------------------------------------------------ */
-            _getSourceUrl: function() {
-               var
-                  dataSource = this.getDataSource();
-               if (dataSource) {
-                  return transHelpers.prepareGetRPCInvocationURL(dataSource.getEndpoint().contract,
-                     dataSource.getBinding().read, this._options.filter);
+            _getSourceUrl: function(options) {
+               options = options ? options : this._options;
+               if (options.dataSource) {
+                  return transHelpers.prepareGetRPCInvocationURL(options.dataSource.getEndpoint().contract,
+                     options.dataSource.getBinding().read, options.filter);
                } else {
-                  return this._options.defaultImage;
+                  return options.defaultImage;
                }
             },
             _bindToolbarEvents: function(){
