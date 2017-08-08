@@ -531,7 +531,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             branchesData = {},
             container = this.getContainer(),
             // а вдруг будет корень 0 нельзя делать ||
-            curRoot = self._options._curRoot === undefined ? null : self._options._curRoot,
+            curRoot = self._options.currentRoot === undefined ? null : self._options.currentRoot,
             //Метод формирования полного списка зависимостей
             findDependentRecords = function(key, parentKey) {
                var
