@@ -15,15 +15,5 @@
          </div>
       </div>
    </ws:if>
-
-   <ws:if data="{{ _options.itemsActions }}">
-      <ws:WSControls.Lists.ItemsToolbar.ItemsToolbarCompatible
-              name="itemsToolbar"
-              idProperty="{{ _options.idProperty }}"
-              itemsActions="{{ _options.itemsActions }}"
-              activeItem="{{ { 'parentContainer': _container, 'display': _display, 'hoveredIndex': _hoveredIndex } }}"
-      />
-   </ws:if>
-
 </div>
 

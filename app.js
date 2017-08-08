@@ -223,7 +223,19 @@ app.get('/stomp/s-:sid/info', simpleProxy.bind(null, {
    }
 }));
 
+app.get('/contacts.html', function(req, res) {
+   fs.readFile(process.cwd() + '/components/WSControls/Containers/Page.html', function(err, data) {
+      res.setHeader('Content-Type', 'text/html');
+      res.send(data);
+   });
+});
 
+app.get('/tasks.html', function(req, res) {
+   fs.readFile(process.cwd() + '/components/WSControls/Containers/Page.html', function(err, data) {
+      res.setHeader('Content-Type', 'text/html');
+      res.send(data);
+   });
+});
 
 /*server.on('upgrade', function (inMsg, socket, head) {
 });*/
