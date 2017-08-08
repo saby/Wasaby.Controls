@@ -226,7 +226,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             }
             return error;
          });
-         if (object !== "Excel" && !this._enableLongOperations) {
+         if (object !== "Excel" || !this._enableLongOperations) {
             this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + object);
             exportDeferred.addCallback(function(ds) {
                self.downloadFile(ds.getScalar());
