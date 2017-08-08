@@ -297,9 +297,13 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
           * @return {Core/Deferred}
           */
          reload: function () {
-            return this._view.reload().addCallback(function () {
+            var promise = this._view.reload().addCallback(function () {
                this._updateItems();
             }.bind(this));
+            // Индикатор загрузки здесь только приводит к мельканию списка, убрать его
+            // Лучше бы конечно, если бы у SBIS3.CONTROLS.ListView была опция "Не показывать индикатор загрузки. Совсем. Никогда."
+            this._view.getContainer().find('.controls-AjaxLoader').addClass('ws-hidden').removeClass('controls-AjaxLoader__showIndication');
+            return promise;
          },
 
          /**
