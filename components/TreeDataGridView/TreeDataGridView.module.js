@@ -243,7 +243,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             this._createAllFolderFooters();
          }
          //Если есть скролящиеся заголовки, нужно уменьшить ширину хлебных крошек в поиске до ширины таблицы
-         if ((this._options.startScrollColumn || this.getContainer().hasClass('.controls-DataGridView__tableLayout-auto')) && this._isSearchMode()){
+         if ((this._options.startScrollColumn || this.getContainer().hasClass('controls-DataGridView__tableLayout-auto')) && this._isSearchMode()){
          	this.getContainer().find('.controls-TreeView__searchBreadCrumbs').width(this._getSearchBreadCrumbsWidth());
          }
       },
