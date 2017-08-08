@@ -331,20 +331,6 @@ body {
 
   }
 
-    .ws-window-titlebar {
-    color: @default-text-color;
-    line-height: 3.57rem;
-    height: 3.57rem;
-    position: absolute;
-    left: 0;
-    right: 0;
-    font-size: 1.43rem;
-    white-space: nowrap;
-    -moz-box-shadow: none!important;
-    -webkit-box-shadow: none!important;
-    background: #2e404f;
-    box-shadow: none!important;
-  }
   .ws-float-area-title {
       font-size: 1.43rem!important;
       font-weight: normal !important;
@@ -502,21 +488,6 @@ body  .ws-window {
 
 
 body {
-
-  .ws-window-titlebar-action.close {
-     width: 3rem !important;
-     height: 3rem !important;
-     background: @closeBigButtonImage;
-     &:hover, &:active {
-        background: @closeBigButtonImageHover;
-     }
-  }
-  .ws-window-title {
-     font-size: 1.43rem;
-     height: 3.57rem;
-     max-height: 3.57rem;
-     line-height: 3.57rem;
-  }
   .engine-Browser__path {
     max-height: 2rem;
     height: auto !important;
@@ -549,6 +520,7 @@ body {
       }
    }
    .ws-window-title {
+      color: @default-text-color;
       font-size: 1.43rem;
       height: 3.57rem;
       max-height: 3.57rem;
