@@ -115,7 +115,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
 
       _isPageStartVisisble: function(page){
          var top;
-         if (page.element.parents('html').length == 0) {
+         if (page.element.parents('html').length === 0) {
             return false;
          }
 
@@ -232,7 +232,9 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          this._options.paging.setPagesCount(pagesCount);
 
          //Если есть страницы - покажем paging
-         this._options.paging.setVisible(pagesCount > 1);
+         if (this._options.hiddenPager) {
+            this._options.paging.setVisible(pagesCount > 1);
+         }
       },
 
       destroy: function(){
