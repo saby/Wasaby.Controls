@@ -58,8 +58,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             idProperty: cfg.idProperty || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
             parentProperty: cfg.parentProperty,
             nodeProperty: cfg.nodeProperty,
-            // todo временное решение, т.к. с бизнес-логики прилетает инвертированное значение признака загруженности ветки
-            loadedProperty: '!' + cfg.parentProperty + '$',
+            loadedProperty: '!' + cfg.hasChildrenProperty,
             unique: true,
             root: root,
             rootEnumerable: rootAsNode,
@@ -544,6 +543,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              * @see parentProperty
              */
             nodeProperty: null,
+            /**
+             * @cfg {String} Устанавливает поле, по значениям которого определяется признак наличия дочерних элементов.
+             * @see parentProperty
+             */
+            hasChildrenProperty: null,
             /**
              * @cfg {String} Устанавливает режим отображения записей: отображать только записи типа "Узел" (папка) или любые типы записей.
              * @remark
@@ -1230,6 +1234,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             }
             if (cfg.parentProperty && !cfg.nodeProperty) {
                cfg.nodeProperty = cfg.parentProperty + '@';
+            }
+            if (cfg.parentProperty && !cfg.hasChildrenProperty) {
+               // todo временное решение, т.к. с бизнес-логики прилетает инвертированное значение признака загруженности ветки
+               cfg.hasChildrenProperty = cfg.parentProperty + '$';
             }
          },
          _addItems: function() {
