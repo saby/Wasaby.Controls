@@ -312,7 +312,17 @@ define('js!SBIS3.CONTROLS.FilterButton',
 
              return config;
           },
-
+   
+          _onResizeHandler: function() {
+             var picker = this._picker;
+             
+             FilterButton.superclass._onResizeHandler.apply(this, arguments);
+      
+             if (picker) {
+                picker._onResizeHandler();
+             }
+          },
+   
           _setPickerConfig: function () {
              var context = cContext.createContext(this, {restriction: 'set'}),
                  rootName = this._options.internalContextFilterName,
