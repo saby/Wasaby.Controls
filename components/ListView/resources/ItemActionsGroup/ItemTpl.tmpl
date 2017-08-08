@@ -4,14 +4,15 @@
       caption="{{caption}}"
       tooltip="{{tooltip}}"
       allowChangeEnable="{{allowChangeEnable}}"
-      class="controls-ItemActions__item {{cssClass}}"
+      class="controls-ItemActions__item {{cssClass ? cssClass}}"
       icon="{{icon && viewMode !== 'caption' ? icon + ' controls-ItemActions__icon'}}"
-      template="{{'js!' + icon && !viewMode ? 'SBIS3.CONTROLS.IconButton' : 'SBIS3.CONTROLS.Link'}}"
+      template="{{'js!' + (icon && !viewMode ? 'SBIS3.CONTROLS.IconButton' : 'SBIS3.CONTROLS.Link')}}"
    />
 </ws:template>
 
 <ws:partial
    template="_itemTpl"
+   icon="{{item.get('icon')}}"
    caption="{{item.get('caption')}}"
    visible="{{item.get('visible')}}"
    tooltip="{{item.get('tooltip')}}"

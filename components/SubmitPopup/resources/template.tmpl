@@ -30,25 +30,25 @@
                name="positiveButton"
                allowChangeEnable="{{false}}"
                caption="{{positiveButton.caption}}"
-               template="{{'js!' + positiveButton.isLink ? 'SBIS3.CONTROLS.Link' : 'SBIS3.CONTROLS.Button'}}"
+               template="{{'js!' + (positiveButton.isLink ? 'SBIS3.CONTROLS.Link' : 'SBIS3.CONTROLS.Button')}}"
                class="controls-SubmitPopup__button{{hasCancelButton ? ' controls-SubmitPopup__button-mini'}} controls-Button__ellipsis"
             />
             <ws:partial
                name="negativeButton"
                allowChangeEnable="{{false}}"
                caption="{{negativeButton.caption}}"
-               template="{{'js!' + negativeButton.isLink ? 'SBIS3.CONTROLS.Link' : 'SBIS3.CONTROLS.Button'}}"
+               template="{{'js!' + (negativeButton.isLink ? 'SBIS3.CONTROLS.Link' : 'SBIS3.CONTROLS.Button')}}"
                class="controls-SubmitPopup__button{{hasCancelButton ? ' controls-SubmitPopup__button-mini'}} controls-Button__ellipsis"
             />
-         </ws:if>
-         <ws:if data="{{hasCancelButton}}">
-            <ws:partial
-               name="cancelButton"
-               allowChangeEnable="{{false}}"
-               caption="{{cancelButton.caption}}"
-               template="{{'js!' + cancelButton.isLink ? 'SBIS3.CONTROLS.Link' : 'SBIS3.CONTROLS.Button'}}"
-               class="controls-SubmitPopup__button controls-SubmitPopup__button-mini controls-Button__ellipsis"
-            />
+            <ws:if data="{{hasCancelButton}}">
+               <ws:partial
+                  name="cancelButton"
+                  allowChangeEnable="{{false}}"
+                  caption="{{cancelButton.caption}}"
+                  template="{{'js!' + (cancelButton.isLink ? 'SBIS3.CONTROLS.Link' : 'SBIS3.CONTROLS.Button')}}"
+                  class="controls-SubmitPopup__button controls-SubmitPopup__button-mini controls-Button__ellipsis"
+               />
+            </ws:if>
          </ws:if>
          <ws:else>
             <ws:partial
@@ -61,9 +61,5 @@
             />
          </ws:else>
       </div>
-      <!--primary="{{true}}"
-            allowChangeEnable="{{false}}"
-            caption="{{submitButton.caption}}"
-            class="controls-SubmitPopup__button controls-Button__ellipsis"-->
    </div>
 </div>
