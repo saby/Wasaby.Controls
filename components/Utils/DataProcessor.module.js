@@ -82,6 +82,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
       },
 
       $constructor: function() {
+         this._enableLongOperations = requirejs.defined('js!SBIS3.Engine.LongOperationsInformer');
       },
       /**
        * Отправить на печать готовый dataSet
@@ -111,18 +112,29 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        * @param {number} pageOrientation 1 - потртетная, 2 - альбомная
        */
       exportHTML: function(fileName, fileType, pageOrientation){
-         var self = this;
+         var
+            self = this,
+            methodName = 'SaveHTML',
+            newCfg;
          this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + fileType);
          this._prepareSerializer().addCallback(function(reportText){
             self._destroyLoadIndicator();
-            var newCfg = {
-               'FileName': fileName,
-               'html': reportText
-            };
+            if (self._enableLongOperations) {
+               newCfg = {
+                  'FileName': fileName,
+                  'html': reportText
+               };
+            } else {
+               methodName = 'СохранитьПоHTMLDWC';
+               newCfg = {
+                  'name': fileName,
+                  'html': reportText
+               };
+            }
             if (fileType === "PDF") {
                newCfg.PageOrientation = typeof pageOrientation === 'number' ? pageOrientation : 1;
             }
-            self.exportFileTransfer(fileType, 'SaveHTML', newCfg);
+            self.exportFileTransfer(fileType, methodName, newCfg);
 
          });
       },
@@ -140,6 +152,9 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          }
          if (pageOrientation) {
             cfg.PageOrientation = pageOrientation;
+         }
+         if (!this._enableLongOperations && !methodName) {
+            methodName = 'СохранитьListDWC';
          }
          this.exportFileTransfer(fileType, methodName || 'SaveList', cfg);
       },
@@ -182,7 +197,9 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
                cfg.PageOrientation = pageOrientation;
             }
          }
-
+         if (!this._enableLongOperations && !methodName) {
+            methodName = 'СохранитьRSDWC';
+         }
          this.exportFileTransfer(fileType, methodName || 'SaveRecordSet', cfg);
       },
       /**
@@ -209,7 +226,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             }
             return error;
          });
-         if (object !== "Excel") {
+         if (object !== "Excel" && !this._enableLongOperations) {
             this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + object);
             exportDeferred.addCallback(function(ds) {
                self.downloadFile(ds.getScalar());
