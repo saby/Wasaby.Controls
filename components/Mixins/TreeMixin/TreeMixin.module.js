@@ -1255,9 +1255,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             // https://inside.tensor.ru/opendoc.html?guid=4f8e94ac-6303-4878-b608-8d17a54d8bd5&des=
             applyExpandToItemsProjection(this._getItemsProjection(), this._options);
          },
-         reload: function() {
+         _stateResetHandler: function () {
             // сохраняем текущую страницу при проваливании в папку
-            if (this._options.saveReloadPosition) {  
+            if (this._options.saveReloadPosition) {
                this._hierPages[this._previousRoot] = this._getCurrentPage();
             }
             this._options._folderOffsets['null'] = 0;
@@ -1267,6 +1267,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             this._loadedNodes = {};
             // При перезагрузке приходят новые данные, т.ч. сбрасываем объект, хранящий список узлов с "есть ещё"
             this._options._folderHasMore = {};
+         },
+         reload: function() {
+            this._stateResetHandler();
+         },
+         setItems: function() {
+            this._stateResetHandler();
          },
          _applyExpandToItems: function(items) {
             var hierarchy = this._options._getHierarchyRelation(this._options),
