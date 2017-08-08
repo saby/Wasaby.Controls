@@ -58,7 +58,9 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                   linkedContainer = this.getParent().getInputContainer(), // всегда считаем  показ панели от поля ввода редактора
                   inputOffset = linkedContainer.offset().top,
                   panelOffset = this._container.offset().top,
-                  inputHeight = linkedContainer.height();
+                  inputHeight = linkedContainer.height(),
+                  inputOffsetLeft = linkedContainer.offset().left,
+                  panelOffsetleft = this._container.offset().left;
                this._container.css('width',this.getTarget().width());
                this._container.css('max-width', this.getParent().getInputContainer().width() - imagePanelhOffset);
                this._container.css('height',imagePanelHeight + 'px'); // dich3000
@@ -71,6 +73,9 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                   if (panelOffset > inputOffset + inputHeight + imagePanelhOffsetBottom) {
                      this._container.css('top', inputOffset + inputHeight - imagePanelHeight / 2);
                   }
+               }
+               if (panelOffsetleft < inputOffsetLeft) {
+                  this._container.css('left', inputOffsetLeft);
                }
             },
 
