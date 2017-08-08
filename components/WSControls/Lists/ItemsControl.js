@@ -55,9 +55,6 @@ define('js!WSControls/Lists/ItemsControl', [
 
          constructor: function (cfg) {
             ItemsControl.superclass.constructor.apply(this, arguments);
-            //TODO в правильной работе VDOM опций не должно быть в конструкторе. Сейчас они зовутся из DeprecatedContr, и мешают работать
-            //https://online.sbis.ru/opendoc.html?guid=2eca8164-29bd-4b29-b489-4dd9e142a808
-            this._options = {};
 
             this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
             this._prepareMountingData(cfg);
@@ -82,20 +79,11 @@ define('js!WSControls/Lists/ItemsControl', [
             if (this._dataSource && cfg.dataSource.firstLoad !== false) {
                this.reload();
             }
-
-            //TODO в правильной работе VDOM опций не должно быть в конструкторе. Сейчас они зовутся из DeprecatedContr, и мешают работать
-            //https://online.sbis.ru/opendoc.html?guid=2eca8164-29bd-4b29-b489-4dd9e142a808
-            debugger;
-            this._options = newOptions;
          },
 
          _beforeUpdate: function(newOptions) {
             this._prepareMountingData(newOptions);
             //TODO обработать смену фильтров и т.д. позвать релоад если надо
-
-            //TODO в правильной работе VDOM опций не должно быть в конструкторе. Сейчас они зовутся из DeprecatedContr, и мешают работать
-            //https://online.sbis.ru/opendoc.html?guid=2eca8164-29bd-4b29-b489-4dd9e142a808
-            this._options = newOptions;
          },
 
          _initItemBasedControllers: function(items, cfg) {
