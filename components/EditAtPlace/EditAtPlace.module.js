@@ -171,7 +171,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
           */
          validate: function(){
             var result = EditAtPlace.superclass.validate.apply(this, arguments);
-            if (!result) {
+            if (!result && !this._options.editInPopup) {
                this.setInPlaceEditMode(true);
             }
             return result;
