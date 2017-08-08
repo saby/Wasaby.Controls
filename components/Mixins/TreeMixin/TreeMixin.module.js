@@ -1225,6 +1225,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
 
       before: {
          _modifyOptions: function(cfg) {
+            if (cfg._curRoot !== null && cfg.currentRoot === null) {
+               cfg.currentRoot = cfg._curRoot;
+            }
             if (cfg.currentRoot === null) {
                this._previousRoot = cfg.currentRoot = cfg.root;
             } else {
