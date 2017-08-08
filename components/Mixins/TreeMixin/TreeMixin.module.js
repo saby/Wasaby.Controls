@@ -25,8 +25,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       var
          root, projection, rootAsNode,
          filter = [];
-      if (typeof cfg._curRoot != 'undefined') {
-         root = cfg._curRoot;
+      if (typeof cfg.currentRoot != 'undefined') {
+         root = cfg.currentRoot;
       }
       else {
          if (typeof cfg.root != 'undefined') {
@@ -493,9 +493,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             _searchFolders: {},
             _getRecordsForRedraw: getRecordsForRedraw,
             _getRecordsForRedrawTree: getRecordsForRedraw,
-            _curRoot: null,
             _createDefaultProjection : createDefaultProjection,
             _hasNextPageInFolder: hasNextPageInFolder,
+            /**
+             * @cfg {String, Number} Устанавливает идентификатор узла, относительно которого отображаются данные в текущий момент
+             */
+            currentRoot: null,
             /**
              * @cfg {Number} Задает размер отступов для каждого уровня иерархии
              * @example
@@ -1226,8 +1229,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
 
       before: {
          _modifyOptions: function(cfg) {
-            cfg._curRoot = cfg.root;
-            this._previousRoot = cfg._curRoot;
+            if (cfg._curRoot !== null && cfg.currentRoot === null) {
+               cfg.currentRoot = cfg._curRoot;
+            }
+            if (cfg.currentRoot === null) {
+               this._previousRoot = cfg.currentRoot = cfg.root;
+            } else {
+               this._previousRoot = cfg.root;
+            }
             if (cfg.hierField) {
                IoC.resolve('ILogger').log('TreeMixin', 'Опция hierField является устаревшей, используйте parentProperty');
                cfg.parentProperty = cfg.hierField;
@@ -1283,10 +1292,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                this._applyExpandToItems(this.getItems());
             }
             if (path) {
-               hierarchy = this._getHierarchy(path, this._options._curRoot);
+               hierarchy = this.getHierarchy(path, this._options.currentRoot);
             }
-            if (this._previousRoot !== this._options._curRoot) {
-               this._notify('onSetRoot', this._options._curRoot, hierarchy);
+            if (this._previousRoot !== this._options.currentRoot) {
+               this._notify('onSetRoot', this._options.currentRoot, hierarchy);
                //TODO Совсем быстрое и временное решение. Нужно скроллиться к первому элементу при проваливании в папку.
                // Выпилить, когда это будет делать установка выделенного элемента
                //TODO курсор
@@ -1309,7 +1318,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                   }
                }
 
-               this._previousRoot = this._options._curRoot;
+               this._previousRoot = this._options.currentRoot;
 
             }
          }
@@ -1374,7 +1383,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see root
        */
       getCurrentRoot : function(){
-         return this._options._curRoot;
+         return this._options.currentRoot;
       },
       /**
        * Устанавливает проваливание в узел и вызывает отрисовку хлебных крошек (если они есть), относительно вершины иерархии (см. {@link root}).
@@ -1412,15 +1421,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          this._offset = 0;
          //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
          this._notify('onBeforeSetRoot', key);
-         this._options._curRoot = key !== undefined && key !== null ? key : this._options.root;
+         this._options.currentRoot = key !== undefined && key !== null ? key : this._options.root;
          if (this._options._itemsProjection) {
             this._options._itemsProjection.setEventRaising(false);
-            this._options._itemsProjection.setRoot(this._options._curRoot !== undefined ? this._options._curRoot : null);
+            this._options._itemsProjection.setRoot(this._options.currentRoot !== undefined ? this._options.currentRoot : null);
             this._options._itemsProjection.setEventRaising(true);
          }
-         this._hier = this._getHierarchy(this.getItems(), key);
+         this._hier = this.getHierarchy(this.getItems(), key);
       },
-      _getHierarchy: function(items, key){
+      getHierarchy: function(items, key){
          var record, parentKey,
             hierarchy = [];
          if (items && items.getCount()){

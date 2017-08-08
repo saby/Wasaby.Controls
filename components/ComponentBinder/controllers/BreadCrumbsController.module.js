@@ -38,7 +38,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
 
       bindBreadCrumbs: function(breadCrumbs, backButton){
          var self = this,
-            view = this._options.view;
+            view = this._options.view,
+            currentRoot = view.getCurrentRoot();
 
          backButton = backButton || this._options.backButton;
          breadCrumbs = breadCrumbs || this._options.breadCrumbs;
@@ -63,7 +64,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
             view.reload();
          }
 
-         view.subscribe('onSetRoot', function(event, id, hier){
+         function applyRoot(id, hier) {
             //Этот массив могут использовать другие подписанты, а мы его модифицируем
             var hierClone = cFunctions.clone(hier);
             //onSetRoot стреляет после того как перешли в режим поиска (так как он стреляет при каждом релоаде),
@@ -71,7 +72,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
             if (!self._searchMode){
                var lastHierElem = hierClone[hierClone.length - 1],
                   caption;
-               //Если пришла иерархия, которая не является продолжением уже установленной заменим ее целиком 
+               //Если пришла иерархия, которая не является продолжением уже установленной заменим ее целиком
                if ((self._currentRoot && hierClone.length && lastHierElem.parent != self._currentRoot.id)){
                   self._currentRoot = hierClone[0];
                   self._path = hierClone.reverse();
@@ -110,6 +111,14 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
                }
                backButton.setCaption(caption);
             }
+         }
+
+         if (currentRoot !== view.getRoot()) {
+            applyRoot(currentRoot, view.getHierarchy(view.getItems().getMetaData().path, currentRoot));
+         }
+
+         view.subscribe('onSetRoot', function(event, id, hier){
+            applyRoot(id, hier);
          });
 
          view.subscribe('onKeyPressed', function(event, jqEvent) {
