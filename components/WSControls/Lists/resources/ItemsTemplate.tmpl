@@ -1,0 +1,16 @@
+<ws:for data="index,item in records">
+    <ws:if data="{{ item.getContents }}">
+        <ws:partial
+                template="{{_getItemTpl()}}"
+                contentTemplate="{{_getItemContentTpl()}}"
+                defaultItemTpl="{{_defaultItemTemplate}}"
+                scope="{{...}}"
+                item="{{item.getContents()}}"
+                projItem="{{item}}"
+                index="{{index}}"
+                itemData="{{_getItemData(item, index)}}"/>
+    </ws:if>
+    <ws:else>
+        <ws:partial template="{{ item.tpl }}" scope="{{ item.data }}" />
+    </ws:else>
+</ws:for>

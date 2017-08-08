@@ -1,0 +1,29 @@
+<div class="controls-ListView {{multiselect !== false ? 'controls-ListView__multiselect' : 'controls-ListView__multiselect__off'}}{{ _serverRender ? ' controls-ListView__dataLoaded'}}"
+     event:onmouseleave="_mouseLeave()">
+   <div class="controls-ListView__itemsContainer">
+      <ws:partial template="{{_itemsTemplate}}"
+                  records="{{_records}}"
+                  scope="{{...}}"/>
+   </div>
+
+   <ws:if data="{{loading}}">
+      <div class="controls-AjaxLoader">
+         <div class="controls-AjaxLoader__outer">
+            <div class="controls-AjaxLoader__block">
+               <div class="controls-AjaxLoader__LoadingIndicator"></div>
+            </div>
+         </div>
+      </div>
+   </ws:if>
+
+   <ws:if data="{{ _options.itemsActions }}">
+      <ws:WSControls.Lists.ItemsToolbar.ItemsToolbarCompatible
+              name="itemsToolbar"
+              idProperty="{{ _options.idProperty }}"
+              itemsActions="{{ _options.itemsActions }}"
+              activeItem="{{ { 'parentContainer': _container, 'display': _display, 'hoveredIndex': _hoveredIndex } }}"
+      />
+   </ws:if>
+
+</div>
+
