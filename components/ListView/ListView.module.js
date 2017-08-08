@@ -3721,14 +3721,14 @@ define('js!SBIS3.CONTROLS.ListView',
                if (this.isInfiniteScroll() && this._isPageLoaded(pageNumber)){
                   if (this._getItemsProjection() && this._getItemsProjection().getCount()){
                      var itemIndex = pageNumber * this._options.pageSize - this._scrollOffset.top,
-                        itemId = this._getItemsProjection().getItemBySourceIndex(itemIndex).getContents().getId(),
+                        itemId = this._getItemsProjection().at(itemIndex).getContents().getId(),
                         item = this.getItems().getRecordById(itemId);
                      if (item) {
                         this.scrollToItem(item);
                      }
                   }
                } else {
-                  if (pageNumber == 0) {
+                  if (pageNumber === 0) {
                      this._setInfiniteScrollState('down');
                   }
                   this._offset = this._options.pageSize * pageNumber;
