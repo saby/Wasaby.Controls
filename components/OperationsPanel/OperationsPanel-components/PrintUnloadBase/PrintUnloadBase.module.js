@@ -190,7 +190,8 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
             if (pageSize < numOfRecords) {
                //Выберем pageSize записей из dataSet
                recordSet = Chain(recordSet).first(pageSize).value(RecordSetFactory, {
-                  adapter: recordSet.getAdapter()
+                  adapter: recordSet.getAdapter(),
+                  model: recordSet.getModel()
                });
             }
             self._applyOperation(recordSet);
