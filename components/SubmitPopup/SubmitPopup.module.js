@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.SubmitPopup', [
    "Core/constants",
    "js!SBIS3.CONTROLS.InformationPopup",
-   "html!SBIS3.CONTROLS.SubmitPopup/resources/template",
+   "tmpl!SBIS3.CONTROLS.SubmitPopup/resources/template",
    'Core/Sanitize',
    "js!SBIS3.CONTROLS.Button",
    "js!SBIS3.CONTROLS.Link",

@@ -4,7 +4,7 @@
 define('js!SBIS3.CONTROLS.Image.EditDialog', [
    "Transport/BLObject",
    "js!SBIS3.CORE.CompoundControl",
-   "html!SBIS3.CONTROLS.Image.EditDialog",
+   "tmpl!SBIS3.CONTROLS.Image.EditDialog",
    "js!SBIS3.CONTROLS.Image.CropPlugin",
    "js!SBIS3.CONTROLS.Utils.ImageUtil",
    "Core/helpers/transport-helpers",

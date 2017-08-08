@@ -1,0 +1,21 @@
+<ws:template name="_itemTpl">
+   <ws:partial
+      visible="{{visible}}"
+      caption="{{caption}}"
+      tooltip="{{tooltip}}"
+      allowChangeEnable="{{allowChangeEnable}}"
+      class="controls-ItemActions__item {{cssClass}}"
+      icon="{{icon && viewMode !== 'caption' ? icon + ' controls-ItemActions__icon'}}"
+      template="{{'js!' + icon && !viewMode ? 'SBIS3.CONTROLS.IconButton' : 'SBIS3.CONTROLS.Link'}}"
+   />
+</ws:template>
+
+<ws:partial
+   template="_itemTpl"
+   caption="{{item.get('caption')}}"
+   visible="{{item.get('visible')}}"
+   tooltip="{{item.get('tooltip')}}"
+   cssClass="{{item.get('cssClass')}}"
+   viewMode="{{item.get('toolbarViewMode')}}"
+   cssClallowChangeEnableass="{{item.get('allowChangeEnable')}}"
+/>
