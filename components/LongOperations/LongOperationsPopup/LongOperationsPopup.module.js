@@ -102,7 +102,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
 
             var view = this._longOpList.getView();//this._longOpList.getChildControlByName('operationListDataGrid')
 
-            this.subscribeTo(view, 'onItemsReady', function () {
+            this.subscribeTo(view, 'onDrawItems'/*'onItemsReady'*/, function () {
                var items = self._longOpList.getItems();
                var count = items ? items.getCount() : 0;
                if (count) {
@@ -132,19 +132,13 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                      $ctr.removeClass(cls);
                      $ctr.animate({opacity:1}, 800);//1500
                   }
+
+                  //При перерисовке размеры могут меняться
+                  self._notify('onSizeChange');
                }
                else {
                   //Если операций нет, просто закрываем попап
                   self.close();
-               }
-            });
-
-            this.subscribeTo(view, 'onDrawItems', function () {
-               var items = self._longOpList.getItems();
-               var count = items ? items.getCount() : 0;
-               if (count) {
-                  //При перерисовке размеры могут меняться
-                  self._notify('onSizeChange');
                }
             });
 
