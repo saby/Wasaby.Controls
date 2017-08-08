@@ -110,7 +110,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   tooltip: titles.resume,
                   isMainAction: true,
                   onActivated: function ($item, id, model) {
-                     self.applyUserAction('resume', model, true);
+                     self.applyUserAction('resume', model, false);
                   }
                },
                {
@@ -120,7 +120,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   tooltip: titles.suspend,
                   isMainAction: true,
                   onActivated: function ($item, id, model) {
-                     self.applyUserAction('suspend', model, true);
+                     self.applyUserAction('suspend', model, false);
                   }
                },
                {
@@ -160,7 +160,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                               else {
                                  model.set(evt.changed, evt[evt.changed]);
                               }
-                              self._updateItems(items);
+                              self._checkItems(items);
                               dontReload = true;
                            }
                         }
@@ -232,10 +232,10 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
          },
 
          /**
-          * Обновить отображаемые элементы списка
+          * Инициировать анимацию и процесс обновления времён выполнения если нужно
           * @public
           */
-         _updateItems: function () {
+         _checkItems: function () {
             var hasRun;
             var items = this._view.getItems();
             if (items && items.getCount()) {
@@ -298,7 +298,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
           */
          reload: function () {
             var promise = this._view.reload().addCallback(function () {
-               this._updateItems();
+               this._checkItems();
             }.bind(this));
             // Индикатор загрузки здесь только приводит к мельканию списка, убрать его
             // Лучше бы конечно, если бы у SBIS3.CONTROLS.ListView была опция "Не показывать индикатор загрузки. Совсем. Никогда."
