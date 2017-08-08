@@ -419,10 +419,9 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 targetsControl = DragObject.getTargetsControl(),
                 res,
                 container = this._getDragContainer();
-
+            this._updateDragTarget(DragObject, e);
             if (targetsControl === this) {
                 container.addClass('controls-dragndrop');
-                this._updateDragTarget(DragObject, e);
                 res = this._notify('onDragOver', DragObject, e);
             } else if (container.hasClass('controls-dragndrop')) {
                 container.removeClass('controls-dragndrop')

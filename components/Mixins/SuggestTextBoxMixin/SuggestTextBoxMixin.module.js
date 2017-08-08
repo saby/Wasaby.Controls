@@ -15,7 +15,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    "Core/CommandDispatcher",
    "Core/core-functions",
    "Core/IoC",
-   "Core/helpers/Function/once"
+   "Core/helpers/Function/once",
+   "Core/detection"
 ], function (
    constants,
    SearchController,
@@ -30,7 +31,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    CommandDispatcher,
    cFunctions,
    IoC,
-   once) {
+   once,
+   detection) {
 
    'use strict';
 
@@ -481,7 +483,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             var parentConfig = parentFunc.apply(this, arguments);
             parentConfig.tabindex = 0;
             parentConfig.targetPart = true;
-            parentConfig.closeOnTargetMove = true;
+            /* Т.к. на мобильных устройствах при установке фокуса в поле ввода может проиходить скролл ( и чаще всего происходит ),
+               нельзя скрывать автодополнение при скроле. */
+            parentConfig.closeOnTargetMove = !detection.isMobilePlatform;
             return parentConfig;
          },
 

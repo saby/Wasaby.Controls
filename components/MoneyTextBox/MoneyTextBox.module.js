@@ -3,16 +3,17 @@
  */
 
 define('js!SBIS3.CONTROLS.MoneyTextBox', [
-   "Core/defaultRenders",
-   "Core/constants",
-   "js!SBIS3.CONTROLS.NumberTextBox",
+   'Core/defaultRenders',
+   'Core/constants',
+   'js!SBIS3.CONTROLS.NumberTextBox',
+   'js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil',
    'tmpl!SBIS3.CONTROLS.MoneyTextBox/resources/textFieldWrapper',
    'css!SBIS3.CONTROLS.MoneyTextBox'
-], function (cDefaultRenders, constants, NumberTextBox, textFieldWrapper) {
+], function (cDefaultRenders, constants, NumberTextBox, NumberTextBoxUtil, textFieldWrapper) {
 
    'use strict';
 
-   function formatText(value, integers, maxLength){
+   function formatText(value, text, integers, maxLength){
       // Вырезаем переносы строк и теги.
       value = typeof value === 'string' ? value.replace(/\n/gm, '').replace(/<.*?>/g, '') : value;
       value = value + '';
@@ -26,6 +27,10 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
           maxLength,
           true
       );
+
+      if(!NumberTextBoxUtil.checkMaxLength(value, maxLength)){
+         return text;
+      }
 
       return value || '';
    }
@@ -93,6 +98,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
          if (value){
             options.text = formatText(
                 value,
+                options.text,
                 options.integers,
                 options.maxLength
             );
@@ -201,6 +207,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
       _formatText: function(value){
          return formatText(
              value,
+             this._options.text,
              this._options.integers,
              this._options.maxLength
          );

@@ -1084,7 +1084,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           _setPickerConfig: function () {
              return {
                 corner: 'bl',
-                closeOnTargetMove: !constants.browser.isMobileIOS,
+                closeOnTargetMove: !constants.browser.isMobilePlatform,
                 closeByExternalClick: true,
                 targetPart: true,
                 _canScroll: true,
