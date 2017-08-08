@@ -82,7 +82,6 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
       },
 
       $constructor: function() {
-         this._enableLongOperations = requirejs.defined('js!SBIS3.Engine.LongOperationsInformer');
       },
       /**
        * Отправить на печать готовый dataSet
@@ -119,7 +118,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + fileType);
          this._prepareSerializer().addCallback(function(reportText){
             self._destroyLoadIndicator();
-            if (self._enableLongOperations) {
+            if (self._isLongOperationsEnabled()) {
                newCfg = {
                   'FileName': fileName,
                   'html': reportText
@@ -153,7 +152,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          if (pageOrientation) {
             cfg.PageOrientation = pageOrientation;
          }
-         if (!this._enableLongOperations && !methodName) {
+         if (!this._isLongOperationsEnabled() && !methodName) {
             methodName = 'СохранитьListDWC';
          }
          this.exportFileTransfer(fileType, methodName || 'SaveList', cfg);
@@ -197,12 +196,12 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
                cfg.PageOrientation = pageOrientation;
             }
          }
-         if (!this._enableLongOperations && !methodName) {
+         if (!this._isLongOperationsEnabled() && !methodName) {
             methodName = 'СохранитьRSDWC';
          }
          this.exportFileTransfer(fileType, methodName || 'SaveRecordSet', cfg);
       },
-      /**
+       /**
        * Универсальная выгрузка данных через сервис file-transfer
        * @param object
        * @param methodName
@@ -226,7 +225,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             }
             return error;
          });
-         if (object !== "Excel" || !this._enableLongOperations) {
+         if (object !== "Excel" || !this._isLongOperationsEnabled()) {
             this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + object);
             exportDeferred.addCallback(function(ds) {
                self.downloadFile(ds.getScalar());
@@ -353,6 +352,9 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             this._loadIndicator.destroy();
             this._loadIndicator = undefined;
          }
+      },
+      _isLongOperationsEnabled: function() {
+         return requirejs.defined('js!SBIS3.Engine.LongOperationsInformer');
       }
    });
 });
