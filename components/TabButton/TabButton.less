@@ -432,5 +432,12 @@
          position: relative;
          top: -1px;
       }
+   
+      /* Баг edge, из-за border-box'a обрезаются хвосты букв.
+         В качестве решения ещё предлагается сделать overflow: auto,
+         но это тут не подходит, т.к. текст должен обрезаться */
+      .controls-EditAtPlace .controls-EditAtPlace__fieldWrapper {
+         box-sizing: content-box;
+      }
    }
 }
