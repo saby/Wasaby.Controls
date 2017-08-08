@@ -2030,7 +2030,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                            delete content.attributes[attributeName];
                         }
 
-                     },
+                     }
                   },
                   checkDataAttribute: false,
                   escapeInvalidTags: false

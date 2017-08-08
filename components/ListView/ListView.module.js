@@ -1515,6 +1515,12 @@ define('js!SBIS3.CONTROLS.ListView',
                    item = this.getItems() ? this.getItems().getRecordById(targetKey) : undefined,
                    correctTarget = target.hasClass('controls-editInPlace') ? this._getDomElementByItem(this._options._itemsProjection.getItemBySourceItem(item)) : target;
 
+               //В некоторых версиях 11 IE не успевает рассчитаться ширина узла, вследствие чего correctTarget.offsetWidth == 0
+               //Это вызывает неправильное позиционирование тулбара
+               if (cDetection.isIE) {
+                  correctTarget.width();
+               }
+
                return {
                   key: targetKey,
                   record: item,
@@ -2972,7 +2978,9 @@ define('js!SBIS3.CONTROLS.ListView',
                 self = this;
 
             if (this.isInfiniteScroll()) {
-               this._createScrollWatcher();
+               if (!this._scrollWatcher) {
+                  this._createScrollWatcher();
+               }
 
                this._createLoadingIndicator();
                if (this._options.infiniteScroll == 'demand'){
@@ -3203,6 +3211,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         this._toggleEmptyData(!this.getItems().getCount());
                      }
                      this._notify('onDataMerge', dataSet);
+                     this._onDataMergeCallback(dataSet);
                      //Если данные пришли, нарисуем
                      if (dataSet.getCount()) {
                         //TODO: вскрылась проблема  проекциями, когда нужно рисовать какие-то определенные элементы и записи
@@ -3284,7 +3293,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollOffset.top -= this._limit;
             }
          },
-
+         _onDataMergeCallback: function(dataSet) {},
          _drawPage: function(dataSet, state){
             var at = null,
                 self = this,

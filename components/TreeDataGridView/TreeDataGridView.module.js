@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
    var
       DEFAULT_SELECT_CHECKBOX_WIDTH = 24, // Стандартная ширина чекбокса отметки записи.
+      DEFAULT_ROW_SELECT_WIDTH = 8,       // Стандартная ширина полоски выбранной строки.
       DEFAULT_FIELD_PADDING_SIZE = 5,     // Стандартный отступ в полях ввода 4px + border 1px. Используется для расчёта отступа при редактировании по месту.
       DEFAULT_EXPAND_ELEMENT_WIDTH = 26,  // Стандартная ширина стрелки разворота в дереве
       DEFAULT_CELL_PADDING_DIFFERENCE = 1,// Стандартная разница между оступом в ячейке табличного представления и отступом в текстовых полях (6px - 5px = 1px)
@@ -242,7 +243,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             this._createAllFolderFooters();
          }
          //Если есть скролящиеся заголовки, нужно уменьшить ширину хлебных крошек в поиске до ширины таблицы
-         if (this._options.startScrollColumn && this._isSearchMode()){
+         if ((this._options.startScrollColumn || this.getContainer().hasClass('.controls-DataGridView__tableLayout-auto')) && this._isSearchMode()){
          	this.getContainer().find('.controls-TreeView__searchBreadCrumbs').width(this._getSearchBreadCrumbsWidth());
          }
       },
@@ -299,11 +300,15 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             // Без режима поиска и при наличии родителя - необходимо учесть отступ иерархии
             levelOffset = !this._isSearchMode() && parentProj ? parentProj.getLevel() * this._getLevelPaddingWidth() : 0,
             hasCheckbox = container.hasClass('controls-ListView__multiselect'),
-            checkboxOffset = this._options.editingTemplate && hasCheckbox && !container.hasClass('controls-ListView__hideCheckBoxes') ? DEFAULT_SELECT_CHECKBOX_WIDTH : 0,
-            // Считаем необходимый отступ слева-направо:
-            // отступ чекбокса + отступ строки + отступ иерархии (в режиме поиска 0) + ширина стрелки разворота.
-            // Так же в режиме поиска или наличии модификатора controls-TreeView__hideExpands не нужно учитывать DEFAULT_EXPAND_ELEMENT_WIDTH, т.к. expand { display: none; }
-            result = checkboxOffset + this._getRowPadding(target) + levelOffset + (this._isSearchMode() || container.hasClass('controls-TreeView__hideExpands') ? 0 : DEFAULT_EXPAND_ELEMENT_WIDTH);
+            checkboxOffset = 0,
+            result;
+         if (this._options.editingTemplate && hasCheckbox) {
+            checkboxOffset = container.hasClass('controls-ListView__hideCheckBoxes') ? DEFAULT_ROW_SELECT_WIDTH : DEFAULT_SELECT_CHECKBOX_WIDTH;
+         }
+         // Считаем необходимый отступ слева-направо:
+         // отступ чекбокса + отступ строки + отступ иерархии (в режиме поиска 0) + ширина стрелки разворота.
+         // Так же в режиме поиска или наличии модификатора controls-TreeView__hideExpands не нужно учитывать DEFAULT_EXPAND_ELEMENT_WIDTH, т.к. expand { display: none; }
+         result = checkboxOffset + this._getRowPadding(target) + levelOffset + (this._isSearchMode() || container.hasClass('controls-TreeView__hideExpands') ? 0 : DEFAULT_EXPAND_ELEMENT_WIDTH);
          // Если не задан шаблон редактирования строки и отображаются чекбоксы - компенсируем разницу оступов в полях ввода и ячеек таблицы (в полях ввода 5px, в таблице - 6px)
          if (!this._options.editingTemplate && hasCheckbox) {
             result += DEFAULT_CELL_PADDING_DIFFERENCE;

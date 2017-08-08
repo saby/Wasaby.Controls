@@ -141,12 +141,24 @@ define([
             dragMove.beginDrag();
             assert.equal(DragObject.getSource().at(0).getOwner(), view);
          });
+         it('should set sourse dom elemet if listview has a editinplace', function () {
+            var eip = $('<div class="controls-editInPlace controls-ListView__item js-controls-ListView__item"></div>');
+            eip.data('hash', view._getItemsProjection().at(0).getHash());
+            view.getContainer().find('[data-id=1]').after(eip);
+            dragMove.beginDrag();
+            assert.isFalse(DragObject.getSource().at(0).getDomElement().hasClass('controls-editInPlace'));
+         });
       });
       describe('._getDragTarget', function () {
          it('should return drag target', function () {
             var target = dragMove._getDragTarget();
             assert.equal(target.item.getContents().getId(), 1);
             assert.equal(target.domElement.html(), 1);
+         });
+         it('should not return drag target when horisontal dragndrop', function () {
+            event.target = $('<div/>');
+            var target = dragMove._getDragTarget();
+            assert.isTrue(!target.item);
          })
       });
       describe('.updateTarget', function () {
@@ -191,6 +203,12 @@ define([
             dragMove.updateTarget();
             var target = DragObject.getTarget();
             assert.equal(target.getOwner(), view);
+         });
+         it('should be clear target if view cant found target and old targets owner this view', function () {
+            dragMove.updateTarget();
+            event.target = $('<div/>');
+            dragMove.updateTarget();
+            assert.isUndefined(DragObject.getTarget());
          });
       });
       describe('._canDragMove', function () {

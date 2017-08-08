@@ -32,6 +32,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
       $protected: {
          _tabButtons: null,
          _switchableArea: null,
+         _changingAreaDeferred: null,
          _options: {
             /**
              * @typedef {object} Item
@@ -195,7 +196,12 @@ define('js!SBIS3.CONTROLS.TabControl', [
       _setActiveArea: function(id){
          this._options.selectedKey = id;
          this._switchableArea._options.defaultArea = id;
-         return this._switchableArea.setActiveArea(id);
+         /* Чтобе не возникало гонок, если вкладку сменили ещё до загрузки текущей. */
+         if (this._changingAreaDeferred && !this._changingAreaDeferred.isReady()) {
+            this._changingAreaDeferred.cancel();
+         }
+         this._changingAreaDeferred = this._switchableArea.setActiveArea(id);
+         return this._changingAreaDeferred;
       }
    });
 
