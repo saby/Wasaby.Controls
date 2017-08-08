@@ -1,11 +1,11 @@
 define('js!SBIS3.CONTROLS.LongOperationsList',
    [
       'Core/Deferred',
-      'Core/TimeInterval',
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model',
       'js!SBIS3.CONTROLS.LongOperationsManager',
+      'js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
       'js!SBIS3.CONTROLS.Utils.InformationPopupManager',
       'html!SBIS3.CONTROLS.LongOperationsList',
       'css!SBIS3.CONTROLS.LongOperationsList',
@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
       'js!SBIS3.CONTROLS.DataGridView'
    ],
 
-   function (Deferred, TimeInterval, CompoundControl, LongOperationEntry, Model, longOperationsManager, InformationPopupManager, dotTplFn) {
+   function (Deferred, CompoundControl, LongOperationEntry, Model, longOperationsManager, LongOperationsListDataSource, InformationPopupManager, dotTplFn) {
       'use strict';
 
       /**
@@ -110,7 +110,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   tooltip: titles.resume,
                   isMainAction: true,
                   onActivated: function ($item, id, model) {
-                     self.applyUserAction('resume',  model, true);
+                     self.applyUserAction('resume', model, true);
                   }
                },
                {
@@ -130,12 +130,14 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   tooltip: titles['delete'],
                   isMainAction: true,
                   onActivated: function ($item, id, model) {
-                     self.applyUserAction('delete',  model, true);
+                     self.applyUserAction('delete', model, true);
                   }
                }
             ]);
 
             this._bindEvents();
+
+            this._view.setDataSource(new LongOperationsListDataSource());
          },
 
          _bindEvents: function () {
@@ -158,7 +160,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                               else {
                                  model.set(evt.changed, evt[evt.changed]);
                               }
-                              self._setItems(items);
+                              self._updateItems(items);
                               dontReload = true;
                            }
                         }
@@ -173,12 +175,6 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                      self.reload();
                   }
                });
-            });
-
-            this.subscribeTo(this._view, /*'onPropertiesChanged'*/'onPropertyChanged', function (evtName, property) {
-               if (property === 'filter') {
-                  self.reload();
-               }
             });
 
             //У приостановленных операций нужно менять цвет текста, поэтому навешиваем класс
@@ -236,13 +232,12 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
          },
 
          /**
-          * Установить новые отображаемые элементы списка
+          * Обновить отображаемые элементы списка
           * @public
-          * @param {WS.Data/Collection/RecordSet}
           */
-         _setItems: function (items) {
-            this._view.setItems(items);
+         _updateItems: function () {
             var hasRun;
+            var items = this._view.getItems();
             if (items && items.getCount()) {
                var STATUSES = LongOperationEntry.STATUSES;
                var from = !this._notFirst ? (new Date()).getTime() - ANIM_NOTEARLY : null;
@@ -302,82 +297,9 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
           * @return {Core/Deferred}
           */
          reload: function () {
-            return longOperationsManager.fetch(this._gatherFetchOptions())
-               .addCallback(function (results) {
-                  if (this._isDestroyed) {
-                     return;
-                  }
-                  //###view._notify('onDataLoad', results);
-                  this._setItems(results);
-               }.bind(this));
-         },
-
-         /**
-          * Собрать параметры запроса данных
-          * @protected
-          * @returns {object}
-          */
-         _gatherFetchOptions: function () {
-            var options = {};
-            var view = this._view;
-            var filter = view.getFilter();
-            if (filter) {
-               var where = {};
-               if (filter.status) {
-                  var STATUSES = LongOperationEntry.STATUSES;
-                  switch (filter.status) {
-                     case 'running':
-                     case 'suspended':
-                     case 'ended':
-                        where.status = STATUSES[filter.status];
-                        break;
-                     case 'not-suspended':
-                        where.status = [STATUSES.running, STATUSES.ended];
-                        break;
-                     case 'success-ended':
-                        where.status = STATUSES.ended;
-                        where.isFailed = null;
-                        break;
-                     case 'error-ended':
-                        where.status = STATUSES.ended;
-                        where.isFailed = true;
-                        break;
-                  }
-               }
-               if (filter.period) {
-                  where.startedAt = {condition:'>=', value:(new TimeInterval(filter.period)).subFromDate(new Date())};
-               }
-               if (filter.duration) {
-                  where.timeSpent = {condition:'>=', value:(new TimeInterval(filter.duration)).getTotalMilliseconds()};
-               }
-               if (filter['СтрокаПоиска']) {
-                  where.title = {condition:'contains', value:filter['СтрокаПоиска'], sensitive:false};
-                  /*if (filter.usePages) {
-                  }*/
-               }
-               if (filter.UserId) {
-                  where.userId = filter.UserId;
-               }
-               if (Object.keys(where).length) {
-                  options.where = where;
-               }
-            }
-            var sorting = view.getSorting();
-            if (sorting && sorting.length) {
-               options.orderBy = sorting;
-            }
-            var offset = view.getOffset();
-            if (0 <= offset) {
-               options.offset = offset;
-            }
-            var limit = view.getPageSize();
-            if (0 < limit) {
-               options.limit = limit;
-            }
-            if (filter.needUserInfo) {
-               options.extra = {needUserInfo:true};
-            }
-            return Object.keys(options).length ? options : null;
+            return this._view.reload().addCallback(function () {
+               this._updateItems();
+            }.bind(this));
          },
 
          /**
