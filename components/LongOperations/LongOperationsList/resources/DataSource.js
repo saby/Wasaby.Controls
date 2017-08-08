@@ -27,109 +27,6 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
       var LongOperationsListDataSource = CoreExtend.extend({}, [ISource], /** @lends SBIS3.CONTROLS.LongOperationsListDataSource.prototype */{
          _moduleName: 'SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
 
-         /*_$options: {
-         },*/
-
-         /**
-          * Конструктор
-          * @public
-          */
-         $constructor: function $LongOperationsListDataSource () {
-         },
-
-
-
-         /**
-          * Возвращает конечную точку, обеспечивающую доступ клиента к функциональным возможностям источника данных.
-          * @return {Endpoint}
-          */
-         /*###getEndpoint: function () {
-         },*/
-
-         /**
-          * Возвращает соответствие методов CRUD+ контракту.
-          * @return {Binding}
-          */
-         /*###getBinding: function () {
-         },*/
-
-         /**
-          * Устанавливает соответствие методов CRUD+ контракту.
-          * @param {Binding} binding
-          */
-         /*###setBinding: function (binding) {
-         },*/
-
-         /**
-          * Возвращает адаптер для работы с данными.
-          * @return {WS.Data/Adapter/IAdapter}
-          */
-         /*###getAdapter: function () {
-         },*/
-
-         /**
-          * Устанавливает адаптер для работы с данными.
-          * @param {String|WS.Data/Adapter/IAdapter} adapter
-          */
-         /*###setAdapter: function (adapter) {
-         },*/
-
-         /**
-          * Возвращает конструктор записей, порождаемых источником данных.
-          * @return {String|Function}
-          */
-         /*###getModel: function () {
-         },*/
-
-         /**
-          * Устанавливает конструктор записей, порождаемых источником данных.
-          * @param {String|Function} model
-          */
-         /*###setModel: function (model) {
-         },*/
-
-         /**
-          * Возвращает конструктор рекордсетов, порождаемых источником данных.
-          * @return {String|Function}
-          */
-         /*###getListModule: function () {
-         },*/
-
-         /**
-          * Устанавливает конструктор списка моделей
-          * @param {String|Function} listModule
-          */
-         /*###setListModule: function (listModule) {
-         },*/
-
-         /**
-          * Возвращает название свойства модели, содержащего первичный ключ
-          * @return {String}
-          */
-         /*###getIdProperty: function () {
-         },*/
-
-         /**
-          * Устанавливает название свойства модели, содержащего первичный ключ
-          * @param {String} name
-          */
-         /*###setIdProperty: function (name) {
-         },*/
-
-         /**
-          * Возвращает имя поля, по которому по умолчанию сортируются записи выборки.
-          * @return {String}
-          */
-         /*###getOrderProperty: function () {
-         },*/
-
-         /**
-          * Устанавливает имя поля, по которому по умолчанию сортируются записи выборки.
-          * @param {String} name
-          */
-         /*###setOrderProperty: function (name) {
-         },*/
-
          /**
           * Возвращает дополнительные настройки источника данных.
           * @return {Object}
@@ -139,66 +36,6 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
                navigationType: 'Page'
             };
          },
-
-         /**
-          * Устанавливает дополнительные настройки источника данных.
-          * @param {Object} options
-          */
-         /*###setOptions: function (options) {
-         },*/
-
-         /**
-          * Создает пустую модель через источник данных (при этом она не сохраняется в хранилище)
-          * @param {Object|WS.Data/Entity/Record} [meta] Дополнительные мета данные, которые могут понадобиться для создания модели
-          * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link WS.Data/Entity/Model}.
-          */
-         /*###create: function (meta) {
-         },*/
-
-         /**
-          * Читает модель из источника данных
-          * @param {String} key Первичный ключ модели
-          * @param {Object|WS.Data/Entity/Record} [meta] Дополнительные мета данные
-          * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link WS.Data/Entity/Model}.
-          */
-         /*###read: function (key, meta) {
-         },*/
-
-         /**
-          * Обновляет модель в источнике данных
-          * @param {WS.Data/Entity/Model|WS.Data/Collection/RecordSet} data Обновляемая запись или рекордсет
-          * @param {Object} [meta] Дополнительные мета данные
-          * @return {Core/Deferred} Асинхронный результат выполнения
-          */
-         /*###update: function (data, meta) {
-         },*/
-
-         /**
-          * Удаляет модель из источника данных
-          * @param {String|Array} keys Первичный ключ, или массив первичных ключей модели
-          * @param {Object|WS.Data/Entity/Record} [meta] Дополнительные мета данные
-          * @return {Core/Deferred} Асинхронный результат выполнения
-          */
-         /*###destroy: function (keys, meta) {
-         },*/
-
-         /**
-          * Объединяет одну модель с другой
-          * @param {String} from Первичный ключ модели-источника (при успешном объедининии модель будет удалена)
-          * @param {String} to Первичный ключ модели-приёмника
-          * @return {Core/Deferred} Асинхронный результат выполнения
-          */
-         /*###merge: function (from, to) {
-         },*/
-
-         /**
-          * Создает копию модели
-          * @param {String} key Первичный ключ модели
-          * @param {Object} [meta] Дополнительные мета данные
-          * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link WS.Data/Entity/Model копия модели}.
-          */
-         /*###copy: function (key, meta) {
-         },*/
 
          /**
           * Выполняет запрос на выборку
@@ -278,27 +115,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
                });
                return dataSet;
             });
-         }//###,
-
-         /**
-          *
-          * Вызывает метод (только для RPC источников)
-          * @param {String} command Имя метода
-          * @param {Object} [data] Аргументы
-          * @return {Core/Deferred} Асинхронный результат выполнения. В колбэке придет {@link WS.Data/Source/DataSet}.
-          */
-         /*###call: function (command, data) {
-         },*/
-
-         /**
-          * Производит перемещение записи.
-          * @param {Array} items Перемещаемая модель.
-          * @param {String} target Идентификатор целевой записи, относительно которой позиционируются перемещаемые.
-          * @param {MoveMetaConfig} [meta] Дополнительные мета данные.
-          * @return {Core/Deferred} Асинхронный результат выполнения.
-          */
-         /*###remove: function (items, target, meta) {
-         }*/
+         }
       });
 
 
