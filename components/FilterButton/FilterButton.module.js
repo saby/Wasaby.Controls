@@ -17,7 +17,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
    "Core/IoC",
    "Core/helpers/Function/once",
    "Core/detection",
-   "Core/helpers/Function/debounce",
    "js!SBIS3.CONTROLS.IconButton",
    "js!SBIS3.CONTROLS.FilterButton.FilterLine",
    "i18n!SBIS3.CONTROLS.FilterButton",
@@ -40,8 +39,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
         colHelpers,
         IoC,
         once,
-        detection,
-        debounce
+        detection
     ) {
 
        'use strict';
@@ -192,7 +190,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
              declareCmd('change-field-internal', this._changeFieldInternal.bind(this));
 
              this._checkPickerContent = once.call(this._checkPickerContent);
-             this._resizePickerArea = debounce(this._resizePickerArea, 30);
              this.getContainer().on('click', '.controls__filterButton__filterLine-items, .controls__filterButton-button', showPicker);
           },
 
@@ -315,24 +312,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
 
              return config;
           },
-   
-          /*  В текущем состоянии пикер не пересчитывает свои размеры при изменении внутреннего контента.
-              Для этого есть причины:
-              1) Пикер не знает, что именно в нём изменился контент.
-              2) Если принудительно считать, то все пикеры начнут часто прыгать.
-              Вызвать пересчёт - ответственность того, кто вызвал это изменение.
-              Но в кнопке фильтров контент постоянно меняется динамически (фильтры показываются / скрываются / раскрывается история),
-              и эти изменения вызываются стандартыми средствани (show/hide контролов), которые так же не сообщают,
-              где произошли изменения, а просто вызывают onResize. Для этого пишу обработчик, который замеряет высоту пикера,
-              и при её изменении вызывает необходимые расчеты.
-           */
-          _resizePickerArea: function() {
-             var picker = this.getPicker();
-             
-             if(picker) {
-                picker.recalcPosition(true);
-             }
-          },
 
           _setPickerConfig: function () {
              var context = cContext.createContext(this, {restriction: 'set'}),
@@ -438,7 +417,17 @@ define('js!SBIS3.CONTROLS.FilterButton',
                    },
                    
                    onResize: function() {
-                      self._resizePickerArea();
+                      /*  В текущем состоянии пикер не пересчитывает свои размеры при изменении внутреннего контента.
+                          Для этого есть причины:
+                          1) Пикер не знает, что именно в нём изменился контент.
+                          2) Если принудительно считать, то все пикеры начнут часто прыгать.
+                          Вызвать пересчёт - ответственность того, кто вызвал это изменение.
+                          Но в кнопке фильтров контент постоянно меняется динамически (фильтры показываются / скрываются / раскрывается история),
+                          и эти изменения вызываются стандартыми средствани (show/hide контролов), которые так же не сообщают,
+                          где произошли изменения, а просто вызывают onResize. Для этого пишу обработчик, который замеряет высоту пикера,
+                          и при её изменении вызывает необходимые расчеты.
+                       */
+                      this.recalcPosition(true);
                    }
                 }
              };
