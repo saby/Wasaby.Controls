@@ -114,7 +114,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
             }
          }
 
-         if (currentRoot !== view.getRoot() && items) {
+         if (currentRoot !== null && currentRoot !== view.getRoot() && items) {
             applyRoot(currentRoot, view.getHierarchy(items.getMetaData().path, currentRoot));
          }
 
