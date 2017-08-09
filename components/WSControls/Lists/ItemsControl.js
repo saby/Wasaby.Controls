@@ -94,14 +94,6 @@ define('js!WSControls/Lists/ItemsControl', [
                }
                this._display = this._createDefaultDisplay(items, cfg);
                this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
-
-               if (this._multiSelector) {
-                  this._multiSelector.destroy();
-               }
-
-               if(this._needMultiSelector) {
-                  this._multiSelector = this._createDefaultMultiSelector();
-               }
             }
          },
 
@@ -142,7 +134,7 @@ define('js!WSControls/Lists/ItemsControl', [
                groupBy = this._options.groupBy,
                groupData;
             groupData = {
-               multiselect : this._options.multiselect,
+               multiselect : this._options.multiSelect,
                groupContentTemplate: TemplateUtil.prepareTemplate(groupBy.contentTemplate || '', true)
             };
             return groupData;
@@ -207,10 +199,6 @@ define('js!WSControls/Lists/ItemsControl', [
 
          _onItemClick: function (evt) {
             //Method must be implemented
-         },
-
-         itemActionActivated: function(number, evt) {
-            alert('clicked ' + this._hoveredItem + ' on button ' + number);
          },
          
    
@@ -303,9 +291,6 @@ define('js!WSControls/Lists/ItemsControl', [
             ItemsControl.superclass.destroy.apply(this, arguments);
             if (this._display) {
                this._display.destroy();
-            }
-            if (this._multiSelector) {
-               this._multiSelector.destroy();
             }
          }
       });
