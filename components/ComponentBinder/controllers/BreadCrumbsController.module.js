@@ -39,7 +39,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
       bindBreadCrumbs: function(breadCrumbs, backButton){
          var self = this,
             view = this._options.view,
-            currentRoot = view.getCurrentRoot();
+            currentRoot = view.getCurrentRoot(),
+            items = view.getItems();
 
          backButton = backButton || this._options.backButton;
          breadCrumbs = breadCrumbs || this._options.breadCrumbs;
@@ -113,8 +114,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
             }
          }
 
-         if (currentRoot !== view.getRoot()) {
-            applyRoot(currentRoot, view.getHierarchy(view.getItems().getMetaData().path, currentRoot));
+         if (currentRoot !== view.getRoot() && items) {
+            applyRoot(currentRoot, view.getHierarchy(items.getMetaData().path, currentRoot));
          }
 
          view.subscribe('onSetRoot', function(event, id, hier){
