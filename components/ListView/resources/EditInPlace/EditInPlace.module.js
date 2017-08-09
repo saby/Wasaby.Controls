@@ -315,9 +315,9 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   editorTop = target.position().top - this.getContainer().position().top;
                   if (this._lastVerticalPosition !== editorTop) {
                      this._lastVerticalPosition = editorTop;
-                     $.each(this._editors, function (id, editor) {
-                        $(editor).css('top', editorTop);
-                     });
+                     for (var i = 0; i < this._editors.length; i++) {
+                        $(this._editors[i]).css('top', editorTop);
+                     }
                   }
                }
             },

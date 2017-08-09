@@ -2,7 +2,7 @@
  * Created by as.avramenko on 24.01.2017.
  */
 
-define('js!SBIS3.CONTROLS.ColumnsController', ['Core/Abstract', 'Core/helpers/collection-helpers'], function(cAbstract, cHelpers) {
+define('js!SBIS3.CONTROLS.ColumnsController', ['Core/Abstract'], function(cAbstract) {
    'use strict';
    /**
     * Класс контроллера редакторования колонок.
@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.ColumnsController', ['Core/Abstract', 'Core/helpers/co
                   newColumns = newColumns.concat(column.get('columnConfig'));
                }
             });
-            cHelpers.forEach(this._state, function (colId) {
+            this._state.forEach(function (colId) {
                column = columns.getRecordById(colId);
                if (column && !column.get('fixed')) {
                   newColumns = newColumns.concat(column.get('columnConfig'));

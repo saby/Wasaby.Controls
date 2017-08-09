@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
    'js!SBIS3.CORE.CompoundControl',
    'js!SBIS3.CONTROLS.PopupMixin',
    'js!SBIS3.CONTROLS.HistoryController',
-   'Core/helpers/collection-helpers',
+   'Core/helpers/Object/find',
    'Core/helpers/generate-helpers',
    'html!SBIS3.CONTROLS.StylesPanelNew',
    'Core/EventBus',
@@ -16,7 +16,7 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
    'js!SBIS3.CONTROLS.CheckBox',
    'css!SBIS3.CONTROLS.StylesPanelNew',
    'css!SBIS3.CONTROLS.MenuItem'
-], function(CommandDispatcher, CompoundControl, PopupMixin, HistoryController, colHelpers, genHelpers, dotTplFn, EventBus) {
+], function(CommandDispatcher, CompoundControl, PopupMixin, HistoryController, objectFind, genHelpers, dotTplFn, EventBus) {
 
 
    'use strict';
@@ -307,19 +307,23 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
       },
 
       _preparePreset: function() {
-         var preparedPreset = [],
+         var
+            preparedPreset = [],
+            presets = this._options.presets,
             preparedItem;
-         colHelpers.forEach(this._options.presets, function(style) {
-            preparedItem = {
-               id: genHelpers.randomId(),
-               json: style
-            };
-            if (style.name) {
-               preparedItem.name = style.name;
-               delete preparedItem.json.name;
+         for (var style in presets) {
+            if (presets.hasOwnProperty(style)) {
+               preparedItem = {
+                  id: genHelpers.randomId(),
+                  json: presets[style]
+               };
+               if (presets[style].name) {
+                  preparedItem.name = presets[style].name;
+                  delete preparedItem.json.name;
+               }
+               preparedPreset.push(preparedItem);
             }
-            preparedPreset.push(preparedItem);
-         });
+         }
          this._presetItems = preparedPreset;
       },
 
@@ -328,16 +332,31 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
          var self = this,
             preparedItems = [],
             preparedItem;
-         colHelpers.forEach(items, function(item) {
-            preparedItem = {
-               id: item.id,
-               style: self._getInlineStyle(item.json)
-            };
-            if (item.name) {
-               preparedItem.name = item.name;
+         if (items instanceof Array) {
+            items.forEach(function(item) {
+               preparedItem = {
+                  id: item.id,
+                  style: self._getInlineStyle(item.json)
+               };
+               if (item.name) {
+                  preparedItem.name = item.name;
+               }
+               preparedItems.push(preparedItem);
+            });
+         } else {
+            for (var key in items) {
+               if(items.hasOwnProperty(key)) {
+                  preparedItem = {
+                     id: items[key].id,
+                     style: self._getInlineStyle(items[key].json)
+                  };
+                  if (items[key].name) {
+                     preparedItem.name = items[key].name;
+                  }
+                  preparedItems.push(preparedItem);
+               }
             }
-            preparedItems.push(preparedItem);
-         });
+         }
          return preparedItems;
       },
 
@@ -430,16 +449,18 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
       /* собирает строку css стилей из текущего  */
       _getInlineStyle: function(format) {
          var css = '';
-         colHelpers.forEach(format, function(value, option) {
-            css += option + ':' + value + ';';
-         });
+         for (var key in format) {
+            if(format.hasOwnProperty(key)) {
+               css += key + ':' + format[key] + ';';
+            }
+         }
          return css;
       },
 
       _activatePresetByKey: function(key) {
          var preset;
 
-         preset = colHelpers.find(this._options.presets ? this._presetItems : this._history, function(item) {
+         preset = objectFind(this._options.presets ? this._presetItems : this._history, function(item) {
             return item.id == key;
          }, this, false);
          this._currentPresetId = preset.json.id !== null ? preset.json.id : null;

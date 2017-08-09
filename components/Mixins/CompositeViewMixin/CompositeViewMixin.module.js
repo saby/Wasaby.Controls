@@ -1,6 +1,5 @@
 define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    'Core/constants',
-   'Core/helpers/collection-helpers',
    'tmpl!SBIS3.CONTROLS.CompositeViewMixin',
    'Core/IoC',
    'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/CompositeItemsTemplate',
@@ -13,7 +12,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/InvisibleItemsTemplate',
    'Core/core-merge',
    'js!SBIS3.CONTROLS.Link'
-], function(constants, collection, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate, ItemsTemplate, InvisibleItemsTemplate, cMerge) {
+], function(constants, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate, ItemsTemplate, InvisibleItemsTemplate, cMerge) {
    'use strict';
    /**
     * Миксин добавляет функционал, который позволяет контролу устанавливать режимы отображения элементов коллекции по типу "Таблица", "Плитка" и "Список".

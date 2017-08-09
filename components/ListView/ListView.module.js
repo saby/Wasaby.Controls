@@ -44,7 +44,6 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.ComponentBinder',
    'js!WS.Data/Di',
    'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
-   'Core/helpers/collection-helpers',
    'Core/core-instance',
    'Core/helpers/functional-helpers',
    'Core/helpers/dom&controls-helpers',
@@ -69,7 +68,7 @@ define('js!SBIS3.CONTROLS.ListView',
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents, LayoutManager, mHelpers,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove) {
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove) {
      'use strict';
 
       var
@@ -2946,7 +2945,7 @@ define('js!SBIS3.CONTROLS.ListView',
                if(itemsActions) {
                   target = self.getItemsActions().getTarget();
                   targetHash = target.container.data('hash');
-                  colHelpers.forEach(items, function (item) {
+                  items.forEach(function(item) {
                      if (item.getHash() == targetHash) {
                         self._itemsToolbar.unlockToolbar();
                         self._itemsToolbar.hide();
@@ -4452,7 +4451,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                 self = this,
                 keysForRemove = [];
-            colHelpers.forEach(this.getSelectedKeys(), function(key) {
+            this.getSelectedKeys().forEach(function(key) {
                if (!self._getItemProjectionByItemId(key)) {
                   keysForRemove.push(key);
                }

@@ -2,13 +2,12 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
     'js!SBIS3.CONTROLS.FilterPanelChooser.List',
     'Core/CommandDispatcher',
     'Core/core-functions',
-    'Core/helpers/collection-helpers',
     'Core/core-instance',
     'js!WS.Data/Collection/RecordSet',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList/resources/FilterPanelChooserDictionaryFooter',
     'js!SBIS3.CONTROLS.Action.SelectorAction',
     'css!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList'
-], function(FilterPanelChooserList, CommandDispatcher, cFunctions, colHelpers, cInstance, RecordSet, footerTpl, SelectorAction) {
+], function(FilterPanelChooserList, CommandDispatcher, cFunctions, cInstance, RecordSet, footerTpl, SelectorAction) {
 
     'use strict';
 
@@ -116,12 +115,12 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
             var
                 item,
                 items = this._getListView().getItems();
-            colHelpers.forEach(changed.removed, function(id) {
+            changed.removed.forEach(function(id) {
                 item = items.getRecordById(id);
                 if (item) {
                     items.remove(item);
                 }
-            }, this);
+            });
             this._getListView().redraw();
             this._addItemsFromDefault();
             this._toggleAllButton();
