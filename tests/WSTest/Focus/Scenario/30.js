@@ -62,7 +62,7 @@ define('js!WSTest/Focus/Scenario/30', [
          delete window[testControlName];
          control.destroy();
          done();
-      }, 50);
+      }, 100);
 
    };
 });

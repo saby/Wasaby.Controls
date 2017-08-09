@@ -10,11 +10,10 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
        'tmpl!SBIS3.CONTROLS.ItemsToolbar',
        'tmpl!SBIS3.CONTROLS.ItemsToolbar/editActions',
        'Core/helpers/dom&controls-helpers',
-       'Core/helpers/collection-helpers',
        'i18n!SBIS3.CONTROLS.ItemsToolbar',
        'css!SBIS3.CONTROLS.ItemsToolbar'
     ],
-    function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, dcHelpers, colHelpers) {
+    function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, dcHelpers) {
 
        'use strict';
        /**
@@ -199,13 +198,13 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            * @private
            */
           _bigIconsFix: function(items) {
-             colHelpers.forEach(
-                 items,
-                 function(item){
-                    if(item.hasOwnProperty('icon') && item.icon){
-                       item.icon = item.icon.replace('icon-16', 'icon-size');
-                    }
-                 });
+             if (items) {
+                items.forEach(function(item){
+                   if(item.hasOwnProperty('icon') && item.icon){
+                      item.icon = item.icon.replace('icon-16', 'icon-size');
+                   }
+                });
+             }
           },
           /**
            * Проверяет, отображаются ли сейчас опции записи

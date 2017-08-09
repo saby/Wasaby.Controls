@@ -351,7 +351,6 @@ define('js!SBIS3.CONTROLS.TextArea', [
       destroy: function() {
          this._inputField instanceof $ && this._inputField.trigger('autosize.destroy');
          dcHelpers.trackElement(this._container, false);
-         this._inputField = undefined;
          TextArea.superclass.destroy.apply(this, arguments);
       }
    });

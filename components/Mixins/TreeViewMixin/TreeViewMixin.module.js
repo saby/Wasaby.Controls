@@ -2,9 +2,8 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
    "Core/constants",
    'js!SBIS3.CONTROLS.TreePaging',
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
-   "Core/helpers/collection-helpers",
    "Core/core-instance"
-], function ( constants, TreePaging, TemplateUtil, colHelpers, cInstance) {
+], function ( constants, TreePaging, TemplateUtil, cInstance) {
 
 
    var getFolderFooterOptions = function(cfg, item) {
@@ -287,7 +286,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
          _clearItems: function(container) {
             if (this._getItemsContainer().get(0) == $(container).get(0) || !container) {
                var self = this;
-               this._lastParent = this._options._curRoot;
+               this._lastParent = this._options.currentRoot;
                this._lastDrawn = undefined;
                this._lastPath = [];
 
@@ -303,9 +302,12 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
          //TODO: после переход на серверную вёрстку фолдерфутера, данный метод не понадобится
          setOpenedPath: function(openedPath) {
             if (this._getItemsProjection()) {
-               colHelpers.forEach(openedPath, function (val, key) {
-                  this._createFolderFooter(key);
-               }.bind(this));
+               for (var key in openedPath) {
+                  if (openedPath.hasOwnProperty(key)) {
+                     this._createFolderFooter(key);
+
+                  }
+               }
             }
          }
       },

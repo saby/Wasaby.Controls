@@ -330,20 +330,6 @@ body {
 
   }
 
-    .ws-window-titlebar {
-    color: @default-text-color;
-    line-height: 3.57rem;
-    height: 3.57rem;
-    position: absolute;
-    left: 0;
-    right: 0;
-    font-size: 1.43rem;
-    white-space: nowrap;
-    -moz-box-shadow: none!important;
-    -webkit-box-shadow: none!important;
-    background: #2e404f;
-    box-shadow: none!important;
-  }
   .ws-float-area-title {
       font-size: 1.43rem!important;
       font-weight: normal !important;
@@ -492,21 +478,6 @@ body  .ws-window {
 
 
 body {
-
-  .ws-window-titlebar-action.close {
-     width: 3rem !important;
-     height: 3rem !important;
-     background: @closeBigButtonImage;
-     &:hover, &:active {
-        background: @closeBigButtonImageHover;
-     }
-  }
-  .ws-window-title {
-     font-size: 1.43rem;
-     height: 3.57rem;
-     max-height: 3.57rem;
-     line-height: 3.57rem;
-  }
   .engine-Browser__path {
     max-height: 2rem;
     height: auto !important;
@@ -539,6 +510,7 @@ body {
       }
    }
    .ws-window-title {
+      color: @default-text-color;
       font-size: 1.43rem;
       height: 3.57rem;
       max-height: 3.57rem;
@@ -1137,4 +1109,16 @@ body .controls-ItemActions .controls-Button__icon.icon-size {
     height: 3rem !important;
     width: 3rem !important;
     line-height: 3rem !important;
+}
+
+//TODO Костыль, т.к. у dropdownList не правильная базовая линия
+//Выпилить, как только dropdownList будет передалан по следующей задаче
+// https://online.sbis.ru/opendoc.html?guid=00f27299-b05b-4732-afeb-a87da885aeb1&des=
+.controls-operationsPanel .controls-DropdownList__selectedItem:before {
+   content: '.';
+   width: 0;
+   height: 0;
+}
+.controls-operationsPanel .controls-DropdownList__selectedItem .controls-IconButton {
+   margin-top: 8px;
 }

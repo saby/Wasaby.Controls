@@ -83,24 +83,11 @@
          background: @menu-item-hover-bg;
       }
    }
-   // т.к. IE8 не поддерживает :not, то делаю для него отдельный фикс подсветки по ховеру,
-   // усилил селектор задизейбленного состояния т.к. иначе ховер его перебьет
-   &.ws-is-ie8 {
-      .controls-MenuItem{
-         &:hover {
-            color: @menu-item-hover-text-color;
-            background: @menu-item-hover-bg;
-         }
-         &.ws-disabled {
-            color: @menu-item-disabled-text-color;
-            background: transparent;
-            cursor: default;
-
-            .controls-MenuItem__icon {
-               color: @menu-item-disabled-text-color !important;
-            }
-         }
-
+}
+.ws-is-ie {
+   .controls-MenuItem {
+      .controls-MenuItem__content {
+         display: block;
       }
    }
 }

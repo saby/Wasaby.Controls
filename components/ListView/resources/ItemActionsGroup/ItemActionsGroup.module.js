@@ -12,14 +12,14 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
    "js!SBIS3.CONTROLS.Link",
    "tmpl!SBIS3.CONTROLS.ItemActionsGroup",
    "tmpl!SBIS3.CONTROLS.ItemActionsGroup/ItemTpl",
-   "Core/helpers/collection-helpers",
+   "Core/helpers/Object/find",
    "Core/helpers/markup-helpers",
    "Core/helpers/functional-helpers",
    "Core/moduleStubs",
    "css!SBIS3.CONTROLS.ItemActionsGroup",
    "i18n!SBIS3.CONTROLS.ItemActionsGroup"
 ],
-   function( CommandDispatcher, IoC, ConsoleLogger,ButtonGroupBaseDS, IconButton, Link, dotTplFn, dotTplFnForItem, colHelpers, mkpHelpers, fHelpers, moduleStubs) {
+   function( CommandDispatcher, IoC, ConsoleLogger,ButtonGroupBaseDS, IconButton, Link, dotTplFn, dotTplFnForItem, objectFind, mkpHelpers, fHelpers, moduleStubs) {
 
       'use strict';
 
@@ -248,7 +248,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          },
 
          hasVisibleActions: function() {
-            return colHelpers.find(this.getItemsInstances(), function(instance) {
+            return objectFind(this.getItemsInstances(), function(instance) {
                /* Вызвать этот метод могут раньше, чем скроются выключенные операции,
                   и он вернёт неверный результат, поэтому проверяем и на isEnabled */
                return instance.isVisible() && instance.isEnabled();

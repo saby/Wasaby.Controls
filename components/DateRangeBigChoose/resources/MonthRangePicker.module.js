@@ -7,11 +7,10 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
    "js!SBIS3.CONTROLS.RangeSelectableViewMixin",
    "js!WS.Data/Source/Base",
    "js!WS.Data/Source/DataSet",
-   "Core/helpers/collection-helpers",
    "Core/core-instance",
    "js!SBIS3.CONTROLS.Utils.DateUtil",
    "js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView"
-], function ( constants, Deferred, ListView, ItemTmpl, RangeMixin, RangeSelectableViewMixin, Base, DataSet, colHelpers, cInstance, dateUtils) {
+], function ( constants, Deferred, ListView, ItemTmpl, RangeMixin, RangeSelectableViewMixin, Base, DataSet, cInstance, dateUtils) {
    'use strict';
 
    var _startingOffset = 1000000;
@@ -313,7 +312,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
 
       forEachMonthView: function (func) {
          var self = this;
-         colHelpers.forEach(this.getChildControls(), function(control) {
+         this.getChildControls().forEach(function(control) {
             // Почему то в control иногда попадают левые контролы
             if (self._isMonthView(control)) {
                func(control);

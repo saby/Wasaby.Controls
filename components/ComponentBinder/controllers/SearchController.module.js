@@ -115,7 +115,7 @@ define('js!SBIS3.CONTROLS.SearchController',
                callProjectionMethod('setEventRaising',[false]);
                //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
                callProjectionMethod('setRoot', [root]);
-               view._options._curRoot = root;
+               view._options.currentRoot = root;
                callProjectionMethod('setEventRaising', [true]);
             }
          });
@@ -174,7 +174,7 @@ define('js!SBIS3.CONTROLS.SearchController',
              т.к. появлялась ошибка при сценарии: ищем что-то, пока грузится сбрасываем поиск,
              и сразу опять что-то ищем. В фильтре списка оставался неправильный раздел. */
             //view.setCurrentRoot(self._lastRoot || null);
-            view._options._curRoot = self._lastRoot ||  view.getRoot() || null;
+            view._options.currentRoot = self._lastRoot ||  view.getRoot() || null;
             view._getItemsProjection().setRoot(self._lastRoot ||  view.getRoot() || null);
          });
          this._searchMode = false;
