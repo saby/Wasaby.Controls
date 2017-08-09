@@ -1,34 +1,24 @@
-define('js!WSControls/Lists/ListView2', ['js!WSControls/Lists/Selector',
+define('js!WSControls/Lists/ListView2',
+   [
+      'js!WSControls/Lists/MultiSelector',
       'tmpl!WSControls/Lists/ListView2',
       'tmpl!WSControls/Lists/resources/GroupTemplate',
-      'js!WSControls/Controllers/ListMultiSelector',
-      'js!WSControls/Lists/ItemsToolbar/ItemsToolbarCompatible'],
+      'js!WSControls/Lists/ItemsToolbar/ItemsToolbarCompatible'
+   ],
 
-   function(Selector, template, groupTemplate, ListMultiSelector) {
+   function(MultiSelector, template, groupTemplate) {
       
       var INDICATOR_DELAY = 2000;
       
-      var ListView = Selector.extend({
+      var ListView = MultiSelector.extend({
          _controlName: 'WSControls/Lists/ListView',
          _template: template,
-         _needMultiSelector: true,
          
          _defaultGroupTemplate: groupTemplate,
-
-         _createDefaultMultiSelector: function() {
-            return new ListMultiSelector({
-               display: this._display,
-               idProperty: this._options.idProperty,
-               allowEmptyMultiSelection: this._options.allowEmptySelection,
-               selectedKeys: this._options.selectedKeys,
-               multiSelect: this._options.multiSelect
-            })
-         },
-
-         _mouseMove: function(e, index) {
-            if (this._hoveredIndex !== index) {
-               this._hoveredIndex = index;
-            }
+         
+   
+         _mouseMove: function(e, displayItem) {
+            this._hoveredIndex = this._display.getIndex(displayItem);
          },
 
          _mouseLeave: function () {
