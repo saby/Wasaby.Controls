@@ -205,7 +205,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
                 filter,
                 dataSource,
                 self = this;
-             if (this._linkedObject._options.useSelectAll) {
+             if (this._linkedObject && this._linkedObject._options.useSelectAll) {
                 filter = cFunctions.clone(this._linkedObject.getFilter());
                 dataSource = this._linkedObject.getDataSource();
                 filter['selection'] = Record.fromObject(this._linkedObject.getSelection(), dataSource.getAdapter());

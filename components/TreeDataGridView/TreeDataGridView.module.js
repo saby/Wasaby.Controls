@@ -70,7 +70,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             projection: cfg.projItem.getOwner()
          };
          config.children = cfg.hierarchy.getChildren(cfg.item, config.projection.getCollection());
-         config.isLoaded = cfg.projItem.isLoaded();
+         config.isLoaded = typeof cfg.item.get(cfg.hasChildrenProperty) === 'boolean' && cfg.projItem.isLoaded();
          config.hasLoadedChild = config.children.length > 0;
          config.classIsLoaded = config.isLoaded ? ' controls-ListView__item-loaded' : '';
          config.classHasLoadedChild = config.hasLoadedChild ? ' controls-ListView__item-with-child' : ' controls-ListView__item-without-child';
@@ -243,7 +243,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             this._createAllFolderFooters();
          }
          //Если есть скролящиеся заголовки, нужно уменьшить ширину хлебных крошек в поиске до ширины таблицы
-         if ((this._options.startScrollColumn || this.getContainer().hasClass('.controls-DataGridView__tableLayout-auto')) && this._isSearchMode()){
+         if ((this._options.startScrollColumn || this.getContainer().hasClass('controls-DataGridView__tableLayout-auto')) && this._isSearchMode()){
          	this.getContainer().find('.controls-TreeView__searchBreadCrumbs').width(this._getSearchBreadCrumbsWidth());
          }
       },
