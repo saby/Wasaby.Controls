@@ -132,48 +132,46 @@ define(['js!WSControls/Lists/Selector',
          });
 
          describe('GetData', function(){
-            //TODO нужно решение - как запускать проверки только после mount
-            //https://online.sbis.ru/opendoc.html?guid=3ce92067-2609-44a1-bf93-be6e03d2b3c4
-            /*
+
             it('_isItemSelected', function () {
                var rs = new RecordSet({
                      rawData: data,
                      idProperty : 'id'
                   }),
-                  ctrl = new Selector({
+                  cfg = {
                      items : rs,
                      idProperty: 'id',
                      displayProperty: 'title',
                      selectedIndex: 1
-                  });
+                  },
+                  ctrl = new Selector(cfg);
+               ctrl.saveOptions(cfg);
                var proj = ctrl._display;
                var isSel = ctrl._isItemSelected(proj.at(0));
                assert.isFalse(isSel, 'selected in itemData in not correct');
                isSel = ctrl._isItemSelected(proj.at(1));
                assert.isTrue(isSel, 'selected in itemData in not correct');
             })
-            */
          });
 
 
          it('_SetSelectedByHash', function () {
-            //TODO нужно решение - как запускать проверки только после mount
-            //https://online.sbis.ru/opendoc.html?guid=3ce92067-2609-44a1-bf93-be6e03d2b3c4
-            /*var selector = new Selector({
+
+            var cfg = {
                selectedIndex : 2,
                items: dataRs,
                idProperty: 'id'
-            });
+            };
+            var selector = new Selector(cfg);
+            ctrl.saveOptions(cfg);
 
             var display = selector._display;
             var hash = display.at(1).getHash();
 
             selector._setSelectedByHash(hash);
             assert.equal(1, selector._selectedIndex, 'Method _setSelectedByHash doesn\'t work');
-            assert.equal(2, selector._selectedKey, 'Method _setSelectedByHash doesn\'t work');*/
+            assert.equal(2, selector._selectedKey, 'Method _setSelectedByHash doesn\'t work');
          });
-
-
       });
    });
 });

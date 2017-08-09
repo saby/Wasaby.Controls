@@ -28,20 +28,21 @@ define(['js!WSControls/Lists/ListView2', 'js!WS.Data/Collection/RecordSet', 'js!
          });
 
          describe('Events', function () {
-            //TODO нужно решение - как запускать проверки только после mount
-            //https://online.sbis.ru/opendoc.html?guid=3ce92067-2609-44a1-bf93-be6e03d2b3c4
-            /*it('ItemClick', function () {
-               var ctrl = new ListView({
+
+            it('ItemClick', function () {
+               var cfg = {
                   items : data,
                   idProperty: 'id'
-               });
+               };
+               var ctrl = new ListView(cfg);
+               ctrl.saveOptions(cfg);
 
                var display = ctrl._display;
                ctrl._onItemClick({}, display.at(1));
 
                assert.equal(2, ctrl._selectedKey, 'itemClick doesn\'t select key');
                assert.equal(1, ctrl._selectedIndex, 'itemClick doesn\'t select index');
-            });*/
+            });
    
             it('mousemove', function () {
                var ctrl = new ListView({

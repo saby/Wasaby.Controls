@@ -69,8 +69,8 @@ define('js!WSControls/Lists/TreeView2', [
          templateData.addClasses = templateData.classNodeType + templateData.classNodeState + templateData.classIsLoaded + templateData.classHasLoadedChild;
          return templateData;
       },
-      _createDefaultDisplay: function() {
-         return TreeItemsUtil.getDefaultTreeDisplay(this._items, this._options);
+      _createDefaultDisplay: function(items, cfg) {
+         return TreeItemsUtil.getDefaultTreeDisplay(items, cfg);
       },
       _onExpandClick: function(event, treeItem) {
          this.toggleItem(treeItem.getHash());

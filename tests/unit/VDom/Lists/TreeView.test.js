@@ -23,14 +23,15 @@ define(['js!WSControls/Lists/TreeView2', 'js!WS.Data/Source/Memory'], function (
             {  id: 4,   title: 'Empty hidden 4',   parent: null, 'parent@': false, 'parent$': false },
             {  id: 5,   title: 'Leaf 5',           parent: null, 'parent@': null,  'parent$': true  }
          ],
-         treeView = new TreeView({
+         cfg = {
             expandMode: 'incorrect_value',
             loadMode: 'incorrect_value',
             idProperty: 'id',
             parentProperty: 'parent',
             nodeProperty: 'parent@',
             items: treeViewItems
-         }),
+         },
+         treeView = new TreeView(cfg),
          resultCorrectInitialize = {
             _expandMode: 'multiple',
             _loadMode: 'partial'
@@ -87,6 +88,7 @@ define(['js!WSControls/Lists/TreeView2', 'js!WS.Data/Source/Memory'], function (
                3: true
             }
          };
+      treeView.saveOptions(cfg);
       it('Check correct initialize TreeView with incorrect options', function () {
          assert.deepEqual({
             _loadMode: treeView._loadMode,

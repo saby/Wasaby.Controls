@@ -23,18 +23,6 @@ define('js!WSControls/Lists/Selector', [
          return this._selectedKey == this._getPropertyValue(projItem.getContents(), this._options.idProperty);
       },
 
-      _prepareSelectedIndexByKey: function (key) {
-         //Вычисляем индекс по известному ключу
-         this._selectedIndex = this._getItemIndexByKey(key);
-         this._applyAllowEmpty();
-      },
-
-      _prepareSelectedKeyByIndex: function () {
-         //Вычисляем ключ по известному индексу
-         this._selectedKey = this._getKeyByIndex(this._selectedIndex);
-         this._applyAllowEmpty();
-      },
-
       _onItemClick: function(e, displayItem) {
          this._setSelectedByHash(displayItem.getHash());
          this._onSelectedItemChange();
@@ -62,7 +50,7 @@ define('js!WSControls/Lists/Selector', [
       _setSelectedByHash: function (hash) {
          var elem = this._display.getByHash(hash);
          this._selectedIndex = this._display.getIndex(elem);
-         this._selectedKey = this._getItemIndexByKey(this._selectedIndex, this._options);
+         this._selectedKey = this._getKeyByIndex(this._selectedIndex, this._options);
       },
 
       _isEmptyIndex: function (index) {
