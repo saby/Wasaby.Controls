@@ -15,7 +15,8 @@ define([
    var testNum = 1;
 
    var skipTests = [24, 29];//Пропустить тест
-   var skipComponent = [13, 14, 15, 16, 17, 18, 19, 20, 26, 30, 32, 33]; //Для асинхронных тестов, аргументом в функцию проверки передается done
+   var skipComponent = [13, 14, 15, 16, 17, 18, 19, 20, 26, 30, 32, 33]; //Для тестов, которые сами создают контролы,
+   // аргументом в функцию проверки передается done
 
    describe('Focus-tests', function () {
       var testControl;
@@ -53,7 +54,8 @@ define([
                });
             });
          })(i);
-      };
+      }
+      ;
       afterEach(function () {
          testControl && testControl.destroy();
       });
