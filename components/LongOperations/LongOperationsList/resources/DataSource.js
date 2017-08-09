@@ -10,13 +10,14 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
    [
       'Core/core-extend',
       'js!WS.Data/Source/ISource',
+      'js!WS.Data/Entity/ObservableMixin',
       'js!WS.Data/Source/DataSet',
       'js!SBIS3.CONTROLS.LongOperationsManager',
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'Core/TimeInterval'
    ],
 
-   function (CoreExtend, ISource, DataSet, longOperationsManager, LongOperationEntry, TimeInterval) {
+   function (CoreExtend, ISource, ObservableMixin, DataSet, longOperationsManager, LongOperationEntry, TimeInterval) {
       'use strict';
 
       /**
@@ -24,8 +25,12 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
        * @public
        * @type {object}
        */
-      var LongOperationsListDataSource = CoreExtend.extend({}, [ISource], /** @lends SBIS3.CONTROLS.LongOperationsListDataSource.prototype */{
+      var LongOperationsListDataSource = CoreExtend.extend({}, [ISource, ObservableMixin], /** @lends SBIS3.CONTROLS.LongOperationsListDataSource.prototype */{
          _moduleName: 'SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
+
+         $constructor: function $LongOperationsListDataSource () {
+            this._publish('onBeforeProviderCall');
+         },
 
          /**
           * Возвращает дополнительные настройки источника данных.
@@ -101,6 +106,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
             if (filter.needUserInfo) {
                options.extra = {needUserInfo:true};
             }
+            this._notify('onBeforeProviderCall');
             return longOperationsManager.fetch(Object.keys(options).length ? options : null).addCallback(function (recordSet) {
                var meta = recordSet.getMetaData()
                var dataSet = new DataSet({
