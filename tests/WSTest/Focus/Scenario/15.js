@@ -75,8 +75,8 @@ define('js!WSTest/Focus/Scenario/15', [
             delete window[caseChildControlName];
             delete window[caseParentControlName];
             done();
-         }, 10);
-      }, 10);
+         }, 100);
+      }, 100);
 
 
    };
