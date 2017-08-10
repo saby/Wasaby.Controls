@@ -7,6 +7,10 @@ body {
    font-size: 1rem !important;
 }
 body {
+  // TODO: оставляем так до 3.17.100 т.к. сейчас стили для icon-16, icon-24 и icon-32 определены в ws
+  .icon-16, .icon-24, .icon-32 {
+    font-family: @icon-font !important;
+  }
    .ws-validation-error > textarea {
       background-color: @text-box-error-bg !important; // перебиваю стили fieldAbstract
    }
@@ -1124,11 +1128,10 @@ body .controls-ItemActions .controls-Button__icon.icon-size {
 //TODO Костыль, т.к. у dropdownList не правильная базовая линия
 //Выпилить, как только dropdownList будет передалан по следующей задаче
 // https://online.sbis.ru/opendoc.html?guid=00f27299-b05b-4732-afeb-a87da885aeb1&des=
-.controls-operationsPanel .controls-DropdownList__selectedItem:before {
-   content: '.';
-   width: 0;
-   height: 0;
+.controls-operationsPanel .controls-DropdownList {
+   line-height: 1.43rem;
 }
-.controls-operationsPanel .controls-DropdownList__selectedItem .controls-IconButton {
-   margin-top: 8px;
+.controls-operationsPanel .controls-DropdownList .controls-IconButton {
+   position: relative;
+   top: 12px;
 }
