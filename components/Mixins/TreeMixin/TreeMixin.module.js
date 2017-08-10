@@ -500,14 +500,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              */
             currentRoot: null,
             /**
-             * @cfg {Number} Задает размер отступов для каждого уровня иерархии
-             * @example
-             * <pre>
-             *    <option name="paddingSize">24</option>
-             * </pre>
-             */
-            paddingSize: undefined,
-            /**
              * @cfg {String, Number} Устанавливает идентификатор узла, относительно которого нужно отображать данные. Такой узел будет считаться вершиной иерархии.
              * @example
              * <pre>
