@@ -154,6 +154,11 @@ define([
             var target = dragMove._getDragTarget();
             assert.equal(target.item.getContents().getId(), 1);
             assert.equal(target.domElement.html(), 1);
+         });
+         it('should not return drag target when horisontal dragndrop', function () {
+            event.target = $('<div/>');
+            var target = dragMove._getDragTarget();
+            assert.isTrue(!target.item);
          })
       });
       describe('.updateTarget', function () {
@@ -198,6 +203,12 @@ define([
             dragMove.updateTarget();
             var target = DragObject.getTarget();
             assert.equal(target.getOwner(), view);
+         });
+         it('should be clear target if view cant found target and old targets owner this view', function () {
+            dragMove.updateTarget();
+            event.target = $('<div/>');
+            dragMove.updateTarget();
+            assert.isUndefined(DragObject.getTarget());
          });
       });
       describe('._canDragMove', function () {

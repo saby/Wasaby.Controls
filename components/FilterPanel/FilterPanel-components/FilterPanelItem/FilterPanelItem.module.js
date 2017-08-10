@@ -66,6 +66,11 @@ define('js!SBIS3.CONTROLS.FilterPanelItem', [
             }
          });
          ctx.setValue(CONTEXT_ITEM_FIELD, cfg.item);
+      },
+
+      destroy: function() {
+         this.getContext().contextDeferred.callback();
+         FilterPanelItem.superclass.destroy.apply(this, arguments);
       }
    });
 

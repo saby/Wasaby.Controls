@@ -155,6 +155,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
 
       updateTarget: function() {
          var dragTarget = this._getDragTarget(),
+            oldTarget = DragObject.getTarget(),
             target;
          if (this._isCorrectSource(DragObject.getSource()) && dragTarget.item && !dragTarget.domElement.hasClass('controls-DragNDrop__placeholder')) {
             var position,
@@ -178,6 +179,8 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             } else  {
                DragObject.setTarget(undefined);
             }
+         } else if(oldTarget && oldTarget.getOwner &&  oldTarget.getOwner()  == this._getView()) {
+            DragObject.setTarget(undefined); //если не смогли найти таргет и устанавливали с этого контрола то надо стереть
          }
       },
 
@@ -363,11 +366,8 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
                target = this._findItemByElement($(elements[1]));
                if (target.length > 0) {
                   item = projection.getByHash(target.data('hash'));
-               } else {
-                  item = projection.at(projection.getCount() - 1);
                }
             }
-
          }
          return {
             item: item,

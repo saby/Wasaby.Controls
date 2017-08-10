@@ -1182,11 +1182,11 @@ define('js!SBIS3.CONTROLS.ListView',
                view: this,
                pagingZIndex: this._pagingZIndex
             });
-
             // Создаем пейджинг скрытым если включено сохранение позиции при reload, но сам пейджинг выключен
             // Так как для сохранения страницы все равно нужекн рассчет страниц скролла
             var hiddenPager = !this._options.scrollPaging && this._options.saveReloadPosition;
             this._scrollBinder.bindScrollPaging(this._scrollPager, hiddenPager);
+            dcHelpers.trackElement(this.getContainer(), true).subscribe('onVisible', this._onVisibleChange.bind(this));
             
             if (!this._inScrollContainerControl) {
                // Отлавливаем изменение масштаба
@@ -1196,10 +1196,10 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         _updateScrollPagerVisibility: function(){
+         _onVisibleChange: function(event, visible){
             if (this._scrollPager) {
                // покажем если ListView показалось и есть страницы и скроем если скрылось
-               this._scrollPager.setVisible(this.isVisible() && this._scrollPager.getPagesCount());
+               this._scrollPager.setVisible(visible && this._scrollPager.getPagesCount());
             }
          },
 
@@ -2870,7 +2870,6 @@ define('js!SBIS3.CONTROLS.ListView',
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
          _onResizeHandler: function(){
             ListView.superclass._onResizeHandler.call(this);
-            this._updateScrollPagerVisibility();
             if (this.getItems()){
                //Мог поменяться размер окна или смениться ориентация на планшете - тогда могут влезть еще записи, надо попробовать догрузить
                if (this.isInfiniteScroll() && this._scrollWatcher && !this._scrollWatcher.hasScroll()){
@@ -3751,14 +3750,14 @@ define('js!SBIS3.CONTROLS.ListView',
                if (this.isInfiniteScroll() && this._isPageLoaded(pageNumber)){
                   if (this._getItemsProjection() && this._getItemsProjection().getCount()){
                      var itemIndex = pageNumber * this._options.pageSize - this._scrollOffset.top,
-                        itemId = this._getItemsProjection().getItemBySourceIndex(itemIndex).getContents().getId(),
+                        itemId = this._getItemsProjection().at(itemIndex).getContents().getId(),
                         item = this.getItems().getRecordById(itemId);
                      if (item) {
                         this.scrollToItem(item);
                      }
                   }
                } else {
-                  if (pageNumber == 0) {
+                  if (pageNumber === 0) {
                      this._setInfiniteScrollState('down');
                   }
                   this._offset = this._options.pageSize * pageNumber;
@@ -4027,6 +4026,7 @@ define('js!SBIS3.CONTROLS.ListView',
                if (!this._inScrollContainerControl) {
                   $(window).off('resize scroll', this._setScrollPagerPositionThrottled);
                }
+               dcHelpers.trackElement(this.getContainer(), false).unsubscribe('onVisible', this._onVisibleChange);
                this._scrollPager.destroy();
             }
             if (this._listNavigation) {

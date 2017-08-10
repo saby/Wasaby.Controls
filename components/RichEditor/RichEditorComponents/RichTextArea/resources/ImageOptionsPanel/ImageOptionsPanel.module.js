@@ -58,7 +58,9 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                   linkedContainer = this.getParent().getInputContainer(), // всегда считаем  показ панели от поля ввода редактора
                   inputOffset = linkedContainer.offset().top,
                   panelOffset = this._container.offset().top,
-                  inputHeight = linkedContainer.height();
+                  inputHeight = linkedContainer.height(),
+                  inputOffsetLeft = linkedContainer.offset().left,
+                  panelOffsetleft = this._container.offset().left;
                this._container.css('width',this.getTarget().width());
                this._container.css('max-width', this.getParent().getInputContainer().width() - imagePanelhOffset);
                this._container.css('height',imagePanelHeight + 'px'); // dich3000
@@ -71,6 +73,11 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                   if (panelOffset > inputOffset + inputHeight + imagePanelhOffsetBottom) {
                      this._container.css('top', inputOffset + inputHeight - imagePanelHeight / 2);
                   }
+               }
+               //ждем реализации нового стандарта(по правой кнопке)
+               //http://axure.tensor.ru/standarts/v7/%D1%88%D0%B0%D0%B1%D0%BB%D0%BE%D0%BD_%D0%B2%D1%81%D1%82%D0%B0%D0%B2%D0%BA%D0%B8_%D0%B8%D0%B7%D0%BE%D0%B1%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D1%8F__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_2_.html
+               if (panelOffsetleft < inputOffsetLeft) {
+                  this._container.css('left', inputOffsetLeft);
                }
             },
 

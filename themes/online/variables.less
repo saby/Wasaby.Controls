@@ -877,7 +877,6 @@
 
 @text-box-placeholder-color:              @gray-ccc-color !important;
 @text-box-compat-placeholder-font:        inherit;
-@text-box-compat-placeholder-padding:     1px 0 0;
 @text-box-compat-placeholder-alignment:   inherit;
 
 @text-box-overflow:                       ellipsis;
@@ -2018,7 +2017,6 @@
 @controls-OperationsPanel-actions-margin:           0 4px;
 
 @controls-OperationsPanel-separator-margin-left:    8px;
-@controls-OperationsPanel-separator-margin-right:   0;
 @controls-OperationsPanel-separator-bg:             @gray-ccc-color;
 @controls-OperationsPanel-separator-width:          1px;
 @controls-OperationsPanel-separator-height:         20px;
@@ -2212,8 +2210,8 @@
 @controls-filterButton-button-image-disabled:     -48px 0;
 @controls-filterButton-button-height:             24px;
 @controls-filterButton-button-width:              24px;
-@controls-filterButton-button-margin:             8px;
-@controls-filterButton-button-margin-right-align: @controls-filterButton-button-margin;
+@controls-filterButton-button-margin:             8px 8px 8px 0;
+@controls-filterButton-button-margin-right-align: 8px 0 8px 8px;
 @controls-filterButton-button-margin-ff:          8px 32px 8px 0;
 @controls-filterButton-height:                    40px;
 
@@ -2238,7 +2236,8 @@
 @controls-filterButton-line-height:               @link-line-height;
 @controls-filterButton-apply-margin-right:        0;
 
-@controls-filterButton-filterLine-margin:         8px 0 8px 0;
+@controls-filterButton-margin-value:              8px;
+@controls-filterButton-filterLine-margin:         8px 8px 8px 0;
 
 //FilterButtonHistory
 @controls-filterButton-history-wrapper-padding:   6px;
@@ -2716,7 +2715,7 @@
 @long-operations-popup-collapsed-header-caption-line-height: @long-operations-popup-header-caption-line-height;
 @long-operations-popup-collapsed-header-caption-color: @long-operations-popup-header-caption-color;
 @long-operations-popup-header-result-max-width: 150px;
-@long-operations-popup-header-result-min-width: 48px;
+@long-operations-popup-header-result-min-width: 64px;
 @long-operations-popup-header-but-f-size: inherit;
 @long-operations-popup-header-but-gap-top: 2px;
 @long-operations-popup-collapsed-header-but-gap-top: @long-operations-popup-header-but-gap-top;
