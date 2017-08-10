@@ -249,7 +249,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       },
 
       _keyboardHover: function(event){
-       //  event.stopPropagation();
+         event.stopPropagation();
          return true;
       },
 
