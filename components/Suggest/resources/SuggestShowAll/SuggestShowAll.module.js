@@ -4,11 +4,10 @@
 define('js!SBIS3.CONTROLS.SuggestShowAll',
     [  'js!SBIS3.CORE.CompoundControl',
        'html!SBIS3.CONTROLS.SuggestShowAll',
-       'Core/helpers/collection-helpers',
        'js!SBIS3.CONTROLS.DataGridView',
        'i18n!SBIS3.CONTROLS.SuggestShowAll',
        'js!SBIS3.CONTROLS.Button'
-    ], function (CompoundControl, dotTplFn, colHelpers) {
+    ], function (CompoundControl, dotTplFn) {
 
        var optionsToSet = ['columns', 'itemTpl', 'idProperty', 'filter'];
        /**
@@ -48,7 +47,7 @@ define('js!SBIS3.CONTROLS.SuggestShowAll',
                  view = this.getChildControlByName('controls-showAllView'),
                  selectButton = this.getChildControlByName('selectButton');
 
-             colHelpers.forEach(optionsToSet, function(opt) {
+             optionsToSet.forEach(function(opt) {
                 view.setProperty(opt, list.getProperty(opt));
              });
              view.setDataSource(list.getDataSource());
