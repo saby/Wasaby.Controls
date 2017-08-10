@@ -526,7 +526,7 @@
 @radio-button-icon-disabled-checked-bg:         @radio-button-icon-bg;
 @radio-button-icon-disabled-checked-hover-bg:   @radio-button-icon-bg;
 
-@radio-button-icon-margin:                      8px 6px 0 6px;
+@radio-button-icon-margin:                      7px 6px 0 6px;
 @radio-button-icon-border-style:                solid;
 @radio-button-icon-border-color:                @gray-color;
 @radio-button-icon-border-color-checked:        @radio-button-hover-text-color;
@@ -599,18 +599,19 @@
 // -------- //
 // Switcher //
 // -------- //
-
-@switcher-cursor:                               pointer;
-@switcher-cursor-disabled:                      default;
 @switcher-width:                                46px;
 @switcher-height:                               24px;
-@switcher-line-height:                          @switcher-height;
-@switcherline-height:                           2px;
-
-@switcher-line-color:							@gray-color;
-@switcher-border:                               1px solid @gray-light-color;
 @switcher-border-radius:                        30px;
-@switcher-line-width:                           36px;
+@switcher-hover-border-width:                   @default-border-width;
+@switcherline-height:                           2px;
+@switcherline-width:                            34px;
+@switcher-btn-size:                             12px;
+@switcher-btn-border-width:                     2px;
+@switcher-btn-hover-border-width:               3px;
+@switcher-dot-size:                             4px;
+@switcher-border-color:                         @gray-light-color;
+@switcher-disabled-color:                       @gray-light-color;
+
 @switcher-line-color-disabled:                  @gray-light-color;
 @switcher-btn-bg-color:                         @white-color;
 @switcher-btn-bg-color-disabled:                @white-color;
@@ -618,10 +619,7 @@
 @switcher-btn-color-inactive:                   @gray-color;
 @switcher-btn-color-disabled:                   @gray-light-color;
 @switcher-dot-radius:                           0;
-@switcher-btn-border-width:                     2px;
-@switcher-btn-border-hover:                     3px;
 @switcher-btn-radius:                           6px;
-@switcher-btn-size:                             12px;
 @switcher-btn-margin:                           5px;
 @switcher-dot-width:                            2px;
 @switcher-dot-height:                           4px;
@@ -632,10 +630,13 @@
 // ---------------------- //
 // Double online switcher //
 // ---------------------- //
+@switcher-do-text-margin:                       6px;
+@switcher-do-text-selected-cursor:              text;
+@switcher-do-text-unselected-decoration:        underline;
 
 @switcher-do-margin:                            0 0 0 8px;
 
-@switcher-do-text-cursor:                       @switcher-cursor;
+@switcher-do-text-cursor:                       @default-hover-cursor;
 @switcher-do-text-color:                        @black-color;
 @switcher-do-decoration:                        none;
 @swithcer-do-font-weight:                       normal;
@@ -645,7 +646,7 @@
 @switcher-do-unselected-text-decoration:        none;
 @switcher-do-unselected-text-decoration-hover:  underline;
 
-@switcher-do-disabled-toggle-cursor:            @switcher-cursor-disabled;
+@switcher-do-disabled-toggle-cursor:            @disabled-hover-cursor;
 @switcher-do-disabled-text-cursor:              text;
 @switcher-do-disabled-text-color:               @gray-light-color;
 @switcher-do-disabled-toggle-border-color:      @switcher-do-disabled-text-color;
@@ -655,17 +656,17 @@
 
 @switcher-do-horizontal-toggle-width:           @switcher-width;
 @switcher-do-horizontal-toggle-height:          @switcher-height;
-@switcher-do-horizontal-toggle-line-height:     @switcher-line-height;
+@switcher-do-horizontal-toggle-line-height:     @switcher-height;
 @switcher-do-horizontal-toggle-margin:          0 6px;
 
 @switcher-do-vertical-toggle-width:             24px;
 @switcher-do-vertical-toggle-height:            48px;
 @switcher-do-vertical-toggle-margin:            0 12px 0 0;
 
-@switcher-do-border:                            @switcher-border;
+@switcher-do-border:                            @default-border-width @default-border-style @gray-light-color;
 @switcher-do-border-radius:                     @switcher-border-radius;
 
-@switcher-do-horizontal-line-width:             @switcher-line-width;
+@switcher-do-horizontal-line-width:             @switcherline-width;
 @switcher-do-vertical-line-width:               38px;
 @switcher-do-horizontal-line-background-color:  @gray-color;
 @switcher-do-horizontal-disabled-line-color:    @gray-light-color;
@@ -678,7 +679,7 @@
 @switcher-do-horizontal-btn-margin:             @switcher-btn-margin;
 @switcher-do-horizontal-btn-bg-color:           @switcher-btn-bg-color;
 @switcher-do-horizontal-btn-color-disabled:     @switcher-btn-color-disabled;
-@switcher-do-horizontal-btn-border-width-hover: @switcher-btn-border-hover;
+@switcher-do-horizontal-btn-border-width-hover: @switcher-btn-hover-border-width;
 
 
 
@@ -818,6 +819,7 @@
 // -------- //
 
 @text-box-height:                         24px;
+@text-box-line-height:                    22px;
 @text-box-wrapper-padding:                0 4px;
 @text-box-border-radius:                  0;
 @text-box-color:                          @default-text-color;
@@ -1108,7 +1110,6 @@
 @text-area-field-text-color:                    inherit;
 @text-area-field-focus-text-color:              @text-area-field-text-color;
 @text-area-field-error-text-color:              @text-box-field-error-text-color;
-@text-area-field-hover-text-color:              @text-area-field-text-color;
 @text-area-field-disabled-text-color:           @text-area-field-text-color;
 
 @text-area-border-width:                        @default-border-width;
@@ -1699,6 +1700,7 @@
 @list-view-items-toolbar-right-tile:                 1px;
 @list-view-items-toolbar-bottom-tile:                2px;
 @list-view-items-toolbar-icon-size:                  24px;
+@list-view-items-toolbar-menu-icon-size:             @list-view-items-toolbar-icon-size;
 @list-view-items-toolbar-font-family:                @default-icon-medium-font;
 
 @bottomStyle-items-toolbar-margin-top:               2px;
@@ -1747,6 +1749,8 @@
 @listView-servicefooter-padding:                0 8px;
 @listView-servicefooter-height:                 32px;
 @listView-servicefooter-fontsize:               12px;
+
+@listView-loadmorebutton-font-size:             @link-font-size;
 
 @scrollPaging-padding:                          32px;
 
@@ -1804,13 +1808,7 @@
 // --------- //
 //  ToolBar  //
 // --------- //
-
-@controls-toolbar-display:                      inline-block;
 @controls-toolbar-default-margin:               12px;
-@controls-toolbar-item-margin-right:            @controls-toolbar-default-margin;
-@controls-toolbar-menu-margin-left:             @controls-toolbar-default-margin;
-@controls-toolbar-container-margin-right:       -@controls-toolbar-default-margin;
-@controls-toolbar-item-vertical-align:          middle;
 
 // --------- //
 // Tree view //
@@ -2041,22 +2039,11 @@
 @controls-MergeDialogTemplate-hint-font-size:                     13px;
 @controls-MergeDialogTemplate-hint-margin:                        0 15px;
 @controls-MergeDialogTemplate-treeDataGridView-padding-bottom:    12px;
-@controls-MergeDialogTemplate-DataGridView-th-content-margin-left:40px;
 @controls-MergeDialogTemplate-DataGridView-td-border-bottom:      1px solid @gray-light-color !important;
-@controls-MergeDialogTemplate-BreadCrumbs-margin-left:            5px;
-@controls-MergeDialogTemplate-BreadCrumbs-line-height:            18px;
-@controls-MergeDialogTemplate-radioButton-metric:                 12px;
-@controls-MergeDialogTemplate-radioButtonIcon-metric:             6px;
-@controls-MergeDialogTemplate-radioButtonIcon-margin:             2px;
-@controls-MergeDialogTemplate-radioButton-border-radius:          6px;
-@controls-MergeDialogTemplate-radioButton-margin-top:             6px;
 @controls-MergeDialogTemplate-mergeButton-margin-left:            5px;
 @controls-MergeDialogTemplate-applyBlock-padding:                 0 12px 12px 0;
-@controls-MergeDialogTemplate-hint-font-size-color:               @gray-color;
-@controls-MergeDialogTemplate-BreadCrumbs-main-title-color:       @bread-crumb-title-color;
-@controls-MergeDialogTemplate-treeDataGridView-first-cell-padding-left: @controls-view-padding-DEFAULT;
-@controls-MergeDialogTemplate-DataGridView-column-value-line-height: @data-grid-cell-line-height;
-
+@controls-MergeDialogTemplate-hint-font-color:               @gray-color;
+@controls-MergeDialogTemplate-treeDataGridView-first-cell-width:  52px;
 // --------------- //
 //   OperationSum  //
 // --------------- //
@@ -2137,6 +2124,8 @@
 @DropdownList-picker-offset:                          0 0 0 1px;
 @DropdownList-picker-fastdatafilter-offset:           1px 0 0 1px;
 @DropdownList-picker-margin-top:                      -1px;
+@DropdownList-picker-close-btn-top:                   4px;
+@DropdownList-picker-close-btn-right:                 6px;
 @DropdownList-picker-head-margin:                     0;
 @DropdownList-picker-head-padding:                    4px 8px;
 @DropdownList-picker-head-duplicate-type-top-padding: 4px;
@@ -2223,8 +2212,8 @@
 @controls-filterButton-button-image-disabled:     -48px 0;
 @controls-filterButton-button-height:             24px;
 @controls-filterButton-button-width:              24px;
-@controls-filterButton-button-margin:             8px 8px 8px 0;
-@controls-filterButton-button-margin-right-align: 8px 0 8px 8px;
+@controls-filterButton-button-margin:             8px;
+@controls-filterButton-button-margin-right-align: @controls-filterButton-button-margin;
 @controls-filterButton-button-margin-ff:          8px 32px 8px 0;
 @controls-filterButton-height:                    40px;
 
@@ -2365,6 +2354,7 @@
 
 @controls-FieldLink-disabled-item-single-padding:  0;
 @controls-FieldLink-disabled-item-single-margin:   2px 4px;
+@controls-FieldLink-disabled-item-picker-margin:   0 4px 0 0;
 
 @controls-FieldLink-afterField-background:         @white-color;
 @controls-FieldLink-link-color:                    #8991A9;
@@ -2450,6 +2440,7 @@
 @controls-InformationPopup-closeButton-font-size:             24px;
 @controls-InformationPopup-closeButton-color:                 #CCCCCC;
 @controls-InformationPopup-closeButton-hover-color:           @icon-active-color;
+@controls-InformationPopup-closeButton-font-family:           'cbuc-icons24';
 
 //NotificationPopup
 @controls-NotificationPopup-border:                                          @float-area-border;
@@ -2724,14 +2715,23 @@
 @long-operations-popup-collapsed-header-caption-f-size: @long-operations-popup-header-caption-f-size;
 @long-operations-popup-collapsed-header-caption-line-height: @long-operations-popup-header-caption-line-height;
 @long-operations-popup-collapsed-header-caption-color: @long-operations-popup-header-caption-color;
-@long-operations-popup-header-stop-but-f-size: inherit;
-@long-operations-popup-header-stop-but-color: #999999;
+@long-operations-popup-header-result-max-width: 150px;
+@long-operations-popup-header-result-min-width: 48px;
+@long-operations-popup-header-but-f-size: inherit;
+@long-operations-popup-header-but-gap-top: 2px;
+@long-operations-popup-collapsed-header-but-gap-top: @long-operations-popup-header-but-gap-top;
+@long-operations-popup-header-suspended-color: #999999;
+@long-operations-popup-list-time-f-size: 12px;
+@long-operations-popup-list-border-bot: 1px solid #F5F5F5;
+@long-operations-popup-reg-but-ctr-height: 24px;
+@long-operations-popup-reg-but-line-height: 12px;
 @long-operations-popup-foot-height: 32px;
 @long-operations-popup-foot-bg: #F3F3F3;
 @long-operations-popup-foot-f-size: 12px;
+@long-operations-popup-foot-but-gap-top: 8px;
 @long-operations-popup-foot-color: #999999;
-@long-operations-popup-reg-but-ctr-height: 24px;
-@long-operations-popup-reg-but-line-height: 12px;
+@long-operations-popup-foot-accent-color: #333333;
+@long-operations-popup-foot-but-hover-color: #313E78 !important;
 @long-operations-reg-filter-width: 150px;
 @long-operations-reg-filter-height: 30px;
 @long-operations-reg-filter-title-height: 24px;
@@ -2811,7 +2811,7 @@
 @bottomStyle-items-toolbar-height:                  30px;
 @bottomStyle-padding-bottom:                        @bottomStyle-items-toolbar-height + @bottomStyle-items-toolbar-margin; //высота операций + маржин
 @bottomStyle-items-toolbar-border-color:            #F3F3F3;
-@bottomStyle-items-toolbar-margin:                  3px;
+@bottomStyle-items-toolbar-margin:                  4px;
 @scroll-pager-bg:							                @default-bg-color;
 @textbox-font-size:							             @default-font-size;
 @image-bar-height:                                  32px;

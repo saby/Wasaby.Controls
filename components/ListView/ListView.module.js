@@ -29,6 +29,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.MassSelectionController',
    'js!SBIS3.CONTROLS.ImitateEvents',
    'js!SBIS3.CORE.LayoutManager',
+   'Core/helpers/markup-helpers',
    'js!SBIS3.CONTROLS.Link',
    'js!SBIS3.CONTROLS.ScrollWatcher',
    'js!WS.Data/Collection/IBind',
@@ -67,7 +68,7 @@ define('js!SBIS3.CONTROLS.ListView',
 ],
    function (cMerge, cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
-    TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents, LayoutManager,
+    TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents, LayoutManager, mHelpers,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
     Paging, ComponentBinder, Di, ArraySimpleValuesUtil, fcHelpers, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove) {
      'use strict';
@@ -956,6 +957,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._setScrollPagerPositionThrottled = throttle.call(this._setScrollPagerPosition, 100, true).bind(this);
             this._updateScrollIndicatorTopThrottled = throttle.call(this._updateScrollIndicatorTop, 100, true).bind(this);
             this._eventProxyHdl = this._eventProxyHandler.bind(this);
+            this._onScrollHandler = this._onScrollHandler.bind(this);
 
             this._toggleEventHandlers(this._container, true);
 
@@ -995,6 +997,9 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._options.scrollPaging) {
                this._pagingZIndex = WindowManager.acquireZIndex();
                WindowManager.setVisible(this._pagingZIndex);
+            }
+            if (this._options.virtualScrolling || this._options.scrollPaging) {
+               this._getScrollWatcher().subscribe('onScroll', this._onScrollHandler);
             }
             this._prepareInfiniteScroll();
             ListView.superclass.init.call(this);
@@ -1202,6 +1207,9 @@ define('js!SBIS3.CONTROLS.ListView',
             var itemActions = this.getItemsActions();
             if (itemActions && itemActions.isItemActionsMenuVisible()){
                itemActions.hide();
+            }
+            if (this._virtualScrollController) {
+              this._virtualScrollController._scrollHandler(event, scrollTop);
             }
          },
          _setScrollPagerPosition: function(){
@@ -1524,6 +1532,12 @@ define('js!SBIS3.CONTROLS.ListView',
                    targetKey = target[0].getAttribute('data-id'),
                    item = this.getItems() ? this.getItems().getRecordById(targetKey) : undefined,
                    correctTarget = target.hasClass('controls-editInPlace') ? this._getDomElementByItem(this._options._itemsProjection.getItemBySourceItem(item)) : target;
+
+               //В некоторых версиях 11 IE не успевает рассчитаться ширина узла, вследствие чего correctTarget.offsetWidth == 0
+               //Это вызывает неправильное позиционирование тулбара
+               if (cDetection.isIE) {
+                  correctTarget.width();
+               }
 
                return {
                   key: targetKey,
@@ -2374,6 +2388,23 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _getEditInPlaceConfig: function() {
+            /**
+             * Объект _savedConfigs содержит конфигурации компонентов, которые описаны
+             * внутри контентной опции с type='string'
+             * Раскладываем их обратно в configStorage перед созданием
+             * редактирования по месту
+             */
+            if (this._savedConfigs) {
+               for (var i=0;i<this._savedConfigs.length;i++){
+                  var conf = this._savedConfigsMaps[i],
+                     temp = this._savedConfigs[i][conf],
+                     obj = {};
+                  if (!temp._thisIsInstance) {
+                     obj[conf] = cFunctions.shallowClone(temp);
+                     mHelpers.mergeConfigStorage(obj);
+                  }
+               }
+            }
             var
                config = {
                   items: this.getItems(),
@@ -2406,7 +2437,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         this.setSelectedKey(model.getId());
                         if (model.getState() === Record.RecordState.DETACHED) {
                            $(".controls-ListView__item", this._getItemsContainer()).removeClass('controls-ListView__item__selected');
-                           $('.controls-ListView__item[data-id="' + model.getId() + '"]', this._container).addClass('controls-ListView__item__selected');
+                           $('.controls-ListView__item[data-id="' +  (model.getId() === undefined ? '' : model.getId()) + '"]', this._container).addClass('controls-ListView__item__selected');
                         }
                         else {
                            this.setSelectedKey(model.getId());
@@ -2527,7 +2558,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var id = item.getId();
             // Даже не думать удалять ":not(...)". Это связано с тем, что при редактировании по месту может возникнуть задача перерисовать строку
             // DataGridView. В виду одинакового атрибута "data-id", это единственный способ отличить строку DataGridView от строки EditInPlace.
-            return this._getItemsContainer().find('.js-controls-ListView__item[data-id="' + (id === undefined ? '' : id) + '"]:not(".controls-editInPlace")');
+            return this._getItemsContainer().find('>.js-controls-ListView__item[data-id="' + (id === undefined ? '' : id) + '"]:not(".controls-editInPlace")');
          },
          /**
           * Возвращает признак, по которому можно установить: активно или нет редактирование по месту в данный момент.
@@ -2677,7 +2708,6 @@ define('js!SBIS3.CONTROLS.ListView',
          _hideItemsToolbar: function (animate) {
             if (this._itemsToolbar) {
                this._itemsToolbar.hide(animate);
-               this._touchSupport && this._clearHoveredItem();
             }
          },
          _getItemsToolbar: function() {
@@ -2703,14 +2733,6 @@ define('js!SBIS3.CONTROLS.ListView',
                            self.setSelectedKey(hoveredKey);
                         }
                      },
-                     onCloseItemActionsMenu: function() {
-                        /* на тач-устройствах по закрытию меню скрывается тулбар
-                           поэтому необходимо очистить выделенный элемент
-                         */
-                        if(self._touchSupport) {
-                           self._clearHoveredItem();
-                        }
-                     },
                      onItemActionActivated: function(e, key) {
                         self.setSelectedKey(key);
                         if(self._touchSupport) {
@@ -2720,6 +2742,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      onItemsToolbarHide: function() {
                         if(self._touchSupport) {
                            self._setTouchSupport(false);
+                           self._clearHoveredItem();
                         }
                      }
 
@@ -2839,6 +2862,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._moveTopScroll();
                }
             }
+            if (this._virtualScrollController){
+               this._virtualScrollController.initHeights();
+            }
             this._updateHoveredItemAfterRedraw();
          },
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
@@ -2854,9 +2880,6 @@ define('js!SBIS3.CONTROLS.ListView',
                   //TODO: Это возможно очень долго, надо как то убрать. Нужно для случев, когда ListView создается скрытым, а потом показывается
                   this._scrollBinder && this._scrollBinder._updateScrollPages();
                   this._setScrollPagerPositionThrottled();
-               }
-               if (this._virtualScrollController){
-                  this._virtualScrollController.updateVirtualPages();
                }
             }
             /* при изменении размера таблицы необходимо вызвать перерасчет позиции тулбара
@@ -2985,7 +3008,9 @@ define('js!SBIS3.CONTROLS.ListView',
                 self = this;
 
             if (this.isInfiniteScroll()) {
-               this._createScrollWatcher();
+               if (!this._scrollWatcher) {
+                  this._createScrollWatcher();
+               }
 
                this._createLoadingIndicator();
                if (this._options.infiniteScroll == 'demand'){
@@ -3216,6 +3241,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         this._toggleEmptyData(!this.getItems().getCount());
                      }
                      this._notify('onDataMerge', dataSet);
+                     this._onDataMergeCallback(dataSet);
                      //Если данные пришли, нарисуем
                      if (dataSet.getCount()) {
                         //TODO: вскрылась проблема  проекциями, когда нужно рисовать какие-то определенные элементы и записи
@@ -3297,7 +3323,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollOffset.top -= this._limit;
             }
          },
-
+         _onDataMergeCallback: function(dataSet) {},
          _drawPage: function(dataSet, state){
             var at = null,
                 self = this,

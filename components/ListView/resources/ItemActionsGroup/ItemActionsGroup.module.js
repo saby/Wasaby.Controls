@@ -16,7 +16,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
    "Core/helpers/markup-helpers",
    "Core/helpers/functional-helpers",
    "Core/moduleStubs",
-   "css!SBIS3.CONTROLS.ItemActionsGroup"
+   "css!SBIS3.CONTROLS.ItemActionsGroup",
+   "i18n!SBIS3.CONTROLS.ItemActionsGroup"
 ],
    function( CommandDispatcher, IoC, ConsoleLogger,ButtonGroupBaseDS, IconButton, Link, dotTplFn, dotTplFnForItem, colHelpers, mkpHelpers, fHelpers, moduleStubs) {
 

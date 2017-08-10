@@ -3,7 +3,6 @@
  */
 define('js!SBIS3.CONTROLS.Image',
    [
-   'Transport/BLObject',
    'js!SBIS3.CONTROLS.Utils.ImageUtil',
    'Core/helpers/vital/processImagePath',
    "Core/Indicator",
@@ -25,7 +24,6 @@ define('js!SBIS3.CONTROLS.Image',
    "i18n!SBIS3.CONTROLS.Image",
    'css!SBIS3.CONTROLS.Image'
 ], function(
-   BLObject,
    ImageUtil,
    processImagePath,
    cIndicator, cMerge,
@@ -490,7 +488,7 @@ define('js!SBIS3.CONTROLS.Image',
                   dataSource = this.getDataSource();
                if (dataSource) {
                   return transHelpers.prepareGetRPCInvocationURL(dataSource.getEndpoint().contract,
-                     dataSource.getBinding().read, this._options.filter, BLObject.RETURN_TYPE_ASIS);
+                     dataSource.getBinding().read, this._options.filter);
                } else {
                   return this._options.defaultImage;
                }
@@ -769,8 +767,9 @@ define('js!SBIS3.CONTROLS.Image',
                      var
                         dataSource = self.getDataSource(),
                         sendFilter = filter && Object.prototype.toString.call(filter) === '[object Object]' ? filter : self.getFilter();
-                     new BLObject(dataSource.getEndpoint().contract)
-                        .call(dataSource.getBinding().destroy, sendFilter, BLObject.RETURN_TYPE_ASIS)
+                     new SbisService({
+                       endpoint: dataSource.getEndpoint().contract
+                     }).call(dataSource.getBinding().destroy, sendFilter)
                         .addBoth(function() {
                            self._setImage(self._options.defaultImage);
                            if (self._options.defaultImage === '') {

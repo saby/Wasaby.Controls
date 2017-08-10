@@ -9,11 +9,14 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    'js!WS.Data/Collection/RecordSet',
    'js!WS.Data/Di',
    "js!WS.Data/Query/Query",
+   'Core/Deferred',
+   "Core/ParallelDeferred",
    "Core/core-instance",
    "Core/CommandDispatcher",
    "Core/core-functions",
    "Core/IoC",
-   "Core/helpers/Function/once"
+   "Core/helpers/Function/once",
+   "Core/detection"
 ], function (
    constants,
    SearchController,
@@ -22,11 +25,14 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    RecordSet,
    Di,
    Query,
+   Deferred,
+   ParallelDeferred,
    cInstance,
    CommandDispatcher,
    cFunctions,
    IoC,
-   once) {
+   once,
+   detection) {
 
    'use strict';
 
@@ -44,6 +50,23 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
     * @author Крайнов Дмитрий Олегович
     */
    var SuggestTextBoxMixin = /**@lends SBIS3.CONTROLS.SuggestTextBoxMixin.prototype  */{
+      /**
+       * @event onBeforeLoadHistory Происходит перед вызовом списочного метода для получения истории
+       * @remark
+       * В некоторых случаях есть необходимость дополнить выводимую историю своими записями.
+       * Для этого из события нужно вернуть deferred, который в callback вернет RecordSet с записями, которые требуется добавить к истории
+       * <pre>
+       *    SuggestTextBox.subscribe('onBeforeLoadHistory', function(eventObject, idArray) {
+           *        if (idArray.length < 12) {
+           *           var myQuery = self.getMyQuery().limit(12 - idArray.length);
+           *           var queryDeferred = self.getMyDataSource().query(myQuery);
+           *           eventObject.setResult(queryDeferred);
+           *        }
+           *    });
+       * </pre>
+       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Array} idArray Массив идентификаторов записей, которые будут получены списочным методом
+       */
       $protected: {
          _changedByKeyboard: false,  /* {Boolean} Флаг, обозначающий, что изменения были вызваны действиями с клавиатуры */
          /* Т.к. при выборе из списка, фокус может находиться на нём, а не на поле ввода,
@@ -70,7 +93,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
       },
       $constructor: function () {
          var self = this;
-
+         this._publish('onBeforeLoadHistory');
          this._options.observableControls.unshift(this);
          
          /* Инициализация searchController'a происходит лениво,
@@ -93,40 +116,65 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
       },
 
       _showHistory: function () {
-         if (this._historyController.getCount()) {
-            this._getHistoryRecordSet().addCallback(function(rs) {
-               if (rs.getCount()) {
-                  this.getList().setItems(rs);
-               }
-               else {
-                  this.getList().setItems(this._getHistoryRecordSetSync()); //В рамках совместимости оставляю старое поведение
-               }
+         this._getHistoryRecordSet().addCallback(function (rs) {
+            if (rs.getCount()) {
+               this.getList().setItems(rs);
                this.showPicker();
-            }.bind(this)).addErrback(function(err){
-               //Если запрос был прерван нами, то ничего не делаем
-               if (!err.canceled) {
-                  //В рамках совместимости оставляю старое поведение
-                  if (!err.processed) {
-                     IoC.resolve('ILogger').log(this._moduleName, 'Списочный метод не смог вычитать записи по массиву идентификаторов');
-                  }
+            }
+            else if (this._historyController.getCount()) {
+               this.getList().setItems(this._getHistoryRecordSetSync()); //В рамках совместимости оставляю старое поведение
+               this.showPicker();
+            }
+         }.bind(this)).addErrback(function (err) {
+            //Если запрос был прерван нами, то ничего не делаем
+            if (!err.canceled && err.message !== "Cancel") { //Из parallelDeferred возвращается ошибка с текстом "Cancel" при превранном запросе
+               //В рамках совместимости оставляю старое поведение
+               if (!err.processed) {
+                  IoC.resolve('ILogger').log(this._moduleName, 'Списочный метод не смог вычитать записи по массиву идентификаторов');
+               }
+               if (this._historyController.getCount()) {
                   this.getList().setItems(this._getHistoryRecordSetSync());
                   this.showPicker();
                }
-            }.bind(this));
-         }
+            }
+         }.bind(this));
       },
       _getHistoryRecordSet: function () {
-         var listSource = this.getList().getDataSource();
+         var listSource = this.getList().getDataSource(),
+             query = this._getQueryForHistory(),
+             queryFilter = query.getWhere()[this._getListIdProperty()],
+             pd = new ParallelDeferred(),
+             beforeLoadHistoryResult,
+             historyRS;
+
          this._cancelHistoryDeferred();
-         this._historyDeferred = this.getList().getDataSource().query(this._getQueryForHistory()).addCallback(function(rs) {
-            return new RecordSet({
+         beforeLoadHistoryResult = this._notify('onBeforeLoadHistory', queryFilter);
+
+         //Если в нашей истории нет данных, не делаем лишний запрос
+         if (this._historyController.getCount()) {
+            this._historyDeferred = this.getList().getDataSource().query(query);
+            pd.push(this._historyDeferred);
+         }
+         else {
+            pd.push((new Deferred).callback());
+         }
+
+         if (cInstance.instanceOfModule(beforeLoadHistoryResult, 'Core/Deferred')) {
+            pd.push(beforeLoadHistoryResult);
+         }
+
+         return pd.done().getResult().addCallback(function (result) {
+            historyRS = new RecordSet({
                adapter: listSource.getAdapter(),
-               rawData: rs.getRawData(),
-               idProperty: this._list.getProperty('idProperty'),
+               rawData: result[0] ? result[0].getRawData() : [],
+               idProperty: this.getList().getProperty('idProperty'),
                model: listSource.getModel()
             });
+            if (result[1]) {
+               historyRS.assign(result[1].getAll());
+            }
+            return historyRS;
          }.bind(this));
-         return this._historyDeferred;
       },
       _getQueryForHistory: function() {
          var query = new Query(),
@@ -435,7 +483,10 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             var parentConfig = parentFunc.apply(this, arguments);
             parentConfig.tabindex = 0;
             parentConfig.targetPart = true;
-            parentConfig.closeOnTargetMove = true;
+            /* Для устройств на ios не надо скрывать автодополнение при скроле,
+               т.к. на ios'e при клике в поле ввода происходит скролл к полю ввода,
+               и получается что автодополнение не открыть. На Android'e такого не происходит. */
+            parentConfig.closeOnTargetMove = !detection.isMobileIOS;
             return parentConfig;
          },
 
