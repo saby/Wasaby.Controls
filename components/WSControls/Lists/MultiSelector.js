@@ -87,6 +87,7 @@ define('js!WSControls/Lists/MultiSelector', [
       },
       
       _isEmptyMultiSelection: function() {
+         // null || [] || [null] means the selection is empty
          return !this._selectedKeys || !this._selectedKeys.length || this._selectedKeys.length === 1 && this._selectedKeys[0] === null;
       }
       
