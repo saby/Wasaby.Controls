@@ -110,7 +110,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   tooltip: titles.resume,
                   isMainAction: true,
                   onActivated: function ($item, id, model) {
-                     self.applyUserAction('resume', model, false);
+                     self.applyUserAction('resume', model, true);
                   }
                },
                {
@@ -120,7 +120,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   tooltip: titles.suspend,
                   isMainAction: true,
                   onActivated: function ($item, id, model) {
-                     self.applyUserAction('suspend', model, false);
+                     self.applyUserAction('suspend', model, true);
                   }
                },
                {
