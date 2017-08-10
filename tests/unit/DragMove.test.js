@@ -204,11 +204,19 @@ define([
             var target = DragObject.getTarget();
             assert.equal(target.getOwner(), view);
          });
-         it('should be clear target if view cant found target and old targets owner this view', function () {
+         it('should clear target if view cant found target and old targets owner this view', function () {
             dragMove.updateTarget();
             event.target = $('<div/>');
             dragMove.updateTarget();
             assert.isUndefined(DragObject.getTarget());
+         });
+         it('should not clear target if target is placeholder', function () {
+            dragMove._options.useDragPlaceHolder = true;
+            dragMove.updateTarget();
+            var dTarget = DragObject.getTarget();
+            event.target = $(event.target).clone().addClass('controls-DragNDrop__placeholder');
+            dragMove.updateTarget();
+            assert.equal(dTarget, DragObject.getTarget());
          });
       });
       describe('._canDragMove', function () {
