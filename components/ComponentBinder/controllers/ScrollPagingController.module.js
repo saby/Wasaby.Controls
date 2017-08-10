@@ -232,9 +232,8 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          this._options.paging.setPagesCount(pagesCount);
 
          //Если есть страницы - покажем paging
-         if (this._options.hiddenPager) {
-            this._options.paging.setVisible(pagesCount > 1);
-         }
+         
+         this._options.paging.setVisible((pagesCount > 1) && !this._options.hiddenPager);
       },
 
       destroy: function(){
