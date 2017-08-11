@@ -75,7 +75,7 @@ define('js!WSControls/Lists/ItemsControl', [
 
          _beforeMount: function(newOptions) {
 
-            if (newOptions.dataSource != this._dataSource) {
+            if (newOptions.dataSource != this._options.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
                this.reload();
             }
@@ -84,7 +84,7 @@ define('js!WSControls/Lists/ItemsControl', [
          _beforeUpdate: function(newOptions) {
             this._prepareMountingData(newOptions);
 
-            if (newOptions.dataSource != this._dataSource) {
+            if (newOptions.dataSource != this._options._dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
                this.reload();
             }
