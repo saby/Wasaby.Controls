@@ -1006,14 +1006,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _redrawItems: function() {
-         if (!this._options.task1174300036){
-            this._redrawTheadAndTfoot();
-         }
          DataGridView.superclass._redrawItems.apply(this, arguments);
          //FIXME в 3.7.4 поправить, не всегда надо перерисовывать, а только когда изменились колонки
-         if (this._options.task1174300036) {
-            this._redrawTheadAndTfoot();
-         }
+         this._redrawTheadAndTfoot();
       },
       _startEditOnItemClick: function(event, id, record, target, originalEvent) {
          var
