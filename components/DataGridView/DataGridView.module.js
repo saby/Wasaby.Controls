@@ -1005,9 +1005,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _redrawItems: function() {
+         DataGridView.superclass._redrawItems.apply(this, arguments);
          //FIXME в 3.7.4 поправить, не всегда надо перерисовывать, а только когда изменились колонки
          this._redrawTheadAndTfoot();
-         DataGridView.superclass._redrawItems.apply(this, arguments);
       },
       _startEditOnItemClick: function(event, id, record, target, originalEvent) {
          var
