@@ -148,8 +148,11 @@ define('js!WSControls/Buttons/ButtonBase', [
        * Не запускались расчёты авторазмеров
        */
       _setVisibility: function(show) {
-         this._container.toggleClass('ws-hidden', !show);
-         this._isVisible = show;
+         if(show !== this._isVisible){
+            this._container.toggleClass('ws-hidden', !show);
+            this._isVisible = show;
+            this._notifyOnPropertyChanged('visible');
+         }
       }
    });
 
