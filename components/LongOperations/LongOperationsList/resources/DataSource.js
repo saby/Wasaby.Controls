@@ -9,6 +9,7 @@
 define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
    [
       'Core/core-extend',
+      'Core/Deferred',
       'js!WS.Data/Source/ISource',
       'js!WS.Data/Entity/ObservableMixin',
       'js!WS.Data/Source/DataSet',
@@ -17,7 +18,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
       'Core/TimeInterval'
    ],
 
-   function (CoreExtend, ISource, ObservableMixin, DataSet, longOperationsManager, LongOperationEntry, TimeInterval) {
+   function (CoreExtend, Deferred, ISource, ObservableMixin, DataSet, longOperationsManager, LongOperationEntry, TimeInterval) {
       'use strict';
 
       /**
@@ -107,9 +108,10 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
                options.extra = {needUserInfo:true};
             }
             this._notify('onBeforeProviderCall');
-            return longOperationsManager.fetch(Object.keys(options).length ? options : null).addCallback(function (recordSet) {
-               var meta = recordSet.getMetaData()
-               var dataSet = new DataSet({
+            var promise = new Deferred();
+            longOperationsManager.fetch(Object.keys(options).length ? options : null).addCallbacks(function (recordSet) {
+               var meta = recordSet.getMetaData();
+               promise.callback(new DataSet({
                   rawData: {
                      items: recordSet.getRawData(),
                      more: meta && meta.more
@@ -118,9 +120,12 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
                   itemsProperty: 'items',
                   totalProperty: 'more',
                   model: recordSet.getModel()
-               });
-               return dataSet;
+               }));
+            },
+            function (err) {
+               // Не нужно пропускать ошибку в ListView - вылетет алерт в ФФ, не нужно посылать пустой результат - закроется попап
             });
+            return promise;
          }
       });
 
