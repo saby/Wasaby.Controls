@@ -1141,7 +1141,6 @@ define('js!SBIS3.CONTROLS.ListView',
          _createScrollPager: function(){
             var scrollContainer = this._scrollWatcher.getScrollContainer(),
                scrollPagerContainer = $('> .controls-ListView__scrollPager', this._container);
-            this._scrollWatcher.subscribe('onScroll', this._onScrollHandler.bind(this));
             this._scrollPager = new Paging({
                element: scrollPagerContainer,
                visible: false,
