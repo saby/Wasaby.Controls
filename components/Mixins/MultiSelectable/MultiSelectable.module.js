@@ -6,11 +6,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
    "Core/ConsoleLogger",
    "js!WS.Data/Collection/List",
    "js!SBIS3.CONTROLS.ArraySimpleValuesUtil",
-   "Core/helpers/collection-helpers",
+   "Core/helpers/Object/isEqual",
    "Core/core-instance",
    "Core/helpers/functional-helpers",
    "Core/helpers/Array/clone"
-], function( ParallelDeferred, cFunctions, Deferred, IoC, ConsoleLogger,List, ArraySimpleValuesUtil, colHelpers, cInstance, fHelpers, aClone) {
+], function( ParallelDeferred, cFunctions, Deferred, IoC, ConsoleLogger,List, ArraySimpleValuesUtil, isEqualObject, cInstance, fHelpers, aClone) {
 
    var EMPTY_SELECTION = [null],
        convertToKeys = function(list, keyField) {
@@ -266,12 +266,12 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
              };
 
          /* Найдём удаленные */
-         result.removed = colHelpers.filter(arrayOne, function(item) {
+         result.removed = arrayOne.filter(function(item) {
             return !ArraySimpleValuesUtil.hasInArray(arrayTwo, item);
          });
 
          /* Найдём добавленные */
-         result.added = colHelpers.filter(arrayTwo, function(item) {
+         result.added = arrayTwo.filter(function(item) {
             return !ArraySimpleValuesUtil.hasInArray(arrayOne, item);
          });
 
@@ -882,7 +882,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
             /* Запомним, если selectedItems пустой, то при добавлении в него записей, нам не нужно проверять,
                есть ли эти записи там уже, и можно из просто добавлять, не боясь что там будут 2 одинаковые записи */
             isEmpty = !this._options.selectedItems.getCount();
-            colHelpers.forEach(this.getSelectedKeys(), function (key) {
+            this.getSelectedKeys().forEach(function (key) {
                record = dataSet.at(dataSet.getIndexByValue(self._options.idProperty, key));
                if (record) {
                   if(isEmpty) {
@@ -927,7 +927,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
 
          if(selectedKeys.length) {
             /* Для правильной работы биндингов, предполагаем, что масив [null] тоже является пустым выделением */
-            if(colHelpers.isEqualObject(selectedKeys, EMPTY_SELECTION)) {
+            if(isEqualObject(selectedKeys, EMPTY_SELECTION)) {
 
                /* Пробуем найти в рекордсете запись с ключём null, если она есть - выделение не пустое. */
                if(items && items.getIndexByValue(this._options.idProperty, EMPTY_SELECTION[0]) !== -1) {

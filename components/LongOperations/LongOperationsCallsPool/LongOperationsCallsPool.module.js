@@ -459,7 +459,9 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
             if (o.dontSkip || i === outs.length - 1) {
                o.promise.callback(results);
             }
-            else {
+            else
+            // Только если потребитель не успел уже сам от-cancele-ить
+            if (!o.promise.isReady()) {
                o.promise.errback(new Error('Call is outdated'));
             }
          }

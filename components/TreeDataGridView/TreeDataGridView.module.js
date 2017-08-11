@@ -70,7 +70,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             projection: cfg.projItem.getOwner()
          };
          config.children = cfg.hierarchy.getChildren(cfg.item, config.projection.getCollection());
-         config.isLoaded = typeof cfg.item.get(cfg.hasChildrenProperty) === 'boolean' && cfg.projItem.isLoaded();
+         config.isLoaded = cfg.projItem.isLoaded();
          config.hasLoadedChild = config.children.length > 0;
          config.classIsLoaded = config.isLoaded ? ' controls-ListView__item-loaded' : '';
          config.classHasLoadedChild = config.hasLoadedChild ? ' controls-ListView__item-with-child' : ' controls-ListView__item-without-child';

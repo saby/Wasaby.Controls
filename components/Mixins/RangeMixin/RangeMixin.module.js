@@ -1,5 +1,10 @@
 define('js!SBIS3.CONTROLS.RangeMixin', [], function() {
 
+   function propertyUpdateWrapper(func) {
+      return function() {
+         return this.runInPropertiesUpdate(func, arguments);
+      };
+   }
    /**
     * Миксин, добавляющий поведение хранения начального и конечного значений диапазона.
     * @mixin SBIS3.CONTROLS.RangeMixin
@@ -113,7 +118,7 @@ define('js!SBIS3.CONTROLS.RangeMixin', [], function() {
        * @param startValue Начальное значение диапазона.
        * @param endValue Конечное значение диапазона.
        */
-      setRange: function(startValue, endValue, silent) {
+      setRange: propertyUpdateWrapper(function(startValue, endValue, silent) {
          var changed = false,
             oldStart = this.getStartValue(),
             oldEnd = this.getEndValue();
@@ -136,7 +141,7 @@ define('js!SBIS3.CONTROLS.RangeMixin', [], function() {
             this._notifyOnRangeChanged(oldStart, oldEnd);
          }
          return changed;
-      },
+      }),
 
       _notifyOnRangeChangedAfterStartValueChanged: function (value, oldValue, silent) {
          if (!silent) {

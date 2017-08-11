@@ -5,7 +5,6 @@ define('js!SBIS3.CONTROLS.SelectorController', [
    "Core/CommandDispatcher",
    "js!SBIS3.CORE.CompoundControl",
    "js!WS.Data/Di",
-   "Core/helpers/collection-helpers",
    "Core/core-instance",
    "Core/core-merge",
    "Core/core-functions",
@@ -16,7 +15,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
    "js!WS.Data/Collection/List",
    "js!SBIS3.CONTROLS.SelectorWrapper"
 ],
-    function (CommandDispatcher, CompoundControl, Di, collectionHelpers, cInstance, cMerge, cFunctions, Record, SbisService, Query, OpenDialogUtil, List) {
+    function (CommandDispatcher, CompoundControl, Di, cInstance, cMerge, cFunctions, Record, SbisService, Query, OpenDialogUtil, List) {
 
        'use strict';
 
@@ -167,14 +166,14 @@ define('js!SBIS3.CONTROLS.SelectorController', [
              }
 
              if(difference.removed.length) {
-                collectionHelpers.forEach(difference.removed, function (removedKey) {
+                difference.removed.forEach(function(removedKey) {
                    currentItems.removeAt(currentItems.getIndexByValue(idProperty, removedKey));
                 });
                 onChangeSelection();
              }
 
              if(difference.added.length) {
-                collectionHelpers.forEach(difference.added, function(item) {
+                difference.added.forEach(function(item) {
                    var index = currentItems.getIndexByValue(idProperty, item.get(idProperty));
 
                    if(currentItems.getCount() && !multiselect && index === -1) {

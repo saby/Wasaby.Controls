@@ -2,9 +2,8 @@
  * Created by am.gerasimov on 26.05.2015.
  */
 define('js!SBIS3.CONTROLS.DragAndDropMixin', [
-   "Core/constants",
-   "Core/helpers/collection-helpers"
-], function( constants,colHelpers) {
+   "Core/constants"
+], function(constants) {
 
    var isMobile = constants.browser.isMobilePlatform;
 
@@ -66,11 +65,11 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [
        * Выключает/включает стандартный drag-N-Drop браузера
        */
       _toggleNativeDragNDrop: function(enable) {
-         colHelpers.forEach(this._dragContainers, function(elem) {
-            elem.ondragstart = function() {
+         for (var i = 0; i < this._dragContainers.length; i++) {
+            this._dragContainers[i].ondragstart = function() {
                return enable;
             }
-         });
+         }
       },
 
       /*

@@ -44,7 +44,6 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.ComponentBinder',
    'js!WS.Data/Di',
    'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
-   'Core/helpers/collection-helpers',
    'Core/core-instance',
    'Core/helpers/functional-helpers',
    'Core/helpers/dom&controls-helpers',
@@ -69,7 +68,7 @@ define('js!SBIS3.CONTROLS.ListView',
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents, LayoutManager, mHelpers,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove) {
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove) {
      'use strict';
 
       var
@@ -1140,9 +1139,11 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _createScrollPager: function(){
-            var scrollContainer = this._scrollWatcher.getScrollContainer();
+            var scrollContainer = this._scrollWatcher.getScrollContainer(),
+               scrollPagerContainer = $('> .controls-ListView__scrollPager', this._container);
+            this._scrollWatcher.subscribe('onScroll', this._onScrollHandler.bind(this));
             this._scrollPager = new Paging({
-               element: $('> .controls-ListView__scrollPager', this._container),
+               element: scrollPagerContainer,
                visible: false,
                showPages: false,
                idProperty: 'id',
@@ -1153,22 +1154,24 @@ define('js!SBIS3.CONTROLS.ListView',
             // контенеры в контенеры родительских компонентов является хаком. Подумать как изменить архитектуру
             // работы с пэйджером что бы избавится от этого.
             if (this._inScrollContainerControl) {
-              $('> .controls-ListView__scrollPager', this._container).appendTo(scrollContainer.parent());
+              scrollPagerContainer.appendTo(scrollContainer.parent());
             } else if (constants.browser.isMobilePlatform) {
                // скролл может быть у window, но нельзя делать appendTo(window)
                // На скролируемых областях на мобильных платормах висит transform: translate3d(0,0,0);.
                // Он создает новую систему координат внутри себя. position: fixed начинает работать относительно
                // этого контенера а не относительно вьюпорта. По этому выносим пэйджер за пределы скролируемой области.
                scrollContainer = (scrollContainer[0] == window || scrollContainer.is('body')) ? $('body') : scrollContainer.parent();
-               $('> .controls-ListView__scrollPager', this._container).appendTo(scrollContainer);
+               scrollPagerContainer.appendTo(scrollContainer);
             }
             this._setScrollPagerPosition();
             this._scrollBinder = new ComponentBinder({
                view: this,
-               paging: this._scrollPager,
                pagingZIndex: this._pagingZIndex
             });
-            this._scrollBinder.bindScrollPaging();
+            // Создаем пейджинг скрытым если включено сохранение позиции при reload, но сам пейджинг выключен
+            // Так как для сохранения страницы все равно нужекн рассчет страниц скролла
+            var hiddenPager = !this._options.scrollPaging && this._options.saveReloadPosition;
+            this._scrollBinder.bindScrollPaging(this._scrollPager, hiddenPager);
             dcHelpers.trackElement(this.getContainer(), true).subscribe('onVisible', this._onVisibleChange.bind(this));
             
             if (!this._inScrollContainerControl) {
@@ -2946,7 +2949,7 @@ define('js!SBIS3.CONTROLS.ListView',
                if(itemsActions) {
                   target = self.getItemsActions().getTarget();
                   targetHash = target.container.data('hash');
-                  colHelpers.forEach(items, function (item) {
+                  items.forEach(function(item) {
                      if (item.getHash() == targetHash) {
                         self._itemsToolbar.unlockToolbar();
                         self._itemsToolbar.hide();
@@ -4452,7 +4455,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                 self = this,
                 keysForRemove = [];
-            colHelpers.forEach(this.getSelectedKeys(), function(key) {
+            this.getSelectedKeys().forEach(function(key) {
                if (!self._getItemProjectionByItemId(key)) {
                   keysForRemove.push(key);
                }

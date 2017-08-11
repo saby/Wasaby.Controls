@@ -5,10 +5,9 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
    "js!SBIS3.CONTROLS.RangeMixin",
    "js!WS.Data/Source/Base",
    "js!SBIS3.CONTROLS.Utils.DateUtil",
-   "Core/helpers/collection-helpers",
    "Core/core-instance",
    "js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView"
-], function ( Deferred,ListView, ItemTmpl, RangeMixin, Base, DateUtil, colHelpers, cInstance) {
+], function ( Deferred,ListView, ItemTmpl, RangeMixin, Base, DateUtil, cInstance) {
    'use strict';
 
    var _startingOffset = 1000000;
@@ -268,7 +267,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
 
       forEachMonthView: function (func) {
          var self = this;
-         colHelpers.forEach(this.getChildControls(), function(control) {
+         this.getChildControls().forEach(function(control) {
             if (self._isMonthView(control)) {
                func(control);
             }
