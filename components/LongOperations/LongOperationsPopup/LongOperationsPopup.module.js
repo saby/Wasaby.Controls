@@ -33,6 +33,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
       var LongOperationsPopup = NotificationPopup.extend({
          $protected: {
             _options: {
+               userId: UserInfo.get('Пользователь'),
                isHint: false,
                headerTemplate: headerTemplate,
                bodyTemplate: contentTpl,
@@ -188,7 +189,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                      columns: {
                         userPic: false
                      },
-                     userId: UserInfo.get('Пользователь')
+                     userId: self._options.userId
                   }
                });
             });
