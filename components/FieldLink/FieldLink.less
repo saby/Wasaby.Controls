@@ -3,7 +3,7 @@
       .inline-flexbox();
       .flex-shrink(0);
       .flex-direction(row-reverse);
-      max-width: calc(100% ~'-' 20px); //todo
+      max-width: ~'calc(100% - '@controls-FieldLink-linkItem-cross-width~')';
       overflow: hidden;
    }
    .controls-FieldLink__linksWrapper {
@@ -30,6 +30,12 @@
 
    }
    &.controls-FieldLink__selected-single {
+      .controls-TextBox__beforeFieldWrapper {
+         width:100%;
+         .controls-FieldLink__linksWrapper {
+            width:100%;
+         }
+      }
       .controls-FieldLinkItemsCollection {
          .justify-content()
       }
