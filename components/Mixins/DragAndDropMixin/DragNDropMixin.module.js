@@ -302,7 +302,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 };
             if (!DragObject.isInitDragStarter() && $(clickEvent.target).closest('.controls-DragNDropMixin__notDraggable', self._getDragContainer().context).length === 0) {
                this._preparePageXY(clickEvent);
-
                EventBus.channel('DragAndDropChannel').subscribe('onMousemove', dragStrarter);
                EventBus.channel('DragAndDropChannel').once('onMouseup', function () {
                   EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
