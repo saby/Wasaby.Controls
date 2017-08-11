@@ -118,15 +118,17 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + fileType);
          this._prepareSerializer().addCallback(function(reportText){
             self._destroyLoadIndicator();
-            if (self._isLongOperationsEnabled()) {
-               newCfg = {
-                  'FileName': fileName,
-                  'html': reportText
-               };
-            } else {
+            //В престо и  рознице отключены длительные операции и выгрузка должна производиться по-старому
+            //Через длительные операции производилась только выгрузка в Excel, поэтому проверяем fileType
+            if (!self._isLongOperationsEnabled() && fileType === 'Excel') {
                methodName = 'СохранитьПоHTMLDWC';
                newCfg = {
                   'name': fileName,
+                  'html': reportText
+               };
+            } else {
+               newCfg = {
+                  'FileName': fileName,
                   'html': reportText
                };
             }
@@ -152,7 +154,9 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          if (pageOrientation) {
             cfg.PageOrientation = pageOrientation;
          }
-         if (!this._isLongOperationsEnabled() && !methodName) {
+         //В престо и  рознице отключены длительные операции и выгрузка должна производиться по-старому
+         //Через длительные операции производилась только выгрузка в Excel, поэтому проверяем fileType
+         if (!this._isLongOperationsEnabled() && fileType === 'Excel') {
             methodName = 'СохранитьListDWC';
          }
          this.exportFileTransfer(fileType, methodName || 'SaveList', cfg);
@@ -196,7 +200,9 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
                cfg.PageOrientation = pageOrientation;
             }
          }
-         if (!this._isLongOperationsEnabled() && !methodName) {
+         //В престо и  рознице отключены длительные операции и выгрузка должна производиться по-старому
+         //Через длительные операции производилась только выгрузка в Excel, поэтому проверяем fileType
+         if (!this._isLongOperationsEnabled()  && fileType === 'Excel') {
             methodName = 'СохранитьRSDWC';
          }
          this.exportFileTransfer(fileType, methodName || 'SaveRecordSet', cfg);
@@ -225,6 +231,8 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             }
             return error;
          });
+          //В престо и  рознице отключены длительные операции и выгрузка должна производиться по-старому
+          //Через длительные операции производилась только выгрузка в Excel, поэтому проверяем fileType
          if (object !== "Excel" || !this._isLongOperationsEnabled()) {
             this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + object);
             exportDeferred.addCallback(function(ds) {
