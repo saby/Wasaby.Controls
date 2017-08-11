@@ -30,6 +30,7 @@ define('js!WSControls/Lists/ItemsControl', [
 
    var ItemsControl = BaseControl.extend(
       {
+         _needReload: false,
          _controlName: 'WSControls/Lists/ItemsControl',
          iWantVDOM: true,
          _isActiveByClick: false,
@@ -70,19 +71,25 @@ define('js!WSControls/Lists/ItemsControl', [
                this._itemsChangeCallback(this._items, newOptions);
             }
 
-            if (newOptions.dataSource) {
+            if (newOptions.dataSource != this._dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
+               this._needReload = true;
             }
          },
 
          _beforeMount: function(newOptions) {
-            if (this._dataSource && cfg.dataSource.firstLoad !== false) {
+            if (this._needReload === true) {
                this.reload();
+               this._needReload = false;
             }
          },
 
          _beforeUpdate: function(newOptions) {
             this._prepareMountingData(newOptions);
+            if (this._needReload === true) {
+               this.reload();
+               this._needReload = false;
+            }
             //TODO обработать смену фильтров и т.д. позвать релоад если надо
          },
 
