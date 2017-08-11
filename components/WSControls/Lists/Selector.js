@@ -24,6 +24,7 @@ define('js!WSControls/Lists/Selector', [
          if ((cfg.selectedIndex !== this._options.selectedIndex) && !this._isEmptyIndex(cfg.selectedIndex)) { //Новые опции пришли из родителя
             this._selectedIndex = cfg.selectedIndex;
             this._selectedKey = this._getKeyByIndex(this._selectedIndex, cfg);
+            this._applyAllowEmpty(cfg);
          }
          else {
             if ((cfg.selectedKey !== this._options.selectedKey) && (cfg.selectedKey !== undefined)) { //Новые опции пришли из родителя
@@ -31,11 +32,12 @@ define('js!WSControls/Lists/Selector', [
                this._selectedIndex = this._getItemIndexByKey(this._selectedKey, cfg);
                this._applyAllowEmpty(cfg);
             }
-            else {
-               this._selectedIndex = -1;
-               this._selectedKey = undefined;
-               this._applyAllowEmpty(cfg);
-            }
+         }
+
+         if (this._isEmptyIndex(this._selectedIndex)) {
+            this._selectedIndex = -1;
+            this._selectedKey = undefined;
+            this._applyAllowEmpty(cfg);
          }
       },
 

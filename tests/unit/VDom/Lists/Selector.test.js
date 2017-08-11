@@ -163,7 +163,7 @@ define(['js!WSControls/Lists/Selector',
                idProperty: 'id'
             };
             var selector = new Selector(cfg);
-            ctrl.saveOptions(cfg);
+            selector.saveOptions(cfg);
 
             var display = selector._display;
             var hash = display.at(1).getHash();
