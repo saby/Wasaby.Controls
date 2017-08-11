@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.Utils.TemplateUtil', [], function() {
             case 'string' :
                template = tpl.indexOf('html!') === 0 || tpl.indexOf('tmpl!') === 0 ?
                    global.requirejs(tpl) :
-                   doT.template(tpl);
+                  (window.doT ? doT.template(tpl) : tpl);
                break;
             case 'function' :
                template = tpl;
