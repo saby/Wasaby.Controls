@@ -407,7 +407,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          _isHeaderScrolling: false,                   //Флаг обозначающий, происходит ли скролл за заголовок
          _lastLeftPos: null,                          //Положение по горизонтали, нужно когда происходит скролл за заголовок
          _options: {
-            task1174300036: false,
             _footTpl: footTpl,
             _colGroupTpl: colgroupTpl,
             _defaultCellTemplate: cellTemplate,
