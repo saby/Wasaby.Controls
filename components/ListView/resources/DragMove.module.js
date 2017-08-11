@@ -444,7 +444,8 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
       _makeDragPlaceHolder: function() {
          if (this._options.useDragPlaceHolder) {
             var item = DragObject.getSource().at(0);
-            this._dragPlaceHolder = item.getDomElement().clone().addClass('controls-DragNDrop__placeholder');
+            //надо удалять хеш и id что бы вью не считало плейсхолдер за элемент
+            this._dragPlaceHolder = item.getDomElement().clone().removeAttr('data-hash').removeAttr('data-id').addClass('controls-DragNDrop__placeholder');
             item.getDomElement().after(this._dragPlaceHolder);
          }
       },
@@ -490,7 +491,7 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
          } else {
             domElem = target.closest('.js-controls-ListView__item', this.getContainer()[0]);
          }
-         if (projection && !projection.getByHash(domElem.data('hash'))) {
+         if (domElem.data('hash') && projection && !projection.getByHash(domElem.data('hash'))) {
             return this._findItemByElement(domElem.parent());
          }
          return domElem;
