@@ -99,8 +99,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 /**
                  * @cfg {Boolean} Признак, возможножности перемещения элементов с помощью DragNDrop.
                  */
-                itemsDragNDrop: true,
-                dragClasses: 'dragdropBody ws-unSelectable'
+                itemsDragNDrop: true
             },
             /**
              * @member {Number} Константа, показывающая на сколько пикселей надо сдвинуть мышь, чтобы началось перемещение.
@@ -295,9 +294,10 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         _initDrag: function(clickEvent) {
             var
                 self = this,
+                start = new Date(),
                 dragStrarter = function(bus, moveEvent){
                     self._preparePageXY(moveEvent);
-                    if (self._isDrag(moveEvent, clickEvent)) {
+                    if (self._isDrag(moveEvent, clickEvent, start)) {
                         self._beginDrag(clickEvent);
                         self._beginDragTarget = clickEvent.target;
                         EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
@@ -305,6 +305,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 };
             if ($(clickEvent.target).closest('.controls-DragNDropMixin__notDraggable', self._getDragContainer().context).length === 0) {
                this._preparePageXY(clickEvent);
+
                EventBus.channel('DragAndDropChannel').subscribe('onMousemove', dragStrarter);
                EventBus.channel('DragAndDropChannel').once('onMouseup', function () {
                   EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
@@ -356,11 +357,15 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          * @returns {boolean} если true то было смещение.
          * @private
          */
-        _isDrag: function(moveEvent, clickEvent) {
+        _isDrag: function(moveEvent, clickEvent, start) {
             var
                 moveX = moveEvent.pageX - clickEvent.pageX,
                 moveY = moveEvent.pageY - clickEvent.pageY;
-
+            if (clickEvent.type == 'touchstart' && (new Date()) - start < 500) {
+                //при touchstart нельзя сразу начинать dragndrop потому что, если показать аватар, изменится dom и браузер не
+                //будет генерировать клик 500 мс должно хватить на то что бы отличить клик от перетаскивания
+                return false;
+            }
             if ((Math.abs(moveX) < this._constShiftLimit) && (Math.abs(moveY) < this._constShiftLimit)) {
                 return false;
             }
@@ -521,8 +526,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 sel.empty();
              }
           }
-          //останавливаем распрастранение, что бы его не поймал дргой контрол с DragNDropMixin
-          e.stopPropagation();
        }
     };
 
