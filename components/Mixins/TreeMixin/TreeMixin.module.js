@@ -495,6 +495,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             _getRecordsForRedrawTree: getRecordsForRedraw,
             _createDefaultProjection : createDefaultProjection,
             _hasNextPageInFolder: hasNextPageInFolder,
+            _curRoot: null,
             /**
              * @cfg {String, Number} Устанавливает идентификатор узла, относительно которого отображаются данные в текущий момент
              */

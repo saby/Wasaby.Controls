@@ -87,6 +87,7 @@ define('js!SBIS3.CONTROLS.FilterController', [
                };
       
             if(filterButton) {
+               filterChangeHandler.call(filterButton);
                subscribeFilter(filterButton);
             }
       
