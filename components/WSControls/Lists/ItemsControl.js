@@ -3,7 +3,6 @@ define('js!WSControls/Lists/ItemsControl', [
    'js!WSControls/Control/Base',
    'Core/helpers/Object/isEmpty',
    'Core/Sanitize',
-   'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'tmpl!WSControls/Lists/resources/ItemsTemplate',
    'tmpl!WSControls/Lists/resources/ItemTemplate',
    'tmpl!WSControls/Lists/resources/ItemContentTemplate',
@@ -16,7 +15,6 @@ define('js!WSControls/Lists/ItemsControl', [
              BaseControl,
              isEmpty,
              Sanitize,
-             TemplateUtil,
              ItemsTemplate,
              ItemTemplate,
              ItemContentTemplate,
@@ -119,11 +117,11 @@ define('js!WSControls/Lists/ItemsControl', [
          },
 
          _getItemTpl: function() {
-            return TemplateUtil.prepareTemplate(this._options.itemTpl || this._defaultItemTemplate, true);
+            return this._options.itemTpl || this._defaultItemTemplate;
          },
 
          _getItemContentTpl: function() {
-            return TemplateUtil.prepareTemplate(this._options.itemContentTpl || this._defaultItemContentTemplate, true);
+            return this._options.itemContentTpl || this._defaultItemContentTemplate;
          },
 
          _getPropertyValue: function(itemContents, field) {
@@ -140,7 +138,7 @@ define('js!WSControls/Lists/ItemsControl', [
                groupData;
             groupData = {
                multiselect : this._options.multiSelect,
-               groupContentTemplate: TemplateUtil.prepareTemplate(groupBy.contentTemplate || '', true)
+               groupContentTemplate: groupBy.contentTemplate
             };
             return groupData;
          },
@@ -151,7 +149,7 @@ define('js!WSControls/Lists/ItemsControl', [
                groupData = this._getGroupData();
                groupData.item = item;
                groupData.groupId = groupId;
-               groupTemplate = TemplateUtil.prepareTemplate(this._groupTemplate, true)
+               groupTemplate = this._groupTemplate
             }
             return {
                data : groupData,
