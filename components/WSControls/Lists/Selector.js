@@ -10,6 +10,35 @@ define('js!WSControls/Lists/Selector', [
          this._publish('onSelectedItemChange');
       },
 
+      _beforeUpdate: function(newOptions) {
+         this._calcSelection(newOptions);
+         Selector.superclass._beforeUpdate.apply(this, arguments);
+      },
+
+      _displayChangeCallback: function(display, cfg) {
+         this._calcSelection(cfg);
+         Selector.superclass._displayChangeCallback.apply(this, arguments);
+      },
+
+      _calcSelection: function(cfg) {
+         if ((cfg.selectedIndex !== this._options.selectedIndex) && !this._isEmptyIndex(cfg.selectedIndex)) { //Новые опции пришли из родителя
+            this._selectedIndex = cfg.selectedIndex;
+            this._selectedKey = this._getKeyByIndex(this._selectedIndex, cfg);
+         }
+         else {
+            if ((cfg.selectedKey !== this._options.selectedKey) && (cfg.selectedKey !== undefined)) { //Новые опции пришли из родителя
+               this._selectedKey = cfg.selectedKey;
+               this._selectedIndex = this._getItemIndexByKey(this._selectedKey, cfg);
+               this._applyAllowEmpty(cfg);
+            }
+            else {
+               this._selectedIndex = -1;
+               this._selectedKey = undefined;
+               this._applyAllowEmpty(cfg);
+            }
+         }
+      },
+
       _applyAllowEmpty: function (cfg) {
          if ((cfg.allowEmptySelection === false) && this._isEmptyIndex(this._selectedIndex)) {
             if (this._display.getCount()) {
@@ -63,28 +92,6 @@ define('js!WSControls/Lists/Selector', [
 
       _onSelectedItemChange: function() {
          this._setDirty();
-      },
-
-      _displayChangeCallback: function(display, cfg) {
-         if ((cfg.selectedIndex !== this._options.selectedIndex) && !this._isEmptyIndex(cfg.selectedIndex)) { //Новые опции пришли из родителя
-            this._selectedIndex = cfg.selectedIndex;
-            this._selectedKey = this._getKeyByIndex(this._selectedIndex, cfg);
-         }
-         else {
-            if ((cfg.selectedKey !== this._options.selectedKey) && (cfg.selectedKey !== undefined)) { //Новые опции пришли из родителя
-               this._selectedKey = cfg.selectedKey;
-               this._selectedIndex = this._getItemIndexByKey(this._selectedKey, cfg);
-               this._applyAllowEmpty(cfg);
-            }
-            else {
-               this._selectedIndex = -1;
-               this._selectedKey = undefined;
-               this._applyAllowEmpty(cfg);
-            }
-         }
-
-
-         Selector.superclass._displayChangeCallback.apply(this, arguments);
       }
    });
 
