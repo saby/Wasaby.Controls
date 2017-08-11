@@ -494,18 +494,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             _getRecordsForRedrawTree: getRecordsForRedraw,
             _createDefaultProjection : createDefaultProjection,
             _hasNextPageInFolder: hasNextPageInFolder,
+            _curRoot: null,
             /**
              * @cfg {String, Number} Устанавливает идентификатор узла, относительно которого отображаются данные в текущий момент
              */
             currentRoot: null,
-            /**
-             * @cfg {Number} Задает размер отступов для каждого уровня иерархии
-             * @example
-             * <pre>
-             *    <option name="paddingSize">24</option>
-             * </pre>
-             */
-            paddingSize: undefined,
             /**
              * @cfg {String, Number} Устанавливает идентификатор узла, относительно которого нужно отображать данные. Такой узел будет считаться вершиной иерархии.
              * @example
