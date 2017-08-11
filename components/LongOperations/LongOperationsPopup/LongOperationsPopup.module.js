@@ -159,7 +159,8 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                            /*###key: item.getId(),*/
                            tabKey: item.get('tabKey'),
                            producer: item.get('producer'),
-                           operationId: item.get('id')
+                           operationId: item.get('id'),
+                           isFailed: item.get('isFailed')
                         } : {
                            failedOperation: item
                         },
