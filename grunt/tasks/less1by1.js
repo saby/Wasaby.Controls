@@ -95,10 +95,10 @@ module.exports = function less1by1Task(grunt) {
         }
         let taskDone = this.async();
           var bar = new ProgressBar('  compiling [:bar] :file', {
-            complete: '>',
-            incomplete: '.',
+            complete: '♥',
+            incomplete: '_',
             width: 30,
-            total: 116
+            total: 131
         });
         helpers.recurse(rootPath, function(filepath, cb) {
           let relpath = path.relative(rootPath, filepath);
@@ -118,7 +118,9 @@ module.exports = function less1by1Task(grunt) {
                       }
                     }
                     else {
-                      processLessFile(data, filepath, readFileError, theme, false);
+                       if (!~filepath.indexOf('theme.less')) {
+                          processLessFile(data, filepath, readFileError, theme, false);
+                       }
                     }
                 });
             }
