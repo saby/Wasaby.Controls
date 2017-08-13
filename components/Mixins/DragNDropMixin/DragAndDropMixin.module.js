@@ -93,6 +93,10 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [
       _moveAt: function(e) {
          this._preparePageXY(e);
          this._dragMove(e,{top: e.pageY - this._startPosition.y, left: e.pageX - this._startPosition.x});
+         /* Чтобы не скролилась страница при пететаскивании  (актуально для планшетов и при работе с телевизором) */
+         if(e.originalEvent.touches) {
+            e.preventDefault();
+         }
       },
 
       /**
