@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.NotificationPopup', [
       'js!SBIS3.CONTROLS.InformationPopup',
-      'html!SBIS3.CONTROLS.NotificationPopup/resources/template',
-      'html!SBIS3.CONTROLS.NotificationPopup/resources/headerTpl',
+      'tmpl!SBIS3.CONTROLS.NotificationPopup/resources/template',
+      'tmpl!SBIS3.CONTROLS.NotificationPopup/resources/headerTpl',
       'Core/detection',
       'css!SBIS3.CONTROLS.NotificationPopup'
    ],
