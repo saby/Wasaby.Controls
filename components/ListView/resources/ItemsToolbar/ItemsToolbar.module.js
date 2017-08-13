@@ -201,7 +201,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              if (items) {
                 items.forEach(function(item){
                    if(item.hasOwnProperty('icon') && item.icon){
-                      item.icon = item.icon.replace('icon-16', 'icon-size');
+                      item.icon = item.icon.replace('icon-16', 'icon-size').replace('icon-24', 'icon-size').replace('icon-small', 'icon-size').replace('icon-medium', 'icon-size');
                    }
                 });
              }
