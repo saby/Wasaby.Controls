@@ -31,7 +31,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
     *
     * @author
     *
-    * @demo SBIS3.CONTROLS.Demo.MyTreeCompositeView
+    * @demo SBIS3.DOCS.TreeCompositeView
     *
     * @public
     * @control
