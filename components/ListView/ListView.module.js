@@ -3574,10 +3574,15 @@ define('js!SBIS3.CONTROLS.ListView',
                this._initVirtualScrolling();
             }
          },
+
+         _getAjaxLoaderContainer: fHelpers.memoize(function () {
+            return this.getContainer().find('.controls-AjaxLoader').eq(0);
+         }, '_getAjaxLoaderContainer'),
+
          _toggleIndicator: function(show){
             var self = this,
                 container = this.getContainer(),
-                ajaxLoader = container.find('.controls-AjaxLoader').eq(0),
+                ajaxLoader = this._getAjaxLoaderContainer(),
                 indicator, centerCord, scrollContainer;
 
 
@@ -3586,17 +3591,17 @@ define('js!SBIS3.CONTROLS.ListView',
                if (!self.isDestroyed() && self._showedLoading) {
                   scrollContainer = self._getScrollContainer()[0];
                   indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
+                  ajaxLoader.removeClass('ws-hidden');
                   if(indicator.length && scrollContainer && scrollContainer.offsetHeight && container[0].scrollHeight > scrollContainer.offsetHeight) {
                      /* Ищем кординату, которая находится по середине отображаемой области грида */
                      centerCord =
-                        (Math.max(scrollContainer.getBoundingClientRect().bottom, 0) - Math.max(container[0].getBoundingClientRect().top, 0))/2;
+                        (Math.max(scrollContainer.getBoundingClientRect().bottom, 0) - Math.max(ajaxLoader[0].getBoundingClientRect().top, 0))/2;
                      /* Располагаем индикатор, учитывая прокрутку */
                      indicator[0].style.top = centerCord + scrollContainer.scrollTop + 'px';
                   } else {
                      /* Если скрола нет, то сбросим кординату, чтобы индикатор сам расположился по середине */
                      indicator[0].style.top = '';
                   }
-                  ajaxLoader.removeClass('ws-hidden');
                }
                this._loadingIndicatorTimer = setTimeout(function(){
                   ajaxLoader.addClass('controls-AjaxLoader__showIndication');
