@@ -2,11 +2,11 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.HighlightDecorator', [
    'js!SBIS3.CONTROLS.Utils.HtmlDecorators.AbstractDecorator',
    'Core/markup/ParserUtilitiesNew',
    'Core/core-instance',
-   'Core/helpers/string-helpers'
+   'Core/helpers/String/escapeHtml'
 ], function (AbstractDecorator,
             Parser,
             cInst,
-            strHelpers) {
+            escapeHtml) {
    'use strict';
 
    /**
@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.HighlightDecorator', [
             text = text.toString();
          }
          text = Parser.parse(text);
-         highlight = strHelpers.escapeHtml('' + highlight)
+         highlight = escapeHtml('' + highlight)
             .replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
 
          highlighted(text, new RegExp(highlight, 'gi'), cssClass);
