@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "Core/core-instance",
    "js!SBIS3.CONTROLS.Utils.InformationPopupManager",
    "Core/helpers/functional-helpers",
-   'Core/helpers/string-helpers',
+   'Core/helpers/String/escapeHtml',
    "js!SBIS3.CONTROLS.Utils.SourceUtil",
    "Core/helpers/Object/isEmpty",
    "Core/helpers/Function/debounce"
@@ -54,7 +54,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    cInstance,
    InformationPopupManager,
    fHelpers,
-   strHelpers,
+   escapeHtml,
    SourceUtil,
    isEmpty,
    debounce) {
@@ -195,7 +195,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
           timers = {},
           itemTpl, itemContentTpl, logger;
 
-      tplOptions.escapeHtml = strHelpers.escapeHtml;
+      tplOptions.escapeHtml = escapeHtml;
       tplOptions.Sanitize = Sanitize;
       tplOptions.idProperty = cfg.idProperty;
       tplOptions.displayField = cfg.displayProperty;
@@ -2447,7 +2447,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             var args = this._prepareItemData(), buildedTpl;
             args['projItem'] = item;
             args['item'] = item.getContents();
-            args['escapeHtml'] = strHelpers.escapeHtml;
+            args['escapeHtml'] = escapeHtml;
             buildedTpl = dotTemplate(args);
             //TODO нашлись умники, которые в качестве шаблона передают функцию, возвращающую jquery
             //в 200 пусть поживут, а в новой отрисовке, отпилим у них

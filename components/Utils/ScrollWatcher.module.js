@@ -3,10 +3,9 @@
  */
 define('js!SBIS3.CONTROLS.ScrollWatcher', [
    "Core/Abstract",
-   "Core/helpers/string-helpers",
    "js!SBIS3.CORE.LayoutManager",
    'Core/detection'
-], function( cAbstract, strHelpers, LayoutManager, cDetection) {
+], function( cAbstract, LayoutManager, cDetection) {
    'use strict';
 
    /**
