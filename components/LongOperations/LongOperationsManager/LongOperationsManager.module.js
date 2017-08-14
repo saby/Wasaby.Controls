@@ -438,6 +438,23 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          },
 
          /**
+          * Проверить, можно ли в данный момент ликвидировать экземпляр класса без необратимой потери данных
+          * @public
+          * @return {boolean}
+          */
+         canDestroySafely: function () {
+            if (!_isDestroyed) {
+               for (var n in _producers) {
+                  if (_producers[n].canDestroySafely &&//TODO: ### Это переходный код, удалить позднее
+                        !_producers[n].canDestroySafely()) {
+                     return false;
+                  }
+               }
+               return true;
+            }
+         },
+
+         /**
           * Ликвидировать экземпляр класса
           * @public
           */
@@ -999,6 +1016,15 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          // И подписаться на события во вкладках
          _tabChannel.subscribe('LongOperations:Manager:onActivity', _tabListener);
          _tabChannel.notify('LongOperations:Manager:onActivity', {type: 'born', tab: _tabKey});
+
+         // Добавить обработчик перед выгрузкой для уведомеления пользователя (если нужно)
+         window.addEventListener('beforeunload', function (evt) {
+            if (!manager.canDestroySafely()) {
+               // Единственное, что сейчас нам дают сделать браузеры и стандарты - показать пользователю стандартное окно браузера
+               // с уведомлением, что при перезагрузке что-то может не сохраниться
+               evt.returnValue = true;
+            }
+         });
 
          // Добавить обработчик на выгрузку для запуска метода destroy
          window.addEventListener('unload', function () {
