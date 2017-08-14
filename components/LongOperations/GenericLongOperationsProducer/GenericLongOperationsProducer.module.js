@@ -269,6 +269,35 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             }
          },
 
+         /**
+          * Проверить, можно ли в данный момент ликвидировать экземпляр класса без необратимой потери данных
+          * @public
+          * @return {boolean}
+          */
+         canDestroySafely: function () {
+            if (!this._isDestroyed) {
+               if (this._actions) {
+                  var snapshots = GLOStorage.list(this._name);
+                  if (snapshots.length) {
+                     var STATUSES = LongOperationEntry.STATUSES;
+                     var DEFAULTS = LongOperationEntry.DEFAULTS;
+                     for (var i = 0; i < snapshots.length; i++) {
+                        var o = snapshots[i];
+                        if (this._actions[o.id]) {
+                           var status = 'status' in o ? o.status : DEFAULTS.status;
+                           if (status === STATUSES.running || status === STATUSES.suspended) {
+                              // Если обработчики действий пользователя установлены в этой вкладке
+                              // При разрушении продюсера обработчики будут утеряны, что приведёт к необратимой потере данных
+                              return false;
+                           }
+                        }
+                     }
+                  }
+               }
+               return true;
+            }
+         },
+
 
 
          /**
