@@ -36,7 +36,7 @@
                <ws:SBIS3.CONTROLS.Link name="positiveButton" class="controls-SubmitPopup__button controls-Button__ellipsis {{hasCancelButton ? 'controls-SubmitPopup__button-mini'}}" caption="{{positiveButton.caption}}" allowChangeEnable="{{false}}" primary="{{true}}"></ws:SBIS3.CONTROLS.Link>
             </ws:if>
             <ws:else>
-               <ws:SBIS3.CONTROLS.Button name="positiveButton" class="controls-SubmitPopup__button controls-Button__ellipsis {{hasCancelButton ? 'controls-SubmitPopup__button-mini'}}" caption="ergeere" allowChangeEnable="{{false}}" primary="{{true}}"></ws:SBIS3.CONTROLS.Button>
+               <ws:SBIS3.CONTROLS.Button name="positiveButton" class="controls-SubmitPopup__button controls-Button__ellipsis {{hasCancelButton ? 'controls-SubmitPopup__button-mini'}}" caption="{{positiveButton.caption}}" allowChangeEnable="{{false}}" primary="{{true}}"></ws:SBIS3.CONTROLS.Button>
             </ws:else>
 
             <ws:if data="{{negativeButton.isLink}}">
