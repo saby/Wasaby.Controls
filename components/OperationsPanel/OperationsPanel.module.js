@@ -160,11 +160,14 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
             if(self._options.hasItemsMenu){
                //Следим за кнопками, извне могут менять их видимость и тогда потребудется проверить вместимость
                self.getItems().each(function(item){
-                  self.subscribeTo(self.getItemInstance(item.get('name')), 'onPropertyChanged', function(e, propName){
-                     if(propName === 'visible'){
-                        self._checkCapacity();
-                     }
-                  });
+                  var inst = self.getItemInstance(item.get('name'));
+                  if(inst){
+                     self.subscribeTo(inst, 'onPropertyChanged', function(e, propName){
+                        if(propName === 'visible'){
+                           self._checkCapacity();
+                        }
+                     });
+                  }
                });
             }
          });
