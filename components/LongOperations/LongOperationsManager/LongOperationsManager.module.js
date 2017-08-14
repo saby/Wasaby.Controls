@@ -24,10 +24,11 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       'js!SBIS3.CONTROLS.ILongOperationsProducer',
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.LongOperationHistoryItem',
-      'js!SBIS3.CONTROLS.LongOperationsList/resources/model'
+      'js!SBIS3.CONTROLS.LongOperationsList/resources/model'/*###,
+      'js!SBIS3.CONTROLS.Utils.InformationPopupManager'*/
    ],
 
-   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsTabCalls, LongOperationsCallsPool, LongOperationsBunch, ILongOperationsProducer, LongOperationEntry, LongOperationHistoryItem, Model) {
+   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsTabCalls, LongOperationsCallsPool, LongOperationsBunch, ILongOperationsProducer, LongOperationEntry, LongOperationHistoryItem, Model/*###, InformationPopupManager*/) {
       'use strict';
 
       /**
@@ -434,6 +435,23 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          unsubscribe: function (eventType, listener, ctx) {
             if (!_isDestroyed) {
                _channel.unsubscribe(eventType, listener, ctx);
+            }
+         },
+
+         /**
+          * Проверить, можно ли в данный момент ликвидировать экземпляр класса без необратимой потери данных
+          * @public
+          * @return {boolean}
+          */
+         canDestroySafely: function () {
+            if (!_isDestroyed) {
+               for (var n in _producers) {
+                  if (_producers[n].canDestroySafely &&//TODO: ### Это переходный код, удалить позднее
+                        !_producers[n].canDestroySafely()) {
+                     return false;
+                  }
+               }
+               return true;
             }
          },
 
@@ -999,6 +1017,17 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          // И подписаться на события во вкладках
          _tabChannel.subscribe('LongOperations:Manager:onActivity', _tabListener);
          _tabChannel.notify('LongOperations:Manager:onActivity', {type: 'born', tab: _tabKey});
+
+         // Добавить обработчик перед выгрузкой для уведомеления пользователя (если нужно)
+         window.addEventListener('beforeunload', function (evt) {
+            if (!manager.canDestroySafely()) {
+               /*###InformationPopupManager.showConfirmDialog({
+                  message: rk('Подождите пожалуйста'),
+                  details: rk('Если Вы покинете эту страницу сейчас, то некоторые длительные операции не будут завершены корректно. Покинуть страницу?')
+               }, function () {}, function () {}, null);*/
+               evt.returnValue = true;
+            }
+         });
 
          // Добавить обработчик на выгрузку для запуска метода destroy
          window.addEventListener('unload', function () {
