@@ -147,6 +147,15 @@ define('js!SBIS3.CONTROLS.ILongOperationsProducer',
       },
 
       /**
+       * Проверить, можно ли в данный момент ликвидировать экземпляр класса без необратимой потери данных
+       * @public
+       * @return {boolean}
+       */
+      canDestroySafely: function () {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
        * Ликвидировать экземпляр класса
        * @public
        */
