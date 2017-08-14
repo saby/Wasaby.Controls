@@ -100,7 +100,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       }
       else {
          projection.setGroup(null);
-         resetGroupItemsCount(cfg);
       }
       return projection;
    },
@@ -158,21 +157,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       }
    },
 
-   applyGroupItemsCount = function(groupId, count, cfg) {
-      cfg._groupItemsCount = cfg._groupItemsCount || {};
-      cfg._groupItemsCount[groupId] = cfg._groupItemsCount[groupId] || 0;
-      cfg._groupItemsCount[groupId] += count;
-   },
-
-   resetGroupItemsCount = function(cfg) {
-      delete cfg._groupItemsCount;
-   },
-
    getRecordsForRedraw = function(projection, cfg) {
       var
          records = [];
       if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
-         resetGroupItemsCount(cfg);
          var needGroup = false, groupId;
          projection.each(function (item, index) {
             if (cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
@@ -181,7 +169,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             else {
                if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {
-                  applyGroupItemsCount(groupId, 1, cfg);
                   if (needGroup && groupId) {
                      cfg._groupItemProcessing(groupId, records, item, cfg);
                      needGroup = false;
@@ -371,8 +358,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             _buildTplArgs : buildTplArgs,
             _getRecordsForRedrawSt: getRecordsForRedraw,
             _getRecordsForRedraw: getRecordsForRedraw,
-            _applyGroupItemsCount: applyGroupItemsCount,
-            _resetGroupItemsCount: resetGroupItemsCount,
             _applyGroupingToProjection: applyGroupingToProjection,
             _applyFilterToProjection: applyFilterToProjection,
 
@@ -1172,8 +1157,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       _removeItems: function (items, groupId) {
          var removedElements = $([]), prev;
 
-         applyGroupItemsCount(groupId, -items.length, this._options);
-
          for (var i = 0; i < items.length; i++) {
             var item = items[i];
             var targetElement = this._getDomElementByItem(item);
@@ -1199,18 +1182,21 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
 
-      _getItemsForRedrawOnAdd: function(items, groupId) {
-         var itemsToAdd = items;
-         if (!isEmpty(this._options.groupBy) && this._options.easyGroup) {
+      _getItemsForRedrawOnAdd: function(items) {
+         var itemsToAdd = [];
+         var groupId;
 
-            //Если в группе столько же элементов, сколько добавилось, то группа еще не отрисована
-            //и надо ее отрисовать
-            itemsToAdd = [];
-            if (this._options._groupItemsCount[groupId] === items.length && groupId !== false) {
-               this._options._groupItemProcessing(groupId, itemsToAdd, items[0], this._options);
-            }
+         if (items.length && cInstance.instanceOfModule(items[0], 'WS.Data/Display/GroupItem')) {
+            groupId = items[0].getContents();
+            this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options);
+            items.splice(0, 1)
             itemsToAdd = itemsToAdd.concat(items);
          }
+         else {
+            itemsToAdd = items;
+         }
+
+
          return itemsToAdd;
       },
 
@@ -1224,8 +1210,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _addItems: function(newItems, newItemsIndex, groupId) {
-         applyGroupItemsCount(groupId, newItems.length, this._options);
-
          this._itemData = null;
          var i;
          if (newItems && newItems.length) {
@@ -1282,22 +1266,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          // TODO: тут зависимость от virtualscrolling, которой быть не должно
          if (this._virtualScrollController && this._virtualScrollController._currentWindow[1] > 0) {
             lastItemsIndex = this._virtualScrollController._currentWindow[1] + 1;
-         }
-
-         if (this._options.groupBy && this._options.easyGroup) {
-            //в случае наличия группировки надо проверять соседние элементы, потому что
-            //на месте вставки может быть разделитель, надо понимать, когда вставлять до разделителя, а когда после
-            //на выходе получим beforeFlag = true, если надо вставлять ДО какого то элемента, иначе действуем по стандартному алгоритму
-            if (this._canApplyGrouping(newItems[0])) {
-               prevGroup = (prevItem && this._canApplyGrouping(prevItem)) ? projection.getGroupByIndex(newItemsIndex - 1) : null;
-               nextItem = projection.at(newItemsIndex + newItems.length);
-               nextGroup = (nextItem && this._canApplyGrouping(nextItem)) ? projection.getGroupByIndex(newItemsIndex + newItems.length) : null;
-               if ((prevGroup === undefined) || (prevGroup === null) || prevGroup != groupId) {
-                  if (nextGroup !== undefined && nextGroup !== null && nextGroup == groupId) {
-                     beforeFlag = true;
-                  }
-               }
-            }
          }
 
          if (beforeFlag) {

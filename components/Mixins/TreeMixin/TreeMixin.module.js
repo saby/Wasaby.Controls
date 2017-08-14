@@ -230,16 +230,22 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          records = searchProcessing(projection, cfg);
       }
       else {
-         cfg._resetGroupItemsCount(cfg);
          projection.each(function(item, index, group) {
             if (item.isNode()){
                cfg.hasNodes = true;
             }
-            if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {
-               cfg._applyGroupItemsCount(group, 1, cfg);
-               if (cfg._canApplyGrouping(item, cfg) && prevGroupId != group && group !== false) {
-                  cfg._groupItemProcessing(group, records, item, cfg);
-                  prevGroupId = group;
+
+            var needGroup = false, groupId;
+            if (cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
+               groupId = item.getContents();
+               needGroup = true;
+            }
+            else {
+               if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {
+                  if (cfg._canApplyGrouping(item, cfg) && needGroup && groupId) {
+                     cfg._groupItemProcessing(groupId, records, item, cfg);
+                     needGroup = false;
+                  }
                }
             }
             if (cfg._hasFolderFooters(cfg)) {
@@ -902,27 +908,33 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       },
 
       _getItemsForRedrawOnAdd: function(items, groupId) {
-         var result = [];
+         var itemsToAdd = [];
          if (this._options.hierarchyViewMode) {
-            result = searchProcessing(items, this._options);
+            itemsToAdd = searchProcessing(items, this._options);
          }
          else {
-            var prevGroupId = undefined;  //тут groupId одинаковый для пачки данных, но группу надо вставить один раз, используем пермеенную как флаг
-            for (var i = 0; i < items.length; i++) {
-               if (!isEmpty(this._options.groupBy) && this._options.easyGroup) {
-                  if (this._canApplyGrouping(items[i]) && prevGroupId != groupId && groupId !== false) {
-                     prevGroupId = groupId;
-                     if (this._options._groupItemsCount[groupId] === items.length) {
-                        this._options._groupItemProcessing(groupId, result, items[i], this._options);
-                     }
-                  }
+            if (items.length && cInstance.instanceOfModule(items[0], 'WS.Data/Display/GroupItem')) {
+               groupId = items[0].getContents();
+               if (this._canApplyGrouping(items[1])) {
+                  this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options);
+                  items.splice(0, 1);
+                  itemsToAdd = itemsToAdd.concat(items);
                }
+               else {
+                  itemsToAdd = items;
+               }
+            }
+            else {
+               itemsToAdd = items;
+            }
+
+            for (var i = 0; i < items.length; i++) {
                if (this._isVisibleItem(items[i])) {
                   result.push(items[i]);
                }
             }
          }
-         return result;
+         return itemsToAdd;
       },
       /**
        * Создаёт фильтр для дерева (берет текущий фильтр и дополняет его)
