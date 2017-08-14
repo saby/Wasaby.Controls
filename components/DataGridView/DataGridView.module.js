@@ -851,6 +851,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if (this._options.stickyHeader && !this._options.showHead && this._options.resultsPosition === 'top') {
             this._updateStickyHeader(headData.hasResults);
          }
+         // Смещаем индикатор загрузки вниз на высоту заголовков.
+         this._getAjaxLoaderContainer().css('top', this._thead.outerHeight());
       },
 
       _redrawFoot: function(){
