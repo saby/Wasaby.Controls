@@ -1,0 +1,11 @@
+<div class="controls-NotificationPopup">
+   <div class="controls-NotificationPopup__header {{closeButton ? 'controls-NotificationPopup__header-withCloseButton'}}">
+      <ws:partial template="{{headerTemplate}}" scope="{{...}}"></ws:partial>
+   </div>
+   <div if={{bodyTemplate}} class="controls-NotificationPopup__body">
+      <ws:partial template="{{bodyTemplate}}" scope="{{...}}"></ws:partial>
+   </div>
+   <div if={{footerTemplate}} class="controls-NotificationPopup__footer">
+      <ws:partial template="{{footerTemplate}}" scope="{{...}}"></ws:partial>
+   </div>
+</div>
