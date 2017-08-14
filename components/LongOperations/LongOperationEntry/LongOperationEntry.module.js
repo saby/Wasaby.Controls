@@ -34,8 +34,8 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
          timeSpent: 0,
          progressCurrent: 0,
          progressTotal: 1,
-         canSuspend: true,
-         canDelete: true
+         canDelete: true,
+         canSuspend: true
       };
 
       /**
@@ -53,8 +53,9 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
          isFailed: 'boolean',
          progressTotal: 'number',
          progressCurrent: 'number',
-         canSuspend: 'boolean',
          canDelete: 'boolean',
+         canSuspend: 'boolean',
+         resumeAsRepeat: 'boolean',
          userId: 'number',
          userUuId: 'string',
          userFirstName: 'string',
@@ -97,8 +98,9 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
           * @param {number}        [options.progress.total] Общее количество стадий выполнения - альтернативно
           * @param {number}        [options.progressCurrent] Текущая стадия выполнения (опционально, если не указано, будет использован 0)
           * @param {number}        [options.progress.current] Текущая стадия выполнения - альтернативно
-          * @param {boolean}       [options.canSuspend] Можно ли приостановить операцию (опционально, если не указано, будет использовано true)
           * @param {boolean}       [options.canDelete] Можно ли удалить операцию (опционально, если не указано, будет использовано true)
+          * @param {boolean}       [options.canSuspend] Можно ли приостановить (и затем возобновить) операцию (опционально, если не указано, будет использовано true)
+          * @param {boolean}       [options.resumeAsRepeat] Возобновление операции возможно только как полный повтор (не продолжение с места остановки) (опционально)
           * @param {number}        [options.userId] Идентификатор пользователя (опционально)
           * @param {number}        [options.user.id] Идентификатор пользователя (опционально)
           * @param {string}        [options.userUuId] Идентификатор пользователя в сервисе профилей (опционально)
