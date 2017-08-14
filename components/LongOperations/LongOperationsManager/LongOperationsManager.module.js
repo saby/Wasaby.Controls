@@ -24,11 +24,10 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       'js!SBIS3.CONTROLS.ILongOperationsProducer',
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.LongOperationHistoryItem',
-      'js!SBIS3.CONTROLS.LongOperationsList/resources/model'/*###,
-      'js!SBIS3.CONTROLS.Utils.InformationPopupManager'*/
+      'js!SBIS3.CONTROLS.LongOperationsList/resources/model'
    ],
 
-   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsTabCalls, LongOperationsCallsPool, LongOperationsBunch, ILongOperationsProducer, LongOperationEntry, LongOperationHistoryItem, Model/*###, InformationPopupManager*/) {
+   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsTabCalls, LongOperationsCallsPool, LongOperationsBunch, ILongOperationsProducer, LongOperationEntry, LongOperationHistoryItem, Model) {
       'use strict';
 
       /**
@@ -1021,10 +1020,8 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          // Добавить обработчик перед выгрузкой для уведомеления пользователя (если нужно)
          window.addEventListener('beforeunload', function (evt) {
             if (!manager.canDestroySafely()) {
-               /*###InformationPopupManager.showConfirmDialog({
-                  message: rk('Подождите пожалуйста'),
-                  details: rk('Если Вы покинете эту страницу сейчас, то некоторые длительные операции не будут завершены корректно. Покинуть страницу?')
-               }, function () {}, function () {}, null);*/
+               // Единственное, что сейчас нам дают сделать браузеры и стандарты - показать пользователю стандартное окно браузера
+               // с уведомлением, что при перезагрузке что-то может не сохраниться
                evt.returnValue = true;
             }
          });
