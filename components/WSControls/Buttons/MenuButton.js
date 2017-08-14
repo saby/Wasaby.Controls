@@ -6,8 +6,8 @@ define('js!WSControls/Buttons/MenuButton', [
    'Core/IoC',
    'Core/detection',
    'Core/Sanitize',
-   'Core/helpers/string-helpers'
-], function(Button, PickerMixin, DSMixin, dcHelpers, IoC, detection, Sanitize, strHelpers) {
+   'Core/helpers/String/escapeHtml'
+], function(Button, PickerMixin, DSMixin, dcHelpers, IoC, detection, Sanitize, escapeHtml) {
 
    'use strict';
    
@@ -322,7 +322,7 @@ define('js!WSControls/Buttons/MenuButton', [
        _drawMenuCaption: function(menuCaption) {
            if (this._picker && menuCaption){
               if(this._options.escapeCaptionHtml){
-                  menuCaption = strHelpers.escapeHtml(menuCaption);
+                  menuCaption = escapeHtml(menuCaption);
               }
               menuCaption = Sanitize(menuCaption, {validNodes: {component: true}});
               $('.controls-Menu__header-caption', this._picker._container).html(menuCaption);
