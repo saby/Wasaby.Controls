@@ -186,8 +186,10 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this.getTarget().height('');
             },
             _targetTracking: function(trackingHorizontalValues) {
-               this._updateVerticalPosition();
+               //Сначала нужно пересчитывать высоту редактируемой строки, а затем позицию редактора, так как при изменении
+               //высоты меняется и позиция.
                this._recalculateHeight();
+               this._updateVerticalPosition();
                if (trackingHorizontalValues) {
                   this._recalculateWidth();
                   this._updateHorizontalPosition();
