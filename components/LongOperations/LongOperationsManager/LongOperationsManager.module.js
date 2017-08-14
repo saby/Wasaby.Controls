@@ -24,11 +24,11 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       'js!SBIS3.CONTROLS.ILongOperationsProducer',
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.LongOperationHistoryItem',
-      'js!SBIS3.CONTROLS.LongOperationsList/resources/model',
-      'js!SBIS3.CONTROLS.Utils.InformationPopupManager'
+      'js!SBIS3.CONTROLS.LongOperationsList/resources/model'/*###,
+      'js!SBIS3.CONTROLS.Utils.InformationPopupManager'*/
    ],
 
-   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsTabCalls, LongOperationsCallsPool, LongOperationsBunch, ILongOperationsProducer, LongOperationEntry, LongOperationHistoryItem, Model, InformationPopupManager) {
+   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsTabCalls, LongOperationsCallsPool, LongOperationsBunch, ILongOperationsProducer, LongOperationEntry, LongOperationHistoryItem, Model/*###, InformationPopupManager*/) {
       'use strict';
 
       /**
@@ -446,7 +446,8 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          canDestroySafely: function () {
             if (!_isDestroyed) {
                for (var n in _producers) {
-                  if (!_producers[n].canDestroySafely()) {
+                  if (_producers[n].canDestroySafely &&//TODO: ### Это переходный код, удалить позднее
+                        !_producers[n].canDestroySafely()) {
                      return false;
                   }
                }
@@ -1020,10 +1021,10 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          // Добавить обработчик перед выгрузкой для уведомеления пользователя (если нужно)
          window.addEventListener('beforeunload', function (evt) {
             if (!manager.canDestroySafely()) {
-               InformationPopupManager.showConfirmDialog({
+               /*###InformationPopupManager.showConfirmDialog({
                   message: rk('Подождите пожалуйста'),
                   details: rk('Если Вы покинете эту страницу сейчас, то некоторые длительные операции не будут завершены корректно. Покинуть страницу?')
-               }, function () {}, function () {}, null);
+               }, function () {}, function () {}, null);*/
                evt.returnValue = true;
             }
          });
