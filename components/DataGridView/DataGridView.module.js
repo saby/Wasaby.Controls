@@ -5,6 +5,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "Core/core-merge",
    "Core/constants",
    "Core/Deferred",
+   "Core/EventBus",
    "js!SBIS3.CONTROLS.ListView",
    "tmpl!SBIS3.CONTROLS.DataGridView",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/rowTpl",
@@ -38,6 +39,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       cMerge,
       constants,
       Deferred,
+      EventBus,
       ListView,
       dotTplFn,
       rowTpl,
@@ -938,7 +940,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
          table.toggleClass('ws-sticky-header__table', isSticky);
          if (isSticky) {
-            StickyHeaderManager.fixAllChildren(this.getContainer(), table);
+            EventBus.channel('stickyHeader').notify('onForcedStickHeader', this.getContainer());
          } else {
             StickyHeaderManager.unfixOne(table, true);
          }
