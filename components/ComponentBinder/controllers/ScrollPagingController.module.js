@@ -115,7 +115,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
 
       _isPageStartVisisble: function(page){
          var top;
-         if (page.element.parents('html').length == 0) {
+         if (page.element.parents('html').length === 0) {
             return false;
          }
 
@@ -205,8 +205,8 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             var $this = $(this),
                $next = $this.next('.controls-ListView__item'),
                // Считаем через position, так как для плитки не подходит сложение высот
-               curBottom = $this.position().top + $this.outerHeight(true) + topWrapperHeight,
-               nextBottom = $next[0] ? $next.position().top + $next.outerHeight(true) : 0 + topWrapperHeight;
+               curBottom = Math.floor($this.position().top) + $this.outerHeight(true) + topWrapperHeight,
+               nextBottom = $next[0] ? Math.floor($next.position().top) + $next.outerHeight(true) : 0 + topWrapperHeight;
             curBottom = curBottom > pageOffset ? curBottom : pageOffset;
             nextBottom = nextBottom > curBottom ? nextBottom : curBottom;
             pageOffset = curBottom;
@@ -232,7 +232,8 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          this._options.paging.setPagesCount(pagesCount);
 
          //Если есть страницы - покажем paging
-         this._options.paging.setVisible(pagesCount > 1);
+         
+         this._options.paging.setVisible((pagesCount > 1) && !this._options.hiddenPager);
       },
 
       destroy: function(){

@@ -1,5 +1,6 @@
 <!--Если размер текста сообщения и описания превышает заданные рамки, то увеличиваем размер окна-->
 <div class="controls-SubmitPopup{{autoWidth ? '' : message.length > messageMaxLength || details.length > detailsMaxLength ? ' controls-SubmitPopup__size-big' : ' controls-SubmitPopup__size-standard'}}">
+   <!--Блок с сообщением или шаблоном сообщения-->
    <div class="controls-SubmitPopup__body">
       <ws:if data="{{messageTemplate || message}}">
          <div class="controls-SubmitPopup__message">
@@ -11,6 +12,7 @@
             </ws:else>
          </div>
       </ws:if>
+      <!--Блок с деталями или шаблоном деталей-->
       <ws:if data="{{detailsTemplate || details}}">
          <div class="controls-SubmitPopup__details">
             <ws:if data="{{detailsTemplate}}">
@@ -22,6 +24,7 @@
          </div>
       </ws:if>
    </div>
+   <!--Блок с кнопками-->
    <div class="controls-SubmitPopup__footer">
       <div class="controls-SubmitPopup__buttonContainer">
          <ws:if data="{{status === 'confirm' || useConfirmButtons}}">

@@ -14,11 +14,11 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
    "Core/helpers/Object/isEqual",
    "Core/helpers/generate-helpers",
    "Core/helpers/Function/debounce",
-   "Core/helpers/functional-helpers",
+   "Core/helpers/Function/forAliveOnly",
    "Core/Date"
 ],
 
-    function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, isEqualObject, genHelpers, debounce, fHelpers) {
+    function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, isEqualObject, genHelpers, debounce, forAliveOnly) {
 
        'use strict';
 
@@ -64,7 +64,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              this._listHistory = new List({items: cFunctions.clone(this.getHistory()) || []});
              this._prepareListHistory();
              this._changeHistoryFnc = this._changeHistoryHandler.bind(this);
-             this._applyHandlerDebounced = debounce.call(fHelpers.forAliveOnly(this._onApplyFilterHandler, this)).bind(this);
+             this._applyHandlerDebounced = debounce.call(forAliveOnly(this._onApplyFilterHandler, this)).bind(this);
 
              if(this._options.filterButton) {
                 this._initFilterButton();

@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
    "Core/Deferred",
    "js!SBIS3.CONTROLS.Utils.Query",
    "Core/helpers/string-helpers",
-   "js!SBIS3.CONTROLS.HistoryController",
+   "js!SBIS3.CONTROLS.HistoryController"
 ], function( cSessionStorage, cMerge, Deferred,Query, strHelpers, HistoryController) {
 
    var ViewSourceMixin = /**@lends SBIS3.CONTROLS.ViewSourceMixin.prototype  */{

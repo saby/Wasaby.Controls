@@ -324,30 +324,6 @@
    vertical-align: bottom;
 }
 
-.controls-DataGridView.controls-ListView__touchMode:not(.controls-ListView__disableHover) {
-   .controls-DataGridView__tr {
-      &.controls-ListView__hoveredItem {
-         &:not(.controls-ItemActions__activeItem) {
-            background: @data-grid-row-hover-bg-mobile;
-
-            .controls-DataGridView__th {
-               color: @data-grid-row-hover-header-cell-text-color;
-               background-color: @data-grid-row-hover-bg-mobile;
-            }
-            .controls-DataGridView__td {
-               color: @data-grid-row-hover-cell-text-color;
-               background-color: @data-grid-row-hover-bg-mobile;
-            }
-         }
-         &.controls-ListView__item__multiSelected{
-           .controls-DataGridView__td, .controls-DataGridView__thead .controls-DataGridView__th {
-             background-color: @data-grid-row-selected-bg;
-           }
-         }
-      }
-
-   }
-}
 /* Отступы для классов .controls-ListView__padding-XS|S|M|L|XL */
 .generate-padding-class-DGV(@i: 1) when (@i =< length(@controls-view-padding-variants)) {
    @val: extract(@controls-view-padding-variants, @i);

@@ -14,27 +14,6 @@
          }
       }
    }
-   &.controls-EditAtPlace__ellipsis {
-      .controls-EditAtPlace__fieldWrapper {
-        .controls-EditAtPlace__textField {
-          overflow: hidden;
-          white-space: nowrap;
-          text-overflow: ellipsis;
-          width: 100%;
-          vertical-align: top;
-        }
-      }
-   }
-   &.controls-EditAtPlace__multiline {
-      display: inline;
-      white-space:      pre-wrap; /* css-3 */
-      white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
-      text-indent: 0;
-      word-wrap: break-word; /* Internet Explorer 5.5+ */
-   }
-   &.controls-EditAtPlace__autoHeight {
-      height: auto;
-   }
    &.controls-TextBox{
      &.ws-has-focus {
        border: none;
@@ -97,6 +76,30 @@
    .controls-EditAtPlace__fieldWrapper{
       padding: 0 4px;
    }
+}
+
+.controls-EditAtPlace__ellipsis {
+   .controls-EditAtPlace__fieldWrapper {
+      height: inherit;
+      
+      .controls-EditAtPlace__textField {
+         overflow: hidden;
+         white-space: nowrap;
+         text-overflow: ellipsis;
+         width: 100%;
+         vertical-align: top;
+      }
+   }
+}
+.controls-EditAtPlace__multiline {
+   display: inline;
+   white-space:      pre-wrap; /* css-3 */
+   white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+   text-indent: 0;
+   word-wrap: break-word; /* Internet Explorer 5.5+ */
+}
+.controls-EditAtPlace__autoHeight {
+   height: auto;
 }
 
 .controls-EditAtPlace__editorOverlay {

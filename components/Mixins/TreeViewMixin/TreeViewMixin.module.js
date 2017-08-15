@@ -228,8 +228,10 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
       _needCreateFolderFooter: function(item) {
          var
              model = item.getContents(),
-             id = model && model.get(this._options.idProperty);
-         return item.isNode() && item.isExpanded() && (this._options.folderFooterTpl || this._options._folderHasMore[id]);
+             id = model && model.get(this._options.idProperty),
+             nodeType = model && model.get(this._options.nodeProperty);
+         //проверяем на true(папка) и false(скрытый узел). Проверять через item.isNode() неверно, т.к. для скрытых узлов вернётся false.
+         return (nodeType === true || nodeType === false) && item.isExpanded() && (this._options.folderFooterTpl || this._options._folderHasMore[id]);
       },
       //********************************//
       //        FolderFooter_End        //

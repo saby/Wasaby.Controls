@@ -28,6 +28,11 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
 
          $protected: {
             _options: {
+               tabKey: null,
+               producer: null,
+               operationId: null,
+               isFailed: null,
+               failedOperation: null
             },
 
             _data: [{
@@ -50,7 +55,7 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
          },
 
          $constructor: function () {
-            this.getLinkedContext().setValue('filter', {});
+            this.getLinkedContext().setValue('filter', {onlyErrors:!!this._options.isFailed});
          },
 
          init: function () {

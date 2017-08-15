@@ -2,9 +2,10 @@
 define([
    'js!SBIS3.CONTROLS.DateRangeRelationController',
    'Core/Abstract',
+   'js!SBIS3.CORE.Control/Control.compatible',
    'js!SBIS3.CONTROLS.RangeMixin',
    'js!SBIS3.CONTROLS.DateRangeMixin',
-], function (DateRangeRelationController, cAbstract, RangeMixin, DateRangeMixin) {
+], function (DateRangeRelationController, cAbstract, Control, RangeMixin, DateRangeMixin) {
    'use strict';
 
    function assertDates (date1, date2, message) {
@@ -18,12 +19,11 @@ define([
       assertDates(control.getEndValue(), range[1], `${message}: endDate`);
    }
 
-   let DateRangeControl = cAbstract.extend([RangeMixin, DateRangeMixin], {
+   let DateRangeControl = cAbstract.extend([Control, RangeMixin, DateRangeMixin], {
       $protected: {
          _options: {
          }
       },
-      _notifyOnPropertyChanged: function () {},
       setShowLock: function () {},
       setLocked: function (locked) {this._locked = locked; this._notify('onLockedChanged', locked);},
       isLocked: function () {return this._locked}
