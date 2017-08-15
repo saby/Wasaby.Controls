@@ -2009,7 +2009,6 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
             if (this._options.virtualScrolling && this._virtualScrollController) {
-               this._virtualScrollController.reset();
                this._topWrapper.height(0);
                this._bottomWrapper.height(0);
             }
@@ -2063,6 +2062,13 @@ define('js!SBIS3.CONTROLS.ListView',
             this._drawSelectedItems(this.getSelectedKeys());
             this._drawSelectedItem(this.getSelectedKey(), this.getSelectedIndex());
             this._updateHoveredItemAfterRedraw();
+         },
+         _redrawItems: function(){
+            ListView.superclass._redrawItems.call(this);
+            // После полной перерисовки нужно заново инициализировать вирутальный скролинг
+            if (this._options.virtualScrolling && this._virtualScrollController) {
+               this._virtualScrollController.reset();
+            }
          },
          /**
           * Проверить наличие скрола, и догрузить еще данные если его нет
