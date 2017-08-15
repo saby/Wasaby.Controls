@@ -12,11 +12,12 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
       'js!WS.Data/Entity/ObservableMixin',
       'Core/Deferred',
       'Core/UserInfo',
+      'js!SBIS3.CONTROLS.LongOperationsConst',
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.ILongOperationsProducer'
    ],
 
-   function (CoreExtend,  ObservableMixin, Deferred, UserInfo, LongOperationEntry, ILongOperationsProducer) {
+   function (CoreExtend,  ObservableMixin, Deferred, UserInfo, LongOperationsConst, LongOperationEntry, ILongOperationsProducer) {
       'use strict';
 
       /**
@@ -111,7 +112,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                //GenericLongOperationsProducer.superclass.destroy.apply(this, arguments);
                var STATUSES = LongOperationEntry.STATUSES;
                var DEFAULTS = LongOperationEntry.DEFAULTS;
-               var ERR = 'User left the page';
+               var ERR = LongOperationsConst.ERR_UNLOAD;
                var snapshots = GLOStorage.list(this._name);
                var oIds = [];
                for (var i = 0; i < snapshots.length; i++) {
@@ -202,7 +203,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                throw new TypeError('Argument "options.extra" must be an object if present');
             }
             if (this._isDestroyed) {
-               return Deferred.fail('User left the page');
+               return Deferred.fail(LongOperationsConst.ERR_UNLOAD);
             }
             var operations = _list(this, options.where, options.orderBy || DEFAULT_FETCH_SORTING, options.offset, options.limit);
             if (operations.length) {
@@ -236,7 +237,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                throw new TypeError('Argument "action" must be a string');
             }
             if (this._isDestroyed) {
-               return Deferred.fail('User left the page');
+               return Deferred.fail(LongOperationsConst.ERR_UNLOAD);
             }
             var handlers = {
                suspend: 'onSuspend',
