@@ -3657,16 +3657,17 @@ define('js!SBIS3.CONTROLS.ListView',
                      allowChangeEnable: false, //Запрещаем менять состояние, т.к. он нужен активный всегда
                      pagingOptions: pagingOptions,
                      handlers: {
-                        'onPageChange': function (event, pageNum, deferred) {
+                        onPageChange: function (event, pageNum, deferred) {
                            var more = self.getItems().getMetaData().more,
                               hasNextPage = self._hasNextPage(more, self._scrollOffset.bottom),
-                              maxPage = self._pager.getPaging()._maxPage;
+                              maxPage = self._pager.getPaging()._maxPage,
+                              lastPage = self._options.navigation && self._options.navigation.lastPage;
                            self._pager._lastPageReached = self._pager._lastPageReached || !hasNextPage;
                            //Старый Paging при включенной частичной навигации по нажатию кнопки "Перейти к последней странице" возвращает pageNum = 0 (у него индексы страниц начинаются с 1)
                            //В новом Pager'e индексация страниц начинается с 0 и такое поведение здесь не подходит
                            //Так же в режиме частичной навигации нет возможности высчитать номер последней страницы, поэтому
                            //при переходе к последней странице делаем так, чтобы мы переключились на последнюю доступную страницу.
-                           if (pageNum == 0 && self._pager._options.pagingOptions.onlyLeftSide){
+                           if (pageNum === 0 && self._pager._options.pagingOptions.onlyLeftSide && !lastPage) { 
                               pageNum = self._pager._lastPageReached ? maxPage : (maxPage + 1);
                            }
 
