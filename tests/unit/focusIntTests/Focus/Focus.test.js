@@ -4,115 +4,61 @@
 define([
    'Core/constants',
    'js!SBIS3.CORE.CompoundControl',
-   'Core/helpers/collection-helpers'
+   'js!WSTest/Focus/TestFocusHelpers',
+   'css!WSTest/Focus/FocusTests'
 ], function (cConstants,
-             focusTestControl) {
+             focusTestControl,
+             fHelpers,
+             iHelpers) {
    'use strict';
 
-   var scenario = {
-      1: function (testControl) {
-         fireClick(testControl.getChildControlByName('TextBox0'));
-         childIsActive(testControl, 'TextBox0');
-         childHasFocus(testControl, 'TextBox0');
-         isActive(testControl);
+   var testNum = 1;
 
-         fireKeypress(testControl.getChildControlByName('TextBox0'), cConstants.key.tab);
-         childIsActive(testControl, 'TextBox1');
-         childIsActive(testControl, 'AreaAbstract1');
-         childHasFocus(testControl, 'TextBox1');
-         isActive(testControl);
-
-         fireKeypress(testControl.getChildControlByName('TextBox1'), cConstants.key.tab);
-         childHasFocus(testControl, 'TextBox3');
-
-         fireClick(testControl.getChildControlByName('AreaAbstract1'));
-         childHasFocus(testControl, 'TextBox3');
-
-         fireKeypress(testControl.getChildControlByName('TextBox3'), cConstants.key.tab);
-         // childIsNotInFocus(testControl, 'TextBox2');
-         // childIsNotActive(testControl, 'AreaAbstract1');
-         // notActive(testControl);
-         //
-         // fireClick(testControl.getChildControlByName('AreaAbstract1'));
-         // childHasFocus(testControl, 'TextBox1');
-      }
-
-   };
-
-   function notInFocus(control) {
-      assert.isTrue(document.activeElement !== control._getElementToFocus()[0])
-   }
-
-   function hasFocus(control) {
-      assert.isTrue(document.activeElement === control._getElementToFocus()[0])
-   };
-
-   function isActive(control) {
-      assert.isTrue(control.isActive());
-   }
-
-   function notActive(control) {
-      assert.isTrue(!control.isActive());
-   }
-
-   function fireClick(control) {
-      control.getContainer().trigger('click');
-   }
-
-   function fireKeypress(control, keyCode) {
-      var el = control.getContainer();
-      var e = $.Event('keydown');
-      e.which = keyCode; // Character 'A'
-      el.trigger(e);
-   };
-
-   function childIsActive(caseControl, childName) {
-      assert.isTrue(caseControl.getChildControlByName(childName).isActive());
-   };
-
-   function childIsNotActive(caseControl, childName) {
-      assert.isTrue(!caseControl.getChildControlByName(childName).isActive());
-   };
-
-   function childHasFocus(caseControl, childName) {
-      hasFocus(caseControl.getChildControlByName(childName));
-   };
-
-   function childIsNotInFocus(caseControl, childName) {
-      notInFocus(caseControl.getChildControlByName(childName));
-   };
+   var skipTests = [24, 29];//Пропустить тест
+   var skipComponent = [13, 14, 15, 16, 17, 18, 19, 20, 26, 30, 32, 33]; //Для тестов, которые сами создают контролы,
+   // и для асинхронных тестов.
+   // Аргументом в функцию проверки передается done
 
    describe('Focus-tests', function () {
       var testControl;
       beforeEach(function () {
-         if (typeof $ === 'undefined') {
+         if (typeof $ === 'undefined') {//Проверка того, что тесты выполняются в браузере
             this.skip();
          }
-         $('#mocha').append('<div id="component"></div>');
-         $('#mocha').append('<div id="freeArea"></div>');
-
+         if (~skipTests.indexOf(testNum)) {
+            testNum++;
+            this.skip();
+         }
+         else {
+            testNum++;
+            $('#mocha').append('<div id="component"></div>');//Для добавления верстки на страницу
+         }
       });
-
-      for (var i = 1; i <= 1; i++) {
+      for (var i = 1; i < 34; i++) {
          (function (i) {
             it('Case' + (i), function (done) {
-               require(['tmpl!WSTest/Focus/Case' + i], function (caseTmpl) {
-                  var comp = focusTestControl.extend({
-                     _dotTplFn: caseTmpl
-                  });
-                  testControl = new comp({
-                     element: 'component'
-                  });
-                  scenario[i](testControl); //Запускаем функцию проверки
-                  done();
+               require(['tmpl!WSTest/Focus/Case' + i, 'js!WSTest/Focus/Scenario/' + i], function (caseTmpl, func) {
+                  if (!~skipComponent.indexOf(i)) {
+                     var comp = focusTestControl.extend({
+                        _dotTplFn: caseTmpl
+                     });
+
+                     testControl = new comp({
+                        element: 'component',
+                        name: 'Case' + i + 'Control'
+                     });
+                     func(testControl); //Запускаем функцию проверки
+                     done();
+                  } else {
+                     func(done);
+                  }
                });
             });
          })(i);
       }
+      ;
       afterEach(function () {
          testControl && testControl.destroy();
       });
-
    });
-
 });

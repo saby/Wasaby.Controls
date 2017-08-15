@@ -1,6 +1,6 @@
 define('js!WSTest/TestSubControls/TestSubControlChild',
    [
-      'js!WSControls/Control/Base',
+      'Core/Control',
       'tmpl!WSTest/TestSubControls/TestSubControlChild'
    ],
    function(Base, template) {

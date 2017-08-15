@@ -11,15 +11,14 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    "tmpl!SBIS3.CONTROLS.TreeMixin/resources/searchRender",
    "js!WS.Data/Entity/Model",
    "js!WS.Data/Relation/Hierarchy",
-   "Core/helpers/collection-helpers",
    "Core/core-instance",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
-   "Core/helpers/functional-helpers",
+   "Core/helpers/Function/forAliveOnly",
    "Core/IoC",
    "Core/helpers/Object/isEmpty",
    "Core/helpers/Object/isPlainObject",
    "js!WS.Data/Adapter/Sbis"
-], function ( cFunctions, cMerge, TreeDataReload, constants, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, colHelpers, cInstance, TemplateUtil, fHelpers, IoC, isEmpty, isPlainObject) {
+], function ( cFunctions, cMerge, TreeDataReload, constants, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, cInstance, TemplateUtil, forAliveOnly, IoC, isEmpty, isPlainObject) {
 
    var createDefaultProjection = function(items, cfg) {
       var
@@ -132,7 +131,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       //может прийти массив или проекция
       if (src instanceof Array) {
          iterator = function(func){
-            colHelpers.forEach(src, func);
+            src.forEach(func);
          };
       }
       else {
@@ -501,14 +500,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              */
             currentRoot: null,
             /**
-             * @cfg {Number} Задает размер отступов для каждого уровня иерархии
-             * @example
-             * <pre>
-             *    <option name="paddingSize">24</option>
-             * </pre>
-             */
-            paddingSize: undefined,
-            /**
              * @cfg {String, Number} Устанавливает идентификатор узла, относительно которого нужно отображать данные. Такой узел будет считаться вершиной иерархии.
              * @example
              * <pre>
@@ -830,7 +821,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                }
                this._options.openedPath[id] = true;
                this._options._folderOffsets[id] = 0;
-               return this._loadNode(id).addCallback(fHelpers.forAliveOnly(function() {
+               return this._loadNode(id).addCallback(forAliveOnly(function() {
                   var expItem;
                   if (hash) {
                      expItem = this._getItemsProjection().getByHash(hash);
@@ -849,7 +840,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          if (this._dataSource && !this._loadedNodes[id] && this._options.partialyReload) {
             this._toggleIndicator(true);
             this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), 0, this._limit);
-            return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(fHelpers.forAliveOnly(function (list) {
+            return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(forAliveOnly(function (list) {
                this._options._folderHasMore[id] = list.getMetaData().more;
                this._loadedNodes[id] = true;
                this._notify('onDataMerge', list); // Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
@@ -961,11 +952,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @private
        */
       _collapseNodes: function(openedPath, ignoreKey) {
-         colHelpers.forEach(openedPath, function(value, key) {
-            if (!ignoreKey || key != ignoreKey) {
-               this.collapseNode(key);
+         for (var key in openedPath) {
+            if (openedPath.hasOwnProperty(key)) {
+               if (!ignoreKey || key != ignoreKey) {
+                  this.collapseNode(key);
+               }
             }
-         }, this);
+         }
       },
       /**
        * Получить текущий набор открытых элементов иерархии.
@@ -1168,7 +1161,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             filter;
          this._toggleIndicator(true);
          this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit);
-         this._loader = this._callQuery(this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
+         this._loader = this._callQuery(this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit).addCallback(forAliveOnly(function (dataSet) {
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
             self._notify('onDataMerge', dataSet);

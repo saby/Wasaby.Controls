@@ -1,17 +1,15 @@
+@import "defaults";
+@import "colors";
+@import "sizes";
 // Кошерные переменные "на выход"
 @default-text-size:                       14px;
 @small-text-size:                         12px;
 @large-text-size:                         15px;
-@huge-text-size:						              17px;
+@huge-text-size:                          17px;
 @default-text-color:                      #000;
 @default-color:                           #587AB0;
 @primary-color:                           #ff7033;
-@disabled-color:                          #CCC;
 @innacent-color:                     	   #8991A9;
-@error-color:                             #EF463A;
-@warning-color:                           #FEC63F;
-@success-color:                           #72BE44;
-@default-bg-color:                        #FFFFFF;
 @accent-color:							         #313E78;
 @default-hover-color:                     #F0F5FB;
 @innacent-color2:						         #999999; //Неакцентные элементы, заголовки таблиц, комментарии
@@ -45,14 +43,7 @@
 @primary-color:                           #ff7033;
 @secondary-color:                         transparent;
 @default-border-width:                    1px;
-@default-border-style:                    solid;
 
-@icon-color-attention:                    @warning-color;
-@icon-color-done:                         #72be44;
-@icon-color-error:                        @red-color;
-@icon-color-primary:                      @default-color;
-@icon-color-hover:                        #ff7033;
-@icon-color-disabled:                     #CCC;
 @icon-active-color:                       @blue-dark-color;
 
 @float-area-border-color:                 #bdbdbd;
@@ -60,22 +51,16 @@
 @float-area-shadow:                       0 0 12px rgba(0, 0, 0, 0.4);
 @font-popup-size:                         14px;
 @bg:                                      @secondary-color;
-@default-text-color:                      @black-color;
 @disabled-text-color:                     @gray-ccc-color;
 
 @default-font-name:                       'TensorFont', sans-serif;
 @icon-font:                               'cbuc-icons';
-@default-font-size:                       14px;
 @popup-font-size:                         15px;
 @font-folder-size:                        15px;
 @default-font-line-height:                20px;
 
 @bold-font-weight:                        700;
 
-@default-height:                          24px;
-
-@default-border-width:                    1px;
-@default-border-style:                    solid;
 
 @default-hover-cursor:                    pointer;
 @disabled-hover-cursor:                   default;
@@ -95,16 +80,11 @@
 @icon-medium-size:                        24px;
 @icon-large-size:                         32px;
 
-@default-icon-small-font:                 'cbuc-icons';
-@default-icon-medium-font:                'cbuc-icons24';
-@default-icon-large-font:                 @default-icon-small-font;
-
   // ---- //
 // Link //
 // ---- //
 
 @link-font:                               @default-font-size @default-font-name;
-@link-cursor:                             pointer;
 @link-text-color:                         @darkcyan-color;
 @link-disabled-text-color:                @gray-ccc-color;
 @link-text-decoration:                    none;
@@ -636,17 +616,14 @@
 
 @switcher-do-margin:                            0 0 0 8px;
 
-@switcher-do-text-cursor:                       @default-hover-cursor;
 @switcher-do-text-color:                        @black-color;
 @switcher-do-decoration:                        none;
 @swithcer-do-font-weight:                       normal;
 @swithcer-do-unselected-font-weight:            normal;
-@switcher-do-unselected-text-cursor:            @switcher-do-text-cursor;
 @switcher-do-unselected-text-color:             @gray-color;
 @switcher-do-unselected-text-decoration:        none;
 @switcher-do-unselected-text-decoration-hover:  underline;
 
-@switcher-do-disabled-toggle-cursor:            @disabled-hover-cursor;
 @switcher-do-disabled-text-cursor:              text;
 @switcher-do-disabled-text-color:               @gray-light-color;
 @switcher-do-disabled-toggle-border-color:      @switcher-do-disabled-text-color;
@@ -696,7 +673,6 @@
 @menu-border-style:                       solid;
 @menu-border-color:                       @gray-ccc-color;
 @menu-border-radius:                      0;
-@menu-shadow:                             0px 0px 12px 0px rgba(0,0,0,0.25);
 @menu-header-bg-color:                    #f4f4f4;
 @menu-expand-width:                       16px;
 @menu-expand-height:                      16px;
@@ -743,7 +719,6 @@
 @menu-item-hover-icon-color:              @default-color !important;
  @menu-item-icon-16-margin:					6px 0 6px 22px;
 @menu-item-icon-top-offset:               8px;
-@menu-item-icon-top-offset-big:           0px;
 @menu-item-icon-left-offset:              0px;
 @menu-item-icon-left-offset-big:          0px;
 
@@ -818,15 +793,7 @@
 // Text box //
 // -------- //
 
-@text-box-height:                         24px;
-@text-box-line-height:                    22px;
-@text-box-wrapper-padding:                0 4px;
-@text-box-border-radius:                  0;
-@text-box-color:                          @default-text-color;
-@text-box-text-decoration:                inherit;
 
-@text-box-field-font:                     inherit;
-@text-box-field-font-size:                inherit;
 @text-box-field-text-alignment:           left;
 @text-box-field-min-height:               19px;
 @text-box-field-line-height:              20px !important;
@@ -844,9 +811,7 @@
 
 @text-box-border-width:                   1px;
 @text-box-border-style:                   solid;
-@text-box-border-color:                   #eaeaea #eaeaea #ccc #eaeaea;
 @text-box-bottom-border-color:            #ccc;
-@text-box-bg:                             @white-color;
 @text-box-editor-bg:                      @white-color;
 @text-box-editor-text-color:              inherit;
 
@@ -893,74 +858,20 @@
 @formatted-text-box-wrapper-padding:            @text-box-wrapper-padding;
 @formatted-text-box-wrapper-bg:                 transparent;
 
-@formatted-text-box-field-padding:              2px 0 0;
+@formatted-text-box-field-padding:              0;
 @formatted-text-box-field-error-text-color:     @text-box-field-error-text-color;
 
 @formatted-text-box-error-border-width:         @text-box-error-border-width;
 @formatted-text-box-error-border-style:         @text-box-error-border-style;
 @formatted-text-box-error-border-color:         @text-box-error-border-color;
 @formatted-text-box-error-bg:                   @text-box-error-bg;
-
-
-
-// --------------- //
-// Number text box //
-// --------------- //
-
-@number-text-box-field-text-alignment:                left;
-@number-text-box-wrapper-margin:                      0 14px 0 0;
-
-@number-text-box-arrow-spritesheet:                   '';
-
-@number-text-box-arrow-up-width:                      16px;
-@number-text-box-arrow-up-height:                     11px;
-@number-text-box-arrow-up-margin:                     0;
-
-@number-text-box-arrow-up-border-radius:              0;
-
-@number-text-box-arrow-up-bg:                         url('img/NumberTextBox-arrowup.png') left bottom no-repeat;
-@number-text-box-arrow-up-border-width:               1px;
-@number-text-box-arrow-up-border-style:               solid;
-@number-text-box-arrow-up-border-color:               transparent;
-
-@number-text-box-arrow-up-hover-bg:                   @number-text-box-arrow-up-bg;
-@number-text-box-arrow-up-hover-border-width:         @number-text-box-arrow-up-border-width;
-@number-text-box-arrow-up-hover-border-style:         @number-text-box-arrow-up-border-style;
-@number-text-box-arrow-up-hover-border-color:         @number-text-box-arrow-up-border-color;
-
-@number-text-box-arrow-up-disabled-bg:                none;
-@number-text-box-arrow-up-disabled-border-width:      @number-text-box-arrow-up-border-width;
-@number-text-box-arrow-up-disabled-border-style:      @number-text-box-arrow-up-border-style;
-@number-text-box-arrow-up-disabled-border-color:      @number-text-box-arrow-up-border-color;
-
-@number-text-box-arrow-down-width:                    @number-text-box-arrow-up-width;
-@number-text-box-arrow-down-height:                   @number-text-box-arrow-up-height;
-@number-text-box-arrow-down-margin:                   1px 0 0;
-
-@number-text-box-arrow-down-border-radius:            0;
-
-@number-text-box-arrow-down-bg:                       url('img/NumberTextBox-arrowdown.png') left top no-repeat;
-@number-text-box-arrow-down-border-width:             1px;
-@number-text-box-arrow-down-border-style:             solid;
-@number-text-box-arrow-down-border-color:             transparent;
-
-@number-text-box-arrow-down-hover-bg:                 @number-text-box-arrow-down-bg;
-@number-text-box-arrow-down-hover-border-width:       @number-text-box-arrow-down-border-width;
-@number-text-box-arrow-down-hover-border-style:       @number-text-box-arrow-down-border-style;
-@number-text-box-arrow-down-hover-border-color:       @number-text-box-arrow-down-border-color;
-
-@number-text-box-arrow-down-disabled-bg:              none;
-@number-text-box-arrow-down-disabled-border-width:    @number-text-box-arrow-down-border-width;
-@number-text-box-arrow-down-disabled-border-style:    @number-text-box-arrow-down-border-style;
-@number-text-box-arrow-down-disabled-border-color:    @number-text-box-arrow-down-border-color;
-
 // --------------- //
 // Money text box  //
 // --------------- //
 
 @money-text-box-min-width:            102px;
 
-@money-text-box-decimals-padding:     2px 0;
+@money-text-box-decimals-padding:     1px 0;
 @money-text-box-decimals-font-size:   12px;
 @money-text-box-decimals-color:                       @gray-ccc-color;
 
@@ -1001,27 +912,19 @@
 // Search form //
 // ----------- //
 
-@search-background:                                   #F2F2F2;
 @search-disabled-background:                          @search-background;
 @search-focus-background:                             @search-background;
 @search-height:                                       @text-box-height;
 @search-padding:                                      0 24px 0 16px;
 @search-left-margin:                                  12px;
-@search-border-radius:                                10px;
 @search-border-color:                                 @search-background;
 @search-hover-border-color:                           @search-background;
 @search-bottom-border-color:                          @search-background;
-@search-form-icon-reset-color:                        @innacent-color;
-@search-form-icon-search-color:                       @default-color;
-@search-form-icon-search-hover-color:                 @accent-color;
 @search-form-border-width:                            @text-box-border-width;
 @search-form-border-disabled-width:                   @text-box-disabled-border-width;
 @search-buttons-wrapper-width:                        20px + 20px;
 @search-form-field-wrapper-margin-right:              45px;
-@search-button-wrapper-padding:                       0 5px 0 0;
-@search-form-icon-padding:                            3px  2px;
 @search-form-icon-disabled-display:                   block;
-@search-loop-size:                                    16px;
 
 // --------- //
 // Combo box //
@@ -1029,7 +932,6 @@
 
 @combo-box-arrow-spritesheet:                   'img/ComboBox.png';
 @combobox-picker-border-width:                    1px;
-@combo-box-cursor:                              pointer;
 @combo-box-right-padding:                       4px;
 @combo-box-disabled-cursor:                     default;
 @combo-box-disabled-border-width:               0 0 1px 0;
@@ -1049,7 +951,7 @@
 @combo-box-arrow-border-color:                  transparent;
 @combo-box-arrow-bg:                            @white-color url(@combo-box-arrow-spritesheet) -3px -4px no-repeat;
 
-@combo-box-arrow-hover-border-width:            @combo-box-arrow-border-width;
+
 @combo-box-arrow-hover-border-style:            @combo-box-arrow-border-style;
 @combo-box-arrow-hover-border-color:            @combo-box-arrow-border-color;
 @combo-box-arrow-hover-bg:                      @white-color url(@combo-box-arrow-spritesheet) -3px -28px no-repeat;
@@ -1059,7 +961,7 @@
 @combo-box-arrow-active-border-color:           @combo-box-arrow-border-color;
 @combo-box-arrow-active-bg:                     @combo-box-arrow-bg;
 
-@combo-box-arrow-active-hover-border-width:     @combo-box-arrow-hover-border-width;
+
 @combo-box-arrow-active-hover-border-style:     @combo-box-arrow-hover-border-style;
 @combo-box-arrow-active-hover-border-color:     @combo-box-arrow-hover-border-color;
 @combo-box-arrow-active-hover-bg:               @combo-box-arrow-hover-bg;
@@ -1091,68 +993,10 @@
 @combo-box-picker-show-border-color:            @gray-ccc-color;
 @combo-box-picker-show-background-color:        @text-box-focus-bg;
 
-// TODO: check whether it's required
-@combo-box-input-wrapper-right-offset:          18px;
-@combo-box-arrowDown-color:                     @default-color;
-@combo-box-arrowDown-color-focus:               @accent-color;
-@combo-box-arrowDown-color-hover:               @accent-color;
 @combo-box-arrowDown-color-picker-show:         @accent-color;
-
-// --------- //
-// Text area //
-// --------- //
-
-@text-area-field-font:                          inherit;
-@text-area-field-line-height:                   18px;
-@text-area-border-radius:                       0;
-
-@text-area-field-text-color:                    inherit;
-@text-area-field-focus-text-color:              @text-area-field-text-color;
-@text-area-field-error-text-color:              @text-box-field-error-text-color;
-@text-area-field-disabled-text-color:           @text-area-field-text-color;
-
-@text-area-border-width:                        @default-border-width;
-@text-area-border-style:                        solid;
-@text-area-border-color:                        #eaeaea #eaeaea #cccccc #eaeaea;
-@text-area-bg:                                  @text-box-bg;
-
-@text-area-focus-border-width:                  @text-area-border-width;
-@text-area-focus-border-style:                  @text-area-border-style;
-@text-area-focus-border-color:                  #ccc;
-@text-area-focus-bg:                            @text-area-bg;
-
-@text-area-error-border-width:                  @text-area-border-width;
-@text-area-error-border-style:                  @text-area-border-style;
-@text-area-error-border-color:                  @text-box-error-border-color;
-@text-area-error-bg:                            @text-box-error-bg;
-
-@text-area-hover-border-width:                  @text-area-focus-border-width;
-@text-area-hover-border-style:                  @text-area-focus-border-style;
-@text-area-hover-border-color:                  @text-area-focus-border-color;
-@text-area-hover-bg:                            @text-area-focus-bg;
-
-@text-area-disabled-border-width:               @text-area-border-width;
-@text-area-disabled-border-style:               @text-area-border-style;
-@text-area-disabled-border-color:               transparent;
-@text-area-disabled-bg:                         transparent;
-
-@text-area-left-padding:                        4px;
-@text-area-top-padding:                         2px;
-@text-area-right-padding:                       4px;
-@text-area-bottom-padding:                      2px;
-@text-area-field-padding:                       @text-area-top-padding @text-area-right-padding @text-area-bottom-padding @text-area-left-padding;
-
-@text-area-placeholder-color:              @text-box-placeholder-color;
-@text-area-compat-placeholder-font:        @text-box-compat-placeholder-font;
-@text-area-compat-placeholder-padding:     2px 0 0;
-@text-area-compat-placeholder-alignment:   @text-box-compat-placeholder-alignment;
-
 // --------------- //
 // SuggestTextBox //
 // -------------- //
-
-@suggest-text-box-reset-margin:              3px 4px;
-@suggest-text-box-wrapper-width:             22px;
 @suggest-text-box-icon-cross-color:          #8991A9;
 
 // ----------- //
@@ -1755,6 +1599,7 @@
 
 // ItemsToolbar small
 @items-toolbar-bottom-style-background: 			url('img/items-toolbar-bottom-style-background.png');
+
 @list-view-small-items-toolbar-line-height:         16px;
 @list-view-small-actions-item-height:               16px;
 @list-view-small-actions-verAlign-width:            20px;
@@ -1884,7 +1729,7 @@
 // Data grid //
 // --------- //
 
-@data-grid-bg:                                  @white-color;
+@data-grid-bg:                                  transparent;
 @data-grid-border-spacing:                      0;
 @data-grid-border-collapse:                     separate;
 @data-grid-border-width:                        0;
@@ -1966,7 +1811,7 @@
 // ---------- //
 @data-grid-partScroll-cursor:                   pointer;
 @data-grid-partScroll-wrapper-height:           1px;
-@data-grid-partScroll-notScrolledCell-Color:    @data-grid-bg;
+@data-grid-partScroll-notScrolledCell-Color:    @white-color;
 @data-grid-multiselect-notScrolledCell-Color:   @data-grid-partScroll-notScrolledCell-Color;
 
 @data-grid-partScroll-thumb-height-hover:       6px;
@@ -2316,7 +2161,7 @@
 @drag-and-drop-border:                             1px solid @drag-and-drop-border-color;
 
 //FieldLink
-@controls-FieldLink-border-color:                  @text-area-border-color @text-area-border-color @gray-ccc-color @text-area-border-color;
+
 @controls-FieldLink-border-color-focus-hover:      @gray-ccc-color;
 @controls-FieldLink-border-color-picker-show:      @controls-FieldLink-border-color-focus-hover;
 @controls-FieldLink-border:                        1px solid;
@@ -2808,6 +2653,7 @@
 @clock-picker-inner-arrow-height:                   @clock-picker-inner-circle-radius - @clock-picker-inner-tick-radius - @clock-picker-arrow-tip-border-width;
 
 @bottomStyle-items-toolbar-height:                  30px;
+@bottomStyle-items-toolbar-width:                   24px;
 @bottomStyle-padding-bottom:                        @bottomStyle-items-toolbar-height + @bottomStyle-items-toolbar-margin; //высота операций + маржин
 @bottomStyle-items-toolbar-border-color:            #F3F3F3;
 @bottomStyle-items-toolbar-margin:                  4px;

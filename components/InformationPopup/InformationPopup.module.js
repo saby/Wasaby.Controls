@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.InformationPopup',
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.PopupMixin',
       'js!SBIS3.CORE.LikeWindowMixin',
-      'html!SBIS3.CONTROLS.InformationPopup',
+      'tmpl!SBIS3.CONTROLS.InformationPopup',
       'css!SBIS3.CONTROLS.InformationPopup'
    ],
 

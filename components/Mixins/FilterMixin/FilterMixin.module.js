@@ -5,9 +5,8 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
    "Core/core-functions",
    "Core/core-merge",
    "js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil",
-   "Core/helpers/collection-helpers",
    "Core/helpers/String/ucFirst"
-], function ( cFunctions, cMerge,FilterToStringUtil, colHelpers, ucFirst) {
+], function ( cFunctions, cMerge,FilterToStringUtil, ucFirst) {
 
 
    var FILTER_STRUCTURE_DEFAULT_ELEMENT = {
@@ -145,7 +144,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
          };
 
          if (filterStructure) {
-            this._filterStructure = colHelpers.map(filterStructure, function(element) {
+            this._filterStructure = filterStructure.map(function(element) {
                var newEl;
 
                if(typeof element.internalValueField !== 'string') {
@@ -164,7 +163,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
             });
          }
          if (filter) {
-            this._filterStructure = colHelpers.map(this._filterStructure, function(element) {
+            this._filterStructure = this._filterStructure.map(function(element) {
                var newElement = cFunctions.clone(element),
                    field = newElement.internalValueField;
 
@@ -224,14 +223,14 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
          return -1;
       },
       _findFilterStructureElement: function(func) {
-         return colHelpers.find(this._filterStructure, function(element) {
+         return this._filterStructure.find(function(element) {
             return func(element);
          });
       },
 
       _recalcInternalContext: function() {
          this.getLinkedContext().setValueSelf({
-            filterChanged: colHelpers.reduce(this._filterStructure, function(result, element) {
+            filterChanged: this._filterStructure.reduce(function(result, element) {
                return result || (element.hasOwnProperty('value') ? !FilterToStringUtil.isEqualValues(element.resetValue, element.value) : false);
             }, false),
             filterStructure: this._filterStructure,
@@ -281,7 +280,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
       }),
 
       _mapFilterStructureByProp: function(prop) {
-         return colHelpers.reduce(this._filterStructure, function(result, element) {
+         return this._filterStructure.reduce(function(result, element) {
             if (element.hasOwnProperty(prop)) {
                result[element.internalValueField] = element[prop];
             }
@@ -290,7 +289,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
       },
 
       _mapFilterStructureByVisibilityField: function(prop) {
-         return colHelpers.reduce(this._filterStructure, function(result, element) {
+         return this._filterStructure.reduce(function(result, element) {
             if(element.internalVisibilityField) {
                if (element.hasOwnProperty(prop)) {
                   result[element.internalVisibilityField] = element[prop];
@@ -311,7 +310,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
          var resetProp = 'reset' + ucFirst.call(prop),
              isPartial, ivf;
          
-         return colHelpers.reduce(this.getFilterStructure(), function(result, element) {
+         return this.getFilterStructure().reduce(function(result, element) {
             isPartial = partial && element.itemTemplate === null && element.historyItemTemplate !== null && element.hasOwnProperty(prop);
             ivf = element.internalValueField;
 
@@ -347,7 +346,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
       },
       
       _getFilter: function(byInternal) {
-         return colHelpers.reduce(this._filterStructure, function(result, element) {
+         return this._filterStructure.reduce(function(result, element) {
             if (element.hasOwnProperty('value')) {
                /* FIXME для внедрения в задачах используется filterField, т.к. у них internalValueField не совпадает
                   с полем фильтра */

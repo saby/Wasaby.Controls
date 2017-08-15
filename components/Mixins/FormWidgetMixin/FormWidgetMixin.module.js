@@ -4,8 +4,8 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
    "Core/core-functions",
    "Core/ConsoleLogger",
    "Core/Deferred",
-   "Core/helpers/string-helpers"
-], function ( constants, IoC, cFunctions, ConsoleLogger, Deferred, strHelpers) {
+   "Core/helpers/String/escapeHtml"
+], function ( constants, IoC, cFunctions, ConsoleLogger, Deferred, escapeHtml) {
    /**
     * Миксин, который добавляет функционал валидаторов.
     * Подробнее о работе с валидаторами вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/">Валидация вводимых данных</a>.
@@ -249,7 +249,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
          }
 
          if (message) {
-            messageBox.find('.ws-warning-message-text').html(strHelpers.escapeHtml(message));
+            messageBox.find('.ws-warning-message-text').html(escapeHtml(message));
          }
          try {
             if (settings) {

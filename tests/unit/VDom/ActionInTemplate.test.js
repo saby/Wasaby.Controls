@@ -2,7 +2,7 @@
  * Created by dv.zuev on 14.07.2017.
  */
 define([
-   'js!WSControls/Control/Base',
+   'Core/Control',
    'js!WSTest/TestSubControls/LogicParentTestControl'
 ], function (
    ParentControl, LogicParentTestControl

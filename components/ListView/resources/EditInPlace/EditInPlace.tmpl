@@ -1,0 +1,36 @@
+<ws:if data="{{columns}}">
+    <tr class="js-controls-ListView__item controls-editInPlace">
+        <ws:if data="{{editingTemplate}}">
+            <td colspan="{{ignoreFirstColumn ? columns.length + 1 : columns.length}}" class="controls-editInPlace__withEditor">
+                <div class="controls-editInPlace__editor">
+                    <ws:partial template="{{editingTemplate}}"></ws:partial>
+                </div>
+            </td>
+        </ws:if>
+        <ws:else>
+            <ws:if data="{{ignoreFirstColumn}}">
+                <td class="controls-editInPlace__withoutEditor"></td>
+            </ws:if>
+            <ws:for data="index, column in columns">
+                <ws:if data="{{column.editor}}">
+                    <td class="controls-editInPlace__withEditor">
+                        <div class="controls-editInPlace__editor {{ (ignoreFirstColumn && index === 0) ? 'controls-editInPlace__editorWithOffset' }}">
+                            <ws:partial template="{{column.editor}}"></ws:partial>
+                        </div>
+                    </td>
+                </ws:if>
+                <ws:else>
+                    <td class="controls-editInPlace__withoutEditor">
+                    </td>
+                </ws:else>
+            </ws:for>
+        </ws:else>
+    </tr>
+</ws:if>
+<ws:else>
+    <div class="js-controls-ListView__item controls-editInPlace">
+        <div class="controls-editInPlace__editor">
+            <ws:partial template="{{editingTemplate}}"></ws:partial>
+        </div>
+    </div>
+</ws:else>

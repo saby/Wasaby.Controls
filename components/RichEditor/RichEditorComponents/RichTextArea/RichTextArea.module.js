@@ -18,7 +18,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    'js!WS.Data/Di',
    "js!SBIS3.CONTROLS.Utils.ImageUtil",
    "Core/Sanitize",
-   "Core/helpers/collection-helpers",
    "Core/helpers/fast-control-helpers",
    "Core/helpers/string-helpers",
    'js!SBIS3.CONTROLS.Utils.LinkWrap',
@@ -45,7 +44,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
       Di,
       ImageUtil,
       Sanitize,
-      colHelpers,
       fcHelpers,
       strHelpers,
       LinkWrap,
@@ -608,16 +606,15 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          saveToHistory: function(valParam) {
             var
                self = this,
-               isDublicate = false;
+               isDublicate = false,
+               valBL;
             if (valParam && typeof valParam === 'string' && self._textChanged && self._options.saveHistory) {
                this.getHistory().addCallback(function(arrBL){
-                  if( typeof arrBL  === 'object') {
-                     colHelpers.forEach(arrBL, function (valBL, keyBL) {
-                        if (valParam === valBL) {
-                           isDublicate = true;
-                        }
-                     });
-                  }
+                  arrBL.forEach(function (valBL) {
+                     if (valParam === valBL) {
+                        isDublicate = true;
+                     }
+                  });
                   if (!isDublicate) {
                      self._addToHistory(valParam);
                   }
@@ -764,7 +761,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                this.setActive(true);
             }
             if (typeof smile === 'string') {
-               $.each(smiles, function(i, obj) {
+               smiles.forEach(function(obj) {
                   if (obj.key === smile) {
                      smile = obj;
                      return false;
@@ -1266,7 +1263,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
                //upd: в костроме форматная вставка, не нужно вырезать лишние теги
                if (!self._mouseIsPressed && self._options.editorConfig.paste_as_text) {
-                  e.content = Sanitize(e.content, {validNodes: {img: false}, checkDataAttribute: false, escapeInvalidTags: false});
+                  e.content = self._sanitizeBeforePaste(e.content);
                }
                self._mouseIsPressed = false;
                // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
@@ -1997,7 +1994,50 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }
             return true;
          },
+         _sanitizeBeforePaste: function(text) {
+            return Sanitize(text,
+               {
+                  validNodes: {
+                     img: false
+                  },
+                  validAttributes: {
+                     'class' : function(content, attributeName) {
+                        var
+                           currentValue = content.attributes[attributeName].value,
+                           classes = currentValue.split(' '),
+                           whiteList =  [
+                              'titleText',
+                              'subTitleText',
+                              'additionalText',
+                              'controls-RichEditor__noneditable',
+                              'without-margin',
+                              'image-template-left',
+                              'image-template-center',
+                              'image-template-right',
+                              'mce-object-iframe',
+                              'ws-hidden'
+                           ],
+                           index = classes.length - 1;
 
+                        while (index >= 0) {
+                           if (!~whiteList.indexOf(classes[index])) {
+                              classes.splice(index, 1);
+                           }
+                           index -= 1;
+                        }
+                        currentValue = classes.join(' ');
+                        if (currentValue) {
+                           content.attributes[attributeName].value = currentValue;
+                        } else {
+                           delete content.attributes[attributeName];
+                        }
+
+                     }
+                  },
+                  checkDataAttribute: false,
+                  escapeInvalidTags: false
+               });
+         },
          _getTextBeforePaste: function(){
             //Проблема:
             //          после вставки текста могут возникать пробелы после <br> в начале строки

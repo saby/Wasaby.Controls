@@ -3,12 +3,11 @@ define('js!WSControls/Buttons/MenuButton', [
    'js!SBIS3.CONTROLS.PickerMixin',
    'js!SBIS3.CONTROLS.DSMixin',
    'Core/helpers/dom&controls-helpers',
-   'Core/helpers/collection-helpers',
    'Core/IoC',
    'Core/detection',
    'Core/Sanitize',
-   'Core/helpers/string-helpers'
-], function(Button, PickerMixin, DSMixin, dcHelpers, colHelpers, IoC, detection, Sanitize, strHelpers) {
+   'Core/helpers/String/escapeHtml'
+], function(Button, PickerMixin, DSMixin, dcHelpers, IoC, detection, Sanitize, escapeHtml) {
 
    'use strict';
    
@@ -226,9 +225,11 @@ define('js!WSControls/Buttons/MenuButton', [
             footerTpl: this._options.footerTpl
          };
          if (this._options.pickerConfig){
-            colHelpers.forEach(this._options.pickerConfig, function(val, key) {
-               menuconfig[key] = val;
-            });
+            for (var key in this._options.pickerConfig) {
+               if(this._options.pickerConfig.hasOwnProperty(key)) {
+                  menuconfig[key] = this._options.pickerConfig[key];
+               }
+            }
          }
          menuconfig = this._modifyPickerOptions(menuconfig);
          if (this._dataSource) {
@@ -321,7 +322,7 @@ define('js!WSControls/Buttons/MenuButton', [
        _drawMenuCaption: function(menuCaption) {
            if (this._picker && menuCaption){
               if(this._options.escapeCaptionHtml){
-                  menuCaption = strHelpers.escapeHtml(menuCaption);
+                  menuCaption = escapeHtml(menuCaption);
               }
               menuCaption = Sanitize(menuCaption, {validNodes: {component: true}});
               $('.controls-Menu__header-caption', this._picker._container).html(menuCaption);

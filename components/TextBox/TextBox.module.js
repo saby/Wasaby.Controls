@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
    'js!SBIS3.CONTROLS.TextBoxUtils',
    'Core/Sanitize',
    'Core/helpers/dom&controls-helpers',
-   'Core/helpers/functional-helpers',
+   'Core/helpers/Function/forAliveOnly',
    'js!SBIS3.CONTROLS.ControlHierarchyManager',
    'js!SBIS3.CONTROLS.IconButton',
    'css!SBIS3.CONTROLS.TextBox'
@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
     TextBoxUtils,
     Sanitize,
     dcHelpers,
-    fHelpers,
+    forAliveOnly,
     ControlHierarchyManager) {
 
    'use strict';
@@ -321,7 +321,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _keyboardDispatcher: function(event){
-         return fHelpers.forAliveOnly(function(event){
+         return forAliveOnly(function(event){
             var result = true;
             switch (event.type) {
                case 'keydown':
@@ -604,7 +604,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
          this._updateCompatPlaceholderVisibility();
          this._inputField.attr('placeholder', '');
          this._compatPlaceholder.css({
-            'left': this._inputField.position().left || parseInt(this._inputField.parent().css('padding-left'), 10),
+            'left': (this._inputField.position().left || parseInt(this._inputField.parent().css('padding-left'), 10)) + 1, //отступ 1px под курсор, иначе курсор появляется под подсказкой
             'right': this._inputField.position().right || parseInt(this._inputField.parent().css('padding-right'), 10)
          });
          this._compatPlaceholder.on('click', this._inputClickHandler.bind(this));

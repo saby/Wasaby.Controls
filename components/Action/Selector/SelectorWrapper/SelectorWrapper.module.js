@@ -3,10 +3,9 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
    'js!SBIS3.CORE.CompoundControl',
    'tmpl!SBIS3.CONTROLS.SelectorWrapper',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-   'Core/helpers/collection-helpers',
    'Core/core-instance',
    'Core/Deferred'
-], function (CompoundControl, dotTplFn, TemplateUtil, collectionHelpers, cInstance, Deferred) {
+], function (CompoundControl, dotTplFn, TemplateUtil, cInstance, Deferred) {
 
 
    /**
@@ -119,7 +118,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
             }
 
             if(diff.added.length) {
-               collectionHelpers.forEach(diff.added, function(addedKey) {
+               diff.added.forEach(function(addedKey) {
                   /* Записи с выделенным ключём может не быть в recordSet'e
                    (например это запись внутри папки или на другой странице) */
                   index = selectedItems.getIndexByValue(idProperty, addedKey);
@@ -171,6 +170,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
                   linkedObject.toggleItemsSelection([id]);
                }
             } else if(!isBranch) {
+               clickResult = false;
                this._applyItemSelect(item);
             }
          } else {
@@ -182,8 +182,8 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
                if(this.getSelectionType() === 'allBySelectAction') {
                   return;
                }
-               clickResult = false;
             }
+            clickResult = false;
             this._applyItemSelect(item);
          }
          return clickResult;

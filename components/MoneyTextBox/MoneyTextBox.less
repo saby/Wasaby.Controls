@@ -8,18 +8,24 @@
     font-size: @money-text-box-decimals-font-size;
     color: @money-text-box-decimals-color; //@gray-ccc-color;
     background-color: transparent;
+    line-height:@default-base-line-height;
   }
 
   .controls-MoneyTextBox__input {
+    .flex-shrink();
     position:relative;
     width: 100%;
-    height: @text-box-height - 2 * @text-box-border-width;
+    height:100%;
     outline: none;
     white-space: nowrap;
     display: inline-block;
     z-index: 1;
+    line-height:@default-base-line-height;
   }
-
+  .controls-TextBox__wrapper {
+    padding: @text-box-wrapper-padding;
+    .box-sizing(border-box);
+  }
   .controls-TextBox__placeholder {
     z-index: 0;
   }
@@ -36,12 +42,4 @@
     }
   }
 
-  &.ws-disabled {
-    .controls-MoneyTextBox__input {
-      display: inline;
-    }
-    .controls-TextBox__fieldWrapper {
-      .baseline-fix();
-    }
-  }
 }
