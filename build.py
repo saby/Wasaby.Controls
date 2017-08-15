@@ -11,3 +11,4 @@ def copyReplace(folder):
 
 copyReplace("components")
 copyReplace("themes")
+copyReplace("lang")
