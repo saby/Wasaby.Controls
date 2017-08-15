@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "js!SBIS3.CORE.LayoutManager",
    "Core/core-instance",
    "js!SBIS3.CONTROLS.Utils.InformationPopupManager",
-   "Core/helpers/functional-helpers",
+   "Core/helpers/Function/forAliveOnly",
    'Core/helpers/String/escapeHtml',
    "js!SBIS3.CONTROLS.Utils.SourceUtil",
    "Core/helpers/Object/isEmpty",
@@ -53,7 +53,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    LayoutManager,
    cInstance,
    InformationPopupManager,
-   fHelpers,
+   forAliveOnly,
    escapeHtml,
    SourceUtil,
    isEmpty,
@@ -795,9 +795,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             processed: true
          };
 
-         var debouncedDrawItemsCallback = debounce(fHelpers.forAliveOnly(this._drawItemsCallback, this), 0);
+         var debouncedDrawItemsCallback = debounce(forAliveOnly(this._drawItemsCallback, this), 0);
          // FIXME сделано для правильной работы медленной отрисовки
-         this._drawItemsCallbackDebounce = fHelpers.forAliveOnly(function() {
+         this._drawItemsCallbackDebounce = forAliveOnly(function() {
             debouncedDrawItemsCallback();
             this._drawItemsCallbackSync();
          }, this);
@@ -1650,7 +1650,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              this._toggleIndicator(true);
              this._notify('onBeforeDataLoad', this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit);
              def = this._callQuery(this._getFilterForReload.apply(this, arguments), this.getSorting(), this._offset, this._limit)
-                .addCallback(fHelpers.forAliveOnly(function (list) {
+                .addCallback(forAliveOnly(function (list) {
                    self._toggleIndicator(false);
                    self._notify('onDataLoad', list);
                    self._onDataLoad(list);
@@ -1680,7 +1680,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    //self._notify('onBeforeRedraw');
                    return list;
                 }, self))
-                .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
+                .addErrback(forAliveOnly(this._loadErrorProcess, self));
              this._loader = def;
           } else {
              if (this._options._itemsProjection) {

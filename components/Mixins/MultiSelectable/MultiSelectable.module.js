@@ -8,9 +8,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
    "js!SBIS3.CONTROLS.ArraySimpleValuesUtil",
    "Core/helpers/Object/isEqual",
    "Core/core-instance",
-   "Core/helpers/functional-helpers",
+   "Core/helpers/Function/forAliveOnly",
    "Core/helpers/Array/clone"
-], function( ParallelDeferred, cFunctions, Deferred, IoC, ConsoleLogger,List, ArraySimpleValuesUtil, isEqualObject, cInstance, fHelpers, aClone) {
+], function( ParallelDeferred, cFunctions, Deferred, IoC, ConsoleLogger,List, ArraySimpleValuesUtil, isEqualObject, cInstance, forAliveOnly, aClone) {
 
    var EMPTY_SELECTION = [null],
        convertToKeys = function(list, keyField) {
@@ -678,7 +678,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
             }
 
             /* Если сорс грузит данные, то дожидаемся его */
-            Deferred.callbackWrapper(dependDef, fHelpers.forAliveOnly(function(res) {
+            Deferred.callbackWrapper(dependDef, forAliveOnly(function(res) {
                items = self.getItems();
                for (var j = 0; loadKeysAmount > j; j++) {
                   item = items && items.at(items.getIndexByValue(self._options.idProperty, loadKeysArr[j]));
