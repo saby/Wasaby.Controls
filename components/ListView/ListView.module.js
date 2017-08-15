@@ -859,8 +859,8 @@ define('js!SBIS3.CONTROLS.ListView',
                partialPaging: true,
                /**
                 * @typedef {Object} CursorNavigParams
-                * @property {String} [field] Поле выборки, по которому строится индекс для курсора.
-                * @property {String} [position] Исходная позиция - значение поля в индексе для записи, на которой находится курсор по умолчанию
+                * @property {String|Array} [field] Поле/набор полей выборки, по которому строится индекс для курсора.
+                * @property {String|Array} [position] Исходная позиция/набор позиций - значений полей в индексе для записи, на которой находится курсор по умолчанию
                 * @property {String} [direction] Направление просмотра индекса по умолчанию (при первом запросе):
                      - before - вверх
                      - after - вниз
