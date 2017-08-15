@@ -155,6 +155,20 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
             if(self._itemsMenu){
                self._updateActionsMenuButtonItems();
             }
+
+            if(self._options.hasItemsMenu){
+               //Следим за кнопками, извне могут менять их видимость и тогда потребудется проверить вместимость
+               self.getItems().each(function(item){
+                  var inst = self.getItemInstance(item.get('name'));
+                  if(inst){
+                     self.subscribeTo(inst, 'onPropertyChanged', function(e, propName){
+                        if(propName === 'visible'){
+                           self._checkCapacity();
+                        }
+                     });
+                  }
+               });
+            }
          });
       },
 
@@ -386,13 +400,22 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                   icon: 'sprite:icon-24 icon-ExpandDown icon-primary action-hover',
                   pickerConfig: {
                      closeButton: true,
-                     className: 'controls-operationsPanel__itemsMenu_picker controls-operationsPanel__massMode',
+                     className: 'controls-operationsPanel__itemsMenu_picker',
                      horizontalAlign: {
                         side: 'right',
                         offset: 48
                      }
                   }
                });
+
+               //Инициализируем режим
+               if(self._container.hasClass('controls-operationsPanel__massMode')){
+                  self._itemsMenu.getContainer().addClass('controls-operationsPanel__massMode');
+               }
+               if(self._container.hasClass('controls-operationsPanel__selectionMode')){
+                  self._itemsMenu.getContainer().addClass('controls-operationsPanel__selectionMode');
+               }
+
                self.registerChildControl(self._itemsMenu);
 
                self._itemsMenu._setPickerContent = function() {

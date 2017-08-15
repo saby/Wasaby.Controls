@@ -205,8 +205,8 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             var $this = $(this),
                $next = $this.next('.controls-ListView__item'),
                // Считаем через position, так как для плитки не подходит сложение высот
-               curBottom = $this.position().top + $this.outerHeight(true) + topWrapperHeight,
-               nextBottom = $next[0] ? $next.position().top + $next.outerHeight(true) : 0 + topWrapperHeight;
+               curBottom = Math.floor($this.position().top) + $this.outerHeight(true) + topWrapperHeight,
+               nextBottom = $next[0] ? Math.floor($next.position().top) + $next.outerHeight(true) : 0 + topWrapperHeight;
             curBottom = curBottom > pageOffset ? curBottom : pageOffset;
             nextBottom = nextBottom > curBottom ? nextBottom : curBottom;
             pageOffset = curBottom;
