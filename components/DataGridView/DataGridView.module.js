@@ -838,7 +838,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          } else {
             this._thead = newTHead.insertBefore(body);
          }
-         this.reviveComponents(this._thead);
 
          this._redrawColgroup();
          if (this.hasPartScroll()) {
@@ -864,7 +863,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._tfoot.replaceWith(newTFoot);
             this._tfoot = newTFoot;
          }
-         this.reviveComponents(this._tfoot);
          DataGridView.superclass._redrawFoot.call(this);
       },
 
@@ -1005,9 +1003,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _redrawItems: function() {
-         DataGridView.superclass._redrawItems.apply(this, arguments);
          //FIXME в 3.7.4 поправить, не всегда надо перерисовывать, а только когда изменились колонки
          this._redrawTheadAndTfoot();
+         DataGridView.superclass._redrawItems.apply(this, arguments);
       },
       _startEditOnItemClick: function(event, id, record, target, originalEvent) {
          var
@@ -1469,6 +1467,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this.redraw();
          } else if(this._options.showHead) {
             this._redrawTheadAndTfoot();
+            this.reviveComponents(this._thead);
+            this.reviveComponents(this._tfoot);
          }
       },
 
