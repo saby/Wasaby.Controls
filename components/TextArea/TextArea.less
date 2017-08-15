@@ -1,141 +1,73 @@
-.controls-TextArea {
-   display: inline-block;
-   vertical-align: top;
-   position: relative;
-   .border-radius(@text-area-border-radius);
-   border-width: @text-area-border-width;
-   border-style: @text-area-border-style;
-   border-color: @text-area-border-color;
-   background: @text-area-bg;
-   padding: @text-area-field-padding;
-   .box-sizing(border-box);
-
-   .controls-TextArea__inputField {
-      position: absolute;
-      overflow: auto;
-      font: @text-area-field-font;
-      color: @text-area-field-text-color;
-      display: block;
-      width: 100%;
+.controls-TextBox.controls-TextArea {
+   height: auto;
+   .border-radius(0);
+   .controls-TextBox__wrapper {
+      margin: calc(@default-height / 2 - @default-line-height / 2 ~'-' @default-border-width) 0; //margin тк padding увеличиват высоту блока, из за этого view становится больше чем field
+      &:before{
+         line-height: @text-area-field-line-height;
+      }
+   }
+   .controls-TextArea__field {
       line-height: @text-area-field-line-height;
-      //padding отсюда перенесен выше, чтобы autosize рассчитывался корректно
       resize: none;
-      border: none;
-      padding: 0;
-      background: transparent;
+      overflow: auto;
+      display: block;
+      white-space: pre-wrap; //https://bugzilla.mozilla.org/show_bug.cgi?id=1137650
+   }
+   .controls-TextArea__view {
+      .flex-shrink(0);
       .box-sizing(border-box);
-      // Internet Explorer 10+ placeholder
-      .placeholder();
-   }
-
-   &:hover {
-      border-width: @text-area-hover-border-width;
-      border-style: @text-area-hover-border-style;
-      border-color: @text-area-hover-border-color;
-      background: @text-area-hover-bg;
-   }
-
-   &.ws-has-focus {
-      border-width: @text-area-focus-border-width;
-      border-style: @text-area-focus-border-style;
-      border-color: @text-area-focus-border-color;
-      background: @text-area-focus-bg;
-
-      .controls-TextArea__inputField {
-         color: @text-area-field-focus-text-color;
+      line-height: @text-area-field-line-height;
+      padding: @text-box-wrapper-padding;
+      width:100%;
+      overflow-x: hidden;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      min-height: @text-area-field-line-height;
+      max-height: 100%;
+      &.-empty {
+          color: @default-placeholder-color;
       }
    }
-
-   &.ws-validation-error {
-      border-width: @text-area-error-border-width;
-      border-style: @text-area-error-border-style;
-      border-color: @text-area-error-border-color;
-      background: @text-area-error-bg;
-
-      .controls-TextArea__inputField {
-         color: @text-area-field-error-text-color;
-      }
-   }
-
+   //TODO временное решение для 230, в 240 будет автоматом
    &.ws-disabled {
-      border-width: @text-area-disabled-border-width;
-      border-style: @text-area-disabled-border-style;
-      border-color: @text-area-disabled-border-color;
-      background: @text-area-disabled-bg;
-
-      .controls-TextArea__inputField {
-         color: @text-area-field-disabled-text-color;
-      }
-
-      //TODO временное решение для 230, в 240 будет автоматом
+      border-bottom-color: @default-border-color-disabled;
       &.controls-TextArea__hiddenIfEmpty {
-         .controls-TextArea__inputField {
+         .controls-TextArea__Field {
             position: absolute;
          }
-         .controls-TextArea__disabled-wrapper{
+         .controls-TextArea__view{
             position: static;
             height: auto !important;
             min-height: 0 !important;
-            &.controls-TextArea__disabled-wrapper-empty {
+            &.controls-TextArea__view-empty {
                height: 0 !important;
             }
          }
       }
    }
+   @height-count: 10;  // Количество классов
 
-   &.controls-TextArea__autoheight {
-      height: auto !important;
+   .generate-height(@i: 1) when (@i =< @height-count) {
+      .controls-TextArea__field__maxheight-@{i} {
+         max-height: @i * @text-area-field-line-height;
+      }
+      .controls-TextArea__field__minheight-@{i} {
+         min-height: @i * @text-area-field-line-height;
+      }
+
+      .generate-height(@i + 1);
    }
-   .controls-TextArea__placeholder {
-      position: absolute;
-      top: 0;
-      .text-overflow();
-      color: @text-area-placeholder-color;
-      font: @text-area-compat-placeholder-font;
-      padding: @text-area-compat-placeholder-padding;
-      text-align: @text-area-compat-placeholder-alignment;
-   }
-}
-.controls-TextArea__disabled-wrapper{
-   line-height: @text-area-field-line-height;
-   top: @text-area-top-padding;
-   left: @text-area-left-padding;
-   right: @text-area-right-padding;
-   bottom: @text-area-bottom-padding;
-   background: @text-area-disabled-bg;
-   padding: 0;
-   box-sizing: border-box;
-   overflow-x: hidden;
-   overflow-y: auto;
-   white-space: pre-wrap;
-   word-wrap: break-word;
-   min-height: @text-box-height - @text-area-top-padding - @text-area-bottom-padding - (@text-area-disabled-border-width * 2);
-   &.controls-TextArea__disabled-wrapper-empty {
-      color: @text-area-placeholder-color;
-   }
+   .generate-height();
 }
 .controls-TextArea__heightInit {
-   .controls-TextArea__disabled-wrapper {
+   .controls-TextArea__view {
       position: absolute;
       min-height: 0;
    }
-   .controls-TextArea__inputField {
+   .controls-TextArea__field {
       position: static;
       height: 100%;
    }
 }
-
-@height-count: 10;  // Количество классов
-
-.generate-height(@i: 1) when (@i =< @height-count) {
-   .controls-TextArea__inputField__maxheight-@{i} {
-      max-height: @i * @text-area-field-line-height;
-   }
-   .controls-TextArea__inputField__minheight-@{i} {
-      min-height: @i * @text-area-field-line-height;
-   }
-
-   .generate-height(@i + 1);
-}
-
-.generate-height();

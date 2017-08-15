@@ -78,13 +78,6 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          OperationsMark.superclass.init.call(this);
          this.subscribe('onMenuItemActivate', this._onMenuItemActivate.bind(this));
       },
-      _initItems: function(items) {
-         var self = this;
-         $.each(items, function(key, val) {
-            self._parseItem(val);
-         });
-         OperationsMark.superclass._initItems.apply(this, [items]);
-      },
       _parseItem: function(item) {
          if (item.handler) {
             this[item.name] = item.handler;

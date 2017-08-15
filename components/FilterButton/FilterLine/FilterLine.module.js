@@ -3,10 +3,10 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
       'tmpl!SBIS3.CONTROLS.FilterButton.FilterLine',
-      'Core/helpers/string-helpers',
+      'Core/helpers/String/escapeTagsFromStr',
       'Core/Sanitize'
    ],
-   function(CompoundControl, FilterToStringUtil, dotTplFn, strHelpers, Sanitize) {
+   function(CompoundControl, FilterToStringUtil, dotTplFn, escapeTagsFromStr, Sanitize) {
 
       /**
        * Контрол, отображающий строку из применённых фильтров рядом с кнопкой фильтров.
@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
 
                   context.setValueSelf({
                      linkText: linkText,
-                     titleText: strHelpers.escapeTagsFromStr(linkText, '')
+                     titleText: escapeTagsFromStr(linkText, '')
                   });
                   self.toggle(!!linkText);
                   self._notifyOnSizeChanged();

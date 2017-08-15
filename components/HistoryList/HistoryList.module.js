@@ -11,10 +11,10 @@ define('js!SBIS3.CONTROLS.HistoryList',
       'js!WS.Data/Entity/Record',
       'Core/Serializer',
       'Core/helpers/generate-helpers',
-      'Core/helpers/collection-helpers'
+      'Core/helpers/Object/isEqual'
    ],
 
-   function(HistoryController, IList, IEnumerable, IIndexedCollection, RecordSet, Record, Serializer, genHelpers, colHelpers) {
+   function(HistoryController, IList, IEnumerable, IIndexedCollection, RecordSet, Record, Serializer, genHelpers, isEqualObject) {
 
       'use strict';
 
@@ -45,9 +45,17 @@ define('js!SBIS3.CONTROLS.HistoryList',
 
          function deepCompare(val1, val2) {
             var eq = false;
-            colHelpers.forEach(val1, function(val, key) {
-               eq &= compare(val1[key], val2[key]);
-            });
+            if (val1 instanceof Array) {
+               val1.forEach(function(val, key) {
+                  eq &= compare(val1[key], val2[key]);
+               });
+            } else {
+               for (var key in val1) {
+                  if(val1.hasOwnProperty(key)) {
+                     eq &= compare(val1[key], val2[key]);
+                  }
+               }
+            }
             return eq;
          }
 
@@ -58,12 +66,12 @@ define('js!SBIS3.CONTROLS.HistoryList',
 
          /* cInstance.instanceOfMixin(value1, 'WS.Data/Entity/FormattableMixin') - правильно, но медленно */
          if(!isEqual && value1.getRawData && value2.getRawData) {
-            isEqual = colHelpers.isEqualObject(value1.getRawData(), value2.getRawData());
+            isEqual = isEqualObject(value1.getRawData(), value2.getRawData());
          }
 
          if(!isEqual &&  isPlainArray(value1) && isPlainArray(value2)) {
             if(value1.length === value2.length) {
-               isEqual = colHelpers.isEqualObject(value1, value2);
+               isEqual = isEqualObject(value1, value2);
 
                if(!isEqual) {
                   isEqual = deepCompare(value1, value2);
@@ -73,7 +81,7 @@ define('js!SBIS3.CONTROLS.HistoryList',
 
          if(!isEqual && isPlainObject(value1) && isPlainObject(value2)) {
             if(Object.keys(value1).length === Object.keys(value2).length) {
-               isEqual = colHelpers.isEqualObject(value1, value2);
+               isEqual = isEqualObject(value1, value2);
 
                if(!isEqual) {
                   isEqual = deepCompare(value1, value2);

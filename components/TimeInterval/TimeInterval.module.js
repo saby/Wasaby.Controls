@@ -431,7 +431,7 @@ define(
                sectionArray.push(intervalValues.minutes);
             }
 
-            $.each(sectionArray, function(i, value){
+            sectionArray.forEach(function(value, i){
                if (value !== 0) {
                   isEmptyValue = false;
                }

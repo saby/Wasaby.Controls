@@ -7,7 +7,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "Core/helpers/functional-helpers",
        'Deprecated/helpers/dom&controls-helpers',
        "Core/helpers/string-helpers",
-       "Core/helpers/collection-helpers",
        "Core/ParserUtilities",
        'js!SBIS3.CONTROLS.ControlHierarchyManager',
        "js!SBIS3.CONTROLS.SuggestTextBox",
@@ -43,7 +42,6 @@ define('js!SBIS3.CONTROLS.FieldLink',
         fHelpers,
         domHelpers,
         strHelpers,
-        colHelpers,
         ParserUtilities,
         ControlHierarchyManager,
         SuggestTextBox,
@@ -393,7 +391,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  .subscribeTo(linkCollection, 'onFocusIn', function() {
                      // Из за того, что фокус устанавливается программно, нужно выставить флаг fromTouch - 
                      // так как нажатие произошло на поле связи, но не на поле ввода, но фокус остался в поле ввода
-                     if (constants.browser.isMobileIOS && self._isInputVisible()) {
+                     if (constants.browser.isMobilePlatform && self._isInputVisible()) {
                         self._fromTouch = true;
                      }
                      self.setActive(true);
@@ -582,7 +580,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              var config;
 
              if(key) {
-                config = colHelpers.find(this._options.dictionaries, function (elem) {
+                config = this._options.dictionaries.find(function (elem) {
                    return elem.name === key;
                 });
              } else {
@@ -779,7 +777,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           }, '_getLinkCollection'),
           
           _getInputMinWidth: fHelpers.memoize(function() {
-             var fieldWrapper = this.getContainer().find('.controls-TextBox__fieldWrapper');
+             var fieldWrapper = this.getContainer().find('.controls-FieldLink__fieldWrapper');
              return parseInt(window.getComputedStyle(fieldWrapper[0]).getPropertyValue('--min-width') || fieldWrapper.css('min-width'));
           }, '_getInputMinWidth'),
 
@@ -1186,7 +1184,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           _toggleShowAll: function(show) {
              if(this._options.multiselect) {
-                this._getShowAllButton().toggleClass(classes.HIDDEN, !show);
+                this._getShowAllButton().toggleClass(classes.HIDDEN, !show); //todo
              }
           },
           

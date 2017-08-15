@@ -81,7 +81,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        */
       var ScrollContainer = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, WsCompatibleConstructor], {
          _template: template,
-
+         iWantVDOM: false,
          _controlName: 'SBIS3.CONTROLS.ScrollContainer',
          _useNativeAsMain: true,
          _doNotSetDirty: true,

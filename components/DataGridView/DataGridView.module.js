@@ -26,7 +26,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/headColumnTpl",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/SortingTemplate",
-   "Core/helpers/collection-helpers",
    "Core/helpers/Object/isEmpty",
    "Core/helpers/string-helpers",
    "Core/helpers/dom&controls-helpers",
@@ -61,7 +60,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
       headColumnTpl,
       GroupTemplate,
       SortingTemplate,
-      colHelpers,
       isEmpty,
       strHelpers,
       dcHelpers,
@@ -409,7 +407,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          _isHeaderScrolling: false,                   //Флаг обозначающий, происходит ли скролл за заголовок
          _lastLeftPos: null,                          //Положение по горизонтали, нужно когда происходит скролл за заголовок
          _options: {
-            task1174300036: false,
             _footTpl: footTpl,
             _colGroupTpl: colgroupTpl,
             _defaultCellTemplate: cellTemplate,
@@ -843,7 +840,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          } else {
             this._thead = newTHead.insertBefore(body);
          }
-         this.reviveComponents(this._thead);
 
          this._redrawColgroup();
          if (this.hasPartScroll()) {
@@ -869,7 +865,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._tfoot.replaceWith(newTFoot);
             this._tfoot = newTFoot;
          }
-         this.reviveComponents(this._tfoot);
          DataGridView.superclass._redrawFoot.call(this);
       },
 
@@ -1010,14 +1005,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _redrawItems: function() {
-         if (!this._options.task1174300036){
-            this._redrawTheadAndTfoot();
-         }
-         DataGridView.superclass._redrawItems.apply(this, arguments);
          //FIXME в 3.7.4 поправить, не всегда надо перерисовывать, а только когда изменились колонки
-         if (this._options.task1174300036) {
-            this._redrawTheadAndTfoot();
-         }
+         this._redrawTheadAndTfoot();
+         DataGridView.superclass._redrawItems.apply(this, arguments);
       },
       _startEditOnItemClick: function(event, id, record, target, originalEvent) {
          var
@@ -1075,7 +1065,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             self = this,
             columns = this._options.enabled ? this._options.columns : [];
          if (!this._options.enabled) {
-            colHelpers.forEach(this._options.columns, function(item) {
+            this._options.columns.forEach(function(item) {
                columns.push(item.allowChangeEnable === false ? item : {});
             });
          }
@@ -1479,6 +1469,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this.redraw();
          } else if(this._options.showHead) {
             this._redrawTheadAndTfoot();
+            this.reviveComponents(this._thead);
+            this.reviveComponents(this._tfoot);
          }
       },
 

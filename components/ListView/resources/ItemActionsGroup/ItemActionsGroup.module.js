@@ -12,14 +12,14 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
    "js!SBIS3.CONTROLS.Link",
    "html!SBIS3.CONTROLS.ItemActionsGroup",
    "html!SBIS3.CONTROLS.ItemActionsGroup/ItemTpl",
-   "Core/helpers/collection-helpers",
+   "Core/helpers/Object/find",
    "Core/helpers/markup-helpers",
-   "Core/helpers/functional-helpers",
+   "Core/helpers/Function/forAliveOnly",
    "Core/moduleStubs",
    "css!SBIS3.CONTROLS.ItemActionsGroup",
    "i18n!SBIS3.CONTROLS.ItemActionsGroup"
 ],
-   function( CommandDispatcher, IoC, ConsoleLogger,ButtonGroupBaseDS, IconButton, Link, dotTplFn, dotTplFnForItem, colHelpers, mkpHelpers, fHelpers, moduleStubs) {
+   function( CommandDispatcher, IoC, ConsoleLogger,ButtonGroupBaseDS, IconButton, Link, dotTplFn, dotTplFnForItem, objectFind, mkpHelpers, forAliveOnly, moduleStubs) {
 
       'use strict';
 
@@ -206,7 +206,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
           */
          showItemActionsMenu: function(align) {
             //TODO перейти на menuIcon при переводе операций на Vdom
-            moduleStubs.require("js!SBIS3.CONTROLS.ContextMenu").addCallback(fHelpers.forAliveOnly(function(mods) {
+            moduleStubs.require("js!SBIS3.CONTROLS.ContextMenu").addCallback(forAliveOnly(function(mods) {
                /* Если за время загрузки меню операции скрылись, то и показывать меню не надо */
                if(!this.isVisible()) {
                   return;
@@ -248,7 +248,7 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          },
 
          hasVisibleActions: function() {
-            return colHelpers.find(this.getItemsInstances(), function(instance) {
+            return objectFind(this.getItemsInstances(), function(instance) {
                /* Вызвать этот метод могут раньше, чем скроются выключенные операции,
                   и он вернёт неверный результат, поэтому проверяем и на isEnabled */
                return instance.isVisible() && instance.isEnabled();

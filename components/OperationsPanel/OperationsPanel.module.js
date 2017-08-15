@@ -5,12 +5,11 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
    'js!SBIS3.CORE.CompoundControl',
    'tmpl!SBIS3.CONTROLS.OperationsPanel',
    'js!SBIS3.CONTROLS.ItemsControlMixin',
-   'Core/helpers/collection-helpers',
    'Core/core-instance',
    'tmpl!SBIS3.CONTROLS.OperationsPanel/resources/ItemTemplate',
    'Core/moduleStubs',
    'css!SBIS3.CONTROLS.OperationsPanel'
-], function(Control, dotTplFn, ItemsControlMixin, colHelpers, cInstance, ItemTemplate, moduleStubs) {
+], function(Control, dotTplFn, ItemsControlMixin, cInstance, ItemTemplate, moduleStubs) {
 
    var ITEMS_MENU_WIDTH = 28;
 
@@ -274,12 +273,17 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          }
       },
       _onSelectedItemsChange: function(idArray) {
+         var
+            instances = this.getItemsInstances(),
+            instance;
          //Прокидываем сигнал onSelectedItemsChange из браузера в кнопки
-         colHelpers.forEach(this.getItemsInstances(), function(instance) {
-            if (typeof instance.onSelectedItemsChange === 'function') {
-               instance.onSelectedItemsChange(idArray);
+         for (instance in instances) {
+            if (instances.hasOwnProperty(instance)) {
+               if (typeof instances[instance].onSelectedItemsChange === 'function') {
+                  instances[instance].onSelectedItemsChange(idArray);
+               }
             }
-         });
+         }
       },
       _onResizeHandler: function(){
          if(this.isVisible()){

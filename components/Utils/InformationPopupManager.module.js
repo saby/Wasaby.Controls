@@ -59,8 +59,11 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
 
       return /** @lends SBIS3.CONTROLS.Utils.InformationPopupManager.prototype */{
          /**
-          * Открывает диалог с кнопками "Да", "Нет" и "Отмена" (опционально от опции {@link SBIS3.CONTROLS.SubmitPopup#status}).
-          * @param {Object} Объект конфигурацией открываемого диалога - {@link SBIS3.CONTROLS.SubmitPopup}.
+          * Открывает диалог с кнопками "Да", "Нет" и "Отмена" (опционально), в котором при нажатии на кнопку выполняется пользовательский обработчик.
+          * @remark
+          * Открываемый диалог строится на основе экземпляра класса {@link SBIS3.CONTROLS.SubmitPopup}.
+          * Изменению не подлежит значение опции {@link SBIS3.CONTROLS.SubmitPopup#status status}.
+          * @param {Object} config Объект c конфигурацией открываемого диалога. В качестве свойств объекта передают опции, соответствующие классу {@link SBIS3.CONTROLS.SubmitPopup}.
           * @param {Function} positiveHandler Обработчик нажатия на кнопку "Да".
           * @param {Function} negativeHandler Обработчик нажатия на кнопку "Нет".
           * @param {Function} [cancelHandler] Обработчик нажатия на кнопку "Отмена".
@@ -73,7 +76,7 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
           *       details: 'Чтобы продолжить редактирование нажмите, «Отмена».',
           *       opener: self
           *    },
-          *    myPositiveHandler, myNegativeHandler
+          *    myPositiveHandler, myNegativeHandler, cancelHandler
           * );
           * </pre>
           * @see showMessageDialog

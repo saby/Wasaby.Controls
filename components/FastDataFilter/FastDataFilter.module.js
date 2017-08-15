@@ -10,12 +10,10 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
    "js!SBIS3.CONTROLS.DropdownList",
    "tmpl!SBIS3.CONTROLS.FastDataFilter",
    "tmpl!SBIS3.CONTROLS.FastDataFilter/ItemTpl",
-   "Core/helpers/collection-helpers",
-   "Core/helpers/dom&controls-helpers",
    'css!SBIS3.CONTROLS.FastDataFilter'
 ],
 
-   function(CompoundControl, ItemsControlMixin, FilterMixin, cDeferred, DropdownList, dotTplFn, ItemTpl, colHelpers, dcHelpers) {
+   function(CompoundControl, ItemsControlMixin, FilterMixin, cDeferred, DropdownList, dotTplFn, ItemTpl) {
 
       'use strict';
       /**
@@ -168,9 +166,11 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
 
          _resetMaxWidth: function(){
             var dropdownContainer = $('.controls-DropdownList', this.getContainer());
-            colHelpers.forEach(dropdownContainer, function(elem){
-               $(elem).css('flex-shrink', '');
-            });
+            for (var i = 0; i < dropdownContainer.length; i++) {
+               if (i in dropdownContainer) {
+                  $(dropdownContainer[i]).css('flex-shrink', '');
+               }
+            }
          },
 
          _onResizeHandler: function(){
@@ -183,9 +183,9 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
 
          _recalcInternalContext: function() {
             var
-                  changed = colHelpers.reduce(this._filterStructure, function(result, element) {
-                     return result || element.resetValue !== element.value;
-                  }, false);
+               changed = this._filterStructure.reduce(function(result, element) {
+                  return result || element.resetValue !== element.value;
+               }, false);
 
             this.getLinkedContext().setValueSelf({
                filterChanged: changed,
