@@ -1,3 +1,5 @@
 <div class="controls-InformationPopup controls-FloatArea controls-InformationPopup__status-{{status}} {{additionalClass || ''}}">
-   <ws:partial if={{template}} template="{{template}}" scope="{{...}}"></ws:partial>
+   <ws:if data="{{template}}">
+      <ws:partial template="{{template}}" scope="{{...}}"></ws:partial>
+   </ws:if>
 </div>
