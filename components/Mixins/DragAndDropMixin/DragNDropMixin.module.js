@@ -508,7 +508,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         * @private
         */
        _preventClickEvent: function (e) {
-          //preventDefault для touchStart запрещает клик
+          //preventDefault для touchStart запрещает клик, а текст по touch соытиям не выделяется
           if (e.type == 'mousedown') {
              e.preventDefault();
              //снимаем выделение с текста иначе не будут работать клики а выделение не будет сниматься по клику из за preventDefault
