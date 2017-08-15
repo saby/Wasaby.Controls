@@ -291,10 +291,9 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         _initDrag: function(clickEvent) {
             var
                 self = this,
-                start = new Date(),
                 dragStrarter = function(bus, moveEvent){
                     self._preparePageXY(moveEvent);
-                    if (self._isDrag(moveEvent, clickEvent, start)) {
+                    if (self._isDrag(moveEvent, clickEvent)) {
                         self._beginDrag(clickEvent);
                         self._beginDragTarget = clickEvent.target;
                         EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
@@ -354,15 +353,11 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          * @returns {boolean} если true то было смещение.
          * @private
          */
-        _isDrag: function(moveEvent, clickEvent, start) {
+        _isDrag: function(moveEvent, clickEvent) {
             var
                 moveX = moveEvent.pageX - clickEvent.pageX,
                 moveY = moveEvent.pageY - clickEvent.pageY;
-            if (clickEvent.type == 'touchstart' && (new Date()) - start < 500) {
-                //при touchstart нельзя сразу начинать dragndrop потому что, если показать аватар, изменится dom и браузер не
-                //будет генерировать клик 500 мс должно хватить на то что бы отличить клик от перетаскивания
-                return false;
-            }
+
             if ((Math.abs(moveX) < this._constShiftLimit) && (Math.abs(moveY) < this._constShiftLimit)) {
                 return false;
             }
@@ -513,14 +508,17 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         * @private
         */
        _preventClickEvent: function (e) {
-          e.preventDefault();
-          //снимаем выделение с текста иначе не будут работать клики а выделение не будет сниматься по клику из за preventDefault
-          var sel = window.getSelection();
-          if (sel) {
-             if (sel.removeAllRanges) {
-                sel.removeAllRanges();
-             } else if (sel.empty) {
-                sel.empty();
+          //preventDefault для touchStart запрещает клик
+          if (e.type == 'mousedown') {
+             e.preventDefault();
+             //снимаем выделение с текста иначе не будут работать клики а выделение не будет сниматься по клику из за preventDefault
+             var sel = window.getSelection();
+             if (sel) {
+                if (sel.removeAllRanges) {
+                   sel.removeAllRanges();
+                } else if (sel.empty) {
+                   sel.empty();
+                }
              }
           }
        }
