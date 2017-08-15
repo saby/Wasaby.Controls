@@ -2038,7 +2038,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this._updateHoveredItemAfterRedraw();
          },
          _redrawItems: function(){
-            ListView.superclass._redrawItems.call(this);
+            ListView.superclass._redrawItems.apply(this, arguments);
             // После полной перерисовки нужно заново инициализировать вирутальный скролинг
             if (this._options.virtualScrolling && this._virtualScrollController) {
                this._virtualScrollController.reset();

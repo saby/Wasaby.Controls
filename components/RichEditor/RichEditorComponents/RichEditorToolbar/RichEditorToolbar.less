@@ -160,11 +160,14 @@
 
 .controls-RichEditorToolbar__stylePicker {
    .controls-ComboBox__itemRow.controls-ListView__item { //2 Для большего веча селектора
-      &.titleText{
+      &.titleText {
          font-size: 18px;
          line-height: 23px;
          color: #313E78;
          font-weight: bold;
+      }
+      &.titleText:hover {
+         color: #313E78;
       }
 
       &.subTitleText {
@@ -173,10 +176,16 @@
          color: #313E78;
          font-weight: bold;
       }
+      &.subTitleText:hover {
+         color: #313E78;
+      }
 
       &.additionalText {
          font-size: 12px;
          line-height: 15px;
+         color: #999999;
+      }
+      &.additionalText:hover {
          color: #999999;
       }
    }
