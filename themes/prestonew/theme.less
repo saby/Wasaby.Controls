@@ -1104,3 +1104,17 @@ body {
    position: relative;
    top: 12px;
 }
+
+// В темах престо и розницы все сверстано на внутренних скролируемых контенерах.
+// Делаем что бы флоат арии всегда были с 100% высотой и не надо устанавливать ws-float-area__block-layout.
+// Выпилить когда уйдем от ws-float-area__block-layout в онлайне.
+.ws-float-area {
+   display: block !important;
+}
+.ws-float-area-stack-panel-shadow {
+   display: block !important;
+}
+
+.ws-float-area-stack-scroll-wrapper-touch {
+  -webkit-overflow-scrolling: auto!important;
+}
