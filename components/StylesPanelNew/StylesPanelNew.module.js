@@ -201,6 +201,11 @@ define('js!SBIS3.CONTROLS.StylesPanelNew', [
             if (checked) {
                self._palette.setSelectedKey("auto");
                self._palette.redraw();
+               if (self._options.paletteRenderStyle === true) {
+                  self.saveHandler({
+                     color: 'auto'
+                  });
+               }
             } else if (self._palette.getSelectedIndex() == -1) {
                self._palette.setSelectedIndex(0);
             }
