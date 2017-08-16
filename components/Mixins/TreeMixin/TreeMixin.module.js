@@ -93,7 +93,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          highlightText: cfg.highlightText,
          colorMarkEnabled: cfg.colorMarkEnabled,
          colorField: cfg.colorField,
-         allowEnterToFolder: cfg.allowEnterToFolder
+         allowEnterToFolder: cfg.allowEnterToFolder,
+         task1173671799: cfg.task1173671799
       }
    },
    searchProcessing = function(src, cfg) {
@@ -866,7 +867,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * Получить список записей для отрисовки
        * @private
        */
-      _breadCrumbsItemClick : function(id) {
+      _breadCrumbsItemClick : function(id, crumbPath) {
+         var
+            self = this;
          //Таблицу нужно связывать только с тем PS, в который кликнули. Хорошо, что сначала идет _notify('onBreadCrumbClick'), а вотом выполняется setCurrentRoot
          if (this._notify('onSearchPathClick', id) !== false ) {
 
@@ -881,8 +884,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             this.setHighlightText('', false);
             this.setFilter(filter, true);
             this._options.hierarchyViewMode = false;
-            this.setCurrentRoot(id);
-            this.reload();
+            if (this._options.task1173671799) {
+               crumbPath.forEach(function(id) {
+                  self._options.openedPath[id] = true;
+               });
+               this.setCurrentRoot(this.getRoot());
+               this.reload(undefined, undefined, undefined, undefined, true); // Это deepReload, детка!
+            } else {
+               this.setCurrentRoot(id);
+               this.reload();
+            }
          }
       },
       _isVisibleItem: function(item, onlyFolders) {
