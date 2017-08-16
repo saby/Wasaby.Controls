@@ -182,8 +182,8 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
                if(this.getSelectionType() === 'allBySelectAction') {
                   return;
                }
+               clickResult = false;
             }
-            clickResult = false;
             this._applyItemSelect(item);
          }
          return clickResult;
