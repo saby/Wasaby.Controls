@@ -421,7 +421,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
             /* Если фокус уходит на список - вернём его обратно в контрол, с которого фокус ушёл */
             this.subscribeTo(control, 'onFocusOut', function(e, destroyed, focusedControl) {
-               function clear() {
+               function clearItems() {
                   /* Когда уходит фокус с поля ввода, необходимо очистить записи в списке, т.к. записи могут удалять/изменять */
                   self._list.getItems() && self._list.getItems().clear();
                }
@@ -432,9 +432,12 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                      this.setActive(true);
                   } else if (self._options.autoShow && focusedControl && !ControlHierarchyManager.checkInclusion(this, focusedControl.getContainer()[0])) {
                      if (focusedControl) {
-                        focusedControl.once('onFocusIn', clear);
+                        // если фокус переходит на другой компонент, дождемся этого перехода фокуса, и только потом почистим items.
+                        // если так не сделать, преждевременно сработает механизм восстановления фокуса, в случае safari это приводит к ошибке
+                        // https://online.sbis.ru/opendoc.html?guid=aa909af6-3564-4fed-ac60-962fc71b451e
+                        focusedControl.once('onFocusIn', clearItems);
                      } else {
-                        clear();
+                        clearItems();
                      }
                   }
                }
