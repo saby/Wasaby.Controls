@@ -44,7 +44,6 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.ComponentBinder',
    'js!WS.Data/Di',
    'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
-   'Core/helpers/collection-helpers',
    'Core/core-instance',
    'Core/helpers/functional-helpers',
    'Core/helpers/dom&controls-helpers',
@@ -69,7 +68,7 @@ define('js!SBIS3.CONTROLS.ListView',
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents, LayoutManager, mHelpers,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, colHelpers, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove) {
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove) {
      'use strict';
 
       var
@@ -860,8 +859,8 @@ define('js!SBIS3.CONTROLS.ListView',
                partialPaging: true,
                /**
                 * @typedef {Object} CursorNavigParams
-                * @property {String} [field] Поле выборки, по которому строится индекс для курсора.
-                * @property {String} [position] Исходная позиция - значение поля в индексе для записи, на которой находится курсор по умолчанию
+                * @property {String|Array} [field] Поле/набор полей выборки, по которому строится индекс для курсора.
+                * @property {String|Array} [position] Исходная позиция/набор позиций - значений полей в индексе для записи, на которой находится курсор по умолчанию
                 * @property {String} [direction] Направление просмотра индекса по умолчанию (при первом запросе):
                      - before - вверх
                      - after - вниз
@@ -1140,9 +1139,10 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _createScrollPager: function(){
-            var scrollContainer = this._scrollWatcher.getScrollContainer();
+            var scrollContainer = this._scrollWatcher.getScrollContainer(),
+               scrollPagerContainer = $('> .controls-ListView__scrollPager', this._container);
             this._scrollPager = new Paging({
-               element: $('> .controls-ListView__scrollPager', this._container),
+               element: scrollPagerContainer,
                visible: false,
                showPages: false,
                idProperty: 'id',
@@ -1153,22 +1153,24 @@ define('js!SBIS3.CONTROLS.ListView',
             // контенеры в контенеры родительских компонентов является хаком. Подумать как изменить архитектуру
             // работы с пэйджером что бы избавится от этого.
             if (this._inScrollContainerControl) {
-              $('> .controls-ListView__scrollPager', this._container).appendTo(scrollContainer.parent());
+              scrollPagerContainer.appendTo(scrollContainer.parent());
             } else if (constants.browser.isMobilePlatform) {
                // скролл может быть у window, но нельзя делать appendTo(window)
                // На скролируемых областях на мобильных платормах висит transform: translate3d(0,0,0);.
                // Он создает новую систему координат внутри себя. position: fixed начинает работать относительно
                // этого контенера а не относительно вьюпорта. По этому выносим пэйджер за пределы скролируемой области.
                scrollContainer = (scrollContainer[0] == window || scrollContainer.is('body')) ? $('body') : scrollContainer.parent();
-               $('> .controls-ListView__scrollPager', this._container).appendTo(scrollContainer);
+               scrollPagerContainer.appendTo(scrollContainer);
             }
             this._setScrollPagerPosition();
             this._scrollBinder = new ComponentBinder({
                view: this,
-               paging: this._scrollPager,
                pagingZIndex: this._pagingZIndex
             });
-            this._scrollBinder.bindScrollPaging();
+            // Создаем пейджинг скрытым если включено сохранение позиции при reload, но сам пейджинг выключен
+            // Так как для сохранения страницы все равно нужекн рассчет страниц скролла
+            var hiddenPager = !this._options.scrollPaging && this._options.saveReloadPosition;
+            this._scrollBinder.bindScrollPaging(this._scrollPager, hiddenPager);
             dcHelpers.trackElement(this.getContainer(), true).subscribe('onVisible', this._onVisibleChange.bind(this));
             
             if (!this._inScrollContainerControl) {
@@ -1993,7 +1995,6 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
             if (this._options.virtualScrolling && this._virtualScrollController) {
-               this._virtualScrollController.reset();
                this._topWrapper.height(0);
                this._bottomWrapper.height(0);
             }
@@ -2035,6 +2036,13 @@ define('js!SBIS3.CONTROLS.ListView',
             this._drawSelectedItems(this.getSelectedKeys());
             this._drawSelectedItem(this.getSelectedKey(), this.getSelectedIndex());
             this._updateHoveredItemAfterRedraw();
+         },
+         _redrawItems: function(){
+            ListView.superclass._redrawItems.apply(this, arguments);
+            // После полной перерисовки нужно заново инициализировать вирутальный скролинг
+            if (this._options.virtualScrolling && this._virtualScrollController) {
+               this._virtualScrollController.reset();
+            }
          },
          /**
           * Проверить наличие скрола, и догрузить еще данные если его нет
@@ -2946,7 +2954,7 @@ define('js!SBIS3.CONTROLS.ListView',
                if(itemsActions) {
                   target = self.getItemsActions().getTarget();
                   targetHash = target.container.data('hash');
-                  colHelpers.forEach(items, function (item) {
+                  items.forEach(function(item) {
                      if (item.getHash() == targetHash) {
                         self._itemsToolbar.unlockToolbar();
                         self._itemsToolbar.hide();
@@ -3546,10 +3554,15 @@ define('js!SBIS3.CONTROLS.ListView',
                this._initVirtualScrolling();
             }
          },
+
+         _getAjaxLoaderContainer: fHelpers.memoize(function () {
+            return this.getContainer().find('.controls-AjaxLoader').eq(0);
+         }, '_getAjaxLoaderContainer'),
+
          _toggleIndicator: function(show){
             var self = this,
                 container = this.getContainer(),
-                ajaxLoader = container.find('.controls-AjaxLoader').eq(0),
+                ajaxLoader = this._getAjaxLoaderContainer(),
                 indicator, centerCord, scrollContainer;
 
 
@@ -3558,17 +3571,17 @@ define('js!SBIS3.CONTROLS.ListView',
                if (!self.isDestroyed() && self._showedLoading) {
                   scrollContainer = self._getScrollContainer()[0];
                   indicator = ajaxLoader.find('.controls-AjaxLoader__outer');
+                  ajaxLoader.removeClass('ws-hidden');
                   if(indicator.length && scrollContainer && scrollContainer.offsetHeight && container[0].scrollHeight > scrollContainer.offsetHeight) {
                      /* Ищем кординату, которая находится по середине отображаемой области грида */
                      centerCord =
-                        (Math.max(scrollContainer.getBoundingClientRect().bottom, 0) - Math.max(container[0].getBoundingClientRect().top, 0))/2;
+                        (Math.max(scrollContainer.getBoundingClientRect().bottom, 0) - Math.max(ajaxLoader[0].getBoundingClientRect().top, 0))/2;
                      /* Располагаем индикатор, учитывая прокрутку */
                      indicator[0].style.top = centerCord + scrollContainer.scrollTop + 'px';
                   } else {
                      /* Если скрола нет, то сбросим кординату, чтобы индикатор сам расположился по середине */
                      indicator[0].style.top = '';
                   }
-                  ajaxLoader.removeClass('ws-hidden');
                }
                this._loadingIndicatorTimer = setTimeout(function(){
                   ajaxLoader.addClass('controls-AjaxLoader__showIndication');
@@ -3618,16 +3631,17 @@ define('js!SBIS3.CONTROLS.ListView',
                      allowChangeEnable: false, //Запрещаем менять состояние, т.к. он нужен активный всегда
                      pagingOptions: pagingOptions,
                      handlers: {
-                        'onPageChange': function (event, pageNum, deferred) {
+                        onPageChange: function (event, pageNum, deferred) {
                            var more = self.getItems().getMetaData().more,
                               hasNextPage = self._hasNextPage(more, self._scrollOffset.bottom),
-                              maxPage = self._pager.getPaging()._maxPage;
+                              maxPage = self._pager.getPaging()._maxPage,
+                              lastPage = self._options.navigation && self._options.navigation.lastPage;
                            self._pager._lastPageReached = self._pager._lastPageReached || !hasNextPage;
                            //Старый Paging при включенной частичной навигации по нажатию кнопки "Перейти к последней странице" возвращает pageNum = 0 (у него индексы страниц начинаются с 1)
                            //В новом Pager'e индексация страниц начинается с 0 и такое поведение здесь не подходит
                            //Так же в режиме частичной навигации нет возможности высчитать номер последней страницы, поэтому
                            //при переходе к последней странице делаем так, чтобы мы переключились на последнюю доступную страницу.
-                           if (pageNum == 0 && self._pager._options.pagingOptions.onlyLeftSide){
+                           if (pageNum === 0 && self._pager._options.pagingOptions.onlyLeftSide && !lastPage) { 
                               pageNum = self._pager._lastPageReached ? maxPage : (maxPage + 1);
                            }
 
@@ -3637,6 +3651,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         }
                      }
                   });
+                  self._updateHoveredItemAfterRedraw();
                   self._pagerContainer = self.getContainer().find('.controls-Pager-container');
                   self._updatePaging();
                });
@@ -4452,7 +4467,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                 self = this,
                 keysForRemove = [];
-            colHelpers.forEach(this.getSelectedKeys(), function(key) {
+            this.getSelectedKeys().forEach(function(key) {
                if (!self._getItemProjectionByItemId(key)) {
                   keysForRemove.push(key);
                }

@@ -3,10 +3,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
    "Core/core-merge",
    "Core/Deferred",
    "js!SBIS3.CONTROLS.PickerMixin",
-   "Core/helpers/collection-helpers",
    "Core/core-instance",
    "js!SBIS3.CONTROLS.ControlHierarchyManager"
-], function ( cFunctions, cMerge, Deferred, PickerMixin, colHelpers, cInstance, ControlHierarchyManager) {
+], function ( cFunctions, cMerge, Deferred, PickerMixin, cInstance, ControlHierarchyManager) {
    'use strict';
 
 
@@ -334,11 +333,13 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              changedFields = [],
              items = this._getListItems();
 
-         colHelpers.forEach(filter, function(value, key) {
-            if(value !== self._options.listFilter[key]) {
-               changedFields.push(key);
+         for (var key in filter) {
+            if(filter.hasOwnProperty(key)) {
+               if (filter[key] !== self._options.listFilter[key]) {
+                  changedFields.push(key);
+               }
             }
-         });
+         }
 
          this._options.listFilter = filter;
          this._notifyOnPropertyChanged('listFilter');
@@ -416,7 +417,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          var self = this;
 
          //Подписываемся на события в отслеживаемых контролах
-         colHelpers.forEach(this._options.observableControls, function (control) {
+         this._options.observableControls.forEach(function (control) {
             this.subscribeTo(control, 'onFocusIn', self._observableControlFocusHandler.bind(self));
 
             /* Если фокус уходит на список - вернём его обратно в контрол, с которого фокус ушёл */
@@ -502,11 +503,13 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                options = cFunctions.clone(this._options.list.options);
                component = require(this._options.list.component);
 
-               colHelpers.forEach(DEFAULT_LIST_CONFIG, function(value, key) {
-                  if(!options.hasOwnProperty(key)) {
-                     options[key] = typeof value === 'function' ? value.call(this) : value;
+               for (var key in DEFAULT_LIST_CONFIG) {
+                  if(DEFAULT_LIST_CONFIG.hasOwnProperty(key)) {
+                     if(!options.hasOwnProperty(key)) {
+                        options[key] = typeof DEFAULT_LIST_CONFIG[key] === 'function' ? DEFAULT_LIST_CONFIG[key].call(this) : DEFAULT_LIST_CONFIG[key];
+                     }
                   }
-               }, this);
+               }
 
                /* Сорс могут устанавливать не через сеттер, а через опцию */
                if(options.dataSource !== undefined) {
@@ -737,9 +740,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @private
        */
       _isObservableControlFocused: function() {
-         return colHelpers.find(this._options.observableControls, function(ctrl) {
+         return this._options.observableControls.find(function(ctrl) {
             return ctrl.isActive();
-         }, this, false)
+         })
       },
 
       /**

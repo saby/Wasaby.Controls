@@ -13,14 +13,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        'js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
        'js!SBIS3.CONTROLS.DateRangeRelationController',
        'js!SBIS3.CONTROLS.FilterController',
-       "Core/helpers/collection-helpers",
        "Core/core-instance",
        "Core/helpers/functional-helpers",
        "Core/helpers/Object/find",
        "Core/Deferred",
        "Core/UserConfig"
     ],
-    function (cAbstract, cFunctions, cMerge, constants, HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController, FilterHistoryControllerUntil, DateRangeRelationController, FilterController, colHelpers, cInstance, fHelpers, find, Deferred, UserConfig) {
+    function (cAbstract, cFunctions, cMerge, constants, HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController, FilterHistoryControllerUntil, DateRangeRelationController, FilterController, cInstance, fHelpers, find, Deferred, UserConfig) {
    /**
     * Контроллер для осуществления базового взаимодействия между компонентами.
     *
@@ -51,14 +50,17 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       }
    }
    function drawItemsCallback(operationPanel, view) {
+      var instances = operationPanel.getItemsInstances();
       //TODO: После перехода на экшены, кнопки ни чего знать о view не будут, и этот костыль уйдёт.
-      colHelpers.forEach(operationPanel.getItemsInstances(), function(instance) {
-         if (typeof instance.setLinkedView == 'function') {
-            instance.setLinkedView(view);
-         } else {
-            instance._options.linkedView = view;
+      for (var key in instances) {
+         if (instances.hasOwnProperty(key)) {
+            if (typeof instances[key].setLinkedView == 'function') {
+               instances[key].setLinkedView(view);
+            } else {
+               instances[key]._options.linkedView = view;
+            }
          }
-      }, this)
+      }
    }
 
    /**
@@ -393,12 +395,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
          }
       },
 
-      bindScrollPaging: function(paging) {
+      bindScrollPaging: function(paging, hidden) {
          if (!this._scrollPagingController) {
             this._scrollPagingController = new ScrollPagingController({
                view: this._options.view,
                paging: paging || this._options.paging,
-               zIndex: this._options.pagingZIndex
+               zIndex: this._options.pagingZIndex,
+               hiddenPager: hidden
             });
          }
          this._scrollPagingController.bindScrollPaging();

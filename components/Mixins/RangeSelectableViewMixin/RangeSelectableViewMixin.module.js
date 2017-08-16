@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', ['Core/core-instance', 'Core/helpers/collection-helpers'], function(cInstance, colHelpers) {
+define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', ['Core/core-instance'], function(cInstance) {
    /**
     * Миксин, добавляющий поведение выделения интервала из нескольких фиксированных элементов
     * @mixin SBIS3.CONTROLS.RangeSelectableViewMixin
@@ -328,7 +328,7 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', ['Core/core-instance', 'Cor
             ids = [ids];
          }
 
-         ids = colHelpers.map(ids, function (itemId) {
+         ids = ids.map(function (itemId) {
             return [
                '.',
                this._SELECTABLE_RANGE_CSS_CLASSES.item,
@@ -338,7 +338,7 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', ['Core/core-instance', 'Cor
                itemId,
                '"]'
             ].join('');
-         }.bind(this));
+         }, this);
 
          this._getSelectedRangeItemsContainers().filter(ids.join(',')).addClass(cls);
       },

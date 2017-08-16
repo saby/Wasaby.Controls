@@ -33,7 +33,7 @@ define('js!WSTest/Focus/Scenario/17', [
          wnd.destroy();
          delete window[caseControlName];
          done();
-      }, 50);
+      }, 100);
 
 
    };

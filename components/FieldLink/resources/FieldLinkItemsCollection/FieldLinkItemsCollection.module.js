@@ -8,11 +8,10 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
       'tmpl!SBIS3.CONTROLS.FieldLinkItemsCollection',
       'tmpl!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemTemplate',
       'tmpl!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemContentTemplate',
-      'Core/helpers/collection-helpers',
       'Core/core-instance',
       'Core/helpers/Function/callNext',
       'js!SBIS3.CONTROLS.Utils.ItemsSelection'
-   ], function(CompoundControl, DSMixin, PickerMixin, dotTplFn, defaultItemTemplate, defaultItemContentTemplate, colHelpers, cInstance, callNext, ItemsSelection) {
+   ], function(CompoundControl, DSMixin, PickerMixin, dotTplFn, defaultItemTemplate, defaultItemContentTemplate, cInstance, callNext, ItemsSelection) {
 
       'use strict';
 

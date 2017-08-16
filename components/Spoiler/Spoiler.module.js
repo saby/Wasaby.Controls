@@ -5,10 +5,9 @@ define('js!SBIS3.CONTROLS.Spoiler', [
    'tmpl!SBIS3.CONTROLS.Spoiler',
    'tmpl!SBIS3.CONTROLS.Spoiler/resources/LeftPartTitleTemplate',
    'tmpl!SBIS3.CONTROLS.Spoiler/resources/MiddlePartTitleTemplate',
-   'Core/helpers/collection-helpers',
    'Core/helpers/dom&controls-helpers',
    'css!SBIS3.CONTROLS.Spoiler'
-], function(WSButtonBase, Expandable, TemplateUtil, dotTplFn, LeftPartTitleTemplate, MiddlePartTitleTemplate, colHelpers, dcHelpers) {
+], function(WSButtonBase, Expandable, TemplateUtil, dotTplFn, LeftPartTitleTemplate, MiddlePartTitleTemplate, dcHelpers) {
 
    'use strict';
 
@@ -153,7 +152,7 @@ define('js!SBIS3.CONTROLS.Spoiler', [
          this.reviveComponents();
       },
       _destroyContent: function() {
-         colHelpers.forEach(dcHelpers.findControlsInContainer(this._getContentContainer()), function(item) {
+         dcHelpers.findControlsInContainer(this._getContentContainer()).forEach(function(item) {
             item.destroy();
          });
          dcHelpers.clearContainer(this._getContentContainer());

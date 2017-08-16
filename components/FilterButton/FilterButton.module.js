@@ -13,7 +13,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
    "js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "Core/ParallelDeferred",
-   "Core/helpers/collection-helpers",
    "Core/IoC",
    "Core/helpers/Function/once",
    "Core/detection",
@@ -36,7 +35,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
         FilterToStringUtil,
         TemplateUtil,
         ParallelDeferred,
-        colHelpers,
         IoC,
         once,
         detection
@@ -175,7 +173,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
              _historyController: null,    /* Контроллер для работы с историей */
              _filterTemplates: {},      /* Компонент, который будет отображаться на панели фильтрации */
              _dTemplatesReady: null,
-             _pickerHeight: null,
              _filterLineInitialized: false
           },
 
@@ -241,9 +238,11 @@ define('js!SBIS3.CONTROLS.FilterButton',
 
              this._dTemplatesReady = new ParallelDeferred();
 
-             colHelpers.forEach(TEMPLATES, function(template) {
-                processTemplate(self.getProperty(template), template);
-             });
+             for (var key in TEMPLATES) {
+                if (TEMPLATES.hasOwnProperty(key)) {
+                   processTemplate(self.getProperty(TEMPLATES[key]), TEMPLATES[key]);
+                }
+             }
 
              return this._dTemplatesReady.done().getResult();
           },
@@ -306,41 +305,26 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 return prepTpl(tpl);
              }
 
-             colHelpers.forEach(TEMPLATES, function(template) {
-                templateProperty = self.getProperty(template);
-                config[template] = components[template] ? getCompTpl(templateProperty) : getTpl(templateProperty);
-             });
+             for (var key in TEMPLATES) {
+                if (TEMPLATES.hasOwnProperty(key)) {
+                   templateProperty = self.getProperty(TEMPLATES[key]);
+                   config[TEMPLATES[key]] = components[TEMPLATES[key]] ? getCompTpl(templateProperty) : getTpl(templateProperty);
+                }
+             }
 
              return config;
           },
-
-          /* В текущем состоянии пикер не пересчитывает свои размеры при изменении внутреннего контента.
-             Для этого есть причины:
-             1) Пикер не знает, что именно в нём изменился контент.
-             2) Если принудительно считать, то все пикеры начнут часто прыгать.
-             Вызвать пересчёт - ответственность того, кто вызвал это изменение.
-             Но в кнопке фильтров контент постоянно меняется динамически (фильтры показываются / скрываются / раскрывается история),
-             и эти изменения вызываются стандартыми средствани (show/hide контролов), которые так же не сообщают,
-             где произошли изменения, а просто вызывают onResize. Для этого пишу обработчик, который замеряет высоту пикера,
-             и при её изменении вызывает необходимые расчеты.
-           */
+   
           _onResizeHandler: function() {
-             var picker = this._picker,
-                 pickerContainer = picker && picker.getContainer()[0];
-
-             if (!this._pickerHeight && pickerContainer) {
-                this._pickerHeight = pickerContainer.offsetHeight;
-             }
-
+             var picker = this._picker;
+             
              FilterButton.superclass._onResizeHandler.apply(this, arguments);
-
-             if (pickerContainer && (this._pickerHeight !== pickerContainer.offsetHeight)) {
-                picker.recalcPosition(true);
+      
+             if (picker) {
                 picker._onResizeHandler();
-                this._pickerHeight = pickerContainer.offsetHeight;
              }
           },
-
+   
           _setPickerConfig: function () {
              var context = cContext.createContext(this, {restriction: 'set'}),
                  rootName = this._options.internalContextFilterName,
@@ -361,11 +345,11 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 var visibility = context.getValue(rootName + '/visibility');
 
                 if(!Object.isEmpty(visibility)) {
-                   var showAdittionalBlock = colHelpers.reduce(context.getValue(rootName + '/visibility'), function (result, element) {
-                      return result || element === false;
+                   var showAdditionalBlock = Object.keys(visibility).reduce(function(result, element) {
+                      return result || visibility[element] === false;
                    }, false);
 
-                   context.setValue('additionalFilterVisible', showAdittionalBlock);
+                   context.setValue('additionalFilterVisible', showAdditionalBlock);
                 }
              }
 
@@ -403,7 +387,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
              });
 
              context.subscribe('onFieldsChanged', function() {
-                var changed = colHelpers.reduce(self._filterStructure, function(result, element) {
+                var changed = self._filterStructure.reduce(function(result, element) {
                        return result || !isFieldResetValue(element, element.internalValueField, context.getValue(rootName + '/filter'));
                     }, false);
                 self._changeFieldInternal(rootName + '/filterChanged', changed);
@@ -442,6 +426,20 @@ define('js!SBIS3.CONTROLS.FilterButton',
                       if(e.which === constants.key.esc) {
                          this.hide();
                       }
+                   },
+                   
+                   onResize: function() {
+                      /*  В текущем состоянии пикер не пересчитывает свои размеры при изменении внутреннего контента.
+                          Для этого есть причины:
+                          1) Пикер не знает, что именно в нём изменился контент.
+                          2) Если принудительно считать, то все пикеры начнут часто прыгать.
+                          Вызвать пересчёт - ответственность того, кто вызвал это изменение.
+                          Но в кнопке фильтров контент постоянно меняется динамически (фильтры показываются / скрываются / раскрывается история),
+                          и эти изменения вызываются стандартыми средствани (show/hide контролов), которые так же не сообщают,
+                          где произошли изменения, а просто вызывают onResize. Для этого пишу обработчик, который замеряет высоту пикера,
+                          и при её изменении вызывает необходимые расчеты.
+                       */
+                      this.recalcPosition(true);
                    }
                 }
              };

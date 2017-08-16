@@ -111,18 +111,31 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        * @param {number} pageOrientation 1 - потртетная, 2 - альбомная
        */
       exportHTML: function(fileName, fileType, pageOrientation){
-         var self = this;
+         var
+            self = this,
+            methodName = 'SaveHTML',
+            newCfg;
          this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + fileType);
          this._prepareSerializer().addCallback(function(reportText){
             self._destroyLoadIndicator();
-            var newCfg = {
-               'FileName': fileName,
-               'html': reportText
-            };
+            //В престо и  рознице отключены длительные операции и выгрузка должна производиться по-старому
+            //Через длительные операции производилась только выгрузка в Excel, поэтому проверяем fileType
+            if (!self._isLongOperationsEnabled() && fileType === 'Excel') {
+               methodName = 'СохранитьПоHTMLDWC';
+               newCfg = {
+                  'name': fileName,
+                  'html': reportText
+               };
+            } else {
+               newCfg = {
+                  'FileName': fileName,
+                  'html': reportText
+               };
+            }
             if (fileType === "PDF") {
                newCfg.PageOrientation = typeof pageOrientation === 'number' ? pageOrientation : 1;
             }
-            self.exportFileTransfer(fileType, 'SaveHTML', newCfg);
+            self.exportFileTransfer(fileType, methodName, newCfg);
 
          });
       },
@@ -140,6 +153,11 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          }
          if (pageOrientation) {
             cfg.PageOrientation = pageOrientation;
+         }
+         //В престо и  рознице отключены длительные операции и выгрузка должна производиться по-старому
+         //Через длительные операции производилась только выгрузка в Excel, поэтому проверяем fileType
+         if (!this._isLongOperationsEnabled() && fileType === 'Excel') {
+            methodName = 'СохранитьListDWC';
          }
          this.exportFileTransfer(fileType, methodName || 'SaveList', cfg);
       },
@@ -182,10 +200,14 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
                cfg.PageOrientation = pageOrientation;
             }
          }
-
+         //В престо и  рознице отключены длительные операции и выгрузка должна производиться по-старому
+         //Через длительные операции производилась только выгрузка в Excel, поэтому проверяем fileType
+         if (!this._isLongOperationsEnabled()  && fileType === 'Excel') {
+            methodName = 'СохранитьRSDWC';
+         }
          this.exportFileTransfer(fileType, methodName || 'SaveRecordSet', cfg);
       },
-      /**
+       /**
        * Универсальная выгрузка данных через сервис file-transfer
        * @param object
        * @param methodName
@@ -209,7 +231,9 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             }
             return error;
          });
-         if (object !== "Excel") {
+          //В престо и  рознице отключены длительные операции и выгрузка должна производиться по-старому
+          //Через длительные операции производилась только выгрузка в Excel, поэтому проверяем fileType
+         if (object !== "Excel" || !this._isLongOperationsEnabled()) {
             this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + object);
             exportDeferred.addCallback(function(ds) {
                self.downloadFile(ds.getScalar());
@@ -336,6 +360,9 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             this._loadIndicator.destroy();
             this._loadIndicator = undefined;
          }
+      },
+      _isLongOperationsEnabled: function() {
+         return requirejs.defined('js!SBIS3.Engine.LongOperationsInformer');
       }
    });
 });

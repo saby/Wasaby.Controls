@@ -1,12 +1,11 @@
 define('js!SBIS3.CONTROLS.FilterPanelChooser.BaseList', [
    'js!SBIS3.CONTROLS.FilterPanelChooser.Base',
    'Core/core-functions',
-   'Core/helpers/collection-helpers',
    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.BaseList/resources/ItemTpl',
    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.BaseList/resources/FilterPanelChooserBaseList',
    'js!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.FilterPanelChooser.BaseList'
-], function(FilterPanelChooserBase, cFunctions, colHelpers, itemTpl, chooserTpl) {
+], function(FilterPanelChooserBase, cFunctions, itemTpl, chooserTpl) {
    'use strict';
    /**
     * Базовый класс редактора "Список".

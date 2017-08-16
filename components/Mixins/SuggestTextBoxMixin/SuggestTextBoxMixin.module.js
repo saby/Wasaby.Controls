@@ -88,7 +88,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             /**
              * @cfg {Boolean} Использовать механизм смены неверной раскладки по новому стандарту
              */
-            keyboardLayoutRevertNew: true
+            keyboardLayoutRevertNew: true,
+            // TODO разобраться с множественным вызовом на фокус и клик _observableControlFocusHandler https://online.sbis.ru/opendoc.html?guid=19af9bf9-0d16-4f63-8aa8-6d0ef7ff0799
+            task1174306848: false
          }
       },
       $constructor: function () {
@@ -357,14 +359,14 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
 
          // FIXME костыль до перехода на пикера по фокусную систему
          _inputFocusInHandler: function(event) {
-            this._observableControlFocusHandler(event);
+            !this._options.task1174306848 && this._observableControlFocusHandler(event);
          },
          
          _inputClickHandler: function(e) {
             /* По стандарту клик по полю с автодополнением или получение фокуса при включённом автопоказе (опция autoShow),
                должен вызывать отображение автодополнения. Т.к. если в поле ввода уже стоит фокус, то клик не вызывает никаких
                связанных с фокусом событий, поэтому при клике по полю ввода надо тоже показать автодополнение. */
-            if(this.isActive()) {
+            if(this.isActive() && !this._options.task1174306848) {
                this._observableControlFocusHandler(e);
             }
          },

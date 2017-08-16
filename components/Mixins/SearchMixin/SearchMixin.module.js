@@ -3,10 +3,10 @@
  */
 define('js!SBIS3.CONTROLS.SearchMixin',
     [
-       'Core/helpers/functional-helpers',
+       'Core/helpers/Function/forAliveOnly',
        'Core/CommandDispatcher',
        'js!SBIS3.CONTROLS.Utils.SearchMixin'
-    ], function(fHelpers, CommandDispatcher, SearchMixinUtil) {
+    ], function(forAliveOnly, CommandDispatcher, SearchMixinUtil) {
 
    /**
     * Миксин, добавляющий иконку
@@ -101,7 +101,7 @@ define('js!SBIS3.CONTROLS.SearchMixin',
 
       _startSearch: function(text) {
          this._clearSearchDelay();
-         this._searchDelay = setTimeout(fHelpers.forAliveOnly(function () {
+         this._searchDelay = setTimeout(forAliveOnly(function () {
             this._applySearch(text);
          }, this), this._options.searchDelay);
       },

@@ -74,7 +74,7 @@ define('js!SBIS3.CONTROLS.LongOperationsBunch',
          },
 
          /**
-          * Получить ключ по идентификатору
+          * Получить идентификатор по ключу
           * @public
           * @param {object} key Ключ
           * @return {number}
@@ -120,7 +120,7 @@ define('js!SBIS3.CONTROLS.LongOperationsBunch',
           * Получить список идентификаторов по списку ключей
           * @public
           * @param {object[]} keys Список ключей
-          * @return {any[]}
+          * @return {number[]}
           */
          listIds: function (keys) {
             if (!Array.isArray(keys)) {
@@ -150,21 +150,7 @@ define('js!SBIS3.CONTROLS.LongOperationsBunch',
           * @return {any[]}
           */
          search: function (pattern, inIds) {
-            if (pattern && typeof pattern !== 'object') {
-               throw new TypeError('Argument "pattern" must be an object');
-            }
-            if (inIds && !(Array.isArray(inIds) && inIds.every(function (id) { return typeof id === 'number' && 0 < id; }))) {
-               throw new TypeError('Argument "inIds" must be an array of numbers');
-            }
-            var values = [];
-            var allKeys = !pattern;
-            var allIds = !inIds;
-            for (var id in this._keys) {
-               if ((allIds || inIds.indexOf(+id) !== -1) && (allKeys || _isAgr(this._keys[id], pattern))) {
-                  values.push(this._values[id]);
-               }
-            }
-            return values;
+            return _search(this, pattern, inIds, false);
          },
 
          /**
@@ -201,7 +187,7 @@ define('js!SBIS3.CONTROLS.LongOperationsBunch',
          },
 
          /**
-          * Удалить хранящееся значение по ключу. Возвращается удалённое значение
+          * Удалить хранящееся значение по идентификатору. Возвращается удалённое значение
           * @public
           * @param {number} id Идентификатор
           * @return {any}
@@ -223,26 +209,7 @@ define('js!SBIS3.CONTROLS.LongOperationsBunch',
           * @return {any[]}
           */
          removeAll: function (pattern, inIds) {
-            if (pattern && typeof pattern !== 'object') {
-               throw new TypeError('Argument "pattern" must be an object');
-            }
-            if (inIds && !Array.isArray(inIds)) {
-               throw new TypeError('Argument "inIds" must be an array');
-            }
-            if (inIds && !(Array.isArray(inIds) && inIds.every(function (id) { return typeof id === 'number' && 0 < id; }))) {
-               throw new TypeError('Argument "inIds" must be an array of numbers');
-            }
-            var values = [];
-            var allKeys = !pattern;
-            var allIds = !inIds;
-            for (var id in this._keys) {
-               if ((allIds || inIds.indexOf(id) !== -1) && (allKeys || _isAgr(this._keys[id], pattern))) {
-                  values.push(this._values[id]);
-                  delete this._keys[id];
-                  delete this._values[id];
-               }
-            }
-            return values;
+            return _search(this, pattern, inIds, true);
          }
       });
 
@@ -261,6 +228,40 @@ define('js!SBIS3.CONTROLS.LongOperationsBunch',
          delete self._values[id];
          return value;
       };
+
+      /**
+       * Найти хранящееся значения по заданным критериям. Если указано условие andRemove, то удалить всё найденное. Возвращается список всех найденных значений
+       * @protected
+       * @param {SBIS3.CONTROLS.LongOperationsBunch} self Этот объект
+       * @param {object} pattern Критерии поиска
+       * @param {number[]} inIds Искать только среди этих идентификаторов
+       * @param {boolean} andRemove И удалить всё найденное
+       * @return {any[]}
+       */
+      var _search = function (self, pattern, inIds, andRemove) {
+         if (pattern && typeof pattern !== 'object') {
+            throw new TypeError('Argument "pattern" must be an object');
+         }
+         if (andRemove && typeof andRemove !== 'boolean') {
+            throw new TypeError('Argument "andRemove" must be a boolean');
+         }
+         if (inIds && !(Array.isArray(inIds) && inIds.every(function (id) { return typeof id === 'number' && 0 < id; }))) {
+            throw new TypeError('Argument "inIds" must be an array of numbers');
+         }
+         var values = [];
+         var allKeys = !pattern;
+         var allIds = !inIds;
+         for (var id in self._keys) {
+            if ((allIds || inIds.indexOf(+id) !== -1) && (allKeys || _isAgr(self._keys[id], pattern))) {
+               values.push(self._values[id]);
+               if (andRemove) {
+                  delete self._keys[id];
+                  delete self._values[id];
+               }
+            }
+         }
+         return values;
+      }
 
       /**
        * Проверить значение на соответсвие критериям

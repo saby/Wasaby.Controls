@@ -94,46 +94,9 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
          init: function () {
             LongOperationsList.superclass.init.call(this);
 
-            var self = this;
             this._view = this.getChildControlByName(this._options.listName);
 
-            var titles = {
-               resume: rk('Возобновить'),
-               suspend: rk('Приостановить', 'ДлительныеОперации'),
-               'delete': rk('Удалить')
-            };
-            this._view.setItemsActions([
-               {
-                  name: 'resume',
-                  icon: 'sprite:icon-16 icon-DayForward icon-primary action-hover',
-                  caption: titles.resume,
-                  tooltip: titles.resume,
-                  isMainAction: true,
-                  onActivated: function ($item, id, model) {
-                     self.applyUserAction('resume', model, true);
-                  }
-               },
-               {
-                  name: 'suspend',
-                  icon: 'sprite:icon-16 icon-Pause icon-primary action-hover',
-                  caption: titles.suspend,
-                  tooltip: titles.suspend,
-                  isMainAction: true,
-                  onActivated: function ($item, id, model) {
-                     self.applyUserAction('suspend', model, true);
-                  }
-               },
-               {
-                  name: 'delete',
-                  icon: 'sprite:icon-16 icon-Erase icon-error',
-                  caption: titles['delete'],
-                  tooltip: titles['delete'],
-                  isMainAction: true,
-                  onActivated: function ($item, id, model) {
-                     self.applyUserAction('delete', model, true);
-                  }
-               }
-            ]);
+            //this._view.setItemsActions(this._makeItemsActions(null));
 
             this._bindEvents();
 
@@ -160,7 +123,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                               else {
                                  model.set(evt.changed, evt[evt.changed]);
                               }
-                              self._updateItems(items);
+                              self._checkItems(items);
                               dontReload = true;
                            }
                         }
@@ -192,25 +155,71 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
 
             //Нужно показывать разные действия в зависимости от состояния операции
             this.subscribeTo(this._view, 'onChangeHoveredItem', function (event, item) {
-               if (item.record) {
-                  var instances = this.getItemsActions().getItemsInstances();
-                  for (var itemAction in instances) {
-                     if (instances.hasOwnProperty(itemAction)) {
-                        var status = item.record.get('status');
-
-                        var hide = (itemAction === 'resume' || itemAction === 'suspend')
-                                    && (status === STATUSES.ended || status === STATUSES.running && itemAction === 'resume' || status === STATUSES.suspended && itemAction === 'suspend');
-
-                        /*Прикладной разработчик может запретить показывать операции удаления и остановки*/
-                        if (!hide) {
-                           hide = itemAction === 'suspend' && !item.record.get('canSuspend') || itemAction === 'delete' && !item.record.get('canDelete');
-                        }
-
-                        instances[itemAction][hide ? 'hide' : 'show']();
-                     }
+               var model = item.record;
+               if (model) {
+                  var actions = self._makeItemsActions(model);
+                  var itemsActionsGroup = self._view.getItemsActions();
+                  if (itemsActionsGroup) {
+                     itemsActionsGroup.setItems(actions);
+                  }
+                  else {
+                     self._view.setItemsActions(actions);
                   }
                }
             });
+         },
+
+         /**
+          * Приготовить список доступных действий для указаной модели
+          * @protected
+          * @return {object[]}
+          */
+         _makeItemsActions: function (model) {
+            var actions = [];
+            if (model) {
+               var STATUSES = LongOperationEntry.STATUSES;
+               var self = this;
+               if (model.get('canSuspend') && model.get('status') === STATUSES.running) {
+                  var title = rk(model.get('resumeAsRepeat') ? 'Отменить' : 'Приостановить', 'ДлительныеОперации');
+                  actions.push({
+                     name: 'suspend',
+                     icon: 'sprite:icon-16 icon-Pause icon-primary action-hover',
+                     caption: title,
+                     tooltip: title,
+                     isMainAction: true,
+                     onActivated: function ($item, id, itemModel) {
+                        self.applyUserAction('suspend', itemModel, true);
+                     }
+                  });
+               }
+               if (model.get('canSuspend') && model.get('status') === STATUSES.suspended) {
+                  var title = rk(model.get('resumeAsRepeat') ? 'Повторить' : 'Возобновить');
+                  actions.push({
+                     name: 'resume',
+                     icon: 'sprite:icon-16 icon-DayForward icon-primary action-hover',
+                     caption: title,
+                     tooltip: title,
+                     isMainAction: true,
+                     onActivated: function ($item, id, itemModel) {
+                        self.applyUserAction('resume', itemModel, true);
+                     }
+                  });
+               }
+               if (model.get('canDelete')) {
+                  var title = rk('Удалить');
+                  actions.push({
+                     name: 'delete',
+                     icon: 'sprite:icon-16 icon-Erase icon-error',
+                     caption: title,
+                     tooltip: title,
+                     isMainAction: true,
+                     onActivated: function ($item, id, itemModel) {
+                        self.applyUserAction('delete', itemModel, true);
+                     }
+                  });
+               }
+            }
+            return actions;
          },
 
          /**
@@ -232,10 +241,10 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
          },
 
          /**
-          * Обновить отображаемые элементы списка
+          * Инициировать анимацию и процесс обновления времён выполнения если нужно
           * @public
           */
-         _updateItems: function () {
+         _checkItems: function () {
             var hasRun;
             var items = this._view.getItems();
             if (items && items.getCount()) {
@@ -298,7 +307,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
           */
          reload: function () {
             var promise = this._view.reload().addCallback(function () {
-               this._updateItems();
+               this._checkItems();
             }.bind(this));
             // Индикатор загрузки здесь только приводит к мельканию списка, убрать его
             // Лучше бы конечно, если бы у SBIS3.CONTROLS.ListView была опция "Не показывать индикатор загрузки. Совсем. Никогда."

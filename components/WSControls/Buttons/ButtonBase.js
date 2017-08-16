@@ -10,8 +10,8 @@ define('js!WSControls/Buttons/ButtonBase', [
    'js!SBIS3.CONTROLS.FormWidgetMixin',
    'js!SBIS3.CONTROLS.DataBindMixin',
    'js!SBIS3.CONTROLS.IconMixin',
-   'Core/helpers/string-helpers'
-], function( constants,Control, Clickable, FormWidgetMixin, DataBindMixin, IconMixin, strHelpers) {
+   'Core/helpers/String/escapeHtml'
+], function( constants,Control, Clickable, FormWidgetMixin, DataBindMixin, IconMixin, escapeHtml) {
 
    'use strict';
 
@@ -117,7 +117,7 @@ define('js!WSControls/Buttons/ButtonBase', [
        */
       setCaption: function(caption) {
          if (this._options.escapeCaptionHtml){
-            caption = strHelpers.escapeHtml(caption);
+            caption = escapeHtml(caption);
          }
          this._options.caption = caption || '';
       },
@@ -148,8 +148,11 @@ define('js!WSControls/Buttons/ButtonBase', [
        * Не запускались расчёты авторазмеров
        */
       _setVisibility: function(show) {
-         this._container.toggleClass('ws-hidden', !show);
-         this._isVisible = show;
+         if(show !== this._isVisible){
+            this._container.toggleClass('ws-hidden', !show);
+            this._isVisible = show;
+            this._notifyOnPropertyChanged('visible');
+         }
       }
    });
 

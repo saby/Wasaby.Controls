@@ -309,10 +309,10 @@
       font-size: @DropdownList-picker-menu-font-size;
       .controls-DropdownList__itemTextWrapper {
          max-width: 100%;
+         min-width: 0; //flex hack
          vertical-align: top;
          .controls-DropdownList__item-text {
-            overflow: hidden;
-            white-space: nowrap;
+            .text-overflow();
             color: @DropdownList-picker-menu-item-base-color;
          }
       }

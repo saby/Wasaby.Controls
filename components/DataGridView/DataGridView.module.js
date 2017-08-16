@@ -5,6 +5,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "Core/core-merge",
    "Core/constants",
    "Core/Deferred",
+   "Core/EventBus",
    "js!SBIS3.CONTROLS.ListView",
    "tmpl!SBIS3.CONTROLS.DataGridView",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/rowTpl",
@@ -25,7 +26,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/headColumnTpl",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/SortingTemplate",
-   "Core/helpers/collection-helpers",
    "Core/helpers/Object/isEmpty",
    "Core/helpers/string-helpers",
    "Core/helpers/dom&controls-helpers",
@@ -39,6 +39,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       cMerge,
       constants,
       Deferred,
+      EventBus,
       ListView,
       dotTplFn,
       rowTpl,
@@ -59,7 +60,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
       headColumnTpl,
       GroupTemplate,
       SortingTemplate,
-      colHelpers,
       isEmpty,
       strHelpers,
       dcHelpers,
@@ -840,7 +840,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          } else {
             this._thead = newTHead.insertBefore(body);
          }
-         this.reviveComponents(this._thead);
 
          this._redrawColgroup();
          if (this.hasPartScroll()) {
@@ -853,6 +852,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if (this._options.stickyHeader && !this._options.showHead && this._options.resultsPosition === 'top') {
             this._updateStickyHeader(headData.hasResults);
          }
+         // Смещаем индикатор загрузки вниз на высоту заголовков.
+         this._getAjaxLoaderContainer().css('top', this._thead.outerHeight());
       },
 
       _redrawFoot: function(){
@@ -864,7 +865,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._tfoot.replaceWith(newTFoot);
             this._tfoot = newTFoot;
          }
-         this.reviveComponents(this._tfoot);
          DataGridView.superclass._redrawFoot.call(this);
       },
 
@@ -938,7 +938,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
          table.toggleClass('ws-sticky-header__table', isSticky);
          if (isSticky) {
-            StickyHeaderManager.fixAllChildren(this.getContainer(), table);
+            EventBus.channel('stickyHeader').notify('onForcedStickHeader', this.getContainer());
          } else {
             StickyHeaderManager.unfixOne(table, true);
          }
@@ -1065,7 +1065,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             self = this,
             columns = this._options.enabled ? this._options.columns : [];
          if (!this._options.enabled) {
-            colHelpers.forEach(this._options.columns, function(item) {
+            this._options.columns.forEach(function(item) {
                columns.push(item.allowChangeEnable === false ? item : {});
             });
          }
@@ -1469,6 +1469,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this.redraw();
          } else if(this._options.showHead) {
             this._redrawTheadAndTfoot();
+            this.reviveComponents(this._thead);
+            this.reviveComponents(this._tfoot);
          }
       },
 

@@ -186,8 +186,10 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                this.getTarget().height('');
             },
             _targetTracking: function(trackingHorizontalValues) {
-               this._updateVerticalPosition();
+               //Сначала нужно пересчитывать высоту редактируемой строки, а затем позицию редактора, так как при изменении
+               //высоты меняется и позиция.
                this._recalculateHeight();
+               this._updateVerticalPosition();
                if (trackingHorizontalValues) {
                   this._recalculateWidth();
                   this._updateHorizontalPosition();
@@ -315,9 +317,9 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   editorTop = target.position().top - this.getContainer().position().top;
                   if (this._lastVerticalPosition !== editorTop) {
                      this._lastVerticalPosition = editorTop;
-                     $.each(this._editors, function (id, editor) {
-                        $(editor).css('top', editorTop);
-                     });
+                     for (var i = 0; i < this._editors.length; i++) {
+                        $(this._editors[i]).css('top', editorTop);
+                     }
                   }
                }
             },

@@ -5,12 +5,11 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
    'js!SBIS3.CORE.CompoundControl',
    'tmpl!SBIS3.CONTROLS.OperationsPanel',
    'js!SBIS3.CONTROLS.ItemsControlMixin',
-   'Core/helpers/collection-helpers',
    'Core/core-instance',
    'tmpl!SBIS3.CONTROLS.OperationsPanel/resources/ItemTemplate',
    'Core/moduleStubs',
    'css!SBIS3.CONTROLS.OperationsPanel'
-], function(Control, dotTplFn, ItemsControlMixin, colHelpers, cInstance, ItemTemplate, moduleStubs) {
+], function(Control, dotTplFn, ItemsControlMixin, cInstance, ItemTemplate, moduleStubs) {
 
    var ITEMS_MENU_WIDTH = 28;
 
@@ -156,6 +155,20 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
             if(self._itemsMenu){
                self._updateActionsMenuButtonItems();
             }
+
+            if(self._options.hasItemsMenu){
+               //Следим за кнопками, извне могут менять их видимость и тогда потребудется проверить вместимость
+               self.getItems().each(function(item){
+                  var inst = self.getItemInstance(item.get('name'));
+                  if(inst){
+                     self.subscribeTo(inst, 'onPropertyChanged', function(e, propName){
+                        if(propName === 'visible'){
+                           self._checkCapacity();
+                        }
+                     });
+                  }
+               });
+            }
          });
       },
 
@@ -260,12 +273,17 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          }
       },
       _onSelectedItemsChange: function(idArray) {
+         var
+            instances = this.getItemsInstances(),
+            instance;
          //Прокидываем сигнал onSelectedItemsChange из браузера в кнопки
-         colHelpers.forEach(this.getItemsInstances(), function(instance) {
-            if (typeof instance.onSelectedItemsChange === 'function') {
-               instance.onSelectedItemsChange(idArray);
+         for (instance in instances) {
+            if (instances.hasOwnProperty(instance)) {
+               if (typeof instances[instance].onSelectedItemsChange === 'function') {
+                  instances[instance].onSelectedItemsChange(idArray);
+               }
             }
-         });
+         }
       },
       _onResizeHandler: function(){
          if(this.isVisible()){
@@ -382,13 +400,22 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                   icon: 'sprite:icon-24 icon-ExpandDown icon-primary action-hover',
                   pickerConfig: {
                      closeButton: true,
-                     className: 'controls-operationsPanel__itemsMenu_picker controls-operationsPanel__massMode',
+                     className: 'controls-operationsPanel__itemsMenu_picker',
                      horizontalAlign: {
                         side: 'right',
                         offset: 48
                      }
                   }
                });
+
+               //Инициализируем режим
+               if(self._container.hasClass('controls-operationsPanel__massMode')){
+                  self._itemsMenu.getContainer().addClass('controls-operationsPanel__massMode');
+               }
+               if(self._container.hasClass('controls-operationsPanel__selectionMode')){
+                  self._itemsMenu.getContainer().addClass('controls-operationsPanel__selectionMode');
+               }
+
                self.registerChildControl(self._itemsMenu);
 
                self._itemsMenu._setPickerContent = function() {

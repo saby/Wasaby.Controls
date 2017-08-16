@@ -5,9 +5,8 @@ define('js!SBIS3.CONTROLS.LinkFieldController', [
    'Core/Abstract',
    'Core/Deferred',
    'Core/ParallelDeferred',
-   'Core/helpers/collection-helpers',
    'Core/core-instance'
-], function(Abstract, Deferred, ParallelDeferred, colHelpers, instance){
+], function(Abstract, Deferred, ParallelDeferred, instance){
 
    'use strict';
 
@@ -140,20 +139,24 @@ define('js!SBIS3.CONTROLS.LinkFieldController', [
              self = this;
 
          /* Загрузим сразу все изменения, чтобы применить пачкой */
-         colHelpers.forEach(fieldsToUpdate, function(elem) {
+         fieldsToUpdate.forEach(function(elem) {
             if(elem.value !== null) {
                readDeferred.push(_private.callSourceMethod(self._options.dataSource, elem, self._options.readMetaData).addCallback(function (rec) {
-                  var loadedRecord = _private.prepareRecord(rec);
+                  var
+                     loadedRecord = _private.prepareRecord(rec),
+                     fieldsToChange = self._getFieldsToChange(elem.field, loadedRecord, elem.map);
 
                   /* Запомним изменения, чтобы применить их пачкой */
-                  colHelpers.forEach(self._getFieldsToChange(elem.field, loadedRecord, elem.map), function (value, key) {
-                     updatedFields[value] = loadedRecord.get(key);
-                  });
+                  for (var key in fieldsToChange) {
+                     if(fieldsToChange.hasOwnProperty(key)) {
+                        updatedFields[fieldsToChange[key]] = loadedRecord.get(key);
+                     }
+                  }
 
                   return rec;
                }));
             } else {
-               colHelpers.forEach(self._getFieldsToDelete(elem.field, elem.map), function(value) {
+               self._getFieldsToDelete(elem.field, elem.map).forEach(function(value) {
                   updatedFields[value] = null;
                });
 
@@ -178,20 +181,22 @@ define('js!SBIS3.CONTROLS.LinkFieldController', [
              formatName, correctValue;
 
          if (map) {
-            colHelpers.forEach(map, function(value) {
-               if(value.indexOf(ABSTRACT_FIELD_NAME) !== -1) {
-                  correctValue = value.replace(ABSTRACT_FIELD_NAME, '');
-                  recordFormat.each(function(format) {
-                     formatName = format.getName();
+            for (var key in map) {
+               if (map.hasOwnProperty(key)) {
+                  if(map[key].indexOf(ABSTRACT_FIELD_NAME) !== -1) {
+                     correctValue = map[key].replace(ABSTRACT_FIELD_NAME, '');
+                     recordFormat.each(function(format) {
+                        formatName = format.getName();
 
-                     if(formatName.beginsWith(correctValue)) {
-                        toDelete.push(formatName);
-                     }
-                  })
-               } else {
-                  toDelete.push(value);
+                        if(formatName.beginsWith(correctValue)) {
+                           toDelete.push(formatName);
+                        }
+                     })
+                  } else {
+                     toDelete.push(map[key]);
+                  }
                }
-            });
+            }
          }
 
          return toDelete;
@@ -211,34 +216,36 @@ define('js!SBIS3.CONTROLS.LinkFieldController', [
              recFormatName, loadedRecFormatName, commonFieldPart, correctKey;
 
          if(map) {
-            colHelpers.forEach(map, function (value, key) {
-               /* Если в поле маппинга присутствует разделитель '*',
-                то будем искать этому полю соответствия */
-               if (key.indexOf(ABSTRACT_FIELD_NAME) !== -1) {
-                  correctKey = key.replace(ABSTRACT_FIELD_NAME, '');
+            for (var key in map) {
+               if(map.hasOwnProperty(key)) {
+                  /* Если в поле маппинга присутствует разделитель '*',
+                   то будем искать этому полю соответствия */
+                  if (key.indexOf(ABSTRACT_FIELD_NAME) !== -1) {
+                     correctKey = key.replace(ABSTRACT_FIELD_NAME, '');
 
-                  loadedRecFormat.each(function (format) {
-                     loadedRecFormatName = format.getName();
+                     loadedRecFormat.each(function (format) {
+                        loadedRecFormatName = format.getName();
 
-                     /* Если нашли нужное поле в формате записи,
-                      то надо найти соответствующее поле в формате отслеживаемой записи */
-                     if (loadedRecFormatName.beginsWith(correctKey)) {
-                        /* Выделим общую часть в загруженной записи и в отслеживаемой */
-                        commonFieldPart = loadedRecFormatName.replace(correctKey, '');
+                        /* Если нашли нужное поле в формате записи,
+                         то надо найти соответствующее поле в формате отслеживаемой записи */
+                        if (loadedRecFormatName.beginsWith(correctKey)) {
+                           /* Выделим общую часть в загруженной записи и в отслеживаемой */
+                           commonFieldPart = loadedRecFormatName.replace(correctKey, '');
 
-                        recFormat.each(function (recFormat) {
-                           recFormatName = recFormat.getName();
+                           recFormat.each(function (recFormat) {
+                              recFormatName = recFormat.getName();
 
-                           if (recFormatName.replace(value.replace(ABSTRACT_FIELD_NAME, ''), '') === commonFieldPart) {
-                              toChange[loadedRecFormatName] = recFormatName;
-                           }
-                        });
-                     }
-                  });
-               } else {
-                  toChange[key] = value;
+                              if (recFormatName.replace(map[key].replace(ABSTRACT_FIELD_NAME, ''), '') === commonFieldPart) {
+                                 toChange[loadedRecFormatName] = recFormatName;
+                              }
+                           });
+                        }
+                     });
+                  } else {
+                     toChange[key] = map[key];
+                  }
                }
-            });
+            }
          }
 
          return toChange;
@@ -252,26 +259,24 @@ define('js!SBIS3.CONTROLS.LinkFieldController', [
        * @private
        */
       _processRecordFieldChange: function(event, changes) {
+         var self = this;
          /* За один раз может измениться несколько полей, которые мы отслеживаем,
             надо сразу обновить все пачкой */
-         var fieldsToUpdate =  colHelpers.reduce(changes, function(result, value, field) {
-            /* Ищем среди изменившехся полей,
-               поля, которые мы отслеживаем,
-               если нашли -> добавляем объект с изменившемся полем и его значением */
-            var obsField =  colHelpers.find(this._options.observableFields, function(elem) {
+         var fieldsToUpdate = Object.keys(changes).reduce(function(result, field) {
+            var obsField =  self._options.observableFields.find(function(elem) {
                return elem.field === field;
-            }, this, false);
+            });
 
             if(obsField) {
                result.push({
                   field: field,
-                  value: value,
+                  value: changes[field],
                   map: obsField.map
                });
             }
 
             return result;
-         }, [], this);
+         }, []);
 
 
          if(fieldsToUpdate.length) {

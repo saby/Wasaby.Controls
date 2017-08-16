@@ -18,6 +18,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       'js!WS.Data/Source/DataSet',
       'js!WS.Data/Collection/RecordSet',
       'js!WS.Data/Chain',
+      'js!SBIS3.CONTROLS.LongOperationsConst',
       'js!SBIS3.CONTROLS.LongOperationsTabCalls',
       'js!SBIS3.CONTROLS.LongOperationsCallsPool',
       'js!SBIS3.CONTROLS.LongOperationsBunch',
@@ -27,7 +28,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model'
    ],
 
-   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsTabCalls, LongOperationsCallsPool, LongOperationsBunch, ILongOperationsProducer, LongOperationEntry, LongOperationHistoryItem, Model) {
+   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsConst, LongOperationsTabCalls, LongOperationsCallsPool, LongOperationsBunch, ILongOperationsProducer, LongOperationEntry, LongOperationHistoryItem, Model) {
       'use strict';
 
       /**
@@ -191,7 +192,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             // и limit, имеет другие дополнительные возможности. Поддержка всего этого тут не нужна (и скорее обременительна), поэтому ограничимся
             // более простыми типами
             if (_isDestroyed) {
-               return Deferred.fail('User left the page');
+               return Deferred.fail(LongOperationsConst.ERR_UNLOAD);
             }
             var query = {
                where: null,
@@ -314,7 +315,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                throw new TypeError('Argument "operationId" must be string or number');
             }
             if (_isDestroyed) {
-               return Deferred.fail('User left the page');
+               return Deferred.fail(LongOperationsConst.ERR_UNLOAD);
             }
             if (!tabKey || tabKey === _tabKey) {
                var producer = _producers[prodName];
@@ -391,7 +392,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                throw new TypeError('Argument "filter" must be an object if present');
             }
             if (_isDestroyed) {
-               return Deferred.fail('User left the page');
+               return Deferred.fail(LongOperationsConst.ERR_UNLOAD);
             }
             if (!tabKey || tabKey === _tabKey) {
                var producer = _producers[prodName];
@@ -434,6 +435,23 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          unsubscribe: function (eventType, listener, ctx) {
             if (!_isDestroyed) {
                _channel.unsubscribe(eventType, listener, ctx);
+            }
+         },
+
+         /**
+          * Проверить, можно ли в данный момент ликвидировать экземпляр класса без необратимой потери данных
+          * @public
+          * @return {boolean}
+          */
+         canDestroySafely: function () {
+            if (!_isDestroyed) {
+               for (var n in _producers) {
+                  if (_producers[n].canDestroySafely &&//TODO: ### Это переходный код, удалить позднее
+                        !_producers[n].canDestroySafely()) {
+                     return false;
+                  }
+               }
+               return true;
             }
          },
 
@@ -999,6 +1017,17 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          // И подписаться на события во вкладках
          _tabChannel.subscribe('LongOperations:Manager:onActivity', _tabListener);
          _tabChannel.notify('LongOperations:Manager:onActivity', {type: 'born', tab: _tabKey});
+
+         // Добавить обработчик перед выгрузкой для уведомеления пользователя (если нужно)
+         window.addEventListener('beforeunload', function (evt) {
+            if (!manager.canDestroySafely()) {
+               // Единственное, что сейчас нам дают сделать браузеры и стандарты - показать пользователю стандартное окно браузера
+               // с уведомлением, что при перезагрузке что-то может не сохраниться. Текст сообщения в большинсве случаев будет заменён
+               // на браузерный стандартный, однако если он может быть где-то показан, то пусть будет.
+               evt.returnValue = LongOperationsConst.MSG_UNLOAD;
+               return LongOperationsConst.MSG_UNLOAD;
+            }
+         });
 
          // Добавить обработчик на выгрузку для запуска метода destroy
          window.addEventListener('unload', function () {

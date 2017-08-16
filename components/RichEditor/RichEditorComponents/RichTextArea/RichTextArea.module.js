@@ -18,7 +18,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    'js!WS.Data/Di',
    "js!SBIS3.CONTROLS.Utils.ImageUtil",
    "Core/Sanitize",
-   "Core/helpers/collection-helpers",
    "Core/helpers/fast-control-helpers",
    "Core/helpers/string-helpers",
    'js!SBIS3.CONTROLS.Utils.LinkWrap',
@@ -45,7 +44,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
       Di,
       ImageUtil,
       Sanitize,
-      colHelpers,
       fcHelpers,
       strHelpers,
       LinkWrap,
@@ -608,16 +606,15 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          saveToHistory: function(valParam) {
             var
                self = this,
-               isDublicate = false;
+               isDublicate = false,
+               valBL;
             if (valParam && typeof valParam === 'string' && self._textChanged && self._options.saveHistory) {
                this.getHistory().addCallback(function(arrBL){
-                  if( typeof arrBL  === 'object') {
-                     colHelpers.forEach(arrBL, function (valBL, keyBL) {
-                        if (valParam === valBL) {
-                           isDublicate = true;
-                        }
-                     });
-                  }
+                  arrBL.forEach(function (valBL) {
+                     if (valParam === valBL) {
+                        isDublicate = true;
+                     }
+                  });
                   if (!isDublicate) {
                      self._addToHistory(valParam);
                   }
@@ -764,7 +761,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                this.setActive(true);
             }
             if (typeof smile === 'string') {
-               $.each(smiles, function(i, obj) {
+               smiles.forEach(function(obj) {
                   if (obj.key === smile) {
                      smile = obj;
                      return false;

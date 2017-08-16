@@ -192,7 +192,6 @@
 
 .ws-is-firefox {
    .controls-Button {
-      line-height: calc(@button-line-height~' - 1px');
       .controls-Button__text {
          padding-bottom: 1px;
       }
@@ -202,5 +201,11 @@
       &.controls-Button__big {
          line-height: @button-big-height -  2 * @button-border-width;
       }
+   }
+}
+
+@-moz-document url-prefix() {
+   .controls-Button {
+      line-height: calc(@button-line-height~' - 1px');
    }
 }

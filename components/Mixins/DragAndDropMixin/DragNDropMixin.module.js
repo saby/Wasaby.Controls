@@ -23,12 +23,9 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         // незначительно дополненные
         $(document).bind('mouseup touchend', function(e) {
             EventBusChannel.notify('onMouseup', e);
-            if (DragObject.isDragging()) {
-                //Сбрасывать драгндроп надо после того как выполнились все обработчики, нам неизвестен порядок выполнения
-               // обработчиков может быть что первым mouseup поймает владелец и сбросит драгндроп
-                DragObject.setDragging(false);
-                DragObject.reset();
-            }
+            //Сбрасывать драгндроп надо после того как выполнились все обработчики, нам неизвестен порядок выполнения
+            // обработчиков может быть что первым mouseup поймает владелец и сбросит драгндроп
+            DragObject.reset();
         });
 
         $(document).bind('mousemove touchmove', function (e) {
@@ -99,8 +96,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 /**
                  * @cfg {Boolean} Признак, возможножности перемещения элементов с помощью DragNDrop.
                  */
-                itemsDragNDrop: true,
-                dragClasses: 'dragdropBody ws-unSelectable'
+                itemsDragNDrop: true
             },
             /**
              * @member {Number} Константа, показывающая на сколько пикселей надо сдвинуть мышь, чтобы началось перемещение.
@@ -303,13 +299,14 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                         EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
                     }
                 };
-            if ($(clickEvent.target).closest('.controls-DragNDropMixin__notDraggable', self._getDragContainer().context).length === 0) {
+            if (!DragObject.isInitDragStarter() && $(clickEvent.target).closest('.controls-DragNDropMixin__notDraggable', self._getDragContainer().context).length === 0) {
                this._preparePageXY(clickEvent);
                EventBus.channel('DragAndDropChannel').subscribe('onMousemove', dragStrarter);
                EventBus.channel('DragAndDropChannel').once('onMouseup', function () {
                   EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
                });
                this._preventClickEvent(clickEvent);
+               DragObject.setInitDragStarter(true);
             }
         },
         /**
@@ -511,18 +508,19 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         * @private
         */
        _preventClickEvent: function (e) {
-          e.preventDefault();
-          //снимаем выделение с текста иначе не будут работать клики а выделение не будет сниматься по клику из за preventDefault
-          var sel = window.getSelection();
-          if (sel) {
-             if (sel.removeAllRanges) {
-                sel.removeAllRanges();
-             } else if (sel.empty) {
-                sel.empty();
+          //preventDefault для touchStart запрещает клик, а текст по touch соытиям не выделяется
+          if (e.type == 'mousedown') {
+             e.preventDefault();
+             //снимаем выделение с текста иначе не будут работать клики а выделение не будет сниматься по клику из за preventDefault
+             var sel = window.getSelection();
+             if (sel) {
+                if (sel.removeAllRanges) {
+                   sel.removeAllRanges();
+                } else if (sel.empty) {
+                   sel.empty();
+                }
              }
           }
-          //останавливаем распрастранение, что бы его не поймал дргой контрол с DragNDropMixin
-          e.stopPropagation();
        }
     };
 

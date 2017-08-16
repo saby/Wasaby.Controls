@@ -1,6 +1,5 @@
 define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    'Core/constants',
-   'Core/helpers/collection-helpers',
    'tmpl!SBIS3.CONTROLS.CompositeViewMixin',
    'Core/IoC',
    'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/CompositeItemsTemplate',
@@ -13,7 +12,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/InvisibleItemsTemplate',
    'Core/core-merge',
    'js!SBIS3.CONTROLS.Link'
-], function(constants, collection, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate, ItemsTemplate, InvisibleItemsTemplate, cMerge) {
+], function(constants, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate, ItemsTemplate, InvisibleItemsTemplate, cMerge) {
    'use strict';
    /**
     * Миксин добавляет функционал, который позволяет контролу устанавливать режимы отображения элементов коллекции по типу "Таблица", "Плитка" и "Список".
@@ -514,9 +513,15 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
                parentFnc.apply(this, args);
             }
             else {
-               //TODO когда идет догрузка по скроллу, все перерисовывать слишком дорого - возникли тормоза в контактах, до VDOM вставляем такую проверку
+
                var lastItemsIndex = this._getItemsProjection().getCount() - newItems.length;
-               if ((lastItemsIndex == newItemsIndex) || action == 'rm') {//Если случается событие replace то срабатывает сначала удаление, потом добавление. Если по удалению перерисовывать все, то потом добавление дублирует запись, поэтому проверка на удалени обязательна
+
+               //TODO когда идет догрузка по скроллу, все перерисовывать слишком дорого - возникли тормоза в контактах, до VDOM вставляем такую проверку
+               //1. Если это добавление в конец и на второй странице нет папок
+               //2. Если это удаление
+               // тогда можно отрисовать как обычно
+               // в остальных случаях полная перерисовка
+               if (((lastItemsIndex == newItemsIndex) && (newItems[0].isNode())) || action == 'rm') {
                   parentFnc.apply(this, args);
                }
                else {

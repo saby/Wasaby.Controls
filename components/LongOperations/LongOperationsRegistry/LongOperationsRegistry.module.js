@@ -133,10 +133,10 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
             var longOperationsBrowser = this.getChildControlByName('longOperationsBrowser');
             var view = this._longOpList.getView();//###longOperationsBrowser.getChildControlByName('browserView')
 
-            /*var searh = self.getChildControlByName('browserSearch');
-            this.subscribeTo(searh, 'onSearch', function (evtName, text, force) {
+            /*var search = self.getChildControlByName('browserSearch');
+            this.subscribeTo(search, 'onSearch', function (evtName, text, force) {
                if (!force) {
-                  searh._hideLoadingIndicator();
+                  search._hideLoadingIndicator();
                }
             });*/
 
@@ -156,7 +156,8 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
                      meta.componentOptions = canHasHistory ? {
                         tabKey: item.get('tabKey'),
                         producer: item.get('producer'),
-                        operationId: item.get('id')
+                        operationId: item.get('id'),
+                        isFailed: item.get('isFailed')
                      } : {
                         failedOperation: item
                      };
@@ -165,7 +166,7 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
                }
             });
 
-            this.subscribeTo(view, 'onItemsReady', function () {
+            this.subscribeTo(view, 'onDataLoad'/*'onItemsReady'*/, function () {
                self._previousGroupBy = null;
                var status = self._longOpList.getLinkedContext().getValue('filter/status');
                view.setEmptyHTML(emptyHTMLTpl({title:FILTER_STATUSES[status === undefined ? null : status]}));
