@@ -7,13 +7,13 @@ define('js!SBIS3.CONTROLS.HighCharts', [
    "Core/Deferred",
    "js!SBIS3.CORE.Control",
    "html!SBIS3.CONTROLS.HighCharts",
-   "Core/helpers/functional-helpers",
+   'Core/helpers/Function/forAliveOnly',
    "Core/helpers/dom&controls-helpers",
    "browser!/cdn/highcharts/4.2.7/highcharts-more.js",
    "css!SBIS3.CONTROLS.HighCharts",
    "i18n!SBIS3.CONTROLS.HighCharts"
 ],
-function( SbisService, Query, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTpl, fHelpers, dcHelpers){
+function( SbisService, Query, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTpl, forAliveOnly, dcHelpers){
    'use strict';
 
    function ctxOnFieldChange(e, field, value, init) {
@@ -1048,12 +1048,12 @@ function( SbisService, Query, cHelpers, cFunctions, constants, Deferred,BaseCont
                var source = this._getDataSource(BL[0], BL[1]);
                var query = new Query();
                query.where(this._filters);
-               source.query(query).addCallback(fHelpers.forAliveOnly(function (ds) {
+               source.query(query).addCallback(forAliveOnly(function (ds) {
                   var rs = ds.getAll();
                   /*результат метода пишем в data*/
                   self._sourceData.data = rs;
                   resultDef.callback();
-               }, self)).addErrback(fHelpers.forAliveOnly(function (err) {
+               }, self)).addErrback(forAliveOnly(function (err) {
                   self.hide();
                   resultDef.errback(err);
                }, self));
@@ -1153,7 +1153,7 @@ function( SbisService, Query, cHelpers, cFunctions, constants, Deferred,BaseCont
          }
          this._notify("onFilterChange", changedFilters, this._filters);
 
-         this._getData().addCallback(fHelpers.forAliveOnly(function(){
+         this._getData().addCallback(forAliveOnly(function(){
             /*обновим текущие примененные фильтры*/
             self._updateLoadedFilters();
 
@@ -1170,7 +1170,7 @@ function( SbisService, Query, cHelpers, cFunctions, constants, Deferred,BaseCont
             self._loadingIndicator.addClass('ws-hidden');
             self._drawHighChart();
             def.callback();
-         }, self)).addErrback(fHelpers.forAliveOnly(function(error){
+         }, self)).addErrback(forAliveOnly(function(error){
 
             if (error instanceof Error && !error.canceled) {
                if (!error._isOfflineMode) {//Не показываем ошибку, если было прервано соединение с интернетом
