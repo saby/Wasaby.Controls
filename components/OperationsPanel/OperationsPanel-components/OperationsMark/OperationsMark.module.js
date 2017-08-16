@@ -76,6 +76,11 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
       },
       init: function() {
          OperationsMark.superclass.init.call(this);
+      },
+      _bindEvents: function() {
+         //Обычно ПМО сама прокидывает onSelectedItemsChange, но люди используют OperationsMark вне ПМО
+         //Так что подписываемся на событие onSelectedItemsChange у linkedView
+         this._options.linkedView.subscribe('onSelectedItemsChange', this._updateMark.bind(this));
          this.subscribe('onMenuItemActivate', this._onMenuItemActivate.bind(this));
       },
       _parseItem: function(item) {
@@ -90,9 +95,6 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
       addItem: function(item) {
          this._parseItem(item);
          OperationsMark.superclass.addItem.apply(this, [item]);
-      },
-      onSelectedItemsChange: function() {
-         this._updateMark();
       },
       /**
        * Метод установки или замены связанного представления данных.
@@ -109,6 +111,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
                self.getItemInstance('selectAll').toggle(linkedView._options.infiniteScroll);
                self.getPicker().getContainer().find('.controls-MenuLink__header').toggleClass('ws-hidden', !self._options.caption);
             });
+            this._bindEvents();
             this._updateMark();
          }
       },
