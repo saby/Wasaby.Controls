@@ -427,8 +427,10 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                      focusedControl.setActive(false, false, false, this);
                      this.setActive(true);
                   } else if (self._options.autoShow && focusedControl && !ControlHierarchyManager.checkInclusion(this, focusedControl.getContainer()[0])) {
-                     /* Когда уходит фокус с поля ввода, необходимо очистить записи в списке, т.к. записи могут удалять/изменять */
-                     self._list.getItems() && self._list.getItems().clear();
+                     focusedControl && focusedControl.once('onFocusIn', function() {
+                        /* Когда уходит фокус с поля ввода, необходимо очистить записи в списке, т.к. записи могут удалять/изменять */
+                        self._list.getItems() && self._list.getItems().clear();
+                     });
                   }
                }
             });
