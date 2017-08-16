@@ -2,7 +2,7 @@
             {{ multiselect !== false ? 'controls-ListView__multiselect' : 'controls-ListView__multiselect__off' }}
             {{ startScrollColumn !== undefined ? 'controls-DataGridView__with-partScroll' }}
             {{ 'controls-CompositeView-' + viewMode }}
-            {{ viewMode === 'tile' ? ('controls-CompositeView-tile__' + tileMode) }}">
+            {{ viewMode === 'tile' ? ('controls-CompositeView-tile__' + tileMode) }}{{ _serverRender ? ' controls-ListView__dataLoaded'}}">
    <ws:SBIS3.CONTROLS.Panel tabindex="{{1}}" class="controls-ListView__fakeFocusElement"/>
    <div class="controls-AjaxLoader ws-hidden">
       <div class="controls-AjaxLoader__outer">

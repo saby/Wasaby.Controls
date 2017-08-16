@@ -9,11 +9,11 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
    "Core/Abstract",
    "Core/helpers/string-helpers",
    "Core/Deferred",
-   "Core/helpers/functional-helpers",
+   "Core/helpers/Function/forAliveOnly",
    "Core/IoC",
    "Core/constants",
    "js!SBIS3.CORE.LocalStorage"
-], function(EventBus, cSessionStorage, SBISUserConfigStorage, SBISClientsGlobalConfigStorage, cAbstract, strHelpers, Deferred, fHelpers, IoC, constants, LocalStorage ) {
+], function(EventBus, cSessionStorage, SBISUserConfigStorage, SBISClientsGlobalConfigStorage, cAbstract, strHelpers, Deferred, forAliveOnly, IoC, constants, LocalStorage ) {
 
    'use strict';
 
@@ -200,7 +200,7 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
          if (!this.isNowSaving()) {
             this._saveParamsDeferred = new Deferred();
 
-            this._setStorageValue(this._history).addCallback(fHelpers.forAliveOnly(function(res) {
+            this._setStorageValue(this._history).addCallback(forAliveOnly(function(res) {
                self._saveParamsDeferred.callback();
                return res;
             }, self));
