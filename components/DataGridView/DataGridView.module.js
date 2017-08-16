@@ -5,6 +5,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "Core/core-merge",
    "Core/constants",
    "Core/Deferred",
+   'Core/detection',
    "Core/EventBus",
    "js!SBIS3.CONTROLS.ListView",
    "tmpl!SBIS3.CONTROLS.DataGridView",
@@ -39,6 +40,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       cMerge,
       constants,
       Deferred,
+      cDetection,
       EventBus,
       ListView,
       dotTplFn,
@@ -814,7 +816,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _redrawHead : function() {
          var
             headData,
-            headMarkup;
+            headMarkup,
+            height,
+            styles;
 
          if (!this._thead) {
             this._bindHead();
@@ -853,7 +857,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._updateStickyHeader(headData.hasResults);
          }
          // Смещаем индикатор загрузки вниз на высоту заголовков.
-         this._getAjaxLoaderContainer().css('top', this._thead.outerHeight());
+         height = this._thead.outerHeight();
+         styles = {top: height || ''};
+         if (cDetection.webkit) {
+            styles.height =  height ? 'calc(100% - ' + height + 'px)' : '';
+         }
+         this._getAjaxLoaderContainer().css(styles);
       },
 
       _redrawFoot: function(){
