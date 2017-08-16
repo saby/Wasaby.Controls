@@ -3205,7 +3205,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      var state = this._loadQueue[loadId],
                         hasNextPage;
                      if (this._options.navigation && this._options.navigation.type == 'cursor') {
-                        this._listNavigation.analizeResponceParams(dataSet);
+                        this._listNavigation.analyzeResponseParams(dataSet);
                         hasNextPage = this._listNavigation.hasNextPage(state.mode);
                      }
                      else {
@@ -3527,7 +3527,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _onDataLoad: function(list) {
             if (this._options.navigation && this._options.navigation.type == 'cursor') {
-               this._listNavigation.analizeResponceParams(list);
+               this._listNavigation.analyzeResponseParams(list);
             }
          },
 
