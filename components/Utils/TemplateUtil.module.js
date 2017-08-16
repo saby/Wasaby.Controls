@@ -19,8 +19,13 @@ define('js!SBIS3.CONTROLS.Utils.TemplateUtil', [], function() {
          switch (typeof tpl) {
             case 'string' :
                template = tpl.indexOf('html!') === 0 || tpl.indexOf('tmpl!') === 0 ?
-                   global.requirejs(tpl) :
-                  (window.doT ? doT.template(tpl) : tpl);
+                  global.requirejs(tpl) :
+                  /**
+                  * Если в строке нет ничего, что похоже на dot,
+                  * то и не будем преобразовывать строку. 
+                  * Это обезопасит от ситуации, когда doT нет.
+                  */
+                  (/{{/.test(tpl) ? doT.template(tpl) : tpl);
                break;
             case 'function' :
                template = tpl;
