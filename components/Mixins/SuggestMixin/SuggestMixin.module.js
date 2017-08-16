@@ -435,6 +435,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                         // если фокус переходит на другой компонент, дождемся этого перехода фокуса, и только потом почистим items.
                         // если так не сделать, преждевременно сработает механизм восстановления фокуса, в случае safari это приводит к ошибке
                         // https://online.sbis.ru/opendoc.html?guid=aa909af6-3564-4fed-ac60-962fc71b451e
+                        // утечки памяти тут не произойдет, потому что мы попали сюда в процессе перехода активности на focusedControl,
+                        // и после onFocusOut сразу должен сработать onFocusIn в focusedControl
                         focusedControl.once('onFocusIn', clearItems);
                      } else {
                         clearItems();
