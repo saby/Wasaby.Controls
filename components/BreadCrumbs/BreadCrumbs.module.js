@@ -131,6 +131,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       },
 
       _onClickHandler: function(e, fromDropdown) {
+         var
+            crumbId, crumbPath, items, item, idx;
          if (this.isEnabled()){
             BreadCrumbs.superclass._onClickHandler.apply(this, arguments);
             var target = $(e.target),
@@ -140,8 +142,18 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
                e.stopPropagation();
             } else {
                if (crumb.length) {
-                  this._notify('onItemClick', crumb.data('id'));
-                  this.sendCommand('BreadCrumbsItemClick', crumb.data('id'));
+                  crumbId = crumb.data('id');
+                  crumbPath = [];
+                  items = this.getItems();
+                  idx = 0;
+                  do {
+                     item = items.at(idx)
+                     crumbPath.push(item.getId());
+                     idx ++;
+                  } while (item.getId() != crumbId && idx < items.getCount());
+
+                  this._notify('onItemClick', crumbId);
+                  this.sendCommand('BreadCrumbsItemClick', crumbId, crumbPath);
                   e.stopPropagation();
                }
             }

@@ -96,8 +96,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 /**
                  * @cfg {Boolean} Признак, возможножности перемещения элементов с помощью DragNDrop.
                  */
-                itemsDragNDrop: true,
-                dragClasses: 'dragdropBody ws-unSelectable'
+                itemsDragNDrop: true
             },
             /**
              * @member {Number} Константа, показывающая на сколько пикселей надо сдвинуть мышь, чтобы началось перемещение.
@@ -509,14 +508,17 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         * @private
         */
        _preventClickEvent: function (e) {
-          e.preventDefault();
-          //снимаем выделение с текста иначе не будут работать клики а выделение не будет сниматься по клику из за preventDefault
-          var sel = window.getSelection();
-          if (sel) {
-             if (sel.removeAllRanges) {
-                sel.removeAllRanges();
-             } else if (sel.empty) {
-                sel.empty();
+          //preventDefault для touchStart запрещает клик, а текст по touch соытиям не выделяется
+          if (e.type == 'mousedown') {
+             e.preventDefault();
+             //снимаем выделение с текста иначе не будут работать клики а выделение не будет сниматься по клику из за preventDefault
+             var sel = window.getSelection();
+             if (sel) {
+                if (sel.removeAllRanges) {
+                   sel.removeAllRanges();
+                } else if (sel.empty) {
+                   sel.empty();
+                }
              }
           }
        }

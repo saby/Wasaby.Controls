@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
    'js!SBIS3.CONTROLS.TextBoxUtils',
    'Core/Sanitize',
    'Core/helpers/dom&controls-helpers',
-   'Core/helpers/functional-helpers',
+   'Core/helpers/Function/forAliveOnly',
    'js!SBIS3.CONTROLS.ControlHierarchyManager',
    'js!SBIS3.CONTROLS.IconButton',
    'css!SBIS3.CONTROLS.TextBox'
@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
     TextBoxUtils,
     Sanitize,
     dcHelpers,
-    fHelpers,
+    forAliveOnly,
     ControlHierarchyManager) {
 
    'use strict';
@@ -321,7 +321,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _keyboardDispatcher: function(event){
-         return fHelpers.forAliveOnly(function(event){
+         return forAliveOnly(function(event){
             var result = true;
             switch (event.type) {
                case 'keydown':

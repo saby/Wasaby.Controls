@@ -108,6 +108,10 @@ define('js!SBIS3.CONTROLS.BackButton',
                e.stopPropagation();
             } else {
                self._notify('onActivated');
+               if (!!self._options.command && self.isEnabled()) {
+                  var args = [self._options.command].concat(self._options.commandArgs);
+                  self.sendCommand.apply(self, args);
+               }
             }
          });
          this._link.subscribe('onActivated', function(){
