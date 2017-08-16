@@ -421,16 +421,21 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
             /* Если фокус уходит на список - вернём его обратно в контрол, с которого фокус ушёл */
             this.subscribeTo(control, 'onFocusOut', function(e, destroyed, focusedControl) {
+               function clear() {
+                  /* Когда уходит фокус с поля ввода, необходимо очистить записи в списке, т.к. записи могут удалять/изменять */
+                  self._list.getItems() && self._list.getItems().clear();
+               }
                /* Если фокус ушёл на список, или на дочерний контрол списка - возвращаем обратно в поле ввода */
                if(self._list) {
                   if (self._list === focusedControl || ~Array.indexOf(self._list.getChildControls(), focusedControl)) {
                      focusedControl.setActive(false, false, false, this);
                      this.setActive(true);
                   } else if (self._options.autoShow && focusedControl && !ControlHierarchyManager.checkInclusion(this, focusedControl.getContainer()[0])) {
-                     focusedControl && focusedControl.once('onFocusIn', function() {
-                        /* Когда уходит фокус с поля ввода, необходимо очистить записи в списке, т.к. записи могут удалять/изменять */
-                        self._list.getItems() && self._list.getItems().clear();
-                     });
+                     if (focusedControl) {
+                        focusedControl.once('onFocusIn', clear);
+                     } else {
+                        clear();
+                     }
                   }
                }
             });
