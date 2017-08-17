@@ -1,5 +1,5 @@
 #!groovy
-{ -> }
+{ -> build()}
 def build() {
     
     properties([
