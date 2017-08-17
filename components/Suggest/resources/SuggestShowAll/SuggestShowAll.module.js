@@ -22,7 +22,8 @@ define('js!SBIS3.CONTROLS.SuggestShowAll',
                 autoWidth: false,
                 autoHeight: false,
                 width: '700px',
-                height: '500px'
+                height: '500px',
+                itemsDragNDrop: 'allow'
              }
           },
           $constructor: function () {
