@@ -25,7 +25,7 @@ properties([
             name: 'branch_atf'),
         choice(
             choices: [
-                '',
+                ' ',
                 'fieldlink', 
                 'filterbutton', 
                 'atplace', 
@@ -41,7 +41,7 @@ properties([
                 name: 'Tag1'),
         choice(
             choices: [
-                '',
+                ' ',
                 'fieldlink', 
                 'filterbutton', 
                 'atplace', 
@@ -57,7 +57,7 @@ properties([
                 name: 'Tag2'),
         choice(
             choices: [
-                '',
+                ' ',
                 'fieldlink', 
                 'filterbutton', 
                 'atplace', 
