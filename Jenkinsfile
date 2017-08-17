@@ -47,6 +47,8 @@ node('controls') {
     def SDK = ""
     def items_1 = ""
 
+    sh "python3 -c 'import os; print(dict(filter(lambda x: 'env.' in x[0], dict(os.environ).items())))'"
+    
     echo "${env.JOB_NAME}"
     def TAGS = ""
     if ("${env.Tag1}" != "0")
@@ -59,7 +61,21 @@ node('controls') {
         TAGS = "--TAGS_TO_START ${TAGS}"
         
     stage("Checkout"){
-
+        // Контролы
+        dir("${env.WORKSPACE}") {
+            checkout([$class: 'GitSCM', 
+               branches: [[name: "${env.JOB_NAME}"]], 
+               doGenerateSubmoduleConfigurations: false, 
+               extensions: [[
+                   $class: 'RelativeTargetDirectory', 
+                   relativeTargetDir: "controls"
+                ]], 
+                submoduleCfg: [], 
+                userRemoteConfigs: [[
+                    credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b', 
+                    url: 'git@git.sbis.ru:sbis/controls.git']]
+            ]) 
+        }
         // Выкачиваем platform
         dir("${env.WORKSPACE}") {
             checkout([$class: 'GitSCM', 
