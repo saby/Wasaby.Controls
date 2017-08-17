@@ -32,6 +32,7 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
       var DEFAULTS = {
          status: STATUSES.running,
          timeSpent: 0,
+         timeIdle: 0,
          progressCurrent: 0,
          progressTotal: 1,
          canDelete: true,
@@ -49,6 +50,7 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
          producer: 'string',
          startedAt: 'Date',
          timeSpent: 'number',
+         timeIdle: 'number',
          status: 'number',
          isFailed: 'boolean',
          progressTotal: 'number',
@@ -91,6 +93,7 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
           * @param {string}        options.producer Имя продюсера операции (обязательный)
           * @param {Date|number|string} options.startedAt Время начала операции (обязательный)
           * @param {number}        [options.timeSpent] Общее время выполнения (опционально, если не указано, будет использован 0)
+          * @param {number}        [options.timeIdle] Общее время простоя (опционально, если не указано, будет использован 0)
           * @param {string|number} [options.status] Статус операции. Возможные значения: 'running', 0, 'suspended', 1, 'ended', 2.
           *                                         (опционально, если не указано, будет использовано 'running')
           * @param {boolean}       [options.isFailed] Показывает, что операция завершена с ошибкой (опционально)
