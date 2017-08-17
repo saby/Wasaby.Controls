@@ -335,7 +335,9 @@ node('controls') {
             BASE_VERSION = css_${NODE_NAME}${ver}1
             RUN_REGRESSION=True
             server_address = http://10.76.159.209:4444/wd/hub
-            CHROME_BINARY_LOCATION=C:\\chrome64_58\\chrome.exe"""
+            CHROME_BINARY_LOCATION=C:\\chrome64_58\\chrome.exe
+            [regression]
+            IMAGE_DIR = capture_${env.theme}"""
     }
 
     stage("Инт.тесты"){
