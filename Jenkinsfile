@@ -25,7 +25,7 @@ properties([
             name: 'branch_atf'),
         choice(
             choices: [
-                ' ',
+                '0',
                 'fieldlink', 
                 'filterbutton', 
                 'atplace', 
@@ -41,7 +41,7 @@ properties([
                 name: 'Tag1'),
         choice(
             choices: [
-                ' ',
+                '0',
                 'fieldlink', 
                 'filterbutton', 
                 'atplace', 
@@ -57,7 +57,7 @@ properties([
                 name: 'Tag2'),
         choice(
             choices: [
-                ' ',
+                '0',
                 'fieldlink', 
                 'filterbutton', 
                 'atplace', 
@@ -85,13 +85,13 @@ node('controls') {
 
     echo "${env.JOB_NAME}"
     def TAGS = ""
-    if ("${Tag1}" != "")
+    if ("${Tag1}" != "0")
         TAGS = "${Tag1}"
-    if ("${Tag2}" != "")
+    if ("${Tag2}" != "0")
         TAGS = "${TAGS}, ${Tag2}"
-    if ("${Tag3}" !="")
+    if ("${Tag3}" !="0")
         TAGS = "${TAGS}, ${Tag3}"
-    if ("${TAGS}" != "")
+    if ("${TAGS}" != "0")
         TAGS = "--TAGS_TO_START ${TAGS}"
         
     stage("Checkout"){
