@@ -367,8 +367,7 @@ node('controls') {
             dir("./controls/tests/reg"){
                 sh """
                     source /home/sbis/venv_for_test/venv_for_test/bin/activate
-                    #python start_tests.py --RESTART_AFTER_BUILD_MODE
-                    python start_tests.py --STREAMS_NUMBER 20 --BROWSER ${browser_type} --SITE http://${NODE_NAME}:7777 --FAIL_TEST_REPEAT_TIMES 0 --DO_NOT_RESTART True --SOFT_RESTART False --NO_RESOURCES True --DELAY_RUN_TESTS 2 --ELEMENT_OUTPUT_LOG locator --WAIT_ELEMENT_LOAD 20 --HTTP_PATH http://${NODE_NAME}:2100/${JOB_NAME}/controls/tests/reg/ --SERVER_ADDRESS http://usd-prog130:4444/wd/hub --RUN_REGRESSION True --USER_OPTIONS TAGS_NOT_TO_START=iOSOnly SERVER=test-autotest-db1 BASE_VERSION=css_${NODE_NAME}${ver}1 CHROME_BINARY_LOCATION=C:\\chrome64_58\\chrome.exe
+                    python start_tests.py --RESTART_AFTER_BUILD_MODE
                     deactivate
                 """
             }
