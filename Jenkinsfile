@@ -47,8 +47,8 @@ node('controls') {
     def SDK = ""
     def items_1 = ""
 
-    sh "python3 -c 'import os; print(dict(filter(lambda x: 'env.' in x[0], dict(os.environ).items())))'"
-    
+    sh "python3 -c 'import os; print(dict(filter(lambda x: \'env.\' in x[0], dict(os.environ).items())))'"
+
     echo "${env.JOB_NAME}"
     def TAGS = ""
     if ("${env.Tag1}" != "0")
