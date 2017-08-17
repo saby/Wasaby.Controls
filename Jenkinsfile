@@ -337,7 +337,7 @@ node('controls') {
             server_address = http://10.76.159.209:4444/wd/hub
             CHROME_BINARY_LOCATION=C:\\chrome64_58\\chrome.exe
             [regression]
-            IMAGE_DIR = capture_${env.theme}"""
+            IMAGE_DIR = capture"""
     }
 
     stage("Инт.тесты"){
