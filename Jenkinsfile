@@ -24,19 +24,19 @@ properties([
             description: '',
             name: 'branch_atf'),
         choice(
-            choices: "/nfieldlink/nfilterbutton/natplace/nformcontroller/nglobalpanel/nrichedit/nmove/nscroll/nsearch/nprint/nmerge",
+            choices: "\nfieldlink\nfilterbutton\natplace\nformcontroller\nglobalpanel\nrichedit\nmove\nscroll\nsearch\nprint\nmerge",
             description: '',
             name: 'Tag1'),
         choice(
-            choices: "/nfieldlink/nfilterbutton/natplace/nformcontroller/nglobalpanel/nrichedit/nmove/nscroll/nsearch/nprint/nmerge",
+            choices: "\nfieldlink\nfilterbutton\natplace\nformcontroller\nglobalpanel\nrichedit\nmove\nscroll\nsearch\nprint\nmerge",
             description: '',
             name: 'Tag2'),
         choice(
-            choices: "/nfieldlink/nfilterbutton/natplace/nformcontroller/nglobalpanel/nrichedit/nmove/nscroll/nsearch/nprint/nmerge",
+            choices: "\nfieldlink\nfilterbutton\natplace\nformcontroller\nglobalpanel\nrichedit\nmove\nscroll\nsearch\nprint\nmerge",
             description: '',
             name: 'Tag3'),  
-        choice(choices: ['chrome', 'ff'], description: '', name: 'browser_type'),
-        choice(choices: ['all', 'only_reg', 'only_int'], description: '', name: 'run_tests')]),
+        choice(choices: "chrome\nff", description: '', name: 'browser_type'),
+        choice(choices: "all\nonly_reg\nonly_int", description: '', name: 'run_tests')]),
     pipelineTriggers([])
 ])
 
@@ -245,7 +245,7 @@ node('controls') {
             
         sh """
             cd ./jinnee/distrib/builder
-            node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/jenkins/jenkins_p/workspace/Controls1 --application=/
+            node .\node_modules/grunt-cli/bin/grunt custompack --root=/home/jenkins/jenkins_p/workspace/Controls1 --application=/
         """ 
     }
     writeFile file: "./controls/tests/int/config.ini", text: 
