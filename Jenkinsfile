@@ -49,13 +49,13 @@ node('controls') {
 
     echo "${env.JOB_NAME}"
     def TAGS = ""
-    if ("${env.Tag1}" != "0")
+    if ("${env.Tag1}" != "")
         TAGS = "${env.Tag1}"
-    if ("${env.Tag2}" != "0")
+    if ("${env.Tag2}" != "")
         TAGS = "${TAGS}, ${env.Tag2}"
-    if ("${env.Tag3}" !="0")
+    if ("${env.Tag3}" !="")
         TAGS = "${TAGS}, ${env.Tag3}"
-    if ("${TAGS}" != "0")
+    if ("${TAGS}" != "")
         TAGS = "--TAGS_TO_START ${TAGS}"
 
     stage("Checkout"){
@@ -321,8 +321,8 @@ node('controls') {
             sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
             dir("./controls/tests/reg"){
                 sh """
-                    source /home/jenkins/jenkins_p/venv/venv_for_test/bin/activate
-                    python start_tests.py  --STREAMS_NUMBER 20 --BROWSER ${env.browser_type} --SITE http://${NODE_NAME}:7777 --FAIL_TEST_REPEAT_TIMES 0 --DO_NOT_RESTART True --SOFT_RESTART False --NO_RESOURCES True --DELAY_RUN_TESTS 2 --ELEMENT_OUTPUT_LOG locator --WAIT_ELEMENT_LOAD 20 --HTTP_PATH http://${NODE_NAME}:2100/${JOB_NAME}/controls/tests/reg/ --SERVER_ADDRESS http://usd-prog130:4444/wd/hub --RUN_REGRESSION True CHROME_BINARY_LOCATION=C:\\chrome64_58\\chrome.exe
+                    source /home/sbis/venv_for_test/venv_for_test/bin/activate
+                    python start_tests.py --RESTART_AFTER_BUILD_MODE
                     deactivate
                 """
             }
