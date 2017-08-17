@@ -343,9 +343,9 @@ node('controls') {
             def site = "http://${NODE_NAME}:7777"
             site.trim()
             if ( "${TAGS}" != "") {
-               def run_tags="--TAGS_TO_START ${TAGS}"
+               def run_tags = "--TAGS_TO_START ${TAGS}"
             } else {
-               def run_tags=""
+               def run_tags = " "
             }
             dir("./controls/tests/int"){
                 sh """
