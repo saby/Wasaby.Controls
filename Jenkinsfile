@@ -342,10 +342,13 @@ node('controls') {
         if ("${env.run_tests}" != "only_reg"){
             def site = "http://${NODE_NAME}:7777"
             site.trim()
+            if ( "${TAGS}" != "") {
+               def run_tags="--TAGS_TO_START ${TAGS}"
+            }
             dir("./controls/tests/int"){
                 sh """
                 source /home/sbis/venv_for_test/venv_for_test/bin/activate
-                python start_tests.py --RESTART_AFTER_BUILD_MODE --TAGS_TO_START ${TAGS}
+                python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_tags}
                 deactivate
                 """
             }
