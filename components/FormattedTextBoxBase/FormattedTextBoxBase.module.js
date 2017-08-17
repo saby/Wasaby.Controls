@@ -334,21 +334,35 @@ define(
        * Задать положение курсора
        * @param groupNum индекс группы относительно других групп и разделителей
        * @param position позиция в группе
+       * @param {boolean} [isShiftGroupRight=true] осуществлять ли сдвиг курсора вправо если он стоит перед разделителем
        * @returns {boolean} true если курсор установлен
        */
-      setCursor: function(groupNum, position) {
-         var insertInfo;
+      setCursor: function(groupNum, position, isShiftGroupRight) {
+         if (typeof isShiftGroupRight === 'undefined') {
+            isShiftGroupRight = true;
+         }
+         var insertInfo,
+            group,
+            isValidCursor = true;
          if ( !this.model  ||  this.model.length === 0) {
             throw new Error('setCursor. Не задана модель');
          }
-         insertInfo = this._calcPosition(groupNum, position);
-         if (!insertInfo) {
-            return false;
+         group = this.model[groupNum];
+         if (isShiftGroupRight) {
+            insertInfo = this._calcPosition(groupNum, position);
+            if (insertInfo) {
+               this._options.cursorPosition.group = insertInfo.groupNum;
+               this._options.cursorPosition.position = insertInfo.position;
+            } else {
+               isValidCursor = false;
+            }
+         } else if (group && group.isGroup && group.mask.length >= position && position >= 0) {
+            this._options.cursorPosition.group = groupNum;
+            this._options.cursorPosition.position = position;
+         } else {
+            isValidCursor = false;
          }
-         this._options.cursorPosition.group = insertInfo.groupNum;
-         this._options.cursorPosition.position = insertInfo.position;
-
-         return true;
+         return isValidCursor;
       },
       /**
        * Проверяет подходит ли символ группе в заданной позиции
@@ -1080,6 +1094,7 @@ define(
        * В остальных случаях управлять положением курсора не требуется.
        * @param {Number} groupNum Номер контейнера.
        * @param {Number} position Позиция в контейнере.
+       * @param {Boolean} [isShiftGroupRight=true] осуществлять ли сдвиг курсора вправо если он стоит перед разделителем
        * @returns {Boolean} Положение курсора.
        * @example
        * По завершению ввода добавим в конец маски группу из 3 цифр
@@ -1100,13 +1115,20 @@ define(
        * @see setMask
        * @see onInputFinished
        */
-      setCursor: function(groupNum, position) {
-         var formatModel = this._getFormatModel();
-         if (!formatModel.setCursor(groupNum, position)) {
+      setCursor: function(groupNum, position, isShiftGroupRight) {
+         var formatModel = this._getFormatModel(),
+            currentGroup = formatModel._options.cursorPosition.group,
+            newContainer,
+            currentPosition = formatModel._options.cursorPosition.position;
+         if (!formatModel.setCursor(groupNum, position, isShiftGroupRight)) {
             return false;
          }
-         formatModel._options.newContainer = _getContainerByIndex.call(this, formatModel._options.cursorPosition.group);
+         newContainer = _getContainerByIndex.call(this, formatModel._options.cursorPosition.group);
+         formatModel._options.newContainer = newContainer;
          formatModel._options.newPosition = formatModel._options.cursorPosition.position;
+         if (currentGroup !== groupNum || currentPosition !== position) {
+            _moveCursor(newContainer, formatModel._options.cursorPosition.position);
+         }
       },
 
       /**
@@ -1148,9 +1170,11 @@ define(
        * @see setCursor
        */
       setMask: function(mask) {
-         var self = this;
+         var self = this,
+            formatModel = this._getFormatModel();
          this._options.mask = mask;
-         this._getFormatModel().setMask(mask);
+         formatModel.setMask(mask);
+         formatModel.setCursor(0, 0);
          this._inputField.html(this._getHtmlMask());
          //TODO исправить выставление курсора
          setTimeout(function() {
