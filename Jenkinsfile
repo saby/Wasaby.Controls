@@ -266,10 +266,10 @@ node('controls') {
         """# UTF-8
         [general]
         browser = ${env.browser_type}
-        SITE = http://${NODE_NAME}:7777
+        SITE = http://${NODE_NAME}:30001
         fail_test_repeat_times = 0
         DO_NOT_RESTART = True
-        SOFT_RESTART = False
+        SOFT_RESTART = True
         NO_RESOURCES = True
         STREAMS_NUMBER = 20
         DELAY_RUN_TESTS = 2
@@ -286,12 +286,12 @@ node('controls') {
         """# UTF-8
         [general]
         browser = ${env.browser_type}
-        SITE = http://${NODE_NAME}:7777
+        SITE = http://${NODE_NAME}:30001
         fail_test_repeat_times = 0
         DO_NOT_RESTART = True
         SOFT_RESTART = False
         NO_RESOURCES = True
-        STREAMS_NUMBER = 20
+        STREAMS_NUMBER = 40
         DELAY_RUN_TESTS = 2
         TAGS_NOT_TO_START = iOSOnly
         ELEMENT_OUTPUT_LOG = locator
@@ -303,21 +303,6 @@ node('controls') {
         server_address = http://10.76.159.209:4444/wd/hub
         CHROME_BINARY_LOCATION=C:\\chrome64_58\\chrome.exe"""
 
-    def run_test_fail = ""
-    if ("${RUN_ONLY_FAIL_TEST}" == 'true'){
-        run_test_fail = "-sf"
-        step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
-    }
-    /*stage("Запуск тестов параллельно"){
-        dir("./controls/tests"){
-            sh """
-                source /home/jenkins/jenkins_p/venv/venv_for_test/bin/activate
-                python start_tests.py
-                deactivate
-            """
-            publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: "./controls/tests/reg/capture_report/", reportFiles: "report.html", reportName: "Regression Report", reportTitles: ""])
-        }
-    }*/
     stage("Инт.тесты"){
         if ("${env.run_tests}" != "only_reg"){
             def site = "http://${NODE_NAME}:7777"
@@ -325,7 +310,7 @@ node('controls') {
             dir("./controls/tests/int"){
                 sh """
                 source /home/jenkins/jenkins_p/venv/venv_for_test/bin/activate
-                python start_tests.py ${run_test_fail} --STREAMS_NUMBER 20 --RESTART_AFTER_BUILD_MODE ${TAGS} --BROWSER ${env.browser_type} --SITE ${site} --FAIL_TEST_REPEAT_TIMES 0 --DO_NOT_RESTART True --SOFT_RESTART False --NO_RESOURCES True --DELAY_RUN_TESTS 2 --ELEMENT_OUTPUT_LOG locator --WAIT_ELEMENT_LOAD 20 --HTTP_PATH http://${NODE_NAME}:2100/${JOB_NAME}/controls/tests/int/ --SERVER_ADDRESS http://10.76.163.98:4380/wd/hub --USER_OPTIONS TAGS_NOT_TO_START=iOSOnly SERVER=test-autotest-db1 BASE_VERSION=css_${NODE_NAME}${ver}1
+                python start_tests.py --RESTART_AFTER_BUILD_MODE ${TAGS}
                 deactivate
                 """
             }
@@ -337,7 +322,7 @@ node('controls') {
             dir("./controls/tests/reg"){
                 sh """
                     source /home/jenkins/jenkins_p/venv/venv_for_test/bin/activate
-                    python start_tests.py ${run_test_fail} --STREAMS_NUMBER 20 --BROWSER ${env.browser_type} --SITE http://${NODE_NAME}:7777 --FAIL_TEST_REPEAT_TIMES 0 --DO_NOT_RESTART True --SOFT_RESTART False --NO_RESOURCES True --DELAY_RUN_TESTS 2 --ELEMENT_OUTPUT_LOG locator --WAIT_ELEMENT_LOAD 20 --HTTP_PATH http://${NODE_NAME}:2100/${JOB_NAME}/controls/tests/reg/ --SERVER_ADDRESS http://usd-prog130:4444/wd/hub --RUN_REGRESSION True --USER_OPTIONS TAGS_NOT_TO_START=iOSOnly SERVER=test-autotest-db1 BASE_VERSION=css_${NODE_NAME}${ver}1 CHROME_BINARY_LOCATION=C:\\chrome64_58\\chrome.exe
+                    python start_tests.py  --STREAMS_NUMBER 20 --BROWSER ${env.browser_type} --SITE http://${NODE_NAME}:7777 --FAIL_TEST_REPEAT_TIMES 0 --DO_NOT_RESTART True --SOFT_RESTART False --NO_RESOURCES True --DELAY_RUN_TESTS 2 --ELEMENT_OUTPUT_LOG locator --WAIT_ELEMENT_LOAD 20 --HTTP_PATH http://${NODE_NAME}:2100/${JOB_NAME}/controls/tests/reg/ --SERVER_ADDRESS http://usd-prog130:4444/wd/hub --RUN_REGRESSION True CHROME_BINARY_LOCATION=C:\\chrome64_58\\chrome.exe
                     deactivate
                 """
             }
