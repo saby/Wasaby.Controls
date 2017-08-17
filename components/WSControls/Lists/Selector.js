@@ -24,12 +24,14 @@ define('js!WSControls/Lists/Selector', [
          if ((cfg.selectedIndex !== this._options.selectedIndex) && !this._isEmptyIndex(cfg.selectedIndex)) { //Новые опции пришли из родителя
             this._selectedIndex = cfg.selectedIndex;
             this._selectedKey = this._getKeyByIndex(this._selectedIndex, cfg);
+            this._notify('onChangeSelectedKey', this._selectedKey);
             this._applyAllowEmpty(cfg);
          }
          else {
             if ((cfg.selectedKey !== this._options.selectedKey) && (cfg.selectedKey !== undefined)) { //Новые опции пришли из родителя
                this._selectedKey = cfg.selectedKey;
                this._selectedIndex = this._getItemIndexByKey(this._selectedKey, cfg);
+               this._notify('onChangeSelectedIndex', this._selectedIndex);
                this._applyAllowEmpty(cfg);
             }
          }
@@ -38,6 +40,30 @@ define('js!WSControls/Lists/Selector', [
             this._selectedIndex = -1;
             this._selectedKey = undefined;
             this._applyAllowEmpty(cfg);
+         }
+         else {
+            if (this._selectedKey !== undefined) {
+               var newIndex = this._getItemIndexByKey(this._selectedKey, cfg);
+               if (this._selectedIndex != newIndex) {
+                  if (!this._isEmptyIndex(newIndex)) {
+                     this._selectedIndex = newIndex;
+                     this._notify('onChangeSelectedIndex', this._selectedIndex);
+                  }
+                  else {
+                     this._selectedIndex = this._selectedIndex + 1;
+                     this._notify('onChangeSelectedIndex', this._selectedIndex);
+                     this._selectedKey = this._getKeyByIndex(this._selectedIndex, cfg);
+                     this._notify('onChangeSelectedKey', this._selectedKey);
+                  }
+               }
+            }
+            else {
+               var newKey = this._getKeyByIndex(this._selectedIndex, cfg);
+               if (newKey != this._selectedKey) {
+                  this._selectedKey = newKey;
+                  this._notify('onChangeSelectedKey', this._selectedKey);
+               }
+            }
          }
       },
 
