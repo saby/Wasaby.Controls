@@ -1,82 +1,82 @@
 #!groovy
-node('controls') {
-    properties([
-        buildDiscarder(
-            logRotator(
-                artifactDaysToKeepStr: '5', 
-                artifactNumToKeepStr: '10', 
-                daysToKeepStr: '5', 
-                numToKeepStr: '10')),
-        parameters([
-            string(
-                defaultValue: '3.17.100', 
-                description: 'Версия', 
-                name: 'version'),
-            string(
-                defaultValue: 'rc-3.17.100',
-                description: '', 
-                name: 'branch_engine'), 
-            string(
-                defaultValue: 'rc-3.17.100',
+properties([
+    buildDiscarder(
+        logRotator(
+            artifactDaysToKeepStr: '5', 
+            artifactNumToKeepStr: '10', 
+            daysToKeepStr: '5', 
+            numToKeepStr: '10')),
+    parameters([
+        string(
+            defaultValue: '3.17.100', 
+            description: 'Версия', 
+            name: 'version'),
+        string(
+            defaultValue: 'rc-3.17.100',
+            description: '', 
+            name: 'branch_engine'), 
+        string(
+            defaultValue: 'rc-3.17.100',
+            description: '',
+            name: 'branch_ws'),
+        string(
+            defaultValue: 'rc-3.31',
+            description: '',
+            name: 'branch_atf'),
+        choice(
+            choices: [
+                '',
+                'fieldlink', 
+                'filterbutton', 
+                'atplace', 
+                'formcontroller', 
+                'globalpanel', 
+                'richedit', 
+                'move', 
+                'scroll', 
+                'search', 
+                'print', 
+                'merge'],
                 description: '',
-                name: 'branch_ws'),
-            string(
-                defaultValue: 'rc-3.31',
+                name: 'Tag1'),
+        choice(
+            choices: [
+                '',
+                'fieldlink', 
+                'filterbutton', 
+                'atplace', 
+                'formcontroller', 
+                'globalpanel', 
+                'richedit', 
+                'move', 
+                'scroll', 
+                'search', 
+                'print', 
+                'merge'],
                 description: '',
-                name: 'branch_atf'),
-            choice(
-                choices: [
-                    '',
-                    'fieldlink', 
-                    'filterbutton', 
-                    'atplace', 
-                    'formcontroller', 
-                    'globalpanel', 
-                    'richedit', 
-                    'move', 
-                    'scroll', 
-                    'search', 
-                    'print', 
-                    'merge'],
-                    description: '',
-                    name: 'Tag1'),
-            choice(
-                choices: [
-                    '',
-                    'fieldlink', 
-                    'filterbutton', 
-                    'atplace', 
-                    'formcontroller', 
-                    'globalpanel', 
-                    'richedit', 
-                    'move', 
-                    'scroll', 
-                    'search', 
-                    'print', 
-                    'merge'],
-                    description: '',
-                    name: 'Tag2'),
-            choice(
-                choices: [
-                    '',
-                    'fieldlink', 
-                    'filterbutton', 
-                    'atplace', 
-                    'formcontroller', 
-                    'globalpanel', 
-                    'richedit', 
-                    'move', 
-                    'scroll', 
-                    'search', 
-                    'print', 
-                    'merge'],
-                    description: '',
-                    name: 'Tag3'),    
-            choice(choices: ['chrome', 'ff'], description: '', name: 'browser_type'),
-            choice(choices: ['all', 'only_reg', 'only_int'], description: '', name: 'run_tests')]),
-        pipelineTriggers([])
-    ])
+                name: 'Tag2'),
+        choice(
+            choices: [
+                '',
+                'fieldlink', 
+                'filterbutton', 
+                'atplace', 
+                'formcontroller', 
+                'globalpanel', 
+                'richedit', 
+                'move', 
+                'scroll', 
+                'search', 
+                'print', 
+                'merge'],
+                description: '',
+                name: 'Tag3'),    
+        choice(choices: ['chrome', 'ff'], description: '', name: 'browser_type'),
+        choice(choices: ['all', 'only_reg', 'only_int'], description: '', name: 'run_tests')]),
+    pipelineTriggers([])
+])
 
+node('controls') {
     def version = "${version}"
     def ver = version.replaceAll('.','')
     def python_ver = 'python3.4'
