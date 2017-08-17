@@ -1,6 +1,6 @@
 define('js!WSControls/Lists/ItemsControl', [
    'Core/core-extend',
-   'js!WSControls/Control/Base',
+   'Core/Control',
    'Core/helpers/Object/isEmpty',
    'Core/Sanitize',
    'tmpl!WSControls/Lists/resources/ItemsTemplate',
