@@ -238,13 +238,13 @@ node('controls') {
         sh """cp -f ./controls/tests/stand/intest/pageTemplates/branch/* ./controls/tests/stand/intest/pageTemplates"""
         sh """
             sudo chmod -R 0777 ${env.WORKSPACE}
-            ${python_ver} "./constructor/updater.py" "${env.version}" "/home/jenkins/jenkins_p/workspace/Controls1" "css_${env.NODE_NAME}${ver}1" "./controls/tests/stand/conf/sbis-rpc-service.ini" "./controls/tests/stand/distrib_branch_new" --sdk_path "${SDK}" --items "${items_1}" --host test-autotest-db1 --stand nginx_branch --daemon_name Controls1
+            ${python_ver} "./constructor/updater.py" "${env.version}" "/home/sbis/Controls1" "css_${env.NODE_NAME}${ver}1" "./controls/tests/stand/conf/sbis-rpc-service.ini" "./controls/tests/stand/distrib_branch_new" --sdk_path "${SDK}" --items "${items_1}" --host test-autotest-db1 --stand nginx_branch --daemon_name Controls1
             sudo chmod -R 0777 ${env.WORKSPACE}
-            sudo chmod -R 0777 /home/jenkins/jenkins_p/workspace/Controls1
+            sudo chmod -R 0777 /home/sbis/Controls1
         """
 
         //Пакуем данные
-        writeFile file: "/home/jenkins/jenkins_p/workspace/Controls1/Core.package.json", text: """
+        writeFile file: "/home/sbis/Controls1/Core.package.json", text: """
             {
             "modules" : [
             "Core/core",
@@ -259,7 +259,7 @@ node('controls') {
 
         sh """
             cd ./jinnee/distrib/builder
-            node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/jenkins/jenkins_p/workspace/Controls1 --application=/
+            node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls1 --application=/
         """
     }
     writeFile file: "./controls/tests/int/config.ini", text:
