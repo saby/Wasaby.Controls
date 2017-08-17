@@ -240,7 +240,7 @@ node('controls') {
         // Копируем шаблоны
         sh """cp -f ./controls/tests/stand/intest/pageTemplates/branch/* ./controls/tests/stand/intest/pageTemplates"""
         sh """
-            cd "${env.WORKSPACE}/tests/stand/intest/"
+            cd "${env.WORKSPACE}/controls/tests/stand/intest/"
             sudo python3 "change_theme.py" ${env.theme}
             cd "${env.WORKSPACE}
         """
