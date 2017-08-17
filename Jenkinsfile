@@ -41,7 +41,7 @@ properties([
 ])
 
 node('controls') {
-    def version = "${version}"
+    def version = "${env.version}"
     def ver = version.replaceAll('.','')
     def python_ver = 'python3.4'
     def SDK = ""
@@ -49,12 +49,12 @@ node('controls') {
 
     echo "${env.JOB_NAME}"
     def TAGS = ""
-    if ("${Tag1}" != "0")
-        TAGS = "${Tag1}"
-    if ("${Tag2}" != "0")
-        TAGS = "${TAGS}, ${Tag2}"
-    if ("${Tag3}" !="0")
-        TAGS = "${TAGS}, ${Tag3}"
+    if ("${env.Tag1}" != "0")
+        TAGS = "${env.Tag1}"
+    if ("${env.Tag2}" != "0")
+        TAGS = "${TAGS}, ${env.Tag2}"
+    if ("${env.Tag3}" !="0")
+        TAGS = "${TAGS}, ${env.Tag3}"
     if ("${TAGS}" != "0")
         TAGS = "--TAGS_TO_START ${TAGS}"
         
@@ -63,7 +63,7 @@ node('controls') {
         // Выкачиваем platform
         dir("${env.WORKSPACE}") {
             checkout([$class: 'GitSCM', 
-            branches: [[name: "rc-${version}"]], 
+            branches: [[name: "rc-${env.version}"]], 
             doGenerateSubmoduleConfigurations: false, 
             extensions: [[
                 $class: 'RelativeTargetDirectory', 
@@ -90,7 +90,7 @@ node('controls') {
         // Выкачиваем constructor и cdn
         dir("./constructor") {
             checkout([$class: 'GitSCM', 
-            branches: [[name: "rc-${version}"]], 
+            branches: [[name: "rc-${env.version}"]], 
             doGenerateSubmoduleConfigurations: false, 
             extensions: [[
                 $class: 'RelativeTargetDirectory', 
@@ -106,7 +106,7 @@ node('controls') {
         // Выкачиваем atf
         dir("./controls/tests/int") {
         checkout([$class: 'GitSCM', 
-            branches: [[name: "${branch_atf}"]], 
+            branches: [[name: "${env.branch_atf}"]], 
             doGenerateSubmoduleConfigurations: false, 
             extensions: [[
                 $class: 'RelativeTargetDirectory', 
@@ -122,7 +122,7 @@ node('controls') {
         // Выкачиваем engine
         dir("./controls/tests"){
             checkout([$class: 'GitSCM', 
-            branches: [[name: "${branch_engine}"]], 
+            branches: [[name: "${env.branch_engine}"]], 
             doGenerateSubmoduleConfigurations: false, 
             extensions: [[
                 $class: 'RelativeTargetDirectory', 
@@ -153,14 +153,14 @@ node('controls') {
         sh "cp -rf ./demo_stand/client ./controls/tests/stand"
     
         // Выкачиваем ws
-        if ("${branch_ws}" == "rc-${version}")
+        if ("${env.branch_ws}" == "rc-${env.version}")
         {
         items_1 = "controls:${env.WORKSPACE}/controls"
         echo "${items_1}"
         } else {
             dir("${env.WORKSPACE}") {
                 checkout([$class: 'GitSCM', 
-                branches: [[name: "${branch_ws}"]], 
+                branches: [[name: "${env.branch_ws}"]], 
                 doGenerateSubmoduleConfigurations: false, 
                 extensions: [[
                     $class: 'RelativeTargetDirectory', 
@@ -182,7 +182,7 @@ node('controls') {
     stage("Разворот стенда"){
         dir("./constructor/Constructor/SDK") { 
             // Определяем SDK
-            SDK = sh returnStdout: true, script: "${python_ver} getSDK.py ${version} --conf linux_x86_64 -b"
+            SDK = sh returnStdout: true, script: "${python_ver} getSDK.py ${env.version} --conf linux_x86_64 -b"
             SDK = SDK.trim()
             echo "${SDK}"
         }
@@ -224,7 +224,7 @@ node('controls') {
         sh """cp -f ./controls/tests/stand/intest/pageTemplates/branch/* ./controls/tests/stand/intest/pageTemplates"""
         sh """
             sudo chmod -R 0777 ${env.WORKSPACE}
-            ${python_ver} "./constructor/updater.py" "${version}" "/home/jenkins/jenkins_p/workspace/Controls1" "css_${env.NODE_NAME}${ver}1" "./controls/tests/stand/conf/sbis-rpc-service.ini" "./controls/tests/stand/distrib_branch_new" --sdk_path "${SDK}" --items "${items_1}" --host test-autotest-db1 --stand nginx_branch --daemon_name Controls1
+            ${python_ver} "./constructor/updater.py" "${env.version}" "/home/jenkins/jenkins_p/workspace/Controls1" "css_${env.NODE_NAME}${ver}1" "./controls/tests/stand/conf/sbis-rpc-service.ini" "./controls/tests/stand/distrib_branch_new" --sdk_path "${SDK}" --items "${items_1}" --host test-autotest-db1 --stand nginx_branch --daemon_name Controls1
             sudo chmod -R 0777 ${env.WORKSPACE}
             sudo chmod -R 0777 /home/jenkins/jenkins_p/workspace/Controls1
         """
@@ -251,7 +251,7 @@ node('controls') {
     writeFile file: "./controls/tests/int/config.ini", text: 
         """# UTF-8
         [general]
-        browser = ${browser_type}
+        browser = ${env.browser_type}
         SITE = http://${NODE_NAME}:7777
         fail_test_repeat_times = 0
         DO_NOT_RESTART = True
@@ -271,7 +271,7 @@ node('controls') {
         text: 
         """# UTF-8
         [general]
-        browser = ${browser_type}
+        browser = ${env.browser_type}
         SITE = http://${NODE_NAME}:7777
         fail_test_repeat_times = 0
         DO_NOT_RESTART = True
@@ -305,25 +305,25 @@ node('controls') {
         }
     }*/
     stage("Инт.тесты"){
-        if ("${run_tests}" != "only_reg"){
+        if ("${env.run_tests}" != "only_reg"){
             def site = "http://${NODE_NAME}:7777"
             site.trim()
             dir("./controls/tests/int"){
                 sh """
                 source /home/jenkins/jenkins_p/venv/venv_for_test/bin/activate
-                python start_tests.py ${run_test_fail} --STREAMS_NUMBER 20 --RESTART_AFTER_BUILD_MODE ${TAGS} --BROWSER ${browser_type} --SITE ${site} --FAIL_TEST_REPEAT_TIMES 0 --DO_NOT_RESTART True --SOFT_RESTART False --NO_RESOURCES True --DELAY_RUN_TESTS 2 --ELEMENT_OUTPUT_LOG locator --WAIT_ELEMENT_LOAD 20 --HTTP_PATH http://${NODE_NAME}:2100/${JOB_NAME}/controls/tests/int/ --SERVER_ADDRESS http://10.76.163.98:4380/wd/hub --USER_OPTIONS TAGS_NOT_TO_START=iOSOnly SERVER=test-autotest-db1 BASE_VERSION=css_${NODE_NAME}${ver}1
+                python start_tests.py ${run_test_fail} --STREAMS_NUMBER 20 --RESTART_AFTER_BUILD_MODE ${TAGS} --BROWSER ${env.browser_type} --SITE ${site} --FAIL_TEST_REPEAT_TIMES 0 --DO_NOT_RESTART True --SOFT_RESTART False --NO_RESOURCES True --DELAY_RUN_TESTS 2 --ELEMENT_OUTPUT_LOG locator --WAIT_ELEMENT_LOAD 20 --HTTP_PATH http://${NODE_NAME}:2100/${JOB_NAME}/controls/tests/int/ --SERVER_ADDRESS http://10.76.163.98:4380/wd/hub --USER_OPTIONS TAGS_NOT_TO_START=iOSOnly SERVER=test-autotest-db1 BASE_VERSION=css_${NODE_NAME}${ver}1
                 deactivate
                 """
             }
         }
     }
     stage("Рег.тесты"){
-        if ("${run_tests}" != "only_int"){
+        if ("${env.run_tests}" != "only_int"){
             sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
             dir("./controls/tests/reg"){
                 sh """
                     source /home/jenkins/jenkins_p/venv/venv_for_test/bin/activate
-                    python start_tests.py ${run_test_fail} --STREAMS_NUMBER 20 --BROWSER ${browser_type} --SITE http://${NODE_NAME}:7777 --FAIL_TEST_REPEAT_TIMES 0 --DO_NOT_RESTART True --SOFT_RESTART False --NO_RESOURCES True --DELAY_RUN_TESTS 2 --ELEMENT_OUTPUT_LOG locator --WAIT_ELEMENT_LOAD 20 --HTTP_PATH http://${NODE_NAME}:2100/${JOB_NAME}/controls/tests/reg/ --SERVER_ADDRESS http://usd-prog130:4444/wd/hub --RUN_REGRESSION True --USER_OPTIONS TAGS_NOT_TO_START=iOSOnly SERVER=test-autotest-db1 BASE_VERSION=css_${NODE_NAME}${ver}1 CHROME_BINARY_LOCATION=C:\\chrome64_58\\chrome.exe
+                    python start_tests.py ${run_test_fail} --STREAMS_NUMBER 20 --BROWSER ${env.browser_type} --SITE http://${NODE_NAME}:7777 --FAIL_TEST_REPEAT_TIMES 0 --DO_NOT_RESTART True --SOFT_RESTART False --NO_RESOURCES True --DELAY_RUN_TESTS 2 --ELEMENT_OUTPUT_LOG locator --WAIT_ELEMENT_LOAD 20 --HTTP_PATH http://${NODE_NAME}:2100/${JOB_NAME}/controls/tests/reg/ --SERVER_ADDRESS http://usd-prog130:4444/wd/hub --RUN_REGRESSION True --USER_OPTIONS TAGS_NOT_TO_START=iOSOnly SERVER=test-autotest-db1 BASE_VERSION=css_${NODE_NAME}${ver}1 CHROME_BINARY_LOCATION=C:\\chrome64_58\\chrome.exe
                     deactivate
                 """
             }
