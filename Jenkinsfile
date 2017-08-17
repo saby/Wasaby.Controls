@@ -343,18 +343,22 @@ node('controls') {
             def site = "http://${NODE_NAME}:7777"
             site.trim()
             if ( "${TAGS}" != "") {
-               def run_tags = "--TAGS_TO_START ${TAGS}"
-            } else {
-               def run_tags = " "
-            }
-            dir("./controls/tests/int"){
+               dir("./controls/tests/int"){
                 sh """
                 source /home/sbis/venv_for_test/venv_for_test/bin/activate
-                python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_tags}
+                python start_tests.py --RESTART_AFTER_BUILD_MODE --TAGS_TO_START ${TAGS}
+                deactivate
+                """
+            } else {
+               dir("./controls/tests/int"){
+                sh """
+                source /home/sbis/venv_for_test/venv_for_test/bin/activate
+                python start_tests.py --RESTART_AFTER_BUILD_MODE
                 deactivate
                 """
             }
-        }
+            }
+         }
     }
     stage("Рег.тесты"){
         if ("${env.run_tests}" != "only_int"){
