@@ -349,6 +349,7 @@ node('controls') {
                 python start_tests.py --RESTART_AFTER_BUILD_MODE --TAGS_TO_START ${TAGS}
                 deactivate
                 """
+               }
             } else {
                dir("./controls/tests/int"){
                 sh """
