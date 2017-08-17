@@ -212,7 +212,6 @@ node('controls') {
         def user_db = "postgres"
         def password_db = "postgres"
         writeFile file: "./controls/tests/stand/conf/sbis-rpc-service.ini", text: """[Базовая конфигурация]
-            Модули=Модули
             АдресСервиса=${env.NODE_NAME}:10001
             ПаузаПередЗагрузкойМодулей=0
             ХранилищеСессий=host=\'dev-sbis3-autotest\' port=\'6380\' dbindex=\'2\'
