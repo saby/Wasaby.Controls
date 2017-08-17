@@ -290,7 +290,7 @@ node('controls') {
         server_address = http://10.76.163.98:4380/wd/hub"""
 
 
-    if ( "${env.theme}" != "online" ): {
+    if ( "${env.theme}" != "online" ) {
          writeFile file: "./controls/tests/reg/config.ini",
          text:
             """# UTF-8
