@@ -276,7 +276,7 @@ node('controls') {
         TAGS_NOT_TO_START = iOSOnly
         ELEMENT_OUTPUT_LOG = locator
         WAIT_ELEMENT_LOAD = 20
-        HTTP_PATH = http://${NODE_NAME}:2100/${JOB_NAME}/controls/tests/int/
+        HTTP_PATH = http://${NODE_NAME}:2100/sbis3-controls_${env.version}/${env.BRANCH_NAME}/controls/tests/int/
         SERVER = test-autotest-db1
         BASE_VERSION = css_${NODE_NAME}${ver}1
         server_address = http://10.76.163.98:4380/wd/hub"""
@@ -296,7 +296,7 @@ node('controls') {
         TAGS_NOT_TO_START = iOSOnly
         ELEMENT_OUTPUT_LOG = locator
         WAIT_ELEMENT_LOAD = 20
-        HTTP_PATH = http://${NODE_NAME}:2100/${JOB_NAME}/controls/tests/int/
+        HTTP_PATH = http://${NODE_NAME}:2100/sbis3-controls_${env.version}/${env.BRANCH_NAME}/controls/tests/reg/
         SERVER = test-autotest-db1
         BASE_VERSION = css_${NODE_NAME}${ver}1
         RUN_REGRESSION=True
