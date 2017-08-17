@@ -40,7 +40,7 @@ properties([
             description: '',
             name: 'theme'),
         choice(choices: "chrome\nff", description: '', name: 'browser_type'),
-        choice(choices: "all\nonly_reg\nonly_int\only_unit", description: '', name: 'run_tests')]),
+        choice(choices: "all\nonly_reg\nonly_int\nonly_unit", description: '', name: 'run_tests')]),
     pipelineTriggers([])
 ])
 
