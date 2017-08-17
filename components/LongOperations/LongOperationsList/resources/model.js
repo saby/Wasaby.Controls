@@ -11,7 +11,13 @@ define(
          if (typeof timeSpent !== 'number' || timeSpent <= 0) {
             var STATUSES = LongOperationEntry.STATUSES;
             var status = model.get('status');
-            timeSpent = status === STATUSES.running ? (new Date()).getTime() - model.get('startedAt') : 0;
+            if (status === STATUSES.running) {
+               var timeIdle = model.get('timeIdle');
+               timeSpent = (new Date()).getTime() - model.get('startedAt') - (typeof timeIdle === 'number' && 0 < timeIdle ? timeIdle : 0);
+            }
+            else {
+               timeSpent = 0;
+            }
          }
          return timeSpent;
       };
