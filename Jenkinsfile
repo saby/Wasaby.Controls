@@ -7,36 +7,40 @@ properties([
             daysToKeepStr: '5',
             numToKeepStr: '10')),
     parameters([
-        string(
+         string(
             defaultValue: '3.17.100',
             description: 'Версия',
             name: 'version'),
-        string(
+         string(
             defaultValue: 'rc-3.17.100',
             description: '',
             name: 'branch_engine'),
-        string(
+         string(
             defaultValue: 'rc-3.17.100',
             description: '',
             name: 'branch_ws'),
-        string(
+         string(
             defaultValue: 'rc-3.31',
             description: '',
             name: 'branch_atf'),
-        choice(
+         choice(
             choices: "\nfieldlink\nfilterbutton\natplace\nformcontroller\nglobalpanel\nrichedit\nmove\nscroll\nsearch\nprint\nmerge",
             description: '',
             name: 'Tag1'),
-        choice(
+         choice(
             choices: "\nfieldlink\nfilterbutton\natplace\nformcontroller\nglobalpanel\nrichedit\nmove\nscroll\nsearch\nprint\nmerge",
             description: '',
             name: 'Tag2'),
-        choice(
+         choice(
             choices: "\nfieldlink\nfilterbutton\natplace\nformcontroller\nglobalpanel\nrichedit\nmove\nscroll\nsearch\nprint\nmerge",
             description: '',
             name: 'Tag3'),
+         choice(
+            choices: "online\npresto\ncarry\ngenie",
+            description: '',
+            name: 'theme'),
         choice(choices: "chrome\nff", description: '', name: 'browser_type'),
-        choice(choices: "all\nonly_reg\nonly_int", description: '', name: 'run_tests')]),
+        choice(choices: "all\nonly_reg\nonly_int\only_unit", description: '', name: 'run_tests')]),
     pipelineTriggers([])
 ])
 
@@ -236,6 +240,11 @@ node('controls') {
         // Копируем шаблоны
         sh """cp -f ./controls/tests/stand/intest/pageTemplates/branch/* ./controls/tests/stand/intest/pageTemplates"""
         sh """
+            cd "${env.WORKSPACE}/tests/stand/intest/"
+            sudo python3 "change_theme.py" ${env.theme}
+            cd "${env.WORKSPACE}
+        """
+        sh """
             sudo chmod -R 0777 ${env.WORKSPACE}
             ${python_ver} "./constructor/updater.py" "${env.version}" "/home/sbis/Controls1" "css_${env.NODE_NAME}${ver}1" "./controls/tests/stand/conf/sbis-rpc-service.ini" "./controls/tests/stand/distrib_branch_new" --sdk_path "${SDK}" --items "${items_1}" --host test-autotest-db1 --stand nginx_branch --daemon_name Controls1
             sudo chmod -R 0777 ${env.WORKSPACE}
@@ -280,27 +289,54 @@ node('controls') {
         BASE_VERSION = css_${NODE_NAME}${ver}1
         server_address = http://10.76.163.98:4380/wd/hub"""
 
-    writeFile file: "./controls/tests/reg/config.ini",
-        text:
-        """# UTF-8
-        [general]
-        browser = ${env.browser_type}
-        SITE = http://${NODE_NAME}:30001
-        fail_test_repeat_times = 0
-        DO_NOT_RESTART = True
-        SOFT_RESTART = False
-        NO_RESOURCES = True
-        STREAMS_NUMBER = 40
-        DELAY_RUN_TESTS = 2
-        TAGS_NOT_TO_START = iOSOnly
-        ELEMENT_OUTPUT_LOG = locator
-        WAIT_ELEMENT_LOAD = 20
-        HTTP_PATH = http://${NODE_NAME}:2100/sbis3-controls_${env.version}/${env.BRANCH_NAME}/controls/tests/reg/
-        SERVER = test-autotest-db1
-        BASE_VERSION = css_${NODE_NAME}${ver}1
-        RUN_REGRESSION=True
-        server_address = http://10.76.159.209:4444/wd/hub
-        CHROME_BINARY_LOCATION=C:\\chrome64_58\\chrome.exe"""
+
+    if ( "${env.theme}" != "online" ): {
+         writeFile file: "./controls/tests/reg/config.ini",
+         text:
+            """# UTF-8
+            [general]
+            browser = ${env.browser_type}
+            SITE = http://${NODE_NAME}:30001
+            fail_test_repeat_times = 0
+            DO_NOT_RESTART = True
+            SOFT_RESTART = False
+            NO_RESOURCES = True
+            STREAMS_NUMBER = 40
+            DELAY_RUN_TESTS = 2
+            TAGS_NOT_TO_START = ${env.theme}
+            ELEMENT_OUTPUT_LOG = locator
+            WAIT_ELEMENT_LOAD = 20
+            HTTP_PATH = http://${NODE_NAME}:2100/sbis3-controls_${env.version}/${env.BRANCH_NAME}/controls/tests/reg/
+            SERVER = test-autotest-db1
+            BASE_VERSION = css_${NODE_NAME}${ver}1
+            RUN_REGRESSION=True
+            server_address = http://10.76.159.209:4444/wd/hub
+            CHROME_BINARY_LOCATION=C:\\chrome64_58\\chrome.exe
+            [regression]
+            IMAGE_DIR = capture_${env.theme}"""
+    } else {
+         writeFile file: "./controls/tests/reg/config.ini",
+         text:
+            """# UTF-8
+            [general]
+            browser = ${env.browser_type}
+            SITE = http://${NODE_NAME}:30001
+            fail_test_repeat_times = 0
+            DO_NOT_RESTART = True
+            SOFT_RESTART = False
+            NO_RESOURCES = True
+            STREAMS_NUMBER = 15
+            DELAY_RUN_TESTS = 2
+            TAGS_NOT_TO_START = ${env.theme}
+            ELEMENT_OUTPUT_LOG = locator
+            WAIT_ELEMENT_LOAD = 20
+            HTTP_PATH = http://${NODE_NAME}:2100/sbis3-controls_${env.version}/${env.BRANCH_NAME}/controls/tests/reg/
+            SERVER = test-autotest-db1
+            BASE_VERSION = css_${NODE_NAME}${ver}1
+            RUN_REGRESSION=True
+            server_address = http://10.76.159.209:4444/wd/hub
+            CHROME_BINARY_LOCATION=C:\\chrome64_58\\chrome.exe"""
+    }
 
     stage("Инт.тесты"){
         if ("${env.run_tests}" != "only_reg"){
