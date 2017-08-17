@@ -371,7 +371,7 @@ node('controls') {
                     deactivate
                 """
             }
-            publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: "./controls/tests/reg/capture_report/", reportFiles: "report.html", reportName: "Regression Report", reportTitles: ""])
+            //publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: "./controls/tests/reg/capture_report/", reportFiles: "report.html", reportName: "Regression Report", reportTitles: ""])
         }
     }
     stage("Результаты"){
