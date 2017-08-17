@@ -309,7 +309,7 @@ node('controls') {
             site.trim()
             dir("./controls/tests/int"){
                 sh """
-                source /home/jenkins/jenkins_p/venv/venv_for_test/bin/activate
+                source /home/sbis/venv_for_test/venv_for_test/bin/activate
                 python start_tests.py --RESTART_AFTER_BUILD_MODE ${TAGS}
                 deactivate
                 """
