@@ -43,7 +43,7 @@ properties([
 node('controls') {
     def version = "${env.version}"
     def ver = version.replaceAll('.','')
-    def python_ver = 'python3.4'
+    def python_ver = 'python3'
     def SDK = ""
     def items_1 = ""
 
