@@ -5,6 +5,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "Core/core-merge",
    "Core/constants",
    "Core/Deferred",
+   'Core/detection',
+   "Core/EventBus",
    "js!SBIS3.CONTROLS.ListView",
    "tmpl!SBIS3.CONTROLS.DataGridView",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/rowTpl",
@@ -38,6 +40,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
       cMerge,
       constants,
       Deferred,
+      cDetection,
+      EventBus,
       ListView,
       dotTplFn,
       rowTpl,
@@ -812,7 +816,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _redrawHead : function() {
          var
             headData,
-            headMarkup;
+            headMarkup,
+            height,
+            styles;
 
          if (!this._thead) {
             this._bindHead();
@@ -838,7 +844,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          } else {
             this._thead = newTHead.insertBefore(body);
          }
-         this.reviveComponents(this._thead);
 
          this._redrawColgroup();
          if (this.hasPartScroll()) {
@@ -852,7 +857,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._updateStickyHeader(headData.hasResults);
          }
          // Смещаем индикатор загрузки вниз на высоту заголовков.
-         this._getAjaxLoaderContainer().css('top', this._thead.outerHeight());
+         height = this._thead.outerHeight();
+         styles = {top: height || ''};
+         if (cDetection.webkit) {
+            styles.height =  height ? 'calc(100% - ' + height + 'px)' : '';
+         }
+         this._getAjaxLoaderContainer().css(styles);
       },
 
       _redrawFoot: function(){
@@ -864,7 +874,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._tfoot.replaceWith(newTFoot);
             this._tfoot = newTFoot;
          }
-         this.reviveComponents(this._tfoot);
          DataGridView.superclass._redrawFoot.call(this);
       },
 
@@ -938,7 +947,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
          table.toggleClass('ws-sticky-header__table', isSticky);
          if (isSticky) {
-            StickyHeaderManager.fixAllChildren(this.getContainer(), table);
+            EventBus.channel('stickyHeader').notify('onForcedStickHeader', this.getContainer());
          } else {
             StickyHeaderManager.unfixOne(table, true);
          }
@@ -1005,9 +1014,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _redrawItems: function() {
-         DataGridView.superclass._redrawItems.apply(this, arguments);
          //FIXME в 3.7.4 поправить, не всегда надо перерисовывать, а только когда изменились колонки
          this._redrawTheadAndTfoot();
+         DataGridView.superclass._redrawItems.apply(this, arguments);
       },
       _startEditOnItemClick: function(event, id, record, target, originalEvent) {
          var
@@ -1469,6 +1478,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this.redraw();
          } else if(this._options.showHead) {
             this._redrawTheadAndTfoot();
+            this.reviveComponents(this._thead);
+            this.reviveComponents(this._tfoot);
          }
       },
 
