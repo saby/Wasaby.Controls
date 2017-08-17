@@ -47,8 +47,6 @@ node('controls') {
     def SDK = ""
     def items_1 = ""
 
-    sh "python3 -c 'import os; print(dict(os.environ).items())'"
-
     echo "${env.JOB_NAME}"
     def TAGS = ""
     if ("${env.Tag1}" != "0")
@@ -64,7 +62,7 @@ node('controls') {
         // Контролы
         dir("${env.WORKSPACE}") {
             checkout([$class: 'GitSCM', 
-               branches: [[name: "${env.JOB_NAME}"]], 
+               branches: [[name: "${env.BRANCH_NAME}"]], 
                doGenerateSubmoduleConfigurations: false, 
                extensions: [[
                    $class: 'RelativeTargetDirectory', 
