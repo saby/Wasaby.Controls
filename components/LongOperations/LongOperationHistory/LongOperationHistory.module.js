@@ -107,7 +107,7 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
                   title: failedOperation.get('title'),
                   id: failedOperation.get('id'),
                   //producer: failedOperation.get('producer'),
-                  endedAt: new Date(failedOperation.get('startedAt').getTime() + (failedOperation.get('timeSpent') || 0)),
+                  endedAt: new Date(failedOperation.get('startedAt').getTime() + (failedOperation.get('timeSpent') || 0) + (failedOperation.get('timeIdle') || 0)),
                   errorMessage: failedOperation.get('resultMessage') || 'Ошибка',
                   isFailed: true
                });

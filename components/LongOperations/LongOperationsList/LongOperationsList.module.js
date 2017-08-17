@@ -121,10 +121,14 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                                  model.set('progressTotal', evt.progress.total);
                               }
                               else {
+                                 if (evt.changed === 'status' && evt[evt.changed] === STATUSES.running && model.get('status') === STATUSES.suspended) {
+                                    model.set('timeIdle', (new Date()).getTime() - model.get('startedAt').getTime() - model.get('timeSpent'));
+                                 }
                                  model.set(evt.changed, evt[evt.changed]);
                               }
-                              self._checkItems(items);
+                              self._checkItems();
                               dontReload = true;
+                              // тем не менее после действий пользователя suspend и resume перезагрузка всё равно будет осуществлена, если в itemsActions это задано
                            }
                         }
                         break;
@@ -254,7 +258,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   var status = model.get('status');
                   if (!this._notFirst
                         && status === STATUSES.ended
-                        && from < model.get('startedAt').getTime() + model.get('timeSpent')) {
+                        && from < model.get('startedAt').getTime() + model.get('timeSpent') + model.get('timeIdle')) {
                      this._animationAdd(model.getId(), !model.get('isFailed'));
                   }
                   if (!hasRun && status === STATUSES.running) {
@@ -265,7 +269,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
             this._notFirst = true;
             if (hasRun) {
                if (!this._spentTiming) {
-                  this._spentTiming = setInterval(this._changeSpentTime.bind(this), TIMESPENT_DURATION);
+                  this._spentTiming = setInterval(this._changeTimeSpent.bind(this), TIMESPENT_DURATION);
                }
             }
             else
@@ -280,7 +284,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
           * Изенить отображаемое время выполнения операций
           * @protected
           */
-         _changeSpentTime: function () {
+         _changeTimeSpent: function () {
             var items = this._view.getItems();
             if (items && items.each) {
                var STATUSES = LongOperationEntry.STATUSES;
@@ -290,7 +294,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                var time = (new Date()).getTime();
                items.each(function (model) {
                   if (model.get('status') === STATUSES.running) {
-                     model.set('timeSpent', time - model.get('startedAt'));
+                     model.set('timeSpent', time - model.get('startedAt').getTime() - model.get('timeIdle'));
                      $cont.find('.js-controls-ListView__item[data-id="' + model.getId() + '"]')
                         .find('.controls-LongOperationsList__executeTimeContainer').html(model.get('strTimeSpent'));
                   }

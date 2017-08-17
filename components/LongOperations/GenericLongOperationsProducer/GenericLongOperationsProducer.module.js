@@ -118,7 +118,8 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                for (var i = 0; i < snapshots.length; i++) {
                   var o = snapshots[i];
                   var status = 'status' in o ? o.status : DEFAULTS.status;
-                  if (status === STATUSES.running || status === STATUSES.suspended) {
+                  var wasRun = status === STATUSES.running;
+                  if (wasRun || status === STATUSES.suspended) {
                      var operationId = o.id;
                      var handlers = this._actions ? this._actions[operationId] : null;
                      // Если обработчики действий пользователя установлены в этой вкладке
@@ -128,7 +129,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                         o.status = STATUSES.ended;
                         o.isFailed = true;
                         o.resultMessage = ERR;
-                        o.timeSpent = (new Date()).getTime() - o.startedAt;
+                        o[wasRun ? 'timeSpent' : 'timeIdle'] = (new Date()).getTime() - o.startedAt - o[wasRun ? 'timeIdle' : 'timeSpent'];
                         GLOStorage.put(this._name, operationId, o);
                         oIds.push(operationId);
                      }
@@ -530,15 +531,16 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
          if (status !== operation.status) {
             var isAllowed;
             var prev = operation.status;
+            var wasRun = prev === STATUSES.running;
             switch (status) {
                case STATUSES.running:
                   isAllowed = prev === STATUSES.suspended;
                   break;
                case STATUSES.suspended:
-                  isAllowed = prev === STATUSES.running;
+                  isAllowed = wasRun;
                   break;
                case STATUSES.ended:
-                  isAllowed = prev === STATUSES.running || prev === STATUSES.suspended;
+                  isAllowed = wasRun || prev === STATUSES.suspended;
                   break;
             }
             if (!isAllowed) {
@@ -557,8 +559,6 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                   result = {changed:'status'};
                   break;
                case STATUSES.ended:
-                  operation.progressCurrent = operation.progressTotal;
-                  operation.timeSpent = (new Date()).getTime() - operation.startedAt;
                   if (operation.canDelete) {
                      var actions = self._actions[operationId];
                      delete actions.onSuspend;
@@ -570,6 +570,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                   eventType = 'onlongoperationended';
                   var err = details ? details.error : null;
                   if (!err) {
+                     operation.progressCurrent = operation.progressTotal;
                      if (details) {
                         if (details.url && typeof details.url === 'string') {
                            operation.resultUrl = details.url;
@@ -599,6 +600,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                   }
                   break;
             }
+            operation[wasRun ? 'timeSpent' : 'timeIdle'] = (new Date()).getTime() - operation.startedAt - operation[wasRun ? 'timeIdle' : 'timeSpent'];
             GLOStorage.put(self._name, operationId, _toSnapshot(operation));
             var common = {producer:self._name, operationId:operationId, status:status};
             self._notify(eventType, result ? ObjectAssign(common, result) : common);
