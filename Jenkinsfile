@@ -242,7 +242,7 @@ node('controls') {
         sh """
             cd "${env.WORKSPACE}/controls/tests/stand/intest/"
             sudo python3 "change_theme.py" ${env.theme}
-            cd "${env.WORKSPACE}
+            cd "${env.WORKSPACE}"
         """
         sh """
             sudo chmod -R 0777 ${env.WORKSPACE}
