@@ -2,19 +2,19 @@
 properties([
     buildDiscarder(
         logRotator(
-            artifactDaysToKeepStr: '5', 
-            artifactNumToKeepStr: '10', 
-            daysToKeepStr: '5', 
+            artifactDaysToKeepStr: '5',
+            artifactNumToKeepStr: '10',
+            daysToKeepStr: '5',
             numToKeepStr: '10')),
     parameters([
         string(
-            defaultValue: '3.17.100', 
-            description: 'Версия', 
+            defaultValue: '3.17.100',
+            description: 'Версия',
             name: 'version'),
         string(
             defaultValue: 'rc-3.17.100',
-            description: '', 
-            name: 'branch_engine'), 
+            description: '',
+            name: 'branch_engine'),
         string(
             defaultValue: 'rc-3.17.100',
             description: '',
@@ -34,7 +34,7 @@ properties([
         choice(
             choices: "\nfieldlink\nfilterbutton\natplace\nformcontroller\nglobalpanel\nrichedit\nmove\nscroll\nsearch\nprint\nmerge",
             description: '',
-            name: 'Tag3'),  
+            name: 'Tag3'),
         choice(choices: "chrome\nff", description: '', name: 'browser_type'),
         choice(choices: "all\nonly_reg\nonly_int", description: '', name: 'run_tests')]),
     pipelineTriggers([])
@@ -57,115 +57,115 @@ node('controls') {
         TAGS = "${TAGS}, ${env.Tag3}"
     if ("${TAGS}" != "0")
         TAGS = "--TAGS_TO_START ${TAGS}"
-        
+
     stage("Checkout"){
         // Контролы
         dir("${env.WORKSPACE}") {
-            checkout([$class: 'GitSCM', 
-               branches: [[name: "${env.BRANCH_NAME}"]], 
-               doGenerateSubmoduleConfigurations: false, 
+            checkout([$class: 'GitSCM',
+               branches: [[name: "${env.BRANCH_NAME}"]],
+               doGenerateSubmoduleConfigurations: false,
                extensions: [[
-                   $class: 'RelativeTargetDirectory', 
+                   $class: 'RelativeTargetDirectory',
                    relativeTargetDir: "controls"
-                ]], 
-                submoduleCfg: [], 
+                ]],
+                submoduleCfg: [],
                 userRemoteConfigs: [[
-                    credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b', 
+                    credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
                     url: 'git@git.sbis.ru:sbis/controls.git']]
-            ]) 
+            ])
         }
         // Выкачиваем platform
         dir("${env.WORKSPACE}") {
-            checkout([$class: 'GitSCM', 
-            branches: [[name: "rc-${env.version}"]], 
-            doGenerateSubmoduleConfigurations: false, 
+            checkout([$class: 'GitSCM',
+            branches: [[name: "rc-${env.version}"]],
+            doGenerateSubmoduleConfigurations: false,
             extensions: [[
-                $class: 'RelativeTargetDirectory', 
+                $class: 'RelativeTargetDirectory',
                 relativeTargetDir: "constructor"
-                ]], 
-                submoduleCfg: [], 
+                ]],
+                submoduleCfg: [],
                 userRemoteConfigs: [[
-                    credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b', 
+                    credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
                     url: 'git@git.sbis.ru:sbis-ci/platform.git']]
-            ]) 
-            checkout([$class: 'GitSCM', 
-            branches: [[name: '1.0']], 
-            doGenerateSubmoduleConfigurations: false, 
+            ])
+            checkout([$class: 'GitSCM',
+            branches: [[name: '1.0']],
+            doGenerateSubmoduleConfigurations: false,
             extensions: [[
-                $class: 'RelativeTargetDirectory', 
+                $class: 'RelativeTargetDirectory',
                 relativeTargetDir: "cdn"
-                ]], 
-                submoduleCfg: [], 
+                ]],
+                submoduleCfg: [],
                 userRemoteConfigs: [[
-                    credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b', 
+                    credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
                     url: 'git@git.sbis.ru:root/sbis3-cdn.git']]
-            ]) 
+            ])
         }
         // Выкачиваем constructor и cdn
         dir("./constructor") {
-            checkout([$class: 'GitSCM', 
-            branches: [[name: "rc-${env.version}"]], 
-            doGenerateSubmoduleConfigurations: false, 
+            checkout([$class: 'GitSCM',
+            branches: [[name: "rc-${env.version}"]],
+            doGenerateSubmoduleConfigurations: false,
             extensions: [[
-                $class: 'RelativeTargetDirectory', 
+                $class: 'RelativeTargetDirectory',
                 relativeTargetDir: "Constructor"
-                ]], 
-                submoduleCfg: [], 
+                ]],
+                submoduleCfg: [],
                 userRemoteConfigs: [[
-                    credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b', 
+                    credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
                     url: 'git@git.sbis.ru:sbis-ci/constructor.git']]
-            ]) 
-    
+            ])
+
         }
         // Выкачиваем atf
         dir("./controls/tests/int") {
-        checkout([$class: 'GitSCM', 
-            branches: [[name: "${env.branch_atf}"]], 
-            doGenerateSubmoduleConfigurations: false, 
+        checkout([$class: 'GitSCM',
+            branches: [[name: "${env.branch_atf}"]],
+            doGenerateSubmoduleConfigurations: false,
             extensions: [[
-                $class: 'RelativeTargetDirectory', 
+                $class: 'RelativeTargetDirectory',
                 relativeTargetDir: "atf"
-                ]], 
-                submoduleCfg: [], 
+                ]],
+                submoduleCfg: [],
                 userRemoteConfigs: [[
-                    credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b', 
+                    credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
                     url: 'git@git.sbis.ru:autotests/atf.git']]
-            ]) 
+            ])
         }
-    
+
         // Выкачиваем engine
         dir("./controls/tests"){
-            checkout([$class: 'GitSCM', 
-            branches: [[name: "${env.branch_engine}"]], 
-            doGenerateSubmoduleConfigurations: false, 
+            checkout([$class: 'GitSCM',
+            branches: [[name: "${env.branch_engine}"]],
+            doGenerateSubmoduleConfigurations: false,
             extensions: [[
-                $class: 'RelativeTargetDirectory', 
+                $class: 'RelativeTargetDirectory',
                 relativeTargetDir: "sbis3-app-engine"
-                ]], 
-                submoduleCfg: [], 
+                ]],
+                submoduleCfg: [],
                 userRemoteConfigs: [[
-                    credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b', 
+                    credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
                     url: 'git@git.sbis.ru:sbis/engine.git']]
-            ]) 
-        } 
+            ])
+        }
         // Выкачиваем demo_stand
         dir("${env.WORKSPACE}") {
-            checkout([$class: 'GitSCM', 
-            branches: [[name: 'master']], 
-            doGenerateSubmoduleConfigurations: false, 
+            checkout([$class: 'GitSCM',
+            branches: [[name: 'master']],
+            doGenerateSubmoduleConfigurations: false,
             extensions: [[
-                $class: 'RelativeTargetDirectory', 
+                $class: 'RelativeTargetDirectory',
                 relativeTargetDir: "demo_stand"
-                ]], 
-                submoduleCfg: [], 
+                ]],
+                submoduleCfg: [],
                 userRemoteConfigs: [[
-                    credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b', 
+                    credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
                     url: 'git@git.sbis.ru:ka.sannikov/demo_stand.git']]
-            ]) 
+            ])
         }
         // Копируем /demo_stand/client в /tests/stand/client
         sh "cp -rf ./demo_stand/client ./controls/tests/stand"
-    
+
         // Выкачиваем ws
         if ("${env.branch_ws}" == "rc-${env.version}")
         {
@@ -173,28 +173,28 @@ node('controls') {
         echo "${items_1}"
         } else {
             dir("${env.WORKSPACE}") {
-                checkout([$class: 'GitSCM', 
-                branches: [[name: "${env.branch_ws}"]], 
-                doGenerateSubmoduleConfigurations: false, 
+                checkout([$class: 'GitSCM',
+                branches: [[name: "${env.branch_ws}"]],
+                doGenerateSubmoduleConfigurations: false,
                 extensions: [[
-                    $class: 'RelativeTargetDirectory', 
+                    $class: 'RelativeTargetDirectory',
                     relativeTargetDir: "WIS-git-temp"
-                    ]], 
-                    submoduleCfg: [], 
+                    ]],
+                    submoduleCfg: [],
                     userRemoteConfigs: [[
-                    credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b', 
+                    credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
                     url: 'git@git.sbis.ru:sbis/ws.git']]
-                ]) 
+                ])
             }
             dir("${env.WORKSPACE}") {
                 sh "${python_ver} ./constructor/build_ws.py ${env.WORKSPACE}/WIS-git-temp 'release' ${env.WORKSPACE}/WIS-git-temp_build ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
-                
+
                 items_1="controls:${env.WORKSPACE}/controls, ws:${env.WORKSPACE}/WIS-git-temp_build"
             }
         }
     }
     stage("Разворот стенда"){
-        dir("./constructor/Constructor/SDK") { 
+        dir("./constructor/Constructor/SDK") {
             // Определяем SDK
             SDK = sh returnStdout: true, script: "${python_ver} getSDK.py ${env.version} --conf linux_x86_64 -b"
             SDK = SDK.trim()
@@ -234,7 +234,7 @@ node('controls') {
             ОтправлятьНаСервисЛогов=Нет
             [Тест]
             Адрес=http://${env.NODE_NAME}:10001"""
-        // Копируем шаблоны     
+        // Копируем шаблоны
         sh """cp -f ./controls/tests/stand/intest/pageTemplates/branch/* ./controls/tests/stand/intest/pageTemplates"""
         sh """
             sudo chmod -R 0777 ${env.WORKSPACE}
@@ -242,27 +242,27 @@ node('controls') {
             sudo chmod -R 0777 ${env.WORKSPACE}
             sudo chmod -R 0777 /home/jenkins/jenkins_p/workspace/Controls1
         """
-        
+
         //Пакуем данные
         writeFile file: "/home/jenkins/jenkins_p/workspace/Controls1/Core.package.json", text: """
-            { 
+            {
             "modules" : [
-            "Core/core", 
+            "Core/core",
             "WS.Data/Source/SbisService",
-            "WS.Data/Source/Memory", 
-            "WS.Data/Entity/Model", 
+            "WS.Data/Source/Memory",
+            "WS.Data/Entity/Model",
             "WS.Data/Collection/RecordSet",
             "SBIS3.CONTROLS.ItemsControlMixin"
             ],
-                "output" : "/resources/Core.module.js" 
+                "output" : "/resources/Core.module.js"
             }"""
-            
+
         sh """
             cd ./jinnee/distrib/builder
-            node .\node_modules/grunt-cli/bin/grunt custompack --root=/home/jenkins/jenkins_p/workspace/Controls1 --application=/
-        """ 
+            node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/jenkins/jenkins_p/workspace/Controls1 --application=/
+        """
     }
-    writeFile file: "./controls/tests/int/config.ini", text: 
+    writeFile file: "./controls/tests/int/config.ini", text:
         """# UTF-8
         [general]
         browser = ${env.browser_type}
@@ -280,9 +280,9 @@ node('controls') {
         SERVER = test-autotest-db1
         BASE_VERSION = css_${NODE_NAME}${ver}1
         server_address = http://10.76.163.98:4380/wd/hub"""
-        
-    writeFile file: "./controls/tests/reg/config.ini", 
-        text: 
+
+    writeFile file: "./controls/tests/reg/config.ini",
+        text:
         """# UTF-8
         [general]
         browser = ${env.browser_type}
@@ -302,7 +302,7 @@ node('controls') {
         RUN_REGRESSION=True
         server_address = http://10.76.159.209:4444/wd/hub
         CHROME_BINARY_LOCATION=C:\\chrome64_58\\chrome.exe"""
-        
+
     def run_test_fail = ""
     if ("${RUN_ONLY_FAIL_TEST}" == 'true'){
         run_test_fail = "-sf"
@@ -343,11 +343,11 @@ node('controls') {
             }
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: "./controls/tests/reg/capture_report/", reportFiles: "report.html", reportName: "Regression Report", reportTitles: ""])
         }
-    } 
+    }
     stage("Результаты"){
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
     }
-    
+
 }
