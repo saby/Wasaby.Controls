@@ -340,6 +340,7 @@ node('controls') {
             node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls1 --application=/
         """
     }
+   def work_dir=""
    dir("$workspace"){
       work_dir = sh returnStdout: true, script: "python3 -c 'import os; print(os.path.basename(os.getcwd()).strip())'"
       }
