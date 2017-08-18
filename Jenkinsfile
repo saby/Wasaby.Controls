@@ -43,7 +43,7 @@ properties([
         choice(choices: "all\nonly_reg\nonly_int\nonly_unit", description: '', name: 'run_tests')]),
     pipelineTriggers([])
 ])
-
+ws('$BRANC_NAME') {
 node('controls') {
     def version = "3.17.100"
     def workspace = "${env.WORKSPACE}"
@@ -228,7 +228,14 @@ node('controls') {
             }
         }
     }
-
+    def work_dir=""
+    dir("$workspace"){
+        work_dir = sh returnStdout: true, script: """
+        python3 -c "import os; print(os.path.basename(os.getcwd()).rstrip('\\n'))"
+        """
+        }
+    echo 'work_dir'
+    echo 'http://${NODE_NAME}:2100/${work_dir}/controls/tests/int/'
     stage("Сборка компонент"){
         // Собираем controls
         dir("./controls"){
@@ -340,14 +347,7 @@ node('controls') {
             node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls1 --application=/
         """
     }
-    def work_dir=""
-    dir("$workspace"){
-        work_dir = sh returnStdout: true, script: """
-        python3 -c "import os; print(os.path.basename(os.getcwd()).rstrip('\\n'))"
-        """
-        }
-    echo 'work_dir'
-    echo 'http://${NODE_NAME}:2100/${work_dir}/controls/tests/int/'
+
     writeFile file: "./controls/tests/int/config.ini", text:
         """# UTF-8
         [general]
@@ -464,4 +464,5 @@ node('controls') {
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
     }
 
+}
 }
