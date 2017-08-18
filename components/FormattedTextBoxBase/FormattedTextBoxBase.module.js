@@ -334,35 +334,30 @@ define(
        * Задать положение курсора
        * @param groupNum индекс группы относительно других групп и разделителей
        * @param position позиция в группе
-       * @param {boolean} [isShiftGroupRight=true] осуществлять ли сдвиг курсора вправо если он стоит перед разделителем
+       * @param {boolean} [shiftRightSeparator=true] осуществлять ли сдвиг курсора вправо если он стоит перед разделителем
        * @returns {boolean} true если курсор установлен
        */
-      setCursor: function(groupNum, position, isShiftGroupRight) {
-         if (typeof isShiftGroupRight === 'undefined') {
-            isShiftGroupRight = true;
-         }
+      setCursor: function(groupNum, position, shiftRightSeparator) {
          var insertInfo,
-            group,
-            isValidCursor = true;
+            group;
+         shiftRightSeparator = shiftRightSeparator === undefined ? true : shiftRightSeparator;
          if ( !this.model  ||  this.model.length === 0) {
             throw new Error('setCursor. Не задана модель');
          }
          group = this.model[groupNum];
-         if (isShiftGroupRight) {
+         if (shiftRightSeparator) {
             insertInfo = this._calcPosition(groupNum, position);
-            if (insertInfo) {
-               this._options.cursorPosition.group = insertInfo.groupNum;
-               this._options.cursorPosition.position = insertInfo.position;
-            } else {
-               isValidCursor = false;
-            }
          } else if (group && group.isGroup && group.mask.length >= position && position >= 0) {
-            this._options.cursorPosition.group = groupNum;
-            this._options.cursorPosition.position = position;
-         } else {
-            isValidCursor = false;
+            insertInfo = {
+               groupNum: groupNum,
+               position: position
+            };
          }
-         return isValidCursor;
+         if (insertInfo) {
+            this._options.cursorPosition.group = insertInfo.groupNum;
+            this._options.cursorPosition.position = insertInfo.position;
+         }
+         return !!insertInfo;
       },
       /**
        * Проверяет подходит ли символ группе в заданной позиции
@@ -1094,7 +1089,7 @@ define(
        * В остальных случаях управлять положением курсора не требуется.
        * @param {Number} groupNum Номер контейнера.
        * @param {Number} position Позиция в контейнере.
-       * @param {Boolean} [isShiftGroupRight=true] осуществлять ли сдвиг курсора вправо если он стоит перед разделителем
+       * @param {Boolean} [shiftRightSeparator=true] осуществлять ли сдвиг курсора вправо если он стоит перед разделителем
        * @returns {Boolean} Положение курсора.
        * @example
        * По завершению ввода добавим в конец маски группу из 3 цифр
@@ -1115,12 +1110,12 @@ define(
        * @see setMask
        * @see onInputFinished
        */
-      setCursor: function(groupNum, position, isShiftGroupRight) {
+      setCursor: function(groupNum, position, shiftRightSeparator) {
          var formatModel = this._getFormatModel(),
             currentGroup = formatModel._options.cursorPosition.group,
             newContainer,
             currentPosition = formatModel._options.cursorPosition.position;
-         if (!formatModel.setCursor(groupNum, position, isShiftGroupRight)) {
+         if (!formatModel.setCursor(groupNum, position, shiftRightSeparator)) {
             return false;
          }
          newContainer = _getContainerByIndex.call(this, formatModel._options.cursorPosition.group);
