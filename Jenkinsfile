@@ -263,13 +263,14 @@ node('controls') {
                 sh "sh ./bin/test-isolated"
                 sh "mv ./artifacts/xunit-report.xml ./artifacts/test-isolated-report.xml"
 
-                def test_url_host = "${env.NODE_NAME}"
-                def test_server_port = "10253"
-                def test_url_port = "10253"
-                def WEBDRIVER_remote_enabled = "1"
-                def WEBDRIVER_remote_host = "10.76.163.98"
-                def WEBDRIVER_remote_port = "4380"
-                sh "sh ./bin/test-browser"
+                sh """
+                export test_url_host = ${env.NODE_NAME}
+                export test_server_port = 10253
+                export test_url_port = 10253
+                export WEBDRIVER_remote_enabled = 1
+                export WEBDRIVER_remote_host = 10.76.163.98
+                export WEBDRIVER_remote_port = 4380
+                sh ./bin/test-browser"""
                 sh "mv ./artifacts/xunit-report.xml ./artifacts/test-browser-report.xml"
             }
         }
