@@ -237,7 +237,7 @@ node('controls') {
         dir("${WORKSPACE}"){
             // Собираем ws если задан сторонний бранч
             if ("${env.ws_revision}" != "sdk"){
-                new File("${WORKSPACE}/WIS-git-temp2").mkdir()  
+                new File("${WORKSPACE}/WIS-git-temp2").mkdir()
                 sh "${python_ver} ${env.WORKSPACE}/constructor/build_ws.py ${env.WORKSPACE}/WIS-git-temp 'release' ${env.WORKSPACE}/WIS-git-temp2 ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
                 // Добавляем в items
                 items = items + ", ws:${env.WORKSPACE}/WIS-git-temp2"
@@ -270,7 +270,7 @@ node('controls') {
                 def WEBDRIVER_remote_host = "10.76.163.98"
                 def WEBDRIVER_remote_port = "4380"
                 sh "./bin/test-browser"
-                sh "mv ./artifacts/xunit-report.xml ./artifacts/test-browser-report.xml" 
+                sh "mv ./artifacts/xunit-report.xml ./artifacts/test-browser-report.xml"
             }
         }
     }
@@ -337,7 +337,7 @@ node('controls') {
             node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls1 --application=/
         """
     }
-    work_dir = sh returnStdout: true, script: "echo ${env.WORKSPACE}|awk -F \"/\" '{print $4}'"
+    work_dir = sh returnStdout: true, script: "python3 -c \"import os; print(os.path.basename('${env.WORKSPACE}'))\""
     writeFile file: "./controls/tests/int/config.ini", text:
         """# UTF-8
         [general]
