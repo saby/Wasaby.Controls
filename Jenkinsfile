@@ -343,9 +343,11 @@ node('controls') {
     def work_dir=""
     dir("$workspace"){
         work_dir = sh returnStdout: true, script: """
-        python3 -c "import os; print(os.path.basename(os.getcwd()).strip('\n'))"
+        python3 -c "import os; print(os.path.basename(os.getcwd()).rstrip('\\n'))"
         """
         }
+    echo 'work_dir'
+    echo 'http://${NODE_NAME}:2100/${work_dir}/controls/tests/int/'
     writeFile file: "./controls/tests/int/config.ini", text:
         """# UTF-8
         [general]
