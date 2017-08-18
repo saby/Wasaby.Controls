@@ -383,7 +383,9 @@ node('controls') {
         }
     }
     stage("Результаты"){
-        publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: "./controls/tests/reg/capture_report/", reportFiles: "report.html", reportName: "Regression Report", reportTitles: ""])
+        dir("${env.WORKSPACE}"){
+           publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
+        }
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
