@@ -254,8 +254,8 @@ node('controls') {
     stage("Unit тесты"){
         if (("${env.run_tests}" == "only_unit" ) || ("${run_tests}" == "all")){
             dir("${WORKSPACE}"){
-                sh "cp -rf ./ws_data/WS.Data", ".controls/components/"
-                sh "cp -rf ./ws_data/WS.Data", ".controls/"
+                sh "cp -rf ./ws_data/WS.Data .controls/components/"
+                sh "cp -rf ./ws_data/WS.Data .controls/"
             }
             dir("./controls"){
                 sh "npm config set registry http://npmregistry.sbis.ru:81/"
