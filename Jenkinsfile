@@ -234,10 +234,11 @@ node('controls') {
         dir("./controls"){
             sh "${python_ver} ${workspace}/constructor/build_controls.py ${workspace}/controls ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
         }
-        dir("${WORKSPACE}"){
+        dir("${workspace}"){
             // Собираем ws если задан сторонний бранч
             if ("${env.ws_revision}" != "sdk"){
-                sh "mkdir ${WORKSPACE}/WIS-git-temp2"
+                sh "rm -rf ${workspace}/WIS-git-temp2"
+                sh "mkdir ${workspace}/WIS-git-temp2"
                 sh "${python_ver} ${workspace}/constructor/build_ws.py ${workspace}/WIS-git-temp 'release' ${workspace}/WIS-git-temp2 ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
                 // Добавляем в items
                 items = items + ", ws:${workspace}/WIS-git-temp2"
@@ -254,7 +255,7 @@ node('controls') {
 
     stage("Unit тесты"){
         if (("${env.run_tests}" == "only_unit" ) || ("${run_tests}" == "all")){
-            dir("${WORKSPACE}"){
+            dir("${workspace}"){
                 sh "cp -rf ./WIS-git-temp ./controls/sbis3-ws"
                 sh "cp -rf ./ws_data/WS.Data ./controls/components/"
                 sh "cp -rf ./ws_data/WS.Data ./controls/"
