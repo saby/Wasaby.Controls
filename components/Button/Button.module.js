@@ -5,8 +5,9 @@ define('js!SBIS3.CONTROLS.Button',
       'tmpl!SBIS3.CONTROLS.Button',
       'Core/core-functions',
       'js!SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor',
-      "js!SBIS3.CORE.Control/ControlGoodCode",
-      'css!SBIS3.CONTROLS.Button'
+      'js!SBIS3.CORE.Control/ControlGoodCode',
+      'css!SBIS3.CONTROLS.Button',
+      'css!WSControls/Buttons/resources/ButtonBase'
          ],
 
    function (Base,
