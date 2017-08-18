@@ -245,9 +245,8 @@ node('controls') {
             }
             // Собираем ws.data только когда указан сторонний бранч
             if ("${env.ws_data_revision}" != "sdk"){
-                sh "${python_ver} ${workspace}/constructor/build_ws_data.py ${workspace}/ws_data ${workspace} ${env.BUILD_NUMBER} ${env.BUILD_ID} --not_web_sdk NOT_WEB_SDK"
                 // Добавляем в items
-                items = items + ", ws_data:${workspace}"
+                items = items + ", ws_data:${workspace}/ws_data"
             }
         }
         echo "${items}"
