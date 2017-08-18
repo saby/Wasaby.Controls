@@ -46,10 +46,11 @@ properties([
 
 node('controls') {
     def version = "3.17.100"
+    def workspace = "${env.WORKSPACE}"
     def ver = version.replaceAll('.','')
     def python_ver = 'python3'
     def SDK = ""
-    def items = "controls:${env.WORKSPACE}/controls"
+    def items = "controls:${workspace}/controls"
 
     def TAGS = ""
     if ("${env.Tag1}" != "")
@@ -63,7 +64,7 @@ node('controls') {
 
     stage("Checkout"){
         // Контролы
-        dir("${env.WORKSPACE}") {
+        dir("${workspace}") {
             checkout([$class: 'GitSCM',
                branches: [[name: "${env.BRANCH_NAME}"]],
                doGenerateSubmoduleConfigurations: false,
@@ -85,7 +86,7 @@ node('controls') {
          }
 
         // Выкачиваем platform и cdn
-        dir("${env.WORKSPACE}") {
+        dir("${workspace}") {
             checkout([$class: 'GitSCM',
             branches: [[name: "rc-${version}"]],
             doGenerateSubmoduleConfigurations: false,
@@ -167,7 +168,7 @@ node('controls') {
             ])
         }
         // Выкачиваем demo_stand
-        dir("${env.WORKSPACE}") {
+        dir("${workspace}") {
             checkout([$class: 'GitSCM',
             branches: [[name: 'master']],
             doGenerateSubmoduleConfigurations: false,
@@ -188,9 +189,9 @@ node('controls') {
         if (("${env.run_tests}" == "only_unit" ) || ("${run_tests}" == "all") || ("${env.ws_revision}" != "sdk") ){
             def ws_revision = "${env.ws_revision}"
             if ("${env.ws_revision}" == "sdk"){
-                ws_revision = sh returnStdout: true, script: "${python_ver} ${env.WORKSPACE}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
+                ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
             }
-            dir("${env.WORKSPACE}") {
+            dir("${workspace}") {
                 checkout([$class: 'GitSCM',
                 branches: [[name: "${ws_revision}"]],
                 doGenerateSubmoduleConfigurations: false,
@@ -209,9 +210,9 @@ node('controls') {
         if (("${env.run_tests}" == "only_unit" ) || ("${run_tests}" == "all") || ("${env.ws_data_revision}" != "sdk") ){
             def ws_data_revision = "${env.ws_data_revision}"
             if ("${env.ws_data_revision}" == "sdk"){
-                ws_data_revision = sh returnStdout: true, script: "${python_ver} ${env.WORKSPACE}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
+                ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
             }
-            dir("${env.WORKSPACE}") {
+            dir("${workspace}") {
                 checkout([$class: 'GitSCM',
                 branches: [[name: "${ws_data_revision}"]],
                 doGenerateSubmoduleConfigurations: false,
@@ -231,21 +232,21 @@ node('controls') {
     stage("Сборка компонент"){
         // Собираем controls
         dir("./controls"){
-            sh "${python_ver} ${env.WORKSPACE}/constructor/build_controls.py ${env.WORKSPACE}/controls ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
+            sh "${python_ver} ${workspace}/constructor/build_controls.py ${workspace}/controls ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
         }
         dir("${WORKSPACE}"){
             // Собираем ws если задан сторонний бранч
             if ("${env.ws_revision}" != "sdk"){
                 sh "mkdir ${WORKSPACE}/WIS-git-temp2"
-                sh "${python_ver} ${env.WORKSPACE}/constructor/build_ws.py ${env.WORKSPACE}/WIS-git-temp 'release' ${env.WORKSPACE}/WIS-git-temp2 ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
+                sh "${python_ver} ${workspace}/constructor/build_ws.py ${workspace}/WIS-git-temp 'release' ${workspace}/WIS-git-temp2 ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
                 // Добавляем в items
-                items = items + ", ws:${env.WORKSPACE}/WIS-git-temp2"
+                items = items + ", ws:${workspace}/WIS-git-temp2"
             }
             // Собираем ws.data только когда указан сторонний бранч
             if ("${env.ws_data_revision}" != "sdk"){
-                sh "${python_ver} ${env.WORKSPACE}/constructor/build_ws_data.py ${env.WORKSPACE}/ws_data ${env.WORKSPACE} ${env.BUILD_NUMBER} ${env.BUILD_ID} --not_web_sdk NOT_WEB_SDK"
+                sh "${python_ver} ${workspace}/constructor/build_ws_data.py ${workspace}/ws_data ${workspace} ${env.BUILD_NUMBER} ${env.BUILD_ID} --not_web_sdk NOT_WEB_SDK"
                 // Добавляем в items
-                items = items + ", ws_data:${env.WORKSPACE}/WS.Data"
+                items = items + ", ws_data:${workspace}/WS.Data"
             }
         }
         echo "${items}"
@@ -309,14 +310,14 @@ node('controls') {
         // Копируем шаблоны
         sh """cp -f ./controls/tests/stand/intest/pageTemplates/branch/* ./controls/tests/stand/intest/pageTemplates"""
         sh """
-            cd "${env.WORKSPACE}/controls/tests/stand/intest/"
+            cd "${workspace}/controls/tests/stand/intest/"
             sudo python3 "change_theme.py" ${env.theme}
-            cd "${env.WORKSPACE}"
+            cd "${workspace}"
         """
         sh """
-            sudo chmod -R 0777 ${env.WORKSPACE}
+            sudo chmod -R 0777 ${workspace}
             ${python_ver} "./constructor/updater.py" "${version}" "/home/sbis/Controls1" "css_${env.NODE_NAME}${ver}1" "./controls/tests/stand/conf/sbis-rpc-service.ini" "./controls/tests/stand/distrib_branch_new" --sdk_path "${SDK}" --items "${items}" --host test-autotest-db1 --stand nginx_branch --daemon_name Controls1
-            sudo chmod -R 0777 ${env.WORKSPACE}
+            sudo chmod -R 0777 ${workspace}
             sudo chmod -R 0777 /home/sbis/Controls1
         """
 
@@ -339,7 +340,7 @@ node('controls') {
             node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls1 --application=/
         """
     }
-    work_dir = sh returnStdout: true, script: "python3 -c \"import os; print(os.path.basename('${env.WORKSPACE}'))\""
+    work_dir = sh returnStdout: true, script: "python3 -c \"import os; print(os.path.basename('${workspace}'))\""
     writeFile file: "./controls/tests/int/config.ini", text:
         """# UTF-8
         [general]
@@ -446,7 +447,7 @@ node('controls') {
         }
     }
     stage("Результаты"){
-        dir("${env.WORKSPACE}"){
+        dir("${workspace}"){
            publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
         }
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
