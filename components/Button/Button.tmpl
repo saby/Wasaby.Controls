@@ -12,6 +12,7 @@
       class="controls-Button controls-ButtonBase
  controls-Button-size__{{!!_options.size ? _options.size : 'default'}}
  controls-Button-color__{{_options.primary ? 'primary':'default'}}
+{{_options.primary ? ' controls-Button__primary'}}
 {{_isActiveByClick?' controls-Click__active'}}
 {{!isVisible() ? ' ws-hidden'}}
 {{!isEnabled() ? ' ws-disabled':' ws-enabled'}}"

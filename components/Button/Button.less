@@ -26,6 +26,17 @@
          }
       }
    }
+   /* TODO https://online.sbis.ru/opendoc.html?guid=51396ef7-59e1-417a-a74d-a8571cec2f6d
+      на класс controls-Button__primary завязаны прикладники и тесты
+   */
+   &.controls-Button__primary {
+      color: @button-text-color;
+      background: @button-primary-bg-color;
+      border-color: @button-primary-border-color;
+      &:active:not(.ws-disabled) {
+         background: @button-primary-bg-active;
+      }
+   }
 
    /* End Button Themes */
    &.controls-Button-size__ {
@@ -94,6 +105,11 @@
             &:hover {
                background: @button-primary-hover-bg;
             }
+         }
+      }
+      &.controls-Button__primary {
+         &:hover {
+            background: @button-primary-hover-bg;
          }
       }
    }
