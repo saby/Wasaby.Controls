@@ -341,7 +341,7 @@ node('controls') {
             node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls1 --application=/
         """
     }
-    work_dir = sh returnStdout: true, script: "python3 -c \"import os; print(os.path.basename('${workspace}').strip())\""
+    def work_dir = sh returnStdout: true, script: "python3 -c \"import os; print(os.path.basename(\'${workspace}\).strip())\""
     writeFile file: "./controls/tests/int/config.ini", text:
         """# UTF-8
         [general]
