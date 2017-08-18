@@ -50,6 +50,7 @@ node('controls') {
     def python_ver = 'python3'
     def SDK = ""
     def items = "controls:${env.WORKSPACE}/controls"
+    sh "export VERSION=${version}" // версия нужна еще в окружении
 
     def TAGS = ""
     if ("${env.Tag1}" != "")
