@@ -327,7 +327,7 @@ node('controls') {
             NO_RESOURCES = True
             STREAMS_NUMBER = 15
             DELAY_RUN_TESTS = 2
-            TAGS_NOT_TO_START = ${env.theme}
+            TAGS_TO_START = ${env.theme}
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
             HTTP_PATH = http://${NODE_NAME}:2100/sbis3-controls_${env.version}/${env.BRANCH_NAME}/controls/tests/reg/
@@ -373,10 +373,10 @@ node('controls') {
                     deactivate
                 """
             }
-            //publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: "./controls/tests/reg/capture_report/", reportFiles: "report.html", reportName: "Regression Report", reportTitles: ""])
         }
     }
     stage("Результаты"){
+        publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: "./controls/tests/reg/capture_report/", reportFiles: "report.html", reportName: "Regression Report", reportTitles: ""])
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
