@@ -51,7 +51,6 @@ node('controls') {
     def SDK = ""
     def items = "controls:${env.WORKSPACE}/controls"
 
-    echo "${env.JOB_NAME}"
     def TAGS = ""
     if ("${env.Tag1}" != "")
         TAGS = "${env.Tag1}"
@@ -249,6 +248,7 @@ node('controls') {
                 items = items + ", ws_data:${env.WORKSPACE}/WS.Data"
             }
         }
+        echo "${items}"
     }
 
     stage("Unit тесты"){
