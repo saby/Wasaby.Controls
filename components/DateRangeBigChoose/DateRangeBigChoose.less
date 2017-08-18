@@ -419,7 +419,7 @@
          width: @date-range-big-choose-months-range-width;
          .range-vertical-button-bar-mixin();
 
-         a.controls-Button.controls-Button__default {
+         a.controls-Button {
             .inline-flexbox();
             .justify-content(flex-start);
             .align-items(center);
@@ -435,7 +435,7 @@
             background-color: transparent;
             .controls-Button__wrapper {
                padding: 0;
-               .justify-content(@date-range-big-choose-months-text-align);
+               .justify-content(flex-start);
             }
 
             &:first-child {
