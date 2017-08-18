@@ -50,7 +50,6 @@ node('controls') {
     def python_ver = 'python3'
     def SDK = ""
     def items = "controls:${env.WORKSPACE}/controls"
-    sh "export VERSION=${version}" // версия нужна еще в окружении
 
     def TAGS = ""
     if ("${env.Tag1}" != "")
@@ -232,7 +231,7 @@ node('controls') {
     stage("Сборка компонент"){
         // Собираем controls
         dir("./controls"){
-            sh "${python_ver} ${env.WORKSPACE}/constructor/build_controls.py ${env.WORKSPACE}/controls ${env.BUILD_NUMBER}"
+            sh "${python_ver} ${env.WORKSPACE}/constructor/build_controls.py ${env.WORKSPACE}/controls ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
         }
         dir("${WORKSPACE}"){
             // Собираем ws если задан сторонний бранч
@@ -244,7 +243,7 @@ node('controls') {
             }
             // Собираем ws.data только когда указан сторонний бранч
             if ("${env.ws_data_revision}" != "sdk"){
-                sh "${python_ver} ${env.WORKSPACE}/constructor/build_ws_data.py ${env.WORKSPACE}/ws_data ${env.WORKSPACE} ${env.BUILD_NUMBER} ${env.BUILD_ID}"
+                sh "${python_ver} ${env.WORKSPACE}/constructor/build_ws_data.py ${env.WORKSPACE}/ws_data ${env.WORKSPACE} ${env.BUILD_NUMBER} ${env.BUILD_ID} --not_web_sdk NOT_WEB_SDK"
                 // Добавляем в items
                 items = items + ", ws_data:${env.WORKSPACE}/WS.Data"
             }
