@@ -257,19 +257,19 @@ node('controls') {
                 Files.copy("./ws_data/WS.Data", ".controls/components/")
                 Files.copy("./ws_data/WS.Data", ".controls/")
             }
-            dir("${WORKSPACE}"){
+            dir("./controls"){
                 sh "npm config set registry http://npmregistry.sbis.ru:81/"
 
-                sh "./sh bin/test-isolated"
+                sh "./bin/test-isolated"
                 new File("./artifacts/xunit-report.xml").renameTo(new File("./artifacts/test-isolated-report.xml"))  
 
                 def test_url_host = "${env.NODE_NAME}"
-                def test_server_port = 10253
-                def test_url_port = 10253
-                def WEBDRIVER_remote_enabled = 1
-                def WEBDRIVER_remote_host = 10.76.163.98
-                def WEBDRIVER_remote_port = 4380
-                sh "./sh bin/test-browser"
+                def test_server_port = "10253"
+                def test_url_port = "10253"
+                def WEBDRIVER_remote_enabled = "1"
+                def WEBDRIVER_remote_host = "10.76.163.98"
+                def WEBDRIVER_remote_port = "4380"
+                sh "./bin/test-browser"
                 new File("./artifacts/xunit-report.xml").renameTo(new File("./artifacts/test-browser-report.xml"))  
             }
         }
