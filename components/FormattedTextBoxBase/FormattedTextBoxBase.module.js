@@ -347,6 +347,7 @@ define(
          group = this.model[groupNum];
          if (shiftRightSeparator) {
             insertInfo = this._calcPosition(groupNum, position);
+            // Если нет необходимости сдвигать курсор вправо проверяем возможно ли установить курсор в рамках текущей модели.
          } else if (group && group.isGroup && group.mask.length >= position && position >= 0) {
             insertInfo = {
                groupNum: groupNum,
@@ -1113,14 +1114,15 @@ define(
       setCursor: function(groupNum, position, shiftRightSeparator) {
          var formatModel = this._getFormatModel(),
             currentGroup = formatModel._options.cursorPosition.group,
-            newContainer,
-            currentPosition = formatModel._options.cursorPosition.position;
+            currentPosition = formatModel._options.cursorPosition.position,
+            newContainer;
          if (!formatModel.setCursor(groupNum, position, shiftRightSeparator)) {
             return false;
          }
          newContainer = _getContainerByIndex.call(this, formatModel._options.cursorPosition.group);
          formatModel._options.newContainer = newContainer;
          formatModel._options.newPosition = formatModel._options.cursorPosition.position;
+         // Если курсор не совпадает с пекущей позицией передвигаем каретку
          if (currentGroup !== groupNum || currentPosition !== position) {
             _moveCursor(newContainer, formatModel._options.cursorPosition.position);
          }
@@ -1169,8 +1171,9 @@ define(
             formatModel = this._getFormatModel();
          this._options.mask = mask;
          formatModel.setMask(mask);
-         formatModel.setCursor(0, 0);
          this._inputField.html(this._getHtmlMask());
+         // Перемещаем курсор в модели в начало т.к каретка становится вначале поля ввода.
+         formatModel.setCursor(0, 0);
          //TODO исправить выставление курсора
          setTimeout(function() {
             //Если контрол не сфокусирован, и мы вызываем нажатие alt, то
