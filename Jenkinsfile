@@ -47,7 +47,7 @@ properties([
 node('controls') {
     def version = "3.17.100"
     ws('/home/sbis/workspace/controls_${version}/$BRANCH_NAME') {
-        def workspace = "${env.WORKSPACE}"
+        def workspace = "${PWD}"
         def ver = version.replaceAll('.','')
         def python_ver = 'python3'
         def SDK = ""
