@@ -453,7 +453,7 @@ node('controls') {
     }
     stage("Результаты"){
         dir("${workspace}"){
-           publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
+            publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
         }
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
         junit keepLongStdio: true, testResults: "./controls/artifacts/test-isolated-report.xml"
