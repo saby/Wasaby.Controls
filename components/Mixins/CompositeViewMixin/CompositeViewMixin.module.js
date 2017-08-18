@@ -11,8 +11,9 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/ItemsTemplate',
    'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/InvisibleItemsTemplate',
    'Core/core-merge',
+   'Core/core-instance',
    'js!SBIS3.CONTROLS.Link'
-], function(constants, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate, ItemsTemplate, InvisibleItemsTemplate, cMerge) {
+], function(constants, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate, ItemsTemplate, InvisibleItemsTemplate, cMerge, cInstance) {
    'use strict';
    /**
     * Миксин добавляет функционал, который позволяет контролу устанавливать режимы отображения элементов коллекции по типу "Таблица", "Плитка" и "Список".
@@ -521,7 +522,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
                //2. Если это удаление
                // тогда можно отрисовать как обычно
                // в остальных случаях полная перерисовка
-               if (((lastItemsIndex == newItemsIndex) && (newItems[0].isNode())) || action == 'rm') {
+               if (((lastItemsIndex == newItemsIndex) && !(cInstance.instanceOfModule(newItems[0], 'WS.Data/Display/TreeItem') && newItems[0].isNode())) || action == 'rm') {
                   parentFnc.apply(this, args);
                }
                else {
