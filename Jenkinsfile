@@ -43,8 +43,10 @@ properties([
         choice(choices: "all\nonly_reg\nonly_int\nonly_unit", description: '', name: 'run_tests')]),
     pipelineTriggers([])
 ])
-ws('$BRANC_NAME') {
+
 node('controls') {
+    ws('$BRANC_NAME') {
+
     def version = "3.17.100"
     def workspace = "${env.WORKSPACE}"
     def ver = version.replaceAll('.','')
@@ -463,6 +465,7 @@ node('controls') {
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
     }
+    }
 
 }
-}
+
