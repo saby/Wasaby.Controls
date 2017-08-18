@@ -77,7 +77,14 @@ node('controls') {
                     credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
                     url: 'git@git.sbis.ru:sbis/controls.git']]
             ])
-        }
+         }
+         dir("./controls"){
+            sh """
+               git fetch
+               git merge origin/rc-${env.version}
+            """
+         }
+
         // Выкачиваем platform
         dir("${env.WORKSPACE}") {
             checkout([$class: 'GitSCM',
