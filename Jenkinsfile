@@ -81,7 +81,7 @@ node('controls') {
          dir("./controls"){
             sh """
                git fetch
-               git merge origin/rc-${version}
+               git merge origin/rc-3.17.100
             """
          }
 
