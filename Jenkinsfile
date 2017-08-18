@@ -229,7 +229,7 @@ node('controls') {
         }
     }
 
-    stage("Сборка: WS, Controls, WS.Data"){
+    stage("Сборка компонент"){
         // Собираем controls
         dir("./controls"){
             sh "${python_ver} ${env.WORKSPACE}/constructor/build_controls.py ${env.WORKSPACE}/controls ${env.BUILD_NUMBER}"
