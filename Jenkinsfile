@@ -85,7 +85,7 @@ node('controls') {
          dir("./controls"){
             sh """
                git fetch
-               git merge origin/rc-${env.version}
+               git merge origin/rc-${version}
             """
          }
 
@@ -337,6 +337,7 @@ node('controls') {
             node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls1 --application=/
         """
     }
+    work_dir = sh returnStdout: true, script: "echo ${env.WORKSPACE}|awk -F \"/\" '{print $4}'"
     writeFile file: "./controls/tests/int/config.ini", text:
         """# UTF-8
         [general]
@@ -351,7 +352,7 @@ node('controls') {
         TAGS_NOT_TO_START = iOSOnly
         ELEMENT_OUTPUT_LOG = locator
         WAIT_ELEMENT_LOAD = 20
-        HTTP_PATH = http://${NODE_NAME}:2100/sbis3-controls_${env.version}/${env.BRANCH_NAME}/controls/tests/int/
+        HTTP_PATH = http://${NODE_NAME}:2100/${work_dir}/controls/tests/int/
         SERVER = test-autotest-db1
         BASE_VERSION = css_${NODE_NAME}${ver}1
         server_address = http://10.76.163.98:4380/wd/hub"""
@@ -373,7 +374,7 @@ node('controls') {
             TAGS_TO_START = ${env.theme}
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
-            HTTP_PATH = http://${NODE_NAME}:2100/sbis3-controls_${env.version}/${env.BRANCH_NAME}/controls/tests/reg/
+            HTTP_PATH = http://${NODE_NAME}:2100/${work_dir}/controls/tests/reg/
             SERVER = test-autotest-db1
             BASE_VERSION = css_${NODE_NAME}${ver}1
             server_address = http://10.76.159.209:4444/wd/hub
@@ -397,7 +398,7 @@ node('controls') {
             TAGS_TO_START = ${env.theme}
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
-            HTTP_PATH = http://${NODE_NAME}:2100/sbis3-controls_${env.version}/${env.BRANCH_NAME}/controls/tests/reg/
+            HTTP_PATH = http://${NODE_NAME}:2100/${work_dir}/controls/tests/reg/
             SERVER = test-autotest-db1
             BASE_VERSION = css_${NODE_NAME}${ver}1
             server_address = http://10.76.159.209:4444/wd/hub
