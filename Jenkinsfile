@@ -254,14 +254,14 @@ node('controls') {
     stage("Unit тесты"){
         if (("${env.run_tests}" == "only_unit" ) || ("${run_tests}" == "all")){
             dir("${WORKSPACE}"){
-                Files.copy("./ws_data/WS.Data", ".controls/components/")
-                Files.copy("./ws_data/WS.Data", ".controls/")
+                sh "cp -rf ./ws_data/WS.Data", ".controls/components/"
+                sh "cp -rf ./ws_data/WS.Data", ".controls/"
             }
             dir("./controls"){
                 sh "npm config set registry http://npmregistry.sbis.ru:81/"
 
                 sh "./bin/test-isolated"
-                new File("./artifacts/xunit-report.xml").renameTo(new File("./artifacts/test-isolated-report.xml"))  
+                sh "mv ./artifacts/xunit-report.xml ./artifacts/test-isolated-report.xml"
 
                 def test_url_host = "${env.NODE_NAME}"
                 def test_server_port = "10253"
@@ -270,7 +270,7 @@ node('controls') {
                 def WEBDRIVER_remote_host = "10.76.163.98"
                 def WEBDRIVER_remote_port = "4380"
                 sh "./bin/test-browser"
-                new File("./artifacts/xunit-report.xml").renameTo(new File("./artifacts/test-browser-report.xml"))  
+                sh "mv ./artifacts/xunit-report.xml ./artifacts/test-browser-report.xml" 
             }
         }
     }
