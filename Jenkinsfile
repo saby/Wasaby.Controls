@@ -341,7 +341,7 @@ node('controls') {
         """
     }
    dir("$workspace"){
-      def work_dir = sh returnStdout: true, script: "python3 -c 'import os; print(os.path.basename(os.getcwd()).strip())'"
+      work_dir = sh returnStdout: true, script: "python3 -c 'import os; print(os.path.basename(os.getcwd()).strip())'"
       }
     writeFile file: "./controls/tests/int/config.ini", text:
         """# UTF-8
