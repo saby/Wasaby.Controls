@@ -230,14 +230,6 @@ node('controls') {
                 }
             }
         }
-        def work_dir=""
-        dir("$workspace"){
-            work_dir = sh returnStdout: true, script: """
-            python3 -c "import os; print(os.path.basename(os.getcwd()).rstrip('\\n'))"
-            """
-            }
-        echo 'work_dir'
-        echo 'http://${NODE_NAME}:2100/${work_dir}/controls/tests/int/'
         stage("Сборка компонент"){
             // Собираем controls
             dir("./controls"){
@@ -364,7 +356,7 @@ node('controls') {
             TAGS_NOT_TO_START = iOSOnly
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
-            HTTP_PATH = http://${NODE_NAME}:2100/${work_dir}/controls/tests/int/
+            HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/
             SERVER = test-autotest-db1
             BASE_VERSION = css_${NODE_NAME}${ver}1
             server_address = http://10.76.163.98:4380/wd/hub"""
@@ -386,7 +378,7 @@ node('controls') {
                 TAGS_TO_START = ${env.theme}
                 ELEMENT_OUTPUT_LOG = locator
                 WAIT_ELEMENT_LOAD = 20
-                HTTP_PATH = http://${NODE_NAME}:2100/${work_dir}/controls/tests/reg/
+                HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
                 SERVER = test-autotest-db1
                 BASE_VERSION = css_${NODE_NAME}${ver}1
                 server_address = http://10.76.159.209:4444/wd/hub
@@ -410,7 +402,7 @@ node('controls') {
                 TAGS_TO_START = ${env.theme}
                 ELEMENT_OUTPUT_LOG = locator
                 WAIT_ELEMENT_LOAD = 20
-                HTTP_PATH = http://${NODE_NAME}:2100/${work_dir}/controls/tests/reg/
+                HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
                 SERVER = test-autotest-db1
                 BASE_VERSION = css_${NODE_NAME}${ver}1
                 server_address = http://10.76.159.209:4444/wd/hub
