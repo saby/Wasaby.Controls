@@ -8,14 +8,6 @@ properties([
             numToKeepStr: '10')),
     parameters([
         string(
-            defaultValue: '3.17.100',
-            description: 'Версия',
-            name: 'version'),
-        string(
-            defaultValue: 'rc-3.17.100',
-            description: '',
-            name: 'branch_engine'),
-        string(
             defaultValue: 'sdk',
             description: '',
             name: 'ws_revision'),
@@ -23,6 +15,10 @@ properties([
             defaultValue: 'sdk',
             description: '',
             name: 'ws_data_revision'),
+        string(
+            defaultValue: 'rc-3.17.100',
+            description: '',
+            name: 'branch_engine'),
         string(
             defaultValue: 'rc-3.31',
             description: '',
@@ -49,7 +45,7 @@ properties([
 ])
 
 node('controls') {
-    def version = "${env.version}"
+    def version = "3.17.100"
     def ver = version.replaceAll('.','')
     def python_ver = 'python3'
     def SDK = ""
@@ -92,7 +88,7 @@ node('controls') {
         // Выкачиваем platform и cdn
         dir("${env.WORKSPACE}") {
             checkout([$class: 'GitSCM',
-            branches: [[name: "rc-${env.version}"]],
+            branches: [[name: "rc-${version}"]],
             doGenerateSubmoduleConfigurations: false,
             extensions: [[
                 $class: 'RelativeTargetDirectory',
@@ -120,7 +116,7 @@ node('controls') {
         // Выкачиваем constructor
         dir("./constructor") {
             checkout([$class: 'GitSCM',
-            branches: [[name: "rc-${env.version}"]],
+            branches: [[name: "rc-${version}"]],
             doGenerateSubmoduleConfigurations: false,
             extensions: [[
                 $class: 'RelativeTargetDirectory',
@@ -135,7 +131,7 @@ node('controls') {
 
         // Определяем SDK
         dir("./constructor/Constructor/SDK") {
-            SDK = sh returnStdout: true, script: "${python_ver} getSDK.py ${env.version} --conf linux_x86_64 -b"
+            SDK = sh returnStdout: true, script: "${python_ver} getSDK.py ${version} --conf linux_x86_64 -b"
             SDK = SDK.trim()
             echo "${SDK}"
         }
@@ -319,7 +315,7 @@ node('controls') {
         """
         sh """
             sudo chmod -R 0777 ${env.WORKSPACE}
-            ${python_ver} "./constructor/updater.py" "${env.version}" "/home/sbis/Controls1" "css_${env.NODE_NAME}${ver}1" "./controls/tests/stand/conf/sbis-rpc-service.ini" "./controls/tests/stand/distrib_branch_new" --sdk_path "${SDK}" --items "${items}" --host test-autotest-db1 --stand nginx_branch --daemon_name Controls1
+            ${python_ver} "./constructor/updater.py" "${version}" "/home/sbis/Controls1" "css_${env.NODE_NAME}${ver}1" "./controls/tests/stand/conf/sbis-rpc-service.ini" "./controls/tests/stand/distrib_branch_new" --sdk_path "${SDK}" --items "${items}" --host test-autotest-db1 --stand nginx_branch --daemon_name Controls1
             sudo chmod -R 0777 ${env.WORKSPACE}
             sudo chmod -R 0777 /home/sbis/Controls1
         """
