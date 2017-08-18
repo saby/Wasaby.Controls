@@ -343,7 +343,7 @@ node('controls') {
     def work_dir=""
     dir("$workspace"){
         work_dir = sh returnStdout: true, script: """
-        python3 -c 'import os; print(os.path.basename(os.getcwd()).strip("\n")'
+        python3 -c 'import os; print(os.path.basename(os.getcwd()).strip("\\n")'
         """
         }
     writeFile file: "./controls/tests/int/config.ini", text:
