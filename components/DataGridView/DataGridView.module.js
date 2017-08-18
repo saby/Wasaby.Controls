@@ -1661,6 +1661,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _getTableContainer: function(){
          return this.getContainer().find('>.controls-DataGridView__table');
+      },
+
+
+      _reviveItems: function() {
+         DataGridView.superclass._reviveItems.apply(this, arguments);
+         //контролы в шапке тоже нужно оживить
+         if (this._container.find(this._thead).length == 0) {
+            this.reviveComponents(this._thead);
+         }
       }
    });
 
