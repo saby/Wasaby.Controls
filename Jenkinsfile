@@ -342,12 +342,12 @@ node('controls') {
 
     stage("Инт.тесты"){
         if ("${env.run_tests}" != "only_reg"){
-            def site = "http://${NODE_NAME}:7777"
+            def site = "http://${NODE_NAME}:30001"
             site.trim()
             if ( "${TAGS}" != "") {
                dir("./controls/tests/int"){
                 sh """
-                source /home/sbis/venv_for_test/venv_for_test/bin/activate
+                source /home/sbis/venv_for_test/bin/activate
                 python start_tests.py --RESTART_AFTER_BUILD_MODE --TAGS_TO_START ${TAGS}
                 deactivate
                 """
@@ -355,7 +355,7 @@ node('controls') {
             } else {
                dir("./controls/tests/int"){
                 sh """
-                source /home/sbis/venv_for_test/venv_for_test/bin/activate
+                source /home/sbis/venv_for_test/bin/activate
                 python start_tests.py --RESTART_AFTER_BUILD_MODE
                 deactivate
                 """
@@ -368,7 +368,7 @@ node('controls') {
             sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
             dir("./controls/tests/reg"){
                 sh """
-                    source /home/sbis/venv_for_test/venv_for_test/bin/activate
+                    source /home/sbis/venv_for_test/bin/activate
                     python start_tests.py --RESTART_AFTER_BUILD_MODE
                     deactivate
                 """
