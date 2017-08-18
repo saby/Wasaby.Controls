@@ -15,10 +15,13 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
    "Core/helpers/generate-helpers",
    "Core/helpers/Function/debounce",
    "Core/helpers/functional-helpers",
+   "Core/HashManager",
+   "Core/core-instance",
+   "Core/core-merge",
    "Core/Date"
 ],
 
-    function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, isEqualObject, genHelpers, debounce, fHelpers) {
+    function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, isEqualObject, genHelpers, debounce, fHelpers, HashManager, cInstance, cMerge) {
 
        'use strict';
 
@@ -54,7 +57,11 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 /**
                  * Параметры фильтрации, которые не надо сохранять в историю
                  */
-                noSaveFilters: []
+                noSaveFilters: [],
+                /*
+                * фильтры которые надо сохранять в историю
+                */
+                filtersForHistory: []
              }
           },
 
@@ -77,6 +84,19 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              /* Подпишемся на глобальный канал изменения истории,
                 чтобы изменения сразу применялись ко всем реестрам, у которых один historyId */
              HISTORY_CHANNEL.subscribe('onChangeHistory', this._changeHistoryFnc);
+             this._hashChangeHandlerFnc = this._hashChangeHandler.bind(this);
+             if (this._options.filtersForHistory.length > 0) {
+                HashManager.subscribe('onChange',this._hashChangeHandlerFnc);
+                if (cInstance.instanceOfMixin(this._options.view, 'SBIS3.CONTROLS.TreeMixin')
+                   && this._options.filtersForHistory.indexOf(this._options.view.getParentProperty()) > -1
+                ) {
+                   this._options.view.subscribe('onSetRoot', function (e, root) {
+                      var filters = this._getFiltersFormHash();
+                      filters[this._options.view.getParentProperty()] = root;
+                      this._setFiltersToHash(filters)
+                   }.bind(this));
+                }
+             }
           },
 
           _changeHistoryHandler: function(e, id, newHistory, activeFilter, saveDeferred) {
@@ -238,7 +258,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              if(activeFilter) {
                 activeFilter.isActiveFilter = false;
              }
-
+             this._setFiltersToHash(filterObject);
              /* Не сохраняем в историю, если:
                 1) Ещё не сохранился предыдущий фильтр,
                 2) Такой фильтр уже есть в истории
@@ -317,11 +337,63 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
            * @private
            */
           getActiveFilter: function() {
-             return this.getHistoryArr().find(function(item) {
-                return item.isActiveFilter;
-             });
-          },
+             var filter = this.getHistoryArr().find(function(item) {
+                    return item.isActiveFilter;
+                }),
+                hashFilter = this._getFiltersFormHash();
+             if (filter && hashFilter) {
+                for (var key in hashFilter) {
+                   if (hashFilter.hasOwnProperty(key)) {
+                      filter.filter.each(function(filterConfig){
+                         if (filterConfig.filterField == key) {
+                            filterConfig.value = hashFilter[key]
+                         }
+                      });
+                   }
+                }
+             }
+             return filter;
 
+          },
+          /**
+           * возвращает фильтры из хеша
+           * @private
+           */
+          _getFiltersFormHash: function () {
+             var filter = HashManager.get(this._options.historyId),
+                filtersForHistory = this._options.filtersForHistory;
+             if (filter) {
+                if (filtersForHistory.length == 1) {
+                   var hashFilters = {};
+                   hashFilters[filtersForHistory[0]] =  filter;
+                   return hashFilters;
+                }
+                return JSON.parse(filter);
+             }
+             return {};
+          },
+          _setFiltersToHash: function (filters) {
+             var filtersForHistory = this._options.filtersForHistory;
+             if (filtersForHistory.length > 0) {
+                //если сохранять надо только один фильтр то сохраняем только значение, так хеш будет короче
+                if (filtersForHistory.length == 1) {
+                   HashManager.set(this._options.historyId, filters[filtersForHistory[0]]);
+                } else {
+                   var saveFilters = {};
+                   filtersForHistory.forEach(function (name) {
+                      var value = filters[name];
+                      if (typeof value  !== undefined) {
+                         saveFilters[name] = filters[name];
+                      }
+                      if (saveFilters) {
+                         HashManager.set(this._options.historyId, JSON.stringify(saveFilters));
+                      } else {
+                         HashManager.remove(this._options.historyId);
+                      }
+                   }.bind(this));
+                }
+             }
+          },
           /**
            * Ищет фильтр по ключу
            * @param {String} key
@@ -391,8 +463,23 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              )
           },
 
+          _hashChangeHandler: function () {
+             var view = this._options.view,
+               viewFilters = view.getFilter(),
+               hashFilters = this._getFiltersFormHash();
+             if (
+                cInstance.instanceOfMixin(this._options.view, 'SBIS3.CONTROLS.TreeMixin') &&
+                this._options.filtersForHistory.indexOf(view.getParentProperty()) > -1
+             ) {//если меняется раздел то надо сменить корень у дерева иначе записи не будут отображаться
+                view.setRoot(hashFilters[this._options.historyId]||null);
+             }
+             cMerge(viewFilters, hashFilters);
+             view.setFilter(viewFilters);
+          },
+
           destroy: function() {
              HISTORY_CHANNEL.unsubscribe('onChangeHistory', this._changeHistoryFnc);
+             HashManager.unsubscribe('onChange', this._hashChangeHandlerFnc);
              this._changeHistoryFnc = undefined;
              this._applyHandlerDebounced = undefined;
              FilterHistoryController.superclass.destroy.apply(this, arguments);

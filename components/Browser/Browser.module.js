@@ -170,6 +170,11 @@ define('js!SBIS3.CONTROLS.Browser', [
              */
             ignoreFiltersList: [],
             /**
+             * @cfg [Array} ignoreFiltersList Массив ключей фильтров, которые будут сохраняться в хеш адресной строки и историю браузера.
+             * @remark изменение фильтров будет создавать запись в истории браузера, будут работать кнопки вперед/назад
+             */
+            filtersForHistory: ['ПапкаДокументов', 'ФильтрПросроченные'],
+            /**
              * @cfg {Boolean} showCheckBoxes необходимо ли показывать чекбоксы, когда панель массовых операций закрыта.
              */
             showCheckBoxes: false,
@@ -453,7 +458,8 @@ define('js!SBIS3.CONTROLS.Browser', [
                this._options.ignoreFiltersList,
                this._options.applyHistoryFilterOnLoad,
                this,
-               this._options.updateFilterHistory);
+               this._options.updateFilterHistory,
+               this._options.filtersForHistory);
          }
       },
 
