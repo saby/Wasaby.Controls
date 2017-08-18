@@ -189,11 +189,15 @@ node('controls') {
         // Копируем /demo_stand/client в /tests/stand/client
         sh "cp -rf ./demo_stand/client ./controls/tests/stand"
 
-        // Выкачиваем ws если указан сторонний бранч
-        if ("${env.ws_revision}" != "sdk"){
+        // Выкачиваем ws для unit тестов и если указан сторонний бранч
+        if (("${env.run_tests}" == "only_unit" ) || ("${run_tests}" == "all") || ("${env.ws_revision}" != "sdk") ){
+            def ws_revision = "${env.ws_revision}"
+            if ("${env.ws_revision}" == "sdk"){
+                ws_revision = sh returnStdout: true, script: "${python_ver} ${env.WORKSPACE}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
+            }
             dir("${env.WORKSPACE}") {
                 checkout([$class: 'GitSCM',
-                branches: [[name: "${env.ws_revision}"]],
+                branches: [[name: "${ws_revision}"]],
                 doGenerateSubmoduleConfigurations: false,
                 extensions: [[
                     $class: 'RelativeTargetDirectory',
@@ -237,7 +241,7 @@ node('controls') {
         dir("${WORKSPACE}"){
             // Собираем ws если задан сторонний бранч
             if ("${env.ws_revision}" != "sdk"){
-                new File("${WORKSPACE}/WIS-git-temp2").mkdir()
+                sh "mkdir ${WORKSPACE}/WIS-git-temp2"
                 sh "${python_ver} ${env.WORKSPACE}/constructor/build_ws.py ${env.WORKSPACE}/WIS-git-temp 'release' ${env.WORKSPACE}/WIS-git-temp2 ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
                 // Добавляем в items
                 items = items + ", ws:${env.WORKSPACE}/WIS-git-temp2"
@@ -254,6 +258,7 @@ node('controls') {
     stage("Unit тесты"){
         if (("${env.run_tests}" == "only_unit" ) || ("${run_tests}" == "all")){
             dir("${WORKSPACE}"){
+                sh "cp -rf ./WIS-git-temp ./controls/sbis3-ws"
                 sh "cp -rf ./ws_data/WS.Data ./controls/components/"
                 sh "cp -rf ./ws_data/WS.Data ./controls/"
             }
