@@ -376,11 +376,11 @@ node('controls') {
             HTTP_PATH = http://${NODE_NAME}:2100/sbis3-controls_${env.version}/${env.BRANCH_NAME}/controls/tests/reg/
             SERVER = test-autotest-db1
             BASE_VERSION = css_${NODE_NAME}${ver}1
-            RUN_REGRESSION=True
             server_address = http://10.76.159.209:4444/wd/hub
             CHROME_BINARY_LOCATION=C:\\chrome64_58\\chrome.exe
             [regression]
-            IMAGE_DIR = capture_${env.theme}"""
+            IMAGE_DIR = capture_${env.theme}
+            RUN_REGRESSION=True"""
     } else {
          writeFile file: "./controls/tests/reg/config.ini",
          text:
@@ -400,11 +400,11 @@ node('controls') {
             HTTP_PATH = http://${NODE_NAME}:2100/sbis3-controls_${env.version}/${env.BRANCH_NAME}/controls/tests/reg/
             SERVER = test-autotest-db1
             BASE_VERSION = css_${NODE_NAME}${ver}1
-            RUN_REGRESSION=True
             server_address = http://10.76.159.209:4444/wd/hub
             CHROME_BINARY_LOCATION=C:\\chrome64_58\\chrome.exe
             [regression]
-            IMAGE_DIR = capture"""
+            IMAGE_DIR = capture
+            RUN_REGRESSION=True"""
     }
 
     stage("Инт.тесты"){
@@ -443,7 +443,9 @@ node('controls') {
         }
     }
     stage("Результаты"){
-        publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: "./controls/tests/reg/capture_report/", reportFiles: "report.html", reportName: "Regression Report", reportTitles: ""])
+        dir("${env.WORKSPACE}"){
+           publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
+        }
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
         junit keepLongStdio: true, testResults: "./controls/artifacts/test-isolated-report.xml"
         junit keepLongStdio: true, testResults: "./controls/artifacts/test-browser-report.xml"
