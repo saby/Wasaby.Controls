@@ -47,6 +47,7 @@ properties([
 node('controls') {
     def version = "3.17.100"
     ws("/home/sbis/workspace/controls_${version}/${BRANCH_NAME}") {
+        deleteDir()
         sh "python3 -c 'import os; print(dict(os.environ).items())'"
         def workspace = "${env.WORKSPACE}"
         def ver = version.replaceAll('.','')
@@ -63,7 +64,7 @@ node('controls') {
             TAGS = "${TAGS}, ${env.Tag3}"
         if ("${TAGS}" != "")
             TAGS = "--TAGS_TO_START ${TAGS}"
-
+        
         stage("Checkout"){
             // Контролы
             dir("${workspace}") {
