@@ -4,14 +4,14 @@
 define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
    [
       "Core/core-extend",
-      "Core/helpers/string-helpers",
+      "Core/helpers/String/diffAt",
       "Core/core-functions",
       "js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil",
       "js!SBIS3.CONTROLS.MissSpell",
       'js!SBIS3.CONTROLS.Utils.Query',
       'Core/core-instance'
    ],
-   function (cExtend, strHelpers, cFunctions, KbLayoutRevertUtil, MissSpell, queryUtil, cInstance) {
+   function (cExtend, diffAt, cFunctions, KbLayoutRevertUtil, MissSpell, queryUtil, cInstance) {
       'use strict';
 
       /* Вспомогательный класс, для посчёта времени запроса.
@@ -335,7 +335,8 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
          if(searchValue && oldSearchValue) {
             if (searchValue.length > oldSearchValue.length) {
                // ищем разницу между старым и текущим значением поискового запроса
-               symbolsDifference = strHelpers.searchSymbolsDifference(searchValue, oldSearchValue);
+               var pos = diffAt(searchValue, oldSearchValue);
+               symbolsDifference = (pos === -1 ? false : [searchValue.substr(0, pos), searchValue.substr(pos), oldSearchValue.substr(pos)]);
             }
          }
 

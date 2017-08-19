@@ -14,12 +14,12 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        'js!SBIS3.CONTROLS.DateRangeRelationController',
        'js!SBIS3.CONTROLS.FilterController',
        "Core/core-instance",
-       "Core/helpers/functional-helpers",
+        'Core/helpers/Function/forAliveOnly',
        "Core/helpers/Object/find",
        "Core/Deferred",
        "Core/UserConfig"
     ],
-    function (cAbstract, cFunctions, cMerge, constants, HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController, FilterHistoryControllerUntil, DateRangeRelationController, FilterController, cInstance, fHelpers, find, Deferred, UserConfig) {
+    function (cAbstract, cFunctions, cMerge, constants, HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController, FilterHistoryControllerUntil, DateRangeRelationController, FilterController, cInstance, forAliveOnly, find, Deferred, UserConfig) {
    /**
     * Контроллер для осуществления базового взаимодействия между компонентами.
     *
@@ -260,7 +260,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
    
          /* Из-за того, что историю фильтрации надо обновлять (из-за серверного рендеринга),
             надо и все синхронизации производить после вычитки новых параметров */
-         (this._dFiltersReady || Deferred.success()).addCallback(fHelpers.forAliveOnly(function(res) {
+         (this._dFiltersReady || Deferred.success()).addCallback(forAliveOnly(function(res) {
             self._filterController.bindFilters();
             return res;
          }, view));
@@ -332,7 +332,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             }
    
             if(browser) {
-               setTimeout(fHelpers.forAliveOnly(function () {
+               setTimeout(forAliveOnly(function () {
                   /* Через timeout, т.к. необходимо, чтобы уже работали бинды,
                      иначе перетрётся опция после синхронизации из контекста. + это позволяет не проставлять фильтр,
                      он проставится по биндам */
