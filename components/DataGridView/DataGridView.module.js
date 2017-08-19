@@ -859,6 +859,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          // Смещаем индикатор загрузки вниз на высоту заголовков.
          height = this._thead.outerHeight();
          styles = {top: height || ''};
+         // Корректируем хак ".ws-is-webkit .controls-AjaxLoader {height: 100%;}" из стилей ListView.
          if (cDetection.webkit) {
             styles.height =  height ? 'calc(100% - ' + height + 'px)' : '';
          }
