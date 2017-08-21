@@ -1,15 +1,15 @@
 <ws:if data="{{_display}}">
-   <ws:for data="_displayEnumerator.reset(); _displayEnumerator.moveNext(); _displayEnumerator">
-       <ws:if data="{{ _displayEnumerator.getCurrent().getContents }}">
+   <ws:for data="_getStartEnumerationPosition(); _curIndex < _stopIndex; _getNextEnumerationPosition();">
+       <ws:if data="{{ _display.at(_curIndex).getContents }}">
            <ws:partial
                    template="{{_getItemTpl()}}"
                    contentTemplate="{{_getItemContentTpl()}}"
                    defaultItemTpl="{{_defaultItemTemplate}}"
                    scope="{{...}}"
-                   item="{{_displayEnumerator.getCurrent().getContents()}}"
-                   projItem="{{_displayEnumerator.getCurrent()}}"
-                   index="{{_displayEnumerator.getCurrentIndex()}}"
-                   itemData="{{_getItemData(_displayEnumerator.getCurrent(), _displayEnumerator.getCurrentIndex())}}"/>
+                   item="{{_display.at(_curIndex).getContents()}}"
+                   projItem="{{_display.at(_curIndex)}}"
+                   index="{{_curIndex}}"
+                   itemData="{{_getItemData(_display.at(_curIndex), _curIndex)}}"/>
        </ws:if>
        <ws:else>
            <ws:partial template="{{ item.tpl }}" scope="{{ item.data }}" />

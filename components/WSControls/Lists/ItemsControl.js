@@ -27,6 +27,9 @@ define('js!WSControls/Lists/ItemsControl', [
    var ItemsControl = BaseControl.extend(
       {
          _controlName: 'WSControls/Lists/ItemsControl',
+         _startIndex: 0,
+         _stopIndex: 0,
+         _curIndex: 0,
          iWantVDOM: true,
          _isActiveByClick: false,
          _items: null,
@@ -101,6 +104,7 @@ define('js!WSControls/Lists/ItemsControl', [
             this._setDirty();
          },
 
+
          _itemsChangeCallback: function(items, cfg) {
             this._initItemBasedControllers(items, cfg);
             this._displayChangeCallback(this._display, cfg);
@@ -109,8 +113,16 @@ define('js!WSControls/Lists/ItemsControl', [
 
          //при изменениях в проекции
          _displayChangeCallback: function(display, cfg) {
-            //Сохранять надо здесь, т.к. если звать из шаблона, то каждый вызов создаст новый инстанс, а присваивать в шаблоне нельзя
-            this._displayEnumerator = this._display.getEnumerator();
+            this._startIndex = 0;
+            this._stopIndex = this._display.getCount();
+         },
+
+         _getStartEnumerationPosition: function() {
+            this._curIndex = this._startIndex;
+         },
+
+         _getNextEnumerationPosition: function() {
+            this._curIndex++;
          },
 
          _getItemTpl: function() {
