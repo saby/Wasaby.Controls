@@ -40,7 +40,8 @@ properties([
             description: '',
             name: 'theme'),
         choice(choices: "chrome\nff", description: '', name: 'browser_type'),
-        choice(choices: "all\nonly_reg\nonly_int\nonly_unit", description: '', name: 'run_tests')]),
+        choice(choices: "all\nonly_reg\nonly_int\nonly_unit", description: '', name: 'run_tests'),
+        booleanParam(defaultValue: false, description: "", name: 'RUN_ONLY_FAIL_TEST')]),
     pipelineTriggers([])
 ])
 
@@ -49,12 +50,12 @@ node('controls') {
     ws("/home/sbis/workspace/controls_${version}/${BRANCH_NAME}") {
         deleteDir()
         sh "python3 -c 'import os; print(dict(os.environ).items())'"
-        def workspace = "${env.WORKSPACE}"
+        def workspace = env.WORKSPACE
         def ver = version.replaceAll('.','')
         def python_ver = 'python3'
         def SDK = ""
         def items = "controls:${workspace}/controls"
-        def branch_atf = "${env.branch_atf}"
+        def branch_atf = env.branch_atf
 
         def TAGS = ""
         if ("${env.Tag1}" != "")
@@ -70,7 +71,7 @@ node('controls') {
             // Контролы
             dir("${workspace}") {
                 checkout([$class: 'GitSCM',
-                branches: [[name: "${env.BRANCH_NAME}"]],
+                branches: [[name: env.BRANCH_NAME]],
                 doGenerateSubmoduleConfigurations: false,
                 extensions: [[
                     $class: 'RelativeTargetDirectory',
@@ -159,7 +160,7 @@ node('controls') {
             // Выкачиваем engine
             dir("./controls/tests"){
                 checkout([$class: 'GitSCM',
-                branches: [[name: "${env.branch_engine}"]],
+                branches: [[name: env.branch_engine]],
                 doGenerateSubmoduleConfigurations: false,
                 extensions: [[
                     $class: 'RelativeTargetDirectory',
@@ -191,7 +192,7 @@ node('controls') {
 
             // Выкачиваем ws для unit тестов и если указан сторонний бранч
             if (("${env.run_tests}" == "only_unit" ) || ("${run_tests}" == "all") || ("${env.ws_revision}" != "sdk") ){
-                def ws_revision = "${env.ws_revision}"
+                def ws_revision = env.ws_revision
                 if ("${env.ws_revision}" == "sdk"){
                     ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
                 }
@@ -212,7 +213,7 @@ node('controls') {
             }
             // Выкачиваем ws.data для unit тестов и если указан сторонний бранч
             if (("${env.run_tests}" == "only_unit" ) || ("${run_tests}" == "all") || ("${env.ws_data_revision}" != "sdk") ){
-                def ws_data_revision = "${env.ws_data_revision}"
+                def ws_data_revision = env.ws_data_revision
                 if ("${env.ws_data_revision}" == "sdk"){
                     ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
                 }
@@ -413,7 +414,11 @@ node('controls') {
                 IMAGE_DIR = capture
                 RUN_REGRESSION=True"""
         }
-
+        def run_test_fail = ""
+        if ("${RUN_ONLY_FAIL_TEST}" == 'true'){
+            run_test_fail = "-sf"
+            step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
+        }
         stage("Инт.тесты"){
             if ("${env.run_tests}" != "only_reg"){
                 def site = "http://${NODE_NAME}:30001"
@@ -422,7 +427,7 @@ node('controls') {
                 dir("./controls/tests/int"){
                     sh """
                     source /home/sbis/venv_for_test/bin/activate
-                    python start_tests.py --RESTART_AFTER_BUILD_MODE --TAGS_TO_START ${TAGS}
+                    python start_tests.py --RESTART_AFTER_BUILD_MODE --TAGS_TO_START ${TAGS} ${run_test_fail}
                     deactivate
                     """
                 }
@@ -430,7 +435,7 @@ node('controls') {
                 dir("./controls/tests/int"){
                     sh """
                     source /home/sbis/venv_for_test/bin/activate
-                    python start_tests.py --RESTART_AFTER_BUILD_MODE
+                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
                     deactivate
                     """
                 }
@@ -443,20 +448,24 @@ node('controls') {
                 dir("./controls/tests/reg"){
                     sh """
                         source /home/sbis/venv_for_test/bin/activate
-                        python start_tests.py --RESTART_AFTER_BUILD_MODE
+                        python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
                         deactivate
                     """
                 }
             }
         }
+        sh """
+            sudo chmod -R 0777 ${workspace}
+            sudo chmod -R 0777 /home/sbis/Controls1
+        """
         stage("Результаты"){
             dir("${workspace}"){
                 publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
             }
-            junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
             junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
             archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
             archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
+            junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
         }
     }
 
