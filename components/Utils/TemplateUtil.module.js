@@ -1,7 +1,8 @@
 /**
  * Created by am.gerasimov on 19.01.2016.
  */
-define('js!SBIS3.CONTROLS.Utils.TemplateUtil', ['Core/tmpl/tmplstr'], function(tmplstr) {
+//Приходится пока что реквайрить dot, потому что очень многие задают шаблоны стркоами
+define('js!SBIS3.CONTROLS.Utils.TemplateUtil', ['Core/js-template-doT'], function() {
 
     /**
      * @class SBIS3.CONTROLS.Utils.TemplateUtil
@@ -13,13 +14,14 @@ define('js!SBIS3.CONTROLS.Utils.TemplateUtil', ['Core/tmpl/tmplstr'], function(t
         * @param tpl
         * @returns {*}
         */
-      prepareTemplate: function(tpl, logicless) {
+      prepareTemplate: function(tpl) {
          var template;
 
          switch (typeof tpl) {
             case 'string' :
                template = tpl.indexOf('html!') === 0 || tpl.indexOf('tmpl!') === 0 ?
-                   global.requirejs(tpl) : ( logicless ? tmplstr.getFunction(tpl) : doT.template(tpl));
+                   global.requirejs(tpl) :
+                   doT.template(tpl);
                break;
             case 'function' :
                template = tpl;

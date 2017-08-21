@@ -262,8 +262,9 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
             for (var list = self._calls[poolId].list, i = 0; i < list.length; i++) {
                var c = list[i];
                if (_isEq(c.member, m)) {
-                  _cancel(c.promise);
+                  var prev = c.promise;
                   c.promise = promise;
+                  _cancel(prev);
                   call = c;
                   break;
                }
@@ -272,7 +273,7 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
                throw new Error('Not found');
             }
          }
-         promise.addBoth(_onPartial.bind(null, self, poolId, call));
+         promise.addBoth(_onPartial.bind(null, self, poolId, call, promise));
          /*###if (isReplace) {
             // Проверить, возможно после замены уже не нужно ждать дальше
             _checkCompleteness(self, poolId);
@@ -362,29 +363,32 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
        * @param {SBIS3.CONTROLS.LongOperationsCallsPool} self Этот объект
        * @param {number} poolId Идентификатор группы
        * @param {object} call Элемент
+       * @param {Core/Deferred} promise Обещание результата
        * @param {any} result Результат или ошибка
        */
-      var _onPartial = function (self, poolId, call, result) {
-         delete call.promise;
-         if (result instanceof Error) {
-            call.error = result;
-         }
-         else {
-            var node = self._calls[poolId];
-            if (node) {
-               try {
-                  call.result = self._handlePartial(node.pool, call.member, result);
-               }
-               catch (ex) {
-                  call.error = ex;
-               }
+      var _onPartial = function (self, poolId, call, promise, result) {
+         if (call.promise === promise) {
+            delete call.promise;
+            if (result instanceof Error) {
+               call.error = result;
             }
             else {
-               call.error = new Error('Pool not found');
+               var node = self._calls[poolId];
+               if (node) {
+                  try {
+                     call.result = self._handlePartial(node.pool, call.member, result);
+                  }
+                  catch (ex) {
+                     call.error = ex;
+                  }
+               }
+               else {
+                  call.error = new Error('Pool not found');
+               }
             }
+            // Проверить, все ли результаты получены или нужно ждать дальше
+            _checkCompleteness(self, poolId);
          }
-         // Проверить, все ли результаты получены или нужно ждать дальше
-         _checkCompleteness(self, poolId);
       };
 
       /**

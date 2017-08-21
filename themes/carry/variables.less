@@ -245,12 +245,15 @@
 @button-without-caption-min-width:              60px;
 
 // Normal default button
-@button-bg:                                     #EAEAEA;
+@button-bg-color:                               #EAEAEA;
 @button-hover-bg:                               #E1ECF6;
-@button-active-bg:                              #C1D7F0;
+@button-bg-active:                              #C1D7F0;
 @button-big-font-size:                          @globalDefaultFontSize;
 
-@button-border:                                 @button-border-width solid transparent;
+
+
+@button-border:                                 @button-border-width solid @button-border-color;
+@button-border-color:                           transparent;
 @button-border-radius:                          0;
 
 // Button's icon
@@ -258,10 +261,11 @@
 @button-icon-32-left-offset:                    2px;
 
 // Normal primary button
-@button-primary-bg:                             #FFB87A;
+@button-primary-bg-color:                       #FFB87A;
 @button-primary-hover-bg:                       #FDECD9;
-@button-primary-active-bg:                      #FE9442;
+@button-primary-bg-active:                      #FE9442;
 @button-primary-border:                         @button-border;
+@button-primary-border-color:                   @button-border-color;
 @button-padding:                                0 16px;
 
 // Normal disabled button
@@ -270,10 +274,8 @@
 
 // Big button
 
-@button-big-border-radius:                      0;
 @button-big-font:                               @globalDefaultFontSize @default-font-name;
 @button-big-min-width:                          60px;
-@button-big-height:                             60px;
 @button-big-line-height:                        60px;
 @icon-height:                                   24px;
 
@@ -290,6 +292,10 @@
 @button-big-icon-32-left-offset:                14px;
 
 @button-without-caption-icon-32-left:           14px;
+
+@button-large-height:                                                                                                   60px;
+@button-large-border-radius:                                                                                            0;
+@button-large-font-size:                                                                                                @globalDefaultFontSize;
 
 // Big disabled button
 
@@ -585,7 +591,6 @@
 
 // Big button
 @button-big-font:                               @globalDefaultFontSize;
-@button-big-height:                             60px;
 @icon-height:                                   24px;
 
 // --------------- //

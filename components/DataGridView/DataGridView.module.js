@@ -5,6 +5,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "Core/core-merge",
    "Core/constants",
    "Core/Deferred",
+   'Core/detection',
    "Core/EventBus",
    "js!SBIS3.CONTROLS.ListView",
    "tmpl!SBIS3.CONTROLS.DataGridView",
@@ -27,7 +28,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/SortingTemplate",
    "Core/helpers/Object/isEmpty",
-   "Core/helpers/string-helpers",
+   'Core/helpers/String/escapeHtml',
    "Core/helpers/dom&controls-helpers",
    'Core/Sanitize',
    'js!SBIS3.StickyHeaderManager',
@@ -39,6 +40,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       cMerge,
       constants,
       Deferred,
+      cDetection,
       EventBus,
       ListView,
       dotTplFn,
@@ -61,7 +63,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       GroupTemplate,
       SortingTemplate,
       isEmpty,
-      strHelpers,
+      escapeHtml,
       dcHelpers,
       Sanitize,
       StickyHeaderManager) {
@@ -94,7 +96,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          },
          getColumnVal = function (item, colName) {
             if (!colName || !(colName.indexOf("['") == 0 && colName.indexOf("']") == (colName.length - 2))){
-               return strHelpers.escapeHtml(item.get(colName));
+               return escapeHtml(item.get(colName));
             }
             var colNameParts = colName.slice(2, -2).split('.'),
                curItem = item,
@@ -720,7 +722,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                if(colValue && !colValue.getAttribute('title')) {
                   colValueText = colValue.innerText;
 
-                  if (dcHelpers.getTextWidth(strHelpers.escapeHtml(colValueText)) > colValue.offsetWidth) {
+                  if (dcHelpers.getTextWidth(escapeHtml(colValueText)) > colValue.offsetWidth) {
                      colValue.setAttribute('title', colValueText);
                   }
                }
@@ -814,7 +816,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _redrawHead : function() {
          var
             headData,
-            headMarkup;
+            headMarkup,
+            height,
+            styles;
 
          if (!this._thead) {
             this._bindHead();
@@ -853,7 +857,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._updateStickyHeader(headData.hasResults);
          }
          // Смещаем индикатор загрузки вниз на высоту заголовков.
-         this._getAjaxLoaderContainer().css('top', this._thead.outerHeight());
+         height = this._thead.outerHeight();
+         styles = {top: height || ''};
+         // Корректируем хак ".ws-is-webkit .controls-AjaxLoader {height: 100%;}" из стилей ListView.
+         if (cDetection.webkit) {
+            styles.height =  height ? 'calc(100% - ' + height + 'px)' : '';
+         }
+         this._getAjaxLoaderContainer().css(styles);
       },
 
       _redrawFoot: function(){
@@ -1619,7 +1629,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                value = null;
             }
             value = this._options._decorators.applyOnly(
-                  value === undefined || value === null ? '' : strHelpers.escapeHtml(value), {
+                  value === undefined || value === null ? '' : escapeHtml(value), {
                   highlight: column.highlight
                }
             );
@@ -1651,6 +1661,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _getTableContainer: function(){
          return this.getContainer().find('>.controls-DataGridView__table');
+      },
+
+
+      _reviveItems: function() {
+         DataGridView.superclass._reviveItems.apply(this, arguments);
+         //контролы в шапке тоже нужно оживить
+         if (this._container.find(this._thead).length == 0) {
+            this.reviveComponents(this._thead);
+         }
       }
    });
 

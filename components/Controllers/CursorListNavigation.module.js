@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
                case 'both': sign = '~'; break;
             }
 
-            for (var i = 0; i < this._options.config.field; i++) {
+            for (var i = 0; i < this._options.config.field.length; i++) {
                additionalFilter[this._options.config.field[i] + sign] = this._options.config.position[i];
             }
 
@@ -76,7 +76,7 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
                   edgeRecord = projection.at(projection.getCount() - 1).getContents();
                }
                var newPos = [];
-               for (var i = 0; i < this._options.config.field; i++) {
+               for (var i = 0; i < this._options.config.field.length; i++) {
                   filterValue = edgeRecord.get(this._options.config.field[i]);
                   newPos.push(filterValue);
                }
@@ -91,7 +91,7 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
             return params;
          },
 
-         analizeResponceParams: function(dataset) {
+         analyzeResponseParams: function(dataset) {
             var more = dataset.getMetaData().more;
             if (typeof more == 'boolean') {
                this._hasMore[this._options.config.direction] = more;

@@ -7,8 +7,8 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
    "js!WS.Data/Display/Tree",
    "js!WS.Data/Relation/Hierarchy",
-   "Core/helpers/functional-helpers"
-], function ( cFunctions, cMerge, constants,Control, BreadCrumbs, groupByTpl, TreeProjection, HierarchyRelation, fHelpers) {
+   'Core/helpers/Function/forAliveOnly'
+], function ( cFunctions, cMerge, constants,Control, BreadCrumbs, groupByTpl, TreeProjection, HierarchyRelation, forAliveOnly) {
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
     * @mixin SBIS3.CONTROLS.TreeMixinDS
@@ -401,7 +401,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
             self = this,
             filter = id ? this._createTreeFilter(id) : this.getFilter();
          this._notify('onBeforeDataLoad', filter, this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit);
-         this._loader = this._callQuery(filter, this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit, 'down').addCallback(fHelpers.forAliveOnly(function (dataSet) {
+         this._loader = this._callQuery(filter, this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit, 'down').addCallback(forAliveOnly(function (dataSet) {
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
             self._notify('onDataMerge', dataSet);

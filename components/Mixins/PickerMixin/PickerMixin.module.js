@@ -110,7 +110,6 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
                            }
                         }
                      }
-                     return;
                   }
                   pickerConfig[key] = this._options.pickerConfig[key];
                }
