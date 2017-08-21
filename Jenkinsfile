@@ -69,7 +69,7 @@ node('controls') {
 
         stage("Checkout"){
             // Контролы
-            dir("${workspace}") {
+            dir(workspace) {
                 checkout([$class: 'GitSCM',
                 branches: [[name: env.BRANCH_NAME]],
                 doGenerateSubmoduleConfigurations: false,
@@ -91,7 +91,7 @@ node('controls') {
             }
 
             // Выкачиваем platform и cdn
-            dir("${workspace}") {
+            dir(workspace) {
                 checkout([$class: 'GitSCM',
                 branches: [[name: "rc-${version}"]],
                 doGenerateSubmoduleConfigurations: false,
@@ -138,13 +138,13 @@ node('controls') {
             dir("./constructor/Constructor/SDK") {
                 SDK = sh returnStdout: true, script: "${python_ver} getSDK.py ${version} --conf linux_x86_64 -b"
                 SDK = SDK.trim()
-                echo "${SDK}"
+                echo SDK
             }
 
             // Выкачиваем atf
             dir("./controls/tests/int") {
             checkout([$class: 'GitSCM',
-                branches: [[name: "${branch_atf}"]],
+                branches: [[name: branch_atf]],
                 doGenerateSubmoduleConfigurations: false,
                 extensions: [[
                     $class: 'RelativeTargetDirectory',
@@ -173,7 +173,7 @@ node('controls') {
                 ])
             }
             // Выкачиваем demo_stand
-            dir("${workspace}") {
+            dir(workspace) {
                 checkout([$class: 'GitSCM',
                 branches: [[name: 'master']],
                 doGenerateSubmoduleConfigurations: false,
@@ -196,9 +196,9 @@ node('controls') {
                 if ("${env.ws_revision}" == "sdk"){
                     ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
                 }
-                dir("${workspace}") {
+                dir(workspace) {
                     checkout([$class: 'GitSCM',
-                    branches: [[name: "${ws_revision}"]],
+                    branches: [[name: ws_revision]],
                     doGenerateSubmoduleConfigurations: false,
                     extensions: [[
                         $class: 'RelativeTargetDirectory',
@@ -217,9 +217,9 @@ node('controls') {
                 if ("${env.ws_data_revision}" == "sdk"){
                     ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
                 }
-                dir("${workspace}") {
+                dir(workspace) {
                     checkout([$class: 'GitSCM',
-                    branches: [[name: "${ws_data_revision}"]],
+                    branches: [[name: ws_data_revision]],
                     doGenerateSubmoduleConfigurations: false,
                     extensions: [[
                         $class: 'RelativeTargetDirectory',
@@ -238,7 +238,7 @@ node('controls') {
             dir("./controls"){
                 sh "${python_ver} ${workspace}/constructor/build_controls.py ${workspace}/controls ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
             }
-            dir("${workspace}"){
+            dir(workspace){
                 // Собираем ws если задан сторонний бранч
                 if ("${env.ws_revision}" != "sdk"){
                     sh "rm -rf ${workspace}/WIS-git-temp2"
@@ -253,12 +253,12 @@ node('controls') {
                     items = items + ", ws_data:${workspace}/ws_data"
                 }
             }
-            echo "${items}"
+            echo items
         }
 
         stage("Unit тесты"){
             if (("${env.run_tests}" == "only_unit" ) || ("${run_tests}" == "all")){
-                dir("${workspace}"){
+                dir(workspace){
                     sh "cp -rf ./WIS-git-temp ./controls/sbis3-ws"
                     sh "cp -rf ./ws_data/WS.Data ./controls/components/"
                     sh "cp -rf ./ws_data/WS.Data ./controls/"
@@ -459,7 +459,7 @@ node('controls') {
             sudo chmod -R 0777 /home/sbis/Controls1
         """
         stage("Результаты"){
-            dir("${workspace}"){
+            dir(workspace){
                 publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
             }
             junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
