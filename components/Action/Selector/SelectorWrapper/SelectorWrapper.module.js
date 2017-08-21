@@ -170,7 +170,6 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
                   linkedObject.toggleItemsSelection([id]);
                }
             } else if(!isBranch) {
-               clickResult = false;
                this._applyItemSelect(item);
             }
          } else {
@@ -182,8 +181,8 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
                if(this.getSelectionType() === 'allBySelectAction') {
                   return;
                }
+               clickResult = false;
             }
-            clickResult = false;
             this._applyItemSelect(item);
          }
          return clickResult;

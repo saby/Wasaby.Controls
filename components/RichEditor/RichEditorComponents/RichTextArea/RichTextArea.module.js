@@ -19,7 +19,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "js!SBIS3.CONTROLS.Utils.ImageUtil",
    "Core/Sanitize",
    "Core/helpers/fast-control-helpers",
-   "Core/helpers/string-helpers",
+   'Core/helpers/String/escapeTagsFromStr',
+   'Core/helpers/String/escapeHtml',
    'js!SBIS3.CONTROLS.Utils.LinkWrap',
    "Core/helpers/dom&controls-helpers",
    'js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
@@ -45,7 +46,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
       ImageUtil,
       Sanitize,
       fcHelpers,
-      strHelpers,
+      escapeTagsFromStr,
+      escapeHtml,
       LinkWrap,
       dcHelpers,
       ImageOptionsPanel,
@@ -285,7 +287,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                return result;
             }
 
-            if ((id = this._getYouTubeVideoId(strHelpers.escapeTagsFromStr(link, [])))) {
+            if ((id = this._getYouTubeVideoId(escapeTagsFromStr(link, [])))) {
                var
                   protocol = /https?:/.test(link) ? link.replace(/.*(https?:).*/gi, '$1') : '';
                content = [
@@ -877,7 +879,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                                     if (href) {
                                        dom.setAttribs(element, {
                                           target: '_blank',
-                                          href: strHelpers.escapeHtml(href)
+                                          href: escapeHtml(href)
                                        });
                                     } else {
                                        editor.execCommand('unlink');

@@ -1464,6 +1464,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
          },
          destroy : function() {
+            this._cancelLoading();
             this._unsetItemsEventHandlers();
             if (this._options._items) {
                this._options._items = null;

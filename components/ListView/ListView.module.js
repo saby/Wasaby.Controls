@@ -950,10 +950,10 @@ define('js!SBIS3.CONTROLS.ListView',
             this.initEditInPlace();
             this._setItemsDragNDrop(this._options.itemsDragNDrop);
             dispatcher.declareCommand(this, 'activateItem', this._activateItem);
-            dispatcher.declareCommand(this, 'beginAdd', this._beginAdd);
-            dispatcher.declareCommand(this, 'beginEdit', this._beginEdit);
-            dispatcher.declareCommand(this, 'cancelEdit', this._cancelEdit);
-            dispatcher.declareCommand(this, 'commitEdit', this._commitEdit);
+            dispatcher.declareCommand(this, 'beginAdd', this.beginAdd);
+            dispatcher.declareCommand(this, 'beginEdit', this.beginEdit);
+            dispatcher.declareCommand(this, 'cancelEdit', this.cancelEdit);
+            dispatcher.declareCommand(this, 'commitEdit', this.commitEdit);
 
             if (this._options.navigation && this._options.navigation.type == 'cursor') {
                this._listNavigation = new CursorNavigation(this._options.navigation);
@@ -2059,7 +2059,7 @@ define('js!SBIS3.CONTROLS.ListView',
          toggleCheckboxes: function(toggle) {
             // Лучшего решения сейчас нет. Редактирование по месту позиционируется абсолютно и размеры свои менять не может.
             // При переключении видимости чекбоксов у таблицы меняются размеры и блок с редактированием позиционируется неправильно.
-            this._cancelEdit();
+            this.cancelEdit();
             this._container.toggleClass('controls-ListView__hideCheckBoxes', !toggle);
             this._notifyOnSizeChanged(true);
          },
@@ -3205,7 +3205,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      var state = this._loadQueue[loadId],
                         hasNextPage;
                      if (this._options.navigation && this._options.navigation.type == 'cursor') {
-                        this._listNavigation.analizeResponceParams(dataSet);
+                        this._listNavigation.analyzeResponseParams(dataSet);
                         hasNextPage = this._listNavigation.hasNextPage(state.mode);
                      }
                      else {
@@ -3527,7 +3527,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _onDataLoad: function(list) {
             if (this._options.navigation && this._options.navigation.type == 'cursor') {
-               this._listNavigation.analizeResponceParams(list);
+               this._listNavigation.analyzeResponseParams(list);
             }
          },
 
@@ -3904,12 +3904,11 @@ define('js!SBIS3.CONTROLS.ListView',
           * myView.sendCommand('beginAdd', commandParams);
           * </pre>
           * @returns {*|Deferred} В случае ошибки, вернёт Deferred с текстом ошибки.
-          * @private
           * @command beginAdd
           * @see onBeginAdd
           * @see sendCommand
           */
-         _beginAdd: function(options, withoutActivateEditor) {
+         beginAdd: function(options, withoutActivateEditor) {
             if (!options) {
                options = {};
             }
@@ -3921,13 +3920,12 @@ define('js!SBIS3.CONTROLS.ListView',
           * @remark
           * Используется для активации редактирования по месту без клика пользователя по элементу коллекции.
           * При выполнении команды происходят события {@link onBeginEdit} и {@link onAfterBeginEdit}.
-          * @param {WS.Data/Entity/Model} record Элемент коллекции, для которого требуется активировать редактирование по месту.
+          * @param {WS.Data/Entity/Model|String|Number} record Элемент коллекции, для которого требуется активировать редактирование по месту.
           * @param {Boolean} [withoutActivateEditor] Запуск редактирования осуществляется без активации самого редактора
           * @example
           * <pre>
           *    myListView.sendCommand('beginEdit', record);
           * </pre>
-          * @private
           * @command beginEdit
           * @see sendCommand
           * @see cancelEdit
@@ -3935,7 +3933,13 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see beginAdd
           * @see activateItem
           */
-         _beginEdit: function(record, withoutActivateEditor) {
+         beginEdit: function(record, withoutActivateEditor) {
+            if (!(record instanceof Record)) {
+               record = this.getItems().getRecordById(record);
+            }
+            if (!record) {
+               return Deferred.fail();
+            }
             return this.showEip(record, { isEdit: true }, withoutActivateEditor);
          },
          /**
@@ -3946,7 +3950,6 @@ define('js!SBIS3.CONTROLS.ListView',
           * <pre>
           *    myListView.sendCommand('cancelEdit');
           * </pre>
-          * @private
           * @command cancelEdit
           * @see sendCommand
           * @see beginEdit
@@ -3954,7 +3957,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see beginAdd
           * @see activateItem
           */
-         _cancelEdit: function() {
+         cancelEdit: function() {
             if (this._hasEditInPlace()) {
                return this._getEditInPlace().addCallback(function(editInPlace) {
                   return editInPlace.endEdit();
@@ -3971,7 +3974,6 @@ define('js!SBIS3.CONTROLS.ListView',
           * <pre>
           *    myListView.sendCommand('commitEdit');
           * </pre>
-          * @private
           * @command commitEdit
           * @see sendCommand
           * @see beginEdit
@@ -3979,7 +3981,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see beginAdd
           * @see activateItem
           */
-         _commitEdit: function(checkAutoAdd) {
+         commitEdit: function(checkAutoAdd) {
             var
                self = this,
                eip = this._getEditInPlace();
