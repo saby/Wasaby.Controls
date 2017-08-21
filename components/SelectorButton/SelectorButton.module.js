@@ -4,6 +4,7 @@
 define('js!SBIS3.CONTROLS.SelectorButton',
     [
    "Core/constants",
+   'tmpl!SBIS3.CONTROLS.SelectorButton/SelectorButton',
    "tmpl!SBIS3.CONTROLS.SelectorButton/resources/contentTemplate",
    "tmpl!SBIS3.CONTROLS.SelectorButton/resources/defaultItemContentTemplate",
    "tmpl!SBIS3.CONTROLS.SelectorButton/resources/defaultItemTemplate",
@@ -28,6 +29,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
 ],
     function(
        constants,
+       dotTplFn,
        contentTemplate,
        defaultItemContentTemplate,
        defaultItemTemplate,
@@ -88,6 +90,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     */
 
    var SelectorButton = WSButton.extend([ItemsControlMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin], /** @lends SBIS3.CONTROLS.SelectorButton.prototype */ {
+      _dotTplFn: dotTplFn,
       $protected: {
          _options: {
             clickThrottle: true,
