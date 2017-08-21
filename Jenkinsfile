@@ -54,6 +54,7 @@ node('controls') {
         def python_ver = 'python3'
         def SDK = ""
         def items = "controls:${workspace}/controls"
+        def branch_atf = "${env.branch_atf}"
 
         def TAGS = ""
         if ("${env.Tag1}" != "")
@@ -64,7 +65,7 @@ node('controls') {
             TAGS = "${TAGS}, ${env.Tag3}"
         if ("${TAGS}" != "")
             TAGS = "--TAGS_TO_START ${TAGS}"
-        
+
         stage("Checkout"){
             // Контролы
             dir("${workspace}") {
@@ -142,7 +143,7 @@ node('controls') {
             // Выкачиваем atf
             dir("./controls/tests/int") {
             checkout([$class: 'GitSCM',
-                branches: [[name: "${env.branch_atf}"]],
+                branches: [[name: "${branch_atf}"]],
                 doGenerateSubmoduleConfigurations: false,
                 extensions: [[
                     $class: 'RelativeTargetDirectory',
