@@ -74,7 +74,7 @@
 @listView-empty-data-padding-top:         1.9285rem;
 //Button
 @button-height:                           3rem;
-@button-font-size:                        1.42rem;
+@button-font-size:                        1.428rem;
 @button-min-width:                        0.86rem;
 @button-padding:                          0 .5rem;
 @button-icon-top-offset:                  0.4285rem;                     // top offset of 16x16 icon
@@ -107,17 +107,19 @@
 @button-border-width:                     @default-border-width;
 // Normal default button
 @button-border:                           @default-border-width solid @default-border-color-second;
-@button-line-height: 						   2.86rem;
-@button-active-bg:                        #1B2A3B;
+@button-line-height:                      2.86rem;
+@button-bg-active:                        #1B2A3B;
 @button-hover-bg:                         #293D52;
-@button-bg: 							  #354B62;
+@button-bg-color:                         #354B62;
+@button-border-color:                     @icon-color-primary;
 // Normal primary button
-@button-primary-border:                   @default-border-width solid #d94700;
-@button-primary-bg:                       @primary-color;
+@button-primary-border:                   @default-border-width solid @button-primary-border-color;
+@button-primary-border-color:             #d94700;
+@button-primary-bg-color:                 @primary-color;
 @button-primary-hover-bg:                 #EC5B19;
 @button-primary-active-text-color:        @button-active-text-color;
 @button-primary-active-border:            @default-border-width solid #d94700;
-@button-primary-active-bg:                #d94700;
+@button-primary-bg-active:                #d94700;
 // Normal disabled button
 @button-disabled-text-color:              @disabled-color;
 @button-disabled-border:                  @default-border-width solid @disabled-color;
@@ -130,6 +132,11 @@
 @button-big-icon-text-margin:             @button-icon-text-margin;         // margin of text following 16x16 icon
 @button-big-icon-big-top-offset:          0.5357rem;                             // top offset of 24x24 icon
 @button-primary-hover-text-color:         @default-text-color;
+
+@button-large-height:                                                                                                   @button-height;
+@button-large-border-radius:                                                                                            0;
+@button-large-font-size:                                                                                                @button-font-size;
+
 //Button group
 @button-group-horizontal-item-margin:     0 1.75rem 0 0;
 @button-group-vertical-item-margin:       0 0 1.75rem 0;
@@ -137,7 +144,7 @@
 @button-checked-border-width:             @button-border-width;
 @button-checked-line-height:              @button-line-height;
 @button-checked-border:                   @button-active-border;
-@button-checked-bg:                       @button-active-bg;
+@button-checked-bg:                       @button-bg-active;
 @button-checked-icon-top-offset:          @button-icon-top-offset;
 @button-checked-icon-left-offset:         @button-icon-left-offset;
 @button-checked-icon-big-top-offset:      @button-icon-big-top-offset;
@@ -289,7 +296,7 @@
 @menu-padding:										0;
 //Menu link
 @menu-link-menu-item-container-padding:	0 0 0 0;
-@menu-link-line-height:                   1.43rem;
+@menu-link-line-height:                   1.14rem;
 @menu-link-border-color: 						@primary-color transparent transparent transparent;
 @menu-link-checked-text-color:            @secondary-color;
 @menu-link-menu-border-width:             @default-border-width;
@@ -496,6 +503,8 @@
 @date-range-big-choose-date-range-picker-bg-boundary-selected-color:    #26B8FF;
 @date-range-big-choose-date-range-picker-bg-selected-color:             @date-range-big-choose-bg-hovered-color;
 @date-range-big-choose-date-range-picker-bg-hovered-color:              @date-range-big-choose-bg-hovered-color;
+@date-range-big-choose-months-text-align:                               center;
+@date-range-big-choose-months-padding:                                  0px;
 
 @date-range-big-choose-years-height:      3.57rem;
 @date-range-big-choose-header-padding:    0.256rem 0 0.256rem 0;
@@ -975,7 +984,7 @@
 @DropdownList-footer-hasMore-top-multiselect:         1rem;
 @DropdownList-footer-hasMore-top:                     1rem;
 @DropdownList-footer-select-icon-container-size:      3rem;
-@DropdownList-footer-select-icon-size:                3rem;
+@DropdownList-footer-select-icon-size:                2.3rem;
 //money
 @money-decorator-integer-accent-results-font-color:#FFCC99;
 @money-decorator-integer-no-accent-results-font-color:@disabled-color;
@@ -1000,6 +1009,7 @@
 @data-grid-row-hover-cell-bg:             #293A4B;
 @image-bar-height:                        3.57rem;
 @image-bar-vertical-padding:              0.245rem;
+@image-bar-vertical-padding:              0.316rem;
 @image-bar-horizontal-padding:            0.286rem;
 @image-bar-bg-color:                      rgba(102,170,221, .5);
 @money-text-box-decimals-padding:         0;
