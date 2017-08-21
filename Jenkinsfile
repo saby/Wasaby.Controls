@@ -16,7 +16,7 @@ properties([
             description: '',
             name: 'ws_data_revision'),
         string(
-            defaultValue: 'rc-3.17.100',
+            defaultValue: 'rc-3.17.110',
             description: '',
             name: 'branch_engine'),
         string(
@@ -45,7 +45,7 @@ properties([
 ])
 
 node('controls') {
-    def version = "3.17.100"
+    def version = "3.17.110"
     ws("/home/sbis/workspace/controls_${version}/${BRANCH_NAME}") {
         deleteDir()
         sh "python3 -c 'import os; print(dict(os.environ).items())'"
@@ -85,7 +85,7 @@ node('controls') {
             dir("./controls"){
                 sh """
                 git fetch
-                git merge origin/rc-3.17.100
+                git merge origin/rc-3.17.110
                 """
             }
 
