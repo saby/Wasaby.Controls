@@ -946,7 +946,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
 
             for (var i = 0; i < items.length; i++) {
                if (this._isVisibleItem(items[i])) {
-                  result.push(items[i]);
+                  itemsToAdd.push(items[i]);
                }
             }
          }
