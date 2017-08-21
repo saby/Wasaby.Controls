@@ -37,8 +37,8 @@ define(['js!WSControls/Lists/ItemsControl', 'js!WS.Data/Collection/RecordSet', '
                   items : data
                });
 
-               var drawedItems = ctrl._records;
-               assert.equal(data.length, drawedItems.length, 'Count of drawed items is not equal to count of src items');
+               var display = ctrl._display;
+               assert.equal(data.length, display.getCount(), 'Count of display items is not equal to count of src items');
             });
 
             it('Recordset.Simple', function () {
@@ -51,25 +51,8 @@ define(['js!WSControls/Lists/ItemsControl', 'js!WS.Data/Collection/RecordSet', '
                      idProperty: 'id'
                   });
 
-               var drawedItems = ctrl._records;
-               assert.equal(rs.getCount(), drawedItems.length, 'Count of drawed items is not equal to count of src items');
-            });
-
-            it('Group', function () {
-               var rs = new RecordSet({
-                     rawData: data,
-                     idProperty : 'id'
-                  }),
-                  ctrl = new ItemsControl({
-                     items : rs,
-                     idProperty: 'id',
-                     groupBy : {
-                        field : 'type'
-                     }
-                  });
-
-               var drawedItems = ctrl._records;
-               assert.equal(rs.getCount() + 2, drawedItems.length, 'Count of drawed items is not equal to count of src items + count of groups');
+               var display = ctrl._display;
+               assert.equal(rs.getCount(), display.getCount(), 'Count of display items is not equal to count of src items');
             });
 
             it('Array.Simple + Source', function () {

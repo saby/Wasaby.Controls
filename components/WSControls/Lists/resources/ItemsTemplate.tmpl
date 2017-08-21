@@ -1,16 +1,18 @@
-<ws:for data="index,item in records">
-    <ws:if data="{{ item.getContents }}">
-        <ws:partial
-                template="{{_getItemTpl()}}"
-                contentTemplate="{{_getItemContentTpl()}}"
-                defaultItemTpl="{{_defaultItemTemplate}}"
-                scope="{{...}}"
-                item="{{item.getContents()}}"
-                projItem="{{item}}"
-                index="{{index}}"
-                itemData="{{_getItemData(item, index)}}"/>
-    </ws:if>
-    <ws:else>
-        <ws:partial template="{{ item.tpl }}" scope="{{ item.data }}" />
-    </ws:else>
-</ws:for>
+<ws:if data="{{_display}}">
+   <ws:for data="_displayEnumerator.reset(); _displayEnumerator.moveNext(); _displayEnumerator">
+       <ws:if data="{{ _displayEnumerator.getCurrent().getContents }}">
+           <ws:partial
+                   template="{{_getItemTpl()}}"
+                   contentTemplate="{{_getItemContentTpl()}}"
+                   defaultItemTpl="{{_defaultItemTemplate}}"
+                   scope="{{...}}"
+                   item="{{_displayEnumerator.getCurrent().getContents()}}"
+                   projItem="{{_displayEnumerator.getCurrent()}}"
+                   index="{{_displayEnumerator.getCurrentIndex()}}"
+                   itemData="{{_getItemData(_displayEnumerator.getCurrent(), _displayEnumerator.getCurrentIndex())}}"/>
+       </ws:if>
+       <ws:else>
+           <ws:partial template="{{ item.tpl }}" scope="{{ item.data }}" />
+       </ws:else>
+   </ws:for>
+</ws:if>

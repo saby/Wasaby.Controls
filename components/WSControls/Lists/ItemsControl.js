@@ -2,7 +2,6 @@ define('js!WSControls/Lists/ItemsControl', [
    'Core/core-extend',
    'Core/Control',
    'Core/helpers/Object/isEmpty',
-   'Core/Sanitize',
    'tmpl!WSControls/Lists/resources/ItemsTemplate',
    'tmpl!WSControls/Lists/resources/ItemTemplate',
    'tmpl!WSControls/Lists/resources/ItemContentTemplate',
@@ -14,7 +13,6 @@ define('js!WSControls/Lists/ItemsControl', [
 ], function (extend,
              BaseControl,
              isEmpty,
-             Sanitize,
              ItemsTemplate,
              ItemTemplate,
              ItemContentTemplate,
@@ -41,8 +39,6 @@ define('js!WSControls/Lists/ItemsControl', [
          _sorting: undefined,
          _limit: undefined,
          _offset: undefined,
-
-         _records: null,
 
          _defaultItemContentTemplate: ItemContentTemplate,
          _defaultItemTemplate: ItemTemplate,
@@ -113,7 +109,8 @@ define('js!WSControls/Lists/ItemsControl', [
 
          //при изменениях в проекции
          _displayChangeCallback: function(display, cfg) {
-            this._records = this._getRecordsForView(display, cfg);
+            //Сохранять надо здесь, т.к. если звать из шаблона, то каждый вызов создаст новый инстанс, а присваивать в шаблоне нельзя
+            this._displayEnumerator = this._display.getEnumerator();
          },
 
          _getItemTpl: function() {
@@ -157,37 +154,8 @@ define('js!WSControls/Lists/ItemsControl', [
             }
          },
 
-         _getRecordsForViewFlat: function(display, cfg) {
-            var
-               ctrl = this,
-               records = [];
-            if (display) {     //У таблицы могут позвать перерисовку, когда данных еще нет
-               var prevGroupId = undefined;
-               display.each(function (item, index, group) {
-                  if (!isEmpty(cfg.groupBy)) {
-                     if (prevGroupId != group && group !== false) {
-                        records.push(ctrl._getGroupItem(group, item));
-                        prevGroupId = group;
-                     }
-                  }
-                  records.push(item);
-               });
-            }
-            return records;
-         },
-
-
-
-         _getRecordsForView: function(display, cfg) {
-            return this._getRecordsForViewFlat.apply(this, arguments)
-         },
-
          _createDefaultDisplay: function(items, cfg) {
             return ItemsUtil.getDefaultDisplayFlat(items, cfg)
-         },
-   
-         _createDefaultMultiSelector: function() {
-            /*Must be implemented*/
          },
 
 
