@@ -56,10 +56,10 @@ define('js!WSControls/VDOM/Item/Item', [
       onBlur: function (event) {
          this._completeEdit(event.target.value);
       },
-      _applyOptions:function(){
-         this.completed = this._options.completed;
-         this.title = this._options.title;
-         this.item = this._options.item;
+      _beforeUpdate:function(newOptions){
+         this.completed = newOptions.completed;
+         this.title = newOptions.title;
+         this.item = newOptions.item;
       },
       _startEdit: function(){
          this._editing = true;
