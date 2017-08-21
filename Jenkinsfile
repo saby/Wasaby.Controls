@@ -213,7 +213,7 @@ node('controls') {
             }
             // Выкачиваем ws.data для unit тестов и если указан сторонний бранч
             if (("${env.run_tests}" == "only_unit" ) || ("${run_tests}" == "all") || ("${env.ws_data_revision}" != "sdk") ){
-                def ws_data_revision = env.ws_data_revision}
+                def ws_data_revision = env.ws_data_revision
                 if ("${env.ws_data_revision}" == "sdk"){
                     ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
                 }
