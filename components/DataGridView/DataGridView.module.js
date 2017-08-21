@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/SortingTemplate",
    "Core/helpers/Object/isEmpty",
-   "Core/helpers/string-helpers",
+   'Core/helpers/String/escapeHtml',
    "Core/helpers/dom&controls-helpers",
    'Core/Sanitize',
    'js!SBIS3.StickyHeaderManager',
@@ -63,7 +63,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       GroupTemplate,
       SortingTemplate,
       isEmpty,
-      strHelpers,
+      escapeHtml,
       dcHelpers,
       Sanitize,
       StickyHeaderManager) {
@@ -96,7 +96,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          },
          getColumnVal = function (item, colName) {
             if (!colName || !(colName.indexOf("['") == 0 && colName.indexOf("']") == (colName.length - 2))){
-               return strHelpers.escapeHtml(item.get(colName));
+               return escapeHtml(item.get(colName));
             }
             var colNameParts = colName.slice(2, -2).split('.'),
                curItem = item,
@@ -722,7 +722,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                if(colValue && !colValue.getAttribute('title')) {
                   colValueText = colValue.innerText;
 
-                  if (dcHelpers.getTextWidth(strHelpers.escapeHtml(colValueText)) > colValue.offsetWidth) {
+                  if (dcHelpers.getTextWidth(escapeHtml(colValueText)) > colValue.offsetWidth) {
                      colValue.setAttribute('title', colValueText);
                   }
                }
@@ -1629,7 +1629,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                value = null;
             }
             value = this._options._decorators.applyOnly(
-                  value === undefined || value === null ? '' : strHelpers.escapeHtml(value), {
+                  value === undefined || value === null ? '' : escapeHtml(value), {
                   highlight: column.highlight
                }
             );
@@ -1661,6 +1661,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _getTableContainer: function(){
          return this.getContainer().find('>.controls-DataGridView__table');
+      },
+
+
+      _reviveItems: function() {
+         DataGridView.superclass._reviveItems.apply(this, arguments);
+         //контролы в шапке тоже нужно оживить
+         if (this._container.find(this._thead).length == 0) {
+            this.reviveComponents(this._thead);
+         }
       }
    });
 

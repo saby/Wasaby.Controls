@@ -95,11 +95,10 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
    }
 
    function hideEmptyDecimals(value){
-      while (value[value.length - 1] == '0' || value[value.length - 1] == '.') {
+      value = value + '';
+
+      while (value && value.indexOf('.') !== -1 && (value[value.length - 1] == '0' || value[value.length - 1] == '.')) {
          value = value.substr(0, value.length - 1);
-         if (value.indexOf('.') == -1) { // удаляем только дробную часть
-            break;
-         }
       }
       return value;
    }
@@ -209,10 +208,13 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
       },
 
       _modifyOptions: function(options){
+         var value;
+
          options = NumberTextBox.superclass._modifyOptions.apply(this, arguments);
-         if (options.numericValue != undefined){
+         value = (options.numericValue != undefined) ? options.numericValue : options.text;
+         if (value){
             options.text = formatText(
-               options.numericValue, 
+               value,
                options.text, 
                options.onlyInteger, 
                options.decimals, 
@@ -222,9 +224,9 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
                options.maxLength,
                options.hideEmptyDecimals
             );
-            if(options.hideEmptyDecimals) {
-               options.text = hideEmptyDecimals(options.text);
-            }
+         }
+         if(options.hideEmptyDecimals && options.text) {
+            options.text = hideEmptyDecimals(options.text);
          }
 
 	      options.cssClassName += ' controls-NumberTextBox';
@@ -250,13 +252,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          this._inputField.bind('blur', function(){
             self._blurHandler();
          });
-
-         if (typeof this._options.numericValue === 'number' && !isNaN(this._options.numericValue)) {
-            this._options.text = this._options.numericValue + '';
-         }
-         this._options.text = this._formatText(this._options.text, this._options.hideEmptyDecimals);
-         this._setNumericValue(this._options.text);
-         this._setInputValue(this._options.text);
 
          // TODO https://online.sbis.ru/opendoc.html?guid=f30c45a4-49f5-4125-b743-d391331b6587
          // временное решения в версию для скролла в поле ввода,
