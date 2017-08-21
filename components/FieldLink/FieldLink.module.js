@@ -4,7 +4,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "Core/constants",
        "Core/IoC",
        "Core/core-instance",
-       "Core/helpers/functional-helpers",
+       'Core/helpers/Function/forAliveOnly',
+       'Core/helpers/Function/memoize',
        'Deprecated/helpers/dom&controls-helpers',
        "Core/helpers/string-helpers",
        "Core/ParserUtilities",
@@ -39,7 +40,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
         constants,
         IoC,
         cInstance,
-        fHelpers,
+        forAliveOnly,
+        memoize,
         domHelpers,
         strHelpers,
         ParserUtilities,
@@ -423,7 +425,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
           },
 
-          _getSelectorAction: fHelpers.memoize(function() {
+          _getSelectorAction: memoize(function() {
              return this.getChildControlByName('FieldLinkSelectorAction');
           }, '_getSelectorAction'),
 
@@ -610,7 +612,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              if(constants.browser.firefox && active && !this.getText() && this._isEmptySelection()) {
                 var elemToFocus = this._getElementToFocus();
 
-                setTimeout(fHelpers.forAliveOnly(function () {
+                setTimeout(forAliveOnly(function () {
                    if(elemToFocus[0] === document.activeElement){
                       var suggestShowed = this.isPickerVisible();
                       elemToFocus.blur().focus();
@@ -772,11 +774,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
              return cfg;
           },
    
-          _getLinkCollection: fHelpers.memoize(function() {
+          _getLinkCollection: memoize(function() {
              return this.getChildControlByName('FieldLinkItemsCollection');
           }, '_getLinkCollection'),
           
-          _getInputMinWidth: fHelpers.memoize(function() {
+          _getInputMinWidth: memoize(function() {
              var fieldWrapper = this.getContainer().find('.controls-FieldLink__fieldWrapper');
              return parseInt(window.getComputedStyle(fieldWrapper[0]).getPropertyValue('--min-width') || fieldWrapper.css('min-width'));
           }, '_getInputMinWidth'),
@@ -1188,7 +1190,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
           },
           
-          _getShowAllButton: fHelpers.memoize(function () {
+          _getShowAllButton: memoize(function () {
              return this.getContainer().find('.controls-FieldLink__showAllLinks');
           }, '_showAllButton'),
 

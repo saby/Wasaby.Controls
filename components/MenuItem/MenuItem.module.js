@@ -4,9 +4,8 @@ define('js!SBIS3.CONTROLS.MenuItem', [
    'tmpl!SBIS3.CONTROLS.MenuItem',
    'Core/EventBus',
    'Core/Sanitize',
-   'Core/helpers/string-helpers',
    'css!SBIS3.CONTROLS.MenuItem'
-], function(WSButtonBase, dotTplFn, EventBus, Sanitize, strelpers) {
+], function(WSButtonBase, dotTplFn, EventBus, Sanitize) {
 
    'use strict';
    /**
