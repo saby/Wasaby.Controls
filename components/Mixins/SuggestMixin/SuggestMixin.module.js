@@ -751,6 +751,31 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @returns {*}
        * @private
        */
+      _isObservableControlFocused: function() {
+         if (Array.prototype.find) {
+            return this._options.observableControls.find(function (ctrl) {
+               return ctrl.isActive();
+            });
+         } else {
+            //TODO Необходимо для кроссбраузерности, в IE и Opera не поддерживается Array.prototype.find.
+            var control, isFocus;
+
+            isFocus = this._options.observableControls.some(function (ctrl) {
+               if (ctrl.isActive()) {
+                  control = ctrl;
+                  return true;
+               } else {
+                  return false;
+               }
+            });
+
+            if (isFocus) {
+               return control;
+            } else {
+               return undefined;
+            }
+         }
+      },
 
       /**
        * Проверяет необходимость изменения состояния пикера
