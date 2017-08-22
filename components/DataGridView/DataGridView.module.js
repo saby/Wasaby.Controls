@@ -1679,6 +1679,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._notify('onDrawHead');
             this._headIsChanged = false;
          }
+         DataGridView.superclass._onReviveItems.apply(this, arguments);
       }
    });
 
