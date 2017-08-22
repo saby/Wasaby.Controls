@@ -212,7 +212,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
                   if (w != self._cachedW || h != self._cachedH) {
                      self._cachedW = w;
                      self._cachedH = h;
-                     self._autosizeTextArea();
+                     self._autosizeTextArea(true);
                   }
                }
             });
