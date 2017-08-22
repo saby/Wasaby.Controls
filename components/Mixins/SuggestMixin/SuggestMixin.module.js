@@ -4,8 +4,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
    "Core/Deferred",
    "js!SBIS3.CONTROLS.PickerMixin",
    "Core/core-instance",
+   'Core/helpers/Object/find',
    "js!SBIS3.CONTROLS.ControlHierarchyManager"
-], function ( cFunctions, cMerge, Deferred, PickerMixin, cInstance, ControlHierarchyManager) {
+], function ( cFunctions, cMerge, Deferred, PickerMixin, cInstance, find, ControlHierarchyManager) {
    'use strict';
 
 
@@ -752,29 +753,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @private
        */
       _isObservableControlFocused: function() {
-         if (Array.prototype.find) {
-            return this._options.observableControls.find(function (ctrl) {
-               return ctrl.isActive();
-            });
-         } else {
-            //TODO Необходимо для кроссбраузерности, в IE и Opera не поддерживается Array.prototype.find.
-            var control, isFocus;
-
-            isFocus = this._options.observableControls.some(function (ctrl) {
-               if (ctrl.isActive()) {
-                  control = ctrl;
-                  return true;
-               } else {
-                  return false;
-               }
-            });
-
-            if (isFocus) {
-               return control;
-            } else {
-               return undefined;
-            }
-         }
+          return find(this._options.observableControls, function(ctrl) {
+              return ctrl.isActive();
+          }, this, false);
       },
 
       /**
