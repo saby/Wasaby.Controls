@@ -67,7 +67,9 @@ define('js!SBIS3.CONTROLS.TextArea', [
          _cachedH: null,
          _pasteCommand: 'insertText',
          _autoSizeInitialized: false,
-         _myResize: false, //TODO флаг нужен для того, чтобы мы могли отличить ресайз, если он был инициирован самим полем, то надо известить родителя, если пришел извне, то не надо
+         //TODO надо подумать как работать с автосайзом эрии без плагина, т.к. в VDOM все равно не получится, как вариант contentEditable
+         _myResize: false, //флаг нужен для того, чтобы мы могли отличить ресайз, если он был инициирован самим полем, то надо известить родителя, если пришел извне, то не надо
+         
          _options: {
             textFieldWrapper: inputField,
             wrapUrls: LinkWrap.wrapURLs,
