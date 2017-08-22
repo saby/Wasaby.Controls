@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
     * </ul>
     * @class SBIS3.CONTROLS.TextArea
     * @extends SBIS3.CONTROLS.TextBoxBase
-    * @author Роман Валерий Сергеевич
+    * @author Романов Валерий Сергеевич
     * @css controls-TextArea Класс для изменения отображения текста в многострочном поле ввода.
     *
     * @ignoreOptions independentContext contextRestriction className
