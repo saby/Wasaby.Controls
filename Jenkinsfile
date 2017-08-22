@@ -277,7 +277,7 @@ node('controls') {
         }
 
         stage("Unit тесты"){
-            if (( un )){
+            if ( unit ){
                 dir(workspace){
                     sh "cp -rf ./WIS-git-temp ./controls/sbis3-ws"
                     sh "cp -rf ./ws_data/WS.Data ./controls/components/"
