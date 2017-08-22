@@ -753,9 +753,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @private
        */
       _isObservableControlFocused: function() {
-          return find(this._options.observableControls, function(ctrl) {
-              return ctrl.isActive();
-          }, this, false);
+         return find(this._options.observableControls, function(ctrl) {
+            return ctrl.isActive();
+         }, this, false);
       },
 
       /**
