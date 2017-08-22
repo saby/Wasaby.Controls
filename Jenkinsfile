@@ -16,7 +16,7 @@ properties([
             description: '',
             name: 'ws_data_revision'),
         string(
-            defaultValue: 'rc-3.17.100',
+            defaultValue: 'rc-3.17.110',
             description: '',
             name: 'branch_engine'),
         string(
@@ -40,21 +40,22 @@ properties([
             description: '',
             name: 'theme'),
         choice(choices: "chrome\nff", description: '', name: 'browser_type'),
-        choice(choices: "all\nonly_reg\nonly_int\nonly_unit", description: '', name: 'run_tests')]),
+        choice(choices: "all\nonly_reg\nonly_int\nonly_unit", description: '', name: 'run_tests'),
+        booleanParam(defaultValue: false, description: "", name: 'RUN_ONLY_FAIL_TEST')]),
     pipelineTriggers([])
 ])
 
 node('controls') {
-    def version = "3.17.100"
+    def version = "3.17.110"
     ws("/home/sbis/workspace/controls_${version}/${BRANCH_NAME}") {
         deleteDir()
         sh "python3 -c 'import os; print(dict(os.environ).items())'"
-        def workspace = "${env.WORKSPACE}"
+        def workspace = env.WORKSPACE
         def ver = version.replaceAll('.','')
         def python_ver = 'python3'
         def SDK = ""
         def items = "controls:${workspace}/controls"
-        def branch_atf = "${env.branch_atf}"
+        def branch_atf = env.branch_atf
 
         def TAGS = ""
         if ("${env.Tag1}" != "")
@@ -68,9 +69,9 @@ node('controls') {
 
         stage("Checkout"){
             // Контролы
-            dir("${workspace}") {
+            dir(workspace) {
                 checkout([$class: 'GitSCM',
-                branches: [[name: "${env.BRANCH_NAME}"]],
+                branches: [[name: env.BRANCH_NAME]],
                 doGenerateSubmoduleConfigurations: false,
                 extensions: [[
                     $class: 'RelativeTargetDirectory',
@@ -85,12 +86,12 @@ node('controls') {
             dir("./controls"){
                 sh """
                 git fetch
-                git merge origin/rc-3.17.100
+                git merge origin/rc-3.17.110
                 """
             }
 
             // Выкачиваем platform и cdn
-            dir("${workspace}") {
+            dir(workspace) {
                 checkout([$class: 'GitSCM',
                 branches: [[name: "rc-${version}"]],
                 doGenerateSubmoduleConfigurations: false,
@@ -137,13 +138,13 @@ node('controls') {
             dir("./constructor/Constructor/SDK") {
                 SDK = sh returnStdout: true, script: "${python_ver} getSDK.py ${version} --conf linux_x86_64 -b"
                 SDK = SDK.trim()
-                echo "${SDK}"
+                echo SDK
             }
 
             // Выкачиваем atf
             dir("./controls/tests/int") {
             checkout([$class: 'GitSCM',
-                branches: [[name: "${branch_atf}"]],
+                branches: [[name: env.branch_atf]],
                 doGenerateSubmoduleConfigurations: false,
                 extensions: [[
                     $class: 'RelativeTargetDirectory',
@@ -159,7 +160,7 @@ node('controls') {
             // Выкачиваем engine
             dir("./controls/tests"){
                 checkout([$class: 'GitSCM',
-                branches: [[name: "${env.branch_engine}"]],
+                branches: [[name: env.branch_engine]],
                 doGenerateSubmoduleConfigurations: false,
                 extensions: [[
                     $class: 'RelativeTargetDirectory',
@@ -172,7 +173,7 @@ node('controls') {
                 ])
             }
             // Выкачиваем demo_stand
-            dir("${workspace}") {
+            dir(workspace) {
                 checkout([$class: 'GitSCM',
                 branches: [[name: 'master']],
                 doGenerateSubmoduleConfigurations: false,
@@ -191,13 +192,13 @@ node('controls') {
 
             // Выкачиваем ws для unit тестов и если указан сторонний бранч
             if (("${env.run_tests}" == "only_unit" ) || ("${run_tests}" == "all") || ("${env.ws_revision}" != "sdk") ){
-                def ws_revision = "${env.ws_revision}"
+                def ws_revision = env.ws_revision
                 if ("${env.ws_revision}" == "sdk"){
                     ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
                 }
-                dir("${workspace}") {
+                dir(workspace) {
                     checkout([$class: 'GitSCM',
-                    branches: [[name: "${ws_revision}"]],
+                    branches: [[name: ws_revision]],
                     doGenerateSubmoduleConfigurations: false,
                     extensions: [[
                         $class: 'RelativeTargetDirectory',
@@ -212,13 +213,13 @@ node('controls') {
             }
             // Выкачиваем ws.data для unit тестов и если указан сторонний бранч
             if (("${env.run_tests}" == "only_unit" ) || ("${run_tests}" == "all") || ("${env.ws_data_revision}" != "sdk") ){
-                def ws_data_revision = "${env.ws_data_revision}"
+                def ws_data_revision = env.ws_data_revision
                 if ("${env.ws_data_revision}" == "sdk"){
                     ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
                 }
-                dir("${workspace}") {
+                dir(workspace) {
                     checkout([$class: 'GitSCM',
-                    branches: [[name: "${ws_data_revision}"]],
+                    branches: [[name: ws_data_revision]],
                     doGenerateSubmoduleConfigurations: false,
                     extensions: [[
                         $class: 'RelativeTargetDirectory',
@@ -237,7 +238,7 @@ node('controls') {
             dir("./controls"){
                 sh "${python_ver} ${workspace}/constructor/build_controls.py ${workspace}/controls ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
             }
-            dir("${workspace}"){
+            dir(workspace){
                 // Собираем ws если задан сторонний бранч
                 if ("${env.ws_revision}" != "sdk"){
                     sh "rm -rf ${workspace}/WIS-git-temp2"
@@ -252,12 +253,12 @@ node('controls') {
                     items = items + ", ws_data:${workspace}/ws_data"
                 }
             }
-            echo "${items}"
+            echo items
         }
 
         stage("Unit тесты"){
             if (("${env.run_tests}" == "only_unit" ) || ("${run_tests}" == "all")){
-                dir("${workspace}"){
+                dir(workspace){
                     sh "cp -rf ./WIS-git-temp ./controls/sbis3-ws"
                     sh "cp -rf ./ws_data/WS.Data ./controls/components/"
                     sh "cp -rf ./ws_data/WS.Data ./controls/"
@@ -413,7 +414,11 @@ node('controls') {
                 IMAGE_DIR = capture
                 RUN_REGRESSION=True"""
         }
-
+        def run_test_fail = ""
+        if ("${RUN_ONLY_FAIL_TEST}" == 'true'){
+            run_test_fail = "-sf"
+            step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
+        }
         stage("Инт.тесты"){
             if ("${env.run_tests}" != "only_reg"){
                 def site = "http://${NODE_NAME}:30001"
@@ -422,7 +427,7 @@ node('controls') {
                 dir("./controls/tests/int"){
                     sh """
                     source /home/sbis/venv_for_test/bin/activate
-                    python start_tests.py --RESTART_AFTER_BUILD_MODE --TAGS_TO_START ${TAGS}
+                    python start_tests.py --RESTART_AFTER_BUILD_MODE --TAGS_TO_START ${TAGS} ${run_test_fail}
                     deactivate
                     """
                 }
@@ -430,7 +435,7 @@ node('controls') {
                 dir("./controls/tests/int"){
                     sh """
                     source /home/sbis/venv_for_test/bin/activate
-                    python start_tests.py --RESTART_AFTER_BUILD_MODE
+                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
                     deactivate
                     """
                 }
@@ -443,20 +448,24 @@ node('controls') {
                 dir("./controls/tests/reg"){
                     sh """
                         source /home/sbis/venv_for_test/bin/activate
-                        python start_tests.py --RESTART_AFTER_BUILD_MODE
+                        python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
                         deactivate
                     """
                 }
             }
         }
+        sh """
+            sudo chmod -R 0777 ${workspace}
+            sudo chmod -R 0777 /home/sbis/Controls1
+        """
         stage("Результаты"){
-            dir("${workspace}"){
+            dir(workspace){
                 publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
             }
-            junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
             junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
             archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
             archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
+            junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
         }
     }
 
