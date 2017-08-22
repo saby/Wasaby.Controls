@@ -909,9 +909,7 @@ define('js!SBIS3.CONTROLS.ListView',
                contextMenu: true,
                /**
                 * @cfg {Boolean} Использовать функционал выбора всех записей
-                * @remark Начиная с версии 3.17.20 данная опция будет удалена.
-                * Стандартным будет считаться поведение, useSelectAll = true.
-                * @deprecated
+                * @see getSelection
                 */
                useSelectAll: false,
                virtualScrolling: false,
@@ -1847,7 +1845,16 @@ define('js!SBIS3.CONTROLS.ListView',
                this._getMassSelectionController().toggleSelectedAll();
             }
          },
-
+         /**
+          * @typedef {Object} Selection
+          * @property {Array} [marked] Идентификаторы выделенныех элементов, в случае выбора ВСЕХ ЗАПИСЕЙ этот массив содержит ID корня.
+          * @property {Array} [excluded] Идентификаторы исключённых из выборки записей.
+          */
+         /**
+          * Получить текущее состояние выделения
+          * @returns {Selection} selection
+          * @see useSelectAll
+          */
          getSelection: function() {
             if (this._options.useSelectAll) {
                return this._getMassSelectionController().getSelection();
