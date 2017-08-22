@@ -624,6 +624,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        * Удаляет запись из источника данных диалога.
        * @param {Object} [config] Конфигурация команды.
        * @param {Boolean} [config.hideIndicator=false] Не показывать индикатор.
+       * @param {Boolean} [config.closePanelAfterSubmit=true] Закрывать диалог после выполнения команды.
        * @remark
        * При удалении происходит событие {@link onDestroyModel}.
        * Источник данных диалога устанавливают с помощью опции {@link dataSource}.
@@ -640,7 +641,7 @@ define('js!SBIS3.CONTROLS.FormController', [
             config = cfg || {},
             self = this,
             destroyConfig = {
-               hideIndicator: config.hideIndicator ? config.hideIndicator : true,
+               hideIndicator: config.hideIndicator !== undefined ? config.hideIndicator : true,
                eventName: 'onDestroyModel',
                hideErrorDialog: true
             },
@@ -649,6 +650,9 @@ define('js!SBIS3.CONTROLS.FormController', [
          return this._prepareSyncOperation(def, config, destroyConfig).addBoth(function(data){
             self._newRecord = false;
             record.setState(Record.RecordState.DELETED);
+            if (config.closePanelAfterSubmit) {
+               self._closePanel(true);
+            }
             return data;
          });
       },
