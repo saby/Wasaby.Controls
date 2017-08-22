@@ -47,10 +47,9 @@ properties([
 
 node('controls') {
     def version = "3.17.100"
-    ws("/home/sbis/workspace/controls_${version}/${BRANCH_NAME}") {
+    def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
+    ws(workspace) {
         deleteDir()
-        sh "python3 -c 'import os; print(dict(os.environ).items())'"
-        def workspace = env.WORKSPACE
         def ver = version.replaceAll('.','')
         def python_ver = 'python3'
         def SDK = ""
@@ -106,7 +105,7 @@ node('controls') {
             dir("./controls"){
                 sh """
                 git fetch
-                git merge origin/rc-3.17.100
+                git merge origin/rc-${version}
                 """
             }
 
