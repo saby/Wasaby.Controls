@@ -68,8 +68,8 @@ node('controls') {
         if ("${TAGS}" != "")
             TAGS = "--TAGS_TO_START ${TAGS}"
 
-        def re = false
         def in = false
+        def re = false
         def un = false
 
         switch (params.run_tests){
