@@ -5,7 +5,7 @@
       {{if (it.ignoreFirstColumn) { colspan++; } }}
       <td colspan="{{=colspan}}" class="controls-editInPlace__withEditor">
          <div class="controls-editInPlace__editor">
-            {{=it.editingTemplate}}
+            {{= (typeof it.editingTemplate === 'function' ? it.editingTemplate(it) : it.editingTemplate) }}
          </div>
       </td>
    {{??}}
@@ -15,7 +15,7 @@
          {{?column.editor}}
             <td class="controls-editInPlace__withEditor">
                <div class="controls-editInPlace__editor {{?(it.ignoreFirstColumn && index === 0)}}controls-editInPlace__editorWithOffset{{?}}">
-                  {{=column.editor}}
+                  {{= (typeof column.editor === 'function' ? column.editor(it) : column.editor) }}
                </div>
          {{??}}
             <td class="controls-editInPlace__withoutEditor">
@@ -27,7 +27,7 @@
 {{??}}
    <div class="js-controls-ListView__item controls-editInPlace">
       <div class="controls-editInPlace__editor">
-         {{=it.editingTemplate}}
+         {{= (typeof it.editingTemplate === 'function' ? it.editingTemplate(it) : it.editingTemplate) }}
       </div>
    </div>
 {{?}}
