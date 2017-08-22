@@ -127,9 +127,9 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                                  model.set(evt.changed, evt[evt.changed]);
                               }
                               self._checkItems();
-                              dontReload = true;
-                              // тем не менее после действий пользователя suspend и resume перезагрузка всё равно будет осуществлена, если в itemsActions это задано
                            }
+                           dontReload = true;
+                           // тем не менее после действий пользователя suspend и resume перезагрузка всё равно будет осуществлена, если в itemsActions это задано
                         }
                         break;
                      case 'onlongoperationended':
