@@ -388,6 +388,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
        * @param {Core/EventObject} eventObject Дескриптор события.
        */
       $protected: {
+         _headIsChanged: false,
          _rowTpl : rowTpl,
          _rowData : [],
          _isPartScrollVisible: false,                 //Видимость скроллбара
@@ -851,7 +852,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this.getContainer().removeClass('controls-DataGridView__PartScroll__shown');
          }
          this._bindHead();
-         this._notify('onDrawHead');
          // Итоги как и заголовки отрисовываются в thead. Помечаем заголовки для фиксации при необходимости.
          if (this._options.stickyHeader && !this._options.showHead && this._options.resultsPosition === 'top') {
             this._updateStickyHeader(headData.hasResults);
@@ -881,6 +881,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _redrawTheadAndTfoot: function(){
          this._redrawHead();
          this._redrawFoot();
+         this._headIsChanged = true;
       },
 
       _bindHead: function() {
@@ -1470,7 +1471,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       setMultiselect: function() {
          DataGridView.superclass.setMultiselect.apply(this, arguments);
-
          // При установке multiselect создается отдельная td'шка под checkbox, которая не учитывается при редактировании по месту.
          // Уничтожаем контроллер редактирования по месту, чтобы пересоздать его с новым набором колонок.
          this._destroyEditInPlaceController();
@@ -1480,6 +1480,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
          } else if(this._options.showHead) {
             this._redrawTheadAndTfoot();
             this.reviveComponents(this._thead);
+            this._notify('onDrawHead');
+            this._headIsChanged = false;
             this.reviveComponents(this._tfoot);
          }
       },
@@ -1665,10 +1667,17 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
 
       _reviveItems: function() {
-         DataGridView.superclass._reviveItems.apply(this, arguments);
          //контролы в шапке тоже нужно оживить
          if (this._container.find(this._thead).length == 0) {
             this.reviveComponents(this._thead);
+         }
+         DataGridView.superclass._reviveItems.apply(this, arguments);
+      },
+
+      _onReviveItems: function() {
+         if (this._headIsChanged) {
+            this._notify('onDrawHead');
+            this._headIsChanged = false;
          }
       }
    });
