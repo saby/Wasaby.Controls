@@ -8,6 +8,10 @@
    min-width: @button-min-width;
    line-height: normal;
 
+   &:active {
+      text-decoration: none !important;
+   }
+
    &.controls-Button-color__ {
       &default {
          color: @button-text-color;
@@ -112,5 +116,17 @@
             background: @button-primary-hover-bg;
          }
       }
+   }
+   .controls-Button:hover {
+      text-decoration: none !important;
+   }
+}
+
+@-moz-document url-prefix() {
+   .controls-Button__text {
+      height: @button-text-height-ff;
+   }
+   .controls-Button__big .controls-Button__text {
+      height: auto;
    }
 }
