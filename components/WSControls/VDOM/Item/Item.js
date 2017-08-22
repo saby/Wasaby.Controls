@@ -56,10 +56,16 @@ define('js!WSControls/VDOM/Item/Item', [
       onBlur: function (event) {
          this._completeEdit(event.target.value);
       },
-      _beforeUpdate:function(newOptions){
+      _saveOpt: function(newOptions){
          this.completed = newOptions.completed;
          this.title = newOptions.title;
          this.item = newOptions.item;
+      },
+      _beforeMount:function(newOptions){
+         this._saveOpt(newOptions);
+      },
+      _beforeUpdate:function(newOptions){
+         this._saveOpt(newOptions);
       },
       _startEdit: function(){
          this._editing = true;
