@@ -73,7 +73,9 @@ node('controls') {
 
         switch (params.run_tests){
             case "all":
-                regr = inte = unit = true
+                regr = true
+                inte = true
+                unit = true
                 break
             case "only_reg":
                 regr = true
