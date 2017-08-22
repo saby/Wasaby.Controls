@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
    "js!SBIS3.CONTROLS.IconMixin",
    "Core/Sanitize",
    "Core/core-instance",
-   "Core/helpers/functional-helpers",
+   'Core/helpers/Function/memoize',
    'Core/helpers/string-helpers',
    'js!SBIS3.CONTROLS.ToSourceModel',
    'js!SBIS3.CONTROLS.Utils.ItemsSelection',
@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
        IconMixin,
        Sanitize,
        cInstance,
-       fHelpers,
+       memoize,
        strHelpers,
        ToSourceModel,
        ItemsSelectionUtil,
@@ -285,7 +285,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          }
       },
 
-      _getSelectorAction: fHelpers.memoize(function() {
+      _getSelectorAction: memoize(function() {
          return this.getChildControlByName('SelectorButtonSelectorAction');
       },'_getSelectorAction'),
 

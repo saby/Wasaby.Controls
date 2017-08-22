@@ -59,7 +59,7 @@ define([
             };
             Object.keys(signatures).forEach(function (method) {
                var len = signatures[method];
-               it('Метод ' + method + ' (' + len + ')', function () {
+               it('Метод экземпляра ' + method + ' (' + len + ')', function () {
                   var f = bunch[method];
                   assert.isFunction(f, 'Метод отсутствует');
                   if (typeof f === 'function') {
@@ -584,9 +584,6 @@ define([
          });
 
 
-
-
-
          describe('Удаление хранящихся значений по заданным критериям - метод removeAll', function () {
             var bunch = _fillBunch(_makeBunch());
             if (!bunch) {
@@ -640,10 +637,6 @@ define([
                assert.deepEqual(deleted7, []);
             });
          });
-
-
-
-
       });
    }
 );

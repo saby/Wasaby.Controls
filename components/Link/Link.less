@@ -51,11 +51,6 @@
     }
   }
 
-  .controls-Button__icon {
-    vertical-align: @link-icon-vertical-alignment;
-    margin: @link-icon-margin;
-  }
-
   .controls-Link__field {
     margin: @link-field-margin;
   }
@@ -64,12 +59,10 @@
     margin: @link-field-margin;
   }
 
-  &.controls-Button__ellipsis {
-    white-space: nowrap;
-    vertical-align: text-bottom;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .controls-Button__text {
+    .text-overflow();
   }
+
   .controls-Link-link {
      color: inherit;
      text-decoration: inherit;
@@ -104,24 +97,8 @@
    }
 }
 
-.ws-is-firefox {
-  .controls-Link {
-   .controls-Button__icon {
-     margin: -4px 0 0;
-   }
-  }
-}
-
 .ws-is-desktop-platform {
   .controls-Link {
     .link-hover-mixin(@link-hover-text-color, @button-icon-color-hover, controls-Button__text);
-  }
-}
-
-.ws-is-sbis-desktop {
-  .controls-Link {
-    .controls-Button__icon {
-      margin: -8px 0 0;
-    }
   }
 }

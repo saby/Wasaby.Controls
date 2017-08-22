@@ -2,9 +2,9 @@
  * Created by am.gerasimov on 01.02.2016.
  */
 define('js!SBIS3.CONTROLS.DateRangeBigChoose.Validators', [
-   'Core/helpers/string-helpers',
+   'Core/helpers/String/format',
    'i18n!SBIS3.CONTROLS.DateRangeBigChoose'
-], function (stringHelpers) {
+], function (format) {
    'use strict';
 
    /**
@@ -25,10 +25,10 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.Validators', [
             return false;
          }
          if (eType === '<=') {
-            errorString = stringHelpers.format(rk('Значение поля должно быть меньше или равно значения поля "$name$s$"'), {name: name});
+            errorString = format(rk('Значение поля должно быть меньше или равно значения поля "$name$s$"'), {name: name});
             return (currentValue <= compareValue) ? true : errorString;
          } else if (eType === '>=') {
-            errorString = stringHelpers.format(rk('Значение поля должно быть больше или равно значения поля "$name$s$"'), {name: name});
+            errorString = format(rk('Значение поля должно быть больше или равно значения поля "$name$s$"'), {name: name});
             return (currentValue >= compareValue) ? true : errorString;
          }
       }

@@ -331,7 +331,12 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          $constructor: function() {
             this._publish('onClickMore');
-            this._container.bind(this._isHoverMode() ? 'mouseenter' : 'click', this.showPicker.bind(this));
+            var self = this;
+            this._container.bind(this._isHoverMode() ? 'mouseenter' : 'click', function(){
+               if (self._getItemsProjection()) {
+                  self.showPicker();
+               }
+            });
             if (this._container.hasClass('controls-DropdownList__withoutCross')){
                this._options.pickerClassName += ' controls-DropdownList__withoutCross';
             }

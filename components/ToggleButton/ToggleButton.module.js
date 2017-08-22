@@ -56,7 +56,9 @@ define('js!SBIS3.CONTROLS.ToggleButton', ['js!WSControls/Buttons/ToggleButton', 
          var
              options = ToggleButton.superclass._modifyOptions.apply(this, arguments);
 
-         options.cssClassName +=  ' controls-ToggleButton__normal controls-Button' + (options.primary ? ' controls-Button__primary' : ' controls-Button__default');
+         options.cssClassName +=  ' controls-ToggleButton__normal controls-Button';
+         options.cssClassName += ' controls-Button-size__' + (!!options.size ? options.size : 'default');
+         options.cssClassName += ' controls-Button-color__' + (!!options.primary ? 'primary' : 'default');
          return options;
       }
    });

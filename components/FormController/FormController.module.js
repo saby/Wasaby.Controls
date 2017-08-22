@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.FormController', [
    "Core/IoC",
    "Core/ConsoleLogger",
    "Core/core-instance",
-   "Core/helpers/functional-helpers",
+   'Core/helpers/Function/forAliveOnly',
    "Core/helpers/dom&controls-helpers",
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CORE.LoadingIndicator",
@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.FormController', [
    "i18n!SBIS3.CONTROLS.FormController",
    'css!SBIS3.CONTROLS.FormController'
 ],
-   function( cContext, cFunctions, cMerge, CommandDispatcher, EventBus, Deferred, IoC, ConsoleLogger, cInstance, fHelpers, domHelpers, CompoundControl, LoadingIndicator, Record, Model, SbisService, InformationPopupManager, OpenDialogUtil, TitleManager) {
+   function( cContext, cFunctions, cMerge, CommandDispatcher, EventBus, Deferred, IoC, ConsoleLogger, cInstance, forAliveOnly, domHelpers, CompoundControl, LoadingIndicator, Record, Model, SbisService, InformationPopupManager, OpenDialogUtil, TitleManager) {
    /**
     * Компонент, на основе которого создают диалог, данные которого инициализируются по записи.
     * В частном случае компонент применяется для создания <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/'>диалогов редактирования записи</a>.
@@ -424,7 +424,7 @@ define('js!SBIS3.CONTROLS.FormController', [
       /**
        * Показывает индикатор загрузки
        */
-      _showLoadingIndicator: fHelpers.forAliveOnly(function(message){
+      _showLoadingIndicator: forAliveOnly(function(message){
          var self = this;
          message = message !== undefined ? message : this._options.indicatorSavingMessage;
          this._showedLoading = true;

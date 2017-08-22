@@ -1,24 +1,22 @@
 <!--Если размер текста сообщения и описания превышает заданные рамки, то увеличиваем размер окна-->
-<div class="controls-SubmitPopup {{ !it.autoWidth ? ((message.length > it.messageMaxLength || it.details.length > it.detailsMaxLength) ? 'controls-SubmitPopup__size-big' : 'controls-SubmitPopup__size-standard')}}">
-
+<div class="controls-SubmitPopup{{autoWidth ? '' : message.length > messageMaxLength || details.length > detailsMaxLength ? ' controls-SubmitPopup__size-big' : ' controls-SubmitPopup__size-standard'}}">
    <!--Блок с сообщением или шаблоном сообщения-->
    <div class="controls-SubmitPopup__body">
       <ws:if data="{{messageTemplate || message}}">
          <div class="controls-SubmitPopup__message">
             <ws:if data="{{messageTemplate}}">
-               <ws:partial template="{{messageTemplate}}" scope="{{...}}"></ws:partial>
+               <ws:partial template="{{messageTemplate}}" scope="{{...}}"/>
             </ws:if>
             <ws:else>
                <div class="controls-SubmitPopup__message-centered">{{message}}</div>
             </ws:else>
          </div>
       </ws:if>
-
       <!--Блок с деталями или шаблоном деталей-->
       <ws:if data="{{detailsTemplate || details}}">
          <div class="controls-SubmitPopup__details">
             <ws:if data="{{detailsTemplate}}">
-               <ws:partial template="{{detailsTemplate}}" scope="{{...}}"></ws:partial>
+               <ws:partial template="{{detailsTemplate}}" scope="{{...}}"/>
             </ws:if>
             <ws:else>
                <div class="controls-SubmitPopup__details-centered">{{details}}</div>
@@ -26,48 +24,45 @@
          </div>
       </ws:if>
    </div>
-
    <!--Блок с кнопками-->
    <div class="controls-SubmitPopup__footer">
       <div class="controls-SubmitPopup__buttonContainer">
          <ws:if data="{{status === 'confirm' || useConfirmButtons}}">
-
-            <ws:if data="{{positiveButton.isLink}}">
-               <ws:SBIS3.CONTROLS.Link name="positiveButton" class="controls-SubmitPopup__button controls-Button__ellipsis {{hasCancelButton ? 'controls-SubmitPopup__button-mini'}}" caption="{{positiveButton.caption}}" allowChangeEnable="{{false}}" primary="{{true}}"></ws:SBIS3.CONTROLS.Link>
-            </ws:if>
-            <ws:else>
-               <ws:SBIS3.CONTROLS.Button name="positiveButton" class="controls-SubmitPopup__button controls-Button__ellipsis {{hasCancelButton ? 'controls-SubmitPopup__button-mini'}}" caption="{{positiveButton.caption}}" allowChangeEnable="{{false}}" primary="{{true}}"></ws:SBIS3.CONTROLS.Button>
-            </ws:else>
-
-            <ws:if data="{{negativeButton.isLink}}">
-               <ws:SBIS3.CONTROLS.Link name="negativeButton" class="controls-SubmitPopup__button controls-Button__ellipsis {{hasCancelButton ? 'controls-SubmitPopup__button-mini'}}" caption="{{negativeButton.caption}}" allowChangeEnable="{{false}}"></ws:SBIS3.CONTROLS.Link>
-            </ws:if>
-            <ws:else>
-               <ws:SBIS3.CONTROLS.Button name="negativeButton" class="controls-SubmitPopup__button controls-Button__ellipsis {{hasCancelButton ? 'controls-SubmitPopup__button-mini'}}" caption="{{negativeButton.caption}}" allowChangeEnable="{{false}}"></ws:SBIS3.CONTROLS.Button>
-            </ws:else>
-
+            <ws:partial
+               primary="{{true}}"
+               name="positiveButton"
+               allowChangeEnable="{{false}}"
+               caption="{{positiveButton.caption}}"
+               template="{{'js!' + (positiveButton.isLink ? 'SBIS3.CONTROLS.Link' : 'SBIS3.CONTROLS.Button')}}"
+               class="controls-SubmitPopup__button{{hasCancelButton ? ' controls-SubmitPopup__button-mini'}} controls-Button__ellipsis"
+            />
+            <ws:partial
+               name="negativeButton"
+               allowChangeEnable="{{false}}"
+               caption="{{negativeButton.caption}}"
+               template="{{'js!' + (negativeButton.isLink ? 'SBIS3.CONTROLS.Link' : 'SBIS3.CONTROLS.Button')}}"
+               class="controls-SubmitPopup__button{{hasCancelButton ? ' controls-SubmitPopup__button-mini'}} controls-Button__ellipsis"
+            />
             <ws:if data="{{hasCancelButton}}">
-               <ws:if data="{{cancelButton.isLink}}">
-                  <ws:SBIS3.CONTROLS.Link name="cancelButton" class="controls-SubmitPopup__button controls-Button__ellipsis controls-SubmitPopup__button-mini" caption="{{cancelButton.caption}}" allowChangeEnable="{{false}}"></ws:SBIS3.CONTROLS.Link>
-               </ws:if>
-               <ws:else>
-                  <ws:SBIS3.CONTROLS.Button name="cancelButton" class="controls-SubmitPopup__button controls-Button__ellipsis controls-SubmitPopup__button-mini" caption="{{cancelButton.caption}}" allowChangeEnable="{{false}}"></ws:SBIS3.CONTROLS.Button>
-               </ws:else>
+               <ws:partial
+                  name="cancelButton"
+                  allowChangeEnable="{{false}}"
+                  caption="{{cancelButton.caption}}"
+                  template="{{'js!' + (cancelButton.isLink ? 'SBIS3.CONTROLS.Link' : 'SBIS3.CONTROLS.Button')}}"
+                  class="controls-SubmitPopup__button controls-SubmitPopup__button-mini controls-Button__ellipsis"
+               />
             </ws:if>
-
          </ws:if>
          <ws:else>
-
-            <ws:if data="{{submitButton.isLink}}">
-               <ws:SBIS3.CONTROLS.Link name="okButton" class="controls-SubmitPopup__button controls-Button__ellipsis" caption="{{submitButton.caption}}" allowChangeEnable="{{false}}" primary="{{true}}"></ws:SBIS3.CONTROLS.Link>
-            </ws:if>
-            <ws:else>
-               <ws:SBIS3.CONTROLS.Button name="okButton" class="controls-SubmitPopup__button controls-Button__ellipsis" caption="{{submitButton.caption}}" allowChangeEnable="{{false}}" primary="{{true}}"></ws:SBIS3.CONTROLS.Button>
-            </ws:else>
-
+            <ws:partial
+               name="okButton"
+               primary="{{true}}"
+               allowChangeEnable="{{false}}"
+               caption="{{submitButton.caption}}"
+               class="controls-SubmitPopup__button controls-Button__ellipsis"
+               template="{{'js!' + (submitButton.isLink ? 'SBIS3.CONTROLS.Link' : 'SBIS3.CONTROLS.Button')}}"
+            />
          </ws:else>
-
       </div>
    </div>
-
 </div>
