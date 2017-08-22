@@ -211,7 +211,7 @@ node('controls') {
             sh "cp -rf ./demo_stand/client ./controls/tests/stand"
 
             // Выкачиваем ws для unit тестов и если указан сторонний бранч
-            if (("${params.run_tests}" == "only_unit" ) || ("${params.run_tests}" == "all") || ("${params.ws_revision}" != "sdk") ){
+            if (( un ) || ("${params.ws_revision}" != "sdk") ){
                 def ws_revision = params.ws_revision
                 if ("${ws_revision}" == "sdk"){
                     ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
@@ -232,7 +232,7 @@ node('controls') {
                 }
             }
             // Выкачиваем ws.data для unit тестов и если указан сторонний бранч
-            if (("${params.run_tests}" == "only_unit" ) || ("${params.run_tests}" == "all") || ("${params.ws_data_revision}" != "sdk") ){
+            if (( un ) || ("${params.ws_data_revision}" != "sdk") ){
                 def ws_data_revision = params.ws_data_revision
                 if ("${ws_data_revision}" == "sdk"){
                     ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
@@ -277,7 +277,7 @@ node('controls') {
         }
 
         stage("Unit тесты"){
-            if (("${params.run_tests}" == "only_unit" ) || ("${params.run_tests}" == "all")){
+            if (( un )){
                 dir(workspace){
                     sh "cp -rf ./WIS-git-temp ./controls/sbis3-ws"
                     sh "cp -rf ./ws_data/WS.Data ./controls/components/"
@@ -440,7 +440,7 @@ node('controls') {
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
         stage("Инт.тесты"){
-            if ("${params.run_tests}" != "only_reg"){
+            if ( in ){
                 def site = "http://${NODE_NAME}:30001"
                 site.trim()
                 if ( "${TAGS}" != "") {
@@ -463,7 +463,7 @@ node('controls') {
             }
         }
         stage("Рег.тесты"){
-            if ("${params.run_tests}" != "only_int"){
+            if ( re ){
                 sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
                 dir("./controls/tests/reg"){
                     sh """
