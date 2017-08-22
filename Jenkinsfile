@@ -68,22 +68,22 @@ node('controls') {
         if ("${TAGS}" != "")
             TAGS = "--TAGS_TO_START ${TAGS}"
 
-        def in = false
-        def re = false
-        def un = false
+        def inte = false
+        def regr = false
+        def unit = false
 
         switch (params.run_tests){
             case "all":
-                re = in = un = true
+                regr = inte = unit = true
                 break
             case "only_reg":
-                re = true
+                regr = true
                 break
             case "only_int":
-                in = true
+                inte = true
                 break
             case "only_unit":
-                un = true
+                unit = true
                 break
         }
         
@@ -211,7 +211,7 @@ node('controls') {
             sh "cp -rf ./demo_stand/client ./controls/tests/stand"
 
             // Выкачиваем ws для unit тестов и если указан сторонний бранч
-            if (( un ) || ("${params.ws_revision}" != "sdk") ){
+            if (( unit ) || ("${params.ws_revision}" != "sdk") ){
                 def ws_revision = params.ws_revision
                 if ("${ws_revision}" == "sdk"){
                     ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
@@ -232,7 +232,7 @@ node('controls') {
                 }
             }
             // Выкачиваем ws.data для unit тестов и если указан сторонний бранч
-            if (( un ) || ("${params.ws_data_revision}" != "sdk") ){
+            if (( unit ) || ("${params.ws_data_revision}" != "sdk") ){
                 def ws_data_revision = params.ws_data_revision
                 if ("${ws_data_revision}" == "sdk"){
                     ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
@@ -440,7 +440,7 @@ node('controls') {
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
         stage("Инт.тесты"){
-            if ( in ){
+            if ( inte ){
                 def site = "http://${NODE_NAME}:30001"
                 site.trim()
                 if ( "${TAGS}" != "") {
@@ -463,7 +463,7 @@ node('controls') {
             }
         }
         stage("Рег.тесты"){
-            if ( re ){
+            if ( regr ){
                 sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
                 dir("./controls/tests/reg"){
                     sh """
@@ -480,19 +480,19 @@ node('controls') {
         """
         stage("Результаты"){
             //выкладываем результаты в зависимости от включенных тестов "all only_reg only_int only_unit"
-            if (re){
+            if ( regr ){
                 dir(workspace){
                     publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
                 }
                 archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
             }
-            if (in){
+            if ( inte ){
                 junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
             }
-            if (un){
+            if ( unit ){
                 junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
             }
-            if (re || in){
+            if ( regr || inte ){
                 archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
             }
         }
