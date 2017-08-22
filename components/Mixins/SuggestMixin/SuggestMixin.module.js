@@ -751,11 +751,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @returns {*}
        * @private
        */
-      _isObservableControlFocused: function() {
-         return this._options.observableControls.find(function(ctrl) {
-            return ctrl.isActive();
-         })
-      },
 
       /**
        * Проверяет необходимость изменения состояния пикера
