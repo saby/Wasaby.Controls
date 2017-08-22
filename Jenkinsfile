@@ -144,7 +144,7 @@ node('controls') {
             // Выкачиваем atf
             dir("./controls/tests/int") {
             checkout([$class: 'GitSCM',
-                branches: [[name: env.branch_atf]],
+                branches: [[name: "rc-3.31"]],
                 doGenerateSubmoduleConfigurations: false,
                 extensions: [[
                     $class: 'RelativeTargetDirectory',
