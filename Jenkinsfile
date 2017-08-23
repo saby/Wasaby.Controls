@@ -416,7 +416,7 @@ node('controls') {
                 RUN_REGRESSION=True"""
         }
         def run_test_fail = ""
-        if ("${RUN_ONLY_FAIL_TEST}" == 'true'){
+        if ("${params.RUN_ONLY_FAIL_TEST}" == 'true'){
             run_test_fail = "-sf"
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
