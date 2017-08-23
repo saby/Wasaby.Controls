@@ -232,7 +232,9 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
                    });
                }
                filter.addField({name: 'selectedIds', type: 'array', kind: 'string'});
-               filter.set('selectedIds', this._getView().getSelectedKeys());
+               filter.set('selectedIds', this._getView().getSelectedKeys().map(function(key) {
+                  return String(key);
+               }));
                fullFilter['MethodName'] = methodName;
                fullFilter['FileName'] = this._getUnloadFileName();
                fullFilter['Filter'] = filter;
