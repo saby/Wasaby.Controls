@@ -617,7 +617,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                       var suggestShowed = this.isPickerVisible();
                       elemToFocus.blur().focus();
 
-                      if(!suggestShowed) {
+                      //https://online.sbis.ru/opendoc.html?guid=19af9bf9-0d16-4f63-8aa8-6d0ef7ff0799
+                      if(!suggestShowed && !this._options.task1174306848) {
                          this.hidePicker();
                       }
                    }
