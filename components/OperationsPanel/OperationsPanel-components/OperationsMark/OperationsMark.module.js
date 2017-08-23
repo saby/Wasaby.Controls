@@ -95,7 +95,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          if (linkedView && cInstance.instanceOfMixin(linkedView, 'SBIS3.CONTROLS.MultiSelectable')) {
             this._options.linkedView = linkedView;
             this._useSelectAll = linkedView._options.useSelectAll;
-            this.once('onPickerOpen', function() {
+            this._menuButton.once('onPickerOpen', function() {
                //Если есть бесконечный скролл то показываем кнопку "Все", иначе показываем кнопку "Всю страницу"
                self._menuButton.getItemInstance('selectCurrentPage').toggle(!linkedView._options.infiniteScroll);
                self._menuButton.getItemInstance('selectAll').toggle(linkedView._options.infiniteScroll);
