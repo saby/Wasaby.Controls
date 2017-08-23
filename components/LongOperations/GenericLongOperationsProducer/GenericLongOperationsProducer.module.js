@@ -27,6 +27,13 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
       var PRODUCER_NAME = 'SBIS3.CONTROLS.GenericLongOperationsProducer';
 
       /**
+       * Префикс пространства имён хранилища
+       * @protected
+       * @type {string}
+       */
+      var STORAGE_NS = 'wslop-gen';
+
+      /**
        * Экземпляры класса (синглетоны), различающиеся идентификаторами (ключами массива). Один идентификатор - один экземпляр
        * @rpoteced
        * @type {object}
@@ -46,11 +53,11 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             }*/
 
             /**
-             * Имя экземпляра продюсера
+             * Идентификатор экземпляра продюсера
              * @protected
              * @type {string}
              */
-            _name: null,
+            _key: null,
 
             /**
              * Обработчики действий для элементов
@@ -74,7 +81,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                return _instances[key];
             }
             //GenericLongOperationsProducer.superclass.$constructor.apply(this, arguments);
-            this._name = PRODUCER_NAME + (key ? ':' + key : '');
+            this._key = key || null;
             _instances[key] = this;
          },
 
@@ -120,7 +127,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                   }
                }
                if (oIds.length) {
-                  this._notify('onlongoperationended', {producer:this._name, operationIds:oIds, error:ERR});
+                  this._notify('onlongoperationended', {producer:this.getName(), operationIds:oIds, error:ERR});
                }
                Object.keys(_instances).some(function (v) { if (this === _instances[v]) { delete _instances[v]; return true;} }.bind(this));
             }
@@ -135,7 +142,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
           */
          getName: function () {
             if (!this._isDestroyed) {
-               return this._name;
+               return this._key ? PRODUCER_NAME + ':' + this._key : PRODUCER_NAME;
             }
          },
 
@@ -212,12 +219,13 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                if (action !== 'delete' && !handler) {
                   throw new Error('Action not found or not applicable');
                }
+               var STATUSES = LongOperationEntry.STATUSES;
                switch (action) {
                   case 'suspend':
-                     _setStatus(this, operationId, 'suspended', handler);
+                     _setStatus(this, operationId, STATUSES.suspended, handler);
                      break;
                   case 'resume':
-                     _setStatus(this, operationId, 'running', handler);
+                     _setStatus(this, operationId, STATUSES.running, handler);
                      break;
                   case 'delete':
                      var snapshot = this._get(false, operationId);
@@ -229,7 +237,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                      }
                      this._remove(operationId);
                      delete this._actions[operationId];
-                     this._notify('onlongoperationdeleted', {producer:this._name, operationId:operationId});
+                     this._notify('onlongoperationdeleted', {producer:this.getName(), operationId:operationId});
                      break;
                }
                return Deferred.success();
@@ -274,7 +282,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
           * return {string}
           */
          _getStorageNS: function () {
-            return 'wslop-gen-' + this._name;
+            return this._key ? STORAGE_NS + '-' + this._key : STORAGE_NS;
          },
 
 
@@ -306,6 +314,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             if (this._isDestroyed) {
                return;
             }
+            var STATUSES = LongOperationEntry.STATUSES;
             options.canSuspend = typeof options.onSuspend === 'function' && typeof options.onResume === 'function';
             options.canDelete = typeof options.onDelete === 'function';
             options.userId = UserInfo.get('Пользователь');
@@ -322,16 +331,16 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                }
                this._actions[operationId] = listeners;
             }
-            this._notify('onlongoperationstarted', {producer:this._name, operationId:operationId});
+            this._notify('onlongoperationstarted', {producer:this.getName(), operationId:operationId});
             stopper.addCallbacks(
                function (result) {
                   if (result && typeof result !== 'object') {
                      throw new TypeError('Invalid result');
                   }
-                  _setStatus(this, operationId, 'ended', result || null);
+                  _setStatus(this, operationId, STATUSES.ended, result || null);
                }.bind(this),
                function (err) {
-                  _setStatus(this, operationId, 'ended', {error:err.message || 'Long operation error'});
+                  _setStatus(this, operationId, STATUSES.ended, {error:err.message || 'Long operation error'});
                }.bind(this)
             )
          }
@@ -344,7 +353,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
        * @protected
        * @param {SBIS3.CONTROLS.GenericLongOperationsProducer} self Экземпляр класса
        * @param {number} operationId Идентификатор длительной операции
-       * @param {string|number} status Новый статус операции. Возможные значения: 'running', 0, 'suspended', 1, 'ended', 2.
+       * @param {number} status Новый статус операции
        * @param {any} details Дополнительная информация при завершении. Для успешного завершения - результат, для завершения с ошибкой -
        *                      сообщение об ошибке. Для приостановки/возобновления может быть обработчик действия пользователя (опционально)
        */
@@ -353,17 +362,13 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             throw new TypeError('Argument "operationId" must be positive number');
          }
          var STATUSES = LongOperationEntry.STATUSES;
-         if (status in STATUSES) {
-            status = STATUSES[status];
-         }
-         else
-         if (typeof status !== 'number' || !bject.keys(STATUSES).some(function (k) { return value === STATUSES[k]; })) {
+         if (typeof status !== 'number' || !Object.keys(STATUSES).some(function (k) { return status === STATUSES[k]; })) {
             throw new TypeError('Invalid argument "status"');
          }
          /*###if (status === STATUSES.deleted) {
             self._remove(operationId);
             delete this._actions[operationId];
-            this._notify('onlongoperationdeleted', {producer:this._name, operationId:operationId});
+            this._notify('onlongoperationdeleted', {producer:this.getName(), operationId:operationId});
             return;
          }*/
          var operation = self._get(true, operationId);
@@ -444,7 +449,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             }
             operation[wasRun ? 'timeSpent' : 'timeIdle'] = (new Date()).getTime() - operation.startedAt - operation[wasRun ? 'timeIdle' : 'timeSpent'];
             self._put(operation);
-            var common = {producer:self._name, operationId:operationId, status:status};
+            var common = {producer:self.getName(), operationId:operationId, status:status};
             self._notify(eventType, result ? ObjectAssign(common, result) : common);
          }
       };
