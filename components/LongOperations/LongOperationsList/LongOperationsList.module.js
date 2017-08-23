@@ -1,6 +1,7 @@
 define('js!SBIS3.CONTROLS.LongOperationsList',
    [
       'Core/Deferred',
+      'Core/IoC',
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model',
@@ -17,7 +18,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
       'js!SBIS3.CONTROLS.DataGridView'
    ],
 
-   function (Deferred, CompoundControl, LongOperationEntry, Model, longOperationsManager, LongOperationsListDataSource, InformationPopupManager, dotTplFn) {
+   function (Deferred, IoC, CompoundControl, LongOperationEntry, Model, longOperationsManager, LongOperationsListDataSource, InformationPopupManager, dotTplFn) {
       'use strict';
 
       /**
@@ -380,7 +381,9 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                         try {
                            args = JSON.parse(args);
                         }
-                        catch (ex) {}
+                        catch (ex) {
+                           IoC.resolve('ILogger').error('SBIS3.CONTROLS.LongOperationsList', 'JSON data is corrupted');
+                        }
                      }
                      if (!Array.isArray(args)) {
                         args = [args];

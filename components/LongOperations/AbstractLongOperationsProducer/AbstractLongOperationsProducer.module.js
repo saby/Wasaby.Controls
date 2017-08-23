@@ -10,6 +10,7 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
    [
       'Core/core-extend',
       'Core/Deferred',
+      'Core/IoC',
       'Core/UserInfo',
       'js!WS.Data/Entity/ObservableMixin',
       'js!SBIS3.CONTROLS.ILongOperationsProducer',
@@ -17,7 +18,7 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
       'js!SBIS3.CONTROLS.LongOperationsConst'
    ],
 
-   function (CoreExtend, Deferred, UserInfo, ObservableMixin, ILongOperationsProducer, LongOperationEntry, LongOperationsConst) {
+   function (CoreExtend, Deferred, IoC, UserInfo, ObservableMixin, ILongOperationsProducer, LongOperationEntry, LongOperationsConst) {
       'use strict';
 
       /**
@@ -42,10 +43,10 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
       var AbstractLongOperationsProducer = CoreExtend.extend({}, [ILongOperationsProducer, ObservableMixin], /** @lends SBIS3.CONTROLS.AbstractLongOperationsProducer.prototype */{
          _moduleName: 'SBIS3.CONTROLS.AbstractLongOperationsProducer',
 
-         $protected: {
-            /*_options: {
-            }*/
-         },
+         /*$protected: {
+            _options: {
+            }
+         },*/
 
          /**
           * Конструктор
@@ -68,7 +69,8 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
           * @public
           * @return {string}
           */
-         /*###getName: function () {
+         /*getName: function () {
+            // Должен быть имплементирован производными классами
          },*/
 
          /**
@@ -76,8 +78,8 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
           * @public
           * @return {boolean}
           */
-         /*###hasCrossTabEvents: function () {
-            return false;
+         /*hasCrossTabEvents: function () {
+            // Должен быть имплементирован производными классами
          },*/
 
          /**
@@ -85,18 +87,18 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
           * @public
           * @return {boolean}
           */
-         /*###hasCrossTabData: function () {
-            return true;
+         /*hasCrossTabData: function () {
+            // Должен быть имплементирован производными классами
          },*/
 
          /**
           * Запросить набор последних длительных операций
           * @public
           * @param {object} options Параметры запроса (опционально)
-          * @param {object} options.where Параметры фильтрации
-          * @param {object} options.orderBy Параметры сортировки
-          * @param {number} options.offset Количество пропущенных элементов в начале
-          * @param {number} options.limit Максимальное количество возвращаемых элементов
+          * @param {object} options.where Параметры фильтрации (опционально)
+          * @param {object} options.orderBy Параметры сортировки (опционально, по умолчанию будет использован DEFAULT_FETCH_SORTING)
+          * @param {number} options.offset Количество пропущенных элементов в начале (опционально)
+          * @param {number} options.limit Максимальное количество возвращаемых элементов (опционально)
           * @param {object} [options.extra] Дополнительные параметры, если есть (опционально)
           * @return {Core/Deferred<SBIS3.CONTROLS.LongOperationEntry[]>}
           */
@@ -104,25 +106,25 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
             if (!options || typeof options !== 'object') {
                throw new TypeError('Argument "options" must be an object');
             }
-            if ('where' in options && typeof options.where !== 'object') {
+            /*###if ('where' in options && typeof options.where !== 'object') {
                throw new TypeError('Argument "options.where" must be an object');
-            }
-            if ('orderBy' in options && typeof options.orderBy !== 'object') {
+            }*/
+            /*###if ('orderBy' in options && typeof options.orderBy !== 'object') {
                throw new TypeError('Argument "options.orderBy" must be an array');
-            }
-            if ('offset' in options && !(typeof options.offset === 'number' && 0 <= options.offset)) {
+            }*/
+            /*###if ('offset' in options && !(typeof options.offset === 'number' && 0 <= options.offset)) {
                throw new TypeError('Argument "options.offset" must be not negative number');
-            }
-            if ('limit' in options && !(typeof options.limit === 'number' && 0 < options.limit)) {
+            }*/
+            /*###if ('limit' in options && !(typeof options.limit === 'number' && 0 < options.limit)) {
                throw new TypeError('Argument "options.limit" must be positive number');
-            }
+            }*/
             if ('extra' in options && typeof options.extra !== 'object') {
                throw new TypeError('Argument "options.extra" must be an object if present');
             }
             if (this._isDestroyed) {
                return Deferred.fail(LongOperationsConst.ERR_UNLOAD);
             }
-            var operations = _list(this, options.where, options.orderBy || DEFAULT_FETCH_SORTING, options.offset, options.limit);
+            var operations = this._list(true, options.where, options.orderBy || DEFAULT_FETCH_SORTING, options.offset, options.limit);
             if (operations.length) {
                if (options.extra && options.extra.needUserInfo) {
                   return _fillUserInfo(operations);
@@ -138,7 +140,8 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
           * @param {string|number} operationId Идентификатор элемента
           * @return {Core/Deferred}
           */
-         /*###callAction: function (action, operationId) {
+         /*callAction: function (action, operationId) {
+            // Должен быть имплементирован производными классами
          },*/
 
          /**
@@ -162,6 +165,8 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
             }
          },
 
+
+
          /**
           * Пространство имён хранилища
           * @protected
@@ -169,114 +174,155 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
           */
          _getStorageNS: function () {
             throw new Error('Method must be implemented');
+         },
+
+         /**
+          * Добавить новую длительную операцию. Метод принимает либо экземпляр класса SBIS3.CONTROLS.LongOperationEntry, либо набор опций,
+          * принимаемых его конструктором. Возвращает присвоенный идентификатор операции
+          * @protected
+          * @param {SBIS3.CONTROLS.LongOperationEntry|object} operation Длительная операция
+          * @return {number}
+          */
+         _put: function (operation) {
+            if (!operation || typeof operation !== 'object') {
+               throw new TypeError('Argument "operation" must be object');
+            }
+            var name = this.getName();
+            var storageNS = this._getStorageNS();
+            if (operation instanceof LongOperationEntry) {
+               if (operation.producer !== name) {
+                  throw new Error('Argument "operation" has invalid producer');
+               }
+            }
+            else {
+               var options = ObjectAssign({producer:name}, operation);
+               if (!options.id) {
+                  options.id = LOStorage.nextCounter(storageNS);
+               }
+               if (!options.startedAt) {
+                  options.startedAt = new Date();
+               }
+               operation = new LongOperationEntry(options);
+            }
+            var operationId = operation.id;
+            LOStorage.put(storageNS, operationId, _toSnapshot(operation));
+            return operationId;
+         },
+
+         /**
+          * Получить длительную операцию по идентификатору
+          * @protected
+          * @param {boolean} asOperation Возвращать как экземпляр SBIS3.CONTROLS.LongOperationEntry, иначе как снимок состояния
+          * @param {number} operationId Идентификатор длительной операции
+          * @return {SBIS3.CONTROLS.LongOperationEntry|object}
+          */
+         _get: function (asOperation, operationId) {
+            if (asOperation && typeof asOperation !== 'boolean') {
+               throw new TypeError('Argument "asOperation" must be boolean');
+            }
+            if (!(typeof operationId === 'number' && 0 < operationId)) {
+               throw new TypeError('Argument "operationId" must be positive number');
+            }
+            var snapshot = LOStorage.get(this._getStorageNS(), operationId);
+            return snapshot ? (asOperation ? _fromSnapshot(snapshot, this.getName()) : snapshot) : null;
+         },
+
+         /**
+          * Получить список длительных операций согласно предоставленным критериям
+          * @protected
+          * @param {boolean} asOperation Возвращать как экземпляр SBIS3.CONTROLS.LongOperationEntry, иначе как снимок состояния
+          * @param {object} where Параметры фильтрации
+          * @param {object} orderBy Параметры сортировки
+          * @param {number} offset Количество пропущенных элементов в начале
+          * @param {number} limit Максимальное количество возвращаемых элементов
+          * @return {SBIS3.CONTROLS.LongOperationEntry[]|object[]}
+          */
+         _list: function (asOperation, where, orderBy, offset, limit) {
+            if (asOperation && typeof asOperation !== 'boolean') {
+               throw new TypeError('Argument "asOperation" must be boolean');
+            }
+            if (where && typeof where !== 'object') {
+               throw new TypeError('Argument "where" must be an object');
+            }
+            if (orderBy && typeof orderBy !== 'object') {
+               throw new TypeError('Argument "orderBy" must be an array');
+            }
+            if (offset && !(typeof offset === 'number' && 0 <= offset)) {
+               throw new TypeError('Argument "offset" must be not negative number');
+            }
+            if (limit && !(typeof limit === 'number' && 0 < limit)) {
+               throw new TypeError('Argument "limit" must be positive number');
+            }
+            var snapshots = LOStorage.list(this._getStorageNS());
+            if (!snapshots.length) {
+               return snapshots;
+            }
+            if (where) {
+               var DEFAULTS = LongOperationEntry.DEFAULTS;
+               snapshots = snapshots.filter(function (snapshot) {
+                  for (var p in where) {
+                     if (!_isSatisfied(p in snapshot ? snapshot[p] : DEFAULTS[p], where[p])) {
+                        return false;
+                     }
+                  }
+                  return true;
+               });
+               if (!snapshots.length) {
+                  return snapshots;
+               }
+            }
+            if (orderBy) {
+               snapshots.sort(function (a, b) {
+                  for (var p in orderBy) {
+                     var va = a[p];
+                     var vb = b[p];
+                     // Для сравниваемых значений могут иметь смысл операции < и >, но не иметь смысла != и ==, как например для Date. Поэтому:
+                     if (va < vb) {
+                        return orderBy[p] ? -1 : +1;
+                     }
+                     else
+                     if (vb < va) {
+                        return orderBy[p] ? +1 : -1;
+                     }
+                  }
+                  return 0;
+               });
+            }
+            if (limit || offset) {
+               snapshots = snapshots.slice(offset || 0, limit ? (offset || 0) + limit : snapshots.length);
+            }
+            if (!asOperation) {
+               return snapshots;
+            }
+            var name = this.getName();
+            return snapshots.map(function (v) { return _fromSnapshot(v, name); });
+         },
+
+         /**
+          * Удалить длительную операцию
+          * @protected
+          * @param {number} operationId Идентификатор длительной операции
+          */
+         _remove: function (operationId) {
+            if (!(typeof operationId === 'number' && 0 < operationId)) {
+               throw new TypeError('Argument "operationId" must be positive number');
+            }
+            if (!LOStorage.remove(this._getStorageNS(), operationId)) {
+               throw new Error('Operation not found');
+            }
+         },
+
+         /**
+          * Удалить всю информацию о длительных операциях. Возвращает список идентификаторов удалённых операций
+          * @protected
+          * @return {number[]}
+          */
+         _clear: function () {
+            return LOStorage.clear(this._getStorageNS());
          }
       });
 
 
-
-      /**
-       * Набор защищённых методов модуля
-       */
-
-      /**
-       * Добавить новую длительную операцию. Метод принимает либо экземпляр модели, либо набор опций, описанных в методе _create.
-       * В этом случае экземпляр модели будет создан вызовом метода _create. Возвращает присвоенный идентификатор операции, который может быть
-       * использован для далнейшего обращения
-       * @protected
-       * @param {SBIS3.CONTROLS.AbstractLongOperationsProducer} self Экземпляр класса
-       * @param {SBIS3.CONTROLS.LongOperationEntry|object} operation Длительная операция
-       * @return {number}
-       */
-      var _put = function (self, operation) {
-         /*###if (!operation || typeof operation !== 'object') {
-            throw new TypeError('Argument "operation" must be object');
-         }*/
-         var name = self.getName();
-         var storage = self._getStorageNS();
-         if (operation instanceof LongOperationEntry) {
-            if (operation.producer !== name) {
-               throw new Error('Argument "operation" has invalid producer');
-            }
-         }
-         else {
-            var options = ObjectAssign({id:LOStorage.nextCounter(storage), producer:name}, operation);
-            if (!options.startedAt) {
-               options.startedAt = new Date();//^^^
-            }
-            operation = new LongOperationEntry(options);
-         }
-         var operationId = operation.id;
-         LOStorage.put(storage, operationId, _toSnapshot(operation));
-         return operationId;
-      };
-
-      /**
-       * Получить длительную операцию по идентификатору
-       * @protected
-       * @param {number} operationId Идентификатор длительной операции
-       * @param {SBIS3.CONTROLS.AbstractLongOperationsProducer} self Экземпляр класса
-       * @return {SBIS3.CONTROLS.LongOperationEntry}
-       */
-      var _get = function (self, operationId) {
-         /*###if (!(typeof operationId === 'number' && 0 < operationId)) {
-            throw new TypeError('Argument "operationId" must be positive number');
-         }*/
-         var snapshot = LOStorage.get(self._getStorageNS(), operationId);
-         return snapshot ? _fromSnapshot(snapshot, self.getName()) : null;
-      };
-
-      /**
-       * Получить список длительных операций
-       * @protected
-       * @param {SBIS3.CONTROLS.AbstractLongOperationsProducer} self Экземпляр класса
-       * @param {object} where Параметры фильтрации
-       * @param {object} orderBy Параметры сортировки. По умолчанию используется обратный хронологический порядок
-       * @param {number} offset Количество пропущенных элементов в начале
-       * @param {number} limit Максимальное количество возвращаемых элементов
-       * @return {SBIS3.CONTROLS.LongOperationEntry[]}
-       */
-      var _list = function (self, where, orderBy, offset, limit) {
-         var snapshots = LOStorage.list(self._getStorageNS());
-         if (!snapshots.length) {
-            return snapshots;
-         }
-         if (where) {
-            var DEFAULTS = LongOperationEntry.DEFAULTS;
-            snapshots = snapshots.filter(function (snapshot) {
-               for (var p in where) {
-                  if (!_isSatisfied(p in snapshot ? snapshot[p] : DEFAULTS[p], where[p])) {
-                     return false;
-                  }
-               }
-               return true;
-            });
-            if (!snapshots.length) {
-               return snapshots;
-            }
-         }
-         if (orderBy) {
-            snapshots.sort(function (a, b) {
-               for (var p in orderBy) {
-                  var va = a[p];
-                  var vb = b[p];
-                  // Для сравниваемых значений могут иметь смысл операции < и >, но не иметь смысла != и ==, как например для Date. Поэтому:
-                  if (va < vb) {
-                     return orderBy[p] ? -1 : +1;
-                  }
-                  else
-                  if (vb < va) {
-                     return orderBy[p] ? +1 : -1;
-                  }
-               }
-               return 0;
-            });
-         }
-         if (limit || offset) {
-            snapshots = snapshots.slice(offset || 0, limit ? (offset || 0) + limit : snapshots.length);
-         }
-         var name = self.getName();
-         return snapshots.map(function (v) { return _fromSnapshot(v, name); });
-      };
 
       /**
        * Проверить, что значение удовлетворяет условию
@@ -312,43 +358,6 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
          }
          return false;
       };
-
-      /**
-       * Удалить длительную операцию
-       * @protected
-       * @param {SBIS3.CONTROLS.AbstractLongOperationsProducer} self Экземпляр класса
-       * @param {number} operationId Идентификатор длительной операции
-       * @param {function} [handler] Обработчик действия пользователя (опционально)
-       */
-      var _remove = function (self, operationId, handler) {
-         if (!(typeof operationId === 'number' && 0 < operationId)) {
-            throw new TypeError('Argument "operationId" must be positive number');
-         }
-         var storage = self._getStorageNS();
-         var snapshot = LOStorage.get(storage, operationId);
-         if (!snapshot) {
-            throw new Error('Operation not found');
-         }
-         if (handler && !handler.call(null)) {
-            throw new Error('Action is not performed');
-         }
-         if (!('canDelete' in snapshot ? snapshot.canDelete : LongOperationEntry.DEFAULTS.canDelete)) {
-            throw new Error('Action is not allowed');
-         }
-         LOStorage.remove(storage, operationId);
-      };
-
-      /**
-       * Удалить всю информацию о длительных операциях
-       * @protected
-       * @param {SBIS3.CONTROLS.AbstractLongOperationsProducer} self Экземпляр класса
-       */
-      /*var _clear = function (self) {
-         var operationIds = LOStorage.clear(self._getStorageNS());
-         if (operationIds.length) {
-            self._notify^^^('onlongoperationdeleted', {producer:self.getName(), operationIds:operationIds});
-         }
-      };*/
 
       /**
        * Создать снимок состояния (плоский объект) длительной операции
@@ -567,7 +576,9 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
                try {
                   obj = JSON.parse(json);
                }
-               catch(ex) {}
+               catch (ex) {
+                  IoC.resolve('ILogger').error('SBIS3.CONTROLS.AbstractLongOperationsProducer', 'JSON data is corrupted');
+               }
                return obj;
             }
          }
