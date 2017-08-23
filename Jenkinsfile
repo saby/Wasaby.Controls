@@ -47,10 +47,9 @@ properties([
 
 node('controls') {
     def version = "3.17.110"
-    ws("/home/sbis/workspace/controls_${version}/${BRANCH_NAME}") {
+    def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
+    ws(workspace) {
         deleteDir()
-        sh "python3 -c 'import os; print(dict(os.environ).items())'"
-        def workspace = env.WORKSPACE
         def ver = version.replaceAll('.','')
         def python_ver = 'python3'
         def SDK = ""
@@ -68,6 +67,27 @@ node('controls') {
         if ("${TAGS}" != "")
             TAGS = "--TAGS_TO_START ${TAGS}"
 
+        def inte = false
+        def regr = false
+        def unit = false
+
+        switch (params.run_tests){
+            case "all":
+                regr = true
+                inte = true
+                unit = true
+                break
+            case "only_reg":
+                regr = true
+                break
+            case "only_int":
+                inte = true
+                break
+            case "only_unit":
+                unit = true
+                break
+        }
+        
         stage("Checkout"){
             // Контролы
             dir(workspace) {
@@ -87,7 +107,7 @@ node('controls') {
             dir("./controls"){
                 sh """
                 git fetch
-                git merge origin/rc-3.17.110
+                git merge origin/rc-${version}
                 """
             }
 
@@ -192,7 +212,7 @@ node('controls') {
             sh "cp -rf ./demo_stand/client ./controls/tests/stand"
 
             // Выкачиваем ws для unit тестов и если указан сторонний бранч
-            if (("${params.run_tests}" == "only_unit" ) || ("${params.run_tests}" == "all") || ("${params.ws_revision}" != "sdk") ){
+            if (( unit ) || ("${params.ws_revision}" != "sdk") ){
                 def ws_revision = params.ws_revision
                 if ("${ws_revision}" == "sdk"){
                     ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
@@ -213,7 +233,7 @@ node('controls') {
                 }
             }
             // Выкачиваем ws.data для unit тестов и если указан сторонний бранч
-            if (("${params.run_tests}" == "only_unit" ) || ("${params.run_tests}" == "all") || ("${params.ws_data_revision}" != "sdk") ){
+            if (( unit ) || ("${params.ws_data_revision}" != "sdk") ){
                 def ws_data_revision = params.ws_data_revision
                 if ("${ws_data_revision}" == "sdk"){
                     ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
@@ -258,7 +278,7 @@ node('controls') {
         }
 
         stage("Unit тесты"){
-            if (("${params.run_tests}" == "only_unit" ) || ("${params.run_tests}" == "all")){
+            if ( unit ){
                 dir(workspace){
                     sh "cp -rf ./WIS-git-temp ./controls/sbis3-ws"
                     sh "cp -rf ./ws_data/WS.Data ./controls/components/"
@@ -416,12 +436,12 @@ node('controls') {
                 RUN_REGRESSION=True"""
         }
         def run_test_fail = ""
-        if ("${RUN_ONLY_FAIL_TEST}" == 'true'){
+        if ("${params.RUN_ONLY_FAIL_TEST}" == 'true'){
             run_test_fail = "-sf"
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
         stage("Инт.тесты"){
-            if ("${params.run_tests}" != "only_reg"){
+            if ( inte ){
                 def site = "http://${NODE_NAME}:30001"
                 site.trim()
                 if ( "${TAGS}" != "") {
@@ -444,7 +464,7 @@ node('controls') {
             }
         }
         stage("Рег.тесты"){
-            if ("${params.run_tests}" != "only_int"){
+            if ( regr ){
                 sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
                 dir("./controls/tests/reg"){
                     sh """
@@ -460,13 +480,22 @@ node('controls') {
             sudo chmod -R 0777 /home/sbis/Controls1
         """
         stage("Результаты"){
-            dir(workspace){
-                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
+            //выкладываем результаты в зависимости от включенных тестов "all only_reg only_int only_unit"
+            if ( regr ){
+                dir(workspace){
+                    publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
+                }
+                archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
             }
-            junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-            archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
-            archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
-            junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
+            if ( inte ){
+                junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+            }
+            if ( unit ){
+                junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
+            }
+            if ( regr || inte ){
+                archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
+            }
         }
     }
 

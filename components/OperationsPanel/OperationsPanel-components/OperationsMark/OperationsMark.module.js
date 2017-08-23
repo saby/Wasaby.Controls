@@ -2,11 +2,13 @@
  * Created by as.suhoruchkin on 02.04.2015.
  */
 define('js!SBIS3.CONTROLS.OperationsMark', [
+   'js!SBIS3.CONTROLS.CompoundControl',
+   'Core/core-instance',
+   'tmpl!SBIS3.CONTROLS.OperationsMark',
    'js!SBIS3.CONTROLS.MenuLink',
    'js!SBIS3.CONTROLS.CheckBox',
-   'Core/core-instance',
    'i18n!SBIS3.CONTROLS.OperationsMark'
-], function(MenuLink, CheckBox, cInstance) {
+], function(CompoundControl, cInstance, template) {
    /**
     * Операции выделения.
     *
@@ -16,8 +18,8 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
     * @author Сухоручкин Андрей Сергеевич
     * @public
     */
-   /*TODO Пока что динамическое создание CheckBox, пока не слиты Control и CompaundControl!!!*/
-   var OperationsMark = MenuLink.extend(/** @lends SBIS3.CONTROLS.OperationsMark.prototype */{
+   var OperationsMark = CompoundControl.extend(/** @lends SBIS3.CONTROLS.OperationsMark.prototype */{
+      _dotTplFn: template,
       $protected: {
          _options: {
              /**
@@ -70,31 +72,19 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          _markCheckBox: undefined,
          _isInternalCheckedChange: false
       },
-      $constructor: function() {
-         this._createMarkCheckBox();
-         this._setCaptionRender();
-      },
       init: function() {
          OperationsMark.superclass.init.call(this);
-      },
-      _bindEvents: function() {
-         //Обычно ПМО сама прокидывает onSelectedItemsChange, но люди используют OperationsMark вне ПМО
-         //Так что подписываемся на событие onSelectedItemsChange у linkedView
-         this._options.linkedView.subscribe('onSelectedItemsChange', this._updateMark.bind(this));
-         this.subscribe('onMenuItemActivate', this._onMenuItemActivate.bind(this));
-      },
-      _parseItem: function(item) {
-         if (item.handler) {
-            this[item.name] = item.handler;
-         }
+         this._markCheckBox = this.getChildControlByName('controls-OperationsMark__checkBox');
+         this._menuButton = this.getChildControlByName('controls-OperationsMark__menu');
+         this.subscribeTo(this._markCheckBox, 'onCheckedChange', this._onCheckedChange.bind(this));
+         this.subscribeTo(this._menuButton, 'onMenuItemActivate', this._onMenuItemActivate.bind(this));
       },
       /**
        * Добавление операции
        * @param {Object} item Операция.
        */
       addItem: function(item) {
-         this._parseItem(item);
-         OperationsMark.superclass.addItem.apply(this, [item]);
+         this._menuButton.addItem.apply(this, [item]);
       },
       /**
        * Метод установки или замены связанного представления данных.
@@ -107,18 +97,23 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
             this._useSelectAll = linkedView._options.useSelectAll;
             this.once('onPickerOpen', function() {
                //Если есть бесконечный скролл то показываем кнопку "Все", иначе показываем кнопку "Всю страницу"
-               self.getItemInstance('selectCurrentPage').toggle(!linkedView._options.infiniteScroll);
-               self.getItemInstance('selectAll').toggle(linkedView._options.infiniteScroll);
-               self.getPicker().getContainer().find('.controls-MenuLink__header').toggleClass('ws-hidden', !self._options.caption);
+               self._menuButton.getItemInstance('selectCurrentPage').toggle(!linkedView._options.infiniteScroll);
+               self._menuButton.getItemInstance('selectAll').toggle(linkedView._options.infiniteScroll);
+               self._menuButton.getPicker().getContainer().find('.controls-MenuLink__header').toggleClass('ws-hidden', !self._options.caption);
             });
-            this._bindEvents();
+            //Обычно ПМО сама прокидывает onSelectedItemsChange, но люди используют OperationsMark вне ПМО
+            //Так что подписываемся на событие onSelectedItemsChange у linkedView
+            this.subscribeTo(this._options.linkedView, 'onSelectedItemsChange', this._updateMark.bind(this));
             this._updateMark();
          }
       },
 
       _onMenuItemActivate: function(e, id) {
-         if (this[id]) {
-            this[id].apply(this);
+         var
+            item = this._menuButton.getItems().getRecordById(id),
+            handler = item.get('handler') || this[id];
+         if (handler) {
+            handler.apply(this);
          }
       },
       _onCheckedChange: function(e, checked) {
@@ -129,7 +124,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
 
       _setSelectionOnCheckedChange: function(checked) {
          if (checked) {
-            this.getItems().getRecordById('selectAll') ? this.selectAll() : this.selectCurrentPage();
+            this._menuButton.getItems().getRecordById('selectAll') ? this.selectAll() : this.selectCurrentPage();
          } else {
             this.removeSelection();
          }
@@ -153,26 +148,23 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
          this._setCheckedInternal(selectedCount === recordsCount && recordsCount ? true : selectedCount ? null : false);
       },
       _updateMarkButton: function() {
-         if (!this._dataSet) {
-            this.reload();
+         if (!this._menuButton.getItems()) {
+            this._menuButton.reload();
          }
-         var hasMarkOptions = !!this._dataSet.getCount(),
+         var
+            caption,
             selectedCount,
-            caption;
+            hasMarkOptions = !!this._menuButton.getItems().getCount(),
+            captionRender = this._options.captionRender || this._captionRender;
          if (hasMarkOptions) {
             selectedCount = this._options.linkedView.getSelectedKeys().length;
-            caption = this._options.captionRender ? this._options.captionRender(selectedCount) : this._options.caption;
-            this.setCaption(caption);
+            caption = typeof this._options.caption === 'string' ? this._options.caption : captionRender(selectedCount);
+            this._menuButton.setCaption(caption);
          }
-         this.setVisible(hasMarkOptions);
+         this._menuButton.setVisible(hasMarkOptions);
       },
       _captionRender: function(selectedCount) {
          return selectedCount ? rk('Отмечено') + '(' + selectedCount + ')' : rk('Отметить');
-      },
-      _setCaptionRender: function() {
-         if (typeof this._options.caption !== 'string' && !this._options.captionRender) {
-            this._options.captionRender = this._captionRender;
-         }
       },
       _updateMark: function() {
          this._updateMarkButton();
@@ -221,19 +213,6 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
             this._options.linkedView.toggleSelectedAll();
          } else {
             this._options.linkedView.toggleItemsSelectionAll();
-         }
-      },
-      _createMarkCheckBox: function() {
-         if (!this._markCheckBox) {//TODO костыль для ЭДО, чтоб не создавалось 2 раза
-            this._markCheckBox = new CheckBox({
-               threeState: true,
-               parent: this,
-               element: $('<span>').insertBefore(this._container),
-               className: 'controls-OperationsMark-checkBox js-controls-operationsPanel__action',
-               handlers: {
-                  onCheckedChange: this._onCheckedChange.bind(this)
-               }
-            });
          }
       }
    });

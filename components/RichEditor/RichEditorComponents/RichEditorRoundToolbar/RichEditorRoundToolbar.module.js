@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                 * <ul>
                 *   <li>componentType - обязательный параметр, определяющий вид компонента;</li>
                 *   <li>name - имя компонента, по которому можно получить элемент тулбара;</li>
-                *   <li>round - число-порядок сортировки элементов тулбара, по умолчанию 0;</li>
+                *   <li>order - число-порядок сортировки элементов тулбара, по умолчанию 0;</li>
                 *   <li>basic - остаётся ли элемент тулбара видимым при переключении выдимости, по умолчанию false.</li>
                 * <ul>
                 * @example
@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                 *    <options name="items" type="array">
                 *       <options>
                 *          <option name="name">myButton</option>
-                *          <option name="round">100</option>
+                *          <option name="order">100</option>
                 *          <option name="basic">true</option>
                 *          <option name="componentType">SBIS3.CONTROLS.Button</option>
                 *          <option name="icon" >sprite:icon-16 icon-Add icon-primary</option>

@@ -4,8 +4,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
    "Core/Deferred",
    "js!SBIS3.CONTROLS.PickerMixin",
    "Core/core-instance",
+   'Core/helpers/Object/find',
    "js!SBIS3.CONTROLS.ControlHierarchyManager"
-], function ( cFunctions, cMerge, Deferred, PickerMixin, cInstance, ControlHierarchyManager) {
+], function ( cFunctions, cMerge, Deferred, PickerMixin, cInstance, find, ControlHierarchyManager) {
    'use strict';
 
 
@@ -752,9 +753,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @private
        */
       _isObservableControlFocused: function() {
-         return this._options.observableControls.find(function(ctrl) {
+         return find(this._options.observableControls, function(ctrl) {
             return ctrl.isActive();
-         })
+         }, this, false);
       },
 
       /**

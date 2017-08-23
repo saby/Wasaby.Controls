@@ -332,18 +332,15 @@ define('js!SBIS3.CONTROLS.DropdownList',
          $constructor: function() {
             this._publish('onClickMore');
             var self = this;
-            this._container.bind(this._isHoverMode() ? 'mouseenter' : 'click', function(){
+            this._container.bind(this._isHoverMode() ? 'mouseenter' : 'click', function(event){
                if (self._getItemsProjection()) {
-                  self.showPicker();
+                  self.showPicker(event);
                }
             });
             if (this._container.hasClass('controls-DropdownList__withoutCross')){
                this._options.pickerClassName += ' controls-DropdownList__withoutCross';
             }
             this._setHeadVariables();
-         },
-         init: function(){
-            DropdownList.superclass.init.apply(this, arguments);
          },
          _modifyOptions: function() {
             var cfg = DropdownList.superclass._modifyOptions.apply(this, arguments);
@@ -885,9 +882,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
                pickerHeadContainer = $('.controls-DropdownList__selectedItem', this._getPickerContainer());
                if (pickerHeadContainer.length){
                   var pickerHeadTpl = $(TemplateUtil.prepareTemplate(this._options.headPickerTemplate.call(this, this._options))());
-                  pickerHeadTpl.click(function(e){
-                     e.stopImmediatePropagation();
-                  });
                   pickerHeadContainer.html(pickerHeadTpl);
                   this._getPickerContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
                }
