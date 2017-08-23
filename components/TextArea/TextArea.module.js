@@ -5,10 +5,10 @@ define('js!SBIS3.CONTROLS.TextArea', [
    'Core/helpers/String/escapeHtml',
    'js!SBIS3.CONTROLS.Utils.LinkWrap',
    "Core/IoC",
-   "Core/helpers/dom&controls-helpers",
+   'Core/helpers/Hcontrol/trackElement',
    "browser!js!SBIS3.CORE.FieldText/resources/Autosize-plugin",
    'css!SBIS3.CONTROLS.TextArea'
-], function( constants,TextBox, inputField, escapeHtml, LinkWrap, IoC, dcHelpers) {
+], function( constants,TextBox, inputField, escapeHtml, LinkWrap, IoC, trackElement) {
 
    'use strict';
 
@@ -195,7 +195,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
             this._cachedW = this._inputField.width();
             this._cachedH = this._inputField.height();
 
-            var trg = dcHelpers.trackElement(this._container, true);
+            var trg = trackElement(this._container, true);
 
             if(this.isVisible()){
                this._autosizeTextArea();
@@ -350,7 +350,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
       destroy: function() {
          this._inputField instanceof $ && this._inputField.trigger('autosize.destroy');
-         dcHelpers.trackElement(this._container, false);
+         trackElement(this._container, false);
          TextArea.superclass.destroy.apply(this, arguments);
       }
    });
