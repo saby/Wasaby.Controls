@@ -84,7 +84,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
                optionValue,
                itemKey = item.get(idProperty),
                options = item.get('options') || {},
-               isToolbarItem = item.get('showType') == showType.MENU_TOOLBAR || item.get('showType') == showType.TOOLBAR;
+               isToolbarItem = isToolbarItem(item);
             if (isToolbarItem) {
                subItems = getSubItems(itemKey, items, idProperty, parentProperty, itemsToSubItems);
                subItems = cFunctions.clone(subItems);
@@ -145,6 +145,25 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             tplOptions.idProperty = cfg.idProperty;
 
             return tplOptions;
+         },
+         isToolbarItem = function(item) {
+            return item.get('showType') === showType.MENU_TOOLBAR || item.get('showType') === showType.TOOLBAR;
+         },
+         getRecordsForRedraw = function(projection) {
+            var
+               model,
+               records = [];
+            if (projection) {
+               projection.each(function (item) {
+                  if (item) {
+                     model = item.getContents();
+                     if (isToolbarItem(model) && model.get('visible') !== false) {
+                        records.push(item);
+                     }
+                  }
+               });
+            }
+            return records;
          };
    /**
     * Контрол, отображающий панель с иконками.
@@ -164,7 +183,8 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          _options: {
             _canServerRender: true,
             _buildTplArgs: buildTplArgs,
-            _defaultItemTemplate: ItemTemplate
+            _defaultItemTemplate: ItemTemplate,
+            _getRecordsForRedraw: getRecordsForRedraw
          }
       },
 
