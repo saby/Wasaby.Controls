@@ -105,7 +105,7 @@ define([
       describe('.beginDrag', function () {
          it('should not begin drag', function () {
             var dragMove = new DragMove({
-                  view: new ListView()
+                  view: new ListView({})
                });
             DragObject._jsEvent = {
                type: "mouseUp",
