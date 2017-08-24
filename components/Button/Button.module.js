@@ -115,7 +115,7 @@ define('js!SBIS3.CONTROLS.Button',
             }
             this._onClickHandler(e);
             this._notify("onActivated", e);
-            this._setDirty();
+            this._forceUpdate();
          },
 
          _onMouseDown: function () {
@@ -159,7 +159,7 @@ define('js!SBIS3.CONTROLS.Button',
                //т.к. появилась асинхронность, руками дернем флаг о перерисовке, чтобы кнопка
                //не осталась "подвисшей"
                if (this.iWantVDOM) {
-                  this._setDirty();
+                  this._forceUpdate();
                }
             }.bind(this), 1000);
          },
