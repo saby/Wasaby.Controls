@@ -696,7 +696,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          }
          var eventType = typeof evtName === 'object' ? evtName.name : evtName;
          if (data) {
-            _channel.notifyWithTarget(eventType, manager, data);
+            _channel.notifyWithTarget(eventType, manager, !dontCrossTab ? ObjectAssign({tabKey:_tabKey}, data) : data);
          }
          else {
             _channel.notifyWithTarget(eventType, manager);
@@ -761,7 +761,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                   throw new Error('Unknown event');
                }
                _regTabProducer(tab, data.producer, evt.isCrossTab, evt.hasHistory);
-               _eventListener(type, data, true);
+               _eventListener(type, ObjectAssign({tabKey:tab}, data), true);
                break;
          }
       };
@@ -914,13 +914,12 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                      throw new Error('Unknown result type');
                   }
                   if (len) {
-                     var tabKey = member.tab !== _tabKey ? member.tab : null;
                      values[iterate](function (v) {
                         // Значение должно быть экземпляром SBIS3.CONTROLS.LongOperationEntry и иметь правилное имя продюсера
                         if (!(v instanceof LongOperationEntry && v.producer === prodName)) {
                            throw new Error('Invalid result');
                         }
-                        v.tabKey = tabKey;
+                        v.tabKey = member.tab;
                      });
                      return values;
                   }
