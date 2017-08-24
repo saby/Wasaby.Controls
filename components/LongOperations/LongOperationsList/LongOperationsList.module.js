@@ -120,17 +120,24 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                               if (evt.changed === 'progress') {
                                  model.set('progressCurrent', evt.progress.value);
                                  model.set('progressTotal', evt.progress.total);
+                                 dontReload = true;
                               }
                               else {
-                                 if (evt.changed === 'status' && evt[evt.changed] === STATUSES.running && model.get('status') === STATUSES.suspended) {
-                                    model.set('timeIdle', (new Date()).getTime() - model.get('startedAt').getTime() - model.get('timeSpent'));
+                                 if (evt.changed === 'status') {
+                                    if (evt.status === STATUSES.running && model.get('status') === STATUSES.suspended) {
+                                       model.set('timeIdle', (new Date()).getTime() - model.get('startedAt').getTime() - model.get('timeSpent'));
+                                    }
+                                 }
+                                 else {
+                                    dontReload = true;
                                  }
                                  model.set(evt.changed, evt[evt.changed]);
                               }
                               self._checkItems();
                            }
-                           dontReload = true;
-                           // тем не менее после действий пользователя suspend и resume перезагрузка всё равно будет осуществлена, если в itemsActions это задано
+                           else {
+                              dontReload = true;
+                           }
                         }
                         break;
                      case 'onlongoperationended':
@@ -193,7 +200,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                      tooltip: title,
                      isMainAction: true,
                      onActivated: function ($item, id, itemModel) {
-                        self.applyUserAction('suspend', itemModel, true);
+                        self.applyUserAction('suspend', itemModel);
                      }
                   });
                }
@@ -206,7 +213,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                      tooltip: title,
                      isMainAction: true,
                      onActivated: function ($item, id, itemModel) {
-                        self.applyUserAction('resume', itemModel, true);
+                        self.applyUserAction('resume', itemModel);
                      }
                   });
                }
@@ -219,7 +226,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                      tooltip: title,
                      isMainAction: true,
                      onActivated: function ($item, id, itemModel) {
-                        self.applyUserAction('delete', itemModel, true);
+                        self.applyUserAction('delete', itemModel);
                      }
                   });
                }
@@ -335,18 +342,13 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
           * @public
           * @param {string} action Имя действия (resume, suspend, delete)
           * @param {SBIS3.CONTROLS.LongOperationsList/resources/model} model Модель длительной операции
-          * @param {boolean} reload Вызвать метод reload после выполнения действия
           * @returns {Core/Deferred}
           */
          applyUserAction: function (action, model, reload) {
             if (!(action === 'suspend' || action === 'resume' ? model.get('canSuspend') : (action === 'delete' ? model.get('canDelete') : null))) {
                return Deferred.fail('Action not allowed');
             }
-            var promise = longOperationsManager.callAction(action, model.get('tabKey'), model.get('producer'), model.get('id'));
-            if (reload) {
-               promise.addCallback(this.reload.bind(this));
-            }
-            return promise;
+            return longOperationsManager.callAction(action, model.get('tabKey'), model.get('producer'), model.get('id'));
          },
 
          /**
