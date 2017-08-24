@@ -211,7 +211,7 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
           * Перечислить все группы, встречающиеся в списке выполняющихся запросов
           * @public
           * @param {object} [member] Идентифицирующие параметры (опционально)
-          * @param {boolean} [completedOnly] Только завершённые (опционально)
+          * @param {boolean} [completedOnly] Только если эти member завершены (опционально)
           * @return {object[]}
           */
          listPools: function (member, completedOnly) {
@@ -222,8 +222,9 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
                throw new TypeError('Argument "completedOnly" must be boolean or null');
             }
             var list = [];
+            var fields = this._fields;
             for (var poolId in this._calls) {
-               if (!member || (_has(this, poolId, member) && (!completedOnly || this._calls[poolId].list.some(function (v) { return !v.promise; })))) {
+               if (!member || this._calls[poolId].list.some(function (c) { return _hasProps(c.member, fields, member) && (!completedOnly || !c.promise); })) {
                   list.push(this._calls[poolId].pool);
                }
             }
