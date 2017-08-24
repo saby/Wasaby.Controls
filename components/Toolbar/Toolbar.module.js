@@ -153,7 +153,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             if (projection) {
                projection.each(function (item) {
                   model = item.getContents();
-                  if ((item.get('showType') === showType.MENU_TOOLBAR || item.get('showType') === showType.TOOLBAR) && model.get('visible') !== false) {
+                  if ((model.get('showType') === showType.MENU_TOOLBAR || model.get('showType') === showType.TOOLBAR) && model.get('visible') !== false) {
                      records.push(item);
                   }
                });
