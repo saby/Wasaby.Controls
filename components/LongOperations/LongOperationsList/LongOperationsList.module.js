@@ -113,36 +113,36 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   var dontReload;
                   switch (evtName.name) {
                      case 'onlongoperationchanged':
-                        var items = self.getItems();
-                        if (items && items.getCount()) {
-                           var model = items.getRecordById(Model.getFullId(evt.tabKey, evt.producer, evt.operationId));
-                           if (model) {
-                              if (evt.changed === 'progress') {
-                                 model.set('progressCurrent', evt.progress.value);
-                                 model.set('progressTotal', evt.progress.total);
-                                 dontReload = true;
-                              }
-                              else {
-                                 if (evt.changed === 'status') {
-                                    if (evt.status === STATUSES.running && model.get('status') === STATUSES.suspended) {
-                                       model.set('timeIdle', (new Date()).getTime() - model.get('startedAt').getTime() - model.get('timeSpent'));
-                                    }
-                                 }
-                                 else {
-                                    dontReload = true;
-                                 }
-                                 model.set(evt.changed, evt[evt.changed]);
-                              }
-                              self._checkItems();
-                           }
-                           else {
+                        var model = self.lookupItem(evt.tabKey, evt.producer, evt.operationId);;
+                        if (model) {
+                           if (evt.changed === 'progress') {
+                              model.set('progressCurrent', evt.progress.value);
+                              model.set('progressTotal', evt.progress.total);
                               dontReload = true;
                            }
+                           else {
+                              if (evt.changed === 'status') {
+                                 if (evt.status === STATUSES.running && model.get('status') === STATUSES.suspended) {
+                                    model.set('timeIdle', (new Date()).getTime() - model.get('startedAt').getTime() - model.get('timeSpent'));
+                                 }
+                              }
+                              else {
+                                 dontReload = true;
+                              }
+                              model.set(evt.changed, evt[evt.changed]);
+                           }
+                           self._checkItems();
+                        }
+                        else {
+                           dontReload = true;
                         }
                         break;
                      case 'onlongoperationended':
-                        self._animationAdd(Model.getFullId(evt.tabKey, evt.producer, evt.operationId), !evt.error);
-                        self._animationRun();
+                        var model = self.lookupItem(evt.tabKey, evt.producer, evt.operationId);
+                        if (model) {
+                           self._animationAdd(model.getId(), !evt.error);
+                           self._animationRun();
+                        }
                         break;
                   }
                   self._notify(evtName.name, evt);
@@ -437,6 +437,20 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                return true;
             }
             return false;
+         },
+
+         /**
+          * Найти модель среди загруженных данных
+          * @param {string} tabKey Ключ вкладки
+          * @param {string} producer Имя продюсера
+          * @param {number|string} operationId Идентификатор длительной операции
+          * @public
+          */
+         lookupItem: function (tabKey, producer, operationId) {
+            var items = this.getItems();
+            if (items && items.getCount()) {
+               return items.getRecordById(Model.getFullId(tabKey, producer, operationId));
+            }
          },
 
          /**

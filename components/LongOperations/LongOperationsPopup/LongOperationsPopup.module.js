@@ -513,8 +513,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
 
                case 'onlongoperationended':
                   this._setProgress(data.progress ? data.progress.value : 1, data.progress ? data.progress.total : 1);
-                  var items = this._longOpList.getItems();
-                  var model = items ? items.getRecordById(Model.getFullId(data.tabKey, data.producer, data.operationId)) : null;
+                  var model = this._longOpList.lookupItem(data.tabKey, data.producer, data.operationId);
                   if (model) {
                      this._activeOperation = model;
                      this._updateState();
