@@ -1,9 +1,8 @@
 define('js!SBIS3.CONTROLS.Link', [
    'Deprecated/helpers/string-helpers',
    'js!WSControls/Buttons/Button',
-   'tmpl!SBIS3.CONTROLS.Link/resources/hrefTemplate',
    'css!SBIS3.CONTROLS.Link'
-], function(strHelpers, WSButton, hrefTemplate) {
+], function(strHelpers, WSButton) {
 
    'use strict';
 
@@ -96,11 +95,8 @@ define('js!SBIS3.CONTROLS.Link', [
          options.cssClassName += ' controls-Link';
 
          // в случае когда задана ссылка передаем отдельный шаблон
-         if(options.href) {
-            options.contentTemplate = hrefTemplate;
-         }else {
             options._textClass = ' controls-Link__field';
-         }
+
          return options;
       },
 
@@ -108,9 +104,6 @@ define('js!SBIS3.CONTROLS.Link', [
 
       setCaption: function(caption){
          Link.superclass.setCaption.call(this, caption);
-         if(this._options.href) {
-            this._container.get(0).innerHTML = hrefTemplate(this._options);
-         }
          this.setTooltip(strHelpers.htmlToText(caption === undefined || caption === null ? '' : caption + ''));
       },
 
@@ -118,18 +111,11 @@ define('js!SBIS3.CONTROLS.Link', [
          Link.superclass._setEnabled.apply(this, arguments);
          if (enabled) {
             if (this._options.href) {
-               $('.controls-Link-link', this._container).attr('href', this._options.href);
+               this._container.attr('href', this._options.href);
             }
          }
          else {
-            $('.controls-Link-link', this._container).removeAttr('href', this._options.href);
-         }
-      },
-
-      _drawIcon: function (icon) {
-         Link.superclass._drawIcon.call(this, icon);
-         if(this._options.href) {
-            this._container.get(0).innerHTML = hrefTemplate(this._options);
+            this._container.removeAttr('href', this._options.href);
          }
       },
       /**
@@ -141,7 +127,7 @@ define('js!SBIS3.CONTROLS.Link', [
        */
       setHref: function (href) {
          this._options.href = href;
-         this._container.html(hrefTemplate(this._options));
+         this._redrawButton();
       }
 
    });

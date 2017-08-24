@@ -9,6 +9,9 @@
       event:ontouchend="_onTouchEnd()"
       event:ontouchmove="_onTouchMove()"
       tabindex="{{_options.tabindex}}"
+      href="{{enabled ? href}}"
+      target="{{inNewTab ? '_blank'}}"
+      rel="{{href ? noreferrer}}"
       class="controls-Button controls-ButtonBase
  controls-Button-size__{{!!_options.size ? _options.size : 'default'}}
  controls-Button-color__{{_options.primary ? 'primary':'default'}}
