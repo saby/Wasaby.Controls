@@ -141,9 +141,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
           * @return {string}
           */
          getName: function () {
-            if (!this._isDestroyed) {
-               return this._key ? PRODUCER_NAME + ':' + this._key : PRODUCER_NAME;
-            }
+            return this._key ? PRODUCER_NAME + ':' + this._key : PRODUCER_NAME;
          },
 
          /**
@@ -282,7 +280,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
           * return {string}
           */
          _getStorageNS: function () {
-            return this._key ? STORAGE_NS + '-' + this._key : STORAGE_NS;
+            return STORAGE_NS + '(' + (this._key || '') + ')';
          },
 
 
@@ -319,7 +317,9 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             options.canDelete = typeof options.onDelete === 'function';
             options.userId = UserInfo.get('Пользователь');
             options.userUuId = UserInfo.get('ИдентификаторСервисаПрофилей') || $.cookie('CpsUserId');
-            var operationId = this._put(options);
+            var operationId = this._getStorageNextId();
+            options.id = operationId;
+            this._put(options);
             if (options.canSuspend || options.canDelete) {
                var listeners = {};
                if (options.canSuspend) {

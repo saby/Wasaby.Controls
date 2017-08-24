@@ -71,6 +71,7 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
           */
          /*getName: function () {
             // Должен быть имплементирован производными классами
+            // Метод должен возвращать корректное значение даже после разрушения экземпляра класса
          },*/
 
          /**
@@ -173,12 +174,23 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
           * return {string}
           */
          _getStorageNS: function () {
+            // В классах - потомках нужно избегать ситуации, когда пространство имён одного потомка плюс разделитель '-' будут являтся точным началом
+            // пространства имён другого потомка
             throw new Error('Method must be implemented');
          },
 
          /**
+          * Пространство имён хранилища
+          * @protected
+          * return {string}
+          */
+         _getStorageNextId: function () {
+            return LOStorage.nextCounter(this._getStorageNS());
+         },
+
+         /**
           * Добавить новую длительную операцию. Метод принимает либо экземпляр класса SBIS3.CONTROLS.LongOperationEntry, либо набор опций,
-          * принимаемых его конструктором. Возвращает присвоенный идентификатор операции
+          * принимаемых его конструктором. Возвращает идентификатор операции
           * @protected
           * @param {SBIS3.CONTROLS.LongOperationEntry|object} operation Длительная операция
           * @return {number}
@@ -195,33 +207,30 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
                }
             }
             else {
+               // Если это опции конструктора, то в них должен быть корректный идентификатор, но здесь это проверять не надо, это будет проверено в конструкторе
                var options = ObjectAssign({producer:name}, operation);
-               if (!options.id) {
-                  options.id = LOStorage.nextCounter(storageNS);
-               }
                if (!options.startedAt) {
                   options.startedAt = new Date();
                }
                operation = new LongOperationEntry(options);
             }
-            var operationId = operation.id;
-            LOStorage.put(storageNS, operationId, _toSnapshot(operation));
-            return operationId;
+            LOStorage.put(storageNS, operation.id, _toSnapshot(operation));
+            return operation.id;
          },
 
          /**
           * Получить длительную операцию по идентификатору
           * @protected
           * @param {boolean} asOperation Возвращать как экземпляр SBIS3.CONTROLS.LongOperationEntry, иначе как снимок состояния
-          * @param {number} operationId Идентификатор длительной операции
+          * @param {number|string} operationId Идентификатор длительной операции
           * @return {SBIS3.CONTROLS.LongOperationEntry|object}
           */
          _get: function (asOperation, operationId) {
             if (asOperation && typeof asOperation !== 'boolean') {
                throw new TypeError('Argument "asOperation" must be boolean');
             }
-            if (!(typeof operationId === 'number' && 0 < operationId)) {
-               throw new TypeError('Argument "operationId" must be positive number');
+            if (!operationId || !(typeof operationId === 'string' || typeof operationId === 'number')) {
+               throw new TypeError('Argument "operationId" must be number or string');
             }
             var snapshot = LOStorage.get(this._getStorageNS(), operationId);
             return snapshot ? (asOperation ? _fromSnapshot(snapshot, this.getName()) : snapshot) : null;
@@ -301,11 +310,11 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
          /**
           * Удалить длительную операцию
           * @protected
-          * @param {number} operationId Идентификатор длительной операции
+          * @param {number|string} operationId Идентификатор длительной операции
           */
          _remove: function (operationId) {
-            if (!(typeof operationId === 'number' && 0 < operationId)) {
-               throw new TypeError('Argument "operationId" must be positive number');
+            if (!operationId || !(typeof operationId === 'string' || typeof operationId === 'number')) {
+               throw new TypeError('Argument "operationId" must be number or string');
             }
             if (!LOStorage.remove(this._getStorageNS(), operationId)) {
                throw new Error('Operation not found');
@@ -468,11 +477,11 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
          /**
           * Устанавливает и возвращает следующее значение счётчика экземпляров
           * @public
-          * @param {string} ns Суффикс пространства имён
+          * @param {string} ns Пространство имён
           * @return {number}
           */
          nextCounter: function (ns) {
-            var name = ns + '-cnt';
+            var name = ns + '-' + '(n)';
             var count = localStorage.getItem(name);
             count = count ? parseInt(count) + 1 : 1;
             localStorage.setItem(name, count);
@@ -482,7 +491,7 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
          /**
           * Сохранить объект
           * @public
-          * @param {string} ns Суффикс пространства имён
+          * @param {string} ns Пространство имён
           * @param {number} id Идентификатор сохраняемого объекта
           * @param {object} obj Сохраняемый объект
           */
@@ -493,7 +502,7 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
          /**
           * Получить сохранённый ранее объект
           * @public
-          * @param {string} ns Суффикс пространства имён
+          * @param {string} ns Пространство имён
           * @param {number} id Идентификатор сохранённого объект
           * @return {object}
           */
@@ -505,7 +514,7 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
          /**
           * Получить все сохранённые ранее объекты
           * @public
-          * @param {string} ns Суффикс пространства имён
+          * @param {string} ns Пространство имён
           * @return {object[]}
           */
          list: function (ns) {
@@ -529,7 +538,7 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
          /**
           * Удалить сохранённый объект
           * @public
-          * @param {string} ns Суффикс пространства имён
+          * @param {string} ns Пространство имён
           * @param {number} id Идентификатор сохранённого объект
           * @return {boolean}
           */
@@ -545,7 +554,7 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
          /**
           * Удалить всю ранее сохранённую информацию. Возвращает идентификаторы удалённых объектов
           * @public
-          * @param {string} ns Суффикс пространства имён
+          * @param {string} ns Пространство имён
           * @return {number[]}
           */
          clear: function (ns) {
