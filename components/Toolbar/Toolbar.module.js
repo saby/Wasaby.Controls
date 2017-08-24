@@ -84,7 +84,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
                optionValue,
                itemKey = item.get(idProperty),
                options = item.get('options') || {},
-               isToolbarItem = isToolbarItem(item);
+               isToolbarItem = item.get('showType') === showType.MENU_TOOLBAR || item.get('showType') === showType.TOOLBAR;
             if (isToolbarItem) {
                subItems = getSubItems(itemKey, items, idProperty, parentProperty, itemsToSubItems);
                subItems = cFunctions.clone(subItems);
@@ -146,9 +146,6 @@ define('js!SBIS3.CONTROLS.Toolbar', [
 
             return tplOptions;
          },
-         isToolbarItem = function(item) {
-            return item.get('showType') === showType.MENU_TOOLBAR || item.get('showType') === showType.TOOLBAR;
-         },
          getRecordsForRedraw = function(projection) {
             var
                model,
@@ -156,7 +153,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             if (projection) {
                projection.each(function (item) {
                   model = item.getContents();
-                  if (isToolbarItem(model) && model.get('visible') !== false) {
+                  if ((item.get('showType') === showType.MENU_TOOLBAR || item.get('showType') === showType.TOOLBAR) && model.get('visible') !== false) {
                      records.push(item);
                   }
                });
