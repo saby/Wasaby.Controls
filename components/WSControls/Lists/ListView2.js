@@ -35,14 +35,13 @@ define('js!WSControls/Lists/ListView2',
 
          _itemsChangeCallback: function(items, newOptions){
             ListView.superclass._itemsChangeCallback.apply(this, arguments);
-            this._initNavigation(newOptions, items);
+            this._initNavigation(newOptions, this._items, this._display);
          },
 
-         _initNavigation: function(options, items) {
-            if ((options.navigation) && (!this._navigationController)) {
-               var cfg = options.navigation.config;
-               cfg.items =
+         _initNavigation: function(options, items, display) {
+            if (options.dataSource && options.navigation && (!this._navigationController)) {
                this._navigationController = new PageNavigation(options.navigation.config);
+               this._navigationController.calculateState(items, display);
             }
          },
 
@@ -78,7 +77,6 @@ define('js!WSControls/Lists/ListView2',
             else {
                this.loading = show;
             }
-            this._setDirty();
          },
 
          _beforeUnmount: function() {

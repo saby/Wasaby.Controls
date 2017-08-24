@@ -81,7 +81,7 @@ define('js!WSControls/Lists/ItemsControl', [
          _beforeUpdate: function(newOptions) {
             this._prepareMountingData(newOptions);
 
-            if (newOptions.dataSource != this._options._dataSource) {
+            if (newOptions.dataSource != this._options.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
                this.reload();
             }
@@ -259,8 +259,8 @@ define('js!WSControls/Lists/ItemsControl', [
             } else {
                this._items = list;
                this._itemsChangeCallback(this._items, this._options);
-               this._setDirty();
             }
+            this._setDirty();
             this._toggleIndicator(false);
             //self._checkIdProperty();
 

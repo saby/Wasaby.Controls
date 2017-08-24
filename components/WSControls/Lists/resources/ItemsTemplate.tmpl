@@ -1,3 +1,4 @@
+<div>
 <ws:if data="{{_display}}">
    <ws:for data="_getStartEnumerationPosition(); _curIndex < _stopIndex; _getNextEnumerationPosition();">
        <ws:if data="{{ _display.at(_curIndex).getContents }}">
@@ -16,3 +17,4 @@
        </ws:else>
    </ws:for>
 </ws:if>
+</div>
