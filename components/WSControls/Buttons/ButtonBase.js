@@ -152,6 +152,7 @@ define('js!WSControls/Buttons/ButtonBase', [
          if(show !== this._isVisible){
             this._container.toggleClass('ws-hidden', !show);
             this._isVisible = show;
+            this._setOption('visible', this._isVisible);
             this._notifyOnPropertyChanged('visible');
          }
       }
