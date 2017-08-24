@@ -236,7 +236,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          if (object !== "Excel" || !this._isLongOperationsEnabled()) {
             this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + object);
             exportDeferred.addCallback(function(ds) {
-               self.downloadFile(ds.getScalar());
+               self.downloadFile(ds.getScalar(), object === "Excel");
             }).addBoth(function() {
                self._destroyLoadIndicator();
             });
@@ -253,8 +253,12 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        * Загрузить файл по готовому id
        * @param id - уникальный идентификатор файла на сервисе file-transfer
        */
-      downloadFile : function(id){
-         window.open(transHelpers.prepareGetRPCInvocationURL( 'File','Download', {'id': id}, undefined, '/file-transfer/service/'), '_self');
+      downloadFile : function(id, isExcel){
+         var params = { 'id': id };
+         if (isExcel) {
+            params['storage'] = 'excel';
+         }
+         window.open(transHelpers.prepareGetRPCInvocationURL( isExcel ? 'FileTransfer' : 'File', 'Download', params, undefined, '/file-transfer/service/'), '_self');
       },
       /**
        * Метод для формирования параметров фильтрации выгружаемого на сервере файла.
