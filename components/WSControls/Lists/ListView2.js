@@ -3,18 +3,20 @@ define('js!WSControls/Lists/ListView2',
       'js!WSControls/Lists/MultiSelector',
       'tmpl!WSControls/Lists/ListView2',
       'tmpl!WSControls/Lists/resources/GroupTemplate',
-      'js!WSControls/Lists/ItemsToolbar/ItemsToolbarCompatible'
+      'js!WSControls/Lists/ItemsToolbar/ItemsToolbarCompatible',
+      'js!WSControls/Lists/Controllers/PageNavigation'
    ],
 
-   function(MultiSelector, template, groupTemplate) {
+   function(MultiSelector, template, GroupTemplate, ItemsToolbarCompatible, PageNavigation) {
       
       var INDICATOR_DELAY = 2000;
       
       var ListView = MultiSelector.extend({
+         _navigationController: null,
          _controlName: 'WSControls/Lists/ListView',
          _template: template,
          
-         _defaultGroupTemplate: groupTemplate,
+         _defaultGroupTemplate: GroupTemplate,
          
    
          _mouseMove: function(e, displayItem) {
@@ -29,6 +31,19 @@ define('js!WSControls/Lists/ListView2',
             var data = ListView.superclass._getItemData.apply(this, arguments);
             data.hovered = this._hoveredIndex === index;
             return data;
+         },
+
+         _itemsChangeCallback: function(items, newOptions){
+            ListView.superclass._itemsChangeCallback.apply(this, arguments);
+            this._initNavigation(newOptions, items);
+         },
+
+         _initNavigation: function(options, items) {
+            if ((options.navigation) && (!this._navigationController)) {
+               var cfg = options.navigation.config;
+               cfg.items =
+               this._navigationController = new PageNavigation(options.navigation.config);
+            }
          },
 
 
@@ -64,8 +79,16 @@ define('js!WSControls/Lists/ListView2',
                this.loading = show;
             }
             this._setDirty();
+         },
+
+         _beforeUnmount: function() {
+            if (this._navigationController) {
+               this._navigationController.destroy();
+               this._navigationController = null;
+            }
          }
          /**/
+
       });
 
       return ListView;
