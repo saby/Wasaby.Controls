@@ -155,11 +155,9 @@ define('js!SBIS3.CONTROLS.Toolbar', [
                records = [];
             if (projection) {
                projection.each(function (item) {
-                  if (item) {
-                     model = item.getContents();
-                     if (isToolbarItem(model) && model.get('visible') !== false) {
-                        records.push(item);
-                     }
+                  model = item.getContents();
+                  if (isToolbarItem(model) && model.get('visible') !== false) {
+                     records.push(item);
                   }
                });
             }
