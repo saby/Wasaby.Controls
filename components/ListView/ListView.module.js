@@ -1047,7 +1047,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if(lvOpts.selectedKey && lvOpts._itemData) {
                lvOpts._itemData.selectedKey = lvOpts.selectedKey;
             }
-            if (lvOpts.multiselect && lvOpts.useSelectAll) {
+            if (!lvOpts.multiselect && lvOpts.useSelectAll) {
                lvOpts.useSelectAll = false;
             }
             return lvOpts;
