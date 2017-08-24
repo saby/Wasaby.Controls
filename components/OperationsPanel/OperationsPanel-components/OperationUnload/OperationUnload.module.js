@@ -232,6 +232,8 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
                    });
                }
                filter.addField({name: 'selectedIds', type: 'array', kind: 'string'});
+               //Приводим ключи к строковому формату, что они соответствовали формату поля(массив строк), иначе могут быть
+               //ошибки, что люди ожидают строку, а получают число.
                filter.set('selectedIds', this._getView().getSelectedKeys().map(function(key) {
                   return String(key);
                }));
