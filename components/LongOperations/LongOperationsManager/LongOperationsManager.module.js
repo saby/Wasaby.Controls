@@ -895,7 +895,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                   throw new Error('Unknown result type');
                }
                // Проверить, что продюсер есть и не был раз-регистрирован за время ожидания
-               var prodName = (member.tab === _tabKey ? _producers[member.producer] : member.tab in _tabManagers) ? member.producer : null;
+               var prodName = (member.tab === _tabKey ? _producers[member.producer] : member.tab in _tabManagers && member.producer in _tabManagers[member.tab]) ? member.producer : null;
                // Если продюсер найден
                if (prodName) {
                   var values = result instanceof DataSet ? result.getAll() : result;
@@ -914,12 +914,13 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                      throw new Error('Unknown result type');
                   }
                   if (len) {
+                     var memberTab = (member.tab === _tabKey ? !_producers[member.producer].hasCrossTabData() : !_producers[member.producer] || !_tabManagers[member.tab][member.producer].hasCrossTabData) ? member.tab : null;
                      values[iterate](function (v) {
                         // Значение должно быть экземпляром SBIS3.CONTROLS.LongOperationEntry и иметь правилное имя продюсера
                         if (!(v instanceof LongOperationEntry && v.producer === prodName)) {
                            throw new Error('Invalid result');
                         }
-                        v.tabKey = member.tab;
+                        v.tabKey = memberTab;
                      });
                      return values;
                   }

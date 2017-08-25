@@ -154,7 +154,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
 
             //У приостановленных операций нужно менять цвет текста, поэтому навешиваем класс
             this.subscribeTo(this._view, 'onDrawItems', function () {
-               var items = self.getItems();
+               var items = self._view.getItems();
                if (items) {
                   var $cont = self._view.getContainer();
                   items.each(function (item, id) {
@@ -344,7 +344,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
           * @param {SBIS3.CONTROLS.LongOperationsList/resources/model} model Модель длительной операции
           * @returns {Core/Deferred}
           */
-         applyUserAction: function (action, model, reload) {
+         applyUserAction: function (action, model) {
             if (!(action === 'suspend' || action === 'resume' ? model.get('canSuspend') : (action === 'delete' ? model.get('canDelete') : null))) {
                return Deferred.fail('Action not allowed');
             }
@@ -447,9 +447,9 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
           * @public
           */
          lookupItem: function (tabKey, producer, operationId) {
-            var items = this.getItems();
+            var items = this._view.getItems();
             if (items && items.getCount()) {
-               return items.getRecordById(Model.getFullId(tabKey, producer, operationId));
+               return items.getRecordById(Model.getFullId(tabKey, producer, operationId)) || items.getRecordById(Model.getFullId(null, producer, operationId));
             }
          },
 
