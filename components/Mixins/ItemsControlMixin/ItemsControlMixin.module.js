@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "tmpl!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate",
    "js!WS.Data/Utils",
    "js!WS.Data/Entity/Model",
-   "Core/ParserUtilities",
+   'Core/markup/ParserUtilities',
    "Core/Sanitize",
    "js!SBIS3.CORE.LayoutManager",
    "Core/core-instance",

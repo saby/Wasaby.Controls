@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.HighlightDecorator', [
    'js!SBIS3.CONTROLS.Utils.HtmlDecorators.AbstractDecorator',
-   'Core/markup/ParserUtilitiesNew',
+   'Core/markup/ParserUtilities',
    'Core/core-instance',
    'Core/helpers/String/escapeHtml'
 ], function (AbstractDecorator,

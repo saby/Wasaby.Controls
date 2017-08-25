@@ -9,7 +9,7 @@ define(
       'tmpl!SBIS3.CONTROLS.TabButtons/resources/ItemTemplate',
       'tmpl!SBIS3.CONTROLS.TabButtons/resources/SpaceTemplate',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-      'Core/ParserUtilities',
+      'Core/markup/ParserUtilities',
       'Core/core-instance',
       'js!SBIS3.CONTROLS.TabButton',
       'css!SBIS3.CONTROLS.TabButtons'
