@@ -1,8 +1,7 @@
 define('js!WSControls/Lists/resources/utils/DataSourceUtil', [
    'js!WS.Data/Query/Query',
-   'Core/core-instance',
-   'Core/Deferred'
-], function(Query, cInstance, Deferred) {
+   'Core/core-instance'
+], function(Query, cInstance) {
    var DataSourceUtil = {
       prepareSource: function(sourceOpt) {
          var result;
@@ -28,21 +27,12 @@ define('js!WSControls/Lists/resources/utils/DataSourceUtil', [
 
          var query = this._getQueryForCall(filter, sorting, offset, limit);
 
-         var def = new Deferred();
-
-         dataSource.query(query).addCallback(function(dataSet) {
+         return dataSource.query(query).addCallback((function(dataSet) {
             if (idProperty && idProperty !== dataSet.getIdProperty()) {
                dataSet.setIdProperty(idProperty);
             }
-            //Деферред должен сработать асинхронно, иначе опции будут не готовы
-            window.setTimeout(function(){
-               def.callback(dataSet.getAll());
-            }, 0);
-
             return dataSet.getAll();
-
-         });
-         return def;
+         }).bind(this));
       },
 
       _getQueryForCall: function(filter, sorting, offset, limit){

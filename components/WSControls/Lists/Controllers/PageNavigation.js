@@ -8,17 +8,23 @@ define('js!WSControls/Lists/Controllers/PageNavigation',
        */
       var PageNavigation = Abstract.extend({
          _page: 0,
-         _nextPage: 1,
+         _nextPage: 0,
          _more: null,
          constructor: function(cfg) {
             this._options = cfg;
             if (cfg.page) {
-               this._page = cfg.page
+               this._page = cfg.page || 0;
+               this._nextPage = this._page + 1;
             }
          },
 
          prepareQueryParams: function(projection, direction) {
-
+            var addParams = {};
+            if (this._options.pageSize) {
+               addParams.offset = this._nextPage * this._options.pageSize;
+               addParams.limit = this._options.pageSize;
+            }
+            return addParams;
          },
 
          calculateState: function(list, display, direction) {

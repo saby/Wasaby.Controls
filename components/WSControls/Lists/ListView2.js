@@ -33,18 +33,27 @@ define('js!WSControls/Lists/ListView2',
             return data;
          },
 
-         _itemsChangeCallback: function(items, newOptions){
-            ListView.superclass._itemsChangeCallback.apply(this, arguments);
-            this._initNavigation(newOptions, this._items, this._display);
+         _beforeMount: function(newOptions) {
+            this._initNavigation(newOptions);
+            ListView.superclass._beforeMount.apply(this, arguments);
          },
 
-         _initNavigation: function(options, items, display) {
+         _initNavigation: function(options) {
             if (options.dataSource && options.navigation && (!this._navigationController)) {
                this._navigationController = new PageNavigation(options.navigation.config);
-               this._navigationController.calculateState(items, display);
             }
          },
 
+         _prepareQueryParams: function() {
+            var params = ListView.superclass._prepareQueryParams.apply(this, arguments);
+            if (this._navigationController) {
+               var addParams = this._navigationController.prepareQueryParams(this._display);
+               params.limit = addParams.limit;
+               params.offset = addParams.offset;
+               //TODO фильтр и сортировка не забыть приделать
+            }
+            return params;
+         },
 
          /*DataSource*/
          _toggleIndicator: function(show){  //TODO метод скопирован из старого ListView

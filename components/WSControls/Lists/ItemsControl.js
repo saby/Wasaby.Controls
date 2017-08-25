@@ -40,8 +40,6 @@ define('js!WSControls/Lists/ItemsControl', [
          //TODO пока спорные параметры
          _filter: undefined,
          _sorting: undefined,
-         _limit: undefined,
-         _offset: undefined,
 
          _defaultItemContentTemplate: ItemContentTemplate,
          _defaultItemTemplate: ItemTemplate,
@@ -74,7 +72,7 @@ define('js!WSControls/Lists/ItemsControl', [
 
             if (newOptions.dataSource != this._options.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
-               this.reload();
+               this.reload(newOptions);
             }
          },
 
@@ -83,7 +81,7 @@ define('js!WSControls/Lists/ItemsControl', [
 
             if (newOptions.dataSource != this._options.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
-               this.reload();
+               this.reload(newOptions);
             }
             //TODO обработать смену фильтров и т.д. позвать релоад если надо
          },
@@ -187,12 +185,17 @@ define('js!WSControls/Lists/ItemsControl', [
    
          //</editor-fold>
 
-         _prepareQueryFilter: function() {
-            return this._filter;
+         _prepareQueryParams: function() {
+            return {
+               filter: this._filter,
+               sorting: this._sorting,
+               limit: undefined,
+               offset: undefined
+            };
          },
 
          //<editor-fold desc='DataSourceMethods'>
-         reload: function() {
+         reload: function(options) {
             if (this._dataSource) {
                var
                   def,
@@ -200,20 +203,21 @@ define('js!WSControls/Lists/ItemsControl', [
 
                this._cancelLoading();
 
-               var queryFilter = this._prepareQueryFilter();
                if (this._dataSource) {
-                  var result = this._notify('onBeforeDataLoad', queryFilter, this._sorting, this._offset, this._limit);
-                  if (result) {
-                     this._filter = result['filter'] || this._filter;
-                     this._sorting = result['sorting'] || this._sorting;
-                     this._offset = result['offset'] || this._offset;
-                     this._limit = result['limit'] || this._limit;
+                  var queryParams = this._prepareQueryParams();
+
+                  var userParams = this._notify('onBeforeDataLoad', queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit);
+                  if (userParams) {
+                     queryParams.filter = userParams['filter'] || queryParams.filter;
+                     queryParams.sorting = userParams['sorting'] || queryParams.sorting;
+                     queryParams.offset = userParams['offset'] || queryParams.offset;
+                     queryParams.limit = userParams['limit'] || queryParams.limit;
                   }
                   //TODO решить с параметрами
-                  def = DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, this._prepareQueryFilter(), this._sorting, this._offset, this._limit)
+                  def = DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
                      .addCallback(fHelpers.forAliveOnly(function (list) {
                         self._notify('onDataLoad', list);
-                        this._onDSReload(list);
+                        this._onDSReload(list, options);
                         return list;
                      }, self))
                      .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
@@ -245,7 +249,7 @@ define('js!WSControls/Lists/ItemsControl', [
          _toggleIndicator: function () {
             /*Must be implemented*/
          },
-         _onDSReload: function(list) {
+         _onDSReload: function(list, options) {
             this._itemData = null;
             if (
                this._items && cInstance.instanceOfModule(this._items, 'WS.Data/Collection/RecordSet')
@@ -258,7 +262,7 @@ define('js!WSControls/Lists/ItemsControl', [
                //this._drawItemsCallbackDebounce();
             } else {
                this._items = list;
-               this._itemsChangeCallback(this._items, this._options);
+               this._itemsChangeCallback(this._items, options);
             }
             this._setDirty();
             this._toggleIndicator(false);
