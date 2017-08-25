@@ -375,6 +375,9 @@ define('js!SBIS3.CONTROLS.Image',
             },
             _modifyOptions: function(options) {
                options = Image.superclass._modifyOptions.apply(this, arguments);
+               if (options.dataSource) {
+                  options.dataSource = SourceUtil.prepareSource(options.dataSource);
+               }
                //если источник данных задан из вёрстки, то необходимо построить теш Img с уже заданным src атрибутом
                options._templateImage = this._getSourceUrl(options);
                return options;
@@ -397,9 +400,6 @@ define('js!SBIS3.CONTROLS.Image',
                   this._imageBar = this._container.find('.controls-image__image-bar');
                }
                this._image = this._container.find('.controls-image__image');
-               if (this._options.dataSource) {
-                  this._options.dataSource = SourceUtil.prepareSource.call(this, this._options.dataSource);
-               }
             },
             init: function() {
                var
