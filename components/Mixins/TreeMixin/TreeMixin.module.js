@@ -884,7 +884,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             this.setHighlightText('', false);
             this.setFilter(filter, true);
             this._options.hierarchyViewMode = false;
-            if (this._options.task1173671799) {
+            if (this._options.task1173671799 && !this._options.allowEnterToFolder) {
                crumbPath.forEach(function(id) {
                   self._options.openedPath[id] = true;
                });
