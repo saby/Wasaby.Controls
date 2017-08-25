@@ -12,7 +12,7 @@ define(
       'js!SBIS3.CONTROLS.TimePicker',
       'tmpl!SBIS3.CONTROLS.DatePicker',
       'tmpl!SBIS3.CONTROLS.DatePicker/resources/elementPickerContent',
-      'Core/helpers/dom&controls-helpers',
+      'js!SBIS3.CONTROLS.Utils.IsChildControl',
       "Core/IoC",
       'i18n!SBIS3.CONTROLS.DatePicker',
       'js!SBIS3.CONTROLS.IconButton',
@@ -20,7 +20,7 @@ define(
       'css!SBIS3.CONTROLS.FormattedTextBox',
       'css!SBIS3.CONTROLS.DateBox'
    ],
-   function (EventBus, DateBox, PickerMixin, DateUtil, DateRangeBigChoose, TimePicker, dotTplFn, ElementPickerContent, dcHelpers, IoC) {
+   function (EventBus, DateBox, PickerMixin, DateUtil, DateRangeBigChoose, TimePicker, dotTplFn, ElementPickerContent, isChildControl, IoC) {
 
    'use strict';
 
@@ -362,7 +362,7 @@ define(
       },
 
       _onFocusIn: function(event) {
-         if (!dcHelpers.isChildControl(this, event.getTarget())) {
+         if (!isChildControl(this, event.getTarget())) {
             this._notify('onDateSelect');
             this.unsubscribeFrom(EventBus.globalChannel(), 'onFocusIn', this._onFocusInHandler);
             this._onFocusInHandler = null;
