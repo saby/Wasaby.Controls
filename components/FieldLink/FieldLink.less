@@ -217,7 +217,6 @@
    }
 
    .controls-FieldLink__Link {
-      display: inline;
       line-height: @default-base-line-height;
    }
 }
@@ -264,7 +263,8 @@
 
    &:not(.controls-FieldLink-Link__filterButton):not(.ws-disabled) {
       color: @controls-FieldLink-link-color;
-      text-decoration: underline;
+      // TODO https://online.sbis.ru/opendoc.html?guid=e780f10e-3409-4390-98be-510dc06f546b аналогично стилям ссылке
+      text-decoration: underline !important;
 
       &:hover {
          color: @controls-FieldLink-link-color-hover;
