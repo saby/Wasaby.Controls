@@ -74,7 +74,11 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
       },
 
       _onLockedChanged: function (controlNumber, e, locked) {
+         if (this._updatingLock) {
+            return;
+         }
          this._updateLocked(controlNumber, locked);
+         this._updateSteps(locked);
          this._options.onlyByCapacity = !locked;
       },
 
@@ -93,13 +97,16 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
                dateRanges[i].setLocked(locked);
             }
          }
+         this._updatingLock = false;
+      },
+
+      _updateSteps: function (locked) {
+         var dateRanges = this._options.dateRanges;
          if (locked) {
-            for (i = 0; i < dateRanges.length - 1; i++) {
+            for (var i = 0; i < dateRanges.length - 1; i++) {
                this._steps[i] = this._getMonthCount(dateRanges[i].getStartValue(), dateRanges[i+1].getStartValue());
             }
          }
-
-         this._updatingLock = false;
       },
 
       _updateControls: function (controlNumber, start, end, oldStart, oldEnd) {

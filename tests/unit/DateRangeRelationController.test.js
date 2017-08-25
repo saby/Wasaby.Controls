@@ -265,6 +265,17 @@ define([
             }
          });
 
+         it(`should update relation type if period type is year and onlyByCapacity = true and checked smaller period`, function () {
+            initControls(new Date(2015, 0, 1), 12, {onlyByCapacity: true, step: 12}, 2);
+            controls[0].setLocked(false);
+            controls[0].setRange(new Date(2013, 0, 1), new Date(2013, 1, 0));
+            let dates = createDates(new Date(2013, 0, 1), 12, 1, 2);
+            for (let [i, control] of controls.entries()) {
+               assertRangeControl(control, dates[i], `Control ${i}`);
+               assert(control.isLocked());
+            }
+         });
+
          it(`should not update relation type if period type and year does not changed `, function () {
             initControls(new Date(2015, 2, 1), 1, {onlyByCapacity: true}, 2);
             controls[0].setLocked(false);
