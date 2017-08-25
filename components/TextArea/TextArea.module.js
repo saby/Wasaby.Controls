@@ -67,6 +67,9 @@ define('js!SBIS3.CONTROLS.TextArea', [
          _cachedH: null,
          _pasteCommand: 'insertText',
          _autoSizeInitialized: false,
+         //TODO надо подумать как работать с автосайзом эрии без плагина, т.к. в VDOM все равно не получится, как вариант contentEditable
+         _myResize: false, //флаг нужен для того, чтобы мы могли отличить ресайз, если он был инициирован самим полем, то надо известить родителя, если пришел извне, то не надо
+         
          _options: {
             textFieldWrapper: inputField,
             wrapUrls: LinkWrap.wrapURLs,
@@ -169,13 +172,16 @@ define('js!SBIS3.CONTROLS.TextArea', [
             if (!self._processNewLine(event) && !event.altKey && !event.ctrlKey && event.which !== constants.key.esc && event.which !== constants.key.tab) {
                event.stopPropagation();
             }
+            self._myResize = true;
          });
 
          this._inputField.bind('paste', function(){
             self._pasteProcessing++;
+            if (!self._myResize) self._myResize = true;
             window.setTimeout(function(){
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
+
                   self.setText.call(self, self._formatText(self._inputField.val()));
                   self._inputField.val(self._options.text);
                }
@@ -248,12 +254,21 @@ define('js!SBIS3.CONTROLS.TextArea', [
       _autosizeTextArea: function(hard){
          var self = this;
          this._inputField.autosize({
-            callback: self._notifyOnSizeChanged(self, self),
-            hard: hard
+            callback: function() {
+               if (self._myResize) {
+                  self._notifyOnSizeChanged(self, self);
+                  self._myResize = false;
+               }
+            },
+            hard : hard
          });
 
 
          this._removeAutoSizeDognail();
+      },
+
+      _autoSizeRecalc: function() {
+         this._inputField.trigger('autosize.resize');
       },
 
       _getElementToFocus: function() {
@@ -339,13 +354,20 @@ define('js!SBIS3.CONTROLS.TextArea', [
       _drawText: function(text) {
          if (this._inputField.val() != text) {
             this._inputField.val(text || '');
-            this._autosizeTextArea(true);
+            this._autoSizeRecalc();
          }
       },
 
       setMaxLength: function(num) {
          TextArea.superclass.setMaxLength.call(this, num);
          this._inputField.attr('maxlength',num);
+      },
+
+
+
+      _onResizeHandler : function(){
+         this._autoSizeRecalc();
+         TextArea.superclass._onResizeHandler.apply(this, arguments);
       },
 
       destroy: function() {
