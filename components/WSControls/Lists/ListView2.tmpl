@@ -1,9 +1,20 @@
 <div class="controls-ListView {{multiselect !== false ? 'controls-ListView__multiselect' : 'controls-ListView__multiselect__off'}}{{ _serverRender ? ' controls-ListView__dataLoaded'}}"
      event:onmouseleave="_mouseLeave()">
+
+   <!-- Placeholder and trigger for activating page load in virtual scroll -->
+   <div class="controls-ListView__virtualScrollTopPlaceholder" >
+      <div class="controls-ListView__virtualScrollTopLoadTrigger" ></div>
+   </div>
+
    <div class="controls-ListView__itemsContainer">
       <ws:partial template="{{_itemsTemplate}}"
                   records="{{_records}}"
                   scope="{{...}}"/>
+   </div>
+
+   <!-- Placeholder and trigger for activating page load in virtual scroll -->
+   <div class="controls-ListView__virtualScrollBottomPlaceholder" >
+      <div class="controls-ListView__virtualScrollBottomLoadTrigger" ></div>
    </div>
 
    <ws:if data="{{loading}}">
