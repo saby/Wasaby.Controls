@@ -38,7 +38,7 @@ define('js!WSControls/Lists/VirtualScroll',
 
             // Load more data
             if (this._vStartIndex === this._dataStart) {
-               // TODO: request more data
+               this._notify('needLoadPageStart');
             }
             else {
                // TODO: check if not enough for page
@@ -63,7 +63,7 @@ define('js!WSControls/Lists/VirtualScroll',
 
             // Load more data
             if (this._vEndIndex === this._dataEnd) {
-               // TODO: request more data
+               this._notify('needLoadPageEnd');
             } else {
                // TODO: check if not enough for page
                this._vEndIndex = this._vEndIndex + this._options.pageSize;
