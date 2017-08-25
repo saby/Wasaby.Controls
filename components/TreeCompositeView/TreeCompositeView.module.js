@@ -144,7 +144,6 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          return cfg._getRecordsForRedrawTree.call(this, projection, cfg)
       }
       else {
-         cfg._resetGroupItemsCount(cfg);
          var
             records = {
                folders : [],
@@ -152,9 +151,6 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             },
             useGroups = !isEmpty(cfg.groupBy) && cfg.easyGroup;
          projection.each(function (item, index, group) {
-            if (useGroups) {
-               cfg._applyGroupItemsCount(group, 1, cfg);
-            }
             if (item.isNode()) {
                records.folders.push(item);
                cfg._hideEmpty = true;
