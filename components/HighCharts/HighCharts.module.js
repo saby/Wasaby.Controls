@@ -8,12 +8,12 @@ define('js!SBIS3.CONTROLS.HighCharts', [
    "js!SBIS3.CORE.Control",
    "html!SBIS3.CONTROLS.HighCharts",
    'Core/helpers/Function/forAliveOnly',
-   "Core/helpers/dom&controls-helpers",
+   'Core/helpers/Hcontrol/trackElement',
    "browser!/cdn/highcharts/4.2.7/highcharts-more.js",
    "css!SBIS3.CONTROLS.HighCharts",
    "i18n!SBIS3.CONTROLS.HighCharts"
 ],
-function( SbisService, Query, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTpl, forAliveOnly, dcHelpers){
+function( SbisService, Query, cHelpers, cFunctions, constants, Deferred,BaseControl, dotTpl, forAliveOnly, trackElement){
    'use strict';
 
    function ctxOnFieldChange(e, field, value, init) {
@@ -814,7 +814,7 @@ function( SbisService, Query, cHelpers, cFunctions, constants, Deferred,BaseCont
          }
 
          //перерисовываем график, если он стал видимым. без этого график не занимает всю ширину контейнера, если был скрыт
-         var trg = dcHelpers.trackElement(this._container, true);
+         var trg = trackElement(this._container, true);
          trg.subscribe('onVisible', function (event, visible) {
             if (self._chartObj && visible) {
                self._chartObj.reflow();
@@ -1213,7 +1213,7 @@ function( SbisService, Query, cHelpers, cFunctions, constants, Deferred,BaseCont
             this._chartObj.destroy();
          }
          this._dataSource = null;
-         dcHelpers.trackElement(this._container, false);
+         trackElement(this._container, false);
          HighCharts.superclass.destroy.call(this);
       }
 

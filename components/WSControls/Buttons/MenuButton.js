@@ -2,12 +2,11 @@ define('js!WSControls/Buttons/MenuButton', [
    'js!WSControls/Buttons/Button',
    'js!SBIS3.CONTROLS.PickerMixin',
    'js!SBIS3.CONTROLS.DSMixin',
-   'Core/helpers/dom&controls-helpers',
    'Core/IoC',
    'Core/detection',
    'Core/Sanitize',
    'Core/helpers/String/escapeHtml'
-], function(Button, PickerMixin, DSMixin, dcHelpers, IoC, detection, Sanitize, escapeHtml) {
+], function(Button, PickerMixin, DSMixin, IoC, detection, Sanitize, escapeHtml) {
 
    'use strict';
    

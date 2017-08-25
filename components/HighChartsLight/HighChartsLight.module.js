@@ -4,11 +4,11 @@ define('js!SBIS3.CONTROLS.HighChartsLight', [
    "Core/constants",
    "js!SBIS3.CORE.Control",
    "html!SBIS3.CONTROLS.HighChartsLight",
-   "Core/helpers/dom&controls-helpers",
+   'Core/helpers/Hcontrol/trackElement',
    "browser!/cdn/highcharts/4.2.7/highcharts-more.js",
    "css!SBIS3.CONTROLS.HighChartsLight"
 ],
-function( cFunctions, cMerge, constants,BaseControl, dotTpl, dcHelpers){
+function( cFunctions, cMerge, constants,BaseControl, dotTpl, trackElement){
    'use strict';
 
    /**
@@ -592,7 +592,7 @@ function( cFunctions, cMerge, constants,BaseControl, dotTpl, dcHelpers){
             this._drawHighChart();
          }
          //перерисовываем график, если он стал видимым. без этого график не занимает всю ширину контейнера, если был скрыт
-         var trg = dcHelpers.trackElement(this._container, true);
+         var trg = trackElement(this._container, true);
          trg.subscribe('onVisible', function (event, visible) {
             if (self._chartObj && visible) {
                self._chartObj.reflow();
@@ -644,7 +644,7 @@ function( cFunctions, cMerge, constants,BaseControl, dotTpl, dcHelpers){
       },
 
       destroy: function() {
-         dcHelpers.trackElement(this._container, false);
+         trackElement(this._container, false);
          if (this._chartObj) {
             this._chartObj.destroy();
          }

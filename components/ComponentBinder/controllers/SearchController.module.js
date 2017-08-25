@@ -6,8 +6,8 @@ define('js!SBIS3.CONTROLS.SearchController',
        "Core/core-merge",
        "Core/Abstract",
        "Core/core-instance",
-       'Core/helpers/dom&controls-helpers'
-    ], function(KbLayoutRevertObserver, constants, cFunctions, cMerge, cAbstract, cInstance, domHelpers) {
+       'Core/helpers/Hcontrol/isElementVisible'
+    ], function(KbLayoutRevertObserver, constants, cFunctions, cMerge, cAbstract, cInstance, isElementVisible) {
 
    var SearchController = cAbstract.extend({
       $protected: {
@@ -318,7 +318,7 @@ define('js!SBIS3.CONTROLS.SearchController',
             /* Нет смысла обрабатывать клавиши и устанавливать фокус, если
                view с которой работает searchForm скрыта.
                (актуально для поля связи / suggestTextBox'a / строки поиска с саггестом ) */
-            if(!domHelpers.isElementVisible(view.getContainer())) {
+            if(!isElementVisible(view.getContainer())) {
                return;
             }
 

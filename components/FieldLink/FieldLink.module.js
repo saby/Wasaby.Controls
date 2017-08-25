@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "Core/core-instance",
        'Core/helpers/Function/forAliveOnly',
        'Core/helpers/Function/memoize',
-       'Deprecated/helpers/dom&controls-helpers',
+       'js!SBIS3.CONTROLS.Utils.Contains',
        "Core/helpers/string-helpers",
        "Core/ParserUtilities",
        'js!SBIS3.CONTROLS.ControlHierarchyManager',
@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         cInstance,
         forAliveOnly,
         memoize,
-        domHelpers,
+        contains,
         strHelpers,
         ParserUtilities,
         ControlHierarchyManager,
@@ -873,7 +873,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 3) Фокус пришел из автодополнения
              */
              if(!this._isInputVisible() || this.getChildControlByName('fieldLinkMenu').getContainer()[0] === document.activeElement ||
-                (event && event.relatedTarget && ControlHierarchyManager.checkInclusion(this, event.relatedTarget) && !domHelpers.contains(this.getContainer(), event.relatedTarget))) {
+                (event && event.relatedTarget && ControlHierarchyManager.checkInclusion(this, event.relatedTarget) && !contains(this.getContainer(), event.relatedTarget))) {
                 return false;
              }
              FieldLink.superclass._observableControlFocusHandler.apply(this, arguments);
