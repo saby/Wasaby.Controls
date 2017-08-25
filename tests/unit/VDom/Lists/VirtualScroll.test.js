@@ -19,7 +19,7 @@ define([
                {
                   'name': 'Window same size as data',
                   'initialState': {
-                     'dataRange': [1, 10],
+                     'dataBounds': [1, 10],
                      'virtualWindow': [1, 10]
                   },
                   'removeAt': [1, 5, 10],
@@ -55,18 +55,22 @@ define([
             ];
 
             for (var i = 0; i < testCases.length; i++) {
-               it(testCases[i].name, function() {
-                  var vs = new VirtualScroll({
-                     maxItems: 15,
-                     pageSize: 5
+               (function(i) {
+                  it(testCases[i].name, function () {
+                     var vs = new VirtualScroll({
+                        maxItems: 15,
+                        pageSize: 5
+                     });
+                     for (var j = 0; j < testCases[i].removeAt.length; j++) {
+                        vs.setState(testCases[i].initialState.dataBounds, testCases[i].initialState.virtualWindow);
+                        vs.onItemRemoved(testCases[i].removeAt[j]);
+                        assert.equal(vs._dataRange[0], resultBounds[0]);
+                        assert.equal(vs._dataRange[1], resultBounds[1]);
+                        assert.equal(vs._virtualWindow[0], testCases[i].resultWindow[j][0]);
+                        assert.equal(vs._virtualWindow[1], testCases[i].resultWindow[j][1]);
+                     }
                   });
-                  for (var j = 0; j < testCases[i].removeAt.length; j++) {
-                     vs.setState(testCases[i].initialState.dataBounds, testCases[i].initialState.virtualWindow);
-                     vs.onItemRemoved(testCases[i].removeAt[j]);
-                     assert.equal(vs._dataRange, resultBounds);
-                     assert.equal(vs._virtualWindow, testCases[i].resultWindow[j]);
-                  }
-               });
+               })(i);
             }
          });
 
@@ -79,7 +83,7 @@ define([
                   {
                      'name': 'Window same size as data',
                      'initialState': {
-                        'dataRange': [1, 10],
+                        'dataBounds': [1, 10],
                         'virtualWindow': [1, 10]
                      },
                      'addAt': [1, 5, 10],
@@ -115,18 +119,23 @@ define([
                ];
 
             for (var i = 0; i < testCases.length; i++) {
-               it(testCases[i].name, function() {
-                  var vs = new VirtualScroll({
-                     maxItems: 15,
-                     pageSize: 5
+               (function(i) {
+                  it(testCases[i].name, function () {
+                     var vs = new VirtualScroll({
+                        maxItems: 15,
+                        pageSize: 5
+                     });
+                     for (var j = 0; j < testCases[i].addAt.length; j++) {
+                        vs.setState(testCases[i].initialState.dataBounds, testCases[i].initialState.virtualWindow);
+                        vs.onItemAdded(testCases[i].addAt[j]);
+                        assert.equal(vs._dataRange[0], resultBounds[0]);
+                        assert.equal(vs._dataRange[1], resultBounds[1]);
+                        assert.equal(vs._virtualWindow[0], testCases[i].resultWindow[j][0]);
+                        assert.equal(vs._virtualWindow[1], testCases[i].resultWindow[j][1]);
+                     }
                   });
-                  for (var j = 0; j < testCases[i].removeAt.length; j++) {
-                     vs.setState(testCases[i].initialState.dataBounds, testCases[i].initialState.virtualWindow);
-                     vs.onItemAdded(testCases[i].addAt[j]);
-                     assert.equal(vs._dataRange, resultBounds);
-                     assert.equal(vs._virtualWindow, testCases[i].resultWindow[j]);
-                  }
-               });
+               })(i);
+
             }
          });
 

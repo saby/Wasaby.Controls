@@ -98,9 +98,13 @@ define('js!WSControls/Lists/VirtualScroll',
           * @param idx - index of removed item
           */
          onItemRemoved: function(idx) {
-            if (idx < this._vStartIndex) {
-               this._vStartIndex -= 1;
-               this._vEndIndex -= 1;
+            this._dataRange[1] -= 1;
+
+            if (idx < this._virtualWindow[0]) {
+               this._virtualWindow[0] -= 1;
+               this._virtualWindow[1] -= 1;
+            } else if (idx <= this._virtualWindow[1]) {
+               this._virtualWindow[1] -= 1;
             }
          },
 
@@ -110,15 +114,22 @@ define('js!WSControls/Lists/VirtualScroll',
           * @param idx - index of new item
           */
          onItemAdded: function(idx) {
+            this._dataRange[1] += 1;
 
+            if (idx <= this._virtualWindow[0]) {
+               this._virtualWindow[0] += 1;
+               this._virtualWindow[1] += 1;
+            } else if (idx <= this._virtualWindow[1]) {
+               this._virtualWindow[1] += 1;
+            }
          },
 
          /**
           * Set the state of dataset and virtual window
           */
          setState: function(dataRange, virtualWindow) {
-            this._dataRange = dataRange;
-            this._virtualWindow = virtualWindow;
+            this._dataRange = [dataRange[0], dataRange[1]];
+            this._virtualWindow = [virtualWindow[0], virtualWindow[1]];
          },
 
          /**
