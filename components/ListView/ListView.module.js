@@ -3161,7 +3161,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _updateScrollIndicatorTop: function () {
             var top = '';
             // Если скролим вверх и есть что загружать сверху
-            if (this._isScrollingUp() && this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.top)) {
+            if (this._isScrollingUp() && this.getItems() && this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.top)) {
                top = StickyHeaderManager.getStickyHeaderIntersectionHeight(this.getContainer()) - this._scrollWatcher.getScrollContainer().scrollTop();
             }
             this._loadingIndicator.css('top', top);
