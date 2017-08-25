@@ -31,7 +31,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          horizontalAlign: {
             side: 'right',
             offset: 0
-         }
+         },
+         corner: 'tr'
       };
 
       var STANDART_ALIGN = {
@@ -42,7 +43,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          horizontalAlign: {
             side: 'right',
             offset: 4
-         }
+         },
+         corner: 'tr'
       };
       /**
        * Класс для работы с операциями над записями, которые появляются при наведении курсора мыши.
@@ -373,8 +375,8 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
 
          setMenuAlign: function(align, target) {
             if(this._itemActionsMenu){
+               this._itemActionsMenu.setProperty('corner', align.corner);
                this._itemActionsMenu.setTarget(target);
-
                this._itemActionsMenu.setVerticalAlign(align.verticalAlign);
                this._itemActionsMenu.setHorizontalAlign(align.horizontalAlign);
             }
