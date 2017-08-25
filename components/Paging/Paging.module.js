@@ -182,7 +182,13 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'tmpl!SBIS3
 
       setSelectedKey: function() {
          Pager.superclass.setSelectedKey.apply(this, arguments);
-         this._toggleItemsEnabled();
+         //если страницы рисуются, то набор надо перерисовать, т.к. он зависит от выбранного элемента
+         if (this._options.visiblePath.pages) {
+            this.redraw();
+         }
+         else {
+            this._toggleItemsEnabled();
+         }
       },
 
       _getItemsContainer: function() {
