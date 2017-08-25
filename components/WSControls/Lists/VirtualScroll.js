@@ -4,6 +4,15 @@ define('js!WSControls/Lists/VirtualScroll',
    ],
    function (Abstract) {
 
+      // <- init
+      // <- added
+      // <- removed
+      // <- newdata
+      //
+      // -> getPage
+      // -> loadRequest
+
+
       var VirtualScroll = Abstract.extend({
          $protected: {
             _options: {
@@ -14,13 +23,10 @@ define('js!WSControls/Lists/VirtualScroll',
          },
 
          // First and last indices of items in projection
-         _displayRange: [0, 0],
-
-
+         _dataRange: [0, 0],
 
          // Range of indices of items that are shown in virtual window
-         _vStartIndex: 0,
-         _vEndIndex: 0,
+         _virtualWindow: [0, 0],
 
          getVirtualWindow: function() {
             return [this._vStartIndex, this._vEndIndex];
@@ -50,6 +56,7 @@ define('js!WSControls/Lists/VirtualScroll',
             return[this.getVirtualWindow(), topChange, bottomChange];
          },
 
+
          resizeWindowOnReachBottom: function() {
             var bottomChange = 0,
                topChange = 0;
@@ -71,6 +78,59 @@ define('js!WSControls/Lists/VirtualScroll',
             }
 
             return[this.getVirtualWindow(), topChange, bottomChange];
+         },
+
+
+         onNewDataLoad: function(bottom, numItems) {
+            // Add to the end
+            if (bottom) {
+               this._displayRange[1] += numItems;
+            }
+            // Added to the beginning
+            else {
+               this._displayRange[0] -= numItems;
+            }
+         },
+
+         /**
+          * Recalculates virtual page after item was removed from the dataset.
+          *
+          * @param idx - index of removed item
+          */
+         onItemRemoved: function(idx) {
+            if (idx < this._vStartIndex) {
+               this._vStartIndex -= 1;
+               this._vEndIndex -= 1;
+            }
+         },
+
+         /**
+          * Recalculates virtual page after item was added to the dataset.
+          *
+          * @param idx - index of new item
+          */
+         onItemAdded: function(idx) {
+
+         },
+
+         /**
+          * Set the state of dataset and virtual window
+          */
+         setState: function(dataRange, virtualWindow) {
+            this._dataRange = dataRange;
+            this._virtualWindow = virtualWindow;
+         },
+
+         /**
+          * Get current state of virtual scroll
+          *
+          * @returns {{dataRange: Array, virtualWindow: Array}}
+          */
+         getState: function() {
+            return {
+               'dataRange': this._dataRange,
+               'virtualWindow': this._virtualWindow
+            };
          }
       });
 
