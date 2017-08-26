@@ -104,27 +104,28 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
           * @return {Core/Deferred<SBIS3.CONTROLS.LongOperationEntry[]>}
           */
          fetch: function (options) {
-            if (!options || typeof options !== 'object') {
-               throw new TypeError('Argument "options" must be an object');
+            if (options && typeof options !== 'object') {
+               throw new TypeError('Argument "options" must be an object if present');
             }
-            /*###if ('where' in options && typeof options.where !== 'object') {
+            /*###if (options && 'where' in options && typeof options.where !== 'object') {
                throw new TypeError('Argument "options.where" must be an object');
             }*/
-            /*###if ('orderBy' in options && typeof options.orderBy !== 'object') {
+            /*###if (options && 'orderBy' in options && typeof options.orderBy !== 'object') {
                throw new TypeError('Argument "options.orderBy" must be an array');
             }*/
-            /*###if ('offset' in options && !(typeof options.offset === 'number' && 0 <= options.offset)) {
+            /*###if (options && 'offset' in options && !(typeof options.offset === 'number' && 0 <= options.offset)) {
                throw new TypeError('Argument "options.offset" must be not negative number');
             }*/
-            /*###if ('limit' in options && !(typeof options.limit === 'number' && 0 < options.limit)) {
+            /*###if (options && 'limit' in options && !(typeof options.limit === 'number' && 0 < options.limit)) {
                throw new TypeError('Argument "options.limit" must be positive number');
             }*/
-            if ('extra' in options && typeof options.extra !== 'object') {
+            if (options && 'extra' in options && typeof options.extra !== 'object') {
                throw new TypeError('Argument "options.extra" must be an object if present');
             }
             if (this._isDestroyed) {
                return Deferred.fail(LongOperationsConst.ERR_UNLOAD);
             }
+            options = options || {};
             var operations = this._list(true, options.where, options.orderBy || DEFAULT_FETCH_SORTING, options.offset, options.limit);
             if (operations.length) {
                if (options.extra && options.extra.needUserInfo) {
@@ -266,8 +267,8 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
             if (!snapshots.length) {
                return snapshots;
             }
+            var DEFAULTS = LongOperationEntry.DEFAULTS;
             if (where) {
-               var DEFAULTS = LongOperationEntry.DEFAULTS;
                snapshots = snapshots.filter(function (snapshot) {
                   for (var p in where) {
                      if (!_isSatisfied(p in snapshot ? snapshot[p] : DEFAULTS[p], where[p])) {
@@ -283,8 +284,8 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
             if (orderBy) {
                snapshots.sort(function (a, b) {
                   for (var p in orderBy) {
-                     var va = a[p];
-                     var vb = b[p];
+                     var va = p in a ? a[p] : DEFAULTS[p];
+                     var vb = p in b ? b[p] : DEFAULTS[p];
                      // Для сравниваемых значений могут иметь смысл операции < и >, но не иметь смысла != и ==, как например для Date. Поэтому:
                      if (va < vb) {
                         return orderBy[p] ? -1 : +1;
