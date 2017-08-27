@@ -21,7 +21,7 @@ define([
       var MODULE = 'SBIS3.CONTROLS.GenericLongOperationsProducer';
 
       // Попробовать создать новый экземпляр
-      var _makeProducer = function (name) {
+      var _makeProducer = function (name, dontClear) {
          var producer;
          try {
             producer = new GenericLongOperationsProducer(name);
@@ -31,7 +31,9 @@ define([
                assert.ifError(ex);
             });
          }
-         _lsTool.clear(name);
+         if (!dontClear) {
+            _lsTool.clear(name);
+         }
          return producer;
       };
 
@@ -72,6 +74,20 @@ define([
          },
       };
 
+      var _byTitles = function (snapshots, titles) {
+         return Object.keys(snapshots)
+            .reduce(function (r, v) { var o = snapshots[v]; if (titles.indexOf(o.title) !== -1) { r.push(o); }; return r; }, [])
+            .sort(function (v1, v2) { return v1 < v2 ? -1 : (v2 < v1 ? + 1 : 0); });
+      };
+
+      var _deferred2Promise = function  (deferred) {
+         var p = new Promise(function (resolve, reject) {
+            deferred.addCallbacks(resolve, reject);
+         });
+         return p;
+      };
+
+
       describe('LongOperations: GenericLongOperationsProducer', function () {
 
          describe('Создание экземпляра и API', function () {
@@ -93,13 +109,13 @@ define([
             it('Аргумент не может быть числом', function () {
                assert.throws(function () {
                   var p = GenericLongOperationsProducer.getInstance(1);
-               }, TypeError);
+               }, Error);
             });
 
             it('Аргумент не может быть объектом', function () {
                assert.throws(function () {
                   var p = GenericLongOperationsProducer.getInstance({'что-то':'здесь'});
-               }, TypeError);
+               }, Error);
             });
 
             it('Аргумент должен быть null-ём или строкой', function () {
@@ -121,13 +137,13 @@ define([
             it('Имя (аргумент конструктора) не может быть числом', function () {
                assert.throws(function () {
                   var p = new GenericLongOperationsProducer(1);
-               }, TypeError);
+               }, Error);
             });
 
             it('Имя (аргумент конструктора) не может быть объектом', function () {
                assert.throws(function () {
                   var p = new GenericLongOperationsProducer({'что-то':'здесь'});
-               }, TypeError);
+               }, Error);
             });
 
             it('Имя (аргумент конструктора) должен быть null-ём или строкой', function () {
@@ -187,6 +203,15 @@ define([
                assert.strictEqual(GenericLongOperationsProducer.getInstance('Первый'), GenericLongOperationsProducer.getInstance('Первый'));
                assert.strictEqual(GenericLongOperationsProducer.getInstance('Второй'), GenericLongOperationsProducer.getInstance('Второй'));
             });
+
+            it('После ликвидации ликвидации одного экземпляра следующий создаваемый экземпляр не будет тем же синглетоном, что и ликвидированный', function () {
+               var destroyed = new GenericLongOperationsProducer('Под ликвидацию 1');
+               var destroyed2 = new GenericLongOperationsProducer('Под ликвидацию 1');
+               assert.strictEqual(destroyed, destroyed2);
+               destroyed.destroy();
+               var notDestroyed = new GenericLongOperationsProducer('Под ликвидацию 1');
+               assert.notStrictEqual(notDestroyed, destroyed);
+            });
          });
 
 
@@ -243,64 +268,58 @@ define([
                return;
             }
 
-            var _byTitles = function (snapshots, titles) {
-               return Object.keys(snapshots)
-                  .reduce(function (r, v) { var o = snapshots[v]; if (titles.indexOf(o.title) !== -1) { r.push(o); }; return r; }, [])
-                  .sort(function (v1, v2) { return v1 < v2 ? -1 : (v2 < v1 ? + 1 : 0); });
-            };
-
             it('Параметры операции не могут быть числом', function () {
                assert.throws(function () {
                   producer.make(1, new Deferred());
-               }, TypeError);
+               }, Error);
             });
 
             it('Параметры операции не могут быть строкой', function () {
                assert.throws(function () {
                   producer.make('Что-то', new Deferred());
-               }, TypeError);
+               }, Error);
             });
 
             it('Параметры операции не могут быть null-ём', function () {
                assert.throws(function () {
                   producer.make(null, new Deferred());
-               }, TypeError);
+               }, Error);
             });
 
             it('Параметры операции не могут быть объектом без обязательных свойств', function () {
                assert.throws(function () {
                   producer.make({'что-то':'здесь'}, new Deferred());
-               }, TypeError);
+               }, Error);
             });
 
             it('Параметры операции не могут содержать свойство title с типом число', function () {
                assert.throws(function () {
                   producer.make({title:1}, new Deferred());
-               }, TypeError);
+               }, Error);
             });
 
             it('Параметры операции не могут содержать свойство title с типом объект', function () {
                assert.throws(function () {
                   producer.make({title:{'что-то':'здесь'}}, new Deferred());
-               }, TypeError);
+               }, Error);
             });
 
             it('Отложенный останов не может быть числом', function () {
                assert.throws(function () {
                   producer.make({title:'Длительная операция (Ошибка 1)'}, 1);
-               }, TypeError);
+               }, Error);
             });
 
             it('Отложенный останов не может быть строкой', function () {
                assert.throws(function () {
                   producer.make({title:'Длительная операция (Ошибка 2)'}, 'Что-то');
-               }, TypeError);
+               }, Error);
             });
 
             it('Отложенный останов не может быть null-ём', function () {
                assert.throws(function () {
                   producer.make({title:'Длительная операция (Ошибка 3)'}, null);
-               }, TypeError);
+               }, Error);
             });
 
             it('Параметры операции должны быть объектом с корректными свойствами, отложенный останов должен быть экземпляром Core/Deferred', function () {
@@ -309,6 +328,34 @@ define([
                   producer.make({title:'Длительная операция 2', startedAt:(new Date()).getTime() - 3000, status:LongOperationEntry.STATUSES.suspended}, new Deferred());
                   producer.make({title:'Длительная операция 3', startedAt:new Date(), onSuspend:new Function(''), onResume:new Function(''), onDelete:new Function('')}, new Deferred());
                }, Error);
+            });
+
+            it('При создании операций будут сформированы события onlongoperationstarted на каждую операцию', function (done) {
+               var destroyed = new GenericLongOperationsProducer('Под ликвидацию 1');
+               destroyed.subscribe('onlongoperationstarted', function (evtName, evt) {
+                  try {
+                     assert.isObject(evtName);
+                     assert.property(evtName, 'name');
+                     assert.strictEqual(evtName.name, 'onlongoperationstarted');
+                     assert.isObject(evt);
+                     assert.property(evt, 'producer');
+                     assert.strictEqual(evt.producer, MODULE + ':Под ликвидацию 1');
+                     assert.property(evt, 'operationId');
+                     var id = evt.operationId;
+                     var allIds = Object.keys(_lsTool.search('Под ликвидацию 1'));
+                     assert.include(allIds, '' + id);
+                     assert.isNumber(id);
+                     assert.equal(id%1, 0);
+                     assert.operator(id, '>', 0);
+                     done();
+                  }
+                  catch (err) {
+                     done(err);
+                  }
+               });
+               destroyed.make({title:'Удаляемая операция'}, new Deferred());
+               destroyed.destroy();
+               _lsTool.clear('Под ликвидацию 1');
             });
 
             it('Снимки всех созданных операций есть в локальном хранилище', function () {
@@ -403,9 +450,28 @@ define([
                }
             });
 
-
-            //^^^ Проверить создание producer._actions для опрерации
-
+            it('Снимки всех созданных операций имеют правильные функции действий', function () {
+               var titles = ['Длительная операция 1', 'Длительная операция 2', 'Длительная операция 3'];
+               var list = _byTitles(_lsTool.search(null), titles);
+               assert.lengthOf(list, titles.length);
+               assert.property(producer, '_actions');
+               var actions = producer._actions;
+               assert.isObject(actions);
+               for (var i = 0; i < list.length; i++) {
+                  var id = list[i].id;
+                  if (i !== list.length - 1) {
+                     assert.notProperty(actions, id);
+                  }
+                  else {
+                     var o = actions[id];
+                     assert.isObject(o);
+                     assert.isFunction(o.onSuspend);
+                     assert.isFunction(o.onResume);
+                     assert.isFunction(o.onDelete);
+                     //^^^ Хорошо бы проверить, что это именно те функции
+                  }
+               }
+            });
 
             it('После разрушения экземпляра ничего не создаётся', function () {
                var destroyed = _makeProducer('Под ликвидацию 1');
@@ -423,13 +489,6 @@ define([
                return;
             }
 
-            var _deferred2Promise = function  (deferred) {
-               var p = new Promise(function (resolve, reject) {
-                  deferred.addCallbacks(resolve, reject);
-               });
-               return p;
-            }
-
             var _ordered = function (list, isDirectly) {
                var ordered = list.slice();
                ordered.sort(function (a, b) { var x = a < b ? -1 : (b < a ? +1 : 0); return isDirectly ? x : -x; });
@@ -439,13 +498,13 @@ define([
             it('Параметры запроса не могут быть числом', function () {
                assert.throws(function () {
                   producer.fetch(1);
-               }, TypeError);
+               }, Error);
             });
 
             it('Параметры запроса не могут быть строкой', function () {
                assert.throws(function () {
                   producer.fetch('Что-то');
-               }, TypeError);
+               }, Error);
             });
 
             it('Параметры запроса должны быть объектом или null-ём', function () {
@@ -521,10 +580,9 @@ define([
                }, Error);
             });
 
-            it('Параметр запроса limit не может быть неположительным числом', function () {
+            it('Параметр запроса limit не может быть отрицательным числом', function () {
                assert.throws(function () {
                   producer.fetch({limit:-10});
-                  producer.fetch({limit:0});
                }, Error);
             });
 
@@ -540,9 +598,10 @@ define([
                }, Error);
             });
 
-            it('Параметр запроса limit должен быть положительным числом или null-ём', function () {
+            it('Параметр запроса limit должен быть не отрицательным числом или null-ём', function () {
                assert.doesNotThrow(function () {
                   producer.fetch({limit:null});
+                  producer.fetch({limit:0});
                   producer.fetch({limit:10});
                }, Error);
             });
@@ -567,9 +626,7 @@ define([
             });
 
             it('Возвращаемое значение является экземпляром класса Core/Deferred', function () {
-               assert.doesNotThrow(function () {
-                  assert.instanceOf(producer.fetch(null), Deferred);
-               }, Error);
+               assert.instanceOf(producer.fetch(null), Deferred);
             });
 
             it('Возвращаемый обещаный результат разрешается массивом экземпляров класса SBIS3.CONTROLS.LongOperationEntry', function (done) {
@@ -1049,7 +1106,6 @@ define([
                      try {
                         assert.instanceOf(results, Array);
                         assert.lengthOf(results, 3);
-                        //^^^
                         done();
                      }
                      catch (err) {
@@ -1071,8 +1127,8 @@ define([
                         assert.property(err, 'message', LongOperationsConst.ERR_UNLOAD);
                         done();
                      }
-                     catch (err) {
-                        done(err);
+                     catch (ex2) {
+                        done(ex2);
                      }
                   });
             });
@@ -1085,57 +1141,170 @@ define([
                return;
             }
 
-            it('000', function () {
-               //assert.(, );
+            it('Аргумент action не может быть числом', function () {
+               assert.throws(function () {
+                  producer.callAction(1, 5);
+               }, Error);
             });
 
+            it('Аргумент action не может быть произвольной строкой', function () {
+               assert.throws(function () {
+                  producer.callAction('Что-то', 5);
+               }, Error);
+               assert.throws(function () {
+                  producer.callAction('Как-то', 5);
+               }, Error);
+               assert.throws(function () {
+                  producer.callAction('Где-то', 5);
+               }, Error);
+            });
 
-            /**
-             * Запросить выполнение указанного действия с указанным элементом
-             * @public
-             * @param {string} action Название действия
-             * @param {string|number} operationId Идентификатор элемента
-             * @return {Core/Deferred}
-             */
-            var callAction = function (action, operationId) {
-               if (!action || typeof action !== 'string') {
-                  throw new TypeError('Argument "action" must be a string');
-               }
-               if (this._isDestroyed) {
-                  return Deferred.fail(LongOperationsConst.ERR_UNLOAD);
-               }
-               var handlers = {
-                  suspend: 'onSuspend',
-                  resume: 'onResume',
-                  delete: 'onDelete'
-               };
-               if (!(action in handlers)) {
-                  throw new Error('Unknown action');
-               }
-               try {
-                  var handler = this._actions && operationId in this._actions && action in handlers ? this._actions[operationId][handlers[action]] : null;
-                  if (action !== 'delete' && !handler) {
-                     throw new Error('Action not found or not applicable');
-                  }
-                  switch (action) {
-                     case 'suspend':
-                        _setStatus(this, operationId, 'suspended', handler);
-                        break;
-                     case 'resume':
-                        _setStatus(this, operationId, 'running', handler);
-                        break;
-                     case 'delete':
-                        _remove(this, operationId, handler);
-                        break;
-                  }
-                  return Deferred.success();
-               }
-               catch (ex) {
-                  return Deferred.fail(ex);
-               }
-            };
+            it('Аргумент action не может быть null-ём', function () {
+               assert.throws(function () {
+                  producer.callAction(null, 5);
+               }, Error);
+            });
 
+            it('Аргумент action не может объектом', function () {
+               assert.throws(function () {
+                  producer.callAction({'что-то':'здесь'}, 5);
+               }, Error);
+            });
+
+            it('Аргумент operationId не может быть null-ём', function () {
+               assert.throws(function () {
+                  producer.callAction('suspend', null);
+               }, Error);
+            });
+
+            it('Аргумент operationId не может объектом', function () {
+               assert.throws(function () {
+                  producer.callAction('suspend', {'что-то':'здесь'});
+               }, Error);
+            });
+
+            it('Аргумент action должен быть одной строкой из списка [suspend, resume, delete], аргумент operationId должен быть числом или строкой', function () {
+               assert.doesNotThrow(function () {
+                  producer.callAction('suspend', '0');
+                  producer.callAction('resume', '0');
+                  producer.callAction('delete', '0')
+               }, Error);
+            });
+
+            it('Возвращаемое значение является экземпляром класса Core/Deferred', function () {
+               assert.instanceOf(producer.callAction('suspend', '0'), Deferred);
+            });
+
+            it('Аргумент operationId должен быть идентификаторм существующей операции, иначе будет обещаный результат будет сразу разрешён ошибкой', function (done) {
+               var suspend = new Deferred();
+               producer.callAction('suspend', '0')
+                  .addCallbacks(function (results) {
+                     done(assert.fail('Получен результат, которого не должно быть'));
+                  },
+                  function (err) {
+                     try {
+                        assert.propertyVal(err, 'message', 'Action not found or not applicable');
+                        suspend.callback();
+                     }
+                     catch (ex2) {
+                        done(ex2);
+                     }
+                  });
+               var resume = new Deferred();
+               producer.callAction('resume', '0')
+                  .addCallbacks(function (results) {
+                     done(assert.fail('Получен результат, которого не должно быть'));
+                  },
+                  function (err) {
+                     try {
+                        assert.propertyVal(err, 'message', 'Action not found or not applicable');
+                        resume.callback();
+                     }
+                     catch (ex2) {
+                        done(ex2);
+                     }
+                  });
+               var del = new Deferred();
+               producer.callAction('delete', '0')
+                  .addCallbacks(function (results) {
+                     done(assert.fail('Получен результат, которого не должно быть'));
+                  },
+                  function (err) {
+                     try {
+                        assert.propertyVal(err, 'message', 'Operation not found');
+                        del.callback();
+                     }
+                     catch (ex2) {
+                        done(ex2);
+                     }
+                  });
+               Promise.all([suspend, resume, del].map(_deferred2Promise)).then(function () {
+                  done();
+               });
+            });
+
+            it('При запросе выполнения действия если обработчика действия нет, то обещаный результат будет разрешён ошибкой', function (done) {
+               var titles = ['Длительная операция 2'];
+               var snapshots = _byTitles(_lsTool.search(null), titles);
+               assert.lengthOf(snapshots, titles.length);
+               producer.callAction('resume', snapshots[0].id)
+                  .addCallbacks(function (results) {
+                     done(assert.fail('Получен результат, которого не должно быть'));
+                  },
+                  function (err) {
+                     try {
+                        assert.propertyVal(err, 'message', 'Action not found or not applicable');
+                        done();
+                     }
+                     catch (ex2) {
+                        done(ex2);
+                     }
+                  });
+            });
+
+            /*^^^it('При запросе выполнения действия если обработчик действия есть, и он вернул false, то обещаный результат будет разрешён ошибкой', function (done) {
+               var titles = ['Длительная операция 3'];
+               var snapshots = _byTitles(_lsTool.search(null), titles);
+               assert.lengthOf(snapshots, titles.length);
+               //////////////////////////////////////////////////
+               console.log('DBG: Test_Gen: snapshots=', snapshots, ';');
+               //////////////////////////////////////////////////
+               //^^^ Реализовать
+            });*/
+
+            /*^^^it('При запросе выполнения действия если обработчик действия есть, и он вернул true, то обещаный результат будет разрешён успешно', function (done) {
+               //^^^ Реализовать
+            });*/
+
+            /*^^^it('При запросе выполнения действия если оно выполнено успешно, снимок события в локальном хранилише будет изменён или удалён', function (done) {
+               //^^^ Реализовать
+            });*/
+
+            /*^^^it('При запросе выполнения действия если оно выполнено успешно, будет сформировано событие onlongoperationchanged или onlongoperationdeleted', function (done) {
+               //^^^ Реализовать
+            });*/
+
+            it('После разрушения экземпляра возвращается экземпляр Deferred с ошибкой SBIS3.CONTROLS.LongOperationsConst.ERR_UNLOAD', function (done) {
+               var destroyed = _makeProducer('Под ликвидацию 1');
+               destroyed.destroy();
+               destroyed.callAction('suspend', '0')
+                  .addCallbacks(function (results) {
+                        done(assert.fail('Получен результат, которого не должно быть'));
+                     },
+                     function (err) {
+                        try {
+                           assert.property(err, 'message', LongOperationsConst.ERR_UNLOAD);
+                           done();
+                        }
+                        catch (ex2) {
+                           done(ex2);
+                        }
+                     });
+            });
          });
+
+
+         //^^^ Протестировать штатное завершение операций
 
 
          describe('Метод canDestroySafely - Можно ли в данный момент ликвидировать экземпляр без потери данных', function () {
@@ -1144,36 +1313,17 @@ define([
                return;
             }
 
-            it('000', function () {
-               //assert.(, );
+            it('При ликвидации экземпляра при наличии незавершённых операций, имеющих функции действий, будут потеряны данные', function () {
+               var ids = producer._actions ? Object.keys(producer._actions) : [];
+               assert.strictEqual(producer.canDestroySafely(), !ids.length);
             });
 
 
-            /**
-             * Проверить, можно ли в данный момент ликвидировать экземпляр класса без необратимой потери данных
-             * @public
-             * @return {boolean}
-             */
-            var canDestroySafely = function () {
-               if (!this._isDestroyed) {
-                  var snapshots = GLOStorage.list(this._name);
-                  if (snapshots.length) {
-                     var STATUSES = LongOperationEntry.STATUSES;
-                     var DEFAULTS = LongOperationEntry.DEFAULTS;
-                     for (var i = 0; i < snapshots.length; i++) {
-                        var o = snapshots[i];
-                        if (this._actions[o.id]) {
-                           var status = 'status' in o ? o.status : DEFAULTS.status;
-                           if (status === STATUSES.running || status === STATUSES.suspended) {
-                              // Если обработчики действий пользователя установлены в этой вкладке
-                              // При разрушении продюсера обработчики будут утеряны, что приведёт к необратимой потере данных
-                              return false;
-                           }
-                        }
-                     }
-                  }
-               }
-            };
+            it('При ликвидации экземпляра при отстутствии незавершённых операций, имеющих функции действий, не будут потеряны данные', function () {
+               var p2 = _makeProducer(null, true);
+               var ids = p2._actions ? Object.keys(p2._actions) : [];
+               assert.strictEqual(p2.canDestroySafely(), !ids.length);
+            });
          });
 
 
@@ -1183,57 +1333,87 @@ define([
                return;
             }
 
-            it('000', function () {
-               //assert.(, );
+            it('При ликвидации экземпляра при наличии незавершённых операций, имеющих функции действий, они будут завершены с ошибкой SBIS3.CONTROLS.LongOperationsConst.ERR_UNLOAD', function () {
+               var titles = ['Длительная операция 1', 'Длительная операция 2', 'Длительная операция 3'];
+               var list = _byTitles(_lsTool.search(null), titles);
+               assert.lengthOf(list, titles.length);
+               var ids = producer._actions ? Object.keys(producer._actions) : [];
+               producer.destroy();
+               var list2 = _byTitles(_lsTool.search(null), titles);
+               assert.lengthOf(list2, titles.length);
+               assert.deepEqual(producer._actions, {});
+               for (var i = 0; i < list.length; i++) {
+                  var snapshot = list[i];
+                  var snapshot2 = list2[i];
+                  var id = snapshot.id;
+                  if (ids.indexOf('' + id) !== -1) {
+                     assert.include([undefined/*LongOperationEntry.STATUSES.running*/, LongOperationEntry.STATUSES.suspended], snapshot.status);
+                     assert.strictEqual(snapshot2.status, LongOperationEntry.STATUSES.ended);
+                     assert.isTrue(snapshot2.isFailed);
+                     assert.strictEqual(snapshot2.resultMessage, LongOperationsConst.ERR_UNLOAD);
+                  }
+                  else {
+                     assert.deepEqual(snapshot, snapshot2);
+                  }
+               }
             });
 
+            it('При ликвидации экземпляра завершаемые с ошибкой операции будут иметь корректные значения счётчиков времени', function () {
+               var titles = ['Длительная операция 3'];
+               var list = _byTitles(_lsTool.search(null), titles);
+               assert.lengthOf(list, titles.length);
+               var time = (new Date()).getTime();
+               var snapshot = list[0];
+               assert.closeTo(snapshot.startedAt + (snapshot.timeSpent || 0) + (snapshot.timeIdle || 0), time, 50);
+            });
 
-            /**
-             * Ликвидировать экземпляр класса
-             * @public
-             */
-            var destroy = function () {
-               if (!this._isDestroyed) {
-                  this._isDestroyed = true;
-                  //GenericLongOperationsProducer.superclass.destroy.apply(this, arguments);
-                  var STATUSES = LongOperationEntry.STATUSES;
-                  var DEFAULTS = LongOperationEntry.DEFAULTS;
-                  var ERR = LongOperationsConst.ERR_UNLOAD;
-                  var snapshots = GLOStorage.list(this._name);
-                  var oIds = [];
-                  for (var i = 0; i < snapshots.length; i++) {
-                     var o = snapshots[i];
-                     var status = 'status' in o ? o.status : DEFAULTS.status;
-                     var wasRun = status === STATUSES.running;
-                     if (wasRun || status === STATUSES.suspended) {
-                        var operationId = o.id;
-                        var handlers = this._actions ? this._actions[operationId] : null;
-                        // Если обработчики действий пользователя установлены в этой вкладке
-                        // При разрушении продюсера обработчики будут утеряны, поэтому операции завершаем ошибкой
-                        if (handlers) {
-                           delete this._actions[operationId];
-                           o.status = STATUSES.ended;
-                           o.isFailed = true;
-                           o.resultMessage = ERR;
-                           o[wasRun ? 'timeSpent' : 'timeIdle'] = (new Date()).getTime() - o.startedAt - o[wasRun ? 'timeIdle' : 'timeSpent'];
-                           GLOStorage.put(this._name, operationId, o);
-                           oIds.push(operationId);
-                        }
+            it('При ликвидации экземпляра при наличии незавершённых операций, имеющих функции действий, будут сформировано событие onlongoperationended', function (done) {
+               var destroyed = new GenericLongOperationsProducer('Под ликвидацию 1');
+               destroyed.subscribe('onlongoperationended', function (evtName, evt) {
+                  try {
+                     assert.isObject(evtName);
+                     assert.property(evtName, 'name');
+                     assert.strictEqual(evtName.name, 'onlongoperationended');
+                     assert.isObject(evt);
+                     assert.property(evt, 'producer');
+                     assert.strictEqual(evt.producer, MODULE + ':Под ликвидацию 1');
+                     assert.property(evt, 'operationIds');
+                     assert.instanceOf(evt.operationIds, Array);
+                     var ids = evt.operationIds;
+                     var allIds = Object.keys(_lsTool.search('Под ликвидацию 1'));
+                     for (var i = 0; i < ids.length; i++) {
+                        var id = ids[i];
+                        assert.include(allIds, '' + id);
+                        assert.isNumber(id);
+                        assert.equal(id%1, 0);
+                        assert.operator(id, '>', 0);
                      }
+                     assert.strictEqual(evt.error, LongOperationsConst.ERR_UNLOAD);
+                     done();
                   }
-                  if (oIds.length) {
-                     this._notify('onlongoperationended', {producer:this._name, operationIds:oIds, error:ERR});
+                  catch (err) {
+                     done(err);
                   }
-                  Object.keys(_instances).some(function (v) { if (this === _instances[v]) { delete _instances[v]; return true;} }.bind(this));
+               });
+               destroyed.make({title:'Удаляемая операция', onDelete:new Function('')}, new Deferred());
+               destroyed.destroy();
+               _lsTool.clear('Под ликвидацию 1');
+            });
+
+            it('При ликвидации экземпляра при отстутствии незавершённых операций, имеющих функции действий, снимки операций в локальном хранилище не будут изменены', function () {
+               var titles = ['Длительная операция 1', 'Длительная операция 2', 'Длительная операция 3'];
+               var list = _byTitles(_lsTool.search(null), titles);
+               assert.lengthOf(list, titles.length);
+               var p2 = _makeProducer(null, true);
+               assert.deepEqual(p2._actions, {});
+               p2.destroy();
+               var list2 = _byTitles(_lsTool.search(null), titles);
+               assert.lengthOf(list2, titles.length);
+               for (var i = 0; i < list.length; i++) {
+                  assert.deepEqual(list[i], list2[i]);
                }
-            };
-
+            });
          });
-
-
-
-
-
       });
    }
 );
