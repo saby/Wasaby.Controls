@@ -120,7 +120,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                         o.status = STATUSES.ended;
                         o.isFailed = true;
                         o.resultMessage = ERR;
-                        o[wasRun ? 'timeSpent' : 'timeIdle'] = (new Date()).getTime() - o.startedAt - o[wasRun ? 'timeIdle' : 'timeSpent'];
+                        o[wasRun ? 'timeSpent' : 'timeIdle'] = (new Date()).getTime() - o.startedAt - (o[wasRun ? 'timeIdle' : 'timeSpent'] || 0);
                         this._put(o);
                         oIds.push(operationId);
                      }
@@ -201,6 +201,9 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             if (!action || typeof action !== 'string') {
                throw new TypeError('Argument "action" must be a string');
             }
+            if (!operationId || !(typeof operationId === 'string' || typeof operationId === 'number')) {
+               throw new TypeError('Argument "operationId" must be string or number');
+            }
             if (this._isDestroyed) {
                return Deferred.fail(LongOperationsConst.ERR_UNLOAD);
             }
@@ -227,6 +230,9 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                      break;
                   case 'delete':
                      var snapshot = this._get(false, operationId);
+                     if (!snapshot) {
+                        throw new Error('Operation not found');
+                     }
                      if (!('canDelete' in snapshot ? snapshot.canDelete : LongOperationEntry.DEFAULTS.canDelete)) {
                         throw new Error('Deleting is not allowed');
                      }
