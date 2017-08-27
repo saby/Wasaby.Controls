@@ -499,16 +499,26 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _setEnabled : function(enabled) {
+         var currentEnabled = this.isEnabled();
+         
          TextBox.superclass._setEnabled.call(this, enabled);
-         if (enabled) {
-            this._inputField.removeAttr('readonly');
-         } else {
-            this._inputField.attr('readonly', 'readonly')
+         
+         /* Из-за того что при инициализации или перестроении компонента (rebuildMarkup) вызывается _setEnabled,
+            лишний раз проставлялись атрибуты и пересоздавался placeholder,
+            а из-за пересоздания placeholder'a на этапе инициализации терялись конфиги компонентов, которые там могли лежать.
+            Поэтому чтобы не делать лишних действий проверяем реально поменялся enabled для компонента */
+         if(currentEnabled !== enabled) {
+            if (enabled) {
+               this._inputField.removeAttr('readonly');
+               this._setPlaceholder(this._options.placeholder);
+            } else {
+               /* Когда дизейблят поле ввода, ставлю placeholder в виде пробела, в старом webkit'e есть баг,
+                из-за коготорого, если во flex контейнере лежит input без placeholder'a ломается базовая линия.
+                placeholder с пустой строкой и так будет не виден, т.ч. проблем быть не должно */
+               this._inputField.attr('readonly', 'readonly');
+               this._setPlaceholder(' ');
+            }
          }
-         /* Когда дизейблят поле ввода, ставлю placeholder в виде пробела, в старом webkit'e есть баг,
-            из-за коготорого, если во flex контейнере лежит input без placeholder'a ломается базовая линия.
-            placeholder с пустой строкой и так будет не веден, т.ч. проблем быть не должно */
-         this._setPlaceholder(enabled ? this._options.placeholder : ' ');
       },
 
       _inputRegExp: function (e, regexp) {
