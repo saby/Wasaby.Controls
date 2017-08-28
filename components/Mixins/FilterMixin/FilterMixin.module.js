@@ -5,8 +5,9 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
    "Core/core-functions",
    "Core/core-merge",
    "js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil",
-   "Core/helpers/String/ucFirst"
-], function ( cFunctions, cMerge,FilterToStringUtil, ucFirst) {
+   "Core/helpers/String/ucFirst",
+   "Core/helpers/Object/find"
+], function ( cFunctions, cMerge,FilterToStringUtil, ucFirst, objectFind) {
 
 
    var FILTER_STRUCTURE_DEFAULT_ELEMENT = {
@@ -223,7 +224,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
          return -1;
       },
       _findFilterStructureElement: function(func) {
-         return this._filterStructure.find(function(element) {
+         return objectFind(this._filterStructure, function(element) {
             return func(element);
          });
       },
