@@ -15,10 +15,11 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
    "Core/helpers/generate-helpers",
    "Core/helpers/Function/debounce",
    "Core/helpers/Function/forAliveOnly",
+   "Core/helpers/Object/find",
    "Core/Date"
 ],
 
-    function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, isEqualObject, genHelpers, debounce, forAliveOnly) {
+    function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, isEqualObject, genHelpers, debounce, forAliveOnly, objectFind) {
 
        'use strict';
 
@@ -229,7 +230,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
            * @param filterObject
            */
           saveToHistory: function(filterObject) {
-             var equalFilter = this.getHistoryArr().find(function(item) {
+             var equalFilter = objectFind(this.getHistoryArr(), function(item) {
                     return isEqualObject(item.filter, filterObject.filter) || item.linkText === filterObject.linkText;
                  }),
                  activeFilter = this.getActiveFilter();
@@ -317,7 +318,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
            * @private
            */
           getActiveFilter: function() {
-             return this.getHistoryArr().find(function(item) {
+             return objectFind(this.getHistoryArr(), function(item) {
                 return item.isActiveFilter;
              });
           },
@@ -328,7 +329,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
            * @private
            */
           findFilterByKey: function(key) {
-             return this.getHistoryArr().find(function(item) {
+             return objectFind(this.getHistoryArr(), function(item) {
                 return item.id == key;
              });
           },

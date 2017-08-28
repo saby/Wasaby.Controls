@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "js!SBIS3.CONTROLS.ToSourceModel",
        "js!WS.Data/Collection/List",
        "js!SBIS3.CONTROLS.Utils.ItemsSelection",
+       "Core/helpers/Object/find",
        "js!SBIS3.CONTROLS.IconButton",
        "js!SBIS3.CONTROLS.Action.SelectorAction",
        'js!SBIS3.CONTROLS.FieldLink.Link',
@@ -71,7 +72,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
         TemplateUtil,
         ToSourceModel,
         List,
-        ItemsSelectionUtil
+        ItemsSelectionUtil,
+        objectFind
     ) {
 
        'use strict';
@@ -582,7 +584,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              var config;
 
              if(key) {
-                config = this._options.dictionaries.find(function (elem) {
+                config = objectFind(this._options.dictionaries, function (elem) {
                    return elem.name === key;
                 });
              } else {
