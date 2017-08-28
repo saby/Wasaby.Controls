@@ -53,7 +53,6 @@
    position: absolute;
    width: @switcher-btn-size;
    height: @switcher-btn-size;
-   background: @default-bg-color;
    border-style: @default-border-style;
    border-width: @switcher-btn-border-width;
    .border-radius(100%);
@@ -80,8 +79,11 @@ body:not(.ws-is-mobile-platform) .ws-enabled.controls-Switcher:hover {
          background: @primary-color;
       }
    }
-   .controls-Switcher__line {
+   &.controls-Checked__checked .controls-Switcher__line {
       background-color: @innacent-color;
+   }
+   &:not(.controls-Checked__checked) .controls-Switcher__line {
+      .horizontal-gradient(transparent @switcher-btn-size, @innacent-color @switcher-btn-size);
    }
    &:not(.controls-Checked__checked) .controls-Switcher__btn {
       border-color: @innacent-color;
@@ -95,8 +97,11 @@ body:not(.ws-is-mobile-platform) .ws-enabled.controls-Switcher:hover {
    &.controls-Checked__checked .controls-Switcher__btn:before {
       background: @switcher-disabled-color;
    }
-   .controls-Switcher__line {
+   &.controls-Checked__checked .controls-Switcher__line {
       background-color: @switcher-disabled-color;
+   }
+   &:not(.controls-Checked__checked) .controls-Switcher__line {
+      .horizontal-gradient(transparent @switcher-btn-size, @switcher-disabled-color @switcher-btn-size);
    }
    .controls-Switcher__btn {
       border-color: @switcher-disabled-color;
