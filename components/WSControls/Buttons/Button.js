@@ -161,7 +161,7 @@ define('js!WSControls/Buttons/Button', [
       },
 
       _redrawButton: function() {
-          this._container.get(0).innerHTML = contentTemplate(this._options);
+          this.rebuildMarkup();
       },
 
       setEnabled: function(enabled){

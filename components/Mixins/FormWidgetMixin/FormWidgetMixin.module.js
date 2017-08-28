@@ -520,9 +520,11 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
        * @see onValidate
        */
       addValidators: function (validators) {
-         if (validators && Object.prototype.toString.apply(validators) == '[object Array]') {
-            Array.prototype.push.apply(this._options.validators, validators);
-         }
+         // Создаем новый массив содержащий старые и переданные валидаторы. При создании компонента опции передаются
+         // по ссылке. Если модифицировать существующий массив, то возможны ошибки если передаваемый в опции
+         // массив используется повторно или в других компонентах.
+         this._options.validators = this._options.validators.slice();
+         Array.prototype.push.apply(this._options.validators, validators);
       }
    };
 

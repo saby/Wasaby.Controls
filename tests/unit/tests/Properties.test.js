@@ -136,9 +136,6 @@ define([
          assert.isTrue(this.hasOwnProperty('_isInitComplete'));
          assert.isTrue(this.hasOwnProperty('_prevEnabled'));
          assert.isTrue(this.hasOwnProperty('_options'));
-         assert.isTrue(this._options.hasOwnProperty('name'));
-         assert.isTrue(typeof this._options.id === 'string');
-         assert.isTrue(this._id === this._options.id);
          assert.isTrue(this.hasOwnProperty('_handlers'));
          assert.isTrue(Array.isArray(this._subscriptions));
          assert.isTrue(Array.isArray(this._subDestroyControls));
