@@ -11,20 +11,14 @@
     line-height:@default-base-line-height;
   }
 
-  .controls-MoneyTextBox__input {
-    .flex-shrink();
-    .text-overflow();
-    position:relative;
-    width: 100%;
-    height:100%;
-    outline: none;
-    white-space: nowrap;
-    display: inline-block;
+  .controls-TextBox__field {
     z-index: 1;
+    text-align: inherit;
+    padding:0;//чтобы копейки были близко к основному тексту в задизабленом состоянии
     line-height:@default-base-line-height;
   }
   .controls-TextBox__wrapper {
-    padding: @text-box-wrapper-padding;
+    padding: @text-box-wrapper-padding;//чтобы копейки были близко к основному тексту в задизабленом состоянии
     .box-sizing(border-box);
   }
   .controls-TextBox__placeholder {
