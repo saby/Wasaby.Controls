@@ -4,7 +4,7 @@
  * @class SBIS3.CONTROLS.LongOperationsManager
  * @public
  *
- * @description file LongOperations.md
+ * @description file ../doc/LongOperations.md
  *
  * @demo SBIS3.CONTROLS.Demo.MyLongOperations
  * @demo SBIS3.CONTROLS.Demo.MyLongOperationsSvc
