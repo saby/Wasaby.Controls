@@ -1,6 +1,6 @@
-define('js!WSControls/VDOM/Item/Item', [
+define('js!WSControls/VDOM/Main/Item', [
    'Core/Control',
-   'tmpl!WSControls/VDOM/Item/Item'
+   'tmpl!WSControls/VDOM/Main/Item'
 ], function (Control, ItemTpl) {
    'use strict';
 
