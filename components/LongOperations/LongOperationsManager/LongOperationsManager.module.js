@@ -4,7 +4,7 @@
  * @class SBIS3.CONTROLS.LongOperationsManager
  * @public
  *
- * @description file LongOperations.md
+ * @description file ../doc/LongOperations.md
  *
  * @demo SBIS3.CONTROLS.Demo.MyLongOperations
  * @demo SBIS3.CONTROLS.Demo.MyLongOperationsSvc
@@ -696,7 +696,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          }
          var eventType = typeof evtName === 'object' ? evtName.name : evtName;
          if (data) {
-            _channel.notifyWithTarget(eventType, manager, data);
+            _channel.notifyWithTarget(eventType, manager, !dontCrossTab ? ObjectAssign({tabKey:_tabKey}, data) : data);
          }
          else {
             _channel.notifyWithTarget(eventType, manager);
@@ -761,7 +761,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                   throw new Error('Unknown event');
                }
                _regTabProducer(tab, data.producer, evt.isCrossTab, evt.hasHistory);
-               _eventListener(type, data, true);
+               _eventListener(type, ObjectAssign({tabKey:tab}, data), true);
                break;
          }
       };
@@ -895,7 +895,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                   throw new Error('Unknown result type');
                }
                // Проверить, что продюсер есть и не был раз-регистрирован за время ожидания
-               var prodName = (member.tab === _tabKey ? _producers[member.producer] : member.tab in _tabManagers) ? member.producer : null;
+               var prodName = (member.tab === _tabKey ? _producers[member.producer] : member.tab in _tabManagers && member.producer in _tabManagers[member.tab]) ? member.producer : null;
                // Если продюсер найден
                if (prodName) {
                   var values = result instanceof DataSet ? result.getAll() : result;
@@ -914,13 +914,13 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                      throw new Error('Unknown result type');
                   }
                   if (len) {
-                     var tabKey = member.tab !== _tabKey ? member.tab : null;
+                     var memberTab = (member.tab === _tabKey ? !_producers[member.producer].hasCrossTabData() : !_producers[member.producer] || !_tabManagers[member.tab][member.producer].hasCrossTabData) ? member.tab : null;
                      values[iterate](function (v) {
                         // Значение должно быть экземпляром SBIS3.CONTROLS.LongOperationEntry и иметь правилное имя продюсера
                         if (!(v instanceof LongOperationEntry && v.producer === prodName)) {
                            throw new Error('Invalid result');
                         }
-                        v.tabKey = tabKey;
+                        v.tabKey = memberTab;
                      });
                      return values;
                   }

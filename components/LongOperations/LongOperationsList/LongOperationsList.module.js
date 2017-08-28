@@ -1,6 +1,7 @@
 define('js!SBIS3.CONTROLS.LongOperationsList',
    [
       'Core/Deferred',
+      'Core/IoC',
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model',
@@ -17,7 +18,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
       'js!SBIS3.CONTROLS.DataGridView'
    ],
 
-   function (Deferred, CompoundControl, LongOperationEntry, Model, longOperationsManager, LongOperationsListDataSource, InformationPopupManager, dotTplFn) {
+   function (Deferred, IoC, CompoundControl, LongOperationEntry, Model, longOperationsManager, LongOperationsListDataSource, InformationPopupManager, dotTplFn) {
       'use strict';
 
       /**
@@ -112,29 +113,36 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   var dontReload;
                   switch (evtName.name) {
                      case 'onlongoperationchanged':
-                        var items = self.getItems();
-                        if (items && items.getCount()) {
-                           var model = items.getRecordById(Model.getFullId(evt.tabKey, evt.producer, evt.operationId));
-                           if (model) {
-                              if (evt.changed === 'progress') {
-                                 model.set('progressCurrent', evt.progress.value);
-                                 model.set('progressTotal', evt.progress.total);
-                              }
-                              else {
-                                 if (evt.changed === 'status' && evt[evt.changed] === STATUSES.running && model.get('status') === STATUSES.suspended) {
+                        var model = self.lookupItem(evt.tabKey, evt.producer, evt.operationId);;
+                        if (model) {
+                           if (evt.changed === 'progress') {
+                              model.set('progressCurrent', evt.progress.value);
+                              model.set('progressTotal', evt.progress.total);
+                              dontReload = true;
+                           }
+                           else {
+                              if (evt.changed === 'status') {
+                                 if (evt.status === STATUSES.running && model.get('status') === STATUSES.suspended) {
                                     model.set('timeIdle', (new Date()).getTime() - model.get('startedAt').getTime() - model.get('timeSpent'));
                                  }
-                                 model.set(evt.changed, evt[evt.changed]);
                               }
-                              self._checkItems();
+                              else {
+                                 dontReload = true;
+                              }
+                              model.set(evt.changed, evt[evt.changed]);
                            }
+                           self._checkItems();
+                        }
+                        else {
                            dontReload = true;
-                           // тем не менее после действий пользователя suspend и resume перезагрузка всё равно будет осуществлена, если в itemsActions это задано
                         }
                         break;
                      case 'onlongoperationended':
-                        self._animationAdd(Model.getFullId(evt.tabKey, evt.producer, evt.operationId), !evt.error);
-                        self._animationRun();
+                        var model = self.lookupItem(evt.tabKey, evt.producer, evt.operationId);
+                        if (model) {
+                           self._animationAdd(model.getId(), !evt.error);
+                           self._animationRun();
+                        }
                         break;
                   }
                   self._notify(evtName.name, evt);
@@ -146,7 +154,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
 
             //У приостановленных операций нужно менять цвет текста, поэтому навешиваем класс
             this.subscribeTo(this._view, 'onDrawItems', function () {
-               var items = self.getItems();
+               var items = self._view.getItems();
                if (items) {
                   var $cont = self._view.getContainer();
                   items.each(function (item, id) {
@@ -192,7 +200,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                      tooltip: title,
                      isMainAction: true,
                      onActivated: function ($item, id, itemModel) {
-                        self.applyUserAction('suspend', itemModel, true);
+                        self.applyUserAction('suspend', itemModel);
                      }
                   });
                }
@@ -205,7 +213,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                      tooltip: title,
                      isMainAction: true,
                      onActivated: function ($item, id, itemModel) {
-                        self.applyUserAction('resume', itemModel, true);
+                        self.applyUserAction('resume', itemModel);
                      }
                   });
                }
@@ -218,7 +226,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                      tooltip: title,
                      isMainAction: true,
                      onActivated: function ($item, id, itemModel) {
-                        self.applyUserAction('delete', itemModel, true);
+                        self.applyUserAction('delete', itemModel);
                      }
                   });
                }
@@ -334,18 +342,13 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
           * @public
           * @param {string} action Имя действия (resume, suspend, delete)
           * @param {SBIS3.CONTROLS.LongOperationsList/resources/model} model Модель длительной операции
-          * @param {boolean} reload Вызвать метод reload после выполнения действия
           * @returns {Core/Deferred}
           */
-         applyUserAction: function (action, model, reload) {
+         applyUserAction: function (action, model) {
             if (!(action === 'suspend' || action === 'resume' ? model.get('canSuspend') : (action === 'delete' ? model.get('canDelete') : null))) {
                return Deferred.fail('Action not allowed');
             }
-            var promise = longOperationsManager.callAction(action, model.get('tabKey'), model.get('producer'), model.get('id'));
-            if (reload) {
-               promise.addCallback(this.reload.bind(this));
-            }
-            return promise;
+            return longOperationsManager.callAction(action, model.get('tabKey'), model.get('producer'), model.get('id'));
          },
 
          /**
@@ -380,7 +383,9 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                         try {
                            args = JSON.parse(args);
                         }
-                        catch (ex) {}
+                        catch (ex) {
+                           IoC.resolve('ILogger').error('SBIS3.CONTROLS.LongOperationsList', 'JSON data is corrupted');
+                        }
                      }
                      if (!Array.isArray(args)) {
                         args = [args];
@@ -432,6 +437,20 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                return true;
             }
             return false;
+         },
+
+         /**
+          * Найти модель среди загруженных данных
+          * @param {string} tabKey Ключ вкладки
+          * @param {string} producer Имя продюсера
+          * @param {number|string} operationId Идентификатор длительной операции
+          * @public
+          */
+         lookupItem: function (tabKey, producer, operationId) {
+            var items = this._view.getItems();
+            if (items && items.getCount()) {
+               return items.getRecordById(Model.getFullId(tabKey, producer, operationId)) || items.getRecordById(Model.getFullId(null, producer, operationId));
+            }
          },
 
          /**
