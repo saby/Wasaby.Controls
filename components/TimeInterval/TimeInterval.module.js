@@ -340,7 +340,10 @@ define(
             this._options.mask = this._options.mask.substr(0, length) + this._options.mask;
             TimeInterval.superclass.setMask.apply(this, [this._options.mask]);
             this._setText(this._options.text);
-            this.setCursor(this._getFormatModel()._options.cursorPosition.group, this._getFormatModel()._options.cursorPosition.position + 1);
+            //Устанавливаю курсор, только если фокус на компоненте, если пришли из сеттера опции, то не нужно
+            if ($(document.activeElement).closest(this.getContainer()).length) {
+               this.setCursor(this._getFormatModel()._options.cursorPosition.group, this._getFormatModel()._options.cursorPosition.position + 1);
+            }
          },
          /**
           * Содержит ли интервал дни\минуты

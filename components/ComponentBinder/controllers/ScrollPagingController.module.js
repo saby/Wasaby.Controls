@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          WindowManager.setVisible(this._options.zIndex);
          // отступ viewport от верха страницы
          this._containerOffset = this._getViewportOffset();
-         this._scrollHandler = throttle.call(this, this._scrollHandler.bind(this), SCROLL_THROTTLE_DELAY);
+         this._scrollHandler = throttle.call(this, this._scrollHandler.bind(this), SCROLL_THROTTLE_DELAY, true);
       },
 
       _getViewportOffset: function(){
@@ -76,8 +76,8 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          this.updateScrollPages(true);         
       },
 
-      _scrollHandler: function() {
-         var pageNumber = this._calculateScrollPage();
+      _scrollHandler: function(event, scrollTop) {
+         var pageNumber = this._calculateScrollPage(scrollTop);
          var paging = this._options.paging;
          if (pageNumber >= 0 && paging.getItems() && this._currentScrollPage != pageNumber) {
             if (pageNumber > paging.getPagesCount()) {
@@ -138,7 +138,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          }
       },
 
-      _calculateScrollPage: function(){
+      _calculateScrollPage: function(scrollTop){
          var view = this._options.view;
          if (this._options.view.isScrollOnBottom(true)){
             return this._scrollPages.length - 1;

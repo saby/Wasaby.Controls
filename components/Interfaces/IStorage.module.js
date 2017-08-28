@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.IStorage', [], function() {
        * Если методу setItem() передать ключ и значение, то в хранилище будет добавлено соответсвтующее ключу значение,
        * либо, если запись уже есть в хранилище, то значение по ключу будет обновлено.
        * @param key {String}
-       * @param value {*}
+       * @param value {String}
        */
       setItem: function(key, value) {
          throw new Error('Method must be implemented');

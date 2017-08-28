@@ -290,7 +290,7 @@ define(
                datetime: rk('Дата или время заполнены некорректно')
             };
          //Добавляем к прикладным валидаторам стандартный, который проверяет что дата заполнена корректно.
-         this._options.validators.push({
+         this.addValidators([{
             validator: function() {
                return self._getFormatModel().isEmpty(this._getMaskReplacer()) ? true : self._options.date instanceof Date;
             },
@@ -300,7 +300,7 @@ define(
                return self._options.date instanceof Date ? self._options.date.getFullYear() > 1400 : true;
             },
             errorMessage: rk('Год должен быть больше 1400')
-         });
+         }]);
       },
 
      /**

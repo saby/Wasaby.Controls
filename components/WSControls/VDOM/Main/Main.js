@@ -132,7 +132,7 @@ define('js!WSControls/VDOM/Main/Main', [
          _save: function(){
             //Сохраняем данные в LocalStorage. Пока не реализованно, чтобы было проще и быстрей отлаживаться
             //JSON.stringify(this._list.toArray());
-            this._setDirty();
+            this._forceUpdate();
          }
       });
 

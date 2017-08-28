@@ -20,7 +20,7 @@ properties([
             description: '',
             name: 'branch_engine'),
         string(
-            defaultValue: 'rc-3.31',
+            defaultValue: 'rc-3.32',
             description: '',
             name: 'branch_atf'),
         choice(
@@ -47,26 +47,47 @@ properties([
 
 node('controls') {
     def version = "3.17.110"
-    ws("/home/sbis/workspace/controls_${version}/${BRANCH_NAME}") {
+    def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
+    ws(workspace) {
         deleteDir()
-        sh "python3 -c 'import os; print(dict(os.environ).items())'"
-        def workspace = env.WORKSPACE
         def ver = version.replaceAll('.','')
         def python_ver = 'python3'
         def SDK = ""
         def items = "controls:${workspace}/controls"
-        def branch_atf = env.branch_atf
+        def branch_atf = params.branch_atf
+        def branch_engine = params.branch_engine
 
         def TAGS = ""
-        if ("${env.Tag1}" != "")
-            TAGS = "${env.Tag1}"
-        if ("${env.Tag2}" != "")
-            TAGS = "${TAGS}, ${env.Tag2}"
-        if ("${env.Tag3}" !="")
-            TAGS = "${TAGS}, ${env.Tag3}"
+        if ("${params.Tag1}" != "")
+            TAGS = "${params.Tag1}"
+        if ("${params.Tag2}" != "")
+            TAGS = "${TAGS}, ${params.Tag2}"
+        if ("${params.Tag3}" !="")
+            TAGS = "${TAGS}, ${params.Tag3}"
         if ("${TAGS}" != "")
             TAGS = "--TAGS_TO_START ${TAGS}"
 
+        def inte = false
+        def regr = false
+        def unit = false
+
+        switch (params.run_tests){
+            case "all":
+                regr = true
+                inte = true
+                unit = true
+                break
+            case "only_reg":
+                regr = true
+                break
+            case "only_int":
+                inte = true
+                break
+            case "only_unit":
+                unit = true
+                break
+        }
+        
         stage("Checkout"){
             // Контролы
             dir(workspace) {
@@ -86,7 +107,7 @@ node('controls') {
             dir("./controls"){
                 sh """
                 git fetch
-                git merge origin/rc-3.17.110
+                git merge origin/rc-${version}
                 """
             }
 
@@ -144,7 +165,7 @@ node('controls') {
             // Выкачиваем atf
             dir("./controls/tests/int") {
             checkout([$class: 'GitSCM',
-                branches: [[name: env.branch_atf]],
+                branches: [[name: branch_atf]],
                 doGenerateSubmoduleConfigurations: false,
                 extensions: [[
                     $class: 'RelativeTargetDirectory',
@@ -160,7 +181,7 @@ node('controls') {
             // Выкачиваем engine
             dir("./controls/tests"){
                 checkout([$class: 'GitSCM',
-                branches: [[name: env.branch_engine]],
+                branches: [[name: branch_engine]],
                 doGenerateSubmoduleConfigurations: false,
                 extensions: [[
                     $class: 'RelativeTargetDirectory',
@@ -191,9 +212,9 @@ node('controls') {
             sh "cp -rf ./demo_stand/client ./controls/tests/stand"
 
             // Выкачиваем ws для unit тестов и если указан сторонний бранч
-            if (("${env.run_tests}" == "only_unit" ) || ("${run_tests}" == "all") || ("${env.ws_revision}" != "sdk") ){
-                def ws_revision = env.ws_revision
-                if ("${env.ws_revision}" == "sdk"){
+            if (( unit ) || ("${params.ws_revision}" != "sdk") ){
+                def ws_revision = params.ws_revision
+                if ("${ws_revision}" == "sdk"){
                     ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
                 }
                 dir(workspace) {
@@ -212,9 +233,9 @@ node('controls') {
                 }
             }
             // Выкачиваем ws.data для unit тестов и если указан сторонний бранч
-            if (("${env.run_tests}" == "only_unit" ) || ("${run_tests}" == "all") || ("${env.ws_data_revision}" != "sdk") ){
-                def ws_data_revision = env.ws_data_revision
-                if ("${env.ws_data_revision}" == "sdk"){
+            if (( unit ) || ("${params.ws_data_revision}" != "sdk") ){
+                def ws_data_revision = params.ws_data_revision
+                if ("${ws_data_revision}" == "sdk"){
                     ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
                 }
                 dir(workspace) {
@@ -240,7 +261,7 @@ node('controls') {
             }
             dir(workspace){
                 // Собираем ws если задан сторонний бранч
-                if ("${env.ws_revision}" != "sdk"){
+                if ("${params.ws_revision}" != "sdk"){
                     sh "rm -rf ${workspace}/WIS-git-temp2"
                     sh "mkdir ${workspace}/WIS-git-temp2"
                     sh "${python_ver} ${workspace}/constructor/build_ws.py ${workspace}/WIS-git-temp 'release' ${workspace}/WIS-git-temp2 ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
@@ -248,7 +269,7 @@ node('controls') {
                     items = items + ", ws:${workspace}/WIS-git-temp2"
                 }
                 // Собираем ws.data только когда указан сторонний бранч
-                if ("${env.ws_data_revision}" != "sdk"){
+                if ("${params.ws_data_revision}" != "sdk"){
                     // Добавляем в items
                     items = items + ", ws_data:${workspace}/ws_data"
                 }
@@ -257,7 +278,7 @@ node('controls') {
         }
 
         stage("Unit тесты"){
-            if (("${env.run_tests}" == "only_unit" ) || ("${run_tests}" == "all")){
+            if ( unit ){
                 dir(workspace){
                     sh "cp -rf ./WIS-git-temp ./controls/sbis3-ws"
                     sh "cp -rf ./ws_data/WS.Data ./controls/components/"
@@ -315,7 +336,7 @@ node('controls') {
             sh """cp -f ./controls/tests/stand/intest/pageTemplates/branch/* ./controls/tests/stand/intest/pageTemplates"""
             sh """
                 cd "${workspace}/controls/tests/stand/intest/"
-                sudo python3 "change_theme.py" ${env.theme}
+                sudo python3 "change_theme.py" ${params.theme}
                 cd "${workspace}"
             """
             sh """
@@ -348,7 +369,7 @@ node('controls') {
         writeFile file: "./controls/tests/int/config.ini", text:
             """# UTF-8
             [general]
-            browser = ${env.browser_type}
+            browser = ${params.browser_type}
             SITE = http://${NODE_NAME}:30001
             fail_test_repeat_times = 0
             DO_NOT_RESTART = True
@@ -365,12 +386,12 @@ node('controls') {
             server_address = http://10.76.163.98:4380/wd/hub"""
 
 
-        if ( "${env.theme}" != "online" ) {
+        if ( "${params.theme}" != "online" ) {
             writeFile file: "./controls/tests/reg/config.ini",
             text:
                 """# UTF-8
                 [general]
-                browser = ${env.browser_type}
+                browser = ${params.browser_type}
                 SITE = http://${NODE_NAME}:30001
                 fail_test_repeat_times = 0
                 DO_NOT_RESTART = True
@@ -378,7 +399,7 @@ node('controls') {
                 NO_RESOURCES = True
                 STREAMS_NUMBER = 40
                 DELAY_RUN_TESTS = 2
-                TAGS_TO_START = ${env.theme}
+                TAGS_TO_START = ${params.theme}
                 ELEMENT_OUTPUT_LOG = locator
                 WAIT_ELEMENT_LOAD = 20
                 HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
@@ -387,14 +408,14 @@ node('controls') {
                 server_address = http://10.76.159.209:4444/wd/hub
                 CHROME_BINARY_LOCATION=C:\\chrome64_58\\chrome.exe
                 [regression]
-                IMAGE_DIR = capture_${env.theme}
+                IMAGE_DIR = capture_${params.theme}
                 RUN_REGRESSION=True"""
         } else {
             writeFile file: "./controls/tests/reg/config.ini",
             text:
                 """# UTF-8
                 [general]
-                browser = ${env.browser_type}
+                browser = ${params.browser_type}
                 SITE = http://${NODE_NAME}:30001
                 fail_test_repeat_times = 0
                 DO_NOT_RESTART = True
@@ -402,7 +423,7 @@ node('controls') {
                 NO_RESOURCES = True
                 STREAMS_NUMBER = 15
                 DELAY_RUN_TESTS = 2
-                TAGS_TO_START = ${env.theme}
+                TAGS_TO_START = ${params.theme}
                 ELEMENT_OUTPUT_LOG = locator
                 WAIT_ELEMENT_LOAD = 20
                 HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
@@ -415,12 +436,12 @@ node('controls') {
                 RUN_REGRESSION=True"""
         }
         def run_test_fail = ""
-        if ("${RUN_ONLY_FAIL_TEST}" == 'true'){
+        if ("${params.RUN_ONLY_FAIL_TEST}" == 'true'){
             run_test_fail = "-sf"
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
         stage("Инт.тесты"){
-            if ("${env.run_tests}" != "only_reg"){
+            if ( inte ){
                 def site = "http://${NODE_NAME}:30001"
                 site.trim()
                 if ( "${TAGS}" != "") {
@@ -443,7 +464,7 @@ node('controls') {
             }
         }
         stage("Рег.тесты"){
-            if ("${env.run_tests}" != "only_int"){
+            if ( regr ){
                 sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
                 dir("./controls/tests/reg"){
                     sh """
@@ -459,13 +480,22 @@ node('controls') {
             sudo chmod -R 0777 /home/sbis/Controls1
         """
         stage("Результаты"){
-            dir(workspace){
-                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
+            //выкладываем результаты в зависимости от включенных тестов "all only_reg only_int only_unit"
+            if ( regr ){
+                dir(workspace){
+                    publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
+                }
+                archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
             }
-            junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-            archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
-            archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
-            junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
+            if ( inte ){
+                junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+            }
+            if ( unit ){
+                junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
+            }
+            if ( regr || inte ){
+                archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
+            }
         }
     }
 

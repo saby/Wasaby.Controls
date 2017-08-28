@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
     * </ol>
     * @class SBIS3.CONTROLS.NumberTextBox
     * @extends SBIS3.CONTROLS.TextBox
-    * @author Роман Валерий Сергеевич
+    * @author Романов Валерий Сергеевич
     * @demo SBIS3.CONTROLS.Demo.MyNumberTextBox
     *
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol textTransform
@@ -212,7 +212,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
 
          options = NumberTextBox.superclass._modifyOptions.apply(this, arguments);
          value = (options.numericValue != undefined) ? options.numericValue : options.text;
-         if (value){
+         if (typeof value !== 'undefined' && value !== null){
             options.text = formatText(
                value,
                options.text, 

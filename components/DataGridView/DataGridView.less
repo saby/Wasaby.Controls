@@ -55,6 +55,8 @@
          .controls-DataGridView__tr:nth-last-child(1){
             .controls-DataGridView__td {
                border-bottom-color: @data-grid-edge-cell-separator-color;
+               line-height: @data-grid-edge-cell-separator-line-height;
+               padding-bottom: @data-grid-edge-cell-separator-bottom-padding;
             }
          }
          &.controls-DataGridView__resultsBottom {
@@ -446,7 +448,7 @@
       }
       font-size: @data-grid-header-cell-font-size;
       .controls-Button__icon {
-         .icon-size(@data-grid-header-cell-font-size);
+         .icon-size(@data-grid-header-cell-icon-size);
       }
    }
 }

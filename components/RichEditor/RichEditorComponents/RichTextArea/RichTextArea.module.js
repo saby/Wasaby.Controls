@@ -21,8 +21,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "Core/helpers/fast-control-helpers",
    'Core/helpers/String/escapeTagsFromStr',
    'Core/helpers/String/escapeHtml',
-   'js!SBIS3.CONTROLS.Utils.LinkWrap',
-   "Core/helpers/dom&controls-helpers",
+   'Core/helpers/String/linkWrap',
+   'Core/helpers/Hcontrol/trackElement',
    'js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
    'js!SBIS3.CONTROLS.RichEditor.CodeSampleDialog',
    'Core/EventBus',
@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
       escapeTagsFromStr,
       escapeHtml,
       LinkWrap,
-      dcHelpers,
+      trackElement,
       ImageOptionsPanel,
       CodeSampleDialog,
       EventBus
@@ -465,7 +465,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                }
                this._tinyEditor.destroyed = true;
             }
-            dcHelpers.trackElement(this._container, false);
+            trackElement(this._container, false);
             this._container.unbind('keydown keyup');
             this._sourceArea.unbind('input');
             this._tinyEditor = null;

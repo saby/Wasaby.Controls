@@ -73,23 +73,32 @@ define('js!WSControls/Buttons/ButtonBase', [
              /**
               * @cfg {Boolean} Устанавливает признак, от которого зависит будут ли экранированы html-теги в надписи кнопки (см. {@link caption}).
               * @remark
-              * Значение опции влияет только на результат вызова метода {@link setCaption}.
-              * По умолчанию значение установлено в true, что означает экранирование любых тегов в надписи кнопки.
+              * По умолчанию значение установлено в true, что означает теги в надписи кнопки экранируются.
               * @example
               * 1) Когда опция `escapeCaptionHtml=true`
               * <pre>
               * myButton.setCaption('<div>Войти</div>');
-              * // надпись на кнопке - "Войти"
-              * </pre>
+              * // надпись на кнопке - "<div>Войти</div>"
               * 2) Когда опция `escapeCaptionHtml=false`
+              * </pre>
               * <pre>
               * myButton.setCaption('<div>Войти</div>');
-              * // надпись на кнопке - "<div>Войти</div>"
+              * // надпись на кнопке - "Войти"
               * </pre>
               * @see caption
               */
-            escapeCaptionHtml: true
+            escapeCaptionHtml: true,
+            task1174347539: false
          }
+      },
+
+      _modifyOptions : function() {
+         var opts = WSButtonBase.superclass._modifyOptions.apply(this, arguments);
+
+         if (opts.caption && opts.escapeCaptionHtml && opts.task1174347539){
+            opts.caption = escapeHtml(opts.caption);
+         }
+         return opts;
       },
 
       $constructor: function() {
@@ -152,6 +161,7 @@ define('js!WSControls/Buttons/ButtonBase', [
          if(show !== this._isVisible){
             this._container.toggleClass('ws-hidden', !show);
             this._isVisible = show;
+            this._setOption('visible', this._isVisible);
             this._notifyOnPropertyChanged('visible');
          }
       }

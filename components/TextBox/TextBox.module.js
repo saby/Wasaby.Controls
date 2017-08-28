@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'js!SBIS3.CONTROLS.TextBoxUtils',
    'Core/Sanitize',
-   'Core/helpers/dom&controls-helpers',
+   'js!SBIS3.CONTROLS.Utils.GetTextWidth',
    'Core/helpers/Function/forAliveOnly',
    'js!SBIS3.CONTROLS.ControlHierarchyManager',
    'js!SBIS3.CONTROLS.IconButton',
@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
     TemplateUtil,
     TextBoxUtils,
     Sanitize,
-    dcHelpers,
+    getTextWidth,
     forAliveOnly,
     ControlHierarchyManager) {
 
@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
     * </ol>
     * @class SBIS3.CONTROLS.TextBox
     * @extends SBIS3.CONTROLS.TextBoxBase
-    * @author Роман Валерий Сергеевич
+    * @author Романов Валерий Сергеевич
     * @demo SBIS3.CONTROLS.Demo.MyTextBox
     *
     * @ignoreOptions independentContext contextRestriction className horizontalAlignment
@@ -363,7 +363,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
          if (this._tooltipText != this._options.text) {
             var scrollWidth;
             if (constants.browser.isIE) {
-               scrollWidth = dcHelpers.getTextWidth(this._options.text);
+               scrollWidth = getTextWidth(this._options.text);
             }
             else {
                scrollWidth = this._inputField[0].scrollWidth;

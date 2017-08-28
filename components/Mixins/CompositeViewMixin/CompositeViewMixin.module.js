@@ -368,10 +368,10 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
             tiles = $('.controls-CompositeView__tileItem:not(.controls-ListView__item-type-node)', itemsContainer),
             folders = $('.controls-ListView__item-type-node', itemsContainer);
          if (!this._tileWidth) {
-            this._tileWidth = $(tiles[0]).width();
+            this._tileWidth = $(tiles[0]).outerWidth(true);
          }
          if (!this._folderWidth) {
-            this._folderWidth = $(folders[0]).width();
+            this._folderWidth = $(folders[0]).outerWidth(true);
          }
          this._calcWidth(tiles, this._tileWidth);
          this._calcWidth(folders, this._folderWidth);
@@ -383,7 +383,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
                tilesCount = Math.floor(itemsContainerWidth / oldWidth),
                newTileWidth = itemsContainerWidth / tilesCount;
 
-            tiles.outerWidth(newTileWidth);
+            tiles.outerWidth(newTileWidth, true);
          }
       },
 

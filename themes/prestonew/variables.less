@@ -142,6 +142,7 @@
 @button-group-vertical-item-margin:       0 0 1.75rem 0;
 // Normal default button
 @button-checked-border-width:             @button-border-width;
+@button-checked-padding:                  @button-padding;
 @button-checked-line-height:              @button-line-height;
 @button-checked-border:                   @button-active-border;
 @button-checked-bg:                       @button-bg-active;
@@ -273,7 +274,7 @@
 @menu-item-bg:                            #f0f5fb;
 @menu-item-font-size:                     @default-font-size;
 @menu-item-icon-16-margin:					   0.2142rem 0 0.2142rem 2.2857rem;
-@menu-item-hover-bg:                      #e1ecf6;
+@menu-item-hover-bg:                      #E0ECF5;
 @menu-item-hover-icon-color:              @primary-color!important;
 @menu-item-default-padding:               0 .57rem;
 @menu-item-icon-top-offset:               0.2805rem; // (3.57 - 3) /2
@@ -443,6 +444,7 @@
 @date-range-icon-button-line-height:      @date-range-icon-button-size;
 @date-range-icon-button-top:              0;
 @date-range-icon-button-margin:           0;
+@date-range-big-choose-header-date-box-font-size: 1rem;
 
 //Data Range Slider
 @date-range-slider-color:                 #26B8FF;
@@ -503,8 +505,6 @@
 @date-range-big-choose-date-range-picker-bg-boundary-selected-color:    #26B8FF;
 @date-range-big-choose-date-range-picker-bg-selected-color:             @date-range-big-choose-bg-hovered-color;
 @date-range-big-choose-date-range-picker-bg-hovered-color:              @date-range-big-choose-bg-hovered-color;
-@date-range-big-choose-months-text-align:                               center;
-@date-range-big-choose-months-padding:                                  0px;
 
 @date-range-big-choose-years-height:      3.57rem;
 @date-range-big-choose-header-padding:    0.256rem 0 0.256rem 0;
@@ -514,6 +514,7 @@
 @date-range-big-choose-header-date-box-border-color:           @text-box-border-color;
 @date-range-big-choose-header-date-box-border-selected-color:  @text-box-bottom-border-color;
 @date-range-big-choose-header-date-pickers-margin-right:3.286rem;
+@date-range-big-choose-date-range-picker-caption-font-size: @default-font-size;
 @date-range-big-choose-header-date-picker-margin-top:0;
 @date-range-big-choose-header-apply-button-size:3rem;
 @date-range-big-choose-header-apply-button-font-size:@date-range-big-choose-header-apply-button-size;
@@ -542,9 +543,10 @@
 @date-range-big-choose-month-range-padding:0.2857rem;
 @date-range-big-choose-month-range-picker-bg-selected:  @date-range-big-choose-bg-selected-color;
 @date-range-big-choose-quarters-half-years-font-size:inherit;
+@date-range-big-choose-month-hovered-color:                          #B9E9FF;
 
 //Edit at place
-@edit-at-place-wrapper-text-area-padding: 0 .1785rem;
+@edit-at-place-wrapper-text-area-padding:  0.1785rem;
 @edit-at-place-wrapper-border-width:      .0357rem;
 @edit-at-place-editor-overlay-margin:     -.3571rem 0 0 -3571rem;
 @edit-at-place-editor-overlay-padding:    .3571rem ;
@@ -618,12 +620,15 @@
 @data-grid-header-cell-padding:           @data-grid-cell-padding;
 @data-grid-header-cell-padding-side:      .3571rem;
 @data-grid-header-cell-font-size:         0.86rem;
+@data-grid-header-cell-icon-size:         1.5rem;
 @data-grid-header-cell-sorting-icon-size: 1rem;
 @data-grid-row-selected-cell-text-color:  @default-text-color;
 @data-grid-cell-height:                   1.7857rem;
 @data-grid-cell-padding:                  0 .28571rem;
 @data-grid-ms-first-content-cell-padding-left:@data-grid-header-cell-padding-side;
 @data-grid-edge-cell-separator-color:     rgba(0, 0, 0, 0.1);
+@data-grid-edge-cell-separator-bottom-padding: @default-border-width;
+@data-grid-edge-cell-separator-line-height: 1.67rem;
 @data-grid-td-checkbox-width:             1.75rem;
 @data-grid-td-visible-checkbox-width:     1.75rem;
 @data-grid-check-box-top:                 -@default-border-width;
@@ -1020,8 +1025,8 @@
 @controls-toolbar-item-vertical-align:    baseline;
 @date-range-big-choose-years-btn:         .5rem;
 @DropdownList-picker-offset:              0;
-@dropdown-list-item-padding:              .1785rem 1.3571rem .1071rem .57rem;
-@list-view-items-toolbar-bottom:          6px;
+@dropdown-list-item-padding:              .1785rem 3rem .1071rem .57rem;
+@list-view-items-toolbar-bottom:          0.214rem;
 @list-view-items-toolbar-font-family:     'carrypresto-icons';
 @search-left-margin:                      .57rem;
 @controls-view-padding-DEFAULT:           .857rem;

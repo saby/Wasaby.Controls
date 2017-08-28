@@ -6,9 +6,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "Core/core-instance",
        'Core/helpers/Function/forAliveOnly',
        'Core/helpers/Function/memoize',
-       'Deprecated/helpers/dom&controls-helpers',
+       'js!SBIS3.CONTROLS.Utils.Contains',
        "Core/helpers/string-helpers",
-       "Core/ParserUtilities",
+       'Core/markup/ParserUtilities',
        'js!SBIS3.CONTROLS.ControlHierarchyManager',
        "js!SBIS3.CONTROLS.SuggestTextBox",
        "js!SBIS3.CONTROLS.ItemsControlMixin",
@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         cInstance,
         forAliveOnly,
         memoize,
-        domHelpers,
+        contains,
         strHelpers,
         ParserUtilities,
         ControlHierarchyManager,
@@ -617,7 +617,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                       var suggestShowed = this.isPickerVisible();
                       elemToFocus.blur().focus();
 
-                      if(!suggestShowed) {
+                      //https://online.sbis.ru/opendoc.html?guid=19af9bf9-0d16-4f63-8aa8-6d0ef7ff0799
+                      if(!suggestShowed && !this._options.task1174306848) {
                          this.hidePicker();
                       }
                    }
@@ -872,7 +873,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 3) Фокус пришел из автодополнения
              */
              if(!this._isInputVisible() || this.getChildControlByName('fieldLinkMenu').getContainer()[0] === document.activeElement ||
-                (event && event.relatedTarget && ControlHierarchyManager.checkInclusion(this, event.relatedTarget) && !domHelpers.contains(this.getContainer(), event.relatedTarget))) {
+                (event && event.relatedTarget && ControlHierarchyManager.checkInclusion(this, event.relatedTarget) && !contains(this.getContainer(), event.relatedTarget))) {
                 return false;
              }
              FieldLink.superclass._observableControlFocusHandler.apply(this, arguments);

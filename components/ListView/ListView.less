@@ -2,11 +2,6 @@
 .controls-ListView {
     position: relative;
 
-   // Нельзя устанавливать минимальную высоту для копии таблицы которая используется для фиксации заголовков
-   &:not(.controls-ListView__dataLoaded):not(.ws-sticky-header__table-header-copy) {
-      min-height: @list-view-min-height;
-   }
-
   .controls-ListView__item {
     overflow: hidden;
     position: relative;
@@ -160,9 +155,7 @@
    }
 }
 
-.controls-ListView__indicatorVisible:not(.ws-sticky-header__table-header-copy) {
-   min-height: @list-view-scroll-height + @data-grid-header-cell-height; // Высота индикатор скрола + высота ячейки шапки, чтобы при подгрузке скролл не скрывался под шапкой
-
+.controls-ListView__indicatorVisible {
     > .controls-ListView-scrollIndicator {
       display: block;
    }

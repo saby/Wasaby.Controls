@@ -46,7 +46,9 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
    'Core/core-instance',
    'Core/helpers/functional-helpers',
-   'Core/helpers/dom&controls-helpers',
+   'Core/helpers/Hcontrol/trackElement',
+   'Core/helpers/Hcontrol/isElementVisible',
+   'js!SBIS3.CONTROLS.Utils.Contains',
    'js!SBIS3.CONTROLS.CursorListNavigation',
    'js!WS.Data/Source/SbisService',
    'Core/detection',
@@ -68,7 +70,7 @@ define('js!SBIS3.CONTROLS.ListView',
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents, LayoutManager, mHelpers,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, cInstance, fHelpers, dcHelpers, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove) {
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, cInstance, fHelpers, trackElement, isElementVisible, contains, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove) {
      'use strict';
 
       var
@@ -909,9 +911,7 @@ define('js!SBIS3.CONTROLS.ListView',
                contextMenu: true,
                /**
                 * @cfg {Boolean} Использовать функционал выбора всех записей
-                * @remark Начиная с версии 3.17.20 данная опция будет удалена.
-                * Стандартным будет считаться поведение, useSelectAll = true.
-                * @deprecated
+                * @see getSelection
                 */
                useSelectAll: false,
                virtualScrolling: false,
@@ -1049,6 +1049,9 @@ define('js!SBIS3.CONTROLS.ListView',
             if(lvOpts.selectedKey && lvOpts._itemData) {
                lvOpts._itemData.selectedKey = lvOpts.selectedKey;
             }
+            if (!lvOpts.multiselect && lvOpts.useSelectAll) {
+               lvOpts.useSelectAll = false;
+            }
             return lvOpts;
          },
 
@@ -1171,7 +1174,7 @@ define('js!SBIS3.CONTROLS.ListView',
             // Так как для сохранения страницы все равно нужекн рассчет страниц скролла
             var hiddenPager = !this._options.scrollPaging && this._options.saveReloadPosition;
             this._scrollBinder.bindScrollPaging(this._scrollPager, hiddenPager);
-            dcHelpers.trackElement(this.getContainer(), true).subscribe('onVisible', this._onVisibleChange.bind(this));
+            trackElement(this.getContainer(), true).subscribe('onVisible', this._onVisibleChange.bind(this));
             
             if (!this._inScrollContainerControl) {
                // Отлавливаем изменение масштаба
@@ -1350,7 +1353,7 @@ define('js!SBIS3.CONTROLS.ListView',
                return undefined;
          },
          _isViewElement: function (elem) {
-            return  dcHelpers.contains(this._getItemsContainer()[0], elem[0]);
+            return  contains(this._getItemsContainer()[0], elem[0]);
          },
          _onClickHandler: function(e) {
             ListView.superclass._onClickHandler.apply(this, arguments);
@@ -1475,7 +1478,7 @@ define('js!SBIS3.CONTROLS.ListView',
              то событие mouseLeave не сработает, поэтому вызовем руками метод,
              если же он остался, то обновим положение кнопки опций. */
             if(hoveredItemContainer){
-               containsHoveredItem = dcHelpers.contains(this._getItemsContainer()[0], hoveredItemContainer[0]);
+               containsHoveredItem = contains(this._getItemsContainer()[0], hoveredItemContainer[0]);
 
                if(!containsHoveredItem && hoveredItemContainer) {
                   /*TODO сейчас зачем то в ховеред итем хранится ссылка на DOM элемент
@@ -1847,7 +1850,16 @@ define('js!SBIS3.CONTROLS.ListView',
                this._getMassSelectionController().toggleSelectedAll();
             }
          },
-
+         /**
+          * @typedef {Object} Selection
+          * @property {Array} [marked] Идентификаторы выделенныех элементов, в случае выбора ВСЕХ ЗАПИСЕЙ этот массив содержит ID корня.
+          * @property {Array} [excluded] Идентификаторы исключённых из выборки записей.
+          */
+         /**
+          * Получить текущее состояние выделения
+          * @returns {Selection} selection
+          * @see useSelectAll
+          */
          getSelection: function() {
             if (this._options.useSelectAll) {
                return this._getMassSelectionController().getSelection();
@@ -2496,7 +2508,7 @@ define('js!SBIS3.CONTROLS.ListView',
                editedItem = cFunctions.clone(this.getHoveredItem());
                editedItem.record = model;
                // на событие onBeginEdit могут поменять модель, запись перерисуется и контейнер на который ссылается тулбар затрется
-               if(!dcHelpers.contains(this.getContainer(), editedItem.container)){
+               if(!contains(this.getContainer(), editedItem.container)){
                    editedItem.container = editedContainer;
                }
 
@@ -2523,7 +2535,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._lastDeleteActionState = undefined;
                }
                // Если после редактирования более hoveredItem остался - то нотифицируем об его изменении, в остальных случаях просто скрываем тулбар
-               if (this.getHoveredItem().container && dcHelpers.contains(this.getContainer(), this.getHoveredItem().container) && !this._touchSupport) {
+               if (this.getHoveredItem().container && contains(this.getContainer(), this.getHoveredItem().container) && !this._touchSupport) {
                   this._notifyOnChangeHoveredItem();
                } else {
                   this._hideItemsToolbar();
@@ -3111,7 +3123,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _scrollLoadNextPage: function () {
             var loadAllowed  = this.isInfiniteScroll() && this._options.infiniteScroll !== 'demand',
                more = this.getItems().getMetaData().more,
-               isContainerVisible = dcHelpers.isElementVisible(this.getContainer()),
+               isContainerVisible = isElementVisible(this.getContainer()),
                // отступ с учетом высоты loading-indicator
                hasScroll = this._scrollWatcher.hasScroll(this._getLoadingIndicatorHeight()),
                hasNextPage;
@@ -3149,7 +3161,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _updateScrollIndicatorTop: function () {
             var top = '';
             // Если скролим вверх и есть что загружать сверху
-            if (this._isScrollingUp() && this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.top)) {
+            if (this._isScrollingUp() && this.getItems() && this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.top)) {
                top = StickyHeaderManager.getStickyHeaderIntersectionHeight(this.getContainer()) - this._scrollWatcher.getScrollContainer().scrollTop();
             }
             this._loadingIndicator.css('top', top);
@@ -4014,7 +4026,7 @@ define('js!SBIS3.CONTROLS.ListView',
                if (!this._inScrollContainerControl) {
                   $(window).off('resize scroll', this._setScrollPagerPositionThrottled);
                }
-               dcHelpers.trackElement(this.getContainer(), false).unsubscribe('onVisible', this._onVisibleChange);
+               trackElement(this.getContainer(), false).unsubscribe('onVisible', this._onVisibleChange);
                this._scrollPager.destroy();
             }
             if (this._listNavigation) {

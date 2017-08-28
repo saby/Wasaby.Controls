@@ -30,7 +30,9 @@ define('js!WSTest/Focus/Scenario/18', [
       });
 
       setTimeout(function() {
-         fHelpers.childHasFocus(wnd, 'AreaAbstract0');
+         fHelpers.childIsNotInFocus(wnd, 'AreaAbstract0');
+         fHelpers.isActive(wnd);
+         fHelpers.hasFocus(wnd);
          wnd.destroy();
          delete window[caseControlName];
          done();

@@ -2,12 +2,11 @@ define('js!WSControls/Buttons/MenuButton', [
    'js!WSControls/Buttons/Button',
    'js!SBIS3.CONTROLS.PickerMixin',
    'js!SBIS3.CONTROLS.DSMixin',
-   'Core/helpers/dom&controls-helpers',
    'Core/IoC',
    'Core/detection',
    'Core/Sanitize',
    'Core/helpers/String/escapeHtml'
-], function(Button, PickerMixin, DSMixin, dcHelpers, IoC, detection, Sanitize, escapeHtml) {
+], function(Button, PickerMixin, DSMixin, IoC, detection, Sanitize, escapeHtml) {
 
    'use strict';
    
@@ -124,6 +123,10 @@ define('js!WSControls/Buttons/MenuButton', [
          }
 
          var opts = MenuButton.superclass._modifyOptions.apply(this, arguments);
+
+         opts.caption = Sanitize(opts.caption, {validNodes: {component: true}});
+         opts.menuCaption = Sanitize(opts.menuCaption, {validNodes: {component: true}});
+
          return opts;
       },
 
