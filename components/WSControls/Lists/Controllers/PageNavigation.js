@@ -8,7 +8,8 @@ define('js!WSControls/Lists/Controllers/PageNavigation',
        */
       var PageNavigation = Abstract.extend({
          _page: 0,
-         _nextPage: 0,
+         _nextPage: 1,
+         _prevPage: 0,
          _more: null,
          constructor: function(cfg) {
             this._options = cfg;
@@ -19,9 +20,18 @@ define('js!WSControls/Lists/Controllers/PageNavigation',
          },
 
          prepareQueryParams: function(projection, direction) {
-            var addParams = {};
+            var addParams = {}, neededPage;
+            if (direction == 'down') {
+               neededPage = this._nextPage;
+            }
+            else if (direction == 'up') {
+               neededPage = this._prevPage;
+            }
+            else {
+               neededPage = this._page;
+            }
             if (this._options.pageSize) {
-               addParams.offset = this._nextPage * this._options.pageSize;
+               addParams.offset = neededPage * this._options.pageSize;
                addParams.limit = this._options.pageSize;
             }
             return addParams;
@@ -29,7 +39,7 @@ define('js!WSControls/Lists/Controllers/PageNavigation',
 
          calculateState: function(list, display, direction) {
             var meta = list.getMetaData();
-            if (this._options.mode == 'withCommonCount') {
+            if (this._options.mode == 'withTotalCount') {
                if (typeof meta.more == 'number') {
                   this._more = meta.more;
                }
@@ -44,6 +54,15 @@ define('js!WSControls/Lists/Controllers/PageNavigation',
                else {
                   throw new Error('"more" Parameter has incorrect type. Must be numeric')
                }
+            }
+            if (direction == 'down') {
+               this._nextPage++;
+            }
+            else if (direction == 'up') {
+
+            }
+            else {
+               this._nextPage = this._page + 1;
             }
          },
 

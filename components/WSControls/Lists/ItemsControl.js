@@ -203,35 +203,51 @@ define('js!WSControls/Lists/ItemsControl', [
 
                this._cancelLoading();
 
-               if (this._dataSource) {
-                  var queryParams = this._prepareQueryParams();
+               var queryParams = this._prepareQueryParams();
 
-                  var userParams = this._notify('onBeforeDataLoad', queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit);
-                  if (userParams) {
-                     queryParams.filter = userParams['filter'] || queryParams.filter;
-                     queryParams.sorting = userParams['sorting'] || queryParams.sorting;
-                     queryParams.offset = userParams['offset'] || queryParams.offset;
-                     queryParams.limit = userParams['limit'] || queryParams.limit;
-                  }
-                  //TODO решить с параметрами
-                  def = DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
-                     .addCallback(fHelpers.forAliveOnly(function (list) {
-                        self._notify('onDataLoad', list);
-                        this._onDSReload(list, options);
-                        return list;
-                     }, self))
-                     .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
-                  this._loader = def;
-               } else {
-                  if (this._display) {
-                     this._redraw();
-                  }
-                  def = new Deferred();
-                  def.callback();
+               var userParams = this._notify('onBeforeDataLoad', queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit);
+               if (userParams) {
+                  queryParams.filter = userParams['filter'] || queryParams.filter;
+                  queryParams.sorting = userParams['sorting'] || queryParams.sorting;
+                  queryParams.offset = userParams['offset'] || queryParams.offset;
+                  queryParams.limit = userParams['limit'] || queryParams.limit;
                }
+               //TODO решить с параметрами
+               def = DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
+                  .addCallback(fHelpers.forAliveOnly(function (list) {
+                     self._notify('onDataLoad', list);
+                     this._onDSReload(list, options);
+                     return list;
+                  }, self))
+                  .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
+               this._loader = def;
             }
             else {
-               console.error('Option dataSource is undefined. Can\'t reload view');
+               throw new Error('Option dataSource is undefined. Can\'t reload view');
+            }
+         },
+
+         loadPage: function(direction) {
+            var def, self = this;
+            if (this._dataSource) {
+               var queryParams = this._prepareQueryParams(direction);
+               def = DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
+                  .addCallback(fHelpers.forAliveOnly(function (list) {
+                     self._notify('onDataLoad', list);
+                     this._onLoadPage(list, direction);
+                     return list;
+                  }, self))
+                  .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
+               this._loader = def;
+            }
+            else {
+               throw new Error('Option dataSource is undefined. Can\'t load page');
+            }
+         },
+
+         _onLoadPage: function(list, direction) {
+            if (direction == 'down') {
+               this._items.append(list);
             }
          },
 
@@ -264,7 +280,6 @@ define('js!WSControls/Lists/ItemsControl', [
                this._items = list;
                this._itemsChangeCallback(this._items, options);
             }
-            this._setDirty();
             this._toggleIndicator(false);
             //self._checkIdProperty();
 

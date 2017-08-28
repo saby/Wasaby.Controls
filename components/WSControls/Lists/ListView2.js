@@ -44,15 +44,22 @@ define('js!WSControls/Lists/ListView2',
             }
          },
 
-         _prepareQueryParams: function() {
+         _prepareQueryParams: function(direction) {
             var params = ListView.superclass._prepareQueryParams.apply(this, arguments);
             if (this._navigationController) {
-               var addParams = this._navigationController.prepareQueryParams(this._display);
+               var addParams = this._navigationController.prepareQueryParams(this._display, direction);
                params.limit = addParams.limit;
                params.offset = addParams.offset;
                //TODO фильтр и сортировка не забыть приделать
             }
             return params;
+         },
+
+         _onLoadPage: function(list, direction) {
+            ListView.superclass._onLoadPage.apply(this, arguments);
+            if (this._navigationController) {
+               this._navigationController.calculateState(list, this._display, direction);
+            }
          },
 
          /*DataSource*/
