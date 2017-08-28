@@ -486,6 +486,7 @@ node('controls') {
                     publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
                 }
                 archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
+                junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
             }
             if ( inte ){
                 junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
