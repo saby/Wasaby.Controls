@@ -278,8 +278,7 @@ define('js!SBIS3.CONTROLS.Browser', [
             this._getView().redraw();
             this._columnsEditor = this._getColumnsEditor();
             if (this._columnsEditor) {
-               this._columnsEditor.subscribe('onSelectedColumnsChange', this._onSelectedColumnsChange.bind(this));
-               this._columnsEditor.subscribe('onColumnsEditorShow', this._onColumnsEditorShow.bind(this));
+               this._subscribeToColumnsEditor();
             }
          }
 
@@ -441,6 +440,17 @@ define('js!SBIS3.CONTROLS.Browser', [
       setHistoryId: function(id) {
          this._options.historyId = id;
          this._bindFilterHistory();
+      },
+      _setColumnsEditor: function() {
+         var newEditor = this._getColumnsEditor();
+         this._columnsEditor.destroy();
+         this._columnsEditor = newEditor;
+         this._subscribeToColumnsEditor();
+      },
+
+      _subscribeToColumnsEditor: function() {
+         this.subscribeTo(this._columnsEditor, 'onSelectedColumnsChange', this._onSelectedColumnsChange.bind(this));
+         this.subscribeTo(this._columnsEditor, 'onColumnsEditorShow', this._onColumnsEditorShow.bind(this));
       },
 
       _bindFilterHistory: function() {
