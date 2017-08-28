@@ -95,7 +95,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
          options.cssClassName += ' controls-MoneyTextBox';
 
          value = options.text || options.moneyValue;
-         if (value){
+         if (typeof value !== 'undefined' && value !== null){
             options.text = formatText(
                 value,
                 options.text,

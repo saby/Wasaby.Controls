@@ -212,7 +212,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
 
          options = NumberTextBox.superclass._modifyOptions.apply(this, arguments);
          value = (options.numericValue != undefined) ? options.numericValue : options.text;
-         if (value){
+         if (typeof value !== 'undefined' && value !== null){
             options.text = formatText(
                value,
                options.text, 
