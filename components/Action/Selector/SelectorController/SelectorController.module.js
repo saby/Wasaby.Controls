@@ -198,16 +198,22 @@ define('js!SBIS3.CONTROLS.SelectorController', [
             * @see selectorWrapperInitialized
             * @see selectorWrapperSelectionChanged
             */
-          _selectComplete: function() {
+          _selectComplete: function(item) {
              var
                 list,
                 filter,
+                selection,
                 dataSource,
                 self = this;
              if (this._linkedObject && this._linkedObject._options.useSelectAll) {
                 filter = cFunctions.clone(this._linkedObject.getFilter());
                 dataSource = this._linkedObject.getDataSource();
-                filter['selection'] = Record.fromObject(this._linkedObject.getSelection(), dataSource.getAdapter());
+                //Если кликнули по кнопке Выбрать на строке, то этот элемент нам придёт в опции и мы выберем его. Иначе
+                //заберём выделение с представления данных.
+                selection = cInstance.instanceOfModule(item, 'WS.Data/Entity/Model') ? {
+                   marked: [item.get(this._linkedObject.getProperty('idProperty'))], excluded: []
+                } : this._linkedObject.getSelection();
+                filter['selection'] = Record.fromObject(selection, dataSource.getAdapter());
                 Query(dataSource, [filter]).addCallback(function(recordSet) {
                    list = new List();
                    list.assign(recordSet.getAll());
