@@ -5,8 +5,9 @@ define('js!SBIS3.CONTROLS.LinkFieldController', [
    'Core/Abstract',
    'Core/Deferred',
    'Core/ParallelDeferred',
-   'Core/core-instance'
-], function(Abstract, Deferred, ParallelDeferred, instance){
+   'Core/core-instance',
+   'Core/helpers/Object/find'
+], function(Abstract, Deferred, ParallelDeferred, instance, objectFind){
 
    'use strict';
 
@@ -263,7 +264,7 @@ define('js!SBIS3.CONTROLS.LinkFieldController', [
          /* За один раз может измениться несколько полей, которые мы отслеживаем,
             надо сразу обновить все пачкой */
          var fieldsToUpdate = Object.keys(changes).reduce(function(result, field) {
-            var obsField =  self._options.observableFields.find(function(elem) {
+            var obsField =  objectFind(self._options.observableFields, function(elem) {
                return elem.field === field;
             });
 
