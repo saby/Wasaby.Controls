@@ -32128,9 +32128,7 @@
 
                // Verify that the range is within the root of the editor
                var root = dom.getRoot();
-               var isBadStart = !dom.isChildOf(rng.startContainer, root);
-               var isBadEnd = !dom.isChildOf(rng.endContainer, root);
-               if (isBadStart) {
+               if (!dom.isChildOf(rng.startContainer, root)) {
                   if (root.firstChild) {
                      rng.setStartBefore(root.firstChild);
                   }
@@ -32138,7 +32136,7 @@
                      rng.setStart(root, 0);
                   }
                }
-               if (isBadEnd) {
+               if (!dom.isChildOf(rng.endContainer, root)) {
                   if (root.lastChild) {
                      rng.setEndAfter(root.lastChild);
                   }
