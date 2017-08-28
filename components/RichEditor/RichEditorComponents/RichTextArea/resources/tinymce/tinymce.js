@@ -33198,14 +33198,34 @@
                   return;
                }
 
+               // Verify that the range is within the root of the editor
+               var root = dom.getRoot();
+               var isBadStart = !dom.isChildOf(rng.startContainer, root);
+               var isBadEnd = !dom.isChildOf(rng.endContainer, root);
+               if (isBadStart) {
+                  if (root.firstChild) {
+                     rng.setStartBefore(root.firstChild);
+                  }
+                  else {
+                     rng.setStart(root, 0);
+                  }
+               }
+               if (isBadEnd) {
+                  if (root.lastChild) {
+                     rng.setEndAfter(root.lastChild);
+                  }
+                  else {
+                     rng.setEnd(root, 0);
+                  }
+               }
+
                startBlock = dom.getParent(RangeUtils.getNode(rng.startContainer, rng.startOffset), dom.isBlock);
                endBlock = dom.getParent(RangeUtils.getNode(rng.endContainer, rng.endOffset), dom.isBlock);
-               textBlockElements = editor.schema.getTextBlockElements();
-
                if (startBlock == endBlock) {
                   return;
                }
 
+               textBlockElements = editor.schema.getTextBlockElements();
                if (!textBlockElements[startBlock.nodeName] || !textBlockElements[endBlock.nodeName]) {
                   return;
                }
