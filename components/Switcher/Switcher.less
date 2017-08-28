@@ -7,6 +7,7 @@
       @{prop}: calc(~"@{temp} - @{border}");
    }
 }
+
 .switcherBorder(@border) {
    &.controls-Checked__checked .controls-Switcher__btn {
       .get-size(right, @switcher-width, -@switcherline-width, @border);
@@ -48,6 +49,22 @@
    width: @switcherline-width;
 }
 
+.controls-Switcher__line_disabled-checked() {
+   background-color: @switcher-disabled-color;
+}
+
+.controls-Switcher__line_disabled-unchecked() {
+   .horizontal-gradient(transparent @switcher-btn-size, @switcher-disabled-color @switcher-btn-size);
+}
+
+.controls-Switcher__line_enabled-checked() {
+   background-color: @innacent-color;
+}
+
+.controls-Switcher__line_enabled-unchecked() {
+   .horizontal-gradient(transparent @switcher-btn-size, @innacent-color @switcher-btn-size);
+}
+
 .controls-Switcher__btn {
    display: block;
    position: absolute;
@@ -80,10 +97,10 @@ body:not(.ws-is-mobile-platform) .ws-enabled.controls-Switcher:hover {
       }
    }
    &.controls-Checked__checked .controls-Switcher__line {
-      background-color: @innacent-color;
+      .controls-Switcher__line_enabled-checked();
    }
    &:not(.controls-Checked__checked) .controls-Switcher__line {
-      .horizontal-gradient(transparent @switcher-btn-size, @innacent-color @switcher-btn-size);
+      .controls-Switcher__line_enabled-unchecked();
    }
    &:not(.controls-Checked__checked) .controls-Switcher__btn {
       border-color: @innacent-color;
@@ -98,10 +115,10 @@ body:not(.ws-is-mobile-platform) .ws-enabled.controls-Switcher:hover {
       background: @switcher-disabled-color;
    }
    &.controls-Checked__checked .controls-Switcher__line {
-      background-color: @switcher-disabled-color;
+      .controls-Switcher__line_disabled-checked();
    }
    &:not(.controls-Checked__checked) .controls-Switcher__line {
-      .horizontal-gradient(transparent @switcher-btn-size, @switcher-disabled-color @switcher-btn-size);
+      .controls-Switcher__line_disabled-unchecked();
    }
    .controls-Switcher__btn {
       border-color: @switcher-disabled-color;
@@ -115,6 +132,7 @@ body:not(.ws-is-mobile-platform) .ws-enabled.controls-Switcher:hover {
       .switcherBorder(@default-border-width);
    }
 }
+
 & when not (@switcher-hover-border-width = @default-border-width) {
    .controls-Switcher {
       &:not(:hover), .ws-disabled&:hover {
