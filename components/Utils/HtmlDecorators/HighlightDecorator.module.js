@@ -86,7 +86,7 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.HighlightDecorator', [
          /**
           * Если enum - нужно взять toString
           */
-         if (cInst.instanceOfModule(text, 'WS.Data/Types/Enum')) {
+         if (cInst.instanceOfModule(text, 'WS.Data/Type/Enum')) {
             text = text.toString();
          }
          text = Parser.parse(text);
