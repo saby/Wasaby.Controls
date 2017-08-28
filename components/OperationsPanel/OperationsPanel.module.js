@@ -328,7 +328,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          /* Доступная под операции ширина = Ширина контейнера - ширина кнопки с меню*/
          var allowedWidth = container.width() - ITEMS_MENU_WIDTH;
 
-         var operations = this._getItemsContainer().find('.js-controls-operationsPanel__action:visible');
+         var operations = this._getItemsContainer().find(' > .js-controls-operationsPanel__action:visible');
 
          var width = 0;
          var isMenuNecessary = false;
