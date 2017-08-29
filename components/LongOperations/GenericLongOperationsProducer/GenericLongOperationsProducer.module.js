@@ -11,12 +11,13 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
    [
       'Core/Deferred',
       'Core/UserInfo',
+      'Core/EventBusChannel',
       'js!SBIS3.CONTROLS.LongOperationsConst',
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.AbstractLongOperationsProducer'
    ],
 
-   function (Deferred, UserInfo, LongOperationsConst, LongOperationEntry, AbstractLongOperationsProducer) {
+   function (Deferred, UserInfo, EventBusChannel, LongOperationsConst, LongOperationEntry, AbstractLongOperationsProducer) {
       'use strict';
 
       /**
@@ -240,6 +241,11 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                         throw new Error('Deleting is not performed');
                      }
                      this._remove(operationId);
+                     var actions = this._actions[operationId];
+                     if (actions && actions.progressor) {
+                        var progressor = actions.progressor;
+                        progressor.channel.unsubscribe(progressor.event, progressor.handler);
+                     }
                      delete this._actions[operationId];
                      this._notify('onlongoperationdeleted', {producer:this.getName(), operationId:operationId});
                      break;
@@ -303,6 +309,10 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
           * @param {function} [options.onSuspend] Обработчик действия пользователя. Должен возвращать успешность выполнения. Если не представлен, значит действие не разрешено
           * @param {function} [options.onResume] Обработчик действия пользователя. Должен возвращать успешность выполнения. Если не представлен, значит действие не разрешено
           * @param {function} [options.onDelete] Обработчик действия пользователя. Должен возвращать успешность выполнения. Если не представлен, значит действие не разрешено
+          * @param {object} [options.progressor] Источник информации о прогрессе операции
+          * @param {Core/EventBusChannel} [options.progressor.channel] Канал событий, по которому будут передаваться события с информацией о прогрессе
+          * @param {string} [options.progressor.event] Имя события в канале с информацией о прогрессе
+          * @param {function} [options.progressor.extractor] Функция, принимающая данные события и возвращающая число от 0 до 1 (не от 0 до 100!) - прогресс выполнения операции
           * @param {Core/Deferred<object>} stopper Отложенный останов длительной операции
           */
          make: function (options, stopper) {
@@ -314,6 +324,15 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             }
             if (!(stopper instanceof Deferred)) {
                throw new TypeError('Argument "stopper" must be a Deferred');
+            }
+            if (options.progressor &&
+                  !(typeof options.progressor === 'object' &&
+                     options.progressor.channel instanceof EventBusChannel &&
+                     (options.progressor.event && typeof options.progressor.event === 'string') &&
+                     typeof options.progressor.extractor === 'function'
+                  )
+               ) {
+               throw new TypeError('Argument "options.progressor" is not valid');
             }
             if (this._isDestroyed) {
                return;
@@ -337,7 +356,21 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                }
                this._actions[operationId] = listeners;
             }
+            var progressor;
+            var data = options.progressor;
+            if (data) {
+               progressor = {
+                  channel: data.channel,
+                  event: data.event,
+                  extractor: data.extractor,
+                  handler: _handleProgress.bind(null, this, operationId)
+               };
+               (this._actions[operationId] = this._actions[operationId] || {}).progressor = progressor;
+            }
             this._notify('onlongoperationstarted', {producer:this.getName(), operationId:operationId});
+            if (progressor) {
+               progressor.channel.subscribe(progressor.event, progressor.handler);
+            }
             stopper.addCallbacks(
                function (result) {
                   if (result && typeof result !== 'object') {
@@ -353,6 +386,32 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
       });
 
 
+
+      /**
+       * Обработать событиен с информацией о прогрессе выполнения длительной операции
+       * @protected
+       * @param {SBIS3.CONTROLS.GenericLongOperationsProducer} self Экземпляр класса
+       * @param {number} operationId Идентификатор длительной операции
+       * @param {Core/EventObject} evtName Дескриптор события
+       * @param {any} evt Данные события
+       */
+      var _handleProgress = function (self, operationId, evtName, evt) {
+         var actions = self._actions[operationId];
+         if (!actions || !actions.progressor) {
+            throw new Error('Actions or progressor is missed');
+         }
+         var progress = actions.progressor.extractor.call(null, evt);
+         if (!(typeof progress === 'number' && 0 <= progress && progress <= 1)) {
+            throw new Error('Illegal progress value');
+         }
+         var snapshot = self._get(false, operationId);
+         if (!snapshot) {
+            throw new Error('not found');
+         }
+         snapshot.progressCurrent = progress;
+         self._put(snapshot);
+         self._notify('onlongoperationchanged', {producer:self.getName(), operationId:operationId, changed:'progress', progress:{value:progress, total:1}});
+      };
 
       /**
        * Установить новый статус длительной операции
@@ -412,8 +471,12 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                   result = {changed:'status'};
                   break;
                case STATUSES.ended:
+                  var actions = self._actions[operationId];
+                  if (actions && actions.progressor) {
+                     var progressor = actions.progressor;
+                     progressor.channel.unsubscribe(progressor.event, progressor.handler);
+                  }
                   if (operation.canDelete) {
-                     var actions = self._actions[operationId];
                      delete actions.onSuspend;
                      delete actions.onResume;
                   }
