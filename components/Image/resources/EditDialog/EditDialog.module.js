@@ -69,7 +69,7 @@ define('js!SBIS3.CONTROLS.Image.EditDialog', [
             self = this;
          this._publish('onBeginSave', 'onEndSave', 'onOpenError');
          this._image = this._container.find('.controls-EditDialog__image');
-         this._image.load(function() {
+         this._image.on('load', function() {
             var
                dimension = ImageUtil.getDimensions(this._image[0]),
                parent = this.getTopParent(),
@@ -99,7 +99,7 @@ define('js!SBIS3.CONTROLS.Image.EditDialog', [
                   this._cropPlugin.startCrop();
                }.bind(this),0);
          }.bind(this));
-         this._image.error(function(event){
+         this._image.on('error', function(event){
             self._notify('onOpenError', event);
             self.sendCommand('close');
          });

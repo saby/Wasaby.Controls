@@ -7,6 +7,7 @@
    border-width: @default-border-width;
    min-width: @button-min-width;
    line-height: normal;
+   text-decoration: none;
 
    &:active {
       text-decoration: none !important;
@@ -117,13 +118,10 @@
          }
       }
    }
-   .controls-Button:hover {
-      text-decoration: none !important;
-   }
 }
 
 @-moz-document url-prefix() {
-   .controls-Button__text {
+   .controls-Button .controls-Button__text {
       height: @button-text-height-ff;
    }
    .controls-Button__big .controls-Button__text {
