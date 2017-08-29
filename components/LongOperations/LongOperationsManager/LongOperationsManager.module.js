@@ -451,8 +451,8 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                      return false;
                   }
                }
-               return true;
             }
+            return true;
          },
 
          /**
