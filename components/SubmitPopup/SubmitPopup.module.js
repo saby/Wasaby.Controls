@@ -2,7 +2,6 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
    "Core/constants",
    "js!SBIS3.CONTROLS.InformationPopup",
    "tmpl!SBIS3.CONTROLS.SubmitPopup/resources/template",
-   'Core/Sanitize',
    "js!SBIS3.CONTROLS.Button",
    "js!SBIS3.CONTROLS.Link",
    'css!SBIS3.CONTROLS.SubmitPopup'
@@ -17,7 +16,7 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
     * @public
     * @author Степин Павел Владимирович
     */
-   function(constants, InformationPopup, template, sanitize){
+   function(constants, InformationPopup, template){
       'use strict';
 
       var SubmitPopup = InformationPopup.extend(/** @lends SBIS3.CONTROLS.SubmitPopup.prototype */ {
@@ -160,15 +159,6 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
          },
          $constructor : function(){
             this._publish('onChoose');
-         },
-
-         _modifyOptions: function(){
-            var options = SubmitPopup.superclass._modifyOptions.apply(this, arguments);
-
-            options.message = sanitize(options.message);
-            options.details = sanitize(options.details);
-
-            return options;
          },
 
          init : function() {
