@@ -1,12 +1,12 @@
 define('js!WSControls/Lists/Controllers/PageNavigation',
-   ['Core/Abstract'],
-   function (Abstract) {
+   ['Core/Abstract', 'js!WSControls/Lists/Controllers/INavigation'],
+   function (Abstract, INavigation) {
       /**
        *
        * @author Крайнов Дмитрий
        * @public
        */
-      var PageNavigation = Abstract.extend({
+      var PageNavigation = Abstract.extend([INavigation], {
          _page: 0,
          _nextPage: 1,
          _prevPage: 0,
@@ -17,6 +17,10 @@ define('js!WSControls/Lists/Controllers/PageNavigation',
                this._page = cfg.page || 0;
                this._nextPage = this._page + 1;
             }
+         },
+
+         prepareSource: function() {
+
          },
 
          prepareQueryParams: function(projection, direction) {

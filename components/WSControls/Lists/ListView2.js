@@ -41,6 +41,7 @@ define('js!WSControls/Lists/ListView2',
          _initNavigation: function(options) {
             if (options.dataSource && options.navigation && (!this._navigationController)) {
                this._navigationController = new PageNavigation(options.navigation.config);
+               this._navigationController.prepareSource(options.dataSource);
             }
          },
 
