@@ -11,7 +11,7 @@ define([
    function (GenericLongOperationsProducer, LongOperationEntry, LongOperationsConst, CoreInstance, Deferred, UserInfo) {
       'use strict';
 
-      mocha.setup({/*ignoreLeaks:true,*/ globals:[/*'*',*/ '__extends', 'sharedBusDebug', 'Lib/ServerEventBus/class/logger/ConnectWatchDog', 'Lib/ServerEventBus/class/logger/ConsoleDocviewWatchDog']});
+      mocha.setup({/*ignoreLeaks:true,*/ globals:[/*'*',*/ '__extends', 'sharedBusDebug', 'sharedBusLog', 'Lib/ServerEventBus/class/logger/ConnectWatchDog', 'Lib/ServerEventBus/class/logger/ConsoleDocviewWatchDog']});
 
       window.userInfo = {
          'Пользователь': 861523,
@@ -90,6 +90,14 @@ define([
 
       describe('LongOperations: GenericLongOperationsProducer', function () {
 
+         after(function () {
+            // Всё почистить
+            _lsTool.clear(null);
+            _lsTool.clear('Первый');
+            _lsTool.clear('Второй');
+            _lsTool.clear('Под ликвидацию 1');
+         });
+
          describe('Создание экземпляра и API', function () {
             // Статические методы класса
             var signatures = {
@@ -160,6 +168,8 @@ define([
                hasCrossTabData: 0,
                fetch: 1,
                callAction: 2,
+               subscribe: 3,
+               unsubscribe: 3,
                canDestroySafely: 0,
                make: 2,
                destroy: 0
@@ -170,7 +180,7 @@ define([
                   var f = producer[method];
                   assert.isFunction(f, 'Метод отсутствует');
                   if (typeof f === 'function') {
-                     assert.equal(len, f.length, 'Количество аргументов');
+                     assert.equal(f.length, len, 'Количество аргументов');
                   }
                });
             });
@@ -1305,6 +1315,22 @@ define([
 
 
          //^^^ Протестировать штатное завершение операций
+
+         //^^^ Протестировать прогресс операций
+
+
+         /*describe('Метод subscribe - Подписаться на получение события', function () {
+            it('000', function () {
+               //^^^Реализовать
+            });
+         });*/
+
+
+         /*describe('Метод unsubscribe - Отписаться от получения события', function () {
+            it('000', function () {
+               //^^^Реализовать
+            });
+         });*/
 
 
          describe('Метод canDestroySafely - Можно ли в данный момент ликвидировать экземпляр без потери данных', function () {
