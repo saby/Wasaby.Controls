@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', [
              * * true Показать иконку просмотра пароля.
              * * false Скрыть иконку просмотра пароля.
              */
-            showPassword: false
+            showPassword: true
          }
       },
       $constructor: function() {
@@ -71,6 +71,10 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', [
          });
       },
 
+      _changeType: function (isPass) {
+         this._inputField.attr("type", isPass ? "password" : "text");
+      },
+      
       _modifyOptions: function() {
          var cfg = PasswordTextBox.superclass._modifyOptions.apply(this, arguments);
          
@@ -78,10 +82,6 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', [
             cfg.afterFieldWrapper = null;
          }
          return cfg;
-      },
-
-      _changeType: function (isPass) {
-         this._inputField.attr("type", isPass ? "password" : "text");
       }
    });
 
