@@ -208,8 +208,11 @@ define('js!SBIS3.CONTROLS.SelectorController', [
              if (this._linkedObject && this._linkedObject._options.useSelectAll) {
                 filter = cFunctions.clone(this._linkedObject.getFilter());
                 dataSource = this._linkedObject.getDataSource();
-                //Если кликнули по кнопке Выбрать на строке, то этот элемент нам придёт в опции и мы выберем его. Иначе
-                //заберём выделение с представления данных.
+                //Закончить выбор элементов можно двумя способами:
+                //1) Нажать кнопку "Выбрать" в шапке диалога;
+                //2) Нажать на кнопку "Выбрать" в опциях над записью у элемента таблицы, либо кликом по элементу таблицы.
+                //В первом случае элементы выборки мы получим исходя из состояния выделения в таблице.
+                //Во стором случае, элемент который был выбран, придёт аргументом в этот обработчик, и в выборку мы добавим только его.
                 selection = cInstance.instanceOfModule(item, 'WS.Data/Entity/Model') ? {
                    marked: [item.get(this._linkedObject.getProperty('idProperty'))], excluded: []
                 } : this._linkedObject.getSelection();
