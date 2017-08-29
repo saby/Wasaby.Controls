@@ -66,7 +66,7 @@ define('js!WSControls/Lists/Controllers/PageNavigation',
                this._nextPage++;
             }
             else if (direction == 'up') {
-
+               this._nextPage--;
             }
             else {
                this._nextPage = this._options.page + 1;

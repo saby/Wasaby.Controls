@@ -252,6 +252,8 @@ define('js!WSControls/Lists/ItemsControl', [
          _onLoadPage: function(list, direction) {
             if (direction == 'down') {
                this._items.append(list);
+            } else if (direction == 'up') {
+               this._items.prepend(list);
             }
          },
 
