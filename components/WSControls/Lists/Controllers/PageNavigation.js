@@ -7,15 +7,18 @@ define('js!WSControls/Lists/Controllers/PageNavigation',
        * @public
        */
       var PageNavigation = Abstract.extend([INavigation], {
-         _page: 0,
          _nextPage: 1,
-         _prevPage: 0,
+         _prevPage: -1,
          _more: null,
          constructor: function(cfg) {
             this._options = cfg;
-            if (cfg.page) {
-               this._page = cfg.page || 0;
-               this._nextPage = this._page + 1;
+            if (cfg.page !== undefined) {
+               this._options.page = cfg.page || 0;
+               this._prevPage = this._options.page - 1;
+               this._nextPage = this._options.page + 1;
+            }
+            if (!this._options.pageSize) {
+               throw new Error ('Option pageSize is undefined in PageNavigation')
             }
          },
 
@@ -32,18 +35,18 @@ define('js!WSControls/Lists/Controllers/PageNavigation',
                neededPage = this._prevPage;
             }
             else {
-               neededPage = this._page;
+               neededPage = this._options.page;
             }
-            if (this._options.pageSize) {
-               addParams.offset = neededPage * this._options.pageSize;
-               addParams.limit = this._options.pageSize;
-            }
+
+            addParams.offset = neededPage * this._options.pageSize;
+            addParams.limit = this._options.pageSize;
+
             return addParams;
          },
 
          calculateState: function(list, display, direction) {
             var meta = list.getMetaData();
-            if (this._options.mode == 'withTotalCount') {
+            if (this._options.mode == 'totalCount') {
                if (typeof meta.more == 'number') {
                   this._more = meta.more;
                }
@@ -52,11 +55,11 @@ define('js!WSControls/Lists/Controllers/PageNavigation',
                }
             }
             else {
-               if (typeof meta.more == 'number') {
+               if (typeof meta.more == 'boolean') {
                   this._more = meta.more;
                }
                else {
-                  throw new Error('"more" Parameter has incorrect type. Must be numeric')
+                  throw new Error('"more" Parameter has incorrect type. Must be boolean')
                }
             }
             if (direction == 'down') {
@@ -66,12 +69,27 @@ define('js!WSControls/Lists/Controllers/PageNavigation',
 
             }
             else {
-               this._nextPage = this._page + 1;
+               this._nextPage = this._options.page + 1;
             }
          },
 
          hasMoreData: function(direction) {
-
+            if (direction == 'down') {
+               if (this._options.mode == 'totalCount') {
+                  //в таком случае в more приходит общее число записей в списке
+                  //значит умножим номер след. страницы на число записей на одной странице и сравним с общим
+                  return this._nextPage * this._options.pageSize < this._more;
+               }
+               else {
+                  return this._more;
+               }
+            }
+            else if (direction == 'up'){
+               return this._prevPage >= 0;
+            }
+            else {
+               throw new Error('Parameter direction is not defined in hasMoreData call')
+            }
          }
 
       });
