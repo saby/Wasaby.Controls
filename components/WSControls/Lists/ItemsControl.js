@@ -9,6 +9,8 @@ define('js!WSControls/Lists/ItemsControl', [
    'js!WSControls/Lists/resources/utils/ItemsUtil',
    'Core/helpers/functional-helpers',
    'Core/Deferred',
+   'js!WS.Data/Type/descriptor',
+   'js!WS.Data/Source/ISource',
    'Core/core-instance'
 ], function (extend,
              BaseControl,
@@ -20,6 +22,8 @@ define('js!WSControls/Lists/ItemsControl', [
              ItemsUtil,
              fHelpers,
              Deferred,
+             Types,
+             ISource,
              cInstance
    ) {
    'use strict';
@@ -296,5 +300,12 @@ define('js!WSControls/Lists/ItemsControl', [
             }
          }
       });
+
+   ItemsControl.getOptionTypes = function getOptionTypes(){
+      return {
+         dataSource: Types(ISource)
+      }
+   };
+
    return ItemsControl;
 });
