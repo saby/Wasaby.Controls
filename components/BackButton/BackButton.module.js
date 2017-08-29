@@ -103,16 +103,17 @@ define('js!SBIS3.CONTROLS.BackButton',
          // Две подписки сделаны для того что бы в тестах можно было стриггерить событие нажатия
          // Клик по Link не проходит и сделан для того что бы можно было кликнуть по стрелке
          this._container.on('click', function(e){
-            if ($(e.target).hasClass('controls-BackButton__arrow')){
-               self._notify('onArrowActivated');
-               e.stopPropagation();
-            } else {
+            if (!$(e.target).hasClass('controls-BackButton__arrow')) {
                self._notify('onActivated');
                if (!!self._options.command && self.isEnabled()) {
                   var args = [self._options.command].concat(self._options.commandArgs);
                   self.sendCommand.apply(self, args);
                }
             }
+         });
+         
+         this.subscribeTo(this.getChildControlByName('BackButton-arrow'), 'onActivated', function() {
+            self._notify('onArrowActivated');
          });
          this._link.subscribe('onActivated', function(){
             self._notify('onActivated');
