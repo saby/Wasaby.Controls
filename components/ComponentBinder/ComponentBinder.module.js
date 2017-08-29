@@ -102,7 +102,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
              */
             filterButton: undefined,
             /**
-             * @cfg {SBIS3.CONROLS.Pagign} объект пэйджинга
+             * @cfg {SBIS3.CONROLS.Paging} объект пэйджинга
              */
             paging: undefined,
             /**
