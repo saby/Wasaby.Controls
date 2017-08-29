@@ -8,7 +8,7 @@
                <ws:partial template="{{messageTemplate}}" scope="{{...}}"/>
             </ws:if>
             <ws:else>
-               <div class="controls-SubmitPopup__message-centered">{{message}}</div>
+               <div class="controls-SubmitPopup__message-centered">{{message|sanitize}}</div>
             </ws:else>
          </div>
       </ws:if>
@@ -19,7 +19,7 @@
                <ws:partial template="{{detailsTemplate}}" scope="{{...}}"/>
             </ws:if>
             <ws:else>
-               <div class="controls-SubmitPopup__details-centered">{{details}}</div>
+               <div class="controls-SubmitPopup__details-centered">{{details|sanitize}}</div>
             </ws:else>
          </div>
       </ws:if>
