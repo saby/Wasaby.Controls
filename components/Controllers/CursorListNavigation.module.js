@@ -27,15 +27,13 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
                }
             }
          },
-         _modifyOptions: function() {
-            var cfg = CursorListNavigation.superclass._modifyOptions.apply(this, arguments);
-            if (!(cfg.config.field instanceof Array)) {
-               cfg.config.field = [cfg.config.field];
+         $constructor: function() {
+            if (!(this._options.config.field instanceof Array)) {
+               this._options.config.field = [this._options.config.field];
             }
-            if (!(cfg.config.position instanceof Array)) {
-               cfg.config.position = [cfg.config.position];
+            if (!(this._options.config.position instanceof Array)) {
+               this._options.config.position = [this._options.config.position];
             }
-            return cfg;
          },
          _getCalculatedParams: function() {
             var sign = '', additionalFilter = {};

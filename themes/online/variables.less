@@ -89,7 +89,7 @@
 @link-font:                               @default-font-size @default-font-name;
 @link-text-color:                         @darkcyan-color;
 @link-disabled-text-color:                @gray-ccc-color;
-@link-text-decoration:                    none;
+@link-text-decoration:                    none !important;
 @link-text-alignment:                     center;
 @link-line-height:                        24px;
 @link-padding:                            0;
@@ -118,7 +118,7 @@
 @button-font:                             @default-font-size @default-font-name;
 @button-text-color:                       @default-text-color;
 @button-text-alignment:                   center;
-@button-min-width:                        24px;
+@button-min-width:                        48px;
 @button-height:                           24px;
 @button-line-height:                      22px;
 @button-padding:                          0 11px;
@@ -145,14 +145,14 @@
 
 @button-without-caption-icon-32-left:     7px;
 
-@FilterPanelButtonRightClose: url('img/FilterPanelButton.png') 0 0;
-@FilterPanelButtonLeftClose: url('img/FilterPanelButton.png') -35px 0;
-@FilterPanelButtonRightOpen: url('img/FilterPanelButton.png') -70px 0;
-@FilterPanelButtonLeftOpen: url('img/FilterPanelButton.png') -105px 0;
-@FilterPanelButtonHoverRightClose: url('img/FilterPanelButton.png') 0 24px;
-@FilterPanelButtonHoverLeftClose: url('img/FilterPanelButton.png') -35px 24px;
-@FilterPanelButtonHoverRightOpen: url('img/FilterPanelButton.png') -70px -24px;
-@FilterPanelButtonHoverLeftOpen: url('img/FilterPanelButton.png') -105px -24px;
+@FilterPanelButtonRightClose: url('img/FilterPanelButton.svg') 0 0;
+@FilterPanelButtonLeftClose: url('img/FilterPanelButton.svg') -35px 0;
+@FilterPanelButtonRightOpen: url('img/FilterPanelButton.svg') -70px 0;
+@FilterPanelButtonLeftOpen: url('img/FilterPanelButton.svg') -105px 0;
+@FilterPanelButtonHoverRightClose: url('img/FilterPanelButton.svg') 0 24px;
+@FilterPanelButtonHoverLeftClose: url('img/FilterPanelButton.svg') -35px 24px;
+@FilterPanelButtonHoverRightOpen: url('img/FilterPanelButton.svg') -70px -24px;
+@FilterPanelButtonHoverLeftOpen: url('img/FilterPanelButton.svg') -105px -24px;
 
 // ------------------ //
 // FilterPanelChooser //
@@ -269,6 +269,8 @@
 @button-large-height:                                                                                                   48px;
 @button-large-border-radius:                                                                                            24px;
 @button-large-font-size:                                                                                                18px;
+
+@button-text-height-ff:                                                                                                 20px;
 
 
 // ------------ //
@@ -1431,7 +1433,6 @@
 @date-range-big-choose-months-button-first-height:                   36px;
 @date-range-big-choose-months-button-last-padding-bottom:            4px;
 @date-range-big-choose-months-button-last-height:                    37px;
-@date-range-big-choose-months-text-align:                            flex-start;
 @date-range-big-choose-months-padding:                               8px;
 
 @date-range-big-choose-go-to-boundary-button-bg-color:               @dodgerblue-color;
@@ -1452,6 +1453,7 @@
 @date-range-big-choose-month-range-picker-bg-boundary-selected-color: @date-range-big-choose-bg-boundary-selected-color;
 @date-range-big-choose-month-range-picker-table-element-height:      11px;
 @date-range-big-choose-month-range-picker-table-element-font-size:   8px;
+@date-range-big-choose-month-hovered-color:                          @black-color;
 
 @date-range-big-choose-month-range-picker-today-border-color:         #ff7033;
 @date-range-big-choose-month-range-picker-weekend-color:              #EF463A;

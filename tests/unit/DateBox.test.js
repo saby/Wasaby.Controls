@@ -73,6 +73,20 @@ define(['js!SBIS3.CONTROLS.DateBox'], function (DateBox) {
       // };
       this.ctx.controlConfig = {};
 
+      describe('initialization', function () {
+         this.ctx.controlConfig.validators = [];
+         // Этот вызов должен быть во внешнем describe, но тогда мы не сможем модифицировать опции во внутренних describe.
+         controlTestCase();
+
+         it('should add 2 validators', function () {
+            assert.lengthOf(this.testControl._options.validators, 2);
+         });
+
+         it('should not modify validators array from options', function () {
+            assert.notStrictEqual(this.testControl._options.validators, this.controlConfig.validators);
+         });
+      });
+
       describe('auto set century with YY year mask', function () {
          this.ctx.controlConfig.mask = 'DD.MM.YY';
          // Этот вызов должен быть во внешнем describe, но тогда мы не сможем модифицировать опции во внутренних describe.

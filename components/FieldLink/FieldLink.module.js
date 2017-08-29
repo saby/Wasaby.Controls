@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "js!SBIS3.CONTROLS.ToSourceModel",
        "js!WS.Data/Collection/List",
        "js!SBIS3.CONTROLS.Utils.ItemsSelection",
+       "Core/helpers/Object/find",
        "js!SBIS3.CONTROLS.IconButton",
        "js!SBIS3.CONTROLS.Action.SelectorAction",
        'js!SBIS3.CONTROLS.FieldLink.Link',
@@ -71,7 +72,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
         TemplateUtil,
         ToSourceModel,
         List,
-        ItemsSelectionUtil
+        ItemsSelectionUtil,
+        objectFind
     ) {
 
        'use strict';
@@ -582,7 +584,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              var config;
 
              if(key) {
-                config = this._options.dictionaries.find(function (elem) {
+                config = objectFind(this._options.dictionaries, function (elem) {
                    return elem.name === key;
                 });
              } else {
@@ -617,7 +619,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
                       var suggestShowed = this.isPickerVisible();
                       elemToFocus.blur().focus();
 
-                      if(!suggestShowed) {
+                      //https://online.sbis.ru/opendoc.html?guid=19af9bf9-0d16-4f63-8aa8-6d0ef7ff0799
+                      if(!suggestShowed && !this._options.task1174306848) {
                          this.hidePicker();
                       }
                    }
