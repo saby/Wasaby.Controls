@@ -1,3 +1,4 @@
+@crossing-line-btn: @switcherline-width - @switcher-btn-size;
 .get-size(@prop, @var1, @var2, @border) {
    @temp: (@var1 + @var2) / 2;
    & when (get-unit(@var1) = get-unit(@border)) {
@@ -50,7 +51,7 @@
 }
 
 .controls-Switcher__line_disabled-checked() {
-   background-color: @switcher-disabled-color;
+   .horizontal-gradient(@switcher-disabled-color @crossing-line-btn, transparent @crossing-line-btn);
 }
 
 .controls-Switcher__line_disabled-unchecked() {
@@ -58,7 +59,7 @@
 }
 
 .controls-Switcher__line_enabled-checked() {
-   background-color: @innacent-color;
+   .horizontal-gradient(@innacent-color @crossing-line-btn, transparent @crossing-line-btn);
 }
 
 .controls-Switcher__line_enabled-unchecked() {
