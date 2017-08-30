@@ -579,7 +579,7 @@
   .for(@_i: 1, @array, @callback);
 }
 
-.for(@array, @callback) when (default()) {
+.for(@array, @callback) when not (isnumber(@array)) {
   .for-recursive(@array, length(@array), @callback);
 }
 
