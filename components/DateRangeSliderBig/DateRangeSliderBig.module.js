@@ -1,8 +1,9 @@
 /*global define*/
 define('js!SBIS3.CONTROLS.DateRangeSliderBig', [
    'js!SBIS3.CONTROLS.DateRangeSliderBase',
-   'js!SBIS3.CONTROLS.DateRangeBigChoosePickerMixin'
-], function (DateRangeSliderBase, DateRangeBigChoosePickerMixin) {
+   'js!SBIS3.CONTROLS.DateRangeBigChoosePickerMixin',
+   'js!SBIS3.CONTROLS.ControlsValidators'
+], function (DateRangeSliderBase, DateRangeBigChoosePickerMixin, ControlsValidators) {
    'use strict';
    /**
     * Контрол позволяющий выбирать произвольный диапазон дат.
@@ -37,12 +38,12 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBig', [
          // Пробрасываем required валидаторы полей startValue и endValue в выпадашку.
          config.startValueValidators = this._options.validators.filter(function (validator) {
             return validator.option === 'startValue' && validator.validator &&
-               validator.validator.wsHandlerPath === 'js!SBIS3.CONTROLS.ControlsValidators:required';
+               validator.validator === ControlsValidators.required;
          }).map(getValidator);
 
          config.endValueValidators = this._options.validators.filter(function (validator) {
             return validator.option === 'endValue' && validator.validator &&
-               validator.validator.wsHandlerPath === 'js!SBIS3.CONTROLS.ControlsValidators:required';
+               validator.validator === ControlsValidators.required;
          }).map(getValidator);
          return config;
       }
