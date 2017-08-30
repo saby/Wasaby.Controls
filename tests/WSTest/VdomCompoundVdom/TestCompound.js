@@ -9,7 +9,7 @@ define('js!WSTest/VdomCompoundVdom/TestCompound', [
          _options: {
             compoundText: 'compound text'
          }
-      },
+      }
    });
    return moduleClass;
 });
