@@ -56,11 +56,13 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
       },
 
       $constructor: function() {
-         var topParent;
          this._publish('onTotalScroll', 'onScroll');
-         var element = this._findScrollElement() || $(window);
          this._onContainerScroll = this._onContainerScroll.bind(this);
-         element.bind('scroll.wsScrollWatcher', this._onContainerScroll);
+         this._getScrollElement().bind('scroll.wsScrollWatcher', this._onContainerScroll);
+      },
+      
+      _getScrollElement: function() {
+         return this._findScrollElement() || $(window);
       },
 
       // Ищем в порядке - пользовательский контейнер -> ws-scrolling-content -> ws-body-scrolling-content -> Window
@@ -213,9 +215,13 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
          return scrollHeight > this.getContainerHeight() - offset || scrollHeight > $(window).height() - offset;
       },
 
-      destroy: function(){
-         var element = this._findScrollElement() || $(window);
-         element.unbind('scroll.wsScrollWatcher', this._onContainerScroll);
+      destroy: function() {
+         this._getScrollElement().unbind('.wsScrollWatcher', this._onContainerScroll);
+         
+         /* Т.к. опции при разрушении не затираются, необходимо затереть самим */
+         this._setOption('element', null);
+         this._setOption('opener', null);
+         
          ScrollWatcher.superclass.destroy.call(this);
       }
 
