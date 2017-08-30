@@ -56,28 +56,38 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', [
 
       init: function() {
          PasswordTextBox.superclass.init.apply(this, arguments);
+         //Инициализируем событие просмотра пароля
          if (this._options.showPassword) {
             this._initEventChangeType();
          }
       },
 
+      /**
+       * Инициализирует событие для функционала отображения пароля
+       */
       _initEventChangeType: function() {
          var self = this;
+         //При потери фокуса изменяем тип поля на password
          this.subscribe("onFocusOut", function () {
             this._changeType(true);
          });
          this.getChildControlByName("showPassword").subscribe("onActivated", function () {
+            //Показываем пароль
             self._changeType(false);
          });
       },
 
+      /**
+       * Изменяет тип пол с password на text и обратно 
+       * @param {Boolean} isPass true - тип password, false - text
+       */
       _changeType: function (isPass) {
          this._inputField.attr("type", isPass ? "password" : "text");
       },
       
       _modifyOptions: function() {
          var cfg = PasswordTextBox.superclass._modifyOptions.apply(this, arguments);
-         
+         //Сбрасываем значение параметра afterFieldWrapper
          if (!cfg.showPassword) {
             cfg.afterFieldWrapper = null;
          }
