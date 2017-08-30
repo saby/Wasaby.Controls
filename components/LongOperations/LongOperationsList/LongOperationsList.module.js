@@ -145,6 +145,9 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                         }
                         break;
                   }
+                  if (evt) {
+                     evt.isCurrentTab = evt.tabKey === longOperationsManager.getTabKey();
+                  }
                   self._notify(evtName.name, evt);
                   if (!dontReload) {
                      self.reload();
