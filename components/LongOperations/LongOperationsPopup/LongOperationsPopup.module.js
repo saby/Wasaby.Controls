@@ -483,7 +483,9 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
          _onOperation: function (eventType, data) {
             switch (eventType) {
                case 'onlongoperationstarted':
-                  this._animationAtStart();
+                  if (data.isCurrentTab) {
+                     this._animationAtStart();
+                  }
                   this._setProgress(0, data.progress ? data.progress.total : 1);
                   break;
 

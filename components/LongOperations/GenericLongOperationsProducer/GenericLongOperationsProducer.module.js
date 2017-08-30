@@ -240,7 +240,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                      if (handler && !handler.call(null)) {
                         throw new Error('Deleting is not performed');
                      }
-                     this._remove(operationId);
+                     this._remove(operationId);//Опустить ниже?
                      var actions = this._actions[operationId];
                      if (actions && actions.progressor) {
                         var progressor = actions.progressor;
@@ -397,16 +397,19 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
        */
       var _handleProgress = function (self, operationId, evtName, evt) {
          var actions = self._actions[operationId];
-         if (!actions || !actions.progressor) {
-            throw new Error('Actions or progressor is missed');
+         if (!actions) {
+            return;
+         }
+         var snapshot = self._get(false, operationId);
+         if (!snapshot) {
+            return;
+         }
+         if (!actions.progressor) {
+            throw new Error('Progressor is missed');
          }
          var progress = actions.progressor.extractor.call(null, evt);
          if (!(typeof progress === 'number' && 0 <= progress && progress <= 1)) {
             throw new Error('Illegal progress value');
-         }
-         var snapshot = self._get(false, operationId);
-         if (!snapshot) {
-            throw new Error('not found');
          }
          snapshot.progressCurrent = progress;
          self._put(snapshot);
