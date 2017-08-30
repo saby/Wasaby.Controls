@@ -198,7 +198,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
 
          result.added.push(item);
          this.sendCommand('selectorWrapperSelectionChanged', result);
-         this.sendCommand('selectComplete');
+         this.sendCommand('selectComplete', item);
       },
 
       _onChangeHoveredItemHandler: function(event, hoveredItem) {
