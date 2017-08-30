@@ -3488,14 +3488,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._allowInfiniteScroll = true;
                }
             }
-            if (type && !noLoad) {
-               this._scrollLoadNextPage();
-               return;
-            }
-            //НА саом деле если во время infiniteScroll произошла ошибка загрузки, я о ней не смогу узнать, но при выключении нужно убрать индикатор
-            if (!type && this._loadingIndicator && this._loadingIndicator.is(':visible')){
-               this._cancelLoading();
-            }
+   
             /* Если скролл - demand, надо скрыть/показать кнопку 'Еще' */
             if (type === 'demand') {
                if (this._loadMoreButton) {
@@ -3506,6 +3499,16 @@ define('js!SBIS3.CONTROLS.ListView',
             } else if(this._loadMoreButton) {
                this._loadMoreButton.hide();
             }
+            
+            if (type && !noLoad) {
+               this._scrollLoadNextPage();
+               return;
+            }
+            //НА саом деле если во время infiniteScroll произошла ошибка загрузки, я о ней не смогу узнать, но при выключении нужно убрать индикатор
+            if (!type && this._loadingIndicator && this._loadingIndicator.is(':visible')){
+               this._cancelLoading();
+            }
+
             //Убираем текст Еще 10, если включили бесконечную подгрузку
             this.getContainer().find('.controls-TreePager-container').toggleClass('ws-hidden', !!type);
             this._hideLoadingIndicator();
