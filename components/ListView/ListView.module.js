@@ -1058,6 +1058,15 @@ define('js!SBIS3.CONTROLS.ListView',
          _getElementToFocus: function() {
             return $('.controls-ListView__fakeFocusElement', this._container).first();
          },
+   
+         /* Переопределяю метод из Control.compatible.js
+            _isAcceptKeyEvents: function(){
+               return this.isEnabled();
+            }
+            необходимо чтобы работала обработка нажатия клавиш даже в задизейбленом состоянии. */
+         _isAcceptKeyEvents: function() {
+            return true;
+         },
 
          _setTouchSupport: function(support) {
             var currentTouch = this._touchSupport;
@@ -1150,7 +1159,8 @@ define('js!SBIS3.CONTROLS.ListView',
                showPages: false,
                idProperty: 'id',
                mode: (this._options.navigation && this._options.navigation.lastPage) ? 'full' : 'part',
-               parent: this
+               parent: this,
+               tabindex: 0 // чтобы не принимал фокус по табу
             });
             // TODO: То, что ListView знает о компонентах в которые он может быть вставленн и то, что он переносит свои
             // контенеры в контенеры родительских компонентов является хаком. Подумать как изменить архитектуру
