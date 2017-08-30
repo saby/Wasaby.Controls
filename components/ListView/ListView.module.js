@@ -4017,6 +4017,10 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          destroy: function () {
             this._destroyEditInPlaceController();
+            if (this._scrollBinder){
+               this._scrollBinder.destroy();
+               this._scrollBinder = null;
+            }
             if (this._scrollWatcher) {
                if (this._options.scrollPaging){
                   this._scrollWatcher.unsubscribe('onScroll', this._onScrollHandler);
@@ -4029,10 +4033,6 @@ define('js!SBIS3.CONTROLS.ListView',
                this._pager.destroy();
                this._pager = undefined;
                this._pagerContainer = undefined;
-            }
-            if (this._scrollBinder){
-               this._scrollBinder.destroy();
-               this._scrollBinder = null;
             }
             if (this._scrollPager){
                if (!this._inScrollContainerControl) {
