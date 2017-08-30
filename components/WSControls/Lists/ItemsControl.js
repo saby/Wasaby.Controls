@@ -141,7 +141,13 @@ define('js!WSControls/Lists/ItemsControl', [
          },
 
          _checkConditionForEnumerationInGroup: function() {
-            return this._enumIndexes._curIndex < this._enumIndexes._stopIndex && !(cInstance.instanceOfModule(this._display.at(this._enumIndexes._curIndex + 1), 'WS.Data/Display/GroupItem'));
+            if (this._enumIndexes._curIndex < this._enumIndexes._stopIndex && !(cInstance.instanceOfModule(this._display.at(this._enumIndexes._curIndex), 'WS.Data/Display/GroupItem'))) {
+               return true;
+            }
+            else {
+               this._enumIndexes._curIndex--;
+               return false;
+            }
          },
 
          _getNextEnumerationPosition: function() {
