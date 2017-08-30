@@ -5,6 +5,9 @@ define('js!WSControls/Lists/ItemsControl', [
    'tmpl!WSControls/Lists/resources/ItemsTemplate',
    'tmpl!WSControls/Lists/resources/ItemTemplate',
    'tmpl!WSControls/Lists/resources/ItemContentTemplate',
+   'tmpl!WSControls/Lists/resources/GroupTemplate',
+   'tmpl!WSControls/Lists/resources/GroupItemTemplate',
+   'tmpl!WSControls/Lists/resources/GroupItemContentTemplate',
    'js!WSControls/Lists/resources/utils/DataSourceUtil',
    'js!WSControls/Lists/resources/utils/ItemsUtil',
    'Core/helpers/functional-helpers',
@@ -18,6 +21,9 @@ define('js!WSControls/Lists/ItemsControl', [
              ItemsTemplate,
              ItemTemplate,
              ItemContentTemplate,
+             GroupTemplate,
+             GroupItemTemplate,
+             GroupItemContentTemplate,
              DataSourceUtil,
              ItemsUtil,
              fHelpers,
@@ -47,8 +53,9 @@ define('js!WSControls/Lists/ItemsControl', [
 
          _defaultItemContentTemplate: ItemContentTemplate,
          _defaultItemTemplate: ItemTemplate,
-         _groupTemplate: null,
-         _defaultGroupTemplate: null,
+         _defaultGroupTemplate: GroupTemplate,
+         _defaultGroupItemTemplate: GroupItemTemplate,
+         _defaultGroupItemContentTemplate: GroupItemContentTemplate,
 
          _itemsTemplate: ItemsTemplate,
 
@@ -61,9 +68,6 @@ define('js!WSControls/Lists/ItemsControl', [
          },
 
          _prepareMountingData: function(newOptions) {
-            //this._itemContentTpl = cfg.itemContentTpl || this._defaultItemContentTemplate;
-            this._groupTemplate = newOptions.groupTemplate || this._defaultGroupTemplate;
-
             if (newOptions.items && (this._items != newOptions.items)) {
                this._items = newOptions.items;
                this._itemsChangeCallback(this._items, newOptions);
@@ -103,7 +107,7 @@ define('js!WSControls/Lists/ItemsControl', [
 
          _onCollectionChange: function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
             this._displayChangeCallback(this._display, this._options);
-            this._setDirty();
+            this._forceUpdate();
          },
 
 
@@ -127,12 +131,22 @@ define('js!WSControls/Lists/ItemsControl', [
             this._curIndex++;
          },
 
-         _getItemTpl: function() {
-            return this._options.itemTpl || this._defaultItemTemplate;
+         _getItemTpl: function(dispItem) {
+            if (cInstance.instanceOfModule(dispItem, 'WS.Data/Display/GroupItem')) {
+               return this._defaultGroupTemplate;
+            }
+            else {
+               return this._options.itemTpl || this._defaultItemTemplate;
+            }
          },
 
-         _getItemContentTpl: function() {
-            return this._options.itemContentTpl || this._defaultItemContentTemplate;
+         _getItemContentTpl: function(dispItem) {
+            if (cInstance.instanceOfModule(dispItem, 'WS.Data/Display/GroupItem')) {
+               return this._defaultGroupItemContentTemplate;
+            }
+            else {
+               return this._options.itemContentTpl || this._defaultItemContentTemplate;
+            }
          },
 
          _getPropertyValue: function(itemContents, field) {

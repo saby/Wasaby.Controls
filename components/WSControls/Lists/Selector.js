@@ -121,7 +121,7 @@ define('js!WSControls/Lists/Selector', [
       },
 
       _onSelectedItemChange: function() {
-         this._setDirty();
+         this._forceUpdate();
       }
    });
 

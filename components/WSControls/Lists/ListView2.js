@@ -2,12 +2,11 @@ define('js!WSControls/Lists/ListView2',
    [
       'js!WSControls/Lists/MultiSelector',
       'tmpl!WSControls/Lists/ListView2',
-      'tmpl!WSControls/Lists/resources/GroupTemplate',
       'js!WSControls/Lists/ItemsToolbar/ItemsToolbarCompatible',
       'js!WSControls/Lists/Controllers/PageNavigation'
    ],
 
-   function(MultiSelector, template, GroupTemplate, ItemsToolbarCompatible, PageNavigation) {
+   function(MultiSelector, template, ItemsToolbarCompatible, PageNavigation) {
       
       var INDICATOR_DELAY = 2000;
       
@@ -15,10 +14,8 @@ define('js!WSControls/Lists/ListView2',
          _navigationController: null,
          _controlName: 'WSControls/Lists/ListView',
          _template: template,
-         
-         _defaultGroupTemplate: GroupTemplate,
-         
-   
+
+
          _mouseMove: function(e, displayItem) {
             this._hoveredIndex = this._display.getIndex(displayItem);
          },
