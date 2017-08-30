@@ -177,7 +177,6 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
 
             function showMissSpellValue(value) {
                self._showMissSpell(value);
-               self._toggleItemsEventRaising(true);
             }
 
             function successSearch() {
@@ -198,10 +197,13 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                         }
                         
                         backOldSearchValue();
-                        showMissSpellValue(searchValue)
+                        showMissSpellValue(searchValue);
+                        self._toggleItemsEventRaising(true);
                      } else {
                         /* Прошлый поиск был не успешен -> отображаем данные и выводим сообщение */
                         showMissSpellValue(searchValue);
+                        //Без анализа изменений, чтобы не вызвать преждевременную отрисовку и не портить очередёность срабатывания событий
+                        self._toggleItemsEventRaising(true, false);
                         self._textBeforeTranslate = null;
                      }
                   } else {
@@ -264,14 +266,15 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
          /* Требуется отключать обработку событий проекции при поиске со сменой раскладки,
           чтобы избежать моргания данных, обработка событий включается,
           когда поиск точно закончен (уже была сменена раскладка, если требуется) */
-         _toggleItemsEventRaising: function(enable) {
+         _toggleItemsEventRaising: function(enable, analyze) {
             var items = this._currentItems || this._options.view.getItems();
+            analyze = analyze !== undefined ? analyze : true;
 
             if(items) {
                var isEqual = items.isEventRaising() === enable;
 
                if(!isEqual) {
-                  items.setEventRaising(enable, true);
+                  items.setEventRaising(enable, analyze);
                   /* Запоминаем рекордсет, чтобы потом у него же и включить обработку событий */
                   this._currentItems = !enable ? items : null;
                }
