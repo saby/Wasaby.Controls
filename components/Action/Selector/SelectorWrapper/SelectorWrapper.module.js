@@ -123,7 +123,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
                    (например это запись внутри папки или на другой странице) */
                   index = selectedItems.getIndexByValue(idProperty, addedKey);
 
-                  if(index !== -1) {
+                  if(index !== -1 && self._checkItemForSelect(selectedItems.at(index))) {
                      result.added.push(selectedItems.at(index));
                   }
                });
