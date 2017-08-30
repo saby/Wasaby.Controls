@@ -1,6 +1,6 @@
 define('js!WSControls/Lists/Controllers/PageNavigation',
-   ['Core/Abstract', 'js!WSControls/Lists/Controllers/INavigation'],
-   function (Abstract, INavigation) {
+   ['Core/Abstract', 'js!WSControls/Lists/Controllers/INavigation', 'js!WS.Data/Source/SbisService'],
+   function (Abstract, INavigation, SbisService) {
       /**
        *
        * @author Крайнов Дмитрий
@@ -20,10 +20,6 @@ define('js!WSControls/Lists/Controllers/PageNavigation',
             if (!this._options.pageSize) {
                throw new Error ('Option pageSize is undefined in PageNavigation')
             }
-         },
-
-         prepareSource: function() {
-
          },
 
          prepareQueryParams: function(projection, direction) {
@@ -90,6 +86,12 @@ define('js!WSControls/Lists/Controllers/PageNavigation',
             else {
                throw new Error('Parameter direction is not defined in hasMoreData call')
             }
+         },
+
+         prepareSource: function(source) {
+            var options = source.getOptions();
+            options.navigationType = SbisService.prototype.NAVIGATION_TYPE.PAGE;
+            source.setOptions(options);
          }
 
       });
