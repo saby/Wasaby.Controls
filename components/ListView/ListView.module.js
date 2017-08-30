@@ -3557,7 +3557,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._setLoadMoreCaption(this.getItems());
                }
             }
-            this._onMetaDataResultsChange = this._redrawResults.bind(this);
+            this._onMetaDataResultsChange = function(){
+               this._redrawResults(true);
+            }.bind(this);
             this._observeResultsRecord(true);
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
             this._needScrollCompensation = false;
@@ -4361,7 +4363,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         _redrawResults: function(){
+         _redrawResults: function(revive){
             var resultsRow = $('.controls-ListView__results', this.getContainer()),
                 insertMethod = this._options.resultsPosition == 'top' ? 'before' : 'after',
                 resultsRecord = this.getItems() && this.getItems().getMetaData().results,
@@ -4374,7 +4376,9 @@ define('js!SBIS3.CONTROLS.ListView',
                markup = TemplateUtil.prepareTemplate(this._options.resultsTpl)({item: resultsRecord, multiselect: this._options.multiselect});
                this._getItemsContainer()[insertMethod](markup);
             }
-
+            if (revive) {
+               this.reviveComponents($('.controls-ListView__results', this.getContainer()));
+            }
          },
 
          /**
