@@ -240,7 +240,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                      if (handler && !handler.call(null)) {
                         throw new Error('Deleting is not performed');
                      }
-                     this._remove(operationId);
+                     this._remove(operationId);//Опустить ниже?
                      var actions = this._actions[operationId];
                      if (actions && actions.progressor) {
                         var progressor = actions.progressor;

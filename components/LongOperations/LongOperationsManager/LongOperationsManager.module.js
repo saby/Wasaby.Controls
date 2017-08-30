@@ -704,12 +704,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             }
          }
          var eventType = typeof evtName === 'object' ? evtName.name : evtName;
-         if (data) {
-            _channel.notifyWithTarget(eventType, manager, !dontCrossTab ? ObjectAssign({tabKey:_tabKey}, data) : data);
-         }
-         else {
-            _channel.notifyWithTarget(eventType, manager);
-         }
+         _channel.notifyWithTarget(eventType, manager, !dontCrossTab ? (data ? ObjectAssign({tabKey:_tabKey}, data) : {tabKey:_tabKey}) : data);
          if (!dontCrossTab && !producer.hasCrossTabEvents()) {
             _tabChannel.notify('LongOperations:Manager:onActivity', {type:eventType, tab:_tabKey, isCrossTab:producer.hasCrossTabData(), hasHistory:_canHasHistory(producer), data:data});
          }
