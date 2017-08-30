@@ -1043,7 +1043,7 @@ define(
        * @private
        */
       _checkPossibleMask: function(){
-         if (this._possibleMasks && this._options.mask && Array.indexOf(this._possibleMasks, this._options.mask) == -1){
+         if (this._possibleMasks && this._options.mask && this._possibleMasks.indexOf(this._options.mask) == -1){
             throw new Error('_checkPossibleMask. Маска не удовлетворяет ни одной допустимой маске данного контролла');
          }
       },
