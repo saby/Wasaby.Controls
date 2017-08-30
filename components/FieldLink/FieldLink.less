@@ -261,8 +261,10 @@
 
 .controls-FieldLink__Link.ws-enabled {
    color: @controls-FieldLink-link-color;
-   // TODO https://online.sbis.ru/opendoc.html?guid=e780f10e-3409-4390-98be-510dc06f546b аналогично стилям ссылке
-   text-decoration: underline !important;
+
+   .controls-Button__text {
+      text-decoration: underline;
+   }
    
    &:hover {
       color: @controls-FieldLink-link-color-hover;
