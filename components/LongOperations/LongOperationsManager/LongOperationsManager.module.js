@@ -121,6 +121,15 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          DEFAULT_FETCH_LIMIT: DEFAULT_FETCH_LIMIT,
 
          /**
+          * Получить ключ текущей вкладки
+          * @public
+          * @return {string}
+          */
+         getTabKey: function () {
+            return _tabKey;
+         },
+
+         /**
           * Получить зарегистрированный продюсер длительных операций по его имени
           * @public
           * @param {string} prodName Имя продюсера длительных операций
