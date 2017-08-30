@@ -1283,14 +1283,26 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
          this._moveThumbAndColumns(cords);
       },
-
+   
       _moveThumbAndColumns: function(cords) {
+         var self = this;
+      
+         if (window.requestAnimationFrame) {
+            window.requestAnimationFrame(function() {
+               self._scrollColumns(cords);
+            })
+         } else {
+            this._scrollColumns(cords);
+         }
+      },
+   
+      _scrollColumns: function(cords) {
          this._setPartScrollShift(cords);
-         
+      
          /* Ячейки двигаем через translateX, т.к. IE не двиагает ячейки через left,
-            если таблица лежит в контейнере с display: flex */
+          если таблица лежит в контейнере с display: flex */
          var movePosition = 'translateX(' + this._getColumnsScrollPosition() + 'px)';
-
+      
          for(var i= 0, len = this._movableElems.length; i < len; i++) {
             this._movableElems[i].style.transform = movePosition;
          }
