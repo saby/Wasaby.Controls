@@ -2053,7 +2053,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          //TODO может перерисовку надо по-другому делать
          this._options.groupBy = group;
          // запросим данные из источника
-         if (!isEmpty(this._options.groupBy)){
+         if (!isEmpty(this._options.groupBy) && !this._options.easyGroup){
             if (!this._options.groupBy.hasOwnProperty('method')){
                this._options.groupBy.method = _oldGroupByDefaultMethod;
             }
