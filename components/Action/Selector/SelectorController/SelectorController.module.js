@@ -198,16 +198,25 @@ define('js!SBIS3.CONTROLS.SelectorController', [
             * @see selectorWrapperInitialized
             * @see selectorWrapperSelectionChanged
             */
-          _selectComplete: function() {
+          _selectComplete: function(item) {
              var
                 list,
                 filter,
+                selection,
                 dataSource,
                 self = this;
              if (this._linkedObject && this._linkedObject._options.useSelectAll) {
                 filter = cFunctions.clone(this._linkedObject.getFilter());
                 dataSource = this._linkedObject.getDataSource();
-                filter['selection'] = Record.fromObject(this._linkedObject.getSelection(), dataSource.getAdapter());
+                //Закончить выбор элементов можно двумя способами:
+                //1) Нажать кнопку "Выбрать" в шапке диалога;
+                //2) Нажать на кнопку "Выбрать" в опциях над записью у элемента таблицы, либо кликом по элементу таблицы.
+                //В первом случае элементы выборки мы получим исходя из состояния выделения в таблице.
+                //Во стором случае, элемент который был выбран, придёт аргументом в этот обработчик, и в выборку мы добавим только его.
+                selection = cInstance.instanceOfModule(item, 'WS.Data/Entity/Model') ? {
+                   marked: [item.get(this._linkedObject.getProperty('idProperty'))], excluded: []
+                } : this._linkedObject.getSelection();
+                filter['selection'] = Record.fromObject(selection, dataSource.getAdapter());
                 Query(dataSource, [filter]).addCallback(function(recordSet) {
                    list = new List();
                    list.assign(recordSet.getAll());
