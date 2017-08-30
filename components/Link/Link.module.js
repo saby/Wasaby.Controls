@@ -1,8 +1,9 @@
 define('js!SBIS3.CONTROLS.Link', [
    'Deprecated/helpers/string-helpers',
    'js!WSControls/Buttons/Button',
+   'tmpl!SBIS3.CONTROLS.Link/resources/hrefTemplate',
    'css!SBIS3.CONTROLS.Link'
-], function(strHelpers, WSButton) {
+], function(strHelpers, WSButton, hrefTemplate) {
 
    'use strict';
 
@@ -68,35 +69,38 @@ define('js!SBIS3.CONTROLS.Link', [
    var Link = WSButton.extend( /** @lends SBIS3.CONTROLS.Link.prototype */ {
       $protected: {
          _options: {
-             /**
-              * @cfg {String} Адрес документа, к которому нужно перейти
-              * @example
-              * <pre>
-              *     <option name="href">https://google.ru/</option>
-              * </pre>
-              * @see inNewTab
-              */
+            /**
+             * @cfg {String} Адрес документа, к которому нужно перейти
+             * @example
+             * <pre>
+             *     <option name="href">https://google.ru/</option>
+             * </pre>
+             * @see inNewTab
+             */
             href: '',
-             /**
-              * @cfg {Boolean} Открывать ссылку в новой вкладке
-              * @example
-              * <pre>
-              *     <option name="inNewTab">true</option>
-              * </pre>
-              * @see href
-              */
+            /**
+             * @cfg {Boolean} Открывать ссылку в новой вкладке
+             * @example
+             * <pre>
+             *     <option name="inNewTab">true</option>
+             * </pre>
+             * @see href
+             */
             inNewTab: false
          }
       },
 
       _modifyOptions: function (opts) {
          var
-             options = Link.superclass._modifyOptions.apply(this, arguments);
+            options = Link.superclass._modifyOptions.apply(this, arguments);
          options.cssClassName += ' controls-Link';
 
          // в случае когда задана ссылка передаем отдельный шаблон
+         if(options.href) {
+            options.contentTemplate = hrefTemplate;
+         }else {
             options._textClass = ' controls-Link__field';
-
+         }
          return options;
       },
 
@@ -104,6 +108,9 @@ define('js!SBIS3.CONTROLS.Link', [
 
       setCaption: function(caption){
          Link.superclass.setCaption.call(this, caption);
+         if(this._options.href) {
+            this._container.get(0).innerHTML = hrefTemplate(this._options);
+         }
          this.setTooltip(strHelpers.htmlToText(caption === undefined || caption === null ? '' : caption + ''));
       },
 
@@ -111,11 +118,18 @@ define('js!SBIS3.CONTROLS.Link', [
          Link.superclass._setEnabled.apply(this, arguments);
          if (enabled) {
             if (this._options.href) {
-               this._container.attr('href', this._options.href);
+               $('.controls-Link-link', this._container).attr('href', this._options.href);
             }
          }
          else {
-            this._container.removeAttr('href', this._options.href);
+            $('.controls-Link-link', this._container).removeAttr('href', this._options.href);
+         }
+      },
+
+      _drawIcon: function (icon) {
+         Link.superclass._drawIcon.call(this, icon);
+         if(this._options.href) {
+            this._container.get(0).innerHTML = hrefTemplate(this._options);
          }
       },
       /**
@@ -127,7 +141,7 @@ define('js!SBIS3.CONTROLS.Link', [
        */
       setHref: function (href) {
          this._options.href = href;
-         this._redrawButton();
+         this._container.html(hrefTemplate(this._options));
       }
 
    });
