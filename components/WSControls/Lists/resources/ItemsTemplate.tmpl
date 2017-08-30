@@ -1,15 +1,11 @@
 <div>
 <ws:if data="{{_display}}">
-   <ws:for data="_getStartEnumerationPosition(); _curIndex < _stopIndex; _getNextEnumerationPosition();">
-           <ws:partial
-                   template="{{_getItemTpl(_display.at(_curIndex))}}"
-                   scope="{{...}}"
-                   contentTemplate="{{_getItemContentTpl(_display.at(_curIndex))}}"
-                   defaultItemTpl="{{_defaultItemTemplate}}"
-                   item="{{_display.at(_curIndex).getContents()}}"
-                   projItem="{{_display.at(_curIndex)}}"
-                   index="{{_curIndex}}"
-                   itemData="{{_getItemData(_display.at(_curIndex), _curIndex)}}"/>
-   </ws:for>
+      <ws:partial
+            scope="{{...}}"
+            template="{{_listItemsTemplate}}"
+            startFnc="{{_getStartEnumerationPosition}}"
+            condFnc="{{_checkConditionForEnumeration}}"
+            endFnc="{{_getNextEnumerationPosition}}"
+      />
 </ws:if>
 </div>

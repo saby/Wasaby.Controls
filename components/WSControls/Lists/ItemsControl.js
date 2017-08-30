@@ -3,6 +3,7 @@ define('js!WSControls/Lists/ItemsControl', [
    'Core/Control',
    'Core/helpers/Object/isEmpty',
    'tmpl!WSControls/Lists/resources/ItemsTemplate',
+   'tmpl!WSControls/Lists/resources/ListItemsTemplate',
    'tmpl!WSControls/Lists/resources/ItemTemplate',
    'tmpl!WSControls/Lists/resources/ItemContentTemplate',
    'tmpl!WSControls/Lists/resources/GroupTemplate',
@@ -19,6 +20,7 @@ define('js!WSControls/Lists/ItemsControl', [
              BaseControl,
              isEmpty,
              ItemsTemplate,
+             ListItemsTemplate,
              ItemTemplate,
              ItemContentTemplate,
              GroupTemplate,
@@ -37,9 +39,11 @@ define('js!WSControls/Lists/ItemsControl', [
    var ItemsControl = BaseControl.extend(
       {
          _controlName: 'WSControls/Lists/ItemsControl',
-         _startIndex: 0,
-         _stopIndex: 0,
-         _curIndex: 0,
+         _enumIndexes: {
+            _startIndex: 0,
+            _stopIndex: 0,
+            _curIndex: 0
+         },
          iWantVDOM: true,
          _isActiveByClick: false,
          _items: null,
@@ -58,6 +62,7 @@ define('js!WSControls/Lists/ItemsControl', [
          _defaultGroupItemContentTemplate: GroupItemContentTemplate,
 
          _itemsTemplate: ItemsTemplate,
+         _listItemsTemplate: ListItemsTemplate,
 
          constructor: function (cfg) {
             ItemsControl.superclass.constructor.apply(this, arguments);
@@ -119,16 +124,28 @@ define('js!WSControls/Lists/ItemsControl', [
 
          //при изменениях в проекции
          _displayChangeCallback: function(display, cfg) {
-            this._startIndex = 0;
-            this._stopIndex = this._display.getCount();
+            this._enumIndexes._startIndex = 0;
+            this._enumIndexes._stopIndex = this._display.getCount();
          },
 
          _getStartEnumerationPosition: function() {
-            this._curIndex = this._startIndex;
+            this._enumIndexes._curIndex = this._enumIndexes._startIndex;
+         },
+
+         _getStartEnumerationPositionInGroup: function() {
+            this._enumIndexes._curIndex++;
+         },
+
+         _checkConditionForEnumeration: function() {
+            return this._enumIndexes._curIndex < this._enumIndexes._stopIndex;
+         },
+
+         _checkConditionForEnumerationInGroup: function() {
+            return this._enumIndexes._curIndex < this._enumIndexes._stopIndex && !(cInstance.instanceOfModule(this._display.at(this._enumIndexes._curIndex + 1), 'WS.Data/Display/GroupItem'));
          },
 
          _getNextEnumerationPosition: function() {
-            this._curIndex++;
+            this._enumIndexes._curIndex++;
          },
 
          _getItemTpl: function(dispItem) {
