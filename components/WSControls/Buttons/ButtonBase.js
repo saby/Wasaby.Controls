@@ -164,7 +164,13 @@ define('js!WSControls/Buttons/ButtonBase', [
             this._setOption('visible', this._isVisible);
             this._notifyOnPropertyChanged('visible');
          }
-      }
+      },
+      _getExtendedTooltipPositionContainer: function() {
+         if (this._options.icon || !!this._options.iconClass) {
+            return this.getContainer()[0].querySelector('.js-controls-Button__icon');
+         }
+         return this.getContainer();
+      },
    });
 
    return WSButtonBase;
