@@ -1162,7 +1162,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
 
          if(leftOffset) {
-            this._moveThumbAndColumns({left: leftOffset});
+            /* Необхдимо скролить сразу, иначе бразуер по фокусу в контрол сдвинет контейнер таблицы */
+            this._moveThumbAndColumns({left: leftOffset}, true);
          }
       },
 
@@ -1284,10 +1285,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._moveThumbAndColumns(cords);
       },
    
-      _moveThumbAndColumns: function(cords) {
+      /**
+       * Передвигает ползунок частичного скрола на переданную координату
+       * @param cords Значение, на которое нужно проскролить
+       * @param force выполнить скролл сразу, а не запланировать в ближайший кадр перерисовки бразуера (менее оптимально)
+       * @private
+       */
+      _moveThumbAndColumns: function(cords, force) {
          var self = this;
       
-         if (window.requestAnimationFrame) {
+         if (window.requestAnimationFrame && !force) {
             window.requestAnimationFrame(function() {
                self._scrollColumns(cords);
             })
