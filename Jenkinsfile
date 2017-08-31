@@ -1,5 +1,6 @@
 #!groovy
 properties([
+    disableConcurrentBuilds(),
     buildDiscarder(
         logRotator(
             artifactDaysToKeepStr: '5',
