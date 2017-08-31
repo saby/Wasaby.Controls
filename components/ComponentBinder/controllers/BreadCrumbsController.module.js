@@ -67,7 +67,18 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
 
          function applyRoot(id, hier) {
             //Этот массив могут использовать другие подписанты, а мы его модифицируем
-            var hierClone = cFunctions.clone(hier);
+            var hierClone = cFunctions.clone(hier),
+                breadCrumbsIdProp = breadCrumbs.getProperty('idProperty'),
+                breadCrumbsDisplayProp = breadCrumbs.getProperty('displayProperty');
+            
+            /* Т.к. у крошек idProperty и displayProperty может отличаться от id и title соответственно,
+               то для корректной работы добавим в массив с иерархией эти поля. */
+            if(breadCrumbsIdProp !== 'id' || breadCrumbsDisplayProp !== 'title') {
+               hierClone.forEach(function(elem) {
+                  elem[breadCrumbsIdProp] = elem['id'];
+                  elem[breadCrumbsDisplayProp] = elem['title'];
+               })
+            }
             //onSetRoot стреляет после того как перешли в режим поиска (так как он стреляет при каждом релоаде),
             //при этом не нужно пересчитывать хлебные крошки
             if (!self._searchMode){
