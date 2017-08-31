@@ -200,7 +200,9 @@ define('js!SBIS3.CONTROLS.Button',
          },
 
          destroy: function() {
-            this._unregisterDefaultButton();
+            if (this.isPrimary()) {
+               this._unregisterDefaultButton();
+            }
             Button.superclass.destroy.call(this);
          }
          //</editor-fold>
