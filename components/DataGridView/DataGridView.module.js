@@ -382,11 +382,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * </component>
     */
    var DataGridView = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS.DataGridView.prototype*/ {
+       /**
+        * @event onDrawHead Возникает после отрисовки шапки
+        * @param {Core/EventObject} eventObject Дескриптор события.
+        */
       _dotTplFn : dotTplFn,
-      /**
-       * @event onDrawHead Возникает после отрисовки шапки
-       * @param {Core/EventObject} eventObject Дескриптор события.
-       */
       $protected: {
          _headIsChanged: false,
          _rowTpl : rowTpl,
