@@ -67,18 +67,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
 
          function applyRoot(id, hier) {
             //Этот массив могут использовать другие подписанты, а мы его модифицируем
-            var hierClone = cFunctions.clone(hier),
-                breadCrumbsIdProp = breadCrumbs.getProperty('idProperty'),
-                breadCrumbsDisplayProp = breadCrumbs.getProperty('displayProperty');
-            
-            /* Т.к. у крошек idProperty и displayProperty может отличаться от id и title соответственно,
-               то для корректной работы добавим в массив с иерархией эти поля. */
-            if(breadCrumbsIdProp !== 'id' || breadCrumbsDisplayProp !== 'title') {
-               hierClone.forEach(function(elem) {
-                  elem[breadCrumbsIdProp] = elem['id'];
-                  elem[breadCrumbsDisplayProp] = elem['title'];
-               })
-            }
+            var hierClone = cFunctions.clone(hier);
             //onSetRoot стреляет после того как перешли в режим поиска (так как он стреляет при каждом релоаде),
             //при этом не нужно пересчитывать хлебные крошки
             if (!self._searchMode){
@@ -114,10 +103,13 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
                      break;
                   }
                }
-
-               breadCrumbs.setItems(self._path.reduce(function(elem) {
-                  return createBreadCrumb(elem);
-               }));
+               
+               /* Т.к. у крошек может быть свой idProperty и displayProperty, отличный от полей в пути,
+                  которые приходят в событии onSetRoot, надо элементы ковертировать, не именяя исходный путь */
+               breadCrumbs.setItems(self._path.reduce(function(result, elem) {
+                  result.push(createBreadCrumb(elem));
+                  return result;
+               }, []));
                if (self._options.backButtonTemplate && self._currentRoot) {
                   caption = self._options.backButtonTemplate(self._currentRoot.data);
                } else {
