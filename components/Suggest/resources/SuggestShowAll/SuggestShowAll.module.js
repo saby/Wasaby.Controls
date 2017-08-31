@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.SuggestShowAll',
        'js!SBIS3.CONTROLS.Button'
     ], function (CompoundControl, dotTplFn) {
 
-       var optionsToSet = ['columns', 'itemTpl', 'idProperty', 'filter'];
+       var optionsToSet = ['columns', 'itemTpl', 'idProperty', 'filter', 'dataSource'];
        /**
         * SBIS3.CORE.SuggestShowAll
         * @extends SBIS3.CORE.CompoundControl
@@ -44,14 +44,13 @@ define('js!SBIS3.CONTROLS.SuggestShowAll',
           init: function() {
              SuggestShowAllDialog.superclass.init.apply(this, arguments);
 
-             var list = this.getParent().getOpener().getList(),
-                 view = this.getChildControlByName('controls-showAllView'),
-                 selectButton = this.getChildControlByName('selectButton');
+             var view = this.getChildControlByName('controls-showAllView'),
+                 selectButton = this.getChildControlByName('selectButton'),
+                 self = this;
 
              optionsToSet.forEach(function(opt) {
-                view.setProperty(opt, list.getProperty(opt));
+                view.setProperty(opt, self._options.listConfig[opt]);
              });
-             view.setDataSource(list.getDataSource());
 
              this.subscribeTo(view, 'onSelectedItemsChange', function () {
                 selectButton.show();
