@@ -404,6 +404,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             left: 0,
             right: 0
          },
+         _partScrollRequestAnimationId: null,
          _currentScrollPosition: 0,                   //Текущее положение частичного скрола заголовков
          _scrollingNow: false,                        //Флаг обозначающий, происходит ли в данный момент скролирование элементов
          _partScrollRow: undefined,                   //Строка-контейнер, в которой лежит частичный скролл
@@ -1293,13 +1294,24 @@ define('js!SBIS3.CONTROLS.DataGridView',
        */
       _moveThumbAndColumns: function(cords, force) {
          var self = this;
-      
-         if (window.requestAnimationFrame && !force) {
-            window.requestAnimationFrame(function() {
+         
+         /* Т.к. requestAnimationFrame работает асинхронно, надо выполнять лишь последний вызов,
+            иначе скролл может дёргаться */
+         this._cancelScrollRequest();
+         
+         if(!force) {
+            this._partScrollRequestAnimationId = window.requestAnimationFrame(function() {
                self._scrollColumns(cords);
             })
          } else {
             this._scrollColumns(cords);
+         }
+      },
+      
+      _cancelScrollRequest: function() {
+         if(this._partScrollRequestAnimationId) {
+            window.cancelAnimationFrame(this._partScrollRequestAnimationId);
+            this._partScrollRequestAnimationId = null;
          }
       },
    
@@ -1561,6 +1573,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
       destroy: function() {
          if (this.hasPartScroll()) {
+            this._cancelScrollRequest();
             this._thumb.unbind('click');
             this._thumb = undefined;
             this._arrowLeft.unbind('click');
