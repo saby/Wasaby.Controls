@@ -305,6 +305,11 @@ define('js!SBIS3.CONTROLS.SearchController',
             }
 
             if(self._options.keyboardLayoutRevert) {
+               /* Если в этот момент уже происходит поиск,
+                  то механизм смены раскладки надо обновить, чтобы он работал от текущего поиска  */
+               if(view.isLoading()) {
+                  self._kbLayoutRevertObserver.stopObserve();
+               }
                self._kbLayoutRevertObserver.startObserve();
             }
             if (isTree) {
