@@ -185,6 +185,19 @@
 	margin: @controls-filterButton-area-text-margin;
 }
 
+.controls__filterButton__picker .controls-FieldLink__Link.ws-enabled {
+	color: @controls-FieldLink-FilterButton-color;
+
+	.controls-Button__text {
+		text-decoration: none;
+	}
+	
+	&.ws-enabled:hover {
+		color: @controls-FieldLink-FilterButton-color-hover;
+		text-decoration: underline;
+	}
+}
+
 .ws-is-desktop-platform {
 	.controls__filterButton__picker {
 		.controls__filterButton__area-header {

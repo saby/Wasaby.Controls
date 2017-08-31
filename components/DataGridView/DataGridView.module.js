@@ -1162,7 +1162,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
 
          if(leftOffset) {
-            this._moveThumbAndColumns({left: leftOffset});
+            /* Необхдимо скролить сразу, иначе бразуер по фокусу в контрол сдвинет контейнер таблицы */
+            this._moveThumbAndColumns({left: leftOffset}, true);
          }
       },
 
@@ -1283,14 +1284,32 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
          this._moveThumbAndColumns(cords);
       },
-
-      _moveThumbAndColumns: function(cords) {
+   
+      /**
+       * Передвигает ползунок частичного скрола на переданную координату
+       * @param cords Значение, на которое нужно проскролить
+       * @param force выполнить скролл сразу, а не запланировать в ближайший кадр перерисовки бразуера (менее оптимально)
+       * @private
+       */
+      _moveThumbAndColumns: function(cords, force) {
+         var self = this;
+      
+         if (window.requestAnimationFrame && !force) {
+            window.requestAnimationFrame(function() {
+               self._scrollColumns(cords);
+            })
+         } else {
+            this._scrollColumns(cords);
+         }
+      },
+   
+      _scrollColumns: function(cords) {
          this._setPartScrollShift(cords);
-         
+      
          /* Ячейки двигаем через translateX, т.к. IE не двиагает ячейки через left,
-            если таблица лежит в контейнере с display: flex */
+          если таблица лежит в контейнере с display: flex */
          var movePosition = 'translateX(' + this._getColumnsScrollPosition() + 'px)';
-
+      
          for(var i= 0, len = this._movableElems.length; i < len; i++) {
             this._movableElems[i].style.transform = movePosition;
          }
@@ -1528,10 +1547,17 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }, this);
          }
       },
-      _redrawResults: function() {
-        if (this._options.resultsPosition !== 'none'){
+      _redrawResults: function(revive) {
+         if (this._options.resultsPosition !== 'none'){
            this._redrawTheadAndTfoot();
-        }
+         }
+         if (revive) {
+            var self = this;
+            this.reviveComponents(this._thead).addCallback(function(){
+               self._notify('onDrawHead');
+               self._headIsChanged = false;
+            });
+         }
       },
       destroy: function() {
          if (this.hasPartScroll()) {

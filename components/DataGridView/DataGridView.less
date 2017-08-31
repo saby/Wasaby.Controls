@@ -401,11 +401,9 @@
 }
 
 .controls-DataGridView__scrollingNow {
-  .controls-DataGridView__thead {
-    .controls-DataGridView__scrolledCell {
-      .closedHandCursor();
-    }
-  }
+   .controls-DataGridView__scrolledCell, .controls-DataGridView__PartScroll__thumb {
+      will-change: transform;
+   }
 }
 /****************************************/
 

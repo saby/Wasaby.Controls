@@ -199,6 +199,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   parent: this
                });
 
+               this._recalcSizeScrollbar();
+
                this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
             }
          },
@@ -402,20 +404,11 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _onResizeHandler: function(){
-            var headerHeight, scrollbarContainer;
             AreaAbstractCompatible._onResizeHandler.apply(this, arguments);
             if (this._scrollbar){
                this._scrollbar.setContentHeight(this._getScrollHeight());
                this._scrollbar.setPosition(this._getScrollTop());
-               if (this._options.stickyContainer) {
-                  headerHeight = StickyHeaderManager.getStickyHeaderHeight(this._content);
-                  if (this._headerHeight !== headerHeight) {
-                     scrollbarContainer = this._scrollbar._container;
-                     scrollbarContainer.css('margin-top', headerHeight);
-                     scrollbarContainer.height('calc(100% - ' + headerHeight + 'px)');
-                     this._headerHeight = headerHeight;
-                  }
-               }
+               this._recalcSizeScrollbar();
             }
             //ресайз может позваться до инита контейнера
             if (this._content) {
@@ -438,6 +431,19 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                 */
                if (this._container.height()) {
                   this._setPagesCount(Math.ceil(this._getScrollHeight() / this._container.height()));
+               }
+            }
+         },
+
+         _recalcSizeScrollbar: function() {
+            var headerHeight, scrollbarContainer;
+            if (this._options.stickyContainer) {
+               headerHeight = StickyHeaderManager.getStickyHeaderHeight(this._content);
+               if (this._headerHeight !== headerHeight) {
+                  scrollbarContainer = this._scrollbar._container;
+                  scrollbarContainer.css('margin-top', headerHeight);
+                  scrollbarContainer.height('calc(100% - ' + headerHeight + 'px)');
+                  this._headerHeight = headerHeight;
                }
             }
          },

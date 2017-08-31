@@ -1058,6 +1058,15 @@ define('js!SBIS3.CONTROLS.ListView',
          _getElementToFocus: function() {
             return $('.controls-ListView__fakeFocusElement', this._container).first();
          },
+   
+         /* Переопределяю метод из Control.compatible.js
+            _isAcceptKeyEvents: function(){
+               return this.isEnabled();
+            }
+            необходимо чтобы работала обработка нажатия клавиш даже в задизейбленом состоянии. */
+         _isAcceptKeyEvents: function() {
+            return true;
+         },
 
          _setTouchSupport: function(support) {
             var currentTouch = this._touchSupport;
@@ -1150,7 +1159,8 @@ define('js!SBIS3.CONTROLS.ListView',
                showPages: false,
                idProperty: 'id',
                mode: (this._options.navigation && this._options.navigation.lastPage) ? 'full' : 'part',
-               parent: this
+               parent: this,
+               tabindex: 0 // чтобы не принимал фокус по табу
             });
             // TODO: То, что ListView знает о компонентах в которые он может быть вставленн и то, что он переносит свои
             // контенеры в контенеры родительских компонентов является хаком. Подумать как изменить архитектуру
@@ -3557,7 +3567,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._setLoadMoreCaption(this.getItems());
                }
             }
-            this._onMetaDataResultsChange = this._redrawResults.bind(this);
+            this._onMetaDataResultsChange = function(){
+               this._redrawResults(true);
+            }.bind(this);
             this._observeResultsRecord(true);
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
             this._needScrollCompensation = false;
@@ -4005,6 +4017,10 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          destroy: function () {
             this._destroyEditInPlaceController();
+            if (this._scrollBinder){
+               this._scrollBinder.destroy();
+               this._scrollBinder = null;
+            }
             if (this._scrollWatcher) {
                if (this._options.scrollPaging){
                   this._scrollWatcher.unsubscribe('onScroll', this._onScrollHandler);
@@ -4017,10 +4033,6 @@ define('js!SBIS3.CONTROLS.ListView',
                this._pager.destroy();
                this._pager = undefined;
                this._pagerContainer = undefined;
-            }
-            if (this._scrollBinder){
-               this._scrollBinder.destroy();
-               this._scrollBinder = null;
             }
             if (this._scrollPager){
                if (!this._inScrollContainerControl) {
@@ -4361,7 +4373,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         _redrawResults: function(){
+         _redrawResults: function(revive){
             var resultsRow = $('.controls-ListView__results', this.getContainer()),
                 insertMethod = this._options.resultsPosition == 'top' ? 'before' : 'after',
                 resultsRecord = this.getItems() && this.getItems().getMetaData().results,
@@ -4374,7 +4386,9 @@ define('js!SBIS3.CONTROLS.ListView',
                markup = TemplateUtil.prepareTemplate(this._options.resultsTpl)({item: resultsRecord, multiselect: this._options.multiselect});
                this._getItemsContainer()[insertMethod](markup);
             }
-
+            if (revive) {
+               this.reviveComponents($('.controls-ListView__results', this.getContainer()));
+            }
          },
 
          /**
