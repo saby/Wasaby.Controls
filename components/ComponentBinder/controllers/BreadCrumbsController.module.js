@@ -115,7 +115,9 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
                   }
                }
 
-               breadCrumbs.setItems(self._path);
+               breadCrumbs.setItems(self._path.reduce(function(elem) {
+                  return createBreadCrumb(elem);
+               }));
                if (self._options.backButtonTemplate && self._currentRoot) {
                   caption = self._options.backButtonTemplate(self._currentRoot.data);
                } else {
