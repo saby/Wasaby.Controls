@@ -236,15 +236,15 @@ define('js!SBIS3.CONTROLS.SelectorController', [
           return OpenDialogUtil.getOptionsFromProto(this, opt);
        };
 
-       SelectorController.prototype.getItemsFromSource = function (opt) {
+       SelectorController.prototype.getItemsFromSource = function (opt, metaOpts) {
           var options = this.getComponentOptions(opt),
               dataSource = options.dataSource;
 
           return Query(dataSource, [
-             options.hasOwnProperty('filter') ? options.filter : {},
-             options.hasOwnProperty('sorting') ? options.sorting : {},
+             options.filter ? options.filter : metaOpts.filter || {}, // Фильтр может быть задан не на прототипе, а передан в мета информации для action'a, т.к. определяется динамически
+             options.sorting ? options.sorting : {},
              0,
-             options.hasOwnProperty('pageSize') ? options.pageSize : 25]);
+             options.pageSize ? options.pageSize : 25]);
        };
 
        return SelectorController;
