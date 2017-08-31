@@ -656,13 +656,13 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                columns: list.getColumns(),
                filter: list.getFilter(),
                idProperty: list.getProperty('idProperty'),
-               itemTpl: list.getItemTpl(),
+               itemTpl: list.getProperty('itemTpl'),
                dataSource: list.getDataSource()
             };
             
             /* Когда нет записей в списке автодополнения,
                должен открываться справочник без фильтра, чтобы отобразились все записи */
-            if(!list.getItems().getCount()) {
+            if(!list.getItems().getCount() && this._options.searchParam) {
                delete listConfig.filter[this._options.searchParam];
             }
    
