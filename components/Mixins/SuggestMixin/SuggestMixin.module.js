@@ -655,7 +655,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
             listConfig = {
                columns: list.getColumns(),
                filter: list.getFilter(),
-               idProperty: list.getIdProperty(),
+               idProperty: list.getProperty('idProperty'),
                itemTpl: list.getItemTpl(),
                dataSource: list.getDataSource()
             };
