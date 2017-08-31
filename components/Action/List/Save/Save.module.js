@@ -2,7 +2,6 @@ define('js!SBIS3.CONTROLS.Action.List.Save', [
     'js!SBIS3.CONTROLS.Action.Save',
     'js!SBIS3.CONTROLS.Action.List.ListMixin',
     'Core/helpers/fast-control-helpers',
-    'Core/helpers/collection-helpers',
     'Core/Deferred',
     'Core/constants',
     'Core/core-instance',
@@ -10,7 +9,7 @@ define('js!SBIS3.CONTROLS.Action.List.Save', [
     'js!WS.Data/Collection/RecordSet',
     'js!SBIS3.CORE.DialogSelector',
     'js!WS.Data/Query/Query'
-], function (Save, ListMixin, fcHelpers, colHelpers, Deferred, constants, cInstance, cFunctions, RecordSet, Dialog, Query) {
+], function (Save, ListMixin, fcHelpers, Deferred, constants, cInstance, cFunctions, RecordSet, Dialog, Query) {
     var MAX_RECORDS_COUNT = 20000;
 
     /**
@@ -76,15 +75,19 @@ define('js!SBIS3.CONTROLS.Action.List.Save', [
             var
                 query = new Query(),
                 linkedObject = this.getLinkedObject(),
-                filter = cFunctions.clone(linkedObject.getFilter());
+                filter = cFunctions.clone(linkedObject.getFilter()),
+                openedPath;
             if (parentProperty) {
                 filter[parentProperty] = filter[parentProperty] === undefined ? [linkedObject.getCurrentRoot()] : filter[parentProperty];
                 filter[parentProperty] = filter[parentProperty] instanceof Array ? filter[parentProperty] : [filter[parentProperty]];
-                colHelpers.forEach(linkedObject.getOpenedPath(), function (val, key) {
-                    if (filter[parentProperty].indexOf(key) === -1) {
-                        filter[parentProperty].push(key);
+                openedPath = linkedObject.getOpenedPath();
+                for (var key in openedPath) {
+                    if (openedPath.hasOwnProperty(key)) {
+                       if (filter[parentProperty].indexOf(key) === -1) {
+                          filter[parentProperty].push(key);
+                       }
                     }
-                }, this);
+                }
             }
 
             query.where(filter).orderBy(linkedObject.getSorting()).offset(linkedObject.getOffset()).limit(limit);
@@ -135,7 +138,7 @@ define('js!SBIS3.CONTROLS.Action.List.Save', [
                 linkedObject = this.getLinkedObject(),
                 options = ['columns', 'fileName', 'xsl'];
 
-            colHelpers.forEach(options, function (name) {
+            options.forEach(function (name) {
                 meta[name] = meta[name] || this._options[name];
             }, this);
             meta.dataSource = meta.dataSource || this.getDataSource();
@@ -150,22 +153,25 @@ define('js!SBIS3.CONTROLS.Action.List.Save', [
         },
 
         _loadData: function(dataSource, query) {
-            var
-                self = this,
-                result = new Deferred();
-            fcHelpers.question(rk('Операция займет продолжительное время. Провести операцию?'), {}, self).addCallback(function(answer) {
-                if (answer) {
+            var result = new Deferred();
+
+           require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(manager){
+              manager.showConfirmDialog({message: 'Операция займет продолжительное время. Провести операцию?'},
+                 function (){
                     fcHelpers.toggleIndicator(true);
                     dataSource.query(query).addCallback(function (recordSet) {
-                        result.callback(recordSet.getAll())
+                       result.callback(recordSet.getAll())
                     }).addBoth(function() {
-                        fcHelpers.toggleIndicator(false);
+                       fcHelpers.toggleIndicator(false);
                     });
-                } else {
+                 },
+                 function(){
                     result.errback();
-                }
-            });
-            return result;
+                 }
+              )
+           });
+
+           return result;
         }
 
     });

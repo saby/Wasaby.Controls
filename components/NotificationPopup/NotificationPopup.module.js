@@ -1,7 +1,8 @@
 define('js!SBIS3.CONTROLS.NotificationPopup', [
       'js!SBIS3.CONTROLS.InformationPopup',
-      'html!SBIS3.CONTROLS.NotificationPopup/resources/template',
-      'html!SBIS3.CONTROLS.NotificationPopup/resources/headerTpl',
+      'tmpl!SBIS3.CONTROLS.NotificationPopup/resources/template',
+      'tmpl!SBIS3.CONTROLS.NotificationPopup/resources/headerTpl',
+      'Core/detection',
       'css!SBIS3.CONTROLS.NotificationPopup'
    ],
 
@@ -14,7 +15,7 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
     * @public
     * @author Степин Павел Владимирович
     */
-   function(InformationPopup, template, headerTpl){
+   function(InformationPopup, template, headerTpl, detection){
       'use strict';
 
       var ICONS = {
@@ -80,22 +81,30 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
                /**
                 * @noShow
                 */
-               additionalClass: 'controls-NotificationPopup_popup'
+               additionalClass: 'controls-NotificationPopup_popup',
+               closeButton: true
             },
 
             _customIcon: false
          },
-         $constructor : function(){
-         },
 
          init : function() {
             NotificationPopup.superclass.init.call(this);
+
+            var self = this;
 
             if (this._options.icon){
                this.setIcon(this._options.icon);
             }
             else{
                this.setStatus(this._options.status);
+            }
+
+            //По свайпу будем закрывать окно.
+            if(detection.isMobilePlatform) {
+               this.getContainer().on('swipe', function(){
+                  self.close();
+               });
             }
          },
          /**
@@ -130,6 +139,14 @@ define('js!SBIS3.CONTROLS.NotificationPopup', [
          _setIcon: function(icon){
             this.getContainer().find('.controls-NotificationPopup__header_icon').removeClass(this._options.icon).addClass(icon);
             this._options.icon = icon;
+         },
+
+         destructor: function(){
+            if(detection.isMobilePlatform) {
+               this.getContainer().off('swipe');
+            }
+
+            NotificationPopup.superclass.destructor.call(this);
          }
       });
       return NotificationPopup;

@@ -23,6 +23,7 @@
 @data-grid-cell-padding:                        4px 8px;
 @data-grid-ms-first-content-cell-padding-left:  8px;
 @data-grid-header-cell-font-size:               18px;
+@data-grid-header-cell-icon-size:               @data-grid-header-cell-font-size;
 @data-grid-header-cell-height:                  22px;
 @data-grid-header-cell-padding:                 @data-grid-cell-padding;
 @data-grid-cell-line-height:                    34px;
@@ -245,12 +246,15 @@
 @button-without-caption-min-width:              60px;
 
 // Normal default button
-@button-bg:                                     #EAEAEA;
+@button-bg-color:                               #EAEAEA;
 @button-hover-bg:                               #E1ECF6;
-@button-active-bg:                              #C1D7F0;
+@button-bg-active:                              #C1D7F0;
 @button-big-font-size:                          @globalDefaultFontSize;
 
-@button-border:                                 @button-border-width solid transparent;
+
+
+@button-border:                                 @button-border-width solid @button-border-color;
+@button-border-color:                           transparent;
 @button-border-radius:                          0;
 
 // Button's icon
@@ -258,10 +262,11 @@
 @button-icon-32-left-offset:                    2px;
 
 // Normal primary button
-@button-primary-bg:                             #FFB87A;
+@button-primary-bg-color:                       #FFB87A;
 @button-primary-hover-bg:                       #FDECD9;
-@button-primary-active-bg:                      #FE9442;
+@button-primary-bg-active:                      #FE9442;
 @button-primary-border:                         @button-border;
+@button-primary-border-color:                   @button-border-color;
 @button-padding:                                0 16px;
 
 // Normal disabled button
@@ -270,10 +275,8 @@
 
 // Big button
 
-@button-big-border-radius:                      0;
 @button-big-font:                               @globalDefaultFontSize @default-font-name;
 @button-big-min-width:                          60px;
-@button-big-height:                             60px;
 @button-big-line-height:                        60px;
 @icon-height:                                   24px;
 
@@ -290,6 +293,10 @@
 @button-big-icon-32-left-offset:                14px;
 
 @button-without-caption-icon-32-left:           14px;
+
+@button-large-height:                                                                                                   60px;
+@button-large-border-radius:                                                                                            0;
+@button-large-font-size:                                                                                                @globalDefaultFontSize;
 
 // Big disabled button
 
@@ -394,6 +401,7 @@
 @controls-filterButton-apply-margin-right:      30px;
 @controls-filterLine-link-hover-color:          @controls-filterLine-link-color;
 @controls-filterButton-button-height:           40px;
+@controls-filterButton-picker-close-top:        24px;
 @controls-filterLine-wrapper-height:            @controls-filterButton-button-height;
 @controls-filterLine-items-line-height:         40px;
 
@@ -442,10 +450,8 @@
 // -------- //
 @text-box-height:                               40px;
 @text-box-field-line-height:                    35px !important;
-@text-box-border-color:                         #EAEAEA;
 @text-box-focus-bg:                             #F0F5FB;
 @text-box-bottom-border-color:                  #CCCCCC;
-@text-box-field-focus-text-color:               @black-color;
 @text-box-hover-border-color:                   @text-box-bottom-border-color;
 @text-box-field-hover-text-color:               @default-text-color;
 @text-box-focus-border-color:                   @text-box-bottom-border-color;
@@ -461,6 +467,7 @@
 // ----------- //
 
 @search-background:                             #FFFFFF;
+@search-border-color-active:                    #CCCCCC;
 @search-disabled-background:                    none;
 @search-focus-background:                       @text-box-focus-bg;
 @search-left-margin:                            8px;
@@ -472,7 +479,7 @@
 @search-hover-border-color:                     @text-box-bottom-border-color;
 @search-bottom-border-color:                    @text-box-bottom-border-color;
 @search-form-disabled-border-bottom:            1px solid @text-box-disabled-border-bottom;
-@search-form-icon-padding:                      11px 0 0 0;
+@search-form-icon-padding:                      0;
 @search-form-icon-disabled-display:             none;
 @search-loop-size:                              32px;
 
@@ -521,18 +528,20 @@
 
 @switcher-width:                                90px;
 @switcher-height:                               45px;
-@switcher-line-height:                          40px;
-@switcher-line-width:                           60px;
-@switcher-line-color-disabled:                  @gray-color;
-@switcher-btn-margin:                           8px;
-@switcher-btn-radius:                           10px;
+@switcherline-height:                           2px;
+@switcherline-width:                            60px;
 @switcher-btn-size:                             22px;
+@switcher-disabled-color:                       @gray-color;
 
-@switcher-btn-color-disabled:                   @switcher-do-disabled-line-color;
 
 @switcher-dot-height:                           8px;
 @switcher-dot-margin:                           5px 0 0 8px;
 @switcher-dot-margin-hover:                     4px 0 0 7px;
+
+@switcher-btn-color-disabled:                   @switcher-do-disabled-line-color;
+@switcher-line-color-disabled:                  @gray-color;
+@switcher-btn-margin:                           8px;
+@switcher-btn-radius:                           10px;
 
 @swithcer-do-font-weight:                       bold;
 @switcher-do-vertical-toggle-width:             40px;
@@ -584,7 +593,6 @@
 
 // Big button
 @button-big-font:                               @globalDefaultFontSize;
-@button-big-height:                             60px;
 @icon-height:                                   24px;
 
 // --------------- //
@@ -606,7 +614,7 @@
 @controls-OperationsPanelButton-width:          32px;
 @controls-OperationsPanelButton-vert-height:    32px;
 @controls-OperationsPanelButton-icon-left:      2px;
-@controls-OperationsPanelButton-font:           24px 'TensorFont', sans-serif;
+@controls-OperationsPanelButton-font-size:      24px;
 
 // --------- //
 // Menu link //
@@ -695,22 +703,30 @@
 
 @long-operations-list-time-ctr-f-size: 16px;
 @long-operations-popup-collapsed-width: 420px;
+@long-operations-popup-collapsed-max-width: 420px;
 @long-operations-popup-exp-width: 600px;
 @long-operations-popup-exp-max-width: 600px;
 @long-operations-popup-header-height: 60px;
 @long-operations-popup-header-line-height: 60px;
-@long-operations-popup-header-pad-rt: 72px;
+@long-operations-popup-header-pad-rt: 54px;
 @long-operations-popup-header-icon-size: 32px;
 @long-operations-popup-header-caption-f-size: 32px;
 @long-operations-popup-header-caption-line-height: 52px;
 @long-operations-popup-header-caption-color: #313E78;
 @long-operations-popup-collapsed-header-caption-f-size: 24px;
 @long-operations-popup-collapsed-header-caption-color: #000000;
-@long-operations-popup-foot-height: 50px;
-@long-operations-popup-foot-f-size: 16px;
+@long-operations-popup-list-time-f-size: 21px;
+@long-operations-popup-list-border-bot: 0px none;
 @long-operations-popup-reg-but-ctr-height: 50px;
 @long-operations-popup-reg-but-line-height: 50px;
+@long-operations-popup-foot-height: 50px;
+@long-operations-popup-foot-f-size: 16px;
+@long-operations-popup-foot-but-gap-top: 12px;
+@long-operations-popup-foot-but-hover-color: #b9e9ff !important;
 @long-operations-reg-filter-width: 220px;
 @long-operations-reg-filter-height: 46px;
 @long-operations-reg-filter-title-height: 40px;
 
+
+@money-decorator-fraction-font-size:                18px;
+@money-decorator-integer-accent-results-font-size:  24px;

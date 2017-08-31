@@ -4,9 +4,10 @@
 define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
     [
        'Core/core-functions',
-       'Core/helpers/collection-helpers',
+       'Core/helpers/Object/isEqual',
+       'Core/helpers/Object/find',
        'Core/helpers/String/ucFirst'
-    ], function(cFunctions, colHelpers, ucFirst) {
+    ], function(cFunctions, isEqualObject, objectFind, ucFirst) {
 
    'use strict';
 
@@ -20,7 +21,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
           resVal = structElem[resetFieldName];
 
       if(structElem.hasOwnProperty(fieldName)) {
-         if(structElem.hasOwnProperty(resetFieldName) && !colHelpers.isEqualObject(structElem[fieldName], resVal)) {
+         if(structElem.hasOwnProperty(resetFieldName) && !isEqualObject(structElem[fieldName], resVal)) {
             structElem[fieldName] = resVal;
          } else {
             delete structElem[fieldName];
@@ -33,24 +34,26 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
          /* Все правки надо делать с копией, чтобы не портить оригинальную структуру */
          var structureCopy = cFunctions.clone(structure);
 
-         colHelpers.forEach(structureCopy, function(elem) {
-            /* Хак для испрвления даты, при записи на бл история приводится к строке через метод JSON.stringify,
-             а метод stringify сериализует дату, учитывая сдвиг (GMT/UTC)
-             и в итоге мы можем получить не ту дату */
-            if(elem.value) {
-               if(elem.value instanceof Date) {
-                  elem.value = elem.value.toSQL();
+         for (var key in structureCopy) {
+            if(structureCopy.hasOwnProperty(key)) {
+               /* Хак для испрвления даты, при записи на бл история приводится к строке через метод JSON.stringify,
+                а метод stringify сериализует дату, учитывая сдвиг (GMT/UTC)
+                и в итоге мы можем получить не ту дату */
+               if(structureCopy[key].value) {
+                  if(structureCopy[key].value instanceof Date) {
+                     structureCopy[key].value = structureCopy[key].value.toSQL();
+                  }
+               }
+               /* Надо удалить из истории шаблоны, т.к. история сохраняется строкой */
+               if(structureCopy[key].hasOwnProperty(TPL_FIELD)) {
+                  delete structureCopy[key][TPL_FIELD];
+               }
+
+               if(structureCopy[key].hasOwnProperty(HISTORY_TPL_FIELD)) {
+                  delete structureCopy[key][HISTORY_TPL_FIELD];
                }
             }
-            /* Надо удалить из истории шаблоны, т.к. история сохраняется строкой */
-            if(elem.hasOwnProperty(TPL_FIELD)) {
-               delete elem[TPL_FIELD];
-            }
-
-            if(elem.hasOwnProperty(HISTORY_TPL_FIELD)) {
-               delete elem[HISTORY_TPL_FIELD];
-            }
-         });
+         }
 
          return structureCopy;
       },
@@ -70,36 +73,38 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
           элементы в структуре из истории с таким же internalValueField
           2) Если нашли, то смержим эти элементы
           3) Если не нашли, и есть значение в value, то сбросим этот фильтр */
-         colHelpers.forEach(currentStructureCopy, function(elem) {
-            var elemFromHistory = colHelpers.find(structure, function(structureElem) {
-               return elem.internalValueField === structureElem.internalValueField;
-            }, false);
+         for (var key in currentStructureCopy) {
+            if(currentStructureCopy.hasOwnProperty(key)) {
+               var elemFromHistory = objectFind(structure, function(structureElem) {
+                  return currentStructureCopy[key].internalValueField === structureElem.internalValueField;
+               }, false);
 
-            if(elemFromHistory) {
-               /* Меняем только value и caption, т.к. нам нужны только значения для фильтрации из историии,
-                остальные значения структуры нам не интересны + их могут менять, и портить их неправильно тем, что пришло из истории неправильно */
-               if(elemFromHistory.value !== undefined) {
-                  elem.value = elemFromHistory.value;
-               } else {
-                  /* Если при мерже структур возникла ситуация, когда в структуре из истории значения нет,
-                     а в исходной структуре значение есть, то в исходной структуре его надо сбросить в resetValue или удалить.
-                     Иначе применение истории может не заменить некоторые фильтры. */
-                  resetField('value', elem);
-               }
+               if(elemFromHistory) {
+                  /* Меняем только value и caption, т.к. нам нужны только значения для фильтрации из историии,
+                   остальные значения структуры нам не интересны + их могут менять, и портить их неправильно тем, что пришло из истории неправильно */
+                  if(elemFromHistory.value !== undefined) {
+                     currentStructureCopy[key].value = elemFromHistory.value;
+                  } else {
+                     /* Если при мерже структур возникла ситуация, когда в структуре из истории значения нет,
+                      а в исходной структуре значение есть, то в исходной структуре его надо сбросить в resetValue или удалить.
+                      Иначе применение истории может не заменить некоторые фильтры. */
+                     resetField('value', currentStructureCopy[key]);
+                  }
 
-               if(elemFromHistory.caption !== undefined) {
-                  elem.caption = elemFromHistory.caption;
-               } else {
-                  resetField('caption', elem);
-               }
+                  if(elemFromHistory.caption !== undefined) {
+                     currentStructureCopy[key].caption = elemFromHistory.caption;
+                  } else {
+                     resetField('caption', currentStructureCopy[key]);
+                  }
 
-               if(elemFromHistory.visibilityValue !== undefined) {
-                  elem.visibilityValue = elemFromHistory.visibilityValue;
+                  if(elemFromHistory.visibilityValue !== undefined) {
+                     currentStructureCopy[key].visibilityValue = elemFromHistory.visibilityValue;
+                  }
+               } else if(!doNotResetIfFound && currentStructureCopy[key].hasOwnProperty('value') && currentStructureCopy[key].hasOwnProperty('resetValue') && !isEqualObject(currentStructureCopy[key].value, currentStructureCopy[key].resetValue)) {
+                  resetField('value', currentStructureCopy[key]);
                }
-            } else if(!doNotResetIfFound && elem.hasOwnProperty('value') && elem.hasOwnProperty('resetValue') && !colHelpers.isEqualObject(elem.value, elem.resetValue)) {
-               resetField('value', elem);
             }
-         });
+         }
          return currentStructureCopy;
       },
 
@@ -114,29 +119,31 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
                 }
              };
 
-         colHelpers.forEach(newStructure, function(newStructureElem, key) {
-            var elemFromCurrentStructure = colHelpers.find(currentStructure, function(elem) {
-               /* По неустановленной причине, в структуре из истории могут появляться null'ы,
-                скорее всего, это прикладная ошибка, но надо от этого защититься (повторяется только на некоторых фильтрах ЭДО) */
-               if(!newStructureElem) {
-                  return false;
-               } else {
-                  hasStructureElem = newStructureElem.internalValueField === elem.internalValueField;
+         for (var key in newStructure) {
+            if (newStructure.hasOwnProperty(key)) {
+               var elemFromCurrentStructure = objectFind(currentStructure, function(elem) {
+                  /* По неустановленной причине, в структуре из истории могут появляться null'ы,
+                   скорее всего, это прикладная ошибка, но надо от этого защититься (повторяется только на некоторых фильтрах ЭДО) */
+                  if(!newStructure[key]) {
+                     return false;
+                  } else {
+                     hasStructureElem = newStructure[key].internalValueField === elem.internalValueField;
 
-                  if(hasStructureElem) {
-                     checkTpl(TPL_FIELD, elem, newStructureElem);
-                     checkTpl(HISTORY_TPL_FIELD, elem, newStructureElem);
+                     if(hasStructureElem) {
+                        checkTpl(TPL_FIELD, elem, newStructure[key]);
+                        checkTpl(HISTORY_TPL_FIELD, elem, newStructure[key]);
+                     }
+                     return hasStructureElem;
                   }
-                  return hasStructureElem;
+               });
+
+               if(!elemFromCurrentStructure) {
+                  toDelete.push(key);
                }
-            });
-
-            if(!elemFromCurrentStructure) {
-               toDelete.push(key);
             }
-         });
+         }
 
-         colHelpers.forEach(toDelete, function(elem) {
+         toDelete.forEach(function(elem) {
             delete newStructure[elem];
          });
       },
@@ -150,7 +157,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
          Другого способо до серверной отрисовки пока нет. */
       resetStructureElementsByFilterKeys: function(filterButton, structure, keys) {
          var filterStructure = structure || cFunctions.clone(filterButton.getFilterStructure()),
-             bindings = colHelpers.find(filterButton._options.bindings, function(binding) {
+             bindings = objectFind(filterButton._options.bindings, function(binding) {
                 return binding.propName === 'filterStructure'
              }),
              valueBind;

@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    'js!SBIS3.CORE.LayoutManager',
    'js!SBIS3.CONTROLS.TextBox',
    'js!SBIS3.CONTROLS.TextBoxUtils',
-   "tmpl!SBIS3.CONTROLS.ComboBox",
+   "tmpl!SBIS3.CONTROLS.ComboBox/resources/textFieldWrapper",
    "tmpl!SBIS3.CONTROLS.ComboBox/resources/ComboBoxPicker",
    "js!SBIS3.CONTROLS.PickerMixin",
    "js!SBIS3.CONTROLS.ItemsControlMixin",
@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "Core/core-instance",
    "i18n!SBIS3.CONTROLS.СomboBox",
    'css!SBIS3.CONTROLS.ComboBox'
-], function ( constants, Deferred, LayoutManager, TextBox, TextBoxUtils, dotTplFn, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
+], function ( constants, Deferred, LayoutManager, TextBox, TextBoxUtils, textFieldWrapper, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
    'use strict';
    /**
     * Класс контрола "Комбинированный выпадающий список" с возможностью ввода значения с клавиатуры.
@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     *        Для этого в опции {@link pickerClassName} нужно указать свой класс someClass и в css указать селектор .someClass.controls-ComboBox__picker .controls-ComboBox__scrollContainer, установив свойство max-height в нужное значение</li>
     * </ul>
     * <br/>
-    * Вы можете связать опцию items с полем контекста, в котором хранятся данные с типом значения перечисляемое - {@link WS.Data/Types/Enum}. Если эти данные хранят состояние выбранного значения, то в контрол будет установлено выбранное значение.
+    * Вы можете связать опцию items с полем контекста, в котором хранятся данные с типом значения перечисляемое - {@link WS.Data/Type/Enum}. Если эти данные хранят состояние выбранного значения, то в контрол будет установлено выбранное значение.
     * <pre>
     *    <component data-component="SBIS3.CONTROLS.ComboBox">
     *       <options name="items" type="array" bind="record/MyEnumField"></options>
@@ -91,7 +91,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    }
 
    var ComboBox = TextBox.extend([PickerMixin, ItemsControlMixin, Selectable, DataBindMixin, SearchMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
-      _dotTplFn: dotTplFn,
       _dotTplFnPicker: dotTplFnPicker,
       /**
        * @typedef {Object} ItemsComboBox
@@ -138,6 +137,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          _isClearing: false,
          _keysWeHandle: [constants.key.up, constants.key.down, constants.key.enter, constants.key.esc],
          _options: {
+            textFieldWrapper: textFieldWrapper,
             _emptyRecordProjection: undefined,
             _getRecordsForRedraw: getRecordsForRedrawCB,
             _defaultItemTemplate: ItemTemplate,
@@ -189,8 +189,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              */
             valueFormat: '',
             /*
-               @cfg {Boolean} Автоматически фильтровать пункты выпадающего списка по введеной строке
-            */
+             @cfg {Boolean} Автоматически фильтровать пункты выпадающего списка по введеной строке
+             */
             autocomplete: false
          }
       },
@@ -211,7 +211,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             var target = $(e.target),
                isArrow = target.hasClass('js-controls-ComboBox__arrowDown');
             if (isArrow || ( target[0] === self._getAfterFieldWrapper()[0] ) || self.isEditable() === false) {
-               if (self.isEnabled()) {
+               if (self.isEnabled() && self._getItemsProjection()) {//открывать, если нет данных, нет смысла
                   self.togglePicker();
                   // Что бы не открывалась клавиатура на айпаде при клике на стрелку
                   if (isArrow || !self.isEditable()) {
@@ -229,7 +229,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                emptyItemProjection,
                rs;
             rawData[cfg.idProperty] = null;
-            rawData[cfg.displayProperty] = 'Не выбрано';
+            rawData[cfg.displayProperty] = rk('Не выбрано');
             rawData.isEmptyValue = true;
 
             rs = new RecordSet({
@@ -239,6 +239,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
             emptyItemProjection = Projection.getDefaultDisplay(rs).at(0);
             cfg._emptyRecordProjection = emptyItemProjection;
+         }
+         cfg.cssClassName += ' controls-ComboBox';
+         if (!cfg.editable) {
+            cfg.cssClassName += ' controls-ComboBox__editable-false';
+         }
+         if (!cfg.selectedKey) { //todo: ьожет это ндао в условие уровнем повыше
+            cfg.cssClassName += ' controls-ComboBox_emptyValue';
          }
          return cfg;
       },
@@ -258,7 +265,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          //TODO: Обобщить поиск с автодополнением и строкой поиска
          //Сделать общую точку входа для поиска, для понимания где искать на источнике или на проекции
          var itemText = model.get(this._options.displayProperty).toLowerCase(),
-             text = this.getText().toLowerCase();
+            text = this.getText().toLowerCase();
          if (itemText.match(text)){
             return true;
          }
@@ -270,18 +277,26 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this._getItemsProjection().setFilter(this._searchFilter.bind(this));
          this.redraw();
          this.showPicker();
+         this._setKeyByText();
       },
 
       _onResetSearch: function(){
          this.setSelectedIndex(-1);
          this._getItemsProjection().setFilter(null);
          this.redraw();
+         this._setKeyByText();
       },
 
       _keyboardHover: function (e) {
          var
             selectedKey = this.getSelectedKey(),
             selectedItem, newSelectedItem, newSelectedItemId, newSelectedItemHash;
+
+         // горячая комбинация клавиш
+         if(e.ctrlKey && e.which === constants.key.enter) {
+            return true;
+         }
+
          if (this._picker) {
             if(!this._picker.isVisible() && e.which === constants.key.esc ){
                return true;
@@ -356,13 +371,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       setText: function (text) {
          ComboBox.superclass.setText.call(this, text);
-         this._setKeyByText();
       },
 
       _drawText: function(text) {
          ComboBox.superclass._drawText.apply(this, arguments);
          this._drawNotEditablePlaceholder(text);
-         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text || this._options.placeholder);
+         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).html(text || this._options.placeholder || '&nbsp;');
          if (this._options.editable) {
             this._setKeyByText();
          }
@@ -514,15 +528,16 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             _canScroll: true,
             targetPart: true,
             activableByClick: false,
+            closeOnTargetMove: true,
             template : this._dotTplFnPicker({})
          };
       },
 
       _getItemsContainer: function () {
          if (this._picker){
-         	return $('.controls-ComboBox__list', this._picker.getContainer()[0]);
+            return $('.controls-ComboBox__list', this._picker.getContainer()[0]);
          } else {
-         	return null;
+            return null;
          }
       },
 
@@ -573,10 +588,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          var keys = constants.key;
          /*по изменению текста делаем то же что и в текстбоксе*/
          ComboBox.superclass._keyUpBind.apply(this, arguments);
-         /*не делаем смену значения при нажатии на стрелки вверх вниз. Иначе событие смены ключа срабатывает два раза*/
-         if ((e.which != keys.down) && (e.which != keys.up)) {
-            this._setKeyByText();
-         }
+
          /*при нажатии enter или escape, событие должно всплывать. Возможно эти кнопки являются управляющими командами (например в редактировании по месту)*/
          if ((e.which != keys.enter) && (e.which != keys.esc)) {
             e.stopPropagation();
@@ -738,9 +750,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          TextBoxUtils.setEqualPickerWidth(this._picker);
          //После отображения пикера подскроливаем до выбранного элемента
          var projection = this._getItemsProjection(),
-             item = projection.at(this.getSelectedIndex()),
-             hash = item && item.getHash();
-         
+            item = projection.at(this.getSelectedIndex()),
+            hash = item && item.getHash();
+
          if(!hash && projection.getCount() > 0) {
             hash = projection.at(0).getHash();
          }

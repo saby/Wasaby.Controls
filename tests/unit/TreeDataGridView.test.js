@@ -45,6 +45,13 @@ define(['js!SBIS3.CONTROLS.TreeDataGridView'], function (TreeDataGridView) {
                TestTDGV.collapseNode(2);
                assert.deepEqual(TestTDGV._loadedNodes, {2: true});
             });
+            it('Expand "Item 2" and set items. Loaded nodes equal {}.', function () {
+               var
+                  items = TestTDGV.getItems();
+               TestTDGV.expandNode(2);
+               TestTDGV.setItems(items);
+               assert.deepEqual(TestTDGV._loadedNodes, {});
+            });
             it('Remove "Item 2" from items. Loaded nodes equal {}.', function () {
                var
                   items = TestTDGV.getItems();

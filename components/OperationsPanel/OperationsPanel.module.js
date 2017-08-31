@@ -5,12 +5,11 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
    'js!SBIS3.CORE.CompoundControl',
    'tmpl!SBIS3.CONTROLS.OperationsPanel',
    'js!SBIS3.CONTROLS.ItemsControlMixin',
-   'Core/helpers/collection-helpers',
    'Core/core-instance',
    'tmpl!SBIS3.CONTROLS.OperationsPanel/resources/ItemTemplate',
    'Core/moduleStubs',
    'css!SBIS3.CONTROLS.OperationsPanel'
-], function(Control, dotTplFn, ItemsControlMixin, colHelpers, cInstance, ItemTemplate, moduleStubs) {
+], function(Control, dotTplFn, ItemsControlMixin, cInstance, ItemTemplate, moduleStubs) {
 
    var ITEMS_MENU_WIDTH = 28;
 
@@ -156,6 +155,20 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
             if(self._itemsMenu){
                self._updateActionsMenuButtonItems();
             }
+
+            if(self._options.hasItemsMenu){
+               //Следим за кнопками, извне могут менять их видимость и тогда потребудется проверить вместимость
+               self.getItems().each(function(item){
+                  var inst = self.getItemInstance(item.get('name'));
+                  if(inst){
+                     self.subscribeTo(inst, 'onPropertyChanged', function(e, propName){
+                        if(propName === 'visible'){
+                           self._checkCapacity();
+                        }
+                     });
+                  }
+               });
+            }
          });
       },
 
@@ -174,6 +187,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       //который возвращается requireButtons, чтобы requireButtons при следующей отрисовке ещё раз подгрузил кнопки.
       setItems: function() {
          this._itemsLoadDeferred = null;
+         this._itemsWidth = null;
          OperationsPanel.superclass.setItems.apply(this, arguments);
       },
 
@@ -259,12 +273,17 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          }
       },
       _onSelectedItemsChange: function(idArray) {
+         var
+            instances = this.getItemsInstances(),
+            instance;
          //Прокидываем сигнал onSelectedItemsChange из браузера в кнопки
-         colHelpers.forEach(this.getItemsInstances(), function(instance) {
-            if (typeof instance.onSelectedItemsChange === 'function') {
-               instance.onSelectedItemsChange(idArray);
+         for (instance in instances) {
+            if (instances.hasOwnProperty(instance)) {
+               if (typeof instances[instance].onSelectedItemsChange === 'function') {
+                  instances[instance].onSelectedItemsChange(idArray);
+               }
             }
-         });
+         }
       },
       _onResizeHandler: function(){
          if(this.isVisible()){
@@ -277,14 +296,40 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
        * */
       _checkCapacity: function(){
          if (!this._options.hasItemsMenu) {
+
+            /*
+               TODO Очередное хреновое решение для ПМО.
+               Если Не влезают операции, и нельзя заюзать механизм с меню,
+               то будем скрывать caption на операциях с классом controls-operationsPanel__action-withoutCaption
+             */
+            if(!this._itemsWidth){
+               this._itemsWidth = this._getItemsContainer().width();
+            }
+
+            var containerWidth = this.getContainer().width();
+
+            if(this._withoutCaptionsMode){
+               if(containerWidth > this._itemsWidth){
+                  this._toggleWithoutCaptionsMode(false);
+               }
+            }
+            else {
+               if(containerWidth <= this._itemsWidth){
+                  this._toggleWithoutCaptionsMode(true);
+               }
+            }
+            /*TODO Конец*/
+
             return;
          }
+
          var container = this.getContainer();
 
          /* Доступная под операции ширина = Ширина контейнера - ширина кнопки с меню*/
          var allowedWidth = container.width() - ITEMS_MENU_WIDTH;
 
-         var operations = this._getItemsContainer().find('.js-controls-operationsPanel__action:visible');
+         /* Проверяем на вместимость только видимые операции. Операции линейно лежат в контейнере, поэтому для оптимизации выборки проверим только детей первого уровня. */
+         var operations = this._getItemsContainer().find('> .js-controls-operationsPanel__action:visible');
 
          var width = 0;
          var isMenuNecessary = false;
@@ -311,6 +356,11 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          if (this._itemsMenu) {
             this._itemsMenu.getContainer().toggleClass('ws-hidden', !isMenuNecessary);
          }
+      },
+
+      _toggleWithoutCaptionsMode: function(f){
+         this._withoutCaptionsMode = f;
+         this.getContainer().toggleClass('controls-operationsPanel__mode-withoutCaptions', f);
       },
 
       redraw: function() {
@@ -351,13 +401,22 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                   icon: 'sprite:icon-24 icon-ExpandDown icon-primary action-hover',
                   pickerConfig: {
                      closeButton: true,
-                     className: 'controls-operationsPanel__itemsMenu_picker controls-operationsPanel__massMode',
+                     className: 'controls-operationsPanel__itemsMenu_picker',
                      horizontalAlign: {
                         side: 'right',
                         offset: 48
                      }
                   }
                });
+
+               //Инициализируем режим
+               if(self._container.hasClass('controls-operationsPanel__massMode')){
+                  self._itemsMenu.getContainer().addClass('controls-operationsPanel__massMode');
+               }
+               if(self._container.hasClass('controls-operationsPanel__selectionMode')){
+                  self._itemsMenu.getContainer().addClass('controls-operationsPanel__selectionMode');
+               }
+
                self.registerChildControl(self._itemsMenu);
 
                self._itemsMenu._setPickerContent = function() {

@@ -84,7 +84,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
                optionValue,
                itemKey = item.get(idProperty),
                options = item.get('options') || {},
-               isToolbarItem = item.get('showType') == showType.MENU_TOOLBAR || item.get('showType') == showType.TOOLBAR;
+               isToolbarItem = item.get('showType') === showType.MENU_TOOLBAR || item.get('showType') === showType.TOOLBAR;
             if (isToolbarItem) {
                subItems = getSubItems(itemKey, items, idProperty, parentProperty, itemsToSubItems);
                subItems = cFunctions.clone(subItems);
@@ -100,8 +100,10 @@ define('js!SBIS3.CONTROLS.Toolbar', [
                }
             }
             options['visible'] = isToolbarItem && (item.get('visible') !== false);
-            options['idProperty'] = idProperty;
-            ['commandArgs', 'className', 'icon', 'name', 'caption', 'command'].forEach(function(optName) {
+            if (!options.idProperty) {
+               options['idProperty'] = idProperty;
+            }
+            ['commandArgs', 'className', 'icon', 'name', 'caption', 'command', 'enabled'].forEach(function(optName) {
                optionValue = item.get(optName);
                if (optionValue !== undefined) {
                   options[optName] = optionValue;
@@ -109,6 +111,29 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             });
 
             return options;
+         },
+         // формируем список без элементов с showType.TOOLBAR
+         getMenuItems = function(items) {
+            //var menuItems = items
+            if (!items) {
+               return [];
+            }
+            var rawData = getArrayItems(items),//null,
+               menuItems = [];
+            //производный массив
+            for (var i = 0; i < rawData.length; i++) {
+               if (rawData[i].showType != showType.TOOLBAR) {
+                  menuItems.push(rawData[i]);
+               }
+            }
+            return menuItems;
+         },
+         hasVisibleItems = function(items) {
+            var hasVisibleItems = false;
+            for (var i = 0; i < items.length; i++) {
+               hasVisibleItems = hasVisibleItems || items[i].visible !== false
+            }
+            return hasVisibleItems;
          },
          buildTplArgs = function(cfg) {
             var tplOptions = cfg._buildTplArgsSt.call(this, cfg);
@@ -122,6 +147,20 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             tplOptions.idProperty = cfg.idProperty;
 
             return tplOptions;
+         },
+         getRecordsForRedraw = function(projection) {
+            var
+               model,
+               records = [];
+            if (projection) {
+               projection.each(function (item) {
+                  model = item.getContents();
+                  if ((model.get('showType') === showType.MENU_TOOLBAR || model.get('showType') === showType.TOOLBAR) && model.get('visible') !== false) {
+                     records.push(item);
+                  }
+               });
+            }
+            return records;
          };
    /**
     * Контрол, отображающий панель с иконками.
@@ -141,7 +180,8 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          _options: {
             _canServerRender: true,
             _buildTplArgs: buildTplArgs,
-            _defaultItemTemplate: ItemTemplate
+            _defaultItemTemplate: ItemTemplate,
+            _getRecordsForRedraw: getRecordsForRedraw
          }
       },
 
@@ -153,6 +193,8 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          if (cfg.parentProperty && !cfg.nodeProperty) {
             cfg.nodeProperty = cfg.parentProperty + '@';
          }
+         cfg.menuItems = getMenuItems(cfg.items);
+         cfg.menuIsVisible = cfg.menuItems.length && hasVisibleItems(cfg.menuItems);
          return Toolbar.superclass._modifyOptions.apply(this, arguments);
       },
 
@@ -165,7 +207,6 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          Toolbar.superclass.init.call(this);
          this._menuIcon = this.getChildControlByName('controls-ToolBar__menuIcon');
          this._menuIcon.subscribe('onMenuItemActivate', this._onMenuItemActivate.bind(this));
-         this._setMenuItems(this._options.items);
       },
 
       setItems: function(items) {
@@ -178,9 +219,9 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             return;
          }
          //отправляем в меню обработанные элементы, в которых убраны с showType.TOOLBAR
-         var menuItems = this._getMenuItems(items);
+         var menuItems = getMenuItems(items);
          this._menuIcon.setItems(menuItems);
-         this._menuIcon.toggle(!!menuItems.length && this._hasVisibleItems(menuItems));
+         this._menuIcon.toggle(!!menuItems.length && hasVisibleItems(menuItems));
       },
 
       //обработчик для меню
@@ -221,31 +262,6 @@ define('js!SBIS3.CONTROLS.Toolbar', [
       /* Переопределяем получение контейнера для элементов */
       _getItemsContainer: function() {
          return this._itemsContainer;
-      },
-
-      // формируем список без элементов с showType.TOOLBAR
-      _getMenuItems: function(items) {
-         //var menuItems = items
-         if ( ! items) {
-            return [];
-         }
-         var rawData = getArrayItems(items),//null,
-             menuItems = [];
-         //производный массив
-         for (var i = 0; i < rawData.length; i++) {
-            if (rawData[i].showType != showType.TOOLBAR) {
-               menuItems.push(rawData[i]);
-            }
-         }
-         return menuItems;
-      },
-
-      _hasVisibleItems: function(items) {
-         var hasVisibleItems = false;
-         for (var i = 0; i < items.length; i++) {
-            hasVisibleItems = hasVisibleItems || items[i].visible !== false
-         }
-         return hasVisibleItems;
       }
    });
 

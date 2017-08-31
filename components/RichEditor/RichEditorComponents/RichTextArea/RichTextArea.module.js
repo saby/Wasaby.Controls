@@ -18,11 +18,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    'js!WS.Data/Di',
    "js!SBIS3.CONTROLS.Utils.ImageUtil",
    "Core/Sanitize",
-   "Core/helpers/collection-helpers",
    "Core/helpers/fast-control-helpers",
-   "Core/helpers/string-helpers",
-   'js!SBIS3.CONTROLS.Utils.LinkWrap',
-   "Core/helpers/dom&controls-helpers",
+   'Core/helpers/String/escapeTagsFromStr',
+   'Core/helpers/String/escapeHtml',
+   'Core/helpers/String/linkWrap',
+   'Core/helpers/Hcontrol/trackElement',
    'js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
    'js!SBIS3.CONTROLS.RichEditor.CodeSampleDialog',
    'Core/EventBus',
@@ -45,11 +45,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
       Di,
       ImageUtil,
       Sanitize,
-      colHelpers,
       fcHelpers,
-      strHelpers,
+      escapeTagsFromStr,
+      escapeHtml,
       LinkWrap,
-      dcHelpers,
+      trackElement,
       ImageOptionsPanel,
       CodeSampleDialog,
       EventBus
@@ -287,7 +287,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                return result;
             }
 
-            if ((id = this._getYouTubeVideoId(strHelpers.escapeTagsFromStr(link, [])))) {
+            if ((id = this._getYouTubeVideoId(escapeTagsFromStr(link, [])))) {
                var
                   protocol = /https?:/.test(link) ? link.replace(/.*(https?:).*/gi, '$1') : '';
                content = [
@@ -366,6 +366,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                this._performByReady(function() {
                   html = this._prepareContent(html);
                   this._tinyEditor.insertContent(html);
+                  //вставка контента может быть инициирована любым контролом,
+                  //необходимо нотифицировать о появлении клавиатуры в любом случае
+                  if (cConstants.browser.isMobilePlatform) {
+                     EventBus.globalChannel().notify('MobileInputFocus');
+                  }
                }.bind(this));
             }
          },
@@ -460,7 +465,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                }
                this._tinyEditor.destroyed = true;
             }
-            dcHelpers.trackElement(this._container, false);
+            trackElement(this._container, false);
             this._container.unbind('keydown keyup');
             this._sourceArea.unbind('input');
             this._tinyEditor = null;
@@ -603,16 +608,15 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          saveToHistory: function(valParam) {
             var
                self = this,
-               isDublicate = false;
+               isDublicate = false,
+               valBL;
             if (valParam && typeof valParam === 'string' && self._textChanged && self._options.saveHistory) {
                this.getHistory().addCallback(function(arrBL){
-                  if( typeof arrBL  === 'object') {
-                     colHelpers.forEach(arrBL, function (valBL, keyBL) {
-                        if (valParam === valBL) {
-                           isDublicate = true;
-                        }
-                     });
-                  }
+                  arrBL.forEach(function (valBL) {
+                     if (valParam === valBL) {
+                        isDublicate = true;
+                     }
+                  });
                   if (!isDublicate) {
                      self._addToHistory(valParam);
                   }
@@ -751,8 +755,15 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @param {String} smile название смайла
           */
          insertSmile: function(smile) {
+            //Если редактор не был активным контролом необходимо вначале проставить активность
+            //поле связи если было активно при потере фокуса дестроит содержимое саггеста
+            //если в нем был какой либо контрол, то он вызывает onBringToFront, который в свою очередь вернет фокус в поле связи
+            //после чего смайл вставится в поле связи
+            if (!this.isActive()) {
+               this.setActive(true);
+            }
             if (typeof smile === 'string') {
-               $.each(smiles, function(i, obj) {
+               smiles.forEach(function(obj) {
                   if (obj.key === smile) {
                      smile = obj;
                      return false;
@@ -868,7 +879,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                                     if (href) {
                                        dom.setAttribs(element, {
                                           target: '_blank',
-                                          href: strHelpers.escapeHtml(href)
+                                          href: escapeHtml(href)
                                        });
                                     } else {
                                        editor.execCommand('unlink');
@@ -929,6 +940,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                }
                editor.selection.select(nodeForSelect, true);
                editor.selection.collapse(false);
+               //code from tinyMCE.init method
+               try {
+                  editor.lastRng = editor.selection.getRng();
+               } catch (ex) {
+                  // IE throws "Unexcpected call to method or property access" some times so lets ignore it
+               }
             }
          },
 
@@ -1248,7 +1265,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
                //upd: в костроме форматная вставка, не нужно вырезать лишние теги
                if (!self._mouseIsPressed && self._options.editorConfig.paste_as_text) {
-                  e.content = Sanitize(e.content, {validNodes: {img: false}, checkDataAttribute: false, escapeInvalidTags: false});
+                  e.content = self._sanitizeBeforePaste(e.content);
                }
                self._mouseIsPressed = false;
                // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
@@ -1575,7 +1592,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          },
             
          _prepareImageURL: function(fileobj) {
-            return'/previewer/r/512/512' + (fileobj.filePath ? fileobj.filePath : fileobj.url);
+            return'/previewer/r/768/768' + (fileobj.filePath ? fileobj.filePath : fileobj.url);
          },
             
          _replaceWhitespaces: function(text) {
@@ -1719,14 +1736,16 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                beginReg = new RegExp('^<p>(&nbsp; *)*</p>'),// регулярка начала строки
                endReg = new RegExp('<p>(&nbsp; *)*</p>$'),// регулярка начала строки
+               shiftLineRegexp = new RegExp('<p><br>(&nbsp;)?'),// регулярка пустой строки через shift+ enter и space
                regResult;
             text = this._removeEmptyTags(text);
-            while ((regResult = beginReg.exec(text)) !== null)
-            {
+            while (shiftLineRegexp.test(text)) {
+               text = text.replace(shiftLineRegexp, '<p>');
+            }
+            while ((regResult = beginReg.exec(text)) !== null) {
                text = text.substr(regResult[0].length + 1);
             }
-            while ((regResult = endReg.exec(text)) !== null)
-            {
+            while ((regResult = endReg.exec(text)) !== null) {
                text = text.substr(0, text.length - regResult[0].length - 1);
             }
             return (text === null || text === undefined) ? '' : ('' + text).replace(/^\s*|\s*$/g, '');
@@ -1772,6 +1791,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             this.getContainer().toggleClass('controls-RichEditor__empty', (curValue === '' || curValue === undefined || curValue === null) &&
                this._inputControl.html().indexOf('</li>') < 0 &&
                this._inputControl.html().indexOf('<p>&nbsp;') < 0 &&
+               this._inputControl.html().indexOf('<p><br>&nbsp;') < 0 &&
                this._inputControl.html().indexOf('<blockquote>') < 0
             );
          },
@@ -1976,7 +1996,50 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }
             return true;
          },
+         _sanitizeBeforePaste: function(text) {
+            return Sanitize(text,
+               {
+                  validNodes: {
+                     img: false
+                  },
+                  validAttributes: {
+                     'class' : function(content, attributeName) {
+                        var
+                           currentValue = content.attributes[attributeName].value,
+                           classes = currentValue.split(' '),
+                           whiteList =  [
+                              'titleText',
+                              'subTitleText',
+                              'additionalText',
+                              'controls-RichEditor__noneditable',
+                              'without-margin',
+                              'image-template-left',
+                              'image-template-center',
+                              'image-template-right',
+                              'mce-object-iframe',
+                              'ws-hidden'
+                           ],
+                           index = classes.length - 1;
 
+                        while (index >= 0) {
+                           if (!~whiteList.indexOf(classes[index])) {
+                              classes.splice(index, 1);
+                           }
+                           index -= 1;
+                        }
+                        currentValue = classes.join(' ');
+                        if (currentValue) {
+                           content.attributes[attributeName].value = currentValue;
+                        } else {
+                           delete content.attributes[attributeName];
+                        }
+
+                     }
+                  },
+                  checkDataAttribute: false,
+                  escapeInvalidTags: false
+               });
+         },
          _getTextBeforePaste: function(){
             //Проблема:
             //          после вставки текста могут возникать пробелы после <br> в начале строки

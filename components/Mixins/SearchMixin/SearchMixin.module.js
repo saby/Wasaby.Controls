@@ -3,10 +3,10 @@
  */
 define('js!SBIS3.CONTROLS.SearchMixin',
     [
-       'Core/helpers/functional-helpers',
+       'Core/helpers/Function/forAliveOnly',
        'Core/CommandDispatcher',
        'js!SBIS3.CONTROLS.Utils.SearchMixin'
-    ], function(fHelpers, CommandDispatcher, SearchMixinUtil) {
+    ], function(forAliveOnly, CommandDispatcher, SearchMixinUtil) {
 
    /**
     * Миксин, добавляющий иконку
@@ -34,13 +34,31 @@ define('js!SBIS3.CONTROLS.SearchMixin',
          _searchDelay: null,
          _options: {
             /**
-             * @cfg {Number|null} количество символов, которые нужно ввести, чтоб начать поиск.
+             * @cfg {Number|null} Устанавливает минимальное количество символов для отображения автодополнения.
              * @remark
-             * Если установить опцию в null, то поиск не будет запускаться автоматически.
+             * Это минимальное число символов, после ввода которых начинает работать автодополнение: формируется запрос к БД, производится выборка записей и построение в пользовательском интерфейсе результатов поиска.
+             * С помощью опции Вы можете варьировать требуемую длину ключевого слова, по которому происходит поиск совпадений.
+             *
+             * Как правило, автодополнение отображает более релевантные результаты, когда поиск производится бо большему числу введенных символов. Однако результаты поиска зависят от списочного метода, установленно в источнике данных для автодополнения.
+             *
+             * Когда для опции *startCharacter* установлено значение null, автоматическое отображение автодополнения отключено. Чтобы автодополнение отобразилось, после ввода символов нажимают клавишу Enter или кнопку "Лупа" (если есть).
+             *
+             * Перед отображением автодополнения по умолчанию существует задержка в 500 мс, которую можно изменить в опции {@link searchDelay}.
+             *
+             * <b>Внимание:</b> для контрола {@link SBIS3.CONTROLS.FieldLink} использование опции *startCharacter* актуально, когда установлена опция {@link SBIS3.CONTROLS.SuggestTextBoxMixin#searchParam}.
+             * @see searchDelay
              */
             startCharacter : 3,
             /**
-             * @cfg {Number} временной интервал, который показывает с какой частотой бросать событие поиска
+             * @cfg {Number} Устанавливает временную задержки перед отображением автодополнения.
+             * @remark
+             * Значение опции устанавливается в миллисекундах.
+             *
+             * Временная задержка необходима для того, чтобы уменьшить частоту появления автодополнения.
+             *
+             * Отсутствие задержки может создавать повышенную нагрузку на сервер. Это происходит, когда автодополнение вызывается после каждого ввода или удаления символа, с учетом ограничения {@link startCharacter}.
+             *
+             * @see startCharacter
              */
             searchDelay : 500
          }
@@ -83,7 +101,7 @@ define('js!SBIS3.CONTROLS.SearchMixin',
 
       _startSearch: function(text) {
          this._clearSearchDelay();
-         this._searchDelay = setTimeout(fHelpers.forAliveOnly(function () {
+         this._searchDelay = setTimeout(forAliveOnly(function () {
             this._applySearch(text);
          }, this), this._options.searchDelay);
       },

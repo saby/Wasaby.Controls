@@ -29,18 +29,23 @@
          padding-right: @menu-header-icon-padding;
       }
    }
+   .controls-MenuItem {
+      min-height: @menu-item-height;
+      height: auto;
+   }
+   // скрываем дополнительные опции через height: 0,
+   // чтобы не было скачка при раскрытии доп пунктов
+   // т.к. в этом случае меню растянется в ширину с учетом скрытых пунктов
    .controls-MenuItem-additional {
-      display: none;
+      min-height: 0;
+      height: 0;
    }
    &.controls-Menu-showAdditionalItems {
       .controls-MenuItem-additional {
          .flexbox();
+         min-height: @menu-item-height;
+         height: auto;
       }
-   }
-
-   .controls-MenuItem {
-      min-height: @menu-item-height;
-      height: auto;
    }
    .controls-Menu__itemsContainer {
       padding: @menu-link-menu-item-container-padding;
@@ -164,6 +169,20 @@
          .controls-Menu__submenu {
             overflow-y: auto;
             .flex-direction(column-reverse);
+         }
+      }
+   }
+}
+
+.ws-is-firefox, .ws-is-ie {
+   .controls-Menu__Popup {
+      display: block;
+      &.controls-popup-revert-vertical {
+         .controls-Menu__header{
+            margin-top: 4px;
+         }
+         &.controls-Menu__hide-menu-header .controls-Menu__itemsContainer {
+            padding-bottom: 4px;
          }
       }
    }

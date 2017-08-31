@@ -6,8 +6,8 @@ define('js!SBIS3.CONTROLS.SearchController',
        "Core/core-merge",
        "Core/Abstract",
        "Core/core-instance",
-       'Core/helpers/dom&controls-helpers'
-    ], function(KbLayoutRevertObserver, constants, cFunctions, cMerge, cAbstract, cInstance, domHelpers) {
+       'Core/helpers/Hcontrol/isElementVisible'
+    ], function(KbLayoutRevertObserver, constants, cFunctions, cMerge, cAbstract, cInstance, isElementVisible) {
 
    var SearchController = cAbstract.extend({
       $protected: {
@@ -115,7 +115,7 @@ define('js!SBIS3.CONTROLS.SearchController',
                callProjectionMethod('setEventRaising',[false]);
                //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
                callProjectionMethod('setRoot', [root]);
-               view._options._curRoot = root;
+               view._options.currentRoot = root;
                callProjectionMethod('setEventRaising', [true]);
             }
          });
@@ -174,7 +174,7 @@ define('js!SBIS3.CONTROLS.SearchController',
              т.к. появлялась ошибка при сценарии: ищем что-то, пока грузится сбрасываем поиск,
              и сразу опять что-то ищем. В фильтре списка оставался неправильный раздел. */
             //view.setCurrentRoot(self._lastRoot || null);
-            view._options._curRoot = self._lastRoot ||  view.getRoot() || null;
+            view._options.currentRoot = self._lastRoot ||  view.getRoot() || null;
             view._getItemsProjection().setRoot(self._lastRoot ||  view.getRoot() || null);
          });
          this._searchMode = false;
@@ -318,7 +318,7 @@ define('js!SBIS3.CONTROLS.SearchController',
             /* Нет смысла обрабатывать клавиши и устанавливать фокус, если
                view с которой работает searchForm скрыта.
                (актуально для поля связи / suggestTextBox'a / строки поиска с саггестом ) */
-            if(!domHelpers.isElementVisible(view.getContainer())) {
+            if(!isElementVisible(view.getContainer())) {
                return;
             }
 

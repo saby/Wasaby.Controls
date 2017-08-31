@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
    [
    "Core/Deferred",
    "js!SBIS3.CORE.CompoundControl",
-   "html!SBIS3.CONTROLS.EditInPlace",
+   "tmpl!SBIS3.CONTROLS.EditInPlace",
    "Core/constants",
    "js!SBIS3.CONTROLS.CompoundFocusMixin",
    "Core/core-instance",
@@ -41,15 +41,16 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                _model: undefined,
                _editing: false,
                _editors: [],
-               _trackerHeightInterval: undefined,
-               _trackerPositionInterval: undefined,
+               _targetTrackingInterval: undefined,
                _lastHeight: 0,
-               _lastPosition: undefined,
+               _lastWidth: 0,
+               _lastVerticalPosition: 0,
+               _lastHorizontalPosition: 0,
                _editingModel: undefined,
                _editingDeferred: undefined
             },
             init: function() {
-               this._publish('onItemValueChanged', 'onChangeHeight', 'onBeginEdit', 'onEndEdit', 'onKeyPress');
+               this._publish('onItemValueChanged', 'onHeightChange', 'onBeginEdit', 'onEndEdit', 'onKeyPress');
                EditInPlace.superclass.init.apply(this, arguments);
                this._container.bind('keypress keydown', this._onKeyDown.bind(this))
                               .bind('keyup', this._onKeyUp.bind(this))
@@ -161,43 +162,67 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                }
                this.setOffset(model);
                EditInPlace.superclass.show.apply(this, arguments);
-               this.updatePosition();
+               this._updateVerticalPosition();
+               if (this.getTarget().prop('tagName') !== 'TR') {
+                  this._updateHorizontalPosition();
+               }
             },
-            _beginTrackHeight: function() {
-               this._lastHeight = 0;
-               // Данный пересчет обязательно нужен, т.к. он синхронно пересчитывает высоту и в каллбеке beginEdit мы получаем элемент с правильной высотой
-               this.recalculateHeight();
-               this._trackerHeightInterval = setInterval(this.recalculateHeight.bind(this), 50);
-            },
-
-            _beginTrackPosition: function() {
-               this._lastPosition = null;
-               // Синхронно пересчитаем позицию, чтобы не было визуальных скачков из-за асинхронного позиционирования
-               this.updatePosition();
-               this._trackerPositionInterval = setInterval(this.updatePosition.bind(this), 50);
-            },
-
-            _endTrackPosition: function() {
-               clearInterval(this._trackerPositionInterval);
-            },
-
-            recalculateHeight: function() {
+            _beginTargetTracking: function() {
                var
-                   target,
-                   newHeight = 0,
-                   editorHeight;
-               $.each(this._editors, function(id, editor) {
-                  editorHeight = $(editor).outerHeight(true);
-                  if (editorHeight > newHeight) {
-                     newHeight = editorHeight;
-                  }
-               }.bind(this));
+                  trackingHorizontalValues = this.getTarget().prop('tagName') !== 'TR';
+               // Сбросим все переменные, используемые при пересчёте
+               this._lastVerticalPosition = 0;
+               this._lastHorizontalPosition = 0;
+               this._lastHeight = 0;
+               this._lastWidth = 0;
+               // Синхронно пересчитаем позицию, чтобы не было визуальных скачков из-за асинхронного позиционирования
+               // Также данный пересчет обязательно нужен, т.к. он синхронно пересчитывает высоту и в каллбеке beginEdit мы получаем элемент с правильной высотой
+               this._targetTracking(trackingHorizontalValues);
+               this._targetTrackingInterval = setInterval(this._targetTracking.bind(this, [trackingHorizontalValues]), 50);
+            },
+            _endTargetTracking: function() {
+               clearInterval(this._targetTrackingInterval);
+               //Сбросим установленное ранее значение высоты строки
+               this.getTarget().height('');
+            },
+            _targetTracking: function(trackingHorizontalValues) {
+               //Сначала нужно пересчитывать высоту редактируемой строки, а затем позицию редактора, так как при изменении
+               //высоты меняется и позиция.
+               this._recalculateHeight();
+               this._updateVerticalPosition();
+               if (trackingHorizontalValues) {
+                  this._recalculateWidth();
+                  this._updateHorizontalPosition();
+               }
+            },
+            _recalculateWidth: function() {
+               var
+                  newWidth = this.getTarget().outerWidth(true);
+               if (this._lastWidth !== newWidth) {
+                  this._lastWidth = newWidth;
+                  this.getContainer().outerWidth(newWidth);
+               }
+            },
+            _recalculateHeight: function() {
+               var
+                   newHeight = this._getMaximalEditorHeight(this._editors);
                if (this._lastHeight !== newHeight) {
                   this._lastHeight = newHeight;
-                  target = this.getTarget();
-                  this._outerHeight(target, newHeight);
-                  this._notify('onChangeHeight', this._model);
+                  this._outerHeight(this.getTarget(), newHeight);
+                  this._notify('onHeightChange', this._model);
                }
+            },
+            _getMaximalEditorHeight: function(editors) {
+               var
+                  height,
+                  maximalHeight = 0;
+               editors.each(function(id, editor) {
+                  height = $(editor).outerHeight(true);
+                  if (height > maximalHeight) {
+                     maximalHeight = height;
+                  }
+               });
+               return maximalHeight;
             },
             /*
             * jquery ui перебивает стандартный outerHeight каким то нерабочим методом.
@@ -208,11 +233,6 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                //Получаем сумму margin + border + padding (top и bottom);
                var offsets = target.outerHeight() - target.height();
                target.height(height - offsets);
-            },
-            _endTrackHeight: function() {
-               clearInterval(this._trackerHeightInterval);
-               //Сбросим установленное ранее значение высоты строки
-               this.getTarget().height('');
             },
             hide: function() {
                EditInPlace.superclass.hide.apply(this, arguments);
@@ -225,13 +245,16 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                /*Сначада необходимо повестиь класс что запись реактируется, т.к. это может привести к изменению высоты
                  редактируемой строки, что в свою очередь может привести к смещению редакторов и визуальным скачкам.*/
                this.getTarget().addClass('controls-editInPlace__editing');
-               this._beginTrackHeight();
                /*Необходимо отслеживать позицию редакторов, т.к. во время редактирования может измениться позиция редакторов,
                  в следствии изменения высоты записей(лежащих выше или ниже редактируемой) или добавления/удаления записей.*/
-               this._beginTrackPosition();
+               this._beginTargetTracking();
                this._editing = true;
-               if (!withoutActivateFirstControl && !this.hasActiveChildControl()) {
-                  this.activateFirstControl();
+               if (!withoutActivateFirstControl) {
+                  if(!this.hasActiveChildControl()) {
+                     this.activateFirstControl();
+                  } else {
+                     this.getActiveChildControl(true, true).setActive(true);
+                  }
                }
                this._notify('onBeginEdit');
             },
@@ -240,8 +263,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             },
             endEdit: function() {
                this.getContainer().removeAttr('data-id');
-               this._endTrackHeight();
-               this._endTrackPosition();
+               this._endTargetTracking();
                this.getTarget().removeClass('controls-editInPlace__editing');
                this._editing = false;
                this.hide();
@@ -264,7 +286,19 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                   $(container).find('.controls-editInPlace__editor').css('padding-left', this._options.getEditorOffset(model, this.getTarget()));
                }
             },
-            updatePosition: function() {
+            _updateHorizontalPosition: function() {
+               var
+                  editorLeft,
+                  target = this.getTarget();
+               if (target && target.length) {
+                  editorLeft = target.position().left;
+                  if (this._lastHorizontalPosition !== editorLeft) {
+                     this._lastHorizontalPosition = editorLeft;
+                     this.getContainer().css('left', editorLeft);
+                  }
+               }
+            },
+            _updateVerticalPosition: function() {
                var
                    editorTop,
                    target = this.getTarget();
@@ -281,11 +315,11 @@ define('js!SBIS3.CONTROLS.EditInPlace',
                //которую можно будет удалить после отказа от hover режима.
                if (target && target.length) {
                   editorTop = target.position().top - this.getContainer().position().top;
-                  if (this._lastPosition !== editorTop) {
-                     this._lastPosition = editorTop;
-                     $.each(this._editors, function (id, editor) {
-                        $(editor).css('top', editorTop);
-                     });
+                  if (this._lastVerticalPosition !== editorTop) {
+                     this._lastVerticalPosition = editorTop;
+                     for (var i = 0; i < this._editors.length; i++) {
+                        $(this._editors[i]).css('top', editorTop);
+                     }
                   }
                }
             },
@@ -297,7 +331,7 @@ define('js!SBIS3.CONTROLS.EditInPlace',
             },
             getTarget: function() {
                var id = this._model.getId();
-               return this._options.itemsContainer.find('.js-controls-ListView__item[data-id="' + (id === undefined ? '' : id) + '"]:not(".controls-editInPlace")');
+               return this._options.itemsContainer.find('>.js-controls-ListView__item[data-id="' + (id === undefined ? '' : id) + '"]:not(".controls-editInPlace")');
             },
             _deactivateActiveChildControl: function() {
                var activeChild = this.getActiveChildControl(undefined, true);

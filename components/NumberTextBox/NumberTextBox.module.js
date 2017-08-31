@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
     * </ol>
     * @class SBIS3.CONTROLS.NumberTextBox
     * @extends SBIS3.CONTROLS.TextBox
-    * @author Роман Валерий Сергеевич
+    * @author Романов Валерий Сергеевич
     * @demo SBIS3.CONTROLS.Demo.MyNumberTextBox
     *
     * @ignoreOptions independentContext contextRestriction isContainerInsideParent owner stateKey subcontrol textTransform
@@ -53,6 +53,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
     */
 
    function formatText(value, text, onlyInteger, decimals, integers, delimiters, onlyPositive, maxLength, hideEmptyDecimals){
+      // Вырезаем переносы строк и теги.
+      value = typeof value === 'string' ? value.replace(/\n/gm, '').replace(/<.*?>/g, '') : value;
       var decimals = onlyInteger ? 0 : decimals,
           dotPos = (value = (value + '')).indexOf('.'),
           parsedVal = dotPos != -1 ? '.' + value.substr(dotPos + 1).replace(/[^0-9]/g, '') : '0',
@@ -90,6 +92,15 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          return text;
       }
       return value || '';
+   }
+
+   function hideEmptyDecimals(value){
+      value = value + '';
+
+      while (value && value.indexOf('.') !== -1 && (value[value.length - 1] == '0' || value[value.length - 1] == '.')) {
+         value = value.substr(0, value.length - 1);
+      }
+      return value;
    }
 
    var NumberTextBox = TextBox.extend(/** @lends SBIS3.CONTROLS.NumberTextBox.prototype */ {
@@ -197,10 +208,13 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
       },
 
       _modifyOptions: function(options){
+         var value;
+
          options = NumberTextBox.superclass._modifyOptions.apply(this, arguments);
-         if (options.numericValue != undefined){
+         value = (options.numericValue != undefined) ? options.numericValue : options.text;
+         if (typeof value !== 'undefined' && value !== null){
             options.text = formatText(
-               options.numericValue, 
+               value,
                options.text, 
                options.onlyInteger, 
                options.decimals, 
@@ -210,6 +224,9 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
                options.maxLength,
                options.hideEmptyDecimals
             );
+         }
+         if(options.hideEmptyDecimals && options.text) {
+            options.text = hideEmptyDecimals(options.text);
          }
 
 	      options.cssClassName += ' controls-NumberTextBox';
@@ -235,13 +252,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          this._inputField.bind('blur', function(){
             self._blurHandler();
          });
-
-         if (typeof this._options.numericValue === 'number' && !isNaN(this._options.numericValue)) {
-            this._options.text = this._options.numericValue + '';
-         }
-         this._options.text = this._formatText(this._options.text, this._options.hideEmptyDecimals);
-         this._setNumericValue(this._options.text);
-         this._setInputValue(this._options.text);
 
          // TODO https://online.sbis.ru/opendoc.html?guid=f30c45a4-49f5-4125-b743-d391331b6587
          // временное решения в версию для скролла в поле ввода,
@@ -272,9 +282,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
 
       init: function() {
          NumberTextBox.superclass.init.apply(this, arguments);
-         this._hideEmptyDecimals();
-
-
       },
 
        _blurHandler: function() {
@@ -321,12 +328,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          var value = this._getInputValue();
          if(value) {
             if (this._options.hideEmptyDecimals && (value && value.indexOf('.') != -1)) {
-               while (value[value.length - 1] == '0' || value[value.length - 1] == '.') {
-                  value = value.substr(0, value.length - 1);
-                  if (value.indexOf('.') == -1) { // удаляем только дробную часть
-                     break;
-                  }
-               }
+               value = hideEmptyDecimals(value);
             }
             this._options.text = value;
 

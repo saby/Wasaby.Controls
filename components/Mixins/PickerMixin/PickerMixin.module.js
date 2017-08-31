@@ -1,8 +1,7 @@
 define('js!SBIS3.CONTROLS.PickerMixin', [
    "Core/constants",
-   "js!SBIS3.CONTROLS.FloatArea",
-   "Core/helpers/collection-helpers"
-], function( constants,FloatArea, colHelpers) {
+   "js!SBIS3.CONTROLS.FloatArea"
+], function( constants,FloatArea) {
    /**
     * Миксин, умеющий отображать выдающий вниз блок.
     * Задаётся контент и методы, позволяющие открывать, закрывать блок.
@@ -95,21 +94,27 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
          var pickerConfig = this._setPickerConfig(),
              parent = this;
 
-         if (this._options.pickerConfig){
-            colHelpers.forEach(this._options.pickerConfig, function(val, key) {
-               /* Нельзя перебивать обработчики из оригинального конфига, иначе может поломаться логика,
-                  просто добавляем к оригинальным обработчикам пользовательские */
-               if(key === 'handlers' && pickerConfig[key]) {
-                  colHelpers.forEach(val, function(handlerVal, handlerKey) {
-                     if(pickerConfig[key][handlerKey]) {
-                        pickerConfig[key][handlerKey] = [pickerConfig[key][handlerKey]];
-                        pickerConfig[key][handlerKey].push(handlerVal);
+         if (this._options.pickerConfig) {
+            for (var key in this._options.pickerConfig) {
+               if(this._options.pickerConfig.hasOwnProperty(key)) {
+                  /* Нельзя перебивать обработчики из оригинального конфига, иначе может поломаться логика,
+                   просто добавляем к оригинальным обработчикам пользовательские */
+                  if(key === 'handlers' && pickerConfig[key]) {
+                     for (var handlerKey in this._options.pickerConfig[key]) {
+                        if(this._options.pickerConfig[key].hasOwnProperty(handlerKey)) {
+                           if(pickerConfig[key][handlerKey]) {
+                              pickerConfig[key][handlerKey] = [pickerConfig[key][handlerKey]];
+                              pickerConfig[key][handlerKey].push(this._options.pickerConfig[key][handlerKey]);
+                           } else {
+                              pickerConfig[key][handlerKey] = this._options.pickerConfig[key][handlerKey];
+                           }
+                        }
                      }
-                  });
-                  return;
+                     continue;
+                  }
+                  pickerConfig[key] = this._options.pickerConfig[key];
                }
-               pickerConfig[key] = val;
-            });
+            }
          }
 
          pickerConfig.parent = pickerConfig.parent !== undefined ? pickerConfig.parent : parent;

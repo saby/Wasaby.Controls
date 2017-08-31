@@ -1,0 +1,6 @@
+<ws:partial
+   template="{{'js!' + item.get('componentType')}}"
+   attributes="{{ {'data-hash': projItem.getHash(), 'data-id': item.getId()} }}"
+   class="controls-ListView__item"
+   scope="{{item.getRawData()}}"
+/>

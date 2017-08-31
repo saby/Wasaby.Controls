@@ -13,7 +13,7 @@ body {
   }
    .controls-ListView__scrollPager {
       .controls-IconButton {
-         background: @button-bg;
+         background: @button-bg-color;
          .controls-Button__icon {
             color: @button-text-color !important;
          }
@@ -27,7 +27,7 @@ body {
    }
     //Todo: https://online.sbis.ru/opendoc.html?guid=47bdafa8-88ab-4cb2-9383-89ffd7c9dcdd
     .controls-accent-text {
-      color: #D94700;
+      color: #D94700 !important;
     }
 }
 
@@ -40,6 +40,9 @@ body {
   .ws-window-titlebar {
     color: #313E78;
   }
+  .ws-window-title{
+     color: #313E78;
+  }
   .ws-info-box {
       background: @default-bg-color;
       .ws-infobox-triangle {
@@ -48,12 +51,6 @@ body {
   }
   .ws-infobox-triangle {
     background: @default-bg-color;
-  }
-  .ws-window-title {
-     font-size: 1.43rem;
-     height: 3.57rem;
-     max-height: 3.57rem;
-     line-height: 3.57rem;
   }
   .ws-float-area-title {
       font-size: 1.43rem!important;
@@ -114,6 +111,10 @@ body {
    .controls-DateRangeBigChoose .controls-DateRangeBigChoose__months .controls-DateRangeBigChoose__months-halfyearRange .controls-DateRangeBigChoose__months-range-btn-wrapper.controls-DateRangeBigChoose__months-range-btn-wrapper1 {
        height: 11rem;
    }
+   // См. такой же хак в теме престо. Исправляем цвет после того как переобределили его в теме престо.
+   .controls-DateRangeChoose__home .icon-primary {
+      color: @icon-color-primary;
+   }
 }
 
 body .ws-window {
@@ -173,4 +174,7 @@ body .ws-window {
           background-color:  #F0F5FB !important;
       }
   }
+}
+.controls-ComboBox__picker .controls-ComboBox__scrollContainer {
+    background: transparent;
 }

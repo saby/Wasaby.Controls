@@ -1,19 +1,19 @@
 define('js!SBIS3.CONTROLS.CompositeViewMixin', [
    'Core/constants',
-   'Core/helpers/collection-helpers',
    'tmpl!SBIS3.CONTROLS.CompositeViewMixin',
    'Core/IoC',
-   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/CompositeItemsTemplate',
+   'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/CompositeItemsTemplate',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/TileTemplate',
-   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/TileContentTemplate',
-   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/ListTemplate',
-   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/ListContentTemplate',
-   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/ItemsTemplate',
-   'html!SBIS3.CONTROLS.CompositeViewMixin/resources/InvisibleItemsTemplate',
+   'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/TileTemplate',
+   'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/TileContentTemplate',
+   'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/ListTemplate',
+   'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/ListContentTemplate',
+   'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/ItemsTemplate',
+   'tmpl!SBIS3.CONTROLS.CompositeViewMixin/resources/InvisibleItemsTemplate',
    'Core/core-merge',
+   'Core/core-instance',
    'js!SBIS3.CONTROLS.Link'
-], function(constants, collection, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate, ItemsTemplate, InvisibleItemsTemplate, cMerge) {
+], function(constants, dotTplFn, IoC, CompositeItemsTemplate, TemplateUtil, TileTemplate, TileContentTemplate, ListTemplate, ListContentTemplate, ItemsTemplate, InvisibleItemsTemplate, cMerge, cInstance) {
    'use strict';
    /**
     * Миксин добавляет функционал, который позволяет контролу устанавливать режимы отображения элементов коллекции по типу "Таблица", "Плитка" и "Список".
@@ -78,6 +78,15 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
          }
          parentOptions.listTpl = TemplateUtil.prepareTemplate(listTpl);
          parentOptions.defaultListTpl = TemplateUtil.prepareTemplate(cfg._defaultListTemplate);
+
+         switch (cfg.viewMode) {
+            case 'tile':
+               parentOptions.itemTpl = tileTpl;
+               break;
+            case 'list':
+               parentOptions.itemTpl = listTpl;
+               break;
+         }
       }
       return parentOptions
    },
@@ -359,10 +368,10 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
             tiles = $('.controls-CompositeView__tileItem:not(.controls-ListView__item-type-node)', itemsContainer),
             folders = $('.controls-ListView__item-type-node', itemsContainer);
          if (!this._tileWidth) {
-            this._tileWidth = $(tiles[0]).width();
+            this._tileWidth = $(tiles[0]).outerWidth(true);
          }
          if (!this._folderWidth) {
-            this._folderWidth = $(folders[0]).width();
+            this._folderWidth = $(folders[0]).outerWidth(true);
          }
          this._calcWidth(tiles, this._tileWidth);
          this._calcWidth(folders, this._folderWidth);
@@ -374,7 +383,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
                tilesCount = Math.floor(itemsContainerWidth / oldWidth),
                newTileWidth = itemsContainerWidth / tilesCount;
 
-            tiles.outerWidth(newTileWidth);
+            tiles.outerWidth(newTileWidth, true);
          }
       },
 
@@ -505,9 +514,15 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
                parentFnc.apply(this, args);
             }
             else {
-               //TODO когда идет догрузка по скроллу, все перерисовывать слишком дорого - возникли тормоза в контактах, до VDOM вставляем такую проверку
+
                var lastItemsIndex = this._getItemsProjection().getCount() - newItems.length;
-               if ((lastItemsIndex == newItemsIndex) || action == 'rm') {//Если случается событие replace то срабатывает сначала удаление, потом добавление. Если по удалению перерисовывать все, то потом добавление дублирует запись, поэтому проверка на удалени обязательна
+
+               //TODO когда идет догрузка по скроллу, все перерисовывать слишком дорого - возникли тормоза в контактах, до VDOM вставляем такую проверку
+               //1. Если это добавление в конец и на второй странице нет папок
+               //2. Если это удаление
+               // тогда можно отрисовать как обычно
+               // в остальных случаях полная перерисовка
+               if (((lastItemsIndex == newItemsIndex) && !(cInstance.instanceOfModule(newItems[0], 'WS.Data/Display/TreeItem') && newItems[0].isNode())) || action == 'rm') {
                   parentFnc.apply(this, args);
                }
                else {

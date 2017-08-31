@@ -79,8 +79,12 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          return this._options.items;
       },
 
+      setItems: function (items) {
+         this._options.items = items;
+      },
+
       _moveToOneRow: function(record, position) {
-         var projection = this.getProjection(),
+         var projection = this.getItemsProjection(),
             item = projection.getItemBySourceItem(record),
             targetItem = position == 'after' ? projection.getNext(item) : projection.getPrevious(item);
          if(targetItem) {
@@ -88,10 +92,16 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          }
       },
 
-      getProjection: function() {
+      getItemsProjection: function() {
          return this._options.projection;
       },
-
+      /**
+       * устанавливает проекцию элементов
+       * @param projection
+       */
+      setItemsProjection: function(projection) {
+         this._options.projection = projection;
+      },
       /**
        * Перемещает записи из внешнего контрола, через drag'n'drop
        * @param {SBIS3.CONTROLS.DragEntity.List} dragSource Объект содержащий данные
@@ -119,7 +129,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             items = this.getItems();
          position = target.getPosition() != 'after' ? position : position +1;
          def.addCallback(function(result) {
-            if (result !== false) {
+            if (result !== false && result !== Mover.ON_BEGIN_MOVE_RESULT.CUSTOM) {
                dragSource.each(function(movedItem) {
                   var model = movedItem.getModel();
                   if (operation === 'add' || operation === 'move') {
@@ -180,7 +190,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
                }
                result.addBoth(function (result) {
                   this._notify('onEndMove', result, movedItems, target, position);
-                  if (result instanceof Error && !result.processed) {
+                  if (result instanceof Error && !result.processed && !result._isOfflineMode ) {
                      InformationPopupManager.showMessageDialog(
                         {
                            message: result.message,
@@ -227,7 +237,6 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
       setMoveStrategy: function (moveStrategy) {
          this._options.moveStrategy = moveStrategy;
       },
-
       /**
        * Вызывает метод перемещения на источнике данных
        * @param movedItems
@@ -328,9 +337,10 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             parentProperty && target.get(parentProperty) == movedItem.get(parentProperty) ||
             !parentProperty
          )) {
-            var  targetIndex = this.getItems().getIndex(target);
+            var  targetIndex = this.getItems().getIndex(target),
+               sourceIndex = this.getItems().getIndex(movedItem);
             targetIndex = position == 'before' ? targetIndex - 1 : targetIndex + 1;
-            if (this.getItems().getIndex(movedItem) == targetIndex) {
+            if (sourceIndex > -1 && sourceIndex == targetIndex) {//если элемента нет то не сравниваем индексы
                return false;
             }
          }
@@ -388,6 +398,9 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
       * Проверяет можно ли переместить элементы
       */
       checkRecordsForMove: function (movedItems, target, position) {
+         if (this.getItems().getIndex(target) === -1){
+            return false;
+         }
          for (var i=0, len = movedItems.length; i < len; i++){
             if (!this._checkRecordForMove(movedItems[i], target, position)){
                return false;

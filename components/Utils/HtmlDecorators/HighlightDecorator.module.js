@@ -1,8 +1,12 @@
 define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.HighlightDecorator', [
    'js!SBIS3.CONTROLS.Utils.HtmlDecorators.AbstractDecorator',
-   'Core/markup/ParserUtilitiesNew',
-   'Core/helpers/string-helpers'
-], function (AbstractDecorator, Parser, strHelpers) {
+   'Core/markup/ParserUtilities',
+   'Core/core-instance',
+   'Core/helpers/String/escapeHtml'
+], function (AbstractDecorator,
+            Parser,
+            cInst,
+            escapeHtml) {
    'use strict';
 
    /**
@@ -78,8 +82,15 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.HighlightDecorator', [
          if (!text || !highlight) {
             return text;
          }
+
+         /**
+          * Если enum - нужно взять toString
+          */
+         if (cInst.instanceOfModule(text, 'WS.Data/Type/Enum')) {
+            text = text.toString();
+         }
          text = Parser.parse(text);
-         highlight = strHelpers.escapeHtml('' + highlight)
+         highlight = escapeHtml('' + highlight)
             .replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
 
          highlighted(text, new RegExp(highlight, 'gi'), cssClass);

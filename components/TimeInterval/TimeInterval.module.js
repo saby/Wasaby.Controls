@@ -340,7 +340,10 @@ define(
             this._options.mask = this._options.mask.substr(0, length) + this._options.mask;
             TimeInterval.superclass.setMask.apply(this, [this._options.mask]);
             this._setText(this._options.text);
-            this.setCursor(this._getFormatModel()._options.cursorPosition.group, this._getFormatModel()._options.cursorPosition.position + 1);
+            //Устанавливаю курсор, только если фокус на компоненте, если пришли из сеттера опции, то не нужно
+            if ($(document.activeElement).closest(this.getContainer()).length) {
+               this.setCursor(this._getFormatModel()._options.cursorPosition.group, this._getFormatModel()._options.cursorPosition.position + 1);
+            }
          },
          /**
           * Содержит ли интервал дни\минуты
@@ -352,29 +355,35 @@ define(
          },
 
          setText: function(text){
-            var lackMaskLength = text.length - this._options.mask.length;
+            var isEmptyText = false,
+                lackMaskLength;
+            if (!text) {
+               text = this._getFormatModel().getStrMask(this._getMaskReplacer());
+               isEmptyText = true;
+            }
+            lackMaskLength = text.length - this._options.mask.length;
             //Увеличиваем маску на допустимое кол-во символов, если того требует устанавливаемый текст
             if (lackMaskLength){
                this._incMask(lackMaskLength);
             }
-            text = this._getCorrectText(text);
+            text = this._getCorrectText(text, isEmptyText);
             TimeInterval.superclass.setText.call(this, text);
          },
          _setText: function(text){
-            text = this._getCorrectText(text);
+            text = this._getCorrectText(text, !text || this._getFormatModel().getStrMask(this._getMaskReplacer()) === text);
             TimeInterval.superclass._setText.call(this, text);
          },
-         _getCorrectText: function(text){
+         _getCorrectText: function(text, isEmptyText){
             this._getFormatModel().setText(text, this._getMaskReplacer());
             this._updateIntervalByText();
-            return this._getTextByTimeInterval();
+            return this._getTextByTimeInterval(isEmptyText);
          },
          /**
           * Получить текст по текущему значению timeInterval.
           * @private
           */
-         _getTextByTimeInterval: function () {
-            var valuesArray = this._getSectionValues(),
+         _getTextByTimeInterval: function (isEmptyText) {
+            var valuesArray = this._getSectionValues(isEmptyText),
                result = valuesArray;
             //Если значение в левой группе больше, чем предусмотрено в maxCharsAtLeftGroup,
             //то выставляем максимальное значение, соответствующее максимально возможной маске (9999:00:00)
@@ -409,8 +418,9 @@ define(
           * Получить массив текущих значений
           * @private
           */
-         _getSectionValues: function () {
+         _getSectionValues: function (isSetEmptyText) {
             var intervalValues = this.timeInterval.toObject(),
+               isEmptyValue = true,
                sectionArray = [];
 
             if (this._hasMaskSection(this._sections.days)) {
@@ -424,11 +434,23 @@ define(
                sectionArray.push(intervalValues.minutes);
             }
 
-            $.each(sectionArray, function(i, value){
+            sectionArray.forEach(function(value, i){
+               if (value !== 0) {
+                  isEmptyValue = false;
+               }
                if (value < 10){
                   sectionArray[i] = "0" + value;
                }
             });
+
+            //Если все по нулям - показываю пустую маску
+            if (isSetEmptyText && isEmptyValue) {
+               var emptySectionValue = this._getMaskReplacer() + this._getMaskReplacer();
+               sectionArray.forEach(function (elem, i) {
+                  sectionArray[i] = emptySectionValue;
+               });
+            }
+
             return sectionArray;
          },
          /**

@@ -9,11 +9,11 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
    "Core/Abstract",
    "Core/helpers/string-helpers",
    "Core/Deferred",
-   "Core/helpers/functional-helpers",
+   "Core/helpers/Function/forAliveOnly",
    "Core/IoC",
    "Core/constants",
    "js!SBIS3.CORE.LocalStorage"
-], function(EventBus, cSessionStorage, SBISUserConfigStorage, SBISClientsGlobalConfigStorage, cAbstract, strHelpers, Deferred, fHelpers, IoC, constants, LocalStorage ) {
+], function(EventBus, cSessionStorage, SBISUserConfigStorage, SBISClientsGlobalConfigStorage, cAbstract, strHelpers, Deferred, forAliveOnly, IoC, constants, LocalStorage ) {
 
    'use strict';
 
@@ -21,7 +21,13 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
       return value ? strHelpers[serialize ? 'serializeURLData' : 'deserializeURLData'](value) : null;
    };
 
+   /* Постфикс для хранения данных в глобальных параметрах клиента */
    var GLOBAL_POSTFIX = '-global';
+   /* Т.к. история для всех контроллеров общая,
+      то ради экономии памяти и оптимизации сериализации храним в общем объекте.
+      В случае разрушение всех экземпляров, которые ссылаются на один id,
+      история из объекта удаляется */
+   var STORAGES = {};
 
    /**
     * Контроллер, который предоставляет базовые механизмы работы с историей.
@@ -77,8 +83,6 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
          /* Чтобы проинициализировать localStorage, требуется,
             чтобы отслеживать изменения в localStorage */
          this._getLocalStorage();
-
-         this._history = this._getStorageValue();
          this._updateHistory = this._updateHistory.bind(this);
          
          this._historyChannel = EventBus.channel('HistoryChannel' + this._options.historyId);
@@ -103,6 +107,7 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
           + надо записывать в LocalStorage, чтобы не было рассинхрона истории на разных вкладках. */
          this._getLocalStorage().setItem(key, serializedValue);
          cSessionStorage.setItem(key, serializedValue);
+         STORAGES[this._options.historyId] = value;
 
          /* Пока нет нормального способа, используя некий интерфейс сохранять параметры,
           то смотрю на флаг globalConfigSupport (поддерживаются ли пользовательский параметры),
@@ -157,6 +162,12 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
        * @see clearHistory
        */
       getHistory: function() {
+         if(!this._history) {
+            if(!STORAGES[this._options.historyId]) {
+               STORAGES[this._options.historyId] = this._getStorageValue();
+            }
+            this._history = STORAGES[this._options.historyId];
+         }
          return this._history;
       },
 
@@ -189,7 +200,7 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
          if (!this.isNowSaving()) {
             this._saveParamsDeferred = new Deferred();
 
-            this._setStorageValue(this._history).addCallback(fHelpers.forAliveOnly(function(res) {
+            this._setStorageValue(this._history).addCallback(forAliveOnly(function(res) {
                self._saveParamsDeferred.callback();
                return res;
             }, self));
@@ -245,6 +256,11 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
             this._localStorage = undefined;
          }
          this._historyChannel.unsubscribe('onHistoryUpdate', this._updateHistory);
+         
+         if(!this._historyChannel.hasEventHandlers('onHistoryUpdate')) {
+            delete STORAGES[this._options.historyId];
+            this._historyChannel.destroy();
+         }
          this._historyChannel = undefined;
          this._history = undefined;
          this._SBISStorage = undefined;

@@ -35,8 +35,14 @@
    .controls-ItemActions__item {
       line-height: @list-view-items-toolbar-line-height !important;
       &.controls-IconButton__round-border-24 {
-         line-height: @list-view-items-toolbar-vertical-line-height !important;
+         line-height: @list-view-items-toolbar-line-height !important;
       }
+   }
+   .controls-IconButton.controls-IconButton__round-border-24 {
+      line-height: @list-view-items-toolbar-line-height !important;
+   }
+   .controls-ItemActions__menu-button {
+      display: none;
    }
 }
 
@@ -106,9 +112,9 @@
          position: absolute;
          display: block;
          background: @items-toolbar-bottom-style-background no-repeat 0 0;
-         width: 24px;
+         width: @bottomStyle-items-toolbar-width;
          height: @bottomStyle-items-toolbar-height;
-         left: -24px;
+         left: -@bottomStyle-items-toolbar-width;
       }
       .controls-ItemActions .controls-ItemActions__itemsContainer {
          margin-left: -4px;
@@ -125,7 +131,7 @@
             .controls-ItemActions__item {
                line-height: @list-view-items-toolbar-line-height !important;
                &.controls-IconButton__round-border-24 {
-                  line-height: @list-view-items-toolbar-vertical-line-height !important;
+                  line-height: @list-view-items-toolbar-line-height !important;
                }
             }
          }

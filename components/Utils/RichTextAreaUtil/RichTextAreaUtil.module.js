@@ -3,7 +3,7 @@
  */
 define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
    'Core/constants',
-   'Core/markup/ParserUtilitiesNew'
+   'Core/markup/ParserUtilities'
 ], function (constants, Parser) {
    'use strict';
    /**

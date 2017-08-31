@@ -18,16 +18,32 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       'js!WS.Data/Source/DataSet',
       'js!WS.Data/Collection/RecordSet',
       'js!WS.Data/Chain',
+      'js!SBIS3.CONTROLS.LongOperationsConst',
       'js!SBIS3.CONTROLS.LongOperationsTabCalls',
       'js!SBIS3.CONTROLS.LongOperationsCallsPool',
+      'js!SBIS3.CONTROLS.LongOperationsBunch',
       'js!SBIS3.CONTROLS.ILongOperationsProducer',
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.LongOperationHistoryItem',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model'
    ],
 
-   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsTabCalls, LongOperationsCallsPool, ILongOperationsProducer, LongOperationEntry, LongOperationHistoryItem, Model) {
+   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsConst, LongOperationsTabCalls, LongOperationsCallsPool, LongOperationsBunch, ILongOperationsProducer, LongOperationEntry, LongOperationHistoryItem, Model) {
       'use strict';
+
+      /**
+       * "Константа" - сортировка возвращаемых методом fetch элементов по умолчанию
+       * @protected
+       * @type {number}
+       */
+      var DEFAULT_FETCH_SORTING = {status:true, startedAt:false};
+
+      /**
+       * "Константа" - максимальное количество возвращаемых методом fetch элементов по умолчанию
+       * @protected
+       * @type {number}
+       */
+      var DEFAULT_FETCH_LIMIT = 10;
 
       /**
        * Список продюсеров длительных операций
@@ -79,6 +95,13 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       var _fetchCalls;
 
       /**
+       * Счётчики текщих отступов по продюсерам
+       * @protected
+       * @type {SBIS3.CONTROLS.LongOperationsBunch}
+       */
+      var _offsetBunch;
+
+      /**
        * Признак того, что менеджер ликвидирован
        * @protected
        * @type {boolean}
@@ -93,6 +116,10 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       var manager = /*CoreExtend.extend*/(/** @lends SBIS3.CONTROLS.LongOperationsManager.prototype */{
          _moduleName: 'SBIS3.CONTROLS.LongOperationsManager',
 
+         // Раскрыть константы
+         DEFAULT_FETCH_SORTING: DEFAULT_FETCH_SORTING,
+         DEFAULT_FETCH_LIMIT: DEFAULT_FETCH_LIMIT,
+
          /**
           * Получить зарегистрированный продюсер длительных операций по его имени
           * @public
@@ -100,13 +127,12 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
           * @return {SBIS3.CONTROLS.ILongOperationsProducer}
           */
          getByName: function (prodName) {
-            if (_isDestroyed) {
-               throw new Error('Manager is destroyed');
-            }
             if (!prodName || typeof prodName !== 'string') {
                throw new TypeError('Argument "prodName" must be a string');
             }
-            return _producers[prodName];
+            if (!_isDestroyed) {
+               return _producers[prodName];
+            }
          },
 
          /**
@@ -115,10 +141,9 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
           * @param {SBIS3.CONTROLS.ILongOperationsProducer} producer Продюсер длительных операций
           */
          register: function (producer) {
-            if (_isDestroyed) {
-               throw new Error('Manager is destroyed');
+            if (!_isDestroyed) {
+               _register(producer);
             }
-            _register(producer);
          },
 
          /**
@@ -128,10 +153,9 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
           * @return {boolean}
           */
          unregister: function (producer) {
-            if (_isDestroyed) {
-               throw new Error('Manager is destroyed');
+            if (!_isDestroyed) {
+               return _unregister(producer);
             }
-            return _unregister(producer);
          },
 
          /**
@@ -141,48 +165,127 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
           * @return {boolean}
           */
          isRegistered: function (producer) {
-            if (_isDestroyed) {
-               throw new Error('Manager is destroyed');
-            }
             if (!producer || !(typeof producer === 'string' || CoreInstance.instanceOfMixin(producer, 'SBIS3.CONTROLS.ILongOperationsProducer'))) {
                throw new TypeError('Argument "producer" must be string or  SBIS3.CONTROLS.ILongOperationsProducer');
             }
-            return typeof producer === 'string' ? !!_producers[producer] : !!_searchName(producer);
+            if (!_isDestroyed) {
+               return typeof producer === 'string' ? !!_producers[producer] : !!_searchName(producer);
+            }
          },
 
          /**
-          * Запросить набор последних длительных операций (отсортированных в обратном хронологическом порядке) из всех зарегистрированных продюсеров
+          * Запросить набор последних длительных операций из всех зарегистрированных продюсеров. В качестве аргумента принимает (опционально) запрос
+          * в виде простого объекта, либо запрос может быть указан (строго) четырьмя отдельными аргументами в последовательности:
+          * where, orderBy, offset и limit
           * @public
-          * @param {number} count Максимальное количество возвращаемых элементов
+          * @param {object} [options] Параметры запроса (опционально)
+          * @param {object} [options.where] Параметры фильтрации. По умолчанию null (опционально)
+          * @param {object} [options.orderBy] Параметры сортировки. По умолчанию будет использована константа DEFAULT_FETCH_SORTING (опционально)
+          * @param {number} [options.offset] Количество пропущенных элементов в начале. По умолчанию 0 (опционально)
+          * @param {number} [options.limit] Максимальное количество возвращаемых элементов. По умолчанию будет использована константа DEFAULT_FETCH_LIMIT (опционально)
+          * @param {object} [options.extra] Дополнительные параметры, если есть (опционально)
           * @return {Core/Deferred<WS.Data/Collection/RecordSet<SBIS3.CONTROLS.LongOperationEntry>>}
           */
-         fetch: function (count) {
+         fetch: function (options) {
+            // Хотя здесь "проситься" использовать экземпляр WS.Data/Query/Query в качестве аргумента, однако WS.Data/Query/Query имеет избыточную
+            // здесь функциональность, в том числе возможность использовать функции для where, содержит другие члены, кроме where, orderBy, offset
+            // и limit, имеет другие дополнительные возможности. Поддержка всего этого тут не нужна (и скорее обременительна), поэтому ограничимся
+            // более простыми типами
             if (_isDestroyed) {
-               return Deferred.fail('User left the page');
+               return Deferred.fail(LongOperationsConst.ERR_UNLOAD);
             }
-            if (!(typeof count === 'number' && 0 < count)) {
-               throw new TypeError('Argument "count" must be positive number' );
+            var query = {
+               where: null,
+               orderBy: DEFAULT_FETCH_SORTING,
+               offset: 0,
+               limit: DEFAULT_FETCH_LIMIT,
+               extra: null
+            };
+            var names = Object.keys(query);
+            var len = arguments.length;
+            if (4 <= len) {
+               var args = arguments;
+               names.forEach(function (v, i) { if (ars[i]) query[v] = ars[i]; });
             }
-            if (!_fetchCalls.has(count)) {
+            else
+            if (len === 1) {
+               if (options) {
+                  if (typeof options !== 'object') {
+                     throw new TypeError('Argument "options" must be an object if present');
+                  }
+                  names.forEach(function (v) { if (options[v]) query[v] = options[v]; });
+               }
+            }
+            else
+            if (len !== 0) {
+               throw new Error('Wrong arguments number');
+            }
+
+            if (query.where != null && typeof query.where !== 'object') {
+               throw new TypeError('Argument "where" must be an object');
+            }
+            if (query.orderBy != null && (typeof query.orderBy !== 'object'
+                  && Object.keys(query.orderBy).every(function (v) { var b = query.orderBy[v]; return b == null || typeof b === 'boolean'; }))) {
+               throw new TypeError('Argument "orderBy" must be an array');
+            }
+            if (!(typeof query.offset === 'number' && 0 <= query.offset)) {
+               throw new TypeError('Argument "offset" must be not negative number');
+            }
+            if (!(typeof query.limit === 'number' && 0 < query.limit)) {
+               throw new TypeError('Argument "limit" must be positive number');
+            }
+            if (query.extra != null && typeof query.extra !== 'object') {
+               throw new TypeError('Argument "extra" must be an object');
+            }
+            if (!_fetchCalls.has(query)) {
                // Если нет уже выполняющегося запроса
-               if (Object.keys(_producers).length) {
-                  for (var n in _producers) {
-                     _fetchCalls.add(count, {tab:_tabKey, producer:n}, _producers[n].fetch(count));
+               var hasProducers = !!Object.keys(_producers).length;
+               var hasTabManagers = !!Object.keys(_tabManagers).length;
+               if (hasProducers || hasTabManagers) {
+                  var useOffsets = 0 < query.offset;
+                  var offsetPattern = {where:query.where, orderBy:query.orderBy, limit:query.limit};
+                  var offsetIds;
+                  if (useOffsets) {
+                     offsetIds = _offsetBunch.searchIds(offsetPattern);
+                     //var prevOffset = offsetIds && offsetIds.length ? _offsetBunch.listByIds(offsetIds).reduce(function (r, v) { r += v; return r; }, 0) : 0;
                   }
-               }
-               if (Object.keys(_tabManagers).length) {
-                  var targets;
-                  for (var tabKey in _tabManagers) {
-                     targets = _tabTargets(targets, tabKey, _tabManagers[tabKey]);
+                  else {
+                     _offsetBunch.removeAll(offsetPattern);
                   }
-                  if (targets) {
-                     _fetchCalls.addList(count, _expandTargets(targets), _tabCalls.callBatch(targets, 'fetch', [count], LongOperationEntry));
+                  if (hasProducers) {
+                     for (var n in _producers) {
+                        var member = {tab:_tabKey, producer:n};
+                        _fetchCalls.add(query, member, _producers[n].fetch(useOffsets ? ObjectAssign({}, query, {offset:_offsetBunch.search(member, offsetIds).shift() || 0}) : query));
+                     }
+                  }
+                  if (hasTabManagers) {
+                     var targets;
+                     for (var tabKey in _tabManagers) {
+                        targets = _tabTargets(targets, tabKey, _tabManagers[tabKey]);
+                     }
+                     if (targets) {
+                        var promises;
+                        if (useOffsets) {
+                           promises = [];
+                           for (var tabKey in targets) {
+                              for (var list = targets[tabKey], i = 0; i < list.length; i++) {
+                                 var n = list[i];
+                                 var member = {tab:tabKey, producer:n};
+                                 promises.push(_tabCalls.call(tabKey, n, 'fetch', [ObjectAssign({}, query, {offset:_offsetBunch.search(member, offsetIds).shift() || 0})], LongOperationEntry));
+                              }
+                           }
+                        }
+                        else {
+                           promises = _tabCalls.callBatch(targets, 'fetch', [query], LongOperationEntry);
+                        }
+                        _fetchCalls.addList(query, _expandTargets(targets), promises);
+                     }
                   }
                }
             }
-            if (_fetchCalls.has(count)) {
+            if (_fetchCalls.has(query)) {
                // Если теперь есть
-               return _fetchCalls.getResult(count);
+               return _fetchCalls.getResult(query, false);
             }
             else {
                return Deferred.success(null);
@@ -199,9 +302,6 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
           * @return {Core/Deferred}
           */
          callAction: function (action, tabKey, prodName, operationId) {
-            if (_isDestroyed) {
-               throw new Error('Manager is destroyed');
-            }
             if (!action || typeof action !== 'string') {
                throw new TypeError('Argument "action" must be a string');
             }
@@ -213,6 +313,9 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             }
             if (!operationId || !(typeof operationId === 'string' || typeof operationId === 'number')) {
                throw new TypeError('Argument "operationId" must be string or number');
+            }
+            if (_isDestroyed) {
+               return Deferred.fail(LongOperationsConst.ERR_UNLOAD);
             }
             if (!tabKey || tabKey === _tabKey) {
                var producer = _producers[prodName];
@@ -238,28 +341,27 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
           * @return {boolean}
           */
          canHasHistory: function (tabKey, prodName) {
-            if (_isDestroyed) {
-               throw new Error('Manager is destroyed');
-            }
             if (tabKey && typeof tabKey !== 'string') {
                throw new TypeError('Argument "tabKey" must be a string');
             }
             if (!prodName || typeof prodName !== 'string') {
                throw new TypeError('Argument "prodName" must be a string');
             }
-            if (!tabKey || tabKey === _tabKey) {
-               var producer = _producers[prodName];
-               if (!producer) {
-                  throw new Error('Producer not found');
+            if (!_isDestroyed) {
+               if (!tabKey || tabKey === _tabKey) {
+                  var producer = _producers[prodName];
+                  if (!producer) {
+                     throw new Error('Producer not found');
+                  }
+                  return _canHasHistory(producer);
                }
-               return _canHasHistory(producer);
+               else
+               if (tabKey in _tabManagers && prodName in _tabManagers[tabKey]) {
+                  // Если вкладка не закрыта и продюсер не раз-регистрирован
+                  return _tabManagers[tabKey][prodName].canHasHistory;
+               }
+               return false;
             }
-            else
-            if (tabKey in _tabManagers && prodName in _tabManagers[tabKey]) {
-               // Если вкладка не закрыта и продюсер не раз-регистрирован
-               return _tabManagers[tabKey][prodName].canHasHistory;
-            }
-            return false;
          },
 
          /**
@@ -274,9 +376,6 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
           * @return {Core/Deferred<WS.Data/Collection/RecordSet<SBIS3.CONTROLS.LongOperationHistoryItem>>}
           */
          history: function (tabKey, prodName, operationId, count, filter) {
-            if (_isDestroyed) {
-               throw new Error('Manager is destroyed');
-            }
             if (tabKey && typeof tabKey !== 'string') {
                throw new TypeError('Argument "tabKey" must be a string');
             }
@@ -287,10 +386,13 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                throw new TypeError('Argument "operationId" must be string or number');
             }
             if (!(typeof count === 'number' && 0 < count)) {
-               throw new TypeError('Argument "count" must be positive number' );
+               throw new TypeError('Argument "count" must be positive number');
             }
             if (filter && typeof filter !== 'object') {
                throw new TypeError('Argument "filter" must be an object if present');
+            }
+            if (_isDestroyed) {
+               return Deferred.fail(LongOperationsConst.ERR_UNLOAD);
             }
             if (!tabKey || tabKey === _tabKey) {
                var producer = _producers[prodName];
@@ -318,10 +420,9 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
           * @param {Object} [ctx] Контекст выполнения
           */
          subscribe: function (eventType, listener, ctx) {
-            if (_isDestroyed) {
-               throw new Error('Manager is destroyed');
+            if (!_isDestroyed) {
+               _channel.subscribe(eventType, listener, ctx);
             }
-            _channel.subscribe(eventType, listener, ctx);
          },
 
          /**
@@ -332,10 +433,26 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
           * @param {Object} [ctx] Контекст выполнения
           */
          unsubscribe: function (eventType, listener, ctx) {
-            if (_isDestroyed) {
-               throw new Error('Manager is destroyed');
+            if (!_isDestroyed) {
+               _channel.unsubscribe(eventType, listener, ctx);
             }
-            _channel.unsubscribe(eventType, listener, ctx);
+         },
+
+         /**
+          * Проверить, можно ли в данный момент ликвидировать экземпляр класса без необратимой потери данных
+          * @public
+          * @return {boolean}
+          */
+         canDestroySafely: function () {
+            if (!_isDestroyed) {
+               for (var n in _producers) {
+                  if (_producers[n].canDestroySafely &&//TODO: ### Это переходный код, удалить позднее
+                        !_producers[n].canDestroySafely()) {
+                     return false;
+                  }
+               }
+               return true;
+            }
          },
 
          /**
@@ -405,9 +522,10 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
              // Уведомить другие вкладки
             _tabChannel.notify('LongOperations:Manager:onActivity', {type:'register', tab:_tabKey, producer:name, isCrossTab:producer.hasCrossTabData(), hasHistory:_canHasHistory(producer)});
             // Если есть уже выполняющиеся запросы данных - присоединиться к ним
-            var counts = _fetchCalls.listGroups();
-            for (var i = 0; i < counts; i++) {
-               _fetchCalls.add(counts[i], {tab:_tabKey, producer:name}, _producers[name].fetch(counts[i]));
+            var queries = _fetchCalls.listPools();
+            for (var i = 0; i < queries.length; i++) {
+               var q = queries[i];
+               _fetchCalls.add(q, {tab:_tabKey, producer:name}, _producers[name].fetch(q.where, q.orderBy, q.offset, q.limit, q.extra));
             }
             // И уведомить своих подписчиков
             _channel.notifyWithTarget('onproducerregistered', manager);
@@ -447,6 +565,8 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             _fetchCalls.remove(null, {tab:_tabKey, producer:name});
             // Удалить из списка
             delete _producers[name];
+            // Почистить _offsetBunch
+            _offsetBunch.removeAll({tab:_tabKey, producer:name});
             done = true;
             // Уведомить другие вкладки
             _tabChannel.notify('LongOperations:Manager:onActivity', {type:'unregister', tab:_tabKey, producer:name});
@@ -564,6 +684,15 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             if (!producer) {
                throw new Error('Unknown event');
             }
+            // Если произошло событие в продюсере и есть выполняющиеся fetch запросы - выполнить незавершённые запросы к этому продюсеру повторно
+            var member = {tab:_tabKey, producer:data.producer};
+            var queries = _fetchCalls.listPools(member, true);
+            if (queries && queries.length) {
+               for (var i = 0; i < queries.length; i++) {
+                  var query = queries[i];
+                  _fetchCalls.replace(query, member, producer.fetch(query));
+               }
+            }
          }
          var eventType = typeof evtName === 'object' ? evtName.name : evtName;
          if (data) {
@@ -667,13 +796,24 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          }
          if (newProds) {
             // Если есть уже выполняющиеся запросы данных - присоединиться к ним
-            var counts = _fetchCalls.listGroups();
-            if (counts.length) {
+            var queries = _fetchCalls.listPools();
+            if (queries.length) {
                var targets = _tabTargets(null, tabKey, newProds);
                if (targets) {
-                  var params = _expandTargets(targets);
-                  for (var i = 0; i < counts; i++) {
-                     _fetchCalls.addList(counts[i], params, _tabCalls.callBatch(targets, 'fetch', [counts[i]], LongOperationEntry));
+                  var members = _expandTargets(targets);
+                  for (var i = 0; i < queries.length; i++) {
+                     var q = queries[i];
+                     var promises;
+                     if (0 < q.offset) {
+                        promises = [];
+                        for (var list = targets[tabKey], i = 0; i < list.length; i++) {
+                           promises.push(_tabCalls.call(tabKey, list[i], 'fetch', [ObjectAssign({}, q, {offset:0})], LongOperationEntry));
+                        }
+                     }
+                     else {
+                        promises = _tabCalls.callBatch(targets, 'fetch', [q], LongOperationEntry);
+                     }
+                     _fetchCalls.addList(q, members, promises);
                   }
                }
             }
@@ -698,6 +838,8 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             else {
                delete _tabManagers[tabKey];
             }
+            // Почистить _offsetBunch
+            _offsetBunch.removeAll(prodName ? {tab:tabKey, producer:prodName} : {tab:tabKey});
             // Уведомить своих подписчиков
             //TODO: ### Если продюсер не отображаемый, можно (нужно?) игнорировать
             _channel.notifyWithTarget('onproducerunregistered', manager);
@@ -715,42 +857,45 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       var _uniqueHex = function(n){var l=[];for(var i=0;i<n;i++){l[i]=Math.round(15*Math.random()).toString(16)}return l.join('')};
       //var _uniqueHex = function(n){return Math.round((Math.pow(16,n)-1)*Math.random()).toString(16).padStart(n,'0')};
 
-      if (typeof window !== "undefined") {
+      var ObjectAssign = Object.assign || function(d){return [].slice.call(arguments,1).reduce(function(r,s){return Object.keys(s).reduce(function(o,n){o[n]=s[n];return o},r)},d)};
 
+
+
+      if (typeof window !== 'undefined') {
          // Установить ключ вкладки
          _tabKey = _uniqueHex(50);
-
-         // Добавить обработчик на выгрузку для запуска метода destroy
-         window.addEventListener('beforeunload', function () {
-            manager.destroy();
-         });
 
          // Создать каналы событий
          _channel = EventBus.channel();
          _tabChannel = new TabMessage();
 
          // Создать объект межвкладочных вызовов
-         var _tabCalls = new LongOperationsTabCalls(_tabKey, manager.getByName, function (v) {
-            return typeof v.toSnapshot === 'function' ? v.toSnapshot() : v;
-            /*###^^^*/
-         }, _tabChannel);
+         var _tabCalls = new LongOperationsTabCalls(
+            /*tabKey:*/_tabKey,
+            /*router:*/manager.getByName,
+            /*packer:*/function (v) {
+               // Упаковщик для отправки. Ожидается, что все объекты будут экземплярами SBIS3.CONTROLS.LongOperationEntry
+               return v && typeof v.toSnapshot === 'function' ? v.toSnapshot() : v;
+            },
+            /*channel:*/_tabChannel
+         );
 
          // Создать пул вызовов методов fetch
          var _fetchCalls = new LongOperationsCallsPool(
-            ['tab', 'producer'],
+            /*fields:*/['tab', 'producer'],
             /**
              * Обработчик одиночного результата вызова метода fetch локального продюсера или продюсера во вкладке
-             * @param {number} count Максимальное количество возвращаемых элементов
-             * @param {object} params Объект с идентифицирующими параметрами вызова - tab и producer
+             * @param {object} query Параметры выполнявшегося запроса
+             * @param {object} member Объект с идентифицирующими параметрами вызова - tab и producer
              * @param {SBIS3.CONTROLS.LongOperationEntry[]|WS.Data/Source/DataSet|WS.Data/Collection/RecordSet} result Полученный результат
              * @return {SBIS3.CONTROLS.LongOperationEntry[]}
              */
-            function (count, params, result) {
+            /*handlePartial:*/function (query, member, result) {
                if (!(result == null || Array.isArray(result) || result instanceof DataSet || result instanceof RecordSet)) {
                   throw new Error('Unknown result type');
                }
                // Проверить, что продюсер есть и не был раз-регистрирован за время ожидания
-               var prodName = (params.tab === _tabKey ? _producers[params.producer] : params.tab in _tabManagers) ? params.producer : null;
+               var prodName = (member.tab === _tabKey ? _producers[member.producer] : member.tab in _tabManagers) ? member.producer : null;
                // Если продюсер найден
                if (prodName) {
                   var values = result instanceof DataSet ? result.getAll() : result;
@@ -760,7 +905,8 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                      iterate = 'forEach';
                      len = values.length;
                   }
-                  else if (values instanceof RecordSet) {
+                  else
+                  if (values instanceof RecordSet) {
                      iterate = 'each';
                      len = values.getCount();
                   }
@@ -768,7 +914,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                      throw new Error('Unknown result type');
                   }
                   if (len) {
-                     var tabKey = params.tab !== _tabKey ? params.tab : null;
+                     var tabKey = member.tab !== _tabKey ? member.tab : null;
                      values[iterate](function (v) {
                         // Значение должно быть экземпляром SBIS3.CONTROLS.LongOperationEntry и иметь правилное имя продюсера
                         if (!(v instanceof LongOperationEntry && v.producer === prodName)) {
@@ -783,11 +929,11 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             },
             /**
              * Обработчик полного результата
-             * @param {number} count Максимальное количество возвращаемых элементов
+             * @param {object} query Параметры выполнявшегося запроса
              * @param {SBIS3.CONTROLS.LongOperationEntry[][]} resultList Список результатов обработки одиночных результатов
              * @return {WS.Data/Collection/RecordSet<SBIS3.CONTROLS.LongOperationEntry>}
              */
-            function (count, resultList) {
+            /*handleComplete:*/function (query, resultList) {
                var operations;
                if (resultList && resultList.length) {
                   for (var i = 0; i < resultList.length; i++) {
@@ -801,7 +947,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                            operations[op.producer] = {};
                         }
                         if (op.id in operations[op.producer]) {
-                           // Есть одна и та же операция от разных продюсеров - выбрать
+                           // Есть одна и та же операция от разных вкладок - выбрать
                            var prev = operations[op.producer][op.id];
                            if ((!prev.canSuspend && op.canSuspend) || (!prev.canDelete && op.canDelete)) {
                               operations[op.producer][op.id] = op;
@@ -819,35 +965,51 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                });
                if (operations) {
                   var chain;
+                  var count = 0;
                   for (var p in operations) {
                      var list = operations[p];
                      list = Object.keys(list).map(function (v) {
                         return list[v];
                      });
                      chain = !chain ? Chain(list) : chain.concat(list);
+                     count += list.length;
                   }
-                  var STATUSES = LongOperationEntry.STATUSES;
-                  results.assign(chain
-                     .sort(function (a, b) {
-                        var s1 = a.status === STATUSES.running || a.status === STATUSES.suspended,
-                           s2 = b.status === STATUSES.running || b.status === STATUSES.suspended;
-                        if (s1 !== s2) {
-                           return s1 ? -1 : 1;
+                  if (query.orderBy) {
+                     var sorter = query.orderBy;
+                     chain = chain.sort(function (a, b) {
+                        for (var p in sorter) {
+                           var va = a[p];
+                           var vb = b[p];
+                           // Для сравниваемых значений могут иметь смысл операции < и >, но не иметь смысла != и ==, как например для Date. Поэтому:
+                           if (va < vb) {
+                              return sorter[p] ? -1 : +1;
+                           }
+                           else
+                           if (vb < va) {
+                              return sorter[p] ? +1 : -1;
+                           }
                         }
-                        var a1 = a.startedAt,
-                           b1 = b.startedAt;
-                        return a1 < b1 ? 1 : (a1 === b1 ? 0 : -1);
-                     })
-                     .first(count)
+                        return 0;
+                     });
+                  }
+                  var obKey = {where:query.where, orderBy:query.orderBy, limit:query.limit, tab:null, producer:null};
+                  results.assign(chain
+                     .first(query.limit)
                      .map(function (v) {
+                        obKey.tab = v.tabKey || _tabKey;
+                        obKey.producer = v.producer;
+                        _offsetBunch.set(obKey, (_offsetBunch.get(obKey) || 0) + 1);
                         return new Model({rawData: v, idProperty: 'fullId'});
                      })
                      .value()
                   );
+                  results.setMetaData({more:query.limit <= count});
                }
                return results;
             }
          );
+
+         _offsetBunch = new LongOperationsBunch();
 
          // Опубликовать свои события
          _channel.publish('onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted');
@@ -855,7 +1017,22 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          // И подписаться на события во вкладках
          _tabChannel.subscribe('LongOperations:Manager:onActivity', _tabListener);
          _tabChannel.notify('LongOperations:Manager:onActivity', {type: 'born', tab: _tabKey});
-         
+
+         // Добавить обработчик перед выгрузкой для уведомеления пользователя (если нужно)
+         window.addEventListener('beforeunload', function (evt) {
+            if (!manager.canDestroySafely()) {
+               // Единственное, что сейчас нам дают сделать браузеры и стандарты - показать пользователю стандартное окно браузера
+               // с уведомлением, что при перезагрузке что-то может не сохраниться. Текст сообщения в большинсве случаев будет заменён
+               // на браузерный стандартный, однако если он может быть где-то показан, то пусть будет.
+               evt.returnValue = LongOperationsConst.MSG_UNLOAD;
+               return LongOperationsConst.MSG_UNLOAD;
+            }
+         });
+
+         // Добавить обработчик на выгрузку для запуска метода destroy
+         window.addEventListener('unload', function () {
+            manager.destroy();
+         });
       }
 
       return manager;

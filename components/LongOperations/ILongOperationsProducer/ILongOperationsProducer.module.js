@@ -49,9 +49,9 @@ define('js!SBIS3.CONTROLS.ILongOperationsProducer',
        * @param {object} data Данные события
        * @param {string} data.producer Имя продюсера
        * @param {string} data.operationId Идентификатор операции (Возможен список идентификаторов в свойстве data.operationIds)
-       * @param {number} data.status Статус операции, может быть только LongOperationEntry.STATUSES.success или LongOperationEntry.STATUSES.error
        * @param {number} [data.progress.total] Общее количество подзадач, по умолчанию 1
        * @param {number} [data.progress.value] Количество выполненых подзадач (Здесь всегда равно data.progress.total)
+       * @param {string} [data.error] Сообщение об ошибке, если завершено с ошибкой
        * @example
        * <pre>
        *    producer.subscribe('onlongoperationended', function (evtName, data) {
@@ -100,13 +100,18 @@ define('js!SBIS3.CONTROLS.ILongOperationsProducer',
       },
 
       /**
-       * Запросить набор последних длительных операций (отсортированных в обратном хронологическом порядке)
+       * Запросить набор последних длительных операций
        * При имплементации в возвращаем Deferrred-е нужно использовать опцию cancelCallback, если это применимо с точки зрения природы данных
        * @public
-       * @param {number} count Максимальное количество возвращаемых элементов
+       * @param {object} options Параметры запроса (опционально)
+       * @param {object} options.where Параметры фильтрации
+       * @param {object} options.orderBy Параметры сортировки
+       * @param {number} options.offset Количество пропущенных элементов в начале
+       * @param {number} options.limit Максимальное количество возвращаемых элементов
+       * @param {object} [options.extra] Дополнительные параметры, если есть (опционально)
        * @return {Core/Deferred<SBIS3.CONTROLS.LongOperationEntry[]>}
        */
-      fetch: function (count) {
+      fetch: function (options) {
          throw new Error('Method must be implemented');
       },
 
@@ -138,6 +143,15 @@ define('js!SBIS3.CONTROLS.ILongOperationsProducer',
        * @param {function} listener Обработчик события
        */
       unsubscribe: function (eventType, listener) {
+         throw new Error('Method must be implemented');
+      },
+
+      /**
+       * Проверить, можно ли в данный момент ликвидировать экземпляр класса без необратимой потери данных
+       * @public
+       * @return {boolean}
+       */
+      canDestroySafely: function () {
          throw new Error('Method must be implemented');
       },
 

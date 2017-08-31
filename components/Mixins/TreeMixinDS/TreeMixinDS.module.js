@@ -7,9 +7,8 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
    "js!WS.Data/Display/Tree",
    "js!WS.Data/Relation/Hierarchy",
-   "Core/helpers/collection-helpers",
-   "Core/helpers/functional-helpers"
-], function ( cFunctions, cMerge, constants,Control, BreadCrumbs, groupByTpl, TreeProjection, HierarchyRelation, colHelpers, fHelpers) {
+   'Core/helpers/Function/forAliveOnly'
+], function ( cFunctions, cMerge, constants,Control, BreadCrumbs, groupByTpl, TreeProjection, HierarchyRelation, forAliveOnly) {
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
     * @mixin SBIS3.CONTROLS.TreeMixinDS
@@ -300,13 +299,14 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
          }
       },
       _closeAllExpandedNode: function(key){
-         var self = this;
          if (this._options.singleExpand){
-            $.each(this._options.openedPath, function(openedKey, _value){
-               if (key != openedKey){
-                  self.collapseNode(openedKey);
+            for (var openedKey in this._options.openedPath) {
+               if(this._options.openedPath.hasOwnProperty(openedKey)) {
+                  if (key !== openedKey){
+                     this.collapseNode(openedKey);
+                  }
                }
-            });
+            }
          }
       },
       /**
@@ -401,7 +401,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
             self = this,
             filter = id ? this._createTreeFilter(id) : this.getFilter();
          this._notify('onBeforeDataLoad', filter, this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit);
-         this._loader = this._callQuery(filter, this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit, 'down').addCallback(fHelpers.forAliveOnly(function (dataSet) {
+         this._loader = this._callQuery(filter, this.getSorting(), (id ? this._folderOffsets[id] : this._folderOffsets['null']) + this._limit, this._limit, 'down').addCallback(forAliveOnly(function (dataSet) {
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
             self._notify('onDataMerge', dataSet);
@@ -489,7 +489,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
          var
             controls,
             self = this;
-         colHelpers.forEach(items, function(item) {
+         items.forEach(function(item) {
             if (self._foldersFooters[item]) {
                controls = self._foldersFooters[item].find('.ws-component');
                for (var i = 0; i < controls.length; i++) {
@@ -538,14 +538,15 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
          },
          _clearItems: function(container) {
             if (this._getItemsContainer().get(0) == $(container).get(0) || !container) {
-               var self = this;
                this._lastParent = this._curRoot;
                this._lastDrawn = undefined;
                this._lastPath = [];
                this._destroySearchBreadCrumbs();
-               colHelpers.forEach(this._foldersFooters, function(val, key) {
-                  self._destroyFolderFooter([key]);
-               });
+               for (var key in this._foldersFooters) {
+                  if(this._foldersFooters.hasOwnProperty(key)) {
+                     this._destroyFolderFooter([key]);
+                  }
+               }
             }
          }
       },

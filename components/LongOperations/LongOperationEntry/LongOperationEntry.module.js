@@ -20,8 +20,7 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
       var STATUSES = {
          running:   0,
          suspended: 1,
-         success:   2,
-         error:     3,
+         ended:     2,
          deleted:   4
       };
 
@@ -33,10 +32,11 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
       var DEFAULTS = {
          status: STATUSES.running,
          timeSpent: 0,
+         timeIdle: 0,
          progressCurrent: 0,
          progressTotal: 1,
-         canSuspend: true,
-         canDelete: true
+         canDelete: true,
+         canSuspend: true
       };
 
       /**
@@ -50,23 +50,29 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
          producer: 'string',
          startedAt: 'Date',
          timeSpent: 'number',
+         timeIdle: 'number',
          status: 'number',
+         isFailed: 'boolean',
          progressTotal: 'number',
          progressCurrent: 'number',
-         canSuspend: 'boolean',
          canDelete: 'boolean',
+         canSuspend: 'boolean',
+         resumeAsRepeat: 'boolean',
+         userId: 'number',
+         userUuId: 'string',
          userFirstName: 'string',
          userPatronymicName: 'string',
          userLastName: 'string',
          userPic: 'string',
-         workflow: 'number',
-         notification: 'string',
+         resultWayOfUse: 'string',
          resultMessage: 'string',
          resultUrl: 'string',
          resultUrlAsDownload: 'boolean',
          resultValidUntil: 'Date',
          resultHandler: 'string',
-         resultHandlerArgs: ['string', 'object']
+         resultHandlerArgs: ['string', 'object'],
+         extra: 'object',
+         notification: 'string'
       };
 
       /**
@@ -87,14 +93,21 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
           * @param {string}        options.producer Имя продюсера операции (обязательный)
           * @param {Date|number|string} options.startedAt Время начала операции (обязательный)
           * @param {number}        [options.timeSpent] Общее время выполнения (опционально, если не указано, будет использован 0)
-          * @param {string|number} [options.status] Статус операции. Возможные значения: 'running', 0, 'suspended', 1, 'success', 2, 'error', 3.
+          * @param {number}        [options.timeIdle] Общее время простоя (опционально, если не указано, будет использован 0)
+          * @param {string|number} [options.status] Статус операции. Возможные значения: 'running', 0, 'suspended', 1, 'ended', 2.
           *                                         (опционально, если не указано, будет использовано 'running')
+          * @param {boolean}       [options.isFailed] Показывает, что операция завершена с ошибкой (опционально)
           * @param {number}        [options.progressTotal] Общее количество стадий выполнения (опционально, если не указано, будет использована 1)
           * @param {number}        [options.progress.total] Общее количество стадий выполнения - альтернативно
           * @param {number}        [options.progressCurrent] Текущая стадия выполнения (опционально, если не указано, будет использован 0)
           * @param {number}        [options.progress.current] Текущая стадия выполнения - альтернативно
-          * @param {boolean}       [options.canSuspend] Можно ли приостановить операцию (опционально, если не указано, будет использовано true)
           * @param {boolean}       [options.canDelete] Можно ли удалить операцию (опционально, если не указано, будет использовано true)
+          * @param {boolean}       [options.canSuspend] Можно ли приостановить (и затем возобновить) операцию (опционально, если не указано, будет использовано true)
+          * @param {boolean}       [options.resumeAsRepeat] Возобновление операции возможно только как полный повтор (не продолжение с места остановки) (опционально)
+          * @param {number}        [options.userId] Идентификатор пользователя (опционально)
+          * @param {number}        [options.user.id] Идентификатор пользователя (опционально)
+          * @param {string}        [options.userUuId] Идентификатор пользователя в сервисе профилей (опционально)
+          * @param {string}        [options.user.uuId] Идентификатор пользователя в сервисе профилей (опционально)
           * @param {string}        [options.userFirstName] Имя пользователя (опционально)
           * @param {string}        [options.user.firstName] Имя пользователя - альтернативно
           * @param {string}        [options.userPatronymicName] Отчество пользователя (опционально)
@@ -103,8 +116,7 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
           * @param {string}        [options.user.lastName] Фамилия пользователя - альтернативно
           * @param {string}        [options.userPic] Урл изображения, если применимо к данной операции (опционально)
           * @param {string}        [options.user.pic] Урл изображения, если применимо к данной операции - альтернативно
-          * @param {number}        [options.workflow] Идентификатор рабочего процесса, если применим (опционально)
-          * @param {string}        [options.notification] Уведомление, если применимо (опционально)
+          * @param {string}        [options.resultWayOfUse] Название способа использования результата ("Скачать", "Открыть" и т.д.) (опционально)
           * @param {string}        [options.resultMessage] Сообщение о результате операции (опционально)
           * @param {string}        [options.result.message] Сообщение о результате операции - альтернативно
           * @param {string}        [options.resultUrl] Ссылка на результат операции (опционально)
@@ -117,6 +129,8 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
           * @param {string}        [options.result.handler] Строка модуль-метод для отображения результата операции - альтернативно
           * @param {string|object} [options.resultHandlerArgs] Аргументы обработчика отображения результата операции (объект или json-строка) (опционально)
           * @param {string|object} [options.result.handlerArgs] Аргументы обработчика отображения результата операции (объект или json-строка) - альтернативно
+          * @param {object}        [options.extra] Дополнительная информация, определяемая конкретным продюсером, если необходимо (опционально)
+          * @param {string}        [options.notification] Уведомление, если применимо (опционально)
           */
          constructor: function LongOperationEntry (options) {
             if (!options || typeof options !== 'object') {
@@ -184,7 +198,7 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
                }
                this[name] = value;
             }
-            if (!this.progressCurrent && (this.status === STATUSES.success || this.status === STATUSES.error)) {
+            if (!this.progressCurrent && this.status === STATUSES.ended) {
                this.progressCurrent = this.progressTotal;
             }
             this.tabKey = null;

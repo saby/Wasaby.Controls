@@ -53,7 +53,10 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
-            mask: 'DD.MM.YY'
+            mask: 'DD.MM.YY',
+            startValueValidators: [],
+            endValueValidators: [],
+            _monthsNames: constants.Date.longMonths
          },
           _keysWeHandle: [
              constants.key.tab,
@@ -167,6 +170,9 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          this._startDatePicker.subscribe('onInputFinished', function() {
             self._endDatePicker.setActive(true);
          });
+
+         this._startDatePicker.addValidators(this._options.startValueValidators);
+         this._endDatePicker.addValidators(this._options.endValueValidators);
 
          this.subscribe('onRangeChange', this._onRangeChange.bind(this));
 

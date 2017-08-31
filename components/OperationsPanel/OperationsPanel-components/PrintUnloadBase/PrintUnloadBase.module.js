@@ -190,7 +190,8 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
             if (pageSize < numOfRecords) {
                //Выберем pageSize записей из dataSet
                recordSet = Chain(recordSet).first(pageSize).value(RecordSetFactory, {
-                  adapter: recordSet.getAdapter()
+                  adapter: recordSet.getAdapter(),
+                  model: recordSet.getModel()
                });
             }
             self._applyOperation(recordSet);
@@ -199,18 +200,23 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
       _loadFullData: function(pageSize){
          var deferred = new Deferred(),
             self = this;
-         fcHelpers.question('Операция займет продолжительное время. Провести операцию?', {}, self).addCallback(function(answer){
-            if (answer) {
-               fcHelpers.toggleIndicator(true);
-               self._getView()._callQuery(self._getView().getFilter(), self._getView().getSorting(),0,  pageSize || MAX_RECORDS_COUNT).addCallback(function (dataSet) {
-                  deferred.callback(dataSet)
-               }).addBoth(function() {
-                  fcHelpers.toggleIndicator(false);
-               });
-            } else{
-               deferred.errback();
-            }
+
+         require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(manager){
+            manager.showConfirmDialog({message: 'Операция займет продолжительное время. Провести операцию?'},
+               function (){
+                  fcHelpers.toggleIndicator(true);
+                  self._getView()._callQuery(self._getView().getFilter(), self._getView().getSorting(),0,  pageSize || MAX_RECORDS_COUNT).addCallback(function (dataSet) {
+                     deferred.callback(dataSet)
+                  }).addBoth(function() {
+                     fcHelpers.toggleIndicator(false);
+                  });
+               },
+               function(){
+                  deferred.errback();
+               }
+            )
          });
+
          return deferred;
       },
       /**

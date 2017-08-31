@@ -5,9 +5,26 @@
     border-left: @controls-InformationPopup-border-left;
     .box-shadow(@controls-panel-shadow);
 
+   /* Переопределим кнопку закрытия */
    .controls-PopupMixin__closeButton {
-      top:  @controls-InformationPopup-closeButton-top;
+      top: @controls-InformationPopup-closeButton-top;
+      right: @controls-InformationPopup-closeButton-right;
+      background: none;
+      width: @controls-InformationPopup-closeButton-width;
+      height: @controls-InformationPopup-closeButton-height;
+      &:before {
+         content: '';
+         font-size: @controls-InformationPopup-closeButton-font-size;
+         font-family: @controls-InformationPopup-closeButton-font-family;
+         color: @controls-InformationPopup-closeButton-color;
+      }
+      &:hover {
+         &:before {
+            color: @controls-InformationPopup-closeButton-hover-color;
+         }
+      }
    }
+
 
    &.controls-InformationPopup__status-default {
       border-color: @controls-InformationPopup-default-status-border-color;

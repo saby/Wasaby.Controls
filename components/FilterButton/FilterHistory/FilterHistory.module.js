@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.FilterHistory',
     [
    "Core/CommandDispatcher",
    "js!SBIS3.CORE.CompoundControl",
-   "html!SBIS3.CONTROLS.FilterHistory",
+   "tmpl!SBIS3.CONTROLS.FilterHistory",
    "tmpl!SBIS3.CONTROLS.FilterHistory/historyItemContentTpl",
    "js!SBIS3.CONTROLS.CommandsSeparator",
    "js!SBIS3.CONTROLS.ListView",

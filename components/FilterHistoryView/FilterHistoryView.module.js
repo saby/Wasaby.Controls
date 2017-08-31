@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryView',
                    this.setItems(history.clone(true));
                 }.bind(this));
 
-                this.setItems(historyController.getHistory());
+                this.setItems(historyController.getHistory().clone(true));
              }
           }
        });

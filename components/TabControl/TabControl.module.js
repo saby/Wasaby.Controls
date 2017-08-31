@@ -1,11 +1,12 @@
 define('js!SBIS3.CONTROLS.TabControl', [
    'js!SBIS3.CORE.CompoundControl',
    'tmpl!SBIS3.CONTROLS.TabControl',
+   'js!SBIS3.CORE.HasItemsMixin',
    "Core/IoC",
    'js!SBIS3.CONTROLS.SwitchableArea',
    'js!SBIS3.CONTROLS.TabButtons',
    'css!SBIS3.CONTROLS.TabControl'
-], function(CompoundControl, dotTplFn, IoC) {
+], function(CompoundControl, dotTplFn, HasItemsMixin, IoC) {
 
    'use strict';
 
@@ -22,7 +23,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
     * @demo SBIS3.CONTROLS.Demo.MyTabControl
     */
 
-   var TabControl = CompoundControl.extend( /** @lends SBIS3.CONTROLS.TabControl.prototype */ {
+   var TabControl = CompoundControl.extend([HasItemsMixin], /** @lends SBIS3.CONTROLS.TabControl.prototype */ {
       /**
        * @event onSelectedItemChange Происходит при измении выбранной вкладки.
        * @param {String|Number} id Идентификатор выбранной вкладки (см. {@link selectedKey}).
@@ -32,6 +33,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
       $protected: {
          _tabButtons: null,
          _switchableArea: null,
+         _changingAreaDeferred: null,
          _options: {
             /**
              * @typedef {object} Item
@@ -195,7 +197,12 @@ define('js!SBIS3.CONTROLS.TabControl', [
       _setActiveArea: function(id){
          this._options.selectedKey = id;
          this._switchableArea._options.defaultArea = id;
-         return this._switchableArea.setActiveArea(id);
+         /* Чтобе не возникало гонок, если вкладку сменили ещё до загрузки текущей. */
+         if (this._changingAreaDeferred && !this._changingAreaDeferred.isReady()) {
+            this._changingAreaDeferred.cancel();
+         }
+         this._changingAreaDeferred = this._switchableArea.setActiveArea(id);
+         return this._changingAreaDeferred;
       }
    });
 

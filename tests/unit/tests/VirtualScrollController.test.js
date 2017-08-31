@@ -12,16 +12,16 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController', 'Core/core-functions'], fun
       describe('._getWrappersHeight', function() {
          controller._heights = cFunctions.clone(heights);
          it('First Page', function() {
-            newState = controller._getWrappersHeight(0);
-            assert.deepEqual(newState, { begin: 0, end: 3200 });
+            newState = controller._getWrappersHeight([0, 100]);
+            assert.deepEqual(newState, { begin: 0, end: 3180 });
          });
          it('Middle Page', function() {
-            newState = controller._getWrappersHeight(5);
-            assert.deepEqual(newState, { begin: 960 , end: 2240 });
+            newState = controller._getWrappersHeight([60, 160]);
+            assert.deepEqual(newState, { begin: 960 , end: 2220 });
          });
          it('Last Page', function() {
-            newState = controller._getWrappersHeight(13);
-            assert.deepEqual(newState, { begin: 3520, end: 20 });
+            newState = controller._getWrappersHeight([220, 320]);
+            assert.deepEqual(newState, { begin: 3520, end: 0 });
          });
       });
 
@@ -78,11 +78,11 @@ define(['js!SBIS3.CONTROLS.VirtualScrollController', 'Core/core-functions'], fun
          });
          it('End of 2nd page', function() {
             newState = controller._getPage(640);
-            assert.equal(newState, 1);
+            assert.equal(newState, 2);
          });
          it('Last page', function() {
             newState = controller._getPage(99999999);
-            assert.equal(newState, 14);
+            assert.equal(newState, 15);
          });
       });
    });

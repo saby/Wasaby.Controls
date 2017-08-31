@@ -1,4 +1,6 @@
-@border-params: 1px solid #dfdfdf;
+@border-color: #ccc;
+@border-params: 1px solid @border-color;
+@shadow-params: inset -1px 0px @border-color;
 
 .controls-MasterDetail {
   position: relative;
@@ -10,27 +12,19 @@
 }
 
 .controls-MasterDetail__detailContainer {
-  max-width: 70%;
-  min-width: 70%;
   width: 70%;
 }
 
 .controls-MasterDetail__masterContainer {
-  max-width: 30%;
-  min-width: 30%;
   width: 30%;
-  border-right: @border-params;
+  -webkit-box-shadow: @shadow-params;
+  -moz-box-shadow: @shadow-params;
+  box-shadow: @shadow-params;
 }
 
 .controls-MasterDetail__masterContainer .controls-ListView__item__selected td {
   border-bottom: @border-params;
   border-top: @border-params;
-  right: -1px;
-  padding-left: 5px;
-
-  &:first-child {
-    padding-left: 7px;
-  }
 
   &:last-child {
     border-right: 1px solid white;

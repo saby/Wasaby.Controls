@@ -1,9 +1,8 @@
 define('js!SBIS3.CONTROLS.Link', [
    'Deprecated/helpers/string-helpers',
    'js!WSControls/Buttons/Button',
-   'tmpl!SBIS3.CONTROLS.Link/resources/hrefTemplate',
    'css!SBIS3.CONTROLS.Link'
-], function(strHelpers, WSButton, hrefTemplate) {
+], function(strHelpers, WSButton) {
 
    'use strict';
 
@@ -17,7 +16,6 @@ define('js!SBIS3.CONTROLS.Link', [
     * @extends WSControls/Buttons/ButtonBase
     * @author Романов Валерий Сергеевич
     *
-    * @demo SBIS3.CONTROLS.Demo.MyLink
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
@@ -40,6 +38,12 @@ define('js!SBIS3.CONTROLS.Link', [
     * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
     *
     * @css controls-Link__icon Класс для изменения отображения иконки кнопки.
+    * @css ws-header Устанавливает для кнопки стилевое оформление в виде "Заголовок без маркера", 18px с цветом #D94700 (см. <a href="http://axure.tensor.ru/standarts/v7/#p=разделители__заголовки___версия_05_">Стандарты</a>). Класс применяется для создания кликабельного заголовка.
+    * @css ws-subheader Устанавливает для кнопки стилевое оформление в виде "Заголовок без маркера", 18px с цветом #313E78 (см. <a href="http://axure.tensor.ru/standarts/v7/#p=разделители__заголовки___версия_05_">Стандарты</a>). Класс применяется для создания кликабельного заголовка.
+    * @css ws-bigSubheader Устанавливает для кнопки стилевое оформление в виде "Заголовок без маркера", 15px с цветом #313E78 (см. <a href="http://axure.tensor.ru/standarts/v7/#p=разделители__заголовки___версия_05_">Стандарты</a>). Класс применяется для создания кликабельного заголовка.
+    * @css ws-linkHeader Устанавливает для кнопки стилевое оформление в виде "Заголовок-разделитель" (см. <a href="http://axure.tensor.ru/standarts/v7/#p=разделители__заголовки___версия_05_">Стандарты</a>).
+    * @css ws-linkHeader&#32;ws-splitter Устанавливает для кнопки стилевое оформление в виде "Заголовок-разделитель с вертикальной линией" (см. <a href="http://axure.tensor.ru/standarts/v7/#p=разделители__заголовки___версия_05_">Стандарты</a>).
+    *
     *
     * @cssModifier controls-Button__ellipsis Устанавливает отображение многоточия в тексте кнопки при нехватке ширины.
     * !Важно: при добавлении этого модификатора сломается "Базовая линия".
@@ -91,11 +95,8 @@ define('js!SBIS3.CONTROLS.Link', [
          options.cssClassName += ' controls-Link';
 
          // в случае когда задана ссылка передаем отдельный шаблон
-         if(options.href) {
-            options.contentTemplate = hrefTemplate;
-         }else {
             options._textClass = ' controls-Link__field';
-         }
+
          return options;
       },
 
@@ -103,9 +104,6 @@ define('js!SBIS3.CONTROLS.Link', [
 
       setCaption: function(caption){
          Link.superclass.setCaption.call(this, caption);
-         if(this._options.href) {
-            this._container.get(0).innerHTML = hrefTemplate(this._options);
-         }
          this.setTooltip(strHelpers.htmlToText(caption === undefined || caption === null ? '' : caption + ''));
       },
 
@@ -113,18 +111,11 @@ define('js!SBIS3.CONTROLS.Link', [
          Link.superclass._setEnabled.apply(this, arguments);
          if (enabled) {
             if (this._options.href) {
-               $('.controls-Link-link', this._container).attr('href', this._options.href);
+               this._container.attr('href', this._options.href);
             }
          }
          else {
-            $('.controls-Link-link', this._container).removeAttr('href', this._options.href);
-         }
-      },
-
-      _drawIcon: function (icon) {
-         Link.superclass._drawIcon.call(this, icon);
-         if(this._options.href) {
-            this._container.get(0).innerHTML = hrefTemplate(this._options);
+            this._container.removeAttr('href', this._options.href);
          }
       },
       /**
@@ -136,7 +127,7 @@ define('js!SBIS3.CONTROLS.Link', [
        */
       setHref: function (href) {
          this._options.href = href;
-         this._container.html(hrefTemplate(this._options));
+         this._redrawButton();
       }
 
    });

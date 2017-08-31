@@ -14,10 +14,11 @@ define('js!SBIS3.CONTROLS.Menu', [
    'js!SBIS3.CONTROLS.CommandsSeparator',
    'Core/helpers/markup-helpers',
    'Core/Sanitize',
+   'Core/helpers/String/escapeHtml',
    "Core/IoC",
    'css!SBIS3.CONTROLS.Menu'
 
-], function(CommandDispatcher, ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea, MenuItem, Hierarchy, CommandsSeparator, mkpHelpers, Sanitize, IoC) {
+], function(CommandDispatcher, ButtonGroupBase, dot, hierarchyMixin, TreeMixin, FloatArea, MenuItem, Hierarchy, CommandsSeparator, mkpHelpers, Sanitize, escapeHtml, IoC) {
 
    'use strict';
 
@@ -160,6 +161,9 @@ define('js!SBIS3.CONTROLS.Menu', [
                tooltip: item.get('tooltip'),
                allowChangeEnable: item.get('allowChangeEnable') !== undefined ? item.get('allowChangeEnable') : this._options.allowChangeEnable
             };
+         if (item.get('escapeCaptionHtml')){
+            caption = escapeHtml(caption);
+         }
          if(this._options.additionalProperty && item.get(this._options.additionalProperty)){
             options.className = (options.className ? options.className : '') + ' controls-MenuItem-additional';
             this._needShowToggleButton = true;

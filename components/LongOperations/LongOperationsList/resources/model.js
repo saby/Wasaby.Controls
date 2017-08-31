@@ -1,9 +1,26 @@
 define(
    [
-      'js!WS.Data/Entity/Model'
+      'js!WS.Data/Entity/Model',
+      'js!SBIS3.CONTROLS.LongOperationEntry'
    ],
 
-   function (Model) {
+   function (Model, LongOperationEntry) {
+
+      var _timeSpent = function (model) {
+         var timeSpent = model.get('timeSpent');
+         if (typeof timeSpent !== 'number' || timeSpent <= 0) {
+            var STATUSES = LongOperationEntry.STATUSES;
+            var status = model.get('status');
+            if (status === STATUSES.running) {
+               var timeIdle = model.get('timeIdle');
+               timeSpent = (new Date()).getTime() - model.get('startedAt') - (typeof timeIdle === 'number' && 0 < timeIdle ? timeIdle : 0);
+            }
+            else {
+               timeSpent = 0;
+            }
+         }
+         return timeSpent;
+      };
 
       var LongOperationModel = Model.extend({
          $protected: {
@@ -17,13 +34,13 @@ define(
 
                   strTimeSpent: {
                      get: function () {
-                        return LongOperationModel.timeSpentAsString(this.get('timeSpent'), 2);
+                        return LongOperationModel.timeSpentAsString(_timeSpent(this), 2);
                      }
                   },
 
                   shortTimeSpent: {
                      get: function () {
-                        return LongOperationModel.timeSpentAsString(this.get('timeSpent'), 1);
+                        return LongOperationModel.timeSpentAsString(_timeSpent(this), 1);
                      }
                   },
 
@@ -51,29 +68,28 @@ define(
        * @return {string}
        */
       LongOperationModel.timeSpentAsString = function (timeSpent, details) {
-         if (!timeSpent) {
-            return '';
-         }
-         details = 1 < details ? details : 1;
-         var secs = Math.round(timeSpent/1000);
          var spent = [];
-         for (var i = 0, periods = [86400, 3600, 60, 1], names = ['д.', 'ч.', 'мин.', 'сек.']; i < periods.length; i++) {
-            var period = periods[i];
-            var t = Math.floor(secs/period);
-            secs = secs%period;
-            if (t) {
-               spent.push(t + rk(names[i], 'ДлительныеОперации'));
-               if (details <= spent.length) {
-                  break;
+         if (typeof timeSpent === 'number' && 0 < timeSpent) {
+            details = 1 < details ? details : 1;
+            var secs = Math.round(timeSpent/1000);
+            for (var i = 0, periods = [86400, 3600, 60, 1], names = ['д.', 'ч.', 'мин.', 'сек.']; i < periods.length; i++) {
+               var period = periods[i];
+               var t = Math.floor(secs/period);
+               secs = secs%period;
+               if (t) {
+                  spent.push(t + ' ' + rk(names[i], 'ДлительныеОперации'));
+                  if (details <= spent.length) {
+                     break;
+                  }
                }
-            }
-            /*else
-            if (spent.length) {
+               /*else
+               if (spent.length) {
                // Не должно быть пропущенных элементов
-               break;
-            }*/
+                  break;
+               }*/
+            }
          }
-         return spent.join(' ');
+         return spent.length ? spent.join(' ') : '0 сек.';
       };
 
       /**
@@ -84,7 +100,7 @@ define(
        */
       LongOperationModel.getFullId = function (tabKey, producer, id) {
          return (tabKey || '') + ':' + producer + ':' + id;
-      }
+      };
 
       return LongOperationModel;
    }

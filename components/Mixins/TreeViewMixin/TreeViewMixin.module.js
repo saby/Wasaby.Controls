@@ -2,9 +2,8 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
    "Core/constants",
    'js!SBIS3.CONTROLS.TreePaging',
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
-   "Core/helpers/collection-helpers",
    "Core/core-instance"
-], function ( constants, TreePaging, TemplateUtil, colHelpers, cInstance) {
+], function ( constants, TreePaging, TemplateUtil, cInstance) {
 
 
    var getFolderFooterOptions = function(cfg, item) {
@@ -78,6 +77,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
              * @variant allow Разрешено
              * @variant onlyChangeOrder Разрешено только изменение порядка
              * @variant onlyChangeParent Разрешено только перемещение в папку
+             * @variant separateParent Нельзя перемещать лист между папками и папку между листами
              * @example
              * <pre>
              *     <option name="itemsDragNDrop">onlyChangeParent</option>
@@ -120,7 +120,11 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
        * @private
        */
       _onExpandItem: function(expandedItem) {
-         this._createFolderFooter(expandedItem.getContents().getId());
+         var item = expandedItem.getContents();
+         
+         if(this._needCreateFolderFooter(expandedItem)) {
+            this._createFolderFooter(item.getId());
+         }
          this._drawExpandedItem(expandedItem);
       },
       _drawExpandedItem: function(expandedItem) {
@@ -224,8 +228,10 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
       _needCreateFolderFooter: function(item) {
          var
              model = item.getContents(),
-             id = model && model.get(this._options.idProperty);
-         return item.isNode() && item.isExpanded() && (this._options.folderFooterTpl || this._options._folderHasMore[id]);
+             id = model && model.get(this._options.idProperty),
+             nodeType = model && model.get(this._options.nodeProperty);
+         //проверяем на true(папка) и false(скрытый узел). Проверять через item.isNode() неверно, т.к. для скрытых узлов вернётся false.
+         return (nodeType === true || nodeType === false) && item.isExpanded() && (this._options.folderFooterTpl || this._options._folderHasMore[id]);
       },
       //********************************//
       //        FolderFooter_End        //
@@ -282,7 +288,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
          _clearItems: function(container) {
             if (this._getItemsContainer().get(0) == $(container).get(0) || !container) {
                var self = this;
-               this._lastParent = this._options._curRoot;
+               this._lastParent = this._options.currentRoot;
                this._lastDrawn = undefined;
                this._lastPath = [];
 
@@ -298,9 +304,12 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
          //TODO: после переход на серверную вёрстку фолдерфутера, данный метод не понадобится
          setOpenedPath: function(openedPath) {
             if (this._getItemsProjection()) {
-               colHelpers.forEach(openedPath, function (val, key) {
-                  this._createFolderFooter(key);
-               }.bind(this));
+               for (var key in openedPath) {
+                  if (openedPath.hasOwnProperty(key)) {
+                     this._createFolderFooter(key);
+
+                  }
+               }
             }
          }
       },

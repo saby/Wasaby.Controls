@@ -4,17 +4,17 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
    'js!SBIS3.CONTROLS.PickerMixin',
    'js!SBIS3.CONTROLS.DecorableMixin',
    'tmpl!SBIS3.CONTROLS.BreadCrumbs',
-   'html!SBIS3.CONTROLS.BreadCrumbs/resources/itemContentTpl',
+   'tmpl!SBIS3.CONTROLS.BreadCrumbs/resources/itemContentTpl',
    'tmpl!SBIS3.CONTROLS.BreadCrumbs/resources/dotsTpl',
    'tmpl!SBIS3.CONTROLS.BreadCrumbs/resources/itemTpl',
    'tmpl!SBIS3.CONTROLS.BreadCrumbs/resources/menuItem',
    'Core/helpers/string-helpers',
    "Core/IoC",
-   'Core/helpers/functional-helpers',
+   'Core/helpers/Function/memoize',
    'css!SBIS3.CONTROLS.BreadCrumbs',
    'css!SBIS3.CONTROLS.Menu',
    'css!SBIS3.CONTROLS.MenuItem'
-], function(CompoundControl, ItemsControlMixin, PickerMixin, DecorableMixin, dotTplFn, itemContentTpl, dotsTpl, itemTpl, menuItem, strHelpers, IoC, fHelpers) {
+], function(CompoundControl, ItemsControlMixin, PickerMixin, DecorableMixin, dotTplFn, itemContentTpl, dotsTpl, itemTpl, menuItem, strHelpers, IoC, memoize) {
    /**
     * Класс контрола "Хлебные крошки". Основное применение - <a href='https://wi.sbis.ru/doc/platform/patterns-and-practices/typical-list/'>иерархические реестры</a>.
     * @class SBIS3.CONTROLS.BreadCrumbs
@@ -131,6 +131,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       },
 
       _onClickHandler: function(e, fromDropdown) {
+         var
+            crumbId, crumbPath, items, item, idx;
          if (this.isEnabled()){
             BreadCrumbs.superclass._onClickHandler.apply(this, arguments);
             var target = $(e.target),
@@ -140,8 +142,18 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
                e.stopPropagation();
             } else {
                if (crumb.length) {
-                  this._notify('onItemClick', crumb.data('id'));
-                  this.sendCommand('BreadCrumbsItemClick', crumb.data('id'));
+                  crumbId = crumb.data('id');
+                  crumbPath = [];
+                  items = this.getItems();
+                  idx = 0;
+                  do {
+                     item = items.at(idx)
+                     crumbPath.push(item.getId());
+                     idx ++;
+                  } while (item.getId() != crumbId && idx < items.getCount());
+
+                  this._notify('onItemClick', crumbId);
+                  this.sendCommand('BreadCrumbsItemClick', crumbId, crumbPath);
                   e.stopPropagation();
                }
             }
@@ -355,7 +367,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          return  maxWidth ? maxWidth : Math.ceil(Math.abs(boundingClientRect.left - boundingClientRect.right) - this._paddings - this._BCmargins);
       },
 
-      _getItemsContainer: fHelpers.memoize(function() {
+      _getItemsContainer: memoize(function() {
          return $('.controls-BreadCrumbs__itemsContainer', this._container);
       }, '_getItemsContainer'),
 

@@ -1,6 +1,7 @@
 define('js!SBIS3.CONTROLS.TreeMixin', [
    "Core/core-functions",
    "Core/core-merge",
+   'js!SBIS3.CONTROLS.Utils.TreeDataReload',
    "Core/constants",
    "Core/CommandDispatcher",
    "Core/Deferred",
@@ -10,21 +11,21 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    "tmpl!SBIS3.CONTROLS.TreeMixin/resources/searchRender",
    "js!WS.Data/Entity/Model",
    "js!WS.Data/Relation/Hierarchy",
-   "Core/helpers/collection-helpers",
    "Core/core-instance",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
-   "Core/helpers/functional-helpers",
+   "Core/helpers/Function/forAliveOnly",
    "Core/IoC",
    "Core/helpers/Object/isEmpty",
    "Core/helpers/Object/isPlainObject",
    "js!WS.Data/Adapter/Sbis"
-], function ( cFunctions, cMerge, constants, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, colHelpers, cInstance, TemplateUtil, fHelpers, IoC, isEmpty, isPlainObject) {
+], function ( cFunctions, cMerge, TreeDataReload, constants, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, cInstance, TemplateUtil, forAliveOnly, IoC, isEmpty, isPlainObject) {
 
    var createDefaultProjection = function(items, cfg) {
       var
-         root, projection, rootAsNode;
-      if (typeof cfg._curRoot != 'undefined') {
-         root = cfg._curRoot;
+         root, projection, rootAsNode,
+         filter = [];
+      if (typeof cfg.currentRoot != 'undefined') {
+         root = cfg.currentRoot;
       }
       else {
          if (typeof cfg.root != 'undefined') {
@@ -40,19 +41,27 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          root.setIdProperty(cfg.idProperty);
       }
 
+      if (cfg.displayType == 'folders') {
+         filter.push(projectionFilterOnlyFolders.bind(this));
+      } else {
+         filter.push(projectionFilter.bind(cfg));
+      }
+
+      if (cfg.itemsFilterMethod) {
+         filter.push(cfg.itemsFilterMethod);
+      }
+
       var
-         filterCallBack = cfg.displayType == 'folders' ? projectionFilterOnlyFolders.bind(this) : projectionFilter.bind(this),
          projOptions = {
             collection: items,
             idProperty: cfg.idProperty || (cfg.dataSource ? cfg.dataSource.getIdProperty() : ''),
             parentProperty: cfg.parentProperty,
             nodeProperty: cfg.nodeProperty,
-            // todo временное решение, т.к. с бизнес-логики прилетает инвертированное значение признака загруженности ветки
-            loadedProperty: '!' + cfg.parentProperty + '$',
+            loadedProperty: '!' + cfg.hasChildrenProperty,
             unique: true,
             root: root,
             rootEnumerable: rootAsNode,
-            filter: filterCallBack,
+            filter: filter,
             sort: cfg.itemsSortMethod
          };
 
@@ -84,7 +93,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          highlightText: cfg.highlightText,
          colorMarkEnabled: cfg.colorMarkEnabled,
          colorField: cfg.colorField,
-         allowEnterToFolder: cfg.allowEnterToFolder
+         allowEnterToFolder: cfg.allowEnterToFolder,
+         task1173671799: cfg.task1173671799
       }
    },
    searchProcessing = function(src, cfg) {
@@ -122,7 +132,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       //может прийти массив или проекция
       if (src instanceof Array) {
          iterator = function(func){
-            colHelpers.forEach(src, func);
+            src.forEach(func);
          };
       }
       else {
@@ -262,7 +272,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       var
           itemParent = itemProj.getParent(),
           itemParentContent = itemParent && itemParent.getContents();
-      return (cInstance.instanceOfModule(itemParentContent, 'WS.Data/Entity/Record') && itemParent.isNode() !== false && this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj);
+      // Т.к. скрытые узлы не выводятся в режиме поиска, то добавил костыль-проверку на task1174261549.
+      // Используется в админке, будет убрано, когда будет согласован стандарт на отображение скрытых узлов в режиме поиска.
+      // Ошибка: https://online.sbis.ru/opendoc.html?guid=aac1226b-64f1-4b45-bb95-b44f2eb68ada
+      // Поручение на проектировщиков: https://online.sbis.ru/opendoc.html?guid=9b93b078-a432-4550-86bc-1a7b2c4bac5c
+      return (this.hierarchyViewMode && cInstance.instanceOfModule(itemParentContent, 'WS.Data/Entity/Record') && (itemParent.isNode() !== false || this.task1174261549)) || isVisibleItem(itemProj);
    },
    projectionFilterOnlyFolders = function(item, index, itemProj) {
       return (this._isSearchMode && this._isSearchMode()) || isVisibleItem(itemProj, true);
@@ -306,12 +320,17 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       }
    },
    applyFilterToProjection = function(projection, cfg) {
+      var
+         filter = [];
       if (cfg.displayType == 'folders') {
-         projection.setFilter(projectionFilterOnlyFolders.bind(this));
+         filter.push(projectionFilterOnlyFolders.bind(this));
+      } else {
+         filter.push(projectionFilter.bind(cfg));
       }
-      else {
-         projection.setFilter(projectionFilter.bind(this));
+      if (cfg.itemsFilterMethod) {
+         filter.push(cfg.itemsFilterMethod);
       }
+      projection.setFilter(filter);
    },
    expandAllItems = function(projection) {
       var
@@ -474,17 +493,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             _searchFolders: {},
             _getRecordsForRedraw: getRecordsForRedraw,
             _getRecordsForRedrawTree: getRecordsForRedraw,
-            _curRoot: null,
             _createDefaultProjection : createDefaultProjection,
             _hasNextPageInFolder: hasNextPageInFolder,
+            _curRoot: null,
             /**
-             * @cfg {Number} Задает размер отступов для каждого уровня иерархии
-             * @example
-             * <pre>
-             *    <option name="paddingSize">24</option>
-             * </pre>
+             * @cfg {String, Number} Устанавливает идентификатор узла, относительно которого отображаются данные в текущий момент
              */
-            paddingSize: undefined,
+            currentRoot: null,
             /**
              * @cfg {String, Number} Устанавливает идентификатор узла, относительно которого нужно отображать данные. Такой узел будет считаться вершиной иерархии.
              * @example
@@ -524,6 +539,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              * @see parentProperty
              */
             nodeProperty: null,
+            /**
+             * @cfg {String} Устанавливает поле, по значениям которого определяется признак наличия дочерних элементов.
+             * @see parentProperty
+             */
+            hasChildrenProperty: null,
             /**
              * @cfg {String} Устанавливает режим отображения записей: отображать только записи типа "Узел" (папка) или любые типы записей.
              * @remark
@@ -647,7 +667,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              * @variant append - добавлять, при этом записи с одинаковыми id будут выводиться в списке
              *
              */
-            loadItemsStrategy: 'merge'
+            loadItemsStrategy: 'merge',
+            task1174261549: false
          },
          _lastParent : undefined,
          _lastDrawn : undefined,
@@ -801,7 +822,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                }
                this._options.openedPath[id] = true;
                this._options._folderOffsets[id] = 0;
-               return this._loadNode(id).addCallback(fHelpers.forAliveOnly(function() {
+               return this._loadNode(id).addCallback(forAliveOnly(function() {
                   var expItem;
                   if (hash) {
                      expItem = this._getItemsProjection().getByHash(hash);
@@ -820,10 +841,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          if (this._dataSource && !this._loadedNodes[id] && this._options.partialyReload) {
             this._toggleIndicator(true);
             this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), 0, this._limit);
-            return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(fHelpers.forAliveOnly(function (list) {
+            return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(forAliveOnly(function (list) {
                this._options._folderHasMore[id] = list.getMetaData().more;
                this._loadedNodes[id] = true;
                this._notify('onDataMerge', list); // Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
+               this._onDataMergeCallback(list);
                if (this._options.loadItemsStrategy == 'merge') {
                   this._options._items.merge(list, {remove: false});
                }
@@ -845,7 +867,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * Получить список записей для отрисовки
        * @private
        */
-      _breadCrumbsItemClick : function(id) {
+      _breadCrumbsItemClick : function(id, crumbPath) {
+         var
+            self = this;
          //Таблицу нужно связывать только с тем PS, в который кликнули. Хорошо, что сначала идет _notify('onBreadCrumbClick'), а вотом выполняется setCurrentRoot
          if (this._notify('onSearchPathClick', id) !== false ) {
 
@@ -860,8 +884,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             this.setHighlightText('', false);
             this.setFilter(filter, true);
             this._options.hierarchyViewMode = false;
-            this.setCurrentRoot(id);
-            this.reload();
+            if (this._options.task1173671799 && !this._options.allowEnterToFolder) {
+               crumbPath.forEach(function(id) {
+                  self._options.openedPath[id] = true;
+               });
+               this.setCurrentRoot(this.getRoot());
+               this.reload(undefined, undefined, undefined, undefined, true); // Это deepReload, детка!
+            } else {
+               this.setCurrentRoot(id);
+               this.reload();
+            }
          }
       },
       _isVisibleItem: function(item, onlyFolders) {
@@ -931,11 +963,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @private
        */
       _collapseNodes: function(openedPath, ignoreKey) {
-         colHelpers.forEach(openedPath, function(value, key) {
-            if (!ignoreKey || key != ignoreKey) {
-               this.collapseNode(key);
+         for (var key in openedPath) {
+            if (openedPath.hasOwnProperty(key)) {
+               if (!ignoreKey || key != ignoreKey) {
+                  this.collapseNode(key);
+               }
             }
-         }, this);
+         }
       },
       /**
        * Получить текущий набор открытых элементов иерархии.
@@ -982,6 +1016,60 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          }
       },
       around: {
+         /**
+          * Позволяет перезагрузить данные как одной модели, так и всей иерархии из дочерних элементов этой записи.
+          * @param {Number} id Идентификатор записи
+          * @param {Object|WS.Data/Entity/Model} meta Мета информация
+          * @param {String} direction Направление при иерархическом обходе дочерних узлов.
+          * Варианты значений:
+          * <ul>
+          *    <li>undefined || "" (не задано, пустая строка) - осуществляется перезагрузка одной конкретной записи.</li>
+          *    <li>"inside" - перезагрузка данных по иерархии внутрь.</li>
+          * </ul>
+          * В случае, когда direction принимает значение "inside" будет сформирован фильтр для перезагрузки данных.
+          * Фильтр будет состоять из дополненного текущего фильтра представления:
+          * <b>Поле иерархии (например, "Раздел")</b> будет содержать ID узла, перезагрузка которого осуществляется.
+          * <b>Поле "reloadableNodes"</b> будет содержать объект, свойствами которого будут ID узлов, для которых необходимо обновить данные.
+          * Для обновления данных самого перезагружаемого узла - достаточно вернуть его в результах запроса вместе с остальными данными.
+          * @returns {Deferred}
+          */
+         reloadItem: function(parentFn, id, meta, direction) {
+            var
+               items = this.getItems(),
+               item = items.getRecordById(id),
+               hierarchyRelation = this._options._getHierarchyRelation(this._options),
+               nodeProperty = this.getNodeProperty(),
+               filter;
+            if (direction === 'inside') {
+               if (item) {
+                  filter = cFunctions.clone(this.getFilter());
+                  filter[this.getParentProperty()] = id === 'null' ? null : id;
+                  filter.reloadableNodes = TreeDataReload.prepareReloadableNodes({
+                     direction: direction,
+                     hierarchyRelation: hierarchyRelation,
+                     item: item,
+                     items: items,
+                     nodeProperty: nodeProperty
+                  });
+                  this._notify('onBeforeDataLoad', filter, this.getSorting(), this._offset, this._limit);
+                  return this._callQuery(filter, this.getSorting(), this._offset, this._limit)
+                     .addCallback(function (updatedItems) {
+                        TreeDataReload.applyUpdatedData({
+                           direction: direction,
+                           hierarchyRelation: hierarchyRelation,
+                           item: item,
+                           items: items,
+                           nodeProperty: nodeProperty,
+                           updatedItems: updatedItems
+                        });
+                     });
+               } else {
+                  return Deferred.success();
+               }
+            } else {
+               return parentFn.call(this, id, meta);
+            }
+         },
          _getItemProjectionByItemId: function(parentFn, id) {
             var root;
             if (isPlainObject(this._options.root)) {
@@ -1084,10 +1172,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             filter;
          this._toggleIndicator(true);
          this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit);
-         this._loader = this._callQuery(this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
+         this._loader = this._callQuery(this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit).addCallback(forAliveOnly(function (dataSet) {
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
             self._notify('onDataMerge', dataSet);
+            self._onDataMergeCallback(dataSet);
             self._loader = null;
             //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
             if (id) {
@@ -1139,16 +1228,30 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          return offset;
       },
 
+      _getRootCount: function(){
+         return this._getItemsProjection().getChildren(this._getItemsProjection().getRoot()).getCount();
+      },
+
       before: {
          _modifyOptions: function(cfg) {
-            cfg._curRoot = cfg.root;
-            this._previousRoot = cfg._curRoot;
+            if (cfg._curRoot !== null && cfg.currentRoot === null) {
+               cfg.currentRoot = cfg._curRoot;
+            }
+            if (cfg.currentRoot === null) {
+               this._previousRoot = cfg.currentRoot = cfg.root;
+            } else {
+               this._previousRoot = cfg.root;
+            }
             if (cfg.hierField) {
                IoC.resolve('ILogger').log('TreeMixin', 'Опция hierField является устаревшей, используйте parentProperty');
                cfg.parentProperty = cfg.hierField;
             }
             if (cfg.parentProperty && !cfg.nodeProperty) {
                cfg.nodeProperty = cfg.parentProperty + '@';
+            }
+            if (cfg.parentProperty && !cfg.hasChildrenProperty) {
+               // todo временное решение, т.к. с бизнес-логики прилетает инвертированное значение признака загруженности ветки
+               cfg.hasChildrenProperty = cfg.parentProperty + '$';
             }
          },
          _addItems: function() {
@@ -1157,9 +1260,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             // https://inside.tensor.ru/opendoc.html?guid=4f8e94ac-6303-4878-b608-8d17a54d8bd5&des=
             applyExpandToItemsProjection(this._getItemsProjection(), this._options);
          },
-         reload: function() {
+         _stateResetHandler: function () {
             // сохраняем текущую страницу при проваливании в папку
-            if (this._options.saveReloadPosition && this._previousRoot !== this._options._curRoot) {  
+            if (this._options.saveReloadPosition) {
                this._hierPages[this._previousRoot] = this._getCurrentPage();
             }
             this._options._folderOffsets['null'] = 0;
@@ -1170,28 +1273,40 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             // При перезагрузке приходят новые данные, т.ч. сбрасываем объект, хранящий список узлов с "есть ещё"
             this._options._folderHasMore = {};
          },
-         _dataLoadedCallback: function () {
-            //this._options.openedPath = {};
+         reload: function() {
+            this._stateResetHandler();
+         },
+         setItems: function() {
+            this._stateResetHandler();
+         },
+         _applyExpandToItems: function(items) {
+            var hierarchy = this._options._getHierarchyRelation(this._options),
+               openedPath = this._options.openedPath;
+            items.each(function(item) {
+               var id = item.getId(),
+                  children = hierarchy.getChildren(item, items);
+               if (children.length && id != 'null' && id != this._curRoot) {
+                  openedPath[id] = true;
+               }
+            });
+         },
+         _onDataMergeCallback: function(items) {
             if (this._options.expand) {
-               var hierarchy = this._options._getHierarchyRelation(this._options),
-                  items = this.getItems(),
-                  openedPath = this._options.openedPath;
-               items.each(function(item) {
-                  var id = item.getId(),
-                     children = hierarchy.getChildren(item, items);
-                  if (children.length && id != 'null' && id != this._curRoot) {
-                     openedPath[id] = true;
-                  }
-               });
+               this._applyExpandToItems(items);
             }
+         },
+         _dataLoadedCallback: function () {
             var path = this._options._items.getMetaData().path,
                hierarchy = cFunctions.clone(this._hier),
                item;
-            if (path) {
-               hierarchy = this._getHierarchy(path, this._options._curRoot);
+            if (this._options.expand) {
+               this._applyExpandToItems(this.getItems());
             }
-            if (this._previousRoot !== this._options._curRoot) {
-               this._notify('onSetRoot', this._options._curRoot, hierarchy);
+            if (path) {
+               hierarchy = this.getHierarchy(path, this._options.currentRoot);
+            }
+            if (this._previousRoot !== this._options.currentRoot) {
+               this._notify('onSetRoot', this._options.currentRoot, hierarchy);
                //TODO Совсем быстрое и временное решение. Нужно скроллиться к первому элементу при проваливании в папку.
                // Выпилить, когда это будет делать установка выделенного элемента
                //TODO курсор
@@ -1214,7 +1329,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                   }
                }
 
-               this._previousRoot = this._options._curRoot;
+               this._previousRoot = this._options.currentRoot;
 
             }
          }
@@ -1279,7 +1394,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * @see root
        */
       getCurrentRoot : function(){
-         return this._options._curRoot;
+         return this._options.currentRoot;
       },
       /**
        * Устанавливает проваливание в узел и вызывает отрисовку хлебных крошек (если они есть), относительно вершины иерархии (см. {@link root}).
@@ -1317,15 +1432,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          this._offset = 0;
          //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
          this._notify('onBeforeSetRoot', key);
-         this._options._curRoot = key !== undefined && key !== null ? key : this._options.root;
+         this._options.currentRoot = key !== undefined && key !== null ? key : this._options.root;
          if (this._options._itemsProjection) {
             this._options._itemsProjection.setEventRaising(false);
-            this._options._itemsProjection.setRoot(this._options._curRoot !== undefined ? this._options._curRoot : null);
+            this._options._itemsProjection.setRoot(this._options.currentRoot !== undefined ? this._options.currentRoot : null);
             this._options._itemsProjection.setEventRaising(true);
          }
-         this._hier = this._getHierarchy(this.getItems(), key);
+         this._hier = this.getHierarchy(this.getItems(), key);
       },
-      _getHierarchy: function(items, key){
+      getHierarchy: function(items, key){
          var record, parentKey,
             hierarchy = [];
          if (items && items.getCount()){

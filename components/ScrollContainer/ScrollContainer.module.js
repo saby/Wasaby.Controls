@@ -81,7 +81,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        */
       var ScrollContainer = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, WsCompatibleConstructor], {
          _template: template,
-
+         iWantVDOM: false,
          _controlName: 'SBIS3.CONTROLS.ScrollContainer',
          _useNativeAsMain: true,
          _doNotSetDirty: true,
@@ -166,6 +166,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                }
                this._subscribeOnScroll();
 
+               this._addGradient();
+
                // Что бы до инициализации не было видно никаких скроллов
                this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
 
@@ -175,6 +177,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
                this._initPaging();
             }
+         },
+
+         _addGradient: function() {
+         	var maxScrollTop = this._getScrollHeight() - this._container.height();
+            
+            this._container.toggleClass('controls-ScrollContainer__bottom-gradient', maxScrollTop > 0 && this._getScrollTop() < maxScrollTop);
          },
 
          _touchStartHandler: function() {
@@ -187,8 +195,11 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                this._scrollbar = new Scrollbar({
                   element: $('> .controls-ScrollContainer__scrollbar', this._container),
                   contentHeight: this._getScrollHeight(),
+                  position: this._getScrollTop(),
                   parent: this
                });
+
+               this._recalcSizeScrollbar();
 
                this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
             }
@@ -248,63 +259,73 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                var
                   self = this,
                   selfCtx = this._context,
-                  prevContext = this._context.getPrevious();
-
-               this._context.subscribe('onFieldChange', function (ev, name, value) {
-                  //if (this.getValueSelf(name) !== undefined)
-                  {
-                     if (!self.compare(value, prevContext.getValueSelf(name)) &&
-                        !self.compare(value, self._ctxSync.selfToPrev[name])) {
-                        self._ctxSync.selfToPrev[name] = value;
-                        self._ctxSync.selfNeedSync++;
-                        self.fixOpacityField(name);
+                  prevContext = this._context.getPrevious(),
+                  onFieldChange = function(ev, name, value) {
+                     //if (this.getValueSelf(name) !== undefined)
+                     {
+                        if (!self.compare(value, prevContext.getValue(name)) &&
+                           !self.compare(value, self._ctxSync.selfToPrev[name])) {
+                           self._ctxSync.selfToPrev[name] = value;
+                           self._ctxSync.selfNeedSync++;
+                           self.fixOpacityField(name);
+                        }
                      }
-                  }
-               });
-
-               prevContext.subscribe('onFieldChange', function (ev, name, value) {
-                  //if (prevContext.getValueSelf(name) !== undefined)
-                  {
-                     if (!self.compare(value, selfCtx.getValueSelf(name)) &&
-                        !self.compare(value, self._ctxSync.prevToSelf[name])){
-                        self._ctxSync.prevToSelf[name] = value;
-                        self._ctxSync.prevNeedSync++;
-                        self.fixOpacityField(name);
+                  },
+                  prevOnFieldChange = function(ev, name, value) {
+                     //if (prevContext.getValueSelf(name) !== undefined)
+                     {
+                        if (!self.compare(value, selfCtx.getValue(name)) &&
+                           !self.compare(value, self._ctxSync.prevToSelf[name])){
+                           self._ctxSync.prevToSelf[name] = value;
+                           self._ctxSync.prevNeedSync++;
+                           self.fixOpacityField(name);
+                        }
                      }
-                  }
-               });
-
-               this._context.subscribe('onFieldsChanged', function () {
-                  if (self._ctxSync.selfNeedSync) {
-                     self._ctxSync.selfNeedSync = 0;
-                     prevContext.setValue(self._ctxSync.selfToPrev);
-                     self._ctxSync.selfToPrev = {};
-                  }
-               });
-
-               prevContext.subscribe('onFieldsChanged', function () {
-                  if (self._ctxSync.prevNeedSync) {
-                     self._ctxSync.prevNeedSync = 0;
-                     selfCtx.setValue(self._ctxSync.prevToSelf);
-                     self._ctxSync.prevToSelf = {};
-                  }
-               });
-
-               this._context.subscribe('onFieldRemove', function (ev, name, value) {
-                  self._ctxSync.selfCtxRemoved[name] = false;
-                  if (prevContext.getValueSelf(name) !== undefined &&
+                  },
+                  onFieldsChanged = function() {
+                     if (self._ctxSync.selfNeedSync) {
+                        self._ctxSync.selfNeedSync = 0;
+                        prevContext.setValue(self._ctxSync.selfToPrev);
+                        self._ctxSync.selfToPrev = {};
+                     }
+                  },
+                  prevOnFieldsChanged = function() {
+                     if (self._ctxSync.prevNeedSync) {
+                        self._ctxSync.prevNeedSync = 0;
+                        selfCtx.setValue(self._ctxSync.prevToSelf);
+                        self._ctxSync.prevToSelf = {};
+                     }
+                  },
+                  onFieldRemove = function(ev, name, value) {
+                     self._ctxSync.selfCtxRemoved[name] = false;
+                     if (prevContext.getValueSelf(name) !== undefined &&
                         !self._ctxSync.prevCtxRemoved[name]) {
-                     self._ctxSync.prevCtxRemoved[name] = true;
-                     prevContext.removeValue(name);
-                  }
-               });
+                        self._ctxSync.prevCtxRemoved[name] = true;
+                        prevContext.removeValue(name);
+                     }
+                  },
+                  prevOnFieldRemove = function(ev, name, value) {
+                     self._ctxSync.prevCtxRemoved[name] = false;
+                     if (selfCtx.getValueSelf(name) !== undefined && !self._ctxSync.selfCtxRemoved[name]) {
+                        self._ctxSync.selfCtxRemoved[name] = true;
+                        selfCtx.removeValue(name);
+                     }
+                  };
 
-               prevContext.subscribe('onFieldRemove', function (ev, name, value) {
-                  self._ctxSync.prevCtxRemoved[name] = false;
-                  if (selfCtx.getValueSelf(name) !== undefined && !self._ctxSync.selfCtxRemoved[name]) {
-                     self._ctxSync.selfCtxRemoved[name] = true;
-                     selfCtx.removeValue(name);
-                  }
+               this._context.subscribe('onFieldChange', onFieldChange);
+               prevContext.subscribe('onFieldChange', prevOnFieldChange);
+               this._context.subscribe('onFieldsChanged', onFieldsChanged);
+               prevContext.subscribe('onFieldsChanged', prevOnFieldsChanged);
+               this._context.subscribe('onFieldRemove', onFieldRemove);
+               prevContext.subscribe('onFieldRemove', prevOnFieldRemove);
+
+               this.once('onDestroy', function(){
+                  this._context.unsubscribe('onFieldChange', onFieldChange);
+                  prevContext.unsubscribe('onFieldChange', prevOnFieldChange);
+                  this._context.unsubscribe('onFieldsChanged', onFieldsChanged);
+                  prevContext.unsubscribe('onFieldsChanged', prevOnFieldsChanged);
+                  this._context.unsubscribe('onFieldRemove', onFieldRemove);
+                  prevContext.unsubscribe('onFieldRemove', prevOnFieldRemove);
                });
             }
          },
@@ -323,6 +344,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                this._calcPagingSelectedKey(scrollTop);
             }
             this.getContainer().toggleClass('controls-ScrollContainer__top-gradient', scrollTop > 0);
+            this.getContainer().toggleClass('controls-ScrollContainer__bottom-gradient', scrollTop < this._getScrollHeight() -  this._container.height());
          },
 
          _calcPagingSelectedKey: function(position) {
@@ -382,25 +404,57 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _onResizeHandler: function(){
-            var headerHeight, scrollbarContainer;
             AreaAbstractCompatible._onResizeHandler.apply(this, arguments);
             if (this._scrollbar){
                this._scrollbar.setContentHeight(this._getScrollHeight());
                this._scrollbar.setPosition(this._getScrollTop());
-               if (this._options.stickyContainer) {
-                  headerHeight = StickyHeaderManager.getStickyHeaderHeight(this._content);
-                  if (this._headerHeight !== headerHeight) {
-                     scrollbarContainer = this._scrollbar._container;
-                     scrollbarContainer.css('margin-top', headerHeight);
-                     scrollbarContainer.height('calc(100% - ' + headerHeight + 'px)');
-                     this._headerHeight = headerHeight;
-                  }
+               this._recalcSizeScrollbar();
+            }
+            //ресайз может позваться до инита контейнера
+            if (this._content) {
+               this._addGradient();
+               /**
+                * В firefox при высоте = 0 на дочерних элементах, нативный скролл не пропадает.
+                * В такой ситуации content имеет высоту скролла, а должен быть равен 0.
+                * Поэтому мы вешаем класс, который убирает нативный скролл, если произойдет такая ситуация.
+                */
+               if (cDetection.firefox) {
+                  this._content.toggleClass('controls-ScrollContainer__content-overflowHidden', !this._getChildContentHeight());
                }
             }
 
             if (this._paging) {
-               this._setPagesCount(Math.ceil(this._getScrollHeight() / this._container.height()));
+               /**
+                * Меняем количество страниц, если высота не 0.
+                * Если высота стала 0, то менять количество страниц не нужно, потому что определить сколько их нельзя, а
+                * значит и определить на сколько прокручивать при переходе на другую страницу нельзя.
+                */
+               if (this._container.height()) {
+                  this._setPagesCount(Math.ceil(this._getScrollHeight() / this._container.height()));
+               }
             }
+         },
+
+         _recalcSizeScrollbar: function() {
+            var headerHeight, scrollbarContainer;
+            if (this._options.stickyContainer) {
+               headerHeight = StickyHeaderManager.getStickyHeaderHeight(this._content);
+               if (this._headerHeight !== headerHeight) {
+                  scrollbarContainer = this._scrollbar._container;
+                  scrollbarContainer.css('margin-top', headerHeight);
+                  scrollbarContainer.height('calc(100% - ' + headerHeight + 'px)');
+                  this._headerHeight = headerHeight;
+               }
+            }
+         },
+
+         _getChildContentHeight: function() {
+            var height = 0;
+            Array.prototype.forEach.call(this._content.children(), function(item) {
+               height += $(item).outerHeight(true);
+            });
+
+            return height;
          },
 
          _getScrollTop: function(){

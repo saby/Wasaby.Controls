@@ -3,16 +3,19 @@
  */
 
 define('js!SBIS3.CONTROLS.MoneyTextBox', [
-   "Core/defaultRenders",
-   "Core/constants",
-   "js!SBIS3.CONTROLS.NumberTextBox",
+   'Core/defaultRenders',
+   'Core/constants',
+   'js!SBIS3.CONTROLS.NumberTextBox',
+   'js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil',
    'tmpl!SBIS3.CONTROLS.MoneyTextBox/resources/textFieldWrapper',
    'css!SBIS3.CONTROLS.MoneyTextBox'
-], function (cDefaultRenders, constants, NumberTextBox, textFieldWrapper) {
+], function (cDefaultRenders, constants, NumberTextBox, NumberTextBoxUtil, textFieldWrapper) {
 
    'use strict';
 
-   function formatText(value, integers, maxLength){
+   function formatText(value, text, integers, maxLength){
+      // Вырезаем переносы строк и теги.
+      value = typeof value === 'string' ? value.replace(/\n/gm, '').replace(/<.*?>/g, '') : value;
       value = value + '';
 
       value = cDefaultRenders.numeric(
@@ -25,6 +28,10 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
           true
       );
 
+      if(!NumberTextBoxUtil.checkMaxLength(value, maxLength)){
+         return text;
+      }
+
       return value || '';
    }
 
@@ -35,7 +42,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
      * @extends SBIS3.CONTROLS.NumberTextBox
      * @public
      * @control
-     * @author Роман Валерий Сергеевич
+     * @author Романов Валерий Сергеевич
      *
      * @cssModifier controls-MoneyTextBox__ellipsis При нехватке ширины текст в поле ввода будет обрезаться. Если контрол неактивен, то оборвётся многоточием.
      */
@@ -76,8 +83,8 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
              * @see text
              */
              moneyValue: null,
-             _decimalsPart: '00',
-             _integersPart: '0'
+             _decimalsPart: null,
+             _integersPart: null
          }
       },
 
@@ -85,12 +92,13 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
          var value,
              dotPos;
          options = MoneyTextBox.superclass._modifyOptions.apply(this, arguments);
-         options.cssClassName = ' controls-MoneyTextBox';
+         options.cssClassName += ' controls-MoneyTextBox';
 
          value = options.text || options.moneyValue;
-         if (value){
+         if (typeof value !== 'undefined' && value !== null){
             options.text = formatText(
                 value,
+                options.text,
                 options.integers,
                 options.maxLength
             );
@@ -199,6 +207,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
       _formatText: function(value){
          return formatText(
              value,
+             this._options.text,
              this._options.integers,
              this._options.maxLength
          );

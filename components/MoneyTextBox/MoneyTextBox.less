@@ -8,18 +8,19 @@
     font-size: @money-text-box-decimals-font-size;
     color: @money-text-box-decimals-color; //@gray-ccc-color;
     background-color: transparent;
+    line-height:@default-base-line-height;
   }
 
-  .controls-MoneyTextBox__input {
-    position:relative;
-    width: 100%;
-    height: @text-box-height - 2 * @text-box-border-width;
-    outline: none;
-    white-space: nowrap;
-    display: inline-block;
+  .controls-TextBox__field {
     z-index: 1;
+    text-align: inherit;
+    padding:0;//чтобы копейки были близко к основному тексту в задизабленом состоянии
+    line-height:@default-base-line-height;
   }
-
+  .controls-TextBox__wrapper {
+    padding: @text-box-wrapper-padding;//чтобы копейки были близко к основному тексту в задизабленом состоянии
+    .box-sizing(border-box);
+  }
   .controls-TextBox__placeholder {
     z-index: 0;
   }
@@ -36,12 +37,4 @@
     }
   }
 
-  &.ws-disabled {
-    .controls-MoneyTextBox__input {
-      display: inline;
-    }
-    .controls-TextBox__fieldWrapper {
-      .baseline-fix();
-    }
-  }
 }

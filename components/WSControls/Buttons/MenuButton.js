@@ -2,12 +2,11 @@ define('js!WSControls/Buttons/MenuButton', [
    'js!WSControls/Buttons/Button',
    'js!SBIS3.CONTROLS.PickerMixin',
    'js!SBIS3.CONTROLS.DSMixin',
-   'Core/helpers/dom&controls-helpers',
-   'Core/helpers/collection-helpers',
    'Core/IoC',
+   'Core/detection',
    'Core/Sanitize',
-   'Core/helpers/string-helpers'
-], function(Button, PickerMixin, DSMixin, dcHelpers, colHelpers, IoC, Sanitize, strHelpers) {
+   'Core/helpers/String/escapeHtml'
+], function(Button, PickerMixin, DSMixin, IoC, detection, Sanitize, escapeHtml) {
 
    'use strict';
    
@@ -55,7 +54,7 @@ define('js!WSControls/Buttons/MenuButton', [
     * @public
     * @category Buttons
     * @initial
-    * <component data-component='SBIS3.CONTROLS.MenuButton'>
+    * <component data-component='WSControls/Buttons/MenuButton'>
     *    <option name='caption' value='Кнопка с меню'></option>
     *    <options name="items" type="array">
     *        <options>
@@ -70,7 +69,13 @@ define('js!WSControls/Buttons/MenuButton', [
     * </component>
     */
 
-   var MenuButton = Button.extend( [PickerMixin, DSMixin], /** @lends SBIS3.CONTROLS.MenuButton.prototype */ {
+   var MenuButton = Button.extend( [PickerMixin, DSMixin], /** @lends WSControls/Buttons/MenuButton.prototype */ {
+      /**
+       * @event onMenuItemActivate Происходит при клике по пункту меню.
+       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {String} id Идентификатор пункта.
+       * @param {Object} mEvent Объект, который содержит более полную информацию о событии (по сравнению с объектом события eventObject).
+       */
       $protected: {
          _options: {
             /**
@@ -118,6 +123,10 @@ define('js!WSControls/Buttons/MenuButton', [
          }
 
          var opts = MenuButton.superclass._modifyOptions.apply(this, arguments);
+
+         opts.caption = Sanitize(opts.caption, {validNodes: {component: true}});
+         opts.menuCaption = Sanitize(opts.menuCaption, {validNodes: {component: true}});
+
          return opts;
       },
 
@@ -219,9 +228,11 @@ define('js!WSControls/Buttons/MenuButton', [
             footerTpl: this._options.footerTpl
          };
          if (this._options.pickerConfig){
-            colHelpers.forEach(this._options.pickerConfig, function(val, key) {
-               menuconfig[key] = val;
-            });
+            for (var key in this._options.pickerConfig) {
+               if(this._options.pickerConfig.hasOwnProperty(key)) {
+                  menuconfig[key] = this._options.pickerConfig[key];
+               }
+            }
          }
          menuconfig = this._modifyPickerOptions(menuconfig);
          if (this._dataSource) {
@@ -254,6 +265,27 @@ define('js!WSControls/Buttons/MenuButton', [
             self._notify('onMenuItemActivate', id, mEvent);
          });
          this._setWidth();
+
+         //В ie и ff баг с flex-direction: column-reverse: С overflow: hidden скролл на контейнере не появляется
+         //Убрал flex с основного контейнера, меню перемещаю через изменение положения узла в dom-дереве
+         //https://stackoverflow.com/questions/34249501/flexbox-column-reverse-and-overflow-in-firefox-ie
+         //https://bugzilla.mozilla.org/show_bug.cgi?id=1042151
+         if (detection.firefox || detection.isIE) {
+            this.getPicker().subscribe('onAlignmentChange', function() {
+               var picker = this.getPicker(),
+                  isVerticalRevert = picker.getContainer().hasClass('controls-popup-revert-vertical'),
+                  header = $('.controls-Menu__header', picker.getContainer());
+               if (header.length) {
+                  if (isVerticalRevert) {
+                     picker.getContainer().append(header);
+                  }
+                  else {
+                     picker.getContainer().prepend(header);
+                  }
+               }
+
+            }.bind(this));
+         }
       },
 
       setEnabled: function (enabled) {
@@ -293,7 +325,7 @@ define('js!WSControls/Buttons/MenuButton', [
        _drawMenuCaption: function(menuCaption) {
            if (this._picker && menuCaption){
               if(this._options.escapeCaptionHtml){
-                  menuCaption = strHelpers.escapeHtml(menuCaption);
+                  menuCaption = escapeHtml(menuCaption);
               }
               menuCaption = Sanitize(menuCaption, {validNodes: {component: true}});
               $('.controls-Menu__header-caption', this._picker._container).html(menuCaption);

@@ -4,6 +4,7 @@
 define('js!SBIS3.CONTROLS.SelectorButton',
     [
    "Core/constants",
+   'tmpl!SBIS3.CONTROLS.SelectorButton/SelectorButton',
    "tmpl!SBIS3.CONTROLS.SelectorButton/resources/contentTemplate",
    "tmpl!SBIS3.CONTROLS.SelectorButton/resources/defaultItemContentTemplate",
    "tmpl!SBIS3.CONTROLS.SelectorButton/resources/defaultItemTemplate",
@@ -18,8 +19,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
    "js!SBIS3.CONTROLS.IconMixin",
    "Core/Sanitize",
    "Core/core-instance",
-   "Core/helpers/functional-helpers",
-   "Core/helpers/collection-helpers",
+   'Core/helpers/Function/memoize',
    'Core/helpers/string-helpers',
    'js!SBIS3.CONTROLS.ToSourceModel',
    'js!SBIS3.CONTROLS.Utils.ItemsSelection',
@@ -29,6 +29,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
 ],
     function(
        constants,
+       dotTplFn,
        contentTemplate,
        defaultItemContentTemplate,
        defaultItemTemplate,
@@ -43,8 +44,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
        IconMixin,
        Sanitize,
        cInstance,
-       fHelpers,
-       colHelpers,
+       memoize,
        strHelpers,
        ToSourceModel,
        ItemsSelectionUtil,
@@ -90,6 +90,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     */
 
    var SelectorButton = WSButton.extend([ItemsControlMixin, MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ChooserMixin, IconMixin], /** @lends SBIS3.CONTROLS.SelectorButton.prototype */ {
+      _dotTplFn: dotTplFn,
       $protected: {
          _options: {
             clickThrottle: true,
@@ -287,7 +288,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          }
       },
 
-      _getSelectorAction: fHelpers.memoize(function() {
+      _getSelectorAction: memoize(function() {
          return this.getChildControlByName('SelectorButtonSelectorAction');
       },'_getSelectorAction'),
 

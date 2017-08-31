@@ -190,6 +190,9 @@
             color: @black-color;
             font-size: @default-font-size;
          }
+         .controls-EditAtPlace__fieldWrapper{
+            padding: 0;
+         }
          .controls-TextBox {
             .controls-TextBox__fieldWrapper {
                padding-top: 1px;
@@ -400,7 +403,7 @@
         line-height: @tab-button-ff-inner-height;
      }
      &.controls-TabButton__main-item .controls-TabButton__inner{
-        line-height: 26px;
+        line-height: @tab-button-main-text-line-height;
      }
      &.controls-TabButton__main-item {
         .controls-TabButton__additionalText1, .controls-TabButton__additionalText1 > * {
@@ -415,4 +418,27 @@
         line-height: 23px;
      }
   }
+}
+
+.ws-is-ie12 {
+   .controls-TabButton {
+      .controls-TabButton__caption {
+         height: @tab-button-height;
+         > * {
+            vertical-align: top;
+         }
+      }
+   }
+}
+.ws-is-ie {
+  .controls-TabButton {
+    .controls-TabButton__additionalText2 .controls-EditAtPlace {
+      position: relative;
+      top: -1px;
+    }
+  }
+}
+
+.controls-TabButton__mainText.controls-EditAtPlace__ellipsis  .controls-EditAtPlace__fieldWrapper {
+   height: auto;
 }

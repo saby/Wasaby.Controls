@@ -1,0 +1,25 @@
+<ws:template name="toggle">
+   <span class="controls-SwitcherDouble__empty">&nbsp;</span>
+   <span class="js-controls-Switcher__toggle controls-SwitcherDouble__toggle {{checked ? 'controls-SwitcherDouble-on-toggled' : 'controls-SwitcherDouble-off-toggled'}}">
+      &nbsp;
+      <span class="controls-SwitcherDouble__line"></span>
+      <span class="controls-SwitcherDouble__btn"></span>
+   </span>
+</ws:template>
+
+<span
+   class="controls-SwitcherDouble{{checked ? ' controls-Checked__checked' : ''}}{{disposition === 'vertical' ? ' controls-SwitcherDouble_vertical' : ''}}"
+   title="{{tooltip}}">
+   <ws:if data="{{disposition === 'vertical'}}">
+      <ws:partial template="toggle" scope="{{...}}"/>
+      <span class="controls-SwitcherDouble__textBlock">
+         <span class="js-controls-SwitcherDouble__textOn controls-SwitcherDouble__text controls-SwitcherDouble__textOn{{checked ? '' : ' controls-SwitcherDouble__unselected'}}">{{stateOn|sanitize}}</span>
+         <span class="js-controls-SwitcherDouble__textOff controls-SwitcherDouble__text controls-SwitcherDouble__textOff{{checked ? ' controls-SwitcherDouble__unselected' : ''}}">{{stateOff|sanitize}}</span>
+      </span>
+   </ws:if>
+   <ws:else>
+      <span class="js-controls-SwitcherDouble__textOff controls-SwitcherDouble__text controls-SwitcherDouble__textOff{{checked ? ' controls-SwitcherDouble__unselected' : ''}}">{{stateOff|sanitize}}</span>
+      <ws:partial template="toggle" scope="{{...}}"/>
+      <span class="js-controls-SwitcherDouble__textOn controls-SwitcherDouble__text controls-SwitcherDouble__textOn{{checked ? '' : ' controls-SwitcherDouble__unselected'}}">{{stateOn|sanitize}}</span>
+   </ws:else>
+</span>

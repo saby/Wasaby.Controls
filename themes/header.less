@@ -53,7 +53,7 @@
     float: left;
   }
 
-  &.controls-ToggleButton__normal.controls-Button__default.controls-Checked__checked:before {
+  &.controls-ToggleButton__normal.controls-Button-size__default.controls-Checked__checked:before {
     content: @toggle-header-checked-before-content;
   }
 
@@ -120,7 +120,7 @@
     }
   }
 
-  .controls-Button:not(.ws-disabled):not(.controls-Click__active):hover.ws-toggleHeader.controls-ToggleButton__normal.controls-Button__default {
+  .controls-Button:not(.ws-disabled):not(.controls-Click__active):hover.ws-toggleHeader.controls-ToggleButton__normal.controls-Button-size__default {
     border: @toggle-header-border;
     background: @toggle-header-background;
     font: @toggle-header-font;
@@ -128,7 +128,7 @@
   }
   // сейчас нельзя использовать абстрактную кнопку в новом шаблонизаторе из-за слешей в название компонента
   // поэтому временно усиливаю селекторыыы
-  .controls-Button:not(.ws-disabled).ws-toggleHeader.controls-ToggleButton__normal.controls-Button__default {
+  .controls-Button:not(.ws-disabled).ws-toggleHeader.controls-ToggleButton__normal.controls-Button-size__default {
     &, &.controls-Checked__checked {
       &:hover {
         border: @toggle-header-border;
@@ -146,14 +146,14 @@
 
 .controls-Link {
   &.ws-linkHeader, &.ws-header, &.ws-bigSubheader, &.ws-subheader {
-    &.controls-Click__active {
+    &.controls-Click__active, &.controls-Click__active .controls-Button__text {
       text-decoration: @link-header-text-decoration;
       color: @link-header-hover-color;
     }
   }
 }
 
-.controls-Button.ws-toggleHeader.controls-ToggleButton__normal.controls-Button__default {
+.controls-Button.ws-toggleHeader.controls-ToggleButton__normal.controls-Button-size__default {
   &, &.controls-Checked__checked:not(.ws-disabled) {
     &, &.controls-Click__active {
       border: @toggle-header-border;

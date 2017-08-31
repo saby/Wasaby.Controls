@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.IListNavigation',
 
          },
 
-         analizeResponceParams: function(dataset) {
+         analyzeResponseParams: function(dataset) {
 
          }
 

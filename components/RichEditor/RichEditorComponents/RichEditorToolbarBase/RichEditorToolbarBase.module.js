@@ -3,9 +3,10 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
    "Core/core-merge",
    "Core/EventBus",
    "js!SBIS3.CONTROLS.ButtonGroupBase",
-   'Core/helpers/string-helpers',
-   'js!SBIS3.CONTROLS.StylesPanelNew'
-], function( cFunctions, cMerge, EventBus, ButtonGroupBase, strHelpers, StylesPanel) {
+   'Core/helpers/String/escapeHtml',
+   'js!SBIS3.CONTROLS.StylesPanelNew',
+   'css!SBIS3.CONTROLS.RichEditorToolbarBase'
+], function( cFunctions, cMerge, EventBus, ButtonGroupBase, escapeHtml, StylesPanel) {
 
    'use strict';
 
@@ -197,7 +198,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                      var smileName = $(this).attr('title');
                      $(this).replaceWith('[' + (smileName ? smileName : rk('смайл')) +']');
                   });
-                  stripText = title = strHelpers.escapeHtml($tmpDiv.text());
+                  stripText = title = escapeHtml($tmpDiv.text());
                   stripText = stripText.replace('/\n/gi', '');
                   if (!stripText && value) {
                      stripText = rk('Контент содержит только html-разметку, без текста.');
@@ -303,27 +304,27 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                   presets:[
                      {
                         id: 'mainText',
-                        name: 'Основной'
+                        name: rk('Основной')
                      },
                      {
                         id: 'title',
                         color: '#313E78',
                         'font-size' : '18px',
                         'font-weight': 'bold',
-                        name: 'Заголовок'
+                        name: rk('Заголовок')
                      },
                      {
                         id: 'subTitle',
                         color: '#313E78',
                         'font-size' : '15px',
                         'font-weight': 'bold',
-                        name: 'Подзаголовок'
+                        name: rk('Подзаголовок')
                      },
                      {
                         id: 'additionalText',
                         color: '#999999',
                         'font-size' : '12px',
-                        name: 'Дополнительный'
+                        name: rk('Дополнительный')
                      }
                   ],
                   activableByClick: false
@@ -362,6 +363,9 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
          destroy: function() {
             this._unbindEditor();
             this._handlersInstances = null;
+            if (this._stylesPanel) {
+               this._stylesPanel.destroy();
+            }
             RichEditorToolbarBase.superclass.destroy.apply(this, arguments);
             this._itemsContainer = null;
          }

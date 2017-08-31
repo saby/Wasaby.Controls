@@ -127,9 +127,25 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
          });
       });
 
-      describe('.getProjection', function (){
+      describe('.setItems', function (){
+         it('should set items', function(){
+            var items = [];
+            mover.setItems(items);
+            assert.equal(mover.getItems(), items);
+         });
+      });
+
+      describe('.getItemsProjection', function (){
          it('should return the own projection', function(){
-            assert.equal(moverWithMS.getProjection(), projection);
+            assert.equal(mover.getItemsProjection(), projection);
+         });
+      });
+
+      describe('.setItemsProjection', function (){
+         it('should return the own projection', function(){
+            var projection = [];
+            mover.setItemsProjection(projection);
+            assert.equal(mover.getItemsProjection(), projection);
          });
       });
 
@@ -299,6 +315,9 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
          it('should return false if record stay in place', function(){
             assert.isFalse(mover._checkRecordForMove(items.at(0), items.at(1), 'before'));
          });
+         it('should return true if record has not existed from recordset', function(){
+            assert.isTrue(mover._checkRecordForMove(items.at(0), items.at(1).clone(), 'before'));
+         });
       });
       describe('onEndMove', function () {
          it('should trigger onEndMove', function(done) {
@@ -317,7 +336,8 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
                   }
                }
             });
-            mover.subscribe('onEndMove', function () {
+            mover.subscribe('onEndMove', function (e, result) {
+               result.processed = true;//не надо показывать окно с ошибкой в тестах
                done();
             });
             mover.move([items.at(0)], items.at(2), 'after');
@@ -469,6 +489,15 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
             targetRow.setPosition('after');
             var count = treeItems.getCount();
             treeMover.moveFromOutside(list, targetRow, outsideRs, false);
+            assert.equal(count, treeItems.getCount());
+         });
+         it('should not move the source row if a onbeginmove returns cutsom', function(){
+            targetRow.setPosition('after');
+            var count = treeItems.getCount();
+            treeMover.subscribe('onBeginMove', function (e) {
+               e.setResult('Custom');
+            });
+            treeMover.moveFromOutside(list, targetRow, outsideRs, true);
             assert.equal(count, treeItems.getCount());
          });
       });

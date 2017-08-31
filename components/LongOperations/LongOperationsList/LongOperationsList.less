@@ -15,7 +15,7 @@
 .controls-LongOperationsList__startTime_time,
 .controls-LongOperationsList__view_stoppedOperation,
 .controls-LongOperationsList .controls-LongOperationsList__executeTimeContainer.controls-DataGridView__td,
-.controls-LongOperationsList .controls-DataGridView__tr.controls-ListView__hoveredItem .controls-LongOperationsList__executeTimeContainer.controls-DataGridView__td{
+.controls-LongOperationsList .controls-DataGridView__tr.controls-ListView__hoveredItem .controls-LongOperationsList__executeTimeContainer.controls-DataGridView__td {
     color: #999999;
 }
 
@@ -28,7 +28,7 @@
    font-size: @long-operations-list-time-ctr-f-size;
 }
 
-.controls-LongOperationsList__user_image{
+.controls-LongOperationsList__user_image {
     float: left;
     border-radius: 6px;
     width: 34px;
@@ -81,9 +81,14 @@
 }
 
 .controls-LongOperationsList__nameContainer {
-   width: ~"calc(100% - 24px)";
-   float: left;
+   /*###width: ~"calc(100% - 24px)";
+   float: left;*/
    overflow: hidden;
    text-overflow: ellipsis;
-   white-space: nowrap;
+    /*###white-space: nowrap;*/
+}
+
+.controls-LongOperationsList .controls-ItemActions .controls-ItemActions__itemsContainer .controls-ItemActions__item .controls-ItemActions__icon {
+    vertical-align: bottom;
+    margin-bottom: 0px;
 }

@@ -3,9 +3,10 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
    "Core/core-merge",
    "Core/Deferred",
    "js!SBIS3.CONTROLS.PickerMixin",
-   "Core/helpers/collection-helpers",
-   "Core/core-instance"
-], function ( cFunctions, cMerge, Deferred,PickerMixin, colHelpers, cInstance) {
+   "Core/core-instance",
+   'Core/helpers/Object/find',
+   "js!SBIS3.CONTROLS.ControlHierarchyManager"
+], function ( cFunctions, cMerge, Deferred, PickerMixin, cInstance, find, ControlHierarchyManager) {
    'use strict';
 
 
@@ -333,11 +334,13 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              changedFields = [],
              items = this._getListItems();
 
-         colHelpers.forEach(filter, function(value, key) {
-            if(value !== self._options.listFilter[key]) {
-               changedFields.push(key);
+         for (var key in filter) {
+            if(filter.hasOwnProperty(key)) {
+               if (filter[key] !== self._options.listFilter[key]) {
+                  changedFields.push(key);
+               }
             }
-         });
+         }
 
          this._options.listFilter = filter;
          this._notifyOnPropertyChanged('listFilter');
@@ -363,7 +366,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          }
 
          for(var i = 0, len = changedFields.length; i < len; i++) {
-            if(String(this._options.listFilter[changedFields[i]]).length >= this._options.startChar) {
+            if(String(this._options.listFilter[changedFields[i]] || '').length >= this._options.startChar) {
                this._startListSearch();
                return;
             }
@@ -415,15 +418,32 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          var self = this;
 
          //Подписываемся на события в отслеживаемых контролах
-         colHelpers.forEach(this._options.observableControls, function (control) {
+         this._options.observableControls.forEach(function (control) {
             this.subscribeTo(control, 'onFocusIn', self._observableControlFocusHandler.bind(self));
 
             /* Если фокус уходит на список - вернём его обратно в контрол, с которого фокус ушёл */
             this.subscribeTo(control, 'onFocusOut', function(e, destroyed, focusedControl) {
+               function clearItems() {
+                  /* Когда уходит фокус с поля ввода, необходимо очистить записи в списке, т.к. записи могут удалять/изменять */
+                  self._list.getItems() && self._list.getItems().clear();
+               }
                /* Если фокус ушёл на список, или на дочерний контрол списка - возвращаем обратно в поле ввода */
-               if(self._list && (self._list === focusedControl || ~Array.indexOf(self._list.getChildControls(), focusedControl))) {
-                  focusedControl.setActive(false, false, false, this);
-                  this.setActive(true);
+               if(self._list) {
+                  if (self._list === focusedControl || ~Array.indexOf(self._list.getChildControls(), focusedControl)) {
+                     focusedControl.setActive(false, false, false, this);
+                     this.setActive(true);
+                  } else if (self._options.autoShow && focusedControl && !ControlHierarchyManager.checkInclusion(this, focusedControl.getContainer()[0])) {
+                     if (focusedControl) {
+                        // если фокус переходит на другой компонент, дождемся этого перехода фокуса, и только потом почистим items.
+                        // если так не сделать, преждевременно сработает механизм восстановления фокуса, в случае safari это приводит к ошибке
+                        // https://online.sbis.ru/opendoc.html?guid=aa909af6-3564-4fed-ac60-962fc71b451e
+                        // утечки памяти тут не произойдет, потому что мы попали сюда в процессе перехода активности на focusedControl,
+                        // и после onFocusOut сразу должен сработать onFocusIn в focusedControl
+                        focusedControl.once('onFocusIn', clearItems);
+                     } else {
+                        clearItems();
+                     }
+                  }
                }
             });
          }, this);
@@ -434,7 +454,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * Обрабочик на приход фокуса в отслеживаемый компонент
        */
       _observableControlFocusHandler: function() {
-         if(this._options.autoShow) {
+         if(this._options.autoShow && !this.isPickerVisible()) {
             this._checkPickerState(true) ? this.showPicker() : this._startListSearch();
          }
       },
@@ -496,11 +516,13 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                options = cFunctions.clone(this._options.list.options);
                component = require(this._options.list.component);
 
-               colHelpers.forEach(DEFAULT_LIST_CONFIG, function(value, key) {
-                  if(!options.hasOwnProperty(key)) {
-                     options[key] = typeof value === 'function' ? value.call(this) : value;
+               for (var key in DEFAULT_LIST_CONFIG) {
+                  if(DEFAULT_LIST_CONFIG.hasOwnProperty(key)) {
+                     if(!options.hasOwnProperty(key)) {
+                        options[key] = typeof DEFAULT_LIST_CONFIG[key] === 'function' ? DEFAULT_LIST_CONFIG[key].call(this) : DEFAULT_LIST_CONFIG[key];
+                     }
                   }
-               }, this);
+               }
 
                /* Сорс могут устанавливать не через сеттер, а через опцию */
                if(options.dataSource !== undefined) {
@@ -662,6 +684,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                   if(Array.indexOf(button.getEventHandlers('onActivated'), this._showAllButtonHandler) === -1) {
                      this.subscribeTo(button, 'onActivated', this._showAllButtonHandler);
                   }
+                  /* Чтобы кнопка не принимала фокус по табу, иначе клик enter'a, когда автодополнение открыто,
+                     будет вызывать открытие справочника, а не выбор записи */
+                  button.setTabindex(0);
                   button.show();
                } else {
                   this.unsubscribeFrom(button, 'onActivated', this._showAllButtonHandler);
@@ -728,9 +753,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @private
        */
       _isObservableControlFocused: function() {
-         return colHelpers.find(this._options.observableControls, function(ctrl) {
+         return find(this._options.observableControls, function(ctrl) {
             return ctrl.isActive();
-         }, this, false)
+         }, this, false);
       },
 
       /**

@@ -95,7 +95,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                _isAdd: false
             },
             $constructor: function () {
-               this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onInitEditInPlace', 'onChangeHeight', 'onBeginSave', 'onEndSave');
+               this._publish('onItemValueChanged', 'onBeginEdit', 'onAfterBeginEdit', 'onEndEdit', 'onBeginAdd', 'onAfterEndEdit', 'onInitEditInPlace', 'onHeightChange', 'onBeginSave', 'onEndSave');
                this._createEip();
                this._savingDeferred = Deferred.success();
             },
@@ -171,7 +171,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                      onKeyPress: function(event, originalEvent) {
                         self._onKeyPress(originalEvent);
                      },
-                     onChangeHeight: this._onChangeHeight.bind(this)
+                     onHeightChange: this._onHeightChange.bind(this)
                   }
                };
                if (this._options.endEditByFocusOut) {
@@ -179,8 +179,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
                return config;
             },
-            _onChangeHeight: function(event, model) {
-               this._notify('onChangeHeight', model);
+            _onHeightChange: function(event, model) {
+               this._notify('onHeightChange', model);
             },
             _getContextForEip: function () {
                var
@@ -585,7 +585,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   return this._options.dataSource.create(modelOptions).addCallback(function(model) {
                      return model;
                   }).addErrback(function (error) {
-                     fcHelpers.alert(error);
+                     InformationPopupManager.showMessageDialog({
+                        message: error.message,
+                        status: 'error'
+                     });
                      return error;
                   });
                }

@@ -3,7 +3,8 @@ define(['js!SBIS3.CONTROLS.MoneyTextBox'], function (NumberTextBox) {
     'use strict';
     var
         MTB,
-        inputField;
+        inputField,
+        formattedValue;
 
     describe('SBIS3.CONTROLS.MoneyTextBox', function () {
         beforeEach(function() {
@@ -18,6 +19,27 @@ define(['js!SBIS3.CONTROLS.MoneyTextBox'], function (NumberTextBox) {
            });
            inputField = MTB._inputField;
         });
+
+       describe('Check format value', function() {
+          it('check html value', function() {
+             MTB.setText('<span lang="EN-US" style="font-size:72.0pt;line-height:\n\
+                        115%;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;mso-ascii-theme-font:minor-latin;\n\
+                        mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;mso-hansi-theme-font:\n\
+                        minor-latin;mso-bidi-font-family:Aharoni;mso-ansi-language:EN-US;mso-fareast-language:\n\
+                        EN-US;mso-bidi-language:AR-SA">10.</span><span lang="EN-US" style="font-size:\n\
+                        11.0pt;line-height:115%;font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;mso-ascii-theme-font:\n\
+                        minor-latin;mso-fareast-font-family:Calibri;mso-fareast-theme-font:minor-latin;\n\
+                        mso-hansi-theme-font:minor-latin;mso-bidi-font-family:Aharoni;mso-ansi-language:\n\
+                        EN-US;mso-fareast-language:EN-US;mso-bidi-language:AR-SA">1</span>');
+             assert.equal(MTB._getInputValue(), '10.10');
+          });
+
+          it('check value outside', function() {
+             MTB.setProperty('text', '1234.56');
+             formattedValue = MTB._formatText('9999999999999999.99');
+             assert.equal(formattedValue, '1 234.56');
+          });
+       });
 
         describe('Caret Position', function (){
            it('_inputFocusInHandler', function (){

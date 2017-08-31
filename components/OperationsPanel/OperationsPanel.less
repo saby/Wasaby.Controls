@@ -34,7 +34,6 @@
       padding-left: @controls-OperationsPanel-actions-padding-left;
       &:after {
          margin-left: @controls-OperationsPanel-separator-margin-left;
-         margin-right: @controls-OperationsPanel-separator-margin-right;
          background: @controls-OperationsPanel-separator-bg;
          width: @controls-OperationsPanel-separator-width;
          height: @controls-OperationsPanel-separator-height;
@@ -55,13 +54,22 @@
    .controls-IconButton {
       display: inline-flex;
    }
+
+   &.controls-operationsPanel__mode-withoutCaptions {
+      .controls-operationsPanel__action-withoutCaption {
+         .controls-Link__field {
+            display: none;
+         }
+      }
+
+   }
 }
 
 .controls-operationsPanel__itemsMenu_picker .controls-PopupMixin__closeButton,
 .controls-operationsPanel__itemsMenu_picker .controls-PopupMixin__closeButton:hover{
    background: none;
-   top: 7px;
-   right: -6px;
+   top: 8px;
+   right: 10px;
 }
 
 .controls-operationsPanel__itemsMenu_picker.controls-MenuIcon__Menu .controls-MenuItem {

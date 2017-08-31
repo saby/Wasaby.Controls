@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.Label',
    [
-      'js!WSControls/Control/Base',
+      'Core/Control',
       'js!SBIS3.CONTROLS.Clickable',
       'Core/Sanitize',
       'tmpl!SBIS3.CONTROLS.Label',
@@ -50,6 +50,8 @@ define('js!SBIS3.CONTROLS.Label',
 
          _applyOptions: function() {
             this.caption = this._options.caption || '';
+            this.tooltip = this._options.tooltip || '';
+            this.visible = this._options.visible !== false;
          },
 
          _clickCaptionHandler: function() {

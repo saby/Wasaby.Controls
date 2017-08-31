@@ -179,7 +179,7 @@ define('js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil', [],
                         }
                     } else if (b > dotPosition && e > dotPosition) { // после точки
                         if (b == e) {
-                            if (!(b == dotPosition + 1 && decimals > 0)) {
+                            if (!(b == dotPosition + 1 && decimals !== 0)) {
                                 currentVal = currentVal.substr(0, b - 1) + currentVal.substr(e);
                             }
                             newCaretPosition = dotPosition === b - 2 ? newCaretPosition - 2 : newCaretPosition - 1;
@@ -188,7 +188,7 @@ define('js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil', [],
                             newCaretPosition = b;
                         }
                     } else { // точка в выделении
-                        currentVal = currentVal.substr(0, b) + (decimals > 0 ? '.' : '') + currentVal.substr(e);
+                        currentVal = currentVal.substr(0, b) + (decimals !== 0 ? '.' : '') + currentVal.substr(e);
                         newCaretPosition = b;
                     }
                 }

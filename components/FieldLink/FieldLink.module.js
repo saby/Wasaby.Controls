@@ -4,11 +4,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "Core/constants",
        "Core/IoC",
        "Core/core-instance",
-       "Core/helpers/functional-helpers",
-       'Deprecated/helpers/dom&controls-helpers',
+       'Core/helpers/Function/forAliveOnly',
+       'Core/helpers/Function/memoize',
+       'js!SBIS3.CONTROLS.Utils.Contains',
        "Core/helpers/string-helpers",
-       "Core/helpers/collection-helpers",
-       "Core/ParserUtilities",
+       'Core/markup/ParserUtilities',
        'js!SBIS3.CONTROLS.ControlHierarchyManager',
        "js!SBIS3.CONTROLS.SuggestTextBox",
        "js!SBIS3.CONTROLS.ItemsControlMixin",
@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "js!SBIS3.CONTROLS.ToSourceModel",
        "js!WS.Data/Collection/List",
        "js!SBIS3.CONTROLS.Utils.ItemsSelection",
+       "Core/helpers/Object/find",
        "js!SBIS3.CONTROLS.IconButton",
        "js!SBIS3.CONTROLS.Action.SelectorAction",
        'js!SBIS3.CONTROLS.FieldLink.Link',
@@ -40,10 +41,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
         constants,
         IoC,
         cInstance,
-        fHelpers,
-        domHelpers,
+        forAliveOnly,
+        memoize,
+        contains,
         strHelpers,
-        colHelpers,
         ParserUtilities,
         ControlHierarchyManager,
         SuggestTextBox,
@@ -71,7 +72,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
         TemplateUtil,
         ToSourceModel,
         List,
-        ItemsSelectionUtil
+        ItemsSelectionUtil,
+        objectFind
     ) {
 
        'use strict';
@@ -393,7 +395,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  .subscribeTo(linkCollection, 'onFocusIn', function() {
                      // Из за того, что фокус устанавливается программно, нужно выставить флаг fromTouch - 
                      // так как нажатие произошло на поле связи, но не на поле ввода, но фокус остался в поле ввода
-                     if (constants.browser.isMobileIOS && self._isInputVisible()) {
+                     if (constants.browser.isMobilePlatform && self._isInputVisible()) {
                         self._fromTouch = true;
                      }
                      self.setActive(true);
@@ -425,7 +427,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
           },
 
-          _getSelectorAction: fHelpers.memoize(function() {
+          _getSelectorAction: memoize(function() {
              return this.getChildControlByName('FieldLinkSelectorAction');
           }, '_getSelectorAction'),
 
@@ -556,6 +558,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
              this.hidePicker();
              this._getLinkCollection().hidePicker();
+             
+             /* При открытии диалога выбора необходимо очистить список в автодополнении,
+                т.к. на диалоге выбора могут производить изменения / удаление записей */
+             if(this._list && this._list.getItems() && this._getOption('autoShow')) {
+                this._list.getItems().clear();
+             }
 
              if(this._options.useSelectorAction) {
                 this._getSelectorAction().execute(wsCoreMerge(actionCfg, cfg));
@@ -576,7 +584,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              var config;
 
              if(key) {
-                config = colHelpers.find(this._options.dictionaries, function (elem) {
+                config = objectFind(this._options.dictionaries, function (elem) {
                    return elem.name === key;
                 });
              } else {
@@ -606,12 +614,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
              if(constants.browser.firefox && active && !this.getText() && this._isEmptySelection()) {
                 var elemToFocus = this._getElementToFocus();
 
-                setTimeout(fHelpers.forAliveOnly(function () {
+                setTimeout(forAliveOnly(function () {
                    if(elemToFocus[0] === document.activeElement){
                       var suggestShowed = this.isPickerVisible();
                       elemToFocus.blur().focus();
 
-                      if(!suggestShowed) {
+                      //https://online.sbis.ru/opendoc.html?guid=19af9bf9-0d16-4f63-8aa8-6d0ef7ff0799
+                      if(!suggestShowed && !this._options.task1174306848) {
                          this.hidePicker();
                       }
                    }
@@ -768,12 +777,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
              return cfg;
           },
    
-          _getLinkCollection: fHelpers.memoize(function() {
+          _getLinkCollection: memoize(function() {
              return this.getChildControlByName('FieldLinkItemsCollection');
           }, '_getLinkCollection'),
           
-          _getInputMinWidth: fHelpers.memoize(function() {
-             var fieldWrapper = this.getContainer().find('.controls-TextBox__fieldWrapper');
+          _getInputMinWidth: memoize(function() {
+             var fieldWrapper = this.getContainer().find('.controls-FieldLink__fieldWrapper');
              return parseInt(window.getComputedStyle(fieldWrapper[0]).getPropertyValue('--min-width') || fieldWrapper.css('min-width'));
           }, '_getInputMinWidth'),
 
@@ -866,7 +875,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 3) Фокус пришел из автодополнения
              */
              if(!this._isInputVisible() || this.getChildControlByName('fieldLinkMenu').getContainer()[0] === document.activeElement ||
-                (event && event.relatedTarget && ControlHierarchyManager.checkInclusion(this, event.relatedTarget) && !domHelpers.contains(this.getContainer(), event.relatedTarget))) {
+                (event && event.relatedTarget && ControlHierarchyManager.checkInclusion(this, event.relatedTarget) && !contains(this.getContainer(), event.relatedTarget))) {
                 return false;
              }
              FieldLink.superclass._observableControlFocusHandler.apply(this, arguments);
@@ -881,7 +890,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 поэтому нельзя отдавать поле ввода в качестве элемента для фокуса, т.к. браузер не может проставить
                 фокус на скрытый элемент, и он улетит на body. Но оставить фокус на компоненте необходимо для обработки событий,
                 для этого переводим фокус на контейнер поля связи */
-             return this._isInputVisible() ? FieldLink.superclass._getElementToFocus.apply(this, arguments) : this._container;
+             return this._isInputVisible() || this._options.alwaysShowTextBox ? FieldLink.superclass._getElementToFocus.apply(this, arguments) : this._container;
           },
 
           /**
@@ -1078,7 +1087,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
           _setPickerConfig: function () {
              return {
                 corner: 'bl',
-                closeOnTargetMove: !constants.browser.isMobileIOS,
+                closeOnTargetMove: !constants.browser.isMobilePlatform,
                 closeByExternalClick: true,
                 targetPart: true,
                 _canScroll: true,
@@ -1180,11 +1189,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
            */
           _toggleShowAll: function(show) {
              if(this._options.multiselect) {
-                this._getShowAllButton().toggleClass(classes.HIDDEN, !show);
+                this._getShowAllButton().toggleClass(classes.HIDDEN, !show); //todo
              }
           },
           
-          _getShowAllButton: fHelpers.memoize(function () {
+          _getShowAllButton: memoize(function () {
              return this.getContainer().find('.controls-FieldLink__showAllLinks');
           }, '_showAllButton'),
 

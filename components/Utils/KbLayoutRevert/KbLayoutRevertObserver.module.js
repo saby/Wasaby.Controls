@@ -4,14 +4,14 @@
 define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
    [
       "Core/core-extend",
-      "Core/helpers/string-helpers",
+      "Core/helpers/String/diffAt",
       "Core/core-functions",
       "js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil",
       "js!SBIS3.CONTROLS.MissSpell",
       'js!SBIS3.CONTROLS.Utils.Query',
       'Core/core-instance'
    ],
-   function (cExtend, strHelpers, cFunctions, KbLayoutRevertUtil, MissSpell, queryUtil, cInstance) {
+   function (cExtend, diffAt, cFunctions, KbLayoutRevertUtil, MissSpell, queryUtil, cInstance) {
       'use strict';
 
       /* Вспомогательный класс, для посчёта времени запроса.
@@ -69,7 +69,8 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
             _oldSearchValue: '',
             _timer: null,
             _missSpell: null,
-            _missSpellUsed: false
+            _missSpellUsed: false,
+            _currentItems: null
          },
 
          $constructor: function() {
@@ -92,8 +93,20 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                this._observed = false;
                this._oldSearchValue = '';
                this._hideMissSpell();
-               this._toggleItemsEventRising(true, true);
+               this._toggleItemsEventRaising(true);
             }
+         },
+   
+         /**
+          * Установить параметр по которому фильтруются данные
+          * @param {String} param
+          */
+         setParam: function(param) {
+            this._options.param = param
+         },
+         
+         getParam: function() {
+            return this._options.param;
          },
 
          _toggleViewEvents: function (toggle) {
@@ -144,7 +157,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                         return res;
                      })
                   } else {
-                     self._toggleItemsEventRising(false, false);
+                     self._toggleItemsEventRaising(false);
                      /* Для того, чтобы индикатор не моргал между запросами, если запрос работает > INDICATOR_DELAY */
                      if (self._getTimer().getTime() > INDICATOR_DELAY) {
                         view.getContainer().find('.controls-AjaxLoader').eq(0).removeClass('ws-hidden');
@@ -164,7 +177,6 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
 
             function showMissSpellValue(value) {
                self._showMissSpell(value);
-               self._toggleItemsEventRising(true, true);
             }
 
             function successSearch() {
@@ -185,10 +197,13 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                         }
                         
                         backOldSearchValue();
-                        showMissSpellValue(searchValue)
+                        showMissSpellValue(searchValue);
+                        self._toggleItemsEventRaising(true);
                      } else {
                         /* Прошлый поиск был не успешен -> отображаем данные и выводим сообщение */
                         showMissSpellValue(searchValue);
+                        //Без анализа изменений, чтобы не вызвать преждевременную отрисовку и не портить очередёность срабатывания событий
+                        self._toggleItemsEventRaising(true, false);
                         self._textBeforeTranslate = null;
                      }
                   } else {
@@ -199,7 +214,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                         view.setHighlightText(searchValue, false);
                      }
                      self._textBeforeTranslate = null;
-                     self._toggleItemsEventRising(true, true);
+                     self._toggleItemsEventRaising(true);
                   }
                } else {
                   if(self._options.newStandart) {
@@ -221,13 +236,13 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                         data.setMetaData(self._itemsBeforeTranslate.getMetaData());
                      }
                      backOldSearchValue();
-                     self._toggleItemsEventRising(true, true);
+                     self._toggleItemsEventRaising(true);
                      self._hideMissSpell();
                   } else {
                      viewFilter[searchParam] = self._textBeforeTranslate;
                      view.setFilter(viewFilter, true);
                      self._textBeforeTranslate = null;
-                     self._toggleItemsEventRising(true, true);
+                     self._toggleItemsEventRaising(true);
                   }
                } else {
                   reloadWithRevert();
@@ -251,14 +266,17 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
          /* Требуется отключать обработку событий проекции при поиске со сменой раскладки,
           чтобы избежать моргания данных, обработка событий включается,
           когда поиск точно закончен (уже была сменена раскладка, если требуется) */
-         _toggleItemsEventRising: function(enable, analyze) {
-            var items = this._options.view.getItems();
+         _toggleItemsEventRaising: function(enable, analyze) {
+            var items = this._currentItems || this._options.view.getItems();
+            analyze = analyze !== undefined ? analyze : true;
 
             if(items) {
                var isEqual = items.isEventRaising() === enable;
 
                if(!isEqual) {
                   items.setEventRaising(enable, analyze);
+                  /* Запоминаем рекордсет, чтобы потом у него же и включить обработку событий */
+                  this._currentItems = !enable ? items : null;
                }
             }
          },
@@ -320,7 +338,8 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
          if(searchValue && oldSearchValue) {
             if (searchValue.length > oldSearchValue.length) {
                // ищем разницу между старым и текущим значением поискового запроса
-               symbolsDifference = strHelpers.searchSymbolsDifference(searchValue, self._oldSearchValue);
+               var pos = diffAt(searchValue, oldSearchValue);
+               symbolsDifference = (pos === -1 ? false : [searchValue.substr(0, pos), searchValue.substr(pos), oldSearchValue.substr(pos)]);
             }
          }
 

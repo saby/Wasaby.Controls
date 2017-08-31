@@ -12,7 +12,7 @@ define(
       'js!SBIS3.CONTROLS.TimePicker',
       'tmpl!SBIS3.CONTROLS.DatePicker',
       'tmpl!SBIS3.CONTROLS.DatePicker/resources/elementPickerContent',
-      'Core/helpers/dom&controls-helpers',
+      'js!SBIS3.CONTROLS.Utils.IsChildControl',
       "Core/IoC",
       'i18n!SBIS3.CONTROLS.DatePicker',
       'js!SBIS3.CONTROLS.IconButton',
@@ -20,7 +20,7 @@ define(
       'css!SBIS3.CONTROLS.FormattedTextBox',
       'css!SBIS3.CONTROLS.DateBox'
    ],
-   function (EventBus, DateBox, PickerMixin, DateUtil, DateRangeBigChoose, TimePicker, dotTplFn, ElementPickerContent, dcHelpers, IoC) {
+   function (EventBus, DateBox, PickerMixin, DateUtil, DateRangeBigChoose, TimePicker, dotTplFn, ElementPickerContent, isChildControl, IoC) {
 
    'use strict';
 
@@ -151,9 +151,7 @@ define(
             options.pickerIconShow = false;
             IoC.resolve('ILogger').log('DatePicker', 'В качестве опции isCalendarIconShown используйте pickerIconShow');
          }
-         if (options.pickerIconShow) {
-            this._checkTypeOfMask(options);
-         }
+         this._checkTypeOfMask(options);
 
          return options;
       },
@@ -200,6 +198,10 @@ define(
       _timeInit: function() {
          if (this.isEnabled()) {
             this._options.pickerConfig.closeButton = true;
+
+            //TODO: Убрать, когда у FloatArea будет бордер.
+            this._options.pickerConfig.cssClassName = 'controls-DatePicker__timePicker-border';
+
             this.togglePicker();
 
             this._initFocusInHandler();
@@ -331,12 +333,16 @@ define(
             pickerName;
          if (/[DMY]/.test(mask)) {
             pickerName = 'calendar';
-         } else if (mask === 'HH:II' && options.timePickerIconShow) {
+         } else if (mask === 'HH:II') {
             pickerName = 'time';
          }
          if (pickerName) {
             options._pickerName = pickerName;
          } else {
+            options.pickerIconShow = false;
+         }
+         // Выпилить с опцией timePickerIconShow
+         if (options._pickerName === 'time' && !options.timePickerIconShow) {
             options.pickerIconShow = false;
          }
       },
@@ -356,7 +362,7 @@ define(
       },
 
       _onFocusIn: function(event) {
-         if (!dcHelpers.isChildControl(this, event.getTarget())) {
+         if (!isChildControl(this, event.getTarget())) {
             this._notify('onDateSelect');
             this.unsubscribeFrom(EventBus.globalChannel(), 'onFocusIn', this._onFocusInHandler);
             this._onFocusInHandler = null;

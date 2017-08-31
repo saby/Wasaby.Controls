@@ -182,15 +182,20 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'tmpl!SBIS3
 
       setSelectedKey: function() {
          Pager.superclass.setSelectedKey.apply(this, arguments);
-         this.redraw();
+         //если страницы рисуются, то набор надо перерисовать, т.к. он зависит от выбранного элемента
+         if (this._options.visiblePath.pages) {
+            this.redraw();
+         }
+         else {
+            this._toggleItemsEnabled();
+         }
       },
 
       _getItemsContainer: function() {
          return $('.controls-Paging__itemsContainer', this._container.get(0));
       },
-
-      _drawItemsCallback: function() {
-         Pager.superclass._drawItemsCallback.apply(this, arguments);
+      
+      _toggleItemsEnabled: function() {
          if (!this._prevBtn) {
             this._bindControls();
          }
@@ -210,6 +215,11 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'tmpl!SBIS3
             this._endBtn.setEnabled(true);
             this._nextBtn.setEnabled(true);
          }
+      },
+
+      _drawItemsCallback: function() {
+         Pager.superclass._drawItemsCallback.apply(this, arguments);
+         this._toggleItemsEnabled();
       },
 
       destroy: function() {

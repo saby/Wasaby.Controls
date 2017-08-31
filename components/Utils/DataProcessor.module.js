@@ -109,20 +109,34 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        * @param {String} fileName
        * @param {String} fileType PDF или Excel
        * @param {number} pageOrientation 1 - потртетная, 2 - альбомная
+       * @param {Boolean} isExcel указывает что выгрузка будет производиться в EXCEL формате
        */
-      exportHTML: function(fileName, fileType, pageOrientation){
-         var self = this;
+      exportHTML: function(fileName, fileType, pageOrientation, isExcel){
+         var
+            self = this,
+            methodName = 'SaveHTML',
+            newCfg;
          this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + fileType);
          this._prepareSerializer().addCallback(function(reportText){
             self._destroyLoadIndicator();
-            var newCfg = {
-               'FileName': fileName,
-               'html': reportText
-            };
+            //В престо и  рознице отключены длительные операции и выгрузка должна производиться по-старому
+            //Через длительные операции производилась только выгрузка в Excel, поэтому проверяем fileType
+            if (!self._isLongOperationsEnabled() && fileType === 'Excel') {
+               methodName = 'СохранитьПоHTMLDWC';
+               newCfg = {
+                  'name': fileName,
+                  'html': reportText
+               };
+            } else {
+               newCfg = {
+                  'FileName': fileName,
+                  'html': reportText
+               };
+            }
             if (fileType === "PDF") {
                newCfg.PageOrientation = typeof pageOrientation === 'number' ? pageOrientation : 1;
             }
-            self.exportFileTransfer(fileType, 'SaveHTML', newCfg);
+            self.exportFileTransfer(fileType, methodName, newCfg, isExcel);
 
          });
       },
@@ -132,8 +146,9 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        * @param {String} fileType PDF или Excel
        * @param {Object} cfg - параметры метода methodName
        * @param {number} pageOrientation 1 - потртетная, 2 - альбомная
+       * @param {Boolean} isExcel указывает что выгрузка будет производиться в EXCEL формате
        */
-      exportList: function(fileName, fileType, cfg, pageOrientation, methodName){
+      exportList: function(fileName, fileType, cfg, pageOrientation, methodName, isExcel){
          cfg = cfg || {};
          if (fileName) {
             cfg.FileName = fileName;
@@ -141,7 +156,12 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          if (pageOrientation) {
             cfg.PageOrientation = pageOrientation;
          }
-         this.exportFileTransfer(fileType, methodName || 'SaveList', cfg);
+         //В престо и  рознице отключены длительные операции и выгрузка должна производиться по-старому
+         //Через длительные операции производилась только выгрузка в Excel, поэтому проверяем fileType
+         if (!this._isLongOperationsEnabled() && fileType === 'Excel') {
+            methodName = 'СохранитьListDWC';
+         }
+         this.exportFileTransfer(fileType, methodName || 'SaveList', cfg, isExcel);
       },
       /**
        * Выгрузить данные в Excel или PDF по набору данных
@@ -149,8 +169,9 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        * @param {String} fileType PDF или Excel
        * @param {Object} cfg - параметры метода methodName
        * @param {number} pageOrientation 1 - потртетная, 2 - альбомная
+       * @param {Boolean} isExcel указывает что выгрузка будет производиться в EXCEL формате
        */
-      exportDataSet: function(fileName, fileType, cfg, pageOrientation, methodName){
+      exportDataSet: function(fileName, fileType, cfg, pageOrientation, methodName, isExcel){
          var
             columns  = cFunctions.clone(this._options.columns),
             records,
@@ -182,17 +203,22 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
                cfg.PageOrientation = pageOrientation;
             }
          }
-
-         this.exportFileTransfer(fileType, methodName || 'SaveRecordSet', cfg);
+         //В престо и  рознице отключены длительные операции и выгрузка должна производиться по-старому
+         //Через длительные операции производилась только выгрузка в Excel, поэтому проверяем fileType
+         if (!this._isLongOperationsEnabled()  && fileType === 'Excel') {
+            methodName = 'СохранитьRSDWC';
+         }
+         this.exportFileTransfer(fileType, methodName || 'SaveRecordSet', cfg, isExcel);
       },
-      /**
+       /**
        * Универсальная выгрузка данных через сервис file-transfer
        * @param object
        * @param methodName
        * @param cfg
+       * @param {Boolean} isExcel указывает что выгрузка будет производиться в EXCEL формате
        * @returns {Core/Deferred}
        */
-      exportFileTransfer: function(object, methodName, cfg){
+      exportFileTransfer: function(object, methodName, cfg, isExcel){
          var self = this,
              exportDeferred,
              source = new SbisService({
@@ -209,10 +235,12 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             }
             return error;
          });
-         if (object !== "Excel") {
+          //В престо и  рознице отключены длительные операции и выгрузка должна производиться по-старому
+          //Через длительные операции производилась только выгрузка в Excel, поэтому проверяем fileType
+         if (object !== "Excel" || !this._isLongOperationsEnabled()) {
             this._createLoadIndicator(rk('Подождите, идет выгрузка данных в') + ' ' + object);
             exportDeferred.addCallback(function(ds) {
-               self.downloadFile(ds.getScalar());
+               self.downloadFile(ds.getScalar(), object === "Excel" || isExcel);
             }).addBoth(function() {
                self._destroyLoadIndicator();
             });
@@ -228,9 +256,14 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
       /**
        * Загрузить файл по готовому id
        * @param id - уникальный идентификатор файла на сервисе file-transfer
+       * @param {Boolean} isExcel указывает что выгрузка будет производиться в EXCEL формате
        */
-      downloadFile : function(id){
-         window.open(transHelpers.prepareGetRPCInvocationURL( 'File','Download', {'id': id}, undefined, '/file-transfer/service/'), '_self');
+      downloadFile : function(id, isExcel){
+         var params = { 'id': id };
+         if (isExcel) {
+            params['storage'] = 'excel';
+         }
+         window.open(transHelpers.prepareGetRPCInvocationURL( isExcel ? 'FileTransfer' : 'File', 'Download', params, undefined, '/file-transfer/service/'), '_self');
       },
       /**
        * Метод для формирования параметров фильтрации выгружаемого на сервере файла.
@@ -336,6 +369,9 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             this._loadIndicator.destroy();
             this._loadIndicator = undefined;
          }
+      },
+      _isLongOperationsEnabled: function() {
+         return requirejs.defined('js!SBIS3.Engine.LongOperationsInformer');
       }
    });
 });

@@ -10,10 +10,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
    "js!SBIS3.CORE.ModalOverlay",
    "js!SBIS3.CONTROLS.TouchKeyboardHelper",
    'Core/core-instance',
-   "Core/helpers/dom&controls-helpers",
+   'Core/helpers/Hcontrol/doAutofocus',
+   'Core/helpers/Hcontrol/trackElement',
    "Core/detection",
    "Core/constants"
-], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, cInstance, dcHelpers, detection, constants) {
+], function ( cWindowManager, EventBus, Deferred,ControlHierarchyManager, ModalOverlay, TouchKeyboardHelper, cInstance, doAutofocus, trackElement, detection, constants) {
    'use strict';
    if (typeof window !== 'undefined') {
       var
@@ -88,6 +89,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          _zIndex: null,
          _currentAlignment: {},
          _parentFloatArea: null,
+          _keysWeHandle: [
+             constants.key.tab,
+             constants.key.enter,
+             constants.key.esc
+          ],
          _options: {
             visible: false,
             /**
@@ -258,7 +264,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       //Подписка на изменение состояния таргета
       _subscribeTargetMove: function(){
          if (this._options.target) {
-            this._targetChanges = dcHelpers.trackElement(this._options.target, true);
+            this._targetChanges = trackElement(this._options.target, true);
             //перемещаем вслед за таргетом
             this._targetChanges.subscribe('onMove', this._onTargetMove, this);
             //скрываем если таргет скрылся
@@ -1143,7 +1149,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                this._parentFloatArea.setHasPopupInside(true);
             }
             if (this._options.activateAfterShow) {
-               this.activateFirstControl();
+               doAutofocus(this._container);
+            }
+         },
+
+         _keyboardHover: function(event) {
+            if (event.which === constants.key.esc) {
+               this.close();
             }
          }
       },
@@ -1188,7 +1200,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          },
          destroy: function () {
             //ControlHierarchyManager.zIndexManager.setFree(this._zIndex);
-            dcHelpers.trackElement(this._options.target, false);
+            trackElement(this._options.target, false);
             cWindowManager.setHidden(this._zIndex);
             cWindowManager.releaseZIndex(this._zIndex);
             ControlHierarchyManager.removeNode(this);
@@ -1213,7 +1225,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          },
          hide: function() {
             if (this._options.target) {
-               dcHelpers.trackElement(this._options.target, false);
+               trackElement(this._options.target, false);
             }
          }
       },

@@ -5,6 +5,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "Core/core-merge",
    "Core/constants",
    "Core/Deferred",
+   'Core/detection',
+   "Core/EventBus",
    "js!SBIS3.CONTROLS.ListView",
    "tmpl!SBIS3.CONTROLS.DataGridView",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/rowTpl",
@@ -25,10 +27,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/headColumnTpl",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/SortingTemplate",
-   "Core/helpers/collection-helpers",
    "Core/helpers/Object/isEmpty",
-   "Core/helpers/string-helpers",
-   "Core/helpers/dom&controls-helpers",
+   'Core/helpers/String/escapeHtml',
+   'js!SBIS3.CONTROLS.Utils.GetTextWidth',
    'Core/Sanitize',
    'js!SBIS3.StickyHeaderManager',
    'css!SBIS3.CONTROLS.DataGridView'
@@ -39,6 +40,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
       cMerge,
       constants,
       Deferred,
+      cDetection,
+      EventBus,
       ListView,
       dotTplFn,
       rowTpl,
@@ -59,10 +62,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
       headColumnTpl,
       GroupTemplate,
       SortingTemplate,
-      colHelpers,
       isEmpty,
-      strHelpers,
-      dcHelpers,
+      escapeHtml,
+      getTextWidth,
       Sanitize,
       StickyHeaderManager) {
 
@@ -94,7 +96,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          },
          getColumnVal = function (item, colName) {
             if (!colName || !(colName.indexOf("['") == 0 && colName.indexOf("']") == (colName.length - 2))){
-               return strHelpers.escapeHtml(item.get(colName));
+               return escapeHtml(item.get(colName));
             }
             var colNameParts = colName.slice(2, -2).split('.'),
                curItem = item,
@@ -241,6 +243,12 @@ define('js!SBIS3.CONTROLS.DataGridView',
                headColumns = prepareHeadColumns(cfg);
 
             cfg.headTpl = TemplateUtil.prepareTemplate(cfg.headTpl);
+            /* Чтобы не было дёрганий интерфейса сразу создаём шапку с актуальным состоянием видимости */
+            if (cfg.allowToggleHead && cfg.emptyHTML) {
+               headData.isVisible =  cfg._itemsProjection && cfg._itemsProjection.getCount();
+            } else {
+               headData.isVisible = true;
+            }
             cMerge(headData, headColumns);
             for (var i = 0; i < headData.content[1].length; i++) {
                columnTop = headData.content[0][i];
@@ -350,7 +358,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * @cssModifier controls-DataGridView__hasSeparator Устанавливает отображение линий-разделителей между строками.
     * При использовании контролов {@link SBIS3.CONTROLS.CompositeView} или {@link SBIS3.CONTROLS.TreeCompositeView} модификатор применяется только для режима отображения "Таблица".
     * @cssModifier controls-DataGridView__overflow-ellipsis Устанавливает обрезание троеточием текста во всех колонках таблицы.
-    * @cssModifier controls-ListView__padding-XS Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 8px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
+    * @cssModifier controls-ListView__padding-XS Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 0px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
     * @cssModifier controls-ListView__padding-S Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 12px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
     * @cssModifier controls-ListView__padding-M Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 16px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
     * @cssModifier controls-ListView__padding-L Устанавливает левый отступ первой колонки и правый отступ последней колонки, равный величине 20px. Значение отступа определено в <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">стандарте</a>.
@@ -380,6 +388,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
        * @param {Core/EventObject} eventObject Дескриптор события.
        */
       $protected: {
+         _headIsChanged: false,
          _rowTpl : rowTpl,
          _rowData : [],
          _isPartScrollVisible: false,                 //Видимость скроллбара
@@ -395,6 +404,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             left: 0,
             right: 0
          },
+         _partScrollRequestAnimationId: null,
          _currentScrollPosition: 0,                   //Текущее положение частичного скрола заголовков
          _scrollingNow: false,                        //Флаг обозначающий, происходит ли в данный момент скролирование элементов
          _partScrollRow: undefined,                   //Строка-контейнер, в которой лежит частичный скролл
@@ -418,22 +428,23 @@ define('js!SBIS3.CONTROLS.DataGridView',
              */
             /**
              * @typedef {Object} Columns
-             * @property {String} title Заголовок колонки. Отображение заголовков можно изменять с помощью опции {@link showHead}. Также с помощью опции {@link allowToggleHead} можно скрывать заголовки при отсутствии в списке данных.
-             * Если данных в списке много и применяется скролл, то для "прилипания" заголовков применяется опция {@link stickyHeader}. Преобразование заголовков списка производится с помощью опции {@link transformHead}.
+             * @property {String} title Заголовок колонки.
              * @property {String} field Название поля (из формата записи), значения которого будут отображены в данной колонке.
              * @property {String} width Ширина колонки. Значение необходимо устанавливать для колонок с фиксированной шириной.
              * Значение можно установить как в px (суффикс устанавливать не требуется), так и в %.
              * @property {Boolean} [highlight=true] Признак подсвечивания фразы при поиске. Если установить значение в false, то при поиске данных по таблице не будет производиться подсветка совпадений.
              * @property {String} [resultTemplate] Шаблон отображения колонки в строке итогов. Подробнее о создании такого шиблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/">Строка итогов</a>.
-             * @property {String} [className] Имя класса, который будет применён к каждой ячейке колонки.
-             * Стилевые классы:
+             * @property {String} [className] Имя CSS-класса, который будет применён к заголовку и всем ячейкам колонки.
+             * Список классов:
              * <ul>
-             *    <li><b>controls-DataGridView-cell-overflow-ellipsis</b> - текст внутри ячейки будет обрезаться троеточием (актуально для однострочных ячеек);</li>
-             *    <li><b>controls-DataGridView__td__textAlignRight</b> - текст внутри ячейки будет выровнен по правой стороне;</li>
-             *    <li><b>controls-DataGridView-cell-verticalAlignTop</b> - содержимое ячейки будет выравниваться по верхнему краю;</li>
-             *    <li><b>controls-DataGridView-cell-verticalAlignMiddle</b> - содержимое ячейки будет выравниваться по середине;</li>
-             *    <li><b>controls-DataGridView-cell-verticalAlignBottom</b> - содержимое ячейки будет выравниваться по нижнему краю.</li>
+             *    <li><b>controls-DataGridView-cell-overflow-ellipsis</b>. Класс устанавливает обрезание текста троеточием, когда он не помещается в ячейке. Актуально для однострочных ячеек.</li>
+             *    <li><b>controls-DataGrid__column__type-money</b>. Класс применяют для колонок, предназначенных для денежных полей с дробной частью (копейками). Заголовок колонки, для которой применён такой класс, будет выровнен по правому краю по целой части значения (см. <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">Правила выравнивания</a>).
+             *    <li><b>controls-DataGridView__td__textAlignRight</b>. Класс устанавливает выравнивание текста по правому краю.</li>
+             *    <li><b>controls-DataGridView-cell-verticalAlignTop</b>. Класс устанавливает выравнивание текста по верхнему краю.</li>
+             *    <li><b>controls-DataGridView-cell-verticalAlignMiddle</b>. Класс устанавливает выравнивание текста по центру.</li>
+             *    <li><b>controls-DataGridView-cell-verticalAlignBottom</b>. Класс устанавливает выравнивание текста по нижнему краю.</li>
              * </ul>
+             * Текст в заголовке и ячейках колонки по умолчанию выравнивается по левому краю.
              * @property {String} [headTemplate] Шаблон отображения шапки колонки. Подробнее о создании такого шаблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/columns/head-template/">Шаблон отображения заголовка</a>.
              * @property {String} [headTooltip] Всплывающая подсказка, отображаемая при наведении курсора на шапку колонки.
              * @property {String} [editor] Устанавливает редактор колонки для режима редактирования по месту.
@@ -463,8 +474,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              *    {{=it.ladder.get(it.item, it.field)}}
              * </pre>
              * @remark
-             * Если в настройке колонки имя поля соответствует шаблону ['Name1.Name2'] то при подготовке полей для рендеринга
-             * строки считаем, что в .get('Name1') находится рекорд и значение получаем уже у этого рекорда через .get('Name2')
+             * Если в настройке колонки имя поля соответствует шаблону ['Name1.Name2'], то при подготовке полей для рендеринга строки считаем, что в .get('Name1') находится рекорд, и значение получаем уже у этого рекорда через .get('Name2')
              * @property {Object.<String,String>} [templateBinding] Соответствие опций шаблона полям в рекорде.
              * @property {Object.<String,String>} [includedTemplates] Подключаемые внешние шаблоны, ключу соответствует поле it.included.<...>, которое будет функцией в шаблоне ячейки.
              *
@@ -706,7 +716,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if(td.length) {
             index = td.index();
             hoveredColumn = this._hoveredColumn;
-            colIndex = index + (this.getMultiselect() ? 1 : 0);
+            colIndex = index - (this.getMultiselect() ? 1 : 0);
 
             if(columns[colIndex] && !columns[colIndex].cellTemplate && !td[0].getAttribute('title')) {
                colValue = td.find('.controls-DataGridView__columnValue')[0];
@@ -714,7 +724,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                if(colValue && !colValue.getAttribute('title')) {
                   colValueText = colValue.innerText;
 
-                  if (dcHelpers.getTextWidth(strHelpers.escapeHtml(colValueText)) > colValue.offsetWidth) {
+                  if (getTextWidth(escapeHtml(colValueText)) > colValue.offsetWidth) {
                      colValue.setAttribute('title', colValueText);
                   }
                }
@@ -808,7 +818,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
       _redrawHead : function() {
          var
             headData,
-            headMarkup;
+            headMarkup,
+            height,
+            styles;
 
          if (!this._thead) {
             this._bindHead();
@@ -834,7 +846,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          } else {
             this._thead = newTHead.insertBefore(body);
          }
-         this.reviveComponents(this._thead);
 
          this._redrawColgroup();
          if (this.hasPartScroll()) {
@@ -842,11 +853,18 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this.getContainer().removeClass('controls-DataGridView__PartScroll__shown');
          }
          this._bindHead();
-         this._notify('onDrawHead');
          // Итоги как и заголовки отрисовываются в thead. Помечаем заголовки для фиксации при необходимости.
          if (this._options.stickyHeader && !this._options.showHead && this._options.resultsPosition === 'top') {
             this._updateStickyHeader(headData.hasResults);
          }
+         // Смещаем индикатор загрузки вниз на высоту заголовков.
+         height = this._thead.outerHeight();
+         styles = {top: height || ''};
+         // Корректируем хак ".ws-is-webkit .controls-AjaxLoader {height: 100%;}" из стилей ListView.
+         if (cDetection.webkit) {
+            styles.height =  height ? 'calc(100% - ' + height + 'px)' : '';
+         }
+         this._getAjaxLoaderContainer().css(styles);
       },
 
       _redrawFoot: function(){
@@ -858,13 +876,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._tfoot.replaceWith(newTFoot);
             this._tfoot = newTFoot;
          }
-         this.reviveComponents(this._tfoot);
          DataGridView.superclass._redrawFoot.call(this);
       },
 
       _redrawTheadAndTfoot: function(){
          this._redrawHead();
          this._redrawFoot();
+         this._headIsChanged = true;
       },
 
       _bindHead: function() {
@@ -932,7 +950,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
          table.toggleClass('ws-sticky-header__table', isSticky);
          if (isSticky) {
-            StickyHeaderManager.fixAllChildren(this.getContainer(), table);
+            EventBus.channel('stickyHeader').notify('onForcedStickHeader', this.getContainer());
          } else {
             StickyHeaderManager.unfixOne(table, true);
          }
@@ -1059,7 +1077,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             self = this,
             columns = this._options.enabled ? this._options.columns : [];
          if (!this._options.enabled) {
-            colHelpers.forEach(this._options.columns, function(item) {
+            this._options.columns.forEach(function(item) {
                columns.push(item.allowChangeEnable === false ? item : {});
             });
          }
@@ -1145,7 +1163,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
 
          if(leftOffset) {
-            this._moveThumbAndColumns({left: leftOffset});
+            /* Необхдимо скролить сразу, иначе бразуер по фокусу в контрол сдвинет контейнер таблицы */
+            this._moveThumbAndColumns({left: leftOffset}, true);
          }
       },
 
@@ -1266,14 +1285,43 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
          this._moveThumbAndColumns(cords);
       },
-
-      _moveThumbAndColumns: function(cords) {
-         this._setPartScrollShift(cords);
+   
+      /**
+       * Передвигает ползунок частичного скрола на переданную координату
+       * @param cords Значение, на которое нужно проскролить
+       * @param force выполнить скролл сразу, а не запланировать в ближайший кадр перерисовки бразуера (менее оптимально)
+       * @private
+       */
+      _moveThumbAndColumns: function(cords, force) {
+         var self = this;
          
+         /* Т.к. requestAnimationFrame работает асинхронно, надо выполнять лишь последний вызов,
+            иначе скролл может дёргаться */
+         this._cancelScrollRequest();
+         
+         if(!force) {
+            this._partScrollRequestAnimationId = window.requestAnimationFrame(function() {
+               self._scrollColumns(cords);
+            })
+         } else {
+            this._scrollColumns(cords);
+         }
+      },
+      
+      _cancelScrollRequest: function() {
+         if(this._partScrollRequestAnimationId) {
+            window.cancelAnimationFrame(this._partScrollRequestAnimationId);
+            this._partScrollRequestAnimationId = null;
+         }
+      },
+   
+      _scrollColumns: function(cords) {
+         this._setPartScrollShift(cords);
+      
          /* Ячейки двигаем через translateX, т.к. IE не двиагает ячейки через left,
-            если таблица лежит в контейнере с display: flex */
+          если таблица лежит в контейнере с display: flex */
          var movePosition = 'translateX(' + this._getColumnsScrollPosition() + 'px)';
-
+      
          for(var i= 0, len = this._movableElems.length; i < len; i++) {
             this._movableElems[i].style.transform = movePosition;
          }
@@ -1454,11 +1502,18 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       setMultiselect: function() {
          DataGridView.superclass.setMultiselect.apply(this, arguments);
+         // При установке multiselect создается отдельная td'шка под checkbox, которая не учитывается при редактировании по месту.
+         // Уничтожаем контроллер редактирования по месту, чтобы пересоздать его с новым набором колонок.
+         this._destroyEditInPlaceController();
 
          if(this.getItems()) {
             this.redraw();
          } else if(this._options.showHead) {
             this._redrawTheadAndTfoot();
+            this.reviveComponents(this._thead);
+            this._notify('onDrawHead');
+            this._headIsChanged = false;
+            this.reviveComponents(this._tfoot);
          }
       },
 
@@ -1504,13 +1559,21 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }, this);
          }
       },
-      _redrawResults: function() {
-        if (this._options.resultsPosition !== 'none'){
+      _redrawResults: function(revive) {
+         if (this._options.resultsPosition !== 'none'){
            this._redrawTheadAndTfoot();
-        }
+         }
+         if (revive) {
+            var self = this;
+            this.reviveComponents(this._thead).addCallback(function(){
+               self._notify('onDrawHead');
+               self._headIsChanged = false;
+            });
+         }
       },
       destroy: function() {
          if (this.hasPartScroll()) {
+            this._cancelScrollRequest();
             this._thumb.unbind('click');
             this._thumb = undefined;
             this._arrowLeft.unbind('click');
@@ -1607,7 +1670,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                value = null;
             }
             value = this._options._decorators.applyOnly(
-                  value === undefined || value === null ? '' : strHelpers.escapeHtml(value), {
+                  value === undefined || value === null ? '' : escapeHtml(value), {
                   highlight: column.highlight
                }
             );
@@ -1639,6 +1702,23 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _getTableContainer: function(){
          return this.getContainer().find('>.controls-DataGridView__table');
+      },
+
+
+      _reviveItems: function() {
+         //контролы в шапке тоже нужно оживить
+         if (this._container.find(this._thead).length == 0) {
+            this.reviveComponents(this._thead);
+         }
+         DataGridView.superclass._reviveItems.apply(this, arguments);
+      },
+
+      _onReviveItems: function() {
+         if (this._headIsChanged) {
+            this._notify('onDrawHead');
+            this._headIsChanged = false;
+         }
+         DataGridView.superclass._onReviveItems.apply(this, arguments);
       }
    });
 

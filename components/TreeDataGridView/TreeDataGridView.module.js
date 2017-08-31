@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    "Core/core-merge",
    "Core/constants",
    'Core/CommandDispatcher',
-   'Core/helpers/dom&controls-helpers',
+   'js!SBIS3.CONTROLS.Utils.Contains',
    "js!SBIS3.CONTROLS.DataGridView",
    "tmpl!SBIS3.CONTROLS.TreeDataGridView",
    "js!SBIS3.CONTROLS.TreeMixin",
@@ -18,11 +18,12 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'js!SBIS3.CONTROLS.Link',
    'css!SBIS3.CONTROLS.TreeDataGridView',
    'css!SBIS3.CONTROLS.TreeView'
-], function( IoC, cMerge, constants, CommandDispatcher, dcHelpers, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, MassSelectionHierarchyController) {
+], function( IoC, cMerge, constants, CommandDispatcher, contains, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, MassSelectionHierarchyController) {
 
 
    var
       DEFAULT_SELECT_CHECKBOX_WIDTH = 24, // Стандартная ширина чекбокса отметки записи.
+      DEFAULT_ROW_SELECT_WIDTH = 8,       // Стандартная ширина полоски выбранной строки.
       DEFAULT_FIELD_PADDING_SIZE = 5,     // Стандартный отступ в полях ввода 4px + border 1px. Используется для расчёта отступа при редактировании по месту.
       DEFAULT_EXPAND_ELEMENT_WIDTH = 26,  // Стандартная ширина стрелки разворота в дереве
       DEFAULT_CELL_PADDING_DIFFERENCE = 1,// Стандартная разница между оступом в ячейке табличного представления и отступом в текстовых полях (6px - 5px = 1px)
@@ -163,6 +164,12 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             /**
              * @cfg {String} Устанавливает отображение кнопки (>>) справа от названия папки.
              * @remark
+             * Варианты значений:
+             * <ul>
+             *    <li> true - стрелка показывается платформенным механизмом;</li>
+             *    <li> false - стрелка не отображается;</li>
+             *    <li> custom - стрелка показывается платформенным механизмом, но место расположения определяет прикладной программист, сделать это можно расположив "маркер" c классом js-controls-TreeView__editArrow;</li>
+             * </ul>
              * Папкой в контексте иерархического списка может быть запись типа "Узел" и "Скрытый узел". Подробнее о различиях между типами записей вы можете прочитать в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
              * <br/>
              * Кнопка отображается в виде иконки с классом icon-16 icon-View icon-primary (синяя двойная стрелочка). Изменение иконки не поддерживается.
@@ -214,7 +221,15 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             firstCol = $('td:first', this._getItemsContainer()),
       	   firstColWidth = this._options.multiselect ? firstCol.outerWidth() : 0,
       		secondCol = firstCol.next('td'),
-      		cellPadding = secondCol.outerWidth() - secondCol.width();
+      		cellPadding;
+   
+      	/* Второй колонки может и не быть, тогда считаем паддинг по первой */
+         if(!secondCol.length) {
+            secondCol = firstCol;
+         }
+   
+         cellPadding = secondCol.outerWidth() - secondCol.width();
+      	
       	return this.getContainer().width() - cellPadding - firstColWidth;
       },
 
@@ -228,7 +243,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             this._createAllFolderFooters();
          }
          //Если есть скролящиеся заголовки, нужно уменьшить ширину хлебных крошек в поиске до ширины таблицы
-         if (this._options.startScrollColumn && this._isSearchMode()){
+         if ((this._options.startScrollColumn || this.getContainer().hasClass('controls-DataGridView__tableLayout-auto')) && this._isSearchMode()){
          	this.getContainer().find('.controls-TreeView__searchBreadCrumbs').width(this._getSearchBreadCrumbsWidth());
          }
       },
@@ -285,11 +300,15 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             // Без режима поиска и при наличии родителя - необходимо учесть отступ иерархии
             levelOffset = !this._isSearchMode() && parentProj ? parentProj.getLevel() * this._getLevelPaddingWidth() : 0,
             hasCheckbox = container.hasClass('controls-ListView__multiselect'),
-            checkboxOffset = this._options.editingTemplate && hasCheckbox && !container.hasClass('controls-ListView__hideCheckBoxes') ? DEFAULT_SELECT_CHECKBOX_WIDTH : 0,
-            // Считаем необходимый отступ слева-направо:
-            // отступ чекбокса + отступ строки + отступ иерархии (в режиме поиска 0) + ширина стрелки разворота.
-            // Так же в режиме поиска не нужно учитывать DEFAULT_EXPAND_ELEMENT_WIDTH, т.к. expand { display: none; }
-            result = checkboxOffset + this._getRowPadding(target) + levelOffset + (this._isSearchMode() ? 0 : DEFAULT_EXPAND_ELEMENT_WIDTH);
+            checkboxOffset = 0,
+            result;
+         if (this._options.editingTemplate && hasCheckbox) {
+            checkboxOffset = container.hasClass('controls-ListView__hideCheckBoxes') ? DEFAULT_ROW_SELECT_WIDTH : DEFAULT_SELECT_CHECKBOX_WIDTH;
+         }
+         // Считаем необходимый отступ слева-направо:
+         // отступ чекбокса + отступ строки + отступ иерархии (в режиме поиска 0) + ширина стрелки разворота.
+         // Так же в режиме поиска или наличии модификатора controls-TreeView__hideExpands не нужно учитывать DEFAULT_EXPAND_ELEMENT_WIDTH, т.к. expand { display: none; }
+         result = checkboxOffset + this._getRowPadding(target) + levelOffset + (this._isSearchMode() || container.hasClass('controls-TreeView__hideExpands') ? 0 : DEFAULT_EXPAND_ELEMENT_WIDTH);
          // Если не задан шаблон редактирования строки и отображаются чекбоксы - компенсируем разницу оступов в полях ввода и ячеек таблицы (в полях ввода 5px, в таблице - 6px)
          if (!this._options.editingTemplate && hasCheckbox) {
             result += DEFAULT_CELL_PADDING_DIFFERENCE;
@@ -331,10 +350,12 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       collapseNode: function (key, hash) {
+         this._hideItemsToolbar();
          return TreeDataGridView.superclass.collapseNode.apply(this, arguments);
       },
 
       expandNode: function (key, hash) {
+         this._hideItemsToolbar();
          return TreeDataGridView.superclass.expandNode.apply(this, arguments);
       },
 
@@ -495,7 +516,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var res = TreeDataGridView.superclass._isHoverControl.apply(this, arguments);
 
          if(!res && (this._options.editArrow || this._options.arrowActivatedHandler)) {
-            return dcHelpers.contains(this.getEditArrow().getContainer()[0], target[0]);
+            return contains(this.getEditArrow().getContainer()[0], target[0]);
          }
          return res;
       },

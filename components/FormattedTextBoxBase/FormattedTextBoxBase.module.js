@@ -337,18 +337,28 @@ define(
        * @returns {boolean} true если курсор установлен
        */
       setCursor: function(groupNum, position) {
-         var insertInfo;
+         var insertInfo,
+            group;
          if ( !this.model  ||  this.model.length === 0) {
             throw new Error('setCursor. Не задана модель');
          }
-         insertInfo = this._calcPosition(groupNum, position);
-         if (!insertInfo) {
-            return false;
+         // Получаем текущую группу
+         group = this.model[groupNum];
+         // Если пытаемся установить курсор в конец группы то просто его устанавливаем.
+         // Иначе вычисляем позицию курсора с учетом вставки символа
+         if (group && group.isGroup && group.mask.length === position) {
+            insertInfo = {
+               groupNum: groupNum,
+               position: position
+            };
+         } else {
+            insertInfo = this._calcPosition(groupNum, position);
          }
-         this._options.cursorPosition.group = insertInfo.groupNum;
-         this._options.cursorPosition.position = insertInfo.position;
-
-         return true;
+         if (insertInfo) {
+            this._options.cursorPosition.group = insertInfo.groupNum;
+            this._options.cursorPosition.position = insertInfo.position;
+         }
+         return !!insertInfo;
       },
       /**
        * Проверяет подходит ли символ группе в заданной позиции
@@ -698,11 +708,16 @@ define(
          // Проверяем, является ли маска, с которой создается контролл, допустимой
          this._checkPossibleMask();
          this._inputField = $('.js-controls-FormattedTextBox__field', this.getContainer().get(0));
-         this._container.bind('focusin', function () {
+         //Control.module прерывает focusin, сюда он не долетает. нужно отлавливать наше событие, которое стрельнет после setActive
+         this.subscribe('onFocusIn', function () {
+            //событие onFocusIn не гарантирует, что нативный фокус уже стоит в компоненте. Для правильной работы установки каретки, переводим фокус вручную
             //В FireFox если фокус находтся не в блоке, куда мы хотим заколапсить курсор, то этого сделать не получится.
             //Поэтому перед созданием курсора, установим фокус в contenteditable блок.
             if (constants.browser.firefox) {
                self._inputField.focus();
+            }
+            else {
+               self.getContainer().focus();
             }
             self._focusHandler();
          });
@@ -1028,7 +1043,7 @@ define(
        * @private
        */
       _checkPossibleMask: function(){
-         if (this._possibleMasks && this._options.mask && Array.indexOf(this._possibleMasks, this._options.mask) == -1){
+         if (this._possibleMasks && this._options.mask && this._possibleMasks.indexOf(this._options.mask) == -1){
             throw new Error('_checkPossibleMask. Маска не удовлетворяет ни одной допустимой маске данного контролла');
          }
       },
@@ -1096,12 +1111,20 @@ define(
        * @see onInputFinished
        */
       setCursor: function(groupNum, position) {
-         var formatModel = this._getFormatModel();
+         var formatModel = this._getFormatModel(),
+            currentGroup = formatModel._options.cursorPosition.group,
+            currentPosition = formatModel._options.cursorPosition.position,
+            newContainer;
          if (!formatModel.setCursor(groupNum, position)) {
             return false;
          }
-         formatModel._options.newContainer = _getContainerByIndex.call(this, formatModel._options.cursorPosition.group);
+         newContainer = _getContainerByIndex.call(this, formatModel._options.cursorPosition.group);
+         formatModel._options.newContainer = newContainer;
          formatModel._options.newPosition = formatModel._options.cursorPosition.position;
+         // Если курсор не совпадает с текущей позицией передвигаем каретку
+         if (currentGroup !== groupNum || currentPosition !== position) {
+            _moveCursor(newContainer, formatModel._options.cursorPosition.position);
+         }
       },
 
       /**
@@ -1143,10 +1166,13 @@ define(
        * @see setCursor
        */
       setMask: function(mask) {
-         var self = this;
+         var self = this,
+            formatModel = this._getFormatModel();
          this._options.mask = mask;
-         this._getFormatModel().setMask(mask);
+         formatModel.setMask(mask);
          this._inputField.html(this._getHtmlMask());
+         // Перемещаем курсор в модели в начало т.к каретка становится вначале поля ввода.
+         formatModel.setCursor(0, 0);
          //TODO исправить выставление курсора
          setTimeout(function() {
             //Если контрол не сфокусирован, и мы вызываем нажатие alt, то

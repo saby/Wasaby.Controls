@@ -72,8 +72,11 @@ define([
       });
    
       context('need JQ', function() {
-         var getContainer = function() {
+         var getContainer = function(isInsideItem) {
                var elem = $('<div class="selectorButtonContainer"/>');
+               if(isInsideItem) {
+                  elem = $('<div class="js-controls-ListView__item controls-ListView__item"/>').append(elem);
+               }
                elem.appendTo('body');
                return elem;
          },
@@ -94,7 +97,9 @@ define([
             });
    
             after(function() {
-               removeContainer();
+               if(typeof window !== 'undefined') {
+                  removeContainer();
+               }
             });
             
             it('has event handler for onExecuted', function () {
@@ -103,6 +108,18 @@ define([
       
             it('has event handler for onExecute', function () {
                assert.isTrue(action.hasEventHandlers('onExecute'))
+            });
+   
+            it('config is not changed', function () {
+               let cfg = {
+                  componentsOptions: {
+                     handlers: {
+                        onSelectComplete: function () {}
+                     }
+                  }
+               };
+               action._buildComponentConfig(cfg);
+               assert.isTrue(typeof cfg.componentsOptions.handlers.onSelectComplete === "function");
             });
       
          });
@@ -115,7 +132,7 @@ define([
                   this.skip();
                } else {
                   selectorButton = new SelectorButton({
-                     element: getContainer(),
+                     element: getContainer(true),
                      displayProperty: 'title',
                      idProperty: 'id',
                      selectedItem: {id: 123, title: 'title'}
@@ -124,7 +141,9 @@ define([
             });
    
             after(function() {
-               removeContainer();
+               if(typeof window !== 'undefined') {
+                  removeContainer();
+               }
             });
    
             it('cross click check', function () {

@@ -13,12 +13,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        'js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
        'js!SBIS3.CONTROLS.DateRangeRelationController',
        'js!SBIS3.CONTROLS.FilterController',
-       "Core/helpers/collection-helpers",
        "Core/core-instance",
-       "Core/helpers/functional-helpers",
-       "Core/helpers/Object/find"
+        'Core/helpers/Function/forAliveOnly',
+       "Core/helpers/Object/find",
+       "Core/Deferred",
+       "Core/UserConfig"
     ],
-    function (cAbstract, cFunctions, cMerge, constants, HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController, FilterHistoryControllerUntil, DateRangeRelationController, FilterController, colHelpers, cInstance, fHelpers, find) {
+    function (cAbstract, cFunctions, cMerge, constants, HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController, FilterHistoryControllerUntil, DateRangeRelationController, FilterController, cInstance, forAliveOnly, find, Deferred, UserConfig) {
    /**
     * Контроллер для осуществления базового взаимодействия между компонентами.
     *
@@ -49,14 +50,17 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       }
    }
    function drawItemsCallback(operationPanel, view) {
+      var instances = operationPanel.getItemsInstances();
       //TODO: После перехода на экшены, кнопки ни чего знать о view не будут, и этот костыль уйдёт.
-      colHelpers.forEach(operationPanel.getItemsInstances(), function(instance) {
-         if (typeof instance.setLinkedView == 'function') {
-            instance.setLinkedView(view);
-         } else {
-            instance._options.linkedView = view;
+      for (var key in instances) {
+         if (instances.hasOwnProperty(key)) {
+            if (typeof instances[key].setLinkedView == 'function') {
+               instances[key].setLinkedView(view);
+            } else {
+               instances[key]._options.linkedView = view;
+            }
          }
-      }, this)
+      }
    }
 
    /**
@@ -98,7 +102,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
              */
             filterButton: undefined,
             /**
-             * @cfg {SBIS3.CONROLS.Pagign} объект пэйджинга
+             * @cfg {SBIS3.CONROLS.Paging} объект пэйджинга
              */
             paging: undefined,
             /**
@@ -244,6 +248,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       },
       
       bindFilters: function(filterButton, fastDataFilter, view) {
+         var self = this;
+         
          if(!this._filterController) {
             this._filterController = new FilterController({
                view: view,
@@ -252,15 +258,31 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             });
          }
    
-         this._filterController.bindFilters();
+         /* Из-за того, что историю фильтрации надо обновлять (из-за серверного рендеринга),
+            надо и все синхронизации производить после вычитки новых параметров */
+         (this._dFiltersReady || Deferred.success()).addCallback(forAliveOnly(function(res) {
+            self._filterController.bindFilters();
+            return res;
+         }, view));
       },
       
       /**
        * Метод для связывания истории фильтров с представлением данных
        */
-      bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, ignoreFiltersList, applyOnLoad, browser) {
+      bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, ignoreFiltersList, applyOnLoad, browser, loadHistory) {
+            /* Этот параметр необходим для возможности делать запрос в конструкторе,
+               когда мы не можем сделать соответствие фильтров по биндингам и нам нужен фильтр списка,
+               но применять надо не все фильтры */
          var noSaveFilters = ['Разворот', 'ВидДерева'],
-            view, filter, preparedStructure;
+            /* Т.к. параметры вычитываются один раз на сессию, то они могут "протухнуть" в случае,
+               если страница строится на сервере открыта на разных вкладках / тачках,
+               поэтому историю надо всегда актуализировать. */
+             dReady = loadHistory && historyId ? UserConfig.getParam(historyId) : Deferred.success(),
+             self = this,
+             byFilterButtonConfig = browser && browser._hasOption('filterButtonConfig') && find(browser._getOptions().bindings, function(elem) { return elem.propName && (elem.propName.indexOf("filterButtonConfig") !== -1); }),
+             view, filter, preparedStructure;
+            
+         this._dFiltersReady = dReady;
 
          if(browser) {
             view = browser.getView();
@@ -281,47 +303,59 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
          if(this._filterHistoryController) {
             this._filterHistoryController.destroy();
          }
-
-         this._filterHistoryController = new FilterHistoryController({
-            historyId: historyId,
-            filterButton: filterButton,
-            fastDataFilter: fastDataFilter,
-            view: view,
-            noSaveFilters: noSaveFilters
-         });
-
-         filterButton.setHistoryController(this._filterHistoryController);
-         if(applyOnLoad) {
-            filter = this._filterHistoryController.getActiveFilter();
-
-            if(filter) {
-               /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
-               preparedStructure = FilterHistoryControllerUntil.prepareStructureToApply(filter.filter, filterButton.getFilterStructure());
-
-               if(ignoreFiltersList && ignoreFiltersList.length) {
-                  FilterHistoryControllerUntil.resetStructureElementsByFilterKeys(filterButton, preparedStructure, ignoreFiltersList);
-               }
-
-               filterButton.setFilterStructure(preparedStructure);
-               
-               if(browser && browser._hasOption('filterButtonConfig')) {
-                  /* Если была забиндена не сама структура фильтров,
-                     а конфиг фильтров (это происходит, когда конфиг передают объектом на новом шаблонизаторе, а не строкой),
-                     то надо дополнительно обновить опцию filterButtonConfig, иначе после синхронизации сбросится стркутура. */
-                  if(find(browser._getOptions().bindings, function(elem) { return elem.propName === "filterButtonConfig" })) {
-                     browser.getProperty('filterButtonConfig').filterStructure = preparedStructure;
-                     view.setFilter(cMerge(view.getFilter, filter.viewFilter), true);
+   
+         dReady.addCallback(function(res) {
+            self._filterHistoryController = new FilterHistoryController({
+               historyId: historyId,
+               filterButton: filterButton,
+               fastDataFilter: fastDataFilter,
+               view: view,
+               noSaveFilters: noSaveFilters
+            });
+   
+            filterButton.setHistoryController(self._filterHistoryController);
+            if(applyOnLoad) {
+               filter = self._filterHistoryController.getActiveFilter();
+      
+               if(filter) {
+                  /* Надо вмерживать структуру, полученную из истории, т.к. мы не сохраняем в историю шаблоны строки фильтров */
+                  preparedStructure = FilterHistoryControllerUntil.prepareStructureToApply(filter.filter, filterButton.getFilterStructure());
+         
+                  if(ignoreFiltersList && ignoreFiltersList.length) {
+                     FilterHistoryControllerUntil.resetStructureElementsByFilterKeys(filterButton, preparedStructure, ignoreFiltersList);
+                  }
+         
+                  if (!byFilterButtonConfig) {
+                     filterButton.setFilterStructure(preparedStructure);
                   }
                }
             }
-         }
-
-         if(browser) {
-            setTimeout(fHelpers.forAliveOnly(function () {
-               // Через timeout, чтобы можно было подписаться на соыбтие, уйдёт с серверным рендерингом
-               browser._notifyOnFiltersReady();
-            }, view), 0);
-         }
+   
+            if(browser) {
+               setTimeout(forAliveOnly(function () {
+                  /* Через timeout, т.к. необходимо, чтобы уже работали бинды,
+                     иначе перетрётся опция после синхронизации из контекста. + это позволяет не проставлять фильтр,
+                     он проставится по биндам */
+                  if(byFilterButtonConfig && filter && applyOnLoad) {
+                     /* Если была забиндена не сама структура фильтров,
+                        а конфиг фильтров (это происходит, когда конфиг передают объектом на новом шаблонизаторе, а не строкой),
+                        то надо дополнительно обновить опцию filterButtonConfig, иначе после синхронизации сбросится стркутура. */
+                     var filterButtonConfig =  browser.getProperty('filterButtonConfig');
+   
+                     filterButtonConfig.filterStructure = preparedStructure;
+                     browser.setFilterButtonConfig(filterButtonConfig);
+                     
+                     if(!view.isLoading() && (!view.getItems() || !view.getItems().getCount())) {
+                        filterButton.applyFilter();
+                     }
+                  }
+                  // Через timeout, чтобы можно было подписаться на соыбтие, уйдёт с серверным рендерингом
+                  browser._notifyOnFiltersReady();
+               }, view), 0);
+            }
+            
+            return res;
+         });
       },
 
       bindPagingHistory: function(view, id) {
@@ -361,12 +395,13 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
          }
       },
 
-      bindScrollPaging: function(paging) {
+      bindScrollPaging: function(paging, hidden) {
          if (!this._scrollPagingController) {
             this._scrollPagingController = new ScrollPagingController({
                view: this._options.view,
                paging: paging || this._options.paging,
-               zIndex: this._options.pagingZIndex
+               zIndex: this._options.pagingZIndex,
+               hiddenPager: hidden
             });
          }
          this._scrollPagingController.bindScrollPaging();

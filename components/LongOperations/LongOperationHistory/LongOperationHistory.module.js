@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
       'html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryDateTemplate',
       'html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryTimeTemplate',
       'html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryStatusTemplate',
+      'js!SBIS3.CONTROLS.FastDataFilter',/*###*/
       'js!SBIS3.CONTROLS.DataGridView'
    ],
 
@@ -27,6 +28,11 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
 
          $protected: {
             _options: {
+               tabKey: null,
+               producer: null,
+               operationId: null,
+               isFailed: null,
+               failedOperation: null
             },
 
             _data: [{
@@ -49,20 +55,20 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
          },
 
          $constructor: function () {
-            this.getLinkedContext().setValue('filter', {});
+            this.getLinkedContext().setValue('filter', {onlyErrors:!!this._options.isFailed});
          },
 
          init: function () {
             moduleClass.superclass.init.call(this);
             this._view = this.getChildControlByName('browserView');
-            //###this.getChildControlByName('browserFastDataFilter').setItems(this._data);
+            this.getChildControlByName('browserFastDataFilter').setItems(this._data);
             this._bindEvents();
             this._reload();
          },
 
          _bindEvents: function () {
             var self = this;
-            this.subscribeTo(this._view, 'onPropertyChanged', function (evt, property) {
+            this.subscribeTo(this._view, /*'onPropertiesChanged'*/'onPropertyChanged', function (evtName, property) {
                if (property === 'filter') {
                   self._reload();
                }
@@ -91,21 +97,27 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
                );
             }
             else {
+               // Если не использовать RecordSet, то в DataGridView будет создан оборачивающий источник данных класса Memory и события
+               // onPropertyChange:filter начнут удваиваться (в реализации 3.7.5.150)
+               // (ItemsControlMixin:1634 и затем ItemsControlMixin:1686 вместо одного ItemsControlMixin:1803)
                var data = new RecordSet({
                   idProperty: 'id'
                });
+               var item = new LongOperationHistoryItem({
+                  title: failedOperation.get('title'),
+                  id: failedOperation.get('id'),
+                  //producer: failedOperation.get('producer'),
+                  endedAt: new Date(failedOperation.get('startedAt').getTime() + (failedOperation.get('timeSpent') || 0) + (failedOperation.get('timeIdle') || 0)),
+                  errorMessage: failedOperation.get('resultMessage') || 'Ошибка',
+                  isFailed: true
+               });
                data.assign([new Record({
-                  rawData: new LongOperationHistoryItem({
-                     title: failedOperation.get('title'),
-                     id: failedOperation.get('id'),
-                     //producer: failedOperation.get('producer'),
-                     endedAt: new Date(failedOperation.get('startedAt').getTime() + (failedOperation.get('timeSpent') || 0)),
-                     errorMessage: failedOperation.get('resultMessage') || 'Ошибка',
-                     isFailed: true
-                  }),
+                  rawData: item,
                   idProperty: 'id'
                })]);
                this._view.setItems(data);
+
+
             }
          }
       });

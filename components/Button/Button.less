@@ -1,151 +1,79 @@
 .controls-Button {
-   .button-default-style();
-   background: @button-bg;
+   .button-default-style(@button-font-size);
    background-size: contain;
    white-space: nowrap;
    .user-select();
-   color: @button-text-color;
+   border-style: @default-border-style;
+   border-width: @default-border-width;
    min-width: @button-min-width;
-   height: @button-height;
-   line-height: @button-line-height;
-   .border-radius(@button-border-radius);
-   .box-shadow(@button-shadow);
+   line-height: normal;
+   text-decoration: none;
 
-   &.controls-Button__filled, &.controls-Button__big.controls-Button__filled {
-      background-color: #ffffff;
+   &:active {
+      text-decoration: none !important;
    }
 
-   .controls-Button__text {
-      display: block;
-      margin: @button-text-margin;
-      border: none;
-   }
-
-   // Button's icon
-   .controls-Button__icon {
-      position: absolute;
-
-      &.icon-small {
-         .button-mixin(@button-icon-left-offset; @icon-small-size; @button-border-width; @button-text-margin-left; @button-text-margin-right);
+   &.controls-Button-color__ {
+      &default {
+         color: @button-text-color;
+         background: @button-bg-color;
+         border-color: @button-border-color;
+         &:active:not(.ws-disabled) {
+            background: @button-bg-active;
+         }
       }
-      &.icon-medium {
-         .button-mixin(@button-icon-medium-left-offset; @icon-medium-size; @button-border-width; @button-text-margin-left; @button-text-margin-right);
-      }
-      &.icon-large {
-         .button-mixin(@button-icon-large-left-offset; @icon-large-size; @button-border-width; @button-text-margin-left; @button-text-margin-right);
-      }
-
-      // оставляем для совместимости
-      &.icon-16 {
-         .button-mixin(@button-icon-left-offset; @icon-small-size; @button-border-width; @button-text-margin-left; @button-text-margin-right);
-      }
-      &.icon-24 {
-         .button-mixin(@button-icon-big-left-offset; @icon-medium-size; @button-border-width; @button-text-margin-left; @button-text-margin-right);
-      }
-      &.icon-32 {
-         .button-mixin(@button-icon-32-left-offset; @icon-large-size; @button-border-width; @button-text-margin-left; @button-text-margin-right);
+      &primary {
+         color: @button-primary-text-color;
+         background: @button-primary-bg-color;
+         border-color: @button-primary-border-color;
+         &:active:not(.ws-disabled) {
+            background: @button-primary-bg-active;
+         }
       }
    }
-   /* Start Button themes */
-   // Normal default button
-   &.controls-Button__default {
-      border: @button-border;
-
-      &.controls-Click__active {
-         color: @button-active-text-color;
-         border: @button-active-border;
-         background: @button-active-bg;
-      }
-   }
-
-   // Normal primary button
+   /* TODO https://online.sbis.ru/opendoc.html?guid=51396ef7-59e1-417a-a74d-a8571cec2f6d
+      на класс controls-Button__primary завязаны прикладники и тесты
+   */
    &.controls-Button__primary {
-      border: @button-primary-border;
-      background: @button-primary-bg;
       color: @button-primary-text-color;
-
-      &.controls-Click__active {
-         color: @button-primary-active-text-color;
-         border: @button-primary-active-border;
-         background: @button-primary-active-bg;
+      background: @button-primary-bg-color;
+      border-color: @button-primary-border-color;
+      &:active:not(.ws-disabled) {
+         background: @button-primary-bg-active;
       }
    }
+
    /* End Button Themes */
-
-   /* Start Button sizes */
-   &.controls-Button__big {
-      font-size: @button-big-font-size;
-      height: @button-big-height;
-      line-height: @button-big-height -  2 * @button-border-width;
-      .border-radius(@button-big-border-radius);
-
-      .controls-Button__text {
-         margin: @button-big-text-margin;
+   &.controls-Button-size__ {
+      &default:not(.controls-Button__big) {
+         font-size: @button-font-size;
+         height: @default-height;
+         .border-radius(@button-border-radius);
+         .controls-Button__wrapper {
+            padding: @button-padding;
+         }
       }
-
-      // Button's icon
-      .controls-Button__icon {
-         position: absolute;
-
-         &.icon-small {
-            .button-mixin(@button-big-icon-left-offset; @icon-small-size; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
-         }
-         &.icon-medium {
-            .button-mixin(@button-big-icon-big-left-offset; @icon-medium-size; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
-         }
-         &.icon-large {
-            .button-mixin(@button-big-icon-32-left-offset; @icon-large-size; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
-         }
-
-
-         // оставляем для совместимости
-         &.icon-16 {
-              .button-mixin(@button-big-icon-left-offset; 16px; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
-           }
-         &.icon-24 {
-            .button-mixin(@button-big-icon-big-left-offset; 24px; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
-         }
-         &.icon-32 {
-            .button-mixin(@button-big-icon-32-left-offset; 32px; @button-border-width; @button-big-text-margin-left; @button-big-text-margin-right);
+      &l {
+         font-size: @button-large-font-size;
+         height: @button-large-height;
+         .border-radius(@button-large-border-radius);
+         .controls-Button__wrapper {
+            padding: @button-big-padding;
          }
       }
    }
-   /* End Button sizes */
-
-   &.controls-Button__withoutCaption {
-      min-width: @button-without-caption-min-width;
-      .controls-Button__icon {
-         left: 50%;
-         &.icon-small {
-            margin-left: -@icon-small-size/2;
-         }
-         &.icon-medium {
-            margin-left: -@icon-medium-size/2;
-         }
-         &.icon-large {
-            margin-left: -@icon-large-size/2;
-         }
-
-         &.icon-16 {
-            margin-left: -8px;
-         }
-         &.icon-24 {
-            margin-left: -12px;
-         }
-         &.icon-32 {
-            margin-left: -16px;
-         }
-
+   &.controls-Button__big {
+      font-size: @button-large-font-size;
+      height: @button-large-height;
+      line-height: @default-height;
+      .border-radius(@button-large-border-radius);
+      .controls-Button__wrapper {
+         padding: @button-big-padding;
       }
-      &.controls-Button__big {
-         .controls-Button__icon {
-            left: 50%;
-         }
-      }
-      .controls-Button__text {
-         display: none;
-      }
-      .baseline-fix();
+   }
+
+   .controls-Button__wrapper {
+      .justify-content(center);
    }
 
    &.ws-disabled {
@@ -158,49 +86,47 @@
       }
    }
 
-   &.controls-Button__filled {
-      background-color: #ffffff;
+   .controls-Button__icon + .controls-Button__text {
+      margin-left: @button-icon-gap;
    }
-   &.controls-Button__ellipsis .controls-Button__text {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+   .controls-Button__text {
+      .text-overflow();
+   }
+
+   &.controls-Button__withoutCaption {
+      .controls-Button__text {
+         display: none;
+      }
    }
 }
 
 .ws-is-desktop-platform {
-   .controls-Button:not(.ws-disabled):not(.controls-Click__active) {
-      &.controls-Button__default {
-         &:hover {
-            color: @button-hover-text-color;
-            border: @button-hover-border;
-            .box-shadow(@button-hover-shadow);
-            background: @button-hover-bg;
+   .controls-Button:not(.ws-disabled):not(:active) {
+      &.controls-Button-color__ {
+         &default {
+            &:hover {
+               background: @button-hover-bg;
+            }
+         }
+         &primary {
+            &:hover {
+               background: @button-primary-hover-bg;
+            }
          }
       }
-      // Normal primary button
       &.controls-Button__primary {
          &:hover {
-            color: @button-primary-hover-text-color;
-            border: @button-primary-hover-border;
-            .box-shadow(@button-primary-hover-shadow);
             background: @button-primary-hover-bg;
          }
       }
    }
 }
 
-.ws-is-firefox {
-   .controls-Button {
-      line-height: calc(@button-line-height~' - 1px');
-      .controls-Button__text {
-         padding-bottom: 1px;
-      }
-      .controls-Button__icon.icon-24 {
-         margin-top: -13px;
-      }
-      &.controls-Button__big {
-         line-height: @button-big-height -  2 * @button-border-width;
-      }
+@-moz-document url-prefix() {
+   .controls-Button .controls-Button__text {
+      height: @button-text-height-ff;
+   }
+   .controls-Button__big .controls-Button__text {
+      height: auto;
    }
 }

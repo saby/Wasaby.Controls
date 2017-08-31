@@ -1,7 +1,16 @@
 define('js!SBIS3.CONTROLS.ScrollPagingController', 
-   ['js!SBIS3.StickyHeaderManager', 'Core/Abstract', 'Core/core-instance', 'Core/WindowManager', 'css!SBIS3.CONTROLS.ScrollPagingController'],
-   function(StickyHeaderManager, cAbstract, cInstance, WindowManager) {
+   [
+      'js!SBIS3.StickyHeaderManager',
+      'Core/Abstract',
+      'Core/core-instance',
+      'Core/WindowManager',
+      'Core/helpers/Function/throttle',
+      'css!SBIS3.CONTROLS.ScrollPagingController'
+   ],
+   function(StickyHeaderManager, cAbstract, cInstance, WindowManager, throttle) {
 
+   var SCROLL_THROTTLE_DELAY = 200;
+   
    var ScrollPagingController = cAbstract.extend({
       $protected: {
          _options: {
@@ -23,6 +32,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          WindowManager.setVisible(this._options.zIndex);
          // отступ viewport от верха страницы
          this._containerOffset = this._getViewportOffset();
+         this._scrollHandler = throttle.call(this, this._scrollHandler.bind(this), SCROLL_THROTTLE_DELAY, true);
       },
 
       _getViewportOffset: function(){
@@ -35,9 +45,10 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
       },
 
       bindScrollPaging: function(paging) {
-         var view = this._options.view, self = this;
+         var view = this._options.view,
+             isTree = cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin');
+        
          paging = paging || this._options.paging;
-         var isTree = cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin');
 
          if (isTree){
             view.subscribe('onSetRoot', this._changeRootHandler.bind(this));
@@ -49,11 +60,10 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
 
          paging.subscribe('onFirstPageSet', this._scrollToFirstPage.bind(this));
 
-         paging.subscribe('onLastPageSet', this._scrollToLastPage.bind(this));
+         paging.subscribe('onLastPageSet', this._scrollToLastPage.bind(this))
+               .subscribe('onSelectedItemChange', this._pagingSelectedChange.bind(this));
 
-         paging.subscribe('onSelectedItemChange', this._pagingSelectedChange.bind(this));
-
-         view._getScrollWatcher().subscribe('onScroll', this._scrollHandler.bind(this));
+         view._getScrollWatcher().subscribe('onScroll', this._scrollHandler);
 
          $(window).on('resize.wsScrollPaging', this._resizeHandler.bind(this));
       },
@@ -66,8 +76,8 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          this.updateScrollPages(true);         
       },
 
-      _scrollHandler: function() {
-         var pageNumber = this._calculateScrollPage();
+      _scrollHandler: function(event, scrollTop) {
+         var pageNumber = this._calculateScrollPage(scrollTop);
          var paging = this._options.paging;
          if (pageNumber >= 0 && paging.getItems() && this._currentScrollPage != pageNumber) {
             if (pageNumber > paging.getPagesCount()) {
@@ -105,7 +115,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
 
       _isPageStartVisisble: function(page){
          var top;
-         if (page.element.parents('html').length == 0) {
+         if (page.element.parents('html').length === 0) {
             return false;
          }
 
@@ -128,7 +138,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          }
       },
 
-      _calculateScrollPage: function(){
+      _calculateScrollPage: function(scrollTop){
          var view = this._options.view;
          if (this._options.view.isScrollOnBottom(true)){
             return this._scrollPages.length - 1;
@@ -183,20 +193,20 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             if (view.getItems() && view.getItems().getCount() && element.length){
                this._scrollPages.push({
                   element: element,
-                  offset: self._pageOffset 
+                  offset: self._pageOffset
                });
             }
          }
 
-         var topWrapperHeight = $('.controls-ListView__virtualScrollTop', view.getContainer()).height() || 0
+         var topWrapperHeight = $('.controls-ListView__virtualScrollTop', view.getContainer()).height() || 0;
 
          //Считаем оффсеты страниц начиная с последней (если ее нет - сначала)
          listItems.slice(lastPageStart ? lastPageStart + 1 : 0).each(function(){
             var $this = $(this),
                $next = $this.next('.controls-ListView__item'),
                // Считаем через position, так как для плитки не подходит сложение высот
-               curBottom = $this.position().top + $this.outerHeight(true) + topWrapperHeight,
-               nextBottom = $next[0] ? $next.position().top + $next.outerHeight(true) : 0 + topWrapperHeight;
+               curBottom = Math.floor($this.position().top) + $this.outerHeight(true) + topWrapperHeight,
+               nextBottom = $next[0] ? Math.floor($next.position().top) + $next.outerHeight(true) : 0 + topWrapperHeight;
             curBottom = curBottom > pageOffset ? curBottom : pageOffset;
             nextBottom = nextBottom > curBottom ? nextBottom : curBottom;
             pageOffset = curBottom;
@@ -222,10 +232,12 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          this._options.paging.setPagesCount(pagesCount);
 
          //Если есть страницы - покажем paging
-         this._options.paging.setVisible(pagesCount > 1);
+         
+         this._options.paging.setVisible((pagesCount > 1) && !this._options.hiddenPager);
       },
 
       destroy: function(){
+         this._options.view._getScrollWatcher().unsubscribe('onScroll', this._scrollHandler);
          clearTimeout(this._windowResizeTimeout);
          $(window).off('resize.wsScrollPaging');
          WindowManager.releaseZIndex(this._options.zIndex);

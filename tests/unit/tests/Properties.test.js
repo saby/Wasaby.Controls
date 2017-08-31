@@ -2,10 +2,11 @@
  * Created by dv.zuev on 18.05.2017.
  */
 define([
-   'js!WSControls/Control/Base',
+   'Core/Control',
    'Core/vdom/Synchronizer/resources/SyntheticEvent'
 ], function (
-   Base, SyntheticEvent
+   Base,
+   SyntheticEvent
 ) {
    'use strict';
 
@@ -16,14 +17,11 @@ define([
          visible: false
       };
 
-
-
       Base.iWantVDOM = true;
       var baseDis = new Base(cfg);
       var base = new Base({});
 
       /* Список всех опций
-       this._savedConfigs;
        this._thisIsInstance;
        this._icanrulefocus;
        this._parent;
@@ -90,7 +88,6 @@ define([
        */
 
       function assertInitProperties() {
-         assert.isTrue(Array.isArray(this._savedConfigs));
          assert.isTrue(typeof this._thisIsInstance === 'boolean');
          assert.isTrue(this.hasOwnProperty('_parent'));
          assert.isTrue(this.hasOwnProperty('_context'));
@@ -139,9 +136,6 @@ define([
          assert.isTrue(this.hasOwnProperty('_isInitComplete'));
          assert.isTrue(this.hasOwnProperty('_prevEnabled'));
          assert.isTrue(this.hasOwnProperty('_options'));
-         assert.isTrue(this._options.hasOwnProperty('name'));
-         assert.isTrue(typeof this._options.id === 'string');
-         assert.isTrue(this._id === this._options.id);
          assert.isTrue(this.hasOwnProperty('_handlers'));
          assert.isTrue(Array.isArray(this._subscriptions));
          assert.isTrue(Array.isArray(this._subDestroyControls));

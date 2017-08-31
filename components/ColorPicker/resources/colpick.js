@@ -491,7 +491,7 @@ For usage and examples: colpick.com/plugin
 			rgb.g.toString(16),
 			rgb.b.toString(16)
 		];
-		$.each(hex, function (nr, val) {
+		hex.forEach(function (val, nr) {
 			if (val.length == 1) {
 				hex[nr] = '0' + val;
 			}

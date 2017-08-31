@@ -3,10 +3,9 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
    'js!SBIS3.CORE.CompoundControl',
    'tmpl!SBIS3.CONTROLS.SelectorWrapper',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-   'Core/helpers/collection-helpers',
    'Core/core-instance',
    'Core/Deferred'
-], function (CompoundControl, dotTplFn, TemplateUtil, collectionHelpers, cInstance, Deferred) {
+], function (CompoundControl, dotTplFn, TemplateUtil, cInstance, Deferred) {
 
 
    /**
@@ -119,12 +118,12 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
             }
 
             if(diff.added.length) {
-               collectionHelpers.forEach(diff.added, function(addedKey) {
+               diff.added.forEach(function(addedKey) {
                   /* Записи с выделенным ключём может не быть в recordSet'e
                    (например это запись внутри папки или на другой странице) */
                   index = selectedItems.getIndexByValue(idProperty, addedKey);
 
-                  if(index !== -1) {
+                  if(index !== -1 && self._checkItemForSelect(selectedItems.at(index))) {
                      result.added.push(selectedItems.at(index));
                   }
                });
@@ -199,7 +198,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
 
          result.added.push(item);
          this.sendCommand('selectorWrapperSelectionChanged', result);
-         this.sendCommand('selectComplete');
+         this.sendCommand('selectComplete', item);
       },
 
       _onChangeHoveredItemHandler: function(event, hoveredItem) {
@@ -217,7 +216,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
             /* Показываем по стандарту кнопку "Выбрать" у папок при множественном выборе или при поиске у крошек в единичном выборе */
             if (hoveredItem.container && selectAction) {
                if (this._isBranch(hoveredItem.record) && this.getSelectionType() !== 'leaf') {
-                  if (!linkedObject.getSelectedKeys().length && (linkedObject.getMultiselect() || linkedObject._isSearchMode())) {
+                  if (!linkedObject.getSelectedKeys().length && (linkedObject.getMultiselect() ||  this.getSelectionType() === 'allBySelectAction' || linkedObject._isSearchMode())) {
                      selectAction.show();
                   } else {
                      selectAction.hide()

@@ -1,7 +1,8 @@
 /**
  * Created by am.gerasimov on 19.01.2016.
  */
-define('js!SBIS3.CONTROLS.Utils.TemplateUtil', [], function() {
+//Приходится пока что реквайрить dot, потому что очень многие задают шаблоны стркоами
+define('js!SBIS3.CONTROLS.Utils.TemplateUtil', ['Core/js-template-doT'], function() {
 
     /**
      * @class SBIS3.CONTROLS.Utils.TemplateUtil

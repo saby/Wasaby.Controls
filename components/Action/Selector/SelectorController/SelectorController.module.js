@@ -5,16 +5,17 @@ define('js!SBIS3.CONTROLS.SelectorController', [
    "Core/CommandDispatcher",
    "js!SBIS3.CORE.CompoundControl",
    "js!WS.Data/Di",
-   "Core/helpers/collection-helpers",
    "Core/core-instance",
    "Core/core-merge",
+   "Core/core-functions",
+   "js!WS.Data/Entity/Record",
    "js!WS.Data/Source/SbisService",
    "js!SBIS3.CONTROLS.Utils.Query",
    "js!SBIS3.CONTROLS.Utils.OpenDialog",
-   "js!SBIS3.CONTROLS.SelectorWrapper",
-   "js!WS.Data/Collection/List"
+   "js!WS.Data/Collection/List",
+   "js!SBIS3.CONTROLS.SelectorWrapper"
 ],
-    function (CommandDispatcher, CompoundControl, Di, collectionHelpers, cInstance, cMerge, SbisService, Query, OpenDialogUtil) {
+    function (CommandDispatcher, CompoundControl, Di, cInstance, cMerge, cFunctions, Record, SbisService, Query, OpenDialogUtil, List) {
 
        'use strict';
 
@@ -82,6 +83,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
                  */
                 filter: null
              },
+             _linkedObject: undefined,
              _selectButton: null
           },
           $constructor: function () {
@@ -137,6 +139,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
                 selectedItems: this._options.selectedItems,
                 selectionType: this._options.selectionType
              });
+             this._linkedObject = chooserWrapper._getLinkedObject();
           },
 
           /**
@@ -163,14 +166,14 @@ define('js!SBIS3.CONTROLS.SelectorController', [
              }
 
              if(difference.removed.length) {
-                collectionHelpers.forEach(difference.removed, function (removedKey) {
+                difference.removed.forEach(function(removedKey) {
                    currentItems.removeAt(currentItems.getIndexByValue(idProperty, removedKey));
                 });
                 onChangeSelection();
              }
 
              if(difference.added.length) {
-                collectionHelpers.forEach(difference.added, function(item) {
+                difference.added.forEach(function(item) {
                    var index = currentItems.getIndexByValue(idProperty, item.get(idProperty));
 
                    if(currentItems.getCount() && !multiselect && index === -1) {
@@ -195,8 +198,33 @@ define('js!SBIS3.CONTROLS.SelectorController', [
             * @see selectorWrapperInitialized
             * @see selectorWrapperSelectionChanged
             */
-          _selectComplete: function() {
-             this._notify('onSelectComplete', this._options.selectedItems.clone());
+          _selectComplete: function(item) {
+             var
+                list,
+                filter,
+                selection,
+                dataSource,
+                self = this;
+             if (this._linkedObject && this._linkedObject._options.useSelectAll) {
+                filter = cFunctions.clone(this._linkedObject.getFilter());
+                dataSource = this._linkedObject.getDataSource();
+                //Закончить выбор элементов можно двумя способами:
+                //1) Нажать кнопку "Выбрать" в шапке диалога;
+                //2) Нажать на кнопку "Выбрать" в опциях над записью у элемента таблицы, либо кликом по элементу таблицы.
+                //В первом случае элементы выборки мы получим исходя из состояния выделения в таблице.
+                //Во стором случае, элемент который был выбран, придёт аргументом в этот обработчик, и в выборку мы добавим только его.
+                selection = cInstance.instanceOfModule(item, 'WS.Data/Entity/Model') ? {
+                   marked: [item.get(this._linkedObject.getProperty('idProperty'))], excluded: []
+                } : this._linkedObject.getSelection();
+                filter['selection'] = Record.fromObject(selection, dataSource.getAdapter());
+                Query(dataSource, [filter]).addCallback(function(recordSet) {
+                   list = new List();
+                   list.assign(recordSet.getAll());
+                   self._notify('onSelectComplete', list);
+                });
+             } else {
+                this._notify('onSelectComplete', this._options.selectedItems.clone());
+             }
           },
 
           _setContextItems: function(items){

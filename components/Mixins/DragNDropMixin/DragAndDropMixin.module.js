@@ -2,9 +2,8 @@
  * Created by am.gerasimov on 26.05.2015.
  */
 define('js!SBIS3.CONTROLS.DragAndDropMixin', [
-   "Core/constants",
-   "Core/helpers/collection-helpers"
-], function( constants,colHelpers) {
+   "Core/constants"
+], function(constants) {
 
    var isMobile = constants.browser.isMobilePlatform;
 
@@ -17,16 +16,13 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [
             y: 0
          },
          _dragStartEventHandler: undefined,
-         _eventHandlers: isMobile ?
-            {
-               touchmove: '_moveAt',
-               touchend: '_moveEnd',
-               touchcancel: '_moveEnd'
-            }  :
-            mouseHandlers = {
-               mousemove: '_moveAt',
-               mouseup: '_moveEnd'
-            }
+         _eventHandlers: {
+            touchmove: '_moveAt',
+            touchend: '_moveEnd',
+            touchcancel: '_moveEnd',
+            mousemove: '_moveAt',
+            mouseup: '_moveEnd'
+         }
       },
 	   $constructor: function () {
 		   this._dragStartEventHandler = this._startEventHandler.bind(this);
@@ -69,11 +65,11 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [
        * Выключает/включает стандартный drag-N-Drop браузера
        */
       _toggleNativeDragNDrop: function(enable) {
-         colHelpers.forEach(this._dragContainers, function(elem) {
-            elem.ondragstart = function() {
+         for (var i = 0; i < this._dragContainers.length; i++) {
+            this._dragContainers[i].ondragstart = function() {
                return enable;
             }
-         });
+         }
       },
 
       /*
@@ -81,7 +77,7 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [
        */
       _startEventHandler: function(e) {
          /* Если нажали не левой клавишей мыши, то не будем обрабатывать перенос */
-         if(isMobile ? e.originalEvent.touches.length > 1 : e.which !== 1) return;
+         if(e.originalEvent.touches ? e.originalEvent.touches.length > 1 : e.which !== 1) return;
 
          /* Найдём родителя, относительно которого происходит позиционирование */
          this._withinElement = e.target.offsetParent;
@@ -97,6 +93,10 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [
       _moveAt: function(e) {
          this._preparePageXY(e);
          this._dragMove(e,{top: e.pageY - this._startPosition.y, left: e.pageX - this._startPosition.x});
+         /* Чтобы не скролилась страница при пететаскивании  (актуально для планшетов и при работе с телевизором) */
+         if(e.originalEvent.touches) {
+            e.preventDefault();
+         }
       },
 
       /**

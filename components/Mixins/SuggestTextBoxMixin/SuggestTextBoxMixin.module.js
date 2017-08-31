@@ -9,11 +9,14 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    'js!WS.Data/Collection/RecordSet',
    'js!WS.Data/Di',
    "js!WS.Data/Query/Query",
+   'Core/Deferred',
+   "Core/ParallelDeferred",
    "Core/core-instance",
    "Core/CommandDispatcher",
    "Core/core-functions",
    "Core/IoC",
-   "Core/helpers/Function/once"
+   "Core/helpers/Function/once",
+   "Core/detection"
 ], function (
    constants,
    SearchController,
@@ -22,11 +25,14 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    RecordSet,
    Di,
    Query,
+   Deferred,
+   ParallelDeferred,
    cInstance,
    CommandDispatcher,
    cFunctions,
    IoC,
-   once) {
+   once,
+   detection) {
 
    'use strict';
 
@@ -44,6 +50,23 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
     * @author Крайнов Дмитрий Олегович
     */
    var SuggestTextBoxMixin = /**@lends SBIS3.CONTROLS.SuggestTextBoxMixin.prototype  */{
+      /**
+       * @event onBeforeLoadHistory Происходит перед вызовом списочного метода для получения истории
+       * @remark
+       * В некоторых случаях есть необходимость дополнить выводимую историю своими записями.
+       * Для этого из события нужно вернуть deferred, который в callback вернет RecordSet с записями, которые требуется добавить к истории
+       * <pre>
+       *    SuggestTextBox.subscribe('onBeforeLoadHistory', function(eventObject, idArray) {
+           *        if (idArray.length < 12) {
+           *           var myQuery = self.getMyQuery().limit(12 - idArray.length);
+           *           var queryDeferred = self.getMyDataSource().query(myQuery);
+           *           eventObject.setResult(queryDeferred);
+           *        }
+           *    });
+       * </pre>
+       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {Array} idArray Массив идентификаторов записей, которые будут получены списочным методом
+       */
       $protected: {
          _changedByKeyboard: false,  /* {Boolean} Флаг, обозначающий, что изменения были вызваны действиями с клавиатуры */
          /* Т.к. при выборе из списка, фокус может находиться на нём, а не на поле ввода,
@@ -65,12 +88,14 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             /**
              * @cfg {Boolean} Использовать механизм смены неверной раскладки по новому стандарту
              */
-            keyboardLayoutRevertNew: true
+            keyboardLayoutRevertNew: true,
+            // TODO разобраться с множественным вызовом на фокус и клик _observableControlFocusHandler https://online.sbis.ru/opendoc.html?guid=19af9bf9-0d16-4f63-8aa8-6d0ef7ff0799
+            task1174306848: false
          }
       },
       $constructor: function () {
          var self = this;
-
+         this._publish('onBeforeLoadHistory');
          this._options.observableControls.unshift(this);
          
          /* Инициализация searchController'a происходит лениво,
@@ -93,48 +118,77 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
       },
 
       _showHistory: function () {
-         if (this._historyController.getCount()) {
-            this._getHistoryRecordSet().addCallback(function(rs) {
-               if (rs.getCount()) {
-                  this.getList().setItems(rs);
-               }
-               else {
-                  this.getList().setItems(this._getHistoryRecordSetSync()); //В рамках совместимости оставляю старое поведение
-               }
+         this._getHistoryRecordSet().addCallback(function (rs) {
+            if (rs.getCount()) {
+               this.getList().setItems(rs);
                this.showPicker();
-            }.bind(this)).addErrback(function(err){
-               //Если запрос был прерван нами, то ничего не делаем
-               if (!err.canceled) {
-                  //В рамках совместимости оставляю старое поведение
-                  if (!err.processed) {
-                     IoC.resolve('ILogger').log(this._moduleName, 'Списочный метод не смог вычитать записи по массиву идентификаторов');
-                  }
+            }
+            else if (this._historyController.getCount()) {
+               this.getList().setItems(this._getHistoryRecordSetSync()); //В рамках совместимости оставляю старое поведение
+               this.showPicker();
+            }
+         }.bind(this)).addErrback(function (err) {
+            //Если запрос был прерван нами, то ничего не делаем
+            if (!err.canceled && err.message !== "Cancel") { //Из parallelDeferred возвращается ошибка с текстом "Cancel" при превранном запросе
+               //В рамках совместимости оставляю старое поведение
+               if (!err.processed) {
+                  IoC.resolve('ILogger').log(this._moduleName, 'Списочный метод не смог вычитать записи по массиву идентификаторов');
+               }
+               if (this._historyController.getCount()) {
                   this.getList().setItems(this._getHistoryRecordSetSync());
                   this.showPicker();
                }
-            }.bind(this));
-         }
+            }
+         }.bind(this));
       },
       _getHistoryRecordSet: function () {
          var listSource = this.getList().getDataSource(),
-             query = new Query(),
-             filter = {},
-             recordsId = [];
+             query = this._getQueryForHistory(),
+             queryFilter = query.getWhere()[this._getListIdProperty()],
+             pd = new ParallelDeferred(),
+             beforeLoadHistoryResult,
+             historyRS;
+
+         this._cancelHistoryDeferred();
+         beforeLoadHistoryResult = this._notify('onBeforeLoadHistory', queryFilter);
+
+         //Если в нашей истории нет данных, не делаем лишний запрос
+         if (this._historyController.getCount()) {
+            this._historyDeferred = this.getList().getDataSource().query(query);
+            pd.push(this._historyDeferred);
+         }
+         else {
+            pd.push((new Deferred).callback());
+         }
+
+         if (cInstance.instanceOfModule(beforeLoadHistoryResult, 'Core/Deferred')) {
+            pd.push(beforeLoadHistoryResult);
+         }
+
+         return pd.done().getResult().addCallback(function (result) {
+            historyRS = new RecordSet({
+               adapter: listSource.getAdapter(),
+               rawData: result[0] ? result[0].getRawData() : [],
+               idProperty: this.getList().getProperty('idProperty'),
+               model: listSource.getModel()
+            });
+            if (result[1]) {
+               historyRS.assign(result[1].getAll());
+            }
+            return historyRS;
+         }.bind(this));
+      },
+      _getQueryForHistory: function() {
+         var query = new Query(),
+            filter = {},
+            recordsId = [];
+
          for (var i = 0, l = this._historyController.getCount(); i < l; i++) {
             recordsId.push(this._getHistoryRecordId(this._historyController.at(i).get('data')));
          }
          filter[this._getListIdProperty()] = recordsId;
          query.where(filter).limit(12);
-         this._cancelHistoryDeferred();
-         this._historyDeferred = this.getList().getDataSource().query(query).addCallback(function(rs) {
-            return new RecordSet({
-               adapter: listSource.getAdapter(),
-               rawData: rs.getRawData(),
-               idProperty: this._list.getProperty('idProperty'),
-               model: listSource.getModel()
-            });
-         }.bind(this));
-         return this._historyDeferred;
+         return query;
       },
       _getHistoryRecord: function(item){
          var list = this.getList();
@@ -245,14 +299,19 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             }
          },
          _onListItemSelectNotify: function(item){
+            this._addItemToHistory(item);
+         },
+
+         _addItemToHistory: function(item) {
             if (this._historyController) {
                //Определяем наличие записи в истории по ключу: стандартная логика контроллера не подходит,
                //т.к. проверка наличия добавляемой записи в истории производится по полному сравнению всех полей записи.
                //В записи поля могут задаваться динамически, либо просто измениться, к примеру значение полей может быть привязано к текущему времени
                //Это приводит к тому, что historyController не найдет текущую запись в истории и добавит ее заново. Получится дублирование записей в истории
-               var idProp = this.getList().getItems().getIdProperty(),
-                   itemId = item.get(idProp),
-                   index = -1;
+               var items = this.getList().getItems(),
+                  idProp = items ? items.getIdProperty() : this.getList().getProperty('idProperty'),
+                  itemId = item.get(idProp),
+                  index = -1;
 
                this._historyController.each(function(model, i) {
                   var historyModelObject = model.get('data').getRawData();
@@ -300,14 +359,14 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
 
          // FIXME костыль до перехода на пикера по фокусную систему
          _inputFocusInHandler: function(event) {
-            this._observableControlFocusHandler(event);
+            !this._options.task1174306848 && this._observableControlFocusHandler(event);
          },
          
          _inputClickHandler: function(e) {
             /* По стандарту клик по полю с автодополнением или получение фокуса при включённом автопоказе (опция autoShow),
                должен вызывать отображение автодополнения. Т.к. если в поле ввода уже стоит фокус, то клик не вызывает никаких
                связанных с фокусом событий, поэтому при клике по полю ввода надо тоже показать автодополнение. */
-            if(this.isActive()) {
+            if(this.isActive() && !this._options.task1174306848) {
                this._observableControlFocusHandler(e);
             }
          },
@@ -426,7 +485,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             var parentConfig = parentFunc.apply(this, arguments);
             parentConfig.tabindex = 0;
             parentConfig.targetPart = true;
-            parentConfig.closeOnTargetMove = true;
+            /* Т.к. на мобильных устройствах при установке фокуса в поле ввода может проиходить скролл ( и чаще всего происходит ),
+               нельзя скрывать автодополнение при скроле. */
+            parentConfig.closeOnTargetMove = !detection.isMobilePlatform;
             return parentConfig;
          },
 

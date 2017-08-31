@@ -14,7 +14,7 @@
          <opts>
             <opt name="field" value="status"/>
             <opt name="cellTemplate" value="html!SBIS3.CONTROLS.LongOperationsList/resources/LongOperationsListStateTemplate"/>
-            <opt name="width" value="{{=it.narrowTmpl ? 25 : 40}}"/>
+            <opt name="width" value="{{=it.narrowTmpl ? '' : 40}}"/>
          </opts>
          {{?}}
          {{? it.columns.startedAt}}
@@ -28,7 +28,7 @@
          {{? it.columns.title}}
          <opts>
             <opt name="field" value="title"/>
-            <opt name="width" value="100%"/>
+            <opt name="width" value="{{=it.narrowTmpl ? '' : '100%'}}"/>
             <opt name="cellTemplate" value="html!SBIS3.CONTROLS.LongOperationsList/resources/LongOperationsListNameTemplate"/>
             <opt name="className" value="controls-LongOperationsList__nameColumn controls-DataGridView-cell-overflow-ellipsis"/>
          </opts>
@@ -37,7 +37,7 @@
          <opts>
             <opt name="field" value="timeSpent"/>
             <opt name="cellTemplate" value="html!SBIS3.CONTROLS.LongOperationsList/resources/LongOperationsListExecuteTimeTemplate"/>
-            <opt name="width" value="130"/>
+            <opt name="width" value="{{=it.narrowTmpl ? '' : 130}}"/>
             <opt name="className" value="controls-LongOperationsList__executeTimeContainer"/>
          </opts>
          {{?}}

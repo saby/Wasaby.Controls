@@ -8,13 +8,14 @@ define('js!SBIS3.CONTROLS.DateRange', [
    'js!SBIS3.CONTROLS.RangeMixin',
    'js!SBIS3.CONTROLS.DateRangeMixin',
    'js!SBIS3.CONTROLS.DateRangeBigChoose',
+   'js!SBIS3.CONTROLS.ControlsValidators',
    'i18n!SBIS3.CONTROLS.DateRange',
    'js!SBIS3.CONTROLS.DateBox',
    'js!SBIS3.CONTROLS.IconButton',
    'css!SBIS3.CONTROLS.DateRange',
    'css!SBIS3.CONTROLS.FormattedTextBox',
    'css!SBIS3.CONTROLS.DateBox'
-], function (CompoundControl, PickerMixin, dotTplFn, DateUtil, FormWidgetMixin, RangeMixin, DateRangeMixin, DateRangeBigChoose) {
+], function (CompoundControl, PickerMixin, dotTplFn, DateUtil, FormWidgetMixin, RangeMixin, DateRangeMixin, DateRangeBigChoose, ControlsValidators) {
    'use strict';
    /**
     * Класс контрола выбора диапазона дат.
@@ -225,12 +226,12 @@ define('js!SBIS3.CONTROLS.DateRange', [
       _updateRequiredValidators: function () {
          this._options.validators = this._options.validators.filter(function (validator) {
             if ((validator.option === 'startValue' || validator.option === 'startDate') && validator.validator &&
-               validator.validator.wsHandlerPath === 'js!SBIS3.CONTROLS.ControlsValidators:required') {
+               validator.validator === ControlsValidators.required) {
                validator.option = 'text';
                this._datePickerStart.addValidators([validator]);
                return false;
             } else if ((validator.option === 'endValue' || validator.option === 'endDate') && validator.validator &&
-               validator.validator.wsHandlerPath === 'js!SBIS3.CONTROLS.ControlsValidators:required') {
+               validator.validator === ControlsValidators.required) {
                validator.option = 'text';
                this._datePickerEnd.addValidators([validator]);
                return false;
@@ -241,12 +242,12 @@ define('js!SBIS3.CONTROLS.DateRange', [
 
       _addDefaultValidator: function() {
          //Добавляем к прикладным валидаторам стандартный, который проверяет что дата начала периода меньше даты конца.
-         this._options.validators.push({
+         this.addValidators([{
             validator: function() {
                return !(this._options.startValue && this._options.endValue && this._options.endValue < this._options.startValue);
             }.bind(this),
             errorMessage: rk('Дата начала периода не может быть больше даты окончания')
-         });
+         }]);
       },
 
       setStartValue: function(value, silent, _dontUpdatePicker) {
@@ -389,8 +390,10 @@ define('js!SBIS3.CONTROLS.DateRange', [
          return date;
       },
 
-      _focusOutHandler: function () {
-         this.validate()
+      _focusOutHandler: function (event, destroyed) {
+         if (!destroyed){
+            this.validate();
+         }
       }
    });
    return DateRange;

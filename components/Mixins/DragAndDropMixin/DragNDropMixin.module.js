@@ -23,12 +23,9 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         // незначительно дополненные
         $(document).bind('mouseup touchend', function(e) {
             EventBusChannel.notify('onMouseup', e);
-            if (DragObject.isDragging()) {
-                //Сбрасывать драгндроп надо после того как выполнились все обработчики, нам неизвестен порядок выполнения
-               // обработчиков может быть что первым mouseup поймает владелец и сбросит драгндроп
-                DragObject.setDragging(false);
-                DragObject.reset();
-            }
+            //Сбрасывать драгндроп надо после того как выполнились все обработчики, нам неизвестен порядок выполнения
+            // обработчиков может быть что первым mouseup поймает владелец и сбросит драгндроп
+            DragObject.reset();
         });
 
         $(document).bind('mousemove touchmove', function (e) {
@@ -152,7 +149,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          * @remark Определяется в модуле, который подмешивает миксин.
          * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
          * @param {Boolean} droppable Cработал внутри droppable контейнера см {@link _findDragDropContainer}
-         * @param {Event} e Браузерное событие.
+         * @param {Event} e Браузерное событие. На touch устройствах в полях pageX, pageY находятся координаты touch.
          * @see SBIS3.CONTROLS.DragObject
          * @see _findDragDropContainer
          * @example
@@ -179,7 +176,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          * Срабатывает при перемещении (на каждое перемещение).
          * @remark Определяется в модуле, который подмешивает миксин.
          * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
-         * @param {Event} e Браузерное событие.
+         * @param {Event} e Браузерное событие. На touch устройствах в полях pageX, pageY находятся координаты touch.
          * @see SBIS3.CONTROLS.DragObject
          */
         _onDragHandler: function(dragObject, e) {
@@ -190,7 +187,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          * @remark Определяется в модуле, который подмешивает миксин. Если контрол взамодействует с другими контролами через Drag'n'drop
          * то этот метод должен определить, что перемещает пользователь и установить в dragObject (см метод {@link SBIS3.CONTROLS.DragObject#setSource}).
          * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
-         * @param {Event} e Браузерное событие.
+         * @param {Event} e Браузерное событие. На touch устройствах в полях pageX, pageY находятся координаты touch.
          * @see SBIS3.CONTROLS.DragObject
          * @returns {Boolean} если вернуть false перемещение не начнется
          */
@@ -252,34 +249,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         _updateDragTarget: function(dragObject, e) {
 
         },
-        /**
-         * Возвращает контейнер, в котором лежат элементы.
-         * @remark Если элемент бросили за пределами этого контейнера, то target (DragObject.getDragTarget()) будет пустой. Определяется в модуле, который подмешивает миксин.
-         * @example
-         * Пусть у нашего контрола такая верcтка:
-         * <pre>
-         *    <div>
-         *       <h2>Заголовок</h2>
-         *       <ul class="items-list">
-         *          <li>Первый</li>
-         *          <li>Второй</li>
-         *       </ul>
-         *    </div>
-         * </pre>
-         * тогда этот метод должен вернуть ul:
-         * <pre>
-         *    _findDragDropContainer (){
-          *       return this.getContainer().find('ul');
-          *    }
-         * </pre>
-         * @param {Event} e Браузерное событие.
-         * @param {html} target DOM объект в котором надо искать Drag'n'drop контейнер.
-         * @returns {html}
-         * @private
-         */
-        _findDragDropContainer: function (e, target) {
-
-        },
         //endregion handlers
 
         //region protected
@@ -324,20 +293,21 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 self = this,
                 dragStrarter = function(bus, moveEvent){
                     self._preparePageXY(moveEvent);
-                    if ($(clickEvent.target).closest('.controls-DragNDropMixin__notDraggable', self._getDragContainer().context).length === 0) {
-                        if (self._isDrag(moveEvent, clickEvent)) {
-                            self._beginDrag(clickEvent);
-                            self._beginDragTarget = clickEvent.target;
-                            EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
-                        }
+                    if (self._isDrag(moveEvent, clickEvent)) {
+                        self._beginDrag(clickEvent);
+                        self._beginDragTarget = clickEvent.target;
+                        EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
                     }
                 };
-            this._preparePageXY(clickEvent);
-            EventBus.channel('DragAndDropChannel').subscribe('onMousemove', dragStrarter);
-            EventBus.channel('DragAndDropChannel').once('onMouseup', function(){
-                EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
-            });
-
+            if (!DragObject.isInitDragStarter() && $(clickEvent.target).closest('.controls-DragNDropMixin__notDraggable', self._getDragContainer().context).length === 0) {
+               this._preparePageXY(clickEvent);
+               EventBus.channel('DragAndDropChannel').subscribe('onMousemove', dragStrarter);
+               EventBus.channel('DragAndDropChannel').once('onMouseup', function () {
+                  EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
+               });
+               this._preventClickEvent(clickEvent);
+               DragObject.setInitDragStarter(true);
+            }
         },
         /**
          * Начало перемещения.
@@ -349,7 +319,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 DragObject.onDragHandler(e);
                 if (this._beginDragHandler(DragObject, e) !== false) {
                     if (this._notify('onBeginDrag', DragObject, e) !== false) {
-                        $('body').addClass('dragdropBody ws-unSelectable');
+
                         this._showAvatar(e);
                         DragObject.setOwner(this);
                         DragObject.setDragging(true);
@@ -412,8 +382,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
             if (res !== false) {
                 this._endDragHandler(DragObject, droppable, e);
             }
+            this._getDragContainer().removeClass('controls-dragndrop');
             this._position = null;
-            $('body').removeClass('dragdropBody cantDragDrop ws-unSelectable');
         },
 
         /**
@@ -444,11 +414,14 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         _onDrag: function (e) {
             var
                 targetsControl = DragObject.getTargetsControl(),
-                res;
-
+                res,
+                container = this._getDragContainer();
+            this._updateDragTarget(DragObject, e);
             if (targetsControl === this) {
-                this._updateDragTarget(DragObject, e);
+                container.addClass('controls-dragndrop');
                 res = this._notify('onDragOver', DragObject, e);
+            } else if (container.hasClass('controls-dragndrop')) {
+                container.removeClass('controls-dragndrop')
             }
             if (DragObject.getOwner() === this) {
                 this._notify('onDragMove', DragObject, e);
@@ -529,6 +502,25 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                    return false;
                });
            }
+       },
+       /**
+        * Отменяет действие по умолчанию для клика что бы запретить выделение текста
+        * @private
+        */
+       _preventClickEvent: function (e) {
+          //preventDefault для touchStart запрещает клик, а текст по touch соытиям не выделяется
+          if (e.type == 'mousedown') {
+             e.preventDefault();
+             //снимаем выделение с текста иначе не будут работать клики а выделение не будет сниматься по клику из за preventDefault
+             var sel = window.getSelection();
+             if (sel) {
+                if (sel.removeAllRanges) {
+                   sel.removeAllRanges();
+                } else if (sel.empty) {
+                   sel.empty();
+                }
+             }
+          }
        }
     };
 

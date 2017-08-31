@@ -9,12 +9,12 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
        'js!SBIS3.CONTROLS.ItemActionsGroup',
        'tmpl!SBIS3.CONTROLS.ItemsToolbar',
        'tmpl!SBIS3.CONTROLS.ItemsToolbar/editActions',
-       'Core/helpers/dom&controls-helpers',
-       'Core/helpers/collection-helpers',
+       'Core/helpers/Hcontrol/trackElement',
+       'js!SBIS3.CONTROLS.Utils.Contains',
        'i18n!SBIS3.CONTROLS.ItemsToolbar',
        'css!SBIS3.CONTROLS.ItemsToolbar'
     ],
-    function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, dcHelpers, colHelpers) {
+    function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, trackElement, contains) {
 
        'use strict';
        /**
@@ -199,13 +199,13 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            * @private
            */
           _bigIconsFix: function(items) {
-             colHelpers.forEach(
-                 items,
-                 function(item){
-                    if(item.hasOwnProperty('icon') && item.icon){
-                       item.icon = item.icon.replace('icon-16', 'icon-size');
-                    }
-                 });
+             if (items) {
+                items.forEach(function(item){
+                   if(item.hasOwnProperty('icon') && item.icon){
+                      item.icon = item.icon.replace('icon-16', 'icon-size').replace('icon-24', 'icon-size').replace('icon-small', 'icon-size').replace('icon-medium', 'icon-size');
+                   }
+                });
+             }
           },
           /**
            * Проверяет, отображаются ли сейчас опции записи
@@ -240,7 +240,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            * @private
            */
           _trackingTarget: function() {
-             dcHelpers.trackElement(this._currentTarget.container, true).subscribe('onMove', this.recalculatePosition, this);
+             trackElement(this._currentTarget.container, true).subscribe('onMove', this.recalculatePosition, this);
           },
           /**
            * Меняет режим отображения тулбара, если touch - то тулбар отображается с анимацией
@@ -294,7 +294,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            */
           _untrackingTarget: function() {
              if(this._currentTarget) {
-                dcHelpers.trackElement(this._currentTarget.container, false);
+                trackElement(this._currentTarget.container, false);
              }
           },
           /**
@@ -309,7 +309,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
 
              /* Событие onMove из трэкера стреляет и при удалении элемента из DOM'a,
                 надо проверить на наличине элемента, а то получим неверные расчёты, а в худшем случае(ie) браузер падает */
-             if(!dcHelpers.contains(parentContainer, targetContainer)) {
+             if(!contains(parentContainer, targetContainer)) {
                 this._untrackingTarget();
                 return;
              }
@@ -363,7 +363,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                 if(!this._cachedMargin) {
                    containerHeight = $container.height();
                    if(containerHeight) {
-                      this._cachedMargin = containerHeight + parseInt($container.css('bottom'), 10) + parseInt($container.css('border-bottom-width'), 10);
+                      this._cachedMargin = containerHeight + parseInt($container.css('bottom'), 10);
                    }
                 }
                 marginBottom -= this._cachedMargin;

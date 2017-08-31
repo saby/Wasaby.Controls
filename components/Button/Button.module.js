@@ -1,12 +1,13 @@
 define('js!SBIS3.CONTROLS.Button',
    [
-      'js!WSControls/Control/Base',
+      'Core/Control',
       'js!SBIS3.CONTROLS.Button/Button.compatible',
       'tmpl!SBIS3.CONTROLS.Button',
       'Core/core-functions',
       'js!SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor',
-      "js!SBIS3.CORE.Control/ControlGoodCode",
-      'css!SBIS3.CONTROLS.Button'
+      'js!SBIS3.CORE.Control/ControlGoodCode',
+      'css!SBIS3.CONTROLS.Button',
+      'css!WSControls/Buttons/resources/ButtonBase'
          ],
 
    function (Base,
@@ -35,6 +36,12 @@ define('js!SBIS3.CONTROLS.Button',
     * <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Спецификация</a>.
     *
     * @class SBIS3.CONTROLS.Button
+    * @extends Core/Control
+    *
+    * @mixes SBIS3.CONTROLS.Button/Button.compatible
+    * @mixes SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor
+    * @mixes SBIS3.CORE.Control/ControlGoodCode
+    *
     * @demo SBIS3.CONTROLS.Demo.MyButton
     *
     * @author Романов Валерий Сергеевич
@@ -114,7 +121,7 @@ define('js!SBIS3.CONTROLS.Button',
             }
             this._onClickHandler(e);
             this._notify("onActivated", e);
-            this._setDirty();
+            this._forceUpdate();
          },
 
          _onMouseDown: function () {
@@ -158,7 +165,7 @@ define('js!SBIS3.CONTROLS.Button',
                //т.к. появилась асинхронность, руками дернем флаг о перерисовке, чтобы кнопка
                //не осталась "подвисшей"
                if (this.iWantVDOM) {
-                  this._setDirty();
+                  this._forceUpdate();
                }
             }.bind(this), 1000);
          },

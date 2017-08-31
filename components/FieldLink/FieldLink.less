@@ -1,12 +1,63 @@
+.controls-FieldLink {
+   .controls-TextBox__beforeFieldWrapper {
+      .inline-flexbox();
+      .flex-shrink(0);
+      .flex-direction(row-reverse);
+      max-width: ~'calc(100% - '@controls-FieldLink-linkItem-cross-width~')';
+      overflow: hidden;
+   }
+   .controls-FieldLink__linksWrapper {
+      min-width: 0;
+      overflow:hidden;
+   }
+   &.ws-disabled {
+      .controls-TextBox__beforeFieldWrapper {
+         max-width: 100%;
+      }
+      //todo:
+      .controls-Link.controls-FieldLink__showAllLinks {
+         &:after {
+            content: '';
+            position: absolute;
+            right: -@controls-FieldLink-showAll-shadow-width;
+            width: @controls-FieldLink-showAll-shadow-width;
+            top: 0;
+            bottom: 0;
+            .horizontal-gradient(@white-color, rgba(255, 255, 255, 0));
+            background-color: transparent;
+         }
+      }
+
+   }
+   &.controls-FieldLink__selected-single {
+      .controls-TextBox__beforeFieldWrapper {
+         .flex-grow(1);
+         .controls-FieldLink__linksWrapper {
+            width:100%;
+         }
+      }
+      .controls-FieldLinkItemsCollection {
+         .justify-content()
+      }
+   }
+}
+.controls-FieldLink__fieldWrapper {
+   .inline-flexbox();
+   .flex-shrink(1);
+   position:relative;
+   height: 100%;
+   width: 100%;
+   line-height: 20px !important;
+   text-decoration: inherit;
+   margin-right: @controls-FieldLink-fieldWrapper-margin;
+}
+
 .controls-FieldLink__picker {
    max-height: @controls-FieldLink-picker-max-height;
    min-height: @controls-FieldLink-picker-min-height;
    border: @controls-FieldLink-border @gray-ccc-color;
    margin-top: 0;
    overflow: auto;
-}
-
-.controls-FieldLink__picker:not(.controls-Suggest__picker) {
    padding: @controls-FieldLink-linkContainer-padding;
    border-top: none;
    .flexbox();
@@ -33,6 +84,10 @@
          .text-overflow();
          height: @controls-FieldLink-linkItem-line-height;
       }
+   }
+   //todo: надо ли?
+   &.ws-disabled .controls-FieldLink__item-caption {
+      margin-right: @controls-FieldLink-disabled-item-picker-margin;
    }
 
    &.controls-popup-revert-vertical {
@@ -70,7 +125,7 @@
    right: @controls-FieldLink-linkItem-cross-right;
    top: @controls-FieldLink-linkItem-cross-top;
    padding: @controls-FieldLink-linkItem-cross-padding;
-   cursor: @link-cursor;
+   cursor: pointer;
    z-index: 1;
 }
 
@@ -86,7 +141,7 @@
 .controls-FieldLink__itemsEdited {
    .controls-FieldLink__item-caption:hover {
       text-decoration: @link-hover-text-decoration;
-      cursor: @link-cursor;
+      cursor: pointer;
    }
 }
 
@@ -111,7 +166,6 @@
 }
 
 .controls-FieldLink {
-   border-color: @controls-FieldLink-border-color;
    position: relative;
    white-space: nowrap;
    
@@ -140,39 +194,12 @@
 
    &.controls-Picker__show {
       background: @controls-FieldLink-picker-show-color;
-   }
-
-   .controls-TextBox__fieldWrapper {
-      .flexbox();
-      padding: 0;
-      margin-right: @controls-FieldLink-fieldWrapper-margin;
-   }
-
-   .controls-TextBox__field, .controls-TextBox__placeholder {
-      padding: @text-box-wrapper-padding;
-   }
-
-   .controls-TextBox__beforeFieldWrapper {
-      /* Учитываем ширину "гамбургера" в поле связи */
-      max-width: ~'calc(100% - '@controls-FieldLink-showAllLinks-width~')';
-      overflow: hidden;
-   }
-
-   &.ws-validation-error {
-      .controls-TextBox__afterFieldWrapper {
-         background-color: @text-box-error-bg;
+      .controls-TextBox__field {
+         color: @controls-FieldLink-picker-show-field-color
       }
    }
-
+	
    &.ws-disabled {
-
-      .controls-TextBox__placeholder, .controls-TextBox__afterFieldWrapper {
-         display: none;
-      }
-
-      .controls-TextBox__beforeFieldWrapper {
-         max-width: 100%;
-      }
 
       .controls-TextBox__field {
          .hiddenPlaceholder();
@@ -182,9 +209,6 @@
          padding: @controls-FieldLink-disabled-item-padding;
       }
 
-      .controls-FieldLink__showAllLinks:not(.controls-FieldLink__copyShowAll) {
-         display: none;
-      }
    }
 
    .controls-FieldLink__dropAllLinks {
@@ -193,8 +217,7 @@
    }
 
    .controls-FieldLink__Link {
-      display: inline;
-      line-height: 22px;
+      line-height: @default-base-line-height;
    }
 }
 
@@ -224,49 +247,43 @@
    display: none;
 }
 
-.ws-enabled.controls-FieldLink__inputMinWidth .controls-TextBox__fieldWrapper {
+.ws-enabled.controls-FieldLink__inputMinWidth .controls-FieldLink__fieldWrapper {
    /* https://developer.mozilla.org/en-US/docs/Web/CSS/--*
       т.к. min-width нужен только для темизации, то делаю его
       через custom property */
    --min-width: @controls-FieldLink-fieldWrapper-minWidth;
 }
 
-.controls-FieldLink__selected:not(.controls-FieldLink__multiselect):not(.controls-FieldLink__inputMinWidth) .controls-TextBox__fieldWrapper {
+.controls-FieldLink__selected:not(.controls-FieldLink__multiselect):not(.controls-FieldLink__inputMinWidth) .controls-FieldLink__fieldWrapper {
    visibility: hidden;
+   width: 0;
 }
 
-.controls-Link.controls-FieldLink__Link {
+.controls-FieldLink__Link.ws-enabled {
+   color: @controls-FieldLink-link-color;
 
-   &:not(.controls-FieldLink-Link__filterButton):not(.ws-disabled) {
-      color: @controls-FieldLink-link-color;
+   .controls-Button__text {
       text-decoration: underline;
-
-      &:hover:not(.controls-Link__disabledHover) {
-         color: @controls-FieldLink-link-color-hover;
-      }
    }
-   &:not(.ws-disabled) {
-      &.controls-FieldLink-Link__filterButton {
-         color: @controls-FieldLink-FilterButton-color;
-         text-decoration: none;
-
-         &.ws-enabled:hover:not(.controls-Link__disabledHover) {
-            color: @controls-FieldLink-FilterButton-color-hover;
-            text-decoration: underline;
-         }
-      }
+   
+   &:hover {
+      color: @controls-FieldLink-link-color-hover;
    }
 }
 
 .controls-FieldLink__linksWrapper {
    height: 100%;
    display: inline-block;
-   float: right;
 }
 
 .controls-FieldLinkItemsCollection {
+   .justify-content(flex-end);
+   display: inline-flex;
+   width: 100%;
+   height: 100%;
    .controls-FieldLink__item {
       .text-overflow();
+       .flex-shrink(0);
    }
 }
 
@@ -275,61 +292,16 @@
    width: 20px;
    line-height: @controls-FieldLink-showAllLinks-lineHeight;
    padding: @controls-FieldLink-showAllLinks-padding;
-   float: left;
    display: inline-block;
+   .flex-shrink(0);
 }
 
-.controls-FieldLink__copyShowAll.controls-Link {
-   float: left;
-   position: relative;
-   top: -@controls-FieldLink-showAllLinks-lineHeight;
-   width: 16px;
-   line-height: @controls-FieldLink-showAllLinks-lineHeight;
-   margin-right: @controls-FieldLink-showAllLinks-marginRight;
-   text-align: center;
-   background-color: @white-color;
-   color: @link-text-color;
-   padding: @controls-FieldLink-showAllLinks-padding;
 
-   &:after {
-      content: '';
-      position: absolute;
-      right: -@controls-FieldLink-showAll-shadow-width;
-      width: @controls-FieldLink-showAll-shadow-width;
-      top: 0;
-      bottom: 0;
-      .horizontal-gradient(@white-color, rgba(255, 255, 255, 0));
-      background-color: transparent;
-   }
-}
 
 .controls-FieldLink__selected:not(.controls-FieldLink__selected-single) .controls-FieldLink__dropAllLinks {
    display: inline-block;
 }
 
-.controls-FieldLink__copyShowAll {
-   float: left;
-   position: relative;
-   top: -22px;
-   width: 16px;
-   line-height: @controls-FieldLink-showAllLinks-lineHeight;
-   margin-right: -22px;
-   text-align: center;
-   background-color: @white-color;
-   color: @link-text-color;
-   padding: @controls-FieldLink-showAllLinks-padding;
-
-   &:after {
-      content: '';
-      position: absolute;
-      right: -@controls-FieldLink-showAll-shadow-width;
-      width: @controls-FieldLink-showAll-shadow-width;
-      top: 0;
-      bottom: 0;
-      .horizontal-gradient(@white-color, rgba(255, 255, 255, 0));
-      background-color: transparent;
-   }
-}
 
 .ws-is-firefox {
    .controls-FieldLink {
@@ -338,14 +310,8 @@
       .controls-FieldLink__item-cross {
          top: -1px;
       }
-      &.controls-FieldLink__selected-single .controls-FieldLink__copyShowAll {
-         display: none;
-      }
 
-      .controls-FieldLink__copyShowAll {
-         margin-right: @controls-FieldLink-showAll-margin-right-ff;
-         top: @controls-FieldLink-showAll-top-ff;
-      }
+
    }
 }
 
@@ -366,7 +332,7 @@
 
 .ws-is-ie10 {
    /* ie10 не поддерживает custom property */
-   .ws-enabled.controls-FieldLink__inputMinWidth .controls-TextBox__fieldWrapper {
+   .ws-enabled.controls-FieldLink__inputMinWidth .controls-FieldLink__fieldWrapper {
       min-width: @controls-FieldLink-fieldWrapper-minWidth;
    }
    
@@ -381,4 +347,12 @@
    .controls-FieldLink.controls-FieldLink__selected-single.ws-disabled .controls-FieldLink__item{
       max-width: ~'calc(100% - '(@controls-FieldLink-linkContainer-padding * 2) - 1~')';
    }
+}
+
+.controls-FieldLink__showSelector {
+   color: @controls-FieldLink-showSelector-color;
+}
+
+.ws-is-desktop-platform .controls-FieldLink__showSelector:hover {
+   color: @controls-FieldLink-showSelector-color-hover;
 }

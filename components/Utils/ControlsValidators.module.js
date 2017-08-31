@@ -4,7 +4,6 @@
 define('js!SBIS3.CONTROLS.ControlsValidators', [
    'js!SBIS3.CORE.CoreValidators',
    'Core/core-instance',
-   'Deprecated/Enum',
    'Core/IoC',
    'i18n!SBIS3.CONTROLS.ControlsValidators'
 ],function(CoreValidators, cInstace, cEnum, IoC) {
@@ -50,7 +49,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [
                isEmpty = isNaN(option);
                break;
             case 'object' :
-               if(option instanceof cEnum) {
+               if(cInstace.instanceOfModule(option, 'Deprecated/Enum')) {
                   IoC.resolve('ILogger').error('SBIS3.CONTROLS.ControlsValidators', 'использует устаревший модуль Deprecated/Enum. Выпишите ошибку на Интерфейсный фреймворк со скриншотом.');
                   isEmpty = option.getCurrentValue() === null;
                } else if(cInstace.instanceOfModule(option, 'WS.Data/Collection/List')) {
@@ -166,7 +165,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [
       email: function(value) {
          //Регулярное выражение для проверки email отсюда http://stackoverflow.com/a/46181/6729520
          var
-            regExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            regExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Zа-яА-Я\-0-9]+\.)+[a-zA-Zа-яА-Я]{2,}))$/,
             isGoodValue = value ? regExp.test(value) : true;
 
          return isGoodValue ? 

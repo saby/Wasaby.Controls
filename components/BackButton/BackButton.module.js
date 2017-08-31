@@ -37,6 +37,7 @@ define('js!SBIS3.CONTROLS.BackButton',
     * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
     *
     * @css controls-BackButton__alignment Класс для выравнивания кнопки-назад
+    * @css controls-BackButton__orange Устанавливает стилевое оформление, при котором надпись кнопки будет орандевого цвета (#D94700), а символ стрелки "Назад" синего (#313E78) (см. <a href="http://axure.tensor.ru/standarts/v7/#p=разделители__заголовки___версия_05_">Стандарты</a>).
     *
     * @control
     * @public
@@ -107,6 +108,10 @@ define('js!SBIS3.CONTROLS.BackButton',
                e.stopPropagation();
             } else {
                self._notify('onActivated');
+               if (!!self._options.command && self.isEnabled()) {
+                  var args = [self._options.command].concat(self._options.commandArgs);
+                  self.sendCommand.apply(self, args);
+               }
             }
          });
          this._link.subscribe('onActivated', function(){

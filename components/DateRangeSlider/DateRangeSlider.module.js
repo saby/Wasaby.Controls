@@ -155,14 +155,15 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
 
       setStartValue: function (value, silent) {
          var sType = this._getRangeTypeIfSingle(),
-            changed;
+            changed, endValue;
          if (this._options.autoValue && sType) {
             changed = DateRangeSlider.superclass.setStartValue.call(this, value, true);
             if (changed) {
                if (!silent) {
                   this._notifyOnStartValueChanged();
                }
-               if (value && this.setEndValue(this._getEndValueByControlPeriodType(value, sType), true)) {
+               endValue = value ? this._getEndValueByControlPeriodType(value, sType) : null;
+               if (this.setEndValue(endValue, true)) {
                   if (!silent) {
                      this._notifyOnEndValueChanged();
                   }
@@ -179,14 +180,15 @@ define('js!SBIS3.CONTROLS.DateRangeSlider',[
 
       setEndValue: function (value, silent) {
          var sType = this._getRangeTypeIfSingle(),
-            changed;
+            changed, startValue;
          if (this._options.autoValue && sType) {
             changed = DateRangeSlider.superclass.setEndValue.call(this, value, true);
             if (changed) {
                if (!silent) {
                   this._notifyOnEndValueChanged();
                }
-               if (value && this.setStartValue(this._getStartValueByControlPeriodType(value, sType), true)) {
+               startValue = value ? this._getStartValueByControlPeriodType(value, sType) : null;
+               if (this.setStartValue(startValue, true)) {
                   if (!silent) {
                      this._notifyOnStartValueChanged();
                   }

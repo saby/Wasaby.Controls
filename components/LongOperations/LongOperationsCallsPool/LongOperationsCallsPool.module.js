@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
          /**
           * Конструктор
           * @public
-          * @param {string[]} fields Спискок имён параметров, которые будут идентифицировать запросы. Все запросы должны будут указывать
+          * @param {string[]} fields Спискок имён параметров, которые будут идентифицировать запросы внутри группы. Все запросы должны будут указывать
           *                          такие параметры
           * @param {function} handlePartial Обработчик одиночного результата. Получает, обрабатывает и возвращает новый результат. Будет вызван
           *                                 только если результатом не является ошибка
@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
                throw new TypeError('Argument "handleComplete" must be a function');
             }
             /**
-             * Спискок имён полей, идентифицирующих запросы
+             * Спискок имён полей, идентифицирующих запросы внутри группы
              * @protected
              * @type {string[]}
              */
@@ -65,65 +65,78 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
              */
             this._handleComplete = handleComplete;
             /**
-             * Список выполняющихся запросов
+             * Список по группам выполняющихся запросов
              * @protected
-             * @type {object[]}
+             * @type {object}
              */
-            this._calls = [];
+            this._calls = {};
             /**
              * Список обещаний, ожидающих результаты
              * @protected
              * @type {object}
              */
-            this._promises = {};
+            this._outputs = {};
+            /**
+             * Счётчик групп
+             * @protected
+             * @type {number}
+             */
+            this._counter = 0;
          },
 
          /**
           * Добавить пакет запросов в список выполняющихся запросов
           * @public
-          * @param {number} group Идентификатор группы запросов
-          * @param {object[]} paramsList Массив идентифицирующих параметров
+          * @param {object} pool Составной указатель группы запросов
+          * @param {object[]} members Массив идентифицирующих параметров
           * @param {Core/Deferred[]} promises Массив обещаний результатов
           */
-         addList: function (group, paramsList, promises) {
-            if (!Array.isArray(paramsList)) {
-               throw new TypeError('Argument "paramsList" must be an array');
+         addList: function (pool, members, promises) {
+            if (!Array.isArray(members)) {
+               throw new TypeError('Argument "members" must be an array');
             }
             if (!Array.isArray(promises)) {
                throw new TypeError('Argument "promises" must be an array');
             }
-            if (paramsList.length !== promises.length) {
+            if (members.length !== promises.length) {
                throw new TypeError('Not equals array sizes');
             }
-            for (var i = 0; i < paramsList.length; i++) {
-               this.add(group, paramsList[i], promises[i]);
+            var poolId = _getPoolId(this, pool, true);
+            for (var i = 0; i < members.length; i++) {
+               _add(this, poolId, members[i], promises[i]);
             }
          },
 
          /**
           * Добавить запрос в список выполняющихся запросов
           * @public
-          * @param {number} group Идентификатор группы запросов
-          * @param {object} params Идентифицирующие параметры
+          * @param {object} pool Составной указатель группы запросов
+          * @param {object} member Идентифицирующие параметры
           * @param {Core/Deferred} promise Обещание результата
           */
-         add: function (group, params, promise) {
-            if (!group || typeof group !== 'number') {
-               throw new TypeError('Argument "group" must be a number');
+         add: function (pool, member, promise) {
+            if (!pool || typeof pool !== 'object') {
+               throw new TypeError('Argument "pool" must be an object');
             }
-            if (!(promise instanceof Deferred)) {
-               throw new TypeError('Argument "promise" must be a Deferred');
+            _add(this, _getPoolId(this, pool, true), member, promise);
+         },
+
+         /**
+          * Заменить запрос в списке выполняющихся запросов
+          * @public
+          * @param {object} pool Составной указатель группы запросов
+          * @param {object} member Идентифицирующие параметры
+          * @param {Core/Deferred} promise Обещание результата
+          */
+         replace: function (pool, member, promise) {
+            if (!pool || typeof pool !== 'object') {
+               throw new TypeError('Argument "pool" must be an object');
             }
-            var ps = _checkParams(this._fields, params);
-            if (!ps) {
-               throw new TypeError('Argument "params" must be an object and have specified fields');
+            var poolId = _getPoolId(this, pool);
+            if (!poolId) {
+               throw new TypeError('Pool not found');
             }
-            if (this.has(group, ps)) {
-               throw new Error('Already exists');
-            }
-            var call = {group:group, params:ps, promise:promise};
-            this._calls.push(call);
-            call.promise.addBoth(_onPartial.bind(null, this, call));
+            _add(this, poolId, member, promise, true);
          },
 
          /**
@@ -131,89 +144,88 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
           * После вызова этого метода могут быть добавлены дополнитльные запросы в эту же группу, но только до тех пор, пока другие запросы не успели
           * завершиться. Иначе это будет новой группой и нужно вновь будет вызвать этот метод для получения обещания результата
           * @public
-          * @param {number} group Идентификатор группы запросов
+          * @param {object} pool Составной указатель группы запросов
+          * @param {boolean} dontSkip Обязательно разрешить возвращённое методом обещание, даже если далее будут выданы следующие обещания на этот
+          *                           же результат
           * @return {Core/Deferred<any>}
           */
-         getResult: function (group) {
-            if (!group || typeof group !== 'number') {
-               throw new TypeError('Argument "group" must be a number');
+         getResult: function (pool, dontSkip) {
+            if (!pool || typeof pool !== 'object') {
+               throw new TypeError('Argument "pool" must be an object');
+            }
+            if (dontSkip && typeof dontSkip !== 'boolean') {
+               throw new TypeError('Argument "dontSkip" must be boolean if present');
+            }
+            var poolId = _getPoolId(this, pool);
+            if (!poolId) {
+               throw new Error('Pool not found');
             }
             var promise = new Deferred();
-            if (!(group in this._promises)) {
-               this._promises[group] = [];
+            if (!(poolId in this._outputs)) {
+               this._outputs[poolId] = [];
             }
-            this._promises[group].push(promise);
+            this._outputs[poolId].push({promise:promise, dontSkip:!!dontSkip});
             // Проверить, возможно все результаты уже сразу получены
-            _checkCompleteness(this, group);
+            _checkCompleteness(this, poolId);
             return promise;
          },
 
          /**
           * Проверить, есть ли удовлетворяющие критериям запросы в списке выполняющихся запросов
           * @public
-          * @param {number} [group] Идентификатор группы запросов (опционально)
-          * @param {object} [params] Идентифицирующие параметры (опционально)
+          * @param {object} pool Составной указатель группы запросов
           * @return {boolean}
           */
-         has: function (group, params) {
-            if (group && typeof group !== 'number') {
-               throw new TypeError('Argument "group" must be a number');
+         has: function (pool) {
+            if (!pool || typeof pool !== 'object') {
+               throw new TypeError('Argument "pool" must be an object');
             }
-            if (params && typeof params !== 'object') {
-               throw new TypeError('Argument "params" must be an object');
-            }
-            for (var i = 0; i < this._calls.length; i++) {
-               var c = this._calls[i];
-               if ((!group || c.group === group) && (!params || _hasProps(c.params, this._fields, params))) {
-                  return true;
-               }
-            }
-            return false;
+            var poolId = _getPoolId(this, pool);
+            return !!poolId && _has(this, poolId);
          },
 
          /**
           * Удалить удовлетворяющие критериям запросы из списка выполняющихся запросов
           * @public
-          * @param {number} [group] Идентификатор группы запросов (опционально)
-          * @param {object} [params] Идентифицирующие параметры (опционально)
+          * @param {object} [pool] Составной указатель группы запросов (опционально)
+          * @param {object} [member] Идентифицирующие параметры (опционально)
           */
-         remove: function (group, params) {
-            if (group && typeof group !== 'number') {
-               throw new TypeError('Argument "group" must be a number');
+         remove: function (pool, member) {
+            if (pool && typeof pool !== 'object') {
+               throw new TypeError('Argument "pool" must be an object or null');
             }
-            if (params && typeof params !== 'object') {
-               throw new TypeError('Argument "params" must be an object');
+            if (member && typeof member !== 'object') {
+               throw new TypeError('Argument "member" must be an object or null');
             }
-            for (var i = this._calls.length - 1; 0 <= i; i--) {
-               var c = this._calls[i];
-               if (c && (!group || c.group === group) && (!params || _hasProps(c.params, this._fields, params))) {
-                  // Удалить из списка
-                  this._calls.splice(i, 1);
-                  var p = c.promise;
-                  if (p && p.cancel && !p.isReady()) {
-                     // В текущей реализации при наличии обработчика ошибок при вызове cancel он перейдёт в успешно разрешённое состояние (Задача 1174127408)
-                     //p.cancel();
-                     //////////////////////////////////////////////////
-                     //console.log('DBG: LO_CallsPool.remove: p.isSuccessful()=', p.isSuccessful(), '; p._fired=', p._fired, '; p._results[1]=', p._results ? p._results[1] : p._results, ';');
-                     //////////////////////////////////////////////////
-                  }
+            var poolId;
+            if (pool) {
+               poolId = _getPoolId(this, pool);
+               if (!poolId) {
+                  throw new TypeError('Pool not found');
                }
             }
-            // Проверить, возможно после удаления уже не нужно ждать дальше
-            _checkCompleteness(this, group);
+            _remove(this, poolId, member);
          },
 
          /**
           * Перечислить все группы, встречающиеся в списке выполняющихся запросов
           * @public
-          * @return {number[]}
+          * @param {object} [member] Идентифицирующие параметры (опционально)
+          * @param {boolean} [completedOnly] Только если эти member завершены (опционально)
+          * @return {object[]}
           */
-         listGroups: function () {
+         listPools: function (member, completedOnly) {
+            if (member && typeof member !== 'object') {
+               throw new TypeError('Argument "member" must be an object or null');
+            }
+            if (completedOnly && typeof completedOnly !== 'boolean') {
+               throw new TypeError('Argument "completedOnly" must be boolean or null');
+            }
             var list = [];
-            for (var i = 0; i < this._calls.length; i++) {
-               var value = this._calls[i].group;
-               if (list.indexOf(value) === -1) {
-                  list.push(value);
+            var fields = this._fields;
+            for (var poolId in this._calls) {
+               if (!member || this._calls[poolId].list.some(function (c) { return _hasProps(c.member, fields, member) && (!completedOnly || !c.promise); })) {
+                  list.push(this._calls[poolId].pool);
                }
             }
             return list;
@@ -223,16 +235,259 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
 
 
       /**
-       * Проверить допустимость указанных идентифицирующих запрос параметров
+       * Добавить запрос в список выполняющихся запросов
        * @protected
-       * @param {string[]} fields Спискок имён полей, идентифицирующих запросы
-       * @param {object} params Идентифицирующие параметры
-       * @return {object}
+       * @param {SBIS3.CONTROLS.LongOperationsCallsPool} self Этот объект
+       * @param {number} poolId Идентификатор группы
+       * @param {object} member Идентифицирующие параметры
+       * @param {boolean} isReplace Произвести не добавление нового, а замену существующего
+       * @param {Core/Deferred} promise Обещание результата
        */
-      var _checkParams = function (fields, params) {
-         return params && typeof params === 'object' && fields.every(function (v) { return v in params; })
-            ? fields.reduce(function (acc, v) { acc[v] = params[v]; return acc; }, {})
-            : null;
+      var _add = function (self, poolId, member, promise, isReplace) {
+         if (!(promise instanceof Deferred)) {
+            throw new TypeError('Argument "promise" must be a Deferred');
+         }
+         if (!(member && typeof member === 'object' && self._fields.every(function (v) { return v in member; }))) {
+            throw new TypeError('Argument "member" must be an object and have specified fields');
+         }
+         var m = self._fields.reduce(function (r, v) { r[v] = member[v]; return r; }, {});
+         var call;
+         if (!isReplace) {
+            if (_has(self, poolId, m)) {
+               throw new Error('Already exists');
+            }
+            call = {member:m, promise:promise};
+            self._calls[poolId].list.push(call);
+         }
+         else {
+            for (var list = self._calls[poolId].list, i = 0; i < list.length; i++) {
+               var c = list[i];
+               if (_isEq(c.member, m)) {
+                  var prev = c.promise;
+                  c.promise = promise;
+                  _cancel(prev);
+                  call = c;
+                  break;
+               }
+            }
+            if (!call) {
+               throw new Error('Not found');
+            }
+         }
+         promise.addBoth(_onPartial.bind(null, self, poolId, call, promise));
+         /*###if (isReplace) {
+            // Проверить, возможно после замены уже не нужно ждать дальше
+            _checkCompleteness(self, poolId);
+         }*/
+      };
+
+      /**
+       * Проверить, есть ли удовлетворяющие критериям запросы в списке выполняющихся запросов
+       * @protected
+       * @param {SBIS3.CONTROLS.LongOperationsCallsPool} self Этот объект
+       * @param {number} [poolId] Идентификатор группы (опционально)
+       * @param {object} [member] Идентифицирующие параметры (опционально)
+       * @return {boolean}
+       */
+      var _has = function (self, poolId, member) {
+         var node = self._calls[poolId];
+         if (node) {
+            if (member) {
+               for (var i = 0; i < node.list.length; i++) {
+                  var c = node.list[i];
+                  if (_hasProps(c.member, self._fields, member)) {
+                     return true;
+                  }
+               }
+            }
+            else {
+               return true;
+            }
+         }
+         return false;
+      };
+
+      /**
+       * Удалить удовлетворяющие критериям запросы из списка выполняющихся запросов
+       * @protected
+       * @param {SBIS3.CONTROLS.LongOperationsCallsPool} self Этот объект
+       * @param {number} [poolId] Идентификатор группы (опционально)
+       * @param {object} [member] Идентифицирующие параметры (опционально)
+       */
+      var _remove = function (self, poolId, member) {
+         /*###if (member && typeof member !== 'object') {
+            throw new TypeError('Argument "member" must be an object');
+         }*/
+         for (var i = 0, pIds = poolId ? [poolId] : Object.keys(self._calls); i < pIds.length; i++) {
+            var pId = pIds[i];
+            var calls = self._calls[pId].list;
+            for (var j = calls.length - 1; 0 <= j; j--) {
+               var c = calls[j];
+               if (!member || _hasProps(c.member, self._fields, member)) {
+                  // Удалить из списка
+                  calls.splice(j, 1);
+                  _cancel(c.promise);
+               }
+            }
+            if (!calls.length) {
+               delete self._calls[pId];
+            }
+         }
+         // Проверить, возможно после удаления уже не нужно ждать дальше
+         _checkCompleteness(self, poolId);
+      };
+
+      /**
+       * Найти идентификатор группы
+       * @protected
+       * @param {SBIS3.CONTROLS.LongOperationsCallsPool} self Этот объект
+       * @param {object} pool Составной указатель группы запросов
+       * @param {boolean} canAdd Можно ли добавить новую группу, если её ещё нет
+       * @return {number}
+       */
+      var _getPoolId = function (self, pool, canAdd) {
+         for (var poolId in self._calls) {
+            if (_isEq(self._calls[poolId].pool, pool)) {
+               return poolId;
+            }
+         }
+         if (canAdd) {
+            var poolId = ++self._counter;
+            self._calls[poolId] = {pool:pool, list:[]};
+            return poolId;
+         }
+      };
+
+      /**
+       * Обработчик одиночного результата
+       * @protected
+       * @param {SBIS3.CONTROLS.LongOperationsCallsPool} self Этот объект
+       * @param {number} poolId Идентификатор группы
+       * @param {object} call Элемент
+       * @param {Core/Deferred} promise Обещание результата
+       * @param {any} result Результат или ошибка
+       */
+      var _onPartial = function (self, poolId, call, promise, result) {
+         if (call.promise === promise) {
+            delete call.promise;
+            if (result instanceof Error) {
+               call.error = result;
+            }
+            else {
+               var node = self._calls[poolId];
+               if (node) {
+                  try {
+                     call.result = self._handlePartial(node.pool, call.member, result);
+                  }
+                  catch (ex) {
+                     call.error = ex;
+                  }
+               }
+               else {
+                  call.error = new Error('Pool not found');
+               }
+            }
+            // Проверить, все ли результаты получены или нужно ждать дальше
+            _checkCompleteness(self, poolId);
+         }
+      };
+
+      /**
+       * Проверить, все ли результаты получены или нужно ждать дальше. Если все результаты получены - выполнение запросов завершается
+       * @protected
+       * @param {SBIS3.CONTROLS.LongOperationsCallsPool} self Этот объект
+       * @param {number} [poolId] Идентификатор группы (опционально)
+       */
+      var _checkCompleteness = function (self, poolId) {
+         for (var i = 0, pIds = poolId ? [poolId] : Object.keys(self._calls); i < pIds.length; i++) {
+            var pId = pIds[i];
+            if (_isComplete(self, pId)) {
+               // Все результаты группы есть, можно завершать
+               _onComplete(self, pId);
+            }
+         }
+      };
+
+      /**
+       * Проверить, все ли результаты получены или нужно ждать дальше
+       * @protected
+       * @param {SBIS3.CONTROLS.LongOperationsCallsPool} self Этот объект
+       * @param {number} poolId Идентификатор группы
+       * @return {boolean}
+       */
+      var _isComplete = function (self, poolId) {
+         if (!(self._outputs[poolId] && self._outputs[poolId].length)) {
+            return false;
+         }
+         var node = self._calls[poolId];
+         if (!(node && node.list.length)) {
+            return false;
+         }
+         for (var i = 0; i < node.list.length; i++) {
+            if (node.list[i].promise) {
+               return false;
+            }
+         }
+         // Все результаты есть
+         return true;
+      };
+
+      /**
+       * Объединяет все непустые и не ошибочные результаты и разрешает все обещания результатов
+       * @protected
+       * @param {SBIS3.CONTROLS.LongOperationsCallsPool} self Этот объект
+       * @param {number} poolId Идентификатор группы
+       */
+      var _onComplete = function (self, poolId) {
+         var node = self._calls[poolId];
+         var outs = self._outputs[poolId];
+         if (!node || !node.list.length || !outs || !outs.length) {
+            return;
+         }
+         //###_remove(self, poolId);
+         delete self._calls[poolId];
+         delete self._outputs[poolId];
+         var results;
+         for (var i = 0; i < node.list.length; i++) {
+            var c = node.list[i];
+            if (!c.error && c.result) {
+               if (!results) {
+                  results = [];
+               }
+               results.push(c.result);
+            }
+         }
+         results = self._handleComplete(node.pool, results);
+         for (var i = 0; i < outs.length; i++) {
+            var o = outs[i];
+            // Разрешить только "защищённые" или последнее обещание
+            if (o.dontSkip || i === outs.length - 1) {
+               o.promise.callback(results);
+            }
+            else
+            // Только если потребитель не успел уже сам от-cancele-ить
+            if (!o.promise.isReady()) {
+               o.promise.errback(new Error('Call is outdated'));
+            }
+         }
+      };
+
+
+
+      /**
+       * Отказаться от дальнейшего ожидания исполнения обещания
+       * @protected
+       * @param {Core/Deferred} promise Обещание
+       * @return {boolean}
+       */
+      var _cancel = function (promise) {
+         if (promise && promise.cancel && !promise.isReady()) {
+            // В текущей реализации при наличии обработчика ошибок при вызове cancel он перейдёт в успешно разрешённое состояние (Задача 1174127408)
+            //promise.cancel();
+            //////////////////////////////////////////////////
+            //console.log('DBG: LO_CallsPool._cancel: promise.isSuccessful()=', promise.isSuccessful(), '; promise._fired=', promise._fired, '; promise._results[1]=', promise._results ? promise._results[1] : promise._results, ';');
+            //////////////////////////////////////////////////
+         }
       };
 
       /**
@@ -253,118 +508,46 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
          return true;
       };
 
-
-
       /**
-       * Найти все запросы группы в списке выполняющихся запросов. Возвращает список найденных элементов
+       * Проверить на равенство два значения
        * @protected
-       * @param {SBIS3.CONTROLS.LongOperationsCallsPool} self Этот объект
-       * @param {number} group Идентификатор группы запросов
-       * @return {object[]}
-       */
-      var _getGroup = function (self, group) {
-         var list = [];
-         for (var i = 0; i < self._calls.length; i++) {
-            var c = self._calls[i];
-            if (c.group === group) {
-               list.push(c);
-            }
-         }
-         return list;
-      };
-
-      /**
-       * Обработчик одиночного результата
-       * @protected
-       * @param {SBIS3.CONTROLS.LongOperationsCallsPool} self Этот объект
-       * @param {object} call Элемент
-       * @param {any} result Результат или ошибка
-       */
-      var _onPartial = function (self, call, result) {
-         delete call.promise;
-         var group = call.group;
-         if (result instanceof Error) {
-            call.error = result;
-         }
-         else {
-            try {
-               call.result = self._handlePartial(group, call.params, result);
-            }
-            catch (ex) {
-               call.error = ex;
-            }
-         }
-         // Проверить, все ли результаты получены или нужно ждать дальше
-         _checkCompleteness(self, group);
-      };
-
-      /**
-       * Проверить, все ли результаты получены или нужно ждать дальше. Если все результаты получены - выполнение запросов завершается
-       * @protected
-       * @param {SBIS3.CONTROLS.LongOperationsCallsPool} self Этот объект
-       * @param {number} group Идентификатор группы запросов
-       */
-      var _checkCompleteness = function (self, group) {
-         for (var i = 0, groups = group ? [group] : self.listGroups(); i < groups.length; i++) {
-            var g = groups[i];
-            if (_isComplete(self, g)) {
-               // Все результаты группы есть, можно завершать
-               _onComplete(self, g);
-            }
-         }
-      };
-
-      /**
-       * Проверить, все ли результаты получены или нужно ждать дальше
-       * @protected
-       * @param {SBIS3.CONTROLS.LongOperationsCallsPool} self Этот объект
-       * @param {number} group Идентификатор группы запросов
+       * @param {object} v1 Сравниваемое значение
+       * @param {object} v2 Сравниваемое значение
        * @return {boolean}
        */
-      var _isComplete = function (self, group) {
-         if (!self._calls.length || !(self._promises[group] && self._promises[group].length)) {
-            return false;
+      var _isEq = function (v1, v2) {
+         if (v1 == null && v2 == null) {
+            return true;
          }
-         for (var i = 0; i < self._calls.length; i++) {
-            var c = self._calls[i];
-            if (c.group === group && c.promise) {
+         if (!(v1 && typeof v1 === 'object' && v2 && typeof v2 === 'object')) {
+            return v1 === v2;
+         }
+         if (Array.isArray(v1)) {
+            if (!Array.isArray(v2) || v1.length !== v2.length) {
                return false;
             }
-         }
-         // Все результаты есть
-         return true;
-      };
-
-      /**
-       * Объединяет все непустые и не ошибочные результаты и разрешает все обещания результатов
-       * @protected
-       * @param {SBIS3.CONTROLS.LongOperationsCallsPool} self Этот объект
-       * @param {number} group Идентификатор группы запросов
-       */
-      var _onComplete = function (self, group) {
-         var calls = _getGroup(self, group);
-         var promises = self._promises[group];
-         if (!calls || !calls.length || !promises || !promises.length) {
-            return;
-         }
-         self.remove(group);
-         delete self._promises[group];
-         var results;
-         for (var i = 0; i < calls.length; i++) {
-            var call = calls[i];
-            if (!call.error && call.result) {
-               if (!results) {
-                  results = [];
+            for (var i = 0; i < v1.length; i++) {
+               if (!_isEq(v1[i], v2[i])) {
+                  return false;
                }
-               results.push(call.result);
             }
          }
-         if (results) {
-            results = self._handleComplete(group, results);
+         else {
+            if (Array.isArray(v2)) {
+               return false;
+            }
+            var ns = Object.keys(v1);
+            if (ns.length != Object.keys(v2).length) {
+               return false;
+            }
+            for (var i = 0; i < ns.length; i++) {
+               var n = ns[i];
+               if (!_isEq(v1[n], v2[n])) {
+                  return false;
+               }
+            }
          }
-         for (var i = 0; i < promises.length; i++) {
-            promises[i].callback(results);
-         }
+         return true;
       };
 
 
