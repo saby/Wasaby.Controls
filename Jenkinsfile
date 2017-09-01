@@ -42,11 +42,17 @@ properties([
             name: 'theme'),
         choice(choices: "chrome\nff", description: '', name: 'browser_type'),
         choice(choices: "all\nonly_reg\nonly_int\nonly_unit", description: '', name: 'run_tests'),
-        booleanParam(defaultValue: false, description: "", name: 'RUN_ONLY_FAIL_TEST')]),
+        booleanParam(defaultValue: false, description: "", name: 'RUN_ONLY_FAIL_TEST'),
+        booleanParam(defaultValue: false, description: "Запуск вручную", name: 'RUN_HANDS')
+        ]),
     pipelineTriggers([])
 ])
 
 node('controls') {
+    if ( "${env.BUILD_NUMBER}" != "1" && "${params.RUN_HANDS}" == "false" ) {
+        currentBuild.result = 'ABORTED'
+        error('Ветка запустилась по пушу')
+    }
     def version = "3.17.150"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
@@ -88,7 +94,7 @@ node('controls') {
                 unit = true
                 break
         }
-        
+
         stage("Checkout"){
             // Контролы
             dir(workspace) {
@@ -441,41 +447,47 @@ node('controls') {
             run_test_fail = "-sf"
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
-        stage("Инт.тесты"){
-            if ( inte ){
-                def site = "http://${NODE_NAME}:30001"
-                site.trim()
-                if ( "${TAGS}" != "") {
-                dir("./controls/tests/int"){
-                    sh """
-                    source /home/sbis/venv_for_test/bin/activate
-                    python start_tests.py --RESTART_AFTER_BUILD_MODE --TAGS_TO_START ${TAGS} ${run_test_fail}
-                    deactivate
-                    """
+        parallel (
+            int_test: {
+                stage("Инт.тесты"){
+                    if ( inte ){
+                        def site = "http://${NODE_NAME}:30001"
+                        site.trim()
+                        if ( "${TAGS}" != "") {
+                        dir("./controls/tests/int"){
+                            sh """
+                            source /home/sbis/venv_for_test/bin/activate
+                            python start_tests.py --RESTART_AFTER_BUILD_MODE --TAGS_TO_START ${TAGS} ${run_test_fail}
+                            deactivate
+                            """
+                        }
+                        } else {
+                        dir("./controls/tests/int"){
+                            sh """
+                            source /home/sbis/venv_for_test/bin/activate
+                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
+                            deactivate
+                            """
+                        }
+                        }
+                    }
                 }
-                } else {
-                dir("./controls/tests/int"){
-                    sh """
-                    source /home/sbis/venv_for_test/bin/activate
-                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
-                    deactivate
-                    """
-                }
+            },
+            reg_test: {
+                stage("Рег.тесты"){
+                    if ( regr ){
+                        sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
+                        dir("./controls/tests/reg"){
+                            sh """
+                                source /home/sbis/venv_for_test/bin/activate
+                                python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
+                                deactivate
+                            """
+                        }
+                    }
                 }
             }
-        }
-        stage("Рег.тесты"){
-            if ( regr ){
-                sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
-                dir("./controls/tests/reg"){
-                    sh """
-                        source /home/sbis/venv_for_test/bin/activate
-                        python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
-                        deactivate
-                    """
-                }
-            }
-        }
+        )
         sh """
             sudo chmod -R 0777 ${workspace}
             sudo chmod -R 0777 /home/sbis/Controls1
@@ -500,6 +512,5 @@ node('controls') {
             }
         }
     }
-
 }
 
