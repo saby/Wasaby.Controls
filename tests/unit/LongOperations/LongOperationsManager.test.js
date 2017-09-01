@@ -10,6 +10,11 @@ define([
    function (longOperationsManager, GenericLongOperationsProducer, ILongOperationsProducer, CoreExtend, ObservableMixin) {
       'use strict';
 
+      //TODO Поддержать выполнение тестов под node!
+      if (typeof window === 'undefined') {
+         return;
+      }
+
       mocha.setup({/*ignoreLeaks:true,*/ globals:[/*'*',*/ '__extends', 'sharedBusDebug', 'sharedBusLog']});
 
 
