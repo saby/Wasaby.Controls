@@ -42,6 +42,9 @@ define('js!WSControls/Lists/ListView2',
                this._navigationController.prepareSource(options.dataSource);
             }
          },
+
+
+         /**
          _onLoadPage: function(list, direction) {
             ListView.superclass._onLoadPage.apply(this, arguments);
             if (this._navigationController) {
@@ -73,6 +76,7 @@ define('js!WSControls/Lists/ListView2',
             BOTTOM_PLACEHOLDER: 'controls-ListView__virtualScrollBottomPlaceholder',
             TOP_TRIGGER: 'controls-ListView__virtualScrollTopLoadTrigger',
             BOTTOM_TRIGGER: 'controls-ListView__virtualScrollBottomLoadTrigger',
+            ITEMS_CONTAINER: 'controls-ListView__itemsContainer',
 
             pageSize: 5,
             maxItems: 15,
@@ -80,8 +84,8 @@ define('js!WSControls/Lists/ListView2',
             // Virtual windows bounds
             // ... [firstIndex ... lastIndex] ...
             window: {
-               firstIndex: null,
-               lastIndex: null
+               start: null,
+               end: null
             },
 
             domElements: {
@@ -96,29 +100,47 @@ define('js!WSControls/Lists/ListView2',
                itemsContainer: undefined
             },
 
-            needResizeAfterUpdate: {
-               top: false,
-               bottom: false
+            resizePlaceholdersAfterUpdate: {
+               top: 0,
+               bottom: 0
+            },
+
+            placeholderSize: {
+               top: 0,
+               bottom: 0
+            },
+
+            firstLoad: true
+         },
+
+         _getStartEnumerationPosition: function() {
+            if (this._virtualScroll.window.end) {
+               this._stopIndex = this._virtualScroll.window.end;
+               this._curIndex = this._virtualScroll.window.start;
+            }
+            else {
+               return this.startIndex;
             }
          },
 
          /**
           * Lifecycle
           */
-         _afterMount: function() {
-            if (this._enableVirtualScroll) {
-               this._initVirtualScroll();
-            }
-         },
 
          _afterUpdate: function() {
-            if (this._virtualScroll.needResizeAfterUpdate.top) {
-               this._resizeVirtualScrollTopPlaceholder(- this._getTopItemsHeight(this._virtualScroll.pageSize));
-               this._virtualScroll.needResizeAfterUpdate.top = false;
+            // Init virtual scroll after loading items
+            if (!this._virtualScrollController && this._display && this._enableVirtualScroll) {
+               this._initVirtualScroll();
             }
-            if (this._virtualScroll.needResizeAfterUpdate.bottom) {
-               this._resizeVirtualScrollBottomPlaceholder(- this._getBottomItemsHeight(this._virtualScroll.pageSize));
-               this._virtualScroll.needResizeAfterUpdate.bottom = false;
+
+            // Resize placeholders after loading new virtual page
+            if (this._virtualScroll.resizePlaceholdersAfterUpdate.top) {
+               this._resizeVirtualScrollTopPlaceholder(- this._getTopItemsHeight(this._virtualScroll.resizePlaceholdersAfterUpdate.top));
+               this._virtualScroll.resizePlaceholdersAfterUpdate.top = 0;
+            }
+            if (this._virtualScroll.resizePlaceholdersAfterUpdate.bottom) {
+               this._resizeVirtualScrollBottomPlaceholder(- this._getBottomItemsHeight(this._virtualScroll.resizePlaceholdersAfterUpdate.bottom));
+               this._virtualScroll.resizePlaceholdersAfterUpdate.bottom = 0;
             }
          },
 
@@ -129,8 +151,12 @@ define('js!WSControls/Lists/ListView2',
          // Set up virtual scroll
          _initVirtualScroll: function () {
             // Get references to DOM elements
+            // TODO: refactor to get divs by name
             var children = this._container.children();
             for (var i = 0; i < children.length; i++) {
+               if (children[i].className === this._virtualScroll.ITEMS_CONTAINER) {
+                  this._virtualScroll.domElements.itemsContainer = children[i];
+               }
                if (children[i].className === this._virtualScroll.TOP_PLACEHOLDER) {
                   this._virtualScroll.domElements.topPlaceholder = children[i];
                   if (children[i].children[0].className === this._virtualScroll.TOP_TRIGGER) {
@@ -146,16 +172,13 @@ define('js!WSControls/Lists/ListView2',
 
             // Create virtual scroll controller
             this._virtualScrollController = new VirtualScroll({
-               itemsLength: 30, /* TODO: number of items in projection */
+               itemsLength: this._display._getItems().length,
                pageSize: this._virtualScroll.pageSize,
                maxItems: this._virtualScroll.maxItems
             });
-
             this._virtualScrollController.subscribe('needLoadPageEnd', function() {
-               // TODO: load new page and recalculate virtual scroll
-            });
-            this._virtualScrollController.subscribe('needLoadPageStart', function() {
-               // TODO: load new page and recalculate virtual scroll
+               this.loadPage('down');
+               // TODO: Update virtual window after loading new page
             });
 
 
@@ -168,7 +191,11 @@ define('js!WSControls/Lists/ListView2',
                   for (var i = 0; i < changes.length; i++) {
                      if (changes[i].isIntersecting) {
                         if (changes[i].target.className === self._virtualScroll.TOP_TRIGGER) {
-                           self._virtualScrollReachTop();
+                           if (!this._virtualScroll.firstLoad) {
+                              self._virtualScrollReachTop();
+                           } else {
+                              this._virtualScroll.firstLoad = false;
+                           }
                         }
                         if (changes[i].target.className === self._virtualScroll.BOTTOM_TRIGGER) {
                            self._virtualScrollReachBottom();
@@ -178,87 +205,85 @@ define('js!WSControls/Lists/ListView2',
                }, {});
             observer.observe(this._virtualScroll.domElements.topLoadTrigger);
             observer.observe(this._virtualScroll.domElements.bottomLoadTrigger);
+
+            this._forceUpdate();
          },
 
          _virtualScrollReachTop: function() {
-            var result = this._virtualScrollController.resizeWindowOnReachTop();
+            var result = this._virtualScrollController.updateWindowOnReachTop();
 
-            this._virtualScroll.window = result[0];
+            this._virtualScroll.window = result.window;
 
-            if (result[2] < 0) {
-               this._resizeVirtualScrollBottomPlaceholder(this._getBottomItemsHeight(this._virtualScroll.pageSize));
+            if (result.bottomChange < 0) {
+               this._resizeVirtualScrollTopPlaceholder(this._getBottomItemsHeight(-result.bottomChange));
             }
-            if (result[1] > 0) {
-               if ($(this._virtualScroll.domElements.topPlaceholder).height() !== 1) {
-                  this._virtualScroll.needResizeAfterUpdate.top = true;
+
+            // Decrease size of top placeholder if adding a new page
+            if (result.topChange > 0) {
+               if (this._virtualScroll.placeholderSize.top) {
+                  this._virtualScroll.resizePlaceholdersAfterUpdate.top = result.topChange;
                }
             }
 
-            this.virtualPageChange(); /* TODO: Update page */
+            this._forceUpdate();
          },
 
          _virtualScrollReachBottom: function () {
-            var result = this._virtualScrollController.resizeWindowOnReachBottom();
+            var result = this._virtualScrollController.updateWindowOnReachBottom();
 
-            this._virtualScroll.window = result[0];
+            this._virtualScroll.window = result.window;
 
-            if (result[1] < 0) {
-               this._resizeVirtualScrollTopPlaceholder(this._getTopItemsHeight(this._virtualScroll.pageSize));
+            if (result.topChange < 0) {
+               this._resizeVirtualScrollTopPlaceholder(this._getTopItemsHeight(-result.topChange));
             }
-            if (result[2] > 0) {
-               if ($(this._virtualScroll.domElements.bottomPlaceholder).height() !== 1) {
-                  this._virtualScroll.needResizeAfterUpdate.bottom = true;
+
+            // Decrease size of bottom placeholder if adding a new page
+            if (result.bottomChange > 0) {
+               if (this._virtualScroll.placeholderSize.bottom) {
+                  this._virtualScroll.resizePlaceholdersAfterUpdate.bottom = result.bottomChange;
                }
             }
 
-            this.virtualPageChange(); /* TODO: Update page */
+            this._forceUpdate();
          },
 
          // Increases (decreases if input is < 0) height of top placeholder
          _resizeVirtualScrollTopPlaceholder: function(size) {
             var topPlaceholder = this._virtualScroll.domElements.topPlaceholder;
-            $(topPlaceholder).height($(topPlaceholder).height() + size + 'px');
+            this._virtualScroll.placeholderSize.top += size;
+            topPlaceholder.style.height = this._virtualScroll.placeholderSize.top + 'px';
          },
 
          // Increases (decreases if input is < 0) height of bottom placeholder
          _resizeVirtualScrollBottomPlaceholder: function(size) {
             var bottomPlaceholder = this._virtualScroll.domElements.bottomPlaceholder;
-            $(bottomPlaceholder).height($(bottomPlaceholder).height() + size + 'px');
+            this._virtualScroll.placeholderSize.bottom += size;
+            bottomPlaceholder.style.height = this._virtualScroll.placeholderSize.bottom + 'px';
          },
 
          // Total height of first n items
          _getTopItemsHeight: function(numItems) {
-            return this._virtualScroll.domElements.itemsContainer.children[numItems].offsetTop -
-               this._virtualScroll.domElements.itemsContainer.children[0].offsetTop;
+            return this._virtualScroll.domElements.itemsContainer.children[0].children[numItems].offsetTop -
+               this._virtualScroll.domElements.itemsContainer.children[0].children[0].offsetTop;
          },
 
          // Total height of last n items
          _getBottomItemsHeight: function(numItems) {
             var lastItem = this._virtualScroll.domElements.itemsContainer.length - 1;
 
-            return this._virtualScroll.domElements.itemsContainer.children[lastItem].offsetTop -
-               this._container.children()[1].children[lastItem - numItems + 1].offsetTop +
-               $(this._container.children()[1].children[lastItem]).outerHeight();
+            return this._virtualScroll.domElements.itemsContainer.children[0].children[lastItem].offsetTop -
+               this._virtualScroll.domElements.itemsContainer.children[0].children[lastItem - numItems + 1].offsetTop +
+               $(this._virtualScroll.domElements.itemsContainer.children[0].children[lastItem]).outerHeight();
          },
 
-
-         /**
-          * EXTRA
-          */
-
-         _scrollLoadNextPage: function() {
-
-         },
-
-         _loadNextPage: function() {
-
-         },
-
-            maxItems: 15,
 
          /**
           * --------------------------------------------
           */
+
+         loadPage: function() {
+
+         },
 
 
          /*DataSource*/
