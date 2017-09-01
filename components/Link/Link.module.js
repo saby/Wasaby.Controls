@@ -1,9 +1,9 @@
 define('js!SBIS3.CONTROLS.Link', [
-   'Deprecated/helpers/string-helpers',
+   'Core/helpers/String/escapeTagsFromStr',
    'js!WSControls/Buttons/Button',
    'tmpl!SBIS3.CONTROLS.Link/resources/hrefTemplate',
    'css!SBIS3.CONTROLS.Link'
-], function(strHelpers, WSButton, hrefTemplate) {
+], function(escapeTagsFromStr, WSButton, hrefTemplate) {
 
    'use strict';
 
@@ -111,7 +111,8 @@ define('js!SBIS3.CONTROLS.Link', [
          if(this._options.href) {
             this._container.get(0).innerHTML = hrefTemplate(this._options);
          }
-         this.setTooltip(strHelpers.htmlToText(caption === undefined || caption === null ? '' : caption + ''));
+         var res = (caption === undefined || caption === null ? '' : caption + '').replace(/<br>/g, '\n');
+         this.setTooltip(escapeTagsFromStr(res, '\\w+'));
       },
 
       _setEnabled: function(enabled){
