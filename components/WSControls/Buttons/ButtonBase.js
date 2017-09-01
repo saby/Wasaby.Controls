@@ -170,7 +170,7 @@ define('js!WSControls/Buttons/ButtonBase', [
             return this.getContainer()[0].querySelector('.js-controls-Button__icon');
          }
          return this.getContainer();
-      },
+      }
    });
 
    return WSButtonBase;
