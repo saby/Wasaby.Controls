@@ -42,11 +42,18 @@ properties([
             name: 'theme'),
         choice(choices: "chrome\nff", description: '', name: 'browser_type'),
         choice(choices: "all\nonly_reg\nonly_int\nonly_unit", description: '', name: 'run_tests'),
-        booleanParam(defaultValue: false, description: "", name: 'RUN_ONLY_FAIL_TEST')]),
+        booleanParam(defaultValue: false, description: "", name: 'RUN_ONLY_FAIL_TEST'),
+        booleanParam(defaultValue: false, description: "Запуск вручную", name: 'RUN_HANDS')
+        ]),
     pipelineTriggers([])
 ])
 
 node('controls') {
+    if ( "${env.BUILD_NUMBER}" != 1 && "${params.RUN_HANDS}" == "false" ) {
+        echo '[FAILURE] Failed to build'
+        currentBuild.result = 'FAILURE'
+        sh "exit 1"
+    }
     def version = "3.17.110"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
@@ -88,7 +95,7 @@ node('controls') {
                 unit = true
                 break
         }
-        
+
         stage("Checkout"){
             // Контролы
             dir(workspace) {
