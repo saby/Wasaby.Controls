@@ -448,41 +448,47 @@ node('controls') {
             run_test_fail = "-sf"
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
-        stage("Инт.тесты"){
-            if ( inte ){
-                def site = "http://${NODE_NAME}:30001"
-                site.trim()
-                if ( "${TAGS}" != "") {
-                dir("./controls/tests/int"){
-                    sh """
-                    source /home/sbis/venv_for_test/bin/activate
-                    python start_tests.py --RESTART_AFTER_BUILD_MODE --TAGS_TO_START ${TAGS} ${run_test_fail}
-                    deactivate
-                    """
-                }
-                } else {
-                dir("./controls/tests/int"){
-                    sh """
-                    source /home/sbis/venv_for_test/bin/activate
-                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
-                    deactivate
-                    """
-                }
-                }
-            }
-        }
-        stage("Рег.тесты"){
-            if ( regr ){
-                sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
-                dir("./controls/tests/reg"){
-                    sh """
-                        source /home/sbis/venv_for_test/bin/activate
-                        python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
-                        deactivate
-                    """
+        parallel (
+            int_test: {
+                stage("Инт.тесты"){
+                    if ( inte ){
+                        def site = "http://${NODE_NAME}:30001"
+                        site.trim()
+                        if ( "${TAGS}" != "") {
+                        dir("./controls/tests/int"){
+                            sh """
+                            source /home/sbis/venv_for_test/bin/activate
+                            python start_tests.py --RESTART_AFTER_BUILD_MODE --TAGS_TO_START ${TAGS} ${run_test_fail}
+                            deactivate
+                            """
+                        }
+                        } else {
+                        dir("./controls/tests/int"){
+                            sh """
+                            source /home/sbis/venv_for_test/bin/activate
+                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
+                            deactivate
+                            """
+                        }
+                        }
+                    }
                 }
             }
-        }
+            reg_test: {
+                stage("Рег.тесты"){
+                    if ( regr ){
+                        sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
+                        dir("./controls/tests/reg"){
+                            sh """
+                                source /home/sbis/venv_for_test/bin/activate
+                                python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
+                                deactivate
+                            """
+                        }
+                    }
+                }
+            }
+        )
         sh """
             sudo chmod -R 0777 ${workspace}
             sudo chmod -R 0777 /home/sbis/Controls1
