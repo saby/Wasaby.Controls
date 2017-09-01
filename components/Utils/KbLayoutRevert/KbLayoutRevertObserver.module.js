@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
        * @extends Core/core-extend
        * @public
        */
-      var KbLayoutRevertObserver = cExtend({}, /** @lends SBIS3.CONTROLS.Utils.KbLayoutRevertObserver */{
+      var KbLayoutRevertObserver = cExtend({}, /** @lends SBIS3.CONTROLS.Utils.KbLayoutRevertObserver.prototype */{
          $protected: {
             _options: {
                /**
