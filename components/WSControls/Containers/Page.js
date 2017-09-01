@@ -8,6 +8,8 @@ define('js!WSControls/Containers/Page',
       'Core/moduleStubs',
       //TODO: убрать
       'js!WSDemo/Configs/OnlineConfig',
+      //TODO: убрать, хак для препроцессора, без этого на сервере не строится
+      'js!WSControls/Templates/OnlineTemplate',
       'css!WSControls/Containers/Page'
    ],
 
@@ -17,8 +19,8 @@ define('js!WSControls/Containers/Page',
       var Page = Base.extend({
          _controlName: 'WSControls/Containers/Page',
          _template: template,
-         wsRoot: '/sbis3-ws/ws/',
-         resourceRoot: '/components',
+         wsRoot: '/ws/',
+         resourceRoot: '/resources/',
 
          constructor: function(cfg) {
             var

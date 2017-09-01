@@ -26,7 +26,8 @@ define('js!WSControls/Templates/OnlineTemplate',
             if (cfg.tabButtonsConfig) {
                this._currentTab = URLHelpers.getQueryParam('currentTab') || 0;
             }
-            this._logoUrl = cfg.logoUrl ? cfg.logoUrl : 'components/WSControls/Templates/resources/logo.svg';
+            //TODO: как-то нормально прописывать путь до svg
+            this._logoUrl = cfg.logoUrl ? cfg.logoUrl : 'resources/SBIS3.CONTROLS/components/WSControls/Templates/resources/logo.svg';
          },
 
          _beforeUpdate: function(cfg) {
