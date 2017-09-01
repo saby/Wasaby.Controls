@@ -93,7 +93,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                    this._options.view.subscribe('onSetRoot', function (e, root) {
                       var filters = this._getFiltersFormHash();
                       filters[this._options.view.getParentProperty()] = root;
-                      this._setFiltersToHash(filters)
+                      this._setFiltersToHash(filters);
+                      this._onApplyFilterHandler();//сохранаяем в пользовательскую историю что бы фильтр применился при обновлении страницы
                    }.bind(this));
                 }
              }
@@ -317,8 +318,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                    }
                 }
              }
-
-             return viewFilter;
+             var hashFilter = this._getFiltersFormHash();
+             return cMerge(viewFilter, hashFilter);
           },
 
 	       /**
@@ -337,60 +338,52 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
            * @private
            */
           getActiveFilter: function() {
-             var filter = this.getHistoryArr().find(function(item) {
-                    return item.isActiveFilter;
-                }),
-                hashFilter = this._getFiltersFormHash();
-             if (filter && hashFilter) {
-                for (var key in hashFilter) {
-                   if (hashFilter.hasOwnProperty(key)) {
-                      filter.filter.each(function(filterConfig){
-                         if (filterConfig.filterField == key) {
-                            filterConfig.value = hashFilter[key]
-                         }
-                      });
-                   }
-                }
-             }
-             return filter;
-
+             return this.getHistoryArr().find(function(item) {
+                 return item.isActiveFilter;
+             });
           },
           /**
            * возвращает фильтры из хеша
            * @private
            */
           _getFiltersFormHash: function () {
-             var filter = HashManager.get(this._options.historyId),
-                filtersForHistory = this._options.filtersForHistory;
-             if (filter) {
+             var hashValue = HashManager.get(this._options.historyId),
+                filtersForHistory = this._options.filtersForHistory,
+                filter = {};
+             if (hashValue) {
                 if (filtersForHistory.length == 1) {
-                   var hashFilters = {};
-                   hashFilters[filtersForHistory[0]] =  filter;
-                   return hashFilters;
+                   filter[filtersForHistory[0]] =  hashValue;
+                } else {
+                   filter = JSON.parse(hashValue);
                 }
-                return JSON.parse(filter);
              }
-             return {};
+             filtersForHistory.forEach(function (name) {
+                if (!filter.hasOwnProperty(name)) {
+                   filter[name] = null; //todo если фильтра нет то надо востановить значение по умолчанию пока тольк раздел это null
+                }
+             });
+             return filter;
           },
           _setFiltersToHash: function (filters) {
-             var filtersForHistory = this._options.filtersForHistory;
+             var filtersForHistory = this._options.filtersForHistory,
+                saveFilters = {};
              if (filtersForHistory.length > 0) {
                 //если сохранять надо только один фильтр то сохраняем только значение, так хеш будет короче
                 if (filtersForHistory.length == 1) {
-                   HashManager.set(this._options.historyId, filters[filtersForHistory[0]]);
+                   saveFilters = filters[filtersForHistory[0]];
                 } else {
-                   var saveFilters = {};
                    filtersForHistory.forEach(function (name) {
                       var value = filters[name];
                       if (typeof value  !== undefined) {
                          saveFilters[name] = filters[name];
                       }
-                      if (saveFilters) {
-                         HashManager.set(this._options.historyId, JSON.stringify(saveFilters));
-                      } else {
-                         HashManager.remove(this._options.historyId);
-                      }
                    }.bind(this));
+                   saveFilters = JSON.stringify(saveFilters);
+                }
+                if (saveFilters) {
+                   HashManager.set(this._options.historyId, JSON.stringify(saveFilters));
+                } else {
+                   HashManager.remove(this._options.historyId);
                 }
              }
           },
