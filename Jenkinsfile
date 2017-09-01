@@ -51,7 +51,7 @@ properties([
 node('controls') {
     if ( "${env.BUILD_NUMBER}" != "1" && "${params.RUN_HANDS}" == "false" ) {
         currentBuild.result = 'ABORTED'
-        error('Stopping early…')
+        error('Ветка запустилась по пушу')
     }
     def version = "3.17.110"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
