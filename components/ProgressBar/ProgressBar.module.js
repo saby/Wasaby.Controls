@@ -3,16 +3,17 @@
  */
 define('js!SBIS3.CONTROLS.ProgressBar',
    [
-      'js!WSControls/Control/Base',
+      'Core/Control',
       'tmpl!SBIS3.CONTROLS.ProgressBar',
+      'js!WS.Data/Type/descriptor',
       'js!SBIS3.CONTROLS.ProgressBar.compatibility',
       'css!SBIS3.CONTROLS.ProgressBar'
    ],
-   function(LightControl, template, Compatibility) {
+   function(Control, template, types, Compatibility) {
       /**
        * Контрол, индикатор прохождения процесса
        * @class SBIS3.CONTROLS.ProgressBar
-       * @extends WSControls/Control/Base
+       * @extends Core/Control
        * @demo SBIS3.CONTROLS.Demo.MyProgressBar
        *
        * @control
@@ -37,67 +38,59 @@ define('js!SBIS3.CONTROLS.ProgressBar',
        * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner record stateKey
        * @ignoreOptions subcontrol verticalAlignment
        */
-      var ProgressBar = LightControl.extend([Compatibility], {
+      var ProgressBar = Control.extend([Compatibility], {
          _template: template,
 
          _controlName: 'SBIS3.CONTROLS.ProgressBar',
 
-         _beforeMount: function(options) {
-            this._beforeUpdate(options);
-         },
-
-         _afterMount: function() {
-            this._afterUpdate();
-         },
-
-         _beforeUpdate: function(newOptions) {
-            // TODO: убрать после согласования опций по умолчанию.
-            Compatibility._beforeUpdate.call(this, newOptions);
-
-            this._checkRanges(newOptions);
-            /**
-             * @cfg {String} Текущее состояние прогресса в процентах на момен рендера.
-             */
-            this._progressPercent = this._getProgressPercent(newOptions) + '%';
-         },
-
-         _afterUpdate: function() {
-            delete this._progressPercent;
-         },
-
-         _checkRanges: function(options) {
+         _getProgressPercent: function(minimum, maximum, progress, step) {
             var
-               progress = options.progress,
-               minimum = options.minimum,
-               maximum = options.maximum;
-
-            if (progress < minimum) {
-               options.progress = minimum;
-            }
-            if (progress > maximum) {
-               options.progress = maximum;
-            }
-            if (maximum < minimum) {
-               maximum ^= minimum ^= maximum;
-               minimum ^= maximum;
-               options.minimum = minimum;
-               options.maximum = maximum;
-            }
-         },
-
-         _getProgressPercent: function(options) {
-            var
-               progress = options.progress,
-               minimum = options.minimum,
-               step = options.step,
-               length = options.maximum - minimum,
+               length = maximum - minimum,
                progressPercent = Math.round((progress - minimum) / length * 100);
 
-            if (progressPercent !== 100) {
-               progressPercent = Math.floor(progressPercent / step) * step;
-            }
-            return progressPercent;
+            return progressPercent !== 100 ? Math.floor(progressPercent / step) * step : 100;
          }
       });
+
+      ProgressBar.getDefaultOptions = function() {
+         return {
+            /**
+             * @cfg {Number} Минимальное значение прогресса.
+             */
+            minimum: 0,
+            /**
+             * @cfg {Number} Максимальное значение прогресса.
+             */
+            maximum: 100,
+            /**
+             * @cfg {Number} Текущей значени прогресс.
+             */
+            progress: 0,
+            /**
+             * @cfg {Number} Шаг между ближайшими возможными значениями прогресса в процентах.
+             */
+            step: 1,
+            /**
+             * @cfg {String} Расположения текста процесса.
+             * 1.center;
+             * 2.left;
+             * 3.right;
+             */
+            progressPosition: 'center'
+         };
+      };
+      ProgressBar.getOptionTypes =  function getOptionTypes() {
+         return {
+            minimum: types(Number),
+            maximum: types(Number),
+            progress: types(Number),
+            step: types(Number),
+            progressPosition: types(String).oneOf([
+               'center',
+               'left',
+               'right'
+            ])
+         };
+      };
    return ProgressBar;
 });
