@@ -290,7 +290,7 @@ define(
                datetime: rk('Дата или время заполнены некорректно')
             };
          //Добавляем к прикладным валидаторам стандартный, который проверяет что дата заполнена корректно.
-         this._options.validators.push({
+         this.addValidators([{
             validator: function() {
                return self._getFormatModel().isEmpty(this._getMaskReplacer()) ? true : self._options.date instanceof Date;
             },
@@ -300,7 +300,7 @@ define(
                return self._options.date instanceof Date ? self._options.date.getFullYear() > 1400 : true;
             },
             errorMessage: rk('Год должен быть больше 1400')
-         });
+         }]);
       },
 
      /**
@@ -309,9 +309,16 @@ define(
       * @private
       */
       setText: function (text) {
+         var oldText = this._options.text;
          DateBox.superclass.setText.call(this, text);
          this._options.date = text == '' ? null : this._getDateByText(text, this._lastDate);
          this._setLastDate(this._options.date);
+         // Во время пользовательского ввода в режиме complete события генерируются при потере фокуса.
+         // Но если значение устанавливается программно, то мы генерируем события сразу же.
+         if (this._options.notificationMode === 'complete' && oldText !== this._options.text) {
+            this._notifyOnTextChange();
+            this._notifyOnDateChanged();
+         }
       },
 
       /**

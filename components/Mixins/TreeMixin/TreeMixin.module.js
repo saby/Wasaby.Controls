@@ -13,12 +13,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    "js!WS.Data/Relation/Hierarchy",
    "Core/core-instance",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
-   "Core/helpers/functional-helpers",
+   "Core/helpers/Function/forAliveOnly",
    "Core/IoC",
    "Core/helpers/Object/isEmpty",
    "Core/helpers/Object/isPlainObject",
    "js!WS.Data/Adapter/Sbis"
-], function ( cFunctions, cMerge, TreeDataReload, constants, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, cInstance, TemplateUtil, fHelpers, IoC, isEmpty, isPlainObject) {
+], function ( cFunctions, cMerge, TreeDataReload, constants, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, cInstance, TemplateUtil, forAliveOnly, IoC, isEmpty, isPlainObject) {
 
    var createDefaultProjection = function(items, cfg) {
       var
@@ -93,7 +93,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          highlightText: cfg.highlightText,
          colorMarkEnabled: cfg.colorMarkEnabled,
          colorField: cfg.colorField,
-         allowEnterToFolder: cfg.allowEnterToFolder
+         allowEnterToFolder: cfg.allowEnterToFolder,
+         task1173671799: cfg.task1173671799
       }
    },
    searchProcessing = function(src, cfg) {
@@ -821,7 +822,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                }
                this._options.openedPath[id] = true;
                this._options._folderOffsets[id] = 0;
-               return this._loadNode(id).addCallback(fHelpers.forAliveOnly(function() {
+               return this._loadNode(id).addCallback(forAliveOnly(function() {
                   var expItem;
                   if (hash) {
                      expItem = this._getItemsProjection().getByHash(hash);
@@ -840,7 +841,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          if (this._dataSource && !this._loadedNodes[id] && this._options.partialyReload) {
             this._toggleIndicator(true);
             this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), 0, this._limit);
-            return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(fHelpers.forAliveOnly(function (list) {
+            return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(forAliveOnly(function (list) {
                this._options._folderHasMore[id] = list.getMetaData().more;
                this._loadedNodes[id] = true;
                this._notify('onDataMerge', list); // Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
@@ -866,7 +867,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        * Получить список записей для отрисовки
        * @private
        */
-      _breadCrumbsItemClick : function(id) {
+      _breadCrumbsItemClick : function(id, crumbPath) {
+         var
+            self = this;
          //Таблицу нужно связывать только с тем PS, в который кликнули. Хорошо, что сначала идет _notify('onBreadCrumbClick'), а вотом выполняется setCurrentRoot
          if (this._notify('onSearchPathClick', id) !== false ) {
 
@@ -881,8 +884,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             this.setHighlightText('', false);
             this.setFilter(filter, true);
             this._options.hierarchyViewMode = false;
-            this.setCurrentRoot(id);
-            this.reload();
+            if (this._options.task1173671799) {
+               crumbPath.forEach(function(id) {
+                  self._options.openedPath[id] = true;
+               });
+               this.setCurrentRoot(this.getRoot());
+               this.reload(undefined, undefined, undefined, undefined, true); // Это deepReload, детка!
+            } else {
+               this.setCurrentRoot(id);
+               this.reload();
+            }
          }
       },
       _isVisibleItem: function(item, onlyFolders) {
@@ -1161,7 +1172,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             filter;
          this._toggleIndicator(true);
          this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit);
-         this._loader = this._callQuery(this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit).addCallback(fHelpers.forAliveOnly(function (dataSet) {
+         this._loader = this._callQuery(this._createTreeFilter(id), this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit).addCallback(forAliveOnly(function (dataSet) {
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
             self._notify('onDataMerge', dataSet);

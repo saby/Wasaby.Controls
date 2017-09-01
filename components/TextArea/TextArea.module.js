@@ -2,13 +2,13 @@ define('js!SBIS3.CONTROLS.TextArea', [
    "Core/constants",
    "js!SBIS3.CONTROLS.TextBox",
    'tmpl!SBIS3.CONTROLS.TextArea/resources/inputField',
-   "Core/helpers/string-helpers",
+   'Core/helpers/String/escapeHtml',
    'js!SBIS3.CONTROLS.Utils.LinkWrap',
    "Core/IoC",
    "Core/helpers/dom&controls-helpers",
    "browser!js!SBIS3.CORE.FieldText/resources/Autosize-plugin",
    'css!SBIS3.CONTROLS.TextArea'
-], function( constants,TextBox, inputField, strHelpers, LinkWrap, IoC, dcHelpers) {
+], function( constants,TextBox, inputField, escapeHtml, LinkWrap, IoC, dcHelpers) {
 
    'use strict';
 
@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
     * </ul>
     * @class SBIS3.CONTROLS.TextArea
     * @extends SBIS3.CONTROLS.TextBoxBase
-    * @author Роман Валерий Сергеевич
+    * @author Романов Валерий Сергеевич
     * @css controls-TextArea Класс для изменения отображения текста в многострочном поле ввода.
     *
     * @ignoreOptions independentContext contextRestriction className
@@ -67,10 +67,13 @@ define('js!SBIS3.CONTROLS.TextArea', [
          _cachedH: null,
          _pasteCommand: 'insertText',
          _autoSizeInitialized: false,
+         //TODO надо подумать как работать с автосайзом эрии без плагина, т.к. в VDOM все равно не получится, как вариант contentEditable
+         _myResize: false, //флаг нужен для того, чтобы мы могли отличить ресайз, если он был инициирован самим полем, то надо известить родителя, если пришел извне, то не надо
+         
          _options: {
             textFieldWrapper: inputField,
             wrapUrls: LinkWrap.wrapURLs,
-            escapeHtml: strHelpers.escapeHtml,
+            escapeHtml: escapeHtml,
              /**
               * @cfg {String} Текст подсказки внутри поля ввода
               * @remark
@@ -169,13 +172,16 @@ define('js!SBIS3.CONTROLS.TextArea', [
             if (!self._processNewLine(event) && !event.altKey && !event.ctrlKey && event.which !== constants.key.esc && event.which !== constants.key.tab) {
                event.stopPropagation();
             }
+            self._myResize = true;
          });
 
          this._inputField.bind('paste', function(){
             self._pasteProcessing++;
+            if (!self._myResize) self._myResize = true;
             window.setTimeout(function(){
                self._pasteProcessing--;
                if (!self._pasteProcessing) {
+
                   self.setText.call(self, self._formatText(self._inputField.val()));
                   self._inputField.val(self._options.text);
                }
@@ -248,12 +254,21 @@ define('js!SBIS3.CONTROLS.TextArea', [
       _autosizeTextArea: function(hard){
          var self = this;
          this._inputField.autosize({
-            callback: self._notifyOnSizeChanged(self, self),
-            hard: hard
+            callback: function() {
+               if (self._myResize) {
+                  self._notifyOnSizeChanged(self, self);
+                  self._myResize = false;
+               }
+            },
+            hard : hard
          });
 
 
          this._removeAutoSizeDognail();
+      },
+
+      _autoSizeRecalc: function() {
+         this._inputField.trigger('autosize.resize');
       },
 
       _getElementToFocus: function() {
@@ -284,7 +299,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
       _updateDisabledWrapper: function() {
          if (this._disabledWrapper && !this.isEnabled()) {
             var
-               newText = strHelpers.escapeHtml(this.getText());
+               newText = escapeHtml(this.getText());
             this._disabledWrapper.html(LinkWrap.wrapURLs(newText));
             this._disabledWrapper.toggleClass('controls-TextArea__view-empty', !newText);
          }
@@ -339,13 +354,20 @@ define('js!SBIS3.CONTROLS.TextArea', [
       _drawText: function(text) {
          if (this._inputField.val() != text) {
             this._inputField.val(text || '');
-            this._autosizeTextArea(true);
+            this._autoSizeRecalc();
          }
       },
 
       setMaxLength: function(num) {
          TextArea.superclass.setMaxLength.call(this, num);
          this._inputField.attr('maxlength',num);
+      },
+
+
+
+      _onResizeHandler : function(){
+         this._autoSizeRecalc();
+         TextArea.superclass._onResizeHandler.apply(this, arguments);
       },
 
       destroy: function() {

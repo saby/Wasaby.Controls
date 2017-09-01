@@ -28,6 +28,11 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
 
          $protected: {
             _options: {
+               tabKey: null,
+               producer: null,
+               operationId: null,
+               isFailed: null,
+               failedOperation: null
             },
 
             _data: [{
@@ -50,7 +55,7 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
          },
 
          $constructor: function () {
-            this.getLinkedContext().setValue('filter', {});
+            this.getLinkedContext().setValue('filter', {onlyErrors:!!this._options.isFailed});
          },
 
          init: function () {
@@ -102,7 +107,7 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
                   title: failedOperation.get('title'),
                   id: failedOperation.get('id'),
                   //producer: failedOperation.get('producer'),
-                  endedAt: new Date(failedOperation.get('startedAt').getTime() + (failedOperation.get('timeSpent') || 0)),
+                  endedAt: new Date(failedOperation.get('startedAt').getTime() + (failedOperation.get('timeSpent') || 0) + (failedOperation.get('timeIdle') || 0)),
                   errorMessage: failedOperation.get('resultMessage') || 'Ошибка',
                   isFailed: true
                });

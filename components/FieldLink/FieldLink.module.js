@@ -4,7 +4,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "Core/constants",
        "Core/IoC",
        "Core/core-instance",
-       "Core/helpers/functional-helpers",
+       'Core/helpers/Function/forAliveOnly',
+       'Core/helpers/Function/memoize',
        'Deprecated/helpers/dom&controls-helpers',
        "Core/helpers/string-helpers",
        "Core/ParserUtilities",
@@ -25,6 +26,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "js!SBIS3.CONTROLS.ToSourceModel",
        "js!WS.Data/Collection/List",
        "js!SBIS3.CONTROLS.Utils.ItemsSelection",
+       "Core/helpers/Object/find",
        "js!SBIS3.CONTROLS.IconButton",
        "js!SBIS3.CONTROLS.Action.SelectorAction",
        'js!SBIS3.CONTROLS.FieldLink.Link',
@@ -39,7 +41,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
         constants,
         IoC,
         cInstance,
-        fHelpers,
+        forAliveOnly,
+        memoize,
         domHelpers,
         strHelpers,
         ParserUtilities,
@@ -69,7 +72,8 @@ define('js!SBIS3.CONTROLS.FieldLink',
         TemplateUtil,
         ToSourceModel,
         List,
-        ItemsSelectionUtil
+        ItemsSelectionUtil,
+        objectFind
     ) {
 
        'use strict';
@@ -423,7 +427,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
           },
 
-          _getSelectorAction: fHelpers.memoize(function() {
+          _getSelectorAction: memoize(function() {
              return this.getChildControlByName('FieldLinkSelectorAction');
           }, '_getSelectorAction'),
 
@@ -580,7 +584,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              var config;
 
              if(key) {
-                config = this._options.dictionaries.find(function (elem) {
+                config = objectFind(this._options.dictionaries, function (elem) {
                    return elem.name === key;
                 });
              } else {
@@ -610,12 +614,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
              if(constants.browser.firefox && active && !this.getText() && this._isEmptySelection()) {
                 var elemToFocus = this._getElementToFocus();
 
-                setTimeout(fHelpers.forAliveOnly(function () {
+                setTimeout(forAliveOnly(function () {
                    if(elemToFocus[0] === document.activeElement){
                       var suggestShowed = this.isPickerVisible();
                       elemToFocus.blur().focus();
 
-                      if(!suggestShowed) {
+                      //https://online.sbis.ru/opendoc.html?guid=19af9bf9-0d16-4f63-8aa8-6d0ef7ff0799
+                      if(!suggestShowed && !this._options.task1174306848) {
                          this.hidePicker();
                       }
                    }
@@ -772,11 +777,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
              return cfg;
           },
    
-          _getLinkCollection: fHelpers.memoize(function() {
+          _getLinkCollection: memoize(function() {
              return this.getChildControlByName('FieldLinkItemsCollection');
           }, '_getLinkCollection'),
           
-          _getInputMinWidth: fHelpers.memoize(function() {
+          _getInputMinWidth: memoize(function() {
              var fieldWrapper = this.getContainer().find('.controls-FieldLink__fieldWrapper');
              return parseInt(window.getComputedStyle(fieldWrapper[0]).getPropertyValue('--min-width') || fieldWrapper.css('min-width'));
           }, '_getInputMinWidth'),
@@ -1188,7 +1193,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              }
           },
           
-          _getShowAllButton: fHelpers.memoize(function () {
+          _getShowAllButton: memoize(function () {
              return this.getContainer().find('.controls-FieldLink__showAllLinks');
           }, '_showAllButton'),
 

@@ -73,6 +73,20 @@ define(['js!SBIS3.CONTROLS.DateBox'], function (DateBox) {
       // };
       this.ctx.controlConfig = {};
 
+      describe('initialization', function () {
+         this.ctx.controlConfig.validators = [];
+         // Этот вызов должен быть во внешнем describe, но тогда мы не сможем модифицировать опции во внутренних describe.
+         controlTestCase();
+
+         it('should add 2 validators', function () {
+            assert.lengthOf(this.testControl._options.validators, 2);
+         });
+
+         it('should not modify validators array from options', function () {
+            assert.notStrictEqual(this.testControl._options.validators, this.controlConfig.validators);
+         });
+      });
+
       describe('auto set century with YY year mask', function () {
          this.ctx.controlConfig.mask = 'DD.MM.YY';
          // Этот вызов должен быть во внешнем describe, но тогда мы не сможем модифицировать опции во внутренних describe.
@@ -96,5 +110,25 @@ define(['js!SBIS3.CONTROLS.DateBox'], function (DateBox) {
             assert.equal(this.testControl.getDate().getFullYear(), date.getFullYear() - 100);
          });
       });
+      describe('.setText', function () {
+         controlTestCase();
+         it('should generate onTextChange and onDateChange events', function () {
+            let onTextChange = sinon.spy(),
+               onDateChange = sinon.spy(),
+               onPropertiesChanged = sinon.spy(),
+               onPropertyChanged = sinon.spy();
+            this.testControl.subscribe('onTextChange', onTextChange);
+            this.testControl.subscribe('onDateChange', onDateChange);
+            this.testControl.subscribe('onPropertiesChanged', onPropertiesChanged);
+            this.testControl.subscribe('onPropertyChanged', onPropertyChanged);
+            this.testControl.setText('11.11.11');
+            assert(onTextChange.calledOnce, `onTextChange called ${onTextChange.callCount}`);
+            assert(onDateChange.calledOnce, `onDateChange called ${onDateChange.callCount}`);
+            // onPropertiesChanged вызывается 2 раза. Если будет актуально, то в будущем можно оптимизировать избавившись от лишних вызовов.
+            assert(onPropertiesChanged.calledTwice, `onPropertiesChanged called ${onPropertiesChanged.callCount}`);
+            assert(onPropertyChanged.calledTwice, `onPropertyChanged called ${onPropertyChanged.callCount}`);
+         });
+      });
    });
 });
+

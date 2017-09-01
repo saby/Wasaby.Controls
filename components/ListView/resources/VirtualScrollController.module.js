@@ -44,8 +44,9 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
 
          reset: function(){
             this._currentVirtualPage = 0;
-            this._currentWindow = this._getRangeToShow(0, PAGES_COUNT);
             this._heights = [];
+            this.initHeights();
+            this._currentWindow = this._getRangeToShow(0, PAGES_COUNT);
          },
 
          _scrollHandler: function (e, scrollTop) {

@@ -12,11 +12,12 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
       'js!WS.Data/Entity/ObservableMixin',
       'Core/Deferred',
       'Core/UserInfo',
+      'js!SBIS3.CONTROLS.LongOperationsConst',
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.ILongOperationsProducer'
    ],
 
-   function (CoreExtend,  ObservableMixin, Deferred, UserInfo, LongOperationEntry, ILongOperationsProducer) {
+   function (CoreExtend,  ObservableMixin, Deferred, UserInfo, LongOperationsConst, LongOperationEntry, ILongOperationsProducer) {
       'use strict';
 
       /**
@@ -111,13 +112,14 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                //GenericLongOperationsProducer.superclass.destroy.apply(this, arguments);
                var STATUSES = LongOperationEntry.STATUSES;
                var DEFAULTS = LongOperationEntry.DEFAULTS;
-               var ERR = 'User left the page';
+               var ERR = LongOperationsConst.ERR_UNLOAD;
                var snapshots = GLOStorage.list(this._name);
                var oIds = [];
                for (var i = 0; i < snapshots.length; i++) {
                   var o = snapshots[i];
                   var status = 'status' in o ? o.status : DEFAULTS.status;
-                  if (status === STATUSES.running || status === STATUSES.suspended) {
+                  var wasRun = status === STATUSES.running;
+                  if (wasRun || status === STATUSES.suspended) {
                      var operationId = o.id;
                      var handlers = this._actions ? this._actions[operationId] : null;
                      // Если обработчики действий пользователя установлены в этой вкладке
@@ -127,7 +129,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                         o.status = STATUSES.ended;
                         o.isFailed = true;
                         o.resultMessage = ERR;
-                        o.timeSpent = (new Date()).getTime() - o.startedAt;
+                        o[wasRun ? 'timeSpent' : 'timeIdle'] = (new Date()).getTime() - o.startedAt - o[wasRun ? 'timeIdle' : 'timeSpent'];
                         GLOStorage.put(this._name, operationId, o);
                         oIds.push(operationId);
                      }
@@ -202,7 +204,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                throw new TypeError('Argument "options.extra" must be an object if present');
             }
             if (this._isDestroyed) {
-               return Deferred.fail('User left the page');
+               return Deferred.fail(LongOperationsConst.ERR_UNLOAD);
             }
             var operations = _list(this, options.where, options.orderBy || DEFAULT_FETCH_SORTING, options.offset, options.limit);
             if (operations.length) {
@@ -236,7 +238,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                throw new TypeError('Argument "action" must be a string');
             }
             if (this._isDestroyed) {
-               return Deferred.fail('User left the page');
+               return Deferred.fail(LongOperationsConst.ERR_UNLOAD);
             }
             var handlers = {
                suspend: 'onSuspend',
@@ -269,10 +271,39 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             }
          },
 
+         /**
+          * Проверить, можно ли в данный момент ликвидировать экземпляр класса без необратимой потери данных
+          * @public
+          * @return {boolean}
+          */
+         canDestroySafely: function () {
+            if (!this._isDestroyed) {
+               if (this._actions) {
+                  var snapshots = GLOStorage.list(this._name);
+                  if (snapshots.length) {
+                     var STATUSES = LongOperationEntry.STATUSES;
+                     var DEFAULTS = LongOperationEntry.DEFAULTS;
+                     for (var i = 0; i < snapshots.length; i++) {
+                        var o = snapshots[i];
+                        if (this._actions[o.id]) {
+                           var status = 'status' in o ? o.status : DEFAULTS.status;
+                           if (status === STATUSES.running || status === STATUSES.suspended) {
+                              // Если обработчики действий пользователя установлены в этой вкладке
+                              // При разрушении продюсера обработчики будут утеряны, что приведёт к необратимой потере данных
+                              return false;
+                           }
+                        }
+                     }
+                  }
+               }
+               return true;
+            }
+         },
+
 
 
          /**
-          * Начать отображение длительной операции. В аргумент stopper при его разрешении возвращаются результат операции для отображения.
+          * Начать отслеживать ход длительной операции. В аргумент stopper при его разрешении возвращаются результат операции для отображения.
           * Обработчики всех действий (onSuspend, onResume, onDelete) должны возвращать булево значение, показывающее успешность выполнения действия
           * Перед вызовом метода нужно убедиться, что продюсер зарегистрирован в менеджере длительных операций
           * @public
@@ -500,15 +531,16 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
          if (status !== operation.status) {
             var isAllowed;
             var prev = operation.status;
+            var wasRun = prev === STATUSES.running;
             switch (status) {
                case STATUSES.running:
                   isAllowed = prev === STATUSES.suspended;
                   break;
                case STATUSES.suspended:
-                  isAllowed = prev === STATUSES.running;
+                  isAllowed = wasRun;
                   break;
                case STATUSES.ended:
-                  isAllowed = prev === STATUSES.running || prev === STATUSES.suspended;
+                  isAllowed = wasRun || prev === STATUSES.suspended;
                   break;
             }
             if (!isAllowed) {
@@ -527,8 +559,6 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                   result = {changed:'status'};
                   break;
                case STATUSES.ended:
-                  operation.progressCurrent = operation.progressTotal;
-                  operation.timeSpent = (new Date()).getTime() - operation.startedAt;
                   if (operation.canDelete) {
                      var actions = self._actions[operationId];
                      delete actions.onSuspend;
@@ -540,6 +570,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                   eventType = 'onlongoperationended';
                   var err = details ? details.error : null;
                   if (!err) {
+                     operation.progressCurrent = operation.progressTotal;
                      if (details) {
                         if (details.url && typeof details.url === 'string') {
                            operation.resultUrl = details.url;
@@ -569,6 +600,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
                   }
                   break;
             }
+            operation[wasRun ? 'timeSpent' : 'timeIdle'] = (new Date()).getTime() - operation.startedAt - operation[wasRun ? 'timeIdle' : 'timeSpent'];
             GLOStorage.put(self._name, operationId, _toSnapshot(operation));
             var common = {producer:self._name, operationId:operationId, status:status};
             self._notify(eventType, result ? ObjectAssign(common, result) : common);

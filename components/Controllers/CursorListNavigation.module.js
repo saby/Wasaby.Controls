@@ -27,6 +27,14 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
                }
             }
          },
+         $constructor: function() {
+            if (!(this._options.config.field instanceof Array)) {
+               this._options.config.field = [this._options.config.field];
+            }
+            if (!(this._options.config.position instanceof Array)) {
+               this._options.config.position = [this._options.config.position];
+            }
+         },
          _getCalculatedParams: function() {
             var sign = '', additionalFilter = {};
             switch(this._options.config.direction) {
@@ -35,7 +43,10 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
                case 'both': sign = '~'; break;
             }
 
-            additionalFilter[this._options.config.field + sign] = this._options.config.position;
+            for (var i = 0; i < this._options.config.field.length; i++) {
+               additionalFilter[this._options.config.field[i] + sign] = this._options.config.position[i];
+            }
+
             return {
                filter : additionalFilter
             }
@@ -62,8 +73,12 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
                   this.setDirection('after');
                   edgeRecord = projection.at(projection.getCount() - 1).getContents();
                }
-               filterValue = edgeRecord.get(this._options.config.field);
-               this.setPosition(filterValue);
+               var newPos = [];
+               for (var i = 0; i < this._options.config.field.length; i++) {
+                  filterValue = edgeRecord.get(this._options.config.field[i]);
+                  newPos.push(filterValue);
+               }
+               this.setPosition(newPos);
             }
             var params = this._getCalculatedParams();
 
@@ -74,7 +89,7 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
             return params;
          },
 
-         analizeResponceParams: function(dataset) {
+         analyzeResponseParams: function(dataset) {
             var more = dataset.getMetaData().more;
             if (typeof more == 'boolean') {
                this._hasMore[this._options.config.direction] = more;
@@ -87,6 +102,9 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
          },
 
          setPosition: function(pos) {
+            if (!(pos instanceof Array)) {
+               pos = [pos];
+            }
             this._options.config.position = pos;
          },
 

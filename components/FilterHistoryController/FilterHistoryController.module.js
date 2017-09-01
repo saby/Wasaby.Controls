@@ -14,14 +14,15 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
    "Core/helpers/Object/isEqual",
    "Core/helpers/generate-helpers",
    "Core/helpers/Function/debounce",
-   "Core/helpers/functional-helpers",
+   "Core/helpers/Function/forAliveOnly",
+   "Core/helpers/Object/find",
    "Core/HashManager",
    "Core/core-instance",
    "Core/core-merge",
    "Core/Date"
 ],
 
-    function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, isEqualObject, genHelpers, debounce, fHelpers, HashManager, cInstance, cMerge) {
+    function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, isEqualObject, genHelpers, debounce, forAliveOnly, objectFind, HashManager, cInstance, cMerge) {
 
        'use strict';
 
@@ -71,7 +72,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              this._listHistory = new List({items: cFunctions.clone(this.getHistory()) || []});
              this._prepareListHistory();
              this._changeHistoryFnc = this._changeHistoryHandler.bind(this);
-             this._applyHandlerDebounced = debounce.call(fHelpers.forAliveOnly(this._onApplyFilterHandler, this)).bind(this);
+             this._applyHandlerDebounced = debounce.call(forAliveOnly(this._onApplyFilterHandler, this)).bind(this);
 
              if(this._options.filterButton) {
                 this._initFilterButton();
@@ -250,7 +251,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
            * @param filterObject
            */
           saveToHistory: function(filterObject) {
-             var equalFilter = this.getHistoryArr().find(function(item) {
+             var equalFilter = objectFind(this.getHistoryArr(), function(item) {
                     return isEqualObject(item.filter, filterObject.filter) || item.linkText === filterObject.linkText;
                  }),
                  activeFilter = this.getActiveFilter();
@@ -338,8 +339,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
            * @private
            */
           getActiveFilter: function() {
-             return this.getHistoryArr().find(function(item) {
-                 return item.isActiveFilter;
+             return objectFind(this.getHistoryArr(), function(item) {
+                return item.isActiveFilter;
              });
           },
           /**
@@ -393,7 +394,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
            * @private
            */
           findFilterByKey: function(key) {
-             return this.getHistoryArr().find(function(item) {
+             return objectFind(this.getHistoryArr(), function(item) {
                 return item.id == key;
              });
           },

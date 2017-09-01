@@ -204,7 +204,6 @@
    left: @controls-AjaxLoader-default-cord;
    right: @controls-AjaxLoader-default-cord;
    width: 100%;
-   height: 100%;
    z-index: @controls-AjaxLoader-zIndex;
    overflow: hidden;
    min-height: @controls-AjaxLoader-minHeight;
@@ -214,6 +213,11 @@
          display: block;
       }
    }
+}
+// На webkit из-за особенностей верстки в данном месте, несмотря на то что у абсолютно спозиционированного
+// контенера заданы top и bottom, высота все равно равна 0 а не высоте контенера. Устанавливаем высоту через height: 100%;
+.ws-is-webkit .controls-AjaxLoader {
+   height: 100%;
 }
 
 .controls-AjaxLoader__outer{

@@ -123,8 +123,9 @@ define('js!WSControls/Buttons/Button', [
         */
       setPrimary: function(flag){
          this._options.primary = !!flag;
+         this._container.toggleClass('controls-Button-color__primary', this.isPrimary());
          this._container.toggleClass('controls-Button__primary', this.isPrimary());
-         this._container.toggleClass('controls-Button__default', !this.isPrimary());
+         this._container.toggleClass('controls-Button-color__default', !this.isPrimary());
       },
       /**
        * Является ли кнопкой по умолчанию.
@@ -160,7 +161,7 @@ define('js!WSControls/Buttons/Button', [
       },
 
       _redrawButton: function() {
-          this._container.get(0).innerHTML = contentTemplate(this._options);
+          this.rebuildMarkup();
       },
 
       setEnabled: function(enabled){

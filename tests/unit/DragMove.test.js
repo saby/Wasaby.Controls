@@ -105,7 +105,7 @@ define([
       describe('.beginDrag', function () {
          it('should not begin drag', function () {
             var dragMove = new DragMove({
-                  view: new ListView()
+                  view: new ListView({})
                });
             DragObject._jsEvent = {
                type: "mouseUp",
@@ -396,6 +396,23 @@ define([
             dragMove._drawDragHighlight(dragTarget);
             assert.isFalse(dragTarget.getDomElement().hasClass('controls-DragNDrop__insertAfter'));
             assert.isFalse(dragTarget.getDomElement().hasClass('controls-DragNDrop__insertAfter'));
+         });
+      });
+      describe('._makeDragplaceHolder', function () {
+         beforeEach(function () {
+            if (dragMove) {
+               dragMove.beginDrag();
+               dragMove._options.useDragPlaceHolder = true;
+            }
+         });
+         it('should make placeholder', function () {
+            dragMove._makeDragPlaceHolder();
+            assert.equal(view.getContainer().find('.controls-DragNDrop__placeholder').length, 1);
+         });
+         it('should clear data tags', function () {
+            dragMove._makeDragPlaceHolder();
+            assert.isUndefined(dragMove._dragPlaceHolder.data('id'));
+            assert.isUndefined(dragMove._dragPlaceHolder.data('hash'));
          });
       });
       describe('DragPositioner', function () {

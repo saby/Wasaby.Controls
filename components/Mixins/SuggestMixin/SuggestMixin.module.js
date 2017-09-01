@@ -4,8 +4,9 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
    "Core/Deferred",
    "js!SBIS3.CONTROLS.PickerMixin",
    "Core/core-instance",
-   "js!SBIS3.CONTROLS.ControlHierarchyManager"
-], function ( cFunctions, cMerge, Deferred, PickerMixin, cInstance, ControlHierarchyManager) {
+   "js!SBIS3.CONTROLS.ControlHierarchyManager",
+   "Core/helpers/Object/find"
+], function ( cFunctions, cMerge, Deferred, PickerMixin, cInstance, ControlHierarchyManager, objectFind) {
    'use strict';
 
 
@@ -422,14 +423,26 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
             /* Если фокус уходит на список - вернём его обратно в контрол, с которого фокус ушёл */
             this.subscribeTo(control, 'onFocusOut', function(e, destroyed, focusedControl) {
+               function clearItems() {
+                  /* Когда уходит фокус с поля ввода, необходимо очистить записи в списке, т.к. записи могут удалять/изменять */
+                  self._list.getItems() && self._list.getItems().clear();
+               }
                /* Если фокус ушёл на список, или на дочерний контрол списка - возвращаем обратно в поле ввода */
                if(self._list) {
                   if (self._list === focusedControl || ~Array.indexOf(self._list.getChildControls(), focusedControl)) {
                      focusedControl.setActive(false, false, false, this);
                      this.setActive(true);
                   } else if (self._options.autoShow && focusedControl && !ControlHierarchyManager.checkInclusion(this, focusedControl.getContainer()[0])) {
-                     /* Когда уходит фокус с поля ввода, необходимо очистить записи в списке, т.к. записи могут удалять/изменять */
-                     self._list.getItems() && self._list.getItems().clear();
+                     if (focusedControl) {
+                        // если фокус переходит на другой компонент, дождемся этого перехода фокуса, и только потом почистим items.
+                        // если так не сделать, преждевременно сработает механизм восстановления фокуса, в случае safari это приводит к ошибке
+                        // https://online.sbis.ru/opendoc.html?guid=aa909af6-3564-4fed-ac60-962fc71b451e
+                        // утечки памяти тут не произойдет, потому что мы попали сюда в процессе перехода активности на focusedControl,
+                        // и после onFocusOut сразу должен сработать onFocusIn в focusedControl
+                        focusedControl.once('onFocusIn', clearItems);
+                     } else {
+                        clearItems();
+                     }
                   }
                }
             });
@@ -740,7 +753,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        * @private
        */
       _isObservableControlFocused: function() {
-         return this._options.observableControls.find(function(ctrl) {
+         return objectFind(this._options.observableControls, function(ctrl) {
             return ctrl.isActive();
          })
       },

@@ -1,14 +1,8 @@
-.icon-mixin(@icon-width) {
-  left: 50%;
-  top: 50%;
-  margin-left: -@icon-width/2;
-  margin-top: -@icon-width/2;
-}
-
 .controls-IconButton {
-  vertical-align: middle;
   line-height: normal;
+  vertical-align: middle;
   .button-default-style(0);
+
   .controls-Button__icon {
     position: relative;
   }
@@ -57,25 +51,6 @@
    }
    &.controls-IconButton__round-border{
       .round-button-mixin(@gray-ccc-color, @border-radius, @icon-button-border-width);
-      .controls-Button__icon {
-        position: @icon-button-round-border-position;
-        &.icon-16 {
-          .icon-mixin(@icon-small-size);
-        }
-        &.icon-24 {
-          .icon-mixin(@icon-medium-size);
-        }
-
-        &.icon-small {
-          .icon-mixin(@icon-small-size);
-        }
-        &.icon-medium {
-          .icon-mixin(@icon-medium-size);
-        }
-        &.icon-large {
-          .icon-mixin(@icon-large-size);
-        }
-      }
       height: @icon-button-round-border-width;
       width: @icon-button-round-border-height;
       line-height: @icon-button-round-border-line-height !important;
@@ -85,20 +60,6 @@
       .round-button-mixin(@gray-ccc-color, @border-radius, @icon-button-border-width);
       height: @icon-button-edit-round-border-height;
       width: @icon-button-edit-round-border-width;
-      line-height: @icon-button-edit-round-border-line-height;
-      .controls-Button__icon.icon-16 {
-         position: absolute;
-         top: 0;
-         left: 0;
-         box-sizing: content-box;
-         height: calc(@icon-button-edit-round-border-height ~"-" 2 * @icon-button-border-width) !important;
-         width: calc(@icon-button-edit-round-border-width ~"-" 2 * @icon-button-border-width) !important;
-         //graceful degradation pattern
-         //firefox 45 not support calc in line-height property
-         //https://bugzilla.mozilla.org/show_bug.cgi?id=594933
-         line-height: @icon-button-edit-round-border-line-height - 2 * @icon-button-border-width !important;
-         line-height: calc(@icon-button-edit-round-border-line-height ~"-" 2 * @icon-button-border-width) !important;
-      }
    }
    &.controls-IconButton__round-border-32{
       .round-button-mixin(@gray-ccc-color, @border-radius, @icon-button-border-width);
@@ -107,20 +68,17 @@
       width: 38px !important;
       line-height: 38px !important;
    }
+
    &.ws-disabled {
      cursor: default;
      .controls-Button__icon {
        color: @default-disabled-color;
      }
    }
+
+
 }
 .controls-IconButton__filter {
-   &-left-open, &-left-close, &-right-open, &-right-close {
-      height: 24px;
-      width: 35px;
-      cursor: pointer;
-      display: inline-block;
-   }
    &-left-close {
       background: @FilterPanelButtonLeftClose;
       &:hover {
@@ -143,6 +101,15 @@
       background: @FilterPanelButtonRightOpen;
       &:hover {
          background: @FilterPanelButtonHoverRightOpen;
+      }
+   }
+   &-left-open, &-left-close, &-right-open, &-right-close {
+      height: 24px;
+      width: 35px;
+      cursor: pointer;
+      display: inline-block;
+      &, &:hover {
+         background-size: 140px 48px;
       }
    }
 }
