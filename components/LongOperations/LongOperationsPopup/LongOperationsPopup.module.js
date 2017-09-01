@@ -205,13 +205,13 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
 
             container.find('.controls-LongOperationsPopup__footer_pauseIcon').on('click', function () {
                //Остановить / Запустить операцию
-               self._longOpList.applyUserAction($(this).hasClass('icon-Pause') ? 'suspend' : 'resume', self._activeOperation, true);
+               self._longOpList.applyUserAction($(this).hasClass('icon-Pause') ? 'suspend' : 'resume', self._activeOperation);
             });
 
             //Иконку запуска сделаем кликабельной, по ней будет запускать остановленная операция
             container.find('.controls-NotificationPopup__header').on('click', '.controls-LongOperationsPopup__runOperationIcon', function () {
                //Запустить операцию
-               self._longOpList.applyUserAction('resume', self._activeOperation, true);
+               self._longOpList.applyUserAction('resume', self._activeOperation);
             });
 
             //Обработчик, который применяет фильтр "Скрыть приостановленные"
@@ -483,7 +483,9 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
          _onOperation: function (eventType, data) {
             switch (eventType) {
                case 'onlongoperationstarted':
-                  this._animationAtStart();
+                  if (data.isCurrentTab) {
+                     this._animationAtStart();
+                  }
                   this._setProgress(0, data.progress ? data.progress.total : 1);
                   break;
 
@@ -513,8 +515,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
 
                case 'onlongoperationended':
                   this._setProgress(data.progress ? data.progress.value : 1, data.progress ? data.progress.total : 1);
-                  var items = this._longOpList.getItems();
-                  var model = items ? items.getRecordById(Model.getFullId(data.tabKey, data.producer, data.operationId)) : null;
+                  var model = this._longOpList.lookupItem(data.tabKey, data.producer, data.operationId);
                   if (model) {
                      this._activeOperation = model;
                      this._updateState();

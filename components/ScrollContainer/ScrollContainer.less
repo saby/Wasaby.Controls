@@ -9,7 +9,7 @@
    outline: none;
    z-index: 0;
    
-   &.controls-ScrollContainer__top-gradient:before, &.controls-ScrollContainer__bottom-gradient:after {
+   &:before, &:after {
       content: '';
       position: absolute;
       display: block;
@@ -18,13 +18,17 @@
       left: 0;
       width: 100%;
    }
-   &.controls-ScrollContainer__top-gradient:before {
+   &:before {
       top: 0;
+   }
+   &:after {
+      display: none;
+      bottom: 0;
+   }
+   &.controls-ScrollContainer__top-gradient:before {
       background: linear-gradient(to bottom, @controls-ScrollContainer-gradient-background);
    }
    &.controls-ScrollContainer__bottom-gradient:after {
-      display: none;
-      bottom: 0;
       background: linear-gradient(to top, @controls-ScrollContainer-gradient-background);
    }
 }

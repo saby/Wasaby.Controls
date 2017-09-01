@@ -6,6 +6,13 @@ define([
    function (LongOperationsBunch) {
       'use strict';
 
+      //TODO Поддержать выполнение тестов под node!
+      if (typeof window === 'undefined') {
+         return;
+      }
+
+      mocha.setup({/*ignoreLeaks:true,*/ globals:[/*'*',*/ '__extends', 'sharedBusDebug']});
+
       // Попробовать создать новый экземпляр
       var _makeBunch = function () {
          var bunch;
@@ -63,14 +70,14 @@ define([
                   var f = bunch[method];
                   assert.isFunction(f, 'Метод отсутствует');
                   if (typeof f === 'function') {
-                     assert.equal(len, f.length, 'Количество аргументов');
+                     assert.equal(f.length, len, 'Количество аргументов');
                   }
                });
             });
          });
 
 
-         describe('Установка хранящихся значений - метод set', function () {
+         describe('Метод set - Установка хранящихся значений', function () {
             var bunch = _makeBunch();
             if (!bunch) {
                return;
@@ -123,7 +130,7 @@ define([
          });
 
 
-         describe('Получение хранящихся значений по ключу - метод get', function () {
+         describe('Метод get - Получение хранящихся значений по ключу', function () {
             var bunch = _fillBunch(_makeBunch());
             if (!bunch) {
                return;
@@ -166,7 +173,7 @@ define([
          });
 
 
-         describe('Получение идентификаторов по ключу - метод getId', function () {
+         describe('Метод getId - Получение идентификаторов по ключу', function () {
             var bunch = _fillBunch(_makeBunch());
             if (!bunch) {
                return;
@@ -209,7 +216,7 @@ define([
          });
 
 
-         describe('Получение хранящихся значений по идентификаторам - метод getById', function () {
+         describe('Метод getById - Получение хранящихся значений по идентификаторам', function () {
             var bunch = _fillBunch(_makeBunch());
             if (!bunch) {
                return;
@@ -252,7 +259,7 @@ define([
          });
 
 
-         describe('Получение списка хранящихся значений по списку ключей - метод list', function () {
+         describe('Метод list - Получение списка хранящихся значений по списку ключей', function () {
             var bunch = _fillBunch(_makeBunch());
             if (!bunch) {
                return;
@@ -305,7 +312,7 @@ define([
          });
 
 
-         describe('Получение списка идентификаторов по списку ключей - метод listIds', function () {
+         describe('Метод listIds - Получение списка идентификаторов по списку ключей', function () {
             var bunch = _fillBunch(_makeBunch());
             if (!bunch) {
                return;
@@ -358,7 +365,7 @@ define([
          });
 
 
-         describe('Получение списка хранящихся значений по списку идентификаторов - метод listByIds', function () {
+         describe('Метод listByIds - Получение списка хранящихся значений по списку идентификаторов', function () {
             var bunch = _fillBunch(_makeBunch());
             if (!bunch) {
                return;
@@ -406,7 +413,7 @@ define([
          });
 
 
-         describe('Поиск хранящихся значений по заданным критериям - метод search', function () {
+         describe('Метод search - Поиск хранящихся значений по заданным критериям', function () {
             var bunch = _fillBunch(_makeBunch());
             if (!bunch) {
                return;
@@ -461,7 +468,7 @@ define([
          });
 
 
-         describe('Поиск идентификаторов по заданным критериям - метод searchIds', function () {
+         describe('Метод searchIds - Поиск идентификаторов по заданным критериям', function () {
             var bunch = _fillBunch(_makeBunch());
             if (!bunch) {
                return;
@@ -498,7 +505,7 @@ define([
          });
 
 
-         describe('Удаление хранящихся значений по ключу - метод remove', function () {
+         describe('Метод remove - Удаление хранящихся значений по ключу', function () {
             var bunch = _fillBunch(_makeBunch());
             if (!bunch) {
                return;
@@ -541,7 +548,7 @@ define([
          });
 
 
-         describe('Удаление хранящихся значений по идентификатору - метод removeById', function () {
+         describe('Метод removeById - Удаление хранящихся значений по идентификатору', function () {
             var bunch = _fillBunch(_makeBunch());
             if (!bunch) {
                return;
@@ -584,7 +591,7 @@ define([
          });
 
 
-         describe('Удаление хранящихся значений по заданным критериям - метод removeAll', function () {
+         describe('Метод removeAll - Удаление хранящихся значений по заданным критериям', function () {
             var bunch = _fillBunch(_makeBunch());
             if (!bunch) {
                return;

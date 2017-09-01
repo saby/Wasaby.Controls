@@ -413,7 +413,7 @@ body {
 }
 
 body  .ws-window {
-   background-color: #293543;
+   background-color: #2C3E50;
    border-style: solid;
    border-color: #00a2ef;
    border-width: @default-border-width;
@@ -941,13 +941,7 @@ body {
     color: #273B4D;
   }
 }
-.controls-SuggestTextBox.controls-TextBox.controls-Picker__show {
-  border-color: #26B8FF;
-  background: #f0f5fb;
-  & .controls-TextBox__field {
-    color: #273B4D;
-  }
-}
+
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button:hover {
   color: #fff;
 }
@@ -1059,6 +1053,10 @@ body {
     height: 3rem !important;
     width: 3rem !important;
     line-height: 3rem !important;
+}
+//Костыль, у dropdown неподходящая для ПМО минимальная высота. Сделаем 100%.
+.controls-operationsPanel__actions .controls-DropdownList {
+   min-height: 100%;
 }
 
 // В темах престо и розницы все сверстано на внутренних скролируемых контенерах.

@@ -9,12 +9,11 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 ], function ( cFunctions, cMerge, Deferred, PickerMixin, cInstance, find, ControlHierarchyManager) {
    'use strict';
 
-
+   var DEFAULT_SHOW_ALL_TEMPLATE = 'js!SBIS3.CONTROLS.SuggestShowAll';
    var DEFAULT_SHOW_ALL_CONFIG = {
-      template: 'js!SBIS3.CONTROLS.SuggestShowAll',
+      template: DEFAULT_SHOW_ALL_TEMPLATE,
       componentOptions: {}
    };
-
    var DEFAULT_LIST_CONFIG = {
       allowEmptySelection: false,
       itemsDragNDrop: false,
@@ -645,8 +644,31 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       },
 
       _showAllButtonHandler: function() {
+         var showAllConfig = this._getShowAllConfig(),
+             list = this.getList(),
+             listConfig;
+         
          this.hidePicker();
-         this.showSelector(this._getShowAllConfig());
+         
+         if(showAllConfig.template === DEFAULT_SHOW_ALL_TEMPLATE) {
+            /* Если шаблон используется дефолтный - сформируем для него конфиг */
+            listConfig = {
+               columns: list.getColumns(),
+               filter: list.getFilter(),
+               idProperty: list.getProperty('idProperty'),
+               itemTpl: list.getProperty('itemTpl'),
+               dataSource: list.getDataSource()
+            };
+            
+            /* Когда нет записей в списке автодополнения,
+               должен открываться справочник без фильтра, чтобы отобразились все записи */
+            if(!list.getItems().getCount() && this._options.searchParam) {
+               delete listConfig.filter[this._options.searchParam];
+            }
+   
+            showAllConfig.componentOptions.listConfig = listConfig;
+         }
+         this.showSelector(showAllConfig);
       },
 
       /**

@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
 
                 /* dataSource - передан, делаем запрос, а потом открываем */
                 if(compOptions.dataSource && component.prototype.getItemsFromSource) {
-                   initializingDeferred = component.prototype.getItemsFromSource.call(component.prototype, config)
+                   initializingDeferred = component.prototype.getItemsFromSource.call(component.prototype, config, meta)
                       .addCallback(function(dataSet) {
                          return dataSet.getAll();
                       })
