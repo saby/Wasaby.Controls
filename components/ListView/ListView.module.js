@@ -3480,7 +3480,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @see isInfiniteScroll
           */
          setInfiniteScroll: function (type, noLoad) {
-            if (typeof type === 'boolean'){
+            if (typeof type === 'boolean') {
                this._allowInfiniteScroll = type;
             } else {
                if (type) {
@@ -3488,6 +3488,18 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._allowInfiniteScroll = true;
                }
             }
+   
+            /* Если скролл - demand, надо скрыть/показать кнопку 'Еще' */
+            if (type === 'demand') {
+               if (this._loadMoreButton) {
+                  this._loadMoreButton.show()
+               } else {
+                  this._initLoadMoreButton();
+               }
+            } else if(this._loadMoreButton) {
+               this._loadMoreButton.hide();
+            }
+            
             if (type && !noLoad) {
                this._scrollLoadNextPage();
                return;
@@ -3496,6 +3508,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (!type && this._loadingIndicator && this._loadingIndicator.is(':visible')){
                this._cancelLoading();
             }
+
             //Убираем текст Еще 10, если включили бесконечную подгрузку
             this.getContainer().find('.controls-TreePager-container').toggleClass('ws-hidden', !!type);
             this._hideLoadingIndicator();
@@ -4504,7 +4517,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _initLoadMoreButton: function() {
-            if (this._options.infiniteScroll == 'demand'){
+            if (this._options.infiniteScroll == 'demand' && !this._loadMoreButton) {
                this._loadMoreButton = this.getChildControlByName('loadMoreButton');
                if (this.getItems()){
                   this._setLoadMoreCaption(this.getItems());
