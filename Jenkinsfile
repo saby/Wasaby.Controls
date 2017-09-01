@@ -50,9 +50,8 @@ properties([
 
 node('controls') {
     if ( "${env.BUILD_NUMBER}" != "1" && "${params.RUN_HANDS}" == "false" ) {
-        echo '[FAILURE] Failed to build'
         currentBuild.result = 'ABORTED'
-        sh "exit 1"
+        error('Stopping early…')
     }
     def version = "3.17.110"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
