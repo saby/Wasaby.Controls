@@ -155,7 +155,18 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
 
          //Изменить отношение видимой части к размеру контента
          _setViewportRatio: function () {
-            this._viewportRatio = this._containerOuterHeight / this.getContentHeight();
+            /**
+             * Если размер скроллирования меньше 1px, то нет смысла показывать скролл.
+             * Это избавит нас от проблем связанных с разным поведением браузеров.
+             * Например в FF: если контейнер, в котором лежит скроллбар, имеет высоту с дробной частью и
+             * равной своему контенту, то его scrollHeight будет округлен в большую сторону. Если передать
+             * такой scrollHeight в скроллбар, то по логике должен быть скроллбар, хотя это не так.
+             */
+            if (this.getContentHeight() - this._containerOuterHeight > 1) {
+               this._viewportRatio = this._containerOuterHeight / this.getContentHeight();
+            } else {
+               this._viewportRatio = 1;
+            }
          },
 
          _setScrollRatio: function () {
