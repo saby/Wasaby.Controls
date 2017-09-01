@@ -473,7 +473,7 @@ node('controls') {
                         }
                     }
                 }
-            }
+            },
             reg_test: {
                 stage("Рег.тесты"){
                     if ( regr ){
