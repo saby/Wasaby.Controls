@@ -11,6 +11,11 @@ define([
    function (GenericLongOperationsProducer, LongOperationEntry, LongOperationsConst, CoreInstance, Deferred, UserInfo) {
       'use strict';
 
+      //TODO Поддержать выполнение тестов под node!
+      if (typeof window === 'undefined') {
+         return;
+      }
+
       mocha.setup({/*ignoreLeaks:true,*/ globals:[/*'*',*/ '__extends', 'sharedBusDebug', 'sharedBusLog', 'Lib/ServerEventBus/class/logger/ConnectWatchDog', 'Lib/ServerEventBus/class/logger/ConsoleDocviewWatchDog']});
 
       window.userInfo = {
