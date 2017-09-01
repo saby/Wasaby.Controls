@@ -49,7 +49,7 @@ properties([
 ])
 
 node('controls') {
-    if ( "${env.BUILD_NUMBER}" != 1 && "${params.RUN_HANDS}" == "false" ) {
+    if ( "${env.BUILD_NUMBER}" != "1" && "${params.RUN_HANDS}" == "false" ) {
         echo '[FAILURE] Failed to build'
         currentBuild.result = 'FAILURE'
         sh "exit 1"
