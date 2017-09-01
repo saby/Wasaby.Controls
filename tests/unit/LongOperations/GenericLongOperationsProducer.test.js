@@ -742,7 +742,7 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению title < заданного)', function (done) {
+            it('Параметры запроса where правильно отбирают операции (по сравнению title &lt; заданного)', function (done) {
                producer.fetch({where:{title:{condition:'<', value:'Длительная операция 2'}}})
                   .addCallback(function (results) {
                      try {
@@ -758,7 +758,7 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению title <= заданного)', function (done) {
+            it('Параметры запроса where правильно отбирают операции (по сравнению title &lt;= заданного)', function (done) {
                producer.fetch({where:{title:{condition:'<=', value:'Длительная операция 2'}}})
                   .addCallback(function (results) {
                      try {
@@ -776,7 +776,7 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению title >= заданного)', function (done) {
+            it('Параметры запроса where правильно отбирают операции (по сравнению title &gt;= заданного)', function (done) {
                producer.fetch({where:{title:{condition:'>=', value:'Длительная операция 2'}}})
                   .addCallback(function (results) {
                      try {
@@ -794,7 +794,7 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению title > заданного)', function (done) {
+            it('Параметры запроса where правильно отбирают операции (по сравнению title &gt; заданного)', function (done) {
                producer.fetch({where:{title:{condition:'>', value:'Длительная операция 2'}}})
                   .addCallback(function (results) {
                      try {
@@ -810,7 +810,7 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt < с сейчас - 500мс)', function (done) {
+            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &lt; с сейчас - 500мс)', function (done) {
                var time = (new Date()).getTime() - 500;
                producer.fetch({where:{startedAt:{condition:'<', value:time}}})
                   .addCallback(function (results) {
@@ -827,7 +827,7 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt < с сейчас + 500мс)', function (done) {
+            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &lt; с сейчас + 500мс)', function (done) {
                var time = (new Date()).getTime() + 500;
                producer.fetch({where:{startedAt:{condition:'<', value:time}}})
                   .addCallback(function (results) {
@@ -846,7 +846,7 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt > с сейчас - 2000мс)', function (done) {
+            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &gt; с сейчас - 2000мс)', function (done) {
                var time = (new Date()).getTime() - 2000;
                producer.fetch({where:{startedAt:{condition:'>', value:time}}})
                   .addCallback(function (results) {
@@ -865,7 +865,7 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt > с сейчас - 3500мс)', function (done) {
+            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &gt; с сейчас - 3500мс)', function (done) {
                var time = (new Date()).getTime() - 3500;
                producer.fetch({where:{startedAt:{condition:'>', value:time}}})
                   .addCallback(function (results) {
