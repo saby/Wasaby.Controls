@@ -292,8 +292,10 @@
       }
    }
    .controls-DropdownList__body {
+      .flexbox();
+      .flex-direction(column);
       z-index: 1;
-      height: calc(~"100% - 50px"); /* Отступ шапки 40px + 10px от края экрана*/
+      height: 100%;
       border: @DropdownList-picker-border;
       border-radius: @DropdownList-picker-list-border-radius;
       background: @DropdownList-picker-bg;
@@ -304,6 +306,8 @@
    &.controls-FloatArea {
       background: transparent;
       margin: @DropdownList-picker-offset;
+      .flexbox();
+      .flex-direction(column);
    }
    .controls-DropdownList__item {
       padding: @DropdownList-picker-menu-item-padding;
