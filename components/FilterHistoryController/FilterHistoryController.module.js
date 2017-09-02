@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
    "Core/Date"
 ],
 
-    function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, isEqualObject, genHelpers, debounce, forAliveOnly, objectFind, HashManager, cInstance, cMerge) {
+    function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, isEqualObject, genHelpers, debounce, forAliveOnly, find, HashManager, cInstance, cMerge) {
 
        'use strict';
 
