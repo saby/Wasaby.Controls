@@ -170,6 +170,12 @@ define('js!SBIS3.CONTROLS.Browser', [
              */
             ignoreFiltersList: [],
             /**
+             * @cfg [Array} Сохранять проваливание по иерархии в историю браузера будут работать пореходы по кнопке вперед/назад.
+             * @remark работает только в месте с сохранением фильтров сессию.
+             * @see updateFilterHistory
+             */
+            saveRootInHistory: false,
+            /**
              * @cfg {Boolean} showCheckBoxes необходимо ли показывать чекбоксы, когда панель массовых операций закрыта.
              */
             showCheckBoxes: false,
@@ -453,7 +459,8 @@ define('js!SBIS3.CONTROLS.Browser', [
                this._options.ignoreFiltersList,
                this._options.applyHistoryFilterOnLoad,
                this,
-               this._options.updateFilterHistory);
+               this._options.updateFilterHistory,
+               this._options.saveRootInHistory);
          }
       },
 

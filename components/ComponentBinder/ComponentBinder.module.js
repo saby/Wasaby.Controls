@@ -269,7 +269,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       /**
        * Метод для связывания истории фильтров с представлением данных
        */
-      bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, ignoreFiltersList, applyOnLoad, browser, loadHistory) {
+      bindFilterHistory: function(filterButton, fastDataFilter, searchParam, historyId, ignoreFiltersList, applyOnLoad, browser, loadHistory, saveRootInHistory) {
             /* Этот параметр необходим для возможности делать запрос в конструкторе,
                когда мы не можем сделать соответствие фильтров по биндингам и нам нужен фильтр списка,
                но применять надо не все фильтры */
@@ -292,10 +292,6 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             noSaveFilters.push(searchParam);
          }
 
-         if(cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin')) {
-            noSaveFilters.push(view.getParentProperty());
-         }
-
          if(ignoreFiltersList && ignoreFiltersList.length) {
             noSaveFilters = noSaveFilters.concat(ignoreFiltersList);
          }
@@ -305,12 +301,17 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
          }
    
          dReady.addCallback(function(res) {
+            var filtersForHistory = [];
+            if (saveRootInHistory && view) {
+               filtersForHistory.push(view.getParentProperty());
+            }
             self._filterHistoryController = new FilterHistoryController({
                historyId: historyId,
                filterButton: filterButton,
                fastDataFilter: fastDataFilter,
                view: view,
-               noSaveFilters: noSaveFilters
+               noSaveFilters: noSaveFilters,
+               filtersForHistory: filtersForHistory
             });
    
             filterButton.setHistoryController(self._filterHistoryController);
