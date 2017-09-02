@@ -132,9 +132,11 @@ body.ws-is-ie .controls-ScrollContainer__content {
 .controls-ScrollContainer.ws-sticky-header__scrollable-container {
    width: auto;
 }
-
+// Заголовки должны быть выше тени. Если этот z-index вызовет проблемы, то надо будет сделать, что бы при фиксации
+// заголовков на враппер фиксированных заголовков накидывался соответсвующий класс и при его наличии тень в скрол
+// контейнере вообще не отображалась.
 .controls-ScrollContainer > .ws-sticky-header__header-container {
-   z-index: initial;
+   z-index: 1;
 }
 
 .controls-ScrollContainer__hiddenScrollbar > .controls-Scrollbar {
