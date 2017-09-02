@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.Utils.TemplateUtil', ['Core/js-template-doT'], functio
            * Далее логика функции такова, что если это не строка - вернем этот объект
            * нужно чтобы код далее работал с результатом функции rk как со строкой
            */
-         if (tpl.toString && tpl.saveToValue) {
+         if (tpl && tpl.toString && tpl.saveToValue) {
             tpl = tpl.toString();
          }
 
