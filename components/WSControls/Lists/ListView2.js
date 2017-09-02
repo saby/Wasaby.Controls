@@ -4,7 +4,8 @@ define('js!WSControls/Lists/ListView2',
       'js!WSControls/Lists/VirtualScroll',
       'tmpl!WSControls/Lists/ListView2',
       'js!WSControls/Lists/ItemsToolbar/ItemsToolbarCompatible',
-      'js!WSControls/Lists/Controllers/PageNavigation'
+      'js!WSControls/Lists/Controllers/PageNavigation',
+      'css!WSControls/Lists/ListView'
    ],
 
    function(MultiSelector, VirtualScroll, template, ItemsToolbarCompatible, PageNavigation) {
@@ -177,7 +178,7 @@ define('js!WSControls/Lists/ListView2',
                maxItems: this._virtualScroll.maxItems
             });
             this._virtualScrollController.subscribe('needLoadPageEnd', function() {
-               this.loadPage('down');
+               // TODO: load new page
                // TODO: Update virtual window after loading new page
             });
 
@@ -191,10 +192,10 @@ define('js!WSControls/Lists/ListView2',
                   for (var i = 0; i < changes.length; i++) {
                      if (changes[i].isIntersecting) {
                         if (changes[i].target.className === self._virtualScroll.TOP_TRIGGER) {
-                           if (!this._virtualScroll.firstLoad) {
+                           if (!self._virtualScroll.firstLoad) {
                               self._virtualScrollReachTop();
                            } else {
-                              this._virtualScroll.firstLoad = false;
+                              self._virtualScroll.firstLoad = false;
                            }
                         }
                         if (changes[i].target.className === self._virtualScroll.BOTTOM_TRIGGER) {
@@ -215,7 +216,7 @@ define('js!WSControls/Lists/ListView2',
             this._virtualScroll.window = result.window;
 
             if (result.bottomChange < 0) {
-               this._resizeVirtualScrollTopPlaceholder(this._getBottomItemsHeight(-result.bottomChange));
+               this._resizeVirtualScrollBottomPlaceholder(this._getBottomItemsHeight(-result.bottomChange));
             }
 
             // Decrease size of top placeholder if adding a new page
@@ -269,7 +270,7 @@ define('js!WSControls/Lists/ListView2',
 
          // Total height of last n items
          _getBottomItemsHeight: function(numItems) {
-            var lastItem = this._virtualScroll.domElements.itemsContainer.length - 1;
+            var lastItem = this._virtualScroll.domElements.itemsContainer.children[0].children.length - 1;
 
             return this._virtualScroll.domElements.itemsContainer.children[0].children[lastItem].offsetTop -
                this._virtualScroll.domElements.itemsContainer.children[0].children[lastItem - numItems + 1].offsetTop +
@@ -280,10 +281,6 @@ define('js!WSControls/Lists/ListView2',
          /**
           * --------------------------------------------
           */
-
-         loadPage: function() {
-
-         },
 
 
          /*DataSource*/
