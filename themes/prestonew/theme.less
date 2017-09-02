@@ -1075,3 +1075,10 @@ body {
    }
 }
 
+//Rem Line-height Doesn’t Work In Pseudo Elements In IE
+//fallback for ie, will live while there is rem
+.ws-is-ie {
+  .controls-TextBox .controls-TextBox__wrapper:before {
+    line-height: 2.5em; //2.5 = 2.85/1.14 //2.85 - default-line-height, 1.14 - default-font size
+  }
+}
