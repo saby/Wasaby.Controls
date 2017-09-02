@@ -17,6 +17,18 @@ define('js!SBIS3.CONTROLS.Utils.TemplateUtil', ['Core/js-template-doT'], functio
       prepareTemplate: function(tpl) {
          var template;
 
+          /**
+           * Если это результат функции rk - тогда
+           * сделаем из него строку
+           * Потому что rkString - это не string
+           * typeof rkString === 'object'
+           * Далее логика функции такова, что если это не строка - вернем этот объект
+           * нужно чтобы код далее работал с результатом функции rk как со строкой
+           */
+         if (tpl.toString && tpl.saveToValue) {
+            tpl = tpl.toString();
+         }
+
          switch (typeof tpl) {
             case 'string' :
                template = tpl.indexOf('html!') === 0 || tpl.indexOf('tmpl!') === 0 ?
