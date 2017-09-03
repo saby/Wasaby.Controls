@@ -80,7 +80,7 @@ define('js!WSControls/Lists/ListView2',
             ITEMS_CONTAINER: 'controls-ListView__itemsContainer',
 
             pageSize: 5,
-            maxItems: 15,
+            maxItems: 20,
 
             // Virtual windows bounds
             // ... [firstIndex ... lastIndex] ...
@@ -118,6 +118,7 @@ define('js!WSControls/Lists/ListView2',
             if (this._virtualScroll.window.end) {
                this._stopIndex = this._virtualScroll.window.end;
                this._curIndex = this._virtualScroll.window.start;
+               return this._curIndex;
             }
             else {
                return this.startIndex;
@@ -156,7 +157,7 @@ define('js!WSControls/Lists/ListView2',
             var children = this._container.children();
             for (var i = 0; i < children.length; i++) {
                if (children[i].className === this._virtualScroll.ITEMS_CONTAINER) {
-                  this._virtualScroll.domElements.itemsContainer = children[i];
+                  this._virtualScroll.domElements.itemsContainer = children[i].children[0];
                }
                if (children[i].className === this._virtualScroll.TOP_PLACEHOLDER) {
                   this._virtualScroll.domElements.topPlaceholder = children[i];
@@ -264,17 +265,22 @@ define('js!WSControls/Lists/ListView2',
 
          // Total height of first n items
          _getTopItemsHeight: function(numItems) {
-            return this._virtualScroll.domElements.itemsContainer.children[0].children[numItems].offsetTop -
-               this._virtualScroll.domElements.itemsContainer.children[0].children[0].offsetTop;
+            var
+               firstItemOffset = this._virtualScroll.dom1Elements.itemsContainer.children[0].offsetTop,
+               followingItemOffset = this._virtualScroll.domElements.itemsContainer.children[numItems].offsetTop;
+
+            return followingItemOffset - firstItemOffset;
          },
 
          // Total height of last n items
          _getBottomItemsHeight: function(numItems) {
-            var lastItem = this._virtualScroll.domElements.itemsContainer.children[0].children.length - 1;
+            var
+               lastItemIndex = this._virtualScroll.domElements.itemsContainer.children.length - 1,
+               lastItemOffset = this._virtualScroll.domElements.itemsContainer.children[lastItemIndex].offsetTop,
+               lastItemHeight = $(this._virtualScroll.domElements.itemsContainer.children[lastItemIndex]).outerHeight(),
+               firstItemOffset = this._virtualScroll.domElements.itemsContainer.children[lastItemIndex - numItems + 1].offsetTop;
 
-            return this._virtualScroll.domElements.itemsContainer.children[0].children[lastItem].offsetTop -
-               this._virtualScroll.domElements.itemsContainer.children[0].children[lastItem - numItems + 1].offsetTop +
-               $(this._virtualScroll.domElements.itemsContainer.children[0].children[lastItem]).outerHeight();
+            return lastItemOffset - firstItemOffset + lastItemHeight;
          },
 
 
