@@ -144,8 +144,8 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
        * @param value Новое значение поля ввода.
        */
       setMoneyValue: function(value){
+         value = (value+ '').replace(/\s+/g,'');
          if (value !== this._options.moneyValue){
-            this._setNumericValue(value);
             this.setText(value + '');
          }
       },
@@ -155,9 +155,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
       },
 
       _setNumericValue: function(value) {
-         if (typeof(value) == 'string'){
-            value = value.replace(/\s+/g,'');
-         }
+         value = (value+ '').replace(/\s+/g,'');
          this._options.numericValue = parseFloat(value);
          this._options.moneyValue = value;
 
