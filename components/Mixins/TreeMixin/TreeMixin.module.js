@@ -821,7 +821,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                   this._collapseNodes(this.getOpenedPath(), id);
                }
                this._options.openedPath[id] = true;
-               this._options._folderOffsets[id] = 0;
                return this._loadNode(id).addCallback(forAliveOnly(function() {
                   var expItem;
                   if (hash) {
@@ -843,6 +842,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             this._notify('onBeforeDataLoad', this._createTreeFilter(id), this.getSorting(), 0, this._limit);
             return this._callQuery(this._createTreeFilter(id), this.getSorting(), 0, this._limit).addCallback(forAliveOnly(function (list) {
                this._options._folderHasMore[id] = list.getMetaData().more;
+               this._options._folderOffsets[id] = 0;
                this._loadedNodes[id] = true;
                this._notify('onDataMerge', list); // Отдельное событие при загрузке данных узла. Сделано так как тут нельзя нотифаить onDataLoad, так как на него много всего завязано. (пользуется Янис)
                this._onDataMergeCallback(list);
