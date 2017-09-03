@@ -9,6 +9,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    'js!WS.Data/Collection/RecordSet',
    'js!WS.Data/Di',
    "js!WS.Data/Query/Query",
+   'Core/core-merge',
    'Core/Deferred',
    "Core/ParallelDeferred",
    "Core/core-instance",
@@ -25,6 +26,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    RecordSet,
    Di,
    Query,
+   cMerge,
    Deferred,
    ParallelDeferred,
    cInstance,
@@ -209,6 +211,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             recordsId.push(this._getHistoryRecordId(this._historyController.at(i).get('data')));
          }
          filter[this._getListIdProperty()] = recordsId;
+         filter = cMerge(filter, this.getList().getFilter() || {}); //Отдаем в запрос на историю фильтр с листа
          query.where(filter).limit(12);
          return query;
       },
