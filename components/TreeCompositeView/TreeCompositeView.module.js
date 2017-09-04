@@ -247,11 +247,11 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          return result;
       },
 
-      _getEditArrowPositionTile: function(hoveredItem) {
+      _getEditArrowPositionTile: function() {
          var
             top, left,
             arrowCords, titleCords,
-            item = hoveredItem.container,
+            item = this.getHoveredItem(),
             folderTitle = item.find('.controls-CompositeView__tileTitle'),
             containerCords = this._container[0].getBoundingClientRect(),
             arrowContainer = folderTitle.find('.js-controls-TreeView__editArrow');
