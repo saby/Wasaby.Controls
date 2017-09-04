@@ -100,7 +100,7 @@ define('js!WSControls/Lists/ListView2',
 
                itemsContainer: undefined
             },
-            
+
             placeholderSize: {
                top: 0,
                bottom: 0
@@ -123,6 +123,13 @@ define('js!WSControls/Lists/ListView2',
          /**
           * Lifecycle
           */
+
+         _afterMount: function () {
+            // Init virtual scroll after loading items
+            if (this._display && this._enableVirtualScroll) {
+               this._initVirtualScroll();
+            }
+         },
 
          _afterUpdate: function() {
             // Init virtual scroll after loading items
@@ -211,27 +218,36 @@ define('js!WSControls/Lists/ListView2',
             var result = this._virtualScrollController.updateWindowOnTrigger(position);
             this._virtualScroll.window = result.window;
 
+            var
+               topPlaceholderHeightChange = 0,
+               bottomPlaceholderHeightChange = 0;
+
             // Removing items from the bottom => increase bottom placeholder size
             if (result.bottomChange < 0) {
-               var bottomItemsHeight = this._getBottomItemsHeight(-result.bottomChange);
-               this._resizeVirtualScrollBottomPlaceholder(bottomItemsHeight);
-
-               if (result.topChange > 0) {
-                  this._resizeVirtualScrollTopPlaceholder(bottomItemsHeight * result.topChange / result.bottomChange);
-               }
+               bottomPlaceholderHeightChange = this._getBottomItemsHeight(-result.bottomChange);
+               topPlaceholderHeightChange = -bottomPlaceholderHeightChange;
             }
 
             // Removing items from the top => increase top placeholder size
             if (result.topChange < 0) {
-               var topItemsHeight = this._getTopItemsHeight(-result.topChange);
-               this._resizeVirtualScrollTopPlaceholder(topItemsHeight);
-
-               if (result.bottomChange > 0) {
-                  this._resizeVirtualScrollBottomPlaceholder(topItemsHeight * result.bottomChange / result.topChange);
-               }
+               topPlaceholderHeightChange = this._getTopItemsHeight(-result.topChange);
+               bottomPlaceholderHeightChange = -topPlaceholderHeightChange;
             }
 
+            // Update placeholder heights
+            this._virtualScroll.placeholderSize.top = this._resizePlaceholder(
+               this._virtualScroll.placeholderSize.top,
+               topPlaceholderHeightChange);
+            this._virtualScroll.placeholderSize.bottom = this._resizePlaceholder(
+               this._virtualScroll.placeholderSize.bottom,
+               bottomPlaceholderHeightChange);
+
             this._forceUpdate();
+         },
+
+         _resizePlaceholder: function (initialHeight, heightChange) {
+            var newHeight = initialHeight + heightChange;
+            return newHeight > 0 ? newHeight : 0;
          },
 
          // Increases (decreases if input is < 0) height of top placeholder

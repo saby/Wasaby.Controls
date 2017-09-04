@@ -88,10 +88,10 @@ define('js!WSControls/Lists/VirtualScroll',
             this._virtualWindow.end += bottomChange;
 
             // Remove items from opposite end
-            if (this._virtualWindow.end - this._virtualWindow.start > this._options.maxItems) {
+            if (this._virtualWindow.end - this._virtualWindow.start - bottomChange >= this._options.maxItems) {
                // remove page from bottom
-               this._virtualWindow.start += this._options.pageSize;
-               topChange = -this._options.pageSize;
+               this._virtualWindow.start += bottomChange;
+               topChange = -bottomChange;
             }
 
             return {
@@ -123,9 +123,9 @@ define('js!WSControls/Lists/VirtualScroll',
             }
 
             // Remove items from the end of the list
-            if (this._virtualWindow.end - this._virtualWindow.start > this._options.maxItems) {
-               this._virtualWindow.end -= this._options.pageSize;
-               bottomChange -= this._options.pageSize;
+            if (this._virtualWindow.end - this._virtualWindow.start - topChange >= this._options.maxItems) {
+               this._virtualWindow.end -= topChange;
+               bottomChange -= topChange;
             }
             return {
                topChange: topChange,
