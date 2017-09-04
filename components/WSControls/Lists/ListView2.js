@@ -100,12 +100,7 @@ define('js!WSControls/Lists/ListView2',
 
                itemsContainer: undefined
             },
-
-            resizePlaceholdersBeforeUpdate: {
-               top: 0,
-               bottom: 0
-            },
-
+            
             placeholderSize: {
                top: 0,
                bottom: 0
@@ -128,18 +123,6 @@ define('js!WSControls/Lists/ListView2',
          /**
           * Lifecycle
           */
-
-         _beforeUpdate: function() {
-            // Resize placeholders after loading new virtual page
-            if (this._virtualScroll.resizePlaceholdersBeforeUpdate.top) {
-               this._resizeVirtualScrollTopPlaceholder(-this._getTopItemsHeight(this._virtualScroll.resizePlaceholdersBeforeUpdate.top));
-               this._virtualScroll.resizePlaceholdersBeforeUpdate.top = 0;
-            }
-            if (this._virtualScroll.resizePlaceholdersBeforeUpdate.bottom) {
-               this._resizeVirtualScrollBottomPlaceholder(-this._getBottomItemsHeight(this._virtualScroll.resizePlaceholdersBeforeUpdate.bottom));
-               this._virtualScroll.resizePlaceholdersBeforeUpdate.bottom = 0;
-            }
-         },
 
          _afterUpdate: function() {
             // Init virtual scroll after loading items
@@ -233,10 +216,8 @@ define('js!WSControls/Lists/ListView2',
                var bottomItemsHeight = this._getBottomItemsHeight(-result.bottomChange);
                this._resizeVirtualScrollBottomPlaceholder(bottomItemsHeight);
 
-               if (result.topChange === -result.bottomChange) {
-                  this._resizeVirtualScrollTopPlaceholder(-bottomItemsHeight);
-               } else if (result.topChange > 0) {
-                  this._virtualScroll.resizePlaceholdersBeforeUpdate.top = result.topChange;
+               if (result.topChange > 0) {
+                  this._resizeVirtualScrollTopPlaceholder(bottomItemsHeight * result.topChange / result.bottomChange);
                }
             }
 
@@ -245,10 +226,8 @@ define('js!WSControls/Lists/ListView2',
                var topItemsHeight = this._getTopItemsHeight(-result.topChange);
                this._resizeVirtualScrollTopPlaceholder(topItemsHeight);
 
-               if (result.bottomChange === -result.topChange) {
-                  this._resizeVirtualScrollBottomPlaceholder(-topItemsHeight);
-               } else if (result.bottomChange > 0) {
-                  this._virtualScroll.resizePlaceholdersBeforeUpdate.bottom = result.bottomChange;
+               if (result.bottomChange > 0) {
+                  this._resizeVirtualScrollBottomPlaceholder(topItemsHeight * result.bottomChange / result.topChange);
                }
             }
 
