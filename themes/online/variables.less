@@ -678,8 +678,8 @@
 // ---- //
 @popup-header-font-weight:                  bold;
 @popup-header-caption-color:                @blue-dark-color;
-@menu-margin:                             -1px 0 0;
-@menu-subpopup-margin:                    -5px 0 0 0;
+@menu-margin:                             0 0 0 1px;
+@menu-subpopup-margin:                    -4px 0 0 1px;
 @menu-subpopup-padding:                   4px 0;
 @menu-padding:                            0 0 4px 0;
 @menu-border-width:                       1px;
@@ -752,7 +752,7 @@
 // ----------- //
 
 // Menu
-@menu-button-menu-margin:                               -5px 0 0 -1px;
+@menu-button-menu-margin:                               -4px 0 0 0;
 @menu-button-menu-border-width:                         1px;
 @menu-button-menu-border-style:                         @menu-border-style;
 @menu-button-menu-border-color:                         @menu-border-color;
@@ -781,7 +781,7 @@
 @menu-link-checked-hover-text-decoration: @menu-link-checked-text-decoration;
 
 // Menu
-@menu-link-menu-margin:                   -5px 0 0 -13px;
+@menu-link-menu-margin:                   -4px 0 0 -12px;
 @menu-link-menu-item-container-padding:   4px 0 0 0;
 @menu-link-menu-revert-item-container-padding: 4px 0 4px 0;
 @menu-link-menu-bg:                       @menu-button-menu-bg;
@@ -796,8 +796,8 @@
 // --------- //
 
 // Menu
-@menu-icon-menu-margin:                   -9px 0 0 -13px;
-@menu-icon-big-menu-margin:               -5px 0 0 -13px;
+@menu-icon-menu-margin:                   -8px 0 0 -12px;
+@menu-icon-big-menu-margin:               -4px 0 0 -12px;
 @menu-icon-menu-bg:                       @menu-button-menu-bg;
 
 
@@ -1032,8 +1032,8 @@
 @suggest-picker-border-radius:                  0;
 @suggest-picker-box-shadow:                     0 4px 8px rgba(0, 0, 0, 0.15);
 @suggest-picker-box-shadow-reverted:            0 -4px 8px rgba(0, 0, 0, 0.15);
-@suggest-picker-margin:                         -1px 0 0 0;
-@suggest-picker-margin-reverted:                1px 0 0 0;
+@suggest-picker-margin:                         -@default-border-width;
+@suggest-picker-margin-reverted:                @default-border-width;
 @suggest-picker-standard-width:                 500px;
 @suggest-picker-standard-height:                500px;
 @suggest-picker-color:                          initial;
@@ -1587,7 +1587,7 @@
 @list-view-actions-menu-close-height:           24px;
 @list-view-actions-menu-close-width:            24px;
 @list-view-actions-menu-item-padding-right:     38px;
-@list-view-actions-menu-margin:                 4px 0 0 5px;
+@list-view-actions-menu-margin:                 5px 0 0 4px;
 @list-view-actions-menu-text-margin:            6px 0 6px 30px;
 
 @list-view-context-menu-close-right:            6px;
@@ -2520,7 +2520,7 @@
 @commands-button-close-icon-color:                         @blue-dark-color;
 @commands-button-close-button-size:                        32px;
 @commands-button-close-button-top:                         4px;
-@commands-button-margin:                                   -9px -33px 0 0;
+@commands-button-margin:                                   -8px -34px 0 0;
 
 
 
@@ -2583,7 +2583,7 @@
 @long-operations-popup-header-result-max-width: 150px;
 @long-operations-popup-header-result-min-width: 64px;
 @long-operations-popup-header-but-f-size: inherit;
-@long-operations-popup-header-but-gap-top: 2px;
+@long-operations-popup-header-but-gap-top: 1px;
 @long-operations-popup-collapsed-header-but-gap-top: @long-operations-popup-header-but-gap-top;
 @long-operations-popup-header-suspended-color: #999999;
 @long-operations-popup-list-time-f-size: 12px;

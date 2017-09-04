@@ -39,8 +39,9 @@ define('js!SBIS3.CONTROLS.Accordion', [
                // контекстов, возможно их пересечение между собой и просто с другими забинденными свойствами
                tplCfg.generateContext = function() {
                   var
-                     context = cContext.createContext(this, {restriction: 'set'});
-                  context.contextDeferred = new Deferred();
+                     contextDeferred = new Deferred(),
+                     context = cContext.createContext(contextDeferred, {restriction: 'set'});
+                  context.contextDeferred = contextDeferred;
                   return context;
                };
                return tplCfg;

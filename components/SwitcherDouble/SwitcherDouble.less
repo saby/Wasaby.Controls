@@ -18,8 +18,11 @@
          }
       }
    }
-   .controls-SwitcherDouble__line {
-      &:extend(.ws-enabled.controls-Switcher .controls-Switcher__line);
+   &.controls-SwitcherDouble-on-toggled .controls-SwitcherDouble__line {
+      &:extend(.ws-enabled.controls-Switcher.controls-Checked__checked .controls-Switcher__line);
+   }
+   &.controls-SwitcherDouble-off-toggled .controls-SwitcherDouble__line {
+      &:extend(.ws-enabled.controls-Switcher:not(.controls-Checked__checked) .controls-Switcher__line);
    }
 }
 .ws-disabled.controls-SwitcherDouble .controls-SwitcherDouble__toggle {
@@ -32,8 +35,11 @@
          &:extend(.ws-disabled.controls-Switcher.controls-Checked__checked .controls-Switcher__btn:before);
       }
    }
-   .controls-SwitcherDouble__line {
-      &:extend(.ws-disabled.controls-Switcher .controls-Switcher__line);
+   &.controls-SwitcherDouble-on-toggled .controls-SwitcherDouble__line {
+      &:extend(.ws-disabled.controls-Switcher.controls-Checked__checked .controls-Switcher__line);
+   }
+   &.controls-SwitcherDouble-off-toggled .controls-SwitcherDouble__line {
+      &:extend(.ws-disabled.controls-Switcher:not(.controls-Checked__checked) .controls-Switcher__line);
    }
 }
 body:not(.ws-is-mobile-platform) .ws-enabled.controls-SwitcherDouble .controls-SwitcherDouble__toggle:hover {

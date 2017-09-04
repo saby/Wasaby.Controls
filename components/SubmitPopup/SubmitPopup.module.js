@@ -1,6 +1,7 @@
 define('js!SBIS3.CONTROLS.SubmitPopup', [
    "Core/constants",
    "js!SBIS3.CONTROLS.InformationPopup",
+   "Core/helpers/Function/runDelayed",
    "tmpl!SBIS3.CONTROLS.SubmitPopup/resources/template",
    "js!SBIS3.CONTROLS.Button",
    "js!SBIS3.CONTROLS.Link",
@@ -16,7 +17,7 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
     * @public
     * @author Степин Павел Владимирович
     */
-   function(constants, InformationPopup, template){
+   function(constants, InformationPopup, runDelayed, template){
       'use strict';
 
       var SubmitPopup = InformationPopup.extend(/** @lends SBIS3.CONTROLS.SubmitPopup.prototype */ {
@@ -183,6 +184,12 @@ define('js!SBIS3.CONTROLS.SubmitPopup', [
                if(event.which === constants.key.esc){
                   self._choose();
                }
+            });
+
+            //TODO Кнопки на VD строятся асинхронно. Соответсвенно после построения нужно пересчитать размеры.
+            //TODO Удалить как только компонент будет переведен на VD.
+            runDelayed(function(){
+               self.recalcPosition(true);
             });
          },
 
