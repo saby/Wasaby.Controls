@@ -236,6 +236,14 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             return TreeCompositeView.superclass._getEditArrowPosition.apply(this, arguments);
          }
       },
+   
+      _getEditArrowMarker: function() {
+         if (this._options.viewMode === 'tile') {
+            return this.getHoveredItem().container.find('.controls-CompositeView__tileTitle');
+         } else {
+            return TreeCompositeView.superclass._getEditArrowPosition.apply(this, arguments);
+         }
+      },
 
       _getInsertMarkupConfig: function() {
          var result;
