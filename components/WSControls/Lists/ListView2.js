@@ -178,7 +178,11 @@ define('js!WSControls/Lists/ListView2',
                pageSize: this._virtualScroll.pageSize,
                maxItems: this._virtualScroll.maxItems
             });
-            this._virtualScrollController.subscribe('needLoadPageEnd', function() {
+            this._virtualScrollController.subscribe('virtualScrollReachedTop', function() {
+               // TODO: load new page
+               // TODO: Update virtual window after loading new page
+            });
+            this._virtualScrollController.subscribe('virtualScrollReachedBottom', function() {
                // TODO: load new page
                // TODO: Update virtual window after loading new page
             });
