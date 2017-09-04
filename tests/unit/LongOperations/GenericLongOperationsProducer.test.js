@@ -10,18 +10,24 @@ define([
 
    function (GenericLongOperationsProducer, LongOperationEntry, LongOperationsConst, CoreInstance, Deferred, UserInfo) {
       'use strict';
+   (function (window, localStorage) {
+      //////////////////////////////////////////////////
+      console.log('DBG: window=', window, ';');
+      console.log('DBG: localStorage=', localStorage, ';');
+      //////////////////////////////////////////////////
 
       if (typeof mocha !== 'undefined') {
          mocha.setup({/*ignoreLeaks:true,*/ globals:[/*'*',*/ '__extends', 'sharedBusDebug', 'sharedBusLog', 'Lib/ServerEventBus/class/logger/ConnectWatchDog', 'Lib/ServerEventBus/class/logger/ConsoleDocviewWatchDog']});
       }
 
-      var userInfo = {
+      window.userInfo = {
          'Пользователь': 861523,
          'ИдентификаторСервисаПрофилей': '8cab8a51-da51-40fd-bef3-6f090edbdeaa'
       };
-      if (typeof window !== 'undefined') {
-         window.userInfo = userInfo;
-      }
+
+      //if (typeof localStorage === 'undefined') {
+      //   //eval('localStorage = {};');
+      //}
 
       var MODULE = 'SBIS3.CONTROLS.GenericLongOperationsProducer';
 
@@ -1446,5 +1452,7 @@ define([
             });
          });
       });
+
+   })(typeof window !== 'undefined' ? window : {}, typeof localStorage !== 'undefined' ? localStorage : {});
    }
 );

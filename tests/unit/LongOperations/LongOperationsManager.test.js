@@ -9,6 +9,11 @@ define([
 
    function (longOperationsManager, GenericLongOperationsProducer, ILongOperationsProducer, CoreExtend, ObservableMixin) {
       'use strict';
+   (function (window, localStorage) {
+      //////////////////////////////////////////////////
+      console.log('DBG: window=', window, ';');
+      console.log('DBG: localStorage=', localStorage, ';');
+      //////////////////////////////////////////////////
 
       if (typeof mocha !== 'undefined') {
          mocha.setup({/*ignoreLeaks:true,*/ globals:[/*'*',*/ '__extends', 'sharedBusDebug', 'sharedBusLog']});
@@ -557,5 +562,7 @@ define([
 
 
       });
+
+   })(typeof window !== 'undefined' ? window : {}, typeof localStorage !== 'undefined' ? localStorage : {});
    }
 );
