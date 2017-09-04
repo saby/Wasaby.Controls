@@ -693,9 +693,11 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             if (!producer) {
                throw new Error('Unknown event');
             }
-            // Если произошло событие в продюсере и есть выполняющиеся fetch запросы - выполнить незавершённые запросы к этому продюсеру повторно
+            // Если произошло событие в продюсере и есть выполняющиеся fetch запросы - выполнить запросы к этому продюсеру повторно
+            // (все - и завершённые, и даже не завершённые, так как не завершённые уже могут быть "на подходе" со старыми данными)
+            // TODO: ### Для уменьшения количества запросов можно попробовать рассмотреть компромисный вариант - переспрашивать только если уже прошло достаточно много времени
             var member = {tab:_tabKey, producer:data.producer};
-            var queries = _fetchCalls.listPools(member, true);
+            var queries = _fetchCalls.listPools(member/*, true*/);
             if (queries && queries.length) {
                for (var i = 0; i < queries.length; i++) {
                   var query = queries[i];
