@@ -41,17 +41,20 @@ properties([
             description: '',
             name: 'theme'),
         choice(choices: "chrome\nff", description: '', name: 'browser_type'),
-        choice(choices: "all\nonly_reg\nonly_int\nonly_unit", description: '', name: 'run_tests'),
+        //choice(choices: "all\nonly_reg\nonly_int\nonly_unit", description: '', name: 'run_tests'),
+        booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg')
+        booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_int')
+        booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit')
         booleanParam(defaultValue: false, description: "", name: 'RUN_ONLY_FAIL_TEST'),
-        booleanParam(defaultValue: false, description: "Запуск вручную", name: 'RUN_HANDS')
+        //booleanParam(defaultValue: false, description: "Запуск вручную", name: 'RUN_HANDS')
         ]),
     pipelineTriggers([])
 ])
 
 node('controls') {
-    if ( "${env.BUILD_NUMBER}" != "1" && "${params.RUN_HANDS}" == "false" ) {
+    if ( "${env.BUILD_NUMBER}" != "1" && params.run_reg == false && params.run_int == false && params.run_unit == false ) {
         currentBuild.result = 'ABORTED'
-        error('Ветка запустилась по пушу')
+        error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
     }
     def version = "3.17.110"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
@@ -74,26 +77,26 @@ node('controls') {
         if ("${TAGS}" != "")
             TAGS = "--TAGS_TO_START ${TAGS}"
 
-        def inte = false
-        def regr = false
-        def unit = false
+        def inte = params.run_reg
+        def regr = params.run_int
+        def unit = params.run_unit
 
-        switch (params.run_tests){
-            case "all":
-                regr = true
-                inte = true
-                unit = true
-                break
-            case "only_reg":
-                regr = true
-                break
-            case "only_int":
-                inte = true
-                break
-            case "only_unit":
-                unit = true
-                break
-        }
+      //   switch (params.run_tests){
+      //       case "all":
+      //           regr = true
+      //           inte = true
+      //           unit = true
+      //           break
+      //       case "only_reg":
+      //           regr = true
+      //           break
+      //       case "only_int":
+      //           inte = true
+      //           break
+      //       case "only_unit":
+      //           unit = true
+      //           break
+      //   }
 
         stage("Checkout"){
             // Контролы
