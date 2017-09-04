@@ -4,9 +4,11 @@
    margin: @menu-margin;
    .flexbox();
    .flex-direction(column);
-   border-width: @default-border-width;
-   border-style: @default-border-style;
-   border-color: @menu-border-color;
+   // chrome при 150% масштабировании неправильно рассчитывает ширину элементов меню
+   // и элементы частично перекрывают border. используем outline т.к. он не меняет размеры при машстабировании
+   outline-width: @default-border-width;
+   outline-style: @default-border-style;
+   outline-color: @menu-border-color;
    background-color: @white-color;
    .user-select(none);
 
@@ -141,7 +143,7 @@
          display: none;
       }
       &.controls-IconButton__round-border-24 {
-         margin: -7px 0 0 -7px;
+         margin: -6px 0 0 -6px;
          .controls-ListView__item:first-child {
             .controls-MenuItem__icon {
                .round-button-mixin(@gray-ccc-color, @border-radius, @icon-button-border-width);

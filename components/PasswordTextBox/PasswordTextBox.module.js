@@ -5,8 +5,9 @@
 define('js!SBIS3.CONTROLS.PasswordTextBox', [
    "Core/constants",
    "js!SBIS3.CONTROLS.TextBox",
+   "tmpl!SBIS3.CONTROLS.PasswordTextBox/resources/showPasswordTemplate",
    'css!SBIS3.CONTROLS.PasswordTextBox'
-], function ( constants,TextBox) {
+], function ( constants,TextBox, showPasswordTemplate) {
 
    'use strict';
    /**
@@ -36,7 +37,14 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', [
    PasswordTextBox = TextBox.extend(/** @lends SBIS3.CONTROLS.PasswordTextBox.prototype */ {
       $protected: {
          _options: {
-            type: "password"
+            afterFieldWrapper: showPasswordTemplate,
+            type: "password",
+            /**
+             * @cfg {Boolean} Определяет режим просмотра введенного пароля
+             * * true Показать иконку просмотра пароля.
+             * * false Скрыть иконку просмотра пароля.
+             */
+            showPassword: false
          }
       },
       $constructor: function() {
@@ -44,6 +52,33 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', [
          if (constants.browser.isIE) {
             this.getContainer().find('.controls-TextBox__field').addClass('controls-TextBox__field__fixIE');
          }
+      },
+
+      init: function() {
+         PasswordTextBox.superclass.init.apply(this, arguments);
+         //Инициализируем событие просмотра пароля
+         if (this._options.showPassword) {
+            this._initEventChangeType();
+         }
+      },
+
+      /**
+       * Инициализирует событие для функционала отображения пароля
+       */
+      _initEventChangeType: function() {
+         var self = this;
+         this.getChildControlByName("showPassword").subscribe("onActivated", function () {
+            //Показываем/скрываем пароль
+            self._changeType();
+         });
+      },
+
+      /**
+       * Изменяет тип поля с password на text и обратно 
+       */
+      _changeType: function () {
+         this._options.type = this._options.type === "password" ? "text" : "password";
+         this._inputField.attr("type", this._options.type);
       }
    });
 

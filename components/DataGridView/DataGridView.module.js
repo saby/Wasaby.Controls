@@ -382,11 +382,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * </component>
     */
    var DataGridView = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS.DataGridView.prototype*/ {
+       /**
+        * @event onDrawHead Возникает после отрисовки шапки
+        * @param {Core/EventObject} eventObject Дескриптор события.
+        */
       _dotTplFn : dotTplFn,
-      /**
-       * @event onDrawHead Возникает после отрисовки шапки
-       * @param {Core/EventObject} eventObject Дескриптор события.
-       */
       $protected: {
          _headIsChanged: false,
          _rowTpl : rowTpl,
@@ -404,6 +404,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             left: 0,
             right: 0
          },
+         _partScrollRequestAnimationId: null,
          _currentScrollPosition: 0,                   //Текущее положение частичного скрола заголовков
          _scrollingNow: false,                        //Флаг обозначающий, происходит ли в данный момент скролирование элементов
          _partScrollRow: undefined,                   //Строка-контейнер, в которой лежит частичный скролл
@@ -1162,7 +1163,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
 
          if(leftOffset) {
-            this._moveThumbAndColumns({left: leftOffset});
+            /* Необхдимо скролить сразу, иначе бразуер по фокусу в контрол сдвинет контейнер таблицы */
+            this._moveThumbAndColumns({left: leftOffset}, true);
          }
       },
 
@@ -1284,15 +1286,32 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._moveThumbAndColumns(cords);
       },
    
-      _moveThumbAndColumns: function(cords) {
+      /**
+       * Передвигает ползунок частичного скрола на переданную координату
+       * @param cords Значение, на которое нужно проскролить
+       * @param force выполнить скролл сразу, а не запланировать в ближайший кадр перерисовки бразуера (менее оптимально)
+       * @private
+       */
+      _moveThumbAndColumns: function(cords, force) {
          var self = this;
-      
-         if (window.requestAnimationFrame) {
-            window.requestAnimationFrame(function() {
+         
+         /* Т.к. requestAnimationFrame работает асинхронно, надо выполнять лишь последний вызов,
+            иначе скролл может дёргаться */
+         this._cancelScrollRequest();
+         
+         if(!force) {
+            this._partScrollRequestAnimationId = window.requestAnimationFrame(function() {
                self._scrollColumns(cords);
             })
          } else {
             this._scrollColumns(cords);
+         }
+      },
+      
+      _cancelScrollRequest: function() {
+         if(this._partScrollRequestAnimationId) {
+            window.cancelAnimationFrame(this._partScrollRequestAnimationId);
+            this._partScrollRequestAnimationId = null;
          }
       },
    
@@ -1554,6 +1573,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
       destroy: function() {
          if (this.hasPartScroll()) {
+            this._cancelScrollRequest();
             this._thumb.unbind('click');
             this._thumb = undefined;
             this._arrowLeft.unbind('click');

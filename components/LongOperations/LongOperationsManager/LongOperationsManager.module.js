@@ -4,7 +4,7 @@
  * @class SBIS3.CONTROLS.LongOperationsManager
  * @public
  *
- * @description file LongOperations.md
+ * @description file ../doc/LongOperations.md
  *
  * @demo SBIS3.CONTROLS.Demo.MyLongOperations
  * @demo SBIS3.CONTROLS.Demo.MyLongOperationsSvc
@@ -119,6 +119,15 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          // Раскрыть константы
          DEFAULT_FETCH_SORTING: DEFAULT_FETCH_SORTING,
          DEFAULT_FETCH_LIMIT: DEFAULT_FETCH_LIMIT,
+
+         /**
+          * Получить ключ текущей вкладки
+          * @public
+          * @return {string}
+          */
+         getTabKey: function () {
+            return _tabKey;
+         },
 
          /**
           * Получить зарегистрированный продюсер длительных операций по его имени
@@ -451,8 +460,8 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                      return false;
                   }
                }
-               return true;
             }
+            return true;
          },
 
          /**
@@ -695,12 +704,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             }
          }
          var eventType = typeof evtName === 'object' ? evtName.name : evtName;
-         if (data) {
-            _channel.notifyWithTarget(eventType, manager, data);
-         }
-         else {
-            _channel.notifyWithTarget(eventType, manager);
-         }
+         _channel.notifyWithTarget(eventType, manager, !dontCrossTab ? (data ? ObjectAssign({tabKey:_tabKey}, data) : {tabKey:_tabKey}) : data);
          if (!dontCrossTab && !producer.hasCrossTabEvents()) {
             _tabChannel.notify('LongOperations:Manager:onActivity', {type:eventType, tab:_tabKey, isCrossTab:producer.hasCrossTabData(), hasHistory:_canHasHistory(producer), data:data});
          }
@@ -761,7 +765,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                   throw new Error('Unknown event');
                }
                _regTabProducer(tab, data.producer, evt.isCrossTab, evt.hasHistory);
-               _eventListener(type, data, true);
+               _eventListener(type, ObjectAssign({tabKey:tab}, data), true);
                break;
          }
       };
@@ -895,7 +899,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                   throw new Error('Unknown result type');
                }
                // Проверить, что продюсер есть и не был раз-регистрирован за время ожидания
-               var prodName = (member.tab === _tabKey ? _producers[member.producer] : member.tab in _tabManagers) ? member.producer : null;
+               var prodName = (member.tab === _tabKey ? _producers[member.producer] : member.tab in _tabManagers && member.producer in _tabManagers[member.tab]) ? member.producer : null;
                // Если продюсер найден
                if (prodName) {
                   var values = result instanceof DataSet ? result.getAll() : result;
@@ -914,13 +918,13 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                      throw new Error('Unknown result type');
                   }
                   if (len) {
-                     var tabKey = member.tab !== _tabKey ? member.tab : null;
+                     var memberTab = (member.tab === _tabKey ? !_producers[member.producer].hasCrossTabData() : !_producers[member.producer] || !_tabManagers[member.tab][member.producer].hasCrossTabData) ? member.tab : null;
                      values[iterate](function (v) {
                         // Значение должно быть экземпляром SBIS3.CONTROLS.LongOperationEntry и иметь правилное имя продюсера
                         if (!(v instanceof LongOperationEntry && v.producer === prodName)) {
                            throw new Error('Invalid result');
                         }
-                        v.tabKey = tabKey;
+                        v.tabKey = memberTab;
                      });
                      return values;
                   }

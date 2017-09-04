@@ -19,6 +19,9 @@ define('js!SBIS3.CONTROLS.Button',
 
    'use strict';
 
+   // почему нельзя сделать единый шаблон на <button - не работает клик по ссылке в ФФ
+   // почему нельзя сделать единый шаблона на <a - нельзя положить <a внутрь <a, в верстке получится два рядом лежащих тега <a
+
    /**
     * Контрол, отображающий обычную кнопку
     *
@@ -95,7 +98,6 @@ define('js!SBIS3.CONTROLS.Button',
          _isWaitingClick: false,
          _isTouchEnded: false,
          _touchMoveCount: 0,
-
          constructor: function (cfg) {
             Button.superclass.constructor.call(this, cfg);
             this._publish('onActivated');
@@ -200,7 +202,9 @@ define('js!SBIS3.CONTROLS.Button',
          },
 
          destroy: function() {
-            this._unregisterDefaultButton();
+            if (this.isPrimary()) {
+               this._unregisterDefaultButton();
+            }
             Button.superclass.destroy.call(this);
          }
          //</editor-fold>
