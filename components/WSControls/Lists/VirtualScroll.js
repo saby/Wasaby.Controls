@@ -38,12 +38,77 @@ define('js!WSControls/Lists/VirtualScroll',
           *    Event handlers
           *
           ***********************************************/
+         /**
+          * Updates window bounds when reaching top or bottom of the list.
+          *
+          * @param position (string) 'top' or 'bottom'
+          * @returns {{window: (*|{start: number, end: number}), topChange: number, bottomChange: number}}
+          */
+         updateWindowOnTrigger: function(position) {
+            var result;
+
+            if (position === 'top') {
+               result = this._addItemsToWindowStart();
+            } else { // bottom
+               result = this._addItemsToWindowEnd();
+            }
+
+            // No more data left in projection
+            if (this._virtualWindow.end === this._projectionLength) {
+               this._notify('virtualScrollReachedBottom');
+            }
+            if (this._virtualWindow.start === 0) {
+               this._notify('virtualScrollReachedTop');
+            }
+
+            return {
+               'window': this.getVirtualWindow(),
+               'topChange': result.topChange,
+               'bottomChange': result.bottomChange
+            };
+         },
 
          /**
-          * Change window bounds after reaching the top trigger.
+          * Add more items to the end of virtual window.
+          *
+          * @returns {{topChange: number, bottomChange: number}}
+          * @private
           */
-         updateWindowOnReachTop: function() {
-            var bottomChange = 0,
+         _addItemsToWindowEnd: function() {
+            var
+               bottomChange = 0,
+               topChange = 0;
+
+            // Load more data
+            if (this._projectionLength - this._virtualWindow.end < this._options.pageSize) {
+               bottomChange = this._projectionLength - this._virtualWindow.end;
+            } else {
+               bottomChange = this._options.pageSize;
+            }
+            this._virtualWindow.end += bottomChange;
+
+            // Remove items from opposite end
+            if (this._virtualWindow.end - this._virtualWindow.start > this._options.maxItems) {
+               // remove page from bottom
+               this._virtualWindow.start += this._options.pageSize;
+               topChange = -this._options.pageSize;
+            }
+
+            return {
+               topChange: topChange,
+               bottomChange: bottomChange
+            };
+         },
+
+         /**
+          * Add more items to the beginning of virtual window.
+          *
+          * @returns {{topChange: number, bottomChange: number}}
+          * @private
+          */
+         _addItemsToWindowStart: function() {
+            var
+               bottomChange = 0,
                topChange = 0;
 
             // Add items to the beginning of the list
@@ -62,59 +127,12 @@ define('js!WSControls/Lists/VirtualScroll',
                this._virtualWindow.end -= this._options.pageSize;
                bottomChange -= this._options.pageSize;
             }
-
             return {
-               'window': this.getVirtualWindow(),
-               'topChange': topChange,
-               'bottomChange': bottomChange
+               topChange: topChange,
+               bottomChange: bottomChange
             };
+
          },
-
-         /**
-          * Change window bounds after reaching the bottom trigger.
-          */
-         updateWindowOnReachBottom: function() {
-            var bottomChange = 0,
-               topChange = 0;
-
-            // Load more data
-            if (this._projectionLength - this._virtualWindow.end < this._options.pageSize) {
-               bottomChange = this._projectionLength - this._virtualWindow.end;
-            } else {
-               bottomChange = this._options.pageSize;
-            }
-            this._virtualWindow.end += bottomChange;
-
-            // Remove items from opposite end
-            if (this._virtualWindow.end - this._virtualWindow.start > this._options.maxItems) {
-               // remove page from bottom
-               this._virtualWindow.start += this._options.pageSize;
-               topChange = -this._options.pageSize;
-            }
-
-            // Load more data
-            if (this._virtualWindow.end === this._projectionLength) {
-               this._notify('needLoadPageEnd');
-            }
-
-            return {
-               'window': this.getVirtualWindow(),
-               'topChange': topChange,
-               'bottomChange': bottomChange
-            };
-         },
-
-
-         // onNewDataLoad: function(bottom, numItems) {
-         //    // Add to the end
-         //    if (bottom) {
-         //       this._displayRange[1] += numItems;
-         //    }
-         //    // Added to the beginning
-         //    else {
-         //       this._displayRange[0] -= numItems;
-         //    }
-         // },
 
          /**
           * Recalculates virtual page after item was removed from the dataset.

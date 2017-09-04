@@ -194,13 +194,13 @@ define('js!WSControls/Lists/ListView2',
                      if (changes[i].isIntersecting) {
                         if (changes[i].target.className === self._virtualScroll.TOP_TRIGGER) {
                            if (!self._virtualScroll.firstLoad) {
-                              self._virtualScrollReachTop();
+                              self._virtulScrollReachTrigger('top');
                            } else {
                               self._virtualScroll.firstLoad = false;
                            }
                         }
                         if (changes[i].target.className === self._virtualScroll.BOTTOM_TRIGGER) {
-                           self._virtualScrollReachBottom();
+                           self._virtulScrollReachTrigger('bottom');
                         }
                      }
                   }
@@ -211,13 +211,25 @@ define('js!WSControls/Lists/ListView2',
             this._forceUpdate();
          },
 
-         _virtualScrollReachTop: function() {
-            var result = this._virtualScrollController.updateWindowOnReachTop();
-
+         /**
+          * Update virtual window and placeholders after reaching top or bottom
+          * virtual scroll triggers.
+          *
+          * @param position (string) 'top' or 'bottom'
+          * @private
+          */
+         _virtulScrollReachTrigger: function(position) {
+            var result = this._virtualScrollController.updateWindowOnTrigger(position);
             this._virtualScroll.window = result.window;
 
+            // Removing items from the bottom => increase bottom placeholder size
             if (result.bottomChange < 0) {
                this._resizeVirtualScrollBottomPlaceholder(this._getBottomItemsHeight(-result.bottomChange));
+            }
+
+            // Removing items from the top => increase top placeholder size
+            if (result.topChange < 0) {
+               this._resizeVirtualScrollTopPlaceholder(this._getTopItemsHeight(-result.topChange));
             }
 
             // Decrease size of top placeholder if adding a new page
@@ -225,18 +237,6 @@ define('js!WSControls/Lists/ListView2',
                if (this._virtualScroll.placeholderSize.top) {
                   this._virtualScroll.resizePlaceholdersAfterUpdate.top = result.topChange;
                }
-            }
-
-            this._forceUpdate();
-         },
-
-         _virtualScrollReachBottom: function () {
-            var result = this._virtualScrollController.updateWindowOnReachBottom();
-
-            this._virtualScroll.window = result.window;
-
-            if (result.topChange < 0) {
-               this._resizeVirtualScrollTopPlaceholder(this._getTopItemsHeight(-result.topChange));
             }
 
             // Decrease size of bottom placeholder if adding a new page
