@@ -194,13 +194,13 @@ define('js!WSControls/Lists/ListView2',
                      if (changes[i].isIntersecting) {
                         if (changes[i].target.className === self._virtualScroll.TOP_TRIGGER) {
                            if (!self._virtualScroll.firstLoad) {
-                              self._virtulScrollReachTrigger('top');
+                              self._virtualScrollReachTrigger('top');
                            } else {
                               self._virtualScroll.firstLoad = false;
                            }
                         }
                         if (changes[i].target.className === self._virtualScroll.BOTTOM_TRIGGER) {
-                           self._virtulScrollReachTrigger('bottom');
+                           self._virtualScrollReachTrigger('bottom');
                         }
                      }
                   }
@@ -218,7 +218,7 @@ define('js!WSControls/Lists/ListView2',
           * @param position (string) 'top' or 'bottom'
           * @private
           */
-         _virtulScrollReachTrigger: function(position) {
+         _virtualScrollReachTrigger: function(position) {
             var result = this._virtualScrollController.updateWindowOnTrigger(position);
             this._virtualScroll.window = result.window;
 
