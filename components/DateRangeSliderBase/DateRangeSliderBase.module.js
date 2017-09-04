@@ -55,6 +55,11 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
              */
             showLock: false,
 
+            /**
+             * @cfg {String} текст который используется если период не выбран
+             */
+            emptyCaption: rk('Период не указан'),
+
             locked: true
          },
          _cssRangeSlider: {
@@ -122,7 +127,7 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
                fullNameOfMonth: true,
                contractToQuarter: true,
                contractToHalfYear: true,
-               emptyPeriodTitle: opts.showUndefined ? rk('Период не указан') : '\xA0'
+               emptyPeriodTitle: opts.showUndefined ? opts.emptyCaption : '\xA0'
             }
          );
       },
