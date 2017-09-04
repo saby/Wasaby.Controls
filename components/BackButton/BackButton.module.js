@@ -36,7 +36,6 @@ define('js!SBIS3.CONTROLS.BackButton',
     * @ignoreEvents onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
     * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
     *
-    * @css controls-BackButton__alignment Класс для выравнивания кнопки-назад
     * @css controls-BackButton__orange Устанавливает стилевое оформление, при котором надпись кнопки будет орандевого цвета (#D94700), а символ стрелки "Назад" синего (#313E78) (см. <a href="http://axure.tensor.ru/standarts/v7/#p=разделители__заголовки___версия_05_">Стандарты</a>).
     *
     * @control
@@ -103,16 +102,17 @@ define('js!SBIS3.CONTROLS.BackButton',
          // Две подписки сделаны для того что бы в тестах можно было стриггерить событие нажатия
          // Клик по Link не проходит и сделан для того что бы можно было кликнуть по стрелке
          this._container.on('click', function(e){
-            if ($(e.target).hasClass('controls-BackButton__arrow')){
-               self._notify('onArrowActivated');
-               e.stopPropagation();
-            } else {
+            if (!$(e.target).hasClass('controls-BackButton__arrow')) {
                self._notify('onActivated');
                if (!!self._options.command && self.isEnabled()) {
                   var args = [self._options.command].concat(self._options.commandArgs);
                   self.sendCommand.apply(self, args);
                }
             }
+         });
+         
+         this.subscribeTo(this.getChildControlByName('BackButton-arrow'), 'onActivated', function() {
+            self._notify('onArrowActivated');
          });
          this._link.subscribe('onActivated', function(){
             self._notify('onActivated');
