@@ -10,8 +10,9 @@ define([
    function (longOperationsManager, GenericLongOperationsProducer, ILongOperationsProducer, CoreExtend, ObservableMixin) {
       'use strict';
 
-      mocha.setup({/*ignoreLeaks:true,*/ globals:[/*'*',*/ '__extends', 'sharedBusDebug', 'sharedBusLog']});
-
+      if (typeof mocha !== 'undefined') {
+         mocha.setup({/*ignoreLeaks:true,*/ globals:[/*'*',*/ '__extends', 'sharedBusDebug', 'sharedBusLog']});
+      }
 
       describe('LongOperations: LongOperationsManager', function () {
 

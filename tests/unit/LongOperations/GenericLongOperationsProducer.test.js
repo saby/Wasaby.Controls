@@ -11,12 +11,17 @@ define([
    function (GenericLongOperationsProducer, LongOperationEntry, LongOperationsConst, CoreInstance, Deferred, UserInfo) {
       'use strict';
 
-      mocha.setup({/*ignoreLeaks:true,*/ globals:[/*'*',*/ '__extends', 'sharedBusDebug', 'sharedBusLog', 'Lib/ServerEventBus/class/logger/ConnectWatchDog', 'Lib/ServerEventBus/class/logger/ConsoleDocviewWatchDog']});
+      if (typeof mocha !== 'undefined') {
+         mocha.setup({/*ignoreLeaks:true,*/ globals:[/*'*',*/ '__extends', 'sharedBusDebug', 'sharedBusLog', 'Lib/ServerEventBus/class/logger/ConnectWatchDog', 'Lib/ServerEventBus/class/logger/ConsoleDocviewWatchDog']});
+      }
 
-      window.userInfo = {
+      var userInfo = {
          'Пользователь': 861523,
          'ИдентификаторСервисаПрофилей': '8cab8a51-da51-40fd-bef3-6f090edbdeaa'
       };
+      if (typeof window !== 'undefined') {
+         window.userInfo = userInfo;
+      }
 
       var MODULE = 'SBIS3.CONTROLS.GenericLongOperationsProducer';
 
@@ -444,7 +449,7 @@ define([
                var titles = ['Длительная операция 1', 'Длительная операция 2', 'Длительная операция 3'];
                var list = _byTitles(_lsTool.search(null), titles);
                assert.lengthOf(list, titles.length);
-               var userId = window.userInfo['Пользователь'];
+               var userId = userInfo['Пользователь'];
                for (var i = 0; i < list.length; i++) {
                   assert.property(list[i], 'userId', userId);
                }
@@ -454,7 +459,7 @@ define([
                var titles = ['Длительная операция 1', 'Длительная операция 2', 'Длительная операция 3'];
                var list = _byTitles(_lsTool.search(null), titles);
                assert.lengthOf(list, titles.length);
-               var userUuId = window.userInfo['ИдентификаторСервисаПрофилей'];
+               var userUuId = userInfo['ИдентификаторСервисаПрофилей'];
                for (var i = 0; i < list.length; i++) {
                   assert.property(list[i], 'userUuId', userUuId);
                }
