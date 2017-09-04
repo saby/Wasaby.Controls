@@ -108,6 +108,9 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
             } else {
                return message;
             }
+         },
+         _getExtendedTooltipModifiers: function() {
+            return this.isMarked() ? 'ws-infobox-type-error' : '';
          }
       },
       before: {
@@ -346,6 +349,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
                      control: target,
                      message: this._alterTooltipText(),
                      delay: 0,
+                     modifiers: 'ws-infobox-type-error',
                      hideDelay: this._infobox.ACT_CTRL_HIDE_TIMEOUT
                   });
                }
