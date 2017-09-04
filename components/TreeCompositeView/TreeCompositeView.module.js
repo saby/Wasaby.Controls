@@ -251,7 +251,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          var
             top, left,
             arrowCords, titleCords,
-            item = this.getHoveredItem(),
+            item = this.getHoveredItem().container,
             folderTitle = item.find('.controls-CompositeView__tileTitle'),
             containerCords = this._container[0].getBoundingClientRect(),
             arrowContainer = folderTitle.find('.js-controls-TreeView__editArrow');
