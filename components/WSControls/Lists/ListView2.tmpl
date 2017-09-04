@@ -2,7 +2,7 @@
      event:onmouseleave="_mouseLeave()">
 
    <!-- Placeholder and trigger for activating page load in virtual scroll -->
-   <div class="controls-ListView__virtualScrollTopPlaceholder" >
+   <div class="controls-ListView__virtualScrollTopPlaceholder" style="height: {{ _virtualScroll.placeholderSize.top }}px;">
       <div class="controls-ListView__virtualScrollTopLoadTrigger" ></div>
    </div>
 
@@ -13,7 +13,7 @@
    </div>
 
    <!-- Placeholder and trigger for activating page load in virtual scroll -->
-   <div class="controls-ListView__virtualScrollBottomPlaceholder">
+   <div class="controls-ListView__virtualScrollBottomPlaceholder" style="height: {{ _virtualScroll.placeholderSize.bottom }}px;">
       <div class="controls-ListView__virtualScrollBottomLoadTrigger" ></div>
    </div>
 

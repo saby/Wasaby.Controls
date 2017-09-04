@@ -101,7 +101,7 @@ define('js!WSControls/Lists/ListView2',
                itemsContainer: undefined
             },
 
-            resizePlaceholdersAfterUpdate: {
+            resizePlaceholdersBeforeUpdate: {
                top: 0,
                bottom: 0
             },
@@ -129,20 +129,22 @@ define('js!WSControls/Lists/ListView2',
           * Lifecycle
           */
 
+         _beforeUpdate: function() {
+            // Resize placeholders after loading new virtual page
+            if (this._virtualScroll.resizePlaceholdersBeforeUpdate.top) {
+               this._resizeVirtualScrollTopPlaceholder(-this._getTopItemsHeight(this._virtualScroll.resizePlaceholdersBeforeUpdate.top));
+               this._virtualScroll.resizePlaceholdersBeforeUpdate.top = 0;
+            }
+            if (this._virtualScroll.resizePlaceholdersBeforeUpdate.bottom) {
+               this._resizeVirtualScrollBottomPlaceholder(-this._getBottomItemsHeight(this._virtualScroll.resizePlaceholdersBeforeUpdate.bottom));
+               this._virtualScroll.resizePlaceholdersBeforeUpdate.bottom = 0;
+            }
+         },
+
          _afterUpdate: function() {
             // Init virtual scroll after loading items
             if (!this._virtualScrollController && this._display && this._enableVirtualScroll) {
                this._initVirtualScroll();
-            }
-
-            // Resize placeholders after loading new virtual page
-            if (this._virtualScroll.resizePlaceholdersAfterUpdate.top) {
-               this._resizeVirtualScrollTopPlaceholder(- this._getTopItemsHeight(this._virtualScroll.resizePlaceholdersAfterUpdate.top));
-               this._virtualScroll.resizePlaceholdersAfterUpdate.top = 0;
-            }
-            if (this._virtualScroll.resizePlaceholdersAfterUpdate.bottom) {
-               this._resizeVirtualScrollBottomPlaceholder(- this._getBottomItemsHeight(this._virtualScroll.resizePlaceholdersAfterUpdate.bottom));
-               this._virtualScroll.resizePlaceholdersAfterUpdate.bottom = 0;
             }
          },
 
@@ -228,25 +230,25 @@ define('js!WSControls/Lists/ListView2',
 
             // Removing items from the bottom => increase bottom placeholder size
             if (result.bottomChange < 0) {
-               this._resizeVirtualScrollBottomPlaceholder(this._getBottomItemsHeight(-result.bottomChange));
+               var bottomItemsHeight = this._getBottomItemsHeight(-result.bottomChange);
+               this._resizeVirtualScrollBottomPlaceholder(bottomItemsHeight);
+
+               if (result.topChange === -result.bottomChange) {
+                  this._resizeVirtualScrollTopPlaceholder(-bottomItemsHeight);
+               } else if (result.topChange > 0) {
+                  this._virtualScroll.resizePlaceholdersBeforeUpdate.top = result.topChange;
+               }
             }
 
             // Removing items from the top => increase top placeholder size
             if (result.topChange < 0) {
-               this._resizeVirtualScrollTopPlaceholder(this._getTopItemsHeight(-result.topChange));
-            }
+               var topItemsHeight = this._getTopItemsHeight(-result.topChange);
+               this._resizeVirtualScrollTopPlaceholder(topItemsHeight);
 
-            // Decrease size of top placeholder if adding a new page
-            if (result.topChange > 0) {
-               if (this._virtualScroll.placeholderSize.top) {
-                  this._virtualScroll.resizePlaceholdersAfterUpdate.top = result.topChange;
-               }
-            }
-
-            // Decrease size of bottom placeholder if adding a new page
-            if (result.bottomChange > 0) {
-               if (this._virtualScroll.placeholderSize.bottom) {
-                  this._virtualScroll.resizePlaceholdersAfterUpdate.bottom = result.bottomChange;
+               if (result.bottomChange === -result.topChange) {
+                  this._resizeVirtualScrollBottomPlaceholder(-topItemsHeight);
+               } else if (result.bottomChange > 0) {
+                  this._virtualScroll.resizePlaceholdersBeforeUpdate.bottom = result.bottomChange;
                }
             }
 
@@ -255,16 +257,18 @@ define('js!WSControls/Lists/ListView2',
 
          // Increases (decreases if input is < 0) height of top placeholder
          _resizeVirtualScrollTopPlaceholder: function(size) {
-            var topPlaceholder = this._virtualScroll.domElements.topPlaceholder;
             this._virtualScroll.placeholderSize.top += size;
-            topPlaceholder.style.height = this._virtualScroll.placeholderSize.top + 'px';
+            if (this._virtualScroll.placeholderSize.top < 0) {
+               this._virtualScroll.placeholderSize.top = 0;
+            }
          },
 
          // Increases (decreases if input is < 0) height of bottom placeholder
          _resizeVirtualScrollBottomPlaceholder: function(size) {
-            var bottomPlaceholder = this._virtualScroll.domElements.bottomPlaceholder;
             this._virtualScroll.placeholderSize.bottom += size;
-            bottomPlaceholder.style.height = this._virtualScroll.placeholderSize.bottom + 'px';
+            if (this._virtualScroll.placeholderSize.bottom < 0) {
+               this._virtualScroll.placeholderSize.bottom = 0;
+            }
          },
 
          // Total height of first n items
@@ -279,12 +283,11 @@ define('js!WSControls/Lists/ListView2',
          // Total height of last n items
          _getBottomItemsHeight: function(numItems) {
             var
-               lastItemIndex = this._virtualScroll.domElements.itemsContainer.children.length - 1,
-               lastItemOffset = this._virtualScroll.domElements.itemsContainer.children[lastItemIndex].offsetTop,
-               lastItemHeight = $(this._virtualScroll.domElements.itemsContainer.children[lastItemIndex]).outerHeight(),
-               firstItemOffset = this._virtualScroll.domElements.itemsContainer.children[lastItemIndex - numItems + 1].offsetTop;
+               firstItemIndex = this._virtualScroll.window.end - this._virtualScroll.window.start - numItems,
+               bottomPlaceholderOffset = this._virtualScroll.domElements.bottomPlaceholder.offsetTop,
+               firstItemOffset = this._virtualScroll.domElements.itemsContainer.children[firstItemIndex].offsetTop;
 
-            return lastItemOffset - firstItemOffset + lastItemHeight;
+            return bottomPlaceholderOffset - firstItemOffset;
          },
 
 
