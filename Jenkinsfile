@@ -50,7 +50,11 @@ properties([
         ]),
     pipelineTriggers([])
 ])
-
+if ( "${env.BUILD_NUMBER}" != "1" && params.run_reg == false && params.run_int == false && params.run_unit == false ) {
+        currentBuild.result = 'ABORTED'
+        error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
+    }
+    
 node('controls') {
     if ( "${env.BUILD_NUMBER}" != "1" && params.run_reg == false && params.run_int == false && params.run_unit == false ) {
         currentBuild.result = 'ABORTED'
@@ -80,23 +84,6 @@ node('controls') {
         def inte = params.run_reg
         def regr = params.run_int
         def unit = params.run_unit
-
-      //   switch (params.run_tests){
-      //       case "all":
-      //           regr = true
-      //           inte = true
-      //           unit = true
-      //           break
-      //       case "only_reg":
-      //           regr = true
-      //           break
-      //       case "only_int":
-      //           inte = true
-      //           break
-      //       case "only_unit":
-      //           unit = true
-      //           break
-      //   }
 
         stage("Checkout"){
             // Контролы
