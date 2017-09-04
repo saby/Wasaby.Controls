@@ -230,38 +230,38 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       }
       else {
          projection.each(function(item, index, group) {
-            if (item.isNode()){
-               cfg.hasNodes = true;
-            }
-
             var needGroup = false, groupId;
             if (cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
                groupId = item.getContents();
                needGroup = true;
             }
             else {
+               if (item.isNode()){
+                  cfg.hasNodes = true;
+               }
                if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {
                   if (cfg._canApplyGrouping(item, cfg) && needGroup && groupId) {
                      cfg._groupItemProcessing(groupId, records, item, cfg);
                      needGroup = false;
                   }
                }
-            }
-            if (cfg._hasFolderFooters(cfg)) {
-               if (itemsForFooter.length) {
-                  if (item.getLevel() < prevItem.getLevel()) {
-                     records.push({
-                        tpl: cfg._footerWrapperTemplate,
-                        data: cfg._getFolderFooterOptions(cfg, itemsForFooter.pop())
-                     });
+
+               if (cfg._hasFolderFooters(cfg)) {
+                  if (itemsForFooter.length) {
+                     if (item.getLevel() < prevItem.getLevel()) {
+                        records.push({
+                           tpl: cfg._footerWrapperTemplate,
+                           data: cfg._getFolderFooterOptions(cfg, itemsForFooter.pop())
+                        });
+                     }
                   }
+                  if (item.isNode() && item.isExpanded()) {
+                     itemsForFooter.push(item);
+                  }
+                  prevItem = item;
                }
-               if (item.isNode() && item.isExpanded()) {
-                  itemsForFooter.push(item);
-               }
-               prevItem = item;
+               records.push(item);
             }
-            records.push(item);
          });
       }
       return records;
@@ -1014,10 +1014,19 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          }
       },
       _removeFromLoadedRemoteNodes: function(remoteNodes) {
-         // Удаляем только если запись удалена из items, иначе - это было лишь сворачивание веток.
-         if (remoteNodes.length && !this.getItems().getRecordById(remoteNodes[0].getContents().getId())) {
+         var isDeletingFromItems = false;
+         if (remoteNodes.length) {
             for (var idx = 0; idx < remoteNodes.length; idx++) {
-               delete this._loadedNodes[remoteNodes[idx].getContents().getId()];
+               if (!cInstance.instanceOfModule(remoteNodes[0], 'WS.Data/Display/GroupItem')) {
+                  // Удаляем только если запись удалена из items, иначе - это было лишь сворачивание веток.
+                  if (isDeletingFromItems || !this.getItems().getRecordById(remoteNodes[0].getContents().getId())) {
+                     isDeletingFromItems = true;
+                     delete this._loadedNodes[remoteNodes[idx].getContents().getId()];
+                  }
+                  else {
+                     break;
+                  }
+               }
             }
          }
       },
@@ -1108,10 +1117,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                fillBranchesForRedraw = function (items) {
                   var idx, parent;
                   for (idx = 0; idx < items.length; idx++) {
-                     parent = items[idx].getParent();
-                     if (!parent.isRoot()) {
-                        if (!branches[parent.getContents().getId()]) {
-                           branches[parent.getContents().getId()] = parent;
+                     if (!cInstance.instanceOfModule(items[idx], 'WS.Data/Display/GroupItem')) {
+                        parent = items[idx].getParent();
+                        if (!parent.isRoot()) {
+                           if (!branches[parent.getContents().getId()]) {
+                              branches[parent.getContents().getId()] = parent;
+                           }
                         }
                      }
                   }
@@ -1325,12 +1336,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                   }
                } else {
                   /*иначе вход в папку*/
-                  item = this._getItemsProjection() && this._getItemsProjection().at(0);
-                  if (item) {
-                     this.setSelectedKey(item.getContents().getId());
-                     if (!this._container.parents('.controls-ListView').length) {
-                        //todo Это единственный на текущий момент способ проверить, что наш контейнер уже в контейнере ListView и тогда осуществлять scrollTo не нужно!
-                        this._scrollToItem(item.getContents().getId());
+                  for (var i = 0; i < this._getItemsProjection().getCount(); i++) {
+                     item = this._getItemsProjection() && this._getItemsProjection().at(0);
+                     if (item && !cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
+                        this.setSelectedKey(item.getContents().getId());
+                        if (!this._container.parents('.controls-ListView').length) {
+                           //todo Это единственный на текущий момент способ проверить, что наш контейнер уже в контейнере ListView и тогда осуществлять scrollTo не нужно!
+                           this._scrollToItem(item.getContents().getId());
+                        }
+                        break;
                      }
                   }
                }
