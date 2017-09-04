@@ -10,6 +10,7 @@ define(
       'js!SBIS3.CONTROLS.DateRangeBigChoose',
       'js!SBIS3.CONTROLS.TimePicker',
       'tmpl!SBIS3.CONTROLS.DatePicker',
+      'tmpl!SBIS3.CONTROLS.DateBox',
       'tmpl!SBIS3.CONTROLS.DatePicker/resources/elementPickerContent',
       'js!SBIS3.CONTROLS.Utils.IsChildControl',
       "Core/IoC",
@@ -19,7 +20,7 @@ define(
       'css!SBIS3.CONTROLS.FormattedTextBox',
       'css!SBIS3.CONTROLS.DateBox'
    ],
-   function (EventBus, DateBox, PickerMixin, DateRangeBigChoose, TimePicker, dotTplFn, ElementPickerContent, isChildControl, IoC) {
+   function (EventBus, DateBox, PickerMixin, DateRangeBigChoose, TimePicker, dotTplFn, dateBoxTpl, ElementPickerContent, isChildControl, IoC) {
 
    'use strict';
 
@@ -86,6 +87,7 @@ define(
           * Опции создаваемого контролла
           */
          _options: {
+            dateBoxTpl: dateBoxTpl,
             /**
              * @cfg {Boolean} Устанавливает отображение иконки календаря рядом с полем ввода.
              * @remark
