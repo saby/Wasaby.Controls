@@ -54,12 +54,8 @@ if ( "${env.BUILD_NUMBER}" != "1" && params.run_reg == false && params.run_int =
         currentBuild.result = 'ABORTED'
         error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
     }
-    
+
 node('controls') {
-    if ( "${env.BUILD_NUMBER}" != "1" && params.run_reg == false && params.run_int == false && params.run_unit == false ) {
-        currentBuild.result = 'ABORTED'
-        error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
-    }
     def version = "3.17.110"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
