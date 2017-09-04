@@ -19234,6 +19234,7 @@
     *  tinymce.activeEditor.formatter.apply('mycustomformat');
     */
    define("tinymce/Formatter", [
+      "tinymce/Env",
       "tinymce/dom/TreeWalker",
       "tinymce/dom/RangeUtils",
       "tinymce/dom/BookmarkManager",
@@ -19242,7 +19243,7 @@
       "tinymce/util/Tools",
       "tinymce/fmt/Preview",
       "tinymce/fmt/Hooks"
-   ], function(TreeWalker, RangeUtils, BookmarkManager, ElementUtils, Fun, Tools, Preview, Hooks) {
+   ], function(Env, TreeWalker, RangeUtils, BookmarkManager, ElementUtils, Fun, Tools, Preview, Hooks) {
       /**
        * Constructs a new formatter instance.
        *
@@ -20525,6 +20526,13 @@
                   parents = Tools.grep(parents, function(node) {
                      return node.nodeType == 1 && !node.getAttribute('data-mce-bogus');
                   });
+
+                  if (Env.gecko) {
+                     // При тройном клике Firefox делает выделение выше по дереву элементов, чем Chrome
+                     for (var n = parents[0]; n.hasChildNodes() && n.childNodes.length === 1 && n.firstChild.hasChildNodes(); n = parents[0]) {
+                        parents.unshift(n.firstChild);
+                     }
+                  }
 
                   // Check for new formats
                   each(formatChangeData, function(callbacks, format) {
