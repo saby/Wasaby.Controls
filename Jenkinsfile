@@ -41,12 +41,10 @@ properties([
             description: '',
             name: 'theme'),
         choice(choices: "chrome\nff", description: '', name: 'browser_type'),
-        //choice(choices: "all\nonly_reg\nonly_int\nonly_unit", description: '', name: 'run_tests'),
         booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
-        booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_int'),
+        booleanParam(defaultValue: false, description: "Запуск интеграционных тестов", name: 'run_int'),
         booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
-        booleanParam(defaultValue: false, description: "", name: 'RUN_ONLY_FAIL_TEST')
-        //booleanParam(defaultValue: false, description: "Запуск вручную", name: 'RUN_HANDS')
+        booleanParam(defaultValue: false, description: "Запуск только упавших тестов из предыдущего билда", name: 'RUN_ONLY_FAIL_TEST')
         ]),
     pipelineTriggers([])
 ])
