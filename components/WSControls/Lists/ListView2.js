@@ -79,8 +79,8 @@ define('js!WSControls/Lists/ListView2',
             BOTTOM_TRIGGER: 'controls-ListView__virtualScrollBottomLoadTrigger',
             ITEMS_CONTAINER: 'controls-ListView__itemsContainer',
 
-            pageSize: 5,
-            maxItems: 20,
+            pageSize: 15,
+            maxItems: 45,
 
             // Virtual windows bounds
             // ... [firstIndex ... lastIndex] ...
@@ -266,7 +266,7 @@ define('js!WSControls/Lists/ListView2',
          // Total height of first n items
          _getTopItemsHeight: function(numItems) {
             var
-               firstItemOffset = this._virtualScroll.dom1Elements.itemsContainer.children[0].offsetTop,
+               firstItemOffset = this._virtualScroll.domElements.itemsContainer.children[0].offsetTop,
                followingItemOffset = this._virtualScroll.domElements.itemsContainer.children[numItems].offsetTop;
 
             return followingItemOffset - firstItemOffset;

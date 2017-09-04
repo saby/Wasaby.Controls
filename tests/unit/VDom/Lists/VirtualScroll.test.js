@@ -10,6 +10,36 @@ define([
       describe('WSControls.VirtualScroll', function () {
 
          /**
+          * init()
+          */
+         describe('Initialization', function() {
+
+            it('Projection larger than window', function () {
+               var vs = new VirtualScroll({
+                  itemsLength: 30,
+                  pageSize: 5,
+                  maxItems: 15
+               });
+
+               assert.equal(vs._projectionLength, 30);
+               assert.equal(vs._virtualWindow.start, 0);
+               assert.equal(vs._virtualWindow.end, 15);
+            });
+
+            it('Projection smaller than window', function () {
+               var vs = new VirtualScroll({
+                  itemsLength: 15,
+                  pageSize: 5,
+                  maxItems: 30
+               });
+
+               assert.equal(vs._projectionLength, 15);
+               assert.equal(vs._virtualWindow.start, 0);
+               assert.equal(vs._virtualWindow.end, 15);
+            });
+         });
+
+         /**
           * removeAt()
           */
          describe('Remove item from the list', function () {
@@ -140,7 +170,65 @@ define([
          });
 
          describe('Window reach bottom', function() {
+            var resultBounds = [1, 11],
+               testCases = [
+                  {
+                     'name': 'Window same size as data',
+                     'initialState': {
+                        'dataBounds': [1, 10],
+                        'virtualWindow': [1, 10]
+                     },
+                     'addAt': [1, 5, 10],
+                     'resultWindow': [[2, 11], [1, 11], [1, 11]]
+                  },
+                  {
+                     'name': 'Window at the beginning of data',
+                     'initialState': {
+                        'dataBounds': [1, 10],
+                        'virtualWindow': [1, 5]
+                     },
+                     'addAt': [1, 3, 5, 10],
+                     'resultWindow': [[2, 6], [1, 6], [1, 6], [1, 5]]
+                  },
+                  {
+                     'name': 'Window at the end of data',
+                     'initialState': {
+                        'dataBounds': [1, 10],
+                        'virtualWindow': [5, 10]
+                     },
+                     'addAt': [3, 5, 8, 10],
+                     'resultWindow': [[6, 11], [6, 11], [5, 11], [5, 11]]
+                  },
+                  {
+                     'name': 'Window in the middle of data',
+                     'initialState': {
+                        'dataBounds': [1, 10],
+                        'virtualWindow': [3, 8]
+                     },
+                     'addAt': [1, 3, 5, 8, 10],
+                     'resultWindow': [[4, 9], [4, 9], [3, 9], [3, 9], [3, 8]]
+                  }
+               ];
 
+            for (var i = 0; i < testCases.length; i++) {
+               (function(i) {
+                  it(testCases[i].name, function () {
+                     var vs = new VirtualScroll({
+                        maxItems: 15,
+                        pageSize: 5
+                     });
+                     for (var j = 0; j < testCases[i].addAt.length; j++) {
+                        vs.setState(testCases[i].initialState.dataBounds, testCases[i].initialState.virtualWindow);
+                        vs.onItemAdded(testCases[i].addAt[j]);
+                        assert.equal(vs._dataRange[0], resultBounds[0]);
+                        assert.equal(vs._dataRange[1], resultBounds[1]);
+                        assert.equal(vs._virtualWindow[0], testCases[i].resultWindow[j][0]);
+                        assert.equal(vs._virtualWindow[1], testCases[i].resultWindow[j][1]);
+                     }
+                  });
+               })(i);
+
+            }
          });
 
          describe('Window reach top', function() {
