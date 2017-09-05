@@ -295,11 +295,11 @@ node('controls') {
                 dir("./controls"){
                     sh "npm config set registry http://npmregistry.sbis.ru:81/"
                     parallel (
-                        isolated {
+                        isolated: {
                             sh "sh ./bin/test-isolated"
                             sh "mv ./artifacts/xunit-report.xml ./artifacts/test-isolated-report.xml"
                         },
-                        browser {
+                        browser: {
                             sh """
                             export test_url_host=${env.NODE_NAME}
                             export test_server_port=10253
