@@ -25,18 +25,6 @@ properties([
             description: '',
             name: 'branch_atf'),
         choice(
-            choices: "\nfieldlink\nfilterbutton\natplace\nformcontroller\nglobalpanel\nrichedit\nmove\nscroll\nsearch\nprint\nmerge",
-            description: '',
-            name: 'Tag1'),
-        choice(
-            choices: "\nfieldlink\nfilterbutton\natplace\nformcontroller\nglobalpanel\nrichedit\nmove\nscroll\nsearch\nprint\nmerge",
-            description: '',
-            name: 'Tag2'),
-        choice(
-            choices: "\nfieldlink\nfilterbutton\natplace\nformcontroller\nglobalpanel\nrichedit\nmove\nscroll\nsearch\nprint\nmerge",
-            description: '',
-            name: 'Tag3'),
-        choice(
             choices: "online\npresto\ncarry\ngenie",
             description: '',
             name: 'theme'),
@@ -64,17 +52,6 @@ node('controls') {
         def items = "controls:${workspace}/controls"
         def branch_atf = params.branch_atf
         def branch_engine = params.branch_engine
-
-        def TAGS = ""
-        if ("${params.Tag1}" != "")
-            TAGS = "${params.Tag1}"
-        if ("${params.Tag2}" != "")
-            TAGS = "${TAGS}, ${params.Tag2}"
-        if ("${params.Tag3}" !="")
-            TAGS = "${TAGS}, ${params.Tag3}"
-        if ("${TAGS}" != "")
-            TAGS = "--TAGS_TO_START ${TAGS}"
-
         def inte = params.run_reg
         def regr = params.run_int
         def unit = params.run_unit
@@ -294,19 +271,23 @@ node('controls') {
                 }
                 dir("./controls"){
                     sh "npm config set registry http://npmregistry.sbis.ru:81/"
-
-                    sh "sh ./bin/test-isolated"
-                    sh "mv ./artifacts/xunit-report.xml ./artifacts/test-isolated-report.xml"
-
-                    sh """
-                    export test_url_host=${env.NODE_NAME}
-                    export test_server_port=10253
-                    export test_url_port=10253
-                    export WEBDRIVER_remote_enabled=1
-                    export WEBDRIVER_remote_host=10.76.163.98
-                    export WEBDRIVER_remote_port=4380
-                    sh ./bin/test-browser"""
-                    sh "mv ./artifacts/xunit-report.xml ./artifacts/test-browser-report.xml"
+                    parallel (
+                        isolated: {
+                            sh "sh ./bin/test-isolated"
+                            sh "mv ./artifacts/xunit-report.xml ./artifacts/test-isolated-report.xml"
+                        },
+                        browser: {
+                            sh """
+                            export test_url_host=${env.NODE_NAME}
+                            export test_server_port=10253
+                            export test_url_port=10253
+                            export WEBDRIVER_remote_enabled=1
+                            export WEBDRIVER_remote_host=10.76.163.98
+                            export WEBDRIVER_remote_port=4380
+                            export test_report=artifacts/test-browser-report.xml
+                            sh ./bin/test-browser"""
+                        }
+                    )
                 }
             }
         }
@@ -442,47 +423,39 @@ node('controls') {
             run_test_fail = "-sf"
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
-        parallel (
-            int_test: {
-                stage("Инт.тесты"){
-                    if ( inte ){
-                        def site = "http://${NODE_NAME}:30001"
-                        site.trim()
-                        if ( "${TAGS}" != "") {
-                        dir("./controls/tests/int"){
-                            sh """
-                            source /home/sbis/venv_for_test/bin/activate
-                            python start_tests.py --RESTART_AFTER_BUILD_MODE --TAGS_TO_START ${TAGS} ${run_test_fail}
-                            deactivate
-                            """
+        stage("Запуск тестов интеграционных и верстки"){
+            parallel (
+                int_test: {
+                    stage("Инт.тесты"){
+                        if ( inte ){
+                            def site = "http://${NODE_NAME}:30001"
+                            site.trim()
+                            dir("./controls/tests/int"){
+                                 sh """
+                                 source /home/sbis/venv_for_test/bin/activate
+                                 python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
+                                 deactivate
+                                 """
+                            }
                         }
-                        } else {
-                        dir("./controls/tests/int"){
-                            sh """
-                            source /home/sbis/venv_for_test/bin/activate
-                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
-                            deactivate
-                            """
-                        }
+                    }
+                },
+                reg_test: {
+                    stage("Рег.тесты"){
+                        if ( regr ){
+                            sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
+                            dir("./controls/tests/reg"){
+                                sh """
+                                    source /home/sbis/venv_for_test/bin/activate
+                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
+                                    deactivate
+                                """
+                            }
                         }
                     }
                 }
-            },
-            reg_test: {
-                stage("Рег.тесты"){
-                    if ( regr ){
-                        sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
-                        dir("./controls/tests/reg"){
-                            sh """
-                                source /home/sbis/venv_for_test/bin/activate
-                                python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
-                                deactivate
-                            """
-                        }
-                    }
-                }
-            }
-        )
+            )
+        }
         sh """
             sudo chmod -R 0777 ${workspace}
             sudo chmod -R 0777 /home/sbis/Controls1
@@ -508,4 +481,3 @@ node('controls') {
         }
     }
 }
-
