@@ -227,9 +227,8 @@ define('js!WSControls/Lists/ListView2',
                bottomPlaceholderHeightChange = this._getBottomItemsHeight(-result.bottomChange);
                topPlaceholderHeightChange = -bottomPlaceholderHeightChange;
             }
-
             // Removing items from the top => increase top placeholder size
-            if (result.topChange < 0) {
+            else if (result.topChange < 0) {
                topPlaceholderHeightChange = this._getTopItemsHeight(-result.topChange);
                bottomPlaceholderHeightChange = -topPlaceholderHeightChange;
             }
@@ -248,22 +247,6 @@ define('js!WSControls/Lists/ListView2',
          _resizePlaceholder: function (initialHeight, heightChange) {
             var newHeight = initialHeight + heightChange;
             return newHeight > 0 ? newHeight : 0;
-         },
-
-         // Increases (decreases if input is < 0) height of top placeholder
-         _resizeVirtualScrollTopPlaceholder: function(size) {
-            this._virtualScroll.placeholderSize.top += size;
-            if (this._virtualScroll.placeholderSize.top < 0) {
-               this._virtualScroll.placeholderSize.top = 0;
-            }
-         },
-
-         // Increases (decreases if input is < 0) height of bottom placeholder
-         _resizeVirtualScrollBottomPlaceholder: function(size) {
-            this._virtualScroll.placeholderSize.bottom += size;
-            if (this._virtualScroll.placeholderSize.bottom < 0) {
-               this._virtualScroll.placeholderSize.bottom = 0;
-            }
          },
 
          // Total height of first n items
