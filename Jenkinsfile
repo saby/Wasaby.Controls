@@ -206,6 +206,8 @@ node('controls') {
                     }
                 }
             )
+        }
+        stage("Сборка компонент"){
             // Определяем SDK
             dir("./constructor/Constructor/SDK") {
                 SDK = sh returnStdout: true, script: "${python_ver} getSDK.py ${version} --conf linux_x86_64 -b"
@@ -214,51 +216,54 @@ node('controls') {
             }
             // Копируем /demo_stand/client в /tests/stand/client
             sh "cp -rf ./demo_stand/client ./controls/tests/stand"
-
-            // Выкачиваем ws для unit тестов и если указан сторонний бранч
-            if (( unit ) || ("${params.ws_revision}" != "sdk") ){
-                def ws_revision = params.ws_revision
-                if ("${ws_revision}" == "sdk"){
-                    ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
+            parallel(
+                ws: {
+                    // Выкачиваем ws для unit тестов и если указан сторонний бранч
+                    if (( unit ) || ("${params.ws_revision}" != "sdk") ){
+                        def ws_revision = params.ws_revision
+                        if ("${ws_revision}" == "sdk"){
+                            ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
+                        }
+                        dir(workspace) {
+                            checkout([$class: 'GitSCM',
+                            branches: [[name: ws_revision]],
+                            doGenerateSubmoduleConfigurations: false,
+                            extensions: [[
+                                $class: 'RelativeTargetDirectory',
+                                relativeTargetDir: "WIS-git-temp"
+                                ]],
+                                submoduleCfg: [],
+                                userRemoteConfigs: [[
+                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                url: 'git@git.sbis.ru:sbis/ws.git']]
+                            ])
+                        }
+                    }
+                },
+                ws_data: {
+                    // Выкачиваем ws.data для unit тестов и если указан сторонний бранч
+                    if (( unit ) || ("${params.ws_data_revision}" != "sdk") ){
+                        def ws_data_revision = params.ws_data_revision
+                        if ("${ws_data_revision}" == "sdk"){
+                            ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
+                        }
+                        dir(workspace) {
+                            checkout([$class: 'GitSCM',
+                            branches: [[name: ws_data_revision]],
+                            doGenerateSubmoduleConfigurations: false,
+                            extensions: [[
+                                $class: 'RelativeTargetDirectory',
+                                relativeTargetDir: "ws_data"
+                                ]],
+                                submoduleCfg: [],
+                                userRemoteConfigs: [[
+                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                url: 'git@git.sbis.ru:ws/data.git']]
+                            ])
+                        }
+                    }
                 }
-                dir(workspace) {
-                    checkout([$class: 'GitSCM',
-                    branches: [[name: ws_revision]],
-                    doGenerateSubmoduleConfigurations: false,
-                    extensions: [[
-                        $class: 'RelativeTargetDirectory',
-                        relativeTargetDir: "WIS-git-temp"
-                        ]],
-                        submoduleCfg: [],
-                        userRemoteConfigs: [[
-                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                        url: 'git@git.sbis.ru:sbis/ws.git']]
-                    ])
-                }
-            }
-            // Выкачиваем ws.data для unit тестов и если указан сторонний бранч
-            if (( unit ) || ("${params.ws_data_revision}" != "sdk") ){
-                def ws_data_revision = params.ws_data_revision
-                if ("${ws_data_revision}" == "sdk"){
-                    ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
-                }
-                dir(workspace) {
-                    checkout([$class: 'GitSCM',
-                    branches: [[name: ws_data_revision]],
-                    doGenerateSubmoduleConfigurations: false,
-                    extensions: [[
-                        $class: 'RelativeTargetDirectory',
-                        relativeTargetDir: "ws_data"
-                        ]],
-                        submoduleCfg: [],
-                        userRemoteConfigs: [[
-                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                        url: 'git@git.sbis.ru:ws/data.git']]
-                    ])
-                }
-            }
-        }
-        stage("Сборка компонент"){
+            )
             // Собираем controls
             dir("./controls"){
                 sh "${python_ver} ${workspace}/constructor/build_controls.py ${workspace}/controls ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
@@ -280,7 +285,6 @@ node('controls') {
             }
             echo items
         }
-
         stage("Unit тесты"){
             if ( unit ){
                 dir(workspace){
@@ -306,7 +310,6 @@ node('controls') {
                 }
             }
         }
-
         stage("Разворот стенда"){
             // Создаем sbis-rpc-service.ini
             def host_db = "test-autotest-db1"
@@ -349,7 +352,6 @@ node('controls') {
                 sudo chmod -R 0777 ${workspace}
                 sudo chmod -R 0777 /home/sbis/Controls1
             """
-
             //Пакуем данные
             writeFile file: "/home/sbis/Controls1/Core.package.json", text: """
                 {
@@ -363,13 +365,11 @@ node('controls') {
                 ],
                     "output" : "/resources/Core.module.js"
                 }"""
-
             sh """
                 cd ./jinnee/distrib/builder
                 node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls1 --application=/
             """
         }
-
         writeFile file: "./controls/tests/int/config.ini", text:
             """# UTF-8
             [general]
@@ -388,8 +388,6 @@ node('controls') {
             SERVER = test-autotest-db1
             BASE_VERSION = css_${NODE_NAME}${ver}1
             server_address = http://10.76.163.98:4380/wd/hub"""
-
-
         if ( "${params.theme}" != "online" ) {
             writeFile file: "./controls/tests/reg/config.ini",
             text:
@@ -440,7 +438,7 @@ node('controls') {
                 RUN_REGRESSION=True"""
         }
         def run_test_fail = ""
-        if ("${params.RUN_ONLY_FAIL_TEST}" == 'true'){
+        if (params.RUN_ONLY_FAIL_TEST == true){
             run_test_fail = "-sf"
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
