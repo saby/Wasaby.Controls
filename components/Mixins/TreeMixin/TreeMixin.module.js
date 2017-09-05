@@ -294,6 +294,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    },
    applyExpandToItemsProjection = function(projection, cfg) {
       var idx, item;
+      projection.setEventRaising(false, true);
       for (idx in cfg.openedPath) {
          if (cfg.openedPath.hasOwnProperty(idx)) {
             item = projection.getItemBySourceItem(cfg._items.getRecordById(idx));
@@ -318,6 +319,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             }
          }
       }
+      projection.setEventRaising(true, true);
    },
    applyFilterToProjection = function(projection, cfg) {
       var
