@@ -228,8 +228,11 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
                });
             }
          });
-
-         var pagesCount = this._scrollPages.length;
+         
+         var pagesCount =
+            this._scrollPages.length +
+            //Учитываем, что могут быть ещё страницы (ещё не загруженные)
+            (view._hasNextPage(view.getItems().getMetaData().more) ? 1 : 0);
 
          this._options.view.getContainer().toggleClass('controls-ScrollPaging__pagesPadding', pagesCount > 1);
          if (this._options.paging.getSelectedKey() > pagesCount){
