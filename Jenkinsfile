@@ -286,7 +286,6 @@ node('controls') {
                             export WEBDRIVER_remote_port=4380
                             export test_report=artifacts/test-browser-report.xml
                             sh ./bin/test-browser"""
-                            //sh "mv ./artifacts/xunit-report.xml ./artifacts/test-browser-report.xml"
                         }
                     )
                 }
@@ -480,4 +479,3 @@ node('controls') {
         }
     }
 }
-
