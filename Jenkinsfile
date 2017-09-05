@@ -25,18 +25,6 @@ properties([
             description: '',
             name: 'branch_atf'),
         choice(
-            choices: "\nfieldlink\nfilterbutton\natplace\nformcontroller\nglobalpanel\nrichedit\nmove\nscroll\nsearch\nprint\nmerge",
-            description: '',
-            name: 'Tag1'),
-        choice(
-            choices: "\nfieldlink\nfilterbutton\natplace\nformcontroller\nglobalpanel\nrichedit\nmove\nscroll\nsearch\nprint\nmerge",
-            description: '',
-            name: 'Tag2'),
-        choice(
-            choices: "\nfieldlink\nfilterbutton\natplace\nformcontroller\nglobalpanel\nrichedit\nmove\nscroll\nsearch\nprint\nmerge",
-            description: '',
-            name: 'Tag3'),
-        choice(
             choices: "online\npresto\ncarry\ngenie",
             description: '',
             name: 'theme'),
@@ -64,17 +52,6 @@ node('controls') {
         def items = "controls:${workspace}/controls"
         def branch_atf = params.branch_atf
         def branch_engine = params.branch_engine
-
-        def TAGS = ""
-        if ("${params.Tag1}" != "")
-            TAGS = "${params.Tag1}"
-        if ("${params.Tag2}" != "")
-            TAGS = "${TAGS}, ${params.Tag2}"
-        if ("${params.Tag3}" !="")
-            TAGS = "${TAGS}, ${params.Tag3}"
-        if ("${TAGS}" != "")
-            TAGS = "--TAGS_TO_START ${TAGS}"
-
         def inte = params.run_reg
         def regr = params.run_int
         def unit = params.run_unit
@@ -453,22 +430,12 @@ node('controls') {
                     if ( inte ){
                         def site = "http://${NODE_NAME}:30001"
                         site.trim()
-                        if ( "${TAGS}" != "") {
-                        dir("./controls/tests/int"){
-                            sh """
-                            source /home/sbis/venv_for_test/bin/activate
-                            python start_tests.py --RESTART_AFTER_BUILD_MODE --TAGS_TO_START ${TAGS} ${run_test_fail}
-                            deactivate
-                            """
-                        }
-                        } else {
                         dir("./controls/tests/int"){
                             sh """
                             source /home/sbis/venv_for_test/bin/activate
                             python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
                             deactivate
                             """
-                        }
                         }
                     }
                 }
