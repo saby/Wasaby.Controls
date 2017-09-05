@@ -114,6 +114,7 @@ define(['js!WSControls/Lists/ItemsControl', 'js!WS.Data/Collection/RecordSet', '
                var condResult = ctrl._checkConditionForEnumeration();
                assert.isTrue(condResult, 'Incorrect condition value enumeration index after 2x_getNextEnumerationPosition');
                ctrl._getNextEnumerationPosition();
+               condResult = ctrl._checkConditionForEnumeration();
                assert.isFalse(condResult, 'Incorrect condition value enumeration index after 3x_getNextEnumerationPosition');
             });
 
