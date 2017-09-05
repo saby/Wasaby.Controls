@@ -4,11 +4,21 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'tmpl!SBIS3
    'use strict';
 
    /**
+    * Класс контрола "Кнопки постраничной навигации".
+    * Состоит из базовых кнопков для навигации: "Перейти на первую страницу", "Перейти на предыдущую страницу", "Перейти на следующую страницу" и "Перейти к последней странице".
+    * Отображение последней кнопки зависит от режима постраничной навигации (см. {@link mode}).
+    * Отображение номеров страниц устанавливается в опции {@link showPages}.
+    *
     * @class SBIS3.CONTROLS.Paging
     * @extends SBIS3.CORE.CompoundControl
+    *
+    * @mixes SBIS3.CONTROLS.ItemsControlMixin
+    * @mixes SBIS3.CONTROLS.Selectable
+    *
     * @control
     * @category Decorate
     * @public
+    *
     * @author Крайнов Дмитрий Олегович
     */
 
@@ -89,14 +99,21 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'tmpl!SBIS3
    var Pager = CompoundControl.extend([ItemsControlMixin, Selectable],/** @lends SBIS3.CONTROLS.Paging.prototype */{
       _dotTplFn: dotTplFn,
       /**
-       * @event onPageChange При изменении страницы
-       * <wiTag group="Управление">
-       * Происходит при смене текущей страницы: при клике по номеру страницы или стрелке перехода на другую страницу.
+       * @event onPageChange Происходит при смене текущей страницы: при клике по номеру страницы или стрелке перехода на другую страницу.
        * @param {Core/EventObject} eventObject Дескриптор события.
-       * @param {Number} number номер новой страницы
+       * @param {Number} number Номер новой страницы.
+       * @remark
        * Необходимо вызвать функцию на успех с аргументом типа Boolean: есть ли следующая страница.
-       * @example
        */
+       /**
+        * @event onFirstPageSet Происходит при клике на кнопку "Перейти на первую страницу".
+        * @param {Core/EventObject} eventObject Дескриптор события.
+        * @remark
+        */
+       /**
+        * @event onLastPageSet Происходит при клике на кнопку "Перейти к последней странице".
+        * @param {Core/EventObject} eventObject Дескриптор события.
+        */
       $protected: {
          _prevBtn: null,
          _nextBtn: null,
@@ -104,9 +121,49 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'tmpl!SBIS3
             _canServerRender: true,
             _getRecordsForRedraw : getRecordForRedraw,
             allowEmptySelection: false,
+             /**
+              * @cfg {String} Устанавливает режим работы постраничной навигации.
+              * @remark
+              * <ul>
+              *     <li>part - "частичная". В этом режиме пользователь видит номера текущей страницы, следующей и предыдущей; общее количество страниц неизвестно. Кнопка навигации "Перейти к последней странице" недоступна для использования.
+              *         ![](/part.png)
+              *     </li>
+              *     <li>full - "полная". В этом режиме пользователь видит номера первой страниц, последней и промежуточных страниц, которые разделены друг от друга троеточием.
+              *         ![](/full.png)
+              *     </li>
+              * </ul>
+              * @see getMode
+              */
             mode: 'part',
+             /**
+              * @cfg {Number} Устанавливает число элементов, отображаемых на одной странице.
+              * @remark
+              * В контексте работы с источником данных эта опция устанавливает число запрашиваемых записей.
+              * @see setPagesCount
+              * @see getPagesCount
+              */
             pagesCount: null,
+             /**
+              * @cfg {Boolean} Устанавливает отображение номеров страниц.
+              * @remark
+              * Номера страниц отображаются между базовыми кнопками для навигации.
+              * ![](/showpages.png)
+              */
             showPages: true,
+             /**
+              * @cfg {Object} Устанавливает конфигурацию для отображения кнопок навигации и номеров страниц.
+              * @remark
+              * Список свойств объекта:
+              * <ul>
+              *     <li>begin (Boolean) - устанавливает отображение кнопки "Перейти на первую страницу";</li>
+              *     <li>prev (Boolean) - устанавливает отображение кнопки "Перейти на предыдущую страницу";</li>
+              *     <li>pages (Boolean) - устанавливает отображение нумеров страниц;</li>
+              *     <li>next (Boolean) - устанавливает отображение кнопки "Перейти на следующую страницу";</li>
+              *     <li>end (Boolean) - устанавливает отображение кнопки "Перейти к последней странице".</li>
+              * </ul>
+              * @example
+              *
+              */
             visiblePath: null
          }
       },
@@ -139,11 +196,20 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'tmpl!SBIS3
             this._bindControls();
          }
       },
-
+       /**
+        * Возвращает значение, соответствующее установленному режиму работы постраничной навигации.
+        * @returns {String}
+        * @see mode
+        */
       getMode: function() {
          return this._options.mode;
       },
-
+       /**
+        * Возвращает число элементов, отображаемых на одном странице.
+        * @returns {Number}
+        * @see pagesCount
+        * @see setPagesCount
+        */
       getPagesCount: function() {
          return this._options.pagesCount;
       },
@@ -151,7 +217,12 @@ define('js!SBIS3.CONTROLS.Paging', ['js!SBIS3.CORE.CompoundControl', 'tmpl!SBIS3
       getZIndex: function(){
         return this._zIndex;
       },
-
+       /**
+        * Устанавливает число элементов, отображаемых на одной странице.
+        * @param {Number} count
+        * @see pagesCount
+        * @see getPagesCount
+        */
       setPagesCount: function(count) {
          this._options.pagesCount = count;
          this._options.items = null;
