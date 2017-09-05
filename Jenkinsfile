@@ -80,124 +80,137 @@ node('controls') {
         def unit = params.run_unit
 
         stage("Checkout"){
-            // Контролы
-            dir(workspace) {
-                checkout([$class: 'GitSCM',
-                branches: [[name: env.BRANCH_NAME]],
-                doGenerateSubmoduleConfigurations: false,
-                extensions: [[
-                    $class: 'RelativeTargetDirectory',
-                    relativeTargetDir: "controls"
-                    ]],
-                    submoduleCfg: [],
-                    userRemoteConfigs: [[
-                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                        url: 'git@git.sbis.ru:sbis/controls.git']]
-                ])
-            }
-            dir("./controls"){
-                sh """
-                git fetch
-                git merge origin/rc-${version}
-                """
-            }
-
-            // Выкачиваем platform и cdn
-            dir(workspace) {
-                checkout([$class: 'GitSCM',
-                branches: [[name: "rc-${version}"]],
-                doGenerateSubmoduleConfigurations: false,
-                extensions: [[
-                    $class: 'RelativeTargetDirectory',
-                    relativeTargetDir: "constructor"
-                    ]],
-                    submoduleCfg: [],
-                    userRemoteConfigs: [[
-                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                        url: 'git@git.sbis.ru:sbis-ci/platform.git']]
-                ])
-                checkout([$class: 'GitSCM',
-                branches: [[name: '1.0']],
-                doGenerateSubmoduleConfigurations: false,
-                extensions: [[
-                    $class: 'RelativeTargetDirectory',
-                    relativeTargetDir: "cdn"
-                    ]],
-                    submoduleCfg: [],
-                    userRemoteConfigs: [[
-                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                        url: 'git@git.sbis.ru:root/sbis3-cdn.git']]
-                ])
-            }
-
-            // Выкачиваем constructor
-            dir("./constructor") {
-                checkout([$class: 'GitSCM',
-                branches: [[name: "rc-${version}"]],
-                doGenerateSubmoduleConfigurations: false,
-                extensions: [[
-                    $class: 'RelativeTargetDirectory',
-                    relativeTargetDir: "Constructor"
-                    ]],
-                    submoduleCfg: [],
-                    userRemoteConfigs: [[
-                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                        url: 'git@git.sbis.ru:sbis-ci/constructor.git']]
-                ])
-            }
-
+            parallel (
+                checkout1: {
+                    // Контролы
+                    dir(workspace) {
+                        checkout([$class: 'GitSCM',
+                        branches: [[name: env.BRANCH_NAME]],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [[
+                            $class: 'RelativeTargetDirectory',
+                            relativeTargetDir: "controls"
+                            ]],
+                            submoduleCfg: [],
+                            userRemoteConfigs: [[
+                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                url: 'git@git.sbis.ru:sbis/controls.git']]
+                        ])
+                    }
+                    dir("./controls"){
+                        sh """
+                        git fetch
+                        git merge origin/rc-${version}
+                        """
+                    }
+                    parallel (
+                        checkout_atf:{
+                            // Выкачиваем atf
+                            dir("./controls/tests/int") {
+                            checkout([$class: 'GitSCM',
+                                branches: [[name: branch_atf]],
+                                doGenerateSubmoduleConfigurations: false,
+                                extensions: [[
+                                    $class: 'RelativeTargetDirectory',
+                                    relativeTargetDir: "atf"
+                                    ]],
+                                    submoduleCfg: [],
+                                    userRemoteConfigs: [[
+                                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                        url: 'git@git.sbis.ru:autotests/atf.git']]
+                                ])
+                            }
+                        },
+                        checkout_engine: {
+                            // Выкачиваем engine
+                            dir("./controls/tests"){
+                                checkout([$class: 'GitSCM',
+                                branches: [[name: branch_engine]],
+                                doGenerateSubmoduleConfigurations: false,
+                                extensions: [[
+                                    $class: 'RelativeTargetDirectory',
+                                    relativeTargetDir: "sbis3-app-engine"
+                                    ]],
+                                    submoduleCfg: [],
+                                    userRemoteConfigs: [[
+                                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                        url: 'git@git.sbis.ru:sbis/engine.git']]
+                                ])
+                            }
+                        }
+                    )
+                },
+                checkout2: {
+                    dir(workspace) {
+                        // Выкачиваем platform
+                        checkout([$class: 'GitSCM',
+                        branches: [[name: "rc-${version}"]],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [[
+                            $class: 'RelativeTargetDirectory',
+                            relativeTargetDir: "constructor"
+                            ]],
+                            submoduleCfg: [],
+                            userRemoteConfigs: [[
+                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                url: 'git@git.sbis.ru:sbis-ci/platform.git']]
+                        ])
+                    }
+                    dir("./constructor") {
+                        checkout([$class: 'GitSCM',
+                        branches: [[name: "rc-${version}"]],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [[
+                            $class: 'RelativeTargetDirectory',
+                            relativeTargetDir: "Constructor"
+                            ]],
+                            submoduleCfg: [],
+                            userRemoteConfigs: [[
+                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                url: 'git@git.sbis.ru:sbis-ci/constructor.git']]
+                        ])
+                    }
+                },
+                checkout3: {
+                    dir(workspace) {
+                        // Выкачиваем cdn
+                        checkout([$class: 'GitSCM',
+                        branches: [[name: '1.0']],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [[
+                            $class: 'RelativeTargetDirectory',
+                            relativeTargetDir: "cdn"
+                            ]],
+                            submoduleCfg: [],
+                            userRemoteConfigs: [[
+                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                url: 'git@git.sbis.ru:root/sbis3-cdn.git']]
+                        ])
+                    }
+                },
+                checkout4: {
+                    // Выкачиваем demo_stand
+                    dir(workspace) {
+                        checkout([$class: 'GitSCM',
+                        branches: [[name: 'master']],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [[
+                            $class: 'RelativeTargetDirectory',
+                            relativeTargetDir: "demo_stand"
+                            ]],
+                            submoduleCfg: [],
+                            userRemoteConfigs: [[
+                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                url: 'git@git.sbis.ru:ka.sannikov/demo_stand.git']]
+                        ])
+                    }
+                }
+            )
             // Определяем SDK
             dir("./constructor/Constructor/SDK") {
                 SDK = sh returnStdout: true, script: "${python_ver} getSDK.py ${version} --conf linux_x86_64 -b"
                 SDK = SDK.trim()
                 echo SDK
-            }
-
-            // Выкачиваем atf
-            dir("./controls/tests/int") {
-            checkout([$class: 'GitSCM',
-                branches: [[name: branch_atf]],
-                doGenerateSubmoduleConfigurations: false,
-                extensions: [[
-                    $class: 'RelativeTargetDirectory',
-                    relativeTargetDir: "atf"
-                    ]],
-                    submoduleCfg: [],
-                    userRemoteConfigs: [[
-                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                        url: 'git@git.sbis.ru:autotests/atf.git']]
-                ])
-            }
-
-            // Выкачиваем engine
-            dir("./controls/tests"){
-                checkout([$class: 'GitSCM',
-                branches: [[name: branch_engine]],
-                doGenerateSubmoduleConfigurations: false,
-                extensions: [[
-                    $class: 'RelativeTargetDirectory',
-                    relativeTargetDir: "sbis3-app-engine"
-                    ]],
-                    submoduleCfg: [],
-                    userRemoteConfigs: [[
-                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                        url: 'git@git.sbis.ru:sbis/engine.git']]
-                ])
-            }
-            // Выкачиваем demo_stand
-            dir(workspace) {
-                checkout([$class: 'GitSCM',
-                branches: [[name: 'master']],
-                doGenerateSubmoduleConfigurations: false,
-                extensions: [[
-                    $class: 'RelativeTargetDirectory',
-                    relativeTargetDir: "demo_stand"
-                    ]],
-                    submoduleCfg: [],
-                    userRemoteConfigs: [[
-                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                        url: 'git@git.sbis.ru:ka.sannikov/demo_stand.git']]
-                ])
             }
             // Копируем /demo_stand/client в /tests/stand/client
             sh "cp -rf ./demo_stand/client ./controls/tests/stand"
