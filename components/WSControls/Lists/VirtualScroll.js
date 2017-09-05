@@ -176,13 +176,6 @@ define('js!WSControls/Lists/VirtualScroll',
             }
          },
 
-
-         /************************************************
-          *
-          *    Getters and setters
-          *
-          ***********************************************/
-
          /**
           * Return virtual window bounds.
           *
@@ -194,31 +187,6 @@ define('js!WSControls/Lists/VirtualScroll',
                'end': this._virtualWindow.end
             };
          },
-
-         /**
-          * Set the state of dataset and virtual window.
-          *
-          * @param projectionLength - number of items in projection
-          * @param windowStart - index of the first item from virtual window
-          * @param windowEnd - index of the last item from virtual window
-          */
-         setState: function(projectionLength, windowStart, windowEnd) {
-            this._projectionLength = projectionLength;
-            this._virtualWindow.start = windowStart;
-            this._virtualWindow.end = windowEnd;
-         },
-
-         /**
-          * Get current state of virtual scroll.
-          *
-          * @returns {{projectionLength: number, virtualWindow: {start: number, end: number}}}
-          */
-         getState: function() {
-            return {
-               'projectionLength': this._projectionLength,
-               'virtualWindow': this.getVirtualWindow()
-            };
-         }
       });
 
       return VirtualScroll;
