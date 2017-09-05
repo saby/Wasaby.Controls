@@ -95,6 +95,7 @@ define('js!WSControls/Lists/ListView2',
 
          _beforeUnmount: function() {
             if (this._navigationController) {
+               //TODO выписать ошибку Диме Зуеву
                this._navigationController.destroy();
                this._navigationController = null;
             }

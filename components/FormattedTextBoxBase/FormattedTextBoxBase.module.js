@@ -54,7 +54,7 @@ define(
          _moveCursor(_getContainerByIndex.call(this, (group  &&  group.isGroup) ? groupInd : --groupInd), formatModel.model[groupInd].mask.length);
       },
       _setPreviousPosition = function () {
-         var cursor = _getCursor.call(this, true),
+         var cursor = this._getCursor(true),
              container = _getContainerByIndex.call(this, cursor[0]),
              prevSibling = container.parentNode.previousSibling,
              position = cursor[1];
@@ -70,7 +70,7 @@ define(
          _moveCursor(container, position);
       },
       _setNextPosition = function () {
-         var cursor = _getCursor.call(this, true),
+         var cursor = this._getCursor(true),
              container = _getContainerByIndex.call(this, cursor[0]),
              nextSibling = container.parentNode.nextSibling,
              position = cursor[1];
@@ -142,34 +142,6 @@ define(
       _getContainerByIndex = function(idx) {
          //TODO если в основном шаблоне или шаблоне маски есть пробелы или переносы строк, они собъют этот порядок
          return this._inputField.get(0).childNodes[parseInt(idx, 10)].childNodes[0];
-      },
-
-      /**
-       * Получить положение курсора
-       * @param {Boolean} position Позиция: true — начала, false — конца
-       * @returns {Array} Массив положений [номер контейнера, сдвиг]
-       * @protected
-       */
-      _getCursor = function(position) {
-         var
-             formatModel = this._getFormatModel(),
-             selection = constants.browser.isIE10 ? window.getSelectionForIE() : window.getSelection();
-         if (selection.type !== 'None') {
-            selection = selection.getRangeAt(0);
-            this._lastSelection = selection;
-         } else {
-            selection = this._lastSelection || selection;
-            if (selection  &&  formatModel._options.newContainer) {
-               selection.setStart(formatModel._options.newContainer, 0);
-               selection.setEnd(formatModel._options.newContainer, 0);
-               formatModel._options.newContainer = undefined;
-            }
-         }
-
-         return (position ?
-            _getCursorContainerAndPosition.call(this, selection.startContainer, selection.startOffset) :
-            _getCursorContainerAndPosition.call(this, selection.endContainer, selection.endOffset)
-         );
       },
 
       /**
@@ -829,7 +801,7 @@ define(
       _keyPressBind: function(event) {
          var key = event.which || event.keyCode,
              character = String.fromCharCode(key),
-             positionIndexes = _getCursor.call(this, true),
+             positionIndexes = this._getCursor(true),
              position = positionIndexes[1],
              groupNum = positionIndexes[0];
 
@@ -853,7 +825,7 @@ define(
          var textDiff = this._getTextDiff(),
              character = textDiff['char'],
              position = textDiff.position,
-             groupNum = _getCursor.call(this, true)[0];
+             groupNum = this._getCursor(true)[0];
          this._setText(this._options.text);
 
          this._keyPressBindHandler(event, character, position, groupNum);
@@ -889,8 +861,8 @@ define(
 
       _clearCommandHandler: function(type) {
          var
-             positionIndexesBegin = _getCursor.call(this, true),
-             positionIndexesEnd = _getCursor.call(this, false),
+             positionIndexesBegin = this._getCursor(true),
+             positionIndexesEnd = this._getCursor(false),
              position = positionIndexesBegin[1],
              groupNum = positionIndexesBegin[0],
              group = null,
@@ -1125,6 +1097,34 @@ define(
          if (currentGroup !== groupNum || currentPosition !== position) {
             _moveCursor(newContainer, formatModel._options.cursorPosition.position);
          }
+      },
+
+      /**
+       * Получить положение курсора
+       * @param {Boolean} position Позиция: true — начала, false — конца
+       * @returns {Array} Массив положений [номер контейнера, сдвиг]
+       * @protected
+       */
+      _getCursor: function(position) {
+         var
+            formatModel = this._getFormatModel(),
+            selection = constants.browser.isIE10 ? window.getSelectionForIE() : window.getSelection();
+         if (selection.type !== 'None') {
+            selection = selection.getRangeAt(0);
+            this._lastSelection = selection;
+         } else {
+            selection = this._lastSelection || selection;
+            if (selection  &&  formatModel._options.newContainer) {
+               selection.setStart(formatModel._options.newContainer, 0);
+               selection.setEnd(formatModel._options.newContainer, 0);
+               formatModel._options.newContainer = undefined;
+            }
+         }
+
+         return (position ?
+               _getCursorContainerAndPosition.call(this, selection.startContainer, selection.startOffset) :
+               _getCursorContainerAndPosition.call(this, selection.endContainer, selection.endOffset)
+         );
       },
 
       /**

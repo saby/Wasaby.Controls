@@ -161,7 +161,9 @@ define('js!WSControls/Buttons/Button', [
       },
 
       _redrawButton: function() {
-          this.rebuildMarkup();
+         // rebuildMarkup не подходит, т.к. пикер меню смотрит на видимость элемента,
+         // а при перерисовке кнопка скрывается, что приводит к закрытию пикера
+         this._container.find('.controls-Button__wrapper')[0].innerHTML = contentTemplate(this._options);
       },
 
       setEnabled: function(enabled){
