@@ -44,8 +44,6 @@ define('js!WSControls/Lists/ListView2',
             }
          },
 
-
-         /**
          _onLoadPage: function(list, direction) {
             ListView.superclass._onLoadPage.apply(this, arguments);
             if (this._navigationController) {
@@ -61,11 +59,13 @@ define('js!WSControls/Lists/ListView2',
                //TODO фильтр и сортировка не забыть приделать
             }
             return params;
-         },         /**
-          * --------------------------------------------
-          * VIRTUAL SCROLL
-          * --------------------------------------------
+         },
+
+         /** --------------------------------------------
+          *  VIRTUAL SCROLL
+          *  --------------------------------------------
           */
+
          /**
           * Props
           */
