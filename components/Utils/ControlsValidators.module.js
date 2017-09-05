@@ -63,7 +63,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [
                }
                break;
             case 'boolean' :
-               isEmpty = option;
+               isEmpty = !option;
                break;
             case 'undefined' :
                isEmpty = true;

@@ -12,8 +12,9 @@ define('js!WSControls/Lists/Controllers/PageNavigation',
          _more: null,
          constructor: function(cfg) {
             this._options = cfg;
-            if (cfg.page !== undefined) {
-               this._options.page = cfg.page || 0;
+            PageNavigation.superclass.constructor.apply(this, arguments);
+            this._options.page = cfg.page || 0;
+            if (this._options.page !== undefined) {
                this._prevPage = this._options.page - 1;
                this._nextPage = this._options.page + 1;
             }

@@ -7,9 +7,6 @@ define('js!WSControls/Lists/resources/utils/DataSourceUtil', [
          var result;
 
          switch (typeof sourceOpt) {
-            case 'function':
-               result = sourceOpt.call(this);
-               break;
             case 'object':
                if (cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ISource')) {
                   result = sourceOpt;

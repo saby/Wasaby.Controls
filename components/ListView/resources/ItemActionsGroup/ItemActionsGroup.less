@@ -146,6 +146,13 @@
       margin: @list-view-actions-menu-margin;
    }
 
+   &.controls-popup-revert-vertical {
+      .controls-Menu__itemsContainer {
+         .inline-flexbox();
+         .flex-direction(column-reverse);
+      }
+   }
+
    .controls-MenuItem {
       &.controls-ListView__item {
          white-space: nowrap;
