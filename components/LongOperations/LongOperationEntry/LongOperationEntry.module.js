@@ -247,7 +247,16 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
        * @return {boolean}
        */
       var _isA = function (value, type) {
-         return typeof value === type || (['boolean', 'number', 'string', 'object'].indexOf(type) === -1 && typeof window[type] === 'function' && value instanceof window[type]);
+         if (typeof value === type) {
+            return true;
+         }
+         if (['boolean', 'number', 'string', 'object'].indexOf(type) === -1) {
+            var root = typeof window !== 'undefined' ? window : (typeof global !== 'undefined' ? global : null);
+            if (root) {
+               return typeof root[type] === 'function' && value instanceof root[type];
+            }
+         }
+         return false;
       };
 
 
