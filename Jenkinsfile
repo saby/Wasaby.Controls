@@ -446,21 +446,21 @@ node('controls') {
                 def site = "http://${NODE_NAME}:30001"
                 site.trim()
                 if ( "${TAGS}" != "") {
-                dir("./controls/tests/int"){
-                    sh """
-                    source /home/sbis/venv_for_test/bin/activate
-                    python start_tests.py --RESTART_AFTER_BUILD_MODE --TAGS_TO_START ${TAGS} ${run_test_fail}
-                    deactivate
-                    """
-                }
+					dir("./controls/tests/int"){
+						sh """
+						source /home/sbis/venv_for_test/bin/activate
+						python start_tests.py --RESTART_AFTER_BUILD_MODE --TAGS_TO_START ${TAGS} ${run_test_fail}
+						deactivate
+						"""
+					}
                 } else {
-                dir("./controls/tests/int"){
-                    sh """
-                    source /home/sbis/venv_for_test/bin/activate
-                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
-                    deactivate
-                    """
-                }
+					dir("./controls/tests/int"){
+						sh """
+						source /home/sbis/venv_for_test/bin/activate
+						python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
+						deactivate
+						"""
+					}
                 }
             }
         }
@@ -487,16 +487,13 @@ node('controls') {
                     publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
                 }
                 archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
-                junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-            }
-            if ( inte ){
-                junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
             }
             if ( unit ){
                 junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
             }
             if ( regr || inte ){
-                archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
+                archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false				
+                junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
             }
         }
     }
