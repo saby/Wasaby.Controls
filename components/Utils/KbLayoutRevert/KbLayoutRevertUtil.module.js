@@ -1,9 +1,6 @@
 /**
  * Created by am.gerasimov on 06.05.2016.
  */
-/**
- * Модуль для преобразования текста введенного в неверной раскладке
- */
 define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil',
     [],
     function () {
@@ -15,8 +12,20 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil',
              query: 'TranslitSearchProxyCall'
           }
        };
-
-       return {
+        /**
+         * Модуль для преобразования текста, введенного в неверной раскладке. Если передатьь текст в кириллице, то он преобразуется в латиницу.
+         * Модуль поставляет единственный метод статический метод {@link #process}.
+         * @class SBIS3.CONTROLS.Utils.KbLayoutRevertUtil
+         * @public
+         * @example
+         * <pre>
+         * define(..., ['js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil'], function(KbLayoutRevertUtil) {
+         *    ...
+         *    var res = KbLayoutRevertUtil.process(someString);
+         * });
+         * </pre>
+         */
+       return /** @lends SBIS3.CONTROLS.Utils.KbLayoutRevertUtil.prototype SBIS3.CONTROLS.Utils.KbLayoutRevertUtil */{
           _layouts :
           {
              "ru-en" : "йцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮqwertyuiop[]asdfghjkl;'zxcvbnm,.QWERTYUIOP{}ASDFGHJKL:\"ZXCVBNM<>"
@@ -135,14 +144,15 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil',
           },
           /**
            * Проецирует текст введенный в одной раскладке в другую раскладку. Успешно обрабатываются только те случаи, когда каждое слово введено в ошибочной раскладке.
-           *
-           * ghbdtn, Fktrc! => привет, Алекс!       OK
-           * ghbdtn, Фдуч! => привет, Alex!         OK (в процессе ввода была смена раскладки, но оба слова введены в ошибочной раскладке)
-           * ghbdtn, Alex! => привет, Флуч!         BAD (по смыслу второе слово введено верно)
-           *
-           * @param {string} text          текст для преобразования
-           * @param {string} [layoutId]    идентификатор раскладки. Если не указан определяет сам
-           * @returns {string}
+           * @param {String} text Текст для преобразования.
+           * @param {String} [layoutId] Идентификатор раскладки. Если не указан, определяет сам.
+           * @returns {String}
+           * @example
+           * <pre>
+           *    ghbdtn, Fktrc! => привет, Алекс!       OK
+           *    ghbdtn, Фдуч! => привет, Alex!         OK (в процессе ввода была смена раскладки, но оба слова введены в ошибочной раскладке)
+           *    ghbdtn, Alex! => привет, Флуч!         BAD (по смыслу второе слово введено верно)
+           * </pre>
            */
           process : function(text, layoutId) {
 

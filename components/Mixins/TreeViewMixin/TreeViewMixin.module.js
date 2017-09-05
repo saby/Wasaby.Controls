@@ -120,11 +120,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
        * @private
        */
       _onExpandItem: function(expandedItem) {
-         var item = expandedItem.getContents();
-         
-         if(this._needCreateFolderFooter(expandedItem)) {
-            this._createFolderFooter(item.getId());
-         }
+         this._createFolderFooter(expandedItem);
          this._drawExpandedItem(expandedItem);
       },
       _drawExpandedItem: function(expandedItem) {
@@ -184,18 +180,25 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
        * @param key
        * @private
        */
-      _createFolderFooter: function(key) {
+      _createFolderFooter: function(item) {
          var
+            position,
             folderFooter,
-            cfg = this._options,
-            itemProj = this._getItemProjectionByItemId(key),
-            position = this._getLastChildByParent(this._getItemsContainer(), itemProj);
+            cfg = this._options;
 
-         this._destroyItemsFolderFooter(key);
-         if (typeof cfg._footerWrapperTemplate === "function" && position) {
-            folderFooter = $(cfg._footerWrapperTemplate(cfg._getFolderFooterOptions(cfg, itemProj)));
-            folderFooter.insertAfter(position);
-            this.reviveComponents();
+         if (!cInstance.instanceOfModule(item, 'WS.Data/Display/CollectionItem')) {
+            item = this._getItemProjectionByItemId(item);
+         }
+
+         if (item && this._needCreateFolderFooter(item)) {
+            this._destroyItemsFolderFooter(item.getContents().getId());
+            position = this._getLastChildByParent(this._getItemsContainer(), item);
+
+            if (typeof cfg._footerWrapperTemplate === "function" && position) {
+               folderFooter = $(cfg._footerWrapperTemplate(cfg._getFolderFooterOptions(cfg, item)));
+               folderFooter.insertAfter(position);
+               this.reviveComponents();
+            }
          }
       },
       /**
@@ -219,17 +222,19 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
 
       _createAllFolderFooters: function() {
          this._getItemsProjection().each(function(item) {
-            if (this._needCreateFolderFooter(item)) {
-               this._createFolderFooter(item.getContents().getId());
-            }
+            this._createFolderFooter(item);
          }.bind(this));
       },
 
-      _needCreateFolderFooter: function(item) {
+      _needCreateFolderFooter: function (item) {
          var
-             model = item.getContents(),
-             id = model && model.get(this._options.idProperty),
-             nodeType = model && model.get(this._options.nodeProperty);
+            model, id, nodeType;
+         if (cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
+            return false;
+         }
+         model = item.getContents();
+         id = model && model.get(this._options.idProperty);
+         nodeType = model && model.get(this._options.nodeProperty);
          //проверяем на true(папка) и false(скрытый узел). Проверять через item.isNode() неверно, т.к. для скрытых узлов вернётся false.
          return (nodeType === true || nodeType === false) && item.isExpanded() && (this._options.folderFooterTpl || this._options._folderHasMore[id]);
       },
@@ -252,11 +257,13 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
             var i, item, itemId;
             for (i = 0; i < items.length; i++) {
                item = items[i];
-               itemId = item.getContents().getId();
-               if (!notCollapsed && item.isExpanded()) {
-                  delete this._options.openedPath[itemId];
-                  item.setExpanded(false);
-                  this._destroyItemsFolderFooter(itemId);
+               if (!cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
+                  itemId = item.getContents().getId();
+                  if (!notCollapsed && item.isExpanded()) {
+                     delete this._options.openedPath[itemId];
+                     item.setExpanded(false);
+                     this._destroyItemsFolderFooter(itemId);
+                  }
                }
             }
             return parentFunc.call(this, items, notCollapsed, groupId);

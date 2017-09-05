@@ -137,6 +137,8 @@
 @button-large-border-radius:                                                                                            0;
 @button-large-font-size:                                                                                                @button-font-size;
 
+@button-text-height-ff:                                                                                                 auto;
+
 //Button group
 @button-group-horizontal-item-margin:     0 1.75rem 0 0;
 @button-group-vertical-item-margin:       0 0 1.75rem 0;
@@ -288,12 +290,12 @@
 @menu-item-padding-24:                    2.5rem;
 // Menu
 @menu-button-menu-border-width:           @default-border-width;
-@menu-button-menu-margin:                 -10px 0 0 0;
+@menu-button-menu-margin:                 -8px 0 0 0;
 @menu-button-menu-border-color:           #23b8ff;
-@menu-link-header-bg-color:               #5bafe7;
+@menu-link-header-bg-color:               @menu-header-bg-color;
 @menu-link-icon-24-top:                   -.14rem;
-@menu-icon-menu-margin:                   -.32rem 0 0 -.2142rem;
-@menu-icon-big-menu-margin:               -.3571rem 0 0 .5rem;
+@menu-icon-menu-margin:                   -.25rem 0 0 -.1442rem;
+@menu-icon-big-menu-margin:               -.287rem 0 0 .43rem;
 @menu-padding:										0;
 //Menu link
 @menu-link-menu-item-container-padding:	0 0 0 0;
@@ -372,7 +374,6 @@
 // Suggest
 @suggest-picker-border:                   @default-border-width solid @default-border-color-second;
 @suggest-picker-color:                    #273B4D;
-@suggest-picker-margin:                   -@default-border-width 0 0 0;
 
 @suggest-list-footer-height:              3.143rem;
 @suggest-list-footer-padding:             0 0.857rem;
@@ -735,7 +736,7 @@
 @controls-FieldLink-linkItem-margin:         0;
 @controls-FieldLink-linkItem-padding:        0 3rem 0 .56rem;
 @controls-FieldLink-linkItem-caption-height: 1.75rem;
-@controls-FieldLink-linkItem-cross-width:    2.5rem;
+@controls-FieldLink-linkItem-cross-width:    3rem;
 @controls-FieldLink-linkItem-cross-right:    0;
 @controls-FieldLink-linkItem-cross-top:      -.14rem;
 @controls-FieldLink-linkItem-cross-padding:  0;
@@ -901,7 +902,6 @@
 @scrollpager-border:                      none;
 @scrollpager-bottom:                      .3333rem;
 @closeBigButtonWidth:                     3rem;
-@menu-header-bg-color:                    #23b8ff;
 @date-range-big-header-bg:                #2c3e50;
 @date-range-big-choose-border-color:	   #3f566d;
 @date-range-big-choose-width:				   25.8rem;
@@ -1035,6 +1035,7 @@
 @list-view-items-toolbar-bottom:          0.214rem;
 @list-view-items-toolbar-font-family:     'carrypresto-icons';
 @search-left-margin:                      .57rem;
+@controls-view-eip-padding-DEFAULT:                                                                                     .857rem;
 @controls-view-padding-DEFAULT:           .857rem;
 @combo-box-picker-border:                 @default-border-width solid @default-border-color-second;
 @data-grid-row-selected-main-bg:          @basic-block-bg-color;

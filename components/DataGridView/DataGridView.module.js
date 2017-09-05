@@ -382,11 +382,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * </component>
     */
    var DataGridView = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS.DataGridView.prototype*/ {
+       /**
+        * @event onDrawHead Возникает после отрисовки шапки
+        * @param {Core/EventObject} eventObject Дескриптор события.
+        */
       _dotTplFn : dotTplFn,
-      /**
-       * @event onDrawHead Возникает после отрисовки шапки
-       * @param {Core/EventObject} eventObject Дескриптор события.
-       */
       $protected: {
          _headIsChanged: false,
          _rowTpl : rowTpl,
@@ -404,6 +404,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             left: 0,
             right: 0
          },
+         _partScrollRequestAnimationId: null,
          _currentScrollPosition: 0,                   //Текущее положение частичного скрола заголовков
          _scrollingNow: false,                        //Флаг обозначающий, происходит ли в данный момент скролирование элементов
          _partScrollRow: undefined,                   //Строка-контейнер, в которой лежит частичный скролл
@@ -682,6 +683,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          DataGridView.superclass.init.call(this);
          this._updateHeadAfterInit();
          CommandDispatcher.declareCommand(this, 'ColumnSorting', this._setColumnSorting);
+         this._updateAjaxLoaderPosition();
       },
 
       _prepareConfig: function() {
@@ -814,12 +816,25 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return DataGridView.superclass._itemsReadyCallback.apply(this, arguments);
       },
 
+      _updateAjaxLoaderPosition: function () {
+         var height, styles;
+         if (!this._thead) {
+            return;
+         }
+         // Смещаем индикатор загрузки вниз на высоту заголовков.
+         height = this._thead.outerHeight();
+         styles = {top: height || ''};
+         // Корректируем хак ".ws-is-webkit .controls-AjaxLoader {height: 100%;}" из стилей ListView.
+         if (cDetection.webkit) {
+            styles.height =  height ? 'calc(100% - ' + height + 'px)' : '';
+         }
+         this._getAjaxLoaderContainer().css(styles);
+      },
+
       _redrawHead : function() {
          var
             headData,
-            headMarkup,
-            height,
-            styles;
+            headMarkup;
 
          if (!this._thead) {
             this._bindHead();
@@ -856,14 +871,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if (this._options.stickyHeader && !this._options.showHead && this._options.resultsPosition === 'top') {
             this._updateStickyHeader(headData.hasResults);
          }
-         // Смещаем индикатор загрузки вниз на высоту заголовков.
-         height = this._thead.outerHeight();
-         styles = {top: height || ''};
-         // Корректируем хак ".ws-is-webkit .controls-AjaxLoader {height: 100%;}" из стилей ListView.
-         if (cDetection.webkit) {
-            styles.height =  height ? 'calc(100% - ' + height + 'px)' : '';
-         }
-         this._getAjaxLoaderContainer().css(styles);
+         this._updateAjaxLoaderPosition();
       },
 
       _redrawFoot: function(){
@@ -1293,13 +1301,24 @@ define('js!SBIS3.CONTROLS.DataGridView',
        */
       _moveThumbAndColumns: function(cords, force) {
          var self = this;
-      
-         if (window.requestAnimationFrame && !force) {
-            window.requestAnimationFrame(function() {
+         
+         /* Т.к. requestAnimationFrame работает асинхронно, надо выполнять лишь последний вызов,
+            иначе скролл может дёргаться */
+         this._cancelScrollRequest();
+         
+         if(!force) {
+            this._partScrollRequestAnimationId = window.requestAnimationFrame(function() {
                self._scrollColumns(cords);
             })
          } else {
             this._scrollColumns(cords);
+         }
+      },
+      
+      _cancelScrollRequest: function() {
+         if(this._partScrollRequestAnimationId) {
+            window.cancelAnimationFrame(this._partScrollRequestAnimationId);
+            this._partScrollRequestAnimationId = null;
          }
       },
    
@@ -1561,6 +1580,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
       destroy: function() {
          if (this.hasPartScroll()) {
+            this._cancelScrollRequest();
             this._thumb.unbind('click');
             this._thumb = undefined;
             this._arrowLeft.unbind('click');

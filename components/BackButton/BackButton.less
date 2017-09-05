@@ -10,19 +10,12 @@
    .controls-BackButton__caption.controls-Link {
       font-style: normal;
       color: @back-button-text-color;
-      overflow: hidden;
       padding-left: 4px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
       text-align: left;
       max-width: calc(~"100% - 8px");
       line-height: normal;
       font-weight: @back-button-text-fontweight;
       font-size: @back-button-font-size;
-      .controls-Button__text {
-         overflow: hidden;
-         text-overflow: ellipsis;
-      }
    }
    &:not(.ws-disabled):hover:before {
       color: @back-button-arrow-hover-color;
@@ -43,30 +36,14 @@
          .controls-BackButton__arrow{
             display: inline-block;
             color: @icon-color-primary !important;
-            &:hover {
+            &:hover .controls-Button__icon{
                color: @icon-color-hover !important;
             }
          }
       }
       &.controls-BackButton__hover-arrow{
          .controls-BackButton__arrow{
-            position: absolute;
-            top: 0;
-            right: 0;
-            left: auto;
-            height: @back-button-arrow-height;
-            background-color: @white-color;
-            &:before{
-               top: 4px;
-            }
-         }
-      }
-      .controls-BackButton__arrow {
-         position: relative;
-         top: -3px;
-         &:before{
-            float: right;
-            position: relative;
+            margin-right: -@icon-width;
          }
       }
    }
@@ -93,10 +70,6 @@
       .controls-BackButton__caption {
          padding-left: 0;
       }
-   }
-
-   body:not(.ws-is-mobile-platform) &.controls-BackButton__alignment {
-      vertical-align: top;
    }
 
 }

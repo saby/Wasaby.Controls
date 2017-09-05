@@ -41,10 +41,17 @@ properties([
             description: '',
             name: 'theme'),
         choice(choices: "chrome\nff", description: '', name: 'browser_type'),
-        choice(choices: "all\nonly_reg\nonly_int\nonly_unit", description: '', name: 'run_tests'),
-        booleanParam(defaultValue: false, description: "", name: 'RUN_ONLY_FAIL_TEST')]),
+        booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
+        booleanParam(defaultValue: false, description: "Запуск интеграционных тестов", name: 'run_int'),
+        booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
+        booleanParam(defaultValue: false, description: "Запуск только упавших тестов из предыдущего билда", name: 'RUN_ONLY_FAIL_TEST')
+        ]),
     pipelineTriggers([])
 ])
+if ( "${env.BUILD_NUMBER}" != "1" && params.run_reg == false && params.run_int == false && params.run_unit == false ) {
+        currentBuild.result = 'ABORTED'
+        error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
+    }
 
 node('controls') {
     def version = "3.17.150"
@@ -68,27 +75,10 @@ node('controls') {
         if ("${TAGS}" != "")
             TAGS = "--TAGS_TO_START ${TAGS}"
 
-        def inte = false
-        def regr = false
-        def unit = false
+        def inte = params.run_reg
+        def regr = params.run_int
+        def unit = params.run_unit
 
-        switch (params.run_tests){
-            case "all":
-                regr = true
-                inte = true
-                unit = true
-                break
-            case "only_reg":
-                regr = true
-                break
-            case "only_int":
-                inte = true
-                break
-            case "only_unit":
-                unit = true
-                break
-        }
-        
         stage("Checkout"){
             // Контролы
             dir(workspace) {
@@ -441,41 +431,47 @@ node('controls') {
             run_test_fail = "-sf"
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
-        stage("Инт.тесты"){
-            if ( inte ){
-                def site = "http://${NODE_NAME}:30001"
-                site.trim()
-                if ( "${TAGS}" != "") {
-					dir("./controls/tests/int"){
-						sh """
-						source /home/sbis/venv_for_test/bin/activate
-						python start_tests.py --RESTART_AFTER_BUILD_MODE --TAGS_TO_START ${TAGS} ${run_test_fail}
-						deactivate
-						"""
-					}
-                } else {
-					dir("./controls/tests/int"){
-						sh """
-						source /home/sbis/venv_for_test/bin/activate
-						python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
-						deactivate
-						"""
-					}
+        parallel (
+            int_test: {
+                stage("Инт.тесты"){
+                    if ( inte ){
+                        def site = "http://${NODE_NAME}:30001"
+                        site.trim()
+                        if ( "${TAGS}" != "") {
+                        dir("./controls/tests/int"){
+                            sh """
+                            source /home/sbis/venv_for_test/bin/activate
+                            python start_tests.py --RESTART_AFTER_BUILD_MODE --TAGS_TO_START ${TAGS} ${run_test_fail}
+                            deactivate
+                            """
+                        }
+                        } else {
+                        dir("./controls/tests/int"){
+                            sh """
+                            source /home/sbis/venv_for_test/bin/activate
+                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
+                            deactivate
+                            """
+                        }
+                        }
+                    }
+                }
+            },
+            reg_test: {
+                stage("Рег.тесты"){
+                    if ( regr ){
+                        sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
+                        dir("./controls/tests/reg"){
+                            sh """
+                                source /home/sbis/venv_for_test/bin/activate
+                                python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
+                                deactivate
+                            """
+                        }
+                    }
                 }
             }
-        }
-        stage("Рег.тесты"){
-            if ( regr ){
-                sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
-                dir("./controls/tests/reg"){
-                    sh """
-                        source /home/sbis/venv_for_test/bin/activate
-                        python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
-                        deactivate
-                    """
-                }
-            }
-        }
+        )
         sh """
             sudo chmod -R 0777 ${workspace}
             sudo chmod -R 0777 /home/sbis/Controls1
@@ -487,16 +483,18 @@ node('controls') {
                     publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
                 }
                 archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
+                junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+            }
+            if ( inte ){
+                junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
             }
             if ( unit ){
                 junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
             }
             if ( regr || inte ){
-                archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false				
-                junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+                archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
             }
         }
     }
-
 }
 
