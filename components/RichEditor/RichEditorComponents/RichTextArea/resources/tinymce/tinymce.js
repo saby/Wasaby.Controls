@@ -20527,7 +20527,7 @@
                      return node.nodeType == 1 && !node.getAttribute('data-mce-bogus');
                   });
 
-                  if (Env.gecko) {
+                  if (parents.length && Env.gecko) {
                      // При тройном клике Firefox делает выделение выше по дереву элементов, чем Chrome
                      for (var n = parents[0]; n.hasChildNodes() && n.childNodes.length === 1 && n.firstChild.hasChildNodes(); n = parents[0]) {
                         parents.unshift(n.firstChild);
