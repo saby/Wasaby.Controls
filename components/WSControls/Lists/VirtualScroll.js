@@ -14,16 +14,17 @@ define('js!WSControls/Lists/VirtualScroll',
          },
 
          // First and last indices of items in projection
-         _projectionLength: 0,
+         _projectionLength: null,
 
          // Range of indices of items that are shown in virtual window
          _virtualWindow: {
-            start: 0,
-            end: 0
+            start: null,
+            end: null
          },
 
          init: function() {
             this._projectionLength = this._options.itemsLength;
+            this._virtualWindow.start = 0;
 
             if (this._options.maxItems < this._projectionLength) {
                this._virtualWindow.end = this._options.maxItems;

@@ -269,8 +269,8 @@ define([
             it('Nothing to add', function() {
                var vs = new VirtualScroll({
                   itemsLength: 30,
-                  maxItems: 15,
-                  pageSize: 5
+                  pageSize: 5,
+                  maxItems: 15
                });
                vs._virtualWindow.start = 15;
                vs._virtualWindow.end = 30;
@@ -339,11 +339,11 @@ define([
             it('Nothing to add to start', function() {
                var vs = new VirtualScroll({
                   itemsLength: 30,
-                  maxItems: 15,
-                  pageSize: 5
+                  pageSize: 5,
+                  maxItems: 15
                });
 
-               vs.updateWindowOnTrigger('start');
+               vs.updateWindowOnTrigger('top');
 
                assert.equal(vs._projectionLength, 30);
                assert.equal(vs._virtualWindow.start, 0);
@@ -353,13 +353,13 @@ define([
             it('Nothing to add to end', function() {
                var vs = new VirtualScroll({
                   itemsLength: 30,
-                  maxItems: 15,
-                  pageSize: 5
+                  pageSize: 5,
+                  maxItems: 15
                });
-               vs._virtualWindow.start = 15;
-               vs._virtualWindow.end = 30;
+               vs._virtualWindow.start = 10;
+               vs._virtualWindow.end = 25;
 
-               vs.updateWindowOnTrigger('end');
+               vs.updateWindowOnTrigger('bottom');
 
                assert.equal(vs._projectionLength, 30);
                assert.equal(vs._virtualWindow.start, 15);
