@@ -50,6 +50,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             colorMarkEnabled: cfg.colorMarkEnabled,
             colorField: cfg.colorField,
             allowEnterToFolder: cfg.allowEnterToFolder,
+            task1173671799: cfg.task1173671799,
             colspan: cfg.columns.length,
             multiselect: cfg.multiselect
          }
