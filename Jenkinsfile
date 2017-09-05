@@ -314,9 +314,14 @@ node('controls') {
                     )
                 }
             }
-        }   def name_db = "css_${env.NODE_NAME}${ver}1"
+        }
+        stage("Разворот стенда"){
+            // Создаем sbis-rpc-service.ini
+            def host_db = "test-autotest-db1"
+            def port_db = "5432"
+            def name_db = "css_${env.NODE_NAME}${ver}1"
             def user_db = "postgres"
-            def password_db = "postgres"
+            def password_db = "postgres
             writeFile file: "./controls/tests/stand/conf/sbis-rpc-service.ini", text: """[Базовая конфигурация]
                 АдресСервиса=${env.NODE_NAME}:10001
                 ПаузаПередЗагрузкойМодулей=0
