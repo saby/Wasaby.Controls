@@ -103,8 +103,13 @@ define('js!SBIS3.CONTROLS.BreadCrumbsController', ["Core/constants", "Core/Abstr
                      break;
                   }
                }
-
-               breadCrumbs.setItems(self._path);
+               
+               /* Т.к. у крошек может быть свой idProperty и displayProperty, отличный от полей в пути,
+                  которые приходят в событии onSetRoot, надо элементы ковертировать, не именяя исходный путь */
+               breadCrumbs.setItems(self._path.reduce(function(result, elem) {
+                  result.push(createBreadCrumb(elem));
+                  return result;
+               }, []));
                if (self._options.backButtonTemplate && self._currentRoot) {
                   caption = self._options.backButtonTemplate(self._currentRoot.data);
                } else {
