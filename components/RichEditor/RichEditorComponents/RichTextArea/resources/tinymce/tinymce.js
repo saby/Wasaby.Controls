@@ -337,7 +337,10 @@
     * Modifed to be a feature fill and wrapped as tinymce module.
     */
    define("tinymce/util/Promise", [], function() {
-      if (window.Promise) {
+      if (window.Promise && window.Promise.all) {
+         // Только если это стандартное обещание его можно использовать (для IE)
+         //TODO: По мере исправления этого недочёта в оригинальном TinyMCE - обновить
+         // Задача https://online.sbis.ru/opendoc.html?guid=827218ed-d90d-46e5-af76-814bb7bf715b
          return window.Promise;
       }
 
@@ -460,7 +463,7 @@
          });
       };
 
-      Promise.all = function () {
+      Promise.all = function _all () {
          var args = Array.prototype.slice.call(arguments.length === 1 && isArray(arguments[0]) ? arguments[0] : arguments);
 
          return new Promise(function (resolve, reject) {
@@ -489,7 +492,7 @@
          });
       };
 
-      Promise.resolve = function (value) {
+      Promise.resolve = function _resolve (value) {
          if (value && typeof value === 'object' && value.constructor === Promise) {
             return value;
          }
@@ -499,13 +502,13 @@
          });
       };
 
-      Promise.reject = function (value) {
+      Promise.reject = function _reject (value) {
          return new Promise(function (resolve, reject) {
             reject(value);
          });
       };
 
-      Promise.race = function (values) {
+      Promise.race = function _race (values) {
          return new Promise(function (resolve, reject) {
             for(var i = 0, len = values.length; i < len; i++) {
                values[i].then(resolve, reject);
