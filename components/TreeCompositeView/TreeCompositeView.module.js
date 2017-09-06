@@ -469,7 +469,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             }
          }
          else {
-            if (this._prevMode) {
+            if (this._prevMode && this._prevMode !== this._options.viewMode) {
                this.setViewMode(this._prevMode);
             }
             this._prevMode = null;
