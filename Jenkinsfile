@@ -202,8 +202,7 @@ node('controls') {
                 ws: {
                     // Выкачиваем ws для unit тестов и если указан сторонний бранч
                     if ( unit || ("${params.ws_revision}" != "sdk") ) {
-                        params.ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
-                        }
+                        ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
                         dir(workspace) {
                             checkout([$class: 'GitSCM',
                             branches: [[name: ws_revision]],
@@ -224,8 +223,7 @@ node('controls') {
                     // Выкачиваем ws.data для unit тестов и если указан сторонний бранч
                     if ( unit || ("${params.ws_data_revision}" != "sdk") ) {
                         def ws_data_revision = params.ws_data_revision
-                        params.ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
-                        
+                        ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
                         dir(workspace) {
                             checkout([$class: 'GitSCM',
                             branches: [[name: ws_data_revision]],
