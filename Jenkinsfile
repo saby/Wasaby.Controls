@@ -40,7 +40,11 @@ if ( "${env.BUILD_NUMBER}" != "1" && params.run_reg == false && params.run_int =
         currentBuild.result = 'ABORTED'
         error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
     }
-
+if ( "${env.BUILD_NUMBER}" == "1" ) {
+    def params.run_int = true
+    def params.run_reg = true
+    def params.run_unit = true
+}
 node('controls') {
     def version = "3.17.110"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
@@ -52,15 +56,11 @@ node('controls') {
         def items = "controls:${workspace}/controls"
         def branch_atf = params.branch_atf
         def branch_engine = params.branch_engine
-        if ("${env.BUILD_NUMBER}" == "1") {
-            def inte = true
-            def regr = true
-            def unit = true
-        } else {
-            def inte = params.run_int
-            def regr = params.run_reg
-            def unit = params.run_unit
-        }
+        def inte = params.run_int
+        def regr = params.run_reg
+        def unit = params.run_unit
+
+
         stage("Checkout"){
             parallel (
                 checkout1: {
@@ -201,7 +201,7 @@ node('controls') {
             parallel(
                 ws: {
                     // Выкачиваем ws для unit тестов и если указан сторонний бранч
-                    if ( unit || ("${params.ws_revision}" != "sdk") ) {
+                    if ( unit || "${params.ws_revision}" != "sdk" ){
                         ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
                         dir(workspace) {
                             checkout([$class: 'GitSCM',
@@ -221,7 +221,7 @@ node('controls') {
                 },
                 ws_data: {
                     // Выкачиваем ws.data для unit тестов и если указан сторонний бранч
-                    if ( unit || ("${params.ws_data_revision}" != "sdk") ) {
+                    if ( unit || "${params.ws_data_revision}" != "sdk" ){
                         def ws_data_revision = params.ws_data_revision
                         ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
                         dir(workspace) {
