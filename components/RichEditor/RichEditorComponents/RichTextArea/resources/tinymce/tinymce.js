@@ -20527,7 +20527,9 @@
                      return node.nodeType == 1 && !node.getAttribute('data-mce-bogus');
                   });
 
-                  if (Env.gecko) {
+                  // TODO: Убрать это после того, как в оригинальном TinyMCE это будет исправлено -
+                  // задача 1174390350 https://online.sbis.ru/opendoc.html?guid=3c49ad1e-7aa2-4e11-a8e5-bd2d34b98f69
+                  if (parents.length && Env.gecko) {
                      // При тройном клике Firefox делает выделение выше по дереву элементов, чем Chrome
                      for (var n = parents[0]; n.hasChildNodes() && n.childNodes.length === 1 && n.firstChild.hasChildNodes(); n = parents[0]) {
                         parents.unshift(n.firstChild);
