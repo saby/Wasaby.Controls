@@ -6,12 +6,9 @@ define([
    function (LongOperationsBunch) {
       'use strict';
 
-      //TODO Поддержать выполнение тестов под node!
-      if (typeof window === 'undefined') {
-         return;
+      if (typeof mocha !== 'undefined') {
+         mocha.setup({/*ignoreLeaks:true,*/ globals:[/*'*',*/ '__extends', 'sharedBusDebug']});
       }
-
-      mocha.setup({/*ignoreLeaks:true,*/ globals:[/*'*',*/ '__extends', 'sharedBusDebug']});
 
       // Попробовать создать новый экземпляр
       var _makeBunch = function () {
