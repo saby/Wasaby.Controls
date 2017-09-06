@@ -293,11 +293,14 @@ define(
           * @see onChangeInterval
           */
          setInterval: function ( interval ) {
-            if (interval == undefined || interval.toString() == this.getInterval()){
-               return;
+            if (interval == undefined) {
+               this._setText(this._getEmptyText());
             }
-            this.timeInterval.set(interval);
-            this._updateTextByTimeInterval(true);
+            else if (interval.toString() != this.getInterval()){
+               this.timeInterval.set(interval);
+               this._updateTextByTimeInterval(true);
+            }
+            this._options.interval = interval;
          },
          _getEmptyText: function(){
             return this._getFormatModel().getStrMask(this._getMaskReplacer());
