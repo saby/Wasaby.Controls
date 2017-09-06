@@ -5,8 +5,6 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
     [
    "Core/core-functions",
    "Core/EventBus",
-   "Core/IoC",
-   "Core/ConsoleLogger",
    "js!SBIS3.CONTROLS.HistoryController",
    "js!WS.Data/Collection/List",
    "js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil",
@@ -22,7 +20,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
    "Core/Date"
 ],
 
-    function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, isEqualObject, genHelpers, debounce, forAliveOnly, find, HashManager, cInstance, cMerge) {
+    function( cFunctions, EventBus, HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, isEqualObject, genHelpers, debounce, forAliveOnly, find, HashManager, cInstance, cMerge) {
 
        'use strict';
 

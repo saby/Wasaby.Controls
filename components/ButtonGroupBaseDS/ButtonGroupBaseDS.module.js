@@ -4,11 +4,10 @@
 
 define('js!SBIS3.CONTROLS.ButtonGroupBaseDS', [
    "Core/IoC",
-   "Core/ConsoleLogger",
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CONTROLS.DSMixin",
    "js!SBIS3.CONTROLS.DataBindMixin"
-], function( IoC, ConsoleLogger,CompoundControl, DSMixin, DataBindMixin) {
+], function( IoC, CompoundControl, DSMixin, DataBindMixin) {
 
    'use strict';
 
