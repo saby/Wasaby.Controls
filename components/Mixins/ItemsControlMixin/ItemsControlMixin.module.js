@@ -2627,10 +2627,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        */
       onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
          if (this._isNeedToRedraw()) {
-            if (newItems.length > 0) {
-               //TODO проекция отдает неправильные индексы выписана ошибка https://online.sbis.ru/opendoc.html?guid=ccb6214b-70ab-45d3-b5e3-e2e15ddeb639&des=
-               newItemsIndex = this._getItemsProjection().getIndex(newItems[0]);
-            }
 	         switch (action) {
 	            case IBindCollection.ACTION_ADD:
                case IBindCollection.ACTION_MOVE:
