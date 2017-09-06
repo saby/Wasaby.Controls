@@ -56,9 +56,9 @@ node('controls') {
         def regr = params.run_reg
         def unit = params.run_unit
         if ("${env.BUILD_NUMBER}" == "1"){
-            def inte = true
-            def regr = true
-            def unit = true
+            definte = true
+            regr = true
+            unit = true
         }
 
         stage("Checkout"){
