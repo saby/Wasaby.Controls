@@ -746,6 +746,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       showPicker: function(){
+         //Инициализируем пикер, чтобы перед показом ограниччить его ширину
+         if (!this._picker || this._picker.isDestroyed()) {
+            this._initializePicker();
+         }
          ComboBox.superclass.showPicker.call(this);
          TextBoxUtils.setEqualPickerWidth(this._picker);
          //После отображения пикера подскроливаем до выбранного элемента
@@ -769,6 +773,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          self._picker.subscribe('onKeyPressed', function (eventObject, event) {
             self._keyboardHover(event);
          });
+         //перед показом пикера нужно ограничить ширину по таргету
+         TextBoxUtils.setEqualPickerWidth(this._picker);
       },
 
       //TODO заглушка
