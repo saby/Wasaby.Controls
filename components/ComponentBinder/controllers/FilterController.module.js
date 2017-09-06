@@ -54,6 +54,10 @@ define('js!SBIS3.CONTROLS.FilterController', [
                      syncFilters(fastDataFilter, filterButton);
                   }
       
+                  /* После фильтрации сбросим страницу,
+                     т.к. иначе offset будет неверный после фильтрации */
+                  view.setPage(0, true);
+      
                   resultFilter = cMerge(
                      filterButton ? filterButton.getFilter() : {},
                      fastDataFilter ? fastDataFilter.getFilter() : {}
@@ -87,7 +91,6 @@ define('js!SBIS3.CONTROLS.FilterController', [
                };
       
             if(filterButton) {
-               filterChangeHandler.call(filterButton);
                subscribeFilter(filterButton);
             }
       
