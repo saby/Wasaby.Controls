@@ -52,10 +52,15 @@ node('controls') {
         def items = "controls:${workspace}/controls"
         def branch_atf = params.branch_atf
         def branch_engine = params.branch_engine
-        def inte = params.run_int
-        def regr = params.run_reg
-        def unit = params.run_unit
-
+        if ("${env.BUILD_NUMBER}" == "1") {
+            def inte = true
+            def regr = true
+            def unit = true
+        } else {
+            def inte = params.run_int
+            def regr = params.run_reg
+            def unit = params.run_unit
+        }
         stage("Checkout"){
             parallel (
                 checkout1: {
