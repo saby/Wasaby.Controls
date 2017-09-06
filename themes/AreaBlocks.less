@@ -18,31 +18,22 @@
       margin-left: @margin-row;
       margin-right: @margin-row;
       .flexbox();
-      &:before, &:after {
-        clear: both;
-        content: " ";
-        display: table;
-      }
+
       &:not(:last-child) {
         margin-bottom: @spacing-between-blocks;
       }
-      &-rebuild {
-        .flexbox();
-        .flex-flow(row wrap);
-      }
     }
     &col {
-      float: left;
       border-width: 0 @border-col;
       border-color: @default-border-color;
       border-style: @default-border-style;
       .box-sizing();
     }
-    // Модификаторы цвета блоков ws-areaBlocks__col_bg, ..., ws-areaBlocks__col_hover.
-    .for(@color-modificator-name, {
-      &col_@{_item} {
-        background-color: extract(@color-modificator-value, @_i);
-      }
-    });
   }
+  // Модификаторы цвета блоков ws-background_bg, ..., ws-background_hover.
+  .for(@color-modificator-name, {
+    .ws-background_@{_item} {
+      background-color: extract(@color-modificator-value, @_i);
+    }
+  });
 }
