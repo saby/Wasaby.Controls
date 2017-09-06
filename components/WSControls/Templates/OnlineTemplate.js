@@ -27,7 +27,7 @@ define('js!WSControls/Templates/OnlineTemplate',
                this._currentTab = URLHelpers.getQueryParam('currentTab') || 0;
             }
             //TODO: как-то нормально прописывать путь до svg
-            this._logoUrl = cfg.logoUrl ? cfg.logoUrl : 'resources/SBIS3.CONTROLS/components/WSControls/Templates/resources/logo.svg';
+            this._logoUrl = cfg.logoUrl ? cfg.logoUrl : 'components/WSControls/Templates/resources/logo.svg';
          },
 
          _beforeUpdate: function(cfg) {

@@ -1,35 +1,38 @@
 <html lang="ru" xml:lang="ru" xmlns="http://www.w3.org/1999/xhtml" key="1_" id="root">
-    <head key="1_1_">
-        <title>{{ _options.title }}</title>
-        <link rel="stylesheet" data-pack-name="ws-core-styles" type="text/css" href="{{wsRoot}}css/themes/webfonts/fonts.css" />
-        <link rel="stylesheet" data-pack-name="ws-core-styles" type="text/css" href="{{wsRoot}}css/core-min.css" />
-        <ws:if data="{{ _options.cssLinks }}">
-            <ws:for data="value in _options.cssLinks">
-                <link rel="stylesheet" href="{{ value }}" type="text/css"/>
-            </ws:for>
-        </ws:if>
-    </head>
-    <body id="body" key="1_2_">
-        <ws:if data="{{ _options.template }}">
-            <ws:partial template="{{ _options.template }}" scope="{{ _tplConfig }}" aaa="{{_tplConfig}}"></ws:partial>
-        </ws:if>
+<head key="1_1_">
+    <ws:if data="{{ cssLinks }}">
+        <ws:for data="index, value in cssLinks">
+            <link rel="stylesheet" href="{{ value }}" type="text/css" key="{{ 'css_' + (index + 1) + '_' }}"/>
+        </ws:for>
+    </ws:if>
+    <title key="title">{{ title }}</title>
+    <link key="fonts-css-for-page" rel="stylesheet" data-pack-name="ws-core-styles" type="text/css" href="{{wsRoot}}css/themes/webfonts/fonts.css" />
+    <link key="core-min-css-for-page" rel="stylesheet" data-pack-name="ws-core-styles" type="text/css" href="{{wsRoot}}css/core-min.css" />
 
-        <script>
-           window.wsConfig = {
-              wsRoot: '/ws/',
-              resourceRoot: '/resources/'
-           };
-        </script>
-        <script type="text/javascript" src="{{wsRoot}}ext/requirejs/require.js"></script>
-        <script type="text/javascript" src="{{wsRoot}}ext/requirejs/config.js"></script>
-        <script type="text/javascript" src="{{resourceRoot}}/contents.js"></script>
-        <ws:if data="{{ _options.jsLinks }}">
-            <ws:for data="value in _options.jsLinks">
-                <script type="text/javascript" src="{{ value }}" defer="defer"></script>
-            </ws:for>
-        </ws:if>
-        <script>
-           require(['Core/app']);
-        </script>
-    </body>
+</head>
+<body id="body" key="1_2_">
+<ws:if data="{{ template }}">
+    <ws:partial template="{{ template }}" scope="{{ _tplConfig }}"></ws:partial>
+</ws:if>
+<div key="scripts">
+    <script key="ws-config">
+       window.wsConfig = {
+          wsRoot: '/ws/',
+          resourceRoot: '/resources/'
+       };
+    </script>
+    <script key="require" type="text/javascript" src="{{wsRoot}}ext/requirejs/require.js"></script>
+    <script key="config" type="text/javascript" src="{{wsRoot}}ext/requirejs/config.js"></script>
+    <script key="contents" type="text/javascript" src="{{resourceRoot}}/contents.js"></script>
+    <script key="jquery" type="text/javascript" src="/cdn/jquery/3.2.1/jquery-min.js" data-pack-name="skip" defer="defer"></script>
+    <ws:if data="{{ jsLinks }}">
+        <ws:for data="index, value in jsLinks">
+            <script type="text/javascript" src="{{ value }}" defer="defer" key="{{ 'scripts_' + index }}"></script>
+        </ws:for>
+    </ws:if>
+    <script>
+       require(['Core/app']);
+    </script>
+</div>
+</body>
 </html>

@@ -6,14 +6,14 @@ define('js!WSControls/Containers/Page',
       //TODO: убрать EventBus
       'Core/EventBus',
       'Core/moduleStubs',
-      //TODO: убрать
-      'js!WSDemo/Configs/OnlineConfig',
-      //TODO: убрать, хак для препроцессора, без этого на сервере не строится
-      'js!WSControls/Templates/OnlineTemplate',
       'css!WSControls/Containers/Page'
    ],
 
-   function (Base, template, URLHelpers, EventBus, moduleStubs, routes) {
+   function (Base,
+             template,
+             URLHelpers,
+             EventBus,
+             moduleStubs) {
       'use strict';
 
       var Page = Base.extend({
@@ -22,24 +22,40 @@ define('js!WSControls/Containers/Page',
          wsRoot: '/ws/',
          resourceRoot: '/resources/',
 
-         constructor: function(cfg) {
-            var
-               self = this,
-               navigation = EventBus.channel('navigation');
-            Page.superclass.constructor.apply(this, arguments);
-            navigation.subscribe('onNavigate', function(e, location) {
-               self._setLocation.apply(self, arguments);
-            });
+         getDataId: function(){
+            return 'cfg-pagedata';
          },
 
          _beforeMount: function(cfg, receivedState) {
             var self = this;
-            /*return moduleStubs.require([cfg.routes]).addCallback(function(result) {
-               self._routes = result[0];
-               self._tplConfig = self._routes[location.pathname];
-            });*/
-            this._routes = routes;
-            this._tplConfig = this._routes[location.pathname];
+            if (receivedState) {
+               return moduleStubs.require([receivedState.routesConfig, receivedState.template]).addCallback(function(result) {
+                  self._initState(receivedState, result[0]);
+               });
+            } else {
+               return moduleStubs.require([cfg.routesConfig, cfg.template]).addCallback(function(result) {
+                  self._initState(cfg, result[0]);
+                  return cfg;
+               });
+            }
+         },
+
+         _initState: function(cfg, routesConfig) {
+            this._routes = routesConfig;
+            this._tplConfig = this._routes[URLHelpers.getPath()];
+            this.title = cfg.title;
+            this.cssLinks = cfg.cssLinks;
+            this.jsLinks = cfg.jsLinks;
+            this.template = cfg.template;
+         },
+
+         _afterMount: function() {
+            var
+               navigation = EventBus.channel('navigation'),
+               self = this;
+            navigation.subscribe('onNavigate', function(e, location) {
+               self._setLocation.apply(self, arguments);
+            });
          },
 
          _setLocation: function(e, path) {
