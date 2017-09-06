@@ -1519,7 +1519,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         _getDomElementByItem : function(item) {
+         _getRecordElemByItem : function(item) {
             //FIXME т.к. строка редактирования по местру спозиционирована абсолютно, то надо искать оригинальную строку
             return this._getItemsContainer().find('.js-controls-ListView__item[data-hash="' + item.getHash() + '"]:not(.controls-editInPlace)')
          },

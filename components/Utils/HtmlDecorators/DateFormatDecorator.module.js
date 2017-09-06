@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.DateFormatDecorator', [
    'use strict';
 
    /**
-    * Декоратор текста, обеспечивающий отметку цветом
+    * Декоратор даты, обеспечивающий отметку цветом
     * @class SBIS3.CONTROLS.Utils.HtmlDecorators.DateFormatDecorator
     * @public
     * @author Крайнов Дмитрий Олегович

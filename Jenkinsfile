@@ -17,7 +17,7 @@ properties([
             description: '',
             name: 'ws_data_revision'),
         string(
-            defaultValue: 'rc-3.17.110',
+            defaultValue: 'rc-3.17.150',
             description: '',
             name: 'branch_engine'),
         string(
@@ -42,7 +42,7 @@ if ( "${env.BUILD_NUMBER}" != "1" && params.run_reg == false && params.run_int =
     }
 
 node('controls') {
-    def version = "3.17.110"
+    def version = "3.17.150"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
         deleteDir()
@@ -52,8 +52,8 @@ node('controls') {
         def items = "controls:${workspace}/controls"
         def branch_atf = params.branch_atf
         def branch_engine = params.branch_engine
-        def inte = params.run_reg
-        def regr = params.run_int
+        def inte = params.run_int
+        def regr = params.run_reg
         def unit = params.run_unit
 
         stage("Checkout"){
@@ -467,16 +467,13 @@ node('controls') {
                     publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
                 }
                 archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
-                junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-            }
-            if ( inte ){
-                junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
             }
             if ( unit ){
                 junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
             }
             if ( regr || inte ){
                 archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
+                junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
             }
         }
     }
