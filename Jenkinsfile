@@ -201,10 +201,8 @@ node('controls') {
             parallel(
                 ws: {
                     // Выкачиваем ws для unit тестов и если указан сторонний бранч
-                    if (( unit ) || ("${params.ws_revision}" != "sdk") ){
-                        def ws_revision = params.ws_revision
-                        if ("${ws_revision}" == "sdk"){
-                            ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
+                    if ( unit || ("${params.ws_revision}" != "sdk") ) {
+                        params.ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
                         }
                         dir(workspace) {
                             checkout([$class: 'GitSCM',
@@ -224,11 +222,10 @@ node('controls') {
                 },
                 ws_data: {
                     // Выкачиваем ws.data для unit тестов и если указан сторонний бранч
-                    if (( unit ) || ("${params.ws_data_revision}" != "sdk") ){
+                    if ( unit || ("${params.ws_data_revision}" != "sdk") ) {
                         def ws_data_revision = params.ws_data_revision
-                        if ("${ws_data_revision}" == "sdk"){
-                            ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
-                        }
+                        params.ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
+                        
                         dir(workspace) {
                             checkout([$class: 'GitSCM',
                             branches: [[name: ws_data_revision]],
