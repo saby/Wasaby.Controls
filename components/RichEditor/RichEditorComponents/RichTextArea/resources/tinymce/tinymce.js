@@ -463,7 +463,7 @@
          });
       };
 
-      Promise.all = function _all () {
+      Promise.all = function () {
          var args = Array.prototype.slice.call(arguments.length === 1 && isArray(arguments[0]) ? arguments[0] : arguments);
 
          return new Promise(function (resolve, reject) {
@@ -492,7 +492,7 @@
          });
       };
 
-      Promise.resolve = function _resolve (value) {
+      Promise.resolve = function (value) {
          if (value && typeof value === 'object' && value.constructor === Promise) {
             return value;
          }
@@ -502,13 +502,13 @@
          });
       };
 
-      Promise.reject = function _reject (value) {
+      Promise.reject = function (value) {
          return new Promise(function (resolve, reject) {
             reject(value);
          });
       };
 
-      Promise.race = function _race (values) {
+      Promise.race = function (values) {
          return new Promise(function (resolve, reject) {
             for(var i = 0, len = values.length; i < len; i++) {
                values[i].then(resolve, reject);
