@@ -52,15 +52,15 @@ node('controls') {
         def items = "controls:${workspace}/controls"
         def branch_atf = params.branch_atf
         def branch_engine = params.branch_engine
-        if ("${env.BUILD_NUMBER}" == "1") {
-            def inte = true
-            def regr = true
-            def unit = true
-        } else {
-            def inte = params.run_int
-            def regr = params.run_reg
-            def unit = params.run_unit
+        def inte = params.run_int
+        def regr = params.run_reg
+        def unit = params.run_unit
+        if ("${env.BUILD_NUMBER}" == "1"){
+            inte = true
+            regr = true
+            unit = true
         }
+
         stage("Checkout"){
             parallel (
                 checkout1: {
@@ -201,11 +201,8 @@ node('controls') {
             parallel(
                 ws: {
                     // Выкачиваем ws для unit тестов и если указан сторонний бранч
-                    if (( unit ) || ("${params.ws_revision}" != "sdk") ){
-                        def ws_revision = params.ws_revision
-                        if ("${ws_revision}" == "sdk"){
-                            ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
-                        }
+                    if ( unit || "${params.ws_revision}" != "sdk" ){
+                        ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
                         dir(workspace) {
                             checkout([$class: 'GitSCM',
                             branches: [[name: ws_revision]],
@@ -224,11 +221,9 @@ node('controls') {
                 },
                 ws_data: {
                     // Выкачиваем ws.data для unit тестов и если указан сторонний бранч
-                    if (( unit ) || ("${params.ws_data_revision}" != "sdk") ){
+                    if ( unit || "${params.ws_data_revision}" != "sdk" ){
                         def ws_data_revision = params.ws_data_revision
-                        if ("${ws_data_revision}" == "sdk"){
-                            ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
-                        }
+                        ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
                         dir(workspace) {
                             checkout([$class: 'GitSCM',
                             branches: [[name: ws_data_revision]],
