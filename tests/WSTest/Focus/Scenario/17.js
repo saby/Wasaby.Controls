@@ -6,7 +6,8 @@ define('js!WSTest/Focus/Scenario/17', [
    'js!WSTest/Focus/TestFocusHelpers',
    'js!SBIS3.CORE.Window',
    'css!' + wsConfig.wsRoot + 'css/core.css',
-   'css!' + wsConfig.wsRoot + 'css/themes/wi_scheme.css'
+   'css!' + wsConfig.wsRoot + 'css/themes/wi_scheme.css',
+   'js!WSTest/Focus/Case17'
 ], function (cConstants,
              fHelpers,
              W) {
@@ -33,7 +34,7 @@ define('js!WSTest/Focus/Scenario/17', [
          wnd.destroy();
          delete window[caseControlName];
          done();
-      }, 50);
+      }, 100);
 
 
    };

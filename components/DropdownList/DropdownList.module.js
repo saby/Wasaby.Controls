@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
        *    <li>Среди полей источника данных необходимо указать какое является ключевым - {@link idProperty}, и из какого поля будем отображать данные в выпадающий блок - {@link displayProperty}.</li>
        * </ul>
        * <br/>
-       * Вы можете связать опцию items с полем контекста, в котором хранятся данные с типом значения перечисляемое - {@link WS.Data/Types/Enum}. Если эти данные хранят состояние выбранного значения, то в контрол будет установлено выбранное значение.
+       * Вы можете связать опцию items с полем контекста, в котором хранятся данные с типом значения перечисляемое - {@link WS.Data/Type/Enum}. Если эти данные хранят состояние выбранного значения, то в контрол будет установлено выбранное значение.
        * <pre>
        *    <component data-component="SBIS3.CONTROLS.DropdownList">
        *       <options name="items" type="array" bind="record/MyEnumField"></options>
@@ -331,14 +331,16 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          $constructor: function() {
             this._publish('onClickMore');
-            this._container.bind(this._isHoverMode() ? 'mouseenter' : 'click', this.showPicker.bind(this));
+            var self = this;
+            this._container.bind(this._isHoverMode() ? 'mouseenter' : 'click', function(event){
+               if (self._getItemsProjection()) {
+                  self.showPicker(event);
+               }
+            });
             if (this._container.hasClass('controls-DropdownList__withoutCross')){
                this._options.pickerClassName += ' controls-DropdownList__withoutCross';
             }
             this._setHeadVariables();
-         },
-         init: function(){
-            DropdownList.superclass.init.apply(this, arguments);
          },
          _modifyOptions: function() {
             var cfg = DropdownList.superclass._modifyOptions.apply(this, arguments);
@@ -665,7 +667,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _isEnumTypeData: function(){
             //TODO избавиться от этого по задаче https://inside.tensor.ru/opendoc.html?guid=711857a8-d8f0-4b34-aa31-e2f1a0d4b07b&des=
             //Сейчас multiselectable не умеет работать с enum => приходится поддерживать эту логику на уровне выпадающего списка.
-            return cInstance.instanceOfModule(this.getItems(), 'WS.Data/Types/Enum');
+            return cInstance.instanceOfModule(this.getItems(), 'WS.Data/Type/Enum');
          },
          _setFirstItemAsSelected : function() {
             //Перебиваю метод из multeselectable mixin'a. см. коммент у метода _isEnumTypeData
@@ -880,9 +882,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
                pickerHeadContainer = $('.controls-DropdownList__selectedItem', this._getPickerContainer());
                if (pickerHeadContainer.length){
                   var pickerHeadTpl = $(TemplateUtil.prepareTemplate(this._options.headPickerTemplate.call(this, this._options))());
-                  pickerHeadTpl.click(function(e){
-                     e.stopImmediatePropagation();
-                  });
                   pickerHeadContainer.html(pickerHeadTpl);
                   this._getPickerContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
                }

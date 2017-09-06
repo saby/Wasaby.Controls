@@ -36,14 +36,14 @@
 @button-icon-color-hover:                 #313E78;
 // Normal default button
 @button-text-color:                       #2c3e50;
-@button-active-bg:                        #e0ecf5;
+@button-bg-active:                        #e0ecf5;
 @button-hover-bg:                         #e0ecf5;
-@button-bg: 								      #f0f5fb;
+@button-bg-color:                         #f0f5fb;
 // Normal primary button
 @button-primary-text-color:               #fff;
-@button-primary-bg:                       #ff7033;
+@button-primary-bg-color:                 #ff7033;
 @button-primary-hover-bg:                 #EC5B19;
-@button-primary-active-bg:                #d94700;
+@button-primary-bg-active:                #d94700;
 @button-primary-active-text-color:        @button-primary-text-color;
 // Normal disabled button
 @button-disabled-text-color:              @gray-color;
@@ -80,6 +80,9 @@
 // Menu
 @menu-header-caption-color:               #000;
 @popup-header-caption-color:              #fff;
+//MenuItem
+@menu-item-bg:                            @default-bg-color;
+@menu-item-hover-bg:                      #F0F5FB;
 // Text box
 @text-box-field-text-color:               #000;
 @text-box-border-color:                   #EAEAEA;
@@ -89,7 +92,7 @@
 @text-box-editor-text-color:              #999999;
 @combo-box-picker-show-background-color : #ffffff;
 @combo-box-picker-show-border-color:	   #0055BB;
-@compo-box-picker-show-color:             #fff;
+@compo-box-picker-show-color:             #000;
 @text-box-focus-bg:                       #fff;
 @text-box-hover-border-color:             rgb(204, 204, 204);
 @text-box-disabled-border-bottom:         @default-border-width solid @check-box-disabled-color;
@@ -117,7 +120,7 @@
 @controls-FieldLink-picker-show-field-color: @default-text-color;
 @controls-FieldLink-link-color:           #2D68B5;
 @controls-FieldLink-FilterButton-color:   #2D68B5;
-@controls-FieldLink-FilterButton-color-hover:#313E78;
+@controls-FieldLink-FilterButton-color-hover:#2D68B5;
 @controls-FieldLink-border-color-focus-hover:@gray-ccc-color;
 @controls-FieldLink-border-color-picker-show:#0055BB;
 @controls-FieldLink-showSelector-color:   #2D68B5;
@@ -151,6 +154,7 @@
 
 @date-range-big-choose-month-range-picker-color:         #000000;
 @date-range-big-choose-month-range-picker-bg-selected:   @date-range-big-choose-bg-selected-color;
+@date-range-big-choose-month-hovered-color:              @date-range-big-choose-months-color;
 
 
 // List view
@@ -158,6 +162,9 @@
 @controls-editInPlace-editor-bg:          #F5F5F5 !important;
 @list-view-loading-indicator-gradient-bg: url(@list-view-scroll-spritesheet)  no-repeat center;
 @list-view-loading-indicator-gradient-bg-up:url(@list-view-scroll-spritesheet)  no-repeat center;
+@items-toolbar-bottom-style-background:   url('img/items-toolbar-bottom-style-background.png');
+/* Чтобы url к картинке генерился относительно папки carrynew */
+@list-view-scroll-bg:                     url('img/ajax-loader-indicator-big.gif') no-repeat center;
 // Tree view
 @tree-view-expand-color:                        @blue-dark-color;
 @tree-view-expand-hover-color:                  #0055BB;
@@ -174,7 +181,7 @@
 @data-grid-partScroll-notScrolledCell-Color:    @default-bg-color;
 @data-grid-results-color:                 #313E78;
 // OperationsPanel
-@controls-OperationsPanel-bg:                       #354B62;
+@controls-OperationsPanel-bg:                       #F0F5FB;
 @controls-OperationsPanel-separator-bg:             #CCC;
 // OperationsPanelButton
 @controls-OperationsPanelButton-color:    #FFFFFF;
@@ -182,6 +189,7 @@
 @DropdownList-picker-menu-item-base-color: #000;
 @DropdownList-border-color:               #000;
 @DropdownList-disabled-text:              #CCC;
+@DropdownList-picker-head-color:          #FFFFFF;
 //ProgressBar
 @controls-ProgressBar-first-color:        #2D68B5;
 @controls-ProgressBar-border-color:       #EAEAEA;
@@ -252,7 +260,6 @@
 @highlight-text-bg:                       #fffecf;
 @data-grid-row-selected-addit-bg:         rgba(255, 255, 255, 0);
 @data-grid-row-hover-add-bg:              rgba(224, 236, 245, 0);
-@items-toolbar-bottom-style-background:   url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDIwMDEwOTA0Ly9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+CjxzdmcgdmVyc2lvbj0iMS4wIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiB3aWR0aD0iMjU1LjAwMDAwMHB4IiBoZWlnaHQ9IjMwMC4wMDAwMDBweCIgdmlld0JveD0iMCAwIDI1NS4wMDAwMDAgMzAwLjAwMDAwMCIKIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwMDAwMCwzMDAuMDAwMDAwKSBzY2FsZSgwLjEwMDAwMCwtMC4xMDAwMDApIgpmaWxsPSIjZTBlY2Y1IiBzdHJva2U9Im5vbmUiPgo8cGF0aCBkPSJNMTAgMjk4OSBjMCAtMTEgMTkgLTUxIDI5IC01OSA2IC01IDQ2IC02NCAyMTUgLTMxNSA0NCAtNjYgODMgLTEyMgo4NiAtMTI1IDMgLTMgMzcgLTUyIDc1IC0xMTAgMzkgLTU4IDcyIC0xMDcgNzUgLTExMCA2IC02IDY3IC05NSAyMDQgLTMwMCA1MAotNzQgOTMgLTEzNyA5NiAtMTQwIDMgLTMgMjMgLTMyIDQ1IC02NSAyMiAtMzMgNDIgLTYyIDQ1IC02NSAzIC0zIDQzIC02MSA4OQotMTMwIDQ2IC02OSAxMjEgLTE3OSAxNjYgLTI0NSA0NCAtNjYgMTA2IC0xNTYgMTM1IC0yMDAgMzAgLTQ0IDU3IC04MiA2MCAtODUKNSAtNSA0MSAtNTggMjQ0IC0zNjAgNjEgLTkxIDExMyAtMTY3IDExNiAtMTcwIDMgLTMgMjMgLTMyIDQ1IC02NSA0NyAtNzAgMzgKLTU4IDExNiAtMTY0IDU3IC03NiAxNzkgLTE5MSAyMDMgLTE5MSA2IDAgMjUgLTcgNDEgLTE2IDU4IC0zMiAyODcgLTc0IDQwMAotNzQgbDU1IDAgMCAxNTAwIDAgMTUwMCAtMTI3MCAwIGMtODkyIDAgLTEyNzAgLTMgLTEyNzAgLTExeiIvPgo8L2c+Cjwvc3ZnPgo=");
 @bottomStyle-items-toolbar-border-color:  #E0ECF5;
 @closeButtonImage:                              url('img/areaBigCloseButton.png') 0 0;
 @closeButtonImageHover:                         url('img/areaCloseButton.png') 0 -3rem;
@@ -274,7 +281,6 @@
 @long-operations-popup-exp-width: 600px;
 @long-operations-popup-exp-max-width: 600px;
 @long-operations-popup-header-height: 60px;
-@long-operations-popup-header-line-height: 60px;
 @long-operations-popup-header-pad-rt: 54px;
 @long-operations-popup-header-icon-size: 32px;
 @long-operations-popup-header-caption-f-size: 32px;
@@ -283,7 +289,7 @@
 @long-operations-popup-collapsed-header-caption-f-size: 24px;
 @long-operations-popup-collapsed-header-caption-color: @long-operations-popup-header-caption-color;
 @long-operations-popup-header-result-max-width: 210px;
-@long-operations-popup-header-result-min-width: 64px;
+@long-operations-popup-header-result-min-width: 86px;
 @long-operations-popup-header-but-f-size: 24px;
 @long-operations-popup-header-but-gap-top: 7px;
 @long-operations-popup-collapsed-header-but-gap-top: 0px;

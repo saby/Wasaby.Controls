@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.Label.compatibility', [],
           */
          setCaption: function(caption) {
             this.caption = caption;
-            this._setDirty();
+            this._forceUpdate();
          },
 
          /**
@@ -31,7 +31,7 @@ define('js!SBIS3.CONTROLS.Label.compatibility', [],
           */
          setTooltip: function(tooltip) {
             this.tooltip = tooltip;
-            this._setDirty();
+            this._forceUpdate();
          },
          /**
           * Вернуть видимость контрола
@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.Label.compatibility', [],
           */
          getVisible: function(visible) {
             this.visible = visible !== false;
-            this._setDirty();
+            this._forceUpdate();
          },
          /**
           * Изменить видимость контрола
@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.Label.compatibility', [],
           */
          setVisible: function(visible) {
             this.visible = visible !== false;
-            this._setDirty();
+            this._forceUpdate();
          }
       }
    }

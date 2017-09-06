@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          WindowManager.setVisible(this._options.zIndex);
          // отступ viewport от верха страницы
          this._containerOffset = this._getViewportOffset();
-         this._scrollHandler = throttle.call(this, this._scrollHandler.bind(this), SCROLL_THROTTLE_DELAY);
+         this._scrollHandler = throttle.call(this, this._scrollHandler.bind(this), SCROLL_THROTTLE_DELAY, true);
       },
 
       _getViewportOffset: function(){
@@ -76,8 +76,8 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          this.updateScrollPages(true);         
       },
 
-      _scrollHandler: function() {
-         var pageNumber = this._calculateScrollPage();
+      _scrollHandler: function(event, scrollTop) {
+         var pageNumber = this._calculateScrollPage(scrollTop);
          var paging = this._options.paging;
          if (pageNumber >= 0 && paging.getItems() && this._currentScrollPage != pageNumber) {
             if (pageNumber > paging.getPagesCount()) {
@@ -115,7 +115,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
 
       _isPageStartVisisble: function(page){
          var top;
-         if (page.element.parents('html').length == 0) {
+         if (page.element.parents('html').length === 0) {
             return false;
          }
 
@@ -138,7 +138,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          }
       },
 
-      _calculateScrollPage: function(){
+      _calculateScrollPage: function(scrollTop){
          var view = this._options.view;
          if (this._options.view.isScrollOnBottom(true)){
             return this._scrollPages.length - 1;
@@ -205,8 +205,8 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             var $this = $(this),
                $next = $this.next('.controls-ListView__item'),
                // Считаем через position, так как для плитки не подходит сложение высот
-               curBottom = $this.position().top + $this.outerHeight(true) + topWrapperHeight,
-               nextBottom = $next[0] ? $next.position().top + $next.outerHeight(true) : 0 + topWrapperHeight;
+               curBottom = Math.floor($this.position().top) + $this.outerHeight(true) + topWrapperHeight,
+               nextBottom = $next[0] ? Math.floor($next.position().top) + $next.outerHeight(true) : 0 + topWrapperHeight;
             curBottom = curBottom > pageOffset ? curBottom : pageOffset;
             nextBottom = nextBottom > curBottom ? nextBottom : curBottom;
             pageOffset = curBottom;
@@ -232,7 +232,8 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          this._options.paging.setPagesCount(pagesCount);
 
          //Если есть страницы - покажем paging
-         this._options.paging.setVisible(pagesCount > 1);
+         
+         this._options.paging.setVisible((pagesCount > 1) && !this._options.hiddenPager);
       },
 
       destroy: function(){

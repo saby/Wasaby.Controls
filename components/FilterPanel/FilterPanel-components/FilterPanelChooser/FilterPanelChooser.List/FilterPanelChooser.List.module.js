@@ -3,7 +3,6 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
     'Core/core-instance',
     'Core/core-functions',
     'Core/CommandDispatcher',
-    'Core/helpers/collection-helpers',
     'js!WS.Data/Functor/Compute',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/resources/ItemContentTpl',
@@ -13,7 +12,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
     'js!SBIS3.CONTROLS.Link',
     'js!SBIS3.CONTROLS.ListView',
     'css!SBIS3.CONTROLS.FilterPanelChooser.List'
-], function(FilterPanelChooserBaseList, cInstance, cFunctions, CommandDispatcher, colHelpers, ComputeFunctor, dotTplFn, itemContentTpl, itemTemplate, chooserTpl, footerTpl) {
+], function(FilterPanelChooserBaseList, cInstance, cFunctions, CommandDispatcher, ComputeFunctor, dotTplFn, itemContentTpl, itemTemplate, chooserTpl, footerTpl) {
     var
         itemsFilterMethod = function(model, index, proj, projIndex) {
             return this.showFullList || projIndex < 3;

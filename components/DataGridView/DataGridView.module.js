@@ -5,6 +5,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "Core/core-merge",
    "Core/constants",
    "Core/Deferred",
+   'Core/detection',
+   "Core/EventBus",
    "js!SBIS3.CONTROLS.ListView",
    "tmpl!SBIS3.CONTROLS.DataGridView",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/rowTpl",
@@ -25,10 +27,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/headColumnTpl",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/GroupTemplate",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/SortingTemplate",
-   "Core/helpers/collection-helpers",
    "Core/helpers/Object/isEmpty",
-   "Core/helpers/string-helpers",
-   "Core/helpers/dom&controls-helpers",
+   'Core/helpers/String/escapeHtml',
+   'js!SBIS3.CONTROLS.Utils.GetTextWidth',
    'Core/Sanitize',
    'js!SBIS3.StickyHeaderManager',
    'css!SBIS3.CONTROLS.DataGridView'
@@ -39,6 +40,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
       cMerge,
       constants,
       Deferred,
+      cDetection,
+      EventBus,
       ListView,
       dotTplFn,
       rowTpl,
@@ -59,10 +62,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
       headColumnTpl,
       GroupTemplate,
       SortingTemplate,
-      colHelpers,
       isEmpty,
-      strHelpers,
-      dcHelpers,
+      escapeHtml,
+      getTextWidth,
       Sanitize,
       StickyHeaderManager) {
 
@@ -94,7 +96,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          },
          getColumnVal = function (item, colName) {
             if (!colName || !(colName.indexOf("['") == 0 && colName.indexOf("']") == (colName.length - 2))){
-               return strHelpers.escapeHtml(item.get(colName));
+               return escapeHtml(item.get(colName));
             }
             var colNameParts = colName.slice(2, -2).split('.'),
                curItem = item,
@@ -380,12 +382,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * </component>
     */
    var DataGridView = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS.DataGridView.prototype*/ {
+       /**
+        * @event onDrawHead Возникает после отрисовки шапки
+        * @param {Core/EventObject} eventObject Дескриптор события.
+        */
       _dotTplFn : dotTplFn,
-      /**
-       * @event onDrawHead Возникает после отрисовки шапки
-       * @param {Core/EventObject} eventObject Дескриптор события.
-       */
       $protected: {
+         _headIsChanged: false,
          _rowTpl : rowTpl,
          _rowData : [],
          _isPartScrollVisible: false,                 //Видимость скроллбара
@@ -401,6 +404,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             left: 0,
             right: 0
          },
+         _partScrollRequestAnimationId: null,
          _currentScrollPosition: 0,                   //Текущее положение частичного скрола заголовков
          _scrollingNow: false,                        //Флаг обозначающий, происходит ли в данный момент скролирование элементов
          _partScrollRow: undefined,                   //Строка-контейнер, в которой лежит частичный скролл
@@ -679,6 +683,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          DataGridView.superclass.init.call(this);
          this._updateHeadAfterInit();
          CommandDispatcher.declareCommand(this, 'ColumnSorting', this._setColumnSorting);
+         this._updateAjaxLoaderPosition();
       },
 
       _prepareConfig: function() {
@@ -720,7 +725,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                if(colValue && !colValue.getAttribute('title')) {
                   colValueText = colValue.innerText;
 
-                  if (dcHelpers.getTextWidth(strHelpers.escapeHtml(colValueText)) > colValue.offsetWidth) {
+                  if (getTextWidth(escapeHtml(colValueText)) > colValue.offsetWidth) {
                      colValue.setAttribute('title', colValueText);
                   }
                }
@@ -811,6 +816,21 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return DataGridView.superclass._itemsReadyCallback.apply(this, arguments);
       },
 
+      _updateAjaxLoaderPosition: function () {
+         var height, styles;
+         if (!this._thead) {
+            return;
+         }
+         // Смещаем индикатор загрузки вниз на высоту заголовков.
+         height = this._thead.outerHeight();
+         styles = {top: height || ''};
+         // Корректируем хак ".ws-is-webkit .controls-AjaxLoader {height: 100%;}" из стилей ListView.
+         if (cDetection.webkit) {
+            styles.height =  height ? 'calc(100% - ' + height + 'px)' : '';
+         }
+         this._getAjaxLoaderContainer().css(styles);
+      },
+
       _redrawHead : function() {
          var
             headData,
@@ -840,7 +860,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          } else {
             this._thead = newTHead.insertBefore(body);
          }
-         this.reviveComponents(this._thead);
 
          this._redrawColgroup();
          if (this.hasPartScroll()) {
@@ -848,11 +867,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this.getContainer().removeClass('controls-DataGridView__PartScroll__shown');
          }
          this._bindHead();
-         this._notify('onDrawHead');
          // Итоги как и заголовки отрисовываются в thead. Помечаем заголовки для фиксации при необходимости.
          if (this._options.stickyHeader && !this._options.showHead && this._options.resultsPosition === 'top') {
             this._updateStickyHeader(headData.hasResults);
          }
+         this._updateAjaxLoaderPosition();
       },
 
       _redrawFoot: function(){
@@ -864,13 +883,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this._tfoot.replaceWith(newTFoot);
             this._tfoot = newTFoot;
          }
-         this.reviveComponents(this._tfoot);
          DataGridView.superclass._redrawFoot.call(this);
       },
 
       _redrawTheadAndTfoot: function(){
          this._redrawHead();
          this._redrawFoot();
+         this._headIsChanged = true;
       },
 
       _bindHead: function() {
@@ -938,7 +957,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
          table.toggleClass('ws-sticky-header__table', isSticky);
          if (isSticky) {
-            StickyHeaderManager.fixAllChildren(this.getContainer(), table);
+            EventBus.channel('stickyHeader').notify('onForcedStickHeader', this.getContainer());
          } else {
             StickyHeaderManager.unfixOne(table, true);
          }
@@ -1065,7 +1084,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             self = this,
             columns = this._options.enabled ? this._options.columns : [];
          if (!this._options.enabled) {
-            colHelpers.forEach(this._options.columns, function(item) {
+            this._options.columns.forEach(function(item) {
                columns.push(item.allowChangeEnable === false ? item : {});
             });
          }
@@ -1151,7 +1170,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
 
          if(leftOffset) {
-            this._moveThumbAndColumns({left: leftOffset});
+            /* Необхдимо скролить сразу, иначе бразуер по фокусу в контрол сдвинет контейнер таблицы */
+            this._moveThumbAndColumns({left: leftOffset}, true);
          }
       },
 
@@ -1272,14 +1292,43 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
          this._moveThumbAndColumns(cords);
       },
-
-      _moveThumbAndColumns: function(cords) {
-         this._setPartScrollShift(cords);
+   
+      /**
+       * Передвигает ползунок частичного скрола на переданную координату
+       * @param cords Значение, на которое нужно проскролить
+       * @param force выполнить скролл сразу, а не запланировать в ближайший кадр перерисовки бразуера (менее оптимально)
+       * @private
+       */
+      _moveThumbAndColumns: function(cords, force) {
+         var self = this;
          
+         /* Т.к. requestAnimationFrame работает асинхронно, надо выполнять лишь последний вызов,
+            иначе скролл может дёргаться */
+         this._cancelScrollRequest();
+         
+         if(!force) {
+            this._partScrollRequestAnimationId = window.requestAnimationFrame(function() {
+               self._scrollColumns(cords);
+            })
+         } else {
+            this._scrollColumns(cords);
+         }
+      },
+      
+      _cancelScrollRequest: function() {
+         if(this._partScrollRequestAnimationId) {
+            window.cancelAnimationFrame(this._partScrollRequestAnimationId);
+            this._partScrollRequestAnimationId = null;
+         }
+      },
+   
+      _scrollColumns: function(cords) {
+         this._setPartScrollShift(cords);
+      
          /* Ячейки двигаем через translateX, т.к. IE не двиагает ячейки через left,
-            если таблица лежит в контейнере с display: flex */
+          если таблица лежит в контейнере с display: flex */
          var movePosition = 'translateX(' + this._getColumnsScrollPosition() + 'px)';
-
+      
          for(var i= 0, len = this._movableElems.length; i < len; i++) {
             this._movableElems[i].style.transform = movePosition;
          }
@@ -1460,7 +1509,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       setMultiselect: function() {
          DataGridView.superclass.setMultiselect.apply(this, arguments);
-
          // При установке multiselect создается отдельная td'шка под checkbox, которая не учитывается при редактировании по месту.
          // Уничтожаем контроллер редактирования по месту, чтобы пересоздать его с новым набором колонок.
          this._destroyEditInPlaceController();
@@ -1469,6 +1517,10 @@ define('js!SBIS3.CONTROLS.DataGridView',
             this.redraw();
          } else if(this._options.showHead) {
             this._redrawTheadAndTfoot();
+            this.reviveComponents(this._thead);
+            this._notify('onDrawHead');
+            this._headIsChanged = false;
+            this.reviveComponents(this._tfoot);
          }
       },
 
@@ -1514,13 +1566,21 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }, this);
          }
       },
-      _redrawResults: function() {
-        if (this._options.resultsPosition !== 'none'){
+      _redrawResults: function(revive) {
+         if (this._options.resultsPosition !== 'none'){
            this._redrawTheadAndTfoot();
-        }
+         }
+         if (revive) {
+            var self = this;
+            this.reviveComponents(this._thead).addCallback(function(){
+               self._notify('onDrawHead');
+               self._headIsChanged = false;
+            });
+         }
       },
       destroy: function() {
          if (this.hasPartScroll()) {
+            this._cancelScrollRequest();
             this._thumb.unbind('click');
             this._thumb = undefined;
             this._arrowLeft.unbind('click');
@@ -1617,7 +1677,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                value = null;
             }
             value = this._options._decorators.applyOnly(
-                  value === undefined || value === null ? '' : strHelpers.escapeHtml(value), {
+                  value === undefined || value === null ? '' : escapeHtml(value), {
                   highlight: column.highlight
                }
             );
@@ -1649,6 +1709,23 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
       _getTableContainer: function(){
          return this.getContainer().find('>.controls-DataGridView__table');
+      },
+
+
+      _reviveItems: function() {
+         //контролы в шапке тоже нужно оживить
+         if (this._container.find(this._thead).length == 0) {
+            this.reviveComponents(this._thead);
+         }
+         DataGridView.superclass._reviveItems.apply(this, arguments);
+      },
+
+      _onReviveItems: function() {
+         if (this._headIsChanged) {
+            this._notify('onDrawHead');
+            this._headIsChanged = false;
+         }
+         DataGridView.superclass._onReviveItems.apply(this, arguments);
       }
    });
 

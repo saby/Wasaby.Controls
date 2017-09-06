@@ -2,9 +2,10 @@
 define([
    'js!SBIS3.CONTROLS.DateRangeRelationController',
    'Core/Abstract',
+   'js!SBIS3.CORE.Control/Control.compatible',
    'js!SBIS3.CONTROLS.RangeMixin',
    'js!SBIS3.CONTROLS.DateRangeMixin',
-], function (DateRangeRelationController, cAbstract, RangeMixin, DateRangeMixin) {
+], function (DateRangeRelationController, cAbstract, Control, RangeMixin, DateRangeMixin) {
    'use strict';
 
    function assertDates (date1, date2, message) {
@@ -18,12 +19,11 @@ define([
       assertDates(control.getEndValue(), range[1], `${message}: endDate`);
    }
 
-   let DateRangeControl = cAbstract.extend([RangeMixin, DateRangeMixin], {
+   let DateRangeControl = cAbstract.extend([Control, RangeMixin, DateRangeMixin], {
       $protected: {
          _options: {
          }
       },
-      _notifyOnPropertyChanged: function () {},
       setShowLock: function () {},
       setLocked: function (locked) {this._locked = locked; this._notify('onLockedChanged', locked);},
       isLocked: function () {return this._locked}
@@ -259,6 +259,17 @@ define([
             controls[0].setLocked(false);
             controls[0].setRange(new Date(2013, 0, 1), new Date(2013, 1, 0));
             let dates = createDates(new Date(2013, 0, 1), 1, 1, 2);
+            for (let [i, control] of controls.entries()) {
+               assertRangeControl(control, dates[i], `Control ${i}`);
+               assert(control.isLocked());
+            }
+         });
+
+         it(`should update relation type if period type is year and onlyByCapacity = true and checked smaller period`, function () {
+            initControls(new Date(2015, 0, 1), 12, {onlyByCapacity: true, step: 12}, 2);
+            controls[0].setLocked(false);
+            controls[0].setRange(new Date(2013, 0, 1), new Date(2013, 1, 0));
+            let dates = createDates(new Date(2013, 0, 1), 12, 1, 2);
             for (let [i, control] of controls.entries()) {
                assertRangeControl(control, dates[i], `Control ${i}`);
                assert(control.isLocked());

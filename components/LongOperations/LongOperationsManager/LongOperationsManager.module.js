@@ -4,7 +4,7 @@
  * @class SBIS3.CONTROLS.LongOperationsManager
  * @public
  *
- * @description file LongOperations.md
+ * @description file ../doc/LongOperations.md
  *
  * @demo SBIS3.CONTROLS.Demo.MyLongOperations
  * @demo SBIS3.CONTROLS.Demo.MyLongOperationsSvc
@@ -18,6 +18,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       'js!WS.Data/Source/DataSet',
       'js!WS.Data/Collection/RecordSet',
       'js!WS.Data/Chain',
+      'js!SBIS3.CONTROLS.LongOperationsConst',
       'js!SBIS3.CONTROLS.LongOperationsTabCalls',
       'js!SBIS3.CONTROLS.LongOperationsCallsPool',
       'js!SBIS3.CONTROLS.LongOperationsBunch',
@@ -27,7 +28,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model'
    ],
 
-   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsTabCalls, LongOperationsCallsPool, LongOperationsBunch, ILongOperationsProducer, LongOperationEntry, LongOperationHistoryItem, Model) {
+   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsConst, LongOperationsTabCalls, LongOperationsCallsPool, LongOperationsBunch, ILongOperationsProducer, LongOperationEntry, LongOperationHistoryItem, Model) {
       'use strict';
 
       /**
@@ -120,6 +121,15 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          DEFAULT_FETCH_LIMIT: DEFAULT_FETCH_LIMIT,
 
          /**
+          * Получить ключ текущей вкладки
+          * @public
+          * @return {string}
+          */
+         getTabKey: function () {
+            return _tabKey;
+         },
+
+         /**
           * Получить зарегистрированный продюсер длительных операций по его имени
           * @public
           * @param {string} prodName Имя продюсера длительных операций
@@ -191,7 +201,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             // и limit, имеет другие дополнительные возможности. Поддержка всего этого тут не нужна (и скорее обременительна), поэтому ограничимся
             // более простыми типами
             if (_isDestroyed) {
-               return Deferred.fail('User left the page');
+               return Deferred.fail(LongOperationsConst.ERR_UNLOAD);
             }
             var query = {
                where: null,
@@ -314,7 +324,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                throw new TypeError('Argument "operationId" must be string or number');
             }
             if (_isDestroyed) {
-               return Deferred.fail('User left the page');
+               return Deferred.fail(LongOperationsConst.ERR_UNLOAD);
             }
             if (!tabKey || tabKey === _tabKey) {
                var producer = _producers[prodName];
@@ -391,7 +401,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                throw new TypeError('Argument "filter" must be an object if present');
             }
             if (_isDestroyed) {
-               return Deferred.fail('User left the page');
+               return Deferred.fail(LongOperationsConst.ERR_UNLOAD);
             }
             if (!tabKey || tabKey === _tabKey) {
                var producer = _producers[prodName];
@@ -435,6 +445,23 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             if (!_isDestroyed) {
                _channel.unsubscribe(eventType, listener, ctx);
             }
+         },
+
+         /**
+          * Проверить, можно ли в данный момент ликвидировать экземпляр класса без необратимой потери данных
+          * @public
+          * @return {boolean}
+          */
+         canDestroySafely: function () {
+            if (!_isDestroyed) {
+               for (var n in _producers) {
+                  if (_producers[n].canDestroySafely &&//TODO: ### Это переходный код, удалить позднее
+                        !_producers[n].canDestroySafely()) {
+                     return false;
+                  }
+               }
+            }
+            return true;
          },
 
          /**
@@ -666,9 +693,11 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             if (!producer) {
                throw new Error('Unknown event');
             }
-            // Если произошло событие в продюсере и есть выполняющиеся fetch запросы - выполнить незавершённые запросы к этому продюсеру повторно
+            // Если произошло событие в продюсере и есть выполняющиеся fetch запросы - выполнить запросы к этому продюсеру повторно
+            // (все - и завершённые, и даже не завершённые, так как не завершённые уже могут быть "на подходе" со старыми данными)
+            // TODO: ### Для уменьшения количества запросов можно попробовать рассмотреть компромисный вариант - переспрашивать только если уже прошло достаточно много времени
             var member = {tab:_tabKey, producer:data.producer};
-            var queries = _fetchCalls.listPools(member, true);
+            var queries = _fetchCalls.listPools(member/*, true*/);
             if (queries && queries.length) {
                for (var i = 0; i < queries.length; i++) {
                   var query = queries[i];
@@ -677,12 +706,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             }
          }
          var eventType = typeof evtName === 'object' ? evtName.name : evtName;
-         if (data) {
-            _channel.notifyWithTarget(eventType, manager, data);
-         }
-         else {
-            _channel.notifyWithTarget(eventType, manager);
-         }
+         _channel.notifyWithTarget(eventType, manager, !dontCrossTab ? (data ? ObjectAssign({tabKey:_tabKey}, data) : {tabKey:_tabKey}) : data);
          if (!dontCrossTab && !producer.hasCrossTabEvents()) {
             _tabChannel.notify('LongOperations:Manager:onActivity', {type:eventType, tab:_tabKey, isCrossTab:producer.hasCrossTabData(), hasHistory:_canHasHistory(producer), data:data});
          }
@@ -743,7 +767,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                   throw new Error('Unknown event');
                }
                _regTabProducer(tab, data.producer, evt.isCrossTab, evt.hasHistory);
-               _eventListener(type, data, true);
+               _eventListener(type, ObjectAssign({tabKey:tab}, data), true);
                break;
          }
       };
@@ -877,7 +901,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                   throw new Error('Unknown result type');
                }
                // Проверить, что продюсер есть и не был раз-регистрирован за время ожидания
-               var prodName = (member.tab === _tabKey ? _producers[member.producer] : member.tab in _tabManagers) ? member.producer : null;
+               var prodName = (member.tab === _tabKey ? _producers[member.producer] : member.tab in _tabManagers && member.producer in _tabManagers[member.tab]) ? member.producer : null;
                // Если продюсер найден
                if (prodName) {
                   var values = result instanceof DataSet ? result.getAll() : result;
@@ -896,13 +920,13 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                      throw new Error('Unknown result type');
                   }
                   if (len) {
-                     var tabKey = member.tab !== _tabKey ? member.tab : null;
+                     var memberTab = (member.tab === _tabKey ? !_producers[member.producer].hasCrossTabData() : !_producers[member.producer] || !_tabManagers[member.tab][member.producer].hasCrossTabData) ? member.tab : null;
                      values[iterate](function (v) {
                         // Значение должно быть экземпляром SBIS3.CONTROLS.LongOperationEntry и иметь правилное имя продюсера
                         if (!(v instanceof LongOperationEntry && v.producer === prodName)) {
                            throw new Error('Invalid result');
                         }
-                        v.tabKey = tabKey;
+                        v.tabKey = memberTab;
                      });
                      return values;
                   }
@@ -999,6 +1023,17 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          // И подписаться на события во вкладках
          _tabChannel.subscribe('LongOperations:Manager:onActivity', _tabListener);
          _tabChannel.notify('LongOperations:Manager:onActivity', {type: 'born', tab: _tabKey});
+
+         // Добавить обработчик перед выгрузкой для уведомеления пользователя (если нужно)
+         window.addEventListener('beforeunload', function (evt) {
+            if (!manager.canDestroySafely()) {
+               // Единственное, что сейчас нам дают сделать браузеры и стандарты - показать пользователю стандартное окно браузера
+               // с уведомлением, что при перезагрузке что-то может не сохраниться. Текст сообщения в большинсве случаев будет заменён
+               // на браузерный стандартный, однако если он может быть где-то показан, то пусть будет.
+               evt.returnValue = LongOperationsConst.MSG_UNLOAD;
+               return LongOperationsConst.MSG_UNLOAD;
+            }
+         });
 
          // Добавить обработчик на выгрузку для запуска метода destroy
          window.addEventListener('unload', function () {

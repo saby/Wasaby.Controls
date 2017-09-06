@@ -69,30 +69,30 @@ define('js!SBIS3.CONTROLS.Link', [
    var Link = WSButton.extend( /** @lends SBIS3.CONTROLS.Link.prototype */ {
       $protected: {
          _options: {
-             /**
-              * @cfg {String} Адрес документа, к которому нужно перейти
-              * @example
-              * <pre>
-              *     <option name="href">https://google.ru/</option>
-              * </pre>
-              * @see inNewTab
-              */
+            /**
+             * @cfg {String} Адрес документа, к которому нужно перейти
+             * @example
+             * <pre>
+             *     <option name="href">https://google.ru/</option>
+             * </pre>
+             * @see inNewTab
+             */
             href: '',
-             /**
-              * @cfg {Boolean} Открывать ссылку в новой вкладке
-              * @example
-              * <pre>
-              *     <option name="inNewTab">true</option>
-              * </pre>
-              * @see href
-              */
+            /**
+             * @cfg {Boolean} Открывать ссылку в новой вкладке
+             * @example
+             * <pre>
+             *     <option name="inNewTab">true</option>
+             * </pre>
+             * @see href
+             */
             inNewTab: false
          }
       },
 
       _modifyOptions: function (opts) {
          var
-             options = Link.superclass._modifyOptions.apply(this, arguments);
+            options = Link.superclass._modifyOptions.apply(this, arguments);
          options.cssClassName += ' controls-Link';
 
          // в случае когда задана ссылка передаем отдельный шаблон

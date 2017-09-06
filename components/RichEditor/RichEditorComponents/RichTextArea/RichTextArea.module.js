@@ -18,11 +18,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    'js!WS.Data/Di',
    "js!SBIS3.CONTROLS.Utils.ImageUtil",
    "Core/Sanitize",
-   "Core/helpers/collection-helpers",
    "Core/helpers/fast-control-helpers",
-   "Core/helpers/string-helpers",
-   'js!SBIS3.CONTROLS.Utils.LinkWrap',
-   "Core/helpers/dom&controls-helpers",
+   'Core/helpers/String/escapeTagsFromStr',
+   'Core/helpers/String/escapeHtml',
+   'Core/helpers/String/linkWrap',
+   'Core/helpers/Hcontrol/trackElement',
    'js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
    'js!SBIS3.CONTROLS.RichEditor.CodeSampleDialog',
    'Core/EventBus',
@@ -45,11 +45,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
       Di,
       ImageUtil,
       Sanitize,
-      colHelpers,
       fcHelpers,
-      strHelpers,
+      escapeTagsFromStr,
+      escapeHtml,
       LinkWrap,
-      dcHelpers,
+      trackElement,
       ImageOptionsPanel,
       CodeSampleDialog,
       EventBus
@@ -287,7 +287,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                return result;
             }
 
-            if ((id = this._getYouTubeVideoId(strHelpers.escapeTagsFromStr(link, [])))) {
+            if ((id = this._getYouTubeVideoId(escapeTagsFromStr(link, [])))) {
                var
                   protocol = /https?:/.test(link) ? link.replace(/.*(https?:).*/gi, '$1') : '';
                content = [
@@ -366,6 +366,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                this._performByReady(function() {
                   html = this._prepareContent(html);
                   this._tinyEditor.insertContent(html);
+                  //вставка контента может быть инициирована любым контролом,
+                  //необходимо нотифицировать о появлении клавиатуры в любом случае
+                  if (cConstants.browser.isMobilePlatform) {
+                     EventBus.globalChannel().notify('MobileInputFocus');
+                  }
                }.bind(this));
             }
          },
@@ -460,7 +465,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                }
                this._tinyEditor.destroyed = true;
             }
-            dcHelpers.trackElement(this._container, false);
+            trackElement(this._container, false);
             this._container.unbind('keydown keyup');
             this._sourceArea.unbind('input');
             this._tinyEditor = null;
@@ -603,16 +608,15 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          saveToHistory: function(valParam) {
             var
                self = this,
-               isDublicate = false;
+               isDublicate = false,
+               valBL;
             if (valParam && typeof valParam === 'string' && self._textChanged && self._options.saveHistory) {
                this.getHistory().addCallback(function(arrBL){
-                  if( typeof arrBL  === 'object') {
-                     colHelpers.forEach(arrBL, function (valBL, keyBL) {
-                        if (valParam === valBL) {
-                           isDublicate = true;
-                        }
-                     });
-                  }
+                  arrBL.forEach(function (valBL) {
+                     if (valParam === valBL) {
+                        isDublicate = true;
+                     }
+                  });
                   if (!isDublicate) {
                      self._addToHistory(valParam);
                   }
@@ -759,7 +763,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                this.setActive(true);
             }
             if (typeof smile === 'string') {
-               $.each(smiles, function(i, obj) {
+               smiles.forEach(function(obj) {
                   if (obj.key === smile) {
                      smile = obj;
                      return false;
@@ -875,7 +879,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                                     if (href) {
                                        dom.setAttribs(element, {
                                           target: '_blank',
-                                          href: strHelpers.escapeHtml(href)
+                                          href: escapeHtml(href)
                                        });
                                     } else {
                                        editor.execCommand('unlink');

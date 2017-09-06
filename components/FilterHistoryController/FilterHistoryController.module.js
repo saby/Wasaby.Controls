@@ -11,14 +11,18 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
    "js!WS.Data/Collection/List",
    "js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil",
    "js!SBIS3.CONTROLS.FilterHistoryControllerUntil",
-   "Core/helpers/collection-helpers",
+   "Core/helpers/Object/isEqual",
    "Core/helpers/generate-helpers",
    "Core/helpers/Function/debounce",
-   "Core/helpers/functional-helpers",
+   "Core/helpers/Function/forAliveOnly",
+   "Core/helpers/Object/find",
+   "Core/HashManager",
+   "Core/core-instance",
+   "Core/core-merge",
    "Core/Date"
 ],
 
-    function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, colHelpers, genHelpers, debounce, fHelpers) {
+    function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, isEqualObject, genHelpers, debounce, forAliveOnly, find, HashManager, cInstance, cMerge) {
 
        'use strict';
 
@@ -54,7 +58,11 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 /**
                  * Параметры фильтрации, которые не надо сохранять в историю
                  */
-                noSaveFilters: []
+                noSaveFilters: [],
+                /*
+                * фильтры которые надо сохранять в историю
+                */
+                filtersForHistory: []
              }
           },
 
@@ -64,7 +72,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              this._listHistory = new List({items: cFunctions.clone(this.getHistory()) || []});
              this._prepareListHistory();
              this._changeHistoryFnc = this._changeHistoryHandler.bind(this);
-             this._applyHandlerDebounced = debounce.call(fHelpers.forAliveOnly(this._onApplyFilterHandler, this)).bind(this);
+             this._applyHandlerDebounced = debounce.call(forAliveOnly(this._onApplyFilterHandler, this)).bind(this);
 
              if(this._options.filterButton) {
                 this._initFilterButton();
@@ -77,6 +85,20 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              /* Подпишемся на глобальный канал изменения истории,
                 чтобы изменения сразу применялись ко всем реестрам, у которых один historyId */
              HISTORY_CHANNEL.subscribe('onChangeHistory', this._changeHistoryFnc);
+             this._hashChangeHandlerFnc = this._hashChangeHandler.bind(this);
+             if (this._options.filtersForHistory.length > 0) {
+                HashManager.subscribe('onChange',this._hashChangeHandlerFnc);
+                if (cInstance.instanceOfMixin(this._options.view, 'SBIS3.CONTROLS.TreeMixin')
+                   && this._options.filtersForHistory.indexOf(this._options.view.getParentProperty()) > -1
+                ) {
+                   this._options.view.subscribe('onSetRoot', function (e, root) {
+                      var filters = this._getFiltersFormHash();
+                      filters[this._options.view.getParentProperty()] = root;
+                      this._setFiltersToHash(filters);
+                      this._onApplyFilterHandler();//сохранаяем в пользовательскую историю что бы фильтр применился при обновлении страницы
+                   }.bind(this));
+                }
+             }
           },
 
           _changeHistoryHandler: function(e, id, newHistory, activeFilter, saveDeferred) {
@@ -85,13 +107,13 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 return;
              }
 
-             var isHistoryEqual = colHelpers.isEqualObject(this.getHistoryArr(), listToArray(newHistory)),
+             var isHistoryEqual = isEqualObject(this.getHistoryArr(), listToArray(newHistory)),
                  filterButton = this._options.filterButton,
                  currentActiveFilter = this.getActiveFilter();
 
              /* Если при изменении активные фильтры или вся история одинаковы,
                 то не надо запускать механизм синхронизации истории */
-             if (isHistoryEqual || (currentActiveFilter && activeFilter && colHelpers.isEqualObject(currentActiveFilter, activeFilter))) {
+             if (isHistoryEqual || (currentActiveFilter && activeFilter && isEqualObject(currentActiveFilter, activeFilter))) {
                 /* Для случая, когда фильтр был синхронизирован из внешнего контекста (т.е. его в истории нет),
                    при сбросе фильтра, мы должны синхронизировать и другие фильтры, которые подписаны на канал изменения с одинаковым id,
                    т.е. вызвать у них сброс фильтра */
@@ -161,7 +183,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              });
 
              if(toDelete.length) {
-                colHelpers.forEach(toDelete, function(elem) {
+                toDelete.forEach(function(elem) {
                    self._listHistory.remove(elem);
                    needUpdateHistory = true;
                 });
@@ -229,8 +251,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
            * @param filterObject
            */
           saveToHistory: function(filterObject) {
-             var equalFilter = colHelpers.find(this.getHistoryArr(), function(item) {
-                    return colHelpers.isEqualObject(item.filter, filterObject.filter) || item.linkText === filterObject.linkText;
+             var equalFilter = find(this.getHistoryArr() ,function(item) {
+                    return isEqualObject(item.filter, filterObject.filter) || item.linkText === filterObject.linkText;
                  }),
                  activeFilter = this.getActiveFilter();
 
@@ -238,7 +260,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              if(activeFilter) {
                 activeFilter.isActiveFilter = false;
              }
-
+             this._setFiltersToHash(filterObject);
              /* Не сохраняем в историю, если:
                 1) Ещё не сохранился предыдущий фильтр,
                 2) Такой фильтр уже есть в истории
@@ -281,7 +303,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                    там по кнопке фильтров фильтруется набор из несколькх view */
                  viewFilter = cFunctions.clone(filter || (view ? view.getFilter() : {}));
 
-             colHelpers.forEach(this._options.noSaveFilters, function(filter) {
+             this._options.noSaveFilters.forEach(function(filter) {
                 if(viewFilter[filter]) {
                    delete viewFilter[filter];
                 }
@@ -290,13 +312,15 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              /* Т.к. в реестре задач (возможно где-то ещё)
                 в поле фильтра с типом "Дата" ожидают строку даты со сдвигом(чтобы её обработать),
                 а не стандартный ISO формат, то использую наш специальный метод для приведения даты в строку */
-             colHelpers.forEach(viewFilter, function(val, key, obj) {
-                if(val instanceof Date) {
-                   obj[key] = val.toSQL(Date.SQL_SERIALIZE_MODE_AUTO);
+             for (var key in viewFilter) {
+                if(viewFilter.hasOwnProperty(key)) {
+                   if(viewFilter[key] instanceof Date) {
+                      viewFilter[key] = viewFilter[key].toSQL(Date.SQL_SERIALIZE_MODE_AUTO);
+                   }
                 }
-             });
-
-             return viewFilter;
+             }
+             var hashFilter = this._getFiltersFormHash();
+             return cMerge(viewFilter, hashFilter);
           },
 
 	       /**
@@ -315,18 +339,62 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
            * @private
            */
           getActiveFilter: function() {
-             return colHelpers.find(this.getHistoryArr(), function(item) {
+             return find(this.getHistoryArr() ,function(item) {
                 return item.isActiveFilter;
              }, this, false);
           },
-
+          /**
+           * возвращает фильтры из хеша
+           * @private
+           */
+          _getFiltersFormHash: function () {
+             var hashValue = HashManager.get(this._options.historyId),
+                filtersForHistory = this._options.filtersForHistory,
+                filter = {};
+             if (hashValue) {
+                if (filtersForHistory.length == 1) {
+                   filter[filtersForHistory[0]] =  hashValue;
+                } else {
+                   filter = JSON.parse(hashValue);
+                }
+             }
+             filtersForHistory.forEach(function (name) {
+                if (!filter.hasOwnProperty(name)) {
+                   filter[name] = null; //todo если фильтра нет то надо востановить значение по умолчанию пока тольк раздел это null
+                }
+             });
+             return filter;
+          },
+          _setFiltersToHash: function (filters) {
+             var filtersForHistory = this._options.filtersForHistory,
+                saveFilters = {};
+             if (filtersForHistory.length > 0) {
+                //если сохранять надо только один фильтр то сохраняем только значение, так хеш будет короче
+                if (filtersForHistory.length == 1) {
+                   saveFilters = filters[filtersForHistory[0]];
+                } else {
+                   filtersForHistory.forEach(function (name) {
+                      var value = filters[name];
+                      if (typeof value  !== undefined) {
+                         saveFilters[name] = filters[name];
+                      }
+                   }.bind(this));
+                   saveFilters = JSON.stringify(saveFilters);
+                }
+                if (saveFilters) {
+                   HashManager.set(this._options.historyId, JSON.stringify(saveFilters));
+                } else {
+                   HashManager.remove(this._options.historyId);
+                }
+             }
+          },
           /**
            * Ищет фильтр по ключу
            * @param {String} key
            * @private
            */
           findFilterByKey: function(key) {
-             return colHelpers.find(this.getHistoryArr(), function(item) {
+             return find(this.getHistoryArr(), function(item) {
                 return item.id == key;
              }, this, false);
           },
@@ -389,8 +457,23 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              )
           },
 
+          _hashChangeHandler: function () {
+             var view = this._options.view,
+               viewFilters = view.getFilter(),
+               hashFilters = this._getFiltersFormHash();
+             if (
+                cInstance.instanceOfMixin(this._options.view, 'SBIS3.CONTROLS.TreeMixin') &&
+                this._options.filtersForHistory.indexOf(view.getParentProperty()) > -1
+             ) {//если меняется раздел то надо сменить корень у дерева иначе записи не будут отображаться
+                view.setRoot(hashFilters[this._options.historyId]||null);
+             }
+             cMerge(viewFilters, hashFilters);
+             view.setFilter(viewFilters);
+          },
+
           destroy: function() {
              HISTORY_CHANNEL.unsubscribe('onChangeHistory', this._changeHistoryFnc);
+             HashManager.unsubscribe('onChange', this._hashChangeHandlerFnc);
              this._changeHistoryFnc = undefined;
              this._applyHandlerDebounced = undefined;
              FilterHistoryController.superclass.destroy.apply(this, arguments);

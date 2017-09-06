@@ -7,8 +7,8 @@ define('js!SBIS3.CONTROLS.TextBox', [
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'js!SBIS3.CONTROLS.TextBoxUtils',
    'Core/Sanitize',
-   'Core/helpers/dom&controls-helpers',
-   'Core/helpers/functional-helpers',
+   'js!SBIS3.CONTROLS.Utils.GetTextWidth',
+   'Core/helpers/Function/forAliveOnly',
    'js!SBIS3.CONTROLS.ControlHierarchyManager',
    'js!SBIS3.CONTROLS.IconButton',
    'css!SBIS3.CONTROLS.TextBox'
@@ -22,8 +22,8 @@ define('js!SBIS3.CONTROLS.TextBox', [
     TemplateUtil,
     TextBoxUtils,
     Sanitize,
-    dcHelpers,
-    fHelpers,
+    getTextWidth,
+    forAliveOnly,
     ControlHierarchyManager) {
 
    'use strict';
@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
     * </ol>
     * @class SBIS3.CONTROLS.TextBox
     * @extends SBIS3.CONTROLS.TextBoxBase
-    * @author Роман Валерий Сергеевич
+    * @author Романов Валерий Сергеевич
     * @demo SBIS3.CONTROLS.Demo.MyTextBox
     *
     * @ignoreOptions independentContext contextRestriction className horizontalAlignment
@@ -321,7 +321,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _keyboardDispatcher: function(event){
-         return fHelpers.forAliveOnly(function(event){
+         return forAliveOnly(function(event){
             var result = true;
             switch (event.type) {
                case 'keydown':
@@ -363,7 +363,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
          if (this._tooltipText != this._options.text) {
             var scrollWidth;
             if (constants.browser.isIE) {
-               scrollWidth = dcHelpers.getTextWidth(this._options.text);
+               scrollWidth = getTextWidth(this._options.text);
             }
             else {
                scrollWidth = this._inputField[0].scrollWidth;
@@ -500,15 +500,13 @@ define('js!SBIS3.CONTROLS.TextBox', [
 
       _setEnabled : function(enabled) {
          TextBox.superclass._setEnabled.call(this, enabled);
-         if (enabled) {
-            this._inputField.removeAttr('readonly');
-         } else {
-            this._inputField.attr('readonly', 'readonly')
-         }
          /* Когда дизейблят поле ввода, ставлю placeholder в виде пробела, в старом webkit'e есть баг,
             из-за коготорого, если во flex контейнере лежит input без placeholder'a ломается базовая линия.
-            placeholder с пустой строкой и так будет не веден, т.ч. проблем быть не должно */
+            placeholder с пустой строкой и так будет не виден, т.ч. проблем быть не должно */
          this._setPlaceholder(enabled ? this._options.placeholder : ' ');
+         // FIXME Шаблонизатор сейчас не позволяет навешивать одиночные атрибуты, у Зуева Димы в планах на сентябрь
+         // сделать возможность вешать через префикс attr-
+         this._inputField.prop('readonly', !enabled);
       },
 
       _inputRegExp: function (e, regexp) {

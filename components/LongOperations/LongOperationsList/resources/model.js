@@ -8,10 +8,16 @@ define(
 
       var _timeSpent = function (model) {
          var timeSpent = model.get('timeSpent');
-         if (typeof timeSpent !== 'number' || timeSpent < 0) {
+         if (typeof timeSpent !== 'number' || timeSpent <= 0) {
             var STATUSES = LongOperationEntry.STATUSES;
             var status = model.get('status');
-            timeSpent = status === STATUSES.running || status === STATUSES.suspended ? (new Date()).getTime() - model.get('startedAt') : 0;
+            if (status === STATUSES.running) {
+               var timeIdle = model.get('timeIdle');
+               timeSpent = (new Date()).getTime() - model.get('startedAt') - (typeof timeIdle === 'number' && 0 < timeIdle ? timeIdle : 0);
+            }
+            else {
+               timeSpent = 0;
+            }
          }
          return timeSpent;
       };
@@ -77,10 +83,10 @@ define(
                   }
                }
                /*else
-                if (spent.length) {
-                // Не должно быть пропущенных элементов
-                break;
-                }*/
+               if (spent.length) {
+               // Не должно быть пропущенных элементов
+                  break;
+               }*/
             }
          }
          return spent.length ? spent.join(' ') : '0 сек.';
@@ -94,7 +100,7 @@ define(
        */
       LongOperationModel.getFullId = function (tabKey, producer, id) {
          return (tabKey || '') + ':' + producer + ':' + id;
-      }
+      };
 
       return LongOperationModel;
    }

@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
      * @extends SBIS3.CONTROLS.NumberTextBox
      * @public
      * @control
-     * @author Роман Валерий Сергеевич
+     * @author Романов Валерий Сергеевич
      *
      * @cssModifier controls-MoneyTextBox__ellipsis При нехватке ширины текст в поле ввода будет обрезаться. Если контрол неактивен, то оборвётся многоточием.
      */
@@ -95,7 +95,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
          options.cssClassName += ' controls-MoneyTextBox';
 
          value = options.text || options.moneyValue;
-         if (value){
+         if (typeof value !== 'undefined' && value !== null){
             options.text = formatText(
                 value,
                 options.text,
@@ -144,8 +144,8 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
        * @param value Новое значение поля ввода.
        */
       setMoneyValue: function(value){
+         value = (value+ '').replace(/\s+/g,'');
          if (value !== this._options.moneyValue){
-            this._setNumericValue(value);
             this.setText(value + '');
          }
       },
@@ -155,9 +155,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
       },
 
       _setNumericValue: function(value) {
-         if (typeof(value) == 'string'){
-            value = value.replace(/\s+/g,'');
-         }
+         value = (value+ '').replace(/\s+/g,'');
          this._options.numericValue = parseFloat(value);
          this._options.moneyValue = value;
 

@@ -249,17 +249,16 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          }
       },
 
-      _onDatePickerStartDateChanged: function(e) {
+      _onDatePickerStartDateChanged: function(e, text) {
          var date = this._startDatePicker.getDate(),
             oldStartDate = this.getStartValue(),
             endDate = this._endDatePicker.getDate();
-         if (!date) {
+
+         if ((!date && text !== '') || this._isDatesEqual(date, oldStartDate)) {
             return;
          }
-         if (oldStartDate && oldStartDate.getTime() === date.getTime()) {
-            return;
-         }
-         if (endDate && date > endDate) {
+
+         if (endDate && date && date > endDate) {
             // setRange не вызываем, диапазон установится в обработчике _onDatePickerEndDateChanged
             // TODO: когда будет возможность установить свойство без генерации событий надо будет убрать этот хак.
             if (!this._options.rangeselect) {
@@ -285,15 +284,16 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          }
       },
 
-      _onDatePickerEndDateChanged: function(e) {
+      _onDatePickerEndDateChanged: function(e, text) {
          var date = this._endDatePicker.getDate(),
             startDate = this._startDatePicker.getDate(),
             oldEndDate = this.getEndValue();
 
-         if (!date || (oldEndDate && date.getTime() === oldEndDate.getTime())) {
+         if ((!date && text !== '') || this._isDatesEqual(date, oldEndDate)) {
             return;
          }
-         if (startDate && date < startDate) {
+
+         if (startDate && date && date < startDate) {
             // date = startDate
             return;
          }

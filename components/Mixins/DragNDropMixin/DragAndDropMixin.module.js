@@ -2,9 +2,8 @@
  * Created by am.gerasimov on 26.05.2015.
  */
 define('js!SBIS3.CONTROLS.DragAndDropMixin', [
-   "Core/constants",
-   "Core/helpers/collection-helpers"
-], function( constants,colHelpers) {
+   "Core/constants"
+], function(constants) {
 
    var isMobile = constants.browser.isMobilePlatform;
 
@@ -47,7 +46,14 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [
       _bindDragEvents: function() {
          for (var i in this._eventHandlers) {
             if(this._eventHandlers.hasOwnProperty(i)) {
-               constants.$doc.bind(i + '.dragNDrop', this[this._eventHandlers[i]].bind(this));
+               constants.$win.bind(i + '.dragNDrop', function(func, e){
+                  func.call(this, e);
+   
+                  /* Чтобы не скролилась страница при пететаскивании  (актуально для планшетов и при работе с телевизором) */
+                  if(e.originalEvent.touches) {
+                     e.preventDefault();
+                  }
+               }.bind(this, this[this._eventHandlers[i]]));
             }
          }
       },
@@ -66,11 +72,11 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [
        * Выключает/включает стандартный drag-N-Drop браузера
        */
       _toggleNativeDragNDrop: function(enable) {
-         colHelpers.forEach(this._dragContainers, function(elem) {
-            elem.ondragstart = function() {
+         for (var i = 0; i < this._dragContainers.length; i++) {
+            this._dragContainers[i].ondragstart = function() {
                return enable;
             }
-         });
+         }
       },
 
       /*
@@ -100,7 +106,7 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [
        * Отписывается от событий, вызывает метод dragEnd
        */
       _moveEnd: function(e) {
-	     constants.$doc.unbind('.dragNDrop');
+	     constants.$win.unbind('.dragNDrop');
          this._dragEnd(e);
       },
 

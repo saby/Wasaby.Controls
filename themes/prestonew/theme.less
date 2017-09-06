@@ -95,13 +95,6 @@ body {
    }
 
   .controls-ListView__bottomStyle > .controls-ItemsToolbar {
-    &:before {
-      top: -1px;
-      left: -1.7rem;
-      width: 1.88rem;
-      height: 1.88rem;
-      background-size: 1.88rem 1.88rem;
-    }
     &.controls-ItemsToolbar__edit {
       &:before {
         top: 0;
@@ -133,7 +126,7 @@ body {
             color: #E4E4E4 !important;
          }
          &.controls-Click__active {
-           background: @button-active-bg;
+           background: @button-bg-active;
          }
          &.ws-disabled {
             border-color: @disabled-color;
@@ -259,21 +252,6 @@ body {
          width: 3rem;
          height: 3rem;
       }
-      .controls-IconButton.controls-IconButton__round-border {
-         .controls-Button__icon {
-            &.icon-16, &.icon-24 {
-               margin-left: -1.5rem;
-               margin-top: -1.5rem;
-            }
-         }
-      }
-
-      .controls-DateRangeBigChoose__years-prevYearBtn,
-      .controls-DateRangeBigChoose__years-nextYearBtn {
-         &.controls-IconButton {
-            vertical-align: baseline;
-         }
-      }
    }
 
    // Выпилить как будем делать новые темы.
@@ -308,42 +286,6 @@ body {
     font-family: carrypresto-icons!important;
   }
 
-   .icon-16 {
-    font-size: 1.32rem !important;
-    line-height: 1.32rem !important;
-    width: 1.32rem;
-    height: 1.32rem;
-  }
-  .icon-24 {
-    font-size: 1.7857rem !important;
-    height: 1.7857rem !important;
-    width: 1.7857rem !important;
-    line-height: 1.7857rem !important;
-
-  }
-  .icon-32 {
-
-        font-size: 3rem!important;
-        height: 3rem!important;
-        width: 3rem!important;
-        line-height: 3rem !important;
-
-  }
-
-    .ws-window-titlebar {
-    color: @default-text-color;
-    line-height: 3.57rem;
-    height: 3.57rem;
-    position: absolute;
-    left: 0;
-    right: 0;
-    font-size: 1.43rem;
-    white-space: nowrap;
-    -moz-box-shadow: none!important;
-    -webkit-box-shadow: none!important;
-    background: #2e404f;
-    box-shadow: none!important;
-  }
   .ws-float-area-title {
       font-size: 1.43rem!important;
       font-weight: normal !important;
@@ -356,6 +298,9 @@ body {
    .controls-ListView__item__selected .controls-DataGridView__td:first-child {
       background-size: 0.2142rem;
    }
+}
+.ws-float-area-nostack-panel-overflow .ws-float-close.sbisname-window-title-close, .ws-float-close.sbisname-window-title-close {
+   top: .2857rem!important;
 }
 
 .ws-float-close.sbisname-window-title-close,
@@ -386,14 +331,16 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
 
 .controls-Browser {
    .controls-Browser__tableCell-search {
-      width: 19.44rem;
       .controls-Browser__selectAllCheckBox {
          .align-self(center);
       }
    }
    .controls-Browser__search {
-      width: 18.61rem;
+      width: 21.4285rem;
    }
+  &.controls-Browser__search-small .controls-Browser__search {
+    width: 12.5rem;
+  }
 }
 
 .controls-ComboBox {
@@ -466,7 +413,7 @@ body {
 }
 
 body  .ws-window {
-   background-color: #293543;
+   background-color: #2C3E50;
    border-style: solid;
    border-color: #00a2ef;
    border-width: @default-border-width;
@@ -492,21 +439,6 @@ body  .ws-window {
 
 
 body {
-
-  .ws-window-titlebar-action.close {
-     width: 3rem !important;
-     height: 3rem !important;
-     background: @closeBigButtonImage;
-     &:hover, &:active {
-        background: @closeBigButtonImageHover;
-     }
-  }
-  .ws-window-title {
-     font-size: 1.43rem;
-     height: 3.57rem;
-     max-height: 3.57rem;
-     line-height: 3.57rem;
-  }
   .engine-Browser__path {
     max-height: 2rem;
     height: auto !important;
@@ -539,6 +471,7 @@ body {
       }
    }
    .ws-window-title {
+      color: @default-text-color;
       font-size: 1.43rem;
       height: 3.57rem;
       max-height: 3.57rem;
@@ -562,10 +495,13 @@ body {
 }
 
 
-.controls-DropdownList__picker {
+body .controls-DropdownList__picker {
    .controls-DropdownList__itemCheckBox{
       top: 0.6rem;
       padding-right: 0.2rem;
+   }
+   .controls-DropdownList__multiselect .controls-DropdownList__itemCheckBox {
+      visibility: visible;
    }
    .controls-DropdownList__buttonsBlock.controls-DropdownList__multiselect {
       min-width: 8rem;
@@ -623,13 +559,6 @@ body {
     .icon-size(@icon-medium-size, @icon-font);
   }
 }
-
- .controls-Button .controls-Button__icon.icon-32 + .controls-Button__text {
-     margin-left: 3rem !important;
- }
-  .controls-Button .controls-Button__icon.icon-large + .controls-Button__text {
-      margin-left: 3rem !important;
-  }
 
 .controls__filterButton {
    .controls__filterButton__filterLine {
@@ -968,11 +897,11 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__dates .controls-
    padding-left: 0;
    text-align: center;
    &:hover {
-      background: transparent!important;
       border-top: none!important;
       border-bottom: none!important;
       border-right-color: #3f566d!important;
    }
+   line-height: 1.786rem;
    .controls-Button__text {
       width: 100%;
    }
@@ -1012,13 +941,7 @@ body {
     color: #273B4D;
   }
 }
-.controls-SuggestTextBox.controls-TextBox.controls-Picker__show {
-  border-color: #26B8FF;
-  background: #f0f5fb;
-  & .controls-TextBox__field {
-    color: #273B4D;
-  }
-}
+
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button:hover {
   color: #fff;
 }
@@ -1074,9 +997,6 @@ body {
     top: 0.35rem !important;
   }
 }
-body .controls-ItemActions .controls-Button__icon.icon-size {
-   line-height: 1.455rem!important;
-}
 
 .controls-ListView {
   .controls-IconButton {
@@ -1110,10 +1030,6 @@ body .controls-ItemActions .controls-Button__icon.icon-size {
    display: none;
 }
 
-.controls-ListView__ItemsToolbar-container {
-  height: 1.2rem;
-}
-
 .controls-ListView:not(.controls-ListView__bottomStyle) {
   .controls-ListView__ItemsToolbar-container.controls-ItemsToolbar__withEditActions {
     height: 3rem;
@@ -1137,4 +1053,32 @@ body .controls-ItemActions .controls-Button__icon.icon-size {
     height: 3rem !important;
     width: 3rem !important;
     line-height: 3rem !important;
+}
+//Костыль, у dropdown неподходящая для ПМО минимальная высота. Сделаем 100%.
+.controls-operationsPanel__actions .controls-DropdownList {
+   min-height: 100%;
+}
+
+// В темах престо и розницы все сверстано на внутренних скролируемых контенерах.
+// Делаем что бы флоат арии всегда были с 100% высотой и не надо устанавливать ws-float-area__block-layout.
+// Выпилить когда уйдем от ws-float-area__block-layout в онлайне.
+.ws-float-area-stack-cut-wrapper {
+   .ws-float-area {
+      display: block !important;
+   }
+   .ws-float-area-stack-panel-shadow {
+      display: block !important;
+   }
+
+   .ws-float-area-stack-scroll-wrapper-touch {
+     -webkit-overflow-scrolling: auto!important;
+   }
+}
+
+//Rem Line-height Doesn’t Work In Pseudo Elements In IE
+//fallback for ie, will live while there is rem
+.ws-is-ie {
+  .controls-TextBox .controls-TextBox__wrapper:before {
+    line-height: 2.5em; //2.5 = 2.85/1.14 //2.85 - default-line-height, 1.14 - default-font size
+  }
 }

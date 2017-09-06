@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     *        Для этого в опции {@link pickerClassName} нужно указать свой класс someClass и в css указать селектор .someClass.controls-ComboBox__picker .controls-ComboBox__scrollContainer, установив свойство max-height в нужное значение</li>
     * </ul>
     * <br/>
-    * Вы можете связать опцию items с полем контекста, в котором хранятся данные с типом значения перечисляемое - {@link WS.Data/Types/Enum}. Если эти данные хранят состояние выбранного значения, то в контрол будет установлено выбранное значение.
+    * Вы можете связать опцию items с полем контекста, в котором хранятся данные с типом значения перечисляемое - {@link WS.Data/Type/Enum}. Если эти данные хранят состояние выбранного значения, то в контрол будет установлено выбранное значение.
     * <pre>
     *    <component data-component="SBIS3.CONTROLS.ComboBox">
     *       <options name="items" type="array" bind="record/MyEnumField"></options>
@@ -211,7 +211,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             var target = $(e.target),
                isArrow = target.hasClass('js-controls-ComboBox__arrowDown');
             if (isArrow || ( target[0] === self._getAfterFieldWrapper()[0] ) || self.isEditable() === false) {
-               if (self.isEnabled()) {
+               if (self.isEnabled() && self._getItemsProjection()) {//открывать, если нет данных, нет смысла
                   self.togglePicker();
                   // Что бы не открывалась клавиатура на айпаде при клике на стрелку
                   if (isArrow || !self.isEditable()) {
@@ -376,7 +376,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _drawText: function(text) {
          ComboBox.superclass._drawText.apply(this, arguments);
          this._drawNotEditablePlaceholder(text);
-         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text || this._options.placeholder);
+         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).html(text || this._options.placeholder || '&nbsp;');
          if (this._options.editable) {
             this._setKeyByText();
          }

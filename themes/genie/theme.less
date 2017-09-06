@@ -74,8 +74,7 @@
       width: 20px;
       height: 20px;
       border-radius: 10px;
-      border: 1px solid @primary-border-color;
-      left: 0;
+      border: 1px solid @primary-border-color !important;
       top: 1px;
       box-shadow: 0px 1px 0px 0px rgba(0,0,0,0.2);
 
@@ -89,11 +88,15 @@
          border: 1px solid @primary-border-color;
       }
    }
+   
+   &:not(.controls-Checked__checked) .controls-Switcher__btn {
+      left: 0px;
+   }
 
    &.controls-Checked__checked {
       .controls-Switcher__btn {
          border: 1px solid @primary-border-color;
-         right: 0;
+         right: 0px;
 
          &:before {
             display: none !important;

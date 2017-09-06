@@ -170,6 +170,12 @@ define('js!SBIS3.CONTROLS.Browser', [
              */
             ignoreFiltersList: [],
             /**
+             * @cfg [Array} Сохранять проваливание по иерархии в историю браузера будут работать пореходы по кнопке вперед/назад.
+             * @remark работает только в месте с сохранением фильтров сессию.
+             * @see updateFilterHistory
+             */
+            saveRootInHistory: false,
+            /**
              * @cfg {Boolean} showCheckBoxes необходимо ли показывать чекбоксы, когда панель массовых операций закрыта.
              */
             showCheckBoxes: false,
@@ -278,8 +284,7 @@ define('js!SBIS3.CONTROLS.Browser', [
             this._getView().redraw();
             this._columnsEditor = this._getColumnsEditor();
             if (this._columnsEditor) {
-               this._columnsEditor.subscribe('onSelectedColumnsChange', this._onSelectedColumnsChange.bind(this));
-               this._columnsEditor.subscribe('onColumnsEditorShow', this._onColumnsEditorShow.bind(this));
+               this._subscribeToColumnsEditor();
             }
          }
 
@@ -442,6 +447,17 @@ define('js!SBIS3.CONTROLS.Browser', [
          this._options.historyId = id;
          this._bindFilterHistory();
       },
+      _setColumnsEditor: function() {
+         var newEditor = this._getColumnsEditor();
+         this._columnsEditor.destroy();
+         this._columnsEditor = newEditor;
+         this._subscribeToColumnsEditor();
+      },
+
+      _subscribeToColumnsEditor: function() {
+         this.subscribeTo(this._columnsEditor, 'onSelectedColumnsChange', this._onSelectedColumnsChange.bind(this));
+         this.subscribeTo(this._columnsEditor, 'onColumnsEditorShow', this._onColumnsEditorShow.bind(this));
+      },
 
       _bindFilterHistory: function() {
          if(this._filterButton && this._options.historyId) {
@@ -453,7 +469,8 @@ define('js!SBIS3.CONTROLS.Browser', [
                this._options.ignoreFiltersList,
                this._options.applyHistoryFilterOnLoad,
                this,
-               this._options.updateFilterHistory);
+               this._options.updateFilterHistory,
+               this._options.saveRootInHistory);
          }
       },
 

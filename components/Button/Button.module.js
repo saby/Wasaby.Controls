@@ -5,8 +5,9 @@ define('js!SBIS3.CONTROLS.Button',
       'tmpl!SBIS3.CONTROLS.Button',
       'Core/core-functions',
       'js!SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor',
-      "js!SBIS3.CORE.Control/ControlGoodCode",
-      'css!SBIS3.CONTROLS.Button'
+      'js!SBIS3.CORE.Control/ControlGoodCode',
+      'css!SBIS3.CONTROLS.Button',
+      'css!WSControls/Buttons/resources/ButtonBase'
          ],
 
    function (Base,
@@ -17,6 +18,9 @@ define('js!SBIS3.CONTROLS.Button',
              ControlGoodCode) {
 
    'use strict';
+
+   // почему нельзя сделать единый шаблон на <button - не работает клик по ссылке в ФФ
+   // почему нельзя сделать единый шаблона на <a - нельзя положить <a внутрь <a, в верстке получится два рядом лежащих тега <a
 
    /**
     * Контрол, отображающий обычную кнопку
@@ -35,6 +39,12 @@ define('js!SBIS3.CONTROLS.Button',
     * <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Спецификация</a>.
     *
     * @class SBIS3.CONTROLS.Button
+    * @extends WSControls/Buttons/ButtonBase
+    *
+    * @mixes SBIS3.CONTROLS.Button/Button.compatible
+    * @mixes SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor
+    * @mixes SBIS3.CORE.Control/ControlGoodCode
+    *
     * @demo SBIS3.CONTROLS.Demo.MyButton
     *
     * @author Романов Валерий Сергеевич
@@ -72,9 +82,7 @@ define('js!SBIS3.CONTROLS.Button',
     * @category Buttons
     * @public
     * @initial
-    * <component data-component='SBIS3.CONTROLS.Button'>
-    *    <option name='caption' value='Кнопка'></option>
-    * </component>
+    * <ws:SBIS3.CONTROLS.Button caption="Кнопка" />
     */
    var Button = Base.extend([
          ButtonCompatible,
@@ -88,7 +96,6 @@ define('js!SBIS3.CONTROLS.Button',
          _isWaitingClick: false,
          _isTouchEnded: false,
          _touchMoveCount: 0,
-
          constructor: function (cfg) {
             Button.superclass.constructor.call(this, cfg);
             this._publish('onActivated');
@@ -114,7 +121,7 @@ define('js!SBIS3.CONTROLS.Button',
             }
             this._onClickHandler(e);
             this._notify("onActivated", e);
-            this._setDirty();
+            this._forceUpdate();
          },
 
          _onMouseDown: function () {
@@ -158,7 +165,7 @@ define('js!SBIS3.CONTROLS.Button',
                //т.к. появилась асинхронность, руками дернем флаг о перерисовке, чтобы кнопка
                //не осталась "подвисшей"
                if (this.iWantVDOM) {
-                  this._setDirty();
+                  this._forceUpdate();
                }
             }.bind(this), 1000);
          },
@@ -193,7 +200,9 @@ define('js!SBIS3.CONTROLS.Button',
          },
 
          destroy: function() {
-            this._unregisterDefaultButton();
+            if (this.isPrimary()) {
+               this._unregisterDefaultButton();
+            }
             Button.superclass.destroy.call(this);
          }
          //</editor-fold>

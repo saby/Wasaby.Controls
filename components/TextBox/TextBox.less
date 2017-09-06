@@ -6,7 +6,7 @@
    color: @text-box-color;
    border-width: @default-border-width;
    border-style: @default-border-style;
-   border-color: @text-box-border-color;
+   border-color: @text-box-border-color;/*test*/
    border-bottom-color: @text-box-border-color-bottom;
    background: @text-box-bg;
    font-size: @text-box-font-size;
@@ -20,10 +20,6 @@
       border-color: @text-box-border-color-active;
       background: @text-box-bg-focus; //presto, carry
    }
-   &.ws-validation-error {
-      border-color: @text-box-border-color-error;
-      background: @text-box-bg-error;
-   }
    &.ws-disabled {
       border-color: @text-box-border-color-disabled;
       background: @text-box-bg-disabled;
@@ -32,6 +28,10 @@
       .controls-TextBox__field {
          .hiddenPlaceholder();
       }
+   }
+   &.ws-validation-error {
+      border-color: @text-box-border-color-error;
+      background: @text-box-bg-error;
    }
    .controls-informationIcon {
       position: absolute;
@@ -58,6 +58,7 @@
          visibility:hidden;
          width: 0;
          line-height: @default-base-line-height;
+         display: inline-block;
       }
    }
 
@@ -74,6 +75,7 @@
       .box-sizing(border-box);
       .placeholder();
       .text-overflow();
+      .flex-shrink();
       font: inherit;
       width: 100%;
       height: 100%;
@@ -106,6 +108,7 @@
       color: @default-placeholder-color;
       font: inherit;
       text-align: inherit;
+      padding: @text-box-wrapper-padding;
    }
 }
 .controls-TextBox__field-uppercase {

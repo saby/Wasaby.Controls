@@ -9,6 +9,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    'js!WS.Data/Collection/RecordSet',
    'js!WS.Data/Di',
    "js!WS.Data/Query/Query",
+   'Core/core-merge',
    'Core/Deferred',
    "Core/ParallelDeferred",
    "Core/core-instance",
@@ -25,6 +26,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    RecordSet,
    Di,
    Query,
+   cMerge,
    Deferred,
    ParallelDeferred,
    cInstance,
@@ -51,21 +53,21 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
     */
    var SuggestTextBoxMixin = /**@lends SBIS3.CONTROLS.SuggestTextBoxMixin.prototype  */{
       /**
-       * @event onBeforeLoadHistory Происходит перед вызовом списочного метода для получения истории
+       * @event onBeforeLoadHistory Происходит перед вызовом списочного метода для получения истории.
        * @remark
        * В некоторых случаях есть необходимость дополнить выводимую историю своими записями.
        * Для этого из события нужно вернуть deferred, который в callback вернет RecordSet с записями, которые требуется добавить к истории
        * <pre>
-       *    SuggestTextBox.subscribe('onBeforeLoadHistory', function(eventObject, idArray) {
-           *        if (idArray.length < 12) {
-           *           var myQuery = self.getMyQuery().limit(12 - idArray.length);
-           *           var queryDeferred = self.getMyDataSource().query(myQuery);
-           *           eventObject.setResult(queryDeferred);
-           *        }
-           *    });
+       * SuggestTextBox.subscribe('onBeforeLoadHistory', function(eventObject, idArray) {
+       *    if (idArray.length < 12) {
+       *       var myQuery = self.getMyQuery().limit(12 - idArray.length),
+       *           queryDeferred = self.getMyDataSource().query(myQuery);
+       *       eventObject.setResult(queryDeferred);
+       *    }
+       * });
        * </pre>
        * @param {Core/EventObject} eventObject Дескриптор события.
-       * @param {Array} idArray Массив идентификаторов записей, которые будут получены списочным методом
+       * @param {Array} idArray Массив идентификаторов записей, которые будут получены списочным методом.
        */
       $protected: {
          _changedByKeyboard: false,  /* {Boolean} Флаг, обозначающий, что изменения были вызваны действиями с клавиатуры */
@@ -78,7 +80,29 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          _historyDeferred: undefined, //Защита от множественных запросов
          _options: {
             /**
-             * @cfg {String} Имя параметра фильтрации для поиска
+             * @cfg {String} Устанавливает имя параметра, который будет передан при вызове метода БЛ.
+             * @remark
+             * Опция searchParam доступна в тех классах, которые расширены миксином SBIS3.CONTROLS.SuggestTextBoxMixin. Она, как можно понять из названия, нужна, чтобы организовать поиск данных.
+             * @example
+             * Рассмотрим использование опции searchParam на примере контрола "Строка поиска" (см. {@link SBIS3.CONTROLS.SearchForm}).
+             * <pre class="brush: xml">
+             *    <ws:SBIS3.CONTROLS.SearchForm searchParam="searchString" … />
+             * </pre>
+             * Пользователь вводит поисковый запрос "Ноутбук".
+             * В результате для поиска данных вызывается метод бизнес-логики "Goods.List".
+             * Чтобы на бизнес-логике обработать поисковую фразу, введённую пользователем, в параметрах вызова метода (в числе прочих параметров) передаётся :
+             * <pre class="brush: js">
+             *    searchString: “Ноутбук”
+             * </pre>
+             * ![](/search-param-1.png)
+             * На стороне бизнес-логики в методе Goods.List по значению параметра searchString может быть организовано соответствующее условие фильтрации записей.
+             * <br/>
+             * Если Goods.List - это декларативный списочный метод, то сначала параметр нужно объявить среди обрабатываемых в опции <b>Filter Parameters</b>:
+             * ![](/search-param-2.png)
+             * Затем создать условие фильтрации в опции <b>Filter Condition</b>:
+             * ![](/search-param-3.png)
+             * В итоге записи будут отобраны согласно поисковой фразе и другим параметрам метода БЛ:
+             * ![](/search-param-4.png)
              */
             searchParam : '',
             /**
@@ -88,7 +112,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             /**
              * @cfg {Boolean} Использовать механизм смены неверной раскладки по новому стандарту
              */
-            keyboardLayoutRevertNew: true
+            keyboardLayoutRevertNew: true,
+            // TODO разобраться с множественным вызовом на фокус и клик _observableControlFocusHandler https://online.sbis.ru/opendoc.html?guid=19af9bf9-0d16-4f63-8aa8-6d0ef7ff0799
+            task1174306848: false
          }
       },
       $constructor: function () {
@@ -185,6 +211,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             recordsId.push(this._getHistoryRecordId(this._historyController.at(i).get('data')));
          }
          filter[this._getListIdProperty()] = recordsId;
+         filter = cMerge(filter, this.getList().getFilter() || {}); //Отдаем в запрос на историю фильтр с листа
          query.where(filter).limit(12);
          return query;
       },
@@ -357,14 +384,14 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
 
          // FIXME костыль до перехода на пикера по фокусную систему
          _inputFocusInHandler: function(event) {
-            this._observableControlFocusHandler(event);
+            !this._options.task1174306848 && this._observableControlFocusHandler(event);
          },
          
          _inputClickHandler: function(e) {
             /* По стандарту клик по полю с автодополнением или получение фокуса при включённом автопоказе (опция autoShow),
                должен вызывать отображение автодополнения. Т.к. если в поле ввода уже стоит фокус, то клик не вызывает никаких
                связанных с фокусом событий, поэтому при клике по полю ввода надо тоже показать автодополнение. */
-            if(this.isActive()) {
+            if(this.isActive() && !this._options.task1174306848) {
                this._observableControlFocusHandler(e);
             }
          },

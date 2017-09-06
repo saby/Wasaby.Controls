@@ -1,3 +1,4 @@
+@crossing-line-btn: @switcherline-width - @switcher-btn-size;
 .get-size(@prop, @var1, @var2, @border) {
    @temp: (@var1 + @var2) / 2;
    & when (get-unit(@var1) = get-unit(@border)) {
@@ -7,6 +8,7 @@
       @{prop}: calc(~"@{temp} - @{border}");
    }
 }
+
 .switcherBorder(@border) {
    &.controls-Checked__checked .controls-Switcher__btn {
       .get-size(right, @switcher-width, -@switcherline-width, @border);
@@ -48,12 +50,27 @@
    width: @switcherline-width;
 }
 
+.controls-Switcher__line_disabled-checked() {
+   .horizontal-gradient(@switcher-disabled-color @crossing-line-btn, transparent @crossing-line-btn);
+}
+
+.controls-Switcher__line_disabled-unchecked() {
+   .horizontal-gradient(transparent @switcher-btn-size, @switcher-disabled-color @switcher-btn-size);
+}
+
+.controls-Switcher__line_enabled-checked() {
+   .horizontal-gradient(@innacent-color @crossing-line-btn, transparent @crossing-line-btn);
+}
+
+.controls-Switcher__line_enabled-unchecked() {
+   .horizontal-gradient(transparent @switcher-btn-size, @innacent-color @switcher-btn-size);
+}
+
 .controls-Switcher__btn {
    display: block;
    position: absolute;
    width: @switcher-btn-size;
    height: @switcher-btn-size;
-   background: @default-bg-color;
    border-style: @default-border-style;
    border-width: @switcher-btn-border-width;
    .border-radius(100%);
@@ -80,8 +97,11 @@ body:not(.ws-is-mobile-platform) .ws-enabled.controls-Switcher:hover {
          background: @primary-color;
       }
    }
-   .controls-Switcher__line {
-      background-color: @innacent-color;
+   &.controls-Checked__checked .controls-Switcher__line {
+      .controls-Switcher__line_enabled-checked();
+   }
+   &:not(.controls-Checked__checked) .controls-Switcher__line {
+      .controls-Switcher__line_enabled-unchecked();
    }
    &:not(.controls-Checked__checked) .controls-Switcher__btn {
       border-color: @innacent-color;
@@ -95,8 +115,11 @@ body:not(.ws-is-mobile-platform) .ws-enabled.controls-Switcher:hover {
    &.controls-Checked__checked .controls-Switcher__btn:before {
       background: @switcher-disabled-color;
    }
-   .controls-Switcher__line {
-      background-color: @switcher-disabled-color;
+   &.controls-Checked__checked .controls-Switcher__line {
+      .controls-Switcher__line_disabled-checked();
+   }
+   &:not(.controls-Checked__checked) .controls-Switcher__line {
+      .controls-Switcher__line_disabled-unchecked();
    }
    .controls-Switcher__btn {
       border-color: @switcher-disabled-color;
@@ -110,6 +133,7 @@ body:not(.ws-is-mobile-platform) .ws-enabled.controls-Switcher:hover {
       .switcherBorder(@default-border-width);
    }
 }
+
 & when not (@switcher-hover-border-width = @default-border-width) {
    .controls-Switcher {
       &:not(:hover), .ws-disabled&:hover {

@@ -128,7 +128,7 @@
 }
 
 .ws-button-classic {
-   background-color: @button-bg  !important;
+   background-color: @button-bg-color  !important;
    background-size: 100% 100%;
    border-radius: 0  !important;
    border: @button-border  !important;
@@ -136,8 +136,8 @@
       &:hover {
          background-color: @button-hover-bg  !important;
       }
-      &:active, &.ws-field-button-element-active, &.ws-button-pressed {
-         background-color: @button-active-bg  !important;
+      &:active, &.ws-field-button-elemNtent-active, &.ws-button-pressed {
+         background-color: @button-bg-active  !important;
       }
    }
    .ws-button-caption, .ws-button-image {
@@ -152,14 +152,14 @@
       }
    }
    &.ws-default-button {
-      background: @button-primary-bg !important;
+      background: @button-primary-bg-color !important;
       border-color: transparent;
       &.ws-enabled {
          &:hover {
             background-color: @button-primary-hover-bg !important;
          }
          &:active, &.ws-field-button-element-active, &.ws-button-pressed {
-            background-color: @button-primary-active-bg !important;
+            background-color: @button-primary-bg-active !important;
          }
       }
       .ws-button-image {
@@ -247,7 +247,7 @@
 .controls-TextBox {
    &.controls-TextBox__big {
       height: @carry-big-height;
-      .controls-TextBox__fieldWrapper {
+      .controls-TextBox__wrapper {
          .controls-TextBox__field {
             font-size: @text-box-height-carryFont;
          }

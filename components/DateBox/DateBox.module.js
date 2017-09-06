@@ -11,12 +11,13 @@ define(
       'js!SBIS3.CONTROLS.Utils.DateUtil',
       'tmpl!SBIS3.CONTROLS.DateBox',
       'js!SBIS3.CONTROLS.FormWidgetMixin',
+      'js!SBIS3.CONTROLS.ControlsValidators',
       // Разобраться с общими стилями https://inside.tensor.ru/opendoc.html?guid=37032b47-6830-4b96-a4f3-727ea938bf58&des
       'css!SBIS3.CONTROLS.FormattedTextBox',
       'css!SBIS3.CONTROLS.DateBox'
       // 'i18n!SBIS3.CONTROLS.DateBox'
    ],
-   function (IoC, ConsoleLogger, constants, FormattedTextBoxBase, DateUtil, dotTplFn, FormWidgetMixin) {
+   function (IoC, ConsoleLogger, constants, FormattedTextBoxBase, DateUtil, dotTplFn, FormWidgetMixin, ControlsValidators) {
 
    'use strict';
 
@@ -290,7 +291,7 @@ define(
                datetime: rk('Дата или время заполнены некорректно')
             };
          //Добавляем к прикладным валидаторам стандартный, который проверяет что дата заполнена корректно.
-         this._options.validators.push({
+         this.addValidators([{
             validator: function() {
                return self._getFormatModel().isEmpty(this._getMaskReplacer()) ? true : self._options.date instanceof Date;
             },
@@ -300,7 +301,7 @@ define(
                return self._options.date instanceof Date ? self._options.date.getFullYear() > 1400 : true;
             },
             errorMessage: rk('Год должен быть больше 1400')
-         });
+         }]);
       },
 
      /**
@@ -309,9 +310,16 @@ define(
       * @private
       */
       setText: function (text) {
+         var oldText = this._options.text;
          DateBox.superclass.setText.call(this, text);
          this._options.date = text == '' ? null : this._getDateByText(text, this._lastDate);
          this._setLastDate(this._options.date);
+         // Во время пользовательского ввода в режиме complete события генерируются при потере фокуса.
+         // Но если значение устанавливается программно, то мы генерируем события сразу же.
+         if (this._options.notificationMode === 'complete' && oldText !== this._options.text) {
+            this._notifyOnTextChange();
+            this._notifyOnDateChanged();
+         }
       },
 
       /**
@@ -723,7 +731,7 @@ define(
 
       _isRequired: function () {
          for(var i = 0; i < this._options.validators.length; i++) {
-            if (this._options.validators[i].validator.wsHandlerPath === 'js!SBIS3.CONTROLS.ControlsValidators:required') {
+            if (this._options.validators[i].validator === ControlsValidators.required) {
                return true;
             }
          }

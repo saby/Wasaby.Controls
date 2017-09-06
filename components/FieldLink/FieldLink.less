@@ -3,7 +3,7 @@
       .inline-flexbox();
       .flex-shrink(0);
       .flex-direction(row-reverse);
-      max-width: calc(100% ~'-' 20px); //todo
+      max-width: ~'calc(100% - '@controls-FieldLink-linkItem-cross-width~')';
       overflow: hidden;
    }
    .controls-FieldLink__linksWrapper {
@@ -12,10 +12,14 @@
    }
    &.ws-disabled {
       .controls-TextBox__beforeFieldWrapper {
+         .flex-wrap(wrap);
+         .flex-direction(row);
          max-width: 100%;
       }
       //todo:
       .controls-Link.controls-FieldLink__showAllLinks {
+         top: -@default-base-line-height;
+         background: @text-box-bg;
          &:after {
             content: '';
             position: absolute;
@@ -30,13 +34,21 @@
 
    }
    &.controls-FieldLink__selected-single {
+      .controls-TextBox__beforeFieldWrapper {
+         .flex-grow(1);
+         .controls-FieldLink__linksWrapper {
+            width:100%;
+         }
+      }
       .controls-FieldLinkItemsCollection {
-         .justify-content()
+         .justify-content();
+         .flex-shrink();
       }
    }
 }
 .controls-FieldLink__fieldWrapper {
    .inline-flexbox();
+   .flex-shrink(1);
    position:relative;
    height: 100%;
    width: 100%;
@@ -118,7 +130,7 @@
    right: @controls-FieldLink-linkItem-cross-right;
    top: @controls-FieldLink-linkItem-cross-top;
    padding: @controls-FieldLink-linkItem-cross-padding;
-   cursor: @link-cursor;
+   cursor: pointer;
    z-index: 1;
 }
 
@@ -134,7 +146,7 @@
 .controls-FieldLink__itemsEdited {
    .controls-FieldLink__item-caption:hover {
       text-decoration: @link-hover-text-decoration;
-      cursor: @link-cursor;
+      cursor: pointer;
    }
 }
 
@@ -161,10 +173,6 @@
 .controls-FieldLink {
    position: relative;
    white-space: nowrap;
-   
-   &.controls-Picker__show:not(.ws-disabled) {
-      border-color: @controls-FieldLink-border-color-picker-show;
-   }
 
    &:not(.controls-FieldLink__multiselect),
    &.controls-FieldLink__selected-single {
@@ -191,13 +199,7 @@
          color: @controls-FieldLink-picker-show-field-color
       }
    }
-
-   &.ws-validation-error {
-      .controls-TextBox__afterFieldWrapper {
-         background-color: @text-box-error-bg;
-      }
-   }
-
+	
    &.ws-disabled {
 
       .controls-TextBox__field {
@@ -216,7 +218,6 @@
    }
 
    .controls-FieldLink__Link {
-      display: inline;
       line-height: @default-base-line-height;
    }
 }
@@ -259,26 +260,15 @@
    width: 0;
 }
 
-.controls-Link.controls-FieldLink__Link {
+.controls-FieldLink__Link.ws-enabled {
+   color: @controls-FieldLink-link-color;
 
-   &:not(.controls-FieldLink-Link__filterButton):not(.ws-disabled) {
-      color: @controls-FieldLink-link-color;
+   .controls-Button__text {
       text-decoration: underline;
-
-      &:hover:not(.controls-Link__disabledHover) {
-         color: @controls-FieldLink-link-color-hover;
-      }
    }
-   &:not(.ws-disabled) {
-      &.controls-FieldLink-Link__filterButton {
-         color: @controls-FieldLink-FilterButton-color;
-         text-decoration: none;
-
-         &.ws-enabled:hover:not(.controls-Link__disabledHover) {
-            color: @controls-FieldLink-FilterButton-color-hover;
-            text-decoration: underline;
-         }
-      }
+   
+   &:hover {
+      color: @controls-FieldLink-link-color-hover;
    }
 }
 
@@ -303,17 +293,14 @@
    width: 20px;
    line-height: @controls-FieldLink-showAllLinks-lineHeight;
    padding: @controls-FieldLink-showAllLinks-padding;
-   display: inline-block;
+   display: none;
    .flex-shrink(0);
 }
-
-
-
-.controls-FieldLink__selected:not(.controls-FieldLink__selected-single) .controls-FieldLink__dropAllLinks {
-   display: inline-block;
+.controls-FieldLink__selected:not(.controls-FieldLink__selected-single) {
+   .controls-FieldLink__dropAllLinks, .controls-FieldLink__showAllLinks {
+      display: inline-block;
+   }
 }
-
-
 .ws-is-firefox {
    .controls-FieldLink {
       vertical-align: middle;

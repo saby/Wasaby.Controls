@@ -1,0 +1,52 @@
+<div class="controls-image{{sizeMode === 'normal' ? ' controls-image__normal'}}">
+   <div class="controls-image__wrapper">
+      <img
+         class="controls-image__image{{avoidCache && !dataSource ? ' ws-hidden'}}"
+         tooltip="{{tooltip}}"
+         alt="{{tooltip || name}}"
+         src="{{!avoidCache || dataSource ? _templateImage}}"
+      />
+      <ws:if data="{{imageBar}}">
+         <div class="controls-image__image-bar" style="display: none;">
+            <ws:SBIS3.CONTROLS.MenuLink
+               name="ButtonUpload"
+               class="controls-image__button-upload"
+               tooltip="{[Image@@Загрузить]}"
+               caption="{[Image@@Загрузить]}"
+               icon="sprite:icon-16 icon-Picture icon-primary"
+               items="{{ [{
+                  'id': 'fromFile',
+                  'icon': 'sprite:icon-24 icon-OpenedFolder icon-primary',
+                  'title': 'Из файла'
+               }, webCam ? {
+                  'id': 'fromWebCam',
+                  'icon': 'sprite:icon-24 icon-VideoCallNull icon-primary',
+                  'title': 'С веб-камеры'
+               } : undefined ] }}"
+            >
+               <ws:handlers type="object">
+                  <ws:onMenuItemActivate type="function">js!SBIS3.CONTROLS.Image:prototype._buttonUploadClick</ws:onMenuItemActivate>
+                  <ws:onPickerOpen type="function">js!SBIS3.CONTROLS.Image:prototype._pickerOpen</ws:onPickerOpen>
+                  <ws:onPickerClose type="function">js!SBIS3.CONTROLS.Image:prototype._pickerClose</ws:onPickerClose>
+               </ws:handlers>
+            </ws:SBIS3.CONTROLS.MenuLink>
+            <ws:SBIS3.CONTROLS.Link
+               name="ButtonReset"
+               class="controls-image__button-reset"
+               tooltip="Удалить"
+               icon="sprite:icon-16 icon-Erase icon-error"
+               command="resetImage"
+               visible="{{avoidCache}}"
+            />
+            <ws:SBIS3.CONTROLS.Link
+               name="ButtonEdit"
+               class="controls-image__button-edit"
+               tooltip="Редактировать"
+               icon="sprite:icon-16 icon-Edit icon-primary"
+               command="editImage"
+               visible="{{avoidCache}}"
+            />
+         </div>
+      </ws:if>
+   </div>
+</div>

@@ -403,7 +403,7 @@
         line-height: @tab-button-ff-inner-height;
      }
      &.controls-TabButton__main-item .controls-TabButton__inner{
-        line-height: 26px;
+        line-height: @tab-button-main-text-line-height;
      }
      &.controls-TabButton__main-item {
         .controls-TabButton__additionalText1, .controls-TabButton__additionalText1 > * {
@@ -428,9 +428,17 @@
             vertical-align: top;
          }
       }
-      .controls-TabButton__additionalText2 .controls-EditAtPlace {
-         position: relative;
-         top: -1px;
-      }
    }
+}
+.ws-is-ie {
+  .controls-TabButton {
+    .controls-TabButton__additionalText2 .controls-EditAtPlace {
+      position: relative;
+      top: -1px;
+    }
+  }
+}
+
+.controls-TabButton__mainText.controls-EditAtPlace__ellipsis  .controls-EditAtPlace__fieldWrapper {
+   height: auto;
 }

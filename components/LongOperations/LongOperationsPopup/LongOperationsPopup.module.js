@@ -33,6 +33,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
       var LongOperationsPopup = NotificationPopup.extend({
          $protected: {
             _options: {
+               userId: UserInfo.get('Пользователь'),
                isHint: false,
                headerTemplate: headerTemplate,
                bodyTemplate: contentTpl,
@@ -102,7 +103,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
 
             var view = this._longOpList.getView();//this._longOpList.getChildControlByName('operationListDataGrid')
 
-            this.subscribeTo(view, 'onItemsReady', function () {
+            this.subscribeTo(view, 'onDrawItems'/*'onItemsReady'*/, function () {
                var items = self._longOpList.getItems();
                var count = items ? items.getCount() : 0;
                if (count) {
@@ -132,19 +133,13 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                      $ctr.removeClass(cls);
                      $ctr.animate({opacity:1}, 800);//1500
                   }
+
+                  //При перерисовке размеры могут меняться
+                  self._notify('onSizeChange');
                }
                else {
                   //Если операций нет, просто закрываем попап
                   self.close();
-               }
-            });
-
-            this.subscribeTo(view, 'onDrawItems', function () {
-               var items = self._longOpList.getItems();
-               var count = items ? items.getCount() : 0;
-               if (count) {
-                  //При перерисовке размеры могут меняться
-                  self._notify('onSizeChange');
                }
             });
 
@@ -164,7 +159,8 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                            /*###key: item.getId(),*/
                            tabKey: item.get('tabKey'),
                            producer: item.get('producer'),
-                           operationId: item.get('id')
+                           operationId: item.get('id'),
+                           isFailed: item.get('isFailed')
                         } : {
                            failedOperation: item
                         },
@@ -194,7 +190,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                      columns: {
                         userPic: false
                      },
-                     userId: UserInfo.get('Пользователь')
+                     userId: self._options.userId
                   }
                });
             });
@@ -209,13 +205,13 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
 
             container.find('.controls-LongOperationsPopup__footer_pauseIcon').on('click', function () {
                //Остановить / Запустить операцию
-               self._longOpList.applyUserAction($(this).hasClass('icon-Pause') ? 'suspend' : 'resume', self._activeOperation, true);
+               self._longOpList.applyUserAction($(this).hasClass('icon-Pause') ? 'suspend' : 'resume', self._activeOperation);
             });
 
             //Иконку запуска сделаем кликабельной, по ней будет запускать остановленная операция
             container.find('.controls-NotificationPopup__header').on('click', '.controls-LongOperationsPopup__runOperationIcon', function () {
                //Запустить операцию
-               self._longOpList.applyUserAction('resume', self._activeOperation, true);
+               self._longOpList.applyUserAction('resume', self._activeOperation);
             });
 
             //Обработчик, который применяет фильтр "Скрыть приостановленные"
@@ -361,7 +357,8 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                //Кнопка остановки / запуска операции
                var pauseIcon = this.getContainer().find('.controls-LongOperationsPopup__footer_pauseIcon');
 
-               switch (model.get('status')) {
+               var status = model.get('status');
+               switch (status) {
                   case STATUSES.running:
                      this._setHeader(title, 'default', 'icon-size icon-24 controls-LongOperationsPopup__header_icon-customIcon');
                      if (model.get('canSuspend')) {
@@ -394,7 +391,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                   this._setNotification(notification);
                }
                else {
-                  this._setProgress(model.get('progressCurrent'), model.get('progressTotal'));
+                  this._setProgress(model.get('progressCurrent'), model.get('progressTotal'), status === STATUSES.ended);
                }
 
                this._setFooterTimeSpent(model.get('shortTimeSpent'));
@@ -444,9 +441,13 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
             this.getContainer().find('.controls-LongOperationsPopup__footer').toggleClass('controls-LongOperationsPopup__footer_firstOperationMode');
          },
 
-         _setProgress: function (current, total) {
+         _setProgress: function (current, total, isEnded) {
             this._notificationContainer.addClass('ws-hidden');
             this._progressContainer.removeClass('ws-hidden');
+            if (!(0 < total)) {
+               total = 1;
+               current = isEnded ? 1 : (0 < current ? 1 : 0);
+            }
 
             /*###var message;
             if (100 <= total) {
@@ -487,8 +488,10 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
          _onOperation: function (eventType, data) {
             switch (eventType) {
                case 'onlongoperationstarted':
-                  this._animationAtStart();
-                  this._setProgress(0, data.progress ? data.progress.total : 1);
+                  if (data.isCurrentTab) {
+                     this._animationAtStart();
+                  }
+                  this._setProgress(0, data.progress ? data.progress.total : 1, false);
                   break;
 
                case 'onlongoperationchanged':
@@ -497,14 +500,14 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                      case 'status':
                         switch (data.status) {
                            case LongOperationEntry.STATUSES.running:
-                              this._setProgress(data.progress ? data.progress.value : 0, data.progress ? data.progress.total : 1);
+                              this._setProgress(data.progress ? data.progress.value : 0, data.progress ? data.progress.total : 1, false);
                            case LongOperationEntry.STATUSES.suspended:
                               break;
                         }
                         break;
                      case 'progress':
                         if (active && active.get('tabKey') === data.tabKey && active.get('producer') === data.producer && active.get('id') === data.operationId) {
-                           this._setProgress(data.progress.value, data.progress.total);
+                           this._setProgress(data.progress.value, data.progress.total, false);
                         }
                         break;
                      case 'notification':
@@ -516,9 +519,8 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                   break;
 
                case 'onlongoperationended':
-                  this._setProgress(data.progress ? data.progress.value : 1, data.progress ? data.progress.total : 1);
-                  var items = this._longOpList.getItems();
-                  var model = items ? items.getRecordById(Model.getFullId(data.tabKey, data.producer, data.operationId)) : null;
+                  this._setProgress(data.progress ? data.progress.value : 1, data.progress ? data.progress.total : 1, true);
+                  var model = this._longOpList.lookupItem(data.tabKey, data.producer, data.operationId);
                   if (model) {
                      this._activeOperation = model;
                      this._updateState();

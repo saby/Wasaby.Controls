@@ -3,10 +3,9 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
    'js!SBIS3.CONTROLS.ItemsMoveController',
    'js!WS.Data/Source/Memory',
    'Core/CommandDispatcher',
-   'Core/helpers/collection-helpers',
    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.DetailsList/resources/ItemTpl',
    'css!SBIS3.CONTROLS.FilterPanelChooser.DetailsList'
-], function(FilterPanelChooserBaseList, ItemsMoveController, Memory, CommandDispatcher, cHelpers, ItemTpl) {
+], function(FilterPanelChooserBaseList, ItemsMoveController, Memory, CommandDispatcher, ItemTpl) {
 
    'use strict';
 
@@ -108,7 +107,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
       _prepareSelectedKeys: function(items) {
          var
             result = [];
-         cHelpers.forEach(items, function(item) {
+         items.forEach(function(item) {
             result.push(item['id']);
          });
          return result;

@@ -32,10 +32,11 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
       var DEFAULTS = {
          status: STATUSES.running,
          timeSpent: 0,
+         timeIdle: 0,
          progressCurrent: 0,
          progressTotal: 1,
-         canSuspend: true,
-         canDelete: true
+         canDelete: true,
+         canSuspend: true
       };
 
       /**
@@ -49,12 +50,14 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
          producer: 'string',
          startedAt: 'Date',
          timeSpent: 'number',
+         timeIdle: 'number',
          status: 'number',
          isFailed: 'boolean',
          progressTotal: 'number',
          progressCurrent: 'number',
-         canSuspend: 'boolean',
          canDelete: 'boolean',
+         canSuspend: 'boolean',
+         resumeAsRepeat: 'boolean',
          userId: 'number',
          userUuId: 'string',
          userFirstName: 'string',
@@ -90,6 +93,7 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
           * @param {string}        options.producer Имя продюсера операции (обязательный)
           * @param {Date|number|string} options.startedAt Время начала операции (обязательный)
           * @param {number}        [options.timeSpent] Общее время выполнения (опционально, если не указано, будет использован 0)
+          * @param {number}        [options.timeIdle] Общее время простоя (опционально, если не указано, будет использован 0)
           * @param {string|number} [options.status] Статус операции. Возможные значения: 'running', 0, 'suspended', 1, 'ended', 2.
           *                                         (опционально, если не указано, будет использовано 'running')
           * @param {boolean}       [options.isFailed] Показывает, что операция завершена с ошибкой (опционально)
@@ -97,8 +101,9 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
           * @param {number}        [options.progress.total] Общее количество стадий выполнения - альтернативно
           * @param {number}        [options.progressCurrent] Текущая стадия выполнения (опционально, если не указано, будет использован 0)
           * @param {number}        [options.progress.current] Текущая стадия выполнения - альтернативно
-          * @param {boolean}       [options.canSuspend] Можно ли приостановить операцию (опционально, если не указано, будет использовано true)
           * @param {boolean}       [options.canDelete] Можно ли удалить операцию (опционально, если не указано, будет использовано true)
+          * @param {boolean}       [options.canSuspend] Можно ли приостановить (и затем возобновить) операцию (опционально, если не указано, будет использовано true)
+          * @param {boolean}       [options.resumeAsRepeat] Возобновление операции возможно только как полный повтор (не продолжение с места остановки) (опционально)
           * @param {number}        [options.userId] Идентификатор пользователя (опционально)
           * @param {number}        [options.user.id] Идентификатор пользователя (опционально)
           * @param {string}        [options.userUuId] Идентификатор пользователя в сервисе профилей (опционально)

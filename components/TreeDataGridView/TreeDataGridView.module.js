@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    "Core/core-merge",
    "Core/constants",
    'Core/CommandDispatcher',
-   'Core/helpers/dom&controls-helpers',
+   'js!SBIS3.CONTROLS.Utils.Contains',
    "js!SBIS3.CONTROLS.DataGridView",
    "tmpl!SBIS3.CONTROLS.TreeDataGridView",
    "js!SBIS3.CONTROLS.TreeMixin",
@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'js!SBIS3.CONTROLS.Link',
    'css!SBIS3.CONTROLS.TreeDataGridView',
    'css!SBIS3.CONTROLS.TreeView'
-], function( IoC, cMerge, constants, CommandDispatcher, dcHelpers, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, MassSelectionHierarchyController) {
+], function( IoC, cMerge, constants, CommandDispatcher, contains, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, MassSelectionHierarchyController) {
 
 
    var
@@ -50,6 +50,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             colorMarkEnabled: cfg.colorMarkEnabled,
             colorField: cfg.colorField,
             allowEnterToFolder: cfg.allowEnterToFolder,
+            task1173671799: cfg.task1173671799,
             colspan: cfg.columns.length,
             multiselect: cfg.multiselect
          }
@@ -216,23 +217,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
       },
 
-      _getSearchBreadCrumbsWidth: function(){
-      	var
-            firstCol = $('td:first', this._getItemsContainer()),
-      	   firstColWidth = this._options.multiselect ? firstCol.outerWidth() : 0,
-      		secondCol = firstCol.next('td'),
-      		cellPadding;
-   
-      	/* Второй колонки может и не быть, тогда считаем паддинг по первой */
-         if(!secondCol.length) {
-            secondCol = firstCol;
-         }
-   
-         cellPadding = secondCol.outerWidth() - secondCol.width();
-      	
-      	return this.getContainer().width() - cellPadding - firstColWidth;
-      },
-
       redraw: function() {
          /* Перед перерисовкой скроем стрелки редактирования, иначе будет мограние,
             т.к. после отрисовки данные полностью могу измениться */
@@ -242,9 +226,39 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if (this._getItemsProjection()) {
             this._createAllFolderFooters();
          }
-         //Если есть скролящиеся заголовки, нужно уменьшить ширину хлебных крошек в поиске до ширины таблицы
-         if ((this._options.startScrollColumn || this.getContainer().hasClass('.controls-DataGridView__tableLayout-auto')) && this._isSearchMode()){
-         	this.getContainer().find('.controls-TreeView__searchBreadCrumbs').width(this._getSearchBreadCrumbsWidth());
+         this._checkBreadCrumbsWidth();
+      },
+   
+      _afterAddItems: function() {
+         TreeDataGridView.superclass._afterAddItems.apply(this, arguments);
+         this._checkBreadCrumbsWidth();
+      },
+      
+      _checkBreadCrumbsWidth: function() {
+         /* Необходимо ограничивать ширину хлебных крошек в случае динамической ширины таблицы,
+            т.к. тогда ширину хлебных крошек никто не ограничит.
+            Динамическая ширина таблицы включается, когда:
+            - Включен частичный скролл.
+            - Висит модификатор controls-DataGridView__tableLayout-auto, который вешает table-layout: auto на таблицу,
+              и таблица может вылезать за пределы контенера контрола. */
+         if ((this._options.startScrollColumn || this.getContainer().hasClass('controls-DataGridView__tableLayout-auto')) && this._isSearchMode()){
+            var breadCrumbs = this.getContainer().find('.controls-TreeView__searchBreadCrumbs'),
+                firstCol, firstColWidth, secondCol, cellPadding;
+            
+            if(breadCrumbs.length) {
+               firstCol = $('td:first', this._getItemsContainer());
+               firstColWidth = this._options.multiselect ? firstCol.outerWidth() : 0;
+               secondCol = firstCol.next('td');
+   
+               /* Второй колонки может и не быть, тогда считаем паддинг по первой */
+               if(!secondCol.length) {
+                  secondCol = firstCol;
+               }
+               
+               cellPadding = secondCol.outerWidth() - secondCol.width();
+               
+               breadCrumbs.width(this.getContainer().width() - cellPadding - firstColWidth);
+            }
          }
       },
 
@@ -516,7 +530,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var res = TreeDataGridView.superclass._isHoverControl.apply(this, arguments);
 
          if(!res && (this._options.editArrow || this._options.arrowActivatedHandler)) {
-            return dcHelpers.contains(this.getEditArrow().getContainer()[0], target[0]);
+            return contains(this.getEditArrow().getContainer()[0], target[0]);
          }
          return res;
       },

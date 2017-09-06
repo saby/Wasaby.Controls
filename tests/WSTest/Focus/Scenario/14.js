@@ -38,6 +38,6 @@ define('js!WSTest/Focus/Scenario/14', [
          wnd.destroy();
          delete window[caseControlName];
          done();
-      }, 10);
+      }, 100);
    };
 });

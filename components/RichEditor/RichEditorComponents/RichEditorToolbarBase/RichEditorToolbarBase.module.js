@@ -3,10 +3,10 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
    "Core/core-merge",
    "Core/EventBus",
    "js!SBIS3.CONTROLS.ButtonGroupBase",
-   'Core/helpers/string-helpers',
+   'Core/helpers/String/escapeHtml',
    'js!SBIS3.CONTROLS.StylesPanelNew',
    'css!SBIS3.CONTROLS.RichEditorToolbarBase'
-], function( cFunctions, cMerge, EventBus, ButtonGroupBase, strHelpers, StylesPanel) {
+], function( cFunctions, cMerge, EventBus, ButtonGroupBase, escapeHtml, StylesPanel) {
 
    'use strict';
 
@@ -198,7 +198,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                      var smileName = $(this).attr('title');
                      $(this).replaceWith('[' + (smileName ? smileName : rk('смайл')) +']');
                   });
-                  stripText = title = strHelpers.escapeHtml($tmpDiv.text());
+                  stripText = title = escapeHtml($tmpDiv.text());
                   stripText = stripText.replace('/\n/gi', '');
                   if (!stripText && value) {
                      stripText = rk('Контент содержит только html-разметку, без текста.');

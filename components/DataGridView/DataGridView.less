@@ -55,6 +55,8 @@
          .controls-DataGridView__tr:nth-last-child(1){
             .controls-DataGridView__td {
                border-bottom-color: @data-grid-edge-cell-separator-color;
+               line-height: @data-grid-edge-cell-separator-line-height;
+               padding-bottom: @data-grid-edge-cell-separator-bottom-padding;
             }
          }
          &.controls-DataGridView__resultsBottom {
@@ -324,30 +326,6 @@
    vertical-align: bottom;
 }
 
-.controls-DataGridView.controls-ListView__touchMode:not(.controls-ListView__disableHover) {
-   .controls-DataGridView__tr {
-      &.controls-ListView__hoveredItem {
-         &:not(.controls-ItemActions__activeItem) {
-            background: @data-grid-row-hover-bg-mobile;
-
-            .controls-DataGridView__th {
-               color: @data-grid-row-hover-header-cell-text-color;
-               background-color: @data-grid-row-hover-bg-mobile;
-            }
-            .controls-DataGridView__td {
-               color: @data-grid-row-hover-cell-text-color;
-               background-color: @data-grid-row-hover-bg-mobile;
-            }
-         }
-         &.controls-ListView__item__multiSelected{
-           .controls-DataGridView__td, .controls-DataGridView__thead .controls-DataGridView__th {
-             background-color: @data-grid-row-selected-bg;
-           }
-         }
-      }
-
-   }
-}
 /* Отступы для классов .controls-ListView__padding-XS|S|M|L|XL */
 .generate-padding-class-DGV(@i: 1) when (@i =< length(@controls-view-padding-variants)) {
    @val: extract(@controls-view-padding-variants, @i);
@@ -423,11 +401,9 @@
 }
 
 .controls-DataGridView__scrollingNow {
-  .controls-DataGridView__thead {
-    .controls-DataGridView__scrolledCell {
-      .closedHandCursor();
-    }
-  }
+   .controls-DataGridView__scrolledCell, .controls-DataGridView__PartScroll__thumb {
+      will-change: transform;
+   }
 }
 /****************************************/
 
@@ -470,7 +446,7 @@
       }
       font-size: @data-grid-header-cell-font-size;
       .controls-Button__icon {
-         .icon-size(@data-grid-header-cell-font-size);
+         .icon-size(@data-grid-header-cell-icon-size);
       }
    }
 }

@@ -4,8 +4,8 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
    "Core/core-functions",
    "Core/ConsoleLogger",
    "Core/Deferred",
-   "Core/helpers/string-helpers"
-], function ( constants, IoC, cFunctions, ConsoleLogger, Deferred, strHelpers) {
+   "Core/helpers/String/escapeHtml"
+], function ( constants, IoC, cFunctions, ConsoleLogger, Deferred, escapeHtml) {
    /**
     * Миксин, который добавляет функционал валидаторов.
     * Подробнее о работе с валидаторами вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/">Валидация вводимых данных</a>.
@@ -108,6 +108,9 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
             } else {
                return message;
             }
+         },
+         _getExtendedTooltipModifiers: function() {
+            return this.isMarked() ? 'ws-infobox-type-error' : '';
          }
       },
       before: {
@@ -249,7 +252,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
          }
 
          if (message) {
-            messageBox.find('.ws-warning-message-text').html(strHelpers.escapeHtml(message));
+            messageBox.find('.ws-warning-message-text').html(escapeHtml(message));
          }
          try {
             if (settings) {
@@ -346,6 +349,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
                      control: target,
                      message: this._alterTooltipText(),
                      delay: 0,
+                     modifiers: 'ws-infobox-type-error',
                      hideDelay: this._infobox.ACT_CTRL_HIDE_TIMEOUT
                   });
                }
@@ -520,9 +524,11 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
        * @see onValidate
        */
       addValidators: function (validators) {
-         if (validators && Object.prototype.toString.apply(validators) == '[object Array]') {
-            Array.prototype.push.apply(this._options.validators, validators);
-         }
+         // Создаем новый массив содержащий старые и переданные валидаторы. При создании компонента опции передаются
+         // по ссылке. Если модифицировать существующий массив, то возможны ошибки если передаваемый в опции
+         // массив используется повторно или в других компонентах.
+         this._options.validators = this._options.validators.slice();
+         Array.prototype.push.apply(this._options.validators, validators);
       }
    };
 

@@ -105,7 +105,7 @@ define([
       describe('.beginDrag', function () {
          it('should not begin drag', function () {
             var dragMove = new DragMove({
-                  view: new ListView()
+                  view: new ListView({})
                });
             DragObject._jsEvent = {
                type: "mouseUp",
@@ -204,11 +204,19 @@ define([
             var target = DragObject.getTarget();
             assert.equal(target.getOwner(), view);
          });
-         it('should be clear target if view cant found target and old targets owner this view', function () {
+         it('should clear target if view cant found target and old targets owner this view', function () {
             dragMove.updateTarget();
             event.target = $('<div/>');
             dragMove.updateTarget();
             assert.isUndefined(DragObject.getTarget());
+         });
+         it('should not clear target if target is placeholder', function () {
+            dragMove._options.useDragPlaceHolder = true;
+            dragMove.updateTarget();
+            var dTarget = DragObject.getTarget();
+            event.target = $(event.target).clone().addClass('controls-DragNDrop__placeholder');
+            dragMove.updateTarget();
+            assert.equal(dTarget, DragObject.getTarget());
          });
       });
       describe('._canDragMove', function () {
@@ -388,6 +396,23 @@ define([
             dragMove._drawDragHighlight(dragTarget);
             assert.isFalse(dragTarget.getDomElement().hasClass('controls-DragNDrop__insertAfter'));
             assert.isFalse(dragTarget.getDomElement().hasClass('controls-DragNDrop__insertAfter'));
+         });
+      });
+      describe('._makeDragplaceHolder', function () {
+         beforeEach(function () {
+            if (dragMove) {
+               dragMove.beginDrag();
+               dragMove._options.useDragPlaceHolder = true;
+            }
+         });
+         it('should make placeholder', function () {
+            dragMove._makeDragPlaceHolder();
+            assert.equal(view.getContainer().find('.controls-DragNDrop__placeholder').length, 1);
+         });
+         it('should clear data tags', function () {
+            dragMove._makeDragPlaceHolder();
+            assert.isUndefined(dragMove._dragPlaceHolder.data('id'));
+            assert.isUndefined(dragMove._dragPlaceHolder.data('hash'));
          });
       });
       describe('DragPositioner', function () {

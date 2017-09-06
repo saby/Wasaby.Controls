@@ -151,6 +151,13 @@
   border: none;
   padding: 0;
 }
+.button-wrapper-default-style() {
+  .inline-flexbox();
+  box-sizing: border-box;
+  height: 100%;
+  width: 100%;
+  .align-items(center);
+}
 
 .baseline-fix(@height: auto) {
   &:before {
@@ -289,6 +296,7 @@
   -ms-flex-wrap: @wrap;
   -webkit-flex-wrap: @wrap;
 }
+// Use .flex-shrink() forced: in IE10-11 flex-shrink is 0 by default (1 is default value defined in the specification)
 .flex-shrink(@shrink: 1) {
    -webkit-flex-shrink: @shrink;
    -ms-flex-negative: @shrink; //ie10
@@ -571,7 +579,7 @@
   .for(@_i: 1, @array, @callback);
 }
 
-.for(@array, @callback) when (default()) {
+.for(@array, @callback) when not (isnumber(@array)) {
   .for-recursive(@array, length(@array), @callback);
 }
 

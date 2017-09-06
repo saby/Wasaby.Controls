@@ -2,8 +2,8 @@
             {{ multiselect !== false ? 'controls-ListView__multiselect' : 'controls-ListView__multiselect__off' }}
             {{ startScrollColumn !== undefined ? 'controls-DataGridView__with-partScroll' }}
             {{ 'controls-CompositeView-' + viewMode }}
-            {{ viewMode === 'tile' ? ('controls-CompositeView-tile__' + tileMode) }}">
-   <ws:SBIS3.CONTROLS.Panel tabindex="{{1}}" class="controls-ListView__fakeFocusElement"/>
+            {{ viewMode === 'tile' ? ('controls-CompositeView-tile__' + tileMode) }}{{ _serverRender ? ' controls-ListView__dataLoaded'}}">
+   <ws:SBIS3.CONTROLS.Panel tabindex="{{1}}" class="controls-ListView__fakeFocusElement" allowChangeEnable="{{false}}"/>
    <div class="controls-AjaxLoader ws-hidden">
       <div class="controls-AjaxLoader__outer">
          <div class="controls-AjaxLoader__block">
@@ -11,6 +11,9 @@
          </div>
       </div>
    </div>
+   <ws:if data="{{ virtualScrolling }}">
+      <div class="controls-ListView__virtualScrollTop"></div>
+   </ws:if>
    <div class="controls-CompositeView__itemsContainer {{ viewMode == 'table' ? 'ws-hidden' }}">
       <ws:if data="{{ _serverRender }}">
          <ws:partial template="{{_compositeItemsTemplate}}" records="{{ _records }}" tplData="{{ _itemData }}"/>
@@ -57,6 +60,9 @@
             <span class="controls-ListView__counterValue"></span>
          </span>
       </div>
+   </ws:if>
+   <ws:if data="{{ virtualScrolling }}">
+      <div class="controls-ListView__virtualScrollBottom"></div>
    </ws:if>
    <div class="controls-ListView-scrollIndicator {{infiniteScroll === 'up' ? 'controls-ListView-scrollIndicator__up' : ''}}"></div>
    <div class="controls-ListView__ItemsToolbar-container ws-hidden"></div>

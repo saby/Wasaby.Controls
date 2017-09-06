@@ -9,7 +9,6 @@
   height: 24px;
   line-height: 24px;
   user-select: none;
-  .baseline-fix();
 
   .controls-Button__text {
     display: none;
@@ -55,6 +54,7 @@
   }
 
   &.ws-disabled {
+    cursor: default;
     .controls-Button__icon {
       color: @icon-color-disabled;
     }

@@ -5,12 +5,22 @@ define('js!SBIS3.CONTROLS.Spoiler', [
    'tmpl!SBIS3.CONTROLS.Spoiler',
    'tmpl!SBIS3.CONTROLS.Spoiler/resources/LeftPartTitleTemplate',
    'tmpl!SBIS3.CONTROLS.Spoiler/resources/MiddlePartTitleTemplate',
-   'Core/helpers/collection-helpers',
-   'Core/helpers/dom&controls-helpers',
+   'js!SBIS3.CONTROLS.Utils.Contains',
    'css!SBIS3.CONTROLS.Spoiler'
-], function(WSButtonBase, Expandable, TemplateUtil, dotTplFn, LeftPartTitleTemplate, MiddlePartTitleTemplate, colHelpers, dcHelpers) {
+], function(WSButtonBase, Expandable, TemplateUtil, dotTplFn, LeftPartTitleTemplate, MiddlePartTitleTemplate, contains) {
 
    'use strict';
+
+    var findControlsInContainer = function(container) {
+        var controls = [];
+        $('[data-component]', container).each(function (idx, item) {
+            var inst = item.wsControl;
+            if (inst) {
+                controls.push(inst);
+            }
+        });
+        return controls;
+    };
 
    /**
     * Контрол, отображающий переключаемую область (спойлер).
@@ -153,16 +163,16 @@ define('js!SBIS3.CONTROLS.Spoiler', [
          this.reviveComponents();
       },
       _destroyContent: function() {
-         colHelpers.forEach(dcHelpers.findControlsInContainer(this._getContentContainer()), function(item) {
+         findControlsInContainer(this._getContentContainer()).forEach(function(item) {
             item.destroy();
          });
-         dcHelpers.clearContainer(this._getContentContainer());
+         this._getContentContainer().get(0).innerHTML = '';
       },
       _notifyOnActivated: function(originalEvent){
          var
             titleContainer = this._getTitleContainer()[0];
          Spoiler.superclass._notifyOnActivated.apply(this, arguments);
-         if (originalEvent.target === titleContainer || dcHelpers.contains(titleContainer, originalEvent.target)) {
+         if (originalEvent.target === titleContainer || contains(titleContainer, originalEvent.target)) {
             this.toggleExpanded();
          }
       }

@@ -1,12 +1,9 @@
 /**
  * Created by am.gerasimov on 06.05.2016.
  */
-/**
- * Модуль для преобразования текста введенного в неверной раскладке
- */
 define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil',
-    ['Core/helpers/collection-helpers'],
-    function (colHelpers) {
+    [],
+    function () {
        'use strict';
 
        var SEARCH_SOURCE_CONFIG = {
@@ -15,8 +12,20 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil',
              query: 'TranslitSearchProxyCall'
           }
        };
-
-       return {
+        /**
+         * Модуль для преобразования текста, введенного в неверной раскладке. Если передатьь текст в кириллице, то он преобразуется в латиницу.
+         * Модуль поставляет единственный метод статический метод {@link #process}.
+         * @class SBIS3.CONTROLS.Utils.KbLayoutRevertUtil
+         * @public
+         * @example
+         * <pre>
+         * define(..., ['js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil'], function(KbLayoutRevertUtil) {
+         *    ...
+         *    var res = KbLayoutRevertUtil.process(someString);
+         * });
+         * </pre>
+         */
+       return /** @lends SBIS3.CONTROLS.Utils.KbLayoutRevertUtil.prototype SBIS3.CONTROLS.Utils.KbLayoutRevertUtil */{
           _layouts :
           {
              "ru-en" : "йцукенгшщзхъфывапролджэячсмитьбюЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮqwertyuiop[]asdfghjkl;'zxcvbnm,.QWERTYUIOP{}ASDFGHJKL:\"ZXCVBNM<>"
@@ -102,7 +111,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil',
                  dir,
                  wordsConv = [];
 
-             colHelpers.forEach(words, function(word) {
+             words.forEach(function(word) {
 
                 if(!word) {
                    wordsConv.push({ word : ' '});
@@ -135,14 +144,15 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil',
           },
           /**
            * Проецирует текст введенный в одной раскладке в другую раскладку. Успешно обрабатываются только те случаи, когда каждое слово введено в ошибочной раскладке.
-           *
-           * ghbdtn, Fktrc! => привет, Алекс!       OK
-           * ghbdtn, Фдуч! => привет, Alex!         OK (в процессе ввода была смена раскладки, но оба слова введены в ошибочной раскладке)
-           * ghbdtn, Alex! => привет, Флуч!         BAD (по смыслу второе слово введено верно)
-           *
-           * @param {string} text          текст для преобразования
-           * @param {string} [layoutId]    идентификатор раскладки. Если не указан определяет сам
-           * @returns {string}
+           * @param {String} text Текст для преобразования.
+           * @param {String} [layoutId] Идентификатор раскладки. Если не указан, определяет сам.
+           * @returns {String}
+           * @example
+           * <pre>
+           *    ghbdtn, Fktrc! => привет, Алекс!       OK
+           *    ghbdtn, Фдуч! => привет, Alex!         OK (в процессе ввода была смена раскладки, но оба слова введены в ошибочной раскладке)
+           *    ghbdtn, Alex! => привет, Флуч!         BAD (по смыслу второе слово введено верно)
+           * </pre>
            */
           process : function(text, layoutId) {
 
@@ -157,7 +167,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil',
                  layoutMap = (directionByWorld.direction  === 1) ? layoutObj.straight : layoutObj.reverse,
                  result = '';
 
-             colHelpers.forEach(directionByWorld.words, function(wordDef) {
+             directionByWorld.words.forEach(function(wordDef) {
 
                 var word = wordDef.word;
 

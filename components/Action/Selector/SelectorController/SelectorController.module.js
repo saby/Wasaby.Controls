@@ -5,7 +5,6 @@ define('js!SBIS3.CONTROLS.SelectorController', [
    "Core/CommandDispatcher",
    "js!SBIS3.CORE.CompoundControl",
    "js!WS.Data/Di",
-   "Core/helpers/collection-helpers",
    "Core/core-instance",
    "Core/core-merge",
    "Core/core-functions",
@@ -16,7 +15,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
    "js!WS.Data/Collection/List",
    "js!SBIS3.CONTROLS.SelectorWrapper"
 ],
-    function (CommandDispatcher, CompoundControl, Di, collectionHelpers, cInstance, cMerge, cFunctions, Record, SbisService, Query, OpenDialogUtil, List) {
+    function (CommandDispatcher, CompoundControl, Di, cInstance, cMerge, cFunctions, Record, SbisService, Query, OpenDialogUtil, List) {
 
        'use strict';
 
@@ -167,14 +166,14 @@ define('js!SBIS3.CONTROLS.SelectorController', [
              }
 
              if(difference.removed.length) {
-                collectionHelpers.forEach(difference.removed, function (removedKey) {
+                difference.removed.forEach(function(removedKey) {
                    currentItems.removeAt(currentItems.getIndexByValue(idProperty, removedKey));
                 });
                 onChangeSelection();
              }
 
              if(difference.added.length) {
-                collectionHelpers.forEach(difference.added, function(item) {
+                difference.added.forEach(function(item) {
                    var index = currentItems.getIndexByValue(idProperty, item.get(idProperty));
 
                    if(currentItems.getCount() && !multiselect && index === -1) {
@@ -199,16 +198,25 @@ define('js!SBIS3.CONTROLS.SelectorController', [
             * @see selectorWrapperInitialized
             * @see selectorWrapperSelectionChanged
             */
-          _selectComplete: function() {
+          _selectComplete: function(item) {
              var
                 list,
                 filter,
+                selection,
                 dataSource,
                 self = this;
-             if (this._linkedObject._options.useSelectAll) {
+             if (this._linkedObject && this._linkedObject._options.useSelectAll) {
                 filter = cFunctions.clone(this._linkedObject.getFilter());
                 dataSource = this._linkedObject.getDataSource();
-                filter['selection'] = Record.fromObject(this._linkedObject.getSelection(), dataSource.getAdapter());
+                //Закончить выбор элементов можно двумя способами:
+                //1) Нажать кнопку "Выбрать" в шапке диалога;
+                //2) Нажать на кнопку "Выбрать" в опциях над записью у элемента таблицы, либо кликом по элементу таблицы.
+                //В первом случае элементы выборки мы получим исходя из состояния выделения в таблице.
+                //Во стором случае, элемент который был выбран, придёт аргументом в этот обработчик, и в выборку мы добавим только его.
+                selection = cInstance.instanceOfModule(item, 'WS.Data/Entity/Model') ? {
+                   marked: [item.get(this._linkedObject.getProperty('idProperty'))], excluded: []
+                } : this._linkedObject.getSelection();
+                filter['selection'] = Record.fromObject(selection, dataSource.getAdapter());
                 Query(dataSource, [filter]).addCallback(function(recordSet) {
                    list = new List();
                    list.assign(recordSet.getAll());
@@ -228,15 +236,15 @@ define('js!SBIS3.CONTROLS.SelectorController', [
           return OpenDialogUtil.getOptionsFromProto(this, opt);
        };
 
-       SelectorController.prototype.getItemsFromSource = function (opt) {
+       SelectorController.prototype.getItemsFromSource = function (opt, metaOpts) {
           var options = this.getComponentOptions(opt),
               dataSource = options.dataSource;
 
           return Query(dataSource, [
-             options.hasOwnProperty('filter') ? options.filter : {},
-             options.hasOwnProperty('sorting') ? options.sorting : {},
+             options.filter ? options.filter : metaOpts.filter || {}, // Фильтр может быть задан не на прототипе, а передан в мета информации для action'a, т.к. определяется динамически
+             options.sorting ? options.sorting : {},
              0,
-             options.hasOwnProperty('pageSize') ? options.pageSize : 25]);
+             options.pageSize ? options.pageSize : 25]);
        };
 
        return SelectorController;

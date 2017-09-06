@@ -2,11 +2,6 @@
 .controls-ListView {
     position: relative;
 
-   // Нельзя устанавливать минимальную высоту для копии таблицы которая используется для фиксации заголовков
-   &:not(.controls-ListView__dataLoaded):not(.ws-sticky-header__table-header-copy) {
-      min-height: @list-view-min-height;
-   }
-
   .controls-ListView__item {
     overflow: hidden;
     position: relative;
@@ -160,9 +155,7 @@
    }
 }
 
-.controls-ListView__indicatorVisible:not(.ws-sticky-header__table-header-copy) {
-   min-height: @list-view-scroll-height + @data-grid-header-cell-height; // Высота индикатор скрола + высота ячейки шапки, чтобы при подгрузке скролл не скрывался под шапкой
-
+.controls-ListView__indicatorVisible {
     > .controls-ListView-scrollIndicator {
       display: block;
    }
@@ -204,7 +197,6 @@
    left: @controls-AjaxLoader-default-cord;
    right: @controls-AjaxLoader-default-cord;
    width: 100%;
-   height: 100%;
    z-index: @controls-AjaxLoader-zIndex;
    overflow: hidden;
    min-height: @controls-AjaxLoader-minHeight;
@@ -214,6 +206,11 @@
          display: block;
       }
    }
+}
+// На webkit из-за особенностей верстки в данном месте, несмотря на то что у абсолютно спозиционированного
+// контенера заданы top и bottom, высота все равно равна 0 а не высоте контенера. Устанавливаем высоту через height: 100%;
+.ws-is-webkit .controls-AjaxLoader {
+   height: 100%;
 }
 
 .controls-AjaxLoader__outer{
@@ -374,6 +371,7 @@
    background: #fff;
    color: @list-view-separator-content-color;
    font-size: @list-view-separator-content-size;
+   white-space: nowrap;
    &.controls-GroupBy__separatorCollapse{
       cursor: pointer;
       &:before {
