@@ -142,6 +142,12 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
       },
 
       _showHistory: function () {
+         //Если запрос уже идет, то не нужно делать повторный.
+         //Сейчас метод показа истории может вызываться несколько раз из-за проблем с фокусами.
+         //Проблема плавающая, поэтому постави доп защиту здесь от множественного вызова БЛ
+         if (this._historyDeferred) {
+            return;
+         }
          this._getHistoryRecordSet().addCallback(function (rs) {
             if (rs.getCount()) {
                this.getList().setItems(rs);
@@ -170,10 +176,10 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
              query = this._getQueryForHistory(),
              queryFilter = query.getWhere()[this._getListIdProperty()],
              pd = new ParallelDeferred(),
+             self = this,
              beforeLoadHistoryResult,
              historyRS;
 
-         this._cancelHistoryDeferred();
          beforeLoadHistoryResult = this._notify('onBeforeLoadHistory', queryFilter);
 
          //Если в нашей истории нет данных, не делаем лишний запрос
@@ -193,14 +199,17 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             historyRS = new RecordSet({
                adapter: listSource.getAdapter(),
                rawData: result[0] ? result[0].getRawData() : [],
-               idProperty: this.getList().getProperty('idProperty'),
+               idProperty: self.getList().getProperty('idProperty'),
                model: listSource.getModel()
             });
             if (result[1]) {
                historyRS.assign(result[1].getAll());
             }
             return historyRS;
-         }.bind(this));
+         }).addBoth(function(result) {
+            self._historyDeferred = null;
+            return result;
+         });
       },
       _getQueryForHistory: function() {
          var query = new Query(),
@@ -228,11 +237,6 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
       },
       _getListIdProperty: function() {
          return this.getList().getDataSource().getIdProperty() || this.getList().getProperty('idProperty');
-      },
-      _cancelHistoryDeferred: function() {
-         if (this._historyDeferred){
-            this._historyDeferred.cancel();
-         }
       },
       _needShowHistory: function(){
          return this._historyController && !this.getText().length && this._options.startChar; //Если startChar = 0, историю показывать не нужно
@@ -302,7 +306,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
 
       before: {
          hidePicker: function() {
-            this._cancelHistoryDeferred();
+            if (this._historyDeferred){
+               this._historyDeferred.cancel();
+            }
          },
          _setTextByKeyboard: function () {
             /* Этот флаг надо выставлять только когда текст изменён с клавиатуры,
