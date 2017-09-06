@@ -1258,12 +1258,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             // При добавлении новых элементов восстанавливаем раскрытые узлы, т.к. записи, необходимые для восстановления
             // состояния дерева могут придти и на второй странице
             // https://inside.tensor.ru/opendoc.html?guid=4f8e94ac-6303-4878-b608-8d17a54d8bd5&des=
-            var
-               projection = this._getItemsProjection(),
-               projectionFilter = resetFilterAndStopEventRaising(projection, true);
-            applyExpandToItemsProjection(projection, this._options);
-            restoreFilterAndRunEventRaising(projection, projectionFilter, true);
-
+            applyExpandToItemsProjection(this._getItemsProjection(), this._options);
          },
          _stateResetHandler: function () {
             // сохраняем текущую страницу при проваливании в папку
