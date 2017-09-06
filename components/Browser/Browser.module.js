@@ -3,11 +3,10 @@ define('js!SBIS3.CONTROLS.Browser', [
    'tmpl!SBIS3.CONTROLS.Browser',
    'js!SBIS3.CONTROLS.ComponentBinder',
    'js!SBIS3.CONTROLS.ColumnsController',
-   'Core/core-merge',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'Core/core-instance',
    'Core/helpers/Object/find'
-], function(CompoundControl, dotTplFn, ComponentBinder, ColumnsController, cMerge, tplUtil, cInstance, cFind){
+], function(CompoundControl, dotTplFn, ComponentBinder, ColumnsController, tplUtil, cInstance, cFind){
    'use strict';
 
    /**

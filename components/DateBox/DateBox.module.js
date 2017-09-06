@@ -5,7 +5,6 @@ define(
    'js!SBIS3.CONTROLS.DateBox',
    [
       'Core/IoC',
-      'Core/ConsoleLogger',
       'Core/constants',
       'js!SBIS3.CONTROLS.FormattedTextBoxBase',
       'js!SBIS3.CONTROLS.Utils.DateUtil',
@@ -17,7 +16,7 @@ define(
       'css!SBIS3.CONTROLS.DateBox'
       // 'i18n!SBIS3.CONTROLS.DateBox'
    ],
-   function (IoC, ConsoleLogger, constants, FormattedTextBoxBase, DateUtil, dotTplFn, FormWidgetMixin, ControlsValidators) {
+   function (IoC, constants, FormattedTextBoxBase, DateUtil, dotTplFn, FormWidgetMixin, ControlsValidators) {
 
    'use strict';
 

@@ -33,7 +33,6 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.Link',
    'js!SBIS3.CONTROLS.ScrollWatcher',
    'js!WS.Data/Collection/IBind',
-   'js!WS.Data/Collection/List',
    'tmpl!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
    'tmpl!SBIS3.CONTROLS.ListView/resources/emptyData',
    'tmpl!SBIS3.CONTROLS.ListView/resources/ItemTemplate',
@@ -69,7 +68,7 @@ define('js!SBIS3.CONTROLS.ListView',
    function (cMerge, cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents, LayoutManager, mHelpers,
-    Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
+    Link, ScrollWatcher, IBindCollection, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
     Paging, ComponentBinder, Di, ArraySimpleValuesUtil, cInstance, fHelpers, trackElement, isElementVisible, contains, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove) {
      'use strict';
 
