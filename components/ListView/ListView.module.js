@@ -1343,9 +1343,7 @@ define('js!SBIS3.CONTROLS.ListView',
                recordItems = this.getItems(),
                recordIndex = recordItems.getIndexByValue(recordItems.getIdProperty(), id),
                itemsProjection = this._getItemsProjection(),
-               selectedInstanceId = recordIndex !== -1 ? itemsProjection.getItemBySourceIndex(recordIndex).getInstanceId() : -1,
-               selectedItem = $('[data-hash="' + selectedInstanceId + '"]', this._getItemsContainer()),
-               index = items.index(selectedItem),
+               index = recordIndex !== -1 ? items.index(this._getDomElementByItem(itemsProjection.getItemBySourceIndex(recordIndex))) : -1,
                siblingItem;
             if (isNext) {
                if (index + 1 < items.length) {
@@ -1359,10 +1357,9 @@ define('js!SBIS3.CONTROLS.ListView',
             } else {
                siblingItem = items.eq(index);
             }
-            if (siblingItem)
+            if (siblingItem) {
                return this.getItems().getRecordById(siblingItem.data('id')) ? siblingItem : this._getHtmlItemByDOM(siblingItem.data('id'), isNext);
-            else
-               return undefined;
+            }
          },
          _isViewElement: function (elem) {
             return  contains(this._getItemsContainer()[0], elem[0]);
