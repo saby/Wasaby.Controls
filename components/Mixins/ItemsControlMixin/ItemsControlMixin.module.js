@@ -1,9 +1,7 @@
 define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "Core/core-functions",
-   "Core/constants",
    "Core/Deferred",
    "Core/IoC",
-   "Core/ConsoleLogger",
    "js!WS.Data/Source/Memory",
    "js!WS.Data/Source/SbisService",
    "js!WS.Data/Collection/RecordSet",
@@ -30,10 +28,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "Core/helpers/Function/debounce"
 ], function (
    cFunctions,
-   constants,
    Deferred,
    IoC,
-   ConsoleLogger,
    MemorySource,
    SbisService,
    RecordSet,

@@ -6,13 +6,12 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
    'js!SBIS3.CONTROLS.RichEditorToolbarBase',
    'tmpl!SBIS3.CONTROLS.RichEditorRoundToolbar',
    'js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
-   'js!SBIS3.CONTROLS.FloatArea',
    'js!WS.Data/Di',
    'js!SBIS3.CONTROLS.MenuIcon',
    'js!SBIS3.CONTROLS.IconButton',
    'css!SBIS3.CONTROLS.RichEditorRoundToolbar',
    'js!SBIS3.CONTROLS.IconButton'
-], function(RichEditorToolbarBase, dotTplFn, defaultConfig, FloatArea, Di) {
+], function(RichEditorToolbarBase, dotTplFn, defaultConfig, Di) {
 
    'use strict';
    var
