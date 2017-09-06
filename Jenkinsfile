@@ -52,8 +52,8 @@ node('controls') {
         def items = "controls:${workspace}/controls"
         def branch_atf = params.branch_atf
         def branch_engine = params.branch_engine
-        def inte = params.run_reg
-        def regr = params.run_int
+        def inte = params.run_int
+        def regr = params.run_reg
         def unit = params.run_unit
 
         stage("Checkout"){
