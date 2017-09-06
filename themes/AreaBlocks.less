@@ -1,4 +1,3 @@
-@size: 3px;
 & {
   @margin-row: -@border-col;
   @border-col: @spacing-between-blocks / 2;
@@ -9,6 +8,11 @@
     &area {
       overflow: hidden;
       background: @default-border-color;
+      &_topOffset {
+        > .ws-areaBlocks__row:first-child {
+          margin-top: @border-col;
+        }
+      }
     }
     &row {
       margin-left: @margin-row;
@@ -19,11 +23,8 @@
         content: " ";
         display: table;
       }
-      &:first-child {
-        margin-top: @margin-row;
-      }
-      &:last-child {
-        margin-bottom: @margin-row;
+      &:not(:last-child) {
+        margin-bottom: @spacing-between-blocks;
       }
       &-rebuild {
         .flexbox();
@@ -32,7 +33,9 @@
     }
     &col {
       float: left;
-      border: @border-col @default-border-style @default-border-color;
+      border-width: 0 @border-col;
+      border-color: @default-border-color;
+      border-style: @default-border-style;
       .box-sizing();
     }
     // Модификаторы цвета блоков ws-areaBlocks__col_bg, ..., ws-areaBlocks__col_hover.
