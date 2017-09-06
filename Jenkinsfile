@@ -40,11 +40,7 @@ if ( "${env.BUILD_NUMBER}" != "1" && params.run_reg == false && params.run_int =
         currentBuild.result = 'ABORTED'
         error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
     }
-if ( "${env.BUILD_NUMBER}" == "1" ) {
-    def params.run_int = true
-    def params.run_reg = true
-    def params.run_unit = true
-}
+
 node('controls') {
     def version = "3.17.110"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
