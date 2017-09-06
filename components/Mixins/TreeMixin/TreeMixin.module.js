@@ -294,7 +294,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    },
    applyExpandToItemsProjection = function(projection, cfg) {
       var idx, item;
-      projection.setEventRaising(false, true);
       for (idx in cfg.openedPath) {
          if (cfg.openedPath.hasOwnProperty(idx)) {
             item = projection.getItemBySourceItem(cfg._items.getRecordById(idx));
@@ -319,7 +318,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             }
          }
       }
-      projection.setEventRaising(true, true);
    },
    applyFilterToProjection = function(projection, cfg) {
       var
@@ -1260,7 +1258,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             // При добавлении новых элементов восстанавливаем раскрытые узлы, т.к. записи, необходимые для восстановления
             // состояния дерева могут придти и на второй странице
             // https://inside.tensor.ru/opendoc.html?guid=4f8e94ac-6303-4878-b608-8d17a54d8bd5&des=
-            applyExpandToItemsProjection(this._getItemsProjection(), this._options);
+            var
+               projection = this._getItemsProjection(),
+               projectionFilter = resetFilterAndStopEventRaising(projection, true);
+            applyExpandToItemsProjection(projection, this._options);
+            restoreFilterAndRunEventRaising(projection, projectionFilter, true);
+
          },
          _stateResetHandler: function () {
             // сохраняем текущую страницу при проваливании в папку
