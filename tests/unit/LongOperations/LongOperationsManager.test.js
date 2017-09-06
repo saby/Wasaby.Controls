@@ -4,18 +4,53 @@ define([
       'js!SBIS3.CONTROLS.GenericLongOperationsProducer',
       'js!SBIS3.CONTROLS.ILongOperationsProducer',
       'Core/core-extend',
-      'js!WS.Data/Entity/ObservableMixin'
+      'js!WS.Data/Entity/ObservableMixin',
+      'Core/UserInfo'
    ],
 
-   function (longOperationsManager, GenericLongOperationsProducer, ILongOperationsProducer, CoreExtend, ObservableMixin) {
+   function (longOperationsManager, GenericLongOperationsProducer, ILongOperationsProducer, CoreExtend, ObservableMixin, UserInfo) {
       'use strict';
 
-      //TODO Поддержать выполнение тестов под node!
-      if (typeof window === 'undefined') {
-         return;
+      if (typeof mocha !== 'undefined') {
+         mocha.setup({/*ignoreLeaks:true,*/ globals:[/*'*',*/ '__extends', 'sharedBusDebug', 'sharedBusLog']});
       }
 
-      mocha.setup({/*ignoreLeaks:true,*/ globals:[/*'*',*/ '__extends', 'sharedBusDebug', 'sharedBusLog']});
+      var IS_NODEJS = typeof process !== 'undefined';
+
+      var userInfo = {
+         'Пользователь': 861523,
+         'ИдентификаторСервисаПрофилей': '8cab8a51-da51-40fd-bef3-6f090edbdeaa'
+      };
+
+      var globalFixes;
+      if (IS_NODEJS) {
+         globalFixes = {};
+         var _localStorage = {
+            _data: {},
+            get length () {
+               return Object.keys(this._data).length;
+            },
+            key: function (i) {
+               return Object.keys(this._data)[i];
+            },
+            setItem: function (name, value) {
+               this._data[name] = '' + value;
+            },
+            getItem: function (name) {
+               return name in this._data ? '' + this._data[name] : undefined;
+            },
+            removeItem: function (name) {
+               delete this._data[name];
+            },
+         };
+         globalFixes.localStorage = 'localStorage' in global ? {prev:global.localStorage} : {};
+         global.localStorage = _localStorage;
+      }
+
+      if (!UserInfo.get.isSinonProxy) {
+         sinon.stub(UserInfo, 'get').callsFake(function (name) { return userInfo[name]; });
+      }
+
 
 
       describe('LongOperations: LongOperationsManager', function () {
@@ -561,5 +596,6 @@ define([
 
 
       });
+
    }
 );
