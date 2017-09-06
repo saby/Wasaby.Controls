@@ -56,9 +56,9 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          name: 'style',
          componentType: 'SBIS3.CONTROLS.ComboBox',
          items: [
+            { key: 'mainText', title: rk('Основной') },
             { key: 'title', title: rk('Заголовок'), className: 'titleText'},
             { key: 'subTitle', title: rk('Подзаголовок'),  className: 'subTitleText' },
-            { key: 'mainText', title: rk('Основной') },
             { key: 'additionalText', title: rk('Дополнительный'), className: 'additionalText' }
          ],
          pickerClassName: 'controls-RichEditorToolbar__stylePicker',
