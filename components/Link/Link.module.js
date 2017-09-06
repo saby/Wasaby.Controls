@@ -109,7 +109,7 @@ define('js!SBIS3.CONTROLS.Link', [
       setCaption: function(caption){
          Link.superclass.setCaption.call(this, caption);
          if(this._options.href) {
-            this._container.get(0).innerHTML = hrefTemplate(this._options);
+            this._contentContainer[0].innerHTML = hrefTemplate(this._options);
          }
          var res = (caption === undefined || caption === null ? '' : caption + '').replace(/<br>/g, '\n');
          this.setTooltip(escapeTagsFromStr(res, '\\w+'));
