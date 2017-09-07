@@ -5,9 +5,8 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
     'Core/core-functions',
     'Core/helpers/transport-helpers',
     'js!WS.Data/Source/SbisService',
-    'js!WS.Data/Entity/Model',
     'js!WS.Data/Di'
-], function (SaveStrategyBase, EventBus, cFunctions, transHelpers, SbisService, Model, Di) {
+], function (SaveStrategyBase, EventBus, cFunctions, transHelpers, SbisService, Di) {
 
     'use strict';
 

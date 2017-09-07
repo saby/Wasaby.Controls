@@ -1,13 +1,11 @@
 /*global define, $ws*/
 define('js!SBIS3.CONTROLS.Action.DialogMixin', [
    "Core/core-merge",
-   "Core/Deferred",
    "js!SBIS3.CORE.Dialog",
    "js!SBIS3.CORE.FloatArea",
-   "js!WS.Data/Entity/Model",
    "js!WS.Data/Utils",
    'Core/IoC'
-], function( cMerge, Deferred,Dialog, FloatArea, Model, Utils, IoC){
+], function( cMerge, Dialog, FloatArea, Utils, IoC){
    'use strict';
 
    /**
