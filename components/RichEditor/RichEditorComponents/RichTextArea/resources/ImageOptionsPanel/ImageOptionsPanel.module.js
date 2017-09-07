@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                ImageOptionsPanel.superclass.init.call(this);
 
                this._replaceButton = this.getChildControlByName('replaceButton');
-               this._replaceButton.subscribe('onActivated', this._replaceButtonClickHandler.bind(this));
+               this._replaceButton.subscribe('onActivated', this._commandsButtonItemActivateHandler.bind(this, null, 'change')/*###this._replaceButtonClickHandler.bind(this)*/);
                this._commandsButton = this.getChildControlByName('commandsButton');
                this._commandsButton.subscribe('onMenuItemActivate', this._commandsButtonItemActivateHandler.bind(this));
             },
@@ -120,12 +120,12 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                imagePanel.show();
             },
 
-            _replaceButtonClickHandler: function() {
+            /*###_replaceButtonClickHandler: function() {
                this.getFileLoader().startFileLoad(this._replaceButton._container, false, this._options.imageFolder).addCallback(function(fileobj){
                   this._notify('onImageChange', fileobj);
                   this.hide();
                }.bind(this));
-            },
+            },*/
 
             _commandsButtonItemActivateHandler: function(event, key){
                switch (key) {
