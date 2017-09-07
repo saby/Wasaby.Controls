@@ -3,10 +3,9 @@
  */
 define('js!SBIS3.CONTROLS.OperationPrint', [
    'js!SBIS3.CONTROLS.PrintUnloadBase',
-   'js!SBIS3.CORE.Dialog',
    'js!SBIS3.CONTROLS.Utils.DataProcessor',
    'i18n!SBIS3.CONTROLS.OperationPrint'
-], function(PrintUnloadBase, Dialog, Printer) {
+], function(PrintUnloadBase, Printer) {
    /**
     * Класс контрола "Кнопка для печати подготовленных данных". Применяется на "Панели действий" (см. {@link SBIS3.CONTROLS.OperationsPanel}).
     * @class SBIS3.CONTROLS.OperationPrint
