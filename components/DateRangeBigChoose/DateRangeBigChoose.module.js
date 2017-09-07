@@ -583,6 +583,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
 
       _updateYearsRange: function (lastYear) {
          var buttonsCount = 6,
+            lastYear = lastYear || parseInt(this.getChildControlByName('YearsRangeBtn' + (buttonsCount - 1)).getCaption(), 10),
             container, btn, year;
          for (var i = 0; i < buttonsCount; i++) {
             year = lastYear - buttonsCount + 1 + i;
@@ -752,6 +753,10 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
             this.getContainer().addClass(css_classes.selectionProcessing);
             if (selectionType === selectionTypes.months) {
                this._dateRangePicker.startSelection(start, end);
+            } else if (selectionType === selectionTypes.years) {
+               // При клике на год меняется ототбражаемый год в календаре, необходимо обновить выделение текущего года
+               // в панеле выбора интервала годов
+               this._updateYearsRange();
             }
          } else {
             this.getContainer().removeClass(css_classes.selectionProcessing);
