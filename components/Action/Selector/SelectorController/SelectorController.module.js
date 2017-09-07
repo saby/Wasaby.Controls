@@ -6,16 +6,14 @@ define('js!SBIS3.CONTROLS.SelectorController', [
    "js!SBIS3.CORE.CompoundControl",
    "js!WS.Data/Di",
    "Core/core-instance",
-   "Core/core-merge",
    "Core/core-functions",
    "js!WS.Data/Entity/Record",
-   "js!WS.Data/Source/SbisService",
    "js!SBIS3.CONTROLS.Utils.Query",
    "js!SBIS3.CONTROLS.Utils.OpenDialog",
    "js!WS.Data/Collection/List",
    "js!SBIS3.CONTROLS.SelectorWrapper"
 ],
-    function (CommandDispatcher, CompoundControl, Di, cInstance, cMerge, cFunctions, Record, SbisService, Query, OpenDialogUtil, List) {
+    function (CommandDispatcher, CompoundControl, Di, cInstance, cFunctions, Record, Query, OpenDialogUtil, List) {
 
        'use strict';
 
