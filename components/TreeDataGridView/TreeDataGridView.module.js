@@ -397,22 +397,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          return this._editArrow;
       },
 
-      _getEditArrowPosition: function(hoveredItem) {
-         var folderTitle = hoveredItem.container.find('.controls-TreeView__folderTitle'),
-             td = folderTitle.closest('.controls-DataGridView__td', hoveredItem.container),
-             containerCords = this._container[0].getBoundingClientRect(),
-             /* в 3.7.3.200 сделать это публичным маркером для стрелки */
-             arrowContainer = td.find('.js-controls-TreeView__editArrow'),
-             tdPadding, arrowCords, leftOffset, toolbarLeft, needCorrect;
-
-         if(!arrowContainer.length) {
-            arrowContainer = td.find('.controls-TreeView__editArrow');
-         }
-
-         /* Контейнера для стрелки может не быть, тогда не показываем */
-         if(!arrowContainer.length) {
-            return false;
-         }
+      _getEditArrowPosition: function(td, folderTitle, arrowContainer) {
+         var  containerCords = this._container[0].getBoundingClientRect(),
+              tdPadding, arrowCords, leftOffset, toolbarLeft, needCorrect;
+         
          tdPadding = parseInt(td.css('padding-right'), 10);
          /* Т.к. у нас в вёрстке две иконки, то позиционируем в зависимости от той, которая показывается,
             в .200 переделаем на маркер */
@@ -436,7 +424,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             needCorrect = toolbarLeft && (toolbarLeft < leftOffset);
             /* Если стрелка заползает на операции над записью -> увеличиваем отступ */
             if(needCorrect) {
-               leftOffset -= leftOffset - toolbarLeft + tdPadding * 2; //Левая граница тулбара + паддинги
+               leftOffset -= leftOffset - toolbarLeft + this.getEditArrow().getContainer().width(); //Левая граница тулбара + ширина стрелки
             }
             /* backgorund'a у стрелки быть не должно, т.к. она может отображаться на фоне разного цвета,
                но если мы корректрируем положение, то надо навесить background, чтобы она затемняла текст */
@@ -447,6 +435,15 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             top: arrowCords.top - containerCords.top + this._container[0].scrollTop,
             left: leftOffset
          }
+      },
+      
+      _getEditArrowMarker: function(itemContainer) {
+         var arrowContainer = itemContainer.find('.js-controls-TreeView__editArrow');
+         
+         if(!arrowContainer.length) {
+            arrowContainer = itemContainer.find('.controls-TreeView__editArrow');
+         }
+         return arrowContainer;
       },
 
       _onChangeHoveredItem: function() {
@@ -475,22 +472,22 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
       _showEditArrow: function() {
          var hoveredItem = this.getHoveredItem(),
+             hoveredItemContainer = hoveredItem.container,
              editArrowContainer = this.getEditArrow().getContainer(),
-             needShowArrow, hiContainer, editArrowPosition;
+             folderTitle, titleTd, editArrowMarker;
 
-         hiContainer = hoveredItem.container;
          /* Не показываем если:
             1) Иконку скрыли
             2) Не папка
             3) Режим поиска (по стандарту) */
-         needShowArrow = hiContainer && hiContainer.hasClass('controls-ListView__item-type-node') && this.getEditArrow().isVisible() && !this._isSearchMode();
+         if(this._hasHoveredItem() && this._getItemsProjection().getItemBySourceItem(hoveredItem.record).isNode() && this.getEditArrow().isVisible() && !this._isSearchMode()) {
+            folderTitle = hoveredItemContainer.find('.controls-TreeView__folderTitle');
+            titleTd = folderTitle.closest('.controls-DataGridView__td', hoveredItemContainer);
+            editArrowMarker = this._getEditArrowMarker(titleTd);
 
-         if(hiContainer && needShowArrow) {
-            editArrowPosition = this._getEditArrowPosition(hoveredItem);
-
-            if(editArrowPosition) {
-               editArrowContainer.css(editArrowPosition);
+            if(editArrowMarker.length) {
                editArrowContainer.removeClass('ws-hidden');
+               editArrowContainer.css(this._getEditArrowPosition(titleTd, folderTitle, editArrowMarker));
             }
          } else {
             this._hideEditArrow();

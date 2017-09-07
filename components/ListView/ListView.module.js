@@ -45,7 +45,9 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!WS.Data/Di',
    'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
    'Core/core-instance',
-   'Core/helpers/functional-helpers',
+   'Core/LocalStorageNative',
+   'Core/helpers/Function/forAliveOnly',
+   'Core/helpers/Function/memoize',
    'Core/helpers/Hcontrol/trackElement',
    'Core/helpers/Hcontrol/isElementVisible',
    'js!SBIS3.CONTROLS.Utils.Contains',
@@ -70,7 +72,7 @@ define('js!SBIS3.CONTROLS.ListView',
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents, LayoutManager, mHelpers,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, cInstance, fHelpers, trackElement, isElementVisible, contains, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove) {
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, cInstance, LocalStorageNative, forAliveOnly, memoize, trackElement, isElementVisible, contains, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove) {
      'use strict';
 
       var
@@ -1341,9 +1343,7 @@ define('js!SBIS3.CONTROLS.ListView',
                recordItems = this.getItems(),
                recordIndex = recordItems.getIndexByValue(recordItems.getIdProperty(), id),
                itemsProjection = this._getItemsProjection(),
-               selectedInstanceId = recordIndex !== -1 ? itemsProjection.getItemBySourceIndex(recordIndex).getInstanceId() : -1,
-               selectedItem = $('[data-hash="' + selectedInstanceId + '"]', this._getItemsContainer()),
-               index = items.index(selectedItem),
+               index = recordIndex !== -1 ? items.index(this._getDomElementByItem(itemsProjection.getItemBySourceIndex(recordIndex))) : -1,
                siblingItem;
             if (isNext) {
                if (index + 1 < items.length) {
@@ -1357,10 +1357,9 @@ define('js!SBIS3.CONTROLS.ListView',
             } else {
                siblingItem = items.eq(index);
             }
-            if (siblingItem)
+            if (siblingItem) {
                return this.getItems().getRecordById(siblingItem.data('id')) ? siblingItem : this._getHtmlItemByDOM(siblingItem.data('id'), isNext);
-            else
-               return undefined;
+            }
          },
          _isViewElement: function (elem) {
             return  contains(this._getItemsContainer()[0], elem[0]);
@@ -1661,7 +1660,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 && this._hoveredItem
                 && this._hoveredItem.container
                 && !this._hoveredItem.container.hasClass('controls-editInPlace__editing')
-                && fHelpers.getLocalStorageValue('controls-ListView-contextMenu') !== 'false'
+                && LocalStorageNative.getItem('controls-ListView-contextMenu') !== 'false'
                 // при клике по ссылке необходимо показывать стандартное меню,
                 // т.к. иначе ломаем привычное для пользователя поведение
                 && event.target.nodeName.toLowerCase() !== 'a'
@@ -1757,7 +1756,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 self = this,
                 elClickHandler = this._options.elemClickHandler,
                 needSelect = true,
-                afterHandleClickResult = fHelpers.forAliveOnly(function(result) {
+                afterHandleClickResult = forAliveOnly(function(result) {
                    if (result !== false) {
                       if(needSelect) {
                          //todo https://online.sbis.ru/opendoc.html?guid=0d1c1530-502c-4828-8c42-aeb330c014ab&des=
@@ -2073,7 +2072,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          scrollLoadMore: function(){
             if (this._options.infiniteScroll && this._scrollWatcher && !this._scrollWatcher.hasScroll()) {
-               this._scrollLoadNextPage();
+               this._scrollLoadNextPage(this._options.infiniteScroll === 'demand');
             }
          },
          //********************************//
@@ -3126,13 +3125,15 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollOffset.bottom = this._offset;
             }
          },
-
+   
          /**
           * Подгрузить еще данные
           * направление задается через _setInfiniteScrollState
+          * @param loadDemand Подгрузить данные следующей страницы, если включена подгрузка по кнопке 'Ещё'
+          * @private
           */
-         _scrollLoadNextPage: function () {
-            var loadAllowed  = this.isInfiniteScroll() && this._options.infiniteScroll !== 'demand',
+         _scrollLoadNextPage: function (loadDemand) {
+            var loadAllowed  = this.isInfiniteScroll() && (this._options.infiniteScroll !== 'demand' || loadDemand),
                more = this.getItems().getMetaData().more,
                isContainerVisible = isElementVisible(this.getContainer()),
                // отступ с учетом высоты loading-indicator
@@ -3217,11 +3218,11 @@ define('js!SBIS3.CONTROLS.ListView',
                this._loadQueue[loadId] = cFunctions.clone(this._infiniteScrollState);
 
                this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit, this._infiniteScrollState.mode)
-                  .addBoth(fHelpers.forAliveOnly(function(res) {
+                  .addBoth(forAliveOnly(function(res) {
                      this._loader = null;
                      return res;
                   }, this))
-                  .addCallback(fHelpers.forAliveOnly(function (dataSet) {
+                  .addCallback(forAliveOnly(function (dataSet) {
                      //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
                      //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
                      //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
@@ -3290,7 +3291,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         }
                      }
                   }, this))
-                  .addErrback(fHelpers.forAliveOnly(function (error) {
+                  .addErrback(forAliveOnly(function (error) {
                      this._hideLoadingIndicator();
                      //Здесь при .cancel приходит ошибка вида DeferredCanceledError
                      return error;
@@ -3502,7 +3503,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             
             if (type && !noLoad) {
-               this._scrollLoadNextPage();
+               this._scrollLoadNextPage(type === 'demand');
                return;
             }
             //НА саом деле если во время infiniteScroll произошла ошибка загрузки, я о ней не смогу узнать, но при выключении нужно убрать индикатор
@@ -3593,7 +3594,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         _getAjaxLoaderContainer: fHelpers.memoize(function () {
+         _getAjaxLoaderContainer: memoize(function () {
             return this.getContainer().find('.controls-AjaxLoader').eq(0);
          }, '_getAjaxLoaderContainer'),
 
