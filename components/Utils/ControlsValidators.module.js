@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [
    'Core/core-instance',
    'Core/IoC',
    'i18n!SBIS3.CONTROLS.ControlsValidators'
-],function(CoreValidators, cInstace, cEnum, IoC) {
+],function(CoreValidators, cInstace, IoC) {
 
    'use strict';
 
