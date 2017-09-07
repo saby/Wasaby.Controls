@@ -3,13 +3,13 @@
  */
 
 define('js!SBIS3.CONTROLS.NumberTextBox', [
-   "Core/defaultRenders",
-   "Core/constants",
-   "js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil",
-   "js!SBIS3.CONTROLS.TextBox",
-   "tmpl!SBIS3.CONTROLS.NumberTextBox/resources/NumberTextBoxArrows",
+   'Core/constants',
+   'js!SBIS3.CONTROLS.Utils.NumberTextBoxUtil',
+   'js!SBIS3.CONTROLS.TextBox',
+   'js!SBIS3.CONTROLS.NumberTextBox/resources/FormatText',
+   'tmpl!SBIS3.CONTROLS.NumberTextBox/resources/NumberTextBoxArrows',
    'css!SBIS3.CONTROLS.NumberTextBox'
-], function ( cDefaultRenders, constants, NumberTextBoxUtil, TextBox, arrowTpl) {
+], function ( constants, NumberTextBoxUtil, TextBox, FormatText, arrowTpl) {
 
 
    'use strict';
@@ -51,48 +51,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
     *     <option name="text">0</option>
     * </component>
     */
-
-   function formatText(value, text, onlyInteger, decimals, integers, delimiters, onlyPositive, maxLength, hideEmptyDecimals){
-      // Вырезаем переносы строк и теги.
-      value = typeof value === 'string' ? value.replace(/\n/gm, '').replace(/<.*?>/g, '') : value;
-      var decimals = onlyInteger ? 0 : decimals,
-          dotPos = (value = (value + '')).indexOf('.'),
-          parsedVal = dotPos != -1 ? '.' + value.substr(dotPos + 1).replace(/[^0-9]/g, '') : '0',
-          isDotLast = (value && value.length) ? dotPos === value.length - 1 : false,
-          decimalsPart;
-
-      if (value == '-') {
-         return value;
-      }
-
-      value = cDefaultRenders.numeric(
-         value,
-         integers,
-         delimiters,
-         decimals,
-         onlyPositive,
-         maxLength,
-         true
-      );
-      
-      if(isDotLast){
-         value = value ? value + '.' : '.';
-      }
-      if(value && hideEmptyDecimals && decimals){
-         dotPos = value.indexOf('.');
-         if (parsedVal === '0') {
-            value = (dotPos !== -1 ? value.substring(0, dotPos) : value) + '.0';
-         } else {
-            decimalsPart = decimals == -1 ? parsedVal : parsedVal.substr(0, decimals + 1);
-            value = (dotPos !== -1 ? value.substring(0, dotPos) + decimalsPart : value);
-         }
-      }
-
-      if(!NumberTextBoxUtil.checkMaxLength(value, maxLength)){
-         return text;
-      }
-      return value || '';
-   }
 
    function hideEmptyDecimals(value){
       value = value + '';
@@ -213,7 +171,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          options = NumberTextBox.superclass._modifyOptions.apply(this, arguments);
          value = (options.numericValue != undefined) ? options.numericValue : options.text;
          if (typeof value !== 'undefined' && value !== null){
-            options.text = formatText(
+            options.text = FormatText.formatText(
                value,
                options.text, 
                options.onlyInteger, 
@@ -413,7 +371,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
       },
 
       _formatText: function(value){
-         return formatText(
+         return FormatText.formatText(
             value, 
             this._options.text, 
             this._options.onlyInteger, 
