@@ -2072,7 +2072,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          scrollLoadMore: function(){
             if (this._options.infiniteScroll && this._scrollWatcher && !this._scrollWatcher.hasScroll()) {
-               this._scrollLoadNextPage();
+               this._scrollLoadNextPage(this._options.infiniteScroll === 'demand');
             }
          },
          //********************************//
@@ -3125,13 +3125,15 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollOffset.bottom = this._offset;
             }
          },
-
+   
          /**
           * Подгрузить еще данные
           * направление задается через _setInfiniteScrollState
+          * @param loadDemand Подгрузить данные следующей страницы, если включена подгрузка по кнопке 'Ещё'
+          * @private
           */
-         _scrollLoadNextPage: function () {
-            var loadAllowed  = this.isInfiniteScroll() && this._options.infiniteScroll !== 'demand',
+         _scrollLoadNextPage: function (loadDemand) {
+            var loadAllowed  = this.isInfiniteScroll() && (this._options.infiniteScroll !== 'demand' || loadDemand),
                more = this.getItems().getMetaData().more,
                isContainerVisible = isElementVisible(this.getContainer()),
                // отступ с учетом высоты loading-indicator
@@ -3501,7 +3503,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             
             if (type && !noLoad) {
-               this._scrollLoadNextPage();
+               this._scrollLoadNextPage(type === 'demand');
                return;
             }
             //НА саом деле если во время infiniteScroll произошла ошибка загрузки, я о ней не смогу узнать, но при выключении нужно убрать индикатор
