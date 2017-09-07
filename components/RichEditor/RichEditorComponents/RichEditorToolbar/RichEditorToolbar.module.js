@@ -81,8 +81,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                 *    </options>
                 * </pre>
                 */
-               items: undefined,
-               defaultConfig: defaultConfig
+               items: undefined
             },
             _toggleToolbarButton: undefined,
             _itemsContainer:  undefined,
@@ -102,6 +101,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
             _pickerOpenHandler: undefined,
             _fromFormatChange: false
          },
+
          init: function() {
             var
                self = this;
@@ -122,6 +122,14 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
             this._toggleToolbarButton = this._container.find('.controls-RichEditorToolbar__toggleButton').bind('click', this.toggleToolbar.bind(this));
             this._toggleToolbarButton.on('mousedown focus', this._blockFocusEvents);
          },
+
+         _modifyOptions: function (options) {
+            // Так как в конфиге используется локализация через rk(), то только сейчас:
+            options.defaultConfig = defaultConfig();
+            options = RichEditorToolbar.superclass._modifyOptions.apply(this, arguments);
+            return options;
+         },
+
          setExpanded: function(expanded) {
             var
                self = this;
