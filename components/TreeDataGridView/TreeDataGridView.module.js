@@ -474,13 +474,18 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var hoveredItem = this.getHoveredItem(),
              hoveredItemContainer = hoveredItem.container,
              editArrowContainer = this.getEditArrow().getContainer(),
-             folderTitle, titleTd, editArrowMarker;
+             folderTitle, titleTd, editArrowMarker, projItem;
+         
+         if(this._hasHoveredItem()) {
+            projItem = this._getItemsProjection().getItemBySourceItem(hoveredItem.record);
+         }
 
          /* Не показываем если:
             1) Иконку скрыли
             2) Не папка
-            3) Режим поиска (по стандарту) */
-         if(this._hasHoveredItem() && this._getItemsProjection().getItemBySourceItem(hoveredItem.record).isNode() && this.getEditArrow().isVisible() && !this._isSearchMode()) {
+            3) Режим поиска (по стандарту)
+            4) projItem'a может не быть при добавлении по месту */
+         if(projItem && projItem.isNode() && this.getEditArrow().isVisible() && !this._isSearchMode()) {
             folderTitle = hoveredItemContainer.find('.controls-TreeView__folderTitle');
             titleTd = folderTitle.closest('.controls-DataGridView__td', hoveredItemContainer);
             editArrowMarker = this._getEditArrowMarker(titleTd);
