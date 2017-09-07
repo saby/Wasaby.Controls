@@ -2,7 +2,7 @@
 <head key="1_1_">
     <ws:if data="{{ cssLinks }}">
         <ws:for data="index, value in cssLinks">
-            <link rel="stylesheet" href="{{ value }}" type="text/css" key="{{ 'css_' + (index + 1) + '_' }}"/>
+            <link rel="stylesheet" href="{{ value }}" type="text/css" key="{{ 'css_' + index }}"/>
         </ws:for>
     </ws:if>
     <title key="title">{{ title }}</title>
@@ -24,7 +24,6 @@
     <script key="require" type="text/javascript" src="{{wsRoot}}ext/requirejs/require.js"></script>
     <script key="config" type="text/javascript" src="{{wsRoot}}ext/requirejs/config.js"></script>
     <script key="contents" type="text/javascript" src="{{resourceRoot}}/contents.js"></script>
-    <script key="jquery" type="text/javascript" src="/cdn/jquery/3.2.1/jquery-min.js" data-pack-name="skip" defer="defer"></script>
     <ws:if data="{{ jsLinks }}">
         <ws:for data="index, value in jsLinks">
             <script type="text/javascript" src="{{ value }}" defer="defer" key="{{ 'scripts_' + index }}"></script>
