@@ -2,11 +2,10 @@ define('js!SBIS3.CONTROLS.MassSelectionController',
     [
         'js!SBIS3.CORE.Control',
         "js!WS.Data/Collection/IBind",
-        "Core/core-instance",
         "Core/core-functions",
         "js!SBIS3.CONTROLS.ArraySimpleValuesUtil"
     ],
-    function(Control, IBindCollection, cInstance, cFunctions, ArraySimpleValuesUtil) {
+    function(Control, IBindCollection, cFunctions, ArraySimpleValuesUtil) {
 
         var MassSelectionController = Control.Control.extend( /** @lends SBIS3.CONTROLS.MassSelectionController.prototype */ {
             $protected: {
