@@ -162,8 +162,14 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             pageOffset = 0,
             lastPageStart = 0,
             self = this,
-            //Учитываем все что есть в itemsContainer (группировка и тд)
-            listItems = $('> *', view._getItemsContainer()).filter(':visible'),
+            /* Находим все строки в списке */
+            listItems = view._getItemsContainer().find('> *').filter(function() {
+               /* Отфильтровывем скрытые строки,
+                  и строки которые будут вырезаться и перемещаться в прилипающую шапку,
+                  т.к. по ним нельзя корректно посчитать положение. */
+               return !$(this).hasClass('ws-hidden') &&
+                      !$(this).hasClass('ws-sticky-header__table-sticky-row');
+            }),
             stickyHeaderHeight = StickyHeaderManager.getStickyHeaderHeight(view.getContainer()) || 0;
 
          //Если элементов в верстке то нечего и считать
