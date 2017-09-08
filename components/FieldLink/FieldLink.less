@@ -41,7 +41,7 @@
          }
       }
       .controls-FieldLinkItemsCollection {
-         .justify-content()
+         .justify-content();
       }
    }
 }
@@ -179,8 +179,8 @@
          max-width: 100%;
       }
       .controls-FieldLink__item {
-         /* Учитываем отступ под крестик удаления */
-         max-width: ~'calc(100% - '@controls-FieldLink-linkItem-cross-width~')';
+         .flex-shrink();
+         max-width: 100%;
       }
 
       &.ws-disabled {
@@ -233,6 +233,7 @@
 .controls-FieldLink:not(.ws-disabled) .controls-TextBox__afterFieldWrapper {
    .inline-flexbox();
    .align-items(center);
+   .flex-shrink(0);
    height: 100%;
    width: auto;
 }

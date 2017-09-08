@@ -5,14 +5,13 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
       'js!SBIS3.CONTROLS.PopupMixin',
       'js!SBIS3.CORE.FileStorageLoader',
       'js!WS.Data/Di',
-      'Core/helpers/fast-control-helpers',
       'tmpl!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
       'js!SBIS3.CONTROLS.RichEditor.ImagePanel',
       'js!SBIS3.CONTROLS.CommandsButton',
       'js!SBIS3.CONTROLS.Link',
       'css!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
       'css!SBIS3.CONTROLS.Menu'
-   ], function(CompoundControl, PopupMixin, FileStorageLoader, Di, fcHelpers, dotTplFn, ImagePanel) {
+   ], function(CompoundControl, PopupMixin, FileStorageLoader, Di, dotTplFn, ImagePanel) {
       'use strict';
       //todo: отказаться от этого модуля в 3.7.5.50 перейти на контекстное меню
       var

@@ -8,11 +8,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'tmpl!SBIS3.CONTROLS.ScrollContainer',
       'js!SBIS3.CONTROLS.Scrollbar',
       'Core/detection',
-      'Core/core-functions',
       'js!SBIS3.CORE.FloatAreaManager',
       'js!SBIS3.StickyHeaderManager',
-      "Core/core-instance",
-      'Core/compatibility',
       'Core/constants',
       'css!SBIS3.CONTROLS.ScrollContainer'
    ],
@@ -25,11 +22,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
              template,
              Scrollbar,
              cDetection,
-             functions,
              FloatAreaManager,
              StickyHeaderManager,
-             cInstance,
-             compatibility,
              constants) {
       'use strict';
 

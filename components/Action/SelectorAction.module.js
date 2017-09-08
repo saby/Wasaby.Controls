@@ -2,14 +2,14 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
    [
       'js!SBIS3.CONTROLS.Action.Action',
       'js!SBIS3.CONTROLS.Action.DialogMixin',
-      'js!SBIS3.CONTROLS.Utils.Query',
       'js!SBIS3.CONTROLS.Utils.OpenDialog',
       'Core/core-merge',
       'Core/Deferred',
       'Core/Context',
-      'Core/Indicator'
+      'Core/Indicator',
+      'Core/helpers/Function/forAliveOnly'
    ],
-    function (Action, DialogMixin, Query, OpenDialogUtil, cMerge, Deferred, Context, Indicator) {
+    function (Action, DialogMixin, OpenDialogUtil, cMerge, Deferred, Context, Indicator, forAliveOnly) {
        'use strict';
        /**
        * Класс, который описывает действие открытия окна с заданным шаблоном. Из этого окна можно осуществлять выбор.
@@ -100,10 +100,10 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
                    initializingDeferred = Deferred.success(config.componentOptions.items || []);
                 }
 
-                initializingDeferred.addCallback(function(items) {
+                initializingDeferred.addCallback(forAliveOnly(function(items) {
                    initializeComplete(items);
                    return items;
-                });
+                }, self));
              });
           }
        });

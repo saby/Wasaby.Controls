@@ -2,18 +2,16 @@
  * Created by ad.chistyakova on 22.04.2015.
  */
 define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
-   "Core/core-structure",
    "Core/xslt-async",
    "Transport/ReportPrinter",
    "Core/helpers/helpers",
    "Core/core-extend",
    "Core/constants",
    "Core/IoC",
-   "Core/ConsoleLogger",
    "Core/core-instance",
    "Core/helpers/string-helpers",
    "i18n!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer"
-], function( $ws, cXSLT, cReportPrinter, cHelpers, cExtend, constants, IoC, ConsoleLogger,cInstance, strHelpers) {
+], function( cXSLT, cReportPrinter, cHelpers, cExtend, constants, IoC, cInstance, strHelpers) {
    return cExtend({}, {
 
       _complexFields: {

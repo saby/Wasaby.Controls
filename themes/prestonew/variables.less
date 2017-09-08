@@ -240,7 +240,7 @@
 @switcherline-height:                           0.107rem;
 @switcherline-width:                            2.5rem;
 @switcher-btn-size:                             0.929rem;
-@switcher-btn-border-width:                     0.107rem;
+@switcher-btn-border-width:                     0.1072rem;
 @switcher-btn-hover-border-width:               @switcher-btn-border-width;
 @switcher-dot-size:                             @switcher-btn-size;
 @switcher-border-color:                         #37536C;
@@ -278,7 +278,7 @@
 @menu-item-hover-icon-color:              @primary-color!important;
 @menu-item-default-padding:               0 .57rem;
 @menu-item-icon-top-offset:               0.2805rem; // (3.57 - 3) /2
-@menu-item-icon-left-offset:              -.4232rem;
+@menu-item-icon-left-offset:              0;
 @menu-item-icon24-top-offset:             0;
 @menu-item-icon24-top-offset-big:         0;
 @menu-item-icon24-left-offset:            -.57rem;;
@@ -290,7 +290,7 @@
 @menu-button-menu-border-width:           @default-border-width;
 @menu-button-menu-margin:                 -8px 0 0 0;
 @menu-button-menu-border-color:           #23b8ff;
-@menu-link-header-bg-color:               #5bafe7;
+@menu-link-header-bg-color:               @menu-header-bg-color;
 @menu-link-icon-24-top:                   -.14rem;
 @menu-icon-menu-margin:                   -.25rem 0 0 -.1442rem;
 @menu-icon-big-menu-margin:               -.287rem 0 0 .43rem;
@@ -538,7 +538,7 @@
 @date-range-big-choose-month-range-picker-caption-height:      1.7857rem;
 @date-range-big-choose-month-range-picker-caption-font-size:   1.14rem;
 @date-range-big-choose-month-range-picker-table-element-height:.5rem;
-@date-range-big-choose-month-range-picker-table-element-font-size:.43rem;
+@date-range-big-choose-month-range-picker-table-element-font-size: .4rem;
 @date-range-big-choose-month-range-padding:0.2857rem;
 @date-range-big-choose-month-range-picker-bg-selected:  @date-range-big-choose-bg-selected-color;
 @date-range-big-choose-quarters-half-years-font-size:inherit;
@@ -734,17 +734,18 @@
 @controls-FieldLink-linkItem-margin:         0;
 @controls-FieldLink-linkItem-padding:        0 3rem 0 .56rem;
 @controls-FieldLink-linkItem-caption-height: 1.75rem;
-@controls-FieldLink-linkItem-cross-width:    2.5rem;
+@controls-FieldLink-linkItem-cross-width:    3rem;
 @controls-FieldLink-linkItem-cross-right:    0;
 @controls-FieldLink-linkItem-cross-top:      -.14rem;
 @controls-FieldLink-linkItem-cross-padding:  0;
 @controls-FieldLink-showAllLinks-padding:    0 1rem 0 0.14rem;
-@controls-FieldLink-afterField-padding:      0 .14rem 0 0;
+@controls-FieldLink-afterField-padding:      0;
 @controls-FieldLink-disabled-item-single-padding:  0 0 0 .56rem;
 @controls-FieldLink-disabled-item-single-margin: 0;
 @controls-FieldLink-afterField-background:   transparent;
 @controls-FieldLink-FilterButton-color:      #26B8FF;
 @controls-FieldLink-FilterButton-color-hover:#26B8FF;
+@controls-filterButton-area-header-width:    23.92rem;
 //SelectorButton
 @controls-SelectorButton-align:           middle;
 // BackButton
@@ -757,7 +758,7 @@
 @bread-crumb-title-hover-color:           @default-hover-color;
 @breadcrumbs-top:                         0;
 @breadcrumbs-smallItems-font-size:        1rem;
-@breadcrumbs-arrow-top:                   0;
+@breadcrumbs-arrow-top:                   1px;
 @breadcrumbs-small-items-top:             0;
 // EditDialog
 @editdialog-applybutton-width:            auto;
@@ -900,7 +901,6 @@
 @scrollpager-border:                      none;
 @scrollpager-bottom:                      .3333rem;
 @closeBigButtonWidth:                     3rem;
-@menu-header-bg-color:                    #23b8ff;
 @date-range-big-header-bg:                #2c3e50;
 @date-range-big-choose-border-color:	   #3f566d;
 @date-range-big-choose-width:				   25.8rem;
@@ -989,12 +989,15 @@
 @DropdownList-picker-menu-line-height:                3.24rem;
 @DropdownList-before-caption-wrapper-top:             0.16rem;
 @DropdownList-after-caption-wrapper-top:              .4rem;
-@DropdownList-footer-hasMore-left:                    .28rem;
+@DropdownList-footer-hasMore-left:                    .57rem;
 @DropdownList-footer-hasMore-left-multiselect:        2.35rem;
 @DropdownList-footer-hasMore-top-multiselect:         1rem;
 @DropdownList-footer-hasMore-top:                     1rem;
 @DropdownList-footer-select-icon-container-size:      3rem;
 @DropdownList-footer-select-icon-size:                2.3rem;
+//infobox
+@Infobox-cross-color:                                 #E4E4E4;
+@Infobox-cross-color-hover:                           #B9E9FF;
 //money
 @money-decorator-integer-accent-results-font-color:#FFCC99;
 @money-decorator-integer-no-accent-results-font-color:@disabled-color;
@@ -1034,7 +1037,7 @@
 @list-view-items-toolbar-bottom:          0.214rem;
 @list-view-items-toolbar-font-family:     'carrypresto-icons';
 @search-left-margin:                      .57rem;
-@controls-view-eip-padding-DEFAULT:                                                                                     .857rem;
+@controls-view-eip-padding-DEFAULT:                                                                                     .2857rem;
 @controls-view-padding-DEFAULT:           .857rem;
 @combo-box-picker-border:                 @default-border-width solid @default-border-color-second;
 @data-grid-row-selected-main-bg:          @basic-block-bg-color;

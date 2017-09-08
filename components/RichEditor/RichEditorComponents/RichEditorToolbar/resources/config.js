@@ -12,8 +12,9 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          this.getParent()._execCommand(this._options.name);
       };
 
-   return [
-       {
+   return function () {
+      return [
+      {
          name: 'undo',
          componentType: 'WSControls/Buttons/Button',
          tooltip: rk('Шаг назад'),
@@ -56,9 +57,9 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          name: 'style',
          componentType: 'SBIS3.CONTROLS.ComboBox',
          items: [
+            { key: 'mainText', title: rk('Основной') },
             { key: 'title', title: rk('Заголовок'), className: 'titleText'},
             { key: 'subTitle', title: rk('Подзаголовок'),  className: 'subTitleText' },
-            { key: 'mainText', title: rk('Основной') },
             { key: 'additionalText', title: rk('Дополнительный'), className: 'additionalText' }
          ],
          pickerClassName: 'controls-RichEditorToolbar__stylePicker',
@@ -266,7 +267,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          name: 'image',
          componentType: 'WSControls/Buttons/Button',
          icon: 'sprite:icon-24 icon-Picture icon-primary',
-         tooltip: 'Вставить изображение',
+         tooltip: rk('Вставить изображение'),
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          handlers: {
             onActivated: function() {
@@ -278,7 +279,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
 
       {
          name: 'smile',
-         tooltip: 'Вставить смайлик',
+         tooltip: rk('Вставить смайлик'),
          componentType: 'WSControls/Buttons/MenuButton',
          icon: 'sprite:icon-24 icon-SmileBtr icon-primary',
          pickerClassName: 'controls-RichEditorToolbar__smilesPicker controls-Menu__hide-menu-header controls-MenuButton__Menu',
@@ -341,7 +342,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
       },
       {
          name: 'history',
-         caption: 'История ввода',
+         caption: rk('История ввода'),
          componentType: 'WSControls/Buttons/MenuButton',
          pickerClassName: 'controls-MenuIcon__Menu',
          icon: 'sprite:icon-24 icon-InputHistory icon-primary',
@@ -368,7 +369,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
       },
       {
          name: 'codesample',
-         tooltip: 'Вставка кода',
+         tooltip: rk('Вставка кода'),
          componentType: 'WSControls/Buttons/Button',
          icon: 'sprite:icon-24 icon-PasteCodeBtr icon-primary',
          multiselect: false,
@@ -382,4 +383,5 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          order: 130
       }
    ];
+   };
 });

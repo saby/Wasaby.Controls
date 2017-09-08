@@ -5,10 +5,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
    "Core/core-extend",
    "Core/core-functions",
    "Core/EventBus",
-   "Core/IoC",
-   "Core/ConsoleLogger",
    "js!WS.Data/Entity/Record",
-   "js!WS.Data/Source/SbisService",
    "js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer",
    "js!SBIS3.CORE.LoadingIndicator",
    "js!WS.Data/Source/SbisService",
@@ -16,7 +13,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
    "Core/helpers/fast-control-helpers",
    "js!SBIS3.CONTROLS.Utils.InformationPopupManager",
    "i18n!SBIS3.CONTROLS.Utils.DataProcessor"
-], function( cExtend, cFunctions, EventBus, IoC, ConsoleLogger, Record, Source, Serializer, LoadingIndicator, SbisService, transHelpers, fcHelpers, InformationPopupManager) {
+], function( cExtend, cFunctions, EventBus, Record, Serializer, LoadingIndicator, SbisService, transHelpers, fcHelpers, InformationPopupManager) {
    /**
     * Обработчик данных для печати и выгрузки(экспорта) в Excel, PDF. Печать осуществляется по готову XSL-шаблону через XSLT-преобразование.
     * Экспорт в Excel и PDF можно выполнить несколькими способами:

@@ -234,3 +234,9 @@
 		}
 	}
 }
+
+/* Из-за TensorFont'a ссылки без указания высоты в ie имеют высоту не 24px, а 24.57,
+   а это ломает расчёты для кнопки фильтров, т.к. в стандарте все размеры написаны из рачёты высоты ссылок - 24px. */
+.ws-is-ie .controls-filterButton__additionalFilterParams-content .controls-Link {
+	height: @default-height;
+}
