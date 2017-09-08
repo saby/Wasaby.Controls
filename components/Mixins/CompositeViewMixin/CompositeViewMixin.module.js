@@ -379,7 +379,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
 
       _calcWidth: function(tiles, oldWidth){
          if (tiles.length){
-            var itemsContainerWidth =  this._getItemsContainer()[0].getBoundingClientRect().width,
+            var itemsContainerWidth =  Math.floor(this._getItemsContainer()[0].getBoundingClientRect().width),
                tilesCount = Math.floor(itemsContainerWidth / oldWidth),
                newTileWidth = itemsContainerWidth / tilesCount;
 

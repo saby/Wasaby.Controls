@@ -9,22 +9,38 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
       'use strict';
 
       /**
-       * Тонкий скролл.
+       * Класс контрола "Тонкий скролл".
        * @class SBIS3.CONTROLS.Scrollbar
        * @extends SBIS3.CONTROLS.CompoundControl
        *
        * @mixes SBIS3.CONTROLS.DragNDropMixin
        *
+       * @public
        * @control
        * @author Крайнов Дмитрий Олегович
        */
-      var Scrollbar = CompoundControl.extend([DragNDropMixinNew], {
+      var Scrollbar = CompoundControl.extend([DragNDropMixinNew], /** @lends SBIS3.CONTROLS.Scrollbar.prototype */{
+          /**
+           * @event onScrollbarDrag Происходит при изменении позиции скролла.
+           * @param {Core/EventObject} eventObject Дескриптор события.
+           * @param {Number} position Позиция скролла.
+           */
+
          _dotTplFn: dotTplFn,
 
          $protected: {
             _options: {
+               /**
+                * @cfg {Number}
+                */
                position: 0,
+               /**
+                * @cfg {Number}
+                */
                contentHeight: 1,
+               /**
+                * @cfg {Number}
+                */
                tabindex: 0
             },
             _thumb: undefined,
@@ -61,11 +77,17 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             this._setScrollRatio();
             this._setThumbPosition();
          },
-
+          /**
+           *
+           * @returns {*}
+           */
          getPosition: function () {
             return this._options.position;
          },
-
+          /**
+           *
+           * @param position
+           */
          setPosition: function (position) {
             var maxPosition = this.getContentHeight() - this._containerOuterHeight;
 
@@ -73,11 +95,17 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             this._options.position = position;
             this._setThumbPosition();
          },
-
+          /**
+           *
+           * @returns {number|SBIS3.CONTROLS.ScrollContainer._scrollbar.contentHeight|*}
+           */
          getContentHeight: function () {
             return this._options.contentHeight;
          },
-
+          /**
+           *
+           * @param contentHeight
+           */
          setContentHeight: function (contentHeight) {
             this._containerHeight = this._container.height();
             this._containerOuterHeight = this._container.outerHeight(true);
@@ -155,7 +183,18 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
 
          //Изменить отношение видимой части к размеру контента
          _setViewportRatio: function () {
-            this._viewportRatio = this._containerOuterHeight / this.getContentHeight();
+            /**
+             * Если размер скроллирования меньше 1px, то нет смысла показывать скролл.
+             * Это избавит нас от проблем связанных с разным поведением браузеров.
+             * Например в FF: если контейнер, в котором лежит скроллбар, имеет высоту с дробной частью и
+             * равной своему контенту, то его scrollHeight будет округлен в большую сторону. Если передать
+             * такой scrollHeight в скроллбар, то по логике должен быть скроллбар, хотя это не так.
+             */
+            if (this.getContentHeight() - this._containerOuterHeight > 1) {
+               this._viewportRatio = this._containerOuterHeight / this.getContentHeight();
+            } else {
+               this._viewportRatio = 1;
+            }
          },
 
          _setScrollRatio: function () {

@@ -12,10 +12,14 @@
    }
    &.ws-disabled {
       .controls-TextBox__beforeFieldWrapper {
+         .flex-wrap(wrap);
+         .flex-direction(row);
          max-width: 100%;
       }
       //todo:
       .controls-Link.controls-FieldLink__showAllLinks {
+         top: -@default-base-line-height;
+         background: @text-box-bg;
          &:after {
             content: '';
             position: absolute;
@@ -37,7 +41,7 @@
          }
       }
       .controls-FieldLinkItemsCollection {
-         .justify-content()
+         .justify-content();
       }
    }
 }
@@ -175,8 +179,8 @@
          max-width: 100%;
       }
       .controls-FieldLink__item {
-         /* Учитываем отступ под крестик удаления */
-         max-width: ~'calc(100% - '@controls-FieldLink-linkItem-cross-width~')';
+         .flex-shrink();
+         max-width: 100%;
       }
 
       &.ws-disabled {
@@ -229,6 +233,7 @@
 .controls-FieldLink:not(.ws-disabled) .controls-TextBox__afterFieldWrapper {
    .inline-flexbox();
    .align-items(center);
+   .flex-shrink(0);
    height: 100%;
    width: auto;
 }
@@ -288,17 +293,14 @@
    width: 20px;
    line-height: @controls-FieldLink-showAllLinks-lineHeight;
    padding: @controls-FieldLink-showAllLinks-padding;
-   display: inline-block;
+   display: none;
    .flex-shrink(0);
 }
-
-
-
-.controls-FieldLink__selected:not(.controls-FieldLink__selected-single) .controls-FieldLink__dropAllLinks {
-   display: inline-block;
+.controls-FieldLink__selected:not(.controls-FieldLink__selected-single) {
+   .controls-FieldLink__dropAllLinks, .controls-FieldLink__showAllLinks {
+      display: inline-block;
+   }
 }
-
-
 .ws-is-firefox {
    .controls-FieldLink {
       vertical-align: middle;

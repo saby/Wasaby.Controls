@@ -94,6 +94,30 @@ define(['js!WSControls/Lists/ItemsControl', 'js!WS.Data/Collection/RecordSet', '
                });
             });
 
+            it('Enumeration', function () {
+               var ctrl = new ItemsControl({
+                  items : data
+               });
+               var indexes = ctrl._enumIndexes;
+               assert.equal(0, indexes._startIndex, 'Incorrect start enumeration index after constructor');
+               assert.equal(3, indexes._stopIndex, 'Incorrect stop enumeration index after constructor');
+               assert.equal(0, indexes._curIndex, 'Incorrect current enumeration index after constructor');
+
+               indexes._curIndex = 22;
+               ctrl._getStartEnumerationPosition();
+               assert.equal(0, indexes._curIndex, 'Incorrect current enumeration index after _getStartEnumerationPosition');
+
+               ctrl._getNextEnumerationPosition();
+               ctrl._getNextEnumerationPosition();
+               assert.equal(2, indexes._curIndex, 'Incorrect current enumeration index after 2x_getNextEnumerationPosition');
+
+               var condResult = ctrl._checkConditionForEnumeration();
+               assert.isTrue(condResult, 'Incorrect condition value enumeration index after 2x_getNextEnumerationPosition');
+               ctrl._getNextEnumerationPosition();
+               condResult = ctrl._checkConditionForEnumeration();
+               assert.isFalse(condResult, 'Incorrect condition value enumeration index after 3x_getNextEnumerationPosition');
+            });
+
          });
       });
    });

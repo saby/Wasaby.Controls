@@ -1,2 +1,3 @@
-<span class="js-MoneyTextBox__input controls-TextBox__field" contentEditable='true'>{{enabled ? text : _integersPart}}</span>
-<span class="js-MoneyTextBox__decimals controls-MoneyTextBox__decimals {{enabled ? 'ws-hidden'}}">{{!!_decimalsPart ? '.' + _decimalsPart}}</span>
+<span class="js-MoneyTextBox__input controls-TextBox__field" contentEditable='true'>
+    <ws:if data="{{ enabled === true }}">{{text}}</ws:if><ws:else>{{_integersPart}}<span class="controls-MoneyTextBox__decimals">.{{_decimalsPart}}</span></ws:else>
+</span>

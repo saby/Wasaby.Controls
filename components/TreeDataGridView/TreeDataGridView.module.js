@@ -1,5 +1,4 @@
 define('js!SBIS3.CONTROLS.TreeDataGridView', [
-   "Core/IoC",
    "Core/core-merge",
    "Core/constants",
    'Core/CommandDispatcher',
@@ -18,7 +17,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'js!SBIS3.CONTROLS.Link',
    'css!SBIS3.CONTROLS.TreeDataGridView',
    'css!SBIS3.CONTROLS.TreeView'
-], function( IoC, cMerge, constants, CommandDispatcher, contains, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, MassSelectionHierarchyController) {
+], function( cMerge, constants, CommandDispatcher, contains, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, MassSelectionHierarchyController) {
 
 
    var
@@ -50,6 +49,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             colorMarkEnabled: cfg.colorMarkEnabled,
             colorField: cfg.colorField,
             allowEnterToFolder: cfg.allowEnterToFolder,
+            task1173671799: cfg.task1173671799,
             colspan: cfg.columns.length,
             multiselect: cfg.multiselect
          }
@@ -216,23 +216,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
       },
 
-      _getSearchBreadCrumbsWidth: function(){
-      	var
-            firstCol = $('td:first', this._getItemsContainer()),
-      	   firstColWidth = this._options.multiselect ? firstCol.outerWidth() : 0,
-      		secondCol = firstCol.next('td'),
-      		cellPadding;
-   
-      	/* Второй колонки может и не быть, тогда считаем паддинг по первой */
-         if(!secondCol.length) {
-            secondCol = firstCol;
-         }
-   
-         cellPadding = secondCol.outerWidth() - secondCol.width();
-      	
-      	return this.getContainer().width() - cellPadding - firstColWidth;
-      },
-
       redraw: function() {
          /* Перед перерисовкой скроем стрелки редактирования, иначе будет мограние,
             т.к. после отрисовки данные полностью могу измениться */
@@ -242,9 +225,39 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if (this._getItemsProjection()) {
             this._createAllFolderFooters();
          }
-         //Если есть скролящиеся заголовки, нужно уменьшить ширину хлебных крошек в поиске до ширины таблицы
+         this._checkBreadCrumbsWidth();
+      },
+   
+      _afterAddItems: function() {
+         TreeDataGridView.superclass._afterAddItems.apply(this, arguments);
+         this._checkBreadCrumbsWidth();
+      },
+      
+      _checkBreadCrumbsWidth: function() {
+         /* Необходимо ограничивать ширину хлебных крошек в случае динамической ширины таблицы,
+            т.к. тогда ширину хлебных крошек никто не ограничит.
+            Динамическая ширина таблицы включается, когда:
+            - Включен частичный скролл.
+            - Висит модификатор controls-DataGridView__tableLayout-auto, который вешает table-layout: auto на таблицу,
+              и таблица может вылезать за пределы контенера контрола. */
          if ((this._options.startScrollColumn || this.getContainer().hasClass('controls-DataGridView__tableLayout-auto')) && this._isSearchMode()){
-         	this.getContainer().find('.controls-TreeView__searchBreadCrumbs').width(this._getSearchBreadCrumbsWidth());
+            var breadCrumbs = this.getContainer().find('.controls-TreeView__searchBreadCrumbs'),
+                firstCol, firstColWidth, secondCol, cellPadding;
+            
+            if(breadCrumbs.length) {
+               firstCol = $('td:first', this._getItemsContainer());
+               firstColWidth = this._options.multiselect ? firstCol.outerWidth() : 0;
+               secondCol = firstCol.next('td');
+   
+               /* Второй колонки может и не быть, тогда считаем паддинг по первой */
+               if(!secondCol.length) {
+                  secondCol = firstCol;
+               }
+               
+               cellPadding = secondCol.outerWidth() - secondCol.width();
+               
+               breadCrumbs.width(this.getContainer().width() - cellPadding - firstColWidth);
+            }
          }
       },
 
@@ -384,22 +397,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          return this._editArrow;
       },
 
-      _getEditArrowPosition: function(hoveredItem) {
-         var folderTitle = hoveredItem.container.find('.controls-TreeView__folderTitle'),
-             td = folderTitle.closest('.controls-DataGridView__td', hoveredItem.container),
-             containerCords = this._container[0].getBoundingClientRect(),
-             /* в 3.7.3.200 сделать это публичным маркером для стрелки */
-             arrowContainer = td.find('.js-controls-TreeView__editArrow'),
-             tdPadding, arrowCords, leftOffset, toolbarLeft, needCorrect;
-
-         if(!arrowContainer.length) {
-            arrowContainer = td.find('.controls-TreeView__editArrow');
-         }
-
-         /* Контейнера для стрелки может не быть, тогда не показываем */
-         if(!arrowContainer.length) {
-            return false;
-         }
+      _getEditArrowPosition: function(td, folderTitle, arrowContainer) {
+         var  containerCords = this._container[0].getBoundingClientRect(),
+              tdPadding, arrowCords, leftOffset, toolbarLeft, needCorrect;
+         
          tdPadding = parseInt(td.css('padding-right'), 10);
          /* Т.к. у нас в вёрстке две иконки, то позиционируем в зависимости от той, которая показывается,
             в .200 переделаем на маркер */
@@ -423,7 +424,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             needCorrect = toolbarLeft && (toolbarLeft < leftOffset);
             /* Если стрелка заползает на операции над записью -> увеличиваем отступ */
             if(needCorrect) {
-               leftOffset -= leftOffset - toolbarLeft + tdPadding * 2; //Левая граница тулбара + паддинги
+               leftOffset -= leftOffset - toolbarLeft + this.getEditArrow().getContainer().width(); //Левая граница тулбара + ширина стрелки
             }
             /* backgorund'a у стрелки быть не должно, т.к. она может отображаться на фоне разного цвета,
                но если мы корректрируем положение, то надо навесить background, чтобы она затемняла текст */
@@ -434,6 +435,15 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             top: arrowCords.top - containerCords.top + this._container[0].scrollTop,
             left: leftOffset
          }
+      },
+      
+      _getEditArrowMarker: function(itemContainer) {
+         var arrowContainer = itemContainer.find('.js-controls-TreeView__editArrow');
+         
+         if(!arrowContainer.length) {
+            arrowContainer = itemContainer.find('.controls-TreeView__editArrow');
+         }
+         return arrowContainer;
       },
 
       _onChangeHoveredItem: function() {
@@ -462,22 +472,27 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
       _showEditArrow: function() {
          var hoveredItem = this.getHoveredItem(),
+             hoveredItemContainer = hoveredItem.container,
              editArrowContainer = this.getEditArrow().getContainer(),
-             needShowArrow, hiContainer, editArrowPosition;
+             folderTitle, titleTd, editArrowMarker, projItem;
+         
+         if(this._hasHoveredItem()) {
+            projItem = this._getItemsProjection().getItemBySourceItem(hoveredItem.record);
+         }
 
-         hiContainer = hoveredItem.container;
          /* Не показываем если:
             1) Иконку скрыли
             2) Не папка
-            3) Режим поиска (по стандарту) */
-         needShowArrow = hiContainer && hiContainer.hasClass('controls-ListView__item-type-node') && this.getEditArrow().isVisible() && !this._isSearchMode();
+            3) Режим поиска (по стандарту)
+            4) projItem'a может не быть при добавлении по месту */
+         if(projItem && projItem.isNode() && this.getEditArrow().isVisible() && !this._isSearchMode()) {
+            folderTitle = hoveredItemContainer.find('.controls-TreeView__folderTitle');
+            titleTd = folderTitle.closest('.controls-DataGridView__td', hoveredItemContainer);
+            editArrowMarker = this._getEditArrowMarker(titleTd);
 
-         if(hiContainer && needShowArrow) {
-            editArrowPosition = this._getEditArrowPosition(hoveredItem);
-
-            if(editArrowPosition) {
-               editArrowContainer.css(editArrowPosition);
+            if(editArrowMarker.length) {
                editArrowContainer.removeClass('ws-hidden');
+               editArrowContainer.css(this._getEditArrowPosition(titleTd, folderTitle, editArrowMarker));
             }
          } else {
             this._hideEditArrow();

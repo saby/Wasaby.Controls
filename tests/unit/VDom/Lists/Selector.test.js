@@ -131,6 +131,39 @@ define(['js!WSControls/Lists/Selector',
             assert.equal(1, selector._selectedIndex, 'Option selectedKey doesn\'t work (Enum)');
          });
 
+         it('_beforeUpdate', function () {
+            var selector = new Selector({
+               selectedKey : 2,
+               items: dataRs,
+               idProperty: 'id'
+            });
+
+            selector._beforeUpdate({
+               selectedKey : 3,
+               items: dataRs,
+               idProperty: 'id'
+            });
+            assert.equal(3, selector._selectedKey, '_beforeUpdate doesn\'t change key correctly');
+            assert.equal(2, selector._selectedIndex, '_beforeUpdate doesn\'t change key correctly');
+
+            selector._beforeUpdate({
+               selectedIndex : 0,
+               items: dataRs,
+               idProperty: 'id'
+            });
+            assert.equal(1, selector._selectedKey, '_beforeUpdate doesn\'t change index correctly');
+            assert.equal(0, selector._selectedIndex, '_beforeUpdate doesn\'t change index correctly');
+
+            selector._beforeUpdate({
+               selectedKey : 5,
+               items: dataRs,
+               idProperty: 'id'
+            });
+            assert.equal(undefined, selector._selectedKey, '_beforeUpdate doesn\'t change index correctly');
+            assert.equal(-1, selector._selectedIndex, '_beforeUpdate doesn\'t change index correctly');
+
+         });
+
          describe('GetData', function(){
 
             it('_isItemSelected', function () {

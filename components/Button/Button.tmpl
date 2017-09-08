@@ -1,4 +1,4 @@
-<a name="{{_options.name}}" sbisname="{{_options.sbisname||_options.name}}" newconfig="{{_options.config}}"
+<span name="{{_options.name}}" sbisname="{{_options.sbisname||_options.name}}" newconfig="{{_options.config}}"
       event:onclick="_onMouseClick()"
       event:onmousedown="_onMouseDown()"
       event:onmouseup="_onMouseUp()"
@@ -9,9 +9,6 @@
       event:ontouchend="_onTouchEnd()"
       event:ontouchmove="_onTouchMove()"
       tabindex="{{_options.tabindex}}"
-      href="{{enabled ? href}}"
-      target="{{inNewTab ? '_blank'}}"
-      rel="{{href ? noreferrer}}"
       class="controls-Button controls-ButtonBase
  controls-Button-size__{{!!_options.size ? _options.size : 'default'}}
  controls-Button-color__{{_options.primary ? 'primary':'default'}}
@@ -30,4 +27,4 @@
             <span class="controls-Button__text js-controls-Button__text {{_options._textClass}}"><ws:partial template="{{_options.caption}}" /></span>
         </ws:if>
     </span>
-</a>
+</span>

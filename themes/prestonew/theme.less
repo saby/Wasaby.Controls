@@ -842,10 +842,10 @@ body {
          height: 3rem!important;
          right: 0;
          top: 0;
-         color: @link-text-color!important;
+         color: @Infobox-cross-color!important;
          overflow: hidden;
          &:hover {
-            color: @link-hover-text-color!important;
+            color: @Infobox-cross-color-hover!important;
          }
          &:before {
             line-height: 2.7rem!important;
@@ -1075,3 +1075,39 @@ body {
    }
 }
 
+//Rem Line-height Doesn’t Work In Pseudo Elements In IE
+//fallback for ie, will live while there is rem
+.ws-is-ie {
+  .controls-TextBox .controls-TextBox__wrapper:before {
+    line-height: 2.5em; //2.5 = 2.85/1.14 //2.85 - default-line-height, 1.14 - default-font size
+  }
+}
+
+body {
+  .ws-errorsReportDialog {
+    min-width: 30rem;
+
+    .ws-field-string {
+      font-size: 1rem;
+      height: 1.5rem;
+      color: @default-text-color;
+    }
+
+    .ws-field-button {
+      height: 1.5rem;
+      padding-right: 0.5rem;
+    }
+
+    .ws-errorsReportDialog-caption {
+      text-align: left;
+      width: 6rem;
+      color: @default-text-color;
+    }
+
+    .ws-errorsReportDialog-errors {
+      .ws-errorsReportDialog-caption, .ws-field-string, .ws-errorsReportDialog-errorsDescription {
+        color: @error-color;
+      }
+    }
+  }
+}

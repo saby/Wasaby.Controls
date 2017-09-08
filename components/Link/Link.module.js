@@ -1,16 +1,20 @@
 define('js!SBIS3.CONTROLS.Link', [
-   'Deprecated/helpers/string-helpers',
+   'Core/helpers/String/escapeTagsFromStr',
    'js!WSControls/Buttons/Button',
+   'tmpl!SBIS3.CONTROLS.Link/resources/hrefTemplate',
    'css!SBIS3.CONTROLS.Link'
-], function(strHelpers, WSButton) {
+], function(escapeTagsFromStr, WSButton, hrefTemplate) {
 
    'use strict';
 
    /**
-    * Класс контрол "Кнопка в виде ссылки". Используется только в онлайн.
+    * Класс контрола "Кнопка в виде ссылки".
     *
-    * {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/buttons/button-link/ Демонстрационные примеры}.
+    * {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/buttons/button-link/#link Демонстрационные примеры}.
     * <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Спецификация</a>.
+    *
+    * @remark
+    * Используется только для веб-приложения online.sbis.ru.
     *
     * @class SBIS3.CONTROLS.Link
     * @extends WSControls/Buttons/ButtonBase
@@ -68,35 +72,38 @@ define('js!SBIS3.CONTROLS.Link', [
    var Link = WSButton.extend( /** @lends SBIS3.CONTROLS.Link.prototype */ {
       $protected: {
          _options: {
-             /**
-              * @cfg {String} Адрес документа, к которому нужно перейти
-              * @example
-              * <pre>
-              *     <option name="href">https://google.ru/</option>
-              * </pre>
-              * @see inNewTab
-              */
+            /**
+             * @cfg {String} Адрес документа, к которому нужно перейти
+             * @example
+             * <pre>
+             *     <option name="href">https://google.ru/</option>
+             * </pre>
+             * @see inNewTab
+             */
             href: '',
-             /**
-              * @cfg {Boolean} Открывать ссылку в новой вкладке
-              * @example
-              * <pre>
-              *     <option name="inNewTab">true</option>
-              * </pre>
-              * @see href
-              */
+            /**
+             * @cfg {Boolean} Открывать ссылку в новой вкладке
+             * @example
+             * <pre>
+             *     <option name="inNewTab">true</option>
+             * </pre>
+             * @see href
+             */
             inNewTab: false
          }
       },
 
       _modifyOptions: function (opts) {
          var
-             options = Link.superclass._modifyOptions.apply(this, arguments);
+            options = Link.superclass._modifyOptions.apply(this, arguments);
          options.cssClassName += ' controls-Link';
 
          // в случае когда задана ссылка передаем отдельный шаблон
+         if(options.href) {
+            options.contentTemplate = hrefTemplate;
+         }else {
             options._textClass = ' controls-Link__field';
-
+         }
          return options;
       },
 
@@ -104,18 +111,29 @@ define('js!SBIS3.CONTROLS.Link', [
 
       setCaption: function(caption){
          Link.superclass.setCaption.call(this, caption);
-         this.setTooltip(strHelpers.htmlToText(caption === undefined || caption === null ? '' : caption + ''));
+         if(this._options.href) {
+            this._contentContainer[0].innerHTML = hrefTemplate(this._options);
+         }
+         var res = (caption === undefined || caption === null ? '' : caption + '').replace(/<br>/g, '\n');
+         this.setTooltip(escapeTagsFromStr(res, '\\w+'));
       },
 
       _setEnabled: function(enabled){
          Link.superclass._setEnabled.apply(this, arguments);
          if (enabled) {
             if (this._options.href) {
-               this._container.attr('href', this._options.href);
+               $('.controls-Link-link', this._container).attr('href', this._options.href);
             }
          }
          else {
-            this._container.removeAttr('href', this._options.href);
+            $('.controls-Link-link', this._container).removeAttr('href', this._options.href);
+         }
+      },
+
+      _drawIcon: function (icon) {
+         Link.superclass._drawIcon.call(this, icon);
+         if(this._options.href) {
+            this._container.get(0).innerHTML = hrefTemplate(this._options);
          }
       },
       /**
@@ -127,7 +145,7 @@ define('js!SBIS3.CONTROLS.Link', [
        */
       setHref: function (href) {
          this._options.href = href;
-         this._redrawButton();
+         this._container.html(hrefTemplate(this._options));
       }
 
    });

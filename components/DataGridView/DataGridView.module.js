@@ -382,11 +382,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * </component>
     */
    var DataGridView = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS.DataGridView.prototype*/ {
+       /**
+        * @event onDrawHead Возникает после отрисовки шапки
+        * @param {Core/EventObject} eventObject Дескриптор события.
+        */
       _dotTplFn : dotTplFn,
-      /**
-       * @event onDrawHead Возникает после отрисовки шапки
-       * @param {Core/EventObject} eventObject Дескриптор события.
-       */
       $protected: {
          _headIsChanged: false,
          _rowTpl : rowTpl,
@@ -683,6 +683,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          DataGridView.superclass.init.call(this);
          this._updateHeadAfterInit();
          CommandDispatcher.declareCommand(this, 'ColumnSorting', this._setColumnSorting);
+         this._updateAjaxLoaderPosition();
       },
 
       _prepareConfig: function() {
@@ -815,12 +816,25 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return DataGridView.superclass._itemsReadyCallback.apply(this, arguments);
       },
 
+      _updateAjaxLoaderPosition: function () {
+         var height, styles;
+         if (!this._thead) {
+            return;
+         }
+         // Смещаем индикатор загрузки вниз на высоту заголовков.
+         height = this._thead.outerHeight();
+         styles = {top: height || ''};
+         // Корректируем хак ".ws-is-webkit .controls-AjaxLoader {height: 100%;}" из стилей ListView.
+         if (cDetection.webkit) {
+            styles.height =  height ? 'calc(100% - ' + height + 'px)' : '';
+         }
+         this._getAjaxLoaderContainer().css(styles);
+      },
+
       _redrawHead : function() {
          var
             headData,
-            headMarkup,
-            height,
-            styles;
+            headMarkup;
 
          if (!this._thead) {
             this._bindHead();
@@ -857,14 +871,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if (this._options.stickyHeader && !this._options.showHead && this._options.resultsPosition === 'top') {
             this._updateStickyHeader(headData.hasResults);
          }
-         // Смещаем индикатор загрузки вниз на высоту заголовков.
-         height = this._thead.outerHeight();
-         styles = {top: height || ''};
-         // Корректируем хак ".ws-is-webkit .controls-AjaxLoader {height: 100%;}" из стилей ListView.
-         if (cDetection.webkit) {
-            styles.height =  height ? 'calc(100% - ' + height + 'px)' : '';
-         }
-         this._getAjaxLoaderContainer().css(styles);
+         this._updateAjaxLoaderPosition();
       },
 
       _redrawFoot: function(){

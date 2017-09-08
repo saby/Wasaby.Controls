@@ -20,10 +20,6 @@
       border-color: @text-box-border-color-active;
       background: @text-box-bg-focus; //presto, carry
    }
-   &.ws-validation-error {
-      border-color: @text-box-border-color-error;
-      background: @text-box-bg-error;
-   }
    &.ws-disabled {
       border-color: @text-box-border-color-disabled;
       background: @text-box-bg-disabled;
@@ -32,6 +28,10 @@
       .controls-TextBox__field {
          .hiddenPlaceholder();
       }
+   }
+   &.ws-validation-error {
+      border-color: @text-box-border-color-error;
+      background: @text-box-bg-error;
    }
    .controls-informationIcon {
       position: absolute;
@@ -108,7 +108,7 @@
       color: @default-placeholder-color;
       font: inherit;
       text-align: inherit;
-      padding: @text-box-field-padding;
+      padding: @text-box-wrapper-padding;
    }
 }
 .controls-TextBox__field-uppercase {

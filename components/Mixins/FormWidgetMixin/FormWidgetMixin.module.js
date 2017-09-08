@@ -2,10 +2,9 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
    "Core/constants",
    "Core/IoC",
    "Core/core-functions",
-   "Core/ConsoleLogger",
    "Core/Deferred",
    "Core/helpers/String/escapeHtml"
-], function ( constants, IoC, cFunctions, ConsoleLogger, Deferred, escapeHtml) {
+], function ( constants, IoC, cFunctions, Deferred, escapeHtml) {
    /**
     * Миксин, который добавляет функционал валидаторов.
     * Подробнее о работе с валидаторами вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/">Валидация вводимых данных</a>.
@@ -108,6 +107,9 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
             } else {
                return message;
             }
+         },
+         _getExtendedTooltipModifiers: function() {
+            return this.isMarked() ? 'ws-infobox-type-error' : '';
          }
       },
       before: {
@@ -346,6 +348,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
                      control: target,
                      message: this._alterTooltipText(),
                      delay: 0,
+                     modifiers: 'ws-infobox-type-error',
                      hideDelay: this._infobox.ACT_CTRL_HIDE_TIMEOUT
                   });
                }
