@@ -348,12 +348,11 @@ define('js!WSControls/Lists/ItemsControl', [
          }
       });
 
-   //TODO: разобраться что там за ошибка падает
-   // ItemsControl.getOptionTypes = function getOptionTypes(){
-   //    return {
-   //       dataSource: Types(ISource)
-   //    }
-   // };
+   ItemsControl.getOptionTypes = function getOptionTypes(){
+      return {
+         dataSource: Types(ISource)
+      }
+   };
 
    return ItemsControl;
 });
