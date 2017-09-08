@@ -23,22 +23,13 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
             _dotTplFn: dotTplFn,
             $protected: {
                _options: {
-                  imageUuid: null/*###,
-                  richMode: false*/
+                  imageUuid: null
                }
             },
             _replaceButton: undefined,
             _commandsButton: undefined,
             _imageViewer: undefined,
             _imagePanel: undefined,
-
-            /*###_modifyOptions: function(options) {
-               options = ImageOptionsPanel.superclass._modifyOptions.apply(this, arguments);
-               if (Di.isRegistered('ImageEditor')) {
-                  options.richMode = this._options.target.attr('alt') !== ''; //если файлы грузили через fileStorageLoader, то не надо показывать редактор изображений
-               }
-               return options;
-            },*/
 
             $constructor: function(){
                this._publish('onImageChange', 'onImageDelete', 'onImageSizeChange');
@@ -48,7 +39,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                ImageOptionsPanel.superclass.init.call(this);
 
                this._replaceButton = this.getChildControlByName('replaceButton');
-               this._replaceButton.subscribe('onActivated', this._commandsButtonItemActivateHandler.bind(this, null, 'change')/*###this._replaceButtonClickHandler.bind(this)*/);
+               this._replaceButton.subscribe('onActivated', this._commandsButtonItemActivateHandler.bind(this, null, 'change'));
                this._commandsButton = this.getChildControlByName('commandsButton');
                this._commandsButton.subscribe('onMenuItemActivate', this._commandsButtonItemActivateHandler.bind(this));
                this._updateCommandsButtonItems();
@@ -137,13 +128,6 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                imagePanel.show();
             },
 
-            /*###_replaceButtonClickHandler: function() {
-               this.getFileLoader().startFileLoad(this._replaceButton._container, false, this._options.imageFolder).addCallback(function(fileobj){
-                  this._notify('onImageChange', fileobj);
-                  this.hide();
-               }.bind(this));
-            },*/
-
             _commandsButtonItemActivateHandler: function(event, key){
                switch (key) {
                   case "delete":
@@ -171,7 +155,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                   case "edit":
                      var
                         self = this,
-                        uuid = this._options.imageUuid;//###this.getTarget().attr('alt')
+                        uuid = this._options.imageUuid;
                      if (uuid) {
                         this.getEditor().openFullScreenByFileId(uuid).addCallback(function(fileobj){
                            self._notify('onImageChange', fileobj);
