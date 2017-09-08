@@ -278,7 +278,10 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             }
          });
 
-         this.once('onSearch', function () {
+         /* Когда включена опция autoShow, то SearchController необходимо
+            инициализировать при получении фокуса полем ввода,
+            т.к. автодопонение появляется уже при получении фокуса. */
+         this.once(this._getOption('autoShow') ? 'onFocusIn' : 'onSearch', function () {
             this._searchController = new SearchController({
                view: this.getList(),
                searchForm: this,

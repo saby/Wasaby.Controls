@@ -192,6 +192,10 @@ define('js!SBIS3.CONTROLS.SuggestView',
              }
              return opts;
           },
+   
+          _getItemsProjection: function() {
+             return this.getActiveView()._getItemsProjection();
+          },
 
           //region _private
 
@@ -404,9 +408,21 @@ define('js!SBIS3.CONTROLS.SuggestView',
 
           setColumns: function(columns) {
              this.getActiveView().setColumns(columns);
-          }
+          },
 
           //endregion SBIS3.CONTROLS.ListView
+   
+          //region SBIS3.CONTROLS.Selectable
+          
+          getSelectedIndex: function() {
+             return this.getActiveView().getSelectedIndex();
+          },
+          
+          setSelectedIndex: function(index) {
+             return this.getActiveView().setSelectedIndex(index);
+          }
+          
+          //endregion SBIS3.CONTROLS.Selectable
        });
 
        return SuggestView;
