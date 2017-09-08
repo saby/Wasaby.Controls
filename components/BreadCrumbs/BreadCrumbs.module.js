@@ -21,9 +21,9 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
     * @class SBIS3.CONTROLS.BreadCrumbs
     * @extends SBIS3.CORE.CompoundControl
     *
-    * @author Черемушкин Илья Вячеславович
+    * @author Герасимов Александр Максимович
     *
-    * @mixes SBIS3.CONTROLS.DSMixin
+    * @mixes SBIS3.CONTROLS.ItemsControlMixin
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.DecorableMixin
     *

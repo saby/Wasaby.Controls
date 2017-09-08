@@ -2,6 +2,9 @@
  * Константы длительных операций
  *
  * @class SBIS3.CONTROLS.LongOperationsConst
+ *
+ * @author Спирин Виктор Алексеевич
+ *
  * @public
  */
 define('js!SBIS3.CONTROLS.LongOperationsConst',

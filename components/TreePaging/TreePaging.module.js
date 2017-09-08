@@ -3,7 +3,16 @@ define('js!SBIS3.CONTROLS.TreePaging', [
    "tmpl!SBIS3.CONTROLS.TreePaging",
    'i18n!SBIS3.CONTROLS.TreePaging'
 ], function(CompoundControl, tmplFn) {
-   var TreePaging = CompoundControl.extend({
+    /**
+     *
+     * @class SBIS3.CONTROLS.TreePaging
+     * @extends SBIS3.CORE.CompoundControl
+     *
+     * @author Сухоручкин Андрей Сергеевич
+     *
+     * @public
+     */
+   var TreePaging = CompoundControl.extend(/** @lends SBIS3.CONTROLS.TreePaging.prototype*/{
       _dotTplFn: tmplFn,
       $protected :{
          _options : {

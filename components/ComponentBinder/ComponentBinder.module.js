@@ -62,7 +62,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
 
    /**
     * Контроллер, позволяющий связывать компоненты осуществляя базовое взаимодейтсие между ними
-    * @author Черемушкин Илья Вячеславович
+    * @author Герасимов Александр Максимович
     * @class SBIS3.CONTROLS.ComponentBinder
     * @extends Core/Abstract
     * @public
