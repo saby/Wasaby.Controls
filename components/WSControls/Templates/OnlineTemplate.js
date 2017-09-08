@@ -18,10 +18,6 @@ define('js!WSControls/Templates/OnlineTemplate',
          _rightSideVisible: true,
          _compactMode: false,
 
-         constructor: function(cfg) {
-            OnlineTemplate.superclass.constructor.apply(this, arguments);
-         },
-
          _beforeMount: function(cfg) {
             if (cfg.tabButtonsConfig) {
                this._currentTab = URLHelpers.getQueryParam('currentTab') || 0;
