@@ -332,7 +332,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       }
       projection.setFilter(filter);
    },
-   expandAllItems = function(projection) {
+   expandAllItems = function(projection, cfg) {
       var
          recordSet = projection.getCollection(),
          projItems = projection.getItems(),
@@ -340,11 +340,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             idProperty: recordSet.getIdProperty(),
             parentProperty: projection.getParentProperty()
          }),
-         item;
+         item, itemId;
       for (var i = 0; i < projItems.length; i++) {
          item = projItems[i];
          if (item.isNode() && !item.isExpanded()) {
-            if (hierarchy.getChildren(item.getContents().getId(), recordSet).length) {
+            itemId = item.getContents().getId();
+            if (hierarchy.getChildren(itemId, recordSet).length) {
+               if (cfg.expand) {
+                  cfg.openedPath[itemId] = true;
+               }
                item.setExpanded(true);
                item.setLoaded(true);
             }
