@@ -124,6 +124,8 @@
       max-height: @DropdownList-picker-max-height - @DropdownList-footer-multisel-buttonsBlock-h;
       height: 100%;
       width: 100%; //Укажем явно для ie edge
+      min-height: 0;
+      .flex-shrink(1);
    }
 
    .controls-DropdownList__item, .controls-DropdownList__selectedItem * {
@@ -300,6 +302,7 @@
       border-radius: @DropdownList-picker-list-border-radius;
       background: @DropdownList-picker-bg;
       padding: @DropdownList-picker-padding;
+      box-sizing: border-box;
       max-height: @DropdownList-picker-max-height;
       .box-shadow(@menu-shadow);
    }
@@ -479,6 +482,15 @@
       }
       &:active {
          background: @DropdownList-picker-menu-item-hover;
+      }
+   }
+}
+
+//Пример баги в ios https://jsfiddle.net/zk5755vg/12/
+.ws-is-mobile-chrome-ios, .ws-is-mobile-safari, .ws-is-sbis-desktop {
+   .controls-DropdownList__picker {
+      .controls-DropdownList__body {
+         display: block; //С флексовым контейнером в safari не отображается список (height:0). Флекс нужен для правильного обрезания контейнера по высоте, на моб.платформе это не актуально
       }
    }
 }

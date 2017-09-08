@@ -432,7 +432,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                      focusedControl.setActive(false, false, false, this);
                      this.setActive(true);
                   } else if (self._options.autoShow && focusedControl && !ControlHierarchyManager.checkInclusion(this, focusedControl.getContainer()[0])) {
-                     if (focusedControl) {
+                     // не надо подписываться, если контрол уже активен, очистка списка будет удалена в 3.17.150
+                     if (focusedControl && !focusedControl.isActive()) {
                         // если фокус переходит на другой компонент, дождемся этого перехода фокуса, и только потом почистим items.
                         // если так не сделать, преждевременно сработает механизм восстановления фокуса, в случае safari это приводит к ошибке
                         // https://online.sbis.ru/opendoc.html?guid=aa909af6-3564-4fed-ac60-962fc71b451e
@@ -649,25 +650,27 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              listConfig;
          
          this.hidePicker();
-         
-         if(showAllConfig.template === DEFAULT_SHOW_ALL_TEMPLATE) {
-            /* Если шаблон используется дефолтный - сформируем для него конфиг */
-            listConfig = {
-               columns: list.getColumns(),
-               filter: list.getFilter(),
-               idProperty: list.getProperty('idProperty'),
-               itemTpl: list.getProperty('itemTpl'),
-               dataSource: list.getDataSource()
-            };
-            
-            /* Когда нет записей в списке автодополнения,
-               должен открываться справочник без фильтра, чтобы отобразились все записи */
-            if(!list.getItems().getCount() && this._options.searchParam) {
-               delete listConfig.filter[this._options.searchParam];
-            }
    
-            showAllConfig.componentOptions.listConfig = listConfig;
+         listConfig = {
+            columns: list.getColumns(),
+            filter: list.getFilter(),
+            idProperty: list.getProperty('idProperty'),
+            itemTpl: list.getProperty('itemTpl'),
+            dataSource: list.getDataSource()
+         };
+   
+         /* Когда нет записей в списке автодополнения,
+          должен открываться справочник без фильтра, чтобы отобразились все записи */
+         if(!list.getItems().getCount() && this._options.searchParam) {
+            delete listConfig.filter[this._options.searchParam];
          }
+         
+         if(!showAllConfig.componentOptions) {
+            showAllConfig.componentOptions = {};
+         }
+   
+         showAllConfig.componentOptions.listConfig = listConfig;
+         
          this.showSelector(showAllConfig);
       },
 

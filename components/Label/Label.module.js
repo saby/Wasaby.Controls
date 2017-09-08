@@ -2,12 +2,11 @@ define('js!SBIS3.CONTROLS.Label',
    [
       'Core/Control',
       'js!SBIS3.CONTROLS.Clickable',
-      'Core/Sanitize',
       'tmpl!SBIS3.CONTROLS.Label',
       'js!SBIS3.CONTROLS.Label.compatibility',
       'css!SBIS3.CONTROLS.Label'
    ],
-   function(LightControl, Clickable, Sanitize, template, Compatibility) {
+   function(LightControl, Clickable, template, Compatibility) {
 
       'use strict';
 

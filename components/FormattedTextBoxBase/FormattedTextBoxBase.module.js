@@ -2,7 +2,6 @@ define(
    'js!SBIS3.CONTROLS.FormattedTextBoxBase',
    [
       'Core/IoC',
-      'Core/ConsoleLogger',
       'Core/constants',
       'Core/core-extend',
       'js!SBIS3.CONTROLS.Utils.IfEnabled',
@@ -10,7 +9,7 @@ define(
       'html!SBIS3.CONTROLS.FormattedTextBoxBase/FormattedTextBoxBase_mask',
       'is!msIe?js!SBIS3.CORE.FieldString/resources/ext/ierange-m2-min'
    ],
-   function (IoC, ConsoleLogger, constants, cExtend, ifEnabled, TextBoxBase, maskTemplateFn) {
+   function (IoC, constants, cExtend, ifEnabled, TextBoxBase, maskTemplateFn) {
 
    'use strict';
 
