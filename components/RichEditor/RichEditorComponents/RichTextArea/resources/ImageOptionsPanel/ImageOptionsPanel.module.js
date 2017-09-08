@@ -23,7 +23,8 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
             _dotTplFn: dotTplFn,
             $protected: {
                _options: {
-                  richMode: false
+                  imageUuid: null/*###,
+                  richMode: false*/
                }
             },
             _replaceButton: undefined,
@@ -31,13 +32,13 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
             _imageViewer: undefined,
             _imagePanel: undefined,
 
-            _modifyOptions: function(options) {
+            /*###_modifyOptions: function(options) {
                options = ImageOptionsPanel.superclass._modifyOptions.apply(this, arguments);
                if (Di.isRegistered('ImageEditor')) {
                   options.richMode = this._options.target.attr('alt') !== ''; //если файлы грузили через fileStorageLoader, то не надо показывать редактор изображений
                }
                return options;
-            },
+            },*/
 
             $constructor: function(){
                this._publish('onImageChange', 'onImageDelete', 'onImageSizeChange');
@@ -50,6 +51,22 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                this._replaceButton.subscribe('onActivated', this._commandsButtonItemActivateHandler.bind(this, null, 'change')/*###this._replaceButtonClickHandler.bind(this)*/);
                this._commandsButton = this.getChildControlByName('commandsButton');
                this._commandsButton.subscribe('onMenuItemActivate', this._commandsButtonItemActivateHandler.bind(this));
+               this._updateCommandsButtonItems();
+            },
+
+            setImageUuid: function (uuid) {
+               this._options.imageUuid = uuid || null;
+               this._updateCommandsButtonItems();
+            },
+
+            getImageUuid: function () {
+               return this._options.imageUuid;
+            },
+
+            _updateCommandsButtonItems: function () {
+               if (Di.isRegistered('ImageEditor') && this._commandsButton.getPicker()) {
+                  this._commandsButton.getItemInstance('edit').setVisible(!!this._options.imageUuid);
+               }
             },
 
             recalcPosition: function() {
@@ -153,10 +170,13 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                      break;
                   case "edit":
                      var
-                        self = this;
-                     this.getEditor().openFullScreenByFileId(this.getTarget().attr('alt')).addCallback(function(fileobj){
-                        self._notify('onImageChange', fileobj);
-                     });
+                        self = this,
+                        uuid = this._options.imageUuid;//###this.getTarget().attr('alt')
+                     if (uuid) {
+                        this.getEditor().openFullScreenByFileId(uuid).addCallback(function(fileobj){
+                           self._notify('onImageChange', fileobj);
+                        });
+                     }
                      this.hide();
                      break;
                }

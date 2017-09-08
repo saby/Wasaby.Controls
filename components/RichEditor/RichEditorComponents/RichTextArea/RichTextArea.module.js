@@ -1017,20 +1017,20 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             switch (key) {
                case "1":
                   //необходимо вставлять пустой абзац с кареткой, чтобы пользователь понимал куда будет производиться ввод
-                  this._insertImg(URL, 'image-template-left', uuid, '<p class="without-margin">', '</p><p>{$caret}</p>');
+                  this._insertImg(URL, 'image-template-left', ''/*###uuid*/, '<p class="without-margin">', '</p><p>{$caret}</p>');
                   break;
                case "2":
-                  this._insertImg(URL, '', uuid, '<p class="controls-RichEditor__noneditable image-template-center">', '</p><p></p>');
+                  this._insertImg(URL, '', ''/*###uuid*/, '<p class="controls-RichEditor__noneditable image-template-center">', '</p><p></p>');
                   break;
                case "3":
                   //необходимо вставлять пустой абзац с кареткой, чтобы пользователь понимал куда будет производиться ввод
-                  this._insertImg(URL, 'image-template-right ', uuid, '<p class="without-margin">', '</p><p>{$caret}</p>');
+                  this._insertImg(URL, 'image-template-right ', ''/*###uuid*/, '<p class="without-margin">', '</p><p>{$caret}</p>');
                   break;
                case "4":
                   //todo: сделать коллаж
                   break;
                case "6":
-                  this._insertImg(URL, '', uuid);
+                  this._insertImg(URL, '', ''/*###uuid*/);
                   break;
             }
          },
@@ -1517,7 +1517,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      width =  target[0].style.width || (target.width() + 'px'),
                      style =  width ? ' style="width: ' + width + '"':' style="width: 25%"',
                      imageParagraph = '<p class="controls-RichEditor__noneditable image-template-center" contenteditable="false">' + //tinyMCE не проставляет contenteditable если изменение происходит  через dom.replace
-                        '<img src="' +  target.attr('src') + '"' + style + ' alt="' +  this._checkImageUuid(target[0]) + '"></img></p>';
+                        '<img src="' +  target.attr('src') + '"' + style + ' alt="' + target.attr('alt')/*###this._checkImageUuid(target[0])*/ + '"></img></p>';
 
                   this._tinyEditor.dom.replace($(imageParagraph)[0],target[0],false);
                   break;
@@ -1531,13 +1531,14 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
          _getImageOptionsPanel: function(target){
             var
-               self = this;
-            this._checkImageUuid(target[0]);
+               self = this,
+               uuid = this._checkImageUuid(target[0]);
             if (!this._imageOptionsPanel) {
                this._imageOptionsPanel = new ImageOptionsPanel({
                   templates: self._options.templates,
                   parent: self,
                   target: target,
+                  imageUuid: uuid,
                   targetPart: true,
                   corner: 'bl',
                   closeByExternalClick: true,
@@ -1557,7 +1558,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      $img = this.getTarget();
                   $img.attr('src', URL);
                   $img.attr('data-mce-src', URL);
-                  $img.attr('alt', uuid);
+                  //###$img.attr('alt', uuid);
                   self._tinyEditor.undoManager.add();
                   self._setTrimmedText(self._getTinyEditorValue());
                   if (uuid) {
@@ -1590,6 +1591,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                });
             } else {
                this._imageOptionsPanel.setTarget(target);
+               this._imageOptionsPanel.setImageUuid(uuid);
             }
             return this._imageOptionsPanel;
          },
@@ -1603,24 +1605,24 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          _checkImageUuid: function (img) {
             // html, содержащий в себе изображения, может попасть в редактор откуда угодно (старые или проблемные документы и т.д.), нет строгой
             // гарантии, что в атрибуте alt содержится именно uuid изображения, так что пробуем извлечь его откуда найдётся (и поправить если придётся)
-            var RE_UUID = /^[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}$/i;
+            /*###var RE_UUID = /^[0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12}$/i;
             var uuid = img.alt;
             if (RE_UUID.test(uuid)) {
                return uuid;
-            }
+            }*/
             var REs = [
                /(?:\?|&)id=([0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12})(?:&|$)/i,
                /\/disk\/api\/v[0-9\.]+\/([0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12})_/i
             ];
-            uuid = null;
+            /*###uuid = null;*/
             var url = img.src;
             for (var i = 0; i < REs.length; i++) {
                var ms = url.match(REs[i]);
                if (ms) {
-                  uuid = ms[1];
+                  /*###uuid = ms[1];
                   // Исправить атрибут
-                  img.alt = uuid;
-                  return uuid;
+                  img.alt = ms[1];*/
+                  return ms[1];
                }
             }
          },
@@ -1852,7 +1854,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             return this.getName().replace('/', '#') + 'ИсторияИзменений';
          },
 
-         _insertImg: function(path, className, uuid,  before, after, size) {
+         _insertImg: function(path, className, alt/*###uuid*/,  before, after, size) {
             var
                def =new Deferred(),
                self = this,
@@ -1868,7 +1870,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             img.on('load', function() {
                var
                   style = size ? ' style="width: ' + size + '"':' style="width: 25%"';
-               self.insertHtml(before + '<img class="' + className + '" src="' + path + '"' + style + ' alt="' + uuid + '"></img>'+ after);
+               self.insertHtml(before + '<img class="' + className + '" src="' + path + '"' + style + ' alt="' + alt/*###uuid*/ + '"></img>'+ after);
                def.callback();
             });
             return def;
