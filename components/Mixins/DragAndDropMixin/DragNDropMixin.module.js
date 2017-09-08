@@ -16,23 +16,37 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
      * @see SBIS3.CONTROLS.DragEntity.Entity
      */
     if (typeof window !== 'undefined') {
-        var EventBusChannel = EventBus.channel('DragAndDropChannel');
+        var LEFT_BUTTON = 1,
+           isLeftButtonDown = false,
+           eventBusChannel = EventBus.channel('DragAndDropChannel'),
+           onMouseUp = function(e) {
+              eventBusChannel.notify('onMouseup', e);
+              //Сбрасывать драгндроп надо после того как выполнились все обработчики, нам неизвестен порядок выполнения
+              // обработчиков может быть что первым mouseup поймает владелец и сбросит драгндроп
+              DragObject.reset();
+           };
 
         // Добавлены события для мультитач-девайсов
         // Для обработки используются уже существующие обработчики,
         // незначительно дополненные
-        $(document).bind('mouseup touchend', function(e) {
-            EventBusChannel.notify('onMouseup', e);
-            //Сбрасывать драгндроп надо после того как выполнились все обработчики, нам неизвестен порядок выполнения
-            // обработчиков может быть что первым mouseup поймает владелец и сбросит драгндроп
-            DragObject.reset();
+        $(document).on('mousedown touchstart', function(e) {
+            if (e.buttons & LEFT_BUTTON) {
+               isLeftButtonDown = true;
+            }
+        }).on('mouseup touchend', function(e) {
+           isLeftButtonDown = false;
+           onMouseUp(e);
+        }).on('mousemove touchmove', function (e) {
+            //Probably 'mouseup' event doesn't trigger over scrollbars. Detecting that left button is not hold yet.
+            if (isLeftButtonDown && !(e.buttons & LEFT_BUTTON)) {
+               isLeftButtonDown = false;
+               onMouseUp(e);
+            } else {
+               eventBusChannel.notify('onMousemove', e);
+            }
         });
-
-        $(document).bind('mousemove touchmove', function (e) {
-            EventBusChannel.notify('onMousemove', e);
-        });
-
     }
+
     var DragAndDropMixin = /**@lends SBIS3.CONTROLS.DragNDropMixin.prototype*/{
         $protected: {
             /**
