@@ -730,7 +730,8 @@ define(
 
       _isRequired: function () {
          for(var i = 0; i < this._options.validators.length; i++) {
-            if (this._options.validators[i].validator === ControlsValidators.required) {
+            var validator = this._options.validators[i];
+            if (validator.validator === ControlsValidators.required && !validator.noFailOnError) {
                return true;
             }
          }
