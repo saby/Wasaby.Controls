@@ -1,5 +1,6 @@
 #!groovy
 properties([
+    disableConcurrentBuilds(),
     buildDiscarder(
         logRotator(
             artifactDaysToKeepStr: '5',
@@ -24,26 +25,21 @@ properties([
             description: '',
             name: 'branch_atf'),
         choice(
-            choices: "\nfieldlink\nfilterbutton\natplace\nformcontroller\nglobalpanel\nrichedit\nmove\nscroll\nsearch\nprint\nmerge",
-            description: '',
-            name: 'Tag1'),
-        choice(
-            choices: "\nfieldlink\nfilterbutton\natplace\nformcontroller\nglobalpanel\nrichedit\nmove\nscroll\nsearch\nprint\nmerge",
-            description: '',
-            name: 'Tag2'),
-        choice(
-            choices: "\nfieldlink\nfilterbutton\natplace\nformcontroller\nglobalpanel\nrichedit\nmove\nscroll\nsearch\nprint\nmerge",
-            description: '',
-            name: 'Tag3'),
-        choice(
             choices: "online\npresto\ncarry\ngenie",
             description: '',
             name: 'theme'),
         choice(choices: "chrome\nff", description: '', name: 'browser_type'),
-        choice(choices: "all\nonly_reg\nonly_int\nonly_unit", description: '', name: 'run_tests'),
-        booleanParam(defaultValue: false, description: "", name: 'RUN_ONLY_FAIL_TEST')]),
+        booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
+        booleanParam(defaultValue: false, description: "Запуск интеграционных тестов", name: 'run_int'),
+        booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
+        booleanParam(defaultValue: false, description: "Запуск только упавших тестов из предыдущего билда", name: 'RUN_ONLY_FAIL_TEST')
+        ]),
     pipelineTriggers([])
 ])
+if ( "${env.BUILD_NUMBER}" != "1" && params.run_reg == false && params.run_int == false && params.run_unit == false ) {
+        currentBuild.result = 'ABORTED'
+        error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
+    }
 
 node('controls') {
     def version = "3.17.110"
@@ -56,205 +52,195 @@ node('controls') {
         def items = "controls:${workspace}/controls"
         def branch_atf = params.branch_atf
         def branch_engine = params.branch_engine
-
-        def TAGS = ""
-        if ("${params.Tag1}" != "")
-            TAGS = "${params.Tag1}"
-        if ("${params.Tag2}" != "")
-            TAGS = "${TAGS}, ${params.Tag2}"
-        if ("${params.Tag3}" !="")
-            TAGS = "${TAGS}, ${params.Tag3}"
-        if ("${TAGS}" != "")
-            TAGS = "--TAGS_TO_START ${TAGS}"
-
-        def inte = false
-        def regr = false
-        def unit = false
-
-        switch (params.run_tests){
-            case "all":
-                regr = true
-                inte = true
-                unit = true
-                break
-            case "only_reg":
-                regr = true
-                break
-            case "only_int":
-                inte = true
-                break
-            case "only_unit":
-                unit = true
-                break
+        def inte = params.run_int
+        def regr = params.run_reg
+        def unit = params.run_unit
+        if ("${env.BUILD_NUMBER}" == "1"){
+            inte = true
+            regr = true
+            unit = true
         }
-        
+
         stage("Checkout"){
-            // Контролы
-            dir(workspace) {
-                checkout([$class: 'GitSCM',
-                branches: [[name: env.BRANCH_NAME]],
-                doGenerateSubmoduleConfigurations: false,
-                extensions: [[
-                    $class: 'RelativeTargetDirectory',
-                    relativeTargetDir: "controls"
-                    ]],
-                    submoduleCfg: [],
-                    userRemoteConfigs: [[
-                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                        url: 'git@git.sbis.ru:sbis/controls.git']]
-                ])
-            }
-            dir("./controls"){
-                sh """
-                git fetch
-                git merge origin/rc-${version}
-                """
-            }
-
-            // Выкачиваем platform и cdn
-            dir(workspace) {
-                checkout([$class: 'GitSCM',
-                branches: [[name: "rc-${version}"]],
-                doGenerateSubmoduleConfigurations: false,
-                extensions: [[
-                    $class: 'RelativeTargetDirectory',
-                    relativeTargetDir: "constructor"
-                    ]],
-                    submoduleCfg: [],
-                    userRemoteConfigs: [[
-                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                        url: 'git@git.sbis.ru:sbis-ci/platform.git']]
-                ])
-                checkout([$class: 'GitSCM',
-                branches: [[name: '1.0']],
-                doGenerateSubmoduleConfigurations: false,
-                extensions: [[
-                    $class: 'RelativeTargetDirectory',
-                    relativeTargetDir: "cdn"
-                    ]],
-                    submoduleCfg: [],
-                    userRemoteConfigs: [[
-                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                        url: 'git@git.sbis.ru:root/sbis3-cdn.git']]
-                ])
-            }
-
-            // Выкачиваем constructor
-            dir("./constructor") {
-                checkout([$class: 'GitSCM',
-                branches: [[name: "rc-${version}"]],
-                doGenerateSubmoduleConfigurations: false,
-                extensions: [[
-                    $class: 'RelativeTargetDirectory',
-                    relativeTargetDir: "Constructor"
-                    ]],
-                    submoduleCfg: [],
-                    userRemoteConfigs: [[
-                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                        url: 'git@git.sbis.ru:sbis-ci/constructor.git']]
-                ])
-            }
-
+            parallel (
+                checkout1: {
+                    // Контролы
+                    dir(workspace) {
+                        checkout([$class: 'GitSCM',
+                        branches: [[name: env.BRANCH_NAME]],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [[
+                            $class: 'RelativeTargetDirectory',
+                            relativeTargetDir: "controls"
+                            ]],
+                            submoduleCfg: [],
+                            userRemoteConfigs: [[
+                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                url: 'git@git.sbis.ru:sbis/controls.git']]
+                        ])
+                    }
+                    dir("./controls"){
+                        sh """
+                        git fetch
+                        git merge origin/rc-${version}
+                        """
+                    }
+                    parallel (
+                        checkout_atf:{
+                            // Выкачиваем atf
+                            dir("./controls/tests/int") {
+                            checkout([$class: 'GitSCM',
+                                branches: [[name: branch_atf]],
+                                doGenerateSubmoduleConfigurations: false,
+                                extensions: [[
+                                    $class: 'RelativeTargetDirectory',
+                                    relativeTargetDir: "atf"
+                                    ]],
+                                    submoduleCfg: [],
+                                    userRemoteConfigs: [[
+                                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                        url: 'git@git.sbis.ru:autotests/atf.git']]
+                                ])
+                            }
+                        },
+                        checkout_engine: {
+                            // Выкачиваем engine
+                            dir("./controls/tests"){
+                                checkout([$class: 'GitSCM',
+                                branches: [[name: branch_engine]],
+                                doGenerateSubmoduleConfigurations: false,
+                                extensions: [[
+                                    $class: 'RelativeTargetDirectory',
+                                    relativeTargetDir: "sbis3-app-engine"
+                                    ]],
+                                    submoduleCfg: [],
+                                    userRemoteConfigs: [[
+                                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                        url: 'git@git.sbis.ru:sbis/engine.git']]
+                                ])
+                            }
+                        }
+                    )
+                },
+                checkout2: {
+                    dir(workspace) {
+                        // Выкачиваем platform
+                        checkout([$class: 'GitSCM',
+                        branches: [[name: "rc-${version}"]],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [[
+                            $class: 'RelativeTargetDirectory',
+                            relativeTargetDir: "constructor"
+                            ]],
+                            submoduleCfg: [],
+                            userRemoteConfigs: [[
+                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                url: 'git@git.sbis.ru:sbis-ci/platform.git']]
+                        ])
+                    }
+                    dir("./constructor") {
+                        checkout([$class: 'GitSCM',
+                        branches: [[name: "rc-${version}"]],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [[
+                            $class: 'RelativeTargetDirectory',
+                            relativeTargetDir: "Constructor"
+                            ]],
+                            submoduleCfg: [],
+                            userRemoteConfigs: [[
+                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                url: 'git@git.sbis.ru:sbis-ci/constructor.git']]
+                        ])
+                    }
+                },
+                checkout3: {
+                    dir(workspace) {
+                        // Выкачиваем cdn
+                        checkout([$class: 'GitSCM',
+                        branches: [[name: '1.0']],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [[
+                            $class: 'RelativeTargetDirectory',
+                            relativeTargetDir: "cdn"
+                            ]],
+                            submoduleCfg: [],
+                            userRemoteConfigs: [[
+                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                url: 'git@git.sbis.ru:root/sbis3-cdn.git']]
+                        ])
+                    }
+                },
+                checkout4: {
+                    // Выкачиваем demo_stand
+                    dir(workspace) {
+                        checkout([$class: 'GitSCM',
+                        branches: [[name: 'master']],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [[
+                            $class: 'RelativeTargetDirectory',
+                            relativeTargetDir: "demo_stand"
+                            ]],
+                            submoduleCfg: [],
+                            userRemoteConfigs: [[
+                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                url: 'git@git.sbis.ru:ka.sannikov/demo_stand.git']]
+                        ])
+                    }
+                }
+            )
+        }
+        stage("Сборка компонент"){
             // Определяем SDK
             dir("./constructor/Constructor/SDK") {
                 SDK = sh returnStdout: true, script: "${python_ver} getSDK.py ${version} --conf linux_x86_64 -b"
                 SDK = SDK.trim()
                 echo SDK
             }
-
-            // Выкачиваем atf
-            dir("./controls/tests/int") {
-            checkout([$class: 'GitSCM',
-                branches: [[name: branch_atf]],
-                doGenerateSubmoduleConfigurations: false,
-                extensions: [[
-                    $class: 'RelativeTargetDirectory',
-                    relativeTargetDir: "atf"
-                    ]],
-                    submoduleCfg: [],
-                    userRemoteConfigs: [[
-                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                        url: 'git@git.sbis.ru:autotests/atf.git']]
-                ])
-            }
-
-            // Выкачиваем engine
-            dir("./controls/tests"){
-                checkout([$class: 'GitSCM',
-                branches: [[name: branch_engine]],
-                doGenerateSubmoduleConfigurations: false,
-                extensions: [[
-                    $class: 'RelativeTargetDirectory',
-                    relativeTargetDir: "sbis3-app-engine"
-                    ]],
-                    submoduleCfg: [],
-                    userRemoteConfigs: [[
-                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                        url: 'git@git.sbis.ru:sbis/engine.git']]
-                ])
-            }
-            // Выкачиваем demo_stand
-            dir(workspace) {
-                checkout([$class: 'GitSCM',
-                branches: [[name: 'master']],
-                doGenerateSubmoduleConfigurations: false,
-                extensions: [[
-                    $class: 'RelativeTargetDirectory',
-                    relativeTargetDir: "demo_stand"
-                    ]],
-                    submoduleCfg: [],
-                    userRemoteConfigs: [[
-                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                        url: 'git@git.sbis.ru:ka.sannikov/demo_stand.git']]
-                ])
-            }
             // Копируем /demo_stand/client в /tests/stand/client
             sh "cp -rf ./demo_stand/client ./controls/tests/stand"
-
-            // Выкачиваем ws для unit тестов и если указан сторонний бранч
-            if (( unit ) || ("${params.ws_revision}" != "sdk") ){
-                def ws_revision = params.ws_revision
-                if ("${ws_revision}" == "sdk"){
-                    ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
+            parallel(
+                ws: {
+                    // Выкачиваем ws для unit тестов и если указан сторонний бранч
+                    if ( unit || "${params.ws_revision}" != "sdk" ){
+                        ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
+                        dir(workspace) {
+                            checkout([$class: 'GitSCM',
+                            branches: [[name: ws_revision]],
+                            doGenerateSubmoduleConfigurations: false,
+                            extensions: [[
+                                $class: 'RelativeTargetDirectory',
+                                relativeTargetDir: "WIS-git-temp"
+                                ]],
+                                submoduleCfg: [],
+                                userRemoteConfigs: [[
+                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                url: 'git@git.sbis.ru:sbis/ws.git']]
+                            ])
+                        }
+                    }
+                },
+                ws_data: {
+                    // Выкачиваем ws.data для unit тестов и если указан сторонний бранч
+                    if ( unit || "${params.ws_data_revision}" != "sdk" ){
+                        def ws_data_revision = params.ws_data_revision
+                        ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
+                        dir(workspace) {
+                            checkout([$class: 'GitSCM',
+                            branches: [[name: ws_data_revision]],
+                            doGenerateSubmoduleConfigurations: false,
+                            extensions: [[
+                                $class: 'RelativeTargetDirectory',
+                                relativeTargetDir: "ws_data"
+                                ]],
+                                submoduleCfg: [],
+                                userRemoteConfigs: [[
+                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                url: 'git@git.sbis.ru:ws/data.git']]
+                            ])
+                        }
+                    }
                 }
-                dir(workspace) {
-                    checkout([$class: 'GitSCM',
-                    branches: [[name: ws_revision]],
-                    doGenerateSubmoduleConfigurations: false,
-                    extensions: [[
-                        $class: 'RelativeTargetDirectory',
-                        relativeTargetDir: "WIS-git-temp"
-                        ]],
-                        submoduleCfg: [],
-                        userRemoteConfigs: [[
-                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                        url: 'git@git.sbis.ru:sbis/ws.git']]
-                    ])
-                }
-            }
-            // Выкачиваем ws.data для unit тестов и если указан сторонний бранч
-            if (( unit ) || ("${params.ws_data_revision}" != "sdk") ){
-                def ws_data_revision = params.ws_data_revision
-                if ("${ws_data_revision}" == "sdk"){
-                    ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
-                }
-                dir(workspace) {
-                    checkout([$class: 'GitSCM',
-                    branches: [[name: ws_data_revision]],
-                    doGenerateSubmoduleConfigurations: false,
-                    extensions: [[
-                        $class: 'RelativeTargetDirectory',
-                        relativeTargetDir: "ws_data"
-                        ]],
-                        submoduleCfg: [],
-                        userRemoteConfigs: [[
-                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                        url: 'git@git.sbis.ru:ws/data.git']]
-                    ])
-                }
-            }
-        }
-        stage("Сборка компонент"){
+            )
             // Собираем controls
             dir("./controls"){
                 sh "${python_ver} ${workspace}/constructor/build_controls.py ${workspace}/controls ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
@@ -276,7 +262,6 @@ node('controls') {
             }
             echo items
         }
-
         stage("Unit тесты"){
             if ( unit ){
                 dir(workspace){
@@ -286,23 +271,26 @@ node('controls') {
                 }
                 dir("./controls"){
                     sh "npm config set registry http://npmregistry.sbis.ru:81/"
-
-                    sh "sh ./bin/test-isolated"
-                    sh "mv ./artifacts/xunit-report.xml ./artifacts/test-isolated-report.xml"
-
-                    sh """
-                    export test_url_host=${env.NODE_NAME}
-                    export test_server_port=10253
-                    export test_url_port=10253
-                    export WEBDRIVER_remote_enabled=1
-                    export WEBDRIVER_remote_host=10.76.163.98
-                    export WEBDRIVER_remote_port=4380
-                    sh ./bin/test-browser"""
-                    sh "mv ./artifacts/xunit-report.xml ./artifacts/test-browser-report.xml"
+                    parallel (
+                        isolated: {
+                            sh "sh ./bin/test-isolated"
+                            sh "mv ./artifacts/xunit-report.xml ./artifacts/test-isolated-report.xml"
+                        },
+                        browser: {
+                            sh """
+                            export test_url_host=${env.NODE_NAME}
+                            export test_server_port=10253
+                            export test_url_port=10253
+                            export WEBDRIVER_remote_enabled=1
+                            export WEBDRIVER_remote_host=10.76.163.98
+                            export WEBDRIVER_remote_port=4380
+                            export test_report=artifacts/test-browser-report.xml
+                            sh ./bin/test-browser"""
+                        }
+                    )
                 }
             }
         }
-
         stage("Разворот стенда"){
             // Создаем sbis-rpc-service.ini
             def host_db = "test-autotest-db1"
@@ -345,7 +333,6 @@ node('controls') {
                 sudo chmod -R 0777 ${workspace}
                 sudo chmod -R 0777 /home/sbis/Controls1
             """
-
             //Пакуем данные
             writeFile file: "/home/sbis/Controls1/Core.package.json", text: """
                 {
@@ -359,13 +346,11 @@ node('controls') {
                 ],
                     "output" : "/resources/Core.module.js"
                 }"""
-
             sh """
                 cd ./jinnee/distrib/builder
                 node ./node_modules/grunt-cli/bin/grunt custompack --root=/home/sbis/Controls1 --application=/
             """
         }
-
         writeFile file: "./controls/tests/int/config.ini", text:
             """# UTF-8
             [general]
@@ -384,8 +369,6 @@ node('controls') {
             SERVER = test-autotest-db1
             BASE_VERSION = css_${NODE_NAME}${ver}1
             server_address = http://10.76.163.98:4380/wd/hub"""
-
-
         if ( "${params.theme}" != "online" ) {
             writeFile file: "./controls/tests/reg/config.ini",
             text:
@@ -436,44 +419,42 @@ node('controls') {
                 RUN_REGRESSION=True"""
         }
         def run_test_fail = ""
-        if ("${params.RUN_ONLY_FAIL_TEST}" == 'true'){
+        if (params.RUN_ONLY_FAIL_TEST == true){
             run_test_fail = "-sf"
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
-        stage("Инт.тесты"){
-            if ( inte ){
-                def site = "http://${NODE_NAME}:30001"
-                site.trim()
-                if ( "${TAGS}" != "") {
-                dir("./controls/tests/int"){
-                    sh """
-                    source /home/sbis/venv_for_test/bin/activate
-                    python start_tests.py --RESTART_AFTER_BUILD_MODE --TAGS_TO_START ${TAGS} ${run_test_fail}
-                    deactivate
-                    """
+        stage("Запуск тестов интеграционных и верстки"){
+            parallel (
+                int_test: {
+                    stage("Инт.тесты"){
+                        if ( inte ){
+                            def site = "http://${NODE_NAME}:30001"
+                            site.trim()
+                            dir("./controls/tests/int"){
+                                 sh """
+                                 source /home/sbis/venv_for_test/bin/activate
+                                 python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
+                                 deactivate
+                                 """
+                            }
+                        }
+                    }
+                },
+                reg_test: {
+                    stage("Рег.тесты"){
+                        if ( regr ){
+                            sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
+                            dir("./controls/tests/reg"){
+                                sh """
+                                    source /home/sbis/venv_for_test/bin/activate
+                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
+                                    deactivate
+                                """
+                            }
+                        }
+                    }
                 }
-                } else {
-                dir("./controls/tests/int"){
-                    sh """
-                    source /home/sbis/venv_for_test/bin/activate
-                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
-                    deactivate
-                    """
-                }
-                }
-            }
-        }
-        stage("Рег.тесты"){
-            if ( regr ){
-                sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
-                dir("./controls/tests/reg"){
-                    sh """
-                        source /home/sbis/venv_for_test/bin/activate
-                        python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
-                        deactivate
-                    """
-                }
-            }
+            )
         }
         sh """
             sudo chmod -R 0777 ${workspace}
@@ -487,17 +468,13 @@ node('controls') {
                 }
                 archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
             }
-            if ( inte ){
-                junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-            }
             if ( unit ){
                 junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
             }
             if ( regr || inte ){
                 archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
+                junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
             }
         }
     }
-
 }
-

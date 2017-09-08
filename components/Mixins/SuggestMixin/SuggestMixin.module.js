@@ -9,12 +9,11 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 ], function ( cFunctions, cMerge, Deferred, PickerMixin, cInstance, find, ControlHierarchyManager) {
    'use strict';
 
-
+   var DEFAULT_SHOW_ALL_TEMPLATE = 'js!SBIS3.CONTROLS.SuggestShowAll';
    var DEFAULT_SHOW_ALL_CONFIG = {
-      template: 'js!SBIS3.CONTROLS.SuggestShowAll',
+      template: DEFAULT_SHOW_ALL_TEMPLATE,
       componentOptions: {}
    };
-
    var DEFAULT_LIST_CONFIG = {
       allowEmptySelection: false,
       itemsDragNDrop: false,
@@ -433,7 +432,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                      focusedControl.setActive(false, false, false, this);
                      this.setActive(true);
                   } else if (self._options.autoShow && focusedControl && !ControlHierarchyManager.checkInclusion(this, focusedControl.getContainer()[0])) {
-                     if (focusedControl) {
+                     // не надо подписываться, если контрол уже активен, очистка списка будет удалена в 3.17.150
+                     if (focusedControl && !focusedControl.isActive()) {
                         // если фокус переходит на другой компонент, дождемся этого перехода фокуса, и только потом почистим items.
                         // если так не сделать, преждевременно сработает механизм восстановления фокуса, в случае safari это приводит к ошибке
                         // https://online.sbis.ru/opendoc.html?guid=aa909af6-3564-4fed-ac60-962fc71b451e
@@ -645,8 +645,33 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
       },
 
       _showAllButtonHandler: function() {
+         var showAllConfig = this._getShowAllConfig(),
+             list = this.getList(),
+             listConfig;
+         
          this.hidePicker();
-         this.showSelector(this._getShowAllConfig());
+   
+         listConfig = {
+            columns: list.getColumns(),
+            filter: list.getFilter(),
+            idProperty: list.getProperty('idProperty'),
+            itemTpl: list.getProperty('itemTpl'),
+            dataSource: list.getDataSource()
+         };
+   
+         /* Когда нет записей в списке автодополнения,
+          должен открываться справочник без фильтра, чтобы отобразились все записи */
+         if(!list.getItems().getCount() && this._options.searchParam) {
+            delete listConfig.filter[this._options.searchParam];
+         }
+         
+         if(!showAllConfig.componentOptions) {
+            showAllConfig.componentOptions = {};
+         }
+   
+         showAllConfig.componentOptions.listConfig = listConfig;
+         
+         this.showSelector(showAllConfig);
       },
 
       /**

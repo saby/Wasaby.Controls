@@ -331,14 +331,16 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
 
 .controls-Browser {
    .controls-Browser__tableCell-search {
-      width: 19.44rem;
       .controls-Browser__selectAllCheckBox {
          .align-self(center);
       }
    }
    .controls-Browser__search {
-      width: 18.61rem;
+      width: 21.4285rem;
    }
+  &.controls-Browser__search-small .controls-Browser__search {
+    width: 12.5rem;
+  }
 }
 
 .controls-ComboBox {
@@ -411,7 +413,7 @@ body {
 }
 
 body  .ws-window {
-   background-color: #293543;
+   background-color: #2C3E50;
    border-style: solid;
    border-color: #00a2ef;
    border-width: @default-border-width;
@@ -840,10 +842,10 @@ body {
          height: 3rem!important;
          right: 0;
          top: 0;
-         color: @link-text-color!important;
+         color: @Infobox-cross-color!important;
          overflow: hidden;
          &:hover {
-            color: @link-hover-text-color!important;
+            color: @Infobox-cross-color-hover!important;
          }
          &:before {
             line-height: 2.7rem!important;
@@ -939,13 +941,7 @@ body {
     color: #273B4D;
   }
 }
-.controls-SuggestTextBox.controls-TextBox.controls-Picker__show {
-  border-color: #26B8FF;
-  background: #f0f5fb;
-  & .controls-TextBox__field {
-    color: #273B4D;
-  }
-}
+
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button:hover {
   color: #fff;
 }
@@ -1058,17 +1054,60 @@ body {
     width: 3rem !important;
     line-height: 3rem !important;
 }
+//Костыль, у dropdown неподходящая для ПМО минимальная высота. Сделаем 100%.
+.controls-operationsPanel__actions .controls-DropdownList {
+   min-height: 100%;
+}
 
 // В темах престо и розницы все сверстано на внутренних скролируемых контенерах.
 // Делаем что бы флоат арии всегда были с 100% высотой и не надо устанавливать ws-float-area__block-layout.
 // Выпилить когда уйдем от ws-float-area__block-layout в онлайне.
-.ws-float-area {
-   display: block !important;
-}
-.ws-float-area-stack-panel-shadow {
-   display: block !important;
+.ws-float-area-stack-cut-wrapper {
+   .ws-float-area {
+      display: block !important;
+   }
+   .ws-float-area-stack-panel-shadow {
+      display: block !important;
+   }
+
+   .ws-float-area-stack-scroll-wrapper-touch {
+     -webkit-overflow-scrolling: auto!important;
+   }
 }
 
-.ws-float-area-stack-scroll-wrapper-touch {
-  -webkit-overflow-scrolling: auto!important;
+//Rem Line-height Doesn’t Work In Pseudo Elements In IE
+//fallback for ie, will live while there is rem
+.ws-is-ie {
+  .controls-TextBox .controls-TextBox__wrapper:before {
+    line-height: 2.5em; //2.5 = 2.85/1.14 //2.85 - default-line-height, 1.14 - default-font size
+  }
+}
+
+body {
+  .ws-errorsReportDialog {
+    min-width: 30rem;
+
+    .ws-field-string {
+      font-size: 1rem;
+      height: 1.5rem;
+      color: @default-text-color;
+    }
+
+    .ws-field-button {
+      height: 1.5rem;
+      padding-right: 0.5rem;
+    }
+
+    .ws-errorsReportDialog-caption {
+      text-align: left;
+      width: 6rem;
+      color: @default-text-color;
+    }
+
+    .ws-errorsReportDialog-errors {
+      .ws-errorsReportDialog-caption, .ws-field-string, .ws-errorsReportDialog-errorsDescription {
+        color: @error-color;
+      }
+    }
+  }
 }

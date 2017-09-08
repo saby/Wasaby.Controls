@@ -4,10 +4,9 @@ define('js!SBIS3.CONTROLS.MassSelectionHierarchyController',
         "Core/core-instance",
         "Core/core-functions",
         "js!WS.Data/Chain",
-        "js!WS.Data/Entity/Record",
         "js!SBIS3.CONTROLS.ArraySimpleValuesUtil"
     ],
-    function(MassSelectionController, cInstance, cFunctions, Chain, Record, ArraySimpleValuesUtil) {
+    function(MassSelectionController, cInstance, cFunctions, Chain, ArraySimpleValuesUtil) {
 
        var MassSelectionHierarchyController = MassSelectionController.extend(/** @lends SBIS3.CONTROLS.MassSelectionHierarchyController.prototype */ {
           $protected: {
@@ -150,6 +149,7 @@ define('js!SBIS3.CONTROLS.MassSelectionHierarchyController',
           _getNodeSelectionStatus: function (parent, selectedKeys) {
              var
                 itemId,
+                status,
                 self = this,
                 hasSelected = false,
                 hasNotSelected = false,
@@ -174,7 +174,19 @@ define('js!SBIS3.CONTROLS.MassSelectionHierarchyController',
                 }
              }, this);
 
-             return hasSelected ? (hasNotSelected ? null : true) : false;
+             if (hasSelected) {
+                //В режиме поиска отметить всех детей одной из папок, то папка станет выделенной. Но в итоговую выборку
+                //не должны попасть все дети папки. Поэтому для режима поиск, всегджа проставляем что папка частично выбрана
+                //даже если все её дети выбраны.
+                if (hasNotSelected || linkedObject._isSearchMode()) {
+                   status = null;
+                } else {
+                   status = true;
+                }
+             } else {
+                status = false;
+             }
+             return status;
           },
 
           _getDeepChangedUp: function (items, selectedKeys) {

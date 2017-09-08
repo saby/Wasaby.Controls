@@ -40,7 +40,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
              * <pre class="brush:xml">
              *    <options name="pickerConfig">
              *       <options name="verticalAlign">
-             *          <option name="side">top<option>
+             *          <option name="side">top</option>
              *        </options>
              *    </options>
              * </pre>

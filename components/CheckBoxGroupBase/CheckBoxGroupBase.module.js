@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', [
          projItem = this._getItemsProjection().getByHash(hash);
          //TODO Пока делаем отдельную ветку для Флагов.
          //Леха Мальцев должен решить задачу https://inside.tensor.ru/opendoc.html?guid=566894c5-8384-4a2a-8ea6-df9dc5bd2137&description=
-         if (this.getItems() && cInstance.instanceOfModule(this.getItems(), 'WS.Data/Types/Flags')) {
+         if (this.getItems() && cInstance.instanceOfModule(this.getItems(), 'WS.Data/Type/Flags')) {
             projItem.setSelected(!projItem.isSelected());
          }
          else {
@@ -74,7 +74,7 @@ define('js!SBIS3.CONTROLS.CheckBoxGroupBase', [
          //TODO Пока делаем отдельную ветку для Флагов.
          //Леха Мальцев должен решить задачу https://inside.tensor.ru/opendoc.html?guid=566894c5-8384-4a2a-8ea6-df9dc5bd2137&description=
          var i, hash;
-         if (this.getItems() && cInstance.instanceOfModule(this.getItems(), 'WS.Data/Types/Flags')) {
+         if (this.getItems() && cInstance.instanceOfModule(this.getItems(), 'WS.Data/Type/Flags')) {
             for (i in controls) {
                if (controls.hasOwnProperty(i)) {
                   hash = controls[i].getContainer().data('hash');

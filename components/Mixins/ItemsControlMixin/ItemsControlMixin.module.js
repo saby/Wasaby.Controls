@@ -1,9 +1,7 @@
 define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "Core/core-functions",
-   "Core/constants",
    "Core/Deferred",
    "Core/IoC",
-   "Core/ConsoleLogger",
    "js!WS.Data/Source/Memory",
    "js!WS.Data/Source/SbisService",
    "js!WS.Data/Collection/RecordSet",
@@ -30,10 +28,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "Core/helpers/Function/debounce"
 ], function (
    cFunctions,
-   constants,
    Deferred,
    IoC,
-   ConsoleLogger,
    MemorySource,
    SbisService,
    RecordSet,
@@ -2089,7 +2085,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          //TODO может перерисовку надо по-другому делать
          this._options.groupBy = group;
          // запросим данные из источника
-         if (!isEmpty(this._options.groupBy)){
+         if (!isEmpty(this._options.groupBy) && !this._options.easyGroup){
             if (!this._options.groupBy.hasOwnProperty('method')){
                this._options.groupBy.method = _oldGroupByDefaultMethod;
             }

@@ -39,26 +39,46 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
        Задача в разработку 25.03.2016 нужно обобщить появление ромашки ожидания. в FormController, в ListView логика ожидания должна быть … */
       var INDICATOR_DELAY = 750;
 
-      var KbLayoutRevertObserver = cExtend({}, {
+      /**
+       * Класс, который позволяет отслеживать изменения раскладки введённого текста и автоматически изменять её (с кириллицы на латиницу и наоборот), если в результате запроса не было выбрано ни одной записи.
+       * Класс (утилита) предназначен, чтобы связать работу поля ввода и списка, который создан на основе {@link SBIS3.CONTROLS.ListView}.
+       * @class SBIS3.CONTROLS.Utils.KbLayoutRevertObserver
+       * @extends Core/core-extend
+       * @public
+       */
+      var KbLayoutRevertObserver = cExtend({}, /** @lends SBIS3.CONTROLS.Utils.KbLayoutRevertObserver.prototype */{
          $protected: {
             _options: {
                /**
-                * Текстовое поле
-                * @param {SBIS3.CONTROLS.TextBoxBase} textBox
+                * @cfg {SBIS3.CONTROLS.TextBoxBase} Устанавливает экземляр класса контрола, через который пользователь осуществляет ввод поискового запроса.
+                * @remark
+                * В опцию можно передать любой экземпляр класса, который наследуется от {@link SBIS3.CONTROLS.TextBoxBase}.
+                * В этом контроле будет автоматически изменена раскладка, если запрос в связанном списке (см. {@link view}) вернул 0 записей.
+                *
                 */
                textBox: null,
                /**
-                * Представление, в котором надо отслеживать параметр фильтрации
-                * @param {SBIS3.CONTROLS.ListView} view
+                * @cfg {SBIS3.CONTROLS.ListView} Устанавливает экземляр класса списка, в котором отображаются результаты поиска.
+                * @remark
+                * В опцию можно передать любой экземпляр класса, который наследуется от {@link SBIS3.CONTROLS.ListView}.
                 */
                view: null,
                /**
-                * Параметр, который надо отслеживать в фильтре представления
-                * @param {String} param
+                * @cfg {String} Устанавливает имя параметра фильтрации.
+                * @remark
+                * Смысл этого параметра фильтрации подробно описан в опции {@link SBIS3.CONTROLS.SuggestTextBoxMixin#seacrhParam}.
+                * @see setParam
+                * @see getParam
                 */
                param: null,
                /**
-                * Включить смену раскладки по новому стандарту
+                * @cfg {Boolean} Устаналивает поведение для смены раскладки, когда в результате поиска возвращается 0 записей.
+                * @remark
+                * Если запрос был выполнен в кириллице, то раскладка меняется на латиницу, и наоборот. Одна в зависимости от значения опции newStandart возможно следующее поведение:
+                * <ul>
+                *     <li>true - перед сменой раскладки выводится сообщение "Возможно вы имели ввиду ...", где предложен поисковый запрос в другой раскладке.</li>
+                *     <li>false - автоматически выполняется запрос в другой раскладке. </li>
+                * </ul>
                 */
                newStandart: false
             },
@@ -77,14 +97,40 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
             this._onViewDataLoadHandler = this._onViewDataLoad.bind(this);
             this._onBeforeDataLoadHandler = this._onBeforeDataLoad.bind(this);
          },
-
+          /**
+           * Запускает работу утилиты.
+           * @example
+           * <pre>
+           * var util = new KbLayoutRevertObserver({
+           *    textBox: myTextBoxInstance,
+           *    view: myViewInstance,
+           *    param: 'searchString',
+           *    newStandart: true
+           * });
+           * util.startObserve();
+           * </pre>
+           * @see stopObserve
+           */
          startObserve: function() {
             if(!this._observed) {
                this._toggleViewEvents(true);
                this._observed = true;
             }
          },
-
+          /**
+           * Останавливает работы утилиты.
+           * @example
+           * <pre>
+           * var util = new KbLayoutRevertObserver({
+           *    textBox: myTextBoxInstance,
+           *    view: myViewInstance,
+           *    param: 'searchString',
+           *    newStandart: true
+           * });
+           * util.stopObserve();
+           * </pre>
+           * @see stopObserve
+           */
          stopObserve: function() {
             if(this._observed) {
                this._toggleViewEvents(false);
@@ -98,13 +144,20 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
          },
    
          /**
-          * Установить параметр по которому фильтруются данные
+          * Устанавливает параметр фильтрации.
           * @param {String} param
+          * @see param
+          * @see getParam
           */
          setParam: function(param) {
             this._options.param = param
          },
-         
+          /**
+           * Возвращает параметр фильтрации.
+           * @retruns {String}
+           * @see param
+           * @see setParam
+           */
          getParam: function() {
             return this._options.param;
          },
@@ -177,7 +230,6 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
 
             function showMissSpellValue(value) {
                self._showMissSpell(value);
-               self._toggleItemsEventRaising(true);
             }
 
             function successSearch() {
@@ -198,10 +250,13 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                         }
                         
                         backOldSearchValue();
-                        showMissSpellValue(searchValue)
+                        showMissSpellValue(searchValue);
+                        self._toggleItemsEventRaising(true);
                      } else {
                         /* Прошлый поиск был не успешен -> отображаем данные и выводим сообщение */
                         showMissSpellValue(searchValue);
+                        //Без анализа изменений, чтобы не вызвать преждевременную отрисовку и не портить очередёность срабатывания событий
+                        self._toggleItemsEventRaising(true, false);
                         self._textBeforeTranslate = null;
                      }
                   } else {
@@ -264,14 +319,15 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
          /* Требуется отключать обработку событий проекции при поиске со сменой раскладки,
           чтобы избежать моргания данных, обработка событий включается,
           когда поиск точно закончен (уже была сменена раскладка, если требуется) */
-         _toggleItemsEventRaising: function(enable) {
+         _toggleItemsEventRaising: function(enable, analyze) {
             var items = this._currentItems || this._options.view.getItems();
+            analyze = analyze !== undefined ? analyze : true;
 
             if(items) {
                var isEqual = items.isEventRaising() === enable;
 
                if(!isEqual) {
-                  items.setEventRaising(enable, true);
+                  items.setEventRaising(enable, analyze);
                   /* Запоминаем рекордсет, чтобы потом у него же и включить обработку событий */
                   this._currentItems = !enable ? items : null;
                }

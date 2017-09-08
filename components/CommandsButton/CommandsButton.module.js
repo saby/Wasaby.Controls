@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.CommandsButton', [
 
    'use strict';
     /**
-     * Класс контрола "Кнопка с иконкой", для которого по умолчанию установлены следующие фиксированные параметры:
+     * Класс контрола "Кнопка с командами", для которого по умолчанию установлены следующие фиксированные параметры:
      * <ul>
      *     <li><b>Иконка.</b> (опция {@link SBIS3.CONTROLS.IconMixin#icon})
      *     Когда выпадающее меню не отображается, пользователь видит иконку "Стрелка вниз" (ExpandDown) - класс "icon-24 icon-ExpandDown icon-primary".
@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.CommandsButton', [
      * @control
      * @category Inputs
      */
-   var CommandsButton = MenuIcon.extend({
+   var CommandsButton = MenuIcon.extend(/** @lends SBIS3.CONTROLS.CommandsButton.prototype */{
       _modifyOptions: function(opts) {
          opts.cssClassName += ' controls-Menu__hide-menu-header controls-IconButton controls-CommandsButton';
          opts.icon = 'sprite:icon-size icon-ExpandDown icon-primary';

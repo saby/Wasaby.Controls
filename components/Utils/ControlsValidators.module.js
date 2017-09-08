@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [
    'Core/core-instance',
    'Core/IoC',
    'i18n!SBIS3.CONTROLS.ControlsValidators'
-],function(CoreValidators, cInstace, cEnum, IoC) {
+],function(CoreValidators, cInstace, IoC) {
 
    'use strict';
 
@@ -63,7 +63,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [
                }
                break;
             case 'boolean' :
-               isEmpty = option;
+               isEmpty = !option;
                break;
             case 'undefined' :
                isEmpty = true;
@@ -165,7 +165,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [
       email: function(value) {
          //Регулярное выражение для проверки email отсюда http://stackoverflow.com/a/46181/6729520
          var
-            regExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+            regExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Zа-яА-Я\-0-9]+\.)+[a-zA-Zа-яА-Я]{2,}))$/,
             isGoodValue = value ? regExp.test(value) : true;
 
          return isGoodValue ? 

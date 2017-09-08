@@ -278,7 +278,7 @@
 @menu-item-hover-icon-color:              @primary-color!important;
 @menu-item-default-padding:               0 .57rem;
 @menu-item-icon-top-offset:               0.2805rem; // (3.57 - 3) /2
-@menu-item-icon-left-offset:              -.4232rem;
+@menu-item-icon-left-offset:              0;
 @menu-item-icon24-top-offset:             0;
 @menu-item-icon24-top-offset-big:         0;
 @menu-item-icon24-left-offset:            -.57rem;;
@@ -288,12 +288,12 @@
 @menu-item-padding-24:                    2.5rem;
 // Menu
 @menu-button-menu-border-width:           @default-border-width;
-@menu-button-menu-margin:                 -10px 0 0 0;
+@menu-button-menu-margin:                 -8px 0 0 0;
 @menu-button-menu-border-color:           #23b8ff;
-@menu-link-header-bg-color:               #5bafe7;
+@menu-link-header-bg-color:               @menu-header-bg-color;
 @menu-link-icon-24-top:                   -.14rem;
-@menu-icon-menu-margin:                   -.32rem 0 0 -.2142rem;
-@menu-icon-big-menu-margin:               -.3571rem 0 0 .5rem;
+@menu-icon-menu-margin:                   -.25rem 0 0 -.1442rem;
+@menu-icon-big-menu-margin:               -.287rem 0 0 .43rem;
 @menu-padding:										0;
 //Menu link
 @menu-link-menu-item-container-padding:	0 0 0 0;
@@ -319,7 +319,7 @@
 @text-box-hover-border-color:             rgba(96,170,221, .3 );
 @text-box-disabled-border-bottom:         @default-border-width solid rgba(102,170,221, .3);
 @text-box-after-width:                    .7142rem;
-@text-box-overflow:                       initial;
+@text-box-overflow:                       ellipsis;
 //Formatted text box
 @formatted-text-box-wrapper-min-height:   @text-box-field-min-height;
 @formatted-text-box-field-padding:        0;
@@ -372,7 +372,6 @@
 // Suggest
 @suggest-picker-border:                   @default-border-width solid @default-border-color-second;
 @suggest-picker-color:                    #273B4D;
-@suggest-picker-margin:                   -@default-border-width 0 0 0;
 
 @suggest-list-footer-height:              3.143rem;
 @suggest-list-footer-padding:             0 0.857rem;
@@ -539,7 +538,7 @@
 @date-range-big-choose-month-range-picker-caption-height:      1.7857rem;
 @date-range-big-choose-month-range-picker-caption-font-size:   1.14rem;
 @date-range-big-choose-month-range-picker-table-element-height:.5rem;
-@date-range-big-choose-month-range-picker-table-element-font-size:.43rem;
+@date-range-big-choose-month-range-picker-table-element-font-size: .4rem;
 @date-range-big-choose-month-range-padding:0.2857rem;
 @date-range-big-choose-month-range-picker-bg-selected:  @date-range-big-choose-bg-selected-color;
 @date-range-big-choose-quarters-half-years-font-size:inherit;
@@ -569,6 +568,7 @@
 @list-view-items-toolbar-icon-size:       1.32rem;
 @list-view-items-toolbar-menu-icon-size:  @icon-large-size;
 @touch-mode-items-toolbar-icon-margin-top:-0.86rem;
+@items-toolbar-bottom-style-background:   url('img/items-toolbar-bottom-style-background.png');
 @list-view-actions-active-bg:             @data-grid-bg;
 @list-view-actions-menu-icon-width:       @icon-small-size;
 @list-view-actions-menu-close-top:        .14rem;
@@ -677,9 +677,12 @@
 @multiView-tile-selected-item-bg:         #E7F0F9;
 //DropdownList
 
-@DropdownList-border-color:               @default-text-color;
-@DropdownList-linkStyleHoverColor:		   rgb(187, 233, 255);
-@DropdownList-disabled-text:              #38546C;
+@DropdownList-border-color:                 @default-text-color;
+@DropdownList-linkStyleHoverColor:		     rgb(187, 233, 255);
+@DropdownList-disabled-text:                #38546C;
+@DropdownList-picker-title-type-header-bg:  #26B8FF;
+@DropdownList-picker-head-color:            #E4E4E4;
+@DropdownList-picker-head-weight:           normal;
 //ProgressBar
 @controls-ProgressBar-height:             1.3214rem;
 @controls-ProgressBar-width:              14.286rem;
@@ -708,11 +711,12 @@
 @controls-filterButton-button-margin-right-align:.2857rem 0 .2857rem .2857rem;
 @controls-filterButton-button-margin-ff:  .5714rem 0 0 0;
 @controls-filterButton-area-text-weight:	normal;
-@controls-filterButton-button-arrow-margin:-.14rem;;
-@controls-filterButton-area-header-padding:.29rem 3rem .29rem .43rem;
+@controls-filterButton-button-arrow-margin:-.14rem;
+@controls-filterButton-area-header-padding:.29rem 3rem .29rem .86rem;
 @controls-filterButton-area-text-size:    1.43rem;
+@controls-filterButton-area-text-margin:   0 .86rem 0 0;
 @controls-filterButton-area-text-color:   @default-text-color;
-@controls-filterButton-clear-margin-right:.5714rem;
+@controls-filterButton-clear-margin-right: .86rem;
 @controls-filterButton-area-content-margin:0 .42857rem 0.75rem;
 @controls-filterButton-line-height:       1.4642rem;
 @controls-filterButton-filterLine-margin: 0;
@@ -730,7 +734,7 @@
 @controls-FieldLink-linkItem-margin:         0;
 @controls-FieldLink-linkItem-padding:        0 3rem 0 .56rem;
 @controls-FieldLink-linkItem-caption-height: 1.75rem;
-@controls-FieldLink-linkItem-cross-width:    2.5rem;
+@controls-FieldLink-linkItem-cross-width:    3rem;
 @controls-FieldLink-linkItem-cross-right:    0;
 @controls-FieldLink-linkItem-cross-top:      -.14rem;
 @controls-FieldLink-linkItem-cross-padding:  0;
@@ -741,6 +745,7 @@
 @controls-FieldLink-afterField-background:   transparent;
 @controls-FieldLink-FilterButton-color:      #26B8FF;
 @controls-FieldLink-FilterButton-color-hover:#26B8FF;
+@controls-filterButton-area-header-width:    23.92rem;
 //SelectorButton
 @controls-SelectorButton-align:           middle;
 // BackButton
@@ -753,7 +758,7 @@
 @bread-crumb-title-hover-color:           @default-hover-color;
 @breadcrumbs-top:                         0;
 @breadcrumbs-smallItems-font-size:        1rem;
-@breadcrumbs-arrow-top:                   0;
+@breadcrumbs-arrow-top:                   1px;
 @breadcrumbs-small-items-top:             0;
 // EditDialog
 @editdialog-applybutton-width:            auto;
@@ -767,6 +772,7 @@
 @controls-Paging-btn-padding:             .2857rem;
 @controls-Paging-padding:                 0;
 @controls-movedialog-min-height:          3.5714rem;
+@controls-movedialog-max-width:           25rem;
 //ScrollContainer
 @controls-ScrollContainer-top-gradient-height:0.857rem;
 //Scrollbar
@@ -895,7 +901,6 @@
 @scrollpager-border:                      none;
 @scrollpager-bottom:                      .3333rem;
 @closeBigButtonWidth:                     3rem;
-@menu-header-bg-color:                    #23b8ff;
 @date-range-big-header-bg:                #2c3e50;
 @date-range-big-choose-border-color:	   #3f566d;
 @date-range-big-choose-width:				   25.8rem;
@@ -984,12 +989,15 @@
 @DropdownList-picker-menu-line-height:                3.24rem;
 @DropdownList-before-caption-wrapper-top:             0.16rem;
 @DropdownList-after-caption-wrapper-top:              .4rem;
-@DropdownList-footer-hasMore-left:                    .28rem;
+@DropdownList-footer-hasMore-left:                    .57rem;
 @DropdownList-footer-hasMore-left-multiselect:        2.35rem;
 @DropdownList-footer-hasMore-top-multiselect:         1rem;
 @DropdownList-footer-hasMore-top:                     1rem;
 @DropdownList-footer-select-icon-container-size:      3rem;
 @DropdownList-footer-select-icon-size:                2.3rem;
+//infobox
+@Infobox-cross-color:                                 #E4E4E4;
+@Infobox-cross-color-hover:                           #B9E9FF;
 //money
 @money-decorator-integer-accent-results-font-color:#FFCC99;
 @money-decorator-integer-no-accent-results-font-color:@disabled-color;
@@ -1029,6 +1037,7 @@
 @list-view-items-toolbar-bottom:          0.214rem;
 @list-view-items-toolbar-font-family:     'carrypresto-icons';
 @search-left-margin:                      .57rem;
+@controls-view-eip-padding-DEFAULT:                                                                                     .2857rem;
 @controls-view-padding-DEFAULT:           .857rem;
 @combo-box-picker-border:                 @default-border-width solid @default-border-color-second;
 @data-grid-row-selected-main-bg:          @basic-block-bg-color;

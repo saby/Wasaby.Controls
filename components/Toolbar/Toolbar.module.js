@@ -1,7 +1,6 @@
 define('js!SBIS3.CONTROLS.Toolbar', [
    "Core/IoC",
    "Core/core-functions",
-   "Core/ConsoleLogger",
    "js!SBIS3.CONTROLS.ButtonGroupBase",
    "tmpl!SBIS3.CONTROLS.Toolbar",
    "tmpl!SBIS3.CONTROLS.Toolbar/resources/ItemTemplate",
@@ -9,7 +8,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
    "js!SBIS3.CONTROLS.IconButton",
    "js!SBIS3.CONTROLS.CommandsButton",
    'css!SBIS3.CONTROLS.Toolbar'
-], function( IoC, cFunctions, ConsoleLogger, ButtonGroupBase, dotTplFn, ItemTemplate, cInstance) {
+], function( IoC, cFunctions, ButtonGroupBase, dotTplFn, ItemTemplate, cInstance) {
 
    'use strict';
     var
@@ -84,7 +83,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
                optionValue,
                itemKey = item.get(idProperty),
                options = item.get('options') || {},
-               isToolbarItem = item.get('showType') == showType.MENU_TOOLBAR || item.get('showType') == showType.TOOLBAR;
+               isToolbarItem = item.get('showType') === showType.MENU_TOOLBAR || item.get('showType') === showType.TOOLBAR;
             if (isToolbarItem) {
                subItems = getSubItems(itemKey, items, idProperty, parentProperty, itemsToSubItems);
                subItems = cFunctions.clone(subItems);
@@ -147,6 +146,20 @@ define('js!SBIS3.CONTROLS.Toolbar', [
             tplOptions.idProperty = cfg.idProperty;
 
             return tplOptions;
+         },
+         getRecordsForRedraw = function(projection) {
+            var
+               model,
+               records = [];
+            if (projection) {
+               projection.each(function (item) {
+                  model = item.getContents();
+                  if ((model.get('showType') === showType.MENU_TOOLBAR || model.get('showType') === showType.TOOLBAR) && model.get('visible') !== false) {
+                     records.push(item);
+                  }
+               });
+            }
+            return records;
          };
    /**
     * Контрол, отображающий панель с иконками.
@@ -166,7 +179,8 @@ define('js!SBIS3.CONTROLS.Toolbar', [
          _options: {
             _canServerRender: true,
             _buildTplArgs: buildTplArgs,
-            _defaultItemTemplate: ItemTemplate
+            _defaultItemTemplate: ItemTemplate,
+            _getRecordsForRedraw: getRecordsForRedraw
          }
       },
 

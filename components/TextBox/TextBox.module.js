@@ -6,7 +6,6 @@ define('js!SBIS3.CONTROLS.TextBox', [
    'tmpl!SBIS3.CONTROLS.TextBox/resources/textFieldWrapper',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'js!SBIS3.CONTROLS.TextBoxUtils',
-   'Core/Sanitize',
    'js!SBIS3.CONTROLS.Utils.GetTextWidth',
    'Core/helpers/Function/forAliveOnly',
    'js!SBIS3.CONTROLS.ControlHierarchyManager',
@@ -21,7 +20,6 @@ define('js!SBIS3.CONTROLS.TextBox', [
     textFieldWrapper,
     TemplateUtil,
     TextBoxUtils,
-    Sanitize,
     getTextWidth,
     forAliveOnly,
     ControlHierarchyManager) {
@@ -500,15 +498,13 @@ define('js!SBIS3.CONTROLS.TextBox', [
 
       _setEnabled : function(enabled) {
          TextBox.superclass._setEnabled.call(this, enabled);
-         if (enabled) {
-            this._inputField.removeAttr('readonly');
-         } else {
-            this._inputField.attr('readonly', 'readonly')
-         }
          /* Когда дизейблят поле ввода, ставлю placeholder в виде пробела, в старом webkit'e есть баг,
             из-за коготорого, если во flex контейнере лежит input без placeholder'a ломается базовая линия.
-            placeholder с пустой строкой и так будет не веден, т.ч. проблем быть не должно */
+            placeholder с пустой строкой и так будет не виден, т.ч. проблем быть не должно */
          this._setPlaceholder(enabled ? this._options.placeholder : ' ');
+         // FIXME Шаблонизатор сейчас не позволяет навешивать одиночные атрибуты, у Зуева Димы в планах на сентябрь
+         // сделать возможность вешать через префикс attr-
+         this._inputField.prop('readonly', !enabled);
       },
 
       _inputRegExp: function (e, regexp) {

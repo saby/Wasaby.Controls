@@ -120,11 +120,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
        * @private
        */
       _onExpandItem: function(expandedItem) {
-         var item = expandedItem.getContents();
-         
-         if(this._needCreateFolderFooter(expandedItem)) {
-            this._createFolderFooter(item.getId());
-         }
+         this._createFolderFooter(expandedItem);
          this._drawExpandedItem(expandedItem);
       },
       _drawExpandedItem: function(expandedItem) {
@@ -184,18 +180,25 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
        * @param key
        * @private
        */
-      _createFolderFooter: function(key) {
+      _createFolderFooter: function(item) {
          var
+            position,
             folderFooter,
-            cfg = this._options,
-            itemProj = this._getItemProjectionByItemId(key),
-            position = this._getLastChildByParent(this._getItemsContainer(), itemProj);
+            cfg = this._options;
 
-         this._destroyItemsFolderFooter(key);
-         if (typeof cfg._footerWrapperTemplate === "function" && position) {
-            folderFooter = $(cfg._footerWrapperTemplate(cfg._getFolderFooterOptions(cfg, itemProj)));
-            folderFooter.insertAfter(position);
-            this.reviveComponents();
+         if (!cInstance.instanceOfModule(item, 'WS.Data/Display/CollectionItem')) {
+            item = this._getItemProjectionByItemId(item);
+         }
+
+         if (item && this._needCreateFolderFooter(item)) {
+            this._destroyItemsFolderFooter(item.getContents().getId());
+            position = this._getLastChildByParent(this._getItemsContainer(), item);
+
+            if (typeof cfg._footerWrapperTemplate === "function" && position) {
+               folderFooter = $(cfg._footerWrapperTemplate(cfg._getFolderFooterOptions(cfg, item)));
+               folderFooter.insertAfter(position);
+               this.reviveComponents();
+            }
          }
       },
       /**
@@ -219,9 +222,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
 
       _createAllFolderFooters: function() {
          this._getItemsProjection().each(function(item) {
-            if (this._needCreateFolderFooter(item)) {
-               this._createFolderFooter(item.getContents().getId());
-            }
+            this._createFolderFooter(item);
          }.bind(this));
       },
 

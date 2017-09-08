@@ -8,9 +8,8 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
    "js!SBIS3.CONTROLS.Utils.DataProcessor",
    "js!WS.Data/Entity/Record",
    "js!WS.Data/Adapter/Sbis",
-   "Core/helpers/Function/callNext",
    "i18n!SBIS3.CONTROLS.OperationUnload"
-], function( constants, cInstance, PrintUnloadBase, Exporter, Record, SbisAdapter, callNext) {
+], function( constants, cInstance, PrintUnloadBase, Exporter, Record, SbisAdapter) {
    //TODO Идея! нужно просто вызвать у view.export, он в свою очередь поднимает событие onUnload, а событие подхыватит выгрузчик. тогда в кнопке вообще только визуализация будет
    /**
     * Контрол для экспорта в Excel, PDF  подготовленных данных
@@ -167,7 +166,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
          if (methodName) {
             fullFilter['MethodName'] = methodName;
          }
-         exporter.exportList(this._getUnloadFileName(), this._currentItem, fullFilter, pageOrient );
+         exporter.exportList(this._getUnloadFileName(), this._currentItem, fullFilter, pageOrient, undefined, this._getCurrentItem().get('isExcel'));
       },
       _getPDFPageOrient: function(){
          var pageOrient;
@@ -207,17 +206,19 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
              exporter,
              fullFilter,
              methodName,
+             curItem = this._getCurrentItem(),
+             isExcel = curItem.get('isExcel'),
              pageOrient = this._getPDFPageOrient();
 
          if (this._isClientUnload()) {
-            xsl = this._getCurrentItem().get('xsl');
+            xsl = curItem.get('xsl');
             if (xsl) {
                cfg.xsl = xsl;
                cfg.report = true;
             }
             exporter = new Exporter(cfg);
             //TODO что делать, если метод шибко прикладной?
-            exporter.exportHTML(this._getUnloadFileName(), this._currentItem, pageOrient);
+            exporter.exportHTML(this._getUnloadFileName(), this._currentItem, pageOrient, isExcel);
          } else {
             exporter = new Exporter(this._prepareExporterConfig(cfg));
             methodName = this._getSaveMethodName(false);
@@ -242,9 +243,9 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
                if (this._currentItem === 'PDF') {
                   delete fullFilter.HierarchyField;
                }
-               exporter.exportList(this._getUnloadFileName(), this._currentItem, fullFilter, pageOrient);
+               exporter.exportList(this._getUnloadFileName(), this._currentItem, fullFilter, pageOrient, undefined, isExcel);
             } else {
-               exporter.exportDataSet(this._getUnloadFileName(), this._currentItem, undefined, pageOrient);
+               exporter.exportDataSet(this._getUnloadFileName(), this._currentItem, undefined, pageOrient, undefined, isExcel);
             }
          }
       },

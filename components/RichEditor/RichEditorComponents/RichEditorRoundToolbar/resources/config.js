@@ -9,7 +9,8 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
 
       'use strict';
 
-      return [
+      return function () {
+         return [
          {
             name: 'toggle',
             componentType: 'SBIS3.CONTROLS.IconButton',
@@ -87,7 +88,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
          {
             name: 'smile',
             basic: true,
-            tooltip: 'Вставить смайлик',
+            tooltip: rk('Вставить смайлик'),
             componentType: 'SBIS3.CONTROLS.MenuIcon',
             icon: 'sprite:icon-16 icon-EmoiconSmile icon-primary',
             items: smiles,
@@ -104,7 +105,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
          },
          {
             name: 'history',
-            caption: 'История ввода',
+            caption: rk('История ввода'),
             componentType: 'SBIS3.CONTROLS.MenuIcon',
             icon: 'sprite:icon-16 icon-InputHistory icon-primary',
             pickerClassName: 'controls-RichEditorRoundToolbar__historyPicker',
@@ -119,4 +120,5 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
             order: 60
          }
       ];
+      };
    });

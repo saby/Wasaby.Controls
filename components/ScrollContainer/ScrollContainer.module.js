@@ -8,11 +8,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'tmpl!SBIS3.CONTROLS.ScrollContainer',
       'js!SBIS3.CONTROLS.Scrollbar',
       'Core/detection',
-      'Core/core-functions',
       'js!SBIS3.CORE.FloatAreaManager',
       'js!SBIS3.StickyHeaderManager',
-      "Core/core-instance",
-      'Core/compatibility',
       'Core/constants',
       'Core/EventBus',
       'css!SBIS3.CONTROLS.ScrollContainer'
@@ -26,31 +23,32 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
              template,
              Scrollbar,
              cDetection,
-             functions,
              FloatAreaManager,
              StickyHeaderManager,
-             cInstance,
-             compatibility,
              constants,
              EventBus
    ) {
       'use strict';
 
       /**
-       * Контрол представляющий из себя контейнер для контента с тонким скроллом.
-       * Тонкий скролл {@link SBIS3.CONTROLS.Scrollbar}
+       * Класс контрола "Контейнер для контента с тонким скроллом". В качестве тонкого скролла применяется класс контрола {@link SBIS3.CONTROLS.Scrollbar}.
        *
        * @class SBIS3.CONTROLS.ScrollContainer
-       * @demo SBIS3.CONTROLS.Demo.MyScrollContainer
-       * @extends SBIS3.CONTROLS.CompoundControl
-       * @author Черемушкин Илья Вячеславович
+       * @extends Core/core-extend
+       * @author Зуев Дмитрий Владимирович
        *
-       * @example
-       * Использование ScrollContainer с вложенным в него ListView, и настройкой автоподгрузки вниз.
-       * @remark Для  работы ScrollContainer требуется установить height или max-height.
-       * Если установить height, то тонкий скролл появится, когда высота контента станет больше установленной
-       * вами высоты ScrollContainer. Если установить max-height, то ScrollContainer будет растягивать по
-       * мере увеличения контента. Когда размер контента превысит max-height, тогда появится тонкий скролл.
+       * @mixes Core/Abstract.compatible
+       * @mixes SBIS3.CORE.Control/Control.compatible
+       * @mixes SBIS3.CORE.AreaAbstract/AreaAbstract.compatible
+       * @mixes SBIS3.CORE.BaseCompatible
+       * @mixes SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor
+       *
+       * @remark Для работы SBIS3.CONTROLS.ScrollContainer требуется установить CSS-свойства height или max-height:
+       * <ul>
+       *    <li>Когда установлено свойство height, тонкий скролл появится, если высота контента (см. {@link content}) станет больше установленной высоты SBIS3.CONTROLS.ScrollContainer.</li>
+       *    <li>Когда установлено свойство max-height, то SBIS3.CONTROLS.ScrollContainer будет растягиваться по мере увеличения контента. Когда размер контента превысит max-height, тогда появится тонкий скролл.</li>
+       * </ul>
+       *
        * <pre class="brush: html">
        *    <component data-component="SBIS3.CONTROLS.ScrollContainer" class="myScrollContainer">
        *       <option name="content">
@@ -66,11 +64,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        * </pre>
        *
        * @cssModifier controls-ScrollContainer__light Устанавливает светлый тонкий скролл
-       * @cssModifier controls-ScrollContainer__hiddenScrollbar Скрыть ползунок
+       * @cssModifier controls-ScrollContainer__hiddenScrollbar Скрывает отображение ползунка.
+       *
+       * @demo SBIS3.CONTROLS.Demo.MyScrollContainer Использование SBIS3.CONTROLS.ScrollContainer с автоподгрузкой вниз и с вложенным в него списком, который создан на основе класса {@link SBIS3.CONTROLS.ListView}.
        *
        * @control
        * @public
-       *
        * @initial
        * <component data-component='SBIS3.CONTROLS.ScrollContainer' name="MyScrollContainer>
        *     <option name="content">
@@ -81,7 +80,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        *     </option>
        * </component>
        */
-      var ScrollContainer = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, WsCompatibleConstructor], {
+      var ScrollContainer = extend.extend([AbstractCompatible, ControlCompatible, AreaAbstractCompatible, BaseCompatible, WsCompatibleConstructor], /** @lends SBIS3.CONTROLS.ScrollContainer.prototype */{
          _template: template,
          iWantVDOM: false,
          _controlName: 'SBIS3.CONTROLS.ScrollContainer',
@@ -92,9 +91,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
             this._options = {
                /**
-                * @cfg {Content} Контент в ScrollContainer
-                * @remark
-                * Контент в ScrollContainer - это пользовательская верстка, которая будет скроллироваться.
+                * @cfg {Content} Пользовательская разметка, отображаемая в SBIS3.CONTROLS.ScrollContainer и для которой будет отображён скролл.
                 * @example
                 * <pre class="brush: html">
                 *    <option name="content">
@@ -111,19 +108,45 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                 */
                content: '',
                /**
-                * @cfg {Boolean} Включает фиксацию заголовоков в рамках контенера ScrollContainer
+                * @cfg {Boolean} Признак, который устанавливает фиксацию заголовоков в рамках контейнера SBIS3.CONTROLS.ScrollContainer.
                 */
                stickyContainer: false,
-
+               /**
+                * @cfg {Boolean}
+                */
                activableByClick: false,
-
+               /**
+                * @cfg {Boolean}
+                */
                isPaging: false,
-
+               /**
+                * @cfg {Object}
+                */
                navigationToolbar: {
+                 /**
+                  * @cfg {Boolean}
+                  * @name SBIS3.CONTROLS.ScrollContainer#navigationToolbar.begin
+                  */
                   begin: false,
+                  /**
+                   * @cfg {Boolean}
+                   * @name SBIS3.CONTROLS.ScrollContainer#navigationToolbar.prev
+                   */
                   prev: false,
+                  /**
+                   * @cfg {Boolean}
+                   * @name SBIS3.CONTROLS.ScrollContainer#navigationToolbar.pages
+                   */
                   pages: false,
+                  /**
+                   * @cfg {Boolean}
+                   * @name SBIS3.CONTROLS.ScrollContainer#navigationToolbar.next
+                   */
                   next: false,
+                  /**
+                   * @cfg {Boolean}
+                   * @name SBIS3.CONTROLS.ScrollContainer#navigationToolbar.end
+                   */
                   end: false
                }
             };
@@ -233,6 +256,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   position: this._getScrollTop(),
                   parent: this
                });
+
+               this._recalcSizeScrollbar();
 
                this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
             }
@@ -547,20 +572,11 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _onResizeHandler: function(){
-            var headerHeight, scrollbarContainer;
             AreaAbstractCompatible._onResizeHandler.apply(this, arguments);
             if (this._scrollbar){
                this._scrollbar.setContentHeight(this._getScrollHeight());
                this._scrollbar.setPosition(this._getScrollTop());
-               if (this._options.stickyContainer) {
-                  headerHeight = StickyHeaderManager.getStickyHeaderHeight(this._content);
-                  if (this._headerHeight !== headerHeight) {
-                     scrollbarContainer = this._scrollbar._container;
-                     scrollbarContainer.css('margin-top', headerHeight);
-                     scrollbarContainer.height('calc(100% - ' + headerHeight + 'px)');
-                     this._headerHeight = headerHeight;
-                  }
-               }
+               this._recalcSizeScrollbar();
             }
             //ресайз может позваться до инита контейнера
             if (this._content) {
@@ -583,6 +599,19 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                 */
                if (this._container.height()) {
                   this._setPagesCount(Math.ceil(this._getScrollHeight() / this._container.height()));
+               }
+            }
+         },
+
+         _recalcSizeScrollbar: function() {
+            var headerHeight, scrollbarContainer;
+            if (this._options.stickyContainer) {
+               headerHeight = StickyHeaderManager.getStickyHeaderHeight(this._content);
+               if (this._headerHeight !== headerHeight) {
+                  scrollbarContainer = this._scrollbar._container;
+                  scrollbarContainer.css('margin-top', headerHeight);
+                  scrollbarContainer.height('calc(100% - ' + headerHeight + 'px)');
+                  this._headerHeight = headerHeight;
                }
             }
          },

@@ -35,12 +35,6 @@
       margin-left: @button-icon-gap;
     }
   }
-  // TODO https://online.sbis.ru/opendoc.html?guid=e780f10e-3409-4390-98be-510dc06f546b
-  // убрать !important путем спиливания каскадов
-  &.controls-Link__underline {
-    text-decoration: underline !important;
-  }
-
   &.ws-disabled {
     color: @link-disabled-text-color;
     cursor: default;
@@ -69,6 +63,11 @@
      color: inherit;
      text-decoration: inherit;
      cursor: inherit;
+     &:hover {
+       .controls-Link__icon {
+         text-decoration: none;
+       }
+     }
   }
   .controls-Button__wrapper {
     .justify-content(flex-start);
@@ -94,6 +93,11 @@
       display: none;
     }
   }
+}
+
+.controls-Link-link {
+  .inline-flexbox();
+  .align-items(center);
 }
 
 .staff-CardButtons__right{

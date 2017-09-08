@@ -3,13 +3,11 @@
  */
 define('js!SBIS3.CONTROLS.DropdownList',
    [
-   "Core/constants",
    "Core/Deferred",
    "Core/EventBus",
    "Core/IoC",
    "Core/core-merge",
    "Core/core-instance",
-   "Core/ConsoleLogger",
    "Core/core-functions",
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CONTROLS.PickerMixin",
@@ -33,7 +31,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    'css!SBIS3.CONTROLS.DropdownList'
 ],
 
-   function (constants, Deferred, EventBus, IoC, cMerge, cInstance, ConsoleLogger, cFunctions, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
+   function (Deferred, EventBus, IoC, cMerge, cInstance, cFunctions, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
 
       'use strict';
       /**
@@ -45,7 +43,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
        *    <li>Среди полей источника данных необходимо указать какое является ключевым - {@link idProperty}, и из какого поля будем отображать данные в выпадающий блок - {@link displayProperty}.</li>
        * </ul>
        * <br/>
-       * Вы можете связать опцию items с полем контекста, в котором хранятся данные с типом значения перечисляемое - {@link WS.Data/Types/Enum}. Если эти данные хранят состояние выбранного значения, то в контрол будет установлено выбранное значение.
+       * Вы можете связать опцию items с полем контекста, в котором хранятся данные с типом значения перечисляемое - {@link WS.Data/Type/Enum}. Если эти данные хранят состояние выбранного значения, то в контрол будет установлено выбранное значение.
        * <pre>
        *    <component data-component="SBIS3.CONTROLS.DropdownList">
        *       <options name="items" type="array" bind="record/MyEnumField"></options>
@@ -667,7 +665,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _isEnumTypeData: function(){
             //TODO избавиться от этого по задаче https://inside.tensor.ru/opendoc.html?guid=711857a8-d8f0-4b34-aa31-e2f1a0d4b07b&des=
             //Сейчас multiselectable не умеет работать с enum => приходится поддерживать эту логику на уровне выпадающего списка.
-            return cInstance.instanceOfModule(this.getItems(), 'WS.Data/Types/Enum');
+            return cInstance.instanceOfModule(this.getItems(), 'WS.Data/Type/Enum');
          },
          _setFirstItemAsSelected : function() {
             //Перебиваю метод из multeselectable mixin'a. см. коммент у метода _isEnumTypeData
