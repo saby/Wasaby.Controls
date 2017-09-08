@@ -1082,3 +1082,32 @@ body {
     line-height: 2.5em; //2.5 = 2.85/1.14 //2.85 - default-line-height, 1.14 - default-font size
   }
 }
+
+body {
+  .ws-errorsReportDialog {
+    min-width: 30rem;
+
+    .ws-field-string {
+      font-size: 1rem;
+      height: 1.5rem;
+      color: @default-text-color;
+    }
+
+    .ws-field-button {
+      height: 1.5rem;
+      padding-right: 0.5rem;
+    }
+
+    .ws-errorsReportDialog-caption {
+      text-align: left;
+      width: 6rem;
+      color: @default-text-color;
+    }
+
+    .ws-errorsReportDialog-errors {
+      .ws-errorsReportDialog-caption, .ws-field-string, .ws-errorsReportDialog-errorsDescription {
+        color: @error-color;
+      }
+    }
+  }
+}
