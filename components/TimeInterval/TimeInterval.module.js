@@ -296,7 +296,9 @@ define(
             if (interval == undefined) {
                this._setText(this._getEmptyText());
             }
-            else if (interval.toString() != this.getInterval()){
+            //cTimeInterval при преобразовании к строке всегда вернет значение своего формата, даже если туда положили null (в этом случае значение 0 дней, минут, часов)
+            //Если устанавливают интервал 0 дней, часов, минут, проверка на неравенство не пройдет, поэтому смотрим, что если раньше был null, то нужно сеттить
+            else if (interval.toString() != this.getInterval() || !this._options.interval){
                this.timeInterval.set(interval);
                this._updateTextByTimeInterval(true);
             }

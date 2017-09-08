@@ -61,6 +61,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'Core/WindowManager',
    'js!SBIS3.CONTROLS.VirtualScrollController',
    'js!SBIS3.CONTROLS.ListView.DragMove',
+   'Core/helpers/Function/once',
    'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
    'js!WS.Data/Collection/RecordSet',
    'i18n!SBIS3.CONTROLS.ListView',
@@ -72,7 +73,7 @@ define('js!SBIS3.CONTROLS.ListView',
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents, LayoutManager, mHelpers,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, cInstance, LocalStorageNative, forAliveOnly, memoize, trackElement, isElementVisible, contains, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove) {
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, cInstance, LocalStorageNative, forAliveOnly, memoize, trackElement, isElementVisible, contains, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove, once) {
      'use strict';
 
       var
@@ -946,7 +947,9 @@ define('js!SBIS3.CONTROLS.ListView',
             this._updateScrollIndicatorTopThrottled = throttle.call(this._updateScrollIndicatorTop, 100, true).bind(this);
             this._eventProxyHdl = this._eventProxyHandler.bind(this);
             this._onScrollHandler = this._onScrollHandler.bind(this);
-
+            /* Инициализацию бесконечного скрола производим один раз */
+            this._prepareInfiniteScroll = once(this._prepareInfiniteScroll);
+            
             this._toggleEventHandlers(this._container, true);
 
             this.initEditInPlace();
@@ -989,7 +992,9 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._options.virtualScrolling || this._options.scrollPaging) {
                this._getScrollWatcher().subscribe('onScroll', this._onScrollHandler);
             }
-            this._prepareInfiniteScroll();
+            if(this.isInfiniteScroll()) {
+               this._prepareInfiniteScroll();
+            }
             ListView.superclass.init.call(this);
             this._initLoadMoreButton();
          },
@@ -2063,6 +2068,7 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass._redrawItems.apply(this, arguments);
             // После полной перерисовки нужно заново инициализировать вирутальный скролинг
             if (this._options.virtualScrolling && this._virtualScrollController) {
+               this._virtualScrollController.updateProjection(this._getItemsProjection());
                this._virtualScrollController.reset();
             }
          },
@@ -3006,37 +3012,35 @@ define('js!SBIS3.CONTROLS.ListView',
          _prepareInfiniteScroll: function(){
             var topParent = this.getTopParent(),
                 self = this;
-
-            if (this.isInfiniteScroll()) {
-               if (!this._scrollWatcher) {
-                  this._createScrollWatcher();
-               }
-
-               this._createLoadingIndicator();
-               if (this._options.infiniteScroll == 'demand'){
-                  this._setInfiniteScrollState('down');
-                  return;
-               }
-               // Пока по умолчанию считаем что везде подгрузка вниз, и если указана 'up' - значит она просто перевернута
-               this._setInfiniteScrollState('down', this._options.infiniteScroll == 'up');
-               /**TODO Это специфическое решение из-за того, что нам нужно догружать данные пока не появится скролл
-                * Если мы находися на панельке, то пока она скрыта все данные уже могут загрузиться, но новая пачка не загрузится
-                * потому что контейнер невидимый*/
-               if (cInstance.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')){
-                  var afterFloatAreaShow = function(){
-                     if (self.getItems()) {
-                        if (self._options.infiniteScroll == 'up'){
-                           self._moveTopScroll();
-                        }
-                        self._preScrollLoading();
-                     }
-                     topParent.unsubscribe('onAfterShow', afterFloatAreaShow);
-                  };
-                  //Делаем через subscribeTo, а не once, что бы нормально отписываться при destroy FloatArea
-                  this.subscribeTo(topParent, 'onAfterShow', afterFloatAreaShow);
-               }
-               this._scrollWatcher.subscribe('onTotalScroll', this._onTotalScrollHandler.bind(this));
+   
+            if (!this._scrollWatcher) {
+               this._createScrollWatcher();
             }
+   
+            this._createLoadingIndicator();
+            if (this._options.infiniteScroll == 'demand'){
+               this._setInfiniteScrollState('down');
+               return;
+            }
+            // Пока по умолчанию считаем что везде подгрузка вниз, и если указана 'up' - значит она просто перевернута
+            this._setInfiniteScrollState('down', this._options.infiniteScroll == 'up');
+            /**TODO Это специфическое решение из-за того, что нам нужно догружать данные пока не появится скролл
+             * Если мы находися на панельке, то пока она скрыта все данные уже могут загрузиться, но новая пачка не загрузится
+             * потому что контейнер невидимый*/
+            if (cInstance.instanceOfModule(topParent, 'SBIS3.CORE.FloatArea')){
+               var afterFloatAreaShow = function(){
+                  if (self.getItems()) {
+                     if (self._options.infiniteScroll == 'up'){
+                        self._moveTopScroll();
+                     }
+                     self._preScrollLoading();
+                  }
+                  topParent.unsubscribe('onAfterShow', afterFloatAreaShow);
+               };
+               //Делаем через subscribeTo, а не once, что бы нормально отписываться при destroy FloatArea
+               this.subscribeTo(topParent, 'onAfterShow', afterFloatAreaShow);
+            }
+            this._scrollWatcher.subscribe('onTotalScroll', this._onTotalScrollHandler.bind(this));
          },
 
          _setInfiniteScrollState: function(mode, reverse){
@@ -3489,6 +3493,11 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._options.infiniteScroll = type;
                   this._allowInfiniteScroll = true;
                }
+            }
+   
+   
+            if(this.isInfiniteScroll()) {
+               this._prepareInfiniteScroll();
             }
    
             /* Если скролл - demand, надо скрыть/показать кнопку 'Еще' */
