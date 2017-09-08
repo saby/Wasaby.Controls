@@ -348,11 +348,11 @@ define('js!WSControls/Lists/ItemsControl', [
          }
       });
 
-   ItemsControl.getOptionTypes = function getOptionTypes(){
-      return {
-         dataSource: Types(ISource)
-      }
-   };
+   // ItemsControl.getOptionTypes = function getOptionTypes(){
+   //    return {
+   //       dataSource: Types(ISource)
+   //    }
+   // };
 
    return ItemsControl;
 });
