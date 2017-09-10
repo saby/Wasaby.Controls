@@ -8,8 +8,10 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
       'Core/helpers/fast-control-helpers',
       'tmpl!SBIS3.CONTROLS.RichEditor.ImagePanel',
       "Core/EventBus",
+      'Core/Deferred',
+      'js!SBIS3.CONTROLS.RichEditorUtils',
       'css!SBIS3.CONTROLS.RichEditor.ImagePanel'
-   ], function(CompoundControl, PopupMixin, LikeWindowMixin, FileStorageLoader, Di, fcHelpers, dotTplFn, EventBus) {
+   ], function(CompoundControl, PopupMixin, LikeWindowMixin, FileStorageLoader, Di, fcHelpers, dotTplFn, EventBus, Deferred, RichEditorUtils) {
       'use strict';
 
       var
@@ -59,20 +61,24 @@ define('js!SBIS3.CONTROLS.RichEditor.ImagePanel',
                }
             },
             _onTargetChangeVisibility: function(){},
-            _buttonClickHandler: function(event) {
-               var
-                  target = $(event.delegateTarget);
+
+            _buttonClickHandler: function (event) {
+               var target = $(event.delegateTarget);
                this._selectedTemplate = target.attr('data-id');
                if (this._options.onlyTemplate) {
                   this._notify('onTemplateChange', this._selectedTemplate);
                   this.hide();
-               } else {
-                  this.getFileLoader().startFileLoad(target, this._selectedTemplate === COLLAGE_TEMPLATE, this._options.imageFolder).addCallback(function(fileobj) {
+               }
+               else {
+                  var canceler = new Deferred();
+                  this.once('onclose', canceler.callback.bind(canceler));
+                  RichEditorUtils.startFileLoad(this.getFileLoader(), target, this._selectedTemplate === COLLAGE_TEMPLATE, this._options.imageFolder, canceler).addCallback(function (fileobj) {
                      this._notify('onImageChange', this._selectedTemplate, fileobj);
                      this.hide();
-                  }.bind(this))
+                  }.bind(this));
                }
             },
+
             destroy: function() {
                this._container.find('.controls-ImagePanel__Button').off('click', this._buttonHandlerInstance);
                this._container.off('mousedown focus', this._blockFocusEvents);
