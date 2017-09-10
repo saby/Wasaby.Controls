@@ -110,6 +110,9 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       /**
        * Класс менеджера длительных операций
        * @public
+       *
+       * @author Спирин Виктор Алексеевич
+       *
        * @type {SBIS3.CONTROLS.LongOperationsManager}
        */
       var manager = /*CoreExtend.extend*/(/** @lends SBIS3.CONTROLS.LongOperationsManager.prototype */{

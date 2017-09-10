@@ -20,10 +20,12 @@ define('js!SBIS3.CONTROLS.DateRange', [
     * Класс контрола выбора диапазона дат.
     * @class SBIS3.CONTROLS.DateRange
     * @extends SBIS3.CORE.CompoundControl
+    *
     * @mixes SBIS3.CONTROLS.RangeMixin
     * @mixes SBIS3.CONTROLS.DateRangeMixin
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
+    *
     * @author Миронов Александр Юрьевич
     * @demo SBIS3.CONTROLS.Demo.MyDateRange
     *

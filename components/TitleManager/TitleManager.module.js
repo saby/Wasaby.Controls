@@ -9,6 +9,7 @@ define('js!SBIS3.CONTROLS.TitleManager', [
     * @class SBIS3.CONTROLS.TitleManager
     * @public
     * @author Крайнов Дмитрий Олегович
+    * @singleton
     */
    var TitleManager = cAbstract.extend(/**@lends SBIS3.CONTROLS.TitleManager.prototype*/{
       $protected: {

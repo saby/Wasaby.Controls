@@ -8,7 +8,11 @@ define('js!SBIS3.CONTROLS.ViewSourceMixin', [
    "js!SBIS3.CONTROLS.Utils.Query",
    "js!SBIS3.CONTROLS.HistoryController"
 ], function( cMerge, Deferred,Query, HistoryController) {
-
+    /**
+     *
+     * @mixin SBIS3.CONTROLS.ViewSourceMixin
+     * @public
+     */
    var ViewSourceMixin = /**@lends SBIS3.CONTROLS.ViewSourceMixin.prototype  */{
 
       /**
