@@ -62,6 +62,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
        * @mixes SBIS3.CONTROLS.DropdownListMixin
        * @mixes SBIS3.CONTROLS.PickerMixin
        * @mixes SBIS3.CONTROLS.DataBindMixin
+       * @mixes SBIS3.CONTROLS.FormWidgetMixin
        *
        * @demo SBIS3.CONTROLS.Demo.MyDropdownList <b>Пример 1.</b> Простой пример работы контрола
        * @demo SBIS3.CONTROLS.Demo.MyDropdownListFilter <b>Пример 2.</b> Выпадающий список с фильтрацией.

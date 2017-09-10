@@ -4,6 +4,9 @@
  * @class SBIS3.CONTROLS.GenericLongOperationsProducer
  * @extends SBIS3.CONTROLS.AbstractLongOperationsProducer
  * @implements SBIS3.CONTROLS.ILongOperationsProducer
+ *
+ * @author Спирин Виктор Алексеевич
+ *
  * @public
  */
 

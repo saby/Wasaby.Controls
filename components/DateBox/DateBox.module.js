@@ -33,6 +33,9 @@ define(
     * Можно вводить только значения особого формата даты.
     * @class SBIS3.CONTROLS.DateBox
     * @extends SBIS3.CONTROLS.FormattedTextBoxBase
+    *
+    * @mixes SBIS3.CONTROLS.FormWidgetMixin
+    *
     * @control
     * @author Крайнов Дмитрий Олегович
     * @public
