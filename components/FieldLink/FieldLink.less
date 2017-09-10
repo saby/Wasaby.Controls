@@ -53,7 +53,7 @@
    width: 100%;
    line-height: 20px !important;
    text-decoration: inherit;
-   margin-right: @controls-FieldLink-fieldWrapper-margin;
+   margin-right: 0;
 }
 
 .controls-FieldLink__picker {
@@ -101,13 +101,11 @@
 }
 
 .controls-FieldLink__item {
-   cursor: @controls-FieldLink-linkItem-cursor;
+   cursor: default;
    display: inline-block;
-   margin: @controls-FieldLink-linkItem-margin;
-   position: @controls-FieldLink-linkItem-position;
+   position: relative;
+   height:100%;
    padding: @controls-FieldLink-linkItem-padding;
-   line-height: @controls-FieldLink-linkItem-line-height;
-
    &:after {
       position: absolute;
       right: 0;
@@ -127,7 +125,7 @@
 .controls-FieldLink__item-cross {
    position: absolute;
    right: @controls-FieldLink-linkItem-cross-right;
-   top: @controls-FieldLink-linkItem-cross-top;
+   top: 0;
    padding: @controls-FieldLink-linkItem-cross-padding;
    cursor: pointer;
    z-index: 1;
