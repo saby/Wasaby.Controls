@@ -340,11 +340,12 @@ define('js!WSControls/Lists/ItemsControl', [
          }
       });
 
-   ItemsControl.getOptionTypes = function getOptionTypes(){
+   //TODO https://online.sbis.ru/opendoc.html?guid=17a240d1-b527-4bc1-b577-cf9edf3f6757
+   /*ItemsControl.getOptionTypes = function getOptionTypes(){
       return {
          dataSource: Types(ISource)
       }
-   };
+   };*/
 
    return ItemsControl;
 });
