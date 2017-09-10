@@ -105,7 +105,7 @@ define('js!SBIS3.CONTROLS.Utils.ImageUtil',['Core/Deferred', 'Core/constants'], 
          function loadImage(img, url) {
             var
                onLoadHandler = function(){
-                  if (img && img.getAttribute && img.getAttribute('src') == url) {
+                  if (img && img.getAttribute && img.getAttribute('src') === url) {
                      imgReady.callback();
                      img.removeEventListener('load', onLoadHandler);
                      img.removeEventListener('error', onErrorHandler);
@@ -113,7 +113,7 @@ define('js!SBIS3.CONTROLS.Utils.ImageUtil',['Core/Deferred', 'Core/constants'], 
 
                },
                onErrorHandler = function(){
-                  if (img && img.getAttribute && img.getAttribute('src') == url) {
+                  if (img && img.getAttribute && img.getAttribute('src') === url) {
                       imgReady.errback();
                       img.removeEventListener('error',onErrorHandler);
                       img.removeEventListener('load',onLoadHandler);
