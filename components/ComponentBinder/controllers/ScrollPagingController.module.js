@@ -19,6 +19,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          },
          _viewHeight: 0,
          _viewportHeight: 0,
+         _pagesCount: 0,
          _currentScrollPage: 1,
          _windowResizeTimeout: null,
          _zIndex: null
@@ -136,7 +137,11 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
 
 
       getScrollPage: function(){
-         return this._scrollPages[this._currentScrollPage];
+         return this._currentScrollPage;
+      },
+
+      getPagesCount: function() {
+         return this._pagesCount
       },
 
       updatePaging: function() {
@@ -149,6 +154,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          }
          if (!this._options.paging.getItems() || (this._options.paging.getItems().getCount() != pagesCount)) {
             this._options.paging.setPagesCount(pagesCount);
+            this._pagesCount = pagesCount;
          }
 
          //Если есть страницы - покажем paging
