@@ -230,8 +230,8 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          });
 
          var pagesCount = this._scrollPages.length;
-
-         this._options.view.getContainer().toggleClass('controls-ScrollPaging__pagesPadding', pagesCount > 1);
+   
+         view.getContainer().toggleClass('controls-ScrollPaging__pagesPadding', pagesCount > 1);
          if (this._options.paging.getSelectedKey() > pagesCount){
             this._options.paging.setSelectedKey(pagesCount);
          }
@@ -239,7 +239,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
 
          //Если есть страницы - покажем paging
          
-         this._options.paging.setVisible((pagesCount > 1) && !this._options.hiddenPager);
+         this._options.paging.setVisible((pagesCount > 1) && !this._options.hiddenPager && view._getOption('infiniteScroll') !== 'up');
       },
 
       destroy: function(){
