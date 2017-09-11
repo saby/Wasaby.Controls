@@ -8,4 +8,5 @@
       enabled="{{item.get('enabled') !== false}}"
       visible="{{item.get('visible') !== false}}"
       checked="{{item.getId() === selectedKey ? true : false}}"
+      tooltip="{{item.tooltip}}"
       allowChangeEnable="{{!!allowChangeEnable}}" name="{{item.get('name')}}"></ws:SBIS3.CONTROLS.TabButton>
