@@ -14,12 +14,13 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
        /**
        * Класс, который описывает действие открытия окна с заданным шаблоном. Из этого окна можно осуществлять выбор.
        * @class SBIS3.CONTROLS.Action.SelectorAction
-       * @public
        * @extends SBIS3.CONTROLS.Action.Action
+       *
        * @mixes SBIS3.CONTROLS.Action.DialogMixin
        *
        * @demo SBIS3.CONTROLS.Demo.DemoSelectorAction
        *
+       * @public
        * @author Герасимов Александр Максимович
        */
        var SelectorAction = Action.extend([DialogMixin], /** @lends SBIS3.CONTROLS.Action.SelectorAction.prototype */{

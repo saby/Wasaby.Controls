@@ -17,6 +17,8 @@ define('js!SBIS3.CONTROLS.TabControl', [
     * @class SBIS3.CONTROLS.TabControl
     * @extends SBIS3.CORE.CompoundControl
     *
+    * @mixes SBIS3.CORE.HasItemsMixin
+    *
     * @control
     * @author Красильников Андрей Сергеевич
     * @public

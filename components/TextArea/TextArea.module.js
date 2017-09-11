@@ -69,6 +69,8 @@ define('js!SBIS3.CONTROLS.TextArea', [
          _autoSizeInitialized: false,
          //TODO надо подумать как работать с автосайзом эрии без плагина, т.к. в VDOM все равно не получится, как вариант contentEditable
          _myResize: false, //флаг нужен для того, чтобы мы могли отличить ресайз, если он был инициирован самим полем, то надо известить родителя, если пришел извне, то не надо
+         //флаг что была инициализирован плагин автовысоты. Меняется отображение и поведение текстареи
+         _autoHeightInitialized: false,
          
          _options: {
             textFieldWrapper: inputField,
@@ -249,6 +251,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
          var hClasses = generateClassesName(this._options.minLinesCount, this._options.maxLinesCount);
          modifyHeightClasses(this._inputField.get(0), hClasses);
          this._container.addClass('controls-TextArea__heightInit');
+         this._autoHeightInitialized = true;
       },
 
       _autosizeTextArea: function(hard){
@@ -278,7 +281,12 @@ define('js!SBIS3.CONTROLS.TextArea', [
       _setEnabled: function(state){
          TextArea.superclass._setEnabled.call(this, state);
          this._inputField.toggleClass('ws-invisible', !state);
-         this._disabledWrapper.toggleClass('ws-hidden', state);
+         if (this._autoHeightInitialized) {
+            this._disabledWrapper.toggleClass('ws-hidden', state);
+         }
+         else {
+            this._disabledWrapper.toggleClass('ws-invisible', state);
+         }
          this._updateDisabledWrapper();
       },
 

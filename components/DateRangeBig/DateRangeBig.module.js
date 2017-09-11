@@ -9,9 +9,12 @@ define('js!SBIS3.CONTROLS.DateRangeBig', [
     * SBIS3.CONTROLS.DateRangeBig
     * @class SBIS3.CONTROLS.DateRangeBig
     * @extends SBIS3.CONTROLS.DateRange
+    *
     * @author Миронов Александр Юрьевич
+    *
     * @control
     * @public
+    *
     * @demo SBIS3.CONTROLS.Demo.MyDateRangeBig
     */
    var DateRangeBig = DateRange.extend( /** @lends SBIS3.CONTROLS.DateRangeBig.prototype */{

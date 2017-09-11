@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.TagSelector', ['js!SBIS3.CONTROLS.TextBox'], function(
     * @class SBIS3.CONTROLS.TagSelector
     * @extends SBIS3.CONTROLS.TextBox
     * @author Крайнов Дмитрий Олегович
+    * @public
     */
 
    var TagSelector = TextBox.extend(/** @lends SBIS3.CONTROLS.TagSelector.prototype */{
