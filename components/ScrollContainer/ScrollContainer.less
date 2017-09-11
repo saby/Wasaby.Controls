@@ -89,14 +89,6 @@ body.ws-is-ie .controls-ScrollContainer__content {
    overflow: hidden;
 }
 
-.ws-is-desktop-platform {
-   .controls-ScrollContainer__content {
-      &::-webkit-scrollbar {
-         width: 0!important;
-      }
-   }
-}
-
 .ws-is-mobile-android {
    .controls-ScrollContainer__content {
       overflow-y: auto;
@@ -161,7 +153,7 @@ body.ws-is-ie .controls-ScrollContainer__content {
 
 .controls-ScrollContainer__content:not(.controls-ScrollContainer__content-overflowHidden) {
    // Desktop IE
-   body.ws-is-ie &, body.ws-is-firefox & {
+   body.ws-is-ie &, body.ws-is-firefox &, body.ws-is-chrome & {
       margin-right: -17px;
    }
 

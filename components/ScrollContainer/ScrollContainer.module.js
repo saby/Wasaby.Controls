@@ -160,8 +160,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                prevCtxRemoved: {},
                prevNeedSync: 0
             };
-            this._isIE = cDetection.isIE;
-            this._isFirefox = cDetection.firefox;
+            this._isMobileIOS = cDetection.isMobileIOS;
             this.deprecatedContr(cfg);
          },
 
@@ -230,9 +229,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                this._subscribeOnScroll();
 
                this._addGradient();
-
-               // Что бы до инициализации не было видно никаких скроллов
-               this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
 
                // task: 1173330288
                // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
@@ -540,21 +536,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                this._page = page;
                this._paging.setSelectedKey(page);
             }
-         },
-
-         _getBrowserScrollbarWidth: function() {
-            var outer, outerStyle, scrollbarWidth;
-            outer = document.createElement('div');
-            outerStyle = outer.style;
-            outerStyle.position = 'absolute';
-            outerStyle.width = '100px';
-            outerStyle.height = '100px';
-            outerStyle.overflow = 'scroll';
-            outerStyle.top = '-9999px';
-            document.body.appendChild(outer);
-            scrollbarWidth = outer.offsetWidth - outer.clientWidth;
-            document.body.removeChild(outer);
-            return scrollbarWidth;
          },
 
          _scrollbarDragHandler: function(event, position){
