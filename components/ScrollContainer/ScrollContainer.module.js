@@ -216,7 +216,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   this._onMouseenter = this._onMouseenter.bind(this);
                   this._onMouseleave = this._onMouseleave.bind(this);
                   this._subscribeMouseEnterLeave();
-                  this._eventBusChannel = EventBus.channel('ScrollContainerChannel');
                   /**
                    * Можно ли отобрать скролл.
                    * 0 - нельзя отбирать
@@ -400,6 +399,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                .off('mouseenter', this._onMouseenter)
                .off('mouseleave', this._onMouseleave);
          },
+         
+         _getScrollContainerChannel: function() {
+            return EventBus.channel('ScrollContainerChannel');
+         },
 
          _onScroll: function(event) {
             var scrollTop = this._getScrollTop();
@@ -415,7 +418,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _onMouseenter: function() {
-            var EventBusChannel = this._eventBusChannel;
+            var EventBusChannel = this._getScrollContainerChannel();
+
+            if (this._isHover) {
+               return;
+            }
+            this._isHover = true;
 
             /**
              * При переходе курсора на контейнер разрешим отбирать скролл, только при скроллинге другого контейнера.
@@ -445,7 +453,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _onMouseleave: function() {
-            var EventBusChannel = this._eventBusChannel;
+            var EventBusChannel = this._getScrollContainerChannel();
 
             if (this._isTakeScrollbar) {
                EventBusChannel.notify('onRequestTakeScrollbar', 1);
@@ -454,6 +462,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             } else {
                this._isTakeScrollbar = 2;
             }
+
+            this._isHover = false;
          },
 
          _subscribeOnMousemove: function() {
@@ -473,7 +483,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _requestTakeScrollbarHandler: function(event, isTakeScrollbar) {
-            var EventBusChannel = this._eventBusChannel;
+            var EventBusChannel = this._getScrollContainerChannel();
 
             /**
              * При получении запроса на скролл проверим можем ли мы его отдать.
@@ -492,7 +502,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             /**
              * Оповестим подписантов на ответ запроса скролла о принятом решении.
              */
-            this._eventBusChannel.notify('onReturnTakeScrollbar', isTakeScrollbar);
+            this._getScrollContainerChannel().notify('onReturnTakeScrollbar', isTakeScrollbar);
             // Если отдали скролл, то начнем слушать ответы, чтобы взять скролл, на случай ситуации контейнер в контейнере.
             if (isTakeScrollbar) {
                EventBusChannel.subscribe('onReturnTakeScrollbar', this._returnTakeScrollbarHandler);
@@ -500,7 +510,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _returnTakeScrollbarHandler: function(event, isTakeScrollbar) {
-            var EventBusChannel = this._eventBusChannel;
+            var EventBusChannel = this._getScrollContainerChannel();
             if (isTakeScrollbar) {
                /**
                 * Забираем скролл, начинам слушать запросы и прекращаем слушать ответы на скролл.
