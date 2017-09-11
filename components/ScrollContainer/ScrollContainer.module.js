@@ -158,6 +158,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                prevCtxRemoved: {},
                prevNeedSync: 0
             };
+            this._isMobileIOS = cDetection.isMobileIOS;
             this.deprecatedContr(cfg);
          },
 
