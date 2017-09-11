@@ -17,7 +17,7 @@ properties([
             description: '',
             name: 'ws_data_revision'),
         string(
-            defaultValue: 'rc-3.17.120',
+            defaultValue: 'rc-3.17.110',
             description: '',
             name: 'branch_engine'),
         string(
@@ -42,7 +42,7 @@ if ( "${env.BUILD_NUMBER}" != "1" && params.run_reg == false && params.run_int =
     }
 
 node('controls') {
-    def version = "3.17.120"
+    def version = "3.17.110"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
         deleteDir()
