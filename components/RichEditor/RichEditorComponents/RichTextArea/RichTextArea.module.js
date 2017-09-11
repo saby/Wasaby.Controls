@@ -55,6 +55,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
       'use strict';
       //TODO: ПЕРЕПИСАТЬ НА НОРМАЛЬНЫЙ КОД РАБОТУ С ИЗОБРАЖЕНИЯМИ
       var
+         EDITOR_MODULES = ['css!SBIS3.CONTROLS.RichTextArea/resources/tinymce/skins/lightgray/skin.min',
+            'css!SBIS3.CONTROLS.RichTextArea/resources/tinymce/skins/lightgray/content.inline.min',
+            'js!SBIS3.CONTROLS.RichTextArea/resources/tinymce/tinymce'],
          constants = {
             maximalPictureSize: 120,
             imageOffset: 40, //16 слева +  24 справа
@@ -1677,14 +1680,31 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             RichTextArea.superclass._setEnabled.apply(this, arguments);
          },
 
+         _requireTinyMCE: function() {
+            var
+               notDefined = false,
+               result = new Deferred();
+            EDITOR_MODULES.forEach(function(module) {
+               if (!require.defined(module)) {
+                  notDefined = true;
+               }
+            });
+            if (notDefined) {
+               require(EDITOR_MODULES, function() {
+                  result.callback();
+               });
+            } else {
+               result.callback();
+            }
+            return result;
+         },
+
          _initTiny: function() {
             var
                self = this;
             if (!this._tinyEditor && !this._tinyIsInit) {
                this._tinyIsInit = true;
-               require(['css!SBIS3.CONTROLS.RichTextArea/resources/tinymce/skins/lightgray/skin.min',
-                  'css!SBIS3.CONTROLS.RichTextArea/resources/tinymce/skins/lightgray/content.inline.min',
-                  'js!SBIS3.CONTROLS.RichTextArea/resources/tinymce/tinymce'],function(){
+               this._requireTinyMCE().addCallback(function() {
                   tinyMCE.baseURL = cPathResolver.resolveComponentPath('SBIS3.CONTROLS.RichTextArea') + 'resources/tinymce';
                   tinyMCE.init(self._options.editorConfig);
                });
@@ -2064,6 +2084,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          }
 
       });
+
+      RichTextArea.EDITOR_MODULES = EDITOR_MODULES;
 
       return RichTextArea;
    });
