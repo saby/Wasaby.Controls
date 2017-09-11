@@ -51,8 +51,13 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
        * Класс для отображения списка длительных операций
        * @class SBIS3.CONTROLS.LongOperationsList
        * @extends SBIS3.CORE.CompoundControl
+       *
+       * @author Спирин Виктор Алексеевич
+       *
+       * @public
+       *
        */
-      var LongOperationsList = CompoundControl.extend({
+      var LongOperationsList = CompoundControl.extend( /** @lends SBIS3.CONTROLS.LongOperationsList.prototype */{
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
