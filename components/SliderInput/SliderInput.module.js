@@ -5,7 +5,7 @@
 define('js!SBIS3.CONTROLS.SliderInput',
    [
       'js!SBIS3.CONTROLS.Slider',
-      'html!SBIS3.CONTROLS.SliderInput',
+      'tmpl!SBIS3.CONTROLS.SliderInput',
       'Core/constants',
       'js!SBIS3.CONTROLS.NumberTextBox',
       'css!SBIS3.CONTROLS.SliderInput'

@@ -1,0 +1,9 @@
+<tr>
+   <td colspan="5" class="controls-LongOperationsList__groupTpl_td">
+      <div class="controls-LongOperationsList__groupTpl_title">
+         <ws:template name="ValueTpl">{{(value === 0) ? 'В процессе' : (value === 1) ? 'Приостановленные' : 'Завершенные'}}</ws:template>
+         <ws:partial template="ValueTpl" value="{{item.get('status')}}"/>
+      </div>
+      <div class="controls-LongOperationsList__groupTpl_separator"></div>
+   </td>
+</tr>

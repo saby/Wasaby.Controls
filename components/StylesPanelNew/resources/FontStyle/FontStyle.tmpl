@@ -1,0 +1,40 @@
+<div class="controls-StylesPanel__buttons">
+   <ws:SBIS3.CONTROLS.ComboBox
+      name="FontSize"
+      idProperty="key"
+      editable="{{false}}"
+      displayProperty="value"
+      activableByClick="{{false}}"
+      className="controls-ComboBox__ellipsis"
+      items="{{fontSizes.map(_fontSizesConvert)}}"
+      selectedKey="{{style['font-size'].substr(0, style['font-size'].length - 2 )}}"
+   />
+   <ws:WSControls.Buttons.ToggleButton
+      name="Bold"
+      activableByClick="{{false}}"
+      checked="{{!!style['font-weight']}}"
+      icon="sprite:icon-16 icon-Bold icon-primary"
+      cssClassName="controls-ToggleButton__square"
+   />
+   <ws:WSControls.Buttons.ToggleButton
+      name="Italic"
+      activableByClick="{{false}}"
+      checked="{{!!style['font-style']}}"
+      cssClassName="controls-ToggleButton__square"
+      icon="sprite:icon-16 icon-Italic icon-primary"
+   />
+   <ws:WSControls.Buttons.ToggleButton
+      name="Underline"
+      activableByClick="{{false}}"
+      cssClassName="controls-ToggleButton__square"
+      icon="sprite:icon-16 icon-Underline icon-primary"
+      checked="{{style['text-decoration'] && style['text-decoration'].indexOf('underline') !== -1}}"
+   />
+   <ws:WSControls.Buttons.ToggleButton
+      name="Strikethrough"
+      activableByClick="{{false}}"
+      cssClassName="controls-ToggleButton__square"
+      icon="sprite:icon-16 icon-Stroked icon-primary"
+      checked="{{style['text-decoration'] && style['text-decoration'].indexOf('line-through') !== -1}}"
+   />
+</div>

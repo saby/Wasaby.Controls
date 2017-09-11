@@ -3,7 +3,7 @@
  */
 define('js!SBIS3.CONTROLS.SumDialogTemplate', [
     'js!SBIS3.CORE.CompoundControl',
-    'html!SBIS3.CONTROLS.SumDialogTemplate',
+    'tmpl!SBIS3.CONTROLS.SumDialogTemplate',
     'Core/defaultRenders',
     'js!SBIS3.CONTROLS.Button',
     'i18n!SBIS3.CONTROLS.SumDialogTemplate',

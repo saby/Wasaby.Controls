@@ -4,7 +4,7 @@
 
 define('js!SBIS3.CONTROLS.ColorRadioButtonNew', [
    'js!SBIS3.CONTROLS.RadioButtonBase',
-   'html!SBIS3.CONTROLS.ColorRadioButtonNew'
+   'tmpl!SBIS3.CONTROLS.ColorRadioButtonNew'
 ], function(RadioButtonBase, dotTplFn) {
 
    'use strict';

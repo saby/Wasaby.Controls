@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
    "Core/constants",
    "js!SBIS3.CORE.CompoundControl",
-   "html!SBIS3.CONTROLS.DateRangeBigChoose",
+   "tmpl!SBIS3.CONTROLS.DateRangeBigChoose",
    "js!SBIS3.CONTROLS.RangeMixin",
    "js!SBIS3.CONTROLS.RangeSelectableViewMixin",
    "js!SBIS3.CONTROLS.Utils.DateUtil",

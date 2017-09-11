@@ -1,0 +1,46 @@
+<div class="controls-LongOperationsList">
+   <ws:SBIS3.CONTROLS.DataGridView
+      name="{{listName}}"
+      idProperty="fullId"
+      showHead="{{false}}"
+      displayProperty="title"
+      itemsActions="{{ [] }}"
+      pageSize="{{pageSize}}"
+      scrollPaging="{{false}}"
+      itemsDragNDrop="{{false}}"
+      filter="{{'filter'|mutable}}"
+      className="{{className || ''}}"
+      infiniteScroll="{{infiniteScroll}}"
+      columns="{{ [
+         columns.status ? {
+            'field': 'status',
+            'cellTemplate': 'html!SBIS3.CONTROLS.LongOperationsList/resources/LongOperationsListStateTemplate',
+            'width': narrowTmpl ? '' : '40'
+         } : undefined,
+         columns.startedAt ? {
+            'field': 'startedAt',
+            'cellTemplate': 'html!SBIS3.CONTROLS.LongOperationsList/resources/LongOperationsListStartTimeTemplate',
+            'width': '110',
+            'className': 'controls-LongOperationsList__startTimeContainer'
+         } : undefined,
+         columns.title ? {
+            'field': 'title',
+            'cellTemplate': 'html!SBIS3.CONTROLS.LongOperationsList/resources/LongOperationsListNameTemplate',
+            'width': narrowTmpl ? '' : '100%',
+            'className': 'controls-LongOperationsList__nameColumn controls-DataGridView-cell-overflow-ellipsis'
+         } : undefined,
+         columns.timeSpent ? {
+            'field': 'timeSpent',
+            'cellTemplate': 'html!SBIS3.CONTROLS.LongOperationsList/resources/LongOperationsListExecuteTimeTemplate',
+            'width': narrowTmpl ? '' : '130',
+            'className': 'controls-LongOperationsList__executeTimeContainer'
+         } : undefined,
+         columns.userPic ? {
+            'field': 'userPic',
+            'cellTemplate': 'html!SBIS3.CONTROLS.LongOperationsList/resources/LongOperationsListUserPhotoTemplate',
+            'width': narrowTmpl ? '' : '200',
+            'className': 'controls-DataGridView-cell-overflow-ellipsis'
+         } : undefined
+      ] }}"
+   />
+</div>

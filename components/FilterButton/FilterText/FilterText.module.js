@@ -4,7 +4,7 @@
 define('js!SBIS3.CONTROLS.FilterText',
     [
        'js!WSControls/Buttons/ButtonBase',
-       'html!SBIS3.CONTROLS.FilterText',
+       'tmpl!SBIS3.CONTROLS.FilterText',
        'js!SBIS3.CONTROLS.ITextValue'
     ], function(WSButtonBase, dotTplFn, ITextValue) {
        'use strict';

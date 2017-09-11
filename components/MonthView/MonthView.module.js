@@ -10,8 +10,8 @@ define(
       'js!SBIS3.CONTROLS.RangeMixin',
       'js!SBIS3.CONTROLS.RangeSelectableViewMixin',
       'js!SBIS3.CONTROLS.Utils.DateUtil',
-      'html!SBIS3.CONTROLS.MonthView/resources/MonthViewTableBody',
-      'html!SBIS3.CONTROLS.MonthView',
+      'tmpl!SBIS3.CONTROLS.MonthView/resources/MonthViewTableBody',
+      'tmpl!SBIS3.CONTROLS.MonthView',
       'js!SBIS3.CONTROLS.MonthPicker',
       'i18n!SBIS3.CONTROLS.Calendar',
       'css!SBIS3.CONTROLS.MonthView'

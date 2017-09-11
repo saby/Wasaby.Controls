@@ -1,0 +1,49 @@
+<div class="controls-MergeDialogTemplate">
+   <span class="controls-MergeDialogTemplate__hint">{{hint}}</span>
+   <ws:SBIS3.CONTROLS.TreeDataGridView
+      showPaging="{{false}}"
+      itemsActions="{{ [] }}"
+      itemsDragNDrop="{{false}}"
+      idProperty="{{idProperty}}"
+      hierarchyViewMode="{{true}}"
+      allowEmptySelection="{{true}}"
+      nodeProperty="{{nodeProperty}}"
+      parentProperty="{{parentProperty}}"
+      displayProperty="{{displayProperty}}"
+      name="MergeDialogTemplate__treeDataGridView"
+      itemTpl="tmpl!SBIS3.CONTROLS.MergeDialogTemplate/resources/rowTpl"
+      className="controls-MergeDialogTemplate__treeDataGridView controls-ListView__withoutMarker controls-GridView__searchMode controls-TreeView__withoutExpands controls-DataGridView__hasSeparator"
+      columns="{{ [
+         {
+            'cellTemplate': 'tmpl!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellRadioButtonTpl'
+         },
+         {
+            'title': 'Наименование',
+            'width': '400',
+            'field': displayProperty,
+            'cellTemplate': titleCellTemplate || 'tmpl!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellTitleTpl',
+            'className': 'controls-DataGridView-cell-overflow-ellipsis'
+         },
+         {
+            'title': 'Комментарий',
+            'field': 'Comment',
+            'cellTemplate': 'tmpl!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellCommentTpl',
+            'className': 'controls-DataGridView-cell-overflow-ellipsis'
+         }
+      ] }}"
+   >
+      <ws:handlers type="object">
+         <ws:onSearchPathClick type="function">js!SBIS3.CONTROLS.MergeDialogTemplate:prototype.onSearchPathClick</ws:onSearchPathClick>
+      </ws:handlers>
+   </ws:SBIS3.CONTROLS.TreeDataGridView>
+   <div class="controls-MergeDialogTemplate__applyBlock{{selectedKey ? '' : ' ws-hidden'}}">
+      <span class="controls-MergeDialogTemplate__warning">{{warning}}</span>
+      <ws:SBIS3.CONTROLS.Button
+         primary="{{true}}"
+         command="beginMerge"
+         caption="Объединить"
+         className="controls-MergeDialogTemplate__mergeButton"
+         name="MergeDialogTemplate-mergeButton"
+      />
+   </div>
+</div>

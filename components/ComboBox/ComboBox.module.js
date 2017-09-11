@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "js!SBIS3.CONTROLS.SearchMixin",
    "js!SBIS3.CONTROLS.ScrollContainer",
    "tmpl!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown",
-   "html!SBIS3.CONTROLS.ComboBox/resources/ItemTemplate",
+   "tmpl!SBIS3.CONTROLS.ComboBox/resources/ItemTemplate",
    "tmpl!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate",
    "Core/core-instance",
    "i18n!SBIS3.CONTROLS.СomboBox",

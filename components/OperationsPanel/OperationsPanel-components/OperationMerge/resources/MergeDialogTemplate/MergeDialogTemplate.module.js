@@ -4,7 +4,7 @@
 define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
    "Core/CommandDispatcher",
    "js!SBIS3.CORE.CompoundControl",
-   "html!SBIS3.CONTROLS.MergeDialogTemplate",
+   "tmpl!SBIS3.CONTROLS.MergeDialogTemplate",
    "js!WS.Data/Source/SbisService",
    "js!WS.Data/Adapter/Sbis",
    "js!WS.Data/Query/Query",

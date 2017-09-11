@@ -1,0 +1,5 @@
+<div class="ws-SwitchableArea">
+   <ws:for data="index, item in items">
+      <ws:patrial template="{{areaTemplate}}" outer="{{...}}" item="{{item}}" index="{{index}}" defaultArea="{{defaultArea === item.id}}"/>
+   </ws:for>
+</div>

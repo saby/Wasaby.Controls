@@ -1,0 +1,6 @@
+<div class="controls-ComboBox__itemRow js-controls-ComboBox__itemRow controls-ListView__item js-controls-ListView__item{{(item.get && item.get('isEmptyValue')) ? ' controls-ComboBox__emptyRow'}}{{(item.get && item.get('className')) ? ' ' + item.get('className')}}"
+     data-hash="{{projItem.getHash()}}"
+     data-id="{{item.getId()}}"
+>
+   <ws:partial template="{{itemContent}}" scope="{{...}}"/>
+</div>

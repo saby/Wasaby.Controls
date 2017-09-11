@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.LongOperationsFilter', [
       'js!SBIS3.CORE.CompoundControl',
-      'html!SBIS3.CONTROLS.LongOperationsFilter',
+      'tmpl!SBIS3.CONTROLS.LongOperationsFilter',
       'css!SBIS3.CONTROLS.LongOperationsFilter',
       'js!SBIS3.CONTROLS.DropdownList',
       'optional!js!SBIS3.Staff.Choice'

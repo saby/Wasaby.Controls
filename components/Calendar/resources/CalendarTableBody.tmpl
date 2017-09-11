@@ -1,0 +1,14 @@
+<tbody class="controls-Calendar__tableBody">
+    <ws:for data="week in weeksArray">
+        <tr class="controls-Calendar__tableBodyRow">
+            <ws:for data="value in week">
+                <ws:if data="{{value.isCalendar}}">
+                    <td data-day="{{value.day}}" class="controls-Calendar__tableElement controls-Calendar__tableBodyElement">{{value.day}}</td>
+                </ws:if>
+                <ws:else>
+                    <td class="controls-Calendar__tableElement controls-Calendar__tableElementFog">{{value.day}}</td>
+                </ws:else>
+            </ws:for>
+        </tr>
+    </ws:for>
+</tbody>

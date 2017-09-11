@@ -1,0 +1,63 @@
+<div data-lmtype="Dialog">
+   <div class="ws-window-titlebar-custom" data-lmchild="WindowTitle" style="font-size:0; padding-right:30px">
+      <ws:SBIS3.CORE.Button
+         caption="ОК"
+         tabindex="5"
+         name="applyButton"
+         defaultButton="{{true}}"
+         attributes="{{ {
+            'style': 'width:90px;vertical-align:top;display:inline-block;position:absolute;top:8px;right:36px;margin-right:0px;'
+         } }}"
+      />
+   </div>
+   <ws:SBIS3.CORE.FieldDropdown
+      tabindex="3"
+      name="valueType"
+      renderStyle="simple"
+      data="{{ [
+         {
+            'key': 'pix',
+            'value': 'пикселей'
+         },
+         {
+            'key': 'per',
+            'value': 'процентов'
+         }
+      ] }}"
+      attributes="{{ {
+         'style': 'position:absolute;left:174px;width:80px;top:20px;'
+      } }}"
+   />
+   <label class="ws-Label ws-Label-ws-control" data-lmtype="Label" style="position:static;display:block;margin-left:22px;margin-top:8px;">
+      <span data-lmchild="label-title" class="ws-Label-title">Высота</span>
+      <div data-lmchild="label-content" class="ws-Label-content" style="display:inline-block;">
+         <ws:SBIS3.CORE.FieldInteger
+            integers="4"
+            tabindex="1"
+            tooltip="999"
+            name="imageHeight"
+            notNegative="{{true}}"
+            tooltipInside="{{true}}"
+            attributes="{{ {
+               'style': 'width:90px;'
+            } }}"
+         />
+      </div>
+   </label>
+   <label class="ws-Label ws-Label-ws-control" data-lmtype="Label" style="position:relative;display:inline-block;margin-left:16px;margin-top:8px;">
+      <span data-lmchild="label-title" class="ws-Label-title">Ширина</span>
+      <div data-lmchild="label-content" class="ws-Label-content" style="display:inline-block;">
+         <ws:SBIS3.CORE.FieldInteger
+            integers="4"
+            tabindex="2"
+            tooltip="999"
+            name="imageWidth"
+            notNegative="{{true}}"
+            tooltipInside="{{true}}"
+            attributes="{{ {
+               'style': 'width:90px;'
+            } }}"
+         />
+      </div>
+   </label>
+</div>
