@@ -529,7 +529,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                      visiblePath: this._options.navigationToolbar,
                      parent: this
                   });
-                  this._setPagesCount(Math.ceil(this._getScrollHeight() / this._container.height()));
+                  if (this._container.height()) {
+                     this._setPagesCount(Math.ceil(this._getScrollHeight() / this._container.height()));
+                  }
                   this._paging.subscribe('onSelectedItemChange', this._pageChangeHandler.bind(this));
                   this._page = 1;
                }.bind(this));
