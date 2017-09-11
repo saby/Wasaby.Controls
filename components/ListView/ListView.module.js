@@ -4415,6 +4415,11 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
+         _setNewDataAfterReload: function() {
+            ListView.superclass._setNewDataAfterReload.apply(this, arguments);
+            this._redrawResults(true);
+         },
+
          /**
           * Удаляет записи из источника данных по переданным идентификаторам элементов коллекции.
           * @remark
