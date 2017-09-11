@@ -18,6 +18,9 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
     * @extends SBIS3.CORE.Control
     * @author Сухоручкин Андрей Сергеевич
     *
+    * @mixes SBIS3.CONTROLS.Clickable
+    * @mixes SBIS3.CONTROLS.Checkable
+    *
     * @control
     * @public
     * @category Actions

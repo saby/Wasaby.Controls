@@ -12,8 +12,17 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
    'css!SBIS3.CONTROLS.DateRangeChoose'
 ], function ( Deferred, IoC, CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, eHelpers, dateHelpers) {
    'use strict';
-
-   var DateRangeChoose = CompoundControl.extend([RangeMixin, DateRangeMixin], {
+    /**
+     * @class SBIS3.CONTROLS.DateRangeChoose
+     * @extends SBIS3.CORE.CompoundControl
+     *
+     * @mixes SBIS3.CONTROLS.RangeMixin
+     * @mixes SBIS3.CONTROLS.DateRangeMixin
+     *
+     * @public
+     * @control
+     */
+   var DateRangeChoose = CompoundControl.extend([RangeMixin, DateRangeMixin], /** @lends SBIS3.CONTROLS.DateRangeChoose.prototype */{
       /**
        * @typedef {Object} customPeriod
        * @property {String} label Заголовок который будет отбражаться в контроле.

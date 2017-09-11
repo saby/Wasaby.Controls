@@ -39,7 +39,9 @@ define(
     *
     * @class SBIS3.CONTROLS.DatePicker
     * @extends SBIS3.CONTROLS.DateBox
+    *
     * @mixes SBIS3.CONTROLS.PickerMixin
+    *
     * @author Крайнов Дмитрий Олегович
     *
     * @demo SBIS3.CONTROLS.Demo.MyDatePicker
