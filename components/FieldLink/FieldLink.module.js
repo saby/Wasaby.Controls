@@ -95,6 +95,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
           
           isSimplePlaceholder: function(placeholder) {
+             /**
+              * Сюда может прилететь rkString
+              * пока что это единственный способ ее идентифицировать
+              */
+             if (placeholder && placeholder.saveProtoM) {
+                placeholder = '' + placeholder;
+             }
              return typeof placeholder === 'string' && placeholder.indexOf('SBIS3.CONTROLS.FieldLink.Link') === -1;
           }
        };
