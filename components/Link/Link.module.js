@@ -133,7 +133,7 @@ define('js!SBIS3.CONTROLS.Link', [
       _drawIcon: function (icon) {
          Link.superclass._drawIcon.call(this, icon);
          if(this._options.href) {
-            this._container.get(0).innerHTML = hrefTemplate(this._options);
+            this._contentContainer[0].innerHTML = hrefTemplate(this._options);
          }
       },
       /**
@@ -145,7 +145,7 @@ define('js!SBIS3.CONTROLS.Link', [
        */
       setHref: function (href) {
          this._options.href = href;
-         this._container.html(hrefTemplate(this._options));
+         this._contentContainer[0].innerHTML = hrefTemplate(this._options);
       }
 
    });

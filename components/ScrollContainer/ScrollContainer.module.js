@@ -160,6 +160,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                prevCtxRemoved: {},
                prevNeedSync: 0
             };
+            this._isIE = cDetection.isIE;
+            this._isFirefox = cDetection.firefox;
             this.deprecatedContr(cfg);
          },
 
@@ -185,7 +187,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                         }
                      }.bind(this);
                   }
-                  this._hideNativeScrollbar();
 
                   //--------------- Управление видимостью скролла ---------------//
                   // Сделано через EventBus.
@@ -538,22 +539,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             if (this._page !== page) {
                this._page = page;
                this._paging.setSelectedKey(page);
-            }
-         },
-
-         _hideNativeScrollbar: function(){
-            var scrollbarWidth, style;
-            if (!cDetection.webkit && !cDetection.chrome){
-               /**
-                * Скрытие нативного скролла в IE, Firefox происходит через отрицательный margin = длине скролла.
-                */
-               scrollbarWidth = this._getBrowserScrollbarWidth();
-               if (scrollbarWidth) {
-                  style = {
-                     marginRight: -scrollbarWidth
-                  };
-                  this._content.css(style);
-               }
             }
          },
 

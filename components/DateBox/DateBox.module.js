@@ -33,6 +33,9 @@ define(
     * Можно вводить только значения особого формата даты.
     * @class SBIS3.CONTROLS.DateBox
     * @extends SBIS3.CONTROLS.FormattedTextBoxBase
+    *
+    * @mixes SBIS3.CONTROLS.FormWidgetMixin
+    *
     * @control
     * @author Крайнов Дмитрий Олегович
     * @public
@@ -730,7 +733,8 @@ define(
 
       _isRequired: function () {
          for(var i = 0; i < this._options.validators.length; i++) {
-            if (this._options.validators[i].validator === ControlsValidators.required) {
+            var validator = this._options.validators[i];
+            if (validator.validator === ControlsValidators.required && !validator.noFailOnError) {
                return true;
             }
          }

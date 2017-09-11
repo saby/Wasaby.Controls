@@ -19,6 +19,8 @@ define(
     * @class SBIS3.CONTROLS.TabButton
     * @extends SBIS3.CONTROLS.RadioButtonBase
     * @author Крайнов Дмитрий Олегович
+    *
+    * @mixes SBIS3.CONTROLS.IconMixin
     */
 
    var prepareOrder = function(order) {
