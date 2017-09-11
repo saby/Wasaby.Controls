@@ -58,10 +58,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
       //TODO: ПЕРЕПИСАТЬ НА НОРМАЛЬНЫЙ КОД РАБОТУ С ИЗОБРАЖЕНИЯМИ
       var
          constants = {
-            baseAreaWidth: 726,//^^^768
-            defaultImagePercentSize: 25,// Начальный размер картинки (в процентах)
-            defaultPreviewerSize: 512,//^^^768
-            //maximalPictureSize: 120,
+            maximalPictureSize: 120,
             imageOffset: 40, //16 слева +  24 справа
             defaultYoutubeHeight: 300,
             minYoutubeHeight: 214,
@@ -1010,42 +1007,32 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          },
 
          insertImageTemplate: function(key, fileobj) {
-            var className, before, after;
-            //TODO: придумтаь как сделать без without-margin
-            switch (key) {
-               case '1':
-                  className = 'image-template-left';
-                  before = '<p class="without-margin">';
-                  //необходимо вставлять пустой абзац с кареткой, чтобы пользователь понимал куда будет производиться ввод
-                  after = '</p><p>{$caret}</p>';
-                  break;
-               case '2':
-                  before = '<p class="controls-RichEditor__noneditable image-template-center">';
-                  after = '</p><p></p>';
-                  break;
-               case '3':
-                  className = 'image-template-right';
-                  before = '<p class="without-margin">';
-                  //необходимо вставлять пустой абзац с кареткой, чтобы пользователь понимал куда будет производиться ввод
-                  after = '</p><p>{$caret}</p>';
-                  break;
-               case '6':
-                  // Ничего
-                  break;
-               case '4':
-                  //todo: сделать коллаж
-               default:
-                  // Неизвестный тип
-                  return;
-            }
-            var size = constants.defaultImagePercentSize;
-            var hasSize = 0 < fileobj.width && 0 < fileobj.height;
-            var url = this._makeImgPreviewerUrl(fileobj, size, null, false);
-            var uuid = fileobj.id;
+            var
+               uuid = fileobj.id || '',
+               URL = this._prepareImageURL(fileobj);
             if (uuid) {
                this._images[uuid] = false;
             }
-            this._insertImg(url, hasSize ? fileobj.width : null, hasSize ? fileobj.height : null, size + '%', null, className, null, before, after);
+            //TODO: придумтаь как сделать без without-margin
+            switch (key) {
+               case "1":
+                  //необходимо вставлять пустой абзац с кареткой, чтобы пользователь понимал куда будет производиться ввод
+                  this._insertImg(URL, 'image-template-left', '', '<p class="without-margin">', '</p><p>{$caret}</p>');
+                  break;
+               case "2":
+                  this._insertImg(URL, '', '', '<p class="controls-RichEditor__noneditable image-template-center">', '</p><p></p>');
+                  break;
+               case "3":
+                  //необходимо вставлять пустой абзац с кареткой, чтобы пользователь понимал куда будет производиться ввод
+                  this._insertImg(URL, 'image-template-right ', '', '<p class="without-margin">', '</p><p>{$caret}</p>');
+                  break;
+               case "4":
+                  //todo: сделать коллаж
+                  break;
+               case "6":
+                  this._insertImg(URL, '', '');
+                  break;
+            }
          },
          codeSample: function(text, language) {
             if (this._beforeFocusOutRng) {
@@ -1124,35 +1111,26 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   handlers: {
                      onBeforeShow: function () {
                         CommandDispatcher.declareCommand(this, 'saveImage', function () {
-                           self._changeImgSize($image, this.getChildControlByName('imageWidth').getValue(), this.getChildControlByName('imageHeight').getValue(), this.getChildControlByName('valueType').getValue() !== 'per');
+                           var
+                              dataMceStyle = '',
+                              percentSizes = this.getChildControlByName('valueType').getValue() === 'per',
+                              width = this.getChildControlByName('imageWidth').getValue(),
+                              height = this.getChildControlByName('imageHeight').getValue();
+                           width = width !== null ? width + (percentSizes ? '%' : 'px') : '';
+                           height = (height !== null && !percentSizes) ? height + 'px' : ''; //не проставляем высоту если процентые размеры
+                           $image.css({
+                              width: width,
+                              height: height
+                           });
+                           dataMceStyle += width ? 'width: ' + width + ';' : '';
+                           dataMceStyle += height ? 'height: ' + height + ';' : '';
+                           $image.attr('data-mce-style', dataMceStyle);
                            editor.undoManager.add();
                         }.bind(this));
                      }
                   }
                });
             });
-         },
-
-         _changeImgSize: function ($img, width, height, isPixels) {
-            var size = {width:'', height:''};
-            var css = [];
-            if (0 < width) {
-               size.width = width + (isPixels ? 'px' : '%');
-               css.push('width:' + size.width);
-            }
-            //не проставляем высоту если процентые размеры
-            if (0 < height && isPixels) {
-               size.height = height + 'px';
-               css.push('height:' + size.height);
-            }
-            $img.css(size);
-            $img.attr('data-mce-style', css.join(' '));
-            var prevSrc = $img.attr('src');
-            var src = this._makeImgPreviewerUrl($img, 0 < width ? width : null, 0 < height ? height : null, isPixels);
-            if (prevSrc !== src) {
-               $img.attr('src', src);
-               $img.attr('data-mce-src', src);
-            }
          },
 
          _smileHtml: function(smile) {
@@ -1536,18 +1514,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                case "2":
                   var
                      //todo: go to tmpl
-                     width = target[0].style.width || (target.width() + 'px'),
-                     origWidth = target.attr('data-ws-width'),
-                     origheight = target.attr('data-ws-height'),
+                     width =  target[0].style.width || (target.width() + 'px'),
+                     style =  width ? ' style="width: ' + width + '"':' style="width: 25%"',
                      imageParagraph = '<p class="controls-RichEditor__noneditable image-template-center" contenteditable="false">' + //tinyMCE не проставляет contenteditable если изменение происходит  через dom.replace
-                        '<img' +
-                        ' src="' + target.attr('src') + '"' +
-                        (origWidth ? ' data-ws-width="' + origWidth + '"' : '') +
-                        (origheight ? ' data-ws-height="' + origheight + '"' : '') +
-                        ' style="width:' + (width ? width : constants.defaultImagePercentSize + '%') + '"' +
-                        ' alt="' + target.attr('alt') + '"' +
-                        '></img>' +
-                     '</p>';
+                        '<img src="' +  target.attr('src') + '"' + style + ' alt="' + target.attr('alt') + '"></img></p>';
+
                   this._tinyEditor.dom.replace($(imageParagraph)[0],target[0],false);
                   break;
                case "3":
@@ -1581,23 +1552,14 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                });
                this._imageOptionsPanel.subscribe('onImageChange', function(event, fileobj){
-                  var $img = this.getTarget();
-                  var width = $img[0].style.width || ($img.width() + 'px');
-                  var isPixels = width.charAt(width.length - 1) !== '%';
-                  var url = self._makeImgPreviewerUrl(fileobj, +width.substring(0, width.length - (isPixels ? 2 : 1)), null, isPixels);
-                  if (0 < fileobj.width && 0 < fileobj.height) {
-                     $img.attr('data-ws-width', fileobj.width);
-                     $img.attr('data-ws-height', fileobj.height);
-                  }
-                  else {
-                     $img.removeAttr('data-ws-width');
-                     $img.removeAttr('data-ws-height');
-                  }
-                  $img.attr('src', url);
-                  $img.attr('data-mce-src', url);
+                  var
+                     uuid = fileobj.id,
+                     URL = self._prepareImageURL(fileobj),
+                     $img = this.getTarget();
+                  $img.attr('src', URL);
+                  $img.attr('data-mce-src', URL);
                   self._tinyEditor.undoManager.add();
                   self._setTrimmedText(self._getTinyEditorValue());
-                  var uuid = fileobj.id;
                   if (uuid) {
                      self._images[uuid] = false;
                   }
@@ -1644,7 +1606,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             // гарантии, что в атрибуте alt содержится именно uuid изображения, так что пробуем извлечь его откуда найдётся (и поправить если придётся)
             var REs = [
                /(?:\?|&)id=([0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12})(?:&|$)/i,
-               /\/disk\/api\/v[0-9\.]+\/([0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12})(?:_|$)/i
+               /\/disk\/api\/v[0-9\.]+\/([0-9a-f]{8}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{4}\-[0-9a-f]{12})_/i
             ];
             var url = img.src;
             for (var i = 0; i < REs.length; i++) {
@@ -1655,41 +1617,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }
          },
 
-         _makeImgPreviewerUrl: function (imgInfo, width, height, isPixels) {
-            if (!(0 < width)) {
-               throw new Error('Size is not specified');
-            }
-            var url, origWidth, origHeight;
-            // Либо это jQuery-оболочка над IMG
-            if (imgInfo.jquery) {
-               url = imgInfo.attr('src');
-               if (!/\/disk\/api\/v[0-9\.]+\//i.test(url)) {
-                  // Это не файл, хранящийся на СбисДиск, вернуть как есть
-                  return url;
-               }
-               url = url.replace(/^\/previewer(?:\/r\/[0-9]+\/[0-9]+)?/i, '');
-               origWidth = imgInfo.attr('data-ws-width');
-               origHeight = imgInfo.attr('data-ws-height');
-            }
-            // Либо это fileobj из события загрузки файла
-            else {
-               url = (imgInfo.filePath || imgInfo.url);
-               origWidth = imgInfo.width;
-               origHeight = imgInfo.height;
-            }
-            var size;
-            if (0 < origWidth && 0 < origHeight) {
-               var w = isPixels ? width : width*constants.baseAreaWidth/100;//this.getContainer().width()
-               if (Math.round(w) < origWidth) {
-                  size = Math.round(origHeight < origWidth ? w : w*origHeight/origWidth);
-               }
-            }
-            else {
-               size = constants.defaultPreviewerSize;
-            }
-            return '/previewer' + (size ?  '/r/' + size + '/' + size : '') + url;
+         _prepareImageURL: function(fileobj) {
+            return'/previewer/r/768/768' + (fileobj.filePath ? fileobj.filePath : fileobj.url);
          },
-
+            
          _replaceWhitespaces: function(text) {
             var
                out = '',
@@ -1913,28 +1844,23 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             return this.getName().replace('/', '#') + 'ИсторияИзменений';
          },
 
-         _insertImg: function (src, origWidth, origHeight, width, height, className, alt, before, after) {
+         _insertImg: function(path, className, alt,  before, after, size) {
             var
-               def = new Deferred(),
+               def =new Deferred(),
                self = this,
-               //^^^ Почему так сложно???
-               $img = $('<img src="' + src + '"></img>').css({
+               img =  $('<img src="' + path + '"></img>').css({
                   visibility: 'hidden',
                   position: 'absolute',
                   bottom: 0,
                   left: 0
                });
-            $img.on('load', function () {
-               self.insertHtml(
-                  (before + '') + '<img' +
-                  (className ? ' class="' + className + '"' : '') +
-                  ' src="' + src + '"' +
-                  (0 < origWidth ? ' data-ws-width="' + origWidth + '"' : '') +
-                  (0 < origHeight ? ' data-ws-height="' + origHeight + '"' : '') +
-                  (width || height ? ' style="' + (width ? 'width:' + width + ';' : '') + (height ? 'height:' + height + ';' : '') + '"' : '') +
-                  (alt ? ' alt="' + alt.replace('"', '&quot;') + '"' : '') +
-                  '></img>' + (after || '')
-               );
+            className = className ? className: '';
+            before = before ? before: '';
+            after = after ? after: '';
+            img.on('load', function() {
+               var
+                  style = size ? ' style="width: ' + size + '"':' style="width: 25%"';
+               self.insertHtml(before + '<img class="' + className + '" src="' + path + '"' + style + ' alt="' + (alt || '') + '"></img>'+ after);
                def.callback();
             });
             return def;

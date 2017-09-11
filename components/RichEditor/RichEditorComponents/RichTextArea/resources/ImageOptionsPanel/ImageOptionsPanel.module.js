@@ -1,3 +1,4 @@
+
 define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
    [
       'js!SBIS3.CONTROLS.CompoundControl',
@@ -7,13 +8,11 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
       'Core/helpers/fast-control-helpers',
       'tmpl!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
       'js!SBIS3.CONTROLS.RichEditor.ImagePanel',
-      'Core/Deferred',
-      'js!SBIS3.CONTROLS.RichEditorUtils',
       'js!SBIS3.CONTROLS.CommandsButton',
       'js!SBIS3.CONTROLS.Link',
       'css!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
       'css!SBIS3.CONTROLS.Menu'
-   ], function(CompoundControl, PopupMixin, FileStorageLoader, Di, fcHelpers, dotTplFn, ImagePanel, Deferred, RichEditorUtils) {
+   ], function(CompoundControl, PopupMixin, FileStorageLoader, Di, fcHelpers, dotTplFn, ImagePanel) {
       'use strict';
       //todo: отказаться от этого модуля в 3.7.5.50 перейти на контекстное меню
       var
@@ -140,9 +139,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                      this.hide();
                      break;
                   case "change":
-                     var canceler = new Deferred();
-                     this.once('onclose', canceler.callback.bind(canceler));
-                     RichEditorUtils.startFileLoad(this.getFileLoader(), this._replaceButton._container, false, this._options.imageFolder, canceler).addCallback(function (fileobj) {
+                     this.getFileLoader().startFileLoad(this._replaceButton._container, false, this._options.imageFolder).addCallback(function(fileobj){
                         this._notify('onImageChange', fileobj);
                         this.hide();
                      }.bind(this));
