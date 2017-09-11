@@ -256,12 +256,49 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }.bind(this));
 
             this._togglePlaceholder();
-            if (cConstants.browser.isMobileAndroid) {
-               this._notifyTextChanged = this._notifyTextChanged.debounce(500);
-            }
+            this._needDebounceTextChanged().addCallback(function (need) {
+               if (need) {
+                  self._notifyTextChanged = self._notifyTextChanged.debounce(500);
+               }
+            });
             this._lastReview = this.isEnabled() ? undefined : this.getText();
             this._fillImages(false);
          },
+
+         /**
+          * Определить, нужно ли группировать события при изменении текста
+          * @protected
+          * @return {Core/Deferred}
+          */
+         _needDebounceTextChanged: function () {
+            var b = cConstants.browser;
+            if (b.isMobileAndroid) {
+               return Deferred.success(true);
+            }
+            if (!b.isWin10 || typeof TouchEvent === 'undefined') {
+               return Deferred.success(false);
+            }
+            /*if (b.isWPMobilePlatform) {
+               return Deferred.success(true);
+            }*/
+            var o = window.screen.orientation || window.screen.mozOrientation || window.screen.msOrientation;
+            if (!(o && o.type && o.lock && o.unlock)) {
+               return Deferred.success(false);
+            }
+            var promise = new Deferred();
+            o.lock(o.type).then(
+               function () {
+                  o.unlock();
+                  promise.callback(true);
+               },
+               function (ex) {
+                  var msg = ex.message.toLowerCase();
+                  promise.callback(false/*msg.indexOf('is not available') === -1 && msg.indexOf('is not supported') === -1*/);
+               }
+            );
+            return promise;
+         },
+
          /*БЛОК ПУБЛИЧНЫХ МЕТОДОВ*/
 
          /**
