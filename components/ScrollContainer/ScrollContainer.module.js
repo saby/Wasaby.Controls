@@ -635,6 +635,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             }
             this._container.off('mousemove', this._initScrollbar);
             this._unsubscribeMouseEnterLeave();
+            this._getScrollContainerChannel()
+               .unsubscribe('onReturnTakeScrollbar', this._returnTakeScrollbarHandler)
+               .unsubscribe('onRequestTakeScrollbar',  this._requestTakeScrollbarHandler);
 
             BaseCompatible.destroy.call(this);
             // task: 1173330288
