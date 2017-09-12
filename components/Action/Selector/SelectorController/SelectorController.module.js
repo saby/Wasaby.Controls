@@ -165,7 +165,13 @@ define('js!SBIS3.CONTROLS.SelectorController', [
 
              if(difference.removed.length) {
                 difference.removed.forEach(function(removedKey) {
-                   currentItems.removeAt(currentItems.getIndexByValue(idProperty, removedKey));
+                   var index = currentItems.getIndexByValue(idProperty, removedKey);
+                   
+                   /* Т.к. когда делаеют setSelectedKeys с каким-то ключём, записи в рекордсете с этим ключём может не быть,
+                      так и при удалении ключа, записи с таким ключем среди currentSelectedItems может не быть */
+                   if(index !== -1) {
+                      currentItems.removeAt(index);
+                   }
                 });
                 onChangeSelection();
              }
