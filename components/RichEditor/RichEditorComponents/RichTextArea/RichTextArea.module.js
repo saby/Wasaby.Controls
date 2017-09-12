@@ -1146,7 +1146,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                css.push('height:' + size.height);
             }
             $img.css(size);
-            $img.attr('data-mce-style', css.join(' '));
+            $img.attr('data-mce-style', css.join('; '));
             var prevSrc = $img.attr('src');
             var promise = this._makeImgPreviewerUrl($img, 0 < width ? width : null, 0 < height ? height : null, isPixels);//^^^
             promise.addCallback(function (url) {
