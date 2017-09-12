@@ -228,6 +228,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                }
                this._subscribeOnScroll();
 
+               this.subscribeTo(EventBus.channel('stickyHeader'), 'onStickyHeadersChanged', this._recalcSizeScrollbar.bind(this));
+
                this._addGradient();
 
                // task: 1173330288
