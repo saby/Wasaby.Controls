@@ -1684,6 +1684,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                notDefined = false,
                result = new Deferred();
+            // Реквайрим модули только если они не были загружены ранее, т.к. require отрабатывает асинхронно и на ipad это
+            // недопустимо (клавиатуру можно показывать синхронно), да и в целом можно считать это оптимизацией.
             EDITOR_MODULES.forEach(function(module) {
                if (!require.defined(module)) {
                   notDefined = true;
