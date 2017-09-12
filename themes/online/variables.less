@@ -1,6 +1,9 @@
 @import "defaults";
 @import "colors";
 @import "sizes";
+//Переменные с версиями шрифтов
+@tensorFontVer:                           '1.0.0';
+@emojiFontVer:                            '1.0.0';
 // Кошерные переменные "на выход"
 @default-text-size:                       14px;
 @small-text-size:                         12px;
@@ -89,7 +92,7 @@
 @link-font:                               @default-font-size @default-font-name;
 @link-text-color:                         @darkcyan-color;
 @link-disabled-text-color:                @gray-ccc-color;
-@link-text-decoration:                    none !important;
+@link-text-decoration:                    none;
 @link-text-alignment:                     center;
 @link-line-height:                        24px;
 @link-padding:                            0;
@@ -269,9 +272,6 @@
 @button-large-height:                                                                                                   48px;
 @button-large-border-radius:                                                                                            24px;
 @button-large-font-size:                                                                                                18px;
-
-@button-text-height-ff:                                                                                                 20px;
-
 
 // ------------ //
 // Button group //
@@ -691,6 +691,7 @@
 @menu-expand-height:                      16px;
 @menu-expand-top-offset:                  8px;
 @menu-expand-right-offset:                8px;
+@menu-expand-icon-font-size:              16px;
 
 @menu-expand-border-width:                0;
 @menu-expand-border-style:                solid;
@@ -1800,8 +1801,6 @@
 @data-grid-cell-border-width:                   1px 0;
 @data-grid-cell-separator-color:                #F5F5F5;
 @data-grid-edge-cell-separator-color:           #EAEAEA;
-@data-grid-edge-cell-separator-bottom-padding:  3px;
-@data-grid-edge-cell-separator-line-height:     @data-grid-cell-line-height;
 
 @data-grid-cell-border-style:                   solid;
 @data-grid-cell-border-color:                   transparent;
@@ -1880,14 +1879,14 @@
 @controls-OperationsPanel-triangle-width:           8px;
 
 @controls-OperationsPanel-actions-margin:           0 4px;
+@controls-OperationsPanel-menu-icon-size:           @icon-medium-size;
+@controls-OperationsPanel-menu-close-button-right:  10px;
 
 @controls-OperationsPanel-separator-margin-left:    8px;
 @controls-OperationsPanel-separator-bg:             @gray-ccc-color;
 @controls-OperationsPanel-separator-width:          1px;
 @controls-OperationsPanel-separator-height:         20px;
 @controls-OperationsPanel-separator-line-height:    30px;
-
-@controls-OperationsPanel-actions-padding-left:     0;
 
 @controls-OperationsPanel-actions-align:            center;
 

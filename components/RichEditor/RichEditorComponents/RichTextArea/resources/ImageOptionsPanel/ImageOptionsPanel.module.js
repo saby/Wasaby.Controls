@@ -5,14 +5,13 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
       'js!SBIS3.CONTROLS.PopupMixin',
       'js!SBIS3.CORE.FileStorageLoader',
       'js!WS.Data/Di',
-      'Core/helpers/fast-control-helpers',
       'tmpl!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
       'js!SBIS3.CONTROLS.RichEditor.ImagePanel',
       'js!SBIS3.CONTROLS.CommandsButton',
       'js!SBIS3.CONTROLS.Link',
       'css!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
       'css!SBIS3.CONTROLS.Menu'
-   ], function(CompoundControl, PopupMixin, FileStorageLoader, Di, fcHelpers, dotTplFn, ImagePanel) {
+   ], function(CompoundControl, PopupMixin, FileStorageLoader, Di, dotTplFn, ImagePanel) {
       'use strict';
       //todo: отказаться от этого модуля в 3.7.5.50 перейти на контекстное меню
       var
@@ -42,7 +41,15 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                this._replaceButton.subscribe('onActivated', this._commandsButtonItemActivateHandler.bind(this, null, 'change'));
                this._commandsButton = this.getChildControlByName('commandsButton');
                this._commandsButton.subscribe('onMenuItemActivate', this._commandsButtonItemActivateHandler.bind(this));
-               this._updateCommandsButtonItems();
+               // Это следствие ошибки в WSControls/Buttons/MenuButton - в методе _getContextMenu неправильно возвращается значение. После исправления - убрать try-catch
+               try {
+                  this._updateCommandsButtonItems();
+               }
+               catch (ex) {
+                  require(['js!SBIS3.CONTROLS.ContextMenu'], function (ctxMenu) {
+                     this._updateCommandsButtonItems();
+                  }.bind(this));
+               }
             },
 
             setImageUuid: function (uuid) {

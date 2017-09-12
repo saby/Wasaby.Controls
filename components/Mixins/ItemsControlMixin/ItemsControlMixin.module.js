@@ -1,9 +1,7 @@
 define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "Core/core-functions",
-   "Core/constants",
    "Core/Deferred",
    "Core/IoC",
-   "Core/ConsoleLogger",
    "js!WS.Data/Source/Memory",
    "js!WS.Data/Source/SbisService",
    "js!WS.Data/Collection/RecordSet",
@@ -30,10 +28,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "Core/helpers/Function/debounce"
 ], function (
    cFunctions,
-   constants,
    Deferred,
    IoC,
-   ConsoleLogger,
    MemorySource,
    SbisService,
    RecordSet,
@@ -1661,8 +1657,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                       && (Object.getPrototypeOf(list).constructor == Object.getPrototypeOf(list).constructor)
                       && (Object.getPrototypeOf(list.getAdapter()).constructor == Object.getPrototypeOf(this.getItems().getAdapter()).constructor)
                    ) {
-                      this._options._items.setMetaData(list.getMetaData());
-                      this._options._items.assign(list);
+                      this._setNewDataAfterReload(list);
                       self._drawItemsCallbackDebounce();
                    } else {
                       this._unsetItemsEventHandlers();
@@ -1698,6 +1693,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          return def;
       }),
+
+      _setNewDataAfterReload: function (list) {
+         this._options._items.setMetaData(list.getMetaData());
+         this._options._items.assign(list);
+      },
 
       _onDataLoad: function(){
 

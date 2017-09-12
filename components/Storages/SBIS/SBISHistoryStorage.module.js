@@ -7,18 +7,18 @@ define('js!SBIS3.CONTROLS.SBISHistoryStorage', [
    "js!SBIS3.CONTROLS.SBISUserConfigStorage",
    "js!SBIS3.CONTROLS.SBISClientsGlobalConfigStorage",
    "Core/Abstract",
-   "Core/helpers/string-helpers",
+   'Core/helpers/string-helpers-min',
    "Core/Deferred",
    "Core/helpers/Function/forAliveOnly",
    "Core/IoC",
    "Core/constants",
    "js!SBIS3.CORE.LocalStorage"
-], function(EventBus, cSessionStorage, SBISUserConfigStorage, SBISClientsGlobalConfigStorage, cAbstract, strHelpers, Deferred, forAliveOnly, IoC, constants, LocalStorage ) {
+], function(EventBus, cSessionStorage, SBISUserConfigStorage, SBISClientsGlobalConfigStorage, cAbstract, strHelpersMin, Deferred, forAliveOnly, IoC, constants, LocalStorage ) {
 
    'use strict';
 
    var serializeFnc = function(serialize, value) {
-      return value ? strHelpers[serialize ? 'serializeURLData' : 'deserializeURLData'](value) : null;
+      return value ? strHelpersMin[serialize ? 'serializeURLData' : 'deserializeURLData'](value) : null;
    };
 
    /* Постфикс для хранения данных в глобальных параметрах клиента */

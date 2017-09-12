@@ -1,6 +1,5 @@
 define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
     'js!SBIS3.CONTROLS.FilterPanelChooser.BaseList',
-    'Core/core-instance',
     'Core/core-functions',
     'Core/CommandDispatcher',
     'js!WS.Data/Functor/Compute',
@@ -12,7 +11,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
     'js!SBIS3.CONTROLS.Link',
     'js!SBIS3.CONTROLS.ListView',
     'css!SBIS3.CONTROLS.FilterPanelChooser.List'
-], function(FilterPanelChooserBaseList, cInstance, cFunctions, CommandDispatcher, ComputeFunctor, dotTplFn, itemContentTpl, itemTemplate, chooserTpl, footerTpl) {
+], function(FilterPanelChooserBaseList, cFunctions, CommandDispatcher, ComputeFunctor, dotTplFn, itemContentTpl, itemTemplate, chooserTpl, footerTpl) {
     var
         itemsFilterMethod = function(model, index, proj, projIndex) {
             return this.showFullList || projIndex < 3;

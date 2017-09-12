@@ -18,7 +18,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    'js!WS.Data/Di',
    "js!SBIS3.CONTROLS.Utils.ImageUtil",
    "Core/Sanitize",
-   "Core/helpers/fast-control-helpers",
    'Core/helpers/String/escapeTagsFromStr',
    'Core/helpers/String/escapeHtml',
    'Core/helpers/String/linkWrap',
@@ -45,7 +44,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
       Di,
       ImageUtil,
       Sanitize,
-      fcHelpers,
       escapeTagsFromStr,
       escapeHtml,
       LinkWrap,
@@ -57,6 +55,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
       'use strict';
       //TODO: ПЕРЕПИСАТЬ НА НОРМАЛЬНЫЙ КОД РАБОТУ С ИЗОБРАЖЕНИЯМИ
       var
+         EDITOR_MODULES = ['css!SBIS3.CONTROLS.RichTextArea/resources/tinymce/skins/lightgray/skin.min',
+            'css!SBIS3.CONTROLS.RichTextArea/resources/tinymce/skins/lightgray/content.inline.min',
+            'js!SBIS3.CONTROLS.RichTextArea/resources/tinymce/tinymce'],
          constants = {
             baseAreaWidth: 768,//726
             defaultImagePercentSize: 25,// Начальный размер картинки (в процентах)
@@ -261,12 +262,49 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }.bind(this));
 
             this._togglePlaceholder();
-            if (cConstants.browser.isMobileAndroid) {
-               this._notifyTextChanged = this._notifyTextChanged.debounce(500);
-            }
+            this._needDebounceTextChanged().addCallback(function (need) {
+               if (need) {
+                  self._notifyTextChanged = self._notifyTextChanged.debounce(500);
+               }
+            });
             this._lastReview = this.isEnabled() ? undefined : this.getText();
             this._fillImages(false);
          },
+
+         /**
+          * Определить, нужно ли группировать события при изменении текста
+          * @protected
+          * @return {Core/Deferred}
+          */
+         _needDebounceTextChanged: function () {
+            var b = cConstants.browser;
+            if (b.isMobileAndroid) {
+               return Deferred.success(true);
+            }
+            if (!b.isWin10 || typeof TouchEvent === 'undefined') {
+               return Deferred.success(false);
+            }
+            /*if (b.isWPMobilePlatform) {
+               return Deferred.success(true);
+            }*/
+            var o = window.screen.orientation || window.screen.mozOrientation || window.screen.msOrientation;
+            if (!(o && o.type && o.lock && o.unlock)) {
+               return Deferred.success(false);
+            }
+            var promise = new Deferred();
+            o.lock(o.type).then(
+               function () {
+                  o.unlock();
+                  promise.callback(true);
+               },
+               function (ex) {
+                  var msg = ex.message.toLowerCase();
+                  promise.callback(false/*msg.indexOf('is not available') === -1 && msg.indexOf('is not supported') === -1*/);
+               }
+            );
+            return promise;
+         },
+
          /*БЛОК ПУБЛИЧНЫХ МЕТОДОВ*/
 
          /**
@@ -1784,14 +1822,33 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             RichTextArea.superclass._setEnabled.apply(this, arguments);
          },
 
+         _requireTinyMCE: function() {
+            var
+               notDefined = false,
+               result = new Deferred();
+            // Реквайрим модули только если они не были загружены ранее, т.к. require отрабатывает асинхронно и на ipad это
+            // недопустимо (клавиатуру можно показывать синхронно), да и в целом можно считать это оптимизацией.
+            EDITOR_MODULES.forEach(function(module) {
+               if (!require.defined(module)) {
+                  notDefined = true;
+               }
+            });
+            if (notDefined) {
+               require(EDITOR_MODULES, function() {
+                  result.callback();
+               });
+            } else {
+               result.callback();
+            }
+            return result;
+         },
+
          _initTiny: function() {
             var
                self = this;
             if (!this._tinyEditor && !this._tinyIsInit) {
                this._tinyIsInit = true;
-               require(['css!SBIS3.CONTROLS.RichTextArea/resources/tinymce/skins/lightgray/skin.min',
-                  'css!SBIS3.CONTROLS.RichTextArea/resources/tinymce/skins/lightgray/content.inline.min',
-                  'js!SBIS3.CONTROLS.RichTextArea/resources/tinymce/tinymce'],function(){
+               this._requireTinyMCE().addCallback(function() {
                   tinyMCE.baseURL = cPathResolver.resolveComponentPath('SBIS3.CONTROLS.RichTextArea') + 'resources/tinymce';
                   tinyMCE.init(self._options.editorConfig);
                });
@@ -2174,6 +2231,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          }
 
       });
+
+      RichTextArea.EDITOR_MODULES = EDITOR_MODULES;
 
       return RichTextArea;
    });

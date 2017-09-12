@@ -51,8 +51,13 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
        * Класс для отображения списка длительных операций
        * @class SBIS3.CONTROLS.LongOperationsList
        * @extends SBIS3.CORE.CompoundControl
+       *
+       * @author Спирин Виктор Алексеевич
+       *
+       * @public
+       *
        */
-      var LongOperationsList = CompoundControl.extend({
+      var LongOperationsList = CompoundControl.extend( /** @lends SBIS3.CONTROLS.LongOperationsList.prototype */{
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
@@ -177,7 +182,8 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   if (itemsActionsGroup) {
                      itemsActionsGroup.setItems(actions);
                   }
-                  else {
+                  else
+                  if(actions && actions.length) {
                      self._view.setItemsActions(actions);
                   }
                }
@@ -195,6 +201,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                var STATUSES = LongOperationEntry.STATUSES;
                var self = this;
                if (model.get('canSuspend') && model.get('status') === STATUSES.running) {
+                  // Заголовок зависит от модели
                   var title = rk(model.get('resumeAsRepeat') ? 'Отменить' : 'Приостановить', 'ДлительныеОперации');
                   actions.push({
                      name: 'suspend',

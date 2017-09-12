@@ -63,6 +63,8 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     * @class SBIS3.CONTROLS.OperationsPanel
     * @extends SBIS3.CORE.CompoundControl
     *
+    * @mixes SBIS3.CONTROLS.ItemsControlMixin
+    *
     * @demo SBIS3.CONTROLS.Demo.MyOperationsPanel Пример 1. Типовые массовые операции над записями.
     *
     * @author Сухоручкин Андрей Сергеевич
@@ -398,7 +400,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                   idProperty: 'id',
                   parentProperty: 'parent',
                   displayProperty: 'caption',
-                  icon: 'sprite:icon-24 icon-ExpandDown icon-primary action-hover',
+                  icon: 'sprite:icon-size icon-ExpandDown icon-primary action-hover',
                   pickerConfig: {
                      closeButton: true,
                      className: 'controls-operationsPanel__itemsMenu_picker',

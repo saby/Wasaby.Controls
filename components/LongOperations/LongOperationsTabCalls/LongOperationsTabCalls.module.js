@@ -1,9 +1,3 @@
-/**
- * Класс, позволяющий выполнять (асинхронные) вызовы методов в других вкладках
- *
- * @class SBIS3.CONTROLS.LongOperationsTabCalls
- * @public
- */
 define('js!SBIS3.CONTROLS.LongOperationsTabCalls',
    [
       'Core/core-extend',
@@ -19,6 +13,11 @@ define('js!SBIS3.CONTROLS.LongOperationsTabCalls',
 
       /**
        * Класс межвкладочных вызовов методов
+       *
+       * @class SBIS3.CONTROLS.LongOperationsTabCalls
+       *
+       * @author Спирин Виктор Алексеевич
+       *
        * @public
        * @type {SBIS3.CONTROLS.LongOperationsTabCalls}
        */

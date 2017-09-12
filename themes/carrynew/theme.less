@@ -49,9 +49,6 @@ body {
          background: @default-bg-color;
       }
   }
-  .ws-infobox-triangle {
-    background: @default-bg-color;
-  }
   .ws-float-area-title {
       font-size: 1.43rem!important;
       font-weight: normal !important;
@@ -177,4 +174,15 @@ body .ws-window {
 }
 .controls-ComboBox__picker .controls-ComboBox__scrollContainer {
     background: transparent;
+}
+
+body {
+   .ws-sticky-header__block.ws-sticky-header__fixed,
+   .ws-sticky-header__table-header-copy {
+      // В престо в паре мест используется нестандартные цвета фона, чуть темнее или чуть светлее.
+      // В этих местах прикладники должны сами устанавливать цвет фона у зафиксированных заголовков.
+      // В большинстве реестров используется #2C3E50 - @basic-block-bg-color
+      // TODO: выпилить вместе с @basic-block-bg-color
+      background-color: #ffffff;
+   }
 }

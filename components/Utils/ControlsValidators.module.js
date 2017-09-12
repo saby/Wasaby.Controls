@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [
    'Core/core-instance',
    'Core/IoC',
    'i18n!SBIS3.CONTROLS.ControlsValidators'
-],function(CoreValidators, cInstace, cEnum, IoC) {
+],function(CoreValidators, cInstace, IoC) {
 
    'use strict';
 
@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [
        * </ol>
        */
       required: function(option) {
-         var isEmpty;
+         var isEmpty = false;
 
          switch (typeof option) {
             case 'string' :
@@ -61,9 +61,6 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [
                } else if(option === null) {
                   isEmpty = true;
                }
-               break;
-            case 'boolean' :
-               isEmpty = !option;
                break;
             case 'undefined' :
                isEmpty = true;
@@ -91,7 +88,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [
          min = parseFloat(min);
          max = parseFloat(max);
 
-         if(value === '' || isNaN(value) || isNaN(min) || isNaN(max)){
+         if(value === '' || isNaN(value) || isNaN(min) || isNaN(max) || value == undefined){
             return true;
          }
 

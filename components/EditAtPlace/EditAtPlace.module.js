@@ -6,12 +6,12 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
       'js!SBIS3.CONTROLS.FormWidgetMixin',
       'js!SBIS3.CONTROLS.Utils.HtmlDecorators.DateFormatDecorator',
       'tmpl!SBIS3.CONTROLS.EditAtPlace',
-      'Core/helpers/string-helpers',
+      'Core/helpers/String/escapeHtml',
       'js!SBIS3.CONTROLS.ControlHierarchyManager',
       'i18n!SBIS3.CONTROLS.EditAtPlace',
       'css!SBIS3.CONTROLS.EditAtPlace'
    ],
-   function (CompoundControl, TextBox, PickerMixin, EditAtPlaceMixin, FormWidgetMixin, DateFormatDecorator, dotTplFn, strHelpers, ControlHierarchyManager) {
+   function (CompoundControl, TextBox, PickerMixin, EditAtPlaceMixin, FormWidgetMixin, DateFormatDecorator, dotTplFn, escapeHtml, ControlHierarchyManager) {
       'use strict';
 
       var dateDecorator = null;
@@ -53,9 +53,12 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
        * @control
        * @public
        * @category Inputs
+       *
        * @mixes SBIS3.CONTROLS.PickerMixin
        * @mixes SBIS3.CONTROLS.EditAtPlaceMixin
-       * @author Черемушкин Илья Вячеславович
+       * @mixes SBIS3.CONTROLS.FormWidgetMixin
+       *
+       * @author Герасимов Александр Максимович
        * @cssModifier controls-EditAtPlace__ellipsis Текстовое поле обрезается троеточием, если не умещается в контейнере
        */
       var EditAtPlace = CompoundControl.extend([PickerMixin, EditAtPlaceMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.EditAtPlace.prototype */{
@@ -104,7 +107,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                dateDecoratorMask: 'DD.MM.YY',
 
                _escape: function(txt) {
-                  return strHelpers.escapeHtml(txt)
+                  return escapeHtml(txt)
                },
 
                formattedText: function() {
@@ -325,9 +328,9 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
 
          _drawText: function(text){
             if (!text){
-               text = '<span class="controls-EditAtPlace__placeholder">' + strHelpers.escapeHtml(this._options.placeholder) + '</span>';
+               text = '<span class="controls-EditAtPlace__placeholder">' + escapeHtml(this._options.placeholder) + '</span>';
             } else {
-               text = strHelpers.escapeHtml(text);
+               text = escapeHtml(text);
             }
             this._textField.html(text || '&nbsp;');
          }

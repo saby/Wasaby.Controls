@@ -42,7 +42,6 @@
       }
       .controls-FieldLinkItemsCollection {
          .justify-content();
-         .flex-shrink();
       }
    }
 }
@@ -52,7 +51,6 @@
    position:relative;
    height: 100%;
    width: 100%;
-   line-height: 20px !important;
    text-decoration: inherit;
    margin-right: @controls-FieldLink-fieldWrapper-margin;
 }
@@ -180,8 +178,8 @@
          max-width: 100%;
       }
       .controls-FieldLink__item {
-         /* Учитываем отступ под крестик удаления */
-         max-width: ~'calc(100% - '@controls-FieldLink-linkItem-cross-width~')';
+         .flex-shrink();
+         max-width: 100%;
       }
 
       &.ws-disabled {
@@ -234,6 +232,7 @@
 .controls-FieldLink:not(.ws-disabled) .controls-TextBox__afterFieldWrapper {
    .inline-flexbox();
    .align-items(center);
+   .flex-shrink(0);
    height: 100%;
    width: auto;
 }

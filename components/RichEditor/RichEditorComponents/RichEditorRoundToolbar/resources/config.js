@@ -9,7 +9,8 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
 
       'use strict';
 
-      return [
+      return function () {
+         return [
          {
             name: 'toggle',
             componentType: 'SBIS3.CONTROLS.IconButton',
@@ -43,9 +44,10 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
             withoutHeader: true,
             icon   : 'sprite:icon-16 icon-ListMarked icon-primary',
             className: 'controls-IconButton__round-border',
+            pickerClassName: 'controls-Menu__hide-menu-header controls-RichEditorToolbarMenu fre-list',
             items: [
-               { key: 'InsertUnorderedList', title: ' ', icon:'sprite:icon-16 icon-ListMarked icon-primary' },
-               { key: 'InsertOrderedList', title: ' ',icon:'sprite:icon-16 icon-ListNumbered icon-primary' }
+               { key:'InsertUnorderedList', title:' ', icon:'sprite:icon-24 icon-ListMarked icon-primary' },
+               { key:'InsertOrderedList', title:' ', icon:'sprite:icon-24 icon-ListNumbered icon-primary' }
             ],
             handlers: {
                onMenuItemActivate: function(event, key) {
@@ -87,7 +89,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
          {
             name: 'smile',
             basic: true,
-            tooltip: 'Вставить смайлик',
+            tooltip: rk('Вставить смайлик'),
             componentType: 'SBIS3.CONTROLS.MenuIcon',
             icon: 'sprite:icon-16 icon-EmoiconSmile icon-primary',
             items: smiles,
@@ -104,7 +106,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
          },
          {
             name: 'history',
-            caption: 'История ввода',
+            caption: rk('История ввода'),
             componentType: 'SBIS3.CONTROLS.MenuIcon',
             icon: 'sprite:icon-16 icon-InputHistory icon-primary',
             pickerClassName: 'controls-RichEditorRoundToolbar__historyPicker',
@@ -119,4 +121,5 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
             order: 60
          }
       ];
+      };
    });

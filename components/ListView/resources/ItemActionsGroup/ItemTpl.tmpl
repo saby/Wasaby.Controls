@@ -6,7 +6,7 @@
       allowChangeEnable="{{allowChangeEnable}}"
       class="controls-ItemActions__item {{cssClass ? cssClass}}"
       icon="{{icon && viewMode !== 'caption' ? icon + ' controls-ItemActions__icon'}}"
-      template="{{'js!' + (icon && !viewMode ? 'SBIS3.CONTROLS.IconButton' : 'SBIS3.CONTROLS.Link')}}"
+      template="{{'js!' + (icon && (viewMode === 'icon' || !viewMode) ? 'SBIS3.CONTROLS.IconButton' : 'SBIS3.CONTROLS.Link')}}"
    />
 </ws:template>
 

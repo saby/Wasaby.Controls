@@ -1,9 +1,6 @@
 define('js!SBIS3.CONTROLS.ComponentBinder',
     [
        "Core/Abstract",
-       "Core/core-functions",
-       "Core/core-merge",
-       "Core/constants",
        'js!SBIS3.CONTROLS.HistoryController',
        'js!SBIS3.CONTROLS.SearchController',
        'js!SBIS3.CONTROLS.ScrollPagingController',
@@ -19,7 +16,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        "Core/Deferred",
        "Core/UserConfig"
     ],
-    function (cAbstract, cFunctions, cMerge, constants, HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController, FilterHistoryControllerUntil, DateRangeRelationController, FilterController, cInstance, forAliveOnly, find, Deferred, UserConfig) {
+    function (cAbstract, HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController, FilterHistoryControllerUntil, DateRangeRelationController, FilterController, cInstance, forAliveOnly, find, Deferred, UserConfig) {
    /**
     * Контроллер для осуществления базового взаимодействия между компонентами.
     *
@@ -65,7 +62,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
 
    /**
     * Контроллер, позволяющий связывать компоненты осуществляя базовое взаимодейтсие между ними
-    * @author Черемушкин Илья Вячеславович
+    * @author Герасимов Александр Максимович
     * @class SBIS3.CONTROLS.ComponentBinder
     * @extends Core/Abstract
     * @public
@@ -78,35 +75,55 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       $protected : {
          _options: {
             /**
-             * @cfg {SBIS3.CONROLS.DataGridView} объект представления данных
+             * @cfg {SBIS3.CONTROLS.DataGridView} объект представления данных
              */
             view: undefined,
             /**
-             * @cfg {SBIS3.CONROLS.BreadCrumbs} объект хлебных крошек
+             * @cfg {SBIS3.CONTROLS.BreadCrumbs} объект хлебных крошек
              */
             breadCrumbs: undefined,
             /**
-             * @cfg {SBIS3.CONROLS.BackButton} объект кнопки назад
+             * @cfg {SBIS3.CONTROLS.BackButton} объект кнопки назад
              */
             backButton: undefined,
             /**
-             * @cfg {SBIS3.CONROLS.SearchForm} объект строки поиска
+             * @cfg {SBIS3.CONTROLS.SearchForm} объект строки поиска
              */
             searchForm: undefined,
             /**
-             * @cfg {SBIS3.CONROLS.OperationsPanel} объект панели массовых операций
+             * @cfg {SBIS3.CONTROLS.OperationsPanel} объект панели массовых операций
              */
             operationPanel: undefined,
             /**
-             * @cfg {SBIS3.CONROLS.FilterButton} объект кнопки фильтров
+             * @cfg {SBIS3.CONTROLS.FilterButton} объект кнопки фильтров
              */
             filterButton: undefined,
             /**
-             * @cfg {SBIS3.CONROLS.Paging} объект пэйджинга
+             * @cfg {SBIS3.CONTROLS.Paging} Устанавливает конфигурацию постраничной навигации.
+             * @remark
+             * В качестве значения передают экземпляр класса {@link SBIS3.CONTROLS.Paging}.
+             * <pre>
+             *     // создаём экземпляр класса контрола "Постраничная навигация"
+             *     var myPaging = new Paging({
+             *
+             *           // устанавливаем режим полной постраничной навигации
+             *           mode: 'full',
+             *
+             *           // устанавливаем отображение по 10 элементов на странице
+             *           pagesCount: 10
+             *        }),
+             *        ...
+             *        myComponentBinder = new ComponentBinder({
+             *           ...
+             *
+             *           // передаём конфигурацию постраничной навигации
+             *           paging: myPaging
+             *        });
+             * </pre>
              */
             paging: undefined,
             /**
-             * @cfg {SBIS3.CONROLS.DateRangeSlider[]} массив из контролов диапазонов дат.
+             * @cfg {SBIS3.CONTROLS.DateRangeSlider[]} массив из контролов диапазонов дат.
              */
             dateRanges: undefined
          },
@@ -146,7 +163,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        * для работы необходимо задать опциию view
        * @param {String} searchParamName параметр фильтрации для поиска
        * @param {String} searchCrumbsTpl шаблон отрисовки элемента пути в поиске
-       * @param {SBIS3.CONROLS.SearchForm} [searchForm] объект формы поиска, если не передан используется тот, что задан в опциях
+       * @param {SBIS3.CONTROLS.SearchForm} [searchForm] объект формы поиска, если не передан используется тот, что задан в опциях
        * @param {String} [searchMode] В каком узле ищем, в текущем или в корне
        * @example
        * <pre>
@@ -190,8 +207,8 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       /**
        * Метод для связывания хлебных крошек с представлением данных
        * для работы необходимо задать опциию view
-       * @param {SBIS3.CONROLS.BreadCrumbs} [breadCrumbs] объект хлебных крошек, если не передан используется тот, что задан в опциях
-       * @param {SBIS3.CONROLS.BackButton} [backButton] объект книпоки назад, если не передан используется тот, что задан в опциях
+       * @param {SBIS3.CONTROLS.BreadCrumbs} [breadCrumbs] объект хлебных крошек, если не передан используется тот, что задан в опциях
+       * @param {SBIS3.CONTROLS.BackButton} [backButton] объект книпоки назад, если не передан используется тот, что задан в опциях
        * @example
        * <pre>
        *     myBinder = new ComponentBinder({
@@ -217,7 +234,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        * Метод для связывания панели массовых оперций с представлением данных
        * для работы необходимо задать опциию view
        * @param {Boolean} hideCheckBoxes флаг, показывающий, скрывать checkBox'ы для отметки записей
-       * @param {SBIS3.CONROLS.OperationsPanel} [operationPanel] объект панели массовых операций, если не передан используется тот, что задан в опциях
+       * @param {SBIS3.CONTROLS.OperationsPanel} [operationPanel] объект панели массовых операций, если не передан используется тот, что задан в опциях
        * в представлении данных вместе с панелью или нет.
        * @example
        * <pre>

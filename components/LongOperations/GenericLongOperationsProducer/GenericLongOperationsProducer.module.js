@@ -4,6 +4,9 @@
  * @class SBIS3.CONTROLS.GenericLongOperationsProducer
  * @extends SBIS3.CONTROLS.AbstractLongOperationsProducer
  * @implements SBIS3.CONTROLS.ILongOperationsProducer
+ *
+ * @author Спирин Виктор Алексеевич
+ *
  * @public
  */
 
@@ -341,7 +344,7 @@ define('js!SBIS3.CONTROLS.GenericLongOperationsProducer',
             options.canSuspend = typeof options.onSuspend === 'function' && typeof options.onResume === 'function';
             options.canDelete = typeof options.onDelete === 'function';
             options.userId = UserInfo.get('Пользователь');
-            options.userUuId = UserInfo.get('ИдентификаторСервисаПрофилей') || $.cookie('CpsUserId');
+            options.userUuId = UserInfo.get('ИдентификаторСервисаПрофилей') /*###|| $.cookie('CpsUserId')*/;
             var operationId = this._getStorageNextId();
             options.id = operationId;
             this._put(options);

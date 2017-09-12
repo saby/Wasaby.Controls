@@ -35,6 +35,7 @@
    margin: @controls-filterButton-filterLine-margin;
    cursor: pointer;
    color: @controls-filterLine-link-color;
+   font-size: @default-font-size;
    
    &:not(.ws-disabled) {
       .controls__filterButton__filterLine-items:hover {
@@ -65,6 +66,7 @@
 }
 .controls__filterButton__filterLine-items, .controls__filterButton__filterLine-text {
    .text-overflow();
+   .flex-shrink(1);
 }
 
 .controls__filterButton__filterLine-items, .controls__filterButton__filterLine {
