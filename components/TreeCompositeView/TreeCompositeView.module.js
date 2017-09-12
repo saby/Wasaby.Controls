@@ -239,7 +239,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
    
       _getEditArrowMarker: function() {
          if (this._options.viewMode === 'tile') {
-            return this.getHoveredItem().container.find('.controls-CompositeView__tileTitle');
+            return this.getHoveredItem().container.find('.js-controls-TreeView__editArrow');
          } else {
             return TreeCompositeView.superclass._getEditArrowMarker.apply(this, arguments);
          }
