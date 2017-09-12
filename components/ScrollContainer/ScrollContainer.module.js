@@ -228,6 +228,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                }
                this._subscribeOnScroll();
 
+               this.subscribeTo(EventBus.channel('stickyHeader'), 'onStickyHeadersChanged', this._recalcSizeScrollbar.bind(this));
+
                this._addGradient();
 
                // Что бы до инициализации не было видно никаких скроллов
