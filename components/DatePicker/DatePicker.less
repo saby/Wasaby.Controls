@@ -1,6 +1,17 @@
 @import "../DateBox/DateBox";
 .controls-DatePicker {
    display: inline-block;
+
+   .controls-DatePicker__button {
+      //top: @date-picker-calendar-icon-top-offset;
+      //left: @date-picker-calendar-icon-left-offset;
+      .controls-Button__icon {
+         font-size: @date-picker-calendar-icon-size !important;
+         line-height: @date-picker-calendar-icon-size !important;
+         height: @date-picker-calendar-icon-size;
+         width: @date-picker-calendar-icon-size;
+      }
+   }
 }
 .controls-DatePicker__button {
    margin-left: @date-picker-icon-margin-left;
