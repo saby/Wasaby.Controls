@@ -1934,7 +1934,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                });
             $img.on('load', function () {
                self.insertHtml(
-                  (before + '') + '<img' +
+                  (before || '') + '<img' +
                   (className ? ' class="' + className + '"' : '') +
                   ' src="' + src + '"' +
                   (width || height ? ' style="' + (width ? 'width:' + width + ';' : '') + (height ? 'height:' + height + ';' : '') + '"' : '') +
