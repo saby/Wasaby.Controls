@@ -41,7 +41,15 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                this._replaceButton.subscribe('onActivated', this._commandsButtonItemActivateHandler.bind(this, null, 'change'));
                this._commandsButton = this.getChildControlByName('commandsButton');
                this._commandsButton.subscribe('onMenuItemActivate', this._commandsButtonItemActivateHandler.bind(this));
-               this._updateCommandsButtonItems();
+               // Это следствие ошибки в WSControls/Buttons/MenuButton - в методе _getContextMenu неправильно возвращается значение. После исправления - убрать try-catch
+               try {
+                  this._updateCommandsButtonItems();
+               }
+               catch (ex) {
+                  require(['js!SBIS3.CONTROLS.ContextMenu'], function (ctxMenu) {
+                     this._updateCommandsButtonItems();
+                  }.bind(this));
+               }
             },
 
             setImageUuid: function (uuid) {
