@@ -3783,11 +3783,18 @@ define('js!SBIS3.CONTROLS.ListView',
             } else {
                if (this.isInfiniteScroll() && this._isPageLoaded(pageNumber)){
                   if (this._getItemsProjection() && this._getItemsProjection().getCount()){
-                     var itemIndex = pageNumber * this._options.pageSize - this._scrollOffset.top,
-                        itemId = this._getItemsProjection().at(itemIndex).getContents().getId(),
+                     var itemIndex, projItem,  itemId, item;
+                     itemIndex = pageNumber * this._options.pageSize - this._scrollOffset.top;
+                     projItem = this._getItemsProjection().at(itemIndex);
+                     //в некоторых условиях (например поиск в сообщениях) размер страницы, приходящей с сервера не соответствует указанному в настройке
+                     //поэтому элемента с таким индексом может и не быть.
+                     if(projItem) {
+                        itemId = projItem.getContents().getId();
                         item = this.getItems().getRecordById(itemId);
-                     if (item) {
-                        this.scrollToItem(item);
+
+                        if (item) {
+                           this.scrollToItem(item);
+                        }
                      }
                   }
                } else {
