@@ -1015,6 +1015,16 @@ body {
   }
 }
 
+/* КОСТЫЛЬ. Крошки накостылены через top'ы, margin'ы и тд. Срочно требуется переписать стили.
+   Выписана ошибка. https://online.sbis.ru/opendoc.html?guid=fa89f6fd-3e4a-4925-8de3-9f34c6b11729
+ */
+.ws-is-mobile-safari {
+   .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
+      position: relative;
+      top: .3057rem !important; // чтобы перебить непонятный top выше по файлу.
+   }
+}
+
 .controls-ListView {
   .controls-IconButton {
     .icon-primary {
