@@ -9,5 +9,8 @@
         <ws:if data="{{!!_options.icon||!!_options._iconClass}}">
            <i class="controls-Button__icon js-controls-Button__icon {{_options._iconClass?_options._iconClass:_options.icon}}"></i>
         </ws:if>
+        <ws:if data="{{!!_options.caption}}">
+            <span class="controls-Button__text js-controls-Button__text {{_options._textClass}}"><ws:partial template="{{_options.caption}}" /></span>
+        </ws:if>
     </span>
  </span>
