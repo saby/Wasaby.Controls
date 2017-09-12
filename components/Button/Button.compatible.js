@@ -63,19 +63,24 @@ define('js!SBIS3.CONTROLS.Button/Button.compatible', [
       },
 
       /**
+       * Делает кнопку дефолтной или отменяет таковое состояние
+       *
        * @noShow
-       * @param isDefault
+       * @param {Boolean} [isDefault] Если не указан, считается true
+       * @param {Boolean} [dontSendCommand] Не стрелять событием о регистрации/разрегистрации кнопки
        */
-      setDefaultButton: function(isDefault){
+      setDefaultButton: function(isDefault, dontSendCommand){
          if (isDefault === undefined) {
             isDefault = true;
          }
 
-         if (isDefault) {
-            this._registerDefaultButton();
-         }
-         else {
-            this._unregisterDefaultButton();
+         if (!dontSendCommand) {
+            if (isDefault) {
+               this._registerDefaultButton();
+            }
+            else {
+               this._unregisterDefaultButton();
+            }
          }
 
          this.setPrimary(isDefault);
