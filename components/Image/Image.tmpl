@@ -5,6 +5,7 @@
          tooltip="{{tooltip}}"
          alt="{{tooltip || name}}"
          src="{{!avoidCache || dataSource ? _templateImage}}"
+         style="{{ sizeMode === 'stretch' && (!avoidCache || dataSource) ? 'width: 100%'}}"
       />
       <ws:if data="{{imageBar}}">
          <div class="controls-image__image-bar" style="display: none;">
