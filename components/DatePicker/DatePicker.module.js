@@ -232,6 +232,9 @@ define(
          if (this._picker && this._picker.isVisible()){
             this.hidePicker();
          }
+         // Внутри шаблона DatePicker используем шаблон DateBox. Устанавливаем на нем соответсвующие классы
+         // что бы к нему корректно применились стили.
+         this.getContainer().children('.controls-DateBox').toggleClass('ws-enabled', enabled).toggleClass('ws-disabled', !enabled)
       },
 
       showPicker: function () {
