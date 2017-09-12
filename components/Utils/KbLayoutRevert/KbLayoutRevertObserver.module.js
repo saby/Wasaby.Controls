@@ -213,7 +213,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                      self._toggleItemsEventRaising(false);
                      /* Для того, чтобы индикатор не моргал между запросами, если запрос работает > INDICATOR_DELAY */
                      if (self._getTimer().getTime() > INDICATOR_DELAY) {
-                        view.getContainer().find('.controls-AjaxLoader').eq(0).removeClass('ws-hidden');
+                        view.getContainer().find('.controls-AjaxLoader').eq(0).toggleClass('ws-hidden controls-AjaxLoader__showIndication');
                      }
                      self._getTimer().stop();
                      view.setFilter(viewFilter);
