@@ -22,10 +22,7 @@ define('js!WSControls/Containers/FloatAreaOpener',
                   onClose: function() { self._options.closeCallback() }
                },
                componentOptions: {
-                  component: 'js!TestsPlatform/NewsFeed/NewsFeed',
-                  componentOptions: {
-                     caption: 'текст на кнопке'
-                  }
+                  component: 'js!TestsPlatform/NewsFeed/NewsFeed'
                },
                autoHide: true,
                direction: 'left',

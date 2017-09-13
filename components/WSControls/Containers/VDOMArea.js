@@ -2,11 +2,13 @@ define('js!WSControls/Containers/VDOMArea',
    [
       'js!SBIS3.CORE.CompoundControl',
       'tmpl!WSControls/Containers/VDOMArea',
+      'Core/helpers/Function/runDelayed',
       'Core/Control',
       'Core/moduleStubs'
    ],
    function(CompoundControl,
             VDomAreaTpl,
+            runDelayed,
             Control,
             moduleStubs) {
 
@@ -18,7 +20,9 @@ define('js!WSControls/Containers/VDOMArea',
             var self = this;
 
             moduleStubs.require([this._options.component]).addCallback(function(result){
-               Control.createControl(result[0], self._options.componentOptions, self.getContainer().find('.vdom-component')[0]);
+               runDelayed(function() {
+                  Control.createControl(result[0], self._options.componentOptions || {}, self.getContainer().find('.vdom-component')[0]);
+               });
             });
          }
       });
