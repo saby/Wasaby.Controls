@@ -1082,7 +1082,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                if (uuid) {
                   this._images[uuid] = false;
                }
-               this._insertImg(url, size + '%', null, className, null, before, after);
+               this._insertImg(url, size + '%', null, className, null, before, after, uuid);
             }.bind(this));
          },
          codeSample: function(text, language) {
@@ -1186,7 +1186,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             $img.css(size);
             $img.attr('data-mce-style', css.join(' '));
             var prevSrc = $img.attr('src');
-            var promise = this._makeImgPreviewerUrl($img, 0 < width ? width : null, 0 < height ? height : null, isPixels);//^^^
+            var promise = this._makeImgPreviewerUrl($img, 0 < width ? width : null, 0 < height ? height : null, isPixels);
             promise.addCallback(function (url) {
                if (prevSrc !== url) {
                   $img.attr('src', url);
@@ -1597,7 +1597,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          _getImageOptionsPanel: function(target){
             var
                self = this,
-               uuid = this._checkImageUuid(target[0]);
+               uuid = this.checkImageUuid(target[0]);
             if (!this._imageOptionsPanel) {
                this._imageOptionsPanel = new ImageOptionsPanel({
                   templates: self._options.templates,
@@ -1623,9 +1623,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   self._makeImgPreviewerUrl(fileobj, +width.substring(0, width.length - (isPixels ? 2 : 1)), null, isPixels).addCallback(function (url) {
                      $img.attr('src', url);
                      $img.attr('data-mce-src', url);
+                     var uuid = fileobj.id;
+                     // TODO: 20170913 Также убрать атрибуты с uuid, как и в методе _insertImg
+                     $img.attr('data-img-uuid', uuid);
+                     $img.attr('alt', uuid);
                      self._tinyEditor.undoManager.add();
                      self._setTrimmedText(self._getTinyEditorValue());
-                     var uuid = fileobj.id;
                      if (uuid) {
                         self._images[uuid] = false;
                      }
@@ -1664,11 +1667,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
          /**
           * Получить идентификатор изображения
-          * @protected
+          * @public
           * @param {Element} img Элемент IMG
           * @return {string}
           */
-         _checkImageUuid: function (img) {
+         checkImageUuid: function (img) {
             // html, содержащий в себе изображения, может попасть в редактор откуда угодно (старые или проблемные документы и т.д.), нет строгой
             // гарантии, что в атрибуте alt содержится именно uuid изображения, так что пробуем извлечь его откуда найдётся (и поправить если придётся)
             var REs = [
@@ -1980,7 +1983,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             return this.getName().replace('/', '#') + 'ИсторияИзменений';
          },
 
-         _insertImg: function (src, width, height, className, alt, before, after) {
+         _insertImg: function (src, width, height, className, alt, before, after, uuid) {
             var
                def = new Deferred(),
                self = this,
@@ -1992,12 +1995,17 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   left: 0
                });
             $img.on('load', function () {
+               // TODO: 20170913 Здесь в атрибуты, сохранность которых не гарантируется ввиду свободного редактирования пользователями, помещается значение uuid - Для обратной совместимости
+               // После задач https://online.sbis.ru/opendoc.html?guid=6bb150eb-4973-4770-b7da-865789355916 и https://online.sbis.ru/opendoc.html?guid=a56c487d-6e1d-47bc-bdf6-06a0cd7aa57a
+               // Убрать по мере переделки стороннего кода, используещего эти атрибуты.
+               // Для пролучения uuid правильно использовать метод getImageUuid
                self.insertHtml(
                   (before + '') + '<img' +
                   (className ? ' class="' + className + '"' : '') +
                   ' src="' + src + '"' +
                   (width || height ? ' style="' + (width ? 'width:' + width + ';' : '') + (height ? 'height:' + height + ';' : '') + '"' : '') +
-                  (alt ? ' alt="' + alt.replace('"', '&quot;') + '"' : '') +
+                  /*(alt ? ' alt="' + alt.replace('"', '&quot;') + '"' : '') +*/
+                  ' data-img-uuid="' + uuid + '" alt="' + uuid + '"' +
                   '></img>' + (after || '')
                );
                def.callback();
@@ -2222,7 +2230,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                temp = $('<div>' + this.getText() + '</div>');
             temp.find('img').toArray().forEach(function(image){
                var
-                  uuid = this._checkImageUuid(image);
+                  uuid = this.checkImageUuid(image);
                if (uuid) {
                   this._images[uuid] = state;
                }
