@@ -2022,6 +2022,8 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
             if (this._options.virtualScrolling && this._virtualScrollController) {
+               // Will reset pages after redrawing items
+               this._resetPaging = true;
                this._topWrapper.height(0);
                this._bottomWrapper.height(0);
             }
@@ -2852,8 +2854,10 @@ define('js!SBIS3.CONTROLS.ListView',
             this._drawSelectedItems(this._options.selectedKeys, {});
 
             //FixMe: Из за этого при каждой подгрузке по скроллу пэйджинг пересчитывается полностью
-            if (this._scrollBinder){
-               this._scrollBinder._updateScrollPages(!this._options.virtualScrolling);
+            if (this._scrollBinder) {
+               // Resets paging if called after reload()
+               this._scrollBinder._updateScrollPages(!this._options.virtualScrolling || this._resetPaging);
+               this._resetPaging = false;
             } else if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
                this._createScrollPager();
             }
