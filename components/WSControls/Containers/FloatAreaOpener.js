@@ -18,8 +18,12 @@ define('js!WSControls/Containers/FloatAreaOpener',
                parent: this,
                template: 'js!WSControls/Containers/VDOMArea',
                handlers: {
-                  onReady: function(){console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")},
-                  onClose: function() { self._options.closeCallback() }
+                  onReady: function(){
+
+                  },
+                  onClose: function() {
+                     self._options.closeCallback()
+                  }
                },
                componentOptions: {
                   component: 'js!TestsPlatform/NewsFeed/NewsFeed'
