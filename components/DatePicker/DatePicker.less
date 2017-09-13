@@ -1,13 +1,11 @@
-@import "../DateBox/DateBox";
 .controls-DatePicker {
    display: inline-block;
 
+   // Иконка нестандартного размера. Надо с этим разобраться.
    .controls-DatePicker__button {
-      //top: @date-picker-calendar-icon-top-offset;
-      //left: @date-picker-calendar-icon-left-offset;
       .controls-Button__icon {
          font-size: @date-picker-calendar-icon-size !important;
-         line-height: @date-picker-calendar-icon-size !important;
+         line-height: @date-picker-calendar-icon-line-height !important;
          height: @date-picker-calendar-icon-size;
          width: @date-picker-calendar-icon-size;
       }
