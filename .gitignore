@@ -8,6 +8,7 @@
 /sbis3-ws
 /ws-data
 /node_modules
+/typedef
 /SBIS3.CONTROLS/*
 /themes/**/*.css
 /artifacts/*
