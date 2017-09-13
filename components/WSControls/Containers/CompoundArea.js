@@ -2,12 +2,10 @@ define('js!WSControls/Containers/CompoundArea',
    [
       'Core/Control',
       'tmpl!WSControls/Containers/CompoundArea',
-      'Core/Deferred',
       'Core/moduleStubs'
    ],
    function(Control,
             template,
-            Deferred,
             moduleStubs) {
       var CompoundArea = Control.extend({
          _template: template,
@@ -16,14 +14,13 @@ define('js!WSControls/Containers/CompoundArea',
 
          _beforeMount: function(cfg){
             var
-               self = this,
-               def = new Deferred();
+               self = this;
             if (cfg.componentOptions) {
                this.componentOptions = cfg.componentOptions;
             } else {
                this.componentOptions = {};
             }
-            moduleStubs.require(
+            return moduleStubs.require(
                [
                   cfg.component,
                   'js!SBIS3.CORE.Control/Control.compatible',
@@ -42,10 +39,7 @@ define('js!WSControls/Containers/CompoundArea',
                }
 
                self.deprecatedContr(cfg);
-               def.callback();
             });
-
-            return def;
          },
 
          _afterMount: function(){
