@@ -234,8 +234,10 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             Необходимо для того, чтобы в пэйджинге не моргала кнопка перехода к следующей странице, пока грузятся данные. */
          /* Откатываю до 150 + (view._hasNextPage(view.getItems().getMetaData().more) ? 1 : 0) */
          var pagesCount = this._scrollPages.length;
+         var pagingVisibility = pagesCount > 1 && view._getOption('infiniteScroll') !== 'up';
    
-         view.getContainer().toggleClass('controls-ScrollPaging__pagesPadding', pagesCount > 1);
+         /* Если пэйджинг скрыт - паддинг не нужен */
+         view.getContainer().toggleClass('controls-ScrollPaging__pagesPadding', pagingVisibility);
          if (this._options.paging.getSelectedKey() > pagesCount){
             this._options.paging.setSelectedKey(pagesCount);
          }
@@ -243,7 +245,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
 
          //Если есть страницы - покажем paging
          
-         this._options.paging.setVisible((pagesCount > 1) && !this._options.hiddenPager && view._getOption('infiniteScroll') !== 'up');
+         this._options.paging.setVisible(pagingVisibility && !this._options.hiddenPager);
       },
 
       destroy: function(){
