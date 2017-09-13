@@ -69,7 +69,7 @@ define('js!WSControls/Lists/ListView2',
          /**
           * Props
           */
-         _enableVirtualScroll: true,
+         _enableVirtualScroll: false,
          _virtualScrollContainer: undefined,
          _virtualScroll: {
             // Constants
@@ -110,13 +110,13 @@ define('js!WSControls/Lists/ListView2',
          },
 
          _getStartEnumerationPosition: function() {
-            if (this._virtualScroll.window.end) {
-               this._stopIndex = this._virtualScroll.window.end;
-               this._curIndex = this._virtualScroll.window.start;
-               return this._curIndex;
+            if (this._enableVirtualScroll && this._virtualScroll.window.end) {
+               this._enumIndexes._startIndex = this._virtualScroll.window.start;
+               this._enumIndexes._stopIndex = this._virtualScroll.window.end;
+               this._enumIndexes._curIndex = this._virtualScroll.window.start;
             }
             else {
-               return this.startIndex;
+               ListView.superclass._getStartEnumerationPosition.call(this);
             }
          },
 

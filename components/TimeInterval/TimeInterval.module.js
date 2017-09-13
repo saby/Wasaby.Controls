@@ -334,7 +334,9 @@ define(
           * @private
           */
          _incMask: function (length) {
-            var leftGroupMaskLength = this._getFormatModel().model[0].mask.length;
+            var leftGroupMaskLength = this._getFormatModel().model[0].mask.length,
+               cursorPositionGroup = this._getFormatModel()._options.cursorPosition.group,
+               cursorPosition = this._getFormatModel()._options.cursorPosition.position;
             //Увеличиваем маску левой группы до размера не большего maxCharsAtLeftGroup
             if ((leftGroupMaskLength + length) > this._options.maxCharsAtLeftGroup){
                length = this._options.maxCharsAtLeftGroup - leftGroupMaskLength;
@@ -347,7 +349,7 @@ define(
             this._setText(this._options.text);
             //Устанавливаю курсор, только если фокус на компоненте, если пришли из сеттера опции, то не нужно
             if ($(document.activeElement).closest(this.getContainer()).length) {
-               this.setCursor(this._getFormatModel()._options.cursorPosition.group, this._getFormatModel()._options.cursorPosition.position + 1);
+               this.setCursor(cursorPositionGroup, cursorPosition + 1);
             }
          },
          /**

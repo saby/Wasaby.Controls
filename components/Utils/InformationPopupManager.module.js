@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
             }
 
             if(handler && typeof handler === 'function'){
-               handler();
+               handler.call(popup);
             }
          });
 
