@@ -3,7 +3,6 @@
  */
 define('js!SBIS3.CONTROLS.DropdownList',
    [
-   "Core/Deferred",
    "Core/EventBus",
    "Core/IoC",
    "Core/core-merge",
@@ -31,7 +30,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    'css!SBIS3.CONTROLS.DropdownList'
 ],
 
-   function (Deferred, EventBus, IoC, cMerge, cInstance, cFunctions, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
+   function (EventBus, IoC, cMerge, cInstance, cFunctions, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
 
       'use strict';
       /**
@@ -62,6 +61,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
        * @mixes SBIS3.CONTROLS.DropdownListMixin
        * @mixes SBIS3.CONTROLS.PickerMixin
        * @mixes SBIS3.CONTROLS.DataBindMixin
+       * @mixes SBIS3.CONTROLS.FormWidgetMixin
        *
        * @demo SBIS3.CONTROLS.Demo.MyDropdownList <b>Пример 1.</b> Простой пример работы контрола
        * @demo SBIS3.CONTROLS.Demo.MyDropdownListFilter <b>Пример 2.</b> Выпадающий список с фильтрацией.
@@ -779,7 +779,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             var textValues = [],
                 len = id.length,
                 self = this,
-                item, def;
+                item;
             if (!this._getItemsCount()) {
                //Если нет данных - не нужно запускать перерисовку. в этом случае обнулится опция text, которая может использоваться как значение по умолчанию (пока не установят данные)
                //_drawSelectedItems запускается после init'a, в поле связи могут задать selectedItems, не задавая items, поэтому проблему в mixin'e решать нельзя
@@ -791,7 +791,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this._drawSelectedValue(this.getItems().get(), [this.getItems().getAsValue()]);
             }
             else if(len) {
-               def = new Deferred();
                this.getSelectedItems(true).addCallback(function(list) {
                   if(list) {
                      list.each(function (rec) {
@@ -821,11 +820,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
                      }
                   }
 
-                  def.callback(textValues);
+                  self._drawSelectedValue(id[0], textValues);
                   return list;
                });
-
-               def.addCallback(this._drawSelectedValue.bind(this, id[0]));
             }
          },
 

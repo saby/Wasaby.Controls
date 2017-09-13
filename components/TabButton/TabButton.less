@@ -235,6 +235,7 @@
          overflow: hidden;
          text-overflow: ellipsis;
          white-space: nowrap;
+         .flex-shrink(1);
          > div {
             vertical-align: top;
          }
@@ -427,6 +428,14 @@
          > * {
             vertical-align: top;
          }
+      }
+   }
+}
+
+.ws-is-ie {
+   .controls-TabButton .controls-TabButton__mainText {
+      .controls-EditAtPlace__editor .controls-TextBox {
+         line-height: 20px;
       }
    }
 }

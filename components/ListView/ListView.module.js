@@ -1344,7 +1344,7 @@ define('js!SBIS3.CONTROLS.ListView',
          // TODO Подумать, как решить данную проблему. Не надёжно хранить информацию в доме
          // Поиск следующего или предыдущего элемента коллекции с учётом вложенных контролов
          _getHtmlItemByDOM: function (id, isNext) {
-            var items = this._getItemsContainer().children('.js-controls-ListView__item').not('.ws-hidden'),
+            var items = this._getItemsContainer().children('.js-controls-ListView__item').not('.ws-hidden, .controls-editInPlace'),
                recordItems = this.getItems(),
                recordIndex = recordItems.getIndexByValue(recordItems.getIdProperty(), id),
                itemsProjection = this._getItemsProjection(),
@@ -2022,6 +2022,8 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
             if (this._options.virtualScrolling && this._virtualScrollController) {
+               // Will reset pages after redrawing items
+               this._resetPaging = true;
                this._topWrapper.height(0);
                this._bottomWrapper.height(0);
             }
@@ -2858,8 +2860,10 @@ define('js!SBIS3.CONTROLS.ListView',
             this._drawSelectedItems(this._options.selectedKeys, {});
 
             //FixMe: Из за этого при каждой подгрузке по скроллу пэйджинг пересчитывается полностью
-            if (this._scrollBinder){
-               this._scrollBinder._updateScrollPages(!this._options.virtualScrolling);
+            if (this._scrollBinder) {
+               // Resets paging if called after reload()
+               this._scrollBinder._updateScrollPages(!this._options.virtualScrolling || this._resetPaging);
+               this._resetPaging = false;
             } else if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
                this._createScrollPager();
             }
@@ -3789,11 +3793,18 @@ define('js!SBIS3.CONTROLS.ListView',
             } else {
                if (this.isInfiniteScroll() && this._isPageLoaded(pageNumber)){
                   if (this._getItemsProjection() && this._getItemsProjection().getCount()){
-                     var itemIndex = pageNumber * this._options.pageSize - this._scrollOffset.top,
-                        itemId = this._getItemsProjection().at(itemIndex).getContents().getId(),
+                     var itemIndex, projItem,  itemId, item;
+                     itemIndex = pageNumber * this._options.pageSize - this._scrollOffset.top;
+                     projItem = this._getItemsProjection().at(itemIndex);
+                     //в некоторых условиях (например поиск в сообщениях) размер страницы, приходящей с сервера не соответствует указанному в настройке
+                     //поэтому элемента с таким индексом может и не быть.
+                     if(projItem) {
+                        itemId = projItem.getContents().getId();
                         item = this.getItems().getRecordById(itemId);
-                     if (item) {
-                        this.scrollToItem(item);
+
+                        if (item) {
+                           this.scrollToItem(item);
+                        }
                      }
                   }
                } else {
@@ -4419,6 +4430,11 @@ define('js!SBIS3.CONTROLS.ListView',
             if (revive) {
                this.reviveComponents($('.controls-ListView__results', this.getContainer()));
             }
+         },
+
+         _setNewDataAfterReload: function() {
+            ListView.superclass._setNewDataAfterReload.apply(this, arguments);
+            this._redrawResults(true);
          },
 
          /**

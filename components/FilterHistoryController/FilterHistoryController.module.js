@@ -38,7 +38,12 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
           return arr;
        }
 
-       var FilterHistoryController = HistoryController.extend({
+        /**
+         *
+         * @class SBIS3.CONTROLS.FilterHistoryController
+         * @extends SBIS3.CONTROLS.HistoryController
+         */
+       var FilterHistoryController = HistoryController.extend(/** @lends SBIS3.CONTROLS.FilterHistoryController.prototype*/{
           $protected: {
              _options: {
                 /**

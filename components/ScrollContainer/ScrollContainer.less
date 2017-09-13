@@ -43,7 +43,7 @@
 }
 
 .controls-ScrollContainer:not(.controls-ScrollContainer__hiddenScrollbar) {
-   .controls-Scrollbar.controls-Scrollbar__dragging, &:hover > .controls-Scrollbar {
+   .controls-Scrollbar.controls-Scrollbar__dragging {
       display: block;
    }
 }
@@ -85,7 +85,7 @@ body.ws-is-ie .controls-ScrollContainer__content {
    -webkit-overflow-scrolling: auto!important;
 }
 
-.controls-ScrollContainer__content-overflowHidden {
+.controls-ScrollContainer__content.controls-ScrollContainer__content-overflowHidden {
    overflow: hidden;
 }
 
@@ -143,7 +143,7 @@ body.ws-is-ie .controls-ScrollContainer__content {
    display: none;
 }
 
-.controls-ScrollContainer__showScrollbar > .controls-Scrollbar {
+.controls-ScrollContainer__scrollbar_show > .controls-Scrollbar {
    display: block;
 }
 

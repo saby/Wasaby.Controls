@@ -147,8 +147,14 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
       updatePaging: function() {
          this._updateCachedSizes();
 
-         var pagesCount = Math.ceil(this._viewHeight / this._viewportHeight);
-         this._options.view.getContainer().toggleClass('controls-ScrollPaging__pagesPadding', pagesCount > 1);
+         var pagesCount = this._viewportHeight ? Math.ceil(this._viewHeight / this._viewportHeight) : 0,
+            view = this._options.view;
+         /* Для пэйджинга считаем, что кол-во страниц это:
+            текущее кол-во загруженных страниц + 1, если в метаинформации рекордсета есть данные о том, что на бл есть ещё записи.
+            Необходимо для того, чтобы в пэйджинге не моргала кнопка перехода к следующей странице, пока грузятся данные. */
+         pagesCount += (view._hasNextPage(view.getItems().getMetaData().more) ? 1 : 0);
+   
+         view.getContainer().toggleClass('controls-ScrollPaging__pagesPadding', pagesCount > 1);
          if (this._options.paging.getSelectedKey() > pagesCount){
             this._options.paging.setSelectedKey(pagesCount);
          }
@@ -159,7 +165,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
 
          //Если есть страницы - покажем paging
 
-         this._options.paging.setVisible((pagesCount > 1) && !this._options.hiddenPager);
+         this._options.paging.setVisible((pagesCount > 1) && !this._options.hiddenPager && view._getOption('infiniteScroll') !== 'up');
       },
 
       _updateCachedSizes: function(){

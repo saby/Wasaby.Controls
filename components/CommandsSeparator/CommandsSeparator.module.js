@@ -18,6 +18,8 @@ define('js!SBIS3.CONTROLS.CommandsSeparator', [
     * @extends WSControls/Buttons/ButtonBase
     * @author Крайнов Дмитрий Олегович
     *
+    * @mixes SBIS3.CONTROLS.Checkable
+    *
     * @public
     * @control
     * @category ButtonsBase
