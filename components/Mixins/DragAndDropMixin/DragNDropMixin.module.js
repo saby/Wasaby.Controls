@@ -19,6 +19,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         var LEFT_BUTTON = 1,
            isLeftButtonDown = false,
            eventBusChannel = EventBus.channel('DragAndDropChannel'),
+           innerWidth = 0,
+           scrollBarWidth = 24,//Just approximate
            onMouseUp = function(e) {
               eventBusChannel.notify('onMouseup', e);
               //Сбрасывать драгндроп надо после того как выполнились все обработчики, нам неизвестен порядок выполнения
@@ -30,20 +32,22 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         // Для обработки используются уже существующие обработчики,
         // незначительно дополненные
         $(document).on('mousedown touchstart', function(e) {
-            if (e.buttons & LEFT_BUTTON) {
-               isLeftButtonDown = true;
-            }
+           if (e.buttons & LEFT_BUTTON) {
+              isLeftButtonDown = true;
+              innerWidth = window.innerWidth;
+           }
+        }).on('mousemove touchmove', function (e) {
+           //Probably 'mouseup' event doesn't trigger over scrollbars.
+           //Detecting that left button is not hold yet on the window right edge.
+           if (isLeftButtonDown && !(e.buttons & LEFT_BUTTON) && innerWidth - e.pageX < scrollBarWidth) {
+              isLeftButtonDown = false;
+              onMouseUp(e);
+           } else {
+              eventBusChannel.notify('onMousemove', e);
+           }
         }).on('mouseup touchend', function(e) {
            isLeftButtonDown = false;
            onMouseUp(e);
-        }).on('mousemove touchmove', function (e) {
-            //Probably 'mouseup' event doesn't trigger over scrollbars. Detecting that left button is not hold yet.
-            if (isLeftButtonDown && !(e.buttons & LEFT_BUTTON)) {
-               isLeftButtonDown = false;
-               onMouseUp(e);
-            } else {
-               eventBusChannel.notify('onMousemove', e);
-            }
         });
     }
 
