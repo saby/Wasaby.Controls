@@ -51,10 +51,14 @@
    }
 }
 
-.controls-Switcher.controls-Checked__checked {
-   background: @primary-color;
+.controls-Switcher {
+   background: @secondary-background-color;
+   &.controls-Checked__checked {
+      background: @primary-color;
+   }
 }
 .controls-Switcher__btn {
    background: @white-color;
-   border-color: @gray-light-color !important;
+   border-color: @white-color !important;
+   box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.4);;
 }

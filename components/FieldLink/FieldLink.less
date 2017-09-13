@@ -16,10 +16,9 @@
          .flex-direction(row);
          max-width: 100%;
       }
-      //todo:
       .controls-Link.controls-FieldLink__showAllLinks {
          top: -@default-base-line-height;
-         background: @text-box-bg;
+         background: @default-bg-color;
          &:after {
             content: '';
             position: absolute;
@@ -27,7 +26,7 @@
             width: @fieldLink-showAll-shadow-width;
             top: 0;
             bottom: 0;
-            .horizontal-gradient(@white-color, rgba(255, 255, 255, 0));
+            .horizontal-gradient(@default-bg-color, rgba(255, 255, 255, 0));
             background-color: transparent;
          }
       }
@@ -76,24 +75,20 @@
       align-items: center;
       margin: 0;
       padding: 0;
-
+      line-height: @fieldLink-linkItem-line-height;
       &:after {
          content: none;
       }
-
       .controls-FieldLink__item-cross {
          position: static;
          padding: 0;
       }
-
       .controls-FieldLink__item-caption {
          .text-overflow();
-         height: @fieldLink-linkItem-line-height;
       }
    }
-   //todo: надо ли?
    &.ws-disabled .controls-FieldLink__item-caption {
-      margin-right: @fieldLink-disabled-item-picker-margin;
+      margin-right: @default-input-padding;
    }
 
    &.controls-popup-revert-vertical {
@@ -118,12 +113,9 @@
       content: '';
    }
 }
-
 .controls-FieldLink__item-caption {
-   height: @fieldLink-linkItem-caption-height;
    font-size: @default-font-size;
 }
-
 .controls-FieldLink__item-cross {
    position: absolute;
    right: @fieldLink-linkItem-cross-right;
@@ -289,9 +281,8 @@
 
 .controls-Link.controls-FieldLink__showAllLinks {
    position: relative;
-   width: 20px;
-   line-height: @fieldLink-showAllLinks-lineHeight;
-   padding: @fieldLink-showAllLinks-padding;
+   line-height: @default-base-line-height; // перебиваем стили controls-link
+   padding-left: @default-input-padding;
    display: none;
    .flex-shrink(0);
 }
@@ -300,18 +291,6 @@
       display: inline-block;
    }
 }
-.ws-is-firefox {
-   .controls-FieldLink {
-      vertical-align: middle;
-
-      .controls-FieldLink__item-cross {
-         top: -1px;
-      }
-
-
-   }
-}
-
 .controls-FieldLink__hiddenIfEmpty.ws-disabled:not(.controls-FieldLink__selected) {
    display: none;
 }
