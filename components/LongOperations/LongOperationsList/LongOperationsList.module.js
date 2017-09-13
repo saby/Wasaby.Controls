@@ -113,7 +113,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
             var self = this;
             var STATUSES = LongOperationEntry.STATUSES;
 
-            ['onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted', 'onproducerregistered', 'onproducerunregistered'].forEach(function (evtType) {
+            ['onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted', 'onproducerregistered', 'onproducerunregistered'/*, 'ondestroy'*/].forEach(function (evtType) {
                self.subscribeTo(longOperationsManager, evtType, function (evtName, evt) {
                   var dontReload;
                   switch (evtName.name) {
