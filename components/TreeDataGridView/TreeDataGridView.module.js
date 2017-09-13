@@ -521,7 +521,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    
       _mouseDownHandler: function(e) {
          /* По стандарту отключаю выделение по двойному клику мышкой в дереве */
-         if(e.originalEvent.detail > 1) {
+         if(e.originalEvent.detail > 1 && this._needProcessMouseEvent(e)) {
             e.preventDefault();
          }
          TreeDataGridView.superclass._mouseDownHandler.apply(this, arguments);
