@@ -232,7 +232,8 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          /* Для пэйджинга считаем, что кол-во страниц это:
             текущее кол-во загруженных страниц + 1, если в метаинформации рекордсета есть данные о том, что на бл есть ещё записи.
             Необходимо для того, чтобы в пэйджинге не моргала кнопка перехода к следующей странице, пока грузятся данные. */
-         var pagesCount = this._scrollPages.length + (view._hasNextPage(view.getItems().getMetaData().more) ? 1 : 0);
+         /* Откатываю до 150 + (view._hasNextPage(view.getItems().getMetaData().more) ? 1 : 0) */
+         var pagesCount = this._scrollPages.length;
    
          view.getContainer().toggleClass('controls-ScrollPaging__pagesPadding', pagesCount > 1);
          if (this._options.paging.getSelectedKey() > pagesCount){
