@@ -163,6 +163,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
             this._menuButton.setCaption(caption);
          }
          this._menuButton.setVisible(hasMarkOptions);
+         this._notifyOnSizeChanged(true);
       },
       _captionRender: function(selectedCount) {
          return selectedCount ? rk('Отмечено') + '(' + selectedCount + ')' : rk('Отметить');
