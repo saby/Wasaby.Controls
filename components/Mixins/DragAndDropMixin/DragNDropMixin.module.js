@@ -16,11 +16,11 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
      * @see SBIS3.CONTROLS.DragEntity.Entity
      */
     if (typeof window !== 'undefined') {
-        var LEFT_BUTTON = 1,
+        var LEFT_BUTTON = 1,//Mouse left button flag
+           SCROLL_BAR_WIDTH = 24,//Just approximate
+           innerWidth = 0,
            isLeftButtonDown = false,
            eventBusChannel = EventBus.channel('DragAndDropChannel'),
-           innerWidth = 0,
-           scrollBarWidth = 24,//Just approximate
            onMouseUp = function(e) {
               eventBusChannel.notify('onMouseup', e);
               //Сбрасывать драгндроп надо после того как выполнились все обработчики, нам неизвестен порядок выполнения
@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         }).on('mousemove touchmove', function (e) {
            //Probably 'mouseup' event doesn't trigger over scrollbars.
            //Detecting that left button is not hold yet on the window right edge.
-           if (isLeftButtonDown && !(e.buttons & LEFT_BUTTON) && innerWidth - e.pageX < scrollBarWidth) {
+           if (isLeftButtonDown && !(e.buttons & LEFT_BUTTON) && innerWidth - e.pageX < SCROLL_BAR_WIDTH) {
               isLeftButtonDown = false;
               onMouseUp(e);
            } else {
