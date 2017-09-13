@@ -1028,10 +1028,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   }
                }
                this._addItems(itemsToAdd, config.addPosition);
-               this._removeItems(itemsToRemove);
+               this._removeItemsLight(itemsToRemove);
 
-               this._topWrapper.height(config.topWrapperHeight);
-               this._bottomWrapper.height(config.bottomWrapperHeight);
+               this._topWrapper.get(0).style.height = config.topWrapperHeight + 'px';
+               this._bottomWrapper.get(0).style.height = config.bottomWrapperHeight + 'px';
 
             }.bind(this));
          },
