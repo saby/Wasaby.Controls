@@ -138,7 +138,8 @@ define('js!SBIS3.CONTROLS.Utils.ImageUtil',['Core/Deferred', 'Core/constants'], 
                   if (xhr.readyState === 4) {
                      if (xhr.status >= 200 && xhr.status < 400) {
                         img.setAttribute('originsrc', url);
-                        img.setAttribute('src', constants.browser.chrome ? url : URL.createObjectURL(xhr.response));
+                        url =  constants.browser.chrome ? url : URL.createObjectURL(xhr.response);
+                        img.setAttribute('src', url);
                      } else {
                         onErrorHandler();
                      }
