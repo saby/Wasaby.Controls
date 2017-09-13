@@ -228,7 +228,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                }
                this._subscribeOnScroll();
 
-               this.subscribeTo(EventBus.channel('stickyHeader'), 'onStickyHeadersChanged', this._recalcSizeScrollbar.bind(this));
+               this.subscribeTo(EventBus.channel('stickyHeader'), 'onStickyHeadersChanged', this._stickyHeadersChangedHandler.bind(this));
 
                this._addGradient();
 
@@ -237,6 +237,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer().find('.controls-ScrollContainer__content');
 
                this._initPaging();
+            }
+         },
+
+         _stickyHeadersChangedHandler: function() {
+            if (this._scrollbar) {
+               this._recalcSizeScrollbar();
             }
          },
 
