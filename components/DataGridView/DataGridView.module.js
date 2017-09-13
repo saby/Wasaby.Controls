@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "Core/Deferred",
    'Core/detection',
    "Core/EventBus",
+   'Core/helpers/Function/memoize',
    "js!SBIS3.CONTROLS.ListView",
    "tmpl!SBIS3.CONTROLS.DataGridView",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/rowTpl",
@@ -42,6 +43,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       Deferred,
       cDetection,
       EventBus,
+      memoize,
       ListView,
       dotTplFn,
       rowTpl,
@@ -831,6 +833,21 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._getAjaxLoaderContainer().css(styles);
       },
 
+      _getAjaxLoaderMinHeight: memoize(function () {
+         return parseInt(this._getAjaxLoaderContainer().css('min-height'), 10);
+      }, '_getAjaxLoaderMinHeight'),
+
+      _toggleIndicator: function (show) {
+         DataGridView.superclass._toggleIndicator.apply(this, arguments);
+         // Индикатор загрузки позиционируется абсолютно, поэтому не участвует в рассчете высоты компонента.
+         // Корректируем минимальную высоту компонента с учетом зафиксированных заголовков
+         // в момент показа индиктора, что бы он не вылазил за пределы компонента.
+         if (!this._thead) {
+            this._bindHead();
+         }
+         this._getTableContainer().css('min-height', show ? this._thead.outerHeight() + this._getAjaxLoaderMinHeight() + 'px' : '');
+      },
+
       _redrawHead : function() {
          var
             headData,
@@ -1010,6 +1027,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if(this.hasPartScroll()) {
             this._updatePartScroll();
          }
+         this._updateAjaxLoaderPosition();
       },
       //********************************//
       //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
