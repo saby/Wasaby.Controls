@@ -399,10 +399,10 @@
 @calendar-day-cell-active-hover-text-color:@calendar-day-cell-hover-text-color;
 @calendar-day-cell-active-hover-bg:       @calendar-day-cell-hover-bg;
 //fieldlink
-@controls-FieldLink-border:               @default-border-width solid;
-@controls-FieldLink-border-color-focus-hover:@text-box-bottom-border-color;
-@controls-FieldLink-link-color:           #26B8FF;
-@controls-FieldLink-showSelector-color:   @default-text-color;
+@fieldLink-border:               @default-border-width solid;
+@fieldLink-border-color-focus-hover:@text-box-bottom-border-color;
+@fieldLink-link-color:           #26B8FF;
+@fieldLink-showSelector-color:   @default-text-color;
 //MonthView
 @data-grid-cell-hover-bg:                 #1b2530;
 @month-view-bg:                           #2c3e50;
@@ -730,23 +730,23 @@
 @controls-filterLine-copyCross-top:       -1rem;
 @controls-filterLine-copyCross-margin:    -1.75rem;
 //FieldLink
-@controls-FieldLink-showAllLinks-lineHeight:3rem;
-@controls-FieldLink-border-color-picker-show: @accent-color;
-@controls-FieldLink-linkItem-line-height:    calc(@text-box-field-line-height ~"+" @default-border-width);
-@controls-FieldLink-showAllLinks-width:      3.2rem;
-@controls-FieldLink-showAllLinks-marginRight:-1.43rem;
-@controls-FieldLink-linkItem-padding:        0 3rem 0 .56rem;
-@controls-FieldLink-linkItem-caption-height: 1.75rem;
-@controls-FieldLink-linkItem-cross-width:    3rem;
-@controls-FieldLink-linkItem-cross-right:    0;
-@controls-FieldLink-linkItem-cross-top:      -.14rem;
-@controls-FieldLink-linkItem-cross-padding:  0;
-@controls-FieldLink-showAllLinks-padding:    0 1rem 0 0.14rem;
-@controls-FieldLink-afterField-padding:      0;
+@fieldLink-showAllLinks-lineHeight:3rem;
+@fieldLink-border-color-picker-show: @accent-color;
+@fieldLink-linkItem-line-height:    calc(@text-box-field-line-height ~"+" @default-border-width);
+@fieldLink-showAllLinks-width:      3.2rem;
+@fieldLink-showAllLinks-marginRight:-1.43rem;
+@fieldLink-linkItem-padding:        0 3rem 0 .56rem;
+@fieldLink-linkItem-caption-height: 1.75rem;
+@fieldLink-linkItem-cross-width:    3rem;
+@fieldLink-linkItem-cross-right:    0;
+@fieldLink-linkItem-cross-top:      -.14rem;
+@fieldLink-linkItem-cross-padding:  0;
+@fieldLink-showAllLinks-padding:    0 1rem 0 0.14rem;
+@fieldLink-afterField-padding:      0;
 
-@controls-FieldLink-afterField-background:   transparent;
-@controls-FieldLink-FilterButton-color:      #26B8FF;
-@controls-FieldLink-FilterButton-color-hover:#26B8FF;
+@fieldLink-afterField-background:   transparent;
+@fieldLink-FilterButton-color:      #26B8FF;
+@fieldLink-FilterButton-color-hover:#26B8FF;
 @controls-filterButton-area-header-width:    23.92rem;
 //SelectorButton
 @controls-SelectorButton-align:           middle;
@@ -926,8 +926,8 @@
 @tab-buttons-border-bottom-height:        0.01rem;
 @dropdownlist-item-text-color:            #202835;
 @controls-editInPlace-editor-bg:			   #354B62 !important;
-@controls-FieldLink-picker-show-color:		#F0F5FB;
-@controls-FieldLink-picker-show-field-color:   rgb(58, 73, 81);
+@fieldLink-picker-show-color:		#F0F5FB;
+@fieldLink-picker-show-field-color:   rgb(58, 73, 81);
 @textbox-font-size:							   1.43rem;
 @scroll-pager-bg:							      transparent;
 @commands-button-close-icon:              @icon-large-size;
@@ -1055,7 +1055,7 @@
 @controls-NotificationPopup-header-padding:                   0.2857rem;
 @controls-NotificationPopup-header-padding-with-close-button: @controls-NotificationPopup-header-padding 2.0714rem @controls-NotificationPopup-header-padding 8px;
 @back-button-text-color:                  #FFCC99;
-@controls-FieldLink-link-color-hover:     @default-hover-color;
+@fieldLink-link-color-hover:     @default-hover-color;
 
 @commands-button-close-icon-color:        @icon-color-primary;
 @long-operations-popup-header-line-height:60px;
