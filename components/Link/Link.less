@@ -24,7 +24,13 @@
   }
   &.controls-Click__active {
     .controls-Button__text {
-      text-decoration: @link-active-text-decoration;
+      text-decoration: underline;
+    }
+  }
+
+  &.controls-Link__underline {
+    .controls-Button__text {
+      text-decoration: underline;
     }
   }
 
@@ -60,6 +66,7 @@
   }
 
   .controls-Link-link {
+     width: 100%;
      color: inherit;
      text-decoration: inherit;
      cursor: inherit;
@@ -68,6 +75,9 @@
          text-decoration: none;
        }
      }
+    &.controls-Button__text {
+      display: inline-block;
+    }
   }
   .controls-Button__wrapper {
     .justify-content(flex-start);
@@ -94,6 +104,7 @@
     }
   }
 }
+
 
 .controls-Link-link {
   .inline-flexbox();

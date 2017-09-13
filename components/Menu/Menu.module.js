@@ -25,11 +25,14 @@ define('js!SBIS3.CONTROLS.Menu', [
    /**
     * Контрол, отображающий меню, всплывающее в определенном месте страницы
     * @class SBIS3.CONTROLS.Menu
-    * @public
-    * @author Крайнов Дмитрий Олегович
     * @extends SBIS3.CONTROLS.ButtonGroupBaseDS
+    *
     * @mixes SBIS3.CONTROLS.hierarchyMixin
     * @mixes SBIS3.CONTROLS.TreeMixinDS
+    *
+    * @public
+    *
+    * @author Крайнов Дмитрий Олегович
     *
     * @cssModifier controls-MenuPicker__resetIconColor Отменяет перекрашивание иконки в темно-синий цвет в заголовке меню.
     */

@@ -1,0 +1,19 @@
+.controls-TabButtons {
+  .flexbox();
+  .flex-direction(row);
+
+  .controls-TabButton {
+    padding: 5px;
+    cursor: pointer;
+    height: 100%;
+    .box-sizing(border-box);
+
+    &.controls-TabButton__active {
+      font-weight: bold;
+      border: 1px solid #999;
+      border-top: 2px solid #313E78;
+      border-bottom: none;
+      color: #D94700;
+    }
+  }
+}

@@ -44,9 +44,10 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
             withoutHeader: true,
             icon   : 'sprite:icon-16 icon-ListMarked icon-primary',
             className: 'controls-IconButton__round-border',
+            pickerClassName: 'controls-Menu__hide-menu-header controls-RichEditorToolbarMenu fre-list',
             items: [
-               { key: 'InsertUnorderedList', title: ' ', icon:'sprite:icon-16 icon-ListMarked icon-primary' },
-               { key: 'InsertOrderedList', title: ' ',icon:'sprite:icon-16 icon-ListNumbered icon-primary' }
+               { key:'InsertUnorderedList', title:' ', icon:'sprite:icon-24 icon-ListMarked icon-primary' },
+               { key:'InsertOrderedList', title:' ', icon:'sprite:icon-24 icon-ListNumbered icon-primary' }
             ],
             handlers: {
                onMenuItemActivate: function(event, key) {

@@ -18,8 +18,12 @@ body {
    // в онлайне такие кнопки завязаны на жесткие стили controls-IconButton__round-border-24, что неправильно
    // для редизайна нужно перейти на относительные названия
    .controls-MenuIcon__Menu.controls-Menu.controls-Menu__Popup.controls-Menu__hide-menu-header {
-     margin: -.39rem 0 0 -.106rem;
+     margin: -.32rem 0 0 -.606rem;
    }
+   .controls-operationsPanel__itemsMenu_picker.controls-MenuIcon__Menu.controls-Menu.controls-Menu__hide-menu-header {
+     margin: -.32rem 0 0 1.32rem;
+   }
+
 
    //TODO: удалить это когда будет нормальный пэйджинг, не из ws-a
    .ws-paging{
@@ -218,11 +222,11 @@ body {
 
    .controls-DropdownList {
       .controls-DropdownList__selectedItem {
-         .controls-DropdownList__afterCaptionWrapper .controls-DropdownList__crossIcon {
-            font-size: 2rem !important;
-            line-height: 1.32rem !important;
-            width: 2rem;
-            height: 2rem;
+         .controls-DropdownList__afterCaptionWrapper, .controls-DropdownList__crossIcon {
+            font-size: 3rem !important;
+            height: 3rem !important;
+            width: 3rem !important;
+            line-height: 3rem !important;
          }
       }
    }
@@ -617,15 +621,6 @@ body {
 .controls-Link__field {
   vertical-align: baseline;
 }
-.controls-FieldLink, .controls-FieldLink__picker {
-   .controls-FieldLinkItemsCollection, .controls-FieldLink__item {
-      height: 3rem;
-   }
-   .controls-FieldLink__showAllLinks {
-      line-height: 3rem;
-   }
-}
-
 .controls-Paging .control-Paging__btn .controls-Button__icon {
     line-height: 2rem!important;
     padding-right: 0.4rem;
@@ -833,6 +828,16 @@ body {
             border-left: @button-border;
             border-top: @button-border;
          }
+         &.ws-infobox-triangle-vertical-right {
+            right: -.54rem;
+            border-right: @button-border;
+            border-top: @button-border;
+         }
+         &.ws-infobox-triangle-vertical-left {
+            left: -.54rem;
+            border-left: @button-border;
+            border-bottom: @button-border;
+         }
       }
 
       .ws-infobox-content {
@@ -937,6 +942,7 @@ body {
        line-height: 3rem;
      }
      .controls-ListView__hoveredItem {
+        background-color:  #E0ECF5 !important;
          .controls-DataGridView__td {
              background-color:  #E0ECF5 !important;
          }
@@ -949,9 +955,7 @@ body {
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button:hover {
   color: #fff;
 }
-.controls-Browser__breadCrumbs {
-  top: .18rem;
-}
+
 .controls-ToolBar .controls-ToolBar__menuIcon {
     vertical-align: baseline;
 }
@@ -1000,6 +1004,16 @@ body {
   .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
     top: 0.35rem !important;
   }
+}
+
+/* КОСТЫЛЬ. Крошки накостылены через top'ы, margin'ы и тд. Срочно требуется переписать стили.
+   Выписана ошибка. https://online.sbis.ru/opendoc.html?guid=fa89f6fd-3e4a-4925-8de3-9f34c6b11729
+ */
+.ws-is-mobile-safari {
+   .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
+      position: relative;
+      top: .3057rem !important; // чтобы перебить непонятный top выше по файлу.
+   }
 }
 
 .controls-ListView {

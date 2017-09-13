@@ -87,6 +87,10 @@ define('js!WSControls/Lists/ItemsControl', [
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
                this.reload(newOptions);
             }
+            if (newOptions.filter != this._options.filter) {
+               this._filter = newOptions.filter;
+               this.reload();
+            }
          },
 
          _beforeUpdate: function(newOptions) {
@@ -95,6 +99,10 @@ define('js!WSControls/Lists/ItemsControl', [
             if (newOptions.dataSource != this._options.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
                this.reload(newOptions);
+            }
+            if (newOptions.filter != this._options.filter) {
+               this._filter = newOptions.filter;
+               this.reload();
             }
             //TODO обработать смену фильтров и т.д. позвать релоад если надо
          },
@@ -340,11 +348,12 @@ define('js!WSControls/Lists/ItemsControl', [
          }
       });
 
-   ItemsControl.getOptionTypes = function getOptionTypes(){
+   //TODO https://online.sbis.ru/opendoc.html?guid=17a240d1-b527-4bc1-b577-cf9edf3f6757
+   /*ItemsControl.getOptionTypes = function getOptionTypes(){
       return {
          dataSource: Types(ISource)
       }
-   };
+   };*/
 
    return ItemsControl;
 });
