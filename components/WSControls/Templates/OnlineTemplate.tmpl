@@ -1,4 +1,6 @@
 <div class="controls-Online {{_compactMode ? 'compact-menu'}}">
+    <ws:TestsPlatform.Navigation.NavigationDS name="navigationDataSource" />
+    <ws:TestsPlatform.Navigation.NavigationAction name="navigationAction" />
     <div class="controls-Online__leftSide {{ _compactMode ? 'controls-Online__leftSide-compact' : 'controls-Online__leftSide-normal'}}">
         <div class="controls-Online__logoBlock">
             <span class="controls-Online__compactBtn icon-24 icon-ArrangeList" event:onclick="_toggleLeftSide()"></span>
@@ -11,6 +13,8 @@
         <ws:TestsPlatform.Navigation.Navigation
                 name="OnlineNavigation"
                 workspace="{{ _options.workspace }}"
+                navigationAction="{{ _children.navigationAction }}"
+                dataSource="{{ _children.navigationDataSource }}"
                 header="{{ _options.header }}">
         </ws:TestsPlatform.Navigation.Navigation>
     </div>
