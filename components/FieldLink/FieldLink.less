@@ -95,6 +95,9 @@
       border-top: @fieldLink-border @gray-ccc-color;
       border-bottom: none;
    }
+   .icon-size {
+      .icon-size(@fieldLink-picker-icon-size);
+   }
 }
 
 .controls-FieldLink__item {
@@ -119,7 +122,7 @@
 .controls-FieldLink__item-cross {
    position: absolute;
    right: @fieldLink-linkItem-cross-right;
-   top: 0;
+   top: 0; //todo: presto : 0.14rem
    padding: @fieldLink-linkItem-cross-padding;
    cursor: pointer;
    z-index: 1;
