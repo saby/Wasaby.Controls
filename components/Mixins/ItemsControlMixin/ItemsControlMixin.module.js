@@ -1685,7 +1685,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    //self._notify('onBeforeRedraw');
                    return list;
                 }, self))
-                .addErrback(forAliveOnly(this._loadErrorProcess, self));
+                .addErrback(function(error) {
+                   if(!self.isDestroyed()) {
+                      self._loadErrorProcess(error);
+                   }
+                   /* Если не прокинуть ошибку дальше, то далее в цепочке будут срабатывать
+                      callback'и, а не errback'и */
+                   return error;
+                });
              this._loader = def;
           } else {
              if (this._options._itemsProjection) {
