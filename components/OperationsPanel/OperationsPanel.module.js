@@ -425,7 +425,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                   $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-24 icon-size icon-ExpandUp icon-primary action-hover');
                };
 
-               self.subscribeTo(self._itemsMenu, 'onMenuItemActivate', function(e, id){
+               self.subscribeTo(self._itemsMenu, 'onMenuItemActivate', function(e, id, event){
                   var item = this.getItems().getRecordById(id);
                   if (item) {
                      var instance = item.get('instance');
@@ -433,7 +433,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                         instance._notify('onMenuItemActivate', id);
                      }
                      else {
-                        instance._clickHandler();
+                        instance._onClickHandler(event);
                      }
                      return false;
                   }
