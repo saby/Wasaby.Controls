@@ -16,7 +16,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
      * @see SBIS3.CONTROLS.DragEntity.Entity
      */
     if (typeof window !== 'undefined') {
-        var EventBusChannel = EventBus.channel('DragAndDropChannel');
+        var LEFT_BUTTON = 1,//Mouse left button flag
+           EventBusChannel = EventBus.channel('DragAndDropChannel');
 
         // Добавлены события для мультитач-девайсов
         // Для обработки используются уже существующие обработчики,
@@ -301,7 +302,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 };
             if (!DragObject.isInitDragStarter()
                && $(clickEvent.target).closest('.controls-DragNDropMixin__notDraggable', self._getDragContainer()[0]).length === 0
-               && ((clickEvent.type == 'mousedown' && clickEvent.width == 1) || clickEvent.type != 'mousedown') //Для мышки проверям что нажата левая кнопка
+               && ((clickEvent.type == 'mousedown' && clickEvent.width == LEFT_BUTTON) || clickEvent.type != 'mousedown') //Для мышки проверям что нажата левая кнопка
             ) {
                this._preparePageXY(clickEvent);
                EventBus.channel('DragAndDropChannel').subscribe('onMousemove', dragStrarter);
