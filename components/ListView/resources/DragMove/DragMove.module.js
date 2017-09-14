@@ -7,8 +7,8 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
    'js!WS.Data/Di',
    'Core/core-instance',
    'js!SBIS3.CONTROLS.DragEntity.Row',
-   'js!SBIS3.CONTROLS.DragEntity.List'
-
+   'js!SBIS3.CONTROLS.DragEntity.List',
+   'css!SBIS3.CONTROLS.ListView.DragMove'
 ], function (Abstract, DragObject, Di, cInstance) {
    /**
     * Реализация перемещения dragndrop'ом у списочных контролов
@@ -274,9 +274,9 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
          } else {
             var model = DragObject.getSource().at(0).getModel();
             return $(
-               '<div class="controls-dragNDrop-avatar controls-DragNDrop__draggedItem">' +
+               '<div class="controls-dragNDrop-avatar">' +
                '<div class="controls-dragNDrop-avatar__img-wrapper">' +
-               '<img src="' + model.get(this._options.linkTemplateConfig.image) + '">' +
+               '<img class="controls-dragNDrop-avatar__img" src="' + model.get(this._options.linkTemplateConfig.image) + '">' +
                '</div>' +
                '<div class="controls-dragNDrop-avatar__text-wrapper">' +
                '<div class="controls-dragNDrop-avatar__title">' + (model.get(this._options.linkTemplateConfig.title)||'') + '</div>' +
