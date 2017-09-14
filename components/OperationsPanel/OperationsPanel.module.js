@@ -391,9 +391,11 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       _createItemsMenu: function() {
          var self = this;
 
-         if(!this._itemsMenuLoadDeferred){
-            this._itemsMenuLoadDeferred = moduleStubs.require(['js!SBIS3.CONTROLS.MenuIcon']).addCallback(function (MenuIcon) {
+         if(!this._itemsMenuCreated){
+            this._itemsMenuCreated = true;
+            moduleStubs.require(['js!SBIS3.CONTROLS.MenuIcon']).addCallback(function (MenuIcon) {
                self._itemsMenu = new MenuIcon[0]({
+                  parent: self,
                   element: $('<span>').insertAfter(self._getItemsContainer()),
                   name: 'itemsMenu',
                   className: 'controls-Menu__hide-menu-header controls-operationsPanel__itemsMenu',
@@ -419,13 +421,11 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                   self._itemsMenu.getContainer().addClass('controls-operationsPanel__selectionMode');
                }
 
-               self.registerChildControl(self._itemsMenu);
-
                self._itemsMenu._setPickerContent = function() {
                   $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-24 icon-size icon-ExpandUp icon-primary action-hover');
                };
 
-               self.subscribeTo(self._itemsMenu, 'onMenuItemActivate', function(e, id){
+               self.subscribeTo(self._itemsMenu, 'onMenuItemActivate', function(e, id, event){
                   var item = this.getItems().getRecordById(id);
                   if (item) {
                      var instance = item.get('instance');
@@ -433,7 +433,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                         instance._notify('onMenuItemActivate', id);
                      }
                      else {
-                        instance._clickHandler();
+                        instance._onClickHandler(event);
                      }
                      return false;
                   }
@@ -442,7 +442,6 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                self._updateActionsMenuButtonItems();
                self._itemsMenu.getContainer().toggleClass('ws-hidden', false);
             });
-            return this._itemsMenuLoadDeferred;
          }
       },
 
