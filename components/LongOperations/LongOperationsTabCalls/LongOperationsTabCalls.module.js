@@ -1,9 +1,3 @@
-/**
- * Класс, позволяющий выполнять (асинхронные) вызовы методов в других вкладках
- *
- * @class SBIS3.CONTROLS.LongOperationsTabCalls
- * @public
- */
 define('js!SBIS3.CONTROLS.LongOperationsTabCalls',
    [
       'Core/core-extend',
@@ -19,6 +13,11 @@ define('js!SBIS3.CONTROLS.LongOperationsTabCalls',
 
       /**
        * Класс межвкладочных вызовов методов
+       *
+       * @class SBIS3.CONTROLS.LongOperationsTabCalls
+       *
+       * @author Спирин Виктор Алексеевич
+       *
        * @public
        * @type {SBIS3.CONTROLS.LongOperationsTabCalls}
        */
@@ -142,7 +141,7 @@ define('js!SBIS3.CONTROLS.LongOperationsTabCalls',
 
          /**
           * Запросить выполнение метода у целевого объекта во вкладке. Возвращает обещание результата
-          * @protected
+          * @public
           * @param {string} tabKey Ключ вкладки
           * @param {string} target Имя целевого объекта (владельца метода)
           * @param {string} method Имя вызываемого метода
@@ -176,7 +175,7 @@ define('js!SBIS3.CONTROLS.LongOperationsTabCalls',
 
          /**
           * Слушатель извещений из других вкладок о запросах
-          * @protected
+          * @public
           * @param {Core/EventObject} evtName Дескриптор события
           * @param {object} evt Cобытие полностью
           */
@@ -229,7 +228,7 @@ define('js!SBIS3.CONTROLS.LongOperationsTabCalls',
 
          /**
           * Слушатель извещений из других вкладок о получении результатов запросов
-          * @protected
+          * @public
           * @param {Core/EventObject} evtName Дескриптор события
           * @param {object} evt Cобытие полностью
           */

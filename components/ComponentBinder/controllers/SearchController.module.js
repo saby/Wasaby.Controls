@@ -97,7 +97,8 @@ define('js!SBIS3.CONTROLS.SearchController',
          }
 
          view.once('onDataLoad', function() {
-            var root;
+            var isEventRaising = view.getItems() && view.getItems().isEventRaising(),
+                root;
             //Скрываем кнопку назад, чтобы она не наслаивалась на колонки
             if (self._options.backButton) {
                self._options.backButton.getContainer().css({'display': 'none'});
@@ -112,11 +113,16 @@ define('js!SBIS3.CONTROLS.SearchController',
                //setParentProperty и setRoot приводят к перерисовке а она должна происходить только при мерже
                // Attention! Achtung! Uwaga! Не трогать аргументы setEventRaising! Иначе перерисовка вызывается до мержа
                // данных (см. очередность события onDataLoad - оно стреляет до помещения новых данных в items).
-               callProjectionMethod('setEventRaising',[false]);
+               if (isEventRaising) {
+                  callProjectionMethod('setEventRaising', [false]);
+               }
                //Сбрасываю именно через проекцию, т.к. view.setCurrentRoot приводит к отрисовке не пойми чего и пропадает крестик в строке поиска
                callProjectionMethod('setRoot', [root]);
                view._options.currentRoot = root;
-               callProjectionMethod('setEventRaising', [true]);
+               /* Не размораживаем, если проекция была заморожена не нами */
+               if (isEventRaising) {
+                  callProjectionMethod('setEventRaising', [true]);
+               }
             }
          });
    
@@ -305,6 +311,11 @@ define('js!SBIS3.CONTROLS.SearchController',
             }
 
             if(self._options.keyboardLayoutRevert) {
+               /* Если в этот момент уже происходит поиск,
+                  то механизм смены раскладки надо обновить, чтобы он работал от текущего поиска  */
+               if(view.isLoading()) {
+                  self._kbLayoutRevertObserver.stopObserve();
+               }
                self._kbLayoutRevertObserver.startObserve();
             }
             if (isTree) {

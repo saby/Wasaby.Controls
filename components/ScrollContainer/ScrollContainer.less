@@ -9,7 +9,7 @@
    outline: none;
    z-index: 0;
    
-   &.controls-ScrollContainer__top-gradient:before, &.controls-ScrollContainer__bottom-gradient:after {
+   &:before, &:after {
       content: '';
       position: absolute;
       display: block;
@@ -18,13 +18,17 @@
       left: 0;
       width: 100%;
    }
-   &.controls-ScrollContainer__top-gradient:before {
+   &:before {
       top: 0;
+   }
+   &:after {
+      display: none;
+      bottom: 0;
+   }
+   &.controls-ScrollContainer__top-gradient:before {
       background: linear-gradient(to bottom, @controls-ScrollContainer-gradient-background);
    }
    &.controls-ScrollContainer__bottom-gradient:after {
-      display: none;
-      bottom: 0;
       background: linear-gradient(to top, @controls-ScrollContainer-gradient-background);
    }
 }
@@ -39,7 +43,7 @@
 }
 
 .controls-ScrollContainer:not(.controls-ScrollContainer__hiddenScrollbar) {
-   .controls-Scrollbar.controls-Scrollbar__dragging, &:hover > .controls-Scrollbar {
+   .controls-Scrollbar.controls-Scrollbar__dragging {
       display: block;
    }
 }
@@ -47,6 +51,7 @@
 .controls-ScrollContainer__content {
    position: relative;
    overflow-y: scroll;
+   overflow-x: hidden;
    height: 100%;
    max-height: inherit;
    min-width: inherit;
@@ -81,16 +86,8 @@ body.ws-is-ie .controls-ScrollContainer__content {
    -webkit-overflow-scrolling: auto!important;
 }
 
-.controls-ScrollContainer__content-overflowHidden {
+.controls-ScrollContainer__content.controls-ScrollContainer__content-overflowHidden {
    overflow: hidden;
-}
-
-.ws-is-desktop-platform {
-   .controls-ScrollContainer__content {
-      &::-webkit-scrollbar {
-         width: 0!important;
-      }
-   }
 }
 
 .ws-is-mobile-android {
@@ -128,16 +125,18 @@ body.ws-is-ie .controls-ScrollContainer__content {
 .controls-ScrollContainer.ws-sticky-header__scrollable-container {
    width: auto;
 }
-
+// Заголовки должны быть выше тени. Если этот z-index вызовет проблемы, то надо будет сделать, что бы при фиксации
+// заголовков на враппер фиксированных заголовков накидывался соответсвующий класс и при его наличии тень в скрол
+// контейнере вообще не отображалась.
 .controls-ScrollContainer > .ws-sticky-header__header-container {
-   z-index: initial;
+   z-index: 1;
 }
 
 .controls-ScrollContainer__hiddenScrollbar > .controls-Scrollbar {
    display: none;
 }
 
-.controls-ScrollContainer__showScrollbar > .controls-Scrollbar {
+.controls-ScrollContainer__scrollbar_show:not(.controls-ScrollContainer__hiddenScrollbar) > .controls-Scrollbar {
    display: block;
 }
 
@@ -155,7 +154,7 @@ body.ws-is-ie .controls-ScrollContainer__content {
 
 .controls-ScrollContainer__content:not(.controls-ScrollContainer__content-overflowHidden) {
    // Desktop IE
-   body.ws-is-ie &, body.ws-is-firefox & {
+   body.ws-is-ie &, body.ws-is-firefox &, body.ws-is-chrome & {
       margin-right: -17px;
    }
 
@@ -163,6 +162,11 @@ body.ws-is-ie .controls-ScrollContainer__content {
    body.ws-is-touch.ws-is-ie & {
       margin-right: -12px;
       padding-right: 12px;
+   }
+
+   // Desktop Win10 IE
+   body.ws-is-windows-10.ws-is-ie:not(.ws-is-touch) & {
+      margin-right: -12px;
    }
 }
 

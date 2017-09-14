@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "Core/Deferred",
    'Core/detection',
    "Core/EventBus",
+   'Core/helpers/Function/memoize',
    "js!SBIS3.CONTROLS.ListView",
    "tmpl!SBIS3.CONTROLS.DataGridView",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/rowTpl",
@@ -42,6 +43,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       Deferred,
       cDetection,
       EventBus,
+      memoize,
       ListView,
       dotTplFn,
       rowTpl,
@@ -382,11 +384,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * </component>
     */
    var DataGridView = ListView.extend([DragAndDropMixin],/** @lends SBIS3.CONTROLS.DataGridView.prototype*/ {
+       /**
+        * @event onDrawHead Возникает после отрисовки шапки
+        * @param {Core/EventObject} eventObject Дескриптор события.
+        */
       _dotTplFn : dotTplFn,
-      /**
-       * @event onDrawHead Возникает после отрисовки шапки
-       * @param {Core/EventObject} eventObject Дескриптор события.
-       */
       $protected: {
          _headIsChanged: false,
          _rowTpl : rowTpl,
@@ -683,6 +685,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          DataGridView.superclass.init.call(this);
          this._updateHeadAfterInit();
          CommandDispatcher.declareCommand(this, 'ColumnSorting', this._setColumnSorting);
+         this._updateAjaxLoaderPosition();
       },
 
       _prepareConfig: function() {
@@ -815,12 +818,40 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return DataGridView.superclass._itemsReadyCallback.apply(this, arguments);
       },
 
+      _updateAjaxLoaderPosition: function () {
+         var height, styles;
+         if (!this._thead) {
+            return;
+         }
+         // Смещаем индикатор загрузки вниз на высоту заголовков.
+         height = this._thead.outerHeight();
+         styles = {top: height || ''};
+         // Корректируем хак ".ws-is-webkit .controls-AjaxLoader {height: 100%;}" из стилей ListView.
+         if (cDetection.webkit) {
+            styles.height =  height ? 'calc(100% - ' + height + 'px)' : '';
+         }
+         this._getAjaxLoaderContainer().css(styles);
+      },
+
+      _getAjaxLoaderMinHeight: memoize(function () {
+         return parseInt(this._getAjaxLoaderContainer().css('min-height'), 10);
+      }, '_getAjaxLoaderMinHeight'),
+
+      _toggleIndicator: function (show) {
+         DataGridView.superclass._toggleIndicator.apply(this, arguments);
+         // Индикатор загрузки позиционируется абсолютно, поэтому не участвует в рассчете высоты компонента.
+         // Корректируем минимальную высоту компонента с учетом зафиксированных заголовков
+         // в момент показа индиктора, что бы он не вылазил за пределы компонента.
+         if (!this._thead) {
+            this._bindHead();
+         }
+         this._getTableContainer().css('min-height', show ? this._thead.outerHeight() + this._getAjaxLoaderMinHeight() + 'px' : '');
+      },
+
       _redrawHead : function() {
          var
             headData,
-            headMarkup,
-            height,
-            styles;
+            headMarkup;
 
          if (!this._thead) {
             this._bindHead();
@@ -857,14 +888,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if (this._options.stickyHeader && !this._options.showHead && this._options.resultsPosition === 'top') {
             this._updateStickyHeader(headData.hasResults);
          }
-         // Смещаем индикатор загрузки вниз на высоту заголовков.
-         height = this._thead.outerHeight();
-         styles = {top: height || ''};
-         // Корректируем хак ".ws-is-webkit .controls-AjaxLoader {height: 100%;}" из стилей ListView.
-         if (cDetection.webkit) {
-            styles.height =  height ? 'calc(100% - ' + height + 'px)' : '';
-         }
-         this._getAjaxLoaderContainer().css(styles);
+         this._updateAjaxLoaderPosition();
       },
 
       _redrawFoot: function(){
@@ -1003,6 +1027,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if(this.hasPartScroll()) {
             this._updatePartScroll();
          }
+         this._updateAjaxLoaderPosition();
       },
       //********************************//
       //   БЛОК РЕДАКТИРОВАНИЯ ПО МЕСТУ //
@@ -1569,6 +1594,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                self._notify('onDrawHead');
                self._headIsChanged = false;
             });
+            this.reviveComponents(this._tfoot);
          }
       },
       destroy: function() {

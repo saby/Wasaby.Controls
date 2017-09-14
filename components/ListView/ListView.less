@@ -172,6 +172,7 @@
 
 .controls-ListView__serviceFooter {
    padding: @listView-servicefooter-padding;
+   overflow: hidden;
 }
 
 .controls-ListView__loadMoreButton {
@@ -371,6 +372,7 @@
    background: #fff;
    color: @list-view-separator-content-color;
    font-size: @list-view-separator-content-size;
+   white-space: nowrap;
    &.controls-GroupBy__separatorCollapse{
       cursor: pointer;
       &:before {

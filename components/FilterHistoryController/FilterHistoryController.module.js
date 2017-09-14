@@ -5,8 +5,6 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
     [
    "Core/core-functions",
    "Core/EventBus",
-   "Core/IoC",
-   "Core/ConsoleLogger",
    "js!SBIS3.CONTROLS.HistoryController",
    "js!WS.Data/Collection/List",
    "js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil",
@@ -15,11 +13,14 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
    "Core/helpers/generate-helpers",
    "Core/helpers/Function/debounce",
    "Core/helpers/Function/forAliveOnly",
-   'Core/helpers/Object/find',
+   "Core/helpers/Object/find",
+   "Core/HashManager",
+   "Core/core-instance",
+   "Core/core-merge",
    "Core/Date"
 ],
 
-    function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, isEqualObject, genHelpers, debounce, forAliveOnly, find) {
+    function( cFunctions, EventBus, HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, isEqualObject, genHelpers, debounce, forAliveOnly, find, HashManager, cInstance, cMerge) {
 
        'use strict';
 
@@ -37,7 +38,12 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
           return arr;
        }
 
-       var FilterHistoryController = HistoryController.extend({
+        /**
+         *
+         * @class SBIS3.CONTROLS.FilterHistoryController
+         * @extends SBIS3.CONTROLS.HistoryController
+         */
+       var FilterHistoryController = HistoryController.extend(/** @lends SBIS3.CONTROLS.FilterHistoryController.prototype*/{
           $protected: {
              _options: {
                 /**
@@ -55,7 +61,11 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 /**
                  * Параметры фильтрации, которые не надо сохранять в историю
                  */
-                noSaveFilters: []
+                noSaveFilters: [],
+                /*
+                * фильтры которые надо сохранять в историю
+                */
+                filtersForHistory: []
              }
           },
 
@@ -78,6 +88,20 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              /* Подпишемся на глобальный канал изменения истории,
                 чтобы изменения сразу применялись ко всем реестрам, у которых один historyId */
              HISTORY_CHANNEL.subscribe('onChangeHistory', this._changeHistoryFnc);
+             this._hashChangeHandlerFnc = this._hashChangeHandler.bind(this);
+             if (this._options.filtersForHistory.length > 0) {
+                HashManager.subscribe('onChange',this._hashChangeHandlerFnc);
+                if (cInstance.instanceOfMixin(this._options.view, 'SBIS3.CONTROLS.TreeMixin')
+                   && this._options.filtersForHistory.indexOf(this._options.view.getParentProperty()) > -1
+                ) {
+                   this._options.view.subscribe('onSetRoot', function (e, root) {
+                      var filters = this._getFiltersFormHash();
+                      filters[this._options.view.getParentProperty()] = root;
+                      this._setFiltersToHash(filters);
+                      this._onApplyFilterHandler();//сохранаяем в пользовательскую историю что бы фильтр применился при обновлении страницы
+                   }.bind(this));
+                }
+             }
           },
 
           _changeHistoryHandler: function(e, id, newHistory, activeFilter, saveDeferred) {
@@ -239,7 +263,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              if(activeFilter) {
                 activeFilter.isActiveFilter = false;
              }
-
+             this._setFiltersToHash(filterObject);
              /* Не сохраняем в историю, если:
                 1) Ещё не сохранился предыдущий фильтр,
                 2) Такой фильтр уже есть в истории
@@ -298,8 +322,8 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                    }
                 }
              }
-
-             return viewFilter;
+             var hashFilter = this._getFiltersFormHash();
+             return cMerge(viewFilter, hashFilter);
           },
 
 	       /**
@@ -322,7 +346,51 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 return item.isActiveFilter;
              }, this, false);
           },
-
+          /**
+           * возвращает фильтры из хеша
+           * @private
+           */
+          _getFiltersFormHash: function () {
+             var hashValue = HashManager.get(this._options.historyId),
+                filtersForHistory = this._options.filtersForHistory,
+                filter = {};
+             if (hashValue) {
+                if (filtersForHistory.length == 1) {
+                   filter[filtersForHistory[0]] =  hashValue;
+                } else {
+                   filter = JSON.parse(hashValue);
+                }
+             }
+             filtersForHistory.forEach(function (name) {
+                if (!filter.hasOwnProperty(name)) {
+                   filter[name] = null; //todo если фильтра нет то надо востановить значение по умолчанию пока тольк раздел это null
+                }
+             });
+             return filter;
+          },
+          _setFiltersToHash: function (filters) {
+             var filtersForHistory = this._options.filtersForHistory,
+                saveFilters = {};
+             if (filtersForHistory.length > 0) {
+                //если сохранять надо только один фильтр то сохраняем только значение, так хеш будет короче
+                if (filtersForHistory.length == 1) {
+                   saveFilters = filters[filtersForHistory[0]];
+                } else {
+                   filtersForHistory.forEach(function (name) {
+                      var value = filters[name];
+                      if (typeof value  !== undefined) {
+                         saveFilters[name] = filters[name];
+                      }
+                   }.bind(this));
+                   saveFilters = JSON.stringify(saveFilters);
+                }
+                if (saveFilters) {
+                   HashManager.set(this._options.historyId, JSON.stringify(saveFilters));
+                } else {
+                   HashManager.remove(this._options.historyId);
+                }
+             }
+          },
           /**
            * Ищет фильтр по ключу
            * @param {String} key
@@ -392,8 +460,23 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              )
           },
 
+          _hashChangeHandler: function () {
+             var view = this._options.view,
+               viewFilters = view.getFilter(),
+               hashFilters = this._getFiltersFormHash();
+             if (
+                cInstance.instanceOfMixin(this._options.view, 'SBIS3.CONTROLS.TreeMixin') &&
+                this._options.filtersForHistory.indexOf(view.getParentProperty()) > -1
+             ) {//если меняется раздел то надо сменить корень у дерева иначе записи не будут отображаться
+                view.setRoot(hashFilters[this._options.historyId]||null);
+             }
+             cMerge(viewFilters, hashFilters);
+             view.setFilter(viewFilters);
+          },
+
           destroy: function() {
              HISTORY_CHANNEL.unsubscribe('onChangeHistory', this._changeHistoryFnc);
+             HashManager.unsubscribe('onChange', this._hashChangeHandlerFnc);
              this._changeHistoryFnc = undefined;
              this._applyHandlerDebounced = undefined;
              FilterHistoryController.superclass.destroy.apply(this, arguments);

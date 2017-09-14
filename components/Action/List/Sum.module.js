@@ -18,6 +18,9 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
          * @extends SBIS3.CONTROLS.Action.Action
          * @author Крайнов Дмитрий Олегович
          *
+         * @mixes SBIS3.CONTROLS.Action.List.ListMixin
+         * @mixes SBIS3.CONTROLS.Action.DialogMixin
+         *
          * @demo SBIS3.CONTROLS.Demo.SumAction
          *
          * @ignoreOptions validators independentContext contextRestriction extendedTooltip

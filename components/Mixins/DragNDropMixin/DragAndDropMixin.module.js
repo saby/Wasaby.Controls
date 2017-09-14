@@ -6,8 +6,11 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [
 ], function(constants) {
 
    var isMobile = constants.browser.isMobilePlatform;
-
-   var DragAndDropMixin = {
+    /**
+     * @mixin SBIS3.CONTROLS.DragAndDropMixin
+     * @public
+     */
+   var DragAndDropMixin = /** @lends SBIS3.CONTROLS.DragAndDropMixin.prototype */{
       $protected: {
          _dragContainer: undefined,
          _withinElement: undefined,
@@ -46,7 +49,14 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [
       _bindDragEvents: function() {
          for (var i in this._eventHandlers) {
             if(this._eventHandlers.hasOwnProperty(i)) {
-               constants.$doc.bind(i + '.dragNDrop', this[this._eventHandlers[i]].bind(this));
+               constants.$win.bind(i + '.dragNDrop', function(func, e){
+                  func.call(this, e);
+   
+                  /* Чтобы не скролилась страница при пететаскивании  (актуально для планшетов и при работе с телевизором) */
+                  if(e.originalEvent.touches) {
+                     e.preventDefault();
+                  }
+               }.bind(this, this[this._eventHandlers[i]]));
             }
          }
       },
@@ -93,17 +103,13 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [
       _moveAt: function(e) {
          this._preparePageXY(e);
          this._dragMove(e,{top: e.pageY - this._startPosition.y, left: e.pageX - this._startPosition.x});
-         /* Чтобы не скролилась страница при пететаскивании  (актуально для планшетов и при работе с телевизором) */
-         if(e.originalEvent.touches) {
-            e.preventDefault();
-         }
       },
 
       /**
        * Отписывается от событий, вызывает метод dragEnd
        */
       _moveEnd: function(e) {
-	     constants.$doc.unbind('.dragNDrop');
+	     constants.$win.unbind('.dragNDrop');
          this._dragEnd(e);
       },
 

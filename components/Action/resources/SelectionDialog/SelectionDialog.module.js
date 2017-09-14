@@ -1,14 +1,12 @@
 define('js!SBIS3.CONTROLS.SelectionDialog', [
-   "Core/CommandDispatcher",
    'js!SBIS3.CONTROLS.SelectorController',
    "tmpl!SBIS3.CONTROLS.SelectionDialog",
-   "Core/core-instance",
    "tmpl!SBIS3.CONTROLS.SelectionDialog/resources/FolderTitleTpl",
    "js!SBIS3.CONTROLS.Button",
    "js!SBIS3.CONTROLS.TreeDataGridView",
    "i18n!SBIS3.CONTROLS.SelectionDialog",
    'css!SBIS3.CONTROLS.SelectionDialog'
-], function(CommandDispatcher, SelectorController, dotTplFn, cInstance, FolderTitleTpl) {
+], function(SelectorController, dotTplFn, FolderTitleTpl) {
 
    var SelectionDialog = SelectorController.extend({
       _dotTplFn: dotTplFn,

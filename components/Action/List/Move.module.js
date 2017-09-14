@@ -15,6 +15,8 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
        * @extends SBIS3.CONTROLS.Action.Action
        * @author Крайнов Дмитрий Олегович
        *
+       * @mixes SBIS3.CONTROLS.Action.List.ListMixin
+       *
        * @ignoreOptions validators independentContext contextRestriction extendedTooltip
        *
        * @ignoreMethods activateFirstControl activateLastControl addPendingOperation applyEmptyState applyState clearMark

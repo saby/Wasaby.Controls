@@ -48,5 +48,25 @@ define(['js!SBIS3.CONTROLS.ScrollContainer'], function (ScrollContainer) {
                 assert.equal(container.find('.ws-sticky-header__scrollable-container').length, 0);
             });
         });
+        describe('Event', function() {
+           testScrollContainer = new ScrollContainer({
+              element: container
+           });
+           it('mouseenter', function() {
+              testScrollContainer._onMouseenter();
+              assert.equal(testScrollContainer._isTakeScrollbar, 2);
+              assert.isTrue(testScrollContainer._eventBusChannel.hasEventHandlers('onRequestTakeScrollbar'));
+           });
+           it('mousemove', function() {
+              testScrollContainer._oneMousemove();
+              assert.equal(testScrollContainer._isTakeScrollbar, 3);
+           });
+           it('mouseleave', function() {
+              testScrollContainer._onMouseleave();
+              assert.equal(testScrollContainer._isTakeScrollbar, 3);
+              assert.isTrue(!testScrollContainer._eventBusChannel.hasEventHandlers('onRequestTakeScrollbar'));
+              assert.isTrue(!testScrollContainer._eventBusChannel.hasEventHandlers('onReturnTakeScrollbar'));
+           });
+        });
     });
 });

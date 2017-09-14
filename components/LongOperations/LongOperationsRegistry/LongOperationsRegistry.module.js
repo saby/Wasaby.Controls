@@ -32,8 +32,11 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
        * Класс для отображения реестра длительных операций
        * @class SBIS3.CONTROLS.LongOperationsRegistry
        * @extends SBIS3.CORE.CompoundControl
+       *
+       * @author Спирин Виктор Алексеевич
+       *
        */
-      var LongOperationsRegistry = CompoundControl.extend({
+      var LongOperationsRegistry = CompoundControl.extend(/** @lends SBIS3.CONTROLS.LongOperationsRegistry.prototype */{
          _dotTplFn: dotTplFn,
 
          $protected: {

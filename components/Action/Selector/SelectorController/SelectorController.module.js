@@ -6,16 +6,14 @@ define('js!SBIS3.CONTROLS.SelectorController', [
    "js!SBIS3.CORE.CompoundControl",
    "js!WS.Data/Di",
    "Core/core-instance",
-   "Core/core-merge",
    "Core/core-functions",
    "js!WS.Data/Entity/Record",
-   "js!WS.Data/Source/SbisService",
    "js!SBIS3.CONTROLS.Utils.Query",
    "js!SBIS3.CONTROLS.Utils.OpenDialog",
    "js!WS.Data/Collection/List",
    "js!SBIS3.CONTROLS.SelectorWrapper"
 ],
-    function (CommandDispatcher, CompoundControl, Di, cInstance, cMerge, cFunctions, Record, SbisService, Query, OpenDialogUtil, List) {
+    function (CommandDispatcher, CompoundControl, Di, cInstance, cFunctions, Record, Query, OpenDialogUtil, List) {
 
        'use strict';
 
@@ -167,7 +165,13 @@ define('js!SBIS3.CONTROLS.SelectorController', [
 
              if(difference.removed.length) {
                 difference.removed.forEach(function(removedKey) {
-                   currentItems.removeAt(currentItems.getIndexByValue(idProperty, removedKey));
+                   var index = currentItems.getIndexByValue(idProperty, removedKey);
+                   
+                   /* Т.к. когда делаеют setSelectedKeys с каким-то ключём, записи в рекордсете с этим ключём может не быть,
+                      так и при удалении ключа, записи с таким ключем среди currentSelectedItems может не быть */
+                   if(index !== -1) {
+                      currentItems.removeAt(index);
+                   }
                 });
                 onChangeSelection();
              }
@@ -236,15 +240,15 @@ define('js!SBIS3.CONTROLS.SelectorController', [
           return OpenDialogUtil.getOptionsFromProto(this, opt);
        };
 
-       SelectorController.prototype.getItemsFromSource = function (opt) {
+       SelectorController.prototype.getItemsFromSource = function (opt, metaOpts) {
           var options = this.getComponentOptions(opt),
               dataSource = options.dataSource;
 
           return Query(dataSource, [
-             options.hasOwnProperty('filter') ? options.filter : {},
-             options.hasOwnProperty('sorting') ? options.sorting : {},
+             options.filter ? options.filter : metaOpts.filter || {}, // Фильтр может быть задан не на прототипе, а передан в мета информации для action'a, т.к. определяется динамически
+             options.sorting ? options.sorting : {},
              0,
-             options.hasOwnProperty('pageSize') ? options.pageSize : 25]);
+             options.pageSize ? options.pageSize : 25]);
        };
 
        return SelectorController;

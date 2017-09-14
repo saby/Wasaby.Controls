@@ -20,9 +20,11 @@ define('js!SBIS3.CONTROLS.Accordion', [
     * Стандарт описан <a href='http://axure.tensor.ru/standarts/v7/%D0%B0%D0%BA%D0%BA%D0%BE%D1%80%D0%B4%D0%B5%D0%BE%D0%BD__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_7_1_.html'>здесь</a>.
     * @class SBIS3.CONTROLS.Accordion
     * @extends SBIS3.CORE.CompoundControl
-    * @author Авраменко Алексей Сергеевич
-    * @public
     * @mixes SBIS3.CONTROLS.ItemsControlMixin
+    *
+    * @public
+    * @control
+    * @author Авраменко Алексей Сергеевич
     */
 
    var Accordion = CompoundControl.extend([ItemsControlMixin], /** @lends SBIS3.CONTROLS.Accordion.prototype */ {
@@ -39,8 +41,9 @@ define('js!SBIS3.CONTROLS.Accordion', [
                // контекстов, возможно их пересечение между собой и просто с другими забинденными свойствами
                tplCfg.generateContext = function() {
                   var
-                     context = cContext.createContext(this, {restriction: 'set'});
-                  context.contextDeferred = new Deferred();
+                     contextDeferred = new Deferred(),
+                     context = cContext.createContext(contextDeferred, {restriction: 'set'});
+                  context.contextDeferred = contextDeferred;
                   return context;
                };
                return tplCfg;

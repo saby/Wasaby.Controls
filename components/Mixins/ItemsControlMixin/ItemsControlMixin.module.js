@@ -1,9 +1,7 @@
 define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "Core/core-functions",
-   "Core/constants",
    "Core/Deferred",
    "Core/IoC",
-   "Core/ConsoleLogger",
    "js!WS.Data/Source/Memory",
    "js!WS.Data/Source/SbisService",
    "js!WS.Data/Collection/RecordSet",
@@ -30,10 +28,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "Core/helpers/Function/debounce"
 ], function (
    cFunctions,
-   constants,
    Deferred,
    IoC,
-   ConsoleLogger,
    MemorySource,
    SbisService,
    RecordSet,
@@ -100,7 +96,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       }
       else {
          projection.setGroup(null);
-         resetGroupItemsCount(cfg);
       }
       return projection;
    },
@@ -132,7 +127,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    groupItemProcessing = function(groupId, records, item, cfg) {
       if (cfg._canApplyGrouping(item, cfg)) {
          var groupBy = cfg.groupBy;
-
          if (cfg._groupTemplate) {
             var
                tplOptions = {
@@ -160,31 +154,25 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       }
    },
 
-   applyGroupItemsCount = function(groupId, count, cfg) {
-      cfg._groupItemsCount = cfg._groupItemsCount || {};
-      cfg._groupItemsCount[groupId] = cfg._groupItemsCount[groupId] || 0;
-      cfg._groupItemsCount[groupId] += count;
-   },
-
-   resetGroupItemsCount = function(cfg) {
-      delete cfg._groupItemsCount;
-   },
-
    getRecordsForRedraw = function(projection, cfg) {
       var
          records = [];
       if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
-         resetGroupItemsCount(cfg);
-         var prevGroupId = undefined;
-         projection.each(function (item, index, group) {
-            if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {
-               applyGroupItemsCount(group, 1, cfg);
-               if (prevGroupId != group && group !== false) {
-                  cfg._groupItemProcessing(group, records, item,  cfg);
-                  prevGroupId = group;
-               }
+         var needGroup = false, groupId;
+         projection.each(function (item, index) {
+            if (cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
+               groupId = item.getContents();
+               needGroup = true;
             }
-            records.push(item);
+            else {
+               if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {
+                  if (needGroup && groupId) {
+                     cfg._groupItemProcessing(groupId, records, item, cfg);
+                     needGroup = false;
+                  }
+               }
+               records.push(item);
+            }
          });
       }
       return records;
@@ -367,8 +355,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             _buildTplArgs : buildTplArgs,
             _getRecordsForRedrawSt: getRecordsForRedraw,
             _getRecordsForRedraw: getRecordsForRedraw,
-            _applyGroupItemsCount: applyGroupItemsCount,
-            _resetGroupItemsCount: resetGroupItemsCount,
             _applyGroupingToProjection: applyGroupingToProjection,
             _applyFilterToProjection: applyFilterToProjection,
 
@@ -1166,9 +1152,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _removeItems: function (items, groupId) {
-         var removedElements = $([]), prev;
-
-         applyGroupItemsCount(groupId, -items.length, this._options);
+         var prev;
 
          for (var i = 0; i < items.length; i++) {
             var item = items[i];
@@ -1177,27 +1161,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                this._clearItems(targetElement);
                /*TODO С этим отдельно разобраться*/
 
-            /*TODO Особое поведение при группировке*/
-               if (!isEmpty(this._options.groupBy)) {
-
-                  if (this._options.easyGroup) {
-                     if (this._options._groupItemsCount[groupId] < 1) {
-                        $('[data-group="' + groupId + '"]', this._container.get(0)).remove();
-                     }
-                  }
-                  else {
-                     if (!prev)
-                        prev = targetElement.prev();
-                     if (prev.length && prev.hasClass('controls-GroupBy')) {
-                        var next = targetElement.next();
-                        if (!next.length || next.hasClass('controls-GroupBy')) {
-                           prev.remove();
-                           prev = undefined;
-                        }
-                     }
-                  }
-               }
-               removedElements.push(targetElement.get(0));
+               targetElement.get(0).remove();
                /* TODO внештатная ситуация, при поиске могли удалить папку/путь, сейчас нет возможности найти это в гриде и удалить
                   поэтому просто перерисуем весь грид. Как переведём группировку на item'ы, это можно удалить */
             } else if(this._isSearchMode && this._isSearchMode() && item.isNode()) { // FIXME "Грязная проверка" на наличие метода в .220, код удалится в .230
@@ -1205,8 +1169,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                return;
             }
          }
-         removedElements.remove();
-         this._notifyOnDrawItems();
+      },
+
+      _removeItemsLight: function(items) {
+         for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var targetElement = this._getDomElementByItem(item);
+            if (targetElement.length) {
+               this._clearItems(targetElement);
+               targetElement.get(0).remove();
+            }
+         }
       },
 
       _getSourceNavigationType: function(){
@@ -1215,18 +1188,21 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
 
-      _getItemsForRedrawOnAdd: function(items, groupId) {
-         var itemsToAdd = items;
-         if (!isEmpty(this._options.groupBy) && this._options.easyGroup) {
+      _getItemsForRedrawOnAdd: function(items) {
+         var itemsToAdd = [];
+         var groupId;
 
-            //Если в группе столько же элементов, сколько добавилось, то группа еще не отрисована
-            //и надо ее отрисовать
-            itemsToAdd = [];
-            if (this._options._groupItemsCount[groupId] === items.length && groupId !== false) {
-               this._options._groupItemProcessing(groupId, itemsToAdd, items[0], this._options);
-            }
+         if (items.length && cInstance.instanceOfModule(items[0], 'WS.Data/Display/GroupItem')) {
+            groupId = items[0].getContents();
+            this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options);
+            items.splice(0, 1)
             itemsToAdd = itemsToAdd.concat(items);
          }
+         else {
+            itemsToAdd = items;
+         }
+
+
          return itemsToAdd;
       },
 
@@ -1240,8 +1216,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _addItems: function(newItems, newItemsIndex, groupId) {
-         applyGroupItemsCount(groupId, newItems.length, this._options);
-
          this._itemData = null;
          var i;
          if (newItems && newItems.length) {
@@ -1307,22 +1281,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             lastItemsIndex = this._virtualScrollController._currentWindow[1] + 1;
          }
 
-         if (this._options.groupBy && this._options.easyGroup) {
-            //в случае наличия группировки надо проверять соседние элементы, потому что
-            //на месте вставки может быть разделитель, надо понимать, когда вставлять до разделителя, а когда после
-            //на выходе получим beforeFlag = true, если надо вставлять ДО какого то элемента, иначе действуем по стандартному алгоритму
-            if (this._canApplyGrouping(newItems[0])) {
-               prevGroup = (prevItem && this._canApplyGrouping(prevItem)) ? projection.getGroupByIndex(newItemsIndex - 1) : null;
-               nextItem = projection.at(newItemsIndex + newItems.length);
-               nextGroup = (nextItem && this._canApplyGrouping(nextItem)) ? projection.getGroupByIndex(newItemsIndex + newItems.length) : null;
-               if ((prevGroup === undefined) || (prevGroup === null) || prevGroup != groupId) {
-                  if (nextGroup !== undefined && nextGroup !== null && nextGroup == groupId) {
-                     beforeFlag = true;
-                  }
-               }
-            }
-         }
-
          if (beforeFlag) {
             container = this._getDomElementByItem(nextItem);
             inside = false;
@@ -1341,7 +1299,18 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _getDomElementByItem : function(item) {
-         return this._getItemsContainer().find('.js-controls-ListView__item[data-hash="' + item.getHash() + '"]')
+         var container;
+         if (cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
+            container = this._getItemsContainer().find('.controls-GroupBy[data-group="' + item.getContents() + '"]');
+         }
+         else {
+            container = this._getRecordElemByItem(item);
+         }
+         return container;
+      },
+
+      _getRecordElemByItem: function(item) {
+         return this._getItemsContainer().find('.js-controls-ListView__item[data-hash="' + item.getHash() + '"]');
       },
 
       _reviveItems : function(lightVer) {
@@ -1661,8 +1630,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                       && (Object.getPrototypeOf(list).constructor == Object.getPrototypeOf(list).constructor)
                       && (Object.getPrototypeOf(list.getAdapter()).constructor == Object.getPrototypeOf(this.getItems().getAdapter()).constructor)
                    ) {
-                      this._options._items.setMetaData(list.getMetaData());
-                      this._options._items.assign(list);
+                      this._setNewDataAfterReload(list);
                       self._drawItemsCallbackDebounce();
                    } else {
                       this._unsetItemsEventHandlers();
@@ -1698,6 +1666,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          return def;
       }),
+
+      _setNewDataAfterReload: function (list) {
+         this._options._items.setMetaData(list.getMetaData());
+         this._options._items.assign(list);
+      },
 
       _onDataLoad: function(){
 

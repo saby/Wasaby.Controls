@@ -5,7 +5,6 @@ define(
    'js!SBIS3.CONTROLS.DateBox',
    [
       'Core/IoC',
-      'Core/ConsoleLogger',
       'Core/constants',
       'js!SBIS3.CONTROLS.FormattedTextBoxBase',
       'js!SBIS3.CONTROLS.Utils.DateUtil',
@@ -17,7 +16,7 @@ define(
       'css!SBIS3.CONTROLS.DateBox'
       // 'i18n!SBIS3.CONTROLS.DateBox'
    ],
-   function (IoC, ConsoleLogger, constants, FormattedTextBoxBase, DateUtil, dotTplFn, FormWidgetMixin, ControlsValidators) {
+   function (IoC, constants, FormattedTextBoxBase, DateUtil, dotTplFn, FormWidgetMixin, ControlsValidators) {
 
    'use strict';
 
@@ -34,6 +33,9 @@ define(
     * Можно вводить только значения особого формата даты.
     * @class SBIS3.CONTROLS.DateBox
     * @extends SBIS3.CONTROLS.FormattedTextBoxBase
+    *
+    * @mixes SBIS3.CONTROLS.FormWidgetMixin
+    *
     * @control
     * @author Крайнов Дмитрий Олегович
     * @public
@@ -731,7 +733,8 @@ define(
 
       _isRequired: function () {
          for(var i = 0; i < this._options.validators.length; i++) {
-            if (this._options.validators[i].validator === ControlsValidators.required) {
+            var validator = this._options.validators[i];
+            if (validator.validator === ControlsValidators.required && !validator.noFailOnError) {
                return true;
             }
          }

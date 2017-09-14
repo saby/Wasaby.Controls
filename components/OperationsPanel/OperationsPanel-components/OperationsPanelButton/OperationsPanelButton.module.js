@@ -18,6 +18,9 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
     * @extends SBIS3.CORE.Control
     * @author Сухоручкин Андрей Сергеевич
     *
+    * @mixes SBIS3.CONTROLS.Clickable
+    * @mixes SBIS3.CONTROLS.Checkable
+    *
     * @control
     * @public
     * @category Actions
@@ -59,6 +62,8 @@ define('js!SBIS3.CONTROLS.OperationsPanelButton', [
          var
             panel = this.getLinkedPanel(),
             container = this.getContainer();
+         //Для одной и той же кнопки могут сделать setLinkedPanel несколько раз, так что нужно отписываться, иначе будет утечка памяти
+         container.off('mouseenter');
          container.one('mouseenter', function() {
             panel.requireButtons();
          });

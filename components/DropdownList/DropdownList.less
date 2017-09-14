@@ -16,12 +16,20 @@
         text-overflow: ellipsis;
         color: @DropdownList-linkStyleColor;
         cursor: pointer;
-        &:hover{
-          color: @DropdownList-linkStyleHoverColor;
-          text-decoration: underline;
-        }
-        &.ws-disabled:hover{
-          color: @DropdownList-linkStyleColor;
+        .controls-DropdownList__text {
+           .flexbox();
+           .controls-DropdownList__icon {
+              .align-self(center);
+           }
+           .controls-DropdownList__value {
+              .align-self(baseline);
+              overflow: hidden;
+              text-overflow: ellipsis;
+              &:hover{
+                 color: @DropdownList-linkStyleHoverColor;
+                 text-decoration: underline;
+              }
+           }
         }
       }
 
@@ -64,6 +72,11 @@
          display: none;
        }
      }
+      &.controls-DropdownList__defaultItem {
+         .controls-DropdownList__selectedItem .controls-DropdownList__textWrapper {
+            color: @DropdownList-linkStyleColor;
+         }
+      }
    }
    &.controls-DropdownList__type-filter {
       .controls-DropdownList__afterCaptionWrapper {
@@ -77,17 +90,23 @@
    &.ws-disabled{
       color: #ccc;
       cursor: default !important;
-     .controls-DropdownList__selectedItem .controls-DropdownList__textWrapper {
-        color: @DropdownList-disabled-text;
-        cursor: default !important;
-        text-decoration: none;
-      }
      .controls-DropdownList__selectedItem {
-       .controls-DropdownList__beforeCaptionWrapper {
-         .controls-DropdownList__arrowIcon {
-           color: #ccc !important;
-         }
-       }
+        .controls-DropdownList__beforeCaptionWrapper {
+           .controls-DropdownList__arrowIcon {
+              color: #ccc !important;
+           }
+        }
+        .controls-DropdownList__textWrapper {
+           color: @DropdownList-disabled-text;
+           cursor: default !important;
+           text-decoration: none;
+           .controls-DropdownList__text .controls-DropdownList__value {
+              &:hover{
+                 color: @DropdownList-disabled-text;
+                 text-decoration: none;
+              }
+           }
+        }
      }
    }
 
@@ -119,6 +138,8 @@
       max-height: @DropdownList-picker-max-height - @DropdownList-footer-multisel-buttonsBlock-h;
       height: 100%;
       width: 100%; //Укажем явно для ie edge
+      min-height: 0;
+      .flex-shrink(1);
    }
 
    .controls-DropdownList__item, .controls-DropdownList__selectedItem * {
@@ -287,18 +308,23 @@
       }
    }
    .controls-DropdownList__body {
+      .flexbox();
+      .flex-direction(column);
       z-index: 1;
-      height: calc(~"100% - 50px"); /* Отступ шапки 40px + 10px от края экрана*/
+      height: 100%;
       border: @DropdownList-picker-border;
       border-radius: @DropdownList-picker-list-border-radius;
       background: @DropdownList-picker-bg;
       padding: @DropdownList-picker-padding;
+      box-sizing: border-box;
       max-height: @DropdownList-picker-max-height;
       .box-shadow(@menu-shadow);
    }
    &.controls-FloatArea {
       background: transparent;
       margin: @DropdownList-picker-offset;
+      .flexbox();
+      .flex-direction(column);
    }
    .controls-DropdownList__item {
       padding: @DropdownList-picker-menu-item-padding;
@@ -347,6 +373,7 @@
       height: @DropdownList-footer-buttonsBlock-height;
       position: @DropdownList-footer-buttonsBlock-position;
       background: @DropdownList-picker-menu-item-color;
+      .flex-shrink(0);
 
       .controls-DropdownListFooter_hasMore, .controls-DropdownListFooter_select {
          position: @DropdownList-footer-buttons-position;
@@ -469,6 +496,15 @@
       }
       &:active {
          background: @DropdownList-picker-menu-item-hover;
+      }
+   }
+}
+
+//Пример баги в ios https://jsfiddle.net/zk5755vg/12/
+.ws-is-mobile-chrome-ios, .ws-is-mobile-safari, .ws-is-old-webkit {
+   .controls-DropdownList__picker {
+      .controls-DropdownList__body {
+         display: block; //С флексовым контейнером в safari не отображается список (height:0). Флекс нужен для правильного обрезания контейнера по высоте, на моб.платформе это не актуально
       }
    }
 }

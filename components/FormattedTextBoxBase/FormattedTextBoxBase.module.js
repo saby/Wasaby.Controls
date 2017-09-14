@@ -2,14 +2,14 @@ define(
    'js!SBIS3.CONTROLS.FormattedTextBoxBase',
    [
       'Core/IoC',
-      'Core/ConsoleLogger',
       'Core/constants',
       'Core/core-extend',
+      'js!SBIS3.CONTROLS.Utils.IfEnabled',
       'js!SBIS3.CONTROLS.TextBoxBase',
       'html!SBIS3.CONTROLS.FormattedTextBoxBase/FormattedTextBoxBase_mask',
       'is!msIe?js!SBIS3.CORE.FieldString/resources/ext/ierange-m2-min'
    ],
-   function (IoC, ConsoleLogger, constants, cExtend, TextBoxBase, maskTemplateFn) {
+   function (IoC, constants, cExtend, ifEnabled, TextBoxBase, maskTemplateFn) {
 
    'use strict';
 
@@ -54,7 +54,7 @@ define(
          _moveCursor(_getContainerByIndex.call(this, (group  &&  group.isGroup) ? groupInd : --groupInd), formatModel.model[groupInd].mask.length);
       },
       _setPreviousPosition = function () {
-         var cursor = _getCursor.call(this, true),
+         var cursor = this._getCursor(true),
              container = _getContainerByIndex.call(this, cursor[0]),
              prevSibling = container.parentNode.previousSibling,
              position = cursor[1];
@@ -70,7 +70,7 @@ define(
          _moveCursor(container, position);
       },
       _setNextPosition = function () {
-         var cursor = _getCursor.call(this, true),
+         var cursor = this._getCursor(true),
              container = _getContainerByIndex.call(this, cursor[0]),
              nextSibling = container.parentNode.nextSibling,
              position = cursor[1];
@@ -142,34 +142,6 @@ define(
       _getContainerByIndex = function(idx) {
          //TODO если в основном шаблоне или шаблоне маски есть пробелы или переносы строк, они собъют этот порядок
          return this._inputField.get(0).childNodes[parseInt(idx, 10)].childNodes[0];
-      },
-
-      /**
-       * Получить положение курсора
-       * @param {Boolean} position Позиция: true — начала, false — конца
-       * @returns {Array} Массив положений [номер контейнера, сдвиг]
-       * @protected
-       */
-      _getCursor = function(position) {
-         var
-             formatModel = this._getFormatModel(),
-             selection = constants.browser.isIE10 ? window.getSelectionForIE() : window.getSelection();
-         if (selection.type !== 'None') {
-            selection = selection.getRangeAt(0);
-            this._lastSelection = selection;
-         } else {
-            selection = this._lastSelection || selection;
-            if (selection  &&  formatModel._options.newContainer) {
-               selection.setStart(formatModel._options.newContainer, 0);
-               selection.setEnd(formatModel._options.newContainer, 0);
-               formatModel._options.newContainer = undefined;
-            }
-         }
-
-         return (position ?
-            _getCursorContainerAndPosition.call(this, selection.startContainer, selection.startOffset) :
-            _getCursorContainerAndPosition.call(this, selection.endContainer, selection.endOffset)
-         );
       },
 
       /**
@@ -728,26 +700,9 @@ define(
             e.preventDefault();
          });
          //keypress учитывает расскладку, keydown - нет
-         this._inputField.keypress(function (event) {
-            if (!self._isFirefoxKeypressBug(event)) {
-               self._keyPressBind(event);
-            }
-         });
+         this._inputField.keypress(this._onKeyPress.bind(this));
          //keydown ловит управляющие символы, keypress - нет
-         this._inputField.keydown(function(event){
-            /*У некоторых android'ов спецефичная логика обработки клавишь:
-             1) Не стреляет событие keypress
-             2) Событие keydown стреляет послое вставки символа
-             3) Из события не возможно понять какая клавиша была нажата, т.к. возвращается keyCode = 229 || 0
-             Для таких андроидов обрабатываем ввод символа отдельно
-             */
-            if (constants.browser.isMobileAndroid && (event.keyCode === 229 || event.keyCode === 0)){
-               setTimeout(self._keyDownBindAndroid.bind(self, event), 0);
-            }
-            else{
-               self._keyDownBind(event);
-            }
-         });
+         this._inputField.keydown(this._onKeyDown.bind(this));
          this._inputField.bind('paste', function(e) {
             var
                 formatModel = self._getFormatModel(),
@@ -768,6 +723,25 @@ define(
          });
          this._chromeCaretBugFix();
       },
+      _onKeyPress: ifEnabled(function (event) {
+         if (!this._isFirefoxKeypressBug(event)) {
+            this._keyPressBind(event);
+         }
+      }),
+      _onKeyDown: ifEnabled(function (event) {
+         /*У некоторых android'ов спецефичная логика обработки клавишь:
+          1) Не стреляет событие keypress
+          2) Событие keydown стреляет послое вставки символа
+          3) Из события не возможно понять какая клавиша была нажата, т.к. возвращается keyCode = 229 || 0
+          Для таких андроидов обрабатываем ввод символа отдельно
+          */
+         if (constants.browser.isMobileAndroid && (event.keyCode === 229 || event.keyCode === 0)){
+            setTimeout(this._keyDownBindAndroid.bind(this, event), 0);
+         }
+         else{
+            this._keyDownBind(event);
+         }
+      }),
       //FF зачем то кидает событие keypress для управляющих символов(charCode === 0), в отличии от всех остальных браузеров.
       //Просто проигнорируем это событие, т.к. управляющая клавиша уже обработана в keydown. Так же отдельно обработаем
       //ctrl+A, т.к. для этой комбинации keypress так же вызываться не должен.
@@ -829,7 +803,7 @@ define(
       _keyPressBind: function(event) {
          var key = event.which || event.keyCode,
              character = String.fromCharCode(key),
-             positionIndexes = _getCursor.call(this, true),
+             positionIndexes = this._getCursor(true),
              position = positionIndexes[1],
              groupNum = positionIndexes[0];
 
@@ -853,7 +827,7 @@ define(
          var textDiff = this._getTextDiff(),
              character = textDiff['char'],
              position = textDiff.position,
-             groupNum = _getCursor.call(this, true)[0];
+             groupNum = this._getCursor(true)[0];
          this._setText(this._options.text);
 
          this._keyPressBindHandler(event, character, position, groupNum);
@@ -889,8 +863,8 @@ define(
 
       _clearCommandHandler: function(type) {
          var
-             positionIndexesBegin = _getCursor.call(this, true),
-             positionIndexesEnd = _getCursor.call(this, false),
+             positionIndexesBegin = this._getCursor(true),
+             positionIndexesEnd = this._getCursor(false),
              position = positionIndexesBegin[1],
              groupNum = positionIndexesBegin[0],
              group = null,
@@ -1125,6 +1099,34 @@ define(
          if (currentGroup !== groupNum || currentPosition !== position) {
             _moveCursor(newContainer, formatModel._options.cursorPosition.position);
          }
+      },
+
+      /**
+       * Получить положение курсора
+       * @param {Boolean} position Позиция: true — начала, false — конца
+       * @returns {Array} Массив положений [номер контейнера, сдвиг]
+       * @protected
+       */
+      _getCursor: function(position) {
+         var
+            formatModel = this._getFormatModel(),
+            selection = constants.browser.isIE10 ? window.getSelectionForIE() : window.getSelection();
+         if (selection.type !== 'None') {
+            selection = selection.getRangeAt(0);
+            this._lastSelection = selection;
+         } else {
+            selection = this._lastSelection || selection;
+            if (selection  &&  formatModel._options.newContainer) {
+               selection.setStart(formatModel._options.newContainer, 0);
+               selection.setEnd(formatModel._options.newContainer, 0);
+               formatModel._options.newContainer = undefined;
+            }
+         }
+
+         return (position ?
+               _getCursorContainerAndPosition.call(this, selection.startContainer, selection.startOffset) :
+               _getCursorContainerAndPosition.call(this, selection.endContainer, selection.endOffset)
+         );
       },
 
       /**

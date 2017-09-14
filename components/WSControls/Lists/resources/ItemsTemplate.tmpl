@@ -1,0 +1,11 @@
+<div>
+<ws:if data="{{_display}}">
+      <ws:partial
+            scope="{{...}}"
+            template="{{_listItemsTemplate}}"
+            startFnc="{{_getStartEnumerationPosition}}"
+            condFnc="{{_checkConditionForEnumeration}}"
+            endFnc="{{_getNextEnumerationPosition}}"
+      />
+</ws:if>
+</div>
