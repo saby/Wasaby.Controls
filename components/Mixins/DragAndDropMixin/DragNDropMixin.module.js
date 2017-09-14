@@ -317,7 +317,10 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                         EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
                     }
                 };
-            if (!DragObject.isInitDragStarter() && $(clickEvent.target).closest('.controls-DragNDropMixin__notDraggable', self._getDragContainer()[0]).length === 0) {
+            if (!DragObject.isInitDragStarter()
+               && $(clickEvent.target).closest('.controls-DragNDropMixin__notDraggable', self._getDragContainer()[0]).length === 0
+               && ((clickEvent.type == 'mousedown' && clickEvent.width == LEFT_BUTTON) || clickEvent.type != 'mousedown') //Для мышки проверям что нажата левая кнопка
+            ) {
                this._preparePageXY(clickEvent);
                EventBus.channel('DragAndDropChannel').subscribe('onMousemove', dragStrarter);
                EventBus.channel('DragAndDropChannel').once('onMouseup', function () {
