@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [
        * </ol>
        */
       required: function(option) {
-         var isEmpty;
+         var isEmpty = false;
 
          switch (typeof option) {
             case 'string' :
@@ -61,9 +61,6 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [
                } else if(option === null) {
                   isEmpty = true;
                }
-               break;
-            case 'boolean' :
-               isEmpty = !option;
                break;
             case 'undefined' :
                isEmpty = true;

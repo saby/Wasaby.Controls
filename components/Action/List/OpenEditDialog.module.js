@@ -65,6 +65,11 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        */
+       /**
+        * @event onAfterClose Происходит при закрытии диалога редактирования.
+        * @param {Core/EventObject} eventObject Дескриптор события.
+        * @param {*} result Параметр приходит из команды {@link SBIS3.CORE.FloatArea#close}.
+        */
       $protected: {
          _options: {
             /**
