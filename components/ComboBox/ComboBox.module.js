@@ -2,6 +2,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "Core/constants",
    "Core/Deferred",
    'Core/IoC',
+   'Core/Sanitize',
    'js!SBIS3.CORE.LayoutManager',
    'js!SBIS3.CONTROLS.TextBox',
    'js!SBIS3.CONTROLS.TextBoxUtils',
@@ -21,7 +22,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "Core/core-instance",
    "i18n!SBIS3.CONTROLS.СomboBox",
    'css!SBIS3.CONTROLS.ComboBox'
-], function ( constants, Deferred, IoC, LayoutManager, TextBox, TextBoxUtils, textFieldWrapper, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
+], function ( constants, Deferred, IoC, Sanitize, LayoutManager, TextBox, TextBoxUtils, textFieldWrapper, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
    'use strict';
    /**
     * Класс контрола "Комбинированный выпадающий список" с возможностью ввода значения с клавиатуры.
@@ -427,11 +428,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _drawSelectedItemText: function(key, item){
          if (item) {
-            var newText = this._propertyValueGetter(item, this._options.displayProperty);
+            var newText = Sanitize(this._propertyValueGetter(item, this._options.displayProperty));
             if (newText != this._options.text) {
                ComboBox.superclass.setText.call(this, newText);
                this._drawNotEditablePlaceholder(newText);
-               $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(newText);
+               $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).html(newText);
             }
             /*управлять этим классом надо только когда имеем дело с рекордами
              * потому что только в этом случае может прийти рекорд с пустым ключом null, в случае ENUM это не нужно
