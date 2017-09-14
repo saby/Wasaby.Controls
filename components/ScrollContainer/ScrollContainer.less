@@ -43,7 +43,7 @@
 }
 
 .controls-ScrollContainer:not(.controls-ScrollContainer__hiddenScrollbar) {
-   .controls-Scrollbar.controls-Scrollbar__dragging, &:hover > .controls-Scrollbar {
+   .controls-Scrollbar.controls-Scrollbar__dragging {
       display: block;
    }
 }
@@ -51,6 +51,7 @@
 .controls-ScrollContainer__content {
    position: relative;
    overflow-y: scroll;
+   overflow-x: hidden;
    height: 100%;
    max-height: inherit;
    min-width: inherit;
@@ -87,14 +88,6 @@ body.ws-is-ie .controls-ScrollContainer__content {
 
 .controls-ScrollContainer__content.controls-ScrollContainer__content-overflowHidden {
    overflow: hidden;
-}
-
-.ws-is-desktop-platform {
-   .controls-ScrollContainer__content {
-      &::-webkit-scrollbar {
-         width: 0!important;
-      }
-   }
 }
 
 .ws-is-mobile-android {
@@ -143,7 +136,7 @@ body.ws-is-ie .controls-ScrollContainer__content {
    display: none;
 }
 
-.controls-ScrollContainer__showScrollbar > .controls-Scrollbar {
+.controls-ScrollContainer__scrollbar_show:not(.controls-ScrollContainer__hiddenScrollbar) > .controls-Scrollbar {
    display: block;
 }
 
@@ -161,7 +154,7 @@ body.ws-is-ie .controls-ScrollContainer__content {
 
 .controls-ScrollContainer__content:not(.controls-ScrollContainer__content-overflowHidden) {
    // Desktop IE
-   body.ws-is-ie &, body.ws-is-firefox & {
+   body.ws-is-ie &, body.ws-is-firefox &, body.ws-is-chrome & {
       margin-right: -17px;
    }
 
@@ -169,6 +162,11 @@ body.ws-is-ie .controls-ScrollContainer__content {
    body.ws-is-touch.ws-is-ie & {
       margin-right: -12px;
       padding-right: 12px;
+   }
+
+   // Desktop Win10 Edge
+   body.ws-is-windows-10.ws-is-ie12:not(.ws-is-touch) & {
+      margin-right: -12px;
    }
 }
 

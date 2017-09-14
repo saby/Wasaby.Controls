@@ -16,12 +16,20 @@
         text-overflow: ellipsis;
         color: @DropdownList-linkStyleColor;
         cursor: pointer;
-        &:hover{
-          color: @DropdownList-linkStyleHoverColor;
-          text-decoration: underline;
-        }
-        &.ws-disabled:hover{
-          color: @DropdownList-linkStyleColor;
+        .controls-DropdownList__text {
+           .flexbox();
+           .controls-DropdownList__icon {
+              .align-self(center);
+           }
+           .controls-DropdownList__value {
+              .align-self(baseline);
+              overflow: hidden;
+              text-overflow: ellipsis;
+              &:hover{
+                 color: @DropdownList-linkStyleHoverColor;
+                 text-decoration: underline;
+              }
+           }
         }
       }
 
@@ -82,17 +90,23 @@
    &.ws-disabled{
       color: #ccc;
       cursor: default !important;
-     .controls-DropdownList__selectedItem .controls-DropdownList__textWrapper {
-        color: @DropdownList-disabled-text;
-        cursor: default !important;
-        text-decoration: none;
-      }
      .controls-DropdownList__selectedItem {
-       .controls-DropdownList__beforeCaptionWrapper {
-         .controls-DropdownList__arrowIcon {
-           color: #ccc !important;
-         }
-       }
+        .controls-DropdownList__beforeCaptionWrapper {
+           .controls-DropdownList__arrowIcon {
+              color: #ccc !important;
+           }
+        }
+        .controls-DropdownList__textWrapper {
+           color: @DropdownList-disabled-text;
+           cursor: default !important;
+           text-decoration: none;
+           .controls-DropdownList__text .controls-DropdownList__value {
+              &:hover{
+                 color: @DropdownList-disabled-text;
+                 text-decoration: none;
+              }
+           }
+        }
      }
    }
 
@@ -487,7 +501,7 @@
 }
 
 //Пример баги в ios https://jsfiddle.net/zk5755vg/12/
-.ws-is-mobile-chrome-ios, .ws-is-mobile-safari, .ws-is-sbis-desktop {
+.ws-is-mobile-chrome-ios, .ws-is-mobile-safari, .ws-is-old-webkit {
    .controls-DropdownList__picker {
       .controls-DropdownList__body {
          display: block; //С флексовым контейнером в safari не отображается список (height:0). Флекс нужен для правильного обрезания контейнера по высоте, на моб.платформе это не актуально
