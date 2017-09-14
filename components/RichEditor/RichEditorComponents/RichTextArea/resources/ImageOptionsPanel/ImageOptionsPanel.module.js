@@ -1,4 +1,3 @@
-
 define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
    [
       'js!SBIS3.CONTROLS.CompoundControl',
@@ -42,6 +41,7 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                this._commandsButton = this.getChildControlByName('commandsButton');
                this._commandsButton.subscribe('onMenuItemActivate', this._commandsButtonItemActivateHandler.bind(this));
                // Это следствие ошибки в WSControls/Buttons/MenuButton - в методе _getContextMenu неправильно возвращается значение. После исправления - убрать try-catch
+               // https://online.sbis.ru/opendoc.html?guid=7928aef9-cf28-499c-9c87-49b1f788907c
                try {
                   this._updateCommandsButtonItems();
                }

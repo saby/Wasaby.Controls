@@ -87,6 +87,10 @@ define('js!WSControls/Lists/ItemsControl', [
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
                this.reload(newOptions);
             }
+            if (newOptions.filter != this._options.filter) {
+               this._filter = newOptions.filter;
+               this.reload();
+            }
          },
 
          _beforeUpdate: function(newOptions) {
@@ -95,6 +99,10 @@ define('js!WSControls/Lists/ItemsControl', [
             if (newOptions.dataSource != this._options.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
                this.reload(newOptions);
+            }
+            if (newOptions.filter != this._options.filter) {
+               this._filter = newOptions.filter;
+               this.reload();
             }
             //TODO обработать смену фильтров и т.д. позвать релоад если надо
          },

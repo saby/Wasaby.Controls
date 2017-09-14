@@ -3,7 +3,7 @@ define('js!WSControls/Lists/ListView2',
       'js!WSControls/Lists/MultiSelector',
       'js!WSControls/Lists/VirtualScroll',
       'tmpl!WSControls/Lists/ListView2',
-      'js!WSControls/Lists/ItemsToolbar/ItemsToolbarCompatible',
+      'is!compatibleLayer?js!WSControls/Lists/ItemsToolbar/ItemsToolbarCompatible',
       'js!WSControls/Lists/Controllers/PageNavigation',
       'css!WSControls/Lists/ListView'
    ],
