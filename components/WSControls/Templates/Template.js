@@ -12,6 +12,7 @@ define('js!WSControls/Templates/Template',
          _template: template,
          iWantVDOM: true,
 
+         //TODO: добавить getDataId
          _beforeMount: function(cfg, receivedState) {
             var self = this;
             return moduleStubs.require([cfg.component]).addCallback(function() {

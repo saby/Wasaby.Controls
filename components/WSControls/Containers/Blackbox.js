@@ -1,12 +1,16 @@
 define('js!WSControls/Containers/Blackbox',
    [
-      'js!SBIS3.CONTROLS.CompoundControl',
+      'Core/Control',
       'tmpl!WSControls/Containers/Blackbox'
    ],
-   function(CompoundControl,
+   function(Control,
             template) {
-      var Blackbox = CompoundControl.extend({
-         _dotTplFn: template
+      var Blackbox = Control.extend({
+         _template: template,
+
+         _shouldUpdate: function() {
+            return false;
+         }
       });
 
       return Blackbox;
