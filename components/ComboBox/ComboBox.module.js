@@ -198,10 +198,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       $constructor: function () {
          var self = this;
-         if (!this._options.displayProperty) {
-            IoC.resolve('ILogger').info(this._moduleName, 'Не задана опция displayProperty');
-            this._options.displayProperty = 'title';
-         }
 
          if (this._options.autocomplete){
             this.subscribe('onSearch', this._onSearch);
@@ -225,6 +221,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _modifyOptions: function(){
          var cfg = ComboBox.superclass._modifyOptions.apply(this, arguments);
+
+         if (!cfg.displayProperty) {
+            IoC.resolve('ILogger').error(this._moduleName, 'Не задана опция displayProperty');
+            cfg.displayProperty = 'title';
+         }
+
          if (cfg.emptyValue){
             var rawData = {},
                emptyItemProjection,
