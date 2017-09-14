@@ -16,18 +16,17 @@
          .flex-direction(row);
          max-width: 100%;
       }
-      //todo:
       .controls-Link.controls-FieldLink__showAllLinks {
          top: -@default-base-line-height;
-         background: @text-box-bg;
+         background: @default-bg-color;
          &:after {
             content: '';
             position: absolute;
-            right: -@controls-FieldLink-showAll-shadow-width;
-            width: @controls-FieldLink-showAll-shadow-width;
+            right: -@fieldLink-showAll-shadow-width;
+            width: @fieldLink-showAll-shadow-width;
             top: 0;
             bottom: 0;
-            .horizontal-gradient(@white-color, rgba(255, 255, 255, 0));
+            .horizontal-gradient(@default-bg-color, rgba(255, 255, 255, 0));
             background-color: transparent;
          }
       }
@@ -51,9 +50,8 @@
    position:relative;
    height: 100%;
    width: 100%;
-   line-height: 20px !important;
    text-decoration: inherit;
-   margin-right: @controls-FieldLink-fieldWrapper-margin;
+   margin-right: 0;
 }
 
 .controls-FieldLink__picker {
@@ -74,24 +72,20 @@
       align-items: center;
       margin: 0;
       padding: 0;
-
+      line-height: @fieldLink-linkItem-line-height;
       &:after {
          content: none;
       }
-
       .controls-FieldLink__item-cross {
          position: static;
          padding: 0;
       }
-
       .controls-FieldLink__item-caption {
          .text-overflow();
-         height: @controls-FieldLink-linkItem-line-height;
       }
    }
-   //todo: надо ли?
    &.ws-disabled .controls-FieldLink__item-caption {
-      margin-right: @controls-FieldLink-disabled-item-picker-margin;
+      margin-right: @default-input-padding;
    }
 
    &.controls-popup-revert-vertical {
@@ -101,13 +95,11 @@
 }
 
 .controls-FieldLink__item {
-   cursor: @controls-FieldLink-linkItem-cursor;
+   cursor: default;
    display: inline-block;
-   margin: @controls-FieldLink-linkItem-margin;
-   position: @controls-FieldLink-linkItem-position;
+   position: relative;
+   height:100%;
    padding: @controls-FieldLink-linkItem-padding;
-   line-height: @controls-FieldLink-linkItem-line-height;
-
    &:after {
       position: absolute;
       right: 0;
@@ -118,16 +110,14 @@
       content: '';
    }
 }
-
 .controls-FieldLink__item-caption {
-   height: @controls-FieldLink-linkItem-caption-height;
+   height: 100%;
    font-size: @default-font-size;
 }
-
 .controls-FieldLink__item-cross {
    position: absolute;
    right: @controls-FieldLink-linkItem-cross-right;
-   top: @controls-FieldLink-linkItem-cross-top;
+   top: 0;
    padding: @controls-FieldLink-linkItem-cross-padding;
    cursor: pointer;
    z-index: 1;
@@ -144,7 +134,7 @@
 
 .controls-FieldLink__itemsEdited {
    .controls-FieldLink__item-caption:hover {
-      text-decoration: @link-hover-text-decoration;
+      text-decoration: underline;
       cursor: pointer;
    }
 }
@@ -185,9 +175,8 @@
 
       &.ws-disabled {
          .controls-FieldLink__item {
+            //todo
             max-width: ~'calc(100% - '@controls-FieldLink-linkContainer-padding * 2~')';
-            padding: @controls-FieldLink-disabled-item-single-padding;
-            margin: @controls-FieldLink-disabled-item-single-margin;
          }
       }
    }
@@ -290,9 +279,8 @@
 
 .controls-Link.controls-FieldLink__showAllLinks {
    position: relative;
-   width: 20px;
-   line-height: @controls-FieldLink-showAllLinks-lineHeight;
-   padding: @controls-FieldLink-showAllLinks-padding;
+   line-height: @default-base-line-height; // перебиваем стили controls-link
+   padding-left: @default-input-padding;
    display: none;
    .flex-shrink(0);
 }
@@ -301,18 +289,6 @@
       display: inline-block;
    }
 }
-.ws-is-firefox {
-   .controls-FieldLink {
-      vertical-align: middle;
-
-      .controls-FieldLink__item-cross {
-         top: -1px;
-      }
-
-
-   }
-}
-
 .controls-FieldLink__hiddenIfEmpty.ws-disabled:not(.controls-FieldLink__selected) {
    display: none;
 }
@@ -353,4 +329,12 @@
 
 .ws-is-desktop-platform .controls-FieldLink__showSelector:hover {
    color: @controls-FieldLink-showSelector-color-hover;
+}
+//todo: Отказаться от Position: absolute у крестика
+.ws-is-firefox {
+   .controls-FieldLink {
+      .controls-FieldLink__item-cross {
+         top: 1px;
+      }
+   }
 }

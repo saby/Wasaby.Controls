@@ -222,11 +222,11 @@ body {
 
    .controls-DropdownList {
       .controls-DropdownList__selectedItem {
-         .controls-DropdownList__afterCaptionWrapper .controls-DropdownList__crossIcon {
-            font-size: 2rem !important;
-            line-height: 1.32rem !important;
-            width: 2rem;
-            height: 2rem;
+         .controls-DropdownList__afterCaptionWrapper, .controls-DropdownList__crossIcon {
+            font-size: 3rem !important;
+            height: 3rem !important;
+            width: 3rem !important;
+            line-height: 3rem !important;
          }
       }
    }
@@ -621,15 +621,6 @@ body {
 .controls-Link__field {
   vertical-align: baseline;
 }
-.controls-FieldLink, .controls-FieldLink__picker {
-   .controls-FieldLinkItemsCollection, .controls-FieldLink__item {
-      height: 3rem;
-   }
-   .controls-FieldLink__showAllLinks {
-      line-height: 3rem;
-   }
-}
-
 .controls-Paging .control-Paging__btn .controls-Button__icon {
     line-height: 2rem!important;
     padding-right: 0.4rem;
@@ -672,11 +663,6 @@ body .controls-ToolBar__menuIcon .icon-24 {
          vertical-align: baseline;
       }
    }
-}
-.controls-Link {
-  &.additionalLink__2 {
-    font-size: .857rem;
-  }
 }
 
 .controls__filter-button__apply-filter {
@@ -1013,6 +999,16 @@ body {
   .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
     top: 0.35rem !important;
   }
+}
+
+/* КОСТЫЛЬ. Крошки накостылены через top'ы, margin'ы и тд. Срочно требуется переписать стили.
+   Выписана ошибка. https://online.sbis.ru/opendoc.html?guid=fa89f6fd-3e4a-4925-8de3-9f34c6b11729
+ */
+.ws-is-mobile-safari {
+   .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
+      position: relative;
+      top: .4257rem !important; // чтобы перебить непонятный top выше по файлу.
+   }
 }
 
 .controls-ListView {

@@ -97,7 +97,7 @@ define('js!SBIS3.CONTROLS.SearchController',
          }
 
          view.once('onDataLoad', function() {
-            var isEventRaising = view.getItems() && view.getItems().isEventRaising(),
+            var isEventRaising = view._getItemsProjection() && view._getItemsProjection().isEventRaising(),
                 root;
             //Скрываем кнопку назад, чтобы она не наслаивалась на колонки
             if (self._options.backButton) {

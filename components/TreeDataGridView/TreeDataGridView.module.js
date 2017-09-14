@@ -421,7 +421,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          
          if(this._isSupportedItemsToolbar() && this._getItemsToolbar().isVisible()) {
             toolbarLeft = this._getItemsToolbar().getContainer()[0].offsetLeft;
-            needCorrect = toolbarLeft && (toolbarLeft < leftOffset);
+            needCorrect = toolbarLeft && (toolbarLeft < (leftOffset + arrowCords.width)); // Учитываем ширину иконки стрелки при корректировке
             /* Если стрелка заползает на операции над записью -> увеличиваем отступ */
             if(needCorrect) {
                leftOffset -= leftOffset - toolbarLeft + this.getEditArrow().getContainer().width(); //Левая граница тулбара + ширина стрелки
@@ -521,7 +521,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    
       _mouseDownHandler: function(e) {
          /* По стандарту отключаю выделение по двойному клику мышкой в дереве */
-         if(e.originalEvent.detail > 1) {
+         if(e.originalEvent.detail > 1 && this._needProcessMouseEvent(e)) {
             e.preventDefault();
          }
          TreeDataGridView.superclass._mouseDownHandler.apply(this, arguments);

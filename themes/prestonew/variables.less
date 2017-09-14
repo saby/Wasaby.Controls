@@ -252,7 +252,7 @@
 @switcher-do-text-margin:                       0.571rem;
 //Menu
 @popup-font-size:                         1.43rem; // откатил размер из-за того, что меню стало меньше чем кнпока т.к. в самих кнопках размер шрифта используется больший
-@menu-header-bg-color:                    #23b8ff;
+@menu-header-bg-color:                    #26B8FF;
 @menu-subpopup-margin:                    @menu-margin;
 @menu-border-width:                       @default-border-width;
 @menu-border-color:                       @default-border-color-second;
@@ -326,8 +326,6 @@
 @text-box-overflow:                       ellipsis;
 //Formatted text box
 @formatted-text-box-wrapper-min-height:   @text-box-field-min-height;
-@formatted-text-box-field-padding:        0;
-
 // DateBox
 @date-box-wrapper-border-color:           @text-box-border-color @text-box-border-color @text-box-bottom-border-color @text-box-border-color; // @default-border-color
 @date-box-field-text-color:               @default-text-color;
@@ -730,22 +728,16 @@
 @controls-filterLine-copyCross-top:       -1rem;
 @controls-filterLine-copyCross-margin:    -1.75rem;
 //FieldLink
-@controls-FieldLink-showAllLinks-lineHeight:3rem;
 @controls-FieldLink-border-color-picker-show: @accent-color;
-@controls-FieldLink-linkItem-line-height:    calc(@text-box-field-line-height ~"+" @default-border-width);
-@controls-FieldLink-showAllLinks-width:      3.2rem;
 @controls-FieldLink-showAllLinks-marginRight:-1.43rem;
-@controls-FieldLink-linkItem-margin:         0;
-@controls-FieldLink-linkItem-padding:        0 3rem 0 .56rem;
-@controls-FieldLink-linkItem-caption-height: 1.75rem;
+@controls-FieldLink-linkItem-padding:        0 3rem 0 .5rem;
 @controls-FieldLink-linkItem-cross-width:    3rem;
 @controls-FieldLink-linkItem-cross-right:    0;
 @controls-FieldLink-linkItem-cross-top:      -.14rem;
 @controls-FieldLink-linkItem-cross-padding:  0;
-@controls-FieldLink-showAllLinks-padding:    0 1rem 0 0.14rem;
+
 @controls-FieldLink-afterField-padding:      0;
-@controls-FieldLink-disabled-item-single-padding:  0 0 0 .56rem;
-@controls-FieldLink-disabled-item-single-margin: 0;
+
 @controls-FieldLink-afterField-background:   transparent;
 @controls-FieldLink-FilterButton-color:      #26B8FF;
 @controls-FieldLink-FilterButton-color-hover:#26B8FF;
@@ -755,6 +747,7 @@
 // BackButton
 @back-button-font-size:                   1.43rem;
 @back-button-line-height:                 1.7857rem;
+@back-button-height:                      1.7857rem;
 @back-button-arrow-hover-color:           @default-hover-color;
 // BreadCrumbs
 @back-button-arrow-paddingleft:           .5714rem;
@@ -992,7 +985,7 @@
 @DropdownList-footer-select-top:                      0.28rem;
 @DropdownList-picker-menu-line-height:                3.24rem;
 @DropdownList-before-caption-wrapper-top:             0.16rem;
-@DropdownList-after-caption-wrapper-top:              .4rem;
+@DropdownList-after-caption-wrapper-top:              0;
 @DropdownList-footer-hasMore-left:                    .57rem;
 @DropdownList-footer-hasMore-left-multiselect:        2.35rem;
 @DropdownList-footer-hasMore-top-multiselect:         1rem;
@@ -1019,7 +1012,6 @@
 @bottomStyle-items-toolbar-width:         1.5rem;
 @bottomStyle-items-toolbar-margin:        0;
 @controls-filterButton-picker-border-color:@default-border-color-second;
-@formatted-text-box-wrapper-padding:      0 0.57rem;
 @bottomStyle-padding-bottom:              1.78rem;
 @bottomStyle-items-toolbar-border-color:  #293A4B;
 @bottomStyle-items-toolbar-margin-top:    .28rem;

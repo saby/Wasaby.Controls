@@ -478,6 +478,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                   _unregister(n);
                }
                if (_channel) {
+                  _channel.notifyWithTarget('ondestroy', manager);
                   _channel.unsubscribeAll();
                   _channel.destroy();
                   _channel = null;
@@ -582,7 +583,9 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             // Уведомить другие вкладки
             _tabChannel.notify('LongOperations:Manager:onActivity', {type:'unregister', tab:_tabKey, producer:name});
             // И уведомить своих подписчиков
-            _channel.notifyWithTarget('onproducerunregistered', manager);
+            if (!_isDestroyed) {
+               _channel.notifyWithTarget('onproducerunregistered', manager);
+            }
          }
          return done;
       };
