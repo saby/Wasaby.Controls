@@ -1,40 +1,29 @@
-@alignText: left, right, center;
+& {
+  @alignText: left, right, center;
 
-.for(@alignText, {
-  .controls-ProgressBar_align-@{_item} {
-    text-align: @_item;
-  }
-});
-
-.controls-ProgressBar {
-  & when not (ispercentage(@ProgressBar-width)) {
-    display: inline-block;
-  }
+  .for(@alignText, {
+    .controls-ProgressBar_align-@{_item} {
+      text-align: @_item;
+    }
+  });
 }
 
-.controls-ProgressBar__progress_size {
+.controls-ProgressBar {
+  display: inline-block;
+  width: @ProgressBar-width;
+}
+
+.controls-ProgressBar__progress {
   @border: 2 * @default-border-width;
   height: @ProgressBar-height;
-  border: @default-border-width @default-border-style @ProgressBar-border-color;
-  border-radius: @ProgressBar-border-radius;
+  color: @ProgressBar-value-color;
+  line-height: @ProgressBar-height;
   padding: @ProgressBar-value-padding;
-  width: @ProgressBar-width;
+  border-radius: @ProgressBar-border-radius;
+  border: @default-border-width @default-border-style @ProgressBar-border-color;
+  background: @ProgressBar-background-color linear-gradient(to right, @ProgressBar-first-color, @ProgressBar-last-color) no-repeat;
   .box-sizing();
-  & when (get-unit(@ProgressBar-height) = get-unit(@default-border-width)) {
-    line-height: @ProgressBar-height - @border;
-  }
-  & when not (get-unit(@ProgressBar-height) = get-unit(@default-border-width)) {
-    line-height: calc(~"@{ProgressBar-height} - @{border}");
-  }
   & when not (@ProgressBar-value-font-size = @default-text-size) {
     font-size: @ProgressBar-value-font-size;
   }
-}
-
-.controls-ProgressBar__progress_color {
-  background: @ProgressBar-background-color linear-gradient(to right, @ProgressBar-first-color, @ProgressBar-last-color) no-repeat;
-}
-
-.controls-ProgressBar__progress_colorValue {
-  color: @ProgressBar-value-color;
 }
