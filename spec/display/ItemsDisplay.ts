@@ -13,7 +13,7 @@ class ItemsDisplay{
         this._items.forEach(fn);
     }
     at(i:number):IItem{
-
+        return '';
     }
 }
 
