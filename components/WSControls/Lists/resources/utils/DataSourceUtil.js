@@ -15,6 +15,9 @@ define('js!WSControls/Lists/resources/utils/DataSourceUtil', [
                   var DataSourceConstructor = requirejs(sourceOpt.module);
                   result = new DataSourceConstructor(sourceOpt.options || {});
                }
+               if (sourceOpt && sourceOpt.getData) {
+                  result = sourceOpt.getData();
+               }
                break;
          }
          return result;

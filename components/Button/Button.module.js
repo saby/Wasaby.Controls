@@ -1,10 +1,11 @@
 define('js!SBIS3.CONTROLS.Button',
    [
       'Core/Control',
-      'js!SBIS3.CONTROLS.Button/Button.compatible',
+      'is!compatibleLayer?js!SBIS3.CONTROLS.Button/Button.compatible',
       'tmpl!SBIS3.CONTROLS.Button',
-      'js!SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor',
-      'js!SBIS3.CORE.Control/ControlGoodCode',
+      'is',
+      'is!compatibleLayer?js!SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor',
+      'is!compatibleLayer?js!SBIS3.CORE.Control/ControlGoodCode',
       'css!SBIS3.CONTROLS.Button',
       'css!WSControls/Buttons/resources/ButtonBase'
          ],
@@ -12,6 +13,7 @@ define('js!SBIS3.CONTROLS.Button',
    function (Base,
              ButtonCompatible,
              template,
+             isJs,
              WsCompatibleConstructor,
              ControlGoodCode) {
 
@@ -106,7 +108,9 @@ define('js!SBIS3.CONTROLS.Button',
             if (!this.isEnabled()) {
                return;
             }
-            this._onClickHandler(e);
+            if (isJs.features.compatibleLayer) {
+               this._onClickHandler(e);
+            }
             this._notify("onActivated", e);
             this._forceUpdate();
          },
@@ -165,30 +169,40 @@ define('js!SBIS3.CONTROLS.Button',
          },
 
          _onMouseEnter: function(e){
-            this._showExtendedTooltipCompatible();
+            if (isJs.features.compatibleLayer) {
+               this._showExtendedTooltipCompatible();
+            }
             this._notify('onMouseEnter', e);
          },
 
          _onMouseLeave: function(e){
-            if(this.isActive()) {
-               this._hideExtendedTooltipCompatible();
+            if (isJs.features.compatibleLayer) {
+               if (this.isActive()) {
+                  this._hideExtendedTooltipCompatible();
+               }
             }
             this._notify('onMouseLeave', e);
          },
 
          _onFocusIn: function(e){
             var self = this;
-            this._showExtendedTooltipCompatible();
+            if (isJs.features.compatibleLayer) {
+               this._showExtendedTooltipCompatible();
+            }
          },
 
          _onFocusOut: function(e){
             var self = this;
-            this._hideExtendedTooltipCompatible();
+            if (isJs.features.compatibleLayer) {
+               this._hideExtendedTooltipCompatible();
+            }
          },
 
          destroy: function() {
-            if (this.isPrimary()) {
-               this._unregisterDefaultButton();
+            if (isJs.features.compatibleLayer) {
+               if (this.isPrimary()) {
+                  this._unregisterDefaultButton();
+               }
             }
             Button.superclass.destroy.call(this);
          }
