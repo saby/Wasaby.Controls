@@ -36,6 +36,7 @@ class ListView extends ItemsView{
 
         }
 
+        //как будто бы шаблонизатор
         let domObject = new ListViewDOM();
         domObject.onKeyDown.subscribe((item, index)=> {
             //обрабатываем нажатие на стрелку вверх и стрелку вниз
