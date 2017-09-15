@@ -271,8 +271,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             this._filterController = new FilterController({
                view: view,
                filterButton: filterButton,
-               fastDataFilter: fastDataFilter,
-               task1174428326: self._options.task1174428326
+               fastDataFilter: fastDataFilter
             });
          }
    

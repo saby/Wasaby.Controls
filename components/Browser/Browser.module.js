@@ -299,8 +299,7 @@ define('js!SBIS3.CONTROLS.Browser', [
                      backButton : this._backButton,
                      breadCrumbs : this._breadCrumbs,
                      view: this._view,
-                     backButtonTemplate: this._options.backButtonTemplate,
-                     task1174428326: self._options.task1174428326
+                     backButtonTemplate: this._options.backButtonTemplate
                   });
                   this._componentBinder.bindBreadCrumbs();
                }

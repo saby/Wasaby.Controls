@@ -34,8 +34,7 @@ define('js!SBIS3.CONTROLS.FilterController', [
          var filterButton = fButton || this._getOption('filterButton'),
              fastDataFilter = fDataFilter || this._getOption('fastDataFilter'),
              view = viewInst || this._getOption('view'),
-             parentContext = view.getParent().getContext(),
-             self = this;
+             parentContext = view.getParent().getContext();
    
          if(filterButton || fastDataFilter) {
             /* Синхронизация кнопки фильтров и быстрого фильтра */
@@ -48,7 +47,7 @@ define('js!SBIS3.CONTROLS.FilterController', [
       
             /* Обработчик на применение / сборс кнопки фильтров и быстрого фильтра */
             var filterChangeHandler = function(event, internal) {
-                  if(internal && self._options.task1174428326) {
+                  if(internal) {
                      return;
                   }
                
