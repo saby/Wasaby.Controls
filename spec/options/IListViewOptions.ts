@@ -1,6 +1,7 @@
 import IItemsViewOptions = require("IItemsViewOptions");
 import IItemTemplate = require("interfaces/IItemTemplate");
 import IItemAction = require("interfaces/IItemAction");
+import IItem = require("interfaces/IItem")
 
 
 interface IListViewOptions extends IItemsViewOptions{
@@ -8,7 +9,7 @@ interface IListViewOptions extends IItemsViewOptions{
     idProperty?: string, //не понятно. хотелось бы без него
     //selection: IMultiSelection, //пока непонятно что это такое. нужна информация только для отображения.
     editingTemplate?: IItemTemplate,
-    selectedKey?: number
+    selectedItem?: IItem
 }
 
 export = IListViewOptions;

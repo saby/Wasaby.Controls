@@ -32,7 +32,9 @@ class ItemsControl {
         })
     }
     onItemClick(){}
-    reload(){}
+    reload(){
+
+    }
     //вот тут надо подумать. возможно нужен
     //метод sync с более богатым интерфейсом
     reloadItem(id:string){}

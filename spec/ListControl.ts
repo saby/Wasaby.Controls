@@ -4,6 +4,7 @@ import ISource = require("interfaces/ISource");
 import IItemTemplate = require("interfaces/IItemTemplate")
 import IItemAction = require("interfaces/IItemTemplate");
 import IEventEmitter = require("interfaces/IEvent")
+import IItem = require("./interfaces/IItem");
 
 
 interface IListControlOptions {
@@ -33,28 +34,32 @@ class ListControl {
     //в TreeView
     //
     private _selectedKey: number;
+    private _selectedItem: IItem;
+    protected _options;
     public onChangeSelection: IEventEmitter<number>;
     public onItemClick: IEventEmitter<any>;
 
     constructor(options : IListControlOptions){
+        this._options = options;
         this._selectedKey = options.selectedKey;
+
+        //нужно найти item, в зависимости от selectedKey
+        this._selectedItem = this._options.items.find(this._selectedKey);
 
         let listView = new ListView({
             items: options.items,
             itemTemplate: options.itemTemplate,
             idProperty: options.idProperty,
-            selectedKey: options.selectedKey,
+            selectedItem: this._selectedItem,
             editingTemplate: options.editingTemplate
         });
+
+        listView.onChangeSelection.subscribe((item)=>{
+           this._selectedItem = item;
+        });
+
         listView.onItemClick.subscribe((item) => {
             this.onItemClick.notify(item);
         });
-        listView.onChangeHoveredItem.subscribe((item) => {
-
-        });
-        listView.onChangeSelection.subscribe((key) =>{
-            this._selectedKey = key;
-            this.onChangeSelection.notify(key);
-        })
     }
 }

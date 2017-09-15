@@ -1,4 +1,5 @@
 import ICollection = require("../interfaces/ICollection");
+import IItem = require("../interfaces/IItem");
 
 /**
  * проекция
@@ -10,6 +11,9 @@ class ItemsDisplay{
     }
     forEach(fn: (item) => {}){
         this._items.forEach(fn);
+    }
+    at(i:number):IItem{
+
     }
 }
 
