@@ -181,6 +181,7 @@ define(['js!WSControls/Lists/ListView2', 'js!WS.Data/Source/Memory', 'Core/core-
                   items : vsData,
                   idProperty: 'id'
                });
+               vsList._enableVirtualScroll = true;
                vsList._virtualScroll.domElements.itemsContainer = vsItemsContainer;
                vsList._virtualScroll.domElements.topPlaceholder = { offsetTop: 0 };
                vsList._virtualScroll.domElements.bottomPlaceholder = { offsetTop: 40 };
@@ -247,19 +248,12 @@ define(['js!WSControls/Lists/ListView2', 'js!WS.Data/Source/Memory', 'Core/core-
             });
 
             it('Get start enumeration position', function () {
-               var position;
-
-               vsList._virtualScroll.window.end = null;
-               vsList.startIndex = 5;
-               position = vsList._getStartEnumerationPosition();
-               assert.equal(position, 5);
-
                vsList._virtualScroll.window.start = 7;
                vsList._virtualScroll.window.end = 10;
-               vsList.startIndex = 5;
-               position = vsList._getStartEnumerationPosition();
-               assert.equal(position, 7);
-               assert.equal(vsList._stopIndex, 10);
+               vsList._getStartEnumerationPosition();
+               assert.equal(vsList._enumIndexes._curIndex, 7);
+               assert.equal(vsList._enumIndexes._startIndex, 7);
+               assert.equal(vsList._enumIndexes._stopIndex, 10);
             });
 
             it('Placeholder trigger top', function () {
