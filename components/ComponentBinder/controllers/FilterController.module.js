@@ -34,7 +34,8 @@ define('js!SBIS3.CONTROLS.FilterController', [
          var filterButton = fButton || this._getOption('filterButton'),
              fastDataFilter = fDataFilter || this._getOption('fastDataFilter'),
              view = viewInst || this._getOption('view'),
-             parentContext = view.getParent().getContext();
+             parentContext = view.getParent().getContext(),
+             self = this;
    
          if(filterButton || fastDataFilter) {
             /* Синхронизация кнопки фильтров и быстрого фильтра */
@@ -46,8 +47,11 @@ define('js!SBIS3.CONTROLS.FilterController', [
             };
       
             /* Обработчик на применение / сборс кнопки фильтров и быстрого фильтра */
-            var filterChangeHandler = function() {
-                  var resultFilter = {};
+            var filterChangeHandler = function(event, internal) {
+                  if(internal && self._options.task1174428326) {
+                     return;
+                  }
+               
                   if (this === filterButton && fastDataFilter) {
                      syncFilters(filterButton, fastDataFilter);
                   } else if (filterButton) {
@@ -58,7 +62,7 @@ define('js!SBIS3.CONTROLS.FilterController', [
                      т.к. иначе offset будет неверный после фильтрации */
                   view.setPage(0, true);
       
-                  resultFilter = cMerge(
+                  var resultFilter = cMerge(
                      filterButton ? filterButton.getFilter() : {},
                      fastDataFilter ? fastDataFilter.getFilter() : {}
                   );
