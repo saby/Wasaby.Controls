@@ -1,16 +1,21 @@
 import ITextBoxOptions = require("./ITextBoxOptions");
 import ISource = require("../interfaces/ISource");
 import IItem = require("../interfaces/IItem");
-import IItemsViewOptions = require("./IItemsViewOptions");
+import ISourceOptions = require("./ISourceOptions");
+import IItemsOptions = require("./IItemsOptions");
+import ISelectableOptions = require("./ISelecteableOptions");
 
 interface Dictionaries{
 
 }
 
-interface IFieldLinkOptions extends ITextBoxOptions, IItemsViewOptions {
+interface IFieldLinkOptions
+    extends ITextBoxOptions,
+            IItemsOptions,
+            ISourceOptions,
+            ISelectableOptions{
     autoShow: true,
     chooserMode: 'dialog' | 'floatArea',
-    dataSource: ISource,
     dictionaries: Array<Dictionaries>,
     idProperty: string,
     keyboardLayoutRevert,
@@ -23,9 +28,8 @@ interface IFieldLinkOptions extends ITextBoxOptions, IItemsViewOptions {
     searchDelay: number,
     searchParam: string,
     selectMode: 'dialog' | 'floatArea',
-    selectedItem: IItem,
-    selectedItems: Array<any>,
-    selectedKey: number,
+    //selectedItem: IItem, может быть это было нужно по отдельности?
+    //selectedItems: Array<any>,
     selectedKeys: Array<number>;
     showAllConfig: {},
     showEmptyList: boolean,

@@ -1,5 +1,5 @@
 import IItemsViewOptions = require("./IItemsViewOptions");
-interface IGroupedItemsViewOptions extends IItemsViewOptions {
+interface IGroupedItemsViewOptions {
     itemsGroup?: {
         method: () => void,
         field: string,

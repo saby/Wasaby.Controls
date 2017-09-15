@@ -1,13 +1,10 @@
-import ISource = require("./interfaces/ISource");
-import IItem = require("./interfaces/IItem");
+import IFieldLinkOptions = require("./options/IFieldLinkOptions");
 
 
 
 
 class FieldLink{
-    constructor(options:{
-
-    }){
+    constructor(options: IFieldLinkOptions){
 
     }
 }

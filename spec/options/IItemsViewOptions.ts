@@ -1,17 +1,6 @@
-import ICollection = require("interfaces/ICollection");
-import IItemTemplate = require("interfaces/IItemTemplate");
+import IItemsOptions = require("./IItemsOptions");
 
-interface IItemsViewOptions{
-    items: ICollection | Array<any>,
-    itemTemplate?: IItemTemplate,
-    displayProperty?: string,
-
-    //вот это не понятно зачем
-    // это приводит к появлению методов типа getLastItemByProjection
-    //itemsSortMethod?: () => void,
-    //вот это не понятно зачем
-    //itemsFilterMethod?: () => void,
-
+interface IItemsViewOptions extends IItemsOptions{
 }
 
 export = IItemsViewOptions;

@@ -6,19 +6,9 @@ import IItemTemplate = require("interfaces/IItemTemplate")
 import IItemAction = require("interfaces/IItemTemplate");
 import IEventEmitter = require("interfaces/IEvent")
 import IItem = require("./interfaces/IItem");
+import IListControlOptions = require("options/IListControlOptions")
 
 
-interface IListControlOptions {
-    items?: ICollection | Array<any>,
-    itemTemplate?: IItemTemplate,
-    itemsActions?: Array<IItemAction>,
-    idProperty?: string,
-    //selection: IMultiSelection,//это непонятно. но про множественное выделение
-    editingTemplate?: IItemTemplate,
-    dataSource?: ISource,
-    selectedKey?: number,
-    enableVirtualScroll?: boolean
-}
 
 
 class ListControl {
