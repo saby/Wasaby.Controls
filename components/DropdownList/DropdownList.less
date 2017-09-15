@@ -21,15 +21,6 @@
            .controls-DropdownList__icon {
               .align-self(center);
            }
-           .controls-DropdownList__value {
-              .align-self(baseline);
-              overflow: hidden;
-              text-overflow: ellipsis;
-              &:hover{
-                 color: @DropdownList-linkStyleHoverColor;
-                 text-decoration: underline;
-              }
-           }
         }
       }
 
@@ -506,5 +497,23 @@
       .controls-DropdownList__body {
          display: block; //С флексовым контейнером в safari не отображается список (height:0). Флекс нужен для правильного обрезания контейнера по высоте, на моб.платформе это не актуально
       }
+   }
+}
+
+/* Слава ie, Microsoft'у слава */
+.ws-is-ie10, .ws-is-ie11 {
+   .controls-DropdownList__value {
+      display: inline-block;
+      -ms-flex-negative: 1;
+   }
+}
+
+.controls-DropdownList__value {
+   .align-self(baseline);
+   overflow: hidden;
+   text-overflow: ellipsis;
+   &:hover{
+      color: @DropdownList-linkStyleHoverColor;
+      text-decoration: underline;
    }
 }
