@@ -4435,11 +4435,15 @@ define('js!SBIS3.CONTROLS.ListView',
             if (revive) {
                this.reviveComponents($('.controls-ListView__results', this.getContainer()));
             }
+            this._resultsChanged = false;
          },
 
          _setNewDataAfterReload: function() {
+            this._resultsChanged = true;
             ListView.superclass._setNewDataAfterReload.apply(this, arguments);
-            this._redrawResults(true);
+            if (this._resultsChanged) {
+               this._redrawResults(true);
+            }
          },
 
          /**
