@@ -5,11 +5,7 @@ interface IItemsViewOptions{
     items: ICollection | Array<any>,
     itemTemplate?: IItemTemplate,
     displayProperty?: string,
-    itemsGroup?: {
-        method: () => void,
-        field: string,
-        template: () => void
-    }
+
     //вот это не понятно зачем
     // это приводит к появлению методов типа getLastItemByProjection
     //itemsSortMethod?: () => void,
