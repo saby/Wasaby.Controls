@@ -1,4 +1,5 @@
 import ListView = require("ListView");
+import VirtualScroll = require("VirtualScroll");
 import ICollection = require("interfaces/ICollection");
 import ISource = require("interfaces/ISource");
 import IItemTemplate = require("interfaces/IItemTemplate")
@@ -15,7 +16,8 @@ interface IListControlOptions {
     //selection: IMultiSelection,//это непонятно. но про множественное выделение
     editingTemplate?: IItemTemplate,
     dataSource?: ISource,
-    selectedKey?: number
+    selectedKey?: number,
+    enableVirtualScroll?: boolean
 }
 
 
@@ -33,6 +35,7 @@ class ListControl {
     //но отображаемый порядок записей будет только
     //в TreeView
     //
+    private _enableVirtualScroll: boolean;
     private _selectedKey: number;
     private _selectedItem: IItem;
     protected _options;
@@ -42,6 +45,11 @@ class ListControl {
     constructor(options : IListControlOptions){
         this._options = options;
         this._selectedKey = options.selectedKey;
+        this._enableVirtualScroll = options.enableVirtualScroll || false;
+
+        if (this._enableVirtualScroll) {
+            // Init virtual scroll
+        }
 
         //нужно найти item, в зависимости от selectedKey
         this._selectedItem = this._options.items.find(this._selectedKey);
