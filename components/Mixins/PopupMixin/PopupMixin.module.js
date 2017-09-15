@@ -412,6 +412,11 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                   this._container.offset(bodyOffset);
                }
             }
+
+            //Если изменились размеры, то сообщим детям. актуально для ScrollContainer
+            if (recalcFlag) {
+               this._resizeChilds();
+            }
          }
       },
       /**
