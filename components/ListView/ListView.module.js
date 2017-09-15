@@ -995,6 +995,9 @@ define('js!SBIS3.CONTROLS.ListView',
             if(this.isInfiniteScroll()) {
                this._prepareInfiniteScroll();
             }
+            if (this.getItems() && this._options.navigation && this._options.navigation.type == 'cursor') {
+               this._listNavigation.analyzeResponseParams(this.getItems());
+            }
             ListView.superclass.init.call(this);
             this._initLoadMoreButton();
          },
