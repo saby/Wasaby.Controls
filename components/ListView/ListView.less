@@ -1,4 +1,65 @@
 @import "../Utils/HtmlDecorators/HighlightDecorator";
+
+
+//Навесить классы в setHoveredItem, updateHoveredItem
+.controls-ListView__hoveredItem__withHover.controls-ListView__hoveredItem__withoutEditing {
+   background-color: @default-itemHover-color;
+}
+
+.controls-ListView__hoveredItem__withEditing.controls-ListView__hoveredItem__withoutHover {
+
+}
+
+//Навесить классы в ListView.tmpl в зависимости от опции
+.controls-ListView__small__EmptyData {
+   padding-bottom: @listView-empty-data-padding-top;
+   color: @gray-ccc-color;
+}
+
+.controls-ListView__normal__EmptyData {
+   color: @listView-empty-data-color;
+   .box-sizing(border-box);
+   padding-top: @listView-empty-data-padding-top;
+   font-size: @listView-empty-data-font-size;
+   text-align: center;
+}
+
+//Перенести в modifyOptions ListView
+.controls-ListView__pagerNoSizePicker .controls-Pager-container {
+   .controls-Pager__pageSize-container {
+      display: none;
+   }
+   .controls-Pager__table .controls-text-extra{
+      display: none;
+   }
+}
+
+//Move to paging
+.controls-ListView__pagerNoAmount .controls-Pager-container .controls-Amount-text{
+   display: none;
+}
+.controls-ListView__pagerHideEndButton .controls-Pager-container .ws-paging-end{
+   display: none;
+}
+
+.controls-ListView__orangeMarker {
+   .controls-ListView__item__selected {
+      .marker(left top)
+   }
+}
+
+//Если да - то убрать переменную
+.ws-disabled {
+   .controls-ListView__itemCheckBox {
+      cursor: @list-view-disabled-cursor;
+   }
+}
+
+.controls-ListView__item {
+   overflow: hidden;
+   position: relative;
+}
+
 .controls-ListView {
     position: relative;
 
@@ -23,6 +84,7 @@
      }
    }
 
+   //Спросить у Герасимова
    &.controls-ListView__outside-scroll-loader{
       .controls-ListView-scrollIndicator{
          position: relative;
@@ -39,34 +101,6 @@
          .controls-ListView__itemCheckBox {
             display: none;
          }
-      }
-   }
-   &.controls-ListView__pagerNoSizePicker .controls-Pager-container {
-      .controls-Pager__pageSize-container {
-         display: none;
-      }
-      .controls-Pager__table .controls-text-extra{
-         display: none;
-      }
-   }
-   &.controls-ListView__pagerNoAmount .controls-Pager-container .controls-Amount-text{
-      display: none;
-   }
-
-   &.controls-ListView__pagerHideEndButton .controls-Pager-container .ws-paging-end{
-     display: none;
-   }
-
-   &.controls-ListView__orangeMarker {
-      .controls-ListView__itemsContainer > {
-         .controls-ListView__item__selected {
-            .marker(left top)
-         }
-      }
-   }
-   &.ws-disabled {
-      .controls-ListView__itemCheckBox {
-         cursor: @list-view-disabled-cursor;
       }
    }
 }
