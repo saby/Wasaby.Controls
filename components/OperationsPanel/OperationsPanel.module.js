@@ -409,9 +409,9 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                   icon: 'sprite:icon-size icon-ExpandDown icon-primary action-hover',
                   pickerConfig: {
                      closeButton: true,
-                     className: 'controls-operationsPanel__itemsMenu_picker ' +
-                        (massMode ? 'controls-operationsPanel__massMode' : '') +
-                        (selectionMode ? 'controls-operationsPanel__selectionMode' : ''),
+                     className: 'controls-operationsPanel__itemsMenu_picker' +
+                        (massMode ? ' controls-operationsPanel__massMode' : '') +
+                        (selectionMode ? ' controls-operationsPanel__selectionMode' : ''),
                      horizontalAlign: {
                         side: 'right',
                         offset: 48
