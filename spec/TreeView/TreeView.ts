@@ -1,4 +1,4 @@
-import ListView = require("ListView")
+import ListView = require("ListView/ListView")
 import ITreeViewOptions = require("options/view/ITreeViewOptions");
 
 class TreeView extends ListView {

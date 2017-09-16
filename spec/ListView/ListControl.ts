@@ -1,11 +1,11 @@
-import ListView = require("ListView");
-import VirtualScroll = require("VirtualScroll");
+import ListView = require("ListView/ListView");
+import VirtualScroll = require("ListView/VirtualScroll");
 import ICollection = require("interfaces/ICollection");
 import ISource = require("interfaces/ISource");
 import IItemTemplate = require("interfaces/IItemTemplate")
 import IItemAction = require("interfaces/IItemTemplate");
 import IEventEmitter = require("interfaces/IEvent")
-import IItem = require("./interfaces/IItem");
+import IItem = require("../interfaces/IItem");
 import IListControlOptions = require("options/IListControlOptions")
 
 

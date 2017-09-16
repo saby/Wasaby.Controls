@@ -1,4 +1,4 @@
-import IMenuOptions = require("./options/IMenuOptions");
+import IMenuOptions = require("../options/IMenuOptions");
 import MenuView = require("./MenuView");
 
 class Menu {

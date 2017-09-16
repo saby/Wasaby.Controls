@@ -1,4 +1,4 @@
-import ItemsView = require("ItemsView");
+import ItemsView = require("ItemsView/ItemsView");
 import IItemsViewOptions = require("options/view/IItemsViewOptions");
 
 class Toolbar extends ItemsView{

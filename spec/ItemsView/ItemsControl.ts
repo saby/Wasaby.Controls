@@ -1,8 +1,8 @@
-import ItemsView = require("ItemsView");
+import ItemsView = require("ItemsView/ItemsView");
 import ICollection = require("interfaces/ICollection");
 import ISource = require("interfaces/ISource");
 import IItemTemplate = require("interfaces/IItemTemplate")
-import IItemsControlOptions = require("./options/IItemsControlOptions");
+import IItemsControlOptions = require("../options/IItemsControlOptions");
 
 class ItemsControl {
     constructor(options: IItemsControlOptions){

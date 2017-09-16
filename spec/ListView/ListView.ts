@@ -1,7 +1,7 @@
-import ItemsView = require("ItemsView");
+import ItemsView = require("ItemsView/ItemsView");
 import IListViewOptions = require("options/view/IListViewOptions");
 import IEvent = require("interfaces/IEvent");
-import IItem = require("./interfaces/IItem");
+import IItem = require("../interfaces/IItem");
 
 class ListViewDOM{
     onKeyDown: IEvent<IItem>;
