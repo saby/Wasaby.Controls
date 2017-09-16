@@ -7,6 +7,19 @@
    }
    .text-overflow();
 }
+
+.controls-ListView__showCheckBoxes {
+   .controls-ListView__itemCheckBox {
+      .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+   }
+}
+
+.controls-ListView__hideCheckBoxes {
+   .controls-ListView__itemCheckBox {
+      display: none;
+   }
+}
+
 .controls-DataGridView {
    .controls-DataGridView__th, .controls-DataGridView__td {
       &.controls-DataGridView__firstContentCell {
@@ -19,11 +32,11 @@
    .controls-ListView__item {
       &:extend(.controls-ListView .controls-ListView__item all);
    }
-   
+
    &:not(.controls-ListView__disableHover) {
       .controls-ListView__hoveredItem:not(.controls-editInPlace) {
          background: @data-grid-row-hover-bg;
-         
+
          .controls-DataGridView__th {
             color: @data-grid-row-hover-header-cell-text-color;
             background-color: @data-grid-row-hover-header-cell-bg;
@@ -34,7 +47,7 @@
          }
       }
    }
-   
+
    &.controls-DataGridView__hasSeparator{
       &.controls-ListView__dataLoaded {
          .controls-DataGridView__tr {
@@ -77,7 +90,7 @@
          }
       }
    }
-   
+
    &.controls-DataGridView__markerRight{
       .controls-ListView__item__selected {
          .controls-DataGridView__td {
@@ -256,14 +269,14 @@
    color: @data-grid-header-cell-text-color;
    font-size: @data-grid-header-cell-font-size;
    background-color: @data-grid-header-cell-bg;
-   
+
    border-collapse: @data-grid-border-collapse;
    border-width: @data-grid-header-cell-border-width;
    border-style: @data-grid-header-cell-border-style;
    border-color: @data-grid-header-cell-border-color;
    //Работает и так, потому что есть бордер у тела таблицы
    /* border-bottom: @data-grid-header-cell-border-bottom; */
-   
+
    &:hover {
       color: @data-grid-header-cell-hover-text-color;
       background-color: @data-grid-header-cell-hover-bg;
