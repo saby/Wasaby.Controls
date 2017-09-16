@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.FilterController', [
        * @cfg {SBIS3.CONTROLS.ListView} Представление
        */
       _$view: null,
+      _$task1174428326: false,
    
       /**
        * Связывает фильтры и представление данных
