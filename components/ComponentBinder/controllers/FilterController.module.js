@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.FilterController', [
        * @cfg {SBIS3.CONTROLS.ListView} Представление
        */
       _$view: null,
+      _$task1174428326: false,
    
       /**
        * Связывает фильтры и представление данных
@@ -48,7 +49,7 @@ define('js!SBIS3.CONTROLS.FilterController', [
       
             /* Обработчик на применение / сборс кнопки фильтров и быстрого фильтра */
             var filterChangeHandler = function(event, internal) {
-                  if(internal && self._options.task1174428326) {
+                  if(internal && self._getOption('task1174428326')) {
                      return;
                   }
                
