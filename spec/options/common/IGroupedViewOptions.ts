@@ -1,4 +1,4 @@
-import IItemsViewOptions = require("./IItemsViewOptions");
+import IItemsViewOptions = require("../view/IItemsViewOptions");
 interface IGroupedItemsViewOptions {
     itemsGroup?: {
         method: () => void,

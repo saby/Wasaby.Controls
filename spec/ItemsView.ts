@@ -1,5 +1,5 @@
 import ItemsDisplay = require("display/ItemsDisplay");
-import IItemsViewOptions = require("options/IItemsViewOptions");
+import IItemsViewOptions = require("options/view/IItemsViewOptions");
 import IEventEmitter = require("interfaces/IEvent")
 
 

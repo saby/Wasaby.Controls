@@ -1,4 +1,4 @@
-import IItemsOptions = require("./IItemsOptions");
+import IItemsOptions = require("../common/IItemsOptions");
 
 interface IItemsViewOptions extends IItemsOptions{
 }

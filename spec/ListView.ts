@@ -1,5 +1,5 @@
 import ItemsView = require("ItemsView");
-import IListViewOptions = require("options/IListViewOptions");
+import IListViewOptions = require("options/view/IListViewOptions");
 import IEventEmitter = require("interfaces/IEvent");
 import IItem = require("./interfaces/IItem");
 

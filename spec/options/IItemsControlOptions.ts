@@ -1,4 +1,4 @@
-import IItemsViewOptions = require("./IItemsViewOptions");
+import IItemsViewOptions = require("./view/IItemsViewOptions");
 import IItemTemplate = require("../interfaces/IItemTemplate");
 import ICollection = require("../interfaces/ICollection");
 import ISource = require("../interfaces/ISource");

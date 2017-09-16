@@ -1,4 +1,4 @@
-import ISource = require("../interfaces/ISource");
+import ISource = require("../../interfaces/ISource");
 interface ISourceOptions {
     dataSource?: ISource
 }

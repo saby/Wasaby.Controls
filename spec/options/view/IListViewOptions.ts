@@ -1,4 +1,4 @@
-import IGroupedItemsViewOptions = require("IGroupedItemsViewOptions");
+import IGroupedItemsViewOptions = require("options/common/IGroupedViewOptions");
 import IItemTemplate = require("interfaces/IItemTemplate");
 import IItemAction = require("interfaces/IItemAction");
 import IItem = require("interfaces/IItem")

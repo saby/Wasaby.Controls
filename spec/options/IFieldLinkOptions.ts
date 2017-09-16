@@ -1,9 +1,9 @@
 import ITextBoxOptions = require("./ITextBoxOptions");
 import ISource = require("../interfaces/ISource");
 import IItem = require("../interfaces/IItem");
-import ISourceOptions = require("./ISourceOptions");
-import IItemsOptions = require("./IItemsOptions");
-import ISelectableOptions = require("./ISelecteableOptions");
+import ISourceOptions = require("./common/ISourceOptions");
+import IItemsOptions = require("./common/IItemsOptions");
+import ISelectableOptions = require("./common/ISelecteableOptions");
 
 interface Dictionaries{
 
