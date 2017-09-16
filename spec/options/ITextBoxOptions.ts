@@ -5,7 +5,7 @@ interface ITextBoxOptions extends ITextBoxBaseOptions{
     placeholder: string,
     selectOnClick: boolean,
     informationIconColor: boolean,
-    textTransform: 'uppercase' | 'lowercase', 'none',
+    textTransform: 'uppercase' | 'lowercase' | 'none',
     trim: boolean
 }
 

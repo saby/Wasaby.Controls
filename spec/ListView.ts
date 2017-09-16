@@ -1,11 +1,11 @@
 import ItemsView = require("ItemsView");
 import IListViewOptions = require("options/view/IListViewOptions");
-import IEventEmitter = require("interfaces/IEvent");
+import IEvent = require("interfaces/IEvent");
 import IItem = require("./interfaces/IItem");
 
 class ListViewDOM{
-    onKeyDown: IEventEmitter<IItem>;
-    onItemClick: IEventEmitter<IItem>;
+    onKeyDown: IEvent<IItem>;
+    onItemClick: IEvent<IItem>;
 }
 
 /**
@@ -19,7 +19,7 @@ class ListViewDOM{
 
 class ListView extends ItemsView{
     protected _options: IListViewOptions;
-    public onChangeSelection: IEventEmitter<number>;
+    public onChangeSelection: IEvent<number>;
     private _selectedIndex: number;
     private _selectedItem: IItem;
     constructor(options : IListViewOptions){
