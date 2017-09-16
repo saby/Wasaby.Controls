@@ -1,4 +1,4 @@
-import ITextBoxBaseOptions = require("./ITextBoxBaseOptions");
+import ITextBoxBaseOptions = require("../TextBoxBase/Options");
 interface ITextBoxOptions extends ITextBoxBaseOptions{
     maxLength: number,
     inputRegExp: string,

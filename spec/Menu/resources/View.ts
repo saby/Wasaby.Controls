@@ -1,6 +1,6 @@
-import IMenuViewOptions = require("../options/view/IMenuViewOptions");
-import IEvent = require("../interfaces/IEvent");
-import IItem = require("../interfaces/IItem");
+import IMenuViewOptions = require("./ViewOptions");
+import IEvent = require("../../interfaces/IEvent");
+import IItem = require("../../interfaces/IItem");
 
 class MenuViewDOM{
     onItemClick: IEvent<IItem>;

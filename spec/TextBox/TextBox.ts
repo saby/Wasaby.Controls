@@ -1,5 +1,5 @@
 import IEvent = require("../interfaces/IEvent");
-import ITextBoxOptions = require("../options/ITextBoxOptions");
+import ITextBoxOptions = require("./Options");
 
 class TextBox  {
     public onInformationIconActivated: IEvent<void>;

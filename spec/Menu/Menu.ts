@@ -1,5 +1,5 @@
-import IMenuOptions = require("../options/IMenuOptions");
-import MenuView = require("./MenuView");
+import IMenuOptions = require("./Options");
+import MenuView = require("./resources/View");
 
 class Menu {
     constructor(options: IMenuOptions){

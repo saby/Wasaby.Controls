@@ -1,6 +1,6 @@
 import TextBox = require("TextBox/TextBox");
-import ITextBoxOptions = require("../options/ITextBoxOptions");
-import IItemsOptions = require("../options/common/IItemsOptions");
+import ITextBoxOptions = require("../../TextBox/Options");
+import IItemsOptions = require("../../interfaces/options/IItemsOptions");
 
 interface IFieldLinkViewOptions
     extends ITextBoxOptions,

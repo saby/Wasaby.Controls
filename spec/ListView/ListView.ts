@@ -1,69 +1,63 @@
-import ItemsView = require("ItemsView/ItemsView");
-import IListViewOptions = require("options/view/IListViewOptions");
-import IEvent = require("interfaces/IEvent");
+import ListView = require("ListView/resources/View");
+import VirtualScroll = require("ListView/resources/VirtualScroll");
+import ICollection = require("interfaces/ICollection");
+import ISource = require("interfaces/ISource");
+import IItemTemplate = require("interfaces/IItemTemplate")
+import IItemAction = require("interfaces/IItemTemplate");
+import IEventEmitter = require("interfaces/IEvent")
 import IItem = require("../interfaces/IItem");
+import IListControlOptions = require("ListView/Options")
 
-class ListViewDOM{
-    onKeyDown: IEvent<IItem>;
-    onItemClick: IEvent<IItem>;
-}
 
-/**
- * Контрол, отвечающий за аспект отображения списка
- * не содержит работу с источником данных
- * не занимается загрузкой по скроллу
- * не поддерживает виртуальный скролл.
- * Поддерживает отображение курсора, флажков выделения записи
- * Отображение редактирования по месту, операций над записью
- */
 
-class ListView extends ItemsView{
-    protected _options: IListViewOptions;
-    public onChangeSelection: IEvent<number>;
-    private _selectedIndex: number;
+
+class ListControl {
+    //где должен быть selectedKey?
+    //проблема в том, что изменение данных
+    //есть только в listcontrol
+    //т.е. при изменение списка (например удаление)
+    //происходит здесь
+    //но порядковый номер есть только в listview
+    //потому что только проекция знает правильный порядок
+    //элементов, например в дереве.
+    //при выходе из папки - опять же только TreeControl
+    //управляет перезагрузкой данных
+    //но отображаемый порядок записей будет только
+    //в TreeView
+    //
+    private _enableVirtualScroll: boolean;
+    private _selectedKey: number;
     private _selectedItem: IItem;
-    constructor(options : IListViewOptions){
-        super(options);
+    protected _options;
+    public onChangeSelection: IEventEmitter<number>;
+    public onItemClick: IEventEmitter<any>;
 
-        if(!this._options.selectedItem){//сюда попадем, если изначально не был установлен элемент, либо он был удален
-            if(!this._selectedIndex) {
-                this._selectedIndex = 0;//переводим на первый элемент
-            }
-            else{
-                this._selectedIndex++;//условно ищем ближайший элемент, рядом с удаленным
-            }
-            this._selectedItem = this._display.at(this._selectedIndex);
+    constructor(options : IListControlOptions){
+        this._options = options;
+        this._selectedKey = options.selectedKey;
+        this._enableVirtualScroll = options.enableVirtualScroll || false;
 
+        if (this._enableVirtualScroll) {
+            // Init virtual scroll
         }
 
-        //как будто бы шаблонизатор
-        let domObject = new ListViewDOM();
-        domObject.onKeyDown.subscribe((item, index)=> {
-            //обрабатываем нажатие на стрелку вверх и стрелку вниз
-            //находим соседние элементы
-            this._changeSelectedItem(item, index);
-        });
-        domObject.onItemClick.subscribe((item, index)=> {
-            //кликаем по строке и переключаем выделенный элемент
-            this._changeSelectedItem(item, index);
-        })
-    }
+        //нужно найти item, в зависимости от selectedKey
+        this._selectedItem = this._options.items.find(this._selectedKey);
 
-    private _changeSelectedItem(item, index){
-        this.onChangeSelection.notify(item);
-        this._selectedItem = item;
-        this._selectedIndex = index;
-    }
-
-    render() {
-        this._display.forEach((displayItem) => {
-            //рассчитываем значение для модификатора выделенной строки
-            let isSelectedModifier = this._selectedItem === displayItem;
-            return '';
+        let listView = new ListView({
+            items: options.items,
+            itemTemplate: options.itemTemplate,
+            idProperty: options.idProperty,
+            selectedItem: this._selectedItem,
+            editingTemplate: options.editingTemplate
         });
 
+        listView.onChangeSelection.subscribe((item)=>{
+           this._selectedItem = item;
+        });
+
+        listView.onItemClick.subscribe((item) => {
+            this.onItemClick.notify(item);
+        });
     }
 }
-
-
-export = ListView;

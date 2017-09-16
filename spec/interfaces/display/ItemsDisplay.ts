@@ -1,5 +1,5 @@
-import ICollection = require("../interfaces/ICollection");
-import IItem = require("../interfaces/IItem");
+import ICollection = require("../ICollection");
+import IItem = require("../IItem");
 
 /**
  * проекция

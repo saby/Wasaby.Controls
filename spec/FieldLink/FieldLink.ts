@@ -1,5 +1,5 @@
-import IFieldLinkOptions = require("../options/IFieldLinkOptions");
-import FieldLinkView = require("./FieldLinkView");
+import IFieldLinkOptions = require("./Options");
+import FieldLinkView = require("./resources/View");
 
 
 class FieldLink{
