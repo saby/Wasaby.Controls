@@ -432,8 +432,11 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                      if(cInstance.instanceOfModule(instance, 'SBIS3.CONTROLS.MenuLink') && instance.getItems().getCount() > 1){
                         instance._notify('onMenuItemActivate', id);
                      }
-                     else {
+                     else if(cInstance.instanceOfMixin(instance, 'SBIS3.CONTROLS.Clickable')) {
                         instance._onClickHandler(event);
+                     }
+                     else {
+                        instance._clickHandler();
                      }
                      return false;
                   }

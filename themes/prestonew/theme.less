@@ -528,9 +528,12 @@ body .controls-DropdownList__picker {
 // фикс нужен для квадратных кнопок в редизайне. т.к. по задумке проектировщиков иконка должна занимать все пространство внутри кнопки
 // из-за этого приходится спиливать стандартные отступы
 .controls-Button {
-  &.controls-Button__withoutCaption.controls-Button-size__default:not(.controls-Button__big) {
-    .controls-Button__wrapper {
-      padding: 0;
+  &.controls-Button__withoutCaption {
+    &.controls-Button-size__default:not(.controls-Button__big),
+    &.controls-ToggleButton__normal.controls-Checked__checked:not(.ws-disabled).controls-Button-size__default:not(.controls-Button__big) {
+      .controls-Button__wrapper {
+        padding: 0;
+      }
     }
   }
 }
@@ -1030,7 +1033,7 @@ body {
 /* КОСТЫЛЬ. Крошки накостылены через top'ы, margin'ы и тд. Срочно требуется переписать стили.
    Выписана ошибка. https://online.sbis.ru/opendoc.html?guid=fa89f6fd-3e4a-4925-8de3-9f34c6b11729
  */
-.ws-is-mobile-safari {
+.ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
    .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
       position: relative;
       top: .4257rem !important; // чтобы перебить непонятный top выше по файлу.
