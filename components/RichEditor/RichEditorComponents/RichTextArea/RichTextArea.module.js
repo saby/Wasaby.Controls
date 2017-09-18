@@ -1476,7 +1476,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      }
                   }
                   if (isCoupled) {
-                     a.dataset.wsPrev = JSON.stringify({url:url, prefix:prefix, suffix:suffix});
+                     a.dataset.wsPrev = JSON.stringify({url:url, prefix:prefix || '', suffix:suffix || ''});
                   }
                }
             };
