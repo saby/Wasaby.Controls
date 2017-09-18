@@ -159,9 +159,6 @@
 @button-big-checked-icon-left-offset:     @button-big-icon-left-offset;
 @button-big-checked-icon-big-top-offset:  @button-big-icon-big-top-offset;
 @button-big-checked-icon-big-left-offset: @button-big-icon-big-left-offset;
-//Text box
-@text-box-field-line-height:              2.64rem !important;
-@text-box-line-height:                    @text-box-field-line-height;
 // Tab button
 @tab-button-large-secondAddText-font-size:0.4642rem;
 //Radio button
@@ -305,41 +302,22 @@
 @menu-link-checked-text-color:            @secondary-color;
 @menu-link-menu-border-width:             @default-border-width;
 //Text box
-@text-box-field-min-height:               1.3571rem;
-@text-box-field-padding:                  0;
-@text-box-field-text-color:               @default-text-color;
-@text-box-bottom-border-color:            rgba(96,170,221, .3 );
-@text-box-editor-bg:                      #f3f3f3;
-@text-box-editor-text-color:              #999999;
 @combobox-picker-border-width:            @default-border-width;
 @combo-box-picker-show-background-color:  #f0f5fb;
 @combo-box-picker-show-border-color:	   #23b8ff;
 @text-box-focus-border-color:             @text-box-border-color;
 @compo-box-picker-show-color:             #324352;
 @text-box-focus-bg:                       #324352;
-@text-box-border-width:                   @default-border-width;
-@text-box-hover-border-width:             @text-box-border-width;
 @text-box-hover-border-color:             rgba(96,170,221, .3 );
-@text-box-disabled-border-bottom:         @default-border-width solid rgba(102,170,221, .3);
-@text-box-after-width:                    .7142rem;
-@text-box-overflow:                       ellipsis;
-//Formatted text box
-@formatted-text-box-wrapper-min-height:   @text-box-field-min-height;
-// DateBox
-@date-box-wrapper-border-color:           @text-box-border-color @text-box-border-color @text-box-bottom-border-color @text-box-border-color; // @default-border-color
-@date-box-field-text-color:               @default-text-color;
 // Search form
 @search-form-field-wrapper-margin-right:  5.8rem;
 @search-button-wrapper-padding:				0;
 @search-buttons-wrapper-width:            auto;
 @search-background:                       rgba(150, 159, 168, 0.15);
-@search-disabled-background:              @text-box-disabled-bg;
 @search-border-color:                     transparent;
 @search-hover-border-color:               rgba(150, 159, 168, 0.40);
 @search-bottom-border-color:              transparent;
 @search-form-icon-padding:                0;
-@search-focus-background:                 rgba(150, 159, 168, 0.15);
-@search-form-border-disabled-width:       @default-border-width;
 @search-form-icon-disabled-display:       block;
 @search-form-icon-search-color:           #e4e4e4;
 
@@ -369,7 +347,6 @@
 @combo-box-picker-item-hover-bg:          #e0ecf5;
 @combo-box-picker-item-selected-bg:       @combo-box-picker-item-bg;
 @compo-box-fieldWrapper-margin-right:     3rem;
-@combo-box-after-width:                   3rem;
 // Suggest
 @suggest-picker-border:                   @default-border-width solid @default-border-color-second;
 @suggest-picker-color:                    #273B4D;
@@ -397,7 +374,7 @@
 @calendar-day-cell-active-hover-bg:       @calendar-day-cell-hover-bg;
 //fieldlink
 @fieldLink-border:               @default-border-width solid;
-@fieldLink-border-color-focus-hover:@text-box-bottom-border-color;
+@fieldLink-border-color-focus-hover:@text-box-border-color-bottom;
 @fieldLink-link-color:           #26B8FF;
 @fieldLink-showSelector-color:   @default-text-color;
 //MonthView
@@ -512,7 +489,7 @@
 @date-range-big-choose-header-home-button-font-size:@date-range-big-choose-header-home-button-size;
 @date-range-big-choose-header-home-button-margin-left:0;
 @date-range-big-choose-header-date-box-border-color:           @text-box-border-color;
-@date-range-big-choose-header-date-box-border-selected-color:  @text-box-bottom-border-color;
+@date-range-big-choose-header-date-box-border-selected-color:  @text-box-border-color-bottom;
 @date-range-big-choose-header-date-pickers-margin-right:3.286rem;
 @date-range-big-choose-date-range-picker-caption-font-size: @default-font-size;
 @date-range-big-choose-header-date-picker-margin-top:0;
@@ -915,7 +892,6 @@
 @menu-item-icon-32-margin:						0 0 0 3rem;
 @menu-item-icon-24-margin:						0 0 0 1.78rem;
 @menu-item-icon-16-margin:						0 0 0 1.32rem;
-@text-box-error-bg:                       #472e35;
 @back-button-width-before:                .7rem;
 @back-button-text-fontweight:             @default-font-weight;
 @tab-buttons-border-bottom-height:        0.01rem;
@@ -939,7 +915,6 @@
 @DropdownList-picker-close-btn-right:     0;
 @list-view-loading-indicator-gradient-bg: url(@list-view-scroll-spritesheet) no-repeat center;
 @list-view-loading-indicator-gradient-bg-up:url(@list-view-scroll-spritesheet) no-repeat center;
-@text-box-placeholder-color: 				   rgba(96,170,221, .2);
 @DropdownList-picker-menu-item-height:    3rem;
 @DropdownList-picker-menu-item-base-color: @menu-item-text-color;
 @DropdownList-after-caption-top:          0;
@@ -1041,7 +1016,6 @@
 @tree-view-copy-arrow-add-background:     @data-grid-row-selected-addit-bg;
 @data-grid-row-hover-add-bg:              rgba(41, 58, 75, 0);
 @data-grid-row-selected-add-bg:           @data-grid-row-hover-add-bg;
-@text-box-disabled-border-color:          transparent;
 @controls-NotificationPopup-border:       none;
 @controls-NotificationPopup-border-top:   @controls-NotificationPopup-border;
 @controls-NotificationPopup-border-right: @controls-NotificationPopup-border;
