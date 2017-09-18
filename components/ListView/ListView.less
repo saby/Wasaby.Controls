@@ -1,16 +1,16 @@
 @import "../Utils/HtmlDecorators/HighlightDecorator";
 
 
-//Навесить классы в setHoveredItem, updateHoveredItem
+//Навесить классы в setHoveredItem, updateHoveredItem, clearHoveredItem +
 .controls-ListView__hoveredItem__withHover.controls-ListView__hoveredItem__withoutEditing {
    background-color: @default-itemHover-color;
 }
 
-.controls-ListView__hoveredItem__withEditing.controls-ListView__hoveredItem__withoutHover {
+.controls-ListView__hoveredItem__withoutHover.controls-ListView__hoveredItem__withEditing {
 
 }
 
-//Навесить классы в ListView.tmpl в зависимости от опции
+//Навесить классы в ListView.tmpl в зависимости от опции +
 .controls-ListView__small__EmptyData {
    padding-bottom: @listView-empty-data-padding-top;
    color: @gray-ccc-color;
@@ -24,7 +24,7 @@
    text-align: center;
 }
 
-//Перенести в modifyOptions ListView
+//Перенести в modifyOptions +
 .controls-ListView__pagerNoSizePicker .controls-Pager-container {
    .controls-Pager__pageSize-container {
       display: none;
@@ -38,6 +38,7 @@
 .controls-ListView__pagerNoAmount .controls-Pager-container .controls-Amount-text{
    display: none;
 }
+//Move to paging
 .controls-ListView__pagerHideEndButton .controls-Pager-container .ws-paging-end{
    display: none;
 }
@@ -45,6 +46,12 @@
 .controls-ListView__orangeMarker {
    .controls-ListView__item__selected {
       .marker(left top)
+   }
+}
+
+.controls-ListView__outside-scroll-loader{
+   .controls-ListView-scrollIndicator{
+      position: relative;
    }
 }
 
@@ -68,27 +75,11 @@
       min-height: @list-view-min-height;
    }
 
-  .controls-ListView__item {
-    overflow: hidden;
-    position: relative;
-  }
-   
-   &:not(.controls-ListView__disableHover) .controls-ListView__hoveredItem:not(.controls-editInPlace) {
-      background-color: @default-itemHover-color;
-   }
-
    &.controls-small-ListView {
      .controls-ListView__EmptyData{
        padding-bottom: @listView-empty-data-padding-top;
        color: @gray-ccc-color;
      }
-   }
-
-   //Спросить у Герасимова
-   &.controls-ListView__outside-scroll-loader{
-      .controls-ListView-scrollIndicator{
-         position: relative;
-      }
    }
 
    &.controls-ListView__showCheckBoxes {

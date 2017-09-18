@@ -1043,6 +1043,24 @@ define('js!SBIS3.CONTROLS.ListView',
             container[bind ? 'on' : 'off']('swipe tap mousemove mouseleave touchend taphold touchstart contextmenu mousedown mouseup', this._eventProxyHdl);
          },
 
+         _addOptionsFromClass: function(opts) {
+            var opts = [
+               { class: 'controls-small-ListView', optionName: 'isSmall', value: true, defaultValue: false },
+               { class: 'controls-ListView__disableHover', optionName: 'disableHover', value: true, defaultValue: false },
+               { class: 'controls-ListView__pagerNoSizePicker', optionName: 'noSizePicker', value: true, defaultValue: false },
+               { class: 'controls-ListView__pagerNoAmount', optionName: 'noPagerAmount', value: true, defaultValue: false }
+            ]
+            for(var optObj in opts) {
+               if(!opts[optObj.optionName]) {
+                  if(optObj.className && optObj.indexOf && ~optObj.indexOf(optObj.className)) {
+                     opts[optObj.optionName] = optObj.value;
+                  } else {
+                     opts[optObj] = optObj.defaultValue;
+                  }
+               }
+            }
+         },
+
          _modifyOptions : function(opts){
             var lvOpts = ListView.superclass._modifyOptions.apply(this, arguments);
             //Если нам задали бесконечный скролл в виде Bool, то если true, то 'down' иначе null
@@ -1164,6 +1182,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var scrollContainer = this._scrollWatcher.getScrollContainer(),
                scrollPagerContainer = $('> .controls-ListView__scrollPager', this._container);
             this._scrollPager = new Paging({
+               noSizePicker: this._options.noSizePicker,
                element: scrollPagerContainer,
                visible: false,
                showPages: false,
@@ -1478,8 +1497,23 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _updateHoveredItem: function(target) {
-            this._hasHoveredItem() && this.getHoveredItem().container.removeClass('controls-ListView__hoveredItem');
+            if(this._hasHoveredItem()) {
+               var oldHoveredItem = this.getHoveredItem().container;
+               oldHoveredItem.removeClass('controls-ListView__hoveredItem');
+               oldHoveredItem.removeClass('controls-ListView__hoveredItem__withEditing');
+               oldHoveredItem.removeClass('controls-ListView__hoveredItem__withoutEditing');
+               oldHoveredItem.removeClass('controls-ListView__hoveredItem__withoutHover');
+               oldHoveredItem.removeClass('controls-ListView__hoveredItem__withHover');
+            }
             target.addClass('controls-ListView__hoveredItem');
+            target.hasClass('.controls-editInPlace') ?
+               target.addClass('controls-ListView__hoveredItem__withEditing') :
+               target.addClass('controls-ListView__hoveredItem__withoutEditing');
+
+            this._options.disableHover ?
+               target.addClass('controls-ListView__hoveredItem__withoutHover') :
+               target.addClass('controls-ListView__hoveredItem__withHover');
+
             this._hoveredItem = this._getElementData(target);
             this._notifyOnChangeHoveredItem();
          },
@@ -3567,8 +3601,21 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _setHoveredItem: function(hoveredItem) {
-            hoveredItem.container && hoveredItem.container.addClass('controls-ListView__hoveredItem');
-            this._hoveredItem = hoveredItem;
+            //
+            if (hoveredItem.container) {
+               hoveredItem.container.addClass('controls-ListView__hoveredItem');
+               //Надо ли??
+               hoveredItem.container.hasClass('.controls-editInPlace') ?
+                  hoveredItem.container.addClass('controls-ListView__hoveredItem__withEditing') :
+                  hoveredItem.container.addClass('controls-ListView__hoveredItem__withoutEditing');
+
+
+               this._options.disableHover ?
+                  hoveredItem.container.addClass('controls-ListView__hoveredItem__withoutHover') :
+                  hoveredItem.container.addClass('controls-ListView__hoveredItem__withHover');
+
+               this._hoveredItem = hoveredItem;
+            }
          },
 
          /**
@@ -3577,9 +3624,17 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _clearHoveredItem: function() {
             var hoveredItem = this.getHoveredItem(),
+                hoveredItemCont = hoveredItem.container,
                 emptyObject = {};
 
-            hoveredItem.container && hoveredItem.container.removeClass('controls-ListView__hoveredItem');
+            if(hoveredItemCont) {
+               hoveredItemCont.removeClass('controls-ListView__hoveredItem');
+               hoveredItemCont.removeClass('controls-ListView__hoveredItem__withEditing');
+               hoveredItemCont.removeClass('controls-ListView__hoveredItem__withoutEditing');
+               hoveredItemCont.removeClass('controls-ListView__hoveredItem__withoutHover');
+               hoveredItemCont.removeClass('controls-ListView__hoveredItem__withHover');
+            }
+
             for(var key in hoveredItem) {
                if(hoveredItem.hasOwnProperty(key)) {
                   emptyObject[key] = null;
