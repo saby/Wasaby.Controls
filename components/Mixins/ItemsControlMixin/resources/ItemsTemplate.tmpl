@@ -1,6 +1,5 @@
 <ws:if data="{{ tplData.timeLogger && tplData.timeLogger('ItemsRender', true) && false}}"></ws:if>
 <ws:for data="index,item in records">
-    {{debug()}}
     <ws:if data="{{ tplData.timeLogger && tplData.timeLogger('SingleItemRender', true) && false}}"></ws:if>
     <ws:if data="{{ item.getContents }}">
         <ws:if data="{{tplData.decorators && tplData.decorators.ladder}}">{{tplData.decorators.ladder.setRecord(item.getContents()) || ''}}</ws:if>
