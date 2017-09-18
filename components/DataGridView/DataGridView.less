@@ -8,6 +8,7 @@
    .text-overflow();
 }
 
+//Вынесено из ListView.Less
 .controls-ListView__showCheckBoxes {
    .controls-ListView__itemCheckBox {
       .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
@@ -15,6 +16,12 @@
 }
 
 .controls-ListView__hideCheckBoxes {
+   .controls-ListView__itemCheckBox {
+      display: none;
+   }
+}
+
+.controls-ListView__multiselect__off {
    .controls-ListView__itemCheckBox {
       display: none;
    }
