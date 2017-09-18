@@ -34,11 +34,11 @@
    }
 }
 
-//Move to paging
+//Move to paging +
 .controls-ListView__pagerNoAmount .controls-Pager-container .controls-Amount-text{
    display: none;
 }
-//Move to paging
+//Move to paging - класс нигде не навешивается
 .controls-ListView__pagerHideEndButton .controls-Pager-container .ws-paging-end{
    display: none;
 }
@@ -55,10 +55,10 @@
    }
 }
 
-//Если да - то убрать переменную
+//Если да - то убрать переменную +
 .ws-disabled {
    .controls-ListView__itemCheckBox {
-      cursor: @list-view-disabled-cursor;
+      cursor: default;
    }
 }
 
@@ -69,30 +69,9 @@
 
 .controls-ListView {
     position: relative;
-
    // Нельзя устанавливать минимальную высоту для копии таблицы которая используется для фиксации заголовков
    &:not(.controls-ListView__dataLoaded):not(.ws-sticky-header__table-header-copy) {
       min-height: @list-view-min-height;
-   }
-
-   &.controls-small-ListView {
-     .controls-ListView__EmptyData{
-       padding-bottom: @listView-empty-data-padding-top;
-       color: @gray-ccc-color;
-     }
-   }
-
-   &.controls-ListView__showCheckBoxes {
-      .controls-ListView__itemCheckBox {
-         .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
-      }
-   }
-   &.controls-ListView__hideCheckBoxes {
-      &.controls-ListView__multiselect {
-         .controls-ListView__itemCheckBox {
-            display: none;
-         }
-      }
    }
 }
 
