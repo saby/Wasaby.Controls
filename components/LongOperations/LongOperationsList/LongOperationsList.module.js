@@ -390,11 +390,12 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   var args = model.get('resultHandlerArgs');
                   if (args) {
                      if (typeof args === 'string') {
+                        // Это могут быть как сложные данные в виде json, так и просто одиночная строка
                         try {
                            args = JSON.parse(args);
                         }
                         catch (ex) {
-                           IoC.resolve('ILogger').error('SBIS3.CONTROLS.LongOperationsList', 'JSON data is corrupted');
+                           // Значит просто строка
                         }
                      }
                      if (!Array.isArray(args)) {

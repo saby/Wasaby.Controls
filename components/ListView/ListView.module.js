@@ -995,6 +995,9 @@ define('js!SBIS3.CONTROLS.ListView',
             if(this.isInfiniteScroll()) {
                this._prepareInfiniteScroll();
             }
+            if (this.getItems() && this._options.navigation && this._options.navigation.type == 'cursor') {
+               this._listNavigation.analyzeResponseParams(this.getItems());
+            }
             ListView.superclass.init.call(this);
             this._initLoadMoreButton();
          },
@@ -4435,11 +4438,15 @@ define('js!SBIS3.CONTROLS.ListView',
             if (revive) {
                this.reviveComponents($('.controls-ListView__results', this.getContainer()));
             }
+            this._resultsChanged = false;
          },
 
          _setNewDataAfterReload: function() {
+            this._resultsChanged = true;
             ListView.superclass._setNewDataAfterReload.apply(this, arguments);
-            this._redrawResults(true);
+            if (this._resultsChanged) {
+               this._redrawResults(true);
+            }
          },
 
          /**
