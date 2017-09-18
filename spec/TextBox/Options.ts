@@ -1,5 +1,5 @@
 import ITextBoxBaseOptions = require("../TextBoxBase/Options");
-interface ITextBoxOptions extends ITextBoxBaseOptions{
+interface Options extends ITextBoxBaseOptions{
     maxLength: number,
     inputRegExp: string,
     placeholder: string,
@@ -9,4 +9,4 @@ interface ITextBoxOptions extends ITextBoxBaseOptions{
     trim: boolean
 }
 
-export = ITextBoxOptions
+export = Options

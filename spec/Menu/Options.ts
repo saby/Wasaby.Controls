@@ -4,7 +4,7 @@ import IHierarchicalViewOptions = require("../interfaces/options/IHierarchicalVi
 import ISourceOptions = require("../interfaces/options/ISourceOptions");
 import ISelectableOptions = require("../interfaces/options/ISelecteableOptions");
 
-interface IMenuOptions
+interface Options
     extends IItemsOptions,
             IGroupedItemsViewOptions,
             IHierarchicalViewOptions,
@@ -13,4 +13,4 @@ interface IMenuOptions
 
 }
 
-export = IMenuOptions;
+export = Options;

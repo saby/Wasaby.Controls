@@ -2,10 +2,10 @@ import IGroupedItemsViewOptions = require("interfaces/options/IGroupedViewOption
 import IItemTemplate = require("interfaces/IItemTemplate");
 import IItemAction = require("interfaces/IItemAction");
 import IItem = require("interfaces/IItem")
-import IItemsViewOptions = require("../../ItemsView/resources/ViewOptions");
+import IItemsViewOptions = require("../../ItemsView/resources/ItemsRenderOptions");
 
 
-interface IListViewOptions
+interface IListItemsOptions
     extends IItemsViewOptions,
             IGroupedItemsViewOptions{
     itemsActions?: Array<IItemAction>,
@@ -15,4 +15,4 @@ interface IListViewOptions
     selectedItem: IItem | null
 }
 
-export = IListViewOptions;
+export = IListItemsOptions;

@@ -1,9 +1,9 @@
-import IItemsViewOptions = require("./resources/ViewOptions");
+import IItemsRenderOptions = require("./resources/ItemsRenderOptions");
 import IItemTemplate = require("../interfaces/IItemTemplate");
 import ICollection = require("../interfaces/ICollection");
 import ISource = require("../interfaces/ISource");
 
-interface IItemsControlOptions extends IItemsViewOptions {
+interface Options extends IItemsRenderOptions {
     dataSource: ISource,
     navigation: {
         type: string,
@@ -24,4 +24,4 @@ interface IItemsControlOptions extends IItemsViewOptions {
     footerTemplate?: () => void //непонятно, почему нет headertemplate
 
 }
-export = IItemsControlOptions;
+export = Options;

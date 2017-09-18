@@ -1,4 +1,4 @@
-import IMenuViewOptions = require("./ViewOptions");
+import IMenuViewOptions = require("./ItemsRenderOptions");
 import IEvent = require("../../interfaces/IEvent");
 import IItem = require("../../interfaces/IItem");
 
@@ -6,7 +6,7 @@ class MenuViewDOM{
     onItemClick: IEvent<IItem>;
 }
 
-class MenuView {
+class ItemsRender {
     public onItemClick: IEvent<IItem>;
     public onNeedSubmenu: IEvent<any>;
 
@@ -25,4 +25,4 @@ class MenuView {
     }
 }
 
-export = MenuView;
+export = ItemsRender;

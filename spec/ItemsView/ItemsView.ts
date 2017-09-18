@@ -1,12 +1,12 @@
-import ItemsView = require("ItemsView/resources/View");
+import ItemsRender = require("ItemsView/resources/ItemsRender");
 import ICollection = require("interfaces/ICollection");
 import ISource = require("interfaces/ISource");
 import IItemTemplate = require("interfaces/IItemTemplate")
-import IItemsControlOptions = require("./Options");
+import Options = require("./Options");
 
-class ItemsControl {
-    constructor(options: IItemsControlOptions){
-        let listView = new ItemsView({
+class ItemsView {
+    constructor(options: Options){
+        let listView = new ItemsRender({
             items: options.items,
             itemTemplate: options.itemTemplate
         })

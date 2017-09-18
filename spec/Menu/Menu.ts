@@ -1,5 +1,5 @@
 import IMenuOptions = require("./Options");
-import MenuView = require("./resources/View");
+import ItemsRender = require("./resources/ItemsRender");
 
 class Menu {
     constructor(options: IMenuOptions){
@@ -13,7 +13,7 @@ class Menu {
         //когда пользователь кликнул по строке.
         
         let items = options.items || options.dataSource.query();
-        let menuView = new MenuView({
+        let menuView = new ItemsRender({
             items: items,
             displayProperty: options.displayProperty,
             itemsGroup: options.itemsGroup,

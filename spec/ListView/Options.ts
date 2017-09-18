@@ -2,12 +2,12 @@ import ICollection = require("../interfaces/ICollection");
 import IItemTemplate = require("../interfaces/IItemTemplate");
 import IItemAction = require("../interfaces/IItemAction");
 import ISource = require("../interfaces/ISource");
-import IListViewOptions = require("./resources/ViewOptions");
+import IListViewOptions = require("./resources/ItemsRenderOptions");
 import ISelectableOptions = require("../interfaces/options/ISelecteableOptions");
 import ISourceOptions = require("../interfaces/options/ISourceOptions");
 import IItemsOptions = require("../interfaces/options/IItemsOptions");
 
-interface IListControlOptions
+interface Options
     extends IItemsOptions,
             ISelectableOptions,
             ISourceOptions {
@@ -18,4 +18,4 @@ interface IListControlOptions
     enableVirtualScroll?: boolean
 }
 
-export = IListControlOptions;
+export = Options;

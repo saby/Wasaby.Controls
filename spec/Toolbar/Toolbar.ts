@@ -1,5 +1,5 @@
-import ItemsView = require("ItemsView/resources/View");
-import IItemsViewOptions = require("ItemsView/resources/ViewOptions");
+import ItemsView = require("ItemsView/resources/ItemsRender");
+import IItemsViewOptions = require("ItemsView/resources/ItemsRenderOptions");
 
 class Toolbar extends ItemsView{
     constructor(options: IItemsViewOptions){

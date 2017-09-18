@@ -1,5 +1,5 @@
-import ItemsView = require("ItemsView/resources/View");
-import IListViewOptions = require("ListView/resources/ViewOptions");
+import ItemsRender = require("ItemsView/resources/ItemsRender");
+import IListViewOptions = require("ListView/resources/ItemsRenderOptions");
 import IEvent = require("interfaces/IEvent");
 import IItem = require("../../interfaces/IItem");
 
@@ -17,7 +17,7 @@ class ListViewDOM{
  * Отображение редактирования по месту, операций над записью
  */
 
-class ListView extends ItemsView{
+class ListItemsRender extends ItemsRender{
     protected _options: IListViewOptions;
     public onChangeSelection: IEvent<number>;
     private _selectedIndex: number;
@@ -66,4 +66,4 @@ class ListView extends ItemsView{
 }
 
 
-export = ListView;
+export = ListItemsRender;

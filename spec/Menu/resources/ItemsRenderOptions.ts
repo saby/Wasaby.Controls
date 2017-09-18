@@ -1,10 +1,10 @@
 import IItemsOptions = require("../../interfaces/options/IItemsOptions");
 import IGroupedItemsViewOptions = require("../../interfaces/options/IGroupedViewOptions");
 
-interface IMenuViewOptions
+interface Options
     extends IItemsOptions,
             IGroupedItemsViewOptions {
 
 }
 
-export = IMenuViewOptions;
+export = Options;

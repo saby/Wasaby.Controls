@@ -1,4 +1,4 @@
-import ListView = require("ListView/resources/View");
+import ItemsRender = require("ListView/resources/ItemsRender");
 import VirtualScroll = require("ListView/resources/VirtualScroll");
 import ICollection = require("interfaces/ICollection");
 import ISource = require("interfaces/ISource");
@@ -6,12 +6,12 @@ import IItemTemplate = require("interfaces/IItemTemplate")
 import IItemAction = require("interfaces/IItemTemplate");
 import IEventEmitter = require("interfaces/IEvent")
 import IItem = require("../interfaces/IItem");
-import IListControlOptions = require("ListView/Options")
+import IListViewOptions = require("ListView/Options")
 
 
 
 
-class ListControl {
+class ListView {
     //где должен быть selectedKey?
     //проблема в том, что изменение данных
     //есть только в listcontrol
@@ -32,7 +32,7 @@ class ListControl {
     public onChangeSelection: IEventEmitter<number>;
     public onItemClick: IEventEmitter<any>;
 
-    constructor(options : IListControlOptions){
+    constructor(options : IListViewOptions){
         this._options = options;
         this._selectedKey = options.selectedKey;
         this._enableVirtualScroll = options.enableVirtualScroll || false;
@@ -44,7 +44,7 @@ class ListControl {
         //нужно найти item, в зависимости от selectedKey
         this._selectedItem = this._options.items.find(this._selectedKey);
 
-        let listView = new ListView({
+        let listView = new ItemsRender({
             items: options.items,
             itemTemplate: options.itemTemplate,
             idProperty: options.idProperty,
@@ -61,3 +61,5 @@ class ListControl {
         });
     }
 }
+
+export = ListView;
