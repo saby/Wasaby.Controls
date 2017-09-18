@@ -279,7 +279,7 @@ body {
          }
       }
    }
-   .controls-ToolBar__menuIcon .icon-24 {
+  .controls-ToolBar__menuIcon .icon-24 {
     font-family: carrypresto-icons!important;
   }
 
@@ -990,7 +990,7 @@ body {
 /* КОСТЫЛЬ. Крошки накостылены через top'ы, margin'ы и тд. Срочно требуется переписать стили.
    Выписана ошибка. https://online.sbis.ru/opendoc.html?guid=fa89f6fd-3e4a-4925-8de3-9f34c6b11729
  */
-.ws-is-mobile-safari {
+.ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
    .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
       position: relative;
       top: .4257rem !important; // чтобы перебить непонятный top выше по файлу.
@@ -1109,4 +1109,9 @@ body {
       }
     }
   }
+}
+
+//Убрать когда проектировщики сделают одинаковые отступы, обсуждали на этом совещании: https://online.sbis.ru/obj/Meeting/e6b722a9-d339-4016-9fd6-82b763c4e241
+.controls-ItemsToolbar.controls-ItemsToolbar__edit {
+  bottom: 0.2857rem;
 }
