@@ -334,6 +334,7 @@ define('js!SBIS3.CONTROLS.Menu', [
          config.parent = parent;
          config.opener = typeof parent.getOpener == 'function' ? parent.getOpener() : parent;
          config.target = target;
+         config._fixJqueryPositionBug = true;
          return new FloatArea(config);
       },
 
