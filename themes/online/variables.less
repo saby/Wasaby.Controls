@@ -828,69 +828,21 @@
 // --------- //
 // Combo box //
 // --------- //
-
-@combo-box-arrow-spritesheet:                   'img/ComboBox.png';
-@combobox-picker-border-width:                    1px;
-@combo-box-right-padding:                       4px;
-@combo-box-disabled-cursor:                     default;
-@combo-box-disabled-border-width:               0 0 1px 0;
-@combo-box-disabled-border-bottom-color:        #E4E4E4;
-@combo-box-disabled-border-color:               transparent;
-@combo-box-disabled-color:                      inherit;
-
-@combo-box-field-font:                          inherit;
-@combo-box-field-text-color:                    inherit;
-
-@combo-box-arrow-width:                         16px;
-@combo-box-arrow-height:                        16px;
-@combo-box-arrow-line-height:                   1;
-
-@combo-box-arrow-border-width:                  0;
-@combo-box-arrow-border-style:                  solid;
-@combo-box-arrow-border-color:                  transparent;
-@combo-box-arrow-bg:                            @white-color url(@combo-box-arrow-spritesheet) -3px -4px no-repeat;
-
-
-@combo-box-arrow-hover-border-style:            @combo-box-arrow-border-style;
-@combo-box-arrow-hover-border-color:            @combo-box-arrow-border-color;
-@combo-box-arrow-hover-bg:                      @white-color url(@combo-box-arrow-spritesheet) -3px -28px no-repeat;
-
-@combo-box-arrow-active-border-width:           @combo-box-arrow-border-width;
-@combo-box-arrow-active-border-style:           @combo-box-arrow-border-style;
-@combo-box-arrow-active-border-color:           @combo-box-arrow-border-color;
-@combo-box-arrow-active-bg:                     @combo-box-arrow-bg;
-
-
-@combo-box-arrow-active-hover-border-style:     @combo-box-arrow-hover-border-style;
-@combo-box-arrow-active-hover-border-color:     @combo-box-arrow-hover-border-color;
-@combo-box-arrow-active-hover-bg:               @combo-box-arrow-hover-bg;
-
-@combo-box-arrow-disabled-border-width:         @combo-box-arrow-border-width;
-@combo-box-arrow-disabled-border-style:         @combo-box-arrow-border-style;
-@combo-box-arrow-disabled-border-color:         @combo-box-arrow-border-color;
-@combo-box-arrow-disabled-bg:                   @combo-box-arrow-bg;
-
+@combo-box-field-text-color:                    inherit;//todo
 @combo-box-picker-border:                       1px solid @gray-ccc-color;
 @combo-box-picker-border-radius:                0;
 @combo-box-picker-item-font:                    inherit;
 @combo-box-picker-item-font-size:               15px;
 @combo-box-picker-item-padding:                 7px 4px 6px 4px;
-
 @combo-box-picker-item-text-color:              @combo-box-field-text-color;
 @combo-box-picker-item-bg:                      @white-color;
-
 @combo-box-picker-item-hover-text-color:        @combo-box-picker-item-text-color;
 @combo-box-picker-item-hover-bg:                @default-itemHover-color;
-
 @combo-box-picker-item-selected-text-color:     @combo-box-picker-item-text-color;
 @combo-box-picker-item-selected-bg:             @default-itemSelected-color;
-
-@compo-box-fieldWrapper-margin-right:           16px;
-
 @compo-box-picker-show-color:                   @default-text-color;
 @combo-box-picker-show-border-color:            @gray-ccc-color;
 @combo-box-picker-show-background-color:        @text-box-focus-bg;
-
 @combo-box-arrowDown-color-picker-show:         @accent-color;
 // --------------- //
 // SuggestTextBox //
@@ -900,12 +852,6 @@
 // ----------- //
 // Suggest //
 // ----------- //
-
-@suggest-field-font:                          inherit;
-@suggest-field-text-color:                    inherit;
-
-@suggest-cursor:                              pointer;
-@suggest-disabled-cursor:                     default;
 
 @suggest-loading-spritesheet:                   'img/ajax-loader-indicator.gif';
 @suggest-loading-bg:                            url(@suggest-loading-spritesheet) 0 0 no-repeat;
@@ -923,8 +869,6 @@
 @suggest-picker-standard-height:                500px;
 @suggest-picker-color:                          initial;
 
-@suggest-picker-item-font:                      @suggest-field-font;
-@suggest-picker-item-text-color:                @suggest-field-text-color;
 @suggest-picker-item-bg:                        @white-color;
 @suggest-picker-invertVal:                      180deg;
 
@@ -932,18 +876,12 @@
 @suggest-list-item-border:                      solid #f5f5f5;
 @suggest-list-item-border-width:                1px 0 0 0;
 @suggest-list-item-first-child-border-width:    0;
-@suggest-list-item-text-color:                  @suggest-field-font;
-@suggest-list-item-cursor:                      @suggest-cursor;
-@suggest-list-item-font:                        @suggest-picker-item-font;
 @suggest-list-item-padding:                     4px;
 @suggest-list-item-hover-bg:                    @default-itemHover-color;
-@suggest-list-item-hover-text-color:            @suggest-field-text-color;
 @suggest-list-item-selected-bg:                 @default-itemSelected-color;
-@suggest-list-item-selected-text-color:         @suggest-picker-item-text-color;
 
 @suggest-list-empty-bg:                         @suggest-list-item-bg;
 @suggest-list-empty-color:                      @gray-ccc-color;
-@suggest-list-empty-font:                       @suggest-list-item-font;
 @suggest-list-empty-padding:                    16px 0 16px 0;
 @suggest-list-footer-height:                    30px;
 @suggest-list-footer-padding:                   0 8px;
