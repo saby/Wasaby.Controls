@@ -1724,6 +1724,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                if (0 < height) {
                   promise.callback(Math.round(width < height ? w*height/width : w));
                }
+               else
+               if (!imgInfo.jquery && 0 < imgInfo.width && 0 < imgInfo.height) {
+                  promise.callback(Math.round(imgInfo.width < imgInfo.height ? w*imgInfo.height/imgInfo.width : w));
+               }
                else {
                   var img = new Image();
                   img.onload = function () {
