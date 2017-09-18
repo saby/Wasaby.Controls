@@ -3,13 +3,16 @@
  */
 
 define('js!SBIS3.CONTROLS.ViewSourceMixin', [
-   "Core/SessionStorage",
    "Core/core-merge",
    "Core/Deferred",
    "js!SBIS3.CONTROLS.Utils.Query",
    "js!SBIS3.CONTROLS.HistoryController"
-], function( cSessionStorage, cMerge, Deferred,Query, HistoryController) {
-
+], function( cMerge, Deferred,Query, HistoryController) {
+    /**
+     *
+     * @mixin SBIS3.CONTROLS.ViewSourceMixin
+     * @public
+     */
    var ViewSourceMixin = /**@lends SBIS3.CONTROLS.ViewSourceMixin.prototype  */{
 
       /**

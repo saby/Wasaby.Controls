@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
             }
 
             if(handler && typeof handler === 'function'){
-               handler();
+               handler.call(popup);
             }
          });
 
@@ -64,8 +64,8 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
           * Открываемый диалог строится на основе экземпляра класса {@link SBIS3.CONTROLS.SubmitPopup}.
           * Изменению не подлежит значение опции {@link SBIS3.CONTROLS.SubmitPopup#status status}.
           * @param {Object} config Объект c конфигурацией открываемого диалога. В качестве свойств объекта передают опции, соответствующие классу {@link SBIS3.CONTROLS.SubmitPopup}.
-          * @param {Function} positiveHandler Обработчик нажатия на кнопку "Да".
-          * @param {Function} negativeHandler Обработчик нажатия на кнопку "Нет".
+          * @param {Function} [positiveHandler] Обработчик нажатия на кнопку "Да". Когда обработчик не установлен, клик по кнопке закрывает диалог.
+          * @param {Function} [negativeHandler] Обработчик нажатия на кнопку "Нет". Когда обработчик не установлен, клик по кнопке закрывает диалог.
           * @param {Function} [cancelHandler] Обработчик нажатия на кнопку "Отмена".
           * @returns {SBIS3.CONTROLS.SubmitPopup} Экземпляр класса диалога.
           * @example

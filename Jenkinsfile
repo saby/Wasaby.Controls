@@ -55,6 +55,11 @@ node('controls') {
         def inte = params.run_int
         def regr = params.run_reg
         def unit = params.run_unit
+        if ("${env.BUILD_NUMBER}" == "1"){
+            inte = true
+            regr = true
+            unit = true
+        }
 
         stage("Checkout"){
             parallel (
@@ -196,11 +201,8 @@ node('controls') {
             parallel(
                 ws: {
                     // Выкачиваем ws для unit тестов и если указан сторонний бранч
-                    if (( unit ) || ("${params.ws_revision}" != "sdk") ){
-                        def ws_revision = params.ws_revision
-                        if ("${ws_revision}" == "sdk"){
-                            ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
-                        }
+                    if ( unit || "${params.ws_revision}" != "sdk" ){
+                        ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
                         dir(workspace) {
                             checkout([$class: 'GitSCM',
                             branches: [[name: ws_revision]],
@@ -219,11 +221,9 @@ node('controls') {
                 },
                 ws_data: {
                     // Выкачиваем ws.data для unit тестов и если указан сторонний бранч
-                    if (( unit ) || ("${params.ws_data_revision}" != "sdk") ){
+                    if ( unit || "${params.ws_data_revision}" != "sdk" ){
                         def ws_data_revision = params.ws_data_revision
-                        if ("${ws_data_revision}" == "sdk"){
-                            ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
-                        }
+                        ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
                         dir(workspace) {
                             checkout([$class: 'GitSCM',
                             branches: [[name: ws_data_revision]],
@@ -360,8 +360,8 @@ node('controls') {
             DO_NOT_RESTART = True
             SOFT_RESTART = True
             NO_RESOURCES = True
-            STREAMS_NUMBER = 20
-            DELAY_RUN_TESTS = 2
+            STREAMS_NUMBER = 30
+            DELAY_RUN_TESTS = 1
             TAGS_NOT_TO_START = iOSOnly
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
@@ -381,7 +381,7 @@ node('controls') {
                 SOFT_RESTART = False
                 NO_RESOURCES = True
                 STREAMS_NUMBER = 40
-                DELAY_RUN_TESTS = 2
+                DELAY_RUN_TESTS = 1
                 TAGS_TO_START = ${params.theme}
                 ELEMENT_OUTPUT_LOG = locator
                 WAIT_ELEMENT_LOAD = 20

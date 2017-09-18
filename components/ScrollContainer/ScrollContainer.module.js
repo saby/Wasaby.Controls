@@ -8,12 +8,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'tmpl!SBIS3.CONTROLS.ScrollContainer',
       'js!SBIS3.CONTROLS.Scrollbar',
       'Core/detection',
-      'Core/core-functions',
       'js!SBIS3.CORE.FloatAreaManager',
       'js!SBIS3.StickyHeaderManager',
-      "Core/core-instance",
-      'Core/compatibility',
       'Core/constants',
+      'Core/EventBus',
       'css!SBIS3.CONTROLS.ScrollContainer'
    ],
    function (extend,
@@ -25,14 +23,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
              template,
              Scrollbar,
              cDetection,
-             functions,
              FloatAreaManager,
              StickyHeaderManager,
-             cInstance,
-             compatibility,
-             constants) {
+             constants,
+             EventBus
+   ) {
       'use strict';
-
 
       /**
        * Класс контрола "Контейнер для контента с тонким скроллом". В качестве тонкого скролла применяется класс контрола {@link SBIS3.CONTROLS.Scrollbar}.
@@ -164,6 +160,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                prevCtxRemoved: {},
                prevNeedSync: 0
             };
+            this._isMobileIOS = cDetection.isMobileIOS;
             this.deprecatedContr(cfg);
          },
 
@@ -177,10 +174,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                //Под android оставляем нативный скролл
                if (showScrollbar){
                   this._hideScrollbar = this._hideScrollbar.bind(this);
-                  this._touchStartHandler = this._touchStartHandler.bind(this);
                   this._initScrollbar = this._initScrollbar.bind(this);
-                  this._container[0].addEventListener('touchstart', this._touchStartHandler, true);
-                  this._container.one('mousemove', this._initScrollbar);
+                  this._container.one('mouseenter', this._initScrollbar);
                   this._container.one('wheel', this._initScrollbar);
                   if (cDetection.IEVersion >= 10) {
                      // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
@@ -191,14 +186,51 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                         }
                      }.bind(this);
                   }
-                  this._hideNativeScrollbar();
+
+                  //--------------- Управление видимостью скролла ---------------//
+                  // Сделано через EventBus.
+                  //
+                  // На странице в момент времени может быть виден либо один скролл, либо ноль.
+                  // Поэтому канал слушают только контейнеры претендующие на скролл, а их количество не
+                  // превышает максимальную вложенность контейнеров. Это количество связано с логикой работы.
+                  //
+                  // Контейнер с активным скроллом, в дальнейшем просто со скроллом, слушает канал,
+                  // в который другие контейнеры кидают запросы на получение скролла, предварительно
+                  // подписывась на прослушку ответа, а контейнер со скроллом кидает этот ответ.
+                  // При переход от дочернего контейнера на родительский нельзя определить, на какой именно
+                  // перешли, а можно лишь понять что дочернему не нужен скролл. В этом случае дочерний контейнер
+                  // посылает запрос, а слушатели(родители) уже забирают его.
+                  //
+                  // TODO: возможно нужно переделать механизм работы на EventBus и Commands.
+                  // Commands должны забрать на себя механизм обработки контейнер в контейнере.
+                  // Так как сommands идут от потомка к родителю, поэтому канал будет слушать только контейнер со скроллом,
+                  // а не все кто на него претендуют.
+                  // Можно улучшить ленивую инициализацию скролла, например при навдении на дочерний контейнер создать, только
+                  // у него, а сейчас создается и у родителя.
+                  // Через Command этот механизм может стать быстрее.
+                  // Пример проблемы существующего механизма: контейнер с двумя контейнерами.
+                  // При переходе от одного дочернего к другому, происходит переход сначало к родителю, так как он
+                  // претендует на скролл, а уже потом дочерний заберет у родителя, потому что на него навели курсор.
+                  this._requestTakeScrollbarHandler = this._requestTakeScrollbarHandler.bind(this);
+                  this._returnTakeScrollbarHandler = this._returnTakeScrollbarHandler.bind(this);
+                  this._onMouseenter = this._onMouseenter.bind(this);
+                  this._onMouseleave = this._onMouseleave.bind(this);
+                  this._subscribeMouseEnterLeave();
+                  /**
+                   * Можно ли отобрать скролл.
+                   * 0 - нельзя отбирать
+                   * 1 - можно отобрать при переходе на контейнер курсора
+                   * 2 - можно отобрать при скроллинге
+                   * 3 - всегда отбирать
+                   */
+                  this._isTakeScrollbar = 3;
+                  //---------------------------------------------------------------//
                }
                this._subscribeOnScroll();
 
-               this._addGradient();
+               this.subscribeTo(EventBus.channel('stickyHeader'), 'onStickyHeadersChanged', this._stickyHeadersChangedHandler.bind(this));
 
-               // Что бы до инициализации не было видно никаких скроллов
-               this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
+               this._addGradient();
 
                // task: 1173330288
                // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
@@ -208,15 +240,16 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             }
          },
 
+         _stickyHeadersChangedHandler: function() {
+            if (this._scrollbar) {
+               this._recalcSizeScrollbar();
+            }
+         },
+
          _addGradient: function() {
          	var maxScrollTop = this._getScrollHeight() - this._container.height();
             
             this._container.toggleClass('controls-ScrollContainer__bottom-gradient', maxScrollTop > 0 && this._getScrollTop() < maxScrollTop);
-         },
-
-         _touchStartHandler: function() {
-            this._initScrollbar();
-            this._showScrollbar();
          },
 
          _initScrollbar: function(){
@@ -234,19 +267,16 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             }
          },
 
-         // Показать скролл на touch устройствах
+         // Показать скролл
          _showScrollbar: function() {
-            // Покажем скролл и подпишемся на touchend чтобы его снять. Подписываемся у document, потому что палец может
-            // уйти с элемента, но при этом скроллинг продолжается.
-            this._container.toggleClass('controls-ScrollContainer__showScrollbar', true);
-            document.addEventListener('touchend', this._hideScrollbar, true);
+            this._container.toggleClass('controls-ScrollContainer__scrollbar_show', true);
+            this._scrollbar.once('onScrollbarStartDrag', this._setTakeScrollbar.bind(this, 0));
          },
 
-         //Скрыть скролл на touch устройствах
+         //Скрыть скролл
          _hideScrollbar: function() {
-            // Скроем скролл и отпишемся от touchend.
-            this._container.toggleClass('controls-ScrollContainer__showScrollbar', false);
-            document.removeEventListener('touchend', this._hideScrollbar);
+            this._container.toggleClass('controls-ScrollContainer__scrollbar_show', false);
+            this._scrollbar.once('onScrollbarEndDrag', this._setTakeScrollbar.bind(this, 3));
          },
 
          bothIsNaN: function(a, b){
@@ -363,6 +393,22 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             this._content.on('scroll', this._onScroll.bind(this));
          },
 
+         _subscribeMouseEnterLeave: function() {
+            this._container
+               .on('mouseenter', this._onMouseenter)
+               .on('mouseleave', this._onMouseleave);
+         },
+
+         _unsubscribeMouseEnterLeave: function() {
+            this._container
+               .off('mouseenter', this._onMouseenter)
+               .off('mouseleave', this._onMouseleave);
+         },
+         
+         _getScrollContainerChannel: function() {
+            return EventBus.channel('ScrollContainerChannel');
+         },
+
          _onScroll: function(event) {
             var scrollTop = this._getScrollTop();
 
@@ -374,6 +420,114 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             }
             this.getContainer().toggleClass('controls-ScrollContainer__top-gradient', scrollTop > 0);
             this.getContainer().toggleClass('controls-ScrollContainer__bottom-gradient', scrollTop < this._getScrollHeight() -  this._container.height());
+         },
+
+         _onMouseenter: function() {
+            var EventBusChannel = this._getScrollContainerChannel();
+
+            if (this._isHover) {
+               return;
+            }
+            this._isHover = true;
+
+            /**
+             * При переходе курсора на контейнер разрешим отбирать скролл, только при скроллинге другого контейнера.
+             * Давать доступ при переходе курсора на другой контейнер нельзя, потому что, если будет ситуация - контейнер
+             * в контейнере, то при наведении на дочерний, после "всплытия" события, родительский сможет отобрать скролл.
+             * Запрещать "всплытие" НЕЛЬЗЯ так как родительский контейнер должен подготовиться к принятию скролла, когда
+             * уведем курсор с дочернего.
+             */
+            this._isTakeScrollbar = 2;
+
+            /**
+             * Начинаем слушать onReturnTakeScrollbar для принятия скролла в случае отказа владельца от него.
+             */
+            EventBusChannel.subscribe('onReturnTakeScrollbar', this._returnTakeScrollbarHandler);
+            EventBusChannel.once('onReturnTakeScrollbar', this._subscribeOnMousemove.bind(this));
+            /**
+             * Проверяем есть ли обработчики на запрос скролла(видим ли скролл логически на странице).
+             * true: дождемся ответа от владельца скролла можно ли его забрать.
+             * false: забираем скролл.
+             */
+            if (EventBusChannel.hasEventHandlers('onRequestTakeScrollbar')) {
+               // Запрашиваем скролл(оповещаем владельца скролла, что хотим забрать его) с параметром 1(переход курсора)
+               EventBusChannel.notify('onRequestTakeScrollbar', 1);
+            } else {
+               EventBusChannel.notify('onReturnTakeScrollbar', true);
+            }
+         },
+
+         _onMouseleave: function() {
+            var EventBusChannel = this._getScrollContainerChannel();
+
+            if (this._isTakeScrollbar) {
+               EventBusChannel.notify('onRequestTakeScrollbar', 1);
+               EventBusChannel.unsubscribe('onRequestTakeScrollbar', this._requestTakeScrollbarHandler);
+               EventBusChannel.unsubscribe('onReturnTakeScrollbar', this._returnTakeScrollbarHandler);
+            } else {
+               this._isTakeScrollbar = 2;
+            }
+
+            this._isHover = false;
+         },
+
+         _subscribeOnMousemove: function() {
+            /**
+             * Нужно сменить права на скролл при движении мышки.
+             * Из-за "всплытия" mouseenter мы не можем дать права на запрос скролла при переходе
+             * курсора на элемент(см. _onMouseenter присвоение прав).
+             * Но если "всплытия" не было, то нужна дать право на запрос скролла при переходе курсора на контейнер.
+             * Пример: навели на родитльский контейнер, а потом на дочерний, ели не поменять права родительскому, то
+             * дочерний не сможет забрать скролл.
+             */
+            this._container.one('mousemove', this._oneMousemove.bind(this));
+         },
+
+         _oneMousemove: function() {
+            this._isTakeScrollbar = 3;
+         },
+
+         _requestTakeScrollbarHandler: function(event, isTakeScrollbar) {
+            var EventBusChannel = this._getScrollContainerChannel();
+
+            /**
+             * При получении запроса на скролл проверим можем ли мы его отдать.
+             * Для этого сравним повод запроса скролла и права на его отдачу.
+             * Если хоть один из запросов удовлетворяет правам, то отдадим и скроем скролл,
+             * и отпишемся от прослушивания запросов на скролл, потому что его у нас больше нет.
+             * Если же скролл отдать нельзя, то отклоним запрос.
+             */
+            if (this._isTakeScrollbar & isTakeScrollbar) {
+               EventBusChannel.unsubscribe('onRequestTakeScrollbar', this._requestTakeScrollbarHandler);
+               this._hideScrollbar();
+            } else {
+               isTakeScrollbar = 0;
+            }
+
+            /**
+             * Оповестим подписантов на ответ запроса скролла о принятом решении.
+             */
+            this._getScrollContainerChannel().notify('onReturnTakeScrollbar', isTakeScrollbar);
+            // Если отдали скролл, то начнем слушать ответы, чтобы взять скролл, на случай ситуации контейнер в контейнере.
+            if (isTakeScrollbar) {
+               EventBusChannel.subscribe('onReturnTakeScrollbar', this._returnTakeScrollbarHandler);
+            }
+         },
+
+         _returnTakeScrollbarHandler: function(event, isTakeScrollbar) {
+            var EventBusChannel = this._getScrollContainerChannel();
+            if (isTakeScrollbar) {
+               /**
+                * Забираем скролл, начинам слушать запросы и прекращаем слушать ответы на скролл.
+                */
+               EventBusChannel.subscribe('onRequestTakeScrollbar', this._requestTakeScrollbarHandler);
+               EventBusChannel.unsubscribe('onReturnTakeScrollbar', this._returnTakeScrollbarHandler);
+               this._showScrollbar();
+            }
+         },
+
+         _setTakeScrollbar: function(isTakeScrollbar) {
+            this._isTakeScrollbar = isTakeScrollbar;
          },
 
          _calcPagingSelectedKey: function(position) {
@@ -390,37 +544,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                this._page = page;
                this._paging.setSelectedKey(page);
             }
-         },
-
-         _hideNativeScrollbar: function(){
-            var scrollbarWidth, style;
-            if (!cDetection.webkit && !cDetection.chrome){
-               /**
-                * Скрытие нативного скролла в IE, Firefox происходит через отрицательный margin = длине скролла.
-                */
-               scrollbarWidth = this._getBrowserScrollbarWidth();
-               if (scrollbarWidth) {
-                  style = {
-                     marginRight: -scrollbarWidth
-                  };
-                  this._content.css(style);
-               }
-            }
-         },
-
-         _getBrowserScrollbarWidth: function() {
-            var outer, outerStyle, scrollbarWidth;
-            outer = document.createElement('div');
-            outerStyle = outer.style;
-            outerStyle.position = 'absolute';
-            outerStyle.width = '100px';
-            outerStyle.height = '100px';
-            outerStyle.overflow = 'scroll';
-            outerStyle.top = '-9999px';
-            document.body.appendChild(outer);
-            scrollbarWidth = outer.offsetWidth - outer.clientWidth;
-            document.body.removeChild(outer);
-            return scrollbarWidth;
          },
 
          _scrollbarDragHandler: function(event, position){
@@ -516,7 +639,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                this._content.off('scroll', this._onScroll);
             }
             this._container.off('mousemove', this._initScrollbar);
-            this._container[0].removeEventListener('touchstart', this._touchStartHandler);
+            this._unsubscribeMouseEnterLeave();
+            this._getScrollContainerChannel()
+               .unsubscribe('onReturnTakeScrollbar', this._returnTakeScrollbarHandler)
+               .unsubscribe('onRequestTakeScrollbar',  this._requestTakeScrollbarHandler);
 
             BaseCompatible.destroy.call(this);
             // task: 1173330288
@@ -550,7 +676,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                      visiblePath: this._options.navigationToolbar,
                      parent: this
                   });
-                  this._setPagesCount(Math.ceil(this._getScrollHeight() / this._container.height()));
+                  if (this._container.height()) {
+                     this._setPagesCount(Math.ceil(this._getScrollHeight() / this._container.height()));
+                  }
                   this._paging.subscribe('onSelectedItemChange', this._pageChangeHandler.bind(this));
                   this._page = 1;
                }.bind(this));

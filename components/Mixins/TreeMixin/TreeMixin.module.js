@@ -98,7 +98,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       }
    },
    searchProcessing = function(src, cfg) {
-      var resRecords = [], lastNode, lastPushedNode, curPath = [], pathElem, curParentContents;
+      var resRecords = [], lastNode, lastPushedNode, curPath = [], checkedParent;
 
       function pushPath(records, path, cfg) {
          if (path.length) {
@@ -155,17 +155,31 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             }
          }
 
-         if (item.isNode()) {
-            curParentContents = item.getContents();
-            pathElem = {};
+         function createPathElem(item) {
+            var
+               curParentContents = item.getContents(),
+               pathElem = {};
             pathElem[cfg.idProperty] = curParentContents.getId();
             pathElem[cfg.displayProperty] = curParentContents.get(cfg.displayProperty);
             pathElem['projItem'] = item;
             pathElem['item'] = curParentContents;
-            curPath.push(pathElem);
-            lastNode = item;
+            return pathElem;
          }
-         else {
+
+         if (item.isNode()) {
+            // Если выводятся хлебные крошки из нового узла и отсутствует curPath (такое может быть когда данные пришли
+            // на следующей странице), то вычисляем "с нуля" полный путь до данного узла основываясь цепочке родителей
+            if (item.getParent() != lastNode && !curPath.length) {
+               checkedParent = item.getParent();
+               while (checkedParent && !checkedParent.isRoot()) {
+                  curPath.unshift(createPathElem(checkedParent));
+                  lastNode = checkedParent;
+                  checkedParent = checkedParent.getParent();
+               }
+            }
+            curPath.push(createPathElem(item));
+            lastNode = item;
+         } else {
             if (lastNode != lastPushedNode) {
                pushPath(resRecords, curPath, cfg);
                lastPushedNode = lastNode;
@@ -300,7 +314,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    },
    applyExpandToItemsProjection = function(projection, cfg) {
       var idx, item;
-      projection.setEventRaising(false, true);
       for (idx in cfg.openedPath) {
          if (cfg.openedPath.hasOwnProperty(idx)) {
             item = projection.getItemBySourceItem(cfg._items.getRecordById(idx));
@@ -325,7 +338,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             }
          }
       }
-      projection.setEventRaising(true, true);
    },
    applyFilterToProjection = function(projection, cfg) {
       var
@@ -340,7 +352,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       }
       projection.setFilter(filter);
    },
-   expandAllItems = function(projection) {
+   expandAllItems = function(projection, cfg) {
       var
          recordSet = projection.getCollection(),
          projItems = projection.getItems(),
@@ -348,11 +360,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             idProperty: recordSet.getIdProperty(),
             parentProperty: projection.getParentProperty()
          }),
-         item;
+         item, itemId;
       for (var i = 0; i < projItems.length; i++) {
          item = projItems[i];
          if (item.isNode() && !item.isExpanded()) {
-            if (hierarchy.getChildren(item.getContents().getId(), recordSet).length) {
+            itemId = item.getContents().getId();
+            if (hierarchy.getChildren(itemId, recordSet).length) {
+               if (cfg.expand) {
+                  cfg.openedPath[itemId] = true;
+               }
                item.setExpanded(true);
                item.setLoaded(true);
             }

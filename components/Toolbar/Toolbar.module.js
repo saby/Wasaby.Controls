@@ -1,7 +1,6 @@
 define('js!SBIS3.CONTROLS.Toolbar', [
    "Core/IoC",
    "Core/core-functions",
-   "Core/ConsoleLogger",
    "js!SBIS3.CONTROLS.ButtonGroupBase",
    "tmpl!SBIS3.CONTROLS.Toolbar",
    "tmpl!SBIS3.CONTROLS.Toolbar/resources/ItemTemplate",
@@ -9,7 +8,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
    "js!SBIS3.CONTROLS.IconButton",
    "js!SBIS3.CONTROLS.CommandsButton",
    'css!SBIS3.CONTROLS.Toolbar'
-], function( IoC, cFunctions, ConsoleLogger, ButtonGroupBase, dotTplFn, ItemTemplate, cInstance) {
+], function( IoC, cFunctions, ButtonGroupBase, dotTplFn, ItemTemplate, cInstance) {
 
    'use strict';
     var

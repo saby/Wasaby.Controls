@@ -22,13 +22,12 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       'js!SBIS3.CONTROLS.LongOperationsTabCalls',
       'js!SBIS3.CONTROLS.LongOperationsCallsPool',
       'js!SBIS3.CONTROLS.LongOperationsBunch',
-      'js!SBIS3.CONTROLS.ILongOperationsProducer',
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.LongOperationHistoryItem',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model'
    ],
 
-   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsConst, LongOperationsTabCalls, LongOperationsCallsPool, LongOperationsBunch, ILongOperationsProducer, LongOperationEntry, LongOperationHistoryItem, Model) {
+   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsConst, LongOperationsTabCalls, LongOperationsCallsPool, LongOperationsBunch, LongOperationEntry, LongOperationHistoryItem, Model) {
       'use strict';
 
       /**
@@ -111,6 +110,9 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       /**
        * Класс менеджера длительных операций
        * @public
+       *
+       * @author Спирин Виктор Алексеевич
+       *
        * @type {SBIS3.CONTROLS.LongOperationsManager}
        */
       var manager = /*CoreExtend.extend*/(/** @lends SBIS3.CONTROLS.LongOperationsManager.prototype */{
@@ -476,6 +478,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                   _unregister(n);
                }
                if (_channel) {
+                  _channel.notifyWithTarget('ondestroy', manager);
                   _channel.unsubscribeAll();
                   _channel.destroy();
                   _channel = null;
@@ -580,7 +583,9 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             // Уведомить другие вкладки
             _tabChannel.notify('LongOperations:Manager:onActivity', {type:'unregister', tab:_tabKey, producer:name});
             // И уведомить своих подписчиков
-            _channel.notifyWithTarget('onproducerunregistered', manager);
+            if (!_isDestroyed) {
+               _channel.notifyWithTarget('onproducerunregistered', manager);
+            }
          }
          return done;
       };

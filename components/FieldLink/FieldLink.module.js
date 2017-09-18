@@ -95,6 +95,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
           },
           
           isSimplePlaceholder: function(placeholder) {
+             /**
+              * Сюда может прилететь rkString
+              * пока что это единственный способ ее идентифицировать
+              */
+             if (placeholder && placeholder.saveProtoM) {
+                placeholder = '' + placeholder;
+             }
              return typeof placeholder === 'string' && placeholder.indexOf('SBIS3.CONTROLS.FieldLink.Link') === -1;
           }
        };
@@ -620,7 +627,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                       elemToFocus.blur().focus();
 
                       //https://online.sbis.ru/opendoc.html?guid=19af9bf9-0d16-4f63-8aa8-6d0ef7ff0799
-                      if(!suggestShowed && !this._options.task1174306848) {
+                      if (!suggestShowed && !this._options.task1174306848) {
                          this.hidePicker();
                       }
                    }

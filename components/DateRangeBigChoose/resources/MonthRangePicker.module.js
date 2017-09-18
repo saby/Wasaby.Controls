@@ -6,11 +6,10 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
    "js!SBIS3.CONTROLS.RangeMixin",
    "js!SBIS3.CONTROLS.RangeSelectableViewMixin",
    "js!WS.Data/Source/Base",
-   "js!WS.Data/Source/DataSet",
    "Core/core-instance",
    "js!SBIS3.CONTROLS.Utils.DateUtil",
    "js!SBIS3.CONTROLS.DateRangeBigChoose.MonthView"
-], function ( constants, Deferred, ListView, ItemTmpl, RangeMixin, RangeSelectableViewMixin, Base, DataSet, cInstance, dateUtils) {
+], function ( constants, Deferred, ListView, ItemTmpl, RangeMixin, RangeSelectableViewMixin, Base, cInstance, dateUtils) {
    'use strict';
 
    var _startingOffset = 1000000;

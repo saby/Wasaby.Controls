@@ -106,16 +106,18 @@ define('js!SBIS3.CONTROLS.Utils.ImageUtil',['Core/Deferred', 'Core/constants'], 
             var
                onLoadHandler = function(){
                   imgReady.callback();
-                  img.removeEventListener('load',onLoadHandler);
-                  img.removeEventListener('error',onErrorHandler);
+                  img.removeEventListener('load', onLoadHandler);
+                  img.removeEventListener('error', onErrorHandler);
                },
                onErrorHandler = function(){
-                  imgReady.errback();
-                  img.removeEventListener('error',onErrorHandler);
-                  img.removeEventListener('load',onLoadHandler);
+                   imgReady.errback();
+                   img.removeEventListener('error',onErrorHandler);
+                   img.removeEventListener('load',onLoadHandler);
+               },
+               listenImage = function(img){
+                   img.addEventListener('load', onLoadHandler);
+                   img.addEventListener('error', onErrorHandler);
                };
-            img.addEventListener('load', onLoadHandler);
-            img.addEventListener('error', onErrorHandler)
             if (constants.browser.firefox || constants.browser.isIE12) {
                if (url.indexOf('id=') > -1) {
                   url = url.replace(/\?id=(.+?)&/, function (a, b) {
@@ -124,6 +126,7 @@ define('js!SBIS3.CONTROLS.Utils.ImageUtil',['Core/Deferred', 'Core/constants'], 
                } else {
                   url += (url.indexOf('?') > -1 ? '&' : '?') + ('&t=' + (new Date().getTime()));
                }
+               listenImage(img);
                img.setAttribute('src', url);
             } else {
                xhr = new XMLHttpRequest();
@@ -132,6 +135,7 @@ define('js!SBIS3.CONTROLS.Utils.ImageUtil',['Core/Deferred', 'Core/constants'], 
                xhr.onreadystatechange = function () {
                   if (xhr.readyState === 4) {
                      if (xhr.status >= 200 && xhr.status < 400) {
+                        listenImage(img);
                         img.setAttribute('originsrc', url);
                         img.setAttribute('src', constants.browser.chrome ? url : URL.createObjectURL(xhr.response));
                      } else {

@@ -3,7 +3,6 @@ define('js!SBIS3.CONTROLS.DateRange', [
    'js!SBIS3.CORE.CompoundControl',
    'js!SBIS3.CONTROLS.PickerMixin',
    'html!SBIS3.CONTROLS.DateRange',
-   'js!SBIS3.CONTROLS.Utils.DateUtil',
    'js!SBIS3.CONTROLS.FormWidgetMixin',
    'js!SBIS3.CONTROLS.RangeMixin',
    'js!SBIS3.CONTROLS.DateRangeMixin',
@@ -15,16 +14,18 @@ define('js!SBIS3.CONTROLS.DateRange', [
    'css!SBIS3.CONTROLS.DateRange',
    'css!SBIS3.CONTROLS.FormattedTextBox',
    'css!SBIS3.CONTROLS.DateBox'
-], function (CompoundControl, PickerMixin, dotTplFn, DateUtil, FormWidgetMixin, RangeMixin, DateRangeMixin, DateRangeBigChoose, ControlsValidators) {
+], function (CompoundControl, PickerMixin, dotTplFn, FormWidgetMixin, RangeMixin, DateRangeMixin, DateRangeBigChoose, ControlsValidators) {
    'use strict';
    /**
     * Класс контрола выбора диапазона дат.
     * @class SBIS3.CONTROLS.DateRange
     * @extends SBIS3.CORE.CompoundControl
+    *
     * @mixes SBIS3.CONTROLS.RangeMixin
     * @mixes SBIS3.CONTROLS.DateRangeMixin
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.FormWidgetMixin
+    *
     * @author Миронов Александр Юрьевич
     * @demo SBIS3.CONTROLS.Demo.MyDateRange
     *

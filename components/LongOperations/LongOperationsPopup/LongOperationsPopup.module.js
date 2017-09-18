@@ -29,8 +29,10 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
        * Класс всплывающего информационное окна длительных операций
        * @class SBIS3.CONTROLS.LongOperationsPopup
        * @extends SBIS3.CONTROLS.NotificationPopup
+       *
+       * @author Спирин Виктор Алексеевич
        */
-      var LongOperationsPopup = NotificationPopup.extend({
+      var LongOperationsPopup = NotificationPopup.extend(/** @lends SBIS3.CONTROLS.LongOperationsPopup.prototype */{
          $protected: {
             _options: {
                userId: UserInfo.get('Пользователь'),
@@ -77,7 +79,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
             this._tabChannel = new TabMessage();
 
             this._bindEvents();
-            this._longOpList.reload();
+            //this._longOpList.reload();
          },
 
          _bindEvents: function () {

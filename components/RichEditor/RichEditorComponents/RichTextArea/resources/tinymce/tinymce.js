@@ -337,7 +337,10 @@
     * Modifed to be a feature fill and wrapped as tinymce module.
     */
    define("tinymce/util/Promise", [], function() {
-      if (window.Promise) {
+      if (window.Promise && window.Promise.all) {
+         // Только если это стандартное обещание его можно использовать (для IE)
+         //TODO: По мере исправления этого недочёта в оригинальном TinyMCE - обновить
+         // Задача https://online.sbis.ru/opendoc.html?guid=827218ed-d90d-46e5-af76-814bb7bf715b
          return window.Promise;
       }
 

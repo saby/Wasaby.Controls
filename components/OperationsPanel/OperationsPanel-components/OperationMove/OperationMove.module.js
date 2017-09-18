@@ -3,9 +3,8 @@
  */
 define('js!SBIS3.CONTROLS.OperationMove', [
    'js!SBIS3.CONTROLS.Link',
-   'js!SBIS3.CONTROLS.Action.List.InteractiveMove',
    'i18n!SBIS3.CONTROLS.OperationMove'
-], function(Link, InteractiveMove) {
+], function(Link) {
    /**
     * Операция перемещения.
     *

@@ -1,0 +1,14 @@
+<div class="controls-TextBox {{ _classes }}" title="{{ _options.tooltip }}">
+    <div class="controls-TextBox__wrapper" title="{{ _options.tooltip }}">
+        <ws:if data="{{ _beforeFieldWrapper }}">
+            <ws:partial class="controls-TextBox__beforeFieldWrapper" template="{{ _beforeFieldWrapper }}" scope="{{...}}"/>
+        </ws:if>
+        <ws:partial template="{{ _textFieldWrapper }}" scope="{{...}}"/>
+        <ws:if data="{{ _afterFieldWrapper }}">
+            <ws:partial class="controls-TextBox__afterFieldWrapper" template="{{ _afterFieldWrapper }}" scope="{{...}}"/>
+        </ws:if>
+        <ws:if data="{{ _options.informationIconColor }}">
+           <!--TODO: Тут будет IconButton-->
+        </ws:if>
+    </div>
+</div>

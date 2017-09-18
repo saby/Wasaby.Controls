@@ -1,9 +1,7 @@
 define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "Core/core-functions",
-   "Core/constants",
    "Core/Deferred",
    "Core/IoC",
-   "Core/ConsoleLogger",
    "js!WS.Data/Source/Memory",
    "js!WS.Data/Source/SbisService",
    "js!WS.Data/Collection/RecordSet",
@@ -30,10 +28,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "Core/helpers/Function/debounce"
 ], function (
    cFunctions,
-   constants,
    Deferred,
    IoC,
-   ConsoleLogger,
    MemorySource,
    SbisService,
    RecordSet,
@@ -1156,7 +1152,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _removeItems: function (items, groupId) {
-         var removedElements = $([]), prev;
+         var prev;
 
          for (var i = 0; i < items.length; i++) {
             var item = items[i];
@@ -1165,7 +1161,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                this._clearItems(targetElement);
                /*TODO С этим отдельно разобраться*/
 
-               removedElements.push(targetElement.get(0));
+               targetElement.get(0).remove();
                /* TODO внештатная ситуация, при поиске могли удалить папку/путь, сейчас нет возможности найти это в гриде и удалить
                   поэтому просто перерисуем весь грид. Как переведём группировку на item'ы, это можно удалить */
             } else if(this._isSearchMode && this._isSearchMode() && item.isNode()) { // FIXME "Грязная проверка" на наличие метода в .220, код удалится в .230
@@ -1173,8 +1169,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                return;
             }
          }
-         removedElements.remove();
-         this._notifyOnDrawItems();
+      },
+
+      _removeItemsLight: function(items) {
+         for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var targetElement = this._getDomElementByItem(item);
+            if (targetElement.length) {
+               this._clearItems(targetElement);
+               targetElement.get(0).remove();
+            }
+         }
       },
 
       _getSourceNavigationType: function(){
@@ -1625,8 +1630,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                       && (Object.getPrototypeOf(list).constructor == Object.getPrototypeOf(list).constructor)
                       && (Object.getPrototypeOf(list.getAdapter()).constructor == Object.getPrototypeOf(this.getItems().getAdapter()).constructor)
                    ) {
-                      this._options._items.setMetaData(list.getMetaData());
-                      this._options._items.assign(list);
+                      this._setNewDataAfterReload(list);
                       self._drawItemsCallbackDebounce();
                    } else {
                       this._unsetItemsEventHandlers();
@@ -1645,7 +1649,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    //self._notify('onBeforeRedraw');
                    return list;
                 }, self))
-                .addErrback(forAliveOnly(this._loadErrorProcess, self));
+                .addErrback(function(error) {
+                   if(!self.isDestroyed()) {
+                      self._loadErrorProcess(error);
+                   }
+                   /* Если не прокинуть ошибку дальше, то далее в цепочке будут срабатывать
+                      callback'и, а не errback'и */
+                   return error;
+                });
              this._loader = def;
           } else {
              if (this._options._itemsProjection) {
@@ -1662,6 +1673,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          return def;
       }),
+
+      _setNewDataAfterReload: function (list) {
+         this._options._items.setMetaData(list.getMetaData());
+         this._options._items.assign(list);
+      },
 
       _onDataLoad: function(){
 
@@ -2627,6 +2643,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        */
       onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
          if (this._isNeedToRedraw()) {
+            if (newItems.length > 0) {
+               //TODO проекция отдает неправильные индексы выписана ошибка https://online.sbis.ru/opendoc.html?guid=ccb6214b-70ab-45d3-b5e3-e2e15ddeb639&des=
+               newItemsIndex = this._getItemsProjection().getIndex(newItems[0]);
+            }
 	         switch (action) {
 	            case IBindCollection.ACTION_ADD:
                case IBindCollection.ACTION_MOVE:

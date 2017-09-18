@@ -1,22 +1,28 @@
 define('js!SBIS3.CONTROLS.DateRangeChoose',[
    "Core/Deferred",
    "Core/IoC",
-   "Core/ConsoleLogger",
    "js!SBIS3.CORE.CompoundControl",
    "tmpl!SBIS3.CONTROLS.DateRangeChoose",
    "js!SBIS3.CONTROLS.RangeMixin",
    "js!SBIS3.CONTROLS.DateRangeMixin",
-   "js!SBIS3.CONTROLS.Utils.DateUtil",
-   "Core/core-instance",
    "Core/helpers/event-helpers",
    "Core/helpers/date-helpers",
    "js!SBIS3.CONTROLS.IconButton",
    "js!SBIS3.CONTROLS.Link",
    'css!SBIS3.CONTROLS.DateRangeChoose'
-], function ( Deferred, IoC, ConsoleLogger,CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, DateUtil, cInstance, eHelpers, dateHelpers) {
+], function ( Deferred, IoC, CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, eHelpers, dateHelpers) {
    'use strict';
-
-   var DateRangeChoose = CompoundControl.extend([RangeMixin, DateRangeMixin], {
+    /**
+     * @class SBIS3.CONTROLS.DateRangeChoose
+     * @extends SBIS3.CORE.CompoundControl
+     *
+     * @mixes SBIS3.CONTROLS.RangeMixin
+     * @mixes SBIS3.CONTROLS.DateRangeMixin
+     *
+     * @public
+     * @control
+     */
+   var DateRangeChoose = CompoundControl.extend([RangeMixin, DateRangeMixin], /** @lends SBIS3.CONTROLS.DateRangeChoose.prototype */{
       /**
        * @typedef {Object} customPeriod
        * @property {String} label Заголовок который будет отбражаться в контроле.

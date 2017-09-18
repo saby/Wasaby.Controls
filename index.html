@@ -221,6 +221,9 @@
                <li>
                   <div id="VD_TreeViewEnv"></div>
                </li>
+               <li>
+                  <div id="VD_VirtualScroll"></div>
+               </li>
             </ul>
             <h3>Edit in place</h3>
             <ul>
@@ -584,6 +587,13 @@
                element: "VD_TreeView",
                caption: 'TreeView',
                href: '/pages/VD_TreeView.html'
+            })
+         });
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "VD_VirtualScroll",
+               caption: 'Virtual Scroll',
+               href: '/pages/VD_VirtualScroll.html'
             })
          });
          require(["js!SBIS3.CONTROLS.Link"], function (r) {

@@ -48,13 +48,32 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          month: 'month',
          year: 'year'
       };
-
-   var DateRangeBigChoose = CompoundControl.extend([RangeSelectableViewMixin, RangeMixin], {
+    /**
+     *
+     * @class SBIS3.CONTROLS.DateRangeBigChoose
+     * @extends SBIS3.CORE.CompoundControl
+     *
+     * @mixes SBIS3.CONTROLS.RangeMixin
+     * @mixes SBIS3.CONTROLS.RangeSelectableViewMixin
+     *
+     * @public
+     * @control
+     */
+   var DateRangeBigChoose = CompoundControl.extend([RangeSelectableViewMixin, RangeMixin], /** @lends SBIS3.CONTROLS.DateRangeBigChoose.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
+             /**
+              * @cfg {String}
+              */
             mask: 'DD.MM.YY',
+             /**
+              * @cfg {Array}
+              */
             startValueValidators: [],
+             /**
+              * @cfg {Array}
+              */
             endValueValidators: [],
             _monthsNames: constants.Date.longMonths
          },
@@ -583,6 +602,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
 
       _updateYearsRange: function (lastYear) {
          var buttonsCount = 6,
+            lastYear = lastYear || parseInt(this.getChildControlByName('YearsRangeBtn' + (buttonsCount - 1)).getCaption(), 10),
             container, btn, year;
          for (var i = 0; i < buttonsCount; i++) {
             year = lastYear - buttonsCount + 1 + i;
@@ -752,6 +772,10 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
             this.getContainer().addClass(css_classes.selectionProcessing);
             if (selectionType === selectionTypes.months) {
                this._dateRangePicker.startSelection(start, end);
+            } else if (selectionType === selectionTypes.years) {
+               // При клике на год меняется ототбражаемый год в календаре, необходимо обновить выделение текущего года
+               // в панеле выбора интервала годов
+               this._updateYearsRange();
             }
          } else {
             this.getContainer().removeClass(css_classes.selectionProcessing);

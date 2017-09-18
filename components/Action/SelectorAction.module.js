@@ -2,7 +2,6 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
    [
       'js!SBIS3.CONTROLS.Action.Action',
       'js!SBIS3.CONTROLS.Action.DialogMixin',
-      'js!SBIS3.CONTROLS.Utils.Query',
       'js!SBIS3.CONTROLS.Utils.OpenDialog',
       'Core/core-merge',
       'Core/Deferred',
@@ -10,17 +9,18 @@ define('js!SBIS3.CONTROLS.Action.SelectorAction',
       'Core/Indicator',
       'Core/helpers/Function/forAliveOnly'
    ],
-    function (Action, DialogMixin, Query, OpenDialogUtil, cMerge, Deferred, Context, Indicator, forAliveOnly) {
+    function (Action, DialogMixin, OpenDialogUtil, cMerge, Deferred, Context, Indicator, forAliveOnly) {
        'use strict';
        /**
        * Класс, который описывает действие открытия окна с заданным шаблоном. Из этого окна можно осуществлять выбор.
        * @class SBIS3.CONTROLS.Action.SelectorAction
-       * @public
        * @extends SBIS3.CONTROLS.Action.Action
+       *
        * @mixes SBIS3.CONTROLS.Action.DialogMixin
        *
        * @demo SBIS3.CONTROLS.Demo.DemoSelectorAction
        *
+       * @public
        * @author Герасимов Александр Максимович
        */
        var SelectorAction = Action.extend([DialogMixin], /** @lends SBIS3.CONTROLS.Action.SelectorAction.prototype */{

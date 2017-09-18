@@ -1,9 +1,20 @@
 <div class="controls-ListView {{multiselect !== false ? 'controls-ListView__multiselect' : 'controls-ListView__multiselect__off'}}{{ _serverRender ? ' controls-ListView__dataLoaded'}}"
      event:onmouseleave="_mouseLeave()">
+
+   <!-- Placeholder and trigger for activating page load in virtual scroll -->
+   <div class="controls-ListView__virtualScrollTopPlaceholder" style="height: {{ _virtualScroll.placeholderSize.top }}px;">
+      <div class="controls-ListView__virtualScrollTopLoadTrigger" ></div>
+   </div>
+
    <div class="controls-ListView__itemsContainer">
       <ws:partial template="{{_itemsTemplate}}"
                   records="{{_records}}"
                   scope="{{...}}"/>
+   </div>
+
+   <!-- Placeholder and trigger for activating page load in virtual scroll -->
+   <div class="controls-ListView__virtualScrollBottomPlaceholder" style="height: {{ _virtualScroll.placeholderSize.bottom }}px;">
+      <div class="controls-ListView__virtualScrollBottomLoadTrigger" ></div>
    </div>
 
    <ws:if data="{{loading}}">
@@ -15,15 +26,5 @@
          </div>
       </div>
    </ws:if>
-
-   <ws:if data="{{ _options.itemsActions }}">
-      <ws:WSControls.Lists.ItemsToolbar.ItemsToolbarCompatible
-              name="itemsToolbar"
-              idProperty="{{ _options.idProperty }}"
-              itemsActions="{{ _options.itemsActions }}"
-              activeItem="{{ { 'parentContainer': _container, 'display': _display, 'hoveredIndex': _hoveredIndex } }}"
-      />
-   </ws:if>
-
 </div>
 

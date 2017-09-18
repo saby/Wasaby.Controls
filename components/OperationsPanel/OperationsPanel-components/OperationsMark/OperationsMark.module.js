@@ -4,11 +4,12 @@
 define('js!SBIS3.CONTROLS.OperationsMark', [
    'js!SBIS3.CONTROLS.CompoundControl',
    'Core/core-instance',
+   'Core/helpers/Function/forAliveOnly',
    'tmpl!SBIS3.CONTROLS.OperationsMark',
    'js!SBIS3.CONTROLS.MenuLink',
    'js!SBIS3.CONTROLS.CheckBox',
    'i18n!SBIS3.CONTROLS.OperationsMark'
-], function(CompoundControl, cInstance, template) {
+], function(CompoundControl, cInstance, forAliveOnly, template) {
    /**
     * Операции выделения.
     *
@@ -162,14 +163,19 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
             this._menuButton.setCaption(caption);
          }
          this._menuButton.setVisible(hasMarkOptions);
+         this._notifyOnSizeChanged(true);
       },
       _captionRender: function(selectedCount) {
          return selectedCount ? rk('Отмечено') + '(' + selectedCount + ')' : rk('Отметить');
       },
-      _updateMark: function() {
+
+      //Метод выполняется при изменении выделения в табличном преставлении данных. На это же выделение, ранее могли подписаться
+      //другте обработчики, котрые перестраивают панель, и получится что в момент вызова нашего обработчика, кнопка
+      //будет уже разрушена. Чтобы исключить ошибочное поведение, обернём метод в forAliveOnly.
+      _updateMark: forAliveOnly(function() {
          this._updateMarkButton();
          this._updateMarkCheckBox();
-      },
+      }),
       /**
        * Выбрать все элементы.
        */

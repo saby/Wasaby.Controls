@@ -2,7 +2,6 @@
  * Created by ad.chistyakova on 10.04.2015.
  */
 define('js!SBIS3.CONTROLS.MassAmountSelector', [
-   "Core/helpers/fast-control-helpers",
    'js!SBIS3.CORE.CompoundControl',
    'html!SBIS3.CONTROLS.MassAmountSelector',
    'js!SBIS3.CONTROLS.Utils.InformationPopupManager',
@@ -11,7 +10,7 @@ define('js!SBIS3.CONTROLS.MassAmountSelector', [
    'js!SBIS3.CONTROLS.Button',
    'i18n!SBIS3.CONTROLS.MassAmountSelector',
    'css!SBIS3.CONTROLS.MassAmountSelector'
-], function(fcHelpers, Control, dotTplFn, InformationPopupManager) {
+], function(Control, dotTplFn, InformationPopupManager) {
 
    var MassAmountSelector = Control.extend({
 

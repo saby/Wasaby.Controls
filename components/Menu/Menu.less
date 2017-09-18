@@ -74,8 +74,8 @@
 .controls-Menu__hasChild {
    &:after {
       position: absolute;
-      font-family: 'cbuc-icons' !important;
-      font-size: 16px;
+      font-family: @default-icon-small-font !important;
+      font-size: @menu-expand-icon-font-size;
       top: @menu-expand-top-offset;
       right: @menu-expand-right-offset;
       width: @menu-expand-width;
@@ -110,6 +110,7 @@
 .controls-Menu__SubMenuPopup {
    margin: @menu-subpopup-margin;
    padding: @menu-subpopup-padding;
+   border: none;
 }
 
 .controls-Menu {

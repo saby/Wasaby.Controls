@@ -51,8 +51,13 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
        * Класс для отображения списка длительных операций
        * @class SBIS3.CONTROLS.LongOperationsList
        * @extends SBIS3.CORE.CompoundControl
+       *
+       * @author Спирин Виктор Алексеевич
+       *
+       * @public
+       *
        */
-      var LongOperationsList = CompoundControl.extend({
+      var LongOperationsList = CompoundControl.extend( /** @lends SBIS3.CONTROLS.LongOperationsList.prototype */{
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
@@ -108,7 +113,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
             var self = this;
             var STATUSES = LongOperationEntry.STATUSES;
 
-            ['onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted', 'onproducerregistered', 'onproducerunregistered'].forEach(function (evtType) {
+            ['onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted', 'onproducerregistered', 'onproducerunregistered'/*, 'ondestroy'*/].forEach(function (evtType) {
                self.subscribeTo(longOperationsManager, evtType, function (evtName, evt) {
                   var dontReload;
                   switch (evtName.name) {
@@ -177,7 +182,8 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   if (itemsActionsGroup) {
                      itemsActionsGroup.setItems(actions);
                   }
-                  else {
+                  else
+                  if(actions && actions.length) {
                      self._view.setItemsActions(actions);
                   }
                }
@@ -195,6 +201,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                var STATUSES = LongOperationEntry.STATUSES;
                var self = this;
                if (model.get('canSuspend') && model.get('status') === STATUSES.running) {
+                  // Заголовок зависит от модели
                   var title = rk(model.get('resumeAsRepeat') ? 'Отменить' : 'Приостановить', 'ДлительныеОперации');
                   actions.push({
                      name: 'suspend',
@@ -383,11 +390,12 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   var args = model.get('resultHandlerArgs');
                   if (args) {
                      if (typeof args === 'string') {
+                        // Это могут быть как сложные данные в виде json, так и просто одиночная строка
                         try {
                            args = JSON.parse(args);
                         }
                         catch (ex) {
-                           IoC.resolve('ILogger').error('SBIS3.CONTROLS.LongOperationsList', 'JSON data is corrupted');
+                           // Значит просто строка
                         }
                      }
                      if (!Array.isArray(args)) {

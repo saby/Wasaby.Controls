@@ -6,14 +6,12 @@ define('js!SBIS3.CONTROLS.FormController', [
    "Core/EventBus",
    "Core/Deferred",
    "Core/IoC",
-   "Core/ConsoleLogger",
    "Core/core-instance",
    'Core/helpers/Function/forAliveOnly',
    'Core/helpers/Hcontrol/doAutofocus',
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CORE.LoadingIndicator",
    "js!WS.Data/Entity/Record",
-   "js!WS.Data/Entity/Model",
    "js!WS.Data/Source/SbisService",
    "js!SBIS3.CONTROLS.Utils.InformationPopupManager",
    "js!SBIS3.CONTROLS.Utils.OpenDialog",
@@ -22,7 +20,7 @@ define('js!SBIS3.CONTROLS.FormController', [
    "i18n!SBIS3.CONTROLS.FormController",
    'css!SBIS3.CONTROLS.FormController'
 ],
-   function( cContext, cFunctions, cMerge, CommandDispatcher, EventBus, Deferred, IoC, ConsoleLogger, cInstance, forAliveOnly, doAutofocus, CompoundControl, LoadingIndicator, Record, Model, SbisService, InformationPopupManager, OpenDialogUtil, TitleManager) {
+   function( cContext, cFunctions, cMerge, CommandDispatcher, EventBus, Deferred, IoC, cInstance, forAliveOnly, doAutofocus, CompoundControl, LoadingIndicator, Record, SbisService, InformationPopupManager, OpenDialogUtil, TitleManager) {
    /**
     * Компонент, на основе которого создают диалог, данные которого инициализируются по записи.
     * В частном случае компонент применяется для создания <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/'>диалогов редактирования записи</a>.
