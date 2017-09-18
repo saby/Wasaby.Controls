@@ -69,26 +69,6 @@
    height: 1px;
 }
 
-.controls-ListView__multiselect {
-   .controls-ListView__hoveredItem {
-      .controls-ListView__itemCheckBox {
-         .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
-      }
-   }
-   .controls-ListView__item__multiSelected:not(.controls-ListView__item__partiallySelected) {
-      .controls-ListView__itemCheckBox {
-         .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
-         .checkbox-checked-size(@check-box-icon-successful-size, @check-box-icon-successful-left, @check-box-icon-successful-top);
-      }
-   }
-   .controls-ListView__item__partiallySelected {
-      .controls-ListView__itemCheckBox {
-         .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
-         .checkbox-null-size(@check-box-icon-size, @check-box-icon-null-size);
-      }
-   }
-}
-
 .controls-ListView__EmptyData{
    color: @listView-empty-data-color;
    .box-sizing(border-box);
