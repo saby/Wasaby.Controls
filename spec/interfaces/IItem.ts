@@ -1,0 +1,5 @@
+interface IItem {
+
+};
+
+export = IItem;
