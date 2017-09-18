@@ -332,11 +332,8 @@ define('js!SBIS3.CONTROLS.Selectable', [
         TreeView
        */
       getSelectedItem : function() {
-         var
-             selKey = this.getSelectedKey(),
-             items = this.getItems();
-
-         return selKey && items ? items.getRecordById(selKey) : null;
+         var items = this.getItems();
+         return items ? (items.getRecordById(this.getSelectedKey()) || null) : null;
       },
 
       _drawSelectedItem : function() {
