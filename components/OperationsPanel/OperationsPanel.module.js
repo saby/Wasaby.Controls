@@ -394,6 +394,10 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          if(!this._itemsMenuCreated){
             this._itemsMenuCreated = true;
             moduleStubs.require(['js!SBIS3.CONTROLS.MenuIcon']).addCallback(function (MenuIcon) {
+
+               var massMode = self._container.hasClass('controls-operationsPanel__massMode');
+               var selectionMode = self._container.hasClass('controls-operationsPanel__selectionMode');
+
                self._itemsMenu = new MenuIcon[0]({
                   parent: self,
                   element: $('<span>').insertAfter(self._getItemsContainer()),
@@ -405,21 +409,15 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                   icon: 'sprite:icon-size icon-ExpandDown icon-primary action-hover',
                   pickerConfig: {
                      closeButton: true,
-                     className: 'controls-operationsPanel__itemsMenu_picker',
+                     className: 'controls-operationsPanel__itemsMenu_picker' +
+                        (massMode ? ' controls-operationsPanel__massMode' : '') +
+                        (selectionMode ? ' controls-operationsPanel__selectionMode' : ''),
                      horizontalAlign: {
                         side: 'right',
                         offset: 48
                      }
                   }
                });
-
-               //Инициализируем режим
-               if(self._container.hasClass('controls-operationsPanel__massMode')){
-                  self._itemsMenu.getContainer().addClass('controls-operationsPanel__massMode');
-               }
-               if(self._container.hasClass('controls-operationsPanel__selectionMode')){
-                  self._itemsMenu.getContainer().addClass('controls-operationsPanel__selectionMode');
-               }
 
                self._itemsMenu._setPickerContent = function() {
                   $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-24 icon-size icon-ExpandUp icon-primary action-hover');
