@@ -5,9 +5,8 @@ define('js!SBIS3.CONTROLS.TreeView', [
    'tmpl!SBIS3.CONTROLS.TreeView/resources/ItemTemplate',
    'tmpl!SBIS3.CONTROLS.TreeView/resources/ItemContentTemplate',
    "tmpl!SBIS3.CONTROLS.TreeView/resources/FooterWrapperTemplate",
-   'js!SBIS3.CONTROLS.MassSelectionHierarchyController',
    'css!SBIS3.CONTROLS.TreeView'
-], function (ListView, TreeMixin, TreeViewMixin, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, MassSelectionHierarchyController) {
+], function (ListView, TreeMixin, TreeViewMixin, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate) {
    'use strict';
    var getItemTemplateData = function (cfg) {
       var config = {
@@ -70,13 +69,6 @@ define('js!SBIS3.CONTROLS.TreeView', [
       init: function () {
          TreeView.superclass.init.apply(this, arguments);
          this._container.addClass('controls-TreeView');
-         if (this._options.useSelectAll) {
-            this._makeMassSelectionController();
-         }
-      },
-
-      _makeMassSelectionController: function() {
-         this._massSelectionController = new MassSelectionHierarchyController(this._getMassSelectorConfig());
       },
 
       _onDragHandler: function (dragObject, e) {

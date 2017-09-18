@@ -2,6 +2,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
    "Core/ParallelDeferred",
    'Core/core-clone',
    "Core/Deferred",
+   "Core/moduleStubs",
    "Core/IoC",
    "WS.Data/Collection/List",
    "js!SBIS3.CONTROLS.ArraySimpleValuesUtil",
@@ -9,7 +10,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
    "Core/core-instance",
    "Core/helpers/Function/forAliveOnly",
    "Core/helpers/Array/clone"
-], function( ParallelDeferred, coreClone, Deferred, IoC, List, ArraySimpleValuesUtil, isEqualObject, cInstance, forAliveOnly, aClone) {
+], function( ParallelDeferred, coreClone, Deferred, moduleStubs, IoC, List, ArraySimpleValuesUtil, isEqualObject, cInstance, forAliveOnly, aClone) {
 
    var EMPTY_SELECTION = [null],
        convertToKeys = function(list, keyField) {
@@ -149,13 +150,30 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
              * @see toggleItemsSelection
              * @see toggleItemsSelectionAll
              */
-            selectedItems : null
+            selectedItems : null,
+            /**
+             * @cfg {Boolean} Использовать функционал выбора всех записей
+             * @see getSelection
+             */
+            useSelectAll: false
          },
-         _loadItemsDeferred: undefined
+         _loadItemsDeferred: undefined,
+         _selectorController: undefined
       },
 
       $constructor: function() {
-         this._publish('onSelectedItemsChange', 'onBeforeSelectedItemsChange');
+         this._publish('onSelectedItemsChange');
+
+         if (this._options.useSelectAll) {
+            var moduleName = cInstance.instanceOfMixin(this, 'SBIS3.CONTROLS.TreeMixin') ?
+               'js!SBIS3.CONTROLS.MassSelectionHierarchyController' : 'js!SBIS3.CONTROLS.MassSelectionController';
+            moduleStubs.require([moduleName]).addCallback(function(controller) {
+               this._selectorController = new controller[0]({
+                  linkedObject: this,
+                  idProperty: this._options.idProperty
+               });
+            }.bind(this));
+         }
 
          if (this._options.selectedKeys && this._options.selectedKeys.length) {
             if (Array.isArray(this._options.selectedKeys)) {
@@ -207,6 +225,9 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
             if (opts.selectedItems) {
                opts.selectedKeys = convertToKeys(opts.selectedItems, opts.idProperty);
             }
+            if (!opts.multiselect && opts.useSelectAll) {
+               opts.useSelectAll = false;
+            }
          }
       },
       /**
@@ -228,7 +249,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
              difference;
 
          if (Array.isArray(idArray)) {
-            difference = this._getArrayDifference(this._options.selectedKeys, idArray);
+            if (this._selectorController) {
+               this._selectorController.setSelectedKeys(idArray);
+            }
+
+            difference = ArraySimpleValuesUtil.getArrayDifference(this._options.selectedKeys, idArray);
                /* Для правильной работы биндингов св-во должно присваиваться как есть,
                   чтобы метод get возвращал то, что передали в set +
                   при любой модификации св-ва, должно создаваться новое значание, чтобы порвалась ссылка на значение в контексте
@@ -253,31 +278,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
             throw new Error('Argument must be instance of Array');
          }
       },
-      /**
-       * Сравнивает два массива, возвращает разницу между ними
-       * @param arrayOne
-       * @param arrayTwo
-       * @returns {{added: Array, removed: Array}}
-       * @private
-       */
-      _getArrayDifference : function(arrayOne, arrayTwo) {
-         var result = {
-                added: [],
-                removed: []
-             };
-
-         /* Найдём удаленные */
-         result.removed = arrayOne.filter(function(item) {
-            return !ArraySimpleValuesUtil.hasInArray(arrayTwo, item);
-         });
-
-         /* Найдём добавленные */
-         result.added = arrayTwo.filter(function(item) {
-            return !ArraySimpleValuesUtil.hasInArray(arrayOne, item);
-         });
-
-         return result;
-      },
 
       /**
        * Устанавливает все элементы коллекции выбранными.
@@ -301,7 +301,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
        * @see toggleItemsSelectionAll
        */
       setSelectedItemsAll : function() {
-         this.setSelectedKeys(this._convertToKeys(this.getItems()));
+         if (this._selectorController) {
+            this._selectorController.setSelectedItemsAll();
+         } else {
+            this.setSelectedKeys(this._convertToKeys(this.getItems()));
+         }
       },
 
       /**
@@ -357,6 +361,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
          if (Array.isArray(idArray)) {
             if (idArray.length) {
                if (this._options.multiselect) {
+
+                  if (this._selectorController) {
+                     this._selectorController.addItemsSelection(idArray);
+                  }
+
                   resultArray = aClone(this._options.selectedKeys);
                   for (var i = 0; i < idArray.length; i++) {
                      if (!this._isItemSelected(idArray[i])) {
@@ -367,7 +376,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
                   resultArray = idArray.slice(0, 1);
                }
             }
-            addedKeys = this._getArrayDifference(this._options.selectedKeys, resultArray).added;
+            addedKeys = ArraySimpleValuesUtil.getArrayDifference(this._options.selectedKeys, resultArray).added;
             this._options.selectedKeys = resultArray;
             return addedKeys;
          }
@@ -410,6 +419,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
              selectedKeys = aClone(this._options.selectedKeys);
 
          if (Array.isArray(idArray)) {
+            if (this._selectorController) {
+               this._selectorController.removeItemsSelection(idArray);
+            }
+
             for (var i = idArray.length - 1; i >= 0; i--) {
                if (this._isItemSelected(idArray[i])) {
                   selectedKeys.splice(this._getSelectedIndex(idArray[i], selectedKeys), 1);
@@ -449,7 +462,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
        * @see allowEmptyMultiSelection
        */
       removeItemsSelectionAll : function() {
-         this.setSelectedKeys([]);
+         if (this._selectorController) {
+            this._selectorController.removeItemsSelectionAll();
+         } else {
+            this.setSelectedKeys([]);
+         }
       },
 
       /**
@@ -493,13 +510,13 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
                      return
                   }
                   for (var i = 0; i < idArray.length; i++) {
-                     if (!this._isItemSelected(idArray[i])) {
-                        addedKeys = this._addItemsSelection([idArray[i]]);
-                        addedKeysTotal = addedKeysTotal.concat(addedKeys);
-                     }
-                     else {
+                     if (this._isItemSelected(idArray[i]) || this._isItemPartiallySelected(idArray[i])) {
                         removedKeys = this._removeItemsSelection([idArray[i]]);
                         removedKeysTotal = removedKeysTotal.concat(removedKeys);
+                     }
+                     else {
+                        addedKeys = this._addItemsSelection([idArray[i]]);
+                        addedKeysTotal = addedKeysTotal.concat(addedKeys);
                      }
                   }
                }
@@ -520,6 +537,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
          else {
             throw new Error('Argument must be instance of Array');
          }
+      },
+
+      _isItemPartiallySelected: function(item) {
+         return cInstance.instanceOfModule(this._selectorController, 'SBIS3.CONTROLS.MassSelectionHierarchyController') && this._selectorController.isItemPartiallySelected(item);
       },
 
       /**
@@ -548,7 +569,11 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
        * @see allowEmptyMultiSelection
        */
       toggleItemsSelectionAll : function() {
-         this.toggleItemsSelection(this._convertToKeys(this.getItems()));
+         if (this._selectorController) {
+            this._selectorController.toggleItemsSelectionAll();
+         } else {
+            this.toggleItemsSelection(this._convertToKeys(this.getItems()));
+         }
       },
 
       /**
@@ -583,6 +608,22 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
        */
       getMultiselect: function() {
          return this._options.multiselect;
+      },
+
+      /**
+       * @typedef {Object} Selection
+       * @property {Array} [marked] Идентификаторы выделенныех элементов, в случае выбора ВСЕХ ЗАПИСЕЙ этот массив содержит ID корня.
+       * @property {Array} [excluded] Идентификаторы исключённых из выборки записей.
+       */
+      /**
+       * Получить текущее состояние выделения
+       * @returns {Selection} selection
+       * @see useSelectAll
+       */
+      getSelection: function() {
+         if (this._selectorController) {
+            return this._selectorController.getSelection();
+         }
       },
 
       /**
@@ -803,13 +844,6 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
             this._loadItemsDeferred.cancel();
          }
 
-         //TODO: событие нужно для массового выделения, чтобы до нотификации об изменении выделенных записей, можно было их подменить.
-         //Когда массовое выделение будет инкапсулироваться в проекции (во ViewModel) данное событие нужно будет удалить.
-         this._notify('onBeforeSelectedItemsChange', this._options.selectedKeys, {
-            added : addedKeys,
-            removed : removedKeys
-         });
-
          this._notifySelectedItems(this._options.selectedKeys, {
             added : addedKeys,
             removed : removedKeys
@@ -840,7 +874,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
 
       _dataLoadedCallback : function(){
          var items = this.getItems();
-         
+
          if (this._checkEmptySelection()) {
             if (items) {
                this._setFirstItemAsSelected();

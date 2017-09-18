@@ -28,7 +28,6 @@ define('js!SBIS3.CONTROLS.ListView',
    'tmpl!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'js!SBIS3.CONTROLS.CommonHandlers',
-   'js!SBIS3.CONTROLS.MassSelectionController',
    'js!SBIS3.CONTROLS.ImitateEvents',
    'js!SBIS3.CORE.LayoutManager',
    'Core/helpers/markup-helpers',
@@ -72,7 +71,7 @@ define('js!SBIS3.CONTROLS.ListView',
 ],
    function (ConfigByClasses, cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
-    TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents, LayoutManager, mHelpers,
+    TemplateUtil, CommonHandlers, ImitateEvents, LayoutManager, mHelpers,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
     Paging, ComponentBinder, Di, ArraySimpleValuesUtil, cInstance, LocalStorageNative, forAliveOnly, memoize, isElementVisible, contains, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove, once) {
      'use strict';
@@ -939,11 +938,6 @@ define('js!SBIS3.CONTROLS.ListView',
                 * @remark по умолчанию опция включена
                 */
                enabledMove: true,
-               /**
-                * @cfg {Boolean} Использовать функционал выбора всех записей
-                * @see getSelection
-                */
-               useSelectAll: false,
                virtualScrolling: false,
                //это использется для отображения аватарки драгндропа, она должна быть жекорированной ссылкой
                //временное решение пока не будет выпонена задача https://online.sbis.ru/debug/opendoc.html?guid=32162686-eee0-4206-873a-39bc7b4ca7d7&des=
@@ -1119,9 +1113,6 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             if(lvOpts.selectedKey && lvOpts._itemData) {
                lvOpts._itemData.selectedKey = lvOpts.selectedKey;
-            }
-            if (!lvOpts.multiselect && lvOpts.useSelectAll) {
-               lvOpts.useSelectAll = false;
             }
             return lvOpts;
          },
@@ -1940,55 +1931,6 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             return result;
          },
-
-         /*MASS SELECTION START*/
-         /*TODO: После перехода на новый механизм переименовать метод в setSelectedAll и удалить старый метод, выделяющий 1000 записей*/
-         setSelectedAllNew: function(selected) {
-            if (this._options.useSelectAll) {
-               this._getMassSelectionController().setSelectedAll(selected);
-            }
-         },
-
-         toggleSelectedAll: function() {
-            if (this._options.useSelectAll) {
-               this._getMassSelectionController().toggleSelectedAll();
-            }
-         },
-         /**
-          * @typedef {Object} Selection
-          * @property {Array} [marked] Идентификаторы выделенныех элементов, в случае выбора ВСЕХ ЗАПИСЕЙ этот массив содержит ID корня.
-          * @property {Array} [excluded] Идентификаторы исключённых из выборки записей.
-          */
-         /**
-          * Получить текущее состояние выделения
-          * @returns {Selection} selection
-          * @see useSelectAll
-          */
-         getSelection: function() {
-            if (this._options.useSelectAll) {
-               return this._getMassSelectionController().getSelection();
-            }
-         },
-
-         _getMassSelectionController: function() {
-            if (!this._massSelectionController) {
-               this._makeMassSelectionController();
-            }
-            return this._massSelectionController;
-         },
-
-         _makeMassSelectionController: function() {
-            this._massSelectionController = new MassSelectionController(this._getMassSelectorConfig());
-         },
-
-         _getMassSelectorConfig: function() {
-            return {
-               linkedObject: this,
-               idProperty: this._options.idProperty
-            }
-         },
-
-         /*MASS SELECTION END*/
 
          _loadFullData: function() {
             return this.reload(this.getFilter(), this.getSorting(), 0, 1000);
@@ -3300,7 +3242,7 @@ define('js!SBIS3.CONTROLS.ListView',
                                (this._options.infiniteScroll === 'both'),
                infiniteScroll = this._getOption('infiniteScroll'),
                loadType;
-            
+
             if (scrollOnEdge && this.getItems()) {
                // Досткролили вверх, но на самом деле подгружаем данные как обычно, а рисуем вверх
                if (type == 'top' && this._infiniteScrollState.reverse) {
@@ -3308,7 +3250,7 @@ define('js!SBIS3.CONTROLS.ListView',
                } else {
                   this._setInfiniteScrollState(type == 'top' ? 'up' : 'down');
                }
-               
+
                if (this._isCursorNavigation()) {
                   if (infiniteScroll === 'both') {
                      if (type === 'bottom') {
@@ -3324,11 +3266,11 @@ define('js!SBIS3.CONTROLS.ListView',
                      loadType = infiniteScroll;
                   }
                }
-               
+
                this._scrollLoadNextPage(loadType);
             }
          },
-         
+
          _isCursorNavigation: function() {
             return this._options.navigation && this._options.navigation.type === 'cursor';
          },
@@ -3341,7 +3283,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var scrollDown = this._infiniteScrollState.mode === 'down' && !this._infiniteScrollState.reverse,
                 infiniteScroll = this._getOption('infiniteScroll'),
                 isCursorNavigation = this._isCursorNavigation();
-            
+
             // При подгрузке в обе стороны необходимо определять направление, а не ориентироваться по state'у
             // Пока делаю так только при навигации по курсорам, чтобы не поломать остальной функционал
             if (isCursorNavigation) {
@@ -3349,7 +3291,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   scrollDown = this.getListNavigation().hasNextPage('down');
                }
             }
-            
+
             // Если  скролл вверху (при загрузке вверх) или скролл внизу (при загрузке вниз) или скролла вообще нет - нужно догрузить данные
             // //при подгрузке в обе стороны изначально может быть mode == 'down', но загрузить нужно вверх - так как скролл вверху
             if ((scrollDown && this.isScrollOnBottom()) || (!this._scrollWatcher.hasScroll() && infiniteScroll !== 'both')) {
@@ -3750,7 +3692,7 @@ define('js!SBIS3.CONTROLS.ListView',
                if (type) {
                   this._options.infiniteScroll = type;
                   this._allowInfiniteScroll = true;
-                  
+
                   if (type === 'down') {
                      this._setInfiniteScrollState('down');
                   }
@@ -4355,9 +4297,6 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             if (this._listNavigation) {
                this._listNavigation.destroy();
-            }
-            if (this._massSelectionController) {
-               this._massSelectionController.destroy();
             }
             if (this._mover) {
                this._mover.destroy();
