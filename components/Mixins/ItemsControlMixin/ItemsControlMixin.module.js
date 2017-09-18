@@ -1178,7 +1178,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             var targetElement = this._getDomElementByItem(item);
             if (targetElement.length) {
                this._clearItems(targetElement);
-               targetElement.get(0).remove();
+               var targetElementNode = targetElement.get(0);
+               //ie не умеет targetElementNode.remove() делаем кроссбраузерно, не через jquery
+               targetElementNode.parentNode.removeChild(targetElementNode);
             }
          }
       },
