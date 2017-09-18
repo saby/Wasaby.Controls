@@ -112,6 +112,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
              textArray = [];
          if (items && keys && keys.length > 0){
             list = new List();
+            if (items.at(0) && items.at(0).get(cfg.idProperty) === keys[0]) {
+               //Если выбрано дефолтное значение - скрываем крест
+               cfg.className += ' controls-DropdownList__hideCross';
+            }
             items.each(function (record, index) {
                var id = record.get(cfg.idProperty);
                for (var i = 0, l = keys.length; i < l; i++) {
