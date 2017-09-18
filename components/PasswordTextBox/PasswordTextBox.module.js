@@ -49,11 +49,11 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', [
          _iconOptions: {
             password: {
                tooltip: rk("Показать"),
-               icon: "icon-24 icon-Show icon-disabled"
+               icon: "icon-medium icon-Show icon-disabled"
             },
             text: {
                tooltip: rk("Скрыть"),
-               icon: "icon-24 icon-Hide icon-disabled"
+               icon: "icon-medium icon-Hide icon-disabled"
             }
          }
       },
