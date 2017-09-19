@@ -4596,15 +4596,6 @@ define('js!SBIS3.CONTROLS.ListView',
             return textValues.join(', ');
          }
       });
-      
-      var _private = {
-         itemActionActivated: function(key) {
-            this.setSelectedKey(key);
-            if(this._touchSupport) {
-               this._clearHoveredItem();
-            }
-         }
-      };
 
       return ListView.mixin([BreakClickBySelectMixin]);
    });
