@@ -1044,18 +1044,32 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _addOptionsFromClass: function(opts) {
-            var opts = [
+            var classes = [
                { class: 'controls-small-ListView', optionName: 'isSmall', value: true, defaultValue: false },
                { class: 'controls-ListView__disableHover', optionName: 'disableHover', value: true, defaultValue: false },
                { class: 'controls-ListView__pagerNoSizePicker', optionName: 'noSizePicker', value: true, defaultValue: false },
-               { class: 'controls-ListView__pagerNoAmount', optionName: 'noPagerAmount', value: true, defaultValue: false }
+               { class: 'controls-ListView__pagerNoAmount', optionName: 'noPagerAmount', value: true, defaultValue: false },
+               { class: 'controls-ListView__pagerHideEndButton', optionName: 'hideEndButton', value: true, defaultValue: false },
+               { class: 'controls-ListView__orangeMarker', optionName: 'showSelectedMarker', value: true, defaultValue: false }
             ]
-            for(var optObj in opts) {
-               if(!opts[optObj.optionName]) {
-                  if(optObj.className && optObj.indexOf && ~optObj.indexOf(optObj.className)) {
-                     opts[optObj.optionName] = optObj.value;
+            function hasClass(fullClass, className) {
+               if(typeof fullClass === 'string') {
+                  var index = fullClass.split(' ')
+                     .filter(function (el) {
+                        return el !== ''
+                     })
+                     .indexOf(className);
+                  return !!~index;
+               } else {
+                  return undefined;
+               }
+            }
+            for(var el in classes) {
+               if(!opts[el.optionName]) {
+                  if(hasClass(opts.className, el.class)) {
+                     opts[el.optionName] = el.value;
                   } else {
-                     opts[optObj] = optObj.defaultValue;
+                     opts[el] = el.defaultValue;
                   }
                }
             }
@@ -1063,6 +1077,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _modifyOptions : function(opts){
             var lvOpts = ListView.superclass._modifyOptions.apply(this, arguments);
+            this._addOptionsFromClass(opts);
             //Если нам задали бесконечный скролл в виде Bool, то если true, то 'down' иначе null
             if (lvOpts.hasOwnProperty('infiniteScroll')){
                lvOpts.infiniteScroll = typeof lvOpts.infiniteScroll === 'boolean' ?
@@ -1183,6 +1198,7 @@ define('js!SBIS3.CONTROLS.ListView',
                scrollPagerContainer = $('> .controls-ListView__scrollPager', this._container);
             this._scrollPager = new Paging({
                noSizePicker: this._options.noSizePicker,
+               noPagerAmount: this._options.noPagerAmount,
                element: scrollPagerContainer,
                visible: false,
                showPages: false,
@@ -2016,12 +2032,18 @@ define('js!SBIS3.CONTROLS.ListView',
          _drawSelectedItem: function (id, index, lightVer) {
             //рисуем от ключа
             if (lightVer !== true) {
-               $(".controls-ListView__item", this._getItemsContainer()).removeClass('controls-ListView__item__selected');
+               $(".controls-ListView__item", this._getItemsContainer())
+                  .removeClass('controls-ListView__item__selected')
+                  .removeClass('controls-ListView__item__selected__withMarker');
                if (this._getItemsProjection()) {
                   var projItem = this._getItemsProjection().at(index);
                   if (projItem) {
-                     var hash = projItem.getHash();
-                     $('.controls-ListView__item[data-hash="' + hash + '"]', this._container).addClass('controls-ListView__item__selected');
+                     var hash = projItem.getHash(),
+                        curSelected = $('.controls-ListView__item[data-hash="' + hash + '"]', this._container);
+                     curSelected.addClass('controls-ListView__item__selected');
+                     if(this._options.showSelectedMarker) {
+                        curSelected.addClass('controls-ListView__item__selected__withMarker');
+                     }
                   }
 
                }
@@ -2482,8 +2504,14 @@ define('js!SBIS3.CONTROLS.ListView',
                         this._showToolbar(model);
                         this.setSelectedKey(model.getId());
                         if (model.getState() === Record.RecordState.DETACHED) {
-                           $(".controls-ListView__item", this._getItemsContainer()).removeClass('controls-ListView__item__selected');
-                           $('.controls-ListView__item[data-id="' +  (model.getId() === undefined ? '' : model.getId()) + '"]', this._container).addClass('controls-ListView__item__selected');
+                           $(".controls-ListView__item", this._getItemsContainer())
+                              .removeClass('controls-ListView__item__selected')
+                              .removeClass('controls-ListView__item__selected__withMarker');
+                           var curSelected = $('.controls-ListView__item[data-id="' +  (model.getId() === undefined ? '' : model.getId()) + '"]', this._container);
+                           curSelected.addClass('controls-ListView__item__selected');
+                           if(this._options.showSelectedMarker) {
+                              curSelected.addClass('controls-ListView__item__selected__withMarker');
+                           }
                         }
                         else {
                            this.setSelectedKey(model.getId());
@@ -3736,6 +3764,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   var more = self.getItems().getMetaData().more,
                      hasNextPage = self._hasNextPage(more),
                      pagingOptions = {
+                        hideEndButton: this._options.hideEndButton,
                         recordsPerPage: self._options.pageSize || more,
                         currentPage: 1,
                         recordsCount: more || 0,

@@ -24,41 +24,15 @@
    text-align: center;
 }
 
-//Перенести в modifyOptions +
-.controls-ListView__pagerNoSizePicker .controls-Pager-container {
-   .controls-Pager__pageSize-container {
-      display: none;
-   }
-   .controls-Pager__table .controls-text-extra{
-      display: none;
-   }
+//Вынести в modifyOptions +
+.controls-ListView__item__selected__withMarker {
+   .marker(left top)
 }
 
-//Move to paging +
-.controls-ListView__pagerNoAmount .controls-Pager-container .controls-Amount-text{
-   display: none;
-}
-//Move to paging - класс нигде не навешивается
-.controls-ListView__pagerHideEndButton .controls-Pager-container .ws-paging-end{
-   display: none;
-}
-
-.controls-ListView__orangeMarker {
-   .controls-ListView__item__selected {
-      .marker(left top)
-   }
-}
-
+//toggleClass
 .controls-ListView__outside-scroll-loader{
    .controls-ListView-scrollIndicator{
       position: relative;
-   }
-}
-
-//Если да - то убрать переменную +
-.ws-disabled {
-   .controls-ListView__itemCheckBox {
-      cursor: default;
    }
 }
 
@@ -67,12 +41,14 @@
    position: relative;
 }
 
+.controls-ListView__dataNotLoaded:not(.ws-sticky-header__table-header-copy) {
+   min-height: @list-view-min-height;
+}
+
 .controls-ListView {
     position: relative;
    // Нельзя устанавливать минимальную высоту для копии таблицы которая используется для фиксации заголовков
-   &:not(.controls-ListView__dataLoaded):not(.ws-sticky-header__table-header-copy) {
-      min-height: @list-view-min-height;
-   }
+
 }
 
 //Данные стили обеспечивают правильное поведение ListView при активации.
