@@ -1067,7 +1067,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   after = '</p><p>{$caret}</p>';
                   break;
                case '6':
-                  after = '&#xFEFF;{$caret}';
+                  if (cConstants.browser.chrome) {
+                     after = '&#xFEFF;{$caret}';
+                  }
                   break;
                case '4':
                   //todo: сделать коллаж
