@@ -1160,7 +1160,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                this._clearItems(targetElement);
                /*TODO С этим отдельно разобраться*/
 
-               targetElement.get(0).remove();
+               var targetElementNode = targetElement.get(0);
+               targetElementNode.parentNode.removeChild(targetElementNode);
                /* TODO внештатная ситуация, при поиске могли удалить папку/путь, сейчас нет возможности найти это в гриде и удалить
                   поэтому просто перерисуем весь грид. Как переведём группировку на item'ы, это можно удалить */
             } else if(this._isSearchMode && this._isSearchMode() && item.isNode()) { // FIXME "Грязная проверка" на наличие метода в .220, код удалится в .230
@@ -1176,7 +1177,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             var targetElement = this._getDomElementByItem(item);
             if (targetElement.length) {
                this._clearItems(targetElement);
-               targetElement.get(0).remove();
+               var targetElementNode = targetElement.get(0);
+               //ie не умеет targetElementNode.remove() делаем кроссбраузерно, не через jquery
+               targetElementNode.parentNode.removeChild(targetElementNode);
             }
          }
       },
