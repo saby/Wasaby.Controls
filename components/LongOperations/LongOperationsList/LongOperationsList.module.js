@@ -106,7 +106,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
 
             this._bindEvents();
 
-            this._view.setDataSource(new LongOperationsListDataSource());
+            this._view.setDataSource(new LongOperationsListDataSource(), true);
          },
 
          _bindEvents: function () {

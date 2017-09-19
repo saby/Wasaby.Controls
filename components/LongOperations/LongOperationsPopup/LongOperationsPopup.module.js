@@ -79,7 +79,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
             this._tabChannel = new TabMessage();
 
             this._bindEvents();
-            //this._longOpList.reload();
+            this._longOpList.reload();
          },
 
          _bindEvents: function () {
