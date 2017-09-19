@@ -1,35 +1,51 @@
 define('js!WSControls/TextBoxes/TextBoxBase',
-[
-   'Core/Control'
-], function(Control) {
-   var TextBoxBase = Control.extend({
-      _controlName: 'WSControls/TextBoxes/TextBoxBase',
-      iWantVDOM: true,
+   [
+      'Core/Control',
+      'js!WS.Data/Type/descriptor'
+   ],
+   function(Control, types) {
 
-      constructor: function(cfg) {
-         TextBoxBase.superclass.constructor.apply(this, arguments);
-         this._publish('onChangeText');
-      },
+      /**
+       * Базовый класс для текстового поля
+       *
+       * @class SBIS3.CONTROLS.TextBoxBase
+       * @extends Core/Control
+       * @public
+       *
+       * @author Крайнов Дмитрий Олегович
+       */
+      var TextBoxBase = Control.extend({
+         _controlName: 'WSControls/TextBoxes/TextBoxBase',
 
-      _onChangeText: function(e) {
-         var
-            text = e.target.value,
-            newTextIsEmpty = this._isEmptyValue(text),
-            newText = newTextIsEmpty ? text : this._formatText(text);
-         if (this._options.text !== newText) {
-            this._notify('onChangeText', newText);
+         constructor: function(options) {
+            TextBoxBase.superclass.constructor.call(this, options);
+
+            this._publish('onChangeText');
+         },
+
+         _beforeMount: function(options) {
+            this._updateState(options);
+         },
+
+         _beforeUpdate: function(newOptions) {
+            this._updateState(newOptions);
+         },
+
+         _updateState: function(options) {
+            this._text = options.text;
+         },
+
+         _inputHandler: function(event) {
+            this._notify('onChangeText', this._text = event.target.value);
          }
-      },
+      });
 
-      //Проверка на пустое значение, их нужно хранить в неизменном виде, но отображать как пустую строку
-      _isEmptyValue: function(text){
-         return text === null || text === "" || typeof text === "undefined";
-      },
+      TextBoxBase.getOptionTypes = function() {
+         return {
+            text: types(String)
+         }
+      };
 
-      _formatText: function(text) {
-         return text || '';
-      }
-   });
-
-   return TextBoxBase;
-});
+      return TextBoxBase;
+   }
+);
