@@ -447,6 +447,9 @@ define('js!SBIS3.CONTROLS.ListView',
                _defaultItemTemplate: ItemTemplate,
                _defaultItemContentTemplate: ItemContentTemplate,
                _groupTemplate: GroupTemplate,
+               _sanitizeOpts: {
+                  validNodes: { component: true }
+               },
                /**
                 * @faq Почему нет чекбоксов в режиме множественного выбора значений (активация режима производится опцией {@link SBIS3.CONTROLS.ListView#multiselect multiselect})?
                 * Для отрисовки чекбоксов необходимо в шаблоне отображения элемента коллекции обозначить их место.

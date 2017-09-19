@@ -22,7 +22,7 @@
         <ws:partial template="{{_footTpl}}" scope="{{...}}" />
     </table>
     <div class="controls-ListView__EmptyData {{(!_serverRender || _records.length || !emptyHTML) ? 'ws-hidden' : ''}}">
-        <ws:partial template="{{ emptyHTML|sanitize }}"/>
+        <ws:partial template="{{ emptyHTML|sanitize:_sanitizeOpts }}"/>
     </div>
     <ws:if data="{{showPaging}}">
         <div class="controls-TreePager-container"></div>
