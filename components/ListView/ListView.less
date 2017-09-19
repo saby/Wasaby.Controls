@@ -87,12 +87,20 @@
    }
 }
 
+/* Почему сделано через visibility:
+   в ie11 в версии 11.0.9600.18792 появился баг (в более ранних версиях не повторяется),
+   если в ячейке таблицы, которая проскролена вниз, показать что-то через :before,
+   то таблица прагнет на высоту этого показанного контента вверх.
+   Поэтому сразу отображаем чекбоксы, но делаем их скрытыми (visibility: hidden).
+   А при надобности показываем */
+.controls-ListView__itemCheckBox {
+   .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+}
+.controls-ListView__itemCheckBox:before {
+   visibility: hidden;
+}
+
 .controls-ListView__multiselect {
-   .controls-ListView__hoveredItem {
-      .controls-ListView__itemCheckBox {
-         .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
-      }
-   }
    .controls-ListView__item__multiSelected:not(.controls-ListView__item__partiallySelected) {
       .controls-ListView__itemCheckBox {
          .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
@@ -103,6 +111,13 @@
       .controls-ListView__itemCheckBox {
          .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
          .checkbox-null-size(@check-box-icon-size, @check-box-icon-null-size);
+      }
+   }
+   .controls-ListView__hoveredItem,
+   .controls-ListView__item__multiSelected:not(.controls-ListView__item__partiallySelected),
+   .controls-ListView__item__partiallySelected {
+      .controls-ListView__itemCheckBox:before {
+         visibility: visible;
       }
    }
 }
