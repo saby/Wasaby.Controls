@@ -40,15 +40,18 @@
             margin-left: 0;
             margin-right: 16px;
          }
-         & > p:last-child, & > pre:last-child, & > div:last-child {
+         & > :last-child {
             margin-bottom: 0;
          }
          .mce-visual-caret {
             margin: 0px;
          }
       }
-      li{
-         margin-bottom:6px;
+      li {
+         margin-bottom: 6px;
+      }
+      & > :last-child li:last-child {
+         margin-bottom: 0;
       }
    }
    .controls-RichEditor__sourceArea{
