@@ -523,7 +523,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
        Сделано в качестве временного решения (для номенклатуры).
        При правильном разделении функционала данный метод не нужен (пользователь будет лишь менять данные в DataSet, а View будет сам перерисовываться).
       */
-      partialyReload: function(items) {
+      partialyReload: function(items, withoutIndicator) {
          var
             self = this,
             filter,
@@ -636,7 +636,9 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                      });
                }
             };
-         fcHelpers.toggleIndicator(true);
+         if (!withoutIndicator) {
+            fcHelpers.toggleIndicator(true);
+         }
          if (items) {
             currentDataSet = this.getItems();
             filter = cFunctions.clone(this.getFilter());
@@ -654,7 +656,9 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                }
             }, this);
             if (Object.isEmpty(recordsGroup)) {
-               fcHelpers.toggleIndicator(false);
+               if (!withoutIndicator) {
+                  fcHelpers.toggleIndicator(false);
+               }
             } else {
                deferred = new ParallelDeferred();
                Object.keys(recordsGroup).forEach(function(branchId) {
@@ -674,7 +678,9 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                         }
                      })
                      .addBoth(function() {
-                        fcHelpers.toggleIndicator(false);
+                        if (!withoutIndicator) {
+                           fcHelpers.toggleIndicator(false);
+                        }
                      }));
                });
                return deferred.done().getResult();
@@ -685,7 +691,9 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
 
       _reloadViewAfterDelete: function(idArray) {
          if (this.getViewMode() === 'table') {
-            return this.partialyReload(idArray);
+            // В случае операции удаления один индикатор у нас уже отображается, второй показывать не нужно
+            // (для этого передаем true вторым параметром в partialyReload).
+            return this.partialyReload(idArray, true);
          } else {
             return TreeCompositeView.superclass._reloadViewAfterDelete.apply(this, arguments);
          }
