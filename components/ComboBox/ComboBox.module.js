@@ -190,6 +190,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              * // myComboBox - экземпляр класса SBIS3.CONTROLS.ComboBox
              * myComboBox.setSelectedKey(null);
              * </pre>
+             * Чтобы установить текст, отображаемый в поле ввода после выбора пустого значения, определите значение в опции {@link placeholder}.
              */
             emptyValue: false,
             /**
