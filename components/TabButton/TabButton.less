@@ -1,7 +1,8 @@
 .controls-TabButton {
    vertical-align: @tab-button-vertical-align;
    cursor: @tab-button-cursor;
-   height: @tab-button-height;
+   height: 100%;
+   box-sizing: border-box;
    position: @tab-button-position;
    color: @tab-button-color;
    font: @tab-button-font;
@@ -353,7 +354,6 @@
 }
 .controls-TabButtons__simple-view-mini{
   .controls-TabButton {
-    height: 24px;
     .controls-TabButton__inner{
       height: 26px;
       color: #CCCCCC;

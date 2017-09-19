@@ -711,7 +711,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             itemsSortMethod: null,
             itemsFilterMethod: undefined,
             easyGroup: false,
-            task1173537554: false,
             task1173770359: false
          },
          _loader: null
@@ -1913,9 +1912,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              });
           }
           else {
-             if (this._options.task1173537554) {
-                this._notifyOnPropertyChanged('items');
-             }
+             this._notifyOnPropertyChanged('items');
           }
           this.redraw();
       },

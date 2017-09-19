@@ -243,8 +243,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          records = searchProcessing(projection, cfg);
       }
       else {
+         var needGroup = false, groupId;
          projection.each(function(item, index, group) {
-            var needGroup = false, groupId;
             if (cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
                groupId = item.getContents();
                needGroup = true;
@@ -949,16 +949,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          else {
             if (items.length && cInstance.instanceOfModule(items[0], 'WS.Data/Display/GroupItem')) {
                groupId = items[0].getContents();
-               if (this._canApplyGrouping(items[1])) {
+               if (items.length > 1 && this._canApplyGrouping(items[1])) {
                   this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options);
                   items.splice(0, 1);
                   itemsToAdd = itemsToAdd.concat(items);
-                  start = 1;
                }
-            }
-            for (var i = start; i < items.length; i++) {
-               if (this._isVisibleItem(items[i])) {
-                  itemsToAdd.push(items[i]);
+            } else {
+               for (var i = start; i < items.length; i++) {
+                  if (this._isVisibleItem(items[i])) {
+                     itemsToAdd.push(items[i]);
+                  }
                }
             }
          }
