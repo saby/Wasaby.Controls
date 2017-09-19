@@ -249,7 +249,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                self._bindEvents();
             };
 
-
             // Наш чудо-платформенный механизм установки состояния задизабленности отрабатывает не в то время.
             // Для того, чтобы отловить реальное состояние задизабленности нужно дожидаться события onInit.
             this.once('onInit', function() {
@@ -649,8 +648,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          saveToHistory: function(valParam) {
             var
                self = this,
-               isDublicate = false,
-               valBL;
+               isDublicate = false/*,
+               valBL*/;
             if (valParam && typeof valParam === 'string' && self._textChanged && self._options.saveHistory) {
                this.getHistory().addCallback(function(arrBL){
                   arrBL.forEach(function (valBL) {
@@ -1458,29 +1457,82 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                self._updateHeight();
             });
 
+            // Если редактируется ссылка, у которой текст точно соответсвовал урлу, то при редактировании текста должен изменяться и её урл.
+            // Особенно актуально, когда на тулбаре кнопки редактирования ссылки нет
+            var _linkEditStart = function () {
+               var a = editor.selection.getNode();
+               if (a.nodeName === 'A' && a.hasChildNodes() && !a.children.length) {
+                  var url = a.href;
+                  var text = a.innerHTML;
+                  var isCoupled = text === url;
+                  var prefix, suffix;
+                  if (!isCoupled) {
+                     prefix = url.substring(0, url.indexOf('://') + 3);
+                     text = prefix + text;
+                     isCoupled = url === text;
+                     if (!isCoupled) {
+                        suffix = '/';
+                        isCoupled =  url === text + suffix;
+                     }
+                  }
+                  if (isCoupled) {
+                     a.dataset.wsPrev = JSON.stringify({url:url, prefix:prefix || '', suffix:suffix || ''});
+                  }
+               }
+            };
+
+            var _linkEditEnd = function () {
+               var a = editor.selection.getNode();
+               if (a.nodeName === 'A' && 'wsPrev' in a.dataset) {
+                  if (a.hasChildNodes() && !a.children.length) {
+                     var prev = JSON.parse(a.dataset.wsPrev);
+                     var url = a.href;
+                     var text = a.innerHTML;
+                     if (prev.url === url) {
+                        url = prev.prefix + text + prev.suffix;
+                        a.href = url;
+                        a.dataset.mceHref = url;
+                     }
+                  }
+                  delete a.dataset.wsPrev;
+               }
+            };
+
+            // Обработка изменения содержимого редактора.
+            editor.on('keydown', function(e) {
+               if (1 < e.key.length) {
+                  _linkEditStart();
+                  setTimeout(function() {
+                     _linkEditEnd();
+                  }, 1);
+               }
+            });
+
             // Обработка изменения содержимого редактора.
             // Событие keypress возникает сразу после keydown, если нажата символьная клавиша, т.е. нажатие приводит к появлению символа.
             // Любые буквы, цифры генерируют keypress. Управляющие клавиши, такие как Ctrl, Shift, F1, F2.. — keypress не генерируют.
             editor.on('keypress', function(e) {
+               _linkEditStart();
                // <проблема>
                //    Если в редакторе написать более одного абзаца, выделить, и нажать любую символьную клавишу,
                //    то, он оставит сверху один пустой абзац, который не удалить через визуальный режим, и будет писать в новом
                // </проблема>
-               if (!editor.selection.isCollapsed()) {
-                  if (editor.selection.getContent() == self._getTinyEditorValue()) {
-                     if (!e.ctrlKey && !(e.metaKey && cConstants.browser.isMacOSDesktop) && e.charCode !== 0) {
+               if (!e.ctrlKey && !(e.metaKey && cConstants.browser.isMacOSDesktop) && e.charCode !== 0) {
+                  if (!editor.selection.isCollapsed()) {
+                     if (editor.selection.getContent() == self._getTinyEditorValue()) {
                         editor.bodyElement.innerHTML = '';
                      }
                   }
                }
                setTimeout(function() {
+                  _linkEditEnd();
                   self._togglePlaceholder(self._getTinyEditorValue());
                }, 1);
             });
             editor.on('change', function(e) {
                self._setTrimmedText(self._getTinyEditorValue());
             });
-            editor.on( 'cut',function(e){
+            editor.on('cut',function(e){
                setTimeout(function() {
                   self._setTrimmedText(self._getTinyEditorValue());
                }, 1);
@@ -2166,12 +2218,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
          //метод взят из link плагина тини
          _isOnlyTextSelected: function() {
-            var
-               html = this._tinyEditor.selection.getContent();
-            if (/</.test(html) && (!/^<a [^>]+>[^<]+<\/a>$/.test(html) || html.indexOf('href=') == -1)) {
+            var html = this._tinyEditor.selection.getContent();
+            return html.indexOf('<') === -1 || (html.indexOf('href=') !== -1 && /^<a [^>]+>[^<]+<\/a>$/.test(html));
+            /*if (/</.test(html) && (!/^<a [^>]+>[^<]+<\/a>$/.test(html) || html.indexOf('href=') == -1)) {
                return false;
             }
-            return true;
+            return true;*/
          },
          _sanitizeBeforePaste: function(text) {
             return Sanitize(text,
