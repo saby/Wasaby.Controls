@@ -154,7 +154,9 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
                   } while (item.getId() != crumbId && idx < items.getCount());
 
                   this._notify('onItemClick', crumbId);
-                  this.sendCommand('BreadCrumbsItemClick', crumbId, crumbPath);
+                  if (this._options.command) {
+                     this.sendCommand(this._options.command, crumbId, crumbPath);
+                  }
                   e.stopPropagation();
                }
             }
