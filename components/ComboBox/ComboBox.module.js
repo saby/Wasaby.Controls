@@ -532,7 +532,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             targetPart: true,
             activableByClick: false,
             closeOnTargetMove: true,
-            template : this._dotTplFnPicker({})
+            template : this._dotTplFnPicker
          };
       },
 
