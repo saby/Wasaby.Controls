@@ -4,7 +4,7 @@
  * @class SBIS3.CONTROLS.LongOperationsManager
  * @public
  *
- * @description file ../doc/LongOperations.md
+ * @description file LongOperations.md
  *
  * @demo SBIS3.CONTROLS.Demo.MyLongOperations
  * @demo SBIS3.CONTROLS.Demo.MyLongOperationsSvc
@@ -19,15 +19,16 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       'js!WS.Data/Collection/RecordSet',
       'js!WS.Data/Chain',
       'js!SBIS3.CONTROLS.LongOperationsConst',
-      'js!SBIS3.CONTROLS.LongOperationsTabCalls',
-      'js!SBIS3.CONTROLS.LongOperationsCallsPool',
-      'js!SBIS3.CONTROLS.LongOperationsBunch',
+      'js!SBIS3.CONTROLS.LongOperations.Tools.TabCalls',
+      'js!SBIS3.CONTROLS.LongOperations.Tools.CallsPool',
+      'js!SBIS3.CONTROLS.LongOperations.Tools.Bunch',
+      'js!SBIS3.CONTROLS.LongOperations.Tools.Postloader',
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.LongOperationHistoryItem',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model'
    ],
 
-   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsConst, LongOperationsTabCalls, LongOperationsCallsPool, LongOperationsBunch, LongOperationEntry, LongOperationHistoryItem, Model) {
+   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsConst, LongOperationsTabCalls, LongOperationsCallsPool, LongOperationsBunch, Postloader, LongOperationEntry, LongOperationHistoryItem, Model) {
       'use strict';
 
       /**
@@ -82,21 +83,21 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       /**
        * Объект для выполнения методов менеджеров в других вкладках
        * @protected
-       * @type {SBIS3.CONTROLS.LongOperationsTabCalls}
+       * @type {SBIS3.CONTROLS.LongOperations.Tools.TabCalls}
        */
       var _tabCalls;
 
       /**
        * Объект для сбора данных от разных продюсеров и менеджеров при выполнения методов fetch
        * @protected
-       * @type {SBIS3.CONTROLS.LongOperationsCallsPool}
+       * @type {SBIS3.CONTROLS.LongOperations.Tools.CallsPool}
        */
       var _fetchCalls;
 
       /**
        * Счётчики текщих отступов по продюсерам
        * @protected
-       * @type {SBIS3.CONTROLS.LongOperationsBunch}
+       * @type {SBIS3.CONTROLS.LongOperations.Tools.Bunch}
        */
       var _offsetBunch;
 
