@@ -21,6 +21,9 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
       $protected: {
          _picker : null,
          _border : 0,
+          _keysWeHandle: [
+             constants.key.esc
+         ],
          _options: {
              /**
               * @cfg {String} Устанавливает имя CSS-класса, который будет применён к HTML-контейнеру выпадающего блока.
@@ -235,6 +238,15 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
        */
       isPickerVisible: function() {
          return Boolean(this._picker && this._picker.isVisible());
+      },
+
+
+      _keyboardHover: function(event) {
+         if (event.which === constants.key.esc && this.isPickerVisible()) {
+            this.hidePicker();
+            return false;
+         }
+         return true;
       },
 
       _setPickerContent: function () {

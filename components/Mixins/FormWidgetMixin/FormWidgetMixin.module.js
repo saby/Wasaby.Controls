@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
 ], function ( constants, IoC, cFunctions, Deferred, escapeHtml) {
    /**
     * Миксин, который добавляет функционал валидаторов.
-    * Подробнее о работе с валидаторами вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/">Валидация вводимых данных</a>.
+    * Подробнее о работе с валидаторами вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/validation/">Валидация вводимых данных</a>.
     * @mixin SBIS3.CONTROLS.FormWidgetMixin
     * @public
     * @author Крайнов Дмитрий Олегович
@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
              */
             /**
              * @cfg {Validator[]} Устанавливает валидаторы контрола.
-             * Подробнее о валидации можно прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/validation/ руководстве разработчика}.
+             * Подробнее о валидации можно прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/validation/ руководстве разработчика}.
              * @example
              * Пример массива, описывающего валидацию значения из опции text. Такой валидатор, например, можно использовать в контроле {@link SBIS3.CONTROLS.TextBox}.
              * <pre class="brush: xml">
@@ -177,7 +177,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
        * <br/>
        * Если для контрола ограничено взаимодействие через опцию {@link SBIS3.CORE.Control#enabled}, то для него валидация не производится.
        * <br/>
-       * Подробнее о валидации вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/ руководстве разработчика}.
+       * Подробнее о валидации вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/validation/ руководстве разработчика}.
        * @returns {Boolean} Признак: валидация пройдена успешно (true) или с ошибками (false).
        * @see validators
        * @see getValidators

@@ -810,16 +810,22 @@
 @money-text-box-decimals-color:                       @gray-ccc-color;
 
 // ----------- //
-// Date box    //
+// Search form //
 // ----------- //
-@date-box-color:                             @text-box-color;
-@date-box-wrapper-border-radius:             @text-box-border-radius;
-@date-box-wrapper-bg:                        @text-box-bg;
-@date-box-field-text-color:                  @default-text-color;
-@date-box-wrapper-focus-bg:                  @text-box-focus-bg;
-@date-box-wrapper-error-border-color:        @text-box-border-color-error;
-@date-box-wrapper-error-bg:                  @text-box-bg-error;
-@date-box-wrapper-hover-border-color:        @text-box-hover-border-color;
+
+@search-disabled-background:                          @search-background;
+@search-focus-background:                             @search-background;
+@search-height:                                       @text-box-height;
+@search-padding:                                      0 24px 0 16px;
+@search-left-margin:                                  12px;
+@search-border-color:                                 @search-background;
+@search-hover-border-color:                           @search-background;
+@search-bottom-border-color:                          @search-background;
+@search-form-border-width:                            @text-box-border-width;
+@search-form-border-disabled-width:                   @text-box-disabled-border-width;
+@search-buttons-wrapper-width:                        20px + 20px;
+@search-form-field-wrapper-margin-right:              45px;
+@search-form-icon-disabled-display:                   block;
 
 // --------- //
 // Combo box //
@@ -889,13 +895,10 @@
 // Date picker //
 // ----------- //
 
-@date-picker-calendar-spritesheet:              'img/DatePicker-calendar.png';
+@date-picker-icon-margin-left:                  7px;
 
-@date-picker-calendar-icon-cursor:              pointer;
-@date-picker-calendar-icon-width:               18px;
-@date-picker-calendar-icon-height:              18px;
-@date-picker-calendar-icon-top-offset:          4px;
-@date-picker-calendar-icon-left-offset:         1px;
+@date-picker-calendar-icon-size:                18px;
+@date-picker-calendar-icon-line-height:         16px;
 
 // -------- //
 // Calendar //
@@ -1046,13 +1049,12 @@
 // ---------- //
 @controls-date-range-year-marginleft:             0;
 @date-range-choose-year-line-height:            @date-range-choose-year-height + 1;
-@date-range-font-size:                          14px;
 @date-range-line-height:                        24px;
 @date-range-text-line-height:                   normal;
 @date-range-icon-button-size:                   18px;
-@date-range-icon-button-line-height:            16px;
+@date-range-icon-button-line-height:            14px;
 @date-range-icon-button-top:                    4px;
-@date-range-icon-button-margin:                 0 0 3px 8px;
+@date-range-icon-button-margin:                 0 0 0 8px;
 @date-range-icon-button-hover-color:            @hover-color !important;
 @date-range-dash-width:                         2px;
 @date-range-dash-color:                         @black-color;
@@ -1453,11 +1455,10 @@
 
 /*group*/
 @list-view-separator-height:                       24px;
-@list-view-separator-line:                         1px solid #eaeaea;
 @list-view-separator-content-padding:              0 12px;
 @list-view-separator-content-color:                @gray-color;
-@list-view-separator-content-size:                 12px;
 @list-view-separator-expander-size:                16px;
+@list-view-separator-expander-margin:              6px;
 @list-view-separator-content-hover-color:          @blue-dark-color;
 
 // -------------------- //
@@ -1815,6 +1816,7 @@
 @DropdownList-picker-head-duplicate-type-top-padding: 4px;
 @DropdownList-picker-hor-revert-head-margin:          @DropdownList-picker-head-margin;
 @DropdownList-picker-padding:                         4px 0;
+@DropdownList-picker-max-width:                       400px;
 @DropdownList-picker-max-height:                      400px;
 @DropdownList-picker-head-margin:                     0;
 @DropdownList-picker-border:                          1px solid @DropdownList-border-color;

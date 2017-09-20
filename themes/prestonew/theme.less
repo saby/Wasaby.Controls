@@ -551,7 +551,7 @@ body {
 }
 
 .controls-IconButton.controls-TreeView__editArrow-container {
-  @offset: .2695rem;
+  @offset: .37rem;
   margin-top: calc(~"@{default-border-width} - @{offset}");
   .icon-16 {
     .icon-size(@icon-medium-size, @icon-font);
@@ -792,6 +792,9 @@ body {
       color: @default-text-color;
       border: @button-border;
       padding: 0.857rem 3rem 0.857rem 0.857rem;
+      &.ws-infobox-type-error {
+        box-shadow: rgba(0, 0, 0, 0.5) 0 0 0.714rem;
+      }
       .ws-infobox-triangle {
          width: .857rem;
          height: .857rem;
@@ -842,7 +845,7 @@ body {
 }
 
 .controls-BreadCrumbs__crumb {
-   top: 0.08rem
+   top: 0.28rem
 }
 
 .ws-is-sbis-desktop {
@@ -970,12 +973,14 @@ body {
    }
 }
 
-.ws-is-webkit .controls-BreadCrumbs .controls-BreadCrumbs__arrow {
-   top:  0.33rem;
+.ws-is-webkit, .ws-is-mobile-chrome-ios {
+   .controls-BreadCrumbs .controls-BreadCrumbs__arrow {
+      top:  0.33rem;
+   }
 }
 
 .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
-   top: 0.16rem !important;
+   top: 0.34rem !important;
 }
 
 .ws-is-sbis-desktop {

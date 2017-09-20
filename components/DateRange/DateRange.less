@@ -4,42 +4,28 @@
 
    &.ws-validation-error {
       .controls-FormattedTextBox {
-         border: none !important;
-         background: transparent !important;
-         .controls-FormattedTextBox__fieldWrapper.controls-DateBox__fieldWrapper {
-            border-width: @default-border-width;
-            border-style: solid;
-            border-color: @date-box-wrapper-error-border-color;
-            background: @date-box-wrapper-error-bg;
-         }
+         border-width: @default-border-width;
+         border-style: solid;
+         border-color: @formatted-text-box-error-border-color;
+         background: @formatted-text-box-error-bg;
       }
-   }
-
-   .controls-DateRange__DatePickerStart,
-   .controls-DateRange__DatePickerEnd {
-      font-size: @date-range-font-size;
-   }
-
-   .controls-DateRange__Button {
-      line-height: @date-range-line-height;
-      .controls-Button__icon {
-         font-size: @date-range-icon-button-size !important;
-         line-height: @date-range-icon-button-line-height !important;
-         height: @date-range-icon-button-size;
-         width: @date-range-icon-button-size;
-         margin: @date-range-icon-button-margin;
-         position: relative;
-      }
-   }
-
-   .controls-DateRange__dash {
-      display: inline-block;
-      width: @date-range-dash-width;
-      margin: @date-range-dash-margin;
-      border-top: @date-range-dash-border-top;
    }
 }
-// TODO: Когда сделают все кнопки синими при наведении убрать
-.controls-DateRange.ws-disabled .controls-DateRange__Button.icon-primary.controls-IconButton.action-hover.ws-disabled {
-   color: @gray-ccc-color !important;
+
+.controls-DateRange__Button {
+   margin: @date-range-icon-button-margin;
+   // Иконка нестандартного размера. В следующую версию стандарта должна быть стандартной.
+   .controls-Button__icon {
+      font-size: @date-range-icon-button-size !important;
+      line-height: @date-range-icon-button-line-height !important;
+      height: @date-range-icon-button-size;
+      width: @date-range-icon-button-size;
+   }
+}
+
+.controls-DateRange__dash {
+   display: inline-block;
+   width: @date-range-dash-width;
+   margin: @date-range-dash-margin;
+   border-top: @date-range-dash-border-top;
 }

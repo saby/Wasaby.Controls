@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
               *    <li>Установить новый идентификатор элемента коллекции можно с помощью метода {@link setSelectedIndex}, а получить идентификатор - с помощью метода {@link getSelectedIndex}.</li>
               * </ol>
               * @example
-              * Производим связывание опции с полем контекста через атрибут bind. Подробнее о связывании значения опций контролов с полями контекста вы можете прочитать <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/context/">здесь</a>.
+              * Производим связывание опции с полем контекста через атрибут bind. Подробнее о связывании значения опций контролов с полями контекста вы можете прочитать <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/context/">здесь</a>.
               * <pre>
               *     <option name="selectedIndex" bind="record/Индекс"></option>
               * </pre>
@@ -64,7 +64,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
               *    <li>Установить новый идентификатор элемента коллекции можно с помощью метода {@link setSelectedKey}, а получить идентификатор - с помощью метода {@link getSelectedKey}.</li>
               * </ol>
               * @example
-              * Производим связывание опции с полем контекста через атрибут bind. Подробнее о связывании значения опций контролов с полями контекста вы можете прочитать <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/context/">здесь</a>.
+              * Производим связывание опции с полем контекста через атрибут bind. Подробнее о связывании значения опций контролов с полями контекста вы можете прочитать <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/context/">здесь</a>.
               * <pre>
               *     <option name="selectedKey" bind="record/Идентификатор"></option>
               * </pre>
@@ -332,11 +332,8 @@ define('js!SBIS3.CONTROLS.Selectable', [
         TreeView
        */
       getSelectedItem : function() {
-         var
-             selKey = this.getSelectedKey(),
-             items = this.getItems();
-
-         return selKey && items ? items.getRecordById(selKey) : null;
+         var items = this.getItems();
+         return items ? (items.getRecordById(this.getSelectedKey()) || null) : null;
       },
 
       _drawSelectedItem : function() {

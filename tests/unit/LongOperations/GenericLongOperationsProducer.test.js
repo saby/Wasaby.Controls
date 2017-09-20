@@ -23,6 +23,10 @@ define([
          'ИдентификаторСервисаПрофилей': '8cab8a51-da51-40fd-bef3-6f090edbdeaa'
       };
 
+      var TIME_EARLIER  = 100000;//ms
+      var TIME_GAP      =  10000;//ms
+      var TIME_RATTLING =    200;//ms
+
       var globalFixes;
       if (IS_NODEJS) {
          globalFixes = {};
@@ -379,7 +383,7 @@ define([
             it('Параметры операции должны быть объектом с корректными свойствами, отложенный останов должен быть экземпляром Core/Deferred', function () {
                assert.doesNotThrow(function () {
                   producer.make({title:'Длительная операция 1', status:LongOperationEntry.STATUSES.ended}, new Deferred());
-                  producer.make({title:'Длительная операция 2', startedAt:(new Date()).getTime() - 3000, status:LongOperationEntry.STATUSES.suspended}, new Deferred());
+                  producer.make({title:'Длительная операция 2', startedAt:(new Date()).getTime() - TIME_EARLIER, status:LongOperationEntry.STATUSES.suspended}, new Deferred());
                   producer.make({title:'Длительная операция 3', startedAt:new Date(), onSuspend:new Function(''), onResume:new Function(''), onDelete:new Function('')}, new Deferred());
                }, Error);
             });
@@ -458,9 +462,9 @@ define([
                assert.isNumber(startedAts[0]);
                assert.isNumber(startedAts[1]);
                assert.isNumber(startedAts[2]);
-               assert.closeTo(startedAts[0], time, 50);
-               assert.closeTo(startedAts[1], time - 3000, 50);
-               assert.closeTo(startedAts[2], time, 50);
+               assert.closeTo(startedAts[0], time, TIME_RATTLING);
+               assert.closeTo(startedAts[1], time - TIME_EARLIER, TIME_RATTLING);
+               assert.closeTo(startedAts[2], time, TIME_RATTLING);
             });
 
             it('Снимки всех созданных операций имеют правильные значения статуса операции', function () {
@@ -854,8 +858,8 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &lt; с сейчас - 500мс)', function (done) {
-               var time = (new Date()).getTime() - 500;
+            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &lt; с сейчас - ' + TIME_GAP + 'мс)', function (done) {
+               var time = (new Date()).getTime() - TIME_GAP;
                producer.fetch({where:{startedAt:{condition:'<', value:time}}})
                   .addCallback(function (results) {
                      try {
@@ -871,8 +875,8 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &lt; с сейчас + 500мс)', function (done) {
-               var time = (new Date()).getTime() + 500;
+            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &lt; с сейчас + ' + TIME_GAP + 'мс)', function (done) {
+               var time = (new Date()).getTime() + TIME_GAP;
                producer.fetch({where:{startedAt:{condition:'<', value:time}}})
                   .addCallback(function (results) {
                      try {
@@ -890,8 +894,8 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &gt; с сейчас - 2000мс)', function (done) {
-               var time = (new Date()).getTime() - 2000;
+            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &gt; с сейчас - ' + (TIME_EARLIER - TIME_GAP) + 'мс)', function (done) {
+               var time = (new Date()).getTime() - (TIME_EARLIER - TIME_GAP);
                producer.fetch({where:{startedAt:{condition:'>', value:time}}})
                   .addCallback(function (results) {
                      try {
@@ -909,8 +913,8 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &gt; с сейчас - 3500мс)', function (done) {
-               var time = (new Date()).getTime() - 3500;
+            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &gt; с сейчас - ' + (TIME_EARLIER + TIME_GAP) + 'мс)', function (done) {
+               var time = (new Date()).getTime() - (TIME_EARLIER + TIME_GAP);
                producer.fetch({where:{startedAt:{condition:'>', value:time}}})
                   .addCallback(function (results) {
                      try {
@@ -1434,7 +1438,7 @@ define([
                assert.lengthOf(list, titles.length);
                var time = (new Date()).getTime();
                var snapshot = list[0];
-               assert.closeTo(snapshot.startedAt + (snapshot.timeSpent || 0) + (snapshot.timeIdle || 0), time, 50);
+               assert.closeTo(snapshot.startedAt + (snapshot.timeSpent || 0) + (snapshot.timeIdle || 0), time, TIME_RATTLING);
             });
 
             it('При ликвидации экземпляра при наличии незавершённых операций, имеющих функции действий, будут сформировано событие onlongoperationended', function (done) {

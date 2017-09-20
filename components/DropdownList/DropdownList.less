@@ -88,9 +88,9 @@
            }
         }
         .controls-DropdownList__textWrapper {
-           color: @DropdownList-disabled-text;
+           color: @DropdownList-disabled-text !important;
            cursor: default !important;
-           text-decoration: none;
+           text-decoration: none !important;
            .controls-DropdownList__text .controls-DropdownList__value {
               &:hover{
                  color: @DropdownList-disabled-text;
@@ -157,7 +157,7 @@
          }
       }
       .controls-DropdownList__body {
-         max-width: 400px;
+         max-width: @DropdownList-picker-max-width;
          border-width: 1px;
          border-color: @gray-ccc-color;
          border-radius: @DropdownList-picker-list-right-border-radius;
