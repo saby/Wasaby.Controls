@@ -585,6 +585,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
 
       _mergeRecord: function(collectionRecord, editRecord, additionalData) {
          var recValue,
+             values = {},
              self = this;
          Record.prototype.each.call(collectionRecord, function (key, value) {
             if(editRecord.has(key)){
@@ -597,17 +598,18 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
                   if (recValue && (typeof recValue.clone == 'function')) {
                      recValue = recValue.clone();
                   }
-                  //Нет возможности узнать отсюда, есть ли у свойства сеттер или нет
-                  try {
-                     this.set(key, recValue);
-                  } catch (e) {
-                     if (!(e instanceof ReferenceError)) {
-                        throw e;
-                     }
-                  }
+                  values[key] = recValue;
                }
             }
          });
+         //Нет возможности узнать отсюда, есть ли у свойства сеттер или нет
+         try {
+            collectionRecord.set(values);
+         } catch (e) {
+            if (!(e instanceof ReferenceError)) {
+               throw e;
+            }
+         }
       },
       _collectionReload: function(){
          this.getLinkedObject().reload();
