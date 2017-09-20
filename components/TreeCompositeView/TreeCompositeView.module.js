@@ -247,6 +247,13 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             result = TreeCompositeView.superclass._getInsertMarkupConfig.apply(this, arguments);
          } else {
             result = this._getInsertMarkupConfigICM.apply(this, arguments);
+            //При добавлении элементов в начало списка, они добавляются перед FoldersContainer, а должны добавлять после него.
+            //В таком случае явно укажем после какого блока вставить элементы.
+            if (result.inside && result.prepend) {
+               result.inside = false;
+               result.prepend = false;
+               result.container = this._getFoldersContainer()
+            }
          }
          return result;
       },
