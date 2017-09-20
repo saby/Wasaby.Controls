@@ -298,10 +298,6 @@ define('js!SBIS3.CONTROLS.SelectorButton',
                mode: this._getOption('selectMode'),
                visible: false
             });
-            this.once('onDestroy', function() {
-               this._selectorAction.destroy();
-               this._selectorAction = null;
-            });
          }
          return this._selectorAction;
       },
@@ -359,6 +355,13 @@ define('js!SBIS3.CONTROLS.SelectorButton',
       },
       _setSelectedItems: function () {
          
+      },
+      destroy: function () {
+         if (this._selectorAction) {
+            this._selectorAction.destroy();
+            this._selectorAction = null;
+         }
+         SelectorButton.superclass.destroy.call(this);
       }
    });
 
