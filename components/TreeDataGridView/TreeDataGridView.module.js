@@ -389,7 +389,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                   onActivated: function () {
                      var id = self.getHoveredItem().key;
                      self._activateItem(id);
-                     self.setSelectedKey(id);
+                     self._itemActionActivated(id);
                   }
                }
             });

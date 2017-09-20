@@ -2722,6 +2722,17 @@ define('js!SBIS3.CONTROLS.ListView',
                this._itemsToolbar.hide(animate);
             }
          },
+         /**
+          * Обрабатывает клик по операции на строке
+          * @param key
+          * @private
+          */
+         _itemActionActivated: function(key) {
+            this.setSelectedKey(key);
+            if(this._touchSupport) {
+               this._clearHoveredItem();
+            }
+         },
          _getItemsToolbar: function() {
             var self = this;
 
@@ -2746,10 +2757,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         }
                      },
                      onItemActionActivated: function(e, key) {
-                        self.setSelectedKey(key);
-                        if(self._touchSupport) {
-                           self._clearHoveredItem();
-                        }
+                        self._itemActionActivated(key);
                      },
                      onItemsToolbarHide: function() {
                         if(self._touchSupport) {
