@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.ILongOperationsProducer',
+define('js!SBIS3.CONTROLS.LongOperations.IProducer',
    [],
 
    function () {
@@ -6,12 +6,12 @@ define('js!SBIS3.CONTROLS.ILongOperationsProducer',
 
    /**
     * Интерфейс продюсера длительных операций
-    * @interface SBIS3.CONTROLS.ILongOperationsProducer
+    * @interface SBIS3.CONTROLS.LongOperations.IProducer
     * @public
     * @author Спирин Виктор Алексеевич
     */
 
-   return /** @lends SBIS3.CONTROLS.ILongOperationsProducer.prototype */{
+   return /** @lends SBIS3.CONTROLS.LongOperations.IProducer.prototype */{
       /**
        * @event onlongoperationstarted Происходит при начале исполнения новой длительной операции
        * @param {Core/EventObject} evtName Дескриптор события
@@ -110,7 +110,7 @@ define('js!SBIS3.CONTROLS.ILongOperationsProducer',
        * @param {number} options.offset Количество пропущенных элементов в начале
        * @param {number} options.limit Максимальное количество возвращаемых элементов
        * @param {object} [options.extra] Дополнительные параметры, если есть (опционально)
-       * @return {Core/Deferred<SBIS3.CONTROLS.LongOperationEntry[]>}
+       * @return {Core/Deferred<SBIS3.CONTROLS.LongOperations.Entry[]>}
        */
       fetch: function (options) {
          throw new Error('Method must be implemented');

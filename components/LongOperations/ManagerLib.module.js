@@ -1,10 +1,10 @@
 /**
  * Библиотека постзагружаемых методов для менеджера длительных операций
  *
- * @class SBIS3.CONTROLS.LongOperationsManagerLib
+ * @class SBIS3.CONTROLS.LongOperations.ManagerLib
  * @public
  */
-define('js!SBIS3.CONTROLS.LongOperationsManagerLib',
+define('js!SBIS3.CONTROLS.LongOperations.ManagerLib',
    [
    ],
 

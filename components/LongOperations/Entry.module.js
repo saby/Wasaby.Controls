@@ -1,10 +1,10 @@
 /**
  * Класс, содержащий различные сведения о ходе выполнения длительной операции
  *
- * @class SBIS3.CONTROLS.LongOperationEntry
+ * @class SBIS3.CONTROLS.LongOperations.Entry
  * @public
  */
-define('js!SBIS3.CONTROLS.LongOperationEntry',
+define('js!SBIS3.CONTROLS.LongOperations.Entry',
    [
       'Core/core-extend'
    ],
@@ -78,14 +78,14 @@ define('js!SBIS3.CONTROLS.LongOperationEntry',
       /**
        * Класс, содержащий различные сведения о ходе выполнения длительной операции
        *
-       * @class SBIS3.CONTROLS.LongOperationEntry
+       * @class SBIS3.CONTROLS.LongOperations.Entry
        * @extends Core/core-extend
        * @public
        *
        * @author Спирин Виктор Алексеевич
        */
-      var LongOperationEntry = CoreExtend.extend(/** @lends SBIS3.CONTROLS.LongOperationEntry.prototype */{
-         _moduleName: 'SBIS3.CONTROLS.LongOperationEntry',
+      var LongOperationEntry = CoreExtend.extend(/** @lends SBIS3.CONTROLS.LongOperations.Entry.prototype */{
+         _moduleName: 'SBIS3.CONTROLS.LongOperations.Entry',
 
          /**
           * Конструктор

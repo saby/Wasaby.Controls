@@ -1,21 +1,21 @@
 /**
  * Абстрактный продюсер длительных операций - заготовка для порождения классов не слишком специфичных продюсеров длительных операций
  *
- * @class SBIS3.CONTROLS.AbstractLongOperationsProducer
- * @implements SBIS3.CONTROLS.ILongOperationsProducer
+ * @class SBIS3.CONTROLS.LongOperations.AbstractProducer
+ * @implements SBIS3.CONTROLS.LongOperations.IProducer
  * @public
  */
 
-define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
+define('js!SBIS3.CONTROLS.LongOperations.AbstractProducer',
    [
       'Core/core-extend',
       'Core/Deferred',
       'Core/IoC',
       'Core/UserInfo',
       'js!WS.Data/Entity/ObservableMixin',
-      'js!SBIS3.CONTROLS.ILongOperationsProducer',
-      'js!SBIS3.CONTROLS.LongOperationEntry',
-      'js!SBIS3.CONTROLS.LongOperationsConst'
+      'js!SBIS3.CONTROLS.LongOperations.IProducer',
+      'js!SBIS3.CONTROLS.LongOperations.Entry',
+      'js!SBIS3.CONTROLS.LongOperations.Const'
    ],
 
    function (CoreExtend, Deferred, IoC, UserInfo, ObservableMixin, ILongOperationsProducer, LongOperationEntry, LongOperationsConst) {
@@ -40,8 +40,8 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
        * @public
        * @type {function}
        */
-      var AbstractLongOperationsProducer = CoreExtend.extend({}, [ILongOperationsProducer, ObservableMixin], /** @lends SBIS3.CONTROLS.AbstractLongOperationsProducer.prototype */{
-         _moduleName: 'SBIS3.CONTROLS.AbstractLongOperationsProducer',
+      var AbstractLongOperationsProducer = CoreExtend.extend({}, [ILongOperationsProducer, ObservableMixin], /** @lends SBIS3.CONTROLS.LongOperations.AbstractProducer.prototype */{
+         _moduleName: 'SBIS3.CONTROLS.LongOperations.AbstractProducer',
 
          /*$protected: {
             _options: {
@@ -101,7 +101,7 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
           * @param {number} options.offset Количество пропущенных элементов в начале (опционально)
           * @param {number} options.limit Максимальное количество возвращаемых элементов (опционально)
           * @param {object} [options.extra] Дополнительные параметры, если есть (опционально)
-          * @return {Core/Deferred<SBIS3.CONTROLS.LongOperationEntry[]>}
+          * @return {Core/Deferred<SBIS3.CONTROLS.LongOperations.Entry[]>}
           */
          fetch: function (options) {
             if (options && typeof options !== 'object') {
@@ -190,10 +190,10 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
          },
 
          /**
-          * Добавить новую длительную операцию. Метод принимает либо экземпляр класса SBIS3.CONTROLS.LongOperationEntry, либо набор опций,
+          * Добавить новую длительную операцию. Метод принимает либо экземпляр класса SBIS3.CONTROLS.LongOperations.Entry, либо набор опций,
           * принимаемых его конструктором. Возвращает идентификатор операции
           * @protected
-          * @param {SBIS3.CONTROLS.LongOperationEntry|object} operation Длительная операция
+          * @param {SBIS3.CONTROLS.LongOperations.Entry|object} operation Длительная операция
           * @return {number}
           */
          _put: function (operation) {
@@ -222,9 +222,9 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
          /**
           * Получить длительную операцию по идентификатору
           * @protected
-          * @param {boolean} asOperation Возвращать как экземпляр SBIS3.CONTROLS.LongOperationEntry, иначе как снимок состояния
+          * @param {boolean} asOperation Возвращать как экземпляр SBIS3.CONTROLS.LongOperations.Entry, иначе как снимок состояния
           * @param {number|string} operationId Идентификатор длительной операции
-          * @return {SBIS3.CONTROLS.LongOperationEntry|object}
+          * @return {SBIS3.CONTROLS.LongOperations.Entry|object}
           */
          _get: function (asOperation, operationId) {
             if (asOperation && typeof asOperation !== 'boolean') {
@@ -240,12 +240,12 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
          /**
           * Получить список длительных операций согласно предоставленным критериям
           * @protected
-          * @param {boolean} asOperation Возвращать как экземпляр SBIS3.CONTROLS.LongOperationEntry, иначе как снимок состояния
+          * @param {boolean} asOperation Возвращать как экземпляр SBIS3.CONTROLS.LongOperations.Entry, иначе как снимок состояния
           * @param {object} where Параметры фильтрации
           * @param {object} orderBy Параметры сортировки
           * @param {number} offset Количество пропущенных элементов в начале
           * @param {number} limit Максимальное количество возвращаемых элементов
-          * @return {SBIS3.CONTROLS.LongOperationEntry[]|object[]}
+          * @return {SBIS3.CONTROLS.LongOperations.Entry[]|object[]}
           */
          _list: function (asOperation, where, orderBy, offset, limit) {
             if (asOperation && typeof asOperation !== 'boolean') {
@@ -372,7 +372,7 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
       /**
        * Создать снимок состояния (плоский объект) длительной операции
        * @protected
-       * @param {SBIS3.CONTROLS.LongOperationEntry} operation Длительная операция
+       * @param {SBIS3.CONTROLS.LongOperations.Entry} operation Длительная операция
        * @return {object}
        */
       var _toSnapshot = function (operation) {
@@ -389,7 +389,7 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
        * @protected
        * @param {object} snapshot Снимок состояния
        * @param {string} producerName Имя текущего продюсера
-       * @return {SBIS3.CONTROLS.LongOperationEntry}
+       * @return {SBIS3.CONTROLS.LongOperations.Entry}
        */
       var _fromSnapshot = function (snapshot, producerName) {
          if (!snapshot || !(typeof snapshot === 'object')) {
@@ -401,8 +401,8 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
       /**
        * Заполнить длительные операции информацией о пользователях
        * @protected
-       * @param {SBIS3.CONTROLS.LongOperationEntry[]} operations Список длительных операций
-       * @return {Core/Deferred<SBIS3.CONTROLS.LongOperationEntry[]>}
+       * @param {SBIS3.CONTROLS.LongOperations.Entry[]} operations Список длительных операций
+       * @return {Core/Deferred<SBIS3.CONTROLS.LongOperations.Entry[]>}
        */
       var _fillUserInfo = function (operations) {
          var uuIds = operations.reduce(function (r, v) { if (v.userUuId && r.indexOf(v.userUuId) === -1) r.push(v.userUuId); return r; }, []);
@@ -587,7 +587,7 @@ define('js!SBIS3.CONTROLS.AbstractLongOperationsProducer',
                   obj = JSON.parse(json);
                }
                catch (ex) {
-                  IoC.resolve('ILogger').error('SBIS3.CONTROLS.AbstractLongOperationsProducer', 'JSON data is corrupted');
+                  IoC.resolve('ILogger').error('SBIS3.CONTROLS.LongOperations.AbstractProducer', 'JSON data is corrupted');
                }
                return obj;
             }

@@ -1,7 +1,7 @@
 /**
  * Менеджер длительных операций
  *
- * @class SBIS3.CONTROLS.LongOperationsManager
+ * @class SBIS3.CONTROLS.LongOperations.Manager
  * @public
  *
  * @description file LongOperations.md
@@ -9,7 +9,7 @@
  * @demo SBIS3.CONTROLS.Demo.MyLongOperations
  * @demo SBIS3.CONTROLS.Demo.MyLongOperationsSvc
  */
-define('js!SBIS3.CONTROLS.LongOperationsManager',
+define('js!SBIS3.CONTROLS.LongOperations.Manager',
    [
       'Core/core-instance',
       'Core/Deferred',
@@ -18,13 +18,13 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       'js!WS.Data/Source/DataSet',
       'js!WS.Data/Collection/RecordSet',
       'js!WS.Data/Chain',
-      'js!SBIS3.CONTROLS.LongOperationsConst',
+      'js!SBIS3.CONTROLS.LongOperations.Const',
       'js!SBIS3.CONTROLS.LongOperations.Tools.TabCalls',
       'js!SBIS3.CONTROLS.LongOperations.Tools.CallsPool',
       'js!SBIS3.CONTROLS.LongOperations.Tools.Bunch',
       'js!SBIS3.CONTROLS.LongOperations.Tools.Postloader',
-      'js!SBIS3.CONTROLS.LongOperationEntry',
-      'js!SBIS3.CONTROLS.LongOperationHistoryItem',
+      'js!SBIS3.CONTROLS.LongOperations.Entry',
+      'js!SBIS3.CONTROLS.LongOperations.HistoryItem',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model'
    ],
 
@@ -48,7 +48,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       /**
        * Список продюсеров длительных операций
        * @protected
-       * @type {object{SBIS3.CONTROLS.ILongOperationsProducer}}
+       * @type {object{SBIS3.CONTROLS.LongOperations.IProducer}}
        */
       var _producers = {};
 
@@ -114,10 +114,10 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
        *
        * @author Спирин Виктор Алексеевич
        *
-       * @type {SBIS3.CONTROLS.LongOperationsManager}
+       * @type {SBIS3.CONTROLS.LongOperations.Manager}
        */
-      var manager = /*CoreExtend.extend*/(/** @lends SBIS3.CONTROLS.LongOperationsManager.prototype */{
-         _moduleName: 'SBIS3.CONTROLS.LongOperationsManager',
+      var manager = /*CoreExtend.extend*/(/** @lends SBIS3.CONTROLS.LongOperations.Manager.prototype */{
+         _moduleName: 'SBIS3.CONTROLS.LongOperations.Manager',
 
          // Раскрыть константы
          DEFAULT_FETCH_SORTING: DEFAULT_FETCH_SORTING,
@@ -136,7 +136,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
           * Получить зарегистрированный продюсер длительных операций по его имени
           * @public
           * @param {string} prodName Имя продюсера длительных операций
-          * @return {SBIS3.CONTROLS.ILongOperationsProducer}
+          * @return {SBIS3.CONTROLS.LongOperations.IProducer}
           */
          getByName: function (prodName) {
             if (!prodName || typeof prodName !== 'string') {
@@ -150,7 +150,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          /**
           * Зарегистрировать продюсер длительных операций
           * @public
-          * @param {SBIS3.CONTROLS.ILongOperationsProducer} producer Продюсер длительных операций
+          * @param {SBIS3.CONTROLS.LongOperations.IProducer} producer Продюсер длительных операций
           */
          register: function (producer) {
             if (!_isDestroyed) {
@@ -161,7 +161,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          /**
           * Удалить продюсер длительных операций из списка зарегистрированных. Возвращает значение, показывающее удалось ли раз-регистрировать
           * @public
-          * @param {SBIS3.CONTROLS.ILongOperationsProducer|string} producer Продюсер длительных операций или его имя
+          * @param {SBIS3.CONTROLS.LongOperations.IProducer|string} producer Продюсер длительных операций или его имя
           * @return {boolean}
           */
          unregister: function (producer) {
@@ -173,12 +173,12 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          /**
           * Выяснить, зарегистрирован ли указанный продюсер длительных операций
           * @public
-          * @param {SBIS3.CONTROLS.ILongOperationsProducer|string} producer Продюсер длительных операций или его имя
+          * @param {SBIS3.CONTROLS.LongOperations.IProducer|string} producer Продюсер длительных операций или его имя
           * @return {boolean}
           */
          isRegistered: function (producer) {
-            if (!producer || !(typeof producer === 'string' || CoreInstance.instanceOfMixin(producer, 'SBIS3.CONTROLS.ILongOperationsProducer'))) {
-               throw new TypeError('Argument "producer" must be string or  SBIS3.CONTROLS.ILongOperationsProducer');
+            if (!producer || !(typeof producer === 'string' || CoreInstance.instanceOfMixin(producer, 'SBIS3.CONTROLS.LongOperations.IProducer'))) {
+               throw new TypeError('Argument "producer" must be string or  SBIS3.CONTROLS.LongOperations.IProducer');
             }
             if (!_isDestroyed) {
                return typeof producer === 'string' ? !!_producers[producer] : !!_searchName(producer);
@@ -196,7 +196,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
           * @param {number} [options.offset] Количество пропущенных элементов в начале. По умолчанию 0 (опционально)
           * @param {number} [options.limit] Максимальное количество возвращаемых элементов. По умолчанию будет использована константа DEFAULT_FETCH_LIMIT (опционально)
           * @param {object} [options.extra] Дополнительные параметры, если есть (опционально)
-          * @return {Core/Deferred<WS.Data/Collection/RecordSet<SBIS3.CONTROLS.LongOperationEntry>>}
+          * @return {Core/Deferred<WS.Data/Collection/RecordSet<SBIS3.CONTROLS.LongOperations.Entry>>}
           */
          fetch: function (options) {
             // Хотя здесь "проситься" использовать экземпляр WS.Data/Query/Query в качестве аргумента, однако WS.Data/Query/Query имеет избыточную
@@ -385,7 +385,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
           * @param {string|number} operationId Идентификатор длительной операции
           * @param {number} count Максимальное количество возвращаемых элементов
           * @param {object} [filter] Фильтр для получения не всех элементов истроии
-          * @return {Core/Deferred<WS.Data/Collection/RecordSet<SBIS3.CONTROLS.LongOperationHistoryItem>>}
+          * @return {Core/Deferred<WS.Data/Collection/RecordSet<SBIS3.CONTROLS.LongOperations.HistoryItem>>}
           */
          history: function (tabKey, prodName, operationId, count, filter) {
             if (tabKey && typeof tabKey !== 'string') {
@@ -503,11 +503,11 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       /**
        * Зарегистрировать продюсер длительных операций
        * @protected
-       * @param {SBIS3.CONTROLS.ILongOperationsProducer} producer Продюсер длительных операций
+       * @param {SBIS3.CONTROLS.LongOperations.IProducer} producer Продюсер длительных операций
        */
       var _register = function (producer) {
-         if (!producer || !CoreInstance.instanceOfMixin(producer, 'SBIS3.CONTROLS.ILongOperationsProducer')) {
-            throw new TypeError('Argument "producer" must be SBIS3.CONTROLS.ILongOperationsProducer');
+         if (!producer || !CoreInstance.instanceOfMixin(producer, 'SBIS3.CONTROLS.LongOperations.IProducer')) {
+            throw new TypeError('Argument "producer" must be SBIS3.CONTROLS.LongOperations.IProducer');
          }
          var name = producer.getName();
          if (!name) {
@@ -548,12 +548,12 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       /**
        * Удалить продюсер длительных операций из списка зарегистрированных
        * @protected
-       * @param {SBIS3.CONTROLS.ILongOperationsProducer|string} producer Продюсер длительных операций или его имя
+       * @param {SBIS3.CONTROLS.LongOperations.IProducer|string} producer Продюсер длительных операций или его имя
        * @return {boolean}
        */
       var _unregister = function (producer) {
-         if (!producer || (typeof producer !== 'string' && !CoreInstance.instanceOfMixin(producer, 'SBIS3.CONTROLS.ILongOperationsProducer'))) {
-            throw new TypeError('Argument "producer" must be SBIS3.CONTROLS.ILongOperationsProducer or string');
+         if (!producer || (typeof producer !== 'string' && !CoreInstance.instanceOfMixin(producer, 'SBIS3.CONTROLS.LongOperations.IProducer'))) {
+            throw new TypeError('Argument "producer" must be SBIS3.CONTROLS.LongOperations.IProducer or string');
          }
          var name;
          if (typeof producer === 'string') {
@@ -619,7 +619,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       /**
        * Найти под каким именем зарегистрирован продюсер
        * @protected
-       * @param {SBIS3.CONTROLS.ILongOperationsProducer} producer Продюсер длительных операций
+       * @param {SBIS3.CONTROLS.LongOperations.IProducer} producer Продюсер длительных операций
        * @return {string}
        */
       var _searchName = function (producer) {
@@ -633,11 +633,11 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       /**
        * Определить, может ли продюсер иметь историю
        * @protected
-       * @param {SBIS3.CONTROLS.ILongOperationsProducer} producer Продюсер длительных операций
+       * @param {SBIS3.CONTROLS.LongOperations.IProducer} producer Продюсер длительных операций
        * @return {boolean}
        */
       var _canHasHistory = function (producer) {
-         return CoreInstance.instanceOfMixin(producer, 'SBIS3.CONTROLS.ILongOperationsHistoricalProducer');
+         return CoreInstance.instanceOfMixin(producer, 'SBIS3.CONTROLS.LongOperations.IHistoricalProducer');
       };
 
       /**
@@ -885,7 +885,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          /*tabKey:*/_tabKey,
          /*router:*/manager.getByName,
          /*packer:*/function (v) {
-            // Упаковщик для отправки. Ожидается, что все объекты будут экземплярами SBIS3.CONTROLS.LongOperationEntry
+            // Упаковщик для отправки. Ожидается, что все объекты будут экземплярами SBIS3.CONTROLS.LongOperations.Entry
             return v && typeof v.toSnapshot === 'function' ? v.toSnapshot() : v;
          },
          /*channel:*/_tabChannel
@@ -898,8 +898,8 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
           * Обработчик одиночного результата вызова метода fetch локального продюсера или продюсера во вкладке
           * @param {object} query Параметры выполнявшегося запроса
           * @param {object} member Объект с идентифицирующими параметрами вызова - tab и producer
-          * @param {SBIS3.CONTROLS.LongOperationEntry[]|WS.Data/Source/DataSet|WS.Data/Collection/RecordSet} result Полученный результат
-          * @return {SBIS3.CONTROLS.LongOperationEntry[]}
+          * @param {SBIS3.CONTROLS.LongOperations.Entry[]|WS.Data/Source/DataSet|WS.Data/Collection/RecordSet} result Полученный результат
+          * @return {SBIS3.CONTROLS.LongOperations.Entry[]}
           */
          /*handlePartial:*/function (query, member, result) {
             if (!(result == null || Array.isArray(result) || result instanceof DataSet || result instanceof RecordSet)) {
@@ -927,7 +927,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                if (len) {
                   var memberTab = (member.tab === _tabKey ? !_producers[member.producer].hasCrossTabData() : !_producers[member.producer] || !_tabManagers[member.tab][member.producer].hasCrossTabData) ? member.tab : null;
                   values[iterate](function (v) {
-                     // Значение должно быть экземпляром SBIS3.CONTROLS.LongOperationEntry и иметь правилное имя продюсера
+                     // Значение должно быть экземпляром SBIS3.CONTROLS.LongOperations.Entry и иметь правилное имя продюсера
                      if (!(v instanceof LongOperationEntry && v.producer === prodName)) {
                         throw new Error('Invalid result');
                      }
@@ -941,8 +941,8 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
          /**
           * Обработчик полного результата
           * @param {object} query Параметры выполнявшегося запроса
-          * @param {SBIS3.CONTROLS.LongOperationEntry[][]} resultList Список результатов обработки одиночных результатов
-          * @return {WS.Data/Collection/RecordSet<SBIS3.CONTROLS.LongOperationEntry>}
+          * @param {SBIS3.CONTROLS.LongOperations.Entry[][]} resultList Список результатов обработки одиночных результатов
+          * @return {WS.Data/Collection/RecordSet<SBIS3.CONTROLS.LongOperations.Entry>}
           */
          /*handleComplete:*/function (query, resultList) {
             var operations;

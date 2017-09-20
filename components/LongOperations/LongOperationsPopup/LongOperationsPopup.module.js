@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
       'js!SBIS3.CORE.TabMessage',
       /*###'js!SBIS3.CONTROLS.WaitIndicator',*/
       "js!SBIS3.CONTROLS.NotificationPopup",
-      'js!SBIS3.CONTROLS.LongOperationEntry',
+      'js!SBIS3.CONTROLS.LongOperations.Entry',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model',
       "html!SBIS3.CONTROLS.LongOperationsPopup/resources/headerTemplate",
       "html!SBIS3.CONTROLS.LongOperationsPopup/resources/contentTemplate",

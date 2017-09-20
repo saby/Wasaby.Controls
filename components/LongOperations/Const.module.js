@@ -1,13 +1,13 @@
 /**
  * Константы длительных операций
  *
- * @class SBIS3.CONTROLS.LongOperationsConst
+ * @class SBIS3.CONTROLS.LongOperations.Const
  *
  * @author Спирин Виктор Алексеевич
  *
  * @public
  */
-define('js!SBIS3.CONTROLS.LongOperationsConst',
+define('js!SBIS3.CONTROLS.LongOperations.Const',
    [],
 
    function () {

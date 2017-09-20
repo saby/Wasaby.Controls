@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.LongOperationHistoryItem',
+define('js!SBIS3.CONTROLS.LongOperations.HistoryItem',
    [
       'Core/core-extend'
    ],
@@ -32,13 +32,13 @@ define('js!SBIS3.CONTROLS.LongOperationHistoryItem',
       /**
        * Класс, описывающий элемент истории длительной операции
        *
-       * @class SBIS3.CONTROLS.LongOperationHistoryItem
+       * @class SBIS3.CONTROLS.LongOperations.HistoryItem
        * @extends Core/core-extend
        * @author Спирин Виктор Алексеевич
        * @public
        */
-      var LongOperationHistoryItem = CoreExtend.extend(/** @lends SBIS3.CONTROLS.LongOperationHistoryItem.prototype */{
-         _moduleName: 'SBIS3.CONTROLS.LongOperationHistoryItem',
+      var LongOperationHistoryItem = CoreExtend.extend(/** @lends SBIS3.CONTROLS.LongOperations.HistoryItem.prototype */{
+         _moduleName: 'SBIS3.CONTROLS.LongOperations.HistoryItem',
 
          /**
           * Конструктор
