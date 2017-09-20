@@ -31,7 +31,13 @@
             background-color: transparent;
          }
       }
-
+      //todo: стили необходимы для ie, flex-end не работает с переполнением
+      //https://codepen.io/anon/pen/JrGQQx
+      //удалить при отказе от ie11, в edge всё работает корректно
+      .controls-FieldLinkItemsCollection {
+         .flex-direction(row-reverse);
+         .justify-content();
+      }
    }
    &.controls-FieldLink__selected-single {
       .controls-TextBox__beforeFieldWrapper {
