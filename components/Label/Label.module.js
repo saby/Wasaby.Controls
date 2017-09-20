@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.Label',
        * Класс контрола "Метка". Предназначен для использования совместно с {@link SBIS3.CONTROLS.TextBox} и другими полями ввода.
        *
        * <a href="http://axure.tensor.ru/standarts/v7/%D0%BF%D0%BE%D0%BB%D0%B5_%D0%B2%D0%B2%D0%BE%D0%B4%D0%B0__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_03_.html">Спецификация.</a>
-       * <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/textbox/infield/lable/">Демонстрационные примеры.</a>
+       * <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/textbox/infield/label/">Демонстрационные примеры.</a>
        *
        * @class SBIS3.CONTROLS.Label
        * @extends WSControls/Control/Base
