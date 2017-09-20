@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.Action.List.ListMixin', ['Core/core-instance'], functi
              * @cfg {*} связанный список.
              * @remark
              * Список должен быть с примесью миксинов ({@link SBIS3.CONTROLS.ItemsControlMixin} или {@link WS.Data/Collection/IList}) для работы с однотипными элементами.
-             * Подробнее о базовых платформенных списках вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-types/">Виды списков</a>.
+             * Подробнее о базовых платформенных списках вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-types/">Виды списков</a>.
              * @see getLinkedObject
              * @see setLinkedObject
              */

@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.Browser', [
       /**
        * @event onEdit Происходит при редактировании или создании новой записи реестра.
        * @remark
-       * Для <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-types/#_4'>иерархических списков</a> событие происходит только для записей типа "Лист" (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>).
+       * Для <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-types/#_4'>иерархических списков</a> событие происходит только для записей типа "Лист" (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>).
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {Object} meta Мета параметры события.
        * @param {String|Number} meta.id Идентификатор записи. В случае создания новой записи значение параметра - null.
@@ -56,7 +56,7 @@ define('js!SBIS3.CONTROLS.Browser', [
        * @event onEditCurrentFolder Происходит при редактировании или создании новой папки (записей типа "Узел" и "Скрытый узел").
        * @remark
        * Подробнее о типах записей читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/workdata/structure/vocabl/tabl/relations/#hierarchy'>Иерархия</a>.
-       * Событие актуально только для <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-types/#_4'>иерархических списков</a>.
+       * Событие актуально только для <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-types/#_4'>иерархических списков</a>.
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {String} id Идентификатор редактируемой папки. В случае добавления новой папки значение параметра - null.
        */
