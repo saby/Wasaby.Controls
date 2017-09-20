@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.Label.compatibility', [],
          },
 
          /**
-          * Возвращает текст всплывающей подсказке.
+          * Возвращает текст всплывающей подсказки.
           * @returns {String}
           * @see tooltip
           * @see getTooltip
