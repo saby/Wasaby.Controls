@@ -11,7 +11,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
    'use strict';
 
    /**
-    * Класс, описывающий действие открытия окна с заданным шаблоном. Применяется для работы с <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/">диалогами редактирования списков</a>.
+    * Класс, описывающий действие открытия окна с заданным шаблоном. Применяется для работы с <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/editing-dialog/">диалогами редактирования списков</a>.
     * @class SBIS3.CONTROLS.Action.OpenEditDialog
     * @extends SBIS3.CONTROLS.Action.OpenDialog
     * @author Красильников Андрей Сергеевич
@@ -75,13 +75,13 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
             /**
              * @cfg {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} Устанавливает список, связанный с диалогом редактирования.
              * @remark
-             * Для связанного списка автоматическиприменяется <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/synchronization/">синхронизация изменений</a>.
+             * Для связанного списка автоматическиприменяется <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/editing-dialog/synchronization/">синхронизация изменений</a>.
              * @see setLinkedObject
              * @see getLinkedObject
              */
             linkedObject: undefined,
             /**
-             * @cfg {String} Устанавливает <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/initializing-way/">способ инициализации данных</a> диалога редактирования.
+             * @cfg {String} Устанавливает <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/editing-dialog/initializing-way/">способ инициализации данных</a> диалога редактирования.
              * @variant local
              * @variant remote
              * @variant delayedRemote
@@ -111,8 +111,8 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       /**
        * Устанавливает список, связанный с диалогом редактирования.
        * @remark
-       * Для связанного списка автоматическиприменяется <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/synchronization/">синхронизация изменений</a>.
-       * @param {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} linkedObject Экземпляр класса <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">списка</a>.
+       * Для связанного списка автоматическиприменяется <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/editing-dialog/synchronization/">синхронизация изменений</a>.
+       * @param {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} linkedObject Экземпляр класса <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">списка</a>.
        * @see linkedObject
        * @see getLinkedObject
        */
@@ -122,8 +122,8 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
        /**
         * Возвращает экземпляр класса списка, который связан с диалогом редактирования.
         * @remark
-        * Для связанного списка автоматическиприменяется <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/synchronization/">синхронизация изменений</a>.
-        * @returns {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} linkedObject Экземпляр класса <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">списка</a>.
+        * Для связанного списка автоматическиприменяется <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/editing-dialog/synchronization/">синхронизация изменений</a>.
+        * @returns {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} linkedObject Экземпляр класса <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">списка</a>.
         * @see linkedObject
         * @see setLinkedObject
         */
