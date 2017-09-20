@@ -325,6 +325,7 @@
 @text-box-overflow:                       ellipsis;
 //Formatted text box
 @formatted-text-box-wrapper-min-height:   @text-box-field-min-height;
+@formatted-text-box-field-padding:        0;
 // DateBox
 @date-box-wrapper-border-color:           @text-box-border-color @text-box-border-color @text-box-bottom-border-color @text-box-border-color; // @default-border-color
 @date-box-field-text-color:               @default-text-color;
@@ -380,10 +381,9 @@
 @suggest-list-item-hover-bg:              #f3f3f3;
 @suggest-list-item-selected-bg:           darken(@suggest-list-item-hover-bg, 5%);
 //Date picker
-@date-picker-calendar-icon-top-offset:    0;
-@date-picker-calendar-icon-left-offset:   0;
-@date-picker-calendar-icon-height: 			3rem;
-@date-picker-calendar-icon-width: 			2.786rem;
+@date-picker-icon-margin-left:            0;
+@date-picker-calendar-icon-size:          3rem;
+@date-picker-calendar-icon-line-height:   3rem;
 //Calendar
 @calendar-width:                          auto;
 @calendar-bg:                             @basic-block-bg-color;
@@ -433,7 +433,6 @@
 @month-picker-item-active-text-color:     @secondary-color;
 @month-picker-item-active-bg:             @primary-color;
 //Data Range
-@date-range-font-size:                    1.14rem;
 @date-range-line-height:                  normal;
 @date-range-icon-button-top:              0.536rem;
 @date-range-dash-width:                   0.5rem;
