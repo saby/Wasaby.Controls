@@ -1299,7 +1299,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          getNextItemById: function (id) {
             var projection = this._getItemsProjection();
-            return this._getHtmlItemByProjectionItem(
+            return this._getDomElementByItem(
                 projection.getNext(
                     projection.getItemBySourceItem(
                      this.getItems().getRecordById(id)
@@ -1314,7 +1314,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          getPrevItemById: function (id) {
             var projection = this._getItemsProjection();
-            return this._getHtmlItemByProjectionItem(
+            return this._getDomElementByItem(
                 projection.getPrevious(
                     projection.getItemBySourceItem(
                      this.getItems().getRecordById(id)
@@ -1331,12 +1331,6 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._getHtmlItemByDOM(id, false);
          },
 
-         _getHtmlItemByProjectionItem: function (item) {
-            if (item) {
-               return $('.js-controls-ListView__item[data-id="' + item.getContents().getId() + '"]', this._getItemsContainer());
-            }
-            return undefined;
-         },
          /**
           *
           * @param id - идентификатор элемента
