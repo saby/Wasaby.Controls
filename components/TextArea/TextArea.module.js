@@ -293,7 +293,6 @@ define('js!SBIS3.CONTROLS.TextArea', [
          // поэтому принудительно проставляем фокус в активное поле
          // если фокус уже на поле ввода, то повторно проставлять не нужно
           if (this.isEnabled() && elementToFocus[0] !== document.activeElement) {
-             this._fromTab = false;
              elementToFocus.focus();
           }
           TextArea.superclass._onClickHandler.call(this, event);
