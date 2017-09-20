@@ -643,7 +643,11 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                      });
                }
             };
-         fcHelpers.toggleIndicator(true);
+         // В случае операции удаления один индикатор у нас уже отображается, второй показывать не нужно.
+         // https://online.sbis.ru/opendoc.html?guid=e7a40393-e221-434e-9a2d-c1c66f5f374f
+         if (!this._showedLoading) {
+            fcHelpers.toggleIndicator(true);
+         }
          if (items) {
             currentDataSet = this.getItems();
             filter = cFunctions.clone(this.getFilter());
@@ -661,7 +665,9 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                }
             }, this);
             if (Object.isEmpty(recordsGroup)) {
-               fcHelpers.toggleIndicator(false);
+               if (!this._showedLoading) {
+                  fcHelpers.toggleIndicator(false);
+               }
             } else {
                deferred = new ParallelDeferred();
                Object.keys(recordsGroup).forEach(function(branchId) {
@@ -681,7 +687,9 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                         }
                      })
                      .addBoth(function() {
-                        fcHelpers.toggleIndicator(false);
+                        if (!this._showedLoading) {
+                           fcHelpers.toggleIndicator(false);
+                        }
                      }));
                });
                return deferred.done().getResult();
