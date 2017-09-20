@@ -1592,13 +1592,17 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
    
    
-         if(this._options.showHead && this._options.stickyHeader) {
+         if(this._options.showHead && this._options.stickyHeader && this._thead) {
             this._toggleEventHandlers(this._thead, false);
          }
          
          if (this._options.stickyHeader && !this._options.showHead && this._options.resultsPosition === 'top') {
             this._updateStickyHeader(false);
          }
+         
+         this._thead = undefined;
+         this._tbody = undefined;
+         this._tfoot = undefined;
          
          DataGridView.superclass.destroy.call(this);
       },
