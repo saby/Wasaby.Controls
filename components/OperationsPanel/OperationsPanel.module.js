@@ -331,6 +331,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          var allowedWidth = container.width() - ITEMS_MENU_WIDTH;
 
          var operations = this._getItemsContainer().find('> .js-controls-operationsPanel__action');
+         //Вернем видимость всех вручную спрятанных операций.
          operations.css('display', '');
 
          //Отберем только видимые элементы.
