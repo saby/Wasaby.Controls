@@ -33,50 +33,52 @@ define('js!SBIS3.CONTROLS.LongOperations.Tools.Postloader',
           * - после загрузки метод с указанным именем будет импортирован из библиотеки в целевой объект
           * - импортированный метод будет вызван и результат после получения будет возвращён в обещание
           * - При дальнейших обращениях будет отрабатывать загруженный метод сам по себе
+          * Методы-заглушки обязательно должна вызываться в объектном контексте
           * @public
-          * @param {object} target Объект - владелец постзагружаемого метода
           * @param {string} name Имя постзагружаемого метода
           * @return {function<Core/Deferred>}
           */
-         method: function (target, name) {
-            if (!target || typeof target !== 'object') {
-               throw new TypeError('Argument "target" must be an object');
-            }
+         method: function (name) {
             if (!name || typeof name !== 'string') {
                throw new TypeError('Argument "name" must be a string');
             }
-            return _load.bind(null, this, target, name);
+            var postloader = this;
+            return function () {
+               if (!this || typeof this !== 'object') {
+                  throw new Error('Сall without object context');
+               }
+               // Здесь this ссылается на объект, как метод которого вызвана заглушка
+               return _load.call(this, postloader, name, [].slice.call(arguments));
+            };
          }
       };
 
       Postloader.prototype.constructor = Postloader;
 
       /**
-       * Функция, порождающая методы-заглушки
+       * Функция вызывается из методов-заглушек
        * @protected
-       * @param {SBIS3.CONTROLS.LongOperations.Tools.Postloader} self Этот объект
-       * @param {object} target Объект - владелец постзагружаемого метода
+       * @param {SBIS3.CONTROLS.LongOperations.Tools.Postloader} postloader Этот объект
        * @param {string} method Имя постзагружаемого метода
+       * @param {any[]} args Аргументы, с которыми был вызван метод-заглушка
        * @return {Core/Deferred}
        */
-      var _load = function (self, target, method) {
-         // Поскольку метод-заглушка вызывается с какими-то реальными аргументами - нужно передать их дальше
-         var args = 3 < arguments.length ? [].slice.call(arguments, 3) : [];
+      var _load = function (postloader, method, args) {
          var promise = new Deferred();
-         if (self._mod) {
+         if (postloader._mod) {
             // Если библиотека уже загружена - применить сразу
-            _apply(target, method, self._mod[method], args, promise);
+            _apply(this, method, postloader._mod[method], args, promise);
          }
          else {
             // Иначе - загрузить и применить после этого
-            require([self._src], function (module) {
+            require([postloader._src], function (module) {
                if (!module || typeof module !== 'object') {
                   promise.errback(new TypeError('Loaded module must be an object'));
                   return;
                }
-               self._mod = module;
-               _apply(target, method, self._mod[method], args, promise);
-            });
+               postloader._mod = module;
+               _apply(this, method, postloader._mod[method], args, promise);
+            }.bind(this));
          }
          return promise;
       };
