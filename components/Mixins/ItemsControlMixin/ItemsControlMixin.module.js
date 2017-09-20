@@ -556,7 +556,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              *
              * @property {String} contentTemplate Шаблон содержимого заголовка группы.
              * Шаблон будет помещен в платформенный контейнер визуального отображения заголовка группы.
-             * Шаблон - это XHTML-файл, внутри допускается использование {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/ конструкций шаблонизатора}.
+             * Шаблон - это XHTML-файл, внутри допускается использование {@link http://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/xhtml/template/ конструкций шаблонизатора}.
              * В объекте *it* шаблонизатора доступны для использования два свойства:
              * <ul>
              *     <li>groupId - идентификатор группы (см. *method*).</li>
@@ -573,7 +573,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @cfg {GroupBy} Устанавливает группировку элементов коллекции.
              * @remark file ItemsControlMixin-groupBy.md
              * @remark
-             * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
+             * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
              * @example
              * 1. Подключение шаблона группировки:
              * <pre>
@@ -2099,7 +2099,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @remark
        * Если нужно, чтобы стандартаная группировка для элемента не вызывалась - нужно обязательно переопределить (передать) все опции (field, method, template, render), иначе в группировку запишутся стандартные параметры.
        * Всем элементам группы добавляется css-класс "controls-GroupBy".
-       * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
+       * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
        * @param {GroupBy} group Параметры группировки.
        * @param {Boolean} redraw Произвести перерисовку списка после изменения параметров группировки.
        * @see groupBy
@@ -2131,7 +2131,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       /**
        * Возвращает параметры группировки элементов коллекции.
        * @remark
-       * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
+       * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
        * @return {GroupBy}
        * @see groupBy
        * @see setGroupBy
