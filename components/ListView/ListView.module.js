@@ -1050,7 +1050,8 @@ define('js!SBIS3.CONTROLS.ListView',
                { class: 'controls-ListView__pagerNoSizePicker', optionName: 'noSizePicker', value: true, defaultValue: false },
                { class: 'controls-ListView__pagerNoAmount', optionName: 'noPagerAmount', value: true, defaultValue: false },
                { class: 'controls-ListView__pagerHideEndButton', optionName: 'hideEndButton', value: true, defaultValue: false },
-               { class: 'controls-ListView__orangeMarker', optionName: 'showSelectedMarker', value: true, defaultValue: false }
+               { class: 'controls-ListView__orangeMarker', optionName: 'showSelectedMarker', value: true, defaultValue: false },
+               { class: 'controls-ListView__outside-scroll-loader', optionName: 'outsideScroll', value: true, defaultValue: false }
             ]
             function hasClass(fullClass, className) {
                if(typeof fullClass === 'string') {
@@ -3232,7 +3233,9 @@ define('js!SBIS3.CONTROLS.ListView',
             }
 
             //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
-            this._container.toggleClass('controls-ListView__outside-scroll-loader', !hasScroll);
+            // this._container.toggleClass('controls-ListView__outside-scroll-loader', !hasScroll);
+            this._options.outsideScroll = !hasScroll;
+            this.redraw();
 
             this._updateScrollIndicatorTopThrottled();
 
