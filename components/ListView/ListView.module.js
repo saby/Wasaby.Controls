@@ -1514,19 +1514,8 @@ define('js!SBIS3.CONTROLS.ListView',
             if(this._hasHoveredItem()) {
                var oldHoveredItem = this.getHoveredItem().container;
                oldHoveredItem.removeClass('controls-ListView__hoveredItem');
-               oldHoveredItem.removeClass('controls-ListView__hoveredItem__withEditing');
-               oldHoveredItem.removeClass('controls-ListView__hoveredItem__withoutEditing');
-               oldHoveredItem.removeClass('controls-ListView__hoveredItem__withoutHover');
-               oldHoveredItem.removeClass('controls-ListView__hoveredItem__withHover');
             }
             target.addClass('controls-ListView__hoveredItem');
-            target.hasClass('.controls-editInPlace') ?
-               target.addClass('controls-ListView__hoveredItem__withEditing') :
-               target.addClass('controls-ListView__hoveredItem__withoutEditing');
-
-            this._options.disableHover ?
-               target.addClass('controls-ListView__hoveredItem__withoutHover') :
-               target.addClass('controls-ListView__hoveredItem__withHover');
 
             this._hoveredItem = this._getElementData(target);
             this._notifyOnChangeHoveredItem();
@@ -3239,9 +3228,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
 
             //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
-            // this._container.toggleClass('controls-ListView__outside-scroll-loader', !hasScroll);
-            this._options.outsideScroll = !hasScroll;
-            this.redraw();
+            this._scrollWatcher.getScrollContainer().toggleClass('controls-ListView-scrollIndicator_outside', !hasScroll);
 
             this._updateScrollIndicatorTopThrottled();
 
@@ -3641,16 +3628,6 @@ define('js!SBIS3.CONTROLS.ListView',
             //
             if (hoveredItem.container) {
                hoveredItem.container.addClass('controls-ListView__hoveredItem');
-               //Надо ли??
-               hoveredItem.container.hasClass('.controls-editInPlace') ?
-                  hoveredItem.container.addClass('controls-ListView__hoveredItem__withEditing') :
-                  hoveredItem.container.addClass('controls-ListView__hoveredItem__withoutEditing');
-
-
-               this._options.disableHover ?
-                  hoveredItem.container.addClass('controls-ListView__hoveredItem__withoutHover') :
-                  hoveredItem.container.addClass('controls-ListView__hoveredItem__withHover');
-
                this._hoveredItem = hoveredItem;
             }
          },
@@ -3664,13 +3641,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 hoveredItemCont = hoveredItem.container,
                 emptyObject = {};
 
-            if(hoveredItemCont) {
-               hoveredItemCont.removeClass('controls-ListView__hoveredItem');
-               hoveredItemCont.removeClass('controls-ListView__hoveredItem__withEditing');
-               hoveredItemCont.removeClass('controls-ListView__hoveredItem__withoutEditing');
-               hoveredItemCont.removeClass('controls-ListView__hoveredItem__withoutHover');
-               hoveredItemCont.removeClass('controls-ListView__hoveredItem__withHover');
-            }
+            hoveredItemCont && hoveredItemCont.removeClass('controls-ListView__hoveredItem');
 
             for(var key in hoveredItem) {
                if(hoveredItem.hasOwnProperty(key)) {
