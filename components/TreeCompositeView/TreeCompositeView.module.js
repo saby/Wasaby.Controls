@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
 
    /**
     * Контрол, отображающий набор данных с иерархической структурой в виде таблицы, плитки или списка.
-    * Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">Настройка списков</a>.
+    * Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">Настройка списков</a>.
     * @class SBIS3.CONTROLS.TreeCompositeView
     * @extends SBIS3.CONTROLS.TreeDataGridView
     *
@@ -247,6 +247,13 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             result = TreeCompositeView.superclass._getInsertMarkupConfig.apply(this, arguments);
          } else {
             result = this._getInsertMarkupConfigICM.apply(this, arguments);
+            //При добавлении элементов в начало списка, они добавляются перед FoldersContainer, а должны добавлять после него.
+            //В таком случае явно укажем после какого блока вставить элементы.
+            if (result.inside && result.prepend) {
+               result.inside = false;
+               result.prepend = false;
+               result.container = this._getFoldersContainer()
+            }
          }
          return result;
       },

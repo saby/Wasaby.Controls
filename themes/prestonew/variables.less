@@ -92,6 +92,7 @@
 @button-text-margin-right:                .57rem;
 @button-text-padding:                     0;                        // padding of text
 @button-icon-color-hover:                 #B9E9FF;
+@button-ipad-line-height:                 normal;
 @FilterPanelButtonHoverRightClose:        url('img/FilterPanelButton.svg') 0 0.86rem;
 @FilterPanelButtonHoverLeftClose:         url('img/FilterPanelButton.svg') -1.25rem 0.86rem;
 @FilterPanelButtonHoverRightOpen:         url('img/FilterPanelButton.svg') -2.5rem -0.86rem;
@@ -325,6 +326,7 @@
 @text-box-overflow:                       ellipsis;
 //Formatted text box
 @formatted-text-box-wrapper-min-height:   @text-box-field-min-height;
+@formatted-text-box-field-padding:        0;
 // DateBox
 @date-box-wrapper-border-color:           @text-box-border-color @text-box-border-color @text-box-bottom-border-color @text-box-border-color; // @default-border-color
 @date-box-field-text-color:               @default-text-color;
@@ -380,10 +382,9 @@
 @suggest-list-item-hover-bg:              #f3f3f3;
 @suggest-list-item-selected-bg:           darken(@suggest-list-item-hover-bg, 5%);
 //Date picker
-@date-picker-calendar-icon-top-offset:    0;
-@date-picker-calendar-icon-left-offset:   0;
-@date-picker-calendar-icon-height: 			3rem;
-@date-picker-calendar-icon-width: 			2.786rem;
+@date-picker-icon-margin-left:            0;
+@date-picker-calendar-icon-size:          3rem;
+@date-picker-calendar-icon-line-height:   3rem;
 //Calendar
 @calendar-width:                          auto;
 @calendar-bg:                             @basic-block-bg-color;
@@ -433,7 +434,6 @@
 @month-picker-item-active-text-color:     @secondary-color;
 @month-picker-item-active-bg:             @primary-color;
 //Data Range
-@date-range-font-size:                    1.14rem;
 @date-range-line-height:                  normal;
 @date-range-icon-button-top:              0.536rem;
 @date-range-dash-width:                   0.5rem;
@@ -612,6 +612,8 @@
 @tree-view-hier-wrapper-width:				.7142rem;
 @tree-view-hier-wrapper-height: 				.7142rem;
 @tree-view-copy-arrow-background:         @basic-block-bg-color;
+//Group
+@list-view-separator-height:              1.7857rem;
 //Data grid
 @data-grid-bg:                            transparent;
 @data-grid-row-hover-bg:                  #293A4B;
@@ -685,6 +687,7 @@
 @DropdownList-picker-title-type-header-bg:  #26B8FF;
 @DropdownList-picker-head-color:            #E4E4E4;
 @DropdownList-picker-head-weight:           normal;
+@DropdownList-picker-max-width:             28.57rem;
 //ProgressBar
 @controls-ProgressBar-height:             1.3214rem;
 @controls-ProgressBar-width:              14.286rem;
@@ -941,6 +944,7 @@
 @list-view-loading-indicator-gradient-bg-up:url(@list-view-scroll-spritesheet) no-repeat center;
 @text-box-placeholder-color: 				   rgba(96,170,221, .2);
 @DropdownList-picker-menu-item-height:    3rem;
+@DropdownList-picker-menu-item-height-ff: 3rem;
 @DropdownList-picker-menu-item-base-color: @menu-item-text-color;
 @DropdownList-after-caption-top:          0;
 @tree-view-ellipsis-copyArrow-width:      1rem;
