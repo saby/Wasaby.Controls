@@ -116,7 +116,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
             /**
              * @cfg {Boolean} Устанавливает фиксацию / прилипание корешков закладок к шапке страницы / всплывающей панели.
              * @remark
-             * Подробнее о данном функционале читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/fixed-header/'>здесь</a>.
+             * Подробнее о данном функционале читайте <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/fixed-header/'>здесь</a>.
              * @example
              * <pre>
              *     <option name="stickyHeader">true</option>

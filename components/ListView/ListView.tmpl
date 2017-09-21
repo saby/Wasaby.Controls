@@ -22,7 +22,7 @@
        <ws:partial template="{{resultsTpl}}" item="{{_resultsRecord}}" multiselect="{{multiselect}}" />
     </ws:if>
     <div class="controls-ListView__EmptyData {{(!_serverRender || _records.length || !emptyHTML) ? 'ws-hidden'}}">
-        <ws:partial template="{{ emptyHTML }}"/>
+        <ws:partial template="{{ emptyHTML|sanitize:_sanitizeOpts }}"/>
     </div>
     <ws:if data="{{ footerTpl }}">
         <div class="controls-ListView__footer">

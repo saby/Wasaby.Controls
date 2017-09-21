@@ -229,10 +229,6 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             }
          });
          
-         /* Для пэйджинга считаем, что кол-во страниц это:
-            текущее кол-во загруженных страниц + 1, если в метаинформации рекордсета есть данные о том, что на бл есть ещё записи.
-            Необходимо для того, чтобы в пэйджинге не моргала кнопка перехода к следующей странице, пока грузятся данные. */
-         /* Откатываю до 150 + (view._hasNextPage(view.getItems().getMetaData().more) ? 1 : 0) */
          var pagesCount = this._scrollPages.length;
          var pagingVisibility = pagesCount > 1 && view._getOption('infiniteScroll') !== 'up';
    
@@ -241,7 +237,11 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          if (this._options.paging.getSelectedKey() > pagesCount){
             this._options.paging.setSelectedKey(pagesCount);
          }
-         this._options.paging.setPagesCount(pagesCount);
+   
+         /* Для пэйджинга считаем, что кол-во страниц это:
+          текущее кол-во загруженных страниц + 1, если в метаинформации рекордсета есть данные о том, что на бл есть ещё записи.
+          Необходимо для того, чтобы в пэйджинге не моргала кнопка перехода к следующей странице, пока грузятся данные. */
+         this._options.paging.setPagesCount(pagesCount + (view._hasNextPage(view.getItems().getMetaData().more) ? 1 : 0));
 
          //Если есть страницы - покажем paging
          

@@ -5,6 +5,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    [
    "Core/EventBus",
    "Core/IoC",
+   "Core/constants",
    "Core/core-merge",
    "Core/core-instance",
    "Core/core-functions",
@@ -30,7 +31,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    'css!SBIS3.CONTROLS.DropdownList'
 ],
 
-   function (EventBus, IoC, cMerge, cInstance, cFunctions, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
+   function (EventBus, IoC, constants, cMerge, cInstance, cFunctions, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
 
       'use strict';
       /**
@@ -160,7 +161,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                /**
                 * @cfg {String} Устанавливает шаблон отображения шапки.
                 * @remark
-                * Шаблон может быть создан с использованием <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/logicless-template/">logicless-шаблонизатора</a> и <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/">doT.js-шаблонизатора</a>.
+                * Шаблон может быть создан с использованием <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/xhtml/logicless-template/">logicless-шаблонизатора</a> и <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/xhtml/template/">doT.js-шаблонизатора</a>.
                 * Шаблон создают в компоненте в подпапке resources.
                 * Порядок работы с шаблоном:
                 * <ol>
@@ -240,7 +241,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                /**
                 * @cfg {String} Устанавливает шаблон отображения элемента коллекции выпадающего списка.
                 * @remark
-                * Шаблон может быть создан с использованием <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/logicless-template/">logicless-шаблонизатора</a> и <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/">doT.js-шаблонизатора</a>.
+                * Шаблон может быть создан с использованием <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/xhtml/logicless-template/">logicless-шаблонизатора</a> и <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/xhtml/template/">doT.js-шаблонизатора</a>.
                 * Шаблон создают в компоненте в подпапке resources.
                 * @example
                 * Чтобы можно было использовать шаблон в компоненте и передать в опцию itemTpl, нужно выполнить следующее:
@@ -333,6 +334,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          $constructor: function() {
             this._publish('onClickMore');
+            this._keysWeHandle[constants.key.esc] = 100;
             var self = this;
             this._container.bind(this._isHoverMode() ? 'mouseenter' : 'click', function(event){
                if (self._getItemsProjection()) {
@@ -973,6 +975,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if (this._picker) {
                DropdownList.superclass._clearItems.call(this, this._pickerListContainer);
             }
+         },
+         _keyboardHover: function(event) {
+            if (event.which === constants.key.esc && this.isPickerVisible()) {
+               this.hidePicker();
+               return false;
+            }
+            return true;
          },
          destroy : function(){
             if (this._buttonChoose) {

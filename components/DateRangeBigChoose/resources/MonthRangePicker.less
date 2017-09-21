@@ -2,153 +2,118 @@
    padding: @date-range-big-choose-month-range-padding 0 @date-range-big-choose-month-range-padding @date-range-big-choose-month-range-padding;
    .box-sizing(border-box);
 
-   //.controls-ItemsToolbar.controls-ListView__ItemsToolbar-container {
-   //   display: none !important;
-   //}
-   //.controls-ListView__item.controls-MonthView {
-   //   &.controls-ListView__hoveredItem {
-   //      background: transparent;
-   //   }
-   //   &.controls-DateRangeBigChoose-MonthRangePicker__hovered {
-   //      background-color: @date-range-big-choose-month-range-picker-caption-text-hovered-bg;
-   //   }
-   //}
+   &:not(.controls-RangeSelectable__selecting) {
+      .controls-MonthView__tableElement {
+         &.controls-RangeSelectable__item-selectedStart,
+         &.controls-RangeSelectable__item-selectedEnd {
+            color: @date-range-big-choose-month-range-picker-boundary-selected-color;
+            background: @date-range-big-choose-month-range-picker-boundary-selected-bg;
 
-   .controls-DateRangeBigChoose-MonthView.controls-MonthView {
-      .box-sizing(border-box);
-      width: @date-range-big-choose-month-range-picker-month-width;
-      height: @date-range-big-choose-month-range-picker-month-height;
-      margin-right: @date-range-big-choose-month-range-padding;
-      margin-bottom: 1px;
-      padding: 0;
-      border: 1px solid transparent;
-      background: transparent;
-      cursor: pointer;
-      display: block;
-      float: left;
+            &:hover {
+               color: @date-range-big-choose-month-range-picker-boundary-selected-color;
+               background: @date-range-big-choose-month-range-picker-boundary-selected-bg;
+            }
 
-      &.controls-DateRangeBigChoose-MonthRangePicker__hovered {
-         background-color: @date-range-big-choose-month-range-picker-caption-text-hovered-bg;
-         .controls-MonthView__caption {
-            font-weight: bold;
-         }
-      }
-
-      &.controls-RangeSelectable__item-selected {
-         border: 1px solid @date-range-big-choose-month-range-picker-border-selected-color;
-         background-color: @date-range-big-choose-month-range-picker-bg-selected;
-
-         &.controls-DateRangeBigChoose-MonthRangePicker__hovered {
-            background-color: @date-range-big-choose-month-range-picker-caption-text-hovered-bg;
-         }
-
-         &.controls-RangeSelectable__item-selectedStart, &.controls-RangeSelectable__item-selectedEnd {
-            .controls-MonthView__caption {
-               background-color: @date-range-big-choose-month-range-picker-bg-boundary-selected-color;
+            &.controls-MonthView__weekend {
                color: @date-range-big-choose-month-range-picker-boundary-selected-color;
             }
          }
       }
+   }
+}
 
-      // Стили для календаря
-      table {
-         border-collapse: collapse;
+.controls-DateRangeBigChoose-MonthRangePicker__item.controls-MonthView {
+   .box-sizing(border-box);
+   width: @date-range-big-choose-month-range-picker-month-width;
+   height: @date-range-big-choose-month-range-picker-month-height;
+   margin-right: @date-range-big-choose-month-range-padding;
+   margin-bottom: 1px;
+   padding: 0;
+   border: 1px solid transparent;
+   background: transparent;
+   cursor: pointer;
+   display: block;
+   float: left;
+
+   &.controls-DateRangeBigChoose-MonthRangePicker__hovered {
+      background-color: @date-range-big-choose-month-range-picker-caption-text-hovered-bg;
+      .controls-MonthView__caption {
+         font-weight: bold;
+      }
+   }
+
+   &.controls-RangeSelectable__item-selected {
+      border: 1px solid @date-range-big-choose-month-range-picker-border-selected-color;
+      background-color: @date-range-big-choose-month-range-picker-bg-selected;
+
+      &.controls-DateRangeBigChoose-MonthRangePicker__hovered {
+         background-color: @date-range-big-choose-month-range-picker-caption-text-hovered-bg;
       }
 
-      .controls-MonthView__caption-text {
-         height: @date-range-big-choose-month-range-picker-caption-height; // 20?
-         line-height: @date-range-big-choose-month-range-picker-caption-height; //20?
-         vertical-align: middle;
-         font-size: @date-range-big-choose-month-range-picker-caption-font-size;
-      }
-
-      .controls-MonthView__dayTable {
-         border: 1px solid transparent;
-         &:hover {
-            border: @date-range-big-choose-month-range-picker-month-hovered-border;
-         }
-         .controls-MonthView__tableBody {
-            font-size: @date-range-big-choose-month-range-picker-table-element-font-size;
-         }
-
-         .controls-MonthView__tableElement {
-            //width: 12px;
-            height: @date-range-big-choose-month-range-picker-table-element-height;
-            padding: 0;
-            text-align: center;
-            background: transparent;
-            * {
-               padding: 0;
-            }
-
-            &.controls-RangeSelectable__item {
-               cursor: pointer;
-
-               &.controls-MonthView__weekend {
-                  color: @date-range-big-choose-month-range-picker-weekend-color;
-               }
-
-               &.controls-MonthView__today {
-                  border: 1px solid @date-range-big-choose-month-range-picker-today-border-color;
-               }
-
-               //&.controls-RangeSelectable__item-selectedStart, &.controls-RangeSelectable__item-selectedEnd {
-               //   &.controls-RangeSelectable__item-selected {
-               //      color: @date-range-big-choose-month-range-picker-boundary-selected-color;
-               //      background: @date-range-big-choose-month-range-picker-boundary-selected-bg;
-               //
-               //      &:hover {
-               //         color: @date-range-big-choose-month-range-picker-boundary-selected-color;
-               //         background: @date-range-big-choose-month-range-picker-boundary-selected-bg;
-               //      }
-               //
-               //      &.controls-MonthView__weekend {
-               //         color: @date-range-big-choose-month-range-picker-boundary-selected-color;
-               //      }
-               //   }
-               //}
-
-               &.controls-RangeSelectable__item-selected {
-                  color: @date-range-big-choose-month-range-picker-color;
-                  background: @date-range-big-choose-month-range-picker-bg-selected;
-
-                  &:hover {
-                     color: @date-range-big-choose-month-range-picker-color;
-                     background: @date-range-big-choose-month-range-picker-bg-selected;
-                  }
-
-                  &.controls-MonthView__weekend {
-                     color: @date-range-big-choose-month-range-picker-weekend-color;
-                  }
-               }
-            }
+      &.controls-RangeSelectable__item-selectedStart, &.controls-RangeSelectable__item-selectedEnd {
+         .controls-MonthView__caption {
+            background-color: @date-range-big-choose-month-range-picker-bg-boundary-selected-color;
+            color: @date-range-big-choose-month-range-picker-boundary-selected-color;
          }
       }
    }
 
-   &:not(.controls-RangeSelectable__selecting) {
-      .controls-DateRangeBigChoose-MonthView.controls-MonthView {
-         .controls-MonthView__dayTable {
-            .controls-MonthView__tableElement {
-               &.controls-RangeSelectable__item {
-                  &.controls-RangeSelectable__item-selectedStart, &.controls-RangeSelectable__item-selectedEnd {
-                     &.controls-RangeSelectable__item-selected {
-                        color: @date-range-big-choose-month-range-picker-boundary-selected-color;
-                        background: @date-range-big-choose-month-range-picker-boundary-selected-bg;
+   // Стили для календаря
+   table {
+      border-collapse: collapse;
+   }
 
-                        &:hover {
-                           color: @date-range-big-choose-month-range-picker-boundary-selected-color;
-                           background: @date-range-big-choose-month-range-picker-boundary-selected-bg;
-                        }
+   .controls-MonthView__caption-text {
+      height: @date-range-big-choose-month-range-picker-caption-height; // 20?
+      line-height: @date-range-big-choose-month-range-picker-caption-height; //20?
+      vertical-align: middle;
+      font-size: @date-range-big-choose-month-range-picker-caption-font-size;
+   }
 
-                        &.controls-MonthView__weekend {
-                           color: @date-range-big-choose-month-range-picker-boundary-selected-color;
-                        }
-                     }
-                  }
-               }
+   .controls-MonthView__dayTable {
+      border: 1px solid transparent;
+      &:hover {
+         border: @date-range-big-choose-month-range-picker-month-hovered-border;
+      }
+   }
 
-            }
+   .controls-MonthView__tableBody {
+      font-size: @date-range-big-choose-month-range-picker-table-element-font-size;
+   }
+
+   .controls-MonthView__tableElement {
+      //width: 12px;
+      height: @date-range-big-choose-month-range-picker-table-element-height;
+      padding: 0;
+      text-align: center;
+      background: transparent;
+      * {
+         padding: 0;
+      }
+
+      &.controls-RangeSelectable__item {
+         cursor: pointer;
+      }
+
+      &.controls-MonthView__weekend {
+         color: @date-range-big-choose-month-range-picker-weekend-color;
+      }
+
+      &.controls-MonthView__today {
+         border: 1px solid @date-range-big-choose-month-range-picker-today-border-color;
+      }
+
+      &.controls-RangeSelectable__item-selected {
+         color: @date-range-big-choose-month-range-picker-color;
+         background: @date-range-big-choose-month-range-picker-bg-selected;
+
+         &:hover {
+            color: @date-range-big-choose-month-range-picker-color;
+            background: @date-range-big-choose-month-range-picker-bg-selected;
+         }
+
+         &.controls-MonthView__weekend {
+            color: @date-range-big-choose-month-range-picker-weekend-color;
          }
       }
    }
