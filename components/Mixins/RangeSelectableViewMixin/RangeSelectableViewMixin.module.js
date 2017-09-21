@@ -101,8 +101,9 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', ['Core/core-instance'], fun
                this._startRangeSelection(item, endItem);
             }
          } else {
-            this.setRange(item, endItem);
-            this.validateRangeSelectionItemsView();
+            if (this.setRange(item, endItem)) {
+               this.validateRangeSelectionItemsView();
+            }
          }
       },
 
