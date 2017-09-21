@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    },
 
    applyGroupingToProjection = function(projection, cfg) {
-      if (cfg.groupBy && cfg.easyGroup) {
+      if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {
          var
             method = function(item) {
                var
