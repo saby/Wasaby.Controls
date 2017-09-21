@@ -182,15 +182,6 @@
    }
 }
 
-.controls-ListView__scrollPager{
-   position: fixed;
-   bottom: @scrollpager-bottom;
-   height: 32px;
-   background: @scrollpager-bg;
-   border-top: @scrollpager-border;
-   z-index: 10;
-}
-
 .controls-ListView__serviceFooter {
    padding: @listView-servicefooter-padding;
    overflow: hidden;
@@ -270,31 +261,21 @@
   color: #313E78;
 }
 
-.ws-is-mobile-platform .controls-ListView__scrollPager{
-   position: fixed;
-   bottom: 0;
+.controls-ListView__scrollPager{
+   position: absolute;
+   bottom: @scrollpager-bottom;
+   right: 0;
    height: 32px;
-   background: white;
+   background: @scrollpager-bg;
    border-top: @scrollpager-border;
    z-index: 10;
 }
-
+.controls-ListView__scrollPager_fixed {
+   position: fixed;
+}
 .ws-float-area-animate .controls-ListView__scrollPager {
    display: none;
 }
-
-.controls-ScrollContainer {
-   > .controls-ListView__scrollPager{
-      position: absolute;
-      bottom: @scrollpager-bottom;
-      right: 0;
-      height: 32px;
-      background: @scroll-pager-bg;
-      border-top: @scrollpager-border;
-      z-index: 10;
-   }
-}
-
 .rightSwipeAnimation {
    -webkit-animation-name: rightSwipe; /* Safari 4.0 - 8.0 */
    -webkit-animation-duration: 0.3s; /* Safari 4.0 - 8.0 */
