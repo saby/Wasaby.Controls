@@ -45,6 +45,16 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', [
              * * false Скрыть иконку просмотра пароля.
              */
             showPassword: false
+         },
+         _iconOptions: {
+            password: {
+               tooltip: rk("Показать"),
+               icon: "icon-medium icon-Show icon-disabled"
+            },
+            text: {
+               tooltip: rk("Скрыть"),
+               icon: "icon-medium icon-Hide icon-disabled"
+            }
          }
       },
       $constructor: function() {
@@ -70,6 +80,7 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', [
          this.getChildControlByName("showPassword").subscribe("onActivated", function () {
             //Показываем/скрываем пароль
             self._changeType();
+            this.setProperties(self._iconOptions[self._options.type]);
          });
       },
 
