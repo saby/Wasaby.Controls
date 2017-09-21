@@ -5,6 +5,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    [
    "Core/EventBus",
    "Core/IoC",
+   "Core/constants",
    "Core/core-merge",
    "Core/core-instance",
    "Core/core-functions",
@@ -30,7 +31,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    'css!SBIS3.CONTROLS.DropdownList'
 ],
 
-   function (EventBus, IoC, cMerge, cInstance, cFunctions, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
+   function (EventBus, IoC, constants, cMerge, cInstance, cFunctions, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
 
       'use strict';
       /**
@@ -333,6 +334,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          $constructor: function() {
             this._publish('onClickMore');
+            this._keysWeHandle[constants.key.esc] = 100;
             var self = this;
             this._container.bind(this._isHoverMode() ? 'mouseenter' : 'click', function(event){
                if (self._getItemsProjection()) {
@@ -973,6 +975,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if (this._picker) {
                DropdownList.superclass._clearItems.call(this, this._pickerListContainer);
             }
+         },
+         _keyboardHover: function(event) {
+            if (event.which === constants.key.esc && this.isPickerVisible()) {
+               this.hidePicker();
+               return false;
+            }
+            return true;
          },
          destroy : function(){
             if (this._buttonChoose) {
