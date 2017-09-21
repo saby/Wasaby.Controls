@@ -23,12 +23,13 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
       'js!SBIS3.CONTROLS.LongOperations.Tools.CallsPool',
       'js!SBIS3.CONTROLS.LongOperations.Tools.Bunch',
       'js!SBIS3.CONTROLS.LongOperations.Tools.Postloader',
+      'js!SBIS3.CONTROLS.LongOperations.Tools.ProtectedScope',
       'js!SBIS3.CONTROLS.LongOperations.Entry',
       'js!SBIS3.CONTROLS.LongOperations.HistoryItem',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model'
    ],
 
-   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsConst, LongOperationsTabCalls, LongOperationsCallsPool, LongOperationsBunch, Postloader, LongOperationEntry, LongOperationHistoryItem, Model) {
+   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsConst, LongOperationsTabCalls, LongOperationsCallsPool, LongOperationsBunch, Postloader, ProtectedScope, LongOperationEntry, LongOperationHistoryItem, Model) {
       'use strict';
 
       /**
@@ -44,6 +45,20 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
        * @type {number}
        */
       var DEFAULT_FETCH_LIMIT = 10;
+
+      /**
+       * Геттер защищённых членов класса
+       * @protected
+       * @type {function}
+       */
+      var protectedOf = ProtectedScope.create();
+
+      /**
+       * Постзагрузчик методов
+       * @protected
+       * @type {object{SBIS3.CONTROLS.LongOperations.Postloader}}
+       */
+      var postloader = new Postloader('js!SBIS3.CONTROLS.LongOperations.ManagerLib', [protectedOf]);
 
       /**
        * Список продюсеров длительных операций
@@ -198,111 +213,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
           * @param {object} [options.extra] Дополнительные параметры, если есть (опционально)
           * @return {Core/Deferred<WS.Data/Collection/RecordSet<SBIS3.CONTROLS.LongOperations.Entry>>}
           */
-         fetch: function (options) {
-            // Хотя здесь "проситься" использовать экземпляр WS.Data/Query/Query в качестве аргумента, однако WS.Data/Query/Query имеет избыточную
-            // здесь функциональность, в том числе возможность использовать функции для where, содержит другие члены, кроме where, orderBy, offset
-            // и limit, имеет другие дополнительные возможности. Поддержка всего этого тут не нужна (и скорее обременительна), поэтому ограничимся
-            // более простыми типами
-            if (_isDestroyed) {
-               return Deferred.fail(LongOperationsConst.ERR_UNLOAD);
-            }
-            var query = {
-               where: null,
-               orderBy: DEFAULT_FETCH_SORTING,
-               offset: 0,
-               limit: DEFAULT_FETCH_LIMIT,
-               extra: null
-            };
-            var names = Object.keys(query);
-            var len = arguments.length;
-            if (4 <= len) {
-               var args = arguments;
-               names.forEach(function (v, i) { if (ars[i]) query[v] = ars[i]; });
-            }
-            else
-            if (len === 1) {
-               if (options) {
-                  if (typeof options !== 'object') {
-                     throw new TypeError('Argument "options" must be an object if present');
-                  }
-                  names.forEach(function (v) { if (options[v]) query[v] = options[v]; });
-               }
-            }
-            else
-            if (len !== 0) {
-               throw new Error('Wrong arguments number');
-            }
-
-            if (query.where != null && typeof query.where !== 'object') {
-               throw new TypeError('Argument "where" must be an object');
-            }
-            if (query.orderBy != null && (typeof query.orderBy !== 'object'
-                  && Object.keys(query.orderBy).every(function (v) { var b = query.orderBy[v]; return b == null || typeof b === 'boolean'; }))) {
-               throw new TypeError('Argument "orderBy" must be an array');
-            }
-            if (!(typeof query.offset === 'number' && 0 <= query.offset)) {
-               throw new TypeError('Argument "offset" must be not negative number');
-            }
-            if (!(typeof query.limit === 'number' && 0 < query.limit)) {
-               throw new TypeError('Argument "limit" must be positive number');
-            }
-            if (query.extra != null && typeof query.extra !== 'object') {
-               throw new TypeError('Argument "extra" must be an object');
-            }
-            if (!_fetchCalls.has(query)) {
-               // Если нет уже выполняющегося запроса
-               var hasProducers = !!Object.keys(_producers).length;
-               var hasTabManagers = !!Object.keys(_tabManagers).length;
-               if (hasProducers || hasTabManagers) {
-                  var useOffsets = 0 < query.offset;
-                  var offsetPattern = {where:query.where, orderBy:query.orderBy, limit:query.limit};
-                  var offsetIds;
-                  if (useOffsets) {
-                     offsetIds = _offsetBunch.searchIds(offsetPattern);
-                     //var prevOffset = offsetIds && offsetIds.length ? _offsetBunch.listByIds(offsetIds).reduce(function (r, v) { r += v; return r; }, 0) : 0;
-                  }
-                  else {
-                     _offsetBunch.removeAll(offsetPattern);
-                  }
-                  if (hasProducers) {
-                     for (var n in _producers) {
-                        var member = {tab:_tabKey, producer:n};
-                        _fetchCalls.add(query, member, _producers[n].fetch(useOffsets ? ObjectAssign({}, query, {offset:_offsetBunch.search(member, offsetIds).shift() || 0}) : query));
-                     }
-                  }
-                  if (hasTabManagers) {
-                     var targets;
-                     for (var tabKey in _tabManagers) {
-                        targets = _tabTargets(targets, tabKey, _tabManagers[tabKey]);
-                     }
-                     if (targets) {
-                        var promises;
-                        if (useOffsets) {
-                           promises = [];
-                           for (var tabKey in targets) {
-                              for (var list = targets[tabKey], i = 0; i < list.length; i++) {
-                                 var n = list[i];
-                                 var member = {tab:tabKey, producer:n};
-                                 promises.push(_tabCalls.call(tabKey, n, 'fetch', [ObjectAssign({}, query, {offset:_offsetBunch.search(member, offsetIds).shift() || 0})], LongOperationEntry));
-                              }
-                           }
-                        }
-                        else {
-                           promises = _tabCalls.callBatch(targets, 'fetch', [query], LongOperationEntry);
-                        }
-                        _fetchCalls.addList(query, _expandTargets(targets), promises);
-                     }
-                  }
-               }
-            }
-            if (_fetchCalls.has(query)) {
-               // Если теперь есть
-               return _fetchCalls.getResult(query, false);
-            }
-            else {
-               return Deferred.success(null);
-            }
-         },
+         fetch: postloader.method('fetch'),//Загрузить при использовании
 
          /**
           * Запросить указанный продюсер выполнить указанное действие с указанным элементом
@@ -313,7 +224,8 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
           * @param {string|number} operationId Идентификатор длительной операции
           * @return {Core/Deferred}
           */
-         callAction: function (action, tabKey, prodName, operationId) {
+         callAction: //postloader.method('callAction'),//Загрузить при использовании
+            function (action, tabKey, prodName, operationId) {
             if (!action || typeof action !== 'string') {
                throw new TypeError('Argument "action" must be a string');
             }
@@ -387,7 +299,8 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
           * @param {object} [filter] Фильтр для получения не всех элементов истроии
           * @return {Core/Deferred<WS.Data/Collection/RecordSet<SBIS3.CONTROLS.LongOperations.HistoryItem>>}
           */
-         history: function (tabKey, prodName, operationId, count, filter) {
+         history: //postloader.method('history'),//Загрузить при использовании
+            function (tabKey, prodName, operationId, count, filter) {
             if (tabKey && typeof tabKey !== 'string') {
                throw new TypeError('Argument "tabKey" must be a string');
             }

@@ -16,12 +16,14 @@ define('js!SBIS3.CONTROLS.LongOperations.Tools.Postloader',
        * Конструктор
        * @public
        * @param {string} sourceModule Имя модуля(класса) с библиотекой методов класса для постзагрузки
+       * @param {any[]} initArgs Массив аргументов инициализации модуля(класса) с библиотекой
        */
-      var Postloader = function (sourceModule) {
+      var Postloader = function (sourceModule, initArgs) {
          if (!sourceModule || typeof sourceModule !== 'string') {
             throw new TypeError('Argument "sourceModule" must be a string');
          }
          this._src = sourceModule;
+         this._args = initArgs;
          this._mod = null;
       };
 
@@ -71,12 +73,19 @@ define('js!SBIS3.CONTROLS.LongOperations.Tools.Postloader',
          }
          else {
             // Иначе - загрузить и применить после этого
-            require([postloader._src], function (module) {
-               if (!module || typeof module !== 'object') {
-                  promise.errback(new TypeError('Loaded module must be an object'));
+            require([postloader._src], function (modFunc) {
+               if (!modFunc || typeof modFunc !== 'function') {
+                  promise.errback(new TypeError('Loaded module must be a function'));
                   return;
                }
-               postloader._mod = module;
+               var modObj = modFunc.apply(null, postloader._args);
+               if (!modObj || typeof modObj !== 'object') {
+                  promise.errback(new TypeError('Module function must return an object'));
+                  return;
+               }
+               postloader._mod = modObj;
+               delete postloader._src;
+               delete postloader._args;
                _apply(this, method, postloader._mod[method], args, promise);
             }.bind(this));
          }
