@@ -15,9 +15,10 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
    "Core/helpers/fast-control-helpers",
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'Core/core-merge',
+   'Core/core-instance',
    'css!SBIS3.CONTROLS.CompositeView',
    'css!SBIS3.CONTROLS.TreeCompositeView'
-], function( cFunctions, constants, Deferred, ParallelDeferred, isEmpty, TreeDataGridView, CompositeViewMixin, folderTpl, TreeCompositeItemsTemplate, FolderTemplate, ListFolderTemplate, FolderContentTemplate, StaticFolderContentTemplate, fcHelpers, TemplateUtil, cMerge) {
+], function( cFunctions, constants, Deferred, ParallelDeferred, isEmpty, TreeDataGridView, CompositeViewMixin, folderTpl, TreeCompositeItemsTemplate, FolderTemplate, ListFolderTemplate, FolderContentTemplate, StaticFolderContentTemplate, fcHelpers, TemplateUtil, cMerge, cInstance) {
 
    'use strict';
 
@@ -151,13 +152,15 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             },
             useGroups = !isEmpty(cfg.groupBy) && cfg.easyGroup;
          projection.each(function (item, index, group) {
-            if (item.isNode()) {
-               records.folders.push(item);
-               cfg._hideEmpty = true;
-            }
-            else {
-               records.leafs.push(item);
-               cfg._hideEmpty = true;
+            if (!cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
+               if (item.isNode()) {
+                  records.folders.push(item);
+                  cfg._hideEmpty = true;
+               }
+               else {
+                  records.leafs.push(item);
+                  cfg._hideEmpty = true;
+               }
             }
          });
          return records;
