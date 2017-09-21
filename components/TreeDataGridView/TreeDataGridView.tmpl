@@ -27,9 +27,6 @@
     <div class="controls-ListView__EmptyData {{(!_serverRender || _records.length || !emptyHTML) ? 'ws-hidden' : ''}}">
         <ws:partial template="{{ _sanitize(emptyHTML) }}"/>
     </div>
-    <ws:if data="{{showPaging}}">
-        <div class="controls-TreePager-container"></div>
-    </ws:if>
     <ws:if data="{{footerTpl}}">
         <div class="controls-ListView__footer">
             <ws:partial template="{{footerTpl}}" scope="{{...}}" />

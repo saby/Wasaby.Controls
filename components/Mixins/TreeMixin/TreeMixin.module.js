@@ -404,9 +404,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
 
       return tplOptions;
    },
-   hasNextPageInFolder = function(cfg, more, id) {
-      return typeof (more) !== 'boolean' ? more > (cfg._folderOffsets[id || 'null'] + cfg.pageSize) : !!more;
-   },
 
    getHierarchyRelation = function(cfg) {
       var
@@ -531,7 +528,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             _getRecordsForRedraw: getRecordsForRedraw,
             _getRecordsForRedrawTree: getRecordsForRedraw,
             _createDefaultProjection : createDefaultProjection,
-            _hasNextPageInFolder: hasNextPageInFolder,
             _curRoot: null,
             /**
              * @cfg {String, Number} Устанавливает идентификатор узла, относительно которого отображаются данные в текущий момент
@@ -1234,11 +1230,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                self._options._folderOffsets['null'] += self._limit;
             }
             self._options._folderHasMore[id] = dataSet.getMetaData().more;
-            if (!self._options._hasNextPageInFolder(self._options, dataSet.getMetaData().more, id)) {
-               if (typeof id != 'undefined') {
-                  self._getTreePager(id).setHasMore(false);
-               }
-            }
             //Если данные пришли, нарисуем
             if (dataSet.getCount()) {
                if (this._options.loadItemsStrategy == 'merge') {
