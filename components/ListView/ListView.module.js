@@ -1186,6 +1186,7 @@ define('js!SBIS3.CONTROLS.ListView',
                // Он создает новую систему координат внутри себя. position: fixed начинает работать относительно
                // этого контенера а не относительно вьюпорта. По этому выносим пэйджер за пределы скролируемой области.
                scrollContainer = (scrollContainer[0] == window || scrollContainer.is('body')) ? $('body') : scrollContainer.parent();
+               scrollPagerContainer.addClass('controls-ListView__scrollPager_fixed');
                scrollPagerContainer.appendTo(scrollContainer);
             }
             this._setScrollPagerPosition();
