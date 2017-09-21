@@ -702,9 +702,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @private
           */
          setFontStyle: function(style) {
-            //TinyMCE использует для определения положения каретки <br data-mce-bogus="1">.
+            //TinyMCE использует для определения положения каретки(курсора ввода) <br data-mce-bogus="1">.
             //При смене формата содаётся новый <span class='classFormat'>.
-            //В FF в некторых случаях символ каретки не удаляется из предыдущего <span> блока при смене формата
+            //В FF в некторых случаях символ каретки(курсора ввода) не удаляется из предыдущего <span> блока при смене формата
             //из за-чего происход разрыв строки.
             if (cConstants.browser.firefox &&  $(this._tinyEditor.selection.getNode()).find('br').attr('data-mce-bogus') == '1') {
                $(this._tinyEditor.selection.getNode()).find('br').remove();
@@ -1053,7 +1053,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                case '1':
                   className = 'image-template-left';
                   before = '<p class="without-margin">';
-                  //необходимо вставлять пустой абзац с кареткой, чтобы пользователь понимал куда будет производиться ввод
+                  //необходимо вставлять пустой абзац с кареткой(курсором ввода), чтобы пользователь понимал куда будет производиться ввод
                   after = '</p><p>{$caret}</p>';
                   break;
                case '2':
@@ -1063,11 +1063,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                case '3':
                   className = 'image-template-right';
                   before = '<p class="without-margin">';
-                  //необходимо вставлять пустой абзац с кареткой, чтобы пользователь понимал куда будет производиться ввод
+                  //необходимо вставлять пустой абзац с кареткой(курсором ввода), чтобы пользователь понимал куда будет производиться ввод
                   after = '</p><p>{$caret}</p>';
                   break;
                case '6':
-                  // Ничего
+                  if (cConstants.browser.chrome) {
+                     after = '&#xFEFF;{$caret}';
+                  }
                   break;
                case '4':
                   //todo: сделать коллаж
@@ -1698,7 +1700,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   //             start/endContainer = <p>, endOffset = 1.
                   //          После удаления <p>.childNodes.length = 0, попытается восстановиться 1 => ошибка
                   //Решение:
-                  //          После удаления изображения ставить каретку в конец родительского для изображения блока
+                  //          После удаления изображения ставить каретку(курсор ввода) в конец родительского для изображения блока
                   self._tinyEditor.selection.select(nodeForSelect, false);
                   self._tinyEditor.selection.collapse();
                   self._tinyEditor.undoManager.add();
@@ -1775,6 +1777,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                var w = isPixels ? width : width*constants.baseAreaWidth/100;//this.getContainer().width()
                if (0 < height) {
                   promise.callback(Math.round(width < height ? w*height/width : w));
+               }
+               else
+               if (!imgInfo.jquery && 0 < imgInfo.width && 0 < imgInfo.height) {
+                  promise.callback(Math.round(imgInfo.width < imgInfo.height ? w*imgInfo.height/imgInfo.width : w));
                }
                else {
                   var img = new Image();

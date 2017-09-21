@@ -13,7 +13,7 @@
    &.ws-disabled {
       .controls-TextBox__beforeFieldWrapper {
          .flex-wrap(wrap);
-         .flex-direction(row);
+         .flex-direction();
          max-width: 100%;
       }
       .controls-Link.controls-FieldLink__showAllLinks {
@@ -30,7 +30,13 @@
             background-color: transparent;
          }
       }
-
+      //todo: стили необходимы для ie, flex-end не работает с переполнением
+      //https://codepen.io/anon/pen/JrGQQx
+      //удалить при отказе от ie11, в edge всё работает корректно
+      .controls-FieldLinkItemsCollection {
+         .flex-direction(row-reverse);
+         .justify-content();
+      }
    }
    &.controls-FieldLink__selected-single {
       .controls-TextBox__beforeFieldWrapper {
@@ -41,6 +47,7 @@
       }
       .controls-FieldLinkItemsCollection {
          .justify-content();
+         .flex-direction();
       }
    }
    .icon-size {
@@ -296,17 +303,6 @@
 }
 .controls-FieldLink__hiddenIfEmpty.ws-disabled:not(.controls-FieldLink__selected) {
    display: none;
-}
-
-.ws-is-mobile-chrome-ios, .ws-is-mobile-safari {
-   .controls-FieldLink__picker {
-      &.controls-popup-revert-vertical {
-         &:not(.controls-Suggest__picker) {
-            border-top: none;
-         }
-         border-bottom: @fieldLink-border @gray-ccc-color;
-      }
-   }
 }
 
 .ws-is-ie10 {
