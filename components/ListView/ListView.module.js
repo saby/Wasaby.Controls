@@ -1180,13 +1180,17 @@ define('js!SBIS3.CONTROLS.ListView',
             // работы с пэйджером что бы избавится от этого.
             if (this._inScrollContainerControl) {
               scrollPagerContainer.appendTo(scrollContainer.parent());
-            } else if (constants.browser.isMobilePlatform) {
-               // скролл может быть у window, но нельзя делать appendTo(window)
-               // На скролируемых областях на мобильных платормах висит transform: translate3d(0,0,0);.
-               // Он создает новую систему координат внутри себя. position: fixed начинает работать относительно
-               // этого контенера а не относительно вьюпорта. По этому выносим пэйджер за пределы скролируемой области.
-               scrollContainer = (scrollContainer[0] == window || scrollContainer.is('body')) ? $('body') : scrollContainer.parent();
-               scrollPagerContainer.appendTo(scrollContainer);
+            } else {
+               scrollPagerContainer.addClass('controls-ListView__scrollPager_fixed');
+               if (constants.browser.isMobilePlatform) {
+                    // скролл может быть у window, но нельзя делать appendTo(window)
+                    // На скролируемых областях на мобильных платормах висит transform: translate3d(0,0,0);.
+                    // Он создает новую систему координат внутри себя. position: fixed начинает работать относительно
+                    // этого контенера а не относительно вьюпорта. По этому выносим пэйджер за пределы скролируемой области.
+                    scrollContainer = (scrollContainer[0] == window || scrollContainer.is('body')) ? $('body') : scrollContainer.parent();
+
+                    scrollPagerContainer.appendTo(scrollContainer);
+                }
             }
             this._setScrollPagerPosition();
             this._scrollBinder = new ComponentBinder({
