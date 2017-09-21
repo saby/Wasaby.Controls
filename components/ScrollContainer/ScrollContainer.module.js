@@ -560,7 +560,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _onResizeHandler: function(){
-            AreaAbstractCompatible._onResizeHandler.apply(this, arguments);
+            this._notify('onResize');
             if (this._scrollbar){
                this._scrollbar.setContentHeight(this._getScrollHeight());
                this._scrollbar.setPosition(this._getScrollTop());
