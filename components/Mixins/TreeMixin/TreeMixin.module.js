@@ -363,7 +363,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          item, itemId;
       for (var i = 0; i < projItems.length; i++) {
          item = projItems[i];
-         if (item.isNode() && !item.isExpanded()) {
+         if (!cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem') && item.isNode() && !item.isExpanded()) {
             itemId = item.getContents().getId();
             if (hierarchy.getChildren(itemId, recordSet).length) {
                if (cfg.expand) {
