@@ -1,138 +1,131 @@
 @month-view-day-weekend-color: #EF463A;
 
-// В хром на ipad установлен класс ws-is-old-webkit, но не установлен ws-is-webkit. В текущую версию фиксим по месту.
-.ws-is-old-webkit,
-.ws-is-webkit {
-   // в 3.17.150 вместе с упрощение селекторов сделать везде однотипно(через position: absolute),
-   // а исключение сделать для ie. Либо подумать как свертстать по дургому.
-   .controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableElement .controls-MonthView__dayTitle {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-   }
-   .controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableElement .controls-MonthView__dayBorder + .controls-MonthView__dayTitle {
-      left: 7px;
-      right: 7px;
-   }
-}
-
 .controls-MonthView {
    display: inline-block;
    text-align: center;
-   //font: @month-view-font;
    width: @month-view-width;
    padding: @month-view-padding;
    background: @month-view-bg;
 
    font: @default-font-size @default-font-name;
 
-   .controls-MonthView__monthPicker {
-      width: @month-view-month-picker-width;
-   }
-
-   .controls-MonthView__dayTable {
-      table-layout: fixed;
-      vertical-align: middle;
-      width: 100%;
-      border-spacing: @month-view-day-border-spacing;
-
-      .controls-MonthView__tableHead {
-         font: @month-view-day-header-font;
-         text-align: @month-view-day-header-text-alignment;
-      }
-
-      .controls-RangeSelectable__item {
-         font: @month-view-day-body-font;
-         text-align: @month-view-day-body-text-alignment;
-      }
-
-      .controls-MonthView__tableElement {
-         position: relative;
-
-         * {
-            display: block;
-         }
-
-         .controls-MonthView__dayBorder {
-            height: 100%;
-         }
-
-         .controls-MonthView__dayTitle {
-            .box-sizing(border-box);
-            height: 100%;
-         }
-         .controls-MonthView__dayBorder + .controls-MonthView__dayTitle {
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 7px;
-            right: 7px;
-            padding: 8px 0 0 0;
-         }
-         //width: @month-view-day-cell-width;
-         height: @month-view-day-table-cell-height;
-         //padding: @month-view-day-table-cell-padding;
-
-         &.controls-RangeSelectable__item {
-            cursor: @month-view-day-cell-cursor;
-            color: @month-view-day-cell-text-color;
-            background: @month-view-day-cell-bg;
-
-            &.controls-MonthView__weekend {
-               color: @month-view-day-weekend-color;
-            }
-
-            &.controls-RangeSelectable__item-selectedStart, .controls-RangeSelectable__item-selectedEnd {
-               color: @month-view-day-cell-active-text-color;
-               background: @month-view-day-cell-active-bg;
-
-               &:hover {
-                  color: @month-view-day-cell-active-hover-text-color;
-                  background: @month-view-day-cell-active-hover-bg;
-               }
-            }
-
-            &.controls-RangeSelectable__item-selected {
-               color: @month-view-day-cell-active-text-color;
-               background: @month-view-day-cell-active-bg;
-
-               &:hover {
-                  color: @month-view-day-cell-active-hover-text-color;
-                  background: @month-view-day-cell-active-hover-bg;
-               }
-            }
-
-            &:hover {
-               color: @month-view-day-cell-hover-text-color;
-               background: @month-view-day-cell-hover-bg;
-            }
-         }
-
-         &.controls-MonthView__tableElementFog {
-            cursor: @month-view-day-fog-cell-cursor;
-            color: @month-view-day-fog-cell-text-color;
-            background: @month-view-day-fog-cell-bg;
-
-            &:hover {
-               color: @month-view-day-fog-cell-hover-text-color;
-               background: @month-view-day-fog-cell-hover-bg;
-            }
-         }
-      }
-   }
    &.ws-disabled {
-      .controls-MonthView__dayTable {
-         .controls-MonthView__tableElement {
-            &.controls-RangeSelectable__item {
-               cursor: auto;
-               &:hover {
-                  color: @month-view-day-cell-text-color;
-                  background: @month-view-day-cell-bg;
-               }
+      .controls-MonthView__tableElement {
+         &.controls-RangeSelectable__item {
+            cursor: auto;
+            &:hover {
+               color: @month-view-day-cell-text-color;
+               background: @month-view-day-cell-bg;
             }
          }
       }
+   }
+}
+
+.controls-MonthView__monthPicker {
+   width: @month-view-month-picker-width;
+}
+
+.controls-MonthView__dayTable {
+   table-layout: fixed;
+   vertical-align: middle;
+   width: 100%;
+   border-spacing: @month-view-day-border-spacing;
+}
+
+.controls-MonthView__tableHead {
+   font: @month-view-day-header-font;
+   text-align: @month-view-day-header-text-alignment;
+}
+
+.controls-MonthView__tableElement {
+   position: relative;
+   height: @month-view-day-table-cell-height;
+
+   * {
+      display: block;
+   }
+
+   &.controls-RangeSelectable__item {
+      font: @month-view-day-body-font;
+      text-align: @month-view-day-body-text-alignment;
+      cursor: @month-view-day-cell-cursor;
+      color: @month-view-day-cell-text-color;
+      background: @month-view-day-cell-bg;
+
+      &.controls-MonthView__weekend {
+         color: @month-view-day-weekend-color;
+      }
+
+      &.controls-RangeSelectable__item-selectedStart, .controls-RangeSelectable__item-selectedEnd {
+         color: @month-view-day-cell-active-text-color;
+         background: @month-view-day-cell-active-bg;
+
+         &:hover {
+            color: @month-view-day-cell-active-hover-text-color;
+            background: @month-view-day-cell-active-hover-bg;
+         }
+      }
+
+      &.controls-RangeSelectable__item-selected {
+         color: @month-view-day-cell-active-text-color;
+         background: @month-view-day-cell-active-bg;
+
+         &:hover {
+            color: @month-view-day-cell-active-hover-text-color;
+            background: @month-view-day-cell-active-hover-bg;
+         }
+      }
+
+      &:hover {
+         color: @month-view-day-cell-hover-text-color;
+         background: @month-view-day-cell-hover-bg;
+      }
+   }
+
+   &.controls-MonthView__tableElementFog {
+      cursor: @month-view-day-fog-cell-cursor;
+      color: @month-view-day-fog-cell-text-color;
+      background: @month-view-day-fog-cell-bg;
+
+      &:hover {
+         color: @month-view-day-fog-cell-hover-text-color;
+         background: @month-view-day-fog-cell-hover-bg;
+      }
+   }
+}
+
+.controls-MonthView__dayBorder {
+   height: 100%;
+}
+
+.controls-MonthView__dayTitle {
+   .box-sizing(border-box);
+   height: 100%;
+}
+.controls-MonthView__dayBorder + .controls-MonthView__dayTitle {
+   position: absolute;
+   top: 0;
+   bottom: 0;
+   left: 7px;
+   right: 7px;
+   padding: 8px 0 0 0;
+}
+
+// В хром на ipad установлен класс ws-is-old-webkit, но не установлен ws-is-webkit. В текущую версию фиксим по месту.
+.ws-is-old-webkit,
+.ws-is-webkit {
+   // в 3.17.150 вместе с упрощение селекторов сделать везде однотипно(через position: absolute),
+   // а исключение сделать для ie. Либо подумать как свертстать по дургому.
+   .controls-MonthView__dayTitle {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+   }
+   .controls-MonthView__dayBorder + .controls-MonthView__dayTitle {
+      left: 7px;
+      right: 7px;
    }
 }
