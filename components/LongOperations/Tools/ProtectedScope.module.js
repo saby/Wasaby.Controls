@@ -1,17 +1,24 @@
 ﻿/**
- */
-
-/**
  * Защищённая область для хранения защищённых членов классов
  * @class SBIS3.CONTROLS.LongOperations.Tools.ProtectedScope
  * @public
- * ^^^Использование:
  *
- * var protectedOf = ProtectedScope.create();
- * protectedOf(this).memeber = 123;
- * return 300 + protectedOf(this).memeber;
+ * @example
+ * Создание геттера защищённой области:
+ * <pre class="darkula js">
+ *    var protectedOf = ProtectedScope.create();
+ * </pre>
  *
- * protectedOf(this).clear();
+ * Использование геттера защищённой области объекта this:
+ * <pre class="darkula js">
+ *    protectedOf(this).memeber = 123;
+ *    return 300 + protectedOf(this).memeber;
+ * </pre>
+ *
+ * Принудительная очистка защищённой области объекта this:
+ * <pre class="darkula js">
+ *    protectedOf.clear(this);
+ * </pre>
  */
 
 define('js!SBIS3.CONTROLS.LongOperations.Tools.ProtectedScope',

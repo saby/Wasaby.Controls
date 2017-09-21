@@ -115,7 +115,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Tools.Postloader',
             promise.errback(ex);
             return;
          }
-         promise.callback(value);
+         promise[value instanceof Deferred ? 'dependOn' : 'callback'](value);
       };
 
       return Postloader;
