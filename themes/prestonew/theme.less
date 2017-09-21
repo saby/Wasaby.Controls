@@ -6,9 +6,6 @@ body {
    font-size: 1rem !important;
 }
 body {
-   .ws-validation-error > textarea {
-      background-color: @text-box-error-bg !important; // перебиваю стили fieldAbstract
-   }
     //Todo: сделать @accent-color - #FFCC99  https://online.sbis.ru/opendoc.html?guid=47bdafa8-88ab-4cb2-9383-89ffd7c9dcdd
     //сейчас пока сделаем так, чтобы не разломать версию 3.7.5.150
     .controls-accent-text {
@@ -347,7 +344,7 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
 .controls-ComboBox {
   &.controls-Picker__show {
     border-width: 0;
-    border-style: @text-box-hover-border-style;
+    border-style: solid;
     border-color: @text-box-hover-border-color;
   }
 }
