@@ -317,6 +317,9 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
          this._options.viewMode = mode;
          this.setItemsDragNDrop(dragndrop);
          this._drawViewMode(mode);
+         if (mode === 'table') {
+            this._updateAjaxLoaderPosition();
+         }
          this._notify('onViewModeChanged');
       },
       /**
