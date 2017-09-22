@@ -9,6 +9,32 @@
 }
 
 //Вынесено из ListView.Less
+.controls-ListView__itemCheckBox {
+   .checkbox(@check-box-icon-size);
+   cursor: pointer;
+   display: inline-block;
+   position: absolute;
+   left: @listView-check-box-left;
+   top: @listView-check-box-top;
+
+   &:before {
+      color: @check-box-icon-box-color;
+   }
+}
+
+.controls-ListView__item__multiSelected {
+   .controls-ListView__itemCheckBox:after {
+      color: @primary-color;
+   }
+}
+
+.controls-ListView__item__partiallySelected {
+   .controls-ListView__itemCheckBox:after {
+      background-color: @primary-color;
+   }
+}
+
+
 .controls-ListView__showCheckBoxes {
    .controls-ListView__itemCheckBox {
       .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);

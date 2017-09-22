@@ -64,32 +64,6 @@
 .controls-Pager-container {
    overflow: hidden;
 }
-
-.controls-ListView__itemCheckBox {
-   .checkbox(@check-box-icon-size);
-   cursor: pointer;
-   display: inline-block;
-   position: absolute;
-   left: @listView-check-box-left;
-   top: @listView-check-box-top;
-
-   &:before {
-      color: @check-box-icon-box-color;
-   }
-}
-
-.controls-ListView__item__multiSelected {
-   .controls-ListView__itemCheckBox:after {
-      color: @primary-color;
-   }
-}
-
-.controls-ListView__item__partiallySelected {
-   .controls-ListView__itemCheckBox:after {
-      background-color: @primary-color;
-   }
-}
-
 .controls-ListView-scrollIndicator {
    display: none;
    margin: 0 auto;
