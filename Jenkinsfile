@@ -21,7 +21,7 @@ properties([
             description: '',
             name: 'branch_engine'),
         string(
-            defaultValue: 'rc-3.32',
+            defaultValue: 'rc-3.34',
             description: '',
             name: 'branch_atf'),
         choice(
