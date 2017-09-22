@@ -172,6 +172,11 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                });
             }
          });
+
+         //TODO При активации скрытых за облость операций может произойти скроллирование к ним. Нужно его отменить.
+         this._getItemsContainer().on('scroll', function(e){
+            $(this).scrollLeft(0);
+         })
       },
 
       //Суперкласс у панели операций в методе getItems возвращает this._items. Но возможнно в items которые были переданы в
