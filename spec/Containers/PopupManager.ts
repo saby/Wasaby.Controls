@@ -4,5 +4,5 @@
 class PopupManager {
     private popupItems : Array<PopupItem>;
     public showPopup()
-    public showDialog() {}
 }
+export = PopupManager;

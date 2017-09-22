@@ -1,11 +1,11 @@
 /**
- * Created by kraynovdo on 19.09.2017.
+ * Created by kraynovdo on 22.09.2017.
  */
 import PopupManager = require("./PopupManager");
-class StackManager {
-    public showStackArea() {
+class DialogManager {
+    public showDialog() {
         let myPopupManager = new PopupManager();
         myPopupManager.showPopup()
     }
 }
-export = StackManager
+export = DialogManager
