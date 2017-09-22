@@ -1,0 +1,15 @@
+<div event:onclick="_onItemClick(projItem)">{{debug()}}
+   <ws:if data="{{contentTemplate}}">
+      <ws:partial
+            template="{{contentTemplate}}"
+            item="{{item}}"
+            projItem="{{projItem}}"
+            index="{{index}}"
+            itemData="{{itemData}}"
+            _getPropertyValue="{{_getPropertyValue}}"
+            _options="{{_options}}"></ws:partial>
+      </ws:if>
+   <ws:else>
+      <div>{{_getPropertyValue(item, _options.displayProperty)}}</div>
+   </ws:else>
+</div>
