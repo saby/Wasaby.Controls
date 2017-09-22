@@ -2872,6 +2872,7 @@ define('js!SBIS3.CONTROLS.ListView',
                this._resetPaging = false;
             } else if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
                this._createScrollPager();
+               this._scrollBinder._updateScrollPages(!this._options.virtualScrolling || this._resetPaging);
             }
             this._notifyOnSizeChanged(true);
          },
