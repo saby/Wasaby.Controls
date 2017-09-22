@@ -1047,9 +1047,10 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _addOptionsFromClass: function(opts) {
+            opts.pagerConfig = opts.pagerConfig || {};
             var classes = [
                { class: 'controls-small-ListView', optionName: 'isSmall', value: true, defaultValue: false },
-               { class: 'controls-ListView__disableHover', optionName: 'disableHover', value: true, defaultValue: false },
+               { class: 'controls-ListView__disableHover', optionName: 'noHover', value: true, defaultValue: false },
                { class: 'controls-ListView__pagerNoSizePicker', optionName: 'noSizePicker', value: true, defaultValue: false },
                { class: 'controls-ListView__pagerNoAmount', optionName: 'noPagerAmount', value: true, defaultValue: false },
                { class: 'controls-ListView__pagerHideEndButton', optionName: 'hideEndButton', value: true, defaultValue: false },
@@ -1069,8 +1070,20 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
             for(var el in classes) {
-               if(!opts[el.optionName]) {
-                  if(hasClass(opts.className, el.class)) {
+               ////Прокинуть правильные опции
+               // if(el.isPagerConfig) {
+               //    if(!opts.pagerConfig[el.optionName]) {
+               //       hasClass(opts.className, el.class) ? opts.pagerConfig[el.optionName] = el.value :
+               //          opts.pagerConfig[el.optionName] = el.defaultValue;
+               //    }
+               // } else {
+               //    if(!opts[el.optionName]) {
+               //       hasClass(opts.className, el.class) ? opts[el.optionName] = el.value :
+               //          opts[el.optionName] = el.defaultValue;
+               //    }
+               // }
+               if (!opts[el.optionName]) {
+                  if (hasClass(opts.className, el.class)) {
                      opts[el.optionName] = el.value;
                   } else {
                      opts[el] = el.defaultValue;
