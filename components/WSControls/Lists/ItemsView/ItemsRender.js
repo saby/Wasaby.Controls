@@ -17,7 +17,7 @@ define('js!WSControls/Lists/ItemsView/ItemsRender', [
 
    var ItemsRender = BaseControl.extend(
       {
-         _controlName: 'WSControls/Lists/resources/ItemsRender',
+         _controlName: 'WSControls/Lists/ItemsView/ItemsRender',
          _enumIndexes: null,
          iWantVDOM: true,
          _isActiveByClick: false,
