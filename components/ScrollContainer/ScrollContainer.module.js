@@ -63,8 +63,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        *    </component>
        * </pre>
        *
-       * @cssModifier controls-ScrollContainer__light Устанавливает светлый тонкий скролл
+       * @cssModifier controls-ScrollContainer__light Устанавливает светлый тонкий скролл.
        * @cssModifier controls-ScrollContainer__hiddenScrollbar Скрывает отображение ползунка.
+       * @cssModifier controls-ScrollContainer__flex Модификатор применяется в тех случаях, когда контрол встроен внутрь flex-контейнера.
        *
        * @demo SBIS3.CONTROLS.Demo.MyScrollContainer Использование SBIS3.CONTROLS.ScrollContainer с автоподгрузкой вниз и с вложенным в него списком, который создан на основе класса {@link SBIS3.CONTROLS.ListView}.
        *
@@ -231,6 +232,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                this.subscribeTo(EventBus.channel('stickyHeader'), 'onStickyHeadersChanged', this._stickyHeadersChangedHandler.bind(this));
 
                this._addGradient();
+
+               // Что бы до инициализации не было видно никаких скроллов
+               this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
 
                // task: 1173330288
                // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками

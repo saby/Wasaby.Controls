@@ -136,7 +136,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          //если он true, то при условии ключа null текст будет оцищаться
          //нельзя всегда очищать текст, потому что при ручном вводе текста, даже при пустом ключе текст стирать не надо
          _isClearing: false,
-         _keysWeHandle: [constants.key.up, constants.key.down, constants.key.enter, constants.key.esc],
          _options: {
             textFieldWrapper: textFieldWrapper,
             _emptyRecordProjection: undefined,
@@ -180,8 +179,17 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              */
             editable: true,
             /**
-             * @cfg {Boolean} Присутствует пустое значение или нет
-             * @noShow
+             * @cfg {Boolean} Добавляет в выпадающий список новый пункт "Не выбрано".
+             * @remark
+             * Благодаря данной опции контрол можно перевести в такой режим работы, при котором в выпадающем списке будет присутствовать пункт "Не выбрано".
+             * ![](/empty-value-1.png)
+             * При выборе этого пункта сбрасывается ранее установленное значение. Также говорят, что устанавливается пустое значение.
+             * Выбор пункта аналогичен выполнению следующего кода:
+             * <pre>
+             * // myComboBox - экземпляр класса SBIS3.CONTROLS.ComboBox
+             * myComboBox.setSelectedKey(null);
+             * </pre>
+             * Чтобы установить текст, отображаемый в поле ввода после выбора пустого значения, определите значение в опции {@link placeholder}.
              */
             emptyValue: false,
             /**
@@ -198,6 +206,16 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       $constructor: function () {
          var self = this;
+
+         //Дикий костыль в TextBoxBase: задан большой набор значений в _keysWeHandle, чтобы
+         //нажатия по этим клавишам не долетали до ListView и его наследников, т.к. нажатие этих клавиш там обрабатывается.
+         //Чтобы сохранить те клавиши, которые уже описаны в TextBoxBase и добавить свои в наследнике - приходится напрямую
+         //записывать их в объект.
+         this._keysWeHandle[constants.key.up] = 100;
+         this._keysWeHandle[constants.key.down] = 101;
+         this._keysWeHandle[constants.key.enter] = 102;
+         this._keysWeHandle[constants.key.esc] = 103;
+
 
          if (this._options.autocomplete){
             this.subscribe('onSearch', this._onSearch);
@@ -294,6 +312,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          var
             selectedKey = this.getSelectedKey(),
             selectedItem, newSelectedItem, newSelectedItemId, newSelectedItemHash;
+
+         if (e.which !== constants.key.up && e.which !== constants.key.down && e.which !== constants.key.enter && e.which !== constants.key.esc) {
+            return ComboBox.superclass._keyboardHover.apply(this, arguments);
+         }
 
          // горячая комбинация клавиш
          if(e.ctrlKey && e.which === constants.key.enter) {
@@ -532,7 +554,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             targetPart: true,
             activableByClick: false,
             closeOnTargetMove: true,
-            template : this._dotTplFnPicker({})
+            template : this._dotTplFnPicker
          };
       },
 

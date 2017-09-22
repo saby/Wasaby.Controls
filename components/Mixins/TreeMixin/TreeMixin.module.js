@@ -243,8 +243,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          records = searchProcessing(projection, cfg);
       }
       else {
+         var needGroup = false, groupId;
          projection.each(function(item, index, group) {
-            var needGroup = false, groupId;
             if (cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
                groupId = item.getContents();
                needGroup = true;
@@ -363,7 +363,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          item, itemId;
       for (var i = 0; i < projItems.length; i++) {
          item = projItems[i];
-         if (item.isNode() && !item.isExpanded()) {
+         if (!cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem') && item.isNode() && !item.isExpanded()) {
             itemId = item.getContents().getId();
             if (hierarchy.getChildren(itemId, recordSet).length) {
                if (cfg.expand) {
@@ -540,7 +540,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              * @remark
              * Поле иерархии хранит первичный ключ той записи, которая является узлом для текущей. Значение null - запись расположена в корне иерархии.
              * Например, поле иерархии "Раздел". Название поля "Раздел" необязательное, и в каждом случае может быть разным.
-             * По полю иерархии устанавливаются два других служебных поля - "Раздел@" и "Раздел$" , подробнее о назначении которых вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/hierarchy/#_2">Требования к источнику данных</a>.
+             * По полю иерархии устанавливаются два других служебных поля - "Раздел@" и "Раздел$" , подробнее о назначении которых вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/hierarchy/#_2">Требования к источнику данных</a>.
              * @example
              * <pre>
              *    <option name="hierField">Раздел</option>
@@ -949,16 +949,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          else {
             if (items.length && cInstance.instanceOfModule(items[0], 'WS.Data/Display/GroupItem')) {
                groupId = items[0].getContents();
-               if (this._canApplyGrouping(items[1])) {
+               if (items.length > 1 && this._canApplyGrouping(items[1])) {
                   this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options);
                   items.splice(0, 1);
                   itemsToAdd = itemsToAdd.concat(items);
-                  start = 1;
                }
-            }
-            for (var i = start; i < items.length; i++) {
-               if (this._isVisibleItem(items[i])) {
-                  itemsToAdd.push(items[i]);
+            } else {
+               for (var i = start; i < items.length; i++) {
+                  if (this._isVisibleItem(items[i])) {
+                     itemsToAdd.push(items[i]);
+                  }
                }
             }
          }

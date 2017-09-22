@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.MergeAction', [
 ], function (cMerge, OpenDialogAction, IoC) {
    /**
     * Действие открытия окна, в котором производится выбор записей для их объединения.
-    * Пример использования класса можно найти в разделе {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/items-action/panel/basic-operations/merge/ Операция объединения записей реестра}.
+    * Пример использования класса можно найти в разделе {@link http://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/items-action/panel/basic-operations/merge/ Операция объединения записей реестра}.
     * @class SBIS3.CONTROLS.MergeAction
     * @public
     * @extends SBIS3.CONTROLS.Action.OpenDialog

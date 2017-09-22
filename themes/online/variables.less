@@ -63,10 +63,6 @@
 @default-font-line-height:                20px;
 
 @bold-font-weight:                        700;
-
-
-@default-height:                          24px;
-
 @default-hover-cursor:                    pointer;
 @disabled-hover-cursor:                   default;
 
@@ -237,6 +233,8 @@
 @button-disabled-shadow:                  @button-shadow;
 @button-disabled-bg:                      @button-bg-color;
 
+@button-ipad-line-height:                 20px;
+
 
 
 // Big button
@@ -381,7 +379,7 @@
 @tab-button-margin-top:                         0;
 @tab-control-smple-bottomline-height:           3px;
 @tab-button-simple-inner-color:                 #313E78;
-@tab-button-simple-inner-padding:               0 8px 0 6px;
+@tab-button-simple-inner-padding:               0 8px 0 8px;
 @tab-button-simple-inner-checked-color:         #0055BB;
 @tab-button-border:                             1px solid transparent;
 @tab-button-z-index:                            10;
@@ -802,198 +800,34 @@
 // -------- //
 // Text box //
 // -------- //
-
-
-@text-box-field-text-alignment:           left;
-@text-box-field-min-height:               19px;
-@text-box-field-line-height:              20px !important;
-@text-box-field-margin:                   0;
-@text-box-field-padding:                  1px 0;
-@text-box-field-border:                   none;
-@text-box-field-outline:                  none;
-@text-box-field-bg:                       transparent;
-@text-box-field-after-margin:             0 19px 0 0;
-
-@text-box-field-text-color:               inherit;
-@text-box-field-hover-text-color:         @text-box-field-text-color;
-@text-box-field-disabled-text-color:      @text-box-field-text-color;
-
-@text-box-border-width:                   1px;
-@text-box-border-style:                   solid;
-@text-box-bottom-border-color:            #ccc;
-@text-box-editor-bg:                      @white-color;
-@text-box-editor-text-color:              inherit;
-
-@text-box-focus-border-width:             @text-box-border-width;
-@text-box-focus-border-style:             @text-box-border-style;
 @text-box-focus-border-color:             #ccc;
 @text-box-focus-bg:                       @text-box-bg;
-
-@text-box-error-border-width:             @text-box-border-width;
-@text-box-error-border-style:             @text-box-border-style;
-@text-box-error-border-color:             #ff302b !important;
-@text-box-error-bg:                       #fadadd !important;
-
-@text-box-hover-border-width:             @text-box-focus-border-width;
-@text-box-hover-border-style:             @text-box-focus-border-style;
 @text-box-hover-border-color:             @text-box-focus-border-color;
-@text-box-hover-bg:                       @text-box-bg;
-
-@text-box-disabled-border-width:          @text-box-border-width;
-@text-box-disabled-border-style:          @text-box-border-style;
-@text-box-disabled-border-color:          transparent transparent #e4e4e4 transparent;
-@text-box-disabled-bg:                    transparent;
-@text-box-disabled-border-bottom:         1px solid #E4E4E4;
-
-@text-box-after-width:                    16px;
-@text-box-after-min-height:               @text-box-field-min-height;
-@text-box-after-margin:                   0;
-
-@text-box-placeholder-color:              @gray-ccc-color !important;
-@text-box-compat-placeholder-font:        inherit;
-@text-box-compat-placeholder-alignment:   inherit;
-
-@text-box-overflow:                       ellipsis;
-
-
-
-// ------------------ //
-// Formatted text box //
-// ------------------ //
-@formatted-text-box-line-height:                normal;
-@formatted-text-box-wrapper-min-height:         22px;
-@formatted-text-box-error-border-width:         @text-box-error-border-width;
-@formatted-text-box-error-border-style:         @text-box-error-border-style;
-@formatted-text-box-error-border-color:         @text-box-error-border-color;
-@formatted-text-box-error-bg:                   @text-box-error-bg;
 // --------------- //
 // Money text box  //
 // --------------- //
-
 @money-text-box-min-width:            102px;
-
 @money-text-box-decimals-padding:     1px 0;
 @money-text-box-decimals-font-size:   12px;
 @money-text-box-decimals-color:                       @gray-ccc-color;
-
-// ----------- //
-// Date box    //
-// ----------- //
-@date-box-color:                             @text-box-color;
-@date-box-wrapper-border-radius:             @text-box-border-radius;
-
-@date-box-wrapper-border-width:              @text-box-border-width;
-@date-box-wrapper-border-style:              @text-box-border-style;
-@date-box-wrapper-border-color:              @text-box-border-color;
-@date-box-wrapper-bg:                        @text-box-bg;
-@date-box-field-text-color:                  @text-box-field-text-color;
-
-@date-box-wrapper-focus-border-width:        @date-box-wrapper-border-width;
-@date-box-wrapper-focus-border-style:        @date-box-wrapper-border-style;
-@date-box-wrapper-focus-border-color:        @text-box-focus-border-color;
-@date-box-wrapper-focus-bg:                  @text-box-focus-bg;
-
-@date-box-wrapper-error-border-width:        @text-box-error-border-width;
-@date-box-wrapper-error-border-style:        @text-box-error-border-style;
-@date-box-wrapper-error-border-color:        @text-box-error-border-color;
-@date-box-wrapper-error-bg:                  @text-box-error-bg;
-
-@date-box-wrapper-hover-border-width:        @date-box-wrapper-border-width;
-@date-box-wrapper-hover-border-style:        @date-box-wrapper-border-style;
-@date-box-wrapper-hover-border-color:        @text-box-hover-border-color;
-@date-box-wrapper-hover-bg:                  @text-box-hover-bg;
-
-@date-box-wrapper-disabled-cursor:           default;
-@date-box-wrapper-disabled-border-width:     @date-box-wrapper-border-width;
-@date-box-wrapper-disabled-border-style:     @date-box-wrapper-border-style;
-@date-box-wrapper-disabled-border-color:     transparent;
-@date-box-wrapper-disabled-bg:               @text-box-disabled-bg;
-
-// ----------- //
-// Search form //
-// ----------- //
-
-@search-disabled-background:                          @search-background;
-@search-focus-background:                             @search-background;
-@search-height:                                       @text-box-height;
-@search-padding:                                      0 24px 0 16px;
-@search-left-margin:                                  12px;
-@search-border-color:                                 @search-background;
-@search-hover-border-color:                           @search-background;
-@search-bottom-border-color:                          @search-background;
-@search-form-border-width:                            @text-box-border-width;
-@search-form-border-disabled-width:                   @text-box-disabled-border-width;
-@search-buttons-wrapper-width:                        20px + 20px;
-@search-form-field-wrapper-margin-right:              45px;
-@search-form-icon-disabled-display:                   block;
-
 // --------- //
 // Combo box //
 // --------- //
-
-@combo-box-arrow-spritesheet:                   'img/ComboBox.png';
-@combobox-picker-border-width:                    1px;
-@combo-box-right-padding:                       4px;
-@combo-box-disabled-cursor:                     default;
-@combo-box-disabled-border-width:               0 0 1px 0;
-@combo-box-disabled-border-bottom-color:        #E4E4E4;
-@combo-box-disabled-border-color:               transparent;
-@combo-box-disabled-color:                      inherit;
-
-@combo-box-field-font:                          inherit;
-@combo-box-field-text-color:                    inherit;
-
-@combo-box-arrow-width:                         16px;
-@combo-box-arrow-height:                        16px;
-@combo-box-arrow-line-height:                   1;
-
-@combo-box-arrow-border-width:                  0;
-@combo-box-arrow-border-style:                  solid;
-@combo-box-arrow-border-color:                  transparent;
-@combo-box-arrow-bg:                            @white-color url(@combo-box-arrow-spritesheet) -3px -4px no-repeat;
-
-
-@combo-box-arrow-hover-border-style:            @combo-box-arrow-border-style;
-@combo-box-arrow-hover-border-color:            @combo-box-arrow-border-color;
-@combo-box-arrow-hover-bg:                      @white-color url(@combo-box-arrow-spritesheet) -3px -28px no-repeat;
-
-@combo-box-arrow-active-border-width:           @combo-box-arrow-border-width;
-@combo-box-arrow-active-border-style:           @combo-box-arrow-border-style;
-@combo-box-arrow-active-border-color:           @combo-box-arrow-border-color;
-@combo-box-arrow-active-bg:                     @combo-box-arrow-bg;
-
-
-@combo-box-arrow-active-hover-border-style:     @combo-box-arrow-hover-border-style;
-@combo-box-arrow-active-hover-border-color:     @combo-box-arrow-hover-border-color;
-@combo-box-arrow-active-hover-bg:               @combo-box-arrow-hover-bg;
-
-@combo-box-arrow-disabled-border-width:         @combo-box-arrow-border-width;
-@combo-box-arrow-disabled-border-style:         @combo-box-arrow-border-style;
-@combo-box-arrow-disabled-border-color:         @combo-box-arrow-border-color;
-@combo-box-arrow-disabled-bg:                   @combo-box-arrow-bg;
-
+@combo-box-field-text-color:                    inherit;//todo
 @combo-box-picker-border:                       1px solid @gray-ccc-color;
 @combo-box-picker-border-radius:                0;
 @combo-box-picker-item-font:                    inherit;
 @combo-box-picker-item-font-size:               15px;
 @combo-box-picker-item-padding:                 7px 4px 6px 4px;
-
 @combo-box-picker-item-text-color:              @combo-box-field-text-color;
 @combo-box-picker-item-bg:                      @white-color;
-
 @combo-box-picker-item-hover-text-color:        @combo-box-picker-item-text-color;
 @combo-box-picker-item-hover-bg:                @default-itemHover-color;
-
 @combo-box-picker-item-selected-text-color:     @combo-box-picker-item-text-color;
 @combo-box-picker-item-selected-bg:             @default-itemSelected-color;
-
-@compo-box-fieldWrapper-margin-right:           16px;
-@combo-box-after-width:                         @text-box-after-width;
-
 @compo-box-picker-show-color:                   @default-text-color;
 @combo-box-picker-show-border-color:            @gray-ccc-color;
 @combo-box-picker-show-background-color:        @text-box-focus-bg;
-
 @combo-box-arrowDown-color-picker-show:         @accent-color;
 // --------------- //
 // SuggestTextBox //
@@ -1003,12 +837,6 @@
 // ----------- //
 // Suggest //
 // ----------- //
-
-@suggest-field-font:                          inherit;
-@suggest-field-text-color:                    inherit;
-
-@suggest-cursor:                              pointer;
-@suggest-disabled-cursor:                     default;
 
 @suggest-loading-spritesheet:                   'img/ajax-loader-indicator.gif';
 @suggest-loading-bg:                            url(@suggest-loading-spritesheet) 0 0 no-repeat;
@@ -1026,8 +854,6 @@
 @suggest-picker-standard-height:                500px;
 @suggest-picker-color:                          initial;
 
-@suggest-picker-item-font:                      @suggest-field-font;
-@suggest-picker-item-text-color:                @suggest-field-text-color;
 @suggest-picker-item-bg:                        @white-color;
 @suggest-picker-invertVal:                      180deg;
 
@@ -1035,18 +861,12 @@
 @suggest-list-item-border:                      solid #f5f5f5;
 @suggest-list-item-border-width:                1px 0 0 0;
 @suggest-list-item-first-child-border-width:    0;
-@suggest-list-item-text-color:                  @suggest-field-font;
-@suggest-list-item-cursor:                      @suggest-cursor;
-@suggest-list-item-font:                        @suggest-picker-item-font;
 @suggest-list-item-padding:                     4px;
 @suggest-list-item-hover-bg:                    @default-itemHover-color;
-@suggest-list-item-hover-text-color:            @suggest-field-text-color;
 @suggest-list-item-selected-bg:                 @default-itemSelected-color;
-@suggest-list-item-selected-text-color:         @suggest-picker-item-text-color;
 
 @suggest-list-empty-bg:                         @suggest-list-item-bg;
 @suggest-list-empty-color:                      @gray-ccc-color;
-@suggest-list-empty-font:                       @suggest-list-item-font;
 @suggest-list-empty-padding:                    16px 0 16px 0;
 @suggest-list-footer-height:                    30px;
 @suggest-list-footer-padding:                   0 8px;
@@ -1057,14 +877,10 @@
 // ----------- //
 // Date picker //
 // ----------- //
-
-@date-picker-calendar-spritesheet:              'img/DatePicker-calendar.png';
-
-@date-picker-calendar-icon-cursor:              pointer;
-@date-picker-calendar-icon-width:               18px;
-@date-picker-calendar-icon-height:              18px;
-@date-picker-calendar-icon-top-offset:          4px;
-@date-picker-calendar-icon-left-offset:         1px;
+@date-picker-button-margin-left:                7px;
+@date-picker-button-vertical-align:             center;
+@date-picker-button-size:                       18px;
+@date-picker-button-line-height:                16px;
 
 // -------- //
 // Calendar //
@@ -1215,14 +1031,14 @@
 // ---------- //
 @controls-date-range-year-marginleft:             0;
 @date-range-choose-year-line-height:            @date-range-choose-year-height + 1;
-@date-range-font-size:                          14px;
 @date-range-line-height:                        24px;
 @date-range-text-line-height:                   normal;
-@date-range-icon-button-size:                   18px;
-@date-range-icon-button-line-height:            16px;
-@date-range-icon-button-top:                    4px;
-@date-range-icon-button-margin:                 0 0 3px 8px;
-@date-range-icon-button-hover-color:            @hover-color !important;
+@date-range-button-vertical-align:              center;
+@date-range-button-size:                        18px;
+@date-range-button-line-height:                 14px;
+@date-range-button-top:                         4px;
+@date-range-button-margin:                      0 0 0 8px;
+@date-range-button-hover-color:                 @hover-color !important;
 @date-range-dash-width:                         2px;
 @date-range-dash-color:                         @black-color;
 @date-range-dash-margin:                        0 3px 4px 3px;
@@ -1254,8 +1070,8 @@
 
 @date-range-slider-error-border-width:             1px;
 @date-range-slider-error-border-style:             solid;
-@date-range-slider-error-border-color:             @text-box-error-border-color;
-@date-range-slider-error-bg:                       @text-box-error-bg;
+@date-range-slider-error-border-color:             @text-box-border-color-error;
+@date-range-slider-error-bg:                       @text-box-bg-error;
 
 @date-range-slider-picker-shadow:                  0px 0px 12px 0px rgba(0,0,0,0.25);
 
@@ -1540,7 +1356,7 @@
 @list-view-items-toolbar-bg:                         @data-grid-row-hover-bg;
 @list-view-items-toolbar-locked-bg:                  @default-itemSelected-color;
 @list-view-items-toolbar-margin-bottom:              2px;
-@list-view-items-toolbar-elements-margin:            0 4px;
+@list-view-items-toolbar-elements-margin:            0 6px;
 @list-view-items-toolbar-float:                      right;
 @list-view-items-toolbar-ipad-minHeight:             30px;
 @touch-mode-items-toolbar-icon-margin-top:           -24px;
@@ -1622,11 +1438,10 @@
 
 /*group*/
 @list-view-separator-height:                       24px;
-@list-view-separator-line:                         1px solid #eaeaea;
 @list-view-separator-content-padding:              0 12px;
 @list-view-separator-content-color:                @gray-color;
-@list-view-separator-content-size:                 12px;
 @list-view-separator-expander-size:                16px;
+@list-view-separator-expander-margin:              6px;
 @list-view-separator-content-hover-color:          @blue-dark-color;
 
 // -------------------- //
@@ -1984,6 +1799,7 @@
 @DropdownList-picker-head-duplicate-type-top-padding: 4px;
 @DropdownList-picker-hor-revert-head-margin:          @DropdownList-picker-head-margin;
 @DropdownList-picker-padding:                         4px 0;
+@DropdownList-picker-max-width:                       400px;
 @DropdownList-picker-max-height:                      400px;
 @DropdownList-picker-head-margin:                     0;
 @DropdownList-picker-border:                          1px solid @DropdownList-border-color;
@@ -1999,6 +1815,7 @@
 @DropdownList-picker-menu-item-padding:               5px 8px 3px 8px;
 @DropdownList-picker-menu-item-margin:                0;
 @DropdownList-picker-menu-item-height:                24px;
+@DropdownList-picker-menu-item-height-ff:             19px;
 @DropdownList-picker-menu-item-multiselect-padding:   0;
 @DropdownList-picker-menu-item-color:                 @white-color;
 @DropdownList-picker-menu-item-color-blur:            rgba(255, 255, 255, 0);

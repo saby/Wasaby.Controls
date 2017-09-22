@@ -62,7 +62,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
             /**
              * @cfg {filterStructure[]} Устанавливает структуру элементов фильтра.
              * @remark
-             * Примеры и подробное описание использования опции вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterbutton/fbstructure/'>здесь</a>.
+             * Примеры и подробное описание использования опции вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/filtering/list-filterbutton/fbstructure/'>здесь</a>.
              */
             filterStructure: [ /*filterStructureElementDef*/ ],
             /**

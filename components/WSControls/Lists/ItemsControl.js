@@ -39,11 +39,7 @@ define('js!WSControls/Lists/ItemsControl', [
    var ItemsControl = BaseControl.extend(
       {
          _controlName: 'WSControls/Lists/ItemsControl',
-         _enumIndexes: {
-            _startIndex: 0,
-            _stopIndex: 0,
-            _curIndex: 0
-         },
+         _enumIndexes: null,
          iWantVDOM: true,
          _isActiveByClick: false,
          _items: null,
@@ -66,7 +62,11 @@ define('js!WSControls/Lists/ItemsControl', [
 
          constructor: function (cfg) {
             ItemsControl.superclass.constructor.apply(this, arguments);
-
+            this._enumIndexes = {
+               _startIndex: 0,
+               _stopIndex: 0,
+               _curIndex: 0
+            };
             this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
             this._prepareMountingData(cfg);
             this._publish('onItemsReady', 'onDataLoad');

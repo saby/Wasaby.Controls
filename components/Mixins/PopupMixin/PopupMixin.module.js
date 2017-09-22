@@ -195,7 +195,8 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             /*
             эта опция нужна для того, чтобы понять, надо ли отключать плавный скролл на мобильных устройствах на остальных панелях
             */
-            _canScroll: false
+            _canScroll: false,
+            _fixJqueryPositionBug: false //https://online.sbis.ru/opendoc.html?guid=e99ac72c-93d7-493f-a23e-ad09d45e908b
          }
       },
 
@@ -655,7 +656,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             container = this._container;
          if (target) {
             this._targetSizes = {
-               width: target.outerWidth(),
+               width: this._getTargetWidth(target),
                height: target.outerHeight(),
                offset: target.offset(),
                border: (target.outerWidth() - target.innerWidth()) / 2,
@@ -706,6 +707,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
          this._containerSizes.height = this._containerSizes.originHeight;
          this._containerSizes.boundingClientRect = container.get(0).getBoundingClientRect();
          this._initWindowSizes();
+      },
+
+      _getTargetWidth: function(target) {
+         if (this._options._fixJqueryPositionBug) {
+            return target[0].offsetWidth;
+         }
+         return target.outerWidth();
       },
 
       _initWindowSizes: function () {
