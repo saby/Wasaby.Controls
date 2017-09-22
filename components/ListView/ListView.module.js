@@ -2054,8 +2054,14 @@ define('js!SBIS3.CONTROLS.ListView',
          _getCurrentPage: function() {
             var page = 0;
             if (this._scrollBinder) {
-               var scrollPage = this._scrollBinder._getScrollPage();
-               page = scrollPage ? Math.floor(scrollPage.element.index() / this._limit) : 0;
+               var scrollPage, pagesCount, average, commonItemsCount, firstPageElemIndex;
+               scrollPage = this._scrollBinder.getScrollPage();
+               pagesCount = this._scrollBinder.getPagesCount();
+               commonItemsCount = this._getItemsProjection() ? this._getItemsProjection().getCount() : 0;
+               average = commonItemsCount / pagesCount;
+               firstPageElemIndex = (scrollPage - 1) * average;
+
+               page = scrollPage ? Math.floor(firstPageElemIndex / this._limit) : 0;
             }
             // прибавим к полученой странице количество еще не загруженных страниц
             return page + Math.floor((this._scrollOffset.top) / this._limit);
