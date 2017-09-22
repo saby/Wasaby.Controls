@@ -141,6 +141,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
 
 
       iterator(function (item) {
+         // Группировка при поиске не поддерживается. https://online.sbis.ru/opendoc.html?guid=aa8e9981-64fc-4bb1-a75c-ef2fa0c73176
+         if (cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
+            return;
+         }
          if ((item.getParent() != lastNode) && curPath.length) {
             if (lastNode != lastPushedNode) {
                pushPath(resRecords, curPath, cfg);
