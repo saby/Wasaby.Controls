@@ -816,6 +816,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return DataGridView.superclass._itemsReadyCallback.apply(this, arguments);
       },
 
+      _toggleIndicator: function(show){
+         DataGridView.superclass._toggleIndicator.apply(this, arguments);
+         if (show) {
+            this._updateAjaxLoaderPosition();
+         }
+      },
+
       _updateAjaxLoaderPosition: function () {
          var height, styles;
          if (!this._thead) {
@@ -871,7 +878,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if (this._options.stickyHeader && !this._options.showHead && this._options.resultsPosition === 'top') {
             this._updateStickyHeader(headData.hasResults);
          }
-         this._updateAjaxLoaderPosition();
       },
 
       _redrawFoot: function(){
