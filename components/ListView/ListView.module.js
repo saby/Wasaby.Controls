@@ -1305,14 +1305,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {jQuery}
           */
          getNextItemById: function (id) {
-            var projection = this._getItemsProjection();
-            return this._getDomElementByItem(
-                projection.getNext(
-                    projection.getItemBySourceItem(
-                     this.getItems().getRecordById(id)
-                  )
-               )
-            );
+            return this._getSiblingItemById(id, 'getNext');
          },
          /**
           * Возвращает предыдущий элемент
@@ -1320,14 +1313,19 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {jQuery}
           */
          getPrevItemById: function (id) {
+            return this._getSiblingItemById(id, 'getPrevious');
+         },
+
+         _getSiblingItemById: function(id, method) {
             var projection = this._getItemsProjection();
-            return this._getDomElementByItem(
-                projection.getPrevious(
-                    projection.getItemBySourceItem(
-                     this.getItems().getRecordById(id)
-                  )
+            var projItem = projection[method](
+               projection.getItemBySourceItem(
+                  this.getItems().getRecordById(id)
                )
             );
+            if (projItem) {
+               return this._getDomElementByItem(projItem);
+            }
          },
 
          _getNextItemByDOM: function(id) {
