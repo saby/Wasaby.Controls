@@ -1348,7 +1348,7 @@ define('js!SBIS3.CONTROLS.ListView',
          // TODO Подумать, как решить данную проблему. Не надёжно хранить информацию в доме
          // Поиск следующего или предыдущего элемента коллекции с учётом вложенных контролов
          _getHtmlItemByDOM: function (id, isNext) {
-            var items = this._getItemsContainer().children('.js-controls-ListView__item').not('.ws-hidden, .controls-editInPlace'),
+            var items = this._getChildrenDOMItems(),
                recordItems = this.getItems(),
                recordIndex = recordItems.getIndexByValue(recordItems.getIdProperty(), id),
                itemsProjection = this._getItemsProjection(),
@@ -1370,6 +1370,11 @@ define('js!SBIS3.CONTROLS.ListView',
                return this.getItems().getRecordById(siblingItem.data('id')) ? siblingItem : this._getHtmlItemByDOM(siblingItem.data('id'), isNext);
             }
          },
+
+         _getChildrenDOMItems: function() {
+            return this._getItemsContainer().children('.js-controls-ListView__item').not('.ws-hidden, .controls-editInPlace');
+         },
+
          _isViewElement: function (elem) {
             return  contains(this._getItemsContainer()[0], elem[0]);
          },
