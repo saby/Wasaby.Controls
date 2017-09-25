@@ -1209,6 +1209,8 @@ define('js!SBIS3.CONTROLS.ListView',
                // то горизонтальный скрол(и иногда вертикальный) происходит внутри window.
                $(window).on('resize scroll', this._setScrollPagerPositionThrottled);
             }
+
+            this._scrollBinder._updateScrollPages(!this._options.virtualScrolling || this._resetPaging);
          },
 
          _onVisibleChange: function(event, visible){
@@ -1305,14 +1307,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {jQuery}
           */
          getNextItemById: function (id) {
-            var projection = this._getItemsProjection();
-            return this._getDomElementByItem(
-                projection.getNext(
-                    projection.getItemBySourceItem(
-                     this.getItems().getRecordById(id)
-                  )
-               )
-            );
+            return this._getSiblingItemById(id, 'getNext');
          },
          /**
           * Возвращает предыдущий элемент
@@ -1320,14 +1315,19 @@ define('js!SBIS3.CONTROLS.ListView',
           * @returns {jQuery}
           */
          getPrevItemById: function (id) {
+            return this._getSiblingItemById(id, 'getPrevious');
+         },
+
+         _getSiblingItemById: function(id, method) {
             var projection = this._getItemsProjection();
-            return this._getDomElementByItem(
-                projection.getPrevious(
-                    projection.getItemBySourceItem(
-                     this.getItems().getRecordById(id)
-                  )
+            var projItem = projection[method](
+               projection.getItemBySourceItem(
+                  this.getItems().getRecordById(id)
                )
             );
+            if (projItem) {
+               return this._getDomElementByItem(projItem);
+            }
          },
 
          _getNextItemByDOM: function(id) {
@@ -1348,7 +1348,7 @@ define('js!SBIS3.CONTROLS.ListView',
          // TODO Подумать, как решить данную проблему. Не надёжно хранить информацию в доме
          // Поиск следующего или предыдущего элемента коллекции с учётом вложенных контролов
          _getHtmlItemByDOM: function (id, isNext) {
-            var items = this._getItemsContainer().children('.js-controls-ListView__item').not('.ws-hidden, .controls-editInPlace'),
+            var items = this._getChildrenDOMItems(),
                recordItems = this.getItems(),
                recordIndex = recordItems.getIndexByValue(recordItems.getIdProperty(), id),
                itemsProjection = this._getItemsProjection(),
@@ -1370,6 +1370,11 @@ define('js!SBIS3.CONTROLS.ListView',
                return this.getItems().getRecordById(siblingItem.data('id')) ? siblingItem : this._getHtmlItemByDOM(siblingItem.data('id'), isNext);
             }
          },
+
+         _getChildrenDOMItems: function() {
+            return this._getItemsContainer().children('.js-controls-ListView__item').not('.ws-hidden, .controls-editInPlace');
+         },
+
          _isViewElement: function (elem) {
             return  contains(this._getItemsContainer()[0], elem[0]);
          },
@@ -1537,7 +1542,8 @@ define('js!SBIS3.CONTROLS.ListView',
                var cont = this._container[0],
                    targetKey = target[0].getAttribute('data-id'),
                    item = this.getItems() ? this.getItems().getRecordById(targetKey) : undefined,
-                   correctTarget = target.hasClass('controls-editInPlace') ? this._getDomElementByItem(this._options._itemsProjection.getItemBySourceItem(item)) : target;
+                   projItem = this._options._itemsProjection.getItemBySourceItem(item),
+                   correctTarget = target.hasClass('controls-editInPlace') && projItem ? this._getDomElementByItem(projItem) : target;
 
                //В некоторых версиях 11 IE не успевает рассчитаться ширина узла, вследствие чего correctTarget.offsetWidth == 0
                //Это вызывает неправильное позиционирование тулбара
@@ -2557,8 +2563,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._lastDeleteActionState = undefined;
                }
                // Если после редактирования более hoveredItem остался - то нотифицируем об его изменении, в остальных случаях просто скрываем тулбар
-               if (this.getHoveredItem().container && contains(this.getContainer(), this.getHoveredItem().container) && !this._touchSupport) {
-                  this._notifyOnChangeHoveredItem();
+               if (!this._touchSupport) {
+                  this._updateHoveredItemAfterRedraw();
                } else {
                   this._hideItemsToolbar();
                }
@@ -2732,6 +2738,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this.setSelectedKey(key);
             if(this._touchSupport) {
                this._clearHoveredItem();
+               this._onChangeHoveredItem(this.getHoveredItem());
             }
          },
          _getItemsToolbar: function() {
@@ -3817,12 +3824,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      //в некоторых условиях (например поиск в сообщениях) размер страницы, приходящей с сервера не соответствует указанному в настройке
                      //поэтому элемента с таким индексом может и не быть.
                      if(projItem) {
-                        itemId = projItem.getContents().getId();
-                        item = this.getItems().getRecordById(itemId);
-
-                        if (item) {
-                           this.scrollToItem(item);
-                        }
+                        this._scrollToProjItem(projItem);
                      }
                   }
                } else {

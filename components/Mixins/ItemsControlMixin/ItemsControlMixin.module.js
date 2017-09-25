@@ -2181,6 +2181,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
          LayoutManager.scrollToElement(target, toBottom, depth);
       },
+
+      //TODO этот метод более общий чем _scrollToItem надо все места перевести на этот метод
+      _scrollToProjItem: function(item, toBottom, depth) {
+         var container = this._getDomElementByItem(item);
+         if (container) {
+            this._scrollTo(container, toBottom, depth);
+         }
+      },
       _scrollToItem: function(itemId, toBottom, depth) {
          var itemContainer  = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
          if (itemContainer.length) {

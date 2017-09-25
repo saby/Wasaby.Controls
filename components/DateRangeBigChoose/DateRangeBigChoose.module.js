@@ -317,6 +317,9 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
             return;
          }
          this.setRange(startDate, date);
+         if (!date) {
+            return;
+         }
          this._setCurrentYear(date.getFullYear(), true);
          if (this._state === states.year) {
             this._monthRangePicker.setYear(date.getFullYear());

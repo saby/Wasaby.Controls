@@ -228,6 +228,14 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          }
       },
 
+      _getChildrenDOMItems: function() {
+         var
+            folders = this._getFoldersContainer().children('.js-controls-ListView__item'),
+            items = TreeCompositeView.superclass._getChildrenDOMItems.apply(this, arguments);
+
+         return folders.add(items);
+      },
+
       _getEditArrowPosition: function() {
          if (this._options.viewMode === 'tile') {
             return this._getEditArrowPositionTile.apply(this, arguments);
