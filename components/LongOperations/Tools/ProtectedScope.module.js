@@ -46,34 +46,35 @@ define('js!SBIS3.CONTROLS.LongOperations.Tools.ProtectedScope',
           * Возвращает объект - хранилище защищённых свойств для указанного объекта-владельцаа
           * @public
           * @param {object} owner Владелец защищённых свойств
+          * @param {boolean} asIs Не создавать объект если его ещё нет, а вернуть как есть
           * @return {object}
           */
          scope: USE_NATIVE ?
-            function (owner) {
+            function (owner, asIs) {
                var map = this.members = this.members || new WeakMap();
-               if (!map.has(owner)) {
+               if (!map.has(owner) && !asIs) {
                   map.set(owner, {});
                }
                return map.get(owner);
             } :
-            function (owner) {
+            function (owner, asIs) {
                var prop = '__pr0tected__';
-               var map = this.members = this.members || {};
-               if (!(prop in owner)) {
-                  var n = (this.oldCounter || 0) + 1;
-                  Object.defineProperty(owner, prop, {value:n});
-                  this.oldCounter = n;
+               /*^^^if (!(prop in owner) && !asIs) {
+                  this.prefix = this.prefix || _uniqueHex(50) + ':';
+                  var n = this.counter = (this.counter || 0) + 1;
+                  Object.defineProperty(owner, prop, {value:this.prefix + n});
                }
+               var map = this.members = this.members || {};
                var id = owner[prop];
-               if (!(id in map)) {
+               if (!(id in map) && !asIs) {
                   map[id] = {};
                }
-               return map[id];
+               return map[id];*/
                // Альтернативно
-               /*if (!(prop in owner)) {
-                  owner[prop] = {};
+               if (!(prop in owner) && !asIs) {
+                  Object.defineProperty(owner, prop, {value:{}});
                }
-               return owner[prop];*/
+               return owner[prop];
             },
 
          /**
@@ -90,11 +91,12 @@ define('js!SBIS3.CONTROLS.LongOperations.Tools.ProtectedScope',
             function (owner) {
                var prop = '__pr0tected__';
                if (prop in owner) {
-                  if (this.members) {
+                  /*^^^if (this.members) {
                      delete this.members[owner[prop]];
-                  }
+                     delete owner[prop];
+                  }*/
                   // Альтернативно
-                  /*delete owner[prop];*/
+                  delete owner[prop];
                }
             }
       };

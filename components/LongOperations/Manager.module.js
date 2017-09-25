@@ -144,8 +144,9 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
             if (!prodName || typeof prodName !== 'string') {
                throw new TypeError('Argument "prodName" must be a string');
             }
-            if (!protectedOf(this)._isDestroyed) {
-               return protectedOf(this)._producers[prodName];
+            var inner = protectedOf(this);
+            if (!inner._isDestroyed) {
+               return inner._producers[prodName];
             }
          },
 
@@ -182,8 +183,9 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
             if (!producer || !(typeof producer === 'string' || CoreInstance.instanceOfMixin(producer, 'SBIS3.CONTROLS.LongOperations.IProducer'))) {
                throw new TypeError('Argument "producer" must be string or  SBIS3.CONTROLS.LongOperations.IProducer');
             }
-            if (!protectedOf(this)._isDestroyed) {
-               return typeof producer === 'string' ? !!protectedOf(this)._producers[producer] : !!_searchName(producer);
+            var inner = protectedOf(this);
+            if (!inner._isDestroyed) {
+               return typeof producer === 'string' ? !!inner._producers[producer] : !!_searchName(producer);
             }
          },
 
@@ -227,18 +229,19 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
             if (!prodName || typeof prodName !== 'string') {
                throw new TypeError('Argument "prodName" must be a string');
             }
-            if (!protectedOf(this)._isDestroyed) {
-               if (!tabKey || tabKey === protectedOf(this)._tabKey) {
-                  var producer = protectedOf(this)._producers[prodName];
+            var inner = protectedOf(this);
+            if (!inner._isDestroyed) {
+               if (!tabKey || tabKey === inner._tabKey) {
+                  var producer = inner._producers[prodName];
                   if (!producer) {
                      throw new Error('Producer not found');
                   }
                   return _canHasHistory(producer);
                }
                else
-               if (tabKey in protectedOf(this)._tabManagers && prodName in protectedOf(this)._tabManagers[tabKey]) {
+               if (tabKey in inner._tabManagers && prodName in inner._tabManagers[tabKey]) {
                   // Если вкладка не закрыта и продюсер не раз-регистрирован
-                  return protectedOf(this)._tabManagers[tabKey][prodName].canHasHistory;
+                  return inner._tabManagers[tabKey][prodName].canHasHistory;
                }
                return false;
             }
@@ -289,10 +292,11 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
           * @return {boolean}
           */
          canDestroySafely: function () {
-            if (!protectedOf(this)._isDestroyed) {
-               for (var n in protectedOf(this)._producers) {
-                  if (protectedOf(this)._producers[n].canDestroySafely &&//TODO: ### Это переходный код, удалить позднее
-                        !protectedOf(this)._producers[n].canDestroySafely()) {
+            var inner = protectedOf(this);
+            if (!inner._isDestroyed) {
+               for (var n in inner._producers) {
+                  if (inner._producers[n].canDestroySafely &&//TODO: ### Это переходный код, удалить позднее
+                        !inner._producers[n].canDestroySafely()) {
                      return false;
                   }
                }
@@ -305,10 +309,11 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
           * @public
           */
          destroy: function () {
-            if (!protectedOf(this)._isDestroyed) {
-               protectedOf(this)._isDestroyed = true;
-               for (var n in protectedOf(this)._producers) {
-                  protectedOf(this)._producers[n].destroy();
+            var inner = protectedOf(this);
+            if (!inner._isDestroyed) {
+               inner._isDestroyed = true;
+               for (var n in inner._producers) {
+                  inner._producers[n].destroy();
                   _unregister(n);
                }
                if (_channel) {
@@ -317,15 +322,16 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
                   _channel.destroy();
                   _channel = null;
                }
-               if (protectedOf(this)._tabChannel) {
-                  protectedOf(this)._tabChannel.notify('LongOperations:Manager:onActivity', {type:'die', tab:protectedOf(this)._tabKey});
-                  protectedOf(this)._tabChannel.unsubscribe('LongOperations:Manager:onActivity', _tabListener);
-                  protectedOf(this)._tabChannel.destroy();
-                  protectedOf(this)._tabChannel = null;
+               if (inner._tabChannel) {
+                  inner._tabChannel.notify('LongOperations:Manager:onActivity', {type:'die', tab:inner._tabKey});
+                  inner._tabChannel.unsubscribe('LongOperations:Manager:onActivity', _tabListener);
+                  inner._tabChannel.destroy();
+                  inner._tabChannel = null;
                }
-               protectedOf(this)._tabCalls.destroy();
-               protectedOf(this)._tabCalls = null;
-               //^^^protectedOf.clear(this);//^^^ Допилить ?
+               if (inner._tabCalls) {
+                  inner._tabCalls.destroy();
+                  inner._tabCalls = null;
+               }
             }
          }
       });
@@ -358,28 +364,29 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
          if (!module || !(typeof module === 'function' ? producer instanceof module : producer === module)) {
             throw new Error('Producer name is invalid');
          }
-         var already = protectedOf(manager)._producers[name] === producer;
+         var inner = protectedOf(manager);
+         var already = inner._producers[name] === producer;
          if (!already) {
-            if (protectedOf(manager)._producers[name]) {
+            if (inner._producers[name]) {
                throw new Error('Other producer with such name already registered');
             }
             if (_searchName(producer)) {
                throw new Error('This producer with other name already registered');
             }
             // Добавить в список
-            protectedOf(manager)._producers[name] = producer;
+            inner._producers[name] = producer;
             // Подписаться на события
             ['onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted'].forEach(function (eventType) {
                producer.subscribe(eventType, _eventListener);
             });
              // Уведомить другие вкладки
-            protectedOf(manager)._tabChannel.notify('LongOperations:Manager:onActivity', {type:'register', tab:protectedOf(manager)._tabKey, producer:name, isCrossTab:producer.hasCrossTabData(), hasHistory:_canHasHistory(producer)});
+            inner._tabChannel.notify('LongOperations:Manager:onActivity', {type:'register', tab:inner._tabKey, producer:name, isCrossTab:producer.hasCrossTabData(), hasHistory:_canHasHistory(producer)});
             // Если есть уже выполняющиеся запросы данных - присоединиться к ним
-            if (protectedOf(manager)._fetchCalls) {
-               var queries = protectedOf(manager)._fetchCalls.listPools();
+            if (inner._fetchCalls) {
+               var queries = inner._fetchCalls.listPools();
                for (var i = 0; i < queries.length; i++) {
                   var q = queries[i];
-                  protectedOf(manager)._fetchCalls.add(q, {tab:protectedOf(manager)._tabKey, producer:name}, protectedOf(manager)._producers[name].fetch(q.where, q.orderBy, q.offset, q.limit, q.extra));
+                  inner._fetchCalls.add(q, {tab:inner._tabKey, producer:name}, inner._producers[name].fetch(q.where, q.orderBy, q.offset, q.limit, q.extra));
                }
             }
             // И уведомить своих подписчиков
@@ -397,16 +404,17 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
          if (!producer || (typeof producer !== 'string' && !CoreInstance.instanceOfMixin(producer, 'SBIS3.CONTROLS.LongOperations.IProducer'))) {
             throw new TypeError('Argument "producer" must be SBIS3.CONTROLS.LongOperations.IProducer or string');
          }
+         var inner = protectedOf(manager);
          var name;
          if (typeof producer === 'string') {
             name = producer;
-            if (!protectedOf(manager)._producers[name]) {
+            if (!inner._producers[name]) {
                return false;
             }
          }
          else {
             name = producer.getName();
-            if (!name || protectedOf(manager)._producers[name] !== producer) {
+            if (!name || inner._producers[name] !== producer) {
                name =  _searchName(producer);
             }
          }
@@ -414,23 +422,23 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
          if (name) {
             // Отцепить события
             ['onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted'].forEach(function (eventType) {
-               protectedOf(manager)._producers[name].unsubscribe(eventType, _eventListener);
+               inner._producers[name].unsubscribe(eventType, _eventListener);
             });
             // Если есть выполняющийся запрос данных - отсоединиться от него
-            if (protectedOf(manager)._fetchCalls) {
-               protectedOf(manager)._fetchCalls.remove(null, {tab:protectedOf(manager)._tabKey, producer:name});
+            if (inner._fetchCalls) {
+               inner._fetchCalls.remove(null, {tab:inner._tabKey, producer:name});
             }
             // Удалить из списка
-            delete protectedOf(manager)._producers[name];
+            delete inner._producers[name];
             // Почистить _offsetBunch
-            if (protectedOf(manager)._offsetBunch) {
-               protectedOf(manager)._offsetBunch.removeAll({tab:protectedOf(manager)._tabKey, producer:name});
+            if (inner._offsetBunch) {
+               inner._offsetBunch.removeAll({tab:inner._tabKey, producer:name});
             }
             done = true;
             // Уведомить другие вкладки
-            protectedOf(manager)._tabChannel.notify('LongOperations:Manager:onActivity', {type:'unregister', tab:protectedOf(manager)._tabKey, producer:name});
+            inner._tabChannel.notify('LongOperations:Manager:onActivity', {type:'unregister', tab:inner._tabKey, producer:name});
             // И уведомить своих подписчиков
-            if (!protectedOf(manager)._isDestroyed) {
+            if (!inner._isDestroyed) {
                _channel.notifyWithTarget('onproducerunregistered', manager);
             }
          }
@@ -469,8 +477,9 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
        * @return {string}
        */
       var _searchName = function (producer) {
-         for (var n in protectedOf(manager)._producers) {
-            if (producer === protectedOf(manager)._producers[n]) {
+         var inner = protectedOf(manager);
+         for (var n in inner._producers) {
+            if (producer === inner._producers[n]) {
                return n;
             }
          }
@@ -495,10 +504,11 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
        * @return {object}
        */
       protectedOf(manager)._tabTargets = function (targets, tabKey, prodInfo) {
+         var inner = protectedOf(manager);
          for (var prodName in prodInfo) {
             // Если продюсер во вкладке имеет не cross-tab данные - использовать его
             // или имеет cross-tab данные, но не зарегистрирован в текущей вкладке
-            if (!protectedOf(manager)._tabManagers[tabKey][prodName].hasCrossTabData || !protectedOf(manager)._producers[prodName]) {
+            if (!inner._tabManagers[tabKey][prodName].hasCrossTabData || !inner._producers[prodName]) {
                if (!targets) {
                   targets = {};
                }
@@ -533,7 +543,8 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
        * @param {boolean} dontCrossTab Не распространять событие по вкладкам
        */
       var _eventListener = function (evtName, data, dontCrossTab) {
-         if (protectedOf(manager)._isDestroyed) {
+         var inner = protectedOf(manager);
+         if (inner._isDestroyed) {
             return;
          }
          var producer;
@@ -541,26 +552,26 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
             if (!data.producer || typeof data.producer !== 'string') {
                throw new TypeError('Unknown event');
             }
-            producer = protectedOf(manager)._producers[data.producer];
+            producer = inner._producers[data.producer];
             if (!producer) {
                throw new Error('Unknown event');
             }
             // Если произошло событие в продюсере и есть выполняющиеся fetch запросы - выполнить запросы к этому продюсеру повторно
             // (все - и завершённые, и даже не завершённые, так как не завершённые уже могут быть "на подходе" со старыми данными)
             // TODO: ### Для уменьшения количества запросов можно попробовать рассмотреть компромисный вариант - переспрашивать только если уже прошло достаточно много времени
-            var member = {tab:protectedOf(manager)._tabKey, producer:data.producer};
-            if (protectedOf(manager)._fetchCalls) {
-               var queries = protectedOf(manager)._fetchCalls.listPools(member/*, true*/);
+            var member = {tab:inner._tabKey, producer:data.producer};
+            if (inner._fetchCalls) {
+               var queries = inner._fetchCalls.listPools(member/*, true*/);
                for (var i = 0; i < queries.length; i++) {
                   var query = queries[i];
-                  protectedOf(manager)._fetchCalls.replace(query, member, producer.fetch(query));
+                  inner._fetchCalls.replace(query, member, producer.fetch(query));
                }
             }
          }
          var eventType = typeof evtName === 'object' ? evtName.name : evtName;
-         _channel.notifyWithTarget(eventType, manager, !dontCrossTab ? (data ? ObjectAssign({tabKey:protectedOf(manager)._tabKey}, data) : {tabKey:protectedOf(manager)._tabKey}) : data);
+         _channel.notifyWithTarget(eventType, manager, !dontCrossTab ? (data ? ObjectAssign({tabKey:inner._tabKey}, data) : {tabKey:inner._tabKey}) : data);
          if (!dontCrossTab && !producer.hasCrossTabEvents()) {
-            protectedOf(manager)._tabChannel.notify('LongOperations:Manager:onActivity', {type:eventType, tab:protectedOf(manager)._tabKey, isCrossTab:producer.hasCrossTabData(), hasHistory:_canHasHistory(producer), data:data});
+            inner._tabChannel.notify('LongOperations:Manager:onActivity', {type:eventType, tab:inner._tabKey, isCrossTab:producer.hasCrossTabData(), hasHistory:_canHasHistory(producer), data:data});
          }
       };
 
@@ -580,12 +591,13 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
          var tab = evt.tab;
          switch (type) {
             case 'born':
-               protectedOf(manager)._tabManagers[tab] = {};
+               var inner = protectedOf(manager);
+               inner._tabManagers[tab] = {};
                var prodData = {};
-               for (var n in protectedOf(manager)._producers) {
-                  prodData[n] = {isCrossTab:protectedOf(manager)._producers[n].hasCrossTabData(), hasHistory:_canHasHistory(protectedOf(manager)._producers[n])};
+               for (var n in inner._producers) {
+                  prodData[n] = {isCrossTab:inner._producers[n].hasCrossTabData(), hasHistory:_canHasHistory(inner._producers[n])};
                }
-               protectedOf(manager)._tabChannel.notify('LongOperations:Manager:onActivity', {type:'handshake', tab:protectedOf(manager)._tabKey, producers:prodData});
+               inner._tabChannel.notify('LongOperations:Manager:onActivity', {type:'handshake', tab:inner._tabKey, producers:prodData});
                break;
             case 'handshake':
                if (!(evt.producers && typeof evt.producers === 'object')) {
@@ -633,10 +645,11 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
        * @param {boolean} hasHistory Может ли продюсер иметь историю
        */
       var _regTabProducer = function (tabKey, prodInfo, isCrossTab, hasHistory) {
-         if (!(tabKey in protectedOf(manager)._tabManagers)) {
-            protectedOf(manager)._tabManagers[tabKey] = {};
+         if (!(tabKey in inner._tabManagers)) {
+            inner._tabManagers[tabKey] = {};
          }
-         var tabProds = protectedOf(manager)._tabManagers[tabKey];
+         var inner = protectedOf(manager);
+         var tabProds = inner._tabManagers[tabKey];
          var newProds;
          if (typeof prodInfo == 'object' && Object.keys(prodInfo).length) {
             newProds = {};
@@ -654,26 +667,26 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
          }
          if (newProds) {
             // Если есть уже выполняющиеся запросы данных - присоединиться к ним
-            if (protectedOf(manager)._fetchCalls) {
-               var queries = protectedOf(manager)._fetchCalls.listPools();
+            if (inner._fetchCalls) {
+               var queries = inner._fetchCalls.listPools();
                if (queries.length) {
-                  var targets = protectedOf(manager)._tabTargets(null, tabKey, newProds);
+                  var targets = inner._tabTargets(null, tabKey, newProds);
                   if (targets) {
-                     var members = protectedOf(manager)._expandTargets(targets);
+                     var members = inner._expandTargets(targets);
                      for (var i = 0; i < queries.length; i++) {
                         var q = queries[i];
                         /*^^^var promises;
                         if (0 < q.offset) {
                            promises = [];
                            for (var list = targets[tabKey], i = 0; i < list.length; i++) {
-                              promises.push(protectedOf(manager)._tabCalls.call(tabKey, list[i], 'fetch', [ObjectAssign({}, q, {offset:0})], LongOperationEntry));
+                              promises.push(inner._tabCalls.call(tabKey, list[i], 'fetch', [ObjectAssign({}, q, {offset:0})], LongOperationEntry));
                            }
                         }
                         else {
-                           promises = protectedOf(manager)._tabCalls.callBatch(targets, 'fetch', [q], LongOperationEntry);
+                           promises = inner._tabCalls.callBatch(targets, 'fetch', [q], LongOperationEntry);
                         }*/
-                        var promises = protectedOf(self)._tabFetch(targets, q, false);
-                        protectedOf(manager)._fetchCalls.addList(q, members, promises);
+                        var promises = inner._fetchFromTabs(targets, q, false);
+                        inner._fetchCalls.addList(q, members, promises);
                      }
                   }
                }
@@ -690,20 +703,21 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
        * @param {string} [prodName] Имя продюсера (опционально)
        */
       var _unregTabProducer = function (tabKey, prodName) {
-         if (tabKey in protectedOf(manager)._tabManagers) {
+         var inner = protectedOf(manager);
+         if (tabKey in inner._tabManagers) {
             // Если есть выполняющийся запрос данных - отсоединиться от него
-            if (protectedOf(manager)._fetchCalls) {
-               protectedOf(manager)._fetchCalls.remove(null, prodName ? {tab:tabKey, producer:prodName} : {tab:tabKey});
+            if (inner._fetchCalls) {
+               inner._fetchCalls.remove(null, prodName ? {tab:tabKey, producer:prodName} : {tab:tabKey});
             }
             if (prodName) {
-               delete protectedOf(manager)._tabManagers[tabKey][prodName];
+               delete inner._tabManagers[tabKey][prodName];
             }
             else {
-               delete protectedOf(manager)._tabManagers[tabKey];
+               delete inner._tabManagers[tabKey];
             }
             // Почистить _offsetBunch
-            if (protectedOf(manager)._offsetBunch) {
-               protectedOf(manager)._offsetBunch.removeAll(prodName ? {tab:tabKey, producer:prodName} : {tab:tabKey});
+            if (inner._offsetBunch) {
+               inner._offsetBunch.removeAll(prodName ? {tab:tabKey, producer:prodName} : {tab:tabKey});
             }
             // Уведомить своих подписчиков
             //TODO: ### Если продюсер не отображаемый, можно (нужно?) игнорировать
@@ -757,9 +771,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
          });
 
          // Добавить обработчик на выгрузку для запуска метода destroy
-         window.addEventListener('unload', function () {
-            manager.destroy();
-         });
+         window.addEventListener('unload', manager.destroy.bind(manager));
       }
 
       return manager;
