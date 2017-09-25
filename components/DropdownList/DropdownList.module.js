@@ -8,6 +8,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "Core/constants",
    "Core/core-merge",
    "Core/core-instance",
+   "Core/core-functions",
+   "Core/helpers/String/format",
    'Core/helpers/Function/shallowClone',
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CONTROLS.PickerMixin",
@@ -31,7 +33,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    'css!SBIS3.CONTROLS.DropdownList'
 ],
 
-   function (EventBus, IoC, constants, cMerge, cInstance, shallowClone, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
+   function (EventBus, IoC, constants, cMerge, cInstance, cFunctions, format, shallowClone, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
 
       'use strict';
       /**
@@ -143,7 +145,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
       function prepareText(textValue) {
          if (textValue.length > 1) {
-            return textValue[0] + ' и еще ' + (textValue.length - 1);
+            return textValue[0] + ' ' + format({count: textValue.length - 1}, rk('и еще $count$s$'));
          }
          return textValue.join('');
       }
