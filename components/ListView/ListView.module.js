@@ -2736,6 +2736,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this.setSelectedKey(key);
             if(this._touchSupport) {
                this._clearHoveredItem();
+               this._onChangeHoveredItem(this.getHoveredItem());
             }
          },
          _getItemsToolbar: function() {
