@@ -4,11 +4,9 @@ define('js!WSControls/TextBoxes/TextBox',
       'tmpl!WSControls/TextBoxes/TextBox',
       'tmpl!WSControls/TextBoxes/resources/textFieldWrapper',
       'js!WS.Data/Type/descriptor',
-      'Core/detection',
-      'js!SBIS3.CONTROLS.Utils.GetTextWidth',
       'css!WSControls/TextBoxes/TextBox'
    ],
-   function(TextBoxBase, template, textFieldWrapper, types, detection, getTextWidth) {
+   function(TextBoxBase, template, textFieldWrapper, types) {
 
       'use strict';
 
@@ -74,25 +72,48 @@ define('js!WSControls/TextBoxes/TextBox',
 
          _type: 'text',
 
-         constructor: function(options) {
-            TextBox.superclass.constructor.call(this, options);
-
-            this._publish('onInformationIconMouseEnter', 'onInformationIconActivated');
-         },
-
-         _updateState: function(options) {
+         /**
+          * Обновление текста. Переобпределяется в наследниках, если нужно изменить значение текста, в соответствии с опциями.
+          * @param options
+          * @private
+          */
+         _updateText: function(options) {
             this._text = this._calcText(options.text, options);
          },
 
-         _mouseenterInformationIconHandler: function() {
-            this._notify('onInformationIconMouseEnter');
+         /**
+          * Обновление позиций выделения.
+          * @param target
+          * @private
+          */
+         _updateSelectionPosition:function(target) {
+            this._selectionStart = target.selectionStart;
+            this._selectionEnd = target.selectionEnd;
          },
 
-         _activatedInformationIconHandler: function() {
-            this._notify('onInformationIconActivated');
-         },
-
+         /**
+          * Обработчик ввода.
+          * @param event
+          * @private
+          */
          _inputHandler: function(event) {
+            /**
+             * При вводе текста компонент должен расчитать новое текстовое значение и проверить изменилось ли оно.
+             *
+             * Для расчета нужно определить введенный текст.
+             * Если произошло удаление, то введённого текста нет.
+             * В противном случае будем действовать по следующему алгоритму:
+             *    1. Определяем текст после введённого(end). Им является текст после введённого в новом текстовом значении.
+             *    2. Определяем текст до введенного(start). Им является текст до end в старом текстовом значении с учетом,
+             *    что могло быть выделение и часть start была заменена введённым текстом.
+             *    3. Определяем введённый текст. Им является текст между start и end в новом текстовом значении.
+             *    4. Производим расчет введённого текста и полученное значение вставляем между текстом start и end.
+             * Так получаем искомый результат.
+             *
+             * Для проверки изменилось ли новое текстовое значение, сравним старое текстовое значение и текст полученный во
+             * время расчета.
+             * Такая проверка нужна для ситуаций, когда был выделен текст и вставлен тот же самый выделенный текст.
+             */
             var
                target = event.target,
                caretPosition = target.selectionEnd,
@@ -111,8 +132,9 @@ define('js!WSControls/TextBoxes/TextBox',
                   validText = this._calcText(inputText, this._options);
                   caretPosition += validText.length - inputText.length;
                   target.value = pathOne + validText + pathTwo;
+                  target.selectionStart = target.selectionEnd = caretPosition;
 
-                  if (!validText) {
+                  if (target.value === defaultText) {
                      isChangeText = false;
                   }
                } else {
@@ -120,54 +142,63 @@ define('js!WSControls/TextBoxes/TextBox',
                }
             }
 
-            target.selectionStart = target.selectionEnd = this._selectionStart = this._selectionEnd = caretPosition;
+            this._updateSelectionPosition(target);
 
             if (isChangeText) {
                TextBox.superclass._inputHandler.call(this, event);
             }
          },
 
-         _mouseenterHandler: function(event) {
-            var target = event.target;
-            this._tooltip = this._calcTooltip(target.scrollWidth, target.clientWidth, this._options);
-         },
-
+         /**
+          * Обработчик фокусировки элемента.
+          * @param event
+          * @private
+          */
          _focusHandler: function(event) {
-            if (!this._options.selectOnClick) {
+            if (this._options.selectOnClick) {
                event.target.select();
             }
          },
 
+         /**
+          * Обработчик выделения элемента.
+          * @param event
+          * @private
+          */
          _selectHandler: function(event) {
-            var target = event.target;
-
-            this._selectionStart = target.selectionStart;
-            this._selectionEnd = target.selectionEnd;
+            this._updateSelectionPosition(event.target);
          },
 
-         _keydownHandler: function(event) {
-            var caretPosition;
+         /**
+          * Обработчик клика.
+          * @param event
+          * @private
+          */
+         _clickHandler: function(event) {
+            this._updateSelectionPosition(event.target);
+         },
 
-            switch (event.nativeEvent.keyCode) {
-               case 37:
-                  caretPosition = this._selectionStart - 1;
-                  break;
-               case 38:
-                  caretPosition = 0;
-                  break;
-               case 39:
-                  caretPosition = this._selectionEnd + 1;
-                  break;
-               case 40:
-                  caretPosition = this._text.length;
-                  break;
-               default:
-                  return;
+         /**
+          * Обработчик поднятия клавиш.
+          * @param event
+          * @private
+          */
+         _keyupHandler: function(event) {
+            var keyCode = event.nativeEvent.keyCode;
+
+            // При нажатии стрелок происходит смещение курсора.
+            if (keyCode > 36 && keyCode < 41) {
+               this._updateSelectionPosition(event.target);
             }
-
-            this._selectionStart = this._selectionEnd = caretPosition;
          },
 
+         /**
+          * Метод расчета текста.
+          * @param text текст.
+          * @param options опции.
+          * @returns {String}
+          * @private
+          */
          _calcText: function(text, options) {
             var
                isTrim = options.trim,
@@ -189,18 +220,6 @@ define('js!WSControls/TextBoxes/TextBox',
             }
 
             return validText;
-         },
-
-         _calcTooltip: function(scrollWidth, clientWidth, options) {
-            var
-               tooltip = options.tooltip,
-               text = this._text;
-
-            if (detection.isIE) {
-               scrollWidth = getTextWidth(text);
-            }
-
-            return scrollWidth > clientWidth ? text : tooltip;
          }
       });
 

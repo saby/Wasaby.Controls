@@ -1,0 +1,14 @@
+<span>
+   <ws:partial template="{{_options.content}}"/>
+   <ws:if data="{{_options.informationIconColor}}">
+      <span event:onmouseenter="_mouseenterInformationIconHandler()">
+         <ws:SBIS3.CONTROLS.IconButton
+            name="informationIcon"
+            icon="icon-size icon-Listbox"
+            allowChangeEnable="{{false}}"
+            event:onActivated="_activatedInformationIconHandler()"
+            className="controls-informationIcon icon-{{_options.informationIconColor}}"
+         />
+      </span>
+   </ws:if>
+</span>

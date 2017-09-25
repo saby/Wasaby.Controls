@@ -24,19 +24,20 @@ define('js!WSControls/TextBoxes/TextBoxBase',
          },
 
          _beforeMount: function(options) {
-            this._updateState(options);
+            this._updateText(options);
          },
 
          _beforeUpdate: function(newOptions) {
-            this._updateState(newOptions);
+            this._updateText(newOptions);
          },
 
-         _updateState: function(options) {
+         _updateText: function(options) {
             this._text = options.text;
          },
 
          _inputHandler: function(event) {
-            this._notify('onChangeText', this._text = event.target.value);
+            this._text = event.target.value;
+            this._notify('onChangeText', this._text);
          }
       });
 

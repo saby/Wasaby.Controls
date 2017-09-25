@@ -289,38 +289,30 @@ define(
                assert.equal(textBox._selectionStart, 0);
                assert.equal(textBox._selectionEnd, 10);
             });
-            it('keydown', function() {
+            it('keyup', function() {
                textBox._selectionStart = 5;
                textBox._selectionEnd = 5;
-               textBox._keydownHandler(new SyntheticEvent('onmouseenter', {
-                  keyCode: 37
+               textBox._keyupHandler(new SyntheticEvent('onmouseenter', {
+                  keyCode: 37,
+                  target: {
+                     selectionStart: 4,
+                     selectionEnd: 4
+                  }
                }));
                assert.equal(textBox._selectionStart, 4);
                assert.equal(textBox._selectionEnd, 4);
 
                textBox._selectionStart = 5;
                textBox._selectionEnd = 5;
-               textBox._keydownHandler(new SyntheticEvent('onmouseenter', {
-                  keyCode: 38
+               textBox._keyupHandler(new SyntheticEvent('onmouseenter', {
+                  keyCode: 42,
+                  target: {
+                     selectionStart: 4,
+                     selectionEnd: 4
+                  }
                }));
-               assert.equal(textBox._selectionStart, 0);
-               assert.equal(textBox._selectionEnd, 0);
-
-               textBox._selectionStart = 5;
-               textBox._selectionEnd = 5;
-               textBox._keydownHandler(new SyntheticEvent('onmouseenter', {
-                  keyCode: 39
-               }));
-               assert.equal(textBox._selectionStart, 6);
-               assert.equal(textBox._selectionEnd, 6);
-
-               textBox._selectionStart = 5;
-               textBox._selectionEnd = 5;
-               textBox._keydownHandler(new SyntheticEvent('onmouseenter', {
-                  keyCode: 40
-               }));
-               assert.equal(textBox._selectionStart, 10);
-               assert.equal(textBox._selectionEnd, 10);
+               assert.equal(textBox._selectionStart, 5);
+               assert.equal(textBox._selectionEnd, 5);
             });
          });
          describe('CalcMethod', () => {
