@@ -2613,6 +2613,7 @@ define('js!SBIS3.CONTROLS.ListView',
                return;
             }
 
+            this._setTouchSupport(true);
             if (e.direction == 'left') {
                this._changeHoveredItem(target);
                this._onLeftSwipeHandler();
@@ -2627,11 +2628,17 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onLeftSwipeHandler: function() {
+            var itemsActions, target;
+
             if (this._isSupportedItemsToolbar()) {
+               itemsActions = this.getItemsActions();
+               target = itemsActions.getTarget();
+
                if (this._hasHoveredItem()) {
-                  this._setTouchSupport(true);
-                  this._showItemsToolbar(this._hoveredItem);
-                  this.setSelectedKey(this._hoveredItem.key);
+                  if(!this._itemsToolbar.isVisible() || target.key !== this._hoveredItem.key) {
+                     this._showItemsToolbar(this._hoveredItem);
+                     this.setSelectedKey(this._hoveredItem.key);
+                  }
                } else {
                   this._hideItemsToolbar();
                }
