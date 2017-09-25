@@ -1069,7 +1069,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   return undefined;
                }
             }
-            for(var el in classes) {
+            var el;
+            for(var i = 0; i < classes.length; i++) {
+               el = classes[i];
                ////Прокинуть правильные опции
                // if(el.isPagerConfig) {
                //    if(!opts.pagerConfig[el.optionName]) {
@@ -1086,7 +1088,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   if (hasClass(opts.className, el.class)) {
                      opts[el.optionName] = el.value;
                   } else {
-                     opts[el] = el.defaultValue;
+                     opts[el.optionName] = el.defaultValue;
                   }
                }
             }
