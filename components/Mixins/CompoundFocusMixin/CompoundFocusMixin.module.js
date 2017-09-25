@@ -1,6 +1,7 @@
 define('js!SBIS3.CONTROLS.CompoundFocusMixin', ['Core/EventBus'], function(EventBus) {
    /**
     * @class $ws.mixins.CompoundFocusMixin
+    * @public
     */
    var CompoundFocusMixin = /** @lends $ws.mixins.CompoundFocusMixin.prototype */{
       $constructor: function () {

@@ -1,0 +1,5 @@
+interface IItemTemplate {
+
+}
+
+export = IItemTemplate;

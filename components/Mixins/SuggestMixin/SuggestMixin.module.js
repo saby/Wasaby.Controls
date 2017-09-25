@@ -632,25 +632,27 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              listConfig;
          
          this.hidePicker();
-         
-         if(showAllConfig.template === DEFAULT_SHOW_ALL_TEMPLATE) {
-            /* Если шаблон используется дефолтный - сформируем для него конфиг */
-            listConfig = {
-               columns: list.getColumns(),
-               filter: list.getFilter(),
-               idProperty: list.getProperty('idProperty'),
-               itemTpl: list.getProperty('itemTpl'),
-               dataSource: list.getDataSource()
-            };
-            
-            /* Когда нет записей в списке автодополнения,
-               должен открываться справочник без фильтра, чтобы отобразились все записи */
-            if(!list.getItems().getCount() && this._options.searchParam) {
-               delete listConfig.filter[this._options.searchParam];
-            }
    
-            showAllConfig.componentOptions.listConfig = listConfig;
+         listConfig = {
+            columns: list.getColumns(),
+            filter: list.getFilter(),
+            idProperty: list.getProperty('idProperty'),
+            itemTpl: list.getProperty('itemTpl'),
+            dataSource: list.getDataSource()
+         };
+   
+         /* Когда нет записей в списке автодополнения,
+          должен открываться справочник без фильтра, чтобы отобразились все записи */
+         if(!list.getItems().getCount() && this._options.searchParam) {
+            delete listConfig.filter[this._options.searchParam];
          }
+         
+         if(!showAllConfig.componentOptions) {
+            showAllConfig.componentOptions = {};
+         }
+   
+         showAllConfig.componentOptions.listConfig = listConfig;
+         
          this.showSelector(showAllConfig);
       },
 

@@ -9,10 +9,6 @@
    line-height: normal;
    text-decoration: none;
 
-   &:active {
-      text-decoration: none !important;
-   }
-
    &.controls-Button-color__ {
       &default {
          color: @button-text-color;
@@ -119,14 +115,5 @@
             background: @button-primary-hover-bg;
          }
       }
-   }
-}
-
-@-moz-document url-prefix() {
-   .controls-Button .controls-Button__text {
-      height: @button-text-height-ff;
-   }
-   .controls-Button__big .controls-Button__text {
-      height: auto;
    }
 }

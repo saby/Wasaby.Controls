@@ -1,7 +1,8 @@
 .controls-TabButton {
    vertical-align: @tab-button-vertical-align;
    cursor: @tab-button-cursor;
-   height: @tab-button-height;
+   height: 100%;
+   box-sizing: border-box;
    position: @tab-button-position;
    color: @tab-button-color;
    font: @tab-button-font;
@@ -143,7 +144,7 @@
       }
    }
    &.controls-TabButton__main-item {
-      min-width: 0; //Нужно, чтобы flex правильно позиционировал ужимаемый контейнер
+      min-width: 1px; //Нужно, чтобы flex правильно позиционировал ужимаемый контейнер. с 0 в ie11 не работает
       .controls-TabButton__inner{
          font-size: @tab-button-large-inner-font-size;
          font-weight: @tab-button-large-inner-font-weight;
@@ -235,6 +236,7 @@
          overflow: hidden;
          text-overflow: ellipsis;
          white-space: nowrap;
+         .flex-shrink(1);
          > div {
             vertical-align: top;
          }
@@ -352,7 +354,6 @@
 }
 .controls-TabButtons__simple-view-mini{
   .controls-TabButton {
-    height: 24px;
     .controls-TabButton__inner{
       height: 26px;
       color: #CCCCCC;
@@ -430,13 +431,21 @@
       }
    }
 }
+
 .ws-is-ie {
-  .controls-TabButton {
-    .controls-TabButton__additionalText2 .controls-EditAtPlace {
-      position: relative;
-      top: -1px;
-    }
-  }
+   .controls-TabButton {
+      .controls-TabButton__mainText {
+         line-height: 25px;
+         .controls-EditAtPlace__editor .controls-TextBox {
+            line-height: 20px;
+         }
+      }
+      .controls-TabButton__additionalText2 {
+         .controls-EditAtPlace .controls-EditAtPlace__textField {
+            padding: 0;
+         }
+      }
+   }
 }
 
 .controls-TabButton__mainText.controls-EditAtPlace__ellipsis  .controls-EditAtPlace__fieldWrapper {

@@ -37,9 +37,8 @@ define('js!SBIS3.CONTROLS.Label.compatibility', [],
           * Вернуть видимость контрола
           * @returns {Boolean}
           */
-         getVisible: function(visible) {
-            this.visible = visible !== false;
-            this._forceUpdate();
+         getVisible: function() {
+            return this.visible;
          },
          /**
           * Изменить видимость контрола

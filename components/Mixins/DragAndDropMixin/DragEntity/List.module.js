@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.DragEntity.List', [
    /**
     * Список строк, обладающий информацией о том как обработать перемещаемые записи.
     * @class SBIS3.CONTROLS.DragEntity.List
+    * @public
     */
    var List = CollectionList.extend(/**@lends SBIS3.CONTROLS.DragEntity.List.prototype*/{
       _moduleName: 'SBIS3.CONTROLS.DragEntity.List',

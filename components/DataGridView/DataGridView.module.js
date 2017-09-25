@@ -1576,6 +1576,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                self._notify('onDrawHead');
                self._headIsChanged = false;
             });
+            this.reviveComponents(this._tfoot);
          }
       },
       destroy: function() {

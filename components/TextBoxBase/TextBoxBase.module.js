@@ -2,13 +2,12 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
    [
    "Core/constants",
    "Core/IoC",
-   "Core/ConsoleLogger",
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CONTROLS.FormWidgetMixin",
    "js!SBIS3.CONTROLS.DataBindMixin",
    "js!SBIS3.CORE.CompoundActiveFixMixin",
    "js!SBIS3.CONTROLS.ControlHierarchyManager"
-], function( constants, IoC, ConsoleLogger,CompoundControl, FormWidgetMixin, DataBindMixin, CompoundActiveFixMixin, ControlHierarchyManager) {
+], function( constants, IoC, CompoundControl, FormWidgetMixin, DataBindMixin, CompoundActiveFixMixin, ControlHierarchyManager) {
 
    'use strict';
 

@@ -39,24 +39,23 @@
       &.controls-ListView__dataLoaded {
          .controls-DataGridView__tr {
             .controls-DataGridView__td {
-               border-top-color: @data-grid-cell-separator-color;
+               border-bottom-color: @data-grid-cell-separator-color;
             }
          }
-         .controls-DataGridView__tr:first-child {
+         .controls-DataGridView__tr:first-child, .controls-editInPlace + .controls-DataGridView__tr {
             .controls-DataGridView__td {
                border-top-color: @data-grid-edge-cell-separator-color;
             }
             &.controls-GroupBy {
                .controls-DataGridView__td {
                   border-top: none;
+                  border-bottom: none;
                }
             }
          }
          .controls-DataGridView__tr:nth-last-child(1){
             .controls-DataGridView__td {
                border-bottom-color: @data-grid-edge-cell-separator-color;
-               line-height: @data-grid-edge-cell-separator-line-height;
-               padding-bottom: @data-grid-edge-cell-separator-bottom-padding;
             }
          }
          &.controls-DataGridView__resultsBottom {

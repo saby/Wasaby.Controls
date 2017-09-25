@@ -293,11 +293,16 @@ define(
           * @see onChangeInterval
           */
          setInterval: function ( interval ) {
-            if (interval == undefined || interval.toString() == this.getInterval()){
-               return;
+            if (interval == undefined) {
+               this._setText(this._getEmptyText());
             }
-            this.timeInterval.set(interval);
-            this._updateTextByTimeInterval(true);
+            //cTimeInterval при преобразовании к строке всегда вернет значение своего формата, даже если туда положили null (в этом случае значение 0 дней, минут, часов)
+            //Если устанавливают интервал 0 дней, часов, минут, проверка на неравенство не пройдет, поэтому смотрим, что если раньше был null, то нужно сеттить
+            else if (interval.toString() != this.getInterval() || !this._options.interval){
+               this.timeInterval.set(interval);
+               this._updateTextByTimeInterval(true);
+            }
+            this._options.interval = interval;
          },
          _getEmptyText: function(){
             return this._getFormatModel().getStrMask(this._getMaskReplacer());
@@ -329,7 +334,9 @@ define(
           * @private
           */
          _incMask: function (length) {
-            var leftGroupMaskLength = this._getFormatModel().model[0].mask.length;
+            var leftGroupMaskLength = this._getFormatModel().model[0].mask.length,
+               cursorPositionGroup = this._getFormatModel()._options.cursorPosition.group,
+               cursorPosition = this._getFormatModel()._options.cursorPosition.position;
             //Увеличиваем маску левой группы до размера не большего maxCharsAtLeftGroup
             if ((leftGroupMaskLength + length) > this._options.maxCharsAtLeftGroup){
                length = this._options.maxCharsAtLeftGroup - leftGroupMaskLength;
@@ -342,7 +349,7 @@ define(
             this._setText(this._options.text);
             //Устанавливаю курсор, только если фокус на компоненте, если пришли из сеттера опции, то не нужно
             if ($(document.activeElement).closest(this.getContainer()).length) {
-               this.setCursor(this._getFormatModel()._options.cursorPosition.group, this._getFormatModel()._options.cursorPosition.position + 1);
+               this.setCursor(cursorPositionGroup, cursorPosition + 1);
             }
          },
          /**

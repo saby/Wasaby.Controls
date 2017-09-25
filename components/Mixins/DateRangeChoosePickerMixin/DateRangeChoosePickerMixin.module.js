@@ -1,8 +1,7 @@
 define('js!SBIS3.CONTROLS.DateRangeChoosePickerMixin', [
    'js!SBIS3.CONTROLS.DateRangeChoose',
-   'js!SBIS3.CONTROLS.Utils.DateUtil',
    'Core/core-instance'
-], function (DateRangeChoose, DateUtil, cInstance) {
+], function (DateRangeChoose, cInstance) {
    /**
     * Миксин, умеющий отображать выпадающий вниз блок содержащий контрол SBIS3.CONTROLS.DateRangeChoose.
     * Используется только совместно с SBIS3.CONTROLS.DateRangeMixin(SBIS3.CONTROLS.RangeMixin) и SBIS3.CONTROLS.PickerMixin.

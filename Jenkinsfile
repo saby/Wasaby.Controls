@@ -25,18 +25,6 @@ properties([
             description: '',
             name: 'branch_atf'),
         choice(
-            choices: "\nfieldlink\nfilterbutton\natplace\nformcontroller\nglobalpanel\nrichedit\nmove\nscroll\nsearch\nprint\nmerge",
-            description: '',
-            name: 'Tag1'),
-        choice(
-            choices: "\nfieldlink\nfilterbutton\natplace\nformcontroller\nglobalpanel\nrichedit\nmove\nscroll\nsearch\nprint\nmerge",
-            description: '',
-            name: 'Tag2'),
-        choice(
-            choices: "\nfieldlink\nfilterbutton\natplace\nformcontroller\nglobalpanel\nrichedit\nmove\nscroll\nsearch\nprint\nmerge",
-            description: '',
-            name: 'Tag3'),
-        choice(
             choices: "online\npresto\ncarry\ngenie",
             description: '',
             name: 'theme'),
@@ -64,20 +52,14 @@ node('controls') {
         def items = "controls:${workspace}/controls"
         def branch_atf = params.branch_atf
         def branch_engine = params.branch_engine
-
-        def TAGS = ""
-        if ("${params.Tag1}" != "")
-            TAGS = "${params.Tag1}"
-        if ("${params.Tag2}" != "")
-            TAGS = "${TAGS}, ${params.Tag2}"
-        if ("${params.Tag3}" !="")
-            TAGS = "${TAGS}, ${params.Tag3}"
-        if ("${TAGS}" != "")
-            TAGS = "--TAGS_TO_START ${TAGS}"
-
-        def inte = params.run_reg
-        def regr = params.run_int
+        def inte = params.run_int
+        def regr = params.run_reg
         def unit = params.run_unit
+        if ("${env.BUILD_NUMBER}" == "1"){
+            inte = true
+            regr = true
+            unit = true
+        }
 
         stage("Checkout"){
             parallel (
@@ -219,11 +201,8 @@ node('controls') {
             parallel(
                 ws: {
                     // Выкачиваем ws для unit тестов и если указан сторонний бранч
-                    if (( unit ) || ("${params.ws_revision}" != "sdk") ){
-                        def ws_revision = params.ws_revision
-                        if ("${ws_revision}" == "sdk"){
-                            ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
-                        }
+                    if ( unit || "${params.ws_revision}" != "sdk" ){
+                        ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
                         dir(workspace) {
                             checkout([$class: 'GitSCM',
                             branches: [[name: ws_revision]],
@@ -242,11 +221,9 @@ node('controls') {
                 },
                 ws_data: {
                     // Выкачиваем ws.data для unit тестов и если указан сторонний бранч
-                    if (( unit ) || ("${params.ws_data_revision}" != "sdk") ){
+                    if ( unit || "${params.ws_data_revision}" != "sdk" ){
                         def ws_data_revision = params.ws_data_revision
-                        if ("${ws_data_revision}" == "sdk"){
-                            ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
-                        }
+                        ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
                         dir(workspace) {
                             checkout([$class: 'GitSCM',
                             branches: [[name: ws_data_revision]],
@@ -294,19 +271,23 @@ node('controls') {
                 }
                 dir("./controls"){
                     sh "npm config set registry http://npmregistry.sbis.ru:81/"
-
-                    sh "sh ./bin/test-isolated"
-                    sh "mv ./artifacts/xunit-report.xml ./artifacts/test-isolated-report.xml"
-
-                    sh """
-                    export test_url_host=${env.NODE_NAME}
-                    export test_server_port=10253
-                    export test_url_port=10253
-                    export WEBDRIVER_remote_enabled=1
-                    export WEBDRIVER_remote_host=10.76.163.98
-                    export WEBDRIVER_remote_port=4380
-                    sh ./bin/test-browser"""
-                    sh "mv ./artifacts/xunit-report.xml ./artifacts/test-browser-report.xml"
+                    parallel (
+                        isolated: {
+                            sh "sh ./bin/test-isolated"
+                            sh "mv ./artifacts/xunit-report.xml ./artifacts/test-isolated-report.xml"
+                        },
+                        browser: {
+                            sh """
+                            export test_url_host=${env.NODE_NAME}
+                            export test_server_port=10253
+                            export test_url_port=10253
+                            export WEBDRIVER_remote_enabled=1
+                            export WEBDRIVER_remote_host=10.76.163.98
+                            export WEBDRIVER_remote_port=4380
+                            export test_report=artifacts/test-browser-report.xml
+                            sh ./bin/test-browser"""
+                        }
+                    )
                 }
             }
         }
@@ -379,8 +360,8 @@ node('controls') {
             DO_NOT_RESTART = True
             SOFT_RESTART = True
             NO_RESOURCES = True
-            STREAMS_NUMBER = 20
-            DELAY_RUN_TESTS = 2
+            STREAMS_NUMBER = 30
+            DELAY_RUN_TESTS = 1
             TAGS_NOT_TO_START = iOSOnly
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
@@ -400,7 +381,7 @@ node('controls') {
                 SOFT_RESTART = False
                 NO_RESOURCES = True
                 STREAMS_NUMBER = 40
-                DELAY_RUN_TESTS = 2
+                DELAY_RUN_TESTS = 1
                 TAGS_TO_START = ${params.theme}
                 ELEMENT_OUTPUT_LOG = locator
                 WAIT_ELEMENT_LOAD = 20
@@ -442,47 +423,39 @@ node('controls') {
             run_test_fail = "-sf"
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
-        parallel (
-            int_test: {
-                stage("Инт.тесты"){
-                    if ( inte ){
-                        def site = "http://${NODE_NAME}:30001"
-                        site.trim()
-                        if ( "${TAGS}" != "") {
-                        dir("./controls/tests/int"){
-                            sh """
-                            source /home/sbis/venv_for_test/bin/activate
-                            python start_tests.py --RESTART_AFTER_BUILD_MODE --TAGS_TO_START ${TAGS} ${run_test_fail}
-                            deactivate
-                            """
+        stage("Запуск тестов интеграционных и верстки"){
+            parallel (
+                int_test: {
+                    stage("Инт.тесты"){
+                        if ( inte ){
+                            def site = "http://${NODE_NAME}:30001"
+                            site.trim()
+                            dir("./controls/tests/int"){
+                                 sh """
+                                 source /home/sbis/venv_for_test/bin/activate
+                                 python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
+                                 deactivate
+                                 """
+                            }
                         }
-                        } else {
-                        dir("./controls/tests/int"){
-                            sh """
-                            source /home/sbis/venv_for_test/bin/activate
-                            python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
-                            deactivate
-                            """
-                        }
+                    }
+                },
+                reg_test: {
+                    stage("Рег.тесты"){
+                        if ( regr ){
+                            sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
+                            dir("./controls/tests/reg"){
+                                sh """
+                                    source /home/sbis/venv_for_test/bin/activate
+                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
+                                    deactivate
+                                """
+                            }
                         }
                     }
                 }
-            },
-            reg_test: {
-                stage("Рег.тесты"){
-                    if ( regr ){
-                        sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
-                        dir("./controls/tests/reg"){
-                            sh """
-                                source /home/sbis/venv_for_test/bin/activate
-                                python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
-                                deactivate
-                            """
-                        }
-                    }
-                }
-            }
-        )
+            )
+        }
         sh """
             sudo chmod -R 0777 ${workspace}
             sudo chmod -R 0777 /home/sbis/Controls1
@@ -494,18 +467,14 @@ node('controls') {
                     publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
                 }
                 archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
-                junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-            }
-            if ( inte ){
-                junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
             }
             if ( unit ){
                 junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
             }
             if ( regr || inte ){
                 archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
+                junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
             }
         }
     }
 }
-

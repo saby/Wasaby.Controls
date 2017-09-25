@@ -222,12 +222,25 @@
          right: 0;
          background-color: transparent;
 
+         .controls-Button__wrapper {
+            .flex-direction(column);
+            .justify-content(center);
+            &:before {
+               width: 0;
+               height: 0;
+            }
+         }
 
          &.controls-ItemsToolbar-item-size {
             &__1 {
                .controls-ItemActions__item {
                   &.controls-IconButton {
                      .controls-Button__text {
+                        display: none;
+                     }
+                  }
+                  &.controls-Link {
+                     .controls-Button__icon {
                         display: none;
                      }
                   }

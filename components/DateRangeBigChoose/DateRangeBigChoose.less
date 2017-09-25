@@ -51,7 +51,7 @@
       border-bottom: none;
       .controls-Button__text {
          margin: 0;
-         overflow: initial;
+         overflow: visible;
       }
    }
    :first-child {
@@ -63,6 +63,13 @@
       .controls-Button {
          border-bottom: none;
       }
+   }
+}
+
+// Выпилить в 3.17.150 с отказом от кнопок со стилями
+.controls-DateRangeBigChoose__years-yearsRange-btn {
+   &:not(.controls-Button__big).controls-Button-size__default.controls-Button .controls-Button__wrapper {
+      padding: 0;
    }
 }
 
@@ -220,7 +227,7 @@
             .controls-Button__text {
                margin: 0;
                padding: 0;
-               overflow: initial;
+               overflow: visible;
             }
             &.controls-RangeSelectable__item.controls-RangeSelectable__item-selected:not(.controls-RangeSelectable__item-selectedStart) {
                border-left: none;

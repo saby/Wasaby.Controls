@@ -1,9 +1,8 @@
 define('js!SBIS3.CONTROLS.TimePickerUtils',
    [
-      'Core/core-functions',
       'Core/helpers/String/ucFirst'
    ],
-   function(coreFunctions, ucFirst) {
+   function(ucFirst) {
 
       'use strict';
 

@@ -43,6 +43,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
+               _canServerRender: true,
                itemTpl: ItemTpl,
                displayProperty: '',
                /**

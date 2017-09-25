@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.PagingController', ['js!SBIS3.StickyHeaderManager', "Core/Abstract"], function(StickyHeaderManager, cAbstract) {
+define('js!SBIS3.CONTROLS.PagingController', ["Core/Abstract"], function(cAbstract) {
 
    var PagingController = cAbstract.extend({
       $protected: {

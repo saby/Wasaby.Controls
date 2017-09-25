@@ -3,7 +3,7 @@
       .inline-flexbox();
       .flex-shrink(0);
       .flex-direction(row-reverse);
-      max-width: ~'calc(100% - '@controls-FieldLink-linkItem-cross-width~')';
+      max-width: ~'calc(100% - '@fieldLink-linkItem-cross-width~')';
       overflow: hidden;
    }
    .controls-FieldLink__linksWrapper {
@@ -16,18 +16,17 @@
          .flex-direction(row);
          max-width: 100%;
       }
-      //todo:
       .controls-Link.controls-FieldLink__showAllLinks {
          top: -@default-base-line-height;
-         background: @text-box-bg;
+         background: @default-bg-color;
          &:after {
             content: '';
             position: absolute;
-            right: -@controls-FieldLink-showAll-shadow-width;
-            width: @controls-FieldLink-showAll-shadow-width;
+            right: -@fieldLink-showAll-shadow-width;
+            width: @fieldLink-showAll-shadow-width;
             top: 0;
             bottom: 0;
-            .horizontal-gradient(@white-color, rgba(255, 255, 255, 0));
+            .horizontal-gradient(@default-bg-color, rgba(255, 255, 255, 0));
             background-color: transparent;
          }
       }
@@ -42,8 +41,10 @@
       }
       .controls-FieldLinkItemsCollection {
          .justify-content();
-         .flex-shrink();
       }
+   }
+   .icon-size {
+      .icon-size(@fieldLink-icon-size);
    }
 }
 .controls-FieldLink__fieldWrapper {
@@ -52,18 +53,17 @@
    position:relative;
    height: 100%;
    width: 100%;
-   line-height: 20px !important;
    text-decoration: inherit;
-   margin-right: @controls-FieldLink-fieldWrapper-margin;
+   margin-right: 0;
 }
 
 .controls-FieldLink__picker {
-   max-height: @controls-FieldLink-picker-max-height;
-   min-height: @controls-FieldLink-picker-min-height;
-   border: @controls-FieldLink-border @gray-ccc-color;
+   max-height: @fieldLink-picker-max-height;
+   min-height: @fieldLink-picker-min-height;
+   border: @fieldLink-border @gray-ccc-color;
    margin-top: 0;
    overflow: auto;
-   padding: @controls-FieldLink-linkContainer-padding;
+   padding: @fieldLink-linkContainer-padding;
    border-top: none;
    .flexbox();
    .flex-wrap(wrap);
@@ -75,40 +75,37 @@
       align-items: center;
       margin: 0;
       padding: 0;
-
+      line-height: @fieldLink-linkItem-line-height;
       &:after {
          content: none;
       }
-
       .controls-FieldLink__item-cross {
          position: static;
          padding: 0;
       }
-
       .controls-FieldLink__item-caption {
          .text-overflow();
-         height: @controls-FieldLink-linkItem-line-height;
       }
    }
-   //todo: надо ли?
    &.ws-disabled .controls-FieldLink__item-caption {
-      margin-right: @controls-FieldLink-disabled-item-picker-margin;
+      margin-right: @default-input-padding;
    }
 
    &.controls-popup-revert-vertical {
-      border-top: @controls-FieldLink-border @gray-ccc-color;
+      border-top: @fieldLink-border @gray-ccc-color;
       border-bottom: none;
+   }
+   .icon-size {
+      .icon-size(@fieldLink-picker-icon-size);
    }
 }
 
 .controls-FieldLink__item {
-   cursor: @controls-FieldLink-linkItem-cursor;
+   cursor: default;
    display: inline-block;
-   margin: @controls-FieldLink-linkItem-margin;
-   position: @controls-FieldLink-linkItem-position;
-   padding: @controls-FieldLink-linkItem-padding;
-   line-height: @controls-FieldLink-linkItem-line-height;
-
+   position: relative;
+   height:100%;
+   padding: @fieldLink-linkItem-padding;
    &:after {
       position: absolute;
       right: 0;
@@ -119,17 +116,14 @@
       content: '';
    }
 }
-
 .controls-FieldLink__item-caption {
-   height: @controls-FieldLink-linkItem-caption-height;
    font-size: @default-font-size;
 }
-
 .controls-FieldLink__item-cross {
    position: absolute;
-   right: @controls-FieldLink-linkItem-cross-right;
-   top: @controls-FieldLink-linkItem-cross-top;
-   padding: @controls-FieldLink-linkItem-cross-padding;
+   right: @fieldLink-linkItem-cross-right;
+   top: 0; //todo: presto : 0.14rem
+   padding: @fieldLink-linkItem-cross-padding;
    cursor: pointer;
    z-index: 1;
 }
@@ -145,7 +139,7 @@
 
 .controls-FieldLink__itemsEdited {
    .controls-FieldLink__item-caption:hover {
-      text-decoration: @link-hover-text-decoration;
+      text-decoration: underline;
       cursor: pointer;
    }
 }
@@ -164,9 +158,9 @@
 
 .controls-FieldLink__big-fontSize {
    .controls-FieldLink__item-caption {
-      font-size: @controls-FieldLink-big-fontSize;
+      font-size: @fieldLink-big-fontSize;
       font-weight: bold;
-      color: @controls-FieldLink-big-fontSize-color;
+      color: @fieldLink-big-fontSize-color;
    }
 }
 
@@ -180,23 +174,22 @@
          max-width: 100%;
       }
       .controls-FieldLink__item {
-         /* Учитываем отступ под крестик удаления */
-         max-width: ~'calc(100% - '@controls-FieldLink-linkItem-cross-width~')';
+         .flex-shrink();
+         max-width: 100%;
       }
 
       &.ws-disabled {
          .controls-FieldLink__item {
-            max-width: ~'calc(100% - '@controls-FieldLink-linkContainer-padding * 2~')';
-            padding: @controls-FieldLink-disabled-item-single-padding;
-            margin: @controls-FieldLink-disabled-item-single-margin;
+            //todo
+            max-width: ~'calc(100% - '@fieldLink-linkContainer-padding * 2~')';
          }
       }
    }
 
    &.controls-Picker__show {
-      background: @controls-FieldLink-picker-show-color;
+      background: @fieldLink-picker-show-color;
       .controls-TextBox__field {
-         color: @controls-FieldLink-picker-show-field-color
+         color: @fieldLink-picker-show-field-color
       }
    }
 	
@@ -207,13 +200,13 @@
       }
 
       .controls-FieldLink__item {
-         padding: @controls-FieldLink-disabled-item-padding;
+         padding: @fieldLink-disabled-item-padding;
       }
 
    }
 
    .controls-FieldLink__dropAllLinks {
-      color: @controls-FieldLink-link-color;
+      color: @fieldLink-link-color;
       display: none;
    }
 
@@ -234,13 +227,14 @@
 .controls-FieldLink:not(.ws-disabled) .controls-TextBox__afterFieldWrapper {
    .inline-flexbox();
    .align-items(center);
+   .flex-shrink(0);
    height: 100%;
    width: auto;
 }
 
 .controls-TextBox__afterFieldWrapper {
    .controls-FieldLink__dropAllLinks, .controls-FieldLink__showSelector {
-      padding: @controls-FieldLink-afterField-padding;
+      padding: @fieldLink-afterField-padding;
    }
 }
 
@@ -252,7 +246,7 @@
    /* https://developer.mozilla.org/en-US/docs/Web/CSS/--*
       т.к. min-width нужен только для темизации, то делаю его
       через custom property */
-   --min-width: @controls-FieldLink-fieldWrapper-minWidth;
+   --min-width: @fieldLink-fieldWrapper-minWidth;
 }
 
 .controls-FieldLink__selected:not(.controls-FieldLink__multiselect):not(.controls-FieldLink__inputMinWidth) .controls-FieldLink__fieldWrapper {
@@ -261,14 +255,14 @@
 }
 
 .controls-FieldLink__Link.ws-enabled {
-   color: @controls-FieldLink-link-color;
+   color: @fieldLink-link-color;
 
    .controls-Button__text {
       text-decoration: underline;
    }
    
    &:hover {
-      color: @controls-FieldLink-link-color-hover;
+      color: @fieldLink-link-color-hover;
    }
 }
 
@@ -290,9 +284,8 @@
 
 .controls-Link.controls-FieldLink__showAllLinks {
    position: relative;
-   width: 20px;
-   line-height: @controls-FieldLink-showAllLinks-lineHeight;
-   padding: @controls-FieldLink-showAllLinks-padding;
+   line-height: @default-base-line-height; // перебиваем стили controls-link
+   padding-left: @default-input-padding;
    display: none;
    .flex-shrink(0);
 }
@@ -301,18 +294,6 @@
       display: inline-block;
    }
 }
-.ws-is-firefox {
-   .controls-FieldLink {
-      vertical-align: middle;
-
-      .controls-FieldLink__item-cross {
-         top: -1px;
-      }
-
-
-   }
-}
-
 .controls-FieldLink__hiddenIfEmpty.ws-disabled:not(.controls-FieldLink__selected) {
    display: none;
 }
@@ -323,7 +304,7 @@
          &:not(.controls-Suggest__picker) {
             border-top: none;
          }
-         border-bottom: @controls-FieldLink-border @gray-ccc-color;
+         border-bottom: @fieldLink-border @gray-ccc-color;
       }
    }
 }
@@ -331,7 +312,7 @@
 .ws-is-ie10 {
    /* ie10 не поддерживает custom property */
    .ws-enabled.controls-FieldLink__inputMinWidth .controls-FieldLink__fieldWrapper {
-      min-width: @controls-FieldLink-fieldWrapper-minWidth;
+      min-width: @fieldLink-fieldWrapper-minWidth;
    }
    
    .controls-FieldLink__picker:not(.controls-Suggest__picker) .controls-FieldLink__item-caption {
@@ -343,14 +324,22 @@
    реальная ширина увеличивается на 2px */
 .ws-is-desktop-safari, .ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
    .controls-FieldLink.controls-FieldLink__selected-single.ws-disabled .controls-FieldLink__item{
-      max-width: ~'calc(100% - '(@controls-FieldLink-linkContainer-padding * 2) - 1~')';
+      max-width: ~'calc(100% - '(@fieldLink-linkContainer-padding * 2) - 1~')';
    }
 }
 
 .controls-FieldLink__showSelector {
-   color: @controls-FieldLink-showSelector-color;
+   color: @fieldLink-showSelector-color;
 }
 
 .ws-is-desktop-platform .controls-FieldLink__showSelector:hover {
-   color: @controls-FieldLink-showSelector-color-hover;
+   color: @fieldLink-showSelector-color-hover;
+}
+//todo: Отказаться от Position: absolute у крестика
+.ws-is-firefox {
+   .controls-FieldLink {
+      .controls-FieldLink__item-cross {
+         top: 1px;
+      }
+   }
 }

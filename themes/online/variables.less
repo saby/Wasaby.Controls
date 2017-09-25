@@ -1,6 +1,9 @@
 @import "defaults";
 @import "colors";
 @import "sizes";
+//Переменные с версиями шрифтов
+@tensorFontVer:                           '1.0.0';
+@emojiFontVer:                            '1.0.0';
 // Кошерные переменные "на выход"
 @default-text-size:                       14px;
 @small-text-size:                         12px;
@@ -89,7 +92,7 @@
 @link-font:                               @default-font-size @default-font-name;
 @link-text-color:                         @darkcyan-color;
 @link-disabled-text-color:                @gray-ccc-color;
-@link-text-decoration:                    none !important;
+@link-text-decoration:                    none;
 @link-text-alignment:                     center;
 @link-line-height:                        24px;
 @link-padding:                            0;
@@ -97,10 +100,8 @@
 @link-cursor:                             pointer;
 
 @link-hover-text-color:                   @icon-color-primary-hover;
-@link-hover-text-decoration:              underline;
 
 @link-active-text-color:                  @link-hover-text-color;
-@link-active-text-decoration:             @link-hover-text-decoration;
 
 @link-icon-vertical-alignment:            middle;
 @link-icon-margin:                        -3px 0 0;
@@ -269,9 +270,6 @@
 @button-large-height:                                                                                                   48px;
 @button-large-border-radius:                                                                                            24px;
 @button-large-font-size:                                                                                                18px;
-
-@button-text-height-ff:                                                                                                 20px;
-
 
 // ------------ //
 // Button group //
@@ -691,6 +689,7 @@
 @menu-expand-height:                      16px;
 @menu-expand-top-offset:                  8px;
 @menu-expand-right-offset:                8px;
+@menu-expand-icon-font-size:              16px;
 
 @menu-expand-border-width:                0;
 @menu-expand-border-style:                solid;
@@ -762,7 +761,6 @@
 // Menu link //
 // --------- //
 
-@menu-link-line-height:                   24px;
 
 @menu-link-text-color:                    @link-text-color;
 @menu-link-text-decoration:               @link-text-decoration;
@@ -771,7 +769,6 @@
 @menu-link-border-width: 						0;
 
 @menu-link-hover-text-color:              @link-hover-text-color;
-@menu-link-hover-text-decoration:         @link-hover-text-decoration;
 @link-icon-hover-icon:                    @primary-color;
 
 @menu-link-checked-text-color:            @menu-link-hover-text-color;
@@ -818,7 +815,6 @@
 @text-box-field-after-margin:             0 19px 0 0;
 
 @text-box-field-text-color:               inherit;
-@text-box-field-error-text-color:         @text-box-field-text-color;
 @text-box-field-hover-text-color:         @text-box-field-text-color;
 @text-box-field-disabled-text-color:      @text-box-field-text-color;
 
@@ -864,16 +860,8 @@
 // ------------------ //
 // Formatted text box //
 // ------------------ //
-
 @formatted-text-box-line-height:                normal;
-
 @formatted-text-box-wrapper-min-height:         22px;
-@formatted-text-box-wrapper-padding:            @text-box-wrapper-padding;
-@formatted-text-box-wrapper-bg:                 transparent;
-
-@formatted-text-box-field-padding:              0;
-@formatted-text-box-field-error-text-color:     @text-box-field-error-text-color;
-
 @formatted-text-box-error-border-width:         @text-box-error-border-width;
 @formatted-text-box-error-border-style:         @text-box-error-border-style;
 @formatted-text-box-error-border-color:         @text-box-error-border-color;
@@ -1634,11 +1622,10 @@
 
 /*group*/
 @list-view-separator-height:                       24px;
-@list-view-separator-line:                         1px solid #eaeaea;
 @list-view-separator-content-padding:              0 12px;
 @list-view-separator-content-color:                @gray-color;
-@list-view-separator-content-size:                 12px;
 @list-view-separator-expander-size:                16px;
+@list-view-separator-expander-margin:              6px;
 @list-view-separator-content-hover-color:          @blue-dark-color;
 
 // -------------------- //
@@ -1800,8 +1787,6 @@
 @data-grid-cell-border-width:                   1px 0;
 @data-grid-cell-separator-color:                #F5F5F5;
 @data-grid-edge-cell-separator-color:           #EAEAEA;
-@data-grid-edge-cell-separator-bottom-padding:  3px;
-@data-grid-edge-cell-separator-line-height:     @data-grid-cell-line-height;
 
 @data-grid-cell-border-style:                   solid;
 @data-grid-cell-border-color:                   transparent;
@@ -1880,14 +1865,15 @@
 @controls-OperationsPanel-triangle-width:           8px;
 
 @controls-OperationsPanel-actions-margin:           0 4px;
+@controls-OperationsPanel-menu-icon-size:           @icon-medium-size;
+@controls-OperationsPanel-menu-close-button-right:  10px;
+@controls-OperationsPanel-menu-padding-right:       36px;
 
 @controls-OperationsPanel-separator-margin-left:    8px;
 @controls-OperationsPanel-separator-bg:             @gray-ccc-color;
 @controls-OperationsPanel-separator-width:          1px;
 @controls-OperationsPanel-separator-height:         20px;
 @controls-OperationsPanel-separator-line-height:    30px;
-
-@controls-OperationsPanel-actions-padding-left:     0;
 
 @controls-OperationsPanel-actions-align:            center;
 
@@ -2181,62 +2167,46 @@
 @drag-and-drop-count-font-size:                    10px;
 @drag-and-drop-hover-bg:                           @default-itemHover-color !important;
 @drag-and-drop-border-color:                       #8991A9 !important;
-@drag-and-drop-border:                             1px solid @drag-and-drop-border-color;
-
 //FieldLink
 
-@controls-FieldLink-border-color-focus-hover:      @gray-ccc-color;
-@controls-FieldLink-border-color-picker-show:      @controls-FieldLink-border-color-focus-hover;
-@controls-FieldLink-border:                        1px solid;
-@controls-FieldLink-picker-show-color:             @white-color;
-@controls-FieldLink-picker-show-field-color:       @default-text-color;
+@fieldLink-border-color-focus-hover:      @gray-ccc-color;
+@fieldLink-border-color-picker-show:      @fieldLink-border-color-focus-hover;
+@fieldLink-border:                        1px solid;
+@fieldLink-picker-show-color:             @white-color;
+@fieldLink-picker-show-field-color:       @default-text-color;
 
-@controls-FieldLink-fieldWrapper-margin:           0;
-@controls-FieldLink-fieldWrapper-minWidth:         100px;
-@controls-FieldLink-showAllLinks-top:              2px;
-@controls-FieldLink-showAllLinks-lineHeight:       22px;
-@controls-FieldLink-linkItem-line-height:          18px;
-@controls-FieldLink-showAllLinks-padding:          0 0 0 4px;
-@controls-FieldLink-showAllLinks-width:            20px;
-@controls-FieldLink-linkContainer-padding:         4px;
-@controls-FieldLink-showAllLinks-marginRight:      -22px;
 
-@controls-FieldLink-picker-max-height:             500px;
-@controls-FieldLink-picker-min-height:             16px;
-@controls-FieldLink-picker-border:                 1px solid #eaeaea;
-@controls-FieldLink-picker-background:             @white-color;
+@fieldLink-fieldWrapper-minWidth:         100px;
+@fieldLink-linkContainer-padding:         4px;
+@fieldLink-showAllLinks-marginRight:      -22px;
 
-@controls-FieldLink-linkItem-cursor:               default;
-@controls-FieldLink-linkItem-margin:               2px 0;
-@controls-FieldLink-linkItem-position:             relative;
-@controls-FieldLink-linkItem-padding:              0 17px 0 4px;
-@controls-FieldLink-linkItem-caption-height:       16px;
-@controls-FieldLink-linkItem-cross-width:          20px;
-@controls-FieldLink-linkItem-cross-right:          -4px;
-@controls-FieldLink-linkItem-cross-top:            -2px;
-@controls-FieldLink-linkItem-cross-padding:        3px 5px 3px 0;
+@fieldLink-picker-max-height:             500px;
+@fieldLink-picker-min-height:             16px;
+@fieldLink-picker-border:                 1px solid #eaeaea;
+@fieldLink-picker-background:             @white-color;
 
-@controls-FieldLink-disabled-item-padding:         0 4px;
-@controls-FieldLink-afterField-padding:            0 4px 0 0;
+@fieldLink-linkItem-padding:              0 17px 0 4px;
+@fieldLink-linkItem-cross-width:          20px;
+@fieldLink-linkItem-cross-right:          -4px;
+@fieldLink-linkItem-cross-top:            -2px;
+@fieldLink-linkItem-cross-padding:        3px 5px 3px 0;
 
-@controls-FieldLink-disabled-item-single-padding:  0;
-@controls-FieldLink-disabled-item-single-margin:   2px 4px;
-@controls-FieldLink-disabled-item-picker-margin:   0 4px 0 0;
+@fieldLink-disabled-item-padding:         0 4px;
+@fieldLink-afterField-padding:            0 4px 0 0;
 
-@controls-FieldLink-afterField-background:         @white-color;
-@controls-FieldLink-link-color:                    #8991A9;
-@controls-FieldLink-link-color-hover:              #313E78;
-@controls-FieldLink-showAll-shadow-width:          20px;
-@controls-FieldLink-showAll-margin-right-ff:       -15px;
-@controls-FieldLink-showAll-top-ff:                -24px;
+@fieldLink-afterField-background:         @white-color;
+@fieldLink-link-color:                    #8991A9;
+@fieldLink-link-color-hover:              #313E78;
+@fieldLink-showAll-margin-right-ff:       -15px;
+@fieldLink-showAll-top-ff:                -24px;
 
-@controls-FieldLink-showSelector-color:            @icon-color-primary;
-@controls-FieldLink-showSelector-color-hover:      @link-hover-text-color;
+@fieldLink-showSelector-color:            @icon-color-primary;
+@fieldLink-showSelector-color-hover:      @link-hover-text-color;
 
-@controls-FieldLink-big-fontSize:                  15px;
-@controls-FieldLink-big-fontSize-color:            #313E78;
-@controls-FieldLink-FilterButton-color:            #0055bb;
-@controls-FieldLink-FilterButton-color-hover:      @controls-FieldLink-FilterButton-color;
+@fieldLink-big-fontSize:                  15px;
+@fieldLink-big-fontSize-color:            #313E78;
+@fieldLink-FilterButton-color:            #0055bb;
+@fieldLink-FilterButton-color-hover:      @fieldLink-FilterButton-color;
 
 //SelectorButton
 @controls-SelectorButton-height:                   24px;
@@ -2248,6 +2218,7 @@
 // BackButton
 @back-button-font-size:                            18px;
 @back-button-line-height:                          @default-height;
+@back-button-height:                               @default-height;
 @back-button-margin-before:                        0;
 @back-button-padding-before:                       0;
 @back-button-arrow-height:                         24px;
@@ -2281,6 +2252,7 @@
 @controls-movedialog-min-width:                    auto;
 @controls-movedialog-max-width:                    400px;
 @controls-movedialog-height:                       400px;
+@controls-movedialog-width:                        400px;
 @controls-movedialog-padding:                      0 0 5px 0;
 @controls-movedialog-min-height:                   50px;
 

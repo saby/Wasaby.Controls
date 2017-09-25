@@ -1,18 +1,13 @@
 define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       'js!SBIS3.CONTROLS.Action.OpenDialog',
-      'Core/EventBus',
       'Core/core-instance',
       'Core/core-merge',
       'Core/Indicator',
-      'Core/IoC',
       'Core/Deferred',
-      'Core/helpers/fast-control-helpers',
       'js!WS.Data/Entity/Record',
       'js!WS.Data/Di',
-      'js!SBIS3.CONTROLS.Utils.OpenDialog',
-      'js!SBIS3.CORE.Dialog',
-      'js!SBIS3.CORE.FloatArea'
-   ], function (OpenDialog, EventBus, cInstance, cMerge, cIndicator, IoC, Deferred, fcHelpers, Record, Di, OpenDialogUtil, Dialog, FloatArea) {
+      'js!SBIS3.CONTROLS.Utils.OpenDialog'
+   ], function (OpenDialog, cInstance, cMerge, cIndicator, Deferred, Record, Di, OpenDialogUtil) {
    'use strict';
 
    /**
@@ -70,6 +65,11 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        */
+       /**
+        * @event onAfterClose Происходит при закрытии диалога редактирования.
+        * @param {Core/EventObject} eventObject Дескриптор события.
+        * @param {*} result Параметр приходит из команды {@link SBIS3.CORE.FloatArea#close}.
+        */
       $protected: {
          _options: {
             /**

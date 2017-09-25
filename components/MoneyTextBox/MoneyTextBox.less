@@ -4,11 +4,9 @@
   cursor: auto;
 
   .controls-MoneyTextBox__decimals {
-    padding: @money-text-box-decimals-padding;
     font-size: @money-text-box-decimals-font-size;
     color: @money-text-box-decimals-color; //@gray-ccc-color;
     background-color: transparent;
-    line-height:@default-base-line-height;
   }
 
   .controls-TextBox__field {
@@ -17,24 +15,20 @@
     padding:0;//чтобы копейки были близко к основному тексту в задизабленом состоянии
     line-height:@default-base-line-height;
   }
+
+  &.ws-enabled {
+    .controls-TextBox__field:focus {
+      text-overflow: clip;
+    }
+  }
+
   .controls-TextBox__wrapper {
-    padding: @text-box-wrapper-padding;//чтобы копейки были близко к основному тексту в задизабленом состоянии
+    padding: @text-box-input-padding;//чтобы копейки были близко к основному тексту в задизабленом состоянии
     .box-sizing(border-box);
+    .justify-content(flex-end)
   }
   .controls-TextBox__placeholder {
     z-index: 0;
-  }
-
-  &.controls-MoneyTextBox__ellipsis {
-    .controls-TextBox__fieldWrapper {
-      .text-overflow();
-      .controls-MoneyTextBox__input {
-        .text-overflow();
-        &:focus {
-          text-overflow: clip;
-        }
-      }
-    }
   }
 
 }

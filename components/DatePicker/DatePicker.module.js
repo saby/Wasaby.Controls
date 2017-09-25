@@ -7,7 +7,6 @@ define(
       'Core/EventBus',
       'js!SBIS3.CONTROLS.DateBox',
       'js!SBIS3.CONTROLS.PickerMixin',
-      'js!SBIS3.CONTROLS.Utils.DateUtil',
       'js!SBIS3.CONTROLS.DateRangeBigChoose',
       'js!SBIS3.CONTROLS.TimePicker',
       'tmpl!SBIS3.CONTROLS.DatePicker',
@@ -20,7 +19,7 @@ define(
       'css!SBIS3.CONTROLS.FormattedTextBox',
       'css!SBIS3.CONTROLS.DateBox'
    ],
-   function (EventBus, DateBox, PickerMixin, DateUtil, DateRangeBigChoose, TimePicker, dotTplFn, ElementPickerContent, isChildControl, IoC) {
+   function (EventBus, DateBox, PickerMixin, DateRangeBigChoose, TimePicker, dotTplFn, ElementPickerContent, isChildControl, IoC) {
 
    'use strict';
 
@@ -40,7 +39,9 @@ define(
     *
     * @class SBIS3.CONTROLS.DatePicker
     * @extends SBIS3.CONTROLS.DateBox
+    *
     * @mixes SBIS3.CONTROLS.PickerMixin
+    *
     * @author Крайнов Дмитрий Олегович
     *
     * @demo SBIS3.CONTROLS.Demo.MyDatePicker

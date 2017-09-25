@@ -1,5 +1,23 @@
 @month-view-day-weekend-color: #EF463A;
 
+// В хром на ipad установлен класс ws-is-old-webkit, но не установлен ws-is-webkit. В текущую версию фиксим по месту.
+.ws-is-old-webkit,
+.ws-is-webkit {
+   // в 3.17.150 вместе с упрощение селекторов сделать везде однотипно(через position: absolute),
+   // а исключение сделать для ie. Либо подумать как свертстать по дургому.
+   .controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableElement .controls-MonthView__dayTitle {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+   }
+   .controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableElement .controls-MonthView__dayBorder + .controls-MonthView__dayTitle {
+      left: 7px;
+      right: 7px;
+   }
+}
+
 .controls-MonthView {
    display: inline-block;
    text-align: center;
@@ -42,16 +60,16 @@
          }
 
          .controls-MonthView__dayTitle {
+            .box-sizing(border-box);
+            height: 100%;
+         }
+         .controls-MonthView__dayBorder + .controls-MonthView__dayTitle {
             position: absolute;
             top: 0;
             bottom: 0;
-            left: 0;
-            right: 0;
-         }
-         .controls-MonthView__dayBorder + .controls-MonthView__dayTitle {
-               left: 7px;
-               right: 7px;
-               padding: 8px 0 0 0;
+            left: 7px;
+            right: 7px;
+            padding: 8px 0 0 0;
          }
          //width: @month-view-day-cell-width;
          height: @month-view-day-table-cell-height;

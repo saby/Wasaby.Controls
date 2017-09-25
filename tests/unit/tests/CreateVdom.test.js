@@ -32,7 +32,7 @@ define([
                   vdomControl.text = 'double changed text';
                   vdomControl._forceUpdate();
                   setTimeout(function() {
-                     assert.isTrue(vdomControl.children[Object.keys(vdomControl.children)[0]]._options.compoundText === 'double changed text');
+                     assert.isTrue(vdomControl._children['compound']._options.compoundText === 'double changed text');
                      vdomControl.destroy();
                      done();
                   }, 50)

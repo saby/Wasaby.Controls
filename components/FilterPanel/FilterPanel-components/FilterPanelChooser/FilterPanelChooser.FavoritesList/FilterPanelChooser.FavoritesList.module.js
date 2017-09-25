@@ -1,14 +1,13 @@
 define('js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList', [
     'js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList',
     'Core/core-functions',
-    'Core/IoC',
     'js!WS.Data/Collection/RecordSet',
     'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList/resources/FilterPanelChooserFavoritesHeader',
     'js!SBIS3.CONTROLS.FilterPanelBoolean',
     'css!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList'
-], function(FilterPanelChooserDictionary, cFunctions, IoC, RecordSet, ArraySimpleUtil, dotTplFn, headerTpl) {
+], function(FilterPanelChooserDictionary, cFunctions, RecordSet, ArraySimpleUtil, dotTplFn, headerTpl) {
 
     var favoritesIsChecked = function(value, favorites) {
         var

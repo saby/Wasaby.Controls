@@ -16,23 +16,41 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
      * @see SBIS3.CONTROLS.DragEntity.Entity
      */
     if (typeof window !== 'undefined') {
-        var EventBusChannel = EventBus.channel('DragAndDropChannel');
+        var LEFT_BUTTON = 1,//Mouse left button flag
+           SCROLL_BAR_WIDTH = 24,//Just approximate
+           innerWidth = 0,
+           isLeftButtonDown = false,
+           eventBusChannel = EventBus.channel('DragAndDropChannel'),
+           onMouseUp = function(e) {
+              eventBusChannel.notify('onMouseup', e);
+              //Сбрасывать драгндроп надо после того как выполнились все обработчики, нам неизвестен порядок выполнения
+              // обработчиков может быть что первым mouseup поймает владелец и сбросит драгндроп
+              DragObject.reset();
+           };
 
         // Добавлены события для мультитач-девайсов
         // Для обработки используются уже существующие обработчики,
         // незначительно дополненные
-        $(document).bind('mouseup touchend', function(e) {
-            EventBusChannel.notify('onMouseup', e);
-            //Сбрасывать драгндроп надо после того как выполнились все обработчики, нам неизвестен порядок выполнения
-            // обработчиков может быть что первым mouseup поймает владелец и сбросит драгндроп
-            DragObject.reset();
+        $(document).on('mousedown touchstart', function(e) {
+           if (e.buttons & LEFT_BUTTON) {
+              isLeftButtonDown = true;
+              innerWidth = window.innerWidth;
+           }
+        }).on('mousemove touchmove', function (e) {
+           //Probably 'mouseup' event doesn't trigger over scrollbars.
+           //Detecting that left button is not hold yet on the window right edge.
+           if (isLeftButtonDown && !(e.buttons & LEFT_BUTTON) && innerWidth - e.pageX < SCROLL_BAR_WIDTH) {
+              isLeftButtonDown = false;
+              onMouseUp(e);
+           } else {
+              eventBusChannel.notify('onMousemove', e);
+           }
+        }).on('mouseup touchend', function(e) {
+           isLeftButtonDown = false;
+           onMouseUp(e);
         });
-
-        $(document).bind('mousemove touchmove', function (e) {
-            EventBusChannel.notify('onMousemove', e);
-        });
-
     }
+
     var DragAndDropMixin = /**@lends SBIS3.CONTROLS.DragNDropMixin.prototype*/{
         $protected: {
             /**
@@ -299,7 +317,10 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                         EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
                     }
                 };
-            if (!DragObject.isInitDragStarter() && $(clickEvent.target).closest('.controls-DragNDropMixin__notDraggable', self._getDragContainer().context).length === 0) {
+            if (!DragObject.isInitDragStarter()
+               && $(clickEvent.target).closest('.controls-DragNDropMixin__notDraggable', self._getDragContainer()[0]).length === 0
+               && ((clickEvent.type == 'mousedown' && clickEvent.which == LEFT_BUTTON) || clickEvent.type != 'mousedown') //Для мышки проверям что нажата левая кнопка
+            ) {
                this._preparePageXY(clickEvent);
                EventBus.channel('DragAndDropChannel').subscribe('onMousemove', dragStrarter);
                EventBus.channel('DragAndDropChannel').once('onMouseup', function () {

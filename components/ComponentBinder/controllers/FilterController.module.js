@@ -23,6 +23,7 @@ define('js!SBIS3.CONTROLS.FilterController', [
        * @cfg {SBIS3.CONTROLS.ListView} Представление
        */
       _$view: null,
+      _$task1174428326: false,
    
       /**
        * Связывает фильтры и представление данных
@@ -46,15 +47,22 @@ define('js!SBIS3.CONTROLS.FilterController', [
             };
       
             /* Обработчик на применение / сборс кнопки фильтров и быстрого фильтра */
-            var filterChangeHandler = function() {
-                  var resultFilter = {};
+            var filterChangeHandler = function(event, internal) {
+                  if(internal) {
+                     return;
+                  }
+               
                   if (this === filterButton && fastDataFilter) {
                      syncFilters(filterButton, fastDataFilter);
                   } else if (filterButton) {
                      syncFilters(fastDataFilter, filterButton);
                   }
       
-                  resultFilter = cMerge(
+                  /* После фильтрации сбросим страницу,
+                     т.к. иначе offset будет неверный после фильтрации */
+                  view.setPage(0, true);
+      
+                  var resultFilter = cMerge(
                      filterButton ? filterButton.getFilter() : {},
                      fastDataFilter ? fastDataFilter.getFilter() : {}
                   );

@@ -4,10 +4,9 @@ define('js!SBIS3.CONTROLS.MassSelectionHierarchyController',
         "Core/core-instance",
         "Core/core-functions",
         "js!WS.Data/Chain",
-        "js!WS.Data/Entity/Record",
         "js!SBIS3.CONTROLS.ArraySimpleValuesUtil"
     ],
-    function(MassSelectionController, cInstance, cFunctions, Chain, Record, ArraySimpleValuesUtil) {
+    function(MassSelectionController, cInstance, cFunctions, Chain, ArraySimpleValuesUtil) {
 
        var MassSelectionHierarchyController = MassSelectionController.extend(/** @lends SBIS3.CONTROLS.MassSelectionHierarchyController.prototype */ {
           $protected: {
@@ -66,11 +65,13 @@ define('js!SBIS3.CONTROLS.MassSelectionHierarchyController',
              var
                 upChanges,
                 deepChanged = {},
-                selectedKeys = this._getSelectedKeys();
+                selectedKeys = this._getSelectedKeys(),
+                projection = this._options.linkedObject._getItemsProjection();
 
              MassSelectionHierarchyController.superclass._onBeforeSelectedItemsChange.apply(this, arguments);
              this._removeFromPartiallySelected(changed.added.concat(changed.removed));
-             if (this._traceDeepChanges) {
+             //Вычисляем изменения вверх/вниз только если есть проекция.
+             if (this._traceDeepChanges && projection) {
                 //Вычитываем изменения вниз
                 deepChanged.added = this._getDeepFromProjection(changed.added);
                 deepChanged.removed = this._getDeepFromSelected(changed.removed);

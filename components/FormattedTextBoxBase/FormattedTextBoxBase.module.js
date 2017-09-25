@@ -2,14 +2,14 @@ define(
    'js!SBIS3.CONTROLS.FormattedTextBoxBase',
    [
       'Core/IoC',
-      'Core/ConsoleLogger',
       'Core/constants',
       'Core/core-extend',
+      'js!SBIS3.CONTROLS.Utils.IfEnabled',
       'js!SBIS3.CONTROLS.TextBoxBase',
       'html!SBIS3.CONTROLS.FormattedTextBoxBase/FormattedTextBoxBase_mask',
       'is!msIe?js!SBIS3.CORE.FieldString/resources/ext/ierange-m2-min'
    ],
-   function (IoC, ConsoleLogger, constants, cExtend, TextBoxBase, maskTemplateFn) {
+   function (IoC, constants, cExtend, ifEnabled, TextBoxBase, maskTemplateFn) {
 
    'use strict';
 
@@ -700,26 +700,9 @@ define(
             e.preventDefault();
          });
          //keypress учитывает расскладку, keydown - нет
-         this._inputField.keypress(function (event) {
-            if (!self._isFirefoxKeypressBug(event)) {
-               self._keyPressBind(event);
-            }
-         });
+         this._inputField.keypress(this._onKeyPress.bind(this));
          //keydown ловит управляющие символы, keypress - нет
-         this._inputField.keydown(function(event){
-            /*У некоторых android'ов спецефичная логика обработки клавишь:
-             1) Не стреляет событие keypress
-             2) Событие keydown стреляет послое вставки символа
-             3) Из события не возможно понять какая клавиша была нажата, т.к. возвращается keyCode = 229 || 0
-             Для таких андроидов обрабатываем ввод символа отдельно
-             */
-            if (constants.browser.isMobileAndroid && (event.keyCode === 229 || event.keyCode === 0)){
-               setTimeout(self._keyDownBindAndroid.bind(self, event), 0);
-            }
-            else{
-               self._keyDownBind(event);
-            }
-         });
+         this._inputField.keydown(this._onKeyDown.bind(this));
          this._inputField.bind('paste', function(e) {
             var
                 formatModel = self._getFormatModel(),
@@ -740,6 +723,25 @@ define(
          });
          this._chromeCaretBugFix();
       },
+      _onKeyPress: ifEnabled(function (event) {
+         if (!this._isFirefoxKeypressBug(event)) {
+            this._keyPressBind(event);
+         }
+      }),
+      _onKeyDown: ifEnabled(function (event) {
+         /*У некоторых android'ов спецефичная логика обработки клавишь:
+          1) Не стреляет событие keypress
+          2) Событие keydown стреляет послое вставки символа
+          3) Из события не возможно понять какая клавиша была нажата, т.к. возвращается keyCode = 229 || 0
+          Для таких андроидов обрабатываем ввод символа отдельно
+          */
+         if (constants.browser.isMobileAndroid && (event.keyCode === 229 || event.keyCode === 0)){
+            setTimeout(this._keyDownBindAndroid.bind(this, event), 0);
+         }
+         else{
+            this._keyDownBind(event);
+         }
+      }),
       //FF зачем то кидает событие keypress для управляющих символов(charCode === 0), в отличии от всех остальных браузеров.
       //Просто проигнорируем это событие, т.к. управляющая клавиша уже обработана в keydown. Так же отдельно обработаем
       //ctrl+A, т.к. для этой комбинации keypress так же вызываться не должен.

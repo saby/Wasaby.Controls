@@ -232,6 +232,14 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             return TreeCompositeView.superclass._getEditArrowPosition.apply(this, arguments);
          }
       },
+   
+      _getEditArrowMarker: function() {
+         if (this._options.viewMode === 'tile') {
+            return this.getHoveredItem().container.find('.js-controls-TreeView__editArrow');
+         } else {
+            return TreeCompositeView.superclass._getEditArrowMarker.apply(this, arguments);
+         }
+      },
 
       _getInsertMarkupConfig: function() {
          var result;
@@ -243,11 +251,11 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          return result;
       },
 
-      _getEditArrowPositionTile: function(hoveredItem) {
+      _getEditArrowPositionTile: function() {
          var
             top, left,
             arrowCords, titleCords,
-            item = hoveredItem.container,
+            item = this.getHoveredItem().container,
             folderTitle = item.find('.controls-CompositeView__tileTitle'),
             containerCords = this._container[0].getBoundingClientRect(),
             arrowContainer = folderTitle.find('.js-controls-TreeView__editArrow');
@@ -461,7 +469,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             }
          }
          else {
-            if (this._prevMode) {
+            if (this._prevMode && this._prevMode !== this._options.viewMode) {
                this.setViewMode(this._prevMode);
             }
             this._prevMode = null;

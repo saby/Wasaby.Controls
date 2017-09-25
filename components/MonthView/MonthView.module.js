@@ -30,6 +30,9 @@ define(
        * @author Миронов Александр Юрьевич
        * @demo SBIS3.CONTROLS.Demo.MyMonthView
        *
+       * @mixes SBIS3.CONTROLS.RangeSelectableViewMixin
+       * @mixes SBIS3.CONTROLS.RangeMixin
+       *
        */
       var selectionTypes = {WEEK: 'week', DAY: 'day'};
 

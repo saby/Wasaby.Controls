@@ -22,13 +22,12 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       'js!SBIS3.CONTROLS.LongOperationsTabCalls',
       'js!SBIS3.CONTROLS.LongOperationsCallsPool',
       'js!SBIS3.CONTROLS.LongOperationsBunch',
-      'js!SBIS3.CONTROLS.ILongOperationsProducer',
       'js!SBIS3.CONTROLS.LongOperationEntry',
       'js!SBIS3.CONTROLS.LongOperationHistoryItem',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model'
    ],
 
-   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsConst, LongOperationsTabCalls, LongOperationsCallsPool, LongOperationsBunch, ILongOperationsProducer, LongOperationEntry, LongOperationHistoryItem, Model) {
+   function (CoreInstance, Deferred, EventBus, TabMessage, DataSet, RecordSet, Chain, LongOperationsConst, LongOperationsTabCalls, LongOperationsCallsPool, LongOperationsBunch, LongOperationEntry, LongOperationHistoryItem, Model) {
       'use strict';
 
       /**
@@ -111,6 +110,9 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
       /**
        * Класс менеджера длительных операций
        * @public
+       *
+       * @author Спирин Виктор Алексеевич
+       *
        * @type {SBIS3.CONTROLS.LongOperationsManager}
        */
       var manager = /*CoreExtend.extend*/(/** @lends SBIS3.CONTROLS.LongOperationsManager.prototype */{
@@ -476,6 +478,7 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
                   _unregister(n);
                }
                if (_channel) {
+                  _channel.notifyWithTarget('ondestroy', manager);
                   _channel.unsubscribeAll();
                   _channel.destroy();
                   _channel = null;
@@ -580,7 +583,9 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             // Уведомить другие вкладки
             _tabChannel.notify('LongOperations:Manager:onActivity', {type:'unregister', tab:_tabKey, producer:name});
             // И уведомить своих подписчиков
-            _channel.notifyWithTarget('onproducerunregistered', manager);
+            if (!_isDestroyed) {
+               _channel.notifyWithTarget('onproducerunregistered', manager);
+            }
          }
          return done;
       };
@@ -693,9 +698,11 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
             if (!producer) {
                throw new Error('Unknown event');
             }
-            // Если произошло событие в продюсере и есть выполняющиеся fetch запросы - выполнить незавершённые запросы к этому продюсеру повторно
+            // Если произошло событие в продюсере и есть выполняющиеся fetch запросы - выполнить запросы к этому продюсеру повторно
+            // (все - и завершённые, и даже не завершённые, так как не завершённые уже могут быть "на подходе" со старыми данными)
+            // TODO: ### Для уменьшения количества запросов можно попробовать рассмотреть компромисный вариант - переспрашивать только если уже прошло достаточно много времени
             var member = {tab:_tabKey, producer:data.producer};
-            var queries = _fetchCalls.listPools(member, true);
+            var queries = _fetchCalls.listPools(member/*, true*/);
             if (queries && queries.length) {
                for (var i = 0; i < queries.length; i++) {
                   var query = queries[i];
@@ -865,163 +872,163 @@ define('js!SBIS3.CONTROLS.LongOperationsManager',
 
 
 
-      if (typeof window !== 'undefined') {
-         // Установить ключ вкладки
-         _tabKey = _uniqueHex(50);
+      // Установить ключ вкладки
+      _tabKey = _uniqueHex(50);
 
-         // Создать каналы событий
-         _channel = EventBus.channel();
-         _tabChannel = new TabMessage();
+      // Создать каналы событий
+      _channel = EventBus.channel();
+      _tabChannel = new TabMessage();
 
-         // Создать объект межвкладочных вызовов
-         var _tabCalls = new LongOperationsTabCalls(
-            /*tabKey:*/_tabKey,
-            /*router:*/manager.getByName,
-            /*packer:*/function (v) {
-               // Упаковщик для отправки. Ожидается, что все объекты будут экземплярами SBIS3.CONTROLS.LongOperationEntry
-               return v && typeof v.toSnapshot === 'function' ? v.toSnapshot() : v;
-            },
-            /*channel:*/_tabChannel
-         );
+      // Создать объект межвкладочных вызовов
+      var _tabCalls = new LongOperationsTabCalls(
+         /*tabKey:*/_tabKey,
+         /*router:*/manager.getByName,
+         /*packer:*/function (v) {
+            // Упаковщик для отправки. Ожидается, что все объекты будут экземплярами SBIS3.CONTROLS.LongOperationEntry
+            return v && typeof v.toSnapshot === 'function' ? v.toSnapshot() : v;
+         },
+         /*channel:*/_tabChannel
+      );
 
-         // Создать пул вызовов методов fetch
-         var _fetchCalls = new LongOperationsCallsPool(
-            /*fields:*/['tab', 'producer'],
-            /**
-             * Обработчик одиночного результата вызова метода fetch локального продюсера или продюсера во вкладке
-             * @param {object} query Параметры выполнявшегося запроса
-             * @param {object} member Объект с идентифицирующими параметрами вызова - tab и producer
-             * @param {SBIS3.CONTROLS.LongOperationEntry[]|WS.Data/Source/DataSet|WS.Data/Collection/RecordSet} result Полученный результат
-             * @return {SBIS3.CONTROLS.LongOperationEntry[]}
-             */
-            /*handlePartial:*/function (query, member, result) {
-               if (!(result == null || Array.isArray(result) || result instanceof DataSet || result instanceof RecordSet)) {
+      // Создать пул вызовов методов fetch
+      var _fetchCalls = new LongOperationsCallsPool(
+         /*fields:*/['tab', 'producer'],
+         /**
+          * Обработчик одиночного результата вызова метода fetch локального продюсера или продюсера во вкладке
+          * @param {object} query Параметры выполнявшегося запроса
+          * @param {object} member Объект с идентифицирующими параметрами вызова - tab и producer
+          * @param {SBIS3.CONTROLS.LongOperationEntry[]|WS.Data/Source/DataSet|WS.Data/Collection/RecordSet} result Полученный результат
+          * @return {SBIS3.CONTROLS.LongOperationEntry[]}
+          */
+         /*handlePartial:*/function (query, member, result) {
+            if (!(result == null || Array.isArray(result) || result instanceof DataSet || result instanceof RecordSet)) {
+               throw new Error('Unknown result type');
+            }
+            // Проверить, что продюсер есть и не был раз-регистрирован за время ожидания
+            var prodName = (member.tab === _tabKey ? _producers[member.producer] : member.tab in _tabManagers && member.producer in _tabManagers[member.tab]) ? member.producer : null;
+            // Если продюсер найден
+            if (prodName) {
+               var values = result instanceof DataSet ? result.getAll() : result;
+               var iterate;
+               var len;
+               if (Array.isArray(values)) {
+                  iterate = 'forEach';
+                  len = values.length;
+               }
+               else
+               if (values instanceof RecordSet) {
+                  iterate = 'each';
+                  len = values.getCount();
+               }
+               if (!iterate) {
                   throw new Error('Unknown result type');
                }
-               // Проверить, что продюсер есть и не был раз-регистрирован за время ожидания
-               var prodName = (member.tab === _tabKey ? _producers[member.producer] : member.tab in _tabManagers && member.producer in _tabManagers[member.tab]) ? member.producer : null;
-               // Если продюсер найден
-               if (prodName) {
-                  var values = result instanceof DataSet ? result.getAll() : result;
-                  var iterate;
-                  var len;
-                  if (Array.isArray(values)) {
-                     iterate = 'forEach';
-                     len = values.length;
-                  }
-                  else
-                  if (values instanceof RecordSet) {
-                     iterate = 'each';
-                     len = values.getCount();
-                  }
-                  if (!iterate) {
-                     throw new Error('Unknown result type');
-                  }
-                  if (len) {
-                     var memberTab = (member.tab === _tabKey ? !_producers[member.producer].hasCrossTabData() : !_producers[member.producer] || !_tabManagers[member.tab][member.producer].hasCrossTabData) ? member.tab : null;
-                     values[iterate](function (v) {
-                        // Значение должно быть экземпляром SBIS3.CONTROLS.LongOperationEntry и иметь правилное имя продюсера
-                        if (!(v instanceof LongOperationEntry && v.producer === prodName)) {
-                           throw new Error('Invalid result');
-                        }
-                        v.tabKey = memberTab;
-                     });
-                     return values;
-                  }
+               if (len) {
+                  var memberTab = (member.tab === _tabKey ? !_producers[member.producer].hasCrossTabData() : !_producers[member.producer] || !_tabManagers[member.tab][member.producer].hasCrossTabData) ? member.tab : null;
+                  values[iterate](function (v) {
+                     // Значение должно быть экземпляром SBIS3.CONTROLS.LongOperationEntry и иметь правилное имя продюсера
+                     if (!(v instanceof LongOperationEntry && v.producer === prodName)) {
+                        throw new Error('Invalid result');
+                     }
+                     v.tabKey = memberTab;
+                  });
+                  return values;
                }
-               return null;
-            },
-            /**
-             * Обработчик полного результата
-             * @param {object} query Параметры выполнявшегося запроса
-             * @param {SBIS3.CONTROLS.LongOperationEntry[][]} resultList Список результатов обработки одиночных результатов
-             * @return {WS.Data/Collection/RecordSet<SBIS3.CONTROLS.LongOperationEntry>}
-             */
-            /*handleComplete:*/function (query, resultList) {
-               var operations;
-               if (resultList && resultList.length) {
-                  for (var i = 0; i < resultList.length; i++) {
-                     var result = resultList[i];
-                     for (var j = 0, list = resultList[i]; j < list.length; j++) {
-                        var op = list[j];
-                        if (!operations) {
-                           operations = {};
-                        }
-                        if (!(op.producer in operations)) {
-                           operations[op.producer] = {};
-                        }
-                        if (op.id in operations[op.producer]) {
-                           // Есть одна и та же операция от разных вкладок - выбрать
-                           var prev = operations[op.producer][op.id];
-                           if ((!prev.canSuspend && op.canSuspend) || (!prev.canDelete && op.canDelete)) {
-                              operations[op.producer][op.id] = op;
-                           }
-                        }
-                        else {
+            }
+            return null;
+         },
+         /**
+          * Обработчик полного результата
+          * @param {object} query Параметры выполнявшегося запроса
+          * @param {SBIS3.CONTROLS.LongOperationEntry[][]} resultList Список результатов обработки одиночных результатов
+          * @return {WS.Data/Collection/RecordSet<SBIS3.CONTROLS.LongOperationEntry>}
+          */
+         /*handleComplete:*/function (query, resultList) {
+            var operations;
+            if (resultList && resultList.length) {
+               for (var i = 0; i < resultList.length; i++) {
+                  var result = resultList[i];
+                  for (var j = 0, list = resultList[i]; j < list.length; j++) {
+                     var op = list[j];
+                     if (!operations) {
+                        operations = {};
+                     }
+                     if (!(op.producer in operations)) {
+                        operations[op.producer] = {};
+                     }
+                     if (op.id in operations[op.producer]) {
+                        // Есть одна и та же операция от разных вкладок - выбрать
+                        var prev = operations[op.producer][op.id];
+                        if ((!prev.canSuspend && op.canSuspend) || (!prev.canDelete && op.canDelete)) {
                            operations[op.producer][op.id] = op;
                         }
                      }
+                     else {
+                        operations[op.producer][op.id] = op;
+                     }
                   }
                }
-               var results = new RecordSet({
-                  model: Model,
-                  idProperty: 'fullId'
-               });
-               if (operations) {
-                  var chain;
-                  var count = 0;
-                  for (var p in operations) {
-                     var list = operations[p];
-                     list = Object.keys(list).map(function (v) {
-                        return list[v];
-                     });
-                     chain = !chain ? Chain(list) : chain.concat(list);
-                     count += list.length;
-                  }
-                  if (query.orderBy) {
-                     var sorter = query.orderBy;
-                     chain = chain.sort(function (a, b) {
-                        for (var p in sorter) {
-                           var va = a[p];
-                           var vb = b[p];
-                           // Для сравниваемых значений могут иметь смысл операции < и >, но не иметь смысла != и ==, как например для Date. Поэтому:
-                           if (va < vb) {
-                              return sorter[p] ? -1 : +1;
-                           }
-                           else
-                           if (vb < va) {
-                              return sorter[p] ? +1 : -1;
-                           }
-                        }
-                        return 0;
-                     });
-                  }
-                  var obKey = {where:query.where, orderBy:query.orderBy, limit:query.limit, tab:null, producer:null};
-                  results.assign(chain
-                     .first(query.limit)
-                     .map(function (v) {
-                        obKey.tab = v.tabKey || _tabKey;
-                        obKey.producer = v.producer;
-                        _offsetBunch.set(obKey, (_offsetBunch.get(obKey) || 0) + 1);
-                        return new Model({rawData: v, idProperty: 'fullId'});
-                     })
-                     .value()
-                  );
-                  results.setMetaData({more:query.limit <= count});
-               }
-               return results;
             }
-         );
+            var results = new RecordSet({
+               model: Model,
+               idProperty: 'fullId'
+            });
+            if (operations) {
+               var chain;
+               var count = 0;
+               for (var p in operations) {
+                  var list = operations[p];
+                  list = Object.keys(list).map(function (v) {
+                     return list[v];
+                  });
+                  chain = !chain ? Chain(list) : chain.concat(list);
+                  count += list.length;
+               }
+               if (query.orderBy) {
+                  var sorter = query.orderBy;
+                  chain = chain.sort(function (a, b) {
+                     for (var p in sorter) {
+                        var va = a[p];
+                        var vb = b[p];
+                        // Для сравниваемых значений могут иметь смысл операции < и >, но не иметь смысла != и ==, как например для Date. Поэтому:
+                        if (va < vb) {
+                           return sorter[p] ? -1 : +1;
+                        }
+                        else
+                        if (vb < va) {
+                           return sorter[p] ? +1 : -1;
+                        }
+                     }
+                     return 0;
+                  });
+               }
+               var obKey = {where:query.where, orderBy:query.orderBy, limit:query.limit, tab:null, producer:null};
+               results.assign(chain
+                  .first(query.limit)
+                  .map(function (v) {
+                     obKey.tab = v.tabKey || _tabKey;
+                     obKey.producer = v.producer;
+                     _offsetBunch.set(obKey, (_offsetBunch.get(obKey) || 0) + 1);
+                     return new Model({rawData: v, idProperty: 'fullId'});
+                  })
+                  .value()
+               );
+               results.setMetaData({more:query.limit <= count});
+            }
+            return results;
+         }
+      );
 
-         _offsetBunch = new LongOperationsBunch();
+      _offsetBunch = new LongOperationsBunch();
 
-         // Опубликовать свои события
-         _channel.publish('onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted');
+      // Опубликовать свои события
+      _channel.publish('onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted');
 
-         // И подписаться на события во вкладках
-         _tabChannel.subscribe('LongOperations:Manager:onActivity', _tabListener);
-         _tabChannel.notify('LongOperations:Manager:onActivity', {type: 'born', tab: _tabKey});
+      // И подписаться на события во вкладках
+      _tabChannel.subscribe('LongOperations:Manager:onActivity', _tabListener);
+      _tabChannel.notify('LongOperations:Manager:onActivity', {type: 'born', tab: _tabKey});
 
+      if (typeof window !== 'undefined') {
          // Добавить обработчик перед выгрузкой для уведомеления пользователя (если нужно)
          window.addEventListener('beforeunload', function (evt) {
             if (!manager.canDestroySafely()) {

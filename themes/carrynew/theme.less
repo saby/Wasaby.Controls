@@ -49,9 +49,6 @@ body {
          background: @default-bg-color;
       }
   }
-  .ws-infobox-triangle {
-    background: @default-bg-color;
-  }
   .ws-float-area-title {
       font-size: 1.43rem!important;
       font-weight: normal !important;
@@ -110,10 +107,6 @@ body {
    }
    .controls-DateRangeBigChoose .controls-DateRangeBigChoose__months .controls-DateRangeBigChoose__months-halfyearRange .controls-DateRangeBigChoose__months-range-btn-wrapper.controls-DateRangeBigChoose__months-range-btn-wrapper1 {
        height: 11rem;
-   }
-   // См. такой же хак в теме престо. Исправляем цвет после того как переобределили его в теме престо.
-   .controls-DateRangeChoose__home .icon-primary {
-      color: @icon-color-primary;
    }
 }
 
@@ -177,4 +170,15 @@ body .ws-window {
 }
 .controls-ComboBox__picker .controls-ComboBox__scrollContainer {
     background: transparent;
+}
+
+body {
+   .ws-sticky-header__block.ws-sticky-header__fixed,
+   .ws-sticky-header__table-header-copy {
+      // В престо в паре мест используется нестандартные цвета фона, чуть темнее или чуть светлее.
+      // В этих местах прикладники должны сами устанавливать цвет фона у зафиксированных заголовков.
+      // В большинстве реестров используется #2C3E50 - @basic-block-bg-color
+      // TODO: выпилить вместе с @basic-block-bg-color
+      background-color: #ffffff;
+   }
 }

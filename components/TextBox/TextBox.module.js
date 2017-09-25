@@ -6,7 +6,6 @@ define('js!SBIS3.CONTROLS.TextBox', [
    'tmpl!SBIS3.CONTROLS.TextBox/resources/textFieldWrapper',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'js!SBIS3.CONTROLS.TextBoxUtils',
-   'Core/Sanitize',
    'js!SBIS3.CONTROLS.Utils.GetTextWidth',
    'Core/helpers/Function/forAliveOnly',
    'js!SBIS3.CONTROLS.ControlHierarchyManager',
@@ -21,7 +20,6 @@ define('js!SBIS3.CONTROLS.TextBox', [
     textFieldWrapper,
     TemplateUtil,
     TextBoxUtils,
-    Sanitize,
     getTextWidth,
     forAliveOnly,
     ControlHierarchyManager) {

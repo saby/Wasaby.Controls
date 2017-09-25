@@ -129,6 +129,42 @@ define(['js!SBIS3.CONTROLS.DateBox'], function (DateBox) {
             assert(onPropertyChanged.calledTwice, `onPropertyChanged called ${onPropertyChanged.callCount}`);
          });
       });
+
+      describe('._onKeyDown', function () {
+         controlTestCase();
+         it('should not change control properties if control disabled', function () {
+            let sandbox = sinon.sandbox.create(),
+               date = this.testControl.getDate(),
+               text = this.testControl.getText();
+            sandbox.stub(this.testControl, 'setDate');
+            sandbox.stub(this.testControl, 'setText');
+            this.testControl.setEnabled(false);
+            this.testControl._onKeyDown();
+            assert(this.testControl.setDate.notCalled, `setDate called ${this.testControl.setDate.callCount}`);
+            assert(this.testControl.setText.notCalled, `setText called ${this.testControl.setText.callCount}`);
+            assert.strictEqual(this.testControl.getDate(), date);
+            assert.strictEqual(this.testControl.getText(), text);
+            sandbox.restore();
+         });
+      });
+
+      describe('._onKeyPress', function () {
+         controlTestCase();
+         it('should not change control properties if control disabled', function () {
+            let sandbox = sinon.sandbox.create(),
+               date = this.testControl.getDate(),
+               text = this.testControl.getText();
+            sandbox.stub(this.testControl, 'setDate');
+            sandbox.stub(this.testControl, 'setText');
+            this.testControl.setEnabled(false);
+            this.testControl._onKeyPress();
+            assert(this.testControl.setDate.notCalled, `setDate called ${this.testControl.setDate.callCount}`);
+            assert(this.testControl.setText.notCalled, `setText called ${this.testControl.setText.callCount}`);
+            assert.strictEqual(this.testControl.getDate(), date);
+            assert.strictEqual(this.testControl.getText(), text);
+            sandbox.restore();
+         });
+      });
    });
 });
 

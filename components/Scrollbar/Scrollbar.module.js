@@ -58,7 +58,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          },
 
          $constructor: function () {
-            this._publish('onScrollbarDrag');
+            this._publish('onScrollbarStartDrag', 'onScrollbarDrag', 'onScrollbarEndDrag');
          },
 
          init: function () {
@@ -205,6 +205,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          _beginDragHandler: function (dragObject, e) {
             this._container.addClass('controls-Scrollbar__dragging');
             this._beginClient = e.pageY;
+            this._notify('onScrollbarStartDrag', this.getPosition());
          },
 
          // Не использовать e.clientY, потому что его нет на touch устройствах.
@@ -220,6 +221,7 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          // Не использовать e.clientY, потому что его нет на touch устройствах.
          _endDragHandler: function (dragObject, droppable, e) {
             this._container.removeClass('controls-Scrollbar__dragging');
+            this._notify('onScrollbarEndDrag', this.getPosition());
          },
 
          _wheelHandler: function(event) {

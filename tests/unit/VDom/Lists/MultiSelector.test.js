@@ -6,19 +6,13 @@ define(['js!WSControls/Lists/MultiSelector'], function (MultiSelector) {
       var items = ['one', 'two', 'three'];
       
       describe('MultiSelector with multiSelect: true', function() {
-         var ms;
-         
-         before(function() {
-            ms = new MultiSelector({
-               multiSelect: true
-            });
-         });
-         
-         after(function() {
-            ms.destroy();
-         });
-         
+
          it('_setSelectedKeys', function() {
+            var cfg = {
+               multiSelect: true
+            };
+            var ms = new MultiSelector(cfg);
+            ms.saveOptions(cfg);
             ms._setSelectedKeys([1, 2, 3]);
             assert.deepEqual([1, 2, 3], ms._selectedKeys);
    
@@ -29,19 +23,12 @@ define(['js!WSControls/Lists/MultiSelector'], function (MultiSelector) {
       });
    
       describe('MultiSelector with multiSelect: false', function() {
-         var ms;
-   
-         before(function() {
-            ms = new MultiSelector({
-               multiSelect: false
-            });
-         });
-   
-         after(function() {
-            ms.destroy();
-         });
-   
          it('_setSelectedKeys', function() {
+            var cfg = {
+               multiSelect: false
+            };
+            var ms = new MultiSelector(cfg);
+            ms.saveOptions(cfg);
             ms._setSelectedKeys([1, 2, 3]);
             assert.deepEqual([1], ms._selectedKeys);
       
@@ -51,39 +38,25 @@ define(['js!WSControls/Lists/MultiSelector'], function (MultiSelector) {
       });
    
       describe('MultiSelector with allowEmptyMultiSelection: true', function() {
-         var ms;
-   
-         before(function() {
-            ms = new MultiSelector({
+         it('check selectedKeys', function() {
+            var cfg = {
                allowEmptyMultiSelection: true,
                items: items
-            });
-         });
-   
-         after(function() {
-            ms.destroy();
-         });
-         
-         it('check selectedKeys', function() {
+            };
+            var ms = new MultiSelector(cfg);
+            ms.saveOptions(cfg);
             assert.deepEqual(null, ms._selectedKeys);
          });
       });
    
       describe('MultiSelector with allowEmptyMultiSelection: false', function() {
-         var ms;
-   
-         before(function() {
-            ms = new MultiSelector({
+         it('check selectedKeys', function() {
+            var cfg = {
                allowEmptyMultiSelection: false,
                items: items
-            });
-         });
-   
-         after(function() {
-            ms.destroy();
-         });
-   
-         it('check selectedKeys', function() {
+            };
+            var ms = new MultiSelector(cfg);
+            ms.saveOptions(cfg);
             assert.deepEqual(['one'], ms._selectedKeys);
          });
       });

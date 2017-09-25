@@ -9,12 +9,13 @@ define('js!SBIS3.CONTROLS.ToolbarOnline', ['js!SBIS3.CONTROLS.ToolbarBase'], fun
    /**
     * Контрол, отображающий тулбар для макетов online.sbis.ru.
     * Например, некоторые кнопки могут дублироваться в выпадающем списке.
-    * @class SBIS3.Engine.ToolbarOnline
+    * @class SBIS3.CONTROLS.ToolbarOnline
     * @extends SBIS3.CONTROLS.ToolbarBase
     * @author Крайнов Дмитрий Олегович
+    * @public
     */
 
-   var ToolbarOnline = ToolbarBase.extend( /** @lends SBIS3.Engine.ToolbarOnline.prototype */ {
+   var ToolbarOnline = ToolbarBase.extend( /** @lends SBIS3.CONTROLS.ToolbarOnline.prototype */ {
       $protected: {
          _options: {
             /**

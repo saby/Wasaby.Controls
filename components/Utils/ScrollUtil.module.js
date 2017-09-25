@@ -1,7 +1,7 @@
 /**
  * Created by ad.chistyakova on 12.11.2015.
  */
-define('js!SBIS3.CONTROLS.ScrollUtil', ['Core/Abstract'], function(cAbstract, ConsoleLogger) {
+define('js!SBIS3.CONTROLS.ScrollUtil', ['Core/Abstract'], function(cAbstract) {
    'use strict';
     /**
      * @class SBIS3.CONTROLS.ScrollUtil

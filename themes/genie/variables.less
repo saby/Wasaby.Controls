@@ -172,20 +172,19 @@
 // -------- //
 // Switcher //
 // -------- //
-@switcher-cursor:                               pointer;
-@switcher-cursor-disabled:                      default;
-@switcher-line-height:                          @switcher-height;
-@switcher-border:                               1px solid @gray-light-color;
-@switcher-line-width:                           36px;
-@switcher-btn-border-width:                     2px;
-@switcher-btn-border-hover:                     3px;
-@switcher-btn-size:                             12px;
+@switcher-width:                                40px;
+@switcher-height:                               20px;
+@switcher-border-radius:                        15px;
+@switcherline-width:                            40px;
+@switcherline-height:                           0px;
+@switcher-btn-size:                             20px;
+@switcher-btn-border-width:                     @default-border-width;
+@switcher-btn-hover-border-width:               @default-border-width;
+@switcher-dot-size:                             0px;
 // ---------------------- //
 // Double online switcher //
 // ---------------------- //
-@switcher-do-horizontal-toggle-line-height:     @switcher-line-height;
-@switcher-do-border:                            @switcher-border;
-@switcher-do-horizontal-line-width:             @switcher-line-width;
+
 // ---- //
 // Menu //
 // ---- //
@@ -230,7 +229,7 @@
 // -------- //
 @text-box-height:                         24px;
 @text-box-line-height:                    22px;
-@text-box-wrapper-padding:                0 7px;
+@text-box-input-padding:                0 7px;
 @text-box-border-radius:                  2px;
 @text-box-color:                          @default-text-color;
 @text-box-text-decoration:                inherit;
@@ -421,10 +420,9 @@
 //CommandsSeparator
 @controls-filterLine-link-hover-color:            @primary-color;
 //FieldLink
-@controls-FieldLink-border-color-focus-hover:      @gray-ccc-color @gray-ccc-color @gray-ccc-color @gray-ccc-color;
-@controls-FieldLink-fieldWrapper-minWidth:         108px;
-@controls-FieldLink-showAllLinks-padding:          0 0 0 4px;
-@controls-FieldLink-showAllLinks-width:            20px;
+@fieldLink-border-color-focus-hover:      @gray-ccc-color @gray-ccc-color @gray-ccc-color @gray-ccc-color;
+@fieldLink-fieldWrapper-minWidth:         108px;
+@fieldLink-showAllLinks-width:            20px;
 //SelectorButton
 @controls-SelectorButton-align:                    middle;
 // BackButton

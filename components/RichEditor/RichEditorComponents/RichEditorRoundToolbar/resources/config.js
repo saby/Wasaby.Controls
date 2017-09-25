@@ -3,21 +3,21 @@
  */
 define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
    [
+      'js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/handlers',
       'js!SBIS3.CONTROLS.RichTextArea/resources/smiles',
       'i18n!SBIS3.CONTROLS.RichEditor'
-   ], function (smiles) {
+   ], function (handlers, smiles) {
 
       'use strict';
 
-      return [
+      return function () {
+         return [
          {
             name: 'toggle',
             componentType: 'SBIS3.CONTROLS.IconButton',
             icon: 'sprite:icon-16 icon-View icon-primary',
             handlers: {
-               onActivated: function() {
-                  this.getParent().toggleToolbar();
-               }
+               onActivated: handlers.toggle
             },
             basic: true,
             order: 1
@@ -29,9 +29,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
             icon: 'sprite:icon-16 icon-TFCurtailRTE2 icon-primary',
             className: 'controls-IconButton__round-border',
             handlers: {
-               onActivated: function() {
-                  this.getParent()._openStylesPanel(this);
-               }
+               onActivated: handlers.styles
             },
             order: 10
          },
@@ -43,14 +41,13 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
             withoutHeader: true,
             icon   : 'sprite:icon-16 icon-ListMarked icon-primary',
             className: 'controls-IconButton__round-border',
+            pickerClassName: 'controls-Menu__hide-menu-header controls-RichEditorToolbarMenu fre-list',
             items: [
-               { key: 'InsertUnorderedList', title: ' ', icon:'sprite:icon-16 icon-ListMarked icon-primary' },
-               { key: 'InsertOrderedList', title: ' ',icon:'sprite:icon-16 icon-ListNumbered icon-primary' }
+               { key:'InsertUnorderedList', title:' ', icon:'sprite:icon-24 icon-ListMarked icon-primary' },
+               { key:'InsertOrderedList', title:' ', icon:'sprite:icon-24 icon-ListNumbered icon-primary' }
             ],
             handlers: {
-               onMenuItemActivate: function(event, key) {
-                  this.getParent()._execCommand(key);
-               }
+               onMenuItemActivate: handlers.list
             },
             idProperty: 'key',
             order: 20
@@ -63,9 +60,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
             icon: 'sprite:icon-16 icon-Link icon-primary',
             className: 'controls-IconButton__round-border',
             handlers:{
-               onActivated: function(){
-                  this.getParent()._insertLink();
-               }
+               onActivated: handlers.link
             },
             order: 30
          },
@@ -77,9 +72,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
             icon: 'sprite:icon-16 icon-Picture icon-primary',
             className: 'controls-IconButton__round-border',
             handlers: {
-               onActivated: function(event, originalEvent) {
-                  this.getParent()._startFileLoad(this._container);
-               }
+               onActivated: handlers.image
             },
             order: 40
          },
@@ -87,7 +80,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
          {
             name: 'smile',
             basic: true,
-            tooltip: 'Вставить смайлик',
+            tooltip: rk('Вставить смайлик'),
             componentType: 'SBIS3.CONTROLS.MenuIcon',
             icon: 'sprite:icon-16 icon-EmoiconSmile icon-primary',
             items: smiles,
@@ -95,28 +88,25 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
             multiselect: false,
             className: 'controls-IconButton__round-border',
             handlers: {
-               onMenuItemActivate: function(event, key) {
-                  this.getParent()._insertSmile(key);
-               }
+               onMenuItemActivate: handlers.smile
             },
             idProperty: 'key',
             order: 50
          },
          {
             name: 'history',
-            caption: 'История ввода',
+            caption: rk('История ввода'),
             componentType: 'SBIS3.CONTROLS.MenuIcon',
             icon: 'sprite:icon-16 icon-InputHistory icon-primary',
             pickerClassName: 'controls-RichEditorRoundToolbar__historyPicker',
             multiselect: false,
             className: 'controls-IconButton__round-border',
             handlers: {
-               onMenuItemActivate: function(e, key) {
-                  this.getParent()._setText(this.getItems().getRecordById(key).get('value'));
-               }
+               onMenuItemActivate: handlers.history
             },
             idProperty: 'key',
             order: 60
          }
       ];
+      };
    });

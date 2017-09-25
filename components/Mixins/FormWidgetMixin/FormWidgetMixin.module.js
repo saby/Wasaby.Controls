@@ -2,10 +2,9 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
    "Core/constants",
    "Core/IoC",
    "Core/core-functions",
-   "Core/ConsoleLogger",
    "Core/Deferred",
    "Core/helpers/String/escapeHtml"
-], function ( constants, IoC, cFunctions, ConsoleLogger, Deferred, escapeHtml) {
+], function ( constants, IoC, cFunctions, Deferred, escapeHtml) {
    /**
     * Миксин, который добавляет функционал валидаторов.
     * Подробнее о работе с валидаторами вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/">Валидация вводимых данных</a>.

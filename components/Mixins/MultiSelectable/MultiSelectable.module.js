@@ -3,14 +3,13 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
    "Core/core-functions",
    "Core/Deferred",
    "Core/IoC",
-   "Core/ConsoleLogger",
    "js!WS.Data/Collection/List",
    "js!SBIS3.CONTROLS.ArraySimpleValuesUtil",
    "Core/helpers/Object/isEqual",
    "Core/core-instance",
    "Core/helpers/Function/forAliveOnly",
    "Core/helpers/Array/clone"
-], function( ParallelDeferred, cFunctions, Deferred, IoC, ConsoleLogger,List, ArraySimpleValuesUtil, isEqualObject, cInstance, forAliveOnly, aClone) {
+], function( ParallelDeferred, cFunctions, Deferred, IoC, List, ArraySimpleValuesUtil, isEqualObject, cInstance, forAliveOnly, aClone) {
 
    var EMPTY_SELECTION = [null],
        convertToKeys = function(list, keyField) {

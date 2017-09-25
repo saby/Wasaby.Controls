@@ -162,8 +162,14 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             pageOffset = 0,
             lastPageStart = 0,
             self = this,
-            //Учитываем все что есть в itemsContainer (группировка и тд)
-            listItems = $('> *', view._getItemsContainer()).filter(':visible'),
+            /* Находим все строки в списке */
+            listItems = view._getItemsContainer().find('> *').filter(function() {
+               /* Отфильтровывем скрытые строки,
+                  и строки которые будут вырезаться и перемещаться в прилипающую шапку,
+                  т.к. по ним нельзя корректно посчитать положение. */
+               return !$(this).hasClass('ws-hidden') &&
+                      !$(this).hasClass('ws-sticky-header__table-sticky-row');
+            }),
             stickyHeaderHeight = StickyHeaderManager.getStickyHeaderHeight(view.getContainer()) || 0;
 
          //Если элементов в верстке то нечего и считать
@@ -222,10 +228,16 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
                });
             }
          });
-
+         
+         /* Для пэйджинга считаем, что кол-во страниц это:
+            текущее кол-во загруженных страниц + 1, если в метаинформации рекордсета есть данные о том, что на бл есть ещё записи.
+            Необходимо для того, чтобы в пэйджинге не моргала кнопка перехода к следующей странице, пока грузятся данные. */
+         /* Откатываю до 150 + (view._hasNextPage(view.getItems().getMetaData().more) ? 1 : 0) */
          var pagesCount = this._scrollPages.length;
-
-         this._options.view.getContainer().toggleClass('controls-ScrollPaging__pagesPadding', pagesCount > 1);
+         var pagingVisibility = pagesCount > 1 && view._getOption('infiniteScroll') !== 'up';
+   
+         /* Если пэйджинг скрыт - паддинг не нужен */
+         view.getContainer().toggleClass('controls-ScrollPaging__pagesPadding', pagingVisibility);
          if (this._options.paging.getSelectedKey() > pagesCount){
             this._options.paging.setSelectedKey(pagesCount);
          }
@@ -233,7 +245,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
 
          //Если есть страницы - покажем paging
          
-         this._options.paging.setVisible((pagesCount > 1) && !this._options.hiddenPager);
+         this._options.paging.setVisible(pagingVisibility && !this._options.hiddenPager);
       },
 
       destroy: function(){

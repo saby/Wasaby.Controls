@@ -48,13 +48,32 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          month: 'month',
          year: 'year'
       };
-
-   var DateRangeBigChoose = CompoundControl.extend([RangeSelectableViewMixin, RangeMixin], {
+    /**
+     *
+     * @class SBIS3.CONTROLS.DateRangeBigChoose
+     * @extends SBIS3.CORE.CompoundControl
+     *
+     * @mixes SBIS3.CONTROLS.RangeMixin
+     * @mixes SBIS3.CONTROLS.RangeSelectableViewMixin
+     *
+     * @public
+     * @control
+     */
+   var DateRangeBigChoose = CompoundControl.extend([RangeSelectableViewMixin, RangeMixin], /** @lends SBIS3.CONTROLS.DateRangeBigChoose.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
+             /**
+              * @cfg {String}
+              */
             mask: 'DD.MM.YY',
+             /**
+              * @cfg {Array}
+              */
             startValueValidators: [],
+             /**
+              * @cfg {Array}
+              */
             endValueValidators: [],
             _monthsNames: constants.Date.longMonths
          },
@@ -249,17 +268,16 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          }
       },
 
-      _onDatePickerStartDateChanged: function(e) {
+      _onDatePickerStartDateChanged: function(e, text) {
          var date = this._startDatePicker.getDate(),
             oldStartDate = this.getStartValue(),
             endDate = this._endDatePicker.getDate();
-         if (!date) {
+
+         if ((!date && text !== '') || this._isDatesEqual(date, oldStartDate)) {
             return;
          }
-         if (oldStartDate && oldStartDate.getTime() === date.getTime()) {
-            return;
-         }
-         if (endDate && date > endDate) {
+
+         if (endDate && date && date > endDate) {
             // setRange не вызываем, диапазон установится в обработчике _onDatePickerEndDateChanged
             // TODO: когда будет возможность установить свойство без генерации событий надо будет убрать этот хак.
             if (!this._options.rangeselect) {
@@ -285,15 +303,16 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          }
       },
 
-      _onDatePickerEndDateChanged: function(e) {
+      _onDatePickerEndDateChanged: function(e, text) {
          var date = this._endDatePicker.getDate(),
             startDate = this._startDatePicker.getDate(),
             oldEndDate = this.getEndValue();
 
-         if (!date || (oldEndDate && date.getTime() === oldEndDate.getTime())) {
+         if ((!date && text !== '') || this._isDatesEqual(date, oldEndDate)) {
             return;
          }
-         if (startDate && date < startDate) {
+
+         if (startDate && date && date < startDate) {
             // date = startDate
             return;
          }
@@ -583,6 +602,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
 
       _updateYearsRange: function (lastYear) {
          var buttonsCount = 6,
+            lastYear = lastYear || parseInt(this.getChildControlByName('YearsRangeBtn' + (buttonsCount - 1)).getCaption(), 10),
             container, btn, year;
          for (var i = 0; i < buttonsCount; i++) {
             year = lastYear - buttonsCount + 1 + i;
@@ -752,6 +772,10 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
             this.getContainer().addClass(css_classes.selectionProcessing);
             if (selectionType === selectionTypes.months) {
                this._dateRangePicker.startSelection(start, end);
+            } else if (selectionType === selectionTypes.years) {
+               // При клике на год меняется ототбражаемый год в календаре, необходимо обновить выделение текущего года
+               // в панеле выбора интервала годов
+               this._updateYearsRange();
             }
          } else {
             this.getContainer().removeClass(css_classes.selectionProcessing);

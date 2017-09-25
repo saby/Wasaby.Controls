@@ -9,10 +9,10 @@ define('js!SBIS3.CONTROLS.OperationSum', [
      *
      * SBIS3.CONTROLS.OperationSum
      * @class SBIS3.CONTROLS.OperationSum
-     * @extends SBIS3.CONTROLS.IconButton
+     * @extends SBIS3.CONTROLS.Link
      * @control
      * @public
-     * @author Крайнов Дмитрий Олегович
+     * @author Сухоручкин Андрей Сергеевич
      * @initial
      * <component data-component='SBIS3.CONTROLS.OperationSum'>
      *

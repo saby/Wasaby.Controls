@@ -48,6 +48,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
         * @class SBIS3.CONTROLS.FilterButton
         * @extends SBIS3.CORE.CompoundControl
         * @author Герасимов Александр Максимович
+        *
         * @mixes SBIS3.CONTROLS.FilterMixin
         * @mixes SBIS3.CONTROLS.PickerMixin
         *

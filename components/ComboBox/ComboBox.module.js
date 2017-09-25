@@ -1,6 +1,7 @@
 define('js!SBIS3.CONTROLS.ComboBox', [
    "Core/constants",
    "Core/Deferred",
+   'Core/IoC',
    'js!SBIS3.CORE.LayoutManager',
    'js!SBIS3.CONTROLS.TextBox',
    'js!SBIS3.CONTROLS.TextBoxUtils',
@@ -20,7 +21,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "Core/core-instance",
    "i18n!SBIS3.CONTROLS.СomboBox",
    'css!SBIS3.CONTROLS.ComboBox'
-], function ( constants, Deferred, LayoutManager, TextBox, TextBoxUtils, textFieldWrapper, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
+], function ( constants, Deferred, IoC, LayoutManager, TextBox, TextBoxUtils, textFieldWrapper, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
    'use strict';
    /**
     * Класс контрола "Комбинированный выпадающий список" с возможностью ввода значения с клавиатуры.
@@ -197,10 +198,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       $constructor: function () {
          var self = this;
-         if (!this._options.displayProperty) {
-            //TODO по умолчанию поле title???
-            this._options.displayProperty = 'title';
-         }
 
          if (this._options.autocomplete){
             this.subscribe('onSearch', this._onSearch);
@@ -224,6 +221,12 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _modifyOptions: function(){
          var cfg = ComboBox.superclass._modifyOptions.apply(this, arguments);
+
+         if (!cfg.displayProperty) {
+            IoC.resolve('ILogger').error(this._moduleName, 'Не задана опция displayProperty');
+            cfg.displayProperty = 'title';
+         }
+
          if (cfg.emptyValue){
             var rawData = {},
                emptyItemProjection,
@@ -376,7 +379,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _drawText: function(text) {
          ComboBox.superclass._drawText.apply(this, arguments);
          this._drawNotEditablePlaceholder(text);
-         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).html(text || this._options.placeholder || '&nbsp;');
+         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text || this._options.placeholder || '&nbsp;');
          if (this._options.editable) {
             this._setKeyByText();
          }
@@ -746,6 +749,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       showPicker: function(){
+         //Инициализируем пикер, чтобы перед показом ограниччить его ширину
+         if (!this._picker || this._picker.isDestroyed()) {
+            this._initializePicker();
+         }
          ComboBox.superclass.showPicker.call(this);
          TextBoxUtils.setEqualPickerWidth(this._picker);
          //После отображения пикера подскроливаем до выбранного элемента
@@ -769,6 +776,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          self._picker.subscribe('onKeyPressed', function (eventObject, event) {
             self._keyboardHover(event);
          });
+         TextBoxUtils.setEqualPickerWidth(this._picker);
       },
 
       //TODO заглушка

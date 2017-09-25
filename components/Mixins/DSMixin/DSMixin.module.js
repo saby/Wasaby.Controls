@@ -2,10 +2,8 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    "Core/core-functions",
    "Core/Deferred",
    "Core/IoC",
-   "Core/ConsoleLogger",
    "js!WS.Data/Source/Memory",
    "js!WS.Data/Source/SbisService",
-   "js!WS.Data/Collection/RecordSet",
    "js!WS.Data/Query/Query",
    "js!WS.Data/Collection/ObservableList",
    "js!WS.Data/Display/Display",
@@ -15,7 +13,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    "Core/core-instance",
    "Core/helpers/Function/forAliveOnly",
    "Core/helpers/Object/isEmpty"
-], function ( cFunctions, Deferred, IoC, ConsoleLogger,MemorySource, SbisService, RecordSet, Query, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, cInstance, forAliveOnly, isEmptyObject) {
+], function ( cFunctions, Deferred, IoC, MemorySource, SbisService, Query, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, cInstance, forAliveOnly, isEmptyObject) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.

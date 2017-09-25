@@ -63,6 +63,8 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
     * @class SBIS3.CONTROLS.OperationsPanel
     * @extends SBIS3.CORE.CompoundControl
     *
+    * @mixes SBIS3.CONTROLS.ItemsControlMixin
+    *
     * @demo SBIS3.CONTROLS.Demo.MyOperationsPanel Пример 1. Типовые массовые операции над записями.
     *
     * @author Сухоручкин Андрей Сергеевич
@@ -389,19 +391,27 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
       _createItemsMenu: function() {
          var self = this;
 
-         if(!this._itemsMenuLoadDeferred){
-            this._itemsMenuLoadDeferred = moduleStubs.require(['js!SBIS3.CONTROLS.MenuIcon']).addCallback(function (MenuIcon) {
+         if(!this._itemsMenuCreated){
+            this._itemsMenuCreated = true;
+            moduleStubs.require(['js!SBIS3.CONTROLS.MenuIcon']).addCallback(function (MenuIcon) {
+
+               var massMode = self._container.hasClass('controls-operationsPanel__massMode');
+               var selectionMode = self._container.hasClass('controls-operationsPanel__selectionMode');
+
                self._itemsMenu = new MenuIcon[0]({
+                  parent: self,
                   element: $('<span>').insertAfter(self._getItemsContainer()),
                   name: 'itemsMenu',
                   className: 'controls-Menu__hide-menu-header controls-operationsPanel__itemsMenu',
                   idProperty: 'id',
                   parentProperty: 'parent',
                   displayProperty: 'caption',
-                  icon: 'sprite:icon-24 icon-ExpandDown icon-primary action-hover',
+                  icon: 'sprite:icon-size icon-ExpandDown icon-primary action-hover',
                   pickerConfig: {
                      closeButton: true,
-                     className: 'controls-operationsPanel__itemsMenu_picker',
+                     className: 'controls-operationsPanel__itemsMenu_picker' +
+                        (massMode ? ' controls-operationsPanel__massMode' : '') +
+                        (selectionMode ? ' controls-operationsPanel__selectionMode' : ''),
                      horizontalAlign: {
                         side: 'right',
                         offset: 48
@@ -409,26 +419,19 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                   }
                });
 
-               //Инициализируем режим
-               if(self._container.hasClass('controls-operationsPanel__massMode')){
-                  self._itemsMenu.getContainer().addClass('controls-operationsPanel__massMode');
-               }
-               if(self._container.hasClass('controls-operationsPanel__selectionMode')){
-                  self._itemsMenu.getContainer().addClass('controls-operationsPanel__selectionMode');
-               }
-
-               self.registerChildControl(self._itemsMenu);
-
                self._itemsMenu._setPickerContent = function() {
                   $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-24 icon-size icon-ExpandUp icon-primary action-hover');
                };
 
-               self.subscribeTo(self._itemsMenu, 'onMenuItemActivate', function(e, id){
+               self.subscribeTo(self._itemsMenu, 'onMenuItemActivate', function(e, id, event){
                   var item = this.getItems().getRecordById(id);
                   if (item) {
                      var instance = item.get('instance');
                      if(cInstance.instanceOfModule(instance, 'SBIS3.CONTROLS.MenuLink') && instance.getItems().getCount() > 1){
                         instance._notify('onMenuItemActivate', id);
+                     }
+                     else if(cInstance.instanceOfMixin(instance, 'SBIS3.CONTROLS.Clickable')) {
+                        instance._onClickHandler(event);
                      }
                      else {
                         instance._clickHandler();
@@ -440,7 +443,6 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                self._updateActionsMenuButtonItems();
                self._itemsMenu.getContainer().toggleClass('ws-hidden', false);
             });
-            return this._itemsMenuLoadDeferred;
          }
       },
 

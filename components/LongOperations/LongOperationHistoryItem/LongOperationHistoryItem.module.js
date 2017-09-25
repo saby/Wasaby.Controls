@@ -1,9 +1,3 @@
-/**
- * Класс, описывающий элемент истории длительной операции
- *
- * @class SBIS3.CONTROLS.LongOperationHistoryItem
- * @public
- */
 define('js!SBIS3.CONTROLS.LongOperationHistoryItem',
    [
       'Core/core-extend'
@@ -39,6 +33,8 @@ define('js!SBIS3.CONTROLS.LongOperationHistoryItem',
        * Класс, описывающий элемент истории длительной операции
        *
        * @class SBIS3.CONTROLS.LongOperationHistoryItem
+       * @extends Core/core-extend
+       * @author Спирин Виктор Алексеевич
        * @public
        */
       var LongOperationHistoryItem = CoreExtend.extend(/** @lends SBIS3.CONTROLS.LongOperationHistoryItem.prototype */{

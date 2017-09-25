@@ -351,7 +351,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
             if (element.hasOwnProperty('value')) {
                /* FIXME для внедрения в задачах используется filterField, т.к. у них internalValueField не совпадает
                   с полем фильтра */
-               result[byInternal ? element.internalValueField : (element.filterField || element.internalValueField)] = element.value;
+               result[byInternal ? element.internalValueField : (element.filterField || element.internalValueField)] = cFunctions.clone(element.value); // если не склонировать, кто-то может поменять по ссылке и испортит фильтр
             }
             return result;
          }, {});

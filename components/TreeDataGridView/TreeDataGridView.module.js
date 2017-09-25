@@ -1,5 +1,4 @@
 define('js!SBIS3.CONTROLS.TreeDataGridView', [
-   "Core/IoC",
    "Core/core-merge",
    "Core/constants",
    'Core/CommandDispatcher',
@@ -18,7 +17,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'js!SBIS3.CONTROLS.Link',
    'css!SBIS3.CONTROLS.TreeDataGridView',
    'css!SBIS3.CONTROLS.TreeView'
-], function( IoC, cMerge, constants, CommandDispatcher, contains, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, MassSelectionHierarchyController) {
+], function( cMerge, constants, CommandDispatcher, contains, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, MassSelectionHierarchyController) {
 
 
    var
@@ -50,6 +49,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             colorMarkEnabled: cfg.colorMarkEnabled,
             colorField: cfg.colorField,
             allowEnterToFolder: cfg.allowEnterToFolder,
+            task1173671799: cfg.task1173671799,
             colspan: cfg.columns.length,
             multiselect: cfg.multiselect
          }
@@ -397,22 +397,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          return this._editArrow;
       },
 
-      _getEditArrowPosition: function(hoveredItem) {
-         var folderTitle = hoveredItem.container.find('.controls-TreeView__folderTitle'),
-             td = folderTitle.closest('.controls-DataGridView__td', hoveredItem.container),
-             containerCords = this._container[0].getBoundingClientRect(),
-             /* в 3.7.3.200 сделать это публичным маркером для стрелки */
-             arrowContainer = td.find('.js-controls-TreeView__editArrow'),
-             tdPadding, arrowCords, leftOffset, toolbarLeft, needCorrect;
-
-         if(!arrowContainer.length) {
-            arrowContainer = td.find('.controls-TreeView__editArrow');
-         }
-
-         /* Контейнера для стрелки может не быть, тогда не показываем */
-         if(!arrowContainer.length) {
-            return false;
-         }
+      _getEditArrowPosition: function(td, folderTitle, arrowContainer) {
+         var  containerCords = this._container[0].getBoundingClientRect(),
+              tdPadding, arrowCords, leftOffset, toolbarLeft, needCorrect;
+         
          tdPadding = parseInt(td.css('padding-right'), 10);
          /* Т.к. у нас в вёрстке две иконки, то позиционируем в зависимости от той, которая показывается,
             в .200 переделаем на маркер */
@@ -433,10 +421,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          
          if(this._isSupportedItemsToolbar() && this._getItemsToolbar().isVisible()) {
             toolbarLeft = this._getItemsToolbar().getContainer()[0].offsetLeft;
-            needCorrect = toolbarLeft && (toolbarLeft < leftOffset);
+            needCorrect = toolbarLeft && (toolbarLeft < (leftOffset + arrowCords.width)); // Учитываем ширину иконки стрелки при корректировке
             /* Если стрелка заползает на операции над записью -> увеличиваем отступ */
             if(needCorrect) {
-               leftOffset -= leftOffset - toolbarLeft + tdPadding * 2; //Левая граница тулбара + паддинги
+               leftOffset -= leftOffset - toolbarLeft + this.getEditArrow().getContainer().width(); //Левая граница тулбара + ширина стрелки
             }
             /* backgorund'a у стрелки быть не должно, т.к. она может отображаться на фоне разного цвета,
                но если мы корректрируем положение, то надо навесить background, чтобы она затемняла текст */
@@ -447,6 +435,15 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             top: arrowCords.top - containerCords.top + this._container[0].scrollTop,
             left: leftOffset
          }
+      },
+      
+      _getEditArrowMarker: function(itemContainer) {
+         var arrowContainer = itemContainer.find('.js-controls-TreeView__editArrow');
+         
+         if(!arrowContainer.length) {
+            arrowContainer = itemContainer.find('.controls-TreeView__editArrow');
+         }
+         return arrowContainer;
       },
 
       _onChangeHoveredItem: function() {
@@ -475,22 +472,27 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
       _showEditArrow: function() {
          var hoveredItem = this.getHoveredItem(),
+             hoveredItemContainer = hoveredItem.container,
              editArrowContainer = this.getEditArrow().getContainer(),
-             needShowArrow, hiContainer, editArrowPosition;
+             folderTitle, titleTd, editArrowMarker, projItem;
+         
+         if(this._hasHoveredItem()) {
+            projItem = this._getItemsProjection().getItemBySourceItem(hoveredItem.record);
+         }
 
-         hiContainer = hoveredItem.container;
          /* Не показываем если:
             1) Иконку скрыли
             2) Не папка
-            3) Режим поиска (по стандарту) */
-         needShowArrow = hiContainer && hiContainer.hasClass('controls-ListView__item-type-node') && this.getEditArrow().isVisible() && !this._isSearchMode();
+            3) Режим поиска (по стандарту)
+            4) projItem'a может не быть при добавлении по месту */
+         if(projItem && projItem.isNode() && this.getEditArrow().isVisible() && !this._isSearchMode()) {
+            folderTitle = hoveredItemContainer.find('.controls-TreeView__folderTitle');
+            titleTd = folderTitle.closest('.controls-DataGridView__td', hoveredItemContainer);
+            editArrowMarker = this._getEditArrowMarker(titleTd);
 
-         if(hiContainer && needShowArrow) {
-            editArrowPosition = this._getEditArrowPosition(hoveredItem);
-
-            if(editArrowPosition) {
-               editArrowContainer.css(editArrowPosition);
+            if(editArrowMarker.length) {
                editArrowContainer.removeClass('ws-hidden');
+               editArrowContainer.css(this._getEditArrowPosition(titleTd, folderTitle, editArrowMarker));
             }
          } else {
             this._hideEditArrow();
@@ -519,7 +521,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    
       _mouseDownHandler: function(e) {
          /* По стандарту отключаю выделение по двойному клику мышкой в дереве */
-         if(e.originalEvent.detail > 1) {
+         if(e.originalEvent.detail > 1 && this._needProcessMouseEvent(e)) {
             e.preventDefault();
          }
          TreeDataGridView.superclass._mouseDownHandler.apply(this, arguments);
@@ -598,7 +600,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             if ($target.hasClass('js-controls-TreeView__editArrow') || $target.hasClass('js-controls-ListView__itemCheckBox')) {
                return false;
             } else if (data.get(this._options.nodeProperty)) {
-               this._currentScrollPosition = 0;
                this.setCurrentRoot(id);
                this.reload();
             }

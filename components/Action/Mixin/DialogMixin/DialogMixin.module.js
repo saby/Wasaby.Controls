@@ -1,13 +1,11 @@
 /*global define, $ws*/
 define('js!SBIS3.CONTROLS.Action.DialogMixin', [
    "Core/core-merge",
-   "Core/Deferred",
    "js!SBIS3.CORE.Dialog",
    "js!SBIS3.CORE.FloatArea",
-   "js!WS.Data/Entity/Model",
    "js!WS.Data/Utils",
    'Core/IoC'
-], function( cMerge, Deferred,Dialog, FloatArea, Model, Utils, IoC){
+], function( cMerge, Dialog, FloatArea, Utils, IoC){
    'use strict';
 
    /**
@@ -107,16 +105,23 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       _createComponent: function(config, meta, mode) {
          var Component = (mode == 'floatArea') ? FloatArea : Dialog;
          if (this._isNeedToRedrawDialog()){
-            //FloatArea предоставляет возможность перерисовать текущий установленный шаблон. При перерисовке сохраняются все опции, которые были установлены как на FloatArea, так и на редактируемом компоненте.
-            //Производим открытие новой записи по новой конфигурации, все что лежало в опциях до этого не актуально и при текущем конфиге может поломать требуемое поведение.
-            //Поэтому требуется избавиться от старых опций, чтобы reload компонента, фактически, открывал "новую" floatArea с новой конфигурацией, только в текущем открытом контейнере.
-            this._dialog._options.componentOptions = {};
+            this._resetComponentOptions();
             cMerge(this._dialog._options, config);
             this._dialog.reload(true);
          }
          else {
             this._isExecuting = true;
             this._dialog = new Component(config);
+         }
+      },
+      _resetComponentOptions: function() {
+         //FloatArea предоставляет возможность перерисовать текущий установленный шаблон. При перерисовке сохраняются все опции, которые были установлены как на FloatArea, так и на редактируемом компоненте.
+         //Производим открытие новой записи по новой конфигурации, все что лежало в опциях до этого не актуально и при текущем конфиге может поломать требуемое поведение.
+         //Поэтому требуется избавиться от старых опций, чтобы reload компонента, фактически, открывал "новую" floatArea с новой конфигурацией, только в текущем открытом контейнере.
+         //Требуется только сохранить опции, которые отвечают за размер панели
+         var dialogOptions = this._dialog._options;
+         dialogOptions.componentOptions = {
+            isPanelMaximized: dialogOptions.maximized
          }
       },
       /**

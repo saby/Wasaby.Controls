@@ -18,8 +18,12 @@ body {
    // в онлайне такие кнопки завязаны на жесткие стили controls-IconButton__round-border-24, что неправильно
    // для редизайна нужно перейти на относительные названия
    .controls-MenuIcon__Menu.controls-Menu.controls-Menu__Popup.controls-Menu__hide-menu-header {
-     margin: -.39rem 0 0 -.106rem;
+     margin: -.32rem 0 0 -.606rem;
    }
+   .controls-operationsPanel__itemsMenu_picker.controls-MenuIcon__Menu.controls-Menu.controls-Menu__hide-menu-header {
+     margin: -.32rem 0 0 1.32rem;
+   }
+
 
    //TODO: удалить это когда будет нормальный пэйджинг, не из ws-a
    .ws-paging{
@@ -218,11 +222,11 @@ body {
 
    .controls-DropdownList {
       .controls-DropdownList__selectedItem {
-         .controls-DropdownList__afterCaptionWrapper .controls-DropdownList__crossIcon {
-            font-size: 2rem !important;
-            line-height: 1.32rem !important;
-            width: 2rem;
-            height: 2rem;
+         .controls-DropdownList__afterCaptionWrapper, .controls-DropdownList__crossIcon {
+            font-size: 3rem !important;
+            height: 3rem !important;
+            width: 3rem !important;
+            line-height: 3rem !important;
          }
       }
    }
@@ -275,13 +279,6 @@ body {
          }
       }
    }
-   // У кнопок нестандартный цвет, перебиваем его. В новом дизайне либо добьюсь что бы цвета были стандартные,
-   // либо буду устанавливать его через переменные.
-   // В теме розницы есть такой же хак перебивающий этот хак на стандартный цвет
-   .controls-DateRangeChoose__home .icon-primary {
-      color: #e4e4e4;
-   }
-
   .controls-ToolBar__menuIcon .icon-24 {
     font-family: carrypresto-icons!important;
   }
@@ -329,11 +326,15 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
    // Перед тем как править стили для кнопки закрытия прочитай комментарий по .ws-float-close.sbisname-window-title-close
 }
 
+//Удалить, как будет темизация для engine.
 .controls-Browser {
    .controls-Browser__tableCell-search {
       .controls-Browser__selectAllCheckBox {
          .align-self(center);
       }
+   }
+   .controls__filterButton {
+      margin-top: 8px;
    }
    .controls-Browser__search {
       width: 21.4285rem;
@@ -553,7 +554,7 @@ body {
 }
 
 .controls-IconButton.controls-TreeView__editArrow-container {
-  @offset: .2695rem;
+  @offset: .37rem;
   margin-top: calc(~"@{default-border-width} - @{offset}");
   .icon-16 {
     .icon-size(@icon-medium-size, @icon-font);
@@ -613,15 +614,6 @@ body {
 .controls-Link__field {
   vertical-align: baseline;
 }
-.controls-FieldLink, .controls-FieldLink__picker {
-   .controls-FieldLinkItemsCollection, .controls-FieldLink__item {
-      height: 3rem;
-   }
-   .controls-FieldLink__showAllLinks {
-      line-height: 3rem;
-   }
-}
-
 .controls-Paging .control-Paging__btn .controls-Button__icon {
     line-height: 2rem!important;
     padding-right: 0.4rem;
@@ -665,11 +657,6 @@ body .controls-ToolBar__menuIcon .icon-24 {
       }
    }
 }
-.controls-Link {
-  &.additionalLink__2 {
-    font-size: .857rem;
-  }
-}
 
 .controls__filter-button__apply-filter {
     margin-right: 0.29rem;
@@ -683,13 +670,6 @@ body .controls-ToolBar__menuIcon .icon-24 {
 .controls-Link {
   font-size: 1.14rem;
 }
-.controls-FieldLink .icon-size {
-    font-size: 3rem !important;
-    width: 3rem !important;
-    height: 3rem !important;
-    line-height: 3rem !important;
-}
-
 .controls-Browser {
    .controls-Browser__topTemplate {
       height: auto;
@@ -829,6 +809,16 @@ body {
             border-left: @button-border;
             border-top: @button-border;
          }
+         &.ws-infobox-triangle-vertical-right {
+            right: -.54rem;
+            border-right: @button-border;
+            border-top: @button-border;
+         }
+         &.ws-infobox-triangle-vertical-left {
+            left: -.54rem;
+            border-left: @button-border;
+            border-bottom: @button-border;
+         }
       }
 
       .ws-infobox-content {
@@ -842,10 +832,10 @@ body {
          height: 3rem!important;
          right: 0;
          top: 0;
-         color: @link-text-color!important;
+         color: @Infobox-cross-color!important;
          overflow: hidden;
          &:hover {
-            color: @link-hover-text-color!important;
+            color: @Infobox-cross-color-hover!important;
          }
          &:before {
             line-height: 2.7rem!important;
@@ -933,6 +923,7 @@ body {
        line-height: 3rem;
      }
      .controls-ListView__hoveredItem {
+        background-color:  #E0ECF5 !important;
          .controls-DataGridView__td {
              background-color:  #E0ECF5 !important;
          }
@@ -945,9 +936,7 @@ body {
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button:hover {
   color: #fff;
 }
-.controls-Browser__breadCrumbs {
-  top: .18rem;
-}
+
 .controls-ToolBar .controls-ToolBar__menuIcon {
     vertical-align: baseline;
 }
@@ -996,6 +985,16 @@ body {
   .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
     top: 0.35rem !important;
   }
+}
+
+/* КОСТЫЛЬ. Крошки накостылены через top'ы, margin'ы и тд. Срочно требуется переписать стили.
+   Выписана ошибка. https://online.sbis.ru/opendoc.html?guid=fa89f6fd-3e4a-4925-8de3-9f34c6b11729
+ */
+.ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
+   .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
+      position: relative;
+      top: .4257rem !important; // чтобы перебить непонятный top выше по файлу.
+   }
 }
 
 .controls-ListView {
@@ -1081,4 +1080,38 @@ body {
   .controls-TextBox .controls-TextBox__wrapper:before {
     line-height: 2.5em; //2.5 = 2.85/1.14 //2.85 - default-line-height, 1.14 - default-font size
   }
+}
+
+body {
+  .ws-errorsReportDialog {
+    min-width: 30rem;
+
+    .ws-field-string {
+      font-size: 1rem;
+      height: 1.5rem;
+      color: @default-text-color;
+    }
+
+    .ws-field-button {
+      height: 1.5rem;
+      padding-right: 0.5rem;
+    }
+
+    .ws-errorsReportDialog-caption {
+      text-align: left;
+      width: 6rem;
+      color: @default-text-color;
+    }
+
+    .ws-errorsReportDialog-errors {
+      .ws-errorsReportDialog-caption, .ws-field-string, .ws-errorsReportDialog-errorsDescription {
+        color: @error-color;
+      }
+    }
+  }
+}
+
+//Убрать когда проектировщики сделают одинаковые отступы, обсуждали на этом совещании: https://online.sbis.ru/obj/Meeting/e6b722a9-d339-4016-9fd6-82b763c4e241
+.controls-ItemsToolbar.controls-ItemsToolbar__edit {
+  bottom: 0.2857rem;
 }

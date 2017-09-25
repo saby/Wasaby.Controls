@@ -8,21 +8,22 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
    'tmpl!SBIS3.CONTROLS.BreadCrumbs/resources/dotsTpl',
    'tmpl!SBIS3.CONTROLS.BreadCrumbs/resources/itemTpl',
    'tmpl!SBIS3.CONTROLS.BreadCrumbs/resources/menuItem',
-   'Core/helpers/string-helpers',
+   'Core/helpers/String/escapeHtml',
+   'Core/helpers/String/escapeUnicode',
    "Core/IoC",
    'Core/helpers/Function/memoize',
    'css!SBIS3.CONTROLS.BreadCrumbs',
    'css!SBIS3.CONTROLS.Menu',
    'css!SBIS3.CONTROLS.MenuItem'
-], function(CompoundControl, ItemsControlMixin, PickerMixin, DecorableMixin, dotTplFn, itemContentTpl, dotsTpl, itemTpl, menuItem, strHelpers, IoC, memoize) {
+], function(CompoundControl, ItemsControlMixin, PickerMixin, DecorableMixin, dotTplFn, itemContentTpl, dotsTpl, itemTpl, menuItem, escapeHtml, escapeUnicode, IoC, memoize) {
    /**
     * Класс контрола "Хлебные крошки". Основное применение - <a href='https://wi.sbis.ru/doc/platform/patterns-and-practices/typical-list/'>иерархические реестры</a>.
     * @class SBIS3.CONTROLS.BreadCrumbs
     * @extends SBIS3.CORE.CompoundControl
     *
-    * @author Черемушкин Илья Вячеславович
+    * @author Герасимов Александр Максимович
     *
-    * @mixes SBIS3.CONTROLS.DSMixin
+    * @mixes SBIS3.CONTROLS.ItemsControlMixin
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.DecorableMixin
     *
@@ -223,7 +224,6 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
                   var tmplData = {
                      decorators: self._options._decorators,
                      colorField: self._options.colorField ? record.get(self._options.colorField) : '',
-                     strHelpers: strHelpers,
                      record: record,
                      idProperty: self._options.idProperty,
                      displayProperty: self._options.displayProperty,
@@ -355,8 +355,8 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
       _buildTplArgs: function(item) {
          var args = BreadCrumbs.superclass._buildTplArgs.apply(this, arguments);
          args.decorators = this._options._decorators;
-         args.escapeHtml = strHelpers.escapeHtml;
-         args.escapeUnicode = strHelpers.escapeUnicode;  
+         args.escapeHtml = escapeHtml;
+         args.escapeUnicode = escapeUnicode;
          return args;
       },
       

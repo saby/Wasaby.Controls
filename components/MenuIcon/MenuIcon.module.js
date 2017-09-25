@@ -3,25 +3,21 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!WSControls/Buttons/MenuButton', 'css!S
    'use strict';
 
    /**
-    * Класс контрола, который предназначен для отображения кнопки в виде иконки с выпадающим меню.
+    * Класс контрола "Кнопка в виде значка с выпадающим меню".
     *
-    * {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/buttons/button-icon/ Демонстрационные примеры}.
+    * {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/buttons/button-icon/#menu-icon Демонстрационные примеры}.
     * <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Спецификация</a>.
     *
     * @class SBIS3.CONTROLS.MenuIcon
     * @extends WSControls/Buttons/MenuButton
-    * @control
-    * @public
-    *
-    * @mixes SBIS3.CONTROLS.PickerMixin
-    * @mixes SBIS3.CONTROLS.DSMixin
     *
     * @demo SBIS3.CONTROLS.Demo.MyMenuIcon
     *
     * @author Романов Валерий Сергеевич
     *
     * @category Buttons
-    *
+    * @control
+    * @public
     * @initial
     * <component data-component='SBIS3.CONTROLS.MenuIcon'>
     *    <option name="icon" value="icon-24 icon-AddButton icon-primary"></option>
@@ -51,9 +47,6 @@ define('js!SBIS3.CONTROLS.MenuIcon', ['js!WSControls/Buttons/MenuButton', 'css!S
     * @ignoreEvents onDragIn onDragMove onDragOut onDragStart onDragStop onStateChanged onTooltipContentRequest onChange
     * @ignoreEvents onBeforeShow onAfterShow onBeforeLoad onAfterLoad onBeforeControlsLoad onKeyPressed onResize
     * @ignoreEvents onFocusIn onFocusOut onReady onDragIn onDragStart onDragStop onDragMove onDragOut
-    *
-    * @mixes SBIS3.CONTROLS.PickerMixin
-    * @mixes SBIS3.CONTROLS.DSMixin
     *
     * @cssModifier controls-Menu__hide-menu-header Скрывает из выпадающего меню заголовок, который устанавливают с помощью опции {@link caption}.
     */

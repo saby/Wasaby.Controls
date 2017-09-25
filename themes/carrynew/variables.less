@@ -13,6 +13,8 @@
 @acent-color2:                            #F8F8F8;//Цвет акцентной плашки
 @default-hover-color:                     #E0ECF5;
 @innacent-color2:						         #999999; //Неакцентные элементы, заголовки таблиц, комментарии
+// TODO: Используется только в prestonew, в других темах вместо нее используется @default-bg-color. Выпилить.
+// https://online.sbis.ru/opendoc.html?guid=f5f36c75-e461-4e1c-82fc-4079c3cafa90
 @basic-block-bg-color:					      #f3f3f3; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
 //=============
 @black-color:                             #333;
@@ -116,14 +118,14 @@
 // Calendar
 @calendar-bg:                             darken(@secondary-color, 5%);
 //FieldLink
-@controls-FieldLink-picker-show-color:    @white-color;
-@controls-FieldLink-picker-show-field-color: @default-text-color;
-@controls-FieldLink-link-color:           #2D68B5;
-@controls-FieldLink-FilterButton-color:   #2D68B5;
-@controls-FieldLink-FilterButton-color-hover:#2D68B5;
-@controls-FieldLink-border-color-focus-hover:@gray-ccc-color;
-@controls-FieldLink-border-color-picker-show:#0055BB;
-@controls-FieldLink-showSelector-color:   #2D68B5;
+@fieldLink-picker-show-color:    @white-color;
+@fieldLink-picker-show-field-color: @default-text-color;
+@fieldLink-link-color:           #2D68B5;
+@fieldLink-FilterButton-color:   #2D68B5;
+@fieldLink-FilterButton-color-hover:#2D68B5;
+@fieldLink-border-color-focus-hover:@gray-ccc-color;
+@fieldLink-border-color-picker-show:#0055BB;
+@fieldLink-showSelector-color:   #2D68B5;
 // MonthView //
 @month-view-bg:                           @white-color;
 @month-view-day-cell-text-color:          inherit;
@@ -241,7 +243,9 @@
 //money
 @money-decorator-integer-accent-results-font-color:#313E78;
 @money-decorator-integer-accent-registry-font-color:#313E78;
-
+//infobox
+@Infobox-cross-color:                     #2D68B5;
+@Infobox-cross-color-hover:               #313E78;
 //sundry
 @date-range-big-choose-bg-hovered-color:  rgb(240, 245, 251);
 @date-range-big-choose-header-apply-button-icon-margin-left:-1rem;
@@ -265,7 +269,7 @@
 @closeButtonImageHover:                         url('img/areaCloseButton.png') 0 -3rem;
 @DropdownList-linkStyleHoverColor:		      #313E78;
 @back-button-text-color:                     #313E78;
-@controls-FieldLink-link-color-hover:        #313E78;
+@fieldLink-link-color-hover:        #313E78;
 @icon-active-color:                          #313E78;
 
 //----------------//

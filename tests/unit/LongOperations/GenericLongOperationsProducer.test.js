@@ -11,19 +11,48 @@ define([
    function (GenericLongOperationsProducer, LongOperationEntry, LongOperationsConst, CoreInstance, Deferred, UserInfo) {
       'use strict';
 
-      //TODO Поддержать выполнение тестов под node!
-      if (typeof window === 'undefined') {
-         return;
+      if (typeof mocha !== 'undefined') {
+         mocha.setup({/*ignoreLeaks:true,*/ globals:[/*'*',*/ '__extends', 'sharedBusDebug', 'sharedBusLog', 'Lib/ServerEventBus/class/logger/ConnectWatchDog', 'Lib/ServerEventBus/class/logger/ConsoleDocviewWatchDog']});
       }
 
-      mocha.setup({/*ignoreLeaks:true,*/ globals:[/*'*',*/ '__extends', 'sharedBusDebug', 'sharedBusLog', 'Lib/ServerEventBus/class/logger/ConnectWatchDog', 'Lib/ServerEventBus/class/logger/ConsoleDocviewWatchDog']});
+      var MODULE = 'SBIS3.CONTROLS.GenericLongOperationsProducer';
+      var IS_NODEJS = typeof process !== 'undefined';
 
-      window.userInfo = {
+      var userInfo = {
          'Пользователь': 861523,
          'ИдентификаторСервисаПрофилей': '8cab8a51-da51-40fd-bef3-6f090edbdeaa'
       };
 
-      var MODULE = 'SBIS3.CONTROLS.GenericLongOperationsProducer';
+      var globalFixes;
+      if (IS_NODEJS) {
+         globalFixes = {};
+         var _localStorage = {
+            _data: {},
+            get length () {
+               return Object.keys(this._data).length;
+            },
+            key: function (i) {
+               return Object.keys(this._data)[i];
+            },
+            setItem: function (name, value) {
+               this._data[name] = '' + value;
+            },
+            getItem: function (name) {
+               return name in this._data ? '' + this._data[name] : undefined;
+            },
+            removeItem: function (name) {
+               delete this._data[name];
+            },
+         };
+         globalFixes.localStorage = 'localStorage' in global ? {prev:global.localStorage} : {};
+         global.localStorage = _localStorage;
+      }
+
+      if (!UserInfo.get.isSinonProxy) {
+         sinon.stub(UserInfo, 'get').callsFake(function (name) { return userInfo[name]; });
+      }
+
+
 
       // Попробовать создать новый экземпляр
       var _makeProducer = function (name, dontClear) {
@@ -92,7 +121,6 @@ define([
          return p;
       };
 
-
       describe('LongOperations: GenericLongOperationsProducer', function () {
 
          after(function () {
@@ -101,6 +129,17 @@ define([
             _lsTool.clear('Первый');
             _lsTool.clear('Второй');
             _lsTool.clear('Под ликвидацию 1');
+            /*if (globalFixes) {
+               for (var n in globalFixes) {
+                  var value = globalFixes[n];
+                  if ('prev' in value) {
+                     global[n] = value.prev;
+                  }
+                  else {
+                     delete global[n];
+                  }
+               }
+            }*/
          });
 
          describe('Создание экземпляра и API', function () {
@@ -449,7 +488,7 @@ define([
                var titles = ['Длительная операция 1', 'Длительная операция 2', 'Длительная операция 3'];
                var list = _byTitles(_lsTool.search(null), titles);
                assert.lengthOf(list, titles.length);
-               var userId = window.userInfo['Пользователь'];
+               var userId = userInfo['Пользователь'];
                for (var i = 0; i < list.length; i++) {
                   assert.property(list[i], 'userId', userId);
                }
@@ -459,7 +498,7 @@ define([
                var titles = ['Длительная операция 1', 'Длительная операция 2', 'Длительная операция 3'];
                var list = _byTitles(_lsTool.search(null), titles);
                assert.lengthOf(list, titles.length);
-               var userUuId = window.userInfo['ИдентификаторСервисаПрофилей'];
+               var userUuId = userInfo['ИдентификаторСервисаПрофилей'];
                for (var i = 0; i < list.length; i++) {
                   assert.property(list[i], 'userUuId', userUuId);
                }
@@ -1378,7 +1417,7 @@ define([
                   var snapshot2 = list2[i];
                   var id = snapshot.id;
                   if (ids.indexOf('' + id) !== -1) {
-                     assert.include([undefined/*LongOperationEntry.STATUSES.running*/, LongOperationEntry.STATUSES.suspended], snapshot.status);
+                     assert.include([undefined/*LongOperationEntry.STATUSES.running*/, LongOperationEntry.STATUSES.suspended], snapshot.status || undefined);
                      assert.strictEqual(snapshot2.status, LongOperationEntry.STATUSES.ended);
                      assert.isTrue(snapshot2.isFailed);
                      assert.strictEqual(snapshot2.resultMessage, LongOperationsConst.ERR_UNLOAD);
@@ -1446,5 +1485,6 @@ define([
             });
          });
       });
+
    }
 );

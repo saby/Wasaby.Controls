@@ -74,6 +74,14 @@
             padding-right: @controls-view-padding-DEFAULT;
          }
       }
+      .controls-DataGridView__th {
+         &.controls-DataGrid__column__type-money {
+            padding-right:@data-grid-money-header-cell-padding;
+            &:last-child {
+               padding-right: @data-grid-money-header-cell-padding-last;
+            }
+         }
+      }
    }
    &:not(.controls-ListView__multiselect) .controls-TreeView__folderFooterContainer {
       padding-left: @controls-view-padding-DEFAULT;
