@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    'Core/Deferred',
    "Core/ParallelDeferred",
    "Core/core-instance",
-   "Core/core-functions",
+   "Core/core-clone",
    "Core/IoC",
    "Core/helpers/Function/once",
    "Core/detection"
@@ -29,7 +29,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    Deferred,
    ParallelDeferred,
    cInstance,
-   cFunctions,
+   coreClone,
    IoC,
    once,
    detection) {
@@ -474,7 +474,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             if(this._options.searchParam) {
                /* Т.к. при сбросе поиска в саггесте запрос отправлять не надо (саггест скрывается),
                 то просто удалим параметр поиска из фильтра */
-               var listFilter = cFunctions.clone(this.getList().getFilter()); /* Клонируем фильтр, т.к. он передаётся по ссылке */
+               var listFilter = coreClone(this.getList().getFilter()); /* Клонируем фильтр, т.к. он передаётся по ссылке */
 
                delete listFilter[this._options.searchParam];
                this.setListFilter(listFilter, true);
