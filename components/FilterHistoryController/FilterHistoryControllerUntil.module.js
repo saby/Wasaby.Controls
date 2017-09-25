@@ -41,7 +41,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
                 и в итоге мы можем получить не ту дату */
                if(structureCopy[key].value) {
                   if(structureCopy[key].value instanceof Date) {
-                     structureCopy[key].value = structureCopy[key].value.toSQL();
+                     structureCopy[key].value = structureCopy[key].value.toSQL(Date.SQL_SERIALIZE_MODE_AUTO);
                   }
                }
                /* Надо удалить из истории шаблоны, т.к. история сохраняется строкой */
