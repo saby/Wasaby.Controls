@@ -300,6 +300,7 @@ define(
             }
             this._options.month = month;
             this._drawMonthTable();
+            this._$items = null;
             this._drawCurrentRangeSelection();
          },
          /**
