@@ -16,14 +16,11 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
       'Core/EventBus',
       'js!SBIS3.CORE.TabMessage',
       'js!SBIS3.CONTROLS.LongOperations.Const',
-      'js!SBIS3.CONTROLS.LongOperations.Tools.TabCalls',
-      'js!SBIS3.CONTROLS.LongOperations.Tools.Bunch',
       'js!SBIS3.CONTROLS.LongOperations.Tools.Postloader',
-      'js!SBIS3.CONTROLS.LongOperations.Tools.ProtectedScope',
-      'js!SBIS3.CONTROLS.LongOperations.Entry'//^^^ Убрать ?
+      'js!SBIS3.CONTROLS.LongOperations.Tools.ProtectedScope'
    ],
 
-   function (CoreInstance, Deferred, EventBus, TabMessage, LongOperationsConst, LongOperationsTabCalls, LongOperationsBunch, Postloader, ProtectedScope, LongOperationEntry) {
+   function (CoreInstance, Deferred, EventBus, TabMessage, LongOperationsConst, Postloader, ProtectedScope) {
       'use strict';
 
       /**
@@ -73,7 +70,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
        * @protected
        * @type {SBIS3.CORE.TabMessage}
        */
-      var _tabChannel;
+      //var _tabChannel;
 
       /**
        * Ключ текущей вкладки
@@ -97,7 +94,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
       //var _tabCalls;
 
       /**
-       * Объект для сбора данных от разных продюсеров и менеджеров при выполнения методов fetch
+       * Пул вызовов методов fetch
        * @protected
        * @type {SBIS3.CONTROLS.LongOperations.Tools.CallsPool}
        */
@@ -320,11 +317,11 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
                   _channel.destroy();
                   _channel = null;
                }
-               if (_tabChannel) {
-                  _tabChannel.notify('LongOperations:Manager:onActivity', {type:'die', tab:protectedOf(this)._tabKey});
-                  _tabChannel.unsubscribe('LongOperations:Manager:onActivity', _tabListener);
-                  _tabChannel.destroy();
-                  _tabChannel = null;
+               if (protectedOf(this)._tabChannel) {
+                  protectedOf(this)._tabChannel.notify('LongOperations:Manager:onActivity', {type:'die', tab:protectedOf(this)._tabKey});
+                  protectedOf(this)._tabChannel.unsubscribe('LongOperations:Manager:onActivity', _tabListener);
+                  protectedOf(this)._tabChannel.destroy();
+                  protectedOf(this)._tabChannel = null;
                }
                protectedOf(this)._tabCalls.destroy();
                protectedOf(this)._tabCalls = null;
@@ -336,10 +333,6 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
       // Раскрыть константы
       Object.defineProperty(manager, 'DEFAULT_FETCH_SORTING', {value:DEFAULT_FETCH_SORTING, /*writable:false,*/ enumerable:true});
       Object.defineProperty(manager, 'DEFAULT_FETCH_LIMIT', {value:DEFAULT_FETCH_LIMIT, /*writable:false,*/ enumerable:true});
-
-      // Инициализировать
-      protectedOf(manager)._producers = {};
-      protectedOf(manager)._tabManagers = {};
 
 
 
@@ -380,7 +373,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
                producer.subscribe(eventType, _eventListener);
             });
              // Уведомить другие вкладки
-            _tabChannel.notify('LongOperations:Manager:onActivity', {type:'register', tab:protectedOf(manager)._tabKey, producer:name, isCrossTab:producer.hasCrossTabData(), hasHistory:_canHasHistory(producer)});
+            protectedOf(manager)._tabChannel.notify('LongOperations:Manager:onActivity', {type:'register', tab:protectedOf(manager)._tabKey, producer:name, isCrossTab:producer.hasCrossTabData(), hasHistory:_canHasHistory(producer)});
             // Если есть уже выполняющиеся запросы данных - присоединиться к ним
             if (protectedOf(manager)._fetchCalls) {
                var queries = protectedOf(manager)._fetchCalls.listPools();
@@ -429,11 +422,13 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
             }
             // Удалить из списка
             delete protectedOf(manager)._producers[name];
-            // Почистить protectedOf(manager)._offsetBunch
-            protectedOf(manager)._offsetBunch.removeAll({tab:protectedOf(manager)._tabKey, producer:name});
+            // Почистить _offsetBunch
+            if (protectedOf(manager)._offsetBunch) {
+               protectedOf(manager)._offsetBunch.removeAll({tab:protectedOf(manager)._tabKey, producer:name});
+            }
             done = true;
             // Уведомить другие вкладки
-            _tabChannel.notify('LongOperations:Manager:onActivity', {type:'unregister', tab:protectedOf(manager)._tabKey, producer:name});
+            protectedOf(manager)._tabChannel.notify('LongOperations:Manager:onActivity', {type:'unregister', tab:protectedOf(manager)._tabKey, producer:name});
             // И уведомить своих подписчиков
             if (!protectedOf(manager)._isDestroyed) {
                _channel.notifyWithTarget('onproducerunregistered', manager);
@@ -565,7 +560,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
          var eventType = typeof evtName === 'object' ? evtName.name : evtName;
          _channel.notifyWithTarget(eventType, manager, !dontCrossTab ? (data ? ObjectAssign({tabKey:protectedOf(manager)._tabKey}, data) : {tabKey:protectedOf(manager)._tabKey}) : data);
          if (!dontCrossTab && !producer.hasCrossTabEvents()) {
-            _tabChannel.notify('LongOperations:Manager:onActivity', {type:eventType, tab:protectedOf(manager)._tabKey, isCrossTab:producer.hasCrossTabData(), hasHistory:_canHasHistory(producer), data:data});
+            protectedOf(manager)._tabChannel.notify('LongOperations:Manager:onActivity', {type:eventType, tab:protectedOf(manager)._tabKey, isCrossTab:producer.hasCrossTabData(), hasHistory:_canHasHistory(producer), data:data});
          }
       };
 
@@ -590,7 +585,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
                for (var n in protectedOf(manager)._producers) {
                   prodData[n] = {isCrossTab:protectedOf(manager)._producers[n].hasCrossTabData(), hasHistory:_canHasHistory(protectedOf(manager)._producers[n])};
                }
-               _tabChannel.notify('LongOperations:Manager:onActivity', {type:'handshake', tab:protectedOf(manager)._tabKey, producers:prodData});
+               protectedOf(manager)._tabChannel.notify('LongOperations:Manager:onActivity', {type:'handshake', tab:protectedOf(manager)._tabKey, producers:prodData});
                break;
             case 'handshake':
                if (!(evt.producers && typeof evt.producers === 'object')) {
@@ -667,7 +662,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
                      var members = protectedOf(manager)._expandTargets(targets);
                      for (var i = 0; i < queries.length; i++) {
                         var q = queries[i];
-                        var promises;
+                        /*^^^var promises;
                         if (0 < q.offset) {
                            promises = [];
                            for (var list = targets[tabKey], i = 0; i < list.length; i++) {
@@ -676,7 +671,8 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
                         }
                         else {
                            promises = protectedOf(manager)._tabCalls.callBatch(targets, 'fetch', [q], LongOperationEntry);
-                        }
+                        }*/
+                        var promises = protectedOf(self)._tabFetch(targets, q, false);
                         protectedOf(manager)._fetchCalls.addList(q, members, promises);
                      }
                   }
@@ -705,8 +701,10 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
             else {
                delete protectedOf(manager)._tabManagers[tabKey];
             }
-            // Почистить protectedOf(manager)._offsetBunch
-            protectedOf(manager)._offsetBunch.removeAll(prodName ? {tab:tabKey, producer:prodName} : {tab:tabKey});
+            // Почистить _offsetBunch
+            if (protectedOf(manager)._offsetBunch) {
+               protectedOf(manager)._offsetBunch.removeAll(prodName ? {tab:tabKey, producer:prodName} : {tab:tabKey});
+            }
             // Уведомить своих подписчиков
             //TODO: ### Если продюсер не отображаемый, можно (нужно?) игнорировать
             _channel.notifyWithTarget('onproducerunregistered', manager);
@@ -728,32 +726,23 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
 
 
 
+      // Инициализировать
+      protectedOf(manager)._producers = {};
+      protectedOf(manager)._tabManagers = {};
+
       // Установить ключ вкладки
       protectedOf(manager)._tabKey = _uniqueHex(50);
 
       // Создать каналы событий
       _channel = EventBus.channel();
-      _tabChannel = new TabMessage();
-
-      // Создать объект межвкладочных вызовов
-      protectedOf(manager)._tabCalls = new LongOperationsTabCalls(
-         /*tabKey:*/protectedOf(manager)._tabKey,
-         /*router:*/manager.getByName,
-         /*packer:*/function (v) {
-            // Упаковщик для отправки. Ожидается, что все объекты будут экземплярами SBIS3.CONTROLS.LongOperations.Entry
-            return v && typeof v.toSnapshot === 'function' ? v.toSnapshot() : v;
-         },
-         /*channel:*/_tabChannel
-      );
-
-      protectedOf(manager)._offsetBunch = new LongOperationsBunch();
+      protectedOf(manager)._tabChannel = new TabMessage();
 
       // Опубликовать свои события
       _channel.publish('onlongoperationstarted', 'onlongoperationchanged', 'onlongoperationended', 'onlongoperationdeleted');
 
       // И подписаться на события во вкладках
-      _tabChannel.subscribe('LongOperations:Manager:onActivity', _tabListener);
-      _tabChannel.notify('LongOperations:Manager:onActivity', {type: 'born', tab: protectedOf(manager)._tabKey});
+      protectedOf(manager)._tabChannel.subscribe('LongOperations:Manager:onActivity', _tabListener);
+      protectedOf(manager)._tabChannel.notify('LongOperations:Manager:onActivity', {type: 'born', tab: protectedOf(manager)._tabKey});
 
       if (typeof window !== 'undefined') {
          // Добавить обработчик перед выгрузкой для уведомеления пользователя (если нужно)

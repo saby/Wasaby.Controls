@@ -11,11 +11,13 @@ define('js!SBIS3.CONTROLS.LongOperations.ManagerLib',
       'js!WS.Data/Source/DataSet',
       'js!SBIS3.CONTROLS.LongOperations.Entry',
       'js!SBIS3.CONTROLS.LongOperations.HistoryItem',
+      'js!SBIS3.CONTROLS.LongOperations.Tools.Bunch',
       'js!SBIS3.CONTROLS.LongOperations.Tools.CallsPool',
+      'js!SBIS3.CONTROLS.LongOperations.Tools.TabCalls',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model'
    ],
 
-   function (Chain, RecordSet, DataSet, LongOperationEntry, LongOperationHistoryItem, LongOperationsCallsPool, Model) {
+   function (Chain, RecordSet, DataSet, LongOperationEntry, LongOperationHistoryItem, LongOperationsBunch, LongOperationsCallsPool, LongOperationsTabCalls, Model) {
       'use strict';
 
       /**
@@ -83,7 +85,7 @@ define('js!SBIS3.CONTROLS.LongOperations.ManagerLib',
                throw new TypeError('Argument "extra" must be an object');
             }
             if (!protectedOf(this)._fetchCalls) {
-               _createFetchCalls(this);
+               _init(this);
             }
             if (!protectedOf(this)._fetchCalls.has(query)) {
                // Если нет уже выполняющегося запроса
@@ -112,7 +114,7 @@ define('js!SBIS3.CONTROLS.LongOperations.ManagerLib',
                         targets = protectedOf(this)._tabTargets(targets, tabKey, protectedOf(this)._tabManagers[tabKey]);
                      }
                      if (targets) {
-                        var promises;
+                        /*^^^var promises;
                         if (useOffsets) {
                            promises = [];
                            for (var tabKey in targets) {
@@ -125,7 +127,8 @@ define('js!SBIS3.CONTROLS.LongOperations.ManagerLib',
                         }
                         else {
                            promises = protectedOf(this)._tabCalls.callBatch(targets, 'fetch', [query], LongOperationEntry);
-                        }
+                        }*/
+                        var promises = protectedOf(this)._tabFetch(targets, query, true);
                         protectedOf(this)._fetchCalls.addList(query, protectedOf(this)._expandTargets(targets), promises);
                      }
                   }
@@ -167,6 +170,9 @@ define('js!SBIS3.CONTROLS.LongOperations.ManagerLib',
                if (!(tabKey in protectedOf(this)._tabManagers && prodName in protectedOf(this)._tabManagers[tabKey])) {
                   throw new Error('Producer not found');
                }
+               if (!protectedOf(this)._tabCalls) {
+                  _init(this);
+               }
                // Если вкладка не закрыта и продюсер не раз-регистрирован
                return protectedOf(this)._tabCalls.call(tabKey, prodName, 'callAction', [action, operationId], null);
             }
@@ -203,6 +209,9 @@ define('js!SBIS3.CONTROLS.LongOperations.ManagerLib',
             }
             else
             if (tabKey in protectedOf(this)._tabManagers && prodName in protectedOf(this)._tabManagers[tabKey]) {
+               if (!protectedOf(this)._tabCalls) {
+                  _init(this);
+               }
                // Если вкладка не закрыта и продюсер не раз-регистрирован
                return protectedOf(this)._tabCalls.call(tabKey, prodName, 'history', filter ? [operationId, count, filter] : [operationId, count], LongOperationHistoryItem);
             }
@@ -210,12 +219,34 @@ define('js!SBIS3.CONTROLS.LongOperations.ManagerLib',
          }
       };
 
+
+
       /**
-       * Создать пул вызовов методов fetch
+       * Инициализировать
        * @param {object} self Этот объект
        * @protected
        */
-      var _createFetchCalls = function (self) {
+      var _init = function (self) {
+         /**
+          * Объект для выполнения методов менеджеров в других вкладках
+          * @protected
+          * @type {SBIS3.CONTROLS.LongOperations.TabCalls}
+          */
+         protectedOf(self)._tabCalls = new LongOperationsTabCalls(
+            /*tabKey:*/protectedOf(self)._tabKey,
+            /*router:*/self.getByName,
+            /*packer:*/function (v) {
+               // Упаковщик для отправки. Ожидается, что все объекты будут экземплярами SBIS3.CONTROLS.LongOperations.Entry
+               return v && typeof v.toSnapshot === 'function' ? v.toSnapshot() : v;
+            },
+            /*channel:*/protectedOf(self)._tabChannel
+         );
+
+         /**
+          * Пул вызовов методов fetch
+          * @protected
+          * @type {SBIS3.CONTROLS.LongOperations.CallsPool}
+          */
          protectedOf(self)._fetchCalls = new LongOperationsCallsPool(
             /*fields:*/['tab', 'producer'],
             /**
@@ -343,6 +374,38 @@ define('js!SBIS3.CONTROLS.LongOperations.ManagerLib',
                return results;
             }
          );
+
+         /**
+          * Счётчики текщих отступов по продюсерам
+          * @protected
+          * @type {SBIS3.CONTROLS.LongOperations.Bunch}
+          */
+         protectedOf(self)._offsetBunch = new LongOperationsBunch();
+
+         /**
+          * Выполнить запрос к продюсерам во вкладках
+          * @protected
+          * @praram {object} targets Объект с целями для запроса
+          * @praram {object} query Объект с параметрами запроса
+          * @praram {boolean} useOffsets Использовать поиск отступа в _offsetBunch
+          * @return {Core/Deferred[]}
+          */
+         protectedOf(self)._tabFetch = function (targets, query, useBunch) {
+            if (0 < query.offset) {
+               var promises = [];
+               for (var tabKey in targets) {
+                  for (var list = targets[tabKey], i = 0; i < list.length; i++) {
+                     var n = list[i];
+                     var offset = useBunch ? protectedOf(this)._offsetBunch.search({tab:tabKey, producer:n}, offsetIds).shift() || 0 : 0;
+                     promises.push(protectedOf(this)._tabCalls.call(tabKey, n, 'fetch', [ObjectAssign({}, query, {offset:offset})], LongOperationEntry));
+                  }
+               }
+               return promises;
+            }
+            else {
+               return protectedOf(this)._tabCalls.callBatch(targets, 'fetch', [query], LongOperationEntry);
+            }
+         }.bind(self);
       };
 
 
