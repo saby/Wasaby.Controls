@@ -172,6 +172,11 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                });
             }
          });
+
+         //TODO При активации скрытых за область операций может произойти скроллирование к ним. Нужно его отменить.
+         this._getItemsContainer().on('scroll', function(e){
+            $(this).scrollLeft(0);
+         })
       },
 
       //Суперкласс у панели операций в методе getItems возвращает this._items. Но возможнно в items которые были переданы в
@@ -330,40 +335,25 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          /* Доступная под операции ширина = Ширина контейнера - ширина кнопки с меню*/
          var allowedWidth = container.width() - ITEMS_MENU_WIDTH;
 
-         var operations = this._getItemsContainer().find('> .js-controls-operationsPanel__action');
-         //Вернем видимость всех вручную спрятанных операций.
-         operations.css('display', '');
-
-         //Отберем только видимые элементы.
-         operations = operations.filter(function(index, elem){
-            return !!$(elem).is(':visible');
-         });
+         /* Проверяем на вместимость только видимые операции. Операции линейно лежат в контейнере, поэтому для оптимизации выборки проверим только детей первого уровня. */
+         var operations = this._getItemsContainer().find('> .js-controls-operationsPanel__action:visible');
 
          var width = 0;
          var isMenuNecessary = false;
          this._getItemsContainer().css('width', '');
 
          for(var i = 0, l = operations.length; i < l; i++){
+            var elemWidth = $(operations[i]).outerWidth(true);
 
-            var operation = $(operations[i]);
-
-            if(!isMenuNecessary){
-               var elemWidth = operation.outerWidth(true);
-
-               /* Если текущая ширина привышает доступную, то ограничеваем ее, таким образом, кнопка с меню прижмется справа */
-               if(width + elemWidth > allowedWidth){
-                  isMenuNecessary = true;
-                  this._getItemsContainer().css('width', width);
-               }
-               else {
-                  width += elemWidth;
-               }
+            /* Если текущая ширина привышает доступную, то ограничеваем ее, таким образом, кнопка с меню прижмется справа */
+            if(width + elemWidth > allowedWidth){
+               isMenuNecessary = true;
+               this._getItemsContainer().css('width', width);
+               break;
             }
             else {
-               //Скроем оставшиеся операции. Иначе при их активации до них будет прокручиваться скролл.
-               operation.css('display', 'none');
+               width += elemWidth;
             }
-
          }
 
          if (isMenuNecessary) {
