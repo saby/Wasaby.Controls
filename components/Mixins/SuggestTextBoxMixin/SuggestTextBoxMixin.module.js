@@ -302,7 +302,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
       },
 
       _getLoadingContainer : function() {
-         return this.getContainer().find('.controls-TextBox__fieldWrapper');
+         return this.getContainer().find('.controls-TextBox__afterFieldWrapper');
       },
 
       before: {
