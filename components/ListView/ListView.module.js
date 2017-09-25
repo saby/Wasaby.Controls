@@ -1209,6 +1209,8 @@ define('js!SBIS3.CONTROLS.ListView',
                // то горизонтальный скрол(и иногда вертикальный) происходит внутри window.
                $(window).on('resize scroll', this._setScrollPagerPositionThrottled);
             }
+
+            this._scrollBinder._updateScrollPages(!this._options.virtualScrolling || this._resetPaging);
          },
 
          _onVisibleChange: function(event, visible){
