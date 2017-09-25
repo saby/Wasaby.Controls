@@ -97,12 +97,16 @@
       width: 100%;
       height: 100%;
       overflow-y: auto;
-      padding: 6px 0 0 4px; /* отступы у параграфов через padding родительского блока без first-child */
+      padding: 2px 0 2px 4px; /* отступы у параграфов через padding родительского блока без first-child */
       border: 1px solid transparent;
       box-sizing: border-box;
       word-wrap: break-word;
       .engine-DecoratedLink {
          display: block;
+      }
+      & > :last-child,
+      & > :last-child li:last-child {
+         margin-bottom: 0;
       }
    }
    .controls-RichEditor__editorFrame.ws-basic-style {

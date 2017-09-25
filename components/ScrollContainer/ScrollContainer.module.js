@@ -178,15 +178,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   this._initScrollbar = this._initScrollbar.bind(this);
                   this._container.one('mouseenter', this._initScrollbar);
                   this._container.one('wheel', this._initScrollbar);
-                  if (cDetection.IEVersion >= 10) {
-                     // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
-                     // 1px для скроллирования и чтобы мы не могли скроллить мы отменим это действие.
-                     this._content[0].onmousewheel = function(event) {
-                        if (this._content[0].scrollHeight - this._content[0].offsetHeight === 1) {
-                           event.preventDefault();
-                        }
-                     }.bind(this);
-                  }
 
                   //--------------- Управление видимостью скролла ---------------//
                   // Сделано через EventBus.
@@ -233,6 +224,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
                this._addGradient();
 
+               // Что бы до инициализации не было видно никаких скроллов
+               this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
+
                // task: 1173330288
                // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
                FloatAreaManager._scrollableContainers[this.getId()] = this.getContainer().find('.controls-ScrollContainer__content');
@@ -249,7 +243,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          _addGradient: function() {
          	var maxScrollTop = this._getScrollHeight() - this._container.height();
-            
+
             this._container.toggleClass('controls-ScrollContainer__bottom-gradient', maxScrollTop > 0 && this._getScrollTop() < maxScrollTop);
          },
 
@@ -405,7 +399,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                .off('mouseenter', this._onMouseenter)
                .off('mouseleave', this._onMouseleave);
          },
-         
+
          _getScrollContainerChannel: function() {
             return EventBus.channel('ScrollContainerChannel');
          },
@@ -557,7 +551,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _onResizeHandler: function(){
-            AreaAbstractCompatible._onResizeHandler.apply(this, arguments);
+            this._notify('onResize');
             if (this._scrollbar){
                this._scrollbar.setContentHeight(this._getScrollHeight());
                this._scrollbar.setPosition(this._getScrollTop());
@@ -573,6 +567,11 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                 */
                if (cDetection.firefox) {
                   this._content.toggleClass('controls-ScrollContainer__content-overflowHidden', !this._getChildContentHeight());
+               }
+               if (cDetection.isIE) {
+                  // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
+                  // 1px для скроллирования.
+                  this._content.toggleClass('controls-ScrollContainer__content-overflowHidden', this._getScrollHeight() - this._container.height() <= 1);
                }
             }
 
@@ -621,11 +620,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          _getScrollHeight: function(){
             var height;
             height = this._content[0].scrollHeight;
-            // Баг в IE версии 10 и старше, если повесить стиль overflow-y:scroll, то scrollHeight увеличивается на 1px,
-            // поэтому мы вычтем его.
-            if (cDetection.IEVersion >= 10) {
-               height -= 1;
-            }
+
             // TODO: придрот для правильного рассчета с модификатором __withHead
             // он меняет высоту скроллабара - из за этого получаются неверные рассчеты
             // убрать вместе с этим модификатором, когда будет шаблон страницы со ScrollContainer и фиксированой шапкой

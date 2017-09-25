@@ -266,10 +266,10 @@
 @menu-header-height:                      3.57rem;
 @menu-expand-icon-font-size:              @icon-large-size;
 @menu-big-header-height:                  1.1428rem;
-@menu-header-icon-color:                  @default-hover-color;
 @menu-header-padding:                     .14rem 0.57rem;
 @popup-header-font-weight:                normal;
 @popup-header-caption-color:              @default-text-color;
+@menu-header-icon-color:                  @popup-header-caption-color;
 //Menu item
 @menu-item-height:                        3.57rem;
 @menu-item-text-color:                    #273B4D;
@@ -314,8 +314,6 @@
 @search-background:                       rgba(150, 159, 168, 0.15);
 @search-form-icon-padding:                0;
 @search-form-icon-search-color:           #e4e4e4;
-//Formatted text box
-@formatted-text-box-field-padding:        0;
 //  Combo box
 @combo-box-picker-item-font-size:         1.14rem;
 @combo-box-field-text-color : 				@default-text-color;
@@ -593,6 +591,8 @@
 @data-grid-money-header-cell-padding:     1.43rem;
 @data-grid-money-header-cell-padding-last:1.92rem;
 @data-grid-results-color:                 #FFCC99;
+@data-grid-partScroll-arrowLeft-top-shift: -0.8571rem;
+@data-grid-partScroll-arrowRight-top-shift: -0.8571rem;
 // PrintDialog
 //По какой-то причине Firefox берёт font-size не из html, а свой, причем только при расчёте этой ширины
 @controls-printdialog-min-width:          27em;
@@ -896,7 +896,7 @@
 @list-view-loading-indicator-gradient-bg: url(@list-view-scroll-spritesheet) no-repeat center;
 @list-view-loading-indicator-gradient-bg-up:url(@list-view-scroll-spritesheet) no-repeat center;
 @DropdownList-picker-menu-item-height:    3rem;
-@DropdownList-picker-menu-item-height-ff: 3rem;
+@DropdownList-picker-menu-item-height-ff: 4rem;
 @DropdownList-picker-menu-item-base-color: @menu-item-text-color;
 @DropdownList-after-caption-top:          0;
 @tree-view-ellipsis-copyArrow-width:      1rem;

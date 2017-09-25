@@ -287,10 +287,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          //Сделать общую точку входа для поиска, для понимания где искать на источнике или на проекции
          var itemText = model.get(this._options.displayProperty).toLowerCase(),
             text = this.getText().toLowerCase();
-         if (itemText.match(text)){
-            return true;
-         }
-         return false;
+         return itemText.indexOf(text) > -1;
       },
 
       _onSearch: function(){
@@ -304,7 +301,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _onResetSearch: function(){
          this.setSelectedIndex(-1);
          this._getItemsProjection().setFilter(null);
-         this.redraw();
          this._setKeyByText();
       },
 
@@ -524,8 +520,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   self.setActive(true);
                }
                self.hidePicker();
-               // чтобы не было выделения текста, когда фокус вернули в выпадашку
-               self._fromTab = false;
                self.setSelectedIndex(index);
                if (self._options.autocomplete){
                   self._getItemsProjection().setFilter(null);
@@ -771,21 +765,25 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       showPicker: function(){
-         //Инициализируем пикер, чтобы перед показом ограниччить его ширину
-         if (!this._picker || this._picker.isDestroyed()) {
-            this._initializePicker();
-         }
-         ComboBox.superclass.showPicker.call(this);
-         TextBoxUtils.setEqualPickerWidth(this._picker);
-         //После отображения пикера подскроливаем до выбранного элемента
          var projection = this._getItemsProjection(),
             item = projection.at(this.getSelectedIndex()),
             hash = item && item.getHash();
 
-         if(!hash && projection.getCount() > 0) {
-            hash = projection.at(0).getHash();
+         if (projection.getCount()) {
+            //Инициализируем пикер, чтобы перед показом ограниччить его ширину
+            if (!this._picker || this._picker.isDestroyed()) {
+               this._initializePicker();
+            }
+            ComboBox.superclass.showPicker.call(this);
+            TextBoxUtils.setEqualPickerWidth(this._picker);
+            //После отображения пикера подскроливаем до выбранного элемента
+
+
+            if(!hash && projection.getCount() > 0) {
+               hash = projection.at(0).getHash();
+            }
+            this._scrollToItem(hash);
          }
-         this._scrollToItem(hash);
       },
 
       _initializePicker: function(){

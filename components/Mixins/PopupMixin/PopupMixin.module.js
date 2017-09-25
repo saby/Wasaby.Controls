@@ -1117,16 +1117,18 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       _notifyOnAlignmentChange: function () {
          var isVerAlignChanged = this._defaultVerticalAlignSide != this._currentAlignment.verticalAlign.side,
              isHorAlignChanged = this._defaultHorizontalAlignSide != this._currentAlignment.horizontalAlign.side,
+             isChanged = isVerAlignChanged || isHorAlignChanged || this._options.corner != this._currentAlignment.corner,
              newAlignment;
 
-         if (isVerAlignChanged || isHorAlignChanged || this._options.corner != this._currentAlignment.corner) {
+         this._container.toggleClass('controls-popup-revert-horizontal', isHorAlignChanged)
+            .toggleClass('controls-popup-revert-vertical', isVerAlignChanged);
+
+         if (isChanged) {
             newAlignment = {
                verticalAlign: this._options.verticalAlign,
                horizontalAlign: this._options.horizontalAlign,
                corner: this._options.corner
             };
-            this._container.toggleClass('controls-popup-revert-horizontal', isHorAlignChanged)
-                           .toggleClass('controls-popup-revert-vertical', isVerAlignChanged);
             this._notify('onAlignmentChange', newAlignment);
          }
       },

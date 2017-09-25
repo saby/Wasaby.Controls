@@ -113,6 +113,33 @@ define(['js!SBIS3.CONTROLS.FilterHistoryControllerUntil'], function (FilterHisto
                 resultStructure,
                 secondStructure
             );
+   
+            var resultStructure = [
+               {
+                  internalCaptionField: "Тест_CaptionField",
+                  internalValueField: "Тест_ValueField",
+                  resetValue: null,
+                  value: null,
+                  itemTemplate: null,
+                  historyItemTemplate: null
+               },
+               {
+                  caption: "За сегодня",
+                  internalCaptionField: "FilterDatePeriodText",
+                  internalValueField: "FilterDatePeriod",
+                  resetValue: "Все",
+                  value: "Сегодня",
+                  itemTemplate: null,
+                  historyItemTemplate: null
+               }
+            ];
+   
+            FilterHistoryControllerUntil.prepareNewStructure(secondStructure, structure);
+            
+            assert.deepEqual(
+               resultStructure,
+               secondStructure
+            );
          })
       });
 
