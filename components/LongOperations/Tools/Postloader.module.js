@@ -45,6 +45,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Tools.Postloader',
                throw new TypeError('Argument "name" must be a string');
             }
             var postloader = this;
+            //TODO: ### Хорошо бы воспроизводить сигнатуру метода
             return function () {
                if (!this || typeof this !== 'object') {
                   throw new Error('Сall without object context');
