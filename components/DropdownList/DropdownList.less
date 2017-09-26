@@ -50,6 +50,11 @@
      .controls-DropdownList__beforeCaptionWrapper {
        display: inline-block;
      }
+     &.controls-DropdownList__hideCross{
+       .controls-DropdownList__afterCaptionWrapper{
+          display: none;
+       }
+     }
      &.controls-DropdownList__withoutArrow{
        .controls-DropdownList__beforeCaptionWrapper{
          display: none;
@@ -73,7 +78,7 @@
          }
       }
    }
-   &.controls-DropdownList__withoutCross, &.controls-DropdownList__hideCross, &.ws-disabled{
+   &.controls-DropdownList__withoutCross, &.ws-disabled{
       .controls-DropdownList__afterCaptionWrapper{
          display: none;
       }
