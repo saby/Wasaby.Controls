@@ -1,8 +1,8 @@
 define('js!SBIS3.CONTROLS.LongOperationHistory',
    [
       'js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.LongOperationsManager',
-      'js!SBIS3.CONTROLS.LongOperationHistoryItem',
+      'js!SBIS3.CONTROLS.LongOperations.Manager',
+      'js!SBIS3.CONTROLS.LongOperations.HistoryItem',
       'js!WS.Data/Source/DataSet',
       'js!WS.Data/Collection/RecordSet',
       'js!WS.Data/Entity/Record',
