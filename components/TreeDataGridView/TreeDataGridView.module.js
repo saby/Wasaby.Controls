@@ -79,7 +79,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          config.classIsSelected = (cfg.selectedKey == cfg.item.getId()) ? ' controls-ListView__item__selected' : '';
          config.isColumnScrolling = cfg.startScrollColumn !== undefined;
          config.columnsShift = cfg.columnsShift;
-         config.addClasses = 'controls-DataGridView__tr controls-ListView__item js-controls-ListView__item ' + (cfg.className ? cfg.className : '') + config.classNodeType + config.classNodeState + config.classIsLoaded + config.classHasLoadedChild + config.classIsSelected + this._options.noHover ? ' controls-ListView__hoveredItem__withHover' : ' controls-ListView__hoveredItem__withoutHover';
+         config.addClasses = 'controls-DataGridView__tr controls-ListView__item js-controls-ListView__item ' + (cfg.className ? cfg.className : '') + config.classNodeType + config.classNodeState + config.classIsLoaded + config.classHasLoadedChild + config.classIsSelected;
          
          if(cfg.selectedKey === cfg.item.get(cfg.idProperty)) {
             config.addClasses += ' controls-ListView__item__selected';
