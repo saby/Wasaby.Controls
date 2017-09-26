@@ -1217,7 +1217,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _onVisibleChange: function(event, visible){
             if (this._scrollPager) {
                // покажем если ListView показалось и есть страницы и скроем если скрылось
-               this._scrollPager.setVisible(visible && this._scrollPager.getPagesCount());
+               this._scrollPager.setVisible(visible && this._scrollPager.getPagesCount() > 1);
             }
          },
 
