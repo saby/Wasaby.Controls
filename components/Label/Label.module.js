@@ -2,48 +2,59 @@ define('js!SBIS3.CONTROLS.Label',
    [
       'Core/Control',
       'js!SBIS3.CONTROLS.Clickable',
-      'Core/Sanitize',
       'tmpl!SBIS3.CONTROLS.Label',
       'js!SBIS3.CONTROLS.Label.compatibility',
       'css!SBIS3.CONTROLS.Label'
    ],
-   function(LightControl, Clickable, Sanitize, template, Compatibility) {
+   function(LightControl, Clickable, template, Compatibility) {
 
       'use strict';
 
       /**
-       * Компонент метка. Работает как тег label. Должен использоваться совместно с {@link SBIS3.CONTROLS.TextBox}.
+       * Класс контрола "Метка". Предназначен для использования совместно с {@link SBIS3.CONTROLS.TextBox} и другими полями ввода.
+       *
+       * <a href="http://axure.tensor.ru/standarts/v7/%D0%BF%D0%BE%D0%BB%D0%B5_%D0%B2%D0%B2%D0%BE%D0%B4%D0%B0__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_03_.html">Спецификация.</a>
+       * <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/textbox/infield/label/">Демонстрационные примеры.</a>
+       *
        * @class SBIS3.CONTROLS.Label
        * @extends WSControls/Control/Base
        *
-       * @demo SBIS3.CONTROLS.Demo.MyLabelStandart Пример работы Label с TextBox.
-       * Для взаимодействия метки и поля ввода(при клике на метку фокус переходит в поле ввода) нужно задать имя полю ввода
-       * через опцию name и установить такое же значение в опцию owner у метки.
-       *
-       * @demo SBIS3.CONTROLS.Demo.MyLabelRequeredField Пример обязательной метки.
-       * Чтобы иметь обязательную метку нужно повесить класс controls-Label_requeredField задав опцию
-       * className="... controls-Label_requeredField".
-       *
-       * @demo SBIS3.CONTROLS.Demo.MyLabelDisabled Пример недоступной метки и TextBox.
-       * Чтобы метка и TextBox стали недоступными нужно установить родителю опцию enabled="{{false}}" или установить
-       * метке и TextBox ту же опцию с тем же значением.
-       *
-       * @demo SBIS3.CONTROLS.Demo.MyFlexLabelContainer Пример как можно спозиционировать метку слева от контента
-       * с помощью классов controls-LabelContainer controls-LabelContainer__label controls-LabelContainer__content.
-       *
-       * @demo SBIS3.CONTROLS.Demo.MyLabel Пример всевозможных меток по стандарту
-       * http://axure.tensor.ru/standarts/v7/%D0%BF%D0%BE%D0%BB%D0%B5_%D0%B2%D0%B2%D0%BE%D0%B4%D0%B0__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_03_.html
-       *
        * @mixes SBIS3.CONTROLS.Clickable
-       * @author Крайнов Дмитрий Олегович
+       * @mixes SBIS3.CONTROLS.Label.compatibility
        *
-       * @cssModifier controls-Label_requeredField Устанавливет отображение метки как обязательной.
+       * @author Журавлев Максим Сергеевич
        *
+       * @cssModifier controls-Label_requeredField Модификатор устанавливает отображение символа "*" справа от метки.
+       * Такие метки располагают рядом с полями, которые обязательны для заполнения.
+       * Если все поля формы обязательны для заполнения, то не стоит их отмечать через "*".
        * @control
        * @public
        *
        */
       var Label = LightControl.extend([Clickable, Compatibility], /** @lends SBIS3.CONTROLS.Label.prototype */{
+          /**
+           * @name SBIS3.CONTROLS.Label#caption
+           * @cfg {String} Устанавливает текст метки.
+           * @see setCaption
+           * @see getCaption
+           */
+          /**
+           * @name SBIS3.CONTROLS.Label#tooltip
+           * @cfg {String} Устанавливает текст всплывающей подсказки, которая отображается при наведении курсора мыши на метку.
+           * @see setTooltip
+           * @see getTooltip
+           */
+          /**
+           * @name SBIS3.CONTROLS.Label#visible
+           * @cfg {Boolean} Устанавливает видимость метки.
+           * @see setVisible
+           * @see getVisible
+           */
+          /**
+           * @name SBIS3.CONTROLS.Label#owner
+           * @cfg {String} Устанавливает имя контрола, к которому будет привязана метка.
+           *
+           */
          _controlName: 'SBIS3.CONTROLS.Label',
 
          _template: template,

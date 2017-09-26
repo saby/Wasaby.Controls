@@ -2,6 +2,11 @@
 .controls-ListView {
     position: relative;
 
+   // Нельзя устанавливать минимальную высоту для копии таблицы которая используется для фиксации заголовков
+   &:not(.controls-ListView__dataLoaded):not(.ws-sticky-header__table-header-copy) {
+      min-height: @list-view-min-height;
+   }
+
   .controls-ListView__item {
     overflow: hidden;
     position: relative;
@@ -25,8 +30,8 @@
    }
 
    &.controls-ListView__showCheckBoxes {
-      .controls-ListView__itemCheckBox {
-         .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+      .controls-ListView__itemCheckBox:before {
+         visibility: visible;
       }
    }
    &.controls-ListView__hideCheckBoxes {
@@ -82,12 +87,20 @@
    }
 }
 
+/* Почему сделано через visibility:
+   в ie11 в версии 11.0.9600.18792 появился баг (в более ранних версиях не повторяется),
+   если в ячейке таблицы, которая проскролена вниз, показать что-то через :before,
+   то таблица прагнет на высоту этого показанного контента вверх.
+   Поэтому сразу отображаем чекбоксы, но делаем их скрытыми (visibility: hidden).
+   А при надобности показываем */
+.controls-ListView__itemCheckBox {
+   .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+}
+.controls-ListView__itemCheckBox:before {
+   visibility: hidden;
+}
+
 .controls-ListView__multiselect {
-   .controls-ListView__hoveredItem {
-      .controls-ListView__itemCheckBox {
-         .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
-      }
-   }
    .controls-ListView__item__multiSelected:not(.controls-ListView__item__partiallySelected) {
       .controls-ListView__itemCheckBox {
          .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
@@ -98,6 +111,13 @@
       .controls-ListView__itemCheckBox {
          .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
          .checkbox-null-size(@check-box-icon-size, @check-box-icon-null-size);
+      }
+   }
+   .controls-ListView__hoveredItem,
+   .controls-ListView__item__multiSelected:not(.controls-ListView__item__partiallySelected),
+   .controls-ListView__item__partiallySelected {
+      .controls-ListView__itemCheckBox:before {
+         visibility: visible;
       }
    }
 }
@@ -155,23 +175,16 @@
    }
 }
 
-.controls-ListView__indicatorVisible {
+.controls-ListView__indicatorVisible:not(.ws-sticky-header__table-header-copy) {
+    min-height: @list-view-scroll-height + @data-grid-header-cell-height; // Высота индикатор скрола + высота ячейки шапки, чтобы при подгрузке скролл не скрывался под шапкой
     > .controls-ListView-scrollIndicator {
       display: block;
    }
 }
 
-.controls-ListView__scrollPager{
-   position: fixed;
-   bottom: @scrollpager-bottom;
-   height: 32px;
-   background: @scrollpager-bg;
-   border-top: @scrollpager-border;
-   z-index: 10;
-}
-
 .controls-ListView__serviceFooter {
    padding: @listView-servicefooter-padding;
+   overflow: hidden;
 }
 
 .controls-ListView__loadMoreButton {
@@ -240,65 +253,6 @@
    height: @controls-AjaxLoader-indicator-height;
 }
 
-//region dragndrop
-
-.controls-DragNDrop__draggedItem {
-  position: absolute;
-  width: @drag-and-drop-object-width;
-  height: @drag-and-drop-object-height;
-  background: @drag-and-drop-object-bg;
-  text-align: center;
-}
-
-.controls-DragNDrop__draggedCount {
-  display: inline-block;
-  width: @drag-and-drop-count-width;
-  height: @drag-and-drop-count-height;
-  line-height: @drag-and-drop-count-height;
-  margin: @drag-and-drop-count-margin;
-  color: @white-color;
-  font-family: @default-font-name;
-  font-size: 10px;
-}
-.controls-dragndrop {
-   &.controls-ListView {
-      .controls-DragNDrop__placeholder {
-         opacity: 0.35;
-         background-color: @default-itemHover-color;
-      }
-      .controls-DragNDrop__hierarchy_move {
-         outline: @drag-and-drop-border;
-      }
-   }
-
-   &.controls-ListView__verticalDragNDrop {
-      .controls-DragNDrop__insertBefore {
-         &, > td {
-            border-top: @drag-and-drop-border;
-         }
-      }
-      .controls-DragNDrop__insertAfter {
-         &, > td {
-            border-bottom: @drag-and-drop-border;
-         }
-      }
-   }
-
-
-   &.controls-ListView__horisontalDragNDrop {
-     .controls-DragNDrop__insertBefore{
-        border-left: @drag-and-drop-border;
-     }
-     .controls-DragNDrop__insertAfter {
-        border-right: @drag-and-drop-border;
-     }
-   }
-
-   .controls-ItemsToolbar {
-     display: none !important;
-   }
-}
-//endregion dragndrop
 
 .controls-ListView__results{
   background: #FFF;
@@ -307,31 +261,21 @@
   color: #313E78;
 }
 
-.ws-is-mobile-platform .controls-ListView__scrollPager{
-   position: fixed;
-   bottom: 0;
+.controls-ListView__scrollPager{
+   position: absolute;
+   bottom: @scrollpager-bottom;
+   right: 0;
    height: 32px;
-   background: white;
+   background: @scrollpager-bg;
    border-top: @scrollpager-border;
    z-index: 10;
 }
-
+.controls-ListView__scrollPager_fixed {
+   position: fixed;
+}
 .ws-float-area-animate .controls-ListView__scrollPager {
    display: none;
 }
-
-.controls-ScrollContainer {
-   > .controls-ListView__scrollPager{
-      position: absolute;
-      bottom: @scrollpager-bottom;
-      right: 0;
-      height: 32px;
-      background: @scroll-pager-bg;
-      border-top: @scrollpager-border;
-      z-index: 10;
-   }
-}
-
 .rightSwipeAnimation {
    -webkit-animation-name: rightSwipe; /* Safari 4.0 - 8.0 */
    -webkit-animation-duration: 0.3s; /* Safari 4.0 - 8.0 */
@@ -351,118 +295,47 @@
       .translate(0);
    }
 }
-
-.controls-GroupBy__separator {
-   height: @list-view-separator-height / 2;
-   margin-bottom: @list-view-separator-height / 2;
-   border-bottom: @list-view-separator-line;
-}
-.controls-GroupBy__separator__center {
-   text-align: center;
-}
-.controls-GroupBy__separator__right {
-   text-align: right;
-}
-.controls-GroupBy__separatorText {
-   height: @list-view-separator-height;
-   line-height: @list-view-separator-height;
-   display: inline-block;
-   padding: @list-view-separator-content-padding;
-   background: #fff;
-   color: @list-view-separator-content-color;
-   font-size: @list-view-separator-content-size;
-   white-space: nowrap;
-   &.controls-GroupBy__separatorCollapse{
-      cursor: pointer;
-      &:before {
-         width: @list-view-separator-expander-size;
-         height: @list-view-separator-expander-size;
-         content: '\e000';
-         color: @list-view-separator-content-color;
-         font-size: @list-view-separator-expander-size;
-         display: inline-block;
-         float: left;
-         margin-right: 6px;
-      }
-      &.controls-GroupBy__separatorCollapse__collapsed {
-         &:before {
-            content: '\e013';
-         }
-      }
-   }
+:not(.ws-sticky-header__header-container) > .controls-ScrollPaging__pagesPadding.controls-ListView__bottomStyle {
+   padding-bottom: @scrollPaging-padding + @bottomStyle-padding-bottom;
 }
 .controls-GroupBy {
    .user-select();
-   &.controls-GroupBy__collapsed.controls-GroupBy__separatorText .controls-GroupBy__separatorCollapse {
-      &:before {
-         content: '\e013';
+   &__separator {
+      height: @list-view-separator-height / 2;
+      margin-bottom: @list-view-separator-height / 2;
+      border-bottom: @default-border-width solid @default-border-color;
+      &__center { //modifier
+         text-align: center;
       }
-   }
-}
-/*с включенной черезполосицей нужно отключать верхний бордер у строк, следующих за группой*/
-.ws-is-desktop-platform {
-   .controls-GroupBy__separatorText {
-      &.controls-GroupBy__separatorCollapse{
-         &:hover{
-            &, &:before {
-               color: @list-view-separator-content-hover-color;
+      &__right { //modifier
+         text-align: right;
+      }
+      &Text {
+         cursor: pointer;
+         line-height: @list-view-separator-height;
+         display: inline-block;
+         padding: @list-view-separator-content-padding;
+         background: @default-bg-color;
+         color: @list-view-separator-content-color;
+         font-size: @small-text-size;
+         white-space: nowrap;
+         &:hover {
+            color: @list-view-separator-content-hover-color;
+         }
+      }
+      &Collapse {
+         &:before {
+            content: '\e000';
+            float: left;
+            width: @list-view-separator-expander-size;
+            font-size: @list-view-separator-expander-size;
+            margin-right: @list-view-separator-expander-margin;
+         }
+         &__collapsed {
+            &:before {
+               content: '\e013';
             }
          }
       }
    }
 }
-/**/
-/**Петя должен сделать шаблон декорированной ссылки на клиенте, потом это надо будет удалить*/
-.controls-dragNDrop-avatar {
-   width: 200px;
-   height: 40px;
-   background: #fff;
-   .flexbox();
-   .flex-direction(row);
-   overflow: hidden;
-   padding: 4px;
-   .box-shadow(0 0 10px rgba(0, 0, 0, 0.50));
-   font-family: "Segoe UI";
-   .controls-dragNDrop-avatar__img-wrapper {
-      img {
-         width: 40px;
-         height: 40px;
-         border-radius: 8px;
-         margin: 0 4px 0 0;
-      }
-   }
-   .controls-dragNDrop-avatar__text-wrapper {
-      position: relative;
-      width: 100%;
-      overflow: hidden;
-      padding: 2px;
-      text-align: left;
-      .controls-dragNDrop-avatar__title {
-         color: #313E78;
-         font-weight: bold;
-         font-size: 14px;
-         white-space: nowrap;
-      }
-      .controls-dragNDrop-avatar__description {
-         color: #000;
-         font-size: 13px;
-         white-space: nowrap;
-      }
-      &:after {
-         content: '';
-         position: absolute;
-         right: 0px;
-         width: 30px;
-         top: 0;
-         bottom: 0;
-         .horizontal-gradient(rgba(255, 255, 255, 0), @white-color);
-         background-color: transparent;
-      }
-   }
-}
-
-:not(.ws-sticky-header__header-container) > .controls-ScrollPaging__pagesPadding.controls-ListView__bottomStyle {
-   padding-bottom: @scrollPaging-padding + @bottomStyle-padding-bottom;
-}
-
-/**/

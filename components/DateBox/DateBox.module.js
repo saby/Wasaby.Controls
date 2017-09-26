@@ -5,19 +5,20 @@ define(
    'js!SBIS3.CONTROLS.DateBox',
    [
       'Core/IoC',
-      'Core/ConsoleLogger',
       'Core/constants',
       'js!SBIS3.CONTROLS.FormattedTextBoxBase',
       'js!SBIS3.CONTROLS.Utils.DateUtil',
       'tmpl!SBIS3.CONTROLS.DateBox',
+      'tmpl!SBIS3.CONTROLS.FormattedTextBox',
       'js!SBIS3.CONTROLS.FormWidgetMixin',
       'js!SBIS3.CONTROLS.ControlsValidators',
       // Разобраться с общими стилями https://inside.tensor.ru/opendoc.html?guid=37032b47-6830-4b96-a4f3-727ea938bf58&des
+      'css!SBIS3.CONTROLS.TextBox',
       'css!SBIS3.CONTROLS.FormattedTextBox',
       'css!SBIS3.CONTROLS.DateBox'
       // 'i18n!SBIS3.CONTROLS.DateBox'
    ],
-   function (IoC, ConsoleLogger, constants, FormattedTextBoxBase, DateUtil, dotTplFn, FormWidgetMixin, ControlsValidators) {
+   function (IoC, constants, FormattedTextBoxBase, DateUtil, dotTplFn, FormattedTextBoxTpl, FormWidgetMixin, ControlsValidators) {
 
    'use strict';
 
@@ -34,13 +35,16 @@ define(
     * Можно вводить только значения особого формата даты.
     * @class SBIS3.CONTROLS.DateBox
     * @extends SBIS3.CONTROLS.FormattedTextBoxBase
+    *
+    * @mixes SBIS3.CONTROLS.FormWidgetMixin
+    *
     * @control
     * @author Крайнов Дмитрий Олегович
     * @public
     */
 
    var DateBox = FormattedTextBoxBase.extend([FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateBox.prototype */{
-      _dotTplFn: dotTplFn,
+      _dotTplFn: FormattedTextBoxTpl,
        /**
         * @event onDateChange Происходит при изменении даты.
         * @remark
@@ -108,6 +112,7 @@ define(
           * Опции создаваемого контролла
           */
          _options: {
+            formattedTextBoxTpl: FormattedTextBoxTpl,
             /**
              * Допустимые управляющие символы в маске.
              * Условные обозначения:
@@ -228,6 +233,10 @@ define(
       _modifyOptions: function(options) {
          var options = DateBox.superclass._modifyOptions.apply(this, arguments);
 
+         if (!options.className) {
+            options.className = '';
+         }
+         options.className += ' controls-DateBox';
          if (options.notificationMode === 'change') {
             options.notificationMode = 'textChange';
          }
@@ -731,7 +740,8 @@ define(
 
       _isRequired: function () {
          for(var i = 0; i < this._options.validators.length; i++) {
-            if (this._options.validators[i].validator === ControlsValidators.required) {
+            var validator = this._options.validators[i];
+            if (validator.validator === ControlsValidators.required && !validator.noFailOnError) {
                return true;
             }
          }

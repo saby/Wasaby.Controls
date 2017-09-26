@@ -22,6 +22,8 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
        * SBIS3.CONTROLS.LongOperationHistory
        * @class SBIS3.CONTROLS.LongOperationHistory
        * @extends SBIS3.CORE.CompoundControl
+       *
+       * @author Спирин Виктор Алексеевич
        */
       var moduleClass = CompoundControl.extend(/** @lends SBIS3.CONTROLS.LongOperationHistory.prototype */{
          _dotTplFn: dotTplFn,

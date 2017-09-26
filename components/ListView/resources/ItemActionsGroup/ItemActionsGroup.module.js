@@ -374,11 +374,11 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          },
 
          setMenuAlign: function(align, target) {
-            if(this._itemActionsMenu){
+            if (this._itemActionsMenu) {
                this._itemActionsMenu.setProperty('corner', align.corner);
                this._itemActionsMenu.setTarget(target);
-               this._itemActionsMenu.setVerticalAlign(align.verticalAlign);
-               this._itemActionsMenu.setHorizontalAlign(align.horizontalAlign);
+               this._itemActionsMenu._options.verticalAlign = align.verticalAlign;
+               this._itemActionsMenu._options.horizontalAlign = align.horizontalAlign;
             }
          },
 

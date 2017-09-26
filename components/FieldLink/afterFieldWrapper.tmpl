@@ -3,7 +3,7 @@
         cssClassName="controls-FieldLink__dropAllLinks"
         title="Очистить все"
         command="clearAllItems"
-        icon="icon-16 icon-Close icon-size"
+        icon="icon-Close icon-size"
         tabindex="0"
         activableByClick="{{ false }}"
     />
@@ -11,7 +11,8 @@
       <ws:SBIS3.CONTROLS.MenuIcon
             name="fieldLinkMenu"
             cssClassName="controls-FieldLink__showSelector"
-            icon="icon-16 icon-size icon-ListView icon-primary action-hover"
+            pickerClassName="controls-FieldLink__showSelector__picker"
+            icon="icon-size icon-ListView icon-primary action-hover"
             tabindex="0"
             displayProperty="caption"
             idProperty="caption"
@@ -21,7 +22,7 @@
       <ws:SBIS3.CONTROLS.IconButton
             name="fieldLinkMenu"
             cssClassName="controls-FieldLink__showSelector"
-            icon="icon-16 icon-size icon-ListView"
+            icon="icon-size icon-ListView"
             tabindex="0"
             command="showSelector"
             clickThrottle="{{true}}"

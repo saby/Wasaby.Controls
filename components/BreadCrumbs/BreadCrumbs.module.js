@@ -9,21 +9,21 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
    'tmpl!SBIS3.CONTROLS.BreadCrumbs/resources/itemTpl',
    'tmpl!SBIS3.CONTROLS.BreadCrumbs/resources/menuItem',
    'Core/helpers/String/escapeHtml',
-   'Core/helpers/string-helpers',
+   'Core/helpers/String/escapeUnicode',
    "Core/IoC",
    'Core/helpers/Function/memoize',
    'css!SBIS3.CONTROLS.BreadCrumbs',
    'css!SBIS3.CONTROLS.Menu',
    'css!SBIS3.CONTROLS.MenuItem'
-], function(CompoundControl, ItemsControlMixin, PickerMixin, DecorableMixin, dotTplFn, itemContentTpl, dotsTpl, itemTpl, menuItem, escapeHtml, strHelpers, IoC, memoize) {
+], function(CompoundControl, ItemsControlMixin, PickerMixin, DecorableMixin, dotTplFn, itemContentTpl, dotsTpl, itemTpl, menuItem, escapeHtml, escapeUnicode, IoC, memoize) {
    /**
     * Класс контрола "Хлебные крошки". Основное применение - <a href='https://wi.sbis.ru/doc/platform/patterns-and-practices/typical-list/'>иерархические реестры</a>.
     * @class SBIS3.CONTROLS.BreadCrumbs
     * @extends SBIS3.CORE.CompoundControl
     *
-    * @author Черемушкин Илья Вячеславович
+    * @author Герасимов Александр Максимович
     *
-    * @mixes SBIS3.CONTROLS.DSMixin
+    * @mixes SBIS3.CONTROLS.ItemsControlMixin
     * @mixes SBIS3.CONTROLS.PickerMixin
     * @mixes SBIS3.CONTROLS.DecorableMixin
     *
@@ -61,10 +61,10 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
              * @remark
              * Шаблон - это пользовательская вёрстка элемента коллекции.
              * Для доступа к полям элемента коллекции в шаблоне подразумевается использование конструкций шаблонизатора.
-             * Подробнее о шаблонизаторе вы можете прочитать в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/ Шаблонизация вёрстки компонента}.
+             * Подробнее о шаблонизаторе вы можете прочитать в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/xhtml/template/ Шаблонизация вёрстки компонента}.
              *
              * Шаблон может быть создан в отдельном XHTML-файле, когда вёрстка большая или требуется использовать его в разных компонентах.
-             * Шаблон создают в директории компонента в подпапке resources согласно правилам, описанным в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/file-structure/ Файловая структура компонента}.
+             * Шаблон создают в директории компонента в подпапке resources согласно правилам, описанным в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/file-structure/ Файловая структура компонента}.
              * Чтобы такой шаблон можно было использовать, нужно:
              * 1. Подключить шаблон в массив зависимостей компонента и импортировать его в переменную:
              *       <pre>
@@ -154,7 +154,9 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
                   } while (item.getId() != crumbId && idx < items.getCount());
 
                   this._notify('onItemClick', crumbId);
-                  this.sendCommand('BreadCrumbsItemClick', crumbId, crumbPath);
+                  if (this._options.command) {
+                     this.sendCommand(this._options.command, crumbId, crumbPath);
+                  }
                   e.stopPropagation();
                }
             }
@@ -356,7 +358,7 @@ define('js!SBIS3.CONTROLS.BreadCrumbs', [
          var args = BreadCrumbs.superclass._buildTplArgs.apply(this, arguments);
          args.decorators = this._options._decorators;
          args.escapeHtml = escapeHtml;
-         args.escapeUnicode = strHelpers.escapeUnicode;  
+         args.escapeUnicode = escapeUnicode;
          return args;
       },
       

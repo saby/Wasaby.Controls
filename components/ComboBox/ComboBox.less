@@ -12,7 +12,7 @@
       }
    }
    .controls-TextBox__field {
-      padding-right: 0;
+      text-overflow: clip;
    }
    .controls-TextBox__afterFieldWrapper {
       .inline-flexbox();
@@ -48,6 +48,17 @@
          display: inline-block;
       }
    }
+   &.controls-ComboBox__overflow {
+      .controls-ComboBox__shadow {
+         content: '';
+         position: absolute;
+         top:0;
+         right: @combo-box-icon-size + @combo-box-arrow-padding-right;
+         bottom: 0;
+         width: 24px;
+         background: linear-gradient(to left, @combo-box-picker-item-bg, rgba(255, 255, 255, 0));
+      }
+   }
 }
 .controls-ComboBox.controls-TextBox {
    cursor: pointer;
@@ -56,7 +67,7 @@
    &.controls-Picker__show {
       background-color: @combo-box-picker-show-background-color;
       color: @compo-box-picker-show-color;
-      border: @combobox-picker-border-width solid @combo-box-picker-show-border-color;
+      border: @default-border-width solid @combo-box-picker-show-border-color;
 
       .controls-TextBox__afterFieldWrapper {
             color: @combo-box-arrowDown-color-picker-show;
@@ -85,6 +96,7 @@
       &.controls-ComboBox__emptyRow, &.controls-ComboBox__emptyRow:hover{
         color: #ccc;
       }
+      position: relative;
       font: @combo-box-picker-item-font;
       font-size: @combo-box-picker-item-font-size;
       padding: @combo-box-picker-item-padding;
@@ -94,6 +106,21 @@
       &:hover {
          color: @combo-box-picker-item-hover-text-color;
          background: @combo-box-picker-item-hover-bg;
+         .controls-ComboBox__shadow {
+            background: linear-gradient(to left, @combo-box-picker-item-hover-bg, rgba(255, 255, 255, 0));
+         }
+      }
+      .controls-ComboBox__item {
+         white-space: nowrap;
+      }
+      .controls-ComboBox__shadow {
+         content: '';
+         position: absolute;
+         top:0;
+         right: 0;
+         bottom: 0;
+         width: 24px;
+         background: linear-gradient(to left, @combo-box-picker-item-bg, rgba(255, 255, 255, 0));
       }
    }
    &.controls-popup-revert-vertical {
@@ -105,16 +132,9 @@
       }
    }
 }
-/*
+//TODO: только после окончательного отказа удалить (падает браузер)
 .ws-is-ie10 {
-   .controls-ComboBox .controls-TextBox__afterFieldWrapper {
-      margin-top: -1px;
-      .icon-ExpandLight:before {
-         vertical-align: middle;
-      }
-   }
    .controls-ComboBox__picker .controls-ComboBox__body{
       height: 100%; //ie10 падает, если высота рассчитывается через calc. Теперь для ie10 выпадающий список прибит к краю экрана без отступа, если контейнер имеет достаточную высоту.
    }
 }
-*/

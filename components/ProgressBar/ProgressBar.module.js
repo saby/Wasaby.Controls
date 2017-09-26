@@ -9,11 +9,11 @@ define('js!SBIS3.CONTROLS.ProgressBar',
    ],
    function(CompoundControl, dotTplFn){
       /**
-       * Контрол, индикатор прохождения процесса
+       * Класс контрола "Индикатор прохождения процесса".
        * @class SBIS3.CONTROLS.ProgressBar
-       * @extends SBIS3.CORE.Control
+       * @extends SBIS3.CONTROLS.CompoundControl
        * @control
-       * @author Крайнов Дмитрий Олегович
+       * @author Журавлев Максим Сергеевич
        * @initial
        * <component data-component='SBIS3.CONTROLS.ProgressBar'>
        * </component>
@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.ProgressBar',
        * @ignoreOptions autoHeight autoWidth context horizontalAlignment isContainerInsideParent modal owner record stateKey
        * @ignoreOptions subcontrol verticalAlignment
        */
-      var ProgressBar = CompoundControl.extend({
+      var ProgressBar = CompoundControl.extend(/** @lends SBIS3.CONTROLS.ProgressBar.prototype */{
          _dotTplFn: dotTplFn,
          $protected: {
             _errorText: null,

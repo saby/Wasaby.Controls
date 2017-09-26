@@ -228,18 +228,24 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
                });
             }
          });
-
+         
          var pagesCount = this._scrollPages.length;
-
-         this._options.view.getContainer().toggleClass('controls-ScrollPaging__pagesPadding', pagesCount > 1);
+         var pagingVisibility = pagesCount > 1 && view._getOption('infiniteScroll') !== 'up';
+   
+         /* Если пэйджинг скрыт - паддинг не нужен */
+         view.getContainer().toggleClass('controls-ScrollPaging__pagesPadding', pagingVisibility);
          if (this._options.paging.getSelectedKey() > pagesCount){
             this._options.paging.setSelectedKey(pagesCount);
          }
-         this._options.paging.setPagesCount(pagesCount);
+   
+         /* Для пэйджинга считаем, что кол-во страниц это:
+          текущее кол-во загруженных страниц + 1, если в метаинформации рекордсета есть данные о том, что на бл есть ещё записи.
+          Необходимо для того, чтобы в пэйджинге не моргала кнопка перехода к следующей странице, пока грузятся данные. */
+         this._options.paging.setPagesCount(pagesCount + (view._hasNextPage(view.getItems().getMetaData().more) ? 1 : 0));
 
          //Если есть страницы - покажем paging
          
-         this._options.paging.setVisible((pagesCount > 1) && !this._options.hiddenPager);
+         this._options.paging.setVisible(pagingVisibility && !this._options.hiddenPager);
       },
 
       destroy: function(){

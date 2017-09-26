@@ -25,11 +25,14 @@ define('js!SBIS3.CONTROLS.Menu', [
    /**
     * Контрол, отображающий меню, всплывающее в определенном месте страницы
     * @class SBIS3.CONTROLS.Menu
-    * @public
-    * @author Крайнов Дмитрий Олегович
     * @extends SBIS3.CONTROLS.ButtonGroupBaseDS
+    *
     * @mixes SBIS3.CONTROLS.hierarchyMixin
     * @mixes SBIS3.CONTROLS.TreeMixinDS
+    *
+    * @public
+    *
+    * @author Крайнов Дмитрий Олегович
     *
     * @cssModifier controls-MenuPicker__resetIconColor Отменяет перекрашивание иконки в темно-синий цвет в заголовке меню.
     */
@@ -50,17 +53,20 @@ define('js!SBIS3.CONTROLS.Menu', [
       _dotTplFn : dot,
        /**
         * @typedef {Object} ItemsMenu
+        * @description Каждый элемент строится на основе класса {@link SBIS3.CONTROLS.MenuItem}, в описании к которому приведён полный список опций для конфигурации каждого пункта меню.
         * @property {String} id Идентификатор.
         * @property {String} title Текст пункта меню.
         * @property {String} icon Иконка пункта меню.
         * @property {String} parent Идентификатор родительского пункта меню. Опция задаётся для подменю.
+        * @property {String} command Команда, которая будет вызывана при клике по пункту меню.
+        * @property {Array.<Object>} commandArgs Аргументы вызываемой команды.
         * @editor icon ImageEditor
         * @translatable title
         */
        /**
-        * @cfg {ItemsMenu[]} Набор исходных данных, по которому строится отображение
+        * @cfg {ItemsMenu[]} Устанавливает конфигурацию пунктов меню.
         * @name SBIS3.CONTROLS.Menu#items
-        * @description Набор исходных данных, по которому строится отображение
+        * @description Каждый пункт меню строится на основе класса {@link SBIS3.CONTROLS.MenuItem}.
         * @example
         * <pre>
         *     <options name="items" type="array">
@@ -331,6 +337,7 @@ define('js!SBIS3.CONTROLS.Menu', [
          config.parent = parent;
          config.opener = typeof parent.getOpener == 'function' ? parent.getOpener() : parent;
          config.target = target;
+         config._fixJqueryPositionBug = true;
          return new FloatArea(config);
       },
 

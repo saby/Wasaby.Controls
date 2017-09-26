@@ -59,7 +59,7 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
             dateRanges[i].subscribe('onRangeChange', this._onRangeChanged.bind(this, i));
             dateRanges[i].subscribe('onLockedChanged', this._onLockedChanged.bind(this, i));
          }
-         this._resetSteps();
+         this._updateSteps(true);
          if (typeof this._options.showLock  === 'boolean') {
             for (i = 0; i < dateRanges.length; i++) {
                dateRanges[i].setLocked(!this._options.onlyByCapacity);
@@ -130,6 +130,8 @@ define('js!SBIS3.CONTROLS.DateRangeRelationController', [
 
          start = start || changedControl.getStartValue();
          end = end || changedControl.getEndValue();
+         oldStart = oldStart || changedControl.getStartValue();
+         oldEnd = oldEnd || changedControl.getEndValue();
          if (!start || !end) {
             this._updating = false;
             return;

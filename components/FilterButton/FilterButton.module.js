@@ -44,10 +44,11 @@ define('js!SBIS3.CONTROLS.FilterButton',
        /**
         * Класс контрола "Кнопка фильтров".
         *
-        * Подробнее конфигурирование контрола описано в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterbutton/">Панель фильтров</a>.
+        * Подробнее конфигурирование контрола описано в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/filtering/list-filterbutton/">Панель фильтров</a>.
         * @class SBIS3.CONTROLS.FilterButton
         * @extends SBIS3.CORE.CompoundControl
         * @author Герасимов Александр Максимович
+        *
         * @mixes SBIS3.CONTROLS.FilterMixin
         * @mixes SBIS3.CONTROLS.PickerMixin
         *
@@ -88,7 +89,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                  * @сfg {String} Устанавливает шаблон всплывающей панели кнопки фильтров.
                  * @remark
                  * При каждом открытии/закрытии панели происходят события {@link SBIS3.CONTROLS.PopupMixin#onShow} и {@link SBIS3.CONTROLS.PopupMixin#onClose}.
-                 * Подробнее о создании шаблона читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterbutton/fbpanel/'>Панель фильтрации</a>.
+                 * Подробнее о создании шаблона читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/filtering/list-filterbutton/fbpanel/'>Панель фильтрации</a>.
                  * @example
                  * <pre>
                  *   <option name="template" value="SBIS3.EDO.CtxFilter"/>
@@ -100,7 +101,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 /**
                  * @сfg {String} Устанавливает шаблон заголовка всплывающей панели кнопки фильтров.
                  * @remark
-                 * Подробнее о создании шаблона читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterbutton/fbpanel/'>Панель фильтрации</a>.
+                 * Подробнее о создании шаблона читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/filtering/list-filterbutton/fbpanel/'>Панель фильтрации</a>.
                  * @example
                  * <pre>
                  *   <option name="topTemplate" value="SBIS3.EDO.CtxFilter"/>
@@ -110,7 +111,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
                 /**
                  * @сfg {String} Устанавливает шаблон для блока "Можно отобрать" на всплывающей панели.
                  * @remark
-                 * Подробнее о создании шаблона читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterbutton/fbpanel/'>Панель фильтрации</a>.
+                 * Подробнее о создании шаблона читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/filtering/list-filterbutton/fbpanel/'>Панель фильтрации</a>.
                  * @example
                  * <pre>
                  *   <option name="additionalFilterTemplate" value="SBIS3.EDO.additionalFilters"/>
@@ -131,14 +132,14 @@ define('js!SBIS3.CONTROLS.FilterButton',
                  /**
                   * @cfg {String} Устанавливает компонент, который отображает строку применённых фильтров.
                   * @remark
-                  * Подробнее читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterbutton/fbstr/'>Строка примененных фильтров</a>.
+                  * Подробнее читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/filtering/list-filterbutton/fbstr/'>Строка примененных фильтров</a>.
                   * @see filterLineTemplate
                   */
                 filterLineComponent: 'js!SBIS3.CONTROLS.FilterButton.FilterLine',
                  /**
                   * @cfg {*} Устанавливает шаблон, который отображает строку применённых фильтров.
                   * @remark
-                  * Подробнее читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-filterbutton/fbstr/'>Строка примененных фильтров</a>.
+                  * Подробнее читайте в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/filtering/list-filterbutton/fbstr/'>Строка примененных фильтров</a>.
                   * @see filterLineComponent
                   */
                 filterLineTemplate: undefined,

@@ -109,7 +109,8 @@ define('js!WSControls/Lists/Selector', [
          this._selectedIndex = this._display.getIndex(elem);
          this._selectedKey = this._getKeyByIndex(this._selectedIndex, this._options);
          this._notify('onChangeSelectedIndex', this._selectedIndex);
-         this._notify('onChangeSelectedKey', this._selectedKey);
+         //TODO: иначе никак не получить содержимое элемента
+         this._notify('onChangeSelectedKey', this._selectedKey, elem);
       },
 
       _isEmptyIndex: function (index) {

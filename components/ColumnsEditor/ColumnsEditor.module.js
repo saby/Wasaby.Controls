@@ -20,6 +20,8 @@ define('js!SBIS3.CONTROLS.ColumnsEditor', [
        * @class SBIS3.CONTROLS.ColumnsEditor
        * @public
        * @extends SBIS3.CONTROLS.CompoundControl
+       *
+       * @mixes SBIS3.CONTROLS.PickerMixin
        */
       var
          ColumnsEditor = CompoundControl.extend([PickerMixin],/** @lends SBIS3.CONTROLS.ColumnsEditor.prototype */ {

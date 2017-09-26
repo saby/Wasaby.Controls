@@ -3,7 +3,6 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
       'js!SBIS3.CONTROLS.Action.List.Move',
       'js!SBIS3.CONTROLS.Action.DialogMixin',
       'Core/helpers/string-helpers',
-      'js!WS.Data/Di',
       'Core/Indicator',
       'Core/core-merge',
       'Core/IoC',
@@ -11,7 +10,7 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
       'Core/constants',
       'js!SBIS3.CONTROLS.Utils.InformationPopupManager'
    ],
-   function (ListMove, DialogMixin, strHelpers, Di, Indicator, cMerge, IoC, cInstance, constants, InformationPopupManager) {
+   function (ListMove, DialogMixin, strHelpers, Indicator, cMerge, IoC, cInstance, constants, InformationPopupManager) {
       'use strict';
       /**
        * Действие перемещения по иерархии с выбором места перемещения через диалог.

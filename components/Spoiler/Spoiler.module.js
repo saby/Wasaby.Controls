@@ -23,14 +23,12 @@ define('js!SBIS3.CONTROLS.Spoiler', [
     };
 
    /**
-    * Контрол, отображающий переключаемую область (спойлер).
-    * @remark
-    * Длинный заголовок спойлера по умолчанию обрезается.
+    * Класс контрола "Спойлер". Отображает переключаемую область (спойлер). Длинный заголовок спойлера по умолчанию обрезается.
     * @class SBIS3.CONTROLS.Spoiler
     * @extends WSControls/Buttons/ButtonBase
     * @mixes SBIS3.CONTROLS.Expandable
     *
-	 * @demo SBIS3.CONTROLS.Demo.MySpoiler
+	* @demo SBIS3.CONTROLS.Demo.MySpoiler
     *
     * @control
     * @initial

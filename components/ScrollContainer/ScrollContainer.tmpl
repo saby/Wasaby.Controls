@@ -1,5 +1,5 @@
 <div class="controls-ScrollContainer ws-scrolling-content {{ _options.stickyContainer?' ws-sticky-header__wrapper' }}">
-   <div class="controls-ScrollContainer__content ws-scrolling-content controls-ScrollContainer__content-overflowHidden{{_options.stickyContainer?' ws-sticky-header__scrollable-container'}} ">
+   <div class="controls-ScrollContainer__content ws-scrolling-content {{_isMobileIOS ? '' : ' controls-ScrollContainer__content-overflowHidden'}}{{_options.stickyContainer?' ws-sticky-header__scrollable-container'}}">
       <ws:partial template="{{_options.content}}"/>
    </div>
    <div class="controls-ScrollContainer__scrollbar"></div>

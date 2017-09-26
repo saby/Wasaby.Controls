@@ -6,9 +6,6 @@ body {
    font-size: 1rem !important;
 }
 body {
-   .ws-validation-error > textarea {
-      background-color: @text-box-error-bg !important; // перебиваю стили fieldAbstract
-   }
     //Todo: сделать @accent-color - #FFCC99  https://online.sbis.ru/opendoc.html?guid=47bdafa8-88ab-4cb2-9383-89ffd7c9dcdd
     //сейчас пока сделаем так, чтобы не разломать версию 3.7.5.150
     .controls-accent-text {
@@ -18,8 +15,12 @@ body {
    // в онлайне такие кнопки завязаны на жесткие стили controls-IconButton__round-border-24, что неправильно
    // для редизайна нужно перейти на относительные названия
    .controls-MenuIcon__Menu.controls-Menu.controls-Menu__Popup.controls-Menu__hide-menu-header {
-     margin: -.39rem 0 0 -.106rem;
+     margin: -.32rem 0 0 -.606rem;
    }
+   .controls-operationsPanel__itemsMenu_picker.controls-MenuIcon__Menu.controls-Menu.controls-Menu__hide-menu-header {
+     margin: -.32rem 0 0 1.32rem;
+   }
+
 
    //TODO: удалить это когда будет нормальный пэйджинг, не из ws-a
    .ws-paging{
@@ -218,11 +219,11 @@ body {
 
    .controls-DropdownList {
       .controls-DropdownList__selectedItem {
-         .controls-DropdownList__afterCaptionWrapper .controls-DropdownList__crossIcon {
-            font-size: 2rem !important;
-            line-height: 1.32rem !important;
-            width: 2rem;
-            height: 2rem;
+         .controls-DropdownList__afterCaptionWrapper, .controls-DropdownList__crossIcon {
+            font-size: 3rem !important;
+            height: 3rem !important;
+            width: 3rem !important;
+            line-height: 3rem !important;
          }
       }
    }
@@ -275,13 +276,6 @@ body {
          }
       }
    }
-   // У кнопок нестандартный цвет, перебиваем его. В новом дизайне либо добьюсь что бы цвета были стандартные,
-   // либо буду устанавливать его через переменные.
-   // В теме розницы есть такой же хак перебивающий этот хак на стандартный цвет
-   .controls-DateRangeChoose__home .icon-primary {
-      color: #e4e4e4;
-   }
-
   .controls-ToolBar__menuIcon .icon-24 {
     font-family: carrypresto-icons!important;
   }
@@ -329,11 +323,15 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
    // Перед тем как править стили для кнопки закрытия прочитай комментарий по .ws-float-close.sbisname-window-title-close
 }
 
+//Удалить, как будет темизация для engine.
 .controls-Browser {
    .controls-Browser__tableCell-search {
       .controls-Browser__selectAllCheckBox {
          .align-self(center);
       }
+   }
+   .controls__filterButton {
+      margin-top: 8px;
    }
    .controls-Browser__search {
       width: 21.4285rem;
@@ -346,7 +344,7 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
 .controls-ComboBox {
   &.controls-Picker__show {
     border-width: 0;
-    border-style: @text-box-hover-border-style;
+    border-style: solid;
     border-color: @text-box-hover-border-color;
   }
 }
@@ -553,7 +551,7 @@ body {
 }
 
 .controls-IconButton.controls-TreeView__editArrow-container {
-  @offset: .2695rem;
+  @offset: .37rem;
   margin-top: calc(~"@{default-border-width} - @{offset}");
   .icon-16 {
     .icon-size(@icon-medium-size, @icon-font);
@@ -594,12 +592,6 @@ body {
    }
 }
 
-// В теме онлайна кнопка выравнивается маргинами. Но в темах престы и розницы размер иконки другой и из-за них
-// появляются лишние отступы внизу контрола. Обнуляем маргины и меняем vertical-align у кнопки.
-// Если везде все будет хорошо, то в онлайне сделать подобным образом. Возможно проще сделать через flex.
-.controls-DateRange .controls-DateRange__Button {
-   vertical-align: top;
-}
 .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field .controls-FormattedTextBox__field-symbol {
 
     line-height: 2rem;
@@ -613,15 +605,6 @@ body {
 .controls-Link__field {
   vertical-align: baseline;
 }
-.controls-FieldLink, .controls-FieldLink__picker {
-   .controls-FieldLinkItemsCollection, .controls-FieldLink__item {
-      height: 3rem;
-   }
-   .controls-FieldLink__showAllLinks {
-      line-height: 3rem;
-   }
-}
-
 .controls-Paging .control-Paging__btn .controls-Button__icon {
     line-height: 2rem!important;
     padding-right: 0.4rem;
@@ -665,11 +648,6 @@ body .controls-ToolBar__menuIcon .icon-24 {
       }
    }
 }
-.controls-Link {
-  &.additionalLink__2 {
-    font-size: .857rem;
-  }
-}
 
 .controls__filter-button__apply-filter {
     margin-right: 0.29rem;
@@ -683,13 +661,6 @@ body .controls-ToolBar__menuIcon .icon-24 {
 .controls-Link {
   font-size: 1.14rem;
 }
-.controls-FieldLink .icon-size {
-    font-size: 3rem !important;
-    width: 3rem !important;
-    height: 3rem !important;
-    line-height: 3rem !important;
-}
-
 .controls-Browser {
    .controls-Browser__topTemplate {
       height: auto;
@@ -815,6 +786,9 @@ body {
       color: @default-text-color;
       border: @button-border;
       padding: 0.857rem 3rem 0.857rem 0.857rem;
+      &.ws-infobox-type-error {
+        box-shadow: rgba(0, 0, 0, 0.5) 0 0 0.714rem;
+      }
       .ws-infobox-triangle {
          width: .857rem;
          height: .857rem;
@@ -828,6 +802,16 @@ body {
             top: -.53rem;
             border-left: @button-border;
             border-top: @button-border;
+         }
+         &.ws-infobox-triangle-vertical-right {
+            right: -.54rem;
+            border-right: @button-border;
+            border-top: @button-border;
+         }
+         &.ws-infobox-triangle-vertical-left {
+            left: -.54rem;
+            border-left: @button-border;
+            border-bottom: @button-border;
          }
       }
 
@@ -855,7 +839,7 @@ body {
 }
 
 .controls-BreadCrumbs__crumb {
-   top: 0.08rem
+   top: 0.28rem
 }
 
 .ws-is-sbis-desktop {
@@ -933,6 +917,7 @@ body {
        line-height: 3rem;
      }
      .controls-ListView__hoveredItem {
+        background-color:  #E0ECF5 !important;
          .controls-DataGridView__td {
              background-color:  #E0ECF5 !important;
          }
@@ -945,9 +930,7 @@ body {
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button:hover {
   color: #fff;
 }
-.controls-Browser__breadCrumbs {
-  top: .18rem;
-}
+
 .controls-ToolBar .controls-ToolBar__menuIcon {
     vertical-align: baseline;
 }
@@ -984,18 +967,29 @@ body {
    }
 }
 
-.ws-is-webkit .controls-BreadCrumbs .controls-BreadCrumbs__arrow {
-   top:  0.33rem;
+.ws-is-webkit, .ws-is-mobile-chrome-ios {
+   .controls-BreadCrumbs .controls-BreadCrumbs__arrow {
+      top:  0.38rem;
+   }
 }
 
 .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
-   top: 0.16rem !important;
+   top: 0.34rem !important;
 }
 
 .ws-is-sbis-desktop {
   .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
     top: 0.35rem !important;
   }
+}
+
+/* КОСТЫЛЬ. Крошки накостылены через top'ы, margin'ы и тд. Срочно требуется переписать стили.
+   Выписана ошибка. https://online.sbis.ru/opendoc.html?guid=fa89f6fd-3e4a-4925-8de3-9f34c6b11729
+ */
+.ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
+   .controls-BreadCrumbs__crumb {
+      top: 0
+   }
 }
 
 .controls-ListView {
@@ -1081,4 +1075,38 @@ body {
   .controls-TextBox .controls-TextBox__wrapper:before {
     line-height: 2.5em; //2.5 = 2.85/1.14 //2.85 - default-line-height, 1.14 - default-font size
   }
+}
+
+body {
+  .ws-errorsReportDialog {
+    min-width: 30rem;
+
+    .ws-field-string {
+      font-size: 1rem;
+      height: 1.5rem;
+      color: @default-text-color;
+    }
+
+    .ws-field-button {
+      height: 1.5rem;
+      padding-right: 0.5rem;
+    }
+
+    .ws-errorsReportDialog-caption {
+      text-align: left;
+      width: 6rem;
+      color: @default-text-color;
+    }
+
+    .ws-errorsReportDialog-errors {
+      .ws-errorsReportDialog-caption, .ws-field-string, .ws-errorsReportDialog-errorsDescription {
+        color: @error-color;
+      }
+    }
+  }
+}
+
+//Убрать когда проектировщики сделают одинаковые отступы, обсуждали на этом совещании: https://online.sbis.ru/obj/Meeting/e6b722a9-d339-4016-9fd6-82b763c4e241
+.controls-ItemsToolbar.controls-ItemsToolbar__edit {
+  bottom: 0.2857rem;
 }

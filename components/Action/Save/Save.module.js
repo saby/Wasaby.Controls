@@ -1,8 +1,9 @@
 define('js!SBIS3.CONTROLS.Action.Save', [
     'js!SBIS3.CONTROLS.Action.Action',
     'Core/core-instance',
-    'js!WS.Data/Di'
-], function (Action, cInstance, Di) {
+    'Core/moduleStubs',
+    'Core/Deferred'
+], function (Action, cInstance, moduleStubs, Deferred) {
 
     /**
      * Базовый action для сохранения данных.
@@ -14,7 +15,13 @@ define('js!SBIS3.CONTROLS.Action.Save', [
     var Save = Action.extend(/** @lends SBIS3.CONTROLS.Action.Save.prototype */{
         $protected: {
             _options: {
-                saveStrategy: 'savestrategy.sbis'
+               /**
+                * @cfg {SBIS3.CONTROLS.ISaveStrategy) Стратегия сохранения. Класс, который реализует сохранение записей.
+                * @see {@link SBIS3.CONTROLS.ISaveStrategy}
+                * @see {@link SBIS3.CONTROLS.SaveStrategy.Base}
+                * @see {@link SBIS3.CONTROLS.SaveStrategy.Sbis}
+                */
+                saveStrategy: 'js!SBIS3.CONTROLS.SaveStrategy.Base'
             },
             _saveStrategy: undefined
         },
@@ -24,7 +31,10 @@ define('js!SBIS3.CONTROLS.Action.Save', [
          * @private
          */
         _doExecute: function(meta) {
-            this.getSaveStrategy().saveAs(meta);
+           this.getSaveStrategy().addCallback(function(strategy) {
+              strategy.saveAs(meta);
+              return strategy;
+           });
         },
 
         /**
@@ -43,7 +53,7 @@ define('js!SBIS3.CONTROLS.Action.Save', [
             if(!cInstance.instanceOfMixin(strategy, 'SBIS3.CONTROLS.ISaveStrategy')){
                 throw new Error('The strategy must implemented interfaces the SBIS3.CONTROLS.ISaveStrategy.')
             }
-            this._saveStrategy = strategy;
+            this._saveStrategy = Deferred.success(strategy);
         },
 
         /**
@@ -51,7 +61,9 @@ define('js!SBIS3.CONTROLS.Action.Save', [
          * @private
          */
         _makeSaveStrategy: function () {
-            return Di.resolve(this._options.saveStrategy);
+            return moduleStubs.require([this._options.saveStrategy]).addCallback(function(result) {
+                return new result[0]();
+            });
         }
 
     });

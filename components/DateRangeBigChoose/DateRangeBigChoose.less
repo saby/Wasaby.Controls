@@ -66,6 +66,13 @@
    }
 }
 
+// Выпилить в 3.17.150 с отказом от кнопок со стилями
+.controls-DateRangeBigChoose__years-yearsRange-btn {
+   &:not(.controls-Button__big).controls-Button-size__default.controls-Button .controls-Button__wrapper {
+      padding: 0;
+   }
+}
+
 .controls-DateRangeBigChoose {
 
    background-color: @date-range-big-bg;
@@ -127,16 +134,13 @@
       }
 
       .controls-DateBox {
-         .controls-FormattedTextBox__fieldWrapper {
-            border: 1px solid @date-range-big-choose-header-date-box-border-color;
-            border-radius: 3px;
-            font-size: @date-range-big-choose-header-date-box-font-size;
-         }
+         border: 1px solid @date-range-big-choose-header-date-box-border-color;
+         border-radius: 3px;
+         font-size: @date-range-big-choose-header-date-box-font-size;
+
          &:hover,
          &.ws-has-focus {
-            .controls-FormattedTextBox__fieldWrapper {
-               border-color: @date-range-big-choose-header-date-box-border-selected-color;
-            }
+            border-color: @date-range-big-choose-header-date-box-border-selected-color;
          }
       }
    }

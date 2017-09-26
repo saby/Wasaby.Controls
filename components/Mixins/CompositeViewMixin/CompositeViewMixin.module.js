@@ -317,6 +317,9 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
          this._options.viewMode = mode;
          this.setItemsDragNDrop(dragndrop);
          this._drawViewMode(mode);
+         if (mode === 'table') {
+            this._updateAjaxLoaderPosition();
+         }
          this._notify('onViewModeChanged');
       },
       /**
@@ -379,7 +382,7 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
 
       _calcWidth: function(tiles, oldWidth){
          if (tiles.length){
-            var itemsContainerWidth =  this._getItemsContainer()[0].getBoundingClientRect().width,
+            var itemsContainerWidth =  Math.floor(this._getItemsContainer()[0].getBoundingClientRect().width),
                tilesCount = Math.floor(itemsContainerWidth / oldWidth),
                newTileWidth = itemsContainerWidth / tilesCount;
 

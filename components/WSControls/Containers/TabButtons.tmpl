@@ -1,0 +1,5 @@
+<div class="controls-TabButtons">
+    <ws:for data="index,item in _options.items">
+        <div event:onclick="_onTabClick(item.id)" class="controls-TabButton {{ _options.currentTab == item.id ? 'controls-TabButton__active' }}">{{ item.title }}</div>
+    </ws:for>
+</div>

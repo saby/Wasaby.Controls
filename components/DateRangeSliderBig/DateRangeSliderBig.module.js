@@ -10,7 +10,9 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBig', [
     * SBIS3.CONTROLS.DateRangeSliderBig
     * @class SBIS3.CONTROLS.DateRangeSliderBig
     * @extends SBIS3.CONTROLS.DateRangeSliderBase
+    *
     * @mixes SBIS3.CONTROLS.DateRangeBigChoosePickerMixin
+    *
     * @author Миронов Александр Юрьевич
     *
     * @control

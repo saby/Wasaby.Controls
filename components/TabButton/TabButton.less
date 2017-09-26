@@ -1,7 +1,8 @@
 .controls-TabButton {
    vertical-align: @tab-button-vertical-align;
    cursor: @tab-button-cursor;
-   height: @tab-button-height;
+   height: 100%;
+   box-sizing: border-box;
    position: @tab-button-position;
    color: @tab-button-color;
    font: @tab-button-font;
@@ -96,7 +97,7 @@
       z-index: @tab-button-checked-z-index;
       cursor: @tab-button-checked-cursor;
       font-size: @tab-button-checked-font-size;
-      border-bottom-color: transparent;
+      border-bottom: none;
       padding: 0;
       .controls-TabButton__bottomLine{
          position: absolute;
@@ -107,7 +108,6 @@
          height: 3px;
       }
       .controls-TabButton__inner {
-         height: @tab-button-checked-height + 1;
          font-weight: @tab-button-checked-inner-font-weight;
          font-size: @tab-button-checked-inner-font-size;
          color: @tab-button-checked-inner-color;
@@ -143,7 +143,7 @@
       }
    }
    &.controls-TabButton__main-item {
-      min-width: 0; //Нужно, чтобы flex правильно позиционировал ужимаемый контейнер
+      min-width: 1px; //Нужно, чтобы flex правильно позиционировал ужимаемый контейнер. с 0 в ie11 не работает
       .controls-TabButton__inner{
          font-size: @tab-button-large-inner-font-size;
          font-weight: @tab-button-large-inner-font-weight;
@@ -210,7 +210,7 @@
       padding: @tab-button-inner-padding;
       line-height: @tab-button-inner-line-height;
       overflow: @tab-button-inner-overflow;
-      height: @tab-button-inner-height;
+      height: 100%;
       max-width: @tab-button-large-inner-max-width;
       &:before {
         content: @tab-button-inner-after-content;
@@ -235,6 +235,7 @@
          overflow: hidden;
          text-overflow: ellipsis;
          white-space: nowrap;
+         .flex-shrink(1);
          > div {
             vertical-align: top;
          }
@@ -352,7 +353,6 @@
 }
 .controls-TabButtons__simple-view-mini{
   .controls-TabButton {
-    height: 24px;
     .controls-TabButton__inner{
       height: 26px;
       color: #CCCCCC;
@@ -426,6 +426,22 @@
          height: @tab-button-height;
          > * {
             vertical-align: top;
+         }
+      }
+   }
+}
+
+.ws-is-ie {
+   .controls-TabButton {
+      .controls-TabButton__mainText {
+         line-height: 26px; //for ie10-12
+         .controls-EditAtPlace__editor .controls-TextBox {
+            line-height: 20px;
+         }
+      }
+      .controls-TabButton__additionalText2 {
+         .controls-EditAtPlace .controls-EditAtPlace__textField {
+            padding: 0;
          }
       }
    }

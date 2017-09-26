@@ -53,25 +53,29 @@
 
 .placeholder() {
   &::-webkit-input-placeholder {
-    color: @text-box-placeholder-color;
+    color: @default-placeholder-color;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
+    text-overflow:ellipsis;
   }
 
   &:-moz-placeholder {
-     color: darken(@text-box-placeholder-color, 17%);
+     color: darken(@default-placeholder-color, 17%);
     -moz-user-select: none;
+    text-overflow:ellipsis;
   }
 
   &::-moz-placeholder {
-     color: darken(@text-box-placeholder-color, 17%);
+     color: darken(@default-placeholder-color, 17%);
     -moz-user-select: none;
+    text-overflow:ellipsis;
   }
 
   &:-ms-input-placeholder {
-     color: @text-box-placeholder-color;
+     color: @default-placeholder-color;
     -ms-user-select: none;
+    text-overflow:ellipsis;
   }
 }
 
@@ -192,10 +196,11 @@
   background-image: -o-linear-gradient(@direction, @startColor, @endColor);
 }
 
-.animation(@name, @duration: 300ms, @delay: 0, @ease: ease) {
+.animation(@name, @duration: 300ms, @delay: 0ms, @ease: ease) {
   -webkit-animation: @name @duration @delay @ease;
   -moz-animation: @name @duration @delay @ease;
   -ms-animation: @name @duration @delay @ease;
+  animation: @name @duration @delay @ease
 }
 
 .transition(@transition) {
@@ -337,8 +342,9 @@
 // <width>
 .flex-basis(@width: auto) {
   -webkit-flex-basis: @width;
-      -ms-flex-basis: @width;
-          flex-basis: @width;
+  -ms-flex-preferred-size:@width;
+  -ms-flex-basis: @width;
+  flex-basis: @width;
 }
 .flex-grow(@grow: 0) {
    -webkit-flex-grow: @grow;
@@ -426,7 +432,7 @@
   }
   &:not(.ws-disabled):not(.controls-Click__active) {
     &:hover {
-      .@{textSelector}, .controls-Link-link {
+      .@{textSelector} {
         cursor: pointer;
         text-decoration: underline;
       }

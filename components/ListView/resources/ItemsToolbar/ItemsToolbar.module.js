@@ -17,6 +17,11 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
     function(CompoundControl, IconButton, ItemActionsGroup, dotTplFn, editActionsTpl, trackElement, contains) {
 
        'use strict';
+
+       var ANIMATION = {
+          'itemsToolbar-rightSwipe' : 'itemsToolbar-rightSwipeAnimation',
+          'itemsToolbar-leftSwipe' : 'itemsToolbar-leftSwipeAnimation'
+       };
        /**
         * @class SBIS3.CONTROLS.ItemsToolbar
         * @extends SBIS3.CONTROLS.CompoundControl
@@ -49,10 +54,17 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              _currentTarget: null,     // Элемент, относительно которого сейчас отображается тулбар
              _lockingToolbar: false,    // Состояние заблокированности тулбара
              _isVisible: false,
-             _cachedMargin: null
+             _cachedMargin: null,
+             _toolbarContent: null
           },
           $constructor: function() {
              this._publish('onShowItemActionsMenu', 'onCloseItemActionsMenu', 'onItemActionActivated', 'onItemsToolbarHide');
+          },
+
+          init: function() {
+             this._toolbarContent = this._getToolbarContent();
+             this._toolbarContent.on('webkitAnimationEnd oanimationend msAnimationEnd animationend', this._animationEndHandler.bind(this));
+             ItemsToolbar.superclass.init.apply(this, arguments);
           },
           /**
            * Создает или возвращает уже созданные кнопки редактирования
@@ -62,7 +74,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
           _getEditActions: function() {
              var toolbarContent;
              if (!this._editActions) {
-                (toolbarContent = this._getToolbarContent()).append(editActionsTpl());
+                (toolbarContent = this._toolbarContent).append(editActionsTpl());
                 this.reviveComponents();
                 this._editActions = toolbarContent.find('.controls-ItemsToolbar__editActions');
              }
@@ -109,7 +121,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
 
              this._itemsActions = new ItemActionsGroup({
                 items: this._options.itemsActions,
-                element: $('<div class="controls-ListView__itemActions-container"></div>').prependTo(this._getToolbarContent()),
+                element: $('<div class="controls-ListView__itemActions-container"></div>').prependTo(this._toolbarContent),
                 idProperty: 'name',
                 parent: this,
                 linkedControl: this.getParent(),
@@ -258,10 +270,10 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
                 this._itemsActions.setTouchMode(mode);
              }
           },
+
           getTouchMode: function () {
             return this._options.touchMode;
           },
-
           setHeightInTouchMode: function(){
              var height, container, currentSize;
              if(this._currentTarget) {
@@ -382,8 +394,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            * @param {Boolean} animate
            */
           show: function(target, animate) {
-             var container = this.getContainer()[0],
-                 isActionsHidden = this._isItemsActionsHidden() && this._isEditActionsHidden(),
+             var isActionsHidden = this._isItemsActionsHidden() && this._isEditActionsHidden(),
                  hasItemsActions = this._options.itemsActions.length,
                  itemsActions, toolbarContent;
 
@@ -422,13 +433,21 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              if (this._options.touchMode) {
                 this._trackingTarget();
                 if (animate) {
-                   toolbarContent = this._getToolbarContent();
-                   toolbarContent[0].style.right = -container.offsetWidth + 'px';
+                   this._toolbarContent.addClass('itemsToolbar-leftSwipeAnimation');
                    this.setHeightInTouchMode();
-                   toolbarContent.animate({right: 0}, 350);
                 }
              }
           },
+
+          _animationEndHandler: function (e) {
+             this._toolbarContent.removeClass(ANIMATION[e.originalEvent.animationName]);
+             if(e.originalEvent && e.originalEvent.animationName === 'itemsToolbar-rightSwipe') {
+                this.getContainer().addClass('ws-hidden');
+                this.hideItemsActions();
+                this._notify('onItemsToolbarHide');
+             }
+          },
+
           /**
            * Возвращает контейнер тулбара
            * @returns {*|jQuery|HTMLElement}
@@ -442,8 +461,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
            * @param {boolean} animate Анимировать ли скрытие
            */
           hide: function(animate) {
-             var self = this,
-                 container, toolbarContent;
+             var container;
 
              this._target = null;
              if (!this._lockingToolbar && this._isVisible) {
@@ -456,15 +474,7 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
 
                 if (this._options.touchMode && animate) {
                    this._itemsActions && this._itemsActions.applyItemActions();
-                   toolbarContent = this._getToolbarContent();
-                   toolbarContent.animate({right: -container.width()}, {
-                      duration: 350,
-                      complete: function() {
-                         container.addClass('ws-hidden');
-                         self.hideItemsActions();
-                         self._notify('onItemsToolbarHide');
-                      }
-                   });
+                   this._getToolbarContent().addClass('itemsToolbar-rightSwipeAnimation');
                 } else {
                    container.addClass('ws-hidden');
                    this.hideItemsActions();
@@ -494,6 +504,8 @@ define('js!SBIS3.CONTROLS.ItemsToolbar',
              this.hide();
              this._itemsActions = undefined;
              this._editActions = undefined;
+             this._toolbarContent.off('*');
+             this._toolbarContent = undefined;
              ItemsToolbar.superclass.destroy.apply(this, arguments);
           }
        });

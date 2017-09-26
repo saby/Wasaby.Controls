@@ -210,7 +210,21 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          this._inputField.bind('blur', function(){
             self._blurHandler();
          });
+         this._initMirrorInput();
+      },
 
+      _createMirrorInput: function() {
+         var mirrorContainer = $('.controls-NumberTextBox__mirror');
+         if(mirrorContainer.length){
+            this._inputMirror = mirrorContainer;
+         }else {
+            this._inputMirror = $('<span class="controls-NumberTextBox__mirror controls-TextBox__field"></span>');
+            $('body').append(this._inputMirror);
+         }
+      },
+
+      _initMirrorInput: function() {
+         var self = this;
          // TODO https://online.sbis.ru/opendoc.html?guid=f30c45a4-49f5-4125-b743-d391331b6587
          // временное решения в версию для скролла в поле ввода,
          // сейчас браузерный скролл ломает preventDefalt - его нельзя удалить т.к. мы обрабатываем все нажатия и иначе цифры будут дублироваться
@@ -224,16 +238,6 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
             scrollLeft = cursorOffset - containerWidth;
             self._inputField.scrollLeft(scrollLeft > 0 ? scrollLeft + 1 : 0); // +1px на ширину каретки
          });
-      },
-
-      _createMirrorInput: function() {
-         var mirrorContainer = $('.controls-NumberTextBox__mirror');
-         if(mirrorContainer.length){
-            this._inputMirror = mirrorContainer;
-         }else {
-            this._inputMirror = $('<span class="controls-NumberTextBox__mirror controls-TextBox__field"></span>');
-            $('body').append(this._inputMirror);
-         }
       },
 
       init: function() {

@@ -207,6 +207,32 @@
    }
 }
 
+.itemsToolbar-leftSwipeAnimation {
+   .animation(itemsToolbar-leftSwipe, @list-view-items-toolbar-animate-duration );
+}
+
+@keyframes itemsToolbar-leftSwipe {
+   0% {
+      .translate(100%);
+   }
+   100% {
+      .translate(0);
+   }
+}
+
+.itemsToolbar-rightSwipeAnimation {
+   .animation(itemsToolbar-rightSwipe, @list-view-items-toolbar-animate-duration);
+}
+
+@keyframes itemsToolbar-rightSwipe {
+   0% {
+      .translate(0);
+   }
+   100% {
+      .translate(100%);
+   }
+}
+
 .controls-ListView.controls-ListView__touchMode {
    &.controls-ListView__bottomStyle {
        > .controls-ItemsToolbar {
@@ -222,12 +248,25 @@
          right: 0;
          background-color: transparent;
 
+         .controls-Button__wrapper {
+            .flex-direction(column);
+            .justify-content(center);
+            &:before {
+               width: 0;
+               height: 0;
+            }
+         }
 
          &.controls-ItemsToolbar-item-size {
             &__1 {
                .controls-ItemActions__item {
                   &.controls-IconButton {
                      .controls-Button__text {
+                        display: none;
+                     }
+                  }
+                  &.controls-Link {
+                     .controls-Button__icon {
                         display: none;
                      }
                   }

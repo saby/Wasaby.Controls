@@ -1,13 +1,11 @@
 /*global define, $ws*/
 define('js!SBIS3.CONTROLS.Action.DialogMixin', [
    "Core/core-merge",
-   "Core/Deferred",
    "js!SBIS3.CORE.Dialog",
    "js!SBIS3.CORE.FloatArea",
-   "js!WS.Data/Entity/Model",
    "js!WS.Data/Utils",
    'Core/IoC'
-], function( cMerge, Deferred,Dialog, FloatArea, Model, Utils, IoC){
+], function( cMerge, Dialog, FloatArea, Utils, IoC){
    'use strict';
 
    /**
@@ -38,7 +36,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
              * @cfg {String} Устанавливает шаблон диалога редактирования.
              * @remark
              * В качестве значения устанавливают имя компонента в виде "js!SBIS3.MyArea.MyName".
-             * Подробнее о создании шаблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/create/">Создание диалога редактирования</a>.
+             * Подробнее о создании шаблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/editing-dialog/create/">Создание диалога редактирования</a>.
              * @see mode
              */
             template : '',
@@ -54,7 +52,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
              */
             mode: 'dialog',
             /**
-             * @cfg {Object} Объект с пользовательскими опциями, которые передаются в диалог редактирования в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/oop/#configuration-class-parameters">секцию _options</a>.
+             * @cfg {Object} Объект с пользовательскими опциями, которые передаются в диалог редактирования в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/oop/#configuration-class-parameters">секцию _options</a>.
              */
             componentOptions: null,
             /**

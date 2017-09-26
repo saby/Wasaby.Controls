@@ -16,12 +16,11 @@
         text-overflow: ellipsis;
         color: @DropdownList-linkStyleColor;
         cursor: pointer;
-        &:hover{
-          color: @DropdownList-linkStyleHoverColor;
-          text-decoration: underline;
-        }
-        &.ws-disabled:hover{
-          color: @DropdownList-linkStyleColor;
+        .controls-DropdownList__text {
+           .flexbox();
+           .controls-DropdownList__icon {
+              .align-self(center);
+           }
         }
       }
 
@@ -59,11 +58,6 @@
      .controls-DropdownList__afterCaptionWrapper{
        display: inline-block;
      }
-     &.controls-DropdownList__withoutCross, &.controls-DropdownList__hideCross, &.ws-disabled{
-       .controls-DropdownList__afterCaptionWrapper{
-         display: none;
-       }
-     }
       &.controls-DropdownList__defaultItem {
          .controls-DropdownList__selectedItem .controls-DropdownList__textWrapper {
             color: @DropdownList-linkStyleColor;
@@ -79,27 +73,38 @@
          }
       }
    }
+   &.controls-DropdownList__withoutCross, &.controls-DropdownList__hideCross, &.ws-disabled{
+      .controls-DropdownList__afterCaptionWrapper{
+         display: none;
+      }
+   }
    &.ws-disabled{
       color: #ccc;
       cursor: default !important;
-     .controls-DropdownList__selectedItem .controls-DropdownList__textWrapper {
-        color: @DropdownList-disabled-text;
-        cursor: default !important;
-        text-decoration: none;
-      }
      .controls-DropdownList__selectedItem {
-       .controls-DropdownList__beforeCaptionWrapper {
-         .controls-DropdownList__arrowIcon {
-           color: #ccc !important;
-         }
-       }
+        .controls-DropdownList__beforeCaptionWrapper {
+           .controls-DropdownList__arrowIcon {
+              color: #ccc !important;
+           }
+        }
+        .controls-DropdownList__textWrapper {
+           color: @DropdownList-disabled-text !important;
+           cursor: default !important;
+           text-decoration: none !important;
+           .controls-DropdownList__text .controls-DropdownList__value {
+              &:hover{
+                 color: @DropdownList-disabled-text;
+                 text-decoration: none;
+              }
+           }
+        }
      }
    }
 
    &.ws-validation-error {
       outline: 1px solid @red-color;
       outline-offset: -1px;
-      background-color: @text-box-error-bg;
+      background-color: @text-box-bg-error;
    }
 
    &.controls-DropdownList__defaultItem{
@@ -124,6 +129,8 @@
       max-height: @DropdownList-picker-max-height - @DropdownList-footer-multisel-buttonsBlock-h;
       height: 100%;
       width: 100%; //Укажем явно для ie edge
+      min-height: 0;
+      .flex-shrink(1);
    }
 
    .controls-DropdownList__item, .controls-DropdownList__selectedItem * {
@@ -150,7 +157,7 @@
          }
       }
       .controls-DropdownList__body {
-         max-width: 400px;
+         max-width: @DropdownList-picker-max-width;
          border-width: 1px;
          border-color: @gray-ccc-color;
          border-radius: @DropdownList-picker-list-right-border-radius;
@@ -300,6 +307,7 @@
       border-radius: @DropdownList-picker-list-border-radius;
       background: @DropdownList-picker-bg;
       padding: @DropdownList-picker-padding;
+      box-sizing: border-box;
       max-height: @DropdownList-picker-max-height;
       .box-shadow(@menu-shadow);
    }
@@ -443,7 +451,7 @@
             float: none;
          }
          .controls-DropdownList__item-text-shadow {
-            top: -@DropdownList-picker-menu-item-height - 5px;
+            top: -@DropdownList-picker-menu-item-height-ff;
          }
       }
    }
@@ -480,5 +488,32 @@
       &:active {
          background: @DropdownList-picker-menu-item-hover;
       }
+   }
+}
+
+//Пример баги в ios https://jsfiddle.net/zk5755vg/12/
+.ws-is-mobile-chrome-ios, .ws-is-mobile-safari, .ws-is-old-webkit {
+   .controls-DropdownList__picker {
+      .controls-DropdownList__body {
+         display: block; //С флексовым контейнером в safari не отображается список (height:0). Флекс нужен для правильного обрезания контейнера по высоте, на моб.платформе это не актуально
+      }
+   }
+}
+
+/* Слава ie, Microsoft'у слава */
+.ws-is-ie10, .ws-is-ie11 {
+   .controls-DropdownList__value {
+      display: inline-block;
+      -ms-flex-negative: 1;
+   }
+}
+
+.controls-DropdownList__value {
+   .align-self(baseline);
+   overflow: hidden;
+   text-overflow: ellipsis;
+   &:hover{
+      color: @DropdownList-linkStyleHoverColor;
+      text-decoration: underline;
    }
 }

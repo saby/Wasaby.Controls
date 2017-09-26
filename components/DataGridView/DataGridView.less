@@ -39,24 +39,23 @@
       &.controls-ListView__dataLoaded {
          .controls-DataGridView__tr {
             .controls-DataGridView__td {
-               border-top-color: @data-grid-cell-separator-color;
+               border-bottom-color: @data-grid-cell-separator-color;
             }
          }
-         .controls-DataGridView__tr:first-child {
+         .controls-DataGridView__tr:first-child, .controls-editInPlace + .controls-DataGridView__tr {
             .controls-DataGridView__td {
                border-top-color: @data-grid-edge-cell-separator-color;
             }
             &.controls-GroupBy {
                .controls-DataGridView__td {
                   border-top: none;
+                  border-bottom: none;
                }
             }
          }
          .controls-DataGridView__tr:nth-last-child(1){
             .controls-DataGridView__td {
                border-bottom-color: @data-grid-edge-cell-separator-color;
-               line-height: @data-grid-edge-cell-separator-line-height;
-               padding-bottom: @data-grid-edge-cell-separator-bottom-padding;
             }
          }
          &.controls-DataGridView__resultsBottom {
@@ -282,7 +281,7 @@
    text-overflow: ellipsis;
 }
 
-.controls-DataGridView__td__checkBox {
+.controls-DataGridView__td.controls-DataGridView__td__checkBox {
    width: @data-grid-td-checkbox-width;
    padding: 0;
    /*У колонки с чекбоксом, не должно быть левого и правого бордера, иначе при table-layout: auto;
@@ -445,6 +444,8 @@
          margin-left: 0;
       }
       font-size: @data-grid-header-cell-font-size;
+      //выписал еще поручение https://online.sbis.ru/opendoc.html?guid=2a2781e5-bc7b-464f-b183-32317e0b85cc
+      line-height: @data-grid-header-cell-sorting-icon-size;
       .controls-Button__icon {
          .icon-size(@data-grid-header-cell-icon-size);
       }

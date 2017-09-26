@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.ILongOperationsProducer',
     * Интерфейс продюсера длительных операций
     * @interface SBIS3.CONTROLS.ILongOperationsProducer
     * @public
+    * @author Спирин Виктор Алексеевич
     */
 
    return /** @lends SBIS3.CONTROLS.ILongOperationsProducer.prototype */{

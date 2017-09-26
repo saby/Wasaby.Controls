@@ -25,7 +25,11 @@ define('js!SBIS3.CONTROLS.CheckBox', [
     * При необходимости создания нескольких флажков используйте {@link SBIS3.CONTROLS.CheckBoxGroup CheckBoxGroup}.
     * @class SBIS3.CONTROLS.CheckBox
     * @extends WSControls/Buttons/ButtonBase
+    *
     * @mixes SBIS3.CONTROLS.Checkable
+    * @mixes SBIS3.CONTROLS.ITextValue
+    *
+    *
     * @demo SBIS3.CONTROLS.Demo.MyCheckbox
     * @author Журавлев Максим Сергеевич
     *

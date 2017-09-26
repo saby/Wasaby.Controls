@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
     * Базовый контрол для работы с ListView. Подготовливает данные для печати и выгрузки
     * @class SBIS3.CONTROLS.PrintUnloadBase
     * @extends SBIS3.CONTROLS.MenuLink
-    * @author Крайнов Дмитрий Олегович
+    * @author Сухоручкин Андрей Сергеевич
     * @control
     * @public
     */

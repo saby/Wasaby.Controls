@@ -82,7 +82,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    },
 
    applyGroupingToProjection = function(projection, cfg) {
-      if (cfg.groupBy && cfg.easyGroup) {
+      if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {
          var
             method = function(item) {
                var
@@ -546,7 +546,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              *
              * @property {String} contentTemplate Шаблон содержимого заголовка группы.
              * Шаблон будет помещен в платформенный контейнер визуального отображения заголовка группы.
-             * Шаблон - это XHTML-файл, внутри допускается использование {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/ конструкций шаблонизатора}.
+             * Шаблон - это XHTML-файл, внутри допускается использование {@link http://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/xhtml/template/ конструкций шаблонизатора}.
              * В объекте *it* шаблонизатора доступны для использования два свойства:
              * <ul>
              *     <li>groupId - идентификатор группы (см. *method*).</li>
@@ -563,7 +563,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @cfg {GroupBy} Устанавливает группировку элементов коллекции.
              * @remark file ItemsControlMixin-groupBy.md
              * @remark
-             * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
+             * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
              * @example
              * 1. Подключение шаблона группировки:
              * <pre>
@@ -711,7 +711,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             itemsSortMethod: null,
             itemsFilterMethod: undefined,
             easyGroup: false,
-            task1173537554: false,
             task1173770359: false
          },
          _loader: null
@@ -1152,7 +1151,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _removeItems: function (items, groupId) {
-         var removedElements = $([]), prev;
+         var prev;
 
          for (var i = 0; i < items.length; i++) {
             var item = items[i];
@@ -1161,7 +1160,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                this._clearItems(targetElement);
                /*TODO С этим отдельно разобраться*/
 
-               removedElements.push(targetElement.get(0));
+               var targetElementNode = targetElement.get(0);
+               targetElementNode.parentNode.removeChild(targetElementNode);
                /* TODO внештатная ситуация, при поиске могли удалить папку/путь, сейчас нет возможности найти это в гриде и удалить
                   поэтому просто перерисуем весь грид. Как переведём группировку на item'ы, это можно удалить */
             } else if(this._isSearchMode && this._isSearchMode() && item.isNode()) { // FIXME "Грязная проверка" на наличие метода в .220, код удалится в .230
@@ -1169,8 +1169,19 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                return;
             }
          }
-         removedElements.remove();
-         this._notifyOnDrawItems();
+      },
+
+      _removeItemsLight: function(items) {
+         for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            var targetElement = this._getDomElementByItem(item);
+            if (targetElement.length) {
+               this._clearItems(targetElement);
+               var targetElementNode = targetElement.get(0);
+               //ie не умеет targetElementNode.remove() делаем кроссбраузерно, не через jquery
+               targetElementNode.parentNode.removeChild(targetElementNode);
+            }
+         }
       },
 
       _getSourceNavigationType: function(){
@@ -1621,8 +1632,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                       && (Object.getPrototypeOf(list).constructor == Object.getPrototypeOf(list).constructor)
                       && (Object.getPrototypeOf(list.getAdapter()).constructor == Object.getPrototypeOf(this.getItems().getAdapter()).constructor)
                    ) {
-                      this._options._items.setMetaData(list.getMetaData());
-                      this._options._items.assign(list);
+                      this._setNewDataAfterReload(list);
                       self._drawItemsCallbackDebounce();
                    } else {
                       this._unsetItemsEventHandlers();
@@ -1641,7 +1651,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    //self._notify('onBeforeRedraw');
                    return list;
                 }, self))
-                .addErrback(forAliveOnly(this._loadErrorProcess, self));
+                .addErrback(function(error) {
+                   if(!self.isDestroyed()) {
+                      self._loadErrorProcess(error);
+                   }
+                   /* Если не прокинуть ошибку дальше, то далее в цепочке будут срабатывать
+                      callback'и, а не errback'и */
+                   return error;
+                });
              this._loader = def;
           } else {
              if (this._options._itemsProjection) {
@@ -1658,6 +1675,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
          return def;
       }),
+
+      _setNewDataAfterReload: function (list) {
+         this._options._items.setMetaData(list.getMetaData());
+         this._options._items.assign(list);
+      },
 
       _onDataLoad: function(){
 
@@ -1893,9 +1915,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              });
           }
           else {
-             if (this._options.task1173537554) {
-                this._notifyOnPropertyChanged('items');
-             }
+             this._notifyOnPropertyChanged('items');
           }
           this.redraw();
       },
@@ -2039,7 +2059,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @remark
        * Если нужно, чтобы стандартаная группировка для элемента не вызывалась - нужно обязательно переопределить (передать) все опции (field, method, template, render), иначе в группировку запишутся стандартные параметры.
        * Всем элементам группы добавляется css-класс "controls-GroupBy".
-       * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
+       * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
        * @param {GroupBy} group Параметры группировки.
        * @param {Boolean} redraw Произвести перерисовку списка после изменения параметров группировки.
        * @see groupBy
@@ -2071,7 +2091,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       /**
        * Возвращает параметры группировки элементов коллекции.
        * @remark
-       * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
+       * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
        * @return {GroupBy}
        * @see groupBy
        * @see setGroupBy
@@ -2160,6 +2180,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             target = $(target);
          }
          LayoutManager.scrollToElement(target, toBottom, depth);
+      },
+
+      //TODO этот метод более общий чем _scrollToItem надо все места перевести на этот метод
+      _scrollToProjItem: function(item, toBottom, depth) {
+         var container = this._getDomElementByItem(item);
+         if (container) {
+            this._scrollTo(container, toBottom, depth);
+         }
       },
       _scrollToItem: function(itemId, toBottom, depth) {
          var itemContainer  = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());

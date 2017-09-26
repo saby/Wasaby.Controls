@@ -100,7 +100,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'use strict';
 
    /**
-    * Контрол, отображающий набор данных с иерархической структурой в виде в таблицы с несколькими колонками. Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">Настройка списков</a>.
+    * Контрол, отображающий набор данных с иерархической структурой в виде в таблицы с несколькими колонками. Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">Настройка списков</a>.
     *
     * @class SBIS3.CONTROLS.TreeDataGridView
     * @extends SBIS3.CONTROLS.DataGridView
@@ -117,7 +117,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView Пример 1. Простое иерархическое представление данных в режиме множественного выбора записей.
     * @demo SBIS3.CONTROLS.DOCS.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
     * Инициировать добавление можно как по нажатию кнопок в футерах, так и по кнопке Enter из режима редактирования последней записи.
-    * Подробное описание конфигурации компонента и футеров вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/add-in-place/"> Добавление по месту</a>.
+    * Подробное описание конфигурации компонента и футеров вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/add-in-place/"> Добавление по месту</a>.
     *
     * @author Авраменко Алексей Сергеевич
     *
@@ -174,7 +174,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              * <br/>
              * Кнопка отображается в виде иконки с классом icon-16 icon-View icon-primary (синяя двойная стрелочка). Изменение иконки не поддерживается.
              * <br/>
-             * При клике по стрелке происходит событие {@link onItemActivate}, в обработчике которого, как правило, устанавливают отрытие <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/'>диалога редактирования</a>.
+             * При клике по стрелке происходит событие {@link onItemActivate}, в обработчике которого, как правило, устанавливают отрытие <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/editing-dialog/'>диалога редактирования</a>.
              * @example
              * Устанавливаем опцию:
              * <pre>
@@ -277,17 +277,29 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var
             cfg = TreeDataGridView.superclass._getInsertMarkupConfig.apply(this, arguments),
             lastItem = this._options._itemsProjection.at(newItemsIndex - 1),
-            lastItemParent, newItemsParent;
+            lastItemParent, newItemsParent, existingContainer;
 
          if (cfg.inside && !cfg.prepend) {
             cfg.inside = false;
-            // В режиме поиска может возникнуть ситуация, когда предыдущий элемент расположен в других хлебных крошках.
-            // Этот сценарий происходит в случае перерисовки первой записи в хлебных крошках.
-            // В таком случае контейнером, ЗА которым будут добавлены записи должна стать правильная хлебная крошка.
             lastItemParent = lastItem.getContents().get(this._options.parentProperty);
             newItemsParent = newItems[0].getContents().get(this._options.parentProperty);
+            /* В виду того, что мы не можем различить, откуда вызван _getInsertMarkupConfig, возникают две противоречивые ситуации:
+               1. В случае перерисовки ПЕРВОЙ записи в хлебных крошках (изменён прямо record), предыдущий элемент будет
+                  расположен в других хлебных крошках (https://online.sbis.ru/opendoc.html?guid=033fd05c-fb2e-4c3a-a648-37cf47b05a50).
+                  Тогда контейнером, ЗА которым будут добавлены записи, должна стать правильная хлебная крошка, являющаяся реальным
+                  родителем перерисовываемой записи.
+               2. В случае поиска, результаты могут прилететь на второй странице и вызов _getInsertMarkupConfig будет из метода
+                  _addItems (https://online.sbis.ru/opendoc.html?guid=b395391e-b4de-4dd8-affb-4ec79c40c158).
+                  Новую хлебную крошку мы могли ранее не выводить и тогда контейнером, ЗА которым будут добавлены записи, должен стать
+                  последний отрисованный элемент. */
             if (this._isSearchMode() && lastItemParent !== newItemsParent) {
-               cfg.container = this._getItemsContainer().find('.controls-DataGridView__tr.controls-HierarchyDataGridView__path[data-id="' + newItemsParent + '"]');
+               // Ситуация №1 - пытаемся найти уже существующую хлебную крошку и тогда записи будем добавлять непосредственно после неё.
+               existingContainer = this._getItemsContainer().find('.controls-DataGridView__tr.controls-HierarchyDataGridView__path[data-id="' + newItemsParent + '"]');
+               if (existingContainer.length) {
+                  cfg.container = existingContainer;
+               } else { // Ситуация №2 - если существующую хлебную крошку найти не удалось - то добавляем записи за последним элементом.
+                  cfg.container = this._getDomElementByItem(lastItem);
+               }
             } else {
                cfg.container = this._getDomElementByItem(lastItem);
             }
@@ -389,7 +401,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                   onActivated: function () {
                      var id = self.getHoveredItem().key;
                      self._activateItem(id);
-                     self.setSelectedKey(id);
+                     self._itemActionActivated(id);
                   }
                }
             });
@@ -421,7 +433,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          
          if(this._isSupportedItemsToolbar() && this._getItemsToolbar().isVisible()) {
             toolbarLeft = this._getItemsToolbar().getContainer()[0].offsetLeft;
-            needCorrect = toolbarLeft && (toolbarLeft < leftOffset);
+            needCorrect = toolbarLeft && (toolbarLeft < (leftOffset + arrowCords.width)); // Учитываем ширину иконки стрелки при корректировке
             /* Если стрелка заползает на операции над записью -> увеличиваем отступ */
             if(needCorrect) {
                leftOffset -= leftOffset - toolbarLeft + this.getEditArrow().getContainer().width(); //Левая граница тулбара + ширина стрелки
@@ -474,13 +486,18 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var hoveredItem = this.getHoveredItem(),
              hoveredItemContainer = hoveredItem.container,
              editArrowContainer = this.getEditArrow().getContainer(),
-             folderTitle, titleTd, editArrowMarker;
+             folderTitle, titleTd, editArrowMarker, projItem;
+         
+         if(this._hasHoveredItem()) {
+            projItem = this._getItemsProjection().getItemBySourceItem(hoveredItem.record);
+         }
 
          /* Не показываем если:
             1) Иконку скрыли
             2) Не папка
-            3) Режим поиска (по стандарту) */
-         if(this._hasHoveredItem() && this._getItemsProjection().getItemBySourceItem(hoveredItem.record).isNode() && this.getEditArrow().isVisible() && !this._isSearchMode()) {
+            3) Режим поиска (по стандарту)
+            4) projItem'a может не быть при добавлении по месту */
+         if(projItem && projItem.isNode() && this.getEditArrow().isVisible() && !this._isSearchMode()) {
             folderTitle = hoveredItemContainer.find('.controls-TreeView__folderTitle');
             titleTd = folderTitle.closest('.controls-DataGridView__td', hoveredItemContainer);
             editArrowMarker = this._getEditArrowMarker(titleTd);
@@ -516,7 +533,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    
       _mouseDownHandler: function(e) {
          /* По стандарту отключаю выделение по двойному клику мышкой в дереве */
-         if(e.originalEvent.detail > 1) {
+         if(e.originalEvent.detail > 1 && this._needProcessMouseEvent(e)) {
             e.preventDefault();
          }
          TreeDataGridView.superclass._mouseDownHandler.apply(this, arguments);
@@ -595,7 +612,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             if ($target.hasClass('js-controls-TreeView__editArrow') || $target.hasClass('js-controls-ListView__itemCheckBox')) {
                return false;
             } else if (data.get(this._options.nodeProperty)) {
-               this._currentScrollPosition = 0;
                this.setCurrentRoot(id);
                this.reload();
             }

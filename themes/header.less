@@ -46,14 +46,14 @@
 }
 
 .ws-toggleHeader {
-  &:before {
+  & .controls-Button__wrapper:before {
     display: inline-block;
     .ws-header-content-mixin(@toggle-header-before-content, @toggle-header-before-font, @toggle-header-before-color);
     width: @toggle-header-before-width;
     float: left;
   }
 
-  &.controls-ToggleButton__normal.controls-Button-size__default.controls-Checked__checked:before {
+  &.controls-ToggleButton__normal.controls-Button-size__default.controls-Checked__checked .controls-Button__wrapper:before {
     content: @toggle-header-checked-before-content;
   }
 

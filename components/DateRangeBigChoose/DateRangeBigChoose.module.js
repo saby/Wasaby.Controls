@@ -48,13 +48,32 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          month: 'month',
          year: 'year'
       };
-
-   var DateRangeBigChoose = CompoundControl.extend([RangeSelectableViewMixin, RangeMixin], {
+    /**
+     *
+     * @class SBIS3.CONTROLS.DateRangeBigChoose
+     * @extends SBIS3.CORE.CompoundControl
+     *
+     * @mixes SBIS3.CONTROLS.RangeMixin
+     * @mixes SBIS3.CONTROLS.RangeSelectableViewMixin
+     *
+     * @public
+     * @control
+     */
+   var DateRangeBigChoose = CompoundControl.extend([RangeSelectableViewMixin, RangeMixin], /** @lends SBIS3.CONTROLS.DateRangeBigChoose.prototype */{
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
+             /**
+              * @cfg {String}
+              */
             mask: 'DD.MM.YY',
+             /**
+              * @cfg {Array}
+              */
             startValueValidators: [],
+             /**
+              * @cfg {Array}
+              */
             endValueValidators: [],
             _monthsNames: constants.Date.longMonths
          },
@@ -298,6 +317,9 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
             return;
          }
          this.setRange(startDate, date);
+         if (!date) {
+            return;
+         }
          this._setCurrentYear(date.getFullYear(), true);
          if (this._state === states.year) {
             this._monthRangePicker.setYear(date.getFullYear());

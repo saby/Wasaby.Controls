@@ -1,4 +1,3 @@
-
 define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
    [
       'js!SBIS3.CONTROLS.CompoundControl',
@@ -22,21 +21,13 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
             _dotTplFn: dotTplFn,
             $protected: {
                _options: {
-                  richMode: false
+                  imageUuid: null
                }
             },
             _replaceButton: undefined,
             _commandsButton: undefined,
             _imageViewer: undefined,
             _imagePanel: undefined,
-
-            _modifyOptions: function(options) {
-               options = ImageOptionsPanel.superclass._modifyOptions.apply(this, arguments);
-               if (Di.isRegistered('ImageEditor')) {
-                  options.richMode = this._options.target.attr('alt') !== ''; //если файлы грузили через fileStorageLoader, то не надо показывать редактор изображений
-               }
-               return options;
-            },
 
             $constructor: function(){
                this._publish('onImageChange', 'onImageDelete', 'onImageSizeChange');
@@ -46,9 +37,34 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                ImageOptionsPanel.superclass.init.call(this);
 
                this._replaceButton = this.getChildControlByName('replaceButton');
-               this._replaceButton.subscribe('onActivated', this._replaceButtonClickHandler.bind(this));
+               this._replaceButton.subscribe('onActivated', this._commandsButtonItemActivateHandler.bind(this, null, 'change'));
                this._commandsButton = this.getChildControlByName('commandsButton');
                this._commandsButton.subscribe('onMenuItemActivate', this._commandsButtonItemActivateHandler.bind(this));
+               // Это следствие ошибки в WSControls/Buttons/MenuButton - в методе _getContextMenu неправильно возвращается значение. После исправления - убрать try-catch
+               // https://online.sbis.ru/opendoc.html?guid=7928aef9-cf28-499c-9c87-49b1f788907c
+               try {
+                  this._updateCommandsButtonItems();
+               }
+               catch (ex) {
+                  require(['js!SBIS3.CONTROLS.ContextMenu'], function (ctxMenu) {
+                     this._updateCommandsButtonItems();
+                  }.bind(this));
+               }
+            },
+
+            setImageUuid: function (uuid) {
+               this._options.imageUuid = uuid || null;
+               this._updateCommandsButtonItems();
+            },
+
+            getImageUuid: function () {
+               return this._options.imageUuid;
+            },
+
+            _updateCommandsButtonItems: function () {
+               if (Di.isRegistered('ImageEditor') && this._commandsButton.getPicker()) {
+                  this._commandsButton.getItemInstance('edit').setVisible(!!this._options.imageUuid);
+               }
             },
 
             recalcPosition: function() {
@@ -119,13 +135,6 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                imagePanel.show();
             },
 
-            _replaceButtonClickHandler: function() {
-               this.getFileLoader().startFileLoad(this._replaceButton._container, false, this._options.imageFolder).addCallback(function(fileobj){
-                  this._notify('onImageChange', fileobj);
-                  this.hide();
-               }.bind(this));
-            },
-
             _commandsButtonItemActivateHandler: function(event, key){
                switch (key) {
                   case "delete":
@@ -152,10 +161,13 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
                      break;
                   case "edit":
                      var
-                        self = this;
-                     this.getEditor().openFullScreenByFileId(this.getTarget().attr('alt')).addCallback(function(fileobj){
-                        self._notify('onImageChange', fileobj);
-                     });
+                        self = this,
+                        uuid = this._options.imageUuid;
+                     if (uuid) {
+                        this.getEditor().openFullScreenByFileId(uuid).addCallback(function(fileobj){
+                           self._notify('onImageChange', fileobj);
+                        });
+                     }
                      this.hide();
                      break;
                }

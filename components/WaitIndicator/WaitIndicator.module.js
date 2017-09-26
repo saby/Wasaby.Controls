@@ -66,6 +66,10 @@
     * <br/>
     *
     * @class SBIS3.CONTROLS.WaitIndicator
+    * @extends Core/core-extend
+    *
+    * @author Спирин Виктор Алексеевич
+    *
     * @public
     *
     * @demo SBIS3.CONTROLS.Demo.MyWaitIndicator
@@ -91,7 +95,7 @@
        *                            вида "ws-wait-indicator_mod-<модификатор>". Все недопустимые для имени класса символы будут удалены
        * @param {number} delay Задержка перед началом показа индикатора. Если указана и неотрицательна - индикатор будет показан, если нет - не будет
        */
-      var WaitIndicatorInstance = CoreExtend.extend({
+      var WaitIndicatorInstance = CoreExtend.extend(/** @lends SBIS3.CONTROLS.WaitIndicator.prototype */{
          //_moduleName: 'SBIS3.CONTROLS.WaitIndicator',
 
          constructor: function (target, message, look, delay, useDeferred) {

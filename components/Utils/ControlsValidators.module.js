@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [
 
    /**
     * Компонент с набором платформенных валидаторов, которые можно применять только к контролам из пространства имён SBIS3.CONTROLS.
-    * Подробнее о работе с валидаторами вы можете прочитать в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/">Валидация вводимых данных</a>.
+    * Подробнее о работе с валидаторами вы можете прочитать в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/validation/">Валидация вводимых данных</a>.
     * @class SBIS3.CONTROLS.ControlsValidators
     * @public
     * @author Красильников Андрей Сергеевич
@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [
        * </ol>
        */
       required: function(option) {
-         var isEmpty;
+         var isEmpty = false;
 
          switch (typeof option) {
             case 'string' :
@@ -61,9 +61,6 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [
                } else if(option === null) {
                   isEmpty = true;
                }
-               break;
-            case 'boolean' :
-               isEmpty = !option;
                break;
             case 'undefined' :
                isEmpty = true;
@@ -91,7 +88,7 @@ define('js!SBIS3.CONTROLS.ControlsValidators', [
          min = parseFloat(min);
          max = parseFloat(max);
 
-         if(value === '' || isNaN(value) || isNaN(min) || isNaN(max)){
+         if(value === '' || isNaN(value) || isNaN(min) || isNaN(max) || value == undefined){
             return true;
          }
 
