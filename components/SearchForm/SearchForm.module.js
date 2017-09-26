@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.SearchForm', [
 
    /**
     * Cтрока поиска, поле ввода + кнопка поиска.
-    * Подробнее конфигурирование контрола описано в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/filtering/list-search/">Строка поиска</a>.
+    * Подробнее конфигурирование контрола описано в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/filtering/list-search/">Строка поиска</a>.
     * @class SBIS3.CONTROLS.SearchForm
     * @extends SBIS3.CONTROLS.TextBox
     *

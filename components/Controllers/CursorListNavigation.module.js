@@ -67,11 +67,11 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
             if (projection && projection.getCount() && scrollDirection) {
                if (scrollDirection == 'up') {
                   this.setDirection('before');
-                  edgeRecord = projection.at(0).getContents();
+                  edgeRecord = projection.getFirst().getContents();
                }
                else {
                   this.setDirection('after');
-                  edgeRecord = projection.at(projection.getCount() - 1).getContents();
+                  edgeRecord = projection.getLast().getContents();
                }
                var newPos = [];
                for (var i = 0; i < this._options.config.field.length; i++) {

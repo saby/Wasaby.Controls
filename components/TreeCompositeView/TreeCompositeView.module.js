@@ -15,15 +15,16 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
    "Core/helpers/fast-control-helpers",
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'Core/core-merge',
+   'Core/core-instance',
    'css!SBIS3.CONTROLS.CompositeView',
    'css!SBIS3.CONTROLS.TreeCompositeView'
-], function( cFunctions, constants, Deferred, ParallelDeferred, isEmpty, TreeDataGridView, CompositeViewMixin, folderTpl, TreeCompositeItemsTemplate, FolderTemplate, ListFolderTemplate, FolderContentTemplate, StaticFolderContentTemplate, fcHelpers, TemplateUtil, cMerge) {
+], function( cFunctions, constants, Deferred, ParallelDeferred, isEmpty, TreeDataGridView, CompositeViewMixin, folderTpl, TreeCompositeItemsTemplate, FolderTemplate, ListFolderTemplate, FolderContentTemplate, StaticFolderContentTemplate, fcHelpers, TemplateUtil, cMerge, cInstance) {
 
    'use strict';
 
    /**
     * Контрол, отображающий набор данных с иерархической структурой в виде таблицы, плитки или списка.
-    * Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">Настройка списков</a>.
+    * Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">Настройка списков</a>.
     * @class SBIS3.CONTROLS.TreeCompositeView
     * @extends SBIS3.CONTROLS.TreeDataGridView
     *
@@ -151,13 +152,15 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             },
             useGroups = !isEmpty(cfg.groupBy) && cfg.easyGroup;
          projection.each(function (item, index, group) {
-            if (item.isNode()) {
-               records.folders.push(item);
-               cfg._hideEmpty = true;
-            }
-            else {
-               records.leafs.push(item);
-               cfg._hideEmpty = true;
+            if (!cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
+               if (item.isNode()) {
+                  records.folders.push(item);
+                  cfg._hideEmpty = true;
+               }
+               else {
+                  records.leafs.push(item);
+                  cfg._hideEmpty = true;
+               }
             }
          });
          return records;
@@ -225,6 +228,14 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          }
       },
 
+      _getChildrenDOMItems: function() {
+         var
+            folders = this._getFoldersContainer().children('.js-controls-ListView__item'),
+            items = TreeCompositeView.superclass._getChildrenDOMItems.apply(this, arguments);
+
+         return folders.add(items);
+      },
+
       _getEditArrowPosition: function() {
          if (this._options.viewMode === 'tile') {
             return this._getEditArrowPositionTile.apply(this, arguments);
@@ -247,6 +258,13 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             result = TreeCompositeView.superclass._getInsertMarkupConfig.apply(this, arguments);
          } else {
             result = this._getInsertMarkupConfigICM.apply(this, arguments);
+            //При добавлении элементов в начало списка, они добавляются перед FoldersContainer, а должны добавлять после него.
+            //В таком случае явно укажем после какого блока вставить элементы.
+            if (result.inside && result.prepend) {
+               result.inside = false;
+               result.prepend = false;
+               result.container = this._getFoldersContainer()
+            }
          }
          return result;
       },
@@ -632,7 +650,9 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                      });
                }
             };
-         fcHelpers.toggleIndicator(true);
+         if (!this._showedLoading) {
+            fcHelpers.toggleIndicator(true);
+         }
          if (items) {
             currentDataSet = this.getItems();
             filter = cFunctions.clone(this.getFilter());
@@ -650,7 +670,9 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                }
             }, this);
             if (Object.isEmpty(recordsGroup)) {
-               fcHelpers.toggleIndicator(false);
+               if (!this._showedLoading) {
+                  fcHelpers.toggleIndicator(false);
+               }
             } else {
                deferred = new ParallelDeferred();
                Object.keys(recordsGroup).forEach(function(branchId) {
@@ -670,7 +692,9 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
                         }
                      })
                      .addBoth(function() {
-                        fcHelpers.toggleIndicator(false);
+                        if (!self._showedLoading) {
+                           fcHelpers.toggleIndicator(false);
+                        }
                      }));
                });
                return deferred.done().getResult();

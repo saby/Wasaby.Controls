@@ -245,7 +245,6 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 this.clearActiveFilter();
                 filter.isActiveFilter = true;
                 filter.viewFilter = this.prepareViewFilter();
-                this.saveToUserParams();
              }
           },
 

@@ -97,7 +97,7 @@
       z-index: @tab-button-checked-z-index;
       cursor: @tab-button-checked-cursor;
       font-size: @tab-button-checked-font-size;
-      border-bottom-color: transparent;
+      border-bottom: none;
       padding: 0;
       .controls-TabButton__bottomLine{
          position: absolute;
@@ -108,7 +108,6 @@
          height: 3px;
       }
       .controls-TabButton__inner {
-         height: @tab-button-checked-height + 1;
          font-weight: @tab-button-checked-inner-font-weight;
          font-size: @tab-button-checked-inner-font-size;
          color: @tab-button-checked-inner-color;
@@ -211,7 +210,7 @@
       padding: @tab-button-inner-padding;
       line-height: @tab-button-inner-line-height;
       overflow: @tab-button-inner-overflow;
-      height: @tab-button-inner-height;
+      height: 100%;
       max-width: @tab-button-large-inner-max-width;
       &:before {
         content: @tab-button-inner-after-content;
@@ -435,7 +434,7 @@
 .ws-is-ie {
    .controls-TabButton {
       .controls-TabButton__mainText {
-         line-height: 25px;
+         line-height: 26px; //for ie10-12
          .controls-EditAtPlace__editor .controls-TextBox {
             line-height: 20px;
          }

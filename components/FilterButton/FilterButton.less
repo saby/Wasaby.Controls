@@ -69,6 +69,10 @@
    .flex-shrink(1);
 }
 
+.controls__filterButton__filterLine-text {
+   display: inline-block; // display: inline-block кроссбраузерно гарантирует, что внутри flexbox контейра блок не выйдет за ширину родителя
+}
+
 .controls__filterButton__filterLine-items, .controls__filterButton__filterLine {
    .inline-flexbox();
    .align-items(center);

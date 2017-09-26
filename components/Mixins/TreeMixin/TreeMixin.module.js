@@ -141,6 +141,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
 
 
       iterator(function (item) {
+         // Группировка при поиске не поддерживается. https://online.sbis.ru/opendoc.html?guid=aa8e9981-64fc-4bb1-a75c-ef2fa0c73176
+         if (cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
+            return;
+         }
          if ((item.getParent() != lastNode) && curPath.length) {
             if (lastNode != lastPushedNode) {
                pushPath(resRecords, curPath, cfg);
@@ -363,7 +367,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          item, itemId;
       for (var i = 0; i < projItems.length; i++) {
          item = projItems[i];
-         if (item.isNode() && !item.isExpanded()) {
+         if (!cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem') && item.isNode() && !item.isExpanded()) {
             itemId = item.getContents().getId();
             if (hierarchy.getChildren(itemId, recordSet).length) {
                if (cfg.expand) {
@@ -540,7 +544,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              * @remark
              * Поле иерархии хранит первичный ключ той записи, которая является узлом для текущей. Значение null - запись расположена в корне иерархии.
              * Например, поле иерархии "Раздел". Название поля "Раздел" необязательное, и в каждом случае может быть разным.
-             * По полю иерархии устанавливаются два других служебных поля - "Раздел@" и "Раздел$" , подробнее о назначении которых вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/hierarchy/#_2">Требования к источнику данных</a>.
+             * По полю иерархии устанавливаются два других служебных поля - "Раздел@" и "Раздел$" , подробнее о назначении которых вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/hierarchy/#_2">Требования к источнику данных</a>.
              * @example
              * <pre>
              *    <option name="hierField">Раздел</option>

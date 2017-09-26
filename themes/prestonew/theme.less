@@ -6,9 +6,6 @@ body {
    font-size: 1rem !important;
 }
 body {
-   .ws-validation-error > textarea {
-      background-color: @text-box-error-bg !important; // перебиваю стили fieldAbstract
-   }
     //Todo: сделать @accent-color - #FFCC99  https://online.sbis.ru/opendoc.html?guid=47bdafa8-88ab-4cb2-9383-89ffd7c9dcdd
     //сейчас пока сделаем так, чтобы не разломать версию 3.7.5.150
     .controls-accent-text {
@@ -347,7 +344,7 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
 .controls-ComboBox {
   &.controls-Picker__show {
     border-width: 0;
-    border-style: @text-box-hover-border-style;
+    border-style: solid;
     border-color: @text-box-hover-border-color;
   }
 }
@@ -595,12 +592,6 @@ body {
    }
 }
 
-// В теме онлайна кнопка выравнивается маргинами. Но в темах престы и розницы размер иконки другой и из-за них
-// появляются лишние отступы внизу контрола. Обнуляем маргины и меняем vertical-align у кнопки.
-// Если везде все будет хорошо, то в онлайне сделать подобным образом. Возможно проще сделать через flex.
-.controls-DateRange .controls-DateRange__Button {
-   vertical-align: top;
-}
 .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field .controls-FormattedTextBox__field-symbol {
 
     line-height: 2rem;
@@ -795,6 +786,9 @@ body {
       color: @default-text-color;
       border: @button-border;
       padding: 0.857rem 3rem 0.857rem 0.857rem;
+      &.ws-infobox-type-error {
+        box-shadow: rgba(0, 0, 0, 0.5) 0 0 0.714rem;
+      }
       .ws-infobox-triangle {
          width: .857rem;
          height: .857rem;
@@ -845,7 +839,7 @@ body {
 }
 
 .controls-BreadCrumbs__crumb {
-   top: 0.08rem
+   top: 0.28rem
 }
 
 .ws-is-sbis-desktop {
@@ -973,12 +967,14 @@ body {
    }
 }
 
-.ws-is-webkit .controls-BreadCrumbs .controls-BreadCrumbs__arrow {
-   top:  0.33rem;
+.ws-is-webkit, .ws-is-mobile-chrome-ios {
+   .controls-BreadCrumbs .controls-BreadCrumbs__arrow {
+      top:  0.38rem;
+   }
 }
 
 .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
-   top: 0.16rem !important;
+   top: 0.34rem !important;
 }
 
 .ws-is-sbis-desktop {
@@ -991,9 +987,8 @@ body {
    Выписана ошибка. https://online.sbis.ru/opendoc.html?guid=fa89f6fd-3e4a-4925-8de3-9f34c6b11729
  */
 .ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
-   .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
-      position: relative;
-      top: .4257rem !important; // чтобы перебить непонятный top выше по файлу.
+   .controls-BreadCrumbs__crumb {
+      top: 0
    }
 }
 
