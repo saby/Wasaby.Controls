@@ -18,6 +18,8 @@
       "SBIS3.CONTROLS.LongOperationsRegistry",
       "SBIS3.CONTROLS.LongOperationsRegistry*"
    ],
-   "exclude": [],
+   "exclude": [
+      "SBIS3.CONTROLS.LongOperationsList/resources/model"
+   ],
    "output": "js!SBIS3.CONTROLS.LongOperationsPopup"
 }]

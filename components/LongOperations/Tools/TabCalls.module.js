@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.LongOperationsTabCalls',
+define('js!SBIS3.CONTROLS.LongOperations.Tools.TabCalls',
    [
       'Core/core-extend',
       'Core/Deferred',
@@ -14,15 +14,15 @@ define('js!SBIS3.CONTROLS.LongOperationsTabCalls',
       /**
        * Класс межвкладочных вызовов методов
        *
-       * @class SBIS3.CONTROLS.LongOperationsTabCalls
+       * @class SBIS3.CONTROLS.LongOperations.Tools.TabCalls
        *
        * @author Спирин Виктор Алексеевич
        *
        * @public
-       * @type {SBIS3.CONTROLS.LongOperationsTabCalls}
+       * @type {SBIS3.CONTROLS.LongOperations.Tools.TabCalls}
        */
-      var LongOperationsTabCalls = CoreExtend.extend(/** @lends SBIS3.CONTROLS.LongOperationsTabCalls.prototype */{
-         _moduleName: 'SBIS3.CONTROLS.LongOperationsTabCalls',
+      var LongOperationsTabCalls = CoreExtend.extend(/** @lends SBIS3.CONTROLS.LongOperations.Tools.TabCalls.prototype */{
+         _moduleName: 'SBIS3.CONTROLS.LongOperations.Tools.TabCalls',
 
          /**
           * Конструктор
@@ -270,7 +270,7 @@ define('js!SBIS3.CONTROLS.LongOperationsTabCalls',
       /**
        * Отослать полученный результат вызова во вкладку, сделавшую вызов
        * @protected
-       * @param {SBIS3.CONTROLS.LongOperationsTabCalls} self Этот объект
+       * @param {SBIS3.CONTROLS.LongOperations.Tools.TabCalls} self Этот объект
        * @param {string} to Ключ вкладки
        * @param {string} target Имя целевого объекта
        * @param {string} method Имя вызываемого метода
@@ -307,7 +307,7 @@ define('js!SBIS3.CONTROLS.LongOperationsTabCalls',
       /**
        * Получить запрос из списка выполняющихся во вкладках запросов
        * @protected
-       * @param {SBIS3.CONTROLS.LongOperationsTabCalls} self Этот объект
+       * @param {SBIS3.CONTROLS.LongOperations.Tools.TabCalls} self Этот объект
        * @param {string} tabKey Ключ вкладки
        * @param {string} target Имя целевого объекта
        * @param {string} method Имя вызываемого метода
