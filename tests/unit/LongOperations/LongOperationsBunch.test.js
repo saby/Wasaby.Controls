@@ -1,6 +1,6 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
-      'js!SBIS3.CONTROLS.LongOperationsBunch'
+      'js!SBIS3.CONTROLS.LongOperations.Tools.Bunch'
    ],
 
    function (LongOperationsBunch) {
@@ -63,10 +63,11 @@ define([
             };
             Object.keys(signatures).forEach(function (method) {
                var len = signatures[method];
-               it('Метод экземпляра ' + method + ' (' + len + ')', function () {
+               var useLen = typeof len === 'number';
+               it('Метод экземпляра ' + method + (useLen ? ' (' + len + ')' : ''), function () {
                   var f = bunch[method];
                   assert.isFunction(f, 'Метод отсутствует');
-                  if (typeof f === 'function') {
+                  if (useLen && typeof f === 'function') {
                      assert.equal(f.length, len, 'Количество аргументов');
                   }
                });
