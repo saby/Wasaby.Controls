@@ -1529,6 +1529,10 @@ define('js!SBIS3.CONTROLS.ListView',
                    надо обновить выделнный элемент, т.к. могло измениться его положение */
                   this._updateHoveredItem(hoveredItemContainer);
                }
+            }else {
+               if(this._itemsToolbar && this._itemsToolbar.isVisible()){
+                  this._itemsToolbar.hide();
+               }
             }
          },
 
