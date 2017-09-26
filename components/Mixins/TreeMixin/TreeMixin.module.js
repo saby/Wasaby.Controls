@@ -375,6 +375,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                }
                item.setExpanded(true);
                item.setLoaded(true);
+               // Если режим единично раскрытого узла, то выходим после раскрытия первого найденного узла
+               // https://online.sbis.ru/opendoc.html?guid=98a1ca67-7546-41b8-a948-48048e62150d
+               if (cfg.singleExpand) {
+                  return;
+               }
             }
          }
       }
