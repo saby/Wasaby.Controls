@@ -776,18 +776,22 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
       },
 
-      showPicker: function(){
+      showPicker: function() {
          var projection = this._getItemsProjection(),
             item = projection.at(this.getSelectedIndex()),
             hash = item && item.getHash();
 
          if (projection.getCount()) {//Инициализируем пикер, чтобы перед показом ограниччить его ширину
-         if (!this._picker || this._picker.isDestroyed()) {
-            this._initializePicker();
+            if (!this._picker || this._picker.isDestroyed()) {
+               this._initializePicker();
+            }
+            ComboBox.superclass.showPicker.call(this);
+            TextBoxUtils.setEqualPickerWidth(this._picker);
+            if (!hash && projection.getCount() > 0) {
+               hash = projection.at(0).getHash();
+            }
+            this._scrollToItem(hash);
          }
-         ComboBox.superclass.showPicker.call(this);
-         TextBoxUtils.setEqualPickerWidth(this._picker);
-         this._setScroll();
       },
 
       _pickerMouseEnterHandler: function (event) {
@@ -798,16 +802,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             if (getTextWidth(itemText) > itemTextContainer.clientWidth) {
                itemContainer[0].setAttribute('title', itemText);
             }
-         }
-      },
-
-      _setScroll: function () {//После отображения пикера подскроливаем до выбранного элемента
-
-
-            if(!hash && projection.getCount() > 0) {
-               hash = projection.at(0).getHash();
-            }
-            this._scrollToItem(hash);
          }
       },
 
