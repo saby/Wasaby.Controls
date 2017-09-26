@@ -420,7 +420,8 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                      horizontalAlign: {
                         side: 'right',
                         offset: 48
-                     }
+                     },
+                     locationStrategy: 'bodyBounds'
                   }
                });
 
