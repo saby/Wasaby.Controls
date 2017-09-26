@@ -91,6 +91,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       return itemsProjection;
    }
 
+   function checkDisplayProperty(cfg) {
+      if (!cfg.displayProperty && !cInstance.instanceOfModule(cfg._items, 'WS.Data/Type/Enum')) {
+         IoC.resolve('ILogger').error('SBIS3.CONTROLS.ComboBox', 'Не задана опция displayProperty');
+         cfg.displayProperty = 'title';
+      }
+   }
+
    var ComboBox = TextBox.extend([PickerMixin, ItemsControlMixin, Selectable, DataBindMixin, SearchMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
       _dotTplFnPicker: dotTplFnPicker,
       /**
@@ -240,10 +247,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _modifyOptions: function(){
          var cfg = ComboBox.superclass._modifyOptions.apply(this, arguments);
 
-         if (!cfg.displayProperty) {
-            IoC.resolve('ILogger').error(this._moduleName, 'Не задана опция displayProperty');
-            cfg.displayProperty = 'title';
-         }
+         checkDisplayProperty(cfg);
 
          if (cfg.emptyValue){
             var rawData = {},
@@ -696,6 +700,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       redraw: function () {
+         checkDisplayProperty(this._options);
          if (this._picker) {
             ComboBox.superclass.redraw.call(this);
             // Сделано для того, что бы в при уменьшении колчества пунктов при поиске нормально усеньшались размеры пикера
