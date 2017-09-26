@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.LongOperationsRegistry',
    [
       'js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.LongOperationEntry',
+      'js!SBIS3.CONTROLS.LongOperations.Entry',
       'Core/RightsManager',
       'html!SBIS3.CONTROLS.LongOperationsRegistry/resources/groupTpl',
       'html!SBIS3.CONTROLS.LongOperationsRegistry/resources/emptyHTMLTpl',
