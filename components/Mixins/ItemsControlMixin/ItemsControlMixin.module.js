@@ -25,7 +25,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'Core/helpers/String/escapeHtml',
    "js!SBIS3.CONTROLS.Utils.SourceUtil",
    "Core/helpers/Object/isEmpty",
-   "Core/helpers/Function/debounce"
+   "Core/helpers/Function/debounce",
+   "js!SBIS3.CORE.Control"
 ], function (
    coreClone,
    Deferred,
@@ -53,7 +54,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    escapeHtml,
    SourceUtil,
    isEmpty,
-   debounce) {
+   debounce,
+   baseControl) {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -1377,20 +1379,28 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       /*TODO easy параметр для временной поддержки группировки в быстрой отрисовке*/
       _destroyControls: function(container, easy){
-         var compsArray = [];
+         var compsArray = [],
+            destroyed = false;
          $('[data-component]', container).each(function (i, item) {
             var inst = item.wsControl;
             if (inst) {
                if (!easy) {
                   // true - не завершать пакет (ControlBatchUpdater) на дестрой. Иначе сработает onBringToFront и переведет активность раньше времени
                   // https://inside.tensor.ru/opendoc.html?guid=ec5c1d84-a09c-49b2-991a-779a7004a15b&des=
+                  if (!destroyed) {
+                     baseControl.ControlBatchUpdater.beginBatchUpdate('AreaAbstract_destroy');
+                  }
                   inst.destroy(true);
+                  destroyed = true;
                }
                else {
                   compsArray.push(inst);
                }
             }
          });
+         if (destroyed) {
+            baseControl.ControlBatchUpdater.endBatchUpdate('AreaAbstract_destroy');
+         }
          return compsArray;
       },
 
