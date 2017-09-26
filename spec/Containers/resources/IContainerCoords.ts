@@ -5,5 +5,5 @@ interface IContainerCoords {
     left: number
     top: number
     width: number
-    left: number
+    height: number
 }
