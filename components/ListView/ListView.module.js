@@ -1096,7 +1096,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _modifyOptions : function(opts){
             var lvOpts = ListView.superclass._modifyOptions.apply(this, arguments);
-            this._addOptionsFromClass(opts);
+            this._addOptionsFromClass(lvOpts);
             //Если нам задали бесконечный скролл в виде Bool, то если true, то 'down' иначе null
             if (lvOpts.hasOwnProperty('infiniteScroll')){
                lvOpts.infiniteScroll = typeof lvOpts.infiniteScroll === 'boolean' ?
