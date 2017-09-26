@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "Core/constants",
    "Core/core-merge",
    "Core/core-instance",
-   "Core/core-functions",
+   'Core/helpers/Function/shallowClone',
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CONTROLS.PickerMixin",
    "js!SBIS3.CONTROLS.ItemsControlMixin",
@@ -31,7 +31,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    'css!SBIS3.CONTROLS.DropdownList'
 ],
 
-   function (EventBus, IoC, constants, cMerge, cInstance, cFunctions, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
+   function (EventBus, IoC, constants, cMerge, cInstance, shallowClone, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
 
       'use strict';
       /**
@@ -401,7 +401,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             /* Надо делать клон, иначе в ие при определнии scope для шаблона затирается parent
                https://online.sbis.ru/opendoc.html?guid=e5604962-8cea-4d32-88e8-1ead295e0adf&des=
                Задача в разработку 15.05.2017 Не пробрасывать scope в ИЕ utils.js:: createSavingPrototype: function mergeSavingPrototype(scope… */
-            header.append(dotTplFn(cFunctions.shallowClone(this._options)));
+            header.append(dotTplFn(shallowClone(this._options)));
             this._setPickerVariables();
             this._bindItemSelect();
 

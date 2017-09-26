@@ -6,12 +6,12 @@ define('js!WSControls/Lists/TreeView2', [
       'Core/helpers/Object/isPlainObject',
       'Core/Deferred',
       'Core/helpers/collection-helpers',
-      'Core/core-functions',
+      'Core/core-clone',
       'js!WS.Data/Relation/Hierarchy',
       'Core/helpers/functional-helpers',
       'tmpl!WSControls/Lists/resources/TreeView/ItemTemplate',
       'css!SBIS3.CONTROLS.TreeView'
-   ], function(ListView, ItemsUtil, TreeItemsUtil, DataSourceUtil, isPlainObject, Deferred, collectionHelpers, cFunctions, HierarchyRelation, FunctionalHelpers, ItemTemplate) {
+   ], function(ListView, ItemsUtil, TreeItemsUtil, DataSourceUtil, isPlainObject, Deferred, collectionHelpers, coreClone, HierarchyRelation, FunctionalHelpers, ItemTemplate) {
 
    var TreeView = ListView.extend({
       _defaultItemTemplate: ItemTemplate,
@@ -23,7 +23,7 @@ define('js!WSControls/Lists/TreeView2', [
       _prepareMountingData: function(newOptions) {
          TreeView.superclass._prepareMountingData.apply(this, arguments);
          if (isPlainObject(newOptions.expandedItems)) {
-            this._expandedItems = cFunctions.clone(newOptions.expandedItems);
+            this._expandedItems = coreClone(newOptions.expandedItems);
          } else {
             this._expandedItems = {};
          }
@@ -134,7 +134,7 @@ define('js!WSControls/Lists/TreeView2', [
 
       _prepareQueryFilter: function(root) {
          var
-            filter = cFunctions.clone(this._filter) || {};
+            filter = coreClone(this._filter) || {};
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'Узлы и листья';
