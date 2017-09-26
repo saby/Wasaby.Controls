@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.TreeCompositeView', [
-   "Core/core-functions",
+   "Core/core-clone",
    "Core/constants",
    "Core/Deferred",
    "Core/ParallelDeferred",
@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
    'Core/core-instance',
    'css!SBIS3.CONTROLS.CompositeView',
    'css!SBIS3.CONTROLS.TreeCompositeView'
-], function( cFunctions, constants, Deferred, ParallelDeferred, isEmpty, TreeDataGridView, CompositeViewMixin, folderTpl, TreeCompositeItemsTemplate, FolderTemplate, ListFolderTemplate, FolderContentTemplate, StaticFolderContentTemplate, fcHelpers, TemplateUtil, cMerge, cInstance) {
+], function(coreClone, constants, Deferred, ParallelDeferred, isEmpty, TreeDataGridView, CompositeViewMixin, folderTpl, TreeCompositeItemsTemplate, FolderTemplate, ListFolderTemplate, FolderContentTemplate, StaticFolderContentTemplate, fcHelpers, TemplateUtil, cMerge, cInstance) {
 
    'use strict';
 
@@ -226,6 +226,14 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             _compositeItemsTemplate : TreeCompositeItemsTemplate,
             _canServerRenderOther : canServerRenderOther
          }
+      },
+
+      _getChildrenDOMItems: function() {
+         var
+            folders = this._getFoldersContainer().children('.js-controls-ListView__item'),
+            items = TreeCompositeView.superclass._getChildrenDOMItems.apply(this, arguments);
+
+         return folders.add(items);
       },
 
       _getEditArrowPosition: function() {
@@ -503,7 +511,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
             dataArg.itemContent = dataArg[fieldsArr[1]];
             dataArg.defaultItemTpl = dataArg[fieldsArr[2]];
          }
-         var dataClone = cFunctions.clone(data);
+         var dataClone = coreClone(data);
          if (this._options.viewMode == 'tile') {
             if (projItem.isNode()) {
                dataCalc(dataClone, ['folderTpl', 'folderContent', 'defaultFolderTpl']);
@@ -647,7 +655,7 @@ define('js!SBIS3.CONTROLS.TreeCompositeView', [
          }
          if (items) {
             currentDataSet = this.getItems();
-            filter = cFunctions.clone(this.getFilter());
+            filter = coreClone(this.getFilter());
             //Группируем записи по веткам (чтобы как можно меньше запросов делать)
             items.forEach(function(id) {
                item = this._options._items.getRecordById(id);

@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.TreeMixin', [
-   "Core/core-functions",
+   "Core/core-clone",
    "Core/core-merge",
    'js!SBIS3.CONTROLS.Utils.TreeDataReload',
    "Core/constants",
@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    "Core/helpers/Object/isEmpty",
    "Core/helpers/Object/isPlainObject",
    "js!WS.Data/Adapter/Sbis"
-], function ( cFunctions, cMerge, TreeDataReload, constants, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, cInstance, TemplateUtil, forAliveOnly, IoC, isEmpty, isPlainObject) {
+], function (coreClone, cMerge, TreeDataReload, constants, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, cInstance, TemplateUtil, forAliveOnly, IoC, isEmpty, isPlainObject) {
 
    var createDefaultProjection = function(items, cfg) {
       var
@@ -117,7 +117,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                defaultCfg.bcTpls.itemContentTpl = TemplateUtil.prepareTemplate(cfg.hierarchyViewModeItemContentTpl);
             }
             cMerge(defaultCfg, {
-               path: cFunctions.clone(path),
+               path: coreClone(path),
                viewCfg: cfg._getSearchCfg(cfg)
             });
 
@@ -141,6 +141,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
 
 
       iterator(function (item) {
+         // Группировка при поиске не поддерживается. https://online.sbis.ru/opendoc.html?guid=aa8e9981-64fc-4bb1-a75c-ef2fa0c73176
+         if (cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
+            return;
+         }
          if ((item.getParent() != lastNode) && curPath.length) {
             if (lastNode != lastPushedNode) {
                pushPath(resRecords, curPath, cfg);
@@ -371,6 +375,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                }
                item.setExpanded(true);
                item.setLoaded(true);
+               // Если режим единично раскрытого узла, то выходим после раскрытия первого найденного узла
+               // https://online.sbis.ru/opendoc.html?guid=98a1ca67-7546-41b8-a948-48048e62150d
+               if (cfg.singleExpand) {
+                  return;
+               }
             }
          }
       }
@@ -972,12 +981,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        */
       _createTreeFilter: function(key) {
          var
-            filter = cFunctions.clone(this.getFilter()) || {};
+            filter = coreClone(this.getFilter()) || {};
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'Узлы и листья';
          }
-         this.setFilter(cFunctions.clone(filter), true);
+         this.setFilter(coreClone(filter), true);
          filter[this._options.parentProperty] = key;
          return filter;
       },
@@ -1075,7 +1084,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                filter;
             if (direction === 'inside') {
                if (item) {
-                  filter = cFunctions.clone(this.getFilter());
+                  filter = coreClone(this.getFilter());
                   filter[this.getParentProperty()] = id === 'null' ? null : id;
                   filter.reloadableNodes = TreeDataReload.prepareReloadableNodes({
                      direction: direction,
@@ -1184,7 +1193,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       },
       _getFilterForReload: function(filter, sorting, offset, limit, deepReload) {
          var
-            filter = cFunctions.clone(this._options.filter),
+            filter = coreClone(this._options.filter),
             parentProperty;
          if ((this._options.deepReload || deepReload) && !isEmpty(this._options.openedPath)) {
             parentProperty = this._options.parentProperty;
@@ -1332,7 +1341,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          },
          _dataLoadedCallback: function () {
             var path = this._options._items.getMetaData().path,
-               hierarchy = cFunctions.clone(this._hier),
+               hierarchy = coreClone(this._hier),
                item;
             if (this._options.expand) {
                this._applyExpandToItems(this.getItems());

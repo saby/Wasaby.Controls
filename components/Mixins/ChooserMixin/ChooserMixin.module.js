@@ -3,12 +3,12 @@
  */
 define('js!SBIS3.CONTROLS.ChooserMixin', [
    "Core/Context",
-   "Core/core-functions",
+   "Core/core-clone",
    "Core/core-merge",
    "Core/Deferred",
    "js!WS.Data/Entity/Model",
    "js!WS.Data/Adapter/Sbis"
-], function( cContext, cFunctions, cMerge, Deferred,Model, SbisAdapter) {
+], function( cContext, coreClone, cMerge, Deferred,Model, SbisAdapter) {
    /**
     * Миксин, добавляющий интерфейс для открытия окна выбора.
     * @mixin SBIS3.CONTROLS.ChooserMixin
@@ -163,7 +163,7 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
 
 
          requirejs([this._chooserConfig.type[version][this._options.chooserMode]], function(ctrl) {
-            self._chooserDialog = new ctrl(cMerge(cFunctions.clone(self._chooserConfig.config), cMerge(selectorConfig[version], commonConfig)));
+            self._chooserDialog = new ctrl(cMerge(coreClone(self._chooserConfig.config), cMerge(selectorConfig[version], commonConfig)));
             self._chooserDialog.subscribe('onAfterClose', function() {
                self._chooserDialog = undefined;
             });

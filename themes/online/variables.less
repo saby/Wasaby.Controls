@@ -297,7 +297,8 @@
 @icon-button-edit-round-border-height:             @icon-medium-size;
 @icon-button-edit-round-border-width:              @icon-medium-size;
 @icon-button-edit-round-border-line-height:        @icon-medium-size - 2 * @default-border-width;
-@list-view-items-toolbar-icon-button-border-font:       'cbuc-icons';
+@list-view-items-toolbar-icon-button-border-font:  'cbuc-icons';
+@list-view-items-toolbar-animate-duration:         0.35s;
 
 
 // ------------- //
@@ -840,8 +841,7 @@
 
 @suggest-loading-spritesheet:                   'img/ajax-loader-indicator.gif';
 @suggest-loading-bg:                            url(@suggest-loading-spritesheet) 0 0 no-repeat;
-@suggest-loading-height:                        16px;
-@suggest-loading-width:                         @suggest-loading-height;
+@suggest-loading-width:                         16px;
 @suggest-loading-right:                         3px;
 
 @suggest-picker-border:                         1px solid #cccccc;
@@ -1050,10 +1050,6 @@
 // ----------------- //
 @date-range-slider-margin-top:                  -5px;
 
-@date-range-slider-font-family:                 @default-font-name;
-@date-range-slider-color:                       @darkcyan-color;
-@date-range-slider-disabled-text-color:         @link-disabled-text-color;
-@date-range-slider-hover-color:                 @blue-dark-color;
 @date-range-slider-unlocked-icon-hover-color:   @gray-color;
 @date-range-slider-hover-text-decoration:       underline;
 @date-range-slider-font-size:                   15px;
@@ -1062,7 +1058,6 @@
 @date-range-slider-value-padding:               1px;
 @date-range-slider-year-state-width:            80px;
 @date-range-slider-height:                      24px;
-@date-range-slider-prev-next-buttons-hover-color:  @date-range-slider-hover-color;
 @date-range-slider-prev-next-buttons-width:        24px;
 @date-range-slider-prev-next-buttons-font-size:    16px;
 @date-range-slider-prev-next-buttons-font-weight:  normal;
@@ -1089,8 +1084,6 @@
 @date-range-choose-border-hover:                @date-range-choose-border-width solid @gray-lamantin-color;
 @date-range-choose-font-family:                 @default-font-name;
 @date-range-choose-font-size:                   15px;
-@date-range-choose-color:                       @black-color;
-@date-range-choose-hover-color:                 @blue-dark-color;
 @date-range-choose-width:                       178px;
 @date-range-choose-short-width:                 148px;
 @date-range-choose-year-state-width:            82px;
@@ -1113,7 +1106,6 @@
 
 @date-range-choose-year-font-size:              15px;
 @date-range-choose-year-font-weight:            bold;
-@date-range-choose-year-color:                  @darkcyan-color;
 @date-range-choose-year-height:                 @date-range-choose-standart-line-height;
 @date-range-choose-year-margin-bottom:          4px;
 @date-range-choose-year-bg-hover-color:         inherit;
@@ -1122,7 +1114,6 @@
 @date-range-choose-year-prev-next-btns-width:         32px;
 @date-range-choose-year-prev-next-btns-font-size:     16px;
 @date-range-choose-year-prev-next-btns-font-weight:   normal;
-@date-range-choose-year-prev-next-btns-color:         @darkcyan-color;
 
 @date-range-choose-home-icon-width:                   24px;
 
@@ -1131,7 +1122,6 @@
 @date-range-choose-caption-background-color:          @white-color;
 @date-range-choose-caption-text-align:                center;
 
-@date-range-choose-halfyear-caption-with-quarters-color: @darkcyan-color;
 @date-range-choose-halfyear-caption-line-height:      6*@date-range-choose-month-height;
 @date-range-choose-halfyear-caption-width:            30px;
 @date-range-choose-halfyear-caption-right:            initial;
@@ -1168,7 +1158,6 @@
 @date-range-choose-home-button-size:            28px;
 @date-range-choose-home-button-font-size:       14px;
 @date-range-choose-home-button-line-height:     26px;
-@date-range-choose-home-color:                  @date-range-choose-color;
 @date-range-choose-home-button-margin:          0 auto 12px;
 
 
@@ -2472,7 +2461,6 @@
 @scroll-pager-bg:							                @default-bg-color;
 @textbox-font-size:							             @default-font-size;
 @image-bar-height:                                  32px;
-@image-bar-vertical-padding:                        4px;
 @image-bar-horizontal-padding:                      12px;
 @image-bar-bg-color:                                #E7F0F9;
 

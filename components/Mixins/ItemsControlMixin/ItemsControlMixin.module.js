@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.ItemsControlMixin', [
-   "Core/core-functions",
+   'Core/core-clone',
    "Core/Deferred",
    "Core/IoC",
    "js!WS.Data/Source/Memory",
@@ -27,7 +27,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    "Core/helpers/Object/isEmpty",
    "Core/helpers/Function/debounce"
 ], function (
-   cFunctions,
+   coreClone,
    Deferred,
    IoC,
    MemorySource,
@@ -130,7 +130,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (cfg._groupTemplate) {
             var
                tplOptions = {
-                  columns : cFunctions.clone(cfg.columns || []),
+                  columns : coreClone(cfg.columns || []),
                   multiselect : cfg.multiselect,
                   hierField: cfg.hierField + '@',
                   parentProperty: cfg.parentProperty,
@@ -847,7 +847,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             else {
                this._dataSource = new MemorySource({
-                  data: cFunctions.clone(this._options.items),
+                  data: coreClone(this._options.items),
                   idProperty: this._options.idProperty
                });
             }
@@ -986,7 +986,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             buildArgsMethod = this._buildTplArgs;
          }
          if (!this._itemData) {
-            this._itemData = cFunctions.clone(buildArgsMethod.call(this, this._options));
+            this._itemData = coreClone(buildArgsMethod.call(this, this._options));
          } else {
             this._updateItemData(this._itemData);
          }
@@ -2031,7 +2031,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var
                groupBy = this._options.groupBy,
                tplOptions = {
-                  columns : cFunctions.clone(this._options.columns || []),
+                  columns : coreClone(this._options.columns || []),
                   multiselect : this._options.multiselect,
                   hierField: this._options.hierField + '@',
                   parentProperty: this._options.parentProperty,
@@ -2180,6 +2180,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             target = $(target);
          }
          LayoutManager.scrollToElement(target, toBottom, depth);
+      },
+
+      //TODO этот метод более общий чем _scrollToItem надо все места перевести на этот метод
+      _scrollToProjItem: function(item, toBottom, depth) {
+         var container = this._getDomElementByItem(item);
+         if (container) {
+            this._scrollTo(container, toBottom, depth);
+         }
       },
       _scrollToItem: function(itemId, toBottom, depth) {
          var itemContainer  = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
