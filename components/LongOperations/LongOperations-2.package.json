@@ -20,5 +20,5 @@
       "SBIS3.Engine.LongOperations.LRSProducerLib"
    ],
    "exclude": [],
-   "output": "js!BIS3.CONTROLS.LongOperations.ManagerLib"
+   "output": "js!SBIS3.CONTROLS.LongOperations.ManagerLib"
 }]
