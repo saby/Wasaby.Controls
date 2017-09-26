@@ -415,6 +415,8 @@ define('js!SBIS3.CONTROLS.LongOperations.ManagerLib',
          }.bind(self);
       };
 
+      var ObjectAssign = Object.assign || function(d){return [].slice.call(arguments,1).reduce(function(r,s){return Object.keys(s).reduce(function(o,n){o[n]=s[n];return o},r)},d)};
+
 
 
       /**
