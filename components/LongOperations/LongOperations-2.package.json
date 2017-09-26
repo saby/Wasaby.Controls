@@ -1,17 +1,23 @@
 [{
    "modules": [
+      "js!SBIS3.CONTROLS.LongOperations.Entry",
+      "js!SBIS3.CONTROLS.LongOperations.HistoryItem",
       "js!SBIS3.CONTROLS.LongOperations.ManagerLib",
       "js!SBIS3.CONTROLS.LongOperations.Tools.Bunch",
       "js!SBIS3.CONTROLS.LongOperations.Tools.CallsPool",
       "js!SBIS3.CONTROLS.LongOperations.Tools.TabCalls",
-      "js!SBIS3.CONTROLS.LongOperationsList/resources/model"
+      "js!SBIS3.CONTROLS.LongOperationsList/resources/model",
+      "js!SBIS3.Engine.LongOperations.LRSProducerLib"
    ],
    "include": [
+      "SBIS3.CONTROLS.LongOperations.Entry",
+      "SBIS3.CONTROLS.LongOperations.HistoryItem",
       "SBIS3.CONTROLS.LongOperations.ManagerLib",
       "SBIS3.CONTROLS.LongOperations.Tools.Bunch",
       "SBIS3.CONTROLS.LongOperations.Tools.CallsPool",
       "SBIS3.CONTROLS.LongOperations.Tools.TabCalls",
-      "SBIS3.CONTROLS.LongOperationsList/resources/model"
+      "SBIS3.CONTROLS.LongOperationsList/resources/model",
+      "SBIS3.Engine.LongOperations.LRSProducerLib"
    ],
    "exclude": [],
    "output": "js!BIS3.CONTROLS.LongOperations.ManagerLib"
