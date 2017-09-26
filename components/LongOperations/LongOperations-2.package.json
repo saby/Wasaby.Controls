@@ -14,5 +14,5 @@
       "SBIS3.CONTROLS.LongOperationsList/resources/model"
    ],
    "exclude": [],
-   "output": "js!BIS3.CONTROLS.LongOperations.ManagerLib"
+   "output": "js!SBIS3.CONTROLS.LongOperations.ManagerLib"
 }]
