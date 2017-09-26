@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.HighChartsLight', [
-   "Core/core-functions",
+   "Core/core-clone",
    "Core/core-merge",
    "Core/constants",
    "js!SBIS3.CORE.Control",
@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.HighChartsLight', [
    "browser!/cdn/highcharts/4.2.7/highcharts-more.js",
    "css!SBIS3.CONTROLS.HighChartsLight"
 ],
-function( cFunctions, cMerge, constants,BaseControl, dotTpl, trackElement){
+function(coreClone, cMerge, constants,BaseControl, dotTpl, trackElement){
    'use strict';
 
    /**
@@ -582,7 +582,7 @@ function( cFunctions, cMerge, constants,BaseControl, dotTpl, trackElement){
          }
 
          //TODO прописываем опции для spline теже что и line
-         this._options.highChartOptions.plotOptions.spline = cFunctions.clone(this._options.highChartOptions.plotOptions.line);
+         this._options.highChartOptions.plotOptions.spline = coreClone(this._options.highChartOptions.plotOptions.line);
       },
 
       init : function() {
