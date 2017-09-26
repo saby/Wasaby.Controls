@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.TreeView', [
       config.classNodeType = ' controls-ListView__item-type-' + (config.nodePropertyValue == null ? 'leaf' : config.nodePropertyValue == true ? 'node' : 'hidden');
       config.classNodeState = config.nodePropertyValue !== null ? (' controls-TreeView__item-' + (cfg.projItem.isExpanded() ? 'expanded' : 'collapsed')) : '';
       config.classIsSelected = (cfg.selectedKey==cfg.item.getId()) ? ' controls-ListView__item__selected' : '';
-      config.addClasses = 'js-controls-ListView__item controls-ListView__item js-controls-TreeView__item controls-TreeView__item' + config.classNodeType + config.classNodeState + config.classIsLoaded + config.classHasLoadedChild + config.classIsSelected + cfg.noHover ? ' controls-ListView__hoveredItem__withHover' : ' controls-ListView__hoveredItem__withoutHover';
+      config.addClasses = 'js-controls-ListView__item controls-ListView__item js-controls-TreeView__item controls-TreeView__item' + config.classNodeType + config.classNodeState + config.classIsLoaded + config.classHasLoadedChild + config.classIsSelected + (cfg.noHover ? ' controls-ListView__hoveredItem__withHover' : ' controls-ListView__hoveredItem__withoutHover');
       return config;
    };
    /**
