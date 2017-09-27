@@ -77,14 +77,63 @@ define('js!SBIS3.CONTROLS.ListView',
      'use strict';
 
       var
+         _addOptionsFromClass = function _addOptionsFromClass(opts) {
+            opts.pagerConfig = opts.pagerConfig || {};
+            var classes = [
+               { class: 'controls-small-ListView', optionName: 'isSmall', value: true, defaultValue: false },
+               { class: 'controls-ListView__disableHover', optionName: 'noHover', value: true, defaultValue: false },
+               { class: 'controls-ListView__pagerNoSizePicker', optionName: 'noSizePicker', value: true, defaultValue: false },
+               { class: 'controls-ListView__pagerNoAmount', optionName: 'noPagerAmount', value: true, defaultValue: false },
+               { class: 'controls-ListView__pagerHideEndButton', optionName: 'hideEndButton', value: true, defaultValue: false },
+               { class: 'controls-ListView__orangeMarker', optionName: 'showSelectedMarker', value: true, defaultValue: false },
+               { class: 'controls-ListView__outside-scroll-loader', optionName: 'outsideScroll', value: true, defaultValue: false }
+            ]
+            function hasClass(fullClass, className) {
+               if(typeof fullClass === 'string') {
+                  var index = fullClass.split(' ')
+                     .filter(function (el) {
+                        return el !== ''
+                     })
+                     .indexOf(className);
+                  return !!~index;
+               } else {
+                  return undefined;
+               }
+            }
+            var el;
+            for(var i = 0; i < classes.length; i++) {
+               el = classes[i];
+               ////Прокинуть правильные опции
+               // if(el.isPagerConfig) {
+               //    if(!opts.pagerConfig[el.optionName]) {
+               //       hasClass(opts.className, el.class) ? opts.pagerConfig[el.optionName] = el.value :
+               //          opts.pagerConfig[el.optionName] = el.defaultValue;
+               //    }
+               // } else {
+               //    if(!opts[el.optionName]) {
+               //       hasClass(opts.className, el.class) ? opts[el.optionName] = el.value :
+               //          opts[el.optionName] = el.defaultValue;
+               //    }
+               // }
+               if (!opts[el.optionName]) {
+                  if (hasClass(opts.className, el.class)) {
+                     opts[el.optionName] = el.value;
+                  } else {
+                     opts[el.optionName] = el.defaultValue;
+                  }
+               }
+            }
+         },
          buildTplArgsLV = function(cfg) {
             var tplOptions = cfg._buildTplArgsSt.call(this, cfg);
+            _addOptionsFromClass(cfg);
             tplOptions.multiselect = cfg.multiselect;
             tplOptions.decorators = cfg._decorators;
             tplOptions.highlightText = cfg.highlightText;
             tplOptions.colorField = cfg.colorField;
             tplOptions.selectedKey = cfg.selectedKey;
             tplOptions.selectedKeys = cfg.selectedKeys;
+            tplOptions.noHover = cfg.noHover;
 
             return tplOptions;
          },
@@ -1046,57 +1095,8 @@ define('js!SBIS3.CONTROLS.ListView',
             container[bind ? 'on' : 'off']('swipe tap mousemove mouseleave touchend taphold touchstart contextmenu mousedown mouseup', this._eventProxyHdl);
          },
 
-         _addOptionsFromClass: function(opts) {
-            opts.pagerConfig = opts.pagerConfig || {};
-            var classes = [
-               { class: 'controls-small-ListView', optionName: 'isSmall', value: true, defaultValue: false },
-               { class: 'controls-ListView__disableHover', optionName: 'noHover', value: true, defaultValue: false },
-               { class: 'controls-ListView__pagerNoSizePicker', optionName: 'noSizePicker', value: true, defaultValue: false },
-               { class: 'controls-ListView__pagerNoAmount', optionName: 'noPagerAmount', value: true, defaultValue: false },
-               { class: 'controls-ListView__pagerHideEndButton', optionName: 'hideEndButton', value: true, defaultValue: false },
-               { class: 'controls-ListView__orangeMarker', optionName: 'showSelectedMarker', value: true, defaultValue: false },
-               { class: 'controls-ListView__outside-scroll-loader', optionName: 'outsideScroll', value: true, defaultValue: false }
-            ]
-            function hasClass(fullClass, className) {
-               if(typeof fullClass === 'string') {
-                  var index = fullClass.split(' ')
-                     .filter(function (el) {
-                        return el !== ''
-                     })
-                     .indexOf(className);
-                  return !!~index;
-               } else {
-                  return undefined;
-               }
-            }
-            var el;
-            for(var i = 0; i < classes.length; i++) {
-               el = classes[i];
-               ////Прокинуть правильные опции
-               // if(el.isPagerConfig) {
-               //    if(!opts.pagerConfig[el.optionName]) {
-               //       hasClass(opts.className, el.class) ? opts.pagerConfig[el.optionName] = el.value :
-               //          opts.pagerConfig[el.optionName] = el.defaultValue;
-               //    }
-               // } else {
-               //    if(!opts[el.optionName]) {
-               //       hasClass(opts.className, el.class) ? opts[el.optionName] = el.value :
-               //          opts[el.optionName] = el.defaultValue;
-               //    }
-               // }
-               if (!opts[el.optionName]) {
-                  if (hasClass(opts.className, el.class)) {
-                     opts[el.optionName] = el.value;
-                  } else {
-                     opts[el.optionName] = el.defaultValue;
-                  }
-               }
-            }
-         },
-
          _modifyOptions : function(opts){
             var lvOpts = ListView.superclass._modifyOptions.apply(this, arguments);
-            this._addOptionsFromClass(lvOpts);
             //Если нам задали бесконечный скролл в виде Bool, то если true, то 'down' иначе null
             if (lvOpts.hasOwnProperty('infiniteScroll')){
                lvOpts.infiniteScroll = typeof lvOpts.infiniteScroll === 'boolean' ?
