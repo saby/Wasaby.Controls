@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.FormController', [
    "Core/Context",
-   "Core/core-functions",
+   "Core/core-clone",
    "Core/core-merge",
    "Core/CommandDispatcher",
    "Core/EventBus",
@@ -20,7 +20,7 @@ define('js!SBIS3.CONTROLS.FormController', [
    "i18n!SBIS3.CONTROLS.FormController",
    'css!SBIS3.CONTROLS.FormController'
 ],
-   function( cContext, cFunctions, cMerge, CommandDispatcher, EventBus, Deferred, IoC, cInstance, forAliveOnly, doAutofocus, CompoundControl, LoadingIndicator, Record, SbisService, InformationPopupManager, OpenDialogUtil, TitleManager) {
+   function( cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC, cInstance, forAliveOnly, doAutofocus, CompoundControl, LoadingIndicator, Record, SbisService, InformationPopupManager, OpenDialogUtil, TitleManager) {
    /**
     * Компонент, на основе которого создают диалог, данные которого инициализируются по записи.
     * В частном случае компонент применяется для создания <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/editing-dialog/'>диалогов редактирования записи</a>.
@@ -844,7 +844,7 @@ define('js!SBIS3.CONTROLS.FormController', [
 
       _prepareSyncOperation: function(operation, commonConfig, operationConfig){
          var self = this,
-             config = cFunctions.clone(commonConfig || {});
+             config = coreClone(commonConfig || {});
          config = cMerge(commonConfig, operationConfig);
 
          if (!config.hideIndicator){

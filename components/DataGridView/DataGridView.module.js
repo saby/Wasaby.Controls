@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.DataGridView',
    [
    "Core/CommandDispatcher",
-   "Core/core-functions",
+   "Core/core-clone",
    "Core/core-merge",
    "Core/constants",
    "Core/Deferred",
@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 ],
    function(
       CommandDispatcher,
-      cFunctions,
+      coreClone,
       cMerge,
       constants,
       Deferred,
@@ -71,7 +71,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    'use strict';
 
       var _prepareColumns = function(columns, cfg) {
-            var columnsNew = cFunctions.clone(columns);
+            var columnsNew = coreClone(columns);
             for (var i = 0; i < columnsNew.length; i++) {
                if (columnsNew[i].cellTemplate) {
                   columnsNew[i].contentTpl = TemplateUtil.prepareTemplate(columnsNew[i].cellTemplate);
@@ -151,7 +151,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          prepareHeadColumns = function(cfg){
             var
                rowData = {},
-               columns = cFunctions.clone(cfg.columns),
+               columns = coreClone(cfg.columns),
                supportUnion,
                supportDouble,
                curCol,
@@ -174,7 +174,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                nextColSplitTitle = nextCol && nextCol.title.split('.');
 
                if (!supportDouble){
-                  supportDouble = cFunctions.clone(curCol);
+                  supportDouble = coreClone(curCol);
                }
                else {
                   curColSplitTitle = [supportDouble.value, curColSplitTitle];
@@ -206,7 +206,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                }
 
                if (!supportUnion){
-                  supportUnion = cFunctions.clone(curCol);
+                  supportUnion = coreClone(curCol);
                }
                if (nextCol && (supportUnion.title == nextCol.title)) {
                   if (curCol.rowspan) {
@@ -231,7 +231,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          prepareHeadData = function(cfg) {
             var
                headData = {
-                  columns: cFunctions.clone(cfg.columns),
+                  columns: coreClone(cfg.columns),
                   multiselect : cfg.multiselect,
                   startScrollColumn: cfg.startScrollColumn,
                   resultsPosition: cfg.resultsPosition,
@@ -1499,11 +1499,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
         */
        setColumns : function(columns) {
           this._options.columns = columns;
-          
-          if(this.hasPartScroll()) {
-             /* При установке колонок, надо сбросить частичный скролл */
-             this._setPartScrollShift(0);
-          }
           checkColumns(this._options);
           this._destroyEditInPlaceController();
        },
@@ -1701,7 +1696,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             return item.get(colName);
          }
          var colNameParts = colName.slice(2, -2).split('.'),
-            curItem = cFunctions.clone(item),
+            curItem = coreClone(item),
             value;
          for (var i = 0; i < colNameParts.length; i++){
             if (i !== colNameParts.length - 1){

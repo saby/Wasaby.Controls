@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.DSMixin', [
-   "Core/core-functions",
+   "Core/core-clone",
    "Core/Deferred",
    "Core/IoC",
    "js!WS.Data/Source/Memory",
@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    "Core/core-instance",
    "Core/helpers/Function/forAliveOnly",
    "Core/helpers/Object/isEmpty"
-], function ( cFunctions, Deferred, IoC, MemorySource, SbisService, Query, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, cInstance, forAliveOnly, isEmptyObject) {
+], function (coreClone, Deferred, IoC, MemorySource, SbisService, Query, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, cInstance, forAliveOnly, isEmptyObject) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -1242,7 +1242,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var
                groupBy = this._options.groupBy,
                tplOptions = {
-                  columns : cFunctions.clone(this._options.columns || []),
+                  columns : coreClone(this._options.columns || []),
                   multiselect : this._options.multiselect,
                   hierField: this._options.hierField + '@'
                },

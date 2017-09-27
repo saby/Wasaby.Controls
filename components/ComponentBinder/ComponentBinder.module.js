@@ -45,6 +45,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       if (gridView._options.startScrollColumn !== undefined) {
          gridView.updateScrollAndColumns();
       }
+      if (cInstance.instanceOfModule(gridView, 'SBIS3.CONTROLS.TreeDataGridView')) {
+         gridView._updateEditArrow();
+      }
    }
    function drawItemsCallback(operationPanel, view) {
       var instances = operationPanel.getItemsInstances();

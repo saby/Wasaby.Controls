@@ -1,12 +1,12 @@
 define('js!SBIS3.CONTROLS.SuggestMixin', [
-   "Core/core-functions",
+   "Core/core-clone",
    "Core/core-merge",
    "Core/Deferred",
    "js!SBIS3.CONTROLS.PickerMixin",
    "Core/core-instance",
    'Core/helpers/Object/find',
    "js!SBIS3.CONTROLS.ControlHierarchyManager"
-], function ( cFunctions, cMerge, Deferred, PickerMixin, cInstance, find, ControlHierarchyManager) {
+], function (coreClone, cMerge, Deferred, PickerMixin, cInstance, find, ControlHierarchyManager) {
    'use strict';
 
    var DEFAULT_SHOW_ALL_TEMPLATE = 'js!SBIS3.CONTROLS.SuggestShowAll';
@@ -513,7 +513,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                return this._list;
             } else {
                //Набор "Сделай сам"
-               options = cFunctions.clone(this._options.list.options);
+               options = coreClone(this._options.list.options);
                component = require(this._options.list.component);
 
                for (var key in DEFAULT_LIST_CONFIG) {

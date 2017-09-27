@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.Toolbar', [
    "Core/IoC",
-   "Core/core-functions",
+   "Core/core-clone",
    "js!SBIS3.CONTROLS.ButtonGroupBase",
    "tmpl!SBIS3.CONTROLS.Toolbar",
    "tmpl!SBIS3.CONTROLS.Toolbar/resources/ItemTemplate",
@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
    "js!SBIS3.CONTROLS.IconButton",
    "js!SBIS3.CONTROLS.CommandsButton",
    'css!SBIS3.CONTROLS.Toolbar'
-], function( IoC, cFunctions, ButtonGroupBase, dotTplFn, ItemTemplate, cInstance) {
+], function( IoC, coreClone, ButtonGroupBase, dotTplFn, ItemTemplate, cInstance) {
 
    'use strict';
     var
@@ -86,7 +86,7 @@ define('js!SBIS3.CONTROLS.Toolbar', [
                isToolbarItem = item.get('showType') === showType.MENU_TOOLBAR || item.get('showType') === showType.TOOLBAR;
             if (isToolbarItem) {
                subItems = getSubItems(itemKey, items, idProperty, parentProperty, itemsToSubItems);
-               subItems = cFunctions.clone(subItems);
+               subItems = coreClone(subItems);
                for (var i = 0; i < subItems.length; i++) {
                   if (subItems[i].parent == itemKey ) {
                      delete subItems[i].parent;

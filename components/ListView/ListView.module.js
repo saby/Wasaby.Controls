@@ -5,7 +5,8 @@
 define('js!SBIS3.CONTROLS.ListView',
    [
    'Core/core-merge',
-   'Core/core-functions',
+   'Core/core-clone',
+   'Core/helpers/Function/shallowClone',
    'Core/CommandDispatcher',
    'Core/constants',
    'Core/Deferred',
@@ -69,7 +70,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
-   function (cMerge, cFunctions, CommandDispatcher, constants, Deferred, IoC, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
+   function (cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents, LayoutManager, mHelpers,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
@@ -1209,12 +1210,14 @@ define('js!SBIS3.CONTROLS.ListView',
                // то горизонтальный скрол(и иногда вертикальный) происходит внутри window.
                $(window).on('resize scroll', this._setScrollPagerPositionThrottled);
             }
+
+            this._scrollBinder._updateScrollPages(!this._options.virtualScrolling || this._resetPaging);
          },
 
          _onVisibleChange: function(event, visible){
             if (this._scrollPager) {
                // покажем если ListView показалось и есть страницы и скроем если скрылось
-               this._scrollPager.setVisible(visible && this._scrollPager.getPagesCount());
+               this._scrollPager.setVisible(visible && this._scrollPager.getPagesCount() > 1);
             }
          },
 
@@ -1526,6 +1529,10 @@ define('js!SBIS3.CONTROLS.ListView',
                   /* Даже если контейнер выбранной записи не изменился,
                    надо обновить выделнный элемент, т.к. могло измениться его положение */
                   this._updateHoveredItem(hoveredItemContainer);
+               }
+            }else {
+               if(this._itemsToolbar && this._itemsToolbar.isVisible()){
+                  this._itemsToolbar.hide();
                }
             }
          },
@@ -2423,7 +2430,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      temp = this._savedConfigs[i][conf],
                      obj = {};
                   if (!temp._thisIsInstance) {
-                     obj[conf] = cFunctions.shallowClone(temp);
+                     obj[conf] = shallowClone(temp);
                      mHelpers.mergeConfigStorage(obj);
                   }
                }
@@ -2537,7 +2544,7 @@ define('js!SBIS3.CONTROLS.ListView',
                }
                // подменяю рекод выделенного элемента на рекорд редактируемого
                // т.к. тулбар в режиме редактикрования по месту должен работать с измененной запись
-               editedItem = cFunctions.clone(this.getHoveredItem());
+               editedItem = coreClone(this.getHoveredItem());
                editedItem.record = model;
                // на событие onBeginEdit могут поменять модель, запись перерисуется и контейнер на который ссылается тулбар затрется
                if(!contains(this.getContainer(), editedItem.container)){
@@ -2619,6 +2626,7 @@ define('js!SBIS3.CONTROLS.ListView',
                return;
             }
 
+            this._setTouchSupport(true);
             if (e.direction == 'left') {
                this._changeHoveredItem(target);
                this._onLeftSwipeHandler();
@@ -2633,11 +2641,17 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onLeftSwipeHandler: function() {
+            var itemsActions, target;
+
             if (this._isSupportedItemsToolbar()) {
+               itemsActions = this.getItemsActions();
+               target = itemsActions.getTarget();
+
                if (this._hasHoveredItem()) {
-                  this._setTouchSupport(true);
-                  this._showItemsToolbar(this._hoveredItem);
-                  this.setSelectedKey(this._hoveredItem.key);
+                  if(!this._itemsToolbar.isVisible() || target.key !== this._hoveredItem.key) {
+                     this._showItemsToolbar(this._hoveredItem);
+                     this.setSelectedKey(this._hoveredItem.key);
+                  }
                } else {
                   this._hideItemsToolbar();
                }
@@ -2742,6 +2756,7 @@ define('js!SBIS3.CONTROLS.ListView',
             this.setSelectedKey(key);
             if(this._touchSupport) {
                this._clearHoveredItem();
+               this._onChangeHoveredItem(this.getHoveredItem());
             }
          },
          _getItemsToolbar: function() {
@@ -2755,7 +2770,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   visible: false,
                   touchMode: this._touchSupport,
                   className: this._notEndEditClassName,
-                  itemsActions: cFunctions.clone(this._options.itemsActions),
+                  itemsActions: coreClone(this._options.itemsActions),
                   showEditActions: this._options.editMode.indexOf('toolbar') !== -1,
                   handlers: {
                      onShowItemActionsMenu: function() {
@@ -2843,7 +2858,7 @@ define('js!SBIS3.CONTROLS.ListView',
          setItemsActions: function (itemsActions) {
             this._options.itemsActions = itemsActions;
             if(this._itemsToolbar) {
-               this._itemsToolbar.setItemsActions(cFunctions.clone(this._options.itemsActions));
+               this._itemsToolbar.setItemsActions(coreClone(this._options.itemsActions));
                if (this.getHoveredItem().container) {
                   this._notifyOnChangeHoveredItem()
                }
@@ -3257,7 +3272,7 @@ define('js!SBIS3.CONTROLS.ListView',
                }
 
                var loadId = this._loadId++;
-               this._loadQueue[loadId] = cFunctions.clone(this._infiniteScrollState);
+               this._loadQueue[loadId] = coreClone(this._infiniteScrollState);
 
                this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit, this._infiniteScrollState.mode)
                   .addBoth(forAliveOnly(function(res) {
@@ -3754,7 +3769,7 @@ define('js!SBIS3.CONTROLS.ListView',
                options.navigationType = SbisService.prototype.NAVIGATION_TYPE.POSITION;
                this._dataSource.setOptions(options);
 
-               queryFilter =  cFunctions.clone(filter);
+               queryFilter = coreClone(filter);
                var addParams = this._listNavigation.prepareQueryParams(this._getItemsProjection(), direction);
                cMerge(queryFilter, addParams.filter);
             }
@@ -4484,7 +4499,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 beginDeleteResult;
             //Клонируем массив, т.к. он может являться ссылкой на selectedKeys, а после удаления мы сами вызываем removeItemsSelection.
             //В таком случае и наш idArray изменится по ссылке, и в событие onEndDelete уйдут некорректные данные
-            idArray = Array.isArray(idArray) ? cFunctions.clone(idArray) : [idArray];
+            idArray = Array.isArray(idArray) ? coreClone(idArray) : [idArray];
             message = message || (idArray.length !== 1 ? rk("Удалить записи?", "ОперацииНадЗаписями") : rk("Удалить текущую запись?", "ОперацииНадЗаписями"));
             InformationPopupManager.showConfirmDialog({
                message: message,

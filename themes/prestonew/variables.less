@@ -399,8 +399,6 @@
 @date-range-big-choose-header-date-box-font-size: 1rem;
 
 //Data Range Slider
-@date-range-slider-color:                 #26B8FF;
-@date-range-slider-hover-color:           rgb(187, 233, 255);
 @date-range-slider-font-size:             1.14rem;
 @date-range-slider-value-font-weight:     normal;
 @date-range-slider-prev-next-buttons-hover-color:@blue-dark-color;
@@ -416,8 +414,6 @@
 @date-range-choose-font-size:             1rem;
 @date-range-choose-years-only-bg-color:   @basic-block-bg-color;
 @date-range-choose-bg-color:              @basic-block-bg-color;
-@date-range-choose-color:                 @default-text-color;
-@date-range-choose-hover-color:           @button-icon-color-hover;
 @date-range-choose-current-value-color:   #fff;
 @date-range-choose-current-value-bg-color:#26b8ff;
 @date-range-choose-current-value-font-size:1.14rem;
@@ -427,14 +423,12 @@
 @date-range-choose-current-value-margin-bottom: 0;
 @date-range-choose-year-height:           3rem;
 @date-range-choose-year-font-size:        1.14rem;
-@date-range-choose-year-font-weight:      normal;
+@date-range-choose-year-font-weight:      bold;
 @date-range-choose-year-margin-bottom:    0.286rem;
 @date-range-choose-year-prev-next-btns-font-size:1.5rem;
-@date-range-choose-year-color:            @date-range-choose-color;
 @date-range-choose-year-line-height:      3rem;
 @date-range-choose-year-prev-next-btns-width:3rem;
 @date-range-choose-year-prev-next-btns-font-size:1.5rem;
-@date-range-choose-year-prev-next-btns-color:@date-range-choose-color;
 @date-range-choose-home-icon-width:       3rem;
 @controls-date-range-year-marginleft:     0.4rem;
 
@@ -591,6 +585,8 @@
 @data-grid-money-header-cell-padding:     1.43rem;
 @data-grid-money-header-cell-padding-last:1.92rem;
 @data-grid-results-color:                 #FFCC99;
+@data-grid-partScroll-arrowLeft-top-shift: -0.8571rem;
+@data-grid-partScroll-arrowRight-top-shift: -0.8571rem;
 // PrintDialog
 //По какой-то причине Firefox берёт font-size не из html, а свой, причем только при расчёте этой ширины
 @controls-printdialog-min-width:          27em;
@@ -894,7 +890,7 @@
 @list-view-loading-indicator-gradient-bg: url(@list-view-scroll-spritesheet) no-repeat center;
 @list-view-loading-indicator-gradient-bg-up:url(@list-view-scroll-spritesheet) no-repeat center;
 @DropdownList-picker-menu-item-height:    3rem;
-@DropdownList-picker-menu-item-height-ff: 3rem;
+@DropdownList-picker-menu-item-height-ff: 4rem;
 @DropdownList-picker-menu-item-base-color: @menu-item-text-color;
 @DropdownList-after-caption-top:          0;
 @tree-view-ellipsis-copyArrow-width:      1rem;
@@ -971,9 +967,7 @@
 @bottomStyle-items-toolbar-margin-top:    .28rem;
 @data-grid-row-hover-cell-bg:             #293A4B;
 @image-bar-height:                        3.57rem;
-@image-bar-vertical-padding:              0.245rem;
-@image-bar-vertical-padding:              0.316rem;
-@image-bar-horizontal-padding:            0.286rem;
+@image-bar-horizontal-padding:            0;
 @image-bar-bg-color:                      rgba(102,170,221, .5);
 @money-text-box-decimals-padding:         0;
 @money-text-box-decimals-font-size:       @default-font-size;
