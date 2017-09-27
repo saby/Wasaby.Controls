@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.ItemsControlMixin', [
-   "Core/core-functions",
+   'Core/core-clone',
    "Core/Deferred",
    "Core/IoC",
    "js!WS.Data/Source/Memory",
@@ -25,9 +25,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'Core/helpers/String/escapeHtml',
    "js!SBIS3.CONTROLS.Utils.SourceUtil",
    "Core/helpers/Object/isEmpty",
-   "Core/helpers/Function/debounce"
+   "Core/helpers/Function/debounce",
+   "js!SBIS3.CORE.Control"
 ], function (
-   cFunctions,
+   coreClone,
    Deferred,
    IoC,
    MemorySource,
@@ -53,7 +54,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    escapeHtml,
    SourceUtil,
    isEmpty,
-   debounce) {
+   debounce,
+   baseControl) {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -82,7 +84,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    },
 
    applyGroupingToProjection = function(projection, cfg) {
-      if (cfg.groupBy && cfg.easyGroup) {
+      if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {
          var
             method = function(item) {
                var
@@ -121,7 +123,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    },
 
    canApplyGrouping = function(projItem, cfg) {
-      return !isEmpty(cfg.groupBy) && (!projItem.isNode || !projItem.isNode());
+      // todo сильносвязанный код. Если пустой projItem, значит мы сюда попали из onCollectionAdd и единственная добавляемая запись - это сама группа
+      // https://online.sbis.ru/opendoc.html?guid=c02d2545-1afa-4ada-8618-7a21eeadc375
+      return !isEmpty(cfg.groupBy) && (!projItem || !projItem.isNode || !projItem.isNode());
    },
 
    groupItemProcessing = function(groupId, records, item, cfg) {
@@ -130,7 +134,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (cfg._groupTemplate) {
             var
                tplOptions = {
-                  columns : cFunctions.clone(cfg.columns || []),
+                  columns : coreClone(cfg.columns || []),
                   multiselect : cfg.multiselect,
                   hierField: cfg.hierField + '@',
                   parentProperty: cfg.parentProperty,
@@ -847,7 +851,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             else {
                this._dataSource = new MemorySource({
-                  data: cFunctions.clone(this._options.items),
+                  data: coreClone(this._options.items),
                   idProperty: this._options.idProperty
                });
             }
@@ -986,7 +990,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             buildArgsMethod = this._buildTplArgs;
          }
          if (!this._itemData) {
-            this._itemData = cFunctions.clone(buildArgsMethod.call(this, this._options));
+            this._itemData = coreClone(buildArgsMethod.call(this, this._options));
          } else {
             this._updateItemData(this._itemData);
          }
@@ -1377,20 +1381,28 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       /*TODO easy параметр для временной поддержки группировки в быстрой отрисовке*/
       _destroyControls: function(container, easy){
-         var compsArray = [];
+         var compsArray = [],
+            destroyed = false;
          $('[data-component]', container).each(function (i, item) {
             var inst = item.wsControl;
             if (inst) {
                if (!easy) {
                   // true - не завершать пакет (ControlBatchUpdater) на дестрой. Иначе сработает onBringToFront и переведет активность раньше времени
                   // https://inside.tensor.ru/opendoc.html?guid=ec5c1d84-a09c-49b2-991a-779a7004a15b&des=
+                  if (!destroyed) {
+                     baseControl.ControlBatchUpdater.beginBatchUpdate('AreaAbstract_destroy');
+                  }
                   inst.destroy(true);
+                  destroyed = true;
                }
                else {
                   compsArray.push(inst);
                }
             }
          });
+         if (destroyed) {
+            baseControl.ControlBatchUpdater.endBatchUpdate('AreaAbstract_destroy');
+         }
          return compsArray;
       },
 
@@ -2031,7 +2043,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var
                groupBy = this._options.groupBy,
                tplOptions = {
-                  columns : cFunctions.clone(this._options.columns || []),
+                  columns : coreClone(this._options.columns || []),
                   multiselect : this._options.multiselect,
                   hierField: this._options.hierField + '@',
                   parentProperty: this._options.parentProperty,
@@ -2180,6 +2192,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             target = $(target);
          }
          LayoutManager.scrollToElement(target, toBottom, depth);
+      },
+
+      //TODO этот метод более общий чем _scrollToItem надо все места перевести на этот метод
+      _scrollToProjItem: function(item, toBottom, depth) {
+         var container = this._getDomElementByItem(item);
+         if (container) {
+            this._scrollTo(container, toBottom, depth);
+         }
       },
       _scrollToItem: function(itemId, toBottom, depth) {
          var itemContainer  = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());

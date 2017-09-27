@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "Core/pathResolver",
    "Core/Context",
    "Core/Indicator",
-   "Core/core-functions",
+   "Core/core-clone",
    "Core/CommandDispatcher",
    "Core/constants",
    "Core/Deferred",
@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
       cPathResolver,
       cContext,
       cIndicator,
-      cFunctions,
+      coreClone,
       CommandDispatcher,
       cConstants,
       Deferred,
@@ -743,10 +743,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @private
           */
          setFontSize: function(size) {
-            size = size + 'px';
             //необходимо удалять текущий формат(размер шрифта) чтобы правльно создавались span
-            this._removeFormat('fontsize', size);
-            this._tinyEditor.execCommand('FontSize', false,  size);
+            this._removeFormat('fontsize');
+            if (size) {
+               this._tinyEditor.execCommand('FontSize', false,  size + 'px');
+            }
             this._tinyEditor.execCommand('');
             //при установке стиля(через форматтер) не стреляет change
             this._setTrimmedText(this._getTinyEditorValue());
@@ -844,7 +845,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                editor = this._tinyEditor,
                selection = editor.selection,
-               range = cFunctions.clone(selection.getRng()),
+               range = coreClone(selection.getRng()),
                element = selection.getNode(),
                anchor = editor.dom.getParent(element, 'a[href]'),
                href = anchor ? editor.dom.getAttrib(anchor, 'href') : '',

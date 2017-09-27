@@ -44,7 +44,7 @@ define(
     */
 
    var DateBox = FormattedTextBoxBase.extend([FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateBox.prototype */{
-      _dotTplFn: dotTplFn,
+      _dotTplFn: FormattedTextBoxTpl,
        /**
         * @event onDateChange Происходит при изменении даты.
         * @remark
@@ -233,6 +233,10 @@ define(
       _modifyOptions: function(options) {
          var options = DateBox.superclass._modifyOptions.apply(this, arguments);
 
+         if (!options.className) {
+            options.className = '';
+         }
+         options.className += ' controls-DateBox';
          if (options.notificationMode === 'change') {
             options.notificationMode = 'textChange';
          }

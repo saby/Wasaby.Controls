@@ -11,6 +11,9 @@
       overflow:hidden;
    }
    &.ws-disabled {
+      .controls-FieldLink__linksWrapper {
+         max-width:100%;
+      }
       .controls-TextBox__beforeFieldWrapper {
          .flex-wrap(wrap);
          .flex-direction();
@@ -187,8 +190,7 @@
 
       &.ws-disabled {
          .controls-FieldLink__item {
-            //todo
-            max-width: ~'calc(100% - '@fieldLink-linkContainer-padding * 2~')';
+            max-width: 100%;
          }
       }
    }
@@ -326,6 +328,11 @@
 
 .controls-FieldLink__showSelector {
    color: @fieldLink-showSelector-color;
+   &__picker {
+      .icon-size {
+         .icon-size(@fieldLink-icon-size);
+      }
+   }
 }
 
 .ws-is-desktop-platform .controls-FieldLink__showSelector:hover {

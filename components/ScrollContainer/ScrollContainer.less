@@ -154,26 +154,47 @@ body.ws-is-ie .controls-ScrollContainer__content {
 }
 
 .controls-ScrollContainer__content:not(.controls-ScrollContainer__content-overflowHidden) {
-   // Desktop IE
-   body.ws-is-ie &, body.ws-is-firefox &, body.ws-is-chrome & {
+   // Mac OS
+   body.ws-is-mac &,
+   body.ws-is-opera.ws-is-windows-10 & {
+      margin-right: -15px;
+   }
+   body.ws-is-mac.ws-is-safari11 &{
+      padding-right: 15px;
+   }
+   body.ws-is-chrome:not(.ws-is-mac) &,
+   body.ws-is-firefox:not(.ws-is-mac):not(.ws-is-windows-10) &,
+   body.ws-is-opera:not(.ws-is-mac):not(.ws-is-windows-10) &,
+   body.ws-is-sbis-desktop:not(.ws-is-mac) & {
       margin-right: -17px;
    }
-
-   // Планшет Win10 IE
-   body.ws-is-touch.ws-is-ie & {
-      margin-right: -12px;
-      padding-right: 12px;
+   body.ws-is-firefox.ws-is-windows-10 & {
+      margin-right: -16px;
    }
 
-   // Desktop Win10 Edge
-   body.ws-is-windows-10.ws-is-ie12:not(.ws-is-touch) & {
+   // Win10 Edge
+   body.ws-is-ie12 & {
       margin-right: -12px;
+   }
+   // Win10 Touch Edge
+   body.ws-is-ie12.ws-is-touch & {
+      padding-right: 12px;
+   }
+   // Win7 & Win10, Ie10 & Ie11
+   body.ws-is-ie10 &,
+   body.ws-is-ie11 & {
+      margin-right: -17px;
+   }
+   // Win7 & Win10, Touch, Ie10 & Ie11
+   body.ws-is-ie10.ws-is-touch &,
+   body.ws-is-ie11.ws-is-touch & {
+      padding-right: -17px;
    }
 }
 
 .controls-ScrollContainer__paging {
    position: absolute;
-   bottom: 0;
+   bottom: @scrollpager-bottom;
    right: 0;
    background: @white-color;
 }

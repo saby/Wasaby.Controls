@@ -351,7 +351,7 @@
    text-overflow: ellipsis;
 }
 
-.controls-DataGridView__td__checkBox {
+.controls-DataGridView__td.controls-DataGridView__td__checkBox {
    width: @data-grid-td-checkbox-width;
    padding: 0;
    /*У колонки с чекбоксом, не должно быть левого и правого бордера, иначе при table-layout: auto;
@@ -514,6 +514,8 @@
          margin-left: 0;
       }
       font-size: @data-grid-header-cell-font-size;
+      //выписал еще поручение https://online.sbis.ru/opendoc.html?guid=2a2781e5-bc7b-464f-b183-32317e0b85cc
+      line-height: @data-grid-header-cell-sorting-icon-size;
       .controls-Button__icon {
          .icon-size(@data-grid-header-cell-icon-size);
       }

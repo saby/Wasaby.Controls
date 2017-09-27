@@ -66,8 +66,13 @@ define('js!SBIS3.CONTROLS.Action.OpenDialog', [
        * </pre>
        */
       execute: function(meta){
-         OpenDialog.superclass.execute.call(this, meta);
+         return OpenDialog.superclass.execute.call(this, meta);
+      },
+
+      getDialog : function() {
+         return this._dialog;
       }
+
    });
    return OpenDialog;
 });

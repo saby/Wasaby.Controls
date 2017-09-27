@@ -277,17 +277,29 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var
             cfg = TreeDataGridView.superclass._getInsertMarkupConfig.apply(this, arguments),
             lastItem = this._options._itemsProjection.at(newItemsIndex - 1),
-            lastItemParent, newItemsParent;
+            lastItemParent, newItemsParent, existingContainer;
 
          if (cfg.inside && !cfg.prepend) {
             cfg.inside = false;
-            // В режиме поиска может возникнуть ситуация, когда предыдущий элемент расположен в других хлебных крошках.
-            // Этот сценарий происходит в случае перерисовки первой записи в хлебных крошках.
-            // В таком случае контейнером, ЗА которым будут добавлены записи должна стать правильная хлебная крошка.
             lastItemParent = lastItem.getContents().get(this._options.parentProperty);
             newItemsParent = newItems[0].getContents().get(this._options.parentProperty);
+            /* В виду того, что мы не можем различить, откуда вызван _getInsertMarkupConfig, возникают две противоречивые ситуации:
+               1. В случае перерисовки ПЕРВОЙ записи в хлебных крошках (изменён прямо record), предыдущий элемент будет
+                  расположен в других хлебных крошках (https://online.sbis.ru/opendoc.html?guid=033fd05c-fb2e-4c3a-a648-37cf47b05a50).
+                  Тогда контейнером, ЗА которым будут добавлены записи, должна стать правильная хлебная крошка, являющаяся реальным
+                  родителем перерисовываемой записи.
+               2. В случае поиска, результаты могут прилететь на второй странице и вызов _getInsertMarkupConfig будет из метода
+                  _addItems (https://online.sbis.ru/opendoc.html?guid=b395391e-b4de-4dd8-affb-4ec79c40c158).
+                  Новую хлебную крошку мы могли ранее не выводить и тогда контейнером, ЗА которым будут добавлены записи, должен стать
+                  последний отрисованный элемент. */
             if (this._isSearchMode() && lastItemParent !== newItemsParent) {
-               cfg.container = this._getItemsContainer().find('.controls-DataGridView__tr.controls-HierarchyDataGridView__path[data-id="' + newItemsParent + '"]');
+               // Ситуация №1 - пытаемся найти уже существующую хлебную крошку и тогда записи будем добавлять непосредственно после неё.
+               existingContainer = this._getItemsContainer().find('.controls-DataGridView__tr.controls-HierarchyDataGridView__path[data-id="' + newItemsParent + '"]');
+               if (existingContainer.length) {
+                  cfg.container = existingContainer;
+               } else { // Ситуация №2 - если существующую хлебную крошку найти не удалось - то добавляем записи за последним элементом.
+                  cfg.container = this._getDomElementByItem(lastItem);
+               }
             } else {
                cfg.container = this._getDomElementByItem(lastItem);
             }

@@ -2,24 +2,28 @@
    display: inline-block;
    line-height: @date-range-line-height;
 
+   .controls-DateRange__button {
+      vertical-align: @date-range-button-vertical-align;
+   }
+
    &.ws-validation-error {
       .controls-FormattedTextBox {
-         border-width: @formatted-text-box-error-border-width;
-         border-style: @formatted-text-box-error-border-style;
-         border-color: @formatted-text-box-error-border-color;
-         background: @formatted-text-box-error-bg;
+         border-width: @default-border-width;
+         border-style: solid;
+         border-color: @text-box-border-color-error;
+         background: @text-box-bg-error;
       }
    }
 }
 
-.controls-DateRange__Button {
-   margin: @date-range-icon-button-margin;
+.controls-DateRange__button {
+   margin: @date-range-button-margin;
    // Иконка нестандартного размера. В следующую версию стандарта должна быть стандартной.
    .controls-Button__icon {
-      font-size: @date-range-icon-button-size !important;
-      line-height: @date-range-icon-button-line-height !important;
-      height: @date-range-icon-button-size;
-      width: @date-range-icon-button-size;
+      font-size: @date-range-button-size !important;
+      line-height: @date-range-button-line-height !important;
+      height: @date-range-button-size;
+      width: @date-range-button-size;
    }
 }
 

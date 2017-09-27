@@ -1,18 +1,20 @@
 .controls-DatePicker {
    display: inline-block;
+   white-space: nowrap;
 
-   // Иконка нестандартного размера. Надо с этим разобраться.
    .controls-DatePicker__button {
-      .controls-Button__icon {
-         font-size: @date-picker-calendar-icon-size !important;
-         line-height: @date-picker-calendar-icon-line-height !important;
-         height: @date-picker-calendar-icon-size;
-         width: @date-picker-calendar-icon-size;
-      }
+      vertical-align: @date-picker-button-vertical-align;
    }
 }
 .controls-DatePicker__button {
-   margin-left: @date-picker-icon-margin-left;
+   margin-left: @date-picker-button-margin-left;
+   // Иконка нестандартного размера. Надо с этим разобраться.
+   .controls-Button__icon {
+      font-size: @date-picker-button-size !important;
+      line-height: @date-picker-button-line-height !important;
+      height: @date-picker-button-size;
+      width: @date-picker-button-size;
+   }
 }
 .controls-DatePicker__timePicker-border.controls-FloatArea {
    border: @float-area-border;

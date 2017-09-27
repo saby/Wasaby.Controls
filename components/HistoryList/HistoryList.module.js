@@ -108,13 +108,37 @@ define('js!SBIS3.CONTROLS.HistoryList',
          $protected: {
             _options: {
                serialize: function (serialize, value) {
-                  var serializer = new Serializer();
+                  var serializer = new Serializer(),
+                      items = {},
+                      toAppend = [],
+                      list, id;
 
                   if (serialize) {
-                     return JSON.stringify(value, serializer.serialize);
+                     list = JSON.stringify(value, serializer.serialize);
                   } else {
-                     return value ? JSON.parse(value, serializer.deserialize) : getEmptyRecordSet();
+                     /* Из-за того, что clone(true) у рекордсета лишь рвёт ссылку,
+                        оставляя при этом ссылки на вложенные объекты,
+                        то у пользователей могли появляться дубли, надо на это проверять. */
+                     if (value) {
+                        list = JSON.parse(value, serializer.deserialize);
+                        list.each(function(model) {
+                           id = model.get(ID_FIELD);
+   
+                           if(!items.hasOwnProperty(id)) {
+                              items[id] = true;
+                              toAppend.push(model);
+                           }
+                        });
+                        
+                        if (toAppend.length) {
+                           list = getEmptyRecordSet();
+                           list.append(toAppend);
+                        }
+                     } else {
+                        list = getEmptyRecordSet();
+                     }
                   }
+                  return list;
                },
                emptyValue: getEmptyRecordSet(),
                maxLength: MAX_LENGTH
