@@ -48,7 +48,6 @@ define('js!SBIS3.CONTROLS.ListView',
    'Core/LocalStorageNative',
    'Core/helpers/Function/forAliveOnly',
    'Core/helpers/Function/memoize',
-   'Core/helpers/Hcontrol/trackElement',
    'Core/helpers/Hcontrol/isElementVisible',
    'js!SBIS3.CONTROLS.Utils.Contains',
    'js!SBIS3.CONTROLS.CursorListNavigation',
@@ -73,7 +72,7 @@ define('js!SBIS3.CONTROLS.ListView',
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents, LayoutManager, mHelpers,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, cInstance, LocalStorageNative, forAliveOnly, memoize, trackElement, isElementVisible, contains, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove, once) {
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, cInstance, LocalStorageNative, forAliveOnly, memoize, isElementVisible, contains, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove, once) {
      'use strict';
 
       var
@@ -1194,8 +1193,7 @@ define('js!SBIS3.CONTROLS.ListView',
             // Так как для сохранения страницы все равно нужекн рассчет страниц скролла
             var hiddenPager = !this._options.scrollPaging && this._options.saveReloadPosition;
             this._scrollBinder.bindScrollPaging(this._scrollPager, hiddenPager);
-            trackElement(this.getContainer(), true).subscribe('onVisible', this._onVisibleChange.bind(this));
-            
+
             if (!this._inScrollContainerControl) {
                // Отлавливаем изменение масштаба
                // Когда страница увеличена на мобильных платформах или если на десктопе установить ширину браузера меньше 1024рх,
@@ -4088,7 +4086,6 @@ define('js!SBIS3.CONTROLS.ListView',
                if (!this._inScrollContainerControl) {
                   $(window).off('resize scroll', this._setScrollPagerPositionThrottled);
                }
-               trackElement(this.getContainer(), false).unsubscribe('onVisible', this._onVisibleChange);
                this._scrollPager.destroy();
             }
             if (this._listNavigation) {
