@@ -11,6 +11,9 @@
       overflow:hidden;
    }
    &.ws-disabled {
+      .controls-FieldLink__item {
+         padding-right: 0;
+      }
       .controls-FieldLink__linksWrapper {
          max-width:100%;
       }
@@ -90,7 +93,6 @@
          content: none;
       }
       .controls-FieldLink__item-cross {
-         position: static;
          padding: 0;
       }
       .controls-FieldLink__item-caption {
@@ -98,7 +100,7 @@
       }
    }
    &.ws-disabled .controls-FieldLink__item-caption {
-      margin-right: @default-input-padding;
+      margin-right: @default-padding-small;
    }
 
    &.controls-popup-revert-vertical {
@@ -111,11 +113,15 @@
 }
 
 .controls-FieldLink__item {
+   .flex-shrink(0);
+   .inline-flexbox();
+   .align-items(center);
+   .box-sizing();
    cursor: default;
    display: inline-block;
    position: relative;
    height:100%;
-   padding: @fieldLink-linkItem-padding;
+   padding: 0 1px 0 @default-padding-small; //1px - запятая
    &:after {
       position: absolute;
       right: 0;
@@ -127,13 +133,11 @@
    }
 }
 .controls-FieldLink__item-caption {
+   .text-overflow();
+   height: 100%;
    font-size: @default-font-size;
 }
 .controls-FieldLink__item-cross {
-   position: absolute;
-   right: @fieldLink-linkItem-cross-right;
-   top: 0; //todo: presto : 0.14rem
-   padding: @fieldLink-linkItem-cross-padding;
    cursor: pointer;
    z-index: 1;
 }
@@ -202,8 +206,9 @@
          .hiddenPlaceholder();
       }
 
-      .controls-FieldLink__item {
-         padding: @fieldLink-disabled-item-padding;
+      controls-FieldLink__item-caption {
+         padding: 0 @default-padding-small 0 0 ;
+         max-width:100%;
       }
 
    }
@@ -279,16 +284,12 @@
    display: inline-flex;
    width: 100%;
    height: 100%;
-   .controls-FieldLink__item {
-      .text-overflow();
-       .flex-shrink(0);
-   }
 }
 
 .controls-Link.controls-FieldLink__showAllLinks {
    position: relative;
    line-height: @default-base-line-height; // перебиваем стили controls-link
-   padding-left: @default-input-padding;
+   padding-left:  @default-padding-small;
    display: none;
    .flex-shrink(0);
 }
