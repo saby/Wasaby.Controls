@@ -384,6 +384,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * </pre>
           */
          $protected: {
+            _has_task1173941879Fix: true,
             _floatCheckBox: null,
             _dotItemTpl: null,
             _itemsContainer: null,
@@ -448,8 +449,11 @@ define('js!SBIS3.CONTROLS.ListView',
                _defaultItemTemplate: ItemTemplate,
                _defaultItemContentTemplate: ItemContentTemplate,
                _groupTemplate: GroupTemplate,
-               _sanitizeOpts: {
-                  validNodes: { component: true }
+               //TODO Костыль. Чтоб в шаблоне позвать Sanitize с компонентами приходится прокидывать в виде функции свой sanitize
+               _sanitize: function(value) {
+                  return typeof value === 'string' ?
+                     Sanitize(value, {validNodes: {component: true}, validAttributes : {config : true} }) :
+                     value;
                },
                /**
                 * @faq Почему нет чекбоксов в режиме множественного выбора значений (активация режима производится опцией {@link SBIS3.CONTROLS.ListView#multiselect multiselect})?
@@ -2371,6 +2375,23 @@ define('js!SBIS3.CONTROLS.ListView',
             return result;
          },
 
+         _toggleGroup: function(groupId, flag) {
+            var
+               self = this;
+            // Завершаем редактирование по месту, если оно запущено в сворачиваемой группе
+            // (https://online.sbis.ru/opendoc.html?guid=2e6d8922-a53d-45a9-bbfc-81c4f8b71f57)
+            if (this.isEdit() && flag) { // Вот это поворот. flag === true, когда группа сворачивается.
+               this._getEditInPlace().addCallback(function(editInPlace) {
+                  var
+                     editingRecord = editInPlace.getEditingRecord();
+                  if (self._options._prepareGroupId(editingRecord, editingRecord.get(self._options.groupBy.field), self._options) === groupId) {
+                     self.cancelEdit();
+                  }
+               });
+            }
+            ListView.superclass._toggleGroup.apply(this, arguments);
+         },
+
          _editInPlaceMouseDownHandler: function(event) {
             // При редактировании по месту нужно делать preventDefault на mousedown, в таком случае фокусы отработают в нужном порядке.
             // Нативно событийный порядок следующий: mousedown, focus, mouseup, click.
@@ -3128,6 +3149,8 @@ define('js!SBIS3.CONTROLS.ListView',
             //поэтому идет изначальная загрузка вверх, потом присылает страницу с пустым рекордсетом, а дальше наша логика ломается, и мы не грузим вниз
             //если сначала грузить вниз, то мы отрабатываем нормально, т.к. уже защищены под этой же опцией
             //скорее надо переписать навигацию и очереди загрузок вниз/вверх
+
+            //upd проставлять всегда оказалось не лучшей идее, потому что иногда scrollToItem он не делает. Попрошу его самого ставить флаг, когда делает
             if (this._options.task1173941879 && !this._has_task1173941879Fix) {
                type = 'bottom';
                this._has_task1173941879Fix = true;
