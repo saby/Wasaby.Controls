@@ -2,12 +2,12 @@ define('js!SBIS3.CONTROLS.SearchController',
     [
        'js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
        "Core/constants",
-       "Core/core-functions",
+       'Core/core-clone',
        "Core/core-merge",
        "Core/Abstract",
        "Core/core-instance",
        'Core/helpers/Hcontrol/isElementVisible'
-    ], function(KbLayoutRevertObserver, constants, cFunctions, cMerge, cAbstract, cInstance, isElementVisible) {
+    ], function(KbLayoutRevertObserver, constants, coreClone, cMerge, cAbstract, cInstance, isElementVisible) {
 
    var SearchController = cAbstract.extend({
       $protected: {
@@ -86,7 +86,7 @@ define('js!SBIS3.CONTROLS.SearchController',
             this._lastRoot = view.getCurrentRoot();
             //Запомнили путь в хлебных крошках перед тем как их сбросить для режима поиска
             if (this._options.breadCrumbs && this._options.breadCrumbs.getItems()) {
-               this._pathDSRawData = cFunctions.clone(this._options.breadCrumbs.getItems().getRawData());
+               this._pathDSRawData = coreClone(this._options.breadCrumbs.getItems().getRawData());
             }
          }
          this._firstSearch = false;

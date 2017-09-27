@@ -17,7 +17,8 @@
       text-align: center;
    }
    .controls-image__image-bar {
-      position: absolute ;
+      .inline-flexbox();
+      position: absolute;
       margin: 0px;
       padding: 0px;
       left: 0px;
@@ -34,12 +35,12 @@
    .controls-image__button {
       &-edit, &-upload, &-reset {
          color: #0055BB;
-         padding: @image-bar-vertical-padding @image-bar-horizontal-padding @image-bar-vertical-padding 0;
-         float: right;
+         padding-right: @image-bar-horizontal-padding;
       }
       &-upload {
-         float: left;
-         padding: @image-bar-vertical-padding 0 @image-bar-vertical-padding @image-bar-horizontal-padding;
+         padding-left: @image-bar-horizontal-padding;
+         padding-right: 0;
+         margin-right: auto;
       }
    }
    &__normal {

@@ -1,12 +1,12 @@
 define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
-   "Core/core-functions",
+   "Core/core-clone",
    "Core/core-merge",
    "Core/EventBus",
    "js!SBIS3.CONTROLS.ButtonGroupBase",
    'Core/helpers/String/escapeHtml',
    'js!SBIS3.CONTROLS.StylesPanelNew',
    'css!SBIS3.CONTROLS.RichEditorToolbarBase'
-], function( cFunctions, cMerge, EventBus, ButtonGroupBase, escapeHtml, StylesPanel) {
+], function(coreClone, cMerge, EventBus, ButtonGroupBase, escapeHtml, StylesPanel) {
 
    'use strict';
 
@@ -141,7 +141,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
             var
                items,
                deleteIdexes = [];
-            items = cFunctions.clone(defaultConfig);
+            items = coreClone(defaultConfig);
             //мерж массивов
             for (var i in userItems){
                if (userItems.hasOwnProperty(i)) {
