@@ -2892,7 +2892,8 @@ define('js!SBIS3.CONTROLS.ListView',
             } else if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
                this._createScrollPager();
             }
-            this._notifyOnSizeChanged(true);
+
+            this.sendCommand('resizeYourself');
          },
 
          _drawItemsCallbackSync: function() {
