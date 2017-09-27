@@ -52,6 +52,7 @@
       .controls-ComboBox__shadow {
          content: '';
          position: absolute;
+         display: @combo-box-shadow-display;
          top:0;
          right: @combo-box-icon-size + @combo-box-arrow-padding-right;
          bottom: 0;
@@ -59,18 +60,18 @@
          background: linear-gradient(to left, @combo-box-picker-item-bg, rgba(255, 255, 255, 0));
       }
    }
-}
-.controls-ComboBox.controls-TextBox {
-   cursor: pointer;
+   &.controls-TextBox {
+      cursor: pointer;
 
-   //todo:
-   &.controls-Picker__show {
-      background-color: @combo-box-picker-show-background-color;
-      color: @compo-box-picker-show-color;
-      border: @default-border-width solid @combo-box-picker-show-border-color;
+      //todo:
+      &.controls-Picker__show {
+         background-color: @combo-box-picker-show-background-color;
+         color: @compo-box-picker-show-color;
+         border: @default-border-width solid @combo-box-picker-show-border-color;
 
-      .controls-TextBox__afterFieldWrapper {
+         .controls-TextBox__afterFieldWrapper {
             color: @combo-box-arrowDown-color-picker-show;
+         }
       }
    }
 }
