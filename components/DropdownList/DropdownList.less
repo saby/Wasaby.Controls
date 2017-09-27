@@ -149,6 +149,10 @@
    &.controls-DropdownList__type-fastDataFilter {
       &.controls-FloatArea {
          margin: @DropdownList-picker-fastdatafilter-offset;
+         &.controls-DropdownList__withoutArrow {
+            margin-left: @DropdownList-picker-fdf-left;
+         }
+
       }
       &.controls-DropdownList__withoutCross {
          .controls-DropdownList__item.controls-DropdownList__item__selected {
@@ -256,6 +260,9 @@
       }
    }
    &.controls-DropdownList__type-title {
+      &.controls-FloatArea {
+         margin-top: -6px;
+      }
       .controls-DropdownList__body {
          margin-top: -1px;
       }
@@ -274,6 +281,8 @@
    }
 
    &.controls-DropdownList__type-customHeader {
+      margin-top: -1px;
+      margin-left: -2px;
       &.controls-popup-revert-horizontal {
          .flexbox();
          .flex-direction(column);
