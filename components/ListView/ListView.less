@@ -205,14 +205,14 @@
 .controls-AjaxLoader{
    background: transparent;
    position: absolute;
-   top: @controls-AjaxLoader-default-cord;
-   bottom: @controls-AjaxLoader-default-cord;
-   left: @controls-AjaxLoader-default-cord;
-   right: @controls-AjaxLoader-default-cord;
+   top: 0;
+   bottom: 0;
+   left:0;
+   right: 0;
    width: 100%;
-   z-index: @controls-AjaxLoader-zIndex;
+   z-index: 11;
    overflow: hidden;
-   min-height: @controls-AjaxLoader-minHeight;
+   min-height: @controls-AjaxLoader-size;
    &.controls-AjaxLoader__showIndication {
       background: @controls-AjaxLoader-background;
       .controls-AjaxLoader__outer {
@@ -228,9 +228,9 @@
 
 .controls-AjaxLoader__outer{
    display: none;
-   height: @controls-AjaxLoader-outer-height;
+   height: @controls-AjaxLoader-size + 2 * @controls-AjaxLoader-block-padding;
    position: relative;
-   top: @controls-AjaxLoader-outer-top;
+   top: 50%;
    line-height: @controls-AjaxLoader-outer-lineHeight;
 }
 
