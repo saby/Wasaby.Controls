@@ -1547,7 +1547,7 @@ define('js!SBIS3.CONTROLS.ListView',
                var cont = this._container[0],
                    targetKey = target[0].getAttribute('data-id'),
                    item = this.getItems() ? this.getItems().getRecordById(targetKey) : undefined,
-                   projItem = this._options._itemsProjection.getItemBySourceItem(item),
+                   projItem = this._options._itemsProjection ? this._options._itemsProjection.getItemBySourceItem(item) : null,
                    correctTarget = target.hasClass('controls-editInPlace') && projItem ? this._getDomElementByItem(projItem) : target;
 
                //В некоторых версиях 11 IE не успевает рассчитаться ширина узла, вследствие чего correctTarget.offsetWidth == 0
@@ -2065,8 +2065,14 @@ define('js!SBIS3.CONTROLS.ListView',
          _getCurrentPage: function() {
             var page = 0;
             if (this._scrollBinder) {
-               var scrollPage = this._scrollBinder._getScrollPage();
-               page = scrollPage ? Math.floor(scrollPage.element.index() / this._limit) : 0;
+               var scrollPage, pagesCount, average, commonItemsCount, firstPageElemIndex;
+               scrollPage = this._scrollBinder.getScrollPage();
+               pagesCount = this._scrollBinder.getPagesCount();
+               commonItemsCount = this._getItemsProjection() ? this._getItemsProjection().getCount() : 0;
+               average = commonItemsCount / pagesCount;
+               firstPageElemIndex = (scrollPage - 1) * average;
+
+               page = scrollPage ? Math.floor(firstPageElemIndex / this._limit) : 0;
             }
             // прибавим к полученой странице количество еще не загруженных страниц
             return page + Math.floor((this._scrollOffset.top) / this._limit);

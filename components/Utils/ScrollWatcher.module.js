@@ -103,7 +103,7 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
       },
 
       _onContainerScroll: function (event) {
-         var elem = event.target;
+         var elem = event.target == document ? document.body : event.target;
          this._processScrollEvent(elem.scrollTop);
       },
        /**
