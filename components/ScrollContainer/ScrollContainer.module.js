@@ -166,6 +166,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             this._isMobileIOS = cDetection.isMobileIOS;
             this.deprecatedContr(cfg);
 
+            // на resizeYourself команду перерисовываем только себя, не трогая children.
+            // Сейчас команда отправляется только из ListView когда его items изменились (а значит могли измениться размеры)
             CommandDispatcher.declareCommand(this, 'resizeYourself', function () {
                this._resizeInner();
             }.bind(this));

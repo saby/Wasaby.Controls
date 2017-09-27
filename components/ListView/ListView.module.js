@@ -2893,6 +2893,8 @@ define('js!SBIS3.CONTROLS.ListView',
                this._createScrollPager();
             }
 
+            // отправляем команду о перерисовке парентов, и только их. Предполагается, что изменение items
+            // у ListView может повлиять только на некоторых парентов
             this.sendCommand('resizeYourself');
          },
 
