@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "Core/constants",
    "Core/core-merge",
    "Core/core-instance",
-   "Core/core-functions",
+   'Core/helpers/Function/shallowClone',
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CONTROLS.PickerMixin",
    "js!SBIS3.CONTROLS.ItemsControlMixin",
@@ -31,7 +31,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    'css!SBIS3.CONTROLS.DropdownList'
 ],
 
-   function (EventBus, IoC, constants, cMerge, cInstance, cFunctions, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
+   function (EventBus, IoC, constants, cMerge, cInstance, shallowClone, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
 
       'use strict';
       /**
@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
              emptyItemProjection,
              rs;
          rawData[cfg.idProperty] = null;
-         rawData[cfg.displayProperty] = rk('Не выбрано');
+         rawData[cfg.displayProperty] = getEmptyText(cfg);
          rawData.isEmptyValue = true;
 
          rs = new RecordSet({
@@ -103,6 +103,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
          emptyItemProjection = Projection.getDefaultDisplay(rs);
          return emptyItemProjection.at(0);
+      }
+
+      function getEmptyText(cfg) {
+         if (typeof cfg.emptyValue === 'boolean') {
+            return rk('Не выбрано');
+         }
+         return cfg.emptyValue;
       }
 
       function prepareSelectedItems(cfg) {
@@ -313,11 +320,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
                parentProperty: null,
                allowEmptyMultiSelection: false,
                /**
-                * @cfg {Boolean} Добавить пустое значение в выпадающий список с текстом "Не выбрано"
+                * @cfg {Boolean|String} Добавить пустое значение в выпадающий список
+                * @variant true Добавляется пустое значение с текстом "Не выбрано"
+                * @variant {String} Добавляется пустое значение с текстом {String}
                 * @remark
                 * Пустое значение имеет ключ null
                 */
-               emptyValue: null
+               emptyValue: false
             },
             _pickerListContainer: null,
             _pickerCloseContainer: null,
@@ -329,8 +338,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             _defaultId: null,
             _buttonChoose : null,
             _buttonHasMore: null,
-            _currentSelection: [],
-            _emptyText: rk('Не выбрано')
+            _currentSelection: []
          },
          $constructor: function() {
             this._publish('onClickMore');
@@ -393,7 +401,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             /* Надо делать клон, иначе в ие при определнии scope для шаблона затирается parent
                https://online.sbis.ru/opendoc.html?guid=e5604962-8cea-4d32-88e8-1ead295e0adf&des=
                Задача в разработку 15.05.2017 Не пробрасывать scope в ИЕ utils.js:: createSavingPrototype: function mergeSavingPrototype(scope… */
-            header.append(dotTplFn(cFunctions.shallowClone(this._options)));
+            header.append(dotTplFn(shallowClone(this._options)));
             this._setPickerVariables();
             this._bindItemSelect();
 
@@ -444,7 +452,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                var oldKeys = this.getSelectedKeys();
                this._options.selectedItems && this._options.selectedItems.clear();
                this._options.selectedKeys = idArray;
-               this._drawSelectedValue(null, [this._emptyText]);
+               this._drawSelectedValue(null, [getEmptyText(this._options)]);
                this._notifySelectedItems(this._options.selectedKeys,{
                   added : idArray,
                   removed : oldKeys
@@ -601,7 +609,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                if (this.getSelectedKeys()[0] !== null) {
                   this._options.selectedKeys = [null];
                }
-               this._drawSelectedValue(null, [this._emptyText]);
+               this._drawSelectedValue(null, [getEmptyText(this._options)]);
             }
             else{
                if (!this.getSelectedKeys().length && this._getItemsProjection().getCount()) {
@@ -822,7 +830,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                         }
                      }
                      else if (self._options.emptyValue) {
-                        textValues.push(self._emptyText);
+                        textValues.push(getEmptyText(self._options));
                      }
                   }
 
