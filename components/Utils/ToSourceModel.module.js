@@ -4,10 +4,10 @@
 define('js!SBIS3.CONTROLS.ToSourceModel', [
    'js!WS.Data/Di',
    'Core/core-instance',
-   'Core/core-functions',
+   'Core/core-clone',
    'js!WS.Data/Chain',
    'js!WS.Data/Utils'
-], function(Di, cInstance, cFunc, Chain, Utils) {
+], function(Di, cInstance, coreClone, Chain, Utils) {
 
    function getModel(model, config) {
       return typeof model === 'string' ? Di.resolve(model, config) : new model(config)
@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.ToSourceModel', [
 
                if (parent && cInstance.instanceOfModule(parent, 'WS.Data/Entity/Model')) {
                   if(saveParentRecordChanges) {
-                     changedFields = cFunc.clone(parent._changedFields);
+                     changedFields = coreClone(parent._changedFields);
                   } else {
                      Utils.logger.error('ToSourceModel: модель, указанная для источника контрола '+
                         'отличается от модели переданного рекордсета. Возможны изменения в родительской записи.')
