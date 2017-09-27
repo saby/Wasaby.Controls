@@ -56,7 +56,11 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             /**
              * @cfg {WS.Data/Source/ISource} источник данных.
              */
-            dataSource: undefined
+            dataSource: undefined,
+            /**
+             * @cfg {Boolean} Разрешает перемещать элементы в списке.
+             */
+            enabled: true
          }
       },
       $constructor: function (cfg) {
@@ -84,11 +88,13 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
       },
 
       _moveToOneRow: function(record, position) {
-         var projection = this.getItemsProjection(),
-            item = projection.getItemBySourceItem(record),
-            targetItem = position == 'after' ? projection.getNext(item) : projection.getPrevious(item);
-         if(targetItem) {
-            this.move([record], targetItem.getContents(), position);
+         if (this.isEnabled()) {
+            var projection = this.getItemsProjection(),
+               item = projection.getItemBySourceItem(record),
+               targetItem = position == 'after' ? projection.getNext(item) : projection.getPrevious(item);
+            if (targetItem) {
+               this.move([record], targetItem.getContents(), position);
+            }
          }
       },
 
@@ -115,41 +121,43 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
          var operation = dragSource.getOperation(),
             action = dragSource.getAction(),
             def = false;
-         if (typeof action === 'function') {
-            def =  action.call(dragSource);
-         } else  if (move && (operation === 'add' || operation === 'move')) {
-            var movedItems = [];
-            dragSource.each(function (movedItem) {
-               movedItems.push(movedItem.getModel());
-            });
-            def = this.move(movedItems, target.getModel(), target.getPosition());
-         }
-         def = (def instanceof Deferred) ? def : new Deferred().callback(def);
-         var position = this.getItems().getIndex(target.getModel()),
-            items = this.getItems();
-         position = target.getPosition() != 'after' ? position : position +1;
-         def.addCallback(function(result) {
-            if (result !== false && result !== Mover.ON_BEGIN_MOVE_RESULT.CUSTOM) {
-               dragSource.each(function(movedItem) {
-                  var model = movedItem.getModel();
-                  if (operation === 'add' || operation === 'move') {
-                     if (cInstance.instanceOfModule(items, 'WS.Data/Collection/RecordSet')) {
-                        //Если items рекордсет то при перемещении добавится клон записи и по индексу ее будет не найти
-                        if (!items.getRecordById(model.getId())) {
-                           items.add(model, position);
-                        }
-                     } else if(items.getIndex(model) === -1)  {
-                        items.add(model.clone(), position);
-                     }
-                  }
-                  if (operation === 'delete' || operation === 'move') {
-                     ownerItems.remove(model);
-                  }
+         if (this.isEnabled()) {
+            if (typeof action === 'function') {
+               def = action.call(dragSource);
+            } else if (move && (operation === 'add' || operation === 'move')) {
+               var movedItems = [];
+               dragSource.each(function (movedItem) {
+                  movedItems.push(movedItem.getModel());
                });
+               def = this.move(movedItems, target.getModel(), target.getPosition());
             }
-            return result;
-         });
-         return def;
+            def = (def instanceof Deferred) ? def : new Deferred().callback(def);
+            var position = this.getItems().getIndex(target.getModel()),
+               items = this.getItems();
+            position = target.getPosition() != 'after' ? position : position + 1;
+            def.addCallback(function (result) {
+               if (result !== false && result !== Mover.ON_BEGIN_MOVE_RESULT.CUSTOM) {
+                  dragSource.each(function (movedItem) {
+                     var model = movedItem.getModel();
+                     if (operation === 'add' || operation === 'move') {
+                        if (cInstance.instanceOfModule(items, 'WS.Data/Collection/RecordSet')) {
+                           //Если items рекордсет то при перемещении добавится клон записи и по индексу ее будет не найти
+                           if (!items.getRecordById(model.getId())) {
+                              items.add(model, position);
+                           }
+                        } else if (items.getIndex(model) === -1) {
+                           items.add(model.clone(), position);
+                        }
+                     }
+                     if (operation === 'delete' || operation === 'move') {
+                        ownerItems.remove(model);
+                     }
+                  });
+               }
+               return result;
+            });
+         }
+         return (def instanceof Deferred) ? def : new Deferred().callback(def);
       },
       /**
        * Перемещает переданные записи
@@ -162,45 +170,46 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             result = false,
             isNodeTo = true,
             isChangeOrder = position !== 'on';
-
-         if (target !== null && !cInstance.instanceOfModule(target, 'WS.Data/Entity/Model')) {
-            target = this.getItems().getRecordById(target);
-         }
-         var
-            moveStrategy = this.getMoveStrategy();
-         movedItems = movedItems.filter(function (item) {
-            return this._checkRecordForMove(item, target, position);
-         }.bind(this));
-         if (movedItems.length > 0) {
-            if (moveStrategy) {
-               //todo поддерживаем стратегии перемещения, потом убрать
-               if (isChangeOrder) {
-                  result = moveStrategy.move(movedItems, target, position == 'after');
-               } else {
-                  result = moveStrategy.hierarchyMove(movedItems, target);
-               }
-            } else {
-               var result = this._notify('onBeginMove', movedItems, target, position);
-               if (result instanceof Deferred) {
-                  result.addCallback(function (result) {
-                     return this._move(movedItems, target, position, result)
-                  }.bind(this))
-               } else {
-                  result = this._move(movedItems, target, position, result);
-               }
-               result.addBoth(function (result) {
-                  this._notify('onEndMove', result, movedItems, target, position);
-                  if (result instanceof Error && !result.processed && !result._isOfflineMode ) {
-                     InformationPopupManager.showMessageDialog(
-                        {
-                           message: result.message,
-                           status: 'error'
-                        }
-                     );
-                     result.processed = true;
+         if (this.isEnabled()) {
+            if (target !== null && !cInstance.instanceOfModule(target, 'WS.Data/Entity/Model')) {
+               target = this.getItems().getRecordById(target);
+            }
+            var
+               moveStrategy = this.getMoveStrategy();
+            movedItems = movedItems.filter(function (item) {
+               return this._checkRecordForMove(item, target, position);
+            }.bind(this));
+            if (movedItems.length > 0) {
+               if (moveStrategy) {
+                  //todo поддерживаем стратегии перемещения, потом убрать
+                  if (isChangeOrder) {
+                     result = moveStrategy.move(movedItems, target, position == 'after');
+                  } else {
+                     result = moveStrategy.hierarchyMove(movedItems, target);
                   }
-                  return result;
-               }.bind(this));
+               } else {
+                  var result = this._notify('onBeginMove', movedItems, target, position);
+                  if (result instanceof Deferred) {
+                     result.addCallback(function (result) {
+                        return this._move(movedItems, target, position, result)
+                     }.bind(this))
+                  } else {
+                     result = this._move(movedItems, target, position, result);
+                  }
+                  result.addBoth(function (result) {
+                     this._notify('onEndMove', result, movedItems, target, position);
+                     if (result instanceof Error && !result.processed && !result._isOfflineMode) {
+                        InformationPopupManager.showMessageDialog(
+                           {
+                              message: result.message,
+                              status: 'error'
+                           }
+                        );
+                        result.processed = true;
+                     }
+                     return result;
+                  }.bind(this));
+               }
             }
          }
          return (result instanceof Deferred) ? result : new Deferred().callback(result);
@@ -216,6 +225,13 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
             }.bind(this));
          }
          return  new Deferred().callback(result);
+      },
+
+      isEnabled: function () {
+         return this._options.enabled;
+      },
+      setEnabled: function (enabled) {
+         this._options.enabled = enabled;
       },
       //endregion for_controls
       //region move_strategy
