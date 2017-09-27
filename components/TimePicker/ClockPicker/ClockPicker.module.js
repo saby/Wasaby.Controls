@@ -4,11 +4,11 @@ define('js!SBIS3.CONTROLS.ClockPicker',
       'tmpl!SBIS3.CONTROLS.ClockPicker',
       'js!SBIS3.CONTROLS.DragNDropMixin',
       'tmpl!SBIS3.CONTROLS.ClockPicker/resources/Circle',
-      'Core/core-functions',
+      'Core/core-clone',
       'js!SBIS3.CONTROLS.TimePickerUtils',
       'css!SBIS3.CONTROLS.ClockPicker'
    ],
-   function(CompoundControl, dotTplFn, DragNDropMixinNew, circleTplFn, coreFunctions, Utils) {
+   function(CompoundControl, dotTplFn, DragNDropMixinNew, circleTplFn, coreClone, Utils) {
 
       'use strict';
 
@@ -305,7 +305,7 @@ define('js!SBIS3.CONTROLS.ClockPicker',
              */
             tick = parseInt(exec[1]);
             if (!isNaN(tick)) {
-               time = coreFunctions.clone(this._options.time);
+               time = coreClone(this._options.time);
                time[this._options.mode] = tick;
                this.setTime(time);
             } else if (exec[0]) {
@@ -363,7 +363,7 @@ define('js!SBIS3.CONTROLS.ClockPicker',
 
             if (this._options.time[mode] !== tick) {
                this._setArrow(circle, deg, tick);
-               time = coreFunctions.clone(this._options.time);
+               time = coreClone(this._options.time);
                time[mode] = tick;
                Utils._setUtilOption.call(this, 'time', time);
             }
