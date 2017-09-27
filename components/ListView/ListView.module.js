@@ -448,8 +448,11 @@ define('js!SBIS3.CONTROLS.ListView',
                _defaultItemTemplate: ItemTemplate,
                _defaultItemContentTemplate: ItemContentTemplate,
                _groupTemplate: GroupTemplate,
-               _sanitizeOpts: {
-                  validNodes: { component: true }
+               //TODO Костыль. Чтоб в шаблоне позвать Sanitize с компонентами приходится прокидывать в виде функции свой sanitize
+               _sanitize: function(value) {
+                  return typeof value === 'string' ?
+                     Sanitize(value, {validNodes: {component: true}, validAttributes : {config : true} }) :
+                     value;
                },
                /**
                 * @faq Почему нет чекбоксов в режиме множественного выбора значений (активация режима производится опцией {@link SBIS3.CONTROLS.ListView#multiselect multiselect})?
