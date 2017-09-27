@@ -199,7 +199,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                 /**
                  * @cfg {function} функция проверки валидности класса
                  */
-               validateClass: function(){ return false; }
+               validateClass: function(className){ return false; }
             },
             _fakeArea: undefined, //textarea для перехода фкуса по табу
             _tinyEditor: undefined, //экземпляр tinyMCE
