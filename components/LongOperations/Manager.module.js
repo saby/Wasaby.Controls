@@ -645,10 +645,10 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
        * @param {boolean} hasHistory Может ли продюсер иметь историю
        */
       var _regTabProducer = function (tabKey, prodInfo, isCrossTab, hasHistory) {
+         var inner = protectedOf(manager);
          if (!(tabKey in inner._tabManagers)) {
             inner._tabManagers[tabKey] = {};
          }
-         var inner = protectedOf(manager);
          var tabProds = inner._tabManagers[tabKey];
          var newProds;
          if (typeof prodInfo == 'object' && Object.keys(prodInfo).length) {
