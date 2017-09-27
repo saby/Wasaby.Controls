@@ -743,10 +743,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @private
           */
          setFontSize: function(size) {
-            size = size + 'px';
             //необходимо удалять текущий формат(размер шрифта) чтобы правльно создавались span
-            this._removeFormat('fontsize', size);
-            this._tinyEditor.execCommand('FontSize', false,  size);
+            this._removeFormat('fontsize');
+            if (size) {
+               this._tinyEditor.execCommand('FontSize', false,  size + 'px');
+            }
             this._tinyEditor.execCommand('');
             //при установке стиля(через форматтер) не стреляет change
             this._setTrimmedText(this._getTinyEditorValue());
