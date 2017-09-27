@@ -1547,7 +1547,7 @@ define('js!SBIS3.CONTROLS.ListView',
                var cont = this._container[0],
                    targetKey = target[0].getAttribute('data-id'),
                    item = this.getItems() ? this.getItems().getRecordById(targetKey) : undefined,
-                   projItem = this._options._itemsProjection.getItemBySourceItem(item),
+                   projItem = this._options._itemsProjection ? this._options._itemsProjection.getItemBySourceItem(item) : null,
                    correctTarget = target.hasClass('controls-editInPlace') && projItem ? this._getDomElementByItem(projItem) : target;
 
                //В некоторых версиях 11 IE не успевает рассчитаться ширина узла, вследствие чего correctTarget.offsetWidth == 0
