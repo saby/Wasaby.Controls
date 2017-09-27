@@ -176,7 +176,8 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
 
          cMerge(config, meta.dialogOptions);
          config.componentOptions = this._buildComponentConfig(meta);
-         config.handlers = {
+         config.handlers = config.handlers || {};
+         cMerge(config.handlers, {
             onAfterClose: function (e, result) {
                self._isExecuting = false;
                self._notifyOnExecuted(meta, result);
@@ -189,7 +190,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
                self._isExecuting = false;
                self._notify('onAfterShow');
             }
-         };
+         });
          return config;
       },
 
