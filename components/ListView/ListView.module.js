@@ -2372,6 +2372,23 @@ define('js!SBIS3.CONTROLS.ListView',
             return result;
          },
 
+         _toggleGroup: function(groupId, flag) {
+            var
+               self = this;
+            // Завершаем редактирование по месту, если оно запущено в сворачиваемой группе
+            // (https://online.sbis.ru/opendoc.html?guid=2e6d8922-a53d-45a9-bbfc-81c4f8b71f57)
+            if (this.isEdit() && flag) { // Вот это поворот. flag === true, когда группа сворачивается.
+               this._getEditInPlace().addCallback(function(editInPlace) {
+                  var
+                     editingRecord = editInPlace.getEditingRecord();
+                  if (self._options._prepareGroupId(editingRecord, editingRecord.get(self._options.groupBy.field), self._options) === groupId) {
+                     self.cancelEdit();
+                  }
+               });
+            }
+            ListView.superclass._toggleGroup.apply(this, arguments);
+         },
+
          _editInPlaceMouseDownHandler: function(event) {
             // При редактировании по месту нужно делать preventDefault на mousedown, в таком случае фокусы отработают в нужном порядке.
             // Нативно событийный порядок следующий: mousedown, focus, mouseup, click.
