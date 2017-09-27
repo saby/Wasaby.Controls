@@ -36,6 +36,12 @@ define('js!WSControls/Lists/ItemsControl', [
    ) {
    'use strict';
 
+   var _private = {
+      _isGroupItem: function(dispItem) {
+         return (dispItem._moduleName == 'WS.Data/Display/GroupItem')
+      }
+   };
+
    var ItemsControl = BaseControl.extend(
       {
          _controlName: 'WSControls/Lists/ItemsControl',
@@ -193,8 +199,10 @@ define('js!WSControls/Lists/ItemsControl', [
             indexes._curIndex++;
          },
 
+
+
          _getItemTpl: function(dispItem) {
-            if (cInstance.instanceOfModule(dispItem, 'WS.Data/Display/GroupItem')) {
+            if (_private._isGroupItem(dispItem)) {
                return this._groupTemplate;
             }
             else {
@@ -203,7 +211,7 @@ define('js!WSControls/Lists/ItemsControl', [
          },
 
          _getItemContentTpl: function(dispItem) {
-            if (cInstance.instanceOfModule(dispItem, 'WS.Data/Display/GroupItem')) {
+            if (_private._isGroupItem(dispItem)) {
                return this._defaultGroupItemContentTemplate;
             }
             else {
