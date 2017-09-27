@@ -1,7 +1,7 @@
+//это конфиг, который в итоге улетает в попап
 interface IPopupOptions{
-    position: IPosition
-    width: number
-    height: number
+    position: IPosition;
+    template: ITemplate;
 }
 
 export = IPopupOptions;

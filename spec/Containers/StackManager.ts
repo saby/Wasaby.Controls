@@ -1,11 +1,14 @@
 /**
  * Created by kraynovdo on 19.09.2017.
  */
+//синглтон
 import PopupManager = require("./PopupManager");
 class StackManager {
-    public showStackArea() {
-        let myPopupManager = new PopupManager();
-        myPopupManager.showPopup()
+    private constructor(){
+
+    }
+    public show() {
     }
 }
-export = StackManager
+let singleStackManager = new StackManager();
+export = singleStackManager;

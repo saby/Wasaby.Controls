@@ -1,8 +1,15 @@
 /**
  * Created by kraynovdo on 19.09.2017.
  */
+//синглтон
+import PopupItemOptions = require("./resources/IPopupItemOptions");
 class PopupManager {
+    private constructor(){
+
+    }
+    private ModalOverlayPosition;
     private popupItems : Array<PopupItem>;
-    public showPopup()
+    public show(options: PopupItemOptions)
 }
-export = PopupManager;
+let singlePopupManager = new PopupManager();
+export = singlePopupManager;

@@ -3,5 +3,5 @@
  */
 interface ITargetOptions {
     targetContainer
-    corner: string
+    corner: string //tl, tr, br, bl
 }
