@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
+define('js!SBIS3.CONTROLS.LongOperations.Tools.CallsPool',
    [
       'Core/core-extend',
       'Core/Deferred'
@@ -11,16 +11,16 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
        * Класс, позволяющий выполнять группу из нескольких параллельных (асинхронных) вызовов и объединять их результаты. Уже в ходе выполнения к
        * группе могут быть произвольно добавлены новые запросы либо удалено любые выполняющиеся. После выполнения всех запросов буден возвращён
        * результат, включающий в себя все непустые и не ошибочные результаты по всем выполненным запросам
-       * @class SBIS3.CONTROLS.LongOperationsCallsPool
+       * @class SBIS3.CONTROLS.LongOperations.Tools.CallsPool
        * @extends Core/core-extend
        *
        * @author Спирин Виктор Алексеевич
        *
        * @public
-       * @type {SBIS3.CONTROLS.LongOperationsCallsPool}
+       * @type {SBIS3.CONTROLS.LongOperations.Tools.CallsPool}
        */
-      var LongOperationsCallsPool = CoreExtend.extend(/** @lends SBIS3.CONTROLS.LongOperationsCallsPool.prototype */{
-         _moduleName: 'SBIS3.CONTROLS.LongOperationsCallsPool',
+      var LongOperationsCallsPool = CoreExtend.extend(/** @lends SBIS3.CONTROLS.LongOperations.Tools.CallsPool.prototype */{
+         _moduleName: 'SBIS3.CONTROLS.LongOperations.Tools.CallsPool',
 
          /**
           * Конструктор
@@ -234,7 +234,7 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
       /**
        * Добавить запрос в список выполняющихся запросов
        * @protected
-       * @param {SBIS3.CONTROLS.LongOperationsCallsPool} self Этот объект
+       * @param {SBIS3.CONTROLS.LongOperations.Tools.CallsPool} self Этот объект
        * @param {number} poolId Идентификатор группы
        * @param {object} member Идентифицирующие параметры
        * @param {boolean} isReplace Произвести не добавление нового, а замену существующего
@@ -281,7 +281,7 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
       /**
        * Проверить, есть ли удовлетворяющие критериям запросы в списке выполняющихся запросов
        * @protected
-       * @param {SBIS3.CONTROLS.LongOperationsCallsPool} self Этот объект
+       * @param {SBIS3.CONTROLS.LongOperations.Tools.CallsPool} self Этот объект
        * @param {number} [poolId] Идентификатор группы (опционально)
        * @param {object} [member] Идентифицирующие параметры (опционально)
        * @return {boolean}
@@ -307,7 +307,7 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
       /**
        * Удалить удовлетворяющие критериям запросы из списка выполняющихся запросов
        * @protected
-       * @param {SBIS3.CONTROLS.LongOperationsCallsPool} self Этот объект
+       * @param {SBIS3.CONTROLS.LongOperations.Tools.CallsPool} self Этот объект
        * @param {number} [poolId] Идентификатор группы (опционально)
        * @param {object} [member] Идентифицирующие параметры (опционально)
        */
@@ -337,7 +337,7 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
       /**
        * Найти идентификатор группы
        * @protected
-       * @param {SBIS3.CONTROLS.LongOperationsCallsPool} self Этот объект
+       * @param {SBIS3.CONTROLS.LongOperations.Tools.CallsPool} self Этот объект
        * @param {object} pool Составной указатель группы запросов
        * @param {boolean} canAdd Можно ли добавить новую группу, если её ещё нет
        * @return {number}
@@ -358,7 +358,7 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
       /**
        * Обработчик одиночного результата
        * @protected
-       * @param {SBIS3.CONTROLS.LongOperationsCallsPool} self Этот объект
+       * @param {SBIS3.CONTROLS.LongOperations.Tools.CallsPool} self Этот объект
        * @param {number} poolId Идентификатор группы
        * @param {object} call Элемент
        * @param {Core/Deferred} promise Обещание результата
@@ -392,7 +392,7 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
       /**
        * Проверить, все ли результаты получены или нужно ждать дальше. Если все результаты получены - выполнение запросов завершается
        * @protected
-       * @param {SBIS3.CONTROLS.LongOperationsCallsPool} self Этот объект
+       * @param {SBIS3.CONTROLS.LongOperations.Tools.CallsPool} self Этот объект
        * @param {number} [poolId] Идентификатор группы (опционально)
        */
       var _checkCompleteness = function (self, poolId) {
@@ -408,7 +408,7 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
       /**
        * Проверить, все ли результаты получены или нужно ждать дальше
        * @protected
-       * @param {SBIS3.CONTROLS.LongOperationsCallsPool} self Этот объект
+       * @param {SBIS3.CONTROLS.LongOperations.Tools.CallsPool} self Этот объект
        * @param {number} poolId Идентификатор группы
        * @return {boolean}
        */
@@ -432,7 +432,7 @@ define('js!SBIS3.CONTROLS.LongOperationsCallsPool',
       /**
        * Объединяет все непустые и не ошибочные результаты и разрешает все обещания результатов
        * @protected
-       * @param {SBIS3.CONTROLS.LongOperationsCallsPool} self Этот объект
+       * @param {SBIS3.CONTROLS.LongOperations.Tools.CallsPool} self Этот объект
        * @param {number} poolId Идентификатор группы
        */
       var _onComplete = function (self, poolId) {

@@ -1,5 +1,5 @@
 /**
- * Простая оболочка над SBIS3.CONTROLS.LongOperationsManager для имплементации интерфейса WS.Data/Source/ISource
+ * Простая оболочка над SBIS3.CONTROLS.LongOperations.Manager для имплементации интерфейса WS.Data/Source/ISource
  *
  * @class SBIS3.CONTROLS.LongOperationsListDataSource
  * @implements WS.Data/Source/ISource
@@ -13,8 +13,8 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
       'js!WS.Data/Source/ISource',
       'js!WS.Data/Entity/ObservableMixin',
       'js!WS.Data/Source/DataSet',
-      'js!SBIS3.CONTROLS.LongOperationsManager',
-      'js!SBIS3.CONTROLS.LongOperationEntry',
+      'js!SBIS3.CONTROLS.LongOperations.Manager',
+      'js!SBIS3.CONTROLS.LongOperations.Entry',
       'Core/TimeInterval'
    ],
 
@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
       'use strict';
 
       /**
-       * Простая оболочка над SBIS3.CONTROLS.LongOperationsManager для имплементации интерфейса WS.Data/Source/ISource
+       * Простая оболочка над SBIS3.CONTROLS.LongOperations.Manager для имплементации интерфейса WS.Data/Source/ISource
        * @public
        * @type {object}
        */

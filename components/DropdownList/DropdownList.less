@@ -50,6 +50,11 @@
      .controls-DropdownList__beforeCaptionWrapper {
        display: inline-block;
      }
+     &.controls-DropdownList__hideCross{
+       .controls-DropdownList__afterCaptionWrapper{
+          display: none;
+       }
+     }
      &.controls-DropdownList__withoutArrow{
        .controls-DropdownList__beforeCaptionWrapper{
          display: none;
@@ -57,11 +62,6 @@
      }
      .controls-DropdownList__afterCaptionWrapper{
        display: inline-block;
-     }
-     &.controls-DropdownList__withoutCross, &.controls-DropdownList__hideCross, &.ws-disabled{
-       .controls-DropdownList__afterCaptionWrapper{
-         display: none;
-       }
      }
       &.controls-DropdownList__defaultItem {
          .controls-DropdownList__selectedItem .controls-DropdownList__textWrapper {
@@ -76,6 +76,11 @@
             color: @gray-ccc-color!important;
             cursor: pointer;
          }
+      }
+   }
+   &.controls-DropdownList__withoutCross, &.ws-disabled{
+      .controls-DropdownList__afterCaptionWrapper{
+         display: none;
       }
    }
    &.ws-disabled{
