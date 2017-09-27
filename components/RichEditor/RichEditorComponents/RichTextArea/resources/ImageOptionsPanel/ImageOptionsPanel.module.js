@@ -68,9 +68,12 @@ define('js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
             },
 
             recalcPosition: function() {
+               //todo: убрать при переходе на контекстное меню
                ImageOptionsPanel.superclass.recalcPosition.apply(this, arguments);
                var
-                  linkedContainer = this.getParent().getInputContainer(), // всегда считаем  показ панели от поля ввода редактора
+                  parent = this.getParent(),
+                  srcollParent = parent.getContainer().parent('.controls-ScrollContainer__content'),
+                  linkedContainer = srcollParent.length ? srcollParent : parent.getInputContainer(), // всегда считаем  показ панели от поля ввода редактора
                   inputOffset = linkedContainer.offset().top,
                   panelOffset = this._container.offset().top,
                   inputHeight = linkedContainer.height(),
