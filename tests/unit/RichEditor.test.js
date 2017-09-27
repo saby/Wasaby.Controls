@@ -27,7 +27,7 @@ define([
                   '<div ' +
                   'class="image-template-left" hasmarkup="true">' +
                   'kek</div></div>';
-            assert.equal(answ, RichTextArea.prototype._sanitizeBeforePaste(quest));
+            assert.equal(answ, RichTextArea.prototype._sanitizeClasses(quest));
          });
       });
 
