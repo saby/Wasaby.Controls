@@ -1205,6 +1205,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             }
          },
          _onResizeHandler: function(){
+            this._resizeInner();
+         },
+         _resizeInner: function() {
             this._checkFixed(this._options.target || $('body'));
             if (this.isVisible() && !this._fixed) {
                this.recalcPosition(false);
