@@ -1,0 +1,36 @@
+.controls-IconButton__filter {
+    &-left-close {
+        background: @FilterPanelButtonLeftClose;
+        &:hover {
+            background: @FilterPanelButtonHoverLeftClose;
+        }
+    }
+    &-right-close {
+        background: @FilterPanelButtonRightClose;
+        &:hover {
+            background: @FilterPanelButtonHoverRightClose;
+        }
+    }
+    &-left-open {
+        background: @FilterPanelButtonLeftOpen;
+        &:hover {
+            background: @FilterPanelButtonHoverLeftOpen;
+        }
+    }
+    &-right-open {
+        background: @FilterPanelButtonRightOpen;
+        &:hover {
+            background: @FilterPanelButtonHoverRightOpen;
+        }
+    }
+    &-left-open, &-left-close, &-right-open, &-right-close {
+        height: 24px;
+        width: 35px;
+        cursor: pointer;
+        display: inline-block;
+        &, &:hover {
+            background-size: 140px 48px;
+            background-repeat-x: no-repeat;
+        }
+    }
+}
