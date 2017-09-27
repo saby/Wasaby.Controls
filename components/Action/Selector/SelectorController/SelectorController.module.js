@@ -6,14 +6,14 @@ define('js!SBIS3.CONTROLS.SelectorController', [
    "js!SBIS3.CORE.CompoundControl",
    "js!WS.Data/Di",
    "Core/core-instance",
-   "Core/core-functions",
+   'Core/core-clone',
    "js!WS.Data/Entity/Record",
    "js!SBIS3.CONTROLS.Utils.Query",
    "js!SBIS3.CONTROLS.Utils.OpenDialog",
    "js!WS.Data/Collection/List",
    "js!SBIS3.CONTROLS.SelectorWrapper"
 ],
-    function (CommandDispatcher, CompoundControl, Di, cInstance, cFunctions, Record, Query, OpenDialogUtil, List) {
+    function (CommandDispatcher, CompoundControl, Di, cInstance, coreClone, Record, Query, OpenDialogUtil, List) {
 
        'use strict';
 
@@ -210,7 +210,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
                 dataSource,
                 self = this;
              if (this._linkedObject && this._linkedObject._options.useSelectAll) {
-                filter = cFunctions.clone(this._linkedObject.getFilter());
+                filter = coreClone(this._linkedObject.getFilter());
                 dataSource = this._linkedObject.getDataSource();
                 //Закончить выбор элементов можно двумя способами:
                 //1) Нажать кнопку "Выбрать" в шапке диалога;

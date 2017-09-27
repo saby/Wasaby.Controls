@@ -27,8 +27,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
        * @mixes SBIS3.CONTROLS.ItemsControlMixin
        * @mixes SBIS3.CONTROLS.FilterMixin
        *
-       * @demo SBIS3.CONTROLS.Demo.MyFastDataFilter Работа с статическими данными
-       * @demo SBIS3.CONTROLS.Demo.MyFastDataFilterDataSource Работа с DataSource данными
+       * @demo SBIS3.Demo.Filter.FastDataFilterMultiselect
        *
        * @cssModifier controls-FastDataFilter__resize Позволяет управлять шириной выпадающих списков, вписывая их по размеру в контейнер.
        *

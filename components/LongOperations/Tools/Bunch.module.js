@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.LongOperationsBunch',
+define('js!SBIS3.CONTROLS.LongOperations.Tools.Bunch',
    [
       'Core/core-extend',
       'Core/core-merge'
@@ -10,16 +10,16 @@ define('js!SBIS3.CONTROLS.LongOperationsBunch',
       /**
        * Класс для хранения значений по объектным ключам. Обеспечивает манипуляции несколькими значениями по критериям, а также двойной доступ к
        * хранящимся значениям - по объектному клюбчу и по идентификатору. Объектные ключи всегда используются не по ссылке, а по значению
-       * @class SBIS3.CONTROLS.LongOperationsBunch
+       * @class SBIS3.CONTROLS.LongOperations.Tools.Bunch
        * @extends Core/core-extend
        *
        * @author Спирин Виктор Алексеевич
        *
        * @public
-       * @type {SBIS3.CONTROLS.LongOperationsBunch}
+       * @type {SBIS3.CONTROLS.LongOperations.Tools.Bunch}
        */
-      var LongOperationsBunch = CoreExtend.extend(/** @lends SBIS3.CONTROLS.LongOperationsBunch.prototype */{
-         _moduleName: 'SBIS3.CONTROLS.LongOperationsBunch',
+      var LongOperationsBunch = CoreExtend.extend(/** @lends SBIS3.CONTROLS.LongOperations.Tools.Bunch.prototype */{
+         _moduleName: 'SBIS3.CONTROLS.LongOperations.Tools.Bunch',
 
          /**
           * Конструктор
@@ -216,7 +216,7 @@ define('js!SBIS3.CONTROLS.LongOperationsBunch',
       /**
        * Удалить хранящееся значение по ключу. Возвращается удалённое значение
        * @protected
-       * @param {SBIS3.CONTROLS.LongOperationsBunch} self Этот объект
+       * @param {SBIS3.CONTROLS.LongOperations.Tools.Bunch} self Этот объект
        * @param {number} id Идентификатор
        * @return {any}
        */
@@ -230,7 +230,7 @@ define('js!SBIS3.CONTROLS.LongOperationsBunch',
       /**
        * Найти хранящееся значения по заданным критериям. Если указано условие andRemove, то удалить всё найденное. Возвращается список всех найденных значений
        * @protected
-       * @param {SBIS3.CONTROLS.LongOperationsBunch} self Этот объект
+       * @param {SBIS3.CONTROLS.LongOperations.Tools.Bunch} self Этот объект
        * @param {object} pattern Критерии поиска
        * @param {number[]} inIds Искать только среди этих идентификаторов
        * @param {boolean} andRemove И удалить всё найденное
