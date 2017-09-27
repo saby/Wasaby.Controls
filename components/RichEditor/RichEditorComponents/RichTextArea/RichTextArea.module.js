@@ -1332,7 +1332,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
                //upd: в костроме форматная вставка, не нужно вырезать лишние теги
                if (!self._mouseIsPressed && self._options.editorConfig.paste_as_text) {
-                  e.content = self._sanitizeClasses(e.content);
+                  e.content = self._sanitizeClasses(e.content, false);
                }
                self._mouseIsPressed = false;
                // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
@@ -2149,7 +2149,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (text && text[0] !== '<') {
                text = '<p>' + text.replace(/\n/gi, '<br/>') + '</p>';
             }
-            text = this._sanitizeClasses(text);
+            text = this._sanitizeClasses(text, true);
             return this._options.highlightLinks ? LinkWrap.wrapURLs(LinkWrap.wrapFiles(text), true) : text;
          },
 
@@ -2176,7 +2176,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   if (this._tinyReady.isReady()) {
                      this._tinyEditor.setContent(text);
                   } else {
-                     this._inputControl.html(this._sanitizeClasses(text));
+                     this._inputControl.html(this._sanitizeClasses(text, true));
                   }
                }
             }
@@ -2231,13 +2231,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }
             return true;*/
          },
-         _sanitizeClasses: function(text) {
+         _sanitizeClasses: function(text, images) {
             var
                 self = this;
             return Sanitize(text,
                {
                   validNodes: {
-                     img: false
+                     img: images
                   },
                   validAttributes: {
                      'class' : function(content, attributeName) {
