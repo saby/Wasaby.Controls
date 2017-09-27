@@ -1,4 +1,8 @@
-<div class="controls-ListView__item js-controls-ListView__item {{selectedKey==item.getId() ? 'controls-ListView__item__selected'}} {{ className }}{{drawHiddenGroup ? ' ws-hidden' : ''}} {{noHover ? ' controls-ListView__hoveredItem__withHover' : ' controls-ListView__hoveredItem__withoutHover'}} }}"
+<div class="controls-ListView__item js-controls-ListView__item
+    {{selectedKey==item.getId() ? 'controls-ListView__item__selected'}}
+    {{ className }}
+    {{drawHiddenGroup ? ' ws-hidden' : ''}}
+    {{noHover ? ' controls-ListView__hoveredItem__withHover' : ' controls-ListView__hoveredItem__withoutHover'}}"
      data-hash="{{ projItem.getHash() }}"
      data-id="{{ item.getId() + '' }}">
     <ws:partial template="{{itemContent}}" scope="{{...}}" attributes="{{ attributes }}"></ws:partial>
