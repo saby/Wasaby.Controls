@@ -3,7 +3,7 @@
  */
 
 define('js!SBIS3.CONTROLS.FilterPanel', [
-   'Core/core-functions',
+   'Core/core-clone',
    'Core/CommandDispatcher',
    'js!SBIS3.CONTROLS.CompoundControl',
    'js!SBIS3.CONTROLS.Expandable',
@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
    'js!SBIS3.CONTROLS.IconButton',
    'js!SBIS3.CONTROLS.ScrollContainer',
    'css!SBIS3.CONTROLS.FilterPanel'
-], function( cFunctions, CommandDispatcher, CompoundControl, Expandable, RecordSet, FilterPanelItem, FilterToStringUtil, dotTplFn, contentTpl, FilterPanelItemContentTemplate) {
+], function(coreClone, CommandDispatcher, CompoundControl, Expandable, RecordSet, FilterPanelItem, FilterToStringUtil, dotTplFn, contentTpl, FilterPanelItemContentTemplate) {
 
    'use strict';
    /**
@@ -381,7 +381,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
       _resetItemFilterFields: function(item) {
          var
             resetValues = {};
-         resetValues[ITEM_FILTER_VALUE] = cFunctions.clone(item.get(ITEM_FILTER_RESET_VALUE));
+         resetValues[ITEM_FILTER_VALUE] = coreClone(item.get(ITEM_FILTER_RESET_VALUE));
          resetValues[ITEM_FILTER_TEXT_VALUE] = '';
          item.set(resetValues);
       },
