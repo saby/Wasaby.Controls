@@ -321,24 +321,28 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       for (idx in cfg.openedPath) {
          if (cfg.openedPath.hasOwnProperty(idx)) {
             item = projection.getItemBySourceItem(cfg._items.getRecordById(idx));
-            if (item && !item.isExpanded()) {
-               // Внимание! Даже не пытаться выпилить этот код! Логика заключается в том, что после перезагрузки данных (reload) нужно удалять из списка ветки, для которых
-               // из источника данных не пришли дочерние элементы. Если разработчик желает оставить папки развернутыми - пусть присылает при reload их дочерние элементы.
-               // todo Переделать, когда будет выполнена https://inside.tensor.ru/opendoc.html?guid=4673df62-15a3-4526-bf56-f85e05363da3&description=
-               var items = projection.getCollection(),
-                  hierarchy = new HierarchyRelation({
-                     idProperty: items.getIdProperty(),
-                     parentProperty: projection.getParentProperty()
-                  }),
-                  children = hierarchy.getChildren(
-                     item.getContents().getId(),
-                     projection.getCollection()
-                  );
-               if (children.length) {
-                  item.setExpanded(true);
-               } else {
-                  delete cfg.openedPath[idx];
+            if (item) {
+               if (!item.isExpanded()) {
+                  // Внимание! Даже не пытаться выпилить этот код! Логика заключается в том, что после перезагрузки данных (reload) нужно удалять из списка ветки, для которых
+                  // из источника данных не пришли дочерние элементы. Если разработчик желает оставить папки развернутыми - пусть присылает при reload их дочерние элементы.
+                  // todo Переделать, когда будет выполнена https://inside.tensor.ru/opendoc.html?guid=4673df62-15a3-4526-bf56-f85e05363da3&description=
+                  var items = projection.getCollection(),
+                     hierarchy = new HierarchyRelation({
+                        idProperty: items.getIdProperty(),
+                        parentProperty: projection.getParentProperty()
+                     }),
+                     children = hierarchy.getChildren(
+                        item.getContents().getId(),
+                        projection.getCollection()
+                     );
+                  if (children.length) {
+                     item.setExpanded(true);
+                  } else {
+                     delete cfg.openedPath[idx];
+                  }
                }
+            } else { // Если узел в проекции не найден - то удаляем его из списка развернутых https://online.sbis.ru/opendoc.html?guid=202f1e3c-eab6-4f24-8879-f4cb4d007d22
+               delete cfg.openedPath[idx];
             }
          }
       }
