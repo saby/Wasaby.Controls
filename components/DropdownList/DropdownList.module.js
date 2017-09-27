@@ -8,7 +8,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "Core/constants",
    "Core/core-merge",
    "Core/core-instance",
-   "Core/core-functions",
    "Core/helpers/String/format",
    'Core/helpers/Function/shallowClone',
    "js!SBIS3.CORE.CompoundControl",
@@ -33,7 +32,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    'css!SBIS3.CONTROLS.DropdownList'
 ],
 
-   function (EventBus, IoC, constants, cMerge, cInstance, cFunctions, format, shallowClone, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
+   function (EventBus, IoC, constants, cMerge, cInstance, format, shallowClone, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
 
       'use strict';
       /**
