@@ -199,7 +199,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                 /**
                  * @cfg {function} функция проверки валидности класса
                  */
-               sanitizeClass: function(){ return false; }
+               validateClass: function(){ return false; }
             },
             _fakeArea: undefined, //textarea для перехода фкуса по табу
             _tinyEditor: undefined, //экземпляр tinyMCE
@@ -2259,7 +2259,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                            index = classes.length - 1;
 
                         while (index >= 0) {
-                           if (!~whiteList.indexOf(classes[index]) && !this._options.sanitizeClass(classes[index])) {
+                           if (!~whiteList.indexOf(classes[index]) && !this._options.validateClass(classes[index])) {
                               classes.splice(index, 1);
                            }
                            index -= 1;
