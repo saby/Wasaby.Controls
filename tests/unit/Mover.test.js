@@ -135,6 +135,19 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
          });
       });
 
+      describe('.isEnabled', function (){
+         it('should return true by default', function(){
+            assert.equal(mover.isEnabled(), true);
+         });
+      });
+
+      describe('.setEnabled', function (){
+         it('should set enabled', function(){
+            mover.setEnabled(false);
+            assert.isFalse(mover.isEnabled());
+         });
+      });
+
       describe('.getItemsProjection', function (){
          it('should return the own projection', function(){
             assert.equal(mover.getItemsProjection(), projection);
@@ -232,6 +245,13 @@ define(['js!SBIS3.CONTROLS.ListView.Mover',
                   assert.equal(treeItems.at(0).get('parent'), null);
                   done();
                });
+            });
+
+            it('should not move if mover is disabled', function(){
+               mover.setEnabled(false);
+               var id = items.at(2).getId();
+               mover.move([items.at(2)], items.at(0).getId(), 'before');
+               assert.equal(items.at(2).getId(), id);
             });
          });
       });

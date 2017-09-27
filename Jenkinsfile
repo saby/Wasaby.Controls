@@ -18,7 +18,7 @@ properties([
             description: '',
             name: 'ws_data_revision'),
         string(
-            defaultValue: 'rc-3.17.150',
+            defaultValue: 'rc-3.17.200',
             description: '',
             name: 'branch_engine'),
         string(
@@ -44,7 +44,7 @@ if ( "${env.BUILD_NUMBER}" != "1" && params.run_reg == false && params.run_int =
 
 node('controls') {
     echo "Назначем версию и определяем рабочую директорию"
-    def version = "3.17.150"
+    def version = "3.17.200"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
         echo "Чистим рабочую директорию"
