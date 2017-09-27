@@ -921,6 +921,11 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                contextMenu: true,
                /**
+                * @cfg {Boolean} Разрешает перемещать элементы в списке.
+                * @remark по умолчанию опция включена
+                */
+               enabledMove: true,
+               /**
                 * @cfg {Boolean} Использовать функционал выбора всех записей
                 * @see getSelection
                 */
@@ -4195,10 +4200,12 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _setItemsDragNDrop: function(allowDragNDrop) {
-            this._options.itemsDragNDrop = allowDragNDrop;
-            this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', this._getDragInitHandler());
-            if (this._dragMoveController) {
-               this._dragMoveController.setItemsDragNDrop(allowDragNDrop)
+            if (this.isEnabledMove()) {
+               this._options.itemsDragNDrop = allowDragNDrop;
+               this._getItemsContainer()[allowDragNDrop ? 'on' : 'off']('mousedown', '.js-controls-ListView__item', this._getDragInitHandler());
+               if (this._dragMoveController) {
+                  this._dragMoveController.setItemsDragNDrop(allowDragNDrop)
+               }
             }
          },
          /**
@@ -4229,7 +4236,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   dragEntity: this._options.dragEntity,
                   dragEntityList: this._options.dragEntityList,
                   itemsDragNDrop: this.getItemsDragNDrop(),
-                  nodeProperty: this._options.nodeProperty
+                  nodeProperty: this._options.nodeProperty,
+                  enabled: this.isEnabledMove()
                });
             }
             return this._dragMoveController;
@@ -4270,52 +4278,54 @@ define('js!SBIS3.CONTROLS.ListView',
           * @deprecated Используйте SBIS3.CONTROLS.Action.List.InteractiveMove.
           */
          moveRecordsWithDialog: function(idArray) {
-            require(['js!SBIS3.CONTROLS.Action.List.InteractiveMove','js!WS.Data/Utils'], function(InteractiveMove, Utils) {
-               //Utils.logger.info(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"');
-               //В OperationMove ни как не передать инстанс экшена через шаблонизатор до решения этой проблемы перейти не получится
-               var
-                  action = new InteractiveMove({
-                     linkedObject: this,
-                     parentProperty: this._options.parentProperty,
-                     nodeProperty: this._options.nodeProperty,
-                     dialogOptions: {
-                        opener:this
-                     },
-                     moveStrategy: this.getMoveStrategy(),//todo пока передаем стратегию, после полного отказа от стратегий удалить
-                     handlers: {
-                        onExecuted: function () {
-                           this.destroy();
+            if (this.isEnabledMove()) {
+               require(['js!SBIS3.CONTROLS.Action.List.InteractiveMove', 'js!WS.Data/Utils'], function (InteractiveMove, Utils) {
+                  //Utils.logger.info(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"');
+                  //В OperationMove ни как не передать инстанс экшена через шаблонизатор до решения этой проблемы перейти не получится
+                  var
+                     action = new InteractiveMove({
+                        linkedObject: this,
+                        parentProperty: this._options.parentProperty,
+                        nodeProperty: this._options.nodeProperty,
+                        dialogOptions: {
+                           opener: this
+                        },
+                        moveStrategy: this.getMoveStrategy(),//todo пока передаем стратегию, после полного отказа от стратегий удалить
+                        handlers: {
+                           onExecuted: function () {
+                              this.destroy();
+                           }
                         }
-                     }
-                  }),
-                  items = this.getItems(),
-                  movedItems;
-               if (idArray) {
-                  movedItems = [];
-                  idArray.forEach(function (item, i) {
-                     if (!cInstance.instanceOfModule(item, 'WS.Data/Entity/Record')) {
-                        var temp = items.getRecordById(item);
-                        if (!temp) {//чтобы отобразить элемент обязательно нужен рекорд, если он отсутсвует в основном рекордсете, то скоре всего он будет в выделенных
-                           var enumerator =  this.getSelectedItems().getEnumerator(),
-                              index = enumerator.getIndexByValue(this._options.idProperty, item);
-                           temp = this.getSelectedItems().at(index);
+                     }),
+                     items = this.getItems(),
+                     movedItems;
+                  if (idArray) {
+                     movedItems = [];
+                     idArray.forEach(function (item, i) {
+                        if (!cInstance.instanceOfModule(item, 'WS.Data/Entity/Record')) {
+                           var temp = items.getRecordById(item);
+                           if (!temp) {//чтобы отобразить элемент обязательно нужен рекорд, если он отсутсвует в основном рекордсете, то скоре всего он будет в выделенных
+                              var enumerator = this.getSelectedItems().getEnumerator(),
+                                 index = enumerator.getIndexByValue(this._options.idProperty, item);
+                              temp = this.getSelectedItems().at(index);
+                           }
+                           if (temp) {
+                              movedItems.push(temp);
+                           }
+                        } else {
+                           movedItems.push(item);
                         }
-                        if (temp) {
-                           movedItems.push(temp);
-                        }
-                     } else {
-                        movedItems.push(item);
-                     }
-                  }, this);
-               }
-               var  filter = this._notify('onPrepareFilterOnMove', {});
-               action.execute({
-                  movedItems: movedItems,
-                  componentOptions: {
-                     filter: filter
+                     }, this);
                   }
-               });
-            }.bind(this));
+                  var filter = this._notify('onPrepareFilterOnMove', {});
+                  action.execute({
+                     movedItems: movedItems,
+                     componentOptions: {
+                        filter: filter
+                     }
+                  });
+               }.bind(this));
+            }
          },
          /**
           * Перемещает выделенные записи.
@@ -4431,6 +4441,13 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          move: function(movedItems, target, position) {
             return this._getMover().move(movedItems, target, position);
+         },
+         /**
+          * Возвращает включено ли перемещения на списке
+          * @return {boolean}
+          */
+         isEnabledMove: function () {
+            return this._options.enabledMove
          },
          //endregion moveMethods
          /**
