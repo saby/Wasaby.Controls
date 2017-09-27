@@ -90,9 +90,6 @@
       &:after {
          content: none;
       }
-      .controls-FieldLink__item-caption {
-         .text-overflow();
-      }
    }
    &.ws-disabled .controls-FieldLink__item-caption {
       margin-right: @default-padding-small;
@@ -126,6 +123,8 @@
 }
 .controls-FieldLink__item-caption {
    .text-overflow();
+   .flex-shrink();
+   display: inline-block;
    height: 100%;
    font-size: @default-font-size;
 }
