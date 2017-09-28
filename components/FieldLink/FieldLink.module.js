@@ -432,6 +432,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 flMenu.setItems(this._options.dictionaries);
                 this.subscribeTo(flMenu, 'onMenuItemActivate', this._menuItemActivatedHandler);
              }
+
+             this.subscribeTo(this, 'onAfterVisibilityChange', function(event, visibility) {
+                if (visibility) {
+                   this._onResizeHandler();
+                }
+             });
           },
 
           _getSelectorAction: memoize(function() {

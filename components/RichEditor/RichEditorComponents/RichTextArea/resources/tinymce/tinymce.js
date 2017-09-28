@@ -19438,7 +19438,7 @@
                forecolor: {inline: 'span', styles: {color: '%value'}, links: true, remove_similar: true},
                hilitecolor: {inline: 'span', styles: {backgroundColor: '%value'}, links: true, remove_similar: true},
                fontname: {inline: 'span', styles: {fontFamily: '%value'}},
-               fontsize: {inline: 'span', styles: {fontSize: '%value'}},
+               fontsize: {inline: 'span', styles: {fontSize: '%value'}, remove_similar: true},// Без опции remove_similar небозможно сбросить fontsize
                fontsize_class: {inline: 'span', attributes: {'class': '%value'}},
                blockquote: {block: 'blockquote', wrapper: 1, remove: 'all'},
                subscript: {inline: 'sub'},
