@@ -3315,7 +3315,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      var state = this._loadQueue[loadId],
                         hasNextPage;
                      if (this._options.navigation && this._options.navigation.type == 'cursor') {
-                        this._listNavigation.analyzeResponseParams(dataSet);
+                        this._listNavigation.analyzeResponseParams(dataSet, state.mode);
                         hasNextPage = this._listNavigation.hasNextPage(state.mode);
                      }
                      else {
