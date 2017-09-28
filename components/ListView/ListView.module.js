@@ -2922,7 +2922,10 @@ define('js!SBIS3.CONTROLS.ListView',
             } else if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
                this._createScrollPager();
             }
-            this._notifyOnSizeChanged(true);
+
+            // отправляем команду о перерисовке парентов, и только их. Предполагается, что изменение items
+            // у ListView может повлиять только на некоторых парентов
+            this.sendCommand('resizeYourself');
          },
 
          _drawItemsCallbackSync: function() {
