@@ -279,10 +279,8 @@
 // ------------ //
 //  Icon Button //
 // ------------ //
-
 @icon-button-done-color: #72BE44;
 @icon-button-error-color: #EF463A;
-
 @icon-button-round-border-position:     absolute;
 @icon-button-round-border-width:        28px;
 @icon-button-round-border-height:       28px;
@@ -290,7 +288,6 @@
 @icon-button-round-icon-color-hover:    @default-color;
 @border-radius:                         14px;
 @icon-button-border-width:              1px;
-
 @list-view-items-toolbar-icon-button-border-width:      @icon-button-border-width;
 @list-view-items-toolbar-icon-button-border-radius:     @border-radius;
 @list-view-items-toolbar-icon-button-border-font-size:  16px;
@@ -299,269 +296,112 @@
 @icon-button-edit-round-border-line-height:        @icon-medium-size - 2 * @default-border-width;
 @list-view-items-toolbar-icon-button-border-font:  'cbuc-icons';
 @list-view-items-toolbar-animate-duration:         0.35s;
-
-
-// ------------- //
-// Toggle button //
-// ------------- //
-
 // Normal default button
-@button-checked-text-color:               @default-text-color;
 @button-checked-border-width:             2px;
-@button-checked-line-height:              @button-line-height - @button-checked-border-width;
 @button-checked-border:                   @button-checked-border-width solid @default-color;
-@button-checked-font-weight:              normal;
-@button-checked-shadow:                   @button-active-shadow;
 @button-checked-bg:                       @button-hover-bg;
 @button-checked-padding:                  0 10px;
-@button-checked-text-margin-left:         @button-text-margin-left - 1px;
-@button-checked-text-margin-right:        @button-text-margin-right - 1px;
-@button-checked-text-icon-margin:         0 @button-text-margin-right - @button-checked-border-width 0 @button-icon-gap;
-@button-checked-icon-top-offset:          3px;
-@button-checked-icon-left-offset:         @button-icon-left-offset - 1px;
-@button-checked-icon-big-top-offset:      @button-icon-big-top-offset - 1px;
-@button-checked-icon-big-left-offset:     @button-icon-big-left-offset - 1px;
-
 // Normal primary button
-@button-primary-checked-text-color:       @button-primary-active-text-color;
 @button-primary-checked-border:           2px solid @primary-color;
-@button-primary-checked-shadow:           @button-primary-active-shadow;
 @button-primary-checked-bg:               @button-primary-hover-bg;
-
 // Big default button
-@button-big-checked-text-margin-left:     @button-big-text-margin-left - 1px;
-@button-big-checked-text-margin-right:    @button-big-text-margin-right - 1px;
 @button-big-checked-padding:              0 22px;
-@button-big-checked-text-icon-margin:     0 @button-big-text-margin-right - @button-checked-border-width 0 @button-icon-gap;
-@button-big-checked-icon-top-offset:      @button-big-icon-top-offset - 1px;
-@button-big-checked-icon-left-offset:     @button-big-icon-left-offset - 1px;
-@button-big-checked-icon-big-top-offset:  @button-big-icon-big-top-offset - 1px;
-@button-big-checked-icon-big-left-offset: @button-big-icon-big-left-offset - 1px;
-
-// Big primary button
-@button-big-primary-checked-border:       @button-primary-checked-border;
-
-
-
 // ---------- //
 // Tab button //
 // ---------- //
 @tab-buttons-height:                            30px;
-@tab-buttons-display:                           table;
-@tab-buttons-width:                             100%;
-@tab-buttons-border-collapse:                   collapse;
 @tab-buttons-border-bottom-height:              1px;
 @tab-buttons-border-bottom:                     @tab-buttons-border-bottom-height solid #CCCCCC;
-@tab-buttons-div-display:                       table-cell;
-@tab-buttons-div-space:                         nowrap;
-@tab-buttons-div-align:                         middle;
-@tab-buttons-tabSpace-template-width:             100%;
-@tab-buttons-tabSpace-template-inner-width:       0;
-@tab-buttons-tabSpace-template-inner-min-width:   100%;
-@tab-buttons-tabSpace-template-overflow:          hidden;
-@tab-buttons-leftItems-float:                   left;
-@tab-buttons-rightItems-float:                  right;
-
 @tab-button-border-color:                       #E4E4E4;
 @tab-button-checked-border-color:               #CCCCCC;
-
-@tab-button-display:                            inline-block;
-@tab-button-vertical-align:                     middle;
-@tab-button-cursor:                             pointer;
 @tab-button-height:                             28px;
-@tab-button-position:                           relative;
-@tab-button-overflow:                           hidden;
 @tab-button-color:                              @blue-dark-color;
 @tab-button-font-size:                          14px;
 @tab-button-font:                               @tab-button-font-size 'TensorFont', sans-serif;
 @tab-button-main-text-line-height:              27px;
 @tab-button-simple-checked-bottomline-color:    #0055BB;
 @tab-button-simple-hover-bottomline-color:      #E4E4E4;
-@tab-button-margin-top:                         0;
 @tab-control-smple-bottomline-height:           3px;
 @tab-button-simple-inner-color:                 #313E78;
 @tab-button-simple-inner-padding:               0 8px 0 8px;
 @tab-button-simple-inner-checked-color:         #0055BB;
 @tab-button-border:                             1px solid transparent;
-@tab-button-z-index:                            10;
 @tab-button-ff-inner-height:                    29px;
-
 @tab-button-hover-background:                   #F0F5FB;
 @tab-button-hover-border:                       1px solid @tab-button-border-color;
-@tab-button-hover-inner-after-display:          none;
-
-@tab-button-bottomLine-start-display:           none;
-@tab-button-bottomLine-position:                absolute;
-@tab-button-bottomLine-bottom:                  -2px;
-@tab-button-bottomLine-left:                    1px;
-@tab-button-bottomLine-right:                   1px;
-@tab-button-bottomLine-background:              #fff;
-@tab-button-bottomLine-height:                  2px;
-@tab-button-bottomLine-display:                 block;
-
 @tab-button-checked-height:                     28px;
 @tab-button-checked-border-top:                 1px solid @blue-dark-color;
 @tab-button-checked-border-bottom:              1px solid #FFF;
-@tab-button-checked-border-left:                transparent;
-@tab-button-checked-border-right:               transparent;
-//@tab-button-checked-bg:                         #FFFFFF;
-@tab-button-checked-z-index:                     50;
-@tab-button-checked-cursor:                     default;
 @tab-button-checked-font-size:                  15px;
-@tab-button-checked-inner-font-weight:          bold;
 @tab-button-checked-inner-font-size:            15px;
 @tab-button-checked-inner-color:                #D94700;
 @tab-button-checked-inner-bg:                   #FFFFFF;
-@tab-button-checked-inner-border-left:          1px solid @tab-button-checked-border-color;
-@tab-button-checked-inner-border-right:         1px solid @tab-button-checked-border-color;
-@tab-button-checked-inner-after-display:        none;
-@tab-button-checked-overlay-display:            none;
-
+@tab-button-checked-inner-border-left:          @default-border-width solid @tab-button-checked-border-color;
+@tab-button-checked-inner-border-right:         @default-border-width solid @tab-button-checked-border-color;
 @tab-button-large-inner-font-size:              18px;
-@tab-button-large-inner-font-weight:            bold;
 @tab-button-large-inner-line-height:            28px;
 @tab-button-large-inner-max-width:              614px;
-@tab-button-large-inner-overflow:               hidden;
-@tab-button-large-inner-text-overflow:          ellipsis;
-
 @tab-button-large-firstAddText-color:           #0055BB;
 @tab-button-large-firstAddText-color-hover:     #313E78;
 @tab-button-large-firstAddText-font-size:       14px;
-@tab-button-large-firstAddText-font-weight:     normal;
-
 @tab-button-large-secondAddText-color:          #999999;
-@tab-button-large-secondAddText-text-decor:     underline;
 @tab-button-large-secondAddText-font-size:      12px;
-@tab-button-large-secondAddText-font-weight:    normal;
-
 @tab-button-inner-padding:                      0px 8px 0 8px;
 @tab-button-inner-line-height:                  30px;
-@tab-button-inner-overflow:                     hidden;
 @tab-button-inner-height:                       28px;
-@tab-button-inner-after-content:                '';
-@tab-button-inner-after-display:                block;
-@tab-button-inner-after-width:                  1px;
+@tab-button-inner-after-width:                  @default-border-width;
 @tab-button-inner-after-height:                 12px;
 @tab-button-inner-after-bg-color:               @tab-button-border-color;
-@tab-button-inner-after-position:               absolute;
 @tab-button-inner-after-bottom:                 7px;
-@tab-button-inner-after-z-index:                10;
-@tab-button-inner-after-left:                   0;
-@tab-button-icon-position:                      relative;
 @tab-button-icon-top:                           1px;
 @tab-button-icon-margin-right:                  6px;
-
-@tab-button-counter-font-weight:                normal;
-@tab-button-counter-font-size:                  14px;
-
 @tab-button-right-margin-right:                 -1px;
 @tab-button-left-margin-left:                   -1px;
-@tab-button-side-left-margin-left:              0;
-@tab-button-side-right-margin-right:            0;
-
-@tab-button-overlay-position:                   absolute;
-@tab-button-overlay-left:                       0;
-@tab-button-overlay-right:                      0;
-@tab-button-overlay-top:                        0;
-@tab-button-overlay-bottom:                     0;
 @tab-button-overlay-background:                 #FFFFFF;
 @tab-button-overlay-ms-filter:                  "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
-@tab-button-overlay-opacity:                    0;
-
-@tab-button-disabled-border-color:              transparent;
-@tab-button-disabled-bg:                        transparent;
-@tab-button-disabled-inner-color:               #CCCCCC;
-@tab-button-disabled-inner-after-display:       none;
-
 // -----------  //
 // Tab control //
 // -----------  //
 @tab-control-background-color:                  #fff;
-@tab-control-padding-top:                       30px;
-@tab-control-box-sizing:                        border-box;
-
 // ------------ //
 // Radio button //
 // ------------ //
-
 @radio-button-text-margin:                      0 6px 0 0;
-@radio-button-height:                           24px;
-@radio-button-lineheight:                       @radio-button-height;
-
+@radio-button-height:                           24px;//todo
+@radio-button-lineheight:                       @radio-button-height;//todo
 @radio-button-text-color:                       @gray-color;
 @radio-button-hover-text-color:                 @primary-color;
 @radio-button-hover-text-decoration:            underline;
-@radio-button-hover-text-decoration-checked:    none;
-@radio-button-hover-text-decoration-disabled:   none;
-
 @radio-button-checked-text-color:               @black-color;
 @radio-button-checked-hover-text-color:         @black-color;
-
 @radio-button-disabled-text-color:              @gray-light-color;
 @radio-button-disabled-hover-text-color:        @gray-light-color;
-
 @radio-button-icon-width:                       10px;
 @radio-button-icon-height:                      10px;
 @radio-button-icon-line-height:                 @radio-button-icon-height;
-
 @radio-button-icon-bg:                          @white-color;
-@radio-button-icon-hover-bg:                    @radio-button-icon-bg;
-
 @radio-button-icon-checked-bg:                  @radio-button-icon-bg;
 @radio-button-icon-checked-hover-bg:            @radio-button-icon-bg;
-
-@radio-button-icon-disabled-bg:                 @radio-button-icon-bg;
-@radio-button-icon-disabled-hover-bg:           @radio-button-icon-bg;
-
-@radio-button-icon-disabled-checked-bg:         @radio-button-icon-bg;
-@radio-button-icon-disabled-checked-hover-bg:   @radio-button-icon-bg;
-
 @radio-button-icon-margin:                      7px 6px 0 6px;
-@radio-button-icon-border-style:                solid;
 @radio-button-icon-border-color:                @gray-color;
 @radio-button-icon-border-color-checked:        @radio-button-hover-text-color;
 @radio-button-hover-icon-border-color:          @radio-button-icon-border-color;
 @radio-button-icon-border-color-disabled:       @gray-light-color;
 @radio-button-icon-border-width:                1px;
 @radio-button-icon-border-radius:               5px;
-
 @radio-button-text-font-size:                   0;
-
 @radio-button-dot-size:                         4px;
 @radio-button-dot-radius:                       @radio-button-dot-size / 2;
 @radio-button-dot-color:                        @radio-button-icon-border-color-checked;
 @radio-button-dot-color-disabled:               @radio-button-icon-border-color-disabled;
 @radio-button-dot-margin:                       (@radio-button-icon-width - @radio-button-dot-size) / 2  - @radio-button-icon-border-width;
-
 // ----------- //
 // Radio group //
 // ----------- //
-
 @radio-group-horizontal-item-margin:            @button-group-horizontal-item-margin;
-@radio-group-vertical-item-margin:              @button-group-vertical-item-margin;
-
-
-
 // -------- //
 // Checkbox //
 // -------- //
-
-// -------------------------Используются в других темах.-------------------------------- //
-@check-box-icon-spritesheet:                    'img/CheckBox.png';
-
-@check-box-icon-border:                         none;
-@check-box-icon-bg:                             url(@check-box-icon-spritesheet) 0 1px;
-@check-box-icon-bg-pathFilter:                  url(@check-box-icon-spritesheet) 0 2px;
-
-@check-box-icon-hover-border:                   @check-box-icon-border;
-@check-box-icon-hover-bg:                       url(@check-box-icon-spritesheet) 0 17px;
-
-@check-box-icon-checked-border:                 @check-box-icon-border;
-@check-box-icon-checked-bg:                     url(@check-box-icon-spritesheet) 0 49px;
-@check-box-icon-checked-bg-pathFilter:          url(@check-box-icon-spritesheet) 0 50px;
-@check-box-caption-margin-left:                 0px;
-// ------------------------------------------------------------------------------------- //
-
 @check-box-icon-size:                           24px;
 @check-box-icon-successful-size:                18px;
 @check-box-font-size:                           @default-text-size;
@@ -574,18 +414,12 @@
 @check-box-caption-margin-left:                 0;
 @check-box-disabled-color:                      @disabled-color;
 @check-box-icon-successful-top-ie:              0;
-
 @check-box-caption-line-height:                 @check-box-icon-size - 2 * extract(@check-box-caption-padding, 1);
-
 // -------------- //
 // Checkbox group //
 // -------------- //
-
 @check-box-group-horizontal-item-margin:        0 12px 0 0;
 @check-box-group-vertical-item-margin:          0 0 8px 0;
-
-
-
 // -------- //
 // Switcher //
 // -------- //
@@ -601,7 +435,6 @@
 @switcher-dot-size:                             4px;
 @switcher-border-color:                         @gray-light-color;
 @switcher-disabled-color:                       @gray-light-color;
-
 @switcher-line-color-disabled:                  @gray-light-color;
 @switcher-btn-bg-color:                         @white-color;
 @switcher-btn-bg-color-disabled:                @white-color;
@@ -615,192 +448,79 @@
 @switcher-dot-height:                           4px;
 @switcher-dot-margin:                           2px 0 0 3px;
 @switcher-dot-margin-hover:                     1px 0 0 2px;
-
-
 // ---------------------- //
 // Double online switcher //
 // ---------------------- //
 @switcher-do-text-margin:                       6px;
-@switcher-do-text-selected-cursor:              text;
-@switcher-do-text-unselected-decoration:        underline;
-
-@switcher-do-margin:                            0 0 0 8px;
-
-@switcher-do-text-color:                        @black-color;
-@switcher-do-decoration:                        none;
-@swithcer-do-font-weight:                       normal;
-@swithcer-do-unselected-font-weight:            normal;
 @switcher-do-unselected-text-color:             @gray-color;
-@switcher-do-unselected-text-decoration:        none;
-@switcher-do-unselected-text-decoration-hover:  underline;
-
-@switcher-do-disabled-text-cursor:              text;
 @switcher-do-disabled-text-color:               @gray-light-color;
-@switcher-do-disabled-toggle-border-color:      @switcher-do-disabled-text-color;
-@switcher-do-disabled-line-color:               @switcher-do-disabled-text-color;
-@switcher-do-disabled-text-decoration:          none;
-@switcher-do-disabled-btn-background:           @switcher-btn-bg-color;
-
-@switcher-do-horizontal-toggle-width:           @switcher-width;
-@switcher-do-horizontal-toggle-height:          @switcher-height;
-@switcher-do-horizontal-toggle-line-height:     @switcher-height;
-@switcher-do-horizontal-toggle-margin:          0 6px;
-
-@switcher-do-vertical-toggle-width:             24px;
-@switcher-do-vertical-toggle-height:            48px;
-@switcher-do-vertical-toggle-margin:            0 12px 0 0;
-
-@switcher-do-border:                            @default-border-width @default-border-style @gray-light-color;
-@switcher-do-border-radius:                     @switcher-border-radius;
-
-@switcher-do-horizontal-line-width:             @switcherline-width;
-@switcher-do-vertical-line-width:               38px;
-@switcher-do-horizontal-line-background-color:  @gray-color;
-@switcher-do-horizontal-disabled-line-color:    @gray-light-color;
-
-@switcher-do-horizontal-btn-color:              @switcher-btn-color;
-@switcher-do-horizontal-text-hover-color:       @switcher-btn-color;
-@switcher-do-horizontal-btn-size:               @switcher-btn-size;
-@switcher-do-horizontal-btn-border-width:       @switcher-btn-border-width;
-@switcher-do-horizontal-btn-radius:             @switcher-btn-radius;
-@switcher-do-horizontal-btn-margin:             @switcher-btn-margin;
-@switcher-do-horizontal-btn-bg-color:           @switcher-btn-bg-color;
-@switcher-do-horizontal-btn-color-disabled:     @switcher-btn-color-disabled;
-@switcher-do-horizontal-btn-border-width-hover: @switcher-btn-hover-border-width;
-
-
-
 // ---- //
 // Menu //
 // ---- //
-@popup-header-font-weight:                  bold;
-@popup-header-caption-color:                @blue-dark-color;
+@popup-header-font-weight:                bold;
+@popup-header-caption-color:              @blue-dark-color;
 @menu-margin:                             0 0 0 1px;
 @menu-subpopup-margin:                    -4px 0 0 1px;
 @menu-subpopup-padding:                   4px 0;
 @menu-padding:                            0 0 4px 0;
-@menu-border-width:                       1px;
-@menu-border-style:                       solid;
+@menu-border-width:                       @default-border-width;
 @menu-border-color:                       @gray-ccc-color;
-@menu-border-radius:                      0;
 @menu-header-bg-color:                    #f4f4f4;
 @menu-expand-width:                       16px;
 @menu-expand-height:                      16px;
 @menu-expand-top-offset:                  8px;
 @menu-expand-right-offset:                8px;
 @menu-expand-icon-font-size:              16px;
-
-@menu-expand-border-width:                0;
-@menu-expand-border-style:                solid;
 @menu-expand-border-color:                transparent;
 @menu-expand-bg:                          none;
 @menu-expand-content:                     "\e9ab";
-
-@menu-expand-hover-border-width:          @menu-expand-border-width;
-@menu-expand-hover-border-style:          @menu-expand-border-style;
 @menu-expand-hover-border-color:          @menu-expand-border-color;
 @menu-expand-hover-bg:                    @menu-expand-bg;
-@menu-header-caption-color:               @blue-dark-color;
 @menu-header-height:                      32px;
-@menu-header-box-sizing:                  border-box;
 @menu-header-padding:                     0 12px;
 @menu-header-icon-padding:                6px;
 @menu-header-icon-color:                  @icon-active-color;
-
 // --------- //
 // Menu item //
 // --------- //
-@menu-item-cursor:                        pointer;
-@menu-item-width:                         auto;
 @menu-item-height:                        32px;
 @menu-item-line-height:                   20px;
 @menu-item-default-padding:               0 12px;
 @menu-item-expand-padding-right:          30px;
 @menu-item-padding-16:                    33px;
 @menu-item-padding-24:                    42px;
-
-
 @menu-item-text-color:                    @black-color;
 @menu-item-bg:                            @white-color;
 @menu-item-font-size:                     @popup-font-size;
 @menu-item-disabled-text-color:           #ccc;
-
 @menu-item-hover-text-color:              @menu-item-text-color;
 @menu-item-hover-bg:                      @default-itemHover-color;
-@menu-item-hover-icon-color:              @default-color !important;
- @menu-item-icon-16-margin:					6px 0 6px 22px;
+@menu-item-icon-16-margin:					6px 0 6px 22px;
 @menu-item-icon-top-offset:               8px;
 @menu-item-icon-left-offset:              0px;
-@menu-item-icon-left-offset-big:          0px;
-
 @menu-item-icon24-top-offset:             4px;
 @menu-item-icon24-top-offset-big:         -4px;
-
 @menu-item-icon24-left-offset:            0;
-@menu-item-icon24-left-offset-big:        -3px;
-
 @menu-item-text-margin:                   6px 0 6px 0;
 @menu-item-icon-24-margin:                6px 0 6px 30px;
 @menu-item-icon-32-margin:                6px 0 6px 38px;
-
-
-
-// ----------- //
-// Menu button //
-// ----------- //
-
 // Menu
 @menu-button-menu-margin:                               -4px 0 0 0;
-@menu-button-menu-border-width:                         1px;
-@menu-button-menu-border-style:                         @menu-border-style;
+@menu-button-menu-border-width:                         @default-border-width;
 @menu-button-menu-border-color:                         @menu-border-color;
 @menu-button-menu-bg:                                   @white-color;
-
-// --------- //
-// Menu link //
-// --------- //
-
-
-@menu-link-text-color:                    @link-text-color;
-@menu-link-text-decoration:               @link-text-decoration;
-@menu-link-border-color: 						transparent;
-@menu-link-border-style: 						solid;
-@menu-link-border-width: 						0;
-
-@menu-link-hover-text-color:              @link-hover-text-color;
-@link-icon-hover-icon:                    @primary-color;
-
-@menu-link-checked-text-color:            @menu-link-hover-text-color;
-@menu-link-checked-text-decoration:       none;
-
-@menu-link-checked-hover-text-color:      @menu-link-checked-text-color;
-@menu-link-checked-hover-text-decoration: @menu-link-checked-text-decoration;
-
-// Menu
 @menu-link-menu-margin:                   -4px 0 0 -12px;
 @menu-link-menu-item-container-padding:   4px 0 0 0;
 @menu-link-menu-revert-item-container-padding: 4px 0 4px 0;
 @menu-link-menu-bg:                       @menu-button-menu-bg;
 @menu-link-header-bg-color:               #F4F4F4;
-@menu-link-menu-border-width:             @menu-border-width;
-@menu-link-icon-24-top:                   -4px;
-
-
-
-// --------- //
-// Menu icon //
-// --------- //
-
-// Menu
 @menu-icon-menu-margin:                   -8px 0 0 -12px;
 @menu-icon-big-menu-margin:               -4px 0 0 -12px;
 @menu-icon-menu-bg:                       @menu-button-menu-bg;
-
-
-
 // -------- //
 // Text box //
 // -------- //
+//todo
 @text-box-focus-border-color:             #ccc;
 @text-box-focus-bg:                       @text-box-bg;
 @text-box-hover-border-color:             @text-box-focus-border-color;
@@ -808,7 +528,6 @@
 // Money text box  //
 // --------------- //
 @money-text-box-min-width:            102px;
-@money-text-box-decimals-padding:     1px 0;
 @money-text-box-decimals-font-size:   12px;
 @money-text-box-decimals-color:                       @gray-ccc-color;
 // --------- //
@@ -824,8 +543,6 @@
 @combo-box-picker-item-bg:                      @white-color;
 @combo-box-picker-item-hover-text-color:        @combo-box-picker-item-text-color;
 @combo-box-picker-item-hover-bg:                @default-itemHover-color;
-@combo-box-picker-item-selected-text-color:     @combo-box-picker-item-text-color;
-@combo-box-picker-item-selected-bg:             @default-itemSelected-color;
 @compo-box-picker-show-color:                   @default-text-color;
 @combo-box-picker-show-border-color:            @gray-ccc-color;
 @combo-box-picker-show-background-color:        @text-box-focus-bg;
@@ -834,46 +551,27 @@
 // SuggestTextBox //
 // -------------- //
 @suggest-text-box-icon-cross-color:          #8991A9;
-
 // ----------- //
 // Suggest //
 // ----------- //
-
 @suggest-loading-spritesheet:                   'img/ajax-loader-indicator.gif';
 @suggest-loading-bg:                            url(@suggest-loading-spritesheet) 0 0 no-repeat;
 @suggest-loading-width:                         16px;
 @suggest-loading-right:                         3px;
 
 @suggest-picker-border:                         1px solid #cccccc;
-@suggest-picker-border-radius:                  0;
 @suggest-picker-box-shadow:                     0 4px 8px rgba(0, 0, 0, 0.15);
 @suggest-picker-box-shadow-reverted:            0 -4px 8px rgba(0, 0, 0, 0.15);
 @suggest-picker-margin:                         -@default-border-width;
 @suggest-picker-margin-reverted:                @default-border-width;
 @suggest-picker-standard-width:                 500px;
-@suggest-picker-standard-height:                500px;
 @suggest-picker-color:                          initial;
-
 @suggest-picker-item-bg:                        @white-color;
-@suggest-picker-invertVal:                      180deg;
-
-@suggest-list-item-bg:                          @suggest-picker-item-bg;
-@suggest-list-item-border:                      solid #f5f5f5;
-@suggest-list-item-border-width:                1px 0 0 0;
-@suggest-list-item-first-child-border-width:    0;
-@suggest-list-item-padding:                     4px;
-@suggest-list-item-hover-bg:                    @default-itemHover-color;
-@suggest-list-item-selected-bg:                 @default-itemSelected-color;
-
-@suggest-list-empty-bg:                         @suggest-list-item-bg;
 @suggest-list-empty-color:                      @gray-ccc-color;
 @suggest-list-empty-padding:                    16px 0 16px 0;
 @suggest-list-footer-height:                    30px;
 @suggest-list-footer-padding:                   0 8px;
 @suggest-list-tab-padding-top:                  8px;
-
-
-
 // ----------- //
 // Date picker //
 // ----------- //
@@ -881,31 +579,18 @@
 @date-picker-button-vertical-align:             center;
 @date-picker-button-size:                       18px;
 @date-picker-button-line-height:                16px;
-
 // -------- //
 // Calendar //
 // -------- //
-
-@calendar-font:                                 inherit;
 @calendar-width:                                215px;
 @calendar-padding:                              8px 0 0;
 @calendar-bg:                                   @white-color;
-
 @calendar-month-picker-width:                   148px;
-
 @calendar-day-border-spacing:                   1px;
-
 @calendar-day-header-font:                      11px @default-font-name;
-@calendar-day-header-text-alignment:            center;
-
-@calendar-day-body-font:                        @calendar-font;
-@calendar-day-body-text-alignment:              left;
-
 @calendar-day-cell-width:                       56px;
 @calendar-day-table-cell-height:                24px;
 @calendar-day-table-cell-padding:               0 0 0 8px;
-
-@calendar-day-cell-cursor:                      pointer;
 @calendar-day-cell-text-color:                  inherit;
 @calendar-day-cell-bg:                          #f2f2f2;
 @calendar-day-cell-hover-text-color:            @calendar-day-cell-text-color;
@@ -914,18 +599,12 @@
 @calendar-day-cell-active-bg:                   #ffc37e;
 @calendar-day-cell-active-hover-text-color:     @calendar-day-cell-active-text-color;
 @calendar-day-cell-active-hover-bg:             @calendar-day-cell-active-bg;
-
-@calendar-day-fog-cell-cursor:                  default;
 @calendar-day-fog-cell-text-color:              @gray-color;
-@calendar-day-fog-cell-bg:                      transparent;
 @calendar-day-fog-cell-hover-text-color:        @calendar-day-fog-cell-text-color;
-@calendar-day-fog-cell-hover-bg:                @calendar-day-fog-cell-bg;
-
 // --------- //
 // MonthView //
 // --------- //
 
-@month-view-font:                                 @calendar-font;
 @month-view-width:                                @calendar-width;
 @month-view-padding:                              @calendar-padding;
 @month-view-bg:                                   @calendar-bg;
@@ -935,16 +614,10 @@
 @month-view-day-border-spacing:                   @calendar-day-border-spacing;
 
 @month-view-day-header-font:                      @calendar-day-header-font;
-@month-view-day-header-text-alignment:            @calendar-day-header-text-alignment;
-
-@month-view-day-body-font:                        @calendar-day-body-font;
-@month-view-day-body-text-alignment:              @calendar-day-body-text-alignment;
-
 @month-view-day-cell-width:                       @calendar-day-cell-width;
 @month-view-day-table-cell-height:                @calendar-day-table-cell-height;
 @month-view-day-table-cell-padding:               @calendar-day-table-cell-padding;
 
-@month-view-day-cell-cursor:                      @calendar-day-cell-cursor;
 @month-view-day-cell-text-color:                  @calendar-day-cell-text-color;
 @month-view-day-cell-bg:                          @calendar-day-cell-bg;
 @month-view-day-cell-hover-text-color:            @calendar-day-cell-hover-text-color;
@@ -953,12 +626,8 @@
 @month-view-day-cell-active-bg:                   @calendar-day-cell-active-bg;
 @month-view-day-cell-active-hover-text-color:     @calendar-day-cell-active-hover-text-color;
 @month-view-day-cell-active-hover-bg:             @calendar-day-cell-active-hover-bg;
-
-@month-view-day-fog-cell-cursor:                  @calendar-day-fog-cell-cursor;
 @month-view-day-fog-cell-text-color:              @calendar-day-fog-cell-text-color;
-@month-view-day-fog-cell-bg:                      @calendar-day-fog-cell-bg;
 @month-view-day-fog-cell-hover-text-color:        @calendar-day-fog-cell-hover-text-color;
-@month-view-day-fog-cell-hover-bg:                @calendar-day-fog-cell-hover-bg;
 
 
 // ------------ //
@@ -1390,10 +1059,8 @@
 @list-view-scroll-spritesheet:                 'img/ajax-loader-indicator.gif';
 @list-view-scroll-bg:                           url(@list-view-scroll-spritesheet) 0 0 no-repeat;
 @list-view-scroll-height:                       32px;
-@list-view-scroll-width:                        32px;
 @list-view-loading-indicator-gradient-bg:       url(@list-view-scroll-spritesheet)  no-repeat center, linear-gradient(to top, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
 @list-view-loading-indicator-gradient-bg-up:    url(@list-view-scroll-spritesheet)  no-repeat center, linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(255, 255, 255, 0.7) 50%, rgba(255, 255, 255, 0.69) 51%, rgba(255, 255, 255, 0) 100%);
-@list-view-disabled-cursor:                     default;
 
 @listView-empty-data-color:                     @black-color;
 @listView-empty-data-font-size:                 15px;
