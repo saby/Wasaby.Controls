@@ -2244,7 +2244,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   validAttributes: {
                      'class' : function(content, attributeName) {
                         var
-                           validateIsFunction = typeof this._options.validateClass === 'function',
+                           validateIsFunction = this._options && typeof this._options.validateClass === 'function',
                            currentValue = content.attributes[attributeName].value,
                            classes = currentValue.split(' '),
                            whiteList =  [
