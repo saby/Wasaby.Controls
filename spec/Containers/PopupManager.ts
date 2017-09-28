@@ -9,7 +9,7 @@ class PopupManager {
     }
     private ModalOverlayPosition;
     private popupItems : Array<PopupItem>;
-    public show(options: PopupItemOptions)
+    public show(options: PopupItemOptions, opener: IOpener, strategy: IPositionerStrategy)
 }
 let singlePopupManager = new PopupManager();
 export = singlePopupManager;

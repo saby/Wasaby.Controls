@@ -1,18 +1,19 @@
 /**
  * Created by kraynovdo on 22.09.2017.
  */
-import DialogManager = require("./DialogManager");
-import StackManager = require("./StackManager");
+import PopupManager = require("./PopupManager");
+import BodyStrategy = require("./resources/BodyStrategy");
+import StackStrategy = require("./resources/StackStrategy");
 class OpenDialogAction {
     constructor(cfg) {};
     execute() {
-        if (this._options.type == 'dialog') {
-            let myDialogManager = new DialogManager();
-            myDialogManager.showDialog()
+        let strategy;
+        if (cfg.mode == 'StackPanel') {
+            strategy = new StackStrategy({opener: this});
         }
         else {
-            let myStackManager = new StackManager();
-            myStackManager.showStackArea()
+            strategy = new BodyStrategy();
         }
+        PopupManager.show(cfg.dialogOptions, this, strategy);
     }
 }

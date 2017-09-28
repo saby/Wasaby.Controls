@@ -3,6 +3,5 @@ interface IPopupItemOptions{
     width: number;
     height: number;
     modal: Boolean;
-    target?: ITargetOptions; //контейнер, относительно которого рассчитывать положение
     autoHide: boolean
 }
