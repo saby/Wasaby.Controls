@@ -3,7 +3,9 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
    "Core/core-merge",
    "js!SBIS3.CONTROLS.SubmitPopup",
    "js!SBIS3.CONTROLS.NotificationPopup",
-   "browser!js!SBIS3.CONTROLS.Utils.NotificationStackManager"
+   "browser!js!SBIS3.CONTROLS.Utils.NotificationStackManager",
+   "Core/constants",
+   "Core/helpers/Function/runDelayed"
 ],
 
    /**
@@ -27,7 +29,12 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
     * @author Степин Павел Владимирович
     * @public
     */
-   function( cMerge,SubmitPopup, NotificationPopup, NotificationManager){
+   function( cMerge,
+             SubmitPopup,
+             NotificationPopup,
+             NotificationManager,
+             constants,
+             runDelayed){
       'use strict';
 
       var showSubmitDialog = function(config, positiveHandler, negativeHandler, cancelHandler){
@@ -52,8 +59,16 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
             }
          });
 
-         popup.show();
-         popup.setActive(true);
+         if (constants.browser.isIE) {
+            runDelayed(function () {
+               popup.show();
+               popup.setActive(true);
+            });
+         } else {
+            popup.show();
+            popup.setActive(true);
+         }
+
          return popup;
       };
 

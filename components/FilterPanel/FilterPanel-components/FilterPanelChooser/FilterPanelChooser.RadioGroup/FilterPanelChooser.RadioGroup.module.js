@@ -5,9 +5,9 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup', [
    'js!SBIS3.CONTROLS.FilterPanelChooser.Base',
    'js!SBIS3.CONTROLS.RadioGroup',
    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup/resources/FilterPanelChooserRadioGroupTpl',
-   'Core/core-functions',
+   'Core/core-clone',
    'css!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup'
-], function(FilterPanelChooserBase, RadioGroup, chooserTpl, cFunctions) {
+], function(FilterPanelChooserBase, RadioGroup, chooserTpl, coreClone) {
    'use strict';
    /**
     * Класс редактора "Набор радиокнопок".
@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.RadioGroup', [
       },
 
       _updateValue: function() {
-         this._setValue(cFunctions.clone(this._getRadioGroup().getSelectedKey()));
+         this._setValue(coreClone(this._getRadioGroup().getSelectedKey()));
       },
 
       _getRadioGroup: function() {

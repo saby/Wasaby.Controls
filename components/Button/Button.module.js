@@ -198,6 +198,17 @@ define('js!SBIS3.CONTROLS.Button',
             }
          },
 
+         show: function(){
+            // если кнопка скрыта при построение, то она не зарегистрируется дефолтной,
+            // поэтому при показе такой кнопки регистрируем её как дефолтную
+            var oldVisible = this.isVisible();
+
+            Button.superclass.show.call(this);
+            if (isJs.features.compatibleLayer && !oldVisible && this.isPrimary()) {
+               this._registerDefaultButton();
+            }
+         },
+
          destroy: function() {
             if (isJs.features.compatibleLayer) {
                if (this.isPrimary()) {

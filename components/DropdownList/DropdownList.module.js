@@ -8,7 +8,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "Core/constants",
    "Core/core-merge",
    "Core/core-instance",
-   "Core/core-functions",
+   "Core/helpers/String/format",
+   'Core/helpers/Function/shallowClone',
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CONTROLS.PickerMixin",
    "js!SBIS3.CONTROLS.ItemsControlMixin",
@@ -31,7 +32,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    'css!SBIS3.CONTROLS.DropdownList'
 ],
 
-   function (EventBus, IoC, constants, cMerge, cInstance, cFunctions, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
+   function (EventBus, IoC, constants, cMerge, cInstance, format, shallowClone, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
 
       'use strict';
       /**
@@ -143,7 +144,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
       function prepareText(textValue) {
          if (textValue.length > 1) {
-            return textValue[0] + ' и еще ' + (textValue.length - 1);
+            return textValue[0] + ' ' + format({count: textValue.length - 1}, rk('и еще $count$s$'));
          }
          return textValue.join('');
       }
@@ -352,6 +353,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if (this._container.hasClass('controls-DropdownList__withoutCross')){
                this._options.pickerClassName += ' controls-DropdownList__withoutCross';
             }
+            if (this._container.hasClass('controls-DropdownList__withoutArrow')){
+               this._options.pickerClassName += ' controls-DropdownList__withoutArrow';
+            }
             this._setHeadVariables();
          },
          _modifyOptions: function() {
@@ -386,22 +390,12 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
 
          _setPickerContent : function () {
-            var pickerContainer = this._getPickerContainer(),
-                header = pickerContainer.find('.controls-DropdownList__header'),
-                cssModificators = ['controls-DropdownList__withoutArrow',
-                                   'controls-DropdownList__withoutCross',
-                                   'controls-DropdownList__linkStyle'];
-            //Заполняем опцию className навешенными css-модификаторами
-            for (var i = 0, l = cssModificators.length; i < l; i++){
-               if (this.getContainer().hasClass(cssModificators[i]) && this._options.className.indexOf(cssModificators[i]) < 0){
-                  this._options.cssClassName += ' ' + cssModificators[i];
-               }
-            }
+            var header = $('.controls-DropdownList__header', this._getPickerContainer());
             // Собираем header через шаблон, чтобы не тащить стили прикладников
             /* Надо делать клон, иначе в ие при определнии scope для шаблона затирается parent
                https://online.sbis.ru/opendoc.html?guid=e5604962-8cea-4d32-88e8-1ead295e0adf&des=
                Задача в разработку 15.05.2017 Не пробрасывать scope в ИЕ utils.js:: createSavingPrototype: function mergeSavingPrototype(scope… */
-            header.append(dotTplFn(cFunctions.shallowClone(this._options)));
+            header.append(dotTplFn(shallowClone(this._options)));
             this._setPickerVariables();
             this._bindItemSelect();
 
@@ -936,34 +930,16 @@ define('js!SBIS3.CONTROLS.DropdownList',
             return this._pickerListContainer;
          },
          _setPickerConfig: function () {
-            var hasArrow = this.getContainer().hasClass('controls-DropdownList__withoutArrow'),
-                type = this._options.type,
-                isFastDataFilterType = type == 'fastDataFilter',
-                offset = {
-                   top: -10,
-                   left: -10
-                };
-            if (type == 'titleHeader'){
-               offset.top = -6;
-            }
-            else if (type == 'customHeader') {
-               offset.left = -2;
-               offset.top = -1;
-            }
-            else if (isFastDataFilterType) {
-               //Располагаем текст в пикере над текстом в ссылке. Позиция зависит от наличия треугольника
-               offset.left = hasArrow ? -14 : 2;
-            }
+            var type = this._options.type,
+                isFastDataFilterType = type == 'fastDataFilter';
             return {
                corner: 'tl',
                verticalAlign: {
-                  side: 'top',
-                  offset: offset.top
+                  side: 'top'
                },
                _canScroll: true,
                horizontalAlign: {
-                  side: 'left',
-                  offset: offset.left
+                  side: 'left'
                },
                closeByExternalOver: false,
                closeByExternalClick : true,
