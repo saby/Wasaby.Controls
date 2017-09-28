@@ -2108,7 +2108,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          scrollLoadMore: function(){
             if (this._options.infiniteScroll && this._scrollWatcher && !this._scrollWatcher.hasScroll()) {
-               this._scrollLoadNextPage(this._options.infiniteScroll === 'demand');
+               this._scrollLoadNextPage(this._options.infiniteScroll);
             }
          },
          //********************************//
@@ -3184,15 +3184,23 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _preScrollLoading: function(){
-            var scrollDown = this._infiniteScrollState.mode == 'down' && !this._infiniteScrollState.reverse;
+            var scrollDown = this._infiniteScrollState.mode === 'down' && !this._infiniteScrollState.reverse,
+                infiniteScroll = this._getOption('infiniteScroll');
+            
+            // При подгрузке в обе стороны необходимо определять направление, а не ориентироваться по state'у
+            // Пока делаю так только при навигации по курсорам, чтобы не поломать остальной функционал
+            if (infiniteScroll === 'both' && this._options.navigation.type === 'cursor' && this._options.navigation) {
+               scrollDown = this.getListNavigation().hasNextPage('down');
+            }
+            
             // Если  скролл вверху (при загрузке вверх) или скролл внизу (при загрузке вниз) или скролла вообще нет - нужно догрузить данные
             // //при подгрузке в обе стороны изначально может быть mode == 'down', но загрузить нужно вверх - так как скролл вверху
-            if ((scrollDown && this.isScrollOnBottom()) || !this._scrollWatcher.hasScroll()) {
-               this._scrollLoadNextPage();
+            if ((scrollDown && this.isScrollOnBottom()) || (!this._scrollWatcher.hasScroll() && infiniteScroll !== 'both')) {
+               this._scrollLoadNextPage('down');
             } else {
-               if (this._options.infiniteScroll == 'both' && this.isScrollOnTop()){
+               if (infiniteScroll === 'both' && this.isScrollOnTop()){
                   this._setInfiniteScrollState('up');
-                  this._scrollLoadNextPage();
+                  this._scrollLoadNextPage('up');
                }
 
             }
@@ -3218,8 +3226,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param loadDemand Подгрузить данные следующей страницы, если включена подгрузка по кнопке 'Ещё'
           * @private
           */
-         _scrollLoadNextPage: function (loadDemand) {
-            var loadAllowed  = this.isInfiniteScroll() && (this._options.infiniteScroll !== 'demand' || loadDemand),
+         _scrollLoadNextPage: function (type) {
+            var loadAllowed  = this.isInfiniteScroll() && (this._options.infiniteScroll !== 'demand' || type === 'demand'),
                more = this.getItems().getMetaData().more,
                isContainerVisible = isElementVisible(this.getContainer()),
                // отступ с учетом высоты loading-indicator
@@ -3227,7 +3235,7 @@ define('js!SBIS3.CONTROLS.ListView',
                hasNextPage;
 
             if (this._options.navigation && this._options.navigation.type == 'cursor') {
-               hasNextPage = this._listNavigation.hasNextPage(this._infiniteScrollState.mode);
+               hasNextPage = this._listNavigation.hasNextPage(type || this._infiniteScrollState.mode);
             }
             else {
                hasNextPage = this._hasNextPage(more, this._scrollOffset.bottom);
@@ -3240,7 +3248,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && isContainerVisible && hasNextPage && !this.isLoading()) {
-               this._loadNextPage();
+               this._loadNextPage(type);
             }
          },
          _getLoadingIndicatorHeight: function () {
@@ -3286,7 +3294,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse === true);
          },
 
-         _loadNextPage: function() {
+         _loadNextPage: function(type) {
             if (this._dataSource) {
                var offset = this._getNextOffset(),
                   self = this;
@@ -3315,8 +3323,8 @@ define('js!SBIS3.CONTROLS.ListView',
                      var state = this._loadQueue[loadId],
                         hasNextPage;
                      if (this._options.navigation && this._options.navigation.type == 'cursor') {
-                        this._listNavigation.analyzeResponseParams(dataSet, state.mode);
-                        hasNextPage = this._listNavigation.hasNextPage(state.mode);
+                        this._listNavigation.analyzeResponseParams(dataSet, type || state.mode);
+                        hasNextPage = this._listNavigation.hasNextPage(type || state.mode);
                      }
                      else {
                         hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
@@ -3337,7 +3345,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         if (this._isSlowDrawing(this._options.easyGroup)) {
                            this._needToRedraw = false;
                         }
-                        this._drawPage(dataSet, state);
+                        this._drawPage(dataSet, (type && {mode: type}) || state);
 
                         if(this._dogNailSavedMode) {
                            this._setInfiniteScrollState(this._dogNailSavedMode);
@@ -3594,7 +3602,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             
             if (type && !noLoad) {
-               this._scrollLoadNextPage(type === 'demand');
+               this._scrollLoadNextPage(type);
                return;
             }
             //НА саом деле если во время infiniteScroll произошла ошибка загрузки, я о ней не смогу узнать, но при выключении нужно убрать индикатор
