@@ -1309,10 +1309,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             applyExpandToItemsProjection(this._getItemsProjection(), this._options);
          },
          _stateResetHandler: function () {
-            // сохраняем текущую страницу при проваливании в папку
-            if (this._options.saveReloadPosition) {
-               this._hierPages[this._previousRoot] = this._getCurrentPage();
-            }
             this._options._folderOffsets['null'] = 0;
             this._lastParent = undefined;
             this._lastDrawn = undefined;
@@ -1321,7 +1317,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             // При перезагрузке приходят новые данные, т.ч. сбрасываем объект, хранящий список узлов с "есть ещё"
             this._options._folderHasMore = {};
          },
-
+         reload: function() {
+            this._stateResetHandler();
+         },
          setItems: function() {
             this._stateResetHandler();
          },
@@ -1483,8 +1481,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          this._notify('onBeforeSetRoot', key);
          this._options.currentRoot = key !== undefined && key !== null ? key : this._options.root;
 
-         this._stateResetHandler();
-
+         // сохраняем текущую страницу при проваливании в папку
+         if (this._options.saveReloadPosition) {
+            this._hierPages[this._previousRoot] = this._getCurrentPage();
+         }
+         
          if (this._options._itemsProjection) {
             this._options._itemsProjection.setEventRaising(false);
             this._options._itemsProjection.setRoot(this._options.currentRoot !== undefined ? this._options.currentRoot : null);
