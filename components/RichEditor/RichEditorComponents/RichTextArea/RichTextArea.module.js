@@ -1963,13 +1963,17 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           */
          _trimText: function(text) {
             var
-               beginReg = new RegExp('^<p>(&nbsp; *)*</p>'),// регулярка начала строки
-               endReg = new RegExp('<p>(&nbsp; *)*</p>$'),// регулярка начала строки
-               shiftLineRegexp = new RegExp('<p><br>(&nbsp;)?'),// регулярка пустой строки через shift+ enter и space
+               beginReg = new RegExp('^<p> *(&nbsp; *)*(&nbsp;)?</p>'),// регулярка начала строки
+               endReg = new RegExp('<p> *(&nbsp; *)*(&nbsp;)?</p>$'),// регулярка конца строки
+               regShiftLine1 = new RegExp('<p>(<br( ?/)?>)+(&nbsp;)?'),// регулярка пустой строки через shift+ enter и space
+               regShiftLine2 = new RegExp('(&nbsp;)?(<br( ?/)?>)+</p>'),// регулярка пустой строки через space и shift+ enter
                regResult;
             text = this._removeEmptyTags(text);
-            while (shiftLineRegexp.test(text)) {
-               text = text.replace(shiftLineRegexp, '<p>');
+            while (regShiftLine1.test(text)) {
+               text = text.replace(regShiftLine1, '<p>');
+            }
+            while (regShiftLine2.test(text)) {
+               text = text.replace(regShiftLine2, '</p>');
             }
             while ((regResult = beginReg.exec(text)) !== null) {
                text = text.substr(regResult[0].length + 1);
