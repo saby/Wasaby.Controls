@@ -10,7 +10,7 @@ define([
       describe('methods', function(){
 
 
-         it('RichTextArea', function () {
+         it('RichTextArea._sanitizeClasses', function () {
             var
                quest = '<div ' +
                   'class="engine-OnlineBaseInnerMinCoreView__sideLeft titleText controls-ScrollContainer__light" ' +

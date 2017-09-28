@@ -1321,9 +1321,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             // При перезагрузке приходят новые данные, т.ч. сбрасываем объект, хранящий список узлов с "есть ещё"
             this._options._folderHasMore = {};
          },
-         reload: function() {
-            this._stateResetHandler();
-         },
+
          setItems: function() {
             this._stateResetHandler();
          },
@@ -1484,6 +1482,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
          this._notify('onBeforeSetRoot', key);
          this._options.currentRoot = key !== undefined && key !== null ? key : this._options.root;
+
+         this._stateResetHandler();
+
          if (this._options._itemsProjection) {
             this._options._itemsProjection.setEventRaising(false);
             this._options._itemsProjection.setRoot(this._options.currentRoot !== undefined ? this._options.currentRoot : null);
