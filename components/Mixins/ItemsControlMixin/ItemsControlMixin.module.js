@@ -123,7 +123,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    },
 
    canApplyGrouping = function(projItem, cfg) {
-      return !isEmpty(cfg.groupBy) && (!projItem.isNode || !projItem.isNode());
+      // todo сильносвязанный код. Если пустой projItem, значит мы сюда попали из onCollectionAdd и единственная добавляемая запись - это сама группа
+      // https://online.sbis.ru/opendoc.html?guid=c02d2545-1afa-4ada-8618-7a21eeadc375
+      return !isEmpty(cfg.groupBy) && (!projItem || !projItem.isNode || !projItem.isNode());
    },
 
    groupItemProcessing = function(groupId, records, item, cfg) {

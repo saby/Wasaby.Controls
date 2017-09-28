@@ -164,7 +164,8 @@ body.ws-is-ie .controls-ScrollContainer__content {
    }
    body.ws-is-chrome:not(.ws-is-mac) &,
    body.ws-is-firefox:not(.ws-is-mac):not(.ws-is-windows-10) &,
-   body.ws-is-opera:not(.ws-is-mac):not(.ws-is-windows-10) & {
+   body.ws-is-opera:not(.ws-is-mac):not(.ws-is-windows-10) &,
+   body.ws-is-sbis-desktop:not(.ws-is-mac) & {
       margin-right: -17px;
    }
    body.ws-is-firefox.ws-is-windows-10 & {
@@ -193,7 +194,7 @@ body.ws-is-ie .controls-ScrollContainer__content {
 
 .controls-ScrollContainer__paging {
    position: absolute;
-   bottom: 0;
+   bottom: @scrollpager-bottom;
    right: 0;
    background: @white-color;
 }
