@@ -1,6 +1,5 @@
 [{
    "modules": [
-      "js!SBIS3.CONTROLS.LongOperations.Entry",
       "js!SBIS3.CONTROLS.LongOperations.HistoryItem",
       "js!SBIS3.CONTROLS.LongOperations.ManagerLib",
       "js!SBIS3.CONTROLS.LongOperations.Tools.Bunch",
@@ -10,7 +9,6 @@
       "js!SBIS3.Engine.LongOperations.LRSProducerLib"
    ],
    "include": [
-      "SBIS3.CONTROLS.LongOperations.Entry",
       "SBIS3.CONTROLS.LongOperations.HistoryItem",
       "SBIS3.CONTROLS.LongOperations.ManagerLib",
       "SBIS3.CONTROLS.LongOperations.Tools.Bunch",
