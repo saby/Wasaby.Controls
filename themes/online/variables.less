@@ -1027,7 +1027,6 @@
 @data-grid-header-cell-bg:                      transparent;
 @data-grid-header-cell-hover-text-color:        @data-grid-header-cell-text-color;
 @data-grid-header-cell-hover-bg:                @data-grid-header-cell-bg;
-
 @data-grid-cell-height:                         30px;
 @data-grid-cell-line-height:                    20px;
 @data-grid-cell-padding:                        3px 6px;
@@ -1102,7 +1101,6 @@
 // ----------------------- //
 // OperationsPanelButton  //
 // ----------------------- //
-
 @controls-OperationsPanelButton-width:             24px;
 @controls-OperationsPanelButton-vert-height:       24px;
 @controls-OperationsPanelButton-vert-border-radius: 7px;
@@ -1122,11 +1120,8 @@
 // --------------- //
 //    MultiView    //
 // --------------- //
-
-@multiView-tile-item-border:                        1px solid #E7F0F9 ;
 @multiView-tile-item-min-width:                     200px;
 @multiView-tile-item-min-height:                    128px;
-@multiView-tile-item-margin :                       -1px 0 0 -1px;
 @multiView-tile-item-image-box-shadow:              1px 2px 4px #aaa;
 @multiView-tile-item-image-margin:                  4px auto 0 auto;
 @multiView-tile-item-text-margin:                   8px;
@@ -1134,29 +1129,15 @@
 @multiView-tile-selected-item-border:               1px solid @multiView-tile-selected-item-border-color;
 @multiView-tile-selected-item-border-color:         #FF9C6C;
 @multiView-default-folder-border:                   1px solid transparent;
-@multiView-default-folder-bg:                       url("img/defaultFolder.png");
-@multiView-default-item-bg:                         url("img/defaultItem.png");
-// --------------- //
-// FastDataFilter  //
-// --------------- //
-@fastDataFilter-border:                           0;
+@multiView-default-folder-bg:                       url("img/defaultFolder.png");//todo
+@multiView-default-item-bg:                         url("img/defaultItem.png");//todo
 // --------------- //
 // DropdownList//
 // --------------- //
-@DropdownList-cursor:                         pointer;
 @DropdownList-border-color:                   @gray-ccc-color;
 @DropdownList-default-item-color:             #999;
 @DropdownList-picker-default-item-color:      #CCC;
-
-@DropdownList-iconWidth:                      16px;
-@DropdownList-iconHeight:                     16px;
-@DropdownList-box-sizing:                     border-box;
-
-
-@DropdownList-captionWrapper-margin:          0 19px 0 19px;
 @DropdownList-height:                     24px;
-@DropdownList-shadow-hover:                   0 0 0 1px @DropdownList-border-color;
-
 @DropdownList-picker-bg:                              @white-color;
 @DropdownList-header-bg:                              @DropdownList-picker-bg;
 @DropdownList-picker-offset:                          -10px 0 0 -9px;
@@ -1165,32 +1146,24 @@
 @DropdownList-picker-margin-top:                      -1px;
 @DropdownList-picker-close-btn-top:                   4px;
 @DropdownList-picker-close-btn-right:                 6px;
-@DropdownList-picker-head-margin:                     0;
 @DropdownList-picker-head-padding:                    4px 8px;
 @DropdownList-picker-head-weight:                     bold;
 @DropdownList-picker-head-color:                      #313E78;
 @DropdownList-picker-title-type-header-bg:            #f4f4f4;
 @DropdownList-picker-head-duplicate-type-top-padding: 4px;
-@DropdownList-picker-hor-revert-head-margin:          @DropdownList-picker-head-margin;
 @DropdownList-picker-padding:                         4px 0;
 @DropdownList-picker-max-width:                       400px;
 @DropdownList-picker-max-height:                      400px;
-@DropdownList-picker-head-margin:                     0;
 @DropdownList-picker-border:                          1px solid @DropdownList-border-color;
-@DropdownList-picker-head-border-radius:              0;
 @DropdownList-picker-list-border-radius-equal:        0 0 4px 4px;
 @DropdownList-picker-list-right-border-radius:        0;
-@DropdownList-picker-list-left-border-radius:         4px 0 4px 4px;
 @DropdownList-picker-list-border-radius:              0;
 @DropdownList-picker-menu-font-size:                  15px;
 @DropdownList-picker-menu-item-base-color:            @default-text-color;
 @DropdownList-picker-menu-line-height:                24px;
-@DropdownList-picker-menu-white-space:                nowrap;
 @DropdownList-picker-menu-item-padding:               5px 8px 3px 8px;
-@DropdownList-picker-menu-item-margin:                0;
 @DropdownList-picker-menu-item-height:                24px;
 @DropdownList-picker-menu-item-height-ff:             19px;
-@DropdownList-picker-menu-item-multiselect-padding:   0;
 @DropdownList-picker-menu-item-color:                 @white-color;
 @DropdownList-picker-menu-item-color-blur:            rgba(255, 255, 255, 0);
 @DropdownList-picker-menu-item-hover:                 #F0F5FB;
@@ -1198,13 +1171,11 @@
 @DropdownList-after-caption-top:                      3px;
 @DropdownList-linkStyleColor:                         @link-text-color;
 @DropdownList-linkStyleHoverColor:                    #313E78;
-@DropdownList-footer-buttonsBlock-position:           relative;
 @DropdownList-footer-buttonsBlock-height:             24px;
 @DropdownList-footer-multisel-buttonsBlock-h:         32px;
 @DropdownList-checkbox-bottom:                        1px;
 @DropdownList-before-caption-wrapper-top:             2px;
 @DropdownList-after-caption-wrapper-top:              2px;
-@DropdownList-footer-buttons-position:                absolute;
 @DropdownList-footer-hasMore-left:                    12px;
 @DropdownList-footer-hasMore-left-multiselect:        24px;
 @DropdownList-footer-hasMore-top-multiselect:         4px;
@@ -1213,14 +1184,7 @@
 @DropdownList-footer-select-top:                      2px;
 @DropdownList-footer-select-icon-container-size:      28px!important;
 @DropdownList-footer-select-icon-size:                26px!important;
-
-
-@DropdownList-icon-spritesheet:                       'img/CheckBox.png';
-@DropdownList-icon-bg-pathFilter:                     url(@DropdownList-icon-spritesheet) 0 1px;
-@DropdownList-icon-checked-bg-pathFilter:             url(@DropdownList-icon-spritesheet) 0 49px;
-
 @DropdownList-disabled-text:                          #CCC;
-
 //ProgressBar
 @controls-ProgressBar-height:             16px;
 @controls-ProgressBar-width:              100%;
@@ -1232,10 +1196,8 @@
 @controls-ProgressBar-value-font-size:    @small-text-size;
 @controls-ProgressBar-value-color:        @disabled-color;
 @controls-ProgressBar-value-padding:      0 6px;
-
 //Pager
 @controls-Pager-amount-text:              @gray-color;
-@controls-Pager-minHeight:                35px;
 @controls-Pager-height:                   29px;
 
 //FilterButton
