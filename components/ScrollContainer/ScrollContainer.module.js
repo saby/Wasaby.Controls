@@ -400,7 +400,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             скроллится в сторону центра, так как у fakeFocusElement left:50% top: 50%, поэтому подпишемся на скролл и сбросим его.
             https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
             */
-            if(cDetection.isMacOSDesktop){
+            if(cDetection.isMacOSDesktop && cDetection.safari){
                this.getContainer().on('scroll', this._onContainerScroll);
             }
          },
@@ -659,7 +659,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                this._content.off('scroll', this._onScroll);
             }
             this._container.off('mousemove', this._initScrollbar);
-            if(cDetection.isMacOSDesktop){
+            if(cDetection.isMacOSDesktop && cDetection.safari){
                this._container.off('scroll', this._onContainerScroll);
             }
             this._unsubscribeMouseEnterLeave();
