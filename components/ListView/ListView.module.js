@@ -3185,24 +3185,24 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _preScrollLoading: function(){
             var scrollDown = this._infiniteScrollState.mode === 'down' && !this._infiniteScrollState.reverse,
-                infiniteScroll = this._getOption('infiniteScroll');
+                infiniteScroll = this._getOption('infiniteScroll'),
+                isCursorNavigation = this._options.navigation && this._options.navigation.type === 'cursor';
             
             // При подгрузке в обе стороны необходимо определять направление, а не ориентироваться по state'у
             // Пока делаю так только при навигации по курсорам, чтобы не поломать остальной функционал
-            if (infiniteScroll === 'both' && this._options.navigation && this._options.navigation.type === 'cursor') {
+            if (infiniteScroll === 'both' && isCursorNavigation) {
                scrollDown = this.getListNavigation().hasNextPage('down');
             }
             
             // Если  скролл вверху (при загрузке вверх) или скролл внизу (при загрузке вниз) или скролла вообще нет - нужно догрузить данные
             // //при подгрузке в обе стороны изначально может быть mode == 'down', но загрузить нужно вверх - так как скролл вверху
             if ((scrollDown && this.isScrollOnBottom()) || (!this._scrollWatcher.hasScroll() && infiniteScroll !== 'both')) {
-               this._scrollLoadNextPage('down');
+               this._scrollLoadNextPage(isCursorNavigation ? 'down' : null);
             } else {
                if (infiniteScroll === 'both' && this.isScrollOnTop()){
                   this._setInfiniteScrollState('up');
-                  this._scrollLoadNextPage('up');
+                  this._scrollLoadNextPage(isCursorNavigation ? 'up' : null);
                }
-
             }
          },
 
