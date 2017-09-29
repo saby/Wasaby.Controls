@@ -856,7 +856,7 @@ define(
       },
 
       _getSplitterRegExp: function(){
-         return /[.,\/\- :=]/;
+         return /[.,\/\- :=()]/;
       },
 
       _getClearText: function(){
