@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.HighCharts', [
    "js!WS.Data/Source/SbisService",
    "js!WS.Data/Query/Query",
-   "Core/helpers/helpers",
+   'Core/helpers/getType',
    "Core/core-clone",
    "Core/constants",
    "Core/Deferred",
@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.HighCharts', [
    "css!SBIS3.CONTROLS.HighCharts",
    "i18n!SBIS3.CONTROLS.HighCharts"
 ],
-function( SbisService, Query, cHelpers, coreClone, constants, Deferred,BaseControl, dotTpl, forAliveOnly, trackElement){
+function( SbisService, Query, getType, coreClone, constants, Deferred,BaseControl, dotTpl, forAliveOnly, trackElement){
    'use strict';
 
    function ctxOnFieldChange(e, field, value, init) {
@@ -1189,7 +1189,7 @@ function( SbisService, Query, cHelpers, coreClone, constants, Deferred,BaseContr
       },
 
       setQuery : function (obj) {
-         if (cHelpers.type(obj) == 'object') {
+         if (getType(obj) == 'object') {
             this._filters = {};
             for (var i in obj) {
                if (obj.hasOwnProperty(i)) {

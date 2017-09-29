@@ -1314,7 +1314,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             editor.on('Paste', function(e) {
                self._clipboardText = e.clipboardData ?
-                  cConstants.browser.isMobileIOS ? e.clipboardData.getData('text/plain') : e.clipboardData.getData('text') :
+                  e.clipboardData.getData(cConstants.browser.isMobileIOS ? 'text/plain' : 'text') :
                   window.clipboardData.getData('text');
                editor.plugins.paste.clipboard.pasteFormat = 'html';
             });
@@ -1963,13 +1963,17 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           */
          _trimText: function(text) {
             var
-               beginReg = new RegExp('^<p>(&nbsp; *)*</p>'),// регулярка начала строки
-               endReg = new RegExp('<p>(&nbsp; *)*</p>$'),// регулярка начала строки
-               shiftLineRegexp = new RegExp('<p><br>(&nbsp;)?'),// регулярка пустой строки через shift+ enter и space
+               beginReg = new RegExp('^<p> *(&nbsp; *)*(&nbsp;)?</p>'),// регулярка начала строки
+               endReg = new RegExp('<p> *(&nbsp; *)*(&nbsp;)?</p>$'),// регулярка конца строки
+               regShiftLine1 = new RegExp('<p>(<br( ?/)?>)+(&nbsp;)?'),// регулярка пустой строки через shift+ enter и space
+               regShiftLine2 = new RegExp('(&nbsp;)?(<br( ?/)?>)+</p>'),// регулярка пустой строки через space и shift+ enter
                regResult;
             text = this._removeEmptyTags(text);
-            while (shiftLineRegexp.test(text)) {
-               text = text.replace(shiftLineRegexp, '<p>');
+            while (regShiftLine1.test(text)) {
+               text = text.replace(regShiftLine1, '<p>');
+            }
+            while (regShiftLine2.test(text)) {
+               text = text.replace(regShiftLine2, '</p>');
             }
             while ((regResult = beginReg.exec(text)) !== null) {
                text = text.substr(regResult[0].length + 1);
@@ -2258,7 +2262,43 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                               'image-template-center',
                               'image-template-right',
                               'mce-object-iframe',
-                              'ws-hidden'
+                              'ws-hidden',
+                              'language-javascript',
+                              'language-css',
+                              'language-markup',
+                              'language-php',
+                              'token',
+                              'comment',
+                              'prolog',
+                              'doctype',
+                              'cdata',
+                              'punctuation',
+                              'namespace',
+                              'property',
+                              'tag',
+                              'boolean',
+                              'number',
+                              'constant',
+                              'symbol',
+                              'deleted',
+                              'selector',
+                              'attr-name',
+                              'string',
+                              'char',
+                              'builtin',
+                              'inserted',
+                              'operator',
+                              'entity',
+                              'url',
+                              'style',
+                              'attr-value',
+                              'keyword',
+                              'function',
+                              'regex',
+                              'important',
+                              'variable',
+                              'bold',
+                              'italic'
                            ],
                            index = classes.length - 1;
 

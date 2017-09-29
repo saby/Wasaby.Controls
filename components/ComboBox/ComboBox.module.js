@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    }
 
    function checkDisplayProperty(cfg) {
-      if (!cfg.displayProperty && !cInstance.instanceOfModule(cfg._items, 'WS.Data/Type/Enum')) {
+      if (!cfg.displayProperty && cfg._items && !cInstance.instanceOfModule(cfg._items, 'WS.Data/Type/Enum')) {
          IoC.resolve('ILogger').error('SBIS3.CONTROLS.ComboBox', 'Не задана опция displayProperty');
          cfg.displayProperty = 'title';
       }

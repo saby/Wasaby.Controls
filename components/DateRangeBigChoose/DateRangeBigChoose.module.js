@@ -7,6 +7,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
    "js!SBIS3.CONTROLS.Utils.DateUtil",
    "Core/helpers/event-helpers",
    "js!SBIS3.CONTROLS.Button",
+   'js!WSControls/Buttons/Button',
    "js!SBIS3.CONTROLS.IconButton",
    "js!SBIS3.CONTROLS.Link",
    "js!SBIS3.CONTROLS.DateBox",
