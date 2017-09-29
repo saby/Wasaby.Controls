@@ -219,7 +219,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             _fromTouch: false,
             _codeSampleDialog: undefined,
             _beforeFocusOutRng: undefined,
-            _images: {}
+            _images: {},
+            _lastSavedText: undefined
          },
 
          _modifyOptions: function(options) {
@@ -653,9 +654,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          saveToHistory: function(valParam) {
             var
                self = this,
-               isDublicate = false/*,
-               valBL*/;
-            if (valParam && typeof valParam === 'string' && self._textChanged && self._options.saveHistory) {
+               isDublicate = false;
+            if (valParam && typeof valParam === 'string' && self._textChanged && self._options.saveHistory && this._lastSavedText !== valParam) {
+               this._lastSavedText = valParam;
                this.getHistory().addCallback(function(arrBL){
                   arrBL.forEach(function (valBL) {
                      if (valParam === valBL) {
