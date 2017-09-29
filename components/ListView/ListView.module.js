@@ -2079,7 +2079,7 @@ define('js!SBIS3.CONTROLS.ListView',
                average = commonItemsCount / pagesCount;
                firstPageElemIndex = (scrollPage - 1) * average;
 
-               page = scrollPage ? Math.floor(firstPageElemIndex / this._limit) : 0;
+               page = scrollPage ? Math.ceil(firstPageElemIndex / this._limit) : 0;
             }
             // прибавим к полученой странице количество еще не загруженных страниц
             return page + Math.floor((this._scrollOffset.top) / this._limit);
