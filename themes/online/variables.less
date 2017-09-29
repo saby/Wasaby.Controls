@@ -1199,118 +1199,56 @@
 //Pager
 @controls-Pager-amount-text:              @gray-color;
 @controls-Pager-height:                   29px;
-
 //FilterButton
-@filter-button-font-size:							inherit;
 @controls-filterButton-picker-bg:                 #F9F9F9;
-@controls-filterButton-picker-height:             auto !important; //Приходится использовать important, т.к. попап считает высоту и выставляет её в inline-styles
-@controls-filterButton-picker-border-width:       1px;
-@controls-filterButton-picker-border-style:       solid;
+@controls-filterButton-picker-border-width:       @default-border-width;
 @controls-filterButton-picker-border-color:       @gray-ccc-color;
-@controls-filterButton-picker-border-radius:      0;
-@controls-filterButton-picker-margin-top:         -1px;
 @controls-filterButton-picker-close-top:          12px;
 @controls-Popup-closeButton-top:                  10px;
-@controls-Popup-closeButton-right:                0;
-
-@controls-filterButton-button-image:              transparent url("img/sprite_filter.png") no-repeat;
-@controls-filterButton-button-image-hover:        -24px 0;
-@controls-filterButton-button-image-disabled:     -48px 0;
 @controls-filterButton-button-height:             24px;
 @controls-filterButton-button-width:              24px;
 @controls-filterButton-button-margin:             8px 8px 8px 0;
 @controls-filterButton-button-margin-right-align: 8px 0 8px 8px;
-@controls-filterButton-button-margin-ff:          8px 32px 8px 0;
 @controls-filterButton-height:                    40px;
-
-@controls-filterButton-button-arrow-margin:       -4px;
-
 @controls-filterButton-area-header-padding:       12px 48px 12px 12px;
 @controls-filterButton-area-header-height:        24px;
 @controls-filterButton-area-header-width:         310px;
-
 @controls-filterButton-area-text-size:            18px;
 @controls-filterButton-area-text-weight:          bold;
 @controls-filterButton-area-text-color:           @blue-dark-color;
 @controls-filterButton-area-text-margin:          0 12px 0 0;
-
 @controls-filterButton-clear-margin-right:        0;
-
 @controls-filterButton-title-fontSize:            15px;
 @controls-filterButton-title-text-color:          @blue-dark-color;
-
 @controls-filterButton-area-content-margin:       0 12px 12px 26px;
-@controls-filterButton-closeButton-top:           @controls-Popup-closeButton-top;
 @controls-filterButton-line-height:               @link-line-height;
-@controls-filterButton-apply-margin-right:        0;
-
 @controls-filterButton-margin-value:              8px;
 @controls-filterButton-filterLine-margin:         8px 8px 8px 0;
-
+@controls-filterButton-history-pin-top:           5px;
 //FilterButtonHistory
-@controls-filterButton-history-wrapper-padding:   6px;
 @controls-filterButton-history-maxHeight-height:  120px;
-@controls-filterButton-history-maxHeight-overflow:hidden;
-@controls-filterButton-history-actions-right:     auto !important;
 @controls-filterButton-history-actions-left:      -6px !important;
 @controls-filterButton-history-actions-bottom:    -1px;
-
 @controls-filterButton-history-item-min-height:   24px;
-
-@controls-filterButton-history-pin-float:         left;
-@controls-filterButton-history-pin-position:      relative;
-@controls-filterButton-history-pin-top:           5px;
-
-@controls-filterButton-history-titleCont-position:absolute;
 @controls-filterButton-history-titleCont-right:   8px;
 @controls-filterButton-history-titleCont-left:    18px;
-
-@controls-filterButton-history-title-display:     inline-block;
 @controls-filterButton-history-title-height:      24px;
-@controls-filterButton-history-title-verAlign:    top;
 @controls-filterButton-history-title-color:       @blue-dark-color !important;
-@controls-filterButton-history-title-width:       100%;
-
 //CommandsSeparator
 @controls-commandsSeparator-lineHeight:   20px !important;
 @controls-commandsSeparator-fontSize:     28px !important;
 @controls-commandsSeparator-fontFamily:   cbuc-icons24 !important;
 @controls-commandsSeparator-height:       24px;
-
 @controls-commandsSeparator-icon-width:   26px;
 @controls-commandsSeparator-icon-height:  24px;
 @controls-commandsSeparator-icon-top:     2px;
 @controls-commandsSeparator-icon-left:    -2px;
-@controls-commandsSeparator-icon-style:   normal;
 @controls-commandsSeparator-icon-down:    "\e9d7";
 @controls-commandsSeparator-icon-up:      "\e9d8";
 @controls-commandsSeparator-color:        #CCCCCC !important;
-
-@controls-commandsSeparator-border:       none;
-@controls-commandsSeparator-bgColor:      transparent;
-
 //FilterLine
-@controls-filterLine-padding:                     8px 8px 8px 0;
-@controls-filterLine-align:                       top;
-@controls-filterLine-text-align:                  center;
-@controls-filterLine-wrapper-display:             table;
-@controls-filterLine-wrapper-height:              24px;
-@controls-filterLine-line-display:                table-row;
-@controls-filterLine-items-display:               table-cell;
-@controls-filterLine-items-padding:               0;
-@controls-filterLine-items-line-height:           24px;
-@controls-filterLine-arrow-height:                19px;
 @controls-filterLine-link-color:                  #0055bb;
 @controls-filterLine-link-hover-color:            @hover-color;
-
-@controls-filterLine-copyCross-top:               -20px;
-@controls-filterLine-copyCross-margin:            -16px;
-@controls-filterLine-copyCross-shadow:            -8px 0px 10px 2px @white-color;
-@controls-filterLine-copyCross-cross-top:         3px;
-
-// FilterLine FireFox hack
-@controls-filterLine-copyCross-ff-top:            -25px;
-
 //DragNDropObject
 @drag-and-drop-object-bg:                          transparent url('img/dragAvatar.png') no-repeat;
 @drag-and-drop-object-width:                       32px;
@@ -1318,70 +1256,42 @@
 @drag-and-drop-count-height:                       12px;
 @drag-and-drop-count-width:                        21px;
 @drag-and-drop-count-margin:                       20px 0 0 11px;
-@drag-and-drop-count-font-size:                    10px;
 @drag-and-drop-hover-bg:                           @default-itemHover-color !important;
 @drag-and-drop-border-color:                       #8991A9 !important;
 //FieldLink
-
 @fieldLink-border-color-focus-hover:      @gray-ccc-color;
 @fieldLink-border-color-picker-show:      @fieldLink-border-color-focus-hover;
 @fieldLink-border:                        1px solid;
 @fieldLink-picker-show-color:             @white-color;
 @fieldLink-picker-show-field-color:       @default-text-color;
-
-
 @fieldLink-fieldWrapper-minWidth:         100px;
 @fieldLink-linkContainer-padding:         4px;
-@fieldLink-showAllLinks-marginRight:      -22px;
-
 @fieldLink-picker-max-height:             500px;
 @fieldLink-picker-min-height:             16px;
-@fieldLink-picker-border:                 1px solid #eaeaea;
-@fieldLink-picker-background:             @white-color;
-
 @fieldLink-linkItem-cross-width:          20px;
-@fieldLink-linkItem-cross-right:          -4px;
-@fieldLink-linkItem-cross-top:            -2px;
-@fieldLink-linkItem-cross-padding:        3px 5px 3px 0;
-
-@fieldLink-disabled-item-padding:         0 4px;
 @fieldLink-afterField-padding:            0 4px 0 0;
-
-@fieldLink-afterField-background:         @white-color;
 @fieldLink-link-color:                    #8991A9;
 @fieldLink-link-color-hover:              #313E78;
-@fieldLink-showAll-margin-right-ff:       -15px;
-@fieldLink-showAll-top-ff:                -24px;
-
 @fieldLink-showSelector-color:            @icon-color-primary;
 @fieldLink-showSelector-color-hover:      @link-hover-text-color;
-
 @fieldLink-big-fontSize:                  15px;
 @fieldLink-big-fontSize-color:            #313E78;
 @fieldLink-FilterButton-color:            #0055bb;
 @fieldLink-FilterButton-color-hover:      @fieldLink-FilterButton-color;
-
 //SelectorButton
 @controls-SelectorButton-height:                   24px;
 @controls-SelectorButton-line-height:              24px;
-@controls-SelectorButton-align:                    top;
-@controls-SelectorButton-margin:                   4px 0 0 0;
 @controls-SelectorButton-error-outline:            1px solid #ff302b;
-
 // BackButton
 @back-button-font-size:                            18px;
 @back-button-line-height:                          @default-height;
 @back-button-height:                               @default-height;
 @back-button-margin-before:                        0;
 @back-button-padding-before:                       0;
-@back-button-arrow-height:                         24px;
-@icon-size:                                        16px;
-@icon-width:                                       16px;
-@icon-height:                                      16px;
+@icon-size:                                        16px;//todo
+@icon-width:                                       16px;//todo
 @back-button-arrow-hover-color:                    @primary-color;
-
 // BreadCrumbs
-@back-button-arrow-paddingleft:                    4px;
 @bread-crumb-title-hover-color:                    @primary-color;
 @bread-crumb-title-color:                          #0055BB;
 @bread-crumbs-hier-wrapper-bg:					      url('img/BreadCrumbs_hierWrapper.png');
@@ -1391,14 +1301,12 @@
 @breadcrumbs-small-items-top:                      @breadcrumbs-top;
 @bread-crumbs-menu-padding:                        4px 0;
 @bread-crumbs-menu-max-width:                      800px;
-
 // EditDialog
 @editdialog-applybutton-width:                     90px;
 @editdialog-applybutton-right:                     38px; //ширина кнопки закрытия окна 36px + 2px на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)*/
 @editdialog-window-title-margin-right:             128px; //ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить + 2px на небольшой отступ между ними */
 @editdialog-template-minwidth:                     auto;
 @editdialog-applybutton-top:                       8px;
-
 //MoveDialog
 @controls-movedialog-activate-right:               38px;
 @controls-movedialog-activate-top:                 8px;
@@ -1408,12 +1316,10 @@
 @controls-movedialog-width:                        400px;
 @controls-movedialog-padding:                      0 0 5px 0;
 @controls-movedialog-min-height:                   50px;
-
 // PrintDialog
 @controls-printdialog-activate-right:              40px;
 @controls-printdialog-activate-margin-top:         @controls-movedialog-activate-top;
 @controls-printdialog-min-width:                   @controls-movedialog-min-width;
-
 //InformationPopup
 @controls-InformationPopup-bg:                                white;
 @controls-InformationPopup-default-status-border-color:       #0055BB;
@@ -1432,7 +1338,6 @@
 @controls-InformationPopup-closeButton-color:                 #CCCCCC;
 @controls-InformationPopup-closeButton-hover-color:           @icon-active-color;
 @controls-InformationPopup-closeButton-font-family:           'cbuc-icons24';
-
 //NotificationPopup
 @controls-NotificationPopup-border:                                          @float-area-border;
 @controls-NotificationPopup-border-top:                                      none;
@@ -1441,13 +1346,11 @@
 @controls-NotificationPopup-border-bottom:                                   @controls-NotificationPopup-border;
 @controls-NotificationPopup-header-padding:                                  8px;
 @controls-NotificationPopup-header-padding-with-close-button:                6px 41px 8px 8px;
-
 @controls-NotificationPopup-header-caption-margin-right:                     12px;
 @controls-NotificationPopup-header-caption-font-size:                        15px;
 @controls-NotificationPopup-header-icon-right-margin:                        8px;
 @controls-NotificationPopup-max-width:                                       440px;
 @controls-NotificationPopup-min-width:                                       180px;
-
 //SubmitPopup
 @controls-SubmitPopup-size-standard-width:         351px;
 @controls-SubmitPopup-size-big-width:              440px;
@@ -1470,7 +1373,6 @@
 @controls-SubmitPopup-border-bottom:               @controls-SubmitPopup-border;
 @controls-SubmitPopup-message-color:               #000;
 @controls-SubmitPopup-details-color:               inherit;
-
 //ListView AjaxIndicator
 @controls-AjaxLoader-background:                   none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
 @controls-AjaxLoader-default-cord:                 0;
@@ -1499,12 +1401,9 @@
 @controls-Paging-btn-height:                       32px;
 @controls-Paging-btn-margin:                       0;
 @controls-Paging-btn-padding:                      8px 10px;
-@controls-Paging-btn-sprite:                       url('img/PagingArrows.png');
-
 //ScrollContainer
 @controls-ScrollContainer-top-gradient-height:     8px;
 @controls-ScrollContainer-gradient-background:     rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0);
-
 //Scrollbar
 @controls-Scrollbar-width:                         4px;
 @controls-Scrollbar-animate-duration:              0.3s;
@@ -1516,117 +1415,85 @@
 @controls-Scrollbar-thumb-padding:                 0px 2px;
 @controls-Scrollbar-light-hover-thumb-color:       rgba(255, 255, 255, 0.20);
 @controls-Scrollbar-light-active-thumb-color:      rgba(255, 255, 255, 0.50);
-
 @controls-Scrollbar-dark-hover-thumb-color:        rgba(0, 0, 0, 0.10);
 @controls-Scrollbar-dark-active-thumb-color:       rgba(0, 0, 0, 0.15);
-
 //----------//
 //  Header  //
 //----------//
-
 @header-padding-left:                              8px;
 @header-padding-right:                             12px;
 @header-height:                                    32px;
-
 @header-font:                                      700 18px escape('/') @header-height @default-font-name;
 @header-color:                                     #D94700;
 @header-color-hover:                               @header-color;
-
 @bigHeader-font:                                   700 20px escape('/') @header-height @default-font-name;
 @bigHeader-color:                                  @header-color;
-
 @subheader-font:                                   700 15px escape('/') @header-height @default-font-name;
 @subheader-color:                                  @blue-dark-color;
-
 @bigSubheader-font:                                700 18px escape('/') @header-height @default-font-name;
 @bigSubheader-color:                               @subheader-color;
-
 //--------------//
 //  LinkHeader  //
 //--------------//
-
 @link-header-padding-left:                         @header-padding-left;
 @link-header-padding-right:                        @header-padding-right;
 @link-header-height:                               @header-height;
-
 @link-header-font:                                 700 18px escape('/') @header-height @default-font-name;
 @link-header-color:                                #D94700;
 @link-header-text-decoration:                      none;
-
 @link-header-after-content:                        '\E002';
 @link-header-after-font:                           18px @default-font-name;
 @link-header-after-color:                          @blue-dark-color;
 @link-header-after-margin-left:                    4px;
-
 @link-header-hover-color:                          @primary-color;
 @link-header-hover-after-color:                    @link-header-hover-color;
-
 @link-header-separator-color:                      #F4F4F4;
 @link-header-separator-margin:                     0 0 0 8px;
-
 //----------------//
 //  ToggleHeader  //
 //----------------//
-
 @toggle-header-padding-right:                      8px;
 @toggle-header-height:                             24px;
-
 @toggle-header-font:                               700 15px escape('/') @toggle-header-height @default-font-name;
 @toggle-header-color:                              @blue-dark-color;
-@toggle-header-border:                             none;
 @toggle-header-background:                         none;
-
 @toggle-header-before-content:                     '\E013';
 @toggle-header-before-font:                        18px 'TensorFont', sans-serif;
 @toggle-header-before-color:                       #D94700;
 @toggle-header-before-width:                       24px;
-
 @toggle-header-count-font:                         15px escape('/') @toggle-header-height @default-font-name;
 @toggle-header-count-color:                        #D94700;
 @toggle-header-count-margin-right:                 4px;
-
-
 @toggle-header-hover-color:                        @primary-color;
 @toggle-header-hover-before-color:                 @toggle-header-hover-color;
 @toggle-header-hover-count-color:                  @toggle-header-hover-color;
-
 @toggle-header-checked-before-content:             '\E000';
-
 //----------------//
 //  moneyDecorator  //
 //----------------//
-
+//todo: переделать
 @money-decorator-integer-font-size:                        @default-text-size;
 @money-decorator-integer-font-color:                       @default-text-color;
-
 @money-decorator-integer-accent-results-font-size:         @large-text-size;
 @money-decorator-integer-accent-results-font-color:        @blue-dark-color;
 @money-decorator-integer-accent-results-font-weight:       bold;
-
 @money-decorator-integer-no-accent-results-font-size:      @large-text-size;
 @money-decorator-integer-no-accent-results-font-color:     #999999;
 @money-decorator-integer-no-accent-results-font-weight:    bold;
-
 @money-decorator-integer-group-font-size:                  @default-text-size;
 @money-decorator-integer-group-font-color:                 @gray-ccc-color;
-
 @money-decorator-integer-basic-registry-font-size:         @default-text-size;
 @money-decorator-integer-basic-registry-font-color:        @default-text-color;
-
 @money-decorator-integer-no-basic-registry-font-size:      @default-text-size;
 @money-decorator-integer-no-basic-registry-font-color:     #999999;
-
 @money-decorator-integer-accent-registry-font-size:        @large-text-size;
 @money-decorator-integer-accent-registry-font-color:       @blue-dark-color;
 @money-decorator-integer-accent-registry-font-weight:      bold;
-
 @money-decorator-integer-no-accent-registry-font-size:     @large-text-size;
 @money-decorator-integer-no-accent-registry-font-color:    #999999;
 @money-decorator-integer-no-accent-registry-font-weight:   bold;
-
 @money-decorator-fraction-font-size:                       @small-text-size;
 @money-decorator-fraction-font-color:                      @disabled-color;
-
 //Browser
 @back-button-caption-hover-color: @blue-dark-color;
 @back-button-caption-active-color: @primary-color;
