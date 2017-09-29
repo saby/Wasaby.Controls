@@ -2,6 +2,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    "Core/core-merge",
    "Core/constants",
    'Core/CommandDispatcher',
+   'Core/core-instance',
    'js!SBIS3.CONTROLS.Utils.Contains',
    "js!SBIS3.CONTROLS.DataGridView",
    "tmpl!SBIS3.CONTROLS.TreeDataGridView",
@@ -17,7 +18,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'js!SBIS3.CONTROLS.Link',
    'css!SBIS3.CONTROLS.TreeDataGridView',
    'css!SBIS3.CONTROLS.TreeView'
-], function( cMerge, constants, CommandDispatcher, contains, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, MassSelectionHierarchyController) {
+], function( cMerge, constants, CommandDispatcher, cInstance, contains, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, MassSelectionHierarchyController) {
 
 
    var
@@ -277,12 +278,13 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var
             cfg = TreeDataGridView.superclass._getInsertMarkupConfig.apply(this, arguments),
             lastItem = this._options._itemsProjection.at(newItemsIndex - 1),
-            lastItemParent, newItemsParent, existingContainer;
+            lastItemParent, newItemsParent, existingContainer, firstTreeItem;
 
          if (cfg.inside && !cfg.prepend) {
             cfg.inside = false;
             lastItemParent = lastItem.getContents().get(this._options.parentProperty);
-            newItemsParent = newItems[0].getContents().get(this._options.parentProperty);
+            firstTreeItem = cInstance.instanceOfModule(newItems[0], 'WS.Data/Display/GroupItem') ? newItems[1] : newItems[0];
+            newItemsParent = firstTreeItem ? firstTreeItem.getContents().get(this._options.parentProperty) : undefined;
             /* В виду того, что мы не можем различить, откуда вызван _getInsertMarkupConfig, возникают две противоречивые ситуации:
                1. В случае перерисовки ПЕРВОЙ записи в хлебных крошках (изменён прямо record), предыдущий элемент будет
                   расположен в других хлебных крошках (https://online.sbis.ru/opendoc.html?guid=033fd05c-fb2e-4c3a-a648-37cf47b05a50).
@@ -312,7 +314,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          // Но этот вариант очень трудно реализуем, т.к. куча точек входа, где загрузка может быть прервана или перезапущена.
          // Как итог - завел задачу, по которой нужно переосмыслить текущий механизм и решить подобные проблемы раз и навсегда.
          // p.s. data-id используется потому что у крошек нет data-hash.
-         if (this._isSearchMode() && !cfg.container.length && lastItem && lastItem.isNode()) {
+         if (this._isSearchMode() && !cfg.container.length && lastItem && !cInstance.instanceOfModule(lastItem, 'WS.Data/Display/GroupItem') && lastItem.isNode()) {
             cfg.container = this._getItemsContainer().find('.js-controls-BreadCrumbs__crumb[data-id="' + lastItem.getContents().getId() + '"]').parents('.controls-DataGridView__tr.controls-HierarchyDataGridView__path');
          }
          return cfg;
