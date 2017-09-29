@@ -33706,8 +33706,13 @@
                if (!isDefaultPrevented(e) && e.clipboardData && !editor.selection.isCollapsed()) {
                   e.preventDefault();
                   e.clipboardData.clearData();
-                  e.clipboardData.setData('text/html', editor.selection.getContent());
-                  e.clipboardData.setData('text/plain', editor.selection.getContent({format: 'text'}));
+                  // При вырезании целой ссылки (например) нужно вырезать её всю, а не только её внутренний текст
+                  // По задаче https://online.sbis.ru/opendoc.html?guid=7fe70f3f-9e81-4a07-8001-9212c39e6618
+                  var sel = editor.selection;
+                  var rng = sel.getRng();
+                  e.clipboardData.setData('text/html', rng.startOffset === 0 && rng.commonAncestorContainer.nodeType === 3 && rng.endOffset === rng.commonAncestorContainer.nodeValue.length && !sel.dom.isBlock(sel.getNode())
+                              ? sel.dom.getOuterHTML(sel.getNode()) : sel.getContent());
+                  e.clipboardData.setData('text/plain', sel.getContent({format:'text'}));
 
                   // Needed delay for https://code.google.com/p/chromium/issues/detail?id=363288#c3
                   // Nested delete/forwardDelete not allowed on execCommand("cut")
