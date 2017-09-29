@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.FilterButton',
         * @mixes SBIS3.CONTROLS.FilterMixin
         * @mixes SBIS3.CONTROLS.PickerMixin
         *
-        * @demo SBIS3.CONTROLS.Demo.FilterButtonMain Полный функционал кнопки фильтров.
+        * @demo SBIS3.DOCS.FilterButton
         *
         * @control
         * @public
