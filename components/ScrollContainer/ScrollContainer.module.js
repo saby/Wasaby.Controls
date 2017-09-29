@@ -394,6 +394,15 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          _subscribeOnScroll: function(){
             this._content.on('scroll', this._onScroll.bind(this));
+
+            /*
+            TODO На маках в safari при активации controls-ListView__fakeFocusElement у listView скролл у controls-ScrollContainer
+            скроллится в сторону центра, так как у fakeFocusElement left:50% top: 50%, поэтому подпишемся на скролл и сбросим его.
+            https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
+            */
+            if(cDetection.isMacOSDesktop){
+               this.getContainer().on('scroll', this._onContainerScroll);
+            }
          },
 
          _subscribeMouseEnterLeave: function() {
@@ -423,6 +432,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             }
             this.getContainer().toggleClass('controls-ScrollContainer__top-gradient', scrollTop > 0);
             this.getContainer().toggleClass('controls-ScrollContainer__bottom-gradient', scrollTop < this._getScrollHeight() -  this._container.height());
+         },
+
+         _onContainerScroll: function(e){
+            e.target.scrollLeft = 0;
          },
 
          _onMouseenter: function() {
@@ -646,6 +659,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                this._content.off('scroll', this._onScroll);
             }
             this._container.off('mousemove', this._initScrollbar);
+            if(cDetection.isMacOSDesktop){
+               this._container.off('scroll', this._onContainerScroll);
+            }
             this._unsubscribeMouseEnterLeave();
             this._getScrollContainerChannel()
                .unsubscribe('onReturnTakeScrollbar', this._returnTakeScrollbarHandler)
