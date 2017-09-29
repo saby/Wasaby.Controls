@@ -404,7 +404,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _drawText: function(text) {
          ComboBox.superclass._drawText.apply(this, arguments);
          this._drawNotEditablePlaceholder(text);
-         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text || this._options.placeholder || '&nbsp;');
+         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text || this._options.placeholder || '');
          if (this._options.editable) {
             this._setKeyByText();
          }
