@@ -206,7 +206,7 @@ define('js!SBIS3.CONTROLS.LongOperations.ManagerLib',
                if (!producer) {
                   throw new Error('Producer not found');
                }
-               if (!_canHasHistory(producer)) {
+               if (!inner._canHasHistory(producer)) {
                   throw new Error('Producer is not supported history');
                }
                return producer.history(operationId, count, filter);

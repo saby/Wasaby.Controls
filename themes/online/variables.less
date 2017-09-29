@@ -925,7 +925,6 @@
 // MonthView //
 // --------- //
 
-@month-view-font:                                 @calendar-font;
 @month-view-width:                                @calendar-width;
 @month-view-padding:                              @calendar-padding;
 @month-view-bg:                                   @calendar-bg;
@@ -940,9 +939,7 @@
 @month-view-day-body-font:                        @calendar-day-body-font;
 @month-view-day-body-text-alignment:              @calendar-day-body-text-alignment;
 
-@month-view-day-cell-width:                       @calendar-day-cell-width;
 @month-view-day-table-cell-height:                @calendar-day-table-cell-height;
-@month-view-day-table-cell-padding:               @calendar-day-table-cell-padding;
 
 @month-view-day-cell-cursor:                      @calendar-day-cell-cursor;
 @month-view-day-cell-text-color:                  @calendar-day-cell-text-color;
@@ -1222,11 +1219,10 @@
 @date-range-big-choose-months-margin:                                8px;
 @date-range-big-choose-months-range-btn-height:                      97px;
 @date-range-big-choose-months-range-width:                           81px;
-@date-range-big-choose-months-button-height:                         33px;
 @date-range-big-choose-months-button-first-padding-top:              0px;
-@date-range-big-choose-months-button-first-height:                   36px;
-@date-range-big-choose-months-button-last-padding-bottom:            4px;
-@date-range-big-choose-months-button-last-height:                    37px;
+@date-range-big-choose-months-button-first-height:                   37px;
+@date-range-big-choose-months-button-last-padding-bottom:            2px;
+@date-range-big-choose-months-button-last-height:                    36px;
 @date-range-big-choose-months-padding:                               8px;
 
 @date-range-big-choose-go-to-boundary-button-bg-color:               @dodgerblue-color;
@@ -1689,6 +1685,7 @@
 // --------------- //
 // OperationMerge  //
 // --------------- //
+@controls-MergeDialogTemplate-height:                             550px;
 @controls-MergeDialogTemplate-warning-color:                      #ff302b;
 @controls-MergeDialogTemplate-hint-font-size:                     13px;
 @controls-MergeDialogTemplate-hint-margin:                        0 15px;
@@ -1993,7 +1990,6 @@
 @fieldLink-picker-border:                 1px solid #eaeaea;
 @fieldLink-picker-background:             @white-color;
 
-@fieldLink-linkItem-padding:              0 17px 0 4px;
 @fieldLink-linkItem-cross-width:          20px;
 @fieldLink-linkItem-cross-right:          -4px;
 @fieldLink-linkItem-cross-top:            -2px;
@@ -2128,21 +2124,9 @@
 
 //ListView AjaxIndicator
 @controls-AjaxLoader-background:                   none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
-@controls-AjaxLoader-default-cord:                 0;
-@controls-AjaxLoader-zIndex:                       11;
-@controls-AjaxLoader-minHeight:                    32px;
-
-@controls-AjaxLoader-outer-height:                 36px;
-@controls-AjaxLoader-outer-top:                    50%;
-@controls-AjaxLoader-outer-lineHeight:             30px;
-
-@controls-AjaxLoader-block-width:                  32px;
+@controls-AjaxLoader-size:                         32px;
 @controls-AjaxLoader-block-background:             none repeat scroll 0 0 transparent !important;
-@controls-AjaxLoader-block-top:                    -50%;
 @controls-AjaxLoader-block-padding:                2px;
-
-@controls-AjaxLoader-indicator-padding-left:       32px;
-@controls-AjaxLoader-indicator-height:             32px;
 
 @controls-Paging-padding:                          0 6px;
 @controls-Paging-item-width:                       36px;

@@ -197,6 +197,8 @@
             .controls-TextBox__fieldWrapper {
                padding-top: 1px;
                box-sizing: content-box;
+               border: 0; //в 61 хроме проблема, когда задан box-sizing:padding-box и не нулевой border, родительский контейнер считает, что дочерний контейнер с такими стилями
+               //вылезает за границы и при overflow:hidden троеточит его по вертикали
             }
             &.controls-EditAtPlace__ellipsis {
                .controls-EditAtPlace__textField {

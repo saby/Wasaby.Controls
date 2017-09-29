@@ -4,14 +4,14 @@
 define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
    "Core/xslt-async",
    "Transport/ReportPrinter",
-   "Core/helpers/helpers",
+   'Core/helpers/unrelated-helpers',
    "Core/core-extend",
    "Core/constants",
    "Core/IoC",
    "Core/core-instance",
    "Core/helpers/string-helpers",
    "i18n!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer"
-], function( cXSLT, cReportPrinter, cHelpers, cExtend, constants, IoC, cInstance, strHelpers) {
+], function( cXSLT, cReportPrinter, uHelpers, cExtend, constants, IoC, cInstance, strHelpers) {
    return cExtend({}, {
 
       _complexFields: {
@@ -280,8 +280,8 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
          if (document.implementation && document.implementation.createDocument)
             doc = document.implementation.createDocument("", "", null);
          // IE
-         if(cHelpers.axo) {
-            doc = cHelpers.axo(constants.IE_ACTIVEOBJECT_XML_PRINT_TYPE);
+         if(uHelpers.axo) {
+            doc = uHelpers.axo(constants.IE_ACTIVEOBJECT_XML_PRINT_TYPE);
          }
          return doc;
       }

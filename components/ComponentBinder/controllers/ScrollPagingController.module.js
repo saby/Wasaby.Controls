@@ -79,14 +79,10 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
 
       _scrollHandler: function(event, scrollTop) {
          var page = scrollTop / this._viewportHeight;
-         if (!(page % 1)) {
-            page += 1;
-         } else {
+         if (page % 1) {
             page = Math.ceil(page);
-            if (page + 1 === this._options.paging.getPagesCount()) {
-               page += 1;
-            }
          }
+         page += 1; //потому что используем нумерацию страниц с 1
          if (this._currentScrollPage !== page) {
             this._currentScrollPage = page;
             this._options.paging.setSelectedKey(page);
@@ -169,7 +165,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
       _updateCachedSizes: function(){
          var view, viewport;
          view = this._options.view;
-         this._viewHeight = view.getContainer().height();
+         this._viewHeight = view.getContainer().get(0).scrollHeight;
          viewport = $(view._scrollWatcher.getScrollContainer());
          this._viewportHeight = viewport.height();
 

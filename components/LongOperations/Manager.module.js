@@ -236,7 +236,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
                   if (!producer) {
                      throw new Error('Producer not found');
                   }
-                  return _canHasHistory(producer);
+                  return inner._canHasHistory(producer);
                }
                else
                if (tabKey in inner._tabManagers && prodName in inner._tabManagers[tabKey]) {
@@ -380,7 +380,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
                producer.subscribe(eventType, _eventListener);
             });
              // Уведомить другие вкладки
-            inner._tabChannel.notify('LongOperations:Manager:onActivity', {type:'register', tab:inner._tabKey, producer:name, isCrossTab:producer.hasCrossTabData(), hasHistory:_canHasHistory(producer)});
+            inner._tabChannel.notify('LongOperations:Manager:onActivity', {type:'register', tab:inner._tabKey, producer:name, isCrossTab:producer.hasCrossTabData(), hasHistory:inner._canHasHistory(producer)});
             // Если есть уже выполняющиеся запросы данных - присоединиться к ним
             if (inner._fetchCalls) {
                var queries = inner._fetchCalls.listPools();
@@ -491,7 +491,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
        * @param {SBIS3.CONTROLS.LongOperations.IProducer} producer Продюсер длительных операций
        * @return {boolean}
        */
-      var _canHasHistory = function (producer) {
+      protectedOf(manager)._canHasHistory = function (producer) {
          return CoreInstance.instanceOfMixin(producer, 'SBIS3.CONTROLS.LongOperations.IHistoricalProducer');
       };
 
@@ -571,7 +571,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
          var eventType = typeof evtName === 'object' ? evtName.name : evtName;
          _channel.notifyWithTarget(eventType, manager, !dontCrossTab ? (data ? ObjectAssign({tabKey:inner._tabKey}, data) : {tabKey:inner._tabKey}) : data);
          if (!dontCrossTab && !producer.hasCrossTabEvents()) {
-            inner._tabChannel.notify('LongOperations:Manager:onActivity', {type:eventType, tab:inner._tabKey, isCrossTab:producer.hasCrossTabData(), hasHistory:_canHasHistory(producer), data:data});
+            inner._tabChannel.notify('LongOperations:Manager:onActivity', {type:eventType, tab:inner._tabKey, isCrossTab:producer.hasCrossTabData(), hasHistory:inner._canHasHistory(producer), data:data});
          }
       };
 
@@ -595,7 +595,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
                inner._tabManagers[tab] = {};
                var prodData = {};
                for (var n in inner._producers) {
-                  prodData[n] = {isCrossTab:inner._producers[n].hasCrossTabData(), hasHistory:_canHasHistory(inner._producers[n])};
+                  prodData[n] = {isCrossTab:inner._producers[n].hasCrossTabData(), hasHistory:inner._canHasHistory(inner._producers[n])};
                }
                inner._tabChannel.notify('LongOperations:Manager:onActivity', {type:'handshake', tab:inner._tabKey, producers:prodData});
                break;

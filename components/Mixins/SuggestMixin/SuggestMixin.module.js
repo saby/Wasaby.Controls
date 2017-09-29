@@ -673,6 +673,39 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          
          this.showSelector(showAllConfig);
       },
+      
+      _updateList: function() {
+         var list = this.getList();
+         if(list.hasChildControlByName('showAllButton')) {
+            var items = list.getItems(),
+               button = list.getChildControlByName('showAllButton'),
+               showButton;
+      
+            /* Изменяем видимость кнопки в зависимости от:
+             1) Записей не найдено вовсе - показываем (по стандарту).
+             2) Записи найдены, но есть ещё. */
+            if(!items || !items.getCount()) {
+               showButton = true;
+            } else {
+               showButton = list._hasNextPage(items.getMetaData().more);
+            }
+      
+            if(showButton) {
+               /* Чтобы не подписываться лишний раз */
+               if(Array.indexOf(button.getEventHandlers('onActivated'), this._showAllButtonHandler) === -1) {
+                  this.subscribeTo(button, 'onActivated', this._showAllButtonHandler);
+               }
+               /* Чтобы кнопка не принимала фокус по табу, иначе клик enter'a, когда автодополнение открыто,
+                будет вызывать открытие справочника, а не выбор записи */
+               button.setTabindex(0);
+               button.show();
+            } else {
+               this.unsubscribeFrom(button, 'onActivated', this._showAllButtonHandler);
+               button.hide();
+            }
+         }
+         return true;
+      },
 
       /**
        * Возвращает dataSet списка, если список уже инициализирован
@@ -689,35 +722,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        */
       _onListDrawItems: function () {
          if (this._picker) {
-            var list = this.getList();
-            if(list.hasChildControlByName('showAllButton')) {
-               var items = list.getItems(),
-                  button = list.getChildControlByName('showAllButton'),
-                  showButton;
-      
-               /* Изменяем видимость кнопки в зависимости от:
-                1) Записей не найдено вовсе - показываем (по стандарту).
-                2) Записи найдены, но есть ещё. */
-               if(!items || !items.getCount()) {
-                  showButton = true;
-               } else {
-                  showButton = list._hasNextPage(items.getMetaData().more);
-               }
-      
-               if(showButton) {
-                  /* Чтобы не подписываться лишний раз */
-                  if(Array.indexOf(button.getEventHandlers('onActivated'), this._showAllButtonHandler) === -1) {
-                     this.subscribeTo(button, 'onActivated', this._showAllButtonHandler);
-                  }
-                  /* Чтобы кнопка не принимала фокус по табу, иначе клик enter'a, когда автодополнение открыто,
-                     будет вызывать открытие справочника, а не выбор записи */
-                  button.setTabindex(0);
-                  button.show();
-               } else {
-                  this.unsubscribeFrom(button, 'onActivated', this._showAllButtonHandler);
-                  button.hide();
-               }
-            }
+            this._updateList();
             this._picker.getContainer().height('auto');
             this._picker.recalcPosition(true, true);
          }

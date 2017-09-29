@@ -1499,6 +1499,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
         */
        setColumns : function(columns) {
           this._options.columns = columns;
+          
+          if(this.hasPartScroll()) {
+             /* При установке колонок, надо сбросить частичный скролл */
+             this._setPartScrollShift(0);
+          }
           checkColumns(this._options);
           this._destroyEditInPlaceController();
        },

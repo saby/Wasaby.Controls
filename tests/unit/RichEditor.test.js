@@ -10,7 +10,7 @@ define([
       describe('methods', function(){
 
 
-         it('RichTextArea', function () {
+         it('RichTextArea._sanitizeClasses', function () {
             var
                quest = '<div ' +
                   'class="engine-OnlineBaseInnerMinCoreView__sideLeft titleText controls-ScrollContainer__light" ' +
@@ -27,7 +27,7 @@ define([
                   '<div ' +
                   'class="image-template-left" hasmarkup="true">' +
                   'kek</div></div>';
-            assert.equal(answ, RichTextArea.prototype._sanitizeBeforePaste(quest));
+            assert.equal(answ, RichTextArea.prototype._sanitizeClasses(quest));
          });
       });
 
