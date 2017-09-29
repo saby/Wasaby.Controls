@@ -3191,8 +3191,10 @@ define('js!SBIS3.CONTROLS.ListView',
             
             // При подгрузке в обе стороны необходимо определять направление, а не ориентироваться по state'у
             // Пока делаю так только при навигации по курсорам, чтобы не поломать остальной функционал
-            if (infiniteScroll === 'both' && isCursorNavigation) {
-               scrollDown = this.getListNavigation().hasNextPage('down');
+            if (isCursorNavigation) {
+               if (infiniteScroll === 'both' || infiniteScroll === 'down') {
+                  scrollDown = this.getListNavigation().hasNextPage('down');
+               }
             }
             
             // Если  скролл вверху (при загрузке вверх) или скролл внизу (при загрузке вниз) или скролла вообще нет - нужно догрузить данные
