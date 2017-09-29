@@ -1057,8 +1057,8 @@ define('js!SBIS3.CONTROLS.ListView',
             container[bind ? 'on' : 'off']('swipe tap mousemove mouseleave touchend taphold touchstart contextmenu mousedown mouseup', this._eventProxyHdl);
          },
 
-         _addOptionsFromClass: function(opts) {
-            opts.pagerConfig = opts.pagerConfig || {};
+         _addOptionsFromClass: function(opts, attrToMerge) {
+            var className = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || "";
             var classes = [
                { class: 'controls-small-ListView', optionName: 'isSmall', value: true, defaultValue: false },
                { class: 'controls-ListView__disableHover', optionName: 'noHover', value: true, defaultValue: false },
@@ -1096,7 +1096,7 @@ define('js!SBIS3.CONTROLS.ListView',
                //    }
                // }
                if (!opts[el.optionName]) {
-                  if (hasClass(opts.className, el.class)) {
+                  if (hasClass(className, el.class)) {
                      opts[el.optionName] = el.value;
                   } else {
                      opts[el.optionName] = el.defaultValue;
@@ -1105,9 +1105,9 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         _modifyOptions : function(opts){
+         _modifyOptions : function(opts, parsedOptions, attrToMerge){
             var lvOpts = ListView.superclass._modifyOptions.apply(this, arguments);
-            this._addOptionsFromClass(lvOpts);
+            this._addOptionsFromClass(lvOpts, attrToMerge);
             //Если нам задали бесконечный скролл в виде Bool, то если true, то 'down' иначе null
             if (lvOpts.hasOwnProperty('infiniteScroll')){
                lvOpts.infiniteScroll = typeof lvOpts.infiniteScroll === 'boolean' ?
