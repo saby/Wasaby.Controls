@@ -1568,16 +1568,17 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
       },
       _redrawResults: function(revive) {
-         if (this._options.resultsPosition !== 'none'){
-           this._redrawTheadAndTfoot();
-         }
-         if (revive) {
-            var self = this;
-            this.reviveComponents(this._thead).addCallback(function(){
-               self._notify('onDrawHead');
-               self._headIsChanged = false;
-            });
-            this.reviveComponents(this._tfoot);
+         if (this._options.resultsPosition !== 'none') {
+            this._redrawTheadAndTfoot();
+
+            if (revive) {
+               var self = this;
+               this.reviveComponents(this._thead).addCallback(function () {
+                  self._notify('onDrawHead');
+                  self._headIsChanged = false;
+               });
+               this.reviveComponents(this._tfoot);
+            }
          }
       },
       destroy: function() {
