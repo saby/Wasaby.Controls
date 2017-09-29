@@ -283,7 +283,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if (cfg.inside && !cfg.prepend) {
             cfg.inside = false;
             lastItemParent = lastItem.getContents().get(this._options.parentProperty);
-            firstTreeItem = cInstance.instanceOfModule(newItems[0], 'WS.Data/Display/GroupItem') ? newItems[1] : newItems[0];
+            firstTreeItem = newItems[0].isNode ? newItems[1] : newItems[0];
             newItemsParent = firstTreeItem ? firstTreeItem.getContents().get(this._options.parentProperty) : undefined;
             /* В виду того, что мы не можем различить, откуда вызван _getInsertMarkupConfig, возникают две противоречивые ситуации:
                1. В случае перерисовки ПЕРВОЙ записи в хлебных крошках (изменён прямо record), предыдущий элемент будет
@@ -314,7 +314,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          // Но этот вариант очень трудно реализуем, т.к. куча точек входа, где загрузка может быть прервана или перезапущена.
          // Как итог - завел задачу, по которой нужно переосмыслить текущий механизм и решить подобные проблемы раз и навсегда.
          // p.s. data-id используется потому что у крошек нет data-hash.
-         if (this._isSearchMode() && !cfg.container.length && lastItem && !cInstance.instanceOfModule(lastItem, 'WS.Data/Display/GroupItem') && lastItem.isNode()) {
+         if (this._isSearchMode() && !cfg.container.length && lastItem && lastItem.isNode && lastItem.isNode()) {
             cfg.container = this._getItemsContainer().find('.js-controls-BreadCrumbs__crumb[data-id="' + lastItem.getContents().getId() + '"]').parents('.controls-DataGridView__tr.controls-HierarchyDataGridView__path');
          }
          return cfg;
