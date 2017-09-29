@@ -122,9 +122,12 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          this._publish('onBeforeLoadHistory');
          this._options.observableControls.unshift(this);
          CommandDispatcher.declareCommand(this, 'changeSearchParam', function(searchParam) {
-            self._options.searchParam = searchParam;
-            self._initializeSearchController();
+            self.setSearchParamName(searchParam);
             self._updateList();
+            
+            if (self._needShowHistory()) {
+               self._showHistory();
+            }
          });
          
          /* Инициализация searchController'a происходит лениво,
@@ -244,7 +247,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          return this.getList().getDataSource().getIdProperty() || this.getList().getProperty('idProperty');
       },
       _needShowHistory: function(){
-         return this._historyController && !this.getText().length && this._options.startChar; //Если startChar = 0, историю показывать не нужно
+         var listItems = this._getListItems();
+         return this._historyController && !this.getText().length && this._options.startChar && (!listItems || !listItems.getCount()); //Если startChar = 0, историю показывать не нужно
       },
 
       //TODO Выпилить _getHistoryRecordSetSync и _prepareHistoryData после выполнения задачи, когда будет поддержан списочный метод
