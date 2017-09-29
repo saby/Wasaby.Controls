@@ -16,7 +16,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    "Core/core-clone",
    "Core/IoC",
    "Core/helpers/Function/once",
-   "Core/detection"
+   "Core/detection",
+   "Core/CommandDispatcher"
 ], function (
    constants,
    SearchController,
@@ -32,7 +33,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    coreClone,
    IoC,
    once,
-   detection) {
+   detection,
+   CommandDispatcher) {
 
    'use strict';
 
@@ -119,6 +121,11 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          var self = this;
          this._publish('onBeforeLoadHistory');
          this._options.observableControls.unshift(this);
+         CommandDispatcher.declareCommand(this, 'changeSearchParam', function(searchParam) {
+            self._options.searchParam = searchParam;
+            self._initializeSearchController();
+            self._updateList();
+         });
          
          /* Инициализация searchController'a происходит лениво,
             только при начале поиска (по событию onSearch). Поэтому, чтобы не было множественных подписок
