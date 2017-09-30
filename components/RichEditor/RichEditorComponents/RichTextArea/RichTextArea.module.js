@@ -1921,7 +1921,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                });
             }
             this._tinyReady.addCallback(function () {
-               this._tinyEditor.setContent(this._prepareContent(this.getText()));
+               var iniText = this._prepareContent(this.getText());
+               this._tinyEditor.setContent(iniText || !cConstants.browser.isIE ? iniText : '&#65279;');
                //Проблема:
                //          1) При инициализации тини в историю действий добавляет контент блока на котором он построился
                //                (если пусто то <p><br data-mce-bogus="1"><p>)
