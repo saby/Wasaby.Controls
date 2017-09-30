@@ -205,7 +205,7 @@ define('js!SBIS3.CONTROLS.Button',
 
             Button.superclass.show.call(this);
             if (isJs.features.compatibleLayer && !oldVisible && this.isPrimary()) {
-               this._registerDefaultButton();
+               this.setDefaultButton(true);
             }
          },
 

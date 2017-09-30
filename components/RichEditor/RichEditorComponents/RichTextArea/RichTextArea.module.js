@@ -219,7 +219,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             _fromTouch: false,
             _codeSampleDialog: undefined,
             _beforeFocusOutRng: undefined,
-            _images: {}
+            _images: {},
+            _lastSavedText: undefined
          },
 
          _modifyOptions: function(options) {
@@ -653,9 +654,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          saveToHistory: function(valParam) {
             var
                self = this,
-               isDublicate = false/*,
-               valBL*/;
-            if (valParam && typeof valParam === 'string' && self._textChanged && self._options.saveHistory) {
+               isDublicate = false;
+            if (valParam && typeof valParam === 'string' && self._textChanged && self._options.saveHistory && this._lastSavedText !== valParam) {
+               this._lastSavedText = valParam;
                this.getHistory().addCallback(function(arrBL){
                   arrBL.forEach(function (valBL) {
                      if (valParam === valBL) {
@@ -1053,29 +1054,24 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          },
 
          insertImageTemplate: function(key, fileobj) {
+            //необходимо вставлять каретку(курсор ввода), чтобы пользователь понимал куда будет производиться ввод
+            var CARET = cConstants.browser.chrome ? '&#xFEFF;{$caret}' : '{$caret}';
             var className, before, after;
-            //TODO: придумтаь как сделать без without-margin
             switch (key) {
                case '1':
                   className = 'image-template-left';
-                  before = '<p class="without-margin">';
-                  //необходимо вставлять пустой абзац с кареткой(курсором ввода), чтобы пользователь понимал куда будет производиться ввод
-                  after = '</p><p>{$caret}</p>';
+                  after = CARET;
                   break;
                case '2':
                   before = '<p class="controls-RichEditor__noneditable image-template-center">';
-                  after = '</p><p></p>';
+                  after = '</p>' + CARET;
                   break;
                case '3':
                   className = 'image-template-right';
-                  before = '<p class="without-margin">';
-                  //необходимо вставлять пустой абзац с кареткой(курсором ввода), чтобы пользователь понимал куда будет производиться ввод
-                  after = '</p><p>{$caret}</p>';
+                  after = CARET;
                   break;
                case '6':
-                  if (cConstants.browser.chrome) {
-                     after = '&#xFEFF;{$caret}';
-                  }
+                  after = CARET;
                   break;
                case '4':
                   //todo: сделать коллаж
@@ -1314,7 +1310,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             editor.on('Paste', function(e) {
                self._clipboardText = e.clipboardData ?
-                  cConstants.browser.isMobileIOS ? e.clipboardData.getData('text/plain') : e.clipboardData.getData('text') :
+                  e.clipboardData.getData(cConstants.browser.isMobileIOS ? 'text/plain' : 'text') :
                   window.clipboardData.getData('text');
                editor.plugins.paste.clipboard.pasteFormat = 'html';
             });
@@ -1621,34 +1617,34 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             imageOptionsPanel.show();
          },
 
-         _changeImageTemplate: function(target, template) {
-            var
-               parent = target.parent();
-            parent.removeClass();
-            parent.removeAttr ('contenteditable');
-            target.removeClass();
-
+         _changeImageTemplate: function ($img, template) {
+            $img.removeClass();
+            var $parent = $img.parent();
+            var needUnwrap = $parent.hasClass('image-template-center');
+            if (needUnwrap && template != '2') {
+               $img.unwrap();
+            }
             switch (template) {
-               case "1":
-                  target.addClass('image-template-left');
-                  parent.addClass('without-margin');
+               case '1':
+                  $img.addClass('image-template-left');
                   break;
-               case "2":
-                  var
-                     //todo: go to tmpl
-                     width = target[0].style.width || (target.width() + 'px'),
-                     imageParagraph = '<p class="controls-RichEditor__noneditable image-template-center" contenteditable="false">' + //tinyMCE не проставляет contenteditable если изменение происходит  через dom.replace
+               case '2':
+                  //todo: go to tmpl
+                  var width = $img[0].style.width || ($img.width() + 'px');
+                  var html = '<p class="controls-RichEditor__noneditable image-template-center" contenteditable="false">' + //tinyMCE не проставляет contenteditable если изменение происходит  через dom.replace
                         '<img' +
-                        ' src="' + target.attr('src') + '"' +
+                        ' src="' + $img.attr('src') + '"' +
                         ' style="width:' + (width ? width : constants.defaultImagePercentSize + '%') + '"' +
-                        ' alt="' + target.attr('alt') + '"' +
+                        ' alt="' + $img.attr('alt') + '"' +
+                        ' data-img-uuid="' + $img.attr('data-img-uuid') + '"' +
                         '></img>' +
                      '</p>';
-                  this._tinyEditor.dom.replace($(imageParagraph)[0],target[0],false);
+                  this._tinyEditor.dom.replace($(html)[0], (needUnwrap ? $parent : $img)[0],false);
                   break;
-               case "3":
-                  target.addClass('image-template-right');
-                  parent.addClass('without-margin');
+               case '3':
+                  $img.addClass('image-template-right');
+                  break;
+               case '6':
                   break;
             };
             this._setTrimmedText(this._getTinyEditorValue());
@@ -1964,13 +1960,17 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           */
          _trimText: function(text) {
             var
-               beginReg = new RegExp('^<p>(&nbsp; *)*</p>'),// регулярка начала строки
-               endReg = new RegExp('<p>(&nbsp; *)*</p>$'),// регулярка начала строки
-               shiftLineRegexp = new RegExp('<p><br>(&nbsp;)?'),// регулярка пустой строки через shift+ enter и space
+               beginReg = new RegExp('^<p> *(&nbsp; *)*(&nbsp;)?</p>'),// регулярка начала строки
+               endReg = new RegExp('<p> *(&nbsp; *)*(&nbsp;)?</p>$'),// регулярка конца строки
+               regShiftLine1 = new RegExp('<p>(<br( ?/)?>)+(&nbsp;)?'),// регулярка пустой строки через shift+ enter и space
+               regShiftLine2 = new RegExp('(&nbsp;)?(<br( ?/)?>)+</p>'),// регулярка пустой строки через space и shift+ enter
                regResult;
             text = this._removeEmptyTags(text);
-            while (shiftLineRegexp.test(text)) {
-               text = text.replace(shiftLineRegexp, '<p>');
+            while (regShiftLine1.test(text)) {
+               text = text.replace(regShiftLine1, '<p>');
+            }
+            while (regShiftLine2.test(text)) {
+               text = text.replace(regShiftLine2, '</p>');
             }
             while ((regResult = beginReg.exec(text)) !== null) {
                text = text.substr(regResult[0].length + 1);
@@ -2259,7 +2259,43 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                               'image-template-center',
                               'image-template-right',
                               'mce-object-iframe',
-                              'ws-hidden'
+                              'ws-hidden',
+                              'language-javascript',
+                              'language-css',
+                              'language-markup',
+                              'language-php',
+                              'token',
+                              'comment',
+                              'prolog',
+                              'doctype',
+                              'cdata',
+                              'punctuation',
+                              'namespace',
+                              'property',
+                              'tag',
+                              'boolean',
+                              'number',
+                              'constant',
+                              'symbol',
+                              'deleted',
+                              'selector',
+                              'attr-name',
+                              'string',
+                              'char',
+                              'builtin',
+                              'inserted',
+                              'operator',
+                              'entity',
+                              'url',
+                              'style',
+                              'attr-value',
+                              'keyword',
+                              'function',
+                              'regex',
+                              'important',
+                              'variable',
+                              'bold',
+                              'italic'
                            ],
                            index = classes.length - 1;
 
