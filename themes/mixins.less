@@ -102,9 +102,6 @@
   -webkit-border-radius: @radius;
   -moz-border-radius: @radius;
   border-radius: @radius;
-  -webkit-background-clip: padding-box;
-  -moz-background-clip: padding;
-  background-clip: padding-box;
 }
 
 .border-radiuses(@topright: 0, @bottomright: 0, @bottomleft: 0, @topleft: 0) {
@@ -141,7 +138,7 @@
   box-sizing: border-box;
 }
 
-.button-default-style(@button-font-size: @button-font-size) {
+.button-default-style(@button-font-size: @button-font-size, @button-default-shadow: none) {
   cursor: pointer;
   display: inline-block;
   outline: none;
@@ -151,7 +148,7 @@
   font-weight: normal;
   text-align: @button-text-alignment;
   position: relative;
-  .box-shadow(@button-shadow);
+  .box-shadow(@button-default-shadow);
   border: none;
   padding: 0;
 }
