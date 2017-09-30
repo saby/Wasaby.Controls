@@ -74,6 +74,9 @@
 @icon-button-edit-round-border-line-height:@icon-large-size;
 @listView-empty-data-padding-top:         1.9285rem;
 //Button
+@button-text-color:                       @white-color;
+@button-text-shadow:                      0px 1px 0px rgba(0, 0, 0, 0.35);
+@button-border-width:                     2px;
 @button-height:                           3rem;
 @button-font-size:                        1.428rem;
 @button-min-width:                        0.86rem;
@@ -105,26 +108,31 @@
 @filter-panel-chooser-list-view-check-box-left:.14rem;
 @filter-panel-chooser-list-view-title-max-height:5.14rem;
 @filter-panel-chooser-list-view-title-shadow-height:1.14rem;
-@button-border-width:                     @default-border-width;
 // Normal default button
-@button-border:                           @default-border-width solid @default-border-color-second;
+@button-border:                           @button-border-width solid @default-border-color-second;
+@button-border-color:                     @button-bg-color;
 @button-line-height:                      2.86rem;
-@button-bg-active:                        #1B2A3B;
-@button-hover-bg:                         #293D52;
-@button-bg-color:                         #354B62;
-@button-border-color:                     @icon-color-primary;
+@button-bg-active:                        #516B8C;
+@button-hover-bg:                         #516B8C;
+@button-bg-color:                         #567395;
+@button-border-color:                     @button-bg-color;
+@button-hover-border-color:               @button-hover-bg;
+@button-shadow:                           0px 1px 4px rgba(0, 0, 0, 0.5);
 // Normal primary button
+@button-primary-text-color:               @button-text-color;
 @button-primary-border:                   @default-border-width solid @button-primary-border-color;
-@button-primary-border-color:             #d94700;
 @button-primary-bg-color:                 @primary-color;
-@button-primary-hover-bg:                 #EC5B19;
+@button-primary-border-color:             @button-primary-bg-color;
+@button-primary-hover-bg:                 #FA6019;
 @button-primary-active-text-color:        @button-active-text-color;
 @button-primary-active-border:            @default-border-width solid #d94700;
-@button-primary-bg-active:                #d94700;
+@button-primary-bg-active:                @button-primary-hover-bg;
+@button-primary-hover-border-color:       @button-primary-hover-bg;
 // Normal disabled button
-@button-disabled-text-color:              @disabled-color;
-@button-disabled-border:                  @default-border-width solid @disabled-color;
-@button-disabled-bg:                      #354B62;
+@button-disabled-text-color:              rgba(255, 255, 255, 0.15);
+@button-disabled-border:                  @button-border-width solid @button-bg-color;
+@button-disabled-bg:                      #567395;
+@button-disabled-icon-color:              @button-disabled-text-color;
 // Big button
 @button-big-line-height:                  @button-line-height;
 @button-big-padding:                      @button-padding;
@@ -144,7 +152,8 @@
 // Normal default button
 @button-checked-border-width:             @button-border-width;
 @button-checked-padding:                  @button-padding;
-@button-checked-border:                   @button-active-border;
+@button-checked-border:                   @button-border-width solid @button-checked-border-color;
+@button-checked-border-color:             rgba(38, 184, 255, 1);
 @button-checked-bg:                       @button-bg-active;
 // Normal primary button
 @button-primary-checked-border:           @button-primary-active-border;
