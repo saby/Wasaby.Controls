@@ -151,7 +151,6 @@
    }
 }
 .controls-RichEditor {
-
    &.request-result {
       display: block;
       overflow: hidden;
@@ -248,6 +247,10 @@
          background-color:rgba(0, 0, 0, 0);
       }
    }
+   .ws-note__content.ws-noteDialog-text .controls-RichEditor__editorFrame > p {
+      margin-bottom: 0px;
+      padding-bottom: 6px;
+   }
 }
 .ws-is-chrome {
    .controls-RichEditor__editorFrame.ws-basic-style p:empty{
@@ -264,5 +267,12 @@
 .ws-is-desktop-platform {
    .controls-RichEditor__sourceArea {
       font-family: 'EmojiFont', 'TensorFont', sans-serif;
+   }
+}
+.ws-is-mobile-safari {
+   .controls-RichEditor {
+      .controls-RichEditor__placeholder {
+         padding-top: 2px;
+      }
    }
 }

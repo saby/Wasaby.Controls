@@ -214,6 +214,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                      obj.icon = item.get('icon');
                      obj.caption = item.get('title');
                      obj.instance = instance;
+                     obj.visible = instance.isVisible();
                   }
                   else {
                      var name = item.get('name');
@@ -223,6 +224,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                      obj.caption = instance.getCaption();
                      obj.instance = instance;
                      obj.className = 'controls-operationsPanel__actionType-' + getItemType(item.get('type'));
+                     obj.visible = instance.isVisible();
 
                      if(typeof instance.getItems === 'function'){
                         var childItems = instance.getItems();

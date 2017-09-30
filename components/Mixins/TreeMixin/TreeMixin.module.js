@@ -220,13 +220,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          prevItem,
          itemsForFooter = [],
          records = [],
-         projectionFilter,
-         prevGroupId = undefined,
-         analyzeChanges;
+         projectionFilter;
 
       projectionFilter = resetFilterAndStopEventRaising(projection, false);
       if (cfg.expand || cfg.hierarchyViewMode) {
-         analyzeChanges = true;
          expandAllItems(projection, cfg);
       } else {
          /**
@@ -236,10 +233,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
           * https://inside.tensor.ru/opendoc.html?guid=6f1758f0-f45d-496b-a8fe-fde7390c92c7
           * @private
           */
-         analyzeChanges = false;
          applyExpandToItemsProjection(projection, cfg);
       }
-      restoreFilterAndRunEventRaising(projection, projectionFilter, analyzeChanges);
+      restoreFilterAndRunEventRaising(projection, projectionFilter, false);
 
       cfg._searchFolders = {};
       cfg.hasNodes = false;
