@@ -422,28 +422,10 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
             /* Если фокус уходит на список - вернём его обратно в контрол, с которого фокус ушёл */
             this.subscribeTo(control, 'onFocusOut', function(e, destroyed, focusedControl) {
-               function clearItems() {
-                  /* Когда уходит фокус с поля ввода, необходимо очистить записи в списке, т.к. записи могут удалять/изменять */
-                  self._list.getItems() && self._list.getItems().clear();
-               }
                /* Если фокус ушёл на список, или на дочерний контрол списка - возвращаем обратно в поле ввода */
-               if(self._list) {
-                  if (self._list === focusedControl || ~Array.indexOf(self._list.getChildControls(), focusedControl)) {
-                     focusedControl.setActive(false, false, false, this);
-                     this.setActive(true);
-                  } else if (self._options.autoShow && focusedControl && !ControlHierarchyManager.checkInclusion(this, focusedControl.getContainer()[0])) {
-                     // не надо подписываться, если контрол уже активен, очистка списка будет удалена в 3.17.150
-                     if (focusedControl && !focusedControl.isActive()) {
-                        // если фокус переходит на другой компонент, дождемся этого перехода фокуса, и только потом почистим items.
-                        // если так не сделать, преждевременно сработает механизм восстановления фокуса, в случае safari это приводит к ошибке
-                        // https://online.sbis.ru/opendoc.html?guid=aa909af6-3564-4fed-ac60-962fc71b451e
-                        // утечки памяти тут не произойдет, потому что мы попали сюда в процессе перехода активности на focusedControl,
-                        // и после onFocusOut сразу должен сработать onFocusIn в focusedControl
-                        focusedControl.once('onFocusIn', clearItems);
-                     } else {
-                        clearItems();
-                     }
-                  }
+               if (self._list && (self._list === focusedControl || ~Array.indexOf(self._list.getChildControls(), focusedControl))) {
+                  focusedControl.setActive(false, false, false, this);
+                  this.setActive(true);
                }
             });
          }, this);
@@ -455,7 +437,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        */
       _observableControlFocusHandler: function() {
          if(this._options.autoShow && !this.isPickerVisible()) {
-            this._checkPickerState(true) ? this.showPicker() : this._startListSearch();
+            this._startListSearch();
          }
       },
 
