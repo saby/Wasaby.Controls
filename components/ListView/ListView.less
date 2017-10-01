@@ -202,57 +202,49 @@
    line-height: @listView-servicefooter-height;
 }
 
-.controls-AjaxLoader{
+.controls-AjaxLoader {
    background: transparent;
    position: absolute;
-   top: @controls-AjaxLoader-default-cord;
-   bottom: @controls-AjaxLoader-default-cord;
-   left: @controls-AjaxLoader-default-cord;
-   right: @controls-AjaxLoader-default-cord;
+   height: 100%;
+   top: 0;
+   bottom: 0;
+   left:0;
+   right: 0;
    width: 100%;
-   z-index: @controls-AjaxLoader-zIndex;
+   z-index: 11;
    overflow: hidden;
-   min-height: @controls-AjaxLoader-minHeight;
+   min-height: @controls-AjaxLoader-size;
+   //todo: вложенность
    &.controls-AjaxLoader__showIndication {
       background: @controls-AjaxLoader-background;
       .controls-AjaxLoader__outer {
          display: block;
       }
    }
+   &__outer {
+      display: none;
+      height: @controls-AjaxLoader-size + 2 * @controls-AjaxLoader-block-padding;
+      position: relative;
+      top: 50%;
+   }
+   &__block {
+      width: @controls-AjaxLoader-size;
+      border: none;
+      box-shadow: none;
+      background: @controls-AjaxLoader-block-background;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      top: -50%;
+      padding: @controls-AjaxLoader-block-padding;
+   }
+   &__LoadingIndicator{
+      position: absolute;
+      background:@list-view-scroll-bg;
+      padding-left:  @controls-AjaxLoader-size;
+      height:  @controls-AjaxLoader-size;
+   }
 }
-// На webkit из-за особенностей верстки в данном месте, несмотря на то что у абсолютно спозиционированного
-// контенера заданы top и bottom, высота все равно равна 0 а не высоте контенера. Устанавливаем высоту через height: 100%;
-.ws-is-webkit .controls-AjaxLoader {
-   height: 100%;
-}
-
-.controls-AjaxLoader__outer{
-   display: none;
-   height: @controls-AjaxLoader-outer-height;
-   position: relative;
-   top: @controls-AjaxLoader-outer-top;
-   line-height: @controls-AjaxLoader-outer-lineHeight;
-}
-
-.controls-AjaxLoader__block{
-   width: @controls-AjaxLoader-block-width;
-   border: none;
-   box-shadow: none;
-   background: @controls-AjaxLoader-block-background;
-   margin-left: auto;
-   margin-right: auto;
-   position: relative;
-   top: @controls-AjaxLoader-block-top;
-   padding: @controls-AjaxLoader-block-padding;
-}
-
-.controls-AjaxLoader__LoadingIndicator{
-   position: absolute;
-   background:@list-view-scroll-bg;
-   padding-left: @controls-AjaxLoader-indicator-padding-left;
-   height: @controls-AjaxLoader-indicator-height;
-}
-
 
 .controls-ListView__results{
   background: #FFF;

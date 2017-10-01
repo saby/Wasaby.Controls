@@ -583,7 +583,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                if (cDetection.isIE) {
                   // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
                   // 1px для скроллирования.
-                  this._content.toggleClass('controls-ScrollContainer__content-overflowHidden', this._getScrollHeight() - this._container.height() <= 1);
+                  this._content.toggleClass('controls-ScrollContainer__content-overflowHidden', (this._getScrollHeight() - this._container.height()) === 1);
                }
             }
 

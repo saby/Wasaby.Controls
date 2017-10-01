@@ -881,11 +881,13 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls
     border-radius: 0;
 }
 
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__dates .controls-DateRangeBigChoose__dates-months span.controls-Button {
+body .controls-DateRangeBigChoose__dates-month-btn {
    // Будет выпелено с переходом на новый стандарт. Там выравнивание одинаковое.
    padding-left: 0;
    text-align: center;
-   line-height: 1.786rem;
+   .controls-Button__text {
+      width: 100%;
+   }
 }
 body .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__caption-text {
    margin-left: 4.5rem;

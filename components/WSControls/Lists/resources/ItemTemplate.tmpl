@@ -5,7 +5,7 @@
          itemData.hovered ? ' controls-ListView__item__hovered'
       }}{{
          _isItemMultiSelected(projItem) ? ' controls-ListView__item__multiSelected'
-      }}{{className}}"
+      }}{{_options.itemClassName}}"
    data-hash="{{ projItem.getHash() }}"
    key="{{ projItem.getHash() }}"
    event:onclick="_onItemClick(projItem)"
