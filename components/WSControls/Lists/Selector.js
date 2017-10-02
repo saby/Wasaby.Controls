@@ -80,11 +80,6 @@ define('js!WSControls/Lists/Selector', [
          return this._selectedKey == this._getPropertyValue(projItem.getContents(), this._options.idProperty);
       },
 
-      _onItemClick: function(e, displayItem) {
-         this._setSelectedByHash(displayItem.getHash());
-         this._onSelectedItemChange();
-      },
-
       _getKeyByIndex: function (index, cfg) {
          if (this._hasItemByIndex(index)) {
             var itemContents = this._display.at(index).getContents();
