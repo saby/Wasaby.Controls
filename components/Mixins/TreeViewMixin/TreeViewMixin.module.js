@@ -253,7 +253,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
          return lastContainer;
       },
       around: {
-         _onCollectionRemove: function(parentFunc, items, notCollapsed, groupId) {
+         _onCollectionRemove: function(parentFunc, items, notCollapsed) {
             var i, item, itemId;
             for (i = 0; i < items.length; i++) {
                item = items[i];
@@ -266,7 +266,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
                   }
                }
             }
-            return parentFunc.call(this, items, notCollapsed, groupId);
+            return parentFunc.call(this, items, notCollapsed);
          },
          /**
           * Обработка изменения item property

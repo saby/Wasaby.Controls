@@ -1558,7 +1558,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._addStickyToGroups(data.records);
          return data;
       },
-      _getItemsForRedrawOnAdd: function(items, groupId) {
+      _getItemsForRedrawOnAdd: function(items) {
          var data = DataGridView.superclass._getItemsForRedrawOnAdd.apply(this, arguments);
          this._addStickyToGroups(data);
          return data;
