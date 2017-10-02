@@ -273,7 +273,6 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
             if (['bold', 'italic', 'underline', 'strikethrough'].indexOf(obj.format) != -1) {
                this._buttons[obj.format] = state;
             }
-
             return {state: state, name: name};
          },
          getStylesPanel: function(button){
@@ -360,7 +359,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                   //необходимо сначала ставить размер шрифта, тк это сбивает каретку
                   editor.setFontSize(formats.fontsize);
                   for ( var button in this._buttons) {
-                     if (this._buttons.hasOwnProperty(button) && formats[button] && this._buttons[button] !== formats[button]) {
+                     if (this._buttons.hasOwnProperty(button) && button in formats && this._buttons[button] !== formats[button]) {
                         editor.execCommand(button);
                      }
                   }
