@@ -171,7 +171,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                curCol = columns[i];
                nextCol = columns[i + 1];
                curColSplitTitle = (curCol.title || '').split('.');
-               nextColSplitTitle = nextCol && nextCol.title.split('.');
+               nextColSplitTitle = ((nextCol && nextCol.title) || '').split('.');
 
                if (!supportDouble){
                   supportDouble = coreClone(curCol);
