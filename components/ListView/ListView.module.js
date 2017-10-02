@@ -1202,6 +1202,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 }
             }
             this._setScrollPagerPosition();
+            this.subscribeTo(this, 'onAfterVisibilityChange', this._onVisibleChange);
             this._scrollBinder = new ComponentBinder({
                view: this,
                pagingZIndex: this._pagingZIndex
