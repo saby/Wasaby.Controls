@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 'html!SBIS3.CONTROLS.PhoneTextBox', 'css!SBIS3.CONTROLS.PhoneTextBox'], function(FormattedTextBoxBase, dotTpl) {
+define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 'html!SBIS3.CONTROLS.PhoneTextBox', 'Core/detection', 'css!SBIS3.CONTROLS.PhoneTextBox'], function(FormattedTextBoxBase, dotTpl, detection) {
 
    'use strict';
 
@@ -63,6 +63,21 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
          }
       }
       return fullText;
+   },
+   getFirstEmptyPosition = function() {
+      var
+         i, j,
+         model = this._getFormatModel().model;
+
+      for (i = 0; i < model.length; i++) {
+         if (model[i].isGroup) {
+            for (j = 0; j < model[i].mask.length; j++) {
+               if (model[i].value[j] === undefined) {
+                  return [i, j];
+               }
+            }
+         }
+      }
    };
 
    var PhoneTextBox = FormattedTextBoxBase.extend( /** @lends SBIS3.CONTROLS.PhoneTextBox.prototype */ {
@@ -106,6 +121,24 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
          $('.controls-PhoneTextBox__link', this._container.get(0))
             .text(this.getText())
             .attr('href', 'tel:' + this._options.srcText);
+      },
+
+      _focusHandler: function() {
+         var
+            self = this,
+            position = getFirstEmptyPosition.call(this);
+         if (position) {
+            self._moveCursor.apply(self, position);
+            //chrome и safari не перемещают курсор если это делать синхронно в момент фокуса
+            //https://stackoverflow.com/questions/21881509/how-to-set-cursor-position-at-the-end-of-input-text-in-google-chrome
+            if (detection.chrome || detection.safari) {
+               setTimeout(function () {
+                  self._moveCursor.apply(self, position);
+               }, 0);
+            }
+         } else {
+            PhoneTextBox.superclass._focusHandler.apply(this, arguments);
+         }
       },
 
       getSrcText: function() {
