@@ -408,7 +408,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          if (this._options.editable) {
             this._setKeyByText();
          }
-         var isTextOverflow = getTextWidth(this.getText()) > $('.controls-TextBox__field:visible', this.getContainer()).width();
+         // Иногда $(...).width() возвращает не целое число (замечено в MSIE), из-за этого сравнение даёт неверный результат. Так что округляем:
+         var width = $('.controls-TextBox__field:visible', this.getContainer()).width();
+         var isTextOverflow = 0 < width && getTextWidth(this.getText()) > Math.round(width);
          //Если у нас виден инпут, то показываем тень только когда он не в фокусе. иначе в момент ввода появится ненужное затемнение.
          var needShadow = isTextOverflow && (this.isEditable() && !this._inputField.is(':focus') || !this.isEditable());
          this.getContainer().toggleClass('controls-ComboBox__overflow', needShadow);
