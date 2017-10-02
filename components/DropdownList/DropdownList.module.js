@@ -913,7 +913,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             this._setText(text);
          },
          _setText: function(text){
-            if(typeof text === 'string') {
+            if(typeof text === 'string' && this._options.text !== text) {
                this._options.text = text;
                this._notifyOnPropertyChanged('text');
             }
