@@ -3312,7 +3312,7 @@ define('js!SBIS3.CONTROLS.ListView',
                var loadId = this._loadId++;
                this._loadQueue[loadId] = coreClone(this._infiniteScrollState);
 
-               this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit, this._infiniteScrollState.mode)
+               this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit, type || this._infiniteScrollState.mode)
                   .addBoth(forAliveOnly(function(res) {
                      this._loader = null;
                      return res;
