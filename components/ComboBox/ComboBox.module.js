@@ -2,6 +2,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "Core/constants",
    "Core/Deferred",
    'Core/IoC',
+   'Core/detection',
    'js!SBIS3.CORE.LayoutManager',
    'js!SBIS3.CONTROLS.TextBox',
    'js!SBIS3.CONTROLS.TextBoxUtils',
@@ -22,7 +23,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "Core/core-instance",
    "i18n!SBIS3.CONTROLS.СomboBox",
    'css!SBIS3.CONTROLS.ComboBox'
-], function ( constants, Deferred, IoC, LayoutManager, TextBox, TextBoxUtils, textFieldWrapper, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, getTextWidth, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
+], function ( constants, Deferred, IoC, detection, LayoutManager, TextBox, TextBoxUtils, textFieldWrapper, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, getTextWidth, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
    'use strict';
    /**
     * Класс контрола "Комбинированный выпадающий список" с возможностью ввода значения с клавиатуры.
@@ -797,12 +798,16 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _pickerMouseEnterHandler: function (event) {
-         var itemContainer = $(event.target).closest('.controls-ComboBox__itemRow');
-         if (itemContainer.length) {
-            var itemTextContainer = $('.controls-ComboBox__item', itemContainer)[0],
-                itemText = itemTextContainer.textContent;
-            if (getTextWidth(itemText) > itemTextContainer.clientWidth) {
-               itemContainer[0].setAttribute('title', itemText);
+         //не устанавливаем title на мобильных устройствах:
+         //во-первых не нужно, во-вторых на ios из-за установки аттрибута не работает клик
+         if (!detection.isMobilePlatform) {
+            var itemContainer = $(event.target).closest('.controls-ComboBox__itemRow');
+            if (itemContainer.length) {
+               var itemTextContainer = $('.controls-ComboBox__item', itemContainer)[0],
+                  itemText = itemTextContainer.textContent;
+               if (getTextWidth(itemText) > itemTextContainer.clientWidth) {
+                  itemContainer[0].setAttribute('title', itemText);
+               }
             }
          }
       },
