@@ -662,7 +662,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             }
             this._container.off('mousemove', this._initScrollbar);
             if(cDetection.isMacOSDesktop && cDetection.safari){
-               this._container.off('scroll', this._resetContainerScroll);
+               this._container.off('scroll');
             }
             this._unsubscribeMouseEnterLeave();
             this._getScrollContainerChannel()
