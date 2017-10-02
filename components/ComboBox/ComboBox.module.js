@@ -273,7 +273,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             cfg.cssClassName += ' controls-ComboBox__editable-false';
          }
          if (!cfg.selectedKey) { //todo: ьожет это ндао в условие уровнем повыше
-            cfg.cssClassName += ' controls-ComboBox_emptyValue';
+            cfg.cssClassName += ' controls-ComboBox__emptyValue';
          }
          return cfg;
       },
@@ -427,7 +427,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          if (this._picker) {
             $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
          }
-         this._container.addClass('controls-ComboBox_emptyValue');
+         this._container.addClass('controls-ComboBox__emptyValue');
       },
 
       _drawSelectedItem: function (key, index) {
@@ -469,10 +469,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              * вообще этот участок кода нехороший, помечу его TODO
              * планирую избавиться от него по задаче https://inside.tensor.ru/opendoc.html?guid=fb9b0a49-6829-4f06-aa27-7d276a1c9e84&description*/
             if (cInstance.instanceOfModule(item, 'WS.Data/Entity/Model')) {
-               this._container.toggleClass('controls-ComboBox_emptyValue', (key === null));
+               this._container.toggleClass('controls-ComboBox__emptyValue', (key === null));
             }
             else {
-               this._container.removeClass('controls-ComboBox_emptyValue');
+               this._container.removeClass('controls-ComboBox__emptyValue');
             }
          }
          else {
