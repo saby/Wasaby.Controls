@@ -856,7 +856,7 @@ define(
       },
 
       _getSplitterRegExp: function(){
-         return /[.,\/\- :=()]/;
+         return /[.,\/\- :=()+]/;
       },
 
       _getClearText: function(){
@@ -1040,11 +1040,15 @@ define(
        */
       //TODO пока работает только в IE8+ и FireFox
       _focusHandler: function() {
+         this._moveCursor();
+      },
+
+      _moveCursor: function(group, position) {
          var
             self = this,
-            child = !this._getFormatModel().model[0].isGroup ? 1 : 0,
-            startContainer = this._inputField.get(0).childNodes[child].childNodes[0],
-            startPosition = 0;
+            child = group || (this._getFormatModel().model[0].isGroup ? 0 : 1),
+            startContainer = _getContainerByIndex.call(this, child),
+            startPosition = position || 0;
          //В IE если ставить курсор синхронно по событию focusin, то он не устанавливается.
          if (constants.browser.isIE) {
             setTimeout(forAliveOnly(function() {
