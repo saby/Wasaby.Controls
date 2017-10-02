@@ -2363,14 +2363,32 @@ define('js!SBIS3.CONTROLS.ListView',
          _createEditInPlace: function() {
             var
                self = this,
-               result = new Deferred();
-            if (!this._createEditInPlaceDeferred) {
-               this._createEditInPlaceDeferred = new Deferred();
-               requirejs([this._isHoverEditMode() ? 'js!SBIS3.CONTROLS.EditInPlaceHoverController' : 'js!SBIS3.CONTROLS.EditInPlaceClickController'], function (controller) {
-                  self._createEditInPlaceDeferred.callback(self._editInPlace = new controller(self._getEditInPlaceConfig()));
-                  self._createEditInPlaceDeferred = undefined;
+               result = new Deferred(),
+               controller,
+               moduleName = this._isHoverEditMode() ? 'js!SBIS3.CONTROLS.EditInPlaceHoverController' : 'js!SBIS3.CONTROLS.EditInPlaceClickController';
+
+            // Если процесс создания EIP запущен - то просто возвращаем результат деферреда создания
+            if (this._createEditInPlaceDeferred) {
+               this._createEditInPlaceDeferred.addCallback(function(editInPlace) {
+                  result.callback(editInPlace);
+                  return editInPlace;
                });
+               return result;
             }
+
+            // Если модуль редактирования по месту уже загружен - то просто создаем его экземпляр
+            if (requirejs.defined(moduleName)) {
+               controller = requirejs(moduleName);
+               result.callback(this._editInPlace = new controller(self._getEditInPlaceConfig()));
+               return result;
+            }
+
+            // Если мы попали сюда, значит редактирование по месту ещё не создается, да и модуль ещё не загружен. Это нам и предстоит сделать.
+            this._createEditInPlaceDeferred = new Deferred();
+            requirejs([moduleName], function (controller) {
+               self._createEditInPlaceDeferred.callback(self._editInPlace = new controller(self._getEditInPlaceConfig()));
+               self._createEditInPlaceDeferred = undefined;
+            });
             this._createEditInPlaceDeferred.addCallback(function(editInPlace) {
                result.callback(editInPlace);
                return editInPlace;
