@@ -1501,6 +1501,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _updateHoveredItemAfterRedraw: function() {
             var hoveredItem = this.getHoveredItem(),
                 hoveredItemContainer = hoveredItem.container,
+                itemsProjection = this._getItemsProjection(),
                 containsHoveredItem, hash, projItem;
 
             /* !Производить обновление операций надо синхронно, иначе они будут моргать. */
@@ -1516,7 +1517,9 @@ define('js!SBIS3.CONTROLS.ListView',
                    * но этот элемент может теряться в ходе перерисовок. Выписана задача по которой мы будем
                    * хранить только идентификатор и данный код станет не нужен*/
                   hash = hoveredItemContainer.attr('data-hash');
-                  projItem = this._getItemsProjection().getByHash(hash);
+                  if(itemsProjection) {
+                     projItem = itemsProjection.getByHash(hash);
+                  }
                   /* Если в проекции нет элемента и этого элемента нет в DOM'e,
                    но на него осталась jQuery ссылка, то надо её затереть */
                   if (projItem) {
