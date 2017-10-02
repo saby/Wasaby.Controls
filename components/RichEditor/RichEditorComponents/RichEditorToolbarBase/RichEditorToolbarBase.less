@@ -3,6 +3,8 @@
    &.controls-Menu {
       width: 200px;
       padding: 0 0 4px 0 !important;
+      font-family: 'TensorFont', sans-serif;
+
       .controls-ListView__item.controls-MenuItem {
          color: #587ab0;
          font-size: 24px;
@@ -22,35 +24,34 @@
    }
 }
 
+//Если не поддерживает нативные смайлы - нужно добавить шрифт EmojiFont
+.ws-fix-emoji {
+    .controls-RichEditorToolbar__smilesPicker {
+        font-family: 'EmojiFont', 'TensorFont', sans-serif;
+    }
+}
+
 .ws-is-desktop-platform {
-   .controls-RichEditorToolbar__smilesPicker {
-      width: 192px;
-      font-family: 'EmojiFont','TensorFont', sans-serif;
-      &.controls-Menu {
-         .controls-ListView__item {
-            font-size: 18px;
-            width: 31px;// 23 ширина смайла на desktop`e 10 ios + 8 отступ
-         }
-      }
-   }
+    .controls-RichEditorToolbar__smilesPicker {
+        width: 192px;
+        &.controls-Menu {
+            .controls-ListView__item {
+                font-size: 18px;
+                width: 31px;// 23 ширина смайла на desktop`e 10 ios + 8 отступ
+            }
+        }
+    }
 }
 
 .ws-is-windows-8, .ws-is-firefox {
    .controls-RichEditorToolbar__smilesPicker {
       width: 200px;
-      font-family: 'TensorFont', sans-serif;
       &.controls-Menu {
          .controls-ListView__item {
             font-size: 24px;
             width: 33px;// 23 ширина смайла на desktop`e 10 ios + 8 отступ
          }
       }
-   }
-}
-//win10 поддерживает нативные смайлы, не нужно перебивать шрифт на emojiFont
-.ws-is-windows-10{
-   .controls-RichEditorToolbar__smilesPicker {
-      font-family: 'TensorFont', sans-serif;
    }
 }
 
