@@ -1,10 +1,10 @@
 /**
  * Created by kraynovdo on 22.09.2017.
  */
-define('js!WSControls/Lists/ItemsView/ItemsRender', [
+define('js!WSControls/Lists/ItemsRender', [
    'Core/core-extend',
    'Core/Control',
-   'tmpl!WSControls/Lists/ItemsView/ItemsRender',
+   'tmpl!WSControls/Lists/ItemsRender',
    'js!WSControls/Lists/resources/utils/ItemsUtil',
    'js!WS.Data/Type/descriptor'
 ], function (extend,
@@ -17,7 +17,7 @@ define('js!WSControls/Lists/ItemsView/ItemsRender', [
 
    var ItemsRender = BaseControl.extend(
       {
-         _controlName: 'WSControls/Lists/ItemsView/ItemsRender',
+         _controlName: 'WSControls/Lists/ItemsRender',
          _enumIndexes: null,
          iWantVDOM: true,
          _isActiveByClick: false,

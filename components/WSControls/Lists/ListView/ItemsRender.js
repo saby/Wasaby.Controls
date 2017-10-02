@@ -2,7 +2,7 @@
  * Created by kraynovdo on 22.09.2017.
  */
 define('js!WSControls/Lists/ListView/ItemsRender', [
-   'js!WSControls/Lists/ItemsView/ItemsRender',
+   'js!WSControls/Lists/ItemsRender',
    'tmpl!WSControls/Lists/ListView/ItemsRender'
 ], function (ItemsViewRender, ItemsRenderTpl
    ) {
