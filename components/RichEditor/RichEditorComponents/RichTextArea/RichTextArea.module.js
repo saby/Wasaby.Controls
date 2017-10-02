@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "Core/pathResolver",
    "Core/Context",
    "Core/Indicator",
-   "Core/core-functions",
+   "Core/core-clone",
    "Core/CommandDispatcher",
    "Core/constants",
    "Core/Deferred",
@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
       cPathResolver,
       cContext,
       cIndicator,
-      cFunctions,
+      coreClone,
       CommandDispatcher,
       cConstants,
       Deferred,
@@ -195,7 +195,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                 * позволяет сохранять историю ввода
                 * @cfg {boolean} Сохранять ли историю ввода
                 */
-               saveHistory: true
+               saveHistory: true,
+                /**
+                 * @cfg {function} функция проверки валидности класса
+                 */
+               validateClass: undefined
             },
             _fakeArea: undefined, //textarea для перехода фкуса по табу
             _tinyEditor: undefined, //экземпляр tinyMCE
@@ -215,13 +219,15 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             _fromTouch: false,
             _codeSampleDialog: undefined,
             _beforeFocusOutRng: undefined,
-            _images: {}
+            _images: {},
+            _lastSavedText: undefined
          },
 
          _modifyOptions: function(options) {
             options = RichTextArea.superclass._modifyOptions.apply(this, arguments);
             options._prepareReviewContent = this._prepareReviewContent.bind({_options: options});
             options._prepareContent = this._prepareContent.bind(this);
+            options._sanitizeClasses = this._sanitizeClasses.bind(this);
             return options;
          },
 
@@ -648,9 +654,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          saveToHistory: function(valParam) {
             var
                self = this,
-               isDublicate = false/*,
-               valBL*/;
-            if (valParam && typeof valParam === 'string' && self._textChanged && self._options.saveHistory) {
+               isDublicate = false;
+            if (valParam && typeof valParam === 'string' && self._textChanged && self._options.saveHistory && this._lastSavedText !== valParam) {
+               this._lastSavedText = valParam;
                this.getHistory().addCallback(function(arrBL){
                   arrBL.forEach(function (valBL) {
                      if (valParam === valBL) {
@@ -743,10 +749,11 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           * @private
           */
          setFontSize: function(size) {
-            size = size + 'px';
             //необходимо удалять текущий формат(размер шрифта) чтобы правльно создавались span
-            this._removeFormat('fontsize', size);
-            this._tinyEditor.execCommand('FontSize', false,  size);
+            this._removeFormat('fontsize');
+            if (size) {
+               this._tinyEditor.execCommand('FontSize', false,  size + 'px');
+            }
             this._tinyEditor.execCommand('');
             //при установке стиля(через форматтер) не стреляет change
             this._setTrimmedText(this._getTinyEditorValue());
@@ -844,7 +851,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                editor = this._tinyEditor,
                selection = editor.selection,
-               range = cFunctions.clone(selection.getRng()),
+               range = coreClone(selection.getRng()),
                element = selection.getNode(),
                anchor = editor.dom.getParent(element, 'a[href]'),
                href = anchor ? editor.dom.getAttrib(anchor, 'href') : '',
@@ -1308,7 +1315,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             editor.on('Paste', function(e) {
                self._clipboardText = e.clipboardData ?
-                  cConstants.browser.isMobileIOS ? e.clipboardData.getData('text/plain') : e.clipboardData.getData('text') :
+                  e.clipboardData.getData(cConstants.browser.isMobileIOS ? 'text/plain' : 'text') :
                   window.clipboardData.getData('text');
                editor.plugins.paste.clipboard.pasteFormat = 'html';
             });
@@ -1328,7 +1335,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
                //upd: в костроме форматная вставка, не нужно вырезать лишние теги
                if (!self._mouseIsPressed && self._options.editorConfig.paste_as_text) {
-                  e.content = self._sanitizeBeforePaste(e.content);
+                  e.content = self._options._sanitizeClasses(e.content, false);
                }
                self._mouseIsPressed = false;
                // при форматной вставке по кнопке мы обрабаотываем контент через событие tinyMCE
@@ -1957,13 +1964,17 @@ define('js!SBIS3.CONTROLS.RichTextArea',
           */
          _trimText: function(text) {
             var
-               beginReg = new RegExp('^<p>(&nbsp; *)*</p>'),// регулярка начала строки
-               endReg = new RegExp('<p>(&nbsp; *)*</p>$'),// регулярка начала строки
-               shiftLineRegexp = new RegExp('<p><br>(&nbsp;)?'),// регулярка пустой строки через shift+ enter и space
+               beginReg = new RegExp('^<p> *(&nbsp; *)*(&nbsp;)?</p>'),// регулярка начала строки
+               endReg = new RegExp('<p> *(&nbsp; *)*(&nbsp;)?</p>$'),// регулярка конца строки
+               regShiftLine1 = new RegExp('<p>(<br( ?/)?>)+(&nbsp;)?'),// регулярка пустой строки через shift+ enter и space
+               regShiftLine2 = new RegExp('(&nbsp;)?(<br( ?/)?>)+</p>'),// регулярка пустой строки через space и shift+ enter
                regResult;
             text = this._removeEmptyTags(text);
-            while (shiftLineRegexp.test(text)) {
-               text = text.replace(shiftLineRegexp, '<p>');
+            while (regShiftLine1.test(text)) {
+               text = text.replace(regShiftLine1, '<p>');
+            }
+            while (regShiftLine2.test(text)) {
+               text = text.replace(regShiftLine2, '</p>');
             }
             while ((regResult = beginReg.exec(text)) !== null) {
                text = text.substr(regResult[0].length + 1);
@@ -2145,7 +2156,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             if (text && text[0] !== '<') {
                text = '<p>' + text.replace(/\n/gi, '<br/>') + '</p>';
             }
-            text = Sanitize(text, {checkDataAttribute: false});
+            text = this._options._sanitizeClasses(text, true);
             return this._options.highlightLinks ? LinkWrap.wrapURLs(LinkWrap.wrapFiles(text), true) : text;
          },
 
@@ -2172,7 +2183,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   if (this._tinyReady.isReady()) {
                      this._tinyEditor.setContent(text);
                   } else {
-                     this._inputControl.html(Sanitize(text, {checkDataAttribute: false}));
+                     this._inputControl.html(this._options._sanitizeClasses(text, true));
                   }
                }
             }
@@ -2227,15 +2238,19 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }
             return true;*/
          },
-         _sanitizeBeforePaste: function(text) {
+         _sanitizeClasses: function(text, images) {
+            var
+                self = this;
             return Sanitize(text,
                {
                   validNodes: {
-                     img: false
+                     img: images
                   },
                   validAttributes: {
                      'class' : function(content, attributeName) {
                         var
+                           //проверка this._options для юнит тестов, тк там метод зовётся на прототипе
+                           validateIsFunction = this._options && typeof this._options.validateClass === 'function',
                            currentValue = content.attributes[attributeName].value,
                            classes = currentValue.split(' '),
                            whiteList =  [
@@ -2248,12 +2263,48 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                               'image-template-center',
                               'image-template-right',
                               'mce-object-iframe',
-                              'ws-hidden'
+                              'ws-hidden',
+                              'language-javascript',
+                              'language-css',
+                              'language-markup',
+                              'language-php',
+                              'token',
+                              'comment',
+                              'prolog',
+                              'doctype',
+                              'cdata',
+                              'punctuation',
+                              'namespace',
+                              'property',
+                              'tag',
+                              'boolean',
+                              'number',
+                              'constant',
+                              'symbol',
+                              'deleted',
+                              'selector',
+                              'attr-name',
+                              'string',
+                              'char',
+                              'builtin',
+                              'inserted',
+                              'operator',
+                              'entity',
+                              'url',
+                              'style',
+                              'attr-value',
+                              'keyword',
+                              'function',
+                              'regex',
+                              'important',
+                              'variable',
+                              'bold',
+                              'italic'
                            ],
                            index = classes.length - 1;
 
                         while (index >= 0) {
-                           if (!~whiteList.indexOf(classes[index])) {
+                           if (!~whiteList.indexOf(classes[index]) && (!validateIsFunction || !this._options.validateClass(classes[index]))) {
                               classes.splice(index, 1);
                            }
                            index -= 1;
@@ -2265,7 +2316,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                            delete content.attributes[attributeName];
                         }
 
-                     }
+                     }.bind(self)
                   },
                   checkDataAttribute: false,
                   escapeInvalidTags: false

@@ -300,7 +300,7 @@ define(
       },
 
       _onChangeTimeHandler: function(event, time) {
-         this.setDate(time);
+         this.setDate(new Date(time));
       },
 
       _onChooserChange: function(event, date) {

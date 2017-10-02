@@ -13,10 +13,11 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    'Core/Deferred',
    "Core/ParallelDeferred",
    "Core/core-instance",
-   "Core/core-functions",
+   "Core/core-clone",
    "Core/IoC",
    "Core/helpers/Function/once",
-   "Core/detection"
+   "Core/detection",
+   "Core/CommandDispatcher"
 ], function (
    constants,
    SearchController,
@@ -29,10 +30,11 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    Deferred,
    ParallelDeferred,
    cInstance,
-   cFunctions,
+   coreClone,
    IoC,
    once,
-   detection) {
+   detection,
+   CommandDispatcher) {
 
    'use strict';
 
@@ -119,6 +121,14 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          var self = this;
          this._publish('onBeforeLoadHistory');
          this._options.observableControls.unshift(this);
+         CommandDispatcher.declareCommand(this, 'changeSearchParam', function(searchParam) {
+            self.setSearchParamName(searchParam);
+            self._updateList();
+            
+            if (self._needShowHistory()) {
+               self._showHistory();
+            }
+         });
          
          /* Инициализация searchController'a происходит лениво,
             только при начале поиска (по событию onSearch). Поэтому, чтобы не было множественных подписок
@@ -237,7 +247,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          return this.getList().getDataSource().getIdProperty() || this.getList().getProperty('idProperty');
       },
       _needShowHistory: function(){
-         return this._historyController && !this.getText().length && this._options.startChar; //Если startChar = 0, историю показывать не нужно
+         var listItems = this._getListItems();
+         return this._historyController && !this.getText().length && this._options.startChar && //Если startChar = 0, историю показывать не нужно
+               (!listItems || !listItems.getCount() || !this.isPickerVisible()); // Показываем историю, если записей нет или пикер скрыт
       },
 
       //TODO Выпилить _getHistoryRecordSetSync и _prepareHistoryData после выполнения задачи, когда будет поддержан списочный метод
@@ -474,7 +486,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             if(this._options.searchParam) {
                /* Т.к. при сбросе поиска в саггесте запрос отправлять не надо (саггест скрывается),
                 то просто удалим параметр поиска из фильтра */
-               var listFilter = cFunctions.clone(this.getList().getFilter()); /* Клонируем фильтр, т.к. он передаётся по ссылке */
+               var listFilter = coreClone(this.getList().getFilter()); /* Клонируем фильтр, т.к. он передаётся по ссылке */
 
                delete listFilter[this._options.searchParam];
                this.setListFilter(listFilter, true);

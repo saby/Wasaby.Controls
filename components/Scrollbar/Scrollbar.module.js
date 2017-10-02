@@ -166,8 +166,9 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
                this._isConstThumb = false;
             }
             if (this._thumb) {
-               // У ползунка есть отступы сверху и снизу, а мы расчитывали высоту вместе с отступами, поэтому вычтем их.
-               this._thumb.height(this._thumbHeight - this._thumb.outerHeight(true) + this._thumb.height());
+               this._thumb.height(this._thumbHeight);
+               // У ползунка есть отступы сверху и снизу, нужно учесть их.
+               this._thumbHeight += this._thumb.outerHeight(true) - this._thumb.height();
             }
          },
 
@@ -190,15 +191,15 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
              * равной своему контенту, то его scrollHeight будет округлен в большую сторону. Если передать
              * такой scrollHeight в скроллбар, то по логике должен быть скроллбар, хотя это не так.
              */
-            if (this.getContentHeight() - this._containerOuterHeight > 1) {
-               this._viewportRatio = this._containerOuterHeight / this.getContentHeight();
+            if (this.getContentHeight() - this._containerHeight > 1) {
+               this._viewportRatio = this._containerHeight / this.getContentHeight();
             } else {
                this._viewportRatio = 1;
             }
          },
 
          _setScrollRatio: function () {
-            this._scrollRatio = (this.getContainer().height() - this._thumbHeight) / (this.getContentHeight() - this._containerOuterHeight);
+            this._scrollRatio = (this._containerHeight - this._thumbHeight) / (this.getContentHeight() - this._containerOuterHeight);
          },
 
          // Не использовать e.clientY, потому что его нет на touch устройствах.

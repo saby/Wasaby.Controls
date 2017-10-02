@@ -355,6 +355,9 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
       font-weight: bold;
     }
   }
+  .controls-Scrollbar .controls-Scrollbar__thumb {
+    background-color: rgba(0,0,0,.1);
+  }
 }
 
 .controls-Button__closeButton {
@@ -475,6 +478,7 @@ body {
       max-height: 3.57rem;
       line-height: 3.57rem;
       font-weight: normal;
+      margin: 0 3.2857rem 0 .8571rem;
    }
 }
 
@@ -630,10 +634,6 @@ body {
       vertical-align: middle !important;
    }
 }
-.controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
-  line-height: 3rem;
-}
-
 body .controls-TextArea {
    min-height: 3rem;
 }
@@ -877,15 +877,10 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls
     border-radius: 0;
 }
 
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__dates .controls-DateRangeBigChoose__dates-months span.controls-Button {
+body .controls-DateRangeBigChoose__dates-month-btn {
+   // Будет выпелено с переходом на новый стандарт. Там выравнивание одинаковое.
    padding-left: 0;
    text-align: center;
-   &:hover {
-      border-top: none!important;
-      border-bottom: none!important;
-      border-right-color: #3f566d!important;
-   }
-   line-height: 1.786rem;
    .controls-Button__text {
       width: 100%;
    }
@@ -917,9 +912,9 @@ body {
        line-height: 3rem;
      }
      .controls-ListView__hoveredItem {
-        background-color:  #E0ECF5 !important;
+        background-color:  @suggest-list-hover-color !important;
          .controls-DataGridView__td {
-             background-color:  #E0ECF5 !important;
+             background-color:  @suggest-list-hover-color !important;
          }
      }
   & .ws-moneyDecorator .ws-moneyDecorator__integer__BasicRegistry {

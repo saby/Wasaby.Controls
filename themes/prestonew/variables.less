@@ -236,11 +236,11 @@
 @switcher-width:                                3.571rem;
 @switcher-height:                               1.786rem;
 @switcher-border-radius:                        2.143rem;
-@switcher-hover-border-width:                   0.1072rem;
+@switcher-hover-border-width:                   2px;
 @switcherline-height:                           0.107rem;
 @switcherline-width:                            2.5rem;
 @switcher-btn-size:                             0.929rem;
-@switcher-btn-border-width:                     @switcher-hover-border-width;
+@switcher-btn-border-width:                     0.1072rem;
 @switcher-btn-hover-border-width:               @switcher-btn-border-width;
 @switcher-dot-size:                             @switcher-btn-size;
 @switcher-border-color:                         #37536C;
@@ -330,6 +330,7 @@
 
 @suggest-list-footer-height:              3.143rem;
 @suggest-list-footer-padding:             0 0.857rem;
+@suggest-list-hover-color:                #E0ECF5;
 
 @suggest-list-item-hover-bg:              #f3f3f3;
 @suggest-list-item-selected-bg:           darken(@suggest-list-item-hover-bg, 5%);
@@ -399,8 +400,6 @@
 @date-range-big-choose-header-date-box-font-size: 1rem;
 
 //Data Range Slider
-@date-range-slider-color:                 #26B8FF;
-@date-range-slider-hover-color:           rgb(187, 233, 255);
 @date-range-slider-font-size:             1.14rem;
 @date-range-slider-value-font-weight:     normal;
 @date-range-slider-prev-next-buttons-hover-color:@blue-dark-color;
@@ -416,8 +415,6 @@
 @date-range-choose-font-size:             1rem;
 @date-range-choose-years-only-bg-color:   @basic-block-bg-color;
 @date-range-choose-bg-color:              @basic-block-bg-color;
-@date-range-choose-color:                 @default-text-color;
-@date-range-choose-hover-color:           @button-icon-color-hover;
 @date-range-choose-current-value-color:   #fff;
 @date-range-choose-current-value-bg-color:#26b8ff;
 @date-range-choose-current-value-font-size:1.14rem;
@@ -427,14 +424,12 @@
 @date-range-choose-current-value-margin-bottom: 0;
 @date-range-choose-year-height:           3rem;
 @date-range-choose-year-font-size:        1.14rem;
-@date-range-choose-year-font-weight:      normal;
+@date-range-choose-year-font-weight:      bold;
 @date-range-choose-year-margin-bottom:    0.286rem;
 @date-range-choose-year-prev-next-btns-font-size:1.5rem;
-@date-range-choose-year-color:            @date-range-choose-color;
 @date-range-choose-year-line-height:      3rem;
 @date-range-choose-year-prev-next-btns-width:3rem;
 @date-range-choose-year-prev-next-btns-font-size:1.5rem;
-@date-range-choose-year-prev-next-btns-color:@date-range-choose-color;
 @date-range-choose-home-icon-width:       3rem;
 @controls-date-range-year-marginleft:     0.4rem;
 
@@ -445,10 +440,9 @@
 @date-range-big-choose-months-color:                                     #26B8FF;
 @date-range-big-choose-months-font-size:                                 1rem;
 @date-range-big-choose-months-margin:                                    0.286rem;
-@date-range-big-choose-months-button-height:1.786rem;
 @date-range-big-choose-months-range-width:5.429rem;
-@date-range-big-choose-months-button-first-height:@date-range-big-choose-months-button-height;
-@date-range-big-choose-months-button-last-height:@date-range-big-choose-months-button-height;
+@date-range-big-choose-months-button-first-height:                       1.786rem;
+@date-range-big-choose-months-button-last-height:                        1.786rem;
 @date-range-big-choose-date-range-picker-table-element-height:2.8rem;
 @date-range-big-choose-date-range-picker-left: @date-range-big-choose-months-range-width + 0.857rem;
 @date-range-big-choose-date-range-picker-caption-height:2.42rem;
@@ -515,6 +509,7 @@
 @list-view-actions-margin:                0 0.14rem;
 @list-view-actions-icon-top:              .82rem;
 @list-view-actions-menu-text-margin:      .64rem 0 .2142rem 2.92rem;
+@list-view-items-toolbar-elements-margin: 0 0.14rem;
 @list-view-items-toolbar-line-height:     1.75rem;
 @list-view-items-toolbar-vertical-line-height:0.86rem;
 @list-view-items-toolbar-locked-bg:       @basic-block-bg-color;
@@ -533,11 +528,7 @@
 @list-view-scroll-bg:                     url('img/ajax-loader-indicator-big.gif') no-repeat center;
 @list-view-scroll-height:                 3.5714rem;
 @list-view-scroll-width:                  3.5714rem;
-@controls-AjaxLoader-indicator-padding-left:3.5714rem;
-@controls-AjaxLoader-indicator-height:    3.5714rem;
-@controls-AjaxLoader-block-width:         3.5714rem;
-@controls-AjaxLoader-outer-height:        3.5714rem;
-@controls-AjaxLoader-minHeight:           3.5714rem;
+@controls-AjaxLoader-size:                3.5714rem;
 @controls-AjaxLoader-block-padding:       0;
 @controls-AjaxLoader-background:          none;
 @scrollPaging-padding:                    3.6666rem;
@@ -599,6 +590,7 @@
 @controls-printdialog-activate-right:     3.1785rem;
 @controls-printdialog-activate-margin-top:8px;
 //MergeDialog
+@controls-MergeDialogTemplate-height:                                       21rem;
 @controls-MergeDialogTemplate-hint-font-size:                               @small-text-size;
 @controls-MergeDialogTemplate-treeDataGridView-padding-bottom:              .8571rem;
 @controls-MergeDialogTemplate-hint-font-color:                              @default-text-color;
@@ -676,7 +668,7 @@
 @controls-filterButton-area-text-margin:   0 .86rem 0 0;
 @controls-filterButton-area-text-color:   @default-text-color;
 @controls-filterButton-clear-margin-right: .86rem;
-@controls-filterButton-area-content-margin:0 .42857rem 0.75rem;
+@controls-filterButton-area-content-margin:0 .28rem .86rem;
 @controls-filterButton-line-height:       1.4642rem;
 @controls-filterButton-filterLine-margin: 0;
 //FilterLine
@@ -687,7 +679,6 @@
 //FieldLink
 @fieldLink-border-color-picker-show: @accent-color;
 @fieldLink-showAllLinks-marginRight:-1.43rem;
-@fieldLink-linkItem-padding:        0 3rem 0 .5rem;
 @fieldLink-linkItem-cross-width:    3rem;
 @fieldLink-linkItem-cross-right:    0;
 @fieldLink-linkItem-cross-top:      -.14rem;
@@ -886,7 +877,7 @@
 @commands-button-close-button-size:       @icon-large-size;
 @commands-button-close-button-top:        0.125rem;
 @commands-button-margin:                  -.3571rem -3.1071rem 0 0;
-@DropdownList-height: 					      2.97rem;
+@DropdownList-height: 					      3rem;
 @DropdownList-footer-buttonsBlock-height: 3.57rem;
 @DropdownList-footer-hasMore-top:         1.1rem;
 @DropdownList-picker-menu-item-color:     #F0F5FB;
@@ -982,7 +973,9 @@
 @header-color-hover:                      @default-hover-color;
 @controls-toolbar-item-vertical-align:    baseline;
 @date-range-big-choose-years-btn:         .5rem;
-@DropdownList-picker-offset:              0;
+@DropdownList-picker-offset:              -0.39rem 0 0 -0.67rem;
+@DropdownList-picker-fastdatafilter-offset: -0.39rem 0 0 -0.67rem;
+@DropdownList-picker-fdf-left:            -0.7rem;
 @dropdown-list-item-padding:              .1785rem 3rem .1071rem .57rem;
 @list-view-items-toolbar-bottom:          0.214rem;
 @list-view-items-toolbar-font-family:     'carrypresto-icons';

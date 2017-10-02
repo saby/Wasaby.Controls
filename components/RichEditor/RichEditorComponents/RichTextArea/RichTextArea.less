@@ -151,7 +151,6 @@
    }
 }
 .controls-RichEditor {
-
    &.request-result {
       display: block;
       overflow: hidden;
@@ -264,5 +263,12 @@
 .ws-is-desktop-platform {
    .controls-RichEditor__sourceArea {
       font-family: 'EmojiFont', 'TensorFont', sans-serif;
+   }
+}
+.ws-is-mobile-safari {
+   .controls-RichEditor {
+      .controls-RichEditor__placeholder {
+         padding-top: 2px;
+      }
    }
 }

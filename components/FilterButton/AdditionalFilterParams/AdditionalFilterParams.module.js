@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.AdditionalFilterParams',
              this.once('onInit', function() {
                 this._toggleButton = this.getChildControlByName('toggleAdditionalFilterParams');
              });
-             this.subscribeTo(this, 'onAfterVisibilityChange', function(visibility) {
+             this.subscribeTo(this, 'onAfterVisibilityChange', function(event, visibility) {
                 if (visibility) {
                    this._onResizeHandler();
                 }

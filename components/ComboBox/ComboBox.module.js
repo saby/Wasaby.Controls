@@ -93,7 +93,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    }
 
    function checkDisplayProperty(cfg) {
-      if (!cfg.displayProperty && !cInstance.instanceOfModule(cfg._items, 'WS.Data/Type/Enum')) {
+      if (!cfg.displayProperty && cfg._items && !cInstance.instanceOfModule(cfg._items, 'WS.Data/Type/Enum')) {
          IoC.resolve('ILogger').error('SBIS3.CONTROLS.ComboBox', 'Не задана опция displayProperty');
          cfg.displayProperty = 'title';
       }
@@ -404,7 +404,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _drawText: function(text) {
          ComboBox.superclass._drawText.apply(this, arguments);
          this._drawNotEditablePlaceholder(text);
-         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text || this._options.placeholder || '&nbsp;');
+         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text || this._options.placeholder || '');
          if (this._options.editable) {
             this._setKeyByText();
          }
@@ -776,18 +776,22 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
       },
 
-      showPicker: function(){
+      showPicker: function() {
          var projection = this._getItemsProjection(),
             item = projection.at(this.getSelectedIndex()),
             hash = item && item.getHash();
 
          if (projection.getCount()) {//Инициализируем пикер, чтобы перед показом ограниччить его ширину
-         if (!this._picker || this._picker.isDestroyed()) {
-            this._initializePicker();
+            if (!this._picker || this._picker.isDestroyed()) {
+               this._initializePicker();
+            }
+            ComboBox.superclass.showPicker.call(this);
+            TextBoxUtils.setEqualPickerWidth(this._picker);
+            if (!hash && projection.getCount() > 0) {
+               hash = projection.at(0).getHash();
+            }
+            this._scrollToItem(hash);
          }
-         ComboBox.superclass.showPicker.call(this);
-         TextBoxUtils.setEqualPickerWidth(this._picker);
-         this._setScroll();
       },
 
       _pickerMouseEnterHandler: function (event) {
@@ -798,16 +802,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             if (getTextWidth(itemText) > itemTextContainer.clientWidth) {
                itemContainer[0].setAttribute('title', itemText);
             }
-         }
-      },
-
-      _setScroll: function () {//После отображения пикера подскроливаем до выбранного элемента
-
-
-            if(!hash && projection.getCount() > 0) {
-               hash = projection.at(0).getHash();
-            }
-            this._scrollToItem(hash);
          }
       },
 

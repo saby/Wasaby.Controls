@@ -925,7 +925,6 @@
 // MonthView //
 // --------- //
 
-@month-view-font:                                 @calendar-font;
 @month-view-width:                                @calendar-width;
 @month-view-padding:                              @calendar-padding;
 @month-view-bg:                                   @calendar-bg;
@@ -940,9 +939,7 @@
 @month-view-day-body-font:                        @calendar-day-body-font;
 @month-view-day-body-text-alignment:              @calendar-day-body-text-alignment;
 
-@month-view-day-cell-width:                       @calendar-day-cell-width;
 @month-view-day-table-cell-height:                @calendar-day-table-cell-height;
-@month-view-day-table-cell-padding:               @calendar-day-table-cell-padding;
 
 @month-view-day-cell-cursor:                      @calendar-day-cell-cursor;
 @month-view-day-cell-text-color:                  @calendar-day-cell-text-color;
@@ -1050,10 +1047,6 @@
 // ----------------- //
 @date-range-slider-margin-top:                  -5px;
 
-@date-range-slider-font-family:                 @default-font-name;
-@date-range-slider-color:                       @darkcyan-color;
-@date-range-slider-disabled-text-color:         @link-disabled-text-color;
-@date-range-slider-hover-color:                 @blue-dark-color;
 @date-range-slider-unlocked-icon-hover-color:   @gray-color;
 @date-range-slider-hover-text-decoration:       underline;
 @date-range-slider-font-size:                   15px;
@@ -1062,7 +1055,6 @@
 @date-range-slider-value-padding:               1px;
 @date-range-slider-year-state-width:            80px;
 @date-range-slider-height:                      24px;
-@date-range-slider-prev-next-buttons-hover-color:  @date-range-slider-hover-color;
 @date-range-slider-prev-next-buttons-width:        24px;
 @date-range-slider-prev-next-buttons-font-size:    16px;
 @date-range-slider-prev-next-buttons-font-weight:  normal;
@@ -1089,8 +1081,6 @@
 @date-range-choose-border-hover:                @date-range-choose-border-width solid @gray-lamantin-color;
 @date-range-choose-font-family:                 @default-font-name;
 @date-range-choose-font-size:                   15px;
-@date-range-choose-color:                       @black-color;
-@date-range-choose-hover-color:                 @blue-dark-color;
 @date-range-choose-width:                       178px;
 @date-range-choose-short-width:                 148px;
 @date-range-choose-year-state-width:            82px;
@@ -1113,7 +1103,6 @@
 
 @date-range-choose-year-font-size:              15px;
 @date-range-choose-year-font-weight:            bold;
-@date-range-choose-year-color:                  @darkcyan-color;
 @date-range-choose-year-height:                 @date-range-choose-standart-line-height;
 @date-range-choose-year-margin-bottom:          4px;
 @date-range-choose-year-bg-hover-color:         inherit;
@@ -1122,7 +1111,6 @@
 @date-range-choose-year-prev-next-btns-width:         32px;
 @date-range-choose-year-prev-next-btns-font-size:     16px;
 @date-range-choose-year-prev-next-btns-font-weight:   normal;
-@date-range-choose-year-prev-next-btns-color:         @darkcyan-color;
 
 @date-range-choose-home-icon-width:                   24px;
 
@@ -1131,7 +1119,6 @@
 @date-range-choose-caption-background-color:          @white-color;
 @date-range-choose-caption-text-align:                center;
 
-@date-range-choose-halfyear-caption-with-quarters-color: @darkcyan-color;
 @date-range-choose-halfyear-caption-line-height:      6*@date-range-choose-month-height;
 @date-range-choose-halfyear-caption-width:            30px;
 @date-range-choose-halfyear-caption-right:            initial;
@@ -1168,7 +1155,6 @@
 @date-range-choose-home-button-size:            28px;
 @date-range-choose-home-button-font-size:       14px;
 @date-range-choose-home-button-line-height:     26px;
-@date-range-choose-home-color:                  @date-range-choose-color;
 @date-range-choose-home-button-margin:          0 auto 12px;
 
 
@@ -1233,11 +1219,10 @@
 @date-range-big-choose-months-margin:                                8px;
 @date-range-big-choose-months-range-btn-height:                      97px;
 @date-range-big-choose-months-range-width:                           81px;
-@date-range-big-choose-months-button-height:                         33px;
 @date-range-big-choose-months-button-first-padding-top:              0px;
-@date-range-big-choose-months-button-first-height:                   36px;
-@date-range-big-choose-months-button-last-padding-bottom:            4px;
-@date-range-big-choose-months-button-last-height:                    37px;
+@date-range-big-choose-months-button-first-height:                   37px;
+@date-range-big-choose-months-button-last-padding-bottom:            2px;
+@date-range-big-choose-months-button-last-height:                    36px;
 @date-range-big-choose-months-padding:                               8px;
 
 @date-range-big-choose-go-to-boundary-button-bg-color:               @dodgerblue-color;
@@ -1700,6 +1685,7 @@
 // --------------- //
 // OperationMerge  //
 // --------------- //
+@controls-MergeDialogTemplate-height:                             550px;
 @controls-MergeDialogTemplate-warning-color:                      #ff302b;
 @controls-MergeDialogTemplate-hint-font-size:                     13px;
 @controls-MergeDialogTemplate-hint-margin:                        0 15px;
@@ -1786,8 +1772,9 @@
 
 @DropdownList-picker-bg:                              @white-color;
 @DropdownList-header-bg:                              @DropdownList-picker-bg;
-@DropdownList-picker-offset:                          0 0 0 1px;
-@DropdownList-picker-fastdatafilter-offset:           1px 0 0 1px;
+@DropdownList-picker-offset:                          -10px 0 0 -9px;
+@DropdownList-picker-fastdatafilter-offset:           -9px 0 0 3px;
+@DropdownList-picker-fdf-left:                        -13px;
 @DropdownList-picker-margin-top:                      -1px;
 @DropdownList-picker-close-btn-top:                   4px;
 @DropdownList-picker-close-btn-right:                 6px;
@@ -2003,7 +1990,6 @@
 @fieldLink-picker-border:                 1px solid #eaeaea;
 @fieldLink-picker-background:             @white-color;
 
-@fieldLink-linkItem-padding:              0 17px 0 4px;
 @fieldLink-linkItem-cross-width:          20px;
 @fieldLink-linkItem-cross-right:          -4px;
 @fieldLink-linkItem-cross-top:            -2px;
@@ -2138,21 +2124,9 @@
 
 //ListView AjaxIndicator
 @controls-AjaxLoader-background:                   none repeat scroll 0 0 rgba(255, 255, 255, 0.7);
-@controls-AjaxLoader-default-cord:                 0;
-@controls-AjaxLoader-zIndex:                       11;
-@controls-AjaxLoader-minHeight:                    32px;
-
-@controls-AjaxLoader-outer-height:                 36px;
-@controls-AjaxLoader-outer-top:                    50%;
-@controls-AjaxLoader-outer-lineHeight:             30px;
-
-@controls-AjaxLoader-block-width:                  32px;
+@controls-AjaxLoader-size:                         32px;
 @controls-AjaxLoader-block-background:             none repeat scroll 0 0 transparent !important;
-@controls-AjaxLoader-block-top:                    -50%;
 @controls-AjaxLoader-block-padding:                2px;
-
-@controls-AjaxLoader-indicator-padding-left:       32px;
-@controls-AjaxLoader-indicator-height:             32px;
 
 @controls-Paging-padding:                          0 6px;
 @controls-Paging-item-width:                       36px;

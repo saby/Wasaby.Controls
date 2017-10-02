@@ -279,6 +279,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
             if(this.getProperty('useSelectorAction')) {
                cfg.multiselect = this.getMultiselect();
                cfg.selectedItems = this.getSelectedItems();
+               cfg.opener = this; //Т.к. selectorAction создаётся из кода, и ему не назначается parent (так надо, см. коммент. ниже)
                if(this._notify('onSelectorClick', cfg) !== false) {this._getSelectorAction().execute(cfg)}
             } else {
                this._showChooser(cfg.template, cfg.componentOptions);

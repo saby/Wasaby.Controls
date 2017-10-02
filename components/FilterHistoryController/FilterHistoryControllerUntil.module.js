@@ -3,11 +3,11 @@
  */
 define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
     [
-       'Core/core-functions',
+       'Core/core-clone',
        'Core/helpers/Object/isEqual',
        'Core/helpers/Object/find',
        'Core/helpers/String/ucFirst'
-    ], function(cFunctions, isEqualObject, objectFind, ucFirst) {
+    ], function(coreClone, isEqualObject, objectFind, ucFirst) {
 
    'use strict';
 
@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
    return {
       prepareStructureToSave: function(structure) {
          /* Все правки надо делать с копией, чтобы не портить оригинальную структуру */
-         var structureCopy = cFunctions.clone(structure);
+         var structureCopy = coreClone(structure);
 
          for (var key in structureCopy) {
             if(structureCopy.hasOwnProperty(key)) {
@@ -41,7 +41,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
                 и в итоге мы можем получить не ту дату */
                if(structureCopy[key].value) {
                   if(structureCopy[key].value instanceof Date) {
-                     structureCopy[key].value = structureCopy[key].value.toSQL();
+                     structureCopy[key].value = structureCopy[key].value.toSQL(Date.SQL_SERIALIZE_MODE_AUTO);
                   }
                }
                /* Надо удалить из истории шаблоны, т.к. история сохраняется строкой */
@@ -64,7 +64,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
        в оригинальную, заменяя лишь value и resetValue, и при необходимости сбрасывает value в resetValue */
       prepareStructureToApply: function(structure, currentStructure, doNotResetIfFound) {
          /* Чтобы не портить текущую историю, сделаем копию (иначе не применится фильтр) */
-         var currentStructureCopy = cFunctions.clone(currentStructure);
+         var currentStructureCopy = coreClone(currentStructure);
 
          this.prepareNewStructure(currentStructureCopy, structure);
 
@@ -156,7 +156,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryControllerUntil',
          быть уже проставленные фильтр из контекста или прикладным программистом.
          Другого способо до серверной отрисовки пока нет. */
       resetStructureElementsByFilterKeys: function(filterButton, structure, keys) {
-         var filterStructure = structure || cFunctions.clone(filterButton.getFilterStructure()),
+         var filterStructure = structure || coreClone(filterButton.getFilterStructure()),
              bindings = objectFind(filterButton._options.bindings, function(binding) {
                 return binding.propName === 'filterStructure'
              }),
