@@ -1,7 +1,72 @@
 @import "../Utils/HtmlDecorators/HighlightDecorator";
 
+.controls-ListView__itemCheckBox {
+   .checkbox(@check-box-icon-size);
+   cursor: pointer;
+   display: inline-block;
+   position: absolute;
+   left: @listView-check-box-left;
+   top: @listView-check-box-top;
 
-//Навесить классы в setHoveredItem, updateHoveredItem, clearHoveredItem +
+   &:before {
+      color: @check-box-icon-box-color;
+   }
+}
+
+.controls-ListView__item__multiSelected {
+   .controls-ListView__itemCheckBox:after {
+      color: @primary-color;
+   }
+}
+
+.controls-ListView__item__partiallySelected {
+   .controls-ListView__itemCheckBox:after {
+      background-color: @primary-color;
+   }
+}
+
+.controls-ListView__showCheckBoxes {
+   .controls-ListView__itemCheckBox {
+      .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+   }
+}
+
+.controls-ListView__hideCheckBoxes {
+   .controls-ListView__itemCheckBox {
+      display: none;
+   }
+}
+
+.controls-ListView__multiselect__off {
+   .controls-ListView__itemCheckBox {
+      display: none;
+   }
+}
+
+.ws-disabled {
+   .controls-ListView__itemCheckBox {
+      cursor: default;
+   }
+}
+
+.controls-ListView__hoveredItem {
+   .controls-ListView__itemCheckBox {
+      .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+   }
+}
+.controls-ListView__item__multiSelected:not(.controls-ListView__item__partiallySelected) {
+   .controls-ListView__itemCheckBox {
+      .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+      .checkbox-checked-size(@check-box-icon-successful-size, @check-box-icon-successful-left, @check-box-icon-successful-top);
+   }
+}
+.controls-ListView__item__partiallySelected {
+   .controls-ListView__itemCheckBox {
+      .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+      .checkbox-null-size(@check-box-icon-size, @check-box-icon-null-size);
+   }
+}
+
 .controls-ListView__hoveredItem {
    background-color: @default-itemHover-color;
 }
@@ -19,7 +84,6 @@
    text-align: center;
 }
 
-//Вынести в modifyOptions +
 .controls-ListView__item__selected__withMarker {
    .marker(left top)
 }
@@ -33,14 +97,13 @@
    position: relative;
 }
 
+// Нельзя устанавливать минимальную высоту для копии таблицы которая используется для фиксации заголовков
 .controls-ListView__dataNotLoaded:not(.ws-sticky-header__table-header-copy) {
    min-height: @list-view-min-height;
 }
 
 .controls-ListView {
     position: relative;
-   // Нельзя устанавливать минимальную высоту для копии таблицы которая используется для фиксации заголовков
-
 }
 
 //Данные стили обеспечивают правильное поведение ListView при активации.
