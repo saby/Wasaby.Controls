@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'js!SBIS3.StickyHeaderManager',
       'Core/constants',
       'Core/EventBus',
+      'Core/CommandDispatcher',
       'css!SBIS3.CONTROLS.ScrollContainer'
    ],
    function (extend,
@@ -26,7 +27,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
              FloatAreaManager,
              StickyHeaderManager,
              constants,
-             EventBus
+             EventBus,
+             CommandDispatcher
    ) {
       'use strict';
 
@@ -163,6 +165,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             };
             this._isMobileIOS = cDetection.isMobileIOS;
             this.deprecatedContr(cfg);
+
+            // на resizeYourself команду перерисовываем только себя, не трогая children.
+            // Сейчас команда отправляется только из ListView когда его items изменились (а значит могли измениться размеры)
+            CommandDispatcher.declareCommand(this, 'resizeYourself', function () {
+               this._resizeInner();
+            }.bind(this));
          },
 
          _containerReady: function() {
@@ -386,6 +394,21 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          _subscribeOnScroll: function(){
             this._content.on('scroll', this._onScroll.bind(this));
+
+            /*
+            TODO На маках в safari при активации controls-ListView__fakeFocusElement у listView скролл у controls-ScrollContainer
+            скроллится в сторону центра, так как у fakeFocusElement left:50% top: 50%, поэтому подпишемся на скролл и сбросим его.
+            https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
+            */
+            if(cDetection.isMacOSDesktop && cDetection.safari){
+               var self = this;
+
+               this._resetContainerScroll = function(){
+                  self._container.get(0).scrollLeft = 0;
+               };
+
+               this.getContainer().on('scroll', this._resetContainerScroll);
+            }
          },
 
          _subscribeMouseEnterLeave: function() {
@@ -551,7 +574,11 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _onResizeHandler: function(){
-            this._notify('onResize');
+            AreaAbstractCompatible._onResizeHandler.apply(this, arguments);
+            this._resizeInner();
+         },
+
+         _resizeInner: function () {
             if (this._scrollbar){
                this._scrollbar.setContentHeight(this._getScrollHeight());
                this._scrollbar.setPosition(this._getScrollTop());
@@ -571,7 +598,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                if (cDetection.isIE) {
                   // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
                   // 1px для скроллирования.
-                  this._content.toggleClass('controls-ScrollContainer__content-overflowHidden', this._getScrollHeight() - this._container.height() <= 1);
+                  this._content.toggleClass('controls-ScrollContainer__content-overflowHidden', (this._getScrollHeight() - this._container.height()) === 1);
                }
             }
 
@@ -586,7 +613,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                }
             }
          },
-
          _recalcSizeScrollbar: function() {
             var headerHeight, scrollbarContainer;
             if (this._options.stickyContainer) {
@@ -635,6 +661,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                this._content.off('scroll', this._onScroll);
             }
             this._container.off('mousemove', this._initScrollbar);
+            if(cDetection.isMacOSDesktop && cDetection.safari){
+               this._container.off('scroll');
+            }
             this._unsubscribeMouseEnterLeave();
             this._getScrollContainerChannel()
                .unsubscribe('onReturnTakeScrollbar', this._returnTakeScrollbarHandler)

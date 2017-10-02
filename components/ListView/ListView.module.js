@@ -49,7 +49,6 @@ define('js!SBIS3.CONTROLS.ListView',
    'Core/LocalStorageNative',
    'Core/helpers/Function/forAliveOnly',
    'Core/helpers/Function/memoize',
-   'Core/helpers/Hcontrol/trackElement',
    'Core/helpers/Hcontrol/isElementVisible',
    'js!SBIS3.CONTROLS.Utils.Contains',
    'js!SBIS3.CONTROLS.CursorListNavigation',
@@ -74,7 +73,7 @@ define('js!SBIS3.CONTROLS.ListView',
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents, LayoutManager, mHelpers,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
-    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, cInstance, LocalStorageNative, forAliveOnly, memoize, trackElement, isElementVisible, contains, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove, once) {
+    Paging, ComponentBinder, Di, ArraySimpleValuesUtil, cInstance, LocalStorageNative, forAliveOnly, memoize, isElementVisible, contains, CursorNavigation, SbisService, cDetection, Mover, throttle, isEmpty, Sanitize, WindowManager, VirtualScrollController, DragMove, once) {
      'use strict';
 
       var
@@ -1263,8 +1262,7 @@ define('js!SBIS3.CONTROLS.ListView',
             // Так как для сохранения страницы все равно нужекн рассчет страниц скролла
             var hiddenPager = !this._options.scrollPaging && this._options.saveReloadPosition;
             this._scrollBinder.bindScrollPaging(this._scrollPager, hiddenPager);
-            trackElement(this.getContainer(), true).subscribe('onVisible', this._onVisibleChange.bind(this));
-            
+
             if (!this._inScrollContainerControl) {
                // Отлавливаем изменение масштаба
                // Когда страница увеличена на мобильных платформах или если на десктопе установить ширину браузера меньше 1024рх,
@@ -1561,6 +1559,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _updateHoveredItemAfterRedraw: function() {
             var hoveredItem = this.getHoveredItem(),
                 hoveredItemContainer = hoveredItem.container,
+                itemsProjection = this._getItemsProjection(),
                 containsHoveredItem, hash, projItem;
 
             /* !Производить обновление операций надо синхронно, иначе они будут моргать. */
@@ -1576,7 +1575,9 @@ define('js!SBIS3.CONTROLS.ListView',
                    * но этот элемент может теряться в ходе перерисовок. Выписана задача по которой мы будем
                    * хранить только идентификатор и данный код станет не нужен*/
                   hash = hoveredItemContainer.attr('data-hash');
-                  projItem = this._getItemsProjection().getByHash(hash);
+                  if(itemsProjection) {
+                     projItem = itemsProjection.getByHash(hash);
+                  }
                   /* Если в проекции нет элемента и этого элемента нет в DOM'e,
                    но на него осталась jQuery ссылка, то надо её затереть */
                   if (projItem) {
@@ -2140,12 +2141,12 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._scrollBinder) {
                var scrollPage, pagesCount, average, commonItemsCount, firstPageElemIndex;
                scrollPage = this._scrollBinder._getScrollPage();
-               pagesCount = this._scrollBinder.getPagesCount();
+               pagesCount = this._scrollPager.getPagesCount();
                commonItemsCount = this._getItemsProjection() ? this._getItemsProjection().getCount() : 0;
                average = commonItemsCount / pagesCount;
                firstPageElemIndex = (scrollPage - 1) * average;
 
-               page = scrollPage ? Math.floor(firstPageElemIndex / this._limit) : 0;
+               page = scrollPage ? Math.ceil(firstPageElemIndex / this._limit) : 0;
             }
             // прибавим к полученой странице количество еще не загруженных страниц
             return page + Math.floor((this._scrollOffset.top) / this._limit);
@@ -2174,7 +2175,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          scrollLoadMore: function(){
             if (this._options.infiniteScroll && this._scrollWatcher && !this._scrollWatcher.hasScroll()) {
-               this._scrollLoadNextPage(this._options.infiniteScroll === 'demand');
+               this._scrollLoadNextPage(this._options.infiniteScroll);
             }
          },
          //********************************//
@@ -2994,7 +2995,11 @@ define('js!SBIS3.CONTROLS.ListView',
             } else if (this._options.infiniteScroll == 'down' && this._options.scrollPaging){
                this._createScrollPager();
             }
-            this._notifyOnSizeChanged(true);
+
+            // отправляем команду о перерисовке парентов, и только их. Предполагается, что изменение items
+            // у ListView может повлиять только на некоторых парентов
+            this.sendCommand('resizeYourself');
+            this._onResizeHandler();
          },
 
          _drawItemsCallbackSync: function() {
@@ -3253,17 +3258,27 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _preScrollLoading: function(){
-            var scrollDown = this._infiniteScrollState.mode == 'down' && !this._infiniteScrollState.reverse;
+            var scrollDown = this._infiniteScrollState.mode === 'down' && !this._infiniteScrollState.reverse,
+                infiniteScroll = this._getOption('infiniteScroll'),
+                isCursorNavigation = this._options.navigation && this._options.navigation.type === 'cursor';
+            
+            // При подгрузке в обе стороны необходимо определять направление, а не ориентироваться по state'у
+            // Пока делаю так только при навигации по курсорам, чтобы не поломать остальной функционал
+            if (isCursorNavigation) {
+               if (infiniteScroll === 'both' || infiniteScroll === 'down') {
+                  scrollDown = this.getListNavigation().hasNextPage('down');
+               }
+            }
+            
             // Если  скролл вверху (при загрузке вверх) или скролл внизу (при загрузке вниз) или скролла вообще нет - нужно догрузить данные
             // //при подгрузке в обе стороны изначально может быть mode == 'down', но загрузить нужно вверх - так как скролл вверху
-            if ((scrollDown && this.isScrollOnBottom()) || !this._scrollWatcher.hasScroll()) {
-               this._scrollLoadNextPage();
+            if ((scrollDown && this.isScrollOnBottom()) || (!this._scrollWatcher.hasScroll() && infiniteScroll !== 'both')) {
+               this._scrollLoadNextPage(isCursorNavigation ? 'down' : null);
             } else {
-               if (this._options.infiniteScroll == 'both' && this.isScrollOnTop()){
+               if (infiniteScroll === 'both' && this.isScrollOnTop()){
                   this._setInfiniteScrollState('up');
-                  this._scrollLoadNextPage();
+                  this._scrollLoadNextPage(isCursorNavigation ? 'up' : null);
                }
-
             }
          },
 
@@ -3287,8 +3302,8 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param loadDemand Подгрузить данные следующей страницы, если включена подгрузка по кнопке 'Ещё'
           * @private
           */
-         _scrollLoadNextPage: function (loadDemand) {
-            var loadAllowed  = this.isInfiniteScroll() && (this._options.infiniteScroll !== 'demand' || loadDemand),
+         _scrollLoadNextPage: function (type) {
+            var loadAllowed  = this.isInfiniteScroll() && (this._options.infiniteScroll !== 'demand' || type === 'demand'),
                more = this.getItems().getMetaData().more,
                isContainerVisible = isElementVisible(this.getContainer()),
                // отступ с учетом высоты loading-indicator
@@ -3296,7 +3311,7 @@ define('js!SBIS3.CONTROLS.ListView',
                hasNextPage;
 
             if (this._options.navigation && this._options.navigation.type == 'cursor') {
-               hasNextPage = this._listNavigation.hasNextPage(this._infiniteScrollState.mode);
+               hasNextPage = this._listNavigation.hasNextPage(type || this._infiniteScrollState.mode);
             }
             else {
                hasNextPage = this._hasNextPage(more, this._scrollOffset.bottom);
@@ -3309,7 +3324,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
             //Если в догруженных данных в датасете пришел n = false, то больше не грузим.
             if (loadAllowed && isContainerVisible && hasNextPage && !this.isLoading()) {
-               this._loadNextPage();
+               this._loadNextPage(type);
             }
          },
          _getLoadingIndicatorHeight: function () {
@@ -3355,7 +3370,7 @@ define('js!SBIS3.CONTROLS.ListView',
             return this._infiniteScrollState.mode == 'up' || (this._infiniteScrollState.mode == 'down' && this._infiniteScrollState.reverse === true);
          },
 
-         _loadNextPage: function() {
+         _loadNextPage: function(type) {
             if (this._dataSource) {
                var offset = this._getNextOffset(),
                   self = this;
@@ -3372,7 +3387,7 @@ define('js!SBIS3.CONTROLS.ListView',
                var loadId = this._loadId++;
                this._loadQueue[loadId] = coreClone(this._infiniteScrollState);
 
-               this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit, this._infiniteScrollState.mode)
+               this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit, type || this._infiniteScrollState.mode)
                   .addBoth(forAliveOnly(function(res) {
                      this._loader = null;
                      return res;
@@ -3384,8 +3399,8 @@ define('js!SBIS3.CONTROLS.ListView',
                      var state = this._loadQueue[loadId],
                         hasNextPage;
                      if (this._options.navigation && this._options.navigation.type == 'cursor') {
-                        this._listNavigation.analyzeResponseParams(dataSet);
-                        hasNextPage = this._listNavigation.hasNextPage(state.mode);
+                        this._listNavigation.analyzeResponseParams(dataSet, type || state.mode);
+                        hasNextPage = this._listNavigation.hasNextPage(type || state.mode);
                      }
                      else {
                         hasNextPage = this._hasNextPage(dataSet.getMetaData().more, this._scrollOffset.bottom);
@@ -3406,7 +3421,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         if (this._isSlowDrawing(this._options.easyGroup)) {
                            this._needToRedraw = false;
                         }
-                        this._drawPage(dataSet, state);
+                        this._drawPage(dataSet, (type && {mode: type}) || state);
 
                         if(this._dogNailSavedMode) {
                            this._setInfiniteScrollState(this._dogNailSavedMode);
@@ -3663,7 +3678,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             
             if (type && !noLoad) {
-               this._scrollLoadNextPage(type === 'demand');
+               this._scrollLoadNextPage(type);
                return;
             }
             //НА саом деле если во время infiniteScroll произошла ошибка загрузки, я о ней не смогу узнать, но при выключении нужно убрать индикатор
@@ -4223,7 +4238,6 @@ define('js!SBIS3.CONTROLS.ListView',
                if (!this._inScrollContainerControl) {
                   $(window).off('resize scroll', this._setScrollPagerPositionThrottled);
                }
-               trackElement(this.getContainer(), false).unsubscribe('onVisible', this._onVisibleChange);
                this._scrollPager.destroy();
             }
             if (this._listNavigation) {

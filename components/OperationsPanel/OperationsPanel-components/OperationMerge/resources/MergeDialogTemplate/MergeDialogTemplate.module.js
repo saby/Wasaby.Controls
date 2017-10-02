@@ -4,33 +4,44 @@
 define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
    "Core/CommandDispatcher",
    "js!SBIS3.CORE.CompoundControl",
-   "html!SBIS3.CONTROLS.MergeDialogTemplate",
+   "tmpl!SBIS3.CONTROLS.MergeDialogTemplate",
    "js!WS.Data/Source/SbisService",
    "js!WS.Data/Adapter/Sbis",
    "js!WS.Data/Query/Query",
    "js!WS.Data/Collection/RecordSet",
    "Core/helpers/fast-control-helpers",
-   "i18n!SBIS3.CONTROLS.MergeDialogTemplate",
-   "js!SBIS3.CONTROLS.Button",
-   "js!SBIS3.CONTROLS.TreeDataGridView",
    "tmpl!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellRadioButtonTpl",
    "tmpl!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellCommentTpl",
    "tmpl!SBIS3.CONTROLS.MergeDialogTemplate/resources/cellTitleTpl",
    "tmpl!SBIS3.CONTROLS.MergeDialogTemplate/resources/rowTpl",
+   "i18n!SBIS3.CONTROLS.MergeDialogTemplate",
+   "js!SBIS3.CONTROLS.Button",
+   "js!SBIS3.CONTROLS.TreeDataGridView",
+   "js!SBIS3.CONTROLS.ScrollContainer",
    "i18n!!SBIS3.CONTROLS.MergeDialogTemplate",
    'css!SBIS3.CONTROLS.MergeDialogTemplate',
    'css!SBIS3.CONTROLS.RadioButton'
-], function( CommandDispatcher,Control, dotTplFn, SbisServiceSource, SbisAdapter, Query, RecordSet, fcHelpers) {
+], function( CommandDispatcher, Control, dotTplFn, SbisServiceSource, SbisAdapter, Query, RecordSet, fcHelpers, cellRadioButtonTpl, cellCommentTpl, cellTitleTpl, rowTpl) {
 
 
     var COMMENT_FIELD_NAME = 'Comment',
         AVAILABLE_FIELD_NAME = 'Available';
+
+    var onSearchPathClick = function(event) {
+       //Откажемся от перехода по хлебным крошкам
+       event.setResult(false);
+    };
 
     var MergeDialogTemplate = Control.extend({
         _dotTplFn: dotTplFn,
 
         $protected: {
             _options: {
+                _itemTpl: rowTpl,
+                _titleCellTemplate: cellTitleTpl,
+                _cellCommentTpl: cellCommentTpl,
+                _cellRadioButtonTpl: cellRadioButtonTpl,
+                _onSearchPathClick: onSearchPathClick,
                 name: 'controls-MergeDialogTemplate',
                 width: 760,
                 resizable: false,
@@ -61,12 +72,7 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
             _applyContainer: undefined
         },
         $constructor: function() {
-            
             CommandDispatcher.declareCommand(this, 'beginMerge', this.onMergeButtonActivated);
-        },
-        onSearchPathClick: function(event) {
-            //Откажемся от перехода по хлебным крошкам
-            event.setResult(false);
         },
         init: function() {
             MergeDialogTemplate.superclass.init.apply(this, arguments);

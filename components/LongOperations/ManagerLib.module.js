@@ -206,7 +206,7 @@ define('js!SBIS3.CONTROLS.LongOperations.ManagerLib',
                if (!producer) {
                   throw new Error('Producer not found');
                }
-               if (!_canHasHistory(producer)) {
+               if (!inner._canHasHistory(producer)) {
                   throw new Error('Producer is not supported history');
                }
                return producer.history(operationId, count, filter);
@@ -238,7 +238,7 @@ define('js!SBIS3.CONTROLS.LongOperations.ManagerLib',
           */
          protectedOf(self)._tabCalls = new LongOperationsTabCalls(
             /*tabKey:*/protectedOf(self)._tabKey,
-            /*router:*/self.getByName,
+            /*router:*/self.getByName.bind(self),
             /*packer:*/function (v) {
                // Упаковщик для отправки. Ожидается, что все объекты будут экземплярами SBIS3.CONTROLS.LongOperations.Entry
                return v && typeof v.toSnapshot === 'function' ? v.toSnapshot() : v;

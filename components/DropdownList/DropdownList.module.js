@@ -65,8 +65,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
        * @mixes SBIS3.CONTROLS.DataBindMixin
        * @mixes SBIS3.CONTROLS.FormWidgetMixin
        *
-       * @demo SBIS3.CONTROLS.Demo.MyDropdownList <b>Пример 1.</b> Простой пример работы контрола
-       * @demo SBIS3.CONTROLS.Demo.MyDropdownListFilter <b>Пример 2.</b> Выпадающий список с фильтрацией.
+       * @demo SBIS3.CONTROLS.Demo.MyDropdownList Пример работы контрола
        *
        * @ignoreOptions emptyHTML
        * @ignoreMethods setEmptyHTML
@@ -872,8 +871,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _resizeFastDataFilter: function(){
             var parent = this.getParent();
-            this._notifyOnSizeChanged();
-            if (cInstance.instanceOfModule(parent, 'SBIS3.CONTROLS.FastDataFilter')){
+            if (cInstance.instanceOfModule(parent, 'SBIS3.CONTROLS.FastDataFilter')) {
+               this._notifyOnSizeChanged();
                parent._recalcDropdownWidth();
             }
          },
