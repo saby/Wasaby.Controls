@@ -29,11 +29,6 @@
       }
    }
 
-   &.controls-ListView__showCheckBoxes {
-      .controls-ListView__itemCheckBox:before {
-         visibility: visible;
-      }
-   }
    &.controls-ListView__hideCheckBoxes {
       &.controls-ListView__multiselect {
          .controls-ListView__itemCheckBox {
@@ -99,17 +94,19 @@
 .controls-ListView__itemCheckBox:before {
    visibility: hidden;
 }
-
+.controls-ListView__showCheckBoxes {
+   .controls-ListView__itemCheckBox:before {
+      visibility: visible;
+   }
+}
 .controls-ListView__multiselect {
    .controls-ListView__item__multiSelected:not(.controls-ListView__item__partiallySelected) {
       .controls-ListView__itemCheckBox {
-         .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
          .checkbox-checked-size(@check-box-icon-successful-size, @check-box-icon-successful-left, @check-box-icon-successful-top);
       }
    }
    .controls-ListView__item__partiallySelected {
       .controls-ListView__itemCheckBox {
-         .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
          .checkbox-null-size(@check-box-icon-size, @check-box-icon-null-size);
       }
    }
@@ -215,7 +212,7 @@
    overflow: hidden;
    min-height: @controls-AjaxLoader-size;
    //todo: вложенность
-   &.controls-AjaxLoader__showIndication {
+   &__showIndication {
       background: @controls-AjaxLoader-background;
       .controls-AjaxLoader__outer {
          display: block;
