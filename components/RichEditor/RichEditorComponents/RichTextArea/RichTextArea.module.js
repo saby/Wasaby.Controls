@@ -1485,6 +1485,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      }
                   }
                   if (isCoupled) {
+                     if (!a.dataset) {
+                        // В MSIE нет свойства dataset, но достаточно просто довить его
+                        a.dataset = {};
+                     }
                      a.dataset.wsPrev = JSON.stringify({url:url, prefix:prefix || '', suffix:suffix || ''});
                   }
                }
@@ -1492,7 +1496,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             var _linkEditEnd = function () {
                var a = editor.selection.getNode();
-               if (a.nodeName === 'A' && 'wsPrev' in a.dataset) {
+               if (a.nodeName === 'A' && a.dataset && 'wsPrev' in a.dataset) {
                   if (a.hasChildNodes() && !a.children.length) {
                      var prev = JSON.parse(a.dataset.wsPrev);
                      var url = a.href;
@@ -1500,7 +1504,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      if (prev.url === url) {
                         url = prev.prefix + text + prev.suffix;
                         a.href = url;
-                        a.dataset.mceHref = url;
+                        // Опять же - в MSIE нет свойства dataset, поэтому по-старинке
+                        a.setAttribute('data-mce-href', url);
                      }
                   }
                   delete a.dataset.wsPrev;
