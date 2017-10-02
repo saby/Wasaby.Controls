@@ -933,6 +933,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                   offset.left = this._getOppositeOffset(this._options.corner, 'horizontal').left;
                   offset.left = this._addOffset(offset, buf).left;
                }
+
+               //Если после(!) разворота не влезаем в экран, то сдвинемся на наужное кол-во пикселей
+               var dif = offset.left + this.getContainer()[0].offsetWidth - this._windowSizes.width;
+               if (dif > 0) {
+                  offset.left -= dif;
+               }
+
                return offset;
          }
       },
