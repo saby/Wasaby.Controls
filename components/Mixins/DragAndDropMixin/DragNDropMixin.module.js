@@ -403,7 +403,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
             if (res !== false) {
                 this._endDragHandler(DragObject, droppable, e);
             }
-            this._getDragContainer().removeClass('controls-dragndrop');
             this._position = null;
         },
 
@@ -473,6 +472,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 this._preparePageXY(e);
                 DragObject.onDragHandler(e);
                 var target = DragObject.getTargetsControl();
+                this._getDragContainer().removeClass('controls-dragndrop');
                 target = target && cInstance.instanceOfMixin(target, 'SBIS3.CONTROLS.DragNDropMixin') ? target : null;
                 if (DragObject.isDragging() && ((target === this || DragObject.getOwner() === this))) {
                     //если есть таргет то запускаем _endDrag над таргетом иначе запускаем над тем кто начал
