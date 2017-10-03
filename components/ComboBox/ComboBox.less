@@ -1,12 +1,13 @@
 .controls-ComboBox {
-   .controls-ComboBox__fieldNotEditable {
+   cursor: pointer;
+   &__fieldNotEditable {
       display: none;
       line-height: @default-base-line-height;
-      &.controls-ComboBox__fieldNotEditable__placeholder {
+      &__placeholder {
          color: @default-placeholder-color;
       }
    }
-   &.controls-ComboBox_emptyValue {
+   &__emptyValue {
       .controls-ComboBox__fieldNotEditable {
          color: @default-placeholder-color;
       }
@@ -15,10 +16,9 @@
       text-overflow: clip;
    }
    .controls-TextBox__afterFieldWrapper {
-      .inline-flexbox();
       .align-items(center);
       .icon-size(@combo-box-icon-size, @default-icon-font);
-      height:100%;
+      height:100%;//тк icon-size
       cursor: pointer;
       padding: @combo-box-arrow-padding;
       color: @combo-box-arrowDown-color;
@@ -40,7 +40,7 @@
          visibility: hidden;
       }
    }
-   &.controls-ComboBox__editable-false {
+   &__editable-false {
       .controls-TextBox__field {
          display: none;
       }
@@ -48,7 +48,7 @@
          display: inline-block;
       }
    }
-   &.controls-ComboBox__overflow {
+   &__overflow {
       .controls-ComboBox__shadow {
          content: '';
          position: absolute;
@@ -60,18 +60,13 @@
          background: linear-gradient(to left, @combo-box-picker-item-bg, rgba(255, 255, 255, 0));
       }
    }
-   &.controls-TextBox {
-      cursor: pointer;
+   &.controls-Picker__show {
+      background-color: @combo-box-picker-show-background-color;
+      color: @compo-box-picker-show-color;
+      border: @default-border-width solid @combo-box-picker-show-border-color;
 
-      //todo:
-      &.controls-Picker__show {
-         background-color: @combo-box-picker-show-background-color;
-         color: @compo-box-picker-show-color;
-         border: @default-border-width solid @combo-box-picker-show-border-color;
-
-         .controls-TextBox__afterFieldWrapper {
-            color: @combo-box-arrowDown-color-picker-show;
-         }
+      .controls-TextBox__afterFieldWrapper {
+         color: @combo-box-arrowDown-color-picker-show;
       }
    }
 }
@@ -98,7 +93,7 @@
         color: #ccc;
       }
       position: relative;
-      font: @combo-box-picker-item-font;
+      font: inherit;
       font-size: @combo-box-picker-item-font-size;
       padding: @combo-box-picker-item-padding;
       cursor: pointer;

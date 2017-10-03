@@ -65,6 +65,8 @@
    }
 
    &__afterFieldWrapper, &__beforeFieldWrapper {
+      .inline-flexbox();
+      .flex-shrink(0);
       height: 100%;
    }
    &__beforeFieldWrapper {
@@ -121,11 +123,3 @@
 .controls-TextBox__field-lowercase {
    text-transform: lowercase;
 }
-
-/*
-.ws-is-desktop-safari {
-   .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
-      outline: 1px solid transparent;
-   }
-}
-*/
