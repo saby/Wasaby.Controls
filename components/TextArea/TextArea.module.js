@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
    'Core/helpers/String/escapeHtml',
    'js!SBIS3.CONTROLS.Utils.LinkWrap',
    "Core/IoC",
-   'Core/helpers/Hcontrol/trackElement',
+   //'Core/helpers/Hcontrol/trackElement',
    "browser!js!SBIS3.CORE.FieldText/resources/Autosize-plugin",
    'css!SBIS3.CONTROLS.TextArea'
 ], function( constants,TextBox, inputField, escapeHtml, LinkWrap, IoC, trackElement) {
@@ -203,21 +203,23 @@ define('js!SBIS3.CONTROLS.TextArea', [
             this._cachedW = this._inputField.width();
             this._cachedH = this._inputField.height();
 
-            var trg = trackElement(this._container, true);
-
             if(this.isVisible()){
                this._autosizeTextArea();
             }
 
-            trg.subscribe('onVisible', function (event, visible) {
+            //var trg = trackElement(this._container, true);
+
+
+
+            /*trg.subscribe('onVisible', function (event, visible) {
                if (visible) {
-                  var w = self._inputField.width();
-                  var h = self._inputField.height();
-                  if (w != self._cachedW || h != self._cachedH) {
-                     self._cachedW = w;
-                     self._cachedH = h;
-                     self._autosizeTextArea(true);
-                  }
+                  self._autosizeOnShow()
+               }
+            });*/
+
+            this.subscribeTo(this, 'onAfterVisibilityChange', function(e, visible){
+               if (visible) {
+                  this._autosizeOnShow()
                }
             });
 
@@ -226,6 +228,23 @@ define('js!SBIS3.CONTROLS.TextArea', [
                this._inputField.attr('rows',parseInt(this._options.minLinesCount, 10));
             }
             this._removeAutoSizeDognail();
+         }
+      },
+
+      show: function(){
+         TextArea.superclass.show.apply(this, arguments);
+         this._autosizeOnShow();
+      },
+
+      //Если текстэрея была скрыта, то плагин автосайза не применялся к ней, потому что отработал бы неправильно.
+      //так что вызываем его после показа текстэрии
+      _autosizeOnShow: function() {
+         var w = this._inputField.width();
+         var h = this._inputField.height();
+         if (w != this._cachedW || h != this._cachedH) {
+            this._cachedW = w;
+            this._cachedH = h;
+            this._autosizeTextArea(true);
          }
       },
 
@@ -382,7 +401,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
 
       destroy: function() {
          this._inputField instanceof $ && this._inputField.trigger('autosize.destroy');
-         trackElement(this._container, false);
+         //trackElement(this._container, false);
          TextArea.superclass.destroy.apply(this, arguments);
       }
    });
