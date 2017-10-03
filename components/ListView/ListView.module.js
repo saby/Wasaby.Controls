@@ -3168,7 +3168,10 @@ define('js!SBIS3.CONTROLS.ListView',
                scrollOnEdge =  (mode === 'up' && type === 'top') ||   // скролл вверх и доскролили до верхнего края
                                (mode === 'down' && type === 'bottom' && !this._infiniteScrollState.reverse) || // скролл вниз и доскролили до нижнего края
                                (mode === 'down' && type === 'top' && this._infiniteScrollState.reverse) || // скролл верх с запросом данных вниз и доскролили верхнего края
-                               (this._options.infiniteScroll === 'both');
+                               (this._options.infiniteScroll === 'both'),
+               infiniteScroll = this._getOption('infiniteScroll'),
+               loadType;
+            
             if (scrollOnEdge && this.getItems()) {
                // Досткролили вверх, но на самом деле подгружаем данные как обычно, а рисуем вверх
                if (type == 'top' && this._infiniteScrollState.reverse) {
@@ -3176,7 +3179,24 @@ define('js!SBIS3.CONTROLS.ListView',
                } else {
                   this._setInfiniteScrollState(type == 'top' ? 'up' : 'down');
                }
-               this._scrollLoadNextPage();
+               
+               if (this._isCursorNavigation()) {
+                  if (infiniteScroll === 'both') {
+                     if (type === 'bottom') {
+                        if (this.getListNavigation().hasNextPage('down')) {
+                           loadType = 'down';
+                        }
+                     } else {
+                        if(this.getListNavigation().hasNextPage('up')) {
+                           loadType = 'up';
+                        }
+                     }
+                  } else {
+                     loadType = infiniteScroll;
+                  }
+               }
+               
+               this._scrollLoadNextPage(loadType);
             }
          },
          
