@@ -81,6 +81,16 @@
    height: 1px;
 }
 
+/*
+   fakeFocusElement с left 50% пораждает в safari на mac ошибку https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
+   установим left 0, вроде ничего не должно отвалиться.
+*/
+.controls-ListView__fakeFocusElement {
+   body.ws-is-desktop-safari &{
+      left: 0;
+   }
+}
+
 .controls-ListView__multiselect__off {
    .controls-ListView__itemCheckBox {
       display: none;
