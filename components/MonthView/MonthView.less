@@ -35,7 +35,7 @@
 
 .controls-MonthView__tableHead {
    font: @month-view-day-header-font;
-   text-align: @month-view-day-header-text-alignment;
+   text-align: center;
 }
 
 .controls-MonthView__tableElement {
@@ -47,9 +47,9 @@
    }
 
    &.controls-RangeSelectable__item {
-      font: @month-view-day-body-font;
-      text-align: @month-view-day-body-text-alignment;
-      cursor: @month-view-day-cell-cursor;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
       color: @month-view-day-cell-text-color;
       background: @month-view-day-cell-bg;
 
@@ -84,13 +84,12 @@
    }
 
    &.controls-MonthView__tableElementFog {
-      cursor: @month-view-day-fog-cell-cursor;
+      cursor: default;
       color: @month-view-day-fog-cell-text-color;
-      background: @month-view-day-fog-cell-bg;
+      background: transparent;
 
       &:hover {
          color: @month-view-day-fog-cell-hover-text-color;
-         background: @month-view-day-fog-cell-hover-bg;
       }
    }
 }

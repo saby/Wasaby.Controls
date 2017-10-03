@@ -7,7 +7,7 @@
 .controls-PopupMixin__closeButton {
    position: absolute;
    top: @controls-Popup-closeButton-top;
-   right: @controls-Popup-closeButton-right;
+   right: 0;
    width: @closeButtonWidth;
    height: @closeButtonHeight;
    cursor: pointer;
@@ -73,9 +73,9 @@
 }
 
 .controls-Popup-border {
-   .border-radius(@menu-border-radius);
+   .border-radius(0);
    border-width: @menu-border-width;
-   border-style: @menu-border-style;
+   border-style: solid;
    border-color: @menu-border-color;
 }
 

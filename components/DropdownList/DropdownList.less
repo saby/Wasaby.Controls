@@ -1,7 +1,7 @@
 .controls-DropdownList {
    display: inline-block;
    min-height: @DropdownList-height;
-   box-sizing: @DropdownList-box-sizing;
+   box-sizing: border-box;
    line-height: @DropdownList-height;
    .controls-DropdownList__selectedItem {
       .flexbox();
@@ -140,7 +140,7 @@
 
    .controls-DropdownList__item, .controls-DropdownList__selectedItem * {
       font-size: @DropdownList-picker-menu-font-size;
-      cursor: @DropdownList-cursor;
+      cursor: pointer;
    }
 
    &.controls-DropdownList__equalsWidth.controls-FloatArea .controls-DropdownList__body {
@@ -234,11 +234,11 @@
       position: relative;
       background: @DropdownList-header-bg;
       border: @DropdownList-picker-border;
-      border-radius: @DropdownList-picker-head-border-radius;
+      border-radius: 0;
       border-bottom: 0;
       z-index: 2;
       .controls-DropdownList {
-         margin: @DropdownList-picker-head-margin !important;
+         margin: 0 !important;
          position: relative !important;
          padding: 0 !important;
          width: 100%;
@@ -335,7 +335,7 @@
       padding: @DropdownList-picker-menu-item-padding;
       line-height: @DropdownList-picker-menu-line-height;
       background: @DropdownList-picker-menu-item-color;
-      margin: @DropdownList-picker-menu-item-margin;
+      margin: 0;
       font-size: @DropdownList-picker-menu-font-size;
       .controls-DropdownList__itemTextWrapper {
          max-width: 100%;
@@ -376,12 +376,12 @@
    .controls-DropdownList__buttonsBlock {
 
       height: @DropdownList-footer-buttonsBlock-height;
-      position: @DropdownList-footer-buttonsBlock-position;
+      position: relative;
       background: @DropdownList-picker-menu-item-color;
       .flex-shrink(0);
 
       .controls-DropdownListFooter_hasMore, .controls-DropdownListFooter_select {
-         position: @DropdownList-footer-buttons-position;
+         position: absolute;
       }
       .controls-DropdownListFooter_hasMore {
          left: @DropdownList-footer-hasMore-left;
@@ -402,7 +402,7 @@
       }
    }
    .controls-DropdownList__multiselect {
-      padding-left: @DropdownList-picker-menu-item-multiselect-padding;
+      padding-left: 0;
 
       &.controls-DropdownList__item {
          font-size: 0;

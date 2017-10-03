@@ -22,7 +22,7 @@
       background: @radio-button-icon-bg;
       margin: @radio-button-icon-margin;
       box-sizing: border-box;
-      border-style: @radio-button-icon-border-style;
+      border-style: solid;
       border-color: @radio-button-icon-border-color;
       border-width: @radio-button-icon-border-width;
       border-radius: @radio-button-icon-border-radius;
@@ -48,11 +48,10 @@
    &.controls-Checked__checked {
       .controls-RadioButton__caption {
          color: @radio-button-checked-text-color;
-         text-decoration: @radio-button-hover-text-decoration-checked;
+         text-decoration: none;
       }
 
       .controls-RadioButton__icon {
-         background: @radio-button-icon-checked-bg;
          border-color: @radio-button-icon-border-color-checked;
          &:before {
             content: '';
@@ -66,7 +65,6 @@
          }
 
          .controls-RadioButton__icon {
-            background: @radio-button-icon-checked-hover-bg;
             border-color: @radio-button-icon-border-color-checked;
          }
       }
@@ -76,7 +74,7 @@
       cursor: text;
       .controls-RadioButton__caption {
          color: @radio-button-disabled-text-color;
-         text-decoration: @radio-button-hover-text-decoration-disabled;
+         text-decoration: none;
       }
 
       .controls-RadioButton__icon {
@@ -100,7 +98,7 @@
       &:hover {
          &:not(.controls-Checked__checked)  .controls-RadioButton__caption {
             color: @radio-button-disabled-hover-text-color;
-            text-decoration: @radio-button-hover-text-decoration-disabled;
+            text-decoration: none;
          }
 
          .controls-RadioButton__icon {
