@@ -1160,6 +1160,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                $image = $(target),
                editor = this._tinyEditor,
+               scrollTop = this._inputControl.scrollTop(),
                self = this;
             require(['js!SBIS3.CORE.Dialog'], function(Dialog) {
                new Dialog({
@@ -1170,7 +1171,14 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   handlers: {
                      onBeforeShow: function () {
                         CommandDispatcher.declareCommand(this, 'saveImage', function () {
-                           self._changeImgSize($image, this.getChildControlByName('imageWidth').getValue(), this.getChildControlByName('imageHeight').getValue(), this.getChildControlByName('valueType').getValue() !== 'per');
+                           var promise = self._changeImgSize($image, this.getChildControlByName('imageWidth').getValue(), this.getChildControlByName('imageHeight').getValue(), this.getChildControlByName('valueType').getValue() !== 'per');
+                           if (scrollTop) {
+                              promise.addCallback(function () {
+                                 setTimeout(function () {
+                                    self._inputControl.scrollTop(scrollTop)
+                                 }, 1);
+                              });
+                           }
                            editor.undoManager.add();
                         }.bind(this));
                      }
@@ -1195,7 +1203,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             $img.attr('data-mce-style', css.join('; '));
             var prevSrc = $img.attr('src');
             var promise = this._makeImgPreviewerUrl($img, 0 < width ? width : null, 0 < height ? height : null, isPixels);
-            promise.addCallback(function (url) {
+            return promise.addCallback(function (url) {
                if (prevSrc !== url) {
                   $img.attr('src', url);
                   $img.attr('data-mce-src', url);
