@@ -1154,9 +1154,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return data;
       },
 
-      _removeItems: function (items, groupId) {
-         var prev;
-
+      _removeItems: function (items) {
          for (var i = 0; i < items.length; i++) {
             var item = items[i];
             var targetElement = this._getDomElementByItem(item);
@@ -1195,14 +1193,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _getItemsForRedrawOnAdd: function(items) {
-         var itemsToAdd = [];
-         var groupId;
+         var
+            itemsToAdd = [],
+            groupId;
 
          if (items.length && cInstance.instanceOfModule(items[0], 'WS.Data/Display/GroupItem')) {
-            groupId = items[0].getContents();
-            this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options);
-            items.splice(0, 1)
-            itemsToAdd = itemsToAdd.concat(items);
+            if (items.length > 1) {
+               groupId = items[0].getContents();
+               this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options);
+               items.splice(0, 1);
+               itemsToAdd = itemsToAdd.concat(items);
+            }
          }
          else {
             itemsToAdd = items;
@@ -1221,10 +1222,19 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
 
-      _addItems: function(newItems, newItemsIndex, groupId) {
+      _addItems: function(newItems, newItemsIndex) {
+         var
+            i, item, groupId;
          this._itemData = null;
-         var i;
          if (newItems && newItems.length) {
+            if (this._options.groupBy) {
+               if (cInstance.instanceOfModule(newItems[0], 'WS.Data/Display/GroupItem')) {
+                  groupId = newItems[0].getContents();
+               } else {
+                  item = newItems[0].getContents();
+                  groupId = this._options._prepareGroupId(item, item.get(this._options.groupBy.field), this._options);
+               }
+            }
             if (this._isSlowDrawing(this._options.easyGroup)) {
                for (i = 0; i < newItems.length; i++) {
                   this._addItem(
@@ -1241,7 +1251,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   markup, markupExt,
                   itemsToDraw;
 
-               itemsToDraw = this._getItemsForRedrawOnAdd(newItems, groupId);
+               itemsToDraw = this._getItemsForRedrawOnAdd(newItems);
                if (itemsToDraw.length) {
                   data = {
                      records: itemsToDraw,
@@ -1251,7 +1261,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   data.tplData.drawHiddenGroup = !!this._options._groupCollapsing[groupId];
                   markupExt = extendedMarkupCalculate(this._getItemsTemplateForAdd()(data), this._options);
                   markup = markupExt.markup;
-                  this._optimizedInsertMarkup(markup, this._getInsertMarkupConfig(newItemsIndex, newItems, groupId));
+                  this._optimizedInsertMarkup(markup, this._getInsertMarkupConfig(newItemsIndex, newItems));
                   this._revivePackageParams.revive = this._revivePackageParams.revive || markupExt.hasComponents;
                   this._revivePackageParams.light = false;
                }
@@ -1265,11 +1275,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       //Выделяем отдельный метод _getInsertMarkupConfigICM т.к. в TreeView метод _getInsertMarkupConfig переопределяется,
       //а в TreeCompositeView в зависимости от вида отображения нужно звать разные методы, в режиме плитки нужно звать
       //стандартный метод _getInsertMarkupConfigICM а в режиме таблицы переопределённый метод из TreeView
-      _getInsertMarkupConfig: function(newItemsIndex, newItems, groupId) {
+      _getInsertMarkupConfig: function(newItemsIndex, newItems) {
          return this._getInsertMarkupConfigICM.apply(this, arguments);
       },
 
-      _getInsertMarkupConfigICM: function(newItemsIndex, newItems, groupId) {
+      _getInsertMarkupConfigICM: function(newItemsIndex, newItems) {
          var
              nextItem,
              prevGroup,
@@ -2573,15 +2583,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._revivePackageParams.revive = this._revivePackageParams.revive || needToRevive;
          this._revivePackageParams.light = false;
       },
-      _onCollectionRemove: function(items, notCollapsed, groupId) {
+      _onCollectionRemove: function(items, notCollapsed) {
          if (items.length) {
-            this._removeItems(items, groupId);
+            this._removeItems(items);
          }
       },
-      _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
-         this._onCollectionRemove(oldItems, action === IBindCollection.ACTION_MOVE, groupId);
+      _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+         this._onCollectionRemove(oldItems, action === IBindCollection.ACTION_MOVE);
          if (newItems.length) {
-            this._addItems(newItems, newItemsIndex, groupId)
+            this._addItems(newItems, newItemsIndex)
          }
          this._toggleEmptyData(!this._options._itemsProjection.getCount());
       },
@@ -2661,7 +2671,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @param {Integer} oldItemsIndex Индекс, в котором удалены элементы.
        * @private
        */
-      onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
+      onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
          if (this._isNeedToRedraw()) {
             if (newItems.length > 0) {
                //TODO проекция отдает неправильные индексы выписана ошибка https://online.sbis.ru/opendoc.html?guid=ccb6214b-70ab-45d3-b5e3-e2e15ddeb639&des=

@@ -244,7 +244,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       }
       else {
          var needGroup = false, groupId;
-         projection.each(function(item, index, group) {
+         projection.each(function(item) {
             if (cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
                groupId = item.getContents();
                needGroup = true;
@@ -950,8 +950,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          return rootItems;
       },
 
-      _getItemsForRedrawOnAdd: function(items, groupId) {
-         var itemsToAdd = [], start = 0;
+      _getItemsForRedrawOnAdd: function(items) {
+         var itemsToAdd = [], start = 0, groupId;
          if (this._options.hierarchyViewMode) {
             itemsToAdd = searchProcessing(items, this._options);
          }
@@ -960,9 +960,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                groupId = items[0].getContents();
                if (items.length > 1 && this._canApplyGrouping(items[1])) {
                   this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options);
-                  items.splice(0, 1);
-                  itemsToAdd = itemsToAdd.concat(items);
                }
+               items.splice(0, 1);
+               itemsToAdd = itemsToAdd.concat(items);
             } else {
                for (var i = start; i < items.length; i++) {
                   if (this._isVisibleItem(items[i])) {
@@ -1167,8 +1167,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                }
             }
          },
-         _onCollectionAddMoveRemove: function(parentFn, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
-            parentFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId);
+         _onCollectionAddMoveRemove: function(parentFn, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+            parentFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
             this._findAndRedrawChangedBranches(newItems, oldItems);
             this._removeFromLoadedRemoteNodes(oldItems);
          },
