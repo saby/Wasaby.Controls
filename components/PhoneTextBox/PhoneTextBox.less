@@ -1,8 +1,10 @@
-.controls-TextBox.controls-PhoneTextBox {
-   &.ws-disabled {
-      border-bottom-color: transparent;
+.controls-TextBox {
+   .controls-PhoneTextBox {
+      &.ws-disabled {
+         border-bottom-color: transparent;
+      }
    }
-}
-.controls-PhoneTextBox__link {
-   line-height: @default-base-line-height;
+   .controls-PhoneTextBox__link {//перебитие стилей controls-Link
+      line-height: @default-base-line-height;
+   }
 }
