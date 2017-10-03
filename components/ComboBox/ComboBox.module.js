@@ -2,6 +2,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "Core/constants",
    "Core/Deferred",
    'Core/IoC',
+   'Core/detection',
    'js!SBIS3.CORE.LayoutManager',
    'js!SBIS3.CONTROLS.TextBox',
    'js!SBIS3.CONTROLS.TextBoxUtils',
@@ -22,7 +23,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "Core/core-instance",
    "i18n!SBIS3.CONTROLS.СomboBox",
    'css!SBIS3.CONTROLS.ComboBox'
-], function ( constants, Deferred, IoC, LayoutManager, TextBox, TextBoxUtils, textFieldWrapper, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, getTextWidth, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
+], function ( constants, Deferred, IoC, detection, LayoutManager, TextBox, TextBoxUtils, textFieldWrapper, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, getTextWidth, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
    'use strict';
    /**
     * Класс контрола "Комбинированный выпадающий список" с возможностью ввода значения с клавиатуры.
@@ -408,7 +409,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          if (this._options.editable) {
             this._setKeyByText();
          }
-         var isTextOverflow = getTextWidth(this.getText()) > $('.controls-TextBox__field:visible', this.getContainer()).width();
+         // Иногда $(...).width() возвращает не целое число (замечено в MSIE), из-за этого сравнение даёт неверный результат. Так что округляем:
+         var width = $('.controls-TextBox__field:visible', this.getContainer()).width();
+         var isTextOverflow = 0 < width && getTextWidth(this.getText()) > Math.round(width);
          //Если у нас виден инпут, то показываем тень только когда он не в фокусе. иначе в момент ввода появится ненужное затемнение.
          var needShadow = isTextOverflow && (this.isEditable() && !this._inputField.is(':focus') || !this.isEditable());
          this.getContainer().toggleClass('controls-ComboBox__overflow', needShadow);
@@ -795,12 +798,16 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       _pickerMouseEnterHandler: function (event) {
-         var itemContainer = $(event.target).closest('.controls-ComboBox__itemRow');
-         if (itemContainer.length) {
-            var itemTextContainer = $('.controls-ComboBox__item', itemContainer)[0],
-                itemText = itemTextContainer.textContent;
-            if (getTextWidth(itemText) > itemTextContainer.clientWidth) {
-               itemContainer[0].setAttribute('title', itemText);
+         //не устанавливаем title на мобильных устройствах:
+         //во-первых не нужно, во-вторых на ios из-за установки аттрибута не работает клик
+         if (!detection.isMobilePlatform) {
+            var itemContainer = $(event.target).closest('.controls-ComboBox__itemRow');
+            if (itemContainer.length) {
+               var itemTextContainer = $('.controls-ComboBox__item', itemContainer)[0],
+                  itemText = itemTextContainer.textContent;
+               if (getTextWidth(itemText) > itemTextContainer.clientWidth) {
+                  itemContainer[0].setAttribute('title', itemText);
+               }
             }
          }
       },

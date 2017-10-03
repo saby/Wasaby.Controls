@@ -1292,7 +1292,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (newSelectedItem && newSelectedItem.length) {
                newSelectedKey = newSelectedItem.data('id');
                this.setSelectedKey(newSelectedKey);
-               this._scrollToItem(newSelectedKey);
+               this._scrollToItem(newSelectedKey, e.which === constants.key.down);
             }
             return false;
          },
@@ -1501,6 +1501,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _updateHoveredItemAfterRedraw: function() {
             var hoveredItem = this.getHoveredItem(),
                 hoveredItemContainer = hoveredItem.container,
+                itemsProjection = this._getItemsProjection(),
                 containsHoveredItem, hash, projItem;
 
             /* !Производить обновление операций надо синхронно, иначе они будут моргать. */
@@ -1516,7 +1517,9 @@ define('js!SBIS3.CONTROLS.ListView',
                    * но этот элемент может теряться в ходе перерисовок. Выписана задача по которой мы будем
                    * хранить только идентификатор и данный код станет не нужен*/
                   hash = hoveredItemContainer.attr('data-hash');
-                  projItem = this._getItemsProjection().getByHash(hash);
+                  if(itemsProjection) {
+                     projItem = itemsProjection.getByHash(hash);
+                  }
                   /* Если в проекции нет элемента и этого элемента нет в DOM'e,
                    но на него осталась jQuery ссылка, то надо её затереть */
                   if (projItem) {
@@ -2363,14 +2366,32 @@ define('js!SBIS3.CONTROLS.ListView',
          _createEditInPlace: function() {
             var
                self = this,
-               result = new Deferred();
-            if (!this._createEditInPlaceDeferred) {
-               this._createEditInPlaceDeferred = new Deferred();
-               requirejs([this._isHoverEditMode() ? 'js!SBIS3.CONTROLS.EditInPlaceHoverController' : 'js!SBIS3.CONTROLS.EditInPlaceClickController'], function (controller) {
-                  self._createEditInPlaceDeferred.callback(self._editInPlace = new controller(self._getEditInPlaceConfig()));
-                  self._createEditInPlaceDeferred = undefined;
+               result = new Deferred(),
+               controller,
+               moduleName = this._isHoverEditMode() ? 'js!SBIS3.CONTROLS.EditInPlaceHoverController' : 'js!SBIS3.CONTROLS.EditInPlaceClickController';
+
+            // Если процесс создания EIP запущен - то просто возвращаем результат деферреда создания
+            if (this._createEditInPlaceDeferred) {
+               this._createEditInPlaceDeferred.addCallback(function(editInPlace) {
+                  result.callback(editInPlace);
+                  return editInPlace;
                });
+               return result;
             }
+
+            // Если модуль редактирования по месту уже загружен - то просто создаем его экземпляр
+            if (requirejs.defined(moduleName)) {
+               controller = requirejs(moduleName);
+               result.callback(this._editInPlace = new controller(self._getEditInPlaceConfig()));
+               return result;
+            }
+
+            // Если мы попали сюда, значит редактирование по месту ещё не создается, да и модуль ещё не загружен. Это нам и предстоит сделать.
+            this._createEditInPlaceDeferred = new Deferred();
+            requirejs([moduleName], function (controller) {
+               self._createEditInPlaceDeferred.callback(self._editInPlace = new controller(self._getEditInPlaceConfig()));
+               self._createEditInPlaceDeferred = undefined;
+            });
             this._createEditInPlaceDeferred.addCallback(function(editInPlace) {
                result.callback(editInPlace);
                return editInPlace;
@@ -3191,8 +3212,10 @@ define('js!SBIS3.CONTROLS.ListView',
             
             // При подгрузке в обе стороны необходимо определять направление, а не ориентироваться по state'у
             // Пока делаю так только при навигации по курсорам, чтобы не поломать остальной функционал
-            if (infiniteScroll === 'both' && isCursorNavigation) {
-               scrollDown = this.getListNavigation().hasNextPage('down');
+            if (isCursorNavigation) {
+               if (infiniteScroll === 'both' || infiniteScroll === 'down') {
+                  scrollDown = this.getListNavigation().hasNextPage('down');
+               }
             }
             
             // Если  скролл вверху (при загрузке вверх) или скролл внизу (при загрузке вниз) или скролла вообще нет - нужно догрузить данные
@@ -3312,7 +3335,7 @@ define('js!SBIS3.CONTROLS.ListView',
                var loadId = this._loadId++;
                this._loadQueue[loadId] = coreClone(this._infiniteScrollState);
 
-               this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit, this._infiniteScrollState.mode)
+               this._loader = this._callQuery(this.getFilter(), this.getSorting(), offset, this._limit, type || this._infiniteScrollState.mode)
                   .addBoth(forAliveOnly(function(res) {
                      this._loader = null;
                      return res;

@@ -871,8 +871,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
          _resizeFastDataFilter: function(){
             var parent = this.getParent();
-            this._notifyOnSizeChanged();
-            if (cInstance.instanceOfModule(parent, 'SBIS3.CONTROLS.FastDataFilter')){
+            if (cInstance.instanceOfModule(parent, 'SBIS3.CONTROLS.FastDataFilter')) {
+               this._notifyOnSizeChanged();
                parent._recalcDropdownWidth();
             }
          },
@@ -913,7 +913,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             this._setText(text);
          },
          _setText: function(text){
-            if(typeof text === 'string') {
+            if(typeof text === 'string' && this._options.text !== text) {
                this._options.text = text;
                this._notifyOnPropertyChanged('text');
             }
