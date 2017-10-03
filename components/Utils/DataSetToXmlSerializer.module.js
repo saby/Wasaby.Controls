@@ -193,7 +193,7 @@ define('js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer', [
             if (fieldValue instanceof Object) {
                fieldPrimitiveValue = fieldValue.valueOf();
                if (fieldPrimitiveValue !== fieldValue) {
-                  element.setAttribute('Value', fieldPrimitiveValue);
+                  element.setAttribute('Value', String(fieldPrimitiveValue));
                }
             }
 
