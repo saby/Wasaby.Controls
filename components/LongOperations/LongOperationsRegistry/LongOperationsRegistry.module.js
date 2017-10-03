@@ -7,11 +7,11 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
       'html!SBIS3.CONTROLS.LongOperationsRegistry/resources/emptyHTMLTpl',
       'html!SBIS3.CONTROLS.LongOperationsRegistry',
       'css!SBIS3.CONTROLS.LongOperationsRegistry',
-      'js!SBIS3.CONTROLS.Action.OpenEditDialog'/*###'js!SBIS3.Engine.SBISOpenDialogAction'*/,
-      'js!SBIS3.CONTROLS.Browser'/*###'js!SBIS3.Engine.Browser'*/,
-      'js!SBIS3.CONTROLS.SearchForm',/*###*/
-      'js!SBIS3.CONTROLS.FilterButton',/*###*/
-      'js!SBIS3.CONTROLS.FastDataFilter',/*###*/
+      'js!SBIS3.CONTROLS.Action.OpenEditDialog',
+      'js!SBIS3.CONTROLS.Browser',
+      'js!SBIS3.CONTROLS.SearchForm',
+      'js!SBIS3.CONTROLS.FilterButton',
+      'js!SBIS3.CONTROLS.FastDataFilter',
       'js!SBIS3.CONTROLS.LongOperationsList',
       'js!SBIS3.CONTROLS.LongOperationsFilter'
    ],
@@ -103,23 +103,21 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
 
             this.getChildControlByName('browserFastDataFilter').setItems(this._data);
 
-            view.setGroupBy(
-               {
-                  field: 'status',
-                  method: function (record, at, isLast) {
-                     var STATUSES = LongOperationEntry.STATUSES;
-                     var status = record.get('status');
-                     var prev = self._previousGroupBy;
-                     if (prev === null
-                           || (status === STATUSES.suspended && prev === STATUSES.running)
-                           || (status === STATUSES.ended && (prev === STATUSES.running || prev === STATUSES.suspended))) {
-                        self._previousGroupBy = status;
-                        return true;
-                     }
-                  },
-                  template: groupTpl
-               }
-            );
+            view.setGroupBy({
+               field: 'status',
+               method: function (record, at, isLast) {
+                  var STATUSES = LongOperationEntry.STATUSES;
+                  var status = record.get('status');
+                  var prev = self._previousGroupBy;
+                  if (prev === null
+                        || (status === STATUSES.suspended && prev === STATUSES.running)
+                        || (status === STATUSES.ended && (prev === STATUSES.running || prev === STATUSES.suspended))) {
+                     self._previousGroupBy = status;
+                     return true;
+                  }
+               },
+               contentTemplate: groupTpl
+            });
 
             this._bindEvents();
             this._longOpList.reload();
@@ -169,7 +167,7 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
                }
             });
 
-            this.subscribeTo(view, 'onDataLoad'/*'onItemsReady'*/, function () {
+            this.subscribeTo(view, 'onDataLoad'/*'onItemsReady'*/, function (evtName, recordset) {
                self._previousGroupBy = null;
                var status = self._longOpList.getLinkedContext().getValue('filter/status');
                view.setEmptyHTML(emptyHTMLTpl({title:FILTER_STATUSES[status === undefined ? null : status]}));
