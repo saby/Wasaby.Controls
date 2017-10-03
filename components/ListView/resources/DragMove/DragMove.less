@@ -22,27 +22,27 @@
 //todo: - selectors
 .controls-dragndrop {
 
-.controls-ListView__verticalDragNDrop {
-  .controls-DragNDrop__insertBefore {
-    &, > td {
-      border-top: @drag-and-drop-border;
+  &.controls-ListView__verticalDragNDrop {
+    .controls-DragNDrop__insertBefore {
+      &, > td {
+        border-top: @drag-and-drop-border;
+      }
+    }
+    .controls-DragNDrop__insertAfter {
+      &, > td {
+        border-bottom: @drag-and-drop-border;
+      }
     }
   }
-  .controls-DragNDrop__insertAfter {
-    &, > td {
-      border-bottom: @drag-and-drop-border;
-    }
-  }
-}
 //todo: - selectors
-.controls-ListView__horisontalDragNDrop {
-  .controls-DragNDrop__insertBefore {
-    border-left: @drag-and-drop-border;
+  &.controls-ListView__horisontalDragNDrop {
+    .controls-DragNDrop__insertBefore {
+      border-left: @drag-and-drop-border;
+    }
+    .controls-DragNDrop__insertAfter {
+      border-right: @drag-and-drop-border;
+    }
   }
-  .controls-DragNDrop__insertAfter {
-    border-right: @drag-and-drop-border;
-  }
-}
 //todo: - selectors
   .controls-ItemsToolbar {
     display: none !important;
