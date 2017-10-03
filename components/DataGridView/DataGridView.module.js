@@ -1422,7 +1422,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _isTableWide: function() {
-         return this._container[0].offsetWidth < this._getItemsContainer()[0].offsetWidth;
+         return this._container[0].offsetWidth < this._getTableContainer()[0].offsetWidth;
       },
 
       _hidePartScroll: function() {
