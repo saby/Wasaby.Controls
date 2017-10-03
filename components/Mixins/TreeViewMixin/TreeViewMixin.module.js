@@ -195,14 +195,17 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
             item = this._getItemProjectionByItemId(item);
          }
 
-         if (item && this._needCreateFolderFooter(item)) {
+         if (item) {
             this._destroyItemsFolderFooter(item.getContents().getId());
-            position = this._getLastChildByParent(this._getItemsContainer(), item);
 
-            if (typeof cfg._footerWrapperTemplate === "function" && position) {
-               folderFooter = $(cfg._footerWrapperTemplate(cfg._getFolderFooterOptions(cfg, item)));
-               folderFooter.insertAfter(position);
-               this.reviveComponents();
+            if (this._needCreateFolderFooter(item)) {
+               position = this._getLastChildByParent(this._getItemsContainer(), item);
+
+               if (typeof cfg._footerWrapperTemplate === "function" && position) {
+                  folderFooter = $(cfg._footerWrapperTemplate(cfg._getFolderFooterOptions(cfg, item)));
+                  folderFooter.insertAfter(position);
+                  this.reviveComponents();
+               }
             }
          }
       },
