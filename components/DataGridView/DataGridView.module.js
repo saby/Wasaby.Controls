@@ -170,8 +170,25 @@ define('js!SBIS3.CONTROLS.DataGridView',
             for (var i = 0, l = columns.length; i < l; i++){
                curCol = columns[i];
                nextCol = columns[i + 1];
-               curColSplitTitle = (curCol.title || '').split('.');
-               nextColSplitTitle = (nextCol && nextCol.title && nextCol.title.split ? nextCol.title : '').split('.'); //nextCol.title может быть rk объектом, если список строится на сервере
+
+               /**
+                * Сюда может прилететь rkString
+                * пока что это единственный способ ее идентифицировать
+                */
+               curColSplitTitle = (curCol.title || '');
+               if (curColSplitTitle.saveProtoM) {
+                  curColSplitTitle = '' + curColSplitTitle;
+               }
+               curColSplitTitle = curColSplitTitle.split('.');
+
+               nextColSplitTitle = ((nextCol && nextCol.title) || '');
+               if (nextColSplitTitle.saveProtoM) {
+                  nextColSplitTitle = '' + nextColSplitTitle;
+               }
+               nextColSplitTitle = nextColSplitTitle.split('.');
+               /**
+                * end check rkString
+                */
 
                if (!supportDouble){
                   supportDouble = coreClone(curCol);
