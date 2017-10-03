@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
       /**
        * @class SBIS3.CONTROLS.RichEditorToolbar
        * @extends SBIS3.CONTROLS.RichEditorToolbarBase
-       * @author Борисов П.С.
+       * @author Спирин Виктор Алексеевич
        * @public
        * @control
        */
