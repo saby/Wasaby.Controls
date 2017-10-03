@@ -1040,7 +1040,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             в событии onDrawItems могут производить замеры высоты/ширины,
             а без этого класса к списку применяются стили для состояния, когда он "пустой" (например устанавливается минимальная высота),
             что портит расчёты. */
-         this._container.addClass('controls-ListView__dataLoaded');
+         this._container.addClass('controls-ListView__dataLoaded').removeClass('controls-ListView__dataNotLoaded');
 
          if (notRevive) {
             this._revivePackageParams.revive = true;
@@ -1443,7 +1443,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             if (this._options._serverRender) {
                this._notifyOnDrawItems();
-               this._container.addClass('controls-ListView__dataLoaded');
+               this._container.addClass('controls-ListView__dataLoaded').removeClass('controls-ListView__dataNotLoaded');
             }
          },
          destroy : function() {
@@ -2361,7 +2361,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._drawItems(records);
          }
          /*класс для автотестов*/
-         this._container.addClass('controls-ListView__dataLoaded');
+         this._container.addClass('controls-ListView__dataLoaded').removeClass('controls-ListView__dataNotLoaded');
       },
       _drawItem: function (item, at, last) {
          var

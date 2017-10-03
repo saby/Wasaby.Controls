@@ -1076,7 +1076,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._drawItems(records);
          }
          /*класс для автотестов*/
-         this._container.addClass('controls-ListView__dataLoaded');
+         this._container.addClass('controls-ListView__dataLoaded').removeClass('controls-ListView__dataNotLoaded');
       },
       _destroySearchBreadCrumbs: function(){
       },
