@@ -167,7 +167,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          view = this._options.view;
          this._viewHeight = view.getContainer().get(0).scrollHeight;
          viewport = $(view._scrollWatcher.getScrollContainer());
-         this._viewportHeight = viewport.height();
+         this._viewportHeight = viewport.get(0).scrollHeight;
 
       },
 
