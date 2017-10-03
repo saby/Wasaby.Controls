@@ -1,5 +1,5 @@
 @import (reference) "../Switcher/Switcher";
-
+@switcher-do-text-selected-cursor:              text;
 .controls-SwitcherDouble__toggle {
    &:extend(.controls-Switcher);
    &:not(:hover) {
@@ -156,7 +156,7 @@ body:not(.ws-is-mobile-platform) .ws-enabled.controls-SwitcherDouble .controls-S
 .ws-enabled.controls-SwitcherDouble .controls-SwitcherDouble__unselected {
    color: @switcher-do-unselected-text-color;
    &:hover {
-      text-decoration: @switcher-do-text-unselected-decoration;
+      text-decoration: underline;
    }
 }
 
