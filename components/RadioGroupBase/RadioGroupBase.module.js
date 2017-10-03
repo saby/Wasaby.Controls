@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase',
             }
             for (var i in controls) {
                if (controls.hasOwnProperty(i)) {
-                  if (!hash) {
+                  if (!itemId) {
                      controls[i].setChecked(false);
                   }
                   else {
