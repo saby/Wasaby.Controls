@@ -171,7 +171,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                curCol = columns[i];
                nextCol = columns[i + 1];
                curColSplitTitle = (curCol.title || '').split('.');
-               nextColSplitTitle = nextCol && nextCol.title.split('.');
+               nextColSplitTitle = (nextCol && nextCol.title && nextCol.title.split ? nextCol.title : '').split('.'); //nextCol.title может быть rk объектом, если список строится на сервере
 
                if (!supportDouble){
                   supportDouble = coreClone(curCol);

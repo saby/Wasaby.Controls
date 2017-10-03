@@ -159,9 +159,6 @@ body.ws-is-ie .controls-ScrollContainer__content {
    body.ws-is-opera.ws-is-windows-10 & {
       margin-right: -15px;
    }
-   body.ws-is-mac.ws-is-safari11 &{
-      padding-right: 15px;
-   }
    body.ws-is-mobile-android &{
       padding-right: 17px;
    }
@@ -192,5 +189,17 @@ body.ws-is-ie .controls-ScrollContainer__content {
    body.ws-is-ie10.ws-is-touch &,
    body.ws-is-ie11.ws-is-touch & {
       padding-right: -17px;
+   }
+}
+
+/*
+   Скролл в chrome на mac может иметь разную ширину. Предположение, что это зависит от safari, который установлен на машине.
+   Соответсвенно userAgent нам в данном случае не поможет. Явно установим ширину, чтобы она была одинаковой.
+   Возможно просто стоит сбросить ширину в 0, тогда и margin-right не понадобаится.
+   Сделано по ошибке: https://online.sbis.ru/opendoc.html?guid=1734dafa-e837-4889-8fd7-d04f0f6ad78e
+ */
+.controls-ScrollContainer__content:not(.controls-ScrollContainer__content-overflowHidden)::-webkit-scrollbar {
+   body.ws-is-mac &{
+      width: 15px;
    }
 }
