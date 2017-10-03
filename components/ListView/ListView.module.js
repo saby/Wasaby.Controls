@@ -972,7 +972,7 @@ define('js!SBIS3.CONTROLS.ListView',
             dispatcher.declareCommand(this, 'cancelEdit', this.cancelEdit);
             dispatcher.declareCommand(this, 'commitEdit', this.commitEdit);
 
-            if (this._options.navigation && this._options.navigation.type == 'cursor') {
+            if (this._isCursorNavigation()) {
                this._listNavigation = new CursorNavigation(this._options.navigation);
             }
          },
@@ -1007,7 +1007,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if(this.isInfiniteScroll()) {
                this._prepareInfiniteScroll();
             }
-            if (this.getItems() && this._options.navigation && this._options.navigation.type == 'cursor') {
+            if (this.getItems() && this._isCursorNavigation()) {
                this._listNavigation.analyzeResponseParams(this.getItems());
             }
             ListView.superclass.init.call(this);
@@ -3179,6 +3179,10 @@ define('js!SBIS3.CONTROLS.ListView',
                this._scrollLoadNextPage();
             }
          },
+         
+         _isCursorNavigation: function() {
+            return this._options.navigation && this._options.navigation.type === 'cursor';
+         },
 
          /**
           * Функция догрузки данных пока не появится скролл
@@ -3187,7 +3191,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _preScrollLoading: function(){
             var scrollDown = this._infiniteScrollState.mode === 'down' && !this._infiniteScrollState.reverse,
                 infiniteScroll = this._getOption('infiniteScroll'),
-                isCursorNavigation = this._options.navigation && this._options.navigation.type === 'cursor';
+                isCursorNavigation = this._isCursorNavigation();
             
             // При подгрузке в обе стороны необходимо определять направление, а не ориентироваться по state'у
             // Пока делаю так только при навигации по курсорам, чтобы не поломать остальной функционал
@@ -3235,7 +3239,7 @@ define('js!SBIS3.CONTROLS.ListView',
                hasScroll = this._scrollWatcher.hasScroll(this._getLoadingIndicatorHeight()),
                hasNextPage;
 
-            if (this._options.navigation && this._options.navigation.type == 'cursor') {
+            if (this._isCursorNavigation()) {
                hasNextPage = this._listNavigation.hasNextPage(type || this._infiniteScrollState.mode);
             }
             else {
@@ -3323,7 +3327,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
                      var state = this._loadQueue[loadId],
                         hasNextPage;
-                     if (this._options.navigation && this._options.navigation.type == 'cursor') {
+                     if (this._isCursorNavigation()) {
                         this._listNavigation.analyzeResponseParams(dataSet, type || state.mode);
                         hasNextPage = this._listNavigation.hasNextPage(type || state.mode);
                      }
@@ -3583,6 +3587,10 @@ define('js!SBIS3.CONTROLS.ListView',
                if (type) {
                   this._options.infiniteScroll = type;
                   this._allowInfiniteScroll = true;
+                  
+                  if (type === 'down') {
+                     this._setInfiniteScrollState('down');
+                  }
                }
             }
    
@@ -3663,7 +3671,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onDataLoad: function(list) {
-            if (this._options.navigation && this._options.navigation.type == 'cursor') {
+            if (this._isCursorNavigation()) {
                this._listNavigation.analyzeResponseParams(list);
             }
          },
@@ -3802,7 +3810,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                query = new Query(),
                queryFilter = filter;
-            if (this._options.navigation && this._options.navigation.type == 'cursor') {
+            if (this._isCursorNavigation()) {
                var options = this._dataSource.getOptions();
                options.navigationType = SbisService.prototype.NAVIGATION_TYPE.POSITION;
                this._dataSource.setOptions(options);
@@ -3812,7 +3820,7 @@ define('js!SBIS3.CONTROLS.ListView',
                cMerge(queryFilter, addParams.filter);
             }
             /*TODO перенос события для курсоров глубже, делаю под ифом, чтоб не сломать текущий функционал*/
-            if (this._options.navigation && this._options.navigation.type == 'cursor') {
+            if (this._isCursorNavigation()) {
                this._notify('onBeforeDataLoad', queryFilter, sorting, offset, limit);
             }
             query.where(queryFilter)
