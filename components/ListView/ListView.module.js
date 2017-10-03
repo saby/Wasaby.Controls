@@ -85,7 +85,7 @@ define('js!SBIS3.CONTROLS.ListView',
             tplOptions.colorField = cfg.colorField;
             tplOptions.selectedKey = cfg.selectedKey;
             tplOptions.selectedKeys = cfg.selectedKeys;
-            tplOptions.noHover = cfg.noHover;
+            tplOptions.itemsHover = cfg.itemsHover;
 
             return tplOptions;
          },
@@ -122,7 +122,6 @@ define('js!SBIS3.CONTROLS.ListView',
        * @cssModifier controls-ListView__pagerNoSizePicker Скрывает отображение выпадающего списка, в котором производят выбор размера страницы для режима постраничной навигации (см. {@link showPaging}).
        * @cssModifier controls-ListView__pagerNoAmount Скрывает отображение количества записей на странице для режима постраничной навигации (см. {@link showPaging}).
        * @cssModifier controls-ListView__pagerHideEndButton Скрывает отображение кнопки "Перейти к последней странице". Используется для режима постраничной навигации (см. {@link showPaging}).
-       * @cssModifier controls-ListView__disableHover Убирает выделение цветом для строк по "ховеру".
        *
        * @css controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
        * @css js-controls-ListView__notEditable Клик по элементу с данным классом не будет приводить к запуску редактирования по месту.
@@ -442,6 +441,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _loadQueue: {},
             _loadId: 0,
             _options: {
+                itemsHover: true,
                _canServerRender: true,
                _buildTplArgs: buildTplArgsLV,
                _getRecordsForRedraw: getRecordsForRedrawLV,
@@ -1060,13 +1060,13 @@ define('js!SBIS3.CONTROLS.ListView',
             var className = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || "";
             var classes = [
                { class: 'controls-small-ListView', optionName: 'isSmall', value: true, defaultValue: false },
-               { class: 'controls-ListView__disableHover', optionName: 'noHover', value: true, defaultValue: false },
+               { class: 'controls-ListView__disableHover', optionName: 'itemsHover', value: false, defaultValue: true },
                { class: 'controls-ListView__pagerNoSizePicker', optionName: 'noSizePicker', value: true, defaultValue: false },
                { class: 'controls-ListView__pagerNoAmount', optionName: 'noPagerAmount', value: true, defaultValue: false },
                { class: 'controls-ListView__pagerHideEndButton', optionName: 'hideEndButton', value: true, defaultValue: false },
                { class: 'controls-ListView__orangeMarker', optionName: 'showSelectedMarker', value: true, defaultValue: false },
                { class: 'controls-ListView__outside-scroll-loader', optionName: 'outsideScroll', value: true, defaultValue: false }
-            ]
+            ];
             function hasClass(fullClass, className) {
                if(typeof fullClass === 'string') {
                   var index = fullClass.split(' ')
@@ -1548,7 +1548,7 @@ define('js!SBIS3.CONTROLS.ListView',
                var oldHoveredItem = this.getHoveredItem().container;
                oldHoveredItem.removeClass('controls-ListView__hoveredItem');
             }
-            if(!this._options.noHover && !target.hasClass('controls-EditAtPlace')) {
+            if(this._options.itemsHover && !target.hasClass('controls-EditAtPlace')) {
                target.addClass('controls-ListView__hoveredItem');
             }
 
@@ -3735,7 +3735,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _setHoveredItem: function(hoveredItem) {
             //
             if (hoveredItem.container) {
-               if(!this._options.noHover && !hoveredItem.container.hasClass('controls-EditAtPlace')) {
+               if(this._options.itemsHover && !hoveredItem.container.hasClass('controls-EditAtPlace')) {
                   hoveredItem.container.addClass('controls-ListView__hoveredItem');
                }
                this._hoveredItem = hoveredItem;
@@ -4766,6 +4766,9 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
             return textValues.join(', ');
+         },
+         setItemsHover: function( hoverMode) {
+            this._options.itemsHover = hoverMode;
          }
       });
 
