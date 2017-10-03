@@ -283,7 +283,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          if (cfg.inside && !cfg.prepend) {
             cfg.inside = false;
             lastItemParent = lastItem.getContents().get(this._options.parentProperty);
-            firstTreeItem = newItems[0].isNode ? newItems[1] : newItems[0];
+            firstTreeItem = newItems[0].isNode ? newItems[0] : newItems[1];
             newItemsParent = firstTreeItem ? firstTreeItem.getContents().get(this._options.parentProperty) : undefined;
             /* В виду того, что мы не можем различить, откуда вызван _getInsertMarkupConfig, возникают две противоречивые ситуации:
                1. В случае перерисовки ПЕРВОЙ записи в хлебных крошках (изменён прямо record), предыдущий элемент будет
