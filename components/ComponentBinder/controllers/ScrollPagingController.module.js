@@ -163,13 +163,10 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
       },
 
       _updateCachedSizes: function(){
-         var view, viewport;
-         view = this._options.view;
-         this._viewHeight = view.getContainer().get(0).scrollHeight;
-         viewport = $(view._scrollWatcher.getScrollContainer())[0];
-         //offsetHeight у window нету
+         var viewport  = $(this._options.view._scrollWatcher.getScrollContainer())[0];
+         // У window нет scrollHeight и offsetHeight, поэтому высоту получаем иначе
+         this._viewHeight = viewport === window ? document.documentElement.scrollHeight : viewport.scrollHeight;
          this._viewportHeight = viewport === window ? viewport.innerHeight : viewport.offsetHeight;
-
       },
 
       destroy: function(){
