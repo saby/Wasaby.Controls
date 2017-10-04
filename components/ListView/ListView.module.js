@@ -2409,7 +2409,8 @@ define('js!SBIS3.CONTROLS.ListView',
                this._getEditInPlace().addCallback(function(editInPlace) {
                   var
                      editingRecord = editInPlace.getEditingRecord();
-                  if (self._options._prepareGroupId(editingRecord, editingRecord.get(self._options.groupBy.field), self._options) === groupId) {
+                  // Через проекцию группу элемента не выяснить, т.к. редактируемая запись может отсутствовать и в проекции и в рекордсете
+                  if (self._options._prepareGroupId(editingRecord, self._options._getGroupId(editingRecord, self._options), self._options) === groupId) {
                      self.cancelEdit();
                   }
                });
