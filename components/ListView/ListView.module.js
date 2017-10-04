@@ -2991,15 +2991,15 @@ define('js!SBIS3.CONTROLS.ListView',
                });
             }
          },
-         _removeItems: function(items, groupId) {
+         _removeItems: function(items) {
             this._checkDeletedItems(items);
-            ListView.superclass._removeItems.call(this, items, groupId);
+            ListView.superclass._removeItems.call(this, items);
             if (this.isInfiniteScroll()) {
                this._preScrollLoading();
             }
          },
 
-         _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId){
+         _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex){
             if (this._getSourceNavigationType() == 'Offset'){
                if (action == IBindCollection.ACTION_ADD) {
                   this._scrollOffset.bottom += this._getAdditionalOffset(newItems);
