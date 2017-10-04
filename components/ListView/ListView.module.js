@@ -3559,6 +3559,17 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          /**
+          * Scroll to a given offset from the top.
+          *
+          * @param offset
+          */
+         scrollToOffset: function(offset) {
+            if (this._getScrollWatcher()) {
+               this._getScrollWatcher().scrollTo(offset);
+            }
+         },
+
+            /**
           * Возвращает scrollWatcher, при необходимости создаёт его
           * @returns {*|SBIS3.CONTROLS.ListView.$protected._scrollWatcher|ScrollWatcher|SBIS3.CONTROLS.ListView._scrollWatcher}
           * @private
