@@ -294,7 +294,8 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
             }
 
          }
-         if (!endDate) {
+         // Отображаемый год меняем только если начало периода определено, а конец не определен
+         if (date && !endDate) {
             this._setCurrentYear(date.getFullYear(), true);
             if (this._state === states.year) {
                this._monthRangePicker.setYear(date.getFullYear());
