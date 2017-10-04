@@ -1,8 +1,8 @@
 <ws:if data="{{columns}}">
-    <tr class="js-controls-ListView__item controls-ListView__item" data-id="{{model.getId() + ''}}">
-        <td class ="controls-DataGridView__td controls-DataGridView__firstContentCell" colspan="{{columns.length + (ignoreFirstColumn ? 1 : 0)}}"></td>
+    <tr class="js-controls-ListView__item controls-ListView__item">
+        <td class="controls-DataGridView__td controls-DataGridView__firstContentCell" colspan="{{columns.length + (ignoreFirstColumn ? 1 : 0)}}"></td>
     </tr>
 </ws:if>
 <ws:else>
-    <div class="js-controls-ListView__item controls-ListView__item" data-id="{{model.getId() + ''}}"></div>
+    <div class="js-controls-ListView__item controls-ListView__item"></div>
 </ws:else>
