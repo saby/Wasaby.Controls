@@ -85,6 +85,7 @@ define('js!SBIS3.CONTROLS.ListView',
             tplOptions.colorField = cfg.colorField;
             tplOptions.selectedKey = cfg.selectedKey;
             tplOptions.selectedKeys = cfg.selectedKeys;
+            tplOptions.itemsHover = cfg.itemsHover;
 
             return tplOptions;
          },
@@ -121,7 +122,6 @@ define('js!SBIS3.CONTROLS.ListView',
        * @cssModifier controls-ListView__pagerNoSizePicker Скрывает отображение выпадающего списка, в котором производят выбор размера страницы для режима постраничной навигации (см. {@link showPaging}).
        * @cssModifier controls-ListView__pagerNoAmount Скрывает отображение количества записей на странице для режима постраничной навигации (см. {@link showPaging}).
        * @cssModifier controls-ListView__pagerHideEndButton Скрывает отображение кнопки "Перейти к последней странице". Используется для режима постраничной навигации (см. {@link showPaging}).
-       * @cssModifier controls-ListView__disableHover Убирает выделение цветом для строк по "ховеру".
        *
        * @css controls-DragNDropMixin__notDraggable За помеченные данным селектором элементы Drag&Drop производиться не будет.
        * @css js-controls-ListView__notEditable Клик по элементу с данным классом не будет приводить к запуску редактирования по месту.
@@ -441,6 +441,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _loadQueue: {},
             _loadId: 0,
             _options: {
+                itemsHover: true,
                _canServerRender: true,
                _buildTplArgs: buildTplArgsLV,
                _getRecordsForRedraw: getRecordsForRedrawLV,
@@ -1055,8 +1056,57 @@ define('js!SBIS3.CONTROLS.ListView',
             container[bind ? 'on' : 'off']('swipe tap mousemove mouseleave touchend taphold touchstart contextmenu mousedown mouseup', this._eventProxyHdl);
          },
 
-         _modifyOptions : function(opts){
+         _addOptionsFromClass: function(opts, attrToMerge) {
+            var className = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || "";
+            var classes = [
+               { class: 'controls-small-ListView', optionName: 'isSmall', value: true, defaultValue: false },
+               { class: 'controls-ListView__disableHover', optionName: 'itemsHover', value: false, defaultValue: true },
+               { class: 'controls-ListView__pagerNoSizePicker', optionName: 'noSizePicker', value: true, defaultValue: false },
+               { class: 'controls-ListView__pagerNoAmount', optionName: 'noPagerAmount', value: true, defaultValue: false },
+               { class: 'controls-ListView__pagerHideEndButton', optionName: 'hideEndButton', value: true, defaultValue: false },
+               { class: 'controls-ListView__orangeMarker', optionName: 'showSelectedMarker', value: true, defaultValue: false },
+               { class: 'controls-ListView__outside-scroll-loader', optionName: 'outsideScroll', value: true, defaultValue: false }
+            ];
+            function hasClass(fullClass, className) {
+               if(typeof fullClass === 'string') {
+                  var index = fullClass.split(' ')
+                     .filter(function (el) {
+                        return el !== ''
+                     })
+                     .indexOf(className);
+                  return !!~index;
+               } else {
+                  return undefined;
+               }
+            }
+            var el;
+            for(var i = 0; i < classes.length; i++) {
+               el = classes[i];
+               ////Прокинуть правильные опции
+               // if(el.isPagerConfig) {
+               //    if(!opts.pagerConfig[el.optionName]) {
+               //       hasClass(opts.className, el.class) ? opts.pagerConfig[el.optionName] = el.value :
+               //          opts.pagerConfig[el.optionName] = el.defaultValue;
+               //    }
+               // } else {
+               //    if(!opts[el.optionName]) {
+               //       hasClass(opts.className, el.class) ? opts[el.optionName] = el.value :
+               //          opts[el.optionName] = el.defaultValue;
+               //    }
+               // }
+               if (!opts[el.optionName]) {
+                  if (hasClass(className, el.class)) {
+                     opts[el.optionName] = el.value;
+                  } else {
+                     opts[el.optionName] = el.defaultValue;
+                  }
+               }
+            }
+         },
+
+         _modifyOptions : function(opts, parsedOptions, attrToMerge){
             var lvOpts = ListView.superclass._modifyOptions.apply(this, arguments);
+            this._addOptionsFromClass(lvOpts, attrToMerge);
             //Если нам задали бесконечный скролл в виде Bool, то если true, то 'down' иначе null
             if (lvOpts.hasOwnProperty('infiniteScroll')){
                lvOpts.infiniteScroll = typeof lvOpts.infiniteScroll === 'boolean' ?
@@ -1176,6 +1226,8 @@ define('js!SBIS3.CONTROLS.ListView',
             var scrollContainer = this._scrollWatcher.getScrollContainer(),
                scrollPagerContainer = $('> .controls-ListView__scrollPager', this._container);
             this._scrollPager = new Paging({
+               noSizePicker: this._options.noSizePicker,
+               noPagerAmount: this._options.noPagerAmount,
                element: scrollPagerContainer,
                visible: false,
                showPages: false,
@@ -1493,8 +1545,14 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _updateHoveredItem: function(target) {
-            this._hasHoveredItem() && this.getHoveredItem().container.removeClass('controls-ListView__hoveredItem');
-            target.addClass('controls-ListView__hoveredItem');
+            if(this._hasHoveredItem()) {
+               var oldHoveredItem = this.getHoveredItem().container;
+               oldHoveredItem.removeClass('controls-ListView__hoveredItem');
+            }
+            if(this._options.itemsHover && !target.hasClass('controls-EditAtPlace')) {
+               target.addClass('controls-ListView__hoveredItem');
+            }
+
             this._hoveredItem = this._getElementData(target);
             this._notifyOnChangeHoveredItem();
          },
@@ -2005,12 +2063,18 @@ define('js!SBIS3.CONTROLS.ListView',
          _drawSelectedItem: function (id, index, lightVer) {
             //рисуем от ключа
             if (lightVer !== true) {
-               $(".controls-ListView__item", this._getItemsContainer()).removeClass('controls-ListView__item__selected');
+               $(".controls-ListView__item", this._getItemsContainer())
+                  .removeClass('controls-ListView__item__selected')
+                  .removeClass('controls-ListView__item__selected__withMarker');
                if (this._getItemsProjection()) {
                   var projItem = this._getItemsProjection().at(index);
                   if (projItem) {
-                     var hash = projItem.getHash();
-                     $('.controls-ListView__item[data-hash="' + hash + '"]', this._container).addClass('controls-ListView__item__selected');
+                     var hash = projItem.getHash(),
+                        curSelected = $('.controls-ListView__item[data-hash="' + hash + '"]', this._container);
+                     curSelected.addClass('controls-ListView__item__selected');
+                     if(this._options.showSelectedMarker) {
+                        curSelected.addClass('controls-ListView__item__selected__withMarker');
+                     }
                   }
 
                }
@@ -2513,8 +2577,14 @@ define('js!SBIS3.CONTROLS.ListView',
                         this._showToolbar(model);
                         this.setSelectedKey(model.getId());
                         if (model.getState() === Record.RecordState.DETACHED) {
-                           $(".controls-ListView__item", this._getItemsContainer()).removeClass('controls-ListView__item__selected');
-                           $('.controls-ListView__item[data-id="' +  (model.getId() === undefined ? '' : model.getId()) + '"]', this._container).addClass('controls-ListView__item__selected');
+                           $(".controls-ListView__item", this._getItemsContainer())
+                              .removeClass('controls-ListView__item__selected')
+                              .removeClass('controls-ListView__item__selected__withMarker');
+                           var curSelected = $('.controls-ListView__item[data-id="' +  (model.getId() === undefined ? '' : model.getId()) + '"]', this._container);
+                           curSelected.addClass('controls-ListView__item__selected');
+                           if(this._options.showSelectedMarker) {
+                              curSelected.addClass('controls-ListView__item__selected__withMarker');
+                           }
                         }
                         else {
                            this.setSelectedKey(model.getId());
@@ -3292,7 +3362,7 @@ define('js!SBIS3.CONTROLS.ListView',
             }
 
             //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
-            this._container.toggleClass('controls-ListView__outside-scroll-loader', !hasScroll);
+            this._scrollWatcher.getScrollContainer().toggleClass('controls-ListView-scrollIndicator_outside', !hasScroll);
 
             this._updateScrollIndicatorTopThrottled();
 
@@ -3701,8 +3771,13 @@ define('js!SBIS3.CONTROLS.ListView',
           * @private
           */
          _setHoveredItem: function(hoveredItem) {
-            hoveredItem.container && hoveredItem.container.addClass('controls-ListView__hoveredItem');
-            this._hoveredItem = hoveredItem;
+            //
+            if (hoveredItem.container) {
+               if(this._options.itemsHover && !hoveredItem.container.hasClass('controls-EditAtPlace')) {
+                  hoveredItem.container.addClass('controls-ListView__hoveredItem');
+               }
+               this._hoveredItem = hoveredItem;
+            }
          },
 
          /**
@@ -3711,9 +3786,11 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          _clearHoveredItem: function() {
             var hoveredItem = this.getHoveredItem(),
+                hoveredItemCont = hoveredItem.container,
                 emptyObject = {};
 
-            hoveredItem.container && hoveredItem.container.removeClass('controls-ListView__hoveredItem');
+            hoveredItemCont && hoveredItemCont.removeClass('controls-ListView__hoveredItem');
+
             for(var key in hoveredItem) {
                if(hoveredItem.hasOwnProperty(key)) {
                   emptyObject[key] = null;
@@ -3815,6 +3892,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   var more = self.getItems().getMetaData().more,
                      hasNextPage = self._hasNextPage(more),
                      pagingOptions = {
+                        hideEndButton: this._options.hideEndButton,
                         recordsPerPage: self._options.pageSize || more,
                         currentPage: 1,
                         recordsCount: more || 0,
@@ -4726,6 +4804,9 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
             return textValues.join(', ');
+         },
+         setItemsHover: function( hoverMode) {
+            this._options.itemsHover = hoverMode;
          }
       });
 
