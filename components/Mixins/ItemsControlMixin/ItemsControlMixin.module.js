@@ -1166,7 +1166,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                targetElementNode.parentNode.removeChild(targetElementNode);
                /* TODO внештатная ситуация, при поиске могли удалить папку/путь, сейчас нет возможности найти это в гриде и удалить
                   поэтому просто перерисуем весь грид. Как переведём группировку на item'ы, это можно удалить */
-            } else if(this._isSearchMode && this._isSearchMode() && item.isNode()) { // FIXME "Грязная проверка" на наличие метода в .220, код удалится в .230
+            } else if(this._isSearchMode && this._isSearchMode() && item.isNode && item.isNode()) { // FIXME "Грязная проверка" на наличие метода в .220, код удалится в .230
                this.redraw();
                return;
             }
