@@ -5,6 +5,7 @@ define('js!WSControls/Lists/ListView', [
    'tmpl!WSControls/Lists/ListView',
    'tmpl!WSControls/Lists/ListView/ItemTemplate',
    'js!WSControls/Lists/resources/utils/DataSourceUtil',
+   'js!WSControls/Lists/Controllers/PageNavigation',
    'js!WSControls/Lists/resources/utils/ItemsUtil',
    'Core/helpers/functional-helpers',
    'Core/Deferred',
@@ -17,6 +18,7 @@ define('js!WSControls/Lists/ListView', [
              ListViewTpl,
              defaultItemTemplate,
              DataSourceUtil,
+             PageNavigation,
              ItemsUtil,
              fHelpers,
              Deferred,
@@ -51,8 +53,18 @@ define('js!WSControls/Lists/ListView', [
          },
 
 
+
+         _initNavigation: function(options) {
+            if (options.dataSource && options.navigation && (!this._navigationController)) {
+               this._navigationController = new PageNavigation(options.navigation.config);
+               this._navigationController.prepareSource(options.dataSource);
+            }
+         },
+
          _beforeMount: function(newOptions) {
             this._itemTemplate = newOptions.itemTemplate || defaultItemTemplate;
+
+            this._initNavigation(newOptions);
 
             if (newOptions.dataSource != this._options.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
