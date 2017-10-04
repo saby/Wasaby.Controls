@@ -161,10 +161,6 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
                this.getList().setItems(rs);
                this.showPicker();
             }
-            else if (this._historyController.getCount()) {
-               this.getList().setItems(this._getHistoryRecordSetSync()); //В рамках совместимости оставляю старое поведение
-               this.showPicker();
-            }
          }.bind(this)).addErrback(function (err) {
             //Если запрос был прерван нами, то ничего не делаем
             if (!err.canceled && err.message !== "Cancel") { //Из parallelDeferred возвращается ошибка с текстом "Cancel" при превранном запросе
