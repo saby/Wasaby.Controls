@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'js!SBIS3.CONTROLS.Selectable'], function(ButtonGroupBase, Selectable) {
+define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'js!SBIS3.CONTROLS.Selectable', 'Core/core-instance'], function(ButtonGroupBase, Selectable, cInstance) {
 
    'use strict';
 
@@ -31,18 +31,30 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase',
 
       _drawSelectedItem : function(id, index) {
          //TODO не будет работать с перечисляемым. Переписать
-         var
-            item = this._getItemsProjection().at(index),
-            controls = this.getItemsInstances();
+         /* Когда Enum работаем через хэши, в остальных случаях через id */
+         var isEnum = cInstance.instanceOfModule(this.getItems(), 'WS.Data/Type/Enum'),
+             item = this._getItemsProjection().at(index),
+             controls = this.getItemsInstances();
+         
+         if (!isEnum) {
+            item = item.getContents();
+         }
+         
          if (item) {
-            var hash = item.getHash();
+            var itemId;
+            
+            if (isEnum) {
+               itemId = item.getHash();
+            } else {
+               itemId = item.get(this._options.idProperty);
+            }
             for (var i in controls) {
                if (controls.hasOwnProperty(i)) {
-                  if (!hash) {
+                  if (!itemId) {
                      controls[i].setChecked(false);
                   }
                   else {
-                     if (controls[i].getContainer().data('hash') == hash) {
+                     if (controls[i].getContainer().data(isEnum ? 'hash' : 'id') == itemId) {
                         controls[i].setChecked(true);
                      }
                      else {
