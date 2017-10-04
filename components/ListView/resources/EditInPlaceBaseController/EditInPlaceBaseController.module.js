@@ -399,9 +399,9 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                if (eip && this._savingDeferred.isReady()) {
                   this._savingDeferred = new Deferred();
                   record = eip.getEditingRecord();
-                  //Если редактирование завершается с сохранением, но запись не изменена, то нет смысл производить сохранение,
+                  //Если редактирование(не добавление) завершается с сохранением, но запись не изменена, то нет смысл производить сохранение,
                   //т.к. отправится лишний запрос на бл, который ни чего по сути не сделает
-                  if (withSaving && !this._pendingOperation) {
+                  if (withSaving && !this._isAdd && !record.isChanged()) {
                      withSaving = false;
                   }
                   endEditResult = this._notify('onEndEdit', record, withSaving);
