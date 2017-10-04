@@ -83,12 +83,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       return groupId + '';
    },
 
+   getGroupId = function(item, cfg) {
+      return cfg.groupBy.method ? cfg.groupBy.method.apply(this, arguments) : item.get(cfg.groupBy.field);
+   };
+
    applyGroupingToProjection = function(projection, cfg) {
       if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {
          var
             method = function(item) {
                var
-                  groupId = cfg.groupBy.method ? cfg.groupBy.method.apply(this, arguments) : item.get(cfg.groupBy.field);
+                  groupId = cfg._getGroupId(item, cfg);
                if (groupId !== false) {
                   groupId = cfg._prepareGroupId(item, groupId, cfg);
                }
@@ -354,6 +358,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             _defaultItemTemplate: '',
             _defaultItemContentTemplate: '',
             _prepareGroupId: prepareGroupId,
+            _getGroupId: getGroupId,
             _createDefaultProjection : createDefaultProjection,
             _buildTplArgsSt: buildTplArgs,
             _buildTplArgs : buildTplArgs,
@@ -1067,6 +1072,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             markup, markupExt,
             targetElement = this._getDomElementByItem(item),
             inlineStyles = targetElement.attr('style') || '',
+            projection = this._getItemsProjection(),
             data;
 
          //TODO в 3.7.5 избавиться от проверки на _path
@@ -1077,7 +1083,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
             // Вычисляем drawHiddenGroup при перерисовке item'а, т.к. в текущей реализации это единственный способ скрыть элемент, если он расположен в свернутой группе
             if (this._options.groupBy && this._options.easyGroup) {
-               data.drawHiddenGroup = !!this._options._groupCollapsing[this._options._prepareGroupId(data.item, data.item.get(this._options.groupBy.field), this._options)];
+               data.drawHiddenGroup = !!this._options._groupCollapsing[projection.getGroupByIndex(projection.getIndex(item))];
             }
 
             //TODO: выпилить вместе декоратором лесенки
@@ -1224,15 +1230,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _addItems: function(newItems, newItemsIndex) {
          var
-            i, item, groupId;
+            i, groupId,
+            projection = this._getItemsProjection();
          this._itemData = null;
          if (newItems && newItems.length) {
             if (this._options.groupBy) {
                if (cInstance.instanceOfModule(newItems[0], 'WS.Data/Display/GroupItem')) {
                   groupId = newItems[0].getContents();
                } else {
-                  item = newItems[0].getContents();
-                  groupId = this._options._prepareGroupId(item, item.get(this._options.groupBy.field), this._options);
+                  groupId = projection.getGroupByIndex(projection.getIndex(newItems[0]));
                }
             }
             if (this._isSlowDrawing(this._options.easyGroup)) {
