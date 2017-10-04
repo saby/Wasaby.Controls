@@ -2314,7 +2314,14 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                               'important',
                               'variable',
                               'bold',
-                              'italic'
+                              'italic',
+                              'LinkDecorator__link',
+                              'LinkDecorator',
+                              'LinkDecorator__simpleLink',
+                              'LinkDecorator__linkWrap',
+                              'LinkDecorator__decoratedLink',
+                              'LinkDecorator__wrap',
+                              'LinkDecorator__image'
                            ],
                            index = classes.length - 1;
 

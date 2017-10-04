@@ -7560,7 +7560,7 @@
       var each = Tools.each, is = Tools.is, grep = Tools.grep, trim = Tools.trim;
       var isIE = Env.ie;
       var simpleSelectorRe = /^([a-z0-9],?)+$/i;
-      var whiteSpaceRegExp = /^[ \t\r\n]*$/;
+      var whiteSpaceRegExp = isIE ? /^[ \t\r\n\uFEFF]*$/ : /^[ \t\r\n]*$/;// Так как в MSIE симол FEFF иногда используется вместо <br data-mce-bogus="1">
 
       function setupAttrHooks(domUtils, settings) {
          var attrHooks = {}, keepValues = settings.keep_values, keepUrlHook;

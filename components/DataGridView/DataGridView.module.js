@@ -1439,7 +1439,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _isTableWide: function() {
-         return this._container[0].offsetWidth < this._getItemsContainer()[0].offsetWidth;
+         return this._container[0].offsetWidth < this._getTableContainer()[0].offsetWidth;
       },
 
       _hidePartScroll: function() {
@@ -1575,7 +1575,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._addStickyToGroups(data.records);
          return data;
       },
-      _getItemsForRedrawOnAdd: function(items, groupId) {
+      _getItemsForRedrawOnAdd: function(items) {
          var data = DataGridView.superclass._getItemsForRedrawOnAdd.apply(this, arguments);
          this._addStickyToGroups(data);
          return data;
