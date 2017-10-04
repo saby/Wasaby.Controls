@@ -36,18 +36,16 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase',
              item = this._getItemsProjection().at(index),
              controls = this.getItemsInstances();
          
-         if (!isEnum) {
-            item = item.getContents();
-         }
-         
          if (item) {
             var itemId;
-            
-            if (isEnum) {
-               itemId = item.getHash();
-            } else {
+   
+            if (!isEnum) {
+               item = item.getContents();
                itemId = item.get(this._options.idProperty);
+            } else {
+               itemId = item.getHash();
             }
+            
             for (var i in controls) {
                if (controls.hasOwnProperty(i)) {
                   if (!itemId) {
