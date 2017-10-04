@@ -68,21 +68,16 @@
       padding: @fieldLink-afterField-padding;
       display: none;
    }
-   &__Link {
-      //todo
-      &.controls-Link {//перебиваем стили controls-link
-         &.ws-enabled {
-            color: @fieldLink-link-color;
-            &:hover {
-               color: @fieldLink-link-color-hover;
-            }
+   &__Link.ws-enabled {
+       .controls-Button__text {
+          text-decoration: underline;
+       }
+       &.controls-Link { //перебиваем стили controls-link
+         color: @fieldLink-link-color;
+         &:hover {
+           color: @fieldLink-link-color-hover;
          }
-      }
-      &.ws-enabled {
-         .controls-Button__text {
-            text-decoration: underline;
-         }
-      }
+       }
    }
    &__showAllLinks.controls-Link { //перебиваем стили controls-link
       position: relative;
