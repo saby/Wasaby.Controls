@@ -941,6 +941,18 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                                        editor.insertContent(dom.createHTML('a', linkAttrs, dom.encode(linkText)));
                                     } else {
                                        editor.execCommand('mceInsertLink', false, linkAttrs);
+                                       if (cConstants.browser.firefox) {
+                                          // В firefox каретка(курсор ввода) остаётся (и просачивается) внутрь элемента A, нужно принудительно вывести её наружу, поэтому:
+                                          var r = editor.selection.getRng();
+                                          var a = r.endContainer;
+                                          for (; a && a.nodeName !== 'A'; a = a.parentNode) {}
+                                          if (a) {
+                                             editor.selection.select(a);
+                                             editor.selection.collapse(false);
+                                             fre.insertHtml('&#65279;');
+                                             editor.selection.setRng(r);
+                                          }
+                                       }
                                     }
                                     editor.undoManager.add();
                                  }
