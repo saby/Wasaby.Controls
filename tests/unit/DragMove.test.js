@@ -259,38 +259,40 @@ define([
          context('move to another control', function () {
             var ownerElement, ownerItems, owner;
             beforeEach(function () {
-               ownerElement = $(
-                  '<div class="view">' +
-                  '</div>'
-               );
-               ownerItems = new RecordSet({
-                  rawData: [
-                     {id: 1, parent: null, isnode: true},
-                     {id: 2, parent: 1, isnode: null},
-                     {id: 3, parent:null, isnode: null},
-                     {id: 4, parent:null, isnode: null}
-                  ],
-                  idProperty: 'id'
-               });
-               owner = new ListView({
-                  element: ownerElement,
-                  items: ownerItems,
-                  multiselect: true,
-                  displayProperty: 'id',
-                  idProperty: 'id'
-               });
-               event = {
-                  type: "mouseUp",
-                  target: owner.getContainer().find('[data-id=1]'),
-                  pageX: 0,
-                  pageY: 0
-               };
-               DragObject._jsEvent = event;
-               DragObject._targetsControl = view;
-               owner._getDragMove(true).beginDrag();
-               DragObject.setOwner(owner);
-               event.target = view.getContainer().find('[data-id=3]');
-               dragMove.updateTarget();
+               if (dragMove) {
+                  ownerElement = $(
+                     '<div class="view">' +
+                     '</div>'
+                  );
+                  ownerItems = new RecordSet({
+                     rawData: [
+                        {id: 1, parent: null, isnode: true},
+                        {id: 2, parent: 1, isnode: null},
+                        {id: 3, parent: null, isnode: null},
+                        {id: 4, parent: null, isnode: null}
+                     ],
+                     idProperty: 'id'
+                  });
+                  owner = new ListView({
+                     element: ownerElement,
+                     items: ownerItems,
+                     multiselect: true,
+                     displayProperty: 'id',
+                     idProperty: 'id'
+                  });
+                  event = {
+                     type: "mouseUp",
+                     target: owner.getContainer().find('[data-id=1]'),
+                     pageX: 0,
+                     pageY: 0
+                  };
+                  DragObject._jsEvent = event;
+                  DragObject._targetsControl = view;
+                  owner._getDragMove(true).beginDrag();
+                  DragObject.setOwner(owner);
+                  event.target = view.getContainer().find('[data-id=3]');
+                  dragMove.updateTarget();
+               }
             });
             it('should return true wnen contracts is equals', function () {
                var getDataSource = function () {
