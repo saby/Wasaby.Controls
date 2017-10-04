@@ -14,7 +14,7 @@
    <ws:if data="{{ virtualScrolling }}">
       <div class="controls-ListView__virtualScrollTop"></div>
    </ws:if>
-   <div class="controls-CompositeView__itemsContainer {{ viewMode == 'table' ? 'ws-hidden' }}">
+   <div class="controls-CompositeView__itemsContainer{{ viewMode == 'table' ? ' ws-hidden' }}">
       <ws:if data="{{ _serverRender }}">
          <ws:partial template="{{_compositeItemsTemplate}}" records="{{ _records }}" tplData="{{ _itemData }}"/>
       </ws:if>

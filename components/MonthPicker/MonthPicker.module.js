@@ -11,8 +11,8 @@ define(
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.PickerMixin',
       'js!SBIS3.CONTROLS.Utils.DateUtil',
-      'html!SBIS3.CONTROLS.MonthPicker/resources/MonthPickerDropdown',
-      'html!SBIS3.CONTROLS.MonthPicker',
+      'tmpl!SBIS3.CONTROLS.MonthPicker/resources/MonthPickerDropdown',
+      'tmpl!SBIS3.CONTROLS.MonthPicker',
       'i18n!SBIS3.CONTROLS.MonthPicker',
       'css!SBIS3.CONTROLS.MonthPicker'
    ],

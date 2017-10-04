@@ -1,0 +1,26 @@
+<div class="controls-DateRange">
+    <ws:SBIS3.CONTROLS.DateBox
+       mask="{{mask}}"
+       date="{{startValue}}"
+       autocompleteMode="start"
+       name="DateRange__DatePickerStart"
+       notificationMode="{{notificationMode}}"
+       className="controls-DateRange__DatePickerStart"
+    />
+    <div class="controls-DateRange__dash"></div>
+    <ws:SBIS3.CONTROLS.DateBox
+       mask="{{mask}}"
+       date="{{endValue}}"
+       autocompleteMode="end"
+       name="DateRange__DatePickerEnd"
+       focusOnActivatedOnMobiles="{{true}}"
+       notificationMode="{{notificationMode}}"
+       className="controls-DateRange__DatePickerEnd"
+    />
+    <ws:SBIS3.CONTROLS.IconButton
+       tabindex="0"
+       name="DateRange__Button"
+       className="controls-DateRange__button"
+       icon="sprite:icon-16 icon-Calendar2 icon-primary"
+    />
+</div>

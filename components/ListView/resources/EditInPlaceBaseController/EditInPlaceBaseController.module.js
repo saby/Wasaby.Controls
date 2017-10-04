@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
    "Core/IoC",
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CORE.PendingOperationProducerMixin",
-   "html!SBIS3.CONTROLS.EditInPlaceBaseController/AddRowTpl",
+   "tmpl!SBIS3.CONTROLS.EditInPlaceBaseController/AddRowTpl",
    "js!SBIS3.CONTROLS.EditInPlace",
    "js!SBIS3.CONTROLS.ControlHierarchyManager",
    "js!WS.Data/Entity/Model",
@@ -603,6 +603,8 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                       columns: this._options.columns,
                       ignoreFirstColumn: this._options.ignoreFirstColumn
                    }));
+               
+               addTarget.attr('data-id', model.getId() || '');
                if (options.target) {
                   // Могут сделать reload в событии onEndEdit и тогда hash поменяется. Приходится его брать повторно из itemsProjection.
                   targetHash = this._options.itemsProjection.getItemBySourceItem(this._options.items.getRecordById(options.target.getContents().getId())).getHash();
