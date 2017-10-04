@@ -1,0 +1,5 @@
+# Скрипт компилит js-скрипты для ts-скриптов
+
+node -v
+npm install
+node ./node_modules/typescript/lib/tsc -p ./spec/tsconfig.json
