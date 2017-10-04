@@ -401,7 +401,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   record = eip.getEditingRecord();
                   //Если редактирование завершается с сохранением, но запись не изменена, то нет смысл производить сохранение,
                   //т.к. отправится лишний запрос на бл, который ни чего по сути не сделает
-                  if (withSaving && !this._pendingOperation && !record.isChanged()) {
+                  if (withSaving && !this._pendingOperation) {
                      withSaving = false;
                   }
                   endEditResult = this._notify('onEndEdit', record, withSaving);
