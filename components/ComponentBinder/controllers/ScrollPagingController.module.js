@@ -168,9 +168,15 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
       },
 
       _updateCachedSizes: function(){
-         var viewport  = $(this._options.view._scrollWatcher.getScrollContainer())[0];
-         // У window нет scrollHeight и offsetHeight, поэтому высоту получаем иначе
-         this._viewHeight = viewport === window ? document.documentElement.scrollHeight : viewport.scrollHeight;
+         var view = this._options.view,
+             viewport  = $(view._scrollWatcher.getScrollContainer())[0],
+             viewHeight = view.getContainer()[0].offsetHeight,
+            // У window нет scrollHeight и offsetHeight, поэтому высоту получаем иначе
+             viewScrollHeight = viewport === window ? document.documentElement.scrollHeight : viewport.scrollHeight;
+         
+         //Если в scrollContainer'e лежит список, который скрыт, то для viewHeight надо указать нулевую высоту.
+         //Такое может быть, когда в scrollContainer положили вкладки с несколькмим списками
+         this._viewHeight = viewHeight ? viewScrollHeight : 0;
          this._viewportHeight = viewport === window ? viewport.innerHeight : viewport.offsetHeight;
       },
 
