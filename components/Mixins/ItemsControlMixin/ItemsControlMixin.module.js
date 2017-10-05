@@ -1309,6 +1309,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             prepend = true;
          } else if (newItemsIndex == 0 || newItemsIndex == lastItemsIndex) {
             prepend = newItemsIndex == 0;
+            // Если добавляется первый в списке элемент + это узел + включена группировка (для узлов группы не рисуются), то
+            // предыдущим элементом будет группа, которая фактически не рисуется, а значит и DOM элемент будет не найден, а
+            // значит и вставлять будет не куда, поэтому просто возводим флаг prepend, а контейнер оставляем обычный ItemsContainer.
+            // https://online.sbis.ru/opendoc.html?guid=d650908a-1785-4726-aa70-b13786574865
+         } else if (!this._canApplyGrouping(newItems[0]) && cInstance.instanceOfModule(prevItem, 'WS.Data/Display/GroupItem')) {
+            prepend = newItemsIndex == 1;
          } else {
             inside = false;
             container = this._getDomElementByItem(prevItem);
