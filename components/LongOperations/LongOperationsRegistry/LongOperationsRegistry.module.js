@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
             _options: {
                className: '',
                userId: null,
-               useGroupBy: true
+               useGroupByEasyGroup: true
             },
 
             _longOpList: null,
