@@ -5,7 +5,12 @@
       @{prop}: @temp - @border;
    }
    & when not (get-unit(@var1) = get-unit(@border)) {
-      @{prop}: calc(~"@{temp} - @{border}");
+      & when (get-unit(@var1) = get-unit(@var2)) {
+            @{prop}: calc(~"@{temp} - @{border}")
+      }
+      & when not (get-unit(@var1) = get-unit(@var2)) {
+            @{prop}: calc(~"(@{var1} + @{var2}) / 2 - @{border}");
+      }
    }
 }
 
