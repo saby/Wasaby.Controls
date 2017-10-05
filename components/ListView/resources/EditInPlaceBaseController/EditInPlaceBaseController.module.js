@@ -604,7 +604,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                       ignoreFirstColumn: this._options.ignoreFirstColumn
                    }));
                
-               addTarget.attr('data-id', model.getId() || '');
+               addTarget.attr('data-id', model.getId() === undefined ? '' : model.getId() + '');
                if (options.target) {
                   // Могут сделать reload в событии onEndEdit и тогда hash поменяется. Приходится его брать повторно из itemsProjection.
                   targetHash = this._options.itemsProjection.getItemBySourceItem(this._options.items.getRecordById(options.target.getContents().getId())).getHash();
