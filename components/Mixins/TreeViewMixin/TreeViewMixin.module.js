@@ -20,13 +20,19 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
       },
       getFolderPagerOptions = function(cfg, item, key) {
          var
-            count, result,
-            hasMore = cfg._folderHasMore[key];
+            count,
+            result,
+            hasMore;
 
-         if (typeof hasMore === 'number') {
-            count = hasMore - cfg._folderOffsets[key] - cfg.pageSize;
+         if (typeof cfg._folderHasMore[key] === 'number') {
+            count =  cfg._folderHasMore[key] - cfg._folderOffsets[key] - cfg.pageSize;
             hasMore = count <= 0 ? false : count;
+         } else if (typeof cfg._folderHasMore[key] === 'boolean') {
+            hasMore = !!cfg._folderHasMore[key];
+         } else if (typeof cfg._folderHasMore[key] === 'object') {
+            hasMore = !!cfg._folderHasMore[key].after;
          }
+
          if (hasMore) {
             result = {
                caption: rk('Ещё') + ' ' + (typeof hasMore === 'number' ? hasMore : '...'),
