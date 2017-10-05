@@ -151,7 +151,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                    * @name SBIS3.CONTROLS.ScrollContainer#navigationToolbar.end
                    */
                   end: false
-               }
+               },
+               takeScrollbarHidden: true
             };
             this._content = null;
             this._headerHeight = 0;
@@ -215,7 +216,11 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   this._returnTakeScrollbarHandler = this._returnTakeScrollbarHandler.bind(this);
                   this._onMouseenter = this._onMouseenter.bind(this);
                   this._onMouseleave = this._onMouseleave.bind(this);
-                  this._subscribeMouseEnterLeave();
+                  if (!this._options.takeScrollbarHidden) {
+                     this._subscribeTakeScrollbar();
+                  } else {
+                     this._subscribeMouseEnterLeave();
+                  }
                   /**
                    * Можно ли отобрать скролл.
                    * 0 - нельзя отбирать
@@ -395,6 +400,14 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          _subscribeOnScroll: function(){
             this._content.on('scroll', this._onScroll.bind(this));
+         },
+
+         _subscribeTakeScrollbar: function() {
+            if (this._getScrollHeight() - this._container.height() > 1) {
+               this._subscribeMouseEnterLeave();
+            } else {
+               this._unsubscribeMouseEnterLeave();
+            }
          },
 
          _subscribeMouseEnterLeave: function() {
@@ -585,6 +598,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
                   // 1px для скроллирования.
                   this._content.toggleClass('controls-ScrollContainer__content-overflowHidden', (this._getScrollHeight() - this._container.height()) === 1);
+               }
+               if (!this._options.takeScrollbarHidden) {
+                  this._subscribeTakeScrollbar();
                }
             }
 

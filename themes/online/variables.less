@@ -1582,7 +1582,6 @@
 @data-grid-ms-first-content-cell-padding-left:  0px;
 @data-grid-cell-padding-side:                   @data-grid-header-cell-padding-side;
 @data-grid-cell-vertical-align: 				middle;
-@data-grid-cell-check-box-vertical-align: 		top !important;
 
 @data-grid-cell-border-width:                   1px 0;
 @data-grid-cell-separator-color:                #F5F5F5;
@@ -1977,7 +1976,7 @@
 @fieldLink-border-color-picker-show:      @fieldLink-border-color-focus-hover;
 @fieldLink-border:                        1px solid;
 @fieldLink-picker-show-color:             @white-color;
-@fieldLink-picker-show-field-color:       @default-text-color;
+@fieldLink-picker-show-field-color:       initial; //В онлайне цвет никак не перебивается, перебивается в темах
 
 
 @fieldLink-fieldWrapper-minWidth:         100px;

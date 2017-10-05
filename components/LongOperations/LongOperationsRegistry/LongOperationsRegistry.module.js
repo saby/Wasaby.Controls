@@ -42,7 +42,8 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
          $protected: {
             _options: {
                className: '',
-               userId: null
+               userId: null,
+               useGroupByEasyGroup: true
             },
 
             _longOpList: null,
@@ -105,17 +106,6 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
 
             view.setGroupBy({
                field: 'status',
-               method: function (record, at, isLast) {
-                  var STATUSES = LongOperationEntry.STATUSES;
-                  var status = record.get('status');
-                  var prev = self._previousGroupBy;
-                  if (prev === null
-                        || (status === STATUSES.suspended && prev === STATUSES.running)
-                        || (status === STATUSES.ended && (prev === STATUSES.running || prev === STATUSES.suspended))) {
-                     self._previousGroupBy = status;
-                     return true;
-                  }
-               },
                contentTemplate: groupTpl
             });
 
