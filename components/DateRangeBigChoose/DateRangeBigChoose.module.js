@@ -216,14 +216,14 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
       },
 
       _onHomeButtonClick: function () {
-         var now = new Date();
+         var now = new Date(),
+            newDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
          now.setDate(1);
          this._setCurrentYear(now.getFullYear(), true);
          this._monthRangePicker.setYear(now.getFullYear());
          this._dateRangePicker.setMonth(now);
          this._updateYearsRange(now.getFullYear());
-         now = new Date();
-         this.setRange(now, now);
+         this.setRange(newDate, newDate);
       },
 
       _onApplyButtonClick: function () {
