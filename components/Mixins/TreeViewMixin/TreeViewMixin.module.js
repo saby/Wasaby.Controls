@@ -1,9 +1,8 @@
 define('js!SBIS3.CONTROLS.TreeViewMixin', [
    "Core/constants",
-   'js!SBIS3.CONTROLS.TreePaging',
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "Core/core-instance"
-], function ( constants, TreePaging, TemplateUtil, cInstance) {
+], function ( constants, TemplateUtil, cInstance) {
 
 
    var getFolderFooterOptions = function(cfg, item) {
@@ -20,16 +19,22 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
          }
       },
       getFolderPagerOptions = function(cfg, item, key) {
-         return {
-            pageSize: cfg.pageSize,
-            hasMore: cfg._hasNextPageInFolder(cfg, cfg._folderHasMore[key], key),
-            id: key,
-            handlers: {
-               'onClick': function () {
-                  this.sendCommand('loadNode', key);
-               }
+         var
+            count, result,
+            hasMore = cfg._folderHasMore[key];
+
+         if (typeof hasMore === 'number') {
+            count = hasMore - cfg._folderOffsets[key] - cfg.pageSize;
+            hasMore = count <= 0 ? false : count;
+         }
+         if (hasMore) {
+            result = {
+               caption: rk('Ещё') + ' ' + (typeof hasMore === 'number' ? hasMore : '...'),
+               command: 'loadNode',
+               commandArgs: [key]
             }
          }
+         return result;
       },
       hasFolderFooters = function(cfg) {
          return cfg._footerWrapperTemplate && cfg.folderFooterTpl;
@@ -190,14 +195,17 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
             item = this._getItemProjectionByItemId(item);
          }
 
-         if (item && this._needCreateFolderFooter(item)) {
+         if (item) {
             this._destroyItemsFolderFooter(item.getContents().getId());
-            position = this._getLastChildByParent(this._getItemsContainer(), item);
 
-            if (typeof cfg._footerWrapperTemplate === "function" && position) {
-               folderFooter = $(cfg._footerWrapperTemplate(cfg._getFolderFooterOptions(cfg, item)));
-               folderFooter.insertAfter(position);
-               this.reviveComponents();
+            if (this._needCreateFolderFooter(item)) {
+               position = this._getLastChildByParent(this._getItemsContainer(), item);
+
+               if (typeof cfg._footerWrapperTemplate === "function" && position) {
+                  folderFooter = $(cfg._footerWrapperTemplate(cfg._getFolderFooterOptions(cfg, item)));
+                  folderFooter.insertAfter(position);
+                  this.reviveComponents();
+               }
             }
          }
       },
@@ -214,10 +222,6 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
 
       _getFolderFooter: function(id) {
          return $('.controls-TreeDataGridView__folderFooter' + (id ? '[data-parent="' + id + '"]' : ''), this._container);
-      },
-
-      _getTreePager: function(id) {
-         return $('.controls-TreePager[data-id="' + id + '"]', this._container).wsControl();
       },
 
       _createAllFolderFooters: function() {

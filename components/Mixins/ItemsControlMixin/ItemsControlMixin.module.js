@@ -83,12 +83,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       return groupId + '';
    },
 
+   getGroupId = function(item, cfg) {
+      return cfg.groupBy.method ? cfg.groupBy.method.apply(this, arguments) : item.get(cfg.groupBy.field);
+   };
+
    applyGroupingToProjection = function(projection, cfg) {
       if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {
          var
             method = function(item) {
                var
-                  groupId = cfg.groupBy.method ? cfg.groupBy.method.apply(this, arguments) : item.get(cfg.groupBy.field);
+                  groupId = cfg._getGroupId(item, cfg);
                if (groupId !== false) {
                   groupId = cfg._prepareGroupId(item, groupId, cfg);
                }
@@ -354,6 +358,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             _defaultItemTemplate: '',
             _defaultItemContentTemplate: '',
             _prepareGroupId: prepareGroupId,
+            _getGroupId: getGroupId,
             _createDefaultProjection : createDefaultProjection,
             _buildTplArgsSt: buildTplArgs,
             _buildTplArgs : buildTplArgs,
@@ -1040,7 +1045,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             в событии onDrawItems могут производить замеры высоты/ширины,
             а без этого класса к списку применяются стили для состояния, когда он "пустой" (например устанавливается минимальная высота),
             что портит расчёты. */
-         this._container.addClass('controls-ListView__dataLoaded');
+         this._container.addClass('controls-ListView__dataLoaded').removeClass('controls-ListView__dataNotLoaded');
 
          if (notRevive) {
             this._revivePackageParams.revive = true;
@@ -1067,6 +1072,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             markup, markupExt,
             targetElement = this._getDomElementByItem(item),
             inlineStyles = targetElement.attr('style') || '',
+            projection = this._getItemsProjection(),
             data;
 
          //TODO в 3.7.5 избавиться от проверки на _path
@@ -1077,7 +1083,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
             // Вычисляем drawHiddenGroup при перерисовке item'а, т.к. в текущей реализации это единственный способ скрыть элемент, если он расположен в свернутой группе
             if (this._options.groupBy && this._options.easyGroup) {
-               data.drawHiddenGroup = !!this._options._groupCollapsing[this._options._prepareGroupId(data.item, data.item.get(this._options.groupBy.field), this._options)];
+               data.drawHiddenGroup = !!this._options._groupCollapsing[projection.getGroupByIndex(projection.getIndex(item))];
             }
 
             //TODO: выпилить вместе декоратором лесенки
@@ -1166,7 +1172,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                targetElementNode.parentNode.removeChild(targetElementNode);
                /* TODO внештатная ситуация, при поиске могли удалить папку/путь, сейчас нет возможности найти это в гриде и удалить
                   поэтому просто перерисуем весь грид. Как переведём группировку на item'ы, это можно удалить */
-            } else if(this._isSearchMode && this._isSearchMode() && item.isNode()) { // FIXME "Грязная проверка" на наличие метода в .220, код удалится в .230
+            } else if(this._isSearchMode && this._isSearchMode() && item.isNode && item.isNode()) { // FIXME "Грязная проверка" на наличие метода в .220, код удалится в .230
                this.redraw();
                return;
             }
@@ -1224,15 +1230,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _addItems: function(newItems, newItemsIndex) {
          var
-            i, item, groupId;
+            i, groupId,
+            projection = this._getItemsProjection();
          this._itemData = null;
          if (newItems && newItems.length) {
             if (this._options.groupBy) {
                if (cInstance.instanceOfModule(newItems[0], 'WS.Data/Display/GroupItem')) {
                   groupId = newItems[0].getContents();
                } else {
-                  item = newItems[0].getContents();
-                  groupId = this._options._prepareGroupId(item, item.get(this._options.groupBy.field), this._options);
+                  groupId = projection.getGroupByIndex(projection.getIndex(newItems[0]));
                }
             }
             if (this._isSlowDrawing(this._options.easyGroup)) {
@@ -1453,7 +1459,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             if (this._options._serverRender) {
                this._notifyOnDrawItems();
-               this._container.addClass('controls-ListView__dataLoaded');
+               this._container.addClass('controls-ListView__dataLoaded').removeClass('controls-ListView__dataNotLoaded');
             }
          },
          destroy : function() {
@@ -2371,7 +2377,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._drawItems(records);
          }
          /*класс для автотестов*/
-         this._container.addClass('controls-ListView__dataLoaded');
+         this._container.addClass('controls-ListView__dataLoaded').removeClass('controls-ListView__dataNotLoaded');
       },
       _drawItem: function (item, at, last) {
          var

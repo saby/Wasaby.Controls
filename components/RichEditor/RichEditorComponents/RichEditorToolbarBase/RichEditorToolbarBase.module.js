@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
       /**
        * @class SBIS3.CONTROLS.RichEditorToolbarBase
        * @extends SBIS3.CONTROLS.ButtonGroupBase
-       * @author Борисов П.С.
+       * @author Спирин Виктор Алексеевич
        * @public
        * @control
        */

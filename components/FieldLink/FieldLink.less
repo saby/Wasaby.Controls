@@ -68,17 +68,16 @@
       padding: @fieldLink-afterField-padding;
       display: none;
    }
-   &__Link.controls-Link { //перебиваем стили controls-link
-      //todo
-      &.ws-enabled {
+   &__Link.ws-enabled {
+       .controls-Button__text {
+          text-decoration: underline;
+       }
+       &.controls-Link { //перебиваем стили controls-link
          color: @fieldLink-link-color;
-         .controls-Button__text {
-            text-decoration: underline;
-         }
          &:hover {
-            color: @fieldLink-link-color-hover;
+           color: @fieldLink-link-color-hover;
          }
-      }
+       }
    }
    &__showAllLinks.controls-Link { //перебиваем стили controls-link
       position: relative;

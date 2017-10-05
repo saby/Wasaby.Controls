@@ -250,7 +250,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _addGradient: function() {
-         	var maxScrollTop = this._getScrollHeight() - this._container.height();
+            // $elem[0].scrollHeight - integer, $elem.height() - float
+         	var maxScrollTop = this._getScrollHeight() - Math.round(this._container.height());
 
             this._container.toggleClass('controls-ScrollContainer__bottom-gradient', maxScrollTop > 0 && this._getScrollTop() < maxScrollTop);
          },
