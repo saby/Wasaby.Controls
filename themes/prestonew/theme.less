@@ -350,6 +350,9 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
   }
   .controls-Scrollbar .controls-Scrollbar__thumb {
     background-color: rgba(0,0,0,.1);
+    &:hover {
+       background-color: rgba(0,0,0,.15);
+    }
   }
 }
 
@@ -525,6 +528,7 @@ body {
   }
   .ws-float-area-title {
     padding-left: .857rem;
+    width: ~"calc(100% - 3rem)";
   }
    .ws-float-area .ws-window-titlebar.ws-window-titlebar-custom {
       height: 3.57rem;
@@ -1018,27 +1022,12 @@ body {
   }
 }
 
-.controls-TreePager-container {
-    cursor: pointer;
-    display: inline-block;
-    font-size: @listView-loadmorebutton-font-size;
-    color: @link-text-color; //todo
-    text-decoration: none;
-    &:hover{
-     color: @link-hover-text-color;
-    }
-}
-
 //Костыль, т.к. в престо иконки в ПМО большие, а на онлайне средние
 .controls-operationsPanel__actions .icon-24 {
     font-size: 3rem !important;
     height: 3rem !important;
     width: 3rem !important;
     line-height: 3rem !important;
-}
-//Костыль, у dropdown неподходящая для ПМО минимальная высота. Сделаем 100%.
-.controls-operationsPanel__actions .controls-DropdownList {
-   min-height: 100%;
 }
 
 // В темах престо и розницы все сверстано на внутренних скролируемых контенерах.

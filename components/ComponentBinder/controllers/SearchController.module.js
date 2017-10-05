@@ -44,6 +44,20 @@ define('js!SBIS3.CONTROLS.SearchController',
          }
       },
 
+      /**
+       * Scrolls to the top and reloads the view.
+       *
+       * @param view
+       * @private
+       */
+      _reloadView: function(view, filter) {
+         if (view.scrollToFirstPage) {
+            view.scrollToFirstPage();
+         }
+         view.reload(filter, view.getSorting(), 0);
+      },
+
+
       _startHierSearch: function(text) {
          var curFilter = this._options.view.getFilter();
          if (!this._lastDepth) {
@@ -135,7 +149,7 @@ define('js!SBIS3.CONTROLS.SearchController',
             }
          });
 
-         view.reload(filter, view.getSorting(), 0);
+         this._reloadView(view, filter);
          this._searchMode = true;
 
       },
@@ -151,8 +165,7 @@ define('js!SBIS3.CONTROLS.SearchController',
          view.setHighlightText(text, false);
          view.setHighlightEnabled(true);
          view.setInfiniteScroll(true, true);
-         view.reload(filter, view.getSorting(), 0);
-
+         this._reloadView(view, filter);
       },
 
       _resetSearch: function() {
@@ -160,7 +173,7 @@ define('js!SBIS3.CONTROLS.SearchController',
             filter = view.getFilter();
 
          delete(filter[this._options.searchParamName]);
-         view.reload(filter, view.getSorting(), 0);
+         this._reloadView(view, filter);
       },
 
       _resetGroup: function() {
@@ -206,7 +219,7 @@ define('js!SBIS3.CONTROLS.SearchController',
             //DataGridView._filter = filter;
             //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
             //Релоад сделает то же самое, так как он стреляет onSetRoot даже если корень на самом деле не понменялся
-            view.reload(filter, view.getSorting(), 0);
+            this._reloadView(view, filter);
             // TODO: Нужно оставить одно поле хранящее путь, сейчас в одно запоминается состояние хлебных крошек
             // перед тем как их сбросить, а в другом весь путь вместе с кнопкой назад
 

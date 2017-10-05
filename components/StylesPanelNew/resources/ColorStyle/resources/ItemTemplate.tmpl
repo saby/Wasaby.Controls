@@ -5,6 +5,7 @@
    className="controls-ListView__item"
    commandArgs="{{ [item.get('color')] }}"
    attributes="{{ {
-      'data-hash': projItem.getHash()
+      'data-hash': projItem.getHash(),
+      'data-id': getPropertyValue(item, idProperty)
    } }}"
 />

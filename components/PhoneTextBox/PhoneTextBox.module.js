@@ -90,23 +90,19 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
       },
 
       _modifyOptions : function(cfg) {
-
-
+         var formatModel = cfg._createModel(cfg._controlCharactersSet, cfg.mask);
          if (cfg.srcText) {
-            var formatModel = cfg._createModel(cfg._controlCharactersSet, cfg.mask);
             cfg.text = getFullText(cfg.srcText, formatModel.model);
-            if (cfg.srcText.charAt(0) != '+') {
+            if (cfg.srcText.charAt(0) !== '+') {
                cfg.srcText = '+' + cfg.srcText;
             }
+         } else if (cfg.text) {
+            cfg.srcText = getSrcText(cfg.text);
+         } else {
+            cfg.text = formatModel.getText(cfg._maskReplacer);
          }
-         else {
-            if (cfg.text) {
-               cfg.srcText = getSrcText(cfg.text);
-            }
-         }
-         var newCfg = PhoneTextBox.superclass._modifyOptions.apply(this, arguments);
 
-         return newCfg;
+         return PhoneTextBox.superclass._modifyOptions.apply(this, arguments);
       },
 
       _setEnabled: function(state) {
@@ -121,6 +117,11 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
          $('.controls-PhoneTextBox__link', this._container.get(0))
             .text(this.getText())
             .attr('href', 'tel:' + this._options.srcText);
+      },
+
+      _updateTextFromModel: function() {
+         var formatModel = this._getFormatModel();
+         this._options.text = formatModel.getText(this._getMaskReplacer());
       },
 
       _focusHandler: function() {

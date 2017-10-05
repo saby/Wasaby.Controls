@@ -7,6 +7,7 @@
    }
    .text-overflow();
 }
+
 .controls-DataGridView {
    .controls-DataGridView__th, .controls-DataGridView__td {
       &.controls-DataGridView__firstContentCell {
@@ -19,11 +20,11 @@
    .controls-ListView__item {
       &:extend(.controls-ListView .controls-ListView__item all);
    }
-   
+
    &:not(.controls-ListView__disableHover) {
       .controls-ListView__hoveredItem:not(.controls-editInPlace) {
          background: @data-grid-row-hover-bg;
-         
+
          .controls-DataGridView__th {
             color: inherit;
             background-color: @data-grid-row-hover-header-cell-bg;
@@ -34,7 +35,7 @@
          }
       }
    }
-   
+
    &.controls-DataGridView__hasSeparator{
       &.controls-ListView__dataLoaded {
          .controls-DataGridView__tr {
@@ -76,7 +77,7 @@
          }
       }
    }
-   
+
    &.controls-DataGridView__markerRight{
       .controls-ListView__item__selected {
          .controls-DataGridView__td {
@@ -253,11 +254,12 @@
    color: @data-grid-header-cell-text-color;
    font-size: @data-grid-header-cell-font-size;
    background-color: @data-grid-header-cell-bg;
-   
+
    border-collapse: separate;
    border-width: @data-grid-header-cell-border-width;
    border-style: solid;
    border-color: transparent;
+   
    &:hover {
       color: @data-grid-header-cell-hover-text-color;
       background-color: @data-grid-header-cell-hover-bg;
@@ -361,7 +363,7 @@
   position: relative;
   float: left;
   top: @data-grid-partScroll-arrowLeft-top-shift;
-  z-index: 2;
+  z-index: @data-grid-partScroll-arrowLeft-zIndex;
   cursor: pointer;
 }
 
@@ -369,7 +371,7 @@
   position: relative;
   float: right;
   top: @data-grid-partScroll-arrowRight-top-shift;
-  z-index: 2;
+  z-index: @data-grid-partScroll-arrowLeft-zIndex;
   left: @data-grid-partScroll-arrowRight-left-shift;
   cursor: pointer;
 }
