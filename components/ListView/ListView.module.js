@@ -972,7 +972,7 @@ define('js!SBIS3.CONTROLS.ListView',
             dispatcher.declareCommand(this, 'cancelEdit', this.cancelEdit);
             dispatcher.declareCommand(this, 'commitEdit', this.commitEdit);
 
-            if (this._options.navigation && this._options.navigation.type == 'cursor') {
+            if (this._isCursorNavigation()) {
                this._listNavigation = new CursorNavigation(this._options.navigation);
             }
          },
@@ -1007,7 +1007,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if(this.isInfiniteScroll()) {
                this._prepareInfiniteScroll();
             }
-            if (this.getItems() && this._options.navigation && this._options.navigation.type == 'cursor') {
+            if (this.getItems() && this._isCursorNavigation()) {
                this._listNavigation.analyzeResponseParams(this.getItems());
             }
             ListView.superclass.init.call(this);
@@ -2409,7 +2409,8 @@ define('js!SBIS3.CONTROLS.ListView',
                this._getEditInPlace().addCallback(function(editInPlace) {
                   var
                      editingRecord = editInPlace.getEditingRecord();
-                  if (self._options._prepareGroupId(editingRecord, editingRecord.get(self._options.groupBy.field), self._options) === groupId) {
+                  // Через проекцию группу элемента не выяснить, т.к. редактируемая запись может отсутствовать и в проекции и в рекордсете
+                  if (self._options._prepareGroupId(editingRecord, self._options._getGroupId(editingRecord, self._options), self._options) === groupId) {
                      self.cancelEdit();
                   }
                });
@@ -3190,7 +3191,10 @@ define('js!SBIS3.CONTROLS.ListView',
                scrollOnEdge =  (mode === 'up' && type === 'top') ||   // скролл вверх и доскролили до верхнего края
                                (mode === 'down' && type === 'bottom' && !this._infiniteScrollState.reverse) || // скролл вниз и доскролили до нижнего края
                                (mode === 'down' && type === 'top' && this._infiniteScrollState.reverse) || // скролл верх с запросом данных вниз и доскролили верхнего края
-                               (this._options.infiniteScroll === 'both');
+                               (this._options.infiniteScroll === 'both'),
+               infiniteScroll = this._getOption('infiniteScroll'),
+               loadType;
+            
             if (scrollOnEdge && this.getItems()) {
                // Досткролили вверх, но на самом деле подгружаем данные как обычно, а рисуем вверх
                if (type == 'top' && this._infiniteScrollState.reverse) {
@@ -3198,8 +3202,29 @@ define('js!SBIS3.CONTROLS.ListView',
                } else {
                   this._setInfiniteScrollState(type == 'top' ? 'up' : 'down');
                }
-               this._scrollLoadNextPage();
+               
+               if (this._isCursorNavigation()) {
+                  if (infiniteScroll === 'both') {
+                     if (type === 'bottom') {
+                        if (this.getListNavigation().hasNextPage('down')) {
+                           loadType = 'down';
+                        }
+                     } else {
+                        if(this.getListNavigation().hasNextPage('up')) {
+                           loadType = 'up';
+                        }
+                     }
+                  } else {
+                     loadType = infiniteScroll;
+                  }
+               }
+               
+               this._scrollLoadNextPage(loadType);
             }
+         },
+         
+         _isCursorNavigation: function() {
+            return this._options.navigation && this._options.navigation.type === 'cursor';
          },
 
          /**
@@ -3209,7 +3234,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _preScrollLoading: function(){
             var scrollDown = this._infiniteScrollState.mode === 'down' && !this._infiniteScrollState.reverse,
                 infiniteScroll = this._getOption('infiniteScroll'),
-                isCursorNavigation = this._options.navigation && this._options.navigation.type === 'cursor';
+                isCursorNavigation = this._isCursorNavigation();
             
             // При подгрузке в обе стороны необходимо определять направление, а не ориентироваться по state'у
             // Пока делаю так только при навигации по курсорам, чтобы не поломать остальной функционал
@@ -3259,7 +3284,7 @@ define('js!SBIS3.CONTROLS.ListView',
                hasScroll = this._scrollWatcher.hasScroll(this._getLoadingIndicatorHeight()),
                hasNextPage;
 
-            if (this._options.navigation && this._options.navigation.type == 'cursor') {
+            if (this._isCursorNavigation()) {
                hasNextPage = this._listNavigation.hasNextPage(type || this._infiniteScrollState.mode);
             }
             else {
@@ -3347,7 +3372,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      //нам до отрисовки для пейджинга уже нужно знать, остались еще записи или нет
                      var state = this._loadQueue[loadId],
                         hasNextPage;
-                     if (this._options.navigation && this._options.navigation.type == 'cursor') {
+                     if (this._isCursorNavigation()) {
                         this._listNavigation.analyzeResponseParams(dataSet, type || state.mode);
                         hasNextPage = this._listNavigation.hasNextPage(type || state.mode);
                      }
@@ -3497,12 +3522,11 @@ define('js!SBIS3.CONTROLS.ListView',
                $('.controls-ListView__counterValue', this._container.get(0)).text(allCount);
                $('.controls-ListView__counter', this._container.get(0)).removeClass('ws-hidden');
 
-               var ost = more - (this._scrollOffset.bottom + this._options.pageSize);
-               if (ost <= 0) {
+               var caption = more - (this._scrollOffset.bottom + this._options.pageSize);
+               if (caption <= 0) {
                   this._loadMoreButton.setVisible(false);
                   return;
                }
-               caption = ost < this._options.pageSize ? ost : this._options.pageSize;
             } else {
                $('.controls-ListView__counter', this._container.get(0)).addClass('ws-hidden');
                if (more === false) {
@@ -3536,6 +3560,17 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          /**
+          * Scroll to a given offset from the top.
+          *
+          * @param offset
+          */
+         scrollToOffset: function(offset) {
+            if (this._getScrollWatcher()) {
+               this._getScrollWatcher().scrollTo(offset);
+            }
+         },
+
+            /**
           * Возвращает scrollWatcher, при необходимости создаёт его
           * @returns {*|SBIS3.CONTROLS.ListView.$protected._scrollWatcher|ScrollWatcher|SBIS3.CONTROLS.ListView._scrollWatcher}
           * @private
@@ -3607,6 +3642,10 @@ define('js!SBIS3.CONTROLS.ListView',
                if (type) {
                   this._options.infiniteScroll = type;
                   this._allowInfiniteScroll = true;
+                  
+                  if (type === 'down') {
+                     this._setInfiniteScrollState('down');
+                  }
                }
             }
    
@@ -3635,8 +3674,6 @@ define('js!SBIS3.CONTROLS.ListView',
                this._cancelLoading();
             }
 
-            //Убираем текст Еще 10, если включили бесконечную подгрузку
-            this.getContainer().find('.controls-TreePager-container').toggleClass('ws-hidden', !!type);
             this._hideLoadingIndicator();
          },
          /**
@@ -3687,7 +3724,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _onDataLoad: function(list) {
-            if (this._options.navigation && this._options.navigation.type == 'cursor') {
+            if (this._isCursorNavigation()) {
                this._listNavigation.analyzeResponseParams(list);
             }
          },
@@ -3826,7 +3863,7 @@ define('js!SBIS3.CONTROLS.ListView',
             var
                query = new Query(),
                queryFilter = filter;
-            if (this._options.navigation && this._options.navigation.type == 'cursor') {
+            if (this._isCursorNavigation()) {
                var options = this._dataSource.getOptions();
                options.navigationType = SbisService.prototype.NAVIGATION_TYPE.POSITION;
                this._dataSource.setOptions(options);
@@ -3836,7 +3873,7 @@ define('js!SBIS3.CONTROLS.ListView',
                cMerge(queryFilter, addParams.filter);
             }
             /*TODO перенос события для курсоров глубже, делаю под ифом, чтоб не сломать текущий функционал*/
-            if (this._options.navigation && this._options.navigation.type == 'cursor') {
+            if (this._isCursorNavigation()) {
                this._notify('onBeforeDataLoad', queryFilter, sorting, offset, limit);
             }
             query.where(queryFilter)

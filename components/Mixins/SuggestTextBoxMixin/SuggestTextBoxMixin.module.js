@@ -113,6 +113,11 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
              * @cfg {Boolean} Использовать механизм смены неверной раскладки по новому стандарту
              */
             keyboardLayoutRevertNew: true,
+            /**
+             * @cfg {Boolean} Хранить данные истории в пользовательских параметрах
+             * @deprecated
+             */
+            useUserConfigHistory: true,
             // TODO разобраться с множественным вызовом на фокус и клик _observableControlFocusHandler https://online.sbis.ru/opendoc.html?guid=19af9bf9-0d16-4f63-8aa8-6d0ef7ff0799
             task1174306848: false
          }
@@ -160,8 +165,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             if (rs.getCount()) {
                this.getList().setItems(rs);
                this.showPicker();
-            }
-            else if (this._historyController.getCount()) {
+            } else if (this._options.useUserConfigHistory && this._historyController.getCount()) { // Для поддержки совместимости
                this.getList().setItems(this._getHistoryRecordSetSync()); //В рамках совместимости оставляю старое поведение
                this.showPicker();
             }

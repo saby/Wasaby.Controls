@@ -941,6 +941,18 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                                        editor.insertContent(dom.createHTML('a', linkAttrs, dom.encode(linkText)));
                                     } else {
                                        editor.execCommand('mceInsertLink', false, linkAttrs);
+                                       if (cConstants.browser.firefox) {
+                                          // В firefox каретка(курсор ввода) остаётся (и просачивается) внутрь элемента A, нужно принудительно вывести её наружу, поэтому:
+                                          var r = editor.selection.getRng();
+                                          var a = r.endContainer;
+                                          for (; a && a.nodeName !== 'A'; a = a.parentNode) {}
+                                          if (a) {
+                                             editor.selection.select(a);
+                                             editor.selection.collapse(false);
+                                             fre.insertHtml('&#65279;');
+                                             editor.selection.setRng(r);
+                                          }
+                                       }
                                     }
                                     editor.undoManager.add();
                                  }
@@ -1160,6 +1172,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                $image = $(target),
                editor = this._tinyEditor,
+               scrollTop = this._inputControl.scrollTop(),
                self = this;
             require(['js!SBIS3.CORE.Dialog'], function(Dialog) {
                new Dialog({
@@ -1170,7 +1183,14 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   handlers: {
                      onBeforeShow: function () {
                         CommandDispatcher.declareCommand(this, 'saveImage', function () {
-                           self._changeImgSize($image, this.getChildControlByName('imageWidth').getValue(), this.getChildControlByName('imageHeight').getValue(), this.getChildControlByName('valueType').getValue() !== 'per');
+                           var promise = self._changeImgSize($image, this.getChildControlByName('imageWidth').getValue(), this.getChildControlByName('imageHeight').getValue(), this.getChildControlByName('valueType').getValue() !== 'per');
+                           if (scrollTop) {
+                              promise.addCallback(function () {
+                                 setTimeout(function () {
+                                    self._inputControl.scrollTop(scrollTop)
+                                 }, 1);
+                              });
+                           }
                            editor.undoManager.add();
                         }.bind(this));
                      }
@@ -1195,7 +1215,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             $img.attr('data-mce-style', css.join('; '));
             var prevSrc = $img.attr('src');
             var promise = this._makeImgPreviewerUrl($img, 0 < width ? width : null, 0 < height ? height : null, isPixels);
-            promise.addCallback(function (url) {
+            return promise.addCallback(function (url) {
                if (prevSrc !== url) {
                   $img.attr('src', url);
                   $img.attr('data-mce-src', url);
