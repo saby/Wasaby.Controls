@@ -42,7 +42,8 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
          $protected: {
             _options: {
                className: '',
-               userId: null
+               userId: null,
+               useGroupBy: true
             },
 
             _longOpList: null,
