@@ -34,17 +34,6 @@ define('js!WSControls/TextBoxes/TextBox',
           * @variant true Выделять текст.
           * @variant false Не выделять текст.
           *
-          * informationIconColor
-          * @cfg {String} Включает отображение информационной иконки в поле ввода.
-          * @remark
-          * Для взаимодействия с информационной иконкой используются два события
-          * (@see onInformationIconMouseEnter) и (@see onInformationIconActivated).
-          * @variation done
-          * @variation attention
-          * @variation disabled
-          * @variation error
-          * @variation primary
-          *
           * inputRegExp
           * @cfg {String} Устанавливает регулярное выражение, в соответствии с которым будет осуществляться валидация вводимых символов.
           * @remark
@@ -86,9 +75,13 @@ define('js!WSControls/TextBoxes/TextBox',
           * @param target
           * @private
           */
-         _updateSelectionPosition:function(target) {
+         _updateSelectionPosition: function(target) {
             this._selectionStart = target.selectionStart;
             this._selectionEnd = target.selectionEnd;
+         },
+
+         _updateSelectionPositionTarget: function(target, position) {
+            target.selectionStart = target.selectionEnd = position;
          },
 
          /**
@@ -116,25 +109,25 @@ define('js!WSControls/TextBoxes/TextBox',
              */
             var
                target = event.target,
+               isChangeText = true,
                caretPosition = target.selectionEnd,
-               defaultText, pathTwo, pathOne, validText,
-               selectSize, text, inputText, isChangeText = true;
+               oldText, newText, inputText,
+               startText, validText, endText;
 
             if (event.nativeEvent.inputType !== 'deleteContentBackward') {
-               text = target.value;
-               defaultText = this._text;
+               newText = target.value;
+               oldText = this._text;
 
-               if (text !== defaultText) {
-                  selectSize = this._selectionEnd - this._selectionStart;
-                  pathTwo = text.substring(caretPosition);
-                  pathOne = defaultText.substring(0, defaultText.length - pathTwo.length - selectSize);
-                  inputText = text.slice(pathOne.length, -pathTwo.length || text.length);
+               if (newText !== oldText) {
+                  endText = newText.substring(caretPosition);
+                  startText = oldText.substring(0, oldText.length - endText.length - this._selectionEnd + this._selectionStart);
+                  inputText = newText.substring(startText.length, newText.length - endText.length);
                   validText = this._calcText(inputText, this._options);
                   caretPosition += validText.length - inputText.length;
-                  target.value = pathOne + validText + pathTwo;
-                  target.selectionStart = target.selectionEnd = caretPosition;
+                  target.value = startText + validText + endText;
+                  this._updateSelectionPositionTarget(target, caretPosition);
 
-                  if (target.value === defaultText) {
+                  if (target.value === oldText) {
                      isChangeText = false;
                   }
                } else {
@@ -238,13 +231,6 @@ define('js!WSControls/TextBoxes/TextBox',
          optionTypes.selectOnClick = types(Boolean);
          optionTypes.placeholder = types(String);
          optionTypes.inputRegExp = types(String);
-         optionTypes.informationIconColor = types(String).oneOf([
-            'done',
-            'attention',
-            'disabled',
-            'error',
-            'primary'
-         ]);
          optionTypes.textTransform = types(String).oneOf([
             'uppercase',
             'lowercase'

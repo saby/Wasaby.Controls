@@ -5,29 +5,15 @@
          template="{{_options.beforeFieldWrapperTpl}}"
          scope="{{_options.beforeFieldWrapperOpt}}"
       />
-      <ws:WSControls.InformationIconButton.InformationIconButton
-         informationIconColor="{{_options.informationIconColor}}"
-         component="{{...}}"
-      >
-         <ws:content>
-            <ws:WSControls.Tooltips.Tooltip
-               tooltip="{{_options.tooltip}}"
-               text="{{_text}}"
-            >
-               <ws:content>
-                  <ws:partial
-                     template="{{_options.textFieldWrapper}}"
-                     textTransform="{{_options.textTransform}}"
-                     type="{{_type}}"
-                     text="{{_text}}"
-                     placeholder="{{_options.placeholder}}"
-                     maxLength="{{_options.maxLength}}"
-                     enabled="{{isEnabled()}}"
-                  />
-               </ws:content>
-            </ws:WSControls.Tooltips.Tooltip>
-         </ws:content>
-      </ws:WSControls.InformationIconButton.InformationIconButton>
+      <ws:partial
+         template="{{_options.textFieldWrapper}}"
+         textTransform="{{_options.textTransform}}"
+         type="{{_type}}"
+         text="{{_text}}"
+         placeholder="{{_options.placeholder}}"
+         maxLength="{{_options.maxLength}}"
+         enabled="{{isEnabled()}}"
+      />
       <ws:partial
          if="{{_options.afterFieldWrapper}}"
          template="{{_options.afterFieldWrapperTpl}}"
