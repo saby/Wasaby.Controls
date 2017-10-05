@@ -156,13 +156,14 @@ body.ws-is-ie .controls-ScrollContainer__content {
 .controls-ScrollContainer__content:not(.controls-ScrollContainer__content-overflowHidden) {
    // Mac OS
    body.ws-is-mac &,
-   body.ws-is-opera.ws-is-windows-10 & {
+   body.ws-is-opera.ws-is-windows-10 &,
+   body.ws-is-chrome.ws-is-unix &{
       margin-right: -15px;
    }
    body.ws-is-chrome.ws-is-mobile-android &{
       padding-right: 17px;
    }
-   body.ws-is-chrome:not(.ws-is-mac) &,
+   body.ws-is-chrome:not(.ws-is-mac):not(.ws-is-unix) &,
    body.ws-is-firefox:not(.ws-is-mac):not(.ws-is-windows-10) &,
    body.ws-is-opera:not(.ws-is-mac):not(.ws-is-windows-10) &,
    body.ws-is-sbis-desktop:not(.ws-is-mac) & {
