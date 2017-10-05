@@ -116,7 +116,7 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
                      return true;
                   }
                },
-               contentTemplate: groupTpl
+               /*contentTemplate*/template: groupTpl
             });
 
             this._bindEvents();
