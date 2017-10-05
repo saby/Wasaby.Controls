@@ -3634,9 +3634,9 @@ define('js!SBIS3.CONTROLS.ListView',
           *
           * @param offset
           */
-         scrollToOffset: function(offset) {
-            if (this._getScrollWatcher()) {
-               this._getScrollWatcher().scrollTo(offset);
+         scrollToFirstPage: function() {
+            if (this._options.infiniteScroll == "down" && this._options.virtualScrolling) {
+               this._getScrollWatcher().scrollTo('top');
             }
          },
 
