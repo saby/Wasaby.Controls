@@ -195,7 +195,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
             item = this._getItemProjectionByItemId(item);
          }
 
-         if (item) {
+         if (cInstance.instanceOfModule(item, 'WS.Data/Display/TreeItem')) {
             this._destroyItemsFolderFooter(item.getContents().getId());
 
             if (this._needCreateFolderFooter(item)) {
