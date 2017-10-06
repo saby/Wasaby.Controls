@@ -585,8 +585,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
 
       _mergeRecord: function(collectionRecord, editRecord, additionalData) {
          var recValue,
-             values = {},
-             self = this;
+            self = this;
          Record.prototype.each.call(collectionRecord, function (key, value) {
             if(editRecord.has(key)){
                recValue = editRecord.get(key);
@@ -598,18 +597,18 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
                   if (recValue && (typeof recValue.clone == 'function')) {
                      recValue = recValue.clone();
                   }
-                  values[key] = recValue;
+                  //в 150 откатил правки, в 200 вернул. связано с ошибкой https://online.sbis.ru/opendoc.html?guid=49dd3862-5f5e-4d84-80a5-44c83a721cdc
+                  //Нет возможности узнать отсюда, есть ли у свойства сеттер или нет
+                  try {
+                     this.set(key, recValue);
+                  } catch (e) {
+                     if (!(e instanceof ReferenceError)) {
+                        throw e;
+                     }
+                  }
                }
             }
          });
-         //Нет возможности узнать отсюда, есть ли у свойства сеттер или нет
-         try {
-            collectionRecord.set(values);
-         } catch (e) {
-            if (!(e instanceof ReferenceError)) {
-               throw e;
-            }
-         }
       },
       _collectionReload: function(){
          this.getLinkedObject().reload();
