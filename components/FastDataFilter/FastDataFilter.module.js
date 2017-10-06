@@ -160,7 +160,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                return $(el1).width() > $(el2).width();
             });
             for (var i = 0, l = dropdownLists.length; i < l; i++) {
-               $(dropdownLists[i]).css('flex-shrink', i + 1);
+               $(dropdownLists[i]).addClass('ws-flex-shrink-' + (i + 1));
             }
          },
 
@@ -168,9 +168,17 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
             var dropdownContainer = $('.controls-DropdownList', this.getContainer());
             for (var i = 0; i < dropdownContainer.length; i++) {
                if (i in dropdownContainer) {
-                  $(dropdownContainer[i]).css('flex-shrink', '');
+                  $(dropdownContainer[i]).removeClass(this._getFlexShrinkClasses());
                }
             }
+         },
+
+         _getFlexShrinkClasses: function () {
+            var out = '';
+            for (var i = 0; i < 13; i++) {
+               out += 'ws-flex-shrink-' + i + ' ';
+            }
+            return out;
          },
 
          _onResizeHandler: function(){
