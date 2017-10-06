@@ -972,6 +972,9 @@ define('js!SBIS3.CONTROLS.ListView',
             dispatcher.declareCommand(this, 'beginEdit', this.beginEdit);
             dispatcher.declareCommand(this, 'cancelEdit', this.cancelEdit);
             dispatcher.declareCommand(this, 'commitEdit', this.commitEdit);
+            //После правок Шипина с оптимизацией пересчета перестал кидаться notiFyOnSizeChanged вместо него кидается эта команда
+            //
+            dispatcher.declareCommand(this, 'resizeYourself', this._onResizeHandlerInner);
 
             if (this._isCursorNavigation()) {
                this._listNavigation = new CursorNavigation(this._options.navigation);
@@ -3019,7 +3022,6 @@ define('js!SBIS3.CONTROLS.ListView',
             // отправляем команду о перерисовке парентов, и только их. Предполагается, что изменение items
             // у ListView может повлиять только на некоторых парентов
             this.sendCommand('resizeYourself');
-            this._onResizeHandler();
          },
 
          _drawItemsCallbackSync: function() {
@@ -3039,6 +3041,10 @@ define('js!SBIS3.CONTROLS.ListView',
          // TODO: скроллим вниз при первой загрузке, если пользователь никуда не скролил
          _onResizeHandler: function(){
             ListView.superclass._onResizeHandler.call(this);
+            this._onResizeHandlerInner();
+         },
+
+         _onResizeHandlerInner: function(){
             if (this.getItems()){
                //Мог поменяться размер окна или смениться ориентация на планшете - тогда могут влезть еще записи, надо попробовать догрузить
                if (this.isInfiniteScroll() && this._scrollWatcher && !this._scrollWatcher.hasScroll()){
@@ -3051,9 +3057,9 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
             /* при изменении размера таблицы необходимо вызвать перерасчет позиции тулбара
-               позиция тулбара может сбиться например при появление пэйджинга */
+             позиция тулбара может сбиться например при появление пэйджинга */
             if(this._itemsToolbar && this._itemsToolbar.isVisible()){
-                this._itemsToolbar.recalculatePosition();
+               this._itemsToolbar.recalculatePosition();
             }
             /* Т.к. для редактирования нет parent'a, надо ресайц звать руками */
             if(this.isEdit()) {
@@ -3062,6 +3068,7 @@ define('js!SBIS3.CONTROLS.ListView',
                });
             }
          },
+
          _removeItems: function(items) {
             this._checkDeletedItems(items);
             ListView.superclass._removeItems.call(this, items);
