@@ -4162,8 +4162,10 @@ define('js!SBIS3.CONTROLS.ListView',
          cancelEdit: function() {
             if (this._hasEditInPlace()) {
                return this._getEditInPlace().addCallback(function(editInPlace) {
-                  return editInPlace.endEdit();
-               });
+                  var res = editInPlace.endEdit();
+                  this._notifyOnSizeChanged(true);
+                  return res;
+               }.bind(this));
             } else {
                return Deferred.success();
             }
