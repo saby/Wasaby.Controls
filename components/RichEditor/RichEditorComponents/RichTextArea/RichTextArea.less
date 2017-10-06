@@ -129,7 +129,7 @@
       //TODO: увелисчить вес селектора
       outline: none !important;
       cursor: pointer;
-      user-select: none;
+      .user-select();
    }
    .controls-RichEditor__noneditable {
       //TODO: увелисчить вес селектора
@@ -183,12 +183,7 @@
       position: absolute;
       display: none;
       z-index: 0;
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      -khtml-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
+      .user-select();
    }
    &.controls-RichEditor__empty .controls-RichEditor__placeholder{
       display: block;
