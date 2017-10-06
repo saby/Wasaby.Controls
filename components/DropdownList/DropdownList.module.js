@@ -858,6 +858,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
          _drawSelectedValue: function(id, textValue){
             var isDefaultIdSelected = id == this._defaultId,
+                text = prepareText(textValue),
                 pickerContainer;
             if (this._picker && !this._options.multiselect) {
                pickerContainer = this._getPickerContainer();
@@ -865,9 +866,14 @@ define('js!SBIS3.CONTROLS.DropdownList',
                pickerContainer.find('[data-id="' + id + '"]').addClass('controls-DropdownList__item__selected');
                this._setHasMoreButtonVisibility();
             }
-            this._setText(prepareText(textValue));
+            this._setText(text);
             this._redrawHead(isDefaultIdSelected);
+            this._drawTitle(textValue);
             this._resizeFastDataFilter();
+         },
+         _drawTitle: function(textValue) {
+            var title = this.getSelectedKeys().length > 1 ? textValue.join(', ') : '';
+            this.getContainer()[0].setAttribute('title', title);
          },
          _resizeFastDataFilter: function(){
             var parent = this.getParent();
