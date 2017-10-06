@@ -13,7 +13,7 @@
                      'validator': compareExt,
                      'option': 'date',
                      'errorMessage': errorMessage,
-                     'params': ['DatePickerStart', 'getDate', '=']
+                     'params': ['DatePickerStart', 'getDate', '>=']
                   }
                ] : undefined}}"
       />
@@ -109,8 +109,10 @@
                   command="resetFilter"
                   activableByClick="{{false}}"
                   name="YearsRangeBtn{{yearIndex}}"
-                  data-selected-range-id="{{yearIndex}}"
                   className="controls-DateRangeBigChoose__years-yearsRange-btn controls-RangeSelectable__item"
+                  attributes="{{ {
+                     'data-selected-range-id': yearIndex
+                  } }}"
                />
             </ws:for>
          </div>
@@ -173,8 +175,10 @@
                caption="{{monthCaption}}"
                activableByClick="{{false}}"
                name="MonthRangeBtn{{monthIndex}}"
-               data-selected-range-id="{{monthIndex}}"
                class="controls-DateRangeBigChoose__dates-month-btn controls-RangeSelectable__item"
+               attributes="{{ {
+                  'data-selected-range-id': monthIndex
+               } }}"
             />
          </ws:for>
       </div>
