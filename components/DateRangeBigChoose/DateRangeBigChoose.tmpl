@@ -103,8 +103,8 @@
             </div>
          </div>
          <div class="controls-DateRangeBigChoose__rangeContainer controls-DateRangeBigChoose__yearsRange ws-hidden">
-            <ws:for data="yearIndex in 5">
-               <ws:WSControls.Buttons.Button
+            <ws:for data="yearIndex in 6">
+               <ws:SBIS3.CONTROLS.Button
                   tabindex="0"
                   command="resetFilter"
                   activableByClick="{{false}}"
@@ -129,7 +129,7 @@
       <div class="controls-DateRangeBigChoose__months-quarterRange controls-DateRangeBigChoose__left">
          <ws:for data="quarterIndex, quarterCaption in ['I', 'II', 'III', 'IV']">
             <div class="controls-DateRangeBigChoose__months-range-btn-wrapper controls-DateRangeBigChoose__months-range-btn-wrapper{{quarterIndex}} controls-RangeSelectable__item" data-selected-range-id="{{quarterIndex + 1}}">
-               <ws:WSControls.Buttons.Button
+               <ws:SBIS3.CONTROLS.Button
                   tabindex="0"
                   caption="{{quarterCaption}}"
                   activableByClick="{{false}}"
@@ -142,7 +142,7 @@
       <div class="controls-DateRangeBigChoose__months-halfyearRange controls-DateRangeBigChoose__right">
          <ws:for data="halfyearIndex, halfyearCaption in ['I', 'II']">
             <div class="controls-DateRangeBigChoose__months-range-btn-wrapper controls-DateRangeBigChoose__months-range-btn-wrapper{{halfyearIndex}} controls-RangeSelectable__item" data-selected-range-id="{{halfyearIndex + 1}}">
-               <ws:WSControls.Buttons.Button
+               <ws:SBIS3.CONTROLS.Button
                   tabindex="0"
                   activableByClick="{{false}}"
                   caption="{{halfyearCaption}}"
