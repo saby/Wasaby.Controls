@@ -269,9 +269,6 @@ body {
          }
       }
    }
-  .controls-ToolBar__menuIcon .icon-24 {
-    font-family: carrypresto-icons!important;
-  }
 
   .ws-float-area-title {
       font-size: 1.43rem!important;
@@ -374,22 +371,6 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
   white-space: normal;
    padding-bottom: 0; // FF only
 }
-
-.icon-24() {
-  font-size: 1.785rem !important;
-  line-height: 1.785rem !important;
-  width: 1.785rem;
-  height: 1.785rem;
-  font-family: carrypresto-icons !important;
-}
-.controls-TextBox {
-   &.controls-TextBox__big {
-      .controls-TextBox__field {
-         font-size:  1.43rem;
-      }
-   }
-}
-
 .ws-float-area-stack-panel-shadow {
   background: @basic-block-bg-color !important;
 }
@@ -559,6 +540,7 @@ body {
   }
 }
 
+//todo: дулаить это и переделать на еормальные коэфы
 .controls__filterButton {
    .controls__filterButton__filterLine {
       .controls__filterButton__filterLine-text{
@@ -635,9 +617,6 @@ body .controls-TextArea {
    min-height: 3rem;
 }
 
-body .controls-ToolBar__menuIcon .icon-24 {
-  font-family: carrypresto-icons!important;
-}
 .controls__filterButton__area-header {
    .controls-Link {
       .controls-Button__text{
@@ -844,13 +823,14 @@ body {
     top: -0.03rem
   }
 }
+//todo: удалить это нафиг сделать нормально и не лениться
 .controls-image {
    .controls-image__image-bar{
       .icon-16{
-         font-size: 3rem !important;
-         height: 3rem !important;
-         width: 3rem !important;
-         line-height: 3rem !important;
+         font-size: @default-icon-size-large !important;
+         height: @default-icon-size-large !important;
+         width: @default-icon-size-large !important;
+         line-height: @default-icon-size-large !important;
       }
    }
 }
@@ -1024,10 +1004,10 @@ body {
 
 //Костыль, т.к. в престо иконки в ПМО большие, а на онлайне средние
 .controls-operationsPanel__actions .icon-24 {
-    font-size: 3rem !important;
-    height: 3rem !important;
-    width: 3rem !important;
-    line-height: 3rem !important;
+    font-size: @default-height !important;
+    height: @default-height !important;
+    width: @default-height !important;
+    line-height: @default-height !important;
 }
 
 // В темах престо и розницы все сверстано на внутренних скролируемых контенерах.
