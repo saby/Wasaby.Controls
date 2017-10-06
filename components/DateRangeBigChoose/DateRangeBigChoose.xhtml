@@ -90,7 +90,7 @@
          </div>
          <div class="controls-DateRangeBigChoose__rangeContainer controls-DateRangeBigChoose__yearsRange ws-hidden">
             {{~[0, 1, 2, 3, 4, 5] :yearCaption:yearIndex}}
-            <component data-component="SBIS3.CONTROLS.Button" name="YearsRangeBtn{{=yearIndex}}" data-selected-range-id="{{=yearIndex}}" class="controls-DateRangeBigChoose__years-yearsRange-btn controls-RangeSelectable__item">
+            <component data-component="WSControls/Buttons/Button" name="YearsRangeBtn{{=yearIndex}}" data-selected-range-id="{{=yearIndex}}" class="controls-DateRangeBigChoose__years-yearsRange-btn controls-RangeSelectable__item">
                <option name="command">resetFilter</option>
                <option name="activableByClick" type="boolean">false</option>
                <option name="tabindex">0</option>
@@ -110,8 +110,8 @@
    <div class="controls-DateRangeBigChoose__months ws-hidden">
       <div class="controls-DateRangeBigChoose__months-quarterRange controls-DateRangeBigChoose__left">
          {{~['I', 'II', 'III', 'IV'] :quarterCaption:quarterIndex}}
-         <div class="controls-DateRangeBigChoose__months-range-btn-wrapper controls-DateRangeBigChoose__months-range-btn-wrapper{{=quarterIndex}} controls-RangeSelectable__item" data-selected-range-id="{{=quarterIndex + 1}}">
-            <component data-component="SBIS3.CONTROLS.Button" name="QuarterRangeBtn{{=quarterIndex}}" class="controls-DateRangeBigChoose__months-quarter-btn">
+         <div class="controls-DateRangeBigChoose__months-range-btn-wrapper controls-DateRangeBigChoose__months-quarterRange-btn-wrapper{{=quarterIndex}} controls-RangeSelectable__item" data-selected-range-id="{{=quarterIndex + 1}}">
+            <component data-component="WSControls/Buttons/Button" name="QuarterRangeBtn{{=quarterIndex}}" class="controls-DateRangeBigChoose__months-quarter-btn">
                <option name="caption">{{=quarterCaption}}</option>
                <option name="activableByClick" type="boolean">false</option>
                <option name="tabindex">0</option>
@@ -121,8 +121,8 @@
       </div>
       <div class="controls-DateRangeBigChoose__months-halfyearRange controls-DateRangeBigChoose__right">
          {{~['I', 'II'] :halfyearCaption:halfyearIndex}}
-         <div class="controls-DateRangeBigChoose__months-range-btn-wrapper controls-DateRangeBigChoose__months-range-btn-wrapper{{=halfyearIndex}} controls-RangeSelectable__item" data-selected-range-id="{{=halfyearIndex + 1}}">
-            <component data-component="SBIS3.CONTROLS.Button" name="HalfyearRangeBtn{{=halfyearIndex}}" class="controls-DateRangeBigChoose__months-halfyear-btn">
+         <div class="controls-DateRangeBigChoose__months-range-btn-wrapper controls-DateRangeBigChoose__months-halfyearRange-btn-wrapper{{=halfyearIndex}} controls-RangeSelectable__item" data-selected-range-id="{{=halfyearIndex + 1}}">
+            <component data-component="WSControls/Buttons/Button" name="HalfyearRangeBtn{{=halfyearIndex}}" class="controls-DateRangeBigChoose__months-halfyear-btn">
                <option name="caption">{{=halfyearCaption}}</option>
                <option name="activableByClick" type="boolean">false</option>
                <option name="tabindex">0</option>
