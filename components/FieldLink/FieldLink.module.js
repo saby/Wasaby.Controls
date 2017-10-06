@@ -620,11 +620,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
              noFocus = this._options.task_1173772355 ? this._isControlActive : noFocus;
 
              /* Хак, который чинит баг firefox с невидимым курсором в input'e.
-              Это довольно старая и распростронённая проблема в firefox'e,
+              Это довольно старая и распростронённая проблема в firefox'e (а теперь еще и в хроме),
               повторяется с разными сценариями и с разными способомами почи)нки.
               В нашем случае, если фокус в input'e, то перед повторной установкой фокуса надо сделать blur (увести фокус из input'a).
               Чтобы это не вызывало перепрыгов фокуса, делаем это по минимальному таймауту. Выглядит плохо, но другого решения для FF найти не удлось.*/
-             if(constants.browser.firefox && active && !this.getText() && this._isEmptySelection()) {
+             if(active && !this.getText() && this._isEmptySelection()) {
                 var elemToFocus = this._getElementToFocus();
 
                 setTimeout(forAliveOnly(function () {
