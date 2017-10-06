@@ -1534,7 +1534,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             // Обработка изменения содержимого редактора.
             editor.on('keydown', function(e) {
-               if (1 < e.key.length) {
+               if (e.key && 1 < e.key.length) {
                   _linkEditStart();
                   setTimeout(function() {
                      _linkEditEnd();
