@@ -315,7 +315,13 @@
    
    //Безопасная правка для 150, в 200 элемент уже на флексах и такие пляски не нужны.
    .controls-FieldLink__selected-single:not(.controls-FieldLink__multiselect) .controls-FieldLink__item {
-      display: initial;
+      display: -ms-inline-flexbox;
+      
+      .controls-FieldLink__item-caption {
+         display: inline-block;
+         .text-overflow();
+         -ms-flex-negative: 1;
+      }
    }
    
    .controls-FieldLink__picker:not(.controls-Suggest__picker) .controls-FieldLink__item-caption {
