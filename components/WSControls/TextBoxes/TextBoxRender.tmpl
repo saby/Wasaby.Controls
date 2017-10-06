@@ -1,0 +1,19 @@
+<div class="controls-TextBox">
+   <div class="controls-TextBox__wrapper">
+      <ws:partial
+         if="{{_beforeFieldWrapper}}"
+         template="{{_beforeFieldWrapper}}"
+      />
+      <ws:partial
+         template="{{_options.textFieldWrapper}}"
+         type="{{_options.type}}"
+         text="{{_options.text}}"
+         placeholder="{{_options.placeholder}}"
+         enabled="{{_options.enabled}}"
+      />
+      <ws:partial
+         if="{{_afterFieldWrapper}}"
+         template="{{_afterFieldWrapper}}"
+      />
+   </div>
+</div>

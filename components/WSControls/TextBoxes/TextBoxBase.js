@@ -15,6 +15,12 @@ define('js!WSControls/TextBoxes/TextBoxBase',
        * @author Крайнов Дмитрий Олегович
        */
       var TextBoxBase = Control.extend({
+         /**
+          * text
+          * @cfg {String} Устанавливает текст в поле ввода.
+          *
+          * @event onChangeText Происходит при изменении текста.
+          */
          _controlName: 'WSControls/TextBoxes/TextBoxBase',
 
          constructor: function(options) {
@@ -33,11 +39,6 @@ define('js!WSControls/TextBoxes/TextBoxBase',
 
          _updateText: function(options) {
             this._text = options.text;
-         },
-
-         _inputHandler: function(event) {
-            this._text = event.target.value;
-            this._notify('onChangeText', this._text);
          }
       });
 

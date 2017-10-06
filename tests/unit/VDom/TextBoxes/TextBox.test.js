@@ -35,8 +35,12 @@ define(
                   isChangeText = false;
                });
                it('Ввод 0 в начало', () => {
-                  textBox._selectionStart = 0;
-                  textBox._selectionEnd = 0;
+                  textBox._clickHandler(new SyntheticEvent('onclick', {
+                     target: {
+                        selectionStart: 0,
+                        selectionEnd: 0
+                     }
+                  }));
                   textBox._inputHandler(new SyntheticEvent('oninput', {
                      target: {
                         selectionEnd: 1,
@@ -47,8 +51,12 @@ define(
                   assert.isTrue(isChangeText);
                });
                it('Ввод 0 в середину', () => {
-                  textBox._selectionStart = 5;
-                  textBox._selectionEnd = 5;
+                  textBox._clickHandler(new SyntheticEvent('onclick', {
+                     target: {
+                        selectionStart: 5,
+                        selectionEnd: 5
+                     }
+                  }));
                   textBox._inputHandler(new SyntheticEvent('oninput', {
                      target: {
                         selectionEnd: 6,
@@ -59,8 +67,12 @@ define(
                   assert.isTrue(isChangeText);
                });
                it('Ввод 0 в конец', () => {
-                  textBox._selectionStart = 10;
-                  textBox._selectionEnd = 10;
+                  textBox._clickHandler(new SyntheticEvent('onclick', {
+                     target: {
+                        selectionStart: 10,
+                        selectionEnd: 10
+                     }
+                  }));
                   textBox._inputHandler(new SyntheticEvent('oninput', {
                      target: {
                         selectionEnd: 11,
@@ -71,8 +83,12 @@ define(
                   assert.isTrue(isChangeText);
                });
                it('Ввод A в начало', () => {
-                  textBox._selectionStart = 0;
-                  textBox._selectionEnd = 0;
+                  textBox._clickHandler(new SyntheticEvent('onclick', {
+                     target: {
+                        selectionStart: 0,
+                        selectionEnd: 0
+                     }
+                  }));
                   textBox._inputHandler(new SyntheticEvent('oninput', {
                      target: {
                         selectionEnd: 1,
@@ -83,8 +99,12 @@ define(
                   assert.isTrue(!isChangeText);
                });
                it('Ввод A в середину', () => {
-                  textBox._selectionStart = 5;
-                  textBox._selectionEnd = 5;
+                  textBox._clickHandler(new SyntheticEvent('onclick', {
+                     target: {
+                        selectionStart: 5,
+                        selectionEnd: 5
+                     }
+                  }));
                   textBox._inputHandler(new SyntheticEvent('oninput', {
                      target: {
                         selectionEnd: 6,
@@ -95,8 +115,12 @@ define(
                   assert.isTrue(!isChangeText);
                });
                it('Ввод A в конец', () => {
-                  textBox._selectionStart = 10;
-                  textBox._selectionEnd = 10;
+                  textBox._clickHandler(new SyntheticEvent('onclick', {
+                     target: {
+                        selectionStart: 10,
+                        selectionEnd: 10
+                     }
+                  }));
                   textBox._inputHandler(new SyntheticEvent('oninput', {
                      target: {
                         selectionEnd: 11,
@@ -107,8 +131,12 @@ define(
                   assert.isTrue(!isChangeText);
                });
                it('Вставка(перемещение) A0B1C2D3E4F5 в начало', () => {
-                  textBox._selectionStart = 0;
-                  textBox._selectionEnd = 0;
+                  textBox._clickHandler(new SyntheticEvent('onclick', {
+                     target: {
+                        selectionStart: 0,
+                        selectionEnd: 0
+                     }
+                  }));
                   textBox._inputHandler(new SyntheticEvent('oninput', {
                      target: {
                         selectionEnd: 12,
@@ -119,8 +147,12 @@ define(
                   assert.isTrue(isChangeText);
                });
                it('Вставка(перемещение) A0B1C2D3E4F5 в середину', () => {
-                  textBox._selectionStart = 5;
-                  textBox._selectionEnd = 5;
+                  textBox._clickHandler(new SyntheticEvent('onclick', {
+                     target: {
+                        selectionStart: 5,
+                        selectionEnd: 5
+                     }
+                  }));
                   textBox._inputHandler(new SyntheticEvent('oninput', {
                      target: {
                         selectionEnd: 17,
@@ -131,8 +163,12 @@ define(
                   assert.isTrue(isChangeText);
                });
                it('Вставка(перемещение) A0B1C2D3E4F5 в конец', () => {
-                  textBox._selectionStart = 10;
-                  textBox._selectionEnd = 10;
+                  textBox._clickHandler(new SyntheticEvent('onclick', {
+                     target: {
+                        selectionStart: 10,
+                        selectionEnd: 10
+                     }
+                  }));
                   textBox._inputHandler(new SyntheticEvent('oninput', {
                      target: {
                         selectionEnd: 22,
@@ -143,8 +179,12 @@ define(
                   assert.isTrue(isChangeText);
                });
                it('Вставка A0B1C2D3E4F5 с выделением 3 символов в начало', () => {
-                  textBox._selectionStart = 0;
-                  textBox._selectionEnd = 3;
+                  textBox._clickHandler(new SyntheticEvent('onclick', {
+                     target: {
+                        selectionStart: 0,
+                        selectionEnd: 3
+                     }
+                  }));
                   textBox._inputHandler(new SyntheticEvent('oninput', {
                      target: {
                         selectionEnd: 12,
@@ -155,8 +195,12 @@ define(
                   assert.isTrue(isChangeText);
                });
                it('Вставка A0B1C2D3E4F5 с выделением 3 символов в середину', () => {
-                  textBox._selectionStart = 4;
-                  textBox._selectionEnd = 7;
+                  textBox._clickHandler(new SyntheticEvent('onclick', {
+                     target: {
+                        selectionStart: 4,
+                        selectionEnd: 7
+                     }
+                  }));
                   textBox._inputHandler(new SyntheticEvent('oninput', {
                      target: {
                         selectionEnd: 16,
@@ -167,8 +211,12 @@ define(
                   assert.isTrue(isChangeText);
                });
                it('Вставка A0B1C2D3E4F5 с выделением 3 символов в конец', () => {
-                  textBox._selectionStart = 7;
-                  textBox._selectionEnd = 10;
+                  textBox._clickHandler(new SyntheticEvent('onclick', {
+                     target: {
+                        selectionStart: 7,
+                        selectionEnd: 10
+                     }
+                  }));
                   textBox._inputHandler(new SyntheticEvent('oninput', {
                      target: {
                         selectionEnd: 19,
@@ -179,8 +227,12 @@ define(
                   assert.isTrue(isChangeText);
                });
                it('Удаление 3 символов в начале', () => {
-                  textBox._selectionStart = 0;
-                  textBox._selectionEnd = 3;
+                  textBox._clickHandler(new SyntheticEvent('onclick', {
+                     target: {
+                        selectionStart: 0,
+                        selectionEnd: 3
+                     }
+                  }));
                   textBox._inputHandler(new SyntheticEvent('oninput', {
                      target: {
                         selectionEnd: 0,
@@ -192,8 +244,12 @@ define(
                   assert.isTrue(isChangeText);
                });
                it('Удаление символа в начале, при помощи backspace', () => {
-                  textBox._selectionStart = 1;
-                  textBox._selectionEnd = 1;
+                  textBox._clickHandler(new SyntheticEvent('onclick', {
+                     target: {
+                        selectionStart: 1,
+                        selectionEnd: 1
+                     }
+                  }));
                   textBox._inputHandler(new SyntheticEvent('oninput', {
                      target: {
                         selectionEnd: 0,
@@ -205,8 +261,12 @@ define(
                   assert.isTrue(isChangeText);
                });
                it('Удаление символа в середине, при помощи backspace', () => {
-                  textBox._selectionStart = 6;
-                  textBox._selectionEnd = 6;
+                  textBox._clickHandler(new SyntheticEvent('onclick', {
+                     target: {
+                        selectionStart: 6,
+                        selectionEnd: 6
+                     }
+                  }));
                   textBox._inputHandler(new SyntheticEvent('oninput', {
                      target: {
                         selectionEnd: 5,
@@ -218,8 +278,12 @@ define(
                   assert.isTrue(isChangeText);
                });
                it('Удаление символа в конце, при помощи backspace', () => {
-                  textBox._selectionStart = 10;
-                  textBox._selectionEnd = 10;
+                  textBox._clickHandler(new SyntheticEvent('onclick', {
+                     target: {
+                        selectionStart: 10,
+                        selectionEnd: 10
+                     }
+                  }));
                   textBox._inputHandler(new SyntheticEvent('oninput', {
                      target: {
                         selectionEnd: 9,
@@ -231,8 +295,12 @@ define(
                   assert.isTrue(isChangeText);
                });
                it('Удаление символа в начале, при помощи delete', () => {
-                  textBox._selectionStart = 0;
-                  textBox._selectionEnd = 0;
+                  textBox._clickHandler(new SyntheticEvent('onclick', {
+                     target: {
+                        selectionStart: 0,
+                        selectionEnd: 0
+                     }
+                  }));
                   textBox._inputHandler(new SyntheticEvent('oninput', {
                      target: {
                         selectionEnd: 0,
@@ -244,8 +312,12 @@ define(
                   assert.isTrue(isChangeText);
                });
                it('Удаление символа в середине, при помощи delete', () => {
-                  textBox._selectionStart = 5;
-                  textBox._selectionEnd = 5;
+                  textBox._clickHandler(new SyntheticEvent('onclick', {
+                     target: {
+                        selectionStart: 5,
+                        selectionEnd: 5
+                     }
+                  }));
                   textBox._inputHandler(new SyntheticEvent('oninput', {
                      target: {
                         selectionEnd: 5,
@@ -257,8 +329,12 @@ define(
                   assert.isTrue(isChangeText);
                });
                it('Удаление символа в конце, при помощи delete', () => {
-                  textBox._selectionStart = 9;
-                  textBox._selectionEnd = 9;
+                  textBox._clickHandler(new SyntheticEvent('onclick', {
+                     target: {
+                        selectionStart: 9,
+                        selectionEnd: 9
+                     }
+                  }));
                   textBox._inputHandler(new SyntheticEvent('oninput', {
                      target: {
                         selectionEnd: 9,
@@ -269,50 +345,6 @@ define(
                   assert.equal(textBox._text, '012345678');
                   assert.isTrue(isChangeText);
                });
-            });
-            it('mouseenter', function() {
-               textBox._mouseenterHandler(new SyntheticEvent('onmouseenter', {
-                  target: {
-                     scrollWidth: 100,
-                     clientWidth: 150
-                  }
-               }));
-               assert.equal(textBox._tooltip, 'Поле ввода чисел');
-            });
-            it('select', function() {
-               textBox._selectHandler(new SyntheticEvent('onmouseenter', {
-                  target: {
-                     selectionStart: 0,
-                     selectionEnd: 10
-                  }
-               }));
-               assert.equal(textBox._selectionStart, 0);
-               assert.equal(textBox._selectionEnd, 10);
-            });
-            it('keyup', function() {
-               textBox._selectionStart = 5;
-               textBox._selectionEnd = 5;
-               textBox._keyupHandler(new SyntheticEvent('onmouseenter', {
-                  keyCode: 37,
-                  target: {
-                     selectionStart: 4,
-                     selectionEnd: 4
-                  }
-               }));
-               assert.equal(textBox._selectionStart, 4);
-               assert.equal(textBox._selectionEnd, 4);
-
-               textBox._selectionStart = 5;
-               textBox._selectionEnd = 5;
-               textBox._keyupHandler(new SyntheticEvent('onmouseenter', {
-                  keyCode: 42,
-                  target: {
-                     selectionStart: 4,
-                     selectionEnd: 4
-                  }
-               }));
-               assert.equal(textBox._selectionStart, 5);
-               assert.equal(textBox._selectionEnd, 5);
             });
          });
          describe('CalcMethod', () => {
@@ -331,15 +363,6 @@ define(
                assert.equal(textBox._calcText(' TWF4aW0gWmh1cmF2bGV2' , {
                   trim: true
                }), 'TWF4aW0gWmh1cmF2bGV2');
-            });
-            it('_calcTooltip', () => {
-               textBox._text = '0123456789';
-               assert.equal(textBox._calcTooltip(150, 100, {
-                  tooltip: 'Поле ввода чисел'
-               }), '0123456789');
-               assert.equal(textBox._calcTooltip(100, 150, {
-                  tooltip: 'Поле ввода чисел'
-               }), 'Поле ввода чисел');
             });
          });
       });
