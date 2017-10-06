@@ -21,7 +21,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    'Core/helpers/String/escapeTagsFromStr',
    'Core/helpers/String/escapeHtml',
    'Core/helpers/String/linkWrap',
-   'Core/helpers/Hcontrol/trackElement',
    'js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
    'js!SBIS3.CONTROLS.RichEditor.CodeSampleDialog',
    'Core/EventBus',
@@ -47,7 +46,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
       escapeTagsFromStr,
       escapeHtml,
       LinkWrap,
-      trackElement,
       ImageOptionsPanel,
       CodeSampleDialog,
       EventBus
@@ -511,7 +509,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                }
                this._tinyEditor.destroyed = true;
             }
-            trackElement(this._container, false);
             this._container.unbind('keydown keyup');
             this._sourceArea.unbind('input');
             this._tinyEditor = null;
