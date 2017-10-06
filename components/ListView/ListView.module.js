@@ -4163,6 +4163,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._hasEditInPlace()) {
                return this._getEditInPlace().addCallback(function(editInPlace) {
                   var res = editInPlace.endEdit();
+                  // вызываем _notifyOnSizeChanged, потому что при отмене редактирования изменились размеры
                   this._notifyOnSizeChanged(true);
                   return res;
                }.bind(this));
