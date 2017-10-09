@@ -1,7 +1,7 @@
 .controls-Calendar {
   display: inline-block;
   text-align: center;
-  font: @calendar-font;
+  font: inherit;
   width: @calendar-width;
   padding: @calendar-padding;
   background: @calendar-bg;
@@ -17,12 +17,12 @@
 
     .controls-Calendar__tableHead {
       font: @calendar-day-header-font;
-      text-align: @calendar-day-header-text-alignment;
+      text-align: center;
     }
 
     .controls-Calendar__tableBody {
-      font: @calendar-day-body-font;
-      text-align: @calendar-day-body-text-alignment;
+      font: inherit;
+      text-align: left;
     }
 
     .controls-Calendar__tableElement {
@@ -31,7 +31,7 @@
       padding: @calendar-day-table-cell-padding;
 
       &.controls-Calendar__tableBodyElement {
-        cursor: @calendar-day-cell-cursor;
+        cursor: pointer;
         color: @calendar-day-cell-text-color;
         background: @calendar-day-cell-bg;
 
@@ -52,13 +52,12 @@
       }
 
       &.controls-Calendar__tableElementFog {
-        cursor: @calendar-day-fog-cell-cursor;
+        cursor: default;
         color: @calendar-day-fog-cell-text-color;
-        background: @calendar-day-fog-cell-bg;
+        background: transparent;
 
         &:hover {
           color: @calendar-day-fog-cell-hover-text-color;
-          background: @calendar-day-fog-cell-hover-bg;
         }
       }
     }

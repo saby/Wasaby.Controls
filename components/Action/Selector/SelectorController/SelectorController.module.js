@@ -6,14 +6,14 @@ define('js!SBIS3.CONTROLS.SelectorController', [
    "js!SBIS3.CORE.CompoundControl",
    "js!WS.Data/Di",
    "Core/core-instance",
-   "Core/core-functions",
+   'Core/core-clone',
    "js!WS.Data/Entity/Record",
    "js!SBIS3.CONTROLS.Utils.Query",
    "js!SBIS3.CONTROLS.Utils.OpenDialog",
    "js!WS.Data/Collection/List",
    "js!SBIS3.CONTROLS.SelectorWrapper"
 ],
-    function (CommandDispatcher, CompoundControl, Di, cInstance, cFunctions, Record, Query, OpenDialogUtil, List) {
+    function (CommandDispatcher, CompoundControl, Di, cInstance, coreClone, Record, Query, OpenDialogUtil, List) {
 
        'use strict';
 
@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
 
        /**
         * Класс компонента, который описывает логику выбора из диалога/панели.
-        * Пример использования класса описан в статье <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/textbox/selector-action/'>Окно выбора из справочника</a>.
+        * Пример использования класса описан в статье <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/'>Окно выбора из справочника</a>.
         *
         * @class SBIS3.CONTROLS.SelectorController
         * @extends SBIS3.CORE.CompoundControl
@@ -210,7 +210,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
                 dataSource,
                 self = this;
              if (this._linkedObject && this._linkedObject._options.useSelectAll) {
-                filter = cFunctions.clone(this._linkedObject.getFilter());
+                filter = coreClone(this._linkedObject.getFilter());
                 dataSource = this._linkedObject.getDataSource();
                 //Закончить выбор элементов можно двумя способами:
                 //1) Нажать кнопку "Выбрать" в шапке диалога;

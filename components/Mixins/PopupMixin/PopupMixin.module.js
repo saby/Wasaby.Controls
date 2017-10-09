@@ -933,6 +933,13 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
                   offset.left = this._getOppositeOffset(this._options.corner, 'horizontal').left;
                   offset.left = this._addOffset(offset, buf).left;
                }
+
+               //Если после(!) разворота не влезаем в экран, то сдвинемся на наужное кол-во пикселей
+               var dif = offset.left + this.getContainer()[0].offsetWidth - this._windowSizes.width;
+               if (dif > 0) {
+                  offset.left -= dif;
+               }
+
                return offset;
          }
       },
@@ -945,7 +952,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       _isVerticalOverflow: function() {
          var scrollableContainer = this._options.parentContainer ? this._getParentContainer() : $(window);
          var scrollY = this._fixed ? 0 : scrollableContainer.scrollTop();
-         return this._containerSizes.requiredOffset.top > this._windowSizes.height + scrollY;
+         return this._containerSizes.requiredOffset.top > this._windowSizes.height + scrollY - (detection.firefox ? 1 : 0); //для ff проблемы с полупикселем. учитываю в расчетах
       },
 
       _calculateOverflow: function (offset, orientation) {
@@ -1117,16 +1124,18 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
       _notifyOnAlignmentChange: function () {
          var isVerAlignChanged = this._defaultVerticalAlignSide != this._currentAlignment.verticalAlign.side,
              isHorAlignChanged = this._defaultHorizontalAlignSide != this._currentAlignment.horizontalAlign.side,
+             isChanged = isVerAlignChanged || isHorAlignChanged || this._options.corner != this._currentAlignment.corner,
              newAlignment;
 
-         if (isVerAlignChanged || isHorAlignChanged || this._options.corner != this._currentAlignment.corner) {
+         this._container.toggleClass('controls-popup-revert-horizontal', isHorAlignChanged)
+            .toggleClass('controls-popup-revert-vertical', isVerAlignChanged);
+
+         if (isChanged) {
             newAlignment = {
                verticalAlign: this._options.verticalAlign,
                horizontalAlign: this._options.horizontalAlign,
                corner: this._options.corner
             };
-            this._container.toggleClass('controls-popup-revert-horizontal', isHorAlignChanged)
-                           .toggleClass('controls-popup-revert-vertical', isVerAlignChanged);
             this._notify('onAlignmentChange', newAlignment);
          }
       },
@@ -1203,6 +1212,9 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
             }
          },
          _onResizeHandler: function(){
+            this._resizeInner();
+         },
+         _resizeInner: function() {
             this._checkFixed(this._options.target || $('body'));
             if (this.isVisible() && !this._fixed) {
                this.recalcPosition(false);

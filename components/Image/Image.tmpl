@@ -34,20 +34,20 @@
       <ws:if data="{{imageBar}}">
          <div class="controls-image__image-bar" style="display: none;">
             <ws:partial template="MenuLinkTpl" titleFile="{[Из файла]}" titleWebCam="{[С веб-камеры]}" scope="{{...}}"/>
+           <ws:SBIS3.CONTROLS.Link
+              name="ButtonEdit"
+              class="controls-image__button-edit"
+              tooltip="Редактировать"
+              icon="sprite:icon-16 icon-Edit icon-primary"
+              command="editImage"
+              visible="{{avoidCache}}"
+           />
             <ws:SBIS3.CONTROLS.Link
                name="ButtonReset"
                class="controls-image__button-reset"
                tooltip="Удалить"
                icon="sprite:icon-16 icon-Erase icon-error"
                command="resetImage"
-               visible="{{avoidCache}}"
-            />
-            <ws:SBIS3.CONTROLS.Link
-               name="ButtonEdit"
-               class="controls-image__button-edit"
-               tooltip="Редактировать"
-               icon="sprite:icon-16 icon-Edit icon-primary"
-               command="editImage"
                visible="{{avoidCache}}"
             />
          </div>

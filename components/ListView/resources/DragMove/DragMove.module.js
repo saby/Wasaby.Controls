@@ -341,7 +341,8 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             this._isCorrectSource(source) &&
             source.getCount() > 0 &&
             DragObject.getTargetsControl() === this._getView() &&
-            cInstance.instanceOfModule(source.at(0), 'SBIS3.CONTROLS.DragEntity.Row');
+            cInstance.instanceOfModule(source.at(0), 'SBIS3.CONTROLS.DragEntity.Row') &&
+            this._isEqualDataSource()
       },
       /**
        * возвращает Dom элемент и рекорд элемента над которым находится курсор
@@ -377,6 +378,20 @@ define('js!SBIS3.CONTROLS.ListView.DragMove', [
             domElement: target,
             isPlaceholder: isPlaceholder
          };
+      },
+      _isEqualDataSource: function () {
+         if (this._getView() !== DragObject.getOwner()) {
+            var targetDataSource = this._getView().getDataSource(),
+               owner = DragObject.getOwner(),
+               ownerDataSource = typeof owner.getDataSource == 'function' ? owner.getDataSource() : undefined;
+            if (ownerDataSource && targetDataSource && ownerDataSource.getEndpoint().contract === targetDataSource.getEndpoint().contract) {
+               return true;
+            }
+            return false;
+         }
+         else {
+            return true;
+         }
       },
       /**
        * очищает подсвечивание драгндропа

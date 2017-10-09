@@ -87,13 +87,6 @@ body {
          padding: 0;
       }
    }
-   .controls-DataGridView__results {
-      font-size: @default-font-size;
-   }
-
-   .controls-TabButton {
-      box-sizing: border-box;
-   }
 
   .controls-ListView__bottomStyle > .controls-ItemsToolbar {
     &.controls-ItemsToolbar__edit {
@@ -355,6 +348,12 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
       font-weight: bold;
     }
   }
+  .controls-Scrollbar .controls-Scrollbar__thumb {
+    background-color: rgba(0,0,0,.1);
+    &:hover {
+       background-color: rgba(0,0,0,.15);
+    }
+  }
 }
 
 .controls-Button__closeButton {
@@ -475,6 +474,7 @@ body {
       max-height: 3.57rem;
       line-height: 3.57rem;
       font-weight: normal;
+      margin: 0 3.2857rem 0 .8571rem;
    }
 }
 
@@ -528,6 +528,7 @@ body {
   }
   .ws-float-area-title {
     padding-left: .857rem;
+    width: ~"calc(100% - 3rem)";
   }
    .ws-float-area .ws-window-titlebar.ws-window-titlebar-custom {
       height: 3.57rem;
@@ -630,10 +631,6 @@ body {
       vertical-align: middle !important;
    }
 }
-.controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
-  line-height: 3rem;
-}
-
 body .controls-TextArea {
    min-height: 3rem;
 }
@@ -766,7 +763,7 @@ body .controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__cl
 .controls-PopupMixin__closeButton {
   position: absolute;
   top: 8px;
-  right: @controls-Popup-closeButton-right;
+  right: 0;
   width: 3rem;
   height: 3rem;
   cursor: pointer;
@@ -877,15 +874,10 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls
     border-radius: 0;
 }
 
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__dates .controls-DateRangeBigChoose__dates-months span.controls-Button {
+body .controls-DateRangeBigChoose__dates-month-btn {
+   // Будет выпелено с переходом на новый стандарт. Там выравнивание одинаковое.
    padding-left: 0;
    text-align: center;
-   &:hover {
-      border-top: none!important;
-      border-bottom: none!important;
-      border-right-color: #3f566d!important;
-   }
-   line-height: 1.786rem;
    .controls-Button__text {
       width: 100%;
    }
@@ -917,9 +909,9 @@ body {
        line-height: 3rem;
      }
      .controls-ListView__hoveredItem {
-        background-color:  #E0ECF5 !important;
+        background-color:  @suggest-list-hover-color !important;
          .controls-DataGridView__td {
-             background-color:  #E0ECF5 !important;
+             background-color:  @suggest-list-hover-color !important;
          }
      }
   & .ws-moneyDecorator .ws-moneyDecorator__integer__BasicRegistry {
@@ -987,10 +979,8 @@ body {
    Выписана ошибка. https://online.sbis.ru/opendoc.html?guid=fa89f6fd-3e4a-4925-8de3-9f34c6b11729
  */
 .ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
-   .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
-      position: relative;
-      //Будет в октябре у Девятова работа по перевёрстке хлебных крошек.
-      top: .6457rem !important; // чтобы перебить непонятный top выше по файлу.
+   .controls-BreadCrumbs__crumb {
+      top: 0
    }
 }
 
@@ -1032,27 +1022,12 @@ body {
   }
 }
 
-.controls-TreePager-container {
-    cursor: pointer;
-    display: inline-block;
-    font-size: @listView-loadmorebutton-font-size;
-    color: @link-text-color; //todo
-    text-decoration: none;
-    &:hover{
-     color: @link-hover-text-color;
-    }
-}
-
 //Костыль, т.к. в престо иконки в ПМО большие, а на онлайне средние
 .controls-operationsPanel__actions .icon-24 {
     font-size: 3rem !important;
     height: 3rem !important;
     width: 3rem !important;
     line-height: 3rem !important;
-}
-//Костыль, у dropdown неподходящая для ПМО минимальная высота. Сделаем 100%.
-.controls-operationsPanel__actions .controls-DropdownList {
-   min-height: 100%;
 }
 
 // В темах престо и розницы все сверстано на внутренних скролируемых контенерах.

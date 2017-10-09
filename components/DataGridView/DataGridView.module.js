@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.DataGridView',
    [
    "Core/CommandDispatcher",
-   "Core/core-functions",
+   "Core/core-clone",
    "Core/core-merge",
    "Core/constants",
    "Core/Deferred",
@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 ],
    function(
       CommandDispatcher,
-      cFunctions,
+      coreClone,
       cMerge,
       constants,
       Deferred,
@@ -71,7 +71,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    'use strict';
 
       var _prepareColumns = function(columns, cfg) {
-            var columnsNew = cFunctions.clone(columns);
+            var columnsNew = coreClone(columns);
             for (var i = 0; i < columnsNew.length; i++) {
                if (columnsNew[i].cellTemplate) {
                   columnsNew[i].contentTpl = TemplateUtil.prepareTemplate(columnsNew[i].cellTemplate);
@@ -151,7 +151,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          prepareHeadColumns = function(cfg){
             var
                rowData = {},
-               columns = cFunctions.clone(cfg.columns),
+               columns = coreClone(cfg.columns),
                supportUnion,
                supportDouble,
                curCol,
@@ -170,11 +170,28 @@ define('js!SBIS3.CONTROLS.DataGridView',
             for (var i = 0, l = columns.length; i < l; i++){
                curCol = columns[i];
                nextCol = columns[i + 1];
-               curColSplitTitle = (curCol.title || '').split('.');
-               nextColSplitTitle = nextCol && nextCol.title.split('.');
+
+               /**
+                * Сюда может прилететь rkString
+                * пока что это единственный способ ее идентифицировать
+                */
+               curColSplitTitle = (curCol.title || '');
+               if (curColSplitTitle.saveProtoM) {
+                  curColSplitTitle = '' + curColSplitTitle;
+               }
+               curColSplitTitle = curColSplitTitle.split('.');
+
+               nextColSplitTitle = ((nextCol && nextCol.title) || '');
+               if (nextColSplitTitle.saveProtoM) {
+                  nextColSplitTitle = '' + nextColSplitTitle;
+               }
+               nextColSplitTitle = nextColSplitTitle.split('.');
+               /**
+                * end check rkString
+                */
 
                if (!supportDouble){
-                  supportDouble = cFunctions.clone(curCol);
+                  supportDouble = coreClone(curCol);
                }
                else {
                   curColSplitTitle = [supportDouble.value, curColSplitTitle];
@@ -206,7 +223,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                }
 
                if (!supportUnion){
-                  supportUnion = cFunctions.clone(curCol);
+                  supportUnion = coreClone(curCol);
                }
                if (nextCol && (supportUnion.title == nextCol.title)) {
                   if (curCol.rowspan) {
@@ -231,7 +248,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          prepareHeadData = function(cfg) {
             var
                headData = {
-                  columns: cFunctions.clone(cfg.columns),
+                  columns: coreClone(cfg.columns),
                   multiselect : cfg.multiselect,
                   startScrollColumn: cfg.startScrollColumn,
                   resultsPosition: cfg.resultsPosition,
@@ -816,6 +833,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return DataGridView.superclass._itemsReadyCallback.apply(this, arguments);
       },
 
+      _toggleIndicator: function(show){
+         DataGridView.superclass._toggleIndicator.apply(this, arguments);
+         if (show) {
+            this._updateAjaxLoaderPosition();
+         }
+      },
+
       _updateAjaxLoaderPosition: function () {
          var height, styles;
          if (!this._thead) {
@@ -871,7 +895,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if (this._options.stickyHeader && !this._options.showHead && this._options.resultsPosition === 'top') {
             this._updateStickyHeader(headData.hasResults);
          }
-         this._updateAjaxLoaderPosition();
       },
 
       _redrawFoot: function(){
@@ -1416,7 +1439,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _isTableWide: function() {
-         return this._container[0].offsetWidth < this._getItemsContainer()[0].offsetWidth;
+         return this._container[0].offsetWidth < this._getTableContainer()[0].offsetWidth;
       },
 
       _hidePartScroll: function() {
@@ -1552,7 +1575,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._addStickyToGroups(data.records);
          return data;
       },
-      _getItemsForRedrawOnAdd: function(items, groupId) {
+      _getItemsForRedrawOnAdd: function(items) {
          var data = DataGridView.superclass._getItemsForRedrawOnAdd.apply(this, arguments);
          this._addStickyToGroups(data);
          return data;
@@ -1567,16 +1590,17 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
       },
       _redrawResults: function(revive) {
-         if (this._options.resultsPosition !== 'none'){
-           this._redrawTheadAndTfoot();
-         }
-         if (revive) {
-            var self = this;
-            this.reviveComponents(this._thead).addCallback(function(){
-               self._notify('onDrawHead');
-               self._headIsChanged = false;
-            });
-            this.reviveComponents(this._tfoot);
+         if (this._options.resultsPosition !== 'none') {
+            this._redrawTheadAndTfoot();
+
+            if (revive) {
+               var self = this;
+               this.reviveComponents(this._thead).addCallback(function () {
+                  self._notify('onDrawHead');
+                  self._headIsChanged = false;
+               });
+               this.reviveComponents(this._tfoot);
+            }
          }
       },
       destroy: function() {
@@ -1695,7 +1719,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             return item.get(colName);
          }
          var colNameParts = colName.slice(2, -2).split('.'),
-            curItem = cFunctions.clone(item),
+            curItem = coreClone(item),
             value;
          for (var i = 0; i < colNameParts.length; i++){
             if (i !== colNameParts.length - 1){

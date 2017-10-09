@@ -2,12 +2,12 @@
  * Created by ad.chistyakova on 05.10.2015.
  */
 define('js!SBIS3.CONTROLS.FilterMixin', [
-   "Core/core-functions",
+   "Core/core-clone",
    "Core/core-merge",
    "js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil",
    "Core/helpers/String/ucFirst",
    "Core/helpers/Object/find"
-], function ( cFunctions, cMerge,FilterToStringUtil, ucFirst, objectFind) {
+], function (coreClone, cMerge, FilterToStringUtil, ucFirst, objectFind) {
 
 
    var FILTER_STRUCTURE_DEFAULT_ELEMENT = {
@@ -152,7 +152,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
                   throw new Error('У элемента структуры должно быть поле internalValueField');
                }
 
-               newEl = cMerge(cFunctions.clone(FILTER_STRUCTURE_DEFAULT_ELEMENT), element);
+               newEl = cMerge(coreClone(FILTER_STRUCTURE_DEFAULT_ELEMENT), element);
 
                if (!newEl.internalCaptionField) {
                   newEl.internalCaptionField = newEl.internalValueField;
@@ -165,7 +165,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
          }
          if (filter) {
             this._filterStructure = this._filterStructure.map(function(element) {
-               var newElement = cFunctions.clone(element),
+               var newElement = coreClone(element),
                    field = newElement.internalValueField;
 
                function setDescriptionWithReset(description, deleteDescription) {
@@ -351,7 +351,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
             if (element.hasOwnProperty('value')) {
                /* FIXME для внедрения в задачах используется filterField, т.к. у них internalValueField не совпадает
                   с полем фильтра */
-               result[byInternal ? element.internalValueField : (element.filterField || element.internalValueField)] = cFunctions.clone(element.value); // если не склонировать, кто-то может поменять по ссылке и испортит фильтр
+               result[byInternal ? element.internalValueField : (element.filterField || element.internalValueField)] = coreClone(element.value); // если не склонировать, кто-то может поменять по ссылке и испортит фильтр
             }
             return result;
          }, {});

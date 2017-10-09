@@ -84,7 +84,6 @@ define('js!SBIS3.CONTROLS.TextBox', [
          _inputField : null,
          _compatPlaceholder: null,
          _tooltipText: null,
-         _fromTab: true,
          _beforeFieldWrapper: null,
          _afterFieldWrapper: null,
          _textFieldWrapper: null,
@@ -242,7 +241,6 @@ define('js!SBIS3.CONTROLS.TextBox', [
                   self.setText(newText);
                }
             })
-            .on('mousedown', function(){ self._fromTab = false; })
             .on('focusin', this._inputFocusInHandler.bind(this))
             .on('focusout', this._inputFocusOutHandler.bind(this))
             .on('click', this._inputClickHandler.bind(this));
@@ -570,10 +568,9 @@ define('js!SBIS3.CONTROLS.TextBox', [
          if (this._fromTouch){
             EventBus.globalChannel().notify('MobileInputFocus');
          }
-         if (this._options.selectOnClick || this._fromTab){
+         if (this._options.selectOnClick){
             this._inputField.select();
          }
-         this._fromTab = true;
          /* При получении фокуса полем ввода, сделаем контрол активным.
           *  Делать контрол надо активным по фокусу, т.к. при клике и уведении мыши,
           *  кусор поставится в поле ввода, но соыбтие click не произойдёт и контрол актвным не станет, а должен бы.*/

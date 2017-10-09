@@ -44,7 +44,8 @@ define('js!SBIS3.CONTROLS.SelectorButton',
        strHelpers,
        ToSourceModel,
        ItemsSelectionUtil,
-       List
+       List,
+       SelectorAction
        
     ) {
 
@@ -94,6 +95,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
             _serverRender: true,
             _defaultItemContentTemplate: defaultItemContentTemplate,
             _defaultItemTemplate: defaultItemTemplate,
+            _selectorAction: null,
             /**
              * @cfg {String} Устанавливает текст на кнопке выбора, который будет отображен, если нет выбранных элементов.
              * @example
@@ -277,6 +279,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
             if(this.getProperty('useSelectorAction')) {
                cfg.multiselect = this.getMultiselect();
                cfg.selectedItems = this.getSelectedItems();
+               cfg.opener = this; //Т.к. selectorAction создаётся из кода, и ему не назначается parent (так надо, см. коммент. ниже)
                if(this._notify('onSelectorClick', cfg) !== false) {this._getSelectorAction().execute(cfg)}
             } else {
                this._showChooser(cfg.template, cfg.componentOptions);
@@ -284,9 +287,21 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          }
       },
 
-      _getSelectorAction: memoize(function() {
-         return this.getChildControlByName('SelectorButtonSelectorAction');
-      },'_getSelectorAction'),
+      _getSelectorAction: function() {
+         if (!this._selectorAction) {
+            /* В AreaAbstract сейчас такое поведение:
+               если у compoundControl'a ни один дочерний компонент не принимает фокус,
+               то и сам контрол не принимает фокус ( Шипин ). Если action положить в вёрстку,
+               то он зарегистрируется, как дочерний контрол для selectorButton'a и никогда не примет фокус,
+               поэтому создаю action кодом, чтобы он не был дочерним для SelectorButton'a.
+               (По словам Шипина, в AreaAbstract это починить очень дорого). */
+            this._selectorAction = new SelectorAction({
+               mode: this._getOption('selectMode'),
+               visible: false
+            });
+         }
+         return this._selectorAction;
+      },
 
       /**
        * Установить набор диалогов выбора для поля связи
@@ -341,6 +356,13 @@ define('js!SBIS3.CONTROLS.SelectorButton',
       },
       _setSelectedItems: function () {
          
+      },
+      destroy: function () {
+         if (this._selectorAction) {
+            this._selectorAction.destroy();
+            this._selectorAction = null;
+         }
+         SelectorButton.superclass.destroy.call(this);
       }
    });
 

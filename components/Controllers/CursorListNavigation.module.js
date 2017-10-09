@@ -89,10 +89,18 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
             return params;
          },
 
-         analyzeResponseParams: function(dataset) {
+         analyzeResponseParams: function(dataset, scrollDir) {
             var more = dataset.getMetaData().more;
             if (typeof more == 'boolean') {
-               this._hasMore[this._options.config.direction] = more;
+               var direction;
+               if (scrollDir == 'up') {
+                  direction = 'before';
+               }
+               else if (scrollDir == 'down') {
+                  direction = 'after';
+               }
+
+               this._hasMore[direction] = more;
             }
             else {
                if (more instanceof Object) {

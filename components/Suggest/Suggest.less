@@ -1,19 +1,13 @@
-.controls-Suggest {
-  &__loadingContainer {
-    position: relative;
-  }
-
-  &__loadingIndicator {
-    background: @suggest-loading-bg;
-    background-size: contain;
-    height: @suggest-loading-height;
-    position: absolute;
-    right: @suggest-loading-right;
-    top: 50%;
-    margin-top: -@suggest-loading-height/2;
-    width: @suggest-loading-width;
-  }
+.controls-Suggest__loadingIndicator {
+  background: @suggest-loading-bg;
+  background-size: contain;
+  background-position: center;
+  height: 100%;
+  .order(-1);
+  width: @suggest-loading-width;
+  margin-right: @suggest-loading-right;
 }
+
 //Чтобы не зависеть от стилей FloatArea
 .controls-FloatArea.controls-Suggest__picker {
   width: @suggest-picker-standard-width;

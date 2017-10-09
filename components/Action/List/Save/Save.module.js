@@ -5,13 +5,13 @@ define('js!SBIS3.CONTROLS.Action.List.Save', [
     'Core/Deferred',
     'Core/constants',
     'Core/core-instance',
-    'Core/core-functions',
+    'Core/core-clone',
     'js!WS.Data/Collection/RecordSet',
     'js!SBIS3.CORE.DialogSelector',
     'js!WS.Data/Query/Query',
     'js!WS.Data/Entity/Record',
     'Core/moduleStubs'
-], function (Save, ListMixin, fcHelpers, Deferred, constants, cInstance, cFunctions, RecordSet, Dialog, Query, Record, moduleStubs) {
+], function (Save, ListMixin, fcHelpers, Deferred, constants, cInstance, coreClone, RecordSet, Dialog, Query, Record, moduleStubs) {
     var MAX_RECORDS_COUNT = 20000;
 
     /**
@@ -112,7 +112,7 @@ define('js!SBIS3.CONTROLS.Action.List.Save', [
            var
               query = new Query(),
               linkedObject = this.getLinkedObject(),
-              filter = cFunctions.clone(linkedObject.getFilter());
+              filter = coreClone(linkedObject.getFilter());
            filter.selection = Record.fromObject(selection, dataSource.getAdapter());
 
            query.where(filter).orderBy(linkedObject.getSorting()).offset(linkedObject.getOffset()).limit(limit);
@@ -123,7 +123,7 @@ define('js!SBIS3.CONTROLS.Action.List.Save', [
             var
                 query = new Query(),
                 linkedObject = this.getLinkedObject(),
-                filter = cFunctions.clone(linkedObject.getFilter()),
+                filter = coreClone(linkedObject.getFilter()),
                 openedPath;
             if (parentProperty) {
                 filter[parentProperty] = filter[parentProperty] === undefined ? [linkedObject.getCurrentRoot()] : filter[parentProperty];

@@ -12,6 +12,8 @@
    font-size: @text-box-font-size;
    text-decoration: inherit;
    line-height: @default-base-line-height;
+   cursor: auto;
+   max-width: 100%;
 
    &:hover {
       border-color: @text-box-border-color-hover;
@@ -42,6 +44,7 @@
          .icon-size(@text-box-information-icon-size);
          position: absolute;
          right: 0;
+         top: 0;
       }
    }
 
@@ -62,6 +65,8 @@
    }
 
    &__afterFieldWrapper, &__beforeFieldWrapper {
+      .inline-flexbox();
+      .flex-shrink(0);
       height: 100%;
    }
    &__beforeFieldWrapper {
@@ -118,11 +123,3 @@
 .controls-TextBox__field-lowercase {
    text-transform: lowercase;
 }
-
-/*
-.ws-is-desktop-safari {
-   .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
-      outline: 1px solid transparent;
-   }
-}
-*/

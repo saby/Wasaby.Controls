@@ -31,10 +31,10 @@ define([
          });
          it('should update view if range changed', function () {
             rangeControl.setRange(1, 1);
-            let validateRangeSelectionItemsView = sinon.spy(rangeControl, 'validateRangeSelectionItemsView');
+            sinon.stub(rangeControl, 'validateRangeSelectionItemsView');
             rangeControl._onRangeItemElementClick(1, 2);
-            validateRangeSelectionItemsView.restore();
-            sinon.assert.calledOnce(validateRangeSelectionItemsView);
+            sinon.assert.calledOnce(rangeControl.validateRangeSelectionItemsView);
+            rangeControl.validateRangeSelectionItemsView.restore();
          });
       });
 

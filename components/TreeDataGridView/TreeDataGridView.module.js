@@ -2,6 +2,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    "Core/core-merge",
    "Core/constants",
    'Core/CommandDispatcher',
+   'Core/core-instance',
    'js!SBIS3.CONTROLS.Utils.Contains',
    "js!SBIS3.CONTROLS.DataGridView",
    "tmpl!SBIS3.CONTROLS.TreeDataGridView",
@@ -17,7 +18,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'js!SBIS3.CONTROLS.Link',
    'css!SBIS3.CONTROLS.TreeDataGridView',
    'css!SBIS3.CONTROLS.TreeView'
-], function( cMerge, constants, CommandDispatcher, contains, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, MassSelectionHierarchyController) {
+], function( cMerge, constants, CommandDispatcher, cInstance, contains, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, MassSelectionHierarchyController) {
 
 
    var
@@ -115,7 +116,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * @cssModifier controls-TreeView__hideExpands Устанавливает режим отображения дерева без иконок сворачивания/разворачивания узлов.
     *
     * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView Пример 1. Простое иерархическое представление данных в режиме множественного выбора записей.
-    * @demo SBIS3.CONTROLS.DOCS.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
+    * @demo SBIS3.DOCS.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
     * Инициировать добавление можно как по нажатию кнопок в футерах, так и по кнопке Enter из режима редактирования последней записи.
     * Подробное описание конфигурации компонента и футеров вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/add-in-place/"> Добавление по месту</a>.
     *
@@ -277,17 +278,30 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var
             cfg = TreeDataGridView.superclass._getInsertMarkupConfig.apply(this, arguments),
             lastItem = this._options._itemsProjection.at(newItemsIndex - 1),
-            lastItemParent, newItemsParent;
+            lastItemParent, newItemsParent, existingContainer, firstTreeItem;
 
          if (cfg.inside && !cfg.prepend) {
             cfg.inside = false;
-            // В режиме поиска может возникнуть ситуация, когда предыдущий элемент расположен в других хлебных крошках.
-            // Этот сценарий происходит в случае перерисовки первой записи в хлебных крошках.
-            // В таком случае контейнером, ЗА которым будут добавлены записи должна стать правильная хлебная крошка.
             lastItemParent = lastItem.getContents().get(this._options.parentProperty);
-            newItemsParent = newItems[0].getContents().get(this._options.parentProperty);
+            firstTreeItem = newItems[0].isNode ? newItems[0] : newItems[1];
+            newItemsParent = firstTreeItem ? firstTreeItem.getContents().get(this._options.parentProperty) : undefined;
+            /* В виду того, что мы не можем различить, откуда вызван _getInsertMarkupConfig, возникают две противоречивые ситуации:
+               1. В случае перерисовки ПЕРВОЙ записи в хлебных крошках (изменён прямо record), предыдущий элемент будет
+                  расположен в других хлебных крошках (https://online.sbis.ru/opendoc.html?guid=033fd05c-fb2e-4c3a-a648-37cf47b05a50).
+                  Тогда контейнером, ЗА которым будут добавлены записи, должна стать правильная хлебная крошка, являющаяся реальным
+                  родителем перерисовываемой записи.
+               2. В случае поиска, результаты могут прилететь на второй странице и вызов _getInsertMarkupConfig будет из метода
+                  _addItems (https://online.sbis.ru/opendoc.html?guid=b395391e-b4de-4dd8-affb-4ec79c40c158).
+                  Новую хлебную крошку мы могли ранее не выводить и тогда контейнером, ЗА которым будут добавлены записи, должен стать
+                  последний отрисованный элемент. */
             if (this._isSearchMode() && lastItemParent !== newItemsParent) {
-               cfg.container = this._getItemsContainer().find('.controls-DataGridView__tr.controls-HierarchyDataGridView__path[data-id="' + newItemsParent + '"]');
+               // Ситуация №1 - пытаемся найти уже существующую хлебную крошку и тогда записи будем добавлять непосредственно после неё.
+               existingContainer = this._getItemsContainer().find('.controls-DataGridView__tr.controls-HierarchyDataGridView__path[data-id="' + newItemsParent + '"]');
+               if (existingContainer.length) {
+                  cfg.container = existingContainer;
+               } else { // Ситуация №2 - если существующую хлебную крошку найти не удалось - то добавляем записи за последним элементом.
+                  cfg.container = this._getDomElementByItem(lastItem);
+               }
             } else {
                cfg.container = this._getDomElementByItem(lastItem);
             }
@@ -300,7 +314,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          // Но этот вариант очень трудно реализуем, т.к. куча точек входа, где загрузка может быть прервана или перезапущена.
          // Как итог - завел задачу, по которой нужно переосмыслить текущий механизм и решить подобные проблемы раз и навсегда.
          // p.s. data-id используется потому что у крошек нет data-hash.
-         if (this._isSearchMode() && !cfg.container.length && lastItem && lastItem.isNode()) {
+         if (this._isSearchMode() && !cfg.container.length && lastItem && lastItem.isNode && lastItem.isNode()) {
             cfg.container = this._getItemsContainer().find('.js-controls-BreadCrumbs__crumb[data-id="' + lastItem.getContents().getId() + '"]').parents('.controls-DataGridView__tr.controls-HierarchyDataGridView__path');
          }
          return cfg;

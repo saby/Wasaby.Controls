@@ -109,14 +109,27 @@ define('js!WSControls/Lists/ListView2',
             firstLoad: true
          },
 
-         _getStartEnumerationPosition: function() {
+
+         _getItemsTplData: function() {
+            var parOpts = ListView.superclass._getItemsTplData.apply(this, arguments);
+            parOpts._listItemsTplData._selectedKey = this._selectedKey;
+            parOpts._listItemsTplData._itemTplData._onItemClick = this._onItemClick;
+            return parOpts;
+         },
+
+         _onItemClick: function(e, displayItem) {
+            this._setSelectedByHash(displayItem.getHash());
+            //this._onSelectedItemChange();
+         },
+
+         _getStartEnumerationPosition: function(indexes) {
             if (this._enableVirtualScroll && this._virtualScroll.window.end) {
-               this._enumIndexes._startIndex = this._virtualScroll.window.start;
-               this._enumIndexes._stopIndex = this._virtualScroll.window.end;
-               this._enumIndexes._curIndex = this._virtualScroll.window.start;
+               indexes._startIndex = this._virtualScroll.window.start;
+               indexes._stopIndex = this._virtualScroll.window.end;
+               indexes._curIndex = this._virtualScroll.window.start;
             }
             else {
-               ListView.superclass._getStartEnumerationPosition.call(this);
+               ListView.superclass._getStartEnumerationPosition.apply(this, arguments);
             }
          },
 

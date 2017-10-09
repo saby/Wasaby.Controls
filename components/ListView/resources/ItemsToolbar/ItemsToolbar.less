@@ -81,7 +81,7 @@
    }
 }
 .controls-ItemsToolbar__editActions {
-   float: @list-view-items-toolbar-float;
+   float: right;
    > * {
       margin: @list-view-items-toolbar-elements-margin;
    }
@@ -204,6 +204,32 @@
 
    &.controls-ItemsToolbar__hidden {
       visibility: hidden;
+   }
+}
+
+.itemsToolbar-leftSwipeAnimation {
+   .animation(itemsToolbar-leftSwipe, @list-view-items-toolbar-animate-duration );
+}
+
+@keyframes itemsToolbar-leftSwipe {
+   0% {
+      .translate(100%);
+   }
+   100% {
+      .translate(0);
+   }
+}
+
+.itemsToolbar-rightSwipeAnimation {
+   .animation(itemsToolbar-rightSwipe, @list-view-items-toolbar-animate-duration);
+}
+
+@keyframes itemsToolbar-rightSwipe {
+   0% {
+      .translate(0);
+   }
+   100% {
+      .translate(100%);
    }
 }
 

@@ -1,15 +1,16 @@
+@tab-button-large-inner-font-weight:   bold;
 .controls-TabButton {
-   vertical-align: @tab-button-vertical-align;
-   cursor: @tab-button-cursor;
+   vertical-align: middle;
+   cursor: pointer;
    height: 100%;
    box-sizing: border-box;
-   position: @tab-button-position;
+   position: relative;
    color: @tab-button-color;
    font: @tab-button-font;
    font-size: @tab-button-font-size; //for ie 10
-   margin-top: @tab-button-margin-top;
-   z-index: @tab-button-z-index;
-   display: @tab-button-display;
+   margin-top: 0;
+   z-index: 10;
+   display: inline-block;
    border-left: none;
    border-right: none;
    border-top: 1px solid transparent;
@@ -26,7 +27,7 @@
          border-right: @tab-button-hover-border;
          border-left: @tab-button-hover-border;
          &:before {
-            display: @tab-button-hover-inner-after-display;
+            display: none;
          }
       }
    }
@@ -76,7 +77,7 @@
 
 
    .controls-TabButton__bottomLine{
-      display: @tab-button-bottomLine-start-display;
+      display: none;
    }
    //стиль для встраиваемых компонентов, чтобы текст был по стандарту
    .controls-TabButton__mainText, .controls-TabButton__mainText.controls-Link {
@@ -84,7 +85,7 @@
       font: @tab-button-font;
       line-height: @tab-button-main-text-line-height;
       font-weight: @tab-button-large-inner-font-weight;
-      text-overflow: @tab-button-large-inner-text-overflow;
+      text-overflow: ellipsis;
       font-size: @tab-button-large-inner-font-size;
       .controls-TextBox .controls-TextBox__field{
          font-size: @tab-button-large-inner-font-size;
@@ -94,8 +95,8 @@
    }
    &.controls-Checked__checked {
       border-top: @tab-button-checked-border-top;
-      z-index: @tab-button-checked-z-index;
-      cursor: @tab-button-checked-cursor;
+      z-index: 50;
+      cursor: default;
       font-size: @tab-button-checked-font-size;
       border-bottom: none;
       padding: 0;
@@ -108,19 +109,20 @@
          height: 3px;
       }
       .controls-TabButton__inner {
-         font-weight: @tab-button-checked-inner-font-weight;
+         font-weight: bold;
          font-size: @tab-button-checked-inner-font-size;
          color: @tab-button-checked-inner-color;
-         border-left: @tab-button-checked-inner-border-left;
-         border-right: @tab-button-checked-inner-border-right;
+         border-width: 0 @tab-button-checked-inner-border 0 @tab-button-checked-inner-border;
+         border-color: @tab-button-checked-border-color;
+         border-style: solid;
          background: @tab-button-checked-inner-bg;
-         overflow:  @tab-button-large-inner-overflow;
+         overflow:  hidden;
          &:before{
-            display: @tab-button-checked-inner-after-display;
+            display: none;
          }
       }
       .controls-tabButton__overlay{
-         display: @tab-button-checked-overlay-display;
+         display: none;
       }
       //стиль для встраиваемых компонентов, чтобы текст был по стандарту
       .controls-TabButton__mainText {
@@ -166,7 +168,7 @@
       .controls-TabButton__additionalText1, .controls-TabButton__additionalText1 > * {
          color: @tab-button-large-firstAddText-color;
          font-size: @tab-button-large-firstAddText-font-size;
-         font-weight: @tab-button-large-firstAddText-font-weight;
+         font-weight: normal;
          &:hover {
             color: @tab-button-large-firstAddText-color-hover;
          }
@@ -185,7 +187,7 @@
       .controls-TabButton__additionalText2, .controls-TabButton__additionalText2 > * {
          color: @tab-button-large-secondAddText-color;
          font-size: @tab-button-large-secondAddText-font-size;
-         font-weight: @tab-button-large-secondAddText-font-weight;
+         font-weight: normal;
          .controls-EditAtPlace__editor{
             color: @black-color;
             font-size: @default-font-size;
@@ -197,6 +199,8 @@
             .controls-TextBox__fieldWrapper {
                padding-top: 1px;
                box-sizing: content-box;
+               border: 0; //в 61 хроме проблема, когда задан box-sizing:padding-box и не нулевой border, родительский контейнер считает, что дочерний контейнер с такими стилями
+               //вылезает за границы и при overflow:hidden троеточит его по вертикали
             }
             &.controls-EditAtPlace__ellipsis {
                .controls-EditAtPlace__textField {
@@ -209,24 +213,24 @@
    .controls-TabButton__inner {
       padding: @tab-button-inner-padding;
       line-height: @tab-button-inner-line-height;
-      overflow: @tab-button-inner-overflow;
+      overflow: hidden;
       height: 100%;
       max-width: @tab-button-large-inner-max-width;
       &:before {
-        content: @tab-button-inner-after-content;
-        display: @tab-button-inner-after-display;
+        content: '';
+        display: block;
         width: @tab-button-inner-after-width;
         height: @tab-button-inner-after-height;
         background-color: @tab-button-inner-after-bg-color;
-        position: @tab-button-inner-after-position;
+        position: absolute;
         bottom: @tab-button-inner-after-bottom;
-        z-index: @tab-button-inner-after-z-index;
+        z-index: 10;
       }
       .controls-TabButton__wrapper {
          .flexbox();
       }
       .controls-TabButton__icon {
-         position: @tab-button-icon-position;
+         position: relative;
          top: @tab-button-icon-top;
          margin-right: @tab-button-icon-margin-right;
       }
@@ -268,14 +272,14 @@
    }
 
    .controls-tabButton__overlay {
-      position: @tab-button-overlay-position;
-      left: @tab-button-overlay-left;
-      right: @tab-button-overlay-right;
-      top: @tab-button-overlay-top;
-      bottom: @tab-button-overlay-bottom;
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
       background: @tab-button-overlay-background;
       -ms-filter: @tab-button-overlay-ms-filter;
-      opacity: @tab-button-overlay-opacity;
+      opacity: 0;
    }
 }
 
