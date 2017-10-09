@@ -754,9 +754,13 @@
       webkit = /WebKit/.test(userAgent);
       ie = !webkit && !opera && (/MSIE/gi).test(userAgent) && (/Explorer/gi).test(nav.appName);
       ie = ie && /MSIE (\w+)\./.exec(userAgent)[1];
-      ie11 = userAgent.indexOf('Trident/') != -1 && (userAgent.indexOf('rv:') != -1 || nav.appName.indexOf('Netscape') != -1) ? 11 : false;
+      // Строка userAgent для MSIE11 может и не содержать фрагмента rv:11.0, опираться на него нельзя. Например:
+      //"Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E; rv:11.0) like Gecko"
+      //"Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E)"
+      //См. "Compatibility View" в https://blogs.msdn.microsoft.com/ieinternals/2013/09/21/internet-explorer-11s-many-user-agent-strings/
+      ie11 = /*userAgent.indexOf('Trident/') != -1 && (userAgent.indexOf('rv:') != -1 || nav.appName.indexOf('Netscape') != -1) ? 11 : false*/ +(userAgent.match(/Trident\/([0-9]+)\.[0-9]+/) || [])[1] + 4 || false;
       ie12 = (userAgent.indexOf('Edge/') != -1 && !ie && !ie11) ? 12 : false;
-      ie = ie || ie11 || ie12;
+      ie = /*ie || ie11 || ie12*/ie12 || ie11 || ie;// Может быть и ie, и ieNN не пусты одновременно - нужно идти от большего к меньшему
       gecko = !webkit && !ie11 && /Gecko/.test(userAgent);
       mac = userAgent.indexOf('Mac') != -1;
       iDevice = /(iPad|iPhone)/.test(userAgent);
