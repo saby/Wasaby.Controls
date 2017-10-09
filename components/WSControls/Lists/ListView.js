@@ -44,48 +44,46 @@ define('js!WSControls/Lists/ListView', [
          _filter: undefined,
          _sorting: undefined,
 
-         _ItemTemplate: null,
+         _itemTemplate: null,
 
          constructor: function (cfg) {
             ListView.superclass.constructor.apply(this, arguments);
-
+            this._items = cfg.items;
             this._publish('onDataLoad');
          },
 
-
-
-         _initNavigation: function(options) {
-            if (options.dataSource && options.navigation && (!this._navigationController)) {
-               this._navigationController = new PageNavigation(options.navigation.config);
-               this._navigationController.prepareSource(options.dataSource);
-            }
+         //TODO private
+         _initNavigation: function(options, dataSource) {
+            this._navigationController = new PageNavigation(options.navigation.config);
+            this._navigationController.prepareSource(dataSource);
          },
 
          _beforeMount: function(newOptions) {
             this._itemTemplate = newOptions.itemTemplate || defaultItemTemplate;
+            this._filter = newOptions.filter;
 
-            this._initNavigation(newOptions);
-
-            if (newOptions.dataSource != this._options.dataSource) {
+            if (newOptions.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
-               this.reload(newOptions);
-            }
-            if (newOptions.filter != this._options.filter) {
-               this._filter = newOptions.filter;
-               this.reload();
+               this._initNavigation(newOptions, this._dataSource);
+               if (!this._items) {
+                  this.reload(newOptions);
+               }
             }
          },
 
          _beforeUpdate: function(newOptions) {
             this._itemTemplate = newOptions.itemTemplate || defaultItemTemplate;
-            if (newOptions.dataSource != this._options.dataSource) {
-               this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
-               this.reload(newOptions);
-            }
+
             if (newOptions.filter != this._options.filter) {
                this._filter = newOptions.filter;
-               this.reload();
             }
+
+            if (newOptions.dataSource != this._options.dataSource) {
+               this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
+               this._initNavigation(newOptions, this._dataSource);
+               this.reload(newOptions);
+            }
+
             //TODO обработать смену фильтров и т.д. позвать релоад если надо
          },
 
@@ -153,13 +151,21 @@ define('js!WSControls/Lists/ListView', [
 
          //</editor-fold>
 
-         _prepareQueryParams: function() {
-            return {
+         _prepareQueryParams: function(direction) {
+            var params = {
                filter: this._filter,
                sorting: this._sorting,
                limit: undefined,
                offset: undefined
             };
+
+            if (this._navigationController) {
+               var addParams = this._navigationController.prepareQueryParams(this._display, direction);
+               params.limit = addParams.limit;
+               params.offset = addParams.offset;
+               //TODO фильтр и сортировка не забыть приделать
+            }
+            return params;
          },
 
          //<editor-fold desc='DataSourceMethods'>
@@ -236,7 +242,6 @@ define('js!WSControls/Lists/ListView', [
             /*Must be implemented*/
          },
          _onDSReload: function(list, options) {
-            this._itemData = null;
             if (
                this._items && cInstance.instanceOfModule(this._items, 'WS.Data/Collection/RecordSet')
                && (list.getModel() === this._items.getModel())
@@ -248,7 +253,6 @@ define('js!WSControls/Lists/ListView', [
                //this._drawItemsCallbackDebounce();
             } else {
                this._items = list;
-               this._itemsChangeCallback(this._items, options);
             }
             this._toggleIndicator(false);
             //self._checkIdProperty();
@@ -256,15 +260,8 @@ define('js!WSControls/Lists/ListView', [
             //this._dataLoadedCallback();
             //self._notify('onBeforeRedraw');
             return list;
-         },
-         //</editor-fold>
-
-         destroy: function() {
-            ListView.superclass.destroy.apply(this, arguments);
-            if (this._display) {
-               this._display.destroy();
-            }
          }
+
       });
 
    //TODO https://online.sbis.ru/opendoc.html?guid=17a240d1-b527-4bc1-b577-cf9edf3f6757
