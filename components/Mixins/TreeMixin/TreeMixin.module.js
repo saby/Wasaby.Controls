@@ -1127,8 +1127,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             }
          },
          _canApplyGrouping: function(parentFn, projItem) {
+            // Группировка при поиске не поддерживается. https://online.sbis.ru/opendoc.html?guid=aa8e9981-64fc-4bb1-a75c-ef2fa0c73176
+            // https://online.sbis.ru/opendoc.html?guid=88a81ef7-9854-472a-9b2a-88a11072b1be
             if (this._isSearchMode()) {
-               return true;
+               return false;
             }
             return parentFn.call(this, projItem);
          },
