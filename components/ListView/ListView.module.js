@@ -2040,7 +2040,7 @@ define('js!SBIS3.CONTROLS.ListView',
           *    });
           * </pre>
           */
-         reload: function () {
+         reload: function (filter, sorting, pageNumber, pageSize) {
             if (this._scrollBinder && this._options.saveReloadPosition){
                var reloadOffset = this._getReloadOffset();
                this._offset = reloadOffset;
@@ -2050,12 +2050,18 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.setInfiniteScroll('both', true);
                }
             }
+            if (!this._options.saveReloadPosition && pageNumber === 0) {
+               this.setPage(0, true);
+            }
             if (this._options.virtualScrolling && this._virtualScrollController) {
                // Will reset pages after redrawing items
+               this._virtualScrollController.freezeScroll(true);
+               this.scrollToFirstPage();
                this._resetPaging = true;
                this._topWrapper.height(0);
                this._bottomWrapper.height(0);
             }
+
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
             // При перезагрузке нужно также почистить hoveredItem, иначе следующее отображение тулбара будет для элемента, которого уже нет (ведь именно из-за этого ниже скрывается тулбар).
@@ -2964,6 +2970,10 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
             if (this._virtualScrollController){
+               if (this._resetPaging) {
+                  this.scrollToFirstPage();
+                  this._virtualScrollController.freezeScroll(false);
+               }
                this._virtualScrollController.initHeights();
             }
             this._updateHoveredItemAfterRedraw();
@@ -3962,7 +3972,8 @@ define('js!SBIS3.CONTROLS.ListView',
                      /* При смене страницы (не через подгрузку по скролу),
                         надо сбросить выделенную запись, иначе на следующей странице неправильно выделится запись */
                      this.setSelectedIndex(-1);
-                     this.reload();
+                     this.reload(this.getFilter(), this.getSorting(), pageNumber, this.getPageSize());
+
                   }
                }
                this._lastPageLoaded = false;

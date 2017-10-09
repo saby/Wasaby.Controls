@@ -43,23 +43,30 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             }
          },
 
+         freezeScroll: function (toggle) {
+            this._freezed = !!toggle;
+         },
+
          reset: function(){
             this._currentVirtualPage = 0;
             this._heights = [];
             this.initHeights();
             this._currentWindow = this._getRangeToShow(0, PAGES_COUNT);
+            clearTimeout(this._scrollTimeout);
          },
 
          _scrollHandler: function (e, scrollTop) {
-            clearTimeout(this._scrollTimeout);
-            this._scrollTimeout = setTimeout(function () {
-               var scrollTop = this._options.viewport.scrollTop(),
-                  page = this._getPage(scrollTop);
-               if (this._currentVirtualPage != page) {
-                  this._currentVirtualPage = page;
-                  this._onVirtualPageChange(page);
-               }
-            }.bind(this), 25);
+            if (!this._freezed) {
+               clearTimeout(this._scrollTimeout);
+               this._scrollTimeout = setTimeout(function () {
+                  var scrollTop = this._options.viewport.scrollTop(),
+                     page = this._getPage(scrollTop);
+                  if (this._currentVirtualPage != page) {
+                     this._currentVirtualPage = page;
+                     this._onVirtualPageChange(page);
+                  }
+               }.bind(this), 25);
+            }
          },
 
          _getPage: function (scrollTop) {
