@@ -260,6 +260,25 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       setValue : function(txt) {
          IoC.resolve('ILogger').log('setValue()', 'setValue is deprecated. Use setText()');
          this.setText(txt);
+      },
+      setEnabled: function(enabled) {
+         TextBoxBase.superclass.setEnabled.call(this, enabled);
+         this._toggleState();
+      },
+      clearMark: function() {
+         TextBoxBase.superclass.clearMark.call(this);
+         this._toggleState();
+      },
+      markControl: function() {
+         TextBoxBase.superclass.markControl.call(this);
+         this._toggleState();
+      },
+      _updateActiveStyles: function() {
+         TextBoxBase.superclass._updateActiveStyles.call(this);
+         this._toggleState();
+      },
+      // метод который будет переключать состояния кнопки, пока не перейдем на vDom
+      _toggleState: function() {
       }
    });
 

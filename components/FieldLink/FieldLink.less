@@ -30,7 +30,7 @@
          .flex-shrink();
          display: inline-block;
          height: 100%;
-         font-size: @default-font-size;
+         font-size: @default-text-size;
       }
    }
    &__showSelector.controls-IconButton { // Перебиваем стили .controls-IconButton
@@ -81,7 +81,7 @@
    }
    &__showAllLinks.controls-Link { //перебиваем стили controls-link
       position: relative;
-      line-height: @default-base-line-height;
+      line-height: @text-box-line-height;
       padding-left: @default-padding;
       display: none;
       .flex-shrink(0);
@@ -170,7 +170,7 @@
       .icon-size(@fieldLink-icon-size);
    }
    .controls-FieldLink__Link { //вложенность, чтобы вне поля связи был дефолтный line-height
-      line-height: @default-base-line-height;
+      line-height: @text-box-line-height;
    }
 }
 .ws-disabled {
@@ -187,7 +187,7 @@
          max-width: 100%;
       }
       &__showAllLinks.controls-Link {
-         top: -@default-base-line-height;
+         top: -@text-box-line-height;
          background: @default-bg-color;
          &:after {
             content: '';

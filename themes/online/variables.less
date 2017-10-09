@@ -5,10 +5,6 @@
 @tensorFontVer:                           '1.0.0';
 @emojiFontVer:                            '1.0.0';
 // Кошерные переменные "на выход"
-@default-text-size:                       14px;
-@small-text-size:                         12px;
-@large-text-size:                         15px;
-@huge-text-size:                          17px;
 @default-text-color:                      #000;
 @default-color:                           #587AB0;
 @primary-color:                           #ff7033;
@@ -85,14 +81,14 @@
 // Link //
 // ---- //
 
-@link-font:                               @default-font-size @default-font-name;
+@link-font:                               @default-text-size @default-font-name;
 @link-text-color:                         @darkcyan-color;
 @link-disabled-text-color:                @gray-ccc-color;
 @link-text-decoration:                    none;
 @link-text-alignment:                     center;
 @link-line-height:                        24px;
 @link-padding:                            0;
-@link-font-size:                          @default-font-size;
+@link-font-size:                          @default-text-size;
 @link-cursor:                             pointer;
 
 @link-hover-text-color:                   @icon-color-primary-hover;
@@ -112,7 +108,7 @@
 // ------ //
 
 // Normal button
-@button-font:                             @default-font-size @default-font-name;
+@button-font:                             @default-text-size @default-font-name;
 @button-text-color:                       @default-text-color;
 @button-text-alignment:                   center;
 @button-min-width:                        48px;
@@ -194,7 +190,7 @@
 // Normal default button
 @button-border-width:                     1px;
 @button-border:                           @button-border-width solid @button-border-color;
-@button-font-size:                        @default-font-size;
+@button-font-size:                        @default-text-size;
 @button-shadow:                           none;
 @button-bg-color:                         transparent;
 @button-border-color:                     @default-color;
@@ -841,7 +837,7 @@
 @edit-at-place-wrapper-border-width:            2px 1px;
 @edit-at-place-field-border-width:              0 0 1px 0;
 @edit-at-place-field-border-color:              #868686;
-@edit-at-place-text-box-editor-font:            @default-font-size/@default-font-line-height @default-font-name;
+@edit-at-place-text-box-editor-font:            @default-text-size/@default-font-line-height @default-font-name;
 @edit-at-place-text-area-editor-font:           @edit-at-place-text-box-editor-font;
 @edit-at-place-editor-overlay-margin:           -5px 0 0 -5px;
 @edit-at-place-editor-overlay-padding:          4px 0 4px 4px;

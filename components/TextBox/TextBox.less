@@ -2,19 +2,29 @@
    .box-sizing(border-box);
    .border-radius(@text-box-border-radius);
    display: inline-block;
-   height: @text-box-height;
    color: @text-box-color;
    border-width: @default-border-width;
    border-style: @default-border-style;
    border-color: @text-box-border-color;/*test*/
    border-bottom-color: @text-box-border-color-bottom;
    background: @text-box-bg;
-   font-size: @text-box-font-size;
    text-decoration: inherit;
-   line-height: @default-base-line-height;
    cursor: auto;
    max-width: 100%;
-
+   //различные размеры
+   &__size {
+      &__default {
+         height: @text-box-height;
+         font-size: @text-box-font-size;
+         line-height: @text-box-line-height;
+      }
+      &__large {
+         height: @text-box-height-large;
+         font-size: @text-box-font-size-large;
+         line-height: @text-box-line-height-large;
+      }
+   }
+   //различные состояния контрола
    &:hover {
       border-color: @text-box-border-color-hover;
    }
@@ -34,18 +44,6 @@
       border-color: @text-box-border-color-error;
       background: @text-box-bg-error;
    }
-   .controls-informationIcon {
-      position: absolute;
-      right: 0;
-      top: 0;
-      .controls-Button__icon {
-         .icon-size(@text-box-information-icon-size);
-         position: absolute;
-         right: 0;
-         top: 0;
-      }
-   }
-
    &__wrapper {
       .inline-flexbox();
       .flex-shrink();
@@ -61,7 +59,7 @@
          display: inline-block;
       }
    }
-
+   //основные блоки вёрстки
    &__afterFieldWrapper, &__beforeFieldWrapper {
       .inline-flexbox();
       .flex-shrink(0);
@@ -113,7 +111,19 @@
       text-align: inherit;
       padding: @text-box-input-padding;
    }
+   .controls-informationIcon {
+      position: absolute;
+      right: 0;
+      top: 0;
+      .controls-Button__icon {
+         .icon-size(@text-box-information-icon-size);
+         position: absolute;
+         right: 0;
+         top: 0;
+      }
+   }
 }
+//модификаторы
 .controls-TextBox__field-uppercase {
    text-transform: uppercase;
 }
