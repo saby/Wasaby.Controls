@@ -3972,7 +3972,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      /* При смене страницы (не через подгрузку по скролу),
                         надо сбросить выделенную запись, иначе на следующей странице неправильно выделится запись */
                      this.setSelectedIndex(-1);
-                     this.reload(this.getFilter(), this.getSorting(), pageNumber, this.getPageSize());
+                     this.reload();
 
                   }
                }
