@@ -187,5 +187,6 @@
    "Вперёд": "Forward",
    "Назад": "Backward",
    "В конец": "To end",
-   "В начало": "To beginning"
+   "В начало": "To beginning",
+   "Очистить поле": "Clear field"
 }
