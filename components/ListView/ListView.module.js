@@ -3027,6 +3027,7 @@ define('js!SBIS3.CONTROLS.ListView',
             // отправляем команду о перерисовке парентов, и только их. Предполагается, что изменение items
             // у ListView может повлиять только на некоторых парентов
             this.sendCommand('resizeYourself');
+            this._onResizeHandler();
          },
 
          _drawItemsCallbackSync: function() {
