@@ -96,7 +96,7 @@ define('js!SBIS3.SPEC.Control', [
 
 
    /**
-    * Принудительный вызов обновления шаблонизатора
+    * Принудительный вызов обновления шаблона
     * @function SBIS3.SPEC.Control#_forceUpdate
     * @private
     */
