@@ -2,7 +2,7 @@ define('js!SBIS3.SPEC.Input.Mask', [
 ], function() {
 
    /**
-    * Поле ввода денежных единиц.
+    * Форматное поле ввода.
     * @class SBIS3.SPEC.Input.Mask
     * @extends SBIS3.SPEC.Control
     * @mixes SBIS3.SPEC.Input.TextMixin

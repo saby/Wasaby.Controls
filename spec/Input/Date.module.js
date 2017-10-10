@@ -2,7 +2,7 @@ define('js!SBIS3.SPEC.Input.Date', [
 ], function() {
 
    /**
-    * Поле ввода денежных единиц.
+    * Поле ввода даты.
     * @class SBIS3.SPEC.Input.Date
     * @extends SBIS3.SPEC.Control
     * @control
@@ -12,7 +12,7 @@ define('js!SBIS3.SPEC.Input.Date', [
 
    /**
     * @name SBIS3.SPEC.Input.Date#value
-    * @cfg {String} Устанавливает текстовое значение в поле ввода.
+    * @cfg {String} Устанавливает значение даты в поле ввода.
     */
 
    /**
