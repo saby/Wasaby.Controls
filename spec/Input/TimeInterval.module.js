@@ -1,0 +1,39 @@
+define('js!SBIS3.SPEC.Input.TimeInterval', [
+], function() {
+
+   /**
+    * Форматное поле ввода.
+    * @class SBIS3.SPEC.Input.TimeInterval
+    * @extends SBIS3.SPEC.Control
+    * @mixes SBIS3.SPEC.Input.IText
+    * @control
+    * @public
+    * @category Inputs
+    */
+
+   /**
+    * @name SBIS3.SPEC.Input.TimeInterval#mask
+    * @cfg {String} Формат ввода значения временного интервала.
+    * Допустимые символы в маске:
+    * <ol>
+    *    <li>D(day) - календарный день.</li>
+    *    <li>H(hour) - час.</li>
+    *    <li>I - минута.</li>
+    *    <li>":" - используется в качестве разделителя.</li>
+    * </ol>
+    * @example
+    * <pre>
+    *     <option name="mask">DD:HH:II</option>
+    * </pre>
+    * @variant 'DD:HH:II'
+    * @variant 'DD:HH'
+    * @variant 'HH:II'
+    * @variant 'DDDD:HH:II'
+    * @variant 'DDD:HH:II'
+    * @variant 'HHHH:II'
+    * @variant 'HHH:II'
+    * @variant 'DDDD:HH'
+    * @variant 'DDD:HH'
+    */
+
+});
