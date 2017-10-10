@@ -102,10 +102,12 @@
 .controls-ListView-scrollIndicator_outside{
    position: relative;
 }
-
-.controls-ListView__item {
-   overflow: hidden;
-   position: relative;
+//todo: элементы itemsControlMixin вне listView не должны обрезаться
+.controls-ListView {
+   .controls-ListView__item {
+      overflow: hidden;
+      position: relative;
+   }
 }
 
 // Нельзя устанавливать минимальную высоту для копии таблицы которая используется для фиксации заголовков

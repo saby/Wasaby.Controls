@@ -1379,6 +1379,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              thumbWidth = this._thumb[0].offsetWidth,
              correctMargin = 0,
              lastRightStop = this._stopMovingCords.right,
+             arrowsWidth = this._arrowRight[0].offsetWidth * 2,
              notScrolledCells, thumbPos;
 
          /* Найдём ширину нескроллируемых колонок */
@@ -1394,9 +1395,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
          scrollContainer[0].style.width = containerWidth - correctMargin + 'px';
 
          /* Найдём соотношение, для того чтобы правильно двигать скроллируемый контент относительно ползунка */
-         this._partScrollRatio = (this._getItemsContainer()[0].offsetWidth - containerWidth) / (containerWidth - correctMargin - thumbWidth - 40);
+         this._partScrollRatio = (this._getItemsContainer()[0].offsetWidth - containerWidth) / (containerWidth - correctMargin - thumbWidth - arrowsWidth);
          this._stopMovingCords = {
-            right: scrollContainer[0].offsetWidth - thumbWidth - 40,
+            right: scrollContainer[0].offsetWidth - thumbWidth - arrowsWidth,
             left: correctMargin
          };
 

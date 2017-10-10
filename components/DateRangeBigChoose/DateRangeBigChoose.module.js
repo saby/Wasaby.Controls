@@ -223,7 +223,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose',[
          this._monthRangePicker.setYear(now.getFullYear());
          this._dateRangePicker.setMonth(now);
          this._updateYearsRange(now.getFullYear());
-         this.setRange(newDate, newDate);
+         this.setRange(newDate, new Date(newDate));
       },
 
       _onApplyButtonClick: function () {

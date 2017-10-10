@@ -838,15 +838,19 @@ define(
 
       _getTextDiff: function(){
          var splitRegExp = this._getSplitterRegExp(),
-             oldText = this._options.text ? this._options.text.split(splitRegExp)  : this._getClearText().split(splitRegExp),
-             newText = this._inputField.text().split(splitRegExp);
+            oldText = this._options.text ? this._options.text.split(splitRegExp)  : this._getClearText().split(splitRegExp),
+            newText = this._inputField.text().split(splitRegExp),
+            maskGroups = this._getMask().split(splitRegExp);
+
          for (var i = 0, l = newText.length; i < l; i++) {
             if (oldText[i].length !== newText[i].length){
                for (var j = 0; j < newText[i].length; j++){
                   if (oldText[i][j] !== newText[i][j]){
                      return {
                         'char': newText[i][j],
-                        position: j
+                        // проверка на возможность ввода символа в группу,
+                        // если в данную группу нельзя ввести символы, то вводим в первую позицию след разрешенной группы
+                        position: maskGroups[i].replace(/[L,l,d,x]/g,'').length === maskGroups[i].length ? 0 : j
                      }
                   }
                }

@@ -335,8 +335,7 @@
 @tab-button-checked-inner-font-size:            15px;
 @tab-button-checked-inner-color:                #D94700;
 @tab-button-checked-inner-bg:                   #FFFFFF;
-@tab-button-checked-inner-border-left:          @default-border-width solid @tab-button-checked-border-color;
-@tab-button-checked-inner-border-right:         @default-border-width solid @tab-button-checked-border-color;
+@tab-button-checked-inner-border:               1px;
 @tab-button-large-inner-font-size:              18px;
 @tab-button-large-inner-line-height:            28px;
 @tab-button-large-inner-max-width:              614px;
@@ -1055,14 +1054,14 @@
 @data-grid-partScroll-thumb-width:              96px;
 @data-grid-partScroll-thumb-color:              @blue-dark-color;
 @data-grid-partScroll-thumb-border-radius:      3px 3px;
-@data-grid-partScroll-thumb-margin:             20px;
+@data-grid-partScroll-thumb-margin:             24px;
 @data-grid-partScroll-thumb-zIndex:             2;
 @data-grid-partScroll-thumb-top-shift:          -1px;
 @data-grid-partScroll-thumb-clicked-top-shift:  -2px;
 @data-grid-partScroll-arrowLeft-top-shift:      -12px;
 @data-grid-partScroll-arrowLeft-zIndex:         @list-view-items-toolbar-zindex + 1; // Должен быть выше чем у тулбара
 
-@data-grid-partScroll-arrowRight-top-shift:     -12px;
+@data-grid-partScroll-arrowRight-top-shift:     @data-grid-partScroll-arrowLeft-top-shift;
 @data-grid-partScroll-arrowRight-left-shift:    4px;
 // --------------- //
 // OperationsPanel //
@@ -1185,7 +1184,7 @@
 @DropdownList-footer-select-top:                      2px;
 @DropdownList-footer-select-icon-container-size:      28px!important;
 @DropdownList-footer-select-icon-size:                26px!important;
-@DropdownList-disabled-text:                          #CCC;
+@DropdownList-disabled-text:                          #000;
 //ProgressBar
 @controls-ProgressBar-height:             16px;
 @controls-ProgressBar-width:              100%;
