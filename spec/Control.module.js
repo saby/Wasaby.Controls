@@ -21,8 +21,6 @@ define('js!SBIS3.SPEC.Control', [
     */
 
    /**
-
-   /**
     * Перевести фокус на компонент.
     * @function SBIS3.SPEC.Control#focus
     */
@@ -41,19 +39,6 @@ define('js!SBIS3.SPEC.Control', [
    /**
     * Возвращает признак наличия фокуса на вложенном в компонент элементе.
     * @function SBIS3.SPEC.Control#hasFocus
-    * @returns {Boolean}
-    */
-
-   /**
-    * Возвращает признак активности компонента.
-    * @function SBIS3.SPEC.Control#isEnabled
-    * @returns {Boolean}
-    */
-
-
-   /**
-    * Возвращает признак видимости компонента.
-    * @function SBIS3.SPEC.Control#isVisible
     * @returns {Boolean}
     */
 
