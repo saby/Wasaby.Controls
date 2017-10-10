@@ -33,6 +33,8 @@ define('js!SBIS3.CONTROLS.FontStyle', [
       _modifyOptions: function(options) {
          FontStyle.superclass._modifyOptions.call(this, options);
          options._fontSizesConvert = fontSizesConvert;
+
+         return options;
       }
    });
 
