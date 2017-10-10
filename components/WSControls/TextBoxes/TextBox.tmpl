@@ -1,23 +1,12 @@
-<div class="controls-TextBox">
-   <div class="controls-TextBox__wrapper">
-      <ws:partial
-         if="{{_options.beforeFieldWrapper}}"
-         template="{{_options.beforeFieldWrapperTpl}}"
-         scope="{{_options.beforeFieldWrapperOpt}}"
-      />
-      <ws:partial
-         template="{{_options.textFieldWrapper}}"
-         textTransform="{{_options.textTransform}}"
-         type="{{_type}}"
-         text="{{_text}}"
-         placeholder="{{_options.placeholder}}"
-         maxLength="{{_options.maxLength}}"
-         enabled="{{isEnabled()}}"
-      />
-      <ws:partial
-         if="{{_options.afterFieldWrapper}}"
-         template="{{_options.afterFieldWrapperTpl}}"
-         scope="{{_options.afterFieldWrapperOpt}}"
-      />
-   </div>
-</div>
+<ws:WSControls.TextBoxes.TextBoxRender
+   type="text"
+   text="{{_text}}"
+   enabled="{{isEnabled()}}"
+   placeholder="{{_options.placeholder}}"
+   textFieldWrapper="{{_textFieldWrapper}}"
+   inputHandler="{{_inputHandler}}"
+   focusHandler="{{_focusHandler}}"
+   selectHandler="{{_selectHandler}}"
+   clickHandler="{{_clickHandler}}"
+   keyupHandler="{{_keyupHandler}}"
+/>

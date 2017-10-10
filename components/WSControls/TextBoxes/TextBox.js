@@ -14,35 +14,31 @@ define('js!WSControls/TextBoxes/TextBox',
 
       var selectionUtils = new SelectionUtils();
 
-      function setText(target, text, position) {
-         this._text = target.value = text;
-         selectionUtils.updateSelectionPositionTarget(target, position, position);
-         selectionUtils.updateSelectionPosition(target);
+      function setText(text) {
+         this._text = text;
          this._notify('onChangeText', text);
       }
-      
+
+      function setTextTarget(target, text, position) {
+         target.value = text;
+         selectionUtils.updateSelectionPositionTarget(target, position, position);
+         selectionUtils.updateSelectionPosition(target);
+      }
+
       function getInputText(target) {
          var
             oldText = this._text,
             newText = target.value,
             caretPosition = target.selectionEnd,
-            splitText, inputText, calcText;
+            splitText, calcText;
 
-         if (oldText === newText) {
-            inputText = {
-               text: newText,
-               position: caretPosition
-            }
-         } else {
-            splitText = calcInputText.getSplitInputText(oldText, newText, caretPosition, selectionUtils.selectionEnd - selectionUtils.selectionStart);
-            calcText = this._calcText(splitText.inputText, this._options);
-            inputText = {
-               text: splitText.beforeInputText + calcText + splitText.afterInputText,
-               position: splitText.beforeInputText.length + calcText.length
-            };
-         }
+         splitText = calcInputText.getSplitInputText(oldText, newText, caretPosition, selectionUtils.selectionEnd - selectionUtils.selectionStart);
+         calcText = this._calcText(splitText.inputText, this._options);
 
-         return inputText;
+         return {
+            text: splitText.beforeInputText + calcText + splitText.afterInputText,
+            position: splitText.beforeInputText.length + calcText.length
+         };
       }
 
       var TextBox = TextBoxBase.extend({
@@ -104,16 +100,13 @@ define('js!WSControls/TextBoxes/TextBox',
             }
 
             if (event.nativeEvent.inputType === 'deleteContentBackward') {
-               inputText = {
-                  text: target.value,
-                  position: target.selectionEnd
-               };
+               setText.call(this, target.value);
             } else {
                inputText = getInputText.call(this, target);
-            }
-
-            if (this._text !== inputText.text) {
-               setText.call(this, target, inputText.text, inputText.position);
+               setTextTarget.call(this, target, inputText.text, inputText.position);
+               if (this._text !== inputText.text) {
+                  setText.call(this, inputText.text);
+               }
             }
          },
 
