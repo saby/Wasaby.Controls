@@ -1,5 +1,5 @@
-import ICollection = require("interfaces/ICollection");
-import IItemTemplate = require("interfaces/IItemTemplate");
+import ICollection = require("..//ICollection");
+import IItemTemplate = require("..//IItemTemplate");
 
 interface IItemsOptions{
     items: ICollection | Array<any>,

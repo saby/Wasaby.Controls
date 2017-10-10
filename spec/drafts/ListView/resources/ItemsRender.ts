@@ -1,6 +1,6 @@
-import ItemsRender = require("ItemsView/resources/ItemsRender");
-import IListViewOptions = require("ListView/resources/ItemsRenderOptions");
-import IEvent = require("interfaces/IEvent");
+import ItemsRender = require("../../ItemsView/resources/ItemsRender");
+import IListViewOptions = require("..//resources/ItemsRenderOptions");
+import IEvent = require("../../interfaces/IEvent");
 import IItem = require("../../interfaces/IItem");
 
 class ListViewDOM{

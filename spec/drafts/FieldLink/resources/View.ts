@@ -1,4 +1,4 @@
-import TextBox = require("TextBox/TextBox");
+import TextBox = require("../../TextBox/TextBox");
 import ITextBoxOptions = require("../../TextBox/Options");
 import IItemsOptions = require("../../interfaces/options/IItemsOptions");
 

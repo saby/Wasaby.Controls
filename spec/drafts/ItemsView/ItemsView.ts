@@ -1,7 +1,7 @@
-import ItemsRender = require("ItemsView/resources/ItemsRender");
-import ICollection = require("interfaces/ICollection");
-import ISource = require("interfaces/ISource");
-import IItemTemplate = require("interfaces/IItemTemplate")
+import ItemsRender = require("/resources/ItemsRender");
+import ICollection = require("../interfaces/ICollection");
+import ISource = require("../interfaces/ISource");
+import IItemTemplate = require("../interfaces/IItemTemplate")
 import Options = require("./Options");
 
 class ItemsView {

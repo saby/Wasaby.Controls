@@ -1,5 +1,5 @@
-import ListViewRender = require("ListView/resources/ItemsRender")
-import ITreeViewOptions = require("TreeView/resources/ItemsRenderOptions");
+import ListViewRender = require("../../ListView/resources/ItemsRender")
+import ITreeViewOptions = require("..//resources/ItemsRenderOptions");
 
 class TreeItemsRender extends ListViewRender {
     constructor(options: ITreeViewOptions) {

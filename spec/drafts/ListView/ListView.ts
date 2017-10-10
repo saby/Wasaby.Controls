@@ -1,12 +1,12 @@
-import ItemsRender = require("ListView/resources/ItemsRender");
-import VirtualScroll = require("ListView/resources/VirtualScroll");
-import ICollection = require("interfaces/ICollection");
-import ISource = require("interfaces/ISource");
-import IItemTemplate = require("interfaces/IItemTemplate")
-import IItemAction = require("interfaces/IItemTemplate");
-import IEventEmitter = require("interfaces/IEvent")
+import ItemsRender = require("/resources/ItemsRender");
+import VirtualScroll = require("/resources/VirtualScroll");
+import ICollection = require("../interfaces/ICollection");
+import ISource = require("../interfaces/ISource");
+import IItemTemplate = require("../interfaces/IItemTemplate")
+import IItemAction = require("../interfaces/IItemTemplate");
+import IEventEmitter = require("../interfaces/IEvent")
 import IItem = require("../interfaces/IItem");
-import IListViewOptions = require("ListView/Options")
+import IListViewOptions = require("/Options")
 
 
 

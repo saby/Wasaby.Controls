@@ -1,6 +1,6 @@
-import ItemsDisplay = require("interfaces/display/ItemsDisplay");
-import IItemsRenderOptions = require("ItemsView/resources/ItemsRenderOptions");
-import IEventEmitter = require("interfaces/IEvent")
+import ItemsDisplay = require("../../interfaces/display/ItemsDisplay");
+import IItemsRenderOptions = require("..//resources/ItemsRenderOptions");
+import IEventEmitter = require("../../interfaces/IEvent")
 
 
 class ItemsRender {
