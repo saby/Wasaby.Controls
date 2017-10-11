@@ -3,7 +3,7 @@
     <table class="controls-Pager__table">
         <tr>
             <td class="controls-Pager-block-amount">
-                <ws:if data="{{noSizePicker}}">
+                <ws:if data="{{!noSizePicker}}">
                    <ws:SBIS3.CONTROLS.DropdownList
                            name="controls-Pager_comboBox"
                            className="controls-Pager-block controls-Pager__pageSize-container controls-DropdownList__withoutArrow controls-DropdownList__withoutCross controls-DropdownList__linkStyle"
