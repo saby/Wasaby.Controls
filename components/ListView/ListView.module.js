@@ -3027,6 +3027,7 @@ define('js!SBIS3.CONTROLS.ListView',
             // отправляем команду о перерисовке парентов, и только их. Предполагается, что изменение items
             // у ListView может повлиять только на некоторых парентов
             this.sendCommand('resizeYourself');
+            this._onResizeHandler();
          },
 
          _drawItemsCallbackSync: function() {
@@ -3904,7 +3905,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   var more = self.getItems().getMetaData().more,
                      hasNextPage = self._hasNextPage(more),
                      pagingOptions = {
-                        hideEndButton: this._options.hideEndButton,
+                        hideEndButton: self._options.hideEndButton,
                         recordsPerPage: self._options.pageSize || more,
                         currentPage: 1,
                         recordsCount: more || 0,
@@ -3915,6 +3916,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      pagerContainer = self.getContainer().find('.controls-Pager-container').append('<div/>');
 
                   self._pager = new pagerCtr({
+                     noSizePicker: self._options.noSizePicker,
                      pageSize: self._options.pageSize,
                      opener: self,
                      element: pagerContainer.find('div'),
