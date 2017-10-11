@@ -517,11 +517,19 @@ define('js!SBIS3.CONTROLS.TextBox', [
          // сделать возможность вешать через префикс attr-
          this._inputField.prop('readonly', !enabled);
       },
-      _toggleState: function() {
+      _toggleStateEnabled: function() {
           var
-              enabled = this.isEnabled(),
-              active = this.isActive(),
+              enabled = this.isEnabled();
+          //todo: сделать навешивание классов и согласовать их с Бегуновым А.
+      },
+      _toggleStateValidate: function() {
+          var
               marked = this.isMarked();
+          //todo: сделать навешивание классов и согласовать их с Бегуновым А.
+      },
+      _toggleStateActive: function() {
+          var
+              active = this.isActive();
           //todo: сделать навешивание классов и согласовать их с Бегуновым А.
       },
       _inputRegExp: function (e, regexp) {
