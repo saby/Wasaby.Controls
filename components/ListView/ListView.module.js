@@ -3389,7 +3389,9 @@ define('js!SBIS3.CONTROLS.ListView',
             }
 
             //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
-            this._scrollWatcher.getScrollContainer().toggleClass('controls-ListView-scrollIndicator_outside', !hasScroll);
+            if(this._loadingIndicator) {
+               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator_outside', !hasScroll);
+            }
 
             this._updateScrollIndicatorTopThrottled();
 
