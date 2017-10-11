@@ -62,29 +62,31 @@ define('js!SBIS3.CONTROLS.Pager', [
                fddData = [],
                opener;
          Pager.superclass.init.call(this);
-         this._dropd = this.getChildControlByName('controls-Pager_comboBox');
-         //Если переданный pageSize не входит в стандартный набор - добавим и отсортируем по возрастанию
-         if (Array.indexOf(this._dropdDataKeys, numPageSize) < 0){
-            this._dropdDataKeys.push(numPageSize);
-            this._dropdDataKeys.sort(sortNumber);
-         }
-         for (var i = 0; i < this._dropdDataKeys.length; i++) {
-            fddData.push({
-               'id' : this._dropdDataKeys[i],
-               'value' :  this._dropdDataKeys[i]
+         if(!this._options.noSizePicker) {
+            this._dropd = this.getChildControlByName('controls-Pager_comboBox');
+            //Если переданный pageSize не входит в стандартный набор - добавим и отсортируем по возрастанию
+            if (Array.indexOf(this._dropdDataKeys, numPageSize) < 0) {
+               this._dropdDataKeys.push(numPageSize);
+               this._dropdDataKeys.sort(sortNumber);
+            }
+            for (var i = 0; i < this._dropdDataKeys.length; i++) {
+               fddData.push({
+                  'id': this._dropdDataKeys[i],
+                  'value': this._dropdDataKeys[i]
+               });
+            }
+            //TODO подписаться на изменение проперти в контексте. Пока Витя не допилил - подписываюсь на комбобокс
+            this._dropd.setItems(fddData);
+            this._dropd.setSelectedKeys([numPageSize]);
+            this._dropd.subscribe('onSelectedItemsChange', function (event, arr) {
+               //TODO может менять pageSize модно будет в фильтре?
+               var value = arr[0];
+               self._options.pageSize = value;
+               self.getPaging()._maxPage = self.getPaging().getPage();
+               self.getPaging().setPageSize(value);
+               self.getOpener().setPageSize(value);
             });
          }
-         //TODO подписаться на изменение проперти в контексте. Пока Витя не допилил - подписываюсь на комбобокс
-         this._dropd.setItems(fddData);
-         this._dropd.setSelectedKeys([numPageSize]);
-         this._dropd.subscribe('onSelectedItemsChange', function(event, arr){
-            //TODO может менять pageSize модно будет в фильтре?
-            var value = arr[0];
-            self._options.pageSize = value;
-            self.getPaging()._maxPage = self.getPaging().getPage();
-            self.getPaging().setPageSize(value);
-            self.getOpener().setPageSize(value);
-         });
          this._paging = this.getChildControlByName('controls-Pager_paging');
          this._paging.subscribe('onPageChange', function(event, pageNum, deferred){
             self._notify('onPageChange', pageNum, deferred);
