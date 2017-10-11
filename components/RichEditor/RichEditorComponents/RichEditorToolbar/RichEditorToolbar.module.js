@@ -4,7 +4,6 @@
 
 define('js!SBIS3.CONTROLS.RichEditorToolbar', [
    "Core/core-merge",
-   'Core/Deferred',
    "js!SBIS3.CONTROLS.RichEditorToolbarBase",
    "tmpl!SBIS3.CONTROLS.RichEditorToolbar",
    "js!SBIS3.CONTROLS.RichEditorToolbar/resources/config",
@@ -16,19 +15,18 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
    'css!SBIS3.CONTROLS.RichEditorToolbar',
    'css!SBIS3.CONTROLS.ToggleButton/resources/ToggleButton__square',
    'css!SBIS3.CONTROLS.MenuIcon'
-], function (cMerge, Deferred, RichEditorToolbarBase, dotTplFn, defaultConfig, ImagePanel) {
+], function( cMerge, RichEditorToolbarBase, dotTplFn, defaultConfig, ImagePanel) {
 
    'use strict';
 
    var
       constants = {
-         toolbarHeight: 32,
-         copypasteCheckTime: 1500//msec
+         toolbarHeight: 32
       },
       /**
        * @class SBIS3.CONTROLS.RichEditorToolbar
        * @extends SBIS3.CONTROLS.RichEditorToolbarBase
-       * @author Спирин Виктор Алексеевич
+       * @author Борисов П.С.
        * @public
        * @control
        */
@@ -105,7 +103,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
          },
 
          init: function() {
-            var self = this;
+            var
+               self = this;
             RichEditorToolbar.superclass.init.call(this);
             //Необходимо делать блокировку фокуса на пикере comboBox`a чтобы редактор не терял выделение
             //Делаем это при первом показе пикера
@@ -116,15 +115,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
                }.bind(self);
                self._styleBox.once('onPickerOpen', self._pickerOpenHandler);
             }
-            if (this.getItems().getRecordById('paste')) {
-               // Так как событие clipboardchange пока не поддерживается, то реализация следующая:
-               this._clipboard = new Deferred();
-               require(['js!SBIS3.Engine.PluginClipboard'], function (PluginClipboard) {
-                  var promise = self._clipboard;
-                  self._clipboard = new PluginClipboard();
-                  promise.callback();
-               });
-            }
+
          },
 
          $constructor: function() {
@@ -234,7 +225,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
             }
          },
 
-         _buttonSetEnabled: function(buttonName, enabled) {
+         _buttonSetEnabled: function(buttonName,enabled ) {
             this.getItemInstance(buttonName).setEnabled(enabled);
          },
 
@@ -277,20 +268,13 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
          },
 
          _unbindEditor: function() {
-            var editor = this._options.linkedEditor;
+            var
+               editor = this._options.linkedEditor;
             RichEditorToolbar.superclass._unbindEditor.apply(this, arguments);
             if (editor) {
                editor.unsubscribe('onUndoRedoChange', this._handlersInstances.undoRedo);
                editor.unsubscribe('onNodeChange', this._handlersInstances.node);
                editor.unsubscribe('onToggleContentSource', this._handlersInstances.source);
-            }
-            if (this._clipboard) {
-               this._stopCopypasteButtonCheck();
-               if (typeof window !== 'undefined') {
-                  [/*'clipboardchange',*/ 'copy', 'cut'].forEach(function (evtType) {
-                     window.removeEventListener(evtType, this._clipboardListener_b);
-                  }.bind(this));
-               }
             }
          },
 
@@ -310,41 +294,6 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar', [
             }
             if (this.getItems().getRecordById('source')) {
                editor.subscribe('onToggleContentSource', this._handlersInstances.source);
-            }
-            if (this._clipboard) {
-               // Так как событие clipboardchange пока не поддерживается, то реализация следующая:
-               this._clipboardTrimmer = editor._trimText.bind(editor);
-               if (this._clipboard instanceof Deferred) {
-                  this._clipboard.addCallback(this._chechCopypasteButtonState.bind(this, constants.copypasteCheckTime));
-               }
-               else {
-                  this._chechCopypasteButtonState(constants.copypasteCheckTime);
-               }
-               if (typeof window !== 'undefined') {
-                  this._clipboardListener_b = this._chechCopypasteButtonState.bind(this, constants.copypasteCheckTime);
-                  [/*'clipboardchange',*/ 'copy', 'cut'].forEach(function (evtType) {
-                     window.addEventListener(evtType, this._clipboardListener_b);
-                  }.bind(this));
-               }
-            }
-         },
-
-         _chechCopypasteButtonState: function (delay) {
-            this._stopCopypasteButtonCheck();
-            if (this._clipboard) {
-               this._clipboard.getData('text').addBoth(function (arg) {
-                  this._buttonSetEnabled('paste', (arg instanceof Error) || !!this._clipboardTrimmer(arg));
-                  if (typeof delay === 'number' && 0 < delay) {
-                     this._clipboardThread = setTimeout(this._chechCopypasteButtonState.bind(this, delay), delay);
-                  }
-               }.bind(this));
-            }
-         },
-
-         _stopCopypasteButtonCheck: function () {
-            if (this._clipboardThread) {
-               clearTimeout(this._clipboardThread);
-               this._clipboardThread = null;
             }
          },
 

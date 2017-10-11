@@ -401,6 +401,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _editInPlace: null,
             _createEditInPlaceDeferred: null,
             _pageChangeDeferred : undefined,
+            _scrollPager: null,
             _pager : undefined,
             _pagerContainer: undefined,
             _previousGroupBy : undefined,
@@ -460,6 +461,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Для отрисовки чекбоксов необходимо в шаблоне отображения элемента коллекции обозначить их место.
                 * Это делают с помощью CSS-классов "controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox".
                 * В следующем примере место отображения чекбоксом обозначено тегом span:
+                * <pre>
                 * <pre>
                 *     <div class="listViewItem" style="height: 30px;">
                 *        <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></span>
@@ -1281,6 +1283,9 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._scrollPager) {
                // покажем если ListView показалось и есть страницы и скроем если скрылось
                this._scrollPager.setVisible(visible && this._scrollPager.getPagesCount() > 1);
+            }
+            if (this._scrollBinder) {
+               this._scrollBinder.freezePaging(!visible);
             }
          },
 
@@ -3022,6 +3027,7 @@ define('js!SBIS3.CONTROLS.ListView',
             // отправляем команду о перерисовке парентов, и только их. Предполагается, что изменение items
             // у ListView может повлиять только на некоторых парентов
             this.sendCommand('resizeYourself');
+            this._onResizeHandler();
          },
 
          _drawItemsCallbackSync: function() {
@@ -3899,7 +3905,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   var more = self.getItems().getMetaData().more,
                      hasNextPage = self._hasNextPage(more),
                      pagingOptions = {
-                        hideEndButton: this._options.hideEndButton,
+                        hideEndButton: self._options.hideEndButton,
                         recordsPerPage: self._options.pageSize || more,
                         currentPage: 1,
                         recordsCount: more || 0,
@@ -3910,6 +3916,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      pagerContainer = self.getContainer().find('.controls-Pager-container').append('<div/>');
 
                   self._pager = new pagerCtr({
+                     noSizePicker: self._options.noSizePicker,
                      pageSize: self._options.pageSize,
                      opener: self,
                      element: pagerContainer.find('div'),
@@ -4247,8 +4254,11 @@ define('js!SBIS3.CONTROLS.ListView',
          cancelEdit: function() {
             if (this._hasEditInPlace()) {
                return this._getEditInPlace().addCallback(function(editInPlace) {
-                  return editInPlace.endEdit();
-               });
+                  var res = editInPlace.endEdit();
+                  // вызываем _notifyOnSizeChanged, потому что при отмене редактирования изменились размеры
+                  this._notifyOnSizeChanged(true);
+                  return res;
+               }.bind(this));
             } else {
                return Deferred.success();
             }
