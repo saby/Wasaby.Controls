@@ -41,16 +41,6 @@ define('js!SBIS3.SPEC.Input.Number', [
     */
 
    /**
-    * @name SBIS3.SPEC.Input.Number#showDelimiters
-    * @cfg {Boolean} Показать разделители триад
-    */
-
-   /**
-    * @name SBIS3.SPEC.Input.Number#step
-    * @cfg {Number} Шаг приращения числа при управлениями клавишами вверх/вниз.
-    */
-
-   /**
     * @event SBIS3.SPEC.Input.Number#onValueChange Происходит при изменении числа в поле ввода.
     * @param {Number} value Число.
     */

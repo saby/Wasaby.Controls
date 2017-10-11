@@ -17,7 +17,7 @@ define('js!SBIS3.SPEC.Control', [
 
    /**
     * @name SBIS3.SPEC.Control#enabled
-    * @cfg {Boolean} Устанавливает режим взаимодействия с контролом.
+    * @cfg {Boolean} Устанавливает доступность контрола пользователю.
     */
 
    /**
