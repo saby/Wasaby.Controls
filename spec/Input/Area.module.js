@@ -5,7 +5,7 @@ define('js!SBIS3.SPEC.Input.Area', [
     * Многострочное поле ввода - это текстовое поле с автовысотой.
     * Данное поле может автоматически менять высоту в зависимости от количества введённой информации.
     * @class SBIS3.SPEC.Input.Area
-    * @extends SBIS3.SPEC.Control.Text
+    * @extends SBIS3.SPEC.Input.Text
     * @control
     * @public
     * @category Inputs
