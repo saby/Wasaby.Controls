@@ -2,7 +2,8 @@ define('js!SBIS3.SPEC.Input.TimeInterval', [
 ], function() {
 
    /**
-    * Форматное поле ввода.
+    * Контрол предназначен для ввода информации о количестве времени с точностью от дня до минуты.
+    * Можно вводить только значения особого формата даты ISO_8601 с точностью от дней до минут.
     * @class SBIS3.SPEC.Input.TimeInterval
     * @extends SBIS3.SPEC.Control
     * @mixes SBIS3.SPEC.Input.IText
