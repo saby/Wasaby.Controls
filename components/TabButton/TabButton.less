@@ -338,9 +338,11 @@
       display: block;
     }
     &.controls-Checked__checked {
+       padding: 0 1px;
       .controls-TabButton__inner{
         color: @tab-button-simple-inner-checked-color;
         background: transparent;
+        border-width: 0;
       }
       .controls-TabButton__bottomLine{
          display: block;
@@ -349,6 +351,10 @@
     }
     &:hover {
       background: transparent;
+      padding: 0 1px;
+      .controls-TabButton__inner {
+         border-width: 0;
+      }
       .controls-TabButton__bottomLine{
         background: @tab-button-simple-hover-bottomline-color;
       }
