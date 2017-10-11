@@ -1,11 +1,11 @@
 <div class="controls-CompositeView__foldersContainer"></div>
-<ws:if data="{{tplData.viewMode === 'list' || tplData.viewMode === 'tile'}}">
-   <ws:partial
-      template="{{tplData._itemsTemplate}}"
-      records="{{records}}"
-      tplData="{{tplData}}"
-   />
-</ws:if>
+   <ws:if data="{{tplData.viewMode === 'list' || tplData.viewMode === 'tile'}}">
+      <ws:partial
+         template="{{tplData._itemsTemplate}}"
+         records="{{records}}"
+         tplData="{{tplData}}"
+      />
+   </ws:if>
 <ws:if data="{{tplData.tileMode === 'static'}}">
    <ws:partial template="{{tplData.invisibleItemsTemplate}}" scope="{{...}}"/>
 </ws:if>
