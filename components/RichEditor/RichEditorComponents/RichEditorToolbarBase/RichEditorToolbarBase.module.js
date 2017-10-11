@@ -244,17 +244,22 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
          _codeSample: function(button) {
             this.getLinkedEditor().showCodeSample();
          },
-         _openStylesPanel: function(button){
-            var stylesPanel = this.getStylesPanel(button);
+
+         _getCurrentFormats: function () {
             var selNode = this.getLinkedEditor().getTinyEditor().selection.getNode();
-            stylesPanel.setStylesFromObject({
-               fontsize: tinyMCE.DOM.getStyle(selNode, 'font-size', true).replace('px', ''),
+            return {
+               fontsize: +tinyMCE.DOM.getStyle(selNode, 'font-size', true).replace('px', ''),
                color: constants.colorsMap[tinyMCE.DOM.getStyle(selNode, 'color', true)],
                bold: this._buttons.bold,
                italic: this._buttons.italic,
                underline: this._buttons.underline,
                strikethrough: this._buttons.strikethrough
-            });
+            };
+         },
+
+         _openStylesPanel: function(button){
+            var stylesPanel = this.getStylesPanel(button);
+            stylesPanel.setStylesFromObject(this._getCurrentFormats());
             stylesPanel.show();
          },
 
@@ -276,11 +281,11 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
             return {state: state, name: name};
          },
          getStylesPanel: function(button){
-            var
-               self = this;
+            var self = this;
             if (!this._stylesPanel) {
+               var editor = this.getLinkedEditor();
                this._stylesPanel = new StylesPanel({
-                  parent: self.getLinkedEditor(), // при закрытии панеи необходимо чтобы фокус оставался в редакторе
+                  parent: editor, // при закрытии панели необходимо чтобы фокус оставался в редакторе
                   target: button.getContainer(),
                   corner: 'tl',
                   verticalAlign: {
@@ -329,17 +334,22 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                   activableByClick: false
                });
 
+               var $root = $(editor.getInputContainer());
+               var color = $root.css('color');
+               // Формат по-умолчанию - определяется по свойствам форматирования контейнера редактора, (то, как видно в редакторе без форматирования)
+               var defaults = {
+                  fontsize : +$root.css('font-size').replace('px', ''),
+                  color: constants.colorsMap[color] || color
+               };
                this._stylesPanel.subscribe('changeFormat', function () {
-                  var defaults = {
-                     fontsize : 14,
-                     color: 'black'
-                  };
                   var formats = self._stylesPanel.getStylesObject();
+                  // Отбросить все свойства форматирования, тождественные форматированию по-умолчанию
                   for (var prop in defaults) {
                      if (prop in formats && formats[prop] ==/* Не "==="! */ defaults[prop]) {
                         delete formats[prop];
                      }
                   }
+                  // Применить новое форматирование
                   self._applyFormats(formats);
                });
             }
@@ -353,11 +363,13 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                   editor.setFontStyle(formats.id);
                }
                else {
-                  ['title', 'subTitle', 'additionalText', 'forecolor'].forEach(function (stl) {
-                     editor._removeFormat(stl);
-                  }, this);
+                  ['title', 'subTitle', 'additionalText', 'forecolor'].forEach(editor._removeFormat.bind(editor));
+                  var previous = this._getCurrentFormats();
+                  var atFirst = !formats.fontsize || formats.fontsize !== previous.fontsize;
                   //необходимо сначала ставить размер шрифта, тк это сбивает каретку
-                  editor.setFontSize(formats.fontsize);
+                  if (atFirst) {
+                     editor.setFontSize(formats.fontsize);
+                  }
                   for ( var button in this._buttons) {
                      if (this._buttons.hasOwnProperty(button) && button in formats && this._buttons[button] !== formats[button]) {
                         editor.execCommand(button);
@@ -365,6 +377,10 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                   }
                   if (formats.color) {
                      editor.setFontColor(formats.color);
+                  }
+                  if (!atFirst) {
+                     editor.getTinyEditor().selection.getRng().expand();
+                     editor.setFontSize(formats.fontsize);
                   }
                }
             }
