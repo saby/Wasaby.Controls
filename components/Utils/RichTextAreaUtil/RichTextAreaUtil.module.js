@@ -43,19 +43,36 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
          }
       },
       /*Блок приватных методов*/
-      _markingRichContent: function(e) {
-         var
-            event =  e.originalEvent ? e.originalEvent : e,
-            oldOrphans = event.target.style.orphans;
+      _markingRichContent: function (e) {
+         var event =  e.originalEvent ? e.originalEvent : e;
          //согласно документации https://developer.mozilla.org/ru/docs/Web/API/Selection/focusNode
          //focusNode является узлом на котором закончилось выделение
          //$.contains(node,node) вернет false, необходимо дополнительно проверить равеноство узлов
-         if (document.getSelection() && ($.contains(event.currentTarget , document.getSelection().focusNode)  || event.currentTarget  === document.getSelection().focusNode)) {
+         var sel = document.getSelection();
+         if (sel && (event.currentTarget === sel.focusNode || $.contains(event.currentTarget, sel.focusNode))) {
             //orphans = '31415' - метка показывающая что содержимое было скопировано из богатого редактора
-            event.target.style.orphans = '31415'; //Pi
-            setTimeout(function() {
-               event.target.style.orphans = oldOrphans;
-            });
+            // Обработчик, проставляющий или убирающий метку указщанному узлу если он элемент
+            var handleNode = function (isForward, node) {
+               if (node.nodeType === 1) {
+                  var MARK = '31415';//Pi
+                  if (isForward) {
+                     node.setAttribute('data-orphans', node.style.orphans);
+                     node.style.orphans = MARK;
+                  }
+                  else {
+                     node.style.orphans = node.getAttribute('data-orphans');
+                     node.removeAttribute('data-orphans');
+                  }
+               }
+            };
+            // Может быть выделена только часть текста внутри элемента event.target, поэтому маркировать нужно не только его самого, но и его дочерние элементы
+            var handleAll = function (isForward, target) {
+               handleNode(isForward, target);
+               [].slice.call(target.childNodes).forEach(handleNode.bind(null, isForward));
+            };
+            handleAll(true, event.target);
+            // И вернуть всё взад
+            setTimeout(handleAll.bind(null, false, event.target), 1);
          }
       },
 
