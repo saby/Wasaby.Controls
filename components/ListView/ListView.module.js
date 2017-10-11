@@ -2051,11 +2051,9 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
 
-            // Scroll to first page after filter or search
-            if (!this._options.saveReloadPosition) {
-               if (pageNumber === 0) {
-                  this.setPage(0, true);
-               }
+            // Reload to first page (for filter and search)
+            if (!this._options.saveReloadPosition && pageNumber === 0) {
+               this.setPage(0, true);
 
                // Reset virtual scrolling if it's enabled
                if (this._options.virtualScrolling && this._virtualScrollController) {
