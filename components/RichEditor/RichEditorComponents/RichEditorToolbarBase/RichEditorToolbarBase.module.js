@@ -331,17 +331,20 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
 
                var $root = $(editor.getInputContainer());
                var color = $root.css('color');
+               // Формат по-умолчанию - определяется по свойствам форматирования контейнера редактора, (то, как видно в редакторе без форматирования)
                var defaults = {
                   fontsize : +$root.css('font-size').replace('px', ''),
                   color: constants.colorsMap[color] || color
                };
                this._stylesPanel.subscribe('changeFormat', function () {
                   var formats = self._stylesPanel.getStylesObject();
+                  // Отбросить все свойства форматирования, тождественные форматированию по-умолчанию
                   for (var prop in defaults) {
                      if (prop in formats && formats[prop] ==/* Не "==="! */ defaults[prop]) {
                         delete formats[prop];
                      }
                   }
+                  // Применить новое форматирование
                   self._applyFormats(formats);
                });
             }
