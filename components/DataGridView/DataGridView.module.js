@@ -360,6 +360,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
                columns: cfg.columns,
                multiselect: cfg.multiselect
             }
+         },
+         getColumnIndex = function(td) {
+            return td.index() - (this.getMultiselect() ? 1 : 0);
          };
    /**
     * Классов контрола "Список с колонками". Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">Настройка списков</a>.
@@ -734,7 +737,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if(td.length) {
             index = td.index();
             hoveredColumn = this._hoveredColumn;
-            colIndex = index - (this.getMultiselect() ? 1 : 0);
+            colIndex = getColumnIndex.call(this, td);
 
             if(columns[colIndex] && !columns[colIndex].cellTemplate && !td[0].getAttribute('title')) {
                colValue = td.find('.controls-DataGridView__columnValue')[0];
@@ -785,13 +788,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
    
       _notifyOnItemClick: function(id, data, target, e) {
-         var clickedCell = {};
+         var clickedCell = {},
+             cell;
          
          /* Для DataGridView дополняем событие клика информацией о колонке и ячейке */
          if(this._hoveredColumn.columnIndex  !== null) {
+            cell = this._getCellContainerByElement(e.target);
             clickedCell = {
-               cellContainer: this._getCellContainerByElement(e.target),
-               cellIndex: this._hoveredColumn.columnIndex
+               cellContainer: cell,
+               //При клике на touch устройствах не будет hoveredColumn, поэтому ищем по элементу, по котрому кликнули
+               cellIndex: this._hoveredColumn.columnIndex || getColumnIndex.call(this, cell)
             };
          }
          
