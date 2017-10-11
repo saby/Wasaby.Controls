@@ -302,7 +302,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this.setSelectedIndex(-1);
          this._getItemsProjection().setFilter(this._searchFilter.bind(this));
          this.redraw();
-         this.showPicker();
+         if (!this.getPicker().isVisible()) {
+            this.showPicker();
+         }
          this._setKeyByText();
       },
 
@@ -310,6 +312,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this.setSelectedIndex(-1);
          this._getItemsProjection().setFilter(null);
          this._setKeyByText();
+         if (this._picker) {
+            this._picker.recalcPosition(true, true);
+            TextBoxUtils.setEqualPickerWidth(this._picker);
+         }
       },
 
       _keyboardHover: function (e) {
@@ -716,7 +722,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             // Сделано для того, что бы в при уменьшении колчества пунктов при поиске нормально усеньшались размеры пикера
             // В 3.7.3.200 сделано нормально на уровне попапа
             this._picker.getContainer().css('height', '');
-            this._picker.recalcPosition(true);
+            this._picker.recalcPosition(true, true);
+            TextBoxUtils.setEqualPickerWidth(this._picker);
             this._onResizeHandler();
          }
          else {
