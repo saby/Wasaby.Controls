@@ -360,9 +360,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
                columns: cfg.columns,
                multiselect: cfg.multiselect
             }
-         },
-         getColumnIndex = function(td) {
-            return td.index() - (this.getMultiselect() ? 1 : 0);
          };
    /**
     * Классов контрола "Список с колонками". Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">Настройка списков</a>.
@@ -737,7 +734,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if(td.length) {
             index = td.index();
             hoveredColumn = this._hoveredColumn;
-            colIndex = getColumnIndex.call(this, td);
+            colIndex = index - (this.getMultiselect() ? 1 : 0);
 
             if(columns[colIndex] && !columns[colIndex].cellTemplate && !td[0].getAttribute('title')) {
                colValue = td.find('.controls-DataGridView__columnValue')[0];
@@ -797,7 +794,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             clickedCell = {
                cellContainer: cell,
                //При клике на touch устройствах не будет hoveredColumn, поэтому ищем по элементу, по котрому кликнули
-               cellIndex: this._hoveredColumn.columnIndex || getColumnIndex.call(this, cell)
+               cellIndex: this._hoveredColumn.columnIndex || cell.index()
             };
          }
          
