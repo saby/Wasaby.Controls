@@ -1,9 +1,9 @@
-define('js!SBIS3.SPEC.Input.Date', [
+define('js!SBIS3.SPEC.Input.DateTime', [
 ], function() {
 
    /**
     * Поле ввода даты.
-    * @class SBIS3.SPEC.Input.Date
+    * @class SBIS3.SPEC.Input.DateTime
     * @extends SBIS3.SPEC.Control
     * @control
     * @public
@@ -11,12 +11,12 @@ define('js!SBIS3.SPEC.Input.Date', [
     */
 
    /**
-    * @name SBIS3.SPEC.Input.Date#value
+    * @name SBIS3.SPEC.Input.DateTime#value
     * @cfg {String} Устанавливает значение даты в поле ввода.
     */
 
    /**
-    * @name SBIS3.SPEC.Input.Date#mask
+    * @name SBIS3.SPEC.Input.DateTime#mask
     * @cfg {String} Формат отображения данных
     * @remark
     * Необходимо выбрать одну из масок в массиве допустимых значений.
@@ -60,12 +60,12 @@ define('js!SBIS3.SPEC.Input.Date', [
     * @see isCalendarIconShow
     */
    /**
-    * @event SBIS3.SPEC.Input.Date#onValueChange Происходит при изменении даты в поле ввода.
+    * @event SBIS3.SPEC.Input.DateTime#onValueChange Происходит при изменении даты в поле ввода.
     * @param {Date} value Дата.
     */
 
    /**
-    * @event SBIS3.SPEC.Input.Date#onInputFinish Происходит при завершении ввода.
+    * @event SBIS3.SPEC.Input.DateTime#onInputFinish Происходит при завершении ввода.
     * @param {Date} value Дата.
     */
 });
