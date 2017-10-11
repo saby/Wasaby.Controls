@@ -628,7 +628,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 var elemToFocus = this._getElementToFocus();
 
                 setTimeout(forAliveOnly(function () {
-                   if((constants.browser.firefox || constants.browser.chrome) && elemToFocus[0] === document.activeElement && this._isEmptySelection()){
+                   if(!constants.browser.isMobilePlatform && (constants.browser.firefox || constants.browser.chrome) && elemToFocus[0] === document.activeElement && this._isEmptySelection()){
                       var suggestShowed = this.isPickerVisible();
                       elemToFocus.blur().focus();
 

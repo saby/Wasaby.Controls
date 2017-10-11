@@ -3,7 +3,7 @@
     <table class="controls-Pager__table">
         <tr>
             <td class="controls-Pager-block-amount">
-                <ws:if data="{{noSizePicker}}">
+                <ws:if data="{{!noSizePicker}}">
                    <ws:SBIS3.CONTROLS.DropdownList
                            name="controls-Pager_comboBox"
                            className="controls-Pager-block controls-Pager__pageSize-container controls-DropdownList__withoutArrow controls-DropdownList__withoutCross controls-DropdownList__linkStyle"
@@ -15,7 +15,7 @@
                    />
                    <span class="controls-Pager-block  controls-text controls-text-extra">&nbsp;{[по]}</span>
                 </ws:if>
-                <ws:if data="{{noPagerAmount}}">
+                <ws:if data="{{!noPagerAmount}}">
                    <div class="controls-Pager-block controls-text controls-Amount-text controls-Amount-text_js"></div>
                 </ws:if>
             </td>
