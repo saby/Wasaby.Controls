@@ -1,12 +1,12 @@
 define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
-   "Core/core-functions",
+   "Core/core-clone",
    "Core/core-merge",
    "Core/EventBus",
    "js!SBIS3.CONTROLS.ButtonGroupBase",
    'Core/helpers/String/escapeHtml',
    'js!SBIS3.CONTROLS.StylesPanelNew',
    'css!SBIS3.CONTROLS.RichEditorToolbarBase'
-], function( cFunctions, cMerge, EventBus, ButtonGroupBase, escapeHtml, StylesPanel) {
+], function(coreClone, cMerge, EventBus, ButtonGroupBase, escapeHtml, StylesPanel) {
 
    'use strict';
 
@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
       /**
        * @class SBIS3.CONTROLS.RichEditorToolbarBase
        * @extends SBIS3.CONTROLS.ButtonGroupBase
-       * @author Борисов П.С.
+       * @author Спирин Виктор Алексеевич
        * @public
        * @control
        */
@@ -141,7 +141,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
             var
                items,
                deleteIdexes = [];
-            items = cFunctions.clone(defaultConfig);
+            items = coreClone(defaultConfig);
             //мерж массивов
             for (var i in userItems){
                if (userItems.hasOwnProperty(i)) {
@@ -245,11 +245,11 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
             this.getLinkedEditor().showCodeSample();
          },
          _openStylesPanel: function(button){
-            var
-               stylesPanel = this.getStylesPanel(button);
+            var stylesPanel = this.getStylesPanel(button);
+            var selNode = this.getLinkedEditor().getTinyEditor().selection.getNode();
             stylesPanel.setStylesFromObject({
-               fontsize: tinyMCE.DOM.getStyle(this.getLinkedEditor().getTinyEditor().selection.getNode(), 'font-size', true).replace('px',''),
-               color: constants.colorsMap[tinyMCE.DOM.getStyle(this.getLinkedEditor().getTinyEditor().selection.getNode(), 'color', true)],
+               fontsize: tinyMCE.DOM.getStyle(selNode, 'font-size', true).replace('px', ''),
+               color: constants.colorsMap[tinyMCE.DOM.getStyle(selNode, 'color', true)],
                bold: this._buttons.bold,
                italic: this._buttons.italic,
                underline: this._buttons.underline,
@@ -273,7 +273,6 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
             if (['bold', 'italic', 'underline', 'strikethrough'].indexOf(obj.format) != -1) {
                this._buttons[obj.format] = state;
             }
-
             return {state: state, name: name};
          },
          getStylesPanel: function(button){
@@ -330,32 +329,42 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                   activableByClick: false
                });
 
-               this._stylesPanel.subscribe('changeFormat', function(){
-                  self._applyFormats(self._stylesPanel.getStylesObject())
+               this._stylesPanel.subscribe('changeFormat', function () {
+                  var defaults = {
+                     fontsize : 14,
+                     color: 'black'
+                  };
+                  var formats = self._stylesPanel.getStylesObject();
+                  for (var prop in defaults) {
+                     if (prop in formats && formats[prop] ==/* Не "==="! */ defaults[prop]) {
+                        delete formats[prop];
+                     }
+                  }
+                  self._applyFormats(formats);
                });
             }
             return this._stylesPanel;
          },
 
-         _applyFormats: function(formats){
-            if (this._options.linkedEditor) {
+         _applyFormats: function (formats) {
+            var editor = this._options.linkedEditor;
+            if (editor) {
                if (formats.id) {
-                  this._options.linkedEditor.setFontStyle(formats.id);
-               } else {
-                  ['title', 'subTitle', 'additionalText', 'forecolor'].forEach(function(stl){
-                     this._options.linkedEditor._removeFormat(stl);
+                  editor.setFontStyle(formats.id);
+               }
+               else {
+                  ['title', 'subTitle', 'additionalText', 'forecolor'].forEach(function (stl) {
+                     editor._removeFormat(stl);
                   }, this);
                   //необходимо сначала ставить размер шрифта, тк это сбивает каретку
-                  this._options.linkedEditor.setFontSize(formats.fontsize);
+                  editor.setFontSize(formats.fontsize);
                   for ( var button in this._buttons) {
-                     if (this._buttons.hasOwnProperty(button)) {
-                        if (this._buttons[button] !== formats[button]) {
-                           this._options.linkedEditor.execCommand(button);
-                        }
+                     if (this._buttons.hasOwnProperty(button) && button in formats && this._buttons[button] !== formats[button]) {
+                        editor.execCommand(button);
                      }
                   }
-                  if (formats.color !== 'black') {
-                     this._options.linkedEditor.setFontColor(formats.color);
+                  if (formats.color) {
+                     editor.setFontColor(formats.color);
                   }
                }
             }

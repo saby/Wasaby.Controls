@@ -10,6 +10,7 @@ define(
       'js!SBIS3.CONTROLS.DateRangeBigChoose',
       'js!SBIS3.CONTROLS.TimePicker',
       'tmpl!SBIS3.CONTROLS.DatePicker',
+      'tmpl!SBIS3.CONTROLS.DateBox',
       'tmpl!SBIS3.CONTROLS.DatePicker/resources/elementPickerContent',
       'js!SBIS3.CONTROLS.Utils.IsChildControl',
       "Core/IoC",
@@ -19,7 +20,7 @@ define(
       'css!SBIS3.CONTROLS.FormattedTextBox',
       'css!SBIS3.CONTROLS.DateBox'
    ],
-   function (EventBus, DateBox, PickerMixin, DateRangeBigChoose, TimePicker, dotTplFn, ElementPickerContent, isChildControl, IoC) {
+   function (EventBus, DateBox, PickerMixin, DateRangeBigChoose, TimePicker, dotTplFn, dateBoxTpl, ElementPickerContent, isChildControl, IoC) {
 
    'use strict';
 
@@ -86,6 +87,7 @@ define(
           * Опции создаваемого контролла
           */
          _options: {
+            dateBoxTpl: dateBoxTpl,
             /**
              * @cfg {Boolean} Устанавливает отображение иконки календаря рядом с полем ввода.
              * @remark
@@ -230,6 +232,9 @@ define(
          if (this._picker && this._picker.isVisible()){
             this.hidePicker();
          }
+         // Внутри шаблона DatePicker используем шаблон DateBox. Устанавливаем на нем соответсвующие классы
+         // что бы к нему корректно применились стили.
+         this.getContainer().children('.controls-DateBox').toggleClass('ws-enabled', enabled).toggleClass('ws-disabled', !enabled);
       },
 
       showPicker: function () {
@@ -295,7 +300,7 @@ define(
       },
 
       _onChangeTimeHandler: function(event, time) {
-         this.setDate(time);
+         this.setDate(new Date(time));
       },
 
       _onChooserChange: function(event, date) {
@@ -368,6 +373,17 @@ define(
             this.unsubscribeFrom(EventBus.globalChannel(), 'onFocusIn', this._onFocusInHandler);
             this._onFocusInHandler = null;
          }
+      },
+
+      // Внутри шаблона DatePicker используем шаблон DateBox. Устанавливаем на нем соответсвующие классы
+      // что бы к нему корректно применились стили.
+      markControl: function () {
+         DatePicker.superclass.markControl.apply(this, arguments);
+         this.getContainer().children('.controls-DateBox').addClass('ws-validation-error');
+      },
+      clearMark: function () {
+         DatePicker.superclass.clearMark.apply(this, arguments);
+         this.getContainer().children('.controls-DateBox').removeClass('ws-validation-error');
       }
    });
 

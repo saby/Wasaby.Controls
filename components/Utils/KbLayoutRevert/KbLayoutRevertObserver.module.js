@@ -5,13 +5,13 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
    [
       "Core/core-extend",
       "Core/helpers/String/diffAt",
-      "Core/core-functions",
+      "Core/core-clone",
       "js!SBIS3.CONTROLS.Utils.KbLayoutRevertUtil",
       "js!SBIS3.CONTROLS.MissSpell",
       'js!SBIS3.CONTROLS.Utils.Query',
       'Core/core-instance'
    ],
-   function (cExtend, diffAt, cFunctions, KbLayoutRevertUtil, MissSpell, queryUtil, cInstance) {
+   function (cExtend, diffAt, coreClone, KbLayoutRevertUtil, MissSpell, queryUtil, cInstance) {
       'use strict';
 
       /* Вспомогательный класс, для посчёта времени запроса.
@@ -188,7 +188,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
 
          _onViewDataLoad: function(event, data) {
             var view = this._options.view,
-               viewFilter = cFunctions.clone(view.getFilter()),
+               viewFilter = coreClone(view.getFilter()),
                searchParam = this._options.param,
                searchValue = viewFilter[searchParam],
                textBox = this._options.textBox,
@@ -320,7 +320,18 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
           чтобы избежать моргания данных, обработка событий включается,
           когда поиск точно закончен (уже была сменена раскладка, если требуется) */
          _toggleItemsEventRaising: function(enable, analyze) {
-            var items = this._currentItems || this._options.view.getItems();
+            var view = this._options.view,
+                items = this._currentItems;
+            
+            if(!items) {
+               /* Т.к. есть люди, которые просто поддерживают интерфейс listView,
+                  проверим на это (может не быть метода _getItemsProjection). */
+               if (cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.ItemsControlMixin')) {
+                  items = view._getItemsProjection();
+               } else {
+                  items = view.getItems();
+               }
+            }
             analyze = analyze !== undefined ? analyze : true;
 
             if(items) {

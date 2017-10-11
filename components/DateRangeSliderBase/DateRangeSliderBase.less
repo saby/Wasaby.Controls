@@ -2,7 +2,7 @@
    display: inline-block;
    .user-select();
 
-   font-family: @date-range-slider-font-family;
+   font-family: @default-font-name;
    font-size: @date-range-slider-font-size;
 
    &.controls-DateRangeSlider__yearState {
@@ -12,27 +12,8 @@
          min-width: 0;
       }
    }
-   .controls-DateRangeSlider__value-wrapper {
-      display: inline-block;
-      text-align: center;
 
-   }
-
-   .controls-DateRangeSlider__value-wrapper-withArrow {
-      min-width: @date-range-slider-value-min-width;
-   }
-
-   .controls-DateRangeSlider__lock {
-      margin-right: @date-range-slider-lock-margin-right;
-   }
-
-   .controls-DateRangeSlider__value {
-      font-weight: @date-range-slider-value-font-weight;
-      line-height: @date-range-slider-height;
-      padding-top: @date-range-slider-value-padding;
-   }
-
-   &.ws-enabled{
+   &.ws-enabled {
       .controls-DateRangeSlider__value,
       .controls-DateRangeSlider__prev,
       .controls-DateRangeSlider__next,
@@ -41,13 +22,13 @@
       }
       .controls-DateRangeSlider__value {
          &:hover {
-            color: @date-range-slider-hover-color;
-            text-decoration: @date-range-slider-hover-text-decoration;
+            color: @link-hover-text-color;
+            text-decoration: underline;
          }
       }
       .controls-DateRangeSlider__lock.icon-primary {
          &:hover {
-            color: @date-range-slider-hover-color !important;
+            color: @link-hover-text-color !important;
          }
       }
       .controls-DateRangeSlider__lock.icon-disabled {
@@ -58,53 +39,73 @@
    }
 
    &.ws-disabled {
-      color: @date-range-slider-disabled-text-color;
-   }
-
-   &.controls-DateRangeSlider__link {
-      .controls-DateRangeSlider__prev,
-      .controls-DateRangeSlider__next {
-         margin: 0 4px;
-      }
-   }
-
-   &.controls-DateRangeSlider__normal {
-      &.ws-enabled {
-         color: @date-range-slider-color;
-
-         .controls-DateRangeSlider__prev,
-         .controls-DateRangeSlider__next {
-            &:hover {
-               color: @date-range-slider-prev-next-buttons-hover-color;
-            }
-         }
-      }
-      & > * {
-         height: @date-range-slider-height;
-      }
-      .controls-DateRangeSlider__prev:before {
-         content: "\e008 ";
-      }
-      .controls-DateRangeSlider__next:before {
-         content: "\e007";
-      }
-      .controls-DateRangeSlider__prev,
-      .controls-DateRangeSlider__next {
-         display: inline-block;
-         font-size: @date-range-slider-prev-next-buttons-font-size;
-         font-weight: @date-range-slider-prev-next-buttons-font-weight;
-         text-align: center;
-         line-height: ~"calc("@date-range-slider-height~" - "@date-range-slider-prev-next-buttons-font-size~" + "@date-range-slider-font-size~")";
-         height: @date-range-slider-height;
-         width: @date-range-slider-prev-next-buttons-width;
-      }
+      color: @disabled-text-color;
    }
 
    &.ws-validation-error {
       outline-offset: -@date-range-slider-error-border-width;
       outline-width: @date-range-slider-error-border-width;
-      outline-style: @date-range-slider-error-border-style;
+      outline-style: solid;
       outline-color: @date-range-slider-error-border-color;
       background: @date-range-slider-error-bg;
    }
+}
+
+.controls-DateRangeSlider__link {
+   .controls-DateRangeSlider__prev,
+   .controls-DateRangeSlider__next {
+      margin: 0 4px;
+   }
+}
+
+.controls-DateRangeSlider__normal {
+   &.ws-enabled {
+      color: @link-text-color;
+
+      .controls-DateRangeSlider__prev,
+      .controls-DateRangeSlider__next {
+         &:hover {
+            color: @link-hover-text-color;;
+         }
+      }
+   }
+   > * {
+      height: @date-range-slider-height;
+   }
+   .controls-DateRangeSlider__prev:before {
+      content: "\e008 ";
+   }
+   .controls-DateRangeSlider__next:before {
+      content: "\e007";
+   }
+   .controls-DateRangeSlider__prev,
+   .controls-DateRangeSlider__next {
+      display: inline-block;
+      font-size: @date-range-slider-prev-next-buttons-font-size;
+      font-weight: normal;
+      text-align: center;
+      line-height: ~"calc("@date-range-slider-height~" - "@date-range-slider-prev-next-buttons-font-size~" + "@date-range-slider-font-size~")";
+      height: @date-range-slider-height;
+      width: @date-range-slider-prev-next-buttons-width;
+   }
+}
+
+.controls-DateRangeSlider__value-wrapper {
+   display: inline-block;
+   text-align: center;
+
+}
+
+.controls-DateRangeSlider__value-wrapper-withArrow {
+   min-width: @date-range-slider-value-min-width;
+}
+
+.controls-DateRangeSlider__lock {
+   margin-right: @date-range-slider-lock-margin-right;
+}
+
+.controls-DateRangeSlider__value {
+   font-weight: @date-range-slider-value-font-weight;
+   line-height: @date-range-slider-height;
+   padding-top: @date-range-slider-value-padding;
 }

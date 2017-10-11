@@ -2,12 +2,12 @@ define('js!SBIS3.CONTROLS.SearchController',
     [
        'js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
        "Core/constants",
-       "Core/core-functions",
+       'Core/core-clone',
        "Core/core-merge",
        "Core/Abstract",
        "Core/core-instance",
        'Core/helpers/Hcontrol/isElementVisible'
-    ], function(KbLayoutRevertObserver, constants, cFunctions, cMerge, cAbstract, cInstance, isElementVisible) {
+    ], function(KbLayoutRevertObserver, constants, coreClone, cMerge, cAbstract, cInstance, isElementVisible) {
 
    var SearchController = cAbstract.extend({
       $protected: {
@@ -43,6 +43,20 @@ define('js!SBIS3.CONTROLS.SearchController',
             searchForm.resetSearch();
          }
       },
+
+      /**
+       * Scrolls to the top and reloads the view.
+       *
+       * @param view
+       * @private
+       */
+      _reloadView: function(view, filter) {
+         if (view.scrollToFirstPage) {
+            view.scrollToFirstPage();
+         }
+         view.reload(filter, view.getSorting(), 0);
+      },
+
 
       _startHierSearch: function(text) {
          var curFilter = this._options.view.getFilter();
@@ -86,7 +100,7 @@ define('js!SBIS3.CONTROLS.SearchController',
             this._lastRoot = view.getCurrentRoot();
             //Запомнили путь в хлебных крошках перед тем как их сбросить для режима поиска
             if (this._options.breadCrumbs && this._options.breadCrumbs.getItems()) {
-               this._pathDSRawData = cFunctions.clone(this._options.breadCrumbs.getItems().getRawData());
+               this._pathDSRawData = coreClone(this._options.breadCrumbs.getItems().getRawData());
             }
          }
          this._firstSearch = false;
@@ -97,7 +111,7 @@ define('js!SBIS3.CONTROLS.SearchController',
          }
 
          view.once('onDataLoad', function() {
-            var isEventRaising = view.getItems() && view.getItems().isEventRaising(),
+            var isEventRaising = view._getItemsProjection() && view._getItemsProjection().isEventRaising(),
                 root;
             //Скрываем кнопку назад, чтобы она не наслаивалась на колонки
             if (self._options.backButton) {
@@ -135,7 +149,7 @@ define('js!SBIS3.CONTROLS.SearchController',
             }
          });
 
-         view.reload(filter, view.getSorting(), 0);
+         this._reloadView(view, filter);
          this._searchMode = true;
 
       },
@@ -151,8 +165,7 @@ define('js!SBIS3.CONTROLS.SearchController',
          view.setHighlightText(text, false);
          view.setHighlightEnabled(true);
          view.setInfiniteScroll(true, true);
-         view.reload(filter, view.getSorting(), 0);
-
+         this._reloadView(view, filter);
       },
 
       _resetSearch: function() {
@@ -160,7 +173,7 @@ define('js!SBIS3.CONTROLS.SearchController',
             filter = view.getFilter();
 
          delete(filter[this._options.searchParamName]);
-         view.reload(filter, view.getSorting(), 0);
+         this._reloadView(view, filter);
       },
 
       _resetGroup: function() {
@@ -206,7 +219,7 @@ define('js!SBIS3.CONTROLS.SearchController',
             //DataGridView._filter = filter;
             //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
             //Релоад сделает то же самое, так как он стреляет onSetRoot даже если корень на самом деле не понменялся
-            view.reload(filter, view.getSorting(), 0);
+            this._reloadView(view, filter);
             // TODO: Нужно оставить одно поле хранящее путь, сейчас в одно запоминается состояние хлебных крошек
             // перед тем как их сбросить, а в другом весь путь вместе с кнопкой назад
 

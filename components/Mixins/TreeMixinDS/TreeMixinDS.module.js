@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.TreeMixinDS', [
-   "Core/core-functions",
+   "Core/core-clone",
    "Core/core-merge",
    "Core/constants",
    "js!SBIS3.CORE.Control",
@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
    "js!WS.Data/Display/Tree",
    "js!WS.Data/Relation/Hierarchy",
    'Core/helpers/Function/forAliveOnly'
-], function ( cFunctions, cMerge, constants,Control, BreadCrumbs, groupByTpl, TreeProjection, HierarchyRelation, forAliveOnly) {
+], function (coreClone, cMerge, constants,Control, BreadCrumbs, groupByTpl, TreeProjection, HierarchyRelation, forAliveOnly) {
    /**
     * Позволяет контролу отображать данные имеющие иерархическую структуру и работать с ними.
     * @mixin SBIS3.CONTROLS.TreeMixinDS
@@ -101,7 +101,7 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
              * @example
              * В частном случае шаблон футера узла иерархии используют для размещения кнопок создания нового листа или папки.
              * ![](/folderFooterTpl.png)
-             * Подробный пример использования футера для решения этой прикладной задачи вы можете найти в разделе {@link /doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ Добавление по месту в иерархическом списке}.
+             * Подробный пример использования футера для решения этой прикладной задачи вы можете найти в разделе {@link /doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/users/add-in-place-hierarchy/ Добавление по месту в иерархическом списке}.
              * @see SBIS3.CONTROLS.List#footerTpl
              */
             folderFooterTpl: undefined,
@@ -249,12 +249,12 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
       },
       _createTreeFilter: function(key) {
          var
-            filter = cFunctions.clone(this.getFilter()) || {};
+            filter = coreClone(this.getFilter()) || {};
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'Узлы и листья';
          }
-         this.setFilter(cFunctions.clone(filter), true);
+         this.setFilter(coreClone(filter), true);
          filter[this._options.parentProperty] = key;
          return filter;
       },

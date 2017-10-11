@@ -52,7 +52,6 @@
 @link-line-height:                        normal;
 @link-font-size:                          1.14rem;
 @link-hover-text-color:                   #B9E9FF;
-@link-icon-hover-icon:                    @link-hover-text-color;
 @link-icon-margin:                        -@default-border-width 0 0;
 @link-icon-field-margin:                  0 0 0 .14rem;
 @link-additional-color:                   #8991A9;
@@ -92,6 +91,7 @@
 @button-text-margin-right:                .57rem;
 @button-text-padding:                     0;                        // padding of text
 @button-icon-color-hover:                 #B9E9FF;
+@button-ipad-line-height:                 normal;
 @FilterPanelButtonHoverRightClose:        url('img/FilterPanelButton.svg') 0 0.86rem;
 @FilterPanelButtonHoverLeftClose:         url('img/FilterPanelButton.svg') -1.25rem 0.86rem;
 @FilterPanelButtonHoverRightOpen:         url('img/FilterPanelButton.svg') -2.5rem -0.86rem;
@@ -100,7 +100,6 @@
 @closeButtonImageHover:                   url('img/areaCloseButton.png') 0 -3rem;
 //FilterPanelChooser
 @controls-filterButton-area-header-height:3rem;
-@controls-filterLine-items-line-height:	1rem;
 @filter-panel-chooser-list-view-item-padding:0 0 0 0.86rem;
 @filter-panel-chooser-list-view-check-box-top:0.2142rem;
 @filter-panel-chooser-list-view-check-box-left:.14rem;
@@ -145,23 +144,10 @@
 // Normal default button
 @button-checked-border-width:             @button-border-width;
 @button-checked-padding:                  @button-padding;
-@button-checked-line-height:              @button-line-height;
 @button-checked-border:                   @button-active-border;
 @button-checked-bg:                       @button-bg-active;
-@button-checked-icon-top-offset:          @button-icon-top-offset;
-@button-checked-icon-left-offset:         @button-icon-left-offset;
-@button-checked-icon-big-top-offset:      @button-icon-big-top-offset;
-@button-checked-icon-big-left-offset:     @button-icon-big-left-offset;
 // Normal primary button
 @button-primary-checked-border:           @button-primary-active-border;
-// Big default button
-@button-big-checked-icon-top-offset:      @button-big-icon-top-offset;
-@button-big-checked-icon-left-offset:     @button-big-icon-left-offset;
-@button-big-checked-icon-big-top-offset:  @button-big-icon-big-top-offset;
-@button-big-checked-icon-big-left-offset: @button-big-icon-big-left-offset;
-//Text box
-@text-box-field-line-height:              2.64rem !important;
-@text-box-line-height:                    @text-box-field-line-height;
 // Tab button
 @tab-button-large-secondAddText-font-size:0.4642rem;
 //Radio button
@@ -201,10 +187,6 @@
 @check-box-icon-box-size:                 1.143rem;
 @check-box-icon-box-color:                rgba(102, 170, 221, .4);
 @check-box-disabled-color:                #37536C;
-@check-box-icon-border:                   .0357rem solid @default-color;
-@check-box-icon-hover-bg:                 transparent;
-@check-box-icon-checked-bg:               transparent url(@check-box-icon-spritesheet) 0 -@default-border-width;
-
 @check-box-caption-line-height:           1.143rem;
 //Switcher
 @switcher-dot-width:                      100%;
@@ -222,27 +204,21 @@
 @switcherline-height:                     .1rem;
 @switcher-btn-border-width:					.1rem;
 @switcher-btn-border-hover:               .1rem;
-@switcher-do-vertical-toggle-width:			1.43rem;
-@switcher-do-horizontal-btn-size:			.93rem;
 @switcher-btn-size:								.93rem;
 @switcher-btn-margin:							.357rem;
 @switcher-border-radius:						1rem;
 @switcher-btn-color:                      @primary-color;
 @switcher-btn-bg-color-disabled:          @basic-block-bg-color;
-@switcher-do-horizontal-line-background-color:@disabled-color;
-@switcher-do-text-color:                  @white-color;
 @switcher-do-unselected-text-color:       @disabled-color;
 @switcher-do-disabled-text-color:         #37536C;
-@switcher-do-disabled-btn-background:     @gray-color;
-
 @switcher-width:                                3.571rem;
 @switcher-height:                               1.786rem;
 @switcher-border-radius:                        2.143rem;
-@switcher-hover-border-width:                   0.1072rem;
+@switcher-hover-border-width:                   2px;
 @switcherline-height:                           0.107rem;
 @switcherline-width:                            2.5rem;
 @switcher-btn-size:                             0.929rem;
-@switcher-btn-border-width:                     @switcher-hover-border-width;
+@switcher-btn-border-width:                     0.1072rem;
 @switcher-btn-hover-border-width:               @switcher-btn-border-width;
 @switcher-dot-size:                             @switcher-btn-size;
 @switcher-border-color:                         #37536C;
@@ -253,25 +229,22 @@
 //Menu
 @popup-font-size:                         1.43rem; // откатил размер из-за того, что меню стало меньше чем кнпока т.к. в самих кнопках размер шрифта используется больший
 @menu-header-bg-color:                    #26B8FF;
-@menu-subpopup-margin:                    @menu-margin;
-@menu-border-width:                       @default-border-width;
+@menu-subpopup-margin:                    0 0 0 @default-border-width;
 @menu-border-color:                       @default-border-color-second;
-@menu-header-caption-color:               #e4e4e4;
 @menu-expand-width:                       @icon-large-size;
 @menu-expand-height:                      @icon-large-size;
-@menu-expand-top-offset:                  .7142rem;
-@menu-expand-right-offset:                .4285rem;
-@menu-expand-border-width:                0;
+@menu-expand-top-offset:                  .286rem;
+@menu-expand-right-offset:                0;
 @menu-expand-border-color:                transparent transparent transparent @primary-color;
 @menu-expand-bg:                          transparent;
 @menu-expand-hover-border-color:          transparent transparent transparent @secondary-color;
 @menu-header-height:                      3.57rem;
 @menu-expand-icon-font-size:              @icon-large-size;
 @menu-big-header-height:                  1.1428rem;
-@menu-header-icon-color:                  @default-hover-color;
 @menu-header-padding:                     .14rem 0.57rem;
 @popup-header-font-weight:                normal;
 @popup-header-caption-color:              @default-text-color;
+@menu-header-icon-color:                  @popup-header-caption-color;
 //Menu item
 @menu-item-height:                        3.57rem;
 @menu-item-text-color:                    #273B4D;
@@ -279,112 +252,57 @@
 @menu-item-font-size:                     @default-font-size;
 @menu-item-icon-16-margin:					   0.2142rem 0 0.2142rem 2.2857rem;
 @menu-item-hover-bg:                      #E0ECF5;
-@menu-item-hover-icon-color:              @primary-color!important;
 @menu-item-default-padding:               0 .57rem;
 @menu-item-icon-top-offset:               0.2805rem; // (3.57 - 3) /2
 @menu-item-icon-left-offset:              0;
 @menu-item-icon24-top-offset:             0;
 @menu-item-icon24-top-offset-big:         0;
 @menu-item-icon24-left-offset:            -.57rem;;
-@menu-item-icon24-left-offset-big:        0;
 @menu-item-line-height:                   3.57rem;
 @menu-item-padding-16:                    2rem;
 @menu-item-padding-24:                    2.5rem;
 // Menu
-@menu-button-menu-border-width:           @default-border-width;
 @menu-button-menu-margin:                 -8px 0 0 0;
 @menu-button-menu-border-color:           #23b8ff;
 @menu-link-header-bg-color:               @menu-header-bg-color;
-@menu-link-icon-24-top:                   -.14rem;
 @menu-icon-menu-margin:                   -.25rem 0 0 -.1442rem;
 @menu-icon-big-menu-margin:               -.287rem 0 0 .43rem;
 @menu-padding:										0;
 //Menu link
 @menu-link-menu-item-container-padding:	0 0 0 0;
-@menu-link-line-height:                   1.14rem;
-@menu-link-border-color: 						@primary-color transparent transparent transparent;
-@menu-link-checked-text-color:            @secondary-color;
-@menu-link-menu-border-width:             @default-border-width;
 //Text box
-@text-box-field-min-height:               1.3571rem;
-@text-box-field-padding:                  0;
-@text-box-field-text-color:               @default-text-color;
-@text-box-bottom-border-color:            rgba(96,170,221, .3 );
-@text-box-editor-bg:                      #f3f3f3;
-@text-box-editor-text-color:              #999999;
-@combobox-picker-border-width:            @default-border-width;
 @combo-box-picker-show-background-color:  #f0f5fb;
 @combo-box-picker-show-border-color:	   #23b8ff;
 @text-box-focus-border-color:             @text-box-border-color;
 @compo-box-picker-show-color:             #324352;
 @text-box-focus-bg:                       #324352;
-@text-box-border-width:                   @default-border-width;
-@text-box-hover-border-width:             @text-box-border-width;
 @text-box-hover-border-color:             rgba(96,170,221, .3 );
-@text-box-disabled-border-bottom:         @default-border-width solid rgba(102,170,221, .3);
-@text-box-after-width:                    .7142rem;
-@text-box-overflow:                       ellipsis;
-//Formatted text box
-@formatted-text-box-wrapper-min-height:   @text-box-field-min-height;
-// DateBox
-@date-box-wrapper-border-color:           @text-box-border-color @text-box-border-color @text-box-bottom-border-color @text-box-border-color; // @default-border-color
-@date-box-field-text-color:               @default-text-color;
 // Search form
-@search-form-field-wrapper-margin-right:  5.8rem;
 @search-button-wrapper-padding:				0;
-@search-buttons-wrapper-width:            auto;
 @search-background:                       rgba(150, 159, 168, 0.15);
-@search-disabled-background:              @text-box-disabled-bg;
-@search-border-color:                     transparent;
-@search-hover-border-color:               rgba(150, 159, 168, 0.40);
-@search-bottom-border-color:              transparent;
 @search-form-icon-padding:                0;
-@search-focus-background:                 rgba(150, 159, 168, 0.15);
-@search-form-border-disabled-width:       @default-border-width;
-@search-form-icon-disabled-display:       block;
 @search-form-icon-search-color:           #e4e4e4;
-
 //  Combo box
-@combo-box-arrow-spritesheet:             '';
 @combo-box-picker-item-font-size:         1.14rem;
-@combo-box-arrow-width:                   3rem;
-@combo-box-arrow-height:                  3rem;
-@combo-box-arrow-line-height:             3rem;
-@combo-box-arrow-border-color:            @primary-color transparent transparent transparent;
-@combo-box-arrow-bg:                      transparent;
-@combo-box-arrow-hover-border-color:      darken(@primary-color, 10%) transparent transparent transparent;
-@combo-box-arrow-hover-bg:                @combo-box-arrow-bg;
-@combo-box-arrow-active-border-color:     transparent transparent @primary-color transparent;
 @combo-box-field-text-color : 				@default-text-color;
-@combo-box-arrow-active-hover-border-color:transparent transparent darken(@primary-color, 10%) transparent;
-@combo-box-arrow-active-hover-bg:         @combo-box-arrow-active-bg;
-@combo-box-arrow-disabled-border-color:   transparent;
-@combo-box-disabled-border-width:         0;
-@combo-box-disabled-border-bottom-color:  @default-text-color;
-@combo-box-disabled-color:                #38495B;
 @combo-box-picker-item-padding:           1.14rem 0.57rem 1.14rem 0.57rem;
 
 @combo-box-picker-item-bg:                #f0f5fb;
 @combo-box-picker-item-text-color:        #273B4D;
 @combo-box-picker-item-hover-text-color:  #273B4D;
 @combo-box-picker-item-hover-bg:          #e0ecf5;
-@combo-box-picker-item-selected-bg:       @combo-box-picker-item-bg;
-@compo-box-fieldWrapper-margin-right:     3rem;
-@combo-box-after-width:                   3rem;
 // Suggest
 @suggest-picker-border:                   @default-border-width solid @default-border-color-second;
 @suggest-picker-color:                    #273B4D;
 
 @suggest-list-footer-height:              3.143rem;
 @suggest-list-footer-padding:             0 0.857rem;
-
-@suggest-list-item-hover-bg:              #f3f3f3;
-@suggest-list-item-selected-bg:           darken(@suggest-list-item-hover-bg, 5%);
+@suggest-list-hover-color:                #E0ECF5;
 //Date picker
-@date-picker-calendar-icon-top-offset:    0;
-@date-picker-calendar-icon-left-offset:   0;
-@date-picker-calendar-icon-height: 			3rem;
-@date-picker-calendar-icon-width: 			2.786rem;
+@date-picker-button-margin-left:          0;
+@date-picker-button-vertical-align:       top;
+@date-picker-button-size:                 3rem;
+@date-picker-button-line-height:          3rem;
 //Calendar
 @calendar-width:                          auto;
 @calendar-bg:                             @basic-block-bg-color;
@@ -397,12 +315,12 @@
 @calendar-day-cell-active-hover-text-color:@calendar-day-cell-hover-text-color;
 @calendar-day-cell-active-hover-bg:       @calendar-day-cell-hover-bg;
 //fieldlink
-@controls-FieldLink-border:               @default-border-width solid;
-@controls-FieldLink-border-color-focus-hover:@text-box-bottom-border-color;
-@controls-FieldLink-link-color:           #26B8FF;
-@controls-FieldLink-showSelector-color:   @default-text-color;
+@fieldLink-border:                        @default-border-width solid;
+@fieldLink-border-color-focus-hover:      @text-box-border-color-bottom;
+@fieldLink-link-color:                    #26B8FF;
+@fieldLink-showSelector-color:            @default-text-color;
+@fieldLink-picker-show-field-color:       @default-text-color;
 //MonthView
-@data-grid-cell-hover-bg:                 #1b2530;
 @month-view-bg:                           #2c3e50;
 @month-view-day-cell-text-color:          #fff;
 @month-view-day-cell-bg:                  #f2f2f2;
@@ -434,22 +352,18 @@
 @month-picker-item-active-text-color:     @secondary-color;
 @month-picker-item-active-bg:             @primary-color;
 //Data Range
-@date-range-font-size:                    1.14rem;
 @date-range-line-height:                  normal;
-@date-range-icon-button-top:              0.536rem;
 @date-range-dash-width:                   0.5rem;
 @date-range-dash-color:                   rgba(96, 170, 221, 0.2);
 @date-range-dash-margin:                  0 0.286rem 0.286rem 0.286rem;
 @date-range-dash-border-top:              @default-border-width solid @date-range-dash-color;
-@date-range-icon-button-size:             3rem;
-@date-range-icon-button-line-height:      @date-range-icon-button-size;
-@date-range-icon-button-top:              0;
-@date-range-icon-button-margin:           0;
+@date-range-button-vertical-align:        top;
+@date-range-button-size:                  3rem;
+@date-range-button-line-height:           @date-range-button-size;
+@date-range-button-margin:                0;
 @date-range-big-choose-header-date-box-font-size: 1rem;
 
 //Data Range Slider
-@date-range-slider-color:                 #26B8FF;
-@date-range-slider-hover-color:           rgb(187, 233, 255);
 @date-range-slider-font-size:             1.14rem;
 @date-range-slider-value-font-weight:     normal;
 @date-range-slider-prev-next-buttons-hover-color:@blue-dark-color;
@@ -465,25 +379,19 @@
 @date-range-choose-font-size:             1rem;
 @date-range-choose-years-only-bg-color:   @basic-block-bg-color;
 @date-range-choose-bg-color:              @basic-block-bg-color;
-@date-range-choose-color:                 @default-text-color;
-@date-range-choose-hover-color:           @button-icon-color-hover;
 @date-range-choose-current-value-color:   #fff;
 @date-range-choose-current-value-bg-color:#26b8ff;
 @date-range-choose-current-value-font-size:1.14rem;
 @date-range-choose-current-value-font-weight:normal;
 @date-range-choose-current-value-height:  3.57rem;
 @date-range-choose-current-value-line-height:3.43rem;
-@date-range-choose-current-value-margin-bottom: 0;
 @date-range-choose-year-height:           3rem;
 @date-range-choose-year-font-size:        1.14rem;
-@date-range-choose-year-font-weight:      normal;
 @date-range-choose-year-margin-bottom:    0.286rem;
 @date-range-choose-year-prev-next-btns-font-size:1.5rem;
-@date-range-choose-year-color:            @date-range-choose-color;
 @date-range-choose-year-line-height:      3rem;
 @date-range-choose-year-prev-next-btns-width:3rem;
 @date-range-choose-year-prev-next-btns-font-size:1.5rem;
-@date-range-choose-year-prev-next-btns-color:@date-range-choose-color;
 @date-range-choose-home-icon-width:       3rem;
 @controls-date-range-year-marginleft:     0.4rem;
 
@@ -494,10 +402,9 @@
 @date-range-big-choose-months-color:                                     #26B8FF;
 @date-range-big-choose-months-font-size:                                 1rem;
 @date-range-big-choose-months-margin:                                    0.286rem;
-@date-range-big-choose-months-button-height:1.786rem;
 @date-range-big-choose-months-range-width:5.429rem;
-@date-range-big-choose-months-button-first-height:@date-range-big-choose-months-button-height;
-@date-range-big-choose-months-button-last-height:@date-range-big-choose-months-button-height;
+@date-range-big-choose-months-button-first-height:                       1.786rem;
+@date-range-big-choose-months-button-last-height:                        1.786rem;
 @date-range-big-choose-date-range-picker-table-element-height:2.8rem;
 @date-range-big-choose-date-range-picker-left: @date-range-big-choose-months-range-width + 0.857rem;
 @date-range-big-choose-date-range-picker-caption-height:2.42rem;
@@ -513,7 +420,7 @@
 @date-range-big-choose-header-home-button-font-size:@date-range-big-choose-header-home-button-size;
 @date-range-big-choose-header-home-button-margin-left:0;
 @date-range-big-choose-header-date-box-border-color:           @text-box-border-color;
-@date-range-big-choose-header-date-box-border-selected-color:  @text-box-bottom-border-color;
+@date-range-big-choose-header-date-box-border-selected-color:  @text-box-border-color-bottom;
 @date-range-big-choose-header-date-pickers-margin-right:3.286rem;
 @date-range-big-choose-date-range-picker-caption-font-size: @default-font-size;
 @date-range-big-choose-header-date-picker-margin-top:0;
@@ -543,7 +450,6 @@
 @date-range-big-choose-month-range-picker-table-element-font-size: .4rem;
 @date-range-big-choose-month-range-padding:0.2857rem;
 @date-range-big-choose-month-range-picker-bg-selected:  @date-range-big-choose-bg-selected-color;
-@date-range-big-choose-quarters-half-years-font-size:inherit;
 @date-range-big-choose-month-hovered-color:                          #B9E9FF;
 
 //Edit at place
@@ -564,6 +470,7 @@
 @list-view-actions-margin:                0 0.14rem;
 @list-view-actions-icon-top:              .82rem;
 @list-view-actions-menu-text-margin:      .64rem 0 .2142rem 2.92rem;
+@list-view-items-toolbar-elements-margin: 0 0.14rem;
 @list-view-items-toolbar-line-height:     1.75rem;
 @list-view-items-toolbar-vertical-line-height:0.86rem;
 @list-view-items-toolbar-locked-bg:       @basic-block-bg-color;
@@ -581,17 +488,11 @@
 @listView-empty-data-font-size:           1rem;
 @list-view-scroll-bg:                     url('img/ajax-loader-indicator-big.gif') no-repeat center;
 @list-view-scroll-height:                 3.5714rem;
-@list-view-scroll-width:                  3.5714rem;
-@controls-AjaxLoader-indicator-padding-left:3.5714rem;
-@controls-AjaxLoader-indicator-height:    3.5714rem;
-@controls-AjaxLoader-block-width:         3.5714rem;
-@controls-AjaxLoader-outer-height:        3.5714rem;
-@controls-AjaxLoader-minHeight:           3.5714rem;
+@controls-AjaxLoader-size:                3.5714rem;
 @controls-AjaxLoader-block-padding:       0;
 @controls-AjaxLoader-background:          none;
 @scrollPaging-padding:                    3.6666rem;
 //Tree view
-@tree-view-expand-spritesheet:            '';
 @tree-view-expand-width:                  1.7857rem;
 @tree-view-expand-height:                 auto;
 @tree-view-expand-color:                  @gray-lamantin-color;
@@ -602,19 +503,15 @@
 @tree-view-level-padding:                 2.0714rem;
 @tree-view-expand-margin:                 0 .2857rem 0 0;
 @tree-view-editArrow-top:                 0.176rem;
-@tree-view-expand-bg:                     transparent;
-@tree-view-expand-hover-bg:               @tree-view-expand-bg;
-@tree-view-expand-open-margin:            .2857rem 0 0;
 @tree-view-expand-open-border-width:      .2857rem .2857rem 0 .2857rem;
-@tree-view-expand-open-bg:                transparent;
-@tree-view-expand-open-hover-bg:          @tree-view-expand-open-bg;
 @tree-view-item-content-margin:           0 0 0 .7142rem;
 @tree-view-child-container-padding:       @tree-view-item-content-margin;
 @tree-view-hier-wrapper-width:				.7142rem;
 @tree-view-hier-wrapper-height: 				.7142rem;
 @tree-view-copy-arrow-background:         @basic-block-bg-color;
+//Group
+@list-view-separator-height:              1.7857rem;
 //Data grid
-@data-grid-bg:                            transparent;
 @data-grid-row-hover-bg:                  #293A4B;
 @data-grid-row-selected-bg:               @data-grid-row-bg;
 @data-grid-header-cell-height:            1.7857rem;
@@ -624,7 +521,6 @@
 @data-grid-header-cell-font-size:         0.86rem;
 @data-grid-header-cell-icon-size:         1.5rem;
 @data-grid-header-cell-sorting-icon-size: 1rem;
-@data-grid-row-selected-cell-text-color:  @default-text-color;
 @data-grid-cell-height:                   1.7857rem;
 @data-grid-cell-padding:                  0 .28571rem;
 @data-grid-ms-first-content-cell-padding-left:@data-grid-header-cell-padding-side;
@@ -633,27 +529,31 @@
 @data-grid-td-visible-checkbox-width:     1.75rem;
 @data-grid-check-box-top:                 -@default-border-width;
 @data-grid-cell-separator-color:          rgba(0, 0, 0, 0.1);
-@data-grid-cell-border-width:             @default-border-width 0;
 @data-grid-partScroll-notScrolledCell-Color:@basic-block-bg-color;
+@data-grid-partScroll-thumb-margin:       1.78rem;
+@data-grid-partScroll-arrowLeft-top-shift:-.857rem;
 @data-grid-money-header-cell-padding:     1.43rem;
 @data-grid-money-header-cell-padding-last:1.92rem;
 @data-grid-results-color:                 #FFCC99;
+@data-grid-partScroll-arrowLeft-top-shift: -0.8571rem;
+@data-grid-partScroll-arrowRight-top-shift: -0.8571rem;
 // PrintDialog
 //По какой-то причине Firefox берёт font-size не из html, а свой, причем только при расчёте этой ширины
 @controls-printdialog-min-width:          27em;
 @controls-printdialog-activate-right:     3.1785rem;
 @controls-printdialog-activate-margin-top:8px;
 //MergeDialog
+@controls-MergeDialogTemplate-height:                                       21rem;
 @controls-MergeDialogTemplate-hint-font-size:                               @small-text-size;
 @controls-MergeDialogTemplate-treeDataGridView-padding-bottom:              .8571rem;
 @controls-MergeDialogTemplate-hint-font-color:                              @default-text-color;
-@controls-MergeDialogTemplate-DataGridView-td-border-bottom:                1px solid #283848 !important;
 @controls-MergeDialogTemplate-treeDataGridView-first-cell-width:            1rem;
 //OperationsPanel
 @controls-OperationsPanel-height:         3.57rem;
 @controls-OperationsPanel-bg:             #354B62;
 @controls-OperationsPanel-actions-margin: 0 .2857rem;
 @controls-OperationsPanel-menu-icon-size:           @icon-large-size;
+@controls-OperationsPanel-menu-padding-right: @controls-OperationsPanel-menu-icon-size;
 @controls-OperationsPanel-actions-align:  baseline;
 @controls-OperationsPanel-separator-width:  2px;
 @controls-OperationsPanel-separator-height: 1.9285rem;
@@ -672,7 +572,6 @@
 //EditInPlace
 @controls-editInPlace-editor-padding:     .2857rem;
 //MultiView
-@multiView-tile-item-border:              .0357rem solid @gray-light-color;
 @multiView-tile-item-min-width:           4.5714rem;
 @multiView-tile-item-image-margin:        .3571rem 1.43rem;
 @multiView-tile-item-text-margin:         .25rem;
@@ -681,10 +580,11 @@
 
 @DropdownList-border-color:                 @default-text-color;
 @DropdownList-linkStyleHoverColor:		     rgb(187, 233, 255);
-@DropdownList-disabled-text:                #38546C;
+@DropdownList-disabled-text:                #37536C;
 @DropdownList-picker-title-type-header-bg:  #26B8FF;
 @DropdownList-picker-head-color:            #E4E4E4;
 @DropdownList-picker-head-weight:           normal;
+@DropdownList-picker-max-width:             28.57rem;
 //ProgressBar
 @ProgressBar-height:                      1.321rem;
 @ProgressBar-width:                       14.286rem;
@@ -702,55 +602,37 @@
 //FilterButton
 @controls-filterButton-button-width:	   3rem;
 @controls-filterButton-height:            3rem;
-@filter-button-font-size:						3rem !important; //перебиваем .icon-24
 @controls-filterButton-button-height:		3rem;
 @controls-filterButton-button-height:		3rem;
 @controls-filterButton-picker-bg:         #38495B;
-@controls-filterButton-picker-border-width:@default-border-width;
 @controls-Popup-closeButton-top:          8px;
 @controls-filterButton-picker-close-top:  .29rem;
 @controls-filterButton-button-margin:     0;
 @controls-filterButton-button-margin-right-align:.2857rem 0 .2857rem .2857rem;
-@controls-filterButton-button-margin-ff:  .5714rem 0 0 0;
 @controls-filterButton-area-text-weight:	normal;
-@controls-filterButton-button-arrow-margin:-.14rem;
 @controls-filterButton-area-header-padding:.29rem 3rem .29rem .86rem;
 @controls-filterButton-area-text-size:    1.43rem;
 @controls-filterButton-area-text-margin:   0 .86rem 0 0;
 @controls-filterButton-area-text-color:   @default-text-color;
 @controls-filterButton-clear-margin-right: .86rem;
-@controls-filterButton-area-content-margin:0 .42857rem 0.75rem;
+@controls-filterButton-area-content-margin:0 .28rem .86rem .86rem;
 @controls-filterButton-line-height:       1.4642rem;
 @controls-filterButton-filterLine-margin: 0;
 //FilterLine
-@controls-filterLine-wrapper-height:      0.86rem;
 @controls-filterLine-link-color:          #26B8FF;
-@controls-filterLine-copyCross-top:       -1rem;
-@controls-filterLine-copyCross-margin:    -1.75rem;
 //FieldLink
-@controls-FieldLink-border-color-picker-show: @accent-color;
-@controls-FieldLink-showAllLinks-marginRight:-1.43rem;
-@controls-FieldLink-linkItem-padding:        0 3rem 0 .5rem;
-@controls-FieldLink-linkItem-cross-width:    3rem;
-@controls-FieldLink-linkItem-cross-right:    0;
-@controls-FieldLink-linkItem-cross-top:      -.14rem;
-@controls-FieldLink-linkItem-cross-padding:  0;
-
-@controls-FieldLink-afterField-padding:      0;
-
-@controls-FieldLink-afterField-background:   transparent;
-@controls-FieldLink-FilterButton-color:      #26B8FF;
-@controls-FieldLink-FilterButton-color-hover:#26B8FF;
+@fieldLink-border-color-picker-show: @accent-color;
+@fieldLink-linkItem-cross-width:    3rem;
+@fieldLink-afterField-padding:      0;
+@fieldLink-FilterButton-color:      #26B8FF;
+@fieldLink-FilterButton-color-hover:#26B8FF;
 @controls-filterButton-area-header-width:    23.92rem;
-//SelectorButton
-@controls-SelectorButton-align:           middle;
 // BackButton
 @back-button-font-size:                   1.43rem;
 @back-button-line-height:                 1.7857rem;
 @back-button-height:                      1.7857rem;
 @back-button-arrow-hover-color:           @default-hover-color;
 // BreadCrumbs
-@back-button-arrow-paddingleft:           .5714rem;
 @bread-crumb-title-color:                 @gray-lamantin-color;
 @bread-crumb-title-hover-color:           @default-hover-color;
 @breadcrumbs-top:                         0;
@@ -763,13 +645,12 @@
 @editdialog-window-title-margin-right:    11rem; //ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить +.07rem; на небольшой отступ между ними
 //MoveDialog
 @controls-Paging-item-width:              0.86rem;
-@controls-Paging-btn-width:               1.75rem;
-@controls-Paging-btn-height:              1.75rem;
 @controls-Paging-btn-margin:              0 .2857rem 0 0;
 @controls-Paging-btn-padding:             .2857rem;
 @controls-Paging-padding:                 0;
 @controls-movedialog-min-height:          3.5714rem;
 @controls-movedialog-max-width:           25rem;
+@controls-movedialog-width:               25rem;
 //ScrollContainer
 @controls-ScrollContainer-top-gradient-height:0.857rem;
 //Scrollbar
@@ -869,7 +750,6 @@
 @tab-button-simple-inner-padding:         0 .857rem 0 .857rem;
 @tab-control-smple-bottomline-height:     .214rem;
 @tab-button-color:                        @disabled-color;
-@tab-control-padding-top:					   3.57rem;
 @tab-control-background-color:			   transparent;
 @tab-button-font-size:                    1.43rem;
 @tab-button-font:                         @tab-button-font-size 'TensorFont', sans-serif;
@@ -915,14 +795,13 @@
 @menu-item-icon-32-margin:						0 0 0 3rem;
 @menu-item-icon-24-margin:						0 0 0 1.78rem;
 @menu-item-icon-16-margin:						0 0 0 1.32rem;
-@text-box-error-bg:                       #472e35;
 @back-button-width-before:                .7rem;
 @back-button-text-fontweight:             @default-font-weight;
 @tab-buttons-border-bottom-height:        0.01rem;
 @dropdownlist-item-text-color:            #202835;
 @controls-editInPlace-editor-bg:			   #354B62 !important;
-@controls-FieldLink-picker-show-color:		#F0F5FB;
-@controls-FieldLink-picker-show-field-color:   rgb(58, 73, 81);
+@fieldLink-picker-show-color:		#F0F5FB;
+@fieldLink-picker-show-field-color:   rgb(58, 73, 81);
 @textbox-font-size:							   1.43rem;
 @scroll-pager-bg:							      transparent;
 @commands-button-close-icon:              @icon-large-size;
@@ -930,19 +809,18 @@
 @commands-button-close-button-size:       @icon-large-size;
 @commands-button-close-button-top:        0.125rem;
 @commands-button-margin:                  -.3571rem -3.1071rem 0 0;
-@DropdownList-height: 					      2.97rem;
+@DropdownList-height: 					      3rem;
 @DropdownList-footer-buttonsBlock-height: 3.57rem;
-@DropdownList-footer-hasMore-top:         1.1rem;
 @DropdownList-picker-menu-item-color:     #F0F5FB;
 @DropdownList-picker-menu-item-hover:     #E0ECF5;
 @DropdownList-picker-close-btn-top:       0;
 @DropdownList-picker-close-btn-right:     0;
 @list-view-loading-indicator-gradient-bg: url(@list-view-scroll-spritesheet) no-repeat center;
 @list-view-loading-indicator-gradient-bg-up:url(@list-view-scroll-spritesheet) no-repeat center;
-@text-box-placeholder-color: 				   rgba(96,170,221, .2);
 @DropdownList-picker-menu-item-height:    3rem;
+@DropdownList-picker-menu-item-height-ff: 4rem;
 @DropdownList-picker-menu-item-base-color: @menu-item-text-color;
-@DropdownList-after-caption-top:          0.47rem;
+@DropdownList-after-caption-top:          0;
 @tree-view-ellipsis-copyArrow-width:      1rem;
 @DropdownList-picker-bg:                  #E1ECF6;
 @bread-crumbs-menu-padding:               0;
@@ -1017,22 +895,20 @@
 @bottomStyle-items-toolbar-margin-top:    .28rem;
 @data-grid-row-hover-cell-bg:             #293A4B;
 @image-bar-height:                        3.57rem;
-@image-bar-vertical-padding:              0.245rem;
-@image-bar-vertical-padding:              0.316rem;
-@image-bar-horizontal-padding:            0.286rem;
+@image-bar-horizontal-padding:            0;
 @image-bar-bg-color:                      rgba(102,170,221, .5);
-@money-text-box-decimals-padding:         0;
 @money-text-box-decimals-font-size:       @default-font-size;
 @money-text-box-decimals-color:           @default-text-color;
 @header-color:                            #FC9;
 @header-color-hover:                      @default-hover-color;
 @controls-toolbar-item-vertical-align:    baseline;
 @date-range-big-choose-years-btn:         .5rem;
-@DropdownList-picker-offset:              0;
+@DropdownList-picker-offset:              -0.39rem 0 0 -0.67rem;
+@DropdownList-picker-fastdatafilter-offset: -0.39rem 0 0 -0.67rem;
+@DropdownList-picker-fdf-left:            -0.7rem;
 @dropdown-list-item-padding:              .1785rem 3rem .1071rem .57rem;
 @list-view-items-toolbar-bottom:          0.214rem;
 @list-view-items-toolbar-font-family:     'carrypresto-icons';
-@search-left-margin:                      .57rem;
 @controls-view-eip-padding-DEFAULT:                                                                                     .2857rem;
 @controls-view-padding-DEFAULT:           .857rem;
 @combo-box-picker-border:                 @default-border-width solid @default-border-color-second;
@@ -1041,7 +917,6 @@
 @tree-view-copy-arrow-add-background:     @data-grid-row-selected-addit-bg;
 @data-grid-row-hover-add-bg:              rgba(41, 58, 75, 0);
 @data-grid-row-selected-add-bg:           @data-grid-row-hover-add-bg;
-@text-box-disabled-border-color:          transparent;
 @controls-NotificationPopup-border:       none;
 @controls-NotificationPopup-border-top:   @controls-NotificationPopup-border;
 @controls-NotificationPopup-border-right: @controls-NotificationPopup-border;
@@ -1049,7 +924,7 @@
 @controls-NotificationPopup-header-padding:                   0.2857rem;
 @controls-NotificationPopup-header-padding-with-close-button: @controls-NotificationPopup-header-padding 2.0714rem @controls-NotificationPopup-header-padding 8px;
 @back-button-text-color:                  #FFCC99;
-@controls-FieldLink-link-color-hover:     @default-hover-color;
+@fieldLink-link-color-hover:     @default-hover-color;
 
 @commands-button-close-icon-color:        @icon-color-primary;
 @long-operations-popup-header-line-height:60px;

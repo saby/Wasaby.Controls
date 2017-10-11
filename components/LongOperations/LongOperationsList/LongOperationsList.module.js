@@ -3,9 +3,9 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
       'Core/Deferred',
       'Core/IoC',
       'js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.LongOperationEntry',
+      'js!SBIS3.CONTROLS.LongOperations.Entry',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model',
-      'js!SBIS3.CONTROLS.LongOperationsManager',
+      'js!SBIS3.CONTROLS.LongOperations.Manager',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
       'js!SBIS3.CONTROLS.Utils.InformationPopupManager',
       'html!SBIS3.CONTROLS.LongOperationsList',
@@ -106,7 +106,7 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
 
             this._bindEvents();
 
-            this._view.setDataSource(new LongOperationsListDataSource());
+            this._view.setDataSource(new LongOperationsListDataSource(), true);
          },
 
          _bindEvents: function () {
@@ -390,11 +390,12 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
                   var args = model.get('resultHandlerArgs');
                   if (args) {
                      if (typeof args === 'string') {
+                        // Это могут быть как сложные данные в виде json, так и просто одиночная строка
                         try {
                            args = JSON.parse(args);
                         }
                         catch (ex) {
-                           IoC.resolve('ILogger').error('SBIS3.CONTROLS.LongOperationsList', 'JSON data is corrupted');
+                           // Значит просто строка
                         }
                      }
                      if (!Array.isArray(args)) {

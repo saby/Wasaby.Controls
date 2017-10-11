@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.DSMixin', [
-   "Core/core-functions",
+   "Core/core-clone",
    "Core/Deferred",
    "Core/IoC",
    "js!WS.Data/Source/Memory",
@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    "Core/core-instance",
    "Core/helpers/Function/forAliveOnly",
    "Core/helpers/Object/isEmpty"
-], function ( cFunctions, Deferred, IoC, MemorySource, SbisService, Query, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, cInstance, forAliveOnly, isEmptyObject) {
+], function (coreClone, Deferred, IoC, MemorySource, SbisService, Query, ObservableList, Projection, IBindCollection, Collection, TemplateUtil, cInstance, forAliveOnly, isEmptyObject) {
 
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
@@ -324,7 +324,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @property {String} template Шаблон, по которому будет построен заголовок каждой группы.
              * Шаблон представляет собой XHTML-файл. Чтобы шаблон можно было использовать, его нужно предварительно подключить в массив зависимостей компонента.
              * На клик по заголовку группы можно установить функцию-обработчик, которая конфигурируется подопцией clickHandler.
-             * Внутри шаблона допускается использование {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/ конструкций шаблонизатора}, через которые можно получить доступ к полям первого элемента группы.
+             * Внутри шаблона допускается использование {@link http://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/xhtml/template/ конструкций шаблонизатора}, через которые можно получить доступ к полям первого элемента группы.
              * @property {Function} render Функция, дополняющая функционал обработки заголовка группы.
              * Аргументы функции:
              * <ol>
@@ -1076,7 +1076,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._drawItems(records);
          }
          /*класс для автотестов*/
-         this._container.addClass('controls-ListView__dataLoaded');
+         this._container.addClass('controls-ListView__dataLoaded').removeClass('controls-ListView__dataNotLoaded');
       },
       _destroySearchBreadCrumbs: function(){
       },
@@ -1242,7 +1242,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          var
                groupBy = this._options.groupBy,
                tplOptions = {
-                  columns : cFunctions.clone(this._options.columns || []),
+                  columns : coreClone(this._options.columns || []),
                   multiselect : this._options.multiselect,
                   hierField: this._options.hierField + '@'
                },

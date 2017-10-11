@@ -2,6 +2,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "Core/constants",
    "Core/Deferred",
    'Core/IoC',
+   'Core/detection',
    'js!SBIS3.CORE.LayoutManager',
    'js!SBIS3.CONTROLS.TextBox',
    'js!SBIS3.CONTROLS.TextBoxUtils',
@@ -15,13 +16,14 @@ define('js!SBIS3.CONTROLS.ComboBox', [
    "js!SBIS3.CONTROLS.DataBindMixin",
    "js!SBIS3.CONTROLS.SearchMixin",
    "js!SBIS3.CONTROLS.ScrollContainer",
+   'js!SBIS3.CONTROLS.Utils.GetTextWidth',
    "tmpl!SBIS3.CONTROLS.ComboBox/resources/ComboBoxArrowDown",
-   "html!SBIS3.CONTROLS.ComboBox/resources/ItemTemplate",
+   "tmpl!SBIS3.CONTROLS.ComboBox/resources/ItemTemplate",
    "tmpl!SBIS3.CONTROLS.ComboBox/resources/ItemContentTemplate",
    "Core/core-instance",
    "i18n!SBIS3.CONTROLS.СomboBox",
    'css!SBIS3.CONTROLS.ComboBox'
-], function ( constants, Deferred, IoC, LayoutManager, TextBox, TextBoxUtils, textFieldWrapper, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
+], function ( constants, Deferred, IoC, detection, LayoutManager, TextBox, TextBoxUtils, textFieldWrapper, dotTplFnPicker, PickerMixin, ItemsControlMixin, RecordSet, Projection, Selectable, DataBindMixin, SearchMixin, ScrollContainer, getTextWidth, arrowTpl, ItemTemplate, ItemContentTemplate, cInstance) {
    'use strict';
    /**
     * Класс контрола "Комбинированный выпадающий список" с возможностью ввода значения с клавиатуры.
@@ -91,6 +93,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       return itemsProjection;
    }
 
+   function checkDisplayProperty(cfg) {
+      if (!cfg.displayProperty && cfg._items && !cInstance.instanceOfModule(cfg._items, 'WS.Data/Type/Enum')) {
+         IoC.resolve('ILogger').error('SBIS3.CONTROLS.ComboBox', 'Не задана опция displayProperty');
+         cfg.displayProperty = 'title';
+      }
+   }
+
    var ComboBox = TextBox.extend([PickerMixin, ItemsControlMixin, Selectable, DataBindMixin, SearchMixin], /** @lends SBIS3.CONTROLS.ComboBox.prototype */{
       _dotTplFnPicker: dotTplFnPicker,
       /**
@@ -136,7 +145,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          //если он true, то при условии ключа null текст будет оцищаться
          //нельзя всегда очищать текст, потому что при ручном вводе текста, даже при пустом ключе текст стирать не надо
          _isClearing: false,
-         _keysWeHandle: [constants.key.up, constants.key.down, constants.key.enter, constants.key.esc],
          _options: {
             textFieldWrapper: textFieldWrapper,
             _emptyRecordProjection: undefined,
@@ -180,8 +188,17 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              */
             editable: true,
             /**
-             * @cfg {Boolean} Присутствует пустое значение или нет
-             * @noShow
+             * @cfg {Boolean} Добавляет в выпадающий список новый пункт "Не выбрано".
+             * @remark
+             * Благодаря данной опции контрол можно перевести в такой режим работы, при котором в выпадающем списке будет присутствовать пункт "Не выбрано".
+             * ![](/empty-value-1.png)
+             * При выборе этого пункта сбрасывается ранее установленное значение. Также говорят, что устанавливается пустое значение.
+             * Выбор пункта аналогичен выполнению следующего кода:
+             * <pre>
+             * // myComboBox - экземпляр класса SBIS3.CONTROLS.ComboBox
+             * myComboBox.setSelectedKey(null);
+             * </pre>
+             * Чтобы установить текст, отображаемый в поле ввода после выбора пустого значения, определите значение в опции {@link placeholder}.
              */
             emptyValue: false,
             /**
@@ -199,10 +216,22 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       $constructor: function () {
          var self = this;
 
+         //Дикий костыль в TextBoxBase: задан большой набор значений в _keysWeHandle, чтобы
+         //нажатия по этим клавишам не долетали до ListView и его наследников, т.к. нажатие этих клавиш там обрабатывается.
+         //Чтобы сохранить те клавиши, которые уже описаны в TextBoxBase и добавить свои в наследнике - приходится напрямую
+         //записывать их в объект.
+         this._keysWeHandle[constants.key.up] = 100;
+         this._keysWeHandle[constants.key.down] = 101;
+         this._keysWeHandle[constants.key.enter] = 102;
+         this._keysWeHandle[constants.key.esc] = 103;
+
+
          if (this._options.autocomplete){
             this.subscribe('onSearch', this._onSearch);
             this.subscribe('onReset', this._onResetSearch);
          }
+
+         this._pickerMouseEnter = this._pickerMouseEnterHandler.bind(this);
 
          this._container.click(function (e) {
             var target = $(e.target),
@@ -222,10 +251,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _modifyOptions: function(){
          var cfg = ComboBox.superclass._modifyOptions.apply(this, arguments);
 
-         if (!cfg.displayProperty) {
-            IoC.resolve('ILogger').error(this._moduleName, 'Не задана опция displayProperty');
-            cfg.displayProperty = 'title';
-         }
+         checkDisplayProperty(cfg);
 
          if (cfg.emptyValue){
             var rawData = {},
@@ -248,7 +274,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             cfg.cssClassName += ' controls-ComboBox__editable-false';
          }
          if (!cfg.selectedKey) { //todo: ьожет это ндао в условие уровнем повыше
-            cfg.cssClassName += ' controls-ComboBox_emptyValue';
+            cfg.cssClassName += ' controls-ComboBox__emptyValue';
          }
          return cfg;
       },
@@ -269,10 +295,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          //Сделать общую точку входа для поиска, для понимания где искать на источнике или на проекции
          var itemText = model.get(this._options.displayProperty).toLowerCase(),
             text = this.getText().toLowerCase();
-         if (itemText.match(text)){
-            return true;
-         }
-         return false;
+         return itemText.indexOf(text) > -1;
       },
 
       _onSearch: function(){
@@ -286,7 +309,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _onResetSearch: function(){
          this.setSelectedIndex(-1);
          this._getItemsProjection().setFilter(null);
-         this.redraw();
          this._setKeyByText();
       },
 
@@ -294,6 +316,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          var
             selectedKey = this.getSelectedKey(),
             selectedItem, newSelectedItem, newSelectedItemId, newSelectedItemHash;
+
+         if (e.which !== constants.key.up && e.which !== constants.key.down && e.which !== constants.key.enter && e.which !== constants.key.esc) {
+            return ComboBox.superclass._keyboardHover.apply(this, arguments);
+         }
 
          // горячая комбинация клавиш
          if(e.ctrlKey && e.which === constants.key.enter) {
@@ -379,10 +405,16 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       _drawText: function(text) {
          ComboBox.superclass._drawText.apply(this, arguments);
          this._drawNotEditablePlaceholder(text);
-         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).html(text || this._options.placeholder || '&nbsp;');
+         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text || this._options.placeholder || '');
          if (this._options.editable) {
             this._setKeyByText();
          }
+         // Иногда $(...).width() возвращает не целое число (замечено в MSIE), из-за этого сравнение даёт неверный результат. Так что округляем:
+         var width = $('.controls-TextBox__field:visible', this.getContainer()).width();
+         var isTextOverflow = 0 < width && getTextWidth(this.getText()) > Math.round(width);
+         //Если у нас виден инпут, то показываем тень только когда он не в фокусе. иначе в момент ввода появится ненужное затемнение.
+         var needShadow = isTextOverflow && (this.isEditable() && !this._inputField.is(':focus') || !this.isEditable());
+         this.getContainer().toggleClass('controls-ComboBox__overflow', needShadow);
       },
 
       _drawNotEditablePlaceholder: function (text) {
@@ -396,7 +428,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          if (this._picker) {
             $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
          }
-         this._container.addClass('controls-ComboBox_emptyValue');
+         this._container.addClass('controls-ComboBox__emptyValue');
       },
 
       _drawSelectedItem: function (key, index) {
@@ -438,10 +470,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
              * вообще этот участок кода нехороший, помечу его TODO
              * планирую избавиться от него по задаче https://inside.tensor.ru/opendoc.html?guid=fb9b0a49-6829-4f06-aa27-7d276a1c9e84&description*/
             if (cInstance.instanceOfModule(item, 'WS.Data/Entity/Model')) {
-               this._container.toggleClass('controls-ComboBox_emptyValue', (key === null));
+               this._container.toggleClass('controls-ComboBox__emptyValue', (key === null));
             }
             else {
-               this._container.removeClass('controls-ComboBox_emptyValue');
+               this._container.removeClass('controls-ComboBox__emptyValue');
             }
          }
          else {
@@ -502,8 +534,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                   self.setActive(true);
                }
                self.hidePicker();
-               // чтобы не было выделения текста, когда фокус вернули в выпадашку
-               self._fromTab = false;
                self.setSelectedIndex(index);
                if (self._options.autocomplete){
                   self._getItemsProjection().setFilter(null);
@@ -532,7 +562,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             targetPart: true,
             activableByClick: false,
             closeOnTargetMove: true,
-            template : this._dotTplFnPicker({})
+            template : this._dotTplFnPicker
          };
       },
 
@@ -680,6 +710,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
       },
 
       redraw: function () {
+         checkDisplayProperty(this._options);
          if (this._picker) {
             ComboBox.superclass.redraw.call(this);
             // Сделано для того, что бы в при уменьшении колчества пунктов при поиске нормально усеньшались размеры пикера
@@ -748,22 +779,37 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
       },
 
-      showPicker: function(){
-         //Инициализируем пикер, чтобы перед показом ограниччить его ширину
-         if (!this._picker || this._picker.isDestroyed()) {
-            this._initializePicker();
-         }
-         ComboBox.superclass.showPicker.call(this);
-         TextBoxUtils.setEqualPickerWidth(this._picker);
-         //После отображения пикера подскроливаем до выбранного элемента
+      showPicker: function() {
          var projection = this._getItemsProjection(),
             item = projection.at(this.getSelectedIndex()),
             hash = item && item.getHash();
 
-         if(!hash && projection.getCount() > 0) {
-            hash = projection.at(0).getHash();
+         if (projection.getCount()) {//Инициализируем пикер, чтобы перед показом ограниччить его ширину
+            if (!this._picker || this._picker.isDestroyed()) {
+               this._initializePicker();
+            }
+            ComboBox.superclass.showPicker.call(this);
+            TextBoxUtils.setEqualPickerWidth(this._picker);
+            if (!hash && projection.getCount() > 0) {
+               hash = projection.at(0).getHash();
+            }
+            this._scrollToItem(hash);
          }
-         this._scrollToItem(hash);
+      },
+
+      _pickerMouseEnterHandler: function (event) {
+         //не устанавливаем title на мобильных устройствах:
+         //во-первых не нужно, во-вторых на ios из-за установки аттрибута не работает клик
+         if (!detection.isMobilePlatform) {
+            var itemContainer = $(event.target).closest('.controls-ComboBox__itemRow');
+            if (itemContainer.length) {
+               var itemTextContainer = $('.controls-ComboBox__item', itemContainer)[0],
+                  itemText = itemTextContainer.textContent;
+               if (getTextWidth(itemText) > itemTextContainer.clientWidth) {
+                  itemContainer[0].setAttribute('title', itemText);
+               }
+            }
+         }
       },
 
       _initializePicker: function(){
@@ -776,6 +822,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          self._picker.subscribe('onKeyPressed', function (eventObject, event) {
             self._keyboardHover(event);
          });
+         $('.controls-ComboBox__list', this._picker.getContainer()).bind('mouseenter', this._pickerMouseEnter);
          TextBoxUtils.setEqualPickerWidth(this._picker);
       },
 
@@ -806,6 +853,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._isClearing = true;
          }
          ComboBox.superclass.setSelectedKey.apply(this, arguments);
+      },
+
+      destroy: function() {
+         if (this._picker) {
+            $('.controls-ComboBox__list', this._picker.getContainer()).unbind('mouseenter', this._pickerMouseEnter);
+         }
+         ComboBox.superclass.destroy.apply(this, arguments);
       },
 
       _scrollToItem: function(itemHash) {

@@ -101,8 +101,9 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', ['Core/core-instance'], fun
                this._startRangeSelection(item, endItem);
             }
          } else {
-            this.setRange(item, endItem);
-            this.validateRangeSelectionItemsView();
+            if (this.setRange(item, endItem)) {
+               this.validateRangeSelectionItemsView();
+            }
          }
       },
 
@@ -344,6 +345,8 @@ define('js!SBIS3.CONTROLS.RangeSelectableViewMixin', ['Core/core-instance'], fun
       },
 
       _getSelectedRangeItemsContainers: function () {
+         // TODO: переделать через memoize
+         // https://online.sbis.ru/opendoc.html?guid=0ceb4c76-2d17-40c8-a1fb-93213be84738
          if (!this._$items) {
             this._$items = this.getContainer().find(['.', this._SELECTABLE_RANGE_CSS_CLASSES.item].join(''));
          }

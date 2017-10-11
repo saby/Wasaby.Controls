@@ -1,10 +1,11 @@
 define('js!SBIS3.CONTROLS.Button',
    [
       'Core/Control',
-      'js!SBIS3.CONTROLS.Button/Button.compatible',
+      'is!compatibleLayer?js!SBIS3.CONTROLS.Button/Button.compatible',
       'tmpl!SBIS3.CONTROLS.Button',
-      'js!SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor',
-      'js!SBIS3.CORE.Control/ControlGoodCode',
+      'is',
+      'is!compatibleLayer?js!SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor',
+      'is!compatibleLayer?js!SBIS3.CORE.Control/ControlGoodCode',
       'css!SBIS3.CONTROLS.Button',
       'css!WSControls/Buttons/resources/ButtonBase'
          ],
@@ -12,6 +13,7 @@ define('js!SBIS3.CONTROLS.Button',
    function (Base,
              ButtonCompatible,
              template,
+             isJs,
              WsCompatibleConstructor,
              ControlGoodCode) {
 
@@ -23,7 +25,7 @@ define('js!SBIS3.CONTROLS.Button',
    /**
     * Класс контрола "Обычная кнопка".
     *
-    * {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/buttons/button-line/#button Демонстрационные примеры}.
+    * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/textbox/buttons/button-line/#button Демонстрационные примеры}.
     * <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Спецификация</a>.
     *
     * @class SBIS3.CONTROLS.Button
@@ -106,7 +108,9 @@ define('js!SBIS3.CONTROLS.Button',
             if (!this.isEnabled()) {
                return;
             }
-            this._onClickHandler(e);
+            if (isJs.features.compatibleLayer) {
+               this._onClickHandler(e);
+            }
             this._notify("onActivated", e);
             this._forceUpdate();
          },
@@ -165,30 +169,51 @@ define('js!SBIS3.CONTROLS.Button',
          },
 
          _onMouseEnter: function(e){
-            this._showExtendedTooltipCompatible();
+            if (isJs.features.compatibleLayer) {
+               this._showExtendedTooltipCompatible();
+            }
             this._notify('onMouseEnter', e);
          },
 
          _onMouseLeave: function(e){
-            if(this.isActive()) {
-               this._hideExtendedTooltipCompatible();
+            if (isJs.features.compatibleLayer) {
+               if (this.isActive()) {
+                  this._hideExtendedTooltipCompatible();
+               }
             }
             this._notify('onMouseLeave', e);
          },
 
          _onFocusIn: function(e){
             var self = this;
-            this._showExtendedTooltipCompatible();
+            if (isJs.features.compatibleLayer) {
+               this._showExtendedTooltipCompatible();
+            }
          },
 
          _onFocusOut: function(e){
             var self = this;
-            this._hideExtendedTooltipCompatible();
+            if (isJs.features.compatibleLayer) {
+               this._hideExtendedTooltipCompatible();
+            }
+         },
+
+         show: function(){
+            // если кнопка скрыта при построение, то она не зарегистрируется дефолтной,
+            // поэтому при показе такой кнопки регистрируем её как дефолтную
+            var oldVisible = this.isVisible();
+
+            Button.superclass.show.call(this);
+            if (isJs.features.compatibleLayer && !oldVisible && this.isPrimary()) {
+               this.setDefaultButton(true);
+            }
          },
 
          destroy: function() {
-            if (this.isPrimary()) {
-               this._unregisterDefaultButton();
+            if (isJs.features.compatibleLayer) {
+               if (this.isPrimary()) {
+                  this._unregisterDefaultButton();
+               }
             }
             Button.superclass.destroy.call(this);
          }

@@ -13,13 +13,15 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
    
    var ScrollPagingController = cAbstract.extend({
       $protected: {
+         _freezePaging: false,
          _options: {
             view: null,
             zIndex: null
          },
-         _scrollPages: [], // Набор страниц для скролл-пэйджина
-         _pageOffset: 0, // offset последней страницы
-         _currentScrollPage: 0,
+         _viewHeight: 0,
+         _viewportHeight: 0,
+         _pagesCount: 0,
+         _currentScrollPage: 1,
          _windowResizeTimeout: null,
          _zIndex: null
       },
@@ -54,7 +56,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             view.subscribe('onSetRoot', this._changeRootHandler.bind(this));
 
             view.subscribe('onNodeExpand', function(){
-               this.updateScrollPages(true);
+               this.updatePaging(true);
             }.bind(this));
          }
 
@@ -70,39 +72,32 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
 
       _changeRootHandler: function(){
          var curRoot = this._options.view.getCurrentRoot();
-         this._options.paging.setSelectedKey(0);
-         this._options.paging.setPagesCount(0);
-         this._currentScrollPage = 0;
-         this.updateScrollPages(true);         
+         this._options.paging.setSelectedKey(1);
+         this._options.paging.setPagesCount(1);
+         this._currentScrollPage = 1;
+         this.updatePaging(true);
       },
 
       _scrollHandler: function(event, scrollTop) {
-         var pageNumber = this._calculateScrollPage(scrollTop);
-         var paging = this._options.paging;
-         if (pageNumber >= 0 && paging.getItems() && this._currentScrollPage != pageNumber) {
-            if (pageNumber > paging.getPagesCount()) {
-               paging.setPagesCount(pageNumber);
+         if (!this._freezePaging) {
+            var page = scrollTop / this._viewportHeight;
+            if (page % 1) {
+               page = Math.ceil(page);
             }
-            this._currentScrollPage = pageNumber;
-            paging.setSelectedKey(pageNumber + 1);
-         }
-      },
-
-      _pagingSelectedChange: function(e, key, index){
-         if (index != this._currentScrollPage && this._scrollPages.length){
-            var view = this._options.view,
-               page = this._scrollPages[index];
-            if (page){
-               this._scrollToPage(page);
+            page += 1; //потому что используем нумерацию страниц с 1
+            if (this._currentScrollPage !== page) {
+               this._currentScrollPage = page;
+               this._options.paging.setSelectedKey(page);
             }
          }
       },
 
-      _scrollToPage: function(page){
-         // Если первая страница - проскролим к самому верху, не считая оффсет
-         var offset = page.offset ? this._offsetTop : 0;
-         var view = this._options.view;
-         view._getScrollWatcher().scrollTo(page.offset + offset);
+      _pagingSelectedChange: function(e, nPage, index){
+         var scrollTop = this._viewportHeight * (nPage - 1);
+         if (this._currentScrollPage !==  nPage) {
+            this._currentScrollPage = nPage;
+            this._options.view._getScrollWatcher().scrollTo(scrollTop);
+         }
       },
 
       _scrollToLastPage: function(){
@@ -133,119 +128,58 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          if (this._windowHeight != windowHeight){
             this._windowHeight = windowHeight;
             this._windowResizeTimeout = setTimeout(function(){
-               this.updateScrollPages(true);
+               this.updatePaging(true);
             }.bind(this), 200);
          }
       },
 
-      _calculateScrollPage: function(scrollTop){
-         var view = this._options.view;
-         if (this._options.view.isScrollOnBottom(true)){
-            return this._scrollPages.length - 1;
-         }
-         for (var i = 0; i < this._scrollPages.length; i++){
-            var page = this._scrollPages[i];
-            if (this._isPageStartVisisble(page)){
-               return i;
-            }
-         }
-      },
 
       getScrollPage: function(){
-         return this._scrollPages[this._currentScrollPage];
+         return this._currentScrollPage;
       },
 
-      updateScrollPages: function(reset){
-         var view = this._options.view,
-            viewport = $(view._scrollWatcher.getScrollContainer()),
-            viewportHeight = viewport.height(),
-            pageOffset = 0,
-            lastPageStart = 0,
-            self = this,
-            /* Находим все строки в списке */
-            listItems = view._getItemsContainer().find('> *').filter(function() {
-               /* Отфильтровывем скрытые строки,
-                  и строки которые будут вырезаться и перемещаться в прилипающую шапку,
-                  т.к. по ним нельзя корректно посчитать положение. */
-               return !$(this).hasClass('ws-hidden') &&
-                      !$(this).hasClass('ws-sticky-header__table-sticky-row');
-            }),
-            stickyHeaderHeight = StickyHeaderManager.getStickyHeaderHeight(view.getContainer()) || 0;
+      getPagesCount: function() {
+         return this._pagesCount
+      },
 
-         //Если элементов в верстке то нечего и считать
-         if (!listItems.length){
-            this._options.paging.setVisible(false);
-            return;
-         }
+      updatePaging: function() {
+         this._updateCachedSizes();
 
-         // Нужно учитывать отступ от родителя, что бы правильно скроллить к странице
-         if (this._offsetTop === undefined){
-            var viewTop = view.getContainer().get(0).getBoundingClientRect().top,
-               viewportTop = viewport[0] == window ? 0 : viewport.get(0).getBoundingClientRect().top;
-            this._offsetTop = viewTop - viewportTop;
-         }
-         //Cбрасываем все для пересчета
-         if (reset){
-            this._scrollPages = [];
-            self._pageOffset = 0;
-         }
+         var pagesCount = this._viewportHeight ? Math.ceil(this._viewHeight / this._viewportHeight) : 0,
+            view = this._options.view,
+            infiniteScroll = view._getOption('infiniteScroll'),
+            /* Пэйджинг не показываем при загрузке вверх и в обе стороны, он работает некорректно.
+               Сейчас пэйджинг заточен на загрузку вниз. Код необходимо переписать. */
+            pagingVisibility = pagesCount > 1 && infiniteScroll !== 'up' && infiniteScroll !== 'both';
 
-         //Берем последнюю посчитаную страницу, если она есть
-         if (this._scrollPages.length){
-            lastPageStart = this._scrollPages[this._scrollPages.length - 1].element.index();
-         } else {
-            //Запушим первый элемент, если он есть
-            var element = listItems.eq(0);
-            if (view.getItems() && view.getItems().getCount() && element.length){
-               this._scrollPages.push({
-                  element: element,
-                  offset: self._pageOffset
-               });
-            }
-         }
-
-         var topWrapperHeight = $('.controls-ListView__virtualScrollTop', view.getContainer()).height() || 0;
-
-         //Считаем оффсеты страниц начиная с последней (если ее нет - сначала)
-         listItems.slice(lastPageStart ? lastPageStart + 1 : 0).each(function(){
-            var $this = $(this),
-               $next = $this.next('.controls-ListView__item'),
-               // Считаем через position, так как для плитки не подходит сложение высот
-               curBottom = Math.floor($this.position().top) + $this.outerHeight(true) + topWrapperHeight,
-               nextBottom = $next[0] ? Math.floor($next.position().top) + $next.outerHeight(true) : 0 + topWrapperHeight;
-            curBottom = curBottom > pageOffset ? curBottom : pageOffset;
-            nextBottom = nextBottom > curBottom ? nextBottom : curBottom;
-            pageOffset = curBottom;
-            // Если набралось записей на выстору viewport'a добавим еще страницу
-            // При этом нужно учесть отступ сверху от view и фиксированую шапку
-            var offsetTop = self._scrollPages.length == 1 ? self._offsetTop : 0;
-            var prevPageOffset = self._scrollPages.length ? self._scrollPages[self._scrollPages.length - 1].offset : 0;
-            if (nextBottom - prevPageOffset > viewportHeight - offsetTop) {
-               self._pageOffset = pageOffset;
-               self._scrollPages.push({
-                  element: $this,
-                  offset: self._pageOffset - stickyHeaderHeight
-               });
-            }
-         });
-         
-         /* Для пэйджинга считаем, что кол-во страниц это:
-            текущее кол-во загруженных страниц + 1, если в метаинформации рекордсета есть данные о том, что на бл есть ещё записи.
-            Необходимо для того, чтобы в пэйджинге не моргала кнопка перехода к следующей странице, пока грузятся данные. */
-         /* Откатываю до 150 + (view._hasNextPage(view.getItems().getMetaData().more) ? 1 : 0) */
-         var pagesCount = this._scrollPages.length;
-         var pagingVisibility = pagesCount > 1 && view._getOption('infiniteScroll') !== 'up';
-   
          /* Если пэйджинг скрыт - паддинг не нужен */
          view.getContainer().toggleClass('controls-ScrollPaging__pagesPadding', pagingVisibility);
          if (this._options.paging.getSelectedKey() > pagesCount){
             this._options.paging.setSelectedKey(pagesCount);
          }
-         this._options.paging.setPagesCount(pagesCount);
 
-         //Если есть страницы - покажем paging
+         /* Для пэйджинга считаем, что кол-во страниц это:
+            текущее кол-во загруженных страниц + 1, если в метаинформации рекордсета есть данные о том, что на бл есть ещё записи.
+            Необходимо для того, чтобы в пэйджинге не моргала кнопка перехода к следующей странице, пока грузятся данные. */
+         if (pagingVisibility) {
+            this._options.paging.setPagesCount(pagesCount + (view._hasNextPage(view.getItems().getMetaData().more) ? 1 : 0));
+         }
          
+         //Если есть страницы - покажем paging
          this._options.paging.setVisible(pagingVisibility && !this._options.hiddenPager);
+      },
+
+      //когда ListView скрыт следить за скроллом и переключать пэйджинг не надо вообще
+      freezePaging: function(state) {
+         this._freezePaging = state;
+      },
+
+      _updateCachedSizes: function(){
+         var view = this._options.view,
+             viewport  = $(view._scrollWatcher.getScrollContainer())[0];
+         // У window нет scrollHeight и offsetHeight, поэтому высоту получаем иначе
+         this._viewHeight = viewport === window ? document.documentElement.scrollHeight : viewport.scrollHeight;;
+         this._viewportHeight = viewport === window ? viewport.innerHeight : viewport.offsetHeight;
       },
 
       destroy: function(){

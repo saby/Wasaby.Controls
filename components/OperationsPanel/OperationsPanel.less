@@ -28,6 +28,10 @@
       .inline-flexbox();
       .align-items(@controls-OperationsPanel-actions-align);
       overflow: hidden;
+
+      .controls-operationsPanel__action {
+         min-height: inherit;
+      }
    }
 
    .controls-operationsPanel__actionType-mark {
@@ -68,7 +72,7 @@
 
    &.controls-MenuIcon__Menu {
       .controls-MenuItem {
-         padding-right: 36px;
+         padding-right: @controls-OperationsPanel-menu-padding-right;
       }
    }
 

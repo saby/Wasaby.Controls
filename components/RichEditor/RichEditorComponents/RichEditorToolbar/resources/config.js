@@ -1,16 +1,12 @@
 define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
    [
    "Core/constants",
+   'js!SBIS3.CONTROLS.RichEditorToolbar/resources/handlers',
    "js!SBIS3.CONTROLS.RichTextArea/resources/smiles",
    "i18n!SBIS3.CONTROLS.RichEditor"
-], function ( constants, smiles) {
+], function (constants, handlers, smiles) {
 
    'use strict';
-
-   var
-      onButtonClick = function() {
-         this.getParent()._execCommand(this._options.name);
-      };
 
    return function () {
       return [
@@ -21,7 +17,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
           className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          icon: 'sprite:icon-24 icon-Undo2 icon-primary',
          handlers: {
-            onActivated: onButtonClick
+            onActivated: handlers.undo
          },
          enabled: false,
          order: 10
@@ -34,7 +30,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          icon: 'sprite:icon-24 icon-Redo2 icon-primary',
          handlers: {
-            onActivated: onButtonClick
+            onActivated: handlers.redo
          },
          enabled: false,
          order: 10
@@ -46,9 +42,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          icon: 'sprite:icon-24 icon-TFCurtailRTE2 icon-primary',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          handlers: {
-            onActivated: function() {
-               this.getParent()._openStylesPanel(this);
-            }
+            onActivated: handlers.styles
          },
          visible: false,
          order: 25
@@ -67,9 +61,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          selectedKey: 'mainText',
          editable: false,
          handlers: {
-            onSelectedItemChange: function(e, key) {
-               this.getParent()._setFontStyle(key);
-            }
+            onSelectedItemChange: handlers.style
          },
          order: 20
       },
@@ -81,7 +73,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          tooltip: rk('Полужирный'),
          icon: 'sprite:icon-24 icon-Bold icon-primary',
          handlers: {
-            onActivated: onButtonClick
+            onActivated: handlers.bold
          },
          order: 30
       },
@@ -93,7 +85,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          tooltip: rk('Курсив'),
          icon: 'sprite:icon-24 icon-Italic icon-primary',
          handlers: {
-            onActivated: onButtonClick
+            onActivated: handlers.italic
          },
          order: 40
       },
@@ -105,7 +97,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          tooltip: rk('Подчеркнутый'),
          icon: 'sprite:icon-24 icon-Underline icon-primary',
          handlers: {
-            onActivated: onButtonClick
+            onActivated: handlers.underline
          },
          order: 50
       },
@@ -117,7 +109,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          tooltip: rk('Зачеркнутый'),
          icon: 'sprite:icon-24 icon-Stroked icon-primary',
          handlers: {
-            onActivated: onButtonClick
+            onActivated: handlers.strikethrough
          },
          order: 60
       },
@@ -129,7 +121,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          tooltip: rk('Цитата'),
          icon: 'sprite:icon-24 icon-Quote icon-primary',
          handlers: {
-            onActivated: onButtonClick
+            onActivated: handlers.mceBlockQuote
          },
          order: 65
       },
@@ -151,9 +143,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          pickerClassName: 'controls-RichEditorToolbarMenu controls-MenuIcon__Menu controls-Menu__hide-menu-header',
          handlers: {
-            onMenuItemActivate: function(event, key) {
-               this.getParent()._setTextAlign(key);
-            }
+            onMenuItemActivate: handlers.align
          },
          pickerConfig: {
             verticalAlign: {
@@ -184,9 +174,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             { key: 'grey', tooltip: rk('Серый'), title: '<div  unselectable ="on" class="controls-RichEditorToolbar__color controls-RichEditorToolbar__colorGrey"></div>' }
          ],
          handlers: {
-            onMenuItemActivate: function(event, key) {
-               this.getParent()._setFontColor(key);
-            }
+            onMenuItemActivate: handlers.color
          },
          pickerConfig: {
              verticalAlign: {
@@ -214,9 +202,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          ],
          idProperty: 'key',
          handlers: {
-            onMenuItemActivate: function(event, key) {
-               this.getParent()._execCommand(key);
-            }
+            onMenuItemActivate: handlers.list
          },
          pickerConfig: {
             verticalAlign: {
@@ -238,12 +224,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          tooltip: rk('Вставить/редактировать ссылку'),
          icon: 'sprite:icon-24 icon-Link icon-primary',
          handlers:{
-            onActivated: function(){
-               this.setChecked(true);
-               this.getParent()._insertLink(function(){
-                  this.setChecked(false);
-               }.bind(this), this._container);
-            }
+            onActivated: handlers.link
          },
          visible: true,
          order: 100
@@ -256,7 +237,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          icon: 'sprite:icon-24 icon-Unlink icon-primary',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          handlers: {
-            onActivated: onButtonClick
+            onActivated: handlers.unlink
          },
          enabled: false,
          visible: true,
@@ -270,9 +251,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          tooltip: rk('Вставить изображение'),
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          handlers: {
-            onActivated: function() {
-               this.getParent()._openImagePanel(this);
-            }
+            onActivated: handlers.image
          },
          order: 140
       },
@@ -286,9 +265,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          items: smiles,
          handlers: {
-            onMenuItemActivate: function(event, key) {
-               this.getParent()._insertSmile(key);
-            }
+            onMenuItemActivate: handlers.smile
          },
          idProperty: 'key',
          visible: false,
@@ -318,9 +295,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             { key: 'empty', title: 'Без форматирования',icon:'sprite:icon-24 icon-PasteAsText icon-primary' }
          ],
          handlers: {
-            onMenuItemActivate: function(event, key) {
-               this.getParent()._pasteFromBufferWithStyles(false, this._container, key === 'style');
-            }
+            onMenuItemActivate: handlers.paste
          },
          idProperty: 'key',
          visible: !constants.browser.isMobilePlatform && !constants.browser.isMacOSDesktop,
@@ -334,9 +309,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          tooltip: rk('html-разметка'),
          icon: 'sprite:icon-24 icon-Html icon-primary',
          handlers: {
-            onActivated: function() {
-               this.getParent()._toggleContentSource();
-            }
+            onActivated: handlers.source
          },
          order: 160
       },
@@ -349,9 +322,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          multiselect: false,
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          handlers: {
-            onMenuItemActivate: function(e, key) {
-               this.getParent()._setText(this.getItems().getRecordById(key).get('value'));
-            }
+            onMenuItemActivate: handlers.history
          },
          idProperty: 'key',
          pickerConfig: {
@@ -375,9 +346,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
          multiselect: false,
          className: 'controls-ToggleButton__square controls-ToggleButton-square__medium',
          handlers: {
-            onActivated: function() {
-               this.getParent()._codeSample(this);
-            }
+            onActivated: handlers.codesample
          },
          visible: false,//!constants.browser.isMobilePlatform && !constants.browser.isMacOSDesktop,
          order: 130

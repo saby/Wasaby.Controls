@@ -67,6 +67,7 @@
    "Можно отобрать": "Possible to select",
    "Нажмите CTRL + V для вставки текста из буфера обмена с сохранением стилей": "Press CTRL + V to paste the text from the clipboard to the conservation of styles",
    "Наименование": "Name",
+   "и еще $count$s$": "and $count$s$ more",
    "Не выбрано": "Not selected",
    "Не выбрано ни одной записи для перемещения": "Have not been selected rows for move",
    "Неверная контрольная сумма СНИЛС": "Invalid SNILS checksum",
@@ -181,5 +182,6 @@
    "умник": "nerd",
    "шокирован": "shocked",
    "Показать": "Show",
+   "Скрыть": "Hide",
    "Очистить результаты поиска": "Clear search"
 }

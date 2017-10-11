@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.MultiSelectable', [
    "Core/ParallelDeferred",
-   "Core/core-functions",
+   'Core/core-clone',
    "Core/Deferred",
    "Core/IoC",
    "js!WS.Data/Collection/List",
@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
    "Core/core-instance",
    "Core/helpers/Function/forAliveOnly",
    "Core/helpers/Array/clone"
-], function( ParallelDeferred, cFunctions, Deferred, IoC, List, ArraySimpleValuesUtil, isEqualObject, cInstance, forAliveOnly, aClone) {
+], function( ParallelDeferred, coreClone, Deferred, IoC, List, ArraySimpleValuesUtil, isEqualObject, cInstance, forAliveOnly, aClone) {
 
    var EMPTY_SELECTION = [null],
        convertToKeys = function(list, keyField) {
@@ -299,12 +299,17 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
        * @see toggleItemsSelectionAll
        */
       setSelectedItemsAll : function() {
-         var items = this.getItems(),
-             keys = [];
+         var
+            id,
+            keys = [],
+            items = this.getItems();
 
          if (items) {
             items.each(function(rec){
-               keys.push(rec.getId())
+               id = rec.getId();
+               if (!ArraySimpleValuesUtil.hasInArray(keys, id)) {
+                  keys.push(id)
+               }
             });
             this.setSelectedKeys(keys);
          }
@@ -511,13 +516,13 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
                }
                else {
                   if (this._isItemSelected(idArray[0])) {
-                     removedKeysTotal = cFunctions.clone(this._options.selectedKeys);
+                     removedKeysTotal = coreClone(this._options.selectedKeys);
                      this._options.selectedKeys = [];
                   }
                   else {
-                     removedKeysTotal = cFunctions.clone(this._options.selectedKeys);
+                     removedKeysTotal = coreClone(this._options.selectedKeys);
                      this._options.selectedKeys = idArray.slice(0, 1);
-                     addedKeysTotal = cFunctions.clone(this._options.selectedKeys);
+                     addedKeysTotal = coreClone(this._options.selectedKeys);
                   }
                }
                this._afterSelectionHandler(addedKeysTotal, removedKeysTotal);

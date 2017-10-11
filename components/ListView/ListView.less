@@ -1,118 +1,4 @@
 @import "../Utils/HtmlDecorators/HighlightDecorator";
-.controls-ListView {
-    position: relative;
-
-  .controls-ListView__item {
-    overflow: hidden;
-    position: relative;
-  }
-   
-   &:not(.controls-ListView__disableHover) .controls-ListView__hoveredItem:not(.controls-editInPlace) {
-      background-color: @default-itemHover-color;
-   }
-
-   &.controls-small-ListView {
-     .controls-ListView__EmptyData{
-       padding-bottom: @listView-empty-data-padding-top;
-       color: @gray-ccc-color;
-     }
-   }
-
-   &.controls-ListView__outside-scroll-loader{
-      .controls-ListView-scrollIndicator{
-         position: relative;
-      }
-   }
-
-   &.controls-ListView__showCheckBoxes {
-      .controls-ListView__itemCheckBox {
-         .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
-      }
-   }
-   &.controls-ListView__hideCheckBoxes {
-      &.controls-ListView__multiselect {
-         .controls-ListView__itemCheckBox {
-            display: none;
-         }
-      }
-   }
-   &.controls-ListView__pagerNoSizePicker .controls-Pager-container {
-      .controls-Pager__pageSize-container {
-         display: none;
-      }
-      .controls-Pager__table .controls-text-extra{
-         display: none;
-      }
-   }
-   &.controls-ListView__pagerNoAmount .controls-Pager-container .controls-Amount-text{
-      display: none;
-   }
-
-   &.controls-ListView__pagerHideEndButton .controls-Pager-container .ws-paging-end{
-     display: none;
-   }
-
-   &.controls-ListView__orangeMarker {
-      .controls-ListView__itemsContainer > {
-         .controls-ListView__item__selected {
-            .marker(left top)
-         }
-      }
-   }
-   &.ws-disabled {
-      .controls-ListView__itemCheckBox {
-         cursor: @list-view-disabled-cursor;
-      }
-   }
-}
-
-//Данные стили обеспечивают правильное поведение ListView при активации.
-//Фокус должен переходить на элемент с position fixed.
-.controls-ListView__fakeFocusElement {
-   position: fixed;
-   top: 50%;
-   left: 50%;
-   width: 1px;
-   height: 1px;
-}
-
-.controls-ListView__multiselect__off {
-   .controls-ListView__itemCheckBox {
-      display: none;
-   }
-}
-
-.controls-ListView__multiselect {
-   .controls-ListView__hoveredItem {
-      .controls-ListView__itemCheckBox {
-         .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
-      }
-   }
-   .controls-ListView__item__multiSelected:not(.controls-ListView__item__partiallySelected) {
-      .controls-ListView__itemCheckBox {
-         .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
-         .checkbox-checked-size(@check-box-icon-successful-size, @check-box-icon-successful-left, @check-box-icon-successful-top);
-      }
-   }
-   .controls-ListView__item__partiallySelected {
-      .controls-ListView__itemCheckBox {
-         .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
-         .checkbox-null-size(@check-box-icon-size, @check-box-icon-null-size);
-      }
-   }
-}
-
-.controls-ListView__EmptyData{
-   color: @listView-empty-data-color;
-   .box-sizing(border-box);
-   padding-top: @listView-empty-data-padding-top;
-   font-size: @listView-empty-data-font-size;
-   text-align: center;
-}
-
-.controls-Pager-container {
-   overflow: hidden;
-}
 
 .controls-ListView__itemCheckBox {
    .checkbox(@check-box-icon-size);
@@ -139,6 +25,121 @@
    }
 }
 
+.controls-ListView__showCheckBoxes {
+   .controls-ListView__itemCheckBox {
+      .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+   }
+}
+
+.controls-ListView__hideCheckBoxes {
+   .controls-ListView__itemCheckBox {
+      display: none;
+   }
+}
+
+/*
+   fakeFocusElement с left 50% пораждает в safari на mac ошибку https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
+   установим left 0, вроде ничего не должно отвалиться.
+*/
+.controls-ListView__fakeFocusElement {
+   body.ws-is-desktop-safari &,
+   body.ws-is-sbis-desktop &{
+      left: 0;
+   }
+}
+
+.controls-ListView__multiselect__off {
+   .controls-ListView__itemCheckBox {
+      display: none;
+   }
+}
+
+.ws-disabled {
+   .controls-ListView__itemCheckBox {
+      cursor: default;
+   }
+}
+
+.controls-ListView__hoveredItem {
+   .controls-ListView__itemCheckBox {
+      .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+   }
+}
+.controls-ListView__item__multiSelected:not(.controls-ListView__item__partiallySelected) {
+   .controls-ListView__itemCheckBox {
+      .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+      .checkbox-checked-size(@check-box-icon-successful-size, @check-box-icon-successful-left, @check-box-icon-successful-top);
+   }
+}
+.controls-ListView__item__partiallySelected {
+   .controls-ListView__itemCheckBox {
+      .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+      .checkbox-null-size(@check-box-icon-size, @check-box-icon-null-size);
+   }
+}
+
+.controls-ListView__hoveredItem {
+   background-color: @default-itemHover-color;
+}
+
+.controls-ListView__small__EmptyData {
+   padding-bottom: @listView-empty-data-padding-top;
+   color: @gray-ccc-color;
+}
+
+.controls-ListView__normal__EmptyData {
+   color: @listView-empty-data-color;
+   .box-sizing(border-box);
+   padding-top: @listView-empty-data-padding-top;
+   font-size: @listView-empty-data-font-size;
+   text-align: center;
+}
+
+.controls-ListView__item__selected__withMarker {
+   .marker(left top)
+}
+
+.controls-ListView-scrollIndicator_outside{
+   position: relative;
+}
+//todo: элементы itemsControlMixin вне listView не должны обрезаться
+.controls-ListView {
+   .controls-ListView__item {
+      overflow: hidden;
+      position: relative;
+   }
+}
+
+// Нельзя устанавливать минимальную высоту для копии таблицы которая используется для фиксации заголовков
+.controls-ListView__dataNotLoaded:not(.ws-sticky-header__table-header-copy) {
+   min-height: @list-view-min-height;
+}
+
+.controls-ListView {
+    position: relative;
+}
+
+//Данные стили обеспечивают правильное поведение ListView при активации.
+//Фокус должен переходить на элемент с position fixed.
+.controls-ListView__fakeFocusElement {
+   position: fixed;
+   top: 50%;
+   left: 50%;
+   width: 1px;
+   height: 1px;
+}
+
+.controls-ListView__EmptyData{
+   color: @listView-empty-data-color;
+   .box-sizing(border-box);
+   padding-top: @listView-empty-data-padding-top;
+   font-size: @listView-empty-data-font-size;
+   text-align: center;
+}
+
+.controls-Pager-container {
+   overflow: hidden;
+}
 .controls-ListView-scrollIndicator {
    display: none;
    margin: 0 auto;
@@ -155,19 +156,11 @@
    }
 }
 
-.controls-ListView__indicatorVisible {
+.controls-ListView__indicatorVisible:not(.ws-sticky-header__table-header-copy) {
+    min-height: @list-view-scroll-height + @data-grid-header-cell-height; // Высота индикатор скрола + высота ячейки шапки, чтобы при подгрузке скролл не скрывался под шапкой
     > .controls-ListView-scrollIndicator {
       display: block;
    }
-}
-
-.controls-ListView__scrollPager{
-   position: fixed;
-   bottom: @scrollpager-bottom;
-   height: 32px;
-   background: @scrollpager-bg;
-   border-top: @scrollpager-border;
-   z-index: 10;
 }
 
 .controls-ListView__serviceFooter {
@@ -190,116 +183,49 @@
    line-height: @listView-servicefooter-height;
 }
 
-.controls-AjaxLoader{
+.controls-AjaxLoader {
    background: transparent;
    position: absolute;
-   top: @controls-AjaxLoader-default-cord;
-   bottom: @controls-AjaxLoader-default-cord;
-   left: @controls-AjaxLoader-default-cord;
-   right: @controls-AjaxLoader-default-cord;
+   height: 100%;
+   top: 0;
+   bottom: 0;
+   left:0;
+   right: 0;
    width: 100%;
-   z-index: @controls-AjaxLoader-zIndex;
+   z-index: 11;
    overflow: hidden;
-   min-height: @controls-AjaxLoader-minHeight;
+   min-height: @controls-AjaxLoader-size;
+   //todo: вложенность
    &.controls-AjaxLoader__showIndication {
       background: @controls-AjaxLoader-background;
       .controls-AjaxLoader__outer {
          display: block;
       }
    }
-}
-// На webkit из-за особенностей верстки в данном месте, несмотря на то что у абсолютно спозиционированного
-// контенера заданы top и bottom, высота все равно равна 0 а не высоте контенера. Устанавливаем высоту через height: 100%;
-.ws-is-webkit .controls-AjaxLoader {
-   height: 100%;
-}
-
-.controls-AjaxLoader__outer{
-   display: none;
-   height: @controls-AjaxLoader-outer-height;
-   position: relative;
-   top: @controls-AjaxLoader-outer-top;
-   line-height: @controls-AjaxLoader-outer-lineHeight;
-}
-
-.controls-AjaxLoader__block{
-   width: @controls-AjaxLoader-block-width;
-   border: none;
-   box-shadow: none;
-   background: @controls-AjaxLoader-block-background;
-   margin-left: auto;
-   margin-right: auto;
-   position: relative;
-   top: @controls-AjaxLoader-block-top;
-   padding: @controls-AjaxLoader-block-padding;
-}
-
-.controls-AjaxLoader__LoadingIndicator{
-   position: absolute;
-   background:@list-view-scroll-bg;
-   padding-left: @controls-AjaxLoader-indicator-padding-left;
-   height: @controls-AjaxLoader-indicator-height;
-}
-
-//region dragndrop
-
-.controls-DragNDrop__draggedItem {
-  position: absolute;
-  width: @drag-and-drop-object-width;
-  height: @drag-and-drop-object-height;
-  background: @drag-and-drop-object-bg;
-  text-align: center;
-}
-
-.controls-DragNDrop__draggedCount {
-  display: inline-block;
-  width: @drag-and-drop-count-width;
-  height: @drag-and-drop-count-height;
-  line-height: @drag-and-drop-count-height;
-  margin: @drag-and-drop-count-margin;
-  color: @white-color;
-  font-family: @default-font-name;
-  font-size: 10px;
-}
-.controls-dragndrop {
-   &.controls-ListView {
-      .controls-DragNDrop__placeholder {
-         opacity: 0.35;
-         background-color: @default-itemHover-color;
-      }
-      .controls-DragNDrop__hierarchy_move {
-         outline: @drag-and-drop-border;
-      }
+   &__outer {
+      display: none;
+      height: @controls-AjaxLoader-size + 2 * @controls-AjaxLoader-block-padding;
+      position: relative;
+      top: 50%;
    }
-
-   &.controls-ListView__verticalDragNDrop {
-      .controls-DragNDrop__insertBefore {
-         &, > td {
-            border-top: @drag-and-drop-border;
-         }
-      }
-      .controls-DragNDrop__insertAfter {
-         &, > td {
-            border-bottom: @drag-and-drop-border;
-         }
-      }
+   &__block {
+      width: @controls-AjaxLoader-size;
+      border: none;
+      box-shadow: none;
+      background: @controls-AjaxLoader-block-background;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      top: -50%;
+      padding: @controls-AjaxLoader-block-padding;
    }
-
-
-   &.controls-ListView__horisontalDragNDrop {
-     .controls-DragNDrop__insertBefore{
-        border-left: @drag-and-drop-border;
-     }
-     .controls-DragNDrop__insertAfter {
-        border-right: @drag-and-drop-border;
-     }
-   }
-
-   .controls-ItemsToolbar {
-     display: none !important;
+   &__LoadingIndicator{
+      position: absolute;
+      background:@list-view-scroll-bg;
+      padding-left:  @controls-AjaxLoader-size;
+      height:  @controls-AjaxLoader-size;
    }
 }
-//endregion dragndrop
 
 .controls-ListView__results{
   background: #FFF;
@@ -308,31 +234,21 @@
   color: #313E78;
 }
 
-.ws-is-mobile-platform .controls-ListView__scrollPager{
-   position: fixed;
-   bottom: 0;
+.controls-ListView__scrollPager{
+   position: absolute;
+   bottom: @scrollpager-bottom;
+   right: 0;
    height: 32px;
-   background: white;
+   background: @scrollpager-bg;
    border-top: @scrollpager-border;
    z-index: 10;
 }
-
+.controls-ListView__scrollPager_fixed {
+   position: fixed;
+}
 .ws-float-area-animate .controls-ListView__scrollPager {
    display: none;
 }
-
-.controls-ScrollContainer {
-   > .controls-ListView__scrollPager{
-      position: absolute;
-      bottom: @scrollpager-bottom;
-      right: 0;
-      height: 32px;
-      background: @scroll-pager-bg;
-      border-top: @scrollpager-border;
-      z-index: 10;
-   }
-}
-
 .rightSwipeAnimation {
    -webkit-animation-name: rightSwipe; /* Safari 4.0 - 8.0 */
    -webkit-animation-duration: 0.3s; /* Safari 4.0 - 8.0 */
@@ -352,118 +268,47 @@
       .translate(0);
    }
 }
-
-.controls-GroupBy__separator {
-   height: @list-view-separator-height / 2;
-   margin-bottom: @list-view-separator-height / 2;
-   border-bottom: @list-view-separator-line;
-}
-.controls-GroupBy__separator__center {
-   text-align: center;
-}
-.controls-GroupBy__separator__right {
-   text-align: right;
-}
-.controls-GroupBy__separatorText {
-   height: @list-view-separator-height;
-   line-height: @list-view-separator-height;
-   display: inline-block;
-   padding: @list-view-separator-content-padding;
-   background: #fff;
-   color: @list-view-separator-content-color;
-   font-size: @list-view-separator-content-size;
-   white-space: nowrap;
-   &.controls-GroupBy__separatorCollapse{
-      cursor: pointer;
-      &:before {
-         width: @list-view-separator-expander-size;
-         height: @list-view-separator-expander-size;
-         content: '\e000';
-         color: @list-view-separator-content-color;
-         font-size: @list-view-separator-expander-size;
-         display: inline-block;
-         float: left;
-         margin-right: 6px;
-      }
-      &.controls-GroupBy__separatorCollapse__collapsed {
-         &:before {
-            content: '\e013';
-         }
-      }
-   }
+:not(.ws-sticky-header__header-container) > .controls-ScrollPaging__pagesPadding.controls-ListView__bottomStyle {
+   padding-bottom: @scrollPaging-padding + @bottomStyle-padding-bottom;
 }
 .controls-GroupBy {
    .user-select();
-   &.controls-GroupBy__collapsed.controls-GroupBy__separatorText .controls-GroupBy__separatorCollapse {
-      &:before {
-         content: '\e013';
+   &__separator {
+      height: @list-view-separator-height / 2;
+      margin-bottom: @list-view-separator-height / 2;
+      border-bottom: @default-border-width solid @default-border-color;
+      &__center { //modifier
+         text-align: center;
       }
-   }
-}
-/*с включенной черезполосицей нужно отключать верхний бордер у строк, следующих за группой*/
-.ws-is-desktop-platform {
-   .controls-GroupBy__separatorText {
-      &.controls-GroupBy__separatorCollapse{
-         &:hover{
-            &, &:before {
-               color: @list-view-separator-content-hover-color;
+      &__right { //modifier
+         text-align: right;
+      }
+      &Text {
+         cursor: pointer;
+         line-height: @list-view-separator-height;
+         display: inline-block;
+         padding: @list-view-separator-content-padding;
+         background: @default-bg-color;
+         color: @list-view-separator-content-color;
+         font-size: @small-text-size;
+         white-space: nowrap;
+         &:hover {
+            color: @list-view-separator-content-hover-color;
+         }
+      }
+      &Collapse {
+         &:before {
+            content: '\e000';
+            float: left;
+            width: @list-view-separator-expander-size;
+            font-size: @list-view-separator-expander-size;
+            margin-right: @list-view-separator-expander-margin;
+         }
+         &__collapsed {
+            &:before {
+               content: '\e013';
             }
          }
       }
    }
 }
-/**/
-/**Петя должен сделать шаблон декорированной ссылки на клиенте, потом это надо будет удалить*/
-.controls-dragNDrop-avatar {
-   width: 200px;
-   height: 40px;
-   background: #fff;
-   .flexbox();
-   .flex-direction(row);
-   overflow: hidden;
-   padding: 4px;
-   .box-shadow(0 0 10px rgba(0, 0, 0, 0.50));
-   font-family: "Segoe UI";
-   .controls-dragNDrop-avatar__img-wrapper {
-      img {
-         width: 40px;
-         height: 40px;
-         border-radius: 8px;
-         margin: 0 4px 0 0;
-      }
-   }
-   .controls-dragNDrop-avatar__text-wrapper {
-      position: relative;
-      width: 100%;
-      overflow: hidden;
-      padding: 2px;
-      text-align: left;
-      .controls-dragNDrop-avatar__title {
-         color: #313E78;
-         font-weight: bold;
-         font-size: 14px;
-         white-space: nowrap;
-      }
-      .controls-dragNDrop-avatar__description {
-         color: #000;
-         font-size: 13px;
-         white-space: nowrap;
-      }
-      &:after {
-         content: '';
-         position: absolute;
-         right: 0px;
-         width: 30px;
-         top: 0;
-         bottom: 0;
-         .horizontal-gradient(rgba(255, 255, 255, 0), @white-color);
-         background-color: transparent;
-      }
-   }
-}
-
-:not(.ws-sticky-header__header-container) > .controls-ScrollPaging__pagesPadding.controls-ListView__bottomStyle {
-   padding-bottom: @scrollPaging-padding + @bottomStyle-padding-bottom;
-}
-
-/**/

@@ -3,8 +3,7 @@ define('js!WSControls/Containers/Browser',
    'Core/Control',
    'tmpl!WSControls/Containers/Browser',
    //TODO: удалить
-   'js!WS.Data/Source/Memory',
-   'js!WSDemo/Page/PageDemo'
+   'js!WS.Data/Source/Memory'
 ], function(Control, template, StaticSource) {
    var Browser = Control.extend({
       _controlName: 'WSControls/Containers/Browser',

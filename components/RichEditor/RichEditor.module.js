@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.RichEditor',
        * Контрол "Богатый текстовый редактор" (БТР). Состоит из двух компонентов: {@link SBIS3.CONTROLS.RichTextArea} и {@link SBIS3.CONTROLS.RichEditorToolbar}.
        * @class SBIS3.CONTROLS.RichEditor
        * @extends SBIS3.CONTROLS.RichTextArea
-       * @author Борисов Петр Сергеевич
+       * @author Спирин Виктор Алексеевич
        * @public
        * @control
        *

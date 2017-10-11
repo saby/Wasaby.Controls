@@ -97,6 +97,16 @@
   }
 }
 
+/* По мотивам ошибки https://online.sbis.ru/opendoc.html?guid=76042823-1fd7-430f-96dc-f8131496f100
+	чтобы избежать всевозможных проблем с исчезающими кнопками/бордерами.
+	В edge множество багов с рендером элементов у которых дробная ширина или высота
+	https://stackoverflow.com/questions/32313551/microsoft-edge-bug */
+.ws-is-ie12 {
+  .controls-Link {
+    outline: 1px solid transparent;
+  }
+}
+
 .ws-is-mobile-platform {
   .controls-Link__withoutCaptionOnMobile {
     .controls-Link__field {

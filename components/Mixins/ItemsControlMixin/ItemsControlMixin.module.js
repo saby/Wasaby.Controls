@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.ItemsControlMixin', [
-   "Core/core-functions",
+   'Core/core-clone',
    "Core/Deferred",
    "Core/IoC",
    "js!WS.Data/Source/Memory",
@@ -25,9 +25,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'Core/helpers/String/escapeHtml',
    "js!SBIS3.CONTROLS.Utils.SourceUtil",
    "Core/helpers/Object/isEmpty",
-   "Core/helpers/Function/debounce"
+   "Core/helpers/Function/debounce",
+   "js!SBIS3.CORE.Control"
 ], function (
-   cFunctions,
+   coreClone,
    Deferred,
    IoC,
    MemorySource,
@@ -53,7 +54,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    escapeHtml,
    SourceUtil,
    isEmpty,
-   debounce) {
+   debounce,
+   baseControl) {
 
    function propertyUpdateWrapper(func) {
       return function() {
@@ -81,12 +83,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       return groupId + '';
    },
 
+   getGroupId = function(item, cfg) {
+      return cfg.groupBy.method ? cfg.groupBy.method.apply(this, arguments) : item.get(cfg.groupBy.field);
+   };
+
    applyGroupingToProjection = function(projection, cfg) {
-      if (cfg.groupBy && cfg.easyGroup) {
+      if (!isEmpty(cfg.groupBy) && cfg.easyGroup) {
          var
             method = function(item) {
                var
-                  groupId = cfg.groupBy.method ? cfg.groupBy.method.apply(this, arguments) : item.get(cfg.groupBy.field);
+                  groupId = cfg._getGroupId(item, cfg);
                if (groupId !== false) {
                   groupId = cfg._prepareGroupId(item, groupId, cfg);
                }
@@ -121,7 +127,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    },
 
    canApplyGrouping = function(projItem, cfg) {
-      return !isEmpty(cfg.groupBy) && (!projItem.isNode || !projItem.isNode());
+      // todo сильносвязанный код. Если пустой projItem, значит мы сюда попали из onCollectionAdd и единственная добавляемая запись - это сама группа
+      // https://online.sbis.ru/opendoc.html?guid=c02d2545-1afa-4ada-8618-7a21eeadc375
+      return !isEmpty(cfg.groupBy) && (!projItem || !projItem.isNode || !projItem.isNode());
    },
 
    groupItemProcessing = function(groupId, records, item, cfg) {
@@ -130,7 +138,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (cfg._groupTemplate) {
             var
                tplOptions = {
-                  columns : cFunctions.clone(cfg.columns || []),
+                  columns : coreClone(cfg.columns || []),
                   multiselect : cfg.multiselect,
                   hierField: cfg.hierField + '@',
                   parentProperty: cfg.parentProperty,
@@ -350,6 +358,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             _defaultItemTemplate: '',
             _defaultItemContentTemplate: '',
             _prepareGroupId: prepareGroupId,
+            _getGroupId: getGroupId,
             _createDefaultProjection : createDefaultProjection,
             _buildTplArgsSt: buildTplArgs,
             _buildTplArgs : buildTplArgs,
@@ -546,7 +555,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              *
              * @property {String} contentTemplate Шаблон содержимого заголовка группы.
              * Шаблон будет помещен в платформенный контейнер визуального отображения заголовка группы.
-             * Шаблон - это XHTML-файл, внутри допускается использование {@link http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/ конструкций шаблонизатора}.
+             * Шаблон - это XHTML-файл, внутри допускается использование {@link http://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/xhtml/template/ конструкций шаблонизатора}.
              * В объекте *it* шаблонизатора доступны для использования два свойства:
              * <ul>
              *     <li>groupId - идентификатор группы (см. *method*).</li>
@@ -563,7 +572,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * @cfg {GroupBy} Устанавливает группировку элементов коллекции.
              * @remark file ItemsControlMixin-groupBy.md
              * @remark
-             * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
+             * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/groups/'>здесь</a>.
              * @example
              * 1. Подключение шаблона группировки:
              * <pre>
@@ -711,7 +720,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             itemsSortMethod: null,
             itemsFilterMethod: undefined,
             easyGroup: false,
-            task1173537554: false,
             task1173770359: false
          },
          _loader: null
@@ -848,7 +856,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             else {
                this._dataSource = new MemorySource({
-                  data: cFunctions.clone(this._options.items),
+                  data: coreClone(this._options.items),
                   idProperty: this._options.idProperty
                });
             }
@@ -987,7 +995,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             buildArgsMethod = this._buildTplArgs;
          }
          if (!this._itemData) {
-            this._itemData = cFunctions.clone(buildArgsMethod.call(this, this._options));
+            this._itemData = coreClone(buildArgsMethod.call(this, this._options));
          } else {
             this._updateItemData(this._itemData);
          }
@@ -1037,7 +1045,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             в событии onDrawItems могут производить замеры высоты/ширины,
             а без этого класса к списку применяются стили для состояния, когда он "пустой" (например устанавливается минимальная высота),
             что портит расчёты. */
-         this._container.addClass('controls-ListView__dataLoaded');
+         this._container.addClass('controls-ListView__dataLoaded').removeClass('controls-ListView__dataNotLoaded');
 
          if (notRevive) {
             this._revivePackageParams.revive = true;
@@ -1064,6 +1072,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             markup, markupExt,
             targetElement = this._getDomElementByItem(item),
             inlineStyles = targetElement.attr('style') || '',
+            projection = this._getItemsProjection(),
             data;
 
          //TODO в 3.7.5 избавиться от проверки на _path
@@ -1074,7 +1083,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
             // Вычисляем drawHiddenGroup при перерисовке item'а, т.к. в текущей реализации это единственный способ скрыть элемент, если он расположен в свернутой группе
             if (this._options.groupBy && this._options.easyGroup) {
-               data.drawHiddenGroup = !!this._options._groupCollapsing[this._options._prepareGroupId(data.item, data.item.get(this._options.groupBy.field), this._options)];
+               data.drawHiddenGroup = !!this._options._groupCollapsing[projection.getGroupByIndex(projection.getIndex(item))];
             }
 
             //TODO: выпилить вместе декоратором лесенки
@@ -1151,9 +1160,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          return data;
       },
 
-      _removeItems: function (items, groupId) {
-         var prev;
-
+      _removeItems: function (items) {
          for (var i = 0; i < items.length; i++) {
             var item = items[i];
             var targetElement = this._getDomElementByItem(item);
@@ -1161,10 +1168,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                this._clearItems(targetElement);
                /*TODO С этим отдельно разобраться*/
 
-               targetElement.get(0).remove();
+               var targetElementNode = targetElement.get(0);
+               targetElementNode.parentNode.removeChild(targetElementNode);
                /* TODO внештатная ситуация, при поиске могли удалить папку/путь, сейчас нет возможности найти это в гриде и удалить
                   поэтому просто перерисуем весь грид. Как переведём группировку на item'ы, это можно удалить */
-            } else if(this._isSearchMode && this._isSearchMode() && item.isNode()) { // FIXME "Грязная проверка" на наличие метода в .220, код удалится в .230
+            } else if(this._isSearchMode && this._isSearchMode() && item.isNode && item.isNode()) { // FIXME "Грязная проверка" на наличие метода в .220, код удалится в .230
                this.redraw();
                return;
             }
@@ -1177,7 +1185,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             var targetElement = this._getDomElementByItem(item);
             if (targetElement.length) {
                this._clearItems(targetElement);
-               targetElement.get(0).remove();
+               var targetElementNode = targetElement.get(0);
+               //ie не умеет targetElementNode.remove() делаем кроссбраузерно, не через jquery
+               targetElementNode.parentNode.removeChild(targetElementNode);
             }
          }
       },
@@ -1189,14 +1199,17 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       },
 
       _getItemsForRedrawOnAdd: function(items) {
-         var itemsToAdd = [];
-         var groupId;
+         var
+            itemsToAdd = [],
+            groupId;
 
          if (items.length && cInstance.instanceOfModule(items[0], 'WS.Data/Display/GroupItem')) {
-            groupId = items[0].getContents();
-            this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options);
-            items.splice(0, 1)
-            itemsToAdd = itemsToAdd.concat(items);
+            if (items.length > 1) {
+               groupId = items[0].getContents();
+               this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options);
+               items.splice(0, 1);
+               itemsToAdd = itemsToAdd.concat(items);
+            }
          }
          else {
             itemsToAdd = items;
@@ -1215,10 +1228,19 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
 
-      _addItems: function(newItems, newItemsIndex, groupId) {
+      _addItems: function(newItems, newItemsIndex) {
+         var
+            i, groupId,
+            projection = this._getItemsProjection();
          this._itemData = null;
-         var i;
          if (newItems && newItems.length) {
+            if (this._options.groupBy) {
+               if (cInstance.instanceOfModule(newItems[0], 'WS.Data/Display/GroupItem')) {
+                  groupId = newItems[0].getContents();
+               } else {
+                  groupId = projection.getGroupByIndex(projection.getIndex(newItems[0]));
+               }
+            }
             if (this._isSlowDrawing(this._options.easyGroup)) {
                for (i = 0; i < newItems.length; i++) {
                   this._addItem(
@@ -1235,7 +1257,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   markup, markupExt,
                   itemsToDraw;
 
-               itemsToDraw = this._getItemsForRedrawOnAdd(newItems, groupId);
+               itemsToDraw = this._getItemsForRedrawOnAdd(newItems);
                if (itemsToDraw.length) {
                   data = {
                      records: itemsToDraw,
@@ -1245,7 +1267,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                   data.tplData.drawHiddenGroup = !!this._options._groupCollapsing[groupId];
                   markupExt = extendedMarkupCalculate(this._getItemsTemplateForAdd()(data), this._options);
                   markup = markupExt.markup;
-                  this._optimizedInsertMarkup(markup, this._getInsertMarkupConfig(newItemsIndex, newItems, groupId));
+                  this._optimizedInsertMarkup(markup, this._getInsertMarkupConfig(newItemsIndex, newItems));
                   this._revivePackageParams.revive = this._revivePackageParams.revive || markupExt.hasComponents;
                   this._revivePackageParams.light = false;
                }
@@ -1259,11 +1281,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       //Выделяем отдельный метод _getInsertMarkupConfigICM т.к. в TreeView метод _getInsertMarkupConfig переопределяется,
       //а в TreeCompositeView в зависимости от вида отображения нужно звать разные методы, в режиме плитки нужно звать
       //стандартный метод _getInsertMarkupConfigICM а в режиме таблицы переопределённый метод из TreeView
-      _getInsertMarkupConfig: function(newItemsIndex, newItems, groupId) {
+      _getInsertMarkupConfig: function(newItemsIndex, newItems) {
          return this._getInsertMarkupConfigICM.apply(this, arguments);
       },
 
-      _getInsertMarkupConfigICM: function(newItemsIndex, newItems, groupId) {
+      _getInsertMarkupConfigICM: function(newItemsIndex, newItems) {
          var
              nextItem,
              prevGroup,
@@ -1287,6 +1309,12 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             prepend = true;
          } else if (newItemsIndex == 0 || newItemsIndex == lastItemsIndex) {
             prepend = newItemsIndex == 0;
+            // Если добавляется первый в списке элемент + это узел + включена группировка (для узлов группы не рисуются), то
+            // предыдущим элементом будет группа, которая фактически не рисуется, а значит и DOM элемент будет не найден, а
+            // значит и вставлять будет не куда, поэтому просто возводим флаг prepend, а контейнер оставляем обычный ItemsContainer.
+            // https://online.sbis.ru/opendoc.html?guid=d650908a-1785-4726-aa70-b13786574865
+         } else if (!this._canApplyGrouping(newItems[0]) && cInstance.instanceOfModule(prevItem, 'WS.Data/Display/GroupItem')) {
+            prepend = newItemsIndex == 1;
          } else {
             inside = false;
             container = this._getDomElementByItem(prevItem);
@@ -1375,20 +1403,28 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       /*TODO easy параметр для временной поддержки группировки в быстрой отрисовке*/
       _destroyControls: function(container, easy){
-         var compsArray = [];
+         var compsArray = [],
+            destroyed = false;
          $('[data-component]', container).each(function (i, item) {
             var inst = item.wsControl;
             if (inst) {
                if (!easy) {
                   // true - не завершать пакет (ControlBatchUpdater) на дестрой. Иначе сработает onBringToFront и переведет активность раньше времени
                   // https://inside.tensor.ru/opendoc.html?guid=ec5c1d84-a09c-49b2-991a-779a7004a15b&des=
+                  if (!destroyed) {
+                     baseControl.ControlBatchUpdater.beginBatchUpdate('AreaAbstract_destroy');
+                  }
                   inst.destroy(true);
+                  destroyed = true;
                }
                else {
                   compsArray.push(inst);
                }
             }
          });
+         if (destroyed) {
+            baseControl.ControlBatchUpdater.endBatchUpdate('AreaAbstract_destroy');
+         }
          return compsArray;
       },
 
@@ -1429,7 +1465,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             }
             if (this._options._serverRender) {
                this._notifyOnDrawItems();
-               this._container.addClass('controls-ListView__dataLoaded');
+               this._container.addClass('controls-ListView__dataLoaded').removeClass('controls-ListView__dataNotLoaded');
             }
          },
          destroy : function() {
@@ -1649,7 +1685,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
                    //self._notify('onBeforeRedraw');
                    return list;
                 }, self))
-                .addErrback(forAliveOnly(this._loadErrorProcess, self));
+                .addErrback(function(error) {
+                   if(!self.isDestroyed()) {
+                      self._loadErrorProcess(error);
+                   }
+                   /* Если не прокинуть ошибку дальше, то далее в цепочке будут срабатывать
+                      callback'и, а не errback'и */
+                   return error;
+                });
              this._loader = def;
           } else {
              if (this._options._itemsProjection) {
@@ -1906,9 +1949,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              });
           }
           else {
-             if (this._options.task1173537554) {
-                this._notifyOnPropertyChanged('items');
-             }
+             this._notifyOnPropertyChanged('items');
           }
           this.redraw();
       },
@@ -2024,7 +2065,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          var
                groupBy = this._options.groupBy,
                tplOptions = {
-                  columns : cFunctions.clone(this._options.columns || []),
+                  columns : coreClone(this._options.columns || []),
                   multiselect : this._options.multiselect,
                   hierField: this._options.hierField + '@',
                   parentProperty: this._options.parentProperty,
@@ -2052,7 +2093,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @remark
        * Если нужно, чтобы стандартаная группировка для элемента не вызывалась - нужно обязательно переопределить (передать) все опции (field, method, template, render), иначе в группировку запишутся стандартные параметры.
        * Всем элементам группы добавляется css-класс "controls-GroupBy".
-       * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
+       * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
        * @param {GroupBy} group Параметры группировки.
        * @param {Boolean} redraw Произвести перерисовку списка после изменения параметров группировки.
        * @see groupBy
@@ -2084,7 +2125,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       /**
        * Возвращает параметры группировки элементов коллекции.
        * @remark
-       * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
+       * Дополнительное описание о группировке и демо-примеры вы можете найти <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/groups/index/'>здесь</a>.
        * @return {GroupBy}
        * @see groupBy
        * @see setGroupBy
@@ -2173,6 +2214,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             target = $(target);
          }
          LayoutManager.scrollToElement(target, toBottom, depth);
+      },
+
+      //TODO этот метод более общий чем _scrollToItem надо все места перевести на этот метод
+      _scrollToProjItem: function(item, toBottom, depth) {
+         var container = this._getDomElementByItem(item);
+         if (container) {
+            this._scrollTo(container, toBottom, depth);
+         }
       },
       _scrollToItem: function(itemId, toBottom, depth) {
          var itemContainer  = $('.controls-ListView__item[data-id="' + itemId + '"]', this._getItemsContainer());
@@ -2334,7 +2383,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             this._drawItems(records);
          }
          /*класс для автотестов*/
-         this._container.addClass('controls-ListView__dataLoaded');
+         this._container.addClass('controls-ListView__dataLoaded').removeClass('controls-ListView__dataNotLoaded');
       },
       _drawItem: function (item, at, last) {
          var
@@ -2546,15 +2595,15 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._revivePackageParams.revive = this._revivePackageParams.revive || needToRevive;
          this._revivePackageParams.light = false;
       },
-      _onCollectionRemove: function(items, notCollapsed, groupId) {
+      _onCollectionRemove: function(items, notCollapsed) {
          if (items.length) {
-            this._removeItems(items, groupId);
+            this._removeItems(items);
          }
       },
-      _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
-         this._onCollectionRemove(oldItems, action === IBindCollection.ACTION_MOVE, groupId);
+      _onCollectionAddMoveRemove: function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+         this._onCollectionRemove(oldItems, action === IBindCollection.ACTION_MOVE);
          if (newItems.length) {
-            this._addItems(newItems, newItemsIndex, groupId)
+            this._addItems(newItems, newItemsIndex)
          }
          this._toggleEmptyData(!this._options._itemsProjection.getCount());
       },
@@ -2634,7 +2683,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        * @param {Integer} oldItemsIndex Индекс, в котором удалены элементы.
        * @private
        */
-      onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
+      onCollectionChange = function (event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
          if (this._isNeedToRedraw()) {
             if (newItems.length > 0) {
                //TODO проекция отдает неправильные индексы выписана ошибка https://online.sbis.ru/opendoc.html?guid=ccb6214b-70ab-45d3-b5e3-e2e15ddeb639&des=

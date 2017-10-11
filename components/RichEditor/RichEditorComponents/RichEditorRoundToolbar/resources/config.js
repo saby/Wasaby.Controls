@@ -3,9 +3,10 @@
  */
 define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
    [
+      'js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/handlers',
       'js!SBIS3.CONTROLS.RichTextArea/resources/smiles',
       'i18n!SBIS3.CONTROLS.RichEditor'
-   ], function (smiles) {
+   ], function (handlers, smiles) {
 
       'use strict';
 
@@ -16,9 +17,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
             componentType: 'SBIS3.CONTROLS.IconButton',
             icon: 'sprite:icon-16 icon-View icon-primary',
             handlers: {
-               onActivated: function() {
-                  this.getParent().toggleToolbar();
-               }
+               onActivated: handlers.toggle
             },
             basic: true,
             order: 1
@@ -30,9 +29,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
             icon: 'sprite:icon-16 icon-TFCurtailRTE2 icon-primary',
             className: 'controls-IconButton__round-border',
             handlers: {
-               onActivated: function() {
-                  this.getParent()._openStylesPanel(this);
-               }
+               onActivated: handlers.styles
             },
             order: 10
          },
@@ -50,9 +47,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
                { key:'InsertOrderedList', title:' ', icon:'sprite:icon-24 icon-ListNumbered icon-primary' }
             ],
             handlers: {
-               onMenuItemActivate: function(event, key) {
-                  this.getParent()._execCommand(key);
-               }
+               onMenuItemActivate: handlers.list
             },
             idProperty: 'key',
             order: 20
@@ -65,9 +60,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
             icon: 'sprite:icon-16 icon-Link icon-primary',
             className: 'controls-IconButton__round-border',
             handlers:{
-               onActivated: function(){
-                  this.getParent()._insertLink();
-               }
+               onActivated: handlers.link
             },
             order: 30
          },
@@ -79,9 +72,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
             icon: 'sprite:icon-16 icon-Picture icon-primary',
             className: 'controls-IconButton__round-border',
             handlers: {
-               onActivated: function(event, originalEvent) {
-                  this.getParent()._startFileLoad(this._container);
-               }
+               onActivated: handlers.image
             },
             order: 40
          },
@@ -97,9 +88,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
             multiselect: false,
             className: 'controls-IconButton__round-border',
             handlers: {
-               onMenuItemActivate: function(event, key) {
-                  this.getParent()._insertSmile(key);
-               }
+               onMenuItemActivate: handlers.smile
             },
             idProperty: 'key',
             order: 50
@@ -113,9 +102,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
             multiselect: false,
             className: 'controls-IconButton__round-border',
             handlers: {
-               onMenuItemActivate: function(e, key) {
-                  this.getParent()._setText(this.getItems().getRecordById(key).get('value'));
-               }
+               onMenuItemActivate: handlers.history
             },
             idProperty: 'key',
             order: 60

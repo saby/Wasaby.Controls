@@ -1,0 +1,97 @@
+@drag-and-drop-border: @default-border-width solid @drag-and-drop-border-color;
+.controls-DragNDrop__draggedItem {
+  position: absolute;
+  width: @drag-and-drop-object-width;
+  height: @drag-and-drop-object-height;
+  background: @drag-and-drop-object-bg;
+}
+.controls-DragNDrop__draggedCount {
+  display: inline-block;
+  width: @drag-and-drop-count-width;
+  height: @drag-and-drop-count-height;
+  line-height: @drag-and-drop-count-height;
+  margin: @drag-and-drop-count-margin;
+  color: @white-color;
+  font-size: 10px;
+  text-align: center;
+}
+.controls-DragNDrop__placeholder {
+  opacity: 0.35;
+  background-color: @default-itemHover-color;
+}
+//todo: - selectors
+.controls-dragndrop {
+
+  &.controls-ListView__verticalDragNDrop {
+    .controls-DragNDrop__insertBefore {
+      &, > td {
+        border-top: @drag-and-drop-border;
+      }
+    }
+    .controls-DragNDrop__insertAfter {
+      &, > td {
+        border-bottom: @drag-and-drop-border;
+      }
+    }
+  }
+//todo: - selectors
+  &.controls-ListView__horisontalDragNDrop {
+    .controls-DragNDrop__insertBefore {
+      border-left: @drag-and-drop-border;
+    }
+    .controls-DragNDrop__insertAfter {
+      border-right: @drag-and-drop-border;
+    }
+  }
+//todo: - selectors
+  .controls-ItemsToolbar {
+    display: none !important;
+  }
+}
+
+/**Петя должен сделать шаблон декорированной ссылки на клиенте, потом это надо будет удалить*/
+.controls-dragNDrop-avatar {
+  width: 200px;
+  height: 40px;
+  background: #fff;
+  .flexbox();
+  .flex-direction(row);
+  overflow: hidden;
+  padding: 4px;
+  .box-shadow(0 0 10px rgba(0, 0, 0, 0.50));
+  font-family: "Segoe UI";
+  &__img {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    margin: 0 4px 0 0;
+  }
+  &__text-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    padding: 2px;
+    text-align: left;
+    &:after {
+      content: '';
+      position: absolute;
+      right: 0px;
+      width: 30px;
+      top: 0;
+      bottom: 0;
+      .horizontal-gradient(rgba(255, 255, 255, 0), @white-color);
+      background-color: transparent;
+    }
+  }
+  &__title {
+    color: #313E78;
+    font-weight: bold;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+  &__description {
+    color: #000;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+}

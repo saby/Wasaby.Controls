@@ -172,6 +172,11 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                });
             }
          });
+
+         //TODO При активации скрытых за область операций может произойти скроллирование к ним. Нужно его отменить.
+         this._getItemsContainer().on('scroll', function(e){
+            $(this).scrollLeft(0);
+         })
       },
 
       //Суперкласс у панели операций в методе getItems возвращает this._items. Но возможнно в items которые были переданы в
@@ -209,6 +214,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                      obj.icon = item.get('icon');
                      obj.caption = item.get('title');
                      obj.instance = instance;
+                     obj.visible = instance.isVisible();
                   }
                   else {
                      var name = item.get('name');
@@ -218,6 +224,7 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                      obj.caption = instance.getCaption();
                      obj.instance = instance;
                      obj.className = 'controls-operationsPanel__actionType-' + getItemType(item.get('type'));
+                     obj.visible = instance.isVisible();
 
                      if(typeof instance.getItems === 'function'){
                         var childItems = instance.getItems();
@@ -394,6 +401,10 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
          if(!this._itemsMenuCreated){
             this._itemsMenuCreated = true;
             moduleStubs.require(['js!SBIS3.CONTROLS.MenuIcon']).addCallback(function (MenuIcon) {
+
+               var massMode = self._container.hasClass('controls-operationsPanel__massMode');
+               var selectionMode = self._container.hasClass('controls-operationsPanel__selectionMode');
+
                self._itemsMenu = new MenuIcon[0]({
                   parent: self,
                   element: $('<span>').insertAfter(self._getItemsContainer()),
@@ -405,21 +416,16 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                   icon: 'sprite:icon-size icon-ExpandDown icon-primary action-hover',
                   pickerConfig: {
                      closeButton: true,
-                     className: 'controls-operationsPanel__itemsMenu_picker',
+                     className: 'controls-operationsPanel__itemsMenu_picker' +
+                        (massMode ? ' controls-operationsPanel__massMode' : '') +
+                        (selectionMode ? ' controls-operationsPanel__selectionMode' : ''),
                      horizontalAlign: {
                         side: 'right',
                         offset: 48
-                     }
+                     },
+                     locationStrategy: 'bodyBounds'
                   }
                });
-
-               //Инициализируем режим
-               if(self._container.hasClass('controls-operationsPanel__massMode')){
-                  self._itemsMenu.getContainer().addClass('controls-operationsPanel__massMode');
-               }
-               if(self._container.hasClass('controls-operationsPanel__selectionMode')){
-                  self._itemsMenu.getContainer().addClass('controls-operationsPanel__selectionMode');
-               }
 
                self._itemsMenu._setPickerContent = function() {
                   $('.controls-PopupMixin__closeButton', this._picker.getContainer()).addClass('icon-24 icon-size icon-ExpandUp icon-primary action-hover');
@@ -432,8 +438,11 @@ define('js!SBIS3.CONTROLS.OperationsPanel', [
                      if(cInstance.instanceOfModule(instance, 'SBIS3.CONTROLS.MenuLink') && instance.getItems().getCount() > 1){
                         instance._notify('onMenuItemActivate', id);
                      }
-                     else {
+                     else if(cInstance.instanceOfMixin(instance, 'SBIS3.CONTROLS.Clickable')) {
                         instance._onClickHandler(event);
+                     }
+                     else {
+                        instance._clickHandler();
                      }
                      return false;
                   }

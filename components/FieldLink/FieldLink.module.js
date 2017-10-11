@@ -116,7 +116,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         *    <li>
         *       <b>Через справочник.</b>
         *       Справочник - это диалог выбора значений. Диалог строится на основе пользовательского компонента.
-        *       Подробнее о правилах создания компонента для справочника поля связи вы можете прочитать в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/dictionary/">Поле связи</a>.
+        *       Подробнее о правилах создания компонента для справочника поля связи вы можете прочитать в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/textbox/field-link/dictionary/">Поле связи</a>.
         *       Набор справочников устанавливают с помощью опции {@link dictionaries}, а режим отображения открытого справочника - с помощью опции {@link chooserMode}.
         *    </li>
         *    <li>
@@ -128,7 +128,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         *    </li>
         *    <li>
         *       <b>Через контекст контрола.</b>
-        *       Этот способ основан работе с <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/context/">контекстом</a> контрола. Пример № 3 из описания класса поля связи демонстрирует возможности установки значения через контекст.
+        *       Этот способ основан работе с <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/context/">контекстом</a> контрола. Пример № 3 из описания класса поля связи демонстрирует возможности установки значения через контекст.
         *    </li>
         * </ol>
         * <br/>
@@ -229,12 +229,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * Опция caption определяет название справочника в этом подменю:
                  * ![](/FieldLink02.png)
                  * @property {String} template Компонент, на основе которого организован справочник.
-                 * Список значений справочника строится на основе любого компонента, который можно использовать для {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/ отображения данных в списках}:
+                 * Список значений справочника строится на основе любого компонента, который можно использовать для {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/ отображения данных в списках}:
                  * <ul>
                  *    <li>использование компонента {@link SBIS3.CONTROLS.DataGridView}: ![](/FieldLink00.png) </li>
                  *    <li>использование компонента {@link SBIS3.CONTROLS.TreeDataGridView}: ![](/FieldLink01.png) </li>
                  * </ul>
-                 * Подробнее о правилах создания компонента для справочника поля связи вы можете прочитать в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/">Поле связи</a>.
+                 * Подробнее о правилах создания компонента для справочника поля связи вы можете прочитать в разделе <a href="http://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/textbox/field-link/">Поле связи</a>.
                  * @property {Object} componentOptions
                  * Группа опций, которые передаются в секцию _options компонента из опции template. На его основе строится справочник.
                  * Значения переданных опций можно использовать в дочерних компонентах справочника через инструкции шаблонизатора.
@@ -432,6 +432,12 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 flMenu.setItems(this._options.dictionaries);
                 this.subscribeTo(flMenu, 'onMenuItemActivate', this._menuItemActivatedHandler);
              }
+
+             this.subscribeTo(this, 'onAfterVisibilityChange', function(event, visibility) {
+                if (visibility) {
+                   this._onResizeHandler();
+                }
+             });
           },
 
           _getSelectorAction: memoize(function() {
@@ -614,20 +620,20 @@ define('js!SBIS3.CONTROLS.FieldLink',
              noFocus = this._options.task_1173772355 ? this._isControlActive : noFocus;
 
              /* Хак, который чинит баг firefox с невидимым курсором в input'e.
-              Это довольно старая и распростронённая проблема в firefox'e,
+              Это довольно старая и распростронённая проблема в firefox'e (а теперь еще и в хроме),
               повторяется с разными сценариями и с разными способомами почи)нки.
               В нашем случае, если фокус в input'e, то перед повторной установкой фокуса надо сделать blur (увести фокус из input'a).
               Чтобы это не вызывало перепрыгов фокуса, делаем это по минимальному таймауту. Выглядит плохо, но другого решения для FF найти не удлось.*/
-             if(constants.browser.firefox && active && !this.getText() && this._isEmptySelection()) {
+             if(active && !this.getText() && this._isEmptySelection()) {
                 var elemToFocus = this._getElementToFocus();
 
                 setTimeout(forAliveOnly(function () {
-                   if(elemToFocus[0] === document.activeElement){
+                   if(!constants.browser.isMobilePlatform && (constants.browser.firefox || constants.browser.chrome) && elemToFocus[0] === document.activeElement && this._isEmptySelection()){
                       var suggestShowed = this.isPickerVisible();
                       elemToFocus.blur().focus();
 
                       //https://online.sbis.ru/opendoc.html?guid=19af9bf9-0d16-4f63-8aa8-6d0ef7ff0799
-                      if(!suggestShowed && !this._options.task1174306848) {
+                      if (!suggestShowed && this.isPickerVisible() && !this._options.task1174306848) {
                          this.hidePicker();
                       }
                    }

@@ -1,5 +1,4 @@
 .controls-MenuLink {
-   line-height: @menu-link-line-height;
    // при открытии меню шрифт TensorBold не успевал подгружаться и происходил сдвиг меню,
    // т.к. браузер неправильно делал расчет ширины контента
    &:after {
@@ -13,7 +12,7 @@
 .controls-Menu.controls-MenuLink__Menu {
    margin: @menu-link-menu-margin;
    background: @menu-link-menu-bg;
-   border-width: @menu-link-menu-border-width;
+   border-width: @default-border-width;
    .controls-Menu__header {
       background-color: @menu-link-header-bg-color;
    }

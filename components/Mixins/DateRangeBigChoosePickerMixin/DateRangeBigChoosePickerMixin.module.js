@@ -55,7 +55,14 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoosePickerMixin', [
                if (this._options.selectionMode === 'range') {
                   this._chooserControl.applyYearState();
                }
+               this._chooserControl.updateViewAfterShow();
             }
+         }
+      },
+      after: {
+         showPicker: function () {
+            // см комментарий в updateViewAfterShow
+            this._chooserControl.updateViewAfterShow();
          }
       },
 
