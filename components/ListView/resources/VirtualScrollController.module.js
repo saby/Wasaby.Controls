@@ -43,8 +43,14 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             }
          },
 
-         freezeScroll: function (toggle) {
-            this._freezed = !!toggle;
+         /**
+          * Disables scroll handlers, so it doesn't update
+          * virtual pages on scroll
+          *
+          * @param toggle
+          */
+         disableScrollHandler: function (toggle) {
+            this._scrollHandlerDisabled = !!toggle;
          },
 
          reset: function(){
@@ -56,7 +62,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
          },
 
          _scrollHandler: function (e, scrollTop) {
-            if (!this._freezed) {
+            if (!this._scrollHandlerDisabled) {
                clearTimeout(this._scrollTimeout);
                this._scrollTimeout = setTimeout(function () {
                   var scrollTop = this._options.viewport.scrollTop(),

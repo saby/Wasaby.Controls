@@ -2050,16 +2050,22 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.setInfiniteScroll('both', true);
                }
             }
-            if (!this._options.saveReloadPosition && pageNumber === 0) {
-               this.setPage(0, true);
-            }
-            if (this._options.virtualScrolling && this._virtualScrollController) {
-               // Will reset pages after redrawing items
-               this._virtualScrollController.freezeScroll(true);
-               this.scrollToFirstPage();
-               this._resetPaging = true;
-               this._topWrapper.height(0);
-               this._bottomWrapper.height(0);
+
+            // Scroll to first page after filter or search
+            if (!this._options.saveReloadPosition) {
+               if (pageNumber === 0) {
+                  this.setPage(0, true);
+               }
+
+               // Reset virtual scrolling if it's enabled
+               if (this._options.virtualScrolling && this._virtualScrollController) {
+                  this._virtualScrollController.disableScrollHandler(true);
+                  this.scrollToFirstPage();
+                  // Will reset pages after redrawing items
+                  this._resetPaging = true;
+                  this._topWrapper.height(0);
+                  this._bottomWrapper.height(0);
+               }
             }
 
             this._reloadInfiniteScrollParams();
@@ -2972,7 +2978,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._virtualScrollController){
                if (this._resetPaging) {
                   this.scrollToFirstPage();
-                  this._virtualScrollController.freezeScroll(false);
+                  this._virtualScrollController.disableScrollHandler(false);
                }
                this._virtualScrollController.initHeights();
             }
