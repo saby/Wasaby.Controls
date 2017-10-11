@@ -244,17 +244,22 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
          _codeSample: function(button) {
             this.getLinkedEditor().showCodeSample();
          },
-         _openStylesPanel: function(button){
-            var stylesPanel = this.getStylesPanel(button);
+
+         _getCurrentFormats: function () {
             var selNode = this.getLinkedEditor().getTinyEditor().selection.getNode();
-            stylesPanel.setStylesFromObject({
+            return {
                fontsize: +tinyMCE.DOM.getStyle(selNode, 'font-size', true).replace('px', ''),
                color: constants.colorsMap[tinyMCE.DOM.getStyle(selNode, 'color', true)],
                bold: this._buttons.bold,
                italic: this._buttons.italic,
                underline: this._buttons.underline,
                strikethrough: this._buttons.strikethrough
-            });
+            };
+         },
+
+         _openStylesPanel: function(button){
+            var stylesPanel = this.getStylesPanel(button);
+            stylesPanel.setStylesFromObject(this._getCurrentFormats());
             stylesPanel.show();
          },
 
@@ -358,11 +363,13 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                   editor.setFontStyle(formats.id);
                }
                else {
-                  ['title', 'subTitle', 'additionalText', 'forecolor'].forEach(function (stl) {
-                     editor._removeFormat(stl);
-                  }, this);
+                  ['title', 'subTitle', 'additionalText', 'forecolor'].forEach(editor._removeFormat.bind(editor));
+                  var previous = this._getCurrentFormats();
+                  var atFirst = !formats.fontsize || formats.fontsize !== previous.fontsize;
                   //необходимо сначала ставить размер шрифта, тк это сбивает каретку
-                  editor.setFontSize(formats.fontsize);
+                  if (atFirst) {
+                     editor.setFontSize(formats.fontsize);
+                  }
                   for ( var button in this._buttons) {
                      if (this._buttons.hasOwnProperty(button) && button in formats && this._buttons[button] !== formats[button]) {
                         editor.execCommand(button);
@@ -370,6 +377,10 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                   }
                   if (formats.color) {
                      editor.setFontColor(formats.color);
+                  }
+                  if (!atFirst) {
+                     editor.getTinyEditor().selection.getRng().expand();
+                     editor.setFontSize(formats.fontsize);
                   }
                }
             }
