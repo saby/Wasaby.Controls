@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.DateRangeBigChoose.DateRangePicker', [
    "Core/Deferred",
    "js!SBIS3.CONTROLS.ListView",
-   "tmpl!SBIS3.CONTROLS.DateRangeBigChoose/resources/DateRangePickerItem",
+   "html!SBIS3.CONTROLS.DateRangeBigChoose/resources/DateRangePickerItem",
    "js!SBIS3.CONTROLS.RangeMixin",
    "js!WS.Data/Source/Base",
    "js!SBIS3.CONTROLS.Utils.DateUtil",

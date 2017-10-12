@@ -6,7 +6,7 @@ define(
       'Core/core-extend',
       'js!SBIS3.CONTROLS.Utils.IfEnabled',
       'js!SBIS3.CONTROLS.TextBoxBase',
-      'tmpl!SBIS3.CONTROLS.FormattedTextBoxBase/FormattedTextBoxBase_mask',
+      'html!SBIS3.CONTROLS.FormattedTextBoxBase/FormattedTextBoxBase_mask',
       'Core/helpers/Function/forAliveOnly',
       'is!msIe?js!SBIS3.CORE.FieldString/resources/ext/ierange-m2-min'
    ],

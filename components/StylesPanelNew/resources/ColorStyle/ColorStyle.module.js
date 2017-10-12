@@ -4,7 +4,7 @@
 
 define('js!SBIS3.CONTROLS.ColorStyle', [
    'js!SBIS3.CONTROLS.RadioGroup',
-   'tmpl!SBIS3.CONTROLS.ColorStyle/resources/ItemTemplate',
+   'html!SBIS3.CONTROLS.ColorStyle/resources/ItemTemplate',
    'js!SBIS3.CONTROLS.ColorRadioButtonNew'
 ], function(RadioGroup, ItemTemplate) {
 

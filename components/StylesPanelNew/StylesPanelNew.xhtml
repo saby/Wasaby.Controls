@@ -1,0 +1,42 @@
+<div class="controls-StylesPanel controls-StylesPanelNew {{?it.paletteRenderStyle}}controls-StylesPanel__colorPalette{{?}} controls-FloatArea">
+    {{?!it.paletteRenderStyle}}
+    <div  class="controls-StylesPanel__header">
+        <div class="controls-StylesPanel__title" title="Стиль и цвет">{[Стиль и цвет]}</div>
+        <component data-component="SBIS3.CONTROLS.IconButton" class="controls-StylesPanel__applyButton controls-IconButton__round-border controls-IconButton__round icon-size" name="Apply">
+            <option name="icon">sprite:icon-16 icon-Yes icon-done</option>
+            <option name="command">saveStylesPanel</option>
+            <option name="activableByClick">false</option>
+        </component>
+    </div>
+    <component data-component="SBIS3.CONTROLS.FontStyle">
+        <option name="style" type="ref">{{@it.style}}</option>
+        <option name="fontSizes" type="ref">{{@it.fontSizes}}</option>
+        <option name="activableByClick">false</option>
+    </component>
+    {{?}}
+    <component data-component="SBIS3.CONTROLS.ColorStyle" class="controls-StylesPanel__colors">
+        <option name="name">Pallete</option>
+        <option name="allowEmptySelection" type="boolean">{{=it.allowAutoColor}}</option>
+        <option name="selectedKey">{{=it.style.color}}</option>
+        <option name="items" type="ref">{{@it.colors}}</option>
+    </component>
+    <component data-component="SBIS3.CONTROLS.CheckBox" class="controls-StylesPanel__checkBox">
+        <option name="name">CheckBox</option>
+        <option name="visible" type="boolean">{{=it.allowAutoColor}}</option>
+        <option name="caption">Автоматически (под фон)</option>
+        <option name="checked">{{=(it.style.color === 'auto')}}</option>
+    </component>
+    {{?(!it.paletteRenderStyle && (it.historyId || it.presets))}}
+        <div class="controls-StylesPanel-presetFormats_wrapper">
+            <component data-component="SBIS3.CONTROLS.ListView" class="controls-ListView__withoutMarker controls-StylesPanel__presetView">
+                <option name="name">presetView</option>
+                <option name="itemContentTpl">html!SBIS3.CONTROLS.StylesPanelNew/resources/presetItemContentTpl</option>
+                <option name="itemTpl">html!SBIS3.CONTROLS.StylesPanelNew/resources/presetItemTemplate</option>
+                <options name="itemsActions" type="Array"></options>
+                <option name="itemsDragNDrop" value=""></option>
+                <option name="activableByClick" value="false"></option>
+            </component>
+        </div>
+    {{?}}
+
+</div>
