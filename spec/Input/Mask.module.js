@@ -5,7 +5,7 @@ define('js!SBIS3.SPEC.Input.Mask', [
     * Форматное поле ввода.
     * @class SBIS3.SPEC.Input.Mask
     * @extends SBIS3.SPEC.Control
-    * @mixes SBIS3.SPEC.Input.IText
+    * @mixes SBIS3.SPEC.Input.IInputText
     * @control
     * @public
     * @category Inputs

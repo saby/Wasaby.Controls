@@ -5,7 +5,7 @@ define('js!SBIS3.SPEC.Input.Text', [
     * Однострочное текстовое поле ввода.
     * @class SBIS3.SPEC.Input.Text
     * @extends SBIS3.SPEC.Control
-    * @mixes SBIS3.SPEC.Input.IText
+    * @mixes SBIS3.SPEC.Input.IInputText
     * @control
     * @public
     * @category Inputs

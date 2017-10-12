@@ -5,14 +5,10 @@ define('js!SBIS3.SPEC.Input.Number', [
     * Поле ввода числа.
     * @class SBIS3.SPEC.Input.Number
     * @extends SBIS3.SPEC.Control
+    * @mixes SBIS3.SPEC.Input.IInputNumber
     * @control
     * @public
     * @category Inputs
-    */
-
-   /**
-    * @name SBIS3.SPEC.Input.Number#value
-    * @cfg {Number} Устанавливает число.
     */
 
    /**
@@ -40,14 +36,6 @@ define('js!SBIS3.SPEC.Input.Number', [
     * @cfg {Boolean} Показывать ненулевую дробную часть
     */
 
-   /**
-    * @event SBIS3.SPEC.Input.Number#onValueChange Происходит при изменении числа в поле ввода.
-    * @param {Number} value Число.
-    */
 
-   /**
-    * @event SBIS3.SPEC.Input.Number#onInputFinish Происходит при завершении ввода.
-    * @param {Number} value Число.
-    */
 
 });

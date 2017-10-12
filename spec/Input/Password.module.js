@@ -5,7 +5,7 @@ define('js!SBIS3.SPEC.Input.Password', [
     * Поле ввода пароля.
     * @class SBIS3.SPEC.Input.Password
     * @extends SBIS3.SPEC.Control
-    * @mixes SBIS3.SPEC.Input.IText
+    * @mixes SBIS3.SPEC.Input.IInputText
     * @control
     * @public
     * @category Inputs

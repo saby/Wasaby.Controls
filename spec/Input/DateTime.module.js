@@ -18,10 +18,7 @@ define('js!SBIS3.SPEC.Input.DateTime', [
     * @category Inputs
     */
 
-   /**
-    * @name SBIS3.SPEC.Input.DateTime#value
-    * @cfg {String} Устанавливает значение даты в поле ввода.
-    */
+
 
    /**
     * @name SBIS3.SPEC.Input.DateTime#mask
