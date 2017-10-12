@@ -978,7 +978,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             return;
          }
 
-         table.toggleClass('ws-sticky-header__table', isSticky);
+         table.toggleClass('ws-sticky-header__table', Boolean(isSticky));
          if (isSticky) {
             EventBus.channel('stickyHeader').notify('onForcedStickHeader', this.getContainer());
          } else {

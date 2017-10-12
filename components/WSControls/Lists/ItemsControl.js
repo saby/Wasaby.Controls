@@ -159,6 +159,7 @@ define('js!WSControls/Lists/ItemsControl', [
                   _getPropertyValue: this._getPropertyValue,
                   idProperty: cfg.idProperty,
                   _itemTplData: {
+                     className: cfg.itemClassName,
                      _itemContentTplData: {
                         _getPropertyValue: this._getPropertyValue,
                         displayProperty: cfg.displayProperty
