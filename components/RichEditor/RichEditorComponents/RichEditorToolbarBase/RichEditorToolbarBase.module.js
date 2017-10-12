@@ -334,16 +334,13 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                   activableByClick: false
                });
 
-               var $root = $(editor.getInputContainer());
-               var color = $root.css('color');
-               // Формат по-умолчанию - определяется по свойствам форматирования контейнера редактора, (то, как видно в редакторе без форматирования)
-               var defaults = {
-                  fontsize : +$root.css('font-size').replace('px', ''),
-                  color: constants.colorsMap[color] || color
-               };
+               // Так как (оказывается!) в NoteEditor стилевая панель запрашивается до того, как тулбар и редактор связываются друг с другом,
+               // то стиль по умолчанию получать из редактора станем как можно позже
+
                this._stylesPanel.subscribe('changeFormat', function () {
                   var formats = self._stylesPanel.getStylesObject();
                   // Отбросить все свойства форматирования, тождественные форматированию по-умолчанию
+                  var defaults = self._getDefaults();
                   for (var prop in defaults) {
                      if (prop in formats && formats[prop] ==/* Не "==="! */ defaults[prop]) {
                         delete formats[prop];
@@ -354,6 +351,19 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                });
             }
             return this._stylesPanel;
+         },
+
+         _getDefaults: function () {
+            // Формат по-умолчанию - определяется по свойствам форматирования контейнера редактора, (то, как видно в редакторе без форматирования)
+            if (!this._defaults) {
+               var $root = $(this.getLinkedEditor().getInputContainer());
+               var color = $root.css('color');
+               this._defaults = {
+                  fontsize : +$root.css('font-size').replace('px', ''),
+                  color: constants.colorsMap[color] || color
+               };
+            }
+            return this._defaults;
          },
 
          _applyFormats: function (formats) {
