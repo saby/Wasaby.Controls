@@ -2,7 +2,8 @@ define('js!SBIS3.SPEC.Input.Mask', [
 ], function() {
 
    /**
-    * Форматное поле ввода.
+    * Поле ввода строки заранее определенного формата.
+    * В поле уже заранее будут введены символы, определяющие формат, и останется ввести только недостающие символы.
     * @class SBIS3.SPEC.Input.Mask
     * @extends SBIS3.SPEC.Control
     * @mixes SBIS3.SPEC.Input.IInputText

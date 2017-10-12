@@ -18,7 +18,7 @@ define('js!SBIS3.SPEC.Input.Area', [
 
     /**
      * @name SBIS3.SPEC.Input.Area#maxLinesCount
-     * @cfg {Number} Минимальное количество строк
+     * @cfg {Number} Максимальное количество строк
      */
 
     /**
