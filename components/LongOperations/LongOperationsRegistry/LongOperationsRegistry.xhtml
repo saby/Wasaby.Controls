@@ -1,0 +1,89 @@
+<div class="controls-LongOperations controls-LongOperationsRegistry {{? it.className}}{{=it.className}}{{?}}">
+   <component data-component="SBIS3.CONTROLS.Browser" name="longOperationsBrowser" class="controls-Browser__view">
+      <opt name="content">
+         <div class="controls-Browser__table controls-Browser__table-fullFilterBlock">
+            <div class="controls-Browser__tableCell-search">
+               <component data-component="SBIS3.CONTROLS.SearchForm" name="browserSearch" class="controls-Browser__search ws-bootup-autofocus">
+                  <opt name="tabindex" value="2"/>
+                  <opt name="allowChangeEnable" value="false"/>
+                  <!--<opt name="searchParam" value="title"/>-->
+                  <opt name="placeholder" value="{[искать@@найти...]}"/>
+               </component>
+            </div>
+            <div class="controls-Browser__tableRow">
+               <div class="controls-Browser__tableCell-filterButton">
+                  <component data-component="SBIS3.CONTROLS.FilterButton" name="browserFilterButton" class="controls-Browser__filterButton">
+                     <opt name="tabindex" value="0"/>
+                     <opts name="filterStructure" type="array">
+                        <opts>
+                           <opt name="internalValueField" value="PeriodKey"/>
+                           <opt name="internalCaptionField" value="PeriodTitle"/>
+                           <opt name="value" bind="filter/period"/>
+                           <opt name="resetValue" value="null" type="null"/>
+                        </opts>
+                        <opts>
+                           <opt name="internalValueField" value="StateKey"/>
+                           <opt name="internalCaptionField" value="StateTitle"/>
+                           <opt name="value" bind="filter/status"/>
+                           <opt name="itemTemplate" type="null"/>
+                           <opt name="resetValue" value="null" type="null"/>
+                        </opts>
+                        <opts>
+                           <opt name="internalValueField" value="DurationKey"/>
+                           <opt name="internalCaptionField" value="DurationTitle"/>
+                           <opt name="value" bind="filter/duration"/>
+                           <opt name="resetValue" value="null" type="null"/>
+                        </opts>
+                        {{? !it.userId}}
+                        <opts>
+                           <opt name="internalValueField" value="UserId"/>
+                           <opt name="internalCaptionField" value="UserName"/>
+                           <opt name="value" bind="filter/UserId"/>
+                        </opts>
+                        {{?}}
+                     </opts>
+                     <opt name="template">
+                        <component data-component="SBIS3.CONTROLS.LongOperationsFilter">
+                           <opt name="hideStaffFilter" value="{{=it.hideStaffFilter}}"/>
+                        </component>
+                     </opt>
+                  </component>
+               </div>
+               <div class="controls-Browser__tableCell-fastDataFilter">
+                  <component data-component="SBIS3.CONTROLS.FastDataFilter" name="browserFastDataFilter" class="controls-Browser__fastDataFilter">
+                     <opt name="tabindex" value="0"/>
+                     <opts name="filterStructure" type="array">
+                        <opts>
+                           <opt name="internalValueField" value="key"/>
+                           <opt name="internalCaptionField" value="title"/>
+                           <opt name="value" bind="filter/status"/>
+                           <opt name="resetValue" value="null" type="null"/>
+                        </opts>
+                     </opts>
+                     <opts name="items" type="array">
+                        <opts>
+                           <opt name="idProperty" value="key"/>
+                        </opts>
+                     </opts>
+                   </component>
+               </div>
+            </div>
+         </div>
+         <div class="controls-Browser__view">
+            <component data-component="SBIS3.CONTROLS.LongOperationsList" name="operationList">
+               {{? it.useGroupByEasyGroup}}
+               <opt name="useGroupByEasyGroup" value="true"/>
+               {{?}}
+               {{? it.columns}}<opt type="ref" name="columns" value="{{@it.columns}}"/>{{?}}
+               <opt name="userId" value="{{=it.userId}}"/>
+               <opt name="narrowTmpl" value="false"/>
+            </component>
+         </div>
+      </opt>
+   </component>
+   <component data-component="SBIS3.CONTROLS.Action.OpenEditDialog" name="action">
+      <opt name="template" value="js!SBIS3.CONTROLS.LongOperationHistory"/>
+      <opt name="mode" value="floatArea"/>
+      <opt name="initializingWay" value="local"/>
+   </component>
+</div>

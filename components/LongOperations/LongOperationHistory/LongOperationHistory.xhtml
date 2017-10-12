@@ -1,0 +1,57 @@
+<div class="controls-LongOperations controls-LongOperationHistory">
+   <component data-component="SBIS3.CONTROLS.Browser" name="brows" class="controls-Browser__view">
+      <opt name="content">
+         <div class="controls-Browser__table">
+            <div class="controls-Browser__tableRow">
+               <div class="controls-Browser__tableCell-fastDataFilter">
+                  <component data-component="SBIS3.CONTROLS.FastDataFilter" name="browserFastDataFilter" class="controls-Browser__fastDataFilter">
+                     <opts name="filterStructure" type="array">
+                        <opts>
+                           <opt name="internalValueField" value="key"/>
+                           <opt name="internalCaptionField" value="title"/>
+                           <opt name="value" bind="filter/onlyErrors"/>
+                        </opts>
+                     </opts>
+                  </component>
+               </div>
+            </div>
+         </div>
+         <div class="controls-Browser__view">
+            <component data-component="SBIS3.CONTROLS.DataGridView" name="browserView" class="controls-Browser__view controls-DataGridView__hasSeparator controls-DataGridView__overflow-ellipsis">
+               <opts name="filter" type="object" bind="filter"/>
+               <opt name="idProperty" value="id"/>
+               <opt name="displayProperty" value="title"/>
+               <opts name="itemsActions" type="Array"/>
+               <opt name="pageSize" value="2000"/>
+               <opt name="infiniteScroll" value="down"/>
+               <opt name="itemsDragNDrop" value="false"/>
+               <opts name="columns" type="Array">
+                  <opts>
+                     <opt name="title" value="Дата"/>
+                     <opt name="cellTemplate" value="html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryDateTemplate"/>
+                     <opt name="width" value="60"/>
+                  </opts>
+                  <opts>
+                     <opt name="title" value="Время"/>
+                     <opt name="cellTemplate" value="html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryTimeTemplate"/>
+                     <opt name="width" value="60"/>
+                  </opts>
+                  <opts>
+                     <opt name="title" value="{[ОперацииНадЗаписями@@Наименование]}"/>
+                     <opt name="field" value="title"/>
+                     <!--<opt name="width" value="100%"/>-->
+                  </opts>
+                  <opts>
+                     <opt name="title" value="Статус"/>
+                     <opt name="cellTemplate" value="html!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryStatusTemplate"/>
+                     <!--<opt name="width" value="200"/>-->
+                  </opts>
+               </opts>
+               <opts name="ladder" type="array">
+                  <opt value="Date"/>
+               </opts>
+            </component>
+         </div>
+      </opt>
+   </component>
+</div>

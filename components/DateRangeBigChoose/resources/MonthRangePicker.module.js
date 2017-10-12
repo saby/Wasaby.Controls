@@ -2,7 +2,7 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoose.MonthRangePicker', [
    "Core/constants",
    "Core/Deferred",
    "js!SBIS3.CONTROLS.ListView",
-   "tmpl!SBIS3.CONTROLS.DateRangeBigChoose/resources/MonthRangePickerItem",
+   "html!SBIS3.CONTROLS.DateRangeBigChoose/resources/MonthRangePickerItem",
    "js!SBIS3.CONTROLS.RangeMixin",
    "js!SBIS3.CONTROLS.RangeSelectableViewMixin",
    "WS.Data/Source/Base",
