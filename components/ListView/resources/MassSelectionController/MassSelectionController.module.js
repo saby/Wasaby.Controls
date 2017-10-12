@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.MassSelectionController',
     [
         'js!SBIS3.CORE.Control',
-        "js!WS.Data/Collection/IBind",
+        "WS.Data/Collection/IBind",
         "Core/core-clone",
         "js!SBIS3.CONTROLS.ArraySimpleValuesUtil"
     ],

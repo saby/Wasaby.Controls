@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea', [
    'js!SBIS3.CONTROLS.ColumnsEditorUtils',
    'Core/CommandDispatcher',
    'js!SBIS3.CONTROLS.ItemsMoveController',
-   'js!WS.Data/Collection/RecordSet',
+   'WS.Data/Collection/RecordSet',
    'tmpl!SBIS3.CONTROLS.ColumnsEditorArea',
    'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/itemContentTpl',
    'js!SBIS3.CONTROLS.Button',

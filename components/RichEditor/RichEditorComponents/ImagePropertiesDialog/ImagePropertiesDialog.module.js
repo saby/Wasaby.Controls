@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.RichEditor.ImagePropertiesDialog', ['js!SBIS3.CORE.CompoundControl', 'html!SBIS3.CONTROLS.RichEditor.ImagePropertiesDialog', 'js!SBIS3.CORE.Button', 'js!SBIS3.CORE.FieldInteger', 'js!SBIS3.CORE.FieldDropdown', 'js!SBIS3.CORE.FieldLabel'], function(CompoundControl, dotTplFn) {
+define('js!SBIS3.CONTROLS.RichEditor.ImagePropertiesDialog', ['js!SBIS3.CORE.CompoundControl', 'tmpl!SBIS3.CONTROLS.RichEditor.ImagePropertiesDialog', 'js!SBIS3.CORE.Button', 'js!SBIS3.CORE.FieldInteger', 'js!SBIS3.CORE.FieldDropdown', 'js!SBIS3.CORE.FieldLabel'], function(CompoundControl, dotTplFn) {
 
 
    var moduleClass = CompoundControl.extend({

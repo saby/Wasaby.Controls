@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.LongOperations.AbstractProducer',
       'Core/Deferred',
       'Core/IoC',
       'Core/UserInfo',
-      'js!WS.Data/Entity/ObservableMixin',
+      'WS.Data/Entity/ObservableMixin',
       'js!SBIS3.CONTROLS.LongOperations.IProducer',
       'js!SBIS3.CONTROLS.LongOperations.Entry',
       'js!SBIS3.CONTROLS.LongOperations.Const'
@@ -410,7 +410,7 @@ define('js!SBIS3.CONTROLS.LongOperations.AbstractProducer',
             return Deferred.success(operations);
          }
          var promise = new Deferred();
-         require(['js!WS.Data/Source/SbisService', 'js!WS.Data/Chain'], function (SbisService, Chain) {
+         require(['WS.Data/Source/SbisService', 'WS.Data/Chain'], function (SbisService, Chain) {
             if (!_userInfoSource) {
                var _userInfoSource = new SbisService({
                   endpoint: {

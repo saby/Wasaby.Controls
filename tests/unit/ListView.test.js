@@ -1,7 +1,7 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
    'js!SBIS3.CONTROLS.ListView',
-   'js!WS.Data/Collection/RecordSet'
+   'WS.Data/Collection/RecordSet'
 ], function (ListView, RecordSet) {
    'use strict';
    describe('SBIS3.CONTROLS.ListView', function () {
