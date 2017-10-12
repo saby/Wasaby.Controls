@@ -6,7 +6,7 @@ define('js!SBIS3.SPEC.Input.Mask', [
     * В поле уже заранее будут введены символы, определяющие формат, и останется ввести только недостающие символы.
     * @class SBIS3.SPEC.Input.Mask
     * @extends SBIS3.SPEC.Control
-    * @mixes SBIS3.SPEC.Input.IInputText
+    * @mixes SBIS3.SPEC.interface.IInputText
     * @control
     * @public
     * @category Inputs

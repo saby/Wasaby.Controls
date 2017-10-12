@@ -1,24 +1,24 @@
-define('js!SBIS3.SPEC.Input.IInputText', [
+define('js!SBIS3.SPEC.interface.IInputText', [
 ], function() {
 
    /**
     * Интерфейс работы текстового поля ввода.
-    * @mixin SBIS3.SPEC.Input.IInputText
+    * @mixin SBIS3.SPEC.interface.IInputText
     * @public
     */
 
    /**
-    * @name SBIS3.SPEC.Input.IInputText#value
+    * @name SBIS3.SPEC.interface.IInputText#value
     * @cfg {String} Устанавливает текстовое значение в поле ввода.
     */
 
    /**
-    * @event SBIS3.SPEC.Input.IInputText#onValueChange Происходит при изменении текста в поле ввода.
+    * @event SBIS3.SPEC.interface.IInputText#onValueChange Происходит при изменении текста в поле ввода.
     * @param {String} value Текст в поле ввода.
     */
 
    /**
-    * @event SBIS3.SPEC.Input.IInputText#onInputFinish Происходит при завершении ввода.
+    * @event SBIS3.SPEC.interface.IInputText#onInputFinish Происходит при завершении ввода.
     * @param {String} value Текст в поле ввода.
     */
 });

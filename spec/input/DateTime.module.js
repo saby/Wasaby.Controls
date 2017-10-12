@@ -13,7 +13,7 @@ define('js!SBIS3.SPEC.Input.DateTime', [
     * Можно вводить только значения особого формата даты.
     * @class SBIS3.SPEC.Input.DateTime
     * @extends SBIS3.SPEC.Control
-    * @mixes SBIS3.SPEC.Input.IInputDateTime
+    * @mixes SBIS3.SPEC.interface.IInputDateTime
     * @control
     * @public
     * @category Inputs

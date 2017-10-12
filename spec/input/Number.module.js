@@ -5,8 +5,8 @@ define('js!SBIS3.SPEC.Input.Number', [
     * Поле ввода числа.
     * @class SBIS3.SPEC.Input.Number
     * @extends SBIS3.SPEC.Control
-    * @mixes SBIS3.SPEC.Input.IInputNumber
-    * @mixes SBIS3.SPEC.Input.IInputPlaceholder
+    * @mixes SBIS3.SPEC.interface.IInputNumber
+    * @mixes SBIS3.SPEC.interface.IInputPlaceholder
     * @control
     * @public
     * @category Inputs
