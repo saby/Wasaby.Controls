@@ -3,7 +3,7 @@
  */
 define('js!SBIS3.CONTROLS.MassAmountSelector', [
    'js!SBIS3.CORE.CompoundControl',
-   'tmpl!SBIS3.CONTROLS.MassAmountSelector',
+   'html!SBIS3.CONTROLS.MassAmountSelector',
    'js!SBIS3.CONTROLS.Utils.InformationPopupManager',
    'js!SBIS3.CONTROLS.RadioGroup',
    'js!SBIS3.CONTROLS.NumberTextBox',

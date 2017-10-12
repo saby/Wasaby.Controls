@@ -13,8 +13,8 @@ define('js!WSControls/Lists/ItemsControl', [
    'js!WSControls/Lists/resources/utils/ItemsUtil',
    'Core/helpers/functional-helpers',
    'Core/Deferred',
-   'js!WS.Data/Type/descriptor',
-   'js!WS.Data/Source/ISource',
+   'WS.Data/Type/descriptor',
+   'WS.Data/Source/ISource',
    'Core/core-instance'
 ], function (extend,
              BaseControl,

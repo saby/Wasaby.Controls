@@ -3,10 +3,10 @@
  */
 define([
    'js!SBIS3.CONTROLS.ToSourceModel',
-   'js!WS.Data/Collection/List',
-   'js!WS.Data/Source/SbisService',
-   'js!WS.Data/Collection/RecordSet',
-   'js!WS.Data/Entity/Model'
+   'WS.Data/Collection/List',
+   'WS.Data/Source/SbisService',
+   'WS.Data/Collection/RecordSet',
+   'WS.Data/Entity/Model'
 ], function (ToSourceModel, List, SbisService, RecordSet, Model) {
    'use strict';
    

@@ -3,9 +3,9 @@ define('js!SBIS3.CONTROLS.LongOperations.Tools.TabCalls',
       'Core/core-extend',
       'Core/Deferred',
       'js!SBIS3.CORE.TabMessage',
-      'js!WS.Data/Source/DataSet',
-      'js!WS.Data/Collection/RecordSet',
-      'js!WS.Data/Chain'
+      'WS.Data/Source/DataSet',
+      'WS.Data/Collection/RecordSet',
+      'WS.Data/Chain'
    ],
 
    function (CoreExtend, Deferred, TabMessage, DataSet, RecordSet, Chain) {

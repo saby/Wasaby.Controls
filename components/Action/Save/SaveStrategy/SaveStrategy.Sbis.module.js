@@ -4,8 +4,8 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
     'Core/EventBus',
     'Core/core-merge',
     'Core/helpers/transport-helpers',
-    'js!WS.Data/Source/SbisService',
-    'js!WS.Data/Entity/Record',
+    'WS.Data/Source/SbisService',
+    'WS.Data/Entity/Record',
     'Core/moduleStubs'
 ], function (SaveStrategyBase, EventBus, coreMerge, transHelpers, SbisService, Record, moduleStubs) {
 

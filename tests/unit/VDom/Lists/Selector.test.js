@@ -3,9 +3,9 @@
 // */
 ///* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 //define(['js!WSControls/Lists/Selector',
-//      'js!WS.Data/Collection/RecordSet',
+//      'WS.Data/Collection/RecordSet',
 //      'js!WSControls/Lists/resources/utils/ItemsUtil',
-//      'js!WS.Data/Types/Enum'],
+//      'WS.Data/Types/Enum'],
 //   function (Selector,
 //             RecordSet,
 //             ItemsUtil,

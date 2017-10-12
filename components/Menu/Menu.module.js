@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.Menu', [
    'js!SBIS3.CONTROLS.TreeMixinDS',
    'js!SBIS3.CONTROLS.FloatArea',
    'js!SBIS3.CONTROLS.MenuItem',
-   'js!WS.Data/Relation/Hierarchy',
+   'WS.Data/Relation/Hierarchy',
    'js!SBIS3.CONTROLS.CommandsSeparator',
    'Core/helpers/markup-helpers',
    'Core/Sanitize',

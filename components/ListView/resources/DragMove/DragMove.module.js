@@ -4,7 +4,7 @@
 define('js!SBIS3.CONTROLS.ListView.DragMove', [
    "Core/Abstract",
    "js!SBIS3.CONTROLS.DragObject",
-   'js!WS.Data/Di',
+   'WS.Data/Di',
    'Core/core-instance',
    'js!SBIS3.CONTROLS.DragEntity.Row',
    'js!SBIS3.CONTROLS.DragEntity.List',

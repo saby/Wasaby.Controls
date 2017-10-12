@@ -1,0 +1,17 @@
+<div class="controls-filterButton__history-area ws-hidden">
+    <span class="controls-filterButton__secondary-title">{[Ранее отбирались]}</span>
+    <div class="controls-filterButton__footerAreas-wrapper controls-filterButton__footerAreas-maxHeight">
+        <component data-component="SBIS3.CONTROLS.ListView" name="historyView" class="controls-ListView__withoutMarker controls-filterButton__historyView">
+            <option name="itemContentTpl">tmpl!SBIS3.CONTROLS.FilterHistory/historyItemContentTpl</option>
+            <options name="itemsActions" type="Array"></options>
+            <option name="idProperty" value="id"></option>
+            <option name="itemsDragNDrop" value=""></option>
+            <options name="handlers">
+                <option name="onChangeHoveredItem" type="function">js!SBIS3.CONTROLS.FilterHistory:prototype._onChangeHoverHistoryItem</option>
+            </options>
+        </component>
+    </div>
+    <component data-component="SBIS3.CONTROLS.CommandsSeparator" name="toggleHistory">
+        <option name="command">toggleHistory</option>
+    </component>
+</div>
