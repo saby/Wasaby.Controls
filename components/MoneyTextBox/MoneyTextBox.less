@@ -1,19 +1,15 @@
 .controls-MoneyTextBox {
   min-width: @money-text-box-min-width;
   text-align: right;
-  cursor: auto;
 
-  .controls-MoneyTextBox__decimals {
+  &__decimals {
     font-size: @money-text-box-decimals-font-size;
     color: @money-text-box-decimals-color; //@gray-ccc-color;
-    background-color: transparent;
   }
-
+  //cascade
   .controls-TextBox__field {
     z-index: 1;
-    text-align: inherit;
     padding:0;//чтобы копейки были близко к основному тексту в задизабленом состоянии
-    line-height: @text-box-line-height;
   }
 
   &.ws-enabled {
@@ -23,12 +19,12 @@
   }
 
   .controls-TextBox__wrapper {
-    padding: @text-box-input-padding;//чтобы копейки были близко к основному тексту в задизабленом состоянии
     .box-sizing(border-box);
-    .justify-content(flex-end)
+    .justify-content(flex-end);
+    padding: @text-box-input-padding;//чтобы копейки были близко к основному тексту в задизабленом состоянии
   }
   .controls-TextBox__placeholder {
     z-index: 0;
+    padding: 0; //тк отступ на враппере
   }
-
 }

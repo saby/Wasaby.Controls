@@ -1,5 +1,5 @@
 <div class="controls-FormattedTextBox controls-TextBox controls-TextBox__size__{{!! size ? size : 'default'}}">
-    <div class="controls-FormattedTextBox__fieldWrapper">
-        <div contenteditable="{{enabled}}" class="controls-FormattedTextBox__field js-controls-FormattedTextBox__field">{{_maskTemplateFn(_modelForMaskTpl)|sanitize}}</div>
+    <div class="controls-FormattedTextBox__fieldWrapper controls-TextBox__wrapper">
+        <div contenteditable="{{enabled}}" class="controls-FormattedTextBox__field js-controls-FormattedTextBox__field controls-TextBox__field">{{_maskTemplateFn(_modelForMaskTpl)|sanitize}}</div>
     </div>
 </div>
