@@ -4,7 +4,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
     'Core/core-clone',
     'Core/core-merge',
     'Core/core-instance',
-    'js!WS.Data/Collection/RecordSet',
+    'WS.Data/Collection/RecordSet',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList/resources/FilterPanelChooserDictionaryFooter',
     'js!SBIS3.CONTROLS.Action.SelectorAction',
     'css!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList'

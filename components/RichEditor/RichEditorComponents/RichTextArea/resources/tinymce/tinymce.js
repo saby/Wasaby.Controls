@@ -50973,7 +50973,8 @@
       "tinymce/util/Tools"
    ], function (Tools) {
       var isAbsoluteUrl = function (url) {
-         return /^https?:\/\/[\w\?\-\/+=.&%@~#]+$/i.test(url);
+         //TODO Добавили символ ; сами, в соответствии со стандартом https://tools.ietf.org/html/rfc3986, он входит в список разрешенных
+         return /^https?:\/\/[\w\?\-\/+=.;&%@~#]+$/i.test(url);
       };
 
       var isImageUrl = function (url) {

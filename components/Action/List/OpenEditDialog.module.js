@@ -4,8 +4,8 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       'Core/core-merge',
       'Core/Indicator',
       'Core/Deferred',
-      'js!WS.Data/Entity/Record',
-      'js!WS.Data/Di',
+      'WS.Data/Entity/Record',
+      'WS.Data/Di',
       'js!SBIS3.CONTROLS.Utils.OpenDialog'
    ], function (OpenDialog, cInstance, cMerge, cIndicator, Deferred, Record, Di, OpenDialogUtil) {
    'use strict';

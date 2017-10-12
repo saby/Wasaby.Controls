@@ -7,7 +7,7 @@ define('js!WSControls/Lists/TreeView2', [
       'Core/Deferred',
       'Core/helpers/collection-helpers',
       'Core/core-clone',
-      'js!WS.Data/Relation/Hierarchy',
+      'WS.Data/Relation/Hierarchy',
       'Core/helpers/functional-helpers',
       'tmpl!WSControls/Lists/resources/TreeView/ItemTemplate',
       'css!SBIS3.CONTROLS.TreeView'

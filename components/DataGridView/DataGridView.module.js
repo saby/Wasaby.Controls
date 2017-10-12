@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "js!SBIS3.CONTROLS.DragAndDropMixin",
    "js!SBIS3.CONTROLS.ImitateEvents",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
-   'js!WS.Data/Display/Ladder',
+   'WS.Data/Display/Ladder',
    'js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator',
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/ItemTemplate",
@@ -978,7 +978,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             return;
          }
 
-         table.toggleClass('ws-sticky-header__table', isSticky);
+         table.toggleClass('ws-sticky-header__table', Boolean(isSticky));
          if (isSticky) {
             EventBus.channel('stickyHeader').notify('onForcedStickHeader', this.getContainer());
          } else {

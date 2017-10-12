@@ -14,6 +14,7 @@
    "Все": "All",
    "Все записи": "All records",
    "Всего": "Total",
+   "Вставка": "Paste",
    "Вставить картинку": "Insert image",
    "Вставить с учётом стилей": "Insert considering styles",
    "Вставить/Удалить список": "Insert / Remove list",
@@ -180,8 +181,14 @@
    "тупица": "dump",
    "улыбка": "smile",
    "умник": "nerd",
+   "Цитата": "Quote",
    "шокирован": "shocked",
    "Показать": "Show",
    "Скрыть": "Hide",
-   "Очистить результаты поиска": "Clear search"
+   "Очистить результаты поиска": "Clear search",
+   "Вперёд": "Forward",
+   "Назад": "Backward",
+   "В конец": "To end",
+   "В начало": "To beginning",
+   "Очистить поле": "Clear field"
 }

@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.Image',
    "Core/CommandDispatcher",
    "Core/Deferred",
    "js!SBIS3.CORE.CompoundControl",
-   "js!WS.Data/Source/SbisService",
+   "WS.Data/Source/SbisService",
    "tmpl!SBIS3.CONTROLS.Image",
    "js!SBIS3.CORE.FileLoader",
    "Core/helpers/fast-control-helpers",
@@ -298,7 +298,7 @@ define('js!SBIS3.CONTROLS.Image',
                    * Конфигурация источника данных контрола "Изображение" через вёрстку:
                    * <pre>
                    *     <options name="dataSource">
-                   *        <option name="module" value="js!WS.Data/Source/SbisService"></option>
+                   *        <option name="module" value="WS.Data/Source/SbisService"></option>
                    *        <options name="options">
                    *            <options name="endpoint">
                    *                <option name="contract" value="Контрагент"></option>

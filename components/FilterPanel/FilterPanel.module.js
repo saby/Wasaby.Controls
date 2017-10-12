@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
    'Core/CommandDispatcher',
    'js!SBIS3.CONTROLS.CompoundControl',
    'js!SBIS3.CONTROLS.Expandable',
-   'js!WS.Data/Collection/RecordSet',
+   'WS.Data/Collection/RecordSet',
    'js!SBIS3.CONTROLS.FilterPanelItem',
    'js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
    'tmpl!SBIS3.CONTROLS.FilterPanel',

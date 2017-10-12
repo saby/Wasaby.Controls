@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
    'Core/core-clone',
    "Core/Deferred",
    "Core/IoC",
-   "js!WS.Data/Collection/List",
+   "WS.Data/Collection/List",
    "js!SBIS3.CONTROLS.ArraySimpleValuesUtil",
    "Core/helpers/Object/isEqual",
    "Core/core-instance",
