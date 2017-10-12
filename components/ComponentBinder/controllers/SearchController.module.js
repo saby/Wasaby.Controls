@@ -51,9 +51,6 @@ define('js!SBIS3.CONTROLS.SearchController',
        * @private
        */
       _reloadView: function(view, filter) {
-         if (view.scrollToFirstPage) {
-            view.scrollToFirstPage();
-         }
          view.reload(filter, view.getSorting(), 0);
       },
 

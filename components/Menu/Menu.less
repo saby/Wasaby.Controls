@@ -9,6 +9,10 @@
    outline-width: @default-border-width;
    outline-style: @default-border-style;
    outline-color: @menu-border-color;
+   outline-offset: -@default-border-width;
+   // ставим прозрачный border т.к. outline не считается частью элемента и физически между подменю зазор в 1px,
+   // а визуально его нет
+   border: @default-border-width @default-border-style transparent;
    background-color: @white-color;
    .user-select(none);
 
@@ -110,7 +114,6 @@
 .controls-Menu__SubMenuPopup {
    margin: @menu-subpopup-margin;
    padding: @menu-subpopup-padding;
-   border: none;
 }
 
 .controls-Menu {
@@ -144,7 +147,7 @@
          display: none;
       }
       &.controls-IconButton__round-border-24 {
-         margin: -6px 0 0 -6px;
+         margin: -7px 0 0 -7px;
          .controls-ListView__item:first-child {
             .controls-MenuItem__icon {
                .round-button-mixin(@gray-ccc-color, @border-radius, @icon-button-border-width);

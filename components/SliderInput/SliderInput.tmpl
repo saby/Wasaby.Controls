@@ -1,0 +1,40 @@
+<div class="controls-SliderInput{{bigPoint ? ' controls-Slider__big'}}">
+   <div class="controls-Slider">
+      <div class="controls-Slider__wrapper">
+         <div class="controls-Slider__mainSlider{{bigPoint ? ' controls-Slider__big'}}">
+            <div class="controls-Slider__point controls-Slider__point__start{{single ? ' ws-hidden'}}"></div>
+            <div class="controls-Slider__point controls-Slider__point__end"></div>
+            <div class="controls-Slider__line__wrapper"><div class="controls-Slider__line controls-Slider__line__empty"></div></div>
+            <div class="controls-Slider__line__wrapper"><div class="controls-Slider__line controls-Slider__line__full"></div></div>
+         </div>
+      </div>
+      <div if="{{scale}}" class="controls-Slider__scale">
+         <ws:for data="value in scale">
+            <span class="controls-Slider__segment">{{value}}</span>
+         </ws:for>
+      </div>
+   </div>
+   <div class="controls-SliderInput__inputs">
+      <span if="{{startLabel}}" class="controls-SliderInput__label controls-SliderInput__label__start">{{startLabel}}</span>
+      <ws:SBIS3.CONTROLS.NumberTextBox
+         startCharacter="0"
+         name="StartTextBox"
+         text="{{startValue}}"
+         delimiters="{{true}}"
+         placeholder="{{minValue}}"
+         decimals="{{decimals}}"
+         className="controls-SliderInput__input controls-SliderInput__input__start"
+      />
+      <span if="{{middleLabel}}" class="controls-SliderInput__label controls-SliderInput__label__middle">{{middleLabel}}</span>
+      <ws:SBIS3.CONTROLS.NumberTextBox
+         name="EndTextBox"
+         startCharacter="0"
+         text="{{endValue}}"
+         delimiters="{{true}}"
+         decimals="{{decimals}}"
+         placeholder="{{maxValue}}"
+         className="controls-SliderInput__input controls-SliderInput__input__end"
+      />
+      <span if="{{endLabel}}" class="controls-SliderInput__label controls-SliderInput__label__end">{{endLabel}}</span>
+   </div>
+</div>

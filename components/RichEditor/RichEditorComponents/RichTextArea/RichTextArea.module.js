@@ -21,7 +21,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    'Core/helpers/String/escapeTagsFromStr',
    'Core/helpers/String/escapeHtml',
    'Core/helpers/String/linkWrap',
-   'Core/helpers/Hcontrol/trackElement',
    'js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
    'js!SBIS3.CONTROLS.RichEditor.CodeSampleDialog',
    'Core/EventBus',
@@ -47,7 +46,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
       escapeTagsFromStr,
       escapeHtml,
       LinkWrap,
-      trackElement,
       ImageOptionsPanel,
       CodeSampleDialog,
       EventBus
@@ -511,7 +509,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                }
                this._tinyEditor.destroyed = true;
             }
-            trackElement(this._container, false);
             this._container.unbind('keydown keyup');
             this._sourceArea.unbind('input');
             this._tinyEditor = null;
@@ -1342,15 +1339,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             //Обработка вставки контента
             editor.on('BeforePastePreProcess', function(e) {
-               var
-                  isRichContent = e.content.indexOf('orphans: 31415;') !== -1,
-                  content = e.content;
-               e.content =  content.replace('orphans: 31415;','');
+               var isRichContent = e.content.indexOf('orphans: 31415;') !== -1;
+               e.content = e.content.replace('orphans: 31415;', '');
                //Необходимо заменять декорированные ссылки обратно на url
                //TODO: временное решение для 230. удалить в 240 когда сделают ошибку https://inside.tensor.ru/opendoc.html?guid=dbaac53f-1608-42fa-9714-d8c3a1959f17
-               e.content = self._prepareContent( e.content);
+               e.content = self._prepareContent(e.content);
                //Парсер TinyMCE неправльно распознаёт стили из за - &quot;TensorFont Regular&quot;
-               e.content = e. content.replace(/&quot;TensorFont Regular&quot;/gi,'\'TensorFont Regular\'');
+               e.content = e.content.replace(/&quot;TensorFont Regular&quot;/gi,'\'TensorFont Regular\'');
                //_mouseIsPressed - флаг того что мышь была зажата в редакторе и не отпускалась
                //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
                //upd: в костроме форматная вставка, не нужно вырезать лишние теги
@@ -1406,7 +1401,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                // Замена отступов после переноса строки и в первой строке
                // пробелы заменяются с чередованием '&nbsp;' + ' '
                event.node.innerHTML = this._replaceWhitespaces(event.node.innerHTML);
-
             }.bind(this));
 
             editor.on('drop', function(event) {
@@ -1534,7 +1528,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             // Обработка изменения содержимого редактора.
             editor.on('keydown', function(e) {
-               if (1 < e.key.length) {
+               if (e.key && 1 < e.key.length) {
                   _linkEditStart();
                   setTimeout(function() {
                      _linkEditEnd();
