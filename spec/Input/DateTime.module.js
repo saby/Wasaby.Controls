@@ -61,8 +61,6 @@ define('js!SBIS3.SPEC.Input.DateTime', [
     * @variant 'YY-MM-DD HH:II'
     * @variant 'YYYY'
     * @variant 'MM/YYYY'
-    * @see date
-    * @see isCalendarIconShow
     */
    /**
     * @event SBIS3.SPEC.Input.DateTime#onValueChange Происходит при изменении даты в поле ввода.
