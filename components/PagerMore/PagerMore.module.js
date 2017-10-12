@@ -1,11 +1,11 @@
 /* global define, $ws */
 define('js!SBIS3.CONTROLS.PagerMore', [
-   'js!SBIS3.CORE.CompoundControl',
-   'WS.Data/Collection/ISourceLoadable',
-   'tmpl!SBIS3.CONTROLS.PagerMore',
-   'Core/core-instance',
-   'i18n!SBIS3.CONTROLS.PagerMore',
-   'css!SBIS3.CONTROLS.PagerMore'
+      'js!SBIS3.CORE.CompoundControl',
+      'WS.Data/Collection/ISourceLoadable',
+      'html!SBIS3.CONTROLS.PagerMore',
+      'Core/core-instance',
+      'i18n!SBIS3.CONTROLS.PagerMore',
+      'css!SBIS3.CONTROLS.PagerMore'
 ], function(CompoundControl, ISourceLoadable, dotTplFn, cInstance) {
    'use strict';
 

@@ -5,7 +5,7 @@
 define('js!SBIS3.CONTROLS.Slider',
    [
       'js!SBIS3.CORE.CompoundControl',
-      'tmpl!SBIS3.CONTROLS.Slider',
+      'html!SBIS3.CONTROLS.Slider',
       'js!SBIS3.CONTROLS.DragNDropMixin',
       'js!SBIS3.CONTROLS.RangeMixin',
       'Core/IoC',
