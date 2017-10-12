@@ -1,9 +1,9 @@
-define('js!SBIS3.SPEC.Input.Lookup', [
+define('js!SBIS3.SPEC.input.Lookup', [
 ], function() {
 
    /**
     * Поле связи.
-    * @class SBIS3.SPEC.Input.Lookup
+    * @class SBIS3.SPEC.input.Lookup
     * @extends SBIS3.SPEC.Control
     * @mixes SBIS3.SPEC.interface.IDataSource
     * @mixes SBIS3.SPEC.interface.IPlaceholder

@@ -1,4 +1,4 @@
-define('js!SBIS3.SPEC.Input.DateTime', [
+define('js!SBIS3.SPEC.input.DateTime', [
 ], function() {
 
    /**
@@ -11,7 +11,7 @@ define('js!SBIS3.SPEC.Input.DateTime', [
     * </ol>
     * Осуществить ввод информации можно только с клавиатуры.
     * Можно вводить только значения особого формата даты.
-    * @class SBIS3.SPEC.Input.DateTime
+    * @class SBIS3.SPEC.input.DateTime
     * @extends SBIS3.SPEC.Control
     * @mixes SBIS3.SPEC.interface.IInputDateTime
     * @mixes SBIS3.SPEC.interface.IValidation
@@ -21,7 +21,7 @@ define('js!SBIS3.SPEC.Input.DateTime', [
     */
 
    /**
-    * @name SBIS3.SPEC.Input.DateTime#mask
+    * @name SBIS3.SPEC.input.DateTime#mask
     * @cfg {String} Формат отображения данных
     * Необходимо выбрать одну из масок в массиве допустимых значений.
     * Допустимые символы в маске:

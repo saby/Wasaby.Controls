@@ -1,10 +1,10 @@
-define('js!SBIS3.SPEC.Input.Mask', [
+define('js!SBIS3.SPEC.input.Mask', [
 ], function() {
 
    /**
     * Поле ввода строки заранее определенного формата.
     * В поле уже заранее будут введены символы, определяющие формат, и останется ввести только недостающие символы.
-    * @class SBIS3.SPEC.Input.Mask
+    * @class SBIS3.SPEC.input.Mask
     * @extends SBIS3.SPEC.Control
     * @mixes SBIS3.SPEC.interface.IInputText
     * @mixes SBIS3.SPEC.interface.IValidation
@@ -14,7 +14,7 @@ define('js!SBIS3.SPEC.Input.Mask', [
     */
 
    /**
-    * @name SBIS3.SPEC.Input.Mask#mask
+    * @name SBIS3.SPEC.input.Mask#mask
     * @cfg {String} Формат ввода текстового значения.
     * Маска вида: "Lll:xdd", где
     * <ul>

@@ -1,9 +1,9 @@
-define('js!SBIS3.SPEC.Input.Number', [
+define('js!SBIS3.SPEC.input.Number', [
 ], function() {
 
    /**
     * Поле ввода числа.
-    * @class SBIS3.SPEC.Input.Number
+    * @class SBIS3.SPEC.input.Number
     * @extends SBIS3.SPEC.Control
     * @mixes SBIS3.SPEC.interface.IInputNumber
     * @mixes SBIS3.SPEC.interface.IInputPlaceholder
@@ -14,27 +14,27 @@ define('js!SBIS3.SPEC.Input.Number', [
     */
 
    /**
-    * @name SBIS3.SPEC.Input.Number#decimals
+    * @name SBIS3.SPEC.input.Number#decimals
     * @cfg {Number} Количество знаков после запятой
     */
 
    /**
-    * @name SBIS3.SPEC.Input.Number#onlyPositive
+    * @name SBIS3.SPEC.input.Number#onlyPositive
     * @cfg {Boolean} Ввод только положительных чисел
     */
 
    /**
-    * @name SBIS3.SPEC.Input.Number#onlyInteger
+    * @name SBIS3.SPEC.input.Number#onlyInteger
     * @cfg {Boolean} Ввод только целых чисел
     */
 
    /**
-    * @name SBIS3.SPEC.Input.Number#integers
+    * @name SBIS3.SPEC.input.Number#integers
     * @cfg {Number} Количество знаков до запятой
     */
 
    /**
-    * @name SBIS3.SPEC.Input.Number#showEmptyDecimals
+    * @name SBIS3.SPEC.input.Number#showEmptyDecimals
     * @cfg {Boolean} Показывать ненулевую дробную часть
     */
 
