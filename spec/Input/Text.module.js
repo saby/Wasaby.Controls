@@ -6,6 +6,7 @@ define('js!SBIS3.SPEC.Input.Text', [
     * @class SBIS3.SPEC.Input.Text
     * @extends SBIS3.SPEC.Control
     * @mixes SBIS3.SPEC.Input.IInputText
+    * @mixes SBIS3.SPEC.Input.IInputPlaceholder
     * @control
     * @public
     * @category Inputs
@@ -24,10 +25,6 @@ define('js!SBIS3.SPEC.Input.Text', [
     * @variant false Не обрезать пробелы.
     */
 
-   /**
-    * @name SBIS3.SPEC.Input.Text#placeholder
-    * @cfg {String} Устанавливает текст подсказки внутри поля ввода.
-    */
 
    /**
     * @name SBIS3.SPEC.Input.Text#selectOnClick

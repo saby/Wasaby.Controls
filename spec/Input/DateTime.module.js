@@ -19,8 +19,6 @@ define('js!SBIS3.SPEC.Input.DateTime', [
     * @category Inputs
     */
 
-
-
    /**
     * @name SBIS3.SPEC.Input.DateTime#mask
     * @cfg {String} Формат отображения данных
@@ -63,14 +61,5 @@ define('js!SBIS3.SPEC.Input.DateTime', [
     * @variant 'MM/YYYY'
     * @see date
     * @see isCalendarIconShow
-    */
-   /**
-    * @event SBIS3.SPEC.Input.DateTime#onValueChange Происходит при изменении даты в поле ввода.
-    * @param {Date} value Дата.
-    */
-
-   /**
-    * @event SBIS3.SPEC.Input.DateTime#onInputFinish Происходит при завершении ввода.
-    * @param {Date} value Дата.
     */
 });

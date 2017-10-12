@@ -6,6 +6,7 @@ define('js!SBIS3.SPEC.Input.Number', [
     * @class SBIS3.SPEC.Input.Number
     * @extends SBIS3.SPEC.Control
     * @mixes SBIS3.SPEC.Input.IInputNumber
+    * @mixes SBIS3.SPEC.Input.IInputPlaceholder
     * @control
     * @public
     * @category Inputs

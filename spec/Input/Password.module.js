@@ -6,6 +6,7 @@ define('js!SBIS3.SPEC.Input.Password', [
     * @class SBIS3.SPEC.Input.Password
     * @extends SBIS3.SPEC.Control
     * @mixes SBIS3.SPEC.Input.IInputText
+    * @mixes SBIS3.SPEC.Input.IInputPlaceholder
     * @control
     * @public
     * @category Inputs
