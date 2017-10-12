@@ -7,6 +7,7 @@ define('js!SBIS3.SPEC.Input.Mask', [
     * @class SBIS3.SPEC.Input.Mask
     * @extends SBIS3.SPEC.Control
     * @mixes SBIS3.SPEC.interface.IInputText
+    * @mixes SBIS3.SPEC.interface.IValidation
     * @control
     * @public
     * @category Inputs

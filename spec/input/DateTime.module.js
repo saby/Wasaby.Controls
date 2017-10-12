@@ -14,6 +14,7 @@ define('js!SBIS3.SPEC.Input.DateTime', [
     * @class SBIS3.SPEC.Input.DateTime
     * @extends SBIS3.SPEC.Control
     * @mixes SBIS3.SPEC.interface.IInputDateTime
+    * @mixes SBIS3.SPEC.interface.IValidation
     * @control
     * @public
     * @category Inputs
