@@ -6,7 +6,7 @@ define('js!SBIS3.SPEC.Input.TimeInterval', [
     * Можно вводить только значения особого формата даты ISO_8601 с точностью от дней до минут.
     * @class SBIS3.SPEC.Input.TimeInterval
     * @extends SBIS3.SPEC.Control
-    * @mixes SBIS3.SPEC.Input.IText
+    * @mixes SBIS3.SPEC.Input.IInputText
     * @control
     * @public
     * @category Inputs

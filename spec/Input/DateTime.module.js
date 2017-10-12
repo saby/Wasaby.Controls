@@ -13,6 +13,7 @@ define('js!SBIS3.SPEC.Input.DateTime', [
     * Можно вводить только значения особого формата даты.
     * @class SBIS3.SPEC.Input.DateTime
     * @extends SBIS3.SPEC.Control
+    * @mixes SBIS3.SPEC.Input.IInputDateTime
     * @control
     * @public
     * @category Inputs
@@ -23,7 +24,6 @@ define('js!SBIS3.SPEC.Input.DateTime', [
    /**
     * @name SBIS3.SPEC.Input.DateTime#mask
     * @cfg {String} Формат отображения данных
-    * @remark
     * Необходимо выбрать одну из масок в массиве допустимых значений.
     * Допустимые символы в маске:
     * <ol>

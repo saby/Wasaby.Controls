@@ -2,7 +2,7 @@ define('js!SBIS3.SPEC.Input.IInputNumber', [
 ], function() {
 
    /**
-    * Интерфейс работы текстового поля ввода.
+    * Интерфейс работы текстового числового ввода.
     * @mixin SBIS3.SPEC.Input.IInputNumber
     * @public
     */
