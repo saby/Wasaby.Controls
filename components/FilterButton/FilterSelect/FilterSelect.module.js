@@ -4,8 +4,8 @@
 define('js!SBIS3.CONTROLS.FilterSelect',
     [
        'js!SBIS3.CORE.CompoundControl',
-       'tmpl!SBIS3.CONTROLS.FilterSelect',
-       'tmpl!SBIS3.CONTROLS.FilterSelect/FilterSelectItem',
+       'html!SBIS3.CONTROLS.FilterSelect',
+       'html!SBIS3.CONTROLS.FilterSelect/FilterSelectItem',
        'js!SBIS3.CONTROLS.ItemsControlMixin',
        'js!SBIS3.CONTROLS.Clickable',
        'js!SBIS3.CONTROLS.Link'

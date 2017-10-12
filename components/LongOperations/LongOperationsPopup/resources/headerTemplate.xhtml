@@ -1,0 +1,17 @@
+<div class="controls-NotificationPopup__header_icon
+         {{? it.icon}}
+            icon-size {{=it.icon}}
+         {{?? it.status === 'success'}}
+            icon-size icon-24 icon-Yes icon-done
+         {{?? it.status === 'error'}}
+            icon-size icon-24 icon-Alert icon-error
+         {{?}}">
+</div>
+<div class="controls-NotificationPopup__header_caption controls-LongOperationsPopup__header_caption">{{!it.caption}}</div>
+<component data-component="SBIS3.CONTROLS.Link" name="downloadButton" class="controls-LongOperationsPopup__header_downloadButton">
+   <option name="caption">Скачать</option>
+</component>
+<div class="controls-LongOperationsPopup__header_stoppedOperationsButton controls-LongOperationsPopup__header_stoppedOperations-show">
+   <span class="controls-LongOperationsPopup__header_hideStoppedOperations" title="Скрыть прерванные">Скрыть прерванные</span>
+   <span class="controls-LongOperationsPopup__header_showStoppedOperations" title="Показать прерванные">Показать прерванные</span>
+</div>

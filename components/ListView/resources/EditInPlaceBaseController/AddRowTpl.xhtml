@@ -1,0 +1,7 @@
+{{?it.columns}}
+<tr class="js-controls-ListView__item controls-ListView__item" data-id="{{=it.model.getId()}}">
+    <td class ="controls-DataGridView__td controls-DataGridView__firstContentCell" colspan="{{=(it.columns.length + (it.ignoreFirstColumn ? 1 : 0))}}"></td>
+</tr>
+{{??}}
+<div class="js-controls-ListView__item controls-ListView__item" data-id="{{=it.model.getId()}}"></div>
+{{?}}

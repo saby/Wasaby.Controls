@@ -5,7 +5,7 @@
 define('js!SBIS3.CONTROLS.Accordion', [
    'js!SBIS3.CORE.CompoundControl',
    'js!SBIS3.CONTROLS.ItemsControlMixin',
-   'tmpl!SBIS3.CONTROLS.Accordion',
+   'html!SBIS3.CONTROLS.Accordion',
    'Core/Deferred',
    "Core/Context",
    'browser!tmpl!SBIS3.CONTROLS.Accordion/resources/ItemTemplate',
