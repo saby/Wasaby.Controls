@@ -1,5 +1,5 @@
 define('js!WSControls/Lists/Controllers/PageNavigation',
-   ['Core/Abstract', 'js!WSControls/Lists/Controllers/INavigation', 'js!WS.Data/Source/SbisService'],
+   ['Core/Abstract', 'js!WSControls/Lists/Controllers/INavigation', 'WS.Data/Source/SbisService'],
    function (Abstract, INavigation, SbisService) {
       /**
        *

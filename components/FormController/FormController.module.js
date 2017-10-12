@@ -11,8 +11,8 @@ define('js!SBIS3.CONTROLS.FormController', [
    'Core/helpers/Hcontrol/doAutofocus',
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CORE.LoadingIndicator",
-   "js!WS.Data/Entity/Record",
-   "js!WS.Data/Source/SbisService",
+   "WS.Data/Entity/Record",
+   "WS.Data/Source/SbisService",
    "js!SBIS3.CONTROLS.Utils.InformationPopupManager",
    "js!SBIS3.CONTROLS.Utils.OpenDialog",
    "js!SBIS3.CONTROLS.TitleManager",
@@ -57,6 +57,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @event onReadModel Происходит при чтении записи из источника данных диалога редактирования.
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Запись, прочитанная из источника данных (см. {@link dataSource}).
+       * @param {Object} additionalData Дополнительные данных, необходимые для синхронизации action'a.
        * @see read
        * @see dataSource
        * @see onCreateModel
@@ -107,6 +108,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @event onDestroyModel Происходит при удалении записи из источника данных диалога.
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Запись, которая была удалена из источника данных (см. {@link dataSource}).
+       * @param {Object} additionalData Дополнительные данных, необходимые для синхронизации action'a.
        * @see destroy
        * @see dataSource
        * @see onCreateModel
@@ -118,6 +120,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @event onCreateModel Происходит при создании записи в источнике данных диалога редактирования.
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Запись, которая была создана в источнике данных.
+       * @param {Object} additionalData Дополнительные данных, необходимые для синхронизации action'a.
        * При создании часть полей может быть предустановлена с помощью опции {@link initValues}.
        * @see create
        * @see onDestroyModel
@@ -683,10 +686,10 @@ define('js!SBIS3.CONTROLS.FormController', [
                eventName: 'onReadModel'
             },
             self = this,
-            key = (config && config.key) || this._options.key,
             readDeferred;
+         this._options.key = (config && config.key) || this._options.key;
 
-         readDeferred = this._dataSource.read(key, this._options.readMetaData).addCallback(function(record){
+         readDeferred = this._dataSource.read(this._options.key, this._options.readMetaData).addCallback(function(record){
             self.setRecord(record);
             return record;
          }).addBoth(function(data){

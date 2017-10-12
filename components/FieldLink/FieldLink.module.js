@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "js!SBIS3.CONTROLS.ITextValue",
        "js!SBIS3.CONTROLS.Utils.TemplateUtil",
        "js!SBIS3.CONTROLS.ToSourceModel",
-       "js!WS.Data/Collection/List",
+       "WS.Data/Collection/List",
        "js!SBIS3.CONTROLS.Utils.ItemsSelection",
        "Core/helpers/Object/find",
        "js!SBIS3.CONTROLS.IconButton",
@@ -620,20 +620,20 @@ define('js!SBIS3.CONTROLS.FieldLink',
              noFocus = this._options.task_1173772355 ? this._isControlActive : noFocus;
 
              /* Хак, который чинит баг firefox с невидимым курсором в input'e.
-              Это довольно старая и распростронённая проблема в firefox'e,
+              Это довольно старая и распростронённая проблема в firefox'e (а теперь еще и в хроме),
               повторяется с разными сценариями и с разными способомами почи)нки.
               В нашем случае, если фокус в input'e, то перед повторной установкой фокуса надо сделать blur (увести фокус из input'a).
               Чтобы это не вызывало перепрыгов фокуса, делаем это по минимальному таймауту. Выглядит плохо, но другого решения для FF найти не удлось.*/
-             if(constants.browser.firefox && active && !this.getText() && this._isEmptySelection()) {
+             if(active && !this.getText() && this._isEmptySelection()) {
                 var elemToFocus = this._getElementToFocus();
 
                 setTimeout(forAliveOnly(function () {
-                   if(elemToFocus[0] === document.activeElement && this._isEmptySelection()){
+                   if(!constants.browser.isMobilePlatform && (constants.browser.firefox || constants.browser.chrome) && elemToFocus[0] === document.activeElement && this._isEmptySelection()){
                       var suggestShowed = this.isPickerVisible();
                       elemToFocus.blur().focus();
 
                       //https://online.sbis.ru/opendoc.html?guid=19af9bf9-0d16-4f63-8aa8-6d0ef7ff0799
-                      if (!suggestShowed && !this._options.task1174306848) {
+                      if (!suggestShowed && this.isPickerVisible() && !this._options.task1174306848) {
                          this.hidePicker();
                       }
                    }

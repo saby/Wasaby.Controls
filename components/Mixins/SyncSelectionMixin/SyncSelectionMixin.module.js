@@ -2,7 +2,7 @@
  * Created by am.gerasimov on 28.01.2016.
  */
 define('js!SBIS3.CONTROLS.SyncSelectionMixin', [
-   'js!WS.Data/Entity/Model',
+   'WS.Data/Entity/Model',
    'Core/core-instance',
    'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
    'js!SBIS3.CONTROLS.Utils.ItemsSelection'

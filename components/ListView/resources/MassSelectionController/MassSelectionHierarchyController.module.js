@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.MassSelectionHierarchyController',
         'js!SBIS3.CONTROLS.MassSelectionController',
         "Core/core-instance",
         "Core/core-clone",
-        "js!WS.Data/Chain",
+        "WS.Data/Chain",
         "js!SBIS3.CONTROLS.ArraySimpleValuesUtil"
     ],
     function(MassSelectionController, cInstance, coreClone, Chain, ArraySimpleValuesUtil) {

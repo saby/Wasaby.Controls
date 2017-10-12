@@ -427,6 +427,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
          }
          this._scrollPagingController.bindScrollPaging();
       },
+
+      freezePaging: function(freeze) {
+         this._scrollPagingController.freezePaging(freeze);
+      },
       /**
        *
        * @param dateRanges {SBIS3.CONTROLS.DateRangeSlider[]} массив из контролов диапазонов дат, если не передан используется тот, что задан в опциях.

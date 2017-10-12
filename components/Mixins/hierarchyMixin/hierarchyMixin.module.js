@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.hierarchyMixin', [
    "Core/core-clone",
-   "js!WS.Data/Relation/Hierarchy",
+   "WS.Data/Relation/Hierarchy",
    'Core/IoC'
 ], function ( coreClone, Hierarchy, IoC) {
 

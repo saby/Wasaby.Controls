@@ -139,18 +139,10 @@
 @button-text-padding:                     0;                        // padding of text
 @button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
 @button-without-caption-min-width:        48px;
-
-@button-without-caption-icon-32-left:     7px;
-
-@FilterPanelButtonRightClose: url('img/FilterPanelButton.svg') 0 0;
-@FilterPanelButtonLeftClose: url('img/FilterPanelButton.svg') -35px 0;
-@FilterPanelButtonRightOpen: url('img/FilterPanelButton.svg') -70px 0;
-@FilterPanelButtonLeftOpen: url('img/FilterPanelButton.svg') -105px 0;
-@FilterPanelButtonHoverRightClose: url('img/FilterPanelButton.svg') 0 24px;
-@FilterPanelButtonHoverLeftClose: url('img/FilterPanelButton.svg') -35px 24px;
-@FilterPanelButtonHoverRightOpen: url('img/FilterPanelButton.svg') -70px -24px;
-@FilterPanelButtonHoverLeftOpen: url('img/FilterPanelButton.svg') -105px -24px;
-
+//FilterPanelButton
+@filter-panel-button-bg:                         url('img/FilterPanelButton.svg');
+@filter-panel-button-width:                      35px;
+@filter-panel-button-height:                     @default-height;
 // ------------------ //
 // FilterPanelChooser //
 // ------------------ //
@@ -264,10 +256,6 @@
 @button-big-icon-32-top-offset:           0;
 @button-big-icon-32-left-offset:          0;
 
-@button-large-height:                                                                                                   48px;
-@button-large-border-radius:                                                                                            24px;
-@button-large-font-size:                                                                                                18px;
-
 // ------------ //
 // Button group //
 // ------------ //
@@ -293,7 +281,6 @@
 @icon-button-edit-round-border-height:             @icon-medium-size;
 @icon-button-edit-round-border-width:              @icon-medium-size;
 @icon-button-edit-round-border-line-height:        @icon-medium-size - 2 * @default-border-width;
-@list-view-items-toolbar-icon-button-border-font:  'cbuc-icons';
 @list-view-items-toolbar-animate-duration:         0.35s;
 // Normal default button
 @button-checked-border-width:             2px;
@@ -335,8 +322,7 @@
 @tab-button-checked-inner-font-size:            15px;
 @tab-button-checked-inner-color:                #D94700;
 @tab-button-checked-inner-bg:                   #FFFFFF;
-@tab-button-checked-inner-border-left:          @default-border-width solid @tab-button-checked-border-color;
-@tab-button-checked-inner-border-right:         @default-border-width solid @tab-button-checked-border-color;
+@tab-button-checked-inner-border:               1px;
 @tab-button-large-inner-font-size:              18px;
 @tab-button-large-inner-line-height:            28px;
 @tab-button-large-inner-max-width:              614px;
@@ -458,8 +444,8 @@
 // ---- //
 @popup-header-font-weight:                bold;
 @popup-header-caption-color:              @blue-dark-color;
-@menu-margin:                             0 0 0 1px;
-@menu-subpopup-margin:                    -4px 0 0 1px;
+@menu-margin:                             -1px 0 0;
+@menu-subpopup-margin:                    -5px 0 0 0px;
 @menu-subpopup-padding:                   4px 0;
 @menu-padding:                            0 0 4px 0;
 @menu-border-width:                       @default-border-width;
@@ -504,17 +490,17 @@
 @menu-item-icon-24-margin:                6px 0 6px 30px;
 @menu-item-icon-32-margin:                6px 0 6px 38px;
 // Menu
-@menu-button-menu-margin:                               -4px 0 0 0;
+@menu-button-menu-margin:                               -5px 0 0 -1px;;
 @menu-button-menu-border-width:                         @default-border-width;
 @menu-button-menu-border-color:                         @menu-border-color;
 @menu-button-menu-bg:                                   @white-color;
-@menu-link-menu-margin:                   -4px 0 0 -12px;
+@menu-link-menu-margin:                   -5px 0 0 -13px;
 @menu-link-menu-item-container-padding:   4px 0 0 0;
 @menu-link-menu-revert-item-container-padding: 4px 0 4px 0;
 @menu-link-menu-bg:                       @menu-button-menu-bg;
 @menu-link-header-bg-color:               #F4F4F4;
-@menu-icon-menu-margin:                   -8px 0 0 -12px;
-@menu-icon-big-menu-margin:               -4px 0 0 -12px;
+@menu-icon-menu-margin:                   -9px 0 0 -13px;
+@menu-icon-big-menu-margin:               -5px 0 0 -13px;
 @menu-icon-menu-bg:                       @menu-button-menu-bg;
 // -------- //
 // Text box //
@@ -898,7 +884,7 @@
 @list-view-actions-menu-close-height:           24px;
 @list-view-actions-menu-close-width:            24px;
 @list-view-actions-menu-item-padding-right:     38px;
-@list-view-actions-menu-margin:                 5px 0 0 4px;
+@list-view-actions-menu-margin:                 4px 0 0 5px;
 @list-view-actions-menu-text-margin:            6px 0 6px 30px;
 @list-view-context-menu-close-right:            6px;
 @list-view-context-menu-close-top:              7px;
@@ -1055,14 +1041,14 @@
 @data-grid-partScroll-thumb-width:              96px;
 @data-grid-partScroll-thumb-color:              @blue-dark-color;
 @data-grid-partScroll-thumb-border-radius:      3px 3px;
-@data-grid-partScroll-thumb-margin:             20px;
+@data-grid-partScroll-thumb-margin:             24px;
 @data-grid-partScroll-thumb-zIndex:             2;
 @data-grid-partScroll-thumb-top-shift:          -1px;
 @data-grid-partScroll-thumb-clicked-top-shift:  -2px;
 @data-grid-partScroll-arrowLeft-top-shift:      -12px;
 @data-grid-partScroll-arrowLeft-zIndex:         @list-view-items-toolbar-zindex + 1; // Должен быть выше чем у тулбара
 
-@data-grid-partScroll-arrowRight-top-shift:     -12px;
+@data-grid-partScroll-arrowRight-top-shift:     @data-grid-partScroll-arrowLeft-top-shift;
 @data-grid-partScroll-arrowRight-left-shift:    4px;
 // --------------- //
 // OperationsPanel //
@@ -1077,7 +1063,6 @@
 @controls-OperationsPanel-separator-bg:             @gray-ccc-color;
 @controls-OperationsPanel-separator-width:          1px;
 @controls-OperationsPanel-separator-height:         20px;
-@controls-OperationsPanel-separator-line-height:    30px;
 @controls-OperationsPanel-actions-align:            center;
 // --------------- //
 // OperationMerge  //
@@ -1185,7 +1170,7 @@
 @DropdownList-footer-select-top:                      2px;
 @DropdownList-footer-select-icon-container-size:      28px!important;
 @DropdownList-footer-select-icon-size:                26px!important;
-@DropdownList-disabled-text:                          #CCC;
+@DropdownList-disabled-text:                          #000;
 //ProgressBar
 @controls-ProgressBar-height:             16px;
 @controls-ProgressBar-width:              100%;
@@ -1264,13 +1249,14 @@
 @fieldLink-border-color-picker-show:      @fieldLink-border-color-focus-hover;
 @fieldLink-border:                        1px solid;
 @fieldLink-picker-show-color:             @white-color;
-@fieldLink-picker-show-field-color:       @default-text-color;
+@fieldLink-picker-show-field-color:       initial; //В онлайне цвет никак не перебивается, перебивается в темах
+
 @fieldLink-fieldWrapper-minWidth:         100px;
 @fieldLink-linkContainer-padding:         4px;
 @fieldLink-picker-max-height:             500px;
 @fieldLink-picker-min-height:             16px;
 @fieldLink-linkItem-cross-width:          20px;
-@fieldLink-afterField-padding:            0 4px 0 0;
+@fieldLink-afterField-padding:            0 @default-padding 0 0;
 @fieldLink-link-color:                    #8991A9;
 @fieldLink-link-color-hover:              #313E78;
 @fieldLink-showSelector-color:            @icon-color-primary;
@@ -1464,11 +1450,10 @@
 @money-decorator-integer-font-size:                        @default-text-size;
 @money-decorator-integer-font-color:                       @default-text-color;
 @money-decorator-integer-accent-results-font-size:         @large-text-size;
+@money-decorator-integer-accent-results-line-height:       @default-line-height;
 @money-decorator-integer-accent-results-font-color:        @blue-dark-color;
-@money-decorator-integer-accent-results-font-weight:       bold;
 @money-decorator-integer-no-accent-results-font-size:      @large-text-size;
 @money-decorator-integer-no-accent-results-font-color:     #999999;
-@money-decorator-integer-no-accent-results-font-weight:    bold;
 @money-decorator-integer-group-font-size:                  @default-text-size;
 @money-decorator-integer-group-font-color:                 @gray-ccc-color;
 @money-decorator-integer-basic-registry-font-size:         @default-text-size;
@@ -1477,10 +1462,8 @@
 @money-decorator-integer-no-basic-registry-font-color:     #999999;
 @money-decorator-integer-accent-registry-font-size:        @large-text-size;
 @money-decorator-integer-accent-registry-font-color:       @blue-dark-color;
-@money-decorator-integer-accent-registry-font-weight:      bold;
 @money-decorator-integer-no-accent-registry-font-size:     @large-text-size;
 @money-decorator-integer-no-accent-registry-font-color:    #999999;
-@money-decorator-integer-no-accent-registry-font-weight:   bold;
 @money-decorator-fraction-font-size:                       @small-text-size;
 @money-decorator-fraction-font-color:                      @disabled-color;
 //Browser
@@ -1502,7 +1485,7 @@
 @commands-button-close-icon-color:                         @blue-dark-color;
 @commands-button-close-button-size:                        32px;
 @commands-button-close-button-top:                         4px;
-@commands-button-margin:                                   -8px -34px 0 0;
+@commands-button-margin:                                   -9px -33px 0 0;
 
 
 

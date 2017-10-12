@@ -20,13 +20,20 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
       },
       getFolderPagerOptions = function(cfg, item, key) {
          var
-            count, result,
-            hasMore = cfg._folderHasMore[key];
+            count,
+            result,
+            hasMore;
 
-         if (typeof hasMore === 'number') {
-            count = hasMore - cfg._folderOffsets[key] - cfg.pageSize;
+         //Проверяем на pageSize, т.к. опция может быть не задана, а в ответе с бл в параметре hasMore может быть число записей в папке.
+         if (typeof cfg._folderHasMore[key] === 'number' && cfg.pageSize) {
+            count =  cfg._folderHasMore[key] - cfg._folderOffsets[key] - cfg.pageSize;
             hasMore = count <= 0 ? false : count;
+         } else if (typeof cfg._folderHasMore[key] === 'boolean') {
+            hasMore = !!cfg._folderHasMore[key];
+         } else if (typeof cfg._folderHasMore[key] === 'object') {
+            hasMore = !!cfg._folderHasMore[key].after;
          }
+
          if (hasMore) {
             result = {
                caption: rk('Ещё') + ' ' + (typeof hasMore === 'number' ? hasMore : '...'),
@@ -195,7 +202,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
             item = this._getItemProjectionByItemId(item);
          }
 
-         if (item) {
+         if (cInstance.instanceOfModule(item, 'WS.Data/Display/TreeItem')) {
             this._destroyItemsFolderFooter(item.getContents().getId());
 
             if (this._needCreateFolderFooter(item)) {

@@ -119,7 +119,17 @@ module.exports = function less1by1Task(grunt) {
                       }
                     }
                     else {
-                       if (!~filepath.indexOf('theme.less')) {
+                        //todo: black_list
+                       if (!~filepath.indexOf('theme.less') &&
+                           !~filepath.indexOf('header.less') &&
+                           !~filepath.indexOf('mixins.less') &&
+                           !~filepath.indexOf('typograpy.less') &&
+                           !~filepath.indexOf('general.less') &&
+                           !~filepath.indexOf('flex.less') &&
+                           !~filepath.indexOf('defaults.less') &&
+                           !~filepath.indexOf('variables.less') &&
+                           !~filepath.indexOf('sizes.less') &&
+                           !~filepath.indexOf('colors.less')) {
                           processLessFile(data, filepath, readFileError, theme, false);
                        }
                     }

@@ -32,7 +32,7 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
                 if (template) {
                    templateRes = template(structure[elem]);
                    if (templateRes && templateRes.trim()) {
-                      res.push(rk(templateRes));
+                      res.push(templateRes);
                    }
                    return res;
                 } else if (template === null) {
@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
                 /* Некорректно сравнивать elem.value и elem.resetValue, когда нет value,
                    поэтому считаем, что это значение по-умолчанию */
                 if (structure[elem].caption && structure[elem].hasOwnProperty('value') && !isEqualValues(structure[elem].value, structure[elem].resetValue)) {
-                   res.push(typeof structure[elem].caption === 'string' ? rk(structure[elem].caption) : structure[elem].caption);
+                   res.push(structure[elem].caption);
                 }
                 return res;
              }, []);

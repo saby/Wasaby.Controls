@@ -444,7 +444,9 @@ define('js!SBIS3.CONTROLS.LongOperations.GenericProducer',
          }*/
          var operation = self._get(true, operationId);
          if (!operation) {
-            throw new Error('Operation not found');
+            // Временное решение, нужно тщательно разобраться с привязкой операций к владкам в обоих обработчиках в _fetchCalls менеджера. Завтра с утра.
+            return;
+            //throw new Error('Operation not found');
          }
          if (status !== operation.status) {
             var isAllowed;

@@ -1,4 +1,4 @@
-//define(['js!WSControls/Lists/TreeView2', 'js!WS.Data/Source/Memory'], function (TreeView, MemorySource) {
+//define(['js!WSControls/Lists/TreeView2', 'WS.Data/Source/Memory'], function (TreeView, MemorySource) {
 //
 //   'use strict';
 //

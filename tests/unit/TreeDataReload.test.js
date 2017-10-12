@@ -1,4 +1,4 @@
-define(['js!SBIS3.CONTROLS.Utils.TreeDataReload', 'js!WS.Data/Collection/RecordSet', 'js!WS.Data/Relation/Hierarchy'], function (TreeDataReload, RecordSet, HierarchyRelation) {
+define(['js!SBIS3.CONTROLS.Utils.TreeDataReload', 'WS.Data/Collection/RecordSet', 'WS.Data/Relation/Hierarchy'], function (TreeDataReload, RecordSet, HierarchyRelation) {
 
    'use strict';
 

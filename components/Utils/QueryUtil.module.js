@@ -2,8 +2,8 @@
  * Created by am.gerasimov on 09.02.2017.
  */
 define('js!SBIS3.CONTROLS.Utils.Query', [
-   'js!WS.Data/Query/Query',
-   'js!WS.Data/Source/SbisService',
+   'WS.Data/Query/Query',
+   'WS.Data/Source/SbisService',
    'Core/core-instance'],
    function (Query, SbisService, cInstance) {
 

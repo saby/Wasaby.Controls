@@ -112,8 +112,9 @@
          font-weight: bold;
          font-size: @tab-button-checked-inner-font-size;
          color: @tab-button-checked-inner-color;
-         border-left: @tab-button-checked-inner-border-left;
-         border-right: @tab-button-checked-inner-border-right;
+         border-width: 0 @tab-button-checked-inner-border 0 @tab-button-checked-inner-border;
+         border-color: @tab-button-checked-border-color;
+         border-style: solid;
          background: @tab-button-checked-inner-bg;
          overflow:  hidden;
          &:before{
@@ -337,9 +338,11 @@
       display: block;
     }
     &.controls-Checked__checked {
+       padding: 0 1px;
       .controls-TabButton__inner{
         color: @tab-button-simple-inner-checked-color;
         background: transparent;
+        border-width: 0;
       }
       .controls-TabButton__bottomLine{
          display: block;
@@ -348,6 +351,10 @@
     }
     &:hover {
       background: transparent;
+      padding: 0 1px;
+      .controls-TabButton__inner {
+         border-width: 0;
+      }
       .controls-TabButton__bottomLine{
         background: @tab-button-simple-hover-bottomline-color;
       }

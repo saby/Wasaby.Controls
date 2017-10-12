@@ -6,8 +6,8 @@ define('js!SBIS3.CONTROLS.ChooserMixin', [
    "Core/core-clone",
    "Core/core-merge",
    "Core/Deferred",
-   "js!WS.Data/Entity/Model",
-   "js!WS.Data/Adapter/Sbis"
+   "WS.Data/Entity/Model",
+   "WS.Data/Adapter/Sbis"
 ], function( cContext, coreClone, cMerge, Deferred,Model, SbisAdapter) {
    /**
     * Миксин, добавляющий интерфейс для открытия окна выбора.

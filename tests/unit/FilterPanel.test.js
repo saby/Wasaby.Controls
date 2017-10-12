@@ -1,4 +1,4 @@
-define(['js!SBIS3.CONTROLS.FilterPanel', 'js!WS.Data/Collection/RecordSet', 'Core/core-functions'], function (FilterPanel, RecordSet, cFunctions) {
+define(['js!SBIS3.CONTROLS.FilterPanel', 'WS.Data/Collection/RecordSet', 'Core/core-functions'], function (FilterPanel, RecordSet, cFunctions) {
 
    'use strict';
 
