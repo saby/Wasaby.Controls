@@ -1,27 +1,10 @@
 <div class="controls-LongOperations controls-LongOperationsRegistry">
-   <ws:SBIS3.CONTROLS.Browser
-      name="longOperationsBrowser"
-      className="controls-Browser__view"
-   >
-      <ws:content>
-         <div class="controls-Browser__table controls-Browser__table-fullFilterBlock">
-            <div class="controls-Browser__tableCell-search">
-               <ws:SBIS3.CONTROLS.SearchForm
-                  tabindex="2"
-                  name="browserSearch"
-                  allowChangeEnable="{{false}}"
-                  placeholder="{[искать@@найти...]}"
-                  className="controls-Browser__search ws-bootup-autofocus"
-               />
-            </div>
-            <div class="controls-Browser__tableRow">
-               <div class="controls-Browser__tableCell-filterButton">
-                  <ws:template name="browserFilterButtonTpl">
-                     <ws:SBIS3.CONTROLS.FilterButton
-                        name="browserFilterButton"
-                        className="controls-Browser__filterButton"
-                        tabindex="0"
-                        filterStructure="{{ [
+   <ws:template name="browserFilterButtonTpl">
+      <ws:SBIS3.CONTROLS.FilterButton
+         name="browserFilterButton"
+         className="controls-Browser__filterButton"
+         tabindex="0"
+         filterStructure="{{ [
                         {
                            'internalValueField': 'PeriodKey',
                            'internalCaptionField': 'PeriodTitle',
@@ -47,12 +30,29 @@
                            'value': userIdValue
                         }
                      ] }}"
-                     >
-                        <ws:template>
-                           <ws:SBIS3.CONTROLS.LongOperationsFilter hideStaffFilter="{{hideStaffFilter}}"/>
-                        </ws:template>
-                     </ws:SBIS3.CONTROLS.FilterButton>
-                  </ws:template>
+      >
+         <ws:template>
+            <ws:SBIS3.CONTROLS.LongOperationsFilter hideStaffFilter="{{hideStaffFilter}}"/>
+         </ws:template>
+      </ws:SBIS3.CONTROLS.FilterButton>
+   </ws:template>
+   <ws:SBIS3.CONTROLS.Browser
+      name="longOperationsBrowser"
+      className="controls-Browser__view"
+   >
+      <ws:content>
+         <div class="controls-Browser__table controls-Browser__table-fullFilterBlock">
+            <div class="controls-Browser__tableCell-search">
+               <ws:SBIS3.CONTROLS.SearchForm
+                  tabindex="2"
+                  name="browserSearch"
+                  allowChangeEnable="{{false}}"
+                  placeholder="{[искать@@найти...]}"
+                  className="controls-Browser__search ws-bootup-autofocus"
+               />
+            </div>
+            <div class="controls-Browser__tableRow">
+               <div class="controls-Browser__tableCell-filterButton">
                   <ws:partial
                      template="browserFilterButtonTpl"
                      userIdValue="{{'filter/UserId'|mutable}}"
