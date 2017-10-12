@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
    "Core/core-merge",
    "js!SBIS3.CORE.Dialog",
    "js!SBIS3.CORE.FloatArea",
-   "js!WS.Data/Utils",
+   "WS.Data/Utils",
    'Core/IoC'
 ], function( cMerge, Dialog, FloatArea, Utils, IoC){
    'use strict';

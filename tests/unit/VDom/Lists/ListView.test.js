@@ -1,5 +1,5 @@
 ///* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
-//define(['js!WSControls/Lists/ListView2', 'js!WS.Data/Source/Memory', 'Core/core-instance'],
+//define(['js!WSControls/Lists/ListView2', 'WS.Data/Source/Memory', 'Core/core-instance'],
 //   function (ListView, MemorySource, cInstance) {
 //
 //      'use strict';

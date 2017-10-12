@@ -7,4 +7,4 @@
         {{ defaultCaption }}
     </ws:else>
 </span>
-<i class="controls-SelectorButton__cross js-controls__item-cross icon-16 icon-Close icon-disabled action-hover {{ (!items || !items.getCount()) ? 'ws-hidden' }}"></i>
+<i class="controls-SelectorButton__cross js-controls__item-cross icon-16 icon-Close icon-disabled action-hover {{ (!items || !items.getCount() || withoutCross) ? 'ws-hidden' }}"></i>

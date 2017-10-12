@@ -1,7 +1,7 @@
 define('js!WSControls/Lists/Controllers/OffsetNavigation',
    [
       'js!WSControls/Lists/Controllers/PageNavigation',
-      'js!WS.Data/Source/SbisService'
+      'WS.Data/Source/SbisService'
    ],
 function (PageNavigation, SbisService) {
    /**

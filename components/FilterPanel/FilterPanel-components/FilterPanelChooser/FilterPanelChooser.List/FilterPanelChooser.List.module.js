@@ -2,7 +2,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
     'js!SBIS3.CONTROLS.FilterPanelChooser.BaseList',
     'Core/core-merge',
     'Core/CommandDispatcher',
-    'js!WS.Data/Functor/Compute',
+    'WS.Data/Functor/Compute',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/resources/ItemContentTpl',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/resources/ItemTemplate',

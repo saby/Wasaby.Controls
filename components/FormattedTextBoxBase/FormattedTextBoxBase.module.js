@@ -6,7 +6,7 @@ define(
       'Core/core-extend',
       'js!SBIS3.CONTROLS.Utils.IfEnabled',
       'js!SBIS3.CONTROLS.TextBoxBase',
-      'html!SBIS3.CONTROLS.FormattedTextBoxBase/FormattedTextBoxBase_mask',
+      'tmpl!SBIS3.CONTROLS.FormattedTextBoxBase/FormattedTextBoxBase_mask',
       'Core/helpers/Function/forAliveOnly',
       'is!msIe?js!SBIS3.CORE.FieldString/resources/ext/ierange-m2-min'
    ],
@@ -843,14 +843,14 @@ define(
             maskGroups = this._getMask().split(splitRegExp);
 
          for (var i = 0, l = newText.length; i < l; i++) {
-            if (oldText[i].length !== newText[i].length){
+            if (oldText[i] && (oldText[i].length !== newText[i].length)){
                for (var j = 0; j < newText[i].length; j++){
                   if (oldText[i][j] !== newText[i][j]){
                      return {
                         'char': newText[i][j],
                         // проверка на возможность ввода символа в группу,
                         // если в данную группу нельзя ввести символы, то вводим в первую позицию след разрешенной группы
-                        position: maskGroups[i].replace(/[L,l,d,x]/g,'').length === maskGroups[i].length ? 0 : j
+                        position: maskGroups[i].replace(/[L,l,d,D,h,H,i,I,x]/g,'').length === maskGroups[i].length ? 0 : j
                      }
                   }
                }

@@ -4,9 +4,9 @@ define([
    'js!SBIS3.CONTROLS.DragEntity.List',
    'js!SBIS3.CONTROLS.DragObject',
    'js!SBIS3.CONTROLS.ListView',
-   'js!WS.Data/Collection/RecordSet',
+   'WS.Data/Collection/RecordSet',
    'Core/core-instance',
-   'js!WS.Data/Display/Tree'
+   'WS.Data/Display/Tree'
 ], function (DragMove, DragList, DragObject, ListView, RecordSet, cInstance, Tree) {
    'use strict';
    describe('DragMove', function () {

@@ -6,10 +6,10 @@ define('js!SBIS3.CONTROLS.Action.List.Save', [
     'Core/constants',
     'Core/core-instance',
     'Core/core-clone',
-    'js!WS.Data/Collection/RecordSet',
+    'WS.Data/Collection/RecordSet',
     'js!SBIS3.CORE.DialogSelector',
-    'js!WS.Data/Query/Query',
-    'js!WS.Data/Entity/Record',
+    'WS.Data/Query/Query',
+    'WS.Data/Entity/Record',
     'Core/moduleStubs'
 ], function (Save, ListMixin, fcHelpers, Deferred, constants, cInstance, coreClone, RecordSet, Dialog, Query, Record, moduleStubs) {
     var MAX_RECORDS_COUNT = 20000;
