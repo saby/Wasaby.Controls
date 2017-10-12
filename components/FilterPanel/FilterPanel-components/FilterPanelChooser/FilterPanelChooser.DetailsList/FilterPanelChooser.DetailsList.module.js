@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
    'js!SBIS3.CONTROLS.FilterPanelChooser.BaseList',
    'js!SBIS3.CONTROLS.ItemsMoveController',
-   'js!WS.Data/Source/Memory',
+   'WS.Data/Source/Memory',
    'Core/CommandDispatcher',
    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.DetailsList/resources/ItemTpl',
    'css!SBIS3.CONTROLS.FilterPanelChooser.DetailsList'

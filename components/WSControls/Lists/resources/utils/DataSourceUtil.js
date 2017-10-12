@@ -1,5 +1,5 @@
 define('js!WSControls/Lists/resources/utils/DataSourceUtil', [
-   'js!WS.Data/Query/Query',
+   'WS.Data/Query/Query',
    'Core/core-instance'
 ], function(Query, cInstance) {
    var DataSourceUtil = {

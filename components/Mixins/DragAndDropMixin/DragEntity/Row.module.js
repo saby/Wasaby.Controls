@@ -1,7 +1,7 @@
 /*global define, $ws, $*/
 define('js!SBIS3.CONTROLS.DragEntity.Row', [
    'js!SBIS3.CONTROLS.DragEntity.Entity',
-   'js!WS.Data/Di'
+   'WS.Data/Di'
 ], function (Entity, Di) {
    'use strict';
    /**
@@ -13,7 +13,7 @@ define('js!SBIS3.CONTROLS.DragEntity.Row', [
     * @example
     * Рассмотрим пример, как создать свою Drag'n'drop-сущность:
     * <pre>
-    *    defined('js!SBIS3.Demo.DragEntity.Task', ['js!SBIS3.CONTROLS.DragEntity.Row', 'js!WS.Data/Di'], function (Row, Di) {
+    *    defined('js!SBIS3.Demo.DragEntity.Task', ['js!SBIS3.CONTROLS.DragEntity.Row', 'WS.Data/Di'], function (Row, Di) {
     *       var Task = Row.extend({
     *          $protected: {
     *             _options: {

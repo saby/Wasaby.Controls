@@ -1,7 +1,7 @@
 import Deferred = require('Core/Deferred');
-import Record = require('js!WS.Data/Entity/Record');
-import ISource = require('js!WS.Data/Source/ISource');
-import SbisService = require('js!WS.Data/Source/SbisService');
+import Record = require('WS.Data/Entity/Record');
+import ISource = require('WS.Data/Source/ISource');
+import SbisService = require('WS.Data/Source/SbisService');
 
 
 class ScrollControl {
