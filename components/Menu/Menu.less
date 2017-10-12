@@ -9,6 +9,10 @@
    outline-width: @default-border-width;
    outline-style: @default-border-style;
    outline-color: @menu-border-color;
+   outline-offset: -@default-border-width;
+   // ставим прозрачный border т.к. outline не считается частью элемента и физически между подменю зазор в 1px,
+   // а визуально его нет
+   border: @default-border-width @default-border-style transparent;
    background-color: @white-color;
    .user-select(none);
 
@@ -16,7 +20,7 @@
       word-break: break-word;
    }
 
-   .border-radius(@menu-border-radius);
+   .border-radius(0);
    .box-shadow(@menu-shadow);
    .box-sizing(border-box);
 
@@ -24,7 +28,7 @@
       display: block;
    }
    .controls-Menu__header{
-      box-sizing: @menu-header-box-sizing;
+      box-sizing: border-box;
       padding: @menu-header-padding;
       .flex-shrink(0);
       .icon-16, .icon-24{
@@ -81,16 +85,16 @@
       width: @menu-expand-width;
       height: @menu-expand-height;
       content: @menu-expand-content;
-      color: @default-color;
-      border-width: @menu-expand-border-width;
-      border-style: @menu-expand-border-style;
+      color: @icon-color-primary;
+      border-width: 0;
+      border-style: solid;
       border-color: @menu-expand-border-color;
       background: @menu-expand-bg;
       .box-sizing(border-box);
    }
    &:hover:after {
-      border-width: @menu-expand-hover-border-width;
-      border-style: @menu-expand-hover-border-style;
+      border-width: 0;
+      border-style: solid;
       border-color: @menu-expand-hover-border-color;
       background: @menu-expand-hover-bg;
    }
@@ -110,7 +114,6 @@
 .controls-Menu__SubMenuPopup {
    margin: @menu-subpopup-margin;
    padding: @menu-subpopup-padding;
-   border: none;
 }
 
 .controls-Menu {
@@ -144,7 +147,7 @@
          display: none;
       }
       &.controls-IconButton__round-border-24 {
-         margin: -6px 0 0 -6px;
+         margin: -7px 0 0 -7px;
          .controls-ListView__item:first-child {
             .controls-MenuItem__icon {
                .round-button-mixin(@gray-ccc-color, @border-radius, @icon-button-border-width);

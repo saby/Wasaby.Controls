@@ -2,11 +2,11 @@ define('js!SBIS3.CONTROLS.MassSelectionHierarchyController',
     [
         'js!SBIS3.CONTROLS.MassSelectionController',
         "Core/core-instance",
-        "Core/core-functions",
-        "js!WS.Data/Chain",
+        "Core/core-clone",
+        "WS.Data/Chain",
         "js!SBIS3.CONTROLS.ArraySimpleValuesUtil"
     ],
-    function(MassSelectionController, cInstance, cFunctions, Chain, ArraySimpleValuesUtil) {
+    function(MassSelectionController, cInstance, coreClone, Chain, ArraySimpleValuesUtil) {
 
        var MassSelectionHierarchyController = MassSelectionController.extend(/** @lends SBIS3.CONTROLS.MassSelectionHierarchyController.prototype */ {
           $protected: {
@@ -53,7 +53,7 @@ define('js!SBIS3.CONTROLS.MassSelectionHierarchyController',
           _getSelectedKeys: function () {
              var
                 linkedObject = this._options.linkedObject,
-                result = cFunctions.clone(linkedObject.getSelectedKeys());
+                result = coreClone(linkedObject.getSelectedKeys());
              if (this._options.selectedAll) {
                 result.push(linkedObject.getRoot() || null);
              }
@@ -275,7 +275,7 @@ define('js!SBIS3.CONTROLS.MassSelectionHierarchyController',
 
        function breadthFirstSearch(items, callback, context) {
           var callbackResult;
-          items = cFunctions.clone(items);
+          items = coreClone(items);
           for (var i = 0; i < items.length; i++) {
              callbackResult = callback.call(context, items[i]);
              if (callbackResult instanceof Array) {

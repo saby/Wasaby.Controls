@@ -1,8 +1,8 @@
 /* global:object define:function, beforeEach:function, afterEach:function, describe:function, context:function, it:function, assert:function, $ws:object */
 define([
-      'js!SBIS3.CONTROLS.GenericLongOperationsProducer',
-      'js!SBIS3.CONTROLS.LongOperationEntry',
-      'js!SBIS3.CONTROLS.LongOperationsConst',
+      'js!SBIS3.CONTROLS.LongOperations.GenericProducer',
+      'js!SBIS3.CONTROLS.LongOperations.Entry',
+      'js!SBIS3.CONTROLS.LongOperations.Const',
       'Core/core-instance',
       'Core/Deferred',
       'Core/UserInfo'
@@ -15,13 +15,17 @@ define([
          mocha.setup({/*ignoreLeaks:true,*/ globals:[/*'*',*/ '__extends', 'sharedBusDebug', 'sharedBusLog', 'Lib/ServerEventBus/class/logger/ConnectWatchDog', 'Lib/ServerEventBus/class/logger/ConsoleDocviewWatchDog']});
       }
 
-      var MODULE = 'SBIS3.CONTROLS.GenericLongOperationsProducer';
+      var MODULE = 'SBIS3.CONTROLS.LongOperations.GenericProducer';
       var IS_NODEJS = typeof process !== 'undefined';
 
       var userInfo = {
          'Пользователь': 861523,
          'ИдентификаторСервисаПрофилей': '8cab8a51-da51-40fd-bef3-6f090edbdeaa'
       };
+
+      var TIME_EARLIER  = 100000;//ms
+      var TIME_GAP      =  10000;//ms
+      var TIME_RATTLING =    200;//ms
 
       var globalFixes;
       if (IS_NODEJS) {
@@ -149,10 +153,11 @@ define([
             };
             Object.keys(signatures).forEach(function (method) {
                var len = signatures[method];
-               it('Статический метод класса ' + method + ' (' + len + ')', function () {
+               var useLen = typeof len === 'number';
+               it('Статический метод класса ' + method + (useLen ? ' (' + len + ')' : ''), function () {
                   var f = GenericLongOperationsProducer[method];
                   assert.isFunction(f, 'Метод отсутствует');
-                  if (typeof f === 'function') {
+                  if (useLen && typeof f === 'function') {
                      assert.equal(len, f.length, 'Количество аргументов');
                   }
                });
@@ -220,10 +225,11 @@ define([
             };
             Object.keys(signatures).forEach(function (method) {
                var len = signatures[method];
-               it('Метод экземпляра ' + method + ' (' + len + ')', function () {
+               var useLen = typeof len === 'number';
+               it('Метод экземпляра ' + method + (useLen ? ' (' + len + ')' : ''), function () {
                   var f = producer[method];
                   assert.isFunction(f, 'Метод отсутствует');
-                  if (typeof f === 'function') {
+                  if (useLen && typeof f === 'function') {
                      assert.equal(f.length, len, 'Количество аргументов');
                   }
                });
@@ -243,7 +249,7 @@ define([
             });
 
             it('Созданный экземпляр реализует интерфейс ILongOperationsProducer', function () {
-               assert.isOk(CoreInstance.instanceOfMixin(producer, 'SBIS3.CONTROLS.ILongOperationsProducer'));
+               assert.isOk(CoreInstance.instanceOfMixin(producer, 'SBIS3.CONTROLS.LongOperations.IProducer'));
             });
 
             it('Метод getInstance и конструктор возвращают один и тот же экземпляр', function () {
@@ -379,7 +385,7 @@ define([
             it('Параметры операции должны быть объектом с корректными свойствами, отложенный останов должен быть экземпляром Core/Deferred', function () {
                assert.doesNotThrow(function () {
                   producer.make({title:'Длительная операция 1', status:LongOperationEntry.STATUSES.ended}, new Deferred());
-                  producer.make({title:'Длительная операция 2', startedAt:(new Date()).getTime() - 3000, status:LongOperationEntry.STATUSES.suspended}, new Deferred());
+                  producer.make({title:'Длительная операция 2', startedAt:(new Date()).getTime() - TIME_EARLIER, status:LongOperationEntry.STATUSES.suspended}, new Deferred());
                   producer.make({title:'Длительная операция 3', startedAt:new Date(), onSuspend:new Function(''), onResume:new Function(''), onDelete:new Function('')}, new Deferred());
                }, Error);
             });
@@ -458,9 +464,9 @@ define([
                assert.isNumber(startedAts[0]);
                assert.isNumber(startedAts[1]);
                assert.isNumber(startedAts[2]);
-               assert.closeTo(startedAts[0], time, 50);
-               assert.closeTo(startedAts[1], time - 3000, 50);
-               assert.closeTo(startedAts[2], time, 50);
+               assert.closeTo(startedAts[0], time, TIME_RATTLING);
+               assert.closeTo(startedAts[1], time - TIME_EARLIER, TIME_RATTLING);
+               assert.closeTo(startedAts[2], time, TIME_RATTLING);
             });
 
             it('Снимки всех созданных операций имеют правильные значения статуса операции', function () {
@@ -683,7 +689,7 @@ define([
                assert.instanceOf(producer.fetch(null), Deferred);
             });
 
-            it('Возвращаемый обещаный результат разрешается массивом экземпляров класса SBIS3.CONTROLS.LongOperationEntry', function (done) {
+            it('Возвращаемый обещаный результат разрешается массивом экземпляров класса SBIS3.CONTROLS.LongOperations.Entry', function (done) {
                producer.fetch(null)
                   .addCallback(function (results) {
                      try {
@@ -854,8 +860,8 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &lt; с сейчас - 500мс)', function (done) {
-               var time = (new Date()).getTime() - 500;
+            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &lt; с сейчас - ' + TIME_GAP + 'мс)', function (done) {
+               var time = (new Date()).getTime() - TIME_GAP;
                producer.fetch({where:{startedAt:{condition:'<', value:time}}})
                   .addCallback(function (results) {
                      try {
@@ -871,8 +877,8 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &lt; с сейчас + 500мс)', function (done) {
-               var time = (new Date()).getTime() + 500;
+            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &lt; с сейчас + ' + TIME_GAP + 'мс)', function (done) {
+               var time = (new Date()).getTime() + TIME_GAP;
                producer.fetch({where:{startedAt:{condition:'<', value:time}}})
                   .addCallback(function (results) {
                      try {
@@ -890,8 +896,8 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &gt; с сейчас - 2000мс)', function (done) {
-               var time = (new Date()).getTime() - 2000;
+            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &gt; с сейчас - ' + (TIME_EARLIER - TIME_GAP) + 'мс)', function (done) {
+               var time = (new Date()).getTime() - (TIME_EARLIER - TIME_GAP);
                producer.fetch({where:{startedAt:{condition:'>', value:time}}})
                   .addCallback(function (results) {
                      try {
@@ -909,8 +915,8 @@ define([
                   });
             });
 
-            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &gt; с сейчас - 3500мс)', function (done) {
-               var time = (new Date()).getTime() - 3500;
+            it('Параметры запроса where правильно отбирают операции (по сравнению startedAt &gt; с сейчас - ' + (TIME_EARLIER + TIME_GAP) + 'мс)', function (done) {
+               var time = (new Date()).getTime() - (TIME_EARLIER + TIME_GAP);
                producer.fetch({where:{startedAt:{condition:'>', value:time}}})
                   .addCallback(function (results) {
                      try {
@@ -1169,7 +1175,7 @@ define([
             });*/
 
 
-            it('После разрушения экземпляра возвращается экземпляр Deferred с ошибкой SBIS3.CONTROLS.LongOperationsConst.ERR_UNLOAD', function (done) {
+            it('После разрушения экземпляра возвращается экземпляр Deferred с ошибкой SBIS3.CONTROLS.LongOperations.Const.ERR_UNLOAD', function (done) {
                var destroyed = _makeProducer('Под ликвидацию 1');
                destroyed.destroy();
                destroyed.fetch(null)
@@ -1338,7 +1344,7 @@ define([
                //^^^ Реализовать
             });*/
 
-            it('После разрушения экземпляра возвращается экземпляр Deferred с ошибкой SBIS3.CONTROLS.LongOperationsConst.ERR_UNLOAD', function (done) {
+            it('После разрушения экземпляра возвращается экземпляр Deferred с ошибкой SBIS3.CONTROLS.LongOperations.Const.ERR_UNLOAD', function (done) {
                var destroyed = _makeProducer('Под ликвидацию 1');
                destroyed.destroy();
                destroyed.callAction('suspend', '0')
@@ -1403,7 +1409,7 @@ define([
                return;
             }
 
-            it('При ликвидации экземпляра при наличии незавершённых операций, имеющих функции действий, они будут завершены с ошибкой SBIS3.CONTROLS.LongOperationsConst.ERR_UNLOAD', function () {
+            it('При ликвидации экземпляра при наличии незавершённых операций, имеющих функции действий, они будут завершены с ошибкой SBIS3.CONTROLS.LongOperations.Const.ERR_UNLOAD', function () {
                var titles = ['Длительная операция 1', 'Длительная операция 2', 'Длительная операция 3'];
                var list = _byTitles(_lsTool.search(null), titles);
                assert.lengthOf(list, titles.length);
@@ -1434,7 +1440,7 @@ define([
                assert.lengthOf(list, titles.length);
                var time = (new Date()).getTime();
                var snapshot = list[0];
-               assert.closeTo(snapshot.startedAt + (snapshot.timeSpent || 0) + (snapshot.timeIdle || 0), time, 50);
+               assert.closeTo(snapshot.startedAt + (snapshot.timeSpent || 0) + (snapshot.timeIdle || 0), time, TIME_RATTLING);
             });
 
             it('При ликвидации экземпляра при наличии незавершённых операций, имеющих функции действий, будут сформировано событие onlongoperationended', function (done) {

@@ -45,6 +45,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       if (gridView._options.startScrollColumn !== undefined) {
          gridView.updateScrollAndColumns();
       }
+      if (cInstance.instanceOfModule(gridView, 'SBIS3.CONTROLS.TreeDataGridView')) {
+         gridView._updateEditArrow();
+      }
    }
    function drawItemsCallback(operationPanel, view) {
       var instances = operationPanel.getItemsInstances();
@@ -402,7 +405,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       //TODO: избавиться - зовется из ListView
       _updateScrollPages: function(reset){
          if (this._scrollPagingController){
-            this._scrollPagingController.updateScrollPages(reset);
+            this._scrollPagingController.updatePaging(reset);
          }
       },
 
@@ -423,6 +426,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             });
          }
          this._scrollPagingController.bindScrollPaging();
+      },
+
+      freezePaging: function(freeze) {
+         this._scrollPagingController.freezePaging(freeze);
       },
       /**
        *

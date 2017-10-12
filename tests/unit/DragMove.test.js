@@ -4,9 +4,9 @@ define([
    'js!SBIS3.CONTROLS.DragEntity.List',
    'js!SBIS3.CONTROLS.DragObject',
    'js!SBIS3.CONTROLS.ListView',
-   'js!WS.Data/Collection/RecordSet',
+   'WS.Data/Collection/RecordSet',
    'Core/core-instance',
-   'js!WS.Data/Display/Tree'
+   'WS.Data/Display/Tree'
 ], function (DragMove, DragList, DragObject, ListView, RecordSet, cInstance, Tree) {
    'use strict';
    describe('DragMove', function () {
@@ -256,6 +256,85 @@ define([
             dragMove.beginDrag();
             assert.isTrue(dragMove._horisontalDragNDrop);
          });
+         context('move to another control', function () {
+            var ownerElement, ownerItems, owner;
+            beforeEach(function () {
+               if (dragMove) {
+                  ownerElement = $(
+                     '<div class="view">' +
+                     '</div>'
+                  );
+                  ownerItems = new RecordSet({
+                     rawData: [
+                        {id: 1, parent: null, isnode: true},
+                        {id: 2, parent: 1, isnode: null},
+                        {id: 3, parent: null, isnode: null},
+                        {id: 4, parent: null, isnode: null}
+                     ],
+                     idProperty: 'id'
+                  });
+                  owner = new ListView({
+                     element: ownerElement,
+                     items: ownerItems,
+                     multiselect: true,
+                     displayProperty: 'id',
+                     idProperty: 'id'
+                  });
+                  event = {
+                     type: "mouseUp",
+                     target: owner.getContainer().find('[data-id=1]'),
+                     pageX: 0,
+                     pageY: 0
+                  };
+                  DragObject._jsEvent = event;
+                  DragObject._targetsControl = view;
+                  owner._getDragMove(true).beginDrag();
+                  DragObject.setOwner(owner);
+                  event.target = view.getContainer().find('[data-id=3]');
+                  dragMove.updateTarget();
+               }
+            });
+            it('should return true wnen contracts is equals', function () {
+               var getDataSource = function () {
+                  return {
+                     getEndpoint: function () {
+                        return {'contract': '1'};
+                     }
+                  }
+               };
+               owner.getDataSource = getDataSource;
+               view.getDataSource = getDataSource;
+               assert.isTrue(dragMove._canDragMove());
+            });
+            it('should return false wnen contracts is equals', function () {
+               owner.getDataSource = function () {
+                  return {
+                     getEndpoint: function () {
+                        return {'contract': '1'};
+                     }
+                  }
+               };
+               view.getDataSource = function () {
+                  return {
+                     getEndpoint: function () {
+                        return {'contract': '2'};
+                     }
+                  }
+               };
+               assert.isFalse(dragMove._canDragMove());
+            });
+            it('should not raise error when lists hasnt data sourse ', function () {
+               owner.getDataSource = function () {
+                  return undefined
+               };
+               view.getDataSource = function () {
+                  return undefined
+               };
+               assert.doesNotThrow(function() {
+                  dragMove._canDragMove();
+               });
+            });
+         });
       });
       describe('._findItemByElement', function () {
          it('should return item', function () {
@@ -288,13 +367,6 @@ define([
          it('should add hilight', function () {
             dragMove.beginDrag();
             dragMove.updateTarget();
-            dragMove.drag();
-            assert.isTrue(DragObject.getTarget().getDomElement().hasClass('controls-DragNDrop__insertAfter'));
-         });
-         it('should add hilight if another drag owner', function () {
-            dragMove.beginDrag();
-            dragMove.updateTarget();
-            DragObject.setOwner({});
             dragMove.drag();
             assert.isTrue(DragObject.getTarget().getDomElement().hasClass('controls-DragNDrop__insertAfter'));
          });

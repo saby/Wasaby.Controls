@@ -7,6 +7,8 @@ define(['js!SBIS3.CONTROLS.FilterHistoryControllerUntil'], function (FilterHisto
    'use strict';
    describe('SBIS3.CONTROLS.FilterHistoryControllerUntil', function () {
       var structure, secondStructure;
+      var date = new Date(2016, 11, 11);
+      date.setSQLSerializationMode(false);
 
       beforeEach(function() {
          structure = [
@@ -24,6 +26,14 @@ define(['js!SBIS3.CONTROLS.FilterHistoryControllerUntil'], function (FilterHisto
                internalValueField: "FilterDatePeriod",
                resetValue: "Все",
                value: new Date(2016, 11, 11),
+               itemTemplate: null,
+               historyItemTemplate: null
+            },
+            {
+               internalCaptionField: "FilterDatePeriodTextTime",
+               internalValueField: "FilterDatePeriodTime",
+               resetValue: "Все",
+               value: date,
                itemTemplate: null,
                historyItemTemplate: null
             }
@@ -74,6 +84,12 @@ define(['js!SBIS3.CONTROLS.FilterHistoryControllerUntil'], function (FilterHisto
                   internalValueField: "FilterDatePeriod",
                   resetValue: "Все",
                   value: "2016-12-11"
+               },
+               {
+                  internalCaptionField: "FilterDatePeriodTextTime",
+                  internalValueField: "FilterDatePeriodTime",
+                  resetValue: "Все",
+                  value: "00:00:00+03"
                }
             ];
 
@@ -112,6 +128,33 @@ define(['js!SBIS3.CONTROLS.FilterHistoryControllerUntil'], function (FilterHisto
             assert.deepEqual(
                 resultStructure,
                 secondStructure
+            );
+   
+            var resultStructure = [
+               {
+                  internalCaptionField: "Тест_CaptionField",
+                  internalValueField: "Тест_ValueField",
+                  resetValue: null,
+                  value: null,
+                  itemTemplate: null,
+                  historyItemTemplate: null
+               },
+               {
+                  caption: "За сегодня",
+                  internalCaptionField: "FilterDatePeriodText",
+                  internalValueField: "FilterDatePeriod",
+                  resetValue: "Все",
+                  value: "Сегодня",
+                  itemTemplate: null,
+                  historyItemTemplate: null
+               }
+            ];
+   
+            FilterHistoryControllerUntil.prepareNewStructure(secondStructure, structure);
+            
+            assert.deepEqual(
+               resultStructure,
+               secondStructure
             );
          })
       });

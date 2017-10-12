@@ -1,7 +1,7 @@
 /**
  * Created by as.krasilnikov on 12.07.17.
  */
-define(['js!SBIS3.CONTROLS.SuggestTextBox', 'js!WS.Data/Entity/Record', 'js!WS.Data/Source/Memory'], function (SuggestTextBox, Record, Memory) {
+define(['js!SBIS3.CONTROLS.SuggestTextBox', 'WS.Data/Entity/Record', 'WS.Data/Source/Memory'], function (SuggestTextBox, Record, Memory) {
 
    'use strict';
    describe('SBIS3.CONTROLS.SuggestTextBox', function () {

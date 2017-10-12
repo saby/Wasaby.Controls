@@ -1,5 +1,5 @@
 define('js!SBIS3.CONTROLS.TreeMixin', [
-   "Core/core-functions",
+   "Core/core-clone",
    "Core/core-merge",
    'js!SBIS3.CONTROLS.Utils.TreeDataReload',
    "Core/constants",
@@ -7,18 +7,18 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    "Core/Deferred",
    "js!SBIS3.CONTROLS.BreadCrumbs",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
-   "js!WS.Data/Display/Tree",
+   "WS.Data/Display/Tree",
    "tmpl!SBIS3.CONTROLS.TreeMixin/resources/searchRender",
-   "js!WS.Data/Entity/Model",
-   "js!WS.Data/Relation/Hierarchy",
+   "WS.Data/Entity/Model",
+   "WS.Data/Relation/Hierarchy",
    "Core/core-instance",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "Core/helpers/Function/forAliveOnly",
    "Core/IoC",
    "Core/helpers/Object/isEmpty",
    "Core/helpers/Object/isPlainObject",
-   "js!WS.Data/Adapter/Sbis"
-], function ( cFunctions, cMerge, TreeDataReload, constants, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, cInstance, TemplateUtil, forAliveOnly, IoC, isEmpty, isPlainObject) {
+   "WS.Data/Adapter/Sbis"
+], function (coreClone, cMerge, TreeDataReload, constants, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, cInstance, TemplateUtil, forAliveOnly, IoC, isEmpty, isPlainObject) {
 
    var createDefaultProjection = function(items, cfg) {
       var
@@ -117,7 +117,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                defaultCfg.bcTpls.itemContentTpl = TemplateUtil.prepareTemplate(cfg.hierarchyViewModeItemContentTpl);
             }
             cMerge(defaultCfg, {
-               path: cFunctions.clone(path),
+               path: coreClone(path),
                viewCfg: cfg._getSearchCfg(cfg)
             });
 
@@ -141,6 +141,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
 
 
       iterator(function (item) {
+         // Группировка при поиске не поддерживается. https://online.sbis.ru/opendoc.html?guid=aa8e9981-64fc-4bb1-a75c-ef2fa0c73176
+         if (cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
+            return;
+         }
          if ((item.getParent() != lastNode) && curPath.length) {
             if (lastNode != lastPushedNode) {
                pushPath(resRecords, curPath, cfg);
@@ -216,13 +220,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          prevItem,
          itemsForFooter = [],
          records = [],
-         projectionFilter,
-         prevGroupId = undefined,
-         analyzeChanges;
+         projectionFilter;
 
       projectionFilter = resetFilterAndStopEventRaising(projection, false);
       if (cfg.expand || cfg.hierarchyViewMode) {
-         analyzeChanges = true;
          expandAllItems(projection, cfg);
       } else {
          /**
@@ -232,10 +233,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
           * https://inside.tensor.ru/opendoc.html?guid=6f1758f0-f45d-496b-a8fe-fde7390c92c7
           * @private
           */
-         analyzeChanges = false;
          applyExpandToItemsProjection(projection, cfg);
       }
-      restoreFilterAndRunEventRaising(projection, projectionFilter, analyzeChanges);
+      restoreFilterAndRunEventRaising(projection, projectionFilter, false);
 
       cfg._searchFolders = {};
       cfg.hasNodes = false;
@@ -243,8 +243,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          records = searchProcessing(projection, cfg);
       }
       else {
-         projection.each(function(item, index, group) {
-            var needGroup = false, groupId;
+         var needGroup = false, groupId;
+         projection.each(function(item) {
             if (cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem')) {
                groupId = item.getContents();
                needGroup = true;
@@ -317,24 +317,28 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       for (idx in cfg.openedPath) {
          if (cfg.openedPath.hasOwnProperty(idx)) {
             item = projection.getItemBySourceItem(cfg._items.getRecordById(idx));
-            if (item && !item.isExpanded()) {
-               // Внимание! Даже не пытаться выпилить этот код! Логика заключается в том, что после перезагрузки данных (reload) нужно удалять из списка ветки, для которых
-               // из источника данных не пришли дочерние элементы. Если разработчик желает оставить папки развернутыми - пусть присылает при reload их дочерние элементы.
-               // todo Переделать, когда будет выполнена https://inside.tensor.ru/opendoc.html?guid=4673df62-15a3-4526-bf56-f85e05363da3&description=
-               var items = projection.getCollection(),
-                  hierarchy = new HierarchyRelation({
-                     idProperty: items.getIdProperty(),
-                     parentProperty: projection.getParentProperty()
-                  }),
-                  children = hierarchy.getChildren(
-                     item.getContents().getId(),
-                     projection.getCollection()
-                  );
-               if (children.length) {
-                  item.setExpanded(true);
-               } else {
-                  delete cfg.openedPath[idx];
+            if (item) {
+               if (!item.isExpanded()) {
+                  // Внимание! Даже не пытаться выпилить этот код! Логика заключается в том, что после перезагрузки данных (reload) нужно удалять из списка ветки, для которых
+                  // из источника данных не пришли дочерние элементы. Если разработчик желает оставить папки развернутыми - пусть присылает при reload их дочерние элементы.
+                  // todo Переделать, когда будет выполнена https://inside.tensor.ru/opendoc.html?guid=4673df62-15a3-4526-bf56-f85e05363da3&description=
+                  var items = projection.getCollection(),
+                     hierarchy = new HierarchyRelation({
+                        idProperty: items.getIdProperty(),
+                        parentProperty: projection.getParentProperty()
+                     }),
+                     children = hierarchy.getChildren(
+                        item.getContents().getId(),
+                        projection.getCollection()
+                     );
+                  if (children.length) {
+                     item.setExpanded(true);
+                  } else {
+                     delete cfg.openedPath[idx];
+                  }
                }
+            } else { // Если узел в проекции не найден - то удаляем его из списка развернутых https://online.sbis.ru/opendoc.html?guid=202f1e3c-eab6-4f24-8879-f4cb4d007d22
+               delete cfg.openedPath[idx];
             }
          }
       }
@@ -363,7 +367,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          item, itemId;
       for (var i = 0; i < projItems.length; i++) {
          item = projItems[i];
-         if (item.isNode() && !item.isExpanded()) {
+         if (!cInstance.instanceOfModule(item, 'WS.Data/Display/GroupItem') && item.isNode() && !item.isExpanded()) {
             itemId = item.getContents().getId();
             if (hierarchy.getChildren(itemId, recordSet).length) {
                if (cfg.expand) {
@@ -371,6 +375,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                }
                item.setExpanded(true);
                item.setLoaded(true);
+               // Если режим единично раскрытого узла, то выходим после раскрытия первого найденного узла
+               // https://online.sbis.ru/opendoc.html?guid=98a1ca67-7546-41b8-a948-48048e62150d
+               if (cfg.singleExpand) {
+                  return;
+               }
             }
          }
       }
@@ -390,9 +399,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       });
 
       return tplOptions;
-   },
-   hasNextPageInFolder = function(cfg, more, id) {
-      return typeof (more) !== 'boolean' ? more > (cfg._folderOffsets[id || 'null'] + cfg.pageSize) : !!more;
    },
 
    getHierarchyRelation = function(cfg) {
@@ -518,7 +524,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             _getRecordsForRedraw: getRecordsForRedraw,
             _getRecordsForRedrawTree: getRecordsForRedraw,
             _createDefaultProjection : createDefaultProjection,
-            _hasNextPageInFolder: hasNextPageInFolder,
             _curRoot: null,
             /**
              * @cfg {String, Number} Устанавливает идентификатор узла, относительно которого отображаются данные в текущий момент
@@ -540,7 +545,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              * @remark
              * Поле иерархии хранит первичный ключ той записи, которая является узлом для текущей. Значение null - запись расположена в корне иерархии.
              * Например, поле иерархии "Раздел". Название поля "Раздел" необязательное, и в каждом случае может быть разным.
-             * По полю иерархии устанавливаются два других служебных поля - "Раздел@" и "Раздел$" , подробнее о назначении которых вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/hierarchy/#_2">Требования к источнику данных</a>.
+             * По полю иерархии устанавливаются два других служебных поля - "Раздел@" и "Раздел$" , подробнее о назначении которых вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/hierarchy/#_2">Требования к источнику данных</a>.
              * @example
              * <pre>
              *    <option name="hierField">Раздел</option>
@@ -941,24 +946,24 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          return rootItems;
       },
 
-      _getItemsForRedrawOnAdd: function(items, groupId) {
-         var itemsToAdd = [], start = 0;
+      _getItemsForRedrawOnAdd: function(items) {
+         var itemsToAdd = [], start = 0, groupId;
          if (this._options.hierarchyViewMode) {
             itemsToAdd = searchProcessing(items, this._options);
          }
          else {
             if (items.length && cInstance.instanceOfModule(items[0], 'WS.Data/Display/GroupItem')) {
                groupId = items[0].getContents();
-               if (this._canApplyGrouping(items[1])) {
+               if (items.length > 1 && this._canApplyGrouping(items[1])) {
                   this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options);
-                  items.splice(0, 1);
-                  itemsToAdd = itemsToAdd.concat(items);
-                  start = 1;
                }
-            }
-            for (var i = start; i < items.length; i++) {
-               if (this._isVisibleItem(items[i])) {
-                  itemsToAdd.push(items[i]);
+               items.splice(0, 1);
+               itemsToAdd = itemsToAdd.concat(items);
+            } else {
+               for (var i = start; i < items.length; i++) {
+                  if (this._isVisibleItem(items[i])) {
+                     itemsToAdd.push(items[i]);
+                  }
                }
             }
          }
@@ -972,12 +977,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        */
       _createTreeFilter: function(key) {
          var
-            filter = cFunctions.clone(this.getFilter()) || {};
+            filter = coreClone(this.getFilter()) || {};
          if (this._options.expand) {
             filter['Разворот'] = 'С разворотом';
             filter['ВидДерева'] = 'Узлы и листья';
          }
-         this.setFilter(cFunctions.clone(filter), true);
+         this.setFilter(coreClone(filter), true);
          filter[this._options.parentProperty] = key;
          return filter;
       },
@@ -1075,7 +1080,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                filter;
             if (direction === 'inside') {
                if (item) {
-                  filter = cFunctions.clone(this.getFilter());
+                  filter = coreClone(this.getFilter());
                   filter[this.getParentProperty()] = id === 'null' ? null : id;
                   filter.reloadableNodes = TreeDataReload.prepareReloadableNodes({
                      direction: direction,
@@ -1122,8 +1127,10 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             }
          },
          _canApplyGrouping: function(parentFn, projItem) {
+            // Группировка при поиске не поддерживается. https://online.sbis.ru/opendoc.html?guid=aa8e9981-64fc-4bb1-a75c-ef2fa0c73176
+            // https://online.sbis.ru/opendoc.html?guid=88a81ef7-9854-472a-9b2a-88a11072b1be
             if (this._isSearchMode()) {
-               return true;
+               return false;
             }
             return parentFn.call(this, projItem);
          },
@@ -1158,8 +1165,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                }
             }
          },
-         _onCollectionAddMoveRemove: function(parentFn, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
-            parentFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId);
+         _onCollectionAddMoveRemove: function(parentFn, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex) {
+            parentFn.call(this, event, action, newItems, newItemsIndex, oldItems, oldItemsIndex);
             this._findAndRedrawChangedBranches(newItems, oldItems);
             this._removeFromLoadedRemoteNodes(oldItems);
          },
@@ -1184,7 +1191,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       },
       _getFilterForReload: function(filter, sorting, offset, limit, deepReload) {
          var
-            filter = cFunctions.clone(this._options.filter),
+            filter = coreClone(this._options.filter),
             parentProperty;
          if ((this._options.deepReload || deepReload) && !isEmpty(this._options.openedPath)) {
             parentProperty = this._options.parentProperty;
@@ -1221,11 +1228,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                self._options._folderOffsets['null'] += self._limit;
             }
             self._options._folderHasMore[id] = dataSet.getMetaData().more;
-            if (!self._options._hasNextPageInFolder(self._options, dataSet.getMetaData().more, id)) {
-               if (typeof id != 'undefined') {
-                  self._getTreePager(id).setHasMore(false);
-               }
-            }
             //Если данные пришли, нарисуем
             if (dataSet.getCount()) {
                if (this._options.loadItemsStrategy == 'merge') {
@@ -1296,10 +1298,6 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             applyExpandToItemsProjection(this._getItemsProjection(), this._options);
          },
          _stateResetHandler: function () {
-            // сохраняем текущую страницу при проваливании в папку
-            if (this._options.saveReloadPosition) {
-               this._hierPages[this._previousRoot] = this._getCurrentPage();
-            }
             this._options._folderOffsets['null'] = 0;
             this._lastParent = undefined;
             this._lastDrawn = undefined;
@@ -1332,7 +1330,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          },
          _dataLoadedCallback: function () {
             var path = this._options._items.getMetaData().path,
-               hierarchy = cFunctions.clone(this._hier),
+               hierarchy = coreClone(this._hier),
                item;
             if (this._options.expand) {
                this._applyExpandToItems(this.getItems());
@@ -1471,6 +1469,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
          this._notify('onBeforeSetRoot', key);
          this._options.currentRoot = key !== undefined && key !== null ? key : this._options.root;
+
+         // сохраняем текущую страницу при проваливании в папку
+         if (this._options.saveReloadPosition) {
+            this._hierPages[this._previousRoot] = this._getCurrentPage();
+         }
+         
          if (this._options._itemsProjection) {
             this._options._itemsProjection.setEventRaising(false);
             this._options._itemsProjection.setRoot(this._options.currentRoot !== undefined ? this._options.currentRoot : null);

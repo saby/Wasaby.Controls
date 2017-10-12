@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.DataGridView',
    [
    "Core/CommandDispatcher",
-   "Core/core-functions",
+   "Core/core-clone",
    "Core/core-merge",
    "Core/constants",
    "Core/Deferred",
@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "js!SBIS3.CONTROLS.DragAndDropMixin",
    "js!SBIS3.CONTROLS.ImitateEvents",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
-   'js!WS.Data/Display/Ladder',
+   'WS.Data/Display/Ladder',
    'js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator',
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/ItemTemplate",
@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 ],
    function(
       CommandDispatcher,
-      cFunctions,
+      coreClone,
       cMerge,
       constants,
       Deferred,
@@ -71,7 +71,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    'use strict';
 
       var _prepareColumns = function(columns, cfg) {
-            var columnsNew = cFunctions.clone(columns);
+            var columnsNew = coreClone(columns);
             for (var i = 0; i < columnsNew.length; i++) {
                if (columnsNew[i].cellTemplate) {
                   columnsNew[i].contentTpl = TemplateUtil.prepareTemplate(columnsNew[i].cellTemplate);
@@ -151,7 +151,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          prepareHeadColumns = function(cfg){
             var
                rowData = {},
-               columns = cFunctions.clone(cfg.columns),
+               columns = coreClone(cfg.columns),
                supportUnion,
                supportDouble,
                curCol,
@@ -170,11 +170,28 @@ define('js!SBIS3.CONTROLS.DataGridView',
             for (var i = 0, l = columns.length; i < l; i++){
                curCol = columns[i];
                nextCol = columns[i + 1];
-               curColSplitTitle = (curCol.title || '').split('.');
-               nextColSplitTitle = nextCol && nextCol.title.split('.');
+
+               /**
+                * Сюда может прилететь rkString
+                * пока что это единственный способ ее идентифицировать
+                */
+               curColSplitTitle = (curCol.title || '');
+               if (curColSplitTitle.saveProtoM) {
+                  curColSplitTitle = '' + curColSplitTitle;
+               }
+               curColSplitTitle = curColSplitTitle.split('.');
+
+               nextColSplitTitle = ((nextCol && nextCol.title) || '');
+               if (nextColSplitTitle.saveProtoM) {
+                  nextColSplitTitle = '' + nextColSplitTitle;
+               }
+               nextColSplitTitle = nextColSplitTitle.split('.');
+               /**
+                * end check rkString
+                */
 
                if (!supportDouble){
-                  supportDouble = cFunctions.clone(curCol);
+                  supportDouble = coreClone(curCol);
                }
                else {
                   curColSplitTitle = [supportDouble.value, curColSplitTitle];
@@ -206,7 +223,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
                }
 
                if (!supportUnion){
-                  supportUnion = cFunctions.clone(curCol);
+                  supportUnion = coreClone(curCol);
                }
                if (nextCol && (supportUnion.title == nextCol.title)) {
                   if (curCol.rowspan) {
@@ -231,7 +248,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          prepareHeadData = function(cfg) {
             var
                headData = {
-                  columns: cFunctions.clone(cfg.columns),
+                  columns: coreClone(cfg.columns),
                   multiselect : cfg.multiselect,
                   startScrollColumn: cfg.startScrollColumn,
                   resultsPosition: cfg.resultsPosition,
@@ -345,7 +362,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
          };
    /**
-    * Классов контрола "Список с колонками". Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">Настройка списков</a>.
+    * Классов контрола "Список с колонками". Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">Настройка списков</a>.
     *
     * @class SBIS3.CONTROLS.DataGridView
     * @extends SBIS3.CONTROLS.ListView
@@ -353,8 +370,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
     * @mixes SBIS3.CONTROLS.DragAndDropMixin
     *
     *
-    * @cssModifier controls-ListView__withoutMarker Скрывает отображение маркера активной строки. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
-    * @cssModifier controls-DataGridView__markerRight Устанавливает отображение маркера активной строки справа от записи. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
+    * @cssModifier controls-ListView__withoutMarker Скрывает отображение маркера активной строки. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
+    * @cssModifier controls-DataGridView__markerRight Устанавливает отображение маркера активной строки справа от записи. Подробнее о маркере вы можете прочитать в <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/marker/">этом разделе</a>.
     * @cssModifier controls-DataGridView__hasSeparator Устанавливает отображение линий-разделителей между строками.
     * При использовании контролов {@link SBIS3.CONTROLS.CompositeView} или {@link SBIS3.CONTROLS.TreeCompositeView} модификатор применяется только для режима отображения "Таблица".
     * @cssModifier controls-DataGridView__overflow-ellipsis Устанавливает обрезание троеточием текста во всех колонках таблицы.
@@ -433,7 +450,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @property {String} width Ширина колонки. Значение необходимо устанавливать для колонок с фиксированной шириной.
              * Значение можно установить как в px (суффикс устанавливать не требуется), так и в %.
              * @property {Boolean} [highlight=true] Признак подсвечивания фразы при поиске. Если установить значение в false, то при поиске данных по таблице не будет производиться подсветка совпадений.
-             * @property {String} [resultTemplate] Шаблон отображения колонки в строке итогов. Подробнее о создании такого шиблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/">Строка итогов</a>.
+             * @property {String} [resultTemplate] Шаблон отображения колонки в строке итогов. Подробнее о создании такого шиблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/results/">Строка итогов</a>.
              * @property {String} [className] Имя CSS-класса, который будет применён к заголовку и всем ячейкам колонки.
              * Список классов:
              * <ul>
@@ -445,15 +462,15 @@ define('js!SBIS3.CONTROLS.DataGridView',
              *    <li><b>controls-DataGridView-cell-verticalAlignBottom</b>. Класс устанавливает выравнивание текста по нижнему краю.</li>
              * </ul>
              * Текст в заголовке и ячейках колонки по умолчанию выравнивается по левому краю.
-             * @property {String} [headTemplate] Шаблон отображения шапки колонки. Подробнее о создании такого шаблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/columns/head-template/">Шаблон отображения заголовка</a>.
+             * @property {String} [headTemplate] Шаблон отображения шапки колонки. Подробнее о создании такого шаблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/columns/head-template/">Шаблон отображения заголовка</a>.
              * @property {String} [headTooltip] Всплывающая подсказка, отображаемая при наведении курсора на шапку колонки.
              * @property {String} [editor] Устанавливает редактор колонки для режима редактирования по месту.
              * Редактор отрисовывается поверх редактируемой строки с прозрачным фоном. Это поведение считается нормальным в целях решения прикладных задач.
              * Чтобы отображать только редактор строки без прозрачного фона, нужно установить для него свойство background-color.
-             * Пример использования опции вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/simple-edit-in-place/">Редактирование записи по клику</a>.
-             * @property {Boolean} [sorting] Активирует режим сортировки по полю. Подробное описание можно найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/list-sorting/">Сортировка записей в списках</a>.
+             * Пример использования опции вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/simple-edit-in-place/">Редактирование записи по клику</a>.
+             * @property {Boolean} [sorting] Активирует режим сортировки по полю. Подробное описание можно найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/list-sorting/">Сортировка записей в списках</a>.
              * @property {Boolean} [allowChangeEnable] Доступность установки сотояния активности редактирования колонки в зависимости от состояния табличного представления
-             * @property {String} [cellTemplate] Шаблон отображения ячейки. Подробнее о создании такого шаблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/templates/cell-template/">Шаблон отображения ячейки</a>.
+             * @property {String} [cellTemplate] Шаблон отображения ячейки. Подробнее о создании такого шаблона читайте в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/templates/cell-template/">Шаблон отображения ячейки</a>.
              * Данные, которые передаются в cellTemplate:
              * <ol>
              *    <li>item - отрисовываемая запись {@link WS.Data/Entity/Record}</li>
@@ -537,7 +554,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              * @cfg {Number} Устанавливает количество столбцов слева, которые будут не скроллируемы.
              * @remark
              * Для отображения частичного скролла, нужно установить такую ширину колонок, чтобы суммарная ширина всех столбцов была больше чем ширина контейнера таблицы.
-             * Подробнее об использовании опции вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/columns/horizontal-scroll/">Горизонтальный скролл колонок</a>.
+             * Подробнее об использовании опции вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/columns/horizontal-scroll/">Горизонтальный скролл колонок</a>.
              * @example
              * <pre>
              *     <option name="startScrollColumn">3</option>
@@ -548,7 +565,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             /**
              * @cfg {Array.<String>} Устанавливает набор столбцов для режима отображения "Лесенка".
              * @remark
-             * Подробнее о данном режиме списка вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/ladder/">Отображение записей лесенкой</a>.
+             * Подробнее о данном режиме списка вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/ladder/">Отображение записей лесенкой</a>.
              * @example
              * <pre>
              *    <option name="ladder" type="array">
@@ -560,7 +577,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             /**
              * @cfg {String} Устанавливает шаблон отображения строки итогов.
              * @remark
-             * Подробнее о правилах построения шаблона вы можете прочитать в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/results/ Строка итогов}.
+             * Подробнее о правилах построения шаблона вы можете прочитать в статье {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/results/ Строка итогов}.
              * <br/>
              * Чтобы шаблон можно было передать в опцию компонента, его нужно предварительно подключить в массив зависимостей.
              * @example
@@ -598,7 +615,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              *    <li>Колонки с одинаковым title будут объединены;</li>
              *    <li>Для колонок, title которых задан через разделитель "точка", т.е. вида выводимоеОбщееИмя.выводимоеИмяДаннойКолонки, будет отрисован двустрочный заголовок.</li>
              * </ul>
-             * Пример использования опции вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/list-visual-display/columns/head-merge/">Объединение заголовков</a>.
+             * Пример использования опции вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-visual-display/columns/head-merge/">Объединение заголовков</a>.
              * @example
              * <pre>
              *     <option name="transformHead">true</option>
@@ -616,7 +633,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             /**
              * @cfg {Boolean} Устанавливает фиксацию/прилипание заголовков списка к "шапке" страницы/всплывающей панели.
              * @remark
-             * Подробнее об этом механизме вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/fixed-header/">Фиксация шапки страниц и всплывающих панелей</a>.
+             * Подробнее об этом механизме вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/fixed-header/">Фиксация шапки страниц и всплывающих панелей</a>.
              * @example
              * <pre>
              *     <option name="stickyHeader">true</option>
@@ -816,6 +833,13 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return DataGridView.superclass._itemsReadyCallback.apply(this, arguments);
       },
 
+      _toggleIndicator: function(show){
+         DataGridView.superclass._toggleIndicator.apply(this, arguments);
+         if (show) {
+            this._updateAjaxLoaderPosition();
+         }
+      },
+
       _updateAjaxLoaderPosition: function () {
          var height, styles;
          if (!this._thead) {
@@ -871,7 +895,6 @@ define('js!SBIS3.CONTROLS.DataGridView',
          if (this._options.stickyHeader && !this._options.showHead && this._options.resultsPosition === 'top') {
             this._updateStickyHeader(headData.hasResults);
          }
-         this._updateAjaxLoaderPosition();
       },
 
       _redrawFoot: function(){
@@ -955,7 +978,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             return;
          }
 
-         table.toggleClass('ws-sticky-header__table', isSticky);
+         table.toggleClass('ws-sticky-header__table', Boolean(isSticky));
          if (isSticky) {
             EventBus.channel('stickyHeader').notify('onForcedStickHeader', this.getContainer());
          } else {
@@ -1356,6 +1379,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              thumbWidth = this._thumb[0].offsetWidth,
              correctMargin = 0,
              lastRightStop = this._stopMovingCords.right,
+             arrowsWidth = this._arrowRight[0].offsetWidth * 2,
              notScrolledCells, thumbPos;
 
          /* Найдём ширину нескроллируемых колонок */
@@ -1371,9 +1395,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
          scrollContainer[0].style.width = containerWidth - correctMargin + 'px';
 
          /* Найдём соотношение, для того чтобы правильно двигать скроллируемый контент относительно ползунка */
-         this._partScrollRatio = (this._getItemsContainer()[0].offsetWidth - containerWidth) / (containerWidth - correctMargin - thumbWidth - 40);
+         this._partScrollRatio = (this._getItemsContainer()[0].offsetWidth - containerWidth) / (containerWidth - correctMargin - thumbWidth - arrowsWidth);
          this._stopMovingCords = {
-            right: scrollContainer[0].offsetWidth - thumbWidth - 40,
+            right: scrollContainer[0].offsetWidth - thumbWidth - arrowsWidth,
             left: correctMargin
          };
 
@@ -1416,7 +1440,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _isTableWide: function() {
-         return this._container[0].offsetWidth < this._getItemsContainer()[0].offsetWidth;
+         return this._container[0].offsetWidth < this._getTableContainer()[0].offsetWidth;
       },
 
       _hidePartScroll: function() {
@@ -1552,7 +1576,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._addStickyToGroups(data.records);
          return data;
       },
-      _getItemsForRedrawOnAdd: function(items, groupId) {
+      _getItemsForRedrawOnAdd: function(items) {
          var data = DataGridView.superclass._getItemsForRedrawOnAdd.apply(this, arguments);
          this._addStickyToGroups(data);
          return data;
@@ -1567,16 +1591,17 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
       },
       _redrawResults: function(revive) {
-         if (this._options.resultsPosition !== 'none'){
-           this._redrawTheadAndTfoot();
-         }
-         if (revive) {
-            var self = this;
-            this.reviveComponents(this._thead).addCallback(function(){
-               self._notify('onDrawHead');
-               self._headIsChanged = false;
-            });
-            this.reviveComponents(this._tfoot);
+         if (this._options.resultsPosition !== 'none') {
+            this._redrawTheadAndTfoot();
+
+            if (revive) {
+               var self = this;
+               this.reviveComponents(this._thead).addCallback(function () {
+                  self._notify('onDrawHead');
+                  self._headIsChanged = false;
+               });
+               this.reviveComponents(this._tfoot);
+            }
          }
       },
       destroy: function() {
@@ -1592,13 +1617,17 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
    
    
-         if(this._options.showHead && this._options.stickyHeader) {
+         if(this._options.showHead && this._options.stickyHeader && this._thead) {
             this._toggleEventHandlers(this._thead, false);
          }
          
          if (this._options.stickyHeader && !this._options.showHead && this._options.resultsPosition === 'top') {
             this._updateStickyHeader(false);
          }
+         
+         this._thead = undefined;
+         this._tbody = undefined;
+         this._tfoot = undefined;
          
          DataGridView.superclass.destroy.call(this);
       },
@@ -1691,7 +1720,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             return item.get(colName);
          }
          var colNameParts = colName.slice(2, -2).split('.'),
-            curItem = cFunctions.clone(item),
+            curItem = coreClone(item),
             value;
          for (var i = 0; i < colNameParts.length; i++){
             if (i !== colNameParts.length - 1){

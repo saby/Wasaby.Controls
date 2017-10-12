@@ -2,7 +2,7 @@
  * Created by iv.cheremushkin on 13.08.2014.
  */
 
-define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'js!SBIS3.CONTROLS.Selectable'], function(ButtonGroupBase, Selectable) {
+define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase', 'js!SBIS3.CONTROLS.Selectable', 'Core/core-instance'], function(ButtonGroupBase, Selectable, cInstance) {
 
    'use strict';
 
@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase',
             var hash = item.getHash();
             for (var i in controls) {
                if (controls.hasOwnProperty(i)) {
-                  if (!hash) {
+                  if (hash === undefined) {
                      controls[i].setChecked(false);
                   }
                   else {

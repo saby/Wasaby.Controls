@@ -4,7 +4,7 @@
 define('js!WSControls/Lists/ItemsToolbar/ItemsToolbarCompatible',
    [
       'js!SBIS3.CONTROLS.ItemsToolbar',
-      'js!WS.Data/Utils'
+      'WS.Data/Utils'
    ], function (ItemsToolbar, dataUtils) {
    
    /* Слой совместимости между старым тулбаром и новым ListView.

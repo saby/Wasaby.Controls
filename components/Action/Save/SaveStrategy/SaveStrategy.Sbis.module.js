@@ -2,12 +2,12 @@
 define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
     'js!SBIS3.CONTROLS.SaveStrategy.Base',
     'Core/EventBus',
-    'Core/core-functions',
+    'Core/core-merge',
     'Core/helpers/transport-helpers',
-    'js!WS.Data/Source/SbisService',
-    'js!WS.Data/Entity/Record',
+    'WS.Data/Source/SbisService',
+    'WS.Data/Entity/Record',
     'Core/moduleStubs'
-], function (SaveStrategyBase, EventBus, cFunctions, transHelpers, SbisService, Record, moduleStubs) {
+], function (SaveStrategyBase, EventBus, coreMerge, transHelpers, SbisService, Record, moduleStubs) {
 
     'use strict';
 
@@ -81,7 +81,7 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
                   PageOrientation: meta.pageOrientation,
                   HierarchyField: meta.parentProperty && meta.endpoint !== 'PDF' ? meta.parentProperty : undefined
                };
-            cFunctions.merge(cfg, this._parseColumns(meta.columns));
+            coreMerge(cfg, this._parseColumns(meta.columns));
 
             this.exportFileTransfer('SaveRecordSet', cfg, meta);
         },
@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
            var cfg = this._getFilterForList(meta);
            cfg.HierarchyField = meta.parentProperty && meta.endpoint !== 'PDF' ? meta.parentProperty : undefined;
            cfg.Pagination = this._prepareNavigation(meta.query.getOffset(), meta.query.getLimit(), meta.dataSource);
-           cFunctions.merge(cfg, this._parseColumns(meta.columns));
+           coreMerge(cfg, this._parseColumns(meta.columns));
 
            this.exportFileTransfer('SaveList', cfg, meta);
         },
@@ -99,7 +99,7 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Sbis', [
            var cfg = this._getFilterForList(meta);
            cfg.HierarchyField = meta.parentProperty || null;
            cfg.Limit = 0;
-           cFunctions.merge(cfg, this._parseColumns(meta.columns));
+           coreMerge(cfg, this._parseColumns(meta.columns));
 
            this.exportFileTransfer('SaveMarked', cfg, meta);
         },

@@ -13,8 +13,8 @@ define('js!WSControls/Lists/ItemsControl', [
    'js!WSControls/Lists/resources/utils/ItemsUtil',
    'Core/helpers/functional-helpers',
    'Core/Deferred',
-   'js!WS.Data/Type/descriptor',
-   'js!WS.Data/Source/ISource',
+   'WS.Data/Type/descriptor',
+   'WS.Data/Source/ISource',
    'Core/core-instance'
 ], function (extend,
              BaseControl,
@@ -36,14 +36,16 @@ define('js!WSControls/Lists/ItemsControl', [
    ) {
    'use strict';
 
+   var _private = {
+      _isGroupItem: function(dispItem) {
+         return (dispItem._moduleName == 'WS.Data/Display/GroupItem')
+      }
+   };
+
    var ItemsControl = BaseControl.extend(
       {
          _controlName: 'WSControls/Lists/ItemsControl',
-         _enumIndexes: {
-            _startIndex: 0,
-            _stopIndex: 0,
-            _curIndex: 0
-         },
+         _enumIndexes: null,
          iWantVDOM: true,
          _isActiveByClick: false,
          _items: null,
@@ -66,7 +68,11 @@ define('js!WSControls/Lists/ItemsControl', [
 
          constructor: function (cfg) {
             ItemsControl.superclass.constructor.apply(this, arguments);
-
+            this._enumIndexes = {
+               _startIndex: 0,
+               _stopIndex: 0,
+               _curIndex: 0
+            };
             this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
             this._prepareMountingData(cfg);
             this._publish('onItemsReady', 'onDataLoad');
@@ -132,20 +138,52 @@ define('js!WSControls/Lists/ItemsControl', [
 
          //при изменениях в проекции
          _displayChangeCallback: function(display, cfg) {
+
             this._enumIndexes._startIndex = 0;
             this._enumIndexes._stopIndex = this._display.getCount();
+            this._itemsTplData = this._getItemsTplData(cfg);
          },
 
-         _getStartEnumerationPosition: function() {
-            this._enumIndexes._curIndex = this._enumIndexes._startIndex;
+         _getItemsTplData: function(cfg) {
+            return {
+               _listItemsTplData : {
+                  _enumIndexes: this._enumIndexes,
+                  _getItemTpl: this._getItemTpl,
+                  _itemTemplate: cfg.itemTpl || this._defaultItemTemplate,
+                  _itemContentTemplate: cfg.itemContentTpl || this._defaultItemContentTemplate,
+                  _groupTemplate: this._defaultGroupTemplate,
+                  _getItemContentTpl: this._getItemContentTpl,
+                  _display: this._display,
+                  _defaultItemTemplate: this._defaultItemTemplate,
+                  _getItemData: this._getItemData,
+                  _getPropertyValue: this._getPropertyValue,
+                  idProperty: cfg.idProperty,
+                  _itemTplData: {
+                     className: cfg.itemClassName,
+                     _itemContentTplData: {
+                        _getPropertyValue: this._getPropertyValue,
+                        displayProperty: cfg.displayProperty
+                     }
+                  }
+               },
+               _getStartEnumerationPosition: this._getStartEnumerationPosition,
+               _checkConditionForEnumeration: this._checkConditionForEnumeration,
+               _getNextEnumerationPosition: this._getNextEnumerationPosition,
+               _listItemsTemplate : ListItemsTemplate,
+               _display: this._display
+            }
+         },
+
+         _getStartEnumerationPosition: function(indexes) {
+            indexes._curIndex = indexes._startIndex;
          },
 
          _getStartEnumerationPositionInGroup: function() {
             this._enumIndexes._curIndex++;
          },
 
-         _checkConditionForEnumeration: function() {
-            return this._enumIndexes._curIndex < this._enumIndexes._stopIndex;
+         _checkConditionForEnumeration: function(indexes) {
+            return indexes._curIndex < indexes._stopIndex;
          },
 
          _checkConditionForEnumerationInGroup: function() {
@@ -158,25 +196,27 @@ define('js!WSControls/Lists/ItemsControl', [
             }
          },
 
-         _getNextEnumerationPosition: function() {
-            this._enumIndexes._curIndex++;
+         _getNextEnumerationPosition: function(indexes) {
+            indexes._curIndex++;
          },
 
+
+
          _getItemTpl: function(dispItem) {
-            if (cInstance.instanceOfModule(dispItem, 'WS.Data/Display/GroupItem')) {
-               return this._defaultGroupTemplate;
+            if (_private._isGroupItem(dispItem)) {
+               return this._groupTemplate;
             }
             else {
-               return this._options.itemTpl || this._defaultItemTemplate;
+               return this._itemTemplate;
             }
          },
 
          _getItemContentTpl: function(dispItem) {
-            if (cInstance.instanceOfModule(dispItem, 'WS.Data/Display/GroupItem')) {
+            if (_private._isGroupItem(dispItem)) {
                return this._defaultGroupItemContentTemplate;
             }
             else {
-               return this._options.itemContentTpl || this._defaultItemContentTemplate;
+               return this._itemContentTemplate;
             }
          },
 

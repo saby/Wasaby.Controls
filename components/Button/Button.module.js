@@ -25,7 +25,7 @@ define('js!SBIS3.CONTROLS.Button',
    /**
     * Класс контрола "Обычная кнопка".
     *
-    * {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/buttons/button-line/#button Демонстрационные примеры}.
+    * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/textbox/buttons/button-line/#button Демонстрационные примеры}.
     * <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Спецификация</a>.
     *
     * @class SBIS3.CONTROLS.Button
@@ -195,6 +195,17 @@ define('js!SBIS3.CONTROLS.Button',
             var self = this;
             if (isJs.features.compatibleLayer) {
                this._hideExtendedTooltipCompatible();
+            }
+         },
+
+         show: function(){
+            // если кнопка скрыта при построение, то она не зарегистрируется дефолтной,
+            // поэтому при показе такой кнопки регистрируем её как дефолтную
+            var oldVisible = this.isVisible();
+
+            Button.superclass.show.call(this);
+            if (isJs.features.compatibleLayer && !oldVisible && this.isPrimary()) {
+               this.setDefaultButton(true);
             }
          },
 

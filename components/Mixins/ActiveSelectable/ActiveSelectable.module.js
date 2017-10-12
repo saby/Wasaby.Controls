@@ -3,7 +3,7 @@
  */
 define('js!SBIS3.CONTROLS.ActiveSelectable', [
    "Core/Deferred",
-   "js!WS.Data/Entity/Model",
+   "WS.Data/Entity/Model",
    "Core/core-instance",
    "js!SBIS3.CONTROLS.ToSourceModel",
    "js!SBIS3.CONTROLS.Utils.SourceUtil",

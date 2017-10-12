@@ -1,92 +1,92 @@
 //default-sizes
-@default-height:                                                                                                        3rem;
-@default-border-width:                                                                                                  2px;
-@default-font-size-title:                                                                                               1.4285rem;
-@default-font-size:                                                                                                     1.1428rem;
-@default-icon-size:                                                                                                     1.32rem;
-@default-icon-size-medium:                                                                                              1.78rem;
-@default-icon-size-large:                                                                                               3rem;
-@default-line-height:                                                                                                   1.5rem; //42px;
-@default-base-line-height:                                                                                              2.8571rem;//@default-height - 2 * @default-border-width
-@default-input-padding:                                                                                                 0.5rem;
+@default-height:               3rem;
+@default-border-width:         2px;
+@default-font-size:            1.1428rem;
+@default-icon-size:            1.32rem;
+@default-icon-size-medium:     1.78rem;
+@default-icon-size-large:      3rem;
+@default-line-height:          1.5rem; //42px;
+@default-base-line-height:     2.8571rem;//@default-height - 2 * @default-border-width
+@default-padding:              0.5rem;
+@default-padding:              0.25rem;
 //textbox
-@text-box-information-icon-size:                                                                                        1rem;
+@text-box-information-icon-size:                  1rem;
 //text-area
-@text-area-field-line-height:                                                                                           @default-line-height;
+@text-area-field-line-height:                     @default-line-height;
 //number-text-box
-@number-text-box-icon-size:                                                                                             @default-icon-size-large;
+@number-text-box-icon-size:                       @default-icon-size-large;
 //combo-box
-@combo-box-icon-size:                                                                                                   @default-icon-size-large;
-@combo-box-arrow-padding:                                                                                               0px;
+@combo-box-icon-size:                             @default-icon-size-large;
+@combo-box-arrow-padding:                         0px;
+@combo-box-shadow-display:                        none;
 //suggest-text-box
-@suggest-text-box-icon-size:                                                                                            @default-icon-size-large;
+@suggest-text-box-icon-size:                      @default-icon-size-large;
 //search-form
-@search-border-radius:                                                                                                  0;
-@search-button-wrapper-padding:                                                                                         0;
-@search-loop-size:                                                                                                      2.8571rem;
-@search-form-icon-padding:                                                                                              0;
-@search-field-padding:                                                                                                  0 0 0 @default-input-padding;
+@search-border-radius:                            0;
+@search-button-wrapper-padding:                   0;
+@search-loop-size:                                2.8571rem;
+@search-form-icon-padding:                        0;
+@search-field-padding:                            0 0 0 @default-padding;
 //fieldLink
-@fieldLink-showAll-shadow-width:                                                                                        1rem;
-@fieldLink-linkItem-line-height:                                                                                        @default-base-line-height;
-@fieldLink-icon-size:                                                                                                   @default-icon-size-large;
+@fieldLink-showAll-shadow-width:                  1rem;
+@fieldLink-linkItem-line-height:                  @default-base-line-height;
+@fieldLink-icon-size:                             2.8571rem;//todo: при переходе на cbuc-icons отказаться от этого щита
+//treeview
+@tree-view-folder-text-size:                      @default-font-size;
 //button
-@button-border-radius:                                                                                                  0px;
-@button-checked-text-margin-left:                                                                                       0.57rem; //todo: romanov
-@button-checked-text-margin-right:                                                                                      @button-checked-text-margin-left;
+@button-border-radius:                            0px;
 //back-button
-@back-button-margin-before:                                                                                             0 4px 0 0;//todo: romanov
-@back-button-padding-before:                                                                                            1px 0;//todo: romanov
+@back-button-margin-before:                       0 4px 0 0;//todo: romanov
+@back-button-padding-before:                      1px 0;//todo: romanov
 //operationa-panel
-@controls-OperationsPanelButton-icon-left:                                                                              2px;//todo: romanov
+@controls-OperationsPanelButton-icon-left:        2px;//todo: romanov
 //popup
-@menu-link-menu-revert-item-container-padding:                                                                          0px;//todo romanov
+@menu-link-menu-revert-item-container-padding:    0px;//todo romanov
 //menuItem
-@menu-item-text-margin:                                                                                                 0px;//todo romanov
+@menu-item-text-margin:                           0px;//todo romanov
 //date-range
-@date-range-slider-year-state-width:                                                                                    136px;//todo: mironov
-@date-range-slider-value-min-width:                                                                                     124px;//todo: mironov
-@date-range-slider-height:                                                                                              40px;//todo: mironov
-@date-range-slider-value-padding:                                                                                       0px;//todo: mironov
-@date-range-slider-prev-next-buttons-font-size:                                                                         @date-range-slider-font-size;//todo: mironov
-@date-range-choose-year-state-width:                                                                                    136px;//todo: mironov
-@date-range-choose-current-value-padding-left-right:                                                                    0px;//todo: mironov
-@date-range-choose-year-padding-left:                                                                                   12px;//todo: mironov
-@date-range-choose-quarter-caption-height:                                                                              3*@date-range-choose-standart-line-height;//todo: mironov
-@date-range-choose-width:                                                                                               204px;//todo: mironov
-@date-range-choose-home-button-size:                                                                                    40px;//todo: mironov
-@date-range-choose-home-button-font-size:                                                                               32px;//todo: mironov
-@date-range-choose-home-button-line-height:                                                                             40px;//todo: mironov
-@date-range-big-choose-years-panel-toggle-choose-year-button-margin:                                                    0 60px;//todo: mironov
-@date-range-big-choose-months-button-first-padding-top:                                                                 2px;//todo: mironov
-@date-range-big-choose-months-button-last-padding-bottom:                                                               3px;//todo: mironov
-@date-range-big-choose-years-panel-wrapper-font-size:                                                                   24px;//todo: mironov
+@date-range-slider-year-state-width:                                  136px;//todo: mironov
+@date-range-slider-value-min-width:                                   124px;//todo: mironov
+@date-range-slider-height:                                            40px;//todo: mironov
+@date-range-slider-value-padding:                                     0px;//todo: mironov
+@date-range-slider-prev-next-buttons-font-size:                       @date-range-slider-font-size;//todo: mironov
+@date-range-choose-year-state-width:                                  136px;//todo: mironov
+@date-range-choose-current-value-padding-left-right:                  0px;//todo: mironov
+@date-range-choose-year-padding-left:                                 12px;//todo: mironov
+@date-range-choose-quarter-caption-height:                            3*@date-range-choose-standart-line-height;//todo: mironov
+@date-range-choose-width:                                             204px;//todo: mironov
+@date-range-choose-home-button-size:                                  40px;//todo: mironov
+@date-range-choose-home-button-font-size:                             32px;//todo: mironov
+@date-range-choose-home-button-line-height:                           40px;//todo: mironov
+@date-range-big-choose-years-panel-toggle-choose-year-button-margin:  0 60px;//todo: mironov
+@date-range-big-choose-months-button-first-padding-top:               2px;//todo: mironov
+@date-range-big-choose-months-button-last-padding-bottom:             3px;//todo: mironov
+@date-range-big-choose-years-panel-wrapper-font-size:                 24px;//todo: mironov
 //listview
-@listView-check-box-left:                                                                                               3px;//todo: juravlev
-@listView-check-box-top:                                                                                                7px;//todo: juravlev
-@list-view-actions-menu-margin:                                                                                         3px 0 0 0;//todo: romanov
+@listView-check-box-left:                                3px;//todo: juravlev
+@listView-check-box-top:                                 7px;//todo: juravlev
+@list-view-actions-menu-margin:                          3px 0 0 0;//todo: romanov
 //grid
-@data-grid-check-box-left:                                                                                              0px;//todo: juravlev
+@data-grid-check-box-left:                               0px;//todo: juravlev
 //image
-@editdialog-applybutton-top:                                                                                            8px;
-@editdialog-template-minwidth:                                                                                          510px;//todo: borisov
+@editdialog-applybutton-top:                             8px;
+@editdialog-template-minwidth:                           510px;//todo: borisov
 //submit-popup
-@controls-SubmitPopup-size-big-width:                                                                                   800px;//todo: stepin
-@controls-SubmitPopup-button-mini-min-width:                                                                            150px;//todo: stepin
+@controls-SubmitPopup-size-big-width:                    800px;//todo: stepin
+@controls-SubmitPopup-button-mini-min-width:             150px;//todo: stepin
 //dd-list
-@DropdownList-picker-menu-font-size:                                                                                    @default-font-size;//todo: krasilnikov
-@DropdownList-picker-fastdatafilter-offset:                                                                             0 0 0 2px;//todo: krasilnikov
-@DropdownList-picker-margin-top:                                                                                        0;//todo: krasilnikov
-@DropdownList-picker-border:                                                                                            0;//todo: krasilnikov
-@DropdownList-picker-padding:                                                                                           0;//todo: krasilnikov
-@DropdownList-picker-head-margin:                                                                                       0;//todo: krasilnikov
-@DropdownList-picker-head-padding:                                                                                      0 8px;//todo: krasilnikov
-@DropdownList-picker-head-duplicate-type-top-padding:                                                                   0px;//todo: krasilnikov
-@DropdownList-picker-menu-item-padding:                                                                                 .1785rem .57rem;
-@check-box-caption-margin-left:                                                                                         4px;//todo: juravlev
+@DropdownList-picker-menu-font-size:                     @default-font-size;//todo: krasilnikov
+@DropdownList-picker-fastdatafilter-offset:              0 0 0 2px;//todo: krasilnikov
+@DropdownList-picker-margin-top:                         0;//todo: krasilnikov
+@DropdownList-picker-border:                             0;//todo: krasilnikov
+@DropdownList-picker-padding:                            0;//todo: krasilnikov
+@DropdownList-picker-head-padding:                       0 8px;//todo: krasilnikov
+@DropdownList-picker-head-duplicate-type-top-padding:    0px;//todo: krasilnikov
+@DropdownList-picker-menu-item-padding:                  .1785rem .57rem;
+@check-box-caption-margin-left:                          4px;//todo: juravlev
 //MoveDialog
 @controls-movedialog-min-width:                 536px;
 @controls-movedialog-max-width:                 536px;
 @controls-movedialog-width:                     536px;
 //time-header:
-@time-header-icon-size:																																																	@default-icon-size-large;
+@time-header-icon-size:							@default-icon-size-large;

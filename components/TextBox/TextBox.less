@@ -12,13 +12,14 @@
    font-size: @text-box-font-size;
    text-decoration: inherit;
    line-height: @default-base-line-height;
+   cursor: auto;
+   max-width: 100%;
 
    &:hover {
       border-color: @text-box-border-color-hover;
    }
    &.ws-has-focus {
       border-color: @text-box-border-color-active;
-      background: @text-box-bg-focus; //presto, carry
    }
    &.ws-disabled {
       border-color: @text-box-border-color-disabled;
@@ -35,13 +36,13 @@
    }
    .controls-informationIcon {
       position: absolute;
-      height: @text-box-height / 3;
       right: 0;
       top: 0;
       .controls-Button__icon {
          .icon-size(@text-box-information-icon-size);
          position: absolute;
          right: 0;
+         top: 0;
       }
    }
 
@@ -57,12 +58,13 @@
          content: '.';
          visibility:hidden;
          width: 0;
-         line-height: @default-base-line-height;
          display: inline-block;
       }
    }
 
    &__afterFieldWrapper, &__beforeFieldWrapper {
+      .inline-flexbox();
+      .flex-shrink(0);
       height: 100%;
    }
    &__beforeFieldWrapper {
@@ -119,11 +121,3 @@
 .controls-TextBox__field-lowercase {
    text-transform: lowercase;
 }
-
-/*
-.ws-is-desktop-safari {
-   .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
-      outline: 1px solid transparent;
-   }
-}
-*/

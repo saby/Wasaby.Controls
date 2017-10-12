@@ -1,0 +1,51 @@
+<div class="controls-MergeDialogTemplate-wrapper ws-flexbox ws-flex-row">
+    <div class="controls-MergeDialogTemplate ws-flexbox ws-flex-column">
+        <span class="controls-MergeDialogTemplate__hint ws-flex-shrink-0">{{ hint }}</span>
+        <ws:SBIS3.CONTROLS.ScrollContainer class="controls-MergeDialogTemplate__scroll controls-ScrollContainer__flex ws-flex-shrink-1">
+            <ws:content>
+                <ws:SBIS3.CONTROLS.TreeDataGridView
+                        class="controls-MergeDialogTemplate__treeDataGridView controls-ListView__withoutMarker controls-GridView__searchMode controls-TreeView__withoutExpands controls-DataGridView__hasSeparator"
+                        name="MergeDialogTemplate__treeDataGridView"
+                        itemsDragNDrop="{{ false }}"
+                        showPaging="{{ false }}"
+                        allowEmptySelection="{{ true }}"
+                        itemTpl="{{ _itemTpl }}"
+                        displayProperty="{{ displayProperty }}"
+                        parentProperty="{{ parentProperty }}"
+                        nodeProperty="{{ nodeProperty }}"
+                        idProperty="{{ idProperty }}"
+                        itemsActions="{{ [] }}"
+                        hierarchyViewMode="{{ true }}">
+                    <ws:columns>
+                        <ws:Array>
+                            <ws:Object cellTemplate="{{ _cellRadioButtonTpl }}"></ws:Object>
+                            <ws:Object title="Наименование"
+                                       width="{{ 400 }}"
+                                       field="{{ displayProperty }}"
+                                       className="controls-DataGridView-cell-overflow-ellipsis"
+                                       cellTemplate="{{ titleCellTemplate ? titleCellTemplate : _titleCellTemplate }}"
+                            ></ws:Object>
+                            <ws:Object title="Комментарий"
+                                       field="Comment"
+                                       className="controls-DataGridView-cell-overflow-ellipsis"
+                                       cellTemplate="{{ _cellCommentTpl }}"
+                            ></ws:Object>
+                        </ws:Array>
+                    </ws:columns>
+                    <ws:handlers onSearchPathClick="{{ _onSearchPathClick }}">
+                    </ws:handlers>
+                </ws:SBIS3.CONTROLS.TreeDataGridView>
+            </ws:content>
+        </ws:SBIS3.CONTROLS.ScrollContainer>
+        <div class="controls-MergeDialogTemplate__applyBlock ws-hidden ws-flex-shrink-0">
+            <span class="controls-MergeDialogTemplate__warning">{{ warning }}</span>
+            <ws:SBIS3.CONTROLS.Button
+                    class="controls-MergeDialogTemplate__mergeButton"
+                    name="MergeDialogTemplate-mergeButton"
+                    caption="Объединить"
+                    primary="{{ true }}"
+                    command="beginMerge">
+            </ws:SBIS3.CONTROLS.Button>
+        </div>
+    </div>
+</div>

@@ -1,7 +1,7 @@
 <div>
 <ws:if data="{{_display}}">
       <ws:partial
-            scope="{{...}}"
+            scope="{{_listItemsTplData}}"
             template="{{_listItemsTemplate}}"
             startFnc="{{_getStartEnumerationPosition}}"
             condFnc="{{_checkConditionForEnumeration}}"

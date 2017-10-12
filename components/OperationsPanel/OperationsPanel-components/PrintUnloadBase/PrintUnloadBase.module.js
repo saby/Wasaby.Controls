@@ -8,10 +8,10 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
    "Core/Deferred",
    "js!SBIS3.CONTROLS.MenuLink",
    "js!SBIS3.CORE.DialogSelector",
-   "js!WS.Data/Chain",
-   "js!WS.Data/Collection/Factory/RecordSet",
-   "js!WS.Data/Adapter/Json",
-   "js!WS.Data/Collection/RecordSet",
+   "WS.Data/Chain",
+   "WS.Data/Collection/Factory/RecordSet",
+   "WS.Data/Adapter/Json",
+   "WS.Data/Collection/RecordSet",
    "Core/helpers/fast-control-helpers"
 ], function( Deferred,MenuLink, Dialog, Chain, RecordSetFactory, SbisAdapter, RecordSet, fcHelpers) {
    //TODO: ограничение на максимальное количество записей, получаемое на клиент для печати/выгрузки.

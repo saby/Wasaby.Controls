@@ -1,13 +1,13 @@
 define('js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList', [
     'js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList',
-    'Core/core-functions',
-    'js!WS.Data/Collection/RecordSet',
+    'Core/core-clone',
+    'WS.Data/Collection/RecordSet',
     'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList/resources/FilterPanelChooserFavoritesHeader',
     'js!SBIS3.CONTROLS.FilterPanelBoolean',
     'css!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList'
-], function(FilterPanelChooserDictionary, cFunctions, RecordSet, ArraySimpleUtil, dotTplFn, headerTpl) {
+], function(FilterPanelChooserDictionary, coreClone, RecordSet, ArraySimpleUtil, dotTplFn, headerTpl) {
 
     var favoritesIsChecked = function(value, favorites) {
         var
@@ -135,7 +135,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList', [
             var
                 favoriteId,
                 idProperty,
-                value = cFunctions.clone(this._getListView().getSelectedKeys());
+                value = coreClone(this._getListView().getSelectedKeys());
             if (this._getFavoritesCheckBox().getValue()) {
                 idProperty = this._options.favorites.getIdProperty();
                 this._options.favorites.each(function(item) {

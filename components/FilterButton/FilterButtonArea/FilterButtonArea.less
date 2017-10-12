@@ -1,6 +1,6 @@
 .controls-FloatArea.controls__filterButton__picker {
 	background: @controls-filterButton-picker-bg;
-	border: @controls-filterButton-picker-border-width @controls-filterButton-picker-border-style @controls-filterButton-picker-border-color;
+	border: @controls-filterButton-picker-border-width solid @controls-filterButton-picker-border-color;
 	.box-shadow(@menu-shadow);
 	margin-top: -1px;
 
@@ -98,7 +98,7 @@
 .controls-filterButton__historyView .controls-ItemsToolbar {
 	background-color: transparent;
 	box-shadow: none;
-	right: @controls-filterButton-history-actions-right;
+	right: auto !important;
 	left: @controls-filterButton-history-actions-left;
 	bottom: @controls-filterButton-history-actions-bottom;
 	
@@ -122,8 +122,8 @@
 }
 
 .controls-filterButton__historyView-pin {
-	float: @controls-filterButton-history-pin-float;
-	position: @controls-filterButton-history-pin-position;
+	float: left;
+	position: relative;
 	top: @controls-filterButton-history-pin-top;
 }
 
@@ -142,19 +142,19 @@
 }
 
 .controls-filterButton__historyView-titleContainer {
-	position: @controls-filterButton-history-titleCont-position;
+	position: absolute;
 	right: @controls-filterButton-history-titleCont-right;
 	left: @controls-filterButton-history-titleCont-left;
 	top: 4px;
 }
 
 .controls-filterButton__historyView-item-title {
-	display: @controls-filterButton-history-title-display;
+	display: inline-block;
 	.text-overflow();
 	max-height: @controls-filterButton-history-title-height;
-	vertical-align: @controls-filterButton-history-title-verAlign;
+	vertical-align: top;
 	color: @controls-filterButton-history-title-color;
-	width: @controls-filterButton-history-title-width;
+	width: 100%;
 }
 
 .controls__filterButton__area-header {

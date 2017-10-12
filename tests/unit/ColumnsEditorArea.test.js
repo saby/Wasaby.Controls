@@ -2,7 +2,7 @@
  * Created by as.avramenko on 06.07.2017.
  */
 
-define(['js!SBIS3.CONTROLS.ColumnsEditorUtils', 'js!WS.Data/Collection/RecordSet', 'js!WS.Data/Display/Display', 'js!WS.Data/Display/Collection'], function (ColumnsEditorUtils, RecordSet, Display) {
+define(['js!SBIS3.CONTROLS.ColumnsEditorUtils', 'WS.Data/Collection/RecordSet', 'WS.Data/Display/Display', 'WS.Data/Display/Collection'], function (ColumnsEditorUtils, RecordSet, Display) {
 
    'use strict';
 

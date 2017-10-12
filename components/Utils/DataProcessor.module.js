@@ -3,17 +3,17 @@
  */
 define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
    "Core/core-extend",
-   "Core/core-functions",
+   "Core/core-clone",
    "Core/EventBus",
-   "js!WS.Data/Entity/Record",
+   "WS.Data/Entity/Record",
    "js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer",
    "js!SBIS3.CORE.LoadingIndicator",
-   "js!WS.Data/Source/SbisService",
+   "WS.Data/Source/SbisService",
    "Core/helpers/transport-helpers",
    "Core/helpers/fast-control-helpers",
    "js!SBIS3.CONTROLS.Utils.InformationPopupManager",
    "i18n!SBIS3.CONTROLS.Utils.DataProcessor"
-], function( cExtend, cFunctions, EventBus, Record, Serializer, LoadingIndicator, SbisService, transHelpers, fcHelpers, InformationPopupManager) {
+], function( cExtend, coreClone, EventBus, Record, Serializer, LoadingIndicator, SbisService, transHelpers, fcHelpers, InformationPopupManager) {
    /**
     * Обработчик данных для печати и выгрузки(экспорта) в Excel, PDF. Печать осуществляется по готову XSL-шаблону через XSLT-преобразование.
     * Экспорт в Excel и PDF можно выполнить несколькими способами:
@@ -170,7 +170,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        */
       exportDataSet: function(fileName, fileType, cfg, pageOrientation, methodName, isExcel){
          var
-            columns  = cFunctions.clone(this._options.columns),
+            columns  = coreClone(this._options.columns),
             records,
             rawData  = {s : [], d : []},
             fields = [], titles = [];
@@ -283,7 +283,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
        */
       getFullFilter : function(selectedNumRecords, eng){
          var dataSource = this._options.dataSource,
-            columns = cFunctions.clone(this._options.columns),
+            columns = coreClone(this._options.columns),
             fields = [],
             titles = [],
             filter,
@@ -298,7 +298,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             titles.push(columns[i].title || columns[i].field);
          }
          //openedPath[key] = true;
-         filter = cFunctions.clone(this._options.filter || {});
+         filter = coreClone(this._options.filter || {});
          if (this._options.hierField !== undefined){
             hierField = this._options.hierField;
             cfg[eng ? 'HierarchyField' : 'Иерархия'] = hierField;
@@ -307,7 +307,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
             if (openedPath && !Object.isEmpty(openedPath)) {
 
                filter[hierField] = filter[hierField] === undefined ? [this._options.root] : filter[hierField];
-               filter[hierField] = filter[hierField] instanceof Array ? cFunctions.clone(filter[hierField]) : [filter[hierField]];
+               filter[hierField] = filter[hierField] instanceof Array ? coreClone(filter[hierField]) : [filter[hierField]];
                for (i in openedPath) {
                   if (openedPath.hasOwnProperty(i) && Array.indexOf( filter[hierField], i) < 0) {
                      filter[hierField].push(i);

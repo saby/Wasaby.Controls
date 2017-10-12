@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.FormController', [
    "Core/Context",
-   "Core/core-functions",
+   "Core/core-clone",
    "Core/core-merge",
    "Core/CommandDispatcher",
    "Core/EventBus",
@@ -11,8 +11,8 @@ define('js!SBIS3.CONTROLS.FormController', [
    'Core/helpers/Hcontrol/doAutofocus',
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CORE.LoadingIndicator",
-   "js!WS.Data/Entity/Record",
-   "js!WS.Data/Source/SbisService",
+   "WS.Data/Entity/Record",
+   "WS.Data/Source/SbisService",
    "js!SBIS3.CONTROLS.Utils.InformationPopupManager",
    "js!SBIS3.CONTROLS.Utils.OpenDialog",
    "js!SBIS3.CONTROLS.TitleManager",
@@ -20,10 +20,10 @@ define('js!SBIS3.CONTROLS.FormController', [
    "i18n!SBIS3.CONTROLS.FormController",
    'css!SBIS3.CONTROLS.FormController'
 ],
-   function( cContext, cFunctions, cMerge, CommandDispatcher, EventBus, Deferred, IoC, cInstance, forAliveOnly, doAutofocus, CompoundControl, LoadingIndicator, Record, SbisService, InformationPopupManager, OpenDialogUtil, TitleManager) {
+   function( cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC, cInstance, forAliveOnly, doAutofocus, CompoundControl, LoadingIndicator, Record, SbisService, InformationPopupManager, OpenDialogUtil, TitleManager) {
    /**
     * Компонент, на основе которого создают диалог, данные которого инициализируются по записи.
-    * В частном случае компонент применяется для создания <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/'>диалогов редактирования записи</a>.
+    * В частном случае компонент применяется для создания <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/editing-dialog/'>диалогов редактирования записи</a>.
     *
     * @class SBIS3.CONTROLS.FormController
     * @extends SBIS3.CORE.CompoundControl
@@ -57,6 +57,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @event onReadModel Происходит при чтении записи из источника данных диалога редактирования.
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Запись, прочитанная из источника данных (см. {@link dataSource}).
+       * @param {Object} additionalData Дополнительные данных, необходимые для синхронизации action'a.
        * @see read
        * @see dataSource
        * @see onCreateModel
@@ -107,6 +108,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @event onDestroyModel Происходит при удалении записи из источника данных диалога.
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Запись, которая была удалена из источника данных (см. {@link dataSource}).
+       * @param {Object} additionalData Дополнительные данных, необходимые для синхронизации action'a.
        * @see destroy
        * @see dataSource
        * @see onCreateModel
@@ -118,6 +120,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @event onCreateModel Происходит при создании записи в источнике данных диалога редактирования.
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Запись, которая была создана в источнике данных.
+       * @param {Object} additionalData Дополнительные данных, необходимые для синхронизации action'a.
        * При создании часть полей может быть предустановлена с помощью опции {@link initValues}.
        * @see create
        * @see onDestroyModel
@@ -520,7 +523,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          return this._newRecord;
       },
       setDataSource: function (source, config) {
-         throw new Error('FormController: Задавать источник данных необходимо через опцию dataSource. Подробнее https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/create/');
+         throw new Error('FormController: Задавать источник данных необходимо через опцию dataSource. Подробнее https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/editing-dialog/create/');
       },
       /**
        * Устанавливает запись, по данным которой производится инициализация данных диалога.
@@ -683,10 +686,10 @@ define('js!SBIS3.CONTROLS.FormController', [
                eventName: 'onReadModel'
             },
             self = this,
-            key = (config && config.key) || this._options.key,
             readDeferred;
+         this._options.key = (config && config.key) || this._options.key;
 
-         readDeferred = this._dataSource.read(key, this._options.readMetaData).addCallback(function(record){
+         readDeferred = this._dataSource.read(this._options.key, this._options.readMetaData).addCallback(function(record){
             self.setRecord(record);
             return record;
          }).addBoth(function(data){
@@ -703,7 +706,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @param {Boolean} [config.hideErrorDialog=false] Не показывать сообщение при ошибке.
        * @param {Boolean} [config.hideIndicator=false] Не показывать индикатор сохранения.
        * @remark
-       * При сохранении записи происходит проверка всех <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/validation/'>валидаторов</a> диалога.
+       * При сохранении записи происходит проверка всех <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/validation/'>валидаторов</a> диалога.
        * Если на одном из полей ввода валидация будет не пройдена, то сохранение записи отменяется, и пользователь увидит сообщение "Некорректно заполнены обязательные поля!".
        * Если процесс сохранения записи происходит длительное время, то в пользовательском интерфейсе будет выведено сообщение "Подождите, идёт сохранение". Текст сообщения можно конфигурировать с помощью опции {@link indicatorSavingMessage}.
        * При успешном сохранении записи происходит событие {@link onUpdateModel}, а в случае ошибки - {@link onFail}.
@@ -844,7 +847,7 @@ define('js!SBIS3.CONTROLS.FormController', [
 
       _prepareSyncOperation: function(operation, commonConfig, operationConfig){
          var self = this,
-             config = cFunctions.clone(commonConfig || {});
+             config = coreClone(commonConfig || {});
          config = cMerge(commonConfig, operationConfig);
 
          if (!config.hideIndicator){
@@ -895,7 +898,7 @@ define('js!SBIS3.CONTROLS.FormController', [
       /**
        * Производит оповещение о том, что произошло событие диалога. Логика обработки события будет произведена на стороне {@link SBIS3.CONTROLS.OpenDialogAction}, а не в диалоге.
        * @remark
-       * Подрообнее об этом вы можете прочитать в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/synchronization/#event-processing'>Обработка события диалога редактирования в SBIS3.CONTROLS.OpenDialogAction</a>.
+       * Подрообнее об этом вы можете прочитать в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/editing-dialog/synchronization/#event-processing'>Обработка события диалога редактирования в SBIS3.CONTROLS.OpenDialogAction</a>.
        * @param {String} eventName Имя события.
        * @param {*} additionalData Данные, которые должны быть переданы в качестве аргументов события.
        * @command notify

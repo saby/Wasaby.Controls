@@ -1,11 +1,12 @@
 define('js!SBIS3.CONTROLS.LongOperationHistory',
    [
       'js!SBIS3.CORE.CompoundControl',
-      'js!SBIS3.CONTROLS.LongOperationsManager',
-      'js!SBIS3.CONTROLS.LongOperationHistoryItem',
-      'js!WS.Data/Source/DataSet',
-      'js!WS.Data/Collection/RecordSet',
-      'js!WS.Data/Entity/Record',
+      'js!SBIS3.CONTROLS.LongOperations.Manager',
+      'js!SBIS3.CONTROLS.LongOperations.HistoryItem',
+      'WS.Data/Source/DataSet',
+      'WS.Data/Collection/RecordSet',
+      'WS.Data/Entity/Record',
+      'Core/Sanitize',
       'html!SBIS3.CONTROLS.LongOperationHistory',
       'css!SBIS3.CONTROLS.LongOperationHistory',
       'js!SBIS3.CONTROLS.Browser'/*###'js!SBIS3.Engine.Browser'*/,
@@ -16,7 +17,7 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
       'js!SBIS3.CONTROLS.DataGridView'
    ],
 
-   function (CompoundControl, longOperationsManager, LongOperationHistoryItem, DataSet, RecordSet, Record, dotTplFn) {
+   function (CompoundControl, longOperationsManager, LongOperationHistoryItem, DataSet, RecordSet, Record, coreSanitize, dotTplFn) {
 
       /**
        * SBIS3.CONTROLS.LongOperationHistory
@@ -110,7 +111,7 @@ define('js!SBIS3.CONTROLS.LongOperationHistory',
                   id: failedOperation.get('id'),
                   //producer: failedOperation.get('producer'),
                   endedAt: new Date(failedOperation.get('startedAt').getTime() + (failedOperation.get('timeSpent') || 0) + (failedOperation.get('timeIdle') || 0)),
-                  errorMessage: failedOperation.get('resultMessage') || 'Ошибка',
+                  errorMessage: coreSanitize(failedOperation.get('resultMessage'), null/*Использовать опции по умолчанию*/) || 'Ошибка',
                   isFailed: true
                });
                data.assign([new Record({

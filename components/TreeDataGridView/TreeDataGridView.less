@@ -34,9 +34,9 @@
   .controls-TreeView__editArrow{
     display: inline-block;
     visibility: hidden;
-    position: @tree-view-editArrow-position;
+    position: relative;
     top: @tree-view-editArrow-top;
-    vertical-align: @tree-view-editArrow-align;
+    vertical-align: top;
   }
   &:hover {
     .controls-TreeView__expand--inside {
@@ -327,10 +327,14 @@
 
 .controls-TreeDataGridView__levelPaddingWrap {
    .flexbox();
-   flex-direction: row;
+   .flex-shrink(1);
    .controls-DataGridView__columnValue, .controls-TreeView__folderTitle {
       width: 100%;
       min-width: 0;
       .flex-shrink(1);
    }
+}
+
+.controls-TreePager.controls-Link {
+   font-size: @small-text-size;
 }

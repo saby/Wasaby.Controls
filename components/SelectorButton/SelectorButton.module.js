@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
    'Core/helpers/string-helpers',
    'js!SBIS3.CONTROLS.ToSourceModel',
    'js!SBIS3.CONTROLS.Utils.ItemsSelection',
-   'js!WS.Data/Collection/List',
+   'WS.Data/Collection/List',
    "js!SBIS3.CONTROLS.Action.SelectorAction",
    'css!SBIS3.CONTROLS.SelectorButton'
 ],
@@ -44,7 +44,8 @@ define('js!SBIS3.CONTROLS.SelectorButton',
        strHelpers,
        ToSourceModel,
        ItemsSelectionUtil,
-       List
+       List,
+       SelectorAction
        
     ) {
 
@@ -54,7 +55,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
     * Класса контрола "Кнопка выбора", который отображает выбранные записи в виде текстовых значений через запятую.
     * Контрол применяется в качестве альтернативы полю связи {@link SBIS3.CONTROLS.FieldLink}.
     *
-    * Подробнее о поле связи и кнопке выбора вы можете прочитать в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/'>Поле связи</a>.
+    * Подробнее о поле связи и кнопке выбора вы можете прочитать в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/textbox/field-link/'>Поле связи</a>.
     * Обратить внимание: метод <a href='https://wi.sbis.ru/docs/WSControls/Buttons/Button/methods/setCaption/'>setCaption</a>, устанавливающий текст на кнопке, не работает.
     * caption проставляется только по выбору записи по displayProperty или же строится по шаблону.
     *
@@ -94,6 +95,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
             _serverRender: true,
             _defaultItemContentTemplate: defaultItemContentTemplate,
             _defaultItemTemplate: defaultItemTemplate,
+            _selectorAction: null,
             /**
              * @cfg {String} Устанавливает текст на кнопке выбора, который будет отображен, если нет выбранных элементов.
              * @example
@@ -106,7 +108,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
              * @typedef {Array} dictionaries
              * @property {String} caption Название, которое будет использовано в меню выбора справочника. Опция неактуальна, когда установлен только один справочник.
              * @property {String} template Шаблон справочника. В качестве значения передают имя компонента.
-             * @property {Object} componentsOptions Опции, которые будут переданы в секцию _options (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/oop/'>ООП-обертка в веб-фреймворке WS</a>) компонента справочника.
+             * @property {Object} componentsOptions Опции, которые будут переданы в секцию _options (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/oop/'>ООП-обертка в веб-фреймворке WS</a>) компонента справочника.
              * @translatable caption
              */
             /**
@@ -134,7 +136,11 @@ define('js!SBIS3.CONTROLS.SelectorButton',
             /**
              * @cfg {Boolean} Использовать для выбора {@link SBIS3.CONTROLS.Action.SelectorAction}
              */
-            useSelectorAction: false
+            useSelectorAction: false,
+            /**
+             * @cfg {Boolean} Скрывает крестик справа от текста.
+             */
+            withoutCross: false
          }
       },
       $constructor: function() {
@@ -161,9 +167,13 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          }
       },
       
-      _modifyOptions: function() {
-         var opts = SelectorButton.superclass._modifyOptions.apply(this, arguments);
-         opts.cssClassName += ' controls-SelectorButton';
+      _modifyOptions: function(parOpts, parsedOptions, attrToMerge) {
+         var opts = SelectorButton.superclass._modifyOptions.apply(this, arguments),
+             className = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || '';
+         
+         if (className.indexOf('controls-SelectorButton__withoutCross') !== -1) {
+            opts.withoutCross = true;
+         }
    
          if(opts.selectedItem && cInstance.instanceOfModule(opts.selectedItem, 'WS.Data/Entity/Model')) {
             opts.items = new List({items: [opts.selectedItem]});
@@ -198,7 +208,10 @@ define('js!SBIS3.CONTROLS.SelectorButton',
    
       _toggleEmptyData: function(empty) {
          var itemsContainer = this._getItemsContainer();
-         this._container.find('.controls-SelectorButton__cross').toggleClass('ws-hidden', empty);
+         
+         if(!this._options.withoutCross) {
+            this._container.find('.controls-SelectorButton__cross').toggleClass('ws-hidden', empty);
+         }
          
          if(empty) {
             itemsContainer.text(this.getProperty('defaultCaption')).attr('title', '');
@@ -277,6 +290,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
             if(this.getProperty('useSelectorAction')) {
                cfg.multiselect = this.getMultiselect();
                cfg.selectedItems = this.getSelectedItems();
+               cfg.opener = this; //Т.к. selectorAction создаётся из кода, и ему не назначается parent (так надо, см. коммент. ниже)
                if(this._notify('onSelectorClick', cfg) !== false) {this._getSelectorAction().execute(cfg)}
             } else {
                this._showChooser(cfg.template, cfg.componentOptions);
@@ -284,9 +298,21 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          }
       },
 
-      _getSelectorAction: memoize(function() {
-         return this.getChildControlByName('SelectorButtonSelectorAction');
-      },'_getSelectorAction'),
+      _getSelectorAction: function() {
+         if (!this._selectorAction) {
+            /* В AreaAbstract сейчас такое поведение:
+               если у compoundControl'a ни один дочерний компонент не принимает фокус,
+               то и сам контрол не принимает фокус ( Шипин ). Если action положить в вёрстку,
+               то он зарегистрируется, как дочерний контрол для selectorButton'a и никогда не примет фокус,
+               поэтому создаю action кодом, чтобы он не был дочерним для SelectorButton'a.
+               (По словам Шипина, в AreaAbstract это починить очень дорого). */
+            this._selectorAction = new SelectorAction({
+               mode: this._getOption('selectMode'),
+               visible: false
+            });
+         }
+         return this._selectorAction;
+      },
 
       /**
        * Установить набор диалогов выбора для поля связи
@@ -341,6 +367,13 @@ define('js!SBIS3.CONTROLS.SelectorButton',
       },
       _setSelectedItems: function () {
          
+      },
+      destroy: function () {
+         if (this._selectorAction) {
+            this._selectorAction.destroy();
+            this._selectorAction = null;
+         }
+         SelectorButton.superclass.destroy.call(this);
       }
    });
 

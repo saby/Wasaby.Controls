@@ -6,7 +6,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
    'js!SBIS3.CONTROLS.RichEditorToolbarBase',
    'tmpl!SBIS3.CONTROLS.RichEditorRoundToolbar',
    'js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
-   'js!WS.Data/Di',
+   'WS.Data/Di',
    'js!SBIS3.CONTROLS.MenuIcon',
    'js!SBIS3.CONTROLS.IconButton',
    'css!SBIS3.CONTROLS.RichEditorRoundToolbar',
@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
       /**
        * @class SBIS3.CONTROLS.RichEditorRoundToolbar
        * @extends SBIS3.CONTROLS.RichEditorToolbarBase
-       * @author Борисов П.С.
+       * @author Спирин Виктор Алексеевич
        * @public
        * @control
        */

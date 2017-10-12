@@ -1,4 +1,5 @@
 #!groovy
+echo "Задаем параметры сборки"
 properties([
     disableConcurrentBuilds(),
     buildDiscarder(
@@ -17,11 +18,11 @@ properties([
             description: '',
             name: 'ws_data_revision'),
         string(
-            defaultValue: 'rc-3.17.150',
+            defaultValue: 'rc-3.17.200',
             description: '',
             name: 'branch_engine'),
         string(
-            defaultValue: 'rc-3.32',
+            defaultValue: 'rc-3.34',
             description: '',
             name: 'branch_atf'),
         choice(
@@ -42,10 +43,13 @@ if ( "${env.BUILD_NUMBER}" != "1" && params.run_reg == false && params.run_int =
     }
 
 node('controls') {
-    def version = "3.17.150"
+    echo "Назначем версию и определяем рабочую директорию"
+    def version = "3.17.200"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
+        echo "Чистим рабочую директорию"
         deleteDir()
+        echo "Назначаем переменную"
         def ver = version.replaceAll('.','')
         def python_ver = 'python3'
         def SDK = ""
@@ -60,11 +64,11 @@ node('controls') {
             regr = true
             unit = true
         }
-
+        echo "Выкачиваем хранилища"
         stage("Checkout"){
             parallel (
                 checkout1: {
-                    // Контролы
+                    echo "Выкачиваем controls "
                     dir(workspace) {
                         checkout([$class: 'GitSCM',
                         branches: [[name: env.BRANCH_NAME]],
@@ -79,6 +83,7 @@ node('controls') {
                                 url: 'git@git.sbis.ru:sbis/controls.git']]
                         ])
                     }
+                    echo "Обновляемся из rc-"
                     dir("./controls"){
                         sh """
                         git fetch
@@ -87,7 +92,7 @@ node('controls') {
                     }
                     parallel (
                         checkout_atf:{
-                            // Выкачиваем atf
+                            echo " Выкачиваем atf"
                             dir("./controls/tests/int") {
                             checkout([$class: 'GitSCM',
                                 branches: [[name: branch_atf]],
@@ -104,7 +109,7 @@ node('controls') {
                             }
                         },
                         checkout_engine: {
-                            // Выкачиваем engine
+                            echo " Выкачиваем engine"
                             dir("./controls/tests"){
                                 checkout([$class: 'GitSCM',
                                 branches: [[name: branch_engine]],
@@ -123,8 +128,8 @@ node('controls') {
                     )
                 },
                 checkout2: {
+                    echo " Выкачиваем сборочные скрипты"
                     dir(workspace) {
-                        // Выкачиваем platform
                         checkout([$class: 'GitSCM',
                         branches: [[name: "rc-${version}"]],
                         doGenerateSubmoduleConfigurations: false,
@@ -155,7 +160,7 @@ node('controls') {
                 },
                 checkout3: {
                     dir(workspace) {
-                        // Выкачиваем cdn
+                        echo "Выкачиваем cdn"
                         checkout([$class: 'GitSCM',
                         branches: [[name: '1.0']],
                         doGenerateSubmoduleConfigurations: false,
@@ -171,7 +176,7 @@ node('controls') {
                     }
                 },
                 checkout4: {
-                    // Выкачиваем demo_stand
+                    echo "Выкачиваем demo_stand"
                     dir(workspace) {
                         checkout([$class: 'GitSCM',
                         branches: [[name: 'master']],
@@ -190,17 +195,17 @@ node('controls') {
             )
         }
         stage("Сборка компонент"){
-            // Определяем SDK
+            echo " Определяем SDK"
             dir("./constructor/Constructor/SDK") {
                 SDK = sh returnStdout: true, script: "${python_ver} getSDK.py ${version} --conf linux_x86_64 -b"
                 SDK = SDK.trim()
                 echo SDK
             }
-            // Копируем /demo_stand/client в /tests/stand/client
+            echo " Копируем /demo_stand/client в /tests/stand/client"
             sh "cp -rf ./demo_stand/client ./controls/tests/stand"
             parallel(
                 ws: {
-                    // Выкачиваем ws для unit тестов и если указан сторонний бранч
+                    echo "Выкачиваем ws для unit тестов и если указан сторонний бранч"
                     if ( unit || "${params.ws_revision}" != "sdk" ){
                         ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
                         dir(workspace) {
@@ -220,7 +225,7 @@ node('controls') {
                     }
                 },
                 ws_data: {
-                    // Выкачиваем ws.data для unit тестов и если указан сторонний бранч
+                    echo "Выкачиваем ws.data для unit тестов и если указан сторонний бранч"
                     if ( unit || "${params.ws_data_revision}" != "sdk" ){
                         def ws_data_revision = params.ws_data_revision
                         ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
@@ -241,22 +246,22 @@ node('controls') {
                     }
                 }
             )
-            // Собираем controls
+            echo "Собираем controls"
             dir("./controls"){
                 sh "${python_ver} ${workspace}/constructor/build_controls.py ${workspace}/controls ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
             }
             dir(workspace){
-                // Собираем ws если задан сторонний бранч
+                echo "Собираем ws если задан сторонний бранч"
                 if ("${params.ws_revision}" != "sdk"){
                     sh "rm -rf ${workspace}/WIS-git-temp2"
                     sh "mkdir ${workspace}/WIS-git-temp2"
                     sh "${python_ver} ${workspace}/constructor/build_ws.py ${workspace}/WIS-git-temp 'release' ${workspace}/WIS-git-temp2 ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
-                    // Добавляем в items
+                    echo "Добавляем в items"
                     items = items + ", ws:${workspace}/WIS-git-temp2"
                 }
-                // Собираем ws.data только когда указан сторонний бранч
+                echo "Собираем ws.data только когда указан сторонний бранч"
                 if ("${params.ws_data_revision}" != "sdk"){
-                    // Добавляем в items
+                    echo "Добавляем в items"
                     items = items + ", ws_data:${workspace}/ws_data"
                 }
             }
@@ -264,6 +269,7 @@ node('controls') {
         }
         stage("Unit тесты"){
             if ( unit ){
+                echo "Запускаем юнит тесты"
                 dir(workspace){
                     sh "cp -rf ./WIS-git-temp ./controls/sbis3-ws"
                     sh "cp -rf ./ws_data/WS.Data ./controls/components/"
@@ -292,6 +298,7 @@ node('controls') {
             }
         }
         stage("Разворот стенда"){
+            echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
             // Создаем sbis-rpc-service.ini
             def host_db = "test-autotest-db1"
             def port_db = "5432"
@@ -426,6 +433,7 @@ node('controls') {
         stage("Запуск тестов интеграционных и верстки"){
             parallel (
                 int_test: {
+                    echo "Запускаем интеграционные тесты"
                     stage("Инт.тесты"){
                         if ( inte ){
                             def site = "http://${NODE_NAME}:30001"
@@ -442,6 +450,7 @@ node('controls') {
                 },
                 reg_test: {
                     stage("Рег.тесты"){
+                        echo "Запускаем тесты верстки"
                         if ( regr ){
                             sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
                             dir("./controls/tests/reg"){
@@ -461,7 +470,7 @@ node('controls') {
             sudo chmod -R 0777 /home/sbis/Controls1
         """
         stage("Результаты"){
-            //выкладываем результаты в зависимости от включенных тестов "all only_reg only_int only_unit"
+            echo "выкладываем результаты в зависимости от включенных тестов 'all only_reg only_int only_unit'"
             if ( regr ){
                 dir(workspace){
                     publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './controls/tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])

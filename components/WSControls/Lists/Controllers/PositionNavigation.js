@@ -4,7 +4,7 @@
 define('js!WSControls/Lists/Controllers/PositionNavigation',
    [
       'js!WSControls/Lists/Controllers/PageNavigation',
-      'js!WS.Data/Source/SbisService',
+      'WS.Data/Source/SbisService',
       'js!WSControls/Lists/Controllers/INavigation'
    ],
    function (PageNavigation, SbisService, INavigation) {
