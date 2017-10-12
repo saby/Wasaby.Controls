@@ -160,6 +160,35 @@ input[type="reset"]::-moz-focus-inner {
   }
 }
 
+/**
+ ВНИМАНИЕ! WARNING! ACHTUNG! UWAGA!
+ Класс .asLink используется прикладными разработчиками, когда они хотят сделать что-то, похожее на ссылку по общему дизайну.
+ Это официальное решение, нельзя его ломать.
+ .asLink должен вести себя правильно в любом состоянии
+*/
+.asLink {
+  font-size: @link-font-size;
+  background-color: transparent ! important;
+  font-family: @default-font-name;
+  color: @link-text-color;
+  cursor: pointer;
+  text-decoration: none;
+}
+.asLink[disabled='disabled'] {
+  cursor: default;
+  color: @link-disabled-text-color;
+  text-decoration: none;
+}
+.ws-is-desktop-platform .asLink[disabled='disabled']:hover {
+  color: @link-disabled-text-color;
+  text-decoration: none;
+}
+
+.ws-is-desktop-platform .asLink:hover, .asLink:active {
+  text-decoration: underline;
+  color: @link-hover-text-color;
+}
+
 .controls-ListView__withoutMarker {
    .controls-ListView__item__selected,
    .controls-ListView__item__multiSelected {
