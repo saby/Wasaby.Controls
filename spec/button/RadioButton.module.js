@@ -1,9 +1,9 @@
-define('js!SBIS3.SPEC.input.RadioButton', [
+define('js!SBIS3.SPEC.button.RadioButton', [
 ], function() {
 
    /**
     * Кнопка.
-    * @class SBIS3.SPEC.input.RadioButton
+    * @class SBIS3.SPEC.button.RadioButton
     * @extends SBIS3.SPEC.Control
     * @mixes SBIS3.SPEC.interface.IButton
     * @mixes SBIS3.SPEC.interface.ICheckable

@@ -1,9 +1,9 @@
-define('js!SBIS3.SPEC.input.Switcher', [
+define('js!SBIS3.SPEC.button.Switcher', [
 ], function() {
 
    /**
     * Кнопка.
-    * @class SBIS3.SPEC.input.Switcher
+    * @class SBIS3.SPEC.button.Switcher
     * @extends SBIS3.SPEC.Control
     * @mixes SBIS3.SPEC.interface.IButton
     * @mixes SBIS3.SPEC.interface.ICheckable

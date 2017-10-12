@@ -1,9 +1,9 @@
-define('js!SBIS3.SPEC.input.ToggleButton', [
+define('js!SBIS3.SPEC.button.ToggleButton', [
 ], function() {
 
    /**
     * Кнопка.
-    * @class SBIS3.SPEC.input.ToggleButton
+    * @class SBIS3.SPEC.button.ToggleButton
     * @extends SBIS3.SPEC.Control
     * @mixes SBIS3.SPEC.interface.IButton
     * @mixes SBIS3.SPEC.interface.ICheckable

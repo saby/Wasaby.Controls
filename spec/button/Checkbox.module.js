@@ -1,9 +1,9 @@
-define('js!SBIS3.SPEC.input.Checkbox', [
+define('js!SBIS3.SPEC.button.Checkbox', [
 ], function() {
 
    /**
     * Кнопка.
-    * @class SBIS3.SPEC.input.Checkbox
+    * @class SBIS3.SPEC.button.Checkbox
     * @extends SBIS3.SPEC.Control
     * @mixes SBIS3.SPEC.interface.IButton
     * @mixes SBIS3.SPEC.interface.ICheckable
