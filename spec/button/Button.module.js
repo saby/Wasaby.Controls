@@ -5,7 +5,7 @@ define('js!SBIS3.SPEC.button.Button', [
     * Кнопка.
     * @class SBIS3.SPEC.button.Button
     * @extends SBIS3.SPEC.Control
-    * @mixes SBIS3.SPEC.interface.IButton
+    * @mixes SBIS3.SPEC.interface.ICaption
     * @mixes SBIS3.SPEC.interface.IActivated
     * @mixes SBIS3.SPEC.interface.IIcon
     * @mixes SBIS3.SPEC.interface.IStyleButton
