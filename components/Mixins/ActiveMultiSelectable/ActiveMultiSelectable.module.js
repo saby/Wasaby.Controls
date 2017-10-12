@@ -1,7 +1,7 @@
 /**
  * Created by am.gerasimov on 26.10.2015.
  */
-define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['js!WS.Data/Entity/Model', 'Core/core-instance'], function(Model, cInstance) {
+define('js!SBIS3.CONTROLS.ActiveMultiSelectable', ['WS.Data/Entity/Model', 'Core/core-instance'], function(Model, cInstance) {
 
    /**
     * Миксин, добавляющий поведение хранения одного или нескольких выбранных элементов

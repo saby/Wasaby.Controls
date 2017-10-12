@@ -1,4 +1,4 @@
-define(['js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', 'js!WS.Data/Collection/RecordSet'], function (DetailsList, RecordSet) {
+define(['js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', 'WS.Data/Collection/RecordSet'], function (DetailsList, RecordSet) {
 
    'use strict';
 
