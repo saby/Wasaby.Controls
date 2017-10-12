@@ -13,13 +13,12 @@ define('js!SBIS3.SPEC.Input.DateTime', [
     * Можно вводить только значения особого формата даты.
     * @class SBIS3.SPEC.Input.DateTime
     * @extends SBIS3.SPEC.Control
-    * @mixes SBIS3.SPEC.Input.IInputDateTime
+    * @mixes SBIS3.SPEC.interface.IInputDateTime
+    * @mixes SBIS3.SPEC.interface.IValidation
     * @control
     * @public
     * @category Inputs
     */
-
-
 
    /**
     * @name SBIS3.SPEC.Input.DateTime#mask
@@ -61,14 +60,5 @@ define('js!SBIS3.SPEC.Input.DateTime', [
     * @variant 'YY-MM-DD HH:II'
     * @variant 'YYYY'
     * @variant 'MM/YYYY'
-    */
-   /**
-    * @event SBIS3.SPEC.Input.DateTime#onValueChange Происходит при изменении даты в поле ввода.
-    * @param {Date} value Дата.
-    */
-
-   /**
-    * @event SBIS3.SPEC.Input.DateTime#onInputFinish Происходит при завершении ввода.
-    * @param {Date} value Дата.
     */
 });
