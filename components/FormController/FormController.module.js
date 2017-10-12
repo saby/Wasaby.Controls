@@ -690,6 +690,7 @@ define('js!SBIS3.CONTROLS.FormController', [
          this._options.key = (config && config.key) || this._options.key;
 
          readDeferred = this._dataSource.read(this._options.key, this._options.readMetaData).addCallback(function(record){
+            self._newRecord = false;
             self.setRecord(record);
             return record;
          }).addBoth(function(data){
