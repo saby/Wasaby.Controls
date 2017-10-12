@@ -1,0 +1,44 @@
+<div class="controls-SliderInput{{?it.bigPoint}} controls-Slider__big{{?}}">
+   <div class="controls-Slider">
+      <div class="controls-Slider__wrapper">
+         <div class="controls-Slider__mainSlider{{?it.bigPoint}} controls-Slider__big{{?}}">
+            <div class="controls-Slider__point controls-Slider__point__start{{?it.single}} ws-hidden{{?}}"></div>
+            <div class="controls-Slider__point controls-Slider__point__end"></div>
+            <div class="controls-Slider__line__wrapper"><div class="controls-Slider__line controls-Slider__line__empty"></div></div>
+            <div class="controls-Slider__line__wrapper"><div class="controls-Slider__line controls-Slider__line__full"></div></div>
+         </div>
+      </div>
+      {{?it.scale}}
+         <div class="controls-Slider__scale">
+            {{~it.scale: value}}
+            <span class="controls-Slider__segment">{{=value}}</span>
+            {{~}}
+         </div>
+      {{?}}
+   </div>
+   <div class="controls-SliderInput__inputs">
+      {{?it.startLabel}}
+         <span class="controls-SliderInput__label controls-SliderInput__label__start">{{=it.startLabel}}</span>
+      {{?}}
+      <component class="controls-SliderInput__input controls-SliderInput__input__start" data-component="SBIS3.CONTROLS.NumberTextBox" name="StartTextBox" >
+         <option name="text">{{=it.startValue}}</option>
+         <option name="startCharacter">0</option>
+         <option name="delimiters">true</option>
+         <option name="placeholder" type="string">{{=it.minValue}}</option>
+         <option name="decimals">{{=it.decimals}}</option>
+      </component>
+      {{?it.middleLabel}}
+         <span class="controls-SliderInput__label controls-SliderInput__label__middle"> {{=it.middleLabel}} </span>
+      {{?}}
+      <component class="controls-SliderInput__input controls-SliderInput__input__end" data-component="SBIS3.CONTROLS.NumberTextBox" name="EndTextBox" >
+         <option name="text">{{=it.endValue}}</option>
+         <option name="startCharacter">0</option>
+         <option name="delimiters">true</option>
+         <option name="placeholder" type="string">{{=it.maxValue}}</option>
+         <option name="decimals">{{=it.decimals}}</option>
+      </component>
+      {{?it.endLabel}}
+         <span class="controls-SliderInput__label controls-SliderInput__label__end"> {{=it.endLabel}} </span>
+      {{?}}
+   </div>
+</div>
