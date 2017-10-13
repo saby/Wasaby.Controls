@@ -48,6 +48,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Entry',
          title: 'string',
          id: ['string', 'number'],
          producer: 'string',
+         tabKey: 'string',
          startedAt: 'Date',
          timeSpent: 'number',
          timeIdle: 'number',
@@ -204,7 +205,6 @@ define('js!SBIS3.CONTROLS.LongOperations.Entry',
             if (!this.progressCurrent && this.status === STATUSES.ended) {
                this.progressCurrent = this.progressTotal;
             }
-            this.tabKey = null;
          },
 
          /**
