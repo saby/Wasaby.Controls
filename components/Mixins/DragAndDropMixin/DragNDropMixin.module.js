@@ -3,7 +3,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
     "Core/EventBus",
     "js!SBIS3.CONTROLS.DragObject",
     "WS.Data/Di",
-    "Core/core-instance"
+    "Core/core-instance",
+    'css!SBIS3.CONTROLS.DragNDropMixin'
 ], function ( EventBus,DragObject, Di, cInstance) {
     'use strict';
     /**
@@ -114,7 +115,12 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 /**
                  * @cfg {Boolean} Признак, возможножности перемещения элементов с помощью DragNDrop.
                  */
-                itemsDragNDrop: true
+                itemsDragNDrop: true,
+                /**
+                 * @cfg {Boolean} Нужно ли создаваьб оверлей над которым будет двигается курсор перемещения.
+                 * @remark нужно использовать если на странице есть iframe, с которым не надо взаимодействовать.
+                 */
+                useDragOverlay: false
             },
             /**
              * @member {Number} Константа, показывающая на сколько пикселей надо сдвинуть мышь, чтобы началось перемещение.
@@ -338,7 +344,9 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 DragObject.onDragHandler(e);
                 if (this._beginDragHandler(DragObject, e) !== false) {
                     if (this._notify('onBeginDrag', DragObject, e) !== false) {
-
+                        if (this._options.useDragOverlay) {
+                           $('body').append('<div class="controls-DragNDropMixin-overlay"/>');
+                        }
                         this._showAvatar(e);
                         DragObject.setOwner(this);
                         DragObject.setDragging(true);
@@ -392,6 +400,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
             //После опускания мыши, ещё раз позовём обработку перемещения, т.к. в момент перед отпусканием мог произойти
             //переход границы между сменой порядкового номера и перемещением в папку, а обработчик перемещения не вызваться,
             //т.к. он срабатывают так часто, насколько это позволяет внутренняя система взаимодействия с мышью браузера.
+         $('.controls-DragNDropMixin-overlay').remove();
             if (droppable || e.type == "touchend") { //запускаем только если сработало внутри droppable контейнера, иначе таргета нет и нечего обновлять
                 //touchend всегда срабатывает не над droppable контейнером, так что для него запускаем всегда
                 this._updateDragTarget(DragObject, e);
