@@ -158,11 +158,13 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             this._saveOldText();
 
             editorComponent.subscribe('onFocusOut', function(event, destroyed, focusedControl){
-               if (!self._isEditInGroup && self.validate() && !self._isEditorChild(focusedControl, this)){
-                  if (this.getText() !== self._oldText){
-                     self._editorFocusOutHandler(true);
-                  } else {
-                     self._editorFocusOutHandler(false);
+               if (!self._options.enableControlPanel) {
+                  if (!self._isEditInGroup && self.validate() && !self._isEditorChild(focusedControl, this)){
+                     if (this.getText() !== self._oldText){
+                        self._editorFocusOutHandler(true);
+                     } else {
+                        self._editorFocusOutHandler(false);
+                     }
                   }
                }
             });
