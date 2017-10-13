@@ -12,14 +12,16 @@
 @FilterPanelButtonHoverLeftOpen:          url('img/FilterPanelButton.svg') -3.75rem -0.86rem;
 @closeButtonImage:                        url('img/areaBigCloseButton.png') 0 0;
 @closeButtonImageHover:                   url('img/areaCloseButton.png') 0 -3rem;
+@button-text-shadow:                      0px 1px 0px rgba(0, 0, 0, 0.35);
+@button-shadow:                           0px 1px 4px rgba(0, 0, 0, 0.5);
 // Normal default button
-@button-border:                           @default-border-width solid @default-border-color-second;
+@button-border:                           @button-border-width solid @default-border-color-second;
 // Normal primary button
-@button-primary-text-color:               @button-text-color;
 @button-primary-border:                   @default-border-width solid @button-primary-border-color;
 @button-primary-active-border:            @default-border-width solid #d94700;
 // Normal disabled button
-@button-disabled-border:                  @default-border-width solid @disabled-color;
+@button-disabled-border:                  @button-border-width solid @button-bg-color;
+@button-checked-border:                   @button-border-width solid @button-checked-border-color;
 // Normal primary button
 @button-primary-checked-border:           @button-primary-active-border;
 @switcher-border:                         @default-border-width solid #2C4458;
