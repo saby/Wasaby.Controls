@@ -5,10 +5,10 @@ define('js!SBIS3.SPEC.button.Button', [
     * Кнопка.
     * @class SBIS3.SPEC.button.Button
     * @extends SBIS3.SPEC.Control
-    * @mixes SBIS3.SPEC.interface.ICaption
-    * @mixes SBIS3.SPEC.interface.IClick
-    * @mixes SBIS3.SPEC.interface.IIcon
-    * @mixes SBIS3.SPEC.interface.IButtonStyle
+    * @mixes SBIS3.SPEC.button.interface.ICaption
+    * @mixes SBIS3.SPEC.button.interface.IClick
+    * @mixes SBIS3.SPEC.button.interface.IIcon
+    * @mixes SBIS3.SPEC.button.interface.IButtonStyle
     * @control
     * @public
     * @category Buttons
