@@ -2,7 +2,10 @@
 @default-height:               24px;
 @default-height-big:           48px;
 @default-border-width:         1px;
-@default-font-size:            14px;
+@default-text-size:            14px;
+@small-text-size:              12px;
+@large-text-size:              15px;
+@huge-text-size:               17px;
 @default-icon-size:            16px;
 @default-icon-size-medium:     24px;
 @default-icon-size-large:      32px;
@@ -13,8 +16,12 @@
 @default-input-padding:        @default-padding;
 //textbox
 @text-box-height:                 @default-height;
-@text-box-font-size:              @default-font-size;
+@text-box-height-large:           @default-height;//на данный момент большое и малое поле ввода не различаются в теме online
+@text-box-font-size:              @default-text-size;
+@text-box-font-size-large:        @default-text-size;//на данный момент большое и малое поле ввода не различаются в теме online
+@text-box-line-height:            @default-base-line-height;
 @text-box-input-padding:          0 @default-input-padding;
+@text-box-input-padding-large:    0;//на данный момент большое и малое поле ввода не различаются в теме online
 @text-box-information-icon-size:  13px;//по стандарту
 @text-box-border-radius:          0px;
 //text-area
@@ -27,7 +34,7 @@
 @combo-box-shadow-display:        block;
 //suggest-text-box
 @suggest-text-box-icon-size:                @default-icon-size;
-@suggest-text-box-icon-cross-padding:       0 @default-padding-small;
+@suggest-text-box-icon-cross-padding:       0 @default-padding;
 //suggest-text-box
 @fieldLink-link-cross-size:       @default-icon-size;
 //search-form

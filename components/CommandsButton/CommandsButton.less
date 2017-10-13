@@ -10,6 +10,8 @@
    z-index:10;
    position: absolute;
    background-image: none;
+   background-color: transparent;
+   box-shadow: none !important;
    width: @commands-button-close-button-size;
    height: @commands-button-close-button-size;
    font-family: @commands-button-close-font-family;
@@ -18,12 +20,15 @@
    right: 0;
    color: @commands-button-close-icon-color !important;
 
+
    &:before {
       position: absolute;
       top: @commands-button-close-button-top;
+      content: "\e801";
    }
    &:hover {
       background-image: none;
+      background-color: transparent;
    }
 }
 
