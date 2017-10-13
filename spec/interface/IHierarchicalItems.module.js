@@ -2,7 +2,7 @@ define('js!SBIS3.SPEC.interface.IHierarchicalItems', [
 ], function() {
 
    /**
-    * Интерфейс работы списков.
+    * Интерфейс для работы иерархических списков.
     * @mixin SBIS3.SPEC.interface.IHierarchicalItems
     * @public
     */
