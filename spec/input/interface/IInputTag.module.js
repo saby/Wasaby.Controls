@@ -2,14 +2,19 @@ define('js!SBIS3.SPEC.interface.IInputTag', [
 ], function() {
 
    /**
-    * Интерфейс работы тегами в полях ввода.
+    * Интерфейс работы c тегами в полях ввода.
     * @mixin SBIS3.SPEC.interface.IInputTag
     * @public
     */
 
    /**
     * @name SBIS3.SPEC.interface.IInputTag#tagStyle
-    * @cfg {String | undefined} primary, done, attention, error, info
+    * @cfg {String | undefined} Набор цветов для иконки
+    * @variant primary #587AB0.
+    * @variant done #72BE44.
+    * @variant attention #FEC63F.
+    * @variant error #EF463A.
+    * @variant info #999999.
     */
 
    /**

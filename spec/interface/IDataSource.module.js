@@ -2,7 +2,8 @@ define('js!SBIS3.SPEC.interface.IDataSource', [
 ], function() {
 
    /**
-    * Интерфейс работы списков.
+    * Интерфейс для работы с источником данных.
+    * Необходимо использовать в компонентах, использующих источники данных
     * @mixin SBIS3.SPEC.interface.IDataSource
     * @public
     */
