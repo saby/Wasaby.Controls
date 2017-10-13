@@ -825,38 +825,65 @@ define(
          event.preventDefault();
       },
 
-      _keyDownBindAndroid: function(event){
-         var textDiff = this._getTextDiff(),
-             character = textDiff['char'],
-             position = textDiff.position,
-             groupNum = this._getCursor(true)[0];
+      _keyDownBindAndroid: function (event) {
+         var textGroups = this._getTextGroupAndroid(),
+             isRemove = this.getText().length > this._inputField.text().length || !this.getText().length,
+             nativeCursorPosition = this._getCursor(true),
+             textDiff = this._getTextDiff(textGroups.oldText, textGroups.newText, textGroups.maskGroups, isRemove);
+
          this._setText(this._options.text);
 
-         this._keyPressBindHandler(event, character, position, groupNum);
-         event.preventDefault();
+         //Если в доме длина текста меньше, чем в свойстве - значит только что удалили символ
+         if (isRemove) {
+            //если oldText.length !== newText.length значит удалили сепаратор, который удалять нельзя. в этом случае просто восстанавливаем текст, который был до удаления
+            if (textGroups.oldText.length === textGroups.newText.length) {
+               _moveCursor(_getContainerByIndex.call(this, nativeCursorPosition[0]), nativeCursorPosition[1] + 1);
+            }
+            else {
+               _moveCursor(_getContainerByIndex.call(this, nativeCursorPosition[0]), nativeCursorPosition[1]);
+            }
+            this._clearCommandHandler('backspace');
+         }
+         else {
+            this._keyPressBindHandler(event, textDiff.character, textDiff.position, textDiff.groupNum);
+         }
       },
 
-      _getTextDiff: function(){
-         var splitRegExp = this._getSplitterRegExp(),
-            oldText = this._options.text ? this._options.text.split(splitRegExp)  : this._getClearText().split(splitRegExp),
-            newText = this._inputField.text().split(splitRegExp),
-            maskGroups = this._getMask().split(splitRegExp);
-
+      _getTextDiff: function(oldText, newText, maskGroups, isRemove){
          for (var i = 0, l = newText.length; i < l; i++) {
             if (oldText[i].length !== newText[i].length){
                for (var j = 0; j < newText[i].length; j++){
                   if (oldText[i][j] !== newText[i][j]){
-                     return {
-                        'char': newText[i][j],
-                        // проверка на возможность ввода символа в группу,
-                        // если в данную группу нельзя ввести символы, то вводим в первую позицию след разрешенной группы
-                        position: maskGroups[i].replace(/[L,l,d,x]/g,'').length === maskGroups[i].length ? 0 : j
-                     }
+                     return this._getDiffInfo(oldText, newText, maskGroups, isRemove, i, j);
                   }
                }
             }
          }
+
+         if (isRemove) {
+            //Удалили последний символ в группе
+            return this._getDiffInfo(oldText, newText, maskGroups, isRemove, --i, j);
+         }
          return false;
+      },
+
+      _getDiffInfo: function(oldText, newText, maskGroups, isRemove, i, j) {
+         return {
+            character: isRemove ? oldText[i][j] : newText[i][j],
+            // проверка на возможность ввода символа в группу,
+            // если в данную группу нельзя ввести символы, то вводим в первую позицию след разрешенной группы
+            position: maskGroups[i].replace(/[L,l,d,x]/g,'').length === maskGroups[i].length ? 0 : j,
+            groupNum: this._getCursor(true)[0]
+         }
+      },
+
+      _getTextGroupAndroid: function() {
+         var splitRegExp = this._getSplitterRegExp();
+         return {
+            oldText: this._options.text ? this._options.text.split(splitRegExp)  : this._getClearText().split(splitRegExp),
+            newText: this._inputField.text().split(splitRegExp),
+            maskGroups: this._getMask().split(splitRegExp)
+         }
       },
 
       _getSplitterRegExp: function(){
