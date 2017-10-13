@@ -1,13 +1,14 @@
 define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
     'js!SBIS3.CONTROLS.FilterPanelChooser.List',
     'Core/CommandDispatcher',
-    'Core/core-functions',
+    'Core/core-clone',
+    'Core/core-merge',
     'Core/core-instance',
-    'js!WS.Data/Collection/RecordSet',
+    'WS.Data/Collection/RecordSet',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList/resources/FilterPanelChooserDictionaryFooter',
     'js!SBIS3.CONTROLS.Action.SelectorAction',
     'css!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList'
-], function(FilterPanelChooserList, CommandDispatcher, cFunctions, cInstance, RecordSet, footerTpl, SelectorAction) {
+], function(FilterPanelChooserList, CommandDispatcher, coreClone, coreMerge, cInstance, RecordSet, footerTpl, SelectorAction) {
 
     'use strict';
 
@@ -105,7 +106,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
          * @command showDictionary
          */
         _showDictionary: function(meta) {
-            meta = cFunctions.merge(cFunctions.clone(this._options.dictionaryOptions), meta || {});
+            meta = coreMerge(coreClone(this._options.dictionaryOptions), meta || {});
             meta.multiselect = true;
             meta.selectedItems = this._getListView().getSelectedItems();
             this._getSelectorAction().execute(meta);

@@ -237,6 +237,7 @@ define('js!SBIS3.CONTROLS.PickerMixin', [
          return Boolean(this._picker && this._picker.isVisible());
       },
 
+
       _setPickerContent: function () {
          /*Method must be implemented*/
       },

@@ -4,16 +4,16 @@
 
   .controls-MonthPicker__field {
     white-space: nowrap;
-    cursor: @month-picker-field-cursor;
+    cursor: pointer;
     height: @month-picker-field-height;
     margin: @month-picker-field-margin;
     font: @month-picker-field-font;
     color: @month-picker-field-text-color;
-    text-decoration: @month-picker-field-text-decoration;
+    text-decoration: none;
 
     &:hover {
       color: @month-picker-field-hover-text-color;
-      text-decoration: @month-picker-field-hover-text-decoration;
+      text-decoration: underline;
     }
   }
 
@@ -36,22 +36,22 @@
       position: absolute;
       display: inline-block;
       text-decoration: none;
-      cursor: @month-picker-arrow-cursor;
+      cursor: pointer;
       width: @month-picker-arrow-width;
       height: @month-picker-arrow-height;
-      top: @month-picker-arrow-top-offset;
-      right: @month-picker-arrow-right-offset;
+      top: 0;
+      right: 0;
       .box-sizing(border-box);
 
       &.controls-MonthPicker__arrowLeft {
         border-width: @month-picker-left-arrow-border-width;
-        border-style: @month-picker-left-arrow-border-style;
+        border-style: solid;
         border-color: @month-picker-left-arrow-border-color;
         background: @month-picker-left-arrow-bg;
 
         &:hover {
           border-width: @month-picker-left-arrow-hover-border-width;
-          border-style: @month-picker-left-arrow-hover-border-style;
+          border-style: solid;
           border-color: @month-picker-left-arrow-hover-border-color;
           background: @month-picker-left-arrow-hover-bg;
         }
@@ -59,13 +59,13 @@
 
       &.controls-MonthPicker__arrowRight {
         border-width: @month-picker-right-arrow-border-width;
-        border-style: @month-picker-right-arrow-border-style;
+        border-style: solid;
         border-color: @month-picker-right-arrow-border-color;
         background: @month-picker-right-arrow-bg;
 
         &:hover {
           border-width: @month-picker-right-arrow-hover-border-width;
-          border-style: @month-picker-right-arrow-hover-border-style;
+          border-style: solid;
           border-color: @month-picker-right-arrow-hover-border-color;
           background: @month-picker-right-arrow-hover-bg;
         }
@@ -79,7 +79,7 @@
   background: @month-picker-wrapper-bg;
 
   .controls-MonthPicker__dropdownElement {
-    cursor: @month-picker-item-cursor;
+    cursor: pointer;
     height: @month-picker-item-height;
     line-height: @month-picker-item-line-height;
     color: @month-picker-item-text-color;
@@ -91,12 +91,12 @@
     }
 
     &.controls-MonthPicker__dropdownElementMonth {
-      text-align: @month-picker-item-month-text-alignment;
+      text-align: left;
       padding: @month-picker-item-month-padding;
     }
 
     &.controls-MonthPicker__dropdownElementYear {
-      text-align: @month-picker-item-year-text-alignment;
+      text-align: center;
       padding: @month-picker-item-year-padding
     }
 

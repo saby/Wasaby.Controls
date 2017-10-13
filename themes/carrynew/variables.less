@@ -13,6 +13,8 @@
 @acent-color2:                            #F8F8F8;//Цвет акцентной плашки
 @default-hover-color:                     #E0ECF5;
 @innacent-color2:						         #999999; //Неакцентные элементы, заголовки таблиц, комментарии
+// TODO: Используется только в prestonew, в других темах вместо нее используется @default-bg-color. Выпилить.
+// https://online.sbis.ru/opendoc.html?guid=f5f36c75-e461-4e1c-82fc-4079c3cafa90
 @basic-block-bg-color:					      #f3f3f3; //Основной Фон при блочной вёрстке, верхний и нижний разделитель реестра, вверхняя граница полей ввода и вкладок не в фокусе
 //=============
 @black-color:                             #333;
@@ -34,21 +36,9 @@
 @link-header-hover-color:                 #FF7033;
 // Normal button
 @button-icon-color-hover:                 #313E78;
-// Normal default button
-@button-text-color:                       #2c3e50;
-@button-bg-active:                        #e0ecf5;
-@button-hover-bg:                         #e0ecf5;
-@button-bg-color:                         #f0f5fb;
 // Normal primary button
-@button-primary-text-color:               #fff;
-@button-primary-bg-color:                 #ff7033;
-@button-primary-hover-bg:                 #EC5B19;
-@button-primary-bg-active:                #d94700;
 @button-primary-active-text-color:        @button-primary-text-color;
 // Normal disabled button
-@button-disabled-text-color:              @gray-color;
-@button-disabled-border:                  @default-border-width solid #CCCCCC;
-@button-disabled-bg:                      #F0F5FB;
 // Big button
 @button-big-hover-bg:                     #ff7033;
 @button-big-font:                         @button-font;
@@ -64,47 +54,32 @@
 // Checkbox
 @check-box-icon-box-color:                #8991A9;
 @check-box-disabled-color:                #CCC;
-@check-box-icon-border:                   1px solid #8991a9;
 // Switcher
 @switcher-btn-bg-color:                   #fff;
-@switcher-do-text-color:                  @black-color;
 @switcher-do-unselected-text-color:       #8991A9;
 @switcher-do-disabled-text-color:         @gray-ccc-color;
 @switcher-btn-bg-color-disabled:          white;
-@switcher-do-disabled-btn-background:     @gray-ccc-color;
-@switcher-do-horizontal-line-background-color:@innacent-color;
-@switcher-do-disabled-line-color:         @gray-ccc-color;
-
 @switcher-border-color:                   #E4E4E4;
 @switcher-disabled-color:                 @disabled-color;
 // Menu
-@menu-header-caption-color:               #000;
 @popup-header-caption-color:              #fff;
 //MenuItem
 @menu-item-bg:                            @default-bg-color;
 @menu-item-hover-bg:                      #F0F5FB;
 // Text box
-@text-box-field-text-color:               #000;
 @text-box-border-color:                   #EAEAEA;
-@text-box-bottom-border-color:            #CCCCCC;
 @text-box-bg:                             @default-bg-color;
-@text-box-editor-bg:                      #f3f3f3;
-@text-box-editor-text-color:              #999999;
 @combo-box-picker-show-background-color : #ffffff;
 @combo-box-picker-show-border-color:	   #0055BB;
 @compo-box-picker-show-color:             #000;
 @text-box-focus-bg:                       #fff;
 @text-box-hover-border-color:             rgb(204, 204, 204);
-@text-box-disabled-border-bottom:         @default-border-width solid @check-box-disabled-color;
-// DateBox
-@date-box-field-text-color:               @default-text-color;
 // Search form
 @search-form-icon-search-color:           @icon-color-primary;
 @search-form-icon-reset-color:            @icon-color-primary;
 @search-form-icon-search-hover-color:     @button-icon-color-hover;
 // Combo box
 @combo-box-field-text-color :             #314559;
-@combo-box-disabled-border-bottom-color:  #000;
 @combo-box-picker-item-bg:                #ffffff;
 @combo-box-picker-item-hover-bg:          #f0f5fb;
 @combo-box-arrowDown-color:               @icon-color-primary;
@@ -116,14 +91,14 @@
 // Calendar
 @calendar-bg:                             darken(@secondary-color, 5%);
 //FieldLink
-@controls-FieldLink-picker-show-color:    @white-color;
-@controls-FieldLink-picker-show-field-color: @default-text-color;
-@controls-FieldLink-link-color:           #2D68B5;
-@controls-FieldLink-FilterButton-color:   #2D68B5;
-@controls-FieldLink-FilterButton-color-hover:#2D68B5;
-@controls-FieldLink-border-color-focus-hover:@gray-ccc-color;
-@controls-FieldLink-border-color-picker-show:#0055BB;
-@controls-FieldLink-showSelector-color:   #2D68B5;
+@fieldLink-picker-show-color:    @white-color;
+@fieldLink-picker-show-field-color: @default-text-color;
+@fieldLink-link-color:           #2D68B5;
+@fieldLink-FilterButton-color:   #2D68B5;
+@fieldLink-FilterButton-color-hover:@link-hover-text-color;
+@fieldLink-border-color-focus-hover:@gray-ccc-color;
+@fieldLink-border-color-picker-show:#0055BB;
+@fieldLink-showSelector-color:   #2D68B5;
 // MonthView //
 @month-view-bg:                           @white-color;
 @month-view-day-cell-text-color:          inherit;
@@ -132,19 +107,12 @@
 @date-range-dash-color:                   #cccccc;
 @date-range-dash-border-top:              .071rem solid @date-range-dash-color;
 
-//Data Range Slider
-@date-range-slider-color:                 #2D68B5;
-@date-range-slider-hover-color:           #313E78;
-
 // Date Range Choose
 @date-range-choose-bg-active-color:       #e1ecf6;
 @date-range-choose-item-bg-color:         #FFF;
 @date-range-choose-bg-hover-color:        #f0f5fb;
 @date-range-choose-years-only-bg-color :  #FFF;
 @date-range-choose-bg-color:              #FFF;
-@date-range-choose-color:                 #000;
-@date-range-choose-year-color:            #0055BB;
-@date-range-choose-year-prev-next-btns-color:#0055BB;
 
 // Date Range Big
 @date-range-big-choose-border-color:                     #eaeaea;
@@ -174,8 +142,6 @@
 @data-grid-row-hover-bg:                        @default-hover-color;
 @data-grid-row-hover-cell-bg:                   @default-hover-color;
 @data-grid-row-hover-cell-text-color:           #000;
-@data-grid-row-selected-cell-text-color:        #000;
-@data-grid-header-cell-border-bottom: 		      1px solid #F5F5F5;
 @data-grid-edge-cell-separator-color:           #EAEAEA;
 @data-grid-row-selected-main-bg:                @default-bg-color;
 @data-grid-partScroll-notScrolledCell-Color:    @default-bg-color;
@@ -223,9 +189,6 @@
 @date-range-big-bg:                       #fff;
 //sundry
 @switcher-border:                         2px solid #e4e4e4;
-@switcher-do-border:                      2px solid #e4e4e4;
-@text-box-error-bg:                       #fadadd;
-@text-box-error-border-color:             @error-color;
 @header-color:                            #D94700;
 @header-color-hover:                      #FF7033;
 //TimeHeader
@@ -241,7 +204,9 @@
 //money
 @money-decorator-integer-accent-results-font-color:#313E78;
 @money-decorator-integer-accent-registry-font-color:#313E78;
-
+//infobox
+@Infobox-cross-color:                     #2D68B5;
+@Infobox-cross-color-hover:               #313E78;
 //sundry
 @date-range-big-choose-bg-hovered-color:  rgb(240, 245, 251);
 @date-range-big-choose-header-apply-button-icon-margin-left:-1rem;
@@ -252,7 +217,6 @@
 @image-bar-bg-color:                      rgba(255, 255, 255, .5);
 @data-grid-row-hover-cell-bg:             #E0ECF5;
 @icon-color-disabled:                     #ccc !important;
-@text-box-placeholder-color:              #CCCCCC;
 @date-range-big-choose-date-range-picker-border-color:#0055BB;
 @date-range-big-choose-date-range-picker-boundary-selected-color:#fff;
 @date-range-big-choose-date-range-picker-bg-boundary-selected-color:#0055BB;
@@ -265,7 +229,7 @@
 @closeButtonImageHover:                         url('img/areaCloseButton.png') 0 -3rem;
 @DropdownList-linkStyleHoverColor:		      #313E78;
 @back-button-text-color:                     #313E78;
-@controls-FieldLink-link-color-hover:        #313E78;
+@fieldLink-link-color-hover:        #313E78;
 @icon-active-color:                          #313E78;
 
 //----------------//
@@ -308,12 +272,6 @@
 @long-operations-reg-filter-width: 220px;
 @long-operations-reg-filter-height: 46px;
 @long-operations-reg-filter-title-height: 40px;
-
-// --------------- //
-// OperationMerge  //
-// --------------- //
-@controls-MergeDialogTemplate-DataGridView-td-border-bottom:   1px solid @gray-light-color !important;
-
-
 // SUGGEST //
 @suggest-picker-color:                    #000000;
+@suggest-list-hover-color:                #F0F5FB;

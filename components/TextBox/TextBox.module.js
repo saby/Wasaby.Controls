@@ -6,7 +6,6 @@ define('js!SBIS3.CONTROLS.TextBox', [
    'tmpl!SBIS3.CONTROLS.TextBox/resources/textFieldWrapper',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'js!SBIS3.CONTROLS.TextBoxUtils',
-   'Core/Sanitize',
    'js!SBIS3.CONTROLS.Utils.GetTextWidth',
    'Core/helpers/Function/forAliveOnly',
    'js!SBIS3.CONTROLS.ControlHierarchyManager',
@@ -21,7 +20,6 @@ define('js!SBIS3.CONTROLS.TextBox', [
     textFieldWrapper,
     TemplateUtil,
     TextBoxUtils,
-    Sanitize,
     getTextWidth,
     forAliveOnly,
     ControlHierarchyManager) {
@@ -86,7 +84,6 @@ define('js!SBIS3.CONTROLS.TextBox', [
          _inputField : null,
          _compatPlaceholder: null,
          _tooltipText: null,
-         _fromTab: true,
          _beforeFieldWrapper: null,
          _afterFieldWrapper: null,
          _textFieldWrapper: null,
@@ -199,7 +196,20 @@ define('js!SBIS3.CONTROLS.TextBox', [
              * @see setInformationIconColor
              * @see informationIconColor
              */
-            informationIconColor: ''
+            informationIconColor: '',
+             /**
+              * @cfg {String} Устанавливает размер поля ввода.
+              * @remark
+              * По умолчанию значение опции "default"
+              * Значение "large" устaновит большой рамер поля ввода
+              * @example
+              * Пример 1. Большое поле ввода:
+              * фрагмент верстки:
+              * <pre class="brush:xml">
+              *     <option name="size">large</option>
+              * </pre>
+              */
+            size: ''
          }
       },
 
@@ -244,7 +254,6 @@ define('js!SBIS3.CONTROLS.TextBox', [
                   self.setText(newText);
                }
             })
-            .on('mousedown', function(){ self._fromTab = false; })
             .on('focusin', this._inputFocusInHandler.bind(this))
             .on('focusout', this._inputFocusOutHandler.bind(this))
             .on('click', this._inputClickHandler.bind(this));
@@ -508,7 +517,21 @@ define('js!SBIS3.CONTROLS.TextBox', [
          // сделать возможность вешать через префикс attr-
          this._inputField.prop('readonly', !enabled);
       },
-
+      _toggleStateEnabled: function() {
+          var
+              enabled = this.isEnabled();
+          //todo: сделать навешивание классов и согласовать их с Бегуновым А.
+      },
+      _toggleStateValidate: function() {
+          var
+              marked = this.isMarked();
+          //todo: сделать навешивание классов и согласовать их с Бегуновым А.
+      },
+      _toggleStateActive: function() {
+          var
+              active = this.isActive();
+          //todo: сделать навешивание классов и согласовать их с Бегуновым А.
+      },
       _inputRegExp: function (e, regexp) {
          var keyCode = e.which || e.keyCode;
          //Клавиши стрелок, delete, backspace и тд
@@ -572,10 +595,9 @@ define('js!SBIS3.CONTROLS.TextBox', [
          if (this._fromTouch){
             EventBus.globalChannel().notify('MobileInputFocus');
          }
-         if (this._options.selectOnClick || this._fromTab){
+         if (this._options.selectOnClick){
             this._inputField.select();
          }
-         this._fromTab = true;
          /* При получении фокуса полем ввода, сделаем контрол активным.
           *  Делать контрол надо активным по фокусу, т.к. при клике и уведении мыши,
           *  кусор поставится в поле ввода, но соыбтие click не произойдёт и контрол актвным не станет, а должен бы.*/

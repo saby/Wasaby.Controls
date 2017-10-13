@@ -38,6 +38,11 @@ define('js!SBIS3.CONTROLS.AdditionalFilterParams',
              this.once('onInit', function() {
                 this._toggleButton = this.getChildControlByName('toggleAdditionalFilterParams');
              });
+             this.subscribeTo(this, 'onAfterVisibilityChange', function(event, visibility) {
+                if (visibility) {
+                   this._onResizeHandler();
+                }
+             });
           },
 
           toggleAdditionalFiltersBlock: function(event) {

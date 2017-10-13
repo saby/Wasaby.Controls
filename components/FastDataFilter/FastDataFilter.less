@@ -1,9 +1,9 @@
 .controls-FastDataFilter {
   display: inline-block;
   position: relative;
-  border: @fastDataFilter-border;
+  border: 0;
   &.controls-FastDataFilter__resize{
-     .flexbox();
+    .flexbox();
     .controls-DropdownList {
       overflow: hidden;
       .controls-DropdownList__textWrapper{
@@ -11,10 +11,4 @@
       }
     }
   }
-}
-
-.ws-is-firefox {
-   .controls-FastDataFilter.controls-FastDataFilter__resize {
-      .inline-flexbox();
-   }
 }

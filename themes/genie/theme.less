@@ -52,59 +52,13 @@
 }
 
 .controls-Switcher {
-   height: 22px;
-   width: 42px;
-   border-radius: 0;
-   border: none;
-
-   .controls-Switcher__line {
-      height: 18px;
-      width: 36px;
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      margin-left: -19px;
-      margin-top: -10px;
-      background-color: @secondary-background-color;
-      border: 1px solid @primary-border-color;
-      border-radius: 15px;
-   }
-
-   .controls-Switcher__btn {
-      width: 20px;
-      height: 20px;
-      border-radius: 10px;
-      border: 1px solid @primary-border-color !important;
-      top: 1px;
-      box-shadow: 0px 1px 0px 0px rgba(0,0,0,0.2);
-
-      &:before {
-         display: none;
-      }
-   }
-
-   &:hover {
-      .controls-Switcher__btn {
-         border: 1px solid @primary-border-color;
-      }
-   }
-   
-   &:not(.controls-Checked__checked) .controls-Switcher__btn {
-      left: 0px;
-   }
-
+   background: @secondary-background-color;
    &.controls-Checked__checked {
-      .controls-Switcher__btn {
-         border: 1px solid @primary-border-color;
-         right: 0px;
-
-         &:before {
-            display: none !important;
-         }
-      }
-
-      .controls-Switcher__line {
-         background-color: @primary-color;
-      }
+      background: @primary-color;
    }
+}
+.controls-Switcher__btn {
+   background: @white-color;
+   border-color: @white-color !important;
+   box-shadow: 0px 0px 4px 0px rgba(0,0,0,0.4);;
 }

@@ -17,6 +17,7 @@
          <div class="controls-DateRangeBigChoose__datePickerEnd-wrapper{{? !it.rangeselect }} ws-hidden{{?}}">
             <component data-component="SBIS3.CONTROLS.DateBox" name="DatePickerEnd" class="controls-DateRangeBigChoose__datePickerEnd">
                <option name="date" bind="endValue"></option>
+               <option name="serializationMode">{{=it.endValueSerializationMode}}</option>
                <option name="onTextChangeMode">onTextEnter</option>
                <option name="tabindex">2</option>
                <option name="mask">{{=it.mask}}</option>
@@ -40,6 +41,7 @@
          </div>
          <component data-component="SBIS3.CONTROLS.DateBox" name="DatePickerStart" class="controls-DateRangeBigChoose__datePickerStart">
             <option name="date" bind="startValue"></option>
+            <option name="serializationMode">{{=it.startValueSerializationMode}}</option>
             <option name="onTextChangeMode">onTextEnter</option>
             <option name="tabindex">1</option>
             <option name="mask">{{=it.mask}}</option>
@@ -142,7 +144,7 @@
    <div class="controls-DateRangeBigChoose__dates ws-hidden">
       <div class="controls-DateRangeBigChoose__dates-months">
          {{~ it._monthsNames :monthCaption:monthIndex}}
-         <component data-component="SBIS3.CONTROLS.Button" name="MonthRangeBtn{{=monthIndex}}" data-selected-range-id="{{=monthIndex}}" class="controls-DateRangeBigChoose__dates-month-btn controls-RangeSelectable__item">
+         <component data-component="WSControls/Buttons/Button" name="MonthRangeBtn{{=monthIndex}}" data-selected-range-id="{{=monthIndex}}" class="controls-DateRangeBigChoose__dates-month-btn controls-RangeSelectable__item">
             <option name="caption">{{=monthCaption}}</option>
             <option name="activableByClick" type="boolean">false</option>
             <option name="tabindex">0</option>

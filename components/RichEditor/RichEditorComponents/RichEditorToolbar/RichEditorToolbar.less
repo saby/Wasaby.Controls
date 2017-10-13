@@ -43,6 +43,7 @@
       background-color: @fieldRichEditorToolbarColor;
       text-align: left;
       .flexbox();
+      .flex-wrap(wrap);
       padding-left: 4px;
       overflow: hidden;
       -webkit-touch-callout: none;
@@ -107,22 +108,6 @@
          }
          &Grey {
             background-color: grey;
-         }
-      }
-   }
-}
-
-.controls-RichEditorToolbarMenu {
-   .controls-MenuItem {
-      padding: 0 5px;
-      .controls-MenuItem__content {
-         width: 30px;
-         display: inline-block;
-         .controls-MenuItem__icon.icon-24 {
-            left: 3px;
-         }
-         .controls-MenuItem__text {
-            display: none;
          }
       }
    }

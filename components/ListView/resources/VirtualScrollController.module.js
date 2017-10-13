@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
                viewport: null,
                itemsContainer: null
             },
+            _projection: null,
             _currentVirtualPage: 0,
             _heights: [],
             _notAddedAmount: 0,
@@ -22,14 +23,14 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
          },
 
          init: function () {
-            var view = this._options.view;
             VirtualScrollController.superclass.init.call(this);
+            this._projection = this._options.projection;
 
             if (this._options.viewport) {
                this.initHeights();
             }
 
-            if (this._options.projection) {
+            if (this._projection) {
                this._currentWindow = this._getRangeToShow(0, PAGES_COUNT);
             }
             if (this._options.viewport) {
@@ -42,24 +43,36 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             }
          },
 
+         /**
+          * Disables scroll handlers, so it doesn't update
+          * virtual pages on scroll
+          *
+          * @param toggle
+          */
+         disableScrollHandler: function (toggle) {
+            this._scrollHandlerDisabled = !!toggle;
+         },
+
          reset: function(){
             this._currentVirtualPage = 0;
             this._heights = [];
             this.initHeights();
             this._currentWindow = this._getRangeToShow(0, PAGES_COUNT);
+            clearTimeout(this._scrollTimeout);
          },
 
          _scrollHandler: function (e, scrollTop) {
-            clearTimeout(this._scrollTimeout);
-            this._scrollTimeout = setTimeout(function () {
-               var viewportHeight = this._options.viewport.height(), 
-                  scrollTop = this._options.viewport.scrollTop(),
-                  page = this._getPage(scrollTop);
-               if (this._currentVirtualPage != page) {
-                  this._currentVirtualPage = page;
-                  this._onVirtualPageChange(page);
-               }
-            }.bind(this), 0);
+            if (!this._scrollHandlerDisabled) {
+               clearTimeout(this._scrollTimeout);
+               this._scrollTimeout = setTimeout(function () {
+                  var scrollTop = this._options.viewport.scrollTop(),
+                     page = this._getPage(scrollTop);
+                  if (this._currentVirtualPage != page) {
+                     this._currentVirtualPage = page;
+                     this._onVirtualPageChange(page);
+                  }
+               }.bind(this), 25);
+            }
          },
 
          _getPage: function (scrollTop) {
@@ -74,7 +87,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
          },
 
          _onVirtualPageChange: function (pageNumber) {
-            var projCount = this._options.projection.getCount(),
+            var projCount = this._projection.getCount(),
                newWindow = this._getRangeToShow(pageNumber, PAGES_COUNT),
                diff = this._getDiff(this._currentWindow, newWindow, projCount);
 
@@ -131,7 +144,7 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
 
          _getHeightByIndex: function(index){
             if (!this._heights[index]) {
-               var item = this._options.projection.at(index);
+               var item = this._projection.at(index);
                this._heights[index] = this._getItemHeight(item);
             }
             return this._heights[index];
@@ -260,6 +273,15 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             
             // текущее окно поменялось - пересчитаем отображаемые записи
             this._onVirtualPageChange(this._currentVirtualPage);
+         },
+
+         /**
+          * Save reference to new projection after list reload.
+          *
+          * @param newProjection
+          */
+         updateProjection: function (newProjection) {
+            this._projection = newProjection;
          }
 
       });

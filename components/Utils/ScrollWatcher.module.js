@@ -3,9 +3,8 @@
  */
 define('js!SBIS3.CONTROLS.ScrollWatcher', [
    "Core/Abstract",
-   "js!SBIS3.CORE.LayoutManager",
-   'Core/detection'
-], function( cAbstract, LayoutManager, cDetection) {
+   "js!SBIS3.CORE.LayoutManager"
+], function( cAbstract, LayoutManager) {
    'use strict';
 
    /**
@@ -104,8 +103,17 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
       },
 
       _onContainerScroll: function (event) {
-         var elem = event.target;
-         this._processScrollEvent(elem.scrollTop);
+         var scrollTop, elem;
+
+         elem = event.target;
+         //если скролл в боди, то просто так скролл топ не посчитать
+         if (elem == document) {
+            scrollTop = $(window).scrollTop()
+         }
+         else {
+            scrollTop = elem.scrollTop;
+         }
+         this._processScrollEvent(scrollTop);
       },
        /**
         *

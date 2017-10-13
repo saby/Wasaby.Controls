@@ -7,11 +7,4 @@
         {{ defaultCaption }}
     </ws:else>
 </span>
-<i class="controls-SelectorButton__cross js-controls__item-cross icon-16 icon-Close icon-disabled action-hover {{ (!items || !items.getCount()) ? 'ws-hidden' }}"></i>
-
-<ws:SBIS3.CONTROLS.Action.SelectorAction
-    if="{{ useSelectorAction }}"
-    name="SelectorButtonSelectorAction"
-    mode="{{ selectMode }}"
-    visible="{{ false }}"
-    />
+<i class="controls-SelectorButton__cross js-controls__item-cross icon-16 icon-Close icon-disabled action-hover {{ (!items || !items.getCount() || withoutCross) ? 'ws-hidden' }}"></i>

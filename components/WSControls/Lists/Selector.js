@@ -80,11 +80,6 @@ define('js!WSControls/Lists/Selector', [
          return this._selectedKey == this._getPropertyValue(projItem.getContents(), this._options.idProperty);
       },
 
-      _onItemClick: function(e, displayItem) {
-         this._setSelectedByHash(displayItem.getHash());
-         this._onSelectedItemChange();
-      },
-
       _getKeyByIndex: function (index, cfg) {
          if (this._hasItemByIndex(index)) {
             var itemContents = this._display.at(index).getContents();
@@ -109,7 +104,8 @@ define('js!WSControls/Lists/Selector', [
          this._selectedIndex = this._display.getIndex(elem);
          this._selectedKey = this._getKeyByIndex(this._selectedIndex, this._options);
          this._notify('onChangeSelectedIndex', this._selectedIndex);
-         this._notify('onChangeSelectedKey', this._selectedKey);
+         //TODO: иначе никак не получить содержимое элемента
+         this._notify('onChangeSelectedKey', this._selectedKey, elem);
       },
 
       _isEmptyIndex: function (index) {

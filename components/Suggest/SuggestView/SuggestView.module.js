@@ -117,12 +117,24 @@ define('js!SBIS3.CONTROLS.SuggestView',
           init: function() {
              SuggestView.superclass.init.apply(this, arguments);
 
-             var self = this;
+             var self = this,
+                 searchParam;
+             
              this._viewsIterator(function(view) {
                 DELEGATED_EVENTS.forEach(function (key) {
                    self.subscribeTo(view, key, self._notifyDelegatedEvents);
                 });
              });
+             
+             this.subscribeTo(this.getChildControlByName('SuggestTabControl'), 'onSelectedItemChange', function(event, id, index) {
+                self._viewsIterator(function(view, cfg) {
+                   if (cfg.id === id) {
+                      searchParam = cfg.searchParam;
+                   }
+                });
+                //Т.к. для каждой вклдки свой searchParam, необходимо при смене сообщить контроллеру
+                self.sendCommand('changeSearchParam', searchParam);
+             })
           },
 
           /* Т.к. кнопка 'Показать всё' отображается для каждого списка отдельно,
@@ -191,6 +203,10 @@ define('js!SBIS3.CONTROLS.SuggestView',
                 opts.idProperty = opts.keyField;
              }
              return opts;
+          },
+   
+          _getItemsProjection: function() {
+             return this.getActiveView()._getItemsProjection();
           },
 
           //region _private
@@ -404,9 +420,21 @@ define('js!SBIS3.CONTROLS.SuggestView',
 
           setColumns: function(columns) {
              this.getActiveView().setColumns(columns);
-          }
+          },
 
           //endregion SBIS3.CONTROLS.ListView
+   
+          //region SBIS3.CONTROLS.Selectable
+          
+          getSelectedIndex: function() {
+             return this.getActiveView().getSelectedIndex();
+          },
+          
+          setSelectedIndex: function(index) {
+             return this.getActiveView().setSelectedIndex(index);
+          }
+          
+          //endregion SBIS3.CONTROLS.Selectable
        });
 
        return SuggestView;

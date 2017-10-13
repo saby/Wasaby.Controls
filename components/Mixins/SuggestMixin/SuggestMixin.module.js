@@ -1,12 +1,12 @@
 define('js!SBIS3.CONTROLS.SuggestMixin', [
-   "Core/core-functions",
+   "Core/core-clone",
    "Core/core-merge",
    "Core/Deferred",
    "js!SBIS3.CONTROLS.PickerMixin",
    "Core/core-instance",
    'Core/helpers/Object/find',
    "js!SBIS3.CONTROLS.ControlHierarchyManager"
-], function ( cFunctions, cMerge, Deferred, PickerMixin, cInstance, find, ControlHierarchyManager) {
+], function (coreClone, cMerge, Deferred, PickerMixin, cInstance, find, ControlHierarchyManager) {
    'use strict';
 
    var DEFAULT_SHOW_ALL_TEMPLATE = 'js!SBIS3.CONTROLS.SuggestShowAll';
@@ -422,27 +422,10 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
 
             /* Если фокус уходит на список - вернём его обратно в контрол, с которого фокус ушёл */
             this.subscribeTo(control, 'onFocusOut', function(e, destroyed, focusedControl) {
-               function clearItems() {
-                  /* Когда уходит фокус с поля ввода, необходимо очистить записи в списке, т.к. записи могут удалять/изменять */
-                  self._list.getItems() && self._list.getItems().clear();
-               }
                /* Если фокус ушёл на список, или на дочерний контрол списка - возвращаем обратно в поле ввода */
-               if(self._list) {
-                  if (self._list === focusedControl || ~Array.indexOf(self._list.getChildControls(), focusedControl)) {
-                     focusedControl.setActive(false, false, false, this);
-                     this.setActive(true);
-                  } else if (self._options.autoShow && focusedControl && !ControlHierarchyManager.checkInclusion(this, focusedControl.getContainer()[0])) {
-                     if (focusedControl) {
-                        // если фокус переходит на другой компонент, дождемся этого перехода фокуса, и только потом почистим items.
-                        // если так не сделать, преждевременно сработает механизм восстановления фокуса, в случае safari это приводит к ошибке
-                        // https://online.sbis.ru/opendoc.html?guid=aa909af6-3564-4fed-ac60-962fc71b451e
-                        // утечки памяти тут не произойдет, потому что мы попали сюда в процессе перехода активности на focusedControl,
-                        // и после onFocusOut сразу должен сработать onFocusIn в focusedControl
-                        focusedControl.once('onFocusIn', clearItems);
-                     } else {
-                        clearItems();
-                     }
-                  }
+               if (self._list && (self._list === focusedControl || ~Array.indexOf(self._list.getChildControls(), focusedControl))) {
+                  focusedControl.setActive(false, false, false, this);
+                  this.setActive(true);
                }
             });
          }, this);
@@ -454,7 +437,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        */
       _observableControlFocusHandler: function() {
          if(this._options.autoShow && !this.isPickerVisible()) {
-            this._checkPickerState(true) ? this.showPicker() : this._startListSearch();
+            this._startListSearch();
          }
       },
 
@@ -512,7 +495,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
                return this._list;
             } else {
                //Набор "Сделай сам"
-               options = cFunctions.clone(this._options.list.options);
+               options = coreClone(this._options.list.options);
                component = require(this._options.list.component);
 
                for (var key in DEFAULT_LIST_CONFIG) {
@@ -649,26 +632,61 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              listConfig;
          
          this.hidePicker();
-         
-         if(showAllConfig.template === DEFAULT_SHOW_ALL_TEMPLATE) {
-            /* Если шаблон используется дефолтный - сформируем для него конфиг */
-            listConfig = {
-               columns: list.getColumns(),
-               filter: list.getFilter(),
-               idProperty: list.getProperty('idProperty'),
-               itemTpl: list.getProperty('itemTpl'),
-               dataSource: list.getDataSource()
-            };
-            
-            /* Когда нет записей в списке автодополнения,
-               должен открываться справочник без фильтра, чтобы отобразились все записи */
-            if(!list.getItems().getCount() && this._options.searchParam) {
-               delete listConfig.filter[this._options.searchParam];
-            }
    
-            showAllConfig.componentOptions.listConfig = listConfig;
+         listConfig = {
+            columns: list.getColumns(),
+            filter: list.getFilter(),
+            idProperty: list.getProperty('idProperty'),
+            itemTpl: list.getProperty('itemTpl'),
+            dataSource: list.getDataSource()
+         };
+   
+         /* Когда нет записей в списке автодополнения,
+          должен открываться справочник без фильтра, чтобы отобразились все записи */
+         if(!list.getItems().getCount() && this._options.searchParam) {
+            delete listConfig.filter[this._options.searchParam];
          }
+         
+         if(!showAllConfig.componentOptions) {
+            showAllConfig.componentOptions = {};
+         }
+   
+         showAllConfig.componentOptions.listConfig = listConfig;
+         
          this.showSelector(showAllConfig);
+      },
+      
+      _updateList: function() {
+         var list = this.getList();
+         if(list.hasChildControlByName('showAllButton')) {
+            var items = list.getItems(),
+               button = list.getChildControlByName('showAllButton'),
+               showButton;
+      
+            /* Изменяем видимость кнопки в зависимости от:
+             1) Записей не найдено вовсе - показываем (по стандарту).
+             2) Записи найдены, но есть ещё. */
+            if(!items || !items.getCount()) {
+               showButton = true;
+            } else {
+               showButton = list._hasNextPage(items.getMetaData().more);
+            }
+      
+            if(showButton) {
+               /* Чтобы не подписываться лишний раз */
+               if(Array.indexOf(button.getEventHandlers('onActivated'), this._showAllButtonHandler) === -1) {
+                  this.subscribeTo(button, 'onActivated', this._showAllButtonHandler);
+               }
+               /* Чтобы кнопка не принимала фокус по табу, иначе клик enter'a, когда автодополнение открыто,
+                будет вызывать открытие справочника, а не выбор записи */
+               button.setTabindex(0);
+               button.show();
+            } else {
+               this.unsubscribeFrom(button, 'onActivated', this._showAllButtonHandler);
+               button.hide();
+            }
+         }
+         return true;
       },
 
       /**
@@ -686,35 +704,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
        */
       _onListDrawItems: function () {
          if (this._picker) {
-            var list = this.getList();
-            if(list.hasChildControlByName('showAllButton')) {
-               var items = list.getItems(),
-                  button = list.getChildControlByName('showAllButton'),
-                  showButton;
-      
-               /* Изменяем видимость кнопки в зависимости от:
-                1) Записей не найдено вовсе - показываем (по стандарту).
-                2) Записи найдены, но есть ещё. */
-               if(!items || !items.getCount()) {
-                  showButton = true;
-               } else {
-                  showButton = list._hasNextPage(items.getMetaData().more);
-               }
-      
-               if(showButton) {
-                  /* Чтобы не подписываться лишний раз */
-                  if(Array.indexOf(button.getEventHandlers('onActivated'), this._showAllButtonHandler) === -1) {
-                     this.subscribeTo(button, 'onActivated', this._showAllButtonHandler);
-                  }
-                  /* Чтобы кнопка не принимала фокус по табу, иначе клик enter'a, когда автодополнение открыто,
-                     будет вызывать открытие справочника, а не выбор записи */
-                  button.setTabindex(0);
-                  button.show();
-               } else {
-                  this.unsubscribeFrom(button, 'onActivated', this._showAllButtonHandler);
-                  button.hide();
-               }
-            }
+            this._updateList();
             this._picker.getContainer().height('auto');
             this._picker.recalcPosition(true, true);
          }

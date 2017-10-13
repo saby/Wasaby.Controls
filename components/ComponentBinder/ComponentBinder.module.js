@@ -1,9 +1,6 @@
 define('js!SBIS3.CONTROLS.ComponentBinder',
     [
        "Core/Abstract",
-       "Core/core-functions",
-       "Core/core-merge",
-       "Core/constants",
        'js!SBIS3.CONTROLS.HistoryController',
        'js!SBIS3.CONTROLS.SearchController',
        'js!SBIS3.CONTROLS.ScrollPagingController',
@@ -19,7 +16,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
        "Core/Deferred",
        "Core/UserConfig"
     ],
-    function (cAbstract, cFunctions, cMerge, constants, HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController, FilterHistoryControllerUntil, DateRangeRelationController, FilterController, cInstance, forAliveOnly, find, Deferred, UserConfig) {
+    function (cAbstract, HistoryController, SearchController, ScrollPagingController, PagingController, BreadCrumbsController, FilterHistoryController, FilterHistoryControllerUntil, DateRangeRelationController, FilterController, cInstance, forAliveOnly, find, Deferred, UserConfig) {
    /**
     * Контроллер для осуществления базового взаимодействия между компонентами.
     *
@@ -48,6 +45,9 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       if (gridView._options.startScrollColumn !== undefined) {
          gridView.updateScrollAndColumns();
       }
+      if (cInstance.instanceOfModule(gridView, 'SBIS3.CONTROLS.TreeDataGridView')) {
+         gridView._updateEditArrow();
+      }
    }
    function drawItemsCallback(operationPanel, view) {
       var instances = operationPanel.getItemsInstances();
@@ -65,7 +65,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
 
    /**
     * Контроллер, позволяющий связывать компоненты осуществляя базовое взаимодейтсие между ними
-    * @author Черемушкин Илья Вячеславович
+    * @author Герасимов Александр Максимович
     * @class SBIS3.CONTROLS.ComponentBinder
     * @extends Core/Abstract
     * @public
@@ -405,7 +405,7 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
       //TODO: избавиться - зовется из ListView
       _updateScrollPages: function(reset){
          if (this._scrollPagingController){
-            this._scrollPagingController.updateScrollPages(reset);
+            this._scrollPagingController.updatePaging(reset);
          }
       },
 
@@ -426,6 +426,10 @@ define('js!SBIS3.CONTROLS.ComponentBinder',
             });
          }
          this._scrollPagingController.bindScrollPaging();
+      },
+
+      freezePaging: function(freeze) {
+         this._scrollPagingController.freezePaging(freeze);
       },
       /**
        *

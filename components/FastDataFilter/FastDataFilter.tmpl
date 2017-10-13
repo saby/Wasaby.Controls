@@ -1,1 +1,5 @@
-<div class="controls-FastDataFilter {{className|orEmpty}} {{!visible ? 'ws-hidden'}}"></div>
+<div class="controls-FastDataFilter {{className|orEmpty}} {{!visible ? 'ws-hidden'}}">
+    <ws:if data="{{ _serverRender }}">
+        <ws:partial template="{{_itemsTemplate}}" records="{{_records}}" tplData="{{_itemData}}" />
+    </ws:if>
+</div>

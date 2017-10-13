@@ -92,13 +92,15 @@ define('js!WSControls/Buttons/Button', [
              * @see setPrimary
              */
             primary: false
-         }
+         },
+         _contentContainer: null
       },
 
       $constructor: function() {
          if (this._options.primary === true) {
             this._registerDefaultButton();
          }
+         this._contentContainer = this._container.find('.controls-Button__wrapper');
       },
 
       setCaption: function(caption){
@@ -163,7 +165,7 @@ define('js!WSControls/Buttons/Button', [
       _redrawButton: function() {
          // rebuildMarkup не подходит, т.к. пикер меню смотрит на видимость элемента,
          // а при перерисовке кнопка скрывается, что приводит к закрытию пикера
-         this._container.find('.controls-Button__wrapper')[0].innerHTML = contentTemplate(this._options);
+         this._contentContainer[0].innerHTML = contentTemplate(this._options);
       },
 
       setEnabled: function(enabled){
@@ -210,19 +212,24 @@ define('js!WSControls/Buttons/Button', [
       },
 
        /**
+        * Делает кнопку дефолтной или отменяет таковое состояние
+        *
         * @noShow
-        * @param isDefault
+        * @param {Boolean} [isDefault] Если не указан, считается true
+        * @param {Boolean} [dontSendCommand] Не стрелять событием о регистрации/разрегистрации кнопки
         */
-      setDefaultButton: function(isDefault){
+      setDefaultButton: function(isDefault, dontSendCommand){
           if (isDefault === undefined) {
              isDefault = true;
           }
 
-          if (isDefault) {
-             this._registerDefaultButton();
-          }
-          else {
-             this._unregisterDefaultButton();
+          if (!dontSendCommand) {
+             if (isDefault) {
+                this._registerDefaultButton();
+             }
+             else {
+                this._unregisterDefaultButton();
+             }
           }
 
           this.setPrimary(isDefault);

@@ -1,41 +1,30 @@
 .controls-MoneyTextBox {
   min-width: @money-text-box-min-width;
   text-align: right;
-  cursor: auto;
 
-  .controls-MoneyTextBox__decimals {
-    padding: @money-text-box-decimals-padding;
+  &__decimals {
     font-size: @money-text-box-decimals-font-size;
     color: @money-text-box-decimals-color; //@gray-ccc-color;
-    background-color: transparent;
-    line-height:@default-base-line-height;
   }
-
+  //cascade
   .controls-TextBox__field {
     z-index: 1;
-    text-align: inherit;
     padding:0;//чтобы копейки были близко к основному тексту в задизабленом состоянии
-    line-height:@default-base-line-height;
-  }
-  .controls-TextBox__wrapper {
-    padding: @text-box-wrapper-padding;//чтобы копейки были близко к основному тексту в задизабленом состоянии
-    .box-sizing(border-box);
-    .justify-content(flex-end)
-  }
-  .controls-TextBox__placeholder {
-    z-index: 0;
   }
 
-  &.controls-MoneyTextBox__ellipsis {
-    .controls-TextBox__fieldWrapper {
-      .text-overflow();
-      .controls-MoneyTextBox__input {
-        .text-overflow();
-        &:focus {
-          text-overflow: clip;
-        }
-      }
+  &.ws-enabled {
+    .controls-TextBox__field:focus {
+      text-overflow: clip;
     }
   }
 
+  .controls-TextBox__wrapper {
+    .box-sizing(border-box);
+    .justify-content(flex-end);
+    padding: @text-box-input-padding;//чтобы копейки были близко к основному тексту в задизабленом состоянии
+  }
+  .controls-TextBox__placeholder {
+    z-index: 0;
+    padding: 0; //тк отступ на враппере
+  }
 }

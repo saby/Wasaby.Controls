@@ -1,8 +1,7 @@
 define('js!SBIS3.CONTROLS.DateRangeBigChoosePickerMixin', [
    'js!SBIS3.CONTROLS.DateRangeBigChoose',
-   'js!SBIS3.CONTROLS.Utils.DateUtil',
    'Core/core-instance'
-], function (DateRangeBigChoose, DateUtil, cInstance) {
+], function (DateRangeBigChoose, cInstance) {
    /**
     * Миксин, умеющий отображать выпадающий вниз блок содержащий контрол SBIS3.CONTROLS.DateRangeBigChoose.
     * Используется только совместно с SBIS3.CONTROLS.DateRangeMixin(SBIS3.CONTROLS.RangeMixin) и SBIS3.CONTROLS.PickerMixin.
@@ -56,7 +55,14 @@ define('js!SBIS3.CONTROLS.DateRangeBigChoosePickerMixin', [
                if (this._options.selectionMode === 'range') {
                   this._chooserControl.applyYearState();
                }
+               this._chooserControl.updateViewAfterShow();
             }
+         }
+      },
+      after: {
+         showPicker: function () {
+            // см комментарий в updateViewAfterShow
+            this._chooserControl.updateViewAfterShow();
          }
       },
 

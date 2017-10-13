@@ -34,15 +34,16 @@ define([
 
       // this.timeout(1500000);
 
-      let initControls = function (start, endOrStep, options, count) {
+      let initControls = function (start, endOrStep, options, count, period) {
             var step = typeof endOrStep === 'number' ? endOrStep : null,
-               end = step ? new Date(start.getFullYear(), start.getMonth() + step, 0): endOrStep;
+               period = period || step,
+               end = step ? new Date(start.getFullYear(), start.getMonth() + period, 0): endOrStep;
             options = options || {};
             controls = [];
             count = count || 5;
             for (let i = 0; i < count; i++) {
                controls.push(new DateRangeControl({startValue: start, endValue: end}));
-               if (step) {
+               if (period) {
                   start = new Date(start.getFullYear(), start.getMonth() + step, 1);
                   end = new Date(end.getFullYear(), end.getMonth() + step + 1, 0);
                }
@@ -81,12 +82,22 @@ define([
          controls[0].setRange(new Date(2017, 0, 1), new Date(2017, 0, 31));
       });
 
+      it(`should save steps on initialisation`, function () {
+         initControls(new Date(2015, 0, 1), 4, {onlyByCapacity: true}, 2, 1);
+         assert(controller._steps[0], 4);
+         controls[0].setRange(new Date(2015, 1, 1), new Date(2015, 2, 0));
+         let dates = [[new Date(2015, 1, 1), new Date(2015, 2, 0)], [new Date(2015, 4, 1), new Date(2015, 5, 0)]];
+         for (let [i, control] of controls.entries()) {
+            assertRangeControl(control, dates[i], `Control ${i}`);
+         }
+      });
+
       describe('step = null', function () {
          beforeEach(function() {
             initControls(new Date(2015, 0, 1), new Date(2015, 0, 31));
          });
 
-         it('should be update all controls on initialisation by first one', function () {
+         it('should not update all controls on initialisation by first one', function () {
             let dates = createDates(new Date(2015, 0, 1), 1, 1);
             for (let [i, control] of controls.entries()) {
                assertRangeControl(control, dates[i], `Control ${i}`);
@@ -122,10 +133,10 @@ define([
 
       describe('step = 6, period = 1', function () {
          beforeEach(function() {
-            initControls(new Date(2015, 0, 1), new Date(2015, 0, 31), {step: 6});
+            initControls(new Date(2015, 0, 1), 6, {step: 6}, null, 1);
          });
 
-         it('should be update all controls on initialisation by first one', function () {
+         it('should not update all controls on initialisation', function () {
             let dates = createDates(new Date(2015, 0, 1), 6, 1);
             for (let [i, control] of controls.entries()) {
                assertRangeControl(control, dates[i], `Control ${i}`);
@@ -187,7 +198,7 @@ define([
             initControls(new Date(2015, 0, 1), 12, {onlyByCapacity: true});
          });
 
-         it('should be update all controls on initialisation by first one', function () {
+         it('should not update all controls on initialisation by first one', function () {
             let dates = createDates(new Date(2015, 0, 1), 12, 12);
             for (let [i, control] of controls.entries()) {
                assertRangeControl(control, dates[i], `Control ${i}`);

@@ -3,12 +3,10 @@
  */
 define('js!SBIS3.CONTROLS.FilterHistoryController',
     [
-   "Core/core-functions",
+   'Core/core-clone',
    "Core/EventBus",
-   "Core/IoC",
-   "Core/ConsoleLogger",
    "js!SBIS3.CONTROLS.HistoryController",
-   "js!WS.Data/Collection/List",
+   "WS.Data/Collection/List",
    "js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil",
    "js!SBIS3.CONTROLS.FilterHistoryControllerUntil",
    "Core/helpers/Object/isEqual",
@@ -22,7 +20,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
    "Core/Date"
 ],
 
-    function( cFunctions, EventBus, IoC, ConsoleLogger,HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, isEqualObject, genHelpers, debounce, forAliveOnly, find, HashManager, cInstance, cMerge) {
+    function(coreClone, EventBus, HistoryController, List, FilterToStringUtil, FilterHistoryControllerUntil, isEqualObject, genHelpers, debounce, forAliveOnly, find, HashManager, cInstance, cMerge) {
 
        'use strict';
 
@@ -40,7 +38,12 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
           return arr;
        }
 
-       var FilterHistoryController = HistoryController.extend({
+        /**
+         *
+         * @class SBIS3.CONTROLS.FilterHistoryController
+         * @extends SBIS3.CONTROLS.HistoryController
+         */
+       var FilterHistoryController = HistoryController.extend(/** @lends SBIS3.CONTROLS.FilterHistoryController.prototype*/{
           $protected: {
              _options: {
                 /**
@@ -69,7 +72,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
           $constructor: function() {
              /* Делаем клон, т.к. сериализация производится один раз, и создаётся лишь один экземпляр объекта,
                 и его портить нельзя */
-             this._listHistory = new List({items: cFunctions.clone(this.getHistory()) || []});
+             this._listHistory = new List({items: coreClone(this.getHistory()) || []});
              this._prepareListHistory();
              this._changeHistoryFnc = this._changeHistoryHandler.bind(this);
              this._applyHandlerDebounced = debounce.call(forAliveOnly(this._onApplyFilterHandler, this)).bind(this);
@@ -126,7 +129,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
 
              /* Запишем новую историю */
              /* Надо обязательно клонировать историю, чтобы по ссылке не передавались изменения */
-             this._listHistory.assign(cFunctions.clone(listToArray(newHistory)));
+             this._listHistory.assign(coreClone(listToArray(newHistory)));
              this._saveParamsDeferred = saveDeferred;
 
              if(activeFilter) {
@@ -242,7 +245,6 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 this.clearActiveFilter();
                 filter.isActiveFilter = true;
                 filter.viewFilter = this.prepareViewFilter();
-                this.saveToUserParams();
              }
           },
 
@@ -301,7 +303,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              var view = this._options.view,
                 /* View может не быть, если кнопку фильтров используют отдельно (например в торгах,
                    там по кнопке фильтров фильтруется набор из несколькх view */
-                 viewFilter = cFunctions.clone(filter || (view ? view.getFilter() : {}));
+                 viewFilter = coreClone(filter || (view ? view.getFilter() : {}));
 
              this._options.noSaveFilters.forEach(function(filter) {
                 if(viewFilter[filter]) {

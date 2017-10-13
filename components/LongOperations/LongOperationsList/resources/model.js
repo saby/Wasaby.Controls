@@ -1,7 +1,7 @@
 define(
    [
-      'js!WS.Data/Entity/Model',
-      'js!SBIS3.CONTROLS.LongOperationEntry'
+      'WS.Data/Entity/Model',
+      'js!SBIS3.CONTROLS.LongOperations.Entry'
    ],
 
    function (Model, LongOperationEntry) {

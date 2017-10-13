@@ -2,10 +2,9 @@
  * Created by iv.cheremushkin on 21.04.2015.
  */
 define('js!SBIS3.CONTROLS.DropdownListMixin', [
-   "Core/constants",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil"
 ],
-    function ( constants,TemplateUtil) {
+    function ( TemplateUtil) {
         /**
          * @mixin SBIS3.CONTROLS.DropdownListMixin
          * @public

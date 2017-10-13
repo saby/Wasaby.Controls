@@ -125,9 +125,9 @@
       .align-items(baseline);
    }
    &__segment{
+      .inline-flexbox();
       color:#999999;
       font-size: 14px;
-      display: inline-flex;
       justify-content: center;
       width: 0;
       position: relative;
@@ -142,13 +142,14 @@
          left: 0;
       }
       &:first-child {
+         .justify-content();
          justify-content: flex-start;
       }
       &:last-child{
          &:after{
             left: -1px;
          }
-         justify-content: flex-end;
+         .justify-content(flex-end);
       }
    }
 

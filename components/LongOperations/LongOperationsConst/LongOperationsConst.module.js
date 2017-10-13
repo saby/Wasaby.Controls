@@ -1,21 +1,2 @@
-/**
- * Константы длительных операций
- *
- * @class SBIS3.CONTROLS.LongOperationsConst
- * @public
- */
-define('js!SBIS3.CONTROLS.LongOperationsConst',
-   [],
-
-   function () {
-      'use strict';
-
-      return {
-         // Ошибка при выгрузке страницы
-         ERR_UNLOAD: rk('Операция прекращена ввиду того, что пользователь покинул страницу'),
-
-         // Вопрос пользователю при выгрузке страницы
-         MSG_UNLOAD: rk('Если Вы покинете эту страницу сейчас, то некоторые длительные операции не будут завершены корректно. Покинуть страницу?')
-      };
-   }
-);
+// ВРЕМЕННО, для обратной совместимости
+define('js!SBIS3.CONTROLS.LongOperationsConst', ['js!SBIS3.CONTROLS.LongOperations.Const'], function (arg) { return arg; });

@@ -98,12 +98,13 @@ module.exports = function less1by1Task(grunt) {
             complete: '♥',
             incomplete: '_',
             width: 30,
-            total: 131
+            total: 135
         });
         helpers.recurse(rootPath, function(filepath, cb) {
           let relpath = path.relative(rootPath, filepath);
           if (helpers.validateFile(relpath, [grunt.config.get('changed') || `components/**/${lessName}.less`])
-              || helpers.validateFile(relpath, [grunt.config.get('changed') || `themes/**/${lessName}.less`])) {
+              || helpers.validateFile(relpath, [grunt.config.get('changed') || `themes/**/${lessName}.less`])
+               || helpers.validateFile(relpath, [grunt.config.get('changed') || `demo/**/${lessName}.less`])) {
                 foundFile = true;
                 fs.readFile(filepath, function readFileCb(readFileError, data) {
                   let theme = resolveThemeName(filepath);
@@ -118,7 +119,17 @@ module.exports = function less1by1Task(grunt) {
                       }
                     }
                     else {
-                       if (!~filepath.indexOf('theme.less')) {
+                        //todo: black_list
+                       if (!~filepath.indexOf('theme.less') &&
+                           !~filepath.indexOf('header.less') &&
+                           !~filepath.indexOf('mixins.less') &&
+                           !~filepath.indexOf('typograpy.less') &&
+                           !~filepath.indexOf('general.less') &&
+                           !~filepath.indexOf('flex.less') &&
+                           !~filepath.indexOf('defaults.less') &&
+                           !~filepath.indexOf('variables.less') &&
+                           !~filepath.indexOf('sizes.less') &&
+                           !~filepath.indexOf('colors.less')) {
                           processLessFile(data, filepath, readFileError, theme, false);
                        }
                     }

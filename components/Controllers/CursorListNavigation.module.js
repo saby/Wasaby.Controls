@@ -67,11 +67,11 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
             if (projection && projection.getCount() && scrollDirection) {
                if (scrollDirection == 'up') {
                   this.setDirection('before');
-                  edgeRecord = projection.at(0).getContents();
+                  edgeRecord = projection.getFirst().getContents();
                }
                else {
                   this.setDirection('after');
-                  edgeRecord = projection.at(projection.getCount() - 1).getContents();
+                  edgeRecord = projection.getLast().getContents();
                }
                var newPos = [];
                for (var i = 0; i < this._options.config.field.length; i++) {
@@ -89,10 +89,18 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
             return params;
          },
 
-         analyzeResponseParams: function(dataset) {
+         analyzeResponseParams: function(dataset, scrollDir) {
             var more = dataset.getMetaData().more;
             if (typeof more == 'boolean') {
-               this._hasMore[this._options.config.direction] = more;
+               var direction;
+               if (scrollDir == 'up') {
+                  direction = 'before';
+               }
+               else if (scrollDir == 'down') {
+                  direction = 'after';
+               }
+
+               this._hasMore[direction] = more;
             }
             else {
                if (more instanceof Object) {

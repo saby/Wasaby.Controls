@@ -3,24 +3,23 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!WSControls/Buttons/MenuButton', 'css!S
    'use strict';
 
    /**
-    * Контрол, отображающий кнопку в виде ссылки и выпадающее из нее меню
+    * Класс контрола "Кнопка в виде ссылки с выпадающим меню".
     *
-    * {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/buttons/button-link/ Демонстрационные примеры}.
+    * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/textbox/buttons/button-link/#menu-link Демонстрационные примеры}.
     * <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Спецификация</a>.
+    *
+    * @remark
+    * Если в меню задан только один пункт, то меню не будет показано. При нажатии на кнопку будет выполнено действие, соответствующее этому пункту.
     *
     * @class SBIS3.CONTROLS.MenuLink
     * @extends WSControls/Buttons/MenuButton
 	*
     * @demo SBIS3.CONTROLS.Demo.MyMenuLink
     *
-    * @remark
-    * !Важно: Если в меню задан только один пункт, то меню НЕ будет показано, а при нажатии на кнопку будет выполнено действие соответствующее этому пункту.
-    * Кнопка с меню - это кнопка с выбором варинта действия, и если возможно только одно действие, то оно и будет выполнено по нажатию.
+    * @author Романов Валерий Сергеевич
     *
-    * @author Крайнов Дмитрий Олегович
-    *
-    * @public
     * @category Buttons
+    * @public
     * @control
     * @initial
     * <component data-component='SBIS3.CONTROLS.MenuLink'>
@@ -36,9 +35,6 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!WSControls/Buttons/MenuButton', 'css!S
     *         </options>
     *      </options>
     * </component>
-    *
-    * @mixes SBIS3.CONTROLS.DSMixin
-    * @mixes SBIS3.CONTROLS.PickerMixin
     *
     * @ignoreOptions independentContext contextRestriction extendedTooltip validators
     * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment

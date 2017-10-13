@@ -1,32 +1,61 @@
 //default-sizes
-@default-height:                                                                                                        24px;
-@default-border-width:                                                                                                  1px;
-@default-font-size:                                                                                                     14px;
-@default-icon-size:                                                                                                     16px;
-@default-icon-size-medium:                                                                                              24px;
-@default-icon-size-large:                                                                                               32px;
-@default-line-height:                                                                                                   18px;
-@default-base-line-height:                                                                                              22px;//@default-height - 2 * @default-border-width
-@default-input-padding:                                                                                                 4px;
+@default-height:               24px;
+@default-height-big:           48px;
+@default-border-width:         1px;
+@default-text-size:            14px;
+@small-text-size:              12px;
+@large-text-size:              15px;
+@huge-text-size:               17px;
+@default-icon-size:            16px;
+@default-icon-size-medium:     24px;
+@default-icon-size-large:      32px;
+@default-line-height:          18px;
+@default-base-line-height:     22px;//@default-height - 2 * @default-border-width
+@default-padding:              4px;
+@default-padding-small:        2px;
+@default-input-padding:        @default-padding;
 //textbox
-@text-box-height:                                                                                                       @default-height;
-@text-box-font-size:                                                                                                    @default-font-size;
-@text-box-wrapper-padding:                                                                                              0 @default-input-padding;
-@text-box-information-icon-size:                                                                                        13px;//по стандарту
-@text-box-border-radius:                                                                                                0px;
+@text-box-height:                 @default-height;
+@text-box-height-large:           @default-height;//на данный момент большое и малое поле ввода не различаются в теме online
+@text-box-font-size:              @default-text-size;
+@text-box-font-size-large:        @default-text-size;//на данный момент большое и малое поле ввода не различаются в теме online
+@text-box-line-height:            @default-base-line-height;
+@text-box-input-padding:          0 @default-input-padding;
+@text-box-input-padding-large:    0;//на данный момент большое и малое поле ввода не различаются в теме online
+@text-box-information-icon-size:  13px;//по стандарту
+@text-box-border-radius:          0px;
 //text-area
-@text-area-field-line-height:                                                                                           @default-line-height;
+@text-area-field-line-height:     @default-line-height;
 //number-text-box
-@number-text-box-icon-size:                                                                                             @default-icon-size;
+@number-text-box-icon-size:       @default-icon-size;
 //combo-box
-@combo-box-icon-size:                                                                                                   @default-icon-size;
-@combo-box-arrow-padding:                                                                                               0 4px 0 0;
+@combo-box-icon-size:             @default-icon-size;
+@combo-box-arrow-padding:         0 @default-padding 0 0;
+@combo-box-shadow-display:        block;
 //suggest-text-box
-@suggest-text-box-icon-size:                                                                                            @default-icon-size;
+@suggest-text-box-icon-size:                @default-icon-size;
+@suggest-text-box-icon-cross-padding:       0 @default-padding;
 //suggest-text-box
-@fieldLink-link-cross-size:                                                                                             @default-icon-size;
+@fieldLink-link-cross-size:       @default-icon-size;
 //search-form
-@search-border-radius:                                                                                                  10px;
+@search-border-radius:            10px;
+@search-field-padding:            0 0 0 12px;
+@search-button-wrapper-padding:   0 5px 0 0;
+@search-loop-size:                @default-icon-size;
+@search-form-icon-padding:        0 2px;
+//fieldLink
+@fieldLink-icon-size:             @default-icon-size;
+@fieldLink-picker-icon-size:      @default-icon-size;
+@fieldLink-showAll-shadow-width:  20px;
+@fieldLink-linkItem-line-height:  @default-line-height;
+//time-header:
+@time-header-icon-size:           @default-icon-size;
+//treeview
+@tree-view-folder-text-size:      16px;
+//button
+@button-large-height:             @default-height-big;
+@button-large-border-radius:      24px;
+@button-large-font-size:          18px;@search-border-radius:                                                                                                  10px;
 @search-field-padding:                                                                                                  0 0 0 12px;
 @search-button-wrapper-padding:                                                                                         0 5px 0 0;
 @search-loop-size:                                                                                                      @default-icon-size;

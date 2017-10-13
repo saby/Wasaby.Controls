@@ -3,11 +3,11 @@
  */
 
 define('js!SBIS3.CONTROLS.FilterPanel', [
-   'Core/core-functions',
+   'Core/core-clone',
    'Core/CommandDispatcher',
    'js!SBIS3.CONTROLS.CompoundControl',
    'js!SBIS3.CONTROLS.Expandable',
-   'js!WS.Data/Collection/RecordSet',
+   'WS.Data/Collection/RecordSet',
    'js!SBIS3.CONTROLS.FilterPanelItem',
    'js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
    'tmpl!SBIS3.CONTROLS.FilterPanel',
@@ -26,9 +26,10 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
    'js!SBIS3.CONTROLS.FilterPanelDataRange',
    'js!SBIS3.CONTROLS.FilterPanelBoolean',
    'js!SBIS3.CONTROLS.IconButton',
+   'css!SBIS3.CONTROLS.FilterPanel/resources/FilterPanelButton',
    'js!SBIS3.CONTROLS.ScrollContainer',
    'css!SBIS3.CONTROLS.FilterPanel'
-], function( cFunctions, CommandDispatcher, CompoundControl, Expandable, RecordSet, FilterPanelItem, FilterToStringUtil, dotTplFn, contentTpl, FilterPanelItemContentTemplate) {
+], function(coreClone, CommandDispatcher, CompoundControl, Expandable, RecordSet, FilterPanelItem, FilterToStringUtil, dotTplFn, contentTpl, FilterPanelItemContentTemplate) {
 
    'use strict';
    /**
@@ -38,7 +39,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
     *
     * <h2>Разметка компонента</h2>
     *
-    * Разметку компонента создают только в TMPL-файлах с использованием <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/logicless-template/'>logicless-шаблонизатора</a>.
+    * Разметку компонента создают только в TMPL-файлах с использованием <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/xhtml/logicless-template/'>logicless-шаблонизатора</a>.
     *
     * <br/>
     *
@@ -48,7 +49,8 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
     *
     * <h3>Кнопка открытия панели</h3>
     *
-    * Создание и размещение кнопки открытия панели фильтрации остается на совести разработчиков. Рекомендуется использовать контрол {@link SBIS3.CONTROLS.IconButton}.
+    * Создание и размещение кнопки открытия панели фильтрации производится самостоятельно. Для этого существуют css-модификаторы компонента {@link SBIS3.CONTROLS.IconButton}.
+    * Стили модификаторов описаны в "css!SBIS3.CONTROLS.FilterPanel/resources/FilterPanelButton".
     * В зависимости от направления, в котором будет открыта панель (см. {@link filterAlign}), на кнопку открытию устанавливают классы "controls-IconButton__filter-left" (открытие панели влево) или "controls-IconButton__filter-right" (открытие панели вправо).
     * Чтобы открыть панель, используйте метод {@link toggleExpanded}.
     *
@@ -130,7 +132,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
              *     <li>details - использовать редактор {@link SBIS3.CONTROLS.FilterPanelChooser.DetailsList}.</li>
              * </ul>
              * @property {Object} properties.properties Объект, в который передают опции для конфигурации контрола {@link SBIS3.CONTROLS.FieldLink}, на основе которого создан редактор {@link SBIS3.CONTROLS.FilterPanelChooser.FieldLink}.
-             * Описание контрола и список его опций вы можете найти <a href='https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/FieldLink/'>здесь</a> и <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/field-link/selector-action//'>здесь</a>.
+             * Описание контрола и список его опций вы можете найти <a href='https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/FieldLink/'>здесь</a> и <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/textbox/field-link/selector-action//'>здесь</a>.
              * @property {Object} properties.items Набор данных, по которому будет построен список значений. Актуально для редакторов типа "SBIS3.CONTROLS.FilterPanelChooser.*".
              */
             /**
@@ -381,7 +383,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
       _resetItemFilterFields: function(item) {
          var
             resetValues = {};
-         resetValues[ITEM_FILTER_VALUE] = cFunctions.clone(item.get(ITEM_FILTER_RESET_VALUE));
+         resetValues[ITEM_FILTER_VALUE] = coreClone(item.get(ITEM_FILTER_RESET_VALUE));
          resetValues[ITEM_FILTER_TEXT_VALUE] = '';
          item.set(resetValues);
       },

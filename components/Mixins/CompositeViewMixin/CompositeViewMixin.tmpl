@@ -33,7 +33,7 @@
       <ws:partial template="{{_footTpl}}" scope="{{...}}" />
    </table>
    <div class="controls-ListView__EmptyData {{(!_serverRender || _records.length || !emptyHTML || _hideEmpty) ? 'ws-hidden' : ''}}">
-      <ws:partial template="{{ emptyHTML }}"/>
+      <ws:partial template="{{ _sanitize(emptyHTML) }}"/>
    </div>
    <ws:if data="{{ footerTpl }}">
       <div class="controls-ListView__footer">
@@ -42,7 +42,6 @@
    </ws:if>
    <ws:if data="{{ showPaging }}">
       <div class="controls-Pager-container"></div>
-      <div class="controls-TreePager-container"></div>
    </ws:if>
    <ws:if data="{{ editArrow || arrowActivatedHandler }}">
       <div class="controls-TreeView__editArrow-container ws-hidden"></div>

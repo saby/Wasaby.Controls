@@ -1,5 +1,5 @@
 define('js!WSControls/Lists/resources/utils/DataSourceUtil', [
-   'js!WS.Data/Query/Query',
+   'WS.Data/Query/Query',
    'Core/core-instance'
 ], function(Query, cInstance) {
    var DataSourceUtil = {
@@ -14,6 +14,9 @@ define('js!WSControls/Lists/resources/utils/DataSourceUtil', [
                if ('module' in sourceOpt) {
                   var DataSourceConstructor = requirejs(sourceOpt.module);
                   result = new DataSourceConstructor(sourceOpt.options || {});
+               }
+               if (sourceOpt && sourceOpt.getData) {
+                  result = sourceOpt.getData();
                }
                break;
          }

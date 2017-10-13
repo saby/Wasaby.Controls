@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
    'js!SBIS3.CONTROLS.FilterPanelChooser.BaseList',
    'js!SBIS3.CONTROLS.ItemsMoveController',
-   'js!WS.Data/Source/Memory',
+   'WS.Data/Source/Memory',
    'Core/CommandDispatcher',
    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.DetailsList/resources/ItemTpl',
    'css!SBIS3.CONTROLS.FilterPanelChooser.DetailsList'
@@ -114,7 +114,12 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DetailsList', [
       },
 
       _updateView: function(value) {
-         this._getListView().setSelectedKeys(this._prepareSelectedKeys(value));
+         var
+            view = this._getListView();
+         view.setSelectedKeys(this._prepareSelectedKeys(value));
+         // Т.к. отображение записи зависит от её выбранности, то после установки отмеченных записей вызываем перерисовку
+         // https://online.sbis.ru/opendoc.html?guid=7b111c84-0994-4675-a1b6-68ca91a7aa21
+         view.redraw();
       },
 
       _updateValue: function() {

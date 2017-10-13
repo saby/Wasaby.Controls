@@ -1,22 +1,17 @@
 define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       'js!SBIS3.CONTROLS.Action.OpenDialog',
-      'Core/EventBus',
       'Core/core-instance',
       'Core/core-merge',
       'Core/Indicator',
-      'Core/IoC',
       'Core/Deferred',
-      'Core/helpers/fast-control-helpers',
-      'js!WS.Data/Entity/Record',
-      'js!WS.Data/Di',
-      'js!SBIS3.CONTROLS.Utils.OpenDialog',
-      'js!SBIS3.CORE.Dialog',
-      'js!SBIS3.CORE.FloatArea'
-   ], function (OpenDialog, EventBus, cInstance, cMerge, cIndicator, IoC, Deferred, fcHelpers, Record, Di, OpenDialogUtil, Dialog, FloatArea) {
+      'WS.Data/Entity/Record',
+      'WS.Data/Di',
+      'js!SBIS3.CONTROLS.Utils.OpenDialog'
+   ], function (OpenDialog, cInstance, cMerge, cIndicator, Deferred, Record, Di, OpenDialogUtil) {
    'use strict';
 
    /**
-    * Класс, описывающий действие открытия окна с заданным шаблоном. Применяется для работы с <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/">диалогами редактирования списков</a>.
+    * Класс, описывающий действие открытия окна с заданным шаблоном. Применяется для работы с <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/editing-dialog/">диалогами редактирования списков</a>.
     * @class SBIS3.CONTROLS.Action.OpenEditDialog
     * @extends SBIS3.CONTROLS.Action.OpenDialog
     * @author Красильников Андрей Сергеевич
@@ -70,25 +65,30 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Record} record Экземпляр класса записи.
        */
+       /**
+        * @event onAfterClose Происходит при закрытии диалога редактирования.
+        * @param {Core/EventObject} eventObject Дескриптор события.
+        * @param {*} result Параметр приходит из команды {@link SBIS3.CORE.FloatArea#close}.
+        */
       $protected: {
          _options: {
             /**
              * @cfg {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} Устанавливает список, связанный с диалогом редактирования.
              * @remark
-             * Для связанного списка автоматическиприменяется <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/synchronization/">синхронизация изменений</a>.
+             * Для связанного списка автоматическиприменяется <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/editing-dialog/synchronization/">синхронизация изменений</a>.
              * @see setLinkedObject
              * @see getLinkedObject
              */
             linkedObject: undefined,
             /**
-             * @cfg {String} Устанавливает <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/initializing-way/">способ инициализации данных</a> диалога редактирования.
+             * @cfg {String} Устанавливает <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/editing-dialog/initializing-way/">способ инициализации данных</a> диалога редактирования.
              * @variant local
              * @variant remote
              * @variant delayedRemote
              */
             initializingWay: 'remote',
             /**
-             * @cfg {String} Устанавливает поле записи, в котором хранится erl-страницы с диалогом редактирования. При вызове {@link execute}, когда нажата клавиша Ctrl, будет открыта новая вкладка веб-браузера с указанным адресом. Создание url - это задача прикладного разработчика.
+             * @cfg {String} Устанавливает поле записи, в котором хранится url-страницы с диалогом редактирования. При вызове {@link execute}, когда нажата клавиша Ctrl, будет открыта новая вкладка веб-браузера с указанным адресом. Создание url - это задача прикладного разработчика.
              */
             urlProperty: ''
          },
@@ -111,8 +111,8 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       /**
        * Устанавливает список, связанный с диалогом редактирования.
        * @remark
-       * Для связанного списка автоматическиприменяется <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/synchronization/">синхронизация изменений</a>.
-       * @param {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} linkedObject Экземпляр класса <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">списка</a>.
+       * Для связанного списка автоматическиприменяется <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/editing-dialog/synchronization/">синхронизация изменений</a>.
+       * @param {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} linkedObject Экземпляр класса <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">списка</a>.
        * @see linkedObject
        * @see getLinkedObject
        */
@@ -122,8 +122,8 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
        /**
         * Возвращает экземпляр класса списка, который связан с диалогом редактирования.
         * @remark
-        * Для связанного списка автоматическиприменяется <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/synchronization/">синхронизация изменений</a>.
-        * @returns {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} linkedObject Экземпляр класса <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">списка</a>.
+        * Для связанного списка автоматическиприменяется <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/editing-dialog/synchronization/">синхронизация изменений</a>.
+        * @returns {*|SBIS3.CONTROLS.DSMixin|WS.Data/Collection/IList} linkedObject Экземпляр класса <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">списка</a>.
         * @see linkedObject
         * @see setLinkedObject
         */
@@ -402,7 +402,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
        */
       _updateModel: function (model, additionalData) {
          if (additionalData.isNewRecord){
-            this._createRecord(model, 0, additionalData);
+            this._createRecord(model, additionalData.at || 0, additionalData);
          }
          else{
             this._mergeRecords(model, null, additionalData);
@@ -585,6 +585,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
 
       _mergeRecord: function(collectionRecord, editRecord, additionalData) {
          var recValue,
+             values = {},
              self = this;
          Record.prototype.each.call(collectionRecord, function (key, value) {
             if(editRecord.has(key)){
@@ -597,17 +598,18 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
                   if (recValue && (typeof recValue.clone == 'function')) {
                      recValue = recValue.clone();
                   }
-                  //Нет возможности узнать отсюда, есть ли у свойства сеттер или нет
-                  try {
-                     this.set(key, recValue);
-                  } catch (e) {
-                     if (!(e instanceof ReferenceError)) {
-                        throw e;
-                     }
-                  }
+                  values[key] = recValue;
                }
             }
          });
+         //Нет возможности узнать отсюда, есть ли у свойства сеттер или нет
+         try {
+            collectionRecord.set(values);
+         } catch (e) {
+            if (!(e instanceof ReferenceError)) {
+               throw e;
+            }
+         }
       },
       _collectionReload: function(){
          this.getLinkedObject().reload();

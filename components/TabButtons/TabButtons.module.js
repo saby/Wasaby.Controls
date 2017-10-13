@@ -9,12 +9,11 @@ define(
       'tmpl!SBIS3.CONTROLS.TabButtons/resources/ItemTemplate',
       'tmpl!SBIS3.CONTROLS.TabButtons/resources/SpaceTemplate',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
-      'Core/markup/ParserUtilities',
       'Core/core-instance',
       'js!SBIS3.CONTROLS.TabButton',
       'css!SBIS3.CONTROLS.TabButtons'
    ],
-   function (RadioGroupBase, TabButtonsTpl, ItemTemplate, SpaceTemplate, TemplateUtil, ParserUtilities, cInstance) {
+   function (RadioGroupBase, TabButtonsTpl, ItemTemplate, SpaceTemplate, TemplateUtil, cInstance) {
 
       'use strict';
 
@@ -115,6 +114,12 @@ define(
          },
          _dotTplFn: TabButtonsTpl,
 
+         $constructor: function() {
+            //onBeforeTabChange - событие, которое стреляет перед сменой вкладки. Из него можно прервать смену вкладки.
+            //Сейчас нужно только в новой карточке сотрудника для показа вопроса о сохранении
+            this._publish('onBeforeTabChange');
+         },
+
          _modifyOptions: function (opts) {
             opts = TabButtons.superclass._modifyOptions.apply(this, arguments);
             if (opts.tabSpaceTemplate) {
@@ -150,6 +155,28 @@ define(
             }
             else {
                TabButtons.superclass.setItems.apply(this, arguments);
+            }
+         },
+
+         _itemActivatedHandler : function(hash) {
+            var beforeChangeTabResult = this._notify('onBeforeTabChange'),
+                baseMethod = TabButtons.superclass._itemActivatedHandler.bind(this),
+                tabInstance = this.getItemsInstances()[hash];
+
+            if (cInstance.instanceOfModule(beforeChangeTabResult, 'Core/Deferred')) {
+               beforeChangeTabResult.addCallback(function(result) {
+                  if (result !== false) {
+                     tabInstance.setChecked(true);
+                     baseMethod(hash);
+                  }
+               }.bind(this));
+               tabInstance.setChecked(false);
+            }
+            else if (beforeChangeTabResult !== false) {
+               baseMethod(hash);
+            }
+            else {
+               tabInstance.setChecked(false);
             }
          }
       });

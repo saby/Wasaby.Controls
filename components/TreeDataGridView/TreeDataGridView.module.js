@@ -1,8 +1,8 @@
 define('js!SBIS3.CONTROLS.TreeDataGridView', [
-   "Core/IoC",
    "Core/core-merge",
    "Core/constants",
    'Core/CommandDispatcher',
+   'Core/core-instance',
    'js!SBIS3.CONTROLS.Utils.Contains',
    "js!SBIS3.CONTROLS.DataGridView",
    "tmpl!SBIS3.CONTROLS.TreeDataGridView",
@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'js!SBIS3.CONTROLS.Link',
    'css!SBIS3.CONTROLS.TreeDataGridView',
    'css!SBIS3.CONTROLS.TreeView'
-], function( IoC, cMerge, constants, CommandDispatcher, contains, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, MassSelectionHierarchyController) {
+], function( cMerge, constants, CommandDispatcher, cInstance, contains, DataGridView, dotTplFn, TreeMixin, TreeViewMixin, IconButton, ItemTemplate, ItemContentTemplate, FooterWrapperTemplate, searchRender, MassSelectionHierarchyController) {
 
 
    var
@@ -101,7 +101,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'use strict';
 
    /**
-    * Контрол, отображающий набор данных с иерархической структурой в виде в таблицы с несколькими колонками. Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/">Настройка списков</a>.
+    * Контрол, отображающий набор данных с иерархической структурой в виде в таблицы с несколькими колонками. Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">Настройка списков</a>.
     *
     * @class SBIS3.CONTROLS.TreeDataGridView
     * @extends SBIS3.CONTROLS.DataGridView
@@ -116,9 +116,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * @cssModifier controls-TreeView__hideExpands Устанавливает режим отображения дерева без иконок сворачивания/разворачивания узлов.
     *
     * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView Пример 1. Простое иерархическое представление данных в режиме множественного выбора записей.
-    * @demo SBIS3.CONTROLS.DOCS.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
+    * @demo SBIS3.DOCS.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
     * Инициировать добавление можно как по нажатию кнопок в футерах, так и по кнопке Enter из режима редактирования последней записи.
-    * Подробное описание конфигурации компонента и футеров вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/list/list-settings/records-editing/edit-in-place/add-in-place/"> Добавление по месту</a>.
+    * Подробное описание конфигурации компонента и футеров вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/add-in-place/"> Добавление по месту</a>.
     *
     * @author Авраменко Алексей Сергеевич
     *
@@ -175,7 +175,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              * <br/>
              * Кнопка отображается в виде иконки с классом icon-16 icon-View icon-primary (синяя двойная стрелочка). Изменение иконки не поддерживается.
              * <br/>
-             * При клике по стрелке происходит событие {@link onItemActivate}, в обработчике которого, как правило, устанавливают отрытие <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/editing-dialog/'>диалога редактирования</a>.
+             * При клике по стрелке происходит событие {@link onItemActivate}, в обработчике которого, как правило, устанавливают отрытие <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/editing-dialog/'>диалога редактирования</a>.
              * @example
              * Устанавливаем опцию:
              * <pre>
@@ -278,17 +278,30 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var
             cfg = TreeDataGridView.superclass._getInsertMarkupConfig.apply(this, arguments),
             lastItem = this._options._itemsProjection.at(newItemsIndex - 1),
-            lastItemParent, newItemsParent;
+            lastItemParent, newItemsParent, existingContainer, firstTreeItem;
 
          if (cfg.inside && !cfg.prepend) {
             cfg.inside = false;
-            // В режиме поиска может возникнуть ситуация, когда предыдущий элемент расположен в других хлебных крошках.
-            // Этот сценарий происходит в случае перерисовки первой записи в хлебных крошках.
-            // В таком случае контейнером, ЗА которым будут добавлены записи должна стать правильная хлебная крошка.
             lastItemParent = lastItem.getContents().get(this._options.parentProperty);
-            newItemsParent = newItems[0].getContents().get(this._options.parentProperty);
+            firstTreeItem = newItems[0].isNode ? newItems[0] : newItems[1];
+            newItemsParent = firstTreeItem ? firstTreeItem.getContents().get(this._options.parentProperty) : undefined;
+            /* В виду того, что мы не можем различить, откуда вызван _getInsertMarkupConfig, возникают две противоречивые ситуации:
+               1. В случае перерисовки ПЕРВОЙ записи в хлебных крошках (изменён прямо record), предыдущий элемент будет
+                  расположен в других хлебных крошках (https://online.sbis.ru/opendoc.html?guid=033fd05c-fb2e-4c3a-a648-37cf47b05a50).
+                  Тогда контейнером, ЗА которым будут добавлены записи, должна стать правильная хлебная крошка, являющаяся реальным
+                  родителем перерисовываемой записи.
+               2. В случае поиска, результаты могут прилететь на второй странице и вызов _getInsertMarkupConfig будет из метода
+                  _addItems (https://online.sbis.ru/opendoc.html?guid=b395391e-b4de-4dd8-affb-4ec79c40c158).
+                  Новую хлебную крошку мы могли ранее не выводить и тогда контейнером, ЗА которым будут добавлены записи, должен стать
+                  последний отрисованный элемент. */
             if (this._isSearchMode() && lastItemParent !== newItemsParent) {
-               cfg.container = this._getItemsContainer().find('.controls-DataGridView__tr.controls-HierarchyDataGridView__path[data-id="' + newItemsParent + '"]');
+               // Ситуация №1 - пытаемся найти уже существующую хлебную крошку и тогда записи будем добавлять непосредственно после неё.
+               existingContainer = this._getItemsContainer().find('.controls-DataGridView__tr.controls-HierarchyDataGridView__path[data-id="' + newItemsParent + '"]');
+               if (existingContainer.length) {
+                  cfg.container = existingContainer;
+               } else { // Ситуация №2 - если существующую хлебную крошку найти не удалось - то добавляем записи за последним элементом.
+                  cfg.container = this._getDomElementByItem(lastItem);
+               }
             } else {
                cfg.container = this._getDomElementByItem(lastItem);
             }
@@ -301,7 +314,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          // Но этот вариант очень трудно реализуем, т.к. куча точек входа, где загрузка может быть прервана или перезапущена.
          // Как итог - завел задачу, по которой нужно переосмыслить текущий механизм и решить подобные проблемы раз и навсегда.
          // p.s. data-id используется потому что у крошек нет data-hash.
-         if (this._isSearchMode() && !cfg.container.length && lastItem && lastItem.isNode()) {
+         if (this._isSearchMode() && !cfg.container.length && lastItem && lastItem.isNode && lastItem.isNode()) {
             cfg.container = this._getItemsContainer().find('.js-controls-BreadCrumbs__crumb[data-id="' + lastItem.getContents().getId() + '"]').parents('.controls-DataGridView__tr.controls-HierarchyDataGridView__path');
          }
          return cfg;
@@ -390,7 +403,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
                   onActivated: function () {
                      var id = self.getHoveredItem().key;
                      self._activateItem(id);
-                     self.setSelectedKey(id);
+                     self._itemActionActivated(id);
                   }
                }
             });
@@ -398,22 +411,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          return this._editArrow;
       },
 
-      _getEditArrowPosition: function(hoveredItem) {
-         var folderTitle = hoveredItem.container.find('.controls-TreeView__folderTitle'),
-             td = folderTitle.closest('.controls-DataGridView__td', hoveredItem.container),
-             containerCords = this._container[0].getBoundingClientRect(),
-             /* в 3.7.3.200 сделать это публичным маркером для стрелки */
-             arrowContainer = td.find('.js-controls-TreeView__editArrow'),
-             tdPadding, arrowCords, leftOffset, toolbarLeft, needCorrect;
-
-         if(!arrowContainer.length) {
-            arrowContainer = td.find('.controls-TreeView__editArrow');
-         }
-
-         /* Контейнера для стрелки может не быть, тогда не показываем */
-         if(!arrowContainer.length) {
-            return false;
-         }
+      _getEditArrowPosition: function(td, folderTitle, arrowContainer) {
+         var  containerCords = this._container[0].getBoundingClientRect(),
+              tdPadding, arrowCords, leftOffset, toolbarLeft, needCorrect;
+         
          tdPadding = parseInt(td.css('padding-right'), 10);
          /* Т.к. у нас в вёрстке две иконки, то позиционируем в зависимости от той, которая показывается,
             в .200 переделаем на маркер */
@@ -434,10 +435,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          
          if(this._isSupportedItemsToolbar() && this._getItemsToolbar().isVisible()) {
             toolbarLeft = this._getItemsToolbar().getContainer()[0].offsetLeft;
-            needCorrect = toolbarLeft && (toolbarLeft < leftOffset);
+            needCorrect = toolbarLeft && (toolbarLeft < (leftOffset + arrowCords.width)); // Учитываем ширину иконки стрелки при корректировке
             /* Если стрелка заползает на операции над записью -> увеличиваем отступ */
             if(needCorrect) {
-               leftOffset -= leftOffset - toolbarLeft + tdPadding * 2; //Левая граница тулбара + паддинги
+               leftOffset -= leftOffset - toolbarLeft + this.getEditArrow().getContainer().width(); //Левая граница тулбара + ширина стрелки
             }
             /* backgorund'a у стрелки быть не должно, т.к. она может отображаться на фоне разного цвета,
                но если мы корректрируем положение, то надо навесить background, чтобы она затемняла текст */
@@ -448,6 +449,15 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             top: arrowCords.top - containerCords.top + this._container[0].scrollTop,
             left: leftOffset
          }
+      },
+      
+      _getEditArrowMarker: function(itemContainer) {
+         var arrowContainer = itemContainer.find('.js-controls-TreeView__editArrow');
+         
+         if(!arrowContainer.length) {
+            arrowContainer = itemContainer.find('.controls-TreeView__editArrow');
+         }
+         return arrowContainer;
       },
 
       _onChangeHoveredItem: function() {
@@ -476,22 +486,27 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
       _showEditArrow: function() {
          var hoveredItem = this.getHoveredItem(),
+             hoveredItemContainer = hoveredItem.container,
              editArrowContainer = this.getEditArrow().getContainer(),
-             needShowArrow, hiContainer, editArrowPosition;
+             folderTitle, titleTd, editArrowMarker, projItem;
+         
+         if(this._hasHoveredItem()) {
+            projItem = this._getItemsProjection().getItemBySourceItem(hoveredItem.record);
+         }
 
-         hiContainer = hoveredItem.container;
          /* Не показываем если:
             1) Иконку скрыли
             2) Не папка
-            3) Режим поиска (по стандарту) */
-         needShowArrow = hiContainer && hiContainer.hasClass('controls-ListView__item-type-node') && this.getEditArrow().isVisible() && !this._isSearchMode();
+            3) Режим поиска (по стандарту)
+            4) projItem'a может не быть при добавлении по месту */
+         if(projItem && projItem.isNode() && this.getEditArrow().isVisible() && !this._isSearchMode()) {
+            folderTitle = hoveredItemContainer.find('.controls-TreeView__folderTitle');
+            titleTd = folderTitle.closest('.controls-DataGridView__td', hoveredItemContainer);
+            editArrowMarker = this._getEditArrowMarker(titleTd);
 
-         if(hiContainer && needShowArrow) {
-            editArrowPosition = this._getEditArrowPosition(hoveredItem);
-
-            if(editArrowPosition) {
-               editArrowContainer.css(editArrowPosition);
+            if(editArrowMarker.length) {
                editArrowContainer.removeClass('ws-hidden');
+               editArrowContainer.css(this._getEditArrowPosition(titleTd, folderTitle, editArrowMarker));
             }
          } else {
             this._hideEditArrow();
@@ -520,7 +535,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    
       _mouseDownHandler: function(e) {
          /* По стандарту отключаю выделение по двойному клику мышкой в дереве */
-         if(e.originalEvent.detail > 1) {
+         if(e.originalEvent.detail > 1 && this._needProcessMouseEvent(e)) {
             e.preventDefault();
          }
          TreeDataGridView.superclass._mouseDownHandler.apply(this, arguments);
@@ -599,7 +614,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             if ($target.hasClass('js-controls-TreeView__editArrow') || $target.hasClass('js-controls-ListView__itemCheckBox')) {
                return false;
             } else if (data.get(this._options.nodeProperty)) {
-               this._currentScrollPosition = 0;
                this.setCurrentRoot(id);
                this.reload();
             }

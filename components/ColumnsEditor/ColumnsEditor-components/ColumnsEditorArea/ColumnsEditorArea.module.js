@@ -7,8 +7,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea', [
    'js!SBIS3.CONTROLS.ColumnsEditorUtils',
    'Core/CommandDispatcher',
    'js!SBIS3.CONTROLS.ItemsMoveController',
-   'js!WS.Data/Collection/RecordSet',
-   'js!WS.Data/Functor/Compute',
+   'WS.Data/Collection/RecordSet',
    'tmpl!SBIS3.CONTROLS.ColumnsEditorArea',
    'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/itemContentTpl',
    'js!SBIS3.CONTROLS.Button',
@@ -18,7 +17,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea', [
    'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/groupTpl',
    'js!SBIS3.CONTROLS.ScrollContainer'
  ],
-   function(CompoundControl, ColumnsEditorUtils, CommandDispatcher, ItemsMoveController, RecordSet, ComputeFunctor, dotTplFn, ItemContentTpl) {
+   function(CompoundControl, ColumnsEditorUtils, CommandDispatcher, ItemsMoveController, RecordSet, dotTplFn, ItemContentTpl) {
 
       'use strict';
       /**

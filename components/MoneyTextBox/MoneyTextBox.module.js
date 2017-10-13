@@ -44,11 +44,9 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
      * @control
      * @author Романов Валерий Сергеевич
      *
-     * @cssModifier controls-MoneyTextBox__ellipsis При нехватке ширины текст в поле ввода будет обрезаться. Если контрол неактивен, то оборвётся многоточием.
      */
    var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS.MoneyTextBox.prototype */ {
       $protected: {
-         _decimalsContainer: null,
          _options: {
             textFieldWrapper: textFieldWrapper,
             /**
@@ -112,17 +110,18 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
       },
 
       $constructor: function () {
-         if(!this._decimalsContainer) {
-             this._decimalsContainer = this._getDecimalsContainer();
-         }
       },
 
       _setEnabled: function(enabled){
          this._inputField[0].contentEditable = enabled;
          this._setInputValue(this._options.text);
-         this._decimalsContainer.toggleClass('ws-hidden', enabled);
          MoneyTextBox.superclass._setEnabled.apply(this, arguments);
       },
+
+       _createMirrorInput: function () {
+       },
+       _initMirrorInput: function () {
+       },
 
       _blurHandler: function() {
          MoneyTextBox.superclass._blurHandler.apply(this, arguments);
@@ -163,27 +162,16 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
       },
 
       _getInputValue: function() {
-         var decimalsPart,
-             value = this._inputField[0].innerHTML;
+         var value = this._inputField[0].innerHTML;
 
-         if(!this.isEnabled()){
-            decimalsPart = this._decimalsContainer[0].innerHTML;
-            value += decimalsPart;
-         }
-         return value;
+         return value.replace(/\n/gm, '').replace(/<.*?>/g, '');
       },
 
       _setInputValue: function(value) {
          var newText = (value === null ||typeof value === 'undefined') ? '' : value + '';
          this._updateCompatPlaceholderVisibility();
          if(!this.isEnabled()) {
-            // Рассчеты и отрисовку нужно разделить
-            // TODO сделать это в рамках работы по стандартизации полей ввода
-            if(!this._decimalsContainer){
-               this._decimalsContainer = this._getDecimalsContainer();
-            }
-            this._decimalsContainer[0].innerHTML = newText.substring(newText.length - 3, newText.length);
-            this._inputField[0].innerHTML = this._getIntegerPart(newText);
+            this._inputField[0].innerHTML = this._getIntegerPart(newText) + '<span class="controls-MoneyTextBox__decimals">' + newText.substring(newText.length - 3, newText.length) + '</span>';
          }else{
             this._inputField[0].innerHTML = newText;
          }
@@ -196,10 +184,6 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
        _getIntegerPart: function(value) {
         var dotPosition = (value.indexOf('.') != -1) ? value.indexOf('.') : value.length;
         return value.substr(0, dotPosition);
-      },
-
-      _getDecimalsContainer: function () {
-        return  $('.js-MoneyTextBox__decimals', this.getContainer().get(0));
       },
 
       _formatText: function(value){

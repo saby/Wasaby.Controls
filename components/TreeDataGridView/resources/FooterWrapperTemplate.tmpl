@@ -5,7 +5,7 @@
     <td class="controls-TreeDataGridView__folderFooter-td" colspan="{{colspan}}">
       <div class="controls-TreeView__folderFooterContainer">
          <div class="controls-TreeDataGridView__levelPaddingWrap">
-            <ws:for data="i in level">
+            <ws:for data="i in (level + 1)">
                <div class="controls-TreeDataGridView__levelPadding">&nbsp;</div>
             </ws:for>
             <ws:if data="{{footerTpl}}">
@@ -13,7 +13,11 @@
                   <ws:partial template="{{footerTpl}}" scope="{{...}}"  item="{{item}}" projItem="{{projItem}}" ></ws:partial>
                </div>
             </ws:if>
-            <ws:SBIS3.CONTROLS.TreePaging scope="{{pagerOptions}}"></ws:SBIS3.CONTROLS.TreePaging>
+            <ws:if data="{{pagerOptions}}">
+               <ws:SBIS3.CONTROLS.Link class="controls-TreePager" scope="{{pagerOptions}}"
+                                       allowChangeEnable="{{false}}">
+               </ws:SBIS3.CONTROLS.Link>
+            </ws:if>
          </div>
       </div>
     </td>

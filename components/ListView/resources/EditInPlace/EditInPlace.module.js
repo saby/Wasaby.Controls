@@ -9,11 +9,10 @@ define('js!SBIS3.CONTROLS.EditInPlace',
    "tmpl!SBIS3.CONTROLS.EditInPlace",
    "Core/constants",
    "js!SBIS3.CONTROLS.CompoundFocusMixin",
-   "Core/core-instance",
    "Core/helpers/fast-control-helpers",
    'css!SBIS3.CONTROLS.EditInPlace'
 ],
-   function(Deferred, Control, dotTplFn, constants, CompoundFocusMixin, cInstance, fcHelpers) {
+   function(Deferred, Control, dotTplFn, constants, CompoundFocusMixin, fcHelpers) {
       'use strict';
 
       /**

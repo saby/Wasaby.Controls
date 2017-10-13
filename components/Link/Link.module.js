@@ -1,17 +1,20 @@
 define('js!SBIS3.CONTROLS.Link', [
-   'Deprecated/helpers/string-helpers',
+   'Core/helpers/String/escapeTagsFromStr',
    'js!WSControls/Buttons/Button',
    'tmpl!SBIS3.CONTROLS.Link/resources/hrefTemplate',
    'css!SBIS3.CONTROLS.Link'
-], function(strHelpers, WSButton, hrefTemplate) {
+], function(escapeTagsFromStr, WSButton, hrefTemplate) {
 
    'use strict';
 
    /**
-    * Класс контрол "Кнопка в виде ссылки". Используется только в онлайн.
+    * Класс контрола "Кнопка в виде ссылки".
     *
-    * {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/buttons/button-link/ Демонстрационные примеры}.
+    * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/textbox/buttons/button-link/#link Демонстрационные примеры}.
     * <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Спецификация</a>.
+    *
+    * @remark
+    * Используется только для веб-приложения online.sbis.ru.
     *
     * @class SBIS3.CONTROLS.Link
     * @extends WSControls/Buttons/ButtonBase
@@ -109,9 +112,10 @@ define('js!SBIS3.CONTROLS.Link', [
       setCaption: function(caption){
          Link.superclass.setCaption.call(this, caption);
          if(this._options.href) {
-            this._container.get(0).innerHTML = hrefTemplate(this._options);
+            this._contentContainer[0].innerHTML = hrefTemplate(this._options);
          }
-         this.setTooltip(strHelpers.htmlToText(caption === undefined || caption === null ? '' : caption + ''));
+         var res = (caption === undefined || caption === null ? '' : caption + '').replace(/<br>/g, '\n');
+         this.setTooltip(escapeTagsFromStr(res, '\\w+'));
       },
 
       _setEnabled: function(enabled){
@@ -129,7 +133,7 @@ define('js!SBIS3.CONTROLS.Link', [
       _drawIcon: function (icon) {
          Link.superclass._drawIcon.call(this, icon);
          if(this._options.href) {
-            this._container.get(0).innerHTML = hrefTemplate(this._options);
+            this._contentContainer[0].innerHTML = hrefTemplate(this._options);
          }
       },
       /**
@@ -141,7 +145,7 @@ define('js!SBIS3.CONTROLS.Link', [
        */
       setHref: function (href) {
          this._options.href = href;
-         this._container.html(hrefTemplate(this._options));
+         this._contentContainer[0].innerHTML = hrefTemplate(this._options);
       }
 
    });

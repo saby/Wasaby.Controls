@@ -28,10 +28,13 @@
       .inline-flexbox();
       .align-items(@controls-OperationsPanel-actions-align);
       overflow: hidden;
+
+      .controls-operationsPanel__action {
+         min-height: inherit;
+      }
    }
 
    .controls-operationsPanel__actionType-mark {
-      padding-left: @controls-OperationsPanel-actions-padding-left;
       &:after {
          margin-left: @controls-OperationsPanel-separator-margin-left;
          background: @controls-OperationsPanel-separator-bg;
@@ -40,7 +43,7 @@
          content: '\00a0';
          font-size: 1px;
          display: inline-block;
-         line-height: @controls-OperationsPanel-separator-line-height;
+         vertical-align: middle;
       }
    }
 
@@ -64,20 +67,28 @@
 
    }
 }
-
-.controls-operationsPanel__itemsMenu_picker .controls-PopupMixin__closeButton,
-.controls-operationsPanel__itemsMenu_picker .controls-PopupMixin__closeButton:hover{
-   background: none;
-   top: 8px;
-   right: 10px;
-}
-
-.controls-operationsPanel__itemsMenu_picker.controls-MenuIcon__Menu .controls-MenuItem {
-   padding-right: 36px;
-}
-
 .controls-operationsPanel__itemsMenu_picker {
    .controls-operationsPanel-modes();
+
+   &.controls-MenuIcon__Menu {
+      .controls-MenuItem {
+         padding-right: @controls-OperationsPanel-menu-padding-right;
+      }
+   }
+
+   .controls-PopupMixin__closeButton, .controls-PopupMixin__closeButton:hover {
+      background: none;
+      box-shadow: none !important;
+      top: 8px;
+      right: @controls-OperationsPanel-menu-close-button-right;
+      &:before {
+         content: "\e801";
+      }
+   }
+}
+
+.controls-operationsPanel__itemsMenu .icon-size, .controls-operationsPanel__itemsMenu_picker .controls-PopupMixin__closeButton.icon-size{
+   .icon-size(@controls-OperationsPanel-menu-icon-size);
 }
 
 .controls-OperationPanel__Menu {

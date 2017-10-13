@@ -3,14 +3,13 @@
  */
 define('js!SBIS3.CONTROLS.DropdownList',
    [
-   "Core/constants",
-   "Core/Deferred",
    "Core/EventBus",
    "Core/IoC",
+   "Core/constants",
    "Core/core-merge",
    "Core/core-instance",
-   "Core/ConsoleLogger",
-   "Core/core-functions",
+   "Core/helpers/String/format",
+   'Core/helpers/Function/shallowClone',
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CONTROLS.PickerMixin",
    "js!SBIS3.CONTROLS.ItemsControlMixin",
@@ -20,9 +19,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "js!SBIS3.CONTROLS.DropdownListMixin",
    "js!SBIS3.CONTROLS.FormWidgetMixin",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
-   "js!WS.Data/Collection/RecordSet",
-   "js!WS.Data/Display/Display",
-   "js!WS.Data/Collection/List",
+   "WS.Data/Collection/RecordSet",
+   "WS.Data/Display/Display",
+   "WS.Data/Collection/List",
    "tmpl!SBIS3.CONTROLS.DropdownList",
    "tmpl!SBIS3.CONTROLS.DropdownList/DropdownListHead",
    "tmpl!SBIS3.CONTROLS.DropdownList/DropdownListPickerHead",
@@ -33,7 +32,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    'css!SBIS3.CONTROLS.DropdownList'
 ],
 
-   function (constants, Deferred, EventBus, IoC, cMerge, cInstance, ConsoleLogger, cFunctions, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
+   function (EventBus, IoC, constants, cMerge, cInstance, format, shallowClone, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
 
       'use strict';
       /**
@@ -64,9 +63,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
        * @mixes SBIS3.CONTROLS.DropdownListMixin
        * @mixes SBIS3.CONTROLS.PickerMixin
        * @mixes SBIS3.CONTROLS.DataBindMixin
+       * @mixes SBIS3.CONTROLS.FormWidgetMixin
        *
-       * @demo SBIS3.CONTROLS.Demo.MyDropdownList <b>Пример 1.</b> Простой пример работы контрола
-       * @demo SBIS3.CONTROLS.Demo.MyDropdownListFilter <b>Пример 2.</b> Выпадающий список с фильтрацией.
+       * @demo SBIS3.CONTROLS.Demo.MyDropdownList Пример работы контрола
        *
        * @ignoreOptions emptyHTML
        * @ignoreMethods setEmptyHTML
@@ -94,7 +93,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
              emptyItemProjection,
              rs;
          rawData[cfg.idProperty] = null;
-         rawData[cfg.displayProperty] = rk('Не выбрано');
+         rawData[cfg.displayProperty] = getEmptyText(cfg);
          rawData.isEmptyValue = true;
 
          rs = new RecordSet({
@@ -106,6 +105,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
          return emptyItemProjection.at(0);
       }
 
+      function getEmptyText(cfg) {
+         if (typeof cfg.emptyValue === 'boolean') {
+            return rk('Не выбрано');
+         }
+         return cfg.emptyValue;
+      }
+
       function prepareSelectedItems(cfg) {
          //Подготавливаем данные для построения на шаблоне
          var items = cfg._items,
@@ -114,6 +120,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
              textArray = [];
          if (items && keys && keys.length > 0){
             list = new List();
+            if (items.at(0) && items.at(0).get(cfg.idProperty) === keys[0]) {
+               //Если выбрано дефолтное значение - скрываем крест
+               cfg.className += ' controls-DropdownList__hideCross';
+            }
             items.each(function (record, index) {
                var id = record.get(cfg.idProperty);
                for (var i = 0, l = keys.length; i < l; i++) {
@@ -133,7 +143,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
       function prepareText(textValue) {
          if (textValue.length > 1) {
-            return textValue[0] + ' и еще ' + (textValue.length - 1);
+            return textValue[0] + ' ' + format({count: textValue.length - 1}, rk('и еще $count$s$'));
          }
          return textValue.join('');
       }
@@ -158,7 +168,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                /**
                 * @cfg {String} Устанавливает шаблон отображения шапки.
                 * @remark
-                * Шаблон может быть создан с использованием <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/logicless-template/">logicless-шаблонизатора</a> и <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/">doT.js-шаблонизатора</a>.
+                * Шаблон может быть создан с использованием <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/xhtml/logicless-template/">logicless-шаблонизатора</a> и <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/xhtml/template/">doT.js-шаблонизатора</a>.
                 * Шаблон создают в компоненте в подпапке resources.
                 * Порядок работы с шаблоном:
                 * <ol>
@@ -238,7 +248,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                /**
                 * @cfg {String} Устанавливает шаблон отображения элемента коллекции выпадающего списка.
                 * @remark
-                * Шаблон может быть создан с использованием <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/logicless-template/">logicless-шаблонизатора</a> и <a href="https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/core/component/xhtml/template/">doT.js-шаблонизатора</a>.
+                * Шаблон может быть создан с использованием <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/xhtml/logicless-template/">logicless-шаблонизатора</a> и <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/xhtml/template/">doT.js-шаблонизатора</a>.
                 * Шаблон создают в компоненте в подпапке resources.
                 * @example
                 * Чтобы можно было использовать шаблон в компоненте и передать в опцию itemTpl, нужно выполнить следующее:
@@ -310,11 +320,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
                parentProperty: null,
                allowEmptyMultiSelection: false,
                /**
-                * @cfg {Boolean} Добавить пустое значение в выпадающий список с текстом "Не выбрано"
+                * @cfg {Boolean|String} Добавить пустое значение в выпадающий список
+                * @variant true Добавляется пустое значение с текстом "Не выбрано"
+                * @variant {String} Добавляется пустое значение с текстом {String}
                 * @remark
                 * Пустое значение имеет ключ null
                 */
-               emptyValue: null
+               emptyValue: false
             },
             _pickerListContainer: null,
             _pickerCloseContainer: null,
@@ -326,11 +338,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
             _defaultId: null,
             _buttonChoose : null,
             _buttonHasMore: null,
-            _currentSelection: [],
-            _emptyText: rk('Не выбрано')
+            _currentSelection: []
          },
          $constructor: function() {
             this._publish('onClickMore');
+            this._keysWeHandle[constants.key.esc] = 100;
             var self = this;
             this._container.bind(this._isHoverMode() ? 'mouseenter' : 'click', function(event){
                if (self._getItemsProjection()) {
@@ -339,6 +351,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
             });
             if (this._container.hasClass('controls-DropdownList__withoutCross')){
                this._options.pickerClassName += ' controls-DropdownList__withoutCross';
+            }
+            if (this._container.hasClass('controls-DropdownList__withoutArrow')){
+               this._options.pickerClassName += ' controls-DropdownList__withoutArrow';
             }
             this._setHeadVariables();
          },
@@ -374,22 +389,12 @@ define('js!SBIS3.CONTROLS.DropdownList',
          },
 
          _setPickerContent : function () {
-            var pickerContainer = this._getPickerContainer(),
-                header = pickerContainer.find('.controls-DropdownList__header'),
-                cssModificators = ['controls-DropdownList__withoutArrow',
-                                   'controls-DropdownList__withoutCross',
-                                   'controls-DropdownList__linkStyle'];
-            //Заполняем опцию className навешенными css-модификаторами
-            for (var i = 0, l = cssModificators.length; i < l; i++){
-               if (this.getContainer().hasClass(cssModificators[i]) && this._options.className.indexOf(cssModificators[i]) < 0){
-                  this._options.cssClassName += ' ' + cssModificators[i];
-               }
-            }
+            var header = $('.controls-DropdownList__header', this._getPickerContainer());
             // Собираем header через шаблон, чтобы не тащить стили прикладников
             /* Надо делать клон, иначе в ие при определнии scope для шаблона затирается parent
                https://online.sbis.ru/opendoc.html?guid=e5604962-8cea-4d32-88e8-1ead295e0adf&des=
                Задача в разработку 15.05.2017 Не пробрасывать scope в ИЕ utils.js:: createSavingPrototype: function mergeSavingPrototype(scope… */
-            header.append(dotTplFn(cFunctions.shallowClone(this._options)));
+            header.append(dotTplFn(shallowClone(this._options)));
             this._setPickerVariables();
             this._bindItemSelect();
 
@@ -440,7 +445,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                var oldKeys = this.getSelectedKeys();
                this._options.selectedItems && this._options.selectedItems.clear();
                this._options.selectedKeys = idArray;
-               this._drawSelectedValue(null, [this._emptyText]);
+               this._drawSelectedValue(null, [getEmptyText(this._options)]);
                this._notifySelectedItems(this._options.selectedKeys,{
                   added : idArray,
                   removed : oldKeys
@@ -597,7 +602,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                if (this.getSelectedKeys()[0] !== null) {
                   this._options.selectedKeys = [null];
                }
-               this._drawSelectedValue(null, [this._emptyText]);
+               this._drawSelectedValue(null, [getEmptyText(this._options)]);
             }
             else{
                if (!this.getSelectedKeys().length && this._getItemsProjection().getCount()) {
@@ -781,7 +786,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             var textValues = [],
                 len = id.length,
                 self = this,
-                item, def;
+                item;
             if (!this._getItemsCount()) {
                //Если нет данных - не нужно запускать перерисовку. в этом случае обнулится опция text, которая может использоваться как значение по умолчанию (пока не установят данные)
                //_drawSelectedItems запускается после init'a, в поле связи могут задать selectedItems, не задавая items, поэтому проблему в mixin'e решать нельзя
@@ -793,7 +798,6 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this._drawSelectedValue(this.getItems().get(), [this.getItems().getAsValue()]);
             }
             else if(len) {
-               def = new Deferred();
                this.getSelectedItems(true).addCallback(function(list) {
                   if(list) {
                      list.each(function (rec) {
@@ -819,15 +823,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
                         }
                      }
                      else if (self._options.emptyValue) {
-                        textValues.push(self._emptyText);
+                        textValues.push(getEmptyText(self._options));
                      }
                   }
 
-                  def.callback(textValues);
+                  self._drawSelectedValue(id[0], textValues);
                   return list;
                });
-
-               def.addCallback(this._drawSelectedValue.bind(this, id[0]));
             }
          },
 
@@ -856,6 +858,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
          _drawSelectedValue: function(id, textValue){
             var isDefaultIdSelected = id == this._defaultId,
+                text = prepareText(textValue),
                 pickerContainer;
             if (this._picker && !this._options.multiselect) {
                pickerContainer = this._getPickerContainer();
@@ -863,14 +866,19 @@ define('js!SBIS3.CONTROLS.DropdownList',
                pickerContainer.find('[data-id="' + id + '"]').addClass('controls-DropdownList__item__selected');
                this._setHasMoreButtonVisibility();
             }
-            this._setText(prepareText(textValue));
+            this._setText(text);
             this._redrawHead(isDefaultIdSelected);
+            this._drawTitle(textValue);
             this._resizeFastDataFilter();
+         },
+         _drawTitle: function(textValue) {
+            var title = this.getSelectedKeys().length > 1 ? textValue.join(', ') : '';
+            this.getContainer()[0].setAttribute('title', title);
          },
          _resizeFastDataFilter: function(){
             var parent = this.getParent();
-            this._notifyOnSizeChanged();
-            if (cInstance.instanceOfModule(parent, 'SBIS3.CONTROLS.FastDataFilter')){
+            if (cInstance.instanceOfModule(parent, 'SBIS3.CONTROLS.FastDataFilter')) {
+               this._notifyOnSizeChanged();
                parent._recalcDropdownWidth();
             }
          },
@@ -911,7 +919,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             this._setText(text);
          },
          _setText: function(text){
-            if(typeof text === 'string') {
+            if(typeof text === 'string' && this._options.text !== text) {
                this._options.text = text;
                this._notifyOnPropertyChanged('text');
             }
@@ -927,34 +935,16 @@ define('js!SBIS3.CONTROLS.DropdownList',
             return this._pickerListContainer;
          },
          _setPickerConfig: function () {
-            var hasArrow = this.getContainer().hasClass('controls-DropdownList__withoutArrow'),
-                type = this._options.type,
-                isFastDataFilterType = type == 'fastDataFilter',
-                offset = {
-                   top: -10,
-                   left: -10
-                };
-            if (type == 'titleHeader'){
-               offset.top = -6;
-            }
-            else if (type == 'customHeader') {
-               offset.left = -2;
-               offset.top = -1;
-            }
-            else if (isFastDataFilterType) {
-               //Располагаем текст в пикере над текстом в ссылке. Позиция зависит от наличия треугольника
-               offset.left = hasArrow ? -14 : 2;
-            }
+            var type = this._options.type,
+                isFastDataFilterType = type == 'fastDataFilter';
             return {
                corner: 'tl',
                verticalAlign: {
-                  side: 'top',
-                  offset: offset.top
+                  side: 'top'
                },
                _canScroll: true,
                horizontalAlign: {
-                  side: 'left',
-                  offset: offset.left
+                  side: 'left'
                },
                closeByExternalOver: false,
                closeByExternalClick : true,
@@ -974,6 +964,13 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if (this._picker) {
                DropdownList.superclass._clearItems.call(this, this._pickerListContainer);
             }
+         },
+         _keyboardHover: function(event) {
+            if (event.which === constants.key.esc && this.isPickerVisible()) {
+               this.hidePicker();
+               return false;
+            }
+            return true;
          },
          destroy : function(){
             if (this._buttonChoose) {

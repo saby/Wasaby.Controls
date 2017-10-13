@@ -17,8 +17,11 @@ function(RadioGroupBase, dotTpl, ItemTemplate, ITextValue) {
     * Контрол задающий оформление выбора одного из нескольких значений в виде классических радиокнопок
     * @class SBIS3.CONTROLS.RadioGroup
     * @extends SBIS3.CONTROLS.RadioGroupBase
+    *
     * @mixes SBIS3.CONTROLS.ITextValue
+    *
     * @author Журавлев Максим Сергеевич
+    *
     * @demo SBIS3.CONTROLS.Demo.MyRadioGroup
     *
     * @cssModifier controls-ButtonGroup__vertical Для вертикального расположения элементов в группе.

@@ -7,19 +7,16 @@ define('js!SBIS3.CONTROLS.MenuButton', [
    'use strict';
 
    /**
-    * Класс контрола "Кнопка с выпадающим меню".
+    * Класс контрола "Кнопка-меню".
     *
-    * {@link https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/buttons/button-line/#- Демонстрационные примеры}.
+    * {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/textbox/buttons/button-line/#menu-button Демонстрационные примеры}.
     * <a href='http://axure.tensor.ru/standarts/v7/%D0%BA%D0%BD%D0%BE%D0%BF%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_07_.html'>Спецификация</a>.
+    *
+    * @remark
+    * Если в меню задан только один пункт, то меню НЕ будет показано, а при нажатии на кнопку будет выполнено действие, соответствующее этому пункту.
     *
     * @class SBIS3.CONTROLS.MenuButton
     * @extends WSControls/Buttons/MenuButton
-    * @remark
-    * !Важно: Если в меню задан только один пункт, то меню НЕ будет показано, а при нажатии на кнопку будет выполнено действие, соответствующее этому пункту.
-    * Кнопка с меню - это кнопка с выбором варината действия, и если возможно только одно действие, то оно и будет выполнено по нажатию.
-    *
-    * @mixes SBIS3.CONTROLS.PickerMixin
-    * @mixes SBIS3.CONTROLS.DSMixin
     *
     * @author Крайнов Дмитрий Олегович
     *

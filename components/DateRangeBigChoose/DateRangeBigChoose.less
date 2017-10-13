@@ -17,7 +17,8 @@
 
 .range-button-bar-mixin () {
    //.controls-DateRangeBigChoose__months-range-btn-wrapper {
-      .controls-Button {
+      .controls-ButtonBase {
+         cursor: pointer;
          .border-radius(0);
          &.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
             .buttonbar-selected-button();
@@ -29,13 +30,13 @@
       }
 
       .controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
-         .controls-Button {
+         .controls-ButtonBase {
             .buttonbar-selected-button();
          }
 
          &.controls-RangeSelectable__item-selectedStart,
          &.controls-RangeSelectable__item-selectedEnd {
-            .controls-Button {
+            .controls-ButtonBase{
                .buttonbar-selected-boundary-button();
             }
          }
@@ -46,23 +47,30 @@
 
 .range-vertical-button-bar-mixin() {
    .range-button-bar-mixin();
-   .controls-Button {
+   .controls-ButtonBase {
       border: 1px solid @date-range-big-choose-border-color;
       border-bottom: none;
       .controls-Button__text {
          margin: 0;
-         overflow: initial;
+         overflow: visible;
       }
    }
    :first-child {
-      .controls-Button {
+      .controls-ButtonBase {
          border-top: none;
       }
    }
    .controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
-      .controls-Button {
+      .controls-ButtonBase {
          border-bottom: none;
       }
+   }
+}
+
+// Выпилить в 3.17.150 с отказом от кнопок со стилями
+.controls-DateRangeBigChoose__years-yearsRange-btn {
+   &:not(.controls-Button__big).controls-Button-size__default.controls-Button .controls-Button__wrapper {
+      padding: 0;
    }
 }
 
@@ -119,7 +127,6 @@
       .controls-DateRangeBigChoose__datePickerStart {
          float: right;
          margin-top: @date-range-big-choose-header-date-picker-margin-top;
-         height: @date-range-big-choose-header-date-picker-height;
       }
 
       .controls-DateRangeBigChoose__datePickerEnd-wrapper {
@@ -127,16 +134,13 @@
       }
 
       .controls-DateBox {
-         .controls-FormattedTextBox__fieldWrapper {
-            border: 1px solid @date-range-big-choose-header-date-box-border-color;
-            border-radius: 3px;
-            font-size: @date-range-big-choose-header-date-box-font-size;
-         }
+         border: 1px solid @date-range-big-choose-header-date-box-border-color;
+         border-radius: 3px;
+         font-size: @date-range-big-choose-header-date-box-font-size;
+
          &:hover,
          &.ws-has-focus {
-            .controls-FormattedTextBox__fieldWrapper {
-               border-color: @date-range-big-choose-header-date-box-border-selected-color;
-            }
+            border-color: @date-range-big-choose-header-date-box-border-selected-color;
          }
       }
    }
@@ -212,6 +216,8 @@
             font-size: @date-range-big-choose-years-range-font-size;
             text-align: center;
             background-color: transparent;
+            text-shadow: none;
+            box-shadow: none;
 
             &:hover {
                color: #000000;
@@ -220,7 +226,7 @@
             .controls-Button__text {
                margin: 0;
                padding: 0;
-               overflow: initial;
+               overflow: visible;
             }
             &.controls-RangeSelectable__item.controls-RangeSelectable__item-selected:not(.controls-RangeSelectable__item-selectedStart) {
                border-left: none;
@@ -328,8 +334,10 @@
             min-width: @date-range-big-choose-left-right-width;
             height: 100%;
             background-color: transparent;
-            font-size: @date-range-big-choose-quarters-half-years-font-size;
+            font-size: inherit;
             border-bottom: none;
+            box-shadow: none;
+            text-shadow: none;
             .inline-flexbox();
             .justify-content(center);
             .align-items(center);
@@ -422,46 +430,6 @@
       position: relative;
       overflow: hidden;
 
-      .controls-DateRangeBigChoose__dates-months {
-         position: absolute;
-         width: @date-range-big-choose-months-range-width;
-         font-size: 0;
-         .range-vertical-button-bar-mixin();
-
-         span.controls-Button {
-            .inline-flexbox();
-            .justify-content(flex-start);
-            .align-items(center);
-            width: 100%;
-            height: @date-range-big-choose-months-button-height;
-            border-top: none;
-            border-bottom: none;
-            color: @date-range-big-choose-months-color;
-            font-size: @date-range-big-choose-months-font-size;
-            text-align: left;
-            padding-left: @date-range-big-choose-months-padding;
-            border-left-color: transparent;
-            background-color: transparent;
-            .controls-Button__wrapper {
-               padding: 0;
-               .justify-content(flex-start);
-            }
-
-            &:first-child {
-               height: @date-range-big-choose-months-button-first-height;
-               padding-top: @date-range-big-choose-months-button-first-padding-top;
-            }
-            &:last-child {
-               height: @date-range-big-choose-months-button-last-height;
-               padding-bottom: @date-range-big-choose-months-button-last-padding-bottom;
-            }
-
-            &.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
-               border-top: none;
-               border-bottom: none;
-            }
-         }
-      }
       .controls-DateRangeBigChoose__dates-dates-wrapper {
       //.controls-DateRangeBigChoose__dates-dates {
          position: absolute;
@@ -527,6 +495,60 @@
    }
 }
 
+.controls-DateRangeBigChoose__dates-months {
+   width: @date-range-big-choose-months-range-width;
+   position: absolute;
+   height: 100%;
+   .flexbox();
+   .flex-direction(column);
+
+   // Будет выпелено после перехода на новый стандарт, там нет выделения по месяцам.
+   .range-vertical-button-bar-mixin();
+   .controls-ButtonBase {
+      border-top: none;
+      border-bottom: none;
+      border-left-color: transparent;
+      background-color: transparent;
+      &.controls-RangeSelectable__item.controls-RangeSelectable__item-selected {
+         border-top: none;
+         border-bottom: none;
+      }
+      &:not(.controls-RangeSelectable__item-selected) {
+         &:hover {
+            border-left-color: @date-range-big-choose-bg-hovered-color;
+            background: @date-range-big-choose-bg-hovered-color;
+         }
+      }
+      &:hover {
+         color: @date-range-big-choose-month-hovered-color;
+      }
+   }
+}
+
+.controls-DateRangeBigChoose__dates-month-btn {
+   .flexbox();
+   .flex-shrink(0);
+   .flex-grow(1);
+   .align-items(center);
+
+   color: @date-range-big-choose-months-color;
+   font-size: @date-range-big-choose-months-font-size;
+   text-align: left;
+   padding-left: @date-range-big-choose-months-padding;
+
+   // После перехода на новый стандарт будет выпилено. Сейчас размеры первой и последней кнопки разные.
+   &:first-child {
+      height: @date-range-big-choose-months-button-first-height;
+      .flex-grow(0);
+      padding-top: @date-range-big-choose-months-button-first-padding-top;
+   }
+   &:last-child {
+      height: @date-range-big-choose-months-button-last-height;
+      .flex-grow(0);
+      padding-bottom: @date-range-big-choose-months-button-last-padding-bottom;
+   }
+}
+
 body:not(.ws-is-mobile-platform) {
    .controls-DateRangeBigChoose {
       .controls-DateRangeBigChoose__months {
@@ -573,32 +595,6 @@ body:not(.ws-is-mobile-platform) {
                > span:hover {
                   border-right-color:  @date-range-big-choose-bg-hovered-color;
                   border-left-color:  @date-range-big-choose-bg-hovered-color;
-               }
-            }
-         }
-      }
-
-      .controls-DateRangeBigChoose__dates {
-         .controls-DateRangeBigChoose__dates-months {
-            span.controls-Button:not(.controls-RangeSelectable__item-selected) {
-               &:hover {
-                  border-left-color: @date-range-big-choose-bg-hovered-color;
-                  background: @date-range-big-choose-bg-hovered-color;
-               }
-            }
-         }
-      }
-   }
-}
-
-
-.ws-is-desktop-platform {
-   .controls-DateRangeBigChoose {
-      .controls-DateRangeBigChoose__dates {
-         .controls-DateRangeBigChoose__dates-months {
-            span.controls-Button {
-               &:hover {
-                  color: @date-range-big-choose-month-hovered-color;
                }
             }
          }

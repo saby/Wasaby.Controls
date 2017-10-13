@@ -1,11 +1,12 @@
 define('js!SBIS3.CONTROLS.FilterPanelChooser.BaseList', [
    'js!SBIS3.CONTROLS.FilterPanelChooser.Base',
-   'Core/core-functions',
+   'Core/core-clone',
+   'Core/core-merge',
    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.BaseList/resources/ItemTpl',
    'tmpl!SBIS3.CONTROLS.FilterPanelChooser.BaseList/resources/FilterPanelChooserBaseList',
    'js!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.FilterPanelChooser.BaseList'
-], function(FilterPanelChooserBase, cFunctions, itemTpl, chooserTpl) {
+], function(FilterPanelChooserBase, coreClone, coreMerge, itemTpl, chooserTpl) {
    'use strict';
    /**
     * Базовый класс редактора "Список".
@@ -41,7 +42,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.BaseList', [
       _modifyOptions: function() {
          var
             opts = FilterPanelChooserBaseList.superclass._modifyOptions.apply(this, arguments);
-         opts._preparedProperties = cFunctions.merge(opts.properties, this._prepareProperties(opts));
+         opts._preparedProperties = coreMerge(opts.properties, this._prepareProperties(opts));
          return opts;
       },
 
@@ -85,7 +86,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.BaseList', [
       },
 
       _updateValue: function() {
-         this._setValue(cFunctions.clone(this._getListView().getSelectedKeys()));
+         this._setValue(coreClone(this._getListView().getSelectedKeys()));
       },
 
       _getListView: function() {

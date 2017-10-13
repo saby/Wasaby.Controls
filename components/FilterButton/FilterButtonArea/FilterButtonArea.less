@@ -1,6 +1,6 @@
 .controls-FloatArea.controls__filterButton__picker {
 	background: @controls-filterButton-picker-bg;
-	border: @controls-filterButton-picker-border-width @controls-filterButton-picker-border-style @controls-filterButton-picker-border-color;
+	border: @controls-filterButton-picker-border-width solid @controls-filterButton-picker-border-color;
 	.box-shadow(@menu-shadow);
 	margin-top: -1px;
 
@@ -80,6 +80,7 @@
 
 .controls-filterButton__secondary-title {
 	font-size: @controls-filterButton-title-fontSize;
+	font-weight: bold;
 	color: @controls-filterButton-title-text-color;
 	display: inline-block;
 	height: 24px;
@@ -92,13 +93,13 @@
 }
 
 .controls-filterButton__history-area .controls-filterButton__footerAreas-wrapper{
-	margin-left: -4px;
+	margin-left: 4px;
 }
 
 .controls-filterButton__historyView .controls-ItemsToolbar {
 	background-color: transparent;
 	box-shadow: none;
-	right: @controls-filterButton-history-actions-right;
+	right: auto !important;
 	left: @controls-filterButton-history-actions-left;
 	bottom: @controls-filterButton-history-actions-bottom;
 	
@@ -122,8 +123,8 @@
 }
 
 .controls-filterButton__historyView-pin {
-	float: @controls-filterButton-history-pin-float;
-	position: @controls-filterButton-history-pin-position;
+	float: left;
+	position: relative;
 	top: @controls-filterButton-history-pin-top;
 }
 
@@ -134,7 +135,7 @@
 .controls-filterButton__footerAreas-wrapper {
 	display: block;
 	overflow: hidden;
-	margin: 6px 0 0 14px;
+	margin: 6px 0 0 22px;
 }
 
 .controls-filterButton__additionalFilterParams-area {
@@ -142,19 +143,19 @@
 }
 
 .controls-filterButton__historyView-titleContainer {
-	position: @controls-filterButton-history-titleCont-position;
+	position: absolute;
 	right: @controls-filterButton-history-titleCont-right;
 	left: @controls-filterButton-history-titleCont-left;
 	top: 4px;
 }
 
 .controls-filterButton__historyView-item-title {
-	display: @controls-filterButton-history-title-display;
+	display: inline-block;
 	.text-overflow();
 	max-height: @controls-filterButton-history-title-height;
-	vertical-align: @controls-filterButton-history-title-verAlign;
+	vertical-align: top;
 	color: @controls-filterButton-history-title-color;
-	width: @controls-filterButton-history-title-width;
+	width: 100%;
 }
 
 .controls__filterButton__area-header {
@@ -186,14 +187,14 @@
 }
 
 .controls__filterButton__picker .controls-FieldLink__Link.ws-enabled {
-	color: @controls-FieldLink-FilterButton-color;
+	color: @fieldLink-FilterButton-color;
 
 	.controls-Button__text {
 		text-decoration: none;
 	}
 	
 	&.ws-enabled:hover {
-		color: @controls-FieldLink-FilterButton-color-hover;
+		color: @fieldLink-FilterButton-color-hover;
 		text-decoration: underline;
 	}
 }
@@ -233,4 +234,10 @@
 			}
 		}
 	}
+}
+
+/* Из-за TensorFont'a ссылки без указания высоты в ie имеют высоту не 24px, а 24.57,
+   а это ломает расчёты для кнопки фильтров, т.к. в стандарте все размеры написаны из рачёты высоты ссылок - 24px. */
+.ws-is-ie .controls-filterButton__additionalFilterParams-content .controls-Link {
+	height: @default-height;
 }

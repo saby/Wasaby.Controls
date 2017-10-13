@@ -1,16 +1,14 @@
 .controls-SuggestTextBox {
   .controls-SuggestTextBox__reset {
-    .inline-flexbox();
-    .align-items(center);
     .icon-size(@suggest-text-box-icon-size, @default-icon-font);
     height:100%;
     cursor: pointer;
     color: @suggest-text-box-icon-cross-color;
-    padding: 0 3px;//todo //(24 - 2 * 1 - 16)/2 = 3
+    padding: @suggest-text-box-icon-cross-padding;
   }
   
   &.controls-Picker__show {
-    border-color: @controls-FieldLink-border-color-picker-show;
+    border-color: @fieldLink-border-color-picker-show;
     background: @suggest-text-box-bg-show-picker-color;
   
     .controls-TextBox__field {

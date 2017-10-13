@@ -4,18 +4,16 @@
 define('js!SBIS3.CONTROLS.SelectorController', [
    "Core/CommandDispatcher",
    "js!SBIS3.CORE.CompoundControl",
-   "js!WS.Data/Di",
+   "WS.Data/Di",
    "Core/core-instance",
-   "Core/core-merge",
-   "Core/core-functions",
-   "js!WS.Data/Entity/Record",
-   "js!WS.Data/Source/SbisService",
+   'Core/core-clone',
+   "WS.Data/Entity/Record",
    "js!SBIS3.CONTROLS.Utils.Query",
    "js!SBIS3.CONTROLS.Utils.OpenDialog",
-   "js!WS.Data/Collection/List",
+   "WS.Data/Collection/List",
    "js!SBIS3.CONTROLS.SelectorWrapper"
 ],
-    function (CommandDispatcher, CompoundControl, Di, cInstance, cMerge, cFunctions, Record, SbisService, Query, OpenDialogUtil, List) {
+    function (CommandDispatcher, CompoundControl, Di, cInstance, coreClone, Record, Query, OpenDialogUtil, List) {
 
        'use strict';
 
@@ -23,7 +21,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
 
        /**
         * Класс компонента, который описывает логику выбора из диалога/панели.
-        * Пример использования класса описан в статье <a href='https://wi.sbis.ru/doc/platform/developmentapl/interfacedev/components/textbox/selector-action/'>Окно выбора из справочника</a>.
+        * Пример использования класса описан в статье <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/'>Окно выбора из справочника</a>.
         *
         * @class SBIS3.CONTROLS.SelectorController
         * @extends SBIS3.CORE.CompoundControl
@@ -167,7 +165,13 @@ define('js!SBIS3.CONTROLS.SelectorController', [
 
              if(difference.removed.length) {
                 difference.removed.forEach(function(removedKey) {
-                   currentItems.removeAt(currentItems.getIndexByValue(idProperty, removedKey));
+                   var index = currentItems.getIndexByValue(idProperty, removedKey);
+                   
+                   /* Т.к. когда делаеют setSelectedKeys с каким-то ключём, записи в рекордсете с этим ключём может не быть,
+                      так и при удалении ключа, записи с таким ключем среди currentSelectedItems может не быть */
+                   if(index !== -1) {
+                      currentItems.removeAt(index);
+                   }
                 });
                 onChangeSelection();
              }
@@ -206,7 +210,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
                 dataSource,
                 self = this;
              if (this._linkedObject && this._linkedObject._options.useSelectAll) {
-                filter = cFunctions.clone(this._linkedObject.getFilter());
+                filter = coreClone(this._linkedObject.getFilter());
                 dataSource = this._linkedObject.getDataSource();
                 //Закончить выбор элементов можно двумя способами:
                 //1) Нажать кнопку "Выбрать" в шапке диалога;

@@ -1,13 +1,10 @@
 <div
    class="controls-ListView__item js-controls-ListView__item{{
-         _isItemSelected(projItem) ? ' controls-ListView__item__selected'
-      }}{{
-         itemData.hovered ? ' controls-ListView__item__hovered'
-      }}{{
-         _isItemMultiSelected(projItem) ? ' controls-ListView__item__multiSelected'
+         isSelected ? ' controls-ListView__item__selected'
       }}{{className}}"
    data-hash="{{ projItem.getHash() }}"
-   event:onclick="_onItemClick(projItem)"
-   event:onmousemove="_mouseMove(projItem)">
-   <ws:partial template="{{contentTemplate}}" scope="{{...}}" attributes="{{ attributes }}"></ws:partial>
+   key="{{ projItem.getHash() }}"
+   event:onclick="_onItemClick(projItem)">
+   <ws:partial template="{{contentTemplate}}" scope="{{_itemContentTplData}}" attributes="{{ attributes }}" item="{{item}}"
+               projItem="{{projItem}}"></ws:partial>
 </div>

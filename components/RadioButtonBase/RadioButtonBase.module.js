@@ -13,7 +13,11 @@ define('js!SBIS3.CONTROLS.RadioButtonBase', ['js!WSControls/Buttons/ButtonBase',
     * При клике, если состояние не checked, то проставить true, иначе ничего не делать.
     * @class SBIS3.CONTROLS.RadioButtonBase
     * @extends WSControls/Buttons/ButtonBase
+    *
     * @public
+    *
+    * @mixes SBIS3.CONTROLS.Checkable
+    *
     * @author Крайнов Дмитрий Олегович
     */
 

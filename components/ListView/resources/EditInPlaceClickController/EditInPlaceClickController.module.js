@@ -4,10 +4,9 @@
 
 define('js!SBIS3.CONTROLS.EditInPlaceClickController',
    [
-      'js!SBIS3.CONTROLS.EditInPlaceBaseController',
-      'js!SBIS3.CONTROLS.EditInPlace'
+      'js!SBIS3.CONTROLS.EditInPlaceBaseController'
    ],
-   function (EditInPlaceBaseController, EditInPlace) {
+   function (EditInPlaceBaseController) {
 
       'use strict';
 

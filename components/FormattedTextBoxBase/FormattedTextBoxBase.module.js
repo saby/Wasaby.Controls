@@ -2,14 +2,15 @@ define(
    'js!SBIS3.CONTROLS.FormattedTextBoxBase',
    [
       'Core/IoC',
-      'Core/ConsoleLogger',
       'Core/constants',
       'Core/core-extend',
+      'js!SBIS3.CONTROLS.Utils.IfEnabled',
       'js!SBIS3.CONTROLS.TextBoxBase',
       'html!SBIS3.CONTROLS.FormattedTextBoxBase/FormattedTextBoxBase_mask',
+      'Core/helpers/Function/forAliveOnly',
       'is!msIe?js!SBIS3.CORE.FieldString/resources/ext/ierange-m2-min'
    ],
-   function (IoC, ConsoleLogger, constants, cExtend, TextBoxBase, maskTemplateFn) {
+   function (IoC, constants, cExtend, ifEnabled, TextBoxBase, maskTemplateFn, forAliveOnly) {
 
    'use strict';
 
@@ -700,26 +701,9 @@ define(
             e.preventDefault();
          });
          //keypress учитывает расскладку, keydown - нет
-         this._inputField.keypress(function (event) {
-            if (!self._isFirefoxKeypressBug(event)) {
-               self._keyPressBind(event);
-            }
-         });
+         this._inputField.keypress(this._onKeyPress.bind(this));
          //keydown ловит управляющие символы, keypress - нет
-         this._inputField.keydown(function(event){
-            /*У некоторых android'ов спецефичная логика обработки клавишь:
-             1) Не стреляет событие keypress
-             2) Событие keydown стреляет послое вставки символа
-             3) Из события не возможно понять какая клавиша была нажата, т.к. возвращается keyCode = 229 || 0
-             Для таких андроидов обрабатываем ввод символа отдельно
-             */
-            if (constants.browser.isMobileAndroid && (event.keyCode === 229 || event.keyCode === 0)){
-               setTimeout(self._keyDownBindAndroid.bind(self, event), 0);
-            }
-            else{
-               self._keyDownBind(event);
-            }
-         });
+         this._inputField.keydown(this._onKeyDown.bind(this));
          this._inputField.bind('paste', function(e) {
             var
                 formatModel = self._getFormatModel(),
@@ -740,6 +724,26 @@ define(
          });
          this._chromeCaretBugFix();
       },
+      _onKeyPress: ifEnabled(function (event) {
+         if (!this._isFirefoxKeypressBug(event)) {
+            this._keyPressBind(event);
+         }
+      }),
+      _onKeyDown: ifEnabled(function (event) {
+         var self = this;
+         /*У некоторых android'ов спецефичная логика обработки клавишь:
+          1) Не стреляет событие keypress
+          2) Событие keydown стреляет послое вставки символа
+          3) Из события не возможно понять какая клавиша была нажата, т.к. возвращается keyCode = 229 || 0
+          Для таких андроидов обрабатываем ввод символа отдельно
+          */
+         if (constants.browser.isMobileAndroid && (event.keyCode === 229 || event.keyCode === 0)){
+            setTimeout(forAliveOnly(this._keyDownBindAndroid.bind(this, event), self), 0);
+         }
+         else{
+            this._keyDownBind(event);
+         }
+      }),
       //FF зачем то кидает событие keypress для управляющих символов(charCode === 0), в отличии от всех остальных браузеров.
       //Просто проигнорируем это событие, т.к. управляющая клавиша уже обработана в keydown. Так же отдельно обработаем
       //ctrl+A, т.к. для этой комбинации keypress так же вызываться не должен.
@@ -834,15 +838,19 @@ define(
 
       _getTextDiff: function(){
          var splitRegExp = this._getSplitterRegExp(),
-             oldText = this._options.text ? this._options.text.split(splitRegExp)  : this._getClearText().split(splitRegExp),
-             newText = this._inputField.text().split(splitRegExp);
+            oldText = this._options.text ? this._options.text.split(splitRegExp)  : this._getClearText().split(splitRegExp),
+            newText = this._inputField.text().split(splitRegExp),
+            maskGroups = this._getMask().split(splitRegExp);
+
          for (var i = 0, l = newText.length; i < l; i++) {
-            if (oldText[i].length !== newText[i].length){
+            if (oldText[i] && (oldText[i].length !== newText[i].length)){
                for (var j = 0; j < newText[i].length; j++){
                   if (oldText[i][j] !== newText[i][j]){
                      return {
                         'char': newText[i][j],
-                        position: j
+                        // проверка на возможность ввода символа в группу,
+                        // если в данную группу нельзя ввести символы, то вводим в первую позицию след разрешенной группы
+                        position: maskGroups[i].replace(/[L,l,d,D,h,H,i,I,x]/g,'').length === maskGroups[i].length ? 0 : j
                      }
                   }
                }
@@ -852,7 +860,7 @@ define(
       },
 
       _getSplitterRegExp: function(){
-         return /[.,\/\- :=]/;
+         return /[.,\/\- :=()+]/;
       },
 
       _getClearText: function(){
@@ -1036,15 +1044,20 @@ define(
        */
       //TODO пока работает только в IE8+ и FireFox
       _focusHandler: function() {
+         this._moveCursor();
+      },
+
+      _moveCursor: function(group, position) {
          var
-            child = !this._getFormatModel().model[0].isGroup ? 1 : 0,
-            startContainer = this._inputField.get(0).childNodes[child].childNodes[0],
-            startPosition = 0;
+            self = this,
+            child = group || (this._getFormatModel().model[0].isGroup ? 0 : 1),
+            startContainer = _getContainerByIndex.call(this, child),
+            startPosition = position || 0;
          //В IE если ставить курсор синхронно по событию focusin, то он не устанавливается.
          if (constants.browser.isIE) {
-            setTimeout(function() {
+            setTimeout(forAliveOnly(function() {
                _moveCursor(startContainer, startPosition);
-            }, 0);
+            }, self), 0);
          } else {
             _moveCursor(startContainer, startPosition);
          }
@@ -1174,7 +1187,7 @@ define(
          // Перемещаем курсор в модели в начало т.к каретка становится вначале поля ввода.
          formatModel.setCursor(0, 0);
          //TODO исправить выставление курсора
-         setTimeout(function() {
+         setTimeout(forAliveOnly(function() {
             //Если контрол не сфокусирован, и мы вызываем нажатие alt, то
             //вывалится ошибка при вызове getSelection, ловим ее здесь.
             try {
@@ -1182,7 +1195,7 @@ define(
             } catch(ex) {
                IoC.resolve('ILogger').log('FormattedTextBox', ex.message);
             }
-         }, 0);
+         }, self), 0);
       }
 
    });

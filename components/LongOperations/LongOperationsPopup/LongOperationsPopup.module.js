@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
       'js!SBIS3.CORE.TabMessage',
       /*###'js!SBIS3.CONTROLS.WaitIndicator',*/
       "js!SBIS3.CONTROLS.NotificationPopup",
-      'js!SBIS3.CONTROLS.LongOperationEntry',
+      'js!SBIS3.CONTROLS.LongOperations.Entry',
       'js!SBIS3.CONTROLS.LongOperationsList/resources/model',
       "html!SBIS3.CONTROLS.LongOperationsPopup/resources/headerTemplate",
       "html!SBIS3.CONTROLS.LongOperationsPopup/resources/contentTemplate",
@@ -29,8 +29,10 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
        * Класс всплывающего информационное окна длительных операций
        * @class SBIS3.CONTROLS.LongOperationsPopup
        * @extends SBIS3.CONTROLS.NotificationPopup
+       *
+       * @author Спирин Виктор Алексеевич
        */
-      var LongOperationsPopup = NotificationPopup.extend({
+      var LongOperationsPopup = NotificationPopup.extend(/** @lends SBIS3.CONTROLS.LongOperationsPopup.prototype */{
          $protected: {
             _options: {
                userId: UserInfo.get('Пользователь'),

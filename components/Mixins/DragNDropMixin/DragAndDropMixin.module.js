@@ -6,8 +6,11 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [
 ], function(constants) {
 
    var isMobile = constants.browser.isMobilePlatform;
-
-   var DragAndDropMixin = {
+    /**
+     * @mixin SBIS3.CONTROLS.DragAndDropMixin
+     * @public
+     */
+   var DragAndDropMixin = /** @lends SBIS3.CONTROLS.DragAndDropMixin.prototype */{
       $protected: {
          _dragContainer: undefined,
          _withinElement: undefined,

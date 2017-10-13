@@ -3,7 +3,7 @@
    <!--Блок с сообщением или шаблоном сообщения-->
    <div class="controls-SubmitPopup__body">
       <ws:if data="{{messageTemplate || message}}">
-         <div class="controls-SubmitPopup__message">
+         <div class="controls-SubmitPopup__message {{(detailsTemplate || details) ? 'controls-SubmitPopup__message_withDetails'}}">
             <ws:if data="{{messageTemplate}}">
                <ws:partial template="{{messageTemplate}}" scope="{{...}}"/>
             </ws:if>

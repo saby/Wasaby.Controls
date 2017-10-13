@@ -2,7 +2,7 @@
 define('js!SBIS3.CONTROLS.DragNDropMixin', [
     "Core/EventBus",
     "js!SBIS3.CONTROLS.DragObject",
-    "js!WS.Data/Di",
+    "WS.Data/Di",
     "Core/core-instance"
 ], function ( EventBus,DragObject, Di, cInstance) {
     'use strict';
@@ -16,23 +16,41 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
      * @see SBIS3.CONTROLS.DragEntity.Entity
      */
     if (typeof window !== 'undefined') {
-        var EventBusChannel = EventBus.channel('DragAndDropChannel');
+        var LEFT_BUTTON = 1,//Mouse left button flag
+           SCROLL_BAR_WIDTH = 24,//Just approximate
+           innerWidth = 0,
+           isLeftButtonDown = false,
+           eventBusChannel = EventBus.channel('DragAndDropChannel'),
+           onMouseUp = function(e) {
+              eventBusChannel.notify('onMouseup', e);
+              //Сбрасывать драгндроп надо после того как выполнились все обработчики, нам неизвестен порядок выполнения
+              // обработчиков может быть что первым mouseup поймает владелец и сбросит драгндроп
+              DragObject.reset();
+           };
 
         // Добавлены события для мультитач-девайсов
         // Для обработки используются уже существующие обработчики,
         // незначительно дополненные
-        $(document).bind('mouseup touchend', function(e) {
-            EventBusChannel.notify('onMouseup', e);
-            //Сбрасывать драгндроп надо после того как выполнились все обработчики, нам неизвестен порядок выполнения
-            // обработчиков может быть что первым mouseup поймает владелец и сбросит драгндроп
-            DragObject.reset();
+        $(document).on('mousedown touchstart', function(e) {
+           if (e.buttons & LEFT_BUTTON) {
+              isLeftButtonDown = true;
+              innerWidth = window.innerWidth;
+           }
+        }).on('mousemove touchmove', function (e) {
+           //Probably 'mouseup' event doesn't trigger over scrollbars.
+           //Detecting that left button is not hold yet on the window right edge.
+           if (isLeftButtonDown && !(e.buttons & LEFT_BUTTON) && innerWidth - e.pageX < SCROLL_BAR_WIDTH) {
+              isLeftButtonDown = false;
+              onMouseUp(e);
+           } else {
+              eventBusChannel.notify('onMousemove', e);
+           }
+        }).on('mouseup touchend', function(e) {
+           isLeftButtonDown = false;
+           onMouseUp(e);
         });
-
-        $(document).bind('mousemove touchmove', function (e) {
-            EventBusChannel.notify('onMousemove', e);
-        });
-
     }
+
     var DragAndDropMixin = /**@lends SBIS3.CONTROLS.DragNDropMixin.prototype*/{
         $protected: {
             /**
@@ -293,20 +311,21 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 self = this,
                 dragStrarter = function(bus, moveEvent){
                     self._preparePageXY(moveEvent);
-                    if (self._isDrag(moveEvent, clickEvent)) {
+                    if (!DragObject.isDragging() && self._isDrag(moveEvent, clickEvent)) {
                         self._beginDrag(clickEvent);
                         self._beginDragTarget = clickEvent.target;
                         EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
                     }
                 };
-            if (!DragObject.isInitDragStarter() && $(clickEvent.target).closest('.controls-DragNDropMixin__notDraggable', self._getDragContainer().context).length === 0) {
+            if ($(clickEvent.target).closest('.controls-DragNDropMixin__notDraggable', self._getDragContainer()[0]).length === 0
+               && ((clickEvent.type == 'mousedown' && clickEvent.which == LEFT_BUTTON) || clickEvent.type != 'mousedown') //Для мышки проверям что нажата левая кнопка
+            ) {
                this._preparePageXY(clickEvent);
                EventBus.channel('DragAndDropChannel').subscribe('onMousemove', dragStrarter);
                EventBus.channel('DragAndDropChannel').once('onMouseup', function () {
                   EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
                });
                this._preventClickEvent(clickEvent);
-               DragObject.setInitDragStarter(true);
             }
         },
         /**
@@ -382,7 +401,6 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
             if (res !== false) {
                 this._endDragHandler(DragObject, droppable, e);
             }
-            this._getDragContainer().removeClass('controls-dragndrop');
             this._position = null;
         },
 
@@ -452,6 +470,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 this._preparePageXY(e);
                 DragObject.onDragHandler(e);
                 var target = DragObject.getTargetsControl();
+                this._getDragContainer().removeClass('controls-dragndrop');
                 target = target && cInstance.instanceOfMixin(target, 'SBIS3.CONTROLS.DragNDropMixin') ? target : null;
                 if (DragObject.isDragging() && ((target === this || DragObject.getOwner() === this))) {
                     //если есть таргет то запускаем _endDrag над таргетом иначе запускаем над тем кто начал

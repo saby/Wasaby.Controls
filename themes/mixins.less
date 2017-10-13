@@ -53,25 +53,29 @@
 
 .placeholder() {
   &::-webkit-input-placeholder {
-    color: @text-box-placeholder-color;
+    color: @default-placeholder-color;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
+    text-overflow:ellipsis;
   }
 
   &:-moz-placeholder {
-     color: darken(@text-box-placeholder-color, 17%);
+     color: darken(@default-placeholder-color, 17%);
     -moz-user-select: none;
+    text-overflow:ellipsis;
   }
 
   &::-moz-placeholder {
-     color: darken(@text-box-placeholder-color, 17%);
+     color: darken(@default-placeholder-color, 17%);
     -moz-user-select: none;
+    text-overflow:ellipsis;
   }
 
   &:-ms-input-placeholder {
-     color: @text-box-placeholder-color;
-    -ms-user-select: none;
+     color: @default-placeholder-color;
+    //-ms-user-select: none; Убираю, т.к. из-за этого IE ставит курсор не в инпут, а куда то в рандомное место на странице
+    text-overflow:ellipsis;
   }
 }
 
@@ -98,9 +102,6 @@
   -webkit-border-radius: @radius;
   -moz-border-radius: @radius;
   border-radius: @radius;
-  -webkit-background-clip: padding-box;
-  -moz-background-clip: padding;
-  background-clip: padding-box;
 }
 
 .border-radiuses(@topright: 0, @bottomright: 0, @bottomleft: 0, @topleft: 0) {
@@ -137,7 +138,7 @@
   box-sizing: border-box;
 }
 
-.button-default-style(@button-font-size: @button-font-size) {
+.button-default-style(@button-font-size: @button-font-size, @button-default-shadow: none) {
   cursor: pointer;
   display: inline-block;
   outline: none;
@@ -147,7 +148,7 @@
   font-weight: normal;
   text-align: @button-text-alignment;
   position: relative;
-  .box-shadow(@button-shadow);
+  .box-shadow(@button-default-shadow);
   border: none;
   padding: 0;
 }
@@ -192,10 +193,11 @@
   background-image: -o-linear-gradient(@direction, @startColor, @endColor);
 }
 
-.animation(@name, @duration: 300ms, @delay: 0, @ease: ease) {
+.animation(@name, @duration: 300ms, @delay: 0ms, @ease: ease) {
   -webkit-animation: @name @duration @delay @ease;
   -moz-animation: @name @duration @delay @ease;
   -ms-animation: @name @duration @delay @ease;
+  animation: @name @duration @delay @ease
 }
 
 .transition(@transition) {
@@ -337,8 +339,9 @@
 // <width>
 .flex-basis(@width: auto) {
   -webkit-flex-basis: @width;
-      -ms-flex-basis: @width;
-          flex-basis: @width;
+  -ms-flex-preferred-size:@width;
+  -ms-flex-basis: @width;
+  flex-basis: @width;
 }
 .flex-grow(@grow: 0) {
    -webkit-flex-grow: @grow;
@@ -426,7 +429,7 @@
   }
   &:not(.ws-disabled):not(.controls-Click__active) {
     &:hover {
-      .@{textSelector}, .controls-Link-link {
+      .@{textSelector} {
         cursor: pointer;
         text-decoration: underline;
       }
@@ -484,7 +487,7 @@
   height: @size;
 }
 
-.checkbox-border-size(@sizeContainer, @sizeContent, @borderWidth, @borderRadius: 0) {
+.checkbox-border-size(@sizeContainer, @sizeContent, @borderWidth) {
   &:before {
     content: '';
     position: absolute;
@@ -493,9 +496,6 @@
     width: calc(@sizeContent ~"-" 2 * @borderWidth);
     height: calc(@sizeContent ~"-" 2 * @borderWidth);
     margin: (@sizeContainer - @sizeContent) / 2;
-    & when (@borderRadius > 0) {
-      .border-radius(@borderRadius);
-    }
   }
 }
 
@@ -508,7 +508,7 @@
   }
 }
 
-.checkbox-checked-size(@size, @posX, @posY, @topIE: @check-box-icon-successful-top-ie) {
+.checkbox-checked-size(@size, @posX, @posY) {
   &:after {
     font-family: 'cbuc-icons';
     content: '\e616';
@@ -527,8 +527,8 @@
       line-height: calc(~"@{size} + 1px");
     }
     // В IE, если значения css свойст в rem, то top расчитывается неправильно, поэтому ставим для IE другой.
-    body.ws-is-ie:not(.ws-is-windows-10) & when not (@topIE = 0){
-      top: @topIE;
+    body.ws-is-ie:not(.ws-is-windows-10) & when not (@check-box-icon-successful-top-ie = 0){
+      top: @check-box-icon-successful-top-ie;
     }
   }
 }

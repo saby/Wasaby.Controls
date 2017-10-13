@@ -1,12 +1,11 @@
 define('js!SBIS3.CONTROLS.MassSelectionController',
     [
         'js!SBIS3.CORE.Control',
-        "js!WS.Data/Collection/IBind",
-        "Core/core-instance",
-        "Core/core-functions",
+        "WS.Data/Collection/IBind",
+        "Core/core-clone",
         "js!SBIS3.CONTROLS.ArraySimpleValuesUtil"
     ],
-    function(Control, IBindCollection, cInstance, cFunctions, ArraySimpleValuesUtil) {
+    function(Control, IBindCollection, coreClone, ArraySimpleValuesUtil) {
 
         var MassSelectionController = Control.Control.extend( /** @lends SBIS3.CONTROLS.MassSelectionController.prototype */ {
             $protected: {
@@ -46,7 +45,7 @@ define('js!SBIS3.CONTROLS.MassSelectionController',
             },
 
             toggleSelectedAll: function() {
-                var selectedKeys = cFunctions.clone(this._options.linkedObject.getSelectedKeys());
+                var selectedKeys = coreClone(this._options.linkedObject.getSelectedKeys());
                 this._options.selectedAll = !this._options.selectedAll;
                 this._options.linkedObject.toggleItemsSelectionAll();
                 this._options.excluded = selectedKeys;

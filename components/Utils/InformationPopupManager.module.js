@@ -3,7 +3,9 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
    "Core/core-merge",
    "js!SBIS3.CONTROLS.SubmitPopup",
    "js!SBIS3.CONTROLS.NotificationPopup",
-   "browser!js!SBIS3.CONTROLS.Utils.NotificationStackManager"
+   "browser!js!SBIS3.CONTROLS.Utils.NotificationStackManager",
+   "Core/constants",
+   "Core/helpers/Function/runDelayed"
 ],
 
    /**
@@ -27,7 +29,12 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
     * @author Степин Павел Владимирович
     * @public
     */
-   function( cMerge,SubmitPopup, NotificationPopup, NotificationManager){
+   function( cMerge,
+             SubmitPopup,
+             NotificationPopup,
+             NotificationManager,
+             constants,
+             runDelayed){
       'use strict';
 
       var showSubmitDialog = function(config, positiveHandler, negativeHandler, cancelHandler){
@@ -48,12 +55,20 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
             }
 
             if(handler && typeof handler === 'function'){
-               handler();
+               handler.call(popup);
             }
          });
 
-         popup.show();
-         popup.setActive(true);
+         if (constants.browser.isIE) {
+            runDelayed(function () {
+               popup.show();
+               popup.setActive(true);
+            });
+         } else {
+            popup.show();
+            popup.setActive(true);
+         }
+
          return popup;
       };
 
@@ -64,8 +79,8 @@ define('js!SBIS3.CONTROLS.Utils.InformationPopupManager',
           * Открываемый диалог строится на основе экземпляра класса {@link SBIS3.CONTROLS.SubmitPopup}.
           * Изменению не подлежит значение опции {@link SBIS3.CONTROLS.SubmitPopup#status status}.
           * @param {Object} config Объект c конфигурацией открываемого диалога. В качестве свойств объекта передают опции, соответствующие классу {@link SBIS3.CONTROLS.SubmitPopup}.
-          * @param {Function} positiveHandler Обработчик нажатия на кнопку "Да".
-          * @param {Function} negativeHandler Обработчик нажатия на кнопку "Нет".
+          * @param {Function} [positiveHandler] Обработчик нажатия на кнопку "Да". Когда обработчик не установлен, клик по кнопке закрывает диалог.
+          * @param {Function} [negativeHandler] Обработчик нажатия на кнопку "Нет". Когда обработчик не установлен, клик по кнопке закрывает диалог.
           * @param {Function} [cancelHandler] Обработчик нажатия на кнопку "Отмена".
           * @returns {SBIS3.CONTROLS.SubmitPopup} Экземпляр класса диалога.
           * @example

@@ -374,9 +374,12 @@ define('js!SBIS3.CONTROLS.ItemActionsGroup',
          },
 
          setMenuAlign: function(align, target) {
-            if(this._itemActionsMenu){
+            if (this._itemActionsMenu) {
                this._itemActionsMenu.setProperty('corner', align.corner);
                this._itemActionsMenu.setTarget(target);
+               // контекстное меню строится относительно body
+               // popup для расчетов относительно body использует _defaultVerticalAlignSide и _defaultHorizontalAlignSide
+               // если устанавливать не через сеттеры, то дефолтные значения не меняются и меню позиционируется неправильно
                this._itemActionsMenu.setVerticalAlign(align.verticalAlign);
                this._itemActionsMenu.setHorizontalAlign(align.horizontalAlign);
             }

@@ -1,7 +1,7 @@
 <tr class="controls-DataGridView__tr controls-ListView__item js-controls-ListView__item {{(selectedKey == item.getId()) ? 'controls-ListView__item__selected' : ''}} {{className}}{{drawHiddenGroup ? ' ws-hidden' : ''}}" style="{{decorators.apply((item.colorField|orEmpty), 'color')}}" data-hash="{{projItem.getHash()}}" data-id="{{item.getId() + ''}}">
     <ws:if data="{{multiselect}}">
         <td class="controls-DataGridView__td controls-DataGridView__td__checkBox {{startScrollColumn !== undefined ? (startScrollColumn === 0 ? 'controls-DataGridView__scrolledCell' : 'controls-DataGridView__notScrolledCell') : ''}}"
-            style="left:{{startScrollColumn === 0 ? columnsShift + 'px;' : ''}}">
+            style="{{(columnsShift && startScrollColumn === 0)  ? ('transform:translateX(' + columnsShift + 'px);')}}">
         <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></span>
     </td>
     </ws:if>

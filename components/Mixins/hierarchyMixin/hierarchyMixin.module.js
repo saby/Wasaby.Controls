@@ -1,7 +1,8 @@
 define('js!SBIS3.CONTROLS.hierarchyMixin', [
-   "Core/core-functions",
-   "js!WS.Data/Relation/Hierarchy", 'Core/IoC'
-], function ( cFunctions,Hierarchy, IoC) {
+   "Core/core-clone",
+   "WS.Data/Relation/Hierarchy",
+   'Core/IoC'
+], function ( coreClone, Hierarchy, IoC) {
 
    /**
     * Миксин, добавляющий только работу с иерархией и методы для отображения.
@@ -172,7 +173,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [
             curPath = [],
             curLvl = 0,
             hierIterate = function(root) {
-               if (Array.indexOf(curPath, root) > -1) {
+               if (curPath.indexOf(root) > -1) {
                   var error = 'Recursive hierarchy structure detected: node with id "' + root + '" has link to itself';
                   if (curPath.map) {
                      error += ' (';
@@ -296,7 +297,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [
       after : {
          _dataLoadedCallback: function () {
             var path = this._items.getMetaData().path,
-               hierarchy = cFunctions.clone(this._hier),
+               hierarchy = coreClone(this._hier),
                item;
             if (path) {
                hierarchy = this._getHierarchy(path, this._curRoot);

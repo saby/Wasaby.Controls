@@ -1,4 +1,4 @@
-<div class="controls-TextArea__view {{ heightclassName ? heightclassName }} {{ !text ? 'controls-TextArea__view-empty'}}">{{ text ? wrapUrls(escapeHtml(text)) : placeholder && enabled ? placeholder }}</div>
+<div class="controls-TextArea__view {{ heightclassName ? heightclassName }} {{ !text ? 'controls-TextArea__view-empty'}}">{{ (text ? wrapUrls(escapeHtml(text)) : placeholder && enabled ? placeholder)|sanitize }}</div>
 <textarea
    class="controls-TextArea__field controls-TextBox__field js-controls-TextBox__field ws-invisible"
    placeholder="{{ placeholder}}"

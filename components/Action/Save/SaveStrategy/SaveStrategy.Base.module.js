@@ -1,13 +1,20 @@
 /* global define  */
 define('js!SBIS3.CONTROLS.SaveStrategy.Base', [
     'Core/Abstract',
-    'js!WS.Data/Di',
     'Core/helpers/fast-control-helpers',
     'js!SBIS3.CONTROLS.ISaveStrategy',
     'js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer'
-], function (Abstract, Di, fcHelpers, ISaveStrategy, Serializer) {
+], function (Abstract, fcHelpers, ISaveStrategy, Serializer) {
 
     'use strict';
+
+   /**
+    * Базовая стратегия для сохранения данных.
+    * @class SBIS3.CONTROLS.SaveStrategy.Base
+    * @public
+    * @extends Core/Abstract
+    * @author Сухоручкин Андрей Сергеевич
+    */
 
     var SaveStrategyBase = Abstract.extend([ISaveStrategy], /** @lends SBIS3.CONTROLS.SaveStrategy.Base.prototype */{
         $protected: {
@@ -16,6 +23,18 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Base', [
             }
         },
 
+        /**
+        * @typedef {Object} Meta
+        * @property {Array} [columns] Колонки которые будут сохраняться.
+        * @property {String} [xsl] Имя файла с xsl преобразованием.
+        * @property {Number} [minWidth] Минимальная ширина окна печати.
+        * @property {WS.Data/Collection/RecordSet} [recordSet] Набор данных который будет сохранён.
+        */
+        /**
+        * Метод сохранения данных.
+        * @param {Meta} meta - Методанные для сохранения.
+        * @see SBIS3.CONTROLS.ISaveStrategy
+        */
         saveAs: function(meta) {
             this.print(meta);
         },
@@ -44,8 +63,6 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Base', [
         }
 
     });
-
-    Di.register('savestrategy.base', SaveStrategyBase);
 
     return SaveStrategyBase;
 });

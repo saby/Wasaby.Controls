@@ -71,6 +71,9 @@
          </div>
          <div class="controls-Browser__view">
             <component data-component="SBIS3.CONTROLS.LongOperationsList" name="operationList">
+               {{? it.useGroupByEasyGroup}}
+               <opt name="useGroupByEasyGroup" value="true"/>
+               {{?}}
                {{? it.columns}}<opt type="ref" name="columns" value="{{@it.columns}}"/>{{?}}
                <opt name="userId" value="{{=it.userId}}"/>
                <opt name="narrowTmpl" value="false"/>

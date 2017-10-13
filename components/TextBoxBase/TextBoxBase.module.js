@@ -2,13 +2,12 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
    [
    "Core/constants",
    "Core/IoC",
-   "Core/ConsoleLogger",
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CONTROLS.FormWidgetMixin",
    "js!SBIS3.CONTROLS.DataBindMixin",
    "js!SBIS3.CORE.CompoundActiveFixMixin",
    "js!SBIS3.CONTROLS.ControlHierarchyManager"
-], function( constants, IoC, ConsoleLogger,CompoundControl, FormWidgetMixin, DataBindMixin, CompoundActiveFixMixin, ControlHierarchyManager) {
+], function( constants, IoC, CompoundControl, FormWidgetMixin, DataBindMixin, CompoundActiveFixMixin, ControlHierarchyManager) {
 
    'use strict';
 
@@ -261,6 +260,29 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       setValue : function(txt) {
          IoC.resolve('ILogger').log('setValue()', 'setValue is deprecated. Use setText()');
          this.setText(txt);
+      },
+      setEnabled: function(enabled) {
+         TextBoxBase.superclass.setEnabled.call(this, enabled);
+         this._toggleStateEnabled();
+      },
+      clearMark: function() {
+         TextBoxBase.superclass.clearMark.call(this);
+         this._toggleStateValidate();
+      },
+      markControl: function() {
+         TextBoxBase.superclass.markControl.call(this);
+         this._toggleStateValidate();
+      },
+      _updateActiveStyles: function() {
+         TextBoxBase.superclass._updateActiveStyles.call(this);
+         this._toggleStateActive();
+      },
+      // методы которые будут переключать состояния поля ввода, пока не перейдем на vDom
+      _toggleStateEnabled: function() {
+      },
+      _toggleStateValidate: function() {
+      },
+      _toggleStateActive: function() {
       }
    });
 

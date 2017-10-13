@@ -30,6 +30,9 @@ define(
        * @author Миронов Александр Юрьевич
        * @demo SBIS3.CONTROLS.Demo.MyMonthView
        *
+       * @mixes SBIS3.CONTROLS.RangeSelectableViewMixin
+       * @mixes SBIS3.CONTROLS.RangeMixin
+       *
        */
       var selectionTypes = {WEEK: 'week', DAY: 'day'};
 
@@ -297,6 +300,9 @@ define(
             }
             this._options.month = month;
             this._drawMonthTable();
+            // Обнуляем кэш выделяемых элементов.
+            // TODO: переделать https://online.sbis.ru/opendoc.html?guid=0ceb4c76-2d17-40c8-a1fb-93213be84738
+            this._$items = null;
             this._drawCurrentRangeSelection();
          },
          /**

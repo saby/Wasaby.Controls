@@ -12,8 +12,12 @@ define('js!SBIS3.CONTROLS.FilterHistoryView',
     function(ListView, footerTpl, itemTpl, HistoryList, CommandDispatcher) {
 
        'use strict';
-
-       var FilterHistoryView = ListView.extend({
+        /**
+         *
+         * @class SBIS3.CONTROLS.FilterHistoryView
+         * @extends SBIS3.CONTROLS.ListView
+         */
+       var FilterHistoryView = ListView.extend(/** @lends SBIS3.CONTROLS.FilterHistoryView.prototype*/{
           $protected: {
              _options: {
                 historyId: '',
@@ -48,10 +52,10 @@ define('js!SBIS3.CONTROLS.FilterHistoryView',
                 var historyController = new HistoryList({historyId: this.getProperty('historyId')});
 
                 this.subscribeTo(historyController, 'onHistoryUpdate', function(event, history) {
-                   this.setItems(history.clone(true));
+                   this.setItems(history.clone());
                 }.bind(this));
 
-                this.setItems(historyController.getHistory().clone(true));
+                this.setItems(historyController.getHistory().clone());
              }
           }
        });

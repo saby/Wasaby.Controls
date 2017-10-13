@@ -35,6 +35,7 @@
    margin: @controls-filterButton-filterLine-margin;
    cursor: pointer;
    color: @controls-filterLine-link-color;
+   font-size: @default-text-size;
    
    &:not(.ws-disabled) {
       .controls__filterButton__filterLine-items:hover {
@@ -65,6 +66,11 @@
 }
 .controls__filterButton__filterLine-items, .controls__filterButton__filterLine-text {
    .text-overflow();
+   .flex-shrink(1);
+}
+
+.controls__filterButton__filterLine-text {
+   display: inline-block; // display: inline-block кроссбраузерно гарантирует, что внутри flexbox контейра блок не выйдет за ширину родителя
 }
 
 .controls__filterButton__filterLine-items, .controls__filterButton__filterLine {
@@ -99,8 +105,8 @@
    }
 }
 
-/* В FireFox'e есть баг для flex контейнеров, которые лежат в абослютном контейнере,
-   иногда могут неправильно рендериться блоки с align-items: center; */
-.ws-is-firefox .ws-sticky-header__header-container .controls__filterButton__filterLine-text {
-   padding-bottom: 1px;
+/* Правлю выравнивание из-за TensorFont'a,
+   который выравнивается в FF с округлением шрифтов вниз (с TensorFont'ом текст имеет дробную высоту). */
+.ws-is-firefox .controls__filterButton__filterLine-cross {
+   margin-top: 1px;
 }

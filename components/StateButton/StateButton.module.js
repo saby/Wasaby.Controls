@@ -1,8 +1,7 @@
 
 define('js!SBIS3.CONTROLS.StateButton', [
-   'Core/constants',
    'js!WSControls/Buttons/ToggleButton'
-], function(constants, WSToggleButton) {
+], function(WSToggleButton) {
 
    'use strict';
 

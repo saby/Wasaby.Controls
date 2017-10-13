@@ -1,4 +1,4 @@
-<ws:SBIS3.CONTROLS.TabButton class="{{'controls-ListView__item ' + item.get('className')}}"
+<ws:SBIS3.CONTROLS.TabButton class="{{'controls-ListView__item ' + item.get('className')|orEmpty}}"
                              attributes="{{ {'data-hash': projItem.getHash(), 'data-id': item.getId() } }}"
       caption="{{item[displayProperty]}}"
       align="{{item.get('align') || 'right'}}"
@@ -8,4 +8,5 @@
       enabled="{{item.get('enabled') !== false}}"
       visible="{{item.get('visible') !== false}}"
       checked="{{item.getId() === selectedKey ? true : false}}"
+      tooltip="{{item.tooltip}}"
       allowChangeEnable="{{!!allowChangeEnable}}" name="{{item.get('name')}}"></ws:SBIS3.CONTROLS.TabButton>

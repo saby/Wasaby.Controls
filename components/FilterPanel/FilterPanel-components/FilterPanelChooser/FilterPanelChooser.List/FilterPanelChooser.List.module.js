@@ -1,9 +1,8 @@
 define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
     'js!SBIS3.CONTROLS.FilterPanelChooser.BaseList',
-    'Core/core-instance',
-    'Core/core-functions',
+    'Core/core-merge',
     'Core/CommandDispatcher',
-    'js!WS.Data/Functor/Compute',
+    'WS.Data/Functor/Compute',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/resources/ItemContentTpl',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.List/resources/ItemTemplate',
@@ -12,7 +11,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
     'js!SBIS3.CONTROLS.Link',
     'js!SBIS3.CONTROLS.ListView',
     'css!SBIS3.CONTROLS.FilterPanelChooser.List'
-], function(FilterPanelChooserBaseList, cInstance, cFunctions, CommandDispatcher, ComputeFunctor, dotTplFn, itemContentTpl, itemTemplate, chooserTpl, footerTpl) {
+], function(FilterPanelChooserBaseList, coreMerge, CommandDispatcher, ComputeFunctor, dotTplFn, itemContentTpl, itemTemplate, chooserTpl, footerTpl) {
     var
         itemsFilterMethod = function(model, index, proj, projIndex) {
             return this.showFullList || projIndex < 3;
@@ -90,7 +89,7 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.List', [
             //необходимо забиндить фильтр на опции, чтобы в фильтре иметь доступ к опции showFullList, т.к. фильтрация
             //зависит от значения этой опции.
             options._itemsFilterMethod = options._itemsFilterMethod.bind(options);
-            return cFunctions.merge(props, {
+            return coreMerge(props, {
                 itemsSortMethod: options._itemsSortMethod,
                 itemsFilterMethod: options._itemsFilterMethod,
                 /*Сейчас признак мультивыбранности записи не рисуется на сервере, из-за этого происходит лютое моргание.

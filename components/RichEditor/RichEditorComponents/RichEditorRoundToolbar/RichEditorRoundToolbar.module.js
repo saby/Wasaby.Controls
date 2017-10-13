@@ -6,13 +6,12 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
    'js!SBIS3.CONTROLS.RichEditorToolbarBase',
    'tmpl!SBIS3.CONTROLS.RichEditorRoundToolbar',
    'js!SBIS3.CONTROLS.RichEditorRoundToolbar/resources/config',
-   'js!SBIS3.CONTROLS.FloatArea',
-   'js!WS.Data/Di',
+   'WS.Data/Di',
    'js!SBIS3.CONTROLS.MenuIcon',
    'js!SBIS3.CONTROLS.IconButton',
    'css!SBIS3.CONTROLS.RichEditorRoundToolbar',
    'js!SBIS3.CONTROLS.IconButton'
-], function(RichEditorToolbarBase, dotTplFn, defaultConfig, FloatArea, Di) {
+], function(RichEditorToolbarBase, dotTplFn, defaultConfig, Di) {
 
    'use strict';
    var
@@ -22,7 +21,7 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
       /**
        * @class SBIS3.CONTROLS.RichEditorRoundToolbar
        * @extends SBIS3.CONTROLS.RichEditorToolbarBase
-       * @author Борисов П.С.
+       * @author Спирин Виктор Алексеевич
        * @public
        * @control
        */
@@ -69,7 +68,6 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
                 * </pre>
                 */
                items: undefined,
-               defaultConfig: defaultConfig,
                expanded: false,
                /**
                 * @cfg {Boolean} Сторона с которой находится кнопка переключения видимости
@@ -78,7 +76,9 @@ define('js!SBIS3.CONTROLS.RichEditorRoundToolbar', [
             }
          },
 
-         _modifyOptions: function(options) {
+         _modifyOptions: function (options) {
+            // Так как в конфиге используется локализация через rk(), то только сейчас:
+            options.defaultConfig = defaultConfig();
             options.defaultConfig[0].order = options.side === 'right' ? 1000 : 1;
             options.defaultConfig[0].icon = options.side === 'right' ? 'sprite:icon-16 icon-View icon-primary' : 'sprite:icon-16 icon-ViewBack icon-primary';
             options = RichEditorRoundToolbar.superclass._modifyOptions.apply(this, arguments);

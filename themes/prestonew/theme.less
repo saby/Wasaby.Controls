@@ -1,3 +1,34 @@
+.close-button-mixin {
+  .inline-flexbox();
+  .align-items(center);
+  .justify-content(center);
+  color: #8991A9;
+  font-size: 2rem;
+  line-height: 2rem;
+  font-family: 'cbuc-icons';
+  width: 3rem;
+  height: 3rem;
+  background-color: #405A77;
+  background-image: none !important;
+  -webkit-box-shadow: @button-shadow !important;
+  -moz-box-shadow: @button-shadow !important;
+  box-shadow: @button-shadow !important;
+  .border-radius(@button-border-radius);
+
+  &:before {
+    content: "\e66c";
+  }
+
+  &:hover {
+    background: none;
+    background-color: #3D5571;
+  }
+  &:active {
+    background: none;
+    box-shadow: none !important;
+    background-color: #3D5571;
+  }
+}
 
 html {
   color: #e4e4e4;
@@ -6,9 +37,6 @@ body {
    font-size: 1rem !important;
 }
 body {
-   .ws-validation-error > textarea {
-      background-color: @text-box-error-bg !important; // перебиваю стили fieldAbstract
-   }
     //Todo: сделать @accent-color - #FFCC99  https://online.sbis.ru/opendoc.html?guid=47bdafa8-88ab-4cb2-9383-89ffd7c9dcdd
     //сейчас пока сделаем так, чтобы не разломать версию 3.7.5.150
     .controls-accent-text {
@@ -18,8 +46,12 @@ body {
    // в онлайне такие кнопки завязаны на жесткие стили controls-IconButton__round-border-24, что неправильно
    // для редизайна нужно перейти на относительные названия
    .controls-MenuIcon__Menu.controls-Menu.controls-Menu__Popup.controls-Menu__hide-menu-header {
-     margin: -.39rem 0 0 -.106rem;
+     margin: -.32rem 0 0 -.606rem;
    }
+   .controls-operationsPanel__itemsMenu_picker.controls-MenuIcon__Menu.controls-Menu.controls-Menu__hide-menu-header {
+     margin: -.32rem 0 0 1.32rem;
+   }
+
 
    //TODO: удалить это когда будет нормальный пэйджинг, не из ws-a
    .ws-paging{
@@ -86,13 +118,6 @@ body {
          padding: 0;
       }
    }
-   .controls-DataGridView__results {
-      font-size: @default-font-size;
-   }
-
-   .controls-TabButton {
-      box-sizing: border-box;
-   }
 
   .controls-ListView__bottomStyle > .controls-ItemsToolbar {
     &.controls-ItemsToolbar__edit {
@@ -113,9 +138,12 @@ body {
 
    .controls-ListView__scrollPager {
       .controls-IconButton {
-         background: #354B62;
+         background: @button-bg-color;
          padding: 0;
-          border: @button-border;
+         border-style: solid;
+         border-width: @button-border-width;
+         border-color: @button-bg-color;
+        .box-shadow(@button-shadow);
          .controls-Button__icon {
             height: 3rem!important;
             width: 3rem!important;
@@ -125,13 +153,13 @@ body {
             left: -@default-border-width;
             color: #E4E4E4 !important;
          }
-         &.controls-Click__active {
+         &:active {
            background: @button-bg-active;
+           box-shadow: none;
          }
          &.ws-disabled {
-            border-color: @disabled-color;
             .controls-Button__icon {
-               color: @disabled-color !important
+               color: @button-disabled-text-color !important
             }
          }
       }
@@ -194,7 +222,9 @@ body {
    border-color: rgba(96, 170, 221, 0.15);
    border-width: @default-border-width;
 }
+.ws-is-desktop-platform .controls-Button:not(.ws-disabled):not(:active).controls-Button-color__default:hover {
 
+}
 .controls-BreadCrumbs__crumb {
    .icon-primary {
       color: @bread-crumb-title-color !important;
@@ -218,11 +248,11 @@ body {
 
    .controls-DropdownList {
       .controls-DropdownList__selectedItem {
-         .controls-DropdownList__afterCaptionWrapper .controls-DropdownList__crossIcon {
-            font-size: 2rem !important;
-            line-height: 1.32rem !important;
-            width: 2rem;
-            height: 2rem;
+         .controls-DropdownList__afterCaptionWrapper, .controls-DropdownList__crossIcon {
+            font-size: 3rem !important;
+            height: 3rem !important;
+            width: 3rem !important;
+            line-height: 3rem !important;
          }
       }
    }
@@ -275,16 +305,6 @@ body {
          }
       }
    }
-   // У кнопок нестандартный цвет, перебиваем его. В новом дизайне либо добьюсь что бы цвета были стандартные,
-   // либо буду устанавливать его через переменные.
-   // В теме розницы есть такой же хак перебивающий этот хак на стандартный цвет
-   .controls-DateRangeChoose__home .icon-primary {
-      color: #e4e4e4;
-   }
-
-  .controls-ToolBar__menuIcon .icon-24 {
-    font-family: carrypresto-icons!important;
-  }
 
   .ws-float-area-title {
       font-size: 1.43rem!important;
@@ -305,21 +325,7 @@ body {
 
 .ws-float-close.sbisname-window-title-close,
 body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
-   width: 3rem !important;
-   height: 3rem !important;
-   background: @closeBigButtonImage;
-   &:hover {
-      background: @closeBigButtonImageHover;
-   }
-   &:active {
-      background: @closeBigButtonImageHover;
-   }
-   // У нас сейчас есть один растровый бакграунд для кнопки закрытия.
-   // В средней теме он слишком большой. Но этот баг фиксится прикладными стилями.
-   // Если поедут регресионные тесты и кнопка закрытия буде отображаться криво, то после того как вы пофиксите это,
-   // обязательно проверьте не поехала ли она в результате ваших изменений на сайте в крупной и средней темах.
-   // Задача на стилизауию кнопки закрытия.
-   // https://online.sbis.ru/opendoc.html?guid=7447de01-2904-4d45-a5de-06699e99633e
+  .close-button-mixin();
 }
 
 // SBIS3.CORE.CloseButton используется в DateRangeSlider. Удалить после того как выпилим SBIS3.CORE.CloseButton
@@ -329,11 +335,15 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
    // Перед тем как править стили для кнопки закрытия прочитай комментарий по .ws-float-close.sbisname-window-title-close
 }
 
+//Удалить, как будет темизация для engine.
 .controls-Browser {
    .controls-Browser__tableCell-search {
       .controls-Browser__selectAllCheckBox {
          .align-self(center);
       }
+   }
+   .controls__filterButton {
+      margin-top: 8px;
    }
    .controls-Browser__search {
       width: 21.4285rem;
@@ -346,7 +356,7 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
 .controls-ComboBox {
   &.controls-Picker__show {
     border-width: 0;
-    border-style: @text-box-hover-border-style;
+    border-style: solid;
     border-color: @text-box-hover-border-color;
   }
 }
@@ -356,6 +366,19 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
     &.controls-ComboBox__itemRow__selected {
       font-weight: bold;
     }
+  }
+  .controls-Scrollbar {
+     &.controls-Scrollbar__dragging {
+        .controls-Scrollbar__thumb {
+           background-color: rgba(0,0,0,.15);
+        }
+     }
+     .controls-Scrollbar__thumb {
+        background-color: rgba(0,0,0,.1);
+        &:hover {
+           background-color: rgba(0,0,0,.15);
+        }
+     }
   }
 }
 
@@ -377,22 +400,6 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
   white-space: normal;
    padding-bottom: 0; // FF only
 }
-
-.icon-24() {
-  font-size: 1.785rem !important;
-  line-height: 1.785rem !important;
-  width: 1.785rem;
-  height: 1.785rem;
-  font-family: carrypresto-icons !important;
-}
-.controls-TextBox {
-   &.controls-TextBox__big {
-      .controls-TextBox__field {
-         font-size:  1.43rem;
-      }
-   }
-}
-
 .ws-float-area-stack-panel-shadow {
   background: @basic-block-bg-color !important;
 }
@@ -463,12 +470,7 @@ body {
       font-weight: normal !important;
   }
    .ws-window-titlebar-action.close {
-      width: 3rem !important;
-      height: 3rem !important;
-      background: @closeBigButtonImage;
-      &:hover, &:active {
-         background: @closeBigButtonImageHover;
-      }
+      .close-button-mixin();
    }
    .ws-window-title {
       color: @default-text-color;
@@ -477,6 +479,7 @@ body {
       max-height: 3.57rem;
       line-height: 3.57rem;
       font-weight: normal;
+      margin: 0 3.2857rem 0 .8571rem;
    }
 }
 
@@ -523,13 +526,14 @@ body {
       }
    }
     .controls__filterButton__area-header,.controls__filterButton__area-text {
-      line-height: 3rem;
+      line-height: @default-icon-size-large;
     }
   .ws-float-area-title-generated {
       line-height: 3.57rem;
   }
   .ws-float-area-title {
     padding-left: .857rem;
+    width: ~"calc(100% - 3rem)";
   }
    .ws-float-area .ws-window-titlebar.ws-window-titlebar-custom {
       height: 3.57rem;
@@ -553,13 +557,14 @@ body {
 }
 
 .controls-IconButton.controls-TreeView__editArrow-container {
-  @offset: .2695rem;
+  @offset: .37rem;
   margin-top: calc(~"@{default-border-width} - @{offset}");
   .icon-16 {
     .icon-size(@icon-medium-size, @icon-font);
   }
 }
 
+//todo: дулаить это и переделать на еормальные коэфы
 .controls__filterButton {
    .controls__filterButton__filterLine {
       .controls__filterButton__filterLine-text{
@@ -568,10 +573,10 @@ body {
    }
    .controls-Button__icon {
       &.icon-size {
-         font-size: 3rem!important;
-         height: 3rem!important;
-         width: 3rem!important;
-         line-height: 3rem!important;
+         font-size: @default-icon-size-large !important;
+         height: @default-icon-size-large !important;
+         width: @default-icon-size-large !important;
+         line-height: @default-icon-size-large !important;
       }
    }
 }
@@ -594,12 +599,6 @@ body {
    }
 }
 
-// В теме онлайна кнопка выравнивается маргинами. Но в темах престы и розницы размер иконки другой и из-за них
-// появляются лишние отступы внизу контрола. Обнуляем маргины и меняем vertical-align у кнопки.
-// Если везде все будет хорошо, то в онлайне сделать подобным образом. Возможно проще сделать через flex.
-.controls-DateRange .controls-DateRange__Button {
-   vertical-align: top;
-}
 .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field .controls-FormattedTextBox__field-symbol {
 
     line-height: 2rem;
@@ -613,15 +612,6 @@ body {
 .controls-Link__field {
   vertical-align: baseline;
 }
-.controls-FieldLink, .controls-FieldLink__picker {
-   .controls-FieldLinkItemsCollection, .controls-FieldLink__item {
-      height: 3rem;
-   }
-   .controls-FieldLink__showAllLinks {
-      line-height: 3rem;
-   }
-}
-
 .controls-Paging .control-Paging__btn .controls-Button__icon {
     line-height: 2rem!important;
     padding-right: 0.4rem;
@@ -634,9 +624,6 @@ body {
 .icon-large {
   vertical-align: middle !important;
 }
-.controls-ListView__scrollPager .controls-IconButton {
-  background: #1D2834;
-}
 
 .controls-ToolBar__menuIcon {
    .icon-24 {
@@ -647,28 +634,13 @@ body {
       vertical-align: middle !important;
    }
 }
-.controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field {
-  line-height: 3rem;
-}
 
-body .controls-TextArea {
-   min-height: 3rem;
-}
-
-body .controls-ToolBar__menuIcon .icon-24 {
-  font-family: carrypresto-icons!important;
-}
 .controls__filterButton__area-header {
    .controls-Link {
       .controls-Button__text{
          vertical-align: baseline;
       }
    }
-}
-.controls-Link {
-  &.additionalLink__2 {
-    font-size: .857rem;
-  }
 }
 
 .controls__filter-button__apply-filter {
@@ -683,13 +655,6 @@ body .controls-ToolBar__menuIcon .icon-24 {
 .controls-Link {
   font-size: 1.14rem;
 }
-.controls-FieldLink .icon-size {
-    font-size: 3rem !important;
-    width: 3rem !important;
-    height: 3rem !important;
-    line-height: 3rem !important;
-}
-
 .controls-Browser {
    .controls-Browser__topTemplate {
       height: auto;
@@ -763,13 +728,15 @@ body .ws-window.ws-LoadingIndicator__window {
    }
 }
 
+.controls-DateRangeBigChoose__months-quarter-btn.controls-Button.controls-Button-color__default,
+.controls-DateRangeBigChoose__months-halfyear-btn.controls-Button.controls-Button-color__default,
+.controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button {
+  color: @default-text-color;
+}
+
 .controls-ComboBox__picker {
    box-sizing: border-box;
 }
-body .controls__filterButton__filterLine {
-  max-width: 100%;
-}
-
 .controls-DropdownList__picker .controls-DropdownList__item {
   line-height: 3.25rem;
 }
@@ -795,18 +762,11 @@ body .controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__cl
 .controls-PopupMixin__closeButton {
   position: absolute;
   top: 8px;
-  right: @controls-Popup-closeButton-right;
-  width: 3rem;
-  height: 3rem;
+  right: 0;
   cursor: pointer;
-  background: @closeBigButtonImage;
-  &:hover {
-    background: @closeBigButtonImageHover;
-  }
-  &:active {
-    background: @closeBigButtonImageHover;
-  }
   z-index: 1;
+
+  .close-button-mixin();
 }
 
 body {
@@ -815,6 +775,9 @@ body {
       color: @default-text-color;
       border: @button-border;
       padding: 0.857rem 3rem 0.857rem 0.857rem;
+      &.ws-infobox-type-error {
+        box-shadow: rgba(0, 0, 0, 0.5) 0 0 0.714rem;
+      }
       .ws-infobox-triangle {
          width: .857rem;
          height: .857rem;
@@ -829,6 +792,16 @@ body {
             border-left: @button-border;
             border-top: @button-border;
          }
+         &.ws-infobox-triangle-vertical-right {
+            right: -.54rem;
+            border-right: @button-border;
+            border-top: @button-border;
+         }
+         &.ws-infobox-triangle-vertical-left {
+            left: -.54rem;
+            border-left: @button-border;
+            border-bottom: @button-border;
+         }
       }
 
       .ws-infobox-content {
@@ -842,10 +815,10 @@ body {
          height: 3rem!important;
          right: 0;
          top: 0;
-         color: @link-text-color!important;
+         color: @Infobox-cross-color!important;
          overflow: hidden;
          &:hover {
-            color: @link-hover-text-color!important;
+            color: @Infobox-cross-color-hover!important;
          }
          &:before {
             line-height: 2.7rem!important;
@@ -855,7 +828,7 @@ body {
 }
 
 .controls-BreadCrumbs__crumb {
-   top: 0.08rem
+   top: 0.28rem
 }
 
 .ws-is-sbis-desktop {
@@ -863,13 +836,14 @@ body {
     top: -0.03rem
   }
 }
+//todo: удалить это нафиг сделать нормально и не лениться
 .controls-image {
    .controls-image__image-bar{
       .icon-16{
-         font-size: 3rem !important;
-         height: 3rem !important;
-         width: 3rem !important;
-         line-height: 3rem !important;
+         font-size: @default-icon-size-large !important;
+         height: @default-icon-size-large !important;
+         width: @default-icon-size-large !important;
+         line-height: @default-icon-size-large !important;
       }
    }
 }
@@ -893,15 +867,10 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls
     border-radius: 0;
 }
 
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__dates .controls-DateRangeBigChoose__dates-months span.controls-Button {
+body .controls-DateRangeBigChoose__dates-month-btn {
+   // Будет выпелено с переходом на новый стандарт. Там выравнивание одинаковое.
    padding-left: 0;
    text-align: center;
-   &:hover {
-      border-top: none!important;
-      border-bottom: none!important;
-      border-right-color: #3f566d!important;
-   }
-   line-height: 1.786rem;
    .controls-Button__text {
       width: 100%;
    }
@@ -933,8 +902,9 @@ body {
        line-height: 3rem;
      }
      .controls-ListView__hoveredItem {
+        background-color:  @suggest-list-hover-color !important;
          .controls-DataGridView__td {
-             background-color:  #E0ECF5 !important;
+             background-color:  @suggest-list-hover-color !important;
          }
      }
   & .ws-moneyDecorator .ws-moneyDecorator__integer__BasicRegistry {
@@ -945,9 +915,7 @@ body {
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button:hover {
   color: #fff;
 }
-.controls-Browser__breadCrumbs {
-  top: .18rem;
-}
+
 .controls-ToolBar .controls-ToolBar__menuIcon {
     vertical-align: baseline;
 }
@@ -984,18 +952,29 @@ body {
    }
 }
 
-.ws-is-webkit .controls-BreadCrumbs .controls-BreadCrumbs__arrow {
-   top:  0.33rem;
+.ws-is-webkit, .ws-is-mobile-chrome-ios {
+   .controls-BreadCrumbs .controls-BreadCrumbs__arrow {
+      top:  0.38rem;
+   }
 }
 
 .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
-   top: 0.16rem !important;
+   top: 0.34rem !important;
 }
 
 .ws-is-sbis-desktop {
   .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
     top: 0.35rem !important;
   }
+}
+
+/* КОСТЫЛЬ. Крошки накостылены через top'ы, margin'ы и тд. Срочно требуется переписать стили.
+   Выписана ошибка. https://online.sbis.ru/opendoc.html?guid=fa89f6fd-3e4a-4925-8de3-9f34c6b11729
+ */
+.ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
+   .controls-BreadCrumbs__crumb {
+      top: 0
+   }
 }
 
 .controls-ListView {
@@ -1019,6 +998,12 @@ body {
     }
   }
 
+  .controls-ListView__scrollPager:not(.ws-disabled):not(:active) {
+    &:hover {
+      border-color: @button-hover-bg;
+    }
+  }
+
 }
 .controls-Suggest__picker {
   .controls-HtmlDecorators-highlight {
@@ -1036,27 +1021,12 @@ body {
   }
 }
 
-.controls-TreePager-container {
-    cursor: pointer;
-    display: inline-block;
-    font-size: @listView-loadmorebutton-font-size;
-    color: @link-text-color; //todo
-    text-decoration: none;
-    &:hover{
-     color: @link-hover-text-color;
-    }
-}
-
 //Костыль, т.к. в престо иконки в ПМО большие, а на онлайне средние
 .controls-operationsPanel__actions .icon-24 {
-    font-size: 3rem !important;
-    height: 3rem !important;
-    width: 3rem !important;
-    line-height: 3rem !important;
-}
-//Костыль, у dropdown неподходящая для ПМО минимальная высота. Сделаем 100%.
-.controls-operationsPanel__actions .controls-DropdownList {
-   min-height: 100%;
+    font-size: @default-height !important;
+    height: @default-height !important;
+    width: @default-height !important;
+    line-height: @default-height !important;
 }
 
 // В темах престо и розницы все сверстано на внутренних скролируемых контенерах.
@@ -1081,4 +1051,38 @@ body {
   .controls-TextBox .controls-TextBox__wrapper:before {
     line-height: 2.5em; //2.5 = 2.85/1.14 //2.85 - default-line-height, 1.14 - default-font size
   }
+}
+
+body {
+  .ws-errorsReportDialog {
+    min-width: 30rem;
+
+    .ws-field-string {
+      font-size: 1rem;
+      height: 1.5rem;
+      color: @default-text-color;
+    }
+
+    .ws-field-button {
+      height: 1.5rem;
+      padding-right: 0.5rem;
+    }
+
+    .ws-errorsReportDialog-caption {
+      text-align: left;
+      width: 6rem;
+      color: @default-text-color;
+    }
+
+    .ws-errorsReportDialog-errors {
+      .ws-errorsReportDialog-caption, .ws-field-string, .ws-errorsReportDialog-errorsDescription {
+        color: @error-color;
+      }
+    }
+  }
+}
+
+//Убрать когда проектировщики сделают одинаковые отступы, обсуждали на этом совещании: https://online.sbis.ru/obj/Meeting/e6b722a9-d339-4016-9fd6-82b763c4e241
+.controls-ItemsToolbar.controls-ItemsToolbar__edit {
+  bottom: 0.2857rem;
 }

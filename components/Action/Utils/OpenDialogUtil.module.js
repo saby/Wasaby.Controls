@@ -4,7 +4,7 @@
 /**
  * Created by am.gerasimov on 15.02.2017.
  */
-define('js!SBIS3.CONTROLS.Utils.OpenDialog', ['Core/core-merge', 'Core/moduleStubs'], function (cMerge, mStubs) {
+define('js!SBIS3.CONTROLS.Utils.OpenDialog', ['Core/core-merge'], function (cMerge) {
    'use strict';
 
    var OpenDialogUtil = {

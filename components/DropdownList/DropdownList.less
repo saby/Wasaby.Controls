@@ -1,7 +1,7 @@
 .controls-DropdownList {
    display: inline-block;
    min-height: @DropdownList-height;
-   box-sizing: @DropdownList-box-sizing;
+   box-sizing: border-box;
    line-height: @DropdownList-height;
    .controls-DropdownList__selectedItem {
       .flexbox();
@@ -16,12 +16,11 @@
         text-overflow: ellipsis;
         color: @DropdownList-linkStyleColor;
         cursor: pointer;
-        &:hover{
-          color: @DropdownList-linkStyleHoverColor;
-          text-decoration: underline;
-        }
-        &.ws-disabled:hover{
-          color: @DropdownList-linkStyleColor;
+        .controls-DropdownList__text {
+           .flexbox();
+           .controls-DropdownList__icon {
+              .align-self(center);
+           }
         }
       }
 
@@ -31,7 +30,7 @@
         }
       }
       * {
-         font-size: @default-font-size;
+         font-size: @default-text-size;
       }
    }
    .controls-DropdownList__beforeCaptionWrapper {
@@ -51,6 +50,11 @@
      .controls-DropdownList__beforeCaptionWrapper {
        display: inline-block;
      }
+     &.controls-DropdownList__hideCross{
+       .controls-DropdownList__afterCaptionWrapper{
+          display: none;
+       }
+     }
      &.controls-DropdownList__withoutArrow{
        .controls-DropdownList__beforeCaptionWrapper{
          display: none;
@@ -58,11 +62,6 @@
      }
      .controls-DropdownList__afterCaptionWrapper{
        display: inline-block;
-     }
-     &.controls-DropdownList__withoutCross, &.controls-DropdownList__hideCross, &.ws-disabled{
-       .controls-DropdownList__afterCaptionWrapper{
-         display: none;
-       }
      }
       &.controls-DropdownList__defaultItem {
          .controls-DropdownList__selectedItem .controls-DropdownList__textWrapper {
@@ -79,27 +78,38 @@
          }
       }
    }
-   &.ws-disabled{
-      color: #ccc;
-      cursor: default !important;
-     .controls-DropdownList__selectedItem .controls-DropdownList__textWrapper {
-        color: @DropdownList-disabled-text;
-        cursor: default !important;
-        text-decoration: none;
+   &.controls-DropdownList__withoutCross, &.ws-disabled{
+      .controls-DropdownList__afterCaptionWrapper{
+         display: none;
       }
+   }
+   &.ws-disabled{
+      color: @DropdownList-disabled-text;
+      cursor: default !important;
      .controls-DropdownList__selectedItem {
-       .controls-DropdownList__beforeCaptionWrapper {
-         .controls-DropdownList__arrowIcon {
-           color: #ccc !important;
-         }
-       }
+        .controls-DropdownList__beforeCaptionWrapper {
+           .controls-DropdownList__arrowIcon {
+              color: @DropdownList-disabled-text !important;
+           }
+        }
+        .controls-DropdownList__textWrapper {
+           color: @DropdownList-disabled-text !important;
+           cursor: default !important;
+           text-decoration: none !important;
+           .controls-DropdownList__text .controls-DropdownList__value {
+              &:hover{
+                 color: @DropdownList-disabled-text;
+                 text-decoration: none;
+              }
+           }
+        }
      }
    }
 
    &.ws-validation-error {
       outline: 1px solid @red-color;
       outline-offset: -1px;
-      background-color: @text-box-error-bg;
+      background-color: @text-box-bg-error;
    }
 
    &.controls-DropdownList__defaultItem{
@@ -124,11 +134,13 @@
       max-height: @DropdownList-picker-max-height - @DropdownList-footer-multisel-buttonsBlock-h;
       height: 100%;
       width: 100%; //Укажем явно для ie edge
+      min-height: 0;
+      .flex-shrink(1);
    }
 
    .controls-DropdownList__item, .controls-DropdownList__selectedItem * {
       font-size: @DropdownList-picker-menu-font-size;
-      cursor: @DropdownList-cursor;
+      cursor: pointer;
    }
 
    &.controls-DropdownList__equalsWidth.controls-FloatArea .controls-DropdownList__body {
@@ -137,6 +149,10 @@
    &.controls-DropdownList__type-fastDataFilter {
       &.controls-FloatArea {
          margin: @DropdownList-picker-fastdatafilter-offset;
+         &.controls-DropdownList__withoutArrow {
+            margin-left: @DropdownList-picker-fdf-left;
+         }
+
       }
       &.controls-DropdownList__withoutCross {
          .controls-DropdownList__item.controls-DropdownList__item__selected {
@@ -150,7 +166,7 @@
          }
       }
       .controls-DropdownList__body {
-         max-width: 400px;
+         max-width: @DropdownList-picker-max-width;
          border-width: 1px;
          border-color: @gray-ccc-color;
          border-radius: @DropdownList-picker-list-right-border-radius;
@@ -218,11 +234,11 @@
       position: relative;
       background: @DropdownList-header-bg;
       border: @DropdownList-picker-border;
-      border-radius: @DropdownList-picker-head-border-radius;
+      border-radius: 0;
       border-bottom: 0;
       z-index: 2;
       .controls-DropdownList {
-         margin: @DropdownList-picker-head-margin !important;
+         margin: 0 !important;
          position: relative !important;
          padding: 0 !important;
          width: 100%;
@@ -244,6 +260,9 @@
       }
    }
    &.controls-DropdownList__type-title {
+      &.controls-FloatArea {
+         margin-top: -6px;
+      }
       .controls-DropdownList__body {
          margin-top: -1px;
       }
@@ -262,6 +281,8 @@
    }
 
    &.controls-DropdownList__type-customHeader {
+      margin-top: -1px;
+      margin-left: -2px;
       &.controls-popup-revert-horizontal {
          .flexbox();
          .flex-direction(column);
@@ -300,6 +321,7 @@
       border-radius: @DropdownList-picker-list-border-radius;
       background: @DropdownList-picker-bg;
       padding: @DropdownList-picker-padding;
+      box-sizing: border-box;
       max-height: @DropdownList-picker-max-height;
       .box-shadow(@menu-shadow);
    }
@@ -313,7 +335,7 @@
       padding: @DropdownList-picker-menu-item-padding;
       line-height: @DropdownList-picker-menu-line-height;
       background: @DropdownList-picker-menu-item-color;
-      margin: @DropdownList-picker-menu-item-margin;
+      margin: 0;
       font-size: @DropdownList-picker-menu-font-size;
       .controls-DropdownList__itemTextWrapper {
          max-width: 100%;
@@ -354,12 +376,12 @@
    .controls-DropdownList__buttonsBlock {
 
       height: @DropdownList-footer-buttonsBlock-height;
-      position: @DropdownList-footer-buttonsBlock-position;
+      position: relative;
       background: @DropdownList-picker-menu-item-color;
       .flex-shrink(0);
 
       .controls-DropdownListFooter_hasMore, .controls-DropdownListFooter_select {
-         position: @DropdownList-footer-buttons-position;
+         position: absolute;
       }
       .controls-DropdownListFooter_hasMore {
          left: @DropdownList-footer-hasMore-left;
@@ -380,7 +402,7 @@
       }
    }
    .controls-DropdownList__multiselect {
-      padding-left: @DropdownList-picker-menu-item-multiselect-padding;
+      padding-left: 0;
 
       &.controls-DropdownList__item {
          font-size: 0;
@@ -443,7 +465,7 @@
             float: none;
          }
          .controls-DropdownList__item-text-shadow {
-            top: -@DropdownList-picker-menu-item-height - 5px;
+            top: -@DropdownList-picker-menu-item-height-ff;
          }
       }
    }
@@ -480,5 +502,32 @@
       &:active {
          background: @DropdownList-picker-menu-item-hover;
       }
+   }
+}
+
+//Пример баги в ios https://jsfiddle.net/zk5755vg/12/
+.ws-is-mobile-chrome-ios, .ws-is-mobile-safari, .ws-is-old-webkit, .ws-is-sbis-desktop{
+   .controls-DropdownList__picker {
+      .controls-DropdownList__body {
+         display: block; //С флексовым контейнером в safari не отображается список (height:0). Флекс нужен для правильного обрезания контейнера по высоте, на моб.платформе это не актуально
+      }
+   }
+}
+
+/* Слава ie, Microsoft'у слава */
+.ws-is-ie10, .ws-is-ie11 {
+   .controls-DropdownList__value {
+      display: inline-block;
+      -ms-flex-negative: 1;
+   }
+}
+
+.controls-DropdownList__value {
+   .align-self(baseline);
+   overflow: hidden;
+   text-overflow: ellipsis;
+   &:hover{
+      color: @DropdownList-linkStyleHoverColor;
+      text-decoration: underline;
    }
 }

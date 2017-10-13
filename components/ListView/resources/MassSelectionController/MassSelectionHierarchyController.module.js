@@ -2,12 +2,11 @@ define('js!SBIS3.CONTROLS.MassSelectionHierarchyController',
     [
         'js!SBIS3.CONTROLS.MassSelectionController',
         "Core/core-instance",
-        "Core/core-functions",
-        "js!WS.Data/Chain",
-        "js!WS.Data/Entity/Record",
+        "Core/core-clone",
+        "WS.Data/Chain",
         "js!SBIS3.CONTROLS.ArraySimpleValuesUtil"
     ],
-    function(MassSelectionController, cInstance, cFunctions, Chain, Record, ArraySimpleValuesUtil) {
+    function(MassSelectionController, cInstance, coreClone, Chain, ArraySimpleValuesUtil) {
 
        var MassSelectionHierarchyController = MassSelectionController.extend(/** @lends SBIS3.CONTROLS.MassSelectionHierarchyController.prototype */ {
           $protected: {
@@ -54,7 +53,7 @@ define('js!SBIS3.CONTROLS.MassSelectionHierarchyController',
           _getSelectedKeys: function () {
              var
                 linkedObject = this._options.linkedObject,
-                result = cFunctions.clone(linkedObject.getSelectedKeys());
+                result = coreClone(linkedObject.getSelectedKeys());
              if (this._options.selectedAll) {
                 result.push(linkedObject.getRoot() || null);
              }
@@ -66,11 +65,13 @@ define('js!SBIS3.CONTROLS.MassSelectionHierarchyController',
              var
                 upChanges,
                 deepChanged = {},
-                selectedKeys = this._getSelectedKeys();
+                selectedKeys = this._getSelectedKeys(),
+                projection = this._options.linkedObject._getItemsProjection();
 
              MassSelectionHierarchyController.superclass._onBeforeSelectedItemsChange.apply(this, arguments);
              this._removeFromPartiallySelected(changed.added.concat(changed.removed));
-             if (this._traceDeepChanges) {
+             //Вычисляем изменения вверх/вниз только если есть проекция.
+             if (this._traceDeepChanges && projection) {
                 //Вычитываем изменения вниз
                 deepChanged.added = this._getDeepFromProjection(changed.added);
                 deepChanged.removed = this._getDeepFromSelected(changed.removed);
@@ -274,7 +275,7 @@ define('js!SBIS3.CONTROLS.MassSelectionHierarchyController',
 
        function breadthFirstSearch(items, callback, context) {
           var callbackResult;
-          items = cFunctions.clone(items);
+          items = coreClone(items);
           for (var i = 0; i < items.length; i++) {
              callbackResult = callback.call(context, items[i]);
              if (callbackResult instanceof Array) {
