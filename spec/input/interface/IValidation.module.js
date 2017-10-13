@@ -8,7 +8,7 @@ define('js!SBIS3.SPEC.interface.IValidation', [
     */
 
    /**
-    * @name SBIS3.SPEC.interface.IDataSource#validators
+    * @name SBIS3.SPEC.interface.IValidation#validators
     * @cfg {Array} список валидаторов.
     */
 
