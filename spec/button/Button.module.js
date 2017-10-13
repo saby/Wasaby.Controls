@@ -8,7 +8,7 @@ define('js!SBIS3.SPEC.button.Button', [
     * @mixes SBIS3.SPEC.interface.ICaption
     * @mixes SBIS3.SPEC.interface.IClick
     * @mixes SBIS3.SPEC.interface.IIcon
-    * @mixes SBIS3.SPEC.interface.IStyleButton
+    * @mixes SBIS3.SPEC.interface.IButtonStyle
     * @control
     * @public
     * @category Buttons
