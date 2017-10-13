@@ -8,6 +8,7 @@ define('js!SBIS3.SPEC.input.Number', [
     * @mixes SBIS3.SPEC.interface.IInputNumber
     * @mixes SBIS3.SPEC.interface.IInputPlaceholder
     * @mixes SBIS3.SPEC.interface.IValidation
+    * @mixes SBIS3.SPEC.interface.IInputTag
     * @control
     * @public
     * @category Inputs
