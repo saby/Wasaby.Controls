@@ -9,7 +9,7 @@ define('js!SBIS3.SPEC.interface.IInputTag', [
 
    /**
     * @name SBIS3.SPEC.interface.IInputTag#tagStyle
-    * @cfg {String} primary, done, attention, error, info
+    * @cfg {String | undefined} primary, done, attention, error, info
     */
 
    /**

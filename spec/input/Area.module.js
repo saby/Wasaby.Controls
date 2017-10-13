@@ -6,8 +6,6 @@ define('js!SBIS3.SPEC.input.Area', [
     * Данное поле может автоматически менять высоту в зависимости от количества введённой информации.
     * @class SBIS3.SPEC.input.Area
     * @extends SBIS3.SPEC.input.Text
-    * @mixes SBIS3.SPEC.interface.IValidation
-    * @mixes SBIS3.SPEC.interface.IInputTag
     * @control
     * @public
     * @category Inputs
