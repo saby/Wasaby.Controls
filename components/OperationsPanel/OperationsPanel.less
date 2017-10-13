@@ -78,8 +78,12 @@
 
    .controls-PopupMixin__closeButton, .controls-PopupMixin__closeButton:hover {
       background: none;
+      box-shadow: none !important;
       top: 8px;
       right: @controls-OperationsPanel-menu-close-button-right;
+      &:before {
+         content: "\e801";
+      }
    }
 }
 

@@ -1051,6 +1051,10 @@ define('js!SBIS3.CONTROLS.ListView',
                this._addItems(itemsToAdd, config.addPosition);
                this._removeItemsLight(itemsToRemove);
 
+               //После добавления элоементов с помощью виртуального скролла, необходимо добавить на них выделение,
+               //если они до этого были выделены.
+               this._drawSelectedItems(this._options.selectedKeys, {});
+
                this._topWrapper.get(0).style.height = config.topWrapperHeight + 'px';
                this._bottomWrapper.get(0).style.height = config.bottomWrapperHeight + 'px';
 

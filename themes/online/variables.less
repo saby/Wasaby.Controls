@@ -135,6 +135,8 @@
 @button-text-padding:                     0;                        // padding of text
 @button-empty-text-margin:                0 0 0 13px !important;    // margin of empty text
 @button-without-caption-min-width:        48px;
+@button-text-shadow:                      none;
+
 //FilterPanelButton
 @filter-panel-button-bg:                         url('img/FilterPanelButton.svg');
 @filter-panel-button-width:                      35px;
@@ -191,6 +193,8 @@
 @button-hover-border:                     @button-border;
 @button-hover-shadow:                     @button-shadow;
 @button-hover-bg:                         #F0F5FB;
+@button-hover-border-color:               @button-border-color;
+
 
 @button-active-text-color:                @default-text-color;
 @button-active-border:                    @button-border;
@@ -206,6 +210,7 @@
 
 @button-primary-hover-text-color:         @button-primary-text-color;
 @button-primary-hover-border:             @button-primary-border;
+@button-primary-hover-border-color:       @button-primary-border-color;
 @button-primary-hover-shadow:             @button-primary-shadow;
 @button-primary-hover-bg:                 #fdecd9;
 
@@ -215,10 +220,11 @@
 @button-primary-bg-active:                #fdd2c0;
 
 // Normal disabled button
-@button-disabled-text-color:              @gray-color;
+@button-disabled-text-color:              @default-disabled-color;
 @button-disabled-border:                  1px solid @default-disabled-color;
 @button-disabled-shadow:                  @button-shadow;
 @button-disabled-bg:                      @button-bg-color;
+@button-disabled-icon-color:              @default-disabled-color;
 
 @button-ipad-line-height:                 20px;
 
@@ -281,6 +287,8 @@
 // Normal default button
 @button-checked-border-width:             2px;
 @button-checked-border:                   @button-checked-border-width solid @default-color;
+@button-checked-border-color:             @default-color;
+@button-checked-shadow:                   @button-active-shadow;
 @button-checked-bg:                       @button-hover-bg;
 @button-checked-padding:                  0 10px;
 // Normal primary button
