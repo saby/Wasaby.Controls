@@ -16,11 +16,12 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
       'Core/EventBus',
       'js!SBIS3.CORE.TabMessage',
       'js!SBIS3.CONTROLS.LongOperations.Const',
+      'js!SBIS3.CONTROLS.LongOperations.TabKey',
       'js!SBIS3.CONTROLS.LongOperations.Tools.Postloader',
       'js!SBIS3.CONTROLS.LongOperations.Tools.ProtectedScope'
    ],
 
-   function (CoreInstance, Deferred, EventBus, TabMessage, LongOperationsConst, Postloader, ProtectedScope) {
+   function (CoreInstance, Deferred, EventBus, TabMessage, LongOperationsConst, TabKey, Postloader, ProtectedScope) {
       'use strict';
 
       /**
@@ -727,15 +728,6 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
 
 
 
-      /**
-       * Сгенерировать случайную hex-строку указанной длины
-       * @protected
-       * @param {number} n Длина строки
-       * @return {string}
-       */
-      var _uniqueHex = function(n){var l=[];for(var i=0;i<n;i++){l[i]=Math.round(15*Math.random()).toString(16)}return l.join('')};
-      //var _uniqueHex = function(n){return Math.round((Math.pow(16,n)-1)*Math.random()).toString(16).padStart(n,'0')};
-
       var ObjectAssign = Object.assign || function(d){return [].slice.call(arguments,1).reduce(function(r,s){return Object.keys(s).reduce(function(o,n){o[n]=s[n];return o},r)},d)};
 
 
@@ -745,7 +737,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
       protectedOf(manager)._tabManagers = {};
 
       // Установить ключ вкладки
-      protectedOf(manager)._tabKey = _uniqueHex(50);
+      protectedOf(manager)._tabKey = TabKey;//^^^Обдумать, не убрать ли из приватных свойств
 
       // Создать каналы событий
       _channel = EventBus.channel();
