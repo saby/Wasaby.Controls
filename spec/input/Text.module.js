@@ -27,7 +27,6 @@ define('js!SBIS3.SPEC.input.Text', [
     * @variant false Не обрезать пробелы.
     */
 
-
    /**
     * @name SBIS3.SPEC.input.Text#selectOnClick
     * @cfg {Boolean} Определяет режим выделения текста в поле ввода при получении фокуса.
