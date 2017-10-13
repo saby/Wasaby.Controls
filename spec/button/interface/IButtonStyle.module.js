@@ -8,7 +8,7 @@ define('js!SBIS3.SPEC.interface.IButtonStyle', [
     */
 
    /**
-    * @name SBIS3.SPEC.input.IButtonStyle#style
+    * @name SBIS3.SPEC.interface.IButtonStyle#style
     * @cfg {String} Внешний вид кнопки.
     * @variant standard Стандартная кнопка.
     * @variant primary Кнопка по умолчанию. Имеет оранжевый цвет.
