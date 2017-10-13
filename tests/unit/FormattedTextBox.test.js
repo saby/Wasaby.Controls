@@ -13,6 +13,7 @@ define(['js!SBIS3.CONTROLS.FormattedTextBox'], function (FormattedTextBox) {
                element: 'component',
                mask: 'xx:xx:xx'
             });
+            FTB._getCursor = () => {return {}}; //Нативно группу не определить, т.к. высталяем значение из кода
             inputField = FTB._inputField;
          }
       });
@@ -32,30 +33,37 @@ define(['js!SBIS3.CONTROLS.FormattedTextBox'], function (FormattedTextBox) {
 
       context('Android: Get inputted symbol and symbol position', function (){
          it('Not changed', function (){
-            assert.equal(FTB._getTextDiff(), false);
+            let textGroups = FTB._getTextGroupAndroid();
+            assert.equal(FTB._getTextDiff(textGroups.oldText, textGroups.newText, textGroups.maskGroups, false), false);
          });
 
          it('Input first symbol in first section', function (){
             inputField.text('a  :  :  ');
-            assert.deepEqual(FTB._getTextDiff(), {
-               char: 'a',
-               position: 0
+            let textGroups = FTB._getTextGroupAndroid();
+            assert.deepEqual(FTB._getTextDiff(textGroups.oldText, textGroups.newText, textGroups.maskGroups, false), {
+               character: 'a',
+               position: 0,
+               groupNum: undefined
             });
          });
 
          it('Input first symbol in second section', function (){
             inputField.text('  :b  :  ');
-            assert.deepEqual(FTB._getTextDiff(), {
-               char: 'b',
-               position: 0
+            let textGroups = FTB._getTextGroupAndroid();
+            assert.deepEqual(FTB._getTextDiff(textGroups.oldText, textGroups.newText, textGroups.maskGroups, false), {
+               character: 'b',
+               position: 0,
+               groupNum: undefined
             });
          });
 
          it('Input second symbol in third section', function (){
             inputField.text('  :  : c ');
-            assert.deepEqual(FTB._getTextDiff(), {
-               char: 'c',
-               position: 1
+            let textGroups = FTB._getTextGroupAndroid();
+            assert.deepEqual(FTB._getTextDiff(textGroups.oldText, textGroups.newText, textGroups.maskGroups, false), {
+               character: 'c',
+               position: 1,
+               groupNum: undefined
             });
          });
       });
