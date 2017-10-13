@@ -465,16 +465,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                this._drawNotEditablePlaceholder(newText);
                $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(newText);
             }
-            /*управлять этим классом надо только когда имеем дело с рекордами
-             * потому что только в этом случае может прийти рекорд с пустым ключом null, в случае ENUM это не нужно
-             * вообще этот участок кода нехороший, помечу его TODO
-             * планирую избавиться от него по задаче https://inside.tensor.ru/opendoc.html?guid=fb9b0a49-6829-4f06-aa27-7d276a1c9e84&description*/
-            if (cInstance.instanceOfModule(item, 'WS.Data/Entity/Model')) {
-               this._container.toggleClass('controls-ComboBox__emptyValue', (key === null));
-            }
-            else {
-               this._container.removeClass('controls-ComboBox__emptyValue');
-            }
+            this._toggleEmptyValue(key);
          }
          else {
             this._clearSelection();
@@ -482,6 +473,19 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          if (this._picker) {
             $('.controls-ComboBox__itemRow__selected', this._picker.getContainer().get(0)).removeClass('controls-ComboBox__itemRow__selected');
             $('.controls-ComboBox__itemRow[data-id=\'' + key + '\']', this._picker.getContainer().get(0)).addClass('controls-ComboBox__itemRow__selected');
+         }
+      },
+
+      _toggleEmptyValue: function(key) {
+         /*управлять этим классом надо только когда имеем дело с рекордами
+          * потому что только в этом случае может прийти рекорд с пустым ключом null, в случае ENUM это не нужно
+          * вообще этот участок кода нехороший, помечу его TODO
+          * планирую избавиться от него по задаче https://inside.tensor.ru/opendoc.html?guid=fb9b0a49-6829-4f06-aa27-7d276a1c9e84&description*/
+         if (!cInstance.instanceOfModule(this.getItems(), 'WS.Data/Type/Enum')) {
+            this._container.toggleClass('controls-ComboBox__emptyValue', (key === null));
+         }
+         else {
+            this._container.removeClass('controls-ComboBox__emptyValue');
          }
       },
 
@@ -637,6 +641,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          //сначала поищем по рекордсету
          if (this.getItems()) {
             this._findItemByKey(this.getItems());
+            this._toggleEmptyValue(this.getSelectedKey());
          }
          else if (this._dataSource) {
             filterFieldObj[this._options.displayProperty] = self._options.text;
