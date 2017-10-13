@@ -174,7 +174,7 @@
          }
          .controls-EditAtPlace__editor{
             color: @black-color;
-            font-size: @default-font-size;
+            font-size: @default-text-size;
          }
          .controls-EditAtPlace__fieldWrapper{
             padding: 0;
@@ -190,7 +190,7 @@
          font-weight: normal;
          .controls-EditAtPlace__editor{
             color: @black-color;
-            font-size: @default-font-size;
+            font-size: @default-text-size;
          }
          .controls-EditAtPlace__fieldWrapper{
             padding: 0;
@@ -281,6 +281,16 @@
       -ms-filter: @tab-button-overlay-ms-filter;
       opacity: 0;
    }
+  //FIXME: временный костыль, тк избавиться от line-height не переписывая tabButton невозможно
+  .controls-TextBox {
+    line-height: @default-height;
+    &__wrapper {
+      .align-items(normal)
+    }
+    &.controls-DateBox {
+      line-height: @default-base-line-height;
+    }
+  }
 }
 
 .ws-disabled{
