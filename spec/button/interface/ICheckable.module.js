@@ -2,7 +2,7 @@ define('js!SBIS3.SPEC.interface.ICheckable', [
 ], function() {
 
    /**
-    * Интерфейс работы переключетеля.
+    * Интерфейс работы двухпозиционного переключетеля.
     * @mixin SBIS3.SPEC.interface.ICheckable
     * @public
     */
