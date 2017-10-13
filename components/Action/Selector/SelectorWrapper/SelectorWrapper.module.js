@@ -245,7 +245,7 @@ define('js!SBIS3.CONTROLS.SelectorWrapper', [
             itemsActionsArray = itemsActions ? itemsActions.getItems().getRawData() : [];
 
             itemsActionsArray.push({
-               caption: 'Выбрать',
+               caption: rk('Выбрать'),
                name: SELECT_ACTION_NAME,
                isMainAction: true,
                allowChangeEnable: false,
