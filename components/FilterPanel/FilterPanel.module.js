@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
    'Core/CommandDispatcher',
    'js!SBIS3.CONTROLS.CompoundControl',
    'js!SBIS3.CONTROLS.Expandable',
-   'js!WS.Data/Collection/RecordSet',
+   'WS.Data/Collection/RecordSet',
    'js!SBIS3.CONTROLS.FilterPanelItem',
    'js!SBIS3.CONTROLS.FilterButton.FilterToStringUtil',
    'tmpl!SBIS3.CONTROLS.FilterPanel',
@@ -26,6 +26,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
    'js!SBIS3.CONTROLS.FilterPanelDataRange',
    'js!SBIS3.CONTROLS.FilterPanelBoolean',
    'js!SBIS3.CONTROLS.IconButton',
+   'css!SBIS3.CONTROLS.FilterPanel/resources/FilterPanelButton',
    'js!SBIS3.CONTROLS.ScrollContainer',
    'css!SBIS3.CONTROLS.FilterPanel'
 ], function(coreClone, CommandDispatcher, CompoundControl, Expandable, RecordSet, FilterPanelItem, FilterToStringUtil, dotTplFn, contentTpl, FilterPanelItemContentTemplate) {
@@ -48,7 +49,8 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
     *
     * <h3>Кнопка открытия панели</h3>
     *
-    * Создание и размещение кнопки открытия панели фильтрации остается на совести разработчиков. Рекомендуется использовать контрол {@link SBIS3.CONTROLS.IconButton}.
+    * Создание и размещение кнопки открытия панели фильтрации производится самостоятельно. Для этого существуют css-модификаторы компонента {@link SBIS3.CONTROLS.IconButton}.
+    * Стили модификаторов описаны в "css!SBIS3.CONTROLS.FilterPanel/resources/FilterPanelButton".
     * В зависимости от направления, в котором будет открыта панель (см. {@link filterAlign}), на кнопку открытию устанавливают классы "controls-IconButton__filter-left" (открытие панели влево) или "controls-IconButton__filter-right" (открытие панели вправо).
     * Чтобы открыть панель, используйте метод {@link toggleExpanded}.
     *

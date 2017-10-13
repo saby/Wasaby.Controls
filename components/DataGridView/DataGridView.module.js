@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "js!SBIS3.CONTROLS.DragAndDropMixin",
    "js!SBIS3.CONTROLS.ImitateEvents",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
-   'js!WS.Data/Display/Ladder',
+   'WS.Data/Display/Ladder',
    'js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator',
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/ItemTemplate",
@@ -170,8 +170,25 @@ define('js!SBIS3.CONTROLS.DataGridView',
             for (var i = 0, l = columns.length; i < l; i++){
                curCol = columns[i];
                nextCol = columns[i + 1];
-               curColSplitTitle = (curCol.title || '').split('.');
-               nextColSplitTitle = nextCol && nextCol.title.split('.');
+
+               /**
+                * Сюда может прилететь rkString
+                * пока что это единственный способ ее идентифицировать
+                */
+               curColSplitTitle = (curCol.title || '');
+               if (curColSplitTitle.saveProtoM) {
+                  curColSplitTitle = '' + curColSplitTitle;
+               }
+               curColSplitTitle = curColSplitTitle.split('.');
+
+               nextColSplitTitle = ((nextCol && nextCol.title) || '');
+               if (nextColSplitTitle.saveProtoM) {
+                  nextColSplitTitle = '' + nextColSplitTitle;
+               }
+               nextColSplitTitle = nextColSplitTitle.split('.');
+               /**
+                * end check rkString
+                */
 
                if (!supportDouble){
                   supportDouble = coreClone(curCol);
@@ -768,13 +785,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
    
       _notifyOnItemClick: function(id, data, target, e) {
-         var clickedCell = {};
+         var clickedCell = {},
+             cell;
          
          /* Для DataGridView дополняем событие клика информацией о колонке и ячейке */
          if(this._hoveredColumn.columnIndex  !== null) {
+            cell = this._getCellContainerByElement(e.target);
             clickedCell = {
-               cellContainer: this._getCellContainerByElement(e.target),
-               cellIndex: this._hoveredColumn.columnIndex
+               cellContainer: cell,
+               //При клике на touch устройствах не будет hoveredColumn, поэтому ищем по элементу, по котрому кликнули
+               cellIndex: this._hoveredColumn.columnIndex || cell.index()
             };
          }
          
@@ -961,7 +981,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             return;
          }
 
-         table.toggleClass('ws-sticky-header__table', isSticky);
+         table.toggleClass('ws-sticky-header__table', Boolean(isSticky));
          if (isSticky) {
             EventBus.channel('stickyHeader').notify('onForcedStickHeader', this.getContainer());
          } else {
@@ -1362,6 +1382,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              thumbWidth = this._thumb[0].offsetWidth,
              correctMargin = 0,
              lastRightStop = this._stopMovingCords.right,
+             arrowsWidth = this._arrowRight[0].offsetWidth * 2,
              notScrolledCells, thumbPos;
 
          /* Найдём ширину нескроллируемых колонок */
@@ -1377,9 +1398,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
          scrollContainer[0].style.width = containerWidth - correctMargin + 'px';
 
          /* Найдём соотношение, для того чтобы правильно двигать скроллируемый контент относительно ползунка */
-         this._partScrollRatio = (this._getItemsContainer()[0].offsetWidth - containerWidth) / (containerWidth - correctMargin - thumbWidth - 40);
+         this._partScrollRatio = (this._getItemsContainer()[0].offsetWidth - containerWidth) / (containerWidth - correctMargin - thumbWidth - arrowsWidth);
          this._stopMovingCords = {
-            right: scrollContainer[0].offsetWidth - thumbWidth - 40,
+            right: scrollContainer[0].offsetWidth - thumbWidth - arrowsWidth,
             left: correctMargin
          };
 
@@ -1422,7 +1443,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
 
       _isTableWide: function() {
-         return this._container[0].offsetWidth < this._getItemsContainer()[0].offsetWidth;
+         return this._container[0].offsetWidth < this._getTableContainer()[0].offsetWidth;
       },
 
       _hidePartScroll: function() {
@@ -1499,6 +1520,11 @@ define('js!SBIS3.CONTROLS.DataGridView',
         */
        setColumns : function(columns) {
           this._options.columns = columns;
+          
+          if(this.hasPartScroll()) {
+             /* При установке колонок, надо сбросить частичный скролл */
+             this._setPartScrollShift(0);
+          }
           checkColumns(this._options);
           this._destroyEditInPlaceController();
        },
@@ -1553,7 +1579,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
          this._addStickyToGroups(data.records);
          return data;
       },
-      _getItemsForRedrawOnAdd: function(items, groupId) {
+      _getItemsForRedrawOnAdd: function(items) {
          var data = DataGridView.superclass._getItemsForRedrawOnAdd.apply(this, arguments);
          this._addStickyToGroups(data);
          return data;
@@ -1568,16 +1594,17 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
       },
       _redrawResults: function(revive) {
-         if (this._options.resultsPosition !== 'none'){
-           this._redrawTheadAndTfoot();
-         }
-         if (revive) {
-            var self = this;
-            this.reviveComponents(this._thead).addCallback(function(){
-               self._notify('onDrawHead');
-               self._headIsChanged = false;
-            });
-            this.reviveComponents(this._tfoot);
+         if (this._options.resultsPosition !== 'none') {
+            this._redrawTheadAndTfoot();
+
+            if (revive) {
+               var self = this;
+               this.reviveComponents(this._thead).addCallback(function () {
+                  self._notify('onDrawHead');
+                  self._headIsChanged = false;
+               });
+               this.reviveComponents(this._tfoot);
+            }
          }
       },
       destroy: function() {

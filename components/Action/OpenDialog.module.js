@@ -2,8 +2,8 @@
 define('js!SBIS3.CONTROLS.Action.OpenDialog', [
    'js!SBIS3.CONTROLS.Action.Action',
    'js!SBIS3.CONTROLS.Action.DialogMixin',
-   'js!WS.Data/Entity/Model',
-   'js!WS.Data/Utils'
+   'WS.Data/Entity/Model',
+   'WS.Data/Utils'
 ], function(Action, DialogMixin) {
    'use strict';
 
@@ -66,8 +66,13 @@ define('js!SBIS3.CONTROLS.Action.OpenDialog', [
        * </pre>
        */
       execute: function(meta){
-         OpenDialog.superclass.execute.call(this, meta);
+         return OpenDialog.superclass.execute.call(this, meta);
+      },
+
+      getDialog : function() {
+         return this._dialog;
       }
+
    });
    return OpenDialog;
 });

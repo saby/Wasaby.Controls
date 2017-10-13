@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
    
    var ScrollPagingController = cAbstract.extend({
       $protected: {
+         _freezePaging: false,
          _options: {
             view: null,
             zIndex: null
@@ -78,20 +79,17 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
       },
 
       _scrollHandler: function(event, scrollTop) {
-         var page = scrollTop / this._viewportHeight;
-         if (!(page % 1)) {
-            page += 1;
-         } else {
-            page = Math.ceil(page);
-            if (page + 1 === this._options.paging.getPagesCount()) {
-               page += 1;
+         if (!this._freezePaging) {
+            var page = scrollTop / this._viewportHeight;
+            if (page % 1) {
+               page = Math.ceil(page);
+            }
+            page += 1; //потому что используем нумерацию страниц с 1
+            if (this._currentScrollPage !== page) {
+               this._currentScrollPage = page;
+               this._options.paging.setSelectedKey(page);
             }
          }
-         if (this._currentScrollPage !== page) {
-            this._currentScrollPage = page;
-            this._options.paging.setSelectedKey(page);
-         }
-
       },
 
       _pagingSelectedChange: function(e, nPage, index){
@@ -149,7 +147,10 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
 
          var pagesCount = this._viewportHeight ? Math.ceil(this._viewHeight / this._viewportHeight) : 0,
             view = this._options.view,
-            pagingVisibility = pagesCount > 1 && view._getOption('infiniteScroll') !== 'up';
+            infiniteScroll = view._getOption('infiniteScroll'),
+            /* Пэйджинг не показываем при загрузке вверх и в обе стороны, он работает некорректно.
+               Сейчас пэйджинг заточен на загрузку вниз. Код необходимо переписать. */
+            pagingVisibility = pagesCount > 1 && infiniteScroll !== 'up' && infiniteScroll !== 'both';
 
          /* Если пэйджинг скрыт - паддинг не нужен */
          view.getContainer().toggleClass('controls-ScrollPaging__pagesPadding', pagingVisibility);
@@ -158,21 +159,27 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          }
 
          /* Для пэйджинга считаем, что кол-во страниц это:
-          текущее кол-во загруженных страниц + 1, если в метаинформации рекордсета есть данные о том, что на бл есть ещё записи.
-          Необходимо для того, чтобы в пэйджинге не моргала кнопка перехода к следующей странице, пока грузятся данные. */
-         this._options.paging.setPagesCount(pagesCount + (view._hasNextPage(view.getItems().getMetaData().more) ? 1 : 0));
+            текущее кол-во загруженных страниц + 1, если в метаинформации рекордсета есть данные о том, что на бл есть ещё записи.
+            Необходимо для того, чтобы в пэйджинге не моргала кнопка перехода к следующей странице, пока грузятся данные. */
+         if (pagingVisibility) {
+            this._options.paging.setPagesCount(pagesCount + (view._hasNextPage(view.getItems().getMetaData().more) ? 1 : 0));
+         }
+         
          //Если есть страницы - покажем paging
-
          this._options.paging.setVisible(pagingVisibility && !this._options.hiddenPager);
       },
 
-      _updateCachedSizes: function(){
-         var view, viewport;
-         view = this._options.view;
-         this._viewHeight = view.getContainer().height();
-         viewport = $(view._scrollWatcher.getScrollContainer());
-         this._viewportHeight = viewport.height();
+      //когда ListView скрыт следить за скроллом и переключать пэйджинг не надо вообще
+      freezePaging: function(state) {
+         this._freezePaging = state;
+      },
 
+      _updateCachedSizes: function(){
+         var view = this._options.view,
+             viewport  = $(view._scrollWatcher.getScrollContainer())[0];
+         // У window нет scrollHeight и offsetHeight, поэтому высоту получаем иначе
+         this._viewHeight = viewport === window ? document.documentElement.scrollHeight : viewport.scrollHeight;;
+         this._viewportHeight = viewport === window ? viewport.innerHeight : viewport.offsetHeight;
       },
 
       destroy: function(){

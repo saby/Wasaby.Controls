@@ -16,11 +16,12 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
       'Core/EventBus',
       'js!SBIS3.CORE.TabMessage',
       'js!SBIS3.CONTROLS.LongOperations.Const',
+      'js!SBIS3.CONTROLS.LongOperations.TabKey',
       'js!SBIS3.CONTROLS.LongOperations.Tools.Postloader',
       'js!SBIS3.CONTROLS.LongOperations.Tools.ProtectedScope'
    ],
 
-   function (CoreInstance, Deferred, EventBus, TabMessage, LongOperationsConst, Postloader, ProtectedScope) {
+   function (CoreInstance, Deferred, EventBus, TabMessage, LongOperationsConst, TabKey, Postloader, ProtectedScope) {
       'use strict';
 
       /**
@@ -236,7 +237,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
                   if (!producer) {
                      throw new Error('Producer not found');
                   }
-                  return _canHasHistory(producer);
+                  return inner._canHasHistory(producer);
                }
                else
                if (tabKey in inner._tabManagers && prodName in inner._tabManagers[tabKey]) {
@@ -380,7 +381,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
                producer.subscribe(eventType, _eventListener);
             });
              // Уведомить другие вкладки
-            inner._tabChannel.notify('LongOperations:Manager:onActivity', {type:'register', tab:inner._tabKey, producer:name, isCrossTab:producer.hasCrossTabData(), hasHistory:_canHasHistory(producer)});
+            inner._tabChannel.notify('LongOperations:Manager:onActivity', {type:'register', tab:inner._tabKey, producer:name, isCrossTab:producer.hasCrossTabData(), hasHistory:inner._canHasHistory(producer)});
             // Если есть уже выполняющиеся запросы данных - присоединиться к ним
             if (inner._fetchCalls) {
                var queries = inner._fetchCalls.listPools();
@@ -491,7 +492,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
        * @param {SBIS3.CONTROLS.LongOperations.IProducer} producer Продюсер длительных операций
        * @return {boolean}
        */
-      var _canHasHistory = function (producer) {
+      protectedOf(manager)._canHasHistory = function (producer) {
          return CoreInstance.instanceOfMixin(producer, 'SBIS3.CONTROLS.LongOperations.IHistoricalProducer');
       };
 
@@ -571,7 +572,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
          var eventType = typeof evtName === 'object' ? evtName.name : evtName;
          _channel.notifyWithTarget(eventType, manager, !dontCrossTab ? (data ? ObjectAssign({tabKey:inner._tabKey}, data) : {tabKey:inner._tabKey}) : data);
          if (!dontCrossTab && !producer.hasCrossTabEvents()) {
-            inner._tabChannel.notify('LongOperations:Manager:onActivity', {type:eventType, tab:inner._tabKey, isCrossTab:producer.hasCrossTabData(), hasHistory:_canHasHistory(producer), data:data});
+            inner._tabChannel.notify('LongOperations:Manager:onActivity', {type:eventType, tab:inner._tabKey, isCrossTab:producer.hasCrossTabData(), hasHistory:inner._canHasHistory(producer), data:data});
          }
       };
 
@@ -595,7 +596,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
                inner._tabManagers[tab] = {};
                var prodData = {};
                for (var n in inner._producers) {
-                  prodData[n] = {isCrossTab:inner._producers[n].hasCrossTabData(), hasHistory:_canHasHistory(inner._producers[n])};
+                  prodData[n] = {isCrossTab:inner._producers[n].hasCrossTabData(), hasHistory:inner._canHasHistory(inner._producers[n])};
                }
                inner._tabChannel.notify('LongOperations:Manager:onActivity', {type:'handshake', tab:inner._tabKey, producers:prodData});
                break;
@@ -645,10 +646,10 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
        * @param {boolean} hasHistory Может ли продюсер иметь историю
        */
       var _regTabProducer = function (tabKey, prodInfo, isCrossTab, hasHistory) {
+         var inner = protectedOf(manager);
          if (!(tabKey in inner._tabManagers)) {
             inner._tabManagers[tabKey] = {};
          }
-         var inner = protectedOf(manager);
          var tabProds = inner._tabManagers[tabKey];
          var newProds;
          if (typeof prodInfo == 'object' && Object.keys(prodInfo).length) {
@@ -727,15 +728,6 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
 
 
 
-      /**
-       * Сгенерировать случайную hex-строку указанной длины
-       * @protected
-       * @param {number} n Длина строки
-       * @return {string}
-       */
-      var _uniqueHex = function(n){var l=[];for(var i=0;i<n;i++){l[i]=Math.round(15*Math.random()).toString(16)}return l.join('')};
-      //var _uniqueHex = function(n){return Math.round((Math.pow(16,n)-1)*Math.random()).toString(16).padStart(n,'0')};
-
       var ObjectAssign = Object.assign || function(d){return [].slice.call(arguments,1).reduce(function(r,s){return Object.keys(s).reduce(function(o,n){o[n]=s[n];return o},r)},d)};
 
 
@@ -745,7 +737,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Manager',
       protectedOf(manager)._tabManagers = {};
 
       // Установить ключ вкладки
-      protectedOf(manager)._tabKey = _uniqueHex(50);
+      protectedOf(manager)._tabKey = TabKey;//^^^Обдумать, не убрать ли из приватных свойств
 
       // Создать каналы событий
       _channel = EventBus.channel();

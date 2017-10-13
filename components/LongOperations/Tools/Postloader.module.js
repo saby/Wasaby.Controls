@@ -25,6 +25,7 @@ define('js!SBIS3.CONTROLS.LongOperations.Tools.Postloader',
          this._src = sourceModule;
          this._args = initArgs;
          this._mod = null;
+         this._waits = {};
       };
 
       Postloader.prototype = /** @lends SBIS3.CONTROLS.LongOperations.Tools.Postloader.prototype */{
@@ -73,20 +74,30 @@ define('js!SBIS3.CONTROLS.LongOperations.Tools.Postloader',
             _apply(this, method, postloader._mod[method], args, promise);
          }
          else {
-            // Иначе - загрузить и применить после этого
-            require([postloader._src], function (modFunc) {
-               if (!modFunc || typeof modFunc !== 'function') {
-                  promise.errback(new TypeError('Loaded module must be a function'));
-                  return;
-               }
-               var modObj = modFunc.apply(null, postloader._args);
-               if (!modObj || typeof modObj !== 'object') {
-                  promise.errback(new TypeError('Module function must return an object'));
-                  return;
-               }
-               postloader._mod = modObj;
-               delete postloader._src;
-               delete postloader._args;
+            // Или возможно она уже загружается прямо сейчас
+            var loading = postloader._waits[method];
+            if (!loading) {
+               // Если нет - то загрузить
+               postloader._waits[method] = loading = new Deferred();
+               require([postloader._src], function (modFunc) {
+                  if (!modFunc || typeof modFunc !== 'function') {
+                     promise.errback(new TypeError('Loaded module must be a function'));
+                     return;
+                  }
+                  var modObj = modFunc.apply(null, postloader._args);
+                  if (!modObj || typeof modObj !== 'object') {
+                     promise.errback(new TypeError('Module function must return an object'));
+                     return;
+                  }
+                  postloader._mod = modObj;
+                  delete postloader._src;
+                  delete postloader._args;
+                  delete postloader._waits[method];
+                  loading.callback();
+               }.bind(this));
+            }
+            // И применить после загрузки
+            loading.addCallback(function () {
                _apply(this, method, postloader._mod[method], args, promise);
             }.bind(this));
          }

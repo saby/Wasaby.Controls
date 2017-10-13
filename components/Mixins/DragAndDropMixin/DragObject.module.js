@@ -60,12 +60,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
          /**
           * @member {SBIS3.CONTROLS.Control} Контрол, над которым находится курсор мыши.
           */
-         _targetsControl: undefined,
-         /**
-          * @member {Boolean} признак показывает зарегистрирован ли метод который начнет драгндроп
-          * @remark используется что бы только 1 контрол мог начать перемещение,
-          */
-         _initDragStarter: false
+         _targetsControl: undefined
       },
       /**
        * Возвращает набор перемещаемых элементов.
@@ -118,7 +113,6 @@ define('js!SBIS3.CONTROLS.DragObject', [
          this._jsEvent = undefined;
          this._targetsControl = undefined;
          this._dragging = false;
-         this._initDragStarter = false;
          this.setAvatar(null);
       },
       /**
@@ -244,12 +238,6 @@ define('js!SBIS3.CONTROLS.DragObject', [
        */
       setDragging: function (dragging) {
          this._dragging = !!dragging;
-      },
-      isInitDragStarter: function () {
-         return this._initDragStarter;
-      },
-      setInitDragStarter: function (value) {
-         this._initDragStarter = value;
       },
       /**
        * Устанавливает позицию аватара.

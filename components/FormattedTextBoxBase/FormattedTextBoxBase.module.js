@@ -838,15 +838,19 @@ define(
 
       _getTextDiff: function(){
          var splitRegExp = this._getSplitterRegExp(),
-             oldText = this._options.text ? this._options.text.split(splitRegExp)  : this._getClearText().split(splitRegExp),
-             newText = this._inputField.text().split(splitRegExp);
+            oldText = this._options.text ? this._options.text.split(splitRegExp)  : this._getClearText().split(splitRegExp),
+            newText = this._inputField.text().split(splitRegExp),
+            maskGroups = this._getMask().split(splitRegExp);
+
          for (var i = 0, l = newText.length; i < l; i++) {
-            if (oldText[i].length !== newText[i].length){
+            if (oldText[i] && (oldText[i].length !== newText[i].length)){
                for (var j = 0; j < newText[i].length; j++){
                   if (oldText[i][j] !== newText[i][j]){
                      return {
                         'char': newText[i][j],
-                        position: j
+                        // проверка на возможность ввода символа в группу,
+                        // если в данную группу нельзя ввести символы, то вводим в первую позицию след разрешенной группы
+                        position: maskGroups[i].replace(/[L,l,d,D,h,H,i,I,x]/g,'').length === maskGroups[i].length ? 0 : j
                      }
                   }
                }
@@ -856,7 +860,7 @@ define(
       },
 
       _getSplitterRegExp: function(){
-         return /[.,\/\- :=]/;
+         return /[.,\/\- :=()+]/;
       },
 
       _getClearText: function(){
@@ -1040,11 +1044,15 @@ define(
        */
       //TODO пока работает только в IE8+ и FireFox
       _focusHandler: function() {
+         this._moveCursor();
+      },
+
+      _moveCursor: function(group, position) {
          var
             self = this,
-            child = !this._getFormatModel().model[0].isGroup ? 1 : 0,
-            startContainer = this._inputField.get(0).childNodes[child].childNodes[0],
-            startPosition = 0;
+            child = group || (this._getFormatModel().model[0].isGroup ? 0 : 1),
+            startContainer = _getContainerByIndex.call(this, child),
+            startPosition = position || 0;
          //В IE если ставить курсор синхронно по событию focusin, то он не устанавливается.
          if (constants.browser.isIE) {
             setTimeout(forAliveOnly(function() {

@@ -1,10 +1,21 @@
 .controls-TabControl {
-   .flexbox();
-   .flex-direction(column);
+   position: relative;
    .ws-SwitchableArea__item {
       background-color: @tab-control-background-color;
+      z-index: 100;
    }
-   .controls-TabControl-tabButtons {
-      .flex-shrink(0);
+   .controls-TabControl-area {
+      padding-top: @tab-buttons-height;
+      box-sizing: border-box;
    }
+}
+
+//За пределами .controls-TabControl, т.к. контейнер с вкладками может быть "вырван" stickyHeader'ом за пределы компонента
+.controls-TabControl-tabButtons {
+   position: absolute;
+   height: @tab-buttons-height;
+   left: 0;
+   right: 0;
+   top: 0;
+   overflow: hidden;
 }

@@ -2,13 +2,13 @@ define('js!SBIS3.CONTROLS.DSMixin', [
    "Core/core-clone",
    "Core/Deferred",
    "Core/IoC",
-   "js!WS.Data/Source/Memory",
-   "js!WS.Data/Source/SbisService",
-   "js!WS.Data/Query/Query",
-   "js!WS.Data/Collection/ObservableList",
-   "js!WS.Data/Display/Display",
-   "js!WS.Data/Collection/IBind",
-   "js!WS.Data/Display/Collection",
+   "WS.Data/Source/Memory",
+   "WS.Data/Source/SbisService",
+   "WS.Data/Query/Query",
+   "WS.Data/Collection/ObservableList",
+   "WS.Data/Display/Display",
+   "WS.Data/Collection/IBind",
+   "WS.Data/Display/Collection",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "Core/core-instance",
    "Core/helpers/Function/forAliveOnly",
@@ -239,7 +239,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * Аналогичная предыдущему примеру конфигурация будет выглядеть следующим образом:
              * <pre>
              *    <options name="dataSource">
-             *       <option name="module" value="js!WS.Data/Source/SbisService"></options>
+             *       <option name="module" value="WS.Data/Source/SbisService"></options>
              *       <options name="options">
              *          <options name="endpoint">
              *             <option name="contract" value="Отчеты"></option>
@@ -687,7 +687,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
        *     define( 'SBIS3.MyArea.MyComponent',
        *        [ // Массив зависимостей компонента
        *           ... ,
-       *           'js!WS.Data/Source/Memory' // Подключаем класс для работы со статическим источником данных
+       *           'WS.Data/Source/Memory' // Подключаем класс для работы со статическим источником данных
        *        ],
        *        function(
        *           ...,
@@ -1076,7 +1076,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             this._drawItems(records);
          }
          /*класс для автотестов*/
-         this._container.addClass('controls-ListView__dataLoaded');
+         this._container.addClass('controls-ListView__dataLoaded').removeClass('controls-ListView__dataNotLoaded');
       },
       _destroySearchBreadCrumbs: function(){
       },

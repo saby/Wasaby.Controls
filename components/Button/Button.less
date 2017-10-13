@@ -1,13 +1,14 @@
 .controls-Button {
-   .button-default-style(@button-font-size);
+   .button-default-style(@button-font-size, @button-shadow);
    background-size: contain;
    white-space: nowrap;
    .user-select();
    border-style: @default-border-style;
-   border-width: @default-border-width;
+   border-width: @button-border-width;
    min-width: @button-min-width;
    line-height: normal;
    text-decoration: none;
+   text-shadow: @button-text-shadow;
 
    &.controls-Button-color__ {
       &default {
@@ -15,7 +16,9 @@
          background: @button-bg-color;
          border-color: @button-border-color;
          &:active:not(.ws-disabled) {
+            border-color: @button-hover-border-color;
             background: @button-bg-active;
+            box-shadow: none;
          }
       }
       &primary {
@@ -23,7 +26,9 @@
          background: @button-primary-bg-color;
          border-color: @button-primary-border-color;
          &:active:not(.ws-disabled) {
+            border-color: @button-primary-hover-border-color;
             background: @button-primary-bg-active;
+            box-shadow: none;
          }
       }
    }
@@ -35,7 +40,9 @@
       background: @button-primary-bg-color;
       border-color: @button-primary-border-color;
       &:active:not(.ws-disabled) {
+         border-color: @button-primary-hover-border-color;
          background: @button-primary-bg-active;
+         box-shadow: none;
       }
    }
 
@@ -74,11 +81,12 @@
 
    &.ws-disabled {
       cursor: default;
-      color: @default-disabled-color;
+      text-shadow: none;
+      color: @button-disabled-text-color;
       border: @button-disabled-border;
       background: @button-disabled-bg;
       .controls-Button__icon {
-         color: @default-disabled-color !important;
+         color: @button-disabled-icon-color !important;
       }
    }
 
@@ -101,17 +109,20 @@
       &.controls-Button-color__ {
          &default {
             &:hover {
+               border-color: @button-hover-border-color;
                background: @button-hover-bg;
             }
          }
          &primary {
             &:hover {
+               border-color: @button-primary-hover-border-color;
                background: @button-primary-hover-bg;
             }
          }
       }
       &.controls-Button__primary {
          &:hover {
+            border-color: @button-primary-hover-border-color;
             background: @button-primary-hover-bg;
          }
       }

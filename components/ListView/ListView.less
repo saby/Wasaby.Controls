@@ -1,138 +1,4 @@
 @import "../Utils/HtmlDecorators/HighlightDecorator";
-.controls-ListView {
-    position: relative;
-
-   // Нельзя устанавливать минимальную высоту для копии таблицы которая используется для фиксации заголовков
-   &:not(.controls-ListView__dataLoaded):not(.ws-sticky-header__table-header-copy) {
-      min-height: @list-view-min-height;
-   }
-
-  .controls-ListView__item {
-    overflow: hidden;
-    position: relative;
-  }
-   
-   &:not(.controls-ListView__disableHover) .controls-ListView__hoveredItem:not(.controls-editInPlace) {
-      background-color: @default-itemHover-color;
-   }
-
-   &.controls-small-ListView {
-     .controls-ListView__EmptyData{
-       padding-bottom: @listView-empty-data-padding-top;
-       color: @gray-ccc-color;
-     }
-   }
-
-   &.controls-ListView__outside-scroll-loader{
-      .controls-ListView-scrollIndicator{
-         position: relative;
-      }
-   }
-
-   &.controls-ListView__showCheckBoxes {
-      .controls-ListView__itemCheckBox:before {
-         visibility: visible;
-      }
-   }
-   &.controls-ListView__hideCheckBoxes {
-      &.controls-ListView__multiselect {
-         .controls-ListView__itemCheckBox {
-            display: none;
-         }
-      }
-   }
-   &.controls-ListView__pagerNoSizePicker .controls-Pager-container {
-      .controls-Pager__pageSize-container {
-         display: none;
-      }
-      .controls-Pager__table .controls-text-extra{
-         display: none;
-      }
-   }
-   &.controls-ListView__pagerNoAmount .controls-Pager-container .controls-Amount-text{
-      display: none;
-   }
-
-   &.controls-ListView__pagerHideEndButton .controls-Pager-container .ws-paging-end{
-     display: none;
-   }
-
-   &.controls-ListView__orangeMarker {
-      .controls-ListView__itemsContainer > {
-         .controls-ListView__item__selected {
-            .marker(left top)
-         }
-      }
-   }
-   &.ws-disabled {
-      .controls-ListView__itemCheckBox {
-         cursor: @list-view-disabled-cursor;
-      }
-   }
-}
-
-//Данные стили обеспечивают правильное поведение ListView при активации.
-//Фокус должен переходить на элемент с position fixed.
-.controls-ListView__fakeFocusElement {
-   position: fixed;
-   top: 50%;
-   left: 50%;
-   width: 1px;
-   height: 1px;
-}
-
-.controls-ListView__multiselect__off {
-   .controls-ListView__itemCheckBox {
-      display: none;
-   }
-}
-
-/* Почему сделано через visibility:
-   в ie11 в версии 11.0.9600.18792 появился баг (в более ранних версиях не повторяется),
-   если в ячейке таблицы, которая проскролена вниз, показать что-то через :before,
-   то таблица прагнет на высоту этого показанного контента вверх.
-   Поэтому сразу отображаем чекбоксы, но делаем их скрытыми (visibility: hidden).
-   А при надобности показываем */
-.controls-ListView__itemCheckBox {
-   .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
-}
-.controls-ListView__itemCheckBox:before {
-   visibility: hidden;
-}
-
-.controls-ListView__multiselect {
-   .controls-ListView__item__multiSelected:not(.controls-ListView__item__partiallySelected) {
-      .controls-ListView__itemCheckBox {
-         .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
-         .checkbox-checked-size(@check-box-icon-successful-size, @check-box-icon-successful-left, @check-box-icon-successful-top);
-      }
-   }
-   .controls-ListView__item__partiallySelected {
-      .controls-ListView__itemCheckBox {
-         .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
-         .checkbox-null-size(@check-box-icon-size, @check-box-icon-null-size);
-      }
-   }
-   .controls-ListView__hoveredItem,
-   .controls-ListView__item__multiSelected:not(.controls-ListView__item__partiallySelected),
-   .controls-ListView__item__partiallySelected {
-      .controls-ListView__itemCheckBox:before {
-         visibility: visible;
-      }
-   }
-}
-
-.controls-ListView__EmptyData{
-   color: @listView-empty-data-color;
-   .box-sizing(border-box);
-   padding-top: @listView-empty-data-padding-top;
-   font-size: @listView-empty-data-font-size;
-   text-align: center;
-}
-
-.controls-Pager-container {
-   overflow: hidden;
-}
 
 .controls-ListView__itemCheckBox {
    .checkbox(@check-box-icon-size);
@@ -159,6 +25,122 @@
    }
 }
 
+.controls-ListView__showCheckBoxes {
+   .controls-ListView__itemCheckBox {
+      .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+   }
+}
+
+.controls-ListView__hideCheckBoxes {
+   .controls-ListView__itemCheckBox {
+      display: none;
+   }
+}
+
+/*
+   fakeFocusElement с left 50% пораждает в safari на mac ошибку https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
+   установим left 0, вроде ничего не должно отвалиться.
+*/
+.controls-ListView__fakeFocusElement {
+   body.ws-is-desktop-safari &,
+   body.ws-is-sbis-desktop &{
+      left: 0;
+   }
+}
+
+.controls-ListView__multiselect__off {
+   .controls-ListView__itemCheckBox {
+      display: none;
+   }
+}
+
+.ws-disabled {
+   .controls-ListView__itemCheckBox {
+      cursor: default;
+   }
+}
+
+.controls-ListView__hoveredItem {
+   .controls-ListView__itemCheckBox {
+      .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+   }
+}
+.controls-ListView__item__multiSelected:not(.controls-ListView__item__partiallySelected) {
+   .controls-ListView__itemCheckBox {
+      .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+      .checkbox-checked-size(@check-box-icon-successful-size, @check-box-icon-successful-left, @check-box-icon-successful-top);
+   }
+}
+.controls-ListView__item__partiallySelected {
+   .controls-ListView__itemCheckBox {
+      .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+      .checkbox-null-size(@check-box-icon-size, @check-box-icon-null-size);
+   }
+}
+
+.controls-ListView__hoveredItem {
+   background-color: @default-itemHover-color;
+}
+
+.controls-ListView__small__EmptyData {
+   padding-bottom: @listView-empty-data-padding-top;
+   color: @gray-ccc-color;
+}
+
+.controls-ListView__normal__EmptyData {
+   color: @listView-empty-data-color;
+   .box-sizing(border-box);
+   padding-top: @listView-empty-data-padding-top;
+   font-size: @listView-empty-data-font-size;
+   text-align: center;
+}
+
+.controls-ListView__item__selected__withMarker {
+   .marker(left top)
+}
+
+.controls-ListView-scrollIndicator_outside{
+   position: relative;
+}
+//todo: элементы itemsControlMixin вне listView не должны обрезаться
+.controls-ListView {
+   .controls-ListView__item {
+      overflow: hidden;
+      position: relative;
+   }
+}
+
+// Нельзя устанавливать минимальную высоту для копии таблицы которая используется для фиксации заголовков
+.controls-ListView__dataNotLoaded:not(.ws-sticky-header__table-header-copy) {
+   min-height: @list-view-min-height;
+}
+
+.controls-ListView {
+    position: relative;
+}
+
+//Данные стили обеспечивают правильное поведение ListView при активации.
+//Фокус должен переходить на элемент с position fixed.
+.controls-ListView__fakeFocusElement {
+   position: fixed;
+   top: 50%;
+   left: 50%;
+   width: 1px;
+   height: 1px;
+}
+
+.controls-ListView__EmptyData{
+   color: @listView-empty-data-color;
+   .box-sizing(border-box);
+   padding-top: @listView-empty-data-padding-top;
+   font-size: @listView-empty-data-font-size;
+   text-align: center;
+   white-space: normal;
+}
+
+.controls-Pager-container {
+   overflow: hidden;
+}
 .controls-ListView-scrollIndicator {
    display: none;
    margin: 0 auto;
@@ -202,22 +184,46 @@
    line-height: @listView-servicefooter-height;
 }
 
-.controls-AjaxLoader{
+.controls-AjaxLoader {
    background: transparent;
    position: absolute;
-   top: @controls-AjaxLoader-default-cord;
-   bottom: @controls-AjaxLoader-default-cord;
-   left: @controls-AjaxLoader-default-cord;
-   right: @controls-AjaxLoader-default-cord;
+   top: 0;
+   bottom: 0;
+   left:0;
+   right: 0;
    width: 100%;
-   z-index: @controls-AjaxLoader-zIndex;
+   z-index: 11;
    overflow: hidden;
-   min-height: @controls-AjaxLoader-minHeight;
+   min-height: @controls-AjaxLoader-size;
+   //todo: вложенность
    &.controls-AjaxLoader__showIndication {
       background: @controls-AjaxLoader-background;
       .controls-AjaxLoader__outer {
          display: block;
       }
+   }
+   &__outer {
+      display: none;
+      height: @controls-AjaxLoader-size + 2 * @controls-AjaxLoader-block-padding;
+      position: relative;
+      top: 50%;
+   }
+   &__block {
+      width: @controls-AjaxLoader-size;
+      border: none;
+      box-shadow: none;
+      background: @controls-AjaxLoader-block-background;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      top: -50%;
+      padding: @controls-AjaxLoader-block-padding;
+   }
+   &__LoadingIndicator{
+      position: absolute;
+      background:@list-view-scroll-bg;
+      padding-left:  @controls-AjaxLoader-size;
+      height:  @controls-AjaxLoader-size;
    }
 }
 // На webkit из-за особенностей верстки в данном месте, несмотря на то что у абсолютно спозиционированного
@@ -225,35 +231,6 @@
 .ws-is-webkit .controls-AjaxLoader {
    height: 100%;
 }
-
-.controls-AjaxLoader__outer{
-   display: none;
-   height: @controls-AjaxLoader-outer-height;
-   position: relative;
-   top: @controls-AjaxLoader-outer-top;
-   line-height: @controls-AjaxLoader-outer-lineHeight;
-}
-
-.controls-AjaxLoader__block{
-   width: @controls-AjaxLoader-block-width;
-   border: none;
-   box-shadow: none;
-   background: @controls-AjaxLoader-block-background;
-   margin-left: auto;
-   margin-right: auto;
-   position: relative;
-   top: @controls-AjaxLoader-block-top;
-   padding: @controls-AjaxLoader-block-padding;
-}
-
-.controls-AjaxLoader__LoadingIndicator{
-   position: absolute;
-   background:@list-view-scroll-bg;
-   padding-left: @controls-AjaxLoader-indicator-padding-left;
-   height: @controls-AjaxLoader-indicator-height;
-}
-
-
 .controls-ListView__results{
   background: #FFF;
   font-weight: bold;

@@ -2,25 +2,33 @@
    .box-sizing(border-box);
    .border-radius(@text-box-border-radius);
    display: inline-block;
-   height: @text-box-height;
    color: @text-box-color;
    border-width: @default-border-width;
    border-style: @default-border-style;
    border-color: @text-box-border-color;/*test*/
    border-bottom-color: @text-box-border-color-bottom;
    background: @text-box-bg;
-   font-size: @text-box-font-size;
    text-decoration: inherit;
-   line-height: @default-base-line-height;
    cursor: auto;
    max-width: 100%;
-
+   //различные размеры
+   &__size {
+      &__default {
+         height: @text-box-height;
+         font-size: @text-box-font-size;
+      }
+      &__large {
+         height: @text-box-height-large;
+         font-size: @text-box-font-size-large;
+         padding-bottom: @text-box-input-padding-large;
+      }
+   }
+   //различные состояния контрола
    &:hover {
       border-color: @text-box-border-color-hover;
    }
    &.ws-has-focus {
       border-color: @text-box-border-color-active;
-      background: @text-box-bg-focus; //presto, carry
    }
    &.ws-disabled {
       border-color: @text-box-border-color-disabled;
@@ -35,21 +43,10 @@
       border-color: @text-box-border-color-error;
       background: @text-box-bg-error;
    }
-   .controls-informationIcon {
-      position: absolute;
-      height: @text-box-height / 3;
-      right: 0;
-      top: 0;
-      .controls-Button__icon {
-         .icon-size(@text-box-information-icon-size);
-         position: absolute;
-         right: 0;
-      }
-   }
-
    &__wrapper {
       .inline-flexbox();
       .flex-shrink();
+      .align-items(center);
       padding: 0;
       margin: 0;
       position: relative;
@@ -62,8 +59,10 @@
          display: inline-block;
       }
    }
-
+   //основные блоки вёрстки
    &__afterFieldWrapper, &__beforeFieldWrapper {
+      .inline-flexbox();
+      .flex-shrink(0);
       height: 100%;
    }
    &__beforeFieldWrapper {
@@ -79,10 +78,9 @@
       .flex-shrink();
       font: inherit;
       width: 100%;
-      height: 100%;
       min-width: 0; //Иначе input во flex контейнере будет сжиматься лишь до своей стандартной ширины
       margin: 0;
-      text-align: left;
+      text-align: inherit;
       color: inherit;
       border: none;
       outline: none;
@@ -103,16 +101,26 @@
    }
    &__placeholder {
       .text-overflow();
-      height: 100%;
       position: absolute;
-      top: 0;
       cursor: text;
       color: @default-placeholder-color;
       font: inherit;
       text-align: inherit;
       padding: @text-box-input-padding;
    }
+   .controls-informationIcon {
+      position: absolute;
+      right: 0;
+      top: 0;
+      .controls-Button__icon {
+         .icon-size(@text-box-information-icon-size);
+         position: absolute;
+         right: 0;
+         top: 0;
+      }
+   }
 }
+//модификаторы
 .controls-TextBox__field-uppercase {
    text-transform: uppercase;
 }
@@ -120,11 +128,3 @@
 .controls-TextBox__field-lowercase {
    text-transform: lowercase;
 }
-
-/*
-.ws-is-desktop-safari {
-   .controls-TextBox .controls-TextBox__fieldWrapper .controls-TextBox__field {
-      outline: 1px solid transparent;
-   }
-}
-*/

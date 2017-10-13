@@ -12,6 +12,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'js!SBIS3.StickyHeaderManager',
       'Core/constants',
       'Core/EventBus',
+      'Core/CommandDispatcher',
       'css!SBIS3.CONTROLS.ScrollContainer'
    ],
    function (extend,
@@ -26,7 +27,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
              FloatAreaManager,
              StickyHeaderManager,
              constants,
-             EventBus
+             EventBus,
+             CommandDispatcher
    ) {
       'use strict';
 
@@ -149,7 +151,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                    * @name SBIS3.CONTROLS.ScrollContainer#navigationToolbar.end
                    */
                   end: false
-               }
+               },
+               takeScrollbarHidden: true
             };
             this._content = null;
             this._headerHeight = 0;
@@ -163,6 +166,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             };
             this._isMobileIOS = cDetection.isMobileIOS;
             this.deprecatedContr(cfg);
+
+            // на resizeYourself команду перерисовываем только себя, не трогая children.
+            // Сейчас команда отправляется только из ListView когда его items изменились (а значит могли измениться размеры)
+            CommandDispatcher.declareCommand(this, 'resizeYourself', function () {
+               this._resizeInner();
+            }.bind(this));
          },
 
          _containerReady: function() {
@@ -207,7 +216,11 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                   this._returnTakeScrollbarHandler = this._returnTakeScrollbarHandler.bind(this);
                   this._onMouseenter = this._onMouseenter.bind(this);
                   this._onMouseleave = this._onMouseleave.bind(this);
-                  this._subscribeMouseEnterLeave();
+                  if (!this._options.takeScrollbarHidden) {
+                     this._subscribeTakeScrollbar();
+                  } else {
+                     this._subscribeMouseEnterLeave();
+                  }
                   /**
                    * Можно ли отобрать скролл.
                    * 0 - нельзя отбирать
@@ -242,7 +255,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _addGradient: function() {
-         	var maxScrollTop = this._getScrollHeight() - this._container.height();
+            // $elem[0].scrollHeight - integer, $elem.height() - float
+         	var maxScrollTop = this._getScrollHeight() - Math.round(this._container.height());
 
             this._container.toggleClass('controls-ScrollContainer__bottom-gradient', maxScrollTop > 0 && this._getScrollTop() < maxScrollTop);
          },
@@ -386,6 +400,14 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          _subscribeOnScroll: function(){
             this._content.on('scroll', this._onScroll.bind(this));
+         },
+
+         _subscribeTakeScrollbar: function() {
+            if (this._getScrollHeight() - this._container.height() > 1) {
+               this._subscribeMouseEnterLeave();
+            } else {
+               this._unsubscribeMouseEnterLeave();
+            }
          },
 
          _subscribeMouseEnterLeave: function() {
@@ -551,7 +573,11 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _onResizeHandler: function(){
-            this._notify('onResize');
+            AreaAbstractCompatible._onResizeHandler.apply(this, arguments);
+            this._resizeInner();
+         },
+
+         _resizeInner: function () {
             if (this._scrollbar){
                this._scrollbar.setContentHeight(this._getScrollHeight());
                this._scrollbar.setPosition(this._getScrollTop());
@@ -571,7 +597,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                if (cDetection.isIE) {
                   // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
                   // 1px для скроллирования.
-                  this._content.toggleClass('controls-ScrollContainer__content-overflowHidden', this._getScrollHeight() - this._container.height() <= 1);
+                  this._content.toggleClass('controls-ScrollContainer__content-overflowHidden', (this._getScrollHeight() - this._container.height()) === 1);
+               }
+               if (!this._options.takeScrollbarHidden) {
+                  this._subscribeTakeScrollbar();
                }
             }
 
@@ -586,7 +615,6 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                }
             }
          },
-
          _recalcSizeScrollbar: function() {
             var headerHeight, scrollbarContainer;
             if (this._options.stickyContainer) {

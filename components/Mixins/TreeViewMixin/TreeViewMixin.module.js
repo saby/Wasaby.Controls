@@ -1,9 +1,8 @@
 define('js!SBIS3.CONTROLS.TreeViewMixin', [
    "Core/constants",
-   'js!SBIS3.CONTROLS.TreePaging',
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "Core/core-instance"
-], function ( constants, TreePaging, TemplateUtil, cInstance) {
+], function ( constants, TemplateUtil, cInstance) {
 
 
    var getFolderFooterOptions = function(cfg, item) {
@@ -20,16 +19,29 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
          }
       },
       getFolderPagerOptions = function(cfg, item, key) {
-         return {
-            pageSize: cfg.pageSize,
-            hasMore: cfg._hasNextPageInFolder(cfg, cfg._folderHasMore[key], key),
-            id: key,
-            handlers: {
-               'onClick': function () {
-                  this.sendCommand('loadNode', key);
-               }
+         var
+            count,
+            result,
+            hasMore;
+
+         //Проверяем на pageSize, т.к. опция может быть не задана, а в ответе с бл в параметре hasMore может быть число записей в папке.
+         if (typeof cfg._folderHasMore[key] === 'number' && cfg.pageSize) {
+            count =  cfg._folderHasMore[key] - cfg._folderOffsets[key] - cfg.pageSize;
+            hasMore = count <= 0 ? false : count;
+         } else if (typeof cfg._folderHasMore[key] === 'boolean') {
+            hasMore = !!cfg._folderHasMore[key];
+         } else if (typeof cfg._folderHasMore[key] === 'object') {
+            hasMore = !!cfg._folderHasMore[key].after;
+         }
+
+         if (hasMore) {
+            result = {
+               caption: rk('Ещё') + ' ' + (typeof hasMore === 'number' ? hasMore : '...'),
+               command: 'loadNode',
+               commandArgs: [key]
             }
          }
+         return result;
       },
       hasFolderFooters = function(cfg) {
          return cfg._footerWrapperTemplate && cfg.folderFooterTpl;
@@ -190,14 +202,17 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
             item = this._getItemProjectionByItemId(item);
          }
 
-         if (item && this._needCreateFolderFooter(item)) {
+         if (cInstance.instanceOfModule(item, 'WS.Data/Display/TreeItem')) {
             this._destroyItemsFolderFooter(item.getContents().getId());
-            position = this._getLastChildByParent(this._getItemsContainer(), item);
 
-            if (typeof cfg._footerWrapperTemplate === "function" && position) {
-               folderFooter = $(cfg._footerWrapperTemplate(cfg._getFolderFooterOptions(cfg, item)));
-               folderFooter.insertAfter(position);
-               this.reviveComponents();
+            if (this._needCreateFolderFooter(item)) {
+               position = this._getLastChildByParent(this._getItemsContainer(), item);
+
+               if (typeof cfg._footerWrapperTemplate === "function" && position) {
+                  folderFooter = $(cfg._footerWrapperTemplate(cfg._getFolderFooterOptions(cfg, item)));
+                  folderFooter.insertAfter(position);
+                  this.reviveComponents();
+               }
             }
          }
       },
@@ -214,10 +229,6 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
 
       _getFolderFooter: function(id) {
          return $('.controls-TreeDataGridView__folderFooter' + (id ? '[data-parent="' + id + '"]' : ''), this._container);
-      },
-
-      _getTreePager: function(id) {
-         return $('.controls-TreePager[data-id="' + id + '"]', this._container).wsControl();
       },
 
       _createAllFolderFooters: function() {
@@ -253,7 +264,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
          return lastContainer;
       },
       around: {
-         _onCollectionRemove: function(parentFunc, items, notCollapsed, groupId) {
+         _onCollectionRemove: function(parentFunc, items, notCollapsed) {
             var i, item, itemId;
             for (i = 0; i < items.length; i++) {
                item = items[i];
@@ -266,7 +277,7 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
                   }
                }
             }
-            return parentFunc.call(this, items, notCollapsed, groupId);
+            return parentFunc.call(this, items, notCollapsed);
          },
          /**
           * Обработка изменения item property

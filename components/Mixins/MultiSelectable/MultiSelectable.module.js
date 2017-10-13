@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
    'Core/core-clone',
    "Core/Deferred",
    "Core/IoC",
-   "js!WS.Data/Collection/List",
+   "WS.Data/Collection/List",
    "js!SBIS3.CONTROLS.ArraySimpleValuesUtil",
    "Core/helpers/Object/isEqual",
    "Core/core-instance",
@@ -299,12 +299,17 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
        * @see toggleItemsSelectionAll
        */
       setSelectedItemsAll : function() {
-         var items = this.getItems(),
-             keys = [];
+         var
+            id,
+            keys = [],
+            items = this.getItems();
 
          if (items) {
             items.each(function(rec){
-               keys.push(rec.getId())
+               id = rec.getId();
+               if (!ArraySimpleValuesUtil.hasInArray(keys, id)) {
+                  keys.push(id)
+               }
             });
             this.setSelectedKeys(keys);
          }

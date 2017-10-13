@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "Core/constants",
    "Core/core-merge",
    "Core/core-instance",
+   "Core/helpers/String/format",
    'Core/helpers/Function/shallowClone',
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CONTROLS.PickerMixin",
@@ -18,9 +19,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "js!SBIS3.CONTROLS.DropdownListMixin",
    "js!SBIS3.CONTROLS.FormWidgetMixin",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
-   "js!WS.Data/Collection/RecordSet",
-   "js!WS.Data/Display/Display",
-   "js!WS.Data/Collection/List",
+   "WS.Data/Collection/RecordSet",
+   "WS.Data/Display/Display",
+   "WS.Data/Collection/List",
    "tmpl!SBIS3.CONTROLS.DropdownList",
    "tmpl!SBIS3.CONTROLS.DropdownList/DropdownListHead",
    "tmpl!SBIS3.CONTROLS.DropdownList/DropdownListPickerHead",
@@ -31,7 +32,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
    'css!SBIS3.CONTROLS.DropdownList'
 ],
 
-   function (EventBus, IoC, constants, cMerge, cInstance, shallowClone, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
+   function (EventBus, IoC, constants, cMerge, cInstance, format, shallowClone, Control, PickerMixin, ItemsControlMixin, RecordSetUtil, MultiSelectable, DataBindMixin, DropdownListMixin, FormWidgetMixin, TemplateUtil, RecordSet, Projection, List, dotTplFn, dotTplFnHead, dotTplFnPickerHead, dotTplFnForItem, ItemContentTemplate, dotTplFnPicker) {
 
       'use strict';
       /**
@@ -64,8 +65,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
        * @mixes SBIS3.CONTROLS.DataBindMixin
        * @mixes SBIS3.CONTROLS.FormWidgetMixin
        *
-       * @demo SBIS3.CONTROLS.Demo.MyDropdownList <b>Пример 1.</b> Простой пример работы контрола
-       * @demo SBIS3.CONTROLS.Demo.MyDropdownListFilter <b>Пример 2.</b> Выпадающий список с фильтрацией.
+       * @demo SBIS3.CONTROLS.Demo.MyDropdownList Пример работы контрола
        *
        * @ignoreOptions emptyHTML
        * @ignoreMethods setEmptyHTML
@@ -143,7 +143,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
       function prepareText(textValue) {
          if (textValue.length > 1) {
-            return textValue[0] + ' и еще ' + (textValue.length - 1);
+            return textValue[0] + ' ' + format({count: textValue.length - 1}, rk('и еще $count$s$'));
          }
          return textValue.join('');
       }
@@ -858,6 +858,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
 
          _drawSelectedValue: function(id, textValue){
             var isDefaultIdSelected = id == this._defaultId,
+                text = prepareText(textValue),
                 pickerContainer;
             if (this._picker && !this._options.multiselect) {
                pickerContainer = this._getPickerContainer();
@@ -865,14 +866,19 @@ define('js!SBIS3.CONTROLS.DropdownList',
                pickerContainer.find('[data-id="' + id + '"]').addClass('controls-DropdownList__item__selected');
                this._setHasMoreButtonVisibility();
             }
-            this._setText(prepareText(textValue));
+            this._setText(text);
             this._redrawHead(isDefaultIdSelected);
+            this._drawTitle(textValue);
             this._resizeFastDataFilter();
+         },
+         _drawTitle: function(textValue) {
+            var title = this.getSelectedKeys().length > 1 ? textValue.join(', ') : '';
+            this.getContainer()[0].setAttribute('title', title);
          },
          _resizeFastDataFilter: function(){
             var parent = this.getParent();
-            this._notifyOnSizeChanged();
-            if (cInstance.instanceOfModule(parent, 'SBIS3.CONTROLS.FastDataFilter')){
+            if (cInstance.instanceOfModule(parent, 'SBIS3.CONTROLS.FastDataFilter')) {
+               this._notifyOnSizeChanged();
                parent._recalcDropdownWidth();
             }
          },
@@ -913,7 +919,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             this._setText(text);
          },
          _setText: function(text){
-            if(typeof text === 'string') {
+            if(typeof text === 'string' && this._options.text !== text) {
                this._options.text = text;
                this._notifyOnPropertyChanged('text');
             }

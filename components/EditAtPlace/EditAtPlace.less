@@ -9,7 +9,7 @@
       border: none;
       .controls-EditAtPlace__fieldWrapper {
          .controls-EditAtPlace__textField {
-            cursor: @edit-at-place-field-disabled-cursor;
+            cursor: text;
             border-style: none;
          }
       }
@@ -28,8 +28,8 @@
       box-sizing: border-box;
       margin: @edit-at-place-wrapper-margin;
       border-width: @edit-at-place-wrapper-border-width;
-      border-style: @edit-at-place-wrapper-border-style;
-      border-color: @edit-at-place-wrapper-border-color;
+      border-style: solid;
+      border-color: transparent;
       //todo:
       line-height: 20px;
       .controls-EditAtPlace__placeholder {
@@ -45,32 +45,18 @@
          overflow: visible;
          display: inline-block;
          width: auto;
-         cursor: @edit-at-place-field-cursor;
+         cursor: pointer;
          border-width: @edit-at-place-field-border-width;
-         border-style: @edit-at-place-field-border-style;
+         border-style: dashed;
          border-color: @edit-at-place-field-border-color;
       }
    }
    .controls-EditAtPlace__editor{
       width: 100%;
-      border-width: @edit-at-place-editor-border-width;
-      border-style: @edit-at-place-editor-border-style;
-      border-color: @edit-at-place-editor-border-color;
-      .controls-TextBox {
-         line-height: @default-height;
-         .controls-TextBox__wrapper{
-            &:before {
-               line-height: @default-height;
-            }
-         }
-         &.controls-DateBox {
-            line-height: @default-base-line-height
-         }
-      }
+      border-width: 0;
    }
    //todo
    .controls-EditAtPlace__textField.controls-TextBox__field {
-      line-height: 20px;
       padding: 1px 0;
    }
    .controls-EditAtPlace__fieldWrapper{

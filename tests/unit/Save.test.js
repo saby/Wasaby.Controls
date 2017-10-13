@@ -1,11 +1,11 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define(
      ['js!SBIS3.CONTROLS.Action.List.Save',
-      'js!WS.Data/Source/Memory',
-      'js!WS.Data/Source/SbisService',
-      'js!WS.Data/Query/Query',
+      'WS.Data/Source/Memory',
+      'WS.Data/Source/SbisService',
+      'WS.Data/Query/Query',
       'js!SBIS3.CONTROLS.SaveStrategy.Sbis',
-      'js!WS.Data/Collection/RecordSet'],
+      'WS.Data/Collection/RecordSet'],
    function (Save, Memory, SbisService, Query, Strategy, RecordSet) {
       'use strict';
 

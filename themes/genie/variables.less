@@ -21,11 +21,10 @@
 // Link //
 // ---- //
 
-@link-font:                               @default-font-size @default-font-name;
+@link-font:                               @default-text-size @default-font-name;
 @link-text-color:                         @primary-color;
 @link-line-height:                        normal;
 @link-hover-text-color:                   @primary-color;
-@link-icon-hover-icon:                    @primary-color;
 @link-icon-field-margin:                  0 0 0 4px;
 // ------ //
 // Button //
@@ -72,7 +71,7 @@
 @button-disabled-border:                  @button-border;
 @button-disabled-bg:                      @gray-light-color;
 // Big button
-@button-big-font-size:                    (@default-font-size * 1.2);
+@button-big-font-size:                    (@default-text-size * 1.2);
 @button-big-text-alignment:               @button-text-alignment;
 @button-big-height:                       54px;
 @button-big-padding:                      15px 20px;
@@ -100,25 +99,11 @@
 // Toggle button //
 // ------------- //
 // Normal default button
-@button-checked-text-color:               @button-active-text-color;
 @button-checked-border-width:             @button-border-width;
 @button-checked-border:                   @button-active-border;
 @button-checked-bg:                       @button-bg-active;
-@button-checked-text-margin-left:         @button-text-margin-left;
-@button-checked-text-margin-right:        @button-text-margin-right;
-@button-checked-icon-top-offset:          @button-icon-top-offset;
-@button-checked-icon-left-offset:         @button-icon-left-offset;
-@button-checked-icon-big-top-offset:      @button-icon-big-top-offset;
-@button-checked-icon-big-left-offset:     @button-icon-big-left-offset;
 @button-primary-checked-border:           @button-primary-active-border;
 @button-primary-checked-bg:               @button-primary-bg-active;
-// Big default button
-@button-big-checked-text-margin-left:     @button-big-text-margin-left;
-@button-big-checked-text-margin-right:    @button-big-text-margin-right;
-@button-big-checked-icon-top-offset:      @button-big-icon-top-offset;
-@button-big-checked-icon-left-offset:     @button-big-icon-left-offset;
-@button-big-checked-icon-big-top-offset:  @button-big-icon-big-top-offset;
-@button-big-checked-icon-big-left-offset: @button-big-icon-big-left-offset;
 // ---------- //
 // Tab button //
 // ---------- //
@@ -142,28 +127,6 @@
 @radio-button-icon-border-color-checked:        @primary-color;
 @radio-button-icon-border-radius:               8px;
 @radio-button-dot-size:                         8px;
-// -------- //
-// Checkbox //
-// -------- //
-@check-box-text-margin:                         0 8px;
-@check-box-text-color:                          @black-color;
-@check-box-hover-text-color:                    @primary-color;
-@check-box-checked-text-color:                  @check-box-text-color;
-@check-box-checked-hover-text-color:            @check-box-hover-text-color;
-@check-box-third-state-text-color:              @check-box-text-color;
-@check-box-third-state-hover-text-color:        @check-box-hover-text-color;
-@check-box-disabled-text-color:                 @gray-light-color;
-@check-box-disabled-hover-text-color:           @check-box-disabled-text-color;
-@check-box-icon-width:                          16px;
-@check-box-icon-height:                         16px;
-@check-box-icon-line-height:                    normal;
-@check-box-icon-spritesheet:                    'img/CheckBox-sprite.png';
-@check-box-icon-bg:                             url(@check-box-icon-spritesheet) 0 0px;
-@check-box-icon-hover-bg:                       url(@check-box-icon-spritesheet) 0 -16px;
-@check-box-icon-checked-bg:                     url(@check-box-icon-spritesheet) 0 -32px;
-@check-box-icon-checked-hover-border:           @check-box-icon-border;
-@check-box-icon-third-state-hover-border:       @check-box-icon-border;
-@check-box-icon-third-state-hover-bg:           url(@check-box-icon-spritesheet) 0 -48px;
 // -------------- //
 // Checkbox group //
 // -------------- //
@@ -205,19 +168,13 @@
 @menu-item-height:                        24px;
 @menu-item-hover-text-color:              @white-color;
 @menu-item-hover-bg:                      @primary-color;
-@menu-item-hover-icon-color:              @white-color;
 @menu-item-icon-top-offset:               2px;
 @menu-item-icon-left-offset:              -2px;
-@menu-item-icon-left-offset-big:          0px;
 @menu-item-icon24-top-offset:             0px;
 @menu-item-icon24-top-offset-big:         0px;
-@menu-item-icon24-left-offset-big:        0px;
 // --------- //
 // Menu link //
 // --------- //
-@menu-link-border-color: 						@primary-color transparent transparent transparent;
-@menu-link-border-width: 						5px 5px 0 5px;
-// Menu
 @menu-link-menu-margin:                   0 0 0 -10px;
 @menu-link-menu-padding:                  0;
 @menu-link-menu-item-container-padding:   0;
@@ -236,10 +193,6 @@
 @text-box-field-font-size:                inherit;
 @text-box-border-color:                   @gray-light-color;
 @text-box-hover-border-color:             @primary-color;
-// --------------- //
-// Money text box  //
-// --------------- //
-@money-text-box-decimals-padding:     2px 0;
 // ----------- //
 // Search form //
 // ----------- //
@@ -253,14 +206,7 @@
 @combo-box-picker-border-radius:                0 0 2px 2px;
 @combo-box-picker-item-hover-text-color:        @white-color;
 @combo-box-picker-item-hover-bg:                @primary-color;
-@combo-box-picker-item-selected-text-color:     @gray-color;
-@combo-box-picker-item-selected-bg:             @white-color;
 @combo-box-picker-show-border-color:            @primary-color;
-// ----------- //
-// Suggest //
-// ----------- //
-@suggest-list-item-hover-bg:                    #f3f3f3;
-@suggest-list-item-selected-bg:                 darken(@suggest-list-item-hover-bg, 5%);
 // -------- //
 // Calendar //
 // -------- //
@@ -318,25 +264,19 @@
 @list-view-actions-menu-close-height:           16px;
 @list-view-actions-menu-close-width:            16px;
 @list-view-actions-menu-item-padding-right:     24px;
-@list-view-scroll-spritesheet :                 'img/ajax-loader-indicator.gif';
+@list-view-scroll-spritesheet:                 'img/ajax-loader-indicator.gif';
 // --------- //
 // Tree view //
 // --------- //
-@tree-view-expand-spritesheet:                  '';
 @tree-view-expand-width:                        auto;
 @tree-view-expand-height:                       auto;
 @tree-view-expand-margin:                       3px 0 0 3px;
-@tree-view-value-left-margin:                   16px;
 @tree-view-expand-border-width:                 6px 0 6px 6px;
 @tree-view-expand-border-style:                 solid;
 @tree-view-expand-border-color:                 transparent transparent transparent @black-color;
-@tree-view-expand-bg:                           transparent;
-@tree-view-expand-hover-bg:                     @tree-view-expand-bg;
-@tree-view-expand-open-margin:                  7px 0 0 0;
+
 @tree-view-expand-open-border-width:            6px 6px 0 6px;
 @tree-view-expand-open-border-color:            @black-color transparent transparent transparent;
-@tree-view-expand-open-bg:                      transparent;
-@tree-view-expand-open-hover-bg:                @tree-view-expand-open-bg;
 @tree-view-ellipsis-copyArrow-width:            16px;
 @tree-view-item-content-margin:                 0 0 0 15px;
 @tree-view-child-container-padding:             0 0 0 15px;
@@ -374,13 +314,12 @@
 // --------------- //
 //    MultiView    //
 // --------------- //
-@multiView-tile-item-border:                        1px solid @gray-light-color;
 @multiView-tile-item-min-width:                     128px;
 @multiView-tile-item-image-margin:                  10px 40px;
 @multiView-tile-item-text-margin:                   7px;
 @multiView-tile-selected-item-bg:                   #E7F0F9;
-@multiView-default-folder-bg:                       url("img/defaultFolder.png");
-@multiView-default-item-bg:                         url("img/defaultItem.png");
+@multiView-default-folder-bg:                       url("img/defaultFolder.png");//todo
+@multiView-default-item-bg:                         url("img/defaultItem.png");//todo
 // --------------- //
 // DropdownList//
 // --------------- //
@@ -398,7 +337,6 @@
 @controls-ProgressBar-border-radius:              8px;
 //Pager
 @controls-Pager-amount-text :                     #999999;
-@controls-Pager-minHeight:                        35px;
 //FilterButton
 @controls-filterButton-title-text-color:          #313e78;
 @controls-filterButton-line-height:               @default-font-line-height;
@@ -411,10 +349,7 @@
 @fieldLink-border-color-focus-hover:      @gray-ccc-color @gray-ccc-color @gray-ccc-color @gray-ccc-color;
 @fieldLink-fieldWrapper-minWidth:         108px;
 @fieldLink-showAllLinks-width:            20px;
-//SelectorButton
-@controls-SelectorButton-align:                    middle;
 // BackButton
-@back-button-arrow-height:                         17px;
 @back-button-caption-active-color:                 @primary-color;
 // BreadCrumbs
 @breadcrumbs-smallItems-font-size:                 13px;
@@ -425,7 +360,6 @@
 @controls-Paging-btn-height:                       16px;
 @controls-Paging-btn-margin:                       8px 0;
 @controls-Paging-btn-padding:                      8px;
-@controls-Paging-btn-sprite:                       url('img/PagingArrows.png');
 //Scrollbar
 @controls-Scrollbar-thumb-border-radius:           2px;
 @controls-Scrollbar-light-hover-thumb-color:        rgba(255, 255, 255, 0.20);

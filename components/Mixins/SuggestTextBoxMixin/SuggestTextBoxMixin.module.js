@@ -6,9 +6,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    'js!SBIS3.CONTROLS.SearchController',
    'js!SBIS3.CONTROLS.HistoryList',
    'js!SBIS3.CONTROLS.ControlHierarchyManager',
-   'js!WS.Data/Collection/RecordSet',
-   'js!WS.Data/Di',
-   "js!WS.Data/Query/Query",
+   'WS.Data/Collection/RecordSet',
+   'WS.Data/Di',
+   "WS.Data/Query/Query",
    'Core/core-merge',
    'Core/Deferred',
    "Core/ParallelDeferred",
@@ -16,7 +16,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    "Core/core-clone",
    "Core/IoC",
    "Core/helpers/Function/once",
-   "Core/detection"
+   "Core/detection",
+   "Core/CommandDispatcher"
 ], function (
    constants,
    SearchController,
@@ -32,7 +33,8 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
    coreClone,
    IoC,
    once,
-   detection) {
+   detection,
+   CommandDispatcher) {
 
    'use strict';
 
@@ -111,6 +113,11 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
              * @cfg {Boolean} Использовать механизм смены неверной раскладки по новому стандарту
              */
             keyboardLayoutRevertNew: true,
+            /**
+             * @cfg {Boolean} Хранить данные истории в пользовательских параметрах
+             * @deprecated
+             */
+            useUserConfigHistory: true,
             // TODO разобраться с множественным вызовом на фокус и клик _observableControlFocusHandler https://online.sbis.ru/opendoc.html?guid=19af9bf9-0d16-4f63-8aa8-6d0ef7ff0799
             task1174306848: false
          }
@@ -119,6 +126,14 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          var self = this;
          this._publish('onBeforeLoadHistory');
          this._options.observableControls.unshift(this);
+         CommandDispatcher.declareCommand(this, 'changeSearchParam', function(searchParam) {
+            self.setSearchParamName(searchParam);
+            self._updateList();
+            
+            if (self._needShowHistory()) {
+               self._showHistory();
+            }
+         });
          
          /* Инициализация searchController'a происходит лениво,
             только при начале поиска (по событию onSearch). Поэтому, чтобы не было множественных подписок
@@ -150,8 +165,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
             if (rs.getCount()) {
                this.getList().setItems(rs);
                this.showPicker();
-            }
-            else if (this._historyController.getCount()) {
+            } else if (this._options.useUserConfigHistory && this._historyController.getCount()) { // Для поддержки совместимости
                this.getList().setItems(this._getHistoryRecordSetSync()); //В рамках совместимости оставляю старое поведение
                this.showPicker();
             }
@@ -237,7 +251,9 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          return this.getList().getDataSource().getIdProperty() || this.getList().getProperty('idProperty');
       },
       _needShowHistory: function(){
-         return this._historyController && !this.getText().length && this._options.startChar; //Если startChar = 0, историю показывать не нужно
+         var listItems = this._getListItems();
+         return this._historyController && !this.getText().length && this._options.startChar && //Если startChar = 0, историю показывать не нужно
+               (!listItems || !listItems.getCount() || !this.isPickerVisible()); // Показываем историю, если записей нет или пикер скрыт
       },
 
       //TODO Выпилить _getHistoryRecordSetSync и _prepareHistoryData после выполнения задачи, когда будет поддержан списочный метод

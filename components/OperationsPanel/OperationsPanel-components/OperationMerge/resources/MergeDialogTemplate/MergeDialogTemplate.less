@@ -1,4 +1,5 @@
 .controls-MergeDialogTemplate {
+  width: 100%;
 
   .controls-MergeDialogTemplate__applyBlock {
     .flexbox();
@@ -13,6 +14,11 @@
       color: @error-color;
     }
   }
+
+  .controls-MergeDialogTemplate__scroll {
+    height: 100%;
+  }
+
   .controls-MergeDialogTemplate__hint {
     color: @controls-MergeDialogTemplate-hint-font-color;
     font-size: @controls-MergeDialogTemplate-hint-font-size;
@@ -48,5 +54,22 @@
         }
       }
     }
+  }
+}
+
+.controls-MergeDialogTemplate-wrapper {
+  max-height: @controls-MergeDialogTemplate-height;
+}
+
+.ws-is-old-webkit, .ws-is-sbis-desktop {
+  .controls-MergeDialogTemplate__scroll, .controls-MergeDialogTemplate__scroll .controls-ScrollContainer__content {
+     .flex-basis(0);
+     .flex-grow(1);
+  }
+}
+
+.ws-is-ie {
+  .controls-MergeDialogTemplate {
+     max-height: @controls-MergeDialogTemplate-height;
   }
 }

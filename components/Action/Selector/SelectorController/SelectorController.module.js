@@ -4,13 +4,13 @@
 define('js!SBIS3.CONTROLS.SelectorController', [
    "Core/CommandDispatcher",
    "js!SBIS3.CORE.CompoundControl",
-   "js!WS.Data/Di",
+   "WS.Data/Di",
    "Core/core-instance",
    'Core/core-clone',
-   "js!WS.Data/Entity/Record",
+   "WS.Data/Entity/Record",
    "js!SBIS3.CONTROLS.Utils.Query",
    "js!SBIS3.CONTROLS.Utils.OpenDialog",
-   "js!WS.Data/Collection/List",
+   "WS.Data/Collection/List",
    "js!SBIS3.CONTROLS.SelectorWrapper"
 ],
     function (CommandDispatcher, CompoundControl, Di, cInstance, coreClone, Record, Query, OpenDialogUtil, List) {
@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.SelectorController', [
 
        /**
         * Класс компонента, который описывает логику выбора из диалога/панели.
-        * Пример использования класса описан в статье <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/textbox/selector-action/'>Окно выбора из справочника</a>.
+        * Пример использования класса описан в статье <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/selector-action/'>Окно выбора из справочника</a>.
         *
         * @class SBIS3.CONTROLS.SelectorController
         * @extends SBIS3.CORE.CompoundControl

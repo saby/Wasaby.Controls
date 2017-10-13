@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
    'Core/helpers/string-helpers',
    'js!SBIS3.CONTROLS.ToSourceModel',
    'js!SBIS3.CONTROLS.Utils.ItemsSelection',
-   'js!WS.Data/Collection/List',
+   'WS.Data/Collection/List',
    "js!SBIS3.CONTROLS.Action.SelectorAction",
    'css!SBIS3.CONTROLS.SelectorButton'
 ],
@@ -136,7 +136,11 @@ define('js!SBIS3.CONTROLS.SelectorButton',
             /**
              * @cfg {Boolean} Использовать для выбора {@link SBIS3.CONTROLS.Action.SelectorAction}
              */
-            useSelectorAction: false
+            useSelectorAction: false,
+            /**
+             * @cfg {Boolean} Скрывает крестик справа от текста.
+             */
+            withoutCross: false
          }
       },
       $constructor: function() {
@@ -163,9 +167,13 @@ define('js!SBIS3.CONTROLS.SelectorButton',
          }
       },
       
-      _modifyOptions: function() {
-         var opts = SelectorButton.superclass._modifyOptions.apply(this, arguments);
-         opts.cssClassName += ' controls-SelectorButton';
+      _modifyOptions: function(parOpts, parsedOptions, attrToMerge) {
+         var opts = SelectorButton.superclass._modifyOptions.apply(this, arguments),
+             className = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || '';
+         
+         if (className.indexOf('controls-SelectorButton__withoutCross') !== -1) {
+            opts.withoutCross = true;
+         }
    
          if(opts.selectedItem && cInstance.instanceOfModule(opts.selectedItem, 'WS.Data/Entity/Model')) {
             opts.items = new List({items: [opts.selectedItem]});
@@ -200,7 +208,10 @@ define('js!SBIS3.CONTROLS.SelectorButton',
    
       _toggleEmptyData: function(empty) {
          var itemsContainer = this._getItemsContainer();
-         this._container.find('.controls-SelectorButton__cross').toggleClass('ws-hidden', empty);
+         
+         if(!this._options.withoutCross) {
+            this._container.find('.controls-SelectorButton__cross').toggleClass('ws-hidden', empty);
+         }
          
          if(empty) {
             itemsContainer.text(this.getProperty('defaultCaption')).attr('title', '');
@@ -279,6 +290,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
             if(this.getProperty('useSelectorAction')) {
                cfg.multiselect = this.getMultiselect();
                cfg.selectedItems = this.getSelectedItems();
+               cfg.opener = this; //Т.к. selectorAction создаётся из кода, и ему не назначается parent (так надо, см. коммент. ниже)
                if(this._notify('onSelectorClick', cfg) !== false) {this._getSelectorAction().execute(cfg)}
             } else {
                this._showChooser(cfg.template, cfg.componentOptions);

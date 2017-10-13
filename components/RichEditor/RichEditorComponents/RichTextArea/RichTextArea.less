@@ -129,6 +129,7 @@
       //TODO: увелисчить вес селектора
       outline: none !important;
       cursor: pointer;
+      .user-select();
    }
    .controls-RichEditor__noneditable {
       //TODO: увелисчить вес селектора
@@ -151,7 +152,6 @@
    }
 }
 .controls-RichEditor {
-
    &.request-result {
       display: block;
       overflow: hidden;
@@ -183,12 +183,7 @@
       position: absolute;
       display: none;
       z-index: 0;
-      -webkit-touch-callout: none;
-      -webkit-user-select: none;
-      -khtml-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
+      .user-select();
    }
    &.controls-RichEditor__empty .controls-RichEditor__placeholder{
       display: block;
@@ -264,5 +259,12 @@
 .ws-is-desktop-platform {
    .controls-RichEditor__sourceArea {
       font-family: 'EmojiFont', 'TensorFont', sans-serif;
+   }
+}
+.ws-is-mobile-safari {
+   .controls-RichEditor {
+      .controls-RichEditor__placeholder {
+         padding-top: 2px;
+      }
    }
 }

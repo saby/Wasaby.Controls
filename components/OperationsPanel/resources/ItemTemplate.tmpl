@@ -1,6 +1,6 @@
 <ws:partial
         template="{{item['componentType']}}"
         attributes="{{ {'data-hash': projItem.getHash(), 'data-id': item[idProperty]} }}"
-        className = "{{item['options']['className']}} controls-ListView__item js-controls-ListView__item js-controls-operationsPanel__action controls-operationsPanel__actionType-{{getItemType(item['type'])}}"
+        className = "{{item['options']['className']}} controls-ListView__item js-controls-ListView__item js-controls-operationsPanel__action controls-operationsPanel__action controls-operationsPanel__actionType-{{getItemType(item['type'])}}"
         scope="{{item['options']}}"
 />

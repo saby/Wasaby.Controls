@@ -28,6 +28,10 @@
       .inline-flexbox();
       .align-items(@controls-OperationsPanel-actions-align);
       overflow: hidden;
+
+      .controls-operationsPanel__action {
+         min-height: inherit;
+      }
    }
 
    .controls-operationsPanel__actionType-mark {
@@ -39,7 +43,7 @@
          content: '\00a0';
          font-size: 1px;
          display: inline-block;
-         line-height: @controls-OperationsPanel-separator-line-height;
+         vertical-align: middle;
       }
    }
 
@@ -74,8 +78,12 @@
 
    .controls-PopupMixin__closeButton, .controls-PopupMixin__closeButton:hover {
       background: none;
+      box-shadow: none !important;
       top: 8px;
       right: @controls-OperationsPanel-menu-close-button-right;
+      &:before {
+         content: "\e801";
+      }
    }
 }
 

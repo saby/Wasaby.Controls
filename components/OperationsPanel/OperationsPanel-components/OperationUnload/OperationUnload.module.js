@@ -6,8 +6,8 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
    "Core/core-instance",
    "js!SBIS3.CONTROLS.PrintUnloadBase",
    "js!SBIS3.CONTROLS.Utils.DataProcessor",
-   "js!WS.Data/Entity/Record",
-   "js!WS.Data/Adapter/Sbis",
+   "WS.Data/Entity/Record",
+   "WS.Data/Adapter/Sbis",
    "i18n!SBIS3.CONTROLS.OperationUnload"
 ], function( constants, cInstance, PrintUnloadBase, Exporter, Record, SbisAdapter) {
    //TODO Идея! нужно просто вызвать у view.export, он в свою очередь поднимает событие onUnload, а событие подхыватит выгрузчик. тогда в кнопке вообще только визуализация будет
@@ -171,7 +171,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
       _getPDFPageOrient: function(){
          var pageOrient;
          if (this._currentItem === 'PDF'){
-            pageOrient = this.getItems().getRecordById(this._currentItem).getRawData().pageOrientation;
+            pageOrient = this.getItems().getRecordById(this._currentItem).getRawData().pageOrientation || 1;
          }
          return pageOrient
       },

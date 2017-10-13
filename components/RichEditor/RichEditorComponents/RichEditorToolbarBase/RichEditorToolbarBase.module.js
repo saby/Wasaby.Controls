@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
       /**
        * @class SBIS3.CONTROLS.RichEditorToolbarBase
        * @extends SBIS3.CONTROLS.ButtonGroupBase
-       * @author Борисов П.С.
+       * @author Спирин Виктор Алексеевич
        * @public
        * @control
        */
@@ -244,17 +244,22 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
          _codeSample: function(button) {
             this.getLinkedEditor().showCodeSample();
          },
-         _openStylesPanel: function(button){
-            var
-               stylesPanel = this.getStylesPanel(button);
-            stylesPanel.setStylesFromObject({
-               fontsize: tinyMCE.DOM.getStyle(this.getLinkedEditor().getTinyEditor().selection.getNode(), 'font-size', true).replace('px',''),
-               color: constants.colorsMap[tinyMCE.DOM.getStyle(this.getLinkedEditor().getTinyEditor().selection.getNode(), 'color', true)],
+
+         _getCurrentFormats: function () {
+            var selNode = this.getLinkedEditor().getTinyEditor().selection.getNode();
+            return {
+               fontsize: +tinyMCE.DOM.getStyle(selNode, 'font-size', true).replace('px', ''),
+               color: constants.colorsMap[tinyMCE.DOM.getStyle(selNode, 'color', true)],
                bold: this._buttons.bold,
                italic: this._buttons.italic,
                underline: this._buttons.underline,
                strikethrough: this._buttons.strikethrough
-            });
+            };
+         },
+
+         _openStylesPanel: function(button){
+            var stylesPanel = this.getStylesPanel(button);
+            stylesPanel.setStylesFromObject(this._getCurrentFormats());
             stylesPanel.show();
          },
 
@@ -273,15 +278,14 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
             if (['bold', 'italic', 'underline', 'strikethrough'].indexOf(obj.format) != -1) {
                this._buttons[obj.format] = state;
             }
-
             return {state: state, name: name};
          },
          getStylesPanel: function(button){
-            var
-               self = this;
+            var self = this;
             if (!this._stylesPanel) {
+               var editor = this.getLinkedEditor();
                this._stylesPanel = new StylesPanel({
-                  parent: self.getLinkedEditor(), // при закрытии панеи необходимо чтобы фокус оставался в редакторе
+                  parent: editor, // при закрытии панели необходимо чтобы фокус оставался в редакторе
                   target: button.getContainer(),
                   corner: 'tl',
                   verticalAlign: {
@@ -330,32 +334,63 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                   activableByClick: false
                });
 
-               this._stylesPanel.subscribe('changeFormat', function(){
-                  self._applyFormats(self._stylesPanel.getStylesObject())
+               // Так как (оказывается!) в NoteEditor стилевая панель запрашивается до того, как тулбар и редактор связываются друг с другом,
+               // то стиль по умолчанию получать из редактора станем как можно позже
+
+               this._stylesPanel.subscribe('changeFormat', function () {
+                  var formats = self._stylesPanel.getStylesObject();
+                  // Отбросить все свойства форматирования, тождественные форматированию по-умолчанию
+                  var defaults = self._getDefaults();
+                  for (var prop in defaults) {
+                     if (prop in formats && formats[prop] ==/* Не "==="! */ defaults[prop]) {
+                        delete formats[prop];
+                     }
+                  }
+                  // Применить новое форматирование
+                  self._applyFormats(formats);
                });
             }
             return this._stylesPanel;
          },
 
-         _applyFormats: function(formats){
-            if (this._options.linkedEditor) {
+         _getDefaults: function () {
+            // Формат по-умолчанию - определяется по свойствам форматирования контейнера редактора, (то, как видно в редакторе без форматирования)
+            if (!this._defaults) {
+               var $root = $(this.getLinkedEditor().getInputContainer());
+               var color = $root.css('color');
+               this._defaults = {
+                  fontsize : +$root.css('font-size').replace('px', ''),
+                  color: constants.colorsMap[color] || color
+               };
+            }
+            return this._defaults;
+         },
+
+         _applyFormats: function (formats) {
+            var editor = this._options.linkedEditor;
+            if (editor) {
                if (formats.id) {
-                  this._options.linkedEditor.setFontStyle(formats.id);
-               } else {
-                  ['title', 'subTitle', 'additionalText', 'forecolor'].forEach(function(stl){
-                     this._options.linkedEditor._removeFormat(stl);
-                  }, this);
+                  editor.setFontStyle(formats.id);
+               }
+               else {
+                  ['title', 'subTitle', 'additionalText', 'forecolor'].forEach(editor._removeFormat.bind(editor));
+                  var previous = this._getCurrentFormats();
+                  var atFirst = !formats.fontsize || formats.fontsize !== previous.fontsize;
                   //необходимо сначала ставить размер шрифта, тк это сбивает каретку
-                  this._options.linkedEditor.setFontSize(formats.fontsize);
+                  if (atFirst) {
+                     editor.setFontSize(formats.fontsize);
+                  }
                   for ( var button in this._buttons) {
-                     if (this._buttons.hasOwnProperty(button)) {
-                        if (this._buttons[button] !== formats[button]) {
-                           this._options.linkedEditor.execCommand(button);
-                        }
+                     if (this._buttons.hasOwnProperty(button) && button in formats && this._buttons[button] !== formats[button]) {
+                        editor.execCommand(button);
                      }
                   }
-                  if (formats.color !== 'black') {
-                     this._options.linkedEditor.setFontColor(formats.color);
+                  if (formats.color) {
+                     editor.setFontColor(formats.color);
+                  }
+                  if (!atFirst) {
+                     editor.getTinyEditor().selection.getRng().expand();
+                     editor.setFontSize(formats.fontsize);
                   }
                }
             }

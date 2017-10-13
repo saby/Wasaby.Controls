@@ -23,7 +23,7 @@
       .controls-DateRangeSlider__value {
          &:hover {
             color: @link-hover-text-color;
-            text-decoration: @date-range-slider-hover-text-decoration;
+            text-decoration: underline;
          }
       }
       .controls-DateRangeSlider__lock.icon-primary {
@@ -45,7 +45,7 @@
    &.ws-validation-error {
       outline-offset: -@date-range-slider-error-border-width;
       outline-width: @date-range-slider-error-border-width;
-      outline-style: @date-range-slider-error-border-style;
+      outline-style: solid;
       outline-color: @date-range-slider-error-border-color;
       background: @date-range-slider-error-bg;
    }
@@ -82,7 +82,7 @@
    .controls-DateRangeSlider__next {
       display: inline-block;
       font-size: @date-range-slider-prev-next-buttons-font-size;
-      font-weight: @date-range-slider-prev-next-buttons-font-weight;
+      font-weight: normal;
       text-align: center;
       line-height: ~"calc("@date-range-slider-height~" - "@date-range-slider-prev-next-buttons-font-size~" + "@date-range-slider-font-size~")";
       height: @date-range-slider-height;

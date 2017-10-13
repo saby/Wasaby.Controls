@@ -7560,7 +7560,7 @@
       var each = Tools.each, is = Tools.is, grep = Tools.grep, trim = Tools.trim;
       var isIE = Env.ie;
       var simpleSelectorRe = /^([a-z0-9],?)+$/i;
-      var whiteSpaceRegExp = /^[ \t\r\n]*$/;
+      var whiteSpaceRegExp = isIE ? /^[ \t\r\n\uFEFF]*$/ : /^[ \t\r\n]*$/;// Так как в MSIE симол FEFF иногда используется вместо <br data-mce-bogus="1">
 
       function setupAttrHooks(domUtils, settings) {
          var attrHooks = {}, keepValues = settings.keep_values, keepUrlHook;
@@ -19438,7 +19438,7 @@
                forecolor: {inline: 'span', styles: {color: '%value'}, links: true, remove_similar: true},
                hilitecolor: {inline: 'span', styles: {backgroundColor: '%value'}, links: true, remove_similar: true},
                fontname: {inline: 'span', styles: {fontFamily: '%value'}},
-               fontsize: {inline: 'span', styles: {fontSize: '%value'}},
+               fontsize: {inline: 'span', styles: {fontSize: '%value'}, remove_similar: true},// Без опции remove_similar небозможно сбросить fontsize
                fontsize_class: {inline: 'span', attributes: {'class': '%value'}},
                blockquote: {block: 'blockquote', wrapper: 1, remove: 'all'},
                subscript: {inline: 'sub'},
@@ -33706,8 +33706,13 @@
                if (!isDefaultPrevented(e) && e.clipboardData && !editor.selection.isCollapsed()) {
                   e.preventDefault();
                   e.clipboardData.clearData();
-                  e.clipboardData.setData('text/html', editor.selection.getContent());
-                  e.clipboardData.setData('text/plain', editor.selection.getContent({format: 'text'}));
+                  // При вырезании целой ссылки (например) нужно вырезать её всю, а не только её внутренний текст
+                  // По задаче https://online.sbis.ru/opendoc.html?guid=7fe70f3f-9e81-4a07-8001-9212c39e6618
+                  var sel = editor.selection;
+                  var rng = sel.getRng();
+                  e.clipboardData.setData('text/html', rng.startOffset === 0 && rng.commonAncestorContainer.nodeType === 3 && rng.endOffset === rng.commonAncestorContainer.nodeValue.length && !sel.dom.isBlock(sel.getNode())
+                              ? sel.dom.getOuterHTML(sel.getNode()) : sel.getContent());
+                  e.clipboardData.setData('text/plain', sel.getContent({format:'text'}));
 
                   // Needed delay for https://code.google.com/p/chromium/issues/detail?id=363288#c3
                   // Nested delete/forwardDelete not allowed on execCommand("cut")
@@ -50968,7 +50973,8 @@
       "tinymce/util/Tools"
    ], function (Tools) {
       var isAbsoluteUrl = function (url) {
-         return /^https?:\/\/[\w\?\-\/+=.&%@~#]+$/i.test(url);
+         //TODO Добавили символ ; сами, в соответствии со стандартом https://tools.ietf.org/html/rfc3986, он входит в список разрешенных
+         return /^https?:\/\/[\w\?\-\/+=.;&%@~#]+$/i.test(url);
       };
 
       var isImageUrl = function (url) {

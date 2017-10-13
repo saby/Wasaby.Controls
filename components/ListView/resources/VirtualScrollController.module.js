@@ -43,23 +43,36 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
             }
          },
 
+         /**
+          * Disables scroll handlers, so it doesn't update
+          * virtual pages on scroll
+          *
+          * @param toggle
+          */
+         disableScrollHandler: function (toggle) {
+            this._scrollHandlerDisabled = !!toggle;
+         },
+
          reset: function(){
             this._currentVirtualPage = 0;
             this._heights = [];
             this.initHeights();
             this._currentWindow = this._getRangeToShow(0, PAGES_COUNT);
+            clearTimeout(this._scrollTimeout);
          },
 
          _scrollHandler: function (e, scrollTop) {
-            clearTimeout(this._scrollTimeout);
-            this._scrollTimeout = setTimeout(function () {
-               var scrollTop = this._options.viewport.scrollTop(),
-                  page = this._getPage(scrollTop);
-               if (this._currentVirtualPage != page) {
-                  this._currentVirtualPage = page;
-                  this._onVirtualPageChange(page);
-               }
-            }.bind(this), 25);
+            if (!this._scrollHandlerDisabled) {
+               clearTimeout(this._scrollTimeout);
+               this._scrollTimeout = setTimeout(function () {
+                  var scrollTop = this._options.viewport.scrollTop(),
+                     page = this._getPage(scrollTop);
+                  if (this._currentVirtualPage != page) {
+                     this._currentVirtualPage = page;
+                     this._onVirtualPageChange(page);
+                  }
+               }.bind(this), 25);
+            }
          },
 
          _getPage: function (scrollTop) {
