@@ -3,8 +3,8 @@
  */
 
 define('js!SBIS3.CONTROLS.Selectable', [
-   'js!WS.Data/Utils',
-   'js!WS.Data/Collection/IBind',
+   'WS.Data/Utils',
+   'WS.Data/Collection/IBind',
    'Core/core-instance'
 ], function(Utils, IBindCollection, cInstance) {
 

@@ -4,10 +4,10 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
    "js!SBIS3.CONTROLS.Action.Action",
    "js!SBIS3.CONTROLS.Action.List.ListMixin",
    "js!SBIS3.CONTROLS.Action.DialogMixin",
-   "js!WS.Data/Source/SbisService",
-   "js!WS.Data/Entity/Model",
+   "WS.Data/Source/SbisService",
+   "WS.Data/Entity/Model",
    "Core/core-instance",
-   "js!WS.Data/Adapter/Sbis"
+   "WS.Data/Adapter/Sbis"
 ],
     function ( Deferred,ActionBase, ListMixin, DialogMixin, SbisService, Model, cInstance) {
         'use strict';

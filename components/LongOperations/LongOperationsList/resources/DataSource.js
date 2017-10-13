@@ -10,9 +10,9 @@ define('js!SBIS3.CONTROLS.LongOperationsList/resources/DataSource',
    [
       'Core/core-extend',
       'Core/Deferred',
-      'js!WS.Data/Source/ISource',
-      'js!WS.Data/Entity/ObservableMixin',
-      'js!WS.Data/Source/DataSet',
+      'WS.Data/Source/ISource',
+      'WS.Data/Entity/ObservableMixin',
+      'WS.Data/Source/DataSet',
       'js!SBIS3.CONTROLS.LongOperations.Manager',
       'js!SBIS3.CONTROLS.LongOperations.Entry',
       'Core/TimeInterval'

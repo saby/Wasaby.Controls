@@ -2,11 +2,11 @@
  * Created by am.gerasimov on 15.02.2017.
  */
 define('js!SBIS3.CONTROLS.ToSourceModel', [
-   'js!WS.Data/Di',
+   'WS.Data/Di',
    'Core/core-instance',
    'Core/core-clone',
-   'js!WS.Data/Chain',
-   'js!WS.Data/Utils'
+   'WS.Data/Chain',
+   'WS.Data/Utils'
 ], function(Di, cInstance, coreClone, Chain, Utils) {
 
    function getModel(model, config) {

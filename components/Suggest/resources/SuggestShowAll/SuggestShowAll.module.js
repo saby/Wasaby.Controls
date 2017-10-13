@@ -3,7 +3,7 @@
  */
 define('js!SBIS3.CONTROLS.SuggestShowAll',
     [  'js!SBIS3.CORE.CompoundControl',
-       'tmpl!SBIS3.CONTROLS.SuggestShowAll',
+       'html!SBIS3.CONTROLS.SuggestShowAll',
        'js!SBIS3.CONTROLS.DataGridView',
        'i18n!SBIS3.CONTROLS.SuggestShowAll',
        'js!SBIS3.CONTROLS.Button'

@@ -21,7 +21,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
    'Core/helpers/string-helpers',
    'js!SBIS3.CONTROLS.ToSourceModel',
    'js!SBIS3.CONTROLS.Utils.ItemsSelection',
-   'js!WS.Data/Collection/List',
+   'WS.Data/Collection/List',
    "js!SBIS3.CONTROLS.Action.SelectorAction",
    'css!SBIS3.CONTROLS.SelectorButton'
 ],

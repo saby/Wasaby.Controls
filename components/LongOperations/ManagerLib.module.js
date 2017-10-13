@@ -6,9 +6,9 @@
  */
 define('js!SBIS3.CONTROLS.LongOperations.ManagerLib',
    [
-      'js!WS.Data/Chain',
-      'js!WS.Data/Collection/RecordSet',
-      'js!WS.Data/Source/DataSet',
+      'WS.Data/Chain',
+      'WS.Data/Collection/RecordSet',
+      'WS.Data/Source/DataSet',
       'js!SBIS3.CONTROLS.LongOperations.Const',
       'js!SBIS3.CONTROLS.LongOperations.Entry',
       'js!SBIS3.CONTROLS.LongOperations.HistoryItem',

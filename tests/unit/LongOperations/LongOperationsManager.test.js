@@ -4,7 +4,7 @@ define([
       'js!SBIS3.CONTROLS.LongOperations.GenericProducer',
       'js!SBIS3.CONTROLS.LongOperations.IProducer',
       'Core/core-extend',
-      'js!WS.Data/Entity/ObservableMixin',
+      'WS.Data/Entity/ObservableMixin',
       'Core/UserInfo'
    ],
 

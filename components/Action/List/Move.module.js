@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
       'js!SBIS3.CONTROLS.Action.Action',
       'js!SBIS3.CONTROLS.Action.List.ListMixin',
       'js!SBIS3.CONTROLS.ListView.Mover',
-      'js!WS.Data/Di',
+      'WS.Data/Di',
       'Core/core-instance'
    ],
    function (ActionBase, ListMixin, Mover, Di, cInstance) {

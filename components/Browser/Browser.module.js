@@ -187,7 +187,7 @@ define('js!SBIS3.CONTROLS.Browser', [
              * @example
              * 1. В файле MyColumnsConfig.module.js описан RecordSet для конфигурации Панели редактирования колонок:
              * <pre>
-             * define('js!SBIS3.MyArea.MyColumnsConfig', ['js!WS.Data/Collection/RecordSet'], function(RecordSet) {
+             * define('js!SBIS3.MyArea.MyColumnsConfig', ['WS.Data/Collection/RecordSet'], function(RecordSet) {
              *    var data = [
              *        {
              *           id: 1,

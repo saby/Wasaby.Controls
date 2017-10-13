@@ -1,0 +1,23 @@
+<div class="controls-Slider{{?it.bigPoint}} controls-Slider__big{{?}}">
+   <div class="controls-Slider__wrapper">
+      <div class="controls-Slider__mainSlider{{?it.bigPoint}} controls-Slider__big{{?}}">
+         <div class="controls-Slider__point controls-Slider__point__start{{?it.single}} ws-hidden{{?}}"></div>
+         <div class="controls-Slider__point controls-Slider__point__end"></div>
+         <div class="controls-Slider__line__wrapper"><div class="controls-Slider__line controls-Slider__line__empty"></div></div>
+         <div class="controls-Slider__line__wrapper"><div class="controls-Slider__line controls-Slider__line__full"></div></div>
+      </div>
+   </div>
+   {{?it.scale}}
+      <div class="controls-Slider__scale">
+         {{~it.scale: value}}
+         <span class="controls-Slider__segment">{{=value}}</span>
+         {{~}}
+      </div>
+   {{?}}
+   {{?it.startLabel || it.endLabel}}
+      <div class="controls-Slider__labels">
+         <div class="controls-Slider__label controls-Slider__label__start">{{=it.startLabel}}</div>
+         <div class="controls-Slider__label controls-Slider__label__end">{{=it.endLabel}}</div>
+      </div>
+   {{?}}
+</div>

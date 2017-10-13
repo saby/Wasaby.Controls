@@ -7,17 +7,17 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
    "Core/Deferred",
    "js!SBIS3.CONTROLS.BreadCrumbs",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
-   "js!WS.Data/Display/Tree",
+   "WS.Data/Display/Tree",
    "tmpl!SBIS3.CONTROLS.TreeMixin/resources/searchRender",
-   "js!WS.Data/Entity/Model",
-   "js!WS.Data/Relation/Hierarchy",
+   "WS.Data/Entity/Model",
+   "WS.Data/Relation/Hierarchy",
    "Core/core-instance",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "Core/helpers/Function/forAliveOnly",
    "Core/IoC",
    "Core/helpers/Object/isEmpty",
    "Core/helpers/Object/isPlainObject",
-   "js!WS.Data/Adapter/Sbis"
+   "WS.Data/Adapter/Sbis"
 ], function (coreClone, cMerge, TreeDataReload, constants, CommandDispatcher, Deferred,BreadCrumbs, groupByTpl, TreeProjection, searchRender, Model, HierarchyRelation, cInstance, TemplateUtil, forAliveOnly, IoC, isEmpty, isPlainObject) {
 
    var createDefaultProjection = function(items, cfg) {

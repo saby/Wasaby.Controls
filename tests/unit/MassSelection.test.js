@@ -1,4 +1,4 @@
-define(['js!SBIS3.CONTROLS.TreeDataGridView', 'js!WS.Data/Collection/RecordSet'], function (TreeDataGridView, RecordSet) {
+define(['js!SBIS3.CONTROLS.TreeDataGridView', 'WS.Data/Collection/RecordSet'], function (TreeDataGridView, RecordSet) {
 
    'use strict';
 

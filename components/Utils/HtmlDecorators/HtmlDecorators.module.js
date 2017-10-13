@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', [
    "Core/core-extend",
-   "js!WS.Data/Utils"
+   "WS.Data/Utils"
 ], function ( cExtend, Utils) {
    'use strict';
 
