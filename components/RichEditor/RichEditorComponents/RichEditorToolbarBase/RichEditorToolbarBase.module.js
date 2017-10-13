@@ -375,20 +375,25 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                else {
                   ['title', 'subTitle', 'additionalText', 'forecolor'].forEach(editor._removeFormat.bind(editor));
                   var previous = this._getCurrentFormats();
-                  var atFirst = !formats.fontsize || formats.fontsize !== previous.fontsize;
+                  var sameFont = formats.fontsize && formats.fontsize === previous.fontsize;
                   //необходимо сначала ставить размер шрифта, тк это сбивает каретку
-                  if (atFirst) {
+                  if (!sameFont) {
                      editor.setFontSize(formats.fontsize);
                   }
+                  var hasOther;
                   for ( var button in this._buttons) {
                      if (this._buttons.hasOwnProperty(button) && button in formats && this._buttons[button] !== formats[button]) {
                         editor.execCommand(button);
+                        hasOther = true;
                      }
                   }
-                  if (formats.color) {
+                  if (formats.color && formats.color !== previous.color) {
                      editor.setFontColor(formats.color);
+                     hasOther = true;
                   }
-                  if (!atFirst) {
+                  if (sameFont && !hasOther) {
+                     // Если указан тот же размер шрифта (и это не размер по умолчанию), и нет других изменений - нужно чтобы были правильно
+                     // созданы окружающие span-ы (например https://online.sbis.ru/opendoc.html?guid=5f4b9308-ec3e-49b7-934c-d64deaf556dc)
                      editor.getTinyEditor().selection.getRng().expand();
                      editor.setFontSize(formats.fontsize);
                   }

@@ -1401,6 +1401,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                // Замена отступов после переноса строки и в первой строке
                // пробелы заменяются с чередованием '&nbsp;' + ' '
                event.node.innerHTML = this._replaceWhitespaces(event.node.innerHTML);
+               // Для того чтобы каретка(курсор ввода) после вставки точна ушла назад и последующая вставка производилась точно после предыдущей
+               // (учитывая любовь tinymce тихонько перемещать курсор внутрь элементов)
+               event.node.innerHTML += '&#65279;';
             }.bind(this));
 
             if (this._options.editorConfig.browser_spellcheck && cConstants.browser.chrome) {
