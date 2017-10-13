@@ -25,17 +25,6 @@ define('js!SBIS3.SPEC.Control', [
     * @function SBIS3.SPEC.Control#blur
     */
 
-   /**
-    * Возвращает признак наличия фокуса на корневом контейнере компонента.
-    * @function SBIS3.SPEC.Control#isFocused
-    * @returns {Boolean}
-    */
-
-   /**
-    * Возвращает признак наличия фокуса на вложенном в компонент элементе.
-    * @function SBIS3.SPEC.Control#hasFocus
-    * @returns {Boolean}
-    */
 
    /**
     * Перед отрисовкой контрола, перед mount контрола в DOM
@@ -94,6 +83,22 @@ define('js!SBIS3.SPEC.Control', [
     * Принудительный вызов обновления шаблона
     * @function SBIS3.SPEC.Control#_forceUpdate
     * @private
+    */
+
+   /**
+    * @event SBIS3.SPEC.Control#onFocus Происходит при переходе фокуса на компонент.
+    */
+
+   /**
+    * @event SBIS3.SPEC.Control#onBlur Происходит при уходе фокуса с компонента.
+    */
+
+   /**
+    * @event SBIS3.SPEC.Control#onFocusIn Происходит при переходе фокуса на дочерний компонент.
+    */
+
+   /**
+    * @event SBIS3.SPEC.Control#onFocusOut Происходит при уходе фокуса с дочернего компонента.
     */
 
 });

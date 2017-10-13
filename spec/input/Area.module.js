@@ -12,12 +12,12 @@ define('js!SBIS3.SPEC.input.Area', [
    */
 
    /**
-    * @name SBIS3.SPEC.input.Area#minLinesCount
+    * @name SBIS3.SPEC.input.Area#minLines
     * @cfg {Number} Минимальное количество строк
     */
 
     /**
-     * @name SBIS3.SPEC.input.Area#maxLinesCount
+     * @name SBIS3.SPEC.input.Area#maxLines
      * @cfg {Number} Максимальное количество строк
      */
 
