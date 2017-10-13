@@ -5,10 +5,10 @@ define('js!SBIS3.SPEC.input.Number', [
     * Поле ввода числа.
     * @class SBIS3.SPEC.input.Number
     * @extends SBIS3.SPEC.Control
-    * @mixes SBIS3.SPEC.interface.IInputNumber
-    * @mixes SBIS3.SPEC.interface.IInputPlaceholder
-    * @mixes SBIS3.SPEC.interface.IValidation
-    * @mixes SBIS3.SPEC.interface.IInputTag
+    * @mixes SBIS3.SPEC.input.interface.IInputNumber
+    * @mixes SBIS3.SPEC.input.interface.IInputPlaceholder
+    * @mixes SBIS3.SPEC.input.interface.IValidation
+    * @mixes SBIS3.SPEC.input.interface.IInputTag
     * @control
     * @public
     * @category Inputs

@@ -1,9 +1,9 @@
-define('js!SBIS3.SPEC.interface.IValidation', [
+define('js!SBIS3.SPEC.input.interface.IValidation', [
 ], function() {
 
    /**
     * Интерфейс работы валидации с полем ввода.
-    * @mixin SBIS3.SPEC.interface.IValidation
+    * @mixin SBIS3.SPEC.input.interface.IValidation
     * @public
     */
 

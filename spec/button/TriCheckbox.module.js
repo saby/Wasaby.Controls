@@ -5,8 +5,8 @@ define('js!SBIS3.SPEC.button.TriCheckbox', [
     * Кнопка.
     * @class SBIS3.SPEC.button.TriCheckbox
     * @extends SBIS3.SPEC.Control
-    * @mixes SBIS3.SPEC.interface.ICaption
-    * @mixes SBIS3.SPEC.interface.ITriCheckable
+    * @mixes SBIS3.SPEC.button.interface.ICaption
+    * @mixes SBIS3.SPEC.button.interface.ITriCheckable
     * @control
     * @public
     * @category Buttons
