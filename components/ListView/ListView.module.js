@@ -3937,6 +3937,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
                   self._pager = new pagerCtr({
                      noSizePicker: self._options.noSizePicker,
+                     noPagerAmount: self._options.noPagerAmount,
                      pageSize: self._options.pageSize,
                      opener: self,
                      element: pagerContainer.find('div'),
