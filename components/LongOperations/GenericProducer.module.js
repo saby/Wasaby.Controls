@@ -277,7 +277,7 @@ define('js!SBIS3.CONTROLS.LongOperations.GenericProducer',
                         var o = snapshots[i];
                         if (this._actions[o.id]) {
                            var status = 'status' in o ? o.status : DEFAULTS.status;
-                           if (status === STATUSES.running || status === STATUSES.suspended) {
+                           if ((status === STATUSES.running || status === STATUSES.suspended) && o.tabKey === TabKey) {
                               // Если обработчики действий пользователя установлены в этой вкладке
                               // При разрушении продюсера обработчики будут утеряны, что приведёт к необратимой потере данных
                               return false;
@@ -482,6 +482,7 @@ define('js!SBIS3.CONTROLS.LongOperations.GenericProducer',
                   result = {changed:'status'};
                   break;
                case STATUSES.ended:
+                  operation.tabKey = null;
                   var actions = self._actions[operationId];
                   if (actions && actions.progressor) {
                      var progressor = actions.progressor;
