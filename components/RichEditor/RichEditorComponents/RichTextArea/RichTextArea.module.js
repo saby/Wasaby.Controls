@@ -1083,7 +1083,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   after = '</p><p>{$caret}</p>';
                   break;
                case '6':
-                  if (cConstants.browser.chrome) {
+                  if (cConstants.browser.chrome || cConstants.browser.firefox) {
                      after = '&#xFEFF;{$caret}';
                   }
                   break;
