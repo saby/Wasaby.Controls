@@ -37,25 +37,27 @@
                className="controls-Browser__view controls-DataGridView__hasSeparator controls-DataGridView__overflow-ellipsis"
                ladder="{{ ['Date'] }}"
             >
-               <ws:columns type="array">
-                  <ws:Object
-                     title="Дата"
-                     cellTemplate="tmpl!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryDateTemplate"
-                     width="60"
-                  />
-                  <ws:Object
-                     title="Время"
-                     cellTemplate="tmpl!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryTimeTemplate"
-                     width="60"
-                  />
-                  <ws:Object
-                     title="{[ОперацииНадЗаписями@@Наименование]}"
-                     field="title"
-                  />
-                  <ws:Object
-                     title="Статус"
-                     cellTemplate="tmpl!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryStatusTemplate"
-                  />
+               <ws:columns>
+                  <ws:Array>
+                     <ws:Object
+                        title="Дата"
+                        cellTemplate="tmpl!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryDateTemplate"
+                        width="60"
+                     />
+                     <ws:Object
+                        title="Время"
+                        cellTemplate="tmpl!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryTimeTemplate"
+                        width="60"
+                     />
+                     <ws:Object
+                        title="{[ОперацииНадЗаписями@@Наименование]}"
+                        field="title"
+                     />
+                     <ws:Object
+                        title="Статус"
+                        cellTemplate="tmpl!SBIS3.CONTROLS.LongOperationHistory/resources/LongOperationHistoryStatusTemplate"
+                     />
+                  </ws:Array>
                </ws:columns>
             </ws:SBIS3.CONTROLS.DataGridView>
          </div>
