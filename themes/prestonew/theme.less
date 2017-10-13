@@ -1,3 +1,34 @@
+.close-button-mixin {
+  .inline-flexbox();
+  .align-items(center);
+  .justify-content(center);
+  color: #8991A9;
+  font-size: 2rem;
+  line-height: 2rem;
+  font-family: 'cbuc-icons';
+  width: 3rem;
+  height: 3rem;
+  background-color: #405A77;
+  background-image: none !important;
+  -webkit-box-shadow: @button-shadow !important;
+  -moz-box-shadow: @button-shadow !important;
+  box-shadow: @button-shadow !important;
+  .border-radius(@button-border-radius);
+
+  &:before {
+    content: "\e66c";
+  }
+
+  &:hover {
+    background: none;
+    background-color: #3D5571;
+  }
+  &:active {
+    background: none;
+    box-shadow: none !important;
+    background-color: #3D5571;
+  }
+}
 
 html {
   color: #e4e4e4;
@@ -107,9 +138,12 @@ body {
 
    .controls-ListView__scrollPager {
       .controls-IconButton {
-         background: #354B62;
+         background: @button-bg-color;
          padding: 0;
-          border: @button-border;
+         border-style: solid;
+         border-width: @button-border-width;
+         border-color: @button-bg-color;
+        .box-shadow(@button-shadow);
          .controls-Button__icon {
             height: 3rem!important;
             width: 3rem!important;
@@ -119,13 +153,13 @@ body {
             left: -@default-border-width;
             color: #E4E4E4 !important;
          }
-         &.controls-Click__active {
+         &:active {
            background: @button-bg-active;
+           box-shadow: none;
          }
          &.ws-disabled {
-            border-color: @disabled-color;
             .controls-Button__icon {
-               color: @disabled-color !important
+               color: @button-disabled-text-color !important
             }
          }
       }
@@ -188,7 +222,9 @@ body {
    border-color: rgba(96, 170, 221, 0.15);
    border-width: @default-border-width;
 }
+.ws-is-desktop-platform .controls-Button:not(.ws-disabled):not(:active).controls-Button-color__default:hover {
 
+}
 .controls-BreadCrumbs__crumb {
    .icon-primary {
       color: @bread-crumb-title-color !important;
@@ -289,21 +325,7 @@ body {
 
 .ws-float-close.sbisname-window-title-close,
 body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
-   width: 3rem !important;
-   height: 3rem !important;
-   background: @closeBigButtonImage;
-   &:hover {
-      background: @closeBigButtonImageHover;
-   }
-   &:active {
-      background: @closeBigButtonImageHover;
-   }
-   // У нас сейчас есть один растровый бакграунд для кнопки закрытия.
-   // В средней теме он слишком большой. Но этот баг фиксится прикладными стилями.
-   // Если поедут регресионные тесты и кнопка закрытия буде отображаться криво, то после того как вы пофиксите это,
-   // обязательно проверьте не поехала ли она в результате ваших изменений на сайте в крупной и средней темах.
-   // Задача на стилизауию кнопки закрытия.
-   // https://online.sbis.ru/opendoc.html?guid=7447de01-2904-4d45-a5de-06699e99633e
+  .close-button-mixin();
 }
 
 // SBIS3.CORE.CloseButton используется в DateRangeSlider. Удалить после того как выпилим SBIS3.CORE.CloseButton
@@ -441,12 +463,7 @@ body {
       font-weight: normal !important;
   }
    .ws-window-titlebar-action.close {
-      width: 3rem !important;
-      height: 3rem !important;
-      background: @closeBigButtonImage;
-      &:hover, &:active {
-         background: @closeBigButtonImageHover;
-      }
+      .close-button-mixin();
    }
    .ws-window-title {
       color: @default-text-color;
@@ -600,9 +617,6 @@ body {
 .icon-large {
   vertical-align: middle !important;
 }
-.controls-ListView__scrollPager .controls-IconButton {
-  background: #1D2834;
-}
 
 .controls-ToolBar__menuIcon {
    .icon-24 {
@@ -707,6 +721,12 @@ body .ws-window.ws-LoadingIndicator__window {
    }
 }
 
+.controls-DateRangeBigChoose__months-quarter-btn.controls-Button.controls-Button-color__default,
+.controls-DateRangeBigChoose__months-halfyear-btn.controls-Button.controls-Button-color__default,
+.controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button {
+  color: @default-text-color;
+}
+
 .controls-ComboBox__picker {
    box-sizing: border-box;
 }
@@ -736,17 +756,10 @@ body .controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__cl
   position: absolute;
   top: 8px;
   right: 0;
-  width: 3rem;
-  height: 3rem;
   cursor: pointer;
-  background: @closeBigButtonImage;
-  &:hover {
-    background: @closeBigButtonImageHover;
-  }
-  &:active {
-    background: @closeBigButtonImageHover;
-  }
   z-index: 1;
+
+  .close-button-mixin();
 }
 
 body {
@@ -975,6 +988,12 @@ body {
           }
         }
       }
+    }
+  }
+
+  .controls-ListView__scrollPager:not(.ws-disabled):not(:active) {
+    &:hover {
+      border-color: @button-hover-bg;
     }
   }
 
