@@ -3842,10 +3842,11 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             if (this.isInfiniteScroll()) {
                //Если нет следующей страницы - скроем индикатор загрузки
-               if (!this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.bottom) || this._options.infiniteScroll == 'demand') {
+               if (!this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.bottom) || this._options.infiniteScroll === 'demand') {
                   this._hideLoadingIndicator();
                }
-               if (this._options.infiniteScroll == 'demand'){
+               //Кнопки может не быть, когда список рендерится на сервере _dataLoadedCallback вызывается ещё в конструкторе, до инициализации компонентов
+               if (this._options.infiniteScroll === 'demand' && this._loadMoreButton){
                   this._setLoadMoreCaption(this.getItems());
                }
             }
