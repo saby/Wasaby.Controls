@@ -11,11 +11,6 @@ define('js!SBIS3.SPEC.Control', [
 
 
    /**
-    * @name SBIS3.SPEC.Control#visible
-    * @cfg {Boolean} Устанавливает видимость контрола.
-    */
-
-   /**
     * @name SBIS3.SPEC.Control#enabled
     * @cfg {Boolean} Устанавливает доступность контрола пользователю.
     */
