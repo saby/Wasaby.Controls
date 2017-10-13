@@ -279,10 +279,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see displayProperty
         */
        /**
-        * @event onBeforeDataLoad Происходит перед загрузкой данных.
+        * @event onBeforeDataLoad Происходит перед запросом к источнику данных компонента.
         * @remark
-        * Событие сработает перед запросом к источнику данных
+        * Запрос к источнику данных компонента инициируется методом {@link reload}.
+        * Источник данных устанавливают в опции {@link dataSource}.
+        * В случае успешного выполнения запроса, происходит событие {@link onDataLoad}
         * @param {Core/EventObject} eventObject Дескриптор события.
+        * @param {Object} filters Параметры фильтрации. Они используются для в качестве условия для отбора данных из источника. Значение параметра определяется опцией {@link filter}.
+        * @param {Array.<Object>} sorting Параметры сортировки возвращаемых данных. Значение определяется опцией {@link sorting}.
+        * @param {Number} offset Смещение первого элемента выборки. Значение определяется методов {@link setOffset} либо с помощью аргумента offset в методе {@link reload}.
+        * @param {Number} limit Количество записей, запрашиваемых из источника данных компонента. Значение определяется опцией {@link pageSize}.
         * @example
         * <pre>
         *    myView.subscribe('onBeforeDataLoad', function(eventObject) {
@@ -291,6 +297,8 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         *       this.setFilter(filter, true)
         *    });
         * </pre>
+        * @see onDataLoad
+        * @see reload
         */
        /**
         * @event onDataLoad Происходит при загрузке данных.
