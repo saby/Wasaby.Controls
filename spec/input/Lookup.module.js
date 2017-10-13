@@ -11,6 +11,7 @@ define('js!SBIS3.SPEC.input.Lookup', [
     * @mixes SBIS3.SPEC.interface.ISelectable
     * @mixes SBIS3.SPEC.interface.IValidation
     * @mixes SBIS3.SPEC.interface.IInputTag
+    * @mixes SBIS3.SPEC.interface.IMultiSelectable
     * @control
     * @public
     * @category Inputs
