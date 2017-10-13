@@ -4701,7 +4701,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _setNewDataAfterReload: function() {
             this._resultsChanged = true;
             ListView.superclass._setNewDataAfterReload.apply(this, arguments);
-            if (this._resultsChanged) {
+            /* Если проекция заморожена, то перерисовывать результаты нельзя, т.к. отрисовка всего списка будет отложена,
+               перерисуем, как проекция будет разморожена. */
+            if (this._resultsChanged && this._getItemsProjection().isEventRaising()) {
                this._redrawResults(true);
             }
          },
