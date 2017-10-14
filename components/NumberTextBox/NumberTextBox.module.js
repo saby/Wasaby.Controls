@@ -210,6 +210,9 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          this._inputField.bind('blur', function(){
             self._blurHandler();
          });
+         if(this._options.text && !this._options.numericValue) {
+             this.setNumericValue(this._options.text);
+         }
          this._initMirrorInput();
       },
 
