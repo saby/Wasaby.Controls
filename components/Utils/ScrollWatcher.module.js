@@ -142,7 +142,8 @@ define('js!SBIS3.CONTROLS.ScrollWatcher', [
 
       _isScrollOnBottom: function(element, offset){
          offset = offset || 0;
-         /* element.outerHeight может возвращать дробную высоту, тогда как scrollHeight всегда возвращает целое,
+         /* element.outerHeight может возвращать дробную высоту (когда браузер показывает свои элменты на странице, например тулбар загрузки файлка),
+            а scrollHeight всегда возвращает целое,
             чтобы корректно сравнивать округляем element.outerHeight */
          return element.scrollTop() + Math.round(element.outerHeight()) >= this.getScrollHeight(element[0]) - offset;
       },
