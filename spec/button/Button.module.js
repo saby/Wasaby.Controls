@@ -4,18 +4,16 @@ define('js!SBIS3.SPEC.button.Button', [
    /**
     * Кнопка.
     * @class SBIS3.SPEC.button.Button
-    * @extends SBIS3.SPEC.Control
-    * @mixes SBIS3.SPEC.button.interface.ICaption
-    * @mixes SBIS3.SPEC.button.interface.IClick
-    * @mixes SBIS3.SPEC.button.interface.IIcon
-    * @mixes SBIS3.SPEC.button.interface.IButtonStyle
+    * @extends SBIS3.SPEC.button.ButtonBase
     * @control
     * @public
     * @category Buttons
     */
 
    /**
-    * @name SBIS3.SPEC.button.Button#href
-    * @cfg {String} Ссылка.
+    * @name SBIS3.SPEC.button.Button#style
+    * @cfg {String} Внешний вид кнопки.
+    * @variant standard Стандартная кнопка.
+    * @variant primary Кнопка по умолчанию. Имеет оранжевый цвет.
     */
 });
