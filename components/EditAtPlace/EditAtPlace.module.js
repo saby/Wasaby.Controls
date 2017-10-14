@@ -9,16 +9,17 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
       'Core/helpers/String/escapeHtml',
       'js!SBIS3.CONTROLS.Utils.TemplateUtil',
       'js!SBIS3.CONTROLS.ControlHierarchyManager',
+      'Core/helpers/Object/isEmpty',
       'i18n!SBIS3.CONTROLS.EditAtPlace',
       'css!SBIS3.CONTROLS.EditAtPlace'
    ],
-   function (CompoundControl, TextBox, PickerMixin, EditAtPlaceMixin, FormWidgetMixin, DateFormatDecorator, dotTplFn, escapeHtml, TemplateUtil, ControlHierarchyManager) {
+   function (CompoundControl, TextBox, PickerMixin, EditAtPlaceMixin, FormWidgetMixin, DateFormatDecorator, dotTplFn, escapeHtml, TemplateUtil, ControlHierarchyManager, objectIsEmpty) {
       'use strict';
 
       var dateDecorator = null;
 
       function formatText(text) {
-         if (!text || Object.isEmpty(text)) {
+         if (!text || objectIsEmpty(text)) {
             return '';
          }
 
