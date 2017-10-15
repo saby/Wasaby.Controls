@@ -16,7 +16,6 @@ define('js!SBIS3.CONTROLS.FormController', [
    "js!SBIS3.CONTROLS.Utils.InformationPopupManager",
    "js!SBIS3.CONTROLS.Utils.OpenDialog",
    "js!SBIS3.CONTROLS.TitleManager",
-   "js!SBIS3.CONTROLS.OpenDialogAction",
    "i18n!SBIS3.CONTROLS.FormController",
    'css!SBIS3.CONTROLS.FormController'
 ],
@@ -792,10 +791,8 @@ define('js!SBIS3.CONTROLS.FormController', [
              updateConfig = {
                indicatorText: this._options.indicatorSavingMessage,
                eventName: 'onUpdateModel',
-               additionalData: {
-                  isNewRecord: this._newRecord
-               }
-            },
+               additionalData: {}
+             },
             self = this;
 
          if (this._options.record.isChanged() || self._newRecord || this._needUpdateAlways) {
@@ -857,7 +854,9 @@ define('js!SBIS3.CONTROLS.FormController', [
          if (!config.additionalData){
             config.additionalData = {};
          }
-         config.additionalData.idProperty = self._options.idProperty;
+         config.additionalData.idProperty = this._options.idProperty;
+         config.additionalData.isNewRecord = this._newRecord;
+
          this._toggleOverlay(true);
          this._addSyncOperationPending();
 
