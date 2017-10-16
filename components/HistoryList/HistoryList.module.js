@@ -4,11 +4,11 @@
 define('js!SBIS3.CONTROLS.HistoryList',
    [
       'js!SBIS3.CONTROLS.HistoryController',
-      'js!WS.Data/Collection/IList',
-      'js!WS.Data/Collection/IEnumerable',
-      'js!WS.Data/Collection/IIndexedCollection',
-      'js!WS.Data/Collection/RecordSet',
-      'js!WS.Data/Entity/Record',
+      'WS.Data/Collection/IList',
+      'WS.Data/Collection/IEnumerable',
+      'WS.Data/Collection/IIndexedCollection',
+      'WS.Data/Collection/RecordSet',
+      'WS.Data/Entity/Record',
       'Core/Serializer',
       'Core/helpers/generate-helpers',
       'Core/helpers/Object/isEqual'

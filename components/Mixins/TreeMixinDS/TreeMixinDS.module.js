@@ -5,8 +5,8 @@ define('js!SBIS3.CONTROLS.TreeMixinDS', [
    "js!SBIS3.CORE.Control",
    "js!SBIS3.CONTROLS.BreadCrumbs",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
-   "js!WS.Data/Display/Tree",
-   "js!WS.Data/Relation/Hierarchy",
+   "WS.Data/Display/Tree",
+   "WS.Data/Relation/Hierarchy",
    'Core/helpers/Function/forAliveOnly'
 ], function (coreClone, cMerge, constants,Control, BreadCrumbs, groupByTpl, TreeProjection, HierarchyRelation, forAliveOnly) {
    /**

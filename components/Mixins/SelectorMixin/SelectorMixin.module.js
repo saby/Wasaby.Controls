@@ -102,9 +102,6 @@ define('js!SBIS3.CONTROLS.SelectorMixin', [
          },
 
          _toggleLinkedViewEvents: function(sub) {
-            if(this._options.multiSelect) {
-               this[sub ? 'subscribeOnceTo' : 'unsubscribeFrom'](this._linkedView, 'onDrawItems', this._linkedView.setSelectedKeys.bind(this._linkedView, this._options.currentSelectedKeys))
-            }
             this[sub ? 'subscribeTo' : 'unsubscribeFrom'](this._linkedView, 'onItemActivate', this._changeSelectionHandler);
          },
 

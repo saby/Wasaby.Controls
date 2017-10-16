@@ -16,11 +16,12 @@ define('js!SBIS3.CONTROLS.LongOperations.GenericProducer',
       'Core/UserInfo',
       'Core/EventBusChannel',
       'js!SBIS3.CONTROLS.LongOperations.Const',
+      'js!SBIS3.CONTROLS.LongOperations.TabKey',
       'js!SBIS3.CONTROLS.LongOperations.Entry',
       'js!SBIS3.CONTROLS.LongOperations.AbstractProducer'
    ],
 
-   function (Deferred, UserInfo, EventBusChannel, LongOperationsConst, LongOperationEntry, AbstractLongOperationsProducer) {
+   function (Deferred, UserInfo, EventBusChannel, LongOperationsConst, TabKey, LongOperationEntry, AbstractLongOperationsProducer) {
       'use strict';
 
       /**
@@ -177,7 +178,7 @@ define('js!SBIS3.CONTROLS.LongOperations.GenericProducer',
           * @param {object} [options.extra] Дополнительные параметры, если есть (опционально)
           * @return {Core/Deferred<SBIS3.CONTROLS.LongOperations.Entry[]>}
           */
-         fetch: function (options) {
+         /*^^^fetch: function (options) {
             return GenericLongOperationsProducer.superclass.fetch.apply(this, arguments).addCallback(function (operations) {
                operations.forEach(function (operation) {
                   var handlers = this._actions ? this._actions[operation.id] : null;
@@ -185,14 +186,14 @@ define('js!SBIS3.CONTROLS.LongOperations.GenericProducer',
                   if (!(handlers && handlers.onSuspend && handlers.onResume)) {
                      operation.canSuspend = false;
                   }
-                  /*if (!(handlers && handlers.onDelete)) {
+                  if (!(handlers && handlers.onDelete)) {
                      operation.canDelete = false;
-                  }*/
+                  }
                   return operation;
                }.bind(this));
                return operations;
             }.bind(this));
-         },
+         },*/
 
          /**
           * Запросить выполнение указанного действия с указанным элементом
@@ -276,7 +277,7 @@ define('js!SBIS3.CONTROLS.LongOperations.GenericProducer',
                         var o = snapshots[i];
                         if (this._actions[o.id]) {
                            var status = 'status' in o ? o.status : DEFAULTS.status;
-                           if (status === STATUSES.running || status === STATUSES.suspended) {
+                           if ((status === STATUSES.running || status === STATUSES.suspended) && o.tabKey === TabKey) {
                               // Если обработчики действий пользователя установлены в этой вкладке
                               // При разрушении продюсера обработчики будут утеряны, что приведёт к необратимой потере данных
                               return false;
@@ -343,12 +344,16 @@ define('js!SBIS3.CONTROLS.LongOperations.GenericProducer',
             var STATUSES = LongOperationEntry.STATUSES;
             options.canSuspend = typeof options.onSuspend === 'function' && typeof options.onResume === 'function';
             options.canDelete = typeof options.onDelete === 'function';
+            var can = options.canSuspend || options.canDelete;
+            if (can) {
+               options.tabKey = TabKey;
+            }
             options.userId = UserInfo.get('Пользователь');
             options.userUuId = UserInfo.get('ИдентификаторСервисаПрофилей') /*###|| $.cookie('CpsUserId')*/;
             var operationId = this._getStorageNextId();
             options.id = operationId;
             this._put(options);
-            if (options.canSuspend || options.canDelete) {
+            if (can) {
                var listeners = {};
                if (options.canSuspend) {
                   listeners.onSuspend = options.onSuspend;
@@ -477,6 +482,7 @@ define('js!SBIS3.CONTROLS.LongOperations.GenericProducer',
                   result = {changed:'status'};
                   break;
                case STATUSES.ended:
+                  operation.tabKey = null;
                   var actions = self._actions[operationId];
                   if (actions && actions.progressor) {
                      var progressor = actions.progressor;

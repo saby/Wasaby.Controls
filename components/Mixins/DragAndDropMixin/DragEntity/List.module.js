@@ -1,7 +1,7 @@
 /*global define, $ws, $*/
 define('js!SBIS3.CONTROLS.DragEntity.List', [
-   'js!WS.Data/Di',
-   'js!WS.Data/Collection/List'
+   'WS.Data/Di',
+   'WS.Data/Collection/List'
 ], function (Di, CollectionList) {
    'use strict';
    /**

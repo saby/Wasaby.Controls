@@ -30,7 +30,7 @@
         }
       }
       * {
-         font-size: @default-font-size;
+         font-size: @default-text-size;
       }
    }
    .controls-DropdownList__beforeCaptionWrapper {
@@ -84,12 +84,12 @@
       }
    }
    &.ws-disabled{
-      color: #ccc;
+      color: @DropdownList-disabled-text;
       cursor: default !important;
      .controls-DropdownList__selectedItem {
         .controls-DropdownList__beforeCaptionWrapper {
            .controls-DropdownList__arrowIcon {
-              color: #ccc !important;
+              color: @DropdownList-disabled-text !important;
            }
         }
         .controls-DropdownList__textWrapper {

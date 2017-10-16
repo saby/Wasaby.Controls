@@ -4,13 +4,13 @@
 define('js!SBIS3.CONTROLS.SelectorController', [
    "Core/CommandDispatcher",
    "js!SBIS3.CORE.CompoundControl",
-   "js!WS.Data/Di",
+   "WS.Data/Di",
    "Core/core-instance",
    'Core/core-clone',
-   "js!WS.Data/Entity/Record",
+   "WS.Data/Entity/Record",
    "js!SBIS3.CONTROLS.Utils.Query",
    "js!SBIS3.CONTROLS.Utils.OpenDialog",
-   "js!WS.Data/Collection/List",
+   "WS.Data/Collection/List",
    "js!SBIS3.CONTROLS.SelectorWrapper"
 ],
     function (CommandDispatcher, CompoundControl, Di, cInstance, coreClone, Record, Query, OpenDialogUtil, List) {

@@ -1177,7 +1177,7 @@ define('js!SBIS3.CONTROLS.PopupMixin', [
 
          _keyboardHover: function(event) {
             if (event.which === constants.key.esc) {
-               this.close();
+               this.hide();
             }
          }
       },

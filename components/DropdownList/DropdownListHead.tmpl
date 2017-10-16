@@ -1,9 +1,9 @@
-<div class="controls-DropdownList__beforeCaptionWrapper">
+<div class="controls-DropdownList__beforeCaptionWrapper" if="{{!!text}}">
     <i class="controls-DropdownList__arrowIcon icon-16 icon-size icon-DayForward icon-primary action-hover"></i>
 </div>
 <div class="controls-DropdownList__textWrapper">
 <span class="controls-DropdownList__text"><span if="{{_selectedItemIcon}}" class="{{_selectedItemIcon}} controls-DropdownList__icon"></span> <span class="controls-DropdownList__value">{{text}}</span></span>
 </div>
-<div class="controls-DropdownList__afterCaptionWrapper">
+<div class="controls-DropdownList__afterCaptionWrapper" if="{{!!text}}">
 <i class="controls-DropdownList__crossIcon icon-16 icon-size icon-Close icon-disabled action-hover"></i>
 </div>

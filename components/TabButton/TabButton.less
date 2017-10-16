@@ -91,6 +91,7 @@
          font-size: @tab-button-large-inner-font-size;
          padding-top: 0;
          padding-bottom: 1px;
+         color: #313E78;
       }
    }
    &.controls-Checked__checked {
@@ -100,6 +101,8 @@
       font-size: @tab-button-checked-font-size;
       border-bottom: none;
       padding: 0;
+      overflow: visible;
+
       .controls-TabButton__bottomLine{
          position: absolute;
          bottom: -2px;
@@ -112,8 +115,9 @@
          font-weight: bold;
          font-size: @tab-button-checked-inner-font-size;
          color: @tab-button-checked-inner-color;
-         border-left: @tab-button-checked-inner-border-left;
-         border-right: @tab-button-checked-inner-border-right;
+         border-width: 0 @tab-button-checked-inner-border 0 @tab-button-checked-inner-border;
+         border-color: @tab-button-checked-border-color;
+         border-style: solid;
          background: @tab-button-checked-inner-bg;
          overflow:  hidden;
          &:before{
@@ -173,7 +177,7 @@
          }
          .controls-EditAtPlace__editor{
             color: @black-color;
-            font-size: @default-font-size;
+            font-size: @default-text-size;
          }
          .controls-EditAtPlace__fieldWrapper{
             padding: 0;
@@ -189,7 +193,7 @@
          font-weight: normal;
          .controls-EditAtPlace__editor{
             color: @black-color;
-            font-size: @default-font-size;
+            font-size: @default-text-size;
          }
          .controls-EditAtPlace__fieldWrapper{
             padding: 0;
@@ -280,6 +284,16 @@
       -ms-filter: @tab-button-overlay-ms-filter;
       opacity: 0;
    }
+  //FIXME: временный костыль, тк избавиться от line-height не переписывая tabButton невозможно
+  .controls-TextBox {
+    line-height: @default-height;
+    &__wrapper {
+      .align-items(normal)
+    }
+    &.controls-DateBox {
+      line-height: @default-base-line-height;
+    }
+  }
 }
 
 .ws-disabled{
@@ -337,9 +351,11 @@
       display: block;
     }
     &.controls-Checked__checked {
+       padding: 0 1px;
       .controls-TabButton__inner{
         color: @tab-button-simple-inner-checked-color;
         background: transparent;
+        border-width: 0;
       }
       .controls-TabButton__bottomLine{
          display: block;
@@ -348,6 +364,10 @@
     }
     &:hover {
       background: transparent;
+      padding: 0 1px;
+      .controls-TabButton__inner {
+         border-width: 0;
+      }
       .controls-TabButton__bottomLine{
         background: @tab-button-simple-hover-bottomline-color;
       }

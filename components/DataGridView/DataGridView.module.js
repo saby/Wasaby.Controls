@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
    "js!SBIS3.CONTROLS.DragAndDropMixin",
    "js!SBIS3.CONTROLS.ImitateEvents",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/DataGridViewGroupBy",
-   'js!WS.Data/Display/Ladder',
+   'WS.Data/Display/Ladder',
    'js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator',
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "tmpl!SBIS3.CONTROLS.DataGridView/resources/ItemTemplate",
@@ -785,13 +785,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
    
       _notifyOnItemClick: function(id, data, target, e) {
-         var clickedCell = {};
+         var clickedCell = {},
+             cell;
          
          /* Для DataGridView дополняем событие клика информацией о колонке и ячейке */
          if(this._hoveredColumn.columnIndex  !== null) {
+            cell = this._getCellContainerByElement(e.target);
             clickedCell = {
-               cellContainer: this._getCellContainerByElement(e.target),
-               cellIndex: this._hoveredColumn.columnIndex
+               cellContainer: cell,
+               //При клике на touch устройствах не будет hoveredColumn, поэтому ищем по элементу, по котрому кликнули
+               cellIndex: this._hoveredColumn.columnIndex || cell.index()
             };
          }
          
@@ -978,7 +981,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
             return;
          }
 
-         table.toggleClass('ws-sticky-header__table', isSticky);
+         table.toggleClass('ws-sticky-header__table', Boolean(isSticky));
          if (isSticky) {
             EventBus.channel('stickyHeader').notify('onForcedStickHeader', this.getContainer());
          } else {
@@ -1379,6 +1382,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              thumbWidth = this._thumb[0].offsetWidth,
              correctMargin = 0,
              lastRightStop = this._stopMovingCords.right,
+             arrowsWidth = this._arrowRight[0].offsetWidth * 2,
              notScrolledCells, thumbPos;
 
          /* Найдём ширину нескроллируемых колонок */
@@ -1394,9 +1398,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
          scrollContainer[0].style.width = containerWidth - correctMargin + 'px';
 
          /* Найдём соотношение, для того чтобы правильно двигать скроллируемый контент относительно ползунка */
-         this._partScrollRatio = (this._getItemsContainer()[0].offsetWidth - containerWidth) / (containerWidth - correctMargin - thumbWidth - 40);
+         this._partScrollRatio = (this._getItemsContainer()[0].offsetWidth - containerWidth) / (containerWidth - correctMargin - thumbWidth - arrowsWidth);
          this._stopMovingCords = {
-            right: scrollContainer[0].offsetWidth - thumbWidth - 40,
+            right: scrollContainer[0].offsetWidth - thumbWidth - arrowsWidth,
             left: correctMargin
          };
 

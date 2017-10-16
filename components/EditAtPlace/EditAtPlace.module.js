@@ -7,11 +7,12 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
       'js!SBIS3.CONTROLS.Utils.HtmlDecorators.DateFormatDecorator',
       'tmpl!SBIS3.CONTROLS.EditAtPlace',
       'Core/helpers/String/escapeHtml',
+      'js!SBIS3.CONTROLS.Utils.TemplateUtil',
       'js!SBIS3.CONTROLS.ControlHierarchyManager',
       'i18n!SBIS3.CONTROLS.EditAtPlace',
       'css!SBIS3.CONTROLS.EditAtPlace'
    ],
-   function (CompoundControl, TextBox, PickerMixin, EditAtPlaceMixin, FormWidgetMixin, DateFormatDecorator, dotTplFn, escapeHtml, ControlHierarchyManager) {
+   function (CompoundControl, TextBox, PickerMixin, EditAtPlaceMixin, FormWidgetMixin, DateFormatDecorator, dotTplFn, escapeHtml, TemplateUtil, ControlHierarchyManager) {
       'use strict';
 
       var dateDecorator = null;
@@ -99,6 +100,10 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                 */
                editorTpl: '<component data-component="SBIS3.CONTROLS.TextBox"></component>',
                /**
+                * @cfg {String|Function} Шаблон отрисовываемого текста
+                */
+               editFieldTpl: null,
+               /**
                 * @cfg {Boolean} Определяет, будет ли многострочным редактируемый текст.
                 * Если указано, текст будет переноситься, убираясь в ширину контейнера.
                 */
@@ -153,11 +158,13 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             this._saveOldText();
 
             editorComponent.subscribe('onFocusOut', function(event, destroyed, focusedControl){
-               if (!self._isEditInGroup && self.validate() && !self._isEditorChild(focusedControl, this)){
-                  if (this.getText() !== self._oldText){
-                     self._editorFocusOutHandler(true);
-                  } else {
-                     self._editorFocusOutHandler(false);
+               if (!self._options.enableControlPanel) {
+                  if (!self._isEditInGroup && self.validate() && !self._isEditorChild(focusedControl, this)){
+                     if (this.getText() !== self._oldText){
+                        self._editorFocusOutHandler(true);
+                     } else {
+                        self._editorFocusOutHandler(false);
+                     }
                   }
                }
             });
@@ -326,15 +333,16 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             return this._options.text;
          },
 
-         _drawText: function(text){
-            if (!text){
+         _drawText: function (text) {
+            if (this._options.editFieldTpl) {
+               text = TemplateUtil.prepareTemplate(this._options.editFieldTpl)({text: text});
+            } else if (!text) {
                text = '<span class="controls-EditAtPlace__placeholder">' + escapeHtml(this._options.placeholder) + '</span>';
             } else {
                text = escapeHtml(text);
             }
             this._textField.html(text || '&nbsp;');
          }
-
       });
 
       return EditAtPlace;

@@ -15,8 +15,8 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.StickyHeaderManager',
    'js!SBIS3.CONTROLS.ItemsControlMixin',
    'js!SBIS3.CONTROLS.MultiSelectable',
-   'js!WS.Data/Query/Query',
-   'js!WS.Data/Entity/Record',
+   'WS.Data/Query/Query',
+   'WS.Data/Entity/Record',
    'js!SBIS3.CONTROLS.Selectable',
    'js!SBIS3.CONTROLS.DataBindMixin',
    'js!SBIS3.CONTROLS.DecorableMixin',
@@ -33,8 +33,8 @@ define('js!SBIS3.CONTROLS.ListView',
    'Core/helpers/markup-helpers',
    'js!SBIS3.CONTROLS.Link',
    'js!SBIS3.CONTROLS.ScrollWatcher',
-   'js!WS.Data/Collection/IBind',
-   'js!WS.Data/Collection/List',
+   'WS.Data/Collection/IBind',
+   'WS.Data/Collection/List',
    'tmpl!SBIS3.CONTROLS.ListView/resources/ListViewGroupBy',
    'tmpl!SBIS3.CONTROLS.ListView/resources/emptyData',
    'tmpl!SBIS3.CONTROLS.ListView/resources/ItemTemplate',
@@ -43,7 +43,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'browser!js!SBIS3.CONTROLS.Utils.InformationPopupManager',
    'js!SBIS3.CONTROLS.Paging',
    'js!SBIS3.CONTROLS.ComponentBinder',
-   'js!WS.Data/Di',
+   'WS.Data/Di',
    'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
    'Core/core-instance',
    'Core/LocalStorageNative',
@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'Core/helpers/Hcontrol/isElementVisible',
    'js!SBIS3.CONTROLS.Utils.Contains',
    'js!SBIS3.CONTROLS.CursorListNavigation',
-   'js!WS.Data/Source/SbisService',
+   'WS.Data/Source/SbisService',
    'Core/detection',
    'js!SBIS3.CONTROLS.ListView.Mover',
    'Core/helpers/Function/throttle',
@@ -63,9 +63,9 @@ define('js!SBIS3.CONTROLS.ListView',
    'js!SBIS3.CONTROLS.ListView.DragMove',
    'Core/helpers/Function/once',
    'browser!js!SBIS3.CONTROLS.ListView/resources/SwipeHandlers',
-   'js!WS.Data/Collection/RecordSet',
+   'WS.Data/Collection/RecordSet',
    'i18n!SBIS3.CONTROLS.ListView',
-   'js!WS.Data/MoveStrategy/Base',
+   'WS.Data/MoveStrategy/Base',
    'css!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
@@ -401,6 +401,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _editInPlace: null,
             _createEditInPlaceDeferred: null,
             _pageChangeDeferred : undefined,
+            _scrollPager: null,
             _pager : undefined,
             _pagerContainer: undefined,
             _previousGroupBy : undefined,
@@ -460,6 +461,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 * Для отрисовки чекбоксов необходимо в шаблоне отображения элемента коллекции обозначить их место.
                 * Это делают с помощью CSS-классов "controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox".
                 * В следующем примере место отображения чекбоксом обозначено тегом span:
+                * <pre>
                 * <pre>
                 *     <div class="listViewItem" style="height: 30px;">
                 *        <span class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></span>
@@ -1049,6 +1051,10 @@ define('js!SBIS3.CONTROLS.ListView',
                this._addItems(itemsToAdd, config.addPosition);
                this._removeItemsLight(itemsToRemove);
 
+               //После добавления элоементов с помощью виртуального скролла, необходимо добавить на них выделение,
+               //если они до этого были выделены.
+               this._drawSelectedItems(this._options.selectedKeys, {});
+
                this._topWrapper.get(0).style.height = config.topWrapperHeight + 'px';
                this._bottomWrapper.get(0).style.height = config.bottomWrapperHeight + 'px';
 
@@ -1281,6 +1287,9 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._scrollPager) {
                // покажем если ListView показалось и есть страницы и скроем если скрылось
                this._scrollPager.setVisible(visible && this._scrollPager.getPagesCount() > 1);
+            }
+            if (this._scrollBinder) {
+               this._scrollBinder.freezePaging(!visible);
             }
          },
 
@@ -2104,7 +2113,7 @@ define('js!SBIS3.CONTROLS.ListView',
           *    });
           * </pre>
           */
-         reload: function () {
+         reload: function (filter, sorting, pageNumber, pageSize) {
             if (this._scrollBinder && this._options.saveReloadPosition){
                var reloadOffset = this._getReloadOffset();
                this._offset = reloadOffset;
@@ -2114,12 +2123,22 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.setInfiniteScroll('both', true);
                }
             }
-            if (this._options.virtualScrolling && this._virtualScrollController) {
-               // Will reset pages after redrawing items
-               this._resetPaging = true;
-               this._topWrapper.height(0);
-               this._bottomWrapper.height(0);
+
+            // Reload to first page (for filter and search)
+            if (!this._options.saveReloadPosition && pageNumber === 0) {
+               this.setPage(0, true);
+
+               // Reset virtual scrolling if it's enabled
+               if (this._options.virtualScrolling && this._virtualScrollController) {
+                  this._virtualScrollController.disableScrollHandler(true);
+                  this.scrollToFirstPage();
+                  // Will reset pages after redrawing items
+                  this._resetPaging = true;
+                  this._topWrapper.height(0);
+                  this._bottomWrapper.height(0);
+               }
             }
+
             this._reloadInfiniteScrollParams();
             this._previousGroupBy = undefined;
             // При перезагрузке нужно также почистить hoveredItem, иначе следующее отображение тулбара будет для элемента, которого уже нет (ведь именно из-за этого ниже скрывается тулбар).
@@ -3022,6 +3041,7 @@ define('js!SBIS3.CONTROLS.ListView',
             // отправляем команду о перерисовке парентов, и только их. Предполагается, что изменение items
             // у ListView может повлиять только на некоторых парентов
             this.sendCommand('resizeYourself');
+            this._onResizeHandler();
          },
 
          _drawItemsCallbackSync: function() {
@@ -3034,6 +3054,10 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
             if (this._virtualScrollController){
+               if (this._resetPaging) {
+                  this.scrollToFirstPage();
+                  this._virtualScrollController.disableScrollHandler(false);
+               }
                this._virtualScrollController.initHeights();
             }
             this._updateHoveredItemAfterRedraw();
@@ -3369,7 +3393,9 @@ define('js!SBIS3.CONTROLS.ListView',
             }
 
             //Если подгружаем элементы до появления скролла показываем loading-indicator рядом со списком, а не поверх него
-            this._scrollWatcher.getScrollContainer().toggleClass('controls-ListView-scrollIndicator_outside', !hasScroll);
+            if(this._loadingIndicator) {
+               this._loadingIndicator.toggleClass('controls-ListView-scrollIndicator_outside', !hasScroll);
+            }
 
             this._updateScrollIndicatorTopThrottled();
 
@@ -3820,10 +3846,11 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             if (this.isInfiniteScroll()) {
                //Если нет следующей страницы - скроем индикатор загрузки
-               if (!this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.bottom) || this._options.infiniteScroll == 'demand') {
+               if (!this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.bottom) || this._options.infiniteScroll === 'demand') {
                   this._hideLoadingIndicator();
                }
-               if (this._options.infiniteScroll == 'demand'){
+               //Кнопки может не быть, когда список рендерится на сервере _dataLoadedCallback вызывается ещё в конструкторе, до инициализации компонентов
+               if (this._options.infiniteScroll === 'demand' && this._loadMoreButton){
                   this._setLoadMoreCaption(this.getItems());
                }
             }
@@ -3899,7 +3926,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   var more = self.getItems().getMetaData().more,
                      hasNextPage = self._hasNextPage(more),
                      pagingOptions = {
-                        hideEndButton: this._options.hideEndButton,
+                        hideEndButton: self._options.hideEndButton,
                         recordsPerPage: self._options.pageSize || more,
                         currentPage: 1,
                         recordsCount: more || 0,
@@ -3910,6 +3937,8 @@ define('js!SBIS3.CONTROLS.ListView',
                      pagerContainer = self.getContainer().find('.controls-Pager-container').append('<div/>');
 
                   self._pager = new pagerCtr({
+                     noSizePicker: self._options.noSizePicker,
+                     noPagerAmount: self._options.noPagerAmount,
                      pageSize: self._options.pageSize,
                      opener: self,
                      element: pagerContainer.find('div'),
@@ -4041,6 +4070,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         надо сбросить выделенную запись, иначе на следующей странице неправильно выделится запись */
                      this.setSelectedIndex(-1);
                      this.reload();
+
                   }
                }
                this._lastPageLoaded = false;
@@ -4247,8 +4277,11 @@ define('js!SBIS3.CONTROLS.ListView',
          cancelEdit: function() {
             if (this._hasEditInPlace()) {
                return this._getEditInPlace().addCallback(function(editInPlace) {
-                  return editInPlace.endEdit();
-               });
+                  var res = editInPlace.endEdit();
+                  // вызываем _notifyOnSizeChanged, потому что при отмене редактирования изменились размеры
+                  this._notifyOnSizeChanged(true);
+                  return res;
+               }.bind(this));
             } else {
                return Deferred.success();
             }
@@ -4434,7 +4467,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          moveRecordsWithDialog: function(idArray) {
             if (this.isEnabledMove()) {
-               require(['js!SBIS3.CONTROLS.Action.List.InteractiveMove', 'js!WS.Data/Utils'], function (InteractiveMove, Utils) {
+               require(['js!SBIS3.CONTROLS.Action.List.InteractiveMove', 'WS.Data/Utils'], function (InteractiveMove, Utils) {
                   //Utils.logger.info(this._moduleName + 'Method "moveRecordsWithDialog" is deprecated and will be removed. Use "SBIS3.CONTROLS.Action.List.InteractiveMove"');
                   //В OperationMove ни как не передать инстанс экшена через шаблонизатор до решения этой проблемы перейти не получится
                   var
@@ -4669,7 +4702,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _setNewDataAfterReload: function() {
             this._resultsChanged = true;
             ListView.superclass._setNewDataAfterReload.apply(this, arguments);
-            if (this._resultsChanged) {
+            /* Если проекция заморожена, то перерисовывать результаты нельзя, т.к. отрисовка всего списка будет отложена,
+               перерисуем, как проекция будет разморожена. */
+            if (this._resultsChanged && this._getItemsProjection().isEventRaising()) {
                this._redrawResults(true);
             }
          },

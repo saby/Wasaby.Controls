@@ -24,7 +24,8 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
             result,
             hasMore;
 
-         if (typeof cfg._folderHasMore[key] === 'number') {
+         //Проверяем на pageSize, т.к. опция может быть не задана, а в ответе с бл в параметре hasMore может быть число записей в папке.
+         if (typeof cfg._folderHasMore[key] === 'number' && cfg.pageSize) {
             count =  cfg._folderHasMore[key] - cfg._folderOffsets[key] - cfg.pageSize;
             hasMore = count <= 0 ? false : count;
          } else if (typeof cfg._folderHasMore[key] === 'boolean') {

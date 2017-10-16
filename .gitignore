@@ -4,7 +4,7 @@
 /components/contents.js
 /components/**/*.css
 /components/WS.Data/*
-/components/WS.Data
+/WS.Data
 /sbis3-ws
 /ws-data
 /node_modules

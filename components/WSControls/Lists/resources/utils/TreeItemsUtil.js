@@ -1,6 +1,6 @@
 define('js!WSControls/Lists/resources/utils/TreeItemsUtil', [
-   'js!WS.Data/Display/Tree',
-   'js!WS.Data/Entity/Model',
+   'WS.Data/Display/Tree',
+   'WS.Data/Entity/Model',
    'Core/core-instance',
    'Core/helpers/Object/isPlainObject'
 ], function(TreeDisplay, Model, CoreInstance, isPlainObject) {

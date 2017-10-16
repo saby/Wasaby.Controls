@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "js!SBIS3.CONTROLS.ITextValue",
        "js!SBIS3.CONTROLS.Utils.TemplateUtil",
        "js!SBIS3.CONTROLS.ToSourceModel",
-       "js!WS.Data/Collection/List",
+       "WS.Data/Collection/List",
        "js!SBIS3.CONTROLS.Utils.ItemsSelection",
        "Core/helpers/Object/find",
        "js!SBIS3.CONTROLS.IconButton",
@@ -628,7 +628,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
                 var elemToFocus = this._getElementToFocus();
 
                 setTimeout(forAliveOnly(function () {
-                   if(elemToFocus[0] === document.activeElement && this._isEmptySelection()){
+                   if(!constants.browser.isMobilePlatform && (constants.browser.firefox || constants.browser.chrome) && elemToFocus[0] === document.activeElement && this._isEmptySelection()){
                       var suggestShowed = this.isPickerVisible();
                       elemToFocus.blur().focus();
 

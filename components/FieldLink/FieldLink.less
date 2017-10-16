@@ -15,11 +15,11 @@
       cursor: default;
       position: relative;
       height:100%;
-      padding: 0 1px 0 @default-padding-small; //1px - запятая
+      padding: 0 1px 0 @default-padding; //1px - запятая
+      //todo: проработать концепцию точки, чейчас это вообще дичь
       &:after {
          position: absolute;
          right: 0;
-         top: 0;
          content: ',';
       }
       &:last-child:after {
@@ -28,9 +28,7 @@
       &-caption {
          .text-overflow();
          .flex-shrink();
-         display: inline-block;
-         height: 100%;
-         font-size: @default-font-size;
+         font-size: @default-text-size;
       }
    }
    &__showSelector.controls-IconButton { // Перебиваем стили .controls-IconButton
@@ -61,6 +59,7 @@
          font-size: @fieldLink-big-fontSize;
          font-weight: bold;
          color: @fieldLink-big-fontSize-color;
+         height: @fieldLink-big-height;
       }
    }
    &__dropAllLinks.controls-IconButton { // Перебиваем стили .controls-IconButton
@@ -81,8 +80,8 @@
    }
    &__showAllLinks.controls-Link { //перебиваем стили controls-link
       position: relative;
-      line-height: @default-base-line-height;
-      padding-left: @default-padding-small;
+      line-height: @text-box-line-height;
+      padding-left: @default-padding;
       display: none;
       .flex-shrink(0);
    }
@@ -138,11 +137,17 @@
          }
       }
       &.ws-disabled .controls-FieldLink__item-caption {
-         margin-right: @default-padding-small;
+         margin-right: @default-padding;
       }
       &.controls-popup-revert-vertical {
          border-top: @fieldLink-border @gray-ccc-color;
          border-bottom: none;
+      }
+      //todo
+      &.controls-FieldLink__big-fontSize {
+         .controls-FieldLink__item-caption {
+            height: auto;
+         }
       }
    }
    &__selected-single {
@@ -170,7 +175,7 @@
       .icon-size(@fieldLink-icon-size);
    }
    .controls-FieldLink__Link { //вложенность, чтобы вне поля связи был дефолтный line-height
-      line-height: @default-base-line-height;
+      line-height: @text-box-line-height;
    }
 }
 .ws-disabled {
@@ -187,7 +192,7 @@
          max-width: 100%;
       }
       &__showAllLinks.controls-Link {
-         top: -@default-base-line-height;
+         top: -@text-box-line-height;
          background: @default-bg-color;
          &:after {
             content: '';
@@ -208,7 +213,7 @@
          .justify-content();
       }
       &__item-caption {
-         padding: 0 @default-padding-small 0 0 ;
+         padding: 0 @default-padding 0 0 ;
          max-width:100%;
       }
       &__item-cross {

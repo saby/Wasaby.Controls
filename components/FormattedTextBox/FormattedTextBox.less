@@ -1,16 +1,14 @@
-.controls-FormattedTextBox {
-  display: inline-block;
-  .controls-FormattedTextBox__fieldWrapper {
-    padding: @text-box-input-padding;
-    background: transparent;
-    .controls-FormattedTextBox__field {
-      .controls-FormattedTextBox__field-symbol {
-        font-style: normal;
-        white-space: pre;
-      }
-    }
-  }
+.controls-FormattedTextBox__fieldWrapper {
+   .user-select(none);
+   .flexbox();
+   .align-items(center);
 }
+
 .controls-FormattedTextBox__field {
-  outline: none;
+   .user-select(text);
+}
+
+.controls-FormattedTextBox__field-symbol {
+  font-style: normal;
+  white-space: pre;
 }

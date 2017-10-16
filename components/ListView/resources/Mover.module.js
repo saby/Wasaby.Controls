@@ -1,11 +1,11 @@
 /*global define, $*/
 define('js!SBIS3.CONTROLS.ListView.Mover', [
-   'js!WS.Data/Di',
+   'WS.Data/Di',
    "Core/core-instance",
    "Core/Deferred",
    "Core/Abstract",
-   'js!WS.Data/Utils',
-   'js!WS.Data/Source/ISource',
+   'WS.Data/Utils',
+   'WS.Data/Source/ISource',
    'js!SBIS3.CONTROLS.Utils.InformationPopupManager'
 
 ], function (Di, cInstance, Deferred, Abstract, Utils, ISource, InformationPopupManager) {
