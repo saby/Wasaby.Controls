@@ -45,6 +45,7 @@ define('js!WSControls/Lists/ListView', [
          _sorting: undefined,
 
          _itemTemplate: null,
+         _selectedItem: null,
 
          constructor: function (cfg) {
             ListView.superclass.constructor.apply(this, arguments);
@@ -69,6 +70,10 @@ define('js!WSControls/Lists/ListView', [
                   this.reload(newOptions);
                }
             }
+
+            if (newOptions.selectedKey !== undefined) {
+               this._selectedItem = ItemsUtil.getItemById(this._items, newOptions.selectedKey, newOptions.idProperty);
+            }
          },
 
          _beforeUpdate: function(newOptions) {
@@ -83,6 +88,16 @@ define('js!WSControls/Lists/ListView', [
                this._initNavigation(newOptions, this._dataSource);
                this.reload(newOptions);
             }
+
+            if (newOptions.selectedKey !== this._options.selectedKey) {
+               if (newOptions.selectedKey !== undefined) {
+                  this._selectedItem = ItemsUtil.getItemById(this._items, newOptions.selectedKey, newOptions.idProperty);
+               }
+               else {
+                  this._selectedItem = null;
+               }
+            }
+
 
             //TODO обработать смену фильтров и т.д. позвать релоад если надо
          },

@@ -16,7 +16,7 @@ define('js!WSControls/Lists/ListView/ItemsRender', [
          _selectedIndex: null,
          _selectedItem: null,
 
-         _displayChangeCallback: function(cfg) {
+         _displayChangeCallback: function(display, cfg) {
             ItemsRender.superclass._displayChangeCallback.apply(this, arguments);
             if(!cfg.selectedItem) {
                if (!this._selectedIndex) {
@@ -30,6 +30,8 @@ define('js!WSControls/Lists/ListView/ItemsRender', [
             else {
                this._selectedItem = cfg.selectedItem;
             }
+
+            //TODO обработать virt scroll
          }
       });
 

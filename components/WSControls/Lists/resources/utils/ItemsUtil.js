@@ -46,7 +46,7 @@ define('js!WSControls/Lists/resources/utils/ItemsUtil', [
       },
 
       //TODO это наверное к Лехе должно уехать
-      getItemById: function(display, id, idProperty) {
+      getDisplayItemById: function(display, id, idProperty) {
          var list = display.getCollection();
          if (cInstance.instanceOfModule(list, 'WS.Data/Collection/RecordSet')) {
             return display.getItemBySourceItem(list.getRecordById(id));
@@ -54,6 +54,30 @@ define('js!WSControls/Lists/resources/utils/ItemsUtil', [
          else {
             var resItem;
             display.each(function(item, i){
+               if (ItemsUtil.getPropertyValue(item.getContents(), idProperty) == id) {
+                  resItem = item;
+               }
+            });
+            return resItem;
+         }
+      },
+
+      getItemById: function(list, id, idProperty) {
+         if (cInstance.instanceOfModule(list, 'WS.Data/Collection/RecordSet')) {
+            return list.getRecordById(id);
+         }
+         else {
+            var iterator, resItem;
+
+            if (list instanceof Array) {
+               iterator = function(func){
+                  list.forEach(func);
+               };
+            } else {
+               iterator = list.each.bind(list);
+
+            }
+            iterator(function(item, i){
                if (ItemsUtil.getPropertyValue(item.getContents(), idProperty) == id) {
                   resItem = item;
                }
