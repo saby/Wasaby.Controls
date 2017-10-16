@@ -34,7 +34,7 @@ define('js!SBIS3.SPEC.input.Text', [
     */
 
    /**
-    * @name SBIS3.SPEC.input.Text#inputCharReg
+    * @name SBIS3.SPEC.input.Text#inputCharRegExp
     * @cfg {String} Устанавливает регулярное выражение, в соответствии с которым будет осуществляться валидация вводимых символов.
     */
 

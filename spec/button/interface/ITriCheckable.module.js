@@ -9,12 +9,12 @@ define('js!SBIS3.SPEC.button.interface.ITriCheckable', [
 
    /**
     * @name SBIS3.SPEC.button.interface.ITriCheckable#checked
-    * @cfg {Boolean|undefined} Устанавливает состояние переключателя.
+    * @cfg {Boolean|null} Устанавливает состояние переключателя.
     */
 
    /**
     * @event SBIS3.SPEC.button.interface.ITriCheckable#onChangeChecked Происходит при изменении состояния переключателя.
-    * @param {Boolean|undefined} value Новое состояние.
+    * @param {Boolean|null} value Новое состояние.
     */
 
 });

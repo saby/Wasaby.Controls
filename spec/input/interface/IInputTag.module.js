@@ -10,11 +10,11 @@ define('js!SBIS3.SPEC.input.interface.IInputTag', [
    /**
     * @name SBIS3.SPEC.input.interface.IInputTag#tagStyle
     * @cfg {String | undefined} Цвет тега
-    * @variant primary #587AB0 (синий).
-    * @variant done #72BE44 (зеленый).
-    * @variant attention #FEC63F (оранжевый).
-    * @variant error #EF463A (красный).
-    * @variant info #999999 (серый).
+    * @variant primary
+    * @variant done
+    * @variant attention
+    * @variant error
+    * @variant info
     */
 
    /**
