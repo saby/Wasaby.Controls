@@ -196,7 +196,20 @@ define('js!SBIS3.CONTROLS.TextBox', [
              * @see setInformationIconColor
              * @see informationIconColor
              */
-            informationIconColor: ''
+            informationIconColor: '',
+             /**
+              * @cfg {String} Устанавливает размер поля ввода.
+              * @remark
+              * По умолчанию значение опции "default"
+              * Значение "large" устaновит большой рамер поля ввода
+              * @example
+              * Пример 1. Большое поле ввода:
+              * фрагмент верстки:
+              * <pre class="brush:xml">
+              *     <option name="size">large</option>
+              * </pre>
+              */
+            size: ''
          }
       },
 
@@ -504,7 +517,21 @@ define('js!SBIS3.CONTROLS.TextBox', [
          // сделать возможность вешать через префикс attr-
          this._inputField.prop('readonly', !enabled);
       },
-
+      _toggleStateEnabled: function() {
+          var
+              enabled = this.isEnabled();
+          //todo: сделать навешивание классов и согласовать их с Бегуновым А.
+      },
+      _toggleStateValidate: function() {
+          var
+              marked = this.isMarked();
+          //todo: сделать навешивание классов и согласовать их с Бегуновым А.
+      },
+      _toggleStateActive: function() {
+          var
+              active = this.isActive();
+          //todo: сделать навешивание классов и согласовать их с Бегуновым А.
+      },
       _inputRegExp: function (e, regexp) {
          var keyCode = e.which || e.keyCode;
          //Клавиши стрелок, delete, backspace и тд

@@ -3846,10 +3846,11 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             if (this.isInfiniteScroll()) {
                //Если нет следующей страницы - скроем индикатор загрузки
-               if (!this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.bottom) || this._options.infiniteScroll == 'demand') {
+               if (!this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.bottom) || this._options.infiniteScroll === 'demand') {
                   this._hideLoadingIndicator();
                }
-               if (this._options.infiniteScroll == 'demand'){
+               //Кнопки может не быть, когда список рендерится на сервере _dataLoadedCallback вызывается ещё в конструкторе, до инициализации компонентов
+               if (this._options.infiniteScroll === 'demand' && this._loadMoreButton){
                   this._setLoadMoreCaption(this.getItems());
                }
             }
@@ -3937,6 +3938,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
                   self._pager = new pagerCtr({
                      noSizePicker: self._options.noSizePicker,
+                     noPagerAmount: self._options.noPagerAmount,
                      pageSize: self._options.pageSize,
                      opener: self,
                      element: pagerContainer.find('div'),
@@ -4700,7 +4702,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _setNewDataAfterReload: function() {
             this._resultsChanged = true;
             ListView.superclass._setNewDataAfterReload.apply(this, arguments);
-            if (this._resultsChanged) {
+            /* Если проекция заморожена, то перерисовывать результаты нельзя, т.к. отрисовка всего списка будет отложена,
+               перерисуем, как проекция будет разморожена. */
+            if (this._resultsChanged && this._getItemsProjection().isEventRaising()) {
                this._redrawResults(true);
             }
          },

@@ -11,20 +11,6 @@ body {
     //это должно быть обязательно после backround иначе масштаб уголка слетает.
     background-size: 3rem 3rem;
   }
-   .controls-ListView__scrollPager {
-      .controls-IconButton {
-         background: @button-bg-color;
-         .controls-Button__icon {
-            color: @button-text-color !important;
-         }
-         &.ws-disabled {
-            border-color: #CCCCCC;
-            .controls-Button__icon {
-               color: #CCCCCC !important
-            }
-         }
-      }
-   }
     //Todo: https://online.sbis.ru/opendoc.html?guid=47bdafa8-88ab-4cb2-9383-89ffd7c9dcdd
     .controls-accent-text {
       color: #D94700 !important;
@@ -54,17 +40,6 @@ body {
       font-weight: normal !important;
   }
 
-}
-.ws-float-close.sbisname-window-title-close {
-   width: 3rem !important;
-   height: 3rem !important;
-   background: @closeBigButtonImage;
-   &:hover {
-      background: @closeBigButtonImageHover;
-   }
-   &:active {
-      background: @closeBigButtonImageHover;
-   }
 }
 .controls-FloatArea {
   background: #fff;
@@ -103,6 +78,11 @@ body {
    .controls-DateRangeBigChoose .controls-DateRangeBigChoose__months .controls-DateRangeBigChoose__months-halfyearRange .controls-DateRangeBigChoose__months-range-btn-wrapper.controls-DateRangeBigChoose__months-range-btn-wrapper1 {
        height: 11rem;
    }
+}
+
+.ws-is-desktop-platform .controls-DateRangeBigChoose .controls-Button:not(.ws-disabled):not(:active).controls-Button-color__default:hover,
+.controls-DateRangeBigChoose .controls-Button.controls-Button-color__default:active:not(.ws-disabled){
+  background: #e0ecf5;
 }
 
 body .ws-window {
