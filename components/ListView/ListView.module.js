@@ -3854,7 +3854,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._setLoadMoreCaption(this.getItems());
                }
             }
-            this._onMetaDataResultsChange = function(){
+            this._onMetaDataResultsChange = function(event, data){
                this._redrawResults(true);
             }.bind(this);
             this._observeResultsRecord(true);
@@ -4661,7 +4661,11 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _observeResultsRecord: function(needObserve){
             var methodName = needObserve ? 'subscribeTo' : 'unsubscribeFrom',
-                resultsRecord = this.getItems() && this.getItems().getMetaData().results;
+                metaData = this.getItems() && this.getItems().getMetaData(),
+                resultsRecord = metaData && metaData.results;
+            if (this.getItems()) {
+               this[methodName](this.getItems(), 'onPropertyChange', this._onMetaDataResultsChange);
+            }
             if (resultsRecord){
                this[methodName](resultsRecord, 'onPropertyChange', this._onMetaDataResultsChange);
             }
