@@ -34,24 +34,24 @@ define('js!SBIS3.CONTROLS.Action.Action',
       //TODO наследуемся от контрола, чтоб можно было размещать в xhtml
       var Action = Control.Control.extend(/** @lends SBIS3.CONTROLS.Action.Action.prototype */{
          /**
-          * @event onExecute Происходит перед началом работы действия.
+          * @event onExecute Происходит перед началом выполнения действия.
           * @remark
           * Если из события вернуть deferred то основное действие выполнится в коллбеке, если вернуть false или 'custom' то действие будет отменено.
           * @param {Core/EventObject} eventObject Дескриптор события.
-          * @param {Object} meta Объект содержащий мета параметры Action'а.
+          * @param {Object} meta Объект, содержащий параметры действия Объект передаётся при вызове метода {@link execute}.
           * @see execute
           */
          /**
-          * @event onExecuted Происходит после выполнения основного действия.
+          * @event onExecuted Происходит после выполнения действия.
           * @param {Core/EventObject} eventObject Дескриптор события.
-          * @param {Object} meta Объект, содержащий мета параметры Action'а.
+          * @param {Object} meta Объект, содержащий параметры действия. Объект передаётся при вызове метода {@link execute}.
           * @see execute
           */
           /**
-          * @event onError Происходит при возникновении ошибки при выполнении Action'a.
+          * @event onError Происходит при возникновении ошибки при выполнении действия.
           * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {Error} error Инстанс ошибки произошедшей при выполнении основного действия.
-          * @param {Object} meta Объект содержащий мета параметры Action'а
+          * @param {Object} meta Объект, содержащий параметры действия.
           * @see execute
           */
           /**
@@ -73,9 +73,33 @@ define('js!SBIS3.CONTROLS.Action.Action',
             this._publish('onChangeCanExecute', 'onExecuted', 'onExecute', 'onError');
          },
          /**
-          * Метод, запускающий выполнение Action'а.
-          * @param {Object} meta Объект, содержащий мета-параметры Action'а. Набор мета-параметров фиксирован для каждого Action'а.
-          * Например, для класса {@link SBIS3.CONTROLS.Action.OpenEditDialog} список мета-параметров описан {@link SBIS3.CONTROLS.Action.OpenEditDialog/ExecuteMetaConfig.typedef здесь}.
+          * Запускает выполнение действие.
+          * @param {Object} meta Метаданные. Дополняют сведения о контексте выполнения действия, а также о свойствах сущностей, с которыми происходит взаимодействие.
+          * Набор метаданных индивидуален для каждого класса действия.
+          * <pre>
+          * // myOpenEditDialog - это экземпляр класса SBIS3.CONTROLS.Action.OpenEditDialog,
+          * // который описывает действие открытие диалога редактирования
+          * myOpenEditDialog.execute({
+          *
+          *    // Идентификатор действия.
+          *    id: myId,
+          *
+          *    // Record, который будет открыт на редактирование.
+          *    item: myItem,
+          *
+          *    // Способ инициализации данных диалога редактирования.
+          *    initializingWay: 'delayedRemote'
+          *
+          *    // Свойства контрола, на основе которого будет создано окно диалога редактирования.
+          *    dialogOptions: {
+          *
+          *       // Заголовок диалога.
+          *       title: 'Редактирования товара'
+          *    }
+          * });
+          * </pre>
+          * @remark
+          *
           * @returns {Deferred}
           */
          execute: function (meta) {
@@ -105,10 +129,11 @@ define('js!SBIS3.CONTROLS.Action.Action',
             }
          },
          /**
-          * Дает возможность пользоватeлю переопределить стандартное поведение(вызов метода method) через вызов события event
-          * _callHandlerMethod подымает событие event и вызывает метод method, если из события возвращается false или custom то
-          * method не вызывается, если из события возвращается deferred то method вызовется в коллбеке, так же
-          * событие может вернуть название другого метода и он будет вызван вместо method
+          * Предоставляет возможность переопределять стандартное поведение (вызов метода method) через вызов события event.
+          * Метод callHandlerMethod "подымает" событие event и вызывает метод method.
+          * Однако если из события возвращается false или custom, то method не вызывается.
+          * Если из события возвращается deferred, то method вызовется в callback, так же
+          * событие может вернуть название другого метода и он будет вызван вместо method.
           * @param {Array} args  Параметры которые будут переданы в event и method
           * @param {String} event  Название события которое надо поднято
           * @param {String} method  Название метода который надо вызвать
