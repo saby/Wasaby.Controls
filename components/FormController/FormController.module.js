@@ -45,34 +45,16 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @event onFail Происходит в случае ошибки при сохранении или чтении записи из источника данных.
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {Object} error Объект с описанием ошибки. В свойстве message хранится текст ошибки, например для вывода в пользовательский интерфейс.
-       * @see submit
-       * @see update
-       * @see read
-       * @see onCreateModel
-       * @see onUpdateModel
-       * @see onDestroyModel
        */
       /**
        * @event onReadModel Происходит при чтении записи из источника данных диалога редактирования.
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Запись, прочитанная из источника данных (см. {@link dataSource}).
        * @param {Object} additionalData Дополнительные данных, необходимые для синхронизации action'a.
-       * @see read
-       * @see dataSource
-       * @see onCreateModel
-       * @see onUpdateModel
-       * @see onDestroyModel
-       * @see onFail
        */
       /**
        * @event onAfterFormLoad Происходит при показе панели с построеной версткой по установленной записи.
        * @param {Core/EventObject} eventObject Дескриптор события.
-       * @see read
-       * @see dataSource
-       * @see onCreateModel
-       * @see onUpdateModel
-       * @see onDestroyModel
-       * @see onFail
        */
       /**
        * @event onBeforeUpdateModel Происходит перед сохранением записи в источнике данных диалога.
@@ -84,48 +66,33 @@ define('js!SBIS3.CONTROLS.FormController', [
        *    <li><b>Error</b> - сохранение записи прервется, текст для сообщения об ошибке берется из error.message</li>
        *    <li><b>Deferred</b> - сохранение приостановится до тех пор, пока deferred не завершит свою работу. В колбэк deferred'a отдается так же False|Error для того, чтобы прервать сохранение.</li>
        * </ul>
-       * @see submit
-       * @see update
-       * @see onCreateModel
-       * @see onDestroyModel
-       * @see onReadModel
-       * @see onFail
        */
       /**
        * @event onUpdateModel Происходит при сохранении записи в источнике данных диалога.
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Сохраняемая запись.
-       * @param {String} key Первичный ключ сохраняемой записи.
-       * @see submit
-       * @see update
-       * @see onCreateModel
-       * @see onDestroyModel
-       * @see onReadModel
-       * @see onFail
+       * @param {Object} additionalData Метаданные. Служебная информация, необходимая для синхронизации Действия.
+       * @param {String} additionalData.key Идентификатор сохранённой записи.
+       * @param {String} additionalData.idProperty Название поля записи, в котором хранится её первичный ключ. Значение параметра извлекается из опции {@link idProperty}.
+       * @param {Boolean} additionalData.isNewRecord Признак того запись была создана в БД.
        */
       /**
        * @event onDestroyModel Происходит при удалении записи из источника данных диалога.
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Запись, которая была удалена из источника данных (см. {@link dataSource}).
-       * @param {Object} additionalData Дополнительные данных, необходимые для синхронизации action'a.
-       * @see destroy
-       * @see dataSource
-       * @see onCreateModel
-       * @see onUpdateModel
-       * @see onReadModel
-       * @see onFail
+       * @param {Object} additionalData Метаданные. Служебная информация, необходимая для синхронизации Действия.
+       * @param {String} additionalData.idProperty Название поля записи, в котором хранится её первичный ключ. Значение параметра извлекается из опции {@link idProperty}.
+       * @param {Boolean} additionalData.isNewRecord Признак того запись была создана в БД.
        */
       /**
-       * @event onCreateModel Происходит при создании записи в источнике данных диалога редактирования.
+       * @event onCreateModel Происходит, когда новая запись успешно создана в источнике данных.
+       * @remark
+       * Настройку источника данных производят в опции {@link dataSource}.
        * @param {Core/EventObject} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Model} record Запись, которая была создана в источнике данных.
-       * @param {Object} additionalData Дополнительные данных, необходимые для синхронизации action'a.
-       * При создании часть полей может быть предустановлена с помощью опции {@link initValues}.
-       * @see create
-       * @see onDestroyModel
-       * @see onUpdateModel
-       * @see onReadModel
-       * @see onFail
+       * @param {WS.Data/Entity/Model} record Новая запись. Значения её полей можно предустановить в опции {@link initValues}.
+       * @param {Object} additionalData Метаданные. Служебная информация, необходимая для синхронизации Действия.
+       * @param {String} additionalData.idProperty Название поля записи, в котором хранится её первичный ключ. Значение параметра извлекается из опции {@link idProperty}.
+       * @param {Boolean} additionalData.isNewRecord Признак того запись была создана в БД.
        */
       $protected: {
          _updateDeferred: undefined,
@@ -151,7 +118,7 @@ define('js!SBIS3.CONTROLS.FormController', [
              */
             key: null,
             /**
-             * @cfg {String} Поле записи, которое является идентификатором записи
+             * @cfg {String} Поле записи, которое является идентификатором записи.
              */
             idProperty: undefined,
             /**
