@@ -288,6 +288,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         *    myView.subscribe('onBeforeDataLoad', function(eventObject) {
         *       var filter = this.getFilter();
         *       filter['myParam'] = myValue;
+        *
         *       this.setFilter(filter, true)
         *    });
         * </pre>
