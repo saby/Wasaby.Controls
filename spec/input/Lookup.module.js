@@ -8,7 +8,7 @@ define('js!SBIS3.SPEC.input.Lookup', [
     * @mixes SBIS3.SPEC.interface.IDataSource
     * @mixes SBIS3.SPEC.input.interface.IPlaceholder
     * @mixes SBIS3.SPEC.interface.IItems
-    * @mixes SBIS3.SPEC.interface.ISelectable
+    * @mixes SBIS3.SPEC.interface.ISingleSelectable
     * @mixes SBIS3.SPEC.input.interface.IValidation
     * @mixes SBIS3.SPEC.input.interface.IInputTag
     * @mixes SBIS3.SPEC.interface.IMultiSelectable

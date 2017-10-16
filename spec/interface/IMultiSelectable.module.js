@@ -18,15 +18,4 @@ define('js!SBIS3.SPEC.interface.IMultiSelectable', [
     * @param {Array} added массив добавленных ключей в списке выбранных элементов коллекции.
     * @param {Array} deleted массив удаленных ключей из списка выбранных элементов коллекции.
     */
-
-   /**
-    * Выделить все
-    * @function SBIS3.SPEC.Control#selectAll
-    */
-
-   /**
-    * Снять выделение
-    * @function SBIS3.SPEC.Control#UnselectAll
-    */
-
 });

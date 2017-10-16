@@ -40,7 +40,12 @@ define('js!SBIS3.SPEC.interface.IInfinitySelectable', [
 
    /**
     * Снять выделение
-    * @function SBIS3.SPEC.interface.IInfinitySelectable#UnselectAll
+    * @function SBIS3.SPEC.interface.IInfinitySelectable#unselectAll
+    */
+
+   /**
+    * Инвертировать выделение
+    * @function SBIS3.SPEC.interface.IInfinitySelectable#toggleSelection
     */
 
 });

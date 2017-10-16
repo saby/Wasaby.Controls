@@ -1,9 +1,9 @@
-define('js!SBIS3.SPEC.interface.ISelectable', [
+define('js!SBIS3.SPEC.interface.ISingleSelectable', [
 ], function() {
 
    /**
     * Интерфейс работы списков.
-    * @mixin SBIS3.SPEC.interface.ISelectable
+    * @mixin SBIS3.SPEC.interface.ISingleSelectable
     * @public
     */
 
