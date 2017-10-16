@@ -643,7 +643,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
    
          /* Когда нет записей в списке автодополнения,
           должен открываться справочник без фильтра, чтобы отобразились все записи */
-         if(!list.getItems().getCount() && this._options.searchParam) {
+         if((!list.getItems() || !list.getItems().getCount()) && this._options.searchParam) {
             delete listConfig.filter[this._options.searchParam];
          }
          
