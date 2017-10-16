@@ -56,10 +56,10 @@
    }
    &__big-fontSize {//modifier
       .controls-FieldLink__item-caption {
-         font-size: @fieldLink-big-fontSize;
-         font-weight: bold;
-         color: @fieldLink-big-fontSize-color;
-         height: @fieldLink-big-height;
+         font-size:@fieldLink-big-fontSize;
+		   font-weight: bold;
+			color: @fieldLink-big-fontSize-color;
+			height: @fieldLink-big-height;
       }
    }
    &__dropAllLinks.controls-IconButton { // Перебиваем стили .controls-IconButton
@@ -86,16 +86,16 @@
       .flex-shrink(0);
    }
    &__fieldWrapper {
-      .inline-flexbox();
-      .flex-shrink(1);
-      position:relative;
-      height: 100%;
-      width: 100%;
-      text-decoration: inherit;
-      margin-right: 0;
-   }
-   &__itemsCollection {
-      .justify-content(flex-end);
+	   .inline-flexbox();
+	   .flex-shrink(1);
+	   position:relative;
+	   height: 100%;
+	   width: 100%;
+	   text-decoration: inherit;
+	   margin-right: 0;
+	}
+	&__itemsCollection {
+		.justify-content(flex-end);
       display: inline-flex;
       width: 100%;
       height: 100%;
@@ -115,26 +115,29 @@
       width: auto;
    }
    &__picker {
-      max-height: @fieldLink-picker-max-height;
-      min-height: @fieldLink-picker-min-height;
-      border: @fieldLink-border @gray-ccc-color;
-      margin-top: 0;
-      overflow: auto;
-      padding: @fieldLink-linkContainer-padding;
-      border-top: none;
-      .flexbox();
-      .flex-wrap(wrap);
-      .controls-FieldLink__item {
-         /* Учитываем бордер пикера */
-         width: ~'calc(50% - 2px)';
-         .inline-flexbox();
-         align-items: center;
-         margin: 0;
-         padding: 0;
-         line-height: @fieldLink-linkItem-line-height;
-         &:after {
-            content: none;
-         }
+   max-height: @fieldLink-picker-max-height;
+   min-height: @fieldLink-picker-min-height;
+   border: @fieldLink-border @gray-ccc-color;
+   margin-top: 0;
+   overflow: auto;
+   padding: @fieldLink-linkContainer-padding;
+   border-top: none;
+   .flexbox();
+   .flex-wrap(wrap);
+
+   .controls-FieldLink__item {
+      /* Учитываем бордер пикера */
+      width: ~'calc(50% - 2px)';
+      .inline-flexbox();
+      align-items: center;
+      margin: 0;
+      padding: 0;
+      line-height: @fieldLink-linkItem-line-height;
+      height: auto;
+	   &:after {
+         content: none;
+      }
+      
       }
       &.ws-disabled .controls-FieldLink__item-caption {
          margin-right: @default-padding;
