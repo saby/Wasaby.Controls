@@ -2811,7 +2811,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 hoveredItem = this.getHoveredItem(),
                 key = target[0].getAttribute('data-id'),
                 columns = target.find('.controls-DataGridView__td').not('.controls-DataGridView__td__checkBox');
-            if(hoveredItem && hoveredItem.key !== key){
+            if(hoveredItem && hoveredItem.key !== key && self.getMultiselect()){
                 columns.addClass('rightSwipeAnimation');
                 setTimeout(function(){
                     columns.toggleClass('rightSwipeAnimation', false);
