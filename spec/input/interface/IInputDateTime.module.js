@@ -2,7 +2,7 @@ define('js!SBIS3.SPEC.input.interface.IInputDateTime', [
 ], function() {
 
    /**
-    * Интерфейс работы текстового поля ввода даты и времени.
+    * Интерфейс работы поля ввода даты и времени.
     * @mixin SBIS3.SPEC.input.interface.IInputDateTime
     * @public
     */

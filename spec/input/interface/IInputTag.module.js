@@ -22,6 +22,6 @@ define('js!SBIS3.SPEC.input.interface.IInputTag', [
     */
 
    /**
-    * @event SBIS3.SPEC.input.interface.IInputTag#onTagHover Происходит когда курсор мыши входит в область тега (информационного уголка).
+    * @event SBIS3.SPEC.input.interface.IInputTag#onTagHover Происходит, когда курсор мыши входит в область тега (информационного уголка).
     */
 });

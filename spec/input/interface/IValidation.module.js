@@ -2,7 +2,7 @@ define('js!SBIS3.SPEC.input.interface.IValidation', [
 ], function() {
 
    /**
-    * Интерфейс работы валидации с полем ввода.
+    * Интерфейс работы валидации в поле ввода.
     * @mixin SBIS3.SPEC.input.interface.IValidation
     * @public
     */
