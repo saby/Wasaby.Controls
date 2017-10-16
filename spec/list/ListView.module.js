@@ -8,7 +8,7 @@ define('js!SBIS3.SPEC.list.ListView', [
     * @mixes SBIS3.SPEC.interface.IDataSource
     * @mixes SBIS3.SPEC.interface.IItems
     * @mixes SBIS3.SPEC.interface.ISingleSelectable
-    * @mixes SBIS3.SPEC.interface.IInfinitySelectable
+    * @mixes SBIS3.SPEC.interface.IPromisedSelectable
     * @mixes SBIS3.SPEC.interface.IGroupedView
     * @control
     * @public

@@ -1,4 +1,4 @@
-define('js!SBIS3.SPEC.input.Lookup', [
+define('js!SBIS3.SPEC.input.SourceSelect', [
 ], function() {
 
    /**
