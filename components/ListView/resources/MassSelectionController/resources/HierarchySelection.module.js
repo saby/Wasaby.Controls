@@ -29,46 +29,48 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
 
    var HierarchySelection = Selection.extend(/** @lends SBIS3.CONTROLS.HierarchySelection */{
       _parentProperty: undefined,
+      _idProperty: undefined,
       _hierarchyRelations: {},
       _markedTree: undefined,
 
       constructor: function (options) {
          HierarchySelection.superclass.constructor.call(this, options);
          this._parentProperty = options.projection.getParentProperty();
+         this._idProperty = options.projection.getIdProperty();
          this._markedTree = new RecordSet({
             rawData: options.markedTree || [],
             idProperty: ID_FIELD
          });
       },
 
-      add: function (ids) {
+      select: function (ids) {
          this._changeTree(ids, true);
          ArraySimpleValuesUtil.removeSubArray(ids, [this._options.root]);
-         HierarchySelection.superclass.add.call(this, ids);
+         HierarchySelection.superclass.select.call(this, ids);
       },
 
-      remove: function (ids) {
-         ArraySimpleValuesUtil.addSubArray(this._options.excluded, ids);
+      unselect: function (ids) {
+         ArraySimpleValuesUtil.addSubArray(this._options.excludedKeys, ids);
          this._changeTree(ids, false);
-         ArraySimpleValuesUtil.removeSubArray(this._options.marked, ids);
+         ArraySimpleValuesUtil.removeSubArray(this._options.selectedKeys, ids);
       },
 
-      addAll: function () {
+      selectAll: function () {
          var rootId = this._options.projection.getRoot().getContents();
          if (rootId === this._options.root) {
             this._markedTree.clear();
-            HierarchySelection.superclass.addAll.call(this);
+            HierarchySelection.superclass.selectAll.call(this);
          }
-         this.add([rootId]);
+         this.select([rootId]);
       },
 
-      removeAll: function () {
+      unselectAll: function () {
          var rootId = this._options.projection.getRoot().getContents();
          if (rootId === this._options.root) {
             this._markedTree.clear();
-            HierarchySelection.superclass.removeAll.call(this);
+            HierarchySelection.superclass.unselectAll.call(this);
          } else {
-            this.remove([rootId]);
+            this.unselect([rootId]);
          }
       },
 
@@ -87,7 +89,7 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
             root = this._markedTree.getRecordById(nodeId),
             rootStatus = root ? root.get(STATUS_FILED) : STATUS.NOT_SELECTED,
             isSelected = rootStatus === STATUS.SELECTED || rootStatus === STATUS.PARTIALLY_FULL,
-            containsArray = isSelected ? this._options.excluded : this._options.marked;
+            containsArray = isSelected ? this._options.excludedKeys : this._options.selectedKeys;
 
          breadthFirstSearch([nodeId], function(id) {
             if (ArraySimpleValuesUtil.hasInArray(containsArray, id)) {
@@ -97,18 +99,18 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
          }, this);
 
          if (isSelected) {
-            this.remove([nodeId]);
-            this.add(forChange);
+            this.unselect([nodeId]);
+            this.select(forChange);
          } else {
-            this.add([nodeId]);
-            this.remove(forChange);
+            this.select([nodeId]);
+            this.unselect(forChange);
          }
       },
 
       getSelection: function (allMarked) {
          return {
             marked: this._getMarked(allMarked),
-            excluded: this._options.excluded,
+            excluded: this._options.excludedKeys,
             isMarkedAll: this._options.markedAll
          }
       },
@@ -249,7 +251,7 @@ define('js!SBIS3.CONTROLS.HierarchySelection', [
             parentId,
             parentStatus,
             result = [];
-         if (this._options.marked.length) {
+         if (this._options.selectedKeys.length) {
             breadthFirstSearch([this._options.root], function (id) {
                status = this._markedTree.getRecordById(id).get(STATUS_FILED);
                if (status === STATUS.SELECTED || status === STATUS.PARTIALLY_FULL) {

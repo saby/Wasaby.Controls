@@ -37,160 +37,113 @@ define(
 
       describe('SBIS3.CONTROLS.HierarchySelection', function () {
          beforeEach(function() {
-            selection.removeAll();
+            selection.unselectAll();
          });
          it('addAll', function () {
-            selection.addAll();
+            selection.selectAll();
             var sel = selection.getSelection();
             assert.deepEqual(sel.marked, [null]);
             assert.deepEqual(sel.excluded, []);
          });
          it('removeAll', function () {
-            selection.removeAll();
+            selection.unselectAll();
             var sel = selection.getSelection();
             assert.deepEqual(sel.marked, []);
             assert.deepEqual(sel.excluded, []);
          });
          it('add and removeAll', function () {
-            selection.add([1]);
-            selection.removeAll();
+            selection.select([1]);
+            selection.unselectAll();
             var sel = selection.getSelection();
             assert.deepEqual(sel.marked, []);
             assert.deepEqual(sel.excluded, []);
          });
          it('add leaf first lvl', function () {
-            selection.add([2]);
+            selection.select([2]);
             var sel = selection.getSelection();
             assert.deepEqual(sel.marked, [2]);
             assert.deepEqual(sel.excluded, []);
          });
          it('add folder first lvl', function () {
-            selection.add([1]);
+            selection.select([1]);
             var sel = selection.getSelection();
             assert.deepEqual(sel.marked, [1]);
             assert.deepEqual(sel.excluded, []);
          });
          it('add leaf second lvl', function () {
-            selection.add([11]);
+            selection.select([11]);
             var sel = selection.getSelection();
             assert.deepEqual(sel.marked, [11]);
             assert.deepEqual(sel.excluded, []);
          });
          it('add folder second lvl', function () {
-            selection.add([13]);
+            selection.select([13]);
             var sel = selection.getSelection();
             assert.deepEqual(sel.marked, [13]);
             assert.deepEqual(sel.excluded, []);
          });
          it('remove leaf first lvl', function () {
-            selection.add([2]);
-            selection.remove([2]);
+            selection.select([2]);
+            selection.unselect([2]);
             var sel = selection.getSelection();
             assert.deepEqual(sel.marked, []);
             //assert.deepEqual(sel.excluded, []);
          });
          it('remove leaf first lvl', function () {
-            selection.add([1]);
-            selection.remove([1]);
+            selection.select([1]);
+            selection.unselect([1]);
             var sel = selection.getSelection();
             assert.deepEqual(sel.marked, []);
             //assert.deepEqual(sel.excluded, []);
          });
          it('remove leaf second lvl', function () {
-            selection.add([11]);
-            selection.remove([11]);
+            selection.select([11]);
+            selection.unselect([11]);
             var sel = selection.getSelection();
             assert.deepEqual(sel.marked, []);
             //assert.deepEqual(sel.excluded, []);
          });
          it('add folder and remove leaf', function () {
-            selection.add([1]);
-            selection.remove([12]);
+            selection.select([1]);
+            selection.unselect([12]);
             var sel = selection.getSelection();
             assert.deepEqual(sel.marked, [1]);
             assert.deepEqual(sel.excluded, [12]);
          });
          it('add folder and delete two leafs', function () {
-            selection.add([1]);
-            selection.remove([11]);
-            selection.remove([12]);
+            selection.select([1]);
+            selection.unselect([11]);
+            selection.unselect([12]);
             var sel = selection.getSelection();
             assert.deepEqual(sel.marked, [1]);
             assert.deepEqual(sel.excluded, [11, 12]);
          });
          it('add folder and delete all leafs', function () {
-            selection.add([1]);
-            debugger;
-            selection.remove([11, 12, 13]);
+            selection.select([1]);
+            selection.unselect([11, 12, 13]);
             var sel = selection.getSelection();
             assert.deepEqual(sel.marked, []);
             //assert.deepEqual(sel.excluded, []);
          });
          it('add all leafs', function () {
-            selection.add([11, 12, 13]);
+            selection.select([11, 12, 13]);
             var sel = selection.getSelection();
             assert.deepEqual(sel.marked, [11, 12, 13]);
             assert.deepEqual(sel.excluded, []);
          });
          it('add folder delete child folder and add leaf', function () {
-            selection.add([1]);
-            selection.remove([13]);
-            selection.add([131]);
+            selection.select([1]);
+            selection.unselect([13]);
+            selection.select([131]);
             var sel = selection.getSelection();
             assert.deepEqual(sel.marked, [1, 131]);
             assert.deepEqual(sel.excluded, [13]);
-         });
-         it('toggle leaf first lvl', function () {
-            selection.toggle([2]);
-            var sel = selection.getSelection();
-            assert.deepEqual(sel.marked, [2]);
-            assert.deepEqual(sel.excluded, []);
-         });
-         it('toggle folder first lvl', function () {
-            selection.toggle([1]);
-            var sel = selection.getSelection();
-            assert.deepEqual(sel.marked, [1]);
-            assert.deepEqual(sel.excluded, []);
-         });
-         it('toggle leaf second lvl', function () {
-            selection.toggle([11]);
-            var sel = selection.getSelection();
-            assert.deepEqual(sel.marked, [11]);
-            assert.deepEqual(sel.excluded, []);
-         });
-         it('toggle folder second lvl', function () {
-            selection.toggle([13]);
-            var sel = selection.getSelection();
-            assert.deepEqual(sel.marked, [13]);
-            assert.deepEqual(sel.excluded, []);
-         });
-         it('toggle and toggle', function () {
-            selection.toggle([13]);
-            selection.toggle([13]);
-            var sel = selection.getSelection();
-            assert.deepEqual(sel.marked, []);
-            assert.deepEqual(sel.excluded, [13]);
-         });
-         it('add leafs and toggle parent folder', function () {
-            selection.add([11, 12]);
-            selection.toggle([1]);
-            var sel = selection.getSelection();
-            assert.deepEqual(sel.marked, [1]);
-            assert.deepEqual(sel.excluded, []);
-         });
-         it('add all leafs and toggle parent folder', function () {
-            selection.add([11, 12, 13]);
-            selection.toggle([1]);
-            var sel = selection.getSelection();
-            assert.deepEqual(sel.marked, []);
-            assert.deepEqual(sel.excluded, [1]);
          });
          it('toggleAll', function () {
             selection.toggleAll();
             var sel = selection.getSelection();
             assert.deepEqual(sel.marked, [null]);
             assert.deepEqual(sel.excluded, []);
-            assert.isTrue(sel.isMarkedAll);
          });
          it('toggleAll and toggleAll', function () {
             selection.toggleAll();
@@ -198,34 +151,32 @@ define(
             var sel = selection.getSelection();
             assert.deepEqual(sel.marked, []);
             assert.deepEqual(sel.excluded, []);
-            assert.isFalse(sel.isMarkedAll);
          });
          it('add, toggleAll and toggleAll', function () {
-            selection.add([1]);
+            selection.select([1]);
             selection.toggleAll();
             selection.toggleAll();
             var sel = selection.getSelection();
             assert.deepEqual(sel.marked, [1]);
             assert.deepEqual(sel.excluded, []);
-            assert.isFalse(sel.isMarkedAll);
          });
          it('add and toggleAll', function () {
-            selection.add([2]);
+            selection.select([2]);
             selection.toggleAll();
             var sel = selection.getSelection();
             assert.deepEqual(sel.marked, [null]);
             assert.deepEqual(sel.excluded, [2]);
          });
          it('add, toggleAll and remove', function () {
-            selection.add([2]);
+            selection.select([2]);
             selection.toggleAll();
-            selection.remove([3]);
+            selection.unselect([3]);
             var sel = selection.getSelection();
             assert.deepEqual(sel.marked, [null]);
             assert.deepEqual(sel.excluded, [2, 3]);
          });
          it('add in folder and toggleAll', function () {
-            selection.add([11, 12]);
+            selection.select([11, 12]);
             selection.toggleAll();
             var sel = selection.getSelection();
             assert.deepEqual(sel.marked, [null]);

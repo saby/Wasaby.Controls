@@ -15,52 +15,47 @@ define('js!SBIS3.CONTROLS.Selection', [
 
       constructor: function(options) {
          this._options = options;
-         this._options.marked = options.marked || [];
-         this._options.excluded = options.excluded || [];
+         this._options.selectedKeys = options.selectedKeys || [];
+         this._options.excludedKeys = options.excludedKeys || [];
+         this._selectedAll = this._options.selectedKeys.indexOf(null) >= 0;
          this._idProperty = options.projection.getIdProperty();
          Selection.superclass.constructor.apply(this, arguments);
       },
 
-      add: function(keys) {
-         ArraySimpleValuesUtil.addSubArray(this._options.marked, keys);
-         ArraySimpleValuesUtil.removeSubArray(this._options.excluded, keys);
+      select: function(keys) {
+         ArraySimpleValuesUtil.addSubArray(this._options.selectedKeys, keys);
+         ArraySimpleValuesUtil.removeSubArray(this._options.excludedKeys, keys);
       },
 
-      remove: function(keys) {
-         ArraySimpleValuesUtil.removeSubArray(this._options.marked, keys);
+      unselect: function(keys) {
+         ArraySimpleValuesUtil.removeSubArray(this._options.selectedKeys, keys);
          if (this._options.markedAll) {
-            ArraySimpleValuesUtil.addSubArray(this._options.excluded, keys);
+            ArraySimpleValuesUtil.addSubArray(this._options.excludedKeys, keys);
          }
       },
 
-      toggle: function(keys) {
-         keys.forEach(function(key) {
-            this[ArraySimpleValuesUtil.hasInArray(this._options.marked, key) ? 'remove' : 'add']([key]);
-         }, this);
-      },
-
-      addAll: function() {
-         this._options.marked = this._getAllKeys();
+      selectAll: function() {
+         this._options.selectedKeys = this._getAllKeys();
          this._options.markedAll = true;
-         this._options.excluded = [];
+         this._options.excludedKeys = [];
       },
 
-      removeAll: function() {
-         this._options.marked = [];
+      unselectAll: function() {
+         this._options.selectedKeys = [];
          this._options.markedAll = false;
-         this._options.excluded = [];
+         this._options.excludedKeys = [];
       },
 
       toggleAll: function() {
          var marked, excluded;
          if (this._options.markedAll) {
-            excluded = cClone(this._options.excluded);
-            this.removeAll();
-            this.add(excluded);
+            excluded = cClone(this._options.excludedKeys);
+            this.unselectAll();
+            this.select(excluded);
          } else {
-            marked = cClone(this._options.marked);
-            this.addAll();
-            this.remove(marked);
+            marked = cClone(this._options.selectedKeys);
+            this.selectAll();
+            this.unselect(marked);
          }
       },
 
@@ -70,8 +65,8 @@ define('js!SBIS3.CONTROLS.Selection', [
 
       getSelection: function() {
          return {
-            marked: this._options.markedAll ? [] : this._options.marked,
-            excluded: this._options.markedAll ? this._options.excluded : [],
+            marked: this._options.markedAll ? [] : this._options.selectedKeys,
+            excluded: this._options.markedAll ? this._options.excludedKeys : [],
             isMarkedAll: this._options.markedAll
          }
       },

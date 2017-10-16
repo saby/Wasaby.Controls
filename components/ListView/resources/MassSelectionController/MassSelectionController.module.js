@@ -1,7 +1,6 @@
 define('js!SBIS3.CONTROLS.MassSelectionController',
     [
-        'js!SBIS3.CORE.Control',
-        "WS.Data/Collection/IBind",
+        "js!SBIS3.CORE.Control",
         "Core/core-clone",
         "WS.Data/Collection/IBind",
         "js!SBIS3.CONTROLS.Selection",
@@ -34,42 +33,42 @@ define('js!SBIS3.CONTROLS.MassSelectionController',
           },
 
           setSelectedKeys: function(keys) {
-             this._selection.removeAll();
-             this._selection.add(keys);
+             this._selection.unselectAll();
+             this._selection.select(keys);
           },
 
           addItemsSelection: function(keys) {
              if (!this._silent) {
-                this._selection.add(keys);
+                this._selection.select(keys);
              }
           },
 
           removeItemsSelection: function(keys) {
              if (!this._silent) {
-                this._selection.remove(keys);
+                this._selection.unselect(keys);
              }
           },
 
           setSelectedItemsAll: function () {
-             var marked = cClone(this._selection._options.marked);
-             this._selection.addAll();
-             this._applyChanges(marked);
+             var selectedKeys = cClone(this._selection._options.selectedKeys);
+             this._selection.selectAll();
+             this._applyChanges(selectedKeys);
           },
 
           removeItemsSelectionAll: function () {
-             var marked = cClone(this._selection._options.marked);
-             this._selection.removeAll();
-             this._applyChanges(marked);
+             var selectedKeys = cClone(this._selection._options.selectedKeys);
+             this._selection.unselectAll();
+             this._applyChanges(selectedKeys);
           },
 
           toggleItemsSelectionAll: function() {
-             var marked = cClone(this._selection._options.marked);
+             var selectedKeys = cClone(this._selection._options.selectedKeys);
              this._selection.toggleAll();
-             this._applyChanges(marked);
+             this._applyChanges(selectedKeys);
           },
 
-          _applyChanges: function(marked) {
-             var diff = ArraySimpleValuesUtil.getArrayDifference(marked, this._selection._options.marked);
+          _applyChanges: function(selectedKeys) {
+             var diff = ArraySimpleValuesUtil.getArrayDifference(selectedKeys, this._selection._options.selectedKeys);
              this._silent = true;
              if (diff.added.length) {
                 this._options.linkedObject.addItemsSelection(diff.added);

@@ -1,11 +1,10 @@
 define('js!SBIS3.CONTROLS.MassSelectionHierarchyController',
     [
-        'js!SBIS3.CONTROLS.MassSelectionController',
-        'js!SBIS3.CONTROLS.HierarchySelection',
-        'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
-        'Core/core-clone'
+        "js!SBIS3.CONTROLS.MassSelectionController",
+        "js!SBIS3.CONTROLS.HierarchySelection",
+        "js!SBIS3.CONTROLS.ArraySimpleValuesUtil"
     ],
-    function(MassSelectionController, HierarchySelection, ArraySimpleValuesUtil, cClone) {
+    function(MassSelectionController, HierarchySelection, ArraySimpleValuesUtil) {
 
        var MassSelectionHierarchyController = MassSelectionController.extend(/** @lends SBIS3.CONTROLS.MassSelectionHierarchyController.prototype */ {
           $constructor: function () {
