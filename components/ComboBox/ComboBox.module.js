@@ -302,8 +302,13 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          this.setSelectedIndex(-1);
          this._getItemsProjection().setFilter(this._searchFilter.bind(this));
          this.redraw();
-         if (!this.getPicker().isVisible()) {
-            this.showPicker();
+         if (this._getItemsProjection().getCount()) {
+            if (!this.getPicker().isVisible()) {
+               this.showPicker();
+            }
+         }
+         else {
+            this.hidePicker();
          }
          this._setKeyByText();
       },
@@ -796,17 +801,15 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             item = projection.at(this.getSelectedIndex()),
             hash = item && item.getHash();
 
-         if (projection.getCount()) {//Инициализируем пикер, чтобы перед показом ограниччить его ширину
-            if (!this._picker || this._picker.isDestroyed()) {
-               this._initializePicker();
-            }
-            ComboBox.superclass.showPicker.call(this);
-            TextBoxUtils.setEqualPickerWidth(this._picker);
-            if (!hash && projection.getCount() > 0) {
-               hash = projection.at(0).getHash();
-            }
-            this._scrollToItem(hash);
+         if (!this._picker || this._picker.isDestroyed()) {
+            this._initializePicker();
          }
+         ComboBox.superclass.showPicker.call(this);
+         TextBoxUtils.setEqualPickerWidth(this._picker);
+         if (!hash && projection.getCount() > 0) {
+            hash = projection.at(0).getHash();
+         }
+         this._scrollToItem(hash);
       },
 
       _pickerMouseEnterHandler: function (event) {
