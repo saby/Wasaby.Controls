@@ -2,7 +2,7 @@ define('js!SBIS3.SPEC.grid.GridView', [
 ], function() {
 
    /**
-    * Поле ввода телефонного номера.
+    * "Список с колонками". Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">Настройка списков</a>.
     * @class SBIS3.SPEC.grid.GridView
     * @extends SBIS3.SPEC.list.ListView
     * @control
