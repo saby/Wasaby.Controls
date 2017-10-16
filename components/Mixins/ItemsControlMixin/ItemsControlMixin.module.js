@@ -259,6 +259,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    };
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
+    *
+    * Последовательность событий, происходящих при взаимодействии с источником данных компонента:
+    *
+    * 1. {@link onBeforeDataLoad}
+    * 2. При успешном выполнении запроса: {@link onDataLoad} &#8594; {@link onItemsReady}
+    * 3. При ошибке выполнения запроса: {@link onDataLoadError}
+    *
     * @mixin SBIS3.CONTROLS.ItemsControlMixin
     * @public
     * @author Крайнов Дмитрий Олегович
@@ -279,16 +286,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see displayProperty
         */
        /**
-        * @event onBeforeDataLoad Происходит перед запросом к источнику данных компонента.
+        * @event onBeforeDataLoad Происходит перед выполнением запроса к источнику данных компонента.
         * @remark
-        * Запрос к источнику данных компонента инициируется методом {@link reload}.
-        * Источник данных устанавливают в опции {@link dataSource}.
-        * В случае успешного выполнения запроса, происходит событие {@link onDataLoad}
+        * Конфигурацию источника данных устанавливают в опции {@link dataSource}.
+        * Выполнение запроса можно инициировать методом {@link reload}.
+        * В <a href="https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/ItemsControlMixin/">описании миксина</a> приведена последовательность событий, происходящих при взаимодействии с источником данных компонента.
         * @param {Core/EventObject} eventObject Дескриптор события.
-        * @param {Object} filters Параметры фильтрации. Они используются для в качестве условия для отбора данных из источника. Значение параметра определяется опцией {@link filter}.
-        * @param {Array.<Object>} sorting Параметры сортировки возвращаемых данных. Значение определяется опцией {@link sorting}.
-        * @param {Number} offset Смещение первого элемента выборки. Значение определяется методов {@link setOffset} либо с помощью аргумента offset в методе {@link reload}.
-        * @param {Number} limit Количество записей, запрашиваемых из источника данных компонента. Значение определяется опцией {@link pageSize}.
+        * @param {Object} filters Параметры фильтрации. Они используются в качестве условия для отбора возвращаемых записей. Значение параметра определяется опцией {@link filter}.
+        * @param {Array.<Object>} sorting Параметры сортировки записей, возвращаемых в результате выполнения запроса. Значение параметра  определяется опцией {@link sorting}.
+        * @param {Number} offset Количество записей в источнике данных, которые будут пропущены перед формированием результирующей выборки. Значение параметра определяется методом {@link setOffset} или с помощью аргумента offset в методе {@link reload}.
+        * @param {Number} limit Количество записей, возвращаемых из источника данных в результате выполнения запроса. Значение определяется опцией {@link pageSize}.
         * @example
         * <pre>
         *    myView.subscribe('onBeforeDataLoad', function(eventObject) {
@@ -300,10 +307,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see onDataLoad
         * @see reload
         */
+
        /**
-        * @event onDataLoad Происходит при загрузке данных.
+        * @event onDataLoad Происходит после успешного выполнения запроса к источнику данных компонента.
         * @param {Core/EventObject} eventObject Дескриптор события.
-        * @param {WS.Data/Collection/RecordSet} dataSet Набор данных.
+        * @param {WS.Data/Collection/RecordSet} dataSet Результирующих набор записей.
         * @example
         * <pre>
         *     myComboBox.subscribe('onDataLoad', function(eventObject) {
@@ -315,15 +323,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see getDataSource
         */
       /**
-       * @event onDataLoadError Происходит при ошибке загрузки данных.
+       * @event onDataLoadError Происходит в случае ошибки при выполнении запроса к источнику данных компонента.
        * @remark
-       * Событие сработает при получении ошибки от любого метода БЛ, вызванного стандартным способом.
+       * В результате выполнения метода бизнес-логики была получена ошибка.
+       * В случае разрыва соеднинения с БД (сервером) сообщение об ошибке не выводится.
        * @param {Core/EventObject} eventObject Дескриптор события.
-       * @param {HTTPError} error Произошедшая ошибка.
-       * @return {Boolean} Если вернуть:
+       * @param {HTTPError} error HTTP-статус запроса.
+       * @return {Boolean} Из обработчика события можно возвращать следующие результаты:
        * <ol>
-       * <li>true, то будет считаться, что ошибка обработана, и стандартное поведение отменяется.</li>
-       * <li>Если не возвращать true, то выведется alert с описанием ошибки.</li>
+       *    <li>true. Ответ интерпретируется так, что ошибка была обработана, и в пользовательском интерфейсе не требуется создавать сообщение об ошибке.</li>
+       *    <li>false. В пользовательском интерфейсе создаётся сообщение с описанием ошибки.</li>
        * </ol>
        * @example
        * <pre>
