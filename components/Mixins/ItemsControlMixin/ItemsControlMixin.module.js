@@ -288,6 +288,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        /**
         * @event onBeforeDataLoad Происходит перед выполнением запроса к источнику данных компонента.
         * @remark
+        * В обработчике события Вы можете изменить параметры, с которыми впоследствии будет выполнен запрос.
         * Конфигурацию источника данных устанавливают в опции {@link dataSource}.
         * Выполнение запроса можно инициировать методом {@link reload}.
         * В <a href="https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/ItemsControlMixin/">описании миксина</a> приведена последовательность событий, происходящих при взаимодействии с источником данных компонента.
@@ -298,10 +299,19 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @param {Number} limit Количество записей, возвращаемых из источника данных в результате выполнения запроса. Значение определяется опцией {@link pageSize}.
         * @example
         * <pre>
-        *    myView.subscribe('onBeforeDataLoad', function(eventObject) {
-        *       var filter = this.getFilter();
-        *       filter['myParam'] = myValue;
-        *       this.setFilter(filter, true)
+        *    myView.subscribe('onBeforeDataLoad', function(eventObject, filters, sorting, offset, limit) {
+        *
+        *       // Устанавливаем новое значение для поля, по которому отбираются записи.
+        *       filters['SomeField'] = newFieldValue;
+        *
+        *       // Устанавливаем новые параметры сортировки.
+        *       sorting = newSortingValue;
+        *
+        *       // Устанавливаем новое значение остальных параметров.
+        *       offset = newOffsetValue;
+        *       limit = newLimitValue;
+        *
+        *       // В итоге запрос к источнику данных компонента будет выполнен с новыми значениями.
         *    });
         * </pre>
         * @see onDataLoad
