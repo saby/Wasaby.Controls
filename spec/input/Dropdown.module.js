@@ -2,7 +2,7 @@ define('js!SBIS3.SPEC.input.Dropdown', [
 ], function() {
 
    /**
-    * Выпадающий список.
+    * "Комбинированный выпадающий список" с возможностью ввода значения с клавиатуры.
     * @class SBIS3.SPEC.input.Dropdown
     * @extends SBIS3.SPEC.input.Text
     * @mixes SBIS3.SPEC.interface.IDataSource
