@@ -5,7 +5,6 @@ define('js!SBIS3.SPEC.input.Selector', [
     * Поле выбора.
     * @class SBIS3.SPEC.input.Selector
     * @extends SBIS3.SPEC.Control
-    * @mixes SBIS3.SPEC.input.interface.IInputText
     * @mixes SBIS3.SPEC.input.interface.IPlaceholder
     * @mixes SBIS3.SPEC.interface.IDataSource
     * @mixes SBIS3.SPEC.interface.IItems
