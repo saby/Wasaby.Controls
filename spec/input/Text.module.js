@@ -14,7 +14,6 @@ define('js!SBIS3.SPEC.input.Text', [
     * @category Inputs
     */
 
-
    /**
     * @name SBIS3.SPEC.input.Text#maxLength
     * @cfg {Number} Устанавливает максимальное количество символов, которое может содержать поле ввода.
@@ -35,9 +34,8 @@ define('js!SBIS3.SPEC.input.Text', [
     */
 
    /**
-    * @name SBIS3.SPEC.input.Text#maskRe
+    * @name SBIS3.SPEC.input.Text#inputCharReg
     * @cfg {String} Устанавливает регулярное выражение, в соответствии с которым будет осуществляться валидация вводимых символов.
     */
-
 
 });
