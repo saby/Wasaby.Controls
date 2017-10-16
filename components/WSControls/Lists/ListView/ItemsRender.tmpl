@@ -7,6 +7,8 @@
          index="{{_enumIndexes._curIndex}}"
          itemData="{{_getItemData(_display.at(_enumIndexes._curIndex), _enumIndexes._curIndex)}}"
          _getPropertyValue="{{_getPropertyValue}}"
-         _options="{{_options}}"/>
+         _options="{{_options}}"
+         selected="{{_display.at(_enumIndexes._curIndex).getContents() == _selectedItem}}"
+         />
 </ws:for>
 </div>
