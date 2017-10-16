@@ -2,7 +2,7 @@ define('js!SBIS3.SPEC.button.ButtonBase', [
 ], function() {
 
    /**
-    * Кнопка.
+    * Базовый класс кнопок
     * @class SBIS3.SPEC.button.ButtonBase
     * @extends SBIS3.SPEC.Control
     * @mixes SBIS3.SPEC.button.interface.ICaption
