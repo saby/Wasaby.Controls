@@ -8,7 +8,7 @@ define('js!SBIS3.SPEC.interface.ISingleSelectable', [
     */
 
    /**
-    * @name SBIS3.SPEC.interface.IItems#selectedKey
+    * @name SBIS3.SPEC.interface.ISingleSelectable#selectedKey
     * @cfg {Number} Ключевое поле выбранного элемента коллекции.
     */
 

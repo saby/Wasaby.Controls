@@ -8,11 +8,11 @@ define('js!SBIS3.SPEC.interface.IHierarchicalItems', [
     */
 
    /**
-    * @name SBIS3.SPEC.interface.IItems#parentProperty
+    * @name SBIS3.SPEC.interface.IHierarchicalItems#parentProperty
     * @cfg {String} Имя поля в объекте из набора items, которое используется для создания отношения иерархии.
     */
    /**
-    * @name SBIS3.SPEC.interface.IItems#hasChildrenProperty
+    * @name SBIS3.SPEC.interface.IHierarchicalItems#hasChildrenProperty
     * @cfg {String} Имя поля в объекте из набора items, которое используется для создания определения наличия детей.
     */
 

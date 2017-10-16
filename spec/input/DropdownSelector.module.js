@@ -1,9 +1,9 @@
-define('js!SBIS3.SPEC.input.Selector', [
+define('js!SBIS3.SPEC.input.DropdownSelector', [
 ], function() {
 
    /**
-    * Поле выбора из списка.
-    * @class SBIS3.SPEC.input.Selector
+    * Поле выбора из значения списка.
+    * @class SBIS3.SPEC.input.DropdownSelector
     * @extends SBIS3.SPEC.Control
     * @mixes SBIS3.SPEC.input.interface.IPlaceholder
     * @mixes SBIS3.SPEC.interface.IDataSource
@@ -11,9 +11,9 @@ define('js!SBIS3.SPEC.input.Selector', [
     * @mixes SBIS3.SPEC.input.interface.IValidation
     * @mixes SBIS3.SPEC.input.interface.IInputTag
     * @mixes SBIS3.SPEC.interface.ISingleSelectable
+    * @mixes SBIS3.SPEC.input.interface.IDropdownEmptyValue
     * @control
     * @public
     * @category Inputs
     */
-
 });
