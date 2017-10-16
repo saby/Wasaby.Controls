@@ -307,10 +307,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         *       // Устанавливаем новые параметры сортировки.
         *       sorting = newSortingValue;
         *
-        *       // Устанавливаем новое значение остальных параметров.
-        *       offset = newOffsetValue;
-        *       limit = newLimitValue;
-        *
         *       // В итоге запрос к источнику данных компонента будет выполнен с новыми значениями.
         *    });
         * </pre>
