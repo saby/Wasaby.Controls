@@ -15,9 +15,8 @@ define('js!SBIS3.SPEC.interface.IPromisedSelectable', [
 
    /**
     * @name SBIS3.SPEC.interface.IPromisedSelectable#excludedKeys
-    * @cfg {Array}  Массив ключевых полей, которые необходимо исключить из набора выбранных элементов "бесконечного" списка.
+    * @cfg {Array} Массив ключевых полей, которые необходимо исключить из набора выбранных элементов "бесконечного" списка.
     */
-
 
    /**
     * @event SBIS3.SPEC.interface.IPromisedSelectable#onChangeSelectedKeys Происходит при изменении массива выделенных записей.
