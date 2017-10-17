@@ -39,8 +39,9 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @typedef {Object} dataSource
        * @property {WS.Data/Source/ISource/Binding/typedef[]} [Binding] Соответствие методов CRUD+ контракту.
        * @property {WS.Data/Source/ISource/Endpoint/typedef[]} [endpoint] Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника данных.
-       * @property {String} [model=source.sbis-service] Название зависимости, или конструктор объекта или инстанс объекта.
-       * @property {String} idProperty Имя поля записи, которое содержит первичный ключ.
+       * @property {String} [model=source.sbis-service] Название зависимости, или конструктор объекта, или экземпляр объекта.
+       * @property {String} [idProperty] Имя поля записи, которое содержит первичный ключ.
+       * Если значение не установлено, используется первое поле записи.
        */
       /**
        * @event onFail Происходит в случае ошибки при сохранении или чтении записи из источника данных.
