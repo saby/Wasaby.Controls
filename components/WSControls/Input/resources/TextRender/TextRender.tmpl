@@ -5,17 +5,18 @@
          template="{{_beforeFieldWrapper}}"
       />
       <input
-         event:oninput="inputHandler()"
-         event:onfocus="focusHandler()"
-         event:onselect="selectHandler()"
-         event:onclick="clickHandler()"
-         event:onkeyup="keyupHandler()"
-         type="{{_options.type}}"
-         value="{{_options.text}}"
-         class="controls-TextBox__field"
-         placeholder="{{_options.enabled ? _options.placeholder}}"
-         readonly="{{_options.enabled ? '' : 'readonly'}}"
          autocomplete="off"
+         type="{{_options.type}}"
+         value="{{_options.value}}"
+         class="controls-TextBox__field"
+         readonly="{{_options.enabled ? '' : 'readonly'}}"
+         placeholder="{{_options.enabled ? _options.placeholder}}"
+         event:oninput="_inputHandler()"
+         event:onfocus="_focusHandler()"
+         event:onselect="_updateSelectionHandler()"
+         event:onclick="_updateSelectionHandler()"
+         event:onkeyup="_keyupHandler()"
+         event:onchange="_notifyHandler('onInputFinish')"
       />
       <ws:if data="{{_options.tagStyle}}">
          <span event:onmouseenter="_notifyHandler('onTagHover')">

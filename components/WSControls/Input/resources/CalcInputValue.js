@@ -1,4 +1,4 @@
-define('js!WSControls/TextBoxes/resources/CalcInputValue', [],
+define('js!WSControls/Input/resources/CalcInputValue', [],
    function() {
 
       'use strict';
@@ -10,7 +10,7 @@ define('js!WSControls/TextBoxes/resources/CalcInputValue', [],
           * @param newValue строка после ввода.
           * @param caretPosition позиция каретки после ввода.
           * @param selectionLength длина выделения до ввода.
-          * @returns {array} [Строка до введенной, введенная строка, Строка после введенной]
+          * @returns {Object} [Строка до введенной, Введенная строка, Строка после введенной]
           */
          getSplitInputValue: function(oldValue, newValue, caretPosition, selectionLength) {
             var inputValue, beforeInputValue, afterInputValue;

@@ -1,4 +1,4 @@
-define('js!WSControls/TextBoxes/resources/SelectionUtil', [],
+define('js!WSControls/Input/resources/SelectionUtil', [],
    function() {
 
       'use strict';
