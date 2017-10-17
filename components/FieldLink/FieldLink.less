@@ -242,12 +242,7 @@
 .controls-FieldLink__selected-single:not(.controls-FieldLink__multiselect) .controls-TextBox__placeholder {
    display: none;
 }
-.ws-enabled.controls-FieldLink__inputMinWidth .controls-FieldLink__fieldWrapper {
-   /* https://developer.mozilla.org/en-US/docs/Web/CSS/--*
-      т.к. min-width нужен только для темизации, то делаю его
-      через custom property */
-   --min-width: @fieldLink-fieldWrapper-minWidth;
-}
+
 .controls-FieldLink__selected:not(.controls-FieldLink__multiselect):not(.controls-FieldLink__inputMinWidth) .controls-FieldLink__fieldWrapper {
    visibility: hidden;
    width: 0;
@@ -259,10 +254,4 @@
 }
 .controls-FieldLink__hiddenIfEmpty.ws-disabled:not(.controls-FieldLink__selected) {
    display: none;
-}
-.ws-is-ie10 {
-   /* ie10 не поддерживает custom property */
-   .ws-enabled.controls-FieldLink__inputMinWidth .controls-FieldLink__fieldWrapper {
-      min-width: @fieldLink-fieldWrapper-minWidth;
-   }
 }
