@@ -263,7 +263,8 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       },
       setEnabled: function(enabled) {
          TextBoxBase.superclass.setEnabled.call(this, enabled);
-         this._toggleState(!this.isEnabled(), 'disabled');
+         var marked = this.isMarked();
+         this._toggleState(marked ? true : !this.isEnabled(), marked ? 'marked' : 'disabled');
       },
       clearMark: function() {
          TextBoxBase.superclass.clearMark.call(this);
