@@ -169,7 +169,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
       
       _modifyOptions: function(parOpts, parsedOptions, attrToMerge) {
          var opts = SelectorButton.superclass._modifyOptions.apply(this, arguments),
-             className = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || '';
+             className = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || opts.className || '';
          
          if (className.indexOf('controls-SelectorButton__withoutCross') !== -1) {
             opts.withoutCross = true;

@@ -785,13 +785,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
    
       _notifyOnItemClick: function(id, data, target, e) {
-         var clickedCell = {};
+         var clickedCell = {},
+             cell;
          
          /* Для DataGridView дополняем событие клика информацией о колонке и ячейке */
          if(this._hoveredColumn.columnIndex  !== null) {
+            cell = this._getCellContainerByElement(e.target);
             clickedCell = {
-               cellContainer: this._getCellContainerByElement(e.target),
-               cellIndex: this._hoveredColumn.columnIndex
+               cellContainer: cell,
+               //При клике на touch устройствах не будет hoveredColumn, поэтому ищем по элементу, по котрому кликнули
+               cellIndex: this._hoveredColumn.columnIndex || cell.index()
             };
          }
          

@@ -212,9 +212,8 @@ define('js!SBIS3.CONTROLS.DragObject', [
             } else if (typeof document.elementFromPoint == 'function' && isTouchEvent) {
                //на ipad'e нет метода elementsFromPoint
                return $(document.elementFromPoint(this._jsEvent.pageX, this._jsEvent.pageY));
-            } else {
-               return $(this._jsEvent.target);
             }
+            return $(this._jsEvent.target);
          }
       },
       getTargetsDomElemet: function () {

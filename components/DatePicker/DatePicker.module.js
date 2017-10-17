@@ -269,12 +269,18 @@ define(
       },
 
       _calendarCreate: function(element) {
+         var
+            date = this.getDate(),
+            type = this.getType();
+
          this._pickerContent = new DateRangeBigChoose({
             parent: this._picker,
             element: element,
             rangeselect: false,
-            startValue: this.getDate(),
-            endValue: this.getDate()
+            startValue: date,
+            startValueSerializationMode: type,
+            endValue: date,
+            endValueSerializationMode: type
          });
          // Добавляем в пикер
          this._picker.getContainer().append(element);
