@@ -458,14 +458,15 @@
    .controls-TabButton {
       .controls-TabButton__mainText {
          line-height: 26px; //for ie10-12
-         .controls-EditAtPlace__editor .controls-TextBox {
-            line-height: 20px;
-         }
       }
       .controls-TabButton__additionalText2 {
          .controls-EditAtPlace .controls-EditAtPlace__textField {
             padding: 0;
          }
+      }
+      .controls-TabButton__mainText .controls-TextBox .controls-TextBox__field,
+      .controls-Link.controls-TabButton__mainText .controls-TextBox .controls-TextBox__field {
+       padding-bottom: 5px;
       }
    }
 }
