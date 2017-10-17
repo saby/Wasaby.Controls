@@ -291,8 +291,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbar/resources/config',
             }
          },
          items: [
-            { key: 'style', title: 'С сохранением стилей', icon:'sprite:icon-24 icon-PasteStyle icon-primary' },
-            { key: 'empty', title: 'Без форматирования',icon:'sprite:icon-24 icon-PasteAsText icon-primary' }
+            { key: 'style', title: rk('С сохранением стилей'), icon:'sprite:icon-24 icon-PasteStyle icon-primary' },
+            { key: 'empty', title: rk('Без форматирования'),icon:'sprite:icon-24 icon-PasteAsText icon-primary' }
          ],
          handlers: {
             onMenuItemActivate: handlers.paste
