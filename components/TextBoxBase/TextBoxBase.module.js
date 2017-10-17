@@ -280,7 +280,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
              enabled = this.isEnabled(),
              marked = this.isMarked(),
              stateName = marked ? 'marked' : !enabled ? 'disabled' : 'active' ,
-             state = marked ? true : !enabled ? true : active
+             state = marked ? true : !enabled ? true : active;
          this._toggleState(state, stateName);
       },
       _toggleState: function(state, stateName) {
