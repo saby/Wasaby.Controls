@@ -263,29 +263,28 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       },
       setEnabled: function(enabled) {
          TextBoxBase.superclass.setEnabled.call(this, enabled);
-         var marked = this.isMarked();
-         this._toggleState(marked ? true : !this.isEnabled(), marked ? 'marked' : 'disabled');
+         this._toggleState();
       },
       clearMark: function() {
          TextBoxBase.superclass.clearMark.call(this);
-         this._toggleState(this.isMarked(), 'marked');
+         this._toggleState();
       },
       markControl: function() {
          TextBoxBase.superclass.markControl.call(this);
-         this._toggleState(this.isMarked(), 'marked');
+         this._toggleState();
       },
       _updateActiveStyles: function() {
          TextBoxBase.superclass._updateActiveStyles.call(this);
-         var
-             active = this.isActive(),
-             enabled = this.isEnabled(),
-             marked = this.isMarked(),
-             stateName = marked ? 'marked' : !enabled ? 'disabled' : 'active' ,
-             state = marked ? true : !enabled ? true : active;
-         this._toggleState(state, stateName);
+         this._toggleState();
       },
-      _toggleState: function(state, stateName) {
-         var container = this.getContainer()[0];
+      _toggleState: function() {
+         var
+             container = this.getContainer()[0],
+              active = this.isActive(),
+              enabled = this.isEnabled(),
+              marked = this.isMarked(),
+              stateName = marked ? 'marked' : !enabled ? 'disabled' : 'active',
+              state = marked ? true : !enabled ? true : active;
          container.className = container.className.replace(/(^|\s)controls-TextBox__state__\S+/gi, '');
          this._container.addClass('controls-TextBox__state__' + (state ? stateName : 'default'));
       }

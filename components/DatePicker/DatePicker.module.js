@@ -236,8 +236,14 @@ define(
          // что бы к нему корректно применились стили.
          this.getContainer().children('.controls-DateBox').toggleClass('ws-enabled', enabled).toggleClass('ws-disabled', !enabled);
       },
-       _toggleState: function(state, stateName) {
-           var container = this.getContainer().children('.controls-DateBox')[0];
+       _toggleState: function() {
+           var
+               container = this.getContainer().children('.controls-DateBox')[0],
+               active = this.isActive(),
+               enabled = this.isEnabled(),
+               marked = this.isMarked(),
+               stateName = marked ? 'marked' : !enabled ? 'disabled' : 'active',
+               state = marked ? true : !enabled ? true : active;
            container.className = container.className.replace(/(^|\s)controls-TextBox__state__\S+/gi, '');
            this._container.children('.controls-DateBox').addClass('controls-TextBox__state__' + (state ? stateName : 'default'));
        },
