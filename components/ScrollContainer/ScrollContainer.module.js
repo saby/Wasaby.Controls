@@ -279,13 +279,11 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          // Показать скролл
          _showScrollbar: function() {
             this._container.toggleClass('controls-ScrollContainer__scrollbar_show', true);
-            this._scrollbar.once('onScrollbarStartDrag', this._setTakeScrollbar.bind(this, 0));
          },
 
          //Скрыть скролл
          _hideScrollbar: function() {
             this._container.toggleClass('controls-ScrollContainer__scrollbar_show', false);
-            this._scrollbar.once('onScrollbarEndDrag', this._setTakeScrollbar.bind(this, 3));
          },
 
          bothIsNaN: function(a, b){
