@@ -1,55 +1,59 @@
 .controls-TextBox {
    .box-sizing(border-box);
    .border-radius(@text-box-border-radius);
-   line-height: normal;
-   display: inline-block;
-   color: @text-box-color;
+
    border-width: @default-border-width;
-   border-style: @default-border-style;
-   border-color: @text-box-border-color;/*test*/
-   border-bottom-color: @text-box-border-color-bottom;
    background: @text-box-bg;
-   text-decoration: inherit;
    cursor: auto;
    max-width: 100%;
+   line-height: normal;
+   display: inline-block;
+   text-decoration: inherit;
+   border-style: solid;
    //различные размеры
    &__size {
       &__default {
+         color: @text-box-color;
          height: @text-box-height;
          font-size: @text-box-font-size;
       }
       &__large {
+         color: @text-box-color-large;
          height: @text-box-height-large;
          font-size: @text-box-font-size-large;
          padding-bottom: @text-box-input-padding-large;
       }
    }
    //различные состояния контрола
-   &:hover {
-      border-color: @text-box-border-color-hover;
-   }
-   &.ws-has-focus {
-      border-color: @text-box-border-color-active;
-   }
-   &.ws-disabled {
-      border-color: @text-box-border-color-disabled;
-      background: @text-box-bg-disabled;
-      border-bottom-color: @text-box-border-color-bottom-disabled;
-      caret-color: transparent;
-      .controls-TextBox__field {
-         .hiddenPlaceholder();
+   &__state {
+      &__default {
+         border-color: @text-box-border-color;
+         border-bottom-color: @text-box-border-color-bottom;
+         &:hover {
+            border-color: @text-box-border-color-hover;
+         }
       }
-   }
-   &.ws-validation-error {
-      border-color: @text-box-border-color-error;
-      background: @text-box-bg-error;
+      &__active {
+         border-color: @text-box-border-color-active;
+      }
+      &__disabled {
+         background: @text-box-bg-disabled;
+         border-color: @text-box-border-color-disabled;
+         border-bottom-color: @text-box-border-color-bottom-disabled;
+         caret-color: transparent;
+         .controls-TextBox__field {
+            .hiddenPlaceholder();
+         }
+      }
+      &__marked {
+         background: @text-box-bg-error;
+         border-color: @text-box-border-color-error;
+      }
    }
    &__wrapper {
       .inline-flexbox();
       .flex-shrink();
       .align-items(center);
-      padding: 0;
-      margin: 0;
       position: relative;
       width: 100%;
       height: 100%;
@@ -80,7 +84,6 @@
       font: inherit;
       width: 100%;
       min-width: 0; //Иначе input во flex контейнере будет сжиматься лишь до своей стандартной ширины
-      margin: 0;
       text-align: inherit;
       color: inherit;
       border: none;
