@@ -794,10 +794,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
              return this.getChildControlByName('FieldLinkItemsCollection');
           }, '_getLinkCollection'),
           
-          _getInputMinWidth: memoize(function() {
-             var fieldWrapper = this.getContainer().find('.controls-FieldLink__fieldWrapper');
-             return parseInt(window.getComputedStyle(fieldWrapper[0]).getPropertyValue('--min-width') || fieldWrapper.css('min-width'));
-          }, '_getInputMinWidth'),
+          _getInputMinWidth: function() {
+             var fieldWrapper = this.getContainer().find('.controls-TextBox__wrapper'),
+                 afterFieldWrapper = this._getAfterFieldWrapper();
+
+             /* По стандарту минимальная ширина поля ввода - 33% */
+             return (fieldWrapper[0].offsetWidth - afterFieldWrapper[0].offsetWidth)/100*33;
+          },
 
           /** Обработчики событий контрола отрисовки элементов **/
           _onDrawItemsCollection: function() {
