@@ -1,9 +1,9 @@
-define('js!SBIS3.SPEC.input.LookupSelector', [
+define('js!SBIS3.SPEC.input.Lookup', [
 ], function() {
 
    /**
     * Поле выбора из справочника.
-    * @class SBIS3.SPEC.input.LookupSelector
+    * @class SBIS3.SPEC.input.Lookup
     * @extends SBIS3.SPEC.Control
     * @mixes SBIS3.SPEC.interface.IDataSource
     * @mixes SBIS3.SPEC.input.interface.IPlaceholder
@@ -18,7 +18,7 @@ define('js!SBIS3.SPEC.input.LookupSelector', [
     */
 
    /**
-    * @name SBIS3.SPEC.input.LookupSelector#multiselect
+    * @name SBIS3.SPEC.input.Lookup#multiselect
     * @cfg {Boolean} Разрешен ли множественный выбор.
     */
 

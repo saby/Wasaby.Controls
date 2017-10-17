@@ -2,16 +2,18 @@ define('js!SBIS3.SPEC.input.Dropdown', [
 ], function() {
 
    /**
-    * Поле ввода с возможностью выбора текстового значения из списка.
+    * Поле выбора из значения списка.
     * @class SBIS3.SPEC.input.Dropdown
-    * @extends SBIS3.SPEC.input.Text
+    * @extends SBIS3.SPEC.Control
+    * @mixes SBIS3.SPEC.input.interface.IPlaceholder
     * @mixes SBIS3.SPEC.interface.IDataSource
     * @mixes SBIS3.SPEC.interface.IItems
+    * @mixes SBIS3.SPEC.input.interface.IValidation
+    * @mixes SBIS3.SPEC.input.interface.IInputTag
+    * @mixes SBIS3.SPEC.interface.ISingleSelectable
     * @mixes SBIS3.SPEC.input.interface.IDropdownEmptyValue
     * @control
     * @public
     * @category Inputs
     */
-
-
 });

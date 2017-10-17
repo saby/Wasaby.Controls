@@ -1,5 +1,0 @@
-interface IItemTemplate {
-
-}
-
-export = IItemTemplate;

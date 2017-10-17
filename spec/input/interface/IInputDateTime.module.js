@@ -13,12 +13,12 @@ define('js!SBIS3.SPEC.input.interface.IInputDateTime', [
     */
 
    /**
-    * @event SBIS3.SPEC.input.interface.IInputDateTime#onValueChange Происходит при изменении числа в поле ввода.
+    * @event SBIS3.SPEC.input.interface.IInputDateTime#valueChanged Происходит при изменении числа в поле ввода.
     * @param {Date} value Новое значение поля.
     */
 
    /**
-    * @event SBIS3.SPEC.input.interface.IInputDateTime#onInputFinish Происходит при завершении ввода.
+    * @event SBIS3.SPEC.input.interface.IInputDateTime#inputCompleted Происходит при завершении ввода.
     * @param {Date} value Новое значение поля.
     */
 

@@ -86,19 +86,19 @@ define('js!SBIS3.SPEC.Control', [
     */
 
    /**
-    * @event SBIS3.SPEC.Control#onFocus Происходит при переходе фокуса на компонент.
+    * @event SBIS3.SPEC.Control#focus Происходит при переходе фокуса на компонент.
     */
 
    /**
-    * @event SBIS3.SPEC.Control#onBlur Происходит при уходе фокуса с компонента.
+    * @event SBIS3.SPEC.Control#blur Происходит при уходе фокуса с компонента.
     */
 
    /**
-    * @event SBIS3.SPEC.Control#onFocusIn Происходит при переходе фокуса на дочерний компонент.
+    * @event SBIS3.SPEC.Control#focusIn Происходит при переходе фокуса на дочерний компонент.
     */
 
    /**
-    * @event SBIS3.SPEC.Control#onFocusOut Происходит при уходе фокуса с дочернего компонента.
+    * @event SBIS3.SPEC.Control#focusOut Происходит при уходе фокуса с дочернего компонента.
     */
 
 });

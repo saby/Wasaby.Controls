@@ -8,7 +8,7 @@ define('js!SBIS3.SPEC.input.interface.IDropdownEmptyValue', [
     */
 
    /**
-    * @name SBIS3.SPEC.input.interface.IDropdownEmptyValue#emptyValue
+    * @name SBIS3.SPEC.input.interface.IDropdownEmptyValue#emptyValueAllowed
     * @cfg {Boolean} Добавляет в выпадающий список новый пункт "Не выбрано".
     */
 });

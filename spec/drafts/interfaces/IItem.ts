@@ -1,5 +1,0 @@
-interface IItem {
-
-};
-
-export = IItem;

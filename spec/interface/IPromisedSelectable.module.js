@@ -19,14 +19,14 @@ define('js!SBIS3.SPEC.interface.IPromisedSelectable', [
     */
 
    /**
-    * @event SBIS3.SPEC.interface.IPromisedSelectable#onChangeSelectedKeys Происходит при изменении массива выделенных записей.
+    * @event SBIS3.SPEC.interface.IPromisedSelectable#selectedKeysChanged Происходит при изменении массива выделенных записей.
     * @param {Array} keys массив ключей выбранных элементов коллекции.
     * @param {Array} added массив добавленных ключей в списке выбранных элементов коллекции.
     * @param {Array} deleted массив удаленных ключей из списка выбранных элементов коллекции.
     */
 
    /**
-    * @event SBIS3.SPEC.interface.IPromisedSelectable#onChangeExcludedKeys Происходит при изменении массива записей исключения выделения.
+    * @event SBIS3.SPEC.interface.IPromisedSelectable#excludedKeysChanged Происходит при изменении массива записей исключения выделения.
     * @param {Array} keys массив ключей, которые необходимо исключить из набора выбранных элементов "бесконечного" списка.
     * @param {Array} added массив добавленных ключей.
     * @param {Array} deleted массив удаленных.
@@ -44,7 +44,7 @@ define('js!SBIS3.SPEC.interface.IPromisedSelectable', [
 
    /**
     * Инвертировать выделение
-    * @function SBIS3.SPEC.interface.IPromisedSelectable#toggleSelection
+    * @function SBIS3.SPEC.interface.IPromisedSelectable#invertSelection
     */
 
 });

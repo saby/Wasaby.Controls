@@ -13,12 +13,12 @@ define('js!SBIS3.SPEC.input.interface.IInputNumber', [
     */
 
    /**
-    * @event SBIS3.SPEC.input.interface.IInputNumber#onValueChange Происходит при изменении числа в поле ввода.
+    * @event SBIS3.SPEC.input.interface.IInputNumber#valueChanged Происходит при изменении числа в поле ввода.
     * @param {Number} value Новое значение поля.
     */
 
    /**
-    * @event SBIS3.SPEC.input.interface.IInputNumber#onInputFinish Происходит при завершении ввода.
+    * @event SBIS3.SPEC.input.interface.IInputNumber#inputCompleted Происходит при завершении ввода.
     * @param {Number} value Новое значение поля.
     */
 

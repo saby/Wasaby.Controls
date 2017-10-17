@@ -12,4 +12,9 @@ define('js!SBIS3.SPEC.interface.ISingleSelectable', [
     * @cfg {Number} Ключевое поле выбранного элемента коллекции.
     */
 
+   /**
+    * @event SBIS3.SPEC.interface.ISingleSelectable#selectedKeyChanged Происходит при выборе записи.
+    * @param {Number} key ключ выбранного элемента коллекции.
+    */
+
 });
