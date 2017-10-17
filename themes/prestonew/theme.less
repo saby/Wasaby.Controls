@@ -367,11 +367,18 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
       font-weight: bold;
     }
   }
-  .controls-Scrollbar .controls-Scrollbar__thumb {
-    background-color: rgba(0,0,0,.1);
-    &:hover {
-       background-color: rgba(0,0,0,.15);
-    }
+  .controls-Scrollbar {
+     &.controls-Scrollbar__dragging {
+        .controls-Scrollbar__thumb {
+           background-color: rgba(0,0,0,.15);
+        }
+     }
+     .controls-Scrollbar__thumb {
+        background-color: rgba(0,0,0,.1);
+        &:hover {
+           background-color: rgba(0,0,0,.15);
+        }
+     }
   }
 }
 
@@ -582,14 +589,6 @@ body {
 }
 .controls-ListView .controls-ItemsToolbar__editActions {
   background: @controls-editInPlace-editor-bg;
-}
-
-.controls-DateBox.controls-FormattedTextBox {
-   .controls-FormattedTextBox__fieldWrapper {
-      .controls-FormattedTextBox__field {
-         height: 2.86rem;
-      }
-   }
 }
 
 .controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field .controls-FormattedTextBox__field-symbol {

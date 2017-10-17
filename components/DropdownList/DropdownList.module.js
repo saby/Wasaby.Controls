@@ -889,7 +889,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if (this._picker) {
                pickerHeadContainer = $('.controls-DropdownList__selectedItem', this._getPickerContainer());
                if (pickerHeadContainer.length){
-                  var pickerHeadTpl = $(TemplateUtil.prepareTemplate(this._options.headPickerTemplate.call(this, this._options))());
+                  var pickerHeadTpl = $(TemplateUtil.prepareTemplate(this._options.headPickerTemplate)(this._options));
                   pickerHeadContainer.html(pickerHeadTpl);
                   this._getPickerContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
                }

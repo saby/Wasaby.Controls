@@ -93,6 +93,10 @@ define('js!SBIS3.CONTROLS.FilterController', [
                   filter.unsubscribe('onApplyFilter', filterChangeHandler)
                         .unsubscribe('onResetFilter', filterChangeHandler);
                };
+
+            if (filterButton && fastDataFilter) {
+               syncFilters(filterButton, fastDataFilter);
+            }
       
             if(filterButton) {
                subscribeFilter(filterButton);
