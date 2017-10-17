@@ -1,16 +1,13 @@
 <div class="controls-TabButton controls-TabButton__{{align}}-align{{checked ? ' controls-Checked__checked'}} {{_sideTab ? 'controls-TabButton__side-tab'}} " style="{{_order}}" title="{{tooltip}}">
    <div class="controls-TabButton__inner">
       <div class="controls-TabButton__wrapper">
-         <ws:if data="{{_iconClass}}">
-            <span class="controls-TabButton__icon">
-               <span class="{{_iconClass}}"></span>
-            </span>
-         </ws:if>
-         <span class="controls-TabButton__caption">
+         <div class="controls-TabButton__icon" if="{{_iconClass}}">
+            <span class="{{_iconClass}}"></span>
+         </div>
+         <div class="controls-TabButton__caption">
             <ws:partial template="{{sanitize}}" scope="{{ {'caption' : caption} }}" />
-         </span>
+         </div>
       </div>
    </div>
    <div class="controls-tabButton__overlay"></div>
-   <div class="controls-TabButton__bottomLine"></div>
 </div>
