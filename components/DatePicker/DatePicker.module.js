@@ -237,6 +237,7 @@ define(
          this.getContainer().children('.controls-DateBox').toggleClass('ws-enabled', enabled).toggleClass('ws-disabled', !enabled);
       },
        _toggleState: function() {
+         //todo: dublicate
            var
                container = this.getContainer().children('.controls-DateBox')[0],
                active = this.isActive(),
