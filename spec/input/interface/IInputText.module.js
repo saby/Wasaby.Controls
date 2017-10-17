@@ -19,7 +19,7 @@ define('js!SBIS3.SPEC.input.interface.IInputText', [
     */
 
    /**
-    * @event SBIS3.SPEC.input.interface.IInputText#inputFinished Происходит при завершении ввода.
+    * @event SBIS3.SPEC.input.interface.IInputText#inputCompleted Происходит при завершении ввода.
     * @param {String} value Новое значение поля.
     */
 });

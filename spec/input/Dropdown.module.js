@@ -5,7 +5,7 @@ define('js!SBIS3.SPEC.input.Dropdown', [
     * Поле выбора из значения списка.
     * @class SBIS3.SPEC.input.Dropdown
     * @extends SBIS3.SPEC.Control
-    * @mixes SBIS3.SPEC.input.interface.IPlaceholder
+    * @mixes SBIS3.SPEC.input.interface.IInputPlaceholder
     * @mixes SBIS3.SPEC.interface.IDataSource
     * @mixes SBIS3.SPEC.interface.IItems
     * @mixes SBIS3.SPEC.input.interface.IValidation
