@@ -275,7 +275,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       },
       _updateActiveStyles: function() {
          TextBoxBase.superclass._updateActiveStyles.call(this);
-         this._toggleState(this.isActive(), this.isEnabled() ? 'active': 'disabled');
+         this._toggleState(this.isEnabled() ? this.isActive() : true, this.isEnabled() ? 'active': 'disabled');
       },
       _toggleState: function(state, stateName) {
          var container = this.getContainer()[0];
