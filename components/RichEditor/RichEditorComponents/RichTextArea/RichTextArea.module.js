@@ -140,6 +140,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                 *
                 */
                editorConfig: {
+                  className: null,
                   plugins: 'media,paste,lists,noneditable,codesample',
                   inline: true,
                   relative_urls: false,
