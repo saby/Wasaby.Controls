@@ -1421,6 +1421,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
                var _onSelectionChange2 = function (evt) {
                   if (evt.target === document) {
+                     this._setTrimmedText(this._getTinyEditorValue());
                      this._tinyEditor.nodeChanged();
                   }
                }.bind(this);
