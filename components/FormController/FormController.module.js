@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @param {Object} error Описание ошибки. В свойстве message хранится текст ошибки, который можно использовать для вывода в пользовательском интерфейсе.
        */
       /**
-       * @event onReadModel Происходит после чтения записи из источника данных диалога.
+       * @event onReadModel Происходит после чтения записи из источника данных.
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Полученная запись.
        * @param {Object} additionalData Метаданные. Служебная информация, необходимая для синхронизации Действия.
@@ -57,24 +57,24 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @param {Boolean} additionalData.isNewRecord Признак "Новая запись", который означает, что запись инициализирована в источнике данных, но не сохранена.
        */
       /**
-       * @event onAfterFormLoad Происходит после отображении диалога, на котором отображена разметка и данные, полученные из редактируемой записи (см. {@link record}).
+       * @event onAfterFormLoad Происходит после того, как отображён диалог с данными, которые полученны из редактируемой записи (см. {@link record}).
        * @remark
-       * Событие происходит при открытии диалога или при изменении редактируемой записи (см. {@link setRecord}).
+       * Событие происходит после открытия диалога или при изменении редактируемой записи (см. {@link setRecord}).
        * @param {Core/EventObject} eventObject Дескриптор события.
        */
       /**
-       * @event onBeforeUpdateModel Происходит перед сохранения записи в источнике данных диалога.
+       * @event onBeforeUpdateModel Происходит перед сохранением записи в источнике данных.
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Сохраняемая запись.
        * @returns {Boolean|Error|Deferred} Чтобы прервать сохранение записи, из обработчика события можно вернуть один из следующих результатов:
        * <ul>
        *    <li><b>false</b> (тип Boolean);</li>
-       *    <li><b>экземпляр объекта Error</b> . Текст для сообщения об ошибке соответствует error.message</li>
-       *    <li>экземпляр класса {@link Core/Deferred}. Сохранение записи приостановится до тех пор, пока deferred не завершит выполнение. В callback отдается так же False|Error для того, чтобы прервать сохранение.</li>
+       *    <li><b>экземпляр объекта Error</b> . Текст сообщения об ошибке соответствует error.message</li>
+       *    <li>экземпляр класса {@link Core/Deferred}. Сохранение записи приостановится до тех пор, пока deferred не завершит выполнение. В callback отдается так же false|Error для того, чтобы прервать сохранение.</li>
        * </ul>
        */
       /**
-       * @event onUpdateModel Происходит после сохранения записи в источнике данных диалога.
+       * @event onUpdateModel Происходит после сохранения записи в источнике данных.
        * @remark
        * Перед данным событием происходит {@link onBeforeUpdateModel}.
        * @param {Core/EventObject} eventObject Дескриптор события.
@@ -85,7 +85,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @param {Boolean} additionalData.isNewRecord Признак "Новая запись", который означает, что запись инициализирована в источнике данных, но не сохранена.
        */
       /**
-       * @event onDestroyModel Происходит после удаления записи из источника данных диалога.
+       * @event onDestroyModel Происходит после удаления записи из источника данных.
        * @remark
        * Конфигурацию источника данных устанавливают в опции {@link dataSource}.
        * @param {Core/EventObject} eventObject Дескриптор события.
