@@ -41,8 +41,14 @@ define('js!SBIS3.CONTROLS.Utils.TemplateUtil', ['Core/js-template-doT'], functio
             case 'undefined' :
                template = undefined;
                break;
+            case 'object' :
+               // Обработка контентной опции массив
+               if (Object.prototype.toString.call(tpl) === '[object Array]') {
+                  template = tpl;
+               }
+               break;
             default:
-               template = null;
+               template = undefined;
          }
          return template;
       }
