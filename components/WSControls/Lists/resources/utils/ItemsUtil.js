@@ -1,8 +1,8 @@
 define('js!WSControls/Lists/resources/utils/ItemsUtil', [
-   'js!WS.Data/Display/Display',
+   'WS.Data/Display/Display',
    'Core/core-instance',
-   'js!WS.Data/Utils',
-   'js!WS.Data/Display/Enum'
+   'WS.Data/Utils',
+   'WS.Data/Display/Enum'
 ], function(Display, cInstance, DataUtils) {
    var ItemsUtil = {
 

@@ -10,8 +10,8 @@ define(
       'js!WSControls/Lists/Controllers/PageNavigation',
       'js!WSControls/Lists/Controllers/OffsetNavigation',
       'js!WSControls/Lists/Controllers/PositionNavigation',
-      'js!WS.Data/Collection/RecordSet',
-      'js!WS.Data/Source/SbisService'
+      'WS.Data/Collection/RecordSet',
+      'WS.Data/Source/SbisService'
    ],
    function (PageNavigation,
              OffsetNavigation,

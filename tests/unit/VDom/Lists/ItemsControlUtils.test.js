@@ -2,8 +2,8 @@
  * Created by am.gerasimov on 06.03.2017.
  */
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
-define(['js!WSControls/Lists/resources/utils/DataSourceUtil', 'js!WSControls/Lists/resources/utils/ItemsUtil', 'js!WS.Data/Collection/RecordSet'
-   , 'js!WS.Data/Source/Memory', 'Core/core-instance', 'js!WS.Data/Types/Enum'],
+define(['js!WSControls/Lists/resources/utils/DataSourceUtil', 'js!WSControls/Lists/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet'
+   , 'WS.Data/Source/Memory', 'Core/core-instance', 'WS.Data/Types/Enum'],
    function (DataSourceUtil, ItemsUtil, RecordSet, MemorySource, cInstance, Enum) {
 
       'use strict';
@@ -65,7 +65,7 @@ define(['js!WSControls/Lists/resources/utils/DataSourceUtil', 'js!WSControls/Lis
                assert.equal(dataSource, resSource, 'prepareSource doesn\'t returns initial datasource');
 
                resSource = DataSourceUtil.prepareSource({
-                  module: 'js!WS.Data/Source/Memory',
+                  module: 'WS.Data/Source/Memory',
                   options: {
                      data: data,
                      idProperty: 'id'

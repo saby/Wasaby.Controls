@@ -1,7 +1,7 @@
 define('js!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList', [
     'js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList',
     'Core/core-clone',
-    'js!WS.Data/Collection/RecordSet',
+    'WS.Data/Collection/RecordSet',
     'js!SBIS3.CONTROLS.ArraySimpleValuesUtil',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList',
     'tmpl!SBIS3.CONTROLS.FilterPanelChooser.FavoritesList/resources/FilterPanelChooserFavoritesHeader',

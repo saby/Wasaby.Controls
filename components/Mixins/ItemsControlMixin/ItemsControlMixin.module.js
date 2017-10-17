@@ -2,20 +2,20 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'Core/core-clone',
    "Core/Deferred",
    "Core/IoC",
-   "js!WS.Data/Source/Memory",
-   "js!WS.Data/Source/SbisService",
-   "js!WS.Data/Collection/RecordSet",
-   "js!WS.Data/Query/Query",
-   "js!WS.Data/Collection/ObservableList",
-   "js!WS.Data/Display/Display",
-   "js!WS.Data/Collection/IBind",
-   "js!WS.Data/Display/Collection",
-   "js!WS.Data/Display/Enum",
-   "js!WS.Data/Display/Flags",
+   "WS.Data/Source/Memory",
+   "WS.Data/Source/SbisService",
+   "WS.Data/Collection/RecordSet",
+   "WS.Data/Query/Query",
+   "WS.Data/Collection/ObservableList",
+   "WS.Data/Display/Display",
+   "WS.Data/Collection/IBind",
+   "WS.Data/Display/Collection",
+   "WS.Data/Display/Enum",
+   "WS.Data/Display/Flags",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
    "tmpl!SBIS3.CONTROLS.ItemsControlMixin/resources/ItemsTemplate",
-   "js!WS.Data/Utils",
-   "js!WS.Data/Entity/Model",
+   "WS.Data/Utils",
+   "WS.Data/Entity/Model",
    'Core/markup/ParserUtilities',
    "Core/Sanitize",
    "js!SBIS3.CORE.LayoutManager",
@@ -259,6 +259,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    };
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
+    *
+    * Далее приведена последовательность событий, происходящих при взаимодействии с источником данных компонента:
+    *
+    * 1. Перед выполнением запроса к источнику данных - {@link onBeforeDataLoad}.
+    * 2. При успешном выполнении запроса: {@link onDataLoad} &#8594; {@link onItemsReady}.
+    * 3. При ошибке выполнения запроса: {@link onDataLoadError}.
+    *
     * @mixin SBIS3.CONTROLS.ItemsControlMixin
     * @public
     * @author Крайнов Дмитрий Олегович
@@ -279,23 +286,38 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see displayProperty
         */
        /**
-        * @event onBeforeDataLoad Происходит перед загрузкой данных.
+        * @event onBeforeDataLoad Происходит перед выполнением запроса к источнику данных компонента.
         * @remark
-        * Событие сработает перед запросом к источнику данных
+        * В обработчике события Вы можете изменить параметры, с которыми впоследствии будет выполнен запрос.
+        * Конфигурацию источника данных устанавливают в опции {@link dataSource}.
+        * Выполнение запроса можно инициировать методом {@link reload}.
+        * В <a href="https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/ItemsControlMixin/">описании миксина</a> приведена последовательность событий, происходящих при взаимодействии с источником данных компонента.
         * @param {Core/EventObject} eventObject Дескриптор события.
+        * @param {Object} filters Параметры фильтрации. Они используются в качестве условия для отбора возвращаемых записей. Значение параметра определяется опцией {@link filter}.
+        * @param {Array.<Object>} sorting Параметры сортировки записей, возвращаемых в результате выполнения запроса. Значение параметра  определяется опцией {@link sorting}.
+        * @param {Number} offset Количество записей в источнике данных, которые будут пропущены перед формированием результирующей выборки. Значение параметра определяется методом {@link setOffset} или с помощью аргумента offset в методе {@link reload}.
+        * @param {Number} limit Количество записей, возвращаемых из источника данных в результате выполнения запроса. Значение определяется опцией {@link pageSize}.
         * @example
         * <pre>
-        *    myView.subscribe('onBeforeDataLoad', function(eventObject) {
-        *       var filter = this.getFilter();
-        *       filter['myParam'] = myValue;
-        *       this.setFilter(filter, true)
+        *    myView.subscribe('onBeforeDataLoad', function(eventObject, filters, sorting, offset, limit) {
+        *
+        *       // Устанавливаем новое значение для поля, по которому отбираются записи.
+        *       filters['SomeField'] = newFieldValue;
+        *
+        *       // Устанавливаем новые параметры сортировки.
+        *       sorting = newSortingValue;
+        *
+        *       // В итоге запрос к источнику данных компонента будет выполнен с новыми значениями.
         *    });
         * </pre>
+        * @see onDataLoad
+        * @see reload
         */
+
        /**
-        * @event onDataLoad Происходит при загрузке данных.
+        * @event onDataLoad Происходит после успешного выполнения запроса к источнику данных компонента.
         * @param {Core/EventObject} eventObject Дескриптор события.
-        * @param {WS.Data/Collection/RecordSet} dataSet Набор данных.
+        * @param {WS.Data/Collection/RecordSet} dataSet Результирующих набор записей.
         * @example
         * <pre>
         *     myComboBox.subscribe('onDataLoad', function(eventObject) {
@@ -307,15 +329,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see getDataSource
         */
       /**
-       * @event onDataLoadError Происходит при ошибке загрузки данных.
+       * @event onDataLoadError Происходит в случае ошибки при выполнении запроса к источнику данных компонента.
        * @remark
-       * Событие сработает при получении ошибки от любого метода БЛ, вызванного стандартным способом.
+       * В результате выполнения метода бизнес-логики была получена ошибка.
+       * В случае разрыва соеднинения с БД (сервером) сообщение об ошибке не выводится.
        * @param {Core/EventObject} eventObject Дескриптор события.
-       * @param {HTTPError} error Произошедшая ошибка.
-       * @return {Boolean} Если вернуть:
+       * @param {HTTPError} error HTTP-статус.
+       * @return {Boolean} Из обработчика события можно возвращать следующие результаты:
        * <ol>
-       * <li>true, то будет считаться, что ошибка обработана, и стандартное поведение отменяется.</li>
-       * <li>Если не возвращать true, то выведется alert с описанием ошибки.</li>
+       *    <li>true. Ответ интерпретируется так, что ошибка была обработана, и в пользовательском интерфейсе не требуется создавать сообщение об ошибке.</li>
+       *    <li>false. В пользовательском интерфейсе создаётся сообщение с описанием ошибки.</li>
        * </ol>
        * @example
        * <pre>
@@ -476,7 +499,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              * Аналогичная предыдущему примеру конфигурация будет выглядеть следующим образом:
              * <pre>
              *    <options name="dataSource">
-             *       <option name="module" value="js!WS.Data/Source/SbisService"></option>
+             *       <option name="module" value="WS.Data/Source/SbisService"></option>
              *       <options name="options">
              *          <options name="endpoint">
              *             <option name="contract" value="Отчеты"></option>
@@ -1534,7 +1557,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         *     define( 'SBIS3.MyArea.MyComponent',
         *        [ // Массив зависимостей компонента
         *           ... ,
-        *           'js!WS.Data/Source/Memory' // Подключаем класс для работы со статическим источником данных
+        *           'WS.Data/Source/Memory' // Подключаем класс для работы со статическим источником данных
         *        ],
         *        function(
         *           ...,

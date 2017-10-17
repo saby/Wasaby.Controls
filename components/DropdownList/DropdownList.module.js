@@ -19,9 +19,9 @@ define('js!SBIS3.CONTROLS.DropdownList',
    "js!SBIS3.CONTROLS.DropdownListMixin",
    "js!SBIS3.CONTROLS.FormWidgetMixin",
    "js!SBIS3.CONTROLS.Utils.TemplateUtil",
-   "js!WS.Data/Collection/RecordSet",
-   "js!WS.Data/Display/Display",
-   "js!WS.Data/Collection/List",
+   "WS.Data/Collection/RecordSet",
+   "WS.Data/Display/Display",
+   "WS.Data/Collection/List",
    "tmpl!SBIS3.CONTROLS.DropdownList",
    "tmpl!SBIS3.CONTROLS.DropdownList/DropdownListHead",
    "tmpl!SBIS3.CONTROLS.DropdownList/DropdownListPickerHead",
@@ -889,7 +889,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             if (this._picker) {
                pickerHeadContainer = $('.controls-DropdownList__selectedItem', this._getPickerContainer());
                if (pickerHeadContainer.length){
-                  var pickerHeadTpl = $(TemplateUtil.prepareTemplate(this._options.headPickerTemplate.call(this, this._options))());
+                  var pickerHeadTpl = $(TemplateUtil.prepareTemplate(this._options.headPickerTemplate)(this._options));
                   pickerHeadContainer.html(pickerHeadTpl);
                   this._getPickerContainer().toggleClass('controls-DropdownList__hideCross', isDefaultIdSelected);
                }

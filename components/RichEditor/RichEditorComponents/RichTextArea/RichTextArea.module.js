@@ -15,13 +15,12 @@ define('js!SBIS3.CONTROLS.RichTextArea',
    "tmpl!SBIS3.CONTROLS.RichTextArea",
    "js!SBIS3.CONTROLS.Utils.RichTextAreaUtil",
    "js!SBIS3.CONTROLS.RichTextArea/resources/smiles",
-   'js!WS.Data/Di',
+   'WS.Data/Di',
    "js!SBIS3.CONTROLS.Utils.ImageUtil",
    "Core/Sanitize",
    'Core/helpers/String/escapeTagsFromStr',
    'Core/helpers/String/escapeHtml',
    'Core/helpers/String/linkWrap',
-   'Core/helpers/Hcontrol/trackElement',
    'js!SBIS3.CONTROLS.RichEditor.ImageOptionsPanel',
    'js!SBIS3.CONTROLS.RichEditor.CodeSampleDialog',
    'Core/EventBus',
@@ -47,7 +46,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
       escapeTagsFromStr,
       escapeHtml,
       LinkWrap,
-      trackElement,
       ImageOptionsPanel,
       CodeSampleDialog,
       EventBus
@@ -511,7 +509,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                }
                this._tinyEditor.destroyed = true;
             }
-            trackElement(this._container, false);
             this._container.unbind('keydown keyup');
             this._sourceArea.unbind('input');
             this._tinyEditor = null;
@@ -1086,7 +1083,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   after = '</p><p>{$caret}</p>';
                   break;
                case '6':
-                  if (cConstants.browser.chrome) {
+                  if (cConstants.browser.chrome || cConstants.browser.firefox) {
                      after = '&#xFEFF;{$caret}';
                   }
                   break;
@@ -1342,15 +1339,13 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             //Обработка вставки контента
             editor.on('BeforePastePreProcess', function(e) {
-               var
-                  isRichContent = e.content.indexOf('orphans: 31415;') !== -1,
-                  content = e.content;
-               e.content =  content.replace('orphans: 31415;','');
+               var isRichContent = e.content.indexOf('orphans: 31415;') !== -1;
+               e.content = e.content.replace('orphans: 31415;', '');
                //Необходимо заменять декорированные ссылки обратно на url
                //TODO: временное решение для 230. удалить в 240 когда сделают ошибку https://inside.tensor.ru/opendoc.html?guid=dbaac53f-1608-42fa-9714-d8c3a1959f17
-               e.content = self._prepareContent( e.content);
+               e.content = self._prepareContent(e.content);
                //Парсер TinyMCE неправльно распознаёт стили из за - &quot;TensorFont Regular&quot;
-               e.content = e. content.replace(/&quot;TensorFont Regular&quot;/gi,'\'TensorFont Regular\'');
+               e.content = e.content.replace(/&quot;TensorFont Regular&quot;/gi,'\'TensorFont Regular\'');
                //_mouseIsPressed - флаг того что мышь была зажата в редакторе и не отпускалась
                //равносильно тому что d&d совершается внутри редактора => не надо обрезать изображение
                //upd: в костроме форматная вставка, не нужно вырезать лишние теги
@@ -1406,8 +1401,34 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                // Замена отступов после переноса строки и в первой строке
                // пробелы заменяются с чередованием '&nbsp;' + ' '
                event.node.innerHTML = this._replaceWhitespaces(event.node.innerHTML);
-
             }.bind(this));
+
+            if (this._options.editorConfig.browser_spellcheck && cConstants.browser.chrome) {
+               // Если включена проверка правописания, нужно при исправлениях генерировать событие NodeChange, иначе об этом изменение никак не станет известно
+               var _onSelectionChange1 = function (evt) {
+                  if (evt.target === document) {
+                     editor.off('SelectionChange', _onSelectionChange1);
+                     if (editor.selection.getContent()) {
+                        editor.once('SelectionChange', _onSelectionChange2);
+                        // Хотя цепляемся на один раз, но всё же отцепим через пару минут, если ничего не случится за это время
+                        setTimeout(editor.off.bind(editor, 'SelectionChange', _onSelectionChange2), 120000);
+                     }
+                  }
+               }.bind(this);
+
+               var _onSelectionChange2 = function (evt) {
+                  if (evt.target === document) {
+                     this._tinyEditor.nodeChanged();
+                  }
+               }.bind(this);
+
+               editor.on('contextmenu', function (evt) {
+                  if (evt.currentTarget === this._inputControl[0] && (evt.target === evt.currentTarget || $.contains(event.currentTarget, evt.target))) {
+                     editor.on('SelectionChange', _onSelectionChange1);
+                     editor.off('SelectionChange', _onSelectionChange2);
+                  }
+               }.bind(this));
+            }
 
             editor.on('drop', function(event) {
                //при дропе тоже заходит в BeforePastePreProcess надо обнулять _clipboardTex
@@ -1534,7 +1555,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             // Обработка изменения содержимого редактора.
             editor.on('keydown', function(e) {
-               if (1 < e.key.length) {
+               if (e.key && 1 < e.key.length) {
                   _linkEditStart();
                   setTimeout(function() {
                      _linkEditEnd();

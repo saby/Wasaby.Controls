@@ -1,36 +1,39 @@
+/*
+  изображение кнопки фильтрации выглядит следующим образом
+   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+  \                                      /   /                |              \
+   |    right-close        left-close   |   |  right-open       left-open     |
+  /                                      \   \                |              /
+   ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯    ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯
+   _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _    _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+  \                                      /   /                |              \
+   |    right-close-h     left-close-h  |   |  right-open-h     left-open-h   |
+  /                                      \   \                |              /
+   ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯    ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯ ¯
+ */
 .controls-IconButton__filter {
     &-left-close {
-        background: @FilterPanelButtonLeftClose;
-        &:hover {
-            background: @FilterPanelButtonHoverLeftClose;
-        }
+        background-position-x: -@filter-panel-button-width;
     }
     &-right-close {
-        background: @FilterPanelButtonRightClose;
-        &:hover {
-            background: @FilterPanelButtonHoverRightClose;
-        }
+        background-position-x: 0;
     }
     &-left-open {
-        background: @FilterPanelButtonLeftOpen;
-        &:hover {
-            background: @FilterPanelButtonHoverLeftOpen;
-        }
+        background-position-x: -@filter-panel-button-width * 3;
     }
     &-right-open {
-        background: @FilterPanelButtonRightOpen;
-        &:hover {
-            background: @FilterPanelButtonHoverRightOpen;
-        }
+        background-position-x: -@filter-panel-button-width * 2;
     }
     &-left-open, &-left-close, &-right-open, &-right-close {
-        height: 24px;
-        width: 35px;
         cursor: pointer;
         display: inline-block;
-        &, &:hover {
-            background-size: 140px 48px;
-            background-repeat-x: no-repeat;
+        height: @filter-panel-button-height;
+        width: @filter-panel-button-width;
+        background-image: @filter-panel-button-bg;
+        background-size: @filter-panel-button-width * 4 @filter-panel-button-height * 2;
+        background-repeat-x: no-repeat;
+        &:hover {
+            background-position-y: @filter-panel-button-height;
         }
     }
 }
