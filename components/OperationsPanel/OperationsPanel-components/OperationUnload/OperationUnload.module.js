@@ -223,7 +223,9 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
             exporter = new Exporter(this._prepareExporterConfig(cfg));
             methodName = this._getSaveMethodName(false);
             if (methodName) {
-               fullFilter = exporter.getFullFilter(cfg.dataSet.getCount(), true);
+               //Не передаём размер страницы. Если мы попали в данную ветку значит выгрузка будет с помощью обработчки
+               //в прикладном списочном методе параметра selectedIds и размер страницы не понадобится.
+               fullFilter = exporter.getFullFilter(null, true);
                if (fullFilter['Filter'] instanceof Record) {
                    filter = fullFilter['Filter'];
                } else {
