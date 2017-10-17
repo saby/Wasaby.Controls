@@ -40,6 +40,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @property {WS.Data/Source/ISource/Binding/typedef[]} [Binding] Соответствие методов CRUD+ контракту.
        * @property {WS.Data/Source/ISource/Endpoint/typedef[]} [endpoint] Конечная точка, обеспечивающая доступ клиента к функциональным возможностям источника данных.
        * @property {String} [model=source.sbis-service] Название зависимости, или конструктор объекта или инстанс объекта.
+       * @property {String} idProperty Имя поля записи, которое содержит первичный ключ.
        */
       /**
        * @event onFail Происходит в случае ошибки при сохранении или чтении записи из источника данных.
@@ -183,9 +184,9 @@ define('js!SBIS3.CONTROLS.FormController', [
              */
             indicatorSavingMessage:  rk('Подождите, идёт сохранение'),
             /**
-             * @cfg {dataSource} Устанавливает конфигурацию источника данных диалога.
+             * @cfg {dataSource} Конфигурация источника данных диалога.
              * @remark
-             * Сейчас допускается установить конфигурацию класса {@link WS.Data/Source/SbisService}. Однако в общем случае это может быть любой источник данных.
+             * В качестве источника используется {@link WS.Data/Source/SbisService}.
              * @example
              * <pre>
              * _options: {
@@ -194,7 +195,8 @@ define('js!SBIS3.CONTROLS.FormController', [
              *       binding: { // CRUD-методы
              *          read: 'ПрочитатьТовар',
              *          query: 'СписокТоваров'
-             *       }
+             *       },
+             *       idProperty: '@Товар'
              *    }
              * }
              * </pre>
@@ -509,7 +511,6 @@ define('js!SBIS3.CONTROLS.FormController', [
        * });
        * </pre>
        * @see dataSource
-       * @see getDataSource
        */
       getDataSource: function(){
          return this._dataSource;
