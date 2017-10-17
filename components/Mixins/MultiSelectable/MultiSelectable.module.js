@@ -851,8 +851,13 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
       },
 
       _dataLoadedCallback : function(){
+         var items;
+         
          if (this._checkEmptySelection()) {
-            this._setFirstItemAsSelected();
+            if (items && items.getCount()) {
+               this._setFirstItemAsSelected();
+               this._afterSelectionHandler(this.getSelectedKeys(), []);
+            }
          }
          this._setSelectedItems();
       },
