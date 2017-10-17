@@ -140,7 +140,7 @@ define('js!SBIS3.CONTROLS.Slider',
                this._fullLine = this._container.find('.controls-Slider__line__full');
                this._wrapper = this._container.find('.controls-Slider__wrapper');
                this._endValue = this._prepareValue(this._options.endValue !== undefined ? this._options.endValue : this._options.maxValue, 'end');
-               this._startValue = this._prepareValue(this._options.startValue !== undefined, 'start');
+               this._startValue = this._prepareValue(this._options.startValue !== undefined ? this._options.startValue : this._options.minValue, 'start');
                this._pointsContainers = {
                   start: this._container.find('.controls-Slider__point__start'),
                   end: this._container.find('.controls-Slider__point__end')
