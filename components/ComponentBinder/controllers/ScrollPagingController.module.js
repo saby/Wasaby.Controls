@@ -13,6 +13,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
    
    var ScrollPagingController = cAbstract.extend({
       $protected: {
+         _freezePaging: false,
          _options: {
             view: null,
             zIndex: null
@@ -78,16 +79,17 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
       },
 
       _scrollHandler: function(event, scrollTop) {
-         var page = scrollTop / this._viewportHeight;
-         if (page % 1) {
-            page = Math.ceil(page);
+         if (!this._freezePaging) {
+            var page = scrollTop / this._viewportHeight;
+            if (page % 1) {
+               page = Math.ceil(page);
+            }
+            page += 1; //потому что используем нумерацию страниц с 1
+            if (this._currentScrollPage !== page) {
+               this._currentScrollPage = page;
+               this._options.paging.setSelectedKey(page);
+            }
          }
-         page += 1; //потому что используем нумерацию страниц с 1
-         if (this._currentScrollPage !== page) {
-            this._currentScrollPage = page;
-            this._options.paging.setSelectedKey(page);
-         }
-
       },
 
       _pagingSelectedChange: function(e, nPage, index){
@@ -167,10 +169,16 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
          this._options.paging.setVisible(pagingVisibility && !this._options.hiddenPager);
       },
 
+      //когда ListView скрыт следить за скроллом и переключать пэйджинг не надо вообще
+      freezePaging: function(state) {
+         this._freezePaging = state;
+      },
+
       _updateCachedSizes: function(){
-         var viewport  = $(this._options.view._scrollWatcher.getScrollContainer())[0];
+         var view = this._options.view,
+             viewport  = $(view._scrollWatcher.getScrollContainer())[0];
          // У window нет scrollHeight и offsetHeight, поэтому высоту получаем иначе
-         this._viewHeight = viewport === window ? document.documentElement.scrollHeight : viewport.scrollHeight;
+         this._viewHeight = viewport === window ? document.documentElement.scrollHeight : viewport.scrollHeight;;
          this._viewportHeight = viewport === window ? viewport.innerHeight : viewport.offsetHeight;
       },
 

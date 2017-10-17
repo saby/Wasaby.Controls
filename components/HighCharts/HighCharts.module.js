@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.HighCharts', [
-   "js!WS.Data/Source/SbisService",
-   "js!WS.Data/Query/Query",
+   "WS.Data/Source/SbisService",
+   "WS.Data/Query/Query",
    'Core/helpers/getType',
    "Core/core-clone",
    "Core/constants",

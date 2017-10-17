@@ -10,7 +10,7 @@ define('js!SBIS3.CONTROLS.Image',
    "Core/CommandDispatcher",
    "Core/Deferred",
    "js!SBIS3.CORE.CompoundControl",
-   "js!WS.Data/Source/SbisService",
+   "WS.Data/Source/SbisService",
    "tmpl!SBIS3.CONTROLS.Image",
    "js!SBIS3.CORE.FileLoader",
    "Core/helpers/fast-control-helpers",
@@ -298,7 +298,7 @@ define('js!SBIS3.CONTROLS.Image',
                    * Конфигурация источника данных контрола "Изображение" через вёрстку:
                    * <pre>
                    *     <options name="dataSource">
-                   *        <option name="module" value="js!WS.Data/Source/SbisService"></option>
+                   *        <option name="module" value="WS.Data/Source/SbisService"></option>
                    *        <options name="options">
                    *            <options name="endpoint">
                    *                <option name="contract" value="Контрагент"></option>
@@ -369,7 +369,8 @@ define('js!SBIS3.CONTROLS.Image',
                _saveIndicator: undefined,
                _firstLoaded: false,
                _pickerIsOpen: false,
-               _cursorInside: false
+               _cursorInside: false,
+               _fistToolbarShow: true
             },
             _modifyOptions: function(options) {
                options = Image.superclass._modifyOptions.apply(this, arguments);
@@ -400,9 +401,6 @@ define('js!SBIS3.CONTROLS.Image',
                this._image = this._container.find('.controls-image__image');
             },
             init: function() {
-               var
-                  dataSource = this.getDataSource(),
-                  width = this._container.width();
                Image.superclass.init.call(this);
                //Находим компоненты, необходимые для работы (если нужно)
                if (this._options.imageBar) {
@@ -411,21 +409,6 @@ define('js!SBIS3.CONTROLS.Image',
                   this._buttonEdit = this.getChildControlByName('ButtonEdit');
                   this._buttonUpload = this.getChildControlByName('ButtonUpload');
                   this._buttonReset = this.getChildControlByName('ButtonReset');
-                  if (width !==0){
-                     this._imageBar.show();//показываем, чтобы можно было вычислить размеры
-                     this._buttonReset.toggle(true);//показываем, чтобы можно было вычислить размеры
-                     var
-                        uploadWidth = this._buttonUpload._container[0].getBoundingClientRect().width,
-                        resetWidth = this._buttonReset._container[0].getBoundingClientRect().width,
-                        minToolbar = uploadWidth + resetWidth + (this._options.edit ? resetWidth : 0) + 4;
-                     this._imageBar.hide();//скрываем после вычисления размеров
-                     this._buttonReset.toggle(false);//скрываем после вычисления размеров
-                     if ((width < minToolbar )){
-                        this._buttonUpload.setCaption('');
-                        this._buttonUpload.setTooltip(rk('Загрузить', 'Image'));
-                     }
-                  }
-
                   this._bindToolbarEvents();
                   if (this._options.webCam) {
                      this._buttonUpload.once('onPickerOpen', function(){
@@ -490,6 +473,27 @@ define('js!SBIS3.CONTROLS.Image',
             /* ------------------------------------------------------------
                Блок приватных методов
                ------------------------------------------------------------ */
+            _recalcUploadCaption: function(){
+               var
+                  width = this._container.width(),
+                  uploadWidth,
+                  resetWidth,
+                  minToolbar,
+                  resetVisible = this._buttonReset.isVisible();
+               if (width !== 0) {
+                  this._imageBar.show();//показываем, чтобы можно было вычислить размеры
+                  this._buttonReset.toggle(true);//показываем, чтобы можно было вычислить размеры
+                  uploadWidth = this._buttonUpload._container[0].getBoundingClientRect().width,
+                  resetWidth = this._buttonReset._container[0].getBoundingClientRect().width,
+                  minToolbar = uploadWidth + resetWidth + (this._options.edit ? resetWidth : 0) + 4;
+                  this._imageBar.hide();//скрываем после вычисления размеров
+                  this._buttonReset.toggle(resetVisible);//скрываем после вычисления размеров
+                  if ((width < minToolbar )) {
+                     this._buttonUpload.setCaption('');
+                     this._buttonUpload.setTooltip(rk('Загрузить', 'Image'));
+                  }
+               }
+            },
             _getSourceUrl: function(options) {
                options = options ? options : this._options;
                if (options.dataSource) {
@@ -576,6 +580,10 @@ define('js!SBIS3.CONTROLS.Image',
             _onImageMouseEnter: function() {
                this._cursorInside = true;
                if (this._canDisplayImageBar()) {
+                  if (this._fistToolbarShow) {
+                     this._recalcUploadCaption();
+                     this._fistToolbarShow = false;
+                  }
                   this._imageBar.fadeIn(ANIMATION_DURATION);
                }
             },

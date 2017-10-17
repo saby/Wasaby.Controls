@@ -24,7 +24,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
        "js!SBIS3.CONTROLS.ITextValue",
        "js!SBIS3.CONTROLS.Utils.TemplateUtil",
        "js!SBIS3.CONTROLS.ToSourceModel",
-       "js!WS.Data/Collection/List",
+       "WS.Data/Collection/List",
        "js!SBIS3.CONTROLS.Utils.ItemsSelection",
        "Core/helpers/Object/find",
        "js!SBIS3.CONTROLS.IconButton",
@@ -620,20 +620,20 @@ define('js!SBIS3.CONTROLS.FieldLink',
              noFocus = this._options.task_1173772355 ? this._isControlActive : noFocus;
 
              /* Хак, который чинит баг firefox с невидимым курсором в input'e.
-              Это довольно старая и распростронённая проблема в firefox'e,
+              Это довольно старая и распростронённая проблема в firefox'e (а теперь еще и в хроме),
               повторяется с разными сценариями и с разными способомами почи)нки.
               В нашем случае, если фокус в input'e, то перед повторной установкой фокуса надо сделать blur (увести фокус из input'a).
               Чтобы это не вызывало перепрыгов фокуса, делаем это по минимальному таймауту. Выглядит плохо, но другого решения для FF найти не удлось.*/
-             if(constants.browser.firefox && active && !this.getText() && this._isEmptySelection()) {
+             if(active && !this.getText() && this._isEmptySelection()) {
                 var elemToFocus = this._getElementToFocus();
 
                 setTimeout(forAliveOnly(function () {
-                   if(elemToFocus[0] === document.activeElement && this._isEmptySelection()){
+                   if(!constants.browser.isMobilePlatform && (constants.browser.firefox || constants.browser.chrome) && elemToFocus[0] === document.activeElement && this._isEmptySelection()){
                       var suggestShowed = this.isPickerVisible();
                       elemToFocus.blur().focus();
 
                       //https://online.sbis.ru/opendoc.html?guid=19af9bf9-0d16-4f63-8aa8-6d0ef7ff0799
-                      if (!suggestShowed && !this._options.task1174306848) {
+                      if (!suggestShowed && this.isPickerVisible() && !this._options.task1174306848) {
                          this.hidePicker();
                       }
                    }
@@ -805,20 +805,20 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  itemsWidth = 0,
                  toAdd = [],
                  isEnabled = this.isEnabled(),
-                 needResizeInput = this._isInputVisible() || this._options.alwaysShowTextBox,
-                 availableWidth, items, additionalWidth, itemWidth, itemsCount, item, showAllLinkWidth;
+                 isInputVisible = this._isInputVisible() || this._options.alwaysShowTextBox,
+                 availableWidth, items, additionalWidth, itemWidth, itemsCount, item, showAllLinkWidth, needResize;
 
              if(!linkCollection.isPickerVisible()) {
                 if (!this._isEmptySelection()) {
                    items = linkCollection.getContainer().find('.controls-FieldLink__item');
                    itemsCount = items.length;
+                   needResize = isInputVisible || (this.getMultiselect() && !this.isEnabled() && itemsCount > 1);
 
                    /* Не надо вызывать пересчёт элементов в случаях:
                       1) Единичный выбор - расчёт ширины сделан на css
-                      2) Множественный выбор в задизейбленом состоянии с количеством элементов > 1,
-                         сделано затемнение на css, если элемент 1 - то он должен полностью влезать в поле связи,
-                         поэтому считать надо. */
-                   if (needResizeInput) {
+                      2) Множественный выбор в задизейбленом состоянии с одним элементом,
+                         если элемент 1 - то он должен полностью влезать в поле связи, сделано на css. */
+                   if (needResize) {
                       additionalWidth = (isEnabled ? this._getAfterFieldWrapper().outerWidth() : 0) + parseInt(this._container.css('border-left-width'))*2;
 
                       /* Для multiselect'a и включённой опции alwaysShowTextBox
@@ -856,7 +856,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
                       }
 
                       if (toAdd.length < itemsCount) {
-                         linkCollection._getItemsContainer().html(toAdd);
+                         /* В задизейбленом состоянии не надо перерисовывать,
+                            надо только показать кнопку */
+                         if(this.isEnabled()) {
+                            linkCollection._getItemsContainer().html(toAdd);
+                         }
                          this._toggleShowAll(true);
                       } else {
                          this._toggleShowAll(false);

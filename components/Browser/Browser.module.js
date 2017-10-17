@@ -187,7 +187,7 @@ define('js!SBIS3.CONTROLS.Browser', [
              * @example
              * 1. В файле MyColumnsConfig.module.js описан RecordSet для конфигурации Панели редактирования колонок:
              * <pre>
-             * define('js!SBIS3.MyArea.MyColumnsConfig', ['js!WS.Data/Collection/RecordSet'], function(RecordSet) {
+             * define('js!SBIS3.MyArea.MyColumnsConfig', ['WS.Data/Collection/RecordSet'], function(RecordSet) {
              *    var data = [
              *        {
              *           id: 1,
@@ -255,6 +255,10 @@ define('js!SBIS3.CONTROLS.Browser', [
              * @cfg {Boolean} hierarchyViewMode Включать группировку при поиске.
              */
             hierarchyViewMode: true,
+            /**
+             * @cfg {String} Имя списка. По умолчанию "browserView"
+             */
+            viewName: 'browserView',
             backButtonTemplate: null
          }
       },
@@ -263,109 +267,16 @@ define('js!SBIS3.CONTROLS.Browser', [
       },
 
       init: function() {
-         var
-            self = this,
-            columnsState;
          this._publish('onEdit', 'onEditCurrentFolder', 'onFiltersReady', 'onColumnsChange');
          Browser.superclass.init.apply(this, arguments);
-         this._view = this._getView();
-         this._view.subscribe('onItemActivate', function(e, itemMeta) {
-            self._notifyOnEditByActivate(itemMeta);
-         });
 
-         if (this._options.columnsConfig) {
-            this._columnsController = new ColumnsController();
-            columnsState = this._columnsController.getState();
-            if (!columnsState) {
-               this._columnsController.setState(this._options.columnsConfig.selectedColumns);
-            }
-            this._getView().setColumns(this._columnsController.getColumns(this._options.columnsConfig.columns));
-            this._getView().redraw();
-            this._columnsEditor = this._getColumnsEditor();
-            if (this._columnsEditor) {
-               this._subscribeToColumnsEditor();
-            }
-         }
-
-         this._hierMode = checkViewType(this._view);
-
-
-         if (this._hierMode) {
-            this._backButton = this._getBackButton();
-            this._breadCrumbs = this._getBreadCrumbs();
-               if (this._backButton && this._breadCrumbs) {
-                  this._backButton.subscribe('onArrowActivated', this._folderEditHandler.bind(this));
-                  this._componentBinder = new ComponentBinder({
-                     backButton : this._backButton,
-                     breadCrumbs : this._breadCrumbs,
-                     view: this._view,
-                     backButtonTemplate: this._options.backButtonTemplate
-                  });
-                  this._componentBinder.bindBreadCrumbs();
-               }
-               else {
-                  this._componentBinder = new ComponentBinder({
-                     view: this._view
-                  });
-               }
-         }
-         else {
-            this._componentBinder = new ComponentBinder({
-               view: this._view
-            });
-         }
-
-         this._searchForm = this._getSearchForm();
-         if (this._searchForm) {
-            this._componentBinder.bindSearchGrid(
-               this._options.searchParam,
-               this._options.searchCrumbsTpl,
-               this._searchForm,
-               this._options.searchMode,
-               false,
-               this._options.keyboardLayoutRevert,
-               this._options.hierarchyViewMode);
-         }
-
-
-         this._operationsPanel = this._getOperationsPanel();
-         if (this._operationsPanel) {
-            this._componentBinder.bindOperationPanel(!this._options.showCheckBoxes, this._operationsPanel);
-            //Временное решение. Необходимо для решения ошибки: https://inside.tensor.ru/opendoc.html?guid=18468d65-ec58-4e2d-a0f0-fc35af4dfde5
-            //Если Browser переделать на flex-box то такие придроты не понадобятся.
-            //Выписана задача https://inside.tensor.ru/opendoc.html?guid=04d2ea0c-133c-4ee1-bf9b-4b222921b7d3
-            this._operationsPanel.subscribe('onToggle', function() {
-               self._container.toggleClass('controls-Browser__operationPanel-opened', this.isVisible());
-            });
-         }
-
-         this._filterButton = this._getFilterButton();
-         this._fastDataFilter = this._getFastDataFilter();
-         
-         if (this._filterButton) {
-            this.subscribeTo(this._filterButton, 'onApplyFilter', function() {
-               self.getView().setActive(true);
-            });
-            if(this._options.historyId) {
-               this._bindFilterHistory();
-            } else {
-               this._notifyOnFiltersReady();
-            }
-         } else {
-            this._notifyOnFiltersReady();
-         }
-         //Необходимо вызывать bindFilters, который выполняет подписку на applyFilter, позже, иначе произойдет неверная синхронизация фильтров при биндинге структуры
-         this.subscribe('onInit', function() {
-            if( (this._filterButton || this._fastDataFilter) &&
-               /* Новый механизм включаем, только если нет биндов на структуру фильтров (такая проверка временно) */
-               (!this._filterButton || this._filterButton && !cFind(this._filterButton._getOptions().bindings, function(obj) {return obj.propName === 'filterStructure'}))) {
-               this._componentBinder.bindFilters(this._filterButton, this._fastDataFilter, this._view);
-            }
-         }.bind(this));
-
-         if(this._options.pagingId && this._view.getProperty('showPaging')) {
-            this._componentBinder.bindPagingHistory(this._view, this._options.pagingId);
-         }
+         this._onItemActivateHandler = this._onItemActivate.bind(this);
+         this._onSelectedColumnsChangeHandler = this._onSelectedColumnsChange.bind(this);
+         this._onColumnsEditorShowHandler = this._onColumnsEditorShow.bind(this);
+         this._folderEditHandler = this._folderEdit.bind(this);
+         this._onApplyFilterHandler = this._onApplyFilter.bind(this);
+         this._onInitBindingsHandler = this._onInitBindings.bind(this);
+         this._bindView();
       },
 
       _onSelectedColumnsChange: function(event, columns) {
@@ -417,7 +328,7 @@ define('js!SBIS3.CONTROLS.Browser', [
          return options;
       },
 
-      _folderEditHandler: function(){
+      _folderEdit: function(){
          this._notify('onEditCurrentFolder', this._componentBinder.getCurrentRootRecord());
       },
 
@@ -428,6 +339,153 @@ define('js!SBIS3.CONTROLS.Browser', [
 
       getView: function() {
          return this._view;
+      },
+
+       /**
+       * Привязать новый список по имени
+       * @param name {String} Имя списка
+       * @see viewName
+       */
+      setViewName: function(name) {
+         this._unbindView();
+         this._options.viewName = name;
+         this._bindView();
+      },
+
+      _unbindView: function() {
+         if (this._view) {
+            this._view.unsubscribe('onItemActivate', this._onItemActivateHandler);
+         }
+         if (this._columnsController) {
+            this._columnsController.destroy();
+         }
+         if (this._columnsEditor) {
+            this._unsubscribeFromColumnsEditor();
+         }
+         if (this._backButton) {
+            this._backButton.unsubscribe('onArrowActivated', this._folderEditHandler);
+         }
+         if (this._componentBinder) {
+            this._componentBinder.destroy();
+         }
+         if (this._filterButton) {
+            this.unsubscribeFrom(this._filterButton, 'onApplyFilter', this._onApplyFilterHandler);
+         }
+      },
+
+      _bindView: function() {
+         var
+            self = this,
+            columnsState;
+         this._view = this._getView();
+         this._view.subscribe('onItemActivate', this._onItemActivateHandler);
+
+         if (this._options.columnsConfig) {
+            this._columnsController = new ColumnsController();
+            columnsState = this._columnsController.getState();
+            if (!columnsState) {
+               this._columnsController.setState(this._options.columnsConfig.selectedColumns);
+            }
+            this._getView().setColumns(this._columnsController.getColumns(this._options.columnsConfig.columns));
+            this._getView().redraw();
+            this._columnsEditor = this._getColumnsEditor();
+            if (this._columnsEditor) {
+               this._subscribeToColumnsEditor();
+            }
+         }
+
+         this._hierMode = checkViewType(this._view);
+
+         if (this._hierMode) {
+            this._backButton = this._getBackButton();
+            this._breadCrumbs = this._getBreadCrumbs();
+            if (this._backButton && this._breadCrumbs) {
+               this._backButton.subscribe('onArrowActivated', this._folderEditHandler);
+               this._componentBinder = new ComponentBinder({
+                  backButton : this._backButton,
+                  breadCrumbs : this._breadCrumbs,
+                  view: this._view,
+                  backButtonTemplate: this._options.backButtonTemplate
+               });
+               this._componentBinder.bindBreadCrumbs();
+            }
+            else {
+               this._componentBinder = new ComponentBinder({
+                  view: this._view
+               });
+            }
+         }
+         else {
+            this._componentBinder = new ComponentBinder({
+               view: this._view
+            });
+         }
+
+         this._searchForm = this._getSearchForm();
+         if (this._searchForm) {
+            this._componentBinder.bindSearchGrid(
+               this._options.searchParam,
+               this._options.searchCrumbsTpl,
+               this._searchForm,
+               this._options.searchMode,
+               false,
+               this._options.keyboardLayoutRevert,
+               this._options.hierarchyViewMode);
+         }
+
+
+         this._operationsPanel = this._getOperationsPanel();
+         if (this._operationsPanel) {
+            this._componentBinder.bindOperationPanel(!this._options.showCheckBoxes, this._operationsPanel);
+            //Временное решение. Необходимо для решения ошибки: https://inside.tensor.ru/opendoc.html?guid=18468d65-ec58-4e2d-a0f0-fc35af4dfde5
+            //Если Browser переделать на flex-box то такие придроты не понадобятся.
+            //Выписана задача https://inside.tensor.ru/opendoc.html?guid=04d2ea0c-133c-4ee1-bf9b-4b222921b7d3
+            this._operationsPanel.subscribe('onToggle', function() {
+               self._container.toggleClass('controls-Browser__operationPanel-opened', this.isVisible());
+            });
+         }
+
+         this._filterButton = this._getFilterButton();
+         this._fastDataFilter = this._getFastDataFilter();
+
+         if (this._filterButton) {
+            this.subscribeTo(this._filterButton, 'onApplyFilter', this._onApplyFilterHandler);
+            if(this._options.historyId) {
+               this._bindFilterHistory();
+            } else {
+               this._notifyOnFiltersReady();
+            }
+         } else {
+            this._notifyOnFiltersReady();
+         }
+
+         if(this._options.pagingId && this._view.getProperty('showPaging')) {
+            this._componentBinder.bindPagingHistory(this._view, this._options.pagingId);
+         }
+
+         //Необходимо вызывать bindFilters, который выполняет подписку на applyFilter, позже, иначе произойдет неверная синхронизация фильтров при биндинге структуры
+         if (this.isInitialized()) {
+            this._onInitBindingsHandler();
+         }
+         else {
+            this.subscribe('onInit', this._onInitBindingsHandler);
+         }
+      },
+
+      _onItemActivate: function(e, itemMeta) {
+         this._notifyOnEditByActivate(itemMeta);
+      },
+
+      _onApplyFilter:function() {
+         this.getView().setActive(true);
+      },
+
+      _onInitBindings: function() {
+         if( (this._filterButton || this._fastDataFilter) &&
+            /* Новый механизм включаем, только если нет биндов на структуру фильтров (такая проверка временно) */
+            (!this._filterButton || this._filterButton && !cFind(this._filterButton._getOptions().bindings, function(obj) {return obj.propName === 'filterStructure'}))) {
+            this._componentBinder.bindFilters(this._filterButton, this._fastDataFilter, this._view);
+         }
       },
 
       /**
@@ -454,8 +512,13 @@ define('js!SBIS3.CONTROLS.Browser', [
       },
 
       _subscribeToColumnsEditor: function() {
-         this.subscribeTo(this._columnsEditor, 'onSelectedColumnsChange', this._onSelectedColumnsChange.bind(this));
-         this.subscribeTo(this._columnsEditor, 'onColumnsEditorShow', this._onColumnsEditorShow.bind(this));
+         this.subscribeTo(this._columnsEditor, 'onSelectedColumnsChange', this._onSelectedColumnsChangeHandler);
+         this.subscribeTo(this._columnsEditor, 'onColumnsEditorShow', this._onColumnsEditorShowHandler);
+      },
+
+      _unsubscribeFromColumnsEditor: function () {
+         this.unsubscribeFrom(this._columnsEditor, 'onSelectedColumnsChange', this._onSelectedColumnsChangeHandler);
+         this.unsubscribeFrom(this._columnsEditor, 'onColumnsEditorShow', this._onColumnsEditorShowHandler);
       },
 
       _bindFilterHistory: function() {
@@ -492,7 +555,7 @@ define('js!SBIS3.CONTROLS.Browser', [
       },
 
       _getView: function() {
-         return this._getLinkedControl('browserView');
+         return this._getLinkedControl(this._options.viewName);
       },
       _getFilterButton: function() {
          return this._getLinkedControl('browserFilterButton');

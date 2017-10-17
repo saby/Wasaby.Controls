@@ -2,8 +2,8 @@
 define('js!SBIS3.CONTROLS.Action.OpenDialog', [
    'js!SBIS3.CONTROLS.Action.Action',
    'js!SBIS3.CONTROLS.Action.DialogMixin',
-   'js!WS.Data/Entity/Model',
-   'js!WS.Data/Utils'
+   'WS.Data/Entity/Model',
+   'WS.Data/Utils'
 ], function(Action, DialogMixin) {
    'use strict';
 
@@ -45,13 +45,13 @@ define('js!SBIS3.CONTROLS.Action.OpenDialog', [
        * @property {WS.Data/Entity/Record} item Экземпляр класса записи. Переопределяет значение опции {@link SBIS3.CONTROLS.FormController#record record}.
        * @property {Object} filter Набор инициализирующих значений, который используется при создании новой записи. Переопределяет значение опции {@link SBIS3.CONTROLS.FormController#initValues initValues}.
        * @property {Object} readMetaData Набор инициализирующих значений, который используется при чтении записи. Переопределяет значение опции  {@link SBIS3.CONTROLS.FormController#readMetaData readMetaData}.
-       * @property {String} initializingWay переопределяет <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/editing-dialog/initializing-way/'>способ инициализации данных диалога</a>.
+       * @property {String} initializingWay переопределяет <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/initializing-way/'>способ инициализации данных диалога</a>.
        * @property {Object} dialogOptions Объект с пользовательскими опциями, которые передаются в диалог редактирования в <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/oop/#configuration-class-parameters'>секцию _options</a>.
        * @property {Object} componentOptions Объект с конфигурацией контрола, на основе которого создаётся диалог редактирования (см. {@link mode}).
        * @property {Boolean} isNewRecord Установив этот флаг, при закрытии диалога будет отображено диалоговое окно для подтверждения действия. Если в диалоге выбран ответ "Нет", то запись будет удалена из БД при выполнении условий: на диалоге открыта новая запись (создана в БД и ей присвоен ID) и для записи не были изменены поля.
        */
       /**
-       * Производит <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/editing-dialog/open/'>открытие диалога редактирования</a>.
+       * Производит <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/open/'>открытие диалога редактирования</a>.
        * @param {ExecuteMetaConfig} meta Параметры, которые переопределяют конфигурацию диалога.
        * @example
        * <pre>

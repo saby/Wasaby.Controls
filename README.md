@@ -14,7 +14,7 @@
 
         git clone git@git.sbis.ru:ws/data.git /path/to/ws-data
         
-4. Слинковать директорию `/path/to/ws-data/WS.Data` в поддиректорию `components/WS.Data`:
+4. Слинковать директорию `/path/to/ws-data/WS.Data` в поддиректорию `WS.Data`:
 
 5. Установить [Node.js](http://nodejs.org/) и [NPM](http://npmjs.com).
 

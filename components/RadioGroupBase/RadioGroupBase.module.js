@@ -31,28 +31,18 @@ define('js!SBIS3.CONTROLS.RadioGroupBase', ['js!SBIS3.CONTROLS.ButtonGroupBase',
 
       _drawSelectedItem : function(id, index) {
          //TODO не будет работать с перечисляемым. Переписать
-         /* Когда Enum работаем через хэши, в остальных случаях через id */
-         var isEnum = cInstance.instanceOfModule(this.getItems(), 'WS.Data/Type/Enum'),
-             item = this._getItemsProjection().at(index),
-             controls = this.getItemsInstances();
-         
+         var
+            item = this._getItemsProjection().at(index),
+            controls = this.getItemsInstances();
          if (item) {
-            var itemId;
-   
-            if (!isEnum) {
-               item = item.getContents();
-               itemId = item.get(this._options.idProperty);
-            } else {
-               itemId = item.getHash();
-            }
-            
+            var hash = item.getHash();
             for (var i in controls) {
                if (controls.hasOwnProperty(i)) {
-                  if (!itemId) {
+                  if (hash === undefined) {
                      controls[i].setChecked(false);
                   }
                   else {
-                     if (controls[i].getContainer().data(isEnum ? 'hash' : 'id') == itemId) {
+                     if (controls[i].getContainer().data('hash') == hash) {
                         controls[i].setChecked(true);
                      }
                      else {

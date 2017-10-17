@@ -51,9 +51,6 @@ define('js!SBIS3.CONTROLS.SearchController',
        * @private
        */
       _reloadView: function(view, filter) {
-         if (view.scrollToOffset) {
-            view.scrollToOffset(0);
-         }
          view.reload(filter, view.getSorting(), 0);
       },
 

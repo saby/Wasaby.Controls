@@ -3,7 +3,7 @@
  */
 define([
    'js!SBIS3.CONTROLS.Utils.ItemsSelection',
-   'js!WS.Data/Entity/Model',
+   'WS.Data/Entity/Model',
    'js!SBIS3.CONTROLS.Action.SelectorAction',
    'js!SBIS3.CONTROLS.SelectorButton'
 ], function (ItemsSelection, Model, SelectorAction, SelectorButton) {

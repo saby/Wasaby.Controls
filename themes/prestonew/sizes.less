@@ -1,14 +1,17 @@
 //default-sizes
 @default-height:               3rem;
 @default-border-width:         2px;
-@default-font-size-title:      1.4285rem;
-@default-font-size:            1.1428rem;
+@default-text-size:            1.1428rem;
+@small-text-size:              .857rem;
+@large-text-size:              1.14rem;
+@huge-text-size:               1.43rem;
 @default-icon-size:            1.32rem;
 @default-icon-size-medium:     1.78rem;
 @default-icon-size-large:      3rem;
 @default-line-height:          1.5rem; //42px;
 @default-base-line-height:     2.8571rem;//@default-height - 2 * @default-border-width
-@default-padding-small:        0.5rem;
+@default-padding:              0.5rem;
+@default-padding-small:        0.25rem;
 //textbox
 @text-box-information-icon-size:                  1rem;
 //text-area
@@ -26,15 +29,15 @@
 @search-button-wrapper-padding:                   0;
 @search-loop-size:                                2.8571rem;
 @search-form-icon-padding:                        0;
-@search-field-padding:                            0 0 0 @default-padding-small;
+@search-field-padding:                            0 0 0 @default-padding;
 //fieldLink
 @fieldLink-showAll-shadow-width:                  1rem;
 @fieldLink-linkItem-line-height:                  @default-base-line-height;
 @fieldLink-icon-size:                             2.8571rem;//todo: при переходе на cbuc-icons отказаться от этого щита
 //treeview
-@tree-view-folder-text-size:                      @default-font-size;
+@tree-view-folder-text-size:                      @default-text-size;
 //button
-@button-border-radius:                            0px;
+@button-border-radius:                            1px;
 //back-button
 @back-button-margin-before:                       0 4px 0 0;//todo: romanov
 @back-button-padding-before:                      1px 0;//todo: romanov
@@ -44,6 +47,7 @@
 @menu-link-menu-revert-item-container-padding:    0px;//todo romanov
 //menuItem
 @menu-item-text-margin:                           0px;//todo romanov
+@controls-filterButton-margin-value:              0px;
 //date-range
 @date-range-slider-year-state-width:                                  136px;//todo: mironov
 @date-range-slider-value-min-width:                                   124px;//todo: mironov
@@ -75,7 +79,7 @@
 @controls-SubmitPopup-size-big-width:                    800px;//todo: stepin
 @controls-SubmitPopup-button-mini-min-width:             150px;//todo: stepin
 //dd-list
-@DropdownList-picker-menu-font-size:                     @default-font-size;//todo: krasilnikov
+@DropdownList-picker-menu-font-size:                     @default-text-size;//todo: krasilnikov
 @DropdownList-picker-fastdatafilter-offset:              0 0 0 2px;//todo: krasilnikov
 @DropdownList-picker-margin-top:                         0;//todo: krasilnikov
 @DropdownList-picker-border:                             0;//todo: krasilnikov
@@ -90,3 +94,575 @@
 @controls-movedialog-width:                     536px;
 //time-header:
 @time-header-icon-size:							@default-icon-size-large;
+//--------------------------------------------------------------------------------------------------------------------//
+@icon-small-size:                         1.32rem;
+@icon-medium-size:                        1.79rem;
+@icon-large-size:                         3rem;
+@closeButtonWidth:                        3rem;
+@closeButtonHeight:                       3rem;
+@font-popup-size:                         1.43rem;
+@font-folder-size:                        1.14rem;
+@check-box-default-font-size:             1.14rem;
+@closeBigButtonHeight:                    1.43rem;
+@link-line-height:                        normal;
+@link-font-size:                          1.14rem;
+@link-icon-field-margin:                  0 0 0 .14rem;
+@icon-button-round-border-width:          auto;
+@icon-button-round-border-height:         2.286rem;
+@icon-button-round-border-line-height:    2.2rem;
+@border-radius:                           0;
+@icon-button-border-width:                0px;
+//ListView
+@list-view-items-toolbar-icon-button-border-width:0;
+@list-view-items-toolbar-icon-button-border-radius:0;
+@list-view-items-toolbar-icon-button-border-font-size:@icon-large-size;
+@icon-button-edit-round-border-height:    @icon-large-size;
+@icon-button-edit-round-border-width:     @icon-large-size;
+@icon-button-edit-round-border-line-height:@icon-large-size;
+@listView-empty-data-padding-top:         1.9285rem;
+//Button
+@button-height:                           3rem;
+@button-font-size:                        1.428rem;
+@button-min-width:                        0.86rem;
+@button-padding:                          0 .5rem;
+@button-icon-top-offset:                  0.4285rem;                     // top offset of 16x16 icon
+@button-icon-gap:                         .14rem;                      // gap between icon and text
+@button-icon-text-margin:                 0 0.2857rem 0 1rem;             // margin of text following 16x16 icon
+@button-icon-big-top-offset:              0.2857rem;                     // top offset of 24x24 icon
+@button-icon-left-offset:                 0.5rem;
+@button-icon-medium-left-offset:          0px; //calc (0 - 2px) - invalid, calc(0px - 2px) - valid
+@button-icon-large-left-offset:           0px; //calc (0 - 2px) - invalid, calc(0px - 2px) - valid
+@button-icon-big-text-margin:             0 0.2857rem 0 1.2857rem;             // margin of text following 24x24 icon
+@button-text-margin:                      0 0.57rem 0 0.57rem;
+@button-text-margin-left:                 .57rem;
+@button-text-margin-right:                .57rem;
+@button-text-padding:                     0;                        // padding of text
+@button-ipad-line-height:                 normal;
+//FilterPanelChooser
+@controls-filterButton-area-header-height:             3rem;
+@filter-panel-chooser-list-view-item-padding:          0 0 0 0.86rem;
+@filter-panel-chooser-list-view-check-box-top:         0.2142rem;
+@filter-panel-chooser-list-view-check-box-left:        .14rem;
+@filter-panel-chooser-list-view-title-max-height:      5.14rem;
+@filter-panel-chooser-list-view-title-shadow-height:   1.14rem;
+@button-border-width:                     2px;
+// Big button
+@button-big-padding:                      @button-padding;
+@button-big-icon-top-offset:              0.7142rem;                             // top offset of 16x16 icon
+@button-big-icon-left-offset:             0.57rem;
+@button-big-icon-text-margin:             @button-icon-text-margin;         // margin of text following 16x16 icon
+@button-big-icon-big-top-offset:          0.5357rem;
+@button-large-height:                     @button-height;
+@button-large-border-radius:               0;
+@button-large-font-size:                  @button-font-size;
+//Button group
+@button-group-horizontal-item-margin:     0 1.75rem 0 0;
+@button-group-vertical-item-margin:       0 0 1.75rem 0;
+// Normal default button
+@button-checked-border-width:             @button-border-width;
+@button-checked-padding:                  @button-padding;
+// Tab button
+@tab-button-large-secondAddText-font-size:0.4642rem;
+//Radio button
+@radio-button-text-margin:                0;
+@radio-button-height:                     auto;
+@radio-button-lineheight:                 normal;
+@radio-button-icon-width:                 .928rem;
+@radio-button-icon-height:                .928rem;
+@radio-button-icon-line-height:           normal;
+@radio-button-icon-border-radius:         .928rem;
+@radio-button-dot-size:                   .928rem;
+@radio-button-dot-margin:                 -0.1rem  0 0 -0.1rem;
+@radio-button-icon-border-width:          0.1rem;
+@radio-button-text-font-size:             1.143rem;
+//Checkbox
+@check-box-icon-size:                     1.786rem;
+@check-box-icon-successful-size:          1.786rem;
+@check-box-font-size:                     1.143rem;
+@check-box-icon-successful-top:           -.143rem;
+@check-box-icon-successful-top-ie:        .75rem;
+@check-box-icon-successful-left:          .214rem;
+@check-box-icon-null-size:                .643rem;
+@check-box-caption-padding:               .322rem 0;
+@check-box-icon-box-size:                 1.143rem;
+@check-box-caption-line-height:           1.143rem;
+//Switcher
+@switcher-dot-margin:                     0;
+@switcher-dot-margin-hover:               0;
+@switcher-dot-radius:                     .2rem;
+@switcher-width:                          3.57rem;
+@switcher-height:                         1.7857rem;
+@switcher-btn-radius:                     1rem;
+@switcherline-height:                     .1rem;
+@switcher-btn-border-width:	              .1rem;
+@switcher-btn-border-hover:               .1rem;
+@switcher-btn-size:	                      .93rem;
+@switcher-btn-margin:                     .357rem;
+@switcher-border-radius:                  1rem;
+@switcher-width:                          3.571rem;
+@switcher-height:                         1.786rem;
+@switcher-border-radius:                  2.143rem;
+@switcher-hover-border-width:             2px;
+@switcherline-height:                     2px;
+@switcherline-width:                      2.5rem;
+@switcher-btn-size:                       0.929rem;
+@switcher-btn-border-width:               0.1072rem;
+@switcher-btn-hover-border-width:         @switcher-btn-border-width;
+@switcher-dot-size:                       @switcher-btn-size;
+//SwitcherDouble
+@switcher-do-text-margin:                       0.571rem;
+//Menu
+@popup-font-size:                         1.43rem; // откатил размер из-за того, что меню стало меньше чем кнпока т.к. в самих кнопках размер шрифта используется больший
+@menu-subpopup-margin:                    0 0 0 @default-border-width;
+@menu-expand-width:                       @icon-large-size;
+@menu-expand-height:                      @icon-large-size;
+@menu-expand-top-offset:                  .286rem;
+@menu-expand-right-offset:                0;
+@menu-header-height:                      3.57rem;
+@menu-expand-icon-font-size:              @icon-large-size;
+@menu-big-header-height:                  1.1428rem;
+@menu-header-padding:                     .14rem 0.57rem;
+@popup-header-font-weight:                normal;
+//Menu item
+@menu-item-height:                        3.57rem;
+@menu-item-font-size:                     @default-text-size;
+@menu-item-icon-16-margin:                0.2142rem 0 0.2142rem 2.2857rem;
+@menu-item-default-padding:               0 .57rem;
+@menu-item-icon-top-offset:               0.2805rem; // (3.57 - 3) /2
+@menu-item-icon-left-offset:              0;
+@menu-item-icon24-top-offset:             0;
+@menu-item-icon24-top-offset-big:         0;
+@menu-item-icon24-left-offset:            -.57rem;;
+@menu-item-line-height:                   3.57rem;
+@menu-item-padding-16:                    2rem;
+@menu-item-padding-24:                    2.5rem;
+// Menu
+@menu-button-menu-margin:                 -10px 0 0 -2px;
+@menu-icon-menu-margin:                   -.354rem 0 0 -.2498rem;
+@menu-icon-big-menu-margin:               -.36rem 0 0 .358rem;
+@menu-padding:                            0;
+//Menu link
+@menu-link-menu-item-container-padding:	  0;
+// Search form
+@search-button-wrapper-padding:				0;
+//  Combo box
+@combo-box-picker-item-font-size:         1.14rem;
+@combo-box-picker-item-padding:           1.14rem 0.57rem 1.14rem 0.57rem;
+@combo-box-picker-item-font-size:         1.14rem;
+// Suggest
+@suggest-list-footer-height:              3.143rem;
+@suggest-list-footer-padding:             0 0.857rem;
+//Date picker
+@date-picker-button-margin-left:          0;
+@date-picker-button-vertical-align:       top;
+@date-picker-button-size:                 3rem;
+@date-picker-button-line-height:          3rem;
+//Calendar
+@calendar-width:                          auto;
+//Month picker
+@month-picker-arrow-width:                .2857rem;
+@month-picker-left-arrow-border-width:    .2857rem .2857rem .2857rem 0;
+@month-picker-field-height:               0.86rem;
+@month-picker-right-arrow-border-width:   .2857rem .2857rem .2857rem 0;
+//Data Range
+@date-range-dash-width:                   0.5rem;
+@date-range-dash-margin:                  0 0.286rem 0.286rem 0.286rem;
+@date-range-button-vertical-align:        top;
+@date-range-button-size:                  3rem;
+@date-range-button-line-height:           @date-range-button-size;
+@date-range-button-margin:                0;
+@date-range-big-choose-header-date-box-font-size: 1rem;
+//Data Range Slider
+@date-range-slider-font-size:             1.14rem;
+@date-range-slider-value-font-weight:     normal;
+//Date Range Choose
+@date-range-choose-border-width:          0; // В theme.less прописан бордер у флоат арии
+@date-range-choose-border-hover-width:    0;
+@date-range-choose-month-height:          1.85rem;
+@date-range-choose-short-width:           16rem;
+@date-range-choose-font-size:             1rem;
+@date-range-choose-current-value-font-size:1.14rem;
+@date-range-choose-current-value-font-weight:normal;
+@date-range-choose-current-value-height:  3.57rem;
+@date-range-choose-current-value-line-height:3.43rem;
+@date-range-choose-year-height:           3rem;
+@date-range-choose-year-font-size:        1.14rem;
+@date-range-choose-year-margin-bottom:    0.286rem;
+@date-range-choose-year-prev-next-btns-font-size:1.5rem;
+@date-range-choose-year-line-height:      3rem;
+@date-range-choose-year-prev-next-btns-width:3rem;
+@date-range-choose-year-prev-next-btns-font-size:1.5rem;
+@date-range-choose-home-icon-width:       3rem;
+@controls-date-range-year-marginleft:     0.4rem;
+@date-range-big-choose-months-font-size:                                 1rem;
+@date-range-big-choose-months-margin:                                    0.286rem;
+@date-range-big-choose-months-range-width:                               5.429rem;
+@date-range-big-choose-months-button-first-height:                       1.786rem;
+@date-range-big-choose-months-button-last-height:                        1.786rem;
+@date-range-big-choose-date-range-picker-table-element-height:           2.8rem;
+@date-range-big-choose-date-range-picker-left:                           @date-range-big-choose-months-range-width + 0.857rem;
+@date-range-big-choose-date-range-picker-caption-height:                 2.42rem;
+@date-range-big-choose-years-height:                                     3.57rem;
+@date-range-big-choose-header-padding:                                   0.256rem 0 0.256rem 0;
+@date-range-big-choose-header-home-button-size:                          3rem;
+@date-range-big-choose-header-home-button-font-size:                     @date-range-big-choose-header-home-button-size;
+@date-range-big-choose-header-home-button-margin-left:                   0;
+@date-range-big-choose-header-date-pickers-margin-right:                 3.286rem;
+@date-range-big-choose-date-range-picker-caption-font-size:              @default-text-size;
+@date-range-big-choose-header-date-picker-margin-top:                    0;
+@date-range-big-choose-header-apply-button-size:                         3rem;
+@date-range-big-choose-header-apply-button-font-size:                    @date-range-big-choose-header-apply-button-size;
+@date-range-big-choose-header-apply-button-icon-margin-left:             -1rem;
+@date-range-big-choose-header-apply-button-margin-left:                  0;
+@date-range-big-choose-header-range-dash-width:                          0.286rem;
+@date-range-big-choose-header-range-dash-margin:                         1.5rem 0.286rem 0.286rem;
+@date-range-big-choose-years-panel-top-padding:                          0.286rem;
+@date-range-big-choose-years-panel-bottom-padding:                       0.286rem;
+@date-range-big-choose-years-panel-toggle-choose-year-button-font-size:  1.43rem;
+@date-range-big-choose-years-panel-wrapper-font-weight:                  normal;
+@date-range-big-choose-years-panel-toggle-choose-year-button-line-height:3rem; // сделать по другому
+@date-range-big-choose-years-panel-current-year-button-line-height:      3rem;
+@date-range-big-choose-years-panel-back-button-font-size:                3rem;
+@date-range-big-choose-years-panel-back-button-line-height:              3rem;
+@date-range-big-choose-years-range-font-size:                            1rem;
+@date-range-big-choose-body-height:                                      21.429rem;
+@date-range-big-choose-months-range-btn-height:                          5.107rem;
+@date-range-big-choose-month-range-picker-month-width:                   6.07rem;
+@date-range-big-choose-month-range-picker-month-height:                  5.07rem;
+@date-range-big-choose-month-range-picker-caption-height:                1.7857rem;
+@date-range-big-choose-month-range-picker-caption-font-size:             1.14rem;
+@date-range-big-choose-month-range-picker-table-element-height:          .5rem;
+@date-range-big-choose-month-range-picker-table-element-font-size:       .4rem;
+@date-range-big-choose-month-range-padding:                              0.2857rem;
+//Edit at place
+@edit-at-place-wrapper-text-area-padding:             0.1785rem;
+@edit-at-place-wrapper-border-width:                  .0357rem;
+@edit-at-place-editor-overlay-margin:                 -.3571rem 0 0 -3571rem;
+@edit-at-place-editor-overlay-padding:                .3571rem ;
+@edit-at-place-editor-overlay-border:                 none;
+@edit-at-place-editor-overlay-border-radius:          .1071rem;
+//List view
+@controls-view-padding-S:                 .3333rem;
+@list-view-min-height:                    8rem;
+@listView-servicefooter-height:           1.47rem;
+@listView-servicefooter-padding:          0 0.8rem;
+@listView-loadmorebutton-font-size:       0.8571rem;
+@list-view-actions-item-height:           @icon-small-size;
+@list-view-actions-margin:                0 0.14rem;
+@list-view-actions-icon-top:              .82rem;
+@list-view-actions-menu-text-margin:      .64rem 0 .2142rem 2.92rem;
+@list-view-items-toolbar-elements-margin: 0 0.14rem;
+@list-view-items-toolbar-line-height:     1.75rem;
+@list-view-items-toolbar-vertical-line-height:0.86rem;
+@list-view-items-toolbar-icon-size:       1.32rem;
+@list-view-items-toolbar-menu-icon-size:  @icon-large-size;
+@touch-mode-items-toolbar-icon-margin-top:-0.86rem;
+@list-view-actions-menu-icon-width:       @icon-small-size;
+@list-view-actions-menu-close-top:        .14rem;
+@list-view-actions-menu-close-right:      .14rem;
+@list-view-actions-menu-close-height:     1.75rem;
+@list-view-actions-menu-close-width:      1.75rem;
+@listView-empty-data-font-size:           1rem;
+@list-view-scroll-height:                 3.5714rem;
+@controls-AjaxLoader-size:                3.5714rem;
+@controls-AjaxLoader-block-padding:       0;
+@controls-AjaxLoader-background:          none;
+@scrollPaging-padding:                    3.6666rem;
+//Tree view
+@tree-view-expand-width:                  1.7857rem;
+@tree-view-expand-height:                 auto;
+@tree-view-expand-icon-size:              1.7857rem;
+@tree-view-level-padding:                 2.0714rem;
+@tree-view-expand-margin:                 0 .2857rem 0 0;
+@tree-view-editArrow-top:                 0.176rem;
+@tree-view-expand-open-border-width:      .2857rem .2857rem 0 .2857rem;
+@tree-view-item-content-margin:           0 0 0 .7142rem;
+@tree-view-child-container-padding:       @tree-view-item-content-margin;
+@tree-view-hier-wrapper-width:            .7142rem;
+@tree-view-hier-wrapper-height:           .7142rem;
+//Group
+@list-view-separator-height:              1.7857rem;
+//Data grid
+@data-grid-header-cell-height:            1.7857rem;
+@data-grid-cell-line-height:              1.562rem;
+@data-grid-header-cell-padding:           @data-grid-cell-padding;
+@data-grid-header-cell-padding-side:      .3571rem;
+@data-grid-header-cell-font-size:         0.86rem;
+@data-grid-header-cell-icon-size:         1.5rem;
+@data-grid-header-cell-sorting-icon-size: 1rem;
+@data-grid-cell-height:                   1.7857rem;
+@data-grid-cell-padding:                  0 .28571rem;
+@data-grid-ms-first-content-cell-padding-left:@data-grid-header-cell-padding-side;
+@data-grid-td-checkbox-width:             1.75rem;
+@data-grid-td-visible-checkbox-width:     1.75rem;
+@data-grid-check-box-top:                 -@default-border-width;
+@data-grid-money-header-cell-padding:     1.43rem;
+@data-grid-money-header-cell-padding-last:1.92rem;
+@data-grid-partScroll-arrowLeft-top-shift: -0.8571rem;
+@data-grid-partScroll-arrowRight-top-shift:-.857rem;
+@data-grid-partScroll-thumb-margin:       1.78rem;
+// PrintDialog
+//По какой-то причине Firefox берёт font-size не из html, а свой, причем только при расчёте этой ширины
+@controls-printdialog-min-width:          27em;
+@controls-printdialog-activate-right:     3.1785rem;
+@controls-printdialog-activate-margin-top:8px;
+//MergeDialog
+@controls-MergeDialogTemplate-height:                                       21rem;
+@controls-MergeDialogTemplate-hint-font-size:                               @small-text-size;
+@controls-MergeDialogTemplate-treeDataGridView-padding-bottom:              .8571rem;
+@controls-MergeDialogTemplate-treeDataGridView-first-cell-width:            1rem;
+//OperationsPanel
+@controls-OperationsPanel-height:                                       3.57rem;
+@controls-OperationsPanel-actions-margin:                               0 .2857rem;
+@controls-OperationsPanel-menu-icon-size:                               @icon-large-size;
+@controls-OperationsPanel-menu-padding-right:                           @controls-OperationsPanel-menu-icon-size;
+@controls-OperationsPanel-actions-align:                                baseline;
+@controls-OperationsPanel-separator-width:                              2px;
+@controls-OperationsPanel-separator-height:                             1.9285rem;
+@controls-OperationsPanel-separator-line-height:                        2.5rem;
+@controls-OperationsPanel-menu-close-button-right:                      0rem;
+//OperationsPanelButton
+@controls-OperationsPanelButton-width:    0.86rem;
+@controls-OperationsPanelButton-vert-height:3.57rem;
+@controls-OperationsPanelButton-font-size: @icon-large-size;
+//EditInPlace
+@controls-editInPlace-editor-padding:     .2857rem;
+//MultiView
+@multiView-tile-item-min-width:           4.5714rem;
+@multiView-tile-item-image-margin:        .3571rem 1.43rem;
+@multiView-tile-item-text-margin:         .25rem;
+//DropdownList
+@DropdownList-picker-head-weight:           normal;
+@DropdownList-picker-max-width:             28.57rem;
+//ProgressBar
+@controls-ProgressBar-height:             1.3214rem;
+@controls-ProgressBar-width:              14.286rem;
+@controls-ProgressBar-border-radius:      0;
+@controls-ProgressBar-value-padding:      0 0.214rem;
+@controls-ProgressBar-value-font-size:    1rem;
+//Pager
+@controls-Pager-height:                   3.14rem; //3 rem - button + 2px *2 border
+//FilterButton
+@controls-filterButton-button-width:	   3rem;
+@controls-filterButton-height:            3rem;
+@controls-filterButton-button-height:		3rem;
+@controls-filterButton-button-height:		3rem;
+@controls-Popup-closeButton-top:          8px;
+@controls-filterButton-picker-close-top:  .29rem;
+@controls-filterButton-button-margin:     0;
+@controls-filterButton-button-margin-right-align:.2857rem 0 .2857rem .2857rem;
+@controls-filterButton-area-text-weight:	normal;
+@controls-filterButton-area-header-padding:.29rem 3rem .29rem .86rem;
+@controls-filterButton-area-text-size:    1.43rem;
+@controls-filterButton-area-text-margin:   0 .86rem 0 0;
+@controls-filterButton-clear-margin-right: .86rem;
+@controls-filterButton-area-content-margin:0 .28rem .86rem .86rem;
+@controls-filterButton-line-height:       1.4642rem;
+@controls-filterButton-filterLine-margin: 0;
+//FieldLink
+@fieldLink-linkItem-cross-width:    3rem;
+@fieldLink-afterField-padding:      0;
+@controls-filterButton-area-header-width:    23.92rem;
+//BackButton
+@back-button-font-size:                   1.43rem;
+@back-button-line-height:                 1.7857rem;
+@back-button-height:                      1.7857rem;
+//BreadCrumbs
+@breadcrumbs-top:                         0;
+@breadcrumbs-smallItems-font-size:        1rem;
+@breadcrumbs-arrow-top:                   1px;
+@breadcrumbs-small-items-top:             0;
+// EditDialog
+@editdialog-applybutton-width:            auto;
+@editdialog-applybutton-right:            3.2rem; //ширина кнопки закрытия окна 36px +.07rem; на небольшой отступ между кнопкой сохранить (в ie8 нет скруглений и кнопки склеиваются)
+@editdialog-window-title-margin-right:    11rem; //ширина кнопки закрытия окна 36px + 90px ширина кнопки сохранить +.07rem; на небольшой отступ между ними
+//MoveDialog
+@controls-Paging-item-width:              0.86rem;
+@controls-Paging-btn-margin:              0 .2857rem 0 0;
+@controls-Paging-btn-padding:             .2857rem;
+@controls-Paging-padding:                 0;
+@controls-movedialog-min-height:          3.5714rem;
+@controls-movedialog-max-width:           25rem;
+@controls-movedialog-width:               25rem;
+//ScrollContainer
+@controls-ScrollContainer-top-gradient-height:0.857rem;
+//Scrollbar
+@controls-Scrollbar-width:                .357rem;
+@controls-Scrollbar-animated-width:       @controls-Scrollbar-width;
+@controls-Scrollbar-animated-right:       0;
+@controls-Scrollbar-animate-duration:     0;
+@controls-Scrollbar-thumb-border-radius:  .179rem;
+@controls-Scrollbar-min-height:           3.571rem;
+@controls-Scrollbar-thumb-margin:         0.286rem 0;
+@controls-Scrollbar-thumb-padding:        0px 0.25rem;
+//InformationPopup
+@controls-InformationPopup-closeButton-top:              6px;
+@controls-InformationPopup-closeButton-right:            6px;
+@controls-InformationPopup-closeButton-width:            1.7857rem;
+@controls-InformationPopup-closeButton-height:           1.7857rem;
+@controls-InformationPopup-closeButton-font-size:        1.7857rem;
+//SubmitPopup
+@controls-SubmitPopup-size-standard-width:28rem;
+@controls-SubmitPopup-button-min-width:   10rem;
+@controls-SubmitPopup-button-height:      3rem;
+@controls-SubmitPopup-button-margin:      0.1428rem;
+@controls-SubmitPopup-message-font-weight:normal;
+@controls-SubmitPopup-message-font-size:  1.14285rem;
+@controls-SubmitPopup-message-margin-bottom:.5714rem;
+@controls-SubmitPopup-details-color:      #8991A9;
+@controls-SubmitPopup-details-font-size:  1rem;
+@controls-SubmitPopup-body-padding:       1.6071rem;
+@controls-SubmitPopup-border-top:         none;
+@controls-SubmitPopup-border-bottom:      none;
+@controls-SubmitPopup-border-left:        none;
+@controls-SubmitPopup-border-right:       none;
+//LongOperations
+@long-operations-list-time-ctr-f-size: 16px;
+@long-operations-list-state-ctr-margin-lf: -16px;
+@long-operations-popup-collapsed-width: 420px;
+@long-operations-popup-collapsed-max-width: 420px;
+@long-operations-popup-exp-width: 600px;
+@long-operations-popup-exp-max-width: 600px;
+@long-operations-popup-header-height: 60px;
+@long-operations-popup-header-pad-rt: 54px;
+@long-operations-popup-header-icon-size: 32px;
+@long-operations-popup-header-caption-f-size: 32px;
+@long-operations-popup-header-caption-line-height: 52px;
+@long-operations-popup-collapsed-header-caption-f-size: 24px;
+@long-operations-popup-header-result-max-width: 210px;
+@long-operations-popup-header-result-min-width: 86px;
+@long-operations-popup-header-but-f-size: 24px;
+@long-operations-popup-header-but-gap-top: 7px;
+@long-operations-popup-collapsed-header-but-gap-top: 0px;
+@long-operations-popup-list-time-f-size: 21px;
+@long-operations-popup-list-border-bot: 0px none;
+@long-operations-popup-reg-but-ctr-height: 50px;
+@long-operations-popup-reg-but-line-height: 50px;
+@long-operations-popup-foot-height: 50px;
+@long-operations-popup-foot-bg: #354b62;
+@long-operations-popup-foot-f-size: 16px;
+@long-operations-popup-foot-but-gap-top: 12px;
+@long-operations-reg-filter-width: 220px;
+@long-operations-reg-filter-height: 46px;
+@long-operations-reg-filter-title-height: 40px;
+//TabButton
+@tab-button-height:                       3.57rem;
+@tab-button-inner-line-height:            3.57rem;
+@tab-button-inner-height:                 3.57rem;
+@tab-button-checked-height:               3.57rem;
+@tab-button-simple-inner-padding:         0 .857rem 0 .857rem;
+@tab-control-smple-bottomline-height:     .214rem;
+@tab-button-font-size:                    1.43rem;
+@tab-button-main-text-line-height:        @tab-button-height;
+@tab-button-checked-font-size:            1.43rem;
+@tab-button-checked-inner-font-size:      1.43rem;
+@tab-button-large-inner-max-width:		   100%;
+@tab-button-inner-padding:                0 .857rem 0 .857rem;
+@tab-button-inner-after-height:           1.928rem;
+@tab-button-inner-after-bottom:           0.821rem;
+@tab-button-inner-after-width:            @default-border-width;
+@tab-button-ff-inner-height:              @tab-button-inner-height;
+//Browser
+@controls-Paging-btn-width:               3rem;
+@controls-Paging-btn-height:              3rem;
+@controls-Paging-item-width:              3rem;
+//sundry
+@paging-font-size:                        3rem;
+@scrollpager-border:                      none;
+@scrollpager-bottom:                      .3333rem;
+@closeBigButtonWidth:                     3rem;
+@date-range-big-choose-width:				   25.8rem;
+@date-range-big-choose-left-right-width:  3rem;
+@date-range-big-choose-years-panel-current-year-button-font-size:1.43rem;
+@date-range-big-choose-date-range-picker-right:0.857rem;
+@date-range-big-choose-date-range-picker-table-element-width:2.6428rem;
+@date-range-big-choose-date-range-picker-table-element-title-padding-top: .6rem;
+@tab-buttons-height:							   3.57rem;
+@button-without-caption-min-width: 			3rem;
+@controls-toolbar-default-margin:			0;
+@controls-SelectorButton-line-height:		1.43rem;
+@controls-SelectorButton-height:				1.43rem;
+@menu-item-icon-32-margin:						0 0 0 3rem;
+@menu-item-icon-24-margin:						0 0 0 1.78rem;
+@menu-item-icon-16-margin:						0 0 0 1.32rem;
+@tab-buttons-border-bottom-height:        0.01rem;
+@commands-button-close-icon:              @icon-large-size;
+@commands-button-close-button-size:       @icon-large-size;
+@commands-button-close-button-top:        0.125rem;
+@commands-button-margin:                  -.3571rem -3.1071rem 0 0;
+@DropdownList-height: 					  3rem;
+@DropdownList-footer-buttonsBlock-height: 3.57rem;
+@DropdownList-picker-close-btn-top:       0;
+@DropdownList-picker-close-btn-right:     0;
+@DropdownList-picker-menu-item-height:    3rem;
+@DropdownList-picker-menu-item-height-ff: 4rem;
+@DropdownList-after-caption-top:          0;
+@tree-view-ellipsis-copyArrow-width:      1rem;
+@bread-crumbs-menu-padding:               0;
+@back-button-width-before:                .7rem;
+@menu-subpopup-padding:                   @bread-crumbs-menu-padding;
+//TimeHeader
+@time-header-height:                      3.5714rem;
+@time-header-font-size:                   1.42857rem;
+@time-header-title-margin-left:           .8571rem;
+@time-header-toggle-time-margin-left:     1.1428rem;
+@time-header-home-button-margin-left:     .2857rem;
+@time-header-margin:                      0;
+@time-header-offset-start-block:          0;
+// ClockPicker
+@clock-picker-height:                     19.357rem;
+@clock-picker-width:                      19.929rem;
+@clock-picker-outer-tick-radius:          1.25rem;
+@clock-picker-inner-tick-radius:          1rem;
+@clock-picker-outer-circle-radius:        7.857rem;
+@clock-picker-inner-circle-radius:        5rem;
+@clock-picker-unit-time-font-size:        1.714rem;
+@clock-picker-arrow-width:                0.036rem;
+@clock-picker-arrow-tip-border-width:     @default-border-width;
+//ddlist
+@DropdownList-footer-multisel-buttonsBlock-h:         3.57rem;
+@DropdownList-checkbox-bottom:                        0;
+@DropdownList-picker-max-height:                      20rem;
+@DropdownList-footer-select-top:                      0.28rem;
+@DropdownList-picker-menu-line-height:                3.24rem;
+@DropdownList-before-caption-wrapper-top:             0.16rem;
+@DropdownList-after-caption-wrapper-top:              0;
+@DropdownList-footer-hasMore-left:                    .57rem;
+@DropdownList-footer-hasMore-left-multiselect:        2.35rem;
+@DropdownList-footer-hasMore-top-multiselect:         1rem;
+@DropdownList-footer-hasMore-top:                     1rem;
+@DropdownList-footer-select-icon-container-size:      3rem;
+@DropdownList-footer-select-icon-size:                2.3rem;
+//money
+@money-decorator-integer-accent-results-font-size: @large-text-size;
+@money-decorator-fraction-font-size:0.8571rem;
+//sundry
+@header-height:                           3rem;
+@header-padding-left:                     0;
+@bottomStyle-items-toolbar-height:        1.78rem;
+@bottomStyle-items-toolbar-width:         1.5rem;
+@bottomStyle-items-toolbar-margin:        0;
+@bottomStyle-padding-bottom:              1.78rem;
+@bottomStyle-items-toolbar-margin-top:    .28rem;
+@image-bar-height:                        3.57rem;
+@image-bar-horizontal-padding:            0;
+@money-text-box-decimals-font-size:       @default-text-size;
+@controls-toolbar-item-vertical-align:    baseline;
+@date-range-big-choose-years-btn:         .5rem;
+@DropdownList-picker-offset:              -0.39rem 0 0 -0.67rem;
+@DropdownList-picker-fastdatafilter-offset: -0.39rem 0 0 -0.67rem;
+@DropdownList-picker-fdf-left:            -0.7rem;
+@dropdown-list-item-padding:              .1785rem 3rem .1071rem .57rem;
+@list-view-items-toolbar-bottom:          0.214rem;
+@controls-view-eip-padding-DEFAULT:       .2857rem;
+@controls-view-padding-DEFAULT:           .857rem;
+@controls-NotificationPopup-border:       none;
+@controls-NotificationPopup-border-top:   @controls-NotificationPopup-border;
+@controls-NotificationPopup-border-right: @controls-NotificationPopup-border;
+@controls-NotificationPopup-border-left:  @controls-NotificationPopup-border;
+@controls-NotificationPopup-header-padding:     0.2857rem;
+@long-operations-popup-header-line-height:      60px;
+@controls-SubmitPopup-footer-border-top:        none;
+@link-icon-margin:                        -@default-border-width 0 0;
+@radio-button-icon-margin:                0.3rem;
+@back-button-text-fontweight:             @default-font-weight;

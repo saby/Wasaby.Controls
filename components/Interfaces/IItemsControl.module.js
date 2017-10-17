@@ -91,7 +91,7 @@ define('js!SBIS3.CONTROLS.IItemsControl', [], function() {
        *     define( 'SBIS3.MyArea.MyComponent',
        *        [ // Массив зависимостей компонента
        *           ... ,
-       *           'js!WS.Data/Source/Memory' // Подключаем класс для работы со статическим источником данных
+       *           'WS.Data/Source/Memory' // Подключаем класс для работы со статическим источником данных
        *        ],
        *        function(
        *           ...,
