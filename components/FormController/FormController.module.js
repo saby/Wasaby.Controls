@@ -43,56 +43,66 @@ define('js!SBIS3.CONTROLS.FormController', [
        */
       /**
        * @event onFail Происходит в случае ошибки при сохранении или чтении записи из источника данных.
+       * @remark
+       * Событие не происходит, когда опция *hideErrorDialog* (см. команды {@link create}, {@link update}, {@link read} и {@link destroy}) установлена в значение true.
        * @param {Core/EventObject} eventObject Дескриптор события.
-       * @param {Object} error Объект с описанием ошибки. В свойстве message хранится текст ошибки, например для вывода в пользовательский интерфейс.
+       * @param {Object} error Описание ошибки. В свойстве message хранится текст ошибки, который можно использовать для вывода в пользовательском интерфейсе.
        */
       /**
-       * @event onReadModel Происходит при чтении записи из источника данных диалога редактирования.
+       * @event onReadModel Происходит после чтения записи из источника данных диалога.
        * @param {Core/EventObject} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Model} record Запись, прочитанная из источника данных (см. {@link dataSource}).
-       * @param {Object} additionalData Дополнительные данных, необходимые для синхронизации action'a.
+       * @param {WS.Data/Entity/Model} record Полученная запись.
+       * @param {Object} additionalData Метаданные. Служебная информация, необходимая для синхронизации Действия.
+       * @param {String} additionalData.idProperty Имя поля записи, в котором хранится первичный ключ. Значение параметра извлекается из опции {@link idProperty}.
+       * @param {Boolean} additionalData.isNewRecord Признак "Новая запись", который означает, что запись инициализирована в источнике данных, но не сохранена.
        */
       /**
-       * @event onAfterFormLoad Происходит при показе панели с построеной версткой по установленной записи.
+       * @event onAfterFormLoad Происходит после отображении диалога, на котором отображена разметка и данные, полученные из редактируемой записи (см. {@link record}).
+       * @remark
+       * Событие происходит при открытии диалога или при изменении редактируемой записи (см. {@link setRecord}).
        * @param {Core/EventObject} eventObject Дескриптор события.
        */
       /**
-       * @event onBeforeUpdateModel Происходит перед сохранением записи в источнике данных диалога.
+       * @event onBeforeUpdateModel Происходит перед сохранения записи в источнике данных диалога.
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Сохраняемая запись.
-       * @returns {Boolean|Error|Deferred}
+       * @returns {Boolean|Error|Deferred} Чтобы прервать сохранение записи, из обработчика события можно вернуть один из следующих результатов:
        * <ul>
-       *    <li><b>Boolean</b> - сохранение записи прервется, если вернули false</li>
-       *    <li><b>Error</b> - сохранение записи прервется, текст для сообщения об ошибке берется из error.message</li>
-       *    <li><b>Deferred</b> - сохранение приостановится до тех пор, пока deferred не завершит свою работу. В колбэк deferred'a отдается так же False|Error для того, чтобы прервать сохранение.</li>
+       *    <li><b>false</b> (тип Boolean);</li>
+       *    <li><b>экземпляр объекта Error</b> . Текст для сообщения об ошибке соответствует error.message</li>
+       *    <li>экземпляр класса {@link Core/Deferred}. Сохранение записи приостановится до тех пор, пока deferred не завершит выполнение. В callback отдается так же False|Error для того, чтобы прервать сохранение.</li>
        * </ul>
        */
       /**
-       * @event onUpdateModel Происходит при сохранении записи в источнике данных диалога.
+       * @event onUpdateModel Происходит после сохранения записи в источнике данных диалога.
+       * @remark
+       * Перед данным событием происходит {@link onBeforeUpdateModel}.
        * @param {Core/EventObject} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Model} record Сохраняемая запись.
+       * @param {WS.Data/Entity/Model} record Сохранённая запись.
        * @param {Object} additionalData Метаданные. Служебная информация, необходимая для синхронизации Действия.
        * @param {String} additionalData.key Идентификатор сохранённой записи.
-       * @param {String} additionalData.idProperty Название поля записи, в котором хранится её первичный ключ. Значение параметра извлекается из опции {@link idProperty}.
-       * @param {Boolean} additionalData.isNewRecord Признак того запись была создана в БД.
+       * @param {String} additionalData.idProperty Имя поля записи, в котором хранится первичный ключ. Значение параметра извлекается из опции {@link idProperty}.
+       * @param {Boolean} additionalData.isNewRecord Признак "Новая запись", который означает, что запись инициализирована в источнике данных, но не сохранена.
        */
       /**
-       * @event onDestroyModel Происходит при удалении записи из источника данных диалога.
-       * @param {Core/EventObject} eventObject Дескриптор события.
-       * @param {WS.Data/Entity/Model} record Запись, которая была удалена из источника данных (см. {@link dataSource}).
-       * @param {Object} additionalData Метаданные. Служебная информация, необходимая для синхронизации Действия.
-       * @param {String} additionalData.idProperty Название поля записи, в котором хранится её первичный ключ. Значение параметра извлекается из опции {@link idProperty}.
-       * @param {Boolean} additionalData.isNewRecord Признак того запись была создана в БД.
-       */
-      /**
-       * @event onCreateModel Происходит, когда новая запись успешно создана в источнике данных.
+       * @event onDestroyModel Происходит после удаления записи из источника данных диалога.
        * @remark
-       * Настройку источника данных производят в опции {@link dataSource}.
+       * Конфигурацию источника данных устанавливают в опции {@link dataSource}.
+       * @param {Core/EventObject} eventObject Дескриптор события.
+       * @param {WS.Data/Entity/Model} record Удаленная запись.
+       * @param {Object} additionalData Метаданные. Служебная информация, необходимая для синхронизации Действия.
+       * @param {String} additionalData.idProperty Имя поля записи, в котором хранится первичный ключ. Значение параметра извлекается из опции {@link idProperty}.
+       * @param {Boolean} additionalData.isNewRecord Признак "Новая запись", который означает, что запись инициализирована в источнике данных, но не сохранена.
+       */
+      /**
+       * @event onCreateModel Происходит после создания новой записи в источнике данных.
+       * @remark
+       * Конфигурацию источника данных устанавливают в опции {@link dataSource}.
        * @param {Core/EventObject} eventObject Дескриптор события.
        * @param {WS.Data/Entity/Model} record Новая запись. Значения её полей можно предустановить в опции {@link initValues}.
        * @param {Object} additionalData Метаданные. Служебная информация, необходимая для синхронизации Действия.
-       * @param {String} additionalData.idProperty Название поля записи, в котором хранится её первичный ключ. Значение параметра извлекается из опции {@link idProperty}.
-       * @param {Boolean} additionalData.isNewRecord Признак того запись была создана в БД.
+       * @param {String} additionalData.idProperty Имя поля записи, в котором хранится первичный ключ. Значение параметра извлекается из опции {@link idProperty}.
+       * @param {Boolean} additionalData.isNewRecord Признак "Новая запись", который означает, что запись инициализирована в источнике данных, но не сохранена.
        */
       $protected: {
          _updateDeferred: undefined,
