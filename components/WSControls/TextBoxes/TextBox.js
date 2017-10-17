@@ -1,52 +1,74 @@
 define('js!WSControls/TextBoxes/TextBox',
    [
-      'js!WSControls/TextBoxes/TextBoxBase',
+      'Core/Control',
       'tmpl!WSControls/TextBoxes/TextBox',
       'tmpl!WSControls/TextBoxes/resources/textFieldWrapper',
       'js!WS.Data/Type/descriptor',
-      'js!WSControls/TextBoxes/resources/CalcInputText',
+      'js!WSControls/TextBoxes/resources/CalcInputValue',
       'js!WSControls/TextBoxes/resources/SelectionUtil',
+      'Core/Validators/IValidatable',
       'css!SBIS3.CONTROLS.TextBox'
    ],
-   function(TextBoxBase, template, textFieldWrapper, types, calcInputText, SelectionUtils) {
+   function(Control, template, textFieldWrapper, types, calcInputValue, SelectionUtils, Validatable) {
 
       'use strict';
 
-      var selectionUtils = new SelectionUtils();
+      var selectionUtils, TextBox;
 
-      function setText(text) {
-         this._text = text;
-         this._notify('onChangeText', text);
+      function setValue(value) {
+         this._value = value;
+         this._notify('onChangeValue', value);
       }
 
-      function setTextTarget(target, text, position) {
-         target.value = text;
+      function setValueTarget(target, value, position) {
+         target.value = value;
          selectionUtils.updateSelectionPositionTarget(target, position, position);
          selectionUtils.updateSelectionPosition(target);
       }
 
-      function getInputText(target) {
+      function getInputValue(target) {
          var
-            oldText = this._text,
-            newText = target.value,
+            oldValue = this._value,
+            newValue = target.value,
             caretPosition = target.selectionEnd,
-            splitText, calcText;
+            splitValue, calcValue;
 
-         splitText = calcInputText.getSplitInputText(oldText, newText, caretPosition, selectionUtils.selectionEnd - selectionUtils.selectionStart);
-         calcText = this._calcText(splitText.inputText, this._options);
+         splitValue = calcInputValue.getSplitInputValue(oldValue, newValue, caretPosition, selectionUtils.selectionEnd - selectionUtils.selectionStart);
+         calcValue = this._calcValue(splitValue.inputValue, this._options);
 
          return {
-            text: splitText.beforeInputText + calcText + splitText.afterInputText,
-            position: splitText.beforeInputText.length + calcText.length
+            value: splitValue.beforeInputValue + calcValue + splitValue.afterInputValue,
+            position: splitValue.beforeInputValue.length + calcValue.length
          };
       }
 
-      var TextBox = TextBoxBase.extend({
+      selectionUtils = new SelectionUtils();
+
+      TextBox = Control.extend([Validatable], {
          /**
+          * @event onTagClick Происходит при клике по тегу.
+          * @event onTagHover Происходит когда курсор мыши входит в область тега.
+          * @event onChangeValue Происходит при изменении текста в поле ввода.
+          * @event onInputFinish Происходит при завершении ввода.
+          *
+          * value
+          * @cfg {String} Значение поля.
+          *
           * trim
           * @cfg {Boolean} Устанавливает режим обрезки пробелов в начале и конце добавляемого текста.
           * @variant true Обрезать пробелы.
           * @variant false Не обрезать пробелы.
+          *
+          * tagStyle
+          * @cfg {String} Набор цветов для иконки
+          * @variant primary #587AB0.
+          * @variant done #72BE44.
+          * @variant attention #FEC63F.
+          * @variant error #EF463A.
+          * @variant info #999999.
+          *
+          * maxLength
+          * @cfg {Number} Устанавливает максимальное количество символов, которое может содержать поле ввода.
           *
           * placeholder
           * @cfg {String} Устанавливает текст подсказки внутри поля ввода.
@@ -56,7 +78,7 @@ define('js!WSControls/TextBoxes/TextBox',
           * @variant true Выделять текст.
           * @variant false Не выделять текст.
           *
-          * inputRegExp
+          * maskRe
           * @cfg {String} Устанавливает регулярное выражение, в соответствии с которым будет осуществляться валидация вводимых символов.
           * @remark
           * Служит для фильтрации вводимых символов в поле ввода по условию, установленному регулярным выражением.
@@ -65,11 +87,11 @@ define('js!WSControls/TextBoxes/TextBox',
           * @example
           * Разрешен ввод только цифр:
           * <pre class="brush:xml">
-          *     <option name="inputRegExp">[0-9]</option>
+          *     <option name="maskRe">[0-9]</option>
           * </pre>
           * Разрешен ввод только кириллицы:
           * <pre class="brush:xml">
-          *     <option name="inputRegExp">[а-яА-ЯёЁ]</option>
+          *     <option name="maskRe">[а-яА-ЯёЁ]</option>
           * </pre>
           */
          _controlName: 'WSControls/TextBoxes/TextBox',
@@ -78,13 +100,20 @@ define('js!WSControls/TextBoxes/TextBox',
 
          _textFieldWrapper: textFieldWrapper,
 
-         /**
-          * Обновление текста. Переобпределяется в наследниках, если нужно изменить значение текста, в соответствии с опциями.
-          * @param options
-          * @private
-          */
-         _updateText: function(options) {
-            this._text = this._calcText(options.text, options);
+         _valueHolder: '_value',
+
+         constructor: function(options) {
+            TextBox.superclass.constructor.call(this, options);
+
+            this._publish('onChangeValue', 'onInputFinish', 'onTagClick', 'onTagHover');
+         },
+
+         _beforeMount: function(options) {
+            this._value = options.value;
+         },
+
+         _beforeUpdate: function(newOptions) {
+            this._value = newOptions.value;
          },
 
          /**
@@ -93,21 +122,34 @@ define('js!WSControls/TextBoxes/TextBox',
           * @private
           */
          _inputHandler: function(event) {
-            var target = event.target, inputText;
+            var target = event.target, inputValue;
 
-            if (target.value === this._text) {
+            if (target.value === this._value) {
                return;
             }
 
             if (event.nativeEvent.inputType === 'deleteContentBackward') {
-               setText.call(this, target.value);
+               setValue.call(this, target.value);
             } else {
-               inputText = getInputText.call(this, target);
-               setTextTarget.call(this, target, inputText.text, inputText.position);
-               if (this._text !== inputText.text) {
-                  setText.call(this, inputText.text);
+               inputValue = getInputValue.call(this, target);
+               setValueTarget.call(this, target, inputValue.value, inputValue.position);
+               if (this._value !== inputValue.value) {
+                  setValue.call(this, inputValue.value);
                }
             }
+         },
+
+         /**
+          * Обработчик завершения ввода.
+          * @param event
+          * @private
+          */
+         _changeHandler: function(event) {
+            this._notify('onInputFinish');
+         },
+
+         _notifyHandler: function(event, value) {
+            this._notify(value);
          },
 
          /**
@@ -155,50 +197,50 @@ define('js!WSControls/TextBoxes/TextBox',
 
          /**
           * Метод расчета текста.
-          * @param text текст.
+          * @param value текст.
           * @param options опции.
           * @returns {String}
           * @private
           */
-         _calcText: function(text, options) {
+         _calcValue: function(value, options) {
             var
                isTrim = options.trim,
-               inputRegExp = options.inputRegExp,
-               validText;
+               maskRe = options.maskRe,
+               validValue;
 
-            if (inputRegExp) {
-               validText = '';
+            if (maskRe) {
+               validValue = '';
 
-               text.replace(new RegExp(inputRegExp, 'g'), function(validSymbol) {
-                  validText += validSymbol;
+               value.replace(new RegExp(maskRe, 'g'), function(validSymbol) {
+                  validValue += validSymbol;
                });
             } else {
-               validText = text;
+               validValue = value;
             }
 
             if (isTrim) {
-               validText = validText.trim();
+               validValue = validValue.trim();
             }
 
-            return validText.substring(0, options.maxLength);
+            return validValue.substring(0, options.maxLength);
          }
       });
 
       TextBox.getDefaultOptions = function() {
          return {
-            text: ''
+            value: ''
          };
       };
 
       TextBox.getOptionTypes = function() {
-         var optionTypes = TextBoxBase.getOptionTypes();
-
-         optionTypes.trim = types(Boolean);
-         optionTypes.selectOnClick = types(Boolean);
-         optionTypes.placeholder = types(String);
-         optionTypes.inputRegExp = types(String);
-
-         return optionTypes;
+         return {
+            trim: types(Boolean),
+            selectOnClick: types(Boolean),
+            placeholder: types(String),
+            maskRe: types(String),
+            value: types(String),
+            maxLength: types(Number)
+         };
       };
       return TextBox;
    }

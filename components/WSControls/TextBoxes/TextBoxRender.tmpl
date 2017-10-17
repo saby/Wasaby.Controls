@@ -4,13 +4,30 @@
          if="{{_beforeFieldWrapper}}"
          template="{{_beforeFieldWrapper}}"
       />
-      <ws:partial
-         template="{{_options.textFieldWrapper}}"
+      <input
+         event:oninput="inputHandler()"
+         event:onfocus="focusHandler()"
+         event:onselect="selectHandler()"
+         event:onclick="clickHandler()"
+         event:onkeyup="keyupHandler()"
          type="{{_options.type}}"
-         text="{{_options.text}}"
-         placeholder="{{_options.placeholder}}"
-         enabled="{{_options.enabled}}"
+         value="{{_options.text}}"
+         class="controls-TextBox__field"
+         placeholder="{{_options.enabled ? _options.placeholder}}"
+         readonly="{{_options.enabled ? '' : 'readonly'}}"
+         autocomplete="off"
       />
+      <ws:if data="{{_options.tagStyle}}">
+         <span event:onmouseenter="_notifyHandler('onTagHover')">
+            <ws:SBIS3.CONTROLS.IconButton
+               name="informationIcon"
+               icon="icon-size icon-Listbox"
+               allowChangeEnable="{{false}}"
+               event:onActivated="_notifyHandler('onTagClick')"
+               className="controls-informationIcon icon-{{_options.tagStyle}}"
+            />
+         </span>
+      </ws:if>
       <ws:partial
          if="{{_afterFieldWrapper}}"
          template="{{_afterFieldWrapper}}"
