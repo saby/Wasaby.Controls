@@ -148,6 +148,10 @@ body.ws-is-ie .controls-ScrollContainer__content {
    .flex-grow(1);
 }
 
+body.ws-is-desktop-platform.ws-is-chrome:not(.ws-is-mac):not(.ws-is-unix) .controls-ScrollContainer__content::-webkit-scrollbar {
+   width: 17px;
+}
+
 .controls-ScrollContainer__content:not(.controls-ScrollContainer__content-overflowHidden) {
    // Mac OS
    body.ws-is-mac &,
