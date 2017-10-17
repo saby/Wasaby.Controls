@@ -79,7 +79,11 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
                      saveDataSet: undefined
                   }
                }
-            ]
+            ],
+            //Опция для того, чтобы в 3.17.154 при выгрузке выбранных записей, в метод выгрузки не передавалась навигация.
+            //Иначе в случае, если списочный метод вернём записей больше, чем количество выбранных записей, то часть записей
+            //будет обрезана. В следующих (3.17.200+) версиях, в указанном случае, навигация не будет передаваться никогда.
+            task1174556685: false
          },
          _controlsId: {
             'PDF' : {
@@ -223,7 +227,7 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
             exporter = new Exporter(this._prepareExporterConfig(cfg));
             methodName = this._getSaveMethodName(false);
             if (methodName) {
-               fullFilter = exporter.getFullFilter(cfg.dataSet.getCount(), true);
+               fullFilter = exporter.getFullFilter(this._options.task1174556685 ? null : cfg.dataSet.getCount(), true);
                if (fullFilter['Filter'] instanceof Record) {
                    filter = fullFilter['Filter'];
                } else {
