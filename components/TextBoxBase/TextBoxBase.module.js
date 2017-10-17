@@ -262,19 +262,19 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
          this.setText(txt);
       },
       setEnabled: function(enabled) {
-         TextBoxBase.superclass.setEnabled.call(this, enabled);
+         TextBoxBase.superclass.setEnabled.apply(this, arguments);
          this._toggleStateEnabled();
       },
       clearMark: function() {
-         TextBoxBase.superclass.clearMark.call(this);
+         TextBoxBase.superclass.clearMark.apply(this, arguments);
          this._toggleStateValidate();
       },
       markControl: function() {
-         TextBoxBase.superclass.markControl.call(this);
+         TextBoxBase.superclass.markControl.apply(this, arguments);
          this._toggleStateValidate();
       },
       _updateActiveStyles: function() {
-         TextBoxBase.superclass._updateActiveStyles.call(this);
+         TextBoxBase.superclass._updateActiveStyles.apply(this, arguments);
          this._toggleStateActive();
       },
       // методы которые будут переключать состояния поля ввода, пока не перейдем на vDom
