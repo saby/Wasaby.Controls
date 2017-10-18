@@ -1,0 +1,12 @@
+<div>
+   <ws:for data="_getStartEnumerationPosition(); _checkConditionForEnumeration(); _getNextEnumerationPosition();">
+      <ws:partial
+            template="{{_options.itemTemplate}}"
+            item="{{_display.at(_curIndex).getContents()}}"
+            projItem="{{_display.at(_curIndex)}}"
+            index="{{_curIndex}}"
+            _getPropertyValue="{{_getPropertyValue}}"
+            _options="{{_options}}"
+            selected="{{_display.at(_curIndex).getContents() == _selectedItem}}"/>
+   </ws:for>
+</div>

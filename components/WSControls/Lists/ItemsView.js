@@ -17,8 +17,7 @@ define('js!WSControls/Lists/ItemsView', [
 
    var ItemsRender = BaseControl.extend(
       {
-         _controlName: 'WSControls/Lists/ItemsRender',
-         _enumIndexes: null,
+         _controlName: 'WSControls/Lists/ItemsView',
          iWantVDOM: true,
          _isActiveByClick: false,
          _template: ItemsRenderTpl,
@@ -26,27 +25,23 @@ define('js!WSControls/Lists/ItemsView', [
 
          constructor: function (cfg) {
             ItemsRender.superclass.constructor.apply(this, arguments);
-            this._enumIndexes = {
-               _startIndex: 0,
-               _stopIndex: 0,
-               _curIndex: 0
-            };
             this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
-            this._prepareMountingData(cfg);
-         },
 
-         _prepareMountingData: function(newOptions) {
-            if (newOptions.items && (this._items != newOptions.items)) {
-               this._items = newOptions.items;
-               this._itemsChangeCallback(this._items, newOptions);
+            if (cfg.items) {
+               this._items = cfg.items;
+               this.__initDisplay(cfg.items, cfg);
             }
          },
 
+
          _beforeUpdate: function(newOptions) {
-            this._prepareMountingData(newOptions);
+            if (newOptions.items && (this._items != newOptions.items)) {
+               this._items = newOptions.items;
+               this.__initDisplay(newOptions.items, newOptions);
+            }
          },
 
-         _initDisplay: function(items, cfg) {
+         __initDisplay: function(items, cfg) {
             if (this._items) {
                //TODO убрать дестрой, проверить утечки памяти
                if (this._display) {
@@ -57,41 +52,8 @@ define('js!WSControls/Lists/ItemsView', [
             }
          },
 
-         _onCollectionChange: function(event, action, newItems, newItemsIndex, oldItems, oldItemsIndex, groupId) {
-            this._displayChangeCallback(this._display, this._options);
+         _onCollectionChange: function() {
             this._forceUpdate();
-         },
-
-
-         _itemsChangeCallback: function(items, cfg) {
-            this._initDisplay(items, cfg);
-            this._displayChangeCallback(this._display, cfg);
-         },
-
-         //при изменениях в проекции
-         _displayChangeCallback: function(display, cfg) {
-            this._enumIndexes._startIndex = 0;
-            this._enumIndexes._stopIndex = this._display.getCount();
-         },
-
-         _getStartEnumerationPosition: function() {
-            this._enumIndexes._curIndex = this._enumIndexes._startIndex;
-         },
-
-         _getNextEnumerationPosition: function() {
-            this._enumIndexes._curIndex++;
-         },
-
-         _checkConditionForEnumeration: function() {
-            return this._enumIndexes._curIndex < this._enumIndexes._stopIndex;
-         },
-
-         _getPropertyValue: function(itemContents, field) {
-            return ItemsUtil.getPropertyValue(itemContents, field);
-         },
-
-         _getItemData: function(projItem, index) {
-            return {};
          },
 
 
@@ -99,12 +61,9 @@ define('js!WSControls/Lists/ItemsView', [
             return ItemsUtil.getDefaultDisplayFlat(items, cfg)
          },
 
-
          _onItemClick: function (evt) {
             //Method must be implemented
          },
-
-
 
          //<editor-fold desc='DataSourceMethods'>
          destroy: function() {

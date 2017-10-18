@@ -1,14 +1,6 @@
-<div>
-<ws:for data="_getStartEnumerationPosition(); _checkConditionForEnumeration(); _getNextEnumerationPosition();">
-   <ws:partial
-         template="{{_options.itemTemplate}}"
-         item="{{_display.at(_enumIndexes._curIndex).getContents()}}"
-         projItem="{{_display.at(_enumIndexes._curIndex)}}"
-         index="{{_enumIndexes._curIndex}}"
-         itemData="{{_getItemData(_display.at(_enumIndexes._curIndex), _enumIndexes._curIndex)}}"
-         _getPropertyValue="{{_getPropertyValue}}"
-         _options="{{_options}}"
-         selected="{{_display.at(_enumIndexes._curIndex).getContents() == _selectedItem}}"
-         />
-</ws:for>
-</div>
+<ws:WSControls.Lists.ListControl.ListRender
+      display="{{_display}}"
+      itemTemplate="{{_options.itemTemplate}}"
+      displayProperty="{{_options.displayProperty}}"
+      selectedItem="{{_selectedItem}}">
+</ws:WSControls.Lists.ListControl.ListRender>

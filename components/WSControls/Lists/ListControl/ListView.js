@@ -3,39 +3,40 @@
  */
 define('js!WSControls/Lists/ListControl/ListView', [
    'js!WSControls/Lists/ItemsView',
-   'tmpl!WSControls/Lists/ListControl/ListView'
-], function (ItemsViewRender, ItemsRenderTpl
+   'tmpl!WSControls/Lists/ListControl/ListView',
+   'js!WSControls/Lists/resources/utils/ItemsUtil'
+], function (ItemsView, ListViewTpl, ItemsUtil
    ) {
    'use strict';
 
-   var ItemsRender = ItemsViewRender.extend(
+   var ListView = ItemsView.extend(
       {
-         _controlName: 'WSControls/Lists/ListView/ItemsRender',
+         _controlName: 'WSControls/Lists/ListControl/ListView',
 
-         _template: ItemsRenderTpl,
+         _template: ListViewTpl,
          _selectedIndex: null,
          _selectedItem: null,
 
-         _displayChangeCallback: function(display, cfg) {
-            ItemsRender.superclass._displayChangeCallback.apply(this, arguments);
-            if(!cfg.selectedItem) {
-               if (!this._selectedIndex) {
-                  this._selectedIndex = 0;//переводим на первый элемент
+         _beforeMount: function(newOptions) {
+            if (newOptions.selectedKey !== undefined) {
+               this._selectedItem = ItemsUtil.getItemById(this._items, newOptions.selectedKey, newOptions.idProperty);
+            }
+         },
+
+         _beforeUpdate: function(newOptions) {
+            if (newOptions.selectedKey !== this._options.selectedKey) {
+               if (newOptions.selectedKey !== undefined) {
+                  this._selectedItem = ItemsUtil.getItemById(this._items, newOptions.selectedKey, newOptions.idProperty);
                }
                else {
-                  this._selectedIndex++;//условно ищем ближайший элемент, рядом с удаленным
+                  this._selectedItem = null;
                }
-               this._selectedItem = this._display.at(this._selectedIndex);
             }
-            else {
-               this._selectedItem = cfg.selectedItem;
-            }
-
-            //TODO обработать virt scroll
          }
+
       });
 
 
 
-   return ItemsRender;
+   return ListView;
 });

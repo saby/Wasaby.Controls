@@ -30,7 +30,7 @@ define('js!WSControls/Lists/ListControl', [
 
    var ListView = BaseControl.extend(
       {
-         _controlName: 'WSControls/Lists/ListView',
+         _controlName: 'WSControls/Lists/ListControl',
          _template: ListViewTpl,
          iWantVDOM: true,
          _isActiveByClick: false,
@@ -70,10 +70,6 @@ define('js!WSControls/Lists/ListControl', [
                   this.reload(newOptions);
                }
             }
-
-            if (newOptions.selectedKey !== undefined) {
-               this._selectedItem = ItemsUtil.getItemById(this._items, newOptions.selectedKey, newOptions.idProperty);
-            }
          },
 
          _beforeUpdate: function(newOptions) {
@@ -89,32 +85,12 @@ define('js!WSControls/Lists/ListControl', [
                this.reload(newOptions);
             }
 
-            if (newOptions.selectedKey !== this._options.selectedKey) {
-               if (newOptions.selectedKey !== undefined) {
-                  this._selectedItem = ItemsUtil.getItemById(this._items, newOptions.selectedKey, newOptions.idProperty);
-               }
-               else {
-                  this._selectedItem = null;
-               }
-            }
+
 
 
             //TODO обработать смену фильтров и т.д. позвать релоад если надо
          },
 
-
-         _getItemContentTpl: function(dispItem) {
-            if (cInstance.instanceOfModule(dispItem, 'WS.Data/Display/GroupItem')) {
-               return this._defaultGroupItemContentTemplate;
-            }
-            else {
-               return this._options.itemContentTpl || this._defaultItemContentTemplate;
-            }
-         },
-
-         _getPropertyValue: function(itemContents, field) {
-            return ItemsUtil.getPropertyValue(itemContents, field);
-         },
 
          _getItemData: function(projItem, index) {
             return {};
@@ -145,17 +121,6 @@ define('js!WSControls/Lists/ListControl', [
             }
          },
 
-         _createDefaultDisplay: function(items, cfg) {
-            return ItemsUtil.getDefaultDisplayFlat(items, cfg)
-         },
-
-
-         /**
-          * Метод получения проекции по hash итема
-          */
-         _getDisplayItemByHash: function(hash) {
-            return this._display.getByHash(hash);
-         },
 
          //<editor-fold desc='EventHandlers'>
 
