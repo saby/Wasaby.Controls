@@ -277,15 +277,18 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
          TextBoxBase.superclass._updateActiveStyles.apply(this, arguments);
          this._toggleState();
       },
+      _getStateToggleContainer: function(){
+         return this._container;
+      },
       _toggleState: function() {
          var
-             container = this.getContainer()[0],
+              container = this._getStateToggleContainer()[0],
               active = this.isActive(),
               enabled = this.isEnabled(),
               marked = this.isMarked(),
               stateName = marked ? 'marked' : !enabled ? 'disabled' : active ? 'active' : 'default';
          container.className = container.className.replace(/(^|\s)controls-TextBox__state__\S+/gi, '');
-         this._container.addClass('controls-TextBox__state__' + stateName);
+         this._getStateToggleContainer().addClass('controls-TextBox__state__' + stateName);
       }
    });
 
