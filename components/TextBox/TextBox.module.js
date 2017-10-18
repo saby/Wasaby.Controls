@@ -200,13 +200,13 @@ define('js!SBIS3.CONTROLS.TextBox', [
              /**
               * @cfg {String} Устанавливает размер поля ввода.
               * @remark
-              * По умолчанию значение опции "default"
-              * Значение "large" устaновит большой рамер поля ввода
+              * По умолчанию значение опции "m"
+              * Значение "l" устaновит большой рамер поля ввода
               * @example
               * Пример 1. Большое поле ввода:
               * фрагмент верстки:
               * <pre class="brush:xml">
-              *     <option name="size">large</option>
+              *     <option name="size">l</option>
               * </pre>
               */
             size: ''
