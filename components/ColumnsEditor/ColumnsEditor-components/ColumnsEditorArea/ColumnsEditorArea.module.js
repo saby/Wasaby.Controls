@@ -6,8 +6,9 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
    [
       'js!SBIS3.CONTROLS.CompoundControl',
       'js!SBIS3.CONTROLS.ColumnsEditorModel',
-      'Core/CommandDispatcher',
       'js!SBIS3.CONTROLS.ItemsMoveController',
+      'Core/CommandDispatcher',
+      'WS.Data/Functor/Compute',
       'WS.Data/Collection/RecordSet',
       'tmpl!SBIS3.CONTROLS.ColumnsEditorArea',
       'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/itemContentTpl',
@@ -19,7 +20,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
       'js!SBIS3.CONTROLS.ScrollContainer'
    ],
 
-   function (CompoundControl, ColumnsEditorModel, CommandDispatcher, ItemsMoveController, RecordSet, dotTplFn, ItemContentTpl) {
+   function (CompoundControl, ColumnsEditorModel, ItemsMoveController, CommandDispatcher, ComputeFunctor, RecordSet, dotTplFn, ItemContentTpl) {
       'use strict';
       /**
        * Класс контрола "Редактор колонок".
@@ -50,7 +51,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
             cfg._onItemClick = this._onItemClick;
             if (!cfg.moveColumns) {
                // Добавляем автосортировку отмеченных элементов - они должны отображаться перед неотмеченными
-               cfg._itemsSortMethod = ColumnsEditorModel.getSortMethod();
+               cfg._itemsSortMethod = this._getItemsSortMethod();
                cfg._onSelectedItemsChange = this._onSelectedItemsChange;
             }
             return cfg;
@@ -130,11 +131,33 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
                result.selectableItems = new RecordSet({
                   rawData: preparingItems,
                   idProperty: 'id',
-                  model: ColumnsEditorModel.getSelectableViewModel()
+                  model: ColumnsEditorModel
                });
-               ColumnsEditorModel.applySelectedToItems(result.selectableMarkedKeys, result.selectableItems);
+               this._applySelectedToItems(result.selectableMarkedKeys, result.selectableItems);
             }
             return result;
+         },
+
+         _getItemsSortMethod: function () {
+            return new ComputeFunctor(function (el1, el2) {
+               // Смещаем отмеченные элементы в начало списка (учитывая их начальный index)
+               if (el1.collectionItem.get('selected')) {
+                  if (el2.collectionItem.get('selected')) {
+                     return el1.index - el2.index;
+                  }
+                  return -1;
+               }
+               if (el2.collectionItem.get('selected')) {
+                  return 1;
+               }
+               return el1.index - el2.index;
+            }, ['selected']);
+         },
+
+         _applySelectedToItems: function (selectedArray, items) {
+            selectedArray.forEach(function (id) {
+               items.getRecordById(id).set('selected', true);
+            });
          },
 
          _onItemClick: function (e, id) {
