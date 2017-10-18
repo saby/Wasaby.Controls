@@ -100,37 +100,39 @@ define('js!SBIS3.CONTROLS.Pager', [
          }
       },
       updateAmount : function(numRecords, hasNextPage, selectedCount){
-         var pagerStr = '';
-         this._lastNumRecords = numRecords;
-         this._lastNextPage = hasNextPage;
-         selectedCount = selectedCount || 0;
-         if (typeof hasNextPage === 'boolean'){
-            var strEnd = '',//typeof hasNextPage !== 'boolean' && hasNextPage ? (' из ' + hasNextPage) : '',
+         if(!this._options.noPagerAmount) {
+            var pagerStr = '';
+            this._lastNumRecords = numRecords;
+            this._lastNextPage = hasNextPage;
+            selectedCount = selectedCount || 0;
+            if (typeof hasNextPage === 'boolean') {
+               var strEnd = '',//typeof hasNextPage !== 'boolean' && hasNextPage ? (' из ' + hasNextPage) : '',
                   page = this.getPaging().getPage() - 1,
                   startRecord = page * this._dropd.getSelectedKeys()[0] + 1;
-            if(numRecords === 0){
-               pagerStr = '';
-            }
-            else if(numRecords === 1 && page === 0){
-               pagerStr = '1 ' + rk('запись');
-            }
-            else{
-               pagerStr = startRecord + ' - ' + (startRecord + numRecords - 1) + strEnd;
-            }
-         } else {
-            pagerStr += pagerStr === '' ? rk('Всего') + ' : ' : '. ' + rk('Всего') + ' : ';
-            pagerStr += numRecords;
-         }
-         
-         if (selectedCount > 0) {
-            if (numRecords == 1) {
-               pagerStr = rk('Выбрана') + ' 1 ' + rk('запись');
+               if (numRecords === 0) {
+                  pagerStr = '';
+               }
+               else if (numRecords === 1 && page === 0) {
+                  pagerStr = '1 ' + rk('запись');
+               }
+               else {
+                  pagerStr = startRecord + ' - ' + (startRecord + numRecords - 1) + strEnd;
+               }
             } else {
-               pagerStr = strHelpers.wordCaseByNumber(selectedCount, rk('Выбрано'), rk('Выбрана'), rk('Выбраны')) +
-               ' ' + selectedCount + strHelpers.wordCaseByNumber(selectedCount, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + '. ' + pagerStr;
+               pagerStr += pagerStr === '' ? rk('Всего') + ' : ' : '. ' + rk('Всего') + ' : ';
+               pagerStr += numRecords;
             }
+
+            if (selectedCount > 0) {
+               if (numRecords == 1) {
+                  pagerStr = rk('Выбрана') + ' 1 ' + rk('запись');
+               } else {
+                  pagerStr = strHelpers.wordCaseByNumber(selectedCount, rk('Выбрано'), rk('Выбрана'), rk('Выбраны')) +
+                     ' ' + selectedCount + strHelpers.wordCaseByNumber(selectedCount, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + '. ' + pagerStr;
+               }
+            }
+            this.getContainer().find('.controls-Amount-text_js').text(pagerStr + ',');
          }
-         this.getContainer().find('.controls-Amount-text_js').text(pagerStr + ',');
       },
       /**
        * Получить SBIS3.CORE.Paging

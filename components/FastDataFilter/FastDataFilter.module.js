@@ -3,6 +3,7 @@
  */
 define('js!SBIS3.CONTROLS.FastDataFilter',
    [
+   "Core/constants",
    "js!SBIS3.CORE.CompoundControl",
    "js!SBIS3.CONTROLS.ItemsControlMixin",
    "js!SBIS3.CONTROLS.FilterMixin",
@@ -13,7 +14,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
    'css!SBIS3.CONTROLS.FastDataFilter'
 ],
 
-   function(CompoundControl, ItemsControlMixin, FilterMixin, cDeferred, DropdownList, dotTplFn, ItemTpl) {
+   function(constants, CompoundControl, ItemsControlMixin, FilterMixin, cDeferred, DropdownList, dotTplFn, ItemTpl) {
 
       'use strict';
       /**
@@ -115,6 +116,19 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                }
             }
             this._recalcDropdownWidth();
+            this._setItemPositionForIE10();
+         },
+         //Очень рано обрадовался и удалил костыли под ie10, приходится возвращать :(
+         _setItemPositionForIE10: function(){
+            //Дичайший баг в ie - если установлено несколько выпадающий списков - 1 из них визуально пропадает
+            //Не отдебагать, т.к. при любом взаимодействии с dom'ом идет перерисовка узлов и выпадающий список появляется
+            //Добавил костыль: вызываю перерисовку узла, взаимодействуя со свойтсвом top
+            if (constants.browser.isIE10){
+               this.getContainer().find('.controls-DropdownList').css({top: ''}); //Убираю top, чтобы когда выставится top: 0 браузер понял что значение изменилось и перерисовал узел
+               setTimeout(function(){
+                  this.getContainer().find('.controls-DropdownList').css({position: 'relative', top: '0'});
+               }.bind(this), 100);
+            }
          },
          _getCurrentContext : function(){
             return this.getLinkedContext();
@@ -151,6 +165,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                      return list;
                   }.bind(this));
                }
+               self._setItemPositionForIE10();
             });
          },
          _recalcDropdownWidth: function () {
