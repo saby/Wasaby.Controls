@@ -258,7 +258,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             // $elem[0].scrollHeight - integer, $elem.height() - float
          	var maxScrollTop = this._getScrollHeight() - Math.round(this._container.height());
 
-            this._container.toggleClass('controls-ScrollContainer__bottom-gradient', maxScrollTop > 0 && this._getScrollTop() < maxScrollTop);
+         	// maxScrollTop > 1 - погрешность округления на различных браузерах.
+            this._container.toggleClass('controls-ScrollContainer__bottom-gradient', maxScrollTop > 1 && this._getScrollTop() < maxScrollTop);
          },
 
          _initScrollbar: function(){
