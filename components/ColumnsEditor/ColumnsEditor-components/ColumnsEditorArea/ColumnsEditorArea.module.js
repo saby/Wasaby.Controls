@@ -5,7 +5,7 @@
 define('js!SBIS3.CONTROLS.ColumnsEditorArea',
    [
       'js!SBIS3.CONTROLS.CompoundControl',
-      'js!SBIS3.CONTROLS.ColumnsEditorUtils',
+      'js!SBIS3.CONTROLS.ColumnsEditorModel',
       'Core/CommandDispatcher',
       'js!SBIS3.CONTROLS.ItemsMoveController',
       'WS.Data/Collection/RecordSet',
@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
       'js!SBIS3.CONTROLS.ScrollContainer'
    ],
 
-   function (CompoundControl, ColumnsEditorUtils, CommandDispatcher, ItemsMoveController, RecordSet, dotTplFn, ItemContentTpl) {
+   function (CompoundControl, ColumnsEditorModel, CommandDispatcher, ItemsMoveController, RecordSet, dotTplFn, ItemContentTpl) {
       'use strict';
       /**
        * Класс контрола "Редактор колонок".
@@ -50,7 +50,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
             cfg._onItemClick = this._onItemClick;
             if (!cfg.moveColumns) {
                // Добавляем автосортировку отмеченных элементов - они должны отображаться перед неотмеченными
-               cfg._itemsSortMethod = ColumnsEditorUtils.getSortMethod();
+               cfg._itemsSortMethod = ColumnsEditorModel.getSortMethod();
                cfg._onSelectedItemsChange = this._onSelectedItemsChange;
             }
             return cfg;
@@ -130,9 +130,9 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
                result.selectableItems = new RecordSet({
                   rawData: preparingItems,
                   idProperty: 'id',
-                  model: ColumnsEditorUtils.getSelectableViewModel()
+                  model: ColumnsEditorModel.getSelectableViewModel()
                });
-               ColumnsEditorUtils.applySelectedToItems(result.selectableMarkedKeys, result.selectableItems);
+               ColumnsEditorModel.applySelectedToItems(result.selectableMarkedKeys, result.selectableItems);
             }
             return result;
          },

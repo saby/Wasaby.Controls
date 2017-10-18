@@ -2,7 +2,7 @@
  * Created by as.avramenko on 06.07.2017.
  */
 
-define('js!SBIS3.CONTROLS.ColumnsEditorUtils', ['WS.Data/Entity/Model', 'WS.Data/Functor/Compute'], function(Model, ComputeFunctor) {
+define('js!SBIS3.CONTROLS.ColumnsEditorModel', ['WS.Data/Entity/Model', 'WS.Data/Functor/Compute'], function(Model, ComputeFunctor) {
    
    'use strict';
 
