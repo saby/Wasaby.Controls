@@ -1,0 +1,9 @@
+<div class="controls-ProgressBar controls-ProgressBar_align-{{_options.progressPosition}}">
+   <ws:template name="progress">
+      <div
+         class="controls-ProgressBar__progress"
+         style="background-size: {{progressPercent}} 100%;"
+      >{{progressPercent}}</div>
+   </ws:template>
+   <ws:partial template="progress" progressPercent="{{_getProgressPercent(_options.minimum, _options.maximum, _options.progress, _options.step)}}%"/>
+</div>
