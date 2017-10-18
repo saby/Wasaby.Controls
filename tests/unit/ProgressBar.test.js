@@ -10,11 +10,13 @@ define(
       describe('SBIS3.CONTROLS.ProgressBar', () => {
          let progressBar;
 
-         if (typeof $ === 'undefined') {
-            this.skip();
-         } else {
-            progressBar = Control.createControl(ProgressBar, {}, $('<div id="progressBar-test"></div>').appendTo('#mocha'));
-         }
+         beforeEach(function () {
+            if (typeof $ === 'undefined') {
+               this.skip();
+            } else {
+               progressBar = Control.createControl(ProgressBar, {}, $('<div id="progressBar-test"></div>').appendTo('#mocha'));
+            }
+         });
 
          describe('_getProgressPercent', () => {
             it('return', () => {
