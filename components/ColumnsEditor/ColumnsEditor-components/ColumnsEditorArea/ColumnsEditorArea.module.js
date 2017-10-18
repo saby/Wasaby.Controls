@@ -17,7 +17,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
       'css!SBIS3.CONTROLS.ColumnsEditorArea',
       'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/groupTpl',
       'js!SBIS3.CONTROLS.ScrollContainer'
-    ],
+   ],
 
    function (CompoundControl, ColumnsEditorUtils, CommandDispatcher, ItemsMoveController, RecordSet, dotTplFn, ItemContentTpl) {
       'use strict';
@@ -46,7 +46,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
          _modifyOptions: function () {
             var
                cfg = ColumnsEditorArea.superclass._modifyOptions.apply(this, arguments);
-            cfg._preparedItems = this._prepareItems(cfg.columns, cfg.selectedColumns, cfg.moveColumns);
+            cfg._preparedItems = this._prepareItems(cfg.columns, cfg.selectedColumns, cfg.groupCollapsing, cfg.moveColumns);
             cfg._onItemClick = this._onItemClick;
             if (!cfg.moveColumns) {
                // Добавляем автосортировку отмеченных элементов - они должны отображаться перед неотмеченными
@@ -65,6 +65,15 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
             ColumnsEditorArea.superclass.init.apply(this, arguments);
             this._fixedView = this.getChildControlByName('controls-ColumnsEditorArea__FixedView');
             this._selectableView = this.getChildControlByName('controls-ColumnsEditorArea__SelectableView');
+            // В опциях могут быть указаны группы, которые нужно свернуть при открытии
+            var groupCollapsing = this._options._preparedItems.groupCollapsing;
+            if (groupCollapsing) {
+               for (var group in groupCollapsing) {
+                  if (groupCollapsing[group]) {
+                     this._selectableView.collapseGroup(group);
+                  }
+               }
+            }
             if (this._options.moveColumns) {
                this._itemsMoveController = new ItemsMoveController({
                   linkedView: this._selectableView
@@ -72,7 +81,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
             }
          },
 
-         _prepareItems: function (columns, selectedColumns, moveColumns) {
+         _prepareItems: function (columns, selectedColumns, groupCollapsing, moveColumns) {
             var
                columnId/*^^^*/,
                preparingItems = [],
@@ -80,20 +89,20 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
                   fixedItems: [],
                   fixedMarkedKeys: [],
                   selectableItems: [],
-                  selectableMarkedKeys: []
+                  selectableMarkedKeys: [],
+                  groupCollapsing: typeof groupCollapsing === 'object' ? groupCollapsing : null
                };
             columns.each(function (column) {
-               //////////////////////////////////////////////////
-               column.set('group', 'Группа: ' + Math.ceil(3*Math.random()));//^^^
-               //////////////////////////////////////////////////
                columnId = column.getId();
                if (column.get('fixed')) {
                   result.fixedItems.push(column.getRawData());
                   result.fixedMarkedKeys.push(columnId);
-               } else {
+               }
+               else {
                   if (moveColumns) {
                      result.selectableItems.push(column.getRawData())
-                  } else {
+                  }
+                  else {
                      // При отключенном перемещении необходимо сформировать рекордсет с собственной моделью.
                      // Подготавливаем для него исходные данные.
                      preparingItems.push(column.getRawData());
@@ -114,7 +123,8 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
                   }
                   return idx2 !== -1 ? 1 : -1;
                });
-            } else {
+            }
+            else {
                // При отключенном перемещении будем использовать рекордсет с собственной моделью
                // для осуществления автосортировки отмеченных записей
                result.selectableItems = new RecordSet({
