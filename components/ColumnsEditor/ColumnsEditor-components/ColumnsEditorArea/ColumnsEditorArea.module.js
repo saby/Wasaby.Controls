@@ -47,7 +47,9 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
 
          _modifyOptions: function () {
             var cfg = ColumnsEditorArea.superclass._modifyOptions.apply(this, arguments);
-            cfg._preparedItems = _prepareItems(cfg.columns, cfg.selectedColumns, cfg.groupCollapsing, cfg.moveColumns);
+            var prepared = _prepareItems(cfg.columns, cfg.selectedColumns, cfg.groupCollapsing, cfg.moveColumns);
+            cfg._preparedFixed = prepared.fixed;
+            cfg._preparedSelectable = prepared.selectable;
             cfg._onItemClick = _onItemClick;
             if (!cfg.moveColumns) {
                // Добавляем автосортировку отмеченных элементов - они должны отображаться перед неотмеченными
@@ -67,7 +69,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
             this._fixedView = this.getChildControlByName('controls-ColumnsEditorArea__FixedView');
             this._selectableView = this.getChildControlByName('controls-ColumnsEditorArea__SelectableView');
             // В опциях могут быть указаны группы, которые нужно свернуть при открытии
-            var groupCollapsing = this._options._preparedItems.groupCollapsing;
+            var groupCollapsing = this._options._preparedSelectable.groupCollapsing;
             if (groupCollapsing) {
                for (var group in groupCollapsing) {
                   if (groupCollapsing[group]) {
@@ -110,38 +112,40 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
 
       var _prepareItems = function (columns, selectedColumns, groupCollapsing, moveColumns) {
          var
-            columnId/*^^^*/,
             preparingItems = [],
-            result = {
-               fixedItems: [],
-               fixedMarkedKeys: [],
-               selectableItems: [],
-               selectableMarkedKeys: [],
+            fixed = {
+               items: [],
+               markedKeys: []
+            },
+            selectable = {
+               items: [],
+               markedKeys: [],
                groupCollapsing: typeof groupCollapsing === 'object' ? groupCollapsing : null
             };
          columns.each(function (column) {
-            columnId = column.getId();
+            var columnId = column.getId();
+            var colData = column.getRawData();
             if (column.get('fixed')) {
-               result.fixedItems.push(column.getRawData());
-               result.fixedMarkedKeys.push(columnId);
+               fixed.items.push(colData);
+               fixed.markedKeys.push(columnId);
             }
             else {
                if (moveColumns) {
-                  result.selectableItems.push(column.getRawData())
+                  selectable.items.push(colData)
                }
                else {
                   // При отключенном перемещении необходимо сформировать рекордсет с собственной моделью.
                   // Подготавливаем для него исходные данные.
-                  preparingItems.push(column.getRawData());
+                  preparingItems.push(colData);
                }
                if (selectedColumns.indexOf(columnId) !== -1) {
-                  result.selectableMarkedKeys.push(columnId);
+                  selectable.markedKeys.push(columnId);
                }
             }
          });
          if (moveColumns) {
             // При включенном перемещении сортируем записи, согласно переданному состоянию массива отмеченных записей
-            result.selectableItems.sort(function (el1, el2) {
+            selectable.items.sort(function (el1, el2) {
                var
                   idx1 = selectedColumns.indexOf(el1.id),
                   idx2 = selectedColumns.indexOf(el2.id);
@@ -154,14 +158,14 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
          else {
             // При отключенном перемещении будем использовать рекордсет с собственной моделью
             // для осуществления автосортировки отмеченных записей
-            result.selectableItems = new RecordSet({
+            selectable.items = new RecordSet({
                rawData: preparingItems,
                idProperty: 'id',
                model: ColumnsEditorModel
             });
-            _applySelectedToItems(result.selectableMarkedKeys, result.selectableItems);
+            _applySelectedToItems(selectable.markedKeys, selectable.items);
          }
-         return result;
+         return {fixed:fixed, selectable:selectable};
       };
 
       var _applySelectedToItems = function (selectedArray, items) {

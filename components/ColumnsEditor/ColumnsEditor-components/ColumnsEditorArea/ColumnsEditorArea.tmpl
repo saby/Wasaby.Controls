@@ -12,24 +12,24 @@
          <ws:SBIS3.CONTROLS.CheckBoxGroup
                  class="controls-ColumnsEditorArea__FixedView"
                  name="controls-ColumnsEditorArea__FixedView"
-                 items="{{ _preparedItems.fixedItems }}"
+                 items="{{ _preparedFixed.items }}"
                  idProperty="id"
                  displayProperty="title"
                  enabled="{{ false }}"
-                 selectedKeys="{{ _preparedItems.fixedMarkedKeys }}"
+                 selectedKeys="{{ _preparedFixed.markedKeys }}"
                  multiselect="{{ true }}" />
          <ws:SBIS3.CONTROLS.ListView
                  class="controls-ColumnsEditorArea__SelectableView"
                  name="controls-ColumnsEditorArea__SelectableView"
                  easyGroup="{{ true }}"
-                 items="{{ _preparedItems.selectableItems }}"
-                 _groupCollapsing="{{ _preparedItems.groupCollapsing }}"
+                 items="{{ _preparedSelectable.items }}"
+                 _groupCollapsing="{{ _preparedSelectable.groupCollapsing }}"
                  itemsActions="{{ [] }}"
                  idProperty="id"
                  itemsDragNDrop="{{ false }}"
                  displayProperty="title"
                  itemsSortMethod="{{ _itemsSortMethod }}"
-                 selectedKeys="{{ _preparedItems.selectableMarkedKeys }}"
+                 selectedKeys="{{ _preparedSelectable.markedKeys }}"
                  itemContentTpl="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/itemContentTpl"
                  multiselect="{{ true }}">
             <ws:handlers onItemClick="{{_onItemClick}}" onSelectedItemsChange="{{ _onSelectedItemsChange }}"/>
