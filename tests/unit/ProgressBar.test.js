@@ -10,11 +10,18 @@ define(
       describe('SBIS3.CONTROLS.ProgressBar', () => {
          let progressBar;
 
-         beforeEach(function () {
+         beforeEach(() => {
             if (typeof $ === 'undefined') {
                this.skip();
             } else {
                progressBar = Control.createControl(ProgressBar, {}, $('<div id="progressBar-test"></div>').appendTo('#mocha'));
+            }
+         });
+         afterEach(() => {
+            if (typeof $ === 'undefined') {
+               this.skip();
+            } else {
+               progressBar.destroy();
             }
          });
 
@@ -26,8 +33,6 @@ define(
                assert.equal(progressBar._getProgressPercent(0, 100, 50, 40), 40);
             });
          });
-
-         progressBar.destroy();
       });
    }
 );
