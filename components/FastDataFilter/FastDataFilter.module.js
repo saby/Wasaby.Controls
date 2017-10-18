@@ -165,7 +165,7 @@ define('js!SBIS3.CONTROLS.FastDataFilter',
                      return list;
                   }.bind(this));
                }
-               this._setItemPositionForIE10();
+               self._setItemPositionForIE10();
             });
          },
          _recalcDropdownWidth: function () {
