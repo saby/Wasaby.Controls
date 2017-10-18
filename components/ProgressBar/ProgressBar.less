@@ -1,40 +1,29 @@
-@heightProgressBar: @controls-ProgressBar-height - 2 * @default-border-width;
-@paddingLR: extract(@controls-ProgressBar-value-padding, 2);
-@alignText: left, right, center;
+& {
+  @alignText: left, right, center;
 
-.for(@alignText, {
-  .controls-ProgressBar_align-@{_item} {
-    .controls-ProgressBar__progress {
+  .for(@alignText, {
+    .controls-ProgressBar_align-@{_item} {
       text-align: @_item;
     }
-  }
-});
-
-.controls-ProgressBar when not (ispercentage(@controls-ProgressBar-width)) {
-  width: @controls-ProgressBar-width;
+  });
 }
 
-.controls-ProgressBar__progress_size {
-  height: @heightProgressBar;
-  border: @default-border-width solid @controls-ProgressBar-border-color;
-  border-radius: @controls-ProgressBar-border-radius;
-  line-height: @heightProgressBar;
-  padding: @controls-ProgressBar-value-padding;
-  font-size: @controls-ProgressBar-value-font-size;
-  & when (ispercentage(@controls-ProgressBar-width)) {
-    width: calc(~"@{controls-ProgressBar-width} - 2 * (@{default-border-width} + @{paddingLR})");
-  }
-  & when not (ispercentage(@controls-ProgressBar-width)) {
-    width: @controls-ProgressBar-width - 2 * (@default-border-width + @paddingLR);
-  }
+.controls-ProgressBar {
+  display: inline-block;
+  width: @ProgressBar-width;
 }
 
-.controls-ProgressBar__progress_color {
-  background-repeat: no-repeat;
-  background-color: @controls-ProgressBar-background-color;
-  background-image: linear-gradient(to right, @controls-ProgressBar-first-color, @controls-ProgressBar-last-color);
-}
-
-.controls-ProgressBar__progress_colorValue {
-  color: @controls-ProgressBar-value-color;
+.controls-ProgressBar__progress {
+  @border: 2 * @default-border-width;
+  height: @ProgressBar-height;
+  color: @ProgressBar-value-color;
+  line-height: @ProgressBar-height;
+  padding: @ProgressBar-value-padding;
+  border-radius: @ProgressBar-border-radius;
+  border: @default-border-width solid @ProgressBar-border-color;
+  background: @ProgressBar-background-color linear-gradient(to right, @ProgressBar-first-color, @ProgressBar-last-color) no-repeat;
+  .box-sizing();
+  & when not (@ProgressBar-value-font-size = @default-text-size) {
+    font-size: @ProgressBar-value-font-size;
+  }
 }

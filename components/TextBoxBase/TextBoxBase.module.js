@@ -262,19 +262,19 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
          this.setText(txt);
       },
       setEnabled: function(enabled) {
-         TextBoxBase.superclass.setEnabled.call(this, enabled);
+         TextBoxBase.superclass.setEnabled.apply(this, arguments);
          this._toggleState();
       },
       clearMark: function() {
-         TextBoxBase.superclass.clearMark.call(this);
+         TextBoxBase.superclass.clearMark.apply(this, arguments);
          this._toggleState();
       },
       markControl: function() {
-         TextBoxBase.superclass.markControl.call(this);
+         TextBoxBase.superclass.markControl.apply(this, arguments);
          this._toggleState();
       },
       _updateActiveStyles: function() {
-         TextBoxBase.superclass._updateActiveStyles.call(this);
+         TextBoxBase.superclass._updateActiveStyles.apply(this, arguments);
          this._toggleState();
       },
       _toggleState: function() {

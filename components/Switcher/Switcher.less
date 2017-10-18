@@ -1,12 +1,6 @@
 @crossing-line-btn: @switcherline-width - @switcher-btn-size;
 .get-size(@prop, @var1, @var2, @border) {
-   @temp: (@var1 + @var2) / 2;
-   & when (get-unit(@var1) = get-unit(@border)) {
-      @{prop}: @temp - @border;
-   }
-   & when not (get-unit(@var1) = get-unit(@border)) {
-      @{prop}: calc(~"@{temp} - @{border}");
-   }
+   @{prop}: calc(~"(@{var1} + @{var2}) / 2 - @{border}");
 }
 
 .switcherBorder(@border) {

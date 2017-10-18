@@ -458,14 +458,23 @@
    .controls-TabButton {
       .controls-TabButton__mainText {
          line-height: 26px; //for ie10-12
-         .controls-EditAtPlace__editor .controls-TextBox {
-            line-height: 20px;
-         }
       }
       .controls-TabButton__additionalText2 {
          .controls-EditAtPlace .controls-EditAtPlace__textField {
             padding: 0;
          }
+      }
+      //FIXME:
+      //далее следую правки за которые необходимо сжигать на костре
+      //необходимо их удалить при отказе от line-height в tabbutons
+      .controls-TabButton__mainText .controls-TextBox .controls-TextBox__field,
+      .controls-Link.controls-TabButton__mainText .controls-TextBox .controls-TextBox__field {
+          padding-bottom: 5px;
+      }
+      .controls-TabButton__additionalText2 {
+        .controls-TextBox .controls-TextBox__field {
+          line-height: 22px;
+        }
       }
    }
 }
