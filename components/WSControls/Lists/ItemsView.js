@@ -1,10 +1,10 @@
 /**
  * Created by kraynovdo on 22.09.2017.
  */
-define('js!WSControls/Lists/ItemsRender', [
+define('js!WSControls/Lists/ItemsView', [
    'Core/core-extend',
    'Core/Control',
-   'tmpl!WSControls/Lists/ItemsRender',
+   'tmpl!WSControls/Lists/ItemsView',
    'js!WSControls/Lists/resources/utils/ItemsUtil',
    'js!WS.Data/Type/descriptor'
 ], function (extend,

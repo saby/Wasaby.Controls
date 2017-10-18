@@ -1,9 +1,9 @@
 /**
  * Created by kraynovdo on 22.09.2017.
  */
-define('js!WSControls/Lists/ListView/ItemsRender', [
-   'js!WSControls/Lists/ItemsRender',
-   'tmpl!WSControls/Lists/ListView/ItemsRender'
+define('js!WSControls/Lists/ListControl/ListView', [
+   'js!WSControls/Lists/ItemsView',
+   'tmpl!WSControls/Lists/ListControl/ListView'
 ], function (ItemsViewRender, ItemsRenderTpl
    ) {
    'use strict';
