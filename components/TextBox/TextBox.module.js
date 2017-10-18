@@ -430,7 +430,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
             if (!this._compatPlaceholder) {
                this._createCompatPlaceholder();
             }
-            this._compatPlaceholder.html(text);
+            this._compatPlaceholder.find('.controls-TextBox__placeholder__overflow').html(text);
          }
          else {
             this._inputField.attr('placeholder', text);
@@ -617,7 +617,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
          if(compatPlaceholder.length) {
             this._compatPlaceholder = compatPlaceholder;
          } else {
-            this._compatPlaceholder = $('<div class="controls-TextBox__placeholder">' + this._options.placeholder + '</div>');
+            this._compatPlaceholder = $('<div class="controls-TextBox__placeholder"><span class="controls-TextBox__placeholder__overflow">' + this._options.placeholder + '</span></div>');
             this._inputField.after(this._compatPlaceholder);
          }
 
