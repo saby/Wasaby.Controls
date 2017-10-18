@@ -916,23 +916,9 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @private
            */
           _chooseCallback: function(result) {
-             var isModel;
-
-             /* После выбора из панели, возвращаем фокус в поле связи */
-             this.setActive(true);
              if(result && result.length) {
-                isModel = cInstance.instanceOfModule(result[0], 'WS.Data/Entity/Model');
+                var isModel = cInstance.instanceOfModule(result[0], 'WS.Data/Entity/Model');
                 this.setText('');
-                
-                //После выбора записи в в поле связи с единичным выбором надо отменить поиск
-                if (!this.getMultiselect()) {
-                   if (this._options.searchParam) {
-                      this._clearSearchDelay();
-                   } else {
-                      //Поддержка для старого варианта поиска
-                      this._clearDelayTimer();
-                   }
-                }
                 
                 if(isModel) {
                    this.addSelectedItems(result);
