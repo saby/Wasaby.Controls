@@ -1,4 +1,9 @@
 <div class="controls-ColumnsEditorArea__SelectableView__group">
-   <div class="controls-ColumnsEditorArea__SelectableView__group-line"></div>
-   <div class="controls-ColumnsEditorArea__SelectableView__group-caption">{{ item.group }}</div>
+   <div class="controls-GroupBy" data-group="{{item.group}}">
+      <!--<div class="controls-ColumnsEditorArea__SelectableView__group-line"></div>-->
+      <!--<div class="controls-ColumnsEditorArea__SelectableView__group-caption">{{item.group}}</div>-->
+      <div class="controls-GroupBy__separator controls-GroupBy__separator__right">
+         <span class="controls-GroupBy__separatorText controls-GroupBy__separatorCollapse">{{item.group}}</span>
+      </div>
+   </div>
 </div>
