@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
             }
          },
 
-         $constructor: function() {
+         $constructor: function () {
             CommandDispatcher.declareCommand(this, 'showEditorArea', this._showColumnsEditor);
             this._publish('onSelectedColumnsChange', 'onColumnsEditorShow');
          },
@@ -51,13 +51,14 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
 
          _setPickerConfig: function () {
             var self = this;
+            var cfg = this._columnsEditorConfig;
             //////////////////////////////////////////////////
-            if (this._columnsEditorConfig.columns && this._columnsEditorConfig.columns.getCount()) {
-               this._columnsEditorConfig.columns.each(function (column) {
+            if (cfg.columns && cfg.columns.getCount()) {
+               cfg.columns.each(function (column) {
                   column.set('group', 'Группа: ' + Math.ceil(3*Math.random()));//^^^
                });
             }
-            this._columnsEditorConfig.groupCollapsing = {/*^^^*/'Группа: 2':true};
+            cfg.groupCollapsing = {/*^^^*/'Группа: 2':true};
             //////////////////////////////////////////////////
             return {
                corner: 'tr',
@@ -74,9 +75,9 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                target: this.getContainer(),
                cssClassName: 'controls-ColumnsEditorArea-picker',
                componentOptions: {
-                  columns: this._columnsEditorConfig.columns,
-                  selectedColumns: this._columnsEditorConfig.selectedColumns,
-                  groupCollapsing: this._columnsEditorConfig.groupCollapsing,
+                  columns: cfg.columns,
+                  selectedColumns: cfg.selectedColumns,
+                  groupCollapsing: cfg.groupCollapsing,
                   title: this._options.title,
                   moveColumns: this._options.moveColumns,
                   handlers: {
