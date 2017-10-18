@@ -1,13 +1,13 @@
 define(
    [
       'Core/Control',
-      'js!SBIS3.CONTROLS.ProgressBar'
+      'js!WSControls/ProgressBars/ProgressBar'
    ],
    (Control, ProgressBar) => {
 
       'use strict';
 
-      describe('SBIS3.CONTROLS.ProgressBar', () => {
+      describe('WSControls.ProgressBars.ProgressBar', () => {
          let progressBar;
 
          beforeEach(() => {
@@ -21,7 +21,7 @@ define(
             if (typeof $ === 'undefined') {
                this.skip();
             } else {
-               progressBar.destroy();
+               //progressBar.destroy();
             }
          });
 
