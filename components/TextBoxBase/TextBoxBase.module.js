@@ -283,10 +283,9 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
               active = this.isActive(),
               enabled = this.isEnabled(),
               marked = this.isMarked(),
-              stateName = marked ? 'marked' : !enabled ? 'disabled' : 'active',
-              state = marked ? true : !enabled ? true : active;
+              stateName = marked ? 'marked' : !enabled ? 'disabled' : active ? 'active' : 'default';
          container.className = container.className.replace(/(^|\s)controls-TextBox__state__\S+/gi, '');
-         this._container.addClass('controls-TextBox__state__' + (state ? stateName : 'default'));
+         this._container.addClass('controls-TextBox__state__' + stateName);
       }
    });
 
