@@ -3,7 +3,6 @@ define('js!WSControls/Lists/ListControl', [
    'Core/Control',
    'Core/helpers/Object/isEmpty',
    'tmpl!WSControls/Lists/ListControl',
-   'tmpl!WSControls/Lists/ListControl/ItemTemplate',
    'js!WSControls/Lists/resources/utils/DataSourceUtil',
    'js!WSControls/Lists/Controllers/PageNavigation',
    'js!WSControls/Lists/resources/utils/ItemsUtil',
@@ -16,8 +15,7 @@ define('js!WSControls/Lists/ListControl', [
 ], function (extend,
              BaseControl,
              isEmpty,
-             ListViewTpl,
-             defaultItemTemplate,
+             ListControlTpl,
              DataSourceUtil,
              PageNavigation,
              ItemsUtil,
@@ -33,7 +31,7 @@ define('js!WSControls/Lists/ListControl', [
    var ListView = BaseControl.extend(
       {
          _controlName: 'WSControls/Lists/ListControl',
-         _template: ListViewTpl,
+         _template: ListControlTpl,
          iWantVDOM: true,
          _isActiveByClick: false,
 
@@ -61,7 +59,6 @@ define('js!WSControls/Lists/ListControl', [
          },
 
          _beforeMount: function(newOptions) {
-            this._itemTemplate = newOptions.itemTemplate || defaultItemTemplate;
             this._filter = newOptions.filter;
 
             if (newOptions.dataSource) {
@@ -74,8 +71,6 @@ define('js!WSControls/Lists/ListControl', [
          },
 
          _beforeUpdate: function(newOptions) {
-            this._itemTemplate = newOptions.itemTemplate || defaultItemTemplate;
-
             if (newOptions.filter != this._options.filter) {
                this._filter = newOptions.filter;
             }
@@ -91,11 +86,6 @@ define('js!WSControls/Lists/ListControl', [
 
 
             //TODO обработать смену фильтров и т.д. позвать релоад если надо
-         },
-
-
-         _getItemData: function(dispItem, index) {
-            return {};
          },
 
          //<editor-fold desc='EventHandlers'>
@@ -163,7 +153,7 @@ define('js!WSControls/Lists/ListControl', [
                var queryParams = this._prepareQueryParams(direction);
                def = DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
                   .addCallback(fHelpers.forAliveOnly(function (list) {
-                     self._notify('onDataLoad', list);
+                     self._notify('onDataLoad', list, direction);
                      this._onLoadPage(list, direction);
                      return list;
                   }, self))

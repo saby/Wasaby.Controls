@@ -31,8 +31,6 @@ define('js!WSControls/Lists/ItemsRender', [
 
          constructor: function (cfg) {
             ItemsRender.superclass.constructor.apply(this, arguments);
-            this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
-
             this._display = cfg.display;
             this._initIndices();
          },
@@ -51,13 +49,6 @@ define('js!WSControls/Lists/ItemsRender', [
             }
          },
 
-
-         _onCollectionChange: function() {
-            //TODO где должно быть это? в itemsView или здесь?
-            this._initIndices();
-            this._forceUpdate();
-         },
-
          _getStartEnumerationPosition: function() {
             this._curIndex = this._startIndex;
          },
@@ -72,10 +63,6 @@ define('js!WSControls/Lists/ItemsRender', [
 
          _getPropertyValue: function(itemContents, field) {
             return ItemsUtil.getPropertyValue(itemContents, field);
-         },
-
-         _getItemData: function(dispItem, index) {
-            return {};
          }
       });
    return ItemsRender;
