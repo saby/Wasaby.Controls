@@ -200,13 +200,13 @@ define('js!SBIS3.CONTROLS.TextBox', [
              /**
               * @cfg {String} Устанавливает размер поля ввода.
               * @remark
-              * По умолчанию значение опции "default"
-              * Значение "large" устaновит большой рамер поля ввода
+              * По умолчанию значение опции "m"
+              * Значение "l" устaновит большой рамер поля ввода
               * @example
               * Пример 1. Большое поле ввода:
               * фрагмент верстки:
               * <pre class="brush:xml">
-              *     <option name="size">large</option>
+              *     <option name="size">l</option>
               * </pre>
               */
             size: ''
@@ -430,7 +430,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
             if (!this._compatPlaceholder) {
                this._createCompatPlaceholder();
             }
-            this._compatPlaceholder.html(text);
+            this._compatPlaceholder.find('.controls-TextBox__placeholder__overflow').html(text);
          }
          else {
             this._inputField.attr('placeholder', text);
@@ -517,21 +517,6 @@ define('js!SBIS3.CONTROLS.TextBox', [
          // сделать возможность вешать через префикс attr-
          this._inputField.prop('readonly', !enabled);
       },
-      _toggleStateEnabled: function() {
-          var
-              enabled = this.isEnabled();
-          //todo: сделать навешивание классов и согласовать их с Бегуновым А.
-      },
-      _toggleStateValidate: function() {
-          var
-              marked = this.isMarked();
-          //todo: сделать навешивание классов и согласовать их с Бегуновым А.
-      },
-      _toggleStateActive: function() {
-          var
-              active = this.isActive();
-          //todo: сделать навешивание классов и согласовать их с Бегуновым А.
-      },
       _inputRegExp: function (e, regexp) {
          var keyCode = e.which || e.keyCode;
          //Клавиши стрелок, delete, backspace и тд
@@ -617,7 +602,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
          if(compatPlaceholder.length) {
             this._compatPlaceholder = compatPlaceholder;
          } else {
-            this._compatPlaceholder = $('<div class="controls-TextBox__placeholder">' + this._options.placeholder + '</div>');
+            this._compatPlaceholder = $('<div class="controls-TextBox__placeholder"><span class="controls-TextBox__placeholder__overflow">' + this._options.placeholder + '</span></div>');
             this._inputField.after(this._compatPlaceholder);
          }
 

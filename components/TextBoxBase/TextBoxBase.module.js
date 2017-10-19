@@ -262,27 +262,33 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
          this.setText(txt);
       },
       setEnabled: function(enabled) {
-         TextBoxBase.superclass.setEnabled.call(this, enabled);
-         this._toggleStateEnabled();
+         TextBoxBase.superclass.setEnabled.apply(this, arguments);
+         this._toggleState();
       },
       clearMark: function() {
-         TextBoxBase.superclass.clearMark.call(this);
-         this._toggleStateValidate();
+         TextBoxBase.superclass.clearMark.apply(this, arguments);
+         this._toggleState();
       },
       markControl: function() {
-         TextBoxBase.superclass.markControl.call(this);
-         this._toggleStateValidate();
+         TextBoxBase.superclass.markControl.apply(this, arguments);
+         this._toggleState();
       },
       _updateActiveStyles: function() {
-         TextBoxBase.superclass._updateActiveStyles.call(this);
-         this._toggleStateActive();
+         TextBoxBase.superclass._updateActiveStyles.apply(this, arguments);
+         this._toggleState();
       },
-      // методы которые будут переключать состояния поля ввода, пока не перейдем на vDom
-      _toggleStateEnabled: function() {
+      _getStateToggleContainer: function(){
+         return this._container;
       },
-      _toggleStateValidate: function() {
-      },
-      _toggleStateActive: function() {
+      _toggleState: function() {
+         var
+              container = this._getStateToggleContainer()[0],
+              active = this.isActive(),
+              enabled = this.isEnabled(),
+              marked = this.isMarked(),
+              stateName = marked ? 'marked' : !enabled ? 'disabled' : active ? 'active' : 'default';
+         container.className = container.className.replace(/(^|\s)controls-TextBox__state__\S+/gi, '');
+         this._getStateToggleContainer().addClass('controls-TextBox__state__' + stateName);
       }
    });
 

@@ -590,16 +590,8 @@ body {
 .controls-ListView .controls-ItemsToolbar__editActions {
   background: @controls-editInPlace-editor-bg;
 }
-
-.controls-DateBox.controls-FormattedTextBox {
-   .controls-FormattedTextBox__fieldWrapper {
-      .controls-FormattedTextBox__field {
-         height: 2.86rem;
-      }
-   }
-}
-
-.controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper .controls-FormattedTextBox__field .controls-FormattedTextBox__field-symbol {
+//todo: отказаться от данного сомнительного решения
+.controls-FormattedTextBox .controls-TextBox__wrapper .controls-TextBox__field .controls-FormattedTextBox__field-symbol {
 
     line-height: 2rem;
 
@@ -741,7 +733,7 @@ body .ws-window.ws-LoadingIndicator__window {
   line-height: 3.25rem;
 }
 
-.controls-FormattedTextBox .controls-FormattedTextBox__fieldWrapper {
+.controls-FormattedTextBox .controls-TextBox__wrapper {
   text-align: center;
 }
 
@@ -862,7 +854,7 @@ body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-
    height: 3rem;
 }
 
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateBox .controls-FormattedTextBox__fieldWrapper {
+body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateBox .controls-TextBox__wrapper {
     border-width: @default-border-width;
     border-radius: 0;
 }

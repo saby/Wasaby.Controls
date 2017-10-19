@@ -156,8 +156,8 @@ define('js!SBIS3.CONTROLS.FilterPanelChooser.DictionaryList', [
             if (cInstance.instanceOfModule(result, 'WS.Data/Collection/List')) {
                 items.clear();
                 if (result.getCount()) {
-                    items.setAdapter(result.at(0).getAdapter());
-                    items.assign(result);
+                   items.setAdapter(result.at(0).getAdapter());
+                   items.assign(result);
                 }
                 listView.setSelectedItemsAll();
                 this._updateValue();

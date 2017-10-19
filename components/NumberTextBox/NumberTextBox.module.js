@@ -210,6 +210,9 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          this._inputField.bind('blur', function(){
             self._blurHandler();
          });
+         if(this._options.text && !this._options.numericValue) {
+             this.setNumericValue(this._options.text);
+         }
          this._initMirrorInput();
       },
 
@@ -238,6 +241,8 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
             scrollLeft = cursorOffset - containerWidth;
             self._inputField.scrollLeft(scrollLeft > 0 ? scrollLeft + 1 : 0); // +1px на ширину каретки
          });
+
+         this._publish('onChangeNumericValue');
       },
 
       init: function() {
@@ -328,6 +333,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
             this._options.numericValue = parseFloat(value);
          }
          this._notifyOnPropertyChanged('numericValue');
+         this._notify('onChangeNumericValue', this._options.numericValue);
       },
       /**
        * Установить количество знаков после запятой

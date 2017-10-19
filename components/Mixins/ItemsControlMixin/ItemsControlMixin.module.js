@@ -259,6 +259,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    };
    /**
     * Миксин, задающий любому контролу поведение работы с набором однотипных элементов.
+    *
+    * Далее приведена последовательность событий, происходящих при взаимодействии с источником данных компонента:
+    *
+    * 1. Перед выполнением запроса к источнику данных - {@link onBeforeDataLoad}.
+    * 2. При успешном выполнении запроса: {@link onDataLoad} &#8594; {@link onItemsReady}.
+    * 3. При ошибке выполнения запроса: {@link onDataLoadError}.
+    *
     * @mixin SBIS3.CONTROLS.ItemsControlMixin
     * @public
     * @author Крайнов Дмитрий Олегович
@@ -279,23 +286,38 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see displayProperty
         */
        /**
-        * @event onBeforeDataLoad Происходит перед загрузкой данных.
+        * @event onBeforeDataLoad Происходит перед выполнением запроса к источнику данных компонента.
         * @remark
-        * Событие сработает перед запросом к источнику данных
+        * В обработчике события Вы можете изменить параметры, с которыми впоследствии будет выполнен запрос.
+        * Конфигурацию источника данных устанавливают в опции {@link dataSource}.
+        * Выполнение запроса можно инициировать методом {@link reload}.
+        * В <a href="https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/ItemsControlMixin/">описании миксина</a> приведена последовательность событий, происходящих при взаимодействии с источником данных компонента.
         * @param {Core/EventObject} eventObject Дескриптор события.
+        * @param {Object} filters Параметры фильтрации. Они используются в качестве условия для отбора возвращаемых записей. Значение параметра определяется опцией {@link filter}.
+        * @param {Array.<Object>} sorting Параметры сортировки записей, возвращаемых в результате выполнения запроса. Значение параметра  определяется опцией {@link sorting}.
+        * @param {Number} offset Количество записей в источнике данных, которые будут пропущены перед формированием результирующей выборки. Значение параметра определяется методом {@link setOffset} или с помощью аргумента offset в методе {@link reload}.
+        * @param {Number} limit Количество записей, возвращаемых из источника данных в результате выполнения запроса. Значение определяется опцией {@link pageSize}.
         * @example
         * <pre>
-        *    myView.subscribe('onBeforeDataLoad', function(eventObject) {
-        *       var filter = this.getFilter();
-        *       filter['myParam'] = myValue;
-        *       this.setFilter(filter, true)
+        *    myView.subscribe('onBeforeDataLoad', function(eventObject, filters, sorting, offset, limit) {
+        *
+        *       // Устанавливаем новое значение для поля, по которому отбираются записи.
+        *       filters['SomeField'] = newFieldValue;
+        *
+        *       // Устанавливаем новые параметры сортировки.
+        *       sorting = newSortingValue;
+        *
+        *       // В итоге запрос к источнику данных компонента будет выполнен с новыми значениями.
         *    });
         * </pre>
+        * @see onDataLoad
+        * @see reload
         */
+
        /**
-        * @event onDataLoad Происходит при загрузке данных.
+        * @event onDataLoad Происходит после успешного выполнения запроса к источнику данных компонента.
         * @param {Core/EventObject} eventObject Дескриптор события.
-        * @param {WS.Data/Collection/RecordSet} dataSet Набор данных.
+        * @param {WS.Data/Collection/RecordSet} dataSet Результирующих набор записей.
         * @example
         * <pre>
         *     myComboBox.subscribe('onDataLoad', function(eventObject) {
@@ -307,15 +329,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
         * @see getDataSource
         */
       /**
-       * @event onDataLoadError Происходит при ошибке загрузки данных.
+       * @event onDataLoadError Происходит в случае ошибки при выполнении запроса к источнику данных компонента.
        * @remark
-       * Событие сработает при получении ошибки от любого метода БЛ, вызванного стандартным способом.
+       * В результате выполнения метода бизнес-логики была получена ошибка.
+       * В случае разрыва соеднинения с БД (сервером) сообщение об ошибке не выводится.
        * @param {Core/EventObject} eventObject Дескриптор события.
-       * @param {HTTPError} error Произошедшая ошибка.
-       * @return {Boolean} Если вернуть:
+       * @param {HTTPError} error HTTP-статус.
+       * @return {Boolean} Из обработчика события можно возвращать следующие результаты:
        * <ol>
-       * <li>true, то будет считаться, что ошибка обработана, и стандартное поведение отменяется.</li>
-       * <li>Если не возвращать true, то выведется alert с описанием ошибки.</li>
+       *    <li>true. Ответ интерпретируется так, что ошибка была обработана, и в пользовательском интерфейсе не требуется создавать сообщение об ошибке.</li>
+       *    <li>false. В пользовательском интерфейсе создаётся сообщение с описанием ошибки.</li>
        * </ol>
        * @example
        * <pre>
@@ -410,8 +433,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             displayProperty: null,
              /**
               * @cfg {Array.<Object>} Устанавливает набор исходных данных, по которому строится отображение.
-              * @remark
-              * Если установлен источник данных в опции {@link dataSource}, то значение опции items будет проигнорировано.
               * @example
               * <pre class="brush:xml">
               *     <options name="items" type="array">
@@ -442,9 +463,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
               */
             items: null,
             /**
-             * @cfg {DataSource|WS.Data/Source/ISource|Function|Object} Устанавливает источник данных контрола.
+             * @cfg {DataSource|WS.Data/Source/ISource|Function|Object} Устанавливает источник данных компонента.
              * @remark
-             * Если установлен источник данных, то значение опции {@link items} будет проигнорировано.
+             * Данные, полученные из источника, будут отображены в компоненте при вызове метода {@link reload}.
              * @example
              * <b>Пример 1.</b> Чтобы установить конфигурацию источника данных через JS-код компонента, необходимо его инициализировать и установить с помощью метода {@link setDataSource}.
              * <pre>
@@ -589,7 +610,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              */
             groupBy : {},
             /**
-             * @cfg {String|HTMLElement|jQuery} Устанавливает отображаемый контент при отсутствии данных.
+             * @cfg {Content} Устанавливает отображаемый контент при отсутствии данных.
              * @remark
              * Опция устанавливает содержимое, отображаемое как при абсолютном отсутствии данных, так и в результате {@link groupBy фильтрации}.
              * Это может быть как обычный текст, так и пользовательский контрол или компонент.
@@ -1610,7 +1631,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
       /**
-       * Перезагружает набор записей представления данных с последующим обновлением отображения.
+       * Перезагружает набор записей компонента с последующим обновлением отображения.
+       * @remark
+       * При вызове метода происходят события {@link onBeforeDataLoad} &#8594; {@link onDataLoad} &#8594; {@link onItemsReady}, а в случае ошибки &#8594; {@link onDataLoadError}
+       * Метод автоматически вызывается в следующих случаях:
+       * <ul>
+       *    <li>при смене сортировки (см. {@link setSorting});</li>
+       *    <li>при изменении количества записей на одной странице (см. {@link setPageSize});</li>
+       *    <li>при изменении параметров фильтрации (см. {@link setFilter});</li>
+       *    <li>при инициализации компонента.</li>
+       * </ul>
        * @param {Object} filter Параметры фильтрации.
        * @param {String|Array.<Object.<String,Boolean>>} sorting Параметры сортировки.
        * @param {Number} offset Смещение первого элемента выборки.

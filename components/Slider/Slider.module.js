@@ -139,7 +139,7 @@ define('js!SBIS3.CONTROLS.Slider',
                this._publish('onDrawValueChange');
                this._fullLine = this._container.find('.controls-Slider__line__full');
                this._wrapper = this._container.find('.controls-Slider__wrapper');
-               this._endValue = this._prepareValue(this._options.endValue ? this._options.endValue : this._options.maxValue, 'end');
+               this._endValue = this._prepareValue(this._options.endValue, 'end');
                this._startValue = this._prepareValue(this._options.startValue, 'start');
                this._pointsContainers = {
                   start: this._container.find('.controls-Slider__point__start'),
@@ -149,7 +149,7 @@ define('js!SBIS3.CONTROLS.Slider',
                this._pointsContainers.end.on('mousedown touchstart', this._initDrag.bind(this));
                //если заданы начальные и конечные значения то необходимо их отрисовать и нотифицировать об этом
                //если значения не заданы то точки встанут в начало и конец а start/endValue будут пустыми
-               if (this._options.startValue || this._options.endValue) {
+               if (this._options.startValue !== this._options.minValue || this._options.endValue !== this._options.maxValue) {
                   this._redraw();
                }
                this._container.find('.controls-Slider__line__wrapper').on('click', this._lineClick.bind(this));

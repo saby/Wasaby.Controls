@@ -14,21 +14,13 @@
       .box-sizing();
       cursor: default;
       position: relative;
-      height:100%;
-      padding: 0 1px 0 @default-padding; //1px - запятая
-      //todo: проработать концепцию точки, чейчас это вообще дичь
-      &:after {
-         position: absolute;
-         right: 0;
-         bottom: 2px;
-         content: ',';
-      }
-      &:last-child:after {
-         content: '';
-      }
+      height: 100%;
+      padding: 0 0 0 @default-padding;
       &-caption {
          .text-overflow();
          .flex-shrink();
+         display: inline-block;
+         font-size: @default-text-size;
       }
    }
    &__showSelector.controls-IconButton { // Перебиваем стили .controls-IconButton
@@ -56,10 +48,10 @@
    }
    &__big-fontSize {//modifier
       .controls-FieldLink__item-caption {
-         font-size: @fieldLink-big-fontSize;
-         font-weight: bold;
-         color: @fieldLink-big-fontSize-color;
-         height: @fieldLink-big-height;
+         font-size:@fieldLink-big-fontSize;
+		   font-weight: bold;
+			color: @fieldLink-big-fontSize-color;
+			height: @fieldLink-big-height;
       }
    }
    &__dropAllLinks.controls-IconButton { // Перебиваем стили .controls-IconButton
@@ -86,16 +78,16 @@
       .flex-shrink(0);
    }
    &__fieldWrapper {
-      .inline-flexbox();
-      .flex-shrink(1);
-      position:relative;
-      height: 100%;
-      width: 100%;
-      text-decoration: inherit;
-      margin-right: 0;
-   }
-   &__itemsCollection {
-      .justify-content(flex-end);
+	   .inline-flexbox();
+	   .flex-shrink(1);
+	   position:relative;
+	   height: 100%;
+	   width: 100%;
+	   text-decoration: inherit;
+	   margin-right: 0;
+	}
+	&__itemsCollection {
+		.justify-content(flex-end);
       display: inline-flex;
       width: 100%;
       height: 100%;
@@ -115,26 +107,29 @@
       width: auto;
    }
    &__picker {
-      max-height: @fieldLink-picker-max-height;
-      min-height: @fieldLink-picker-min-height;
-      border: @fieldLink-border @gray-ccc-color;
-      margin-top: 0;
-      overflow: auto;
-      padding: @fieldLink-linkContainer-padding;
-      border-top: none;
-      .flexbox();
-      .flex-wrap(wrap);
-      .controls-FieldLink__item {
-         /* Учитываем бордер пикера */
-         width: ~'calc(50% - 2px)';
-         .inline-flexbox();
-         align-items: center;
-         margin: 0;
-         padding: 0;
-         line-height: @fieldLink-linkItem-line-height;
-         &:after {
-            content: none;
-         }
+   max-height: @fieldLink-picker-max-height;
+   min-height: @fieldLink-picker-min-height;
+   border: @fieldLink-border @gray-ccc-color;
+   margin-top: 0;
+   overflow: auto;
+   padding: @fieldLink-linkContainer-padding;
+   border-top: none;
+   .flexbox();
+   .flex-wrap(wrap);
+
+   .controls-FieldLink__item {
+      /* Учитываем бордер пикера */
+      width: ~'calc(50% - 2px)';
+      .inline-flexbox();
+      align-items: center;
+      margin: 0;
+      padding: 0;
+      line-height: @fieldLink-linkItem-line-height;
+      height: auto;
+	   &:after {
+         content: none;
+      }
+      
       }
       &.ws-disabled .controls-FieldLink__item-caption {
          margin-right: @default-padding;
@@ -180,9 +175,6 @@
 }
 .ws-disabled {
    .controls-FieldLink{
-      &__item {
-         padding-right: 0;
-      }
       &__linksWrapper {
          max-width:100%;
       }
@@ -213,11 +205,7 @@
          .justify-content();
       }
       &__item-caption {
-         padding: 0 @default-padding 0 0 ;
          max-width:100%;
-      }
-      &__item-cross {
-         display: none;
       }
    }
 }
@@ -241,12 +229,7 @@
 .controls-FieldLink__selected-single:not(.controls-FieldLink__multiselect) .controls-TextBox__placeholder {
    display: none;
 }
-.ws-enabled.controls-FieldLink__inputMinWidth .controls-FieldLink__fieldWrapper {
-   /* https://developer.mozilla.org/en-US/docs/Web/CSS/--*
-      т.к. min-width нужен только для темизации, то делаю его
-      через custom property */
-   --min-width: @fieldLink-fieldWrapper-minWidth;
-}
+
 .controls-FieldLink__selected:not(.controls-FieldLink__multiselect):not(.controls-FieldLink__inputMinWidth) .controls-FieldLink__fieldWrapper {
    visibility: hidden;
    width: 0;
@@ -258,10 +241,4 @@
 }
 .controls-FieldLink__hiddenIfEmpty.ws-disabled:not(.controls-FieldLink__selected) {
    display: none;
-}
-.ws-is-ie10 {
-   /* ie10 не поддерживает custom property */
-   .ws-enabled.controls-FieldLink__inputMinWidth .controls-FieldLink__fieldWrapper {
-      min-width: @fieldLink-fieldWrapper-minWidth;
-   }
 }

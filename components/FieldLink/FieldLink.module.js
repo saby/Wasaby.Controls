@@ -794,10 +794,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
              return this.getChildControlByName('FieldLinkItemsCollection');
           }, '_getLinkCollection'),
           
-          _getInputMinWidth: memoize(function() {
-             var fieldWrapper = this.getContainer().find('.controls-FieldLink__fieldWrapper');
-             return parseInt(window.getComputedStyle(fieldWrapper[0]).getPropertyValue('--min-width') || fieldWrapper.css('min-width'));
-          }, '_getInputMinWidth'),
+          _getInputMinWidth: function() {
+             var fieldWrapper = this.getContainer().find('.controls-TextBox__wrapper'),
+                 afterFieldWrapper = this._getAfterFieldWrapper();
+
+             /* По стандарту минимальная ширина поля ввода - 33% */
+             return (fieldWrapper[0].offsetWidth - afterFieldWrapper[0].offsetWidth)/100*33;
+          },
 
           /** Обработчики событий контрола отрисовки элементов **/
           _onDrawItemsCollection: function() {
@@ -805,20 +808,20 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  itemsWidth = 0,
                  toAdd = [],
                  isEnabled = this.isEnabled(),
-                 needResizeInput = this._isInputVisible() || this._options.alwaysShowTextBox,
-                 availableWidth, items, additionalWidth, itemWidth, itemsCount, item, showAllLinkWidth;
+                 isInputVisible = this._isInputVisible() || this._options.alwaysShowTextBox,
+                 availableWidth, items, additionalWidth, itemWidth, itemsCount, item, showAllLinkWidth, needResize;
 
              if(!linkCollection.isPickerVisible()) {
                 if (!this._isEmptySelection()) {
                    items = linkCollection.getContainer().find('.controls-FieldLink__item');
                    itemsCount = items.length;
+                   needResize = isInputVisible || (this.getMultiselect() && !this.isEnabled() && itemsCount > 1);
 
                    /* Не надо вызывать пересчёт элементов в случаях:
                       1) Единичный выбор - расчёт ширины сделан на css
-                      2) Множественный выбор в задизейбленом состоянии с количеством элементов > 1,
-                         сделано затемнение на css, если элемент 1 - то он должен полностью влезать в поле связи,
-                         поэтому считать надо. */
-                   if (needResizeInput) {
+                      2) Множественный выбор в задизейбленом состоянии с одним элементом,
+                         если элемент 1 - то он должен полностью влезать в поле связи, сделано на css. */
+                   if (needResize) {
                       additionalWidth = (isEnabled ? this._getAfterFieldWrapper().outerWidth() : 0) + parseInt(this._container.css('border-left-width'))*2;
 
                       /* Для multiselect'a и включённой опции alwaysShowTextBox
@@ -856,7 +859,11 @@ define('js!SBIS3.CONTROLS.FieldLink',
                       }
 
                       if (toAdd.length < itemsCount) {
-                         linkCollection._getItemsContainer().html(toAdd);
+                         /* В задизейбленом состоянии не надо перерисовывать,
+                            надо только показать кнопку */
+                         if(this.isEnabled()) {
+                            linkCollection._getItemsContainer().html(toAdd);
+                         }
                          this._toggleShowAll(true);
                       } else {
                          this._toggleShowAll(false);

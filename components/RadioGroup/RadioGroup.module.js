@@ -60,7 +60,7 @@ function(RadioGroupBase, dotTpl, ItemTemplate, ITextValue) {
       /**
        * @typedef {Object} GroupItems
        * @property {String} id Идентификатор элемента группы.
-       * @property {String} title Заголовок элемента группы.
+       * @property {Content} title Заголовок элемента группы.
        * @property {String} caption Заголовок элемента группы.
        * @translatable title caption
        */
