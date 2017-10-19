@@ -74,7 +74,7 @@ define('js!WSControls/Lists/ItemsRender', [
             return ItemsUtil.getPropertyValue(itemContents, field);
          },
 
-         _getItemData: function(projItem, index) {
+         _getItemData: function(dispItem, index) {
             return {};
          }
       });

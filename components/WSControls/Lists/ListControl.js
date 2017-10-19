@@ -8,6 +8,7 @@ define('js!WSControls/Lists/ListControl', [
    'js!WSControls/Lists/Controllers/PageNavigation',
    'js!WSControls/Lists/resources/utils/ItemsUtil',
    'Core/helpers/functional-helpers',
+   'Core/helpers/Object/isEqual',
    'Core/Deferred',
    'js!WS.Data/Type/descriptor',
    'js!WS.Data/Source/ISource',
@@ -21,6 +22,7 @@ define('js!WSControls/Lists/ListControl', [
              PageNavigation,
              ItemsUtil,
              fHelpers,
+             isEqual,
              Deferred,
              Types,
              ISource,
@@ -45,7 +47,6 @@ define('js!WSControls/Lists/ListControl', [
          _sorting: undefined,
 
          _itemTemplate: null,
-         _selectedItem: null,
 
          constructor: function (cfg) {
             ListView.superclass.constructor.apply(this, arguments);
@@ -54,7 +55,7 @@ define('js!WSControls/Lists/ListControl', [
          },
 
          //TODO private
-         _initNavigation: function(options, dataSource) {
+         __initNavigation: function(options, dataSource) {
             this._navigationController = new PageNavigation(options.navigation.config);
             this._navigationController.prepareSource(dataSource);
          },
@@ -65,7 +66,7 @@ define('js!WSControls/Lists/ListControl', [
 
             if (newOptions.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
-               this._initNavigation(newOptions, this._dataSource);
+               this.__initNavigation(newOptions, this._dataSource);
                if (!this._items) {
                   this.reload(newOptions);
                }
@@ -79,9 +80,10 @@ define('js!WSControls/Lists/ListControl', [
                this._filter = newOptions.filter;
             }
 
-            if (newOptions.dataSource != this._options.dataSource) {
+            //TODO внимание только для случая что dataSource задается объектом
+            if (!isEqual(newOptions.dataSource, this._options.dataSource)) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
-               this._initNavigation(newOptions, this._dataSource);
+               this.__initNavigation(newOptions, this._dataSource);
                this.reload(newOptions);
             }
 
@@ -92,35 +94,9 @@ define('js!WSControls/Lists/ListControl', [
          },
 
 
-         _getItemData: function(projItem, index) {
+         _getItemData: function(dispItem, index) {
             return {};
          },
-
-         _getGroupData: function() {
-            var
-               groupBy = this._options.groupBy,
-               groupData;
-            groupData = {
-               multiselect : this._options.multiSelect,
-               groupContentTemplate: groupBy.contentTemplate
-            };
-            return groupData;
-         },
-
-         _getGroupItem : function(groupId, item) {
-            var groupData, groupTemplate;
-            if (this._groupTemplate) {
-               groupData = this._getGroupData();
-               groupData.item = item;
-               groupData.groupId = groupId;
-               groupTemplate = this._groupTemplate
-            }
-            return {
-               data : groupData,
-               tpl : groupTemplate
-            }
-         },
-
 
          //<editor-fold desc='EventHandlers'>
 

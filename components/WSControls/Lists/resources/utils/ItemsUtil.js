@@ -20,7 +20,7 @@ define('js!WSControls/Lists/resources/utils/ItemsUtil', [
             if (!cfg.groupBy.method) {
                var field = cfg.groupBy.field;
 
-               method = function (item, index, projItem) {
+               method = function (item, index, dispItem) {
                   //делаем id группы строкой всегда, чтоб потом при обращении к id из верстки не ошибаться
                   return ItemsUtil.getPropertyValue(item, field) + '';
                }

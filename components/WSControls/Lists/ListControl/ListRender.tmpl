@@ -3,10 +3,10 @@
       <ws:partial
             template="{{_options.itemTemplate}}"
             item="{{_display.at(_curIndex).getContents()}}"
-            projItem="{{_display.at(_curIndex)}}"
+            dispItem="{{_display.at(_curIndex)}}"
             index="{{_curIndex}}"
             _getPropertyValue="{{_getPropertyValue}}"
             _options="{{_options}}"
-            selected="{{_display.at(_curIndex).getContents() == _selectedItem}}"/>
+            selected="{{_display.at(_curIndex).getContents() == _options.selectedItem}}"/>
    </ws:for>
 </div>

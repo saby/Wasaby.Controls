@@ -28,7 +28,6 @@ define('js!WSControls/Lists/ListControl/ListRender', [
 
          __initSelectedItem: function(cfg) {
 
-            //TODO решить это д.б. здесь или в ListView
             if(!cfg.selectedItem) {
                if (!this._selectedIndex) {
                   this._selectedIndex = 0;//переводим на первый элемент
@@ -43,6 +42,10 @@ define('js!WSControls/Lists/ListControl/ListRender', [
             }
 
             //TODO обработать virt scroll
+         },
+
+         _onItemClick: function(e, dispItem) {
+            this._notify('onItemClick', dispItem);
          }
       });
 

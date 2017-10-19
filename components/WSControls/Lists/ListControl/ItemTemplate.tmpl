@@ -1,9 +1,9 @@
-<div class="ws-ListView__item {{selected ? 'ws-ListView__item__selected'}}" event:onclick="_onItemClick(projItem)">
+<div class="ws-ListView__item {{selected ? 'ws-ListView__item__selected'}}" event:onclick="_onItemClick(dispItem)">
    <ws:if data="{{contentTemplate}}">
       <ws:partial
             template="{{contentTemplate}}"
             item="{{item}}"
-            projItem="{{projItem}}"
+            dispItem="{{dispItem}}"
             index="{{index}}"
             itemData="{{itemData}}"
             _getPropertyValue="{{_getPropertyValue}}"
