@@ -11,16 +11,16 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
       'WS.Data/Functor/Compute',
       'WS.Data/Collection/RecordSet',
       'tmpl!SBIS3.CONTROLS.ColumnsEditorArea',
+      'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/groupTpl',
       'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/itemContentTpl',
+      'css!SBIS3.CONTROLS.ColumnsEditorArea',
       'js!SBIS3.CONTROLS.Button',
       'js!SBIS3.CONTROLS.ListView',
       'js!SBIS3.CONTROLS.CheckBoxGroup',
-      'css!SBIS3.CONTROLS.ColumnsEditorArea',
-      'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/groupTpl',
       'js!SBIS3.CONTROLS.ScrollContainer'
    ],
 
-   function (CompoundControl, ColumnsEditorModel, ItemsMoveController, CommandDispatcher, ComputeFunctor, RecordSet, dotTplFn, ItemContentTpl) {
+   function (CompoundControl, ColumnsEditorModel, ItemsMoveController, CommandDispatcher, ComputeFunctor, RecordSet, dotTplFn) {
       'use strict';
 
       /**
@@ -35,7 +35,6 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
-               //^^^_itemContentTpl: ItemContentTpl,
                columns: undefined,
                selectedColumns: [],
                moveColumns: true,
@@ -47,7 +46,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
 
          _modifyOptions: function () {
             var cfg = ColumnsEditorArea.superclass._modifyOptions.apply(this, arguments);
-            var prepared = _prepareItems(cfg.columns, cfg.selectedColumns, cfg.groupCollapsing, cfg.moveColumns);
+            var prepared = _prepareItems(cfg.columns, cfg.selectedColumns, cfg.moveColumns);
             cfg._preparedFixed = prepared.fixed;
             cfg._preparedSelectable = prepared.selectable;
             cfg._onItemClick = _onItemClick;
@@ -69,7 +68,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
             this._fixedView = this.getChildControlByName('controls-ColumnsEditorArea__FixedView');
             this._selectableView = this.getChildControlByName('controls-ColumnsEditorArea__SelectableView');
             // В опциях могут быть указаны группы, которые нужно свернуть при открытии
-            var groupCollapsing = this._options._preparedSelectable.groupCollapsing;
+            var groupCollapsing = this._options.groupCollapsing;
             if (groupCollapsing) {
                for (var group in groupCollapsing) {
                   if (groupCollapsing[group]) {
@@ -110,7 +109,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
 
       // Private methods:
 
-      var _prepareItems = function (columns, selectedColumns, groupCollapsing, moveColumns) {
+      var _prepareItems = function (columns, selectedColumns, moveColumns) {
          var
             preparingItems = [],
             fixed = {
@@ -119,8 +118,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
             },
             selectable = {
                items: [],
-               markedKeys: [],
-               groupCollapsing: typeof groupCollapsing === 'object' ? groupCollapsing : null
+               markedKeys: []
             };
          columns.each(function (column) {
             var columnId = column.getId();

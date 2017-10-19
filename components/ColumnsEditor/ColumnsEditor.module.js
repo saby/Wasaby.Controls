@@ -7,10 +7,11 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
       'js!SBIS3.CONTROLS.CompoundControl',
       'Core/CommandDispatcher',
       'js!SBIS3.CONTROLS.PickerMixin',
+      /*'Core/tmpl/tmplstr', 'js!SBIS3.CONTROLS.Utils.TemplateUtil',*/
       'tmpl!SBIS3.CONTROLS.ColumnsEditor',
+      'css!SBIS3.CONTROLS.ColumnsEditor',
       'js!SBIS3.CONTROLS.IconButton',
-      'js!SBIS3.CONTROLS.ColumnsEditorArea',
-      'css!SBIS3.CONTROLS.ColumnsEditor'
+      'js!SBIS3.CONTROLS.ColumnsEditorArea'
    ],
 
    function (CompoundControl, CommandDispatcher, PickerMixin, dotTplFn) {
@@ -40,9 +41,9 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
             this._publish('onSelectedColumnsChange', 'onColumnsEditorShow');
          },
 
-         init: function () {
+         /*init: function () {
             ColumnsEditor.superclass.init.apply(this, arguments);
-         },
+         },*/
 
          _showColumnsEditor: function () {
             this._columnsEditorConfig = this._notify('onColumnsEditorShow');
@@ -52,13 +53,15 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
          _setPickerConfig: function () {
             var self = this;
             var cfg = this._columnsEditorConfig;
-            //////////////////////////////////////////////////
+            //////////////////////////////////////////////////^^^
             if (cfg.columns && cfg.columns.getCount()) {
                cfg.columns.each(function (column) {
-                  column.set('group', 'Группа: ' + Math.ceil(3*Math.random()));//^^^
+                  column.set('group', Math.ceil(3*Math.random()));
                });
             }
-            cfg.groupCollapsing = {/*^^^*/'Группа: 2':true};
+            cfg.groupTitleTpl = '{{?it.group == 1}}Группа: a1{{??it.group == 2}}Группа: a2{{??it.group == 3}}Группа: a3{{??}}Группа: a{{=it.group}}{{?}}';//<ws:if data="{{groupId == 1}}">Группа: a1</ws:if><ws:else data="{{groupId == 2}}">Группа: a2</ws:else><ws:else data="{{groupId == 3}}">Группа: a3</ws:else><ws:else>Группа: a{{groupId}}</ws:else>
+            cfg.groupTitles = {'1':'Группа: b1', '2':'Группа: b2', '3':'Группа: b3'};
+            cfg.groupCollapsing = {'2':true};
             //////////////////////////////////////////////////
             return {
                corner: 'tr',
@@ -77,7 +80,9 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                componentOptions: {
                   columns: cfg.columns,
                   selectedColumns: cfg.selectedColumns,
-                  groupCollapsing: cfg.groupCollapsing,
+                  groupTitleTpl: cfg.groupTitleTpl && (typeof cfg.groupTitleTpl === 'function' || typeof cfg.groupTitleTpl === 'string') ? cfg.groupTitleTpl : null,
+                  groupTitles: typeof cfg.groupTitles === 'object' ? cfg.groupTitles : null,
+                  groupCollapsing: typeof cfg.groupCollapsing === 'object' ? cfg.groupCollapsing : null,
                   title: this._options.title,
                   moveColumns: this._options.moveColumns,
                   handlers: {
