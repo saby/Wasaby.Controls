@@ -236,7 +236,9 @@ define(
          // что бы к нему корректно применились стили.
          this.getContainer().children('.controls-DateBox').toggleClass('ws-enabled', enabled).toggleClass('ws-disabled', !enabled);
       },
-
+      _getStateToggleContainer: function(){
+         return this.getContainer().children('.controls-DateBox');
+      },
       showPicker: function () {
          DatePicker.superclass.showPicker.call(this);
          this._getPickerMethod('Show')();

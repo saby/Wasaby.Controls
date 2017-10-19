@@ -20,7 +20,7 @@
   line-height: @ProgressBar-height - 2 * @default-border-width;
   padding: @ProgressBar-value-padding;
   border-radius: @ProgressBar-border-radius;
-  border: @default-border-width @default-border-style @ProgressBar-border-color;
+  border: @default-border-width solid @ProgressBar-border-color;
   background: @ProgressBar-background-color linear-gradient(to right, @ProgressBar-first-color, @ProgressBar-last-color) no-repeat;
   .box-sizing();
   & when not (@ProgressBar-value-font-size = @default-text-size) {
