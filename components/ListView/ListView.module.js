@@ -1588,7 +1588,7 @@ define('js!SBIS3.CONTROLS.ListView',
                          containerCords = cont.getBoundingClientRect();
                      return {
                         /* При расчётах координат по вертикали учитываем прокрутку */
-                         top: targetCords.top - containerCords.top + cont.scrollTop,
+                         top: Math.round(targetCords.top - containerCords.top + cont.scrollTop),
                          left: targetCords.left - containerCords.left
                      };
                   },
