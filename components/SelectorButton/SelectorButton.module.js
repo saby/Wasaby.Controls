@@ -135,6 +135,8 @@ define('js!SBIS3.CONTROLS.SelectorButton',
             selectMode: 'floatArea',
             /**
              * @cfg {Boolean} Использовать для выбора {@link SBIS3.CONTROLS.Action.SelectorAction}
+             * @remark
+             * При включенной опции в <a href='https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/FieldLink/options/dictionaries/'>dictionaries</a> можно передать <a href='https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/FieldLink/typedefs/Dictionaries/'>dialogOptions</a>.
              */
             useSelectorAction: false,
             /**
