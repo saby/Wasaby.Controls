@@ -1410,7 +1410,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                event.node.innerHTML = this._replaceWhitespaces(event.node.innerHTML);
             }.bind(this));
 
-            if (this._options.editorConfig.browser_spellcheck && (cConstants.browser.chrome && cConstants.browser.safari)) {
+            if (this._options.editorConfig.browser_spellcheck && (cConstants.browser.chrome || cConstants.browser.safari)) {
                // Если включена проверка правописания, нужно при исправлениях генерировать событие NodeChange, иначе об этом изменение никак не станет известно
                var _onSelectionChange1 = function (evt) {
                   if (evt.target === document) {
