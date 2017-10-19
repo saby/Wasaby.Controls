@@ -1,5 +1,5 @@
 <div
-   class="controls-Label controls-Label__text controls-Label__text_color controls-Label__text_size{{visible ? '' : ' ws-hidden'}}"
-   title="{{tooltip}}"
+   class="controls-Label controls-Label__text controls-Label__text_color controls-Label__text_size{{_options.visible ? '' : ' ws-hidden'}}"
+   title="{{_options.tooltip}}"
    event:onclick="_clickCaptionHandler()"
->{{caption|sanitize}}</div>
+>{{_options.caption|sanitize}}</div>
