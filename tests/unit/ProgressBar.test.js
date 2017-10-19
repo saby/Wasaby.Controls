@@ -1,20 +1,27 @@
 define(
    [
       'Core/Control',
-      'js!SBIS3.CONTROLS.ProgressBar'
+      'js!WSControls/ProgressBars/ProgressBar'
    ],
    (Control, ProgressBar) => {
 
       'use strict';
 
-      describe('SBIS3.CONTROLS.ProgressBar', () => {
+      describe('WSControls.ProgressBars.ProgressBar', () => {
          let progressBar;
 
-         beforeEach(function () {
+         beforeEach(() => {
             if (typeof $ === 'undefined') {
                this.skip();
             } else {
                progressBar = Control.createControl(ProgressBar, {}, $('<div id="progressBar-test"></div>').appendTo('#mocha'));
+            }
+         });
+         afterEach(() => {
+            if (typeof $ === 'undefined') {
+               this.skip();
+            } else {
+               //progressBar.destroy();
             }
          });
 
@@ -26,8 +33,6 @@ define(
                assert.equal(progressBar._getProgressPercent(0, 100, 50, 40), 40);
             });
          });
-
-         progressBar.destroy();
       });
    }
 );

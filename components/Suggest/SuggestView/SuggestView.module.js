@@ -134,7 +134,23 @@ define('js!SBIS3.CONTROLS.SuggestView',
                 });
                 //Т.к. для каждой вклдки свой searchParam, необходимо при смене сообщить контроллеру
                 self.sendCommand('changeSearchParam', searchParam);
-             })
+             });
+             
+             this.subscribe('onAfterVisibilityChange', function (event, visible) {
+                if (!visible) {
+                   self._getTabButtons().setSelectedIndex(0);
+                   /* Когда скрываемся необходимо очистить записи в списках,
+                      иначе на неактивной вкладке может быть список в некорректном состоянии.
+                      Пример:
+                      Поискали - записи нашлись на вкладках.
+                      Стерли - автодополнение скрылось, а списки остались в отфильтрованном состоянии. */
+                   self._viewsIterator(function(view) {
+                      if (view.getItems()) {
+                         view.getItems().clear();
+                      }
+                   });
+                }
+             });
           },
 
           /* Т.к. кнопка 'Показать всё' отображается для каждого списка отдельно,

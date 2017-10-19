@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
              *     <li>left - выравнивание вкладки слева;</li>
              * </ul>
              * @property {Content} content Устанавливает xhtml-вёрстку заголовка вкладки при редактировании по месту.
-             * @property {String} title Устанавливает подпись вкладки.
+             * @property {Content} title Устанавливает подпись вкладки.
              * @translatable title
              */
             /**
