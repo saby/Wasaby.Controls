@@ -171,6 +171,9 @@ define('js!WSControls/Lists/ListControl', [
             } else if (direction == 'up') {
                this._items.prepend(list);
             }
+            if (this._navigationController) {
+               this._navigationController.calculateState(list, direction);
+            }
          },
 
          _isLoading: function(){
@@ -196,15 +199,14 @@ define('js!WSControls/Lists/ListControl', [
                ) {
                this._items.setMetaData(list.getMetaData());
                this._items.assign(list);
-               //this._drawItemsCallbackDebounce();
             } else {
                this._items = list;
             }
-            this._toggleIndicator(false);
-            //self._checkIdProperty();
+            if (this._navigationController) {
+               this._navigationController.calculateState(list)
+            }
 
-            //this._dataLoadedCallback();
-            //self._notify('onBeforeRedraw');
+            this._toggleIndicator(false);
             return list;
          }
 

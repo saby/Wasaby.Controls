@@ -60,30 +60,6 @@ define('js!WSControls/Lists/resources/utils/ItemsUtil', [
             });
             return resItem;
          }
-      },
-
-      getItemById: function(list, id, idProperty) {
-         if (cInstance.instanceOfModule(list, 'WS.Data/Collection/RecordSet')) {
-            return list.getRecordById(id);
-         }
-         else {
-            var iterator, resItem;
-
-            if (list instanceof Array) {
-               iterator = function(func){
-                  list.forEach(func);
-               };
-            } else {
-               iterator = list.each.bind(list);
-
-            }
-            iterator(function(item, i){
-               if (ItemsUtil.getPropertyValue(item.getContents(), idProperty) == id) {
-                  resItem = item;
-               }
-            });
-            return resItem;
-         }
       }
    };
    return ItemsUtil;

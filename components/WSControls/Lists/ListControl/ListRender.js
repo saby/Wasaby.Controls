@@ -35,7 +35,7 @@ define('js!WSControls/Lists/ListControl/ListRender', [
                else {
                   this._selectedIndex++;//условно ищем ближайший элемент, рядом с удаленным
                }
-               this._selectedItem = this._display.at(this._selectedIndex);
+               this._selectedItem = cfg.display.at(this._selectedIndex);
             }
             else {
                this._selectedItem = cfg.selectedItem;

@@ -17,7 +17,7 @@ function () {
          throw new Error('Method prepareQueryParams must be implemented');
       },
 
-      calculateState: function(list, display, direction) {
+      calculateState: function(list, direction) {
          throw new Error('Method calculateState must be implemented');
       },
 

@@ -27,7 +27,6 @@ define('js!WSControls/Lists/ItemsRender', [
          iWantVDOM: true,
          _isActiveByClick: false,
          _template: ItemsRenderTpl,
-         _display: null,
 
          constructor: function (cfg) {
             ItemsRender.superclass.constructor.apply(this, arguments);
@@ -42,12 +41,14 @@ define('js!WSControls/Lists/ItemsRender', [
          },
 
 
-         _beforeUpdate: function(newOptions) {
-            if (newOptions.display != this._options.display) {
-               this._display = newOptions.display;
-               this._initIndices();
-            }
+         _beforeMount: function() {
+            this._initIndices();
          },
+
+         _beforeUpdate: function(newOptions) {
+            this._initIndices();
+         },
+
 
          _getStartEnumerationPosition: function() {
             this._curIndex = this._startIndex;

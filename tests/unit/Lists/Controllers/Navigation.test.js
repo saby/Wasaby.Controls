@@ -73,7 +73,7 @@ define(
 
 
                dataRsDown.setMetaData({more: false});
-               pNav.calculateState(dataRsDown, undefined, 'down');
+               pNav.calculateState(dataRsDown, 'down');
 
                assert.equal(3, pNav._nextPage, 'State nextPage is incorrect after load down');
                assert.isFalse(pNav._more, 'State more is incorrect after load down');
@@ -97,7 +97,7 @@ define(
                assert.isFalse(pNav.hasMoreData('up'), 'Method hasMoreData returns incorrect value after reload');
 
                dataRsDown.setMetaData({more: 8});
-               pNav.calculateState(dataRsDown, undefined, 'down');
+               pNav.calculateState(dataRsDown, 'down');
                assert.equal(2, pNav._nextPage, 'State nextPage is incorrect after load down');
                assert.equal(8, pNav._more, 'State more is incorrect after load down');
                assert.isFalse(pNav.hasMoreData('down'), 'Method hasMoreData returns incorrect value after load down');
