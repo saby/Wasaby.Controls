@@ -200,13 +200,13 @@ define('js!SBIS3.CONTROLS.TextBox', [
              /**
               * @cfg {String} Устанавливает размер поля ввода.
               * @remark
-              * По умолчанию значение опции "default"
-              * Значение "large" устaновит большой рамер поля ввода
+              * По умолчанию значение опции "m"
+              * Значение "l" устaновит большой рамер поля ввода
               * @example
               * Пример 1. Большое поле ввода:
               * фрагмент верстки:
               * <pre class="brush:xml">
-              *     <option name="size">large</option>
+              *     <option name="size">l</option>
               * </pre>
               */
             size: ''
@@ -516,21 +516,6 @@ define('js!SBIS3.CONTROLS.TextBox', [
          // FIXME Шаблонизатор сейчас не позволяет навешивать одиночные атрибуты, у Зуева Димы в планах на сентябрь
          // сделать возможность вешать через префикс attr-
          this._inputField.prop('readonly', !enabled);
-      },
-      _toggleStateEnabled: function() {
-          var
-              enabled = this.isEnabled();
-          //todo: сделать навешивание классов и согласовать их с Бегуновым А.
-      },
-      _toggleStateValidate: function() {
-          var
-              marked = this.isMarked();
-          //todo: сделать навешивание классов и согласовать их с Бегуновым А.
-      },
-      _toggleStateActive: function() {
-          var
-              active = this.isActive();
-          //todo: сделать навешивание классов и согласовать их с Бегуновым А.
       },
       _inputRegExp: function (e, regexp) {
          var keyCode = e.which || e.keyCode;
