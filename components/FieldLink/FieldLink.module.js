@@ -220,6 +220,19 @@ define('js!SBIS3.CONTROLS.FieldLink',
                  * @property {String} name Имя (Идентификатор справочника).
                  * @property {selectionTypeDef} selectionType
                  * @property {Object} dialogOptions Опции для диалога.
+                 * Передаются при включенной опции <a href="https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/SelectorButton/options/useSelectorAction/">useSelectorAction</a>.
+                 * <pre class="brush: xml">
+                 *     <option name="template">js!SBIS3.MyArea.MyDatGridView</option>
+                 *     <options name="dialogOptions">
+                 *        <option name="minWidth">500px</option>
+                 *     </options>
+                 * </pre>
+                 * или
+                 * <pre class="brush: xml">
+                 *     <ws:Object template="js!SBIS3.MyArea.MyDatGridView">
+                 *        <ws:dialogOptions minWidth = "500px" />
+                 *     </ws:Object>
+                 * </pre>
                  * @property {String} caption Текст в меню выбора справочников. Опция актуальна, когда для поля связи установлено несколько справочников.
                  * Открыть справочник можно через меню выбора справочников или с помощью метода {@link showSelector}.
                  * Меню выбора справочников - это кнопка, которая расположена внутри поля связи с правого края:
