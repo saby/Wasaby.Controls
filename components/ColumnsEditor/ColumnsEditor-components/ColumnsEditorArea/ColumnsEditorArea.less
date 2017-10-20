@@ -1,38 +1,25 @@
+
+@ColumnsEditor-head-title-height: 24px;
+@ColumnsEditor-head-preferences-height: 24px;
+@ColumnsEditor-head-gap-top: 8px;
+@ColumnsEditor-head-gap-inner: 12px;
+@ColumnsEditor-head-gap-bottom: 4px;
+
 .controls-ColumnsEditorArea {
    position: relative;
    width: 388px;
    height: 100%;
-   .controls-ColumnsEditorArea__view-item {
-      height: 32px;
-      display: inline-block;
-      .controls-ListView__itemCheckBox {
-         left: 4px;
-         top: 4px;
-      }
-   }
-
-   .controls-ColumnsEditorArea__FixedView {
-      .controls-CheckBox {
-         display: block;
-         padding: 4px;
-      }
-      .controls-CheckBox .controls-CheckBox__caption {
-         padding-left: 8px;
-         box-sizing: border-box;
-         color: @black-color !important;
-      }
-   }
 }
 
 .controls-ColumnsEditorArea__head {
-   height: 40px;
    box-sizing: border-box;
-   padding: 8px 44px 8px 12px;
+   padding: @ColumnsEditor-head-gap-top 6px @ColumnsEditor-head-gap-bottom 12px;
    background-color: #f7f4f0;
 }
 
 .controls-ColumnsEditorArea__head-title {
-   height: 24px;
+   height: @ColumnsEditor-head-title-height;
+   margin-bottom: @ColumnsEditor-head-gap-inner;
 }
 
 .controls-ColumnsEditorArea__head-title-left {
@@ -44,12 +31,90 @@
 
 .controls-ColumnsEditorArea__head-title-right {
    float: right;
+   margin-right: 38px;
+}
+
+.controls-ColumnsEditorArea__ApplyColumnsButton {
+   vertical-align: middle;
+}
+
+.controls-ColumnsEditorArea__head-preferences {
+   font-size: 15px;
+}
+
+.controls-ColumnsEditorArea__head-preferences-label {
+   float: left;
+   padding: 3px 8px 0px 0px;
+   color: rgb(153, 153, 153);
+}
+
+.controls-ColumnsEditorArea__head-preferences-editor {
+   height: @ColumnsEditor-head-preferences-height;
+
+   .controls-ListView__hoveredItem {
+      background-color: transparent;
+   }
+
+   .controls-ItemsToolbar {
+      bottom: 0px;
+      background-color: transparent;
+   }
+
+   /*.controls-editInPlace*/ .controls-editInPlace__editor {
+      padding: 0;
+   }
+}
+
+.controls-ColumnsEditorArea__Preferences {
+}
+
+.controls-ColumnsEditorArea__Preferences-item {
+   box-sizing: border-box;
+   height: @ColumnsEditor-head-preferences-height;
+   padding: 3px 0 0 6px;
+}
+
+.controls-ColumnsEditorArea__Preferences-item-text {
+   color: rgb(0, 85, 187);
+   cursor: pointer;
+}
+
+.controls-ColumnsEditorArea__Preferences-item-text:hover {
+   text-decoration: underline;
+}
+
+.controls-ColumnsEditorArea__Preferences-input {
+   width: 100%;
 }
 
 .controls-ColumnsEditorArea__body {
+   box-sizing: border-box;
+   height: ~"calc(100% - "(@ColumnsEditor-head-title-height + @ColumnsEditor-head-preferences-height + @ColumnsEditor-head-gap-top + @ColumnsEditor-head-gap-inner + @ColumnsEditor-head-gap-bottom)~")";
    border-top: 1px solid #CCCCCC;
-   height: ~"calc(100% - 40px)";
    padding: 12px 0;
+}
+
+.controls-ColumnsEditorArea__FixedList {
+   .controls-CheckBox {
+      display: block;
+      padding: 4px;
+   }
+
+   /*.controls-CheckBox*/ .controls-CheckBox__caption {
+      padding-left: 8px;
+      box-sizing: border-box;
+      color: @black-color !important;
+   }
+}
+
+.controls-ColumnsEditorArea__view-item {
+   height: 32px;
+   display: inline-block;
+
+   .controls-ListView__itemCheckBox {
+      left: 4px;
+      top: 4px;
+   }
 }
 
 .controls-ColumnsEditorArea__view-item-text {
@@ -64,20 +129,16 @@
    }
 }
 
-.controls-ColumnsEditorArea__SelectableView {
+.controls-ColumnsEditorArea__SelectableList {
    cursor: pointer;
 }
 
-.controls-ColumnsEditorArea__ApplyColumnsButton {
-   vertical-align: middle;
-}
-
-.controls-ColumnsEditorArea__SelectableView__group {
+.controls-ColumnsEditorArea__SelectableList__group {
    /*height: 18px;*/
    position: relative;
 }
 
-/*.controls-ColumnsEditorArea__SelectableView__group-line {
+/*.controls-ColumnsEditorArea__SelectableList__group-line {
    content: ' ';
    height: 1px;
    left: 0;
@@ -88,7 +149,7 @@
    position: absolute;
 }*/
 
-/*.controls-ColumnsEditorArea__SelectableView__group-caption {
+/*.controls-ColumnsEditorArea__SelectableList__group-caption {
    float: right;
    padding: 0 6px;
    position: relative;

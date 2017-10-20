@@ -11,8 +11,10 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
       'WS.Data/Functor/Compute',
       'WS.Data/Collection/RecordSet',
       'tmpl!SBIS3.CONTROLS.ColumnsEditorArea',
-      'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/groupTpl',
-      'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/itemContentTpl',
+      'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/preferences',
+      'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/preferencesEdit',
+      'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/selectableGroupContent',
+      'tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/selectableItemContent',
       'css!SBIS3.CONTROLS.ColumnsEditorArea',
       'js!SBIS3.CONTROLS.Button',
       'js!SBIS3.CONTROLS.ListView',
@@ -40,33 +42,59 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
                moveColumns: true,
                title: ''
             },
+            _preferencesView: undefined,
             _fixedView: undefined,
             _selectableView: undefined
          },
 
          _modifyOptions: function () {
             var cfg = ColumnsEditorArea.superclass._modifyOptions.apply(this, arguments);
+            cfg._optsPreferences = {
+               items: new RecordSet({
+                  rawData: [{
+                     id: 1,
+                     title: 'Тестовый шаблон',
+                     info: {prop1:'Свойство 1', prop2:'Свойство 2', prop3:'Свойство 3'}
+                  }],
+                  idProperty: 'id'
+               }),
+               itemsActions: _makeItemsActions(),
+               onItemClick: null,
+               onSelectedItemsChange: null
+            };
             var prepared = _prepareItems(cfg.columns, cfg.selectedColumns, cfg.moveColumns);
-            cfg._preparedFixed = prepared.fixed;
-            cfg._preparedSelectable = prepared.selectable;
-            cfg._onItemClick = _onItemClick;
+            cfg._optsFixed = prepared.fixed;
+            cfg._optsSelectable = prepared.selectable;
+            cfg._optsSelectable.onItemClick = _onItemClick;
             if (!cfg.moveColumns) {
                // Добавляем автосортировку отмеченных элементов - они должны отображаться перед неотмеченными
-               cfg._itemsSortMethod = _getItemsSortMethod();
-               cfg._onSelectedItemsChange = _onSelectedItemsChange;
+               cfg._optsSelectable.itemsSortMethod = _getItemsSortMethod();
+               cfg._optsSelectable.onSelectedItemsChange = _onSelectedItemsChange;
             }
             return cfg;
          },
 
          $constructor: function () {
-            CommandDispatcher.declareCommand(this, 'applyColumns', this._applyColumns);
+            CommandDispatcher.declareCommand(this, 'applyColumns', this._commandApplyColumns);
             this._publish('onSelectedColumnsChange');
          },
 
          init: function () {
             ColumnsEditorArea.superclass.init.apply(this, arguments);
-            this._fixedView = this.getChildControlByName('controls-ColumnsEditorArea__FixedView');
-            this._selectableView = this.getChildControlByName('controls-ColumnsEditorArea__SelectableView');
+            this._preferencesView = this.getChildControlByName('controls-ColumnsEditorArea__Preferences');
+            this._fixedView = this.getChildControlByName('controls-ColumnsEditorArea__FixedList');
+            this._selectableView = this.getChildControlByName('controls-ColumnsEditorArea__SelectableList');
+
+            //this._preferencesView.setItemsHover(false);
+            //this.subscribeTo(this._preferencesView, 'onChangeHoveredItem', this._preferencesView.setItemsHover.bind(this._preferencesView, false));
+
+            this.subscribeTo(this._preferencesView, 'onAfterBeginEdit', this._preferencesView.setItemsActions.bind(this._preferencesView, []));
+            this.subscribeTo(this._preferencesView, 'onEndEdit', function (evtName, model, withSaving) {
+            });
+            this.subscribeTo(this._preferencesView, 'onAfterEndEdit', function (evtName, model, $target, withSaving) {
+               this._preferencesView.setItemsActions(_makeItemsActions());
+            }.bind(this));
+
             // В опциях могут быть указаны группы, которые нужно свернуть при открытии
             var groupCollapsing = this._options.groupCollapsing;
             if (groupCollapsing) {
@@ -83,7 +111,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
             }
          },
 
-         _applyColumns: function () {
+         _commandApplyColumns: function () {
             var
                list = this._selectableView,
                selectedColumns = [].concat(list.getSelectedKeys()),
@@ -164,6 +192,24 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
             _applySelectedToItems(selectable.markedKeys, selectable.items);
          }
          return {fixed:fixed, selectable:selectable};
+      };
+
+      var _makeItemsActions = function () {
+         return [
+            {name:'edit', title:rk('Редактировать'), icon:'sprite:icon-16 icon-Edit icon-primary action-hover'},
+            {name:'clone', title:rk('Дублировать'), icon:'sprite:icon-16 icon-Copy icon-primary action-hover'},
+            {name:'delete', title:rk('Удалить'), icon:'sprite:icon-16 icon-Erase icon-error'}
+         ].map(function (inf) {
+            return {
+               name: inf.name,
+               icon: inf.icon,
+               caption: inf.title,
+               tooltip: inf.title,
+               isMainAction: true,
+               onActivated: function ($item, itemId, itemModel, action) {
+               }
+            };
+         });
       };
 
       var _applySelectedToItems = function (selectedArray, items) {

@@ -62,6 +62,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
             cfg.groupTitleTpl = '{{?it.group == 1}}Группа: a1{{??it.group == 2}}Группа: a2{{??it.group == 3}}Группа: a3{{??}}Группа: a{{=it.group}}{{?}}';//<ws:if data="{{groupId == 1}}">Группа: a1</ws:if><ws:else data="{{groupId == 2}}">Группа: a2</ws:else><ws:else data="{{groupId == 3}}">Группа: a3</ws:else><ws:else>Группа: a{{groupId}}</ws:else>
             cfg.groupTitles = {'1':'Группа: b1', '2':'Группа: b2', '3':'Группа: b3'};
             cfg.groupCollapsing = {'2':true};
+            cfg.moveColumns = false;//^^^true
             //////////////////////////////////////////////////
             return {
                corner: 'tr',

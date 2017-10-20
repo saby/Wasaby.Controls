@@ -6,38 +6,60 @@
             <ws:SBIS3.CONTROLS.Button class="controls-ColumnsEditorArea__ApplyColumnsButton" caption="Применить" command="applyColumns" primary="true" />
          </div>
       </div>
+      <div class="controls-ColumnsEditorArea__head-preferences">
+         <div class="controls-ColumnsEditorArea__head-preferences-label">{[Шаблон]}</div>
+         <div class="controls-ColumnsEditorArea__head-preferences-editor">
+            <ws:SBIS3.CONTROLS.ListView
+               class="controls-ColumnsEditorArea__Preferences controls-ListView__disableHover"
+               name="controls-ColumnsEditorArea__Preferences"
+               items="{{_optsPreferences.items}}"
+               itemsActions="{{_optsPreferences.itemsActions}}"
+               itemsHover="{{false}}"
+               itemsDragNDrop="{{false}}"
+               idProperty="id"
+               displayProperty="title"
+               itemContentTpl="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/preferences"
+               editMode="click|single"
+               editingTemplate="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/preferencesEdit"
+               >
+               <ws:handlers onItemClick="{{_optsPreferences.onItemClick}}"/>
+            </ws:SBIS3.CONTROLS.ListView>
+         </div>
+      </div>
    </div>
    <ws:SBIS3.CONTROLS.ScrollContainer class="controls-ColumnsEditorArea__body">
       <ws:content type="string">
          <ws:SBIS3.CONTROLS.CheckBoxGroup
-                 class="controls-ColumnsEditorArea__FixedView"
-                 name="controls-ColumnsEditorArea__FixedView"
-                 items="{{ _preparedFixed.items }}"
-                 idProperty="id"
-                 displayProperty="title"
-                 enabled="{{ false }}"
-                 selectedKeys="{{ _preparedFixed.markedKeys }}"
-                 multiselect="{{ true }}" />
+            class="controls-ColumnsEditorArea__FixedList"
+            name="controls-ColumnsEditorArea__FixedList"
+            items="{{ _optsFixed.items }}"
+            idProperty="id"
+            displayProperty="title"
+            enabled="{{ false }}"
+            selectedKeys="{{ _optsFixed.markedKeys }}"
+            multiselect="{{ true }}"
+         />
          <ws:SBIS3.CONTROLS.ListView
-                 class="controls-ColumnsEditorArea__SelectableView"
-                 name="controls-ColumnsEditorArea__SelectableView"
-                 easyGroup="{{ true }}"
-                 items="{{ _preparedSelectable.items }}"
-                 groupTitleTpl="{{groupTitleTpl}}"
-                 groupTitles="{{groupTitles}}"
-                 _groupCollapsing="{{groupCollapsing}}"
-                 itemsActions="{{ [] }}"
-                 idProperty="id"
-                 itemsDragNDrop="{{ false }}"
-                 displayProperty="title"
-                 itemsSortMethod="{{ _itemsSortMethod }}"
-                 selectedKeys="{{ _preparedSelectable.markedKeys }}"
-                 itemContentTpl="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/itemContentTpl"
-                 multiselect="{{ true }}">
-            <ws:handlers onItemClick="{{_onItemClick}}" onSelectedItemsChange="{{ _onSelectedItemsChange }}"/>
+            class="controls-ColumnsEditorArea__SelectableList"
+            name="controls-ColumnsEditorArea__SelectableList"
+            easyGroup="{{ true }}"
+            items="{{ _optsSelectable.items }}"
+            groupTitleTpl="{{groupTitleTpl}}"
+            groupTitles="{{groupTitles}}"
+            _groupCollapsing="{{groupCollapsing}}"
+            itemsActions="{{ [] }}"
+            itemsDragNDrop="{{ false }}"
+            idProperty="id"
+            displayProperty="title"
+            itemsSortMethod="{{_optsSelectable.itemsSortMethod}}"
+            selectedKeys="{{_optsSelectable.markedKeys}}"
+            itemContentTpl="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/selectableItemContent"
+            multiselect="{{ true }}"
+            >
+            <ws:handlers onItemClick="{{_optsSelectable.onItemClick}}" onSelectedItemsChange="{{_optsSelectable.onSelectedItemsChange}}"/>
             <ws:groupBy field="group">
                <ws:contentTemplate>
-                  <ws:partial template="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/groupTpl" scope="{{contentTemplate}}" groupTitleTpl="{{groupTitleTpl}}" groupTitles="{{groupTitles}}" />
+                  <ws:partial template="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/selectableGroupContent" scope="{{contentTemplate}}" groupTitleTpl="{{groupTitleTpl}}" groupTitles="{{groupTitles}}" />
                </ws:contentTemplate>
             </ws:groupBy>
          </ws:SBIS3.CONTROLS.ListView>
