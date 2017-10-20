@@ -851,11 +851,13 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
       },
 
       _dataLoadedCallback : function(){
-         var items;
+         var items = this.getItems();
          
          if (this._checkEmptySelection()) {
             if (items && items.getCount()) {
                this._setFirstItemAsSelected();
+               /* Необходимо сигналить об изменениях,
+                  иначе мы добавляем в selectedKeys ключ, а об этом никто не узнаёт */
                this._afterSelectionHandler(this.getSelectedKeys(), []);
             }
          }
