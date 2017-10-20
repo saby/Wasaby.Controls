@@ -1,4 +1,14 @@
 .controls-TextArea {
+   .generate-height(@i: 1) when (@i =< 10) {
+      &__field__maxheight-@{i} {
+         max-height: @i * @text-area-field-line-height;
+      }
+      &__field__minheight-@{i} {
+         min-height: @i * @text-area-field-line-height;
+      }
+      .generate-height(@i + 1);
+   }
+   .generate-height();
    &__field {
       position: absolute;
       line-height: @text-area-field-line-height;
@@ -29,25 +39,17 @@
          min-height: 0;
          top: 0;
       }
-   }
-   //TODO сделать это всегда
-   &.ws-disabled {
-      border-bottom-color: @default-border-color-disabled;
-      &.controls-TextArea__hiddenIfEmpty {
-         .controls-TextArea__Field {
-            position: absolute;
-         }
-         .controls-TextArea__view{
-            position: static;
-            height: auto !important;
-            min-height: 0 !important;
-            &.controls-TextArea__view-empty {
-               height: 0 !important;
-            }
+      &__disabled {
+         min-height: 0;
+         &.controls-TextArea__view__empty {
+            height: 0 !important; //todo:?????
          }
       }
    }
    //todo: cascade
+   &.ws-disabled {
+      border-bottom-color: @default-border-color-disabled;
+   }
    .controls-TextBox__field {
       white-space: pre-wrap; //https://bugzilla.mozilla.org/show_bug.cgi?id=1137650 //todo
       overflow: auto; //todo
@@ -60,13 +62,3 @@
       }
    }
 }
-.generate-height(@i: 1) when (@i =< 10) {
-   .controls-TextArea__field__maxheight-@{i} {
-      max-height: @i * @text-area-field-line-height;
-   }
-   .controls-TextArea__field__minheight-@{i} {
-      min-height: @i * @text-area-field-line-height;
-   }
-   .generate-height(@i + 1);
-}
-.generate-height();
