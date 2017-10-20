@@ -1,0 +1,7 @@
+<div class="controls-popup">
+    <ws:for data="index, item in popupItems">
+        <div class="ws-popup-item" style="left: {{item.left}}; right: {{item.right}}; top: {{item.top}}; bottom: {{item.bottom}}; width: {{item.width}}; height: {{item.height}}; z-index: {{item.zIndex}}">
+            <ws:partial template="js!WSControls/Windows/Popup/Popup" scope="{{item.dialogOptions}}"/>
+        </div>
+    </ws:for>
+</div>
