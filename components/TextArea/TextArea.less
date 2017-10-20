@@ -53,10 +53,10 @@
 
    .generate-height(@i: 1) when (@i =< @height-count) {
       .controls-TextArea__field__maxheight-@{i} {
-         max-height: @i * @text-area-field-line-height;
+         max-height: @i * @default-line-height;
       }
       .controls-TextArea__field__minheight-@{i} {
-         min-height: @i * @text-area-field-line-height;
+         min-height: @i * @default-line-height;
       }
 
       .generate-height(@i + 1);
