@@ -52,6 +52,7 @@ define('js!SBIS3.CONTROLS.SuggestView',
           _dotTplFn: dotTplFn,
           $protected: {
              _options: {
+                _tabControlClasses: '',
                 /**
                  * @typedef {object} Item
                  * @property {String} align Устанавливает выравнивание вкладки. Доступные значения:
@@ -207,9 +208,8 @@ define('js!SBIS3.CONTROLS.SuggestView',
 
           _modifyOptions: function() {
              var opts = SuggestView.superclass._modifyOptions.apply(this, arguments);
-             if(opts.items.length === 1) {
-                opts.cssClassName += ' controls-suggestView__singleTab';
-             }
+             
+             opts._tabControlClasses += opts.items.length === 1 ? ' controls-suggestView__singleTab' : ' controls-suggestView__multipleTabs';
              if (opts.displayField) {
                 IoC.resolve('ILogger').log('SuggestView', 'Опция displayField является устаревшей, используйте displayProperty');
                 opts.displayProperty = opts.displayField;
