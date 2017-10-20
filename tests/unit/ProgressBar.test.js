@@ -8,29 +8,24 @@ define(
       'use strict';
 
       describe('WSControls.ProgressBars.ProgressBar', () => {
-         let progressBar;
+         var PB;
 
-         beforeEach(() => {
+
+         beforeEach(function () {
             if (typeof $ === 'undefined') {
                this.skip();
             } else {
-               progressBar = Control.createControl(ProgressBar, {}, $('<div id="progressBar-test"></div>').appendTo('#mocha'));
+               PB = Control.createControl(ProgressBar, {}, $('<div id="progressBar-test"></div>').appendTo('#mocha'));
             }
          });
-         afterEach(() => {
-            if (typeof $ === 'undefined') {
-               this.skip();
-            } else {
-               //progressBar.destroy();
-            }
-         });
+
 
          describe('_getProgressPercent', () => {
             it('return', () => {
-               assert.equal(progressBar._getProgressPercent(0, 100, 50, 1), 50);
-               assert.equal(progressBar._getProgressPercent(-100, 100, 50, 1), 75);
-               assert.equal(progressBar._getProgressPercent(0, 100, 50, 25), 50);
-               assert.equal(progressBar._getProgressPercent(0, 100, 50, 40), 40);
+               assert.equal(PB._getProgressPercent(0, 100, 50, 1), 50);
+               assert.equal(PB._getProgressPercent(-100, 100, 50, 1), 75);
+               assert.equal(PB._getProgressPercent(0, 100, 50, 25), 50);
+               assert.equal(PB._getProgressPercent(0, 100, 50, 40), 40);
             });
          });
       });

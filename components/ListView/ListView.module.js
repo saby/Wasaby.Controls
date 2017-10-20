@@ -1646,7 +1646,7 @@ define('js!SBIS3.CONTROLS.ListView',
                          containerCords = cont.getBoundingClientRect();
                      return {
                         /* При расчётах координат по вертикали учитываем прокрутку */
-                         top: targetCords.top - containerCords.top + cont.scrollTop,
+                         top: Math.round(targetCords.top - containerCords.top + cont.scrollTop),
                          left: targetCords.left - containerCords.left
                      };
                   },
@@ -4724,7 +4724,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * Если нужно удалить одну запись, то в параметр передаётся простое значение - идентификатор элемента.
           * @param {String} [message] Текст, который будет использован в диалоговом окне перед началом удаления записей из источника.
           * Если параметр не передан, то для удаления нескольких записей будет использован текст "Удалить записи?", а для удаления одной записи - "Удалить текущую запись?".
-          * @returns {Deferred} Возвращает объект deferred. На результат работы метода можно подписаться для решения прикладных задача.
+          * @returns {Deferred} Возвращает объект deferred. На результат работы метода можно подписаться для решения прикладных задач.
           */
          deleteRecords: function(idArray, message) {
             var
