@@ -173,7 +173,7 @@ define('js!SBIS3.CONTROLS.hierarchyMixin', [
             curPath = [],
             curLvl = 0,
             hierIterate = function(root) {
-               if (Array.indexOf(curPath, root) > -1) {
+               if (curPath.indexOf(root) > -1) {
                   var error = 'Recursive hierarchy structure detected: node with id "' + root + '" has link to itself';
                   if (curPath.map) {
                      error += ' (';

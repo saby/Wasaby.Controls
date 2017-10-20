@@ -2,7 +2,10 @@
 @default-height:               24px;
 @default-height-big:           48px;
 @default-border-width:         1px;
-@default-font-size:            14px;
+@default-text-size:            14px;
+@small-text-size:              12px;
+@large-text-size:              15px;
+@huge-text-size:               17px;
 @default-icon-size:            16px;
 @default-icon-size-medium:     24px;
 @default-icon-size-large:      32px;
@@ -12,9 +15,13 @@
 @default-padding-small:        2px;
 @default-input-padding:        @default-padding;
 //textbox
-@text-box-height:                 @default-height;
-@text-box-font-size:              @default-font-size;
+@text-box-height-m:               @default-height;
+@text-box-height-l:               @default-height;
+@text-box-font-size-m:            @default-text-size;
+@text-box-font-size-l:            18px;
+@text-box-line-height:            @default-base-line-height;
 @text-box-input-padding:          0 @default-input-padding;
+@text-box-input-padding-l:        0;//на данный момент большое и малое поле ввода не различаются в теме online //todo @default-padding-small
 @text-box-information-icon-size:  13px;//по стандарту
 @text-box-border-radius:          0px;
 //text-area
@@ -27,7 +34,7 @@
 @combo-box-shadow-display:        block;
 //suggest-text-box
 @suggest-text-box-icon-size:                @default-icon-size;
-@suggest-text-box-icon-cross-padding:       0 @default-padding-small;
+@suggest-text-box-icon-cross-padding:       0 @default-padding;
 //suggest-text-box
 @fieldLink-link-cross-size:       @default-icon-size;
 //search-form
@@ -48,4 +55,12 @@
 //button
 @button-large-height:             @default-height-big;
 @button-large-border-radius:      24px;
-@button-large-font-size:          18px;
+@button-large-font-size:          18px;@search-border-radius:                                                                                                  10px;
+@search-field-padding:                                                                                                  0 0 0 12px;
+@search-button-wrapper-padding:                                                                                         0 5px 0 0;
+@search-loop-size:                                                                                                      @default-icon-size;
+@search-form-icon-padding:                                                                                              0 2px;
+//area-blocks
+@spacing-between-blocks:                                                                                                6px;
+//missspell
+@miss-spell-padding:              8px;

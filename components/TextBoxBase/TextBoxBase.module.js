@@ -260,6 +260,35 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       setValue : function(txt) {
          IoC.resolve('ILogger').log('setValue()', 'setValue is deprecated. Use setText()');
          this.setText(txt);
+      },
+      setEnabled: function(enabled) {
+         TextBoxBase.superclass.setEnabled.apply(this, arguments);
+         this._toggleState();
+      },
+      clearMark: function() {
+         TextBoxBase.superclass.clearMark.apply(this, arguments);
+         this._toggleState();
+      },
+      markControl: function() {
+         TextBoxBase.superclass.markControl.apply(this, arguments);
+         this._toggleState();
+      },
+      _updateActiveStyles: function() {
+         TextBoxBase.superclass._updateActiveStyles.apply(this, arguments);
+         this._toggleState();
+      },
+      _getStateToggleContainer: function(){
+         return this._container;
+      },
+      _toggleState: function() {
+         var
+              container = this._getStateToggleContainer()[0],
+              active = this.isActive(),
+              enabled = this.isEnabled(),
+              marked = this.isMarked(),
+              stateName = marked ? 'marked' : !enabled ? 'disabled' : active ? 'active' : 'default';
+         container.className = container.className.replace(/(^|\s)controls-TextBox__state__\S+/gi, '');
+         this._getStateToggleContainer().addClass('controls-TextBox__state__' + stateName);
       }
    });
 

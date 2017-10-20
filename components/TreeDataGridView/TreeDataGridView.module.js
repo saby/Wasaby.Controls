@@ -175,7 +175,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              * <br/>
              * Кнопка отображается в виде иконки с классом icon-16 icon-View icon-primary (синяя двойная стрелочка). Изменение иконки не поддерживается.
              * <br/>
-             * При клике по стрелке происходит событие {@link onItemActivate}, в обработчике которого, как правило, устанавливают отрытие <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/editing-dialog/'>диалога редактирования</a>.
+             * При клике по стрелке происходит событие {@link onItemActivate}, в обработчике которого, как правило, устанавливают отрытие <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/'>диалога редактирования</a>.
              * @example
              * Устанавливаем опцию:
              * <pre>
@@ -282,7 +282,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
          if (cfg.inside && !cfg.prepend) {
             cfg.inside = false;
-            lastItemParent = lastItem.getContents().get(this._options.parentProperty);
+            // Учитываем так же, что lastItem может быть группой - в таком случае родитель группы нам не интересен
+            // https://online.sbis.ru/opendoc.html?guid=2781df20-a30f-4d7b-82de-c37944da5729
+            lastItemParent = lastItem && lastItem.isNode ? lastItem.getContents().get(this._options.parentProperty) : undefined;
             firstTreeItem = newItems[0].isNode ? newItems[0] : newItems[1];
             newItemsParent = firstTreeItem ? firstTreeItem.getContents().get(this._options.parentProperty) : undefined;
             /* В виду того, что мы не можем различить, откуда вызван _getInsertMarkupConfig, возникают две противоречивые ситуации:

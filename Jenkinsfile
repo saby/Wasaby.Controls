@@ -22,7 +22,7 @@ properties([
             description: '',
             name: 'branch_engine'),
         string(
-            defaultValue: 'rc-3.34',
+            defaultValue: 'dda/flink-improve',
             description: '',
             name: 'branch_atf'),
         choice(

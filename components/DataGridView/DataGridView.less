@@ -43,7 +43,7 @@
                border-bottom-color: @data-grid-cell-separator-color;
             }
          }
-         .controls-DataGridView__tr:first-child, .controls-editInPlace + .controls-DataGridView__tr {
+         .controls-DataGridView__tr:first-child, .controls-editInPlace:first-child + .controls-DataGridView__tr {
             .controls-DataGridView__td {
                border-top-color: @data-grid-edge-cell-separator-color;
             }
@@ -222,7 +222,7 @@
 .controls-DataGridView__results {
    background: @data-grid-row-bg;
    font-weight: bold;
-   font-size: @default-font-size;;
+   font-size: @default-text-size;;
    color: @data-grid-results-color;
 }
 
@@ -254,11 +254,6 @@
    color: @data-grid-header-cell-text-color;
    font-size: @data-grid-header-cell-font-size;
    background-color: @data-grid-header-cell-bg;
-
-   border-collapse: separate;
-   border-width: @data-grid-header-cell-border-width;
-   border-style: solid;
-   border-color: transparent;
    
    &:hover {
       color: @data-grid-header-cell-hover-text-color;
@@ -407,7 +402,7 @@
       overflow-y: hidden;
       background-clip: content-box;
       &.controls-DataGridView__PartScroll__shown {
-         padding-bottom: 7px;
+         padding-bottom: @sticky-header-partScroll-padding;
       }
    }
 }

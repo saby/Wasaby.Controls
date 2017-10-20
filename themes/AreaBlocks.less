@@ -1,0 +1,39 @@
+& {
+  @margin-row: -@border-col;
+  @border-col: @spacing-between-blocks / 2;
+  @color-modificator-name: bg, ghostWhite, whiteSnow, whiteSmoke, mintCream, hover;
+  @color-modificator-value: @default-bg-color, @ghost-white-color, @white-snow-color, @white-smoke-color, @mint-cream-color, @default-hover-color;
+
+  .ws-areaBlocks__ {
+    &area {
+      overflow: hidden;
+      background: @default-border-color;
+      &_topOffset {
+        > .ws-areaBlocks__row:first-child {
+          margin-top: @spacing-between-blocks;
+        }
+      }
+    }
+    &row {
+      margin-left: @margin-row;
+      margin-right: @margin-row;
+      .flexbox();
+
+      &:not(:last-child) {
+        margin-bottom: @spacing-between-blocks;
+      }
+    }
+    &col {
+      border-width: 0 @border-col;
+      border-color: @default-border-color;
+      border-style: solid;
+      .box-sizing();
+    }
+  }
+  // Модификаторы цвета блоков ws-background_bg, ..., ws-background_hover.
+  .for(@color-modificator-name, {
+    .ws-background_@{_item} {
+      background-color: extract(@color-modificator-value, @_i);
+    }
+  });
+}

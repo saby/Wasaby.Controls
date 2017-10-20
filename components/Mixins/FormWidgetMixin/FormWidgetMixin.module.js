@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
 ], function ( constants, IoC, coreClone, Deferred, escapeHtml) {
    /**
     * Миксин, который добавляет функционал валидаторов.
-    * Подробнее о работе с валидаторами вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/validation/">Валидация вводимых данных</a>.
+    * Подробнее о работе с валидаторами вы можете прочитать в разделе документации <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/validation/">Валидация вводимых данных</a>.
     * @mixin SBIS3.CONTROLS.FormWidgetMixin
     * @public
     * @author Крайнов Дмитрий Олегович
@@ -177,7 +177,7 @@ define('js!SBIS3.CONTROLS.FormWidgetMixin', [
        * <br/>
        * Если для контрола ограничено взаимодействие через опцию {@link SBIS3.CORE.Control#enabled}, то для него валидация не производится.
        * <br/>
-       * Подробнее о валидации вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/validation/ руководстве разработчика}.
+       * Подробнее о валидации вы можете прочитать в {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/validation/ руководстве разработчика}.
        * @returns {Boolean} Признак: валидация пройдена успешно (true) или с ошибками (false).
        * @see validators
        * @see getValidators

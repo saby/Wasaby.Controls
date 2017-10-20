@@ -258,7 +258,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             // $elem[0].scrollHeight - integer, $elem.height() - float
          	var maxScrollTop = this._getScrollHeight() - Math.round(this._container.height());
 
-            this._container.toggleClass('controls-ScrollContainer__bottom-gradient', maxScrollTop > 0 && this._getScrollTop() < maxScrollTop);
+         	// maxScrollTop > 1 - погрешность округления на различных браузерах.
+            this._container.toggleClass('controls-ScrollContainer__bottom-gradient', maxScrollTop > 1 && this._getScrollTop() < maxScrollTop);
          },
 
          _initScrollbar: function(){
@@ -279,13 +280,11 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          // Показать скролл
          _showScrollbar: function() {
             this._container.toggleClass('controls-ScrollContainer__scrollbar_show', true);
-            this._scrollbar.once('onScrollbarStartDrag', this._setTakeScrollbar.bind(this, 0));
          },
 
          //Скрыть скролл
          _hideScrollbar: function() {
             this._container.toggleClass('controls-ScrollContainer__scrollbar_show', false);
-            this._scrollbar.once('onScrollbarEndDrag', this._setTakeScrollbar.bind(this, 3));
          },
 
          bothIsNaN: function(a, b){
@@ -597,7 +596,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                if (cDetection.isIE) {
                   // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
                   // 1px для скроллирования.
-                  this._content.toggleClass('controls-ScrollContainer__content-overflowHidden', (this._getScrollHeight() - this._container.height()) === 1);
+                  this._content.toggleClass('controls-ScrollContainer__content-overflowHidden', (this._getScrollHeight() - Math.floor(this._container.height())) === 1);
                }
                if (!this._options.takeScrollbarHidden) {
                   this._subscribeTakeScrollbar();

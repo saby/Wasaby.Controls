@@ -1051,6 +1051,10 @@ define('js!SBIS3.CONTROLS.ListView',
                this._addItems(itemsToAdd, config.addPosition);
                this._removeItemsLight(itemsToRemove);
 
+               //После добавления элоементов с помощью виртуального скролла, необходимо добавить на них выделение,
+               //если они до этого были выделены.
+               this._drawSelectedItems(this._options.selectedKeys, {});
+
                this._topWrapper.get(0).style.height = config.topWrapperHeight + 'px';
                this._bottomWrapper.get(0).style.height = config.bottomWrapperHeight + 'px';
 
@@ -1642,7 +1646,7 @@ define('js!SBIS3.CONTROLS.ListView',
                          containerCords = cont.getBoundingClientRect();
                      return {
                         /* При расчётах координат по вертикали учитываем прокрутку */
-                         top: targetCords.top - containerCords.top + cont.scrollTop,
+                         top: Math.round(targetCords.top - containerCords.top + cont.scrollTop),
                          left: targetCords.left - containerCords.left
                      };
                   },
@@ -2807,7 +2811,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 hoveredItem = this.getHoveredItem(),
                 key = target[0].getAttribute('data-id'),
                 columns = target.find('.controls-DataGridView__td').not('.controls-DataGridView__td__checkBox');
-            if(hoveredItem && hoveredItem.key !== key){
+            if(hoveredItem && hoveredItem.key !== key && self.getMultiselect()){
                 columns.addClass('rightSwipeAnimation');
                 setTimeout(function(){
                     columns.toggleClass('rightSwipeAnimation', false);
@@ -3514,7 +3518,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
                         // Если пришла пустая страница, но есть еще данные - догрузим их
                         if (hasNextPage){
-                           this._scrollLoadNextPage();
+                           this._scrollLoadNextPage(type);
                         } else {
                            // TODO: Сделано только для контактов, которые присылают nav: true, а потом пустой датасет с nav: false
                            this._hideLoadingIndicator();
@@ -3842,14 +3846,15 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             if (this.isInfiniteScroll()) {
                //Если нет следующей страницы - скроем индикатор загрузки
-               if (!this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.bottom) || this._options.infiniteScroll == 'demand') {
+               if (!this._hasNextPage(this.getItems().getMetaData().more, this._scrollOffset.bottom) || this._options.infiniteScroll === 'demand') {
                   this._hideLoadingIndicator();
                }
-               if (this._options.infiniteScroll == 'demand'){
+               //Кнопки может не быть, когда список рендерится на сервере _dataLoadedCallback вызывается ещё в конструкторе, до инициализации компонентов
+               if (this._options.infiniteScroll === 'demand' && this._loadMoreButton){
                   this._setLoadMoreCaption(this.getItems());
                }
             }
-            this._onMetaDataResultsChange = function(){
+            this._onMetaDataResultsChange = function(event, data){
                this._redrawResults(true);
             }.bind(this);
             this._observeResultsRecord(true);
@@ -3933,6 +3938,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
                   self._pager = new pagerCtr({
                      noSizePicker: self._options.noSizePicker,
+                     noPagerAmount: self._options.noPagerAmount,
                      pageSize: self._options.pageSize,
                      opener: self,
                      element: pagerContainer.find('div'),
@@ -4655,7 +4661,11 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _observeResultsRecord: function(needObserve){
             var methodName = needObserve ? 'subscribeTo' : 'unsubscribeFrom',
-                resultsRecord = this.getItems() && this.getItems().getMetaData().results;
+                metaData = this.getItems() && this.getItems().getMetaData(),
+                resultsRecord = metaData && metaData.results;
+            if (this.getItems()) {
+               this[methodName](this.getItems(), 'onPropertyChange', this._onMetaDataResultsChange);
+            }
             if (resultsRecord){
                this[methodName](resultsRecord, 'onPropertyChange', this._onMetaDataResultsChange);
             }
@@ -4696,7 +4706,9 @@ define('js!SBIS3.CONTROLS.ListView',
          _setNewDataAfterReload: function() {
             this._resultsChanged = true;
             ListView.superclass._setNewDataAfterReload.apply(this, arguments);
-            if (this._resultsChanged) {
+            /* Если проекция заморожена, то перерисовывать результаты нельзя, т.к. отрисовка всего списка будет отложена,
+               перерисуем, как проекция будет разморожена. */
+            if (this._resultsChanged && this._getItemsProjection().isEventRaising()) {
                this._redrawResults(true);
             }
          },
@@ -4712,7 +4724,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * Если нужно удалить одну запись, то в параметр передаётся простое значение - идентификатор элемента.
           * @param {String} [message] Текст, который будет использован в диалоговом окне перед началом удаления записей из источника.
           * Если параметр не передан, то для удаления нескольких записей будет использован текст "Удалить записи?", а для удаления одной записи - "Удалить текущую запись?".
-          * @returns {Deferred} Возвращает объект deferred. На результат работы метода можно подписаться для решения прикладных задача.
+          * @returns {Deferred} Возвращает объект deferred. На результат работы метода можно подписаться для решения прикладных задач.
           */
          deleteRecords: function(idArray, message) {
             var

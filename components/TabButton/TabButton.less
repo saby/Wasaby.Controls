@@ -91,6 +91,7 @@
          font-size: @tab-button-large-inner-font-size;
          padding-top: 0;
          padding-bottom: 1px;
+         color: #313E78;
       }
    }
    &.controls-Checked__checked {
@@ -100,6 +101,8 @@
       font-size: @tab-button-checked-font-size;
       border-bottom: none;
       padding: 0;
+      overflow: visible;
+
       .controls-TabButton__bottomLine{
          position: absolute;
          bottom: -2px;
@@ -174,7 +177,7 @@
          }
          .controls-EditAtPlace__editor{
             color: @black-color;
-            font-size: @default-font-size;
+            font-size: @default-text-size;
          }
          .controls-EditAtPlace__fieldWrapper{
             padding: 0;
@@ -190,7 +193,7 @@
          font-weight: normal;
          .controls-EditAtPlace__editor{
             color: @black-color;
-            font-size: @default-font-size;
+            font-size: @default-text-size;
          }
          .controls-EditAtPlace__fieldWrapper{
             padding: 0;
@@ -281,6 +284,16 @@
       -ms-filter: @tab-button-overlay-ms-filter;
       opacity: 0;
    }
+  //FIXME: временный костыль, тк избавиться от line-height не переписывая tabButton невозможно
+  .controls-TextBox {
+    line-height: @default-height;
+    &__wrapper {
+      .align-items(normal)
+    }
+    &.controls-DateBox {
+      line-height: @default-base-line-height;
+    }
+  }
 }
 
 .ws-disabled{
@@ -445,14 +458,23 @@
    .controls-TabButton {
       .controls-TabButton__mainText {
          line-height: 26px; //for ie10-12
-         .controls-EditAtPlace__editor .controls-TextBox {
-            line-height: 20px;
-         }
       }
       .controls-TabButton__additionalText2 {
          .controls-EditAtPlace .controls-EditAtPlace__textField {
             padding: 0;
          }
+      }
+      //FIXME:
+      //далее следую правки за которые необходимо сжигать на костре
+      //необходимо их удалить при отказе от line-height в tabbutons
+      .controls-TabButton__mainText .controls-TextBox .controls-TextBox__field,
+      .controls-Link.controls-TabButton__mainText .controls-TextBox .controls-TextBox__field {
+          padding-bottom: 5px;
+      }
+      .controls-TabButton__additionalText2 {
+        .controls-TextBox .controls-TextBox__field {
+          padding-bottom: 6px;
+        }
       }
    }
 }

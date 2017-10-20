@@ -738,7 +738,19 @@ define(
           Для таких андроидов обрабатываем ввод символа отдельно
           */
          if (constants.browser.isMobileAndroid && (event.keyCode === 229 || event.keyCode === 0)){
-            setTimeout(forAliveOnly(this._keyDownBindAndroid.bind(this, event), self), 0);
+            if (!this._asyncAndroid) {
+               this._asyncAndroid = true;
+               setTimeout(function() {
+                  forAliveOnly(self._keyDownBindAndroid.bind(self, event), self)();
+                  self._asyncAndroid = false;
+               }, 0);
+            }
+            else {
+               //зажали кнопку удалить, наши обработчики не успевают отработать посимвольно
+               //Считаем, что хотели стереть все содержимое
+               this._setText(this._getClearText());
+               _moveCursor(_getContainerByIndex.call(this, 0), 0);
+            }
          }
          else{
             this._keyDownBind(event);
@@ -825,38 +837,70 @@ define(
          event.preventDefault();
       },
 
-      _keyDownBindAndroid: function(event){
-         var textDiff = this._getTextDiff(),
-             character = textDiff['char'],
-             position = textDiff.position,
-             groupNum = this._getCursor(true)[0];
+      _keyDownBindAndroid: function (event) {
+         var textGroups = this._getTextGroupAndroid(),
+            isRemove = this.getText().length > this._inputField.text().length || (!this.getText().length && this._getMask().length > this._inputField.text().length),
+            nativeCursorPosition = this._getCursor(true),
+            textDiff = this._getTextDiff(textGroups.oldText, textGroups.newText, textGroups.maskGroups, isRemove);
+
          this._setText(this._options.text);
 
-         this._keyPressBindHandler(event, character, position, groupNum);
-         event.preventDefault();
+         if (this._isChangeSeparatorLength(textGroups) || !textDiff) {
+            //если oldText.length !== newText.length значит добавили/удалили сепаратор, который добавлять нельзя.
+            //в этом случае просто восстанавливаем текст и курсор, который был до удаления
+            _moveCursor(_getContainerByIndex.call(this, nativeCursorPosition[0]), nativeCursorPosition[1]);
+         }
+         else if (isRemove) {
+            _moveCursor(_getContainerByIndex.call(this, nativeCursorPosition[0]), nativeCursorPosition[1] + 1);
+            this._clearCommandHandler('backspace');
+         }
+         else {
+            this._keyPressBindHandler(event, textDiff.character, textDiff.position, textDiff.groupNum);
+         }
       },
 
-      _getTextDiff: function(){
-         var splitRegExp = this._getSplitterRegExp(),
-            oldText = this._options.text ? this._options.text.split(splitRegExp)  : this._getClearText().split(splitRegExp),
-            newText = this._inputField.text().split(splitRegExp),
-            maskGroups = this._getMask().split(splitRegExp);
+      _isChangeSeparatorLength: function(textGroups) {
+         return textGroups.oldText.length !== textGroups.newText.length;
+      },
 
+      _getTextDiff: function(oldText, newText, maskGroups, isRemove){
+         if (this._isChangeSeparatorLength({oldText: oldText, newText: newText})) {
+            return {};
+         }
          for (var i = 0, l = newText.length; i < l; i++) {
-            if (oldText[i] && (oldText[i].length !== newText[i].length)){
+            if (oldText[i].length !== newText[i].length){
                for (var j = 0; j < newText[i].length; j++){
                   if (oldText[i][j] !== newText[i][j]){
-                     return {
-                        'char': newText[i][j],
-                        // проверка на возможность ввода символа в группу,
-                        // если в данную группу нельзя ввести символы, то вводим в первую позицию след разрешенной группы
-                        position: maskGroups[i].replace(/[L,l,d,D,h,H,i,I,x]/g,'').length === maskGroups[i].length ? 0 : j
-                     }
+                     return this._getDiffInfo(oldText, newText, maskGroups, isRemove, i, j);
                   }
                }
             }
          }
+
+         if (isRemove) {
+            //Удалили последний символ в группе
+            return this._getDiffInfo(oldText, newText, maskGroups, isRemove, --i, j);
+         }
          return false;
+      },
+
+      _getDiffInfo: function(oldText, newText, maskGroups, isRemove, i, j) {
+         return {
+            character: isRemove ? oldText[i][j] : newText[i][j],
+            // проверка на возможность ввода символа в группу,
+            // если в данную группу нельзя ввести символы, то вводим в первую позицию след разрешенной группы
+            position: maskGroups[i].replace(/[l,L,d,D,h,H,i,I,s,S,x,X,m,M,y,Y]/g,'').length === maskGroups[i].length ? 0 : j,
+            groupNum: this._getCursor(true)[0]
+         }
+      },
+
+      _getTextGroupAndroid: function() {
+         var splitRegExp = this._getSplitterRegExp();
+         return {
+            oldText: this._options.text ? this._options.text.split(splitRegExp)  : this._getClearText().split(splitRegExp),
+            newText: this._inputField.text().split(splitRegExp),
+            maskGroups: this._getMask().split(splitRegExp)
+         }
       },
 
       _getSplitterRegExp: function(){

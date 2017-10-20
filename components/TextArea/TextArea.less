@@ -2,6 +2,7 @@
    height: auto;
    .border-radius(0);
    .controls-TextBox__wrapper {
+      .align-items(baseline);
       margin: calc(@default-height / 2 - @default-line-height / 2 ~'-' @default-border-width) 0; //margin тк padding увеличиват высоту блока, из за этого view становится больше чем field
       &:before{
          line-height: @text-area-field-line-height;
@@ -66,6 +67,7 @@
       .controls-TextArea__view {
          position: absolute;
          min-height: 0;
+         top: 0;
       }
       .controls-TextArea__field {
          position: static;

@@ -285,13 +285,21 @@ define('js!SBIS3.CONTROLS.LongOperations.ManagerLib',
                      throw new Error('Unknown result type');
                   }
                   if (len) {
-                     var memberTab = (member.tab === inner._tabKey ? !inner._producers[member.producer].hasCrossTabData() : !inner._producers[member.producer] || !inner._tabManagers[member.tab][member.producer].hasCrossTabData) ? member.tab : null;
+                     var useMemberTab = member.tab === inner._tabKey ? !inner._producers[member.producer].hasCrossTabData() : !inner._producers[member.producer] || !inner._tabManagers[member.tab][member.producer].hasCrossTabData();
                      values[iterate](function (v) {
                         // Значение должно быть экземпляром SBIS3.CONTROLS.LongOperations.Entry и иметь правилное имя продюсера
                         if (!(v instanceof LongOperationEntry && v.producer === prodName)) {
                            throw new Error('Invalid result');
                         }
-                        v.tabKey = memberTab;
+                        if (v.tabKey) {
+                           if (v.tabKey !== inner._tabKey && !(inner._tabManagers[v.tabKey] && inner._tabManagers[v.tabKey][member.producer])) {
+                              v.tabKey = null;
+                           }
+                        }
+                        else
+                        if (useMemberTab) {
+                           v.tabKey = member.tab;
+                        }
                      });
                      return values;
                   }
@@ -308,7 +316,6 @@ define('js!SBIS3.CONTROLS.LongOperations.ManagerLib',
                var operations;
                if (resultList && resultList.length) {
                   for (var i = 0; i < resultList.length; i++) {
-                     var result = resultList[i];
                      for (var j = 0, list = resultList[i]; j < list.length; j++) {
                         var op = list[j];
                         if (!operations) {
@@ -320,7 +327,7 @@ define('js!SBIS3.CONTROLS.LongOperations.ManagerLib',
                         if (op.id in operations[op.producer]) {
                            // Есть одна и та же операция от разных вкладок - выбрать
                            var prev = operations[op.producer][op.id];
-                           if ((!prev.canSuspend && op.canSuspend) || (!prev.canDelete && op.canDelete)) {
+                           if (/*^^^(!prev.canSuspend && op.canSuspend) || (!prev.canDelete && op.canDelete) ||*/ (!prev.tabKey && op.tabKey)) {
                               operations[op.producer][op.id] = op;
                            }
                         }
