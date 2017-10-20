@@ -457,6 +457,11 @@
 
 .ws-is-firefox {
    .controls-DropdownList__picker {
+      .controls-DropdownList__multiselect {
+         .controls-DropdownList__itemCheckBox {
+            bottom: 0;
+         }
+      }
       .controls-DropdownList__header .controls-DropdownList {
          line-height: 25px;
       }
@@ -478,16 +483,6 @@
   .controls-DropdownList .controls-DropdownList__selectedItem{
      .inline-flexbox();
   }
-}
-
-.ws-is-mobile-chrome-ios, .ws-is-mobile-safari, .ws-is-firefox {
-   .controls-DropdownList__picker {
-      .controls-DropdownList__multiselect {
-         .controls-DropdownList__itemCheckBox {
-            bottom: -1px;
-         }
-      }
-   }
 }
 
 .ws-is-mobile-chrome-ios, .ws-is-mobile-safari {
