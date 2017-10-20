@@ -36,7 +36,7 @@ define('js!SBIS3.SPEC.input.Number', [
 
    /**
     * @name SBIS3.SPEC.input.Number#showEmptyDecimals
-    * @cfg {Boolean} Показывать ненулевую дробную часть
+    * @cfg {Boolean} Показывать нулевую дробную часть
     */
 
 

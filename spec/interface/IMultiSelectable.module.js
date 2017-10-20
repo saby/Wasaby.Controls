@@ -13,7 +13,7 @@ define('js!SBIS3.SPEC.interface.IMultiSelectable', [
     */
 
    /**
-    * @event SBIS3.SPEC.interface.IInputText#onChangeSelectedKeys Происходит при изменении массива выделенных записей.
+    * @event SBIS3.SPEC.interface.IMultiSelectable#selectedKeysChanged Происходит при изменении массива выделенных записей.
     * @param {Array} keys массив ключей выбранных элементов коллекции.
     * @param {Array} added массив добавленных ключей в списке выбранных элементов коллекции.
     * @param {Array} deleted массив удаленных ключей из списка выбранных элементов коллекции.

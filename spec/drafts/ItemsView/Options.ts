@@ -15,7 +15,7 @@ interface Options extends IItemsRenderOptions {
     filter? : {},
     sorting?: Array<any>,
     /**
-     * @cfg {String} Устанавливает стратегию действий с подгружаемыми в список записями
+     * @cfg {String} Стратегия действий с подгружаемыми в список записями
      * @variant merge - мержить, при этом записи с одинаковыми id схлопнутся в одну
      * @variant append - добавлять, при этом записи с одинаковыми id будут выводиться в списке
      *

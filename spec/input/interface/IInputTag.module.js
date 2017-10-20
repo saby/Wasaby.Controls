@@ -2,26 +2,26 @@ define('js!SBIS3.SPEC.input.interface.IInputTag', [
 ], function() {
 
    /**
-    * Интерфейс работы c тегами (цветными информационными уголками) в полях ввода.
+    * Интерфейс работы c тегами (цветными информационными ярлыками) в полях ввода.
     * @mixin SBIS3.SPEC.input.interface.IInputTag
     * @public
     */
 
    /**
     * @name SBIS3.SPEC.input.interface.IInputTag#tagStyle
-    * @cfg {String | undefined} Цвет тега
-    * @variant primary #587AB0 (синий).
-    * @variant done #72BE44 (зеленый).
-    * @variant attention #FEC63F (оранжевый).
-    * @variant error #EF463A (красный).
-    * @variant info #999999 (серый).
+    * @cfg {String | undefined} Тип тега (цветной информационный ярлык).
+    * @variant primary
+    * @variant done
+    * @variant attention
+    * @variant error
+    * @variant info
     */
 
    /**
-    * @event SBIS3.SPEC.input.interface.IInputTag#onTagClick Происходит при клике по тегу (информационному уголку).
+    * @event SBIS3.SPEC.input.interface.IInputTag#tagClick Происходит при клике по тегу (информационной иконке).
     */
 
    /**
-    * @event SBIS3.SPEC.input.interface.IInputTag#onTagHover Происходит когда курсор мыши входит в область тега (информационного уголка).
+    * @event SBIS3.SPEC.input.interface.IInputTag#tagHover Происходит, когда курсор мыши входит в область тега (информационной иконки).
     */
 });

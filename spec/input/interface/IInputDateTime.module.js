@@ -2,24 +2,24 @@ define('js!SBIS3.SPEC.input.interface.IInputDateTime', [
 ], function() {
 
    /**
-    * Интерфейс работы текстового поля ввода даты и времени.
+    * Интерфейс работы поля ввода даты и времени.
     * @mixin SBIS3.SPEC.input.interface.IInputDateTime
     * @public
     */
 
    /**
     * @name SBIS3.SPEC.input.interface.IInputDateTime#value
-    * @cfg {Number} Значение поля.
+    * @cfg {Date} Значение поля.
     */
 
    /**
-    * @event SBIS3.SPEC.input.interface.IInputDateTime#onValueChange Происходит при изменении числа в поле ввода.
-    * @param {Number} value Числовое значение поля.
+    * @event SBIS3.SPEC.input.interface.IInputDateTime#valueChanged Происходит при изменении числа в поле ввода.
+    * @param {Date} value Новое значение поля.
     */
 
    /**
-    * @event SBIS3.SPEC.input.interface.IInputDateTime#onInputFinish Происходит при завершении ввода.
-    * @param {Number} value Числовое значение поля.
+    * @event SBIS3.SPEC.input.interface.IInputDateTime#inputCompleted Происходит при завершении ввода.
+    * @param {Date} value Новое значение поля.
     */
 
 });
