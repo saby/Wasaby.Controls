@@ -1,0 +1,37 @@
+<div class="controls-TextBox">
+   <div class="controls-TextBox__wrapper">
+      <ws:partial
+         if="{{_beforeFieldWrapper}}"
+         template="{{_beforeFieldWrapper}}"
+      />
+      <input
+         autocomplete="off"
+         type="{{_options.type}}"
+         value="{{_options.value}}"
+         class="controls-TextBox__field"
+         readonly="{{_options.enabled ? '' : 'readonly'}}"
+         placeholder="{{_options.enabled ? _options.placeholder}}"
+         event:oninput="_inputHandler()"
+         event:onfocus="_focusHandler()"
+         event:onselect="_updateSelectionHandler()"
+         event:onclick="_updateSelectionHandler()"
+         event:onkeyup="_keyupHandler()"
+         event:onchange="_notifyHandler('onInputFinish')"
+      />
+      <ws:if data="{{_options.tagStyle}}">
+         <span event:onmouseenter="_notifyHandler('onTagHover')">
+            <ws:SBIS3.CONTROLS.IconButton
+               name="informationIcon"
+               icon="icon-size icon-Listbox"
+               allowChangeEnable="{{false}}"
+               event:onActivated="_notifyHandler('onTagClick')"
+               className="controls-informationIcon icon-{{_options.tagStyle}}"
+            />
+         </span>
+      </ws:if>
+      <ws:partial
+         if="{{_afterFieldWrapper}}"
+         template="{{_afterFieldWrapper}}"
+      />
+   </div>
+</div>
