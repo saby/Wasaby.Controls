@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<ui_module id="f6fdf353-3ab3-4dbb-8671-01c2b418bf0a" name="WS.Controls" responsible="Бегунов А. В." version="1.00">
+
+  <description>Новая библиотека контролов реализованных на технологии VDOM</description>
+
+    <depends>
+      <bl_module id="f5e3850a-12d1-4805-b5de-8a40474b17ba" name="WS.Data"/>
+    </depends>
+
+  <load_after/>
+
+  <parameters/>
+
+  <resources/>
+
+  <preload/>
+
+</ui_module>
