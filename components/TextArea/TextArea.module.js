@@ -302,6 +302,10 @@ define('js!SBIS3.CONTROLS.TextArea', [
             this._disabledWrapper.toggleClass('ws-invisible', state);
          }
          this._updateDisabledWrapper();
+         this._disabledWrapper.toggleClass('controls-TextArea__view__init', this.isEnabled() && this._autoHeightInitialized);
+         this._inputField.toggleClass('controls-TextArea__field__init', this.isEnabled() && this._autoHeightInitialized);
+         this._disabledWrapper.toggleClass('controls-TextArea__view__disabled', !this.isEnabled());
+         this._inputField.toggleClass('controls-TextArea__field__disabled', !this.isEnabled());
       },
 
       setText: function(text){
@@ -398,22 +402,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
          this._inputField instanceof $ && this._inputField.trigger('autosize.destroy');
          //trackElement(this._container, false);
          TextArea.superclass.destroy.apply(this, arguments);
-      },
-       _toggleState: function() {
-           TextArea.superclass._toggleState.apply(this, arguments);
-           if ( !this.isEnabled()) {
-               this.getContainer().find('.controls-TextArea__view').removeClass('controls-TextArea__view__init');
-               this.getContainer().find('.controls-TextArea__field').removeClass('controls-TextArea__field__init');
-           } else {
-               this.getContainer().find('.controls-TextArea__view').removeClass('controls-TextArea__view__disabled');
-               this.getContainer().find('.controls-TextArea__field').removeClass('controls-TextArea__field__disabled');
-              if ( this._autoHeightInitialized) {
-                   this.getContainer().find('.controls-TextArea__view').addClass('controls-TextArea__view__init');
-                   this.getContainer().find('.controls-TextArea__field').addClass('controls-TextArea__field__init');
-               }
-           }
-
-       }
+      }
    });
 
    return TextArea;
