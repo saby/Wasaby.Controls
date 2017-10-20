@@ -3,9 +3,7 @@
       position: absolute;
       line-height: @text-area-field-line-height;
       resize: none;
-      overflow: auto; //todo
       display: block;
-      white-space: pre-wrap; //https://bugzilla.mozilla.org/show_bug.cgi?id=1137650
       &__init {
          position: static;
          height: 100%; //todo: может быть ээто можно вешать всегда?
@@ -49,11 +47,16 @@
          }
       }
    }
+   //todo: cascade
+   .controls-TextBox__field {
+      white-space: pre-wrap; //https://bugzilla.mozilla.org/show_bug.cgi?id=1137650 //todo
+      overflow: auto; //todo
+   }
    .controls-TextBox__wrapper {
       .align-items(baseline);
       margin: calc(@default-height / 2 - @default-line-height / 2 ~'-' @default-border-width) 0; //margin тк padding увеличиват высоту блока, из за этого view становится больше чем field
       &:before{
-         line-height: @text-area-field-line-height;
+         line-height: @text-area-field-line-height; //todo: need????
       }
    }
 }
