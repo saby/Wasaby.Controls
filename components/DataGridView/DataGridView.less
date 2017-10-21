@@ -43,7 +43,9 @@
                border-bottom-color: @data-grid-cell-separator-color;
             }
          }
-         .controls-DataGridView__tr:first-child, .controls-editInPlace:first-child + .controls-DataGridView__tr {
+         .controls-DataGridView__tr:first-child,
+         .controls-editInPlace:first-child + .controls-DataGridView__tr,
+         .controls-editInPlace:nth-child(2) + .controls-DataGridView__tr{
             .controls-DataGridView__td {
                border-top-color: @data-grid-edge-cell-separator-color;
             }
