@@ -819,8 +819,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             var itemContainer = $(event.target).closest('.controls-ComboBox__itemRow');
             if (itemContainer.length) {
                var itemTextContainer = $('.controls-ComboBox__item', itemContainer)[0],
-                  itemText = itemTextContainer.textContent;
-               if (getTextWidth(itemText) > itemTextContainer.clientWidth) {
+                  itemText = itemTextContainer && itemTextContainer.textContent; //Защита от кастомного шаблона строки
+               if (itemText && getTextWidth(itemText) > itemTextContainer.clientWidth) {
                   itemContainer[0].setAttribute('title', itemText);
                }
             }

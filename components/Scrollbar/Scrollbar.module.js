@@ -167,8 +167,9 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
                this._isConstThumb = false;
             }
             if (this._thumb) {
-               // У ползунка есть отступы сверху и снизу, а мы расчитывали высоту вместе с отступами, поэтому вычтем их.
-               this._thumb.height(this._thumbHeight - this._thumb.outerHeight(true) + this._thumb.height());
+               this._thumb.height(this._thumbHeight);
+               // Высота ползунка должна учитывать margin.
+               this._thumbHeight = this._thumb.outerHeight(true);
             }
          },
 
