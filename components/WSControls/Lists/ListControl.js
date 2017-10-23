@@ -45,8 +45,10 @@ define('js!WSControls/Lists/ListControl', [
          },
 
          __initNavigation: function(options, dataSource) {
-            this._navigationController = new PageNavigation(options.navigation.config);
-            this._navigationController.prepareSource(dataSource);
+            if (options.navigation && options.navigation.type == 'page') {
+               this._navigationController = new PageNavigation(options.navigation.config);
+               this._navigationController.prepareSource(dataSource);
+            }
          },
 
          _beforeMount: function(newOptions) {
@@ -72,17 +74,8 @@ define('js!WSControls/Lists/ListControl', [
                this._reload(newOptions);
             }
 
-
-
-
             //TODO обработать смену фильтров и т.д. позвать релоад если надо
          },
-
-         //<editor-fold desc='EventHandlers'>
-
-
-
-         //</editor-fold>
 
          _prepareQueryParams: function(direction) {
             var params = {
