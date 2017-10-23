@@ -1,7 +1,7 @@
-define('js!WSControls/TextBoxes/SearchTextBox',
+define('js!WSControls/Input/Search',
 [
-   'js!WSControls/TextBoxes/TextBox',
-   'tmpl!WSControls/TextBoxes/resources/searchTextBoxButtons'
+   'js!WSControls/Input/Text',
+   'tmpl!WSControls/Input/Search/searchTextBoxButtons'
 ], function(TextBox, searchTextBoxButtons) {
    var SearchTextBox = TextBox.extend({
       _afterFieldWrapper: searchTextBoxButtons,
