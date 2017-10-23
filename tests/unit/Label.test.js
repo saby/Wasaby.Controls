@@ -55,7 +55,7 @@ define(
          describe('Setter', function() {
             it('setCaption', function() {
                label.setCaption(setCaption);
-               assert.isTrue(label.caption === setCaption);
+               assert.isTrue(label._options.caption === setCaption);
             });
          });
 
