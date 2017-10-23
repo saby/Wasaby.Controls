@@ -932,14 +932,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @private
            */
           _chooseCallback: function(result) {
-             var isModel;
-
-             /* После выбора из панели, возвращаем фокус в поле связи */
-             this.setActive(true);
              if(result && result.length) {
-                isModel = cInstance.instanceOfModule(result[0], 'WS.Data/Entity/Model');
+                var isModel = cInstance.instanceOfModule(result[0], 'WS.Data/Entity/Model');
                 this.setText('');
-
+                
                 if(isModel) {
                    this.addSelectedItems(result);
                 } else {
