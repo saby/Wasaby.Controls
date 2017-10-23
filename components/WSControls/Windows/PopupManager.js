@@ -4,9 +4,9 @@ define('js!WSControls/Windows/PopupManager',
       'js!WSControls/Windows/PopupContainer/PopupContainer',
       'WS.Data/Collection/List',
       'Core/core-merge',
-      'Core/CommandDispatcher'
+      'Core/helpers/random-helpers'
    ],
-   function (Control, PopupContainer, List, coreMerge, CommandDispatcher) {
+   function (Control, PopupContainer, List, coreMerge, random) {
       'use strict';
 
       /**
@@ -28,39 +28,37 @@ define('js!WSControls/Windows/PopupManager',
          show: function (options, opener, strategy) {
             options = options || {};
             coreMerge(options, strategy.getPosition());
-            options.zIndex = PopupManager.calculateZIndex();
-            PopupManager.popupItems.add(options);
+            options.id = random.randomId();
+            options.zIndex = PopupManager._calculateZIndex();
+            PopupManager.popupItems.push(options);
+            PopupManager.apply();
+         },
+
+         remove: function(id){
+            PopupManager.popupItems = PopupManager.popupItems.filter(function(element) {
+               return element.id !== id;
+            });
+            PopupManager.apply();
+         },
+
+         apply: function(){
             PopupManager.popupContainer.setPopupItems(PopupManager.popupItems);
          },
 
-         removePopup: function(index){
-            index = index || (PopupManager.popupItems.getCount() - 1);
-            if( PopupManager.popupItems.getCount() ) {
-               PopupManager._currentZIndex -= 10;
-               PopupManager.popupItems.removeAt(index);
-               PopupManager.popupContainer.setPopupItems(PopupManager.popupItems);
-            }
-         },
-
-         calculateZIndex: function(){
+         _calculateZIndex: function(){
             PopupManager._currentZIndex += 10;
-            return PopupManager._currentZIndex;
+            return PopupManager.getCurrentZIndex();
          },
 
          getCurrentZIndex: function(){
             return PopupManager._currentZIndex;
-         },
-
-         close: function(){
-            PopupManager.removePopup();
          }
       };
 
-      PopupManager._currentZIndex = 1000;
-      PopupManager.popupItems = new List();
-      PopupManager._popupStack = new List();
+      PopupManager.popupItems = [];
       PopupManager.popupContainer = Control.createControl(PopupContainer, {}, '#popup');
-      CommandDispatcher.declareCommand(PopupManager.popupContainer, 'close', PopupManager.close);
+      PopupManager._popupStack = new List();
+      PopupManager._currentZIndex = 1000;
 
       return PopupManager;
    }

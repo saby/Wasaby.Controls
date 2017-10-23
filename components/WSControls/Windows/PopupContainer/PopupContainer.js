@@ -2,8 +2,7 @@ define('js!WSControls/Windows/PopupContainer/PopupContainer',
    [
       'Core/Control',
       'tmpl!WSControls/Windows/PopupContainer/PopupContainer',
-      'css!WSControls/Windows/PopupContainer/PopupContainer',
-      'js!WSControls/Windows/Popup/Popup'
+      'css!WSControls/Windows/PopupContainer/PopupContainer'
    ],
    function (Control, template) {
       'use strict';
@@ -21,17 +20,22 @@ define('js!WSControls/Windows/PopupContainer/PopupContainer',
          iWantVDOM: true,
 
          constructor: function(cfg){
-            this.popupItems = [];
             PopupContainer.superclass.constructor.call(this, cfg);
          },
 
+         _beforeMount: function(options){
+            if( !options.popupItems ){
+               options.popupItems = [];
+            }
+         },
+
          /**
-          * Добавить окно
+          *
           * @function WSControls/Windows/PopupContainer/PopupContainer#show
           * @param popupItems
           */
          setPopupItems: function (popupItems) {
-            this.popupItems = popupItems;
+            this._options.popupItems = popupItems;
             this._forceUpdate();
          }
       });
