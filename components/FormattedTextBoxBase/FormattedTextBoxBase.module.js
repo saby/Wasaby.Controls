@@ -738,7 +738,19 @@ define(
           Для таких андроидов обрабатываем ввод символа отдельно
           */
          if (constants.browser.isMobileAndroid && (event.keyCode === 229 || event.keyCode === 0)){
-            setTimeout(forAliveOnly(this._keyDownBindAndroid.bind(this, event), self), 0);
+            if (!this._asyncAndroid) {
+               this._asyncAndroid = true;
+               setTimeout(function() {
+                  forAliveOnly(self._keyDownBindAndroid.bind(self, event), self)();
+                  self._asyncAndroid = false;
+               }, 0);
+            }
+            else {
+               //зажали кнопку удалить, наши обработчики не успевают отработать посимвольно
+               //Считаем, что хотели стереть все содержимое
+               this._setText(this._getClearText());
+               _moveCursor(_getContainerByIndex.call(this, 0), 0);
+            }
          }
          else{
             this._keyDownBind(event);
@@ -827,21 +839,19 @@ define(
 
       _keyDownBindAndroid: function (event) {
          var textGroups = this._getTextGroupAndroid(),
-            isRemove = this.getText().length > this._inputField.text().length || !this.getText().length,
+            isRemove = this.getText().length > this._inputField.text().length || (!this.getText().length && this._getMask().length > this._inputField.text().length),
             nativeCursorPosition = this._getCursor(true),
             textDiff = this._getTextDiff(textGroups.oldText, textGroups.newText, textGroups.maskGroups, isRemove);
 
          this._setText(this._options.text);
 
-         //Если в доме длина текста меньше, чем в свойстве - значит только что удалили символ
-         if (isRemove) {
-            //если oldText.length !== newText.length значит удалили сепаратор, который удалять нельзя. в этом случае просто восстанавливаем текст, который был до удаления
-            if (textGroups.oldText.length === textGroups.newText.length) {
-               _moveCursor(_getContainerByIndex.call(this, nativeCursorPosition[0]), nativeCursorPosition[1] + 1);
-            }
-            else {
-               _moveCursor(_getContainerByIndex.call(this, nativeCursorPosition[0]), nativeCursorPosition[1]);
-            }
+         if (this._isChangeSeparatorLength(textGroups) || !textDiff) {
+            //если oldText.length !== newText.length значит добавили/удалили сепаратор, который добавлять нельзя.
+            //в этом случае просто восстанавливаем текст и курсор, который был до удаления
+            _moveCursor(_getContainerByIndex.call(this, nativeCursorPosition[0]), nativeCursorPosition[1]);
+         }
+         else if (isRemove) {
+            _moveCursor(_getContainerByIndex.call(this, nativeCursorPosition[0]), nativeCursorPosition[1] + 1);
             this._clearCommandHandler('backspace');
          }
          else {
@@ -849,7 +859,14 @@ define(
          }
       },
 
+      _isChangeSeparatorLength: function(textGroups) {
+         return textGroups.oldText.length !== textGroups.newText.length;
+      },
+
       _getTextDiff: function(oldText, newText, maskGroups, isRemove){
+         if (this._isChangeSeparatorLength({oldText: oldText, newText: newText})) {
+            return {};
+         }
          for (var i = 0, l = newText.length; i < l; i++) {
             if (oldText[i].length !== newText[i].length){
                for (var j = 0; j < newText[i].length; j++){
@@ -872,7 +889,7 @@ define(
             character: isRemove ? oldText[i][j] : newText[i][j],
             // проверка на возможность ввода символа в группу,
             // если в данную группу нельзя ввести символы, то вводим в первую позицию след разрешенной группы
-            position: maskGroups[i].replace(/[L,l,d,x]/g,'').length === maskGroups[i].length ? 0 : j,
+            position: maskGroups[i].replace(/[l,L,d,D,h,H,i,I,s,S,x,X,m,M,y,Y]/g,'').length === maskGroups[i].length ? 0 : j,
             groupNum: this._getCursor(true)[0]
          }
       },

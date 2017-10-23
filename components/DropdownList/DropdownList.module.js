@@ -948,7 +948,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                },
                closeByExternalOver: false,
                closeByExternalClick : true,
-               closeOnTargetMove: isFastDataFilterType,
+               closeOnTargetMove: true,
                locationStrategy: isFastDataFilterType ? 'bodyBounds' : 'base',
                targetPart: true,
                template : dotTplFnPicker({

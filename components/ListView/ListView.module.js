@@ -1646,7 +1646,7 @@ define('js!SBIS3.CONTROLS.ListView',
                          containerCords = cont.getBoundingClientRect();
                      return {
                         /* При расчётах координат по вертикали учитываем прокрутку */
-                         top: targetCords.top - containerCords.top + cont.scrollTop,
+                         top: Math.round(targetCords.top - containerCords.top + cont.scrollTop),
                          left: targetCords.left - containerCords.left
                      };
                   },
@@ -2811,7 +2811,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 hoveredItem = this.getHoveredItem(),
                 key = target[0].getAttribute('data-id'),
                 columns = target.find('.controls-DataGridView__td').not('.controls-DataGridView__td__checkBox');
-            if(hoveredItem && hoveredItem.key !== key){
+            if(hoveredItem && hoveredItem.key !== key && self.getMultiselect()){
                 columns.addClass('rightSwipeAnimation');
                 setTimeout(function(){
                     columns.toggleClass('rightSwipeAnimation', false);
@@ -3518,7 +3518,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
                         // Если пришла пустая страница, но есть еще данные - догрузим их
                         if (hasNextPage){
-                           this._scrollLoadNextPage();
+                           this._scrollLoadNextPage(type);
                         } else {
                            // TODO: Сделано только для контактов, которые присылают nav: true, а потом пустой датасет с nav: false
                            this._hideLoadingIndicator();
@@ -3854,7 +3854,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._setLoadMoreCaption(this.getItems());
                }
             }
-            this._onMetaDataResultsChange = function(){
+            this._onMetaDataResultsChange = function(event, data){
                this._redrawResults(true);
             }.bind(this);
             this._observeResultsRecord(true);
@@ -4661,7 +4661,11 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _observeResultsRecord: function(needObserve){
             var methodName = needObserve ? 'subscribeTo' : 'unsubscribeFrom',
-                resultsRecord = this.getItems() && this.getItems().getMetaData().results;
+                metaData = this.getItems() && this.getItems().getMetaData(),
+                resultsRecord = metaData && metaData.results;
+            if (this.getItems()) {
+               this[methodName](this.getItems(), 'onPropertyChange', this._onMetaDataResultsChange);
+            }
             if (resultsRecord){
                this[methodName](resultsRecord, 'onPropertyChange', this._onMetaDataResultsChange);
             }
@@ -4720,7 +4724,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * Если нужно удалить одну запись, то в параметр передаётся простое значение - идентификатор элемента.
           * @param {String} [message] Текст, который будет использован в диалоговом окне перед началом удаления записей из источника.
           * Если параметр не передан, то для удаления нескольких записей будет использован текст "Удалить записи?", а для удаления одной записи - "Удалить текущую запись?".
-          * @returns {Deferred} Возвращает объект deferred. На результат работы метода можно подписаться для решения прикладных задача.
+          * @returns {Deferred} Возвращает объект deferred. На результат работы метода можно подписаться для решения прикладных задач.
           */
          deleteRecords: function(idArray, message) {
             var

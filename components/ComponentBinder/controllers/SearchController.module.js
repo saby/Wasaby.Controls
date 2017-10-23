@@ -57,8 +57,8 @@ define('js!SBIS3.CONTROLS.SearchController',
 
       _startHierSearch: function(text) {
          var curFilter = this._options.view.getFilter();
-         if (!this._lastDepth) {
-            this._lastDepth = curFilter['Разворот'] ? curFilter['Разворот'] : 'Без разворота'
+         if (!this._lastDepth && curFilter['Разворот']) {
+            this._lastDepth = curFilter['Разворот'];
          }
 
          var searchParamName = this._options.searchParamName,
@@ -176,10 +176,15 @@ define('js!SBIS3.CONTROLS.SearchController',
       _resetGroup: function() {
          var
             view = this._options.view,
-            filter = cMerge(view.getFilter(), {
-               'Разворот': this._lastDepth
-            }),
+            filter = coreClone(view.getFilter()),
             self = this;
+         
+         if (this._lastDepth) {
+            filter['Разворот'] = this._lastDepth;
+         } else {
+            delete filter['Разворот'];
+         }
+         
          this._lastDepth = null;
          delete(filter[this._options.searchParamName]);
          //При сбрасывании группировки в иерархии нужно снять класс-можификатор, но сделать это можно

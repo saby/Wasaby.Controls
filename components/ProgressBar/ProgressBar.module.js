@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.ProgressBar',
       'tmpl!SBIS3.CONTROLS.ProgressBar',
       'css!SBIS3.CONTROLS.ProgressBar'
    ],
-   function(CompoundControl, dotTplFn){
+   function(CompoundControl, dotTplFn) {
       /**
        * Класс контрола "Индикатор прохождения процесса".
        * @class SBIS3.CONTROLS.ProgressBar
@@ -61,24 +61,19 @@ define('js!SBIS3.CONTROLS.ProgressBar',
                step: 1
             }
          },
-
          init: function() {
             ProgressBar.superclass.init.call(this);
-
             // Работаем через контекст, и в setProgress есть валидация, чтобы не дублировать её в
             // шаблоне вызовем его с текущей опцией.
             this.setProgress(this.getProgress());
          },
-
          _modifyOptions: function(options) {
             ProgressBar.superclass._modifyOptions.call(this, options);
             if (!/ controls-ProgressBar_align-(left|right) /.test(options.className)) {
                options.className += ' controls-ProgressBar_align-center';
             }
-
             return options;
          },
-
          _checkRanges: function(options) {
             options.progress = parseFloat(options.progress);
             if (isNaN(options.progress)) {
@@ -99,7 +94,6 @@ define('js!SBIS3.CONTROLS.ProgressBar',
             }
             return true;
          },
-
          /**
           * Устанавливает текущее состояние процесса в процентах
           * @param {String} progress Текст на кнопке.
@@ -113,7 +107,6 @@ define('js!SBIS3.CONTROLS.ProgressBar',
             }
             this._drawProgress(this._getPercent());
          },
-
          /**
           * Получает текущее состояние процесса в процентах
           * @returns {Number} текущее состояние процесса в процентах
@@ -123,7 +116,6 @@ define('js!SBIS3.CONTROLS.ProgressBar',
          getProgress: function() {
             return this._options.progress;
          },
-
          /**
           * Задает максимальное значение
           * @param max {Number}
@@ -132,7 +124,6 @@ define('js!SBIS3.CONTROLS.ProgressBar',
             this._options.maximum = max;
             this._drawProgress(this._getPercent());
          },
-
          /**
           * Задает минимальное возможное значение
           * @param min {Number}
@@ -141,7 +132,6 @@ define('js!SBIS3.CONTROLS.ProgressBar',
             this._options.minimum = min;
             this._drawProgress(this._getPercent());
          },
-
          _getPercent: function() {
             var
                progress = this._options.progress,
@@ -149,20 +139,19 @@ define('js!SBIS3.CONTROLS.ProgressBar',
                maximum = this._options.maximum,
                step = this._options.step,
                length = maximum - minimum;
-
             if (progress !== length) {
                progress = Math.floor(progress / step) * step;
                this._options.progress = progress;
             }
             return Math.round((progress - minimum) / length * 100);
          },
-
          _drawProgress: function(progress) {
             this.getLinkedContext().setValueSelf('progress', {
                backgroundSize: progress + '% 100%',
                value: progress + '%'
             });
-      }
-   });
-   return ProgressBar;
-});
+         }
+      });
+      return ProgressBar;
+   }
+);
