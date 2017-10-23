@@ -11,10 +11,7 @@ define('js!WSControls/Lists/ListControl/ListRender', [
    var ListRender = ItemsRender.extend(
       {
          _controlName: 'WSControls/Lists/ListControl/ListRender',
-
          _template: ItemsRenderTpl,
-         _selectedIndex: null,
-         _selectedItem: null,
 
          constructor: function(cfg) {
             ListRender.superclass.constructor.apply(this, arguments);
@@ -28,18 +25,7 @@ define('js!WSControls/Lists/ListControl/ListRender', [
 
          __initSelectedItem: function(cfg) {
 
-            if(!cfg.selectedItem) {
-               if (!this._selectedIndex) {
-                  this._selectedIndex = 0;//переводим на первый элемент
-               }
-               else {
-                  this._selectedIndex++;//условно ищем ближайший элемент, рядом с удаленным
-               }
-               this._selectedItem = cfg.display.at(this._selectedIndex);
-            }
-            else {
-               this._selectedItem = cfg.selectedItem;
-            }
+
 
             //TODO обработать virt scroll
          },

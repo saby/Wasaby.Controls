@@ -1,34 +1,26 @@
 define('js!WSControls/Lists/ListControl', [
    'Core/core-extend',
    'Core/Control',
-   'Core/helpers/Object/isEmpty',
    'tmpl!WSControls/Lists/ListControl',
    'js!WSControls/Lists/resources/utils/DataSourceUtil',
    'js!WSControls/Lists/Controllers/PageNavigation',
-   'js!WSControls/Lists/resources/utils/ItemsUtil',
    'Core/helpers/functional-helpers',
-   'Core/helpers/Object/isEqual',
-   'Core/Deferred',
    'js!WS.Data/Type/descriptor',
    'js!WS.Data/Source/ISource',
    'Core/core-instance'
 ], function (extend,
-             BaseControl,
-             isEmpty,
+             Control,
              ListControlTpl,
              DataSourceUtil,
              PageNavigation,
-             ItemsUtil,
              fHelpers,
-             isEqual,
-             Deferred,
              Types,
              ISource,
              cInstance
    ) {
    'use strict';
 
-   var ListView = BaseControl.extend(
+   var ListView = Control.extend(
       {
          _controlName: 'WSControls/Lists/ListControl',
          _template: ListControlTpl,
@@ -52,7 +44,6 @@ define('js!WSControls/Lists/ListControl', [
             this._publish('onDataLoad');
          },
 
-         //TODO private
          __initNavigation: function(options, dataSource) {
             this._navigationController = new PageNavigation(options.navigation.config);
             this._navigationController.prepareSource(dataSource);
@@ -75,8 +66,7 @@ define('js!WSControls/Lists/ListControl', [
                this._filter = newOptions.filter;
             }
 
-            //TODO внимание только для случая что dataSource задается объектом
-            if (!isEqual(newOptions.dataSource, this._options.dataSource)) {
+            if (newOptions.dataSource !== this._options.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
                this.__initNavigation(newOptions, this._dataSource);
                this._reload(newOptions);
