@@ -15,7 +15,9 @@ define('js!SBIS3.CONTROLS.Utils.PrintDialogHTMLView', [
     */
    return function showHTMLForPrint(cfg){
 
-      var options = cfg || {};
+      var
+         options = cfg || {},
+         minWidth = cfg.minWidth || 398;
 
       //Устанавливаем неустановленные опции в дефолтные значения
       cMerge(options, {
@@ -24,9 +26,9 @@ define('js!SBIS3.CONTROLS.Utils.PrintDialogHTMLView', [
          isStack: true,
          task_1174068748: true,
          template: 'js!SBIS3.CONTROLS.PrintDialogTemplate',
-         minWidth: options.minWidth,
+         minWidth: minWidth,
          componentOptions: {
-            minWidth: options.minWidth,
+            minWidth: minWidth,
             htmlText: options.htmlText
          }
       }, {preferSource: true});

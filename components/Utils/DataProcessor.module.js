@@ -89,7 +89,7 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          this._prepareSerializer().addCallback(function(reportText){
             PrintDialogHTMLView({
                htmlText: reportText,
-               minWidth: self._options.minWidth || 398,
+               minWidth: self._options.minWidth,
                handlers: {
                   onAfterClose: function() {
                      self._destroyLoadIndicator();

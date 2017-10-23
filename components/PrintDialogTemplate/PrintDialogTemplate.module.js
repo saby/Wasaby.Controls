@@ -19,7 +19,6 @@ define('js!SBIS3.CONTROLS.PrintDialogTemplate',
             _options: {
                autoWidth: true,
                caption: rk('Предварительный просмотр'),
-               minWidth: 398,
                minHeight : 384,
                maxHTMLLength: 3*1000*1000
             }
