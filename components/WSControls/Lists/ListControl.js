@@ -65,7 +65,7 @@ define('js!WSControls/Lists/ListControl', [
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
                this.__initNavigation(newOptions, this._dataSource);
                if (!this._items) {
-                  this.reload(newOptions);
+                  this._reload(newOptions);
                }
             }
          },
@@ -79,7 +79,7 @@ define('js!WSControls/Lists/ListControl', [
             if (!isEqual(newOptions.dataSource, this._options.dataSource)) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
                this.__initNavigation(newOptions, this._dataSource);
-               this.reload(newOptions);
+               this._reload(newOptions);
             }
 
 
@@ -90,9 +90,6 @@ define('js!WSControls/Lists/ListControl', [
 
          //<editor-fold desc='EventHandlers'>
 
-         _onItemClick: function (evt) {
-            //Method must be implemented
-         },
 
 
          //</editor-fold>
@@ -115,7 +112,11 @@ define('js!WSControls/Lists/ListControl', [
          },
 
          //<editor-fold desc='DataSourceMethods'>
-         reload: function(options) {
+         reload: function() {
+            this._reload(this._options);
+         },
+
+         _reload: function(options) {
             if (this._dataSource) {
                var
                   def,
@@ -147,14 +148,14 @@ define('js!WSControls/Lists/ListControl', [
             }
          },
 
-         loadPage: function(direction) {
+         __loadPage: function(direction) {
             var def, self = this;
             if (this._dataSource) {
                var queryParams = this._prepareQueryParams(direction);
                def = DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
                   .addCallback(fHelpers.forAliveOnly(function (list) {
                      self._notify('onDataLoad', list, direction);
-                     this._onLoadPage(list, direction);
+                     this.__onLoadPage(list, direction);
                      return list;
                   }, self))
                   .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
@@ -165,7 +166,7 @@ define('js!WSControls/Lists/ListControl', [
             }
          },
 
-         _onLoadPage: function(list, direction) {
+         __onLoadPage: function(list, direction) {
             if (direction == 'down') {
                this._items.append(list);
             } else if (direction == 'up') {
