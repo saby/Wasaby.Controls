@@ -80,7 +80,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
             tabsDisplayProperty: null,
             /**
              * @cfg {String} Устанавливает поле элемента коллекции, которое является идентификатором записи.
-             * @deprecated
+             * @deprecated Используйте {@link idProperty}.
              */
             keyField: null,
             /**

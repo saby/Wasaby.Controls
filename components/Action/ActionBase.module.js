@@ -7,7 +7,7 @@ define('js!SBIS3.CONTROLS.ActionBase', ['js!SBIS3.CORE.Control'], function(Contr
     * @public
     * @extends SBIS3.CORE.Control
     * @author Крайнов Дмитрий Олегович
-    * @deprecated используйте SBIS3.CONTROLS.Action.Action
+    * @deprecated Используйте {@link SBIS3.CONTROLS.Action.Action}.
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip
     * @ignoreOptions visible tooltip tabindex enabled className alwaysShowExtendedTooltip allowChangeEnable

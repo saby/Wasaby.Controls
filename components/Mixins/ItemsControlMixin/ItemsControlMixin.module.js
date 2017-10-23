@@ -576,7 +576,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              *
              * @property {String} contentTemplate Шаблон содержимого заголовка группы.
              * Шаблон будет помещен в платформенный контейнер визуального отображения заголовка группы.
-             * Шаблон - это XHTML-файл, внутри допускается использование {@link http://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/xhtml/template/ конструкций шаблонизатора}.
+             * Шаблон - это XHTML-файл, внутри допускается использование конструкций шаблонизатора.
              * В объекте *it* шаблонизатора доступны для использования два свойства:
              * <ul>
              *     <li>groupId - идентификатор группы (см. *method*).</li>

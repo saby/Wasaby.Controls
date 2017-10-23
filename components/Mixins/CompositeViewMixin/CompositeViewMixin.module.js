@@ -158,12 +158,12 @@ define('js!SBIS3.CONTROLS.CompositeViewMixin', [
             itemsHeight: undefined,
             /**
              * @cfg {String} Шаблон отображения строки в режиме "Список".
-             * @deprecated
+             * @deprecated Используйте опции {@link listContentTpl} или {@link listTpl}.
              */
             listTemplate : null,
             /**
              * @cfg {String} Шаблон отображения строки в режиме "Плитка".
-             * @deprecated
+             * @deprecated Используйте опции {@link tileContentTpl} или {@link tileTpl}.
              */
             tileTemplate : null,
             /**
