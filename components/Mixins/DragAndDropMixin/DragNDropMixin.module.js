@@ -341,7 +341,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 if (this._beginDragHandler(DragObject, e) !== false) {
                     if (this._notify('onBeginDrag', DragObject, e) !== false) {
                         if (window.frames.length > 0) {
-                           //Нужно создавать оверлей над которым будет двигается курсор перемещенияь если есть iframe, потомучто он не отдает наружу ни каких событий
+                           //Нужно создавать оверлей, над которым будет двигается курсор перемещения, если есть iframe, потомучто он не отдает наружу ни каких событий
                            $('body').append('<div class="controls-DragNDropMixin-overlay"/>');
                         }
                         this._showAvatar(e);
