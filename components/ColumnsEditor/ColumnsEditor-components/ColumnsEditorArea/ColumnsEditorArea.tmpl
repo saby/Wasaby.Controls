@@ -19,9 +19,12 @@
                idProperty="id"
                displayProperty="title"
                itemContentTpl="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/preferences"
-               editMode="click|single"
+               editMode=""
                editingTemplate="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/preferencesEdit"
                >
+               <!--^^^
+               editMode="click|single"
+               -->
                <ws:handlers onItemClick="{{_optsPreferences.onItemClick}}"/>
             </ws:SBIS3.CONTROLS.ListView>
          </div>

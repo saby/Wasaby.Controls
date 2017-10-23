@@ -58,7 +58,6 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
                   }],
                   idProperty: 'id'
                }),
-               itemsActions: _makeItemsActions(),
                onItemClick: null,
                onSelectedItemsChange: null
             };
@@ -87,12 +86,13 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
 
             //this._preferencesView.setItemsHover(false);
             //this.subscribeTo(this._preferencesView, 'onChangeHoveredItem', this._preferencesView.setItemsHover.bind(this._preferencesView, false));
+            this._preferencesView.setItemsActions(_makeItemsActions(this));
 
             this.subscribeTo(this._preferencesView, 'onAfterBeginEdit', this._preferencesView.setItemsActions.bind(this._preferencesView, []));
-            this.subscribeTo(this._preferencesView, 'onEndEdit', function (evtName, model, withSaving) {
-            });
+            /*^^^this.subscribeTo(this._preferencesView, 'onEndEdit', function (evtName, model, withSaving) {
+            });*/
             this.subscribeTo(this._preferencesView, 'onAfterEndEdit', function (evtName, model, $target, withSaving) {
-               this._preferencesView.setItemsActions(_makeItemsActions());
+               this._preferencesView.setItemsActions(_makeItemsActions(this));
             }.bind(this));
 
             // В опциях могут быть указаны группы, которые нужно свернуть при открытии
@@ -194,24 +194,6 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
          return {fixed:fixed, selectable:selectable};
       };
 
-      var _makeItemsActions = function () {
-         return [
-            {name:'edit', title:rk('Редактировать'), icon:'sprite:icon-16 icon-Edit icon-primary action-hover'},
-            {name:'clone', title:rk('Дублировать'), icon:'sprite:icon-16 icon-Copy icon-primary action-hover'},
-            {name:'delete', title:rk('Удалить'), icon:'sprite:icon-16 icon-Erase icon-error'}
-         ].map(function (inf) {
-            return {
-               name: inf.name,
-               icon: inf.icon,
-               caption: inf.title,
-               tooltip: inf.title,
-               isMainAction: true,
-               onActivated: function ($item, itemId, itemModel, action) {
-               }
-            };
-         });
-      };
-
       var _applySelectedToItems = function (selectedArray, items) {
          selectedArray.forEach(function (id) {
             items.getRecordById(id).set('selected', true);
@@ -232,6 +214,37 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
             }
             return el1.index - el2.index;
          }, ['selected']);
+      };
+
+      var _makeItemsActions = function (self) {
+         return [
+            {name:'edit', title:rk('Редактировать'), icon:'sprite:icon-16 icon-Edit icon-primary action-hover'},
+            {name:'clone', title:rk('Дублировать'), icon:'sprite:icon-16 icon-Copy icon-primary action-hover'},
+            {name:'delete', title:rk('Удалить'), icon:'sprite:icon-16 icon-Erase icon-error'}
+         ].map(function (inf) {
+            return {
+               name: inf.name,
+               icon: inf.icon,
+               caption: inf.title,
+               tooltip: inf.title,
+               isMainAction: true,
+               onActivated: function ($item, itemId, itemModel, action) {
+                  _applyTemplateAction(self, action, itemModel);
+               }
+            };
+         });
+      };
+
+      var _applyTemplateAction = function (self, action, model) {
+         switch (action) {
+            case 'edit':
+               self._preferencesView.beginEdit(model, false);
+               break;
+            case 'clone':
+               break;
+            case 'delete':
+               break;
+         }
       };
 
 

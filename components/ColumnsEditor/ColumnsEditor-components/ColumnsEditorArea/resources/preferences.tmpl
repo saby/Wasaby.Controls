@@ -1,3 +1,24 @@
 <div class="controls-ColumnsEditorArea__Preferences-item">
-   <span class="controls-ColumnsEditorArea__Preferences-item-text">{{item[displayProperty]}}</span>
+   <!--^^^<span class="controls-ColumnsEditorArea__Preferences-item-text">{{item[displayProperty]}}</span>--->
+
+   <ws:SBIS3.CONTROLS.DropdownList
+      name="controls-controls-ColumnsEditorArea__Preferences-item-title"
+      className="controls-ColumnsEditorArea__Preferences-item-title"
+      multiselect="{{false}}"
+      mode="click"
+      type="titleHeader"
+      title="{[Выберите шаблон]}"
+      idProperty="id"
+      displayProperty="title"
+      >
+      <ws:items>
+         <ws:Array>
+            <ws:Object id="1" title="Шаблон 1" />
+            <ws:Object id="2" title="Шаблон 2" />
+            <ws:Object id="3" title="Шаблон 3" />
+            <ws:Object id="4" title="Шаблон 4" />
+         </ws:Array>
+      </ws:items>
+   </ws:SBIS3.CONTROLS.DropdownList>
+
 </div>
