@@ -11,8 +11,7 @@ define('js!SBIS3.CONTROLS.PrintDialogTemplate',
       "use strict";
 
       var autoTestsConfig = SessionStorage.get('autoTestConfig');
-      // var needShowReportDialog = !constants.browser.chrome || autoTestsConfig && autoTestsConfig.showPrintReportForTests;
-      var needShowReportDialog = true;
+      var needShowReportDialog = !constants.browser.chrome || autoTestsConfig && autoTestsConfig.showPrintReportForTests;
 
       var PrintDialogTemplate = CompoundControl.extend({
          _dotTplFn: template,
