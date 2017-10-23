@@ -1,9 +1,6 @@
 /**
  * Created by kraynovdo on 29.08.2017.
  */
-/**
- * Created by am.gerasimov on 06.03.2017.
- */
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define(
    [
