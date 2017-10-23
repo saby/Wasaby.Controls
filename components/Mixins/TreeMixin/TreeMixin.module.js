@@ -557,7 +557,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              * </pre>
              * @see getHierarchy
              * @see setHierarchy
-             * @deprecated
+             * @deprecated Используйте опции {@link parentProperty}, {@link nodeProperty} и {@link hasChildrenProperty}.
              */
             hierField: null,
             /**

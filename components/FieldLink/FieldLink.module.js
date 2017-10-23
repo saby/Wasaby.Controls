@@ -671,7 +671,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           /**
            * {String} Устанавливает поле элемента коллекции, которое является идентификатором записи
-           * @deprecated
+           * @deprecated Используйте {@link setIdProperty}.
            */
           setKeyField: function(keyField) {
              IoC.resolve('ILogger').log('FieldLink', 'Метод setKeyField устарел, используйте setIdProperty');
@@ -696,7 +696,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           /**
            * {String} Устанавливает поле элемента коллекции, из которого отображать данные
-           * @deprecated
+           * @deprecated Используйте {@link setDisplayProperty}.
            */
           setDisplayField: function(displayProperty) {
              IoC.resolve('ILogger').log('FieldLink', 'Метод setDisplayField устарел, используйте setDisplayProperty');
