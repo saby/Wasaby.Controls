@@ -187,7 +187,7 @@ define('js!WSControls/Lists/VirtualScroll',
                'start': this._virtualWindow.start,
                'end': this._virtualWindow.end
             };
-         },
+         }
       });
 
       return VirtualScroll;
