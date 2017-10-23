@@ -91,7 +91,7 @@ define('js!WSControls/Lists/Selector', [
       },
 
       _getItemIndexByKey: function (id, cfg) {
-         var projItem = ItemsUtil.getItemById(this._display, id, cfg.idProperty);
+         var projItem = ItemsUtil.getDisplayItemById(this._display, id, cfg.idProperty);
          return this._display.getIndex(projItem);
       },
 

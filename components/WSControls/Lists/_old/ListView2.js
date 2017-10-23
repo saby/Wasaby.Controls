@@ -3,15 +3,14 @@ define('js!WSControls/Lists/ListView2',
       'js!WSControls/Lists/MultiSelector',
       'js!WSControls/Lists/VirtualScroll',
       'tmpl!WSControls/Lists/ListView2',
-      'is!compatibleLayer?js!WSControls/Lists/ItemsToolbar/ItemsToolbarCompatible',
       'js!WSControls/Lists/Controllers/PageNavigation',
       'css!WSControls/Lists/ListView'
    ],
 
-   function(MultiSelector, VirtualScroll, template, ItemsToolbarCompatible, PageNavigation) {
-      
+   function(MultiSelector, VirtualScroll, template, PageNavigation) {
+
       var INDICATOR_DELAY = 2000;
-      
+
       var ListView = MultiSelector.extend({
          _navigationController: null,
          _controlName: 'WSControls/Lists/ListView',
@@ -25,7 +24,7 @@ define('js!WSControls/Lists/ListView2',
          _mouseLeave: function () {
             this._hoveredIndex = -1;
          },
-   
+
          _getItemData: function(displayItem, index) {
             var data = ListView.superclass._getItemData.apply(this, arguments);
             data.hovered = this._hoveredIndex === index;

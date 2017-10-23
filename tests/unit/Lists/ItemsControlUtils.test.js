@@ -125,7 +125,7 @@ define(['js!WSControls/Lists/resources/utils/DataSourceUtil', 'js!WSControls/Lis
                assert.equal('Первый', value, 'getPropertyValue doesn\'t return value of the flag/enum item');
             });
 
-            it('getItemById', function () {
+            it('getDisplayItemById', function () {
                var rs = new RecordSet({
                   rawData: data,
                   idProperty : 'id'
@@ -138,13 +138,13 @@ define(['js!WSControls/Lists/resources/utils/DataSourceUtil', 'js!WSControls/Lis
                displayArray = ItemsUtil.getDefaultDisplayFlat(data, {}),
                displayEnum = ItemsUtil.getDefaultDisplayFlat(myEnum, {});
 
-               var value = ItemsUtil.getItemById(displayRs, 2);
+               var value = ItemsUtil.getDisplayItemById(displayRs, 2);
                assert.equal(rs.getRecordById(2), value.getContents(), 'getItemById doesn\'t return record from recordset');
 
-               value = ItemsUtil.getItemById(displayArray, 2, 'id');
+               value = ItemsUtil.getDisplayItemById(displayArray, 2, 'id');
                assert.equal(data[1], value.getContents(), 'getItemById doesn\'t return object from array');
 
-               value = ItemsUtil.getItemById(displayEnum, 'Второй');
+               value = ItemsUtil.getDisplayItemById(displayEnum, 'Второй');
                assert.equal('Второй', value.getContents(), 'getPropertyValue doesn\'t return value of Enum');
             });
 

@@ -1,6 +1,6 @@
 ///**
-// * Created by am.gerasimov on 06.03.2017.
-// */
+//* Created by am.gerasimov on 06.03.2017.
+//*/
 ///* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 //define(['js!WSControls/Lists/ItemsControl', 'WS.Data/Collection/RecordSet', 'WS.Data/Source/Memory', 'Core/core-instance'],
 //   function (ItemsControl, RecordSet, MemorySource, cInstance) {

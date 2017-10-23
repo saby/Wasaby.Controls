@@ -80,7 +80,7 @@ define('js!WSControls/Lists/TreeView2', [
          this._display.setEventRaising(false, true);
          collectionHelpers.forEach(expandedItems, function(expanded, id) {
             if (!notCollapseItemId || id !== notCollapseItemId) {
-               this.collapseItem(ItemsUtil.getItemById(this._display, id, this._options.idProperty).getHash());
+               this.collapseItem(ItemsUtil.getDisplayItemById(this._display, id, this._options.idProperty).getHash());
             }
          }, this);
          this._display.setEventRaising(true, true);
