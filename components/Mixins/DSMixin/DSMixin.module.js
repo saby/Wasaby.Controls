@@ -118,7 +118,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          _options: {
             /**
              * @cfg {String} Устанавливает поле элемента коллекции, значения которого будут использованы в качестве первичного ключа.
-             * @deprecated
+             * @deprecated Используйте опцию {@link idProperty}.
              */
             keyField : null,
             /**
@@ -142,7 +142,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             idProperty : null,
             /**
              * @cfg {String} Определяет поле элемента коллекции, данные из которого будут использованы для отображения в контроле.
-             * @deprecated
+             * @deprecated Используйте опцию {@link displayProperty}.
              */
             displayField: null,
             /**
