@@ -97,7 +97,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              *     <option name="delay">1000</option>
              * </pre>
              * @see startChar
-             * @deprecated Используйте опцию {@link searchDelay}
+             * @deprecated Используйте опцию {@link searchDelay}.
              */
             delay: 500,
 
@@ -112,7 +112,7 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
              *     <option name="startChar">1</option>
              * </pre>
              * @see delay
-             * @deprecated Используйте опцию {@link startCharacter}
+             * @deprecated Используйте опцию {@link startCharacter}.
              */
             startChar: 3,
             /**

@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
       $protected: {
          _options: {
             /**
-             * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
+             * @deprecated Для внедрения собственной логики используйте события {@link onBeginMove} или {@link onEndMove}.
              * @member {WS.Data/MoveStrategy/IMoveStrategy} Стратегия перемещения
              */
             moveStrategy: undefined,
@@ -237,7 +237,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
       //region move_strategy
       /**
        * Возвращает стратегию перемещения
-       * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
+       * @deprecated Для внедрения собственной логики используйте события {@link onBeginMove} или {@link onEndMove}.
        * @see WS.Data/MoveStrategy/IMoveStrategy
        * @returns {WS.Data/MoveStrategy/IMoveStrategy}
        */
@@ -246,7 +246,7 @@ define('js!SBIS3.CONTROLS.ListView.Mover', [
       },
       /**
        * Устанавливает стратегию перемещения
-       * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
+       * @deprecated Для внедрения собственной логики используйте события {@link onBeginMove} или {@link onEndMove}.
        * @see WS.Data/MoveStrategy/IMoveStrategy
        * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
        */

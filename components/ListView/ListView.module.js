@@ -230,7 +230,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          /**
           * @event onItemValueChanged Происходит при смене значения в одном из полей редактирования по месту и потере фокуса этим полем.
-          * @deprecated Будет удалено в 3.7.3.100. Временное решение
+          * @deprecated
           * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {Array} difference Массив измененных полей.
           * @param {WS.Data/Entity/Model} model Модель с измененными данными.
@@ -473,11 +473,10 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                /**
                 * @cfg {String} Устанавливает шаблон отображения каждого элемента коллекции.
+                * @deprecated Используйте {@link SBIS3.CONTROLS.ItemsControlMixin#itemTpl}.
                 * @remark
-                * @deprecated
                 * Шаблон - это пользовательская вёрстка элемента коллекции.
                 * Для доступа к полям элемента коллекции в шаблоне подразумевается использование конструкций шаблонизатора.
-                * Подробнее о шаблонизаторе вы можете прочитать в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/xhtml/template/ Шаблонизация вёрстки компонента}.
                 * <br/>
                 * Шаблон может быть создан в отдельном XHTML-файле, когда вёрстка большая или требуется использовать его в разных компонентах.
                 * Шаблон создают в директории компонента в подпапке resources согласно правилам, описанным в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/file-structure/ Файловая структура компонента}.
@@ -913,9 +912,7 @@ define('js!SBIS3.CONTROLS.ListView',
                dragEntityList: 'dragentity.list',
                /**
                 * @cfg {WS.Data/MoveStrategy/IMoveStrategy} Стратегия перемещения. Класс, который реализует перемещение записей. Подробнее тут {@link WS.Data/MoveStrategy/Base}.
-                * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
-                * @see {@link WS.Data/MoveStrategy/Base}
-                * @see {@link WS.Data/MoveStrategy/IMoveStrategy}
+                * @deprecated Для внедрения собственной логики используйте события {@link onBeginMove} или {@link onEndMove}.
                 */
                moveStrategy: null,
                /**
@@ -4470,7 +4467,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Перемещает записи через диалог. По умолчанию берет все выделенные записи.
           * @param {Array} idArray Массив перемещаемых записей
-          * @deprecated Используйте SBIS3.CONTROLS.Action.List.InteractiveMove.
+          * @deprecated Используйте {@link SBIS3.CONTROLS.Action.List.InteractiveMove}.
           */
          moveRecordsWithDialog: function(idArray) {
             if (this.isEnabledMove()) {
@@ -4524,7 +4521,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          /**
           * Перемещает выделенные записи.
-          * @deprecated используйте метод move
+          * @deprecated Используйте метод {@link move}.
           * @param {WS.Data/Entity/Model|String} target  К какой записи переместить выделенные. Модель либо ее идентификатор.
           */
          selectedMoveTo: function(target) {
@@ -4554,7 +4551,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Возвращает стратегию перемещения
           * @see WS.Data/MoveStrategy/IMoveStrategy
-          * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
+          * @deprecated Для внедрения собственной логики используйте события {@link onBeginMove} и {@link onEndMove}.
           * @returns {WS.Data/MoveStrategy/IMoveStrategy}
           */
          getMoveStrategy: function() {
@@ -4562,7 +4559,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          /**
           * Создает стратегию перемещения в зависимости от источника данных
-          * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
+          * @deprecated Для внедрения собственной логики используйте события {@link onBeginMove} и {@link onEndMove}.
           * @returns {WS.Data/MoveStrategy/IMoveStrategy}
           * @private
           */
@@ -4580,7 +4577,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Устанавливает стратегию перемещения
           * @see WS.Data/MoveStrategy/IMoveStrategy
-          * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
+          * @deprecated Для внедрения собственной логики используйте события {@link onBeginMove} и {@link onEndMove}.
           * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
           */
          setMoveStrategy: function (moveStrategy) {
