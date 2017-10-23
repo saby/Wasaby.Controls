@@ -115,18 +115,14 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 /**
                  * @cfg {Boolean} Признак, возможножности перемещения элементов с помощью DragNDrop.
                  */
-                itemsDragNDrop: true,
-                /**
-                 * @cfg {Boolean} Нужно ли создаваьб оверлей над которым будет двигается курсор перемещения.
-                 * @remark нужно использовать если на странице есть iframe, с которым не надо взаимодействовать.
-                 */
-                useDragOverlay: false
+                itemsDragNDrop: true
             },
             /**
              * @member {Number} Константа, показывающая на сколько пикселей надо сдвинуть мышь, чтобы началось перемещение.
              */
             _constShiftLimit: 3,
             _beginDragTarget:null
+
         },
         //region public
         $constructor: function () {
@@ -344,7 +340,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 DragObject.onDragHandler(e);
                 if (this._beginDragHandler(DragObject, e) !== false) {
                     if (this._notify('onBeginDrag', DragObject, e) !== false) {
-                        if (this._options.useDragOverlay) {
+                        if (window.frames.length > 0) {
+                           //Нужно создавать оверлей над которым будет двигается курсор перемещенияь если есть iframe, потомучто он не отдает наружу ни каких событий
                            $('body').append('<div class="controls-DragNDropMixin-overlay"/>');
                         }
                         this._showAvatar(e);
