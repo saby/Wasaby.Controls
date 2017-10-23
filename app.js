@@ -33,7 +33,7 @@ collectDeps.on('close', function(code) {
 
 // Кошерный редирект на CDN, который РАБОТАЕТ
 app.get('/cdn*', function(req, res) {
-  res.redirect('https://test-inside.tensor.ru' + req.url);
+  res.redirect('https://localhost:666' + req.url);
 });
 
 app.post('/theme-preview/get-theme/', function(req, res)  {
