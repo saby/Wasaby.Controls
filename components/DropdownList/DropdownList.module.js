@@ -637,8 +637,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             return this._options.emptyValue && this.getSelectedKeys()[0] == null;
          },
          _dataLoadedCallback: function() {
-            DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
             this._setHeadVariables();
+            DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
             if (this._isEnumTypeData()){
                if (this._options.multiselect){
                   throw new Error('DropdownList: Для типа данных Enum выпадающий список должен работать в режиме одиночного выбора')
