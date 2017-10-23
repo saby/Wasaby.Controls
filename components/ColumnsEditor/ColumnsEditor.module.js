@@ -85,6 +85,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                idProperty: 'title'
             });
             this._options._presets = recordset;
+            this._options._selectedPreset = recordset.at(0).get('title');
             this._presetDropdown.setItems(recordset);
          },
 
@@ -92,11 +93,20 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
             return this._options._selectedPreset;
          },
 
-         _setSelectedPreset: function (preset, dontReset) {
+         _setSelectedPreset: function (preset, dontUpdate) {
             this._options._selectedPreset = preset;
-            if (!dontReset) {
+            if (!dontUpdate) {
                this._presetDropdown.setSelectedKeys([preset]);
             }
+         },
+
+         _changePreset: function (title) {
+         },
+
+         _clonePreset: function () {
+         },
+
+         _deletePreset: function () {
          },
 
          _showColumnsEditor: function () {
@@ -137,6 +147,9 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                   getPresets: this._getPresets.bind(this),
                   getSelectedPreset: this._getSelectedPreset.bind(this),
                   setSelectedPreset: this._setSelectedPreset.bind(this),
+                  changePreset: this._changePreset.bind(this),
+                  clonePreset: this._clonePreset.bind(this),
+                  deletePreset: this._deletePreset.bind(this),
                   groupTitleTpl: cfg.groupTitleTpl && (typeof cfg.groupTitleTpl === 'function' || typeof cfg.groupTitleTpl === 'string') ? cfg.groupTitleTpl : null,
                   groupTitles: typeof cfg.groupTitles === 'object' ? cfg.groupTitles : null,
                   groupCollapsing: typeof cfg.groupCollapsing === 'object' ? cfg.groupCollapsing : null,

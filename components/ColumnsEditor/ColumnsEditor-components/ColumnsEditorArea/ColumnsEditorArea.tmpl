@@ -13,19 +13,22 @@
                class="controls-ColumnsEditorArea__Preset controls-ListView__disableHover"
                name="controls-ColumnsEditorArea__Preset"
                items="{{_optsPreset.items}}"
-               itemsActions="{{_optsPreset.itemsActions}}"
                itemsHover="{{false}}"
                itemsDragNDrop="{{false}}"
                idProperty="id"
                displayProperty="title"
-               itemContentTpl="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/preset"
                editMode=""
                editingTemplate="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/presetEdit"
                >
                <!--^^^
+               itemsActions="{{_optsPreset.itemsActions}}"
+               itemContentTpl="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/preset"
                editMode="click|single"
-               -->
                <ws:handlers onItemClick="{{_optsPreset.onItemClick}}"/>
+               -->
+               <ws:itemContentTpl>
+                  <ws:partial template="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/preset" scope="{{itemContentTpl}}" presets="{{getPresets()}}" />
+               </ws:itemContentTpl>
             </ws:SBIS3.CONTROLS.ListView>
          </div>
       </div>

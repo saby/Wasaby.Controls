@@ -43,7 +43,6 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
                title: ''
             },
             _presetView: undefined,
-            _presetDropdown: undefined,
             _fixedView: undefined,
             _selectableView: undefined
          },
@@ -51,16 +50,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
          _modifyOptions: function () {
             var cfg = ColumnsEditorArea.superclass._modifyOptions.apply(this, arguments);
             cfg._optsPreset = {
-               items: new RecordSet({
-                  rawData: [{
-                     id: 1,
-                     title: 'Тестовый шаблон',
-                     info: {prop1:'Свойство 1', prop2:'Свойство 2', prop3:'Свойство 3'}
-                  }],
-                  idProperty: 'id'
-               }),
-               onItemClick: null,
-               onSelectedItemsChange: null
+               items: _makePresetItems(cfg.getPresets(), cfg.getSelectedPreset())
             };
             var prepared = _prepareItems(cfg.columns, cfg.selectedColumns, cfg.moveColumns);
             cfg._optsFixed = prepared.fixed;
@@ -82,21 +72,17 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
          init: function () {
             ColumnsEditorArea.superclass.init.apply(this, arguments);
             this._presetView = this.getChildControlByName('controls-ColumnsEditorArea__Preset');
-            this._presetDropdown = this._presetView.getChildControlByName('controls-controls-ColumnsEditorArea__Preset-item-title');
             this._fixedView = this.getChildControlByName('controls-ColumnsEditorArea__FixedList');
             this._selectableView = this.getChildControlByName('controls-ColumnsEditorArea__SelectableList');
 
-            this._presetDropdown.setItems(this._options.getPresets());
-            this._presetDropdown.setSelectedKeys([this._options.getSelectedPreset()]);
-            this.subscribeTo(this._presetDropdown, 'onSelectedItemsChange', function (evtName, selected, changes) {
-               this._options.setSelectedPreset(selected[0]);
-            }.bind(this));
-
+            _updatePresetView(this, true);
             //this._presetView.setItemsHover(false);
             //this.subscribeTo(this._presetView, 'onChangeHoveredItem', this._presetView.setItemsHover.bind(this._presetView, false));
             this._presetView.setItemsActions(_makeItemsActions(this));
             this.subscribeTo(this._presetView, 'onAfterBeginEdit', this._presetView.setItemsActions.bind(this._presetView, []));
             this.subscribeTo(this._presetView, 'onAfterEndEdit', function (evtName, model, $target, withSaving) {
+               this._options.changePreset(model.get('title'));
+
                this._presetView.setItemsActions(_makeItemsActions(this));
             }.bind(this));
 
@@ -219,6 +205,25 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
             }
             return el1.index - el2.index;
          }, ['selected']);
+      };
+
+      var _makePresetItems = function (presets, selectedPreset) {
+         var rs = new RecordSet({idProperty:'title'});
+         rs.add(presets.getRecordById(selectedPreset));
+         return rs;
+      };
+
+      var _updatePresetView = function (self, dontSet) {
+         if (!dontSet) {
+            self._presetView.setItems(_makePresetItems(self._options.getPresets(), self._options.getSelectedPreset()));
+         }
+         var dropdown = self._presetView.getChildControlByName('controls-controls-ColumnsEditorArea__Preset-item-title');
+         if (dropdown) {
+            self.subscribeTo(dropdown, 'onSelectedItemsChange', function (evtName, selected, changes) {
+               self._options.setSelectedPreset(selected[0]);
+               _updatePresetView(self);
+            }.bind(this));
+         }
       };
 
       var _makeItemsActions = function (self) {
