@@ -43,6 +43,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
                title: ''
             },
             _preferencesView: undefined,
+            _preferencesDropdown: undefined,
             _fixedView: undefined,
             _selectableView: undefined
          },
@@ -81,16 +82,20 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
          init: function () {
             ColumnsEditorArea.superclass.init.apply(this, arguments);
             this._preferencesView = this.getChildControlByName('controls-ColumnsEditorArea__Preferences');
+            this._preferencesDropdown = this._preferencesView.getChildControlByName('controls-controls-ColumnsEditorArea__Preferences-item-title');
             this._fixedView = this.getChildControlByName('controls-ColumnsEditorArea__FixedList');
             this._selectableView = this.getChildControlByName('controls-ColumnsEditorArea__SelectableList');
+
+            this._preferencesDropdown.setItems(this._options.getPreferences());
+            this._preferencesDropdown.setSelectedKeys([this._options.getSelectedPreference()]);
+            this.subscribeTo(this._preferencesDropdown, 'onSelectedItemsChange', function (evtName, selected, changes) {
+               this._options.setSelectedPreference(selected[0]);
+            }.bind(this));
 
             //this._preferencesView.setItemsHover(false);
             //this.subscribeTo(this._preferencesView, 'onChangeHoveredItem', this._preferencesView.setItemsHover.bind(this._preferencesView, false));
             this._preferencesView.setItemsActions(_makeItemsActions(this));
-
             this.subscribeTo(this._preferencesView, 'onAfterBeginEdit', this._preferencesView.setItemsActions.bind(this._preferencesView, []));
-            /*^^^this.subscribeTo(this._preferencesView, 'onEndEdit', function (evtName, model, withSaving) {
-            });*/
             this.subscribeTo(this._preferencesView, 'onAfterEndEdit', function (evtName, model, $target, withSaving) {
                this._preferencesView.setItemsActions(_makeItemsActions(this));
             }.bind(this));
