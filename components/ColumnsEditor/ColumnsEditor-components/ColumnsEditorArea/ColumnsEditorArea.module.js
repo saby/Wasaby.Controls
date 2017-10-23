@@ -42,15 +42,15 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
                moveColumns: true,
                title: ''
             },
-            _preferencesView: undefined,
-            _preferencesDropdown: undefined,
+            _presetView: undefined,
+            _presetDropdown: undefined,
             _fixedView: undefined,
             _selectableView: undefined
          },
 
          _modifyOptions: function () {
             var cfg = ColumnsEditorArea.superclass._modifyOptions.apply(this, arguments);
-            cfg._optsPreferences = {
+            cfg._optsPreset = {
                items: new RecordSet({
                   rawData: [{
                      id: 1,
@@ -81,23 +81,23 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
 
          init: function () {
             ColumnsEditorArea.superclass.init.apply(this, arguments);
-            this._preferencesView = this.getChildControlByName('controls-ColumnsEditorArea__Preferences');
-            this._preferencesDropdown = this._preferencesView.getChildControlByName('controls-controls-ColumnsEditorArea__Preferences-item-title');
+            this._presetView = this.getChildControlByName('controls-ColumnsEditorArea__Preset');
+            this._presetDropdown = this._presetView.getChildControlByName('controls-controls-ColumnsEditorArea__Preset-item-title');
             this._fixedView = this.getChildControlByName('controls-ColumnsEditorArea__FixedList');
             this._selectableView = this.getChildControlByName('controls-ColumnsEditorArea__SelectableList');
 
-            this._preferencesDropdown.setItems(this._options.getPreferences());
-            this._preferencesDropdown.setSelectedKeys([this._options.getSelectedPreference()]);
-            this.subscribeTo(this._preferencesDropdown, 'onSelectedItemsChange', function (evtName, selected, changes) {
-               this._options.setSelectedPreference(selected[0]);
+            this._presetDropdown.setItems(this._options.getPresets());
+            this._presetDropdown.setSelectedKeys([this._options.getSelectedPreset()]);
+            this.subscribeTo(this._presetDropdown, 'onSelectedItemsChange', function (evtName, selected, changes) {
+               this._options.setSelectedPreset(selected[0]);
             }.bind(this));
 
-            //this._preferencesView.setItemsHover(false);
-            //this.subscribeTo(this._preferencesView, 'onChangeHoveredItem', this._preferencesView.setItemsHover.bind(this._preferencesView, false));
-            this._preferencesView.setItemsActions(_makeItemsActions(this));
-            this.subscribeTo(this._preferencesView, 'onAfterBeginEdit', this._preferencesView.setItemsActions.bind(this._preferencesView, []));
-            this.subscribeTo(this._preferencesView, 'onAfterEndEdit', function (evtName, model, $target, withSaving) {
-               this._preferencesView.setItemsActions(_makeItemsActions(this));
+            //this._presetView.setItemsHover(false);
+            //this.subscribeTo(this._presetView, 'onChangeHoveredItem', this._presetView.setItemsHover.bind(this._presetView, false));
+            this._presetView.setItemsActions(_makeItemsActions(this));
+            this.subscribeTo(this._presetView, 'onAfterBeginEdit', this._presetView.setItemsActions.bind(this._presetView, []));
+            this.subscribeTo(this._presetView, 'onAfterEndEdit', function (evtName, model, $target, withSaving) {
+               this._presetView.setItemsActions(_makeItemsActions(this));
             }.bind(this));
 
             // В опциях могут быть указаны группы, которые нужно свернуть при открытии
@@ -243,7 +243,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
       var _applyTemplateAction = function (self, action, model) {
          switch (action) {
             case 'edit':
-               self._preferencesView.beginEdit(model, false);
+               self._presetView.beginEdit(model, false);
                break;
             case 'clone':
                break;

@@ -6,14 +6,14 @@
             <ws:SBIS3.CONTROLS.Button class="controls-ColumnsEditorArea__ApplyColumnsButton" caption="Применить" command="applyColumns" primary="true" />
          </div>
       </div>
-      <div class="controls-ColumnsEditorArea__head-preferences">
-         <div class="controls-ColumnsEditorArea__head-preferences-label">{[Шаблон]}</div>
-         <div class="controls-ColumnsEditorArea__head-preferences-editor">
+      <div class="controls-ColumnsEditorArea__head-preset">
+         <div class="controls-ColumnsEditorArea__head-preset-label">{[Шаблон]}</div>
+         <div class="controls-ColumnsEditorArea__head-preset-editor">
             <ws:SBIS3.CONTROLS.ListView
-               class="controls-ColumnsEditorArea__Preferences controls-ListView__disableHover"
-               name="controls-ColumnsEditorArea__Preferences"
-               items="{{_optsPreferences.items}}"
-               itemsActions="{{_optsPreferences.itemsActions}}"
+               class="controls-ColumnsEditorArea__Preset controls-ListView__disableHover"
+               name="controls-ColumnsEditorArea__Preset"
+               items="{{_optsPreset.items}}"
+               itemsActions="{{_optsPreset.itemsActions}}"
                itemsHover="{{false}}"
                itemsDragNDrop="{{false}}"
                idProperty="id"
@@ -25,7 +25,7 @@
                <!--^^^
                editMode="click|single"
                -->
-               <ws:handlers onItemClick="{{_optsPreferences.onItemClick}}"/>
+               <ws:handlers onItemClick="{{_optsPreset.onItemClick}}"/>
             </ws:SBIS3.CONTROLS.ListView>
          </div>
       </div>

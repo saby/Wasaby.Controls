@@ -35,10 +35,11 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
             _options: {
                title: 'Отображение колонок',
                moveColumns: true,
-               _preferences: null
+               _presets: null,
+               _selectedPreset: null
             },
             _userConfigName: null,
-            _preferencesDropdown: null
+            _presetDropdown: null
          },
 
          $constructor: function () {
@@ -49,19 +50,19 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
          init: function () {
             ColumnsEditor.superclass.init.apply(this, arguments);
             this._userConfigName = 'ColumnsEditor#' + (this._options._columnsEditorConfig || 'default');
-            UserConfig.getParamValues(this._userConfigName).addCallback(this._setPreferences.bind(this));
-            this._preferencesDropdown = this.getChildControlByName('controls-ColumnsEditor__preferences');
+            UserConfig.getParamValues(this._userConfigName).addCallback(this._setPresets.bind(this));
+            this._presetDropdown = this.getChildControlByName('controls-ColumnsEditor__preset');
 
-            this.subscribeTo(this._preferencesDropdown, 'onSelectedItemsChange', function (evtName, selected, changes) {
-               this._setSelectedPreference(selected[0], true);
+            this.subscribeTo(this._presetDropdown, 'onSelectedItemsChange', function (evtName, selected, changes) {
+               this._setSelectedPreset(selected[0], true);
             }.bind(this));
          },
 
-         _getPreferences: function () {
-            return this._options._preferences;
+         _getPresets: function () {
+            return this._options._presets;
          },
 
-         _setPreferences: function (values) {
+         _setPresets: function (values) {
             //////////////////////////////////////////////////
             if (!values.length) {
                values.push({
@@ -83,18 +84,18 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                rawData: values,
                idProperty: 'title'
             });
-            this._options._preferences = recordset;
-            this._preferencesDropdown.setItems(recordset);
+            this._options._presets = recordset;
+            this._presetDropdown.setItems(recordset);
          },
 
-         _getSelectedPreference: function () {
-            return this._options._selectedPreference;
+         _getSelectedPreset: function () {
+            return this._options._selectedPreset;
          },
 
-         _setSelectedPreference: function (preference, dontReset) {
-            this._options._selectedPreference = preference;
+         _setSelectedPreset: function (preset, dontReset) {
+            this._options._selectedPreset = preset;
             if (!dontReset) {
-               this._preferencesDropdown.setSelectedKeys([preference]);
+               this._presetDropdown.setSelectedKeys([preset]);
             }
          },
 
@@ -133,9 +134,9 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                componentOptions: {
                   columns: cfg.columns,
                   selectedColumns: cfg.selectedColumns,
-                  getPreferences: this._getPreferences.bind(this),
-                  getSelectedPreference: this._getSelectedPreference.bind(this),
-                  setSelectedPreference: this._setSelectedPreference.bind(this),
+                  getPresets: this._getPresets.bind(this),
+                  getSelectedPreset: this._getSelectedPreset.bind(this),
+                  setSelectedPreset: this._setSelectedPreset.bind(this),
                   groupTitleTpl: cfg.groupTitleTpl && (typeof cfg.groupTitleTpl === 'function' || typeof cfg.groupTitleTpl === 'string') ? cfg.groupTitleTpl : null,
                   groupTitles: typeof cfg.groupTitles === 'object' ? cfg.groupTitles : null,
                   groupCollapsing: typeof cfg.groupCollapsing === 'object' ? cfg.groupCollapsing : null,
