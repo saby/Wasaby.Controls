@@ -26,13 +26,14 @@ define('js!WSControls/Lists/ItemsView', [
          constructor: function (cfg) {
             ItemsRender.superclass.constructor.apply(this, arguments);
             this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
-
-            if (cfg.items) {
-               this._items = cfg.items;
-               this.__initDisplay(cfg.items, cfg);
-            }
          },
 
+         _beforeMount: function(newOptions) {
+            if (newOptions.items) {
+               this._items = newOptions.items;
+               this.__initDisplay(newOptions.items, newOptions);
+            }
+         },
 
          _beforeUpdate: function(newOptions) {
             if (newOptions.items && (this._items != newOptions.items)) {
@@ -59,10 +60,6 @@ define('js!WSControls/Lists/ItemsView', [
 
          _createDefaultDisplay: function(items, cfg) {
             return ItemsUtil.getDefaultDisplayFlat(items, cfg)
-         },
-
-         _onItemClick: function (evt) {
-            //Method must be implemented
          },
 
          //<editor-fold desc='DataSourceMethods'>

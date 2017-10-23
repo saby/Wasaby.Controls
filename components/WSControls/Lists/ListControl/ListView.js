@@ -41,10 +41,10 @@ define('js!WSControls/Lists/ListControl/ListView', [
             else {
                this._selectedItem = null;
             }
+
+
             //TODO надо вычислить индекс
-
-
-            if(!this._selectedItem) {
+            /*if(!this._selectedItem) {
                if (!this._selectedIndex) {
                   this._selectedIndex = 0;//переводим на первый элемент
                }
@@ -52,7 +52,7 @@ define('js!WSControls/Lists/ListControl/ListView', [
                   this._selectedIndex++;//условно ищем ближайший элемент, рядом с удаленным
                }
                this._selectedItem = this._display.at(this._selectedIndex);
-            }
+            }*/
          },
 
          _onItemClick: function(e, dispItem) {
@@ -63,7 +63,7 @@ define('js!WSControls/Lists/ListControl/ListView', [
          },
 
          _onCollectionChange: function() {
-            //т.к. при дейтсвиях с рекордсетом рекорд может потерять владельца, надо обновить ссылку на актуальный рекорд из текущего набора
+            //т.к. при действиях с рекордсетом рекорд может потерять владельца, надо обновить ссылку на актуальный рекорд из текущего набора
             this._selectedItem = ItemsUtil.getDisplayItemById(this._display, this._options.selectedKey, this._options.idProperty);
             this._forceUpdate();
          }
