@@ -28,14 +28,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
    }
 
    /**
-    * Многострочное поле ввода - это текстовое поле с автовысотой.
-    * Данное поле может автоматически менять высоту в зависимости от количества введённой информации.
-    * Для контрола настраиваются:
-    * <ul>
-    *    <li>{@link SBIS3.CONTROLS.TextArea#minLinesCount минимальное}</li>
-    *    <li>и {@link SBIS3.CONTROLS.TextArea#autoResize.minLinesCount максимальное} количества отображаемых строк,</li>
-    *    <li>{@link SBIS3.CONTROLS.TextArea#autoResize.state автоматическое ли изменение количества строк}.</li>
-    * </ul>
+    * Класс контрола "Многострочное поле ввода". Контрол может автоматически менять высоту в зависимости от количества введённой информации.
     * @class SBIS3.CONTROLS.TextArea
     * @extends SBIS3.CONTROLS.TextBoxBase
     * @author Романов Валерий Сергеевич

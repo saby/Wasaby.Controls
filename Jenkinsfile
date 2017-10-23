@@ -22,7 +22,7 @@ properties([
             description: '',
             name: 'branch_engine'),
         string(
-            defaultValue: 'rc-3.34',
+            defaultValue: 'dda/flink-improve',
             description: '',
             name: 'branch_atf'),
         choice(
@@ -343,6 +343,12 @@ node('controls') {
             //Пакуем данные
             writeFile file: "/home/sbis/Controls1/Core.package.json", text: """
                 {
+                "includeCore":true,
+                "include":[
+                "Core/*",
+                "WS.Data/*",
+                "SBIS3.CONTROLS.ItemsControlMixin"
+                ],
                 "modules" : [
                 "Core/core",
                 "WS.Data/Source/SbisService",

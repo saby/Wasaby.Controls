@@ -108,7 +108,7 @@ define('js!SBIS3.CONTROLS.SelectorButton',
              * @typedef {Array} dictionaries
              * @property {String} caption Название, которое будет использовано в меню выбора справочника. Опция неактуальна, когда установлен только один справочник.
              * @property {String} template Шаблон справочника. В качестве значения передают имя компонента.
-             * @property {Object} componentsOptions Опции, которые будут переданы в секцию _options (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/oop/'>ООП-обертка в веб-фреймворке WS</a>) компонента справочника.
+             * @property {Object} componentOptions Опции, которые будут переданы в секцию _options (см. <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/oop/'>ООП-обертка в веб-фреймворке WS</a>) компонента справочника.
              * @translatable caption
              */
             /**
