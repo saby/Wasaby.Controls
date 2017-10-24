@@ -258,8 +258,14 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
                self._presetView.beginEdit(model, false);
                break;
             case 'clone':
-               break;
             case 'delete':
+               var commands = {'clone':'clonePreset', 'delete':'deletePreset'};
+               self.sendCommand(commands[action]).addCallback(function (isSuccess) {
+                  if (!isSuccess) {
+                     // TODO: Изменение не сохранено - откатится назад
+                  }
+               });
+               _updatePresetView(self);
                break;
          }
       };

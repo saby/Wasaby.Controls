@@ -1,3 +1,8 @@
+// TODO: Проработать правильное сохранение (Пресеты могут быть не только личными)
+// TODO: Проработать ситуацию без созранённых пресетов и с одним созранённым пресетом
+// TODO: Реализовать использование информации из пресета (колонки и группы)
+// TODO: Проработать правильное сочетание(совмещение) информации из пресетов и прямой информации из опций
+// TODO:
 /**
  * Created by as.avramenko on 24.01.2017.
  */
@@ -58,6 +63,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
          init: function () {
             ColumnsEditor.superclass.init.apply(this, arguments);
             this._userConfigName = 'ColumnsEditor#' + this._options.targetRegistryName;
+            this._options._presets = new RecordSet({rawData:[], idProperty:'title'});
             this._presetDropdown = this.getChildControlByName('controls-ColumnsEditor__preset');
 
             this.subscribeTo(this._presetDropdown, 'onSelectedItemsChange', function (evtName, selected, changes) {
@@ -90,13 +96,12 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                });
             }
             //////////////////////////////////////////////////
-            var recordset = new RecordSet({
-               rawData: values,
-               idProperty: 'title'
-            });
+            var recordset = this._options._presets;
+            //recordset.clear();
+            recordset.setRawData(values);
+            recordset.acceptChanges();
             var selected = this._options.defaultPreset;
             selected = selected && values.map(function (v) { return v.title; }).indexOf(selected) !== -1 ? selected : values[0].title;
-            this._options._presets = recordset;
             this._options._selectedPreset = selected;
             this._updateDropdown();
          },
@@ -122,11 +127,47 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
          _commandChangePreset: function (title) {
             var recordset = this._options._presets;
             recordset.getRecordById(this._options._selectedPreset).set('title', title);
+            return this._completeCmdAndSave(title);
+         },
+
+         _commandClonePreset: function () {
+            var recordset = this._options._presets;
+            var record = recordset.getRecordById(this._options._selectedPreset);
+            var i = recordset.getIndex(record);
+            var newRec = record.clone();
+            var newTitle = 'Новый шаблон';// TODO: Возможно, лучше сделать старый заголовок с цифрой в конце
+            newRec.set('title', newTitle);
+            recordset.add(newRec, i + 1);
+            return this._completeCmdAndSave(newTitle);
+         },
+
+         _commandDeletePreset: function () {
+            var recordset = this._options._presets;
+            var count = recordset.getCount();
+            if (!count) {
+               throw new Error('Nothing to delete');
+            }
+            var record = recordset.getRecordById(this._options._selectedPreset);
+            var i = 1 < count ? recordset.getIndex(record) : null;
+            recordset.remove(record);
+            return this._completeCmdAndSave(1 < count ? recordset.at(i).get('title') : null);
+         },
+
+         _completeCmdAndSave: function (title) {
             this._options._selectedPreset = title;
-            recordset.acceptChanges();
+            this._options._presets.acceptChanges();
             this._updateDropdown();
+            return this._save();
+         },
+
+         _commandShowColumnsEditor: function () {
+            this._columnsEditorConfig = this._notify('onColumnsEditorShow');
+            this.showPicker();
+         },
+
+         _save: function () {
             var promise = new Deferred();
-            UserConfig.setParam(this._userConfigName, JSON.stringify(recordset.getRawData())).addCallbacks(
+            UserConfig.setParam(this._userConfigName, JSON.stringify(this._options._presets.getRawData())).addCallbacks(
                promise.callback.bind(promise, true),
                function (err) {
                   // TODO: Изменение не сохранено - откатится назад
@@ -134,17 +175,6 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                }
             );
             return promise;
-         },
-
-         _commandClonePreset: function () {
-         },
-
-         _commandDeletePreset: function () {
-         },
-
-         _commandShowColumnsEditor: function () {
-            this._columnsEditorConfig = this._notify('onColumnsEditorShow');
-            this.showPicker();
          },
 
          _setPickerConfig: function () {
