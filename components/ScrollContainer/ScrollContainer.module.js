@@ -32,6 +32,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
    ) {
       'use strict';
 
+      var widthBrowserScrollbar = 0;
+
       /**
        * Класс контрола "Контейнер для контента с тонким скроллом". В качестве тонкого скролла применяется класс контрола {@link SBIS3.CONTROLS.Scrollbar}.
        *
@@ -251,30 +253,39 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _hideBrowserScrollbar: function(){
-            /**
-             * Бывает, что нельзя определить динамически правильный размер нативного скролла и в этом случае
-             * приходиться узнавать его заранее и скрывать его с помощью css. Если marginRight уже весит на content,
-             * то значит сейчас именно такая ситуация и вычислять ничего не нужно.
-             */
-            if (parseInt(getComputedStyle(this._content[0]).marginRight) === 0) {
-               this._content.css({
-                  marginRight: -this._getBrowserScrollbarWidth()
-               });
+            if (widthBrowserScrollbar === 0) {
+               widthBrowserScrollbar = this._getBrowserScrollbarWidth();
             }
+            this._content.css({
+               marginRight: -widthBrowserScrollbar
+            });
          },
 
          _getBrowserScrollbarWidth: function() {
-            var outer, outerStyle, scrollbarWidth;
-            outer = document.createElement('div');
-            outerStyle = outer.style;
-            outerStyle.position = 'absolute';
-            outerStyle.width = '100px';
-            outerStyle.height = '100px';
-            outerStyle.overflow = 'scroll';
-            outerStyle.top = '-9999px';
-            document.body.appendChild(outer);
-            scrollbarWidth = outer.offsetWidth - outer.clientWidth;
-            document.body.removeChild(outer);
+            var scrollbarWidth = 0, outer, outerStyle;
+
+            if (cDetection.isMac) {
+               scrollbarWidth = 15;
+            }
+            if (cDetection.isIE12) {
+               scrollbarWidth = 12;
+            }
+            if (cDetection.isIE10 || cDetection.isIE10) {
+               scrollbarWidth = 17;
+            }
+            if (scrollbarWidth === 0) {
+               outer = document.createElement('div');
+               outerStyle = outer.style;
+               outerStyle.position = 'absolute';
+               outerStyle.width = '100px';
+               outerStyle.height = '100px';
+               outerStyle.overflow = 'scroll';
+               outerStyle.top = '-9999px';
+               document.body.appendChild(outer);
+               scrollbarWidth = outer.offsetWidth - outer.clientWidth;
+               document.body.removeChild(outer);
+            }
+
             return scrollbarWidth;
          },
 

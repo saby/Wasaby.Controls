@@ -153,23 +153,10 @@ body.ws-is-desktop-platform.ws-is-chrome:not(.ws-is-mac):not(.ws-is-unix) .contr
 }
 
 .controls-ScrollContainer__content:not(.controls-ScrollContainer__content-overflowHidden) {
-   // Mac OS
-   body.ws-is-mac & {
-      margin-right: -15px;
-   }
 
-   // Win10 Edge
-   body.ws-is-ie12 & {
-      margin-right: -12px;
-   }
    // Win10 Touch Edge
    body.ws-is-ie12.ws-is-touch & {
       padding-right: 12px;
-   }
-   // Win7 & Win10, Ie10 & Ie11
-   body.ws-is-ie10 &,
-   body.ws-is-ie11 & {
-      margin-right: -17px;
    }
    // Win7 & Win10, Touch, Ie10 & Ie11
    body.ws-is-ie10.ws-is-touch &,
