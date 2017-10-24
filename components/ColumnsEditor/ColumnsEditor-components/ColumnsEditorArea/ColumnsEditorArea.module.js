@@ -80,9 +80,16 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
             //this.subscribeTo(this._presetView, 'onChangeHoveredItem', this._presetView.setItemsHover.bind(this._presetView, false));
             this._presetView.setItemsActions(_makeItemsActions(this));
             this.subscribeTo(this._presetView, 'onAfterBeginEdit', this._presetView.setItemsActions.bind(this._presetView, []));
+            this.subscribeTo(this._presetView, 'onEndEdit', function (evtName, model, withSaving) {
+               if (withSaving) {
+                  this.sendCommand('changePreset', model.get('title')).addCallback(function (isSuccess) {
+                     if (!isSuccess) {
+                        // TODO: Изменение не сохранено - откатится назад
+                     }
+                  });
+               }
+            }.bind(this));
             this.subscribeTo(this._presetView, 'onAfterEndEdit', function (evtName, model, $target, withSaving) {
-               this._options.changePreset(model.get('title'));
-
                this._presetView.setItemsActions(_makeItemsActions(this));
             }.bind(this));
 
@@ -208,9 +215,9 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
       };
 
       var _makePresetItems = function (presets, selectedPreset) {
-         var rs = new RecordSet({idProperty:'title'});
-         rs.add(presets.getRecordById(selectedPreset));
-         return rs;
+         var recordset = new RecordSet({idProperty:'title'});
+         recordset.add(presets.getRecordById(selectedPreset));
+         return recordset;
       };
 
       var _updatePresetView = function (self, dontSet) {
@@ -220,9 +227,9 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
          var dropdown = self._presetView.getChildControlByName('controls-controls-ColumnsEditorArea__Preset-item-title');
          if (dropdown) {
             self.subscribeTo(dropdown, 'onSelectedItemsChange', function (evtName, selected, changes) {
-               self._options.setSelectedPreset(selected[0]);
+               self.sendCommand('selectPreset', selected[0]);
                _updatePresetView(self);
-            }.bind(this));
+            });
          }
       };
 

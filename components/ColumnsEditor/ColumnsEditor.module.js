@@ -6,6 +6,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
    [
       'js!SBIS3.CONTROLS.CompoundControl',
       'Core/CommandDispatcher',
+      'Core/Deferred',
       'Core/UserConfig',
       'WS.Data/Collection/RecordSet',
       'js!SBIS3.CONTROLS.PickerMixin',
@@ -16,7 +17,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
       'js!SBIS3.CONTROLS.ColumnsEditorArea'
    ],
 
-   function (CompoundControl, CommandDispatcher, UserConfig, RecordSet, PickerMixin, dotTplFn) {
+   function (CompoundControl, CommandDispatcher, Deferred, UserConfig, RecordSet, PickerMixin, dotTplFn) {
       'use strict';
 
       /**
@@ -35,6 +36,9 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
             _options: {
                title: 'Отображение колонок',
                moveColumns: true,
+               targetRegistryName: 'default',
+               defaultPreset: null,
+
                _presets: null,
                _selectedPreset: null
             },
@@ -43,26 +47,32 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
          },
 
          $constructor: function () {
-            CommandDispatcher.declareCommand(this, 'showEditorArea', this._showColumnsEditor);
+            CommandDispatcher.declareCommand(this, 'showEditorArea', this._commandShowColumnsEditor);
+            CommandDispatcher.declareCommand(this, 'selectPreset', this._commandSelectPreset);
+            CommandDispatcher.declareCommand(this, 'changePreset', this._commandChangePreset);
+            CommandDispatcher.declareCommand(this, 'clonePreset', this._commandClonePreset);
+            CommandDispatcher.declareCommand(this, 'deletePreset', this._commandDeletePreset);
             this._publish('onSelectedColumnsChange', 'onColumnsEditorShow');
          },
 
          init: function () {
             ColumnsEditor.superclass.init.apply(this, arguments);
-            this._userConfigName = 'ColumnsEditor#' + (this._options._columnsEditorConfig || 'default');
-            UserConfig.getParamValues(this._userConfigName).addCallback(this._setPresets.bind(this));
+            this._userConfigName = 'ColumnsEditor#' + this._options.targetRegistryName;
             this._presetDropdown = this.getChildControlByName('controls-ColumnsEditor__preset');
 
             this.subscribeTo(this._presetDropdown, 'onSelectedItemsChange', function (evtName, selected, changes) {
-               this._setSelectedPreset(selected[0], true);
+               this._setSelectedPreset(selected[0]);
             }.bind(this));
+
+            UserConfig.getParam(this._userConfigName).addCallback(this._setPresets.bind(this));
          },
 
          _getPresets: function () {
             return this._options._presets;
          },
 
-         _setPresets: function (values) {
+         _setPresets: function (data) {
+            var values = data && typeof data === 'string' ? JSON.parse(data) : data || [];
             //////////////////////////////////////////////////
             if (!values.length) {
                values.push({
@@ -84,32 +94,55 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                rawData: values,
                idProperty: 'title'
             });
+            var selected = this._options.defaultPreset;
+            selected = selected && values.map(function (v) { return v.title; }).indexOf(selected) !== -1 ? selected : values[0].title;
             this._options._presets = recordset;
-            this._options._selectedPreset = recordset.at(0).get('title');
-            this._presetDropdown.setItems(recordset);
+            this._options._selectedPreset = selected;
+            this._updateDropdown();
+         },
+
+         _updateDropdown: function () {
+            this._presetDropdown.setItems(this._options._presets);
+            this._presetDropdown.setSelectedKeys([this._options._selectedPreset]);
          },
 
          _getSelectedPreset: function () {
             return this._options._selectedPreset;
          },
 
-         _setSelectedPreset: function (preset, dontUpdate) {
-            this._options._selectedPreset = preset;
-            if (!dontUpdate) {
-               this._presetDropdown.setSelectedKeys([preset]);
-            }
+         _setSelectedPreset: function (title) {
+            this._options._selectedPreset = title;
          },
 
-         _changePreset: function (title) {
+         _commandSelectPreset: function (title) {
+            this._setSelectedPreset(title);
+            this._presetDropdown.setSelectedKeys([title]);
          },
 
-         _clonePreset: function () {
+         _commandChangePreset: function (title) {
+            var recordset = this._options._presets;
+            recordset.getRecordById(this._options._selectedPreset).set('title', title);
+            this._options._selectedPreset = title;
+            recordset.acceptChanges();
+            this._updateDropdown();
+            var promise = new Deferred();
+            UserConfig.setParam(this._userConfigName, JSON.stringify(recordset.getRawData())).addCallbacks(
+               promise.callback.bind(promise, true),
+               function (err) {
+                  // TODO: Изменение не сохранено - откатится назад
+                  promise.callback(false);
+               }
+            );
+            return promise;
          },
 
-         _deletePreset: function () {
+         _commandClonePreset: function () {
          },
 
-         _showColumnsEditor: function () {
+         _commandDeletePreset: function () {
+         },
+
+         _commandShowColumnsEditor: function () {
             this._columnsEditorConfig = this._notify('onColumnsEditorShow');
             this.showPicker();
          },
@@ -144,12 +177,8 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                componentOptions: {
                   columns: cfg.columns,
                   selectedColumns: cfg.selectedColumns,
-                  getPresets: this._getPresets.bind(this),
-                  getSelectedPreset: this._getSelectedPreset.bind(this),
-                  setSelectedPreset: this._setSelectedPreset.bind(this),
-                  changePreset: this._changePreset.bind(this),
-                  clonePreset: this._clonePreset.bind(this),
-                  deletePreset: this._deletePreset.bind(this),
+                  getPresets: this._getPresets.bind(this),//^^^
+                  getSelectedPreset: this._getSelectedPreset.bind(this),//^^^
                   groupTitleTpl: cfg.groupTitleTpl && (typeof cfg.groupTitleTpl === 'function' || typeof cfg.groupTitleTpl === 'string') ? cfg.groupTitleTpl : null,
                   groupTitles: typeof cfg.groupTitles === 'object' ? cfg.groupTitles : null,
                   groupCollapsing: typeof cfg.groupCollapsing === 'object' ? cfg.groupCollapsing : null,
