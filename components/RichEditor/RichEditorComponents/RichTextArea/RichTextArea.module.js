@@ -1264,16 +1264,20 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   self._showImagePropertiesDialog(target);
                });
                //По нажатию на изображения показывать панель редактирования самого изображения
-               bindImageEvent('mousedown touchstart', function(event, target) {
+               bindImageEvent('mouseup touchstart', function(event, target) {
                   self._showImageOptionsPanel($(target));
-                  //Проблема:
-                  //    При клике на изображение в ie появляются квадраты ресайза
-                  //Решение:
-                  //    отменять дефолтное действие
-                  if(cConstants.browser.isIE) {
-                     event.preventDefault();
-                  }
                });
+
+               //Проблема:
+               //    При клике на изображение в ie появляются квадраты ресайза
+               //Решение:
+               //    отменять дефолтное действие
+               if(cConstants.browser.isIE) {
+                  bindImageEvent('mousedown', function(event) {
+                     event.preventDefault();
+                  });
+               }
+
                //При клике на изображение снять с него выделение
                bindImageEvent('click', function() {
                   var
