@@ -32,6 +32,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
    ) {
       'use strict';
 
+      var widthBrowserScrollbar = 0;
+
       /**
        * Класс контрола "Контейнер для контента с тонким скроллом". В качестве тонкого скролла применяется класс контрола {@link SBIS3.CONTROLS.Scrollbar}.
        *
@@ -239,6 +241,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
                // Что бы до инициализации не было видно никаких скроллов
                this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
+               // Скрываем нативный скролл.
+               this._hideBrowserScrollbar();
 
                // task: 1173330288
                // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
@@ -246,6 +250,59 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
                this._initPaging();
             }
+         },
+
+         _hideBrowserScrollbar: function(){
+            var style;
+
+            if (widthBrowserScrollbar === 0) {
+               widthBrowserScrollbar = this._getBrowserScrollbarWidth();
+            }
+
+            style = {
+               marginRight: -widthBrowserScrollbar
+            };
+
+            // На планшете c OS Windown 10 для скрытия нативного скролла, кроме margin требуется padding.
+            if (compatibility.touch && cDetection.isIE) {
+               style.paddingRight = widthBrowserScrollbar;
+            }
+
+            this._content.css(style);
+         },
+
+         _getBrowserScrollbarWidth: function() {
+            var scrollbarWidth = null, outer, outerStyle;
+
+            // В браузерах с поддержкой ::-webkit-scrollbar установлена ширини 0.
+            if (cDetection.webkit || cDetection.operaChrome) {
+               scrollbarWidth = 0;
+            } else {
+               // На Mac ширина всегда 15, за исключением браузеров с поддержкой ::-webkit-scrollbar.
+               if (cDetection.isMac) {
+                  scrollbarWidth = 15;
+               }
+            }
+            if (cDetection.isIE12) {
+               scrollbarWidth = 12;
+            }
+            if (cDetection.isIE10 || cDetection.isIE11) {
+               scrollbarWidth = 17;
+            }
+            if (scrollbarWidth === null) {
+               outer = document.createElement('div');
+               outerStyle = outer.style;
+               outerStyle.position = 'absolute';
+               outerStyle.width = '100px';
+               outerStyle.height = '100px';
+               outerStyle.overflow = 'scroll';
+               outerStyle.top = '-9999px';
+               document.body.appendChild(outer);
+               scrollbarWidth = outer.offsetWidth - outer.clientWidth;
+               document.body.removeChild(outer);
+            }
+
+            return scrollbarWidth;
          },
 
          _stickyHeadersChangedHandler: function() {
