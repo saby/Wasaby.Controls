@@ -233,6 +233,10 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
          }
          filter[this._getListIdProperty()] = recordsId;
          filter = cMerge(filter, this.getList().getFilter() || {}); //Отдаем в запрос на историю фильтр с листа
+         
+         if (this._options.searchParam) {
+            delete filter[this._options.searchParam];
+         }
          query.where(filter).limit(12);
          return query;
       },

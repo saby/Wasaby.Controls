@@ -421,10 +421,10 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this._setKeyByText();
          }
          // Иногда $(...).width() возвращает не целое число (замечено в MSIE), из-за этого сравнение даёт неверный результат. Так что округляем:
-         var width = $('.controls-TextBox__field:visible', this.getContainer()).width();
-         var isTextOverflow = 0 < width && getTextWidth(this.getText()) > Math.round(width);
-         //Если у нас виден инпут, то показываем тень только когда он не в фокусе. иначе в момент ввода появится ненужное затемнение.
-         var needShadow = isTextOverflow && (this.isEditable() && !this._inputField.is(':focus') || !this.isEditable());
+         var width = $('.controls-TextBox__field', this.getContainer()).width(),
+             isTextOverflow = 0 < width && getTextWidth(this.getText()) > Math.round(width),
+             //Если у нас виден инпут, то показываем тень только когда он не в фокусе. иначе в момент ввода появится ненужное затемнение.
+             needShadow = isTextOverflow && (this.isEditable() && !this._inputField.is(':focus') || !this.isEditable());
          this.getContainer().toggleClass('controls-ComboBox__overflow', needShadow);
       },
 
@@ -819,8 +819,8 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             var itemContainer = $(event.target).closest('.controls-ComboBox__itemRow');
             if (itemContainer.length) {
                var itemTextContainer = $('.controls-ComboBox__item', itemContainer)[0],
-                  itemText = itemTextContainer.textContent;
-               if (getTextWidth(itemText) > itemTextContainer.clientWidth) {
+                  itemText = itemTextContainer && itemTextContainer.textContent; //Защита от кастомного шаблона строки
+               if (itemText && getTextWidth(itemText) > itemTextContainer.clientWidth) {
                   itemContainer[0].setAttribute('title', itemText);
                }
             }

@@ -12,7 +12,7 @@ define('js!SBIS3.CONTROLS.Label.compatibility', [],
           * @see setCaption
           */
          getCaption: function() {
-            return this.caption;
+            return this._options.caption;
          },
 
          /**
@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.Label.compatibility', [],
           * @see getCaption
           */
          setCaption: function(caption) {
-            this.caption = caption;
+            this._options.caption = caption;
             this._forceUpdate();
          },
 
@@ -33,7 +33,7 @@ define('js!SBIS3.CONTROLS.Label.compatibility', [],
           * @see getTooltip
           */
          getTooltip: function() {
-            return this.tooltip;
+            return this._options.tooltip;
          },
          /**
           * Изменяет текст всплывающей подсказки.
@@ -42,7 +42,7 @@ define('js!SBIS3.CONTROLS.Label.compatibility', [],
           * @see getTooltip
           */
          setTooltip: function(tooltip) {
-            this.tooltip = tooltip;
+            this._options.tooltip = tooltip;
             this._forceUpdate();
          },
          /**
@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.Label.compatibility', [],
           * @returns {Boolean} Значение true является признаком, что метка отображается.
           */
          getVisible: function() {
-            return this.visible;
+            return this._options.visible;
          },
          /**
           * Изменяет видимость метки.
@@ -61,7 +61,7 @@ define('js!SBIS3.CONTROLS.Label.compatibility', [],
           * @see visible
           */
          setVisible: function(visible) {
-            this.visible = visible !== false;
+            this._options.visible = visible !== false;
             this._forceUpdate();
          }
       }

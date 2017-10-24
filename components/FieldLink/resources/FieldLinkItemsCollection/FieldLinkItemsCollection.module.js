@@ -21,13 +21,37 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
        * @extends SBIS3.CORE.CompoundControl
        */
 
+      function buildTplArgsFL(cfg) {
+         var
+            tplOptions = cfg._buildTplArgsSt.call(this, cfg);
+         tplOptions.itemsCount = cfg._itemsProjection.getCount();
+         /* При отображении выбранных элементов в выпадающем списке надо их сортировать,
+          чтобы визуально казалось, что последние выбранные будут вверху,
+          делается это с помощью аттрибута order (на css), чтобы ускорить отрисовку,
+          order навешивается в шаблоне. Для отображения в самом поле связи это не требуется,
+          поэтому добавляю проверку на видимость выпадающего списка */
+         tplOptions.needSort = cfg._isPickerVisible || !cfg.enabled;
+         /* Надо рисовать подсказку для поля связи, если используется дефолтный шаблон,
+          в случае прикладного, там может быть вёрстка, и в подсказку её класть нельзя */
+         tplOptions.needTitle = !cfg.itemContentTpl;
+         tplOptions.getItemTemplateData = function(templateCfg) {
+            return {
+               drawCross: cfg.enabled,
+               drawComma: (templateCfg.projItem.getOwner().getIndex(templateCfg.projItem) !== templateCfg.itemsCount - 1) && !cfg._isPickerVisible
+            };
+         };
+         return tplOptions;
+      }
+
       var FieldLinkItemsCollection =  CompoundControl.extend([DSMixin, PickerMixin], {
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
                _defaultItemContentTemplate: defaultItemContentTemplate,
                _defaultItemTemplate: defaultItemTemplate,
-               _canServerRender: true
+               _canServerRender: true,
+               _buildTplArgs: buildTplArgsFL,
+               _isPickerVisible: false
             },
             _parentFieldLink: undefined
          },
@@ -37,7 +61,6 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
 
             /* Запомним контейнер поля связи */
             this._parentFieldLink = this.getParent();
-            this._options._buildTplArgs = callNext(this._options._buildTplArgs, this._buildTplArgs);
          },
 
          _onClickHandler: function(e) {
@@ -58,23 +81,6 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                   }
                }
             );
-         },
-
-         /**
-          * Аргументы для шаблона
-          */
-         _buildTplArgs: function(cfg, newCfg) {
-            newCfg.itemsCount = this._getItemsProjection().getCount();
-            /* При отображении выбранных элементов в выпадающем списке надо их сортировать,
-               чтобы визуально казалось, что последние выбранные будут вверху,
-               делается это с помощью аттрибута order (на css), чтобы ускорить отрисовку,
-               order навешивается в шаблоне. Для отображения в самом поле связи это не требуется,
-               поэтому добавляю проверку на видимость выпадающего списка */
-            newCfg.needSort = this.isPickerVisible() || !this.isEnabled();
-            /* Надо рисовать подсказку для поля связи, если используется дефолтный шаблон,
-               в случае прикладного, там может быть вёрстка, и в подсказку её класть нельзя */
-            newCfg.needTitle = !this._options.itemContentTpl;
-            return newCfg;
          },
 
          /**
@@ -141,6 +147,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                this.getContainer().addClass('ws-invisible');
             }
             FieldLinkItemsCollection.superclass.showPicker.apply(this, arguments);
+            this._options._isPickerVisible = true;
             this.redraw();
             this._picker.recalcPosition(true);
          },
@@ -187,6 +194,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                handlers: {
                   /* Надо сообщить о закрытии пикера полю связи, а так же перерисовать элементы, но только после закрытия */
                   onClose: function() {
+                     self._options._isPickerVisible = false;
                      if (!self.isEnabled()) {
                         self.getContainer().removeClass('ws-invisible');
                      }

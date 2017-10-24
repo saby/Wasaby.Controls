@@ -2,6 +2,7 @@
 @import "colors";
 @import "sizes";
 //Переменные с версиями шрифтов
+@tensorFontNormalVer:                     '1.0.1';
 @tensorFontVer:                           '1.0.0';
 @emojiFontVer:                            '1.0.0';
 // Кошерные переменные "на выход"
@@ -46,7 +47,7 @@
 @icon-active-color:                       @blue-dark-color;
 
 @float-area-border-color:                 #bdbdbd;
-@float-area-border:                       @default-border-width @default-border-style @float-area-border-color;
+@float-area-border:                       @default-border-width solid @float-area-border-color;
 @float-area-shadow:                       0 0 12px rgba(0, 0, 0, 0.4);
 @font-popup-size:                         14px;
 @bg:                                      @secondary-color;
@@ -475,7 +476,6 @@
 @menu-item-padding-16:                    33px;
 @menu-item-padding-24:                    42px;
 @menu-item-text-color:                    @black-color;
-@menu-item-bg:                            @white-color;
 @menu-item-font-size:                     @popup-font-size;
 @menu-item-disabled-text-color:           #ccc;
 @menu-item-hover-text-color:              @menu-item-text-color;
@@ -499,6 +499,7 @@
 @menu-link-menu-revert-item-container-padding: 4px 0 4px 0;
 @menu-link-menu-bg:                       @menu-button-menu-bg;
 @menu-link-header-bg-color:               #F4F4F4;
+@menu-link-header-font-size:              @popup-font-size;
 @menu-icon-menu-margin:                   -9px 0 0 -13px;
 @menu-icon-big-menu-margin:               -5px 0 0 -13px;
 @menu-icon-menu-bg:                       @menu-button-menu-bg;
@@ -839,10 +840,10 @@
 @edit-at-place-editor-overlay-border:           1px solid #e4e4e4;
 @edit-at-place-editor-overlay-border-radius:    4px;
 @edit-at-place-editor-overlay-bg:               #f3f3f3 !important;
-@edit-at-place-control-margin:                  0 0 0 8px;
+@edit-at-place-control-margin:                  0 0 0 12px;
 @edit-at-place-cancel-button-width:             @closeButtonWidth;
 @edit-at-place-cancel-button-height:            @closeButtonHeight;
-@edit-at-place-cancel-button-margin:            0 0 0 4px;
+@edit-at-place-cancel-button-margin:            0 0 0 12px;
 @edit-at-place-cancel-button-bg:                @closeButtonImage;
 @edit-at-place-cancel-button-hover-bg:          @closeButtonImageHover;
 // --------- //
@@ -1005,7 +1006,6 @@
 @data-grid-header-cell-font-size:               12px;
 @data-grid-header-cell-icon-size:               @data-grid-header-cell-font-size;
 @data-grid-header-cell-sorting-icon-size:       16px;
-@data-grid-header-cell-border-width:            1px 0 0 0;
 @data-grid-header-cell-text-color:              #8991a9;
 @data-grid-header-cell-bg:                      transparent;
 @data-grid-header-cell-hover-text-color:        @data-grid-header-cell-text-color;
@@ -1132,8 +1132,10 @@
 @DropdownList-picker-close-btn-right:                 6px;
 @DropdownList-picker-head-padding:                    4px 8px;
 @DropdownList-picker-head-weight:                     bold;
+@DropdownList-picker-head-height:                     24px;
 @DropdownList-picker-head-color:                      #313E78;
 @DropdownList-picker-title-type-header-bg:            #f4f4f4;
+@DropdownList-picker-title-type-margin-top:           -6px;
 @DropdownList-picker-head-duplicate-type-top-padding: 4px;
 @DropdownList-picker-padding:                         4px 0;
 @DropdownList-picker-max-width:                       400px;
@@ -1170,16 +1172,16 @@
 @DropdownList-footer-select-icon-size:                26px!important;
 @DropdownList-disabled-text:                          #000;
 //ProgressBar
-@controls-ProgressBar-height:             16px;
-@controls-ProgressBar-width:              100%;
-@controls-ProgressBar-first-color:        @blue-dark-color;
-@controls-ProgressBar-last-color:         #61B1EE;
-@controls-ProgressBar-border-color:       @gray-light-color;
-@controls-ProgressBar-background-color:   @gray-f4f4f4-color;
-@controls-ProgressBar-border-radius:      3px;
-@controls-ProgressBar-value-font-size:    @small-text-size;
-@controls-ProgressBar-value-color:        @disabled-color;
-@controls-ProgressBar-value-padding:      0 6px;
+@ProgressBar-height:                      16px;
+@ProgressBar-width:                       100%;
+@ProgressBar-first-color:                 @blue-dark-color;
+@ProgressBar-last-color:                  #61B1EE;
+@ProgressBar-border-color:                @gray-light-color;
+@ProgressBar-background-color:            @gray-f4f4f4-color;
+@ProgressBar-border-radius:               3px;
+@ProgressBar-value-font-size:             @small-text-size;
+@ProgressBar-value-color:                 @disabled-color;
+@ProgressBar-value-padding:               0 6px;
 //Pager
 @controls-Pager-amount-text:              @gray-color;
 @controls-Pager-height:                   29px;
@@ -1191,8 +1193,8 @@
 @controls-Popup-closeButton-top:                  10px;
 @controls-filterButton-button-height:             24px;
 @controls-filterButton-button-width:              24px;
-@controls-filterButton-button-margin:             8px 8px 8px 0;
-@controls-filterButton-button-margin-right-align: 8px 0 8px 8px;
+@controls-filterButton-button-margin:             8px 12px 8px 0;
+@controls-filterButton-button-margin-right-align: 8px 0 8px 12px;
 @controls-filterButton-height:                    40px;
 @controls-filterButton-area-header-padding:       12px 48px 12px 12px;
 @controls-filterButton-area-header-height:        24px;

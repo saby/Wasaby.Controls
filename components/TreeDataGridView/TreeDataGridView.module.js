@@ -159,7 +159,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             /**
              * @cfg {Function}
              * @see editArrow
-             * @deprecated Опция устарела и будет удалена в версии 3.7.5. Используйте {@link editArrow}.
+             * @deprecated Используйте {@link editArrow}.
              */
             arrowActivatedHandler: undefined,
             /**
@@ -194,7 +194,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             /**
              * @cfg {Boolean} отображает папки с одной колонкой на всю строку
              * Значение по умолчанию false
-             * @deprecated
+             * @deprecated Функционал должен быть реализован через пользовательский шаблон.
              */
             // Добавил опцию для версии 220
             // с 3.7.5 будет рулиться через пользовательский шаблон
@@ -282,7 +282,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
          if (cfg.inside && !cfg.prepend) {
             cfg.inside = false;
-            lastItemParent = lastItem.getContents().get(this._options.parentProperty);
+            // Учитываем так же, что lastItem может быть группой - в таком случае родитель группы нам не интересен
+            // https://online.sbis.ru/opendoc.html?guid=2781df20-a30f-4d7b-82de-c37944da5729
+            lastItemParent = lastItem && lastItem.isNode ? lastItem.getContents().get(this._options.parentProperty) : undefined;
             firstTreeItem = newItems[0].isNode ? newItems[0] : newItems[1];
             newItemsParent = firstTreeItem ? firstTreeItem.getContents().get(this._options.parentProperty) : undefined;
             /* В виду того, что мы не можем различить, откуда вызван _getInsertMarkupConfig, возникают две противоречивые ситуации:

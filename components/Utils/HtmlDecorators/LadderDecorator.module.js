@@ -9,7 +9,7 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator', [
     * @class SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator
     * @public
     * @author Крайнов Дмитрий Олегович
-    * @deprecated Модуль будет удален в 3.7.5 используйте {@link WS.Data/Display/Ladder}
+    * @deprecated Используйте {@link WS.Data/Display/Ladder}.
     */
    var LadderDecorator = AbstractDecorator.extend(/** @lends SBIS3.CONTROLS.Utils.HtmlDecorators.LadderDecorator.prototype */{
       $protected: {

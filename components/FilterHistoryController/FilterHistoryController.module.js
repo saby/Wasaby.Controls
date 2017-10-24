@@ -354,10 +354,11 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 filtersForHistory = this._options.filtersForHistory,
                 filter = {};
              if (hashValue) {
+                hashValue = JSON.parse(hashValue);
                 if (filtersForHistory.length == 1) {
                    filter[filtersForHistory[0]] =  hashValue;
                 } else {
-                   filter = JSON.parse(hashValue);
+                   filter = hashValue;
                 }
              }
              filtersForHistory.forEach(function (name) {
@@ -467,7 +468,7 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
                 cInstance.instanceOfMixin(this._options.view, 'SBIS3.CONTROLS.TreeMixin') &&
                 this._options.filtersForHistory.indexOf(view.getParentProperty()) > -1
              ) {//если меняется раздел то надо сменить корень у дерева иначе записи не будут отображаться
-                view.setRoot(hashFilters[this._options.historyId]||null);
+                view.setCurrentRoot(hashFilters[view.getParentProperty()]||null);
              }
              cMerge(viewFilters, hashFilters);
              view.setFilter(viewFilters);

@@ -230,7 +230,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          /**
           * @event onItemValueChanged Происходит при смене значения в одном из полей редактирования по месту и потере фокуса этим полем.
-          * @deprecated Будет удалено в 3.7.3.100. Временное решение
+          * @deprecated
           * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {Array} difference Массив измененных полей.
           * @param {WS.Data/Entity/Model} model Модель с измененными данными.
@@ -473,11 +473,10 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                /**
                 * @cfg {String} Устанавливает шаблон отображения каждого элемента коллекции.
+                * @deprecated Используйте {@link SBIS3.CONTROLS.ItemsControlMixin#itemTpl}.
                 * @remark
-                * @deprecated
                 * Шаблон - это пользовательская вёрстка элемента коллекции.
                 * Для доступа к полям элемента коллекции в шаблоне подразумевается использование конструкций шаблонизатора.
-                * Подробнее о шаблонизаторе вы можете прочитать в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/xhtml/template/ Шаблонизация вёрстки компонента}.
                 * <br/>
                 * Шаблон может быть создан в отдельном XHTML-файле, когда вёрстка большая или требуется использовать его в разных компонентах.
                 * Шаблон создают в директории компонента в подпапке resources согласно правилам, описанным в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/file-structure/ Файловая структура компонента}.
@@ -517,44 +516,51 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                itemTemplate: '',
                /**
-                * @typedef {String} toolbarViewModeVariant
-                * @variant icon Будет отображаться как иконка(требуется обязательно указать опцию icon у операции).
-                * @variant caption Будет отображаться как ссылка(требуется обязательно указать опцию caption у операции).
-                *
                 * @typedef {Array} ItemsActions
-                * @property {String} name Уникальное имя кнопки. Обязательная для конфигурации подопция. Её значение, в том числе, может быть использовано в пользовательских обработчиках для отображения или скрытия набора операций.
-                * @property {String} icon Иконка на кнопке. Необязательная подопция. В качестве значения в опцию передаётся строка, описывающая класс иконки.
-                * Набор классов и список иконок, разрешённых для использования, можно найти <a href="https://wi.sbis.ru/docs/3-8-0/icons/">здесь</a>.
+                * @property {String} name Уникальное имя кнопки.
+                * По имени можно получить экземпляр класса кнопки, что в прикладных задачах может быть использовано, например, для изменения видимости кнопки при выполнении условия.
+                *
+                * @property {String} [icon] Иконка на кнопке. Список иконок можно найти в <a href="https://wi.sbis.ru/docs/js/icons/">этом разделе</a>.
+                *
+                * @property {String} [toolbarViewMode] Внешний вид кнопки. Допустимые значения:
                 * <ul>
-                *    <li>Если кнопка отображается не в выпадающем меню (см. подопцию isMainAction) и установлена подопция icon, то использование подопции caption необязательно.</li>
-                *    <li>Если кнопка отображается в выпадающем меню (см. подопцию isMainAction), то производят конфигурацию подопций icon и caption.</li>
+                *   <li><b>icon</b> - будет отображаться только иконка. Для отображения кнопки установите иконку в опции icon. В этом случае кнопка строится на основе класса контрола {@link SBIS3.CONTROLS.IconButton}.</li>
+                *   <li><b>caption</b> - будет отображаться как текст. Для отображения кнопки установите текст в опции caption. В этом случае кнопка строится на основе класса контрола {@link SBIS3.CONTROLS.Link}</li>
                 * </ul>
-                * @property {toolbarViewModeVariant} toolbarViewMode Вид отображения операции в тулбаре.
-                * @property {String} caption Подпись на кнопке.
+                *
+                * @property {String} [caption] Подпись на кнопке.
+                *
+                * @property {String} [tooltip] Текст всплывающей подсказки.
+                *
+                * @property {Boolean} [isMainAction] С помощью данного признака устанавливает, что кнопка отображается либо на тулбаре, либо в выпадающем списке.
+                * Тулбар появляется при наведении курсора мыши на запись вместе со всеми кнопками, для которых isMainAction=true.
+                * Также на тулбаре расположена кнопка для открытия выпадающегно списка, в котором расположены кнопки isMainAction=false.
+                *
+                * @property {Function} [onActivated] Функция, которая будет выполнена при клике по кнопке.
+                * Внутри функции указатель this возвращает экземпляр класса списка.
+                * Аргументы функции:
                 * <ul>
-                *    <li>Если кнопка отображается не в выпадающем меню (см. подопцию isMainAction) и установлена подопция icon, то использование подопции caption необязательно.</li>
-                *    <li>Если кнопка отображается в выпадающем меню (см. подопцию isMainAction), то производят конфигурацию подопций icon и caption.</li>
+                *    <li>contaner {jQuery} - контейнер визуального отображения записи, для которой отображена кнопка.</li>
+                *    <li>id {String|Number} - идентификатор записи.</li>
+                *    <li>item {WS.Data/Entity/Model} - экземпляр класса записи.</li>
                 * </ul>
-                * @property {String} tooltip Текст всплывающей подсказки.
-                * @property {Boolean} isMainAction Признак, по которому устанавливается отображение кнопки в тулбаре.
-                * @property {Function} onActivated Функция, которая будет выполнена при клике по кнопке. Внутри функции указатель this возвращает экземпляр класса представления данных. Аргументы функции:
+                *
+                * @property {Boolean} [allowChangeEnable] Признак, при котором отображение кнопки зависит от значения опции {@link SBIS3.CORE.Control#enabled}.
+                *
                 * <ul>
-                *    <li>contaner - контейнер визуального отображения записи.</li>
-                *    <li>id - идентификатор записи.</li>
-                *    <li>item - запись (экземпляр класса {@link WS.Data/Entity/Model}).</li>
+                *     <li>true. Кнопка не отображается, когда для списка опция {@link SBIS3.CORE.Control#enabled} установлена в значение false.</li>
+                *     <li>false. Кнопка отображается всегда.</li>
                 * </ul>
-                * @property {Boolean} allowChangeEnable Признак отображения действий, которые доступны при наведении курсора на запись, в зависимости от режима взаимодействия со списком (см. {@link SBIS3.CORE.Control#enabled}).
-                * <ul>
-                *     <li>true. Когда для списка установлено <i>enabled=false</i>, действия отображаться не будут.</li>
-                *     <li>false. Действия доступны всегда.</li>
-                * </ul>
+                *
+                * @property {String} [cssClass] Класс, добавляемый на кнопку.
                 *
                 * @editor icon ImageEditor
                 * @translatable caption tooltip
                 */
                /**
-                * @cfg {ItemsActions[]} Набор действий над элементами, отображающийся в виде иконок при наведении курсора мыши на запись.
+                * @cfg {ItemsActions[]} Кнопки, отображаемые при наведении курсора мыши на запись.
                 * @remark
+                * Создаются на основе контролов {@link SBIS3.CONTROLS.IconButton} и {@link SBIS3.CONTROLS.Link}.
                 * Если опция {@link SBIS3.CORE.Control#enabled enabled} контрола установлена в false, то действия, доступные при наведении курсора мыши на запись, отображаться не будут. Однако с помощью опции {@link SBIS3.CORE.Control#allowChangeEnable allowChangeEnable} можно изменить это поведение.
                 * ![](/allowChangeEnable.png)
                 * Подробнее о настройке таких действий вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/items-action/fast/">Быстрый доступ к операциям по наведению курсора</a>.
@@ -906,9 +912,7 @@ define('js!SBIS3.CONTROLS.ListView',
                dragEntityList: 'dragentity.list',
                /**
                 * @cfg {WS.Data/MoveStrategy/IMoveStrategy} Стратегия перемещения. Класс, который реализует перемещение записей. Подробнее тут {@link WS.Data/MoveStrategy/Base}.
-                * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
-                * @see {@link WS.Data/MoveStrategy/Base}
-                * @see {@link WS.Data/MoveStrategy/IMoveStrategy}
+                * @deprecated Для внедрения собственной логики используйте события {@link onBeginMove} или {@link onEndMove}.
                 */
                moveStrategy: null,
                /**
@@ -1646,7 +1650,7 @@ define('js!SBIS3.CONTROLS.ListView',
                          containerCords = cont.getBoundingClientRect();
                      return {
                         /* При расчётах координат по вертикали учитываем прокрутку */
-                         top: targetCords.top - containerCords.top + cont.scrollTop,
+                         top: Math.round(targetCords.top - containerCords.top + cont.scrollTop),
                          left: targetCords.left - containerCords.left
                      };
                   },
@@ -2429,6 +2433,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //но не проставит все необходимые состояния. В .200 начнём пересоздавать редакторы для каждого редактирования
             //и данный код не понадобится.
             this._destroyEditInPlace();
+            this._headIsChanged = true;
             this._redrawResults();
             ListView.superclass.redraw.apply(this, arguments);
             if (this._options.saveReloadPosition) {
@@ -2811,7 +2816,7 @@ define('js!SBIS3.CONTROLS.ListView',
                 hoveredItem = this.getHoveredItem(),
                 key = target[0].getAttribute('data-id'),
                 columns = target.find('.controls-DataGridView__td').not('.controls-DataGridView__td__checkBox');
-            if(hoveredItem && hoveredItem.key !== key){
+            if(hoveredItem && hoveredItem.key !== key && self.getMultiselect()){
                 columns.addClass('rightSwipeAnimation');
                 setTimeout(function(){
                     columns.toggleClass('rightSwipeAnimation', false);
@@ -3518,7 +3523,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
                         // Если пришла пустая страница, но есть еще данные - догрузим их
                         if (hasNextPage){
-                           this._scrollLoadNextPage();
+                           this._scrollLoadNextPage(type);
                         } else {
                            // TODO: Сделано только для контактов, которые присылают nav: true, а потом пустой датасет с nav: false
                            this._hideLoadingIndicator();
@@ -3854,7 +3859,8 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._setLoadMoreCaption(this.getItems());
                }
             }
-            this._onMetaDataResultsChange = function(){
+            this._onMetaDataResultsChange = function(event, data){
+               this._headIsChanged = true;
                this._redrawResults(true);
             }.bind(this);
             this._observeResultsRecord(true);
@@ -4463,7 +4469,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Перемещает записи через диалог. По умолчанию берет все выделенные записи.
           * @param {Array} idArray Массив перемещаемых записей
-          * @deprecated Используйте SBIS3.CONTROLS.Action.List.InteractiveMove.
+          * @deprecated Используйте {@link SBIS3.CONTROLS.Action.List.InteractiveMove}.
           */
          moveRecordsWithDialog: function(idArray) {
             if (this.isEnabledMove()) {
@@ -4517,7 +4523,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          /**
           * Перемещает выделенные записи.
-          * @deprecated используйте метод move
+          * @deprecated Используйте метод {@link move}.
           * @param {WS.Data/Entity/Model|String} target  К какой записи переместить выделенные. Модель либо ее идентификатор.
           */
          selectedMoveTo: function(target) {
@@ -4547,7 +4553,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Возвращает стратегию перемещения
           * @see WS.Data/MoveStrategy/IMoveStrategy
-          * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
+          * @deprecated Для внедрения собственной логики используйте события {@link onBeginMove} и {@link onEndMove}.
           * @returns {WS.Data/MoveStrategy/IMoveStrategy}
           */
          getMoveStrategy: function() {
@@ -4555,7 +4561,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          /**
           * Создает стратегию перемещения в зависимости от источника данных
-          * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
+          * @deprecated Для внедрения собственной логики используйте события {@link onBeginMove} и {@link onEndMove}.
           * @returns {WS.Data/MoveStrategy/IMoveStrategy}
           * @private
           */
@@ -4573,7 +4579,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Устанавливает стратегию перемещения
           * @see WS.Data/MoveStrategy/IMoveStrategy
-          * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
+          * @deprecated Для внедрения собственной логики используйте события {@link onBeginMove} и {@link onEndMove}.
           * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
           */
          setMoveStrategy: function (moveStrategy) {
@@ -4661,7 +4667,11 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _observeResultsRecord: function(needObserve){
             var methodName = needObserve ? 'subscribeTo' : 'unsubscribeFrom',
-                resultsRecord = this.getItems() && this.getItems().getMetaData().results;
+                metaData = this.getItems() && this.getItems().getMetaData(),
+                resultsRecord = metaData && metaData.results;
+            if (this.getItems()) {
+               this[methodName](this.getItems(), 'onPropertyChange', this._onMetaDataResultsChange);
+            }
             if (resultsRecord){
                this[methodName](resultsRecord, 'onPropertyChange', this._onMetaDataResultsChange);
             }
@@ -4720,7 +4730,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * Если нужно удалить одну запись, то в параметр передаётся простое значение - идентификатор элемента.
           * @param {String} [message] Текст, который будет использован в диалоговом окне перед началом удаления записей из источника.
           * Если параметр не передан, то для удаления нескольких записей будет использован текст "Удалить записи?", а для удаления одной записи - "Удалить текущую запись?".
-          * @returns {Deferred} Возвращает объект deferred. На результат работы метода можно подписаться для решения прикладных задача.
+          * @returns {Deferred} Возвращает объект deferred. На результат работы метода можно подписаться для решения прикладных задач.
           */
          deleteRecords: function(idArray, message) {
             var

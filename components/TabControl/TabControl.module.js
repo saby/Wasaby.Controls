@@ -11,9 +11,11 @@ define('js!SBIS3.CONTROLS.TabControl', [
    'use strict';
 
    /**
-    * Класс контрола "Вкладки", содержащий несколько областей с контентом. <a href='http://axure.tensor.ru/standarts/v7/%D0%B2%D0%BA%D0%BB%D0%B0%D0%B4%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_05_.html'>Стандарт контрола</a>.
+    * Класс контрола "Вкладки" - составной компонент, содержащий <a href='https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/TabButtons/'>вкладки</a> и
+    * несколько <a href='https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/SwitchableArea/'>областей с контентом</a>.
     * В каждый момент времени отображается только одна область.
-    * Отображаемая область может переключаться при клике на корешки вкладок.
+    * Отображаемая область может переключаться при клике на корешок вкладки.
+    * Стандарт описан <a href='http://axure.tensor.ru/standarts/v7/%D0%B2%D0%BA%D0%BB%D0%B0%D0%B4%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_05_.html'>здесь</a>.
     * @class SBIS3.CONTROLS.TabControl
     * @extends SBIS3.CORE.CompoundControl
     *
@@ -45,7 +47,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
              *     <li>left - выравнивание вкладки слева;</li>
              * </ul>
              * @property {Content} content Устанавливает xhtml-вёрстку заголовка вкладки при редактировании по месту.
-             * @property {String} title Устанавливает подпись вкладки.
+             * @property {Content} title Устанавливает подпись вкладки.
              * @translatable title
              */
             /**
@@ -80,7 +82,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
             tabsDisplayProperty: null,
             /**
              * @cfg {String} Устанавливает поле элемента коллекции, которое является идентификатором записи.
-             * @deprecated
+             * @deprecated Используйте {@link idProperty}.
              */
             keyField: null,
             /**

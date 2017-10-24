@@ -317,6 +317,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                         EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
                     }
                 };
+            clickEvent = clickEvent.originalEvent || clickEvent;//в clickEvent.which может быть не определен, а в originalEvent он есть
             if ($(clickEvent.target).closest('.controls-DragNDropMixin__notDraggable', self._getDragContainer()[0]).length === 0
                && ((clickEvent.type == 'mousedown' && clickEvent.which == LEFT_BUTTON) || clickEvent.type != 'mousedown') //Для мышки проверям что нажата левая кнопка
             ) {

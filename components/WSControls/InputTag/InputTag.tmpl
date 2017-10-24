@@ -1,0 +1,14 @@
+<span>
+   <ws:partial template="{{_options.content}}"/>
+   <ws:if data="{{_options.tagStyle}}">
+      <span event:onmouseenter="_mouseenterInputTagHandler()">
+         <ws:SBIS3.CONTROLS.IconButton
+            name="informationIcon"
+            icon="icon-size icon-Listbox"
+            allowChangeEnable="{{false}}"
+            event:onActivated="_activatedInputTagHandler()"
+            className="controls-informationIcon icon-{{_options.tagStyle}}"
+         />
+      </span>
+   </ws:if>
+</span>
