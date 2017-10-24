@@ -4,6 +4,7 @@
 
 define('js!SBIS3.CONTROLS.ListView',
    [
+   'js!SBIS3.CONTROLS.Utils.ConfigByClasses',
    'Core/core-merge',
    'Core/core-clone',
    'Core/helpers/Function/shallowClone',
@@ -69,7 +70,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
-   function (cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
+   function (ConfigByClasses, cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents, LayoutManager, mHelpers,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
@@ -1070,51 +1071,18 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _addOptionsFromClass: function(opts, attrToMerge) {
-            var className = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || "";
-            var classes = [
-               { class: 'controls-small-ListView', optionName: 'isSmall', value: true, defaultValue: false },
-               { class: 'controls-ListView__disableHover', optionName: 'itemsHover', value: false, defaultValue: true },
-               { class: 'controls-ListView__pagerNoSizePicker', optionName: 'noSizePicker', value: true, defaultValue: false },
-               { class: 'controls-ListView__pagerNoAmount', optionName: 'noPagerAmount', value: true, defaultValue: false },
-               { class: 'controls-ListView__pagerHideEndButton', optionName: 'hideEndButton', value: true, defaultValue: false },
-               { class: 'controls-ListView__orangeMarker', optionName: 'showSelectedMarker', value: true, defaultValue: false },
-               { class: 'controls-ListView__outside-scroll-loader', optionName: 'outsideScroll', value: true, defaultValue: false }
-            ];
-            function hasClass(fullClass, className) {
-               if(typeof fullClass === 'string') {
-                  var index = fullClass.split(' ')
-                     .filter(function (el) {
-                        return el !== ''
-                     })
-                     .indexOf(className);
-                  return !!~index;
-               } else {
-                  return undefined;
-               }
-            }
-            var el;
-            for(var i = 0; i < classes.length; i++) {
-               el = classes[i];
-               ////Прокинуть правильные опции
-               // if(el.isPagerConfig) {
-               //    if(!opts.pagerConfig[el.optionName]) {
-               //       hasClass(opts.className, el.class) ? opts.pagerConfig[el.optionName] = el.value :
-               //          opts.pagerConfig[el.optionName] = el.defaultValue;
-               //    }
-               // } else {
-               //    if(!opts[el.optionName]) {
-               //       hasClass(opts.className, el.class) ? opts[el.optionName] = el.value :
-               //          opts[el.optionName] = el.defaultValue;
-               //    }
-               // }
-               if (!opts[el.optionName]) {
-                  if (hasClass(className, el.class)) {
-                     opts[el.optionName] = el.value;
-                  } else {
-                     opts[el.optionName] = el.defaultValue;
-                  }
-               }
-            }
+            var
+               classes = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || '',
+               params = [
+                  { class: 'controls-small-ListView', optionName: 'isSmall', value: true, defaultValue: false },
+                  { class: 'controls-ListView__disableHover', optionName: 'itemsHover', value: false, defaultValue: true },
+                  { class: 'controls-ListView__pagerNoSizePicker', optionName: 'noSizePicker', value: true, defaultValue: false },
+                  { class: 'controls-ListView__pagerNoAmount', optionName: 'noPagerAmount', value: true, defaultValue: false },
+                  { class: 'controls-ListView__pagerHideEndButton', optionName: 'hideEndButton', value: true, defaultValue: false },
+                  { class: 'controls-ListView__orangeMarker', optionName: 'showSelectedMarker', value: true, defaultValue: false },
+                  { class: 'controls-ListView__outside-scroll-loader', optionName: 'outsideScroll', value: true, defaultValue: false }
+               ];
+            ConfigByClasses(opts, params, classes);
          },
 
          _modifyOptions : function(opts, parsedOptions, attrToMerge){
