@@ -1564,7 +1564,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                if (e.key && 1 < e.key.length) {
                   _linkEditStart();
                   setTimeout(function() {
-                     _linkEditEnd();
+                     //Возможно, мы уже закрыты
+                     if(!self.isDestroyed()){
+                        _linkEditEnd();
+                     }
                   }, 1);
                }
             });
@@ -1586,7 +1589,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                }
                setTimeout(function() {
-                  _linkEditEnd();
+                  if(!self.isDestroyed()){
+                     _linkEditEnd();
+                  }
                   self._togglePlaceholder(self._getTinyEditorValue());
                }, 1);
             });
