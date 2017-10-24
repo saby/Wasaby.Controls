@@ -328,12 +328,10 @@ define('js!SBIS3.CONTROLS.FormController', [
             event.setResult(false);
          }
          else if (result !== undefined || !record.isChanged() && !self._panel.getChildPendingOperations().length) {
-            //Дестроим запись, когда выполнены три условия
-            //1. если это было создание
-            //2. если есть ключ (метод создать его вернул)
-            //3. ничего не поменяли в рекорде, но закрывают либо поменяли, но нажали нет
-            if (self.isNewRecord() && self._getRecordId() && (!closeAfterConfirmDialogHandler && !record.isChanged() || result === false)){
-               self._destroyModel().addBoth(function(){
+            if (self._needDestroyModel(closeAfterConfirmDialogHandler, result)){
+               self._destroyModel({
+                  closeResult: result
+               }).addBoth(function(){
                   self._closePanel(result);
                });
                event.setResult(false);
@@ -345,6 +343,14 @@ define('js!SBIS3.CONTROLS.FormController', [
                self._showConfirmDialog();
             }
          }
+      },
+
+      _needDestroyModel: function (closeAfterConfirmDialogHandler, closeResult) {
+         //Дестроим запись, когда выполнены три условия
+         //1. если это было создание
+         //2. если есть ключ (метод создать его вернул)
+         //3. ничего не поменяли в рекорде, но закрывают либо поменяли, но нажали нет
+         return this.isNewRecord() && this._getRecordId() && (!closeAfterConfirmDialogHandler && !this.getRecord().isChanged() || closeResult === false);
       },
 
       _onBeforeNavigate: function(event, activeElement, isIconClick){
