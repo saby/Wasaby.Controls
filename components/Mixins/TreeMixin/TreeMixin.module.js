@@ -287,12 +287,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       var itemParent = item.getParent();
       return itemParent ? itemParent.isExpanded() ? isVisibleItem(itemParent) : false : true;
    },
-   projectionFilter = function(item, index, itemProj) {
+   projectionFilter = function(item, index, itemProj, position, hasMembers) {
       var
          itemParent, itemParentContent;
       // Теперь сюда может прилететь groupItem. Проверка через instanceOfModule медленная, просто проверяю наличие метода.
       if (!itemProj.getParent) {
-         return true;
+         return hasMembers;
       }
       // Добавил проверку на скрытый узел. Мы ожидаем, что скрытый узел при поиске не должен быть раскрытым (а его связанные записи - не должны сразу отрисовываться).
       itemParent = itemProj.getParent();
