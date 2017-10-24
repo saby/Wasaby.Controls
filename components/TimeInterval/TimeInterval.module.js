@@ -6,8 +6,7 @@ define(
    [
       'Core/TimeInterval',
       'js!SBIS3.CONTROLS.FormattedTextBoxBase',
-      'html!SBIS3.CONTROLS.TimeInterval',
-      'css!SBIS3.CONTROLS.TimeInterval'
+      'tmpl!SBIS3.CONTROLS.FormattedTextBox'
    ],
    function (cTimeInterval, FormattedTextBoxBase, dotTplFn) {
 
