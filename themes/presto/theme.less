@@ -1,0 +1,56 @@
+body {
+  @infobox-border: @default-border-width solid transparent;
+  .ws-info-box {
+    background: @basic-block-bg-color;
+    color: @default-text-color;
+    border: @infobox-border;
+    padding: 0.857rem 3rem 0.857rem 0.857rem;
+    &.ws-infobox-type-error {
+      box-shadow: rgba(0, 0, 0, 0.5) 0 0 0.714rem;
+    }
+    //25,45584412271571 px
+    //0,9091372900969896rem
+    .ws-infobox-triangle {
+      width: .909137290096rem;
+      height: .909137290096rem;
+      box-sizing: border-box;
+      background: @basic-block-bg-color;
+      transform:  scaleY(1.055555555555556) rotate(45deg);
+      &.ws-infobox-triangle-bottom {
+        bottom: -.47rem;
+        border-right: @infobox-border;
+        border-bottom: @infobox-border;
+      }
+      &.ws-infobox-triangle-top {
+        top: -.47rem;
+        border-left: @infobox-border;
+        border-top: @infobox-border;
+      }
+      &.ws-infobox-triangle-vertical-right {
+        right: -.47rem;
+        border-right: @infobox-border;
+        border-top: @infobox-border;
+      }
+      &.ws-infobox-triangle-vertical-left {
+        left: -.47rem;
+        border-left: @infobox-border;
+        border-bottom: @infobox-border;
+      }
+    }
+    .ws-infobox-close-button.icon-disabled{
+      font-size: 1.857rem!important;
+      width: 1.857rem!important;
+      height: 1.857rem!important;
+      right: .5714rem;
+      top: .5714rem;
+      color: @Infobox-cross-color!important;
+      overflow: hidden;
+      &:hover {
+        color: @Infobox-cross-color-hover!important;
+      }
+      &:before {
+        line-height: 1.857rem!important;
+      }
+    }
+  }
+}
