@@ -2433,6 +2433,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //но не проставит все необходимые состояния. В .200 начнём пересоздавать редакторы для каждого редактирования
             //и данный код не понадобится.
             this._destroyEditInPlace();
+            this._headIsChanged = true;
             this._redrawResults();
             ListView.superclass.redraw.apply(this, arguments);
             if (this._options.saveReloadPosition) {
@@ -3859,6 +3860,7 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
             this._onMetaDataResultsChange = function(event, data){
+               this._headIsChanged = true;
                this._redrawResults(true);
             }.bind(this);
             this._observeResultsRecord(true);
