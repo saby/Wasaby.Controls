@@ -1,55 +1,60 @@
 .controls-TextBox {
    .box-sizing(border-box);
    .border-radius(@text-box-border-radius);
-   line-height: normal;
-   display: inline-block;
-   color: @text-box-color;
+
    border-width: @default-border-width;
-   border-style: @default-border-style;
-   border-color: @text-box-border-color;/*test*/
-   border-bottom-color: @text-box-border-color-bottom;
    background: @text-box-bg;
-   text-decoration: inherit;
    cursor: auto;
    max-width: 100%;
+   line-height: normal;
+   display: inline-block;
+   text-decoration: inherit;
+   border-style: solid;
    //различные размеры
    &__size {
-      &__default {
-         height: @text-box-height;
-         font-size: @text-box-font-size;
+      &__m {
+         color: @text-box-color-m;
+         height: @text-box-height-m;
+         font-size: @text-box-font-size-m;
       }
-      &__large {
-         height: @text-box-height-large;
-         font-size: @text-box-font-size-large;
-         padding-bottom: @text-box-input-padding-large;
+      &__l {
+         color: @text-box-color-l;
+         height: @text-box-height-l;
+         font-size: @text-box-font-size-l;
+         padding-bottom: @text-box-input-padding-l;
       }
    }
    //различные состояния контрола
-   &:hover {
-      border-color: @text-box-border-color-hover;
-   }
-   &.ws-has-focus {
-      border-color: @text-box-border-color-active;
-   }
-   &.ws-disabled {
-      border-color: @text-box-border-color-disabled;
-      background: @text-box-bg-disabled;
-      border-bottom-color: @text-box-border-color-bottom-disabled;
-      caret-color: transparent;
-      .controls-TextBox__field {
-         .hiddenPlaceholder();
+   &__state {
+      &__default {
+         border-color: @text-box-border-color;
+         border-bottom-color: @text-box-border-color-bottom;
+         &:hover {
+            border-color: @text-box-border-color-hover;
+         }
       }
-   }
-   &.ws-validation-error {
-      border-color: @text-box-border-color-error;
-      background: @text-box-bg-error;
+      &__active {
+         border-color: @text-box-border-color-active;
+      }
+      &__disabled {
+         background: @text-box-bg-disabled;
+         border-color: @text-box-border-color-disabled;
+         border-bottom-color: @text-box-border-color-bottom-disabled;
+         caret-color: transparent;
+         .controls-TextBox__field {
+            .hiddenPlaceholder();
+         }
+      }
+      &__marked {
+         background: @text-box-bg-error;
+         border-color: @text-box-border-color-error;
+      }
    }
    &__wrapper {
       .inline-flexbox();
       .flex-shrink();
       .align-items(center);
-      padding: 0;
-      margin: 0;
+      .user-select(none);
       position: relative;
       width: 100%;
       height: 100%;
@@ -77,10 +82,10 @@
       .placeholder();
       .text-overflow();
       .flex-shrink();
+      .user-select(text);
       font: inherit;
       width: 100%;
       min-width: 0; //Иначе input во flex контейнере будет сжиматься лишь до своей стандартной ширины
-      margin: 0;
       text-align: inherit;
       color: inherit;
       border: none;
@@ -101,28 +106,28 @@
       }
    }
    &__placeholder {
-      .text-overflow();
+      .inline-flexbox();
+      .align-items(center);
       position: absolute;
+      top: 0;
+      height: 100%;
       cursor: text;
       color: @default-placeholder-color;
       font: inherit;
       text-align: inherit;
       padding: @text-box-input-padding;
-      //todo: временное решение чтобы починить тесты
-      //Нормальное решение:
-      //top:0; height: 100%; display: inline-flex; align-items-center;
-      //но при таком решении не работает text-align: right и проблема с пробелами в
-      //и проблема с пробелами в fieldlink placeholder
-      top: 0;
-      height: 100%;
-      line-height: @default-base-line-height;
+      &__overflow {
+         .text-overflow();
+         display: inline-block;
+         width: 100%;
+      }
    }
    .controls-informationIcon {
       position: absolute;
       right: 0;
       top: 0;
       .controls-Button__icon {
-         .icon-size(@text-box-information-icon-size);
+         .icon-size(@icon-small-size);
          position: absolute;
          right: 0;
          top: 0;

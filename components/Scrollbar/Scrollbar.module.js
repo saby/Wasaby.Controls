@@ -2,9 +2,10 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
       'js!SBIS3.CONTROLS.CompoundControl',
       'tmpl!SBIS3.CONTROLS.Scrollbar',
       'js!SBIS3.CONTROLS.DragNDropMixin',
+      'Core/detection',
       'css!SBIS3.CONTROLS.Scrollbar'
    ],
-   function (CompoundControl, dotTplFn, DragNDropMixinNew) {
+   function (CompoundControl, dotTplFn, DragNDropMixinNew, detection) {
 
       'use strict';
 
@@ -166,8 +167,9 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
                this._isConstThumb = false;
             }
             if (this._thumb) {
-               // У ползунка есть отступы сверху и снизу, а мы расчитывали высоту вместе с отступами, поэтому вычтем их.
-               this._thumb.height(this._thumbHeight - this._thumb.outerHeight(true) + this._thumb.height());
+               this._thumb.height(this._thumbHeight);
+               // Высота ползунка должна учитывать margin.
+               this._thumbHeight = this._thumb.outerHeight(true);
             }
          },
 
@@ -225,7 +227,14 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          },
 
          _wheelHandler: function(event) {
-            this.setPosition(this.getPosition() + event.originalEvent.deltaY);
+            var deltaY = event.originalEvent.deltaY;
+
+            // В firefox маленькой значение delta в отличии от остальных браузеров.
+            // Например в chrome 100, ie 120, а в firefox 3.
+            if (detection.firefox) {
+               deltaY = deltaY > 4 ? 120 : deltaY * 30;
+            }
+            this.setPosition(this.getPosition() + deltaY);
             this._notify('onScrollbarDrag', this.getPosition());
          },
 

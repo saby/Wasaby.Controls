@@ -1,11 +1,9 @@
 /*global define, $ws*/
 define('js!SBIS3.CONTROLS.Action.DialogMixin', [
    "Core/core-merge",
-   "js!SBIS3.CORE.Dialog",
-   "js!SBIS3.CORE.FloatArea",
    "WS.Data/Utils",
    'Core/IoC'
-], function( cMerge, Dialog, FloatArea, Utils, IoC){
+], function( cMerge, Utils, IoC){
    'use strict';
 
    /**
@@ -71,14 +69,16 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       },
       $constructor: function() {
 
-         if ( this._options.dialogComponent && !this._options.template) {
+         if (this._options.dialogComponent && !this._options.template) {
             Utils.logger.stack(this._moduleName + '::$constructor(): option "dialogComponent" is deprecated and will be removed in 3.8.0', 1);
             this._options.template = this._options.dialogComponent;
          }
          this._publish('onAfterShow', 'onBeforeShow');
       },
       _doExecute: function(meta) {
-         this._openComponent(meta);
+         if (!this._isExecuting) {
+            this._openComponent(meta);
+         }
          return false;
       },
 
@@ -103,7 +103,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       },
 
       _createComponent: function(config, meta, mode) {
-         var Component = (mode == 'floatArea') ? FloatArea : Dialog;
+         var componentName = (mode == 'floatArea') ? 'js!SBIS3.CORE.FloatArea' : 'js!SBIS3.CORE.Dialog';
          if (this._isNeedToRedrawDialog()){
             this._resetComponentOptions();
             cMerge(this._dialog._options, config);
@@ -111,7 +111,10 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          }
          else {
             this._isExecuting = true;
-            this._dialog = new Component(config);
+            requirejs([componentName], function(Component) {
+               this._dialog = new Component(config);
+            }.bind(this));
+
          }
       },
       _resetComponentOptions: function() {

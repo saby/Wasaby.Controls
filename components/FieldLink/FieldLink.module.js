@@ -671,7 +671,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           /**
            * {String} Устанавливает поле элемента коллекции, которое является идентификатором записи
-           * @deprecated
+           * @deprecated Используйте {@link setIdProperty}.
            */
           setKeyField: function(keyField) {
              IoC.resolve('ILogger').log('FieldLink', 'Метод setKeyField устарел, используйте setIdProperty');
@@ -696,7 +696,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
 
           /**
            * {String} Устанавливает поле элемента коллекции, из которого отображать данные
-           * @deprecated
+           * @deprecated Используйте {@link setDisplayProperty}.
            */
           setDisplayField: function(displayProperty) {
              IoC.resolve('ILogger').log('FieldLink', 'Метод setDisplayField устарел, используйте setDisplayProperty');
@@ -794,10 +794,13 @@ define('js!SBIS3.CONTROLS.FieldLink',
              return this.getChildControlByName('FieldLinkItemsCollection');
           }, '_getLinkCollection'),
           
-          _getInputMinWidth: memoize(function() {
-             var fieldWrapper = this.getContainer().find('.controls-FieldLink__fieldWrapper');
-             return parseInt(window.getComputedStyle(fieldWrapper[0]).getPropertyValue('--min-width') || fieldWrapper.css('min-width'));
-          }, '_getInputMinWidth'),
+          _getInputMinWidth: function() {
+             var fieldWrapper = this.getContainer().find('.controls-TextBox__wrapper'),
+                 afterFieldWrapper = this._getAfterFieldWrapper();
+
+             /* По стандарту минимальная ширина поля ввода - 33% */
+             return (fieldWrapper[0].offsetWidth - afterFieldWrapper[0].offsetWidth)/100*33;
+          },
 
           /** Обработчики событий контрола отрисовки элементов **/
           _onDrawItemsCollection: function() {
@@ -916,14 +919,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
            * @private
            */
           _chooseCallback: function(result) {
-             var isModel;
-
-             /* После выбора из панели, возвращаем фокус в поле связи */
-             this.setActive(true);
              if(result && result.length) {
-                isModel = cInstance.instanceOfModule(result[0], 'WS.Data/Entity/Model');
+                var isModel = cInstance.instanceOfModule(result[0], 'WS.Data/Entity/Model');
                 this.setText('');
-
+                
                 if(isModel) {
                    this.addSelectedItems(result);
                 } else {

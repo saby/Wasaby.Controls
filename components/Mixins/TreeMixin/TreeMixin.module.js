@@ -288,10 +288,15 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       return itemParent ? itemParent.isExpanded() ? isVisibleItem(itemParent) : false : true;
    },
    projectionFilter = function(item, index, itemProj) {
-      // Добавил проверку на скрытый узел. Мы ожидаем, что скрытый узел при поиске не должен быть раскрытым (а его связанные записи - не должны сразу отрисовываться).
       var
-          itemParent = itemProj.getParent(),
-          itemParentContent = itemParent && itemParent.getContents();
+         itemParent, itemParentContent;
+      // Теперь сюда может прилететь groupItem. Проверка через instanceOfModule медленная, просто проверяю наличие метода.
+      if (!itemProj.getParent) {
+         return true;
+      }
+      // Добавил проверку на скрытый узел. Мы ожидаем, что скрытый узел при поиске не должен быть раскрытым (а его связанные записи - не должны сразу отрисовываться).
+      itemParent = itemProj.getParent();
+      itemParentContent = itemParent && itemParent.getContents();
       // Т.к. скрытые узлы не выводятся в режиме поиска, то добавил костыль-проверку на task1174261549.
       // Используется в админке, будет убрано, когда будет согласован стандарт на отображение скрытых узлов в режиме поиска.
       // Ошибка: https://online.sbis.ru/opendoc.html?guid=aac1226b-64f1-4b45-bb95-b44f2eb68ada
@@ -552,7 +557,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              * </pre>
              * @see getHierarchy
              * @see setHierarchy
-             * @deprecated
+             * @deprecated Используйте опции {@link parentProperty}, {@link nodeProperty} и {@link hasChildrenProperty}.
              */
             hierField: null,
             /**
@@ -1112,7 +1117,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             var root;
             if (isPlainObject(this._options.root)) {
                root = this._getItemsProjection().getRoot();
-               if (String(root.getContents().getId()) === String(id)) {
+               if (String(root.getContents().get(this._options.idProperty)) === String(id)) {
                   return root;
                }
             }
@@ -1442,6 +1447,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
        */
       setCurrentRoot: function(key) {
          var
+            newRoot,
+            isFakeRoot = false,
             filter = this.getFilter() || {};
          // Internet Explorer при удалении элемента сбрасывает фокус не выше по иерархии, а просто "в никуда" (document.activeElement === null).
          // Для того, чтобы фокус при проваливании в папку не терялся - перед проваливанием устанавливаем его просто
@@ -1454,30 +1461,39 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          }
          // todo Удалить при отказе от режима "hover" у редактирования по месту [Image_2016-06-23_17-54-50_0108] https://inside.tensor.ru/opendoc.html?guid=5bcdb10f-9d69-49a0-9807-75925b726072&description=
          this._destroyEditInPlaceController();
-         if (key !== undefined && key !== null) {
+         if (isPlainObject(this._options.root) && this._options.root[this._options.idProperty] === key) {
             filter[this._options.parentProperty] = key;
+            isFakeRoot = true;
+         } else if (key !== undefined && key !== null) {
+            filter[this._options.parentProperty] = key;
+         } else if (this._options.root) {
+            filter[this._options.parentProperty] = this._options.root;
          } else {
-            if (this._options.root){
-               filter[this._options.parentProperty] = this._options.root;
-            } else {
-               delete(filter[this._options.parentProperty]);
-            }
+            delete(filter[this._options.parentProperty]);
          }
          this.setFilter(filter, true);
          //узел грузим с 0-ой страницы
          this._offset = 0;
          //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
          this._notify('onBeforeSetRoot', key);
-         this._options.currentRoot = key !== undefined && key !== null ? key : this._options.root;
+         this._options.currentRoot = filter[this._options.parentProperty];
 
          // сохраняем текущую страницу при проваливании в папку
          if (this._options.saveReloadPosition) {
             this._hierPages[this._previousRoot] = this._getCurrentPage();
          }
+
+         if (isFakeRoot) {
+            newRoot = Model.fromObject(this._options.root, this.getItems() ? this.getItems().getAdapter() : 'adapter.sbis');
+            newRoot.setIdProperty(this._options.idProperty);
+         } else {
+            newRoot = this._options.currentRoot !== undefined ? this._options.currentRoot : null
+         }
          
          if (this._options._itemsProjection) {
             this._options._itemsProjection.setEventRaising(false);
-            this._options._itemsProjection.setRoot(this._options.currentRoot !== undefined ? this._options.currentRoot : null);
+            this._options._itemsProjection.setRootEnumerable(isFakeRoot);
+            this._options._itemsProjection.setRoot(newRoot);
             this._options._itemsProjection.setEventRaising(true);
          }
          this._hier = this.getHierarchy(this.getItems(), key);

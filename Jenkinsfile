@@ -18,11 +18,11 @@ properties([
             description: '',
             name: 'ws_data_revision'),
         string(
-            defaultValue: 'rc-3.17.200',
+            defaultValue: 'rc-3.17.210',
             description: '',
             name: 'branch_engine'),
         string(
-            defaultValue: 'rc-3.34',
+            defaultValue: 'dda/flink-improve',
             description: '',
             name: 'branch_atf'),
         choice(
@@ -44,7 +44,7 @@ if ( "${env.BUILD_NUMBER}" != "1" && params.run_reg == false && params.run_int =
 
 node('controls') {
     echo "Назначем версию и определяем рабочую директорию"
-    def version = "3.17.200"
+    def version = "3.17.210"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
         echo "Чистим рабочую директорию"
@@ -343,6 +343,12 @@ node('controls') {
             //Пакуем данные
             writeFile file: "/home/sbis/Controls1/Core.package.json", text: """
                 {
+                "includeCore":true,
+                "include":[
+                "Core/*",
+                "WS.Data/*",
+                "SBIS3.CONTROLS.ItemsControlMixin"
+                ],
                 "modules" : [
                 "Core/core",
                 "WS.Data/Source/SbisService",
