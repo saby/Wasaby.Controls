@@ -22,9 +22,8 @@
    }
    &:before {
       width: @back-button-width-before;
-      color: @primary-color;
       font-weight: normal;
-      content: '\e003';
+      content: url("img/Back_red_18.png");
       display: inline-block;
       margin: @back-button-margin-before;
       padding: @back-button-padding-before;
@@ -141,13 +140,10 @@
          color: @header-color;
       }
       &:before {
-         color: @blue-dark-color;
+         content: url("img/Back_blue_18.png");
       }
       &:hover {
          .controls-BackButton__caption {
-            color: @primary-color;
-         }
-         &:before {
             color: @primary-color;
          }
       }
