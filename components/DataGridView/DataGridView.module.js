@@ -1594,7 +1594,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
       },
       _redrawResults: function(revive) {
-         if (this._options.resultsPosition !== 'none') {
+         //Если данные не изменились, то не нужно впустую перерисовывать итоги
+         if (this._headIsChanged && this._options.resultsPosition !== 'none') {
             this._redrawTheadAndTfoot();
 
             if (revive) {
