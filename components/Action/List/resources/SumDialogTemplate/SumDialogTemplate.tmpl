@@ -1,0 +1,17 @@
+<div class="controls-SumDialogTemplate">
+    <div class="controls-SumDialogTemplate__modelView">
+        <ws:for data="row in _rows">
+            <div class="controls-SumDialogTemplate__row">
+                <div class="controls-SumDialogTemplate__row-title" title="{{row.title}}">{{row.title}}</div>
+                <div class="controls-SumDialogTemplate__row-value" title="{{row.value}}">{{row.value}}</div>
+            </div>
+        </ws:for>
+    </div>
+    <div class="controls-SumDialogTemplate__OK-container">
+        <ws:SBIS3.CONTROLS.Button
+            className="controls-SumDialogTemplate__OK"
+            caption="OK"
+            command="close"
+        />
+    </div>
+</div>
