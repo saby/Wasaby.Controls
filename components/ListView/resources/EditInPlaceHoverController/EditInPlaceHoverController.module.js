@@ -96,7 +96,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                this._options.editFieldFocusHandler && this._options.editFieldFocusHandler(control);
             },
             edit: function (model) {
-               return this.endEdit(true).addCallback(function() {
+               return this.commitEdit().addCallback(function() {
                   var
                      hoveredEip = this._hoveredEip,
                      editingRecord,
