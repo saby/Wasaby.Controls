@@ -239,6 +239,8 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
                // Что бы до инициализации не было видно никаких скроллов
                this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
+               // Скрываем нативный скролл.
+               this._hideBrowserScrollbar();
 
                // task: 1173330288
                // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
@@ -246,6 +248,34 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
                this._initPaging();
             }
+         },
+
+         _hideBrowserScrollbar: function(){
+            /**
+             * Бывает, что нельзя определить динамически правильный размер нативного скролла и в этом случае
+             * приходиться узнавать его заранее и скрывать его с помощью css. Если marginRight уже весит на content,
+             * то значит сейчас именно такая ситуация и вычислять ничего не нужно.
+             */
+            if (parseInt(getComputedStyle(this._content[0]).marginRight) === 0) {
+               this._content.css({
+                  marginRight: -this._getBrowserScrollbarWidth()
+               });
+            }
+         },
+
+         _getBrowserScrollbarWidth: function() {
+            var outer, outerStyle, scrollbarWidth;
+            outer = document.createElement('div');
+            outerStyle = outer.style;
+            outerStyle.position = 'absolute';
+            outerStyle.width = '100px';
+            outerStyle.height = '100px';
+            outerStyle.overflow = 'scroll';
+            outerStyle.top = '-9999px';
+            document.body.appendChild(outer);
+            scrollbarWidth = outer.offsetWidth - outer.clientWidth;
+            document.body.removeChild(outer);
+            return scrollbarWidth;
          },
 
          _stickyHeadersChangedHandler: function() {
