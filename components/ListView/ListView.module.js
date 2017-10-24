@@ -86,6 +86,7 @@ define('js!SBIS3.CONTROLS.ListView',
             tplOptions.selectedKey = cfg.selectedKey;
             tplOptions.selectedKeys = cfg.selectedKeys;
             tplOptions.itemsHover = cfg.itemsHover;
+            tplOptions.alwaysShowCheckboxes = cfg.alwaysShowCheckboxes;
 
             return tplOptions;
          },
@@ -443,6 +444,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _loadId: 0,
             _options: {
                 itemsHover: true,
+                alwaysShowCheckboxes: false,
                _canServerRender: true,
                _buildTplArgs: buildTplArgsLV,
                _getRecordsForRedraw: getRecordsForRedrawLV,
@@ -1078,7 +1080,9 @@ define('js!SBIS3.CONTROLS.ListView',
                { class: 'controls-ListView__pagerNoAmount', optionName: 'noPagerAmount', value: true, defaultValue: false },
                { class: 'controls-ListView__pagerHideEndButton', optionName: 'hideEndButton', value: true, defaultValue: false },
                { class: 'controls-ListView__orangeMarker', optionName: 'showSelectedMarker', value: true, defaultValue: false },
-               { class: 'controls-ListView__outside-scroll-loader', optionName: 'outsideScroll', value: true, defaultValue: false }
+               { class: 'controls-ListView__outside-scroll-loader', optionName: 'outsideScroll', value: true, defaultValue: false },
+               { class: 'controls-ListView__showCheckboxes', optionName: 'alwaysShowCheckboxes', value: true, defaultValue: false },
+               { class: 'controls-ListView__hideCheckboxes', optionName: 'alwaysShowCheckboxes', value: false, defaultValue: true }
             ];
             function hasClass(fullClass, className) {
                if(typeof fullClass === 'string') {
@@ -2616,6 +2620,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         else {
                            this.setSelectedKey(model.getId());
                         }
+                        curSelected.find('controls-ListView__itemCheckBox').addClass('controls-ListView__itemCheckBox__showAlways');
                         // Могут быть операции над записью с тулбаром под записью. В таком случае на ListView вешается класс с padding-bottom.
                         // Этот отступ при скроле тоже должен учитываться.
                         // Поэтому вначале подскролливаем к тулбару и затем скролим к элементу.
@@ -2639,6 +2644,8 @@ define('js!SBIS3.CONTROLS.ListView',
                      }.bind(this),
                      onEndEdit: function(event, model, withSaving) {
                         event.setResult(this._notify('onEndEdit', model, withSaving));
+                        var curSelected = $('.controls-ListView__item[data-id="' +  (model.getId() === undefined ? '' : model.getId()) + '"]', this._container);
+                        curSelected.find('controls-ListView__itemCheckBox').removeClass('controls-ListView__itemCheckBox__showAlways');
                      }.bind(this),
                      onAfterEndEdit: function(event, model, target, withSaving) {
                         this.setSelectedKey(model.getId());

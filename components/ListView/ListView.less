@@ -60,11 +60,25 @@
    }
 }
 
-.controls-ListView__hoveredItem {
-   .controls-ListView__itemCheckBox {
+.controls-ListView__item:hover {
+   .controls-ListView__itemCheckBox__showByHover {
       .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
    }
 }
+
+controls-ListView__item__withHover:hover {
+   background-color: @default-itemHover-color;
+}
+
+.controls-ListView__itemCheckBox__showAlways {
+   .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+}
+
+//.controls-ListView__hoveredItem {//TODO: DELETE
+//   .controls-ListView__itemCheckBox {
+//      .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+//   }
+//}
 .controls-ListView__item__multiSelected:not(.controls-ListView__item__partiallySelected) {
    .controls-ListView__itemCheckBox {
       .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
