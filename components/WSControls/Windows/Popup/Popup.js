@@ -3,9 +3,10 @@ define('js!WSControls/Windows/Popup/Popup',
       'Core/Control',
       'tmpl!WSControls/Windows/Popup/Popup',
       'Core/CommandDispatcher',
+      'js!WSControls/Windows/PopupManager',
       'css!WSControls/Windows/Popup/Popup'
    ],
-   function (Control, template, CommandDispatcher) {
+   function (Control, template, CommandDispatcher, PopupManager) {
       'use strict';
 
       var Popup = Control.extend({
@@ -19,10 +20,7 @@ define('js!WSControls/Windows/Popup/Popup',
          },
 
          close: function(){
-            var self = this;
-            require(['js!WSControls/Windows/PopupManager'], function(PopupManager){
-               PopupManager.remove(self.getId());
-            });
+            PopupManager.remove(this.getId());
          }
       });
 

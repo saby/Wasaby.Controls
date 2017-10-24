@@ -25,7 +25,10 @@ define('js!WSControls/Windows/OpenDialogAction',
                   strategy = new StackStrategy();
                   break;
                case 'StickyPanel':
-                  strategy = new StickyStrategy();
+                  strategy = new StickyStrategy({
+                     target: this._options.target,
+                     corner: this._options.corner
+                  });
                   break;
                case 'PushPanel':
                   strategy = new PushStrategy();
