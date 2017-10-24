@@ -41,7 +41,7 @@ define('js!WSControls/Lists/Controllers/PageNavigation',
             return addParams;
          },
 
-         calculateState: function(list, display, direction) {
+         calculateState: function(list, direction) {
             var meta = list.getMetaData();
             if (this._options.mode == 'totalCount') {
                if (typeof meta.more == 'number') {
