@@ -89,7 +89,11 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
          if (!this.isEnabled()) {
             return;
          }
-         this._onClickHandler(e);
+         
+         //Временная поддержка clickThrottle в кнопке, в VDom'e это уже будет зашито
+         if (!this._options.clickThrottle || (this._options.clickThrottle && (e.originalEvent.detail <= 1 || cConstants.browser.isIE))) {
+            this._onClickHandler(e);
+         }
       },
 
       _containerReady:function(container){
