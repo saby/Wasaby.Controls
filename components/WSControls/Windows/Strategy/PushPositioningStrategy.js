@@ -13,12 +13,8 @@ define('js!WSControls/Windows/Strategy/PushPositioningStrategy',
 
          getPosition: function () {
             return {
-               left: 'auto',
-               top: 'auto',
-               right: '16px',
-               bottom: '16px',
-               width: 'auto',
-               height: 'auto'
+               right: 16,
+               bottom: 16
             }
          }
       });

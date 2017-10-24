@@ -13,12 +13,9 @@ define('js!WSControls/Windows/Strategy/StackPositioningStrategy',
 
          getPosition: function () {
             return {
-               left: 'auto',
-               top: '0',
-               right: '0',
-               bottom: 'auto',
-               width: 'auto',
-               height: '100%'
+               top: 0,
+               right: 0,
+               bottom: 0
             }
          }
       });

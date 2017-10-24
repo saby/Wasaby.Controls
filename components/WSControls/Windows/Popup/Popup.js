@@ -19,6 +19,10 @@ define('js!WSControls/Windows/Popup/Popup',
             CommandDispatcher.declareCommand(this, 'close', this.close);
          },
 
+         _afterMount: function(){
+            this.getContainer().css(this._options.strategy.getPosition(this));
+         },
+
          close: function(){
             PopupManager.remove(this.getId());
          }

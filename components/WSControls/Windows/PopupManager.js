@@ -25,8 +25,8 @@ define('js!WSControls/Windows/PopupManager',
           */
          show: function (options, opener, strategy) {
             options = options || {};
-            coreMerge(options, strategy.getPosition());
             options.id = random.randomId();
+            options.dialogOptions.strategy = strategy;
             options.zIndex = PopupManager._calculateZIndex();
             PopupManager.popupItems.push(options);
             PopupManager.popupContainer.setPopupItems(PopupManager.popupItems);

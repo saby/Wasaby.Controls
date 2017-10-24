@@ -1,10 +1,11 @@
 define('js!WSControls/Windows/Strategy/StickyPositioningStrategy',
    [
       'Core/Abstract',
-      'js!WSControls/Windows/Strategy/IPositioningStrategy'
+      'js!WSControls/Windows/Strategy/IPositioningStrategy',
+      'js!WSControls/Windows/Strategy/TargetCoords'
    ],
 
-   function (Abstract, IPositioningStrategy) {
+   function (Abstract, IPositioningStrategy, TargetCoords) {
 
       var StickyPositioningStrategy = Abstract.extend([IPositioningStrategy], {
          constructor: function (cfg) {
@@ -12,24 +13,40 @@ define('js!WSControls/Windows/Strategy/StickyPositioningStrategy',
             this._options = cfg;
          },
 
-         getPosition: function () {
+         getPosition: function (popup) {
             var
-               elem = this._options.target[0],
-               box = elem.getBoundingClientRect(),
-               body = document.body,
-               docElem = document.documentElement,
-               scrollTop = window.pageYOffset || docElem.scrollTop || body.scrollTop,
-               scrollLeft = window.pageXOffset || docElem.scrollLeft || body.scrollLeft,
-               clientTop = docElem.clientTop || body.clientTop || 0,
-               clientLeft = docElem.clientLeft || body.clientLeft || 0,
-               top = box.top +  scrollTop - clientTop,
-               left = box.left + scrollLeft - clientLeft;
-            return {
-               top: Math.round(top) + 'px',
-               left: Math.round(left) + 'px',
-               right: 'auto',
-               bottom: 'auto'
+               container = popup.getContainer(),
+               targetCoords = TargetCoords.get(this._options.target, this._options.corner),
+               position = {};
+            // вертикальное выравнивание
+            if( this._options.verticalAlign ){
+               position.top = targetCoords.top;
+               if(this._options.verticalAlign.side === 'bottom'){
+                  var offsetTop = position.top - container.height();
+                  if( offsetTop > 0 ){
+                     position.top = offsetTop;
+                  }
+               }
+               position.top += this._options.verticalAlign.offset || 0;
             }
+            else{
+               position.top = targetCoords.top;
+            }
+            // горизонтальное выравнивание
+            if( this._options.horizontalAlign ){
+               position.left = targetCoords.left;
+               if(this._options.horizontalAlign.side === 'right'){
+                  var offsetLeft = position.left - container.width();
+                  if( offsetLeft > 0 ){
+                     position.left = offsetLeft;
+                  }
+               }
+               position.left += this._options.horizontalAlign.offset || 0;
+            }
+            else{
+               position.left = targetCoords.left;
+            }
+            return position;
          }
       });
 

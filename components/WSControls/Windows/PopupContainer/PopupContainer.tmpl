@@ -1,9 +1,8 @@
 <div class="ws-PopupContainer">
     <ws:for data="index, item in _options.popupItems">
-        <ws:WSControls.Windows.Popup.Popup id="{{item.id}}"
-            __key="{{item.id}}"
+        <ws:WSControls.Windows.Popup.Popup id="{{item.id}}" __key="{{item.id}}"
             scope="{{item.dialogOptions}}"
-            style="left: {{item.left}}; right: {{item.right}}; top: {{item.top}}; bottom: {{item.bottom}}; width: {{item.width}}; height: {{item.height}}; z-index: {{item.zIndex}}"
+            style="z-index: {{item.zIndex}};"
         />
     </ws:for>
 </div>

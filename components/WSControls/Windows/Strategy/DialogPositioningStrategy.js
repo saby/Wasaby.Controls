@@ -14,12 +14,8 @@ define('js!WSControls/Windows/Strategy/DialogPositioningStrategy',
 
          getPosition: function () {
             return {
-               left: '200px',
-               top: '400px',
-               right: 'auto',
-               bottom: 'auto',
-               width: 'auto',
-               height: 'auto'
+               left: 200,
+               top: 400
             }
          }
       });
