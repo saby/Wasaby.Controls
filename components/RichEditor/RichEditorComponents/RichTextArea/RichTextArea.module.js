@@ -568,7 +568,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                createDialog = function() {
                   cIndicator.hide();
                   require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function (InformationPopupManager) {
-                     InformationPopupManager.showMessageDialog({
+                     document.addEventListener('paste', onPaste, true);
+                     dialog = InformationPopupManager.showMessageDialog({
+                           className: 'controls-RichEditor__pasteWithStyles-alert',
                            message: rk('Нажмите CTRL + V для вставки текста из буфера обмена с сохранением стилей'),
                            details: null,
                            submitButton: {caption:rk('Отменить')},
