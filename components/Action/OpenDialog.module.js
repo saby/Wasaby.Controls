@@ -56,7 +56,7 @@ define('js!SBIS3.CONTROLS.Action.OpenDialog', [
        * @example
        * <pre>
        * // myButton - экземпляр класса кнопки
-       * // myDialogAction - экземпляр класса SBIS3.CONTROLS.OpenDialogAction
+       * // myDialogAction - экземпляр класса SBIS3.CONTROLS.Action.OpenDialog
        * myButton.subscribe('onActivated', function() {
        *    myDialogAction.execute({
        *       id: myId,
