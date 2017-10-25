@@ -2645,7 +2645,7 @@ define('js!SBIS3.CONTROLS.ListView',
                      onEndEdit: function(event, model, withSaving) {
                         event.setResult(this._notify('onEndEdit', model, withSaving));
                         var curSelected = $('.controls-ListView__item[data-id="' +  (model.getId() === undefined ? '' : model.getId()) + '"]', this._container);
-                        curSelected.find('controls-ListView__itemCheckBox').removeClass('controls-ListView__itemCheckBox__showAlways');
+                        curSelected.find('.controls-ListView__itemCheckBox').removeClass('controls-ListView__itemCheckBox__showAlways');
                      }.bind(this),
                      onAfterEndEdit: function(event, model, target, withSaving) {
                         this.setSelectedKey(model.getId());
