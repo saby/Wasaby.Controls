@@ -49,7 +49,7 @@
       }
    }
    &.controls-BackButton__empty {
-      &.controls-BackButton__backArrow {
+      .controls-BackButton__backArrow {
          width: 0;
          margin: 0;
       }
@@ -81,7 +81,7 @@
 
 .ws-is-desktop-platform{
    .controls-BackButton__caption.controls-Link {
-      &:hover:not(.ws-disabled):not(.controls-Click__active) {
+      &:hover:not(.ws-disabled):not(.controls-Click__active):hover {
          color: @back-button-caption-active-color;
          .controls-Button__text {
             text-decoration: none;
@@ -121,8 +121,9 @@
 .controls-BackButton__backArrow {
    width: @back-arrow-width;
    height: @back-arrow-height;
-   background: @back-arrow-bg-orange;
-   fill: #fff;
+   .controls-BackButton__backArrowPath {
+      fill: @back-arrow-bg-orange;
+   }
 }
 
 // ALERT: Расположение этого кода в конце файла - важно! Сделано для того чтобы перебить селектор с такой же силой. Не нагородив при этом кучи каскада
@@ -132,8 +133,8 @@
       .controls-BackButton__caption {
          color: @header-color;
       }
-      .controls-BackButton__backArrow {
-         background: @back-arrow-bg-blue;
+      .controls-BackButton__backArrowPath {
+         fill: @back-arrow-bg-blue;
       }
       &:hover {
          .controls-BackButton__caption {
