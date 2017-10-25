@@ -1086,8 +1086,8 @@ define('js!SBIS3.CONTROLS.ListView',
                { class: 'controls-ListView__pagerHideEndButton', optionName: 'hideEndButton', value: true, defaultValue: false },
                { class: 'controls-ListView__orangeMarker', optionName: 'showSelectedMarker', value: true, defaultValue: false },
                { class: 'controls-ListView__outside-scroll-loader', optionName: 'outsideScroll', value: true, defaultValue: false },
-               { class: 'controls-ListView__showCheckboxes', optionName: 'alwaysShowCheckboxes', value: true, defaultValue: false },
-               { class: 'controls-ListView__hideCheckboxes', optionName: 'alwaysShowCheckboxes', value: false, defaultValue: true }
+               { class: 'controls-ListView__showCheckboxes', optionName: 'showCheckboxes', value: true, defaultValue: false },
+               { class: 'controls-ListView__hideCheckboxes', optionName: 'hideCheckboxes', value: true, defaultValue: false}
             ];
             function hasClass(fullClass, className) {
                if(typeof fullClass === 'string') {
