@@ -1,7 +1,8 @@
 define('js!SBIS3.CONTROLS.Utils.PrintDialogHTMLView', [
    'Core/core-merge',
+   'Core/Deferred',
    'Core/moduleStubs'
-], function (cMerge, moduleStubs) {
+], function (cMerge, Deferred, moduleStubs) {
    /**
     * Показывает стандартный платформенный диалог печати.
     * @remark
@@ -34,7 +35,12 @@ define('js!SBIS3.CONTROLS.Utils.PrintDialogHTMLView', [
       }, {preferSource: true});
 
       return moduleStubs.require(['js!SBIS3.CORE.Dialog']).addCallback(function(result) {
-         new result[0](options);
+         var
+            def = new Deferred(),
+            dlg = new result[0](options);
+
+         def.dependOn(dlg.getReadyDeferred());
+         return def;
       });
    }
 });

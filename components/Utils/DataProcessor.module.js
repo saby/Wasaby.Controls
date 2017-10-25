@@ -87,17 +87,12 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          var self = this;
          this._createLoadIndicator(rk('Печать записей...'));
          this._prepareSerializer().addCallback(function(reportText){
-            PrintDialogHTMLView({
+            return PrintDialogHTMLView({
                htmlText: reportText,
-               minWidth: self._options.minWidth,
-               handlers: {
-                  onAfterClose: function() {
-                     self._destroyLoadIndicator();
-                  }
-               }
-            }).addCallback(function() {
-               self._destroyLoadIndicator();
+               minWidth: self._options.minWidth
             });
+         }).addBoth(function() {
+            self._destroyLoadIndicator();
          });
       },
       /**
