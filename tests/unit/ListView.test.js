@@ -75,7 +75,7 @@ define([
             assert.equal(view.getItemsDragNDrop(), 'allow');
          })
       });
-      describe('getItemsDragNDrop', function () {
+      describe('updateSelectedIndex', function () {
          it('check selectedIndex after reload', function () {
             var dataSource = new Memory({
                   data: [{id: 1}, {id: 2}]
