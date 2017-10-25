@@ -12,11 +12,21 @@ define('js!WSControls/Windows/Strategy/DialogPositioningStrategy',
             this._options = cfg;
          },
 
-         getPosition: function () {
-            return {
-               left: 200,
-               top: 400
-            }
+         getPosition: function (popup) {
+            var
+               container = popup.getContainer(),
+               popupWidth = container.width(),
+               popupHeight = container.height(),
+               windowWidth = window.outerWidth,
+               windowHeight = window.innerHeight,
+               position = {
+                  top: (windowHeight - popupHeight) / 2,
+                  left: (windowWidth - popupWidth) / 2
+               };
+
+            position.left = Math.round(position.left);
+            position.top = Math.round(position.top);
+            return position;
          }
       });
 
