@@ -1,0 +1,45 @@
+<div
+   class="controls-StylesPanel controls-StylesPanelNew{{paletteRenderStyle ? ' controls-StylesPanel__colorPalette'}} controls-FloatArea">
+   <ws:if data="{{!paletteRenderStyle}}">
+      <div class="controls-StylesPanel__header">
+         <div class="controls-StylesPanel__title" title="Стиль и цвет">{[Стиль и цвет]}</div>
+         <ws:SBIS3.CONTROLS.IconButton
+            name="Apply"
+            command="saveStylesPanel"
+            activableByClick="{{false}}"
+            icon="sprite:icon-16 icon-Yes icon-done"
+            className="controls-StylesPanel__applyButton controls-IconButton__round-border controls-IconButton__round icon-size"
+         />
+      </div>
+      <ws:SBIS3.CONTROLS.FontStyle
+         style="{{style}}"
+         fontSizes="{{fontSizes}}"
+         activableByClick="{{false}}"
+      />
+   </ws:if>
+   <ws:SBIS3.CONTROLS.ColorStyle
+      name="Pallete"
+      items="{{colors}}"
+      selectedKey="{{style.color}}"
+      className="controls-StylesPanel__colors"
+      allowEmptySelection="{{allowAutoColor}}"
+   />
+   <ws:SBIS3.CONTROLS.CheckBox
+      name="CheckBox"
+      visible="{{allowAutoColor}}"
+      caption="Автоматически (под фон)"
+      checked="{{style.color === 'auto'}}"
+      className="controls-StylesPanel__checkBox"
+   />
+   <div if="{{!paletteRenderStyle && (historyId || presets)}}" class="controls-StylesPanel-presetFormats_wrapper">
+      <ws:SBIS3.CONTROLS.ListView
+         name="presetView"
+         itemsActions="{{ [] }}"
+         itemsDragNDrop="{{false}}"
+         activableByClick="{{false}}"
+         itemTpl="tmpl!SBIS3.CONTROLS.StylesPanelNew/resources/presetItemTemplate"
+         className="controls-ListView__withoutMarker controls-StylesPanel__presetView"
+         itemContentTpl="tmpl!SBIS3.CONTROLS.StylesPanelNew/resources/presetItemContentTpl"
+      />
+   </div>
+</div>

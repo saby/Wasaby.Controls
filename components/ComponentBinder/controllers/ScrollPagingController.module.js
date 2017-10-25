@@ -162,7 +162,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             текущее кол-во загруженных страниц + 1, если в метаинформации рекордсета есть данные о том, что на бл есть ещё записи.
             Необходимо для того, чтобы в пэйджинге не моргала кнопка перехода к следующей странице, пока грузятся данные. */
          if (pagingVisibility) {
-            this._options.paging.setPagesCount(pagesCount + (view._hasNextPage(view.getItems().getMetaData().more) ? 1 : 0));
+            this._options.paging.setPagesCount(pagesCount + (view._hasNextPage(view.getItems().getMetaData().more, view._scrollOffset.bottom) ? 1 : 0));
          }
          
          //Если есть страницы - покажем paging

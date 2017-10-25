@@ -147,6 +147,11 @@ define('js!SBIS3.CONTROLS.ListView',
        *
        */
 
+      var BeginDeleteResult = { // Возможные результаты события "onBeginDelete"
+         CANCEL: 'Cancel', // Отменить удаление записей
+         WITHOUT_RELOAD: 'WithoutReload' //Удалить записи без перезагрузки реестра
+      };
+
       /*TODO CommonHandlers тут в наследовании не нужны*/
       var ListView = CompoundControl.extend([DecorableMixin, ItemsControlMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DragNDropMixin, CommonHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
          _dotTplFn: dotTplFn,
@@ -1653,8 +1658,10 @@ define('js!SBIS3.CONTROLS.ListView',
                      var targetCords = correctTarget[0].getBoundingClientRect(),
                          containerCords = cont.getBoundingClientRect();
                      return {
-                        /* При расчётах координат по вертикали учитываем прокрутку */
-                         top: Math.round(targetCords.top - containerCords.top + cont.scrollTop),
+                        /* При расчётах координат по вертикали учитываем прокрутку
+                         * округлять нельзя т.к. в IE координаты дробные и из-за этого происходит смещение "операций над записью"
+                         */
+                         top: targetCords.top - containerCords.top + cont.scrollTop,
                          left: targetCords.left - containerCords.left
                      };
                   },
@@ -4121,7 +4128,15 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _isPageLoaded: function(pageNumber) {
             var offset = pageNumber * this._options.pageSize;
-            return (offset <= this._scrollOffset.bottom && offset >= this._scrollOffset.top);
+            
+            /* Т.к. без навигации мы не можем понять, загружена ли страница,
+               то всегда возвращаем, что загружена.
+               FIXME это костыль. https://online.sbis.ru/opendoc.html?guid=e403fe95-33ff-43f0-966b-e36eb0e43071 */
+            if (!this._options.pageSize) {
+               return true;
+            } else {
+               return (offset <= this._scrollOffset.bottom && offset >= this._scrollOffset.top);
+            }
          },
 
          /**
@@ -4775,25 +4790,31 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _deleteRecords: function(idArray, beginDeleteResult) {
             var self = this;
-            if (beginDeleteResult !== false) {
+
+            if (beginDeleteResult === false) {
+               beginDeleteResult = BeginDeleteResult.CANCEL;
+               IoC.resolve('ILogger').log('onBeginDelete', 'Boolean result is deprecated. Use constants ListView.BeginDeleteResult.');
+            }
+
+            if (beginDeleteResult !== BeginDeleteResult.CANCEL) {
                this._toggleIndicator(true);
-               return this._deleteRecordsFromData(idArray).addCallback(function () {
-                  //Если записи удалялись из DataSource, то перезагрузим реест, если из items, то реестр уже в актальном состоянии
-                  if (self.getDataSource()) {
-                     return self._reloadViewAfterDelete(idArray).addCallback(function() {
-                        self._syncSelectedKeys();
+               this._deleteRecordsFromSource(idArray).addCallback(function (result) {
+                  //Если записи удалялись из DataSource, то перезагрузим реест. Если DataSource нет, то удалим записи из items
+                  if (self.getDataSource() && beginDeleteResult !== BeginDeleteResult.WITHOUT_RELOAD) {
+                     self._reloadViewAfterDelete(idArray).addCallback(function () {
+                        self.removeItemsSelection(idArray);
                      });
                   } else {
-                     self._syncSelectedKeys();
+                     self._deleteRecordsFromRecordSet(idArray);
+                     self.removeItemsSelection(idArray);
                   }
+                  return result;
                }).addErrback(function (result) {
-                  InformationPopupManager.showMessageDialog(
-                     {
-                        message: result.message,
-                        opener: self,
-                        status: 'error'
-                     }
-                  );
+                  InformationPopupManager.showMessageDialog({
+                     message: result.message,
+                     opener: self,
+                     status: 'error'
+                  });
                   //Прокидываем ошибку дальше, чтобы она дошла до addBoth и мы смогли отдать её в событие onEndDelete
                   return result;
                }).addBoth(function (result) {
@@ -4803,36 +4824,23 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         _deleteRecordsFromData: function(idArray) {
-            var
-                items = this.getItems(),
-                source = this.getDataSource();
-            if (source) {
-               return source.destroy(idArray);
-            } else {
-               items.setEventRaising(false, true);
-               for (var i = 0; i < idArray.length; i++) {
-                  items.remove(items.getRecordById(idArray[i]));
-               }
-               items.setEventRaising(true, true);
-               return Deferred.success(true);
+         _deleteRecordsFromSource: function(idArray) {
+            var source = this.getDataSource();
+            return source ? source.destroy(idArray) : Deferred.success(true);
+         },
+
+         _deleteRecordsFromRecordSet: function(idArray) {
+            var items = this.getItems();
+            items.setEventRaising(false, true);
+            for (var i = 0; i < idArray.length; i++) {
+               items.remove(items.getRecordById(idArray[i]));
             }
+            items.setEventRaising(true, true);
+            return Deferred.success(true);
          },
 
          _reloadViewAfterDelete: function() {
             return this.reload();
-         },
-
-         _syncSelectedKeys: function() {
-            var
-                self = this,
-                keysForRemove = [];
-            this.getSelectedKeys().forEach(function(key) {
-               if (!self._getItemProjectionByItemId(key)) {
-                  keysForRemove.push(key);
-               }
-            });
-            self.removeItemsSelection(keysForRemove);
          },
 
          _initLoadMoreButton: function() {

@@ -565,44 +565,24 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                },
                createDialog = function() {
                   cIndicator.hide();
-                  require(['js!SBIS3.CORE.Dialog', 'js!SBIS3.CONTROLS.Button'], function(Dialog, Button) {
-                     dialog = new Dialog({
-                        resizable: false,
-                        width: 348,
-                        border: false,
-                        top: target && target.offset().top + target.height(),
-                        left: target && target.offset().left - (348 - target.width()),
-                        autoHeight: true,
-                        keepSize: false,
-                        opener: self._options.richEditor,
-                        handlers: {
-                           onReady: function () {
-                              var
-                                 container = this.getContainer(),
-                                 label = $('<div class="controls-RichEditor__pasteWithStylesLabel">Нажмите CTRL + V для вставки текста из буфера обмена с сохранением стилей</div>');
-                              container.append(label)
-                                 .addClass('controls-RichEditor__pasteWithStyles');
-                              new Button({
-                                 caption: rk('Отменить'),
-                                 tabindex: -1,
-                                 className: 'controls-Button__light',
-                                 element: $('<div class="controls-RichEditor__pasteWithStylesButton">').appendTo(container),
-                                 handlers: {
-                                    onActivated: function () {
-                                       dialog.close();
-                                    }
-                                 }
-                              });
-                              document.addEventListener('paste', onPaste, true);
-                           },
-                           onAfterClose: function () {
-                              document.removeEventListener('paste', onPaste, true);
-                              if (typeof onAfterCloseHandler === 'function') {
-                                 onAfterCloseHandler();
-                              }
+                  require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function (InformationPopupManager) {
+                     document.addEventListener('paste', onPaste, true);
+                     dialog = InformationPopupManager.showMessageDialog({
+                           className: 'controls-RichEditor__pasteWithStyles-alert',
+                           message: rk('Нажмите CTRL + V для вставки текста из буфера обмена с сохранением стилей'),
+                           details: null,
+                           submitButton: {caption:rk('Отменить')},
+                           isModal: true,
+                           closeByExternalClick: true,
+                           opener: self
+                        },
+                        function () {
+                           document.removeEventListener('paste', onPaste, true);
+                           if (typeof onAfterCloseHandler === 'function') {
+                              onAfterCloseHandler();
                            }
                         }
-                     });
+                     );
                   });
                   service.destroy();
                };
@@ -1264,16 +1244,20 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   self._showImagePropertiesDialog(target);
                });
                //По нажатию на изображения показывать панель редактирования самого изображения
-               bindImageEvent('mousedown touchstart', function(event, target) {
+               bindImageEvent('mouseup touchstart', function(event, target) {
                   self._showImageOptionsPanel($(target));
-                  //Проблема:
-                  //    При клике на изображение в ie появляются квадраты ресайза
-                  //Решение:
-                  //    отменять дефолтное действие
-                  if(cConstants.browser.isIE) {
-                     event.preventDefault();
-                  }
                });
+
+               //Проблема:
+               //    При клике на изображение в ie появляются квадраты ресайза
+               //Решение:
+               //    отменять дефолтное действие
+               if(cConstants.browser.isIE) {
+                  bindImageEvent('mousedown', function(event) {
+                     event.preventDefault();
+                  });
+               }
+
                //При клике на изображение снять с него выделение
                bindImageEvent('click', function() {
                   var
@@ -1564,7 +1548,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                if (e.key && 1 < e.key.length) {
                   _linkEditStart();
                   setTimeout(function() {
-                     _linkEditEnd();
+                     //Возможно, мы уже закрыты
+                     if(!self.isDestroyed()){
+                        _linkEditEnd();
+                     }
                   }, 1);
                }
             });
@@ -1586,7 +1573,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                }
                setTimeout(function() {
-                  _linkEditEnd();
+                  if(!self.isDestroyed()){
+                     _linkEditEnd();
+                  }
                   self._togglePlaceholder(self._getTinyEditorValue());
                }, 1);
             });
