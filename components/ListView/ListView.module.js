@@ -2607,11 +2607,11 @@ define('js!SBIS3.CONTROLS.ListView',
                         this._toggleEmptyData(false);
                         this._showToolbar(model);
                         this.setSelectedKey(model.getId());
-                        var curSelected = $('.controls-ListView__item[data-id="' +  (model.getId() === undefined ? '' : model.getId()) + '"]', this._container);
                         if (model.getState() === Record.RecordState.DETACHED) {
                            $(".controls-ListView__item", this._getItemsContainer())
                               .removeClass('controls-ListView__item__selected')
                               .removeClass('controls-ListView__item__selected__withMarker');
+                           var curSelected = $('.controls-ListView__item[data-id="' +  (model.getId() === undefined ? '' : model.getId()) + '"]', this._container);
                            curSelected.addClass('controls-ListView__item__selected');
                            if(this._options.showSelectedMarker) {
                               curSelected.addClass('controls-ListView__item__selected__withMarker');
@@ -2620,7 +2620,6 @@ define('js!SBIS3.CONTROLS.ListView',
                         else {
                            this.setSelectedKey(model.getId());
                         }
-                        curSelected.find('.controls-ListView__itemCheckBox').addClass('controls-ListView__itemCheckBox__showAlways');
                         // Могут быть операции над записью с тулбаром под записью. В таком случае на ListView вешается класс с padding-bottom.
                         // Этот отступ при скроле тоже должен учитываться.
                         // Поэтому вначале подскролливаем к тулбару и затем скролим к элементу.
@@ -2644,8 +2643,6 @@ define('js!SBIS3.CONTROLS.ListView',
                      }.bind(this),
                      onEndEdit: function(event, model, withSaving) {
                         event.setResult(this._notify('onEndEdit', model, withSaving));
-                        var curSelected = $('.controls-ListView__item[data-id="' +  (model.getId() === undefined ? '' : model.getId()) + '"]', this._container);
-                        curSelected.find('.controls-ListView__itemCheckBox').removeClass('controls-ListView__itemCheckBox__showAlways');
                      }.bind(this),
                      onAfterEndEdit: function(event, model, target, withSaving) {
                         this.setSelectedKey(model.getId());
