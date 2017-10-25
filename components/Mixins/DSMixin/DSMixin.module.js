@@ -118,7 +118,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
          _options: {
             /**
              * @cfg {String} Устанавливает поле элемента коллекции, значения которого будут использованы в качестве первичного ключа.
-             * @deprecated
+             * @deprecated Используйте опцию {@link idProperty}.
              */
             keyField : null,
             /**
@@ -142,7 +142,7 @@ define('js!SBIS3.CONTROLS.DSMixin', [
             idProperty : null,
             /**
              * @cfg {String} Определяет поле элемента коллекции, данные из которого будут использованы для отображения в контроле.
-             * @deprecated
+             * @deprecated Используйте опцию {@link displayProperty}.
              */
             displayField: null,
             /**
@@ -324,7 +324,6 @@ define('js!SBIS3.CONTROLS.DSMixin', [
              * @property {String} template Шаблон, по которому будет построен заголовок каждой группы.
              * Шаблон представляет собой XHTML-файл. Чтобы шаблон можно было использовать, его нужно предварительно подключить в массив зависимостей компонента.
              * На клик по заголовку группы можно установить функцию-обработчик, которая конфигурируется подопцией clickHandler.
-             * Внутри шаблона допускается использование {@link http://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/xhtml/template/ конструкций шаблонизатора}, через которые можно получить доступ к полям первого элемента группы.
              * @property {Function} render Функция, дополняющая функционал обработки заголовка группы.
              * Аргументы функции:
              * <ol>

@@ -1264,16 +1264,20 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   self._showImagePropertiesDialog(target);
                });
                //По нажатию на изображения показывать панель редактирования самого изображения
-               bindImageEvent('mousedown touchstart', function(event, target) {
+               bindImageEvent('mouseup touchstart', function(event, target) {
                   self._showImageOptionsPanel($(target));
-                  //Проблема:
-                  //    При клике на изображение в ie появляются квадраты ресайза
-                  //Решение:
-                  //    отменять дефолтное действие
-                  if(cConstants.browser.isIE) {
-                     event.preventDefault();
-                  }
                });
+
+               //Проблема:
+               //    При клике на изображение в ie появляются квадраты ресайза
+               //Решение:
+               //    отменять дефолтное действие
+               if(cConstants.browser.isIE) {
+                  bindImageEvent('mousedown', function(event) {
+                     event.preventDefault();
+                  });
+               }
+
                //При клике на изображение снять с него выделение
                bindImageEvent('click', function() {
                   var
@@ -1564,7 +1568,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                if (e.key && 1 < e.key.length) {
                   _linkEditStart();
                   setTimeout(function() {
-                     _linkEditEnd();
+                     //Возможно, мы уже закрыты
+                     if(!self.isDestroyed()){
+                        _linkEditEnd();
+                     }
                   }, 1);
                }
             });
@@ -1586,7 +1593,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                }
                setTimeout(function() {
-                  _linkEditEnd();
+                  if(!self.isDestroyed()){
+                     _linkEditEnd();
+                  }
                   self._togglePlaceholder(self._getTinyEditorValue());
                }, 1);
             });

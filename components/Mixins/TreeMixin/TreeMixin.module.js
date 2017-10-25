@@ -287,11 +287,16 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       var itemParent = item.getParent();
       return itemParent ? itemParent.isExpanded() ? isVisibleItem(itemParent) : false : true;
    },
-   projectionFilter = function(item, index, itemProj) {
-      // Добавил проверку на скрытый узел. Мы ожидаем, что скрытый узел при поиске не должен быть раскрытым (а его связанные записи - не должны сразу отрисовываться).
+   projectionFilter = function(item, index, itemProj, position, hasMembers) {
       var
-          itemParent = itemProj.getParent(),
-          itemParentContent = itemParent && itemParent.getContents();
+         itemParent, itemParentContent;
+      // Теперь сюда может прилететь groupItem. Проверка через instanceOfModule медленная, просто проверяю наличие метода.
+      if (!itemProj.getParent) {
+         return hasMembers;
+      }
+      // Добавил проверку на скрытый узел. Мы ожидаем, что скрытый узел при поиске не должен быть раскрытым (а его связанные записи - не должны сразу отрисовываться).
+      itemParent = itemProj.getParent();
+      itemParentContent = itemParent && itemParent.getContents();
       // Т.к. скрытые узлы не выводятся в режиме поиска, то добавил костыль-проверку на task1174261549.
       // Используется в админке, будет убрано, когда будет согласован стандарт на отображение скрытых узлов в режиме поиска.
       // Ошибка: https://online.sbis.ru/opendoc.html?guid=aac1226b-64f1-4b45-bb95-b44f2eb68ada
@@ -552,7 +557,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
              * </pre>
              * @see getHierarchy
              * @see setHierarchy
-             * @deprecated
+             * @deprecated Используйте опции {@link parentProperty}, {@link nodeProperty} и {@link hasChildrenProperty}.
              */
             hierField: null,
             /**

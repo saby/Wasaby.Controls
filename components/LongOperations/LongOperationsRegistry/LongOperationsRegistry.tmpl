@@ -1,0 +1,107 @@
+<div class="controls-LongOperations controls-LongOperationsRegistry">
+   <ws:template name="browserFilterButtonTpl">
+      <ws:SBIS3.CONTROLS.FilterButton
+         name="browserFilterButton"
+         className="controls-Browser__filterButton"
+         tabindex="0"
+         filterStructure="{{ [
+                        {
+                           'internalValueField': 'PeriodKey',
+                           'internalCaptionField': 'PeriodTitle',
+                           'value': periodValue,
+                           'resetValue': null
+                        },
+                        {
+                           'internalValueField': 'StateKey',
+                           'internalCaptionField': 'StateTitle',
+                           'value': statusValue,
+                           'itemTemplate': null,
+                           'resetValue': null
+                        },
+                        {
+                           'internalValueField': 'DurationKey',
+                           'internalCaptionField': 'DurationTitle',
+                           'value': durationValue,
+                           'resetValue': null
+                        },
+                        userId ? undefined : {
+                           'internalValueField': 'UserId',
+                           'internalCaptionField': 'UserName',
+                           'value': userIdValue
+                        }
+                     ] }}"
+      >
+         <ws:template>
+            <ws:SBIS3.CONTROLS.LongOperationsFilter hideStaffFilter="{{hideStaffFilter}}"/>
+         </ws:template>
+      </ws:SBIS3.CONTROLS.FilterButton>
+   </ws:template>
+   <ws:SBIS3.CONTROLS.Browser
+      name="longOperationsBrowser"
+      className="controls-Browser__view"
+   >
+      <ws:content>
+         <div class="controls-Browser__table controls-Browser__table-fullFilterBlock">
+            <div class="controls-Browser__tableCell-search">
+               <ws:SBIS3.CONTROLS.SearchForm
+                  tabindex="2"
+                  name="browserSearch"
+                  allowChangeEnable="{{false}}"
+                  placeholder="{[искать@@найти...]}"
+                  className="controls-Browser__search ws-bootup-autofocus"
+               />
+            </div>
+            <div class="controls-Browser__tableRow">
+               <div class="controls-Browser__tableCell-filterButton">
+                  <ws:partial
+                     template="browserFilterButtonTpl"
+                     userIdValue="{{'filter/UserId'|mutable}}"
+                     statusValue="{{'filter/status'|mutable}}"
+                     periodValue="{{'filter/period'|mutable}}"
+                     durationValue="{{'filter/duration'|mutable}}"
+                     scope="{{...}}"
+                  />
+               </div>
+               <div class="controls-Browser__tableCell-fastDataFilter">
+                  <ws:SBIS3.CONTROLS.FastDataFilter
+                     name="browserFastDataFilter"
+                     className="controls-Browser__fastDataFilter"
+                     tabindex="0"
+                     items="{{ [
+                        {
+                           'idProperty': 'key'
+                        }
+                     ] }}"
+                  >
+                     <ws:filterStructure>
+                        <ws:Array>
+                           <ws:Object
+                              internalValueField="key"
+                              internalCaptionField="title"
+                              value="{{'filter/status'|mutable}}"
+                              resetValue="null"
+                           />
+                        </ws:Array>
+                     </ws:filterStructure>
+                  </ws:SBIS3.CONTROLS.FastDataFilter>
+               </div>
+            </div>
+         </div>
+         <div class="controls-Browser__view">
+            <ws:SBIS3.CONTROLS.LongOperationsList
+               name="operationList"
+               columns="{{columns}}"
+               userId="{{userId}}"
+               narrowTmpl="{{false}}"
+               useGroupByEasyGroup="{{useGroupByEasyGroup}}"
+            />
+         </div>
+      </ws:content>
+   </ws:SBIS3.CONTROLS.Browser>
+   <ws:SBIS3.CONTROLS.Action.OpenEditDialog
+      name="action"
+      template="js!SBIS3.CONTROLS.LongOperationHistory"
+      mode="floatArea"
+      initializingWay="local"
+   />
+</div>

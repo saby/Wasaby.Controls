@@ -159,7 +159,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             /**
              * @cfg {Function}
              * @see editArrow
-             * @deprecated Опция устарела и будет удалена в версии 3.7.5. Используйте {@link editArrow}.
+             * @deprecated Используйте {@link editArrow}.
              */
             arrowActivatedHandler: undefined,
             /**
@@ -194,7 +194,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             /**
              * @cfg {Boolean} отображает папки с одной колонкой на всю строку
              * Значение по умолчанию false
-             * @deprecated
+             * @deprecated Функционал должен быть реализован через пользовательский шаблон.
              */
             // Добавил опцию для версии 220
             // с 3.7.5 будет рулиться через пользовательский шаблон

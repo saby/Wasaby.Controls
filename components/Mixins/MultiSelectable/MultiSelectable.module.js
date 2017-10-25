@@ -851,8 +851,17 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
       },
 
       _dataLoadedCallback : function(){
+         var items = this.getItems();
+         
          if (this._checkEmptySelection()) {
-            this._setFirstItemAsSelected();
+            if (items) {
+               this._setFirstItemAsSelected();
+               /* Необходимо сигналить об изменениях,
+                  иначе мы добавляем в selectedKeys ключ, а об этом никто не узнаёт */
+               if(!this._isEmptySelection()) {
+                  this._afterSelectionHandler(this.getSelectedKeys(), []);
+               }
+            }
          }
          this._setSelectedItems();
       },
