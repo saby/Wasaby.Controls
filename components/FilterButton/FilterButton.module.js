@@ -226,9 +226,9 @@ define('js!SBIS3.CONTROLS.FilterButton',
              var self = this;
 
              function processTemplate(template, name) {
-                /* Если шаблон указали как имя компонента (строки которые начинаются с SBIS3 или js!SBIS3),
+                /* Если шаблон указали как имя компонента (строки которые начинаются с js! или SBIS3.),
                    то перед отображением панели фильтров сначала загрузим компонент. */
-                if(template && /^(js!)?SBIS3.*/.test(template)) {
+                if(template && typeof template === 'string' && /^js!*|^SBIS3.*/.test(template)) {
                    self._dTemplatesReady.push(mStubs.require(((template.indexOf('js!') !== 0 ? 'js!' : '') + template)).addCallback(function(comp) {
                       /* Запишем, что в качестве шаблона задали компонент */
                       self._filterTemplates[name] = true;
