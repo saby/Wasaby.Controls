@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
    var
       DEFAULT_SELECT_CHECKBOX_WIDTH = 24, // Стандартная ширина чекбокса отметки записи.
-      DEFAULT_ROW_SELECT_WIDTH = 8,       // Стандартная ширина полоски выбранной строки.
+      DEFAULT_ROW_SELECT_WIDTH = 12,      // Стандартная ширина полоски выбранной строки.
       DEFAULT_FIELD_PADDING_SIZE = 5,     // Стандартный отступ в полях ввода 4px + border 1px. Используется для расчёта отступа при редактировании по месту.
       DEFAULT_EXPAND_ELEMENT_WIDTH = 26,  // Стандартная ширина стрелки разворота в дереве
       DEFAULT_CELL_PADDING_DIFFERENCE = 1,// Стандартная разница между оступом в ячейке табличного представления и отступом в текстовых полях (6px - 5px = 1px)
