@@ -1645,8 +1645,10 @@ define('js!SBIS3.CONTROLS.ListView',
                      var targetCords = correctTarget[0].getBoundingClientRect(),
                          containerCords = cont.getBoundingClientRect();
                      return {
-                        /* При расчётах координат по вертикали учитываем прокрутку */
-                         top: Math.round(targetCords.top - containerCords.top + cont.scrollTop),
+                        /* При расчётах координат по вертикали учитываем прокрутку
+                         * округлять нельзя т.к. в IE координаты дробные и из-за этого происходит смещение "операций над записью"
+                         */
+                         top: targetCords.top - containerCords.top + cont.scrollTop,
                          left: targetCords.left - containerCords.left
                      };
                   },
@@ -4111,7 +4113,15 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _isPageLoaded: function(pageNumber) {
             var offset = pageNumber * this._options.pageSize;
-            return (offset <= this._scrollOffset.bottom && offset >= this._scrollOffset.top);
+            
+            /* Т.к. без навигации мы не можем понять, загружена ли страница,
+               то всегда возвращаем, что загружена.
+               FIXME это костыль. https://online.sbis.ru/opendoc.html?guid=e403fe95-33ff-43f0-966b-e36eb0e43071 */
+            if (!this._options.pageSize) {
+               return true;
+            } else {
+               return (offset <= this._scrollOffset.bottom && offset >= this._scrollOffset.top);
+            }
          },
 
          /**

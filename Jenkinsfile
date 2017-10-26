@@ -348,6 +348,12 @@ node('controls') {
             //Пакуем данные
             writeFile file: "/home/sbis/Controls1/Core.package.json", text: """
                 {
+                "includeCore":true,
+                "include":[
+                "Core/*",
+                "WS.Data/*",
+                "SBIS3.CONTROLS.ItemsControlMixin"
+                ],
                 "modules" : [
                 "Core/core",
                 "WS.Data/Source/SbisService",
