@@ -76,14 +76,12 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          this._publish('onAfterShow', 'onBeforeShow');
       },
       _doExecute: function(meta) {
-         var error;
          if (!this._executeDeferred || this._executeDeferred.isReady()) { //Если завершился предыдущий execute
             this._executeDeferred = new Deferred();
             this._openComponent(meta);
             return this._executeDeferred;
          }
-         error = new Error('Не завершился предыдущий вызов execute');
-         return (new Deferred).errback(error);
+         return (new Deferred).callback();
       },
 
       _openDialog: function(meta) {
