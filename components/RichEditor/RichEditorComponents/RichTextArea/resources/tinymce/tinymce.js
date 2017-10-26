@@ -34599,7 +34599,11 @@
           * editors. This uses a special data:text/mce-internal URL to pass data when drag/drop between editors.
           */
          function ieInternalDragAndDrop() {
+            // Для MSIE тоже вполне доступен drag-n-drop, подключим его
+            // 1174460187 https://online.sbis.ru/opendoc.html?guid=4363b1d3-4bf7-4ef1-b743-4959f5550a84
+            var dragStartRng;
             editor.on('dragstart', function(e) {
+               dragStartRng = selection.getRng();
                setMceInternalContent(e);
             });
 
@@ -34607,10 +34611,17 @@
                if (!isDefaultPrevented(e)) {
                   var internalContent = getMceInternalContent(e);
 
-                  if (internalContent && internalContent.id != editor.id) {
+                  if (internalContent /*&& internalContent.id != editor.id*/) {
                      e.preventDefault();
 
-                     var rng = RangeUtils.getCaretRangeFromPoint(e.x, e.y, editor.getDoc());
+                     var rng = RangeUtils.getCaretRangeFromPoint(e.clientX, e.clientY, editor.getDoc());
+
+                     if (internalContent.id == editor.id && dragStartRng) {
+                        selection.setRng(dragStartRng);
+                        editor.undoManager.transact(dragStartRng.deleteContents.bind(dragStartRng));
+                     }
+                     dragStartRng = null;
+
                      selection.setRng(rng);
                      insertClipboardContents(internalContent.html);
                   }
