@@ -1,15 +1,15 @@
-define('js!SBIS3.SPEC.button.ToggleButton', [
+define('js!SBIS3.SPEC.button.Switch', [
 ], function() {
 
    /**
-    * Кнопка с фиксацией.
-    * @class SBIS3.SPEC.button.ToggleButton
+    * Контрол, отображающий обычный переключатель
+    * @class SBIS3.SPEC.button.Switch
     * @extends SBIS3.SPEC.Control
     * @mixes SBIS3.SPEC.button.interface.ICaption
     * @mixes SBIS3.SPEC.button.interface.ICheckable
-    * @mixes SBIS3.SPEC.button.interface.IIcon
     * @control
     * @public
     * @category Buttons
     */
+
 });
