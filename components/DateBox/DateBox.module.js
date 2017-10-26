@@ -10,7 +10,6 @@ define(
       'js!SBIS3.CONTROLS.Utils.DateUtil',
       'tmpl!SBIS3.CONTROLS.DateBox',
       'tmpl!SBIS3.CONTROLS.FormattedTextBox',
-      'js!SBIS3.CONTROLS.FormWidgetMixin',
       'js!SBIS3.CONTROLS.ControlsValidators',
       // Разобраться с общими стилями https://inside.tensor.ru/opendoc.html?guid=37032b47-6830-4b96-a4f3-727ea938bf58&des
       'css!SBIS3.CONTROLS.TextBox',
@@ -18,7 +17,7 @@ define(
       'css!SBIS3.CONTROLS.DateBox'
       // 'i18n!SBIS3.CONTROLS.DateBox'
    ],
-   function (IoC, constants, FormattedTextBoxBase, DateUtil, dotTplFn, FormattedTextBoxTpl, FormWidgetMixin, ControlsValidators) {
+   function (IoC, constants, FormattedTextBoxBase, DateUtil, dotTplFn, FormattedTextBoxTpl, ControlsValidators) {
 
    'use strict';
 
@@ -36,14 +35,13 @@ define(
     * @class SBIS3.CONTROLS.DateBox
     * @extends SBIS3.CONTROLS.FormattedTextBoxBase
     *
-    * @mixes SBIS3.CONTROLS.FormWidgetMixin
     *
     * @control
     * @author Крайнов Дмитрий Олегович
     * @public
     */
 
-   var DateBox = FormattedTextBoxBase.extend([FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateBox.prototype */{
+   var DateBox = FormattedTextBoxBase.extend(/** @lends SBIS3.CONTROLS.DateBox.prototype */{
       _dotTplFn: FormattedTextBoxTpl,
        /**
         * @event onDateChange Происходит при изменении даты.
