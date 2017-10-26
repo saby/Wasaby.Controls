@@ -284,7 +284,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                             itemProjItem = self._options.itemsProjection.getItemBySourceItem(model);
                         self._getEip().edit(preparedRecord, itemProjItem, withoutActivateFirstControl);
                         editingRecord = self._getEip().getEditingRecord();
-                        self._notify('onAfterBeginEdit', editingRecord);
                         //TODO: необходимо разбивать контроллер редактирования по месту, для плоских и иерархических представлений
                         if (self._options.parentProperty) {
                            parentProjItem = itemProjItem.getParent();
@@ -293,6 +292,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         if (!self._pendingOperation) {
                            self._subscribeToAddPendingOperation(editingRecord);
                         }
+                        self._notify('onAfterBeginEdit', editingRecord);
                      }
                      return editingRecord;
                   })
