@@ -281,14 +281,16 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
          return this._container;
       },
       _toggleState: function() {
-         var
-              container = this._getStateToggleContainer()[0],
-              active = this.isActive(),
-              enabled = this.isEnabled(),
-              marked = this.isMarked(),
-              stateName = marked ? 'marked' : !enabled ? 'disabled' : active ? 'active' : 'default';
+         var container = this._getStateToggleContainer()[0];
          container.className = container.className.replace(/(^|\s)controls-TextBox__state__\S+/gi, '');
-         this._getStateToggleContainer().addClass('controls-TextBox__state__' + stateName);
+         this._getStateToggleContainer().addClass(this._getToggleState());
+      },
+      _getToggleState: function() {
+         var
+            active = this.isActive(),
+            enabled = this.isEnabled(),
+            marked = this.isMarked();
+         return 'controls-TextBox__state__' + (marked ? 'marked' : !enabled ? 'disabled' : active ? 'active' : 'default');
       }
    });
 
