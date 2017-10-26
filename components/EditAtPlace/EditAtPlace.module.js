@@ -343,6 +343,38 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                text = escapeHtml(text);
             }
             this._textField.html(text || '&nbsp;');
+         },
+         //EditAtPlace должен переключать состояние как TextBox, но т.к. он не наследуется от TextBoxBase, то нужно копипастить его методы
+         _getStateToggleContainer: function(){
+            return this._container;
+         },
+         setEnabled: function(enabled) {
+            EditAtPlace.superclass.setEnabled.apply(this, arguments);
+            this._toggleState();
+         },
+         clearMark: function() {
+            EditAtPlace.superclass.clearMark.apply(this, arguments);
+            this._toggleState();
+         },
+         markControl: function() {
+            EditAtPlace.superclass.markControl.apply(this, arguments);
+            this._toggleState();
+         },
+         _updateActiveStyles: function() {
+            EditAtPlace.superclass._updateActiveStyles.apply(this, arguments);
+            this._toggleState();
+         },
+         _toggleState: function() {
+            var container = this._getStateToggleContainer()[0];
+            container.className = container.className.replace(/(^|\s)controls-TextBox__state__\S+/gi, '');
+            this._getStateToggleContainer().addClass(this._getToggleState());
+         },
+         _getToggleState: function() {
+            var
+               active = this.isActive(),
+               enabled = this.isEnabled(),
+               marked = this.isMarked();
+            return 'controls-TextBox__state__' + (marked ? 'marked' : !enabled ? 'disabled' : active ? 'active' : 'default');
          }
       });
 
