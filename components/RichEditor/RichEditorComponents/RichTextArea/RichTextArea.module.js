@@ -558,9 +558,16 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                   prepareAndInsertContent(content);
                   dialog.close();
+                  onClose();
                   event.stopPropagation();
                   event.preventDefault();
                   return false;
+               },
+               onClose = function () {
+                  document.removeEventListener('paste', onPaste, true);
+                  if (typeof onAfterCloseHandler === 'function') {
+                     onAfterCloseHandler();
+                  }
                },
                service = {
                   destroy: function(){}
@@ -578,12 +585,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                            closeByExternalClick: true,
                            opener: self
                         },
-                        function () {
-                           document.removeEventListener('paste', onPaste, true);
-                           if (typeof onAfterCloseHandler === 'function') {
-                              onAfterCloseHandler();
-                           }
-                        }
+                        onClose
                      );
                   });
                   service.destroy();
