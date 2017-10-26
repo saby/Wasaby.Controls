@@ -10,10 +10,10 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
    "js!SBIS3.CORE.LoadingIndicator",
    "WS.Data/Source/SbisService",
    "Core/helpers/transport-helpers",
-   "Core/helpers/fast-control-helpers",
+   "js!SBIS3.CONTROLS.Utils.PrintDialogHTMLView",
    "js!SBIS3.CONTROLS.Utils.InformationPopupManager",
    "i18n!SBIS3.CONTROLS.Utils.DataProcessor"
-], function( cExtend, coreClone, EventBus, Record, Serializer, LoadingIndicator, SbisService, transHelpers, fcHelpers, InformationPopupManager) {
+], function( cExtend, coreClone, EventBus, Record, Serializer, LoadingIndicator, SbisService, transHelpers, PrintDialogHTMLView, InformationPopupManager) {
    /**
     * Обработчик данных для печати и выгрузки(экспорта) в Excel, PDF. Печать осуществляется по готову XSL-шаблону через XSLT-преобразование.
     * Экспорт в Excel и PDF можно выполнить несколькими способами:
@@ -87,18 +87,12 @@ define('js!SBIS3.CONTROLS.Utils.DataProcessor', [
          var self = this;
          this._createLoadIndicator(rk('Печать записей...'));
          this._prepareSerializer().addCallback(function(reportText){
-            fcHelpers.showHTMLForPrint({
+            return PrintDialogHTMLView({
                htmlText: reportText,
-               minWidth : self._options.minWidth,
-               //opener: self,
-               handlers: {
-                  onAfterClose: function() {
-                     self._destroyLoadIndicator();
-                  }
-               }
-            }).addCallback(function() {
-               self._destroyLoadIndicator();
+               minWidth: self._options.minWidth
             });
+         }).addBoth(function() {
+            self._destroyLoadIndicator();
          });
       },
       /**
