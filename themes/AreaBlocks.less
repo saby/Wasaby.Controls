@@ -7,7 +7,6 @@
   .ws-areaBlocks__ {
     &area {
       overflow: hidden;
-      background: @coloring-between-blocks;
       &_topOffset {
         > .ws-areaBlocks__row:first-child {
           margin-top: @spacing-between-blocks;
@@ -49,7 +48,8 @@
       }
     }
     &col {
-      margin: @margin-col;
+      border: @margin-col solid @coloring-between-blocks;
+      .box-sizing();
     }
   }
   // Модификаторы цвета блоков ws-background_bg, ..., ws-background_hover.
