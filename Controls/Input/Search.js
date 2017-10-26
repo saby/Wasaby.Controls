@@ -10,7 +10,7 @@ define('js!Controls/Input/Search',
        * @extends Controls/Input/Text
        * @control
        * @public
-       * @category Inputs
+       * @category Input
        */
 
       /**

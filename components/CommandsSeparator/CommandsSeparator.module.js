@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.CommandsSeparator', [
     *
     * @public
     * @control
-    * @category ButtonsBase
+    * @category ButtonBase
     * @initial
     * <component data-component='SBIS3.CONTROLS.CommandsSeparator'>
     *    <option name='command' value='toggleHistory'></option>

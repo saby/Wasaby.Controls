@@ -14,7 +14,7 @@ define('js!Controls/Input/Lookup', [
     * @mixes Controls/interface/IMultiSelectable
     * @control
     * @public
-    * @category Inputs
+    * @category Input
     */
 
    /**

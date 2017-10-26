@@ -14,6 +14,6 @@ define('js!Controls/Input/Dropdown', [
     * @mixes Controls/Input/interface/IDropdownEmptyValue
     * @control
     * @public
-    * @category Inputs
+    * @category Input
     */
 });

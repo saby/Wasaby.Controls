@@ -21,7 +21,7 @@ define('js!Controls/Input/Text',
           * @mixes Controls/Input/interface/IInputTag
           * @control
           * @public
-          * @category Inputs
+          * @category Input
           * @author Журавлев Максим Сергеевич
           */
 

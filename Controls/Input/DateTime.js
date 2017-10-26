@@ -16,7 +16,7 @@ define('js!Controls/Input/DateTime', [
     * @mixes Controls/Input/interface/IInputTag
     * @control
     * @public
-    * @category Inputs
+    * @category Input
     */
 
    /**

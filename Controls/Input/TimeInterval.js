@@ -11,7 +11,7 @@ define('js!Controls/Input/TimeInterval', [
     * @mixes Controls/Input/interface/IInputTag
     * @control
     * @public
-    * @category Inputs
+    * @category Input
     */
 
    /**

@@ -9,7 +9,7 @@ define('js!Controls/Button/Back', [
     * @mixes Controls/Button/interface/IClick
     * @control
     * @public
-    * @category Buttons
+    * @category Button
     */
 
 });

@@ -10,6 +10,6 @@ define('js!Controls/Input/Phone', [
     * @mixes Controls/Input/interface/IInputTag
     * @control
     * @public
-    * @category Inputs
+    * @category Input
     */
 });

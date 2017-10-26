@@ -11,7 +11,7 @@ define('js!Controls/Button/Button', [
     * @mixes Controls/Button/interface/IIcon
     * @control
     * @public
-    * @category Buttons
+    * @category Button
     */
 
    /**

@@ -65,7 +65,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
     *
     * @control
     * @public
-    * @category Inputs
+    * @category Input
     */
 
    var TextBox = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.TextBox.prototype */ {

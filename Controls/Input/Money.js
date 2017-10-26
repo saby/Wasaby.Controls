@@ -10,6 +10,6 @@ define('js!Controls/Input/Money', [
     * @mixes Controls/Input/interface/IInputTag
     * @control
     * @public
-    * @category Inputs
+    * @category Input
     */
 });

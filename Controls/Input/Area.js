@@ -9,7 +9,7 @@ define('js!Controls/Input/Area', [
     * @extends Controls/Input/Text
     * @control
     * @public
-    * @category Inputs
+    * @category Input
     */
 
    /**

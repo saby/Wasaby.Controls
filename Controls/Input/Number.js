@@ -11,7 +11,7 @@ define('js!Controls/Input/Number', [
     * @mixes Controls/Input/interface/IInputTag
     * @control
     * @public
-    * @category Inputs
+    * @category Input
     */
 
    /**

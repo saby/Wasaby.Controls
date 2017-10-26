@@ -15,7 +15,7 @@ define('js!SBIS3.CONTROLS.EditAtPlaceGroup',
        * @extends SBIS3.CORE.CompoundControl
        * @control
        * @public
-       * @category Inputs
+       * @category Input
        *
        * @mixes SBIS3.CONTROLS.PickerMixin
        * @mixes SBIS3.CONTROLS.EditAtPlaceMixin

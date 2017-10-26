@@ -18,7 +18,7 @@ define('js!SBIS3.CONTROLS.MenuLink', ['js!WSControls/Buttons/MenuButton', 'css!S
     *
     * @author Романов Валерий Сергеевич
     *
-    * @category Buttons
+    * @category Button
     * @public
     * @control
     * @initial
