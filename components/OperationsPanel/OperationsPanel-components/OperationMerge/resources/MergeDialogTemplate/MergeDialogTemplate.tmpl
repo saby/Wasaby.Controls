@@ -1,13 +1,15 @@
 <div class="controls-MergeDialogTemplate-wrapper ws-flexbox ws-flex-row">
     <div class="controls-MergeDialogTemplate ws-flexbox ws-flex-column">
         <span class="controls-MergeDialogTemplate__hint ws-flex-shrink-0">{{ hint }}</span>
-        <ws:SBIS3.CONTROLS.ScrollContainer class="controls-MergeDialogTemplate__scroll controls-ScrollContainer__flex ws-flex-shrink-1">
+        <ws:SBIS3.CONTROLS.ScrollContainer class="controls-MergeDialogTemplate__scroll controls-ScrollContainer__flex ws-flex-shrink-1"
+                stickyContainer="{{ true }}">
             <ws:content>
                 <ws:SBIS3.CONTROLS.TreeDataGridView
                         class="controls-MergeDialogTemplate__treeDataGridView controls-ListView__withoutMarker controls-GridView__searchMode controls-TreeView__withoutExpands controls-DataGridView__hasSeparator"
                         name="MergeDialogTemplate__treeDataGridView"
                         itemsDragNDrop="{{ false }}"
                         showPaging="{{ false }}"
+                        stickyHeader="{{ true }}"
                         allowEmptySelection="{{ true }}"
                         itemTpl="{{ _itemTpl }}"
                         displayProperty="{{ displayProperty }}"
