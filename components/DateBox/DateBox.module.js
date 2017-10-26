@@ -658,17 +658,17 @@ define(
                (filled.indexOf("II") !== -1 || mask.indexOf('I') === -1) ? ii : null,
                (filled.indexOf("SS") !== -1 || mask.indexOf('S') === -1) ? ss : null,
                (filled.indexOf("UU") !== -1 || mask.indexOf('U') === -1) ? uuu : null,
-               autoComplete
+               this._getFormatModel().isEmpty(this._getMaskReplacer())
             );
          }
          return null;
       },
-      _createAutocomplitedDate: function (year, month, date, hour, minute, second, millisecond) {
+      _createAutocomplitedDate: function (year, month, date, hour, minute, second, millisecond, isEmpty) {
          var now = new Date(),
             controlType = this.getType();
 
          var getDate = function (autocompliteDefaultDate) {
-            autocompliteDefaultDate = autocompliteDefaultDate || now.getDate()
+            autocompliteDefaultDate = autocompliteDefaultDate || now.getDate();
             if (this._options.autocompleteMode === 'start') {
                return 1;
             } else if (this._options.autocompleteMode === 'end') {
@@ -677,6 +677,11 @@ define(
                return autocompliteDefaultDate;
             }
          }.bind(this);
+
+         // Автокомплитим только если пользователь частично заполнил поле, либо не заполнил, но поле обязательно для заполнения
+         if (isEmpty && !this._isRequired()) {
+            return null;
+         }
 
          if (controlType === 'date' || controlType === 'datetime'){
             if (this._isRequired() && year === null && month === null && date === null) {
