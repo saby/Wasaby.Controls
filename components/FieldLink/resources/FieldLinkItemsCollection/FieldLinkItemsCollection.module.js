@@ -203,7 +203,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
 
                   onShow: function() {
                      var pickerContainer = self._picker.getContainer(),
-                         pickerWidth = self._parentFieldLink.getContainer()[0].offsetWidth - (pickerContainer.outerWidth() - pickerContainer.width());
+                         pickerWidth = self._parentFieldLink.getContainer()[0].offsetWidth;
 
                      pickerContainer[0].style.maxWidth = pickerWidth + 'px';
                      pickerContainer[0].style.minWidth = pickerWidth + 'px';
