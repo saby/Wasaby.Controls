@@ -14,12 +14,17 @@
 				color: @darkcyan-color;
 			}
 		}
+		&.controls-DropdownList.ws-enabled {
+			.controls-DropdownList__value:hover {
+				color: @darkcyan-color;
+			}
+		}
 	}
 	.blue-dark-color {
 		&.controls-DropdownList {
 			&.ws-enabled {
 				.controls-DropdownList__selectedItem {
-					.controls-DropdownList__textWrapper {
+					.controls-DropdownList__value {
 						color: @blue-dark-color;
 					}
 				}
@@ -206,18 +211,6 @@
 					&.ws-enabled {
 						&:hover {
 							color: @link-text-color;
-						}
-					}
-				}
-			}
-			
-			&.controls-DropdownList {
-				&.ws-enabled {
-					.controls-DropdownList__selectedItem {
-						.controls-DropdownList__textWrapper {
-							&:hover {
-								color: @darkcyan-color;
-							}
 						}
 					}
 				}
