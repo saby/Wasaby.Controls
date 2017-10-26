@@ -1448,8 +1448,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
       setCurrentRoot: function(key) {
          var
             newRoot,
-            isFakeRoot = false,
-            filter = this.getFilter() || {};
+            filter = this.getFilter() || {},
+            isFakeRoot = isPlainObject(this._options.root) && this._options.root[this._options.idProperty] === key;
          // Internet Explorer при удалении элемента сбрасывает фокус не выше по иерархии, а просто "в никуда" (document.activeElement === null).
          // Для того, чтобы фокус при проваливании в папку не терялся - перед проваливанием устанавливаем его просто
          // на контейнер на котором устанавливается фокус по умолчанию, но только в том случае,
@@ -1461,10 +1461,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          }
          // todo Удалить при отказе от режима "hover" у редактирования по месту [Image_2016-06-23_17-54-50_0108] https://inside.tensor.ru/opendoc.html?guid=5bcdb10f-9d69-49a0-9807-75925b726072&description=
          this._destroyEditInPlaceController();
-         if (isPlainObject(this._options.root) && this._options.root[this._options.idProperty] === key) {
-            filter[this._options.parentProperty] = key;
-            isFakeRoot = true;
-         } else if (key !== undefined && key !== null) {
+         if (isFakeRoot || (key !== undefined && key !== null)) {
             filter[this._options.parentProperty] = key;
          } else if (this._options.root) {
             filter[this._options.parentProperty] = this._options.root;
@@ -1476,7 +1473,7 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          this._offset = 0;
          //Если добавить проверку на rootChanged, то при переносе в ту же папку, из которой искали ничего не произойдет
          this._notify('onBeforeSetRoot', key);
-         this._options.currentRoot = filter[this._options.parentProperty] || null;
+         this._options.currentRoot = (isFakeRoot || (key !== undefined && key !== null)) ? key : this._options.root;
 
          // сохраняем текущую страницу при проваливании в папку
          if (this._options.saveReloadPosition) {
