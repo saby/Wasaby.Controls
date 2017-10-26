@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.SearchController',
 
       _startHierSearch: function(text) {
          var curFilter = this._options.view.getFilter();
-         if (!this._lastDepth && curFilter['Разворот']) {
+         if (!this._lastDepth && !this._searchMode && curFilter['Разворот']) {
             this._lastDepth = curFilter['Разворот'];
          }
 

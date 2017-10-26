@@ -10,7 +10,6 @@ define(
       'js!SBIS3.CONTROLS.Utils.DateUtil',
       'tmpl!SBIS3.CONTROLS.DateBox',
       'tmpl!SBIS3.CONTROLS.FormattedTextBox',
-      'js!SBIS3.CONTROLS.FormWidgetMixin',
       'js!SBIS3.CONTROLS.ControlsValidators',
       // Разобраться с общими стилями https://inside.tensor.ru/opendoc.html?guid=37032b47-6830-4b96-a4f3-727ea938bf58&des
       'css!SBIS3.CONTROLS.TextBox',
@@ -18,7 +17,7 @@ define(
       'css!SBIS3.CONTROLS.DateBox'
       // 'i18n!SBIS3.CONTROLS.DateBox'
    ],
-   function (IoC, constants, FormattedTextBoxBase, DateUtil, dotTplFn, FormattedTextBoxTpl, FormWidgetMixin, ControlsValidators) {
+   function (IoC, constants, FormattedTextBoxBase, DateUtil, dotTplFn, FormattedTextBoxTpl, ControlsValidators) {
 
    'use strict';
 
@@ -36,14 +35,13 @@ define(
     * @class SBIS3.CONTROLS.DateBox
     * @extends SBIS3.CONTROLS.FormattedTextBoxBase
     *
-    * @mixes SBIS3.CONTROLS.FormWidgetMixin
     *
     * @control
     * @author Крайнов Дмитрий Олегович
     * @public
     */
 
-   var DateBox = FormattedTextBoxBase.extend([FormWidgetMixin], /** @lends SBIS3.CONTROLS.DateBox.prototype */{
+   var DateBox = FormattedTextBoxBase.extend(/** @lends SBIS3.CONTROLS.DateBox.prototype */{
       _dotTplFn: FormattedTextBoxTpl,
        /**
         * @event onDateChange Происходит при изменении даты.
@@ -658,17 +656,17 @@ define(
                (filled.indexOf("II") !== -1 || mask.indexOf('I') === -1) ? ii : null,
                (filled.indexOf("SS") !== -1 || mask.indexOf('S') === -1) ? ss : null,
                (filled.indexOf("UU") !== -1 || mask.indexOf('U') === -1) ? uuu : null,
-               autoComplete
+               this._getFormatModel().isEmpty(this._getMaskReplacer())
             );
          }
          return null;
       },
-      _createAutocomplitedDate: function (year, month, date, hour, minute, second, millisecond) {
+      _createAutocomplitedDate: function (year, month, date, hour, minute, second, millisecond, isEmpty) {
          var now = new Date(),
             controlType = this.getType();
 
          var getDate = function (autocompliteDefaultDate) {
-            autocompliteDefaultDate = autocompliteDefaultDate || now.getDate()
+            autocompliteDefaultDate = autocompliteDefaultDate || now.getDate();
             if (this._options.autocompleteMode === 'start') {
                return 1;
             } else if (this._options.autocompleteMode === 'end') {
@@ -677,6 +675,11 @@ define(
                return autocompliteDefaultDate;
             }
          }.bind(this);
+
+         // Автокомплитим только если пользователь частично заполнил поле, либо не заполнил, но поле обязательно для заполнения
+         if (isEmpty && !this._isRequired()) {
+            return null;
+         }
 
          if (controlType === 'date' || controlType === 'datetime'){
             if (this._isRequired() && year === null && month === null && date === null) {

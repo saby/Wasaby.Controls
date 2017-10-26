@@ -736,8 +736,10 @@ define(
           2) Событие keydown стреляет послое вставки символа
           3) Из события не возможно понять какая клавиша была нажата, т.к. возвращается keyCode = 229 || 0
           Для таких андроидов обрабатываем ввод символа отдельно
+          ВАЖНО: Прямой проверки на android нет, т.к. в хроме есть режим "Открыть полную версию", который в userAgent'e
+          проставляет значение unix'a, а не андроида. Смотрим только на битый keyCode
           */
-         if (constants.browser.isMobileAndroid && (event.keyCode === 229 || event.keyCode === 0)){
+         if (event.keyCode === 229 || event.keyCode === 0 || !event.keyCode){
             if (!this._asyncAndroid) {
                this._asyncAndroid = true;
                setTimeout(function() {

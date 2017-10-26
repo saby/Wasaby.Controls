@@ -7,11 +7,12 @@
          <div title="Приостановлено"></div>
       </ws:else>
       <ws:else data="{{value === 2}}">
-         {{item.get('isFailed')}}
-         <div class="icon-16 icon-size icon-ChangeAccount icon-done" title="Завершено"></div>
-      </ws:else>
-      <ws:else>
-         <div class="icon-16 icon-size icon-Alert icon-error" title="Завершено с ошибками"></div>
+         <ws:if data="{{item.get('isFailed')}}">
+            <div class="icon-16 icon-size icon-Alert icon-error" title="Завершено с ошибками"></div>
+         </ws:if>
+         <ws:else>
+            <div class="icon-16 icon-size icon-ChangeAccount icon-done" title="Завершено"></div>
+         </ws:else>
       </ws:else>
    </ws:template>
    <ws:partial template="resultTpl" value="{{item.get(field)}}" scope="{{...}}"/>
