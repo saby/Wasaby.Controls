@@ -3652,7 +3652,7 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
 
-            this._loadMoreButton.setCaption('Еще ' + caption);
+            this._loadMoreButton.setCaption(rk('Еще') + ' ' + caption);
             this._loadMoreButton.setVisible(true);
          },
 
