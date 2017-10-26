@@ -415,8 +415,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _drawText: function(text) {
          ComboBox.superclass._drawText.apply(this, arguments);
+         var fieldNotEditableContainer = $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0));
          this._drawNotEditablePlaceholder(text);
-         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text || this._options.placeholder || '');
+         fieldNotEditableContainer.text(text || this._options.placeholder || '');
          if (this._options.editable) {
             this._setKeyByText();
          }
@@ -424,8 +425,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          var width = $('.controls-TextBox__field', this.getContainer()).width(),
              isTextOverflow = 0 < width && getTextWidth(this.getText()) > Math.round(width),
              //Если у нас виден инпут, то показываем тень только когда он не в фокусе. иначе в момент ввода появится ненужное затемнение.
-             needShadow = isTextOverflow && (this.isEditable() && !this._inputField.is(':focus') || !this.isEditable());
+             needShadow = isTextOverflow && (!this.isEditable() || !this._inputField.is(':focus'));
          this.getContainer().toggleClass('controls-ComboBox__overflow', needShadow);
+         if (needShadow) {
+            fieldNotEditableContainer[0].setAttribute('title', fieldNotEditableContainer[0].textContent);
+         }
       },
 
       _drawNotEditablePlaceholder: function (text) {
