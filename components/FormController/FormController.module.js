@@ -880,9 +880,9 @@ define('js!SBIS3.CONTROLS.FormController', [
          }
       },
       /**
-       * Производит оповещение о том, что произошло событие диалога. Логика обработки события будет произведена на стороне {@link SBIS3.CONTROLS.OpenDialogAction}, а не в диалоге.
+       * Производит оповещение о том, что произошло событие диалога. Логика обработки события будет произведена на стороне {@link SBIS3.CONTROLS.Action.OpenEditDialog}, а не в диалоге.
        * @remark
-       * Подрообнее об этом вы можете прочитать в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/#event-processing'>Обработка события диалога редактирования в SBIS3.CONTROLS.OpenDialogAction</a>.
+       * Подрообнее об этом вы можете прочитать в <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/'>этом разделе</a>.
        * @param {String} eventName Имя события.
        * @param {*} additionalData Данные, которые должны быть переданы в качестве аргументов события.
        * @command notify
