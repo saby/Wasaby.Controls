@@ -65,6 +65,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
             поэтому в методе setText опция должна меняться. */
          _textChanged: false,
          _options: {
+            _paddingClass: ' controls-TextBox__paddingBoth',
             /**
              * @cfg {String} Устанавливает текстовое значение в поле ввода.
              * @remark

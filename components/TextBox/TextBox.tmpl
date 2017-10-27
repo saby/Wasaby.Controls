@@ -1,6 +1,7 @@
 <div class="controls-TextBox
    controls-TextBox__size__{{!! size ? size : 'm'}}
-   controls-TextBox__state__{{ enabled ? 'default': 'disabled'}}"
+   controls-TextBox__state__{{ enabled ? 'default': 'disabled'}}
+   {{ _paddingClass}}"
    title="{{tooltip}}">
    <div class="controls-TextBox__wrapper" title="{{tooltip}}">
       <ws:if data="{{beforeFieldWrapper}}">

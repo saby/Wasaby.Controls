@@ -17,7 +17,7 @@
    cursor: default;
    position: relative;
    height: 100%;
-   padding: 0 0 0 @default-padding;
+   padding: 0 @default-padding 0 0;
 }
 .controls-FieldLink__fieldWrapper {
    .inline-flexbox();
@@ -73,7 +73,7 @@
 .controls-FieldLink__showAllLinks {
    position: relative;
    line-height: @text-box-line-height;
-   padding-left: @default-padding;
+   padding-right: @default-padding;
    cursor: pointer;
    color: @link-text-color;
    .flex-shrink(0);
@@ -85,6 +85,7 @@
 .controls-FieldLink__showAllLinks-disabled {
    top: -@text-box-line-height;
    background: @default-bg-color;
+   padding-right: 0;
    &:after {
       content: '';
       position: absolute;
