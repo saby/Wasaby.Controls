@@ -126,8 +126,8 @@ define('js!SBIS3.CONTROLS.Action.Action',
                      return self._notifyOnExecuted(meta, result);
                   }
                }, function (error) {
-                  self._handleError(error, meta);
                   self._notify('onError', error, meta);
+                  self._handleError(error, meta);
                   return error;
                });
             }

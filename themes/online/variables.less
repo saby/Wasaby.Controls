@@ -665,7 +665,7 @@
 @date-range-slider-value-font-weight:           bold;
 @date-range-slider-value-min-width:             102px;
 @date-range-slider-value-padding:               1px;
-@date-range-slider-year-state-width:            80px;
+@date-range-slider-year-state-width:            81px;
 @date-range-slider-height:                      24px;
 @date-range-slider-prev-next-buttons-width:     24px;
 @date-range-slider-prev-next-buttons-font-size: 16px;
@@ -782,7 +782,7 @@
 @date-range-big-choose-months-font-size:                             16px;
 @date-range-big-choose-months-margin:                                8px;
 @date-range-big-choose-months-range-btn-height:                      97px;
-@date-range-big-choose-months-range-width:                           81px;
+@date-range-big-choose-months-range-width:                           87px;
 @date-range-big-choose-months-button-first-padding-top:              0px;
 @date-range-big-choose-months-button-first-height:                   37px;
 @date-range-big-choose-months-button-last-padding-bottom:            2px;
@@ -807,8 +807,8 @@
 @date-range-big-choose-month-hovered-color:                          @black-color;
 @date-range-big-choose-month-range-picker-today-border-color:         #ff7033;
 @date-range-big-choose-month-range-picker-weekend-color:              #EF463A;
-@date-range-big-choose-date-range-picker-left:                       @date-range-big-choose-months-range-width + 8px;
-@date-range-big-choose-date-range-picker-right:                      8px;
+@date-range-big-choose-date-range-picker-left:                       @date-range-big-choose-months-range-width + 5px;
+@date-range-big-choose-date-range-picker-right:                      5px;
 @date-range-big-choose-date-range-picker-color:                      @black-color;
 @date-range-big-choose-date-range-picker-boundary-selected-color:    @date-range-big-choose-boundary-selected-color;
 @date-range-big-choose-date-range-picker-border-color:               @darkcyan-color;
@@ -1194,8 +1194,9 @@
 @controls-Popup-closeButton-top:                  10px;
 @controls-filterButton-button-height:             24px;
 @controls-filterButton-button-width:              24px;
-@controls-filterButton-button-margin:             8px 12px 8px 0;
-@controls-filterButton-button-margin-right-align: 8px 0 8px 12px;
+@controls-filterButton-button-verSide-margin:     12px;
+@controls-filterButton-button-margin:             8px @controls-filterButton-button-verSide-margin 8px 0;
+@controls-filterButton-button-margin-right-align: 8px 0 8px @controls-filterButton-button-verSide-margin;
 @controls-filterButton-height:                    40px;
 @controls-filterButton-area-header-padding:       12px 48px 12px 12px;
 @controls-filterButton-area-header-height:        24px;
@@ -1281,7 +1282,7 @@
 @icon-width:                                       16px;//todo
 @back-button-arrow-hover-color:                    @primary-color;
 // BreadCrumbs
-@bread-crumb-title-hover-color:                    @primary-color;
+@bread-crumb-title-hover-color:                    @icon-active-color;
 @bread-crumb-title-color:                          #0055BB;
 @bread-crumbs-hier-wrapper-bg:					      url('img/BreadCrumbs_hierWrapper.png');
 @breadcrumbs-top:                                  4px;
@@ -1470,7 +1471,7 @@
 @money-decorator-fraction-font-color:                      @disabled-color;
 //Browser
 @back-button-caption-hover-color: @blue-dark-color;
-@back-button-caption-active-color: @primary-color;
+@back-button-caption-active-color: @darkcyan-color;
 
 @process-state-indicator-sector1:                          @icon-color-done;
 @process-state-indicator-sector2:                          @icon-color-attention;
@@ -1664,3 +1665,8 @@
 //  StickyHeader  //
 //----------------//
 @sticky-header-partScroll-padding:        7px;
+
+//-----------------//
+//  StylesPanel   //
+//----------------//
+@styles-panel-color-shadow:               0px 0px 0px @default-border-width @default-border-color;

@@ -381,17 +381,6 @@ define(
             this.unsubscribeFrom(EventBus.globalChannel(), 'onFocusIn', this._onFocusInHandler);
             this._onFocusInHandler = null;
          }
-      },
-
-      // Внутри шаблона DatePicker используем шаблон DateBox. Устанавливаем на нем соответсвующие классы
-      // что бы к нему корректно применились стили.
-      markControl: function () {
-         DatePicker.superclass.markControl.apply(this, arguments);
-         this.getContainer().children('.controls-DateBox').addClass('ws-validation-error');
-      },
-      clearMark: function () {
-         DatePicker.superclass.clearMark.apply(this, arguments);
-         this.getContainer().children('.controls-DateBox').removeClass('ws-validation-error');
       }
    });
 

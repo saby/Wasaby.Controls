@@ -264,7 +264,7 @@ define('js!SBIS3.CONTROLS.Image',
                    * @variant stretch Изображение вытягивается или сужается, чтобы в точности соответствовать размеру контейнера.
                    * @example
                    * <pre>
-                   *     <option name="stretch">true</option>
+                   *     <option name="sizeMode" type="string">stretch</option>
                    * </pre>
                    * @see setSizeMode
                    * @see getSizeMode
