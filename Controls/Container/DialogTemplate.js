@@ -1,9 +1,9 @@
-define('js!Controls/Window/DialogTemplate', [
+define('js!Controls/Container/DialogTemplate', [
 ], function() {
 
    /**
     * Компонент шаблона диалога
-    * @class Controls/Window/DialogTemplate
+    * @class Controls/Container/DialogTemplate
     * @control
     * @extends Core/Control
     * @public

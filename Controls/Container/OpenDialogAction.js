@@ -1,9 +1,9 @@
-define('js!Controls/Window/OpenDialogAction', [
+define('js!Controls/Container/OpenDialogAction', [
 ], function() {
 
    /**
     * Действие открытия окна
-    * @class Controls/Window/OpenDialogAction
+    * @class Controls/Container/OpenDialogAction
     * @control
     * @public
     * @category Window
@@ -11,14 +11,14 @@ define('js!Controls/Window/OpenDialogAction', [
 
    /**
     * Выполнить
-    * @function Controls/Window/OpenDialogAction#execute
+    * @function Controls/Container/OpenDialogAction#execute
     * @param options компонент, который будет показан в окне
     * @param opener компонент, который инициировал открытие окна
     * @param strategy стратегия позиционирования всплывающего окна
     */
 
    /**
-    * @name Controls/Window/OpenDialogAction#mode
+    * @name Controls/Container/OpenDialogAction#mode
     * @cfg {String} Режим отображения окна
     * @variant DialogPanel -
     * @variant StackPanel -

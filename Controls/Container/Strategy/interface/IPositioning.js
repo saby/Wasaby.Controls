@@ -1,4 +1,4 @@
-define('js!Controls/Window/Strategy/interface/IPositioning', [
+define('js!Controls/Container/Strategy/interface/IPositioning', [
 ], function() {
 
    /**
@@ -10,7 +10,7 @@ define('js!Controls/Window/Strategy/interface/IPositioning', [
 
    /**
     * Вернуть информацию о позиционировании окна.
-    * @function Controls/Window/Strategy/interface/IPositioning#getPosition
+    * @function Controls/Container/Strategy/interface/IPositioning#getPosition
     */
 
 });

@@ -1,9 +1,9 @@
-define('js!Controls/Window/PopupManager', [
+define('js!Controls/Container/PopupManager', [
 ], function() {
 
    /**
     * Менеджер окон
-    * @class Controls/Window/PopupManager
+    * @class Controls/Container/PopupManager
     * @control
     * @public
     * @category Window
@@ -12,7 +12,7 @@ define('js!Controls/Window/PopupManager', [
 
    /**
     * Показать всплывающее окно
-    * @function Controls/Window/PopupManager#show
+    * @function Controls/Container/PopupManager#show
     * @param options компонент, который будет показан в окне
     * @param opener компонент, который инициировал открытие окна
     * @param strategy стратегия позиционирования всплывающего окна

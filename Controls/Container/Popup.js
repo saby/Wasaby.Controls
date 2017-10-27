@@ -1,9 +1,9 @@
-define('js!Controls/Window/Popup', [
+define('js!Controls/Container/Popup', [
 ], function() {
 
    /**
     * Компонент вспывающего окна
-    * @class Controls/Window/Popup
+    * @class Controls/Container/Popup
     * @control
     * @extends Core/Control
     * @public
@@ -12,7 +12,7 @@ define('js!Controls/Window/Popup', [
 
    /**
     * Закрыть окно
-    * @function Controls/Window/Popup#close
+    * @function Controls/Container/Popup#close
     */
 
 });
