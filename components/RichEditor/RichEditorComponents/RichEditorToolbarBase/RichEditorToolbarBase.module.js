@@ -389,7 +389,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                      editor.setFontColor(formats.color);
                   }
                   if (!atFirst) {
-                     editor.getTinyEditor().selection.getRng().expand();
+                     //editor.getTinyEditor().selection.getSel().modify();
                      editor.setFontSize(formats.fontsize);
                   }
                }
