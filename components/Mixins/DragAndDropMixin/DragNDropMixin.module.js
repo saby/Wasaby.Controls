@@ -359,11 +359,11 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          */
         _preparePageXY: function(e) {
             if (e.type == "touchstart" || e.type == "touchmove") {
-                e.pageX = e.originalEvent.touches[0].pageX;
-                e.pageY = e.originalEvent.touches[0].pageY;
+                e.pageX = e.touches[0].pageX;
+                e.pageY = e.touches[0].pageY;
             } else if(e.type == "touchend") {
-                e.pageX = e.originalEvent.changedTouches[0].pageX;
-                e.pageY = e.originalEvent.changedTouches[0].pageY;
+                e.pageX = e.changedTouches[0].pageX;
+                e.pageY = e.changedTouches[0].pageY;
             }
         },
         /**
