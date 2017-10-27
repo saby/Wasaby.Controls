@@ -387,11 +387,11 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             /**
              * Завершить редактирование по месту с сохранением
-             * @param {Boolean} commitAddWithoutChanges При добавлении записать добавляемую запись на бл даже если она не была изменена.
+             * @param {Boolean} commitAdd При добавлении записать добавляемую запись на бл даже если она не была изменена.
              * @private
              */
-            commitEdit: function(commitAddWithoutChanges) {
-               return this._prepareEndEdit(this._pendingOperation || (commitAddWithoutChanges && this._isAdd));
+            commitEdit: function(commitAdd) {
+               return this._prepareEndEdit(this._pendingOperation || (commitAdd && this._isAdd));
             },
             /**
              * Завершить редактирование по месту без сохранения
