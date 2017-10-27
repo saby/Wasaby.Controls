@@ -2,10 +2,10 @@
  * Created by kraynovdo on 23.10.2017.
  */
 define([
-   'js!WSControls/Lists/ItemsView',
-   'js!WSControls/Lists/resources/utils/ItemsUtil'
+   'js!Controls/List/ItemsView',
+   'js!Controls/List/resources/utils/ItemsUtil'
 ], function(ItemsView, ItemsUtil){
-   describe('WSControls.Lists.ItemsView', function () {
+   describe('Controls.List.ItemsView', function () {
       var data, display;
       beforeEach(function() {
          data = [
