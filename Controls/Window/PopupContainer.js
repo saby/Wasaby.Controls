@@ -17,4 +17,9 @@ define('js!Controls/Window/PopupContainer', [
     * @param popupItems новый набор окон
     */
 
+   /**
+    * @event Controls/Window/PopupContainer#closePopup Происходит при закрытии попапа.
+    * @param {Object} inst Инстанс попапа.
+    */
+
 });

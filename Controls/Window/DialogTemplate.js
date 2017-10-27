@@ -10,9 +10,4 @@ define('js!Controls/Window/DialogTemplate', [
     * @category Window
     */
 
-   /**
-    * Закрыть окно
-    * @function Controls/Window/DialogTemplate#close
-    */
-
 });

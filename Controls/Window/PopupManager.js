@@ -18,10 +18,4 @@ define('js!Controls/Window/PopupManager', [
     * @param strategy стратегия позиционирования всплывающего окна
     */
 
-   /**
-    * Удалить всплывающее окно
-    * @function Controls/Window/PopupManager#remove
-    * @param id идентификатор окна
-    */
-
 });

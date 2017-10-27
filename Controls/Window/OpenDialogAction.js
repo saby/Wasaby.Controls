@@ -26,4 +26,6 @@ define('js!Controls/Window/OpenDialogAction', [
     * @variant PushPanel -
     */
 
+   //Как получить обратную связь от окна? например диалог подтверждения с кнопками Да, Нет, Отмена
+
 });
