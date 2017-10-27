@@ -1425,7 +1425,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             editor.on('drop', function(event) {
                //при дропе тоже заходит в BeforePastePreProcess надо обнулять _clipboardTex
                self._clipboardText = false;
-               if (!self._mouseIsPressed && (!event.targetClone || (event.targetClone && !$(event.targetClone).hasClass('controls-RichEditor__noneditable'))))  {
+               if (!self._mouseIsPressed && !cConstants.browser.isIE && (!event.targetClone || !$(event.targetClone).hasClass('controls-RichEditor__noneditable')))  {
                   event.preventDefault();
                }
             });
