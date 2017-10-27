@@ -391,7 +391,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
              * @private
              */
             commitEdit: function(commitAdd) {
-               return this._prepareEndEdit(this._pendingOperation || (commitAdd && this._isAdd));
+               return this._prepareEndEdit(!!this._pendingOperation || (commitAdd && this._isAdd));
             },
             /**
              * Завершить редактирование по месту без сохранения
