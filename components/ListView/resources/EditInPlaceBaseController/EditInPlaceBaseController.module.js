@@ -218,14 +218,15 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             editNextTarget: function(editNextRow, isCommit) {
                var
                   self = this,
+                  fromAdd = this._isAdd,
                   nextTarget = this._getNextTarget(this._getCurrentTarget(), editNextRow);
 
                this.commitEdit(isCommit).addCallback(function() {
-                  self._editNextTarget(nextTarget, editNextRow);
+                  self._editNextTarget(nextTarget, editNextRow, fromAdd);
                });
             },
 
-            _editNextTarget: function (target, editNextRow) {
+            _editNextTarget: function (target, editNextRow, fromAdd) {
                var self = this;
                if (target.length && !this._options.modeSingleEdit) {
                   this.edit(this._options.items.getRecordById(target.attr('data-id'))).addCallback(function(result) {
@@ -235,7 +236,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                   });
                // Запускаем добавление если нужно редактировать следующую строку, но строки нет и включен режим автодобавления
                // и выключен режим редактирования единичной записи (или последняя редактируемая запись на самом деле добавляется)
-               } else if (editNextRow && this._options.modeAutoAdd && (!this._options.modeSingleEdit || this._getEditingEip().getEditingRecord().getState() === Record.RecordState.DETACHED)) {
+               } else if (editNextRow && this._options.modeAutoAdd && (!this._options.modeSingleEdit || fromAdd)) {
                   this.add({
                      target: this._lastTargetAdding
                   });
