@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
     *
     * @control
     * @public
-    * @category Inputs
+    * @category Input
     */
 
    var TextArea = TextBox.extend( /** @lends SBIS3.CONTROLS.TextArea.prototype */ {

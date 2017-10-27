@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.ContextMenu', [
     *
     * @control
     * @public
-    * @category Buttons
+    * @category Button
     */
 
    var ContextMenu = Menu.extend([PopupMixin], /** @lends SBIS3.CONTROLS.ContextMenu.prototype */ {

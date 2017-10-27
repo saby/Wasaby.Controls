@@ -10,47 +10,47 @@ define('js!Controls/Input/Text',
       'use strict';
 
       var TextBox = Control.extend({
+
          /**
-          * @class Controls.Input.Text
+          * Однострочное текстовое поле ввода.
+          * @class Controls/Input/Text
           * @extends Core/Control
+          * @mixes Controls/Input/interface/IInputText
+          * @mixes Controls/Input/interface/IInputPlaceholder
+          * @mixes Controls/Input/interface/IValidation
+          * @mixes Controls/Input/interface/IInputTag
           * @control
           * @public
           * @category Input
           * @author Журавлев Максим Сергеевич
-          *
-          * @event onTagClick Происходит при клике по тегу.
-          * @event onTagHover Происходит когда курсор мыши входит в область тега.
-          * @event onChangeValue Происходит при изменении текста в поле ввода.
-          * @event onInputFinish Происходит при завершении ввода.
-          *
-          * @name Controls.Input.Text#value
-          * @cfg {String} Значение поля.
-          *
-          * @name Controls.Input.Text#trim
-          * @cfg {Boolean} Устанавливает режим обрезки пробелов в начале и конце добавляемого текста.
+          */
+
+         /**
+          * @name Controls/Input/Text#maxLength
+          * @cfg {Number} Максимальное количество символов, которое может содержать поле ввода.
+          */
+
+         /**
+          * @name Controls/Input/Text#trim
+          * @cfg {Boolean} Режим обрезки пробелов в начале и конце добавляемого текста.
           * @variant true Обрезать пробелы.
           * @variant false Не обрезать пробелы.
-          *
-          * @name Controls.Input.Text#tagStyle
-          * @cfg {String} Набор цветов для иконки
-          * @variant primary #587AB0.
-          * @variant done #72BE44.
-          * @variant attention #FEC63F.
-          * @variant error #EF463A.
-          * @variant info #999999.
-          *
-          * @name Controls.Input.Text#maxLength
-          * @cfg {Number} Устанавливает максимальное количество символов, которое может содержать поле ввода.
-          *
-          * @name Controls.Input.Text#placeholder
-          * @cfg {String} Устанавливает текст подсказки внутри поля ввода.
-          *
-          * @name Controls.Input.Text#selectOnClick
+          */
+
+         /**
+          * @name Controls/Input/Text#selectOnClick
           * @cfg {Boolean} Определяет режим выделения текста в поле ввода при получении фокуса.
           * @variant true Выделять текст.
           * @variant false Не выделять текст.
-          *
-          * @name Controls.Input.Text#constraint
+          */
+
+         /**
+          * @name Controls/Input/Text#inputCharRegExp
+          * @cfg {String} Регулярное выражение, в соответствии с которым будет осуществляться валидация вводимых символов.
+          */
+         
+         /**
+          * @name Controls/Input/Text#constraint
           * @cfg {String} Устанавливает регулярное выражение, в соответствии с которым будет осуществляться валидация вводимых символов.
           * @remark
           * Служит для фильтрации вводимых символов в поле ввода по условию, установленному регулярным выражением.
@@ -66,6 +66,7 @@ define('js!Controls/Input/Text',
           *     <option name="constraint">[а-яА-ЯёЁ]</option>
           * </pre>
           */
+         
          _controlName: 'Controls/Input/Text',
 
          _template: template,

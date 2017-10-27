@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.SuggestTextBox', [
     *
     * @control
     * @public
-    * @category Inputs
+    * @category Input
     * @cssModifier controls-SuggestTextBox__withoutCross Скрыть крестик удаления значения.
     */
    var SuggestTextBox = TextBox.extend([PickerMixin, SuggestMixin, ChooserMixin, SuggestTextBoxMixin, SearchMixin], {

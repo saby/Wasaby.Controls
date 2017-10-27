@@ -68,7 +68,7 @@ define('js!SBIS3.CONTROLS.Button',
     * @css controls-Button__text Класс для изменения отображения текста на кнопке.
     *
     * @control
-    * @category Buttons
+    * @category Button
     * @public
     * @initial
     * <ws:SBIS3.CONTROLS.Button caption="Кнопка" />
