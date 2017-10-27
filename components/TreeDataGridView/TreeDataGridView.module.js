@@ -198,7 +198,12 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              */
             // Добавил опцию для версии 220
             // с 3.7.5 будет рулиться через пользовательский шаблон
-            foldersColspan: false
+            foldersColspan: false,
+            /**
+             * @cfg {Boolean} Включает режим разворачивания узлов дерева при клике на сам элемент-узел.
+             * Отключив данный режим разворот будет возможнн только при клике на иконку разворота узла.
+             */
+            expandByItemClick: true
          },
          _dragStartHandler: undefined,
          _editArrow: undefined
@@ -625,8 +630,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
          else {
             if (data.get(this._options.nodeProperty)) {
-               //В режиме "поиска" ветки не надо разворачивать
-               if (!this._options.hierarchyViewMode) {
+               // Нужно разворачивать при клике по элементу в следующих ситуациях:
+               // 1. Не режим поиска (hierarchyViewMode)
+               // 2. Включен разворот по клику на сам элемент
+               if (!this._options.hierarchyViewMode && this._options.expandByItemClick) {
                   this.toggleNode(id);
                }
             }
