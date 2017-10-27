@@ -50,15 +50,26 @@ define('js!Controls/List/resources/utils/Search',
       
       function queryWithTranslate(params){
          var self = this,
-             queryDeferred = new Deferred();
+             queryDeferred = new Deferred(),
+             sourceQueryDef;
          
          if (this._kbLayoutRevert) {
             getArgsForQueryWithTranslate.call(self, params).addCallback(function (queryArgs) {
-               DataSourceUtil.callQuery.apply(self, queryArgs).addCallback(function (res) {
-                  queryDeferred.callback(res);
-                  return res;
-               });
+               sourceQueryDef = DataSourceUtil.callQuery.apply(self, queryArgs).addCallbacks(
+                  function (res) {
+                     queryDeferred.callback(res);
+                     return res;
+                  },
+                  function (err) {
+                     queryDeferred.errback(err);
+                     return err
+                  });
                return queryArgs;
+            });
+            queryDeferred.addErrback(function(error) {
+               if (error.canceled && sourceQueryDef && !sourceQueryDef.isReady()) {
+                  sourceQueryDef.cancel();
+               }
             });
          } else {
             queryDeferred.errback(false);
@@ -86,6 +97,19 @@ define('js!Controls/List/resources/utils/Search',
          return hasItemsWithTranslatedQuery;
       }
       
+      function addCancelErrProcess(defs) {
+         this._searchDeferred.addErrback(function(error) {
+            if (error.canceled) {
+               defs.forEach(function(def) {
+                  if (!def.isReady()) {
+                     def.cancel();
+                  }
+               })
+            }
+            return error;
+         })
+      }
+      
       
       function startSearch(searchConfig) {
          var resultDeferred = new Deferred(),
@@ -107,6 +131,8 @@ define('js!Controls/List/resources/utils/Search',
       
             return dataSet;
          });
+   
+         addCancelErrProcess.call(this, [queryDeferred, translateQueryDeferred]);
    
          translateQueryDeferred.addBoth(function(res) {
             resultDeferred.callback({
