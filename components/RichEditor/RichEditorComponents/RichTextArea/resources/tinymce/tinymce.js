@@ -9985,7 +9985,7 @@
     * @private
     * @class tinymce.dom.NodeType
     */
-   define("tinymce/dom/NodeType", [], function() {
+   define("tinymce/dom/NodeType", ["tinymce/Env"], function (Env) {
       function isNodeType(type) {
          return function(node) {
             return !!node && node.nodeType == type;
@@ -10052,7 +10052,9 @@
       function hasContentEditableState(value) {
          return function(node) {
             if (isElement(node)) {
-               if (node.contentEditable === value) {
+               // В MSIE элементы как правило имеют contentEditable === 'inherit' и сравнивать с 'true' или 'false' бессмысленно,
+               // поэтому определим нужным элементам значения по умолчанию
+               if (node.contentEditable === value || (Env.ie && node.contentEditable === 'inherit' && {'IMG':'false'}[node.nodeName] === value)) {
                   return true;
                }
 
