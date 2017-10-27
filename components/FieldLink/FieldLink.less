@@ -63,6 +63,7 @@
    max-height: @fieldLink-picker-max-height;
    min-height: @fieldLink-picker-min-height;
    border: @fieldLink-border @gray-ccc-color;
+   box-sizing: border-box;
    margin-top: 0;
    overflow: auto;
    padding: @fieldLink-linkContainer-padding;
@@ -129,7 +130,7 @@
    &__picker {
       .controls-FieldLink__item {
          /* Учитываем бордер пикера */
-         width: ~'calc(50% - 2px)';
+         width: 50%;
          .inline-flexbox();
          align-items: center;
          margin: 0;
