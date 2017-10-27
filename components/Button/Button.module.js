@@ -35,8 +35,6 @@ define('js!SBIS3.CONTROLS.Button',
     * @mixes SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor
     * @mixes SBIS3.CORE.Control/ControlGoodCode
     *
-    * @demo SBIS3.CONTROLS.Demo.MyButton
-    *
     * @author Романов Валерий Сергеевич
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers parent
