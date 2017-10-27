@@ -665,7 +665,7 @@
 @date-range-slider-value-font-weight:           bold;
 @date-range-slider-value-min-width:             102px;
 @date-range-slider-value-padding:               1px;
-@date-range-slider-year-state-width:            80px;
+@date-range-slider-year-state-width:            81px;
 @date-range-slider-height:                      24px;
 @date-range-slider-prev-next-buttons-width:     24px;
 @date-range-slider-prev-next-buttons-font-size: 16px;
@@ -1194,8 +1194,9 @@
 @controls-Popup-closeButton-top:                  10px;
 @controls-filterButton-button-height:             24px;
 @controls-filterButton-button-width:              24px;
-@controls-filterButton-button-margin:             8px 12px 8px 0;
-@controls-filterButton-button-margin-right-align: 8px 0 8px 12px;
+@controls-filterButton-button-verSide-margin:     12px;
+@controls-filterButton-button-margin:             8px @controls-filterButton-button-verSide-margin 8px 0;
+@controls-filterButton-button-margin-right-align: 8px 0 8px @controls-filterButton-button-verSide-margin;
 @controls-filterButton-height:                    40px;
 @controls-filterButton-area-header-padding:       12px 48px 12px 12px;
 @controls-filterButton-area-header-height:        24px;
@@ -1281,7 +1282,7 @@
 @icon-width:                                       16px;//todo
 @back-button-arrow-hover-color:                    @primary-color;
 // BreadCrumbs
-@bread-crumb-title-hover-color:                    @primary-color;
+@bread-crumb-title-hover-color:                    @icon-active-color;
 @bread-crumb-title-color:                          #0055BB;
 @bread-crumbs-hier-wrapper-bg:					      url('img/BreadCrumbs_hierWrapper.png');
 @breadcrumbs-top:                                  4px;
@@ -1664,3 +1665,8 @@
 //  StickyHeader  //
 //----------------//
 @sticky-header-partScroll-padding:        7px;
+
+//-----------------//
+//  StylesPanel   //
+//----------------//
+@styles-panel-color-shadow:               0px 0px 0px @default-border-width @default-border-color;

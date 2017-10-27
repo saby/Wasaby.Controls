@@ -3,7 +3,14 @@
  *
  * @description
  */
-define('js!SBIS3.CONTROLS.RadioButton', ['js!SBIS3.CONTROLS.RadioButtonBase', 'tmpl!SBIS3.CONTROLS.RadioButton', 'css!SBIS3.CONTROLS.RadioButton'], function(RadioButtonBase,dotTplFn) {
+define('js!SBIS3.CONTROLS.RadioButton',
+   [
+      'js!SBIS3.CONTROLS.RadioButtonBase',
+      'tmpl!SBIS3.CONTROLS.RadioButton',
+      'Core/Sanitize',
+      'css!SBIS3.CONTROLS.RadioButton'
+   ],
+   function(RadioButtonBase,dotTplFn, Sanitize) {
 
    'use strict';
 
@@ -42,6 +49,16 @@ define('js!SBIS3.CONTROLS.RadioButton', ['js!SBIS3.CONTROLS.RadioButtonBase', 't
       setCaption: function(captionTxt){
          RadioButton.superclass.setCaption.call(this,captionTxt);
          this._radioButtonCaption.html(captionTxt || '');
+      },
+
+      _modifyOptions: function(options) {
+         RadioButton.superclass._modifyOptions.call(this, options);
+
+         options.sanitize = function(markup) {
+            return Sanitize(markup.caption, {validNodes: {component: true}, validAttributes : {config: true} });
+         };
+
+         return options;
       }
 
    });
