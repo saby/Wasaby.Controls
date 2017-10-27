@@ -204,5 +204,6 @@
    "Назад": "Backward",
    "В конец": "To end",
    "В начало": "To beginning",
-   "Очистить поле": "Clear field"
+   "Очистить поле": "Clear field",
+   "Очистить фильтр": "Clear filter"
 }
