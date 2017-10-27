@@ -18,7 +18,7 @@ define('js!Controls/Toggle/Button', [
 
    /**
     * @name Controls/Toggle/Button#iconTwo
-    * @cfg {String} Иконка
+    * @cfg {String} Вторая иконка
     */
 
    /**

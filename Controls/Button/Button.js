@@ -18,8 +18,8 @@ define('js!Controls/Button/Button', [
     * @name Controls/Button/Button#type
     * @cfg {String} Внешний вид кнопки
     * @variant standard Стандартная кнопка
-    * @variant link Кнопка ссылка.
-    * @variant flat Плоская кнопка.
+    * @variant link Кнопка ссылка
+    * @variant flat Плоская кнопка
     */
 
 });
