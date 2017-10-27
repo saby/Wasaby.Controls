@@ -196,7 +196,6 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
                self._notify('onBeforeShow');
             },
             onAfterShow: function () {
-               self._finishExecuteDeferred();
                self._notify('onAfterShow');
             }
          });
@@ -206,7 +205,10 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       _finishExecuteDeferred: function(error) {
          if (!this._executeDeferred.isReady()) {
             if (!error) {
-               this._executeDeferred.callback();
+               //false - т.к. приходится нотифаить событие onExecuted самому, из-за того, что базовый action
+               //не может обработать валидный результат false
+               //Выписал задачу, чтобы мог https://online.sbis.ru/opendoc.html?guid=c7ff3ac1-5884-40ef-bf84-e544d8a41ffa
+               this._executeDeferred.callback(false);
             }
             else {
                this._executeDeferred.errback(error);
