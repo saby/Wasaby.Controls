@@ -4,9 +4,9 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define(
    [
-      'js!WSControls/Lists/Controllers/PageNavigation',
-      'js!WSControls/Lists/Controllers/OffsetNavigation',
-      'js!WSControls/Lists/Controllers/PositionNavigation',
+      'js!Controls/List/Controllers/PageNavigation',
+      'js!Controls/List/Controllers/OffsetNavigation',
+      'js!Controls/List/Controllers/PositionNavigation',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Source/SbisService'
    ],
@@ -16,7 +16,7 @@ define(
 
       'use strict';
 
-      describe('WSControls.Controllers.Navigation', function () {
+      describe('Controls.Controllers.Navigation', function () {
          var data, dataDown, dataRs, dataRsDown;
 
          beforeEach(function() {

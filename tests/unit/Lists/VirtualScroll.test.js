@@ -1,5 +1,5 @@
 define([
-      'js!WSControls/Lists/VirtualScroll'
+      'js!Controls/List/VirtualScroll'
    ],
    function(
       VirtualScroll
