@@ -102,6 +102,12 @@
       &::-ms-clear {
          display: none;
       }
+      &:before{
+         content: '.';
+         visibility:hidden;
+         width: 0;
+         display: inline-block;
+      }
    }
    &__placeholder {
       .inline-flexbox();
