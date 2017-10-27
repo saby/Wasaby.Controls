@@ -1,10 +1,10 @@
-define('js!SBIS3.SPEC.window.StackPositioningStrategy', [
+define('js!Controls/Window/Strategy/StackPositioning', [
 ], function() {
 
    /**
     * Стратегия позиционирования окна.
-    * @class SBIS3.SPEC.window.StackPositioningStrategy
-    * @mixes SBIS3.SPEC.window.interface.IPositioningStrategy
+    * @class Controls/Window/Strategy/StackPositioning
+    * @mixes Controls/Window/Strategy/interface/IPositioning
     * @control
     * @public
     * @category Window

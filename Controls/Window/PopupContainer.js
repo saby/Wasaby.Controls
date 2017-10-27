@@ -1,18 +1,19 @@
-define('js!SBIS3.SPEC.window.PopupContainer', [
+define('js!Controls/Window/PopupContainer', [
 ], function() {
 
    /**
-    * Контенер для отображения окон.
-    * @class SBIS3.SPEC.window.PopupContainer
+    * Контенер для отображения окон
+    * @class Controls/Window/PopupContainer
     * @control
+    * @extends Core/Control
     * @public
     * @category Window
     * @singleton
     */
 
    /**
-    * Изменить набор окон.
-    * @function SBIS3.SPEC.window.PopupContainer#setPopupItems
+    * Изменить набор окон
+    * @function Controls/Window/PopupContainer#setPopupItems
     * @param popupItems новый набор окон
     */
 

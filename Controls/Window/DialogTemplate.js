@@ -1,17 +1,18 @@
-define('js!SBIS3.SPEC.window.DialogTemplate', [
+define('js!Controls/Window/DialogTemplate', [
 ], function() {
 
    /**
-    * Компонент шаблона диалога.
-    * @class SBIS3.SPEC.window.DialogTemplate
+    * Компонент шаблона диалога
+    * @class Controls/Window/DialogTemplate
     * @control
+    * @extends Core/Control
     * @public
     * @category Window
     */
 
    /**
-    * Закрыть окно.
-    * @function SBIS3.SPEC.window.DialogTemplate#close
+    * Закрыть окно
+    * @function Controls/Window/DialogTemplate#close
     */
 
 });

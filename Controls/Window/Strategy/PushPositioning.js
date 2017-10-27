@@ -1,10 +1,10 @@
-define('js!SBIS3.SPEC.window.PushPositioningStrategy', [
+define('js!Controls/Window/Strategy/PushPositioning', [
 ], function() {
 
    /**
     * Стратегия позиционирования окна.
-    * @class SBIS3.SPEC.window.PushPositioningStrategy
-    * @mixes SBIS3.SPEC.window.interface.IPositioningStrategy
+    * @class Controls/Window/Strategy/PushPositioning
+    * @mixes Controls/Window/Strategy/interface/IPositioning
     * @control
     * @public
     * @category Window

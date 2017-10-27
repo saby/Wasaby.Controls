@@ -1,4 +1,4 @@
-define('js!SBIS3.SPEC.window.interface.IPositioningStrategy', [
+define('js!Controls/Window/Strategy/interface/IPositioning', [
 ], function() {
 
    /**
@@ -10,7 +10,7 @@ define('js!SBIS3.SPEC.window.interface.IPositioningStrategy', [
 
    /**
     * Вернуть информацию о позиционировании окна.
-    * @function SBIS3.SPEC.window.interface.IPositioningStrategy#getPosition
+    * @function Controls/Window/Strategy/interface/IPositioning#getPosition
     */
 
 });

@@ -1,10 +1,10 @@
-define('js!SBIS3.SPEC.window.DialogPositioningStrategy', [
+define('js!Controls/Window/Strategy/DialogPositioningStrategy', [
 ], function() {
 
    /**
     * Стратегия позиционирования окна.
-    * @class SBIS3.SPEC.window.DialogPositioningStrategy
-    * @mixes SBIS3.SPEC.window.interface.IPositioningStrategy
+    * @class Controls/Window/Strategy/DialogPositioning
+    * @mixes Controls/Window/Strategy/interface/IPositioning
     * @control
     * @public
     * @category Window
