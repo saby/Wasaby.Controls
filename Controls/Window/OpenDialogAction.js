@@ -2,7 +2,7 @@ define('js!Controls/Window/OpenDialogAction', [
 ], function() {
 
    /**
-    * Экшен открытия окна
+    * Действие открытия окна
     * @class Controls/Window/OpenDialogAction
     * @control
     * @public
