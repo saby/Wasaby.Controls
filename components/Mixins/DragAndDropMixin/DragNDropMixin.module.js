@@ -3,7 +3,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
     "Core/EventBus",
     "js!SBIS3.CONTROLS.DragObject",
     "WS.Data/Di",
-    "Core/core-instance"
+    "Core/core-instance",
+    'css!SBIS3.CONTROLS.DragNDropMixin'
 ], function ( EventBus,DragObject, Di, cInstance) {
     'use strict';
     /**
@@ -121,6 +122,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
              */
             _constShiftLimit: 3,
             _beginDragTarget:null
+
         },
         //region public
         $constructor: function () {
@@ -339,7 +341,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 DragObject.onDragHandler(e);
                 if (this._beginDragHandler(DragObject, e) !== false) {
                     if (this._notify('onBeginDrag', DragObject, e) !== false) {
-
+                        this._initDragOverlay();
                         this._showAvatar(e);
                         DragObject.setOwner(this);
                         DragObject.setDragging(true);
@@ -393,6 +395,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
             //После опускания мыши, ещё раз позовём обработку перемещения, т.к. в момент перед отпусканием мог произойти
             //переход границы между сменой порядкового номера и перемещением в папку, а обработчик перемещения не вызваться,
             //т.к. он срабатывают так часто, насколько это позволяет внутренняя система взаимодействия с мышью браузера.
+            $('.controls-DragNDropMixin-overlay').remove();
             if (droppable || e.type == "touchend") { //запускаем только если сработало внутри droppable контейнера, иначе таргета нет и нечего обновлять
                 //touchend всегда срабатывает не над droppable контейнером, так что для него запускаем всегда
                 this._updateDragTarget(DragObject, e);
@@ -541,6 +544,21 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 }
              }
           }
+       },
+
+       _initDragOverlay: function() {
+          //Над каждым iframe создаем оверлей над которым будет двигаться курсор перемещения
+          $('iframe:visible').each(function(i, frame){
+             var rect = frame.getBoundingClientRect(),
+                overlay = $('<div class="controls-DragNDropMixin-overlay">');
+             overlay.css({
+                width: rect.width,
+                height: rect.height,
+                left: frame.offsetLeft,
+                top: frame.offsetTop
+             });
+             $(frame).parent().prepend(overlay);
+          })
        }
     };
 

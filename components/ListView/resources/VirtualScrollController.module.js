@@ -227,7 +227,10 @@ define('js!SBIS3.CONTROLS.VirtualScrollController', ['Core/Abstract'],
          initHeights: function () {
             var self = this,
                //Учитываем все что есть в itemsContainer (группировка и тд)
-               listItems = $('> *', this._options.itemsContainer).filter(':visible');
+               /* Отфильтровывем скрытые строки,
+                и строки которые будут вырезаться и перемещаться в прилипающую шапку,
+                т.к. по ним нельзя корректно посчитать положение. */
+               listItems = this._options.itemsContainer.find('> *').not('.ws-hidden, .ws-sticky-header__table-sticky-row');
 
             // пересчет только при инициализации
             // проверка нужна, так как нет нет точки входа после первой отрисовки, и метод зовется из _drawItemsCallback списка

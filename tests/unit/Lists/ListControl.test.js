@@ -2,11 +2,11 @@
  * Created by kraynovdo on 23.10.2017.
  */
 define([
-   'js!WSControls/Lists/ListControl',
-   'js!WSControls/Lists/resources/utils/ItemsUtil',
-   'js!WS.Data/Source/Memory'
+   'js!Controls/List/ListControl',
+   'js!Controls/List/resources/utils/ItemsUtil',
+   'WS.Data/Source/Memory'
 ], function(ListControl, ItemsUtil, MemorySource){
-   describe('WSControls.Lists.ListControl', function () {
+   describe('Controls.List.ListControl', function () {
       var data, display;
       beforeEach(function() {
          data = [

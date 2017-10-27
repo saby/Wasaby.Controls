@@ -3,7 +3,7 @@ define('js!SBIS3.CONTROLS.HighChartsLight', [
    "Core/core-merge",
    "Core/constants",
    "js!SBIS3.CORE.Control",
-   "html!SBIS3.CONTROLS.HighChartsLight",
+   "tmpl!SBIS3.CONTROLS.HighChartsLight",
    'Core/helpers/Hcontrol/trackElement',
    "browser!/cdn/highcharts/4.2.7/highcharts-more.js",
    "css!SBIS3.CONTROLS.HighChartsLight"

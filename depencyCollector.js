@@ -8,6 +8,7 @@ var fs = require('fs'),
    demoResources = path.join(__dirname, 'demo'),
    testResources = path.join(__dirname, 'tests'),
    sandBoxResources = path.join(__dirname, 'pages', 'sandbox'),
+   vdomCtrlResources = path.join(__dirname, 'Controls'),
    newPath = '',
    dirWalker = function(dir) {
       var pattern = /\.module\.js$/,
@@ -34,6 +35,7 @@ dirWalker(baseResources);
 dirWalker(demoResources);
 dirWalker(testResources);
 dirWalker(sandBoxResources);
+dirWalker(vdomCtrlResources);
 
 fs.writeFileSync(path.join(__dirname, 'components/contents.json'), JSON.stringify({jsModules: jsModules}, null, 3));
 fs.writeFileSync(path.join(__dirname, 'components/contents.js'), 'contents = ' + JSON.stringify({jsModules: jsModules}, null, 3) + ';');

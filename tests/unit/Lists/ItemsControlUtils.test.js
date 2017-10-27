@@ -2,13 +2,13 @@
  * Created by am.gerasimov on 06.03.2017.
  */
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
-define(['js!WSControls/Lists/resources/utils/DataSourceUtil', 'js!WSControls/Lists/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet'
+define(['js!Controls/List/resources/utils/DataSourceUtil', 'js!Controls/List/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet'
    , 'WS.Data/Source/Memory', 'Core/core-instance', 'WS.Data/Types/Enum'],
    function (DataSourceUtil, ItemsUtil, RecordSet, MemorySource, cInstance, Enum) {
 
       'use strict';
 
-      describe('WSControls.Lists.Utils', function () {
+      describe('Controls.List.Utils', function () {
          var data, cfg1, cfg2, sortFnc, filterFnc, groupFnc;
 
          beforeEach(function() {
