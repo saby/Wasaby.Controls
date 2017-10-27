@@ -571,10 +571,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                            self._createAddTarget(model, options);
                            self._getEip().edit(model, undefined, withoutActivateFirstControl);
                            editingRecord = self._getEip().getEditingRecord();
-                           self._notify('onAfterBeginEdit', editingRecord);
                            if (!self._pendingOperation) {
                               self._subscribeToAddPendingOperation(editingRecord);
                            }
+                           self._notify('onAfterBeginEdit', editingRecord);
                            return editingRecord;
                         });
                      });

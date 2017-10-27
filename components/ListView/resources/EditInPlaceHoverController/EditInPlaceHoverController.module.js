@@ -106,10 +106,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceHoverController',
                         this._hoveredEip = null;
                         hoveredEip.edit(model);
                         editingRecord = hoveredEip.getEditingRecord();
-                        this._notify('onAfterBeginEdit', editingRecord);
                         if (!this._pendingOperation) {
                            this._subscribeToAddPendingOperation(editingRecord);
                         }
+                        this._notify('onAfterBeginEdit', editingRecord);
                         return editingRecord;
                      }
                   } else {
