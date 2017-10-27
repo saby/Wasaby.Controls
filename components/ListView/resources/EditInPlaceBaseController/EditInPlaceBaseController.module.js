@@ -230,7 +230,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                if (target.length && !this._options.modeSingleEdit) {
                   this.edit(this._options.items.getRecordById(target.attr('data-id'))).addCallback(function(result) {
                      if (!result) {
-                        self._editNextTarget(this._getNextTarget(target, editNextRow), editNextRow);
+                        self._editNextTarget(self._getNextTarget(target, editNextRow), editNextRow);
                      }
                   });
                // Запускаем добавление если нужно редактировать следующую строку, но строки нет и включен режим автодобавления
