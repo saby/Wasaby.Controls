@@ -218,21 +218,19 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             editNextTarget: function(editNextRow, isCommit) {
                var
                   self = this,
-                  currentTarget = this._getCurrentTarget();
+                  nextTarget = this._getNextTarget(this._getCurrentTarget(), editNextRow);
 
                this.commitEdit(isCommit).addCallback(function() {
-                  self._editNextTarget(currentTarget, editNextRow);
+                  self._editNextTarget(nextTarget, editNextRow);
                });
             },
 
-            _editNextTarget: function (currentTarget, editNextRow) {
-               var
-                  self = this,
-                  nextTarget = this._getNextTarget(currentTarget, editNextRow);
-               if (nextTarget.length && !this._options.modeSingleEdit) {
-                  this.edit(this._options.items.getRecordById(nextTarget.attr('data-id'))).addCallback(function(result) {
+            _editNextTarget: function (target, editNextRow) {
+               var self = this;
+               if (target.length && !this._options.modeSingleEdit) {
+                  this.edit(this._options.items.getRecordById(target.attr('data-id'))).addCallback(function(result) {
                      if (!result) {
-                        self._editNextTarget(nextTarget, editNextRow);
+                        self._editNextTarget(this._getNextTarget(target, editNextRow), editNextRow);
                      }
                   });
                // Запускаем добавление если нужно редактировать следующую строку, но строки нет и включен режим автодобавления
