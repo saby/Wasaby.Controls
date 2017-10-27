@@ -4806,7 +4806,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   } else {
                      self._deleteRecordsFromRecordSet(idArray);
                      self.removeItemsSelection(idArray);
-                     resultDeferred = Deferred.success(result)
+                     resultDeferred = Deferred.success(result);
                   }
                   return resultDeferred;
                }).addErrback(function (result) {
