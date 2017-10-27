@@ -672,6 +672,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       },
 
       _clearVariables: function() {
+         this._isExecuting = false;
          this._finishExecuteDeferred();
          this._dialog = undefined;
       },
