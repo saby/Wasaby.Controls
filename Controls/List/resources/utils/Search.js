@@ -4,9 +4,10 @@ define('js!Controls/List/resources/utils/Search',
       'Core/Deferred',
       'WS.Data/Query/Query',
       'Core/core-clone',
+      'Core/ParallelDeferred',
       'js!Controls/List/resources/utils/DataSourceUtil'
    ],
-   function (Abstract, Deferred, Query, clone, DataSourceUtil) {
+   function (Abstract, Deferred, Query, clone, ParallelDeferred, DataSourceUtil) {
    
       /**
        * Checks required parameters
@@ -113,28 +114,32 @@ define('js!Controls/List/resources/utils/Search',
       
       function startSearch(searchConfig) {
          var resultDeferred = new Deferred(),
+             queryParallelDeferred = new ParallelDeferred(),
              hasItemsWithTranslatedQuery = false,
              queryDeferred, translateQueryDeferred, resultRecordSet;
    
-         queryDeferred = DataSourceUtil.callQuery.apply(this, getArgsForQuery.call(this, searchConfig)).addCallback(function(recordset) {
-            resultRecordSet = recordset;
-            return recordset;
-         });
+         //query without translating
+         queryParallelDeferred.push(
+            queryDeferred = DataSourceUtil.callQuery.apply(this, getArgsForQuery.call(this, searchConfig)).addCallback(function(recordset) {
+               resultRecordSet = recordset;
+               return recordset;
+            }));
    
          //query with translated searchParam
-         translateQueryDeferred = queryWithTranslate.call(this, searchConfig).addCallback(function (dataSet) {
-            //waiting for main query
-            queryDeferred.addCallback(function(result) {
-               hasItemsWithTranslatedQuery =  analyzeTranslatedQueryAnswer(dataSet, searchConfig, resultRecordSet);
-               return result;
-            });
-      
-            return dataSet;
-         });
+         queryParallelDeferred.push(
+            translateQueryDeferred = queryWithTranslate.call(this, searchConfig).addCallback(function (dataSet) {
+               //waiting for query without translating
+               queryDeferred.addCallback(function(result) {
+                  hasItemsWithTranslatedQuery =  analyzeTranslatedQueryAnswer(dataSet, searchConfig, resultRecordSet);
+                  return result;
+               });
+         
+               return dataSet;
+            }));
    
          addCancelErrProcess.call(this, [queryDeferred, translateQueryDeferred]);
    
-         translateQueryDeferred.addBoth(function(res) {
+         queryParallelDeferred.done().getResult().addBoth(function(res) {
             resultDeferred.callback({
                translated: hasItemsWithTranslatedQuery,
                result: resultRecordSet
@@ -173,7 +178,7 @@ define('js!Controls/List/resources/utils/Search',
             cfg = cfg || {};
             checkRequiredParams(cfg);
             this._searchParam = cfg.searchParam;
-            this._searchDelay = cfg.hasOwnProperty('searchDelay') ? cfg.searchDelay : 300;
+            this._searchDelay = cfg.hasOwnProperty('searchDelay') ? cfg.searchDelay : 500;
             this._dataSource = cfg.dataSource;
             this._kbLayoutRevert = cfg.hasOwnProperty('kbLayoutRevert') ? cfg.kbLayoutRevert : true;
             Search.superclass.constructor.apply(this, arguments);

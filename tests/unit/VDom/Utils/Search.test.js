@@ -36,7 +36,8 @@ define(
                   {
                      searchParam: 'name',
                      dataSource: source,
-                     kbLayoutRevert: false
+                     kbLayoutRevert: false,
+                     searchDelay: 50
                   }
                );
                search.search({
@@ -58,7 +59,8 @@ define(
                   {
                      searchParam: 'name',
                      dataSource: source,
-                     kbLayoutRevert: true
+                     kbLayoutRevert: true,
+                     searchDelay: 50
                   }
                );
                search.search({
@@ -80,7 +82,8 @@ define(
                var search  = new Search(
                   {
                      searchParam: 'name',
-                     dataSource: source
+                     dataSource: source,
+                     searchDelay: 50
                   }
                );
                var searchDef = search.search({
@@ -103,7 +106,8 @@ define(
                var search  = new Search(
                   {
                      searchParam: 'name',
-                     dataSource: source
+                     dataSource: source,
+                     searchDelay: 50
                   }
                );
                search.search({
