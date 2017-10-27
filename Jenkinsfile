@@ -4,10 +4,10 @@ properties([
     disableConcurrentBuilds(),
     buildDiscarder(
         logRotator(
-            artifactDaysToKeepStr: '5',
-            artifactNumToKeepStr: '10',
-            daysToKeepStr: '5',
-            numToKeepStr: '10')),
+            artifactDaysToKeepStr: '3',
+            artifactNumToKeepStr: '3',
+            daysToKeepStr: '3',
+            numToKeepStr: '3')),
     parameters([
         string(
             defaultValue: 'sdk',
