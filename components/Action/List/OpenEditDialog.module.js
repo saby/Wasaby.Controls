@@ -145,10 +145,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       _openComponent:function(meta, mode) {
          var openUrl = meta.item && meta.item.get(this._options.urlProperty);
 
-         if (this._isExecuting){
-            //Если execute уже был вызван, а панель еще не открылась, игнорируем этот вызов execute, пока не отработает открытие панели из первого вызова.
-         }
-         else if (this._needOpenInNewTab() && openUrl) {
+         if (this._needOpenInNewTab() && openUrl) {
             window.open(openUrl);
          }
          else if (this._isNeedToRedrawDialog()) {
@@ -236,10 +233,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
                   def = wayDelayedRemove(templateComponent);
                }
                def.addErrback(function (error) {
-                  //Не показываем ошибку, если было прервано соединение с интернетом. просто скрываем индикатор и оверлей
-                  if (!error._isOfflineMode) {
-                     OpenDialogUtil.errorProcess(error);
-                  }
+                  self._finishExecuteDeferred(error);
                   return error;
                }).addBoth(function (record) {
                   self._hideLoadingIndicator();
@@ -318,6 +312,15 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       _hideLoadingIndicator: function() {
          this._toggleOverlay(false);
          cIndicator.hide();
+      },
+
+      _handleError: function(error) {
+         if (!error.processed) {
+            //Не показываем ошибку, если было прервано соединение с интернетом
+            if (!error._isOfflineMode) {
+               OpenDialogUtil.errorProcess(error);
+            }
+         }
       },
 
       _toggleOverlay: function(show){
@@ -669,7 +672,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       },
 
       _clearVariables: function() {
-         this._isExecuting = false;
+         this._finishExecuteDeferred();
          this._dialog = undefined;
       },
 
