@@ -101,25 +101,6 @@ define(
                });
                
             });
-   
-            it('destroy Search', function() {
-               var search  = new Search(
-                  {
-                     searchParam: 'name',
-                     dataSource: source,
-                     searchDelay: 50
-                  }
-               );
-               search.search({
-                  filter: {
-                     name: 'Sasha'
-                  },
-                  pageSize: 5
-               });
-   
-               search.destroy();
-               assert.equal(search._searchDeferred, null);
-            });
          });
       });
    });

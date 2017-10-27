@@ -1,14 +1,16 @@
 define('js!Controls/List/resources/utils/Search',
    [
-      'Core/Abstract',
+      'Core/core-extend',
       'Core/Deferred',
       'WS.Data/Query/Query',
       'Core/core-clone',
       'Core/ParallelDeferred',
+      'Core/moduleStubs',
       'js!Controls/List/resources/utils/DataSourceUtil'
    ],
-   function (Abstract, Deferred, Query, clone, ParallelDeferred, DataSourceUtil) {
-   
+   function (extend, Deferred, Query, clone, ParallelDeferred, moduleStubs, DataSourceUtil) {
+      
+      var kbLayoutPath = 'js!Controls/List/resources/utils/KbLayoutRevert';
       /**
        * Checks required parameters
        */
@@ -35,115 +37,75 @@ define('js!Controls/List/resources/utils/Search',
             searchConfig.limit
          ];
       }
-   
-      function getArgsForQueryWithTranslate(searchConfig) {
-         var searchCfg = clone(searchConfig), //cloning, because will changing
-             getQueryDeferred = new Deferred(),
-             self = this;
       
-         requirejs(['js!Controls/List/resources/utils/KbLayoutRevert'], function(kbLayout) {
-            searchCfg.filter[self._searchParam] = kbLayout(searchCfg.filter[self._searchParam]);
-            getQueryDeferred.callback(getArgsForQuery.call(self, searchCfg));
-         });
-      
-         return getQueryDeferred;
-      }
-      
-      function queryWithTranslate(params){
-         var self = this,
-             queryDeferred = new Deferred(),
-             sourceQueryDef;
-         
-         if (this._kbLayoutRevert) {
-            getArgsForQueryWithTranslate.call(self, params).addCallback(function (queryArgs) {
-               sourceQueryDef = DataSourceUtil.callQuery.apply(self, queryArgs).addCallbacks(
-                  function (res) {
-                     queryDeferred.callback(res);
-                     return res;
-                  },
-                  function (err) {
-                     queryDeferred.errback(err);
-                     return err
-                  });
-               return queryArgs;
-            });
-            queryDeferred.addErrback(function(error) {
-               if (error.canceled && sourceQueryDef && !sourceQueryDef.isReady()) {
-                  sourceQueryDef.cancel();
-               }
-            });
-         } else {
-            queryDeferred.errback(false);
-         }
-         
-         return queryDeferred;
-      }
-      
-      function analyzeTranslatedQueryAnswer(recordSet, searchConfig, resultRecordSet) {
+      function analyzeQueryAnswer(recordSet, recordSetTranslated, searchConfig) {
          var hasItemsWithTranslatedQuery = false;
+         recordSet = recordSet.clone();
    
-         if (recordSet.getCount()) {
+         if (recordSetTranslated && recordSetTranslated.getCount()) {
             hasItemsWithTranslatedQuery = true;
       
             //kbLayout standart
-            if (searchConfig.pageSize && resultRecordSet.getCount() < searchConfig.pageSize) {
-               recordSet.each(function(rec, index) {
-                  if (searchConfig.pageSize - resultRecordSet.getCount() > index) {
-                     resultRecordSet.append([rec]);
+            if (searchConfig.pageSize && recordSet.getCount() < searchConfig.pageSize) {
+               recordSetTranslated.each(function(rec, index) {
+                  if (searchConfig.pageSize - recordSet.getCount() > index) {
+                     recordSet.append([rec]);
                   }
                });
             }
          }
          
-         return hasItemsWithTranslatedQuery;
+         return {
+            translated: hasItemsWithTranslatedQuery,
+            result: recordSet
+         };
       }
       
-      function addCancelErrProcess(defs) {
+      function addCancelErrProcess(def) {
          this._searchDeferred.addErrback(function(error) {
             if (error.canceled) {
-               defs.forEach(function(def) {
-                  if (!def.isReady()) {
-                     def.cancel();
-                  }
-               })
+               if (!def.isReady()) {
+                  def.cancel();
+               }
             }
             return error;
          })
+      }
+      
+      function query(params) {
+         var def = DataSourceUtil.callQuery.apply(this, getArgsForQuery.call(this, params));
+         addCancelErrProcess.call(this, def);
+         return def;
       }
       
       
       function startSearch(searchConfig) {
          var resultDeferred = new Deferred(),
              queryParallelDeferred = new ParallelDeferred(),
-             hasItemsWithTranslatedQuery = false,
-             queryDeferred, translateQueryDeferred, resultRecordSet;
+             searchCfg, queryResult, translateQueryResult;
    
          //query without translating
          queryParallelDeferred.push(
-            queryDeferred = DataSourceUtil.callQuery.apply(this, getArgsForQuery.call(this, searchConfig)).addCallback(function(recordset) {
-               resultRecordSet = recordset;
-               return recordset;
-            }));
+            query.call(this, searchConfig).addCallback(function(recordSet) {
+               queryResult = recordSet;
+               return recordSet;
+            })
+         );
    
-         //query with translated searchParam
-         queryParallelDeferred.push(
-            translateQueryDeferred = queryWithTranslate.call(this, searchConfig).addCallback(function (dataSet) {
-               //waiting for query without translating
-               queryDeferred.addCallback(function(result) {
-                  hasItemsWithTranslatedQuery =  analyzeTranslatedQueryAnswer(dataSet, searchConfig, resultRecordSet);
-                  return result;
-               });
-         
-               return dataSet;
-            }));
-   
-         addCancelErrProcess.call(this, [queryDeferred, translateQueryDeferred]);
+         //query with translating
+         if (this._kbLayoutRevert) {
+            searchCfg = clone(searchConfig); //cloning, because will changing
+            searchCfg.filter[this._searchParam] = requirejs(kbLayoutPath)(searchCfg.filter[this._searchParam]);
+            queryParallelDeferred.push(
+               query.call(this, searchCfg).addCallback(function (recordSet) {
+                  translateQueryResult = recordSet;
+                  return recordSet;
+               })
+            );
+         }
    
          queryParallelDeferred.done().getResult().addBoth(function(res) {
-            resultDeferred.callback({
-               translated: hasItemsWithTranslatedQuery,
-               result: resultRecordSet
-            });
+            resultDeferred.callback(analyzeQueryAnswer(queryResult, translateQueryResult, searchConfig));
             return res;
          });
          
@@ -172,8 +134,7 @@ define('js!Controls/List/resources/utils/Search',
        * @name WSControls/Lists/Controllers/Search#dataSource
        * @cfg {WS.Data/Source/ISource} dataSource
        */
-      var Search  = Abstract.extend({
-         
+      var Search  = extend({
          constructor: function(cfg) {
             cfg = cfg || {};
             checkRequiredParams(cfg);
@@ -201,17 +162,30 @@ define('js!Controls/List/resources/utils/Search',
                throw new Error('filter is required for search ')
             }
             
-            var self = this;
-            
+            var self = this,
+                kbLoad = new Deferred();
+   
+            //preload KbLayoutRevert
+            if (this._kbLayoutRevert && !requirejs.defined(kbLayoutPath)) {
+               requirejs([kbLayoutPath], function () {
+                  kbLoad.callback();
+               })
+            } else {
+               kbLoad.callback();
+            }
             //aborting current search
             this.abort();
             this._searchDeferred = new Deferred();
-            
+
             this._searchDelayTimer = setTimeout(function() {
-               startSearch.call(self, searchConfig).addCallback(function(searchResult) {
-                  self._searchDeferred.callback(searchResult);
-                  self._searchDeferred = null;
-               });
+               kbLoad.addCallback(function(res) {
+                  startSearch.call(self, searchConfig).addCallback(function(searchResult) {
+                     self._searchDeferred.callback(searchResult);
+                     self._searchDeferred = null;
+                     return searchResult;
+                  });
+                  return res;
+               })
             }, this._searchDelay);
             
       
@@ -231,12 +205,8 @@ define('js!Controls/List/resources/utils/Search',
                this._searchDeferred.cancel();
                this._searchDeferred = null;
             }
-         },
-         
-         destroy: function() {
-            this.abort();
-            Search.superclass.destroy.call(this);
          }
+         
       });
    
       return Search;
