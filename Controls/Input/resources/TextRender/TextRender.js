@@ -82,9 +82,9 @@ define('js!Controls/Input/resources/TextRender/TextRender',
                   beforeInputValue: newValue.substring(0, position),
                   inputValue: '',
                   afterInputValue: newValue.substring(position)
-               }
+               };
             } else {
-               splitValue = CalcInputValue.getSplitInputValue(this._options.text, newValue, position, this._selectionUtil.selectionEnd - this._selectionUtil.selectionStart);
+               splitValue = CalcInputValue.getSplitInputValue(this._options.value, newValue, position, this._selectionUtil.selectionEnd - this._selectionUtil.selectionStart);
             }
 
             inputData = this._options.getInputData(splitValue);

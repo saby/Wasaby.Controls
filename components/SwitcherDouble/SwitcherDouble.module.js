@@ -47,7 +47,7 @@ define('js!SBIS3.CONTROLS.SwitcherDouble',
     *
     * @control
     * @public
-    * @category Buttons
+    * @category Button
     * @initial
     * <component data-component='SBIS3.CONTROLS.SwitcherDouble'>
     *    <option name="stateOff" value="Выкл"></option>

@@ -22,7 +22,7 @@ define('js!SBIS3.CONTROLS.StateButton', [
     * @author Крайнов Дмитрий Олегович
     *
     * @control
-    * @category Buttons
+    * @category Button
     * @public
     * @initial
     * <component data-component='SBIS3.CONTROLS.Button'>

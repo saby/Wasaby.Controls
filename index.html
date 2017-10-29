@@ -83,6 +83,16 @@
    <table>
       <tr>
          <td>
+            <h3>VDOM</h3>
+            <ul>
+               <li>
+                  <div id="ListControl"></div>
+               </li>
+               <li>
+                  <div id="Inputs"></div>
+               </li>
+
+            </ul>
             <h3>Просмотр контролов</h3>
             <ul>
                <li>
@@ -279,6 +289,19 @@
 <script type="text/javascript">
    $ws.core.withComponents('Source').addCallback(function () {
       $(document).ready(function () {
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "ListControl",
+               caption: 'ListControl',
+               href: '/pages/demo.html?cname=VDomListView'
+            });
+
+            new r({
+               element: "Inputs",
+               caption: 'Inputs',
+               href: '/pages/demo.html?cname=VDomText'
+            });
+         });
 
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
             new r({
@@ -425,11 +448,7 @@
          });
 
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
-            new r({
-               element: "Views",
-               caption: 'Views',
-               href: '/pages/Views.html'
-            })
+
             new r({
                element: "ViewsNEWDS",
                caption: 'Views New DataSetMixin',

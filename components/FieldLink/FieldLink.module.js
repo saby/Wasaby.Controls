@@ -174,7 +174,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
         *
         * @control
         * @public
-        * @category Inputs
+        * @category Input
         */
 
        var FieldLink = SuggestTextBox.extend([MultiSelectable, ActiveMultiSelectable, Selectable, ActiveSelectable, SyncSelectionMixin, ItemsControlMixin, ITextValue],/** @lends SBIS3.CONTROLS.FieldLink.prototype */{
