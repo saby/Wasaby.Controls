@@ -72,6 +72,14 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                subTitle: {inline: 'span', classes: 'subTitleText'},
                additionalText: {inline: 'span', classes: 'additionalText'}
             },
+            colorsMap: {
+               'rgb(0, 0, 0)': 'black',
+               'rgb(255, 0, 0)': 'red',
+               'rgb(0, 128, 0)': 'green',
+               'rgb(0, 0, 255)': 'blue',
+               'rgb(128, 0, 128)': 'purple',
+               'rgb(128, 128, 128)': 'grey'
+            },
             ipadCoefficient: {
                top: {
                   vertical: 0.65,
@@ -737,6 +745,91 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             this._tinyEditor.execCommand('');
             //при установке стиля(через форматтер) не стреляет change
             this._updateTextByTiny();
+         },
+
+         /**
+          * Получить свойства форматирования текущего выделения
+          * @return {object}
+          */
+         getCurrentFormats: function () {
+            var editor = this._tinyEditor;
+            if (editor) {
+               var selNode = editor.selection.getNode();
+               var $selNode = $(selNode);
+               var color = editor.dom.getStyle(selNode, 'color', true);
+               return {
+                  fontsize: +editor.dom.getStyle(selNode, 'font-size', true).replace('px', ''),
+                  color: constants.colorsMap[color] || color,
+                  bold: !!$selNode.closest('strong').length,
+                  italic: !!$selNode.closest('em').length,
+                  underline: !!$selNode.closest('span[style*="decoration: underline"]').length,
+                  strikethrough: !!$selNode.closest('span[style*="decoration: line-through"]').length
+               };
+            }
+         },
+
+         /**
+          * Получить свойства форматирования по-умолчанию - определяется по свойствам форматирования контейнера редактора, (то, как видно в редакторе без форматирования)
+          * @return {object}
+          */
+         getDefaultFormats: function () {
+            if (!this._defaultFormats) {
+               var $root = $(this._inputControl);
+               var color = $root.css('color');
+               this._defaultFormats = {
+                  fontsize : +$root.css('font-size').replace('px', ''),
+                  color: constants.colorsMap[color] || color
+               };
+            }
+            return this._defaultFormats;
+         },
+
+         /**
+          * Применить свойства форматирования к текущему выделению
+          * @param {object} formats Свойства форматирования
+          */
+         applyFormats: function (formats) {
+            // Отбросить все свойства форматирования, тождественные форматированию по-умолчанию
+            var defaults = this.getDefaultFormats();
+            for (var prop in defaults) {
+               if (prop in formats && formats[prop] ==/* Не "==="! */ defaults[prop]) {
+                  delete formats[prop];
+               }
+            }
+            // Применить новое форматирование
+            if (formats.id) {
+               this.setFontStyle(formats.id);
+            }
+            else {
+               for (var i = 0, names = ['title', 'subTitle', 'additionalText', 'forecolor']; i < names.length; i++) {
+                  this._removeFormat(names[i]);
+               }
+               var previous = this.getCurrentFormats();
+               var sameFont = formats.fontsize && formats.fontsize === previous.fontsize;
+               //необходимо сначала ставить размер шрифта, тк это сбивает каретку
+               if (!sameFont) {
+                  this.setFontSize(formats.fontsize);
+               }
+               var hasOther;
+               for (var i = 0, names = ['bold', 'italic', 'underline', 'strikethrough']; i < names.length; i++) {
+                  var name = names[i];
+                  if (name in formats && formats[name] !== previous[name]) {
+                     this.execCommand(name);
+                     hasOther = true;
+                  }
+               }
+               if (formats.color && formats.color !== previous.color) {
+                  this.setFontColor(formats.color);
+                  hasOther = true;
+               }
+               if (sameFont && !hasOther) {
+                  // Если указан тот же размер шрифта (и это не размер по умолчанию), и нет других изменений - нужно чтобы были правильно
+                  // созданы окружающие span-ы (например https://online.sbis.ru/opendoc.html?guid=5f4b9308-ec3e-49b7-934c-d64deaf556dc)
+                  // в настоящий момент работает и без этого кода, но если не будет работать, но нужно использовать modify, т.к. expand помечен deprecated.
+                  //this._tinyEditor.selection.getSel().modify();//.getRng().expand()
+                  this.setFontSize(formats.fontsize);
+               }
+            }
          },
 
          /**

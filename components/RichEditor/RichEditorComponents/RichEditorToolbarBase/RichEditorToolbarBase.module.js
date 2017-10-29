@@ -19,14 +19,6 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
        * @control
        */
       constants = {
-         colorsMap: {
-            'rgb(0, 0, 0)': 'black',
-            'rgb(255, 0, 0)': 'red',
-            'rgb(0, 128, 0)': 'green',
-            'rgb(0, 0, 255)': 'blue',
-            'rgb(128, 0, 128)': 'purple',
-            'rgb(128, 128, 128)': 'grey'
-         },
          INLINE_TEMPLATE: '6'
       },
       RichEditorToolbarBase = ButtonGroupBase.extend(/** @lends SBIS3.CONTROLS.RichEditorToolbarBase.prototype */{
@@ -245,25 +237,15 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
             this.getLinkedEditor().showCodeSample();
          },
 
-         _getCurrentFormats: function () {
-            var selNode = this.getLinkedEditor().getTinyEditor().selection.getNode();
-            return {
-               fontsize: +tinyMCE.DOM.getStyle(selNode, 'font-size', true).replace('px', ''),
-               color: constants.colorsMap[tinyMCE.DOM.getStyle(selNode, 'color', true)],
-               bold: this._buttons.bold,
-               italic: this._buttons.italic,
-               underline: this._buttons.underline,
-               strikethrough: this._buttons.strikethrough
-            };
-         },
-
          _openStylesPanel: function(button){
             var stylesPanel = this.getStylesPanel(button);
-            stylesPanel.setStylesFromObject(this._getCurrentFormats());
+            var editor = this.getLinkedEditor();
+            stylesPanel.setStylesFromObject(editor ? editor.getCurrentFormats() : {});
             stylesPanel.show();
          },
 
          _toggleState: function(state, obj) {
+            // TODO: Тоже отрефакторить ? (с использованием editro.getCurrentFormats() )
             var
                selectors = {
                   'bold':  'strong',
@@ -280,6 +262,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
             }
             return {state: state, name: name};
          },
+
          getStylesPanel: function(button){
             var self = this;
             if (!this._stylesPanel) {
@@ -334,73 +317,13 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                   activableByClick: false
                });
 
-               // Так как (оказывается!) в NoteEditor стилевая панель запрашивается до того, как тулбар и редактор связываются друг с другом,
-               // то стиль по умолчанию получать из редактора станем как можно позже
-
                this._stylesPanel.subscribe('changeFormat', function () {
-                  var formats = self._stylesPanel.getStylesObject();
-                  // Отбросить все свойства форматирования, тождественные форматированию по-умолчанию
-                  var defaults = self._getDefaults();
-                  for (var prop in defaults) {
-                     if (prop in formats && formats[prop] ==/* Не "==="! */ defaults[prop]) {
-                        delete formats[prop];
-                     }
-                  }
-                  // Применить новое форматирование
-                  self._applyFormats(formats);
+                  self.getLinkedEditor().applyFormats(self._stylesPanel.getStylesObject());
                });
             }
             return this._stylesPanel;
          },
 
-         _getDefaults: function () {
-            // Формат по-умолчанию - определяется по свойствам форматирования контейнера редактора, (то, как видно в редакторе без форматирования)
-            if (!this._defaults) {
-               var $root = $(this.getLinkedEditor().getInputContainer());
-               var color = $root.css('color');
-               this._defaults = {
-                  fontsize : +$root.css('font-size').replace('px', ''),
-                  color: constants.colorsMap[color] || color
-               };
-            }
-            return this._defaults;
-         },
-
-         _applyFormats: function (formats) {
-            var editor = this._options.linkedEditor;
-            if (editor) {
-               if (formats.id) {
-                  editor.setFontStyle(formats.id);
-               }
-               else {
-                  ['title', 'subTitle', 'additionalText', 'forecolor'].forEach(editor._removeFormat.bind(editor));
-                  var previous = this._getCurrentFormats();
-                  var sameFont = formats.fontsize && formats.fontsize === previous.fontsize;
-                  //необходимо сначала ставить размер шрифта, тк это сбивает каретку
-                  if (!sameFont) {
-                     editor.setFontSize(formats.fontsize);
-                  }
-                  var hasOther;
-                  for ( var button in this._buttons) {
-                     if (this._buttons.hasOwnProperty(button) && button in formats && this._buttons[button] !== formats[button]) {
-                        editor.execCommand(button);
-                        hasOther = true;
-                     }
-                  }
-                  if (formats.color && formats.color !== previous.color) {
-                     editor.setFontColor(formats.color);
-                     hasOther = true;
-                  }
-                  if (sameFont && !hasOther) {
-                     // Если указан тот же размер шрифта (и это не размер по умолчанию), и нет других изменений - нужно чтобы были правильно
-                     // созданы окружающие span-ы (например https://online.sbis.ru/opendoc.html?guid=5f4b9308-ec3e-49b7-934c-d64deaf556dc)
-                     // в настоящий момент работает и без этого кода, но если не будет работать, но нужно использовать modify, т.к. expand помечен deprecated.
-                     //editor.getTinyEditor().selection.getSel().modify();//.getRng().expand()
-                     editor.setFontSize(formats.fontsize);
-                  }
-               }
-            }
-         },
          destroy: function() {
             this._unbindEditor();
             this._handlersInstances = null;
