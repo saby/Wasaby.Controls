@@ -1395,7 +1395,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             }.bind(this));
 
             if (this._options.editorConfig.browser_spellcheck && (cConstants.browser.chrome || cConstants.browser.safari)) {
-               // Если включена проверка правописания, нужно при исправлениях генерировать событие NodeChange, иначе об этом изменение никак не станет известно
+               // Если включена проверка правописания, нужно при исправлениях обновлять принудительно text
                var _onSelectionChange1 = function (evt) {
                   if (evt.target === document) {
                      editor.off('SelectionChange', _onSelectionChange1);
@@ -1410,14 +1410,19 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                var _onSelectionChange2 = function (evt) {
                   if (evt.target === document) {
                      this._updateTextByTiny();
-                     this._tinyEditor.nodeChanged();
                   }
                }.bind(this);
 
                editor.on('contextmenu', function (evt) {
                   if (evt.currentTarget === this._inputControl[0] && (evt.target === evt.currentTarget || $.contains(event.currentTarget, evt.target))) {
-                     editor.on('SelectionChange', _onSelectionChange1);
                      editor.off('SelectionChange', _onSelectionChange2);
+                     if (cConstants.browser.safari) {
+                        // Для safari обязательно нужно отложить подписку на событие
+                        setTimeout(editor.on.bind(editor, 'SelectionChange', _onSelectionChange1), 1);
+                     }
+                     else {
+                        editor.on('SelectionChange', _onSelectionChange1);
+                     }
                   }
                }.bind(this));
             }
@@ -2000,6 +2005,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                content = this._tinyEditor.getContent({no_events: true}),
                args = this._tinyEditor.fire('PostProcess', {content: content});
+            //////////////////////////////////////////////////
+            //console.log('DBG: RTE_Area._getTinyEditorValue: content=', content, '; args.content=', args.content, ';');
+            //////////////////////////////////////////////////
             return args.content;
          },
 
