@@ -1456,17 +1456,19 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             editor.on('PastePostProcess', function(event){
                var
-                  maximalWidth,
                   content = event.node,
-                  $images = $(content).find('img:not(.ws-fre__smile)'),
-                  width,
-                  currentWidth,
-                  naturalSizes;
-               $(content).find('[unselectable ="on"]').attr('data-mce-resize','false');
+                  $content = $(content),
+                  $images = $content.find('img:not(.ws-fre__smile)');
+               $content.find('[unselectable ="on"]').attr('data-mce-resize', 'false');
                if ($images.length) {
                   if (/data:image/gi.test(content.innerHTML)) {
                      return false;
                   }
+                  var
+                     maximalWidth,
+                     width,
+                     currentWidth,
+                     naturalSizes;
                   maximalWidth = this._inputControl.width() - constants.imageOffset;
                   for (var i = 0; i < $images.length; i++) {
                      naturalSizes = ImageUtil.getNaturalSizes($images[i]);
@@ -1480,14 +1482,17 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      }
                   }
                }
+               var html = content.innerHTML;
                //Замена переносов строк на <br>
-               event.node.innerHTML = event.node.innerHTML.replace(/([^>])\n(?!<)/gi, '$1<br />');
+               html = html.replace(/([^>])\n(?!<)/gi, '$1<br />');
                // Замена отступов после переноса строки и в первой строке
                // пробелы заменяются с чередованием '&nbsp;' + ' '
-               event.node.innerHTML = this._replaceWhitespaces(event.node.innerHTML);
+               html = this._replaceWhitespaces(html);
                // Для того чтобы каретка(курсор ввода) после вставки точна ушла назад и последующая вставка производилась точно после предыдущей
                // (учитывая любовь tinymce тихонько перемещать курсор внутрь элементов)
-               event.node.innerHTML += '&#65279;';
+               html += '&#65279;';
+               // И теперь (только один раз) вставим в DOM
+               content.innerHTML = html;
             }.bind(this));
 
             if (this._options.editorConfig.browser_spellcheck && (cConstants.browser.chrome || cConstants.browser.safari)) {
