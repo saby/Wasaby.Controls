@@ -1008,6 +1008,16 @@ body {
      -webkit-overflow-scrolling: auto!important;
    }
 }
+// Предыдущие стили отключает скролы на плавающих панелях. А значит и хак с тем что эти скролы могут отвалится на ipad
+// не нужен. ЧТо бы ничего не прыгало отключаем этот хак.
+// Выпилить когда уйдем от ws-float-area__block-layout в онлайне.
+body {
+   &.ws-is-mobile-safari, &.ws-is-mobile-chrome-ios {
+      .ws-float-area-no-height-calc .ws-float-area-stack-panel-overflow {
+         height: 100%;
+      }
+   }
+}
 
 //Rem Line-height Doesn’t Work In Pseudo Elements In IE
 //fallback for ie, will live while there is rem
