@@ -66,9 +66,16 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
             Scrollbar.superclass.init.call(this);
 
             this._thumb = this._container.find('.js-controls-Scrollbar__thumb');
+            this._wheelHandler = this._wheelHandler.bind(this);
+
             this._container.on('mousedown touchstart', '.js-controls-Scrollbar__thumb', this._getDragInitHandler());
             this._container.on('mousedown touchstart', this._onClickDragHandler.bind(this));
-            this._container.on('wheel', this._wheelHandler.bind(this));
+            if (detection.firefox) {
+               this._container.on('MozMousePixelScroll', this._wheelHandler);
+            } else {
+               this._container.on('wheel', this._wheelHandler);
+            }
+
             this._containerHeight = this._container.height();
             this._containerOuterHeight = this._container.outerHeight(true);
             this._browserScrollbarMinHeght = parseFloat(getComputedStyle(this._thumb[0]).minHeight);
@@ -227,15 +234,21 @@ define('js!SBIS3.CONTROLS.Scrollbar', [
          },
 
          _wheelHandler: function(event) {
-            var deltaY = event.originalEvent.deltaY;
+            var deltaY;
 
-            // В firefox маленькой значение delta в отличии от остальных браузеров.
-            // Например в chrome 100, ie 120, а в firefox 3.
-            if (detection.firefox) {
-               deltaY = deltaY > 4 ? 120 : deltaY * 30;
+            switch (event.type) {
+               case 'wheel':
+                  deltaY = event.originalEvent.deltaY;
+                  break;
+               case 'MozMousePixelScroll':
+                  deltaY = event.originalEvent.detail;
+                  break;
             }
+
             this.setPosition(this.getPosition() + deltaY);
             this._notify('onScrollbarDrag', this.getPosition());
+
+            event.preventDefault();
          },
 
          destroy: function () {
