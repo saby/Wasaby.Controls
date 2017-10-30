@@ -86,6 +86,9 @@
             <h3>VDOM</h3>
             <ul>
                <li>
+                  <div id="ItemsView"></div>
+               </li>
+               <li>
                   <div id="ListControl"></div>
                </li>
                <li>
@@ -290,6 +293,12 @@
    $ws.core.withComponents('Source').addCallback(function () {
       $(document).ready(function () {
          require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "ItemsView",
+               caption: 'ItemsView',
+               href: '/pages/demo.html?cname=ItemsView'
+            });
+
             new r({
                element: "ListControl",
                caption: 'ListControl',

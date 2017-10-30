@@ -22,6 +22,10 @@ define('js!Controls/List/ItemsView', [
          _isActiveByClick: false,
          _template: ItemsRenderTpl,
          _items: null,
+         _display: null,
+         _startIndex: 0,
+         _stopIndex: 0,
+         _curIndex: 0,
 
          constructor: function (cfg) {
             ItemsRender.superclass.constructor.apply(this, arguments);
@@ -32,6 +36,7 @@ define('js!Controls/List/ItemsView', [
             if (newOptions.items) {
                this._items = newOptions.items;
                this.__initDisplay(newOptions.items, newOptions);
+               this._initIndices();
             }
          },
 
@@ -40,6 +45,27 @@ define('js!Controls/List/ItemsView', [
                this._items = newOptions.items;
                this.__initDisplay(newOptions.items, newOptions);
             }
+         },
+
+         _initIndices: function() {
+            this._startIndex = 0;
+            this._stopIndex = this._display.getCount();
+         },
+
+         _getStartEnumerationPosition: function() {
+            this._curIndex = this._startIndex;
+         },
+
+         _getNextEnumerationPosition: function() {
+            this._curIndex++;
+         },
+
+         _checkConditionForEnumeration: function() {
+            return this._curIndex < this._stopIndex;
+         },
+
+         __getPropertyValue: function(itemContents, field) {
+            return ItemsUtil.getPropertyValue(itemContents, field);
          },
 
          __initDisplay: function(items, cfg) {
