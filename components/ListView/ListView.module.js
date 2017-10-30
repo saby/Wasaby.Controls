@@ -2143,7 +2143,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._scrollBinder) {
                var scrollPage, pagesCount, average, commonItemsCount, firstPageElemIndex;
                scrollPage = this._scrollBinder._getScrollPage();
-               pagesCount = this._scrollPager.getPagesCount();
+               pagesCount = this._scrollPager.getPagesCount() || 1;//paging мог ещё не отобразиться и pagesCount будет null
                commonItemsCount = this._getItemsProjection() ? this._getItemsProjection().getCount() : 0;
                average = commonItemsCount / pagesCount;
                firstPageElemIndex = (scrollPage - 1) * average;
