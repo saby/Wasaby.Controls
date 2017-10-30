@@ -24210,14 +24210,14 @@
 
                Tools.each(dom.select('*[data-mce-fragment]'), function (node) {
                   if (textInlineElements[node.nodeName.toLowerCase()]) {
-                     for (var ansestor = node.parentNode; ansestor && ansestor != root; ansestor = ansestor.parentNode) {
-                        if (elementUtils.compare(ansestor, node)) {
+                     for (var ancestor = node.parentNode; ancestor && ancestor != root; ancestor = ancestor.parentNode) {
+                        if (elementUtils.compare(ancestor, node)) {
                            // Найден выщестоящий элемент, имеющий такой же тип, атрибуты и инлайн-стили, что и проверяемый node. Значит, можно
-                           // удалить node, пересадив его содержимое на его место. Но ТОЛЬКО ЕСЛИ между ansestor и node нет элементов,
+                           // удалить node, пересадив его содержимое на его место. Но ТОЛЬКО ЕСЛИ между ancestor и node нет элементов,
                            // переопределяющих их общий стиль иначе
                            var hasMiddle;
                            var style = dom.parseStyle(dom.getAttrib(node, 'style'));
-                           for (var n = node.parentNode; n && n != ansestor; n = n.parentNode) {
+                           for (var n = node.parentNode; n && n != ancestor; n = n.parentNode) {
                               var s = dom.parseStyle(dom.getAttrib(n, 'style'));
                               for (var p in style) {
                                  if (p in s && s[p] !== style[p]) {
