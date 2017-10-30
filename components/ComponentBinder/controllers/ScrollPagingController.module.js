@@ -80,14 +80,17 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
 
       _scrollHandler: function(event, scrollTop) {
          if (!this._freezePaging) {
-            var page = scrollTop / this._viewportHeight;
+            var page = scrollTop / this._viewportHeight,
+                paging = this._options.paging,
+                pagesCount = paging.getPagesCount();
             if (page % 1) {
                page = Math.ceil(page);
             }
             page += 1; //потому что используем нумерацию страниц с 1
             if (this._currentScrollPage !== page) {
                this._currentScrollPage = page;
-               this._options.paging.setSelectedKey(page);
+               /* Текущая страница не может быть больше кол-ва страниц, установленных для paging'a. */
+               paging.setSelectedKey(page > pagesCount ? pagesCount : page);
             }
          }
       },
