@@ -556,9 +556,16 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                   prepareAndInsertContent(content);
                   dialog.close();
+                  onClose();
                   event.stopPropagation();
                   event.preventDefault();
                   return false;
+               },
+               onClose = function () {
+                  document.removeEventListener('paste', onPaste, true);
+                  if (typeof onAfterCloseHandler === 'function') {
+                     onAfterCloseHandler();
+                  }
                },
                service = {
                   destroy: function(){}
@@ -576,12 +583,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                            closeByExternalClick: true,
                            opener: self
                         },
-                        function () {
-                           document.removeEventListener('paste', onPaste, true);
-                           if (typeof onAfterCloseHandler === 'function') {
-                              onAfterCloseHandler();
-                           }
-                        }
+                        onClose
                      );
                   });
                   service.destroy();
@@ -1423,7 +1425,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             editor.on('drop', function(event) {
                //при дропе тоже заходит в BeforePastePreProcess надо обнулять _clipboardTex
                self._clipboardText = false;
-               if (!self._mouseIsPressed && (!event.targetClone || (event.targetClone && !$(event.targetClone).hasClass('controls-RichEditor__noneditable'))))  {
+               if (!self._mouseIsPressed && !cConstants.browser.isIE && (!event.targetClone || !$(event.targetClone).hasClass('controls-RichEditor__noneditable')))  {
                   event.preventDefault();
                }
             });
