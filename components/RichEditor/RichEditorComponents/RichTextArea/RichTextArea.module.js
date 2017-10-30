@@ -2005,9 +2005,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             var
                content = this._tinyEditor.getContent({no_events: true}),
                args = this._tinyEditor.fire('PostProcess', {content: content});
-            //////////////////////////////////////////////////
-            //console.log('DBG: RTE_Area._getTinyEditorValue: content=', content, '; args.content=', args.content, ';');
-            //////////////////////////////////////////////////
             return args.content;
          },
 
