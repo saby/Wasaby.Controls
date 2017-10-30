@@ -1791,6 +1791,7 @@ define('js!SBIS3.CONTROLS.ListView',
          setEmptyHTML: function (html) {
             ListView.superclass.setEmptyHTML.apply(this, arguments);
             this._getEmptyDataContainer().empty().html(Sanitize(html, {validNodes: {component: true}, validAttributes : {config: true} }));
+            this._reviveItems();
             this._toggleEmptyData(this._getItemsProjection() && !this._getItemsProjection().getCount());
          },
 
