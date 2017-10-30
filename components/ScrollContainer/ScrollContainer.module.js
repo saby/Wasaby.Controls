@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'tmpl!SBIS3.CONTROLS.ScrollContainer',
       'js!SBIS3.CONTROLS.Scrollbar',
       'Core/detection',
+      'Core/compatibility',
       'js!SBIS3.CORE.FloatAreaManager',
       'js!SBIS3.StickyHeaderManager',
       'Core/constants',
@@ -24,6 +25,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
              template,
              Scrollbar,
              cDetection,
+             compatibility,
              FloatAreaManager,
              StickyHeaderManager,
              constants,
@@ -274,8 +276,11 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          _getBrowserScrollbarWidth: function() {
             var scrollbarWidth = null, outer, outerStyle;
 
-            // В браузерах с поддержкой ::-webkit-scrollbar установлена ширини 0.
-            if (cDetection.webkit || cDetection.operaChrome) {
+            /**
+             * В браузерах с поддержкой ::-webkit-scrollbar установлена ширини 0.
+             * Определяем не с помощью Core/detection, потому что в нем считается, что chrome не на WebKit.
+             */
+            if (/AppleWebKit/.test(navigator.userAgent)) {
                scrollbarWidth = 0;
             } else {
                // На Mac ширина всегда 15, за исключением браузеров с поддержкой ::-webkit-scrollbar.
