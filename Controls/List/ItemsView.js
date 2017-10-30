@@ -80,6 +80,7 @@ define('js!Controls/List/ItemsView', [
          },
 
          _onCollectionChange: function() {
+            this._initIndices();
             this._forceUpdate();
          },
 

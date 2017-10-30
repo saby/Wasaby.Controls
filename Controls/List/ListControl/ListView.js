@@ -65,7 +65,7 @@ define('js!Controls/List/ListControl/ListView', [
          _onCollectionChange: function() {
             //т.к. при действиях с рекордсетом рекорд может потерять владельца, надо обновить ссылку на актуальный рекорд из текущего набора
             this._selectedItem = ItemsUtil.getDisplayItemById(this._display, this._options.selectedKey, this._options.idProperty);
-            this._forceUpdate();
+            ListView.superclass._onCollectionChange.apply(this, arguments);
          }
 
       });
