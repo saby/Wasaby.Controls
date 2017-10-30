@@ -522,10 +522,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       _onLeftSwipeHandler: function() {
+         TreeDataGridView.superclass._onLeftSwipeHandler.apply(this, arguments);
          if(this._options.editArrow || this._options.arrowActivatedHandler) {
             this._showEditArrow();
          }
-         TreeDataGridView.superclass._onLeftSwipeHandler.apply(this, arguments);
       },
 
       _onRightSwipeHandler: function() {
