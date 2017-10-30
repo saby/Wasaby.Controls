@@ -101,7 +101,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'use strict';
 
    /**
-    * Контрол, отображающий набор данных с иерархической структурой в виде в таблицы с несколькими колонками. Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">Настройка списков</a>.
+    * Класс контрола "Иерархическое табличное представление".
+    * <a href="http://axure.tensor.ru/standarts/v7/%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_1_.html">Спецификация</a>
+    * <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">Документация</a>.
     *
     * @class SBIS3.CONTROLS.TreeDataGridView
     * @extends SBIS3.CONTROLS.DataGridView
@@ -114,11 +116,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * @cssModifier controls-TreeDataGridView__withPhoto-L Устанавливает отступы с учетом расположения в верстке изображения, размера L.
     * @cssModifier controls-TreeView__withoutLevelPadding Устанавливает режим отображения дерева без иерархических отступов.
     * @cssModifier controls-TreeView__hideExpands Устанавливает режим отображения дерева без иконок сворачивания/разворачивания узлов.
-    *
-    * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView Пример 1. Простое иерархическое представление данных в режиме множественного выбора записей.
-    * @demo SBIS3.DOCS.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
-    * Инициировать добавление можно как по нажатию кнопок в футерах, так и по кнопке Enter из режима редактирования последней записи.
-    * Подробное описание конфигурации компонента и футеров вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/add-in-place/"> Добавление по месту</a>.
     *
     * @author Авраменко Алексей Сергеевич
     *
