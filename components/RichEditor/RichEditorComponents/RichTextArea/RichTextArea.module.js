@@ -560,7 +560,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   var content = event.clipboardData.getData ? event.clipboardData.getData('text/html') : '';
                   if (!content || !save) {
                      content = event.clipboardData.getData ? event.clipboardData.getData('text/plain') : window.clipboardData.getData('Text');
-                     content.replace('orphans: 31415;','');
+                     content.replace('data-ws-is-rich-text="true"', '');
                   }
                   prepareAndInsertContent(content);
                   dialog.close();
@@ -1423,8 +1423,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             //Обработка вставки контента
             editor.on('BeforePastePreProcess', function(e) {
-               var isRichContent = e.content.indexOf('orphans: 31415;') !== -1;
-               e.content = e.content.replace('orphans: 31415;', '');
+               var isRichContent = e.content.indexOf('data-ws-is-rich-text="true"') !== -1;
+               e.content = e.content.replace('data-ws-is-rich-text="true"', '');
                //Необходимо заменять декорированные ссылки обратно на url
                //TODO: временное решение для 230. удалить в 240 когда сделают ошибку https://inside.tensor.ru/opendoc.html?guid=dbaac53f-1608-42fa-9714-d8c3a1959f17
                e.content = self._prepareContent(e.content);

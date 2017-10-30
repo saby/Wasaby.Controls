@@ -21,10 +21,10 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
          target = target.get(0);
          //поддерживаем форматное копирование не во всех браузерах
          var browser = constants.browser;
-         if (browser.chrome || browser.isIE) {
+         if (browser.chrome || browser.firefox || browser.isIE) {
             if (target.addEventListener) {
-               target.addEventListener('copy', this._markingRichContent, browser.chrome);
-               target.addEventListener('cut', this._markingRichContent, browser.chrome);
+               target.addEventListener('copy', this._markingRichContent, true);
+               target.addEventListener('cut', this._markingRichContent, true);
             }
             else {
                //on в отличие от attachEvent в приходящем событии позволяет получить таргет
@@ -36,11 +36,11 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
       unmarkRichContentOnCopy: function (target) {
          target = target.get(0);
          var browser = constants.browser;
-         if (browser.chrome || browser.isIE) {
+         if (browser.chrome || browser.firefox || browser.isIE) {
             //в webkit в бтре идёт подписка на cut и удаляется лишний символ, поэтому нужно подписываться на capture фазе
             if (target.removeEventListener) {
-               target.removeEventListener('copy', this._markingRichContent, browser.chrome);
-               target.removeEventListener('cut', this._markingRichContent, browser.chrome);
+               target.removeEventListener('copy', this._markingRichContent, true);
+               target.removeEventListener('cut', this._markingRichContent, true);
             }
             else {
                $(target).off('cut copy', this._markingRichContent);
@@ -56,18 +56,15 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
          //$.contains(node,node) вернет false, необходимо дополнительно проверить равеноство узлов
          var sel = document.getSelection();
          if (sel && (event.currentTarget === sel.focusNode || $.contains(event.currentTarget, sel.focusNode))) {
-            //orphans = '31415' - метка показывающая что содержимое было скопировано из богатого редактора
             // Обработчик, проставляющий или убирающий метку указщанному узлу если он элемент
+            // Сейчас в качестве метки используется атрибут data-ws-is-rich-text == 'true', раньше - стилевое свойство orphans == '31415'
             var handleNode = function (isForward, node) {
                if (node.nodeType === 1) {
-                  var MARK = '31415';//Pi
                   if (isForward) {
-                     node.setAttribute('data-orphans', node.style.orphans);
-                     node.style.orphans = MARK;
+                     node.setAttribute('data-ws-is-rich-text', 'true');
                   }
                   else {
-                     node.style.orphans = node.getAttribute('data-orphans');
-                     node.removeAttribute('data-orphans');
+                     node.removeAttribute('data-ws-is-rich-text');
                   }
                }
             };
@@ -76,9 +73,10 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
                handleNode(isForward, target);
                [].slice.call(target.childNodes).forEach(handleNode.bind(null, isForward));
             };
-            handleAll(true, event.target);
+            var evtTarget = constants.browser.firefox ? (sel.focusNode !== sel.anchorNode ? sel.getRangeAt(0).commonAncestorContainer : (sel.focusNode.nodeType === 3 ? sel.focusNode.parentNode : sel.focusNode)) : event.target;
+            handleAll(true, evtTarget);
             // И вернуть всё взад
-            setTimeout(handleAll.bind(null, false, event.target), 1);
+            setTimeout(handleAll.bind(null, false, evtTarget), 1);
          }
       },
 
