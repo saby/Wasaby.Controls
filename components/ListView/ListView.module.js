@@ -4753,7 +4753,9 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _deleteRecords: function(idArray, beginDeleteResult) {
-            var self = this;
+            var
+               self = this,
+               resultDeferred;
 
             if (beginDeleteResult === false) {
                beginDeleteResult = BeginDeleteResult.CANCEL;
@@ -4765,14 +4767,16 @@ define('js!SBIS3.CONTROLS.ListView',
                this._deleteRecordsFromSource(idArray).addCallback(function (result) {
                   //Если записи удалялись из DataSource, то перезагрузим реест. Если DataSource нет, то удалим записи из items
                   if (self.getDataSource() && beginDeleteResult !== BeginDeleteResult.WITHOUT_RELOAD) {
-                     self._reloadViewAfterDelete(idArray).addCallback(function () {
+                     resultDeferred = self._reloadViewAfterDelete(idArray).addCallback(function () {
                         self.removeItemsSelection(idArray);
+                        return result;
                      });
                   } else {
                      self._deleteRecordsFromRecordSet(idArray);
                      self.removeItemsSelection(idArray);
+                     resultDeferred = Deferred.success(result);
                   }
-                  return result;
+                  return resultDeferred;
                }).addErrback(function (result) {
                   InformationPopupManager.showMessageDialog({
                      message: result.message,
