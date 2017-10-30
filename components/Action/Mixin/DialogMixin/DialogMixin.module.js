@@ -66,6 +66,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
           * К примеру в реестре задач ключ записи в реестре и ключ редактируемой записи различается, т.к. одна и та же задача может находиться в нескольких различных фазах
           */
          _linkedModelKey: undefined,
+         _isExecuting: false, //Открывается ли сейчас панель
          _executeDeferred: undefined
       },
       $constructor: function() {
@@ -76,7 +77,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          this._publish('onAfterShow', 'onBeforeShow');
       },
       _doExecute: function(meta) {
-         if (!this._executeDeferred || this._executeDeferred.isReady()) { //Если завершился предыдущий execute
+         if (!this._isExecuting) { //Если завершился предыдущий execute
             this._executeDeferred = new Deferred();
             this._openComponent(meta);
             return this._executeDeferred;
@@ -112,6 +113,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             this._dialog.reload(true);
          }
          else {
+            this._isExecuting = true;
             requirejs([componentName], function(Component) {
                try {
                   this._dialog = new Component(config);
@@ -188,6 +190,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          config.handlers = config.handlers || {};
          cMerge(config.handlers, {
             onAfterClose: function (e, result) {
+               self._isExecuting = false;
                self._finishExecuteDeferred();
                self._notifyOnExecuted(meta, result);
                self._dialog = undefined;
@@ -196,7 +199,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
                self._notify('onBeforeShow');
             },
             onAfterShow: function () {
-               self._finishExecuteDeferred();
+               self._isExecuting = false;
                self._notify('onAfterShow');
             }
          });
@@ -206,7 +209,10 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       _finishExecuteDeferred: function(error) {
          if (!this._executeDeferred.isReady()) {
             if (!error) {
-               this._executeDeferred.callback();
+               //false - т.к. приходится нотифаить событие onExecuted самому, из-за того, что базовый action
+               //не может обработать валидный результат false
+               //Выписал задачу, чтобы мог https://online.sbis.ru/opendoc.html?guid=c7ff3ac1-5884-40ef-bf84-e544d8a41ffa
+               this._executeDeferred.callback(false);
             }
             else {
                this._executeDeferred.errback(error);
