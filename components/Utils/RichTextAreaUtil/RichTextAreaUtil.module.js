@@ -75,6 +75,14 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
             };
             var evtTarget = constants.browser.firefox ? (sel.focusNode !== sel.anchorNode ? sel.getRangeAt(0).commonAncestorContainer : (sel.focusNode.nodeType === 3 ? sel.focusNode.parentNode : sel.focusNode)) : event.target;
             handleAll(true, evtTarget);
+            if (constants.browser.firefox || constants.browser.isIE) {
+               var $evtTarget = $(evtTarget);
+               ['color', 'fontSize'].forEach(function (property) {
+                  if (!evtTarget.style[property]) {
+                     evtTarget.style[property] = $evtTarget.css(property);
+                  }
+               });
+            }
             // И вернуть всё взад
             setTimeout(handleAll.bind(null, false, evtTarget), 1);
          }
