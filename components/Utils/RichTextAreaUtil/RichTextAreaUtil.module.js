@@ -17,31 +17,37 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
        * Метод для добавления определяющей метки в контент при копировании/вырезки из БТРа
        * @param {$object}$object - jquery элемент при копировании/вырезке из которого в буффер необходимо добавлять метку БТРа
        */
-      markRichContentOnCopy: function(target){
+      markRichContentOnCopy: function (target) {
          target = target.get(0);
-         //поддерживаем форматное копирование только в chrome
-         if (constants.browser.chrome) {
+         //поддерживаем форматное копирование не во всех браузерах
+         var browser = constants.browser;
+         if (browser.chrome || browser.isIE) {
             if (target.addEventListener) {
-               target.addEventListener('copy', this._markingRichContent, true);
-               target.addEventListener('cut', this._markingRichContent, true);
-            } else {
+               target.addEventListener('copy', this._markingRichContent, browser.chrome);
+               target.addEventListener('cut', this._markingRichContent, browser.chrome);
+            }
+            else {
                //on в отличие от attachEvent в приходящем событии позволяет получить таргет
                $(target).on('cut copy', this._markingRichContent);
             }
          }
       },
-      unmarkRichContentOnCopy: function(target){
+
+      unmarkRichContentOnCopy: function (target) {
          target = target.get(0);
-         if (constants.browser.chrome) {
+         var browser = constants.browser;
+         if (browser.chrome || browser.isIE) {
             //в webkit в бтре идёт подписка на cut и удаляется лишний символ, поэтому нужно подписываться на capture фазе
             if (target.removeEventListener) {
-               target.removeEventListener('copy', this._markingRichContent, true);
-               target.removeEventListener('cut', this._markingRichContent, true);
-            } else {
+               target.removeEventListener('copy', this._markingRichContent, browser.chrome);
+               target.removeEventListener('cut', this._markingRichContent, browser.chrome);
+            }
+            else {
                $(target).off('cut copy', this._markingRichContent);
             }
          }
       },
+
       /*Блок приватных методов*/
       _markingRichContent: function (e) {
          var event =  e.originalEvent ? e.originalEvent : e;
