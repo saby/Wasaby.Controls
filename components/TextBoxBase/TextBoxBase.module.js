@@ -151,7 +151,8 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
              * </pre>
              * @see SBIS3.CORE.Control#setActive
              */
-            focusOnActivatedOnMobiles: false
+            focusOnActivatedOnMobiles: false,
+            textAlign: 'left'
          }
       },
 
