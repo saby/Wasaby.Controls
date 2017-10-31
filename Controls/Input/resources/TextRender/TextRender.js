@@ -12,7 +12,7 @@ define('js!Controls/Input/resources/TextRender/TextRender',
       var TextBoxRender = Control.extend({
          /**
           * @class Controls.Input.resources.TextRender.TextRender
-          * @extends Controls/Control
+          * @extends Core/Control
           * @control
           * @private
           * @category Input
