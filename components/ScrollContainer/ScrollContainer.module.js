@@ -41,7 +41,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
        *
        * @class SBIS3.CONTROLS.ScrollContainer
        * @extends Core/core-extend
-       * @author Зуев Дмитрий Владимирович
+       * @author Журавлев Максим Сергеевич
        *
        * @mixes Core/Abstract.compatible
        * @mixes SBIS3.CORE.Control/Control.compatible
