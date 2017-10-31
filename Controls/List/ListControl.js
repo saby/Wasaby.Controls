@@ -109,7 +109,7 @@ define('js!Controls/List/ListControl', [
    * */
 
    /**
-    * Создаёт в списке новый элемент коллекции
+    * Запускает создание записи
     * @function Controls/interface/IPromisedSelectable#beginAdd
     */
 
@@ -129,63 +129,28 @@ define('js!Controls/List/ListControl', [
     */
 
    /**
-    * Удаляет записи из источника данных по переданным идентификаторам элементов коллекции
+    * Удаляет записи из источника данных по переданным идентификаторам элементов коллекции. Шляпа какая-то.
     * @function Controls/interface/IPromisedSelectable#deleteRecords
     */
 
    /**
-    * Возвращает следующий элемент
-    * @function Controls/interface/IPromisedSelectable#getNextItemById
-    */
-
-   /**
-    * Возвращает предыдущий элемент
-    * @function Controls/interface/IPromisedSelectable#getPrevItemById
-    */
-
-   /**
-    * Получить номер текущей страницы
+    * Получить номер текущей страницы. Шляпа какая-то.
     * @function Controls/interface/IPromisedSelectable#getPage
     */
 
    /**
-    * Возвращает признак, по которому можно установить: активно или нет редактирование по месту в данный момент
+    * Возвращает признак, по которому можно установить: активно или нет редактирование по месту в данный момент. Шляпа какая-то.
     * @function Controls/interface/IPromisedSelectable#isEdit
     */
 
    /**
-    * Перемещает переданные записи
+    * Перемещает переданные записи. Подумать.
     * @function Controls/interface/IPromisedSelectable#move
     */
 
    /**
     * Перезагружает набор записей представления данных с последующим обновлением отображения
     * @function Controls/interface/IPromisedSelectable#reload
-    */
-
-   /**
-    * Переместить на одну запись ввниз
-    * @function Controls/interface/IPromisedSelectable#moveRecordDown
-    */
-
-   /**
-    * Переместить на одну запись вверх
-    * @function Controls/interface/IPromisedSelectable#moveRecordUp
-    */
-
-   /**
-    *
-    * @function Controls/interface/IPromisedSelectable#scrollLoadMore
-    */
-
-   /**
-    *
-    * @function Controls/interface/IPromisedSelectable#scrollToFirstPage
-    */
-
-   /**
-    * Скролит табличное представление к указанному элементу
-    * @function Controls/interface/IPromisedSelectable#scrollToItem
     */
 
 
