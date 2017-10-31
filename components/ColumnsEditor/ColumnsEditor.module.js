@@ -2,6 +2,7 @@
 // TODO: Проработать ситуацию без созранённых пресетов и с одним созранённым пресетом
 // TODO: Реализовать использование информации из пресета (колонки и группы)
 // TODO: Проработать правильное сочетание(совмещение) информации из пресетов и прямой информации из опций
+// TODO: Сортировать ли по группам?
 // TODO:
 /**
  * Created by as.avramenko on 24.01.2017.
@@ -39,10 +40,13 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
-               title: 'Отображение колонок',
-               moveColumns: true,
+               title: rk('Отображение колонок'),
+               moveColumns: false/*^^^true*/,
                targetRegistryName: 'default',
                defaultPreset: null,
+               newPresetTitle: rk('Новый шаблон'),
+               autoSaveFirstPreset: true,
+               useNumberedTitle: true,
 
                _presets: null,
                _selectedPreset: null
@@ -84,15 +88,15 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                values.push({
                   title: 'Пробный шаблон 1',
                   selectedColumns: [],
-                  collapsedGroups: ['2']
+                  expandedGroups: ['1', '3']
                }, {
                   title: 'Пробный шаблон 2',
                   selectedColumns: [],
-                  collapsedGroups: ['2']
+                  expandedGroups: ['1', '3']
                }, {
                   title: 'Пробный шаблон 3',
                   selectedColumns: [],
-                  collapsedGroups: ['2']
+                  expandedGroups: ['1', '3']
                });
             }
             //////////////////////////////////////////////////
@@ -100,15 +104,13 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
             //recordset.clear();
             recordset.setRawData(values);
             recordset.acceptChanges();
-            var selected = this._options.defaultPreset;
-            selected = selected && values.map(function (v) { return v.title; }).indexOf(selected) !== -1 ? selected : values[0].title;
+            var selected = null;
+            if (values.length) {
+               selected = this._options.defaultPreset;
+               selected = selected && values.map(function (v) { return v.title; }).indexOf(selected) !== -1 ? selected : values[0].title;
+            }
             this._options._selectedPreset = selected;
-            this._updateDropdown();
-         },
-
-         _updateDropdown: function () {
-            this._presetDropdown.setItems(this._options._presets);
-            this._presetDropdown.setSelectedKeys([this._options._selectedPreset]);
+            _updateDropdown(this);
          },
 
          _getSelectedPreset: function () {
@@ -126,19 +128,25 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
 
          _commandChangePreset: function (title) {
             var recordset = this._options._presets;
+            if (!recordset.getCount()) {
+               throw new Error('Nothing to change');
+            }
             recordset.getRecordById(this._options._selectedPreset).set('title', title);
-            return this._completeCmdAndSave(title);
+            return _completeChangePresetsAndSave(this, title);
          },
 
          _commandClonePreset: function () {
             var recordset = this._options._presets;
+            if (!recordset.getCount()) {
+               throw new Error('Nothing to clone');
+            }
             var record = recordset.getRecordById(this._options._selectedPreset);
             var i = recordset.getIndex(record);
             var newRec = record.clone();
-            var newTitle = 'Новый шаблон';// TODO: Возможно, лучше сделать старый заголовок с цифрой в конце
+            var newTitle = this._options.newPresetTitle;// TODO: Возможно, лучше сделать старый заголовок с цифрой в конце - this._options.useNumberedTitle
             newRec.set('title', newTitle);
             recordset.add(newRec, i + 1);
-            return this._completeCmdAndSave(newTitle);
+            return _completeChangePresetsAndSave(this, newTitle);
          },
 
          _commandDeletePreset: function () {
@@ -150,14 +158,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
             var record = recordset.getRecordById(this._options._selectedPreset);
             var i = 1 < count ? recordset.getIndex(record) : null;
             recordset.remove(record);
-            return this._completeCmdAndSave(1 < count ? recordset.at(i).get('title') : null);
-         },
-
-         _completeCmdAndSave: function (title) {
-            this._options._selectedPreset = title;
-            this._options._presets.acceptChanges();
-            this._updateDropdown();
-            return this._save();
+            return _completeChangePresetsAndSave(this, 1 < count ? recordset.at(i).get('title') : null);
          },
 
          _commandShowColumnsEditor: function () {
@@ -165,30 +166,17 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
             this.showPicker();
          },
 
-         _save: function () {
-            var promise = new Deferred();
-            UserConfig.setParam(this._userConfigName, JSON.stringify(this._options._presets.getRawData())).addCallbacks(
-               promise.callback.bind(promise, true),
-               function (err) {
-                  // TODO: Изменение не сохранено - откатится назад
-                  promise.callback(false);
-               }
-            );
-            return promise;
-         },
-
          _setPickerConfig: function () {
             var cfg = this._columnsEditorConfig;
             //////////////////////////////////////////////////^^^
             if (cfg.columns && cfg.columns.getCount()) {
                cfg.columns.each(function (column) {
-                  column.set('group', Math.ceil(3*Math.random()));
+                  column.set('group', '' + Math.ceil(3*Math.random()));
                });
             }
-            cfg.groupTitleTpl = '{{?it.group == 1}}Группа: a1{{??it.group == 2}}Группа: a2{{??it.group == 3}}Группа: a3{{??}}Группа: a{{=it.group}}{{?}}';//<ws:if data="{{groupId == 1}}">Группа: a1</ws:if><ws:else data="{{groupId == 2}}">Группа: a2</ws:else><ws:else data="{{groupId == 3}}">Группа: a3</ws:else><ws:else>Группа: a{{groupId}}</ws:else>
+            cfg.groupTitleTpl = '{{?it.group == "1"}}Группа: a1{{??it.group == "2"}}Группа: a2{{??it.group == "3"}}Группа: a3{{??}}Группа: a{{=it.group}}{{?}}';//<ws:if data="{{groupId == "1v}}">Группа: a1</ws:if><ws:else data="{{groupId == "2"}}">Группа: a2</ws:else><ws:else data="{{groupId == "3"}}">Группа: a3</ws:else><ws:else>Группа: a{{groupId}}</ws:else>
             cfg.groupTitles = {'1':'Группа: b1', '2':'Группа: b2', '3':'Группа: b3'};
-            cfg.groupCollapsing = {'2':true};
-            cfg.moveColumns = false;//^^^true
+            cfg.expandedGroups = ['2'];
             //////////////////////////////////////////////////
             return {
                corner: 'tr',
@@ -206,18 +194,45 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                cssClassName: 'controls-ColumnsEditorArea-picker',
                componentOptions: {
                   columns: cfg.columns,
-                  selectedColumns: cfg.selectedColumns,
-                  getPresets: this._getPresets.bind(this),//^^^
-                  getSelectedPreset: this._getSelectedPreset.bind(this),//^^^
                   groupTitleTpl: cfg.groupTitleTpl && (typeof cfg.groupTitleTpl === 'function' || typeof cfg.groupTitleTpl === 'string') ? cfg.groupTitleTpl : null,
                   groupTitles: typeof cfg.groupTitles === 'object' ? cfg.groupTitles : null,
-                  groupCollapsing: typeof cfg.groupCollapsing === 'object' ? cfg.groupCollapsing : null,
+                  _getPresets: this._getPresets.bind(this),//^^^
+                  _getSelectedPreset: this._getSelectedPreset.bind(this),//^^^
+                  selectedColumns: cfg.selectedColumns,
+                  expandedGroups: Array.isArray(cfg.expandedGroups) ? cfg.expandedGroups : null,
                   title: this._options.title,
                   moveColumns: this._options.moveColumns,
                   handlers: {
-                     onSelectedColumnsChange: function (event, selectedColumns) {
-                        this._notify('onSelectedColumnsChange', selectedColumns);
+                     onComplete/*^^^onSelectedColumnsChange*/: function (evtName, selectedColumns, expandedGroups) {
+                        var recordset = this._options._presets;
+                        var isColumnsChanged;
+                        var isAnyChanged;
+                        if (recordset.getCount()) {
+                           var record = recordset.getRecordById(this._options._selectedPreset);
+                           record.set('selectedColumns', selectedColumns);
+                           isColumnsChanged = record.isChanged();
+                           record.set('expandedGroups', expandedGroups);
+                           isAnyChanged = record.isChanged();
+                           recordset.acceptChanges();
+                        }
+                        else
+                        if (this._options.autoSaveFirstPreset) {
+                           var title = this._options.newPresetTitle;
+                           //recordset.clear();
+                           recordset.setRawData([{title:title, selectedColumns:selectedColumns, expandedGroups:expandedGroups}]);
+                           _completeChangePresets(this, title);
+                           isAnyChanged = isColumnsChanged = true;
+                        }
+                        else {
+                           isColumnsChanged = true;
+                        }
+                        if (isAnyChanged) {
+                           _save(this);
+                        }
                         this._picker.hide();
+                        if (isColumnsChanged) {
+                           this._notify('onSelectedColumnsChange', selectedColumns);
+                        }
                      }.bind(this)
                   }
                },
@@ -233,6 +248,41 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
             };
          }
       });
+
+
+
+      // Private methods:
+
+      var _completeChangePresetsAndSave = function (self, title) {
+         _completeChangePresets(self, title);
+         return _save(self);
+      };
+
+      var _completeChangePresets = function (self, title) {
+         self._options._selectedPreset = title;
+         self._options._presets.acceptChanges();
+         _updateDropdown(self);
+      };
+
+      var _updateDropdown = function (self) {
+         self._presetDropdown.setItems(self._options._presets);
+         var selected = self._options._selectedPreset;
+         self._presetDropdown.setSelectedKeys(selected ? [selected] : []);
+      };
+
+      var _save = function (self) {
+         var promise = new Deferred();
+         UserConfig.setParam(self._userConfigName, JSON.stringify(self._options._presets.getRawData())).addCallbacks(
+            promise.callback.bind(promise, true),
+            function (err) {
+               // TODO: Изменение не сохранено - откатится назад если пикер ещё открыт
+               promise.callback(false);
+            }
+         );
+         return promise;
+      };
+
+
 
       return ColumnsEditor;
    }

@@ -50,11 +50,13 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
          _modifyOptions: function () {
             var cfg = ColumnsEditorArea.superclass._modifyOptions.apply(this, arguments);
             cfg._optsPreset = {
-               items: _makePresetItems(cfg.getPresets(), cfg.getSelectedPreset())
+               items: _makePresetItems(cfg._getPresets(), cfg._getSelectedPreset())
             };
-            var prepared = _prepareItems(cfg.columns, cfg.selectedColumns, cfg.moveColumns);
+            var prepared = _prepareItems(cfg.columns, _uniqueConcat(_getPresetValue(cfg._getPresets(), cfg._getSelectedPreset(), 'selectedColumns'), cfg.selectedColumns), cfg.moveColumns);
             cfg._optsFixed = prepared.fixed;
             cfg._optsSelectable = prepared.selectable;
+            cfg._groups = prepared.groups;
+            _updateGroupCollapsing(cfg);
             cfg._optsSelectable.onItemClick = _onItemClick;
             if (!cfg.moveColumns) {
                // Добавляем автосортировку отмеченных элементов - они должны отображаться перед неотмеченными
@@ -66,7 +68,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
 
          $constructor: function () {
             CommandDispatcher.declareCommand(this, 'applyColumns', this._commandApplyColumns);
-            this._publish('onSelectedColumnsChange');
+            this._publish('onComplete'/*^^^'onSelectedColumnsChange'*/);
          },
 
          init: function () {
@@ -93,15 +95,8 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
                this._presetView.setItemsActions(_makeItemsActions(this));
             }.bind(this));
 
-            // В опциях могут быть указаны группы, которые нужно свернуть при открытии
-            var groupCollapsing = this._options.groupCollapsing;
-            if (groupCollapsing) {
-               for (var group in groupCollapsing) {
-                  if (groupCollapsing[group]) {
-                     this._selectableView.collapseGroup(group);
-                  }
-               }
-            }
+            // В опциях могут быть указаны группы, которые нужно распахнуть при открытии
+            _applyGroupCollapsing(this);
             if (this._options.moveColumns) {
                this._itemsMoveController = new ItemsMoveController({
                   linkedView: this._selectableView
@@ -120,7 +115,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
             });
             this._options.selectedColumns = selectedColumns;
             this._notifyOnPropertyChanged('selectedColumns');
-            this._notify('onSelectedColumnsChange', selectedColumns);
+            this._notify('onComplete'/*^^^'onSelectedColumnsChange'*/, selectedColumns, _listExpandedGroups(this));
          },
 
          destroy: function () {
@@ -135,6 +130,14 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
 
       // Private methods:
 
+      var _getPresetValue = function (presets, selectedPreset, property) {
+         return selectedPreset ? presets.getRecordById(selectedPreset).get(property) : null;
+      };
+
+      var _uniqueConcat = function (list1, list2) {
+         return list1 && list1.length ? (list2 && list2.length ? list1.concat(list2).reduce(function (r, v) { if (r.indexOf(v) === -1) { r.push(v); }; return r; }, []) : list1) : (list2 && list2.length ? list2 : []);
+      };
+
       var _prepareItems = function (columns, selectedColumns, moveColumns) {
          var
             preparingItems = [],
@@ -145,7 +148,8 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
             selectable = {
                items: [],
                markedKeys: []
-            };
+            },
+            groups = [];
          columns.each(function (column) {
             var columnId = column.getId();
             var colData = column.getRawData();
@@ -164,6 +168,10 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
                }
                if (selectedColumns.indexOf(columnId) !== -1) {
                   selectable.markedKeys.push(columnId);
+               }
+               var group = column.get('group');
+               if (groups.indexOf(group) === -1) {
+                  groups.push(group);
                }
             }
          });
@@ -189,7 +197,25 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
             });
             _applySelectedToItems(selectable.markedKeys, selectable.items);
          }
-         return {fixed:fixed, selectable:selectable};
+         groups.sort();
+         return {fixed:fixed, selectable:selectable, groups:groups};
+      };
+
+      var _updateGroupCollapsing = function (cfg) {
+         var groups = cfg._groups;
+         if (groups && groups.length) {
+            var expandedGroups = _uniqueConcat(_getPresetValue(cfg._getPresets(), cfg._getSelectedPreset(), 'expandedGroups'), cfg.expandedGroups);
+            var groups = cfg._groups;
+            var groupCollapsing = {};
+            var has = !!(expandedGroups && expandedGroups.length);
+            for (var i = 0; i < groups.length; i++) {
+               var g = groups[i];
+               if (has ? expandedGroups.indexOf(g) === -1 : i !== 0) {
+                  groupCollapsing[g] = true;
+               }
+            }
+            cfg._groupCollapsing = groupCollapsing;
+         }
       };
 
       var _applySelectedToItems = function (selectedArray, items) {
@@ -216,19 +242,24 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
 
       var _makePresetItems = function (presets, selectedPreset) {
          var recordset = new RecordSet({idProperty:'title'});
-         recordset.add(presets.getRecordById(selectedPreset));
+         if (selectedPreset) {
+            recordset.add(presets.getRecordById(selectedPreset));
+         }
          return recordset;
       };
 
       var _updatePresetView = function (self, dontSet) {
          if (!dontSet) {
-            self._presetView.setItems(_makePresetItems(self._options.getPresets(), self._options.getSelectedPreset()));
+            self._presetView.setItems(_makePresetItems(self._options._getPresets(), self._options._getSelectedPreset()));
          }
          var dropdown = self._presetView.getChildControlByName('controls-controls-ColumnsEditorArea__Preset-item-title');
          if (dropdown) {
             self.subscribeTo(dropdown, 'onSelectedItemsChange', function (evtName, selected, changes) {
                self.sendCommand('selectPreset', selected[0]);
                _updatePresetView(self);
+               var cfg = self._options;
+               _updateGroupCollapsing(cfg);
+               _applyGroupCollapsing(self);
             });
          }
       };
@@ -267,6 +298,34 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
                });
                _updatePresetView(self);
                break;
+         }
+      };
+
+      var _applyGroupCollapsing = function (self) {
+         var groupCollapsing = self._options._groupCollapsing;
+         if (groupCollapsing) {
+            for (var group in groupCollapsing) {
+               if (groupCollapsing[group]) {
+                  self._selectableView.collapseGroup(group);
+               }
+            }
+         }
+      };
+
+      var _listExpandedGroups = function (self) {
+         var groups = self._options._groups;
+         if (groups && groups.length) {
+            var expandedGroups = [];
+            var list = self._selectableView;
+            for (var i = 0; i < groups.length; i++) {
+               var g = groups[i];
+               // В текущей реализации в SBIS3.CONTROLS.ItemsControlMixin нет публичного метода, позволяющего узнать состояние
+               // распахнутости/свёрнутости групп, поэтому так. Но хорошо бы там расширить API !
+               if (!list._isGroupCollapsed(g)) {
+                  expandedGroups.push(g);
+               }
+            }
+            return expandedGroups;
          }
       };
 

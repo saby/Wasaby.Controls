@@ -27,7 +27,7 @@
                <ws:handlers onItemClick="{{_optsPreset.onItemClick}}"/>
                -->
                <ws:itemContentTpl>
-                  <ws:partial template="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/preset" scope="{{itemContentTpl}}" presets="{{getPresets()}}" />
+                  <ws:partial template="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/preset" scope="{{itemContentTpl}}" presets="{{_getPresets()}}" />
                </ws:itemContentTpl>
             </ws:SBIS3.CONTROLS.ListView>
          </div>
@@ -52,7 +52,7 @@
             items="{{ _optsSelectable.items }}"
             groupTitleTpl="{{groupTitleTpl}}"
             groupTitles="{{groupTitles}}"
-            _groupCollapsing="{{groupCollapsing}}"
+            _groupCollapsing="{{_groupCollapsing}}"
             itemsActions="{{ [] }}"
             itemsDragNDrop="{{ false }}"
             idProperty="id"
