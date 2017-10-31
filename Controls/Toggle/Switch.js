@@ -4,7 +4,7 @@ define('js!Controls/Toggle/Switch', [
    /**
     * Контрол, отображающий переключатель
     * @class Controls/Toggle/Switch
-    * @extends Core/Control
+    * @extends Controls/Control
     * @mixes Controls/Toggle/interface/ICheckable
     * @control
     * @public

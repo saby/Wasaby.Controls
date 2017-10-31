@@ -4,7 +4,7 @@ define('js!Controls/Button/Button', [
    /**
     * Кнопка
     * @class Controls/Button/Button
-    * @extends Core/Control
+    * @extends Controls/Control
     * @mixes Controls/Button/interface/IHref
     * @mixes Controls/Button/interface/ICaption
     * @mixes Controls/Button/interface/IClick

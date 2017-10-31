@@ -4,7 +4,7 @@ define('js!Controls/Toggle/Checkbox', [
    /**
     * Контрол, отображающий стандартный флажок
     * @class Controls/Toggle/Checkbox
-    * @extends Core/Control
+    * @extends Controls/Control
     * @mixes Controls/Button/interface/ICaption
     * @control
     * @public
