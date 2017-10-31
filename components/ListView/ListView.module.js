@@ -2281,7 +2281,7 @@ define('js!SBIS3.CONTROLS.ListView',
                // b.addCallback(function(){});
                if (this._hasEditInPlace()) {
                   this._getEditInPlace().addCallback(function(editInPlace) {
-                     editInPlace.endEdit(true).addCallback(function() {
+                     editInPlace.commitEdit().addCallback(function() {
                         var
                            handlerRes = handler.apply(self, args);
                         if (handlerRes instanceof Deferred) {
@@ -2540,7 +2540,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _destroyEditInPlace: function() {
             if (this._hasEditInPlace()) {
                this._getEditInPlace().addCallback(function(editInPlace) {  // Перед дестроем нужно обязательно завершить редактирование и отпустить все деферреды.
-                  editInPlace.endEdit();
+                  editInPlace.cancelEdit();
                   editInPlace._destroyEip();
                });
             }
@@ -4286,7 +4286,7 @@ define('js!SBIS3.CONTROLS.ListView',
          cancelEdit: function() {
             if (this._hasEditInPlace()) {
                return this._getEditInPlace().addCallback(function(editInPlace) {
-                  var res = editInPlace.endEdit();
+                  var res = editInPlace.cancelEdit();
                   // вызываем _notifyOnSizeChanged, потому что при отмене редактирования изменились размеры
                   this._notifyOnSizeChanged(true);
                   return res;
@@ -4316,7 +4316,7 @@ define('js!SBIS3.CONTROLS.ListView',
                eip = this._getEditInPlace();
             eip.addCallback(function(editInPlace) {
                // При сохранении добавляемой записи через галку в тулбаре необходимо автоматически запускать добавление (естественно, если такой режим включен)
-               return checkAutoAdd && editInPlace.isAdd() && self._isModeAutoAdd() ? editInPlace.editNextTarget(true) : editInPlace.endEdit(true);
+               return checkAutoAdd && editInPlace.isAdd() && self._isModeAutoAdd() ? editInPlace.editNextTarget(true) : editInPlace.commitEdit(true);
             });
             return eip;
          },
