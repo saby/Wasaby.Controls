@@ -211,17 +211,17 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                } else if (key === constants.key.enter || key === constants.key.down || key === constants.key.up) {
                   e.stopImmediatePropagation();
                   e.preventDefault();
-                  this.editNextTarget(key === constants.key.down || key === constants.key.enter, key === constants.key.enter);
+                  this.editNextTarget(key === constants.key.down || key === constants.key.enter);
                }
             },
 
-            editNextTarget: function(editNextRow, isCommit) {
+            editNextTarget: function(editNextRow) {
                var
                   self = this,
                   fromAdd = this._isAdd,
                   nextTarget = this._getNextTarget(this._getCurrentTarget(), editNextRow);
 
-               this.commitEdit(isCommit).addCallback(function() {
+               this.commitEdit(true).addCallback(function() {
                   self._editNextTarget(nextTarget, editNextRow, fromAdd);
                });
             },
