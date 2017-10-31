@@ -1417,7 +1417,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   if (evt.currentTarget === this._inputControl[0] && (evt.target === evt.currentTarget || $.contains(event.currentTarget, evt.target))) {
                      editor.off('SelectionChange', _onSelectionChange2);
                      if (cConstants.browser.safari) {
-                        // Для safari обязательно нужно отложить подписку на событие
+                        // Для safari обязательно нужно отложить подписку на событие (потому что safari в тот момент, когда делается эта подписка
+                        // меняет выделение, и потом меняет его в момент вставки. Чтобы первое не ловить - отложить)
                         setTimeout(editor.on.bind(editor, 'SelectionChange', _onSelectionChange1), 1);
                      }
                      else {
