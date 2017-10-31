@@ -1,27 +1,25 @@
-define('js!Controls/Container/OpenDialogAction', [
+define('js!Controls/Popup/OpenDialogAction', [
 ], function() {
 
    /**
     * Действие открытия окна
-    * @class Controls/Container/OpenDialogAction
+    * @class Controls/Popup/OpenDialogAction
     * @control
     * @public
-    * @category Window
+    * @category Popup
     */
 
    /**
     * Выполнить
-    * @function Controls/Container/OpenDialogAction#execute
+    * @function Controls/Popup/OpenDialogAction#execute
     * @param options компонент, который будет показан в окне
     * @param opener компонент, который инициировал открытие окна
     * @param strategy стратегия позиционирования всплывающего окна
     */
 
    /**
-    * @name Controls/Container/OpenDialogAction#mode
+    * @name Controls/Popup/OpenDialogAction#mode
     * @cfg {String} Режим отображения окна
-    * @variant DialogPanel -
-    * @variant StackPanel -
     * @variant StickyPanel -
     * @variant PushPanel -
     */

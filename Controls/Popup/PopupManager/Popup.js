@@ -1,18 +1,18 @@
-define('js!Controls/Container/Popup', [
+define('js!Controls/PopupManager/Popup', [
 ], function() {
 
    /**
     * Компонент вспывающего окна
-    * @class Controls/Container/Popup
+    * @class Controls/PopupManager/Popup
     * @control
     * @extends Core/Control
     * @public
-    * @category Window
+    * @category Popup
     */
 
    /**
     * Закрыть окно
-    * @function Controls/Container/Popup#close
+    * @function Controls/PopupManager/Popup#close
     */
 
 });

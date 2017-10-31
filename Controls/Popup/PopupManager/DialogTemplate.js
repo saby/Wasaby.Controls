@@ -1,13 +1,13 @@
-define('js!Controls/Container/DialogTemplate', [
+define('js!Controls/PopupManager/DialogTemplate', [
 ], function() {
 
    /**
     * Компонент шаблона диалога
-    * @class Controls/Container/DialogTemplate
+    * @class Controls/PopupManager/DialogTemplate
     * @control
     * @extends Core/Control
     * @public
-    * @category Window
+    * @category Popup
     */
 
 });

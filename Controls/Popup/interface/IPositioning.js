@@ -1,16 +1,16 @@
-define('js!Controls/Container/Strategy/interface/IPositioning', [
+define('js!Controls/Popup/interface/IPositioning', [
 ], function() {
 
    /**
     * Интерфейс позиционирования окна.
     * @mixin SPEC.window.interface.IPositioningStrategy
     * @public
-    * @category Window
+    * @category Popup
     */
 
    /**
     * Вернуть информацию о позиционировании окна.
-    * @function Controls/Container/Strategy/interface/IPositioning#getPosition
+    * @function Controls/Popup/interface/IPositioning#getPosition
     */
 
 });
