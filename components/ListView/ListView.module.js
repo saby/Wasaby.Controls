@@ -4328,7 +4328,7 @@ define('js!SBIS3.CONTROLS.ListView',
                eip = this._getEditInPlace();
             eip.addCallback(function(editInPlace) {
                // При сохранении добавляемой записи через галку в тулбаре необходимо автоматически запускать добавление (естественно, если такой режим включен)
-               return checkAutoAdd && editInPlace.isAdd() && self._isModeAutoAdd() ? editInPlace.editNextTarget(true, true) : editInPlace.commitEdit(true);
+               return checkAutoAdd && editInPlace.isAdd() && self._isModeAutoAdd() ? editInPlace.editNextTarget(true) : editInPlace.commitEdit(true);
             });
             return eip;
          },
