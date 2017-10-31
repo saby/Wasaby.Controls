@@ -17,10 +17,10 @@ define('js!SBIS3.CONTROLS.Utils.ConfigByClasses', [], function () {
       }
       for (var i = 0; i < params.length; i++) {
          elem = params[i];
-         if (hasClass(className, el.class)) {
-            opts[el.optionName] = el.value;
+         if (hasClass(classes, elem.class)) {
+            opts[elem.optionName] = elem.value;
          } else {
-            if (!opts[el.optionName]) {
+            if (!opts[elem.optionName]) {
                opts[elem.optionName] = elem.defaultValue;
             }
          }
