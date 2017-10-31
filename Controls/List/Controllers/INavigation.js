@@ -2,7 +2,7 @@
  * Created by kraynovdo on 29.08.2017.
  */
 define('js!Controls/List/Controllers/INavigation', [],
-function () {
+function() {
    /**
     *
     * @author Крайнов Дмитрий

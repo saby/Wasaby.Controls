@@ -3,7 +3,7 @@ define('js!Controls/List/Controllers/OffsetNavigation',
       'js!Controls/List/Controllers/PageNavigation',
       'WS.Data/Source/SbisService'
    ],
-function (PageNavigation, SbisService) {
+function(PageNavigation, SbisService) {
    /**
     *
     * @author Крайнов Дмитрий
