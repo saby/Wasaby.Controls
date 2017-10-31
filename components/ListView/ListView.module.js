@@ -203,7 +203,7 @@ define('js!SBIS3.CONTROLS.ListView',
            * @param {Core/EventObject} eventObject Дескриптор события.
            * @param {String} id Первичный ключ записи.
            * @param {WS.Data/Entity/Model} data Экземпляр класса записи.
-           * @param {jQuery} target DOM-элемент, на который кликнули. Например, это может быть DOM-элемент ячейки (&lt;td class="controls-DataGridView__td"&gt;...&lt;/td&gt;) или её содержимого (&lt;div class="controls-DataGridView__columnValue"&gt;...&lt;/div&gt;).
+           * @param {Object} target DOM-элемент, на который кликнули. Например, это может быть DOM-элемент ячейки (&lt;td class="controls-DataGridView__td"&gt;...&lt;/td&gt;) или её содержимого (&lt;div class="controls-DataGridView__columnValue"&gt;...&lt;/div&gt;).
            * @param {Object} e Объект события.
            * @param {Object} clickedCell Объект с расширенной информацией о ячейке, по которой произвели клик.
            * @param {jQuery} clickedCell.cellContainer DOM-элемент ячейки.
