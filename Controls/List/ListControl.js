@@ -20,6 +20,240 @@ define('js!Controls/List/ListControl', [
    ) {
    'use strict';
 
+   /*
+   Опции
+   * dragEntity, dragEntityList, enabledMove, itemsDragNDrop - обсудить с Яриком, возможно будет достаточно события dragStart
+   * infiniteScroll, infiniteScrollContainer, infiniteScrollPreloadOffset, showPaging, partialPaging, pageSize - вынести в навигацию
+   * resultsPosition, resultsText, resultsTpl - как настраивать
+   *
+   * Удалил:
+   * allowEmptyMultiSelection, allowEmptySelection, colorField, colorMarkEnabled, highlightEnabled, highlightText, includedTemplates, validateIfDisabled, itemTpl
+   * footerTpl, templateBinding, useSelectAll
+   * */
+
+   /**
+    * List Control
+    * @class Controls/List/ListControl
+    * @extends Core/Control
+    * @mixes Controls/interface/IItems
+    * @mixes Controls/interface/IDataSource
+    * @mixes Controls/interface/ISingleSelectable
+    * @mixes Controls/interface/IPromisedSelectable
+    * @mixes Controls/interface/IGroupedView
+    * @control
+    * @public
+    * @category List
+    */
+
+   /**
+    * @name Controls/List/ListControl#contextMenu
+    * @cfg {Boolean} Показывать ли контекстное меню при клике на правую кнопку мыши
+    */
+
+   /**
+    * @name Controls/List/ListControl#editingTemplate
+    * @cfg {Function} Шаблон редактирования строки
+    */
+
+   /**
+    * @name Controls/List/ListControl#emptyTemplate
+    * @cfg {Function} Шаблон отображения пустого списка
+    */
+
+   /**
+    * @name Controls/List/ListControl#filter
+    * @cfg {Object} Настройки фильтра
+    */
+
+   /**
+    * @name Controls/List/ListControl#sorting
+    * @cfg {Object} Настройки сортировки
+    */
+
+   /**
+    * @name Controls/List/ListControl#navigation
+    * @cfg {Object} Настройки навигации
+    */
+
+   /**
+    * @name Controls/List/ListControl#multiselect
+    * @cfg {Boolean} Разрешен ли множественный выбор.
+    */
+
+   /**
+    * @name Controls/List/ListControl#itemsActions
+    * @cfg {Array} Операции над записью
+    */
+
+   /**
+    * @name Controls/List/ListControl#itemContentTpl
+    * @cfg {Function} Шаблон отображения содержимого элементов коллекции
+    */
+
+   /**
+    * @name Controls/List/ListControl#itemsSortMethod
+    * @cfg {Function} Метод сортировки элементов коллекции
+    */
+
+   /**
+    * @name Controls/List/ListControl#loadItemsStrategy
+    * @cfg {String} Стратегия действий с подгружаемыми в список записями
+    * @variant merge Мержить, при этом записи с одинаковыми id схлопнутся в одну
+    * @variant append Добавлять, при этом записи с одинаковыми id будут выводиться в списке
+    */
+
+
+   /*
+   * Методы:
+   * isScrollOnBottom, isScrollOnTop - обсудить
+   * */
+
+   /**
+    * Создаёт в списке новый элемент коллекции
+    * @function Controls/interface/IPromisedSelectable#beginAdd
+    */
+
+   /**
+    * Запускает редактирование по месту
+    * @function Controls/interface/IPromisedSelectable#beginEdit
+    */
+
+   /**
+    * Завершает редактирование по месту без сохранения изменений
+    * @function Controls/interface/IPromisedSelectable#cancelEdit
+    */
+
+   /**
+    * Завершает редактирование по месту с сохранением изменений
+    * @function Controls/interface/IPromisedSelectable#commitEdit
+    */
+
+   /**
+    * Удаляет записи из источника данных по переданным идентификаторам элементов коллекции
+    * @function Controls/interface/IPromisedSelectable#deleteRecords
+    */
+
+   /**
+    * Возвращает следующий элемент
+    * @function Controls/interface/IPromisedSelectable#getNextItemById
+    */
+
+   /**
+    * Возвращает предыдущий элемент
+    * @function Controls/interface/IPromisedSelectable#getPrevItemById
+    */
+
+   /**
+    * Получить номер текущей страницы
+    * @function Controls/interface/IPromisedSelectable#getPage
+    */
+
+   /**
+    * Возвращает признак, по которому можно установить: активно или нет редактирование по месту в данный момент
+    * @function Controls/interface/IPromisedSelectable#isEdit
+    */
+
+   /**
+    * Перемещает переданные записи
+    * @function Controls/interface/IPromisedSelectable#move
+    */
+
+   /**
+    * Перезагружает набор записей представления данных с последующим обновлением отображения
+    * @function Controls/interface/IPromisedSelectable#reload
+    */
+
+   /**
+    * Переместить на одну запись ввниз
+    * @function Controls/interface/IPromisedSelectable#moveRecordDown
+    */
+
+   /**
+    * Переместить на одну запись вверх
+    * @function Controls/interface/IPromisedSelectable#moveRecordUp
+    */
+
+   /**
+    *
+    * @function Controls/interface/IPromisedSelectable#scrollLoadMore
+    */
+
+   /**
+    *
+    * @function Controls/interface/IPromisedSelectable#scrollToFirstPage
+    */
+
+   /**
+    * Скролит табличное представление к указанному элементу
+    * @function Controls/interface/IPromisedSelectable#scrollToItem
+    */
+
+
+
+   /**
+    * @event Controls/List/ListControl#onAfterBeginEdit Происходит после начала редактирования
+    */
+
+   /**
+    * @event Controls/List/ListControl#onAfterEndEdit Происходит после окончания редактирования по месту
+    */
+
+   /**
+    * @event Controls/List/ListControl#onBeginAdd Происходит перед созданием в списке нового элемента коллекции
+    */
+
+   /**
+    * @event Controls/List/ListControl#onBeginDelete Происходит перед удалением записей
+    */
+
+   /**
+    * @event Controls/List/ListControl#onBeginEdit Происходит перед началом редактирования
+    */
+
+   /**
+    * @event Controls/List/ListControl#onBeginMove Происходит перед началом перемещения записей
+    */
+
+   /**
+    * @event Controls/List/ListControl#onChangeHoveredItem Происходит при переводе курсора мыши на другой элемент коллекции списка
+    */
+
+   /**
+    * @event Controls/List/ListControl#onDataMerge Происходит перед добавлением загруженных записей в основной dataSet
+    */
+
+   /**
+    * @event Controls/List/ListControl#onEndDelete Происходит после удаления записей
+    */
+
+   /**
+    * @event Controls/List/ListControl#onEndEdit Происходит перед окончанием редактирования или добавления по месту
+    */
+
+   /**
+    * @event Controls/List/ListControl#onEndMove Происходит после перемещения записей
+    */
+
+   /**
+    * @event Controls/List/ListControl#onItemActivate Происходит при смене записи (активации) под курсором мыши
+    */
+
+   /**
+    * @event Controls/List/ListControl#onItemClick Происходит при любом клике по записи
+    */
+
+   /**
+    * @event Controls/List/ListControl#onPrepareFilterOnMove Происходит при определении фильтра, с которым будет показан диалог перемещения
+    */
+
+   /**
+    * @event Controls/List/ListControl#onDrawItems Происходит после отрисовки всех элементов коллекции
+    */
+
+   /**
+    * @event Controls/List/ListControl#onDataLoad Происходит при загрузке данных
+    */
+
    var ListView = Control.extend(
       {
          _controlName: 'Controls/List/ListControl',
