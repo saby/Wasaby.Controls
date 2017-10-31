@@ -342,7 +342,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             if (this._options.editFieldTpl) {
                text = TemplateUtil.prepareTemplate(this._options.editFieldTpl)({text: text});
             } else if (!text) {
-               text = '<span class="controls-EditAtPlace__placeholder">' + escapeHtml(this._options.placeholder) + '</span>';
+               text = escapeHtml(this._options.placeholder);
             } else {
                text = escapeHtml(text);
             }

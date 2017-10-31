@@ -417,11 +417,11 @@ define('js!SBIS3.CONTROLS.FormController', [
       _hideLoadingIndicator: function(){
          cIndicator.hide();
       },
-      _processError: function(e) {
+      _processError: function(e, hideErrorDialog, eventName) {
          var
-            eResult = this._notify('onFail', e),
+            eResult = this._notify('onFail', e, eventName),
             eMessage = e && e.message;
-         if(eResult || eResult === undefined) { // string, undefined
+         if(!hideErrorDialog && (eResult || eResult === undefined)) { // string, undefined
             if(typeof eResult == 'string') {
                eMessage = eResult;
             }
@@ -735,10 +735,7 @@ define('js!SBIS3.CONTROLS.FormController', [
             return this._updateRecord(config);
          }
 
-         //Если валидация не прошла
-         if (!config.hideErrorDialog) {
-            this._processError(error);
-         }
+         this._processError(error, config.hideErrorDialog, 'onUpdateModel'); //Если валидация не прошла
          return Deferred.fail(error);
       },
 
@@ -821,8 +818,8 @@ define('js!SBIS3.CONTROLS.FormController', [
             return data;
          }).addErrback(function(err){
                //Не показываем ошибку, если было прервано соединение с интернетом. просто скрываем индикатор и оверлей
-               if (!config.hideErrorDialog && (err instanceof Error) && !err._isOfflineMode){
-                  self._processError(err);
+               if ((err instanceof Error) && !err._isOfflineMode){
+                  self._processError(err, config.hideErrorDialog, config.eventName);
                }
                return err;
          }).addBoth(function(result){
