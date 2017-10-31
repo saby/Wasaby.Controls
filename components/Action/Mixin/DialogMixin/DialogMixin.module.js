@@ -95,9 +95,9 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
 
       _openComponent: function(meta, mode) {
          meta = meta || {};
-         mode = mode || this._options.mode;
+         meta.mode = mode || meta.mode || this._options.mode; //todo в 3.17.300 убрать аргумент mode, его через execute проставить нельзя
          var config = this._getDialogConfig(meta);
-         this._createComponent(config, meta, mode);
+         this._createComponent(config, meta);
       },
 
       _buildComponentConfig: function(meta) {
@@ -105,8 +105,8 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          return cMerge(config,  meta.componentOptions || {});
       },
 
-      _createComponent: function(config, meta, mode) {
-         var componentName = (mode == 'floatArea') ? 'js!SBIS3.CORE.FloatArea' : 'js!SBIS3.CORE.Dialog';
+      _createComponent: function(config, meta) {
+         var componentName = (meta.mode == 'floatArea') ? 'js!SBIS3.CORE.FloatArea' : 'js!SBIS3.CORE.Dialog';
          if (this._isNeedToRedrawDialog()){
             this._resetComponentOptions();
             cMerge(this._dialog._options, config);
