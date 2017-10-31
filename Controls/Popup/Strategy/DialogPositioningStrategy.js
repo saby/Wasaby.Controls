@@ -3,8 +3,8 @@ define('js!Controls/Popup/Strategy/DialogPositioningStrategy', [
 
    /**
     * Стратегия позиционирования окна.
-    * @class Controls/Popup/Strategy/DialogPositioning
-    * @mixes Controls/Popup/interface/IPositioning
+    * @class Controls/Popup/Strategy/DialogPositioningStrategy
+    * @mixes Controls/Popup/interface/IPositioningStrategy
     * @control
     * @public
     * @category Popup
