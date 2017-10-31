@@ -833,11 +833,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return DataGridView.superclass._itemsReadyCallback.apply(this, arguments);
       },
 
-      _toggleIndicator: function(show){
-         DataGridView.superclass._toggleIndicator.apply(this, arguments);
-         if (show) {
-            this._updateAjaxLoaderPosition();
-         }
+      _showIndicator: function(){
+         this._updateAjaxLoaderPosition();
+         DataGridView.superclass._showIndicator.apply(this, arguments);
       },
 
       _updateAjaxLoaderPosition: function () {
