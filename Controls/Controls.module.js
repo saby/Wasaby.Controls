@@ -1,4 +1,4 @@
-define('js!Controls', [], function () {
+define('js!Controls', [], function() {
    'use strict';
 
    return {

@@ -7,7 +7,7 @@ define('js!Controls/List/Controllers/PositionNavigation',
       'WS.Data/Source/SbisService',
       'js!Controls/List/Controllers/INavigation'
    ],
-   function (PageNavigation, SbisService, INavigation) {
+   function(PageNavigation, SbisService, INavigation) {
       /**
        *
        * @author Крайнов Дмитрий
