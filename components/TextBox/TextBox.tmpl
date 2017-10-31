@@ -1,5 +1,8 @@
 <div class="controls-TextBox
-   controls-TextBox__size__{{!! size ? size : 'default'}}" title="{{tooltip}}">
+   controls-TextBox__size__{{!! size ? size : 'm'}}
+   controls-TextBox__state__{{ enabled ? 'default': 'disabled'}}
+   controls-TextBox__text-align-{{ textAlign }}"
+   title="{{tooltip}}">
    <div class="controls-TextBox__wrapper" title="{{tooltip}}">
       <ws:if data="{{beforeFieldWrapper}}">
          <ws:partial class="controls-TextBox__beforeFieldWrapper" template="{{beforeFieldWrapper}}" scope="{{...}}"/>

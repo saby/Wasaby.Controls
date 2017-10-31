@@ -19,6 +19,9 @@ define('js!SBIS3.CONTROLS.Pager', [
    'use strict';
 
    /**
+    * Класс контрола "Блок управления постраничной навигацией".
+    * Обычно такой контрол используют совместно со списками и размещают в правом нижнем углу.
+    * Контрол состоит из Кнопок постраничной навигации (см. {@link SBIS3.CONTROLS.Paging}) и выпадающего списка, через который устанавливают количество записей на странице.
     * @class SBIS3.CONTROLS.Pager
     * @extends SBIS3.CORE.CompoundControl
     * @control
@@ -29,17 +32,21 @@ define('js!SBIS3.CONTROLS.Pager', [
 
    var Pager = CompoundControl.extend(/** @lends SBIS3.CONTROLS.Pager.prototype */{
       /**
-       * @event onPageChange При изменении страницы
-       * <wiTag group="Управление">
-       * Происходит при смене текущей страницы: при клике по номеру страницы или стрелке перехода на другую страницу.
+       * @event onPageChange Происходит при смене текущей страницы: клик по номеру страницы или стрелке перехода на другую страницу.
        * @param {Core/EventObject} eventObject Дескриптор события.
-       * @param {Number} number номер новой страницы
-       * Необходимо вызвать функцию на успех с аргументом типа Boolean: есть ли следующая страница.
+       * @param {Number} number Номер новой страницы.
+       * @param {Deferred} deferred
        * @example
        */
       _dotTplFn: dotTplFn,
       $protected: {
          _options: {
+             /**
+              * @name SBIS3.CONTROLS.Pager#noSizePicker
+              * @cfg {Boolean} Признак, с помощью которого управляют отображением выпадающего списка, через который в пользовательском интерфейсе устанавливается количество записей на странице.
+              * @remark
+              * В значении false выпадающий список будет скрыт.
+              */
             pagingOptions: {}
          },
          _dropdDataKeys: [10, 20, 25, 50, 100, 200, 500, 1000],
@@ -99,38 +106,45 @@ define('js!SBIS3.CONTROLS.Pager', [
             });
          }
       },
+       /**
+        * @param {Number} numRecords
+        * @param {Number} hasNextPage
+        * @param {Number} selectedCount
+        */
       updateAmount : function(numRecords, hasNextPage, selectedCount){
-         var pagerStr = '';
-         this._lastNumRecords = numRecords;
-         this._lastNextPage = hasNextPage;
-         selectedCount = selectedCount || 0;
-         if (typeof hasNextPage === 'boolean'){
-            var strEnd = '',//typeof hasNextPage !== 'boolean' && hasNextPage ? (' из ' + hasNextPage) : '',
+         if(!this._options.noPagerAmount) {
+            var pagerStr = '';
+            this._lastNumRecords = numRecords;
+            this._lastNextPage = hasNextPage;
+            selectedCount = selectedCount || 0;
+            if (typeof hasNextPage === 'boolean') {
+               var strEnd = '',//typeof hasNextPage !== 'boolean' && hasNextPage ? (' из ' + hasNextPage) : '',
                   page = this.getPaging().getPage() - 1,
                   startRecord = page * this._dropd.getSelectedKeys()[0] + 1;
-            if(numRecords === 0){
-               pagerStr = '';
-            }
-            else if(numRecords === 1 && page === 0){
-               pagerStr = '1 ' + rk('запись');
-            }
-            else{
-               pagerStr = startRecord + ' - ' + (startRecord + numRecords - 1) + strEnd;
-            }
-         } else {
-            pagerStr += pagerStr === '' ? rk('Всего') + ' : ' : '. ' + rk('Всего') + ' : ';
-            pagerStr += numRecords;
-         }
-         
-         if (selectedCount > 0) {
-            if (numRecords == 1) {
-               pagerStr = rk('Выбрана') + ' 1 ' + rk('запись');
+               if (numRecords === 0) {
+                  pagerStr = '';
+               }
+               else if (numRecords === 1 && page === 0) {
+                  pagerStr = '1 ' + rk('запись');
+               }
+               else {
+                  pagerStr = startRecord + ' - ' + (startRecord + numRecords - 1) + strEnd;
+               }
             } else {
-               pagerStr = strHelpers.wordCaseByNumber(selectedCount, rk('Выбрано'), rk('Выбрана'), rk('Выбраны')) +
-               ' ' + selectedCount + strHelpers.wordCaseByNumber(selectedCount, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + '. ' + pagerStr;
+               pagerStr += pagerStr === '' ? rk('Всего') + ' : ' : '. ' + rk('Всего') + ' : ';
+               pagerStr += numRecords;
             }
+
+            if (selectedCount > 0) {
+               if (numRecords == 1) {
+                  pagerStr = rk('Выбрана') + ' 1 ' + rk('запись');
+               } else {
+                  pagerStr = strHelpers.wordCaseByNumber(selectedCount, rk('Выбрано'), rk('Выбрана'), rk('Выбраны')) +
+                     ' ' + selectedCount + strHelpers.wordCaseByNumber(selectedCount, ' ' + rk('записей'), ' ' + rk('запись', 'множественное'), ' ' + rk('записи')) + '. ' + pagerStr;
+               }
+            }
+            this.getContainer().find('.controls-Amount-text_js').text(pagerStr + ',');
          }
-         this.getContainer().find('.controls-Amount-text_js').text(pagerStr + ',');
       },
       /**
        * Получить SBIS3.CORE.Paging

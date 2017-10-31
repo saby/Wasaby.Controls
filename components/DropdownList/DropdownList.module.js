@@ -168,17 +168,29 @@ define('js!SBIS3.CONTROLS.DropdownList',
                /**
                 * @cfg {String} Устанавливает шаблон отображения шапки.
                 * @remark
-                * Шаблон может быть создан с использованием <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/xhtml/logicless-template/">logicless-шаблонизатора</a> и <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/xhtml/template/">doT.js-шаблонизатора</a>.
-                * Шаблон создают в компоненте в подпапке resources.
+                * Шаблон может быть создан с использованием <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/component-infrastructure/logicless-template/">logicless-шаблонизатора</a> и doT.js-шаблонизатора.<br/>
+                * Шаблон создают в компоненте в подпапке <b>resources</b>.<br/>
                 * Порядок работы с шаблоном:
                 * <ol>
                 *    <li>Подключить шаблон в массив зависимостей компонента.</li>
                 *    <li>Импортировать его в отдельную переменную.</li>
-                *    <li>В сецкии $protected в подсекции _options создать опцию, значением которой передать шаблон (переменная из предыдущего шага).</li>
-                *    <li>В вёрстке компонента в значение опции headTemplate передать значение опции с помощью инструкций шаблонизатора.
-                *    </li>
+                *    <li>В секции $protected в подсекции _options создать опцию, значением которой передать шаблон (переменная из предыдущего шага).</li>
+                *    <li>В разметке компонента в значение опции headTemplate передать значение опции с помощью инструкций шаблонизатора.</li>
                 * </ol>
+                * В шаблон запрещено внедрять компоненты или базовые платформенные контролы. Шаблон формируют на основе <b>базового шаблона</b>:
+                * <pre>
+                * <div class="controls-DropdownList__beforeCaptionWrapper" if="{{!!text}}">
+                *     <i class="controls-DropdownList__arrowIcon icon-16 icon-size icon-DayForward icon-primary action-hover"></i>
+                * </div>
+                * <div class="controls-DropdownList__textWrapper">
+                *     <span class="controls-DropdownList__text"><span if="{{_selectedItemIcon}}" class="{{_selectedItemIcon}} controls-DropdownList__icon"></span> <span class="controls-DropdownList__value">{{text}}</span></span>
+                * </div>
+                * <div class="controls-DropdownList__afterCaptionWrapper" if="{{!!text}}">
+                *     <i class="controls-DropdownList__crossIcon icon-16 icon-size icon-Close icon-disabled action-hover"></i>
+                * </div>
+                * </pre>
                 * @example
+                * В примере показано использование шаблонизатора doT.js.
                 * Подключение, импорт в переменную и передача шаблона в переменную:
                 * <pre>
                 * define('js!SBIS3.MyArea.MyComponent',
@@ -248,7 +260,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                /**
                 * @cfg {String} Устанавливает шаблон отображения элемента коллекции выпадающего списка.
                 * @remark
-                * Шаблон может быть создан с использованием <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/xhtml/logicless-template/">logicless-шаблонизатора</a> и <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/xhtml/template/">doT.js-шаблонизатора</a>.
+                * Шаблон может быть создан с использованием <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/component-infrastructure/logicless-template/">logicless-шаблонизатора</a> и doT.js-шаблонизатора.
                 * Шаблон создают в компоненте в подпапке resources.
                 * @example
                 * Чтобы можно было использовать шаблон в компоненте и передать в опцию itemTpl, нужно выполнить следующее:
@@ -356,6 +368,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this._options.pickerClassName += ' controls-DropdownList__withoutArrow';
             }
             this._setHeadVariables();
+            this._container.bind('mouseenter' , this._showInfobox.bind(this));
          },
          _modifyOptions: function() {
             var cfg = DropdownList.superclass._modifyOptions.apply(this, arguments);
@@ -637,8 +650,8 @@ define('js!SBIS3.CONTROLS.DropdownList',
             return this._options.emptyValue && this.getSelectedKeys()[0] == null;
          },
          _dataLoadedCallback: function() {
-            DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
             this._setHeadVariables();
+            DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
             if (this._isEnumTypeData()){
                if (this._options.multiselect){
                   throw new Error('DropdownList: Для типа данных Enum выпадающий список должен работать в режиме одиночного выбора')
@@ -868,12 +881,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
             this._setText(text);
             this._redrawHead(isDefaultIdSelected);
-            this._drawTitle(textValue);
             this._resizeFastDataFilter();
-         },
-         _drawTitle: function(textValue) {
-            var title = this.getSelectedKeys().length > 1 ? textValue.join(', ') : '';
-            this.getContainer()[0].setAttribute('title', title);
          },
          _resizeFastDataFilter: function(){
             var parent = this.getParent();
@@ -900,6 +908,23 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this.getContainer().toggleClass('controls-DropdownList__defaultItem', isDefaultIdSelected);
             }
             this._setHeadVariables();
+         },
+         _showInfobox: function() {
+            var self = this,
+               textValues = [];
+            if (!this.isEnabled() && this.getSelectedKeys().length > 1) {
+               requirejs(['js!SBIS3.CORE.Infobox'], function(Infobox) {
+                  textValues = [];
+                  self.getSelectedItems().each(function(item) {
+                     textValues.push(item.get(self._options.displayProperty));
+                  });
+                  Infobox.show({
+                     control: self.getContainer(),
+                     message: textValues.join(', '),
+                     autoHide: true
+                  })
+               });
+            }
          },
          /**
           * Получить ключ элемента для выбора "по умолчанию"
@@ -948,7 +973,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                },
                closeByExternalOver: false,
                closeByExternalClick : true,
-               closeOnTargetMove: isFastDataFilterType,
+               closeOnTargetMove: true,
                locationStrategy: isFastDataFilterType ? 'bodyBounds' : 'base',
                targetPart: true,
                template : dotTplFnPicker({

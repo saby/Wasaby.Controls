@@ -1,7 +1,5 @@
 .controls-MoneyTextBox {
   min-width: @money-text-box-min-width;
-  text-align: right;
-
   &__decimals {
     font-size: @money-text-box-decimals-font-size;
     color: @money-text-box-decimals-color; //@gray-ccc-color;
@@ -26,5 +24,6 @@
   .controls-TextBox__placeholder {
     z-index: 0;
     padding: 0; //тк отступ на враппере
+    .flex-direction(row-reverse)
   }
 }

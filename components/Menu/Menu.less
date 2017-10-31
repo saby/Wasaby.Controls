@@ -4,8 +4,8 @@
    margin: @menu-margin;
    .flexbox();
    .flex-direction(column);
-   border: @default-border-width @default-border-style @menu-border-color;
-   background-color: @white-color;
+   border: @default-border-width solid @menu-border-color;
+   background-color: @menu-button-menu-bg;
    .user-select(none);
 
    &.controls-Menu__breakWord {
@@ -137,19 +137,6 @@
    &.controls-Menu__hide-menu-header {
       .controls-Menu__header {
          display: none;
-      }
-      &.controls-IconButton__round-border-24 {
-         margin: -7px 0 0 -7px;
-         .controls-ListView__item:first-child {
-            .controls-MenuItem__icon {
-               .round-button-mixin(@gray-ccc-color, @border-radius, @icon-button-border-width);
-               height: 24px !important;
-               width: 24px !important;
-               line-height: 22px !important;
-               top: 2px;
-               left: -6px;
-            }
-         }
       }
    }
 }

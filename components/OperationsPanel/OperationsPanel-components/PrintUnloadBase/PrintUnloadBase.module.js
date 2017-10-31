@@ -220,7 +220,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
          return deferred;
       },
       /**
-       * @deprecated Переименован в processSelectedPageSize
+       * @deprecated Переименован в {@link processSelectedPageSize}.
        * @param pageSize
        */
       processSelectedOperation: function(pageSize){

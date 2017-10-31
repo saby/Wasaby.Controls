@@ -60,6 +60,7 @@
    "История ввода": "Input history",
    "Итоги операции: \"Объединения\"": "The results of the operation: \"Merge\"",
    "Итого": "Total",
+   "квартал": "quarter",
    "Количество записей": "Number of records",
    "Комментарий": "Comment",
    "Контент содержит только html-разметку, без текста.": "Content contains only html-markup with no text.",
@@ -72,6 +73,7 @@
    "и еще $count$s$": "and $count$s$ more",
    "Не выбрано": "Not selected",
    "Не выбрано ни одной записи для перемещения": "Have not been selected rows for move",
+   "Не указан": "Not specified",
    "Неверная контрольная сумма СНИЛС": "Invalid SNILS checksum",
    "Нет": "No",
    "Некорректно заполнены обязательные поля!": "Incorrect values in required fields",
@@ -95,6 +97,7 @@
    "Ошибка получения данных для диаграммы": "Failed to get the data for the chart",
    "Перенести": "Move",
    "Перенести отмеченные": "Move chosen",
+   "Период не указан": "Period not specified",
    "Печать записей...": "Printing...",
    "Пн": "Mon",
    "По левому краю": "On the left side",
@@ -201,5 +204,6 @@
    "Назад": "Backward",
    "В конец": "To end",
    "В начало": "To beginning",
-   "Очистить поле": "Clear field"
+   "Очистить поле": "Clear field",
+   "Очистить фильтр": "Clear filter"
 }

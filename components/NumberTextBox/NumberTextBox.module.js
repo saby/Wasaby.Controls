@@ -210,6 +210,9 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          this._inputField.bind('blur', function(){
             self._blurHandler();
          });
+         if(this._options.text && !this._options.numericValue) {
+             this.setNumericValue(this._options.text);
+         }
          this._initMirrorInput();
       },
 
@@ -445,7 +448,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
             this._setText('0' + this._getInputValue());
             this._setCaretPosition(1);
          }
-         if (this._CTRL_KEY){
+         if (this._CTRL_KEY || (this._SHIFT_KEY && keyCode === 45) /* insert */){
             return true;
          }
          event.preventDefault();

@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
    var
       DEFAULT_SELECT_CHECKBOX_WIDTH = 24, // Стандартная ширина чекбокса отметки записи.
-      DEFAULT_ROW_SELECT_WIDTH = 8,       // Стандартная ширина полоски выбранной строки.
+      DEFAULT_ROW_SELECT_WIDTH = 12,      // Стандартная ширина полоски выбранной строки.
       DEFAULT_FIELD_PADDING_SIZE = 5,     // Стандартный отступ в полях ввода 4px + border 1px. Используется для расчёта отступа при редактировании по месту.
       DEFAULT_EXPAND_ELEMENT_WIDTH = 26,  // Стандартная ширина стрелки разворота в дереве
       DEFAULT_CELL_PADDING_DIFFERENCE = 1,// Стандартная разница между оступом в ячейке табличного представления и отступом в текстовых полях (6px - 5px = 1px)
@@ -159,7 +159,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             /**
              * @cfg {Function}
              * @see editArrow
-             * @deprecated Опция устарела и будет удалена в версии 3.7.5. Используйте {@link editArrow}.
+             * @deprecated Используйте {@link editArrow}.
              */
             arrowActivatedHandler: undefined,
             /**
@@ -194,7 +194,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
             /**
              * @cfg {Boolean} отображает папки с одной колонкой на всю строку
              * Значение по умолчанию false
-             * @deprecated
+             * @deprecated Функционал должен быть реализован через пользовательский шаблон.
              */
             // Добавил опцию для версии 220
             // с 3.7.5 будет рулиться через пользовательский шаблон
@@ -522,10 +522,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       _onLeftSwipeHandler: function() {
+         TreeDataGridView.superclass._onLeftSwipeHandler.apply(this, arguments);
          if(this._options.editArrow || this._options.arrowActivatedHandler) {
             this._showEditArrow();
          }
-         TreeDataGridView.superclass._onLeftSwipeHandler.apply(this, arguments);
       },
 
       _onRightSwipeHandler: function() {

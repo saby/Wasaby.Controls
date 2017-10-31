@@ -433,8 +433,6 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
             displayProperty: null,
              /**
               * @cfg {Array.<Object>} Устанавливает набор исходных данных, по которому строится отображение.
-              * @remark
-              * Если установлен источник данных в опции {@link dataSource}, то значение опции items будет проигнорировано.
               * @example
               * <pre class="brush:xml">
               *     <options name="items" type="array">
@@ -465,9 +463,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
               */
             items: null,
             /**
-             * @cfg {DataSource|WS.Data/Source/ISource|Function|Object} Устанавливает источник данных контрола.
+             * @cfg {DataSource|WS.Data/Source/ISource|Function|Object} Устанавливает источник данных компонента.
              * @remark
-             * Если установлен источник данных, то значение опции {@link items} будет проигнорировано.
+             * Данные, полученные из источника, будут отображены в компоненте при вызове метода {@link reload}.
              * @example
              * <b>Пример 1.</b> Чтобы установить конфигурацию источника данных через JS-код компонента, необходимо его инициализировать и установить с помощью метода {@link setDataSource}.
              * <pre>
@@ -578,7 +576,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              *
              * @property {String} contentTemplate Шаблон содержимого заголовка группы.
              * Шаблон будет помещен в платформенный контейнер визуального отображения заголовка группы.
-             * Шаблон - это XHTML-файл, внутри допускается использование {@link http://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/xhtml/template/ конструкций шаблонизатора}.
+             * Шаблон - это XHTML-файл, внутри допускается использование конструкций шаблонизатора.
              * В объекте *it* шаблонизатора доступны для использования два свойства:
              * <ul>
              *     <li>groupId - идентификатор группы (см. *method*).</li>
@@ -612,7 +610,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              */
             groupBy : {},
             /**
-             * @cfg {String|HTMLElement|jQuery} Устанавливает отображаемый контент при отсутствии данных.
+             * @cfg {Content} Устанавливает отображаемый контент при отсутствии данных.
              * @remark
              * Опция устанавливает содержимое, отображаемое как при абсолютном отсутствии данных, так и в результате {@link groupBy фильтрации}.
              * Это может быть как обычный текст, так и пользовательский контрол или компонент.
@@ -1633,7 +1631,16 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          }
       },
       /**
-       * Перезагружает набор записей представления данных с последующим обновлением отображения.
+       * Перезагружает набор записей компонента с последующим обновлением отображения.
+       * @remark
+       * При вызове метода происходят события {@link onBeforeDataLoad} &#8594; {@link onDataLoad} &#8594; {@link onItemsReady}, а в случае ошибки &#8594; {@link onDataLoadError}
+       * Метод автоматически вызывается в следующих случаях:
+       * <ul>
+       *    <li>при смене сортировки (см. {@link setSorting});</li>
+       *    <li>при изменении количества записей на одной странице (см. {@link setPageSize});</li>
+       *    <li>при изменении параметров фильтрации (см. {@link setFilter});</li>
+       *    <li>при инициализации компонента.</li>
+       * </ul>
        * @param {Object} filter Параметры фильтрации.
        * @param {String|Array.<Object.<String,Boolean>>} sorting Параметры сортировки.
        * @param {Number} offset Смещение первого элемента выборки.

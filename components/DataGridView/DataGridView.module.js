@@ -785,19 +785,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
    
       _notifyOnItemClick: function(id, data, target, e) {
-         var clickedCell = {},
-             cell;
-         
          /* Для DataGridView дополняем событие клика информацией о колонке и ячейке */
-         if(this._hoveredColumn.columnIndex  !== null) {
-            cell = this._getCellContainerByElement(e.target);
-            clickedCell = {
-               cellContainer: cell,
-               //При клике на touch устройствах не будет hoveredColumn, поэтому ищем по элементу, по котрому кликнули
-               cellIndex: this._hoveredColumn.columnIndex || cell.index()
-            };
-         }
-         
+         var cell = this._getCellContainerByElement(e.target),
+             clickedCell = {
+                cellContainer: cell,
+                //При клике на touch устройствах не будет hoveredColumn, поэтому ищем по элементу, по котрому кликнули
+                cellIndex: this._hoveredColumn.columnIndex || cell.index()
+             };
+      
          return this._notify('onItemClick', id, data, target, e, clickedCell);
       },
 
@@ -1594,7 +1589,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
       },
       _redrawResults: function(revive) {
-         if (this._options.resultsPosition !== 'none') {
+         //Если данные не изменились, то не нужно впустую перерисовывать итоги
+         if (this._headIsChanged && this._options.resultsPosition !== 'none') {
             this._redrawTheadAndTfoot();
 
             if (revive) {
