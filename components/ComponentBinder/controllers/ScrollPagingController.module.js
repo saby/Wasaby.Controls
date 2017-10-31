@@ -80,14 +80,20 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
 
       _scrollHandler: function(event, scrollTop) {
          if (!this._freezePaging) {
-            var page = scrollTop / this._viewportHeight;
+            var page = scrollTop / this._viewportHeight,
+                paging = this._options.paging,
+                pagesCount = paging.getPagesCount();
             if (page % 1) {
                page = Math.ceil(page);
             }
             page += 1; //потому что используем нумерацию страниц с 1
             if (this._currentScrollPage !== page) {
                this._currentScrollPage = page;
-               this._options.paging.setSelectedKey(page);
+               /* Текущая страница не может быть больше кол-ва страниц, установленных для paging'a.
+                  Это защита от реестров с картинками, где картинки подгружаются асихнхронно и могут менять высоту view.
+                  Из-за этого может возникать ситуация, когда высота списка на момент скрола стала значительно больше (вплоть до 2х страниц),
+                  чем на момент отрисовки страницы. */
+               paging.setSelectedKey(page > pagesCount ? pagesCount : page);
             }
          }
       },
