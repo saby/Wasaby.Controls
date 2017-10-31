@@ -48,6 +48,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
    var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS.MoneyTextBox.prototype */ {
       $protected: {
          _options: {
+            textAlign: 'right',
             _paddingClass: ' controls-TextBox__paddingBoth',
             textFieldWrapper: textFieldWrapper,
             /**

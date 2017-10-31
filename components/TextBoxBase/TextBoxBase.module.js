@@ -152,7 +152,8 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
              * </pre>
              * @see SBIS3.CORE.Control#setActive
              */
-            focusOnActivatedOnMobiles: false
+            focusOnActivatedOnMobiles: false,
+            textAlign: 'left'
          }
       },
 
@@ -262,8 +263,8 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
          IoC.resolve('ILogger').log('setValue()', 'setValue is deprecated. Use setText()');
          this.setText(txt);
       },
-      setEnabled: function(enabled) {
-         TextBoxBase.superclass.setEnabled.apply(this, arguments);
+      _setEnabled: function(enabled) {
+         TextBoxBase.superclass._setEnabled.apply(this, arguments);
          this._toggleState();
       },
       clearMark: function() {

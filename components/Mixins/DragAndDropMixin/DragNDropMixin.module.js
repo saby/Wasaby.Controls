@@ -169,7 +169,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          * @remark Определяется в модуле, который подмешивает миксин.
          * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
          * @param {Boolean} droppable Cработал внутри droppable контейнера см {@link _findDragDropContainer}
-         * @param {Event} e Браузерное событие. На touch устройствах в полях pageX, pageY находятся координаты touch.
+         * @param {jQuery.Event} e Объект события. На touch устройствах в полях pageX, pageY находятся координаты touch.
          * @see SBIS3.CONTROLS.DragObject
          * @see _findDragDropContainer
          * @example
@@ -196,7 +196,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          * Срабатывает при перемещении (на каждое перемещение).
          * @remark Определяется в модуле, который подмешивает миксин.
          * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
-         * @param {Event} e Браузерное событие. На touch устройствах в полях pageX, pageY находятся координаты touch.
+         * @param {jQuery.Event} e Объект события. На touch устройствах в полях pageX, pageY находятся координаты touch.
          * @see SBIS3.CONTROLS.DragObject
          */
         _onDragHandler: function(dragObject, e) {
@@ -207,7 +207,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          * @remark Определяется в модуле, который подмешивает миксин. Если контрол взамодействует с другими контролами через Drag'n'drop
          * то этот метод должен определить, что перемещает пользователь и установить в dragObject (см метод {@link SBIS3.CONTROLS.DragObject#setSource}).
          * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
-         * @param {Event} e Браузерное событие. На touch устройствах в полях pageX, pageY находятся координаты touch.
+         * @param {jQuery.Event} e Объект события. На touch устройствах в полях pageX, pageY находятся координаты touch.
          * @see SBIS3.CONTROLS.DragObject
          * @returns {Boolean} если вернуть false перемещение не начнется
          */
@@ -227,7 +227,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          *   ...
          * </pre>
          * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
-         * @param {Event} e Браузерное событие.
+         * @param {jQuery.Event} e Объект события.
          * @returns {String}
          * @see SBIS3.CONTROLS.DragObject
          */
@@ -263,7 +263,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          *    ...
          * </pre>
          * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
-         * @param {Event} e Браузерное событие
+         * @param {jQuery.Event} e Объект события
          * @see SBIS3.CONTROLS.DragObject
          */
         _updateDragTarget: function(dragObject, e) {
@@ -275,7 +275,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
 
         /**
          * Показывает аватар
-         * @param  {Event} e Браузерное событие.
+         * @param  {jQuery.Event} e Объект события.
          * @private
          */
         _showAvatar: function(e) {
@@ -306,7 +306,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
           *    }
          *    ...
          * </pre>
-         * @param {Event} clickEvent Браузерное событие.
+         * @param {Event|jQuery.Event} clickEvent Объект события.
          */
         _initDrag: function(clickEvent) {
             var
@@ -319,11 +319,10 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                         EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
                     }
                 };
-            clickEvent = clickEvent.originalEvent || clickEvent;//в clickEvent.which может быть не определен, а в originalEvent он есть
-            if ($(clickEvent.target).closest('.controls-DragNDropMixin__notDraggable', self._getDragContainer()[0]).length === 0
-               && ((clickEvent.type == 'mousedown' && clickEvent.which == LEFT_BUTTON) || clickEvent.type != 'mousedown') //Для мышки проверям что нажата левая кнопка
+            var clickEventOrigin = clickEvent.originalEvent || clickEvent;//в clickEvent.which может быть не определен, а в originalEvent он есть
+            if ($(clickEventOrigin.target).closest('.controls-DragNDropMixin__notDraggable', self._getDragContainer()[0]).length === 0
+               && ((clickEventOrigin.type == 'mousedown' && clickEventOrigin.which == LEFT_BUTTON) || clickEventOrigin.type != 'mousedown') //Для мышки проверям что нажата левая кнопка
             ) {
-               this._preparePageXY(clickEvent);
                EventBus.channel('DragAndDropChannel').subscribe('onMousemove', dragStrarter);
                EventBus.channel('DragAndDropChannel').once('onMouseup', function () {
                   EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
@@ -333,7 +332,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         },
         /**
          * Начало перемещения.
-         * @param {Event} e Браузерное событие.
+         * @param {jQuery.Event} e Объект события.
          */
         _beginDrag: function (e) {
             if (this._options.itemsDragNDrop) {
@@ -356,22 +355,22 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         },
         /**
          * Вытаскивает координаты нажатия для tuch событий так же как для событий мыши.
-         * @param {Event} e Браузерное событие.
+         * @param {jQuery.Event} e Объект события.
          * @private
          */
         _preparePageXY: function(e) {
             if (e.type == "touchstart" || e.type == "touchmove") {
-                e.pageX = e.touches[0].pageX;
-                e.pageY = e.touches[0].pageY;
+                e.pageX = e.originalEvent.touches[0].pageX;
+                e.pageY = e.originalEvent.touches[0].pageY;
             } else if(e.type == "touchend") {
-                e.pageX = e.changedTouches[0].pageX;
-                e.pageY = e.changedTouches[0].pageY;
+                e.pageX = e.originalEvent.changedTouches[0].pageX;
+                e.pageY = e.originalEvent.changedTouches[0].pageY;
             }
         },
         /**
          * Метод определяет был ли сдвиг или просто кликнули по элементу.
-         * @param {Event} moveEvent Браузерное событие.
-         * @param {Event} clickEvent Браузерное событие.
+         * @param {jQuery.Event} moveEvent Объект события.
+         * @param {jQuery.Event} clickEvent Объект события.
          * @returns {boolean} если true то было смещение.
          * @private
          */
@@ -387,7 +386,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         },
         /**
          * Конец перемещения.
-         * @param {Event} e Браузерное событие.
+         * @param {jQuery.Event} e Объект события.
          * @param {Boolean} droppable Закончили над droppable контейнером.
          * @private
          */
@@ -430,7 +429,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         //region mouseHandler
         /**
          * Запускает обработчики перемещения.
-         * @param {Event} e Браузерное событие.
+         * @param {jQuery.Event} e Объект события.
          * @private
          */
         _onDrag: function (e) {
@@ -455,14 +454,14 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         /**
          * Срабывает когда отпустили мышь за пределами контрола.
          * @param {Core/EventObject} buse Дескриптор события.
-         * @param {Event} e Браузерное событие.
+         * @param {jQuery.Event} e Объект события.
          */
         _onMouseupOutside: function(buse, e) {
             this._mouseUp(e, false);
         },
         /**
          * Обработчик на событие браузера - Mouseup, Touchend.
-         * @param {Event} e Браузерное событие.
+         * @param {jQuery.Event} e Объект события.
          * @param {Boolean} inside Признак того что перемещение закончилось внутри контрола.
          */
         _mouseUp: function(e) {
@@ -493,7 +492,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         /**
          * Обработчик на событие перемещения курсора - Mousemove, Touchmove.
          * @param {Core/EventObject} buse Дескриптор события.
-         * @param {Event} e Браузерное событие.
+         * @param {jQuery.Event} e Объект события.
          */
         _onMousemove: function (buse, e) {
             if (this._options.itemsDragNDrop) {
