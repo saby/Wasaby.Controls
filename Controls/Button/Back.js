@@ -4,7 +4,7 @@ define('js!Controls/Button/Back', [
    /**
     * Кнопка "Назад"
     * @class Controls/Button/Back
-    * @extends Core/Control
+    * @extends Controls/Control
     * @mixes Controls/Button/interface/ICaption
     * @mixes Controls/Button/interface/IClick
     * @control

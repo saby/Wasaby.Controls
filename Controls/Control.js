@@ -3,7 +3,7 @@ define('js!Controls/Control', [
 
    /**
     * Базовый класс компонента
-    * @class Core/Control
+    * @class Controls/Control
     * @control
     * @public
     */
