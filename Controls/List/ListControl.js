@@ -60,6 +60,9 @@ define('js!Controls/List/ListControl', [
     * @cfg {Function} Шаблон отображения пустого списка
     */
 
+
+   /* по названиям вопрос sorting, filtering sort, filter ???? */
+
    /**
     * @name Controls/List/ListControl#filter
     * @cfg {Object} Настройки фильтра
@@ -86,27 +89,11 @@ define('js!Controls/List/ListControl', [
     */
 
    /**
-    * @name Controls/List/ListControl#itemContentTpl
-    * @cfg {Function} Шаблон отображения содержимого элементов коллекции
-    */
-
-   /**
-    * @name Controls/List/ListControl#itemsSortMethod
-    * @cfg {Function} Метод сортировки элементов коллекции
-    */
-
-   /**
     * @name Controls/List/ListControl#loadItemsStrategy
     * @cfg {String} Стратегия действий с подгружаемыми в список записями
     * @variant merge Мержить, при этом записи с одинаковыми id схлопнутся в одну
     * @variant append Добавлять, при этом записи с одинаковыми id будут выводиться в списке
     */
-
-
-   /*
-   * Методы:
-   * isScrollOnBottom, isScrollOnTop - обсудить
-   * */
 
    /**
     * Запускает создание записи
@@ -128,19 +115,20 @@ define('js!Controls/List/ListControl', [
     * @function Controls/interface/IPromisedSelectable#commitEdit
     */
 
+
    /**
+    * Подумать
+    *
+    * тут главный вопрос в диалоге редактирования. что мы должны позвать при диалоге редактирования?
+    * или при операциях над записью. там есть и удаление и перемещение. с помощью диалога редактирования можно
+    * позвать "создать", значит добавление можно делать не только через редактирование по месту.
+    * по сути это синхронизация рекордсета, которым владеет список и источника можно делать вызов
+    * отдельными методами - это это расскрывать детали реализации Санников предлагал делать метод sync,
+    * чтобы был более четкий контракт с экшеном диалога редактирования. но не совсем понятно как работать с
+    * синком из операций над записью.
+    *
     * Удаляет записи из источника данных по переданным идентификаторам элементов коллекции. Шляпа какая-то.
-    * @function Controls/interface/IPromisedSelectable#deleteRecords
-    */
-
-   /**
-    * Получить номер текущей страницы. Шляпа какая-то.
-    * @function Controls/interface/IPromisedSelectable#getPage
-    */
-
-   /**
-    * Возвращает признак, по которому можно установить: активно или нет редактирование по месту в данный момент. Шляпа какая-то.
-    * @function Controls/interface/IPromisedSelectable#isEdit
+    * @function -#deleteRecords
     */
 
    /**
@@ -152,8 +140,6 @@ define('js!Controls/List/ListControl', [
     * Перезагружает набор записей представления данных с последующим обновлением отображения
     * @function Controls/interface/IPromisedSelectable#reload
     */
-
-
 
    /**
     * @event Controls/List/ListControl#onAfterBeginEdit Происходит после начала редактирования
@@ -180,10 +166,6 @@ define('js!Controls/List/ListControl', [
     */
 
    /**
-    * @event Controls/List/ListControl#onChangeHoveredItem Происходит при переводе курсора мыши на другой элемент коллекции списка
-    */
-
-   /**
     * @event Controls/List/ListControl#onDataMerge Происходит перед добавлением загруженных записей в основной dataSet
     */
 
@@ -199,8 +181,10 @@ define('js!Controls/List/ListControl', [
     * @event Controls/List/ListControl#onEndMove Происходит после перемещения записей
     */
 
+
    /**
-    * @event Controls/List/ListControl#onItemActivate Происходит при смене записи (активации) под курсором мыши
+    * Вроде есть смена выделеной записи, пока спилим
+    * @event -#onItemActivate Происходит при смене записи (активации) под курсором мыши
     */
 
    /**
@@ -208,14 +192,7 @@ define('js!Controls/List/ListControl', [
     */
 
    /**
-    * @event Controls/List/ListControl#onPrepareFilterOnMove Происходит при определении фильтра, с которым будет показан диалог перемещения
-    */
-
-   /**
-    * @event Controls/List/ListControl#onDrawItems Происходит после отрисовки всех элементов коллекции
-    */
-
-   /**
+    * в чем разница между dataLoad и dataMerge?
     * @event Controls/List/ListControl#onDataLoad Происходит при загрузке данных
     */
 
