@@ -223,9 +223,7 @@ define('js!SBIS3.CONTROLS.Selectable', [
             var oldIndex = this._options.selectedIndex;
             this._prepareBothSelectedConfig(this._options.selectedIndex, this._options.selectedKey);
             //Необходимо для простановки начального значения при инициализации, чтобы значение можно было сбросить
-            if (this._isEmptyIndex(this._getItemsProjection().getCurrentPosition()) && !this._isEmptyIndex(this._options.selectedIndex) && (this._getItemsProjection().getCount() > this._options.selectedIndex)) {
-               this._getItemsProjection().setCurrentPosition(this._options.selectedIndex, oldIndex == this._options.selectedIndex);
-            }
+            updateProjectionCurrentPosition.call(this, oldIndex);
          }
       },
 
@@ -435,8 +433,13 @@ define('js!SBIS3.CONTROLS.Selectable', [
                }
             }
             var newHash;
-            if (this._getItemsProjection()) {
-               var curItem = this._getItemsProjection().at(this._options.selectedIndex);
+            if (itemsProjection) {
+               
+               if (itemsProjection.getCurrentPosition() !== this.getSelectedIndex()) {
+                  updateProjectionCurrentPosition.call(this, this.getSelectedIndex());
+               }
+               
+               var curItem = itemsProjection.at(this._options.selectedIndex);
                if (curItem) {
                   newHash = curItem.getHash();
                }
@@ -454,6 +457,14 @@ define('js!SBIS3.CONTROLS.Selectable', [
          newPosition,
          this._getKeyByIndex(newPosition)
       );
+   };
+   
+   var updateProjectionCurrentPosition = function(oldIndex) {
+      var itemsProjection = this._getItemsProjection(),
+          selectedIndex = this.getSelectedIndex();
+      if (this._isEmptyIndex(itemsProjection.getCurrentPosition()) && !this._isEmptyIndex(selectedIndex) && (itemsProjection.getCount() > selectedIndex)) {
+         this._getItemsProjection().setCurrentPosition(selectedIndex, oldIndex === selectedIndex);
+      }
    };
 
    return Selectable;

@@ -85,6 +85,11 @@ define('js!SBIS3.CONTROLS.Button',
          _isWaitingClick: false,
          _isTouchEnded: false,
          _touchMoveCount: 0,
+
+         //Какая-то дичь с сервеной частью, у класса определено _useNativeAsMain в слое совместимости,
+         //НО core-extend этого не замечает, и получается, что пытается строить кнопки через цепочку $constructor
+         //ПОКА у класса есть наследники с $constructor, класс должен установить это свойство!
+         _useNativeAsMain: true,
          constructor: function (cfg) {
             Button.superclass.constructor.call(this, cfg);
             this._publish('onActivated');

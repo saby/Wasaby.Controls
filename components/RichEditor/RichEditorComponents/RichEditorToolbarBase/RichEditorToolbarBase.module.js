@@ -389,7 +389,8 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                      editor.setFontColor(formats.color);
                   }
                   if (!atFirst) {
-                     editor.getTinyEditor().selection.getRng().expand();
+                     // в настоящий момент работает и без этого кода, но если не будет работать, но нужно использовать modify, т.к. expand помечен deprecated.
+                     // editor.getTinyEditor().selection.getSel().modify();
                      editor.setFontSize(formats.fontsize);
                   }
                }

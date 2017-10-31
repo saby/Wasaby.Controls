@@ -368,6 +368,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this._options.pickerClassName += ' controls-DropdownList__withoutArrow';
             }
             this._setHeadVariables();
+            this._container.bind('mouseenter' , this._showInfobox.bind(this));
          },
          _modifyOptions: function() {
             var cfg = DropdownList.superclass._modifyOptions.apply(this, arguments);
@@ -880,12 +881,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
             this._setText(text);
             this._redrawHead(isDefaultIdSelected);
-            this._drawTitle(textValue);
             this._resizeFastDataFilter();
-         },
-         _drawTitle: function(textValue) {
-            var title = this.getSelectedKeys().length > 1 ? textValue.join(', ') : '';
-            this.getContainer()[0].setAttribute('title', title);
          },
          _resizeFastDataFilter: function(){
             var parent = this.getParent();
@@ -912,6 +908,23 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this.getContainer().toggleClass('controls-DropdownList__defaultItem', isDefaultIdSelected);
             }
             this._setHeadVariables();
+         },
+         _showInfobox: function() {
+            var self = this,
+               textValues = [];
+            if (!this.isEnabled() && this.getSelectedKeys().length > 1) {
+               requirejs(['js!SBIS3.CORE.Infobox'], function(Infobox) {
+                  textValues = [];
+                  self.getSelectedItems().each(function(item) {
+                     textValues.push(item.get(self._options.displayProperty));
+                  });
+                  Infobox.show({
+                     control: self.getContainer(),
+                     message: textValues.join(', '),
+                     autoHide: true
+                  })
+               });
+            }
          },
          /**
           * Получить ключ элемента для выбора "по умолчанию"
