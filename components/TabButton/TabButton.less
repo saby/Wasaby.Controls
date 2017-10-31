@@ -1,6 +1,5 @@
-@tab-button-large-inner-font-weight:   bold;
+@tab-button-large-inner-font-weight: bold;
 .controls-TabButton {
-   vertical-align: middle;
    cursor: pointer;
    height: 100%;
    box-sizing: border-box;
@@ -18,11 +17,11 @@
    padding: 0 1px;
    .flex-shrink(1);
 
-   &:hover {
+   &:not(.controls-Checked__checked):hover {
+      padding: 0;
       background: @tab-button-hover-background;
       border-top: @tab-button-hover-border;
       border-bottom: @tab-buttons-border-bottom;
-      padding: 0;
       .controls-TabButton__inner {
          border-right: @tab-button-hover-border;
          border-left: @tab-button-hover-border;
@@ -32,68 +31,6 @@
       }
    }
 
-   &.controls-TabButton__counter{
-     &.controls-Checked__checked .controls-TabButton__inner *{
-       color: #D94700;
-     }
-     .controls-tabButton__counter-value{
-       font-size: 14px;
-       color: #FF7033;
-       display: inline-block;
-     }
-     &.controls-TabButton__counter-success{
-       &.controls-Checked__checked .controls-TabButton__inner *{
-         color: #569034;
-       }
-       .controls-tabButton__counter-value{
-         color: #72BE44;
-       }
-     }
-     &.controls-TabButton__counter-error{
-       &.controls-Checked__checked .controls-TabButton__inner *{
-         color: #EF463A;
-       }
-       .controls-tabButton__counter-value{
-         color: #EF463A;
-       }
-     }
-   }
-
-  &.controls-TabButton__counter-checked{
-    &.controls-Checked__checked .controls-TabButton__inner *{
-      color: #D94700!important; /* здесь нужно перебить цвет иконки, который задан через important */
-    }
-    &.controls-TabButton__counter-success{
-      &.controls-Checked__checked .controls-TabButton__inner *{
-        color: #569034!important;
-      }
-    }
-    &.controls-TabButton__counter-error{
-      &.controls-Checked__checked .controls-TabButton__inner *{
-        color: #EF463A!important;
-      }
-    }
-  }
-
-
-   .controls-TabButton__bottomLine{
-      display: none;
-   }
-   //стиль для встраиваемых компонентов, чтобы текст был по стандарту
-   .controls-TabButton__mainText, .controls-TabButton__mainText.controls-Link {
-      color: @tab-button-color;
-      font: @tab-button-font;
-      line-height: @tab-button-main-text-line-height;
-      font-weight: @tab-button-large-inner-font-weight;
-      text-overflow: ellipsis;
-      font-size: @tab-button-large-inner-font-size;
-      .controls-TextBox .controls-TextBox__field{
-         font-size: @tab-button-large-inner-font-size;
-         padding-top: 0;
-         padding-bottom: 1px;
-         color: #313E78;
-      }
-   }
    &.controls-Checked__checked {
       border-top: @tab-button-checked-border-top;
       z-index: 50;
@@ -103,14 +40,7 @@
       padding: 0;
       overflow: visible;
 
-      .controls-TabButton__bottomLine{
-         position: absolute;
-         bottom: -2px;
-         left: 1px;
-         right: 1px;
-         background: #fff;
-         height: 3px;
-      }
+
       .controls-TabButton__inner {
          font-weight: bold;
          font-size: @tab-button-checked-inner-font-size;
@@ -119,46 +49,96 @@
          border-color: @tab-button-checked-border-color;
          border-style: solid;
          background: @tab-button-checked-inner-bg;
-         overflow:  hidden;
-         &:before{
+         .controls-TabButton__wrapper {
+            margin-bottom: 4px;
+         }
+         &:before {
             display: none;
          }
       }
-      .controls-tabButton__overlay{
+      .controls-tabButton__overlay {
          display: none;
       }
       //стиль для встраиваемых компонентов, чтобы текст был по стандарту
       .controls-TabButton__mainText {
          color: @tab-button-checked-inner-color;
-         font-size: @tab-button-large-inner-font-size;
-         font-weight: @tab-button-large-inner-font-weight;
       }
    }
-   //controls-TabButton__main-flex - временный модификатор, чтобы ЭДО могли переверстали свои компоненты
-   &.controls-TabButton__main-item.controls-TabButton__main-flex {
-      .controls-TabButton__flex {
-         max-width: 100%;
-         .flexbox();
-      }
-      .controls-TabButton__mainText {
-         .flex-shrink(1);
-         .align-self(baseline);
-         overflow: hidden;
+
+   .controls-TabButton__inner {
+      padding: @tab-button-inner-padding;
+      overflow: hidden;
+      height: 100%;
+      max-width: @tab-button-large-inner-max-width;
+      .flexbox();
+      .align-items(flex-end);
+      &:before {
+         content: '';
          display: block;
+         width: @tab-button-inner-after-width;
+         height: @tab-button-inner-after-height;
+         background-color: @tab-button-inner-after-bg-color;
+         position: absolute;
+         bottom: @tab-button-inner-after-bottom;
+         z-index: 10;
+      }
+      .controls-TabButton__wrapper {
+         .flexbox();
+         .flex-direction(row);
+         .align-items(center);
+         height: @tab-button-inner-wrapper-height;
+         margin-bottom: 2px;
+         max-width: 100%;
+      }
+      .controls-TabButton__caption {
+         .flexbox();
+         .align-items(baseline);
+         .flex-shrink(0); //for ie
+         overflow: hidden;
+         text-overflow: ellipsis;
+         white-space: nowrap;
+         max-width: 100%;
+      }
+      .controls-TabButton__icon {
+         margin-right: 6px;
+      }
+   }
+
+   //стиль для встраиваемых компонентов, чтобы текст был по стандарту
+   .controls-TabButton__mainText {
+      color: @tab-button-color;
+      font: @tab-button-font;
+      font-weight: @tab-button-large-inner-font-weight;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      font-size: @tab-button-large-inner-font-size;
+      height: @tab-button-inner-wrapper-height;
+      .flex-shrink(1);
+      .flexbox();
+
+      .controls-TextBox__field {
+         font-size: 18px;
       }
    }
    &.controls-TabButton__main-item {
       min-width: 1px; //Нужно, чтобы flex правильно позиционировал ужимаемый контейнер. с 0 в ie11 не работает
-      .controls-TabButton__inner{
+      .controls-EditAtPlace {
+         background: transparent;
+         .controls-EditAtPlace__textField{
+            border-bottom-style: none;
+         }
+      }
+      &.controls-Checked__checked {
+         .controls-TabButton__inner .controls-TabButton__wrapper {
+            margin-bottom: 4px;
+         }
+      }
+      .controls-TabButton__inner {
          font-size: @tab-button-large-inner-font-size;
          font-weight: @tab-button-large-inner-font-weight;
-         line-height: 27px;
-         vertical-align: top;
 
          .controls-TabButton__wrapper {
-            //mainItem имеет flex-shrink:1, tabSpaceTemplate - 9999.
-            //Из-за этого mainItem ужимается на доли пикселя, из-за чего текст троеточится
-            width: ~'calc(100% + 1px)';
+            margin-bottom: 3px;
          }
 
          .controls-MenuLink {
@@ -166,110 +146,35 @@
          }
       }
       .controls-TabButton__caption > * {
-       font-weight: @tab-button-large-inner-font-weight;
+         font-weight: @tab-button-large-inner-font-weight;
       }
       .controls-TabButton__additionalText1, .controls-TabButton__additionalText1 > * {
+         .flex-shrink(0);
          color: @tab-button-large-firstAddText-color;
          font-size: @tab-button-large-firstAddText-font-size;
          font-weight: normal;
          &:hover {
             color: @tab-button-large-firstAddText-color-hover;
          }
-         .controls-EditAtPlace__editor{
-            color: @black-color;
-            font-size: @default-text-size;
-         }
-         .controls-EditAtPlace__fieldWrapper{
-            padding: 0;
-         }
-         .controls-FormattedTextBox {
-            position: relative;
-            bottom: 1px;
-         }
       }
       .controls-TabButton__additionalText2, .controls-TabButton__additionalText2 > * {
+         .flex-shrink(0);
          color: @tab-button-large-secondAddText-color;
          font-size: @tab-button-large-secondAddText-font-size;
          font-weight: normal;
-         .controls-EditAtPlace__editor{
-            color: @black-color;
-            font-size: @default-text-size;
-         }
-         .controls-EditAtPlace__fieldWrapper{
-            padding: 0;
-         }
-         .controls-TextBox {
-            .controls-TextBox__fieldWrapper {
-               padding-top: 1px;
-               box-sizing: content-box;
-               border: 0; //в 61 хроме проблема, когда задан box-sizing:padding-box и не нулевой border, родительский контейнер считает, что дочерний контейнер с такими стилями
-               //вылезает за границы и при overflow:hidden троеточит его по вертикали
-            }
-            &.controls-EditAtPlace__ellipsis {
-               .controls-EditAtPlace__textField {
-                  vertical-align: middle;
-               }
-            }
-         }
-      }
-   }
-   .controls-TabButton__inner {
-      padding: @tab-button-inner-padding;
-      line-height: @tab-button-inner-line-height;
-      overflow: hidden;
-      height: 100%;
-      max-width: @tab-button-large-inner-max-width;
-      &:before {
-        content: '';
-        display: block;
-        width: @tab-button-inner-after-width;
-        height: @tab-button-inner-after-height;
-        background-color: @tab-button-inner-after-bg-color;
-        position: absolute;
-        bottom: @tab-button-inner-after-bottom;
-        z-index: 10;
-      }
-      .controls-TabButton__wrapper {
-         .flexbox();
-      }
-      .controls-TabButton__icon {
-         position: relative;
-         top: @tab-button-icon-top;
-         margin-right: @tab-button-icon-margin-right;
-      }
-      .controls-TabButton__caption {
-         display: inline-block;
-         overflow: hidden;
-         text-overflow: ellipsis;
-         white-space: nowrap;
-         .flex-shrink(1);
-         > div {
-            vertical-align: top;
-         }
-      }
-      .controls-EditAtPlace {
-         .controls-DateRange{
-            height: 24px;
-            position: relative;
-         }
-
-         .controls-EditAtPlace__textField{
-            border-style: none;
-         }
-         background-color: transparent;
       }
    }
 
    &.controls-TabButton__right-align {
       margin-right: @tab-button-right-margin-right;
-      .controls-TabButton__inner:before{
+      .controls-TabButton__inner:before {
          left: 0;
       }
    }
 
    &.controls-TabButton__left-align {
       margin-left: @tab-button-left-margin-left;
-      .controls-TabButton__inner:before{
+      .controls-TabButton__inner:before {
          right: 0;
       }
    }
@@ -284,201 +189,79 @@
       -ms-filter: @tab-button-overlay-ms-filter;
       opacity: 0;
    }
-  //FIXME: временный костыль, тк избавиться от line-height не переписывая tabButton невозможно
-  .controls-TextBox {
-    line-height: @default-height;
-    &__wrapper {
-      .align-items(normal)
-    }
-    &.controls-DateBox {
-      line-height: @default-base-line-height;
-    }
-  }
-}
-
-.ws-disabled{
-   &.controls-TabButton{
-      &.controls-TabButton__main-item{
-         .controls-TabButton__additionalText1, .controls-TabButton__additionalText1 > *{
-            &:hover{
-               color: @tab-button-large-firstAddText-color;
-            }
+   &.controls-TabButton__counter {
+      &.controls-Checked__checked .controls-TabButton__inner * {
+         color: #D94700;
+      }
+      .controls-tabButton__counter-value {
+         color: #FF7033;
+         display: inline-block;
+      }
+      &.controls-TabButton__counter-success {
+         &.controls-Checked__checked .controls-TabButton__inner * {
+            color: #569034;
          }
-         .controls-TabButton__additionalText2, .controls-TabButton__additionalText2 > * {
-            &:hover{
-               color: @tab-button-large-secondAddText-color;
-            }
+         .controls-tabButton__counter-value {
+            color: #72BE44;
+         }
+      }
+      &.controls-TabButton__counter-error {
+         &.controls-Checked__checked .controls-TabButton__inner * {
+            color: #EF463A;
+         }
+         .controls-tabButton__counter-value {
+            color: #EF463A;
          }
       }
    }
 }
 
 .controls-TabButtons__simple-view {
-  &.controls-TabButtons__simple-view-select {
-    .controls-TabButton.controls-Checked__checked {
-      .controls-TabButton__inner{
-        color: #D94700;
+   &.controls-TabButtons__simple-view-select {
+      .controls-TabButton.controls-Checked__checked {
+         .controls-TabButton__inner {
+            color: #D94700;
+         }
       }
-    }
-  }
-  .controls-TabButton {
-    border-color: transparent;
-    border-left: none;
-    border-right: none;
-    border-bottom: @tab-buttons-border-bottom;
-    //В simple-view нет border -> не нужны отступы
-    &.controls-TabButton__left-align .controls-TabButton__inner:before {
-       right: 0;
-    }
-    &.controls-TabButton__right-align .controls-TabButton__inner:before {
-       left: 0;
-    }
-    .controls-TabButton__inner{
-      border-color: transparent;
-      color: @tab-button-simple-inner-color;
-      padding: @tab-button-simple-inner-padding;
-      &:before{
-        display: block;
-        z-index: 1000;
-      }
-    }
-    .controls-TabButton__bottomLine{
-      height: @tab-control-smple-bottomline-height;
-      left: 0;
-      right: 0;
-      bottom: -1px;
-      position: absolute;
-      display: block;
-    }
-    &.controls-Checked__checked {
-       padding: 0 1px;
-      .controls-TabButton__inner{
-        color: @tab-button-simple-inner-checked-color;
-        background: transparent;
-        border-width: 0;
-      }
-      .controls-TabButton__bottomLine{
-         display: block;
-         background: @tab-button-simple-checked-bottomline-color !important;
-      }
-    }
-    &:hover {
-      background: transparent;
-      padding: 0 1px;
+   }
+   .controls-TabButton {
+      border-color: transparent!important; //todo - все important удалятся, когда останутся только вкладки 2 уровня
+      border-bottom: @tab-buttons-border-bottom!important;
       .controls-TabButton__inner {
-         border-width: 0;
-      }
-      .controls-TabButton__bottomLine{
-        background: @tab-button-simple-hover-bottomline-color;
-      }
-    }
-  }
-}
-.controls-TabButtons__simple-view-mini{
-  .controls-TabButton {
-    .controls-TabButton__inner{
-      height: 26px;
-      color: #CCCCCC;
-      font-size: 14px;
-      padding: 0 12px;
-      line-height: 25px;
-      border-color: #E4E4E4;
-      &:before {
-        display: none;
-      }
-    }
-    .controls-TabButton__bottomLine{
-      display: none;
-    }
-    &.controls-Checked__checked {
-      border-color: #E4E4E4;
-      .controls-TabButton__inner, .controls-TabButton__inner:hover{
-        color: #8991A9;
-        font-size: 14px;
-        font-weight: normal;
-        background: transparent;
-      }
-      &:hover{
-        border-color: #E4E4E4;
-      }
-      .controls-TabButton__bottomLine{
-        position: absolute;
-        bottom: -1px;
-        left: 1px;
-        right: 1px;
-        background: #fff;
-        height: 1px;
-        display: block;
-      }
-    }
-    &:hover{
-      background: transparent;
-      .controls-TabButton__inner{
-        color: #313E78;
-      }
-    }
-  }
-}
-
-.ws-is-firefox {
-  .controls-TabButton {
-     .controls-TabButton__inner{
-        line-height: @tab-button-ff-inner-height;
-     }
-     &.controls-TabButton__main-item .controls-TabButton__inner{
-        line-height: @tab-button-main-text-line-height;
-     }
-     &.controls-TabButton__main-item {
-        .controls-TabButton__additionalText1, .controls-TabButton__additionalText1 > * {
-           .controls-FormattedTextBox {
-              bottom: 0;
-           }
-        }
-     }
-  }
-  .controls-TabButtons__simple-view-mini {
-     .controls-TabButton .controls-TabButton__inner {
-        line-height: 23px;
-     }
-  }
-}
-
-.ws-is-ie12 {
-   .controls-TabButton {
-      .controls-TabButton__caption {
-         height: @tab-button-height;
-         > * {
-            vertical-align: top;
+         border-color: transparent!important;
+         color: @tab-button-simple-inner-color;
+         &:before {
+            display: block!important;
          }
       }
-   }
-}
-
-.ws-is-ie {
-   .controls-TabButton {
-      .controls-TabButton__mainText {
-         line-height: 26px; //for ie10-12
-      }
-      .controls-TabButton__additionalText2 {
-         .controls-EditAtPlace .controls-EditAtPlace__textField {
-            padding: 0;
+      &:hover {
+         background: transparent;
+         &:after {
+            background: @tab-button-simple-hover-bottomline-color;
+            display: block;
          }
       }
-      //FIXME:
-      //далее следую правки за которые необходимо сжигать на костре
-      //необходимо их удалить при отказе от line-height в tabbutons
-      .controls-TabButton__mainText .controls-TextBox .controls-TextBox__field,
-      .controls-Link.controls-TabButton__mainText .controls-TextBox .controls-TextBox__field {
-          padding-bottom: 5px;
+      &.controls-Checked__checked {
+         z-index: 10; //чтобы не пропадал разделитель
+         .controls-TabButton__inner {
+            color: @tab-button-simple-inner-checked-color;
+            .controls-TabButton__wrapper {
+               margin-bottom: 3px;
+            }
+         }
+         &:after {
+            display: block;
+            background: @tab-button-simple-checked-bottomline-color;
+         }
       }
-      .controls-TabButton__additionalText2 {
-        .controls-TextBox .controls-TextBox__field {
-          padding-bottom: 6px;
-        }
+      &:after {
+         content: '';
+         position: absolute;
+         bottom: -1px;
+         left: 1px;
+         right: 1px;
+         height: @tab-button-simple-inner-bottom-height;
+         display: none;
       }
    }
-}
-
-.controls-TabButton__mainText.controls-EditAtPlace__ellipsis  .controls-EditAtPlace__fieldWrapper {
-   height: auto;
 }
