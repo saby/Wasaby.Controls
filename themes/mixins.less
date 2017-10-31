@@ -277,6 +277,7 @@
 
 .inline-flexbox() {
   display: inline-flex;
+  display: -ms-flexbox; // в ie10 нет inline-flex ("https://msdn.microsoft.com/en-us/library/hh673531(v=vs.85).aspx")
   display: -ms-inline-flexbox;
   display: -webkit-inline-flex;
 }
@@ -363,7 +364,6 @@
    -ms-justify-content: @justify;
    justify-content: @justify;
    //ie 10 fix
-   -ms-flex-pack: @justify; //ie 10
    & when (@justify = space-between) {
       -ms-flex-pack: justify;
    }

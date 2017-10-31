@@ -18,9 +18,6 @@
      &.ws-has-focus {
        border: none;
      }
-     .controls-TextBox__fieldWrapper .controls-TextBox__placeholder{
-       padding: 0;
-     }
    }
    .controls-EditAtPlace__fieldWrapper {
       height: auto;
@@ -32,9 +29,6 @@
       border-color: transparent;
       //todo:
       line-height: 20px;
-      .controls-EditAtPlace__placeholder {
-         color: @gray-ccc-color;
-      }
       &.controls-EditAtPlace__textAreaWrapper {
          display: block;
          padding: @edit-at-place-wrapper-text-area-padding;
@@ -49,6 +43,7 @@
          border-width: @edit-at-place-field-border-width;
          border-style: dashed;
          border-color: @edit-at-place-field-border-color;
+         height: 100%;
       }
    }
    .controls-EditAtPlace__editor{
@@ -114,4 +109,8 @@
          background: @edit-at-place-cancel-button-hover-bg;
       }
    }
+}
+
+.controls-EditAtPlace__placeholder {
+   color: @default-placeholder-color;
 }

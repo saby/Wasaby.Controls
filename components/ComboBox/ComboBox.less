@@ -75,6 +75,15 @@
    overflow-y: hidden !important;
    border: @combo-box-picker-border;
    box-sizing: border-box;
+   .controls-ComboBox__multiline.controls-ComboBox__itemRow{
+      .controls-ComboBox__item {
+         white-space: normal;
+         word-wrap: break-word;
+      }
+      .controls-ComboBox__shadow {
+         display: none;
+      }
+   }
    .controls-ComboBox__body {
      height: 100%;
      .border-radius(@combo-box-picker-border-radius);

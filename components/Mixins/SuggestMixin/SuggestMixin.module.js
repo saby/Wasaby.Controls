@@ -630,8 +630,6 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          var showAllConfig = this._getShowAllConfig(),
              list = this.getList(),
              listConfig;
-         
-         this.hidePicker();
    
          listConfig = {
             columns: list.getColumns(),
@@ -652,7 +650,8 @@ define('js!SBIS3.CONTROLS.SuggestMixin', [
          }
    
          showAllConfig.componentOptions.listConfig = listConfig;
-         
+   
+         this.hidePicker();
          this.showSelector(showAllConfig);
       },
       

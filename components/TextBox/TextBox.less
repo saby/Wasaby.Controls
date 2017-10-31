@@ -54,7 +54,6 @@
       .inline-flexbox();
       .flex-shrink();
       .align-items(center);
-      .user-select(none);
       position: relative;
       width: 100%;
       height: 100%;
@@ -82,11 +81,9 @@
       .placeholder();
       .text-overflow();
       .flex-shrink();
-      .user-select(text);
       font: inherit;
       width: 100%;
       min-width: 0; //Иначе input во flex контейнере будет сжиматься лишь до своей стандартной ширины
-      text-align: inherit;
       color: inherit;
       border: none;
       outline: none;
@@ -104,6 +101,12 @@
       &::-ms-clear {
          display: none;
       }
+      &:before{
+         content: '.';
+         visibility:hidden;
+         width: 0;
+         display: inline-block;
+      }
    }
    &__placeholder {
       .inline-flexbox();
@@ -114,7 +117,6 @@
       cursor: text;
       color: @default-placeholder-color;
       font: inherit;
-      text-align: inherit;
       padding: @text-box-input-padding;
       &__overflow {
          .text-overflow();
@@ -141,4 +143,12 @@
 
 .controls-TextBox__field-lowercase {
    text-transform: lowercase;
+}
+
+.controls-TextBox__text-align-left {
+   text-align: left;
+}
+
+.controls-TextBox__text-align-right {
+   text-align: right;
 }

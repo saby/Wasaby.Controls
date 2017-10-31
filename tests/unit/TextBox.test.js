@@ -11,9 +11,10 @@ define(['js!SBIS3.CONTROLS.TextBox'], function (TextBox) {
             if (typeof $ === 'undefined') {
                 this.skip();
             }
-            $('#mocha').append('<div id="component"></div>');
+            var container = $('<div></div>');
+            $('#mocha').append(container);
             TB = new TextBox({
-                element: 'component',
+                element: container,
                 text: '1.234',
                 maxLength: 23
             });
