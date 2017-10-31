@@ -63,7 +63,7 @@ define('js!WSControls/Windows/PopupManager',
       PopupManager._currentZIndex = 1000;
 
       require(['js!WSControls/Windows/PopupContainer/PopupContainer'], function(PopupContainer){
-         PopupManager.popupContainer = Control.createControl(PopupContainer, {}, '#popup');
+         PopupManager.popupContainer = PopupContainer;
       });
 
       return PopupManager;

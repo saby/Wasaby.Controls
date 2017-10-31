@@ -19,10 +19,6 @@ define('js!WSControls/Windows/PopupContainer/PopupContainer',
          _controlName: 'WSControls/Windows/PopupContainer/PopupContainer',
          iWantVDOM: true,
 
-         constructor: function(cfg){
-            PopupContainer.superclass.constructor.call(this, cfg);
-         },
-
          _beforeMount: function(options){
             if( !options.popupItems ){
                options.popupItems = [];
@@ -40,6 +36,6 @@ define('js!WSControls/Windows/PopupContainer/PopupContainer',
          }
       });
 
-      return PopupContainer;
+      return Control.createControl(PopupContainer, {}, '#popup');
    }
 );
