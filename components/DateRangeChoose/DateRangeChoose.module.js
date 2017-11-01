@@ -1,4 +1,5 @@
 define('js!SBIS3.CONTROLS.DateRangeChoose',[
+   'Core/constants',
    "Core/Deferred",
    "Core/IoC",
    "js!SBIS3.CORE.CompoundControl",
@@ -10,7 +11,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
    "js!SBIS3.CONTROLS.IconButton",
    "js!SBIS3.CONTROLS.Link",
    'css!SBIS3.CONTROLS.DateRangeChoose'
-], function ( Deferred, IoC, CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, eHelpers, dateHelpers) {
+], function (constants, Deferred, IoC, CompoundControl, dotTplFn, RangeMixin, DateRangeMixin, eHelpers, dateHelpers) {
    'use strict';
     /**
      * @class SBIS3.CONTROLS.DateRangeChoose
@@ -94,23 +95,6 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
              * @see updateIcons
              */
             iconsHandler: null,
-
-            _months: [
-               {
-                  name: 'I',
-                  quarters: [
-                     {name: 'I', months: ['Январь', 'Февраль', 'Март']},
-                     {name: 'II', months: ['Апрель', 'Май', 'Июнь']}
-                  ]
-               },
-               {
-                  name: 'II',
-                  quarters: [
-                     {name: 'III', months: ['Июль', 'Август', 'Сентябрь']},
-                     {name: 'IV', months: ['Октябрь', 'Ноябрь', 'Декабрь']}
-                  ]
-               }
-            ]
          },
          _cssDateRangeChoose: {
             selected: 'controls-DateRangeChoose__selected',
@@ -141,13 +125,31 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
       },
 
       _modifyOptions: function() {
-         var opts = DateRangeChoose.superclass._modifyOptions.apply(this, arguments);
+         var longMonths = constants.Date.longMonths,
+            opts = DateRangeChoose.superclass._modifyOptions.apply(this, arguments);
          if (!opts.year) {
             opts.year = this._getDefaultYear(opts);
             if (!opts.year) {
                opts.year = (new Date()).getFullYear();
             }
          }
+         // локализация может поменяться в рантайме, берем актуальный перевод месяцев при каждой инициализации компонента
+         opts._months = [
+            {
+               name: 'I',
+               quarters: [
+                  {name: 'I', months: longMonths.slice(0, 3)},
+                  {name: 'II', months: longMonths.slice(3, 6)}
+               ]
+            },
+            {
+               name: 'II',
+               quarters: [
+                  {name: 'III', months: longMonths.slice(6, 9)},
+                  {name: 'IV', months: longMonths.slice(9)}
+               ]
+            }
+         ];
          return opts;
       },
 
@@ -522,15 +524,16 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
          var self = this,
             start = this.getStartValue(),
             selectedYear = start ? start.getFullYear() : null,
+            displayedYear = this.getYear(),
             year, containers;
          if (this._options.showMonths || this._options.showQuarters || this._options.showHalfyears) {
             return;
          }
          containers = this.getContainer().find(['.', this._cssDateRangeChoose.yearsModeWrapper, '>*'].join(''));
          containers.removeClass('controls-DateRangeChoose__yearsMode-bold');
-         if (selectedYear) {
+         if (displayedYear) {
             containers.each(function (index) {
-               year = self.getYear() - index;
+               year = displayedYear - index;
                if (selectedYear === year) {
                   $(this).addClass('controls-DateRangeChoose__yearsMode-bold');
                }
@@ -563,7 +566,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
          startValueYear = start ? start.getFullYear() : null;
 
          if (!startValueYear) {
-            return;
+            return (new Date()).getFullYear();
          }
 
          currentYear = (new Date()).getFullYear();

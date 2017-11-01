@@ -19,6 +19,7 @@ define(
 
       /**
        * Класс контрола "Вкладки". Чтобы контрол правильно работал, требуется установить опции {@link idProperty} и {@link displayProperty}.
+       * Используется для отображения вкладок. Также применяется в <a href='https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/TabControl/'>SBIS3.CONTROLS.TabControl</a> - отображает вкладки для <a href='https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/SwitchableArea/'>областей с контентом</a>.
        * Стандарт вкладок описан <a href='http://axure.tensor.ru/standarts/v7/%D0%B2%D0%BA%D0%BB%D0%B0%D0%B4%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_05_.html'>здесь</a>.
        * @remark
        * Чтобы скрыть одну вкладку, используйте следующий код:

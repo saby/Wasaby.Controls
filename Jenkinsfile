@@ -18,7 +18,7 @@ properties([
             description: '',
             name: 'ws_data_revision'),
         string(
-            defaultValue: 'rc-3.17.200',
+            defaultValue: 'rc-3.17.210',
             description: '',
             name: 'branch_engine'),
         string(
@@ -44,7 +44,7 @@ if ( "${env.BUILD_NUMBER}" != "1" && params.run_reg == false && params.run_int =
 
 node('controls') {
     echo "Назначем версию и определяем рабочую директорию"
-    def version = "3.17.200"
+    def version = "3.17.210"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
         echo "Чистим рабочую директорию"
@@ -207,7 +207,10 @@ node('controls') {
                 ws: {
                     echo "Выкачиваем ws для unit тестов и если указан сторонний бранч"
                     if ( unit || "${params.ws_revision}" != "sdk" ){
-                        ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
+                        def ws_revision = params.ws_revision
+                        if ("${params.ws_revision}" == "sdk" ){
+                            ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
+                        }
                         dir(workspace) {
                             checkout([$class: 'GitSCM',
                             branches: [[name: ws_revision]],
@@ -228,7 +231,9 @@ node('controls') {
                     echo "Выкачиваем ws.data для unit тестов и если указан сторонний бранч"
                     if ( unit || "${params.ws_data_revision}" != "sdk" ){
                         def ws_data_revision = params.ws_data_revision
-                        ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
+                        if ( "${params.ws_data_revision}" == "sdk" ){
+                            ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
+                        }
                         dir(workspace) {
                             checkout([$class: 'GitSCM',
                             branches: [[name: ws_data_revision]],

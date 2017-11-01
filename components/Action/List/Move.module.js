@@ -9,11 +9,11 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
    function (ActionBase, ListMixin, Mover, Di, cInstance) {
       'use strict';
       /**
-       * Базовый класс перемещения элементов в списке
+       * Базовый класс действия, которое перемещает элементы в списке.
        * @class SBIS3.CONTROLS.Action.List.Move
        * @public
        * @extends SBIS3.CONTROLS.Action.Action
-       * @author Крайнов Дмитрий Олегович
+       * @author Ганшин Ярослав Олегович
        *
        * @mixes SBIS3.CONTROLS.Action.List.ListMixin
        *
@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
             _options:{
                /**
                 * @cfg {WS.Data/MoveStrategy/IMoveStrategy) Стратегия перемещения. Класс, который реализует перемещение записей. Подробнее тут {@link WS.Data/MoveStrategy/Base}.
-                * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
+                * @deprecated Для внедрения собственной логики используйте события {@link onBeginMove} или {@link onEndMove}.
                 * @see {@link WS.Data/MoveStrategy/Base}
                 * @see {@link WS.Data/MoveStrategy/IMoveStrategy}
                 */
@@ -60,7 +60,7 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
 
          /**
           * Возвращает стратегию перемещения
-          * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
+          * @deprecated Для внедрения собственной логики используйте события {@link onBeginMove} или {@link onEndMove}.
           * @see WS.Data/MoveStrategy/IMoveStrategy
           * @returns {WS.Data/MoveStrategy/IMoveStrategy}
           */
@@ -70,7 +70,7 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
 
          /**
           * Устанавливает стратегию перемещения
-          * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
+          * @deprecated Для внедрения собственной логики используйте события {@link onBeginMove} или {@link onEndMove}.
           * @see WS.Data/MoveStrategy/IMoveStrategy
           * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
           */
@@ -101,7 +101,7 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
          /**
           * Создает стратегию перемещения в зависимости от источника данных
           * @returns {WS.Data/MoveStrategy/IMoveStrategy}
-          * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
+          * @deprecated Для внедрения собственной логики используйте события {@link onBeginMove} или {@link onEndMove}.
           * @private
           */
          _makeMoveStrategy: function () {

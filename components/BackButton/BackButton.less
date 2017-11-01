@@ -10,25 +10,12 @@
    .controls-BackButton__caption.controls-Link {
       font-style: normal;
       color: @back-button-text-color;
-      padding-left: 4px;
+      padding-left: 3px;
       text-align: left;
       max-width: calc(~"100% - 8px");
       line-height: normal;
       font-weight: @back-button-text-fontweight;
       font-size: @back-button-font-size;
-   }
-   &:not(.ws-disabled):hover:before {
-      color: @back-button-arrow-hover-color;
-   }
-   &:before {
-      width: @back-button-width-before;
-      color: @primary-color;
-      font-weight: normal;
-      content: '\e003';
-      display: inline-block;
-      margin: @back-button-margin-before;
-      padding: @back-button-padding-before;
-      line-height: @back-button-linheight-before;
    }
 
    &.controls-BackButton__show-arrow{
@@ -62,8 +49,7 @@
       }
    }
    &.controls-BackButton__empty {
-      &:before {
-         content: '';
+      .controls-BackButton__backArrow {
          width: 0;
          margin: 0;
       }
@@ -93,7 +79,7 @@
    }
 }
 
-.ws-is-desktop-platform {
+.ws-is-desktop-platform{
    .controls-BackButton__caption.controls-Link {
       &:hover:not(.ws-disabled):not(.controls-Click__active):hover {
          color: @back-button-caption-active-color;
@@ -132,6 +118,13 @@
       right: 16px;
    }
 }
+.controls-BackButton__backArrow {
+   width: @back-arrow-width;
+   height: @back-arrow-height;
+   .controls-BackButton__backArrowPath {
+      fill: @back-arrow-bg-orange;
+   }
+}
 
 // ALERT: Расположение этого кода в конце файла - важно! Сделано для того чтобы перебить селектор с такой же силой. Не нагородив при этом кучи каскада
 // По правилам применяется селектор, который описан "позже". Т.е. самый последний
@@ -140,14 +133,11 @@
       .controls-BackButton__caption {
          color: @header-color;
       }
-      &:before {
-         color: @blue-dark-color;
+      .controls-BackButton__backArrowPath {
+         fill: @back-arrow-bg-blue;
       }
       &:hover {
          .controls-BackButton__caption {
-            color: @primary-color;
-         }
-         &:before {
             color: @primary-color;
          }
       }

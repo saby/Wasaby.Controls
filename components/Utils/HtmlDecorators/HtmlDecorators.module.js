@@ -86,7 +86,7 @@ define('js!SBIS3.CONTROLS.Utils.HtmlDecorators', [
       },
 
       /**
-       * @deprecated Опция не поддерживается с 3.7.3.100, вместо нее используйте {@link applyOnly}
+       * @deprecated Используйте {@link applyOnly}.
        */
       applyIf: function (value, condition, area) {
          Utils.logger.stack('SBIS3.CONTROLS.Utils.HtmlDecorators Опция applyIf не поддерживается с 3.7.3.100, вместо нее используйте applyOnly', 1);

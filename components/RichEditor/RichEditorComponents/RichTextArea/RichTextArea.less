@@ -1,4 +1,4 @@
-.controls-RichEditor{
+.controls-RichEditor {
    .mce-edit-focus {
       outline: none;
    }
@@ -243,6 +243,12 @@
          background-color:rgba(0, 0, 0, 0);
       }
    }
+
+   .controls-RichEditor {
+      br[data-mce-bogus] {
+         display: none;
+      }
+   }
 }
 .ws-is-chrome {
    .controls-RichEditor__editorFrame.ws-basic-style p:empty{
@@ -265,6 +271,16 @@
    .controls-RichEditor {
       .controls-RichEditor__placeholder {
          padding-top: 2px;
+      }
+   }
+}
+@media only screen and (-webkit-device-pixel-ratio: 1.25),
+only screen and (-moz-device-pixel-ratio: 1.25),
+only screen and (-o-device-pixel-ratio: 1.25),
+only screen and (device-pixel-ratio: 1.25) {
+   .controls-RichEditor {
+      .controls-RichEditor__editorFrame {
+         border-top-width: calc(1px + 0.15pt);
       }
    }
 }

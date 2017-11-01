@@ -1,8 +1,9 @@
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
 define([
    'js!SBIS3.CONTROLS.ListView',
-   'WS.Data/Collection/RecordSet'
-], function (ListView, RecordSet) {
+   'WS.Data/Collection/RecordSet',
+   'WS.Data/Source/Memory'
+], function (ListView, RecordSet, Memory) {
    'use strict';
    describe('SBIS3.CONTROLS.ListView', function () {
       beforeEach(function () {
@@ -72,6 +73,23 @@ define([
                   items: []
                });
             assert.equal(view.getItemsDragNDrop(), 'allow');
+         })
+      });
+      describe('updateSelectedIndex', function () {
+         it('check selectedIndex after reload', function () {
+            var dataSource = new Memory({
+                  data: [{id: 1}, {id: 2}]
+               }),
+               elem = $('<div></div>').appendTo('body'),
+               view = new ListView({
+                  element:  elem,
+                  dataSource: dataSource,
+                  idProperty: 'id'
+               });
+            view.setSelectedIndex(0);
+            view.reload();
+            assert.equal(view._getItemsProjection().getCurrentPosition(), 0);
+            view.destroy();
          })
       });
    });

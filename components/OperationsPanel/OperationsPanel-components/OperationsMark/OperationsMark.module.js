@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.OperationsMark', [
    'tmpl!SBIS3.CONTROLS.OperationsMark',
    'js!SBIS3.CONTROLS.MenuLink',
    'js!SBIS3.CONTROLS.CheckBox',
-   'i18n!SBIS3.CONTROLS.OperationsMark'
+   'css!SBIS3.CONTROLS.OperationsMark'
 ], function(CompoundControl, cInstance, forAliveOnly, template) {
    /**
     * Операции выделения.

@@ -65,7 +65,7 @@ define('js!SBIS3.CONTROLS.FilterHistory',
          self._historyView.setItemsActions([{
             name: 'pin',
             icon: 'icon-16 icon-Pin',
-            tooltip: 'Отметить',
+            tooltip: rk('Отметить'),
             isMainAction: true,
             onActivated: function(target, key) {
                self._historyController.toggleMarkFilter(key);

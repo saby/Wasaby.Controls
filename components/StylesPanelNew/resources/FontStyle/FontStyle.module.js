@@ -1,6 +1,6 @@
 define('js!SBIS3.CONTROLS.FontStyle', [
    'js!SBIS3.CORE.CompoundControl',
-   'html!SBIS3.CONTROLS.FontStyle',
+   'tmpl!SBIS3.CONTROLS.FontStyle',
    'js!SBIS3.CONTROLS.IconButton',
    'js!WSControls/Buttons/ToggleButton',
    'js!SBIS3.CONTROLS.ComboBox',
@@ -8,6 +8,14 @@ define('js!SBIS3.CONTROLS.FontStyle', [
 ], function(CompoundControl, dotTplFn) {
 
    'use strict';
+   
+   function fontSizesConvert(fontSize) {
+      var result = {};
+
+      result.key = fontSize;
+      result.value = fontSize + 'px';
+      return result;
+   }
 
    var FontStyle = CompoundControl.extend( /** @lends SBIS3.CONTROLS.StylesPanel.prototype */ {
       _dotTplFn: dotTplFn,
@@ -20,6 +28,13 @@ define('js!SBIS3.CONTROLS.FontStyle', [
 
       init: function() {
          FontStyle.superclass.init.call(this);
+      },
+
+      _modifyOptions: function(options) {
+         FontStyle.superclass._modifyOptions.call(this, options);
+         options._fontSizesConvert = fontSizesConvert;
+
+         return options;
       }
    });
 
