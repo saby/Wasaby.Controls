@@ -1,4 +1,4 @@
-<div class="{{getItemTemplateData(...).addClasses}}{{drawHiddenGroup ? ' ws-hidden' : ''}}"
+<div class="{{getItemTemplateData(...).addClasses}}{{drawHiddenGroup ? ' ws-hidden' : ''}} {{_options.itemsHover ? ' controls-ListView__item__withHover' : ' controls-ListView__item__withoutHover'}}"
      data-parent-hash="{{projItem.getParent().getHash()}}" data-hash="{{projItem.getHash()}}"
      data-id="{{item.getId() + ''}}">
       <ws:if data="{{ !isSearch }}">
