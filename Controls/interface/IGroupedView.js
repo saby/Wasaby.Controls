@@ -16,7 +16,6 @@ define('js!Controls/interface/IIGroupedView', [
     }
     */
 
-
 });
 
 
