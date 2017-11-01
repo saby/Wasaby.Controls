@@ -107,7 +107,8 @@ define('js!SBIS3.CONTROLS.SuggestView',
              _tabButtons: null,
              _activeView: null,
              _switchableArea: null,
-             _dataLoaded: []
+             _dataLoaded: [],
+             _syntheticOnDrawItems: false
           },
 
           $constructor: function() {
@@ -183,6 +184,10 @@ define('js!SBIS3.CONTROLS.SuggestView',
               когда все списки згрузились */
              if(e.name === 'ondataload') {
                 this._dataLoaded.push(list);
+                
+                if (!this._syntheticOnDrawItems) {
+                   this._syntheticOnDrawItems = list.isEqual(e.getTarget().getItems());
+                }
                 /* Не прокидываем событие выше, пока не загрузились все списки */
                 if (this.isLoading()) {
                    return;
@@ -195,7 +200,7 @@ define('js!SBIS3.CONTROLS.SuggestView',
                 } else {
                    this._dataLoaded.forEach(function(elem) {
                       if(!data && elem.getCount()) {
-                         data = list;
+                         data = elem;
                       }
                    })
                 }
@@ -204,6 +209,13 @@ define('js!SBIS3.CONTROLS.SuggestView',
              }
 
              e.setResult(this._notify.apply(this, args));
+             /* Необходимо генерировать событие ondrawitems, т.к. событие onDataLoad откладывается до загрузки всех списков,
+                и в случае, когда item'ы списка, который был загружен последним не изменились, событие onDrawItems не стрельнёт и не долетит до контроллера,
+                хотя первый список мог измениться */
+             if (e.name === 'ondataload'  && this._syntheticOnDrawItems) {
+                this._notify('ondrawitems');
+                this._syntheticOnDrawItems = false;
+             }
           },
 
           _modifyOptions: function() {
