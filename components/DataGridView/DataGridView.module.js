@@ -1394,7 +1394,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
 
          /* Найдём соотношение, для того чтобы правильно двигать скроллируемый контент относительно ползунка */
          // !В edge ширина tbody === 0, если нет строк таблицы, надо брать ширину у table или thead
-         this._partScrollRatio = (this._getTableContainer[0].offsetWidth - containerWidth) / (containerWidth - correctMargin - thumbWidth - arrowsWidth);
+         this._partScrollRatio = (this._getTableContainer()[0].offsetWidth - containerWidth) / (containerWidth - correctMargin - thumbWidth - arrowsWidth);
          this._stopMovingCords = {
             right: scrollContainer[0].offsetWidth - thumbWidth - arrowsWidth,
             left: correctMargin
