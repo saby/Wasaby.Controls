@@ -421,14 +421,13 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
              */
             displayField: null,
             /**
-             * @cfg {String} Устанавливает поле элемента коллекции, из которого отображать данные.
-             * @example
-             * <pre class="brush:xml">
-             *     <option name="displayProperty">Название</option>
-             * </pre>
-             * @see idProperty
-             * @see items
-             * @see setDataSource
+             * @cfg {String} Имя поля, данные которого будут по умолчанию отображены в шаблоне элемента коллекции.
+             * @remark
+             * Например, для списочного контрола {@link SBIS3.CONTROLS.ListView} по умолчанию предустановлен шаблон, по которому происходит построение каждой записи списка.
+             * В этом шаблоне выводится содержимое того поля записи, которое установлено в опции **displayProperty**.
+             * Поэтому для списка класса SBIS3.CONTROLS.ListView использование опции актуально в тех случаях, когда применяется шаблон по умолчанию.
+             * Для любых других контролов, в которые подмешан миксин SBIS3.CONTROLS.ItemControlMixin, опция displayProperty может быть использована по-другому.
+             * @see setDisplayProperty
              */
             displayProperty: null,
              /**
@@ -2298,7 +2297,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       /**
        * Устанавливает поле элемента коллекции, которое является идентификатором записи
-       * @deprecated
+       * @deprecated Используйте метод {@link setIdProperty}.
        */
       setKeyField: function(keyField) {
          IoC.resolve('ILogger').log('ItemsControl', 'Метод setKeyField устарел, используйте setIdProperty');
@@ -2322,7 +2321,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       /**
        * Устанавливает поле элемента коллекции, из которого отображать данные
-       * @deprecated
+       * @deprecated Используйте метод {@link setDisplayProperty}.
        */
       setDisplayField: function(displayField) {
          IoC.resolve('ILogger').log('ItemsControl', 'Метод setDisplayField устарел, используйте setDisplayProperty');
