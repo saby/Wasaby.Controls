@@ -62,10 +62,12 @@ define('js!SBIS3.CONTROLS.SearchController',
          }
 
          var searchParamName = this._options.searchParamName,
-             filter = cMerge(curFilter, {
+            /* Нельзя модифицировать оригинальный объект фильтра,
+               иначе эти изменения применятся везде, кто использует этот объект по ссылке */
+            filter = cMerge({
                 'Разворот': 'С разворотом',
                 'usePages': 'full'
-             }),
+             }, curFilter, {preferSource: true}),
              view = this._options.view,
              self = this;
 
@@ -154,9 +156,9 @@ define('js!SBIS3.CONTROLS.SearchController',
       _startSearch: function(text) {
          var searchParamName = this._options.searchParamName,
              view = this._options.view,
-             filter = cMerge(view.getFilter(), {
+             filter = cMerge({
                 'usePages': 'full'
-             });
+             }, view.getFilter(), {preferSource: true});
 
          filter[searchParamName] = text;
          view.setHighlightText(text, false);
