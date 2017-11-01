@@ -86,6 +86,7 @@ define('js!SBIS3.CONTROLS.ListView',
             tplOptions.selectedKey = cfg.selectedKey;
             tplOptions.selectedKeys = cfg.selectedKeys;
             tplOptions.itemsHover = cfg.itemsHover;
+            tplOptions.alwaysShowCheckboxes = cfg.alwaysShowCheckboxes;
 
             return tplOptions;
          },
@@ -448,6 +449,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _loadId: 0,
             _options: {
                 itemsHover: true,
+                alwaysShowCheckboxes: false,
                _canServerRender: true,
                _buildTplArgs: buildTplArgsLV,
                _getRecordsForRedraw: getRecordsForRedrawLV,
@@ -1083,7 +1085,9 @@ define('js!SBIS3.CONTROLS.ListView',
                { class: 'controls-ListView__pagerNoAmount', optionName: 'noPagerAmount', value: true, defaultValue: false },
                { class: 'controls-ListView__pagerHideEndButton', optionName: 'hideEndButton', value: true, defaultValue: false },
                { class: 'controls-ListView__orangeMarker', optionName: 'showSelectedMarker', value: true, defaultValue: false },
-               { class: 'controls-ListView__outside-scroll-loader', optionName: 'outsideScroll', value: true, defaultValue: false }
+               { class: 'controls-ListView__outside-scroll-loader', optionName: 'outsideScroll', value: true, defaultValue: false },
+               { class: 'controls-ListView__showCheckboxes', optionName: 'showCheckboxes', value: true, defaultValue: false },
+               { class: 'controls-ListView__hideCheckboxes', optionName: 'hideCheckboxes', value: true, defaultValue: false}
             ];
             function hasClass(fullClass, className) {
                if(typeof fullClass === 'string') {
@@ -1100,22 +1104,10 @@ define('js!SBIS3.CONTROLS.ListView',
             var el;
             for(var i = 0; i < classes.length; i++) {
                el = classes[i];
-               ////Прокинуть правильные опции
-               // if(el.isPagerConfig) {
-               //    if(!opts.pagerConfig[el.optionName]) {
-               //       hasClass(opts.className, el.class) ? opts.pagerConfig[el.optionName] = el.value :
-               //          opts.pagerConfig[el.optionName] = el.defaultValue;
-               //    }
-               // } else {
-               //    if(!opts[el.optionName]) {
-               //       hasClass(opts.className, el.class) ? opts[el.optionName] = el.value :
-               //          opts[el.optionName] = el.defaultValue;
-               //    }
-               // }
-               if (!opts[el.optionName]) {
-                  if (hasClass(className, el.class)) {
-                     opts[el.optionName] = el.value;
-                  } else {
+               if (hasClass(className, el.class)) {
+                  opts[el.optionName] = el.value;
+               } else {
+                  if (!opts[el.optionName]) {
                      opts[el.optionName] = el.defaultValue;
                   }
                }
@@ -2293,7 +2285,7 @@ define('js!SBIS3.CONTROLS.ListView',
                // b.addCallback(function(){});
                if (this._hasEditInPlace()) {
                   this._getEditInPlace().addCallback(function(editInPlace) {
-                     editInPlace.endEdit(true).addCallback(function() {
+                     editInPlace.commitEdit().addCallback(function() {
                         var
                            handlerRes = handler.apply(self, args);
                         if (handlerRes instanceof Deferred) {
@@ -2552,7 +2544,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _destroyEditInPlace: function() {
             if (this._hasEditInPlace()) {
                this._getEditInPlace().addCallback(function(editInPlace) {  // Перед дестроем нужно обязательно завершить редактирование и отпустить все деферреды.
-                  editInPlace.endEdit();
+                  editInPlace.cancelEdit();
                   editInPlace._destroyEip();
                });
             }
@@ -4298,7 +4290,7 @@ define('js!SBIS3.CONTROLS.ListView',
          cancelEdit: function() {
             if (this._hasEditInPlace()) {
                return this._getEditInPlace().addCallback(function(editInPlace) {
-                  var res = editInPlace.endEdit();
+                  var res = editInPlace.cancelEdit();
                   // вызываем _notifyOnSizeChanged, потому что при отмене редактирования изменились размеры
                   this._notifyOnSizeChanged(true);
                   return res;
@@ -4328,7 +4320,7 @@ define('js!SBIS3.CONTROLS.ListView',
                eip = this._getEditInPlace();
             eip.addCallback(function(editInPlace) {
                // При сохранении добавляемой записи через галку в тулбаре необходимо автоматически запускать добавление (естественно, если такой режим включен)
-               return checkAutoAdd && editInPlace.isAdd() && self._isModeAutoAdd() ? editInPlace.editNextTarget(true) : editInPlace.endEdit(true);
+               return checkAutoAdd && editInPlace.isAdd() && self._isModeAutoAdd() ? editInPlace.editNextTarget(true) : editInPlace.commitEdit(true);
             });
             return eip;
          },

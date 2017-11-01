@@ -24,8 +24,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
                    throw new Error(this._moduleName + ': record key is undefined.')
                 }
 
-                keys.push(key);
-             }.bind(this));
+                if (!ArraySimpleValuesUtil.hasInArray(keys, key)) {
+                   keys.push(key);
+                }
+             }, this);
           }
 
           return keys;
@@ -299,20 +301,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
        * @see toggleItemsSelectionAll
        */
       setSelectedItemsAll : function() {
-         var
-            id,
-            keys = [],
-            items = this.getItems();
-
-         if (items) {
-            items.each(function(rec){
-               id = rec.getId();
-               if (!ArraySimpleValuesUtil.hasInArray(keys, id)) {
-                  keys.push(id)
-               }
-            });
-            this.setSelectedKeys(keys);
-         }
+         this.setSelectedKeys(this._convertToKeys(this.getItems()));
       },
 
       /**
@@ -559,15 +548,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
        * @see allowEmptyMultiSelection
        */
       toggleItemsSelectionAll : function() {
-         var items = this.getItems(),
-             keys = [];
-
-         if (items) {
-            items.each(function(rec){
-               keys.push(rec.getId())
-            });
-            this.toggleItemsSelection(keys);
-         }
+         this.toggleItemsSelection(this._convertToKeys(this.getItems()));
       },
 
       /**
