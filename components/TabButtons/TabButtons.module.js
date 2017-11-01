@@ -60,25 +60,12 @@ define(
                 tmpl, itemTpl, item;
             if (projection) {     //У таблицы могут позвать перерисовку, когда данных еще нет
                projection.each(function (itemProj) {
-                  var tmplOut;
                   item = itemProj.getContents();
                   itemTpl = item.get(opts.displayProperty);
-                  tmplOut = itemTpl && TemplateUtil.prepareTemplate(itemTpl);
-                  if (tmplOut) {
-                     if (Object.prototype.toString.call(tmplOut) === '[object Array]') {
-                        tmpl = tmplOut.reduce(function (prev, tmplOutItemTpl){
-                           return prev + tmplOutItemTpl({
-                                 item: item.getRawData(),
-                                 options: opts
-                              });
-                        }, '');
-                     } else {
-                        tmpl = tmplOut({
-                           item: item.getRawData(),
-                           options: opts
-                        });
-                     }
-                  }
+                  tmpl = itemTpl && TemplateUtil.prepareTemplate(itemTpl)({
+                     item: item.getRawData(),
+                     options: opts
+                  });
                   if (item.get('align') === 'left') {
                      if (!firstLeftItem) {
                         firstLeftItem = item;
