@@ -98,7 +98,7 @@ function(RadioGroupBase, dotTpl, ItemTemplate, ITextValue) {
          if (this._getItemsProjection()) {
             projItem = this._getItemsProjection().at(this._options.selectedIndex);
             if (projItem) {
-               textValue = this._propertyValueGetter(projItem.getContents(), this._options.displayProperty);
+               textValue = this._getPropertyValue(projItem.getContents(), this._options.displayProperty);
             }
          }
 
