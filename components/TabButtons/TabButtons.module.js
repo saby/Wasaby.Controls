@@ -64,18 +64,20 @@ define(
                   item = itemProj.getContents();
                   itemTpl = item.get(opts.displayProperty);
                   tmplOut = itemTpl && TemplateUtil.prepareTemplate(itemTpl);
-                  if (Array.isArray(tmplOut)) {
-                     tmpl = tmplOut.reduce(function (prev, tmplOutItemTpl){
-                        return prev + tmplOutItemTpl({
+                  if (tmplOut) {
+                     if (Object.prototype.toString.call(tmplOut) === '[object Array]') {
+                        tmpl = tmplOut.reduce(function (prev, tmplOutItemTpl){
+                           return prev + tmplOutItemTpl({
+                                 item: item.getRawData(),
+                                 options: opts
+                              });
+                        }, '');
+                     } else {
+                        tmpl = tmplOut({
                            item: item.getRawData(),
                            options: opts
                         });
-                     }, '');
-                  } else {
-                     tmpl = tmplOut({
-                        item: item.getRawData(),
-                        options: opts
-                     });
+                     }
                   }
                   if (item.get('align') === 'left') {
                      if (!firstLeftItem) {
