@@ -849,10 +849,18 @@ define('js!SBIS3.CONTROLS.FormController', [
          }
       },
       /**
-       * Производит оповещение о том, что произошло событие диалога. Логика обработки события будет произведена на стороне {@link SBIS3.CONTROLS.Action.OpenEditDialog}, а не в диалоге.
+       * Производит оповещение о том, что произошло одно из возможных событий (onUpdateModel, onReadModel,onCreateModel или onDestroyModel).
        * @remark
-       * Подрообнее об этом вы можете прочитать в <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/'>этом разделе</a>.
-       * @param {String} eventName Имя события.
+       * Обратите внимание, что логика обработки такого события, которая по умолчанию предопределена классом SBIS3.CONTROLS.FormController, не будет выполнена.
+       * Например,
+       * <pre>
+       *     // отменяется логика сохранения записи, предустановленная в FormController
+       *     this.sendCommand('notify', 'onUpdateModel', someParams);
+       * </pre>
+       * Смысл заключается в том, чтобы логика обработки выполнялась уже на той стороне, откуда был инициирован вызов SBIS3.CONTROLS.FormController.
+       * Таким инициатором является действие, описанное в классе {@link SBIS3.CONTROLS.Action.OpenEditDialog}.
+       * Подробнее об создании обработчиков вы можете прочитать в <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/'>этом разделе</a>.
+       * @param {String} eventName Имя события: onUpdateModel, onReadModel,onCreateModel или onDestroyModel.
        * @param {*} additionalData Данные, которые должны быть переданы в качестве аргументов события.
        * @command notify
        * @see read
