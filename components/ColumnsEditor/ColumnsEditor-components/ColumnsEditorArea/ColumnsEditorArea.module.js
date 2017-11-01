@@ -52,11 +52,8 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
             cfg._optsPreset = {
                items: _makePresetItems(cfg._getPresets(), cfg._getSelectedPreset())
             };
-            var prepared = _prepareItems(cfg.columns, _uniqueConcat(_getPresetValue(cfg._getPresets(), cfg._getSelectedPreset(), 'selectedColumns'), cfg.selectedColumns), cfg.moveColumns);
-            cfg._optsFixed = prepared.fixed;
-            cfg._optsSelectable = prepared.selectable;
-            cfg._groups = prepared.groups;
-            _updateGroupCollapsing(cfg);
+            _prepareChildItemsAndGroups(cfg);
+            _prepareGroupCollapsing(cfg);
             cfg._optsSelectable.onItemClick = _onItemClick;
             if (!cfg.moveColumns) {
                // Добавляем автосортировку отмеченных элементов - они должны отображаться перед неотмеченными
@@ -113,9 +110,9 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
             selectedColumns.sort(function (el1, el2) {
                return items.getIndex(items.getRecordById(el1)) - items.getIndex(items.getRecordById(el2));
             });
-            this._options.selectedColumns = selectedColumns;
-            this._notifyOnPropertyChanged('selectedColumns');
-            this._notify('onComplete'/*^^^'onSelectedColumnsChange'*/, selectedColumns, _listExpandedGroups(this));
+            //^^^this._options.selectedColumns = selectedColumns;
+            //^^^this._notifyOnPropertyChanged('selectedColumns');
+            this._notify('onComplete'/*^^^'onSelectedColumnsChange'*/, selectedColumns, _collectExpandedGroups(this));
          },
 
          destroy: function () {
@@ -138,7 +135,15 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
          return list1 && list1.length ? (list2 && list2.length ? list1.concat(list2).reduce(function (r, v) { if (r.indexOf(v) === -1) { r.push(v); }; return r; }, []) : list1) : (list2 && list2.length ? list2 : []);
       };
 
-      var _prepareItems = function (columns, selectedColumns, moveColumns) {
+      var _getSelectedColumns = function (cfg) {
+         return _uniqueConcat(_getPresetValue(cfg._getPresets(), cfg._getSelectedPreset(), 'selectedColumns'), cfg.selectedColumns);
+      };
+
+      var _prepareChildItemsAndGroups = function (cfg) {
+         var
+            columns = cfg.columns,
+            selectedColumns = _getSelectedColumns(cfg),
+            moveColumns = cfg.moveColumns;
          var
             preparingItems = [],
             fixed = {
@@ -198,21 +203,20 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
             _applySelectedToItems(selectable.markedKeys, selectable.items);
          }
          groups.sort();
-         return {fixed:fixed, selectable:selectable, groups:groups};
+         cfg._optsFixed = fixed;
+         cfg._optsSelectable = selectable;
+         cfg._groups = groups;
       };
 
-      var _updateGroupCollapsing = function (cfg) {
+      var _prepareGroupCollapsing = function (cfg) {
          var groups = cfg._groups;
          if (groups && groups.length) {
             var expandedGroups = _uniqueConcat(_getPresetValue(cfg._getPresets(), cfg._getSelectedPreset(), 'expandedGroups'), cfg.expandedGroups);
-            var groups = cfg._groups;
             var groupCollapsing = {};
-            var has = !!(expandedGroups && expandedGroups.length);
+            var has = !!expandedGroups.length;
             for (var i = 0; i < groups.length; i++) {
                var g = groups[i];
-               if (has ? expandedGroups.indexOf(g) === -1 : i !== 0) {
-                  groupCollapsing[g] = true;
-               }
+               groupCollapsing[g] = has ? expandedGroups.indexOf(g) === -1 : i !== 0;
             }
             cfg._groupCollapsing = groupCollapsing;
          }
@@ -258,7 +262,16 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
                self.sendCommand('selectPreset', selected[0]);
                _updatePresetView(self);
                var cfg = self._options;
-               _updateGroupCollapsing(cfg);
+               var allSelected = _getSelectedColumns(cfg);
+               var selectedColumns = [];
+               cfg.columns.each(function (record) {
+                  var column = record.getId();
+                  if (!record.get('fixed') && allSelected.indexOf(column) !== -1) {
+                     selectedColumns.push(column);
+                  }
+               });
+               self._selectableView.setSelectedKeys(selectedColumns);
+               _prepareGroupCollapsing(cfg);
                _applyGroupCollapsing(self);
             });
          }
@@ -305,14 +318,12 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
          var groupCollapsing = self._options._groupCollapsing;
          if (groupCollapsing) {
             for (var group in groupCollapsing) {
-               if (groupCollapsing[group]) {
-                  self._selectableView.collapseGroup(group);
-               }
+               self._selectableView[groupCollapsing[group] ? 'collapseGroup' : 'expandGroup'](group);
             }
          }
       };
 
-      var _listExpandedGroups = function (self) {
+      var _collectExpandedGroups = function (self) {
          var groups = self._options._groups;
          if (groups && groups.length) {
             var expandedGroups = [];
