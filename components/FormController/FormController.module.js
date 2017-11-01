@@ -849,17 +849,15 @@ define('js!SBIS3.CONTROLS.FormController', [
          }
       },
       /**
-       * Производит оповещение о том, что произошло одно из возможных событий (onUpdateModel, onReadModel,onCreateModel или onDestroyModel).
+       * Оповещает экземпляр класса действия (см. {@link SBIS3.CONTROLS.Action.OpenEditDialog}) о произошедшем событии.
        * @remark
-       * Обратите внимание, что логика обработки такого события, которая по умолчанию предопределена классом SBIS3.CONTROLS.FormController, не будет выполнена.
+       * Логика обработки такого события, которая по умолчанию предопределена классом SBIS3.CONTROLS.FormController, не будет выполнена.
        * Например,
        * <pre>
        *     // отменяется логика сохранения записи, предустановленная в FormController
        *     this.sendCommand('notify', 'onUpdateModel', someParams);
        * </pre>
-       * Смысл заключается в том, чтобы логика обработки выполнялась уже на той стороне, откуда был инициирован вызов SBIS3.CONTROLS.FormController.
-       * Таким инициатором является действие, описанное в классе {@link SBIS3.CONTROLS.Action.OpenEditDialog}.
-       * Подробнее об создании обработчиков вы можете прочитать в <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/'>этом разделе</a>.
+       * Логика обработки события должна быть определена разработчиком в SBIS3.CONTROLS.Action.OpenEditDialog, о чем подробнее вы можете прочитать в <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/'>этом разделе</a>.
        * @param {String} eventName Имя события: onUpdateModel, onReadModel,onCreateModel или onDestroyModel.
        * @param {*} additionalData Данные, которые должны быть переданы в качестве аргументов события.
        * @command notify
