@@ -37,7 +37,7 @@ function(RadioGroupBase, dotTpl, ItemTemplate, ITextValue) {
     *
     * @control
     * @public
-    * @category Inputs
+    * @category Input
     * @initial
     * <component data-component='SBIS3.CONTROLS.RadioGroup'>
     *    <option name="displayProperty">title</option>

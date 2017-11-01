@@ -11,8 +11,7 @@ define('js!SBIS3.CONTROLS.TabControl', [
    'use strict';
 
    /**
-    * Класс контрола "Вкладки" - составной компонент, содержащий <a href='https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/TabButtons/'>вкладки</a> и
-    * несколько <a href='https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/SwitchableArea/'>областей с контентом</a>.
+    * Составной компонент, содержащий <a href='https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/TabButtons/'>вкладки</a> и несколько <a href='https://wi.sbis.ru/docs/js/SBIS3/CONTROLS/SwitchableArea/'>областей с контентом</a>.
     * В каждый момент времени отображается только одна область.
     * Отображаемая область может переключаться при клике на корешок вкладки.
     * Стандарт описан <a href='http://axure.tensor.ru/standarts/v7/%D0%B2%D0%BA%D0%BB%D0%B0%D0%B4%D0%BA%D0%B8__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_05_.html'>здесь</a>.

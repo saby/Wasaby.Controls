@@ -137,15 +137,17 @@ define('js!SBIS3.CONTROLS.Selectable', [
       },
 
       _prepareOtherSelectedConfig: function() {
-         if (this._getItemsProjection()) {
+         var itemsProjection = this._getItemsProjection();
+         
+         if (itemsProjection) {
             //если после всех манипуляций выше индекс пустой, но задана опция, что пустое нельзя - выбираем первое
             if (!this._options.allowEmptySelection && this._isEmptyIndex(this._options.selectedIndex)) {
-               if (this._getItemsProjection().getCount()) {
-                  this._options.selectedIndex = 0;
+               if (itemsProjection.getCount()) {
+                  this._options.selectedIndex = itemsProjection.getIndex(itemsProjection.getFirst());
                   this._options.selectedKey = this._getKeyByIndex(this._options.selectedIndex);
                }
             }
-            var curItem = this._getItemsProjection().at(this._options.selectedIndex);
+            var curItem = itemsProjection.at(this._options.selectedIndex);
             if (curItem) {
                this._curHash = curItem.getHash();
             }

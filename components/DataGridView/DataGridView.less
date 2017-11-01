@@ -161,10 +161,6 @@
 }
 
 
-.controls-DataGridView__td__textAlignRight{
-   text-align: right!important;
-}
-
 .controls-DataGridView__table {
    width: 100%;
    position: relative;
@@ -211,12 +207,13 @@
          background-color: @data-grid-partScroll-notScrolledCell-Color;
       }
    }
-   &.controls-DataGridView__scrolledCell {
-      cursor: pointer;
-   }
    &.controls-DataGridView-cell-verticalAlignTop {
       vertical-align: top;
    }
+}
+
+.controls-DataGridView__PartScroll__shown .controls-DataGridView__scrolledCell {
+   cursor: pointer;
 }
 
 .controls-DataGridView__results {

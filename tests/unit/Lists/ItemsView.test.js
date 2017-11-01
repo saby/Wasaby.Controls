@@ -46,5 +46,34 @@ define([
          disp = iv._createDefaultDisplay(data, cfg);
          assert.equal(data.length, disp.getCount(), 'Incorrect display\'s creating by method _createDefaultDisplay');
       });
+
+      it('Enumeration', function () {
+         var cfg = {
+            items: data,
+            idProperty: 'id'
+         };
+
+         var ctrl = new ItemsView(cfg);
+
+         ctrl._beforeMount(cfg);
+
+         assert.equal(0, ctrl._startIndex, 'Incorrect start enumeration index after constructor');
+         assert.equal(3, ctrl._stopIndex, 'Incorrect stop enumeration index after constructor');
+         assert.equal(0, ctrl._curIndex, 'Incorrect current enumeration index after constructor');
+
+         ctrl._curIndex = 3;
+         ctrl._getStartEnumerationPosition();
+         assert.equal(0, ctrl._curIndex, 'Incorrect current enumeration index after _getStartEnumerationPosition');
+
+         ctrl._getNextEnumerationPosition();
+         ctrl._getNextEnumerationPosition();
+         assert.equal(2, ctrl._curIndex, 'Incorrect current enumeration index after 2x_getNextEnumerationPosition');
+
+         var condResult = ctrl._checkConditionForEnumeration();
+         assert.isTrue(condResult, 'Incorrect condition value enumeration index after 2x_getNextEnumerationPosition');
+         ctrl._getNextEnumerationPosition();
+         condResult = ctrl._checkConditionForEnumeration();
+         assert.isFalse(condResult, 'Incorrect condition value enumeration index after 3x_getNextEnumerationPosition');
+      });
    })
 });

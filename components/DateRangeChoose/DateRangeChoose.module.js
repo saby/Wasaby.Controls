@@ -524,15 +524,16 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
          var self = this,
             start = this.getStartValue(),
             selectedYear = start ? start.getFullYear() : null,
+            displayedYear = this.getYear(),
             year, containers;
          if (this._options.showMonths || this._options.showQuarters || this._options.showHalfyears) {
             return;
          }
          containers = this.getContainer().find(['.', this._cssDateRangeChoose.yearsModeWrapper, '>*'].join(''));
          containers.removeClass('controls-DateRangeChoose__yearsMode-bold');
-         if (selectedYear) {
+         if (displayedYear) {
             containers.each(function (index) {
-               year = self.getYear() - index;
+               year = displayedYear - index;
                if (selectedYear === year) {
                   $(this).addClass('controls-DateRangeChoose__yearsMode-bold');
                }
@@ -565,7 +566,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
          startValueYear = start ? start.getFullYear() : null;
 
          if (!startValueYear) {
-            return;
+            return (new Date()).getFullYear();
          }
 
          currentYear = (new Date()).getFullYear();

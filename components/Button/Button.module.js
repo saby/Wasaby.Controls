@@ -35,8 +35,6 @@ define('js!SBIS3.CONTROLS.Button',
     * @mixes SBIS3.CORE.BaseCompatible/Mixins/WsCompatibleConstructor
     * @mixes SBIS3.CORE.Control/ControlGoodCode
     *
-    * @demo SBIS3.CONTROLS.Demo.MyButton
-    *
     * @author Романов Валерий Сергеевич
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip element linkedContext handlers parent
@@ -68,7 +66,7 @@ define('js!SBIS3.CONTROLS.Button',
     * @css controls-Button__text Класс для изменения отображения текста на кнопке.
     *
     * @control
-    * @category Buttons
+    * @category Button
     * @public
     * @initial
     * <ws:SBIS3.CONTROLS.Button caption="Кнопка" />
@@ -85,6 +83,11 @@ define('js!SBIS3.CONTROLS.Button',
          _isWaitingClick: false,
          _isTouchEnded: false,
          _touchMoveCount: 0,
+
+         //Какая-то дичь с сервеной частью, у класса определено _useNativeAsMain в слое совместимости,
+         //НО core-extend этого не замечает, и получается, что пытается строить кнопки через цепочку $constructor
+         //ПОКА у класса есть наследники с $constructor, класс должен установить это свойство!
+         _useNativeAsMain: true,
          constructor: function (cfg) {
             Button.superclass.constructor.call(this, cfg);
             this._publish('onActivated');

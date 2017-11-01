@@ -1,6 +1,6 @@
 define('js!Controls/List/Controllers/PageNavigation',
    ['Core/Abstract', 'js!Controls/List/Controllers/INavigation', 'WS.Data/Source/SbisService'],
-   function (Abstract, INavigation, SbisService) {
+   function(Abstract, INavigation, SbisService) {
       /**
        *
        * @author Крайнов Дмитрий
@@ -27,11 +27,9 @@ define('js!Controls/List/Controllers/PageNavigation',
             var addParams = {}, neededPage;
             if (direction == 'down') {
                neededPage = this._nextPage;
-            }
-            else if (direction == 'up') {
+            } else if (direction == 'up') {
                neededPage = this._prevPage;
-            }
-            else {
+            } else {
                neededPage = this._options.page;
             }
 

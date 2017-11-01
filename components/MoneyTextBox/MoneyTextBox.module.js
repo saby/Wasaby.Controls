@@ -48,6 +48,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
    var MoneyTextBox = NumberTextBox.extend(/** @lends SBIS3.CONTROLS.MoneyTextBox.prototype */ {
       $protected: {
          _options: {
+            textAlign: 'right',
             textFieldWrapper: textFieldWrapper,
             /**
              * @cfg {Number} Количество знаков после запятой

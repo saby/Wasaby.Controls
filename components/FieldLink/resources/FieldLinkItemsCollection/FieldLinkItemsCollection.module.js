@@ -47,8 +47,17 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             additionalItemClasses += ' controls-FieldLink__item-caption__normal';
          }
          tplOptions.getItemTemplateData = function(templateCfg) {
+            var
+               orderStyle = '',
+               order;
+            if (tplOptions.needSort) {
+               order = ((templateCfg.itemsCount || 0) - templateCfg.projItem.getOwner().getIndexByInstanceId(templateCfg.projItem.getInstanceId()));
+               // "-ms-flex-order" для поддержки ie10 (https://msdn.microsoft.com/en-us/library/hh673531(v=vs.85).aspx)
+               orderStyle = 'order: ' + order + '; -ms-flex-order: ' + order + ';';
+            }
             return {
                additionalItemClasses: additionalItemClasses,
+               orderStyle: orderStyle,
                drawCross: cfg.enabled,
                drawComma: (templateCfg.projItem.getOwner().getIndex(templateCfg.projItem) !== templateCfg.itemsCount - 1) && !cfg._isPickerVisible
             };
@@ -235,7 +244,7 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
 
                   onShow: function() {
                      var pickerContainer = self._picker.getContainer(),
-                         pickerWidth = self._parentFieldLink.getContainer()[0].offsetWidth - (pickerContainer.outerWidth() - pickerContainer.width());
+                         pickerWidth = self._parentFieldLink.getContainer()[0].offsetWidth;
 
                      pickerContainer[0].style.maxWidth = pickerWidth + 'px';
                      pickerContainer[0].style.minWidth = pickerWidth + 'px';

@@ -54,7 +54,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
        * @extends SBIS3.CORE.CompoundControl
        * @control
        * @public
-       * @category Inputs
+       * @category Input
        *
        * @mixes SBIS3.CONTROLS.PickerMixin
        * @mixes SBIS3.CONTROLS.EditAtPlaceMixin
@@ -339,10 +339,11 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
          },
 
          _drawText: function (text) {
+            $('.controls-EditAtPlace__textField', this.getContainer()).toggleClass('controls-EditAtPlace__placeholder', !text);
             if (this._options.editFieldTpl) {
                text = TemplateUtil.prepareTemplate(this._options.editFieldTpl)({text: text});
             } else if (!text) {
-               text = '<span class="controls-EditAtPlace__placeholder">' + escapeHtml(this._options.placeholder) + '</span>';
+               text = escapeHtml(this._options.placeholder);
             } else {
                text = escapeHtml(text);
             }

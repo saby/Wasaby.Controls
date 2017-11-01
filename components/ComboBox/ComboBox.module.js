@@ -65,7 +65,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     *
     * @public
     * @control
-    * @category Inputs
+    * @category Input
     * @initial
     * <component data-component='SBIS3.CONTROLS.ComboBox'>
     *     <options name="items" type="array">
