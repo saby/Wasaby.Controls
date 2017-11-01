@@ -3,7 +3,7 @@ define('js!Controls/Popup/interface/IPositioningStrategy', [
 
    /**
     * Интерфейс позиционирования окна.
-    * @mixin SPEC.window.interface.IPositioningStrategy
+    * @mixin Controls/Popup/interface/IPositioningStrategy
     * @public
     * @category Popup
     */
