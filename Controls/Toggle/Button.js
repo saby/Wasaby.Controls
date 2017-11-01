@@ -4,7 +4,7 @@ define('js!Controls/Toggle/Button', [
    /**
     * Кнопка, которая может находиться в одном из двух состояний.
     * @class Controls/Toggle/Button
-    * @extends Core/Control
+    * @extends Controls/Control
     * @mixes Controls/Toggle/interface/ICheckable
     * @control
     * @public

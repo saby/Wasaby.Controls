@@ -14,7 +14,7 @@ define('js!Controls/Input/Text',
          /**
           * Однострочное текстовое поле ввода.
           * @class Controls/Input/Text
-          * @extends Core/Control
+          * @extends Controls/Control
           * @mixes Controls/Input/interface/IInputText
           * @mixes Controls/Input/interface/IInputPlaceholder
           * @mixes Controls/Input/interface/IValidation

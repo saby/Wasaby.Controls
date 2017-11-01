@@ -87,6 +87,7 @@ define('js!SBIS3.CONTROLS.ListView',
             tplOptions.selectedKey = cfg.selectedKey;
             tplOptions.selectedKeys = cfg.selectedKeys;
             tplOptions.itemsHover = cfg.itemsHover;
+            tplOptions.alwaysShowCheckboxes = cfg.alwaysShowCheckboxes;
 
             return tplOptions;
          },
@@ -203,7 +204,7 @@ define('js!SBIS3.CONTROLS.ListView',
            * @param {Core/EventObject} eventObject Дескриптор события.
            * @param {String} id Первичный ключ записи.
            * @param {WS.Data/Entity/Model} data Экземпляр класса записи.
-           * @param {jQuery} target DOM-элемент, на который кликнули. Например, это может быть DOM-элемент ячейки (&lt;td class="controls-DataGridView__td"&gt;...&lt;/td&gt;) или её содержимого (&lt;div class="controls-DataGridView__columnValue"&gt;...&lt;/div&gt;).
+           * @param {Object} target DOM-элемент, на который кликнули. Например, это может быть DOM-элемент ячейки (&lt;td class="controls-DataGridView__td"&gt;...&lt;/td&gt;) или её содержимого (&lt;div class="controls-DataGridView__columnValue"&gt;...&lt;/div&gt;).
            * @param {Object} e Объект события.
            * @param {Object} clickedCell Объект с расширенной информацией о ячейке, по которой произвели клик.
            * @param {jQuery} clickedCell.cellContainer DOM-элемент ячейки.
@@ -449,6 +450,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _loadId: 0,
             _options: {
                 itemsHover: true,
+                alwaysShowCheckboxes: false,
                _canServerRender: true,
                _buildTplArgs: buildTplArgsLV,
                _getRecordsForRedraw: getRecordsForRedrawLV,
@@ -1085,7 +1087,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   { class: 'controls-ListView__pagerNoAmount', optionName: 'noPagerAmount', value: true, defaultValue: false },
                   { class: 'controls-ListView__pagerHideEndButton', optionName: 'hideEndButton', value: true, defaultValue: false },
                   { class: 'controls-ListView__orangeMarker', optionName: 'showSelectedMarker', value: true, defaultValue: false },
-                  { class: 'controls-ListView__outside-scroll-loader', optionName: 'outsideScroll', value: true, defaultValue: false }
+                  { class: 'controls-ListView__outside-scroll-loader', optionName: 'outsideScroll', value: true, defaultValue: false },
+                  { class: 'controls-ListView__showCheckboxes', optionName: 'showCheckboxes', value: true, defaultValue: false },
+                  { class: 'controls-ListView__hideCheckboxes', optionName: 'hideCheckboxes', value: true, defaultValue: false}
                ];
             ConfigByClasses(opts, params, classes);
          },
