@@ -1019,6 +1019,14 @@ define('js!SBIS3.CONTROLS.ListView',
             this._initLoadMoreButton();
          },
 
+         setItems: function(items) {
+            if (items && this._isCursorNavigation() && this._listNavigation) {
+               this._listNavigation.analyzeResponseParams(items);
+            }
+            ListView.superclass.setItems.apply(this, arguments);
+         },
+
+
          _initVirtualScrolling: function(){
             this._virtualScrollController = new VirtualScrollController({
                view: this,
