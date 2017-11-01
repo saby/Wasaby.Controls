@@ -1378,7 +1378,7 @@ define('js!SBIS3.CONTROLS.DataGridView',
              correctMargin = 0,
              lastRightStop = this._stopMovingCords.right,
              arrowsWidth = this._arrowRight[0].offsetWidth * 2,
-             notScrolledCells, thumbPos, viewPortWidth;
+             notScrolledCells, thumbPos;
 
          /* Найдём ширину нескроллируемых колонок */
          if(this._options.startScrollColumn > 0) {
