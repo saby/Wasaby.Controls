@@ -89,12 +89,17 @@
                   <div id="ItemsView"></div>
                </li>
                <li>
+                  <div id="Paging"></div>
+               </li>
+               <li>
                   <div id="ListControl"></div>
                </li>
                <li>
                   <div id="Inputs"></div>
                </li>
-
+               <li>
+                  <div id="ListControlScroll"></div>
+               </li>
             </ul>
             <h3>Просмотр контролов</h3>
             <ul>
@@ -300,11 +305,21 @@
             });
 
             new r({
+               element: "Paging",
+               caption: 'Paging',
+               href: '/pages/demo.html?cname=Paging'
+            });
+
+            new r({
                element: "ListControl",
                caption: 'ListControl',
                href: '/pages/demo.html?cname=VDomListView'
             });
-
+            new r({
+               element: "ListControlScroll",
+               caption: 'ListControlScroll',
+               href: '/pages/demo.html?cname=ListControlScroll'
+            });
             new r({
                element: "Inputs",
                caption: 'Inputs',
