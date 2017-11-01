@@ -44,7 +44,12 @@ define('js!SBIS3.CONTROLS.Utils.TemplateUtil', ['Core/js-template-doT'], functio
             case 'object' :
                // Обработка контентной опции массив
                if (Object.prototype.toString.call(tpl) === '[object Array]') {
-                  template = tpl;
+                  template = function prepareTemplateOnArray() {
+                     var fnargs = Array.prototype.slice.call(arguments);
+                     return tpl.reduce(function prepareTemplateOnArrayReduce(prevtemplate, nexttemplate) {
+                        return prevtemplate + nexttemplate.apply(this, fnargs);
+                     }, '');
+                  };
                }
                break;
             default:
