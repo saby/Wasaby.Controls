@@ -205,5 +205,6 @@
    "В конец": "To end",
    "В начало": "To beginning",
    "Очистить поле": "Clear field",
-   "Очистить фильтр": "Clear filter"
+   "Очистить фильтр": "Clear filter",
+   "Автоматически (под фон)": "Auto (match background)"
 }
