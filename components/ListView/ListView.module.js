@@ -1020,7 +1020,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          setItems: function(items) {
-            //ViewSourceMixin в документах работает через это место
+            //Когда используется навигация по курсорам, надо иницировать контроллер навигации данными переданного рекордсета, чтобы следующий запрос за даныыми отправился с правильными параметрами
             if (items && this._isCursorNavigation() && this._listNavigation) {
                this._listNavigation.analyzeResponseParams(items);
             }
