@@ -49,6 +49,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
       $protected: {
          _options: {
             textAlign: 'right',
+            _paddingClass: ' controls-TextBox__paddingBoth',
             textFieldWrapper: textFieldWrapper,
             /**
              * @cfg {Number} Количество знаков после запятой

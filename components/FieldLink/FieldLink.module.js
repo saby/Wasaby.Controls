@@ -162,6 +162,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              _lastFieldLinkWidth: null,
              _showAllButton: null,
              _options: {
+                _paddingClass: ' controls-TextBox__paddingLeft',
                 /* Служебные шаблоны поля связи (иконка открытия справочника, контейнер для выбранных записей */
                 afterFieldWrapper: afterFieldWrapper,
                 beforeFieldWrapper: beforeFieldWrapper,
