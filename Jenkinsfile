@@ -378,7 +378,7 @@ node('controls') {
             DO_NOT_RESTART = True
             SOFT_RESTART = True
             NO_RESOURCES = True
-            STREAMS_NUMBER = 30
+            STREAMS_NUMBER = 15
             DELAY_RUN_TESTS = 1
             TAGS_NOT_TO_START = iOSOnly
             ELEMENT_OUTPUT_LOG = locator
@@ -398,7 +398,7 @@ node('controls') {
                 DO_NOT_RESTART = True
                 SOFT_RESTART = False
                 NO_RESOURCES = True
-                STREAMS_NUMBER = 40
+                STREAMS_NUMBER = 15
                 DELAY_RUN_TESTS = 1
                 TAGS_TO_START = ${params.theme}
                 ELEMENT_OUTPUT_LOG = locator
