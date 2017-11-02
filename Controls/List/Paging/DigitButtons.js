@@ -10,77 +10,66 @@ define('js!Controls/List/Paging/DigitButtons', [
    var
       ModuleClass = BaseControl.extend({
          _template: template,
+         __calcSurroundElemens: function(digitsCount, currentDigit) {
+            var first, last;
+            first = currentDigit - SUR_ELEMENTS_STEP;
+            last = currentDigit + SUR_ELEMENTS_STEP;
 
-
-
-         __calcSurrondElemens: function() {
-
+            if (first < 1) {
+               first = 1;
+            }
+            if (last > digitsCount) {
+               last = digitsCount;
+            }
+            return {
+               first : first,
+               last: last
+            }
          },
 
          __initDrawedDigits: function(digitsCount, currentDigit, full) {
 
             var
-               surFirstElem, surLastElem,
+               surElements,
                needLeftDot = false,
                needRightDot = false,
                drawedDigits = [];
 
             if (digitsCount) {
-               surFirstElem = currentDigit - SUR_ELEMENTS_STEP;
-               surLastElem = currentDigit + SUR_ELEMENTS_STEP;
 
-               if (surFirstElem < 1) {
-                  surFirstElem = 1;
-               }
-               if (surLastElem > digitsCount) {
-                  surLastElem = digitsCount;
-               }
+               surElements = this.__calcSurroundElemens(digitsCount, currentDigit);
 
                if (full) {
-                  if (surFirstElem - 1 > 1) {
+                  if (surElements.first - 2 > 1) {
                      needLeftDot = true;
                   }
-                  if (surLastElem + 1 < digitsCount) {
+                  if (surElements.last + 2 < digitsCount) {
                      needRightDot = true;
                   }
                }
 
-               var counter = 1;
+
+
 
                for (var i = 1; i <= digitsCount; i++) {
-                  if (i < )
+                  if (i == 1) {
+                     drawedDigits.push(i);
+                     if (needLeftDot) {
+                        drawedDigits.push('...');
+                     }
+                  }
+                  else if (i == digitsCount) {
+                     if (needRightDot) {
+                        drawedDigits.push('...');
+                     }
+                     drawedDigits.push(i);
+                  }
+                  else if (((i >= surElements.first) || !needLeftDot) && ((i <= surElements.last) || !needRightDot)) {
+                     drawedDigits.push(i);
+                  }
                }
-
-
-
-
-               projection.each(function (item) {
-                  var curId = parseInt(item.getContents().getId(), 10);
-                  if (!full) {
-                     if (curId >= surFirstElem && curId <= surLastElem) {
-                        records.push(item);
-                     }
-                  }
-                  else if (full) {
-                     if (counter == 1 || counter == digitsCount) {
-                        records.push(item);
-                     }
-                     else {
-                        if (needLeftDot && counter == 2) {
-                           records.push('...');
-                        }
-                        if (needRightDot && counter == digitsCount - 1) {
-                           records.push('...');
-                        }
-                        if (curId >= surFirstElem && curId <= surLastElem) {
-                           records.push(item);
-                        }
-                     }
-                  }
-                  counter++;
-               });
             }
-            return records;
+            return drawedDigits;
          }
 
       });
