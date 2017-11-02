@@ -145,11 +145,15 @@ define('js!SBIS3.CONTROLS.FilterHistoryController',
              var fb = this._options.filterButton,
                  self = this;
 
-             this.subscribeTo(fb, 'onResetFilter', function(event, internal) {
+             this.subscribeTo(fb, 'onResetFilter', function(event, internal, partial) {
                 if(!internal) {
-                   self.clearActiveFilter();
-                   if (!self.isNowSaving()) {
-                      self.saveToUserParams();
+                   if (partial && !fb.getLinkedContext().getValue('filterChanged')) {
+                      self.clearActiveFilter();
+                      if (!self.isNowSaving()) {
+                         self.saveToUserParams();
+                      }
+                   } else {
+                      self._applyHandlerDebounced();
                    }
                 }
              });

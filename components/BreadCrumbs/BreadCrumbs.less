@@ -8,6 +8,7 @@
 		&:hover{
 			.controls-BreadCrumbs__title{
 				color: @bread-crumb-title-hover-color !important;
+            text-decoration: underline;
 			}
 			.controls-BreadCrumbs__arrow, .controls-BreadCrumbs__home {
 				color: @bread-crumb-title-hover-color !important;
@@ -116,7 +117,7 @@
    text-overflow: ellipsis;
 }
 
-.ws-is-webkit, .ws-is-mobile-chrome-ios {
+.ws-is-webkit:not(.ws-is-mobile-android), .ws-is-mobile-chrome-ios {
    .controls-BreadCrumbs{
       padding-top: 1px;
       .controls-BreadCrumbs__title{

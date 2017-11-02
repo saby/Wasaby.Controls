@@ -72,6 +72,14 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                subTitle: {inline: 'span', classes: 'subTitleText'},
                additionalText: {inline: 'span', classes: 'additionalText'}
             },
+            colorsMap: {
+               'rgb(0, 0, 0)': 'black',
+               'rgb(255, 0, 0)': 'red',
+               'rgb(0, 128, 0)': 'green',
+               'rgb(0, 0, 255)': 'blue',
+               'rgb(128, 0, 128)': 'purple',
+               'rgb(128, 128, 128)': 'grey'
+            },
             ipadCoefficient: {
                top: {
                   vertical: 0.65,
@@ -552,7 +560,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   var content = event.clipboardData.getData ? event.clipboardData.getData('text/html') : '';
                   if (!content || !save) {
                      content = event.clipboardData.getData ? event.clipboardData.getData('text/plain') : window.clipboardData.getData('Text');
-                     content.replace('orphans: 31415;','');
+                     content.replace('data-ws-is-rich-text="true"', '');
                   }
                   prepareAndInsertContent(content);
                   dialog.close();
@@ -737,6 +745,91 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             this._tinyEditor.execCommand('');
             //при установке стиля(через форматтер) не стреляет change
             this._updateTextByTiny();
+         },
+
+         /**
+          * Получить свойства форматирования текущего выделения
+          * @return {object}
+          */
+         getCurrentFormats: function () {
+            var editor = this._tinyEditor;
+            if (editor) {
+               var selNode = editor.selection.getNode();
+               var $selNode = $(selNode);
+               var color = editor.dom.getStyle(selNode, 'color', true);
+               return {
+                  fontsize: +editor.dom.getStyle(selNode, 'font-size', true).replace('px', ''),
+                  color: constants.colorsMap[color] || color,
+                  bold: !!$selNode.closest('strong').length,
+                  italic: !!$selNode.closest('em').length,
+                  underline: !!$selNode.closest('span[style*="decoration: underline"]').length,
+                  strikethrough: !!$selNode.closest('span[style*="decoration: line-through"]').length
+               };
+            }
+         },
+
+         /**
+          * Получить свойства форматирования по-умолчанию - определяется по свойствам форматирования контейнера редактора, (то, как видно в редакторе без форматирования)
+          * @return {object}
+          */
+         getDefaultFormats: function () {
+            if (!this._defaultFormats) {
+               var $root = $(this._inputControl);
+               var color = $root.css('color');
+               this._defaultFormats = {
+                  fontsize : +$root.css('font-size').replace('px', ''),
+                  color: constants.colorsMap[color] || color
+               };
+            }
+            return this._defaultFormats;
+         },
+
+         /**
+          * Применить свойства форматирования к текущему выделению
+          * @param {object} formats Свойства форматирования
+          */
+         applyFormats: function (formats) {
+            // Отбросить все свойства форматирования, тождественные форматированию по-умолчанию
+            var defaults = this.getDefaultFormats();
+            for (var prop in defaults) {
+               if (prop in formats && formats[prop] ==/* Не "==="! */ defaults[prop]) {
+                  delete formats[prop];
+               }
+            }
+            // Применить новое форматирование
+            if (formats.id) {
+               this.setFontStyle(formats.id);
+            }
+            else {
+               for (var i = 0, names = ['title', 'subTitle', 'additionalText', 'forecolor']; i < names.length; i++) {
+                  this._removeFormat(names[i]);
+               }
+               var previous = this.getCurrentFormats();
+               var sameFont = formats.fontsize && formats.fontsize === previous.fontsize;
+               //необходимо сначала ставить размер шрифта, тк это сбивает каретку
+               if (!sameFont) {
+                  this.setFontSize(formats.fontsize);
+               }
+               var hasOther;
+               for (var i = 0, names = ['bold', 'italic', 'underline', 'strikethrough']; i < names.length; i++) {
+                  var name = names[i];
+                  if (name in formats && formats[name] !== previous[name]) {
+                     this.execCommand(name);
+                     hasOther = true;
+                  }
+               }
+               if (formats.color && formats.color !== previous.color) {
+                  this.setFontColor(formats.color);
+                  hasOther = true;
+               }
+               if (sameFont && !hasOther) {
+                  // Если указан тот же размер шрифта (и это не размер по умолчанию), и нет других изменений - нужно чтобы были правильно
+                  // созданы окружающие span-ы (например https://online.sbis.ru/opendoc.html?guid=5f4b9308-ec3e-49b7-934c-d64deaf556dc)
+                  // в настоящий момент работает и без этого кода, но если не будет работать, но нужно использовать modify, т.к. expand помечен deprecated.
+                  //this._tinyEditor.selection.getSel().modify();//.getRng().expand()
+                  this.setFontSize(formats.fontsize);
+               }
+            }
          },
 
          /**
@@ -1246,16 +1339,20 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   self._showImagePropertiesDialog(target);
                });
                //По нажатию на изображения показывать панель редактирования самого изображения
-               bindImageEvent('mousedown touchstart', function(event, target) {
+               bindImageEvent('mouseup touchstart', function(event, target) {
                   self._showImageOptionsPanel($(target));
-                  //Проблема:
-                  //    При клике на изображение в ie появляются квадраты ресайза
-                  //Решение:
-                  //    отменять дефолтное действие
-                  if(cConstants.browser.isIE) {
-                     event.preventDefault();
-                  }
                });
+
+               //Проблема:
+               //    При клике на изображение в ie появляются квадраты ресайза
+               //Решение:
+               //    отменять дефолтное действие
+               if(cConstants.browser.isIE) {
+                  bindImageEvent('mousedown', function(event) {
+                     event.preventDefault();
+                  });
+               }
+
                //При клике на изображение снять с него выделение
                bindImageEvent('click', function() {
                   var
@@ -1326,8 +1423,8 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             //Обработка вставки контента
             editor.on('BeforePastePreProcess', function(e) {
-               var isRichContent = e.content.indexOf('orphans: 31415;') !== -1;
-               e.content = e.content.replace('orphans: 31415;', '');
+               var isRichContent = e.content.indexOf('data-ws-is-rich-text="true"') !== -1;
+               e.content = e.content.replace('data-ws-is-rich-text="true"', '');
                //Необходимо заменять декорированные ссылки обратно на url
                //TODO: временное решение для 230. удалить в 240 когда сделают ошибку https://inside.tensor.ru/opendoc.html?guid=dbaac53f-1608-42fa-9714-d8c3a1959f17
                e.content = self._prepareContent(e.content);
@@ -1359,17 +1456,19 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
             editor.on('PastePostProcess', function(event){
                var
-                  maximalWidth,
                   content = event.node,
-                  $images = $(content).find('img:not(.ws-fre__smile)'),
-                  width,
-                  currentWidth,
-                  naturalSizes;
-               $(content).find('[unselectable ="on"]').attr('data-mce-resize','false');
+                  $content = $(content),
+                  $images = $content.find('img:not(.ws-fre__smile)');
+               $content.find('[unselectable ="on"]').attr('data-mce-resize', 'false');
                if ($images.length) {
                   if (/data:image/gi.test(content.innerHTML)) {
                      return false;
                   }
+                  var
+                     maximalWidth,
+                     width,
+                     currentWidth,
+                     naturalSizes;
                   maximalWidth = this._inputControl.width() - constants.imageOffset;
                   for (var i = 0; i < $images.length; i++) {
                      naturalSizes = ImageUtil.getNaturalSizes($images[i]);
@@ -1383,15 +1482,18 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      }
                   }
                }
+               var html = content.innerHTML;
                //Замена переносов строк на <br>
-               event.node.innerHTML = event.node.innerHTML.replace(/([^>])\n(?!<)/gi, '$1<br />');
+               html = html.replace(/([^>])\n(?!<)/gi, '$1<br />');
                // Замена отступов после переноса строки и в первой строке
                // пробелы заменяются с чередованием '&nbsp;' + ' '
-               event.node.innerHTML = this._replaceWhitespaces(event.node.innerHTML);
+               html = this._replaceWhitespaces(html);
+               // И теперь (только один раз) вставим в DOM
+               content.innerHTML = html;
             }.bind(this));
 
             if (this._options.editorConfig.browser_spellcheck && (cConstants.browser.chrome || cConstants.browser.safari)) {
-               // Если включена проверка правописания, нужно при исправлениях генерировать событие NodeChange, иначе об этом изменение никак не станет известно
+               // Если включена проверка правописания, нужно при исправлениях обновлять принудительно text
                var _onSelectionChange1 = function (evt) {
                   if (evt.target === document) {
                      editor.off('SelectionChange', _onSelectionChange1);
@@ -1406,14 +1508,20 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                var _onSelectionChange2 = function (evt) {
                   if (evt.target === document) {
                      this._updateTextByTiny();
-                     this._tinyEditor.nodeChanged();
                   }
                }.bind(this);
 
                editor.on('contextmenu', function (evt) {
                   if (evt.currentTarget === this._inputControl[0] && (evt.target === evt.currentTarget || $.contains(event.currentTarget, evt.target))) {
-                     editor.on('SelectionChange', _onSelectionChange1);
                      editor.off('SelectionChange', _onSelectionChange2);
+                     if (cConstants.browser.safari) {
+                        // Для safari обязательно нужно отложить подписку на событие (потому что safari в тот момент, когда делается эта подписка
+                        // меняет выделение, и потом меняет его в момент вставки. Чтобы первое не ловить - отложить)
+                        setTimeout(editor.on.bind(editor, 'SelectionChange', _onSelectionChange1), 1);
+                     }
+                     else {
+                        editor.on('SelectionChange', _onSelectionChange1);
+                     }
                   }
                }.bind(this));
             }
@@ -1421,7 +1529,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             editor.on('drop', function(event) {
                //при дропе тоже заходит в BeforePastePreProcess надо обнулять _clipboardTex
                self._clipboardText = false;
-               if (!self._mouseIsPressed && (!event.targetClone || (event.targetClone && !$(event.targetClone).hasClass('controls-RichEditor__noneditable'))))  {
+               if (!self._mouseIsPressed && !cConstants.browser.isIE && (!event.targetClone || !$(event.targetClone).hasClass('controls-RichEditor__noneditable')))  {
                   event.preventDefault();
                }
             });
@@ -1546,7 +1654,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                if (e.key && 1 < e.key.length) {
                   _linkEditStart();
                   setTimeout(function() {
-                     _linkEditEnd();
+                     //Возможно, мы уже закрыты
+                     if(!self.isDestroyed()){
+                        _linkEditEnd();
+                     }
                   }, 1);
                }
             });
@@ -1568,7 +1679,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                }
                setTimeout(function() {
-                  _linkEditEnd();
+                  if(!self.isDestroyed()){
+                     _linkEditEnd();
+                  }
                   self._togglePlaceholder(self._getTinyEditorValue());
                }, 1);
             });

@@ -2,9 +2,10 @@
 define('js!SBIS3.CONTROLS.SaveStrategy.Base', [
     'Core/Abstract',
     'Core/helpers/fast-control-helpers',
+    'js!SBIS3.CONTROLS.Utils.PrintDialogHTMLView',
     'js!SBIS3.CONTROLS.ISaveStrategy',
     'js!SBIS3.CONTROLS.Utils.DataSetToXMLSerializer'
-], function (Abstract, fcHelpers, ISaveStrategy, Serializer) {
+], function (Abstract, fcHelpers, PrintDialogHTMLView, ISaveStrategy, Serializer) {
 
     'use strict';
 
@@ -42,7 +43,7 @@ define('js!SBIS3.CONTROLS.SaveStrategy.Base', [
         print: function (meta) {
             fcHelpers.toggleIndicator(true);
             this._serializeData(meta.recordSet, meta.columns, meta.xsl).addCallback(function(reportText){
-                fcHelpers.showHTMLForPrint({
+               PrintDialogHTMLView({
                     htmlText: reportText,
                     minWidth : meta.minWidth,
                     handlers: {

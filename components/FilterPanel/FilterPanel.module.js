@@ -39,7 +39,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
     *
     * <h2>Разметка компонента</h2>
     *
-    * Разметку компонента создают только в TMPL-файлах с использованием <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/xhtml/logicless-template/'>logicless-шаблонизатора</a>.
+    * Разметку компонента создают только в TMPL-файлах с использованием <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/component-infrastructure/logicless-template/'>logicless-шаблонизатора</a>.
     *
     * <br/>
     *
@@ -80,7 +80,7 @@ define('js!SBIS3.CONTROLS.FilterPanel', [
     *
     * @mixes SBIS3.CONTROLS.Expandable
     *
-    * @demo SBIS3.CONTROLS.Demo.TestFilterPanel Временный демонстрационный пример без возможности редактировать исходный код компонента. Чтобы получить доступ к исходного коду компонента, скачайте архив демо-примера.
+    * @demo SBIS3.CONTROLS.Demo.MyFilterPanel Временный демонстрационный пример без возможности редактировать исходный код компонента. Чтобы получить доступ к исходного коду компонента, скачайте архив демо-примера.
     */
    var
       ITEM_FILTER_ID          = 'id',

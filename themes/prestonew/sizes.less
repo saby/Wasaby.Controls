@@ -85,7 +85,7 @@
 @DropdownList-picker-margin-top:                         0;//todo: krasilnikov
 @DropdownList-picker-border:                             0;//todo: krasilnikov
 @DropdownList-picker-padding:                            0;//todo: krasilnikov
-@DropdownList-picker-head-padding:                       0 8px;//todo: krasilnikov
+@DropdownList-picker-head-padding:                       0 0.57rem;//todo: krasilnikov
 @DropdownList-picker-head-duplicate-type-top-padding:    0px;//todo: krasilnikov
 @DropdownList-picker-menu-item-padding:                  .1785rem .57rem;
 @check-box-caption-margin-left:                          4px;//todo: juravlev
@@ -245,7 +245,9 @@
 @menu-icon-big-menu-margin:               -.36rem 0 0 .358rem;
 @menu-padding:                            0;
 //Menu link
+@menu-link-menu-margin:                   -.393rem 0 0 -.643rem;
 @menu-link-menu-item-container-padding:	  0;
+@menu-link-header-font-size:              @default-text-size;
 // Search form
 @search-button-wrapper-padding:				0;
 //  Combo box
@@ -404,6 +406,7 @@
 @data-grid-partScroll-arrowLeft-top-shift: -0.8571rem;
 @data-grid-partScroll-arrowRight-top-shift:-.857rem;
 @data-grid-partScroll-thumb-margin:       1.78rem;
+@data-grid-results-cell-padding:          @data-grid-cell-padding;
 // PrintDialog
 //По какой-то причине Firefox берёт font-size не из html, а свой, причем только при расчёте этой ширины
 @controls-printdialog-min-width:          27em;
@@ -422,7 +425,7 @@
 @controls-OperationsPanel-actions-align:                                baseline;
 @controls-OperationsPanel-separator-width:                              2px;
 @controls-OperationsPanel-separator-height:                             1.9285rem;
-@controls-OperationsPanel-separator-line-height:                        2.5rem;
+@controls-OperationsMark-separator-line-height:                         2.5rem;
 @controls-OperationsPanel-menu-close-button-right:                      0rem;
 //OperationsPanelButton
 @controls-OperationsPanelButton-width:    0.86rem;
@@ -436,6 +439,7 @@
 @multiView-tile-item-text-margin:         .25rem;
 //DropdownList
 @DropdownList-picker-head-weight:           normal;
+@DropdownList-picker-head-height:           3.57rem;
 @DropdownList-picker-max-width:             28.57rem;
 //ProgressBar
 @controls-ProgressBar-height:             1.3214rem;
@@ -453,6 +457,7 @@
 @controls-Popup-closeButton-top:          8px;
 @controls-filterButton-picker-close-top:  .29rem;
 @controls-filterButton-button-margin:     0;
+@controls-filterButton-button-verSide-margin: 0;
 @controls-filterButton-button-margin-right-align:.2857rem 0 .2857rem .2857rem;
 @controls-filterButton-area-text-weight:	normal;
 @controls-filterButton-area-header-padding:.29rem 3rem .29rem .86rem;
@@ -669,3 +674,8 @@
 @link-icon-margin:                        -@default-border-width 0 0;
 @radio-button-icon-margin:                0.3rem;
 @back-button-text-fontweight:             @default-font-weight;
+//printDialog
+@printDialog-activate-right:              3.1785rem;
+//back-button
+@back-arrow-width:                1rem;
+@back-arrow-height:               1rem;

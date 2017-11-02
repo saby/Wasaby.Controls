@@ -17,6 +17,7 @@
 
   &:before {
     content: "\e66c";
+    text-shadow: @button-text-shadow;
   }
 
   &:hover {
@@ -51,6 +52,11 @@ body {
    .controls-operationsPanel__itemsMenu_picker.controls-MenuIcon__Menu.controls-Menu.controls-Menu__hide-menu-header {
      margin: -.32rem 0 0 1.32rem;
    }
+
+  .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
+    width: 3rem !important;
+    height: 3rem !important;
+  }
 
 
    //TODO: удалить это когда будет нормальный пэйджинг, не из ws-a
@@ -171,43 +177,6 @@ body {
     padding-left: .857rem;
   }
 
-   //Стили для CORE кнопки на диалоге печати PrintDialog
-   .ws-window .ws-printdialog-titlebar {
-      .ws-window-title {
-         font-size: 1.43rem;
-      }
-
-      .ws-printdialog-print-button {
-         right: 3.1785rem;
-         font-size: 1.43rem;
-         border-radius: 0;
-         font-weight: 400;
-         width: auto;
-         min-width: .86rem;
-         height: 3rem;
-         line-height: 2.73rem;
-         box-sizing: border-box;
-         user-select: none;
-         background-color: #ff7033;
-         color: #fff;
-         border: @default-border-width solid #d94700;
-
-         &:hover {
-            background-color: #EC5B19;
-         }
-
-         &:active {
-            background-color: #d94700 !important;
-         }
-
-         .ws-button-caption {
-            display: block;
-            margin: 0 .57rem 0 .57rem;
-            border: none;
-            line-height: inherit;
-         }
-      }
-   }
   .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableRow .controls-MonthView__tableElement {
 
     font-size: 1.14rem;
@@ -412,6 +381,17 @@ body {
       // В большинстве реестров используется #2C3E50 - @basic-block-bg-color
       background-color: @basic-block-bg-color;
    }
+   // На андроиде между контейнерами на масштабе отличном от 100% всегда есть какая то щель
+   // через которую видно скролируемое содержимое. Стилизация фикса этого бага.
+   // TODO: выпилить после того как перейдем на position: sticky
+   &.ws-is-mobile-android {
+      .ws-sticky-header__block.ws-sticky-header__fixed,
+      .ws-sticky-header__table-header-copy {
+         &:before {
+            background-color: @basic-block-bg-color;
+         }
+      }
+   }
    .ws-sticky-header__gradient {
       height: 0.857rem;
       box-shadow: none;
@@ -422,7 +402,7 @@ body {
 body  .ws-window {
    background-color: #2C3E50;
    border-style: solid;
-   border-color: #00a2ef;
+   border-color: transparent;
    border-width: @default-border-width;
 }
 .ws-window-content {
@@ -799,6 +779,9 @@ body {
       .ws-infobox-content {
          color: @default-text-color;
          font-size: 1rem;
+         ul {
+            padding-left: 1rem;
+         }
       }
 
       .ws-infobox-close-button.icon-disabled{
@@ -1036,6 +1019,16 @@ body {
      -webkit-overflow-scrolling: auto!important;
    }
 }
+// Предыдущие стили отключает скролы на плавающих панелях. А значит и хак с тем что эти скролы могут отвалится на ipad
+// не нужен. ЧТо бы ничего не прыгало отключаем этот хак.
+// Выпилить когда уйдем от ws-float-area__block-layout в онлайне.
+body {
+   &.ws-is-mobile-safari, &.ws-is-mobile-chrome-ios {
+      .ws-float-area-no-height-calc .ws-float-area-stack-panel-overflow {
+         height: 100%;
+      }
+   }
+}
 
 //Rem Line-height Doesn’t Work In Pseudo Elements In IE
 //fallback for ie, will live while there is rem
@@ -1077,4 +1070,10 @@ body {
 //Убрать когда проектировщики сделают одинаковые отступы, обсуждали на этом совещании: https://online.sbis.ru/obj/Meeting/e6b722a9-d339-4016-9fd6-82b763c4e241
 .controls-ItemsToolbar.controls-ItemsToolbar__edit {
   bottom: 0.2857rem;
+}
+.controls-Browser__search {
+   margin: 0.28572rem;
+}
+.controls-Browser__topTemplate {
+   padding: 0.28572rem;
 }

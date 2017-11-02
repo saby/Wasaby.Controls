@@ -4,19 +4,32 @@
 define('js!SBIS3.CONTROLS.FilterText',
     [
        'js!WSControls/Buttons/ButtonBase',
-       'html!SBIS3.CONTROLS.FilterText',
+       'tmpl!SBIS3.CONTROLS.FilterText',
        'js!SBIS3.CONTROLS.ITextValue'
     ], function(WSButtonBase, dotTplFn, ITextValue) {
        'use strict';
 
        /**
-        * Компонент, отображающий текст с крестиком удаления, при клике на крест скрывается.
-        * Используется на панели {@link SBIS3.CONTROLS.FilterButton}:
+        * Класс контрола "Кнопка с крестиком".
+        * Используется на Панели фильтрации (см. {@link SBIS3.CONTROLS.FilterButton}) для отображения набранных параметров.
+        * Контрол представляет собой текст, рядом с котором в правом верхнем углу расположен крестик.
+        * Клик по крестику скрывает контрол, а выбранный параметр удаляется из результирующего фильтра.
+        * Контрол используется на панели {@link SBIS3.CONTROLS.FilterButton}.
+        *
+        * Контрол работает непосредственно с фильтром (объект, по набранным параметрам которого будет производиться фильтрация).
+        * Текущее значение, переданное из контрола в фильтр, хранится в опции {@link filterValue}.
+        * При изменении видимости контрола (скрыт или отображается), обновляется значение опции **filterValue**.
+        * Если контрол становится виден, то в фильтр, ровно как и в опцию **filterValue**, передаётся значение из опции {@link visibleFilterValue}.
+        * Если контрол скрывается, то в фильтр, ровно как и в опцию **filterValue**, передаётся значение опции {@link resetValue}.
+        * Контрол скрывается, когда пользователь нажимает крестик, отображаемый справа от кнопки.
+        *
         * @class SBIS3.CONTROLS.FilterText
         * @extends WSControls/Buttons/ButtonBase
         * @author Герасимов Александр Максимович
         * @control
         * @public
+        *
+        * @mixes SBIS3.CONTROLS.ITextValue
         */
 
        var FilterText = WSButtonBase.extend([ITextValue], /** @lends SBIS3.CONTROLS.FilterText.prototype */ {
@@ -25,17 +38,26 @@ define('js!SBIS3.CONTROLS.FilterText',
              _options: {
                 _visibleValue: null,
                 /**
-                 * @cfg {*} Значение, которое проставляется, если компонент виден.
+                 * @cfg {*} Текущее значение, переданное из контрола в фильтр.
+                 * @remark
+                 * Значение изменяется при скрытии/появлении контрола.
                  * @see getFilterValue
+                 * @see resetValue
+                 * @see visibleFilterValue
                  */
                 filterValue: null,
                 /**
-                 * @cfg {*} Значение, которое проставляется, при нажатии на крестик.
+                 * @cfg {*} Значение, передаваемое в фильтр при скрытии контрола (см. {@link setVisible}).
+                 * @remark
+                 * Контрол скрывается, когда пользователь нажимает крестик, отображаемый справа от кнопки.
+                 * Значение дублируется в опции {@link filterValue}.
                  * @see getFilterValue
                  */
                 resetValue: undefined,
                 /**
-                 * @cfg {*} Значение, которое проставляется в фильтр, если компонент виден.
+                 * @cfg {*} Значение, передаваемое в фильтр при отображении контрола (см. {@link setVisible}).
+                 * @remark
+                 * Значение дублируется в опции {@link filterValue}.
                  * @see getFilterValue
                  */
                 visibleFilterValue: undefined
@@ -48,7 +70,7 @@ define('js!SBIS3.CONTROLS.FilterText',
           },
 
           /**
-           * Возвращает текущее значение filterValue (Зависит от состояние компонента скрыт/отображается)
+           * Возвращает текущее значение фильтра, которое зависит от состояние компонента (скрыт/отображается).
            * @returns {*} filterValue
            */
           getFilterValue: function(){
@@ -77,7 +99,10 @@ define('js!SBIS3.CONTROLS.FilterText',
              this._options.filterValue = value;
              this._notifyOnPropertyChanged('filterValue');
           },
-
+           /**
+            *
+            * @returns {*}
+            */
           getTextValue: function () {
              return this.isVisible() ? this.getCaption() : '';
           }

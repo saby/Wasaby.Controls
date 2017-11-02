@@ -4,13 +4,13 @@ define('js!SBIS3.CONTROLS.Action.List.ListMixin', ['Core/core-instance'], functi
    /**
     * @mixin SBIS3.CONTROLS.Action.List.ListMixin
     * @public
-    * @author Крайнов Дмитрий Олегович
+    * @author Ганшин Ярослав Олегович
     */
    var ListMixin = /** @lends SBIS3.CONTROLS.Action.List.ListMixin.prototype */{
       $protected: {
          _options: {
             /**
-             * @cfg {*} связанный список.
+             * @cfg {*} Связанный список.
              * @remark
              * Список должен быть с примесью миксинов ({@link SBIS3.CONTROLS.ItemsControlMixin} или {@link WS.Data/Collection/IList}) для работы с однотипными элементами.
              * Подробнее о базовых платформенных списках вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/list-types/">Виды списков</a>.
@@ -19,7 +19,7 @@ define('js!SBIS3.CONTROLS.Action.List.ListMixin', ['Core/core-instance'], functi
              */
             linkedObject: undefined,
             /**
-             * @cfg {WS.Data/Source/ISource} связанный истоник данных.
+             * @cfg {WS.Data/Source/ISource} Связанный истоник данных.
              * @see getDataSource
              * @see setDataSource
              * @see #WS.Data/Source/ISource
@@ -28,7 +28,7 @@ define('js!SBIS3.CONTROLS.Action.List.ListMixin', ['Core/core-instance'], functi
          }
       },
       /**
-       * Возвращает связанный объект с данными
+       * Возвращает связанный объект с данными.
        * @returns {WS.Data/Collection/IList|SBIS3.CONTROLS.ListView}
        * @see linkedObject
        */
@@ -36,7 +36,7 @@ define('js!SBIS3.CONTROLS.Action.List.ListMixin', ['Core/core-instance'], functi
          return this._options.linkedObject;
       },
       /**
-       * Устанавливает связанный объект с данными
+       * Устанавливает связанный объект с данными.
        * @param {WS.Data/Collection/IList|SBIS3.CONTROLS.ListView} list
        * @see linkedObject
        */
@@ -44,7 +44,7 @@ define('js!SBIS3.CONTROLS.Action.List.ListMixin', ['Core/core-instance'], functi
          this._options.linkedObject = list;
       },
       /**
-       * Возвращает связанный источник данных
+       * Возвращает связанный источник данных.
        * @returns {WS.Data/Source/ISource} dataSource
        * @see dataSource
        */
@@ -57,7 +57,7 @@ define('js!SBIS3.CONTROLS.Action.List.ListMixin', ['Core/core-instance'], functi
          }
       },
       /**
-       * Устанавливает связанный источник данных
+       * Устанавливает связанный источник данных.
        * @param {WS.Data/Source/ISource}
        * @see dataSource
        */
@@ -65,7 +65,7 @@ define('js!SBIS3.CONTROLS.Action.List.ListMixin', ['Core/core-instance'], functi
          this._options.dataSource = dataSource;
       },
       /**
-       * Возвращает выделенные элементы в linkedObject
+       * Возвращает выделенные элементы в linkedObject.
        * @returns Array
        */
       getSelectedItems: function() {

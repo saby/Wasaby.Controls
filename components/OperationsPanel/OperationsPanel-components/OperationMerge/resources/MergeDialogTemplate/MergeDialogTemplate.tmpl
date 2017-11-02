@@ -19,13 +19,13 @@
                     <ws:columns>
                         <ws:Array>
                             <ws:Object cellTemplate="{{ _cellRadioButtonTpl }}"></ws:Object>
-                            <ws:Object title="Наименование"
+                            <ws:Object title="{[Наименование]}"
                                        width="{{ 400 }}"
                                        field="{{ displayProperty }}"
                                        className="controls-DataGridView-cell-overflow-ellipsis"
                                        cellTemplate="{{ titleCellTemplate ? titleCellTemplate : _titleCellTemplate }}"
                             ></ws:Object>
-                            <ws:Object title="Комментарий"
+                            <ws:Object title="{[Комментарий]}"
                                        field="Comment"
                                        className="controls-DataGridView-cell-overflow-ellipsis"
                                        cellTemplate="{{ _cellCommentTpl }}"
@@ -42,7 +42,7 @@
             <ws:SBIS3.CONTROLS.Button
                     class="controls-MergeDialogTemplate__mergeButton"
                     name="MergeDialogTemplate-mergeButton"
-                    caption="Объединить"
+                    caption="{[Объединить]}"
                     primary="{{ true }}"
                     command="beginMerge">
             </ws:SBIS3.CONTROLS.Button>

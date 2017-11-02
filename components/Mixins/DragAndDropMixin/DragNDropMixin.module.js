@@ -3,7 +3,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
     "Core/EventBus",
     "js!SBIS3.CONTROLS.DragObject",
     "WS.Data/Di",
-    "Core/core-instance"
+    "Core/core-instance",
+    'css!SBIS3.CONTROLS.DragNDropMixin'
 ], function ( EventBus,DragObject, Di, cInstance) {
     'use strict';
     /**
@@ -121,6 +122,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
              */
             _constShiftLimit: 3,
             _beginDragTarget:null
+
         },
         //region public
         $constructor: function () {
@@ -167,7 +169,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          * @remark Определяется в модуле, который подмешивает миксин.
          * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
          * @param {Boolean} droppable Cработал внутри droppable контейнера см {@link _findDragDropContainer}
-         * @param {Event} e Браузерное событие. На touch устройствах в полях pageX, pageY находятся координаты touch.
+         * @param {jQuery.Event} e Объект события. На touch устройствах в полях pageX, pageY находятся координаты touch.
          * @see SBIS3.CONTROLS.DragObject
          * @see _findDragDropContainer
          * @example
@@ -194,7 +196,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          * Срабатывает при перемещении (на каждое перемещение).
          * @remark Определяется в модуле, который подмешивает миксин.
          * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
-         * @param {Event} e Браузерное событие. На touch устройствах в полях pageX, pageY находятся координаты touch.
+         * @param {jQuery.Event} e Объект события. На touch устройствах в полях pageX, pageY находятся координаты touch.
          * @see SBIS3.CONTROLS.DragObject
          */
         _onDragHandler: function(dragObject, e) {
@@ -205,7 +207,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          * @remark Определяется в модуле, который подмешивает миксин. Если контрол взамодействует с другими контролами через Drag'n'drop
          * то этот метод должен определить, что перемещает пользователь и установить в dragObject (см метод {@link SBIS3.CONTROLS.DragObject#setSource}).
          * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
-         * @param {Event} e Браузерное событие. На touch устройствах в полях pageX, pageY находятся координаты touch.
+         * @param {jQuery.Event} e Объект события. На touch устройствах в полях pageX, pageY находятся координаты touch.
          * @see SBIS3.CONTROLS.DragObject
          * @returns {Boolean} если вернуть false перемещение не начнется
          */
@@ -225,7 +227,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          *   ...
          * </pre>
          * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
-         * @param {Event} e Браузерное событие.
+         * @param {jQuery.Event} e Объект события.
          * @returns {String}
          * @see SBIS3.CONTROLS.DragObject
          */
@@ -261,7 +263,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
          *    ...
          * </pre>
          * @param {SBIS3.CONTROLS.DragObject} dragObject Синглтон Drag'n'drop объект.
-         * @param {Event} e Браузерное событие
+         * @param {jQuery.Event} e Объект события
          * @see SBIS3.CONTROLS.DragObject
          */
         _updateDragTarget: function(dragObject, e) {
@@ -273,7 +275,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
 
         /**
          * Показывает аватар
-         * @param  {Event} e Браузерное событие.
+         * @param  {jQuery.Event} e Объект события.
          * @private
          */
         _showAvatar: function(e) {
@@ -304,7 +306,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
           *    }
          *    ...
          * </pre>
-         * @param {Event} clickEvent Браузерное событие.
+         * @param {Event|jQuery.Event} clickEvent Объект события.
          */
         _initDrag: function(clickEvent) {
             var
@@ -317,10 +319,10 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                         EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
                     }
                 };
-            if ($(clickEvent.target).closest('.controls-DragNDropMixin__notDraggable', self._getDragContainer()[0]).length === 0
-               && ((clickEvent.type == 'mousedown' && clickEvent.which == LEFT_BUTTON) || clickEvent.type != 'mousedown') //Для мышки проверям что нажата левая кнопка
+            var clickEventOrigin = clickEvent.originalEvent || clickEvent;//в clickEvent.which может быть не определен, а в originalEvent он есть
+            if ($(clickEventOrigin.target).closest('.controls-DragNDropMixin__notDraggable', self._getDragContainer()[0]).length === 0
+               && ((clickEventOrigin.type == 'mousedown' && clickEventOrigin.which == LEFT_BUTTON) || clickEventOrigin.type != 'mousedown') //Для мышки проверям что нажата левая кнопка
             ) {
-               this._preparePageXY(clickEvent);
                EventBus.channel('DragAndDropChannel').subscribe('onMousemove', dragStrarter);
                EventBus.channel('DragAndDropChannel').once('onMouseup', function () {
                   EventBus.channel('DragAndDropChannel').unsubscribe('onMousemove', dragStrarter);
@@ -330,7 +332,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         },
         /**
          * Начало перемещения.
-         * @param {Event} e Браузерное событие.
+         * @param {jQuery.Event} e Объект события.
          */
         _beginDrag: function (e) {
             if (this._options.itemsDragNDrop) {
@@ -338,7 +340,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 DragObject.onDragHandler(e);
                 if (this._beginDragHandler(DragObject, e) !== false) {
                     if (this._notify('onBeginDrag', DragObject, e) !== false) {
-
+                        this._initDragOverlay();
                         this._showAvatar(e);
                         DragObject.setOwner(this);
                         DragObject.setDragging(true);
@@ -353,7 +355,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         },
         /**
          * Вытаскивает координаты нажатия для tuch событий так же как для событий мыши.
-         * @param {Event} e Браузерное событие.
+         * @param {jQuery.Event} e Объект события.
          * @private
          */
         _preparePageXY: function(e) {
@@ -367,8 +369,8 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         },
         /**
          * Метод определяет был ли сдвиг или просто кликнули по элементу.
-         * @param {Event} moveEvent Браузерное событие.
-         * @param {Event} clickEvent Браузерное событие.
+         * @param {jQuery.Event} moveEvent Объект события.
+         * @param {jQuery.Event} clickEvent Объект события.
          * @returns {boolean} если true то было смещение.
          * @private
          */
@@ -384,7 +386,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         },
         /**
          * Конец перемещения.
-         * @param {Event} e Браузерное событие.
+         * @param {jQuery.Event} e Объект события.
          * @param {Boolean} droppable Закончили над droppable контейнером.
          * @private
          */
@@ -392,6 +394,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
             //После опускания мыши, ещё раз позовём обработку перемещения, т.к. в момент перед отпусканием мог произойти
             //переход границы между сменой порядкового номера и перемещением в папку, а обработчик перемещения не вызваться,
             //т.к. он срабатывают так часто, насколько это позволяет внутренняя система взаимодействия с мышью браузера.
+            $('.controls-DragNDropMixin-overlay').remove();
             if (droppable || e.type == "touchend") { //запускаем только если сработало внутри droppable контейнера, иначе таргета нет и нечего обновлять
                 //touchend всегда срабатывает не над droppable контейнером, так что для него запускаем всегда
                 this._updateDragTarget(DragObject, e);
@@ -426,7 +429,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         //region mouseHandler
         /**
          * Запускает обработчики перемещения.
-         * @param {Event} e Браузерное событие.
+         * @param {jQuery.Event} e Объект события.
          * @private
          */
         _onDrag: function (e) {
@@ -451,14 +454,14 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         /**
          * Срабывает когда отпустили мышь за пределами контрола.
          * @param {Core/EventObject} buse Дескриптор события.
-         * @param {Event} e Браузерное событие.
+         * @param {jQuery.Event} e Объект события.
          */
         _onMouseupOutside: function(buse, e) {
             this._mouseUp(e, false);
         },
         /**
          * Обработчик на событие браузера - Mouseup, Touchend.
-         * @param {Event} e Браузерное событие.
+         * @param {jQuery.Event} e Объект события.
          * @param {Boolean} inside Признак того что перемещение закончилось внутри контрола.
          */
         _mouseUp: function(e) {
@@ -489,7 +492,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
         /**
          * Обработчик на событие перемещения курсора - Mousemove, Touchmove.
          * @param {Core/EventObject} buse Дескриптор события.
-         * @param {Event} e Браузерное событие.
+         * @param {jQuery.Event} e Объект события.
          */
         _onMousemove: function (buse, e) {
             if (this._options.itemsDragNDrop) {
@@ -540,6 +543,21 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
                 }
              }
           }
+       },
+
+       _initDragOverlay: function() {
+          //Над каждым iframe создаем оверлей над которым будет двигаться курсор перемещения
+          $('iframe:visible').each(function(i, frame){
+             var rect = frame.getBoundingClientRect(),
+                overlay = $('<div class="controls-DragNDropMixin-overlay">');
+             overlay.css({
+                width: rect.width,
+                height: rect.height,
+                left: frame.offsetLeft,
+                top: frame.offsetTop
+             });
+             $(frame).parent().prepend(overlay);
+          })
        }
     };
 

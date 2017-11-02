@@ -2,7 +2,7 @@
 define('js!SBIS3.CONTROLS.DateRange', [
    'js!SBIS3.CORE.CompoundControl',
    'js!SBIS3.CONTROLS.PickerMixin',
-   'html!SBIS3.CONTROLS.DateRange',
+   'tmpl!SBIS3.CONTROLS.DateRange',
    'js!SBIS3.CONTROLS.FormWidgetMixin',
    'js!SBIS3.CONTROLS.RangeMixin',
    'js!SBIS3.CONTROLS.DateRangeMixin',

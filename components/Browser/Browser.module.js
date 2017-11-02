@@ -298,6 +298,9 @@ define('js!SBIS3.CONTROLS.Browser', [
        */
       setColumnsConfig: function(config) {
          this._options.columnsConfig = config;
+         if (!this._columnsController) {
+            this._initColumnsController();
+         }
          this._columnsController.setState(this._options.columnsConfig.selectedColumns);
          this._notifyOnPropertyChanged('columnsConfig');
       },
@@ -373,25 +376,30 @@ define('js!SBIS3.CONTROLS.Browser', [
          }
       },
 
+      _initColumnsController: function() {
+         var
+            columnsState;
+         this._columnsController = new ColumnsController();
+         columnsState = this._columnsController.getState();
+         if (!columnsState) {
+            this._columnsController.setState(this._options.columnsConfig.selectedColumns);
+         }
+         this._getView().setColumns(this._columnsController.getColumns(this._options.columnsConfig.columns));
+         this._getView().redraw();
+         this._columnsEditor = this._getColumnsEditor();
+         if (this._columnsEditor) {
+            this._subscribeToColumnsEditor();
+         }
+      },
+
       _bindView: function() {
          var
-            self = this,
-            columnsState;
+            self = this;
          this._view = this._getView();
          this._view.subscribe('onItemActivate', this._onItemActivateHandler);
 
          if (this._options.columnsConfig) {
-            this._columnsController = new ColumnsController();
-            columnsState = this._columnsController.getState();
-            if (!columnsState) {
-               this._columnsController.setState(this._options.columnsConfig.selectedColumns);
-            }
-            this._getView().setColumns(this._columnsController.getColumns(this._options.columnsConfig.columns));
-            this._getView().redraw();
-            this._columnsEditor = this._getColumnsEditor();
-            if (this._columnsEditor) {
-               this._subscribeToColumnsEditor();
-            }
+            this._initColumnsController();
          }
 
          this._hierMode = checkViewType(this._view);
@@ -505,10 +513,16 @@ define('js!SBIS3.CONTROLS.Browser', [
          this._bindFilterHistory();
       },
       _setColumnsEditor: function() {
-         var newEditor = this._getColumnsEditor();
-         this._columnsEditor.destroy();
-         this._columnsEditor = newEditor;
-         this._subscribeToColumnsEditor();
+         var
+            newEditor;
+         if (this._columnsEditor) {
+            this._columnsEditor.destroy();
+         }
+         newEditor = this._getColumnsEditor();
+         if (newEditor) {
+            this._columnsEditor = newEditor;
+            this._subscribeToColumnsEditor();
+         }
       },
 
       _subscribeToColumnsEditor: function() {

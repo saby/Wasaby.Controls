@@ -196,7 +196,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
             var avatar = this.getAvatar(),
                isTouchEvent = (this._jsEvent.type in {"touchmove":true, "touchend":true});
             if (typeof document.elementsFromPoint == 'function' && (
-               this._isAvatarElem(this._jsEvent.target)
+               this._isAncillaryElem(this._jsEvent.target)
                || isTouchEvent
                || constants.browser.firefox
             )) {
@@ -205,7 +205,7 @@ define('js!SBIS3.CONTROLS.DragObject', [
                //Когда курсор быстро двигается он может наезжать на аватар ищем элемент который в него не входит
                var elements = document.elementsFromPoint(this._jsEvent.pageX, this._jsEvent.pageY);
                for (var i=0,len = elements.length; i< len; i++) {
-                  if (!avatar || !this._isAvatarElem(elements[i])) {
+                  if (!avatar || !this._isAncillaryElem(elements[i])) {
                      return $(elements[i]);
                   }
                }
@@ -220,14 +220,14 @@ define('js!SBIS3.CONTROLS.DragObject', [
          return this.getTargetsDomElement();
       },
       /**
-       * Возвращает true если переданный элемент входит в аватар
+       * Возвращает true если переданный элемент входит в аватар или это оверлей
        * @param elem
        * @returns {Boolean}
        * @private
        */
-      _isAvatarElem: function (elem) {
+      _isAncillaryElem: function (elem) {
          var avatar = this.getAvatar();
-         return avatar && (avatar.find(elem).length > 0 || avatar[0] == elem);
+         return $(elem).hasClass('controls-DragNDropMixin-overlay') || avatar && (avatar.find(elem).length > 0 || avatar[0] == elem);
       },
       //region protected
       /**

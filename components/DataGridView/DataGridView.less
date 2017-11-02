@@ -43,7 +43,11 @@
                border-bottom-color: @data-grid-cell-separator-color;
             }
          }
-         .controls-DataGridView__tr:first-child, .controls-editInPlace:first-child + .controls-DataGridView__tr {
+         /* Т.к. редактирование по месту может в DOM'e занимать первые две строки,
+            хотя визуально никак не отображаться, нам надо их обойти и отобразить у реальной строки */
+         .controls-DataGridView__tr:first-child,
+         .controls-editInPlace:first-child + .controls-DataGridView__tr,
+         .controls-editInPlace:nth-child(2) + .controls-DataGridView__tr{
             .controls-DataGridView__td {
                border-top-color: @data-grid-edge-cell-separator-color;
             }
@@ -161,10 +165,6 @@
 }
 
 
-.controls-DataGridView__td__textAlignRight{
-   text-align: right!important;
-}
-
 .controls-DataGridView__table {
    width: 100%;
    position: relative;
@@ -211,12 +211,13 @@
          background-color: @data-grid-partScroll-notScrolledCell-Color;
       }
    }
-   &.controls-DataGridView__scrolledCell {
-      cursor: pointer;
-   }
    &.controls-DataGridView-cell-verticalAlignTop {
       vertical-align: top;
    }
+}
+
+.controls-DataGridView__PartScroll__shown .controls-DataGridView__scrolledCell {
+   cursor: pointer;
 }
 
 .controls-DataGridView__results {
@@ -227,10 +228,9 @@
 }
 
 .controls-DataGridView__results .controls-DataGridView__td{
-   padding-top: 0px;
-   padding-bottom: 0px;
-   height: 24px;
+   height: 22px;
    cursor: default;
+   padding: @data-grid-results-cell-padding;
 }
 
 .controls-DataGridView__tbody, .controls-DataGridView__thead {
@@ -273,7 +273,8 @@
    text-overflow: ellipsis;
 }
 
-.controls-DataGridView__td.controls-DataGridView__td__checkBox {
+.controls-DataGridView__td.controls-DataGridView__td__checkBox,
+.controls-DataGridView__th.controls-DataGridView__td__checkBox {
    width: @data-grid-td-checkbox-width;
    padding: 0;
    /*У колонки с чекбоксом, не должно быть левого и правого бордера, иначе при table-layout: auto;
@@ -319,13 +320,15 @@
 /* Отступы для классов .controls-ListView__padding-XS|S|M|L|XL */
 .generate-padding-class-DGV(@i: 1) when (@i =< length(@controls-view-padding-variants)) {
    @val: extract(@controls-view-padding-variants, @i);
-   .controls-ListView__padding-@{val} {
-      .controls-DataGridView__td, .controls-DataGridView__th {
-         &.controls-DataGridView__firstContentCell {
-            padding-left: ~"@{controls-view-padding-@{val}}";
-         }
-         &:last-child {
-            padding-right: ~"@{controls-view-padding-@{val}}";
+   .controls-DataGridView.controls-ListView__padding-@{val} {
+      .controls-DataGridView__table {
+         .controls-DataGridView__td, .controls-DataGridView__th {
+            &.controls-DataGridView__firstContentCell {
+               padding-left: ~"@{controls-view-padding-@{val}}";
+            }
+            &:last-child {
+               padding-right: ~"@{controls-view-padding-@{val}}";
+            }
          }
       }
    }

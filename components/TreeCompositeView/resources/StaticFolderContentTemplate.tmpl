@@ -1,3 +1,3 @@
-<div class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox"></div>
+<div class="controls-ListView__itemCheckBox js-controls-ListView__itemCheckBox {{_options.showCheckboxes ? ' controls-ListView__itemCheckBox__showAlways'}} {{(!_options.showCheckboxes && !_options.hideCheckboxes) ? ' controls-ListView__itemCheckBox__showByHover'}}"></div>
 <span class="controls-CompositeView__folderIcon icon-32 icon-Folder icon-disabled"></span>
 <div class="controls-CompositeView__tileTitle" style="{{decorators.apply(color, 'color')}}">{{decorators.apply(item.get(displayProperty))|sanitize}}</div>

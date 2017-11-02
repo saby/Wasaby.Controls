@@ -1,9 +1,10 @@
 /*global define, $ws*/
 define('js!SBIS3.CONTROLS.Action.DialogMixin', [
    "Core/core-merge",
+   'Core/Deferred',
    "WS.Data/Utils",
    'Core/IoC'
-], function( cMerge, Utils, IoC){
+], function( cMerge, Deferred, Utils, IoC){
    'use strict';
 
    /**
@@ -65,10 +66,10 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
           * К примеру в реестре задач ключ записи в реестре и ключ редактируемой записи различается, т.к. одна и та же задача может находиться в нескольких различных фазах
           */
          _linkedModelKey: undefined,
-         _isExecuting: false //Открывается ли сейчас панель
+         _isExecuting: false, //Открывается ли сейчас панель
+         _executeDeferred: undefined
       },
       $constructor: function() {
-
          if (this._options.dialogComponent && !this._options.template) {
             Utils.logger.stack(this._moduleName + '::$constructor(): option "dialogComponent" is deprecated and will be removed in 3.8.0', 1);
             this._options.template = this._options.dialogComponent;
@@ -76,10 +77,12 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          this._publish('onAfterShow', 'onBeforeShow');
       },
       _doExecute: function(meta) {
-         if (!this._isExecuting) {
+         if (!this._isExecuting) { //Если завершился предыдущий execute
+            this._executeDeferred = new Deferred();
             this._openComponent(meta);
+            return this._executeDeferred;
          }
-         return false;
+         return (new Deferred).callback();
       },
 
       _openDialog: function(meta) {
@@ -92,9 +95,9 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
 
       _openComponent: function(meta, mode) {
          meta = meta || {};
-         mode = mode || this._options.mode;
+         meta.mode = mode || meta.mode || this._options.mode; //todo в 3.17.300 убрать аргумент mode, его через execute проставить нельзя
          var config = this._getDialogConfig(meta);
-         this._createComponent(config, meta, mode);
+         this._createComponent(config, meta);
       },
 
       _buildComponentConfig: function(meta) {
@@ -102,8 +105,8 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          return cMerge(config,  meta.componentOptions || {});
       },
 
-      _createComponent: function(config, meta, mode) {
-         var componentName = (mode == 'floatArea') ? 'js!SBIS3.CORE.FloatArea' : 'js!SBIS3.CORE.Dialog';
+      _createComponent: function(config, meta) {
+         var componentName = (meta.mode == 'floatArea') ? 'js!SBIS3.CORE.FloatArea' : 'js!SBIS3.CORE.Dialog';
          if (this._isNeedToRedrawDialog()){
             this._resetComponentOptions();
             cMerge(this._dialog._options, config);
@@ -112,7 +115,12 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          else {
             this._isExecuting = true;
             requirejs([componentName], function(Component) {
-               this._dialog = new Component(config);
+               try {
+                  this._dialog = new Component(config);
+               }
+               catch (error) {
+                  this._finishExecuteDeferred(error);
+               }
             }.bind(this));
 
          }
@@ -183,6 +191,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          cMerge(config.handlers, {
             onAfterClose: function (e, result) {
                self._isExecuting = false;
+               self._finishExecuteDeferred();
                self._notifyOnExecuted(meta, result);
                self._dialog = undefined;
             },
@@ -195,6 +204,20 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
             }
          });
          return config;
+      },
+
+      _finishExecuteDeferred: function(error) {
+         if (!this._executeDeferred.isReady()) {
+            if (!error) {
+               //false - т.к. приходится нотифаить событие onExecuted самому, из-за того, что базовый action
+               //не может обработать валидный результат false
+               //Выписал задачу, чтобы мог https://online.sbis.ru/opendoc.html?guid=c7ff3ac1-5884-40ef-bf84-e544d8a41ffa
+               this._executeDeferred.callback(false);
+            }
+            else {
+               this._executeDeferred.errback(error);
+            }
+         }
       },
 
       /**

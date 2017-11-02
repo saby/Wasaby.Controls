@@ -86,6 +86,7 @@ define('js!SBIS3.CONTROLS.ListView',
             tplOptions.selectedKey = cfg.selectedKey;
             tplOptions.selectedKeys = cfg.selectedKeys;
             tplOptions.itemsHover = cfg.itemsHover;
+            tplOptions.alwaysShowCheckboxes = cfg.alwaysShowCheckboxes;
 
             return tplOptions;
          },
@@ -145,6 +146,11 @@ define('js!SBIS3.CONTROLS.ListView',
        *
        *
        */
+
+      var BeginDeleteResult = { // Возможные результаты события "onBeginDelete"
+         CANCEL: 'Cancel', // Отменить удаление записей
+         WITHOUT_RELOAD: 'WithoutReload' //Удалить записи без перезагрузки реестра
+      };
 
       /*TODO CommonHandlers тут в наследовании не нужны*/
       var ListView = CompoundControl.extend([DecorableMixin, ItemsControlMixin, FormWidgetMixin, MultiSelectable, Selectable, DataBindMixin, DragNDropMixin, CommonHandlers], /** @lends SBIS3.CONTROLS.ListView.prototype */ {
@@ -230,7 +236,7 @@ define('js!SBIS3.CONTROLS.ListView',
           */
          /**
           * @event onItemValueChanged Происходит при смене значения в одном из полей редактирования по месту и потере фокуса этим полем.
-          * @deprecated Будет удалено в 3.7.3.100. Временное решение
+          * @deprecated
           * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {Array} difference Массив измененных полей.
           * @param {WS.Data/Entity/Model} model Модель с измененными данными.
@@ -443,6 +449,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _loadId: 0,
             _options: {
                 itemsHover: true,
+                alwaysShowCheckboxes: false,
                _canServerRender: true,
                _buildTplArgs: buildTplArgsLV,
                _getRecordsForRedraw: getRecordsForRedrawLV,
@@ -473,11 +480,10 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                /**
                 * @cfg {String} Устанавливает шаблон отображения каждого элемента коллекции.
+                * @deprecated Используйте {@link SBIS3.CONTROLS.ItemsControlMixin#itemTpl}.
                 * @remark
-                * @deprecated
                 * Шаблон - это пользовательская вёрстка элемента коллекции.
                 * Для доступа к полям элемента коллекции в шаблоне подразумевается использование конструкций шаблонизатора.
-                * Подробнее о шаблонизаторе вы можете прочитать в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/xhtml/template/ Шаблонизация вёрстки компонента}.
                 * <br/>
                 * Шаблон может быть создан в отдельном XHTML-файле, когда вёрстка большая или требуется использовать его в разных компонентах.
                 * Шаблон создают в директории компонента в подпапке resources согласно правилам, описанным в разделе {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/component/file-structure/ Файловая структура компонента}.
@@ -517,44 +523,51 @@ define('js!SBIS3.CONTROLS.ListView',
                 */
                itemTemplate: '',
                /**
-                * @typedef {String} toolbarViewModeVariant
-                * @variant icon Будет отображаться как иконка(требуется обязательно указать опцию icon у операции).
-                * @variant caption Будет отображаться как ссылка(требуется обязательно указать опцию caption у операции).
-                *
                 * @typedef {Array} ItemsActions
-                * @property {String} name Уникальное имя кнопки. Обязательная для конфигурации подопция. Её значение, в том числе, может быть использовано в пользовательских обработчиках для отображения или скрытия набора операций.
-                * @property {String} icon Иконка на кнопке. Необязательная подопция. В качестве значения в опцию передаётся строка, описывающая класс иконки.
-                * Набор классов и список иконок, разрешённых для использования, можно найти <a href="https://wi.sbis.ru/docs/3-8-0/icons/">здесь</a>.
+                * @property {String} name Уникальное имя кнопки.
+                * По имени можно получить экземпляр класса кнопки, что в прикладных задачах может быть использовано, например, для изменения видимости кнопки при выполнении условия.
+                *
+                * @property {String} [icon] Иконка на кнопке. Список иконок можно найти в <a href="https://wi.sbis.ru/docs/js/icons/">этом разделе</a>.
+                *
+                * @property {String} [toolbarViewMode] Внешний вид кнопки. Допустимые значения:
                 * <ul>
-                *    <li>Если кнопка отображается не в выпадающем меню (см. подопцию isMainAction) и установлена подопция icon, то использование подопции caption необязательно.</li>
-                *    <li>Если кнопка отображается в выпадающем меню (см. подопцию isMainAction), то производят конфигурацию подопций icon и caption.</li>
+                *   <li><b>icon</b> - будет отображаться только иконка. Для отображения кнопки установите иконку в опции icon. В этом случае кнопка строится на основе класса контрола {@link SBIS3.CONTROLS.IconButton}.</li>
+                *   <li><b>caption</b> - будет отображаться как текст. Для отображения кнопки установите текст в опции caption. В этом случае кнопка строится на основе класса контрола {@link SBIS3.CONTROLS.Link}</li>
                 * </ul>
-                * @property {toolbarViewModeVariant} toolbarViewMode Вид отображения операции в тулбаре.
-                * @property {String} caption Подпись на кнопке.
+                *
+                * @property {String} [caption] Подпись на кнопке.
+                *
+                * @property {String} [tooltip] Текст всплывающей подсказки.
+                *
+                * @property {Boolean} [isMainAction] С помощью данного признака устанавливает, что кнопка отображается либо на тулбаре, либо в выпадающем списке.
+                * Тулбар появляется при наведении курсора мыши на запись вместе со всеми кнопками, для которых isMainAction=true.
+                * Также на тулбаре расположена кнопка для открытия выпадающегно списка, в котором расположены кнопки isMainAction=false.
+                *
+                * @property {Function} [onActivated] Функция, которая будет выполнена при клике по кнопке.
+                * Внутри функции указатель this возвращает экземпляр класса списка.
+                * Аргументы функции:
                 * <ul>
-                *    <li>Если кнопка отображается не в выпадающем меню (см. подопцию isMainAction) и установлена подопция icon, то использование подопции caption необязательно.</li>
-                *    <li>Если кнопка отображается в выпадающем меню (см. подопцию isMainAction), то производят конфигурацию подопций icon и caption.</li>
+                *    <li>contaner {jQuery} - контейнер визуального отображения записи, для которой отображена кнопка.</li>
+                *    <li>id {String|Number} - идентификатор записи.</li>
+                *    <li>item {WS.Data/Entity/Model} - экземпляр класса записи.</li>
                 * </ul>
-                * @property {String} tooltip Текст всплывающей подсказки.
-                * @property {Boolean} isMainAction Признак, по которому устанавливается отображение кнопки в тулбаре.
-                * @property {Function} onActivated Функция, которая будет выполнена при клике по кнопке. Внутри функции указатель this возвращает экземпляр класса представления данных. Аргументы функции:
+                *
+                * @property {Boolean} [allowChangeEnable] Признак, при котором отображение кнопки зависит от значения опции {@link SBIS3.CORE.Control#enabled}.
+                *
                 * <ul>
-                *    <li>contaner - контейнер визуального отображения записи.</li>
-                *    <li>id - идентификатор записи.</li>
-                *    <li>item - запись (экземпляр класса {@link WS.Data/Entity/Model}).</li>
+                *     <li>true. Кнопка не отображается, когда для списка опция {@link SBIS3.CORE.Control#enabled} установлена в значение false.</li>
+                *     <li>false. Кнопка отображается всегда.</li>
                 * </ul>
-                * @property {Boolean} allowChangeEnable Признак отображения действий, которые доступны при наведении курсора на запись, в зависимости от режима взаимодействия со списком (см. {@link SBIS3.CORE.Control#enabled}).
-                * <ul>
-                *     <li>true. Когда для списка установлено <i>enabled=false</i>, действия отображаться не будут.</li>
-                *     <li>false. Действия доступны всегда.</li>
-                * </ul>
+                *
+                * @property {String} [cssClass] Класс, добавляемый на кнопку.
                 *
                 * @editor icon ImageEditor
                 * @translatable caption tooltip
                 */
                /**
-                * @cfg {ItemsActions[]} Набор действий над элементами, отображающийся в виде иконок при наведении курсора мыши на запись.
+                * @cfg {ItemsActions[]} Кнопки, отображаемые при наведении курсора мыши на запись.
                 * @remark
+                * Создаются на основе контролов {@link SBIS3.CONTROLS.IconButton} и {@link SBIS3.CONTROLS.Link}.
                 * Если опция {@link SBIS3.CORE.Control#enabled enabled} контрола установлена в false, то действия, доступные при наведении курсора мыши на запись, отображаться не будут. Однако с помощью опции {@link SBIS3.CORE.Control#allowChangeEnable allowChangeEnable} можно изменить это поведение.
                 * ![](/allowChangeEnable.png)
                 * Подробнее о настройке таких действий вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/items-action/fast/">Быстрый доступ к операциям по наведению курсора</a>.
@@ -906,9 +919,7 @@ define('js!SBIS3.CONTROLS.ListView',
                dragEntityList: 'dragentity.list',
                /**
                 * @cfg {WS.Data/MoveStrategy/IMoveStrategy} Стратегия перемещения. Класс, который реализует перемещение записей. Подробнее тут {@link WS.Data/MoveStrategy/Base}.
-                * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
-                * @see {@link WS.Data/MoveStrategy/Base}
-                * @see {@link WS.Data/MoveStrategy/IMoveStrategy}
+                * @deprecated Для внедрения собственной логики используйте события {@link onBeginMove} или {@link onEndMove}.
                 */
                moveStrategy: null,
                /**
@@ -1020,6 +1031,15 @@ define('js!SBIS3.CONTROLS.ListView',
             this._initLoadMoreButton();
          },
 
+         setItems: function(items) {
+            //Когда используется навигация по курсорам, надо иницировать контроллер навигации данными переданного рекордсета, чтобы следующий запрос за даныыми отправился с правильными параметрами
+            if (items && this._isCursorNavigation() && this._listNavigation) {
+               this._listNavigation.analyzeResponseParams(items);
+            }
+            ListView.superclass.setItems.apply(this, arguments);
+         },
+
+
          _initVirtualScrolling: function(){
             this._virtualScrollController = new VirtualScrollController({
                view: this,
@@ -1074,7 +1094,9 @@ define('js!SBIS3.CONTROLS.ListView',
                { class: 'controls-ListView__pagerNoAmount', optionName: 'noPagerAmount', value: true, defaultValue: false },
                { class: 'controls-ListView__pagerHideEndButton', optionName: 'hideEndButton', value: true, defaultValue: false },
                { class: 'controls-ListView__orangeMarker', optionName: 'showSelectedMarker', value: true, defaultValue: false },
-               { class: 'controls-ListView__outside-scroll-loader', optionName: 'outsideScroll', value: true, defaultValue: false }
+               { class: 'controls-ListView__outside-scroll-loader', optionName: 'outsideScroll', value: true, defaultValue: false },
+               { class: 'controls-ListView__showCheckboxes', optionName: 'showCheckboxes', value: true, defaultValue: false },
+               { class: 'controls-ListView__hideCheckboxes', optionName: 'hideCheckboxes', value: true, defaultValue: false}
             ];
             function hasClass(fullClass, className) {
                if(typeof fullClass === 'string') {
@@ -1091,22 +1113,10 @@ define('js!SBIS3.CONTROLS.ListView',
             var el;
             for(var i = 0; i < classes.length; i++) {
                el = classes[i];
-               ////Прокинуть правильные опции
-               // if(el.isPagerConfig) {
-               //    if(!opts.pagerConfig[el.optionName]) {
-               //       hasClass(opts.className, el.class) ? opts.pagerConfig[el.optionName] = el.value :
-               //          opts.pagerConfig[el.optionName] = el.defaultValue;
-               //    }
-               // } else {
-               //    if(!opts[el.optionName]) {
-               //       hasClass(opts.className, el.class) ? opts[el.optionName] = el.value :
-               //          opts[el.optionName] = el.defaultValue;
-               //    }
-               // }
-               if (!opts[el.optionName]) {
-                  if (hasClass(className, el.class)) {
-                     opts[el.optionName] = el.value;
-                  } else {
+               if (hasClass(className, el.class)) {
+                  opts[el.optionName] = el.value;
+               } else {
+                  if (!opts[el.optionName]) {
                      opts[el.optionName] = el.defaultValue;
                   }
                }
@@ -2166,7 +2176,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._scrollBinder) {
                var scrollPage, pagesCount, average, commonItemsCount, firstPageElemIndex;
                scrollPage = this._scrollBinder._getScrollPage();
-               pagesCount = this._scrollPager.getPagesCount();
+               pagesCount = this._scrollPager.getPagesCount() || 1;//paging мог ещё не отобразиться и pagesCount будет null
                commonItemsCount = this._getItemsProjection() ? this._getItemsProjection().getCount() : 0;
                average = commonItemsCount / pagesCount;
                firstPageElemIndex = (scrollPage - 1) * average;
@@ -2284,7 +2294,7 @@ define('js!SBIS3.CONTROLS.ListView',
                // b.addCallback(function(){});
                if (this._hasEditInPlace()) {
                   this._getEditInPlace().addCallback(function(editInPlace) {
-                     editInPlace.endEdit(true).addCallback(function() {
+                     editInPlace.commitEdit().addCallback(function() {
                         var
                            handlerRes = handler.apply(self, args);
                         if (handlerRes instanceof Deferred) {
@@ -2431,6 +2441,7 @@ define('js!SBIS3.CONTROLS.ListView',
             //но не проставит все необходимые состояния. В .200 начнём пересоздавать редакторы для каждого редактирования
             //и данный код не понадобится.
             this._destroyEditInPlace();
+            this._headIsChanged = true;
             this._redrawResults();
             ListView.superclass.redraw.apply(this, arguments);
             if (this._options.saveReloadPosition) {
@@ -2542,7 +2553,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _destroyEditInPlace: function() {
             if (this._hasEditInPlace()) {
                this._getEditInPlace().addCallback(function(editInPlace) {  // Перед дестроем нужно обязательно завершить редактирование и отпустить все деферреды.
-                  editInPlace.endEdit();
+                  editInPlace.cancelEdit();
                   editInPlace._destroyEip();
                });
             }
@@ -3642,7 +3653,7 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
 
-            this._loadMoreButton.setCaption('Еще ' + caption);
+            this._loadMoreButton.setCaption(rk('Еще') + ' ' + caption);
             this._loadMoreButton.setVisible(true);
          },
 
@@ -3839,6 +3850,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isCursorNavigation()) {
                this._listNavigation.analyzeResponseParams(list);
             }
+            ListView.superclass._onDataLoad.call(this, list);
          },
 
          _dataLoadedCallback: function () {
@@ -3857,6 +3869,7 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
             this._onMetaDataResultsChange = function(event, data){
+               this._headIsChanged = true;
                this._redrawResults(true);
             }.bind(this);
             this._observeResultsRecord(true);
@@ -3896,15 +3909,17 @@ define('js!SBIS3.CONTROLS.ListView',
                      indicator[0].style.top = '';
                   }
                }
-               this._loadingIndicatorTimer = setTimeout(function(){
-                  ajaxLoader.addClass('controls-AjaxLoader__showIndication');
-               }, INDICATOR_DELAY);
+               this._loadingIndicatorTimer = setTimeout(this._showIndicator.bind(this), INDICATOR_DELAY);
             }
             else {
                clearTimeout(this._loadingIndicatorTimer);
                ajaxLoader.addClass('ws-hidden').removeClass('controls-AjaxLoader__showIndication');
             }
          },
+         _showIndicator: function () {
+            this._getAjaxLoaderContainer().addClass('controls-AjaxLoader__showIndication');
+         },
+
          _toggleEmptyData: function(show) {
             show = show && this._options.emptyHTML;
             this._getEmptyDataContainer().toggleClass('ws-hidden', !show);
@@ -4287,7 +4302,7 @@ define('js!SBIS3.CONTROLS.ListView',
          cancelEdit: function() {
             if (this._hasEditInPlace()) {
                return this._getEditInPlace().addCallback(function(editInPlace) {
-                  var res = editInPlace.endEdit();
+                  var res = editInPlace.cancelEdit();
                   // вызываем _notifyOnSizeChanged, потому что при отмене редактирования изменились размеры
                   this._notifyOnSizeChanged(true);
                   return res;
@@ -4317,7 +4332,7 @@ define('js!SBIS3.CONTROLS.ListView',
                eip = this._getEditInPlace();
             eip.addCallback(function(editInPlace) {
                // При сохранении добавляемой записи через галку в тулбаре необходимо автоматически запускать добавление (естественно, если такой режим включен)
-               return checkAutoAdd && editInPlace.isAdd() && self._isModeAutoAdd() ? editInPlace.editNextTarget(true) : editInPlace.endEdit(true);
+               return checkAutoAdd && editInPlace.isAdd() && self._isModeAutoAdd() ? editInPlace.editNextTarget(true) : editInPlace.commitEdit(true);
             });
             return eip;
          },
@@ -4473,7 +4488,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Перемещает записи через диалог. По умолчанию берет все выделенные записи.
           * @param {Array} idArray Массив перемещаемых записей
-          * @deprecated Используйте SBIS3.CONTROLS.Action.List.InteractiveMove.
+          * @deprecated Используйте {@link SBIS3.CONTROLS.Action.List.InteractiveMove}.
           */
          moveRecordsWithDialog: function(idArray) {
             if (this.isEnabledMove()) {
@@ -4527,7 +4542,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          /**
           * Перемещает выделенные записи.
-          * @deprecated используйте метод move
+          * @deprecated Используйте метод {@link move}.
           * @param {WS.Data/Entity/Model|String} target  К какой записи переместить выделенные. Модель либо ее идентификатор.
           */
          selectedMoveTo: function(target) {
@@ -4557,7 +4572,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Возвращает стратегию перемещения
           * @see WS.Data/MoveStrategy/IMoveStrategy
-          * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
+          * @deprecated Для внедрения собственной логики используйте события {@link onBeginMove} и {@link onEndMove}.
           * @returns {WS.Data/MoveStrategy/IMoveStrategy}
           */
          getMoveStrategy: function() {
@@ -4565,7 +4580,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
          /**
           * Создает стратегию перемещения в зависимости от источника данных
-          * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
+          * @deprecated Для внедрения собственной логики используйте события {@link onBeginMove} и {@link onEndMove}.
           * @returns {WS.Data/MoveStrategy/IMoveStrategy}
           * @private
           */
@@ -4583,7 +4598,7 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Устанавливает стратегию перемещения
           * @see WS.Data/MoveStrategy/IMoveStrategy
-          * @deprecated для внедрения своей логики используйте события onBeginMove, onEndMove
+          * @deprecated Для внедрения собственной логики используйте события {@link onBeginMove} и {@link onEndMove}.
           * @param {WS.Data/MoveStrategy/IMoveStrategy} strategy - стратегия перемещения
           */
          setMoveStrategy: function (moveStrategy) {
@@ -4774,26 +4789,36 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _deleteRecords: function(idArray, beginDeleteResult) {
-            var self = this;
-            if (beginDeleteResult !== false) {
+            var
+               self = this,
+               resultDeferred;
+
+            if (beginDeleteResult === false) {
+               beginDeleteResult = BeginDeleteResult.CANCEL;
+               IoC.resolve('ILogger').log('onBeginDelete', 'Boolean result is deprecated. Use constants ListView.BeginDeleteResult.');
+            }
+
+            if (beginDeleteResult !== BeginDeleteResult.CANCEL) {
                this._toggleIndicator(true);
-               return this._deleteRecordsFromData(idArray).addCallback(function () {
-                  //Если записи удалялись из DataSource, то перезагрузим реест, если из items, то реестр уже в актальном состоянии
-                  if (self.getDataSource()) {
-                     return self._reloadViewAfterDelete(idArray).addCallback(function() {
-                        self._syncSelectedKeys();
+               this._deleteRecordsFromSource(idArray).addCallback(function (result) {
+                  //Если записи удалялись из DataSource, то перезагрузим реест. Если DataSource нет, то удалим записи из items
+                  if (self.getDataSource() && beginDeleteResult !== BeginDeleteResult.WITHOUT_RELOAD) {
+                     resultDeferred = self._reloadViewAfterDelete(idArray).addCallback(function () {
+                        self.removeItemsSelection(idArray);
+                        return result;
                      });
                   } else {
-                     self._syncSelectedKeys();
+                     self._deleteRecordsFromRecordSet(idArray);
+                     self.removeItemsSelection(idArray);
+                     resultDeferred = Deferred.success(result);
                   }
+                  return resultDeferred;
                }).addErrback(function (result) {
-                  InformationPopupManager.showMessageDialog(
-                     {
-                        message: result.message,
-                        opener: self,
-                        status: 'error'
-                     }
-                  );
+                  InformationPopupManager.showMessageDialog({
+                     message: result.message,
+                     opener: self,
+                     status: 'error'
+                  });
                   //Прокидываем ошибку дальше, чтобы она дошла до addBoth и мы смогли отдать её в событие onEndDelete
                   return result;
                }).addBoth(function (result) {
@@ -4803,36 +4828,23 @@ define('js!SBIS3.CONTROLS.ListView',
             }
          },
 
-         _deleteRecordsFromData: function(idArray) {
-            var
-                items = this.getItems(),
-                source = this.getDataSource();
-            if (source) {
-               return source.destroy(idArray);
-            } else {
-               items.setEventRaising(false, true);
-               for (var i = 0; i < idArray.length; i++) {
-                  items.remove(items.getRecordById(idArray[i]));
-               }
-               items.setEventRaising(true, true);
-               return Deferred.success(true);
+         _deleteRecordsFromSource: function(idArray) {
+            var source = this.getDataSource();
+            return source ? source.destroy(idArray) : Deferred.success(true);
+         },
+
+         _deleteRecordsFromRecordSet: function(idArray) {
+            var items = this.getItems();
+            items.setEventRaising(false, true);
+            for (var i = 0; i < idArray.length; i++) {
+               items.remove(items.getRecordById(idArray[i]));
             }
+            items.setEventRaising(true, true);
+            return Deferred.success(true);
          },
 
          _reloadViewAfterDelete: function() {
             return this.reload();
-         },
-
-         _syncSelectedKeys: function() {
-            var
-                self = this,
-                keysForRemove = [];
-            this.getSelectedKeys().forEach(function(key) {
-               if (!self._getItemProjectionByItemId(key)) {
-                  keysForRemove.push(key);
-               }
-            });
-            self.removeItemsSelection(keysForRemove);
          },
 
          _initLoadMoreButton: function() {

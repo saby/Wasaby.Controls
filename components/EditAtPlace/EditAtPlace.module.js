@@ -64,6 +64,10 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
        * @cssModifier controls-EditAtPlace__ellipsis Текстовое поле обрезается троеточием, если не умещается в контейнере
        */
       var EditAtPlace = CompoundControl.extend([PickerMixin, EditAtPlaceMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.EditAtPlace.prototype */{
+         /**
+          * @event onApply Срабатывает при успешном завершении редактирования
+          * @param {Core/EventObject} eventObject Дескриптор события.
+          */
          _dotTplFn: dotTplFn,
          _aliasForContent: 'editorTpl',
          $protected: {
@@ -335,10 +339,11 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
          },
 
          _drawText: function (text) {
+            $('.controls-EditAtPlace__textField', this.getContainer()).toggleClass('controls-EditAtPlace__placeholder', !text);
             if (this._options.editFieldTpl) {
                text = TemplateUtil.prepareTemplate(this._options.editFieldTpl)({text: text});
             } else if (!text) {
-               text = '<span class="controls-EditAtPlace__placeholder">' + escapeHtml(this._options.placeholder) + '</span>';
+               text = escapeHtml(this._options.placeholder);
             } else {
                text = escapeHtml(text);
             }

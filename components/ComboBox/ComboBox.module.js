@@ -61,7 +61,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * @mixes SBIS3.CONTROLS.DataBindMixin
     * @mixes SBIS3.CONTROLS.SearchMixin
     *
-    * @cssModifier controls-ComboBox__ellipsis При нехватке ширины текст в поле ввода оборвётся многоточием.
     * <b>Важно:</b> при добавлении этого класса сломается "Базовая линия".
     *
     * @public
@@ -230,8 +229,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this.subscribe('onSearch', this._onSearch);
             this.subscribe('onReset', this._onResetSearch);
          }
-
-         this._pickerMouseEnter = this._pickerMouseEnterHandler.bind(this);
 
          this._container.click(function (e) {
             var target = $(e.target),
@@ -415,8 +412,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _drawText: function(text) {
          ComboBox.superclass._drawText.apply(this, arguments);
+         var fieldNotEditableContainer = $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0));
          this._drawNotEditablePlaceholder(text);
-         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text || this._options.placeholder || '');
+         fieldNotEditableContainer.text(text || this._options.placeholder || '');
          if (this._options.editable) {
             this._setKeyByText();
          }
@@ -424,8 +422,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          var width = $('.controls-TextBox__field', this.getContainer()).width(),
              isTextOverflow = 0 < width && getTextWidth(this.getText()) > Math.round(width),
              //Если у нас виден инпут, то показываем тень только когда он не в фокусе. иначе в момент ввода появится ненужное затемнение.
-             needShadow = isTextOverflow && (this.isEditable() && !this._inputField.is(':focus') || !this.isEditable());
+             needShadow = isTextOverflow && (!this.isEditable() || !this._inputField.is(':focus'));
          this.getContainer().toggleClass('controls-ComboBox__overflow', needShadow);
+         if (needShadow) {
+            fieldNotEditableContainer[0].setAttribute('title', fieldNotEditableContainer[0].textContent);
+         }
       },
 
       _drawNotEditablePlaceholder: function (text) {
@@ -816,13 +817,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          //не устанавливаем title на мобильных устройствах:
          //во-первых не нужно, во-вторых на ios из-за установки аттрибута не работает клик
          if (!detection.isMobilePlatform) {
-            var itemContainer = $(event.target).closest('.controls-ComboBox__itemRow');
-            if (itemContainer.length) {
-               var itemTextContainer = $('.controls-ComboBox__item', itemContainer)[0],
-                  itemText = itemTextContainer.textContent;
-               if (getTextWidth(itemText) > itemTextContainer.clientWidth) {
-                  itemContainer[0].setAttribute('title', itemText);
-               }
+            var itemText = this.textContent;
+            if (!this.getAttribute('title') && getTextWidth(itemText) > this.clientWidth) {
+               this.setAttribute('title', itemText);
             }
          }
       },
@@ -837,7 +834,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          self._picker.subscribe('onKeyPressed', function (eventObject, event) {
             self._keyboardHover(event);
          });
-         $('.controls-ComboBox__list', this._picker.getContainer()).bind('mouseenter', this._pickerMouseEnter);
+         $('.controls-ComboBox__item', this._picker.getContainer()).bind('mouseenter', this._pickerMouseEnterHandler);
          TextBoxUtils.setEqualPickerWidth(this._picker);
       },
 
@@ -872,7 +869,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       destroy: function() {
          if (this._picker) {
-            $('.controls-ComboBox__list', this._picker.getContainer()).unbind('mouseenter', this._pickerMouseEnter);
+            $('.controls-ComboBox__item', this._picker.getContainer()).unbind('mouseenter', this._pickerMouseEnterHandler);
          }
          ComboBox.superclass.destroy.apply(this, arguments);
       },
