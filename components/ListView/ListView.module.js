@@ -3822,6 +3822,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isCursorNavigation()) {
                this._listNavigation.analyzeResponseParams(list);
             }
+            ListView.superclass._onDataLoad.call(this, list);
          },
 
          _dataLoadedCallback: function () {
