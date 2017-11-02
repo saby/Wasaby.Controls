@@ -48,9 +48,6 @@ define('js!Controls/List/Paging/DigitButtons', [
                   }
                }
 
-
-
-
                for (var i = 1; i <= digitsCount; i++) {
                   if (i == 1) {
                      drawedDigits.push(i);
