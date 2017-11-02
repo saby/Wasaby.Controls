@@ -1,17 +1,14 @@
 define('js!WSControls/Lists/TreeView2', [
-      'js!WSControls/Lists/ListView2',
-      'js!WSControls/Lists/resources/utils/ItemsUtil',
-      'js!WSControls/Lists/resources/utils/TreeItemsUtil',
-      'js!WSControls/Lists/resources/utils/DataSourceUtil',
+      'js!WSControls/Lists/_old/ListView2',
       'Core/helpers/Object/isPlainObject',
       'Core/Deferred',
       'Core/helpers/collection-helpers',
       'Core/core-clone',
       'WS.Data/Relation/Hierarchy',
       'Core/helpers/functional-helpers',
-      'tmpl!WSControls/Lists/resources/TreeView/ItemTemplate',
+      'tmpl!WSControls/Lists/_old/tmpl/TreeView/ItemTemplate',
       'css!SBIS3.CONTROLS.TreeView'
-   ], function(ListView, ItemsUtil, TreeItemsUtil, DataSourceUtil, isPlainObject, Deferred, collectionHelpers, coreClone, HierarchyRelation, FunctionalHelpers, ItemTemplate) {
+   ], function(ListView, isPlainObject, Deferred, collectionHelpers, coreClone, HierarchyRelation, FunctionalHelpers, ItemTemplate) {
 
    var TreeView = ListView.extend({
       _defaultItemTemplate: ItemTemplate,

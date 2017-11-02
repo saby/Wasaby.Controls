@@ -1,7 +1,6 @@
 define('js!WSControls/Lists/Selector', [
-   'js!WSControls/Lists/ItemsControl',
-   'js!WSControls/Lists/resources/utils/ItemsUtil'
-], function(ItemsControl, ItemsUtil) {
+   'js!WSControls/Lists/_old/ItemsControl'
+], function(ItemsControl) {
    var Selector;
    Selector = ItemsControl.extend({
       _controlName: 'WSControls/Lists/Selector',

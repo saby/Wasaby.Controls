@@ -1,13 +1,12 @@
 define('js!WSControls/Lists/ListView2',
    [
-      'js!WSControls/Lists/MultiSelector',
-      'js!WSControls/Lists/VirtualScroll',
-      'tmpl!WSControls/Lists/ListView2',
-      'js!WSControls/Lists/Controllers/PageNavigation',
-      'css!WSControls/Lists/ListView'
+      'js!WSControls/Lists/_old/MultiSelector',
+      'js!WSControls/Lists/_old/VirtualScroll',
+      'tmpl!WSControls/Lists/_old/ListView2',
+      'css!WSControls/Lists/_old/ListView'
    ],
 
-   function(MultiSelector, VirtualScroll, template, PageNavigation) {
+   function(MultiSelector, VirtualScroll, template) {
 
       var INDICATOR_DELAY = 2000;
 
