@@ -1031,6 +1031,15 @@ define('js!SBIS3.CONTROLS.ListView',
             this._initLoadMoreButton();
          },
 
+         setItems: function(items) {
+            //Когда используется навигация по курсорам, надо иницировать контроллер навигации данными переданного рекордсета, чтобы следующий запрос за даныыми отправился с правильными параметрами
+            if (items && this._isCursorNavigation() && this._listNavigation) {
+               this._listNavigation.analyzeResponseParams(items);
+            }
+            ListView.superclass.setItems.apply(this, arguments);
+         },
+
+
          _initVirtualScrolling: function(){
             this._virtualScrollController = new VirtualScrollController({
                view: this,
