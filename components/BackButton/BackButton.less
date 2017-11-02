@@ -48,13 +48,13 @@
       }
    }
    &.controls-BackButton__empty {
-      &:before {
-         content: '';
-         width: 0;
-         margin: 0;
-      }
       .controls-BackButton__caption {
          padding-left: 0;
+         &:before {
+            content: '';
+            width: 0;
+            margin: 0;
+         }
       }
    }
 
@@ -102,11 +102,11 @@
    .controls-BackButton {
       .controls-BackButton__caption {
          margin-left: -4px;
-      }
-      &:before {
-         display: inline-block;
-         vertical-align: top;
-         float: none;
+         &:before {
+            display: inline-block;
+            vertical-align: top;
+            float: none;
+         }
       }
    }
 }
@@ -147,9 +147,9 @@
       &:hover {
          .controls-BackButton__caption {
             color: @primary-color;
-         }
-         &:before {
-            color: @primary-color;
+            &:before {
+               color: @primary-color;
+            }
          }
       }
    }
