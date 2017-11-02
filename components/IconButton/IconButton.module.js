@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
     * @cssModifier controls-IconButton__filter-left Устанавливает внешний вид для кнопки открытия/закрытия фильтров слева.
     * @cssModifier controls-IconButton__filter-right Устанавливает внешний вид  для кнопки открытия/закрытия фильтров справа.
     *
-    * @category Buttons
+    * @category Button
     * @control
     * @public
     * @initial
@@ -89,7 +89,11 @@ define('js!SBIS3.CONTROLS.IconButton', ['js!SBIS3.CONTROLS.Button',
          if (!this.isEnabled()) {
             return;
          }
-         this._onClickHandler(e);
+         
+         //Временная поддержка clickThrottle в кнопке, в VDom'e это уже будет зашито
+         if (!this._options.clickThrottle || (this._options.clickThrottle && (e.originalEvent.detail <= 1 || cConstants.browser.isIE))) {
+            this._onClickHandler(e);
+         }
       },
 
       _containerReady:function(container){

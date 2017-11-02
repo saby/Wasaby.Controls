@@ -362,7 +362,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
          };
    /**
-    * Классов контрола "Список с колонками". Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">Настройка списков</a>.
+    * Класс контрола "Список с колонками".
+    * <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">Спецификация</a>.
+    * <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">Документация</a>.
     *
     * @class SBIS3.CONTROLS.DataGridView
     * @extends SBIS3.CONTROLS.ListView
@@ -785,19 +787,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
    
       _notifyOnItemClick: function(id, data, target, e) {
-         var clickedCell = {},
-             cell;
-         
          /* Для DataGridView дополняем событие клика информацией о колонке и ячейке */
-         if(this._hoveredColumn.columnIndex  !== null) {
-            cell = this._getCellContainerByElement(e.target);
-            clickedCell = {
-               cellContainer: cell,
-               //При клике на touch устройствах не будет hoveredColumn, поэтому ищем по элементу, по котрому кликнули
-               cellIndex: this._hoveredColumn.columnIndex || cell.index()
-            };
-         }
-         
+         var cell = this._getCellContainerByElement(e.target),
+             clickedCell = {
+                cellContainer: cell,
+                //При клике на touch устройствах не будет hoveredColumn, поэтому ищем по элементу, по котрому кликнули
+                cellIndex: this._hoveredColumn.columnIndex || cell.index()
+             };
+      
          return this._notify('onItemClick', id, data, target, e, clickedCell);
       },
 
@@ -1398,7 +1395,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
          scrollContainer[0].style.width = containerWidth - correctMargin + 'px';
 
          /* Найдём соотношение, для того чтобы правильно двигать скроллируемый контент относительно ползунка */
-         this._partScrollRatio = (this._getItemsContainer()[0].offsetWidth - containerWidth) / (containerWidth - correctMargin - thumbWidth - arrowsWidth);
+         // !В edge ширина tbody === 0, если нет строк таблицы, надо брать ширину у table или thead
+         this._partScrollRatio = (this._getTableContainer()[0].offsetWidth - containerWidth) / (containerWidth - correctMargin - thumbWidth - arrowsWidth);
          this._stopMovingCords = {
             right: scrollContainer[0].offsetWidth - thumbWidth - arrowsWidth,
             left: correctMargin
@@ -1594,7 +1592,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
          }
       },
       _redrawResults: function(revive) {
-         if (this._options.resultsPosition !== 'none') {
+         //Если данные не изменились, то не нужно впустую перерисовывать итоги
+         if (this._headIsChanged && this._options.resultsPosition !== 'none') {
             this._redrawTheadAndTfoot();
 
             if (revive) {

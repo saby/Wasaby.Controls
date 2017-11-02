@@ -6,17 +6,19 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
    "js!SBIS3.CONTROLS.Action.DialogMixin",
    "WS.Data/Source/SbisService",
    "WS.Data/Entity/Model",
+   "Core/core-merge",
+   "Core/core-clone",
    "Core/core-instance",
    "WS.Data/Adapter/Sbis"
 ],
-    function ( Deferred,ActionBase, ListMixin, DialogMixin, SbisService, Model, cInstance) {
+    function ( Deferred,ActionBase, ListMixin, DialogMixin, SbisService, Model, cMerge, cClone, cInstance) {
         'use strict';
         /**
-         * Класс суммирования полей в списке
+         * Класс, описывающий действие суммирования полей в списке.
          * @class SBIS3.CONTROLS.Action.List.Sum
          * @public
          * @extends SBIS3.CONTROLS.Action.Action
-         * @author Крайнов Дмитрий Олегович
+         * @author Сухоручкин Андрей Сергеевич
          *
          * @mixes SBIS3.CONTROLS.Action.List.ListMixin
          * @mixes SBIS3.CONTROLS.Action.DialogMixin
@@ -43,6 +45,9 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
         var Sum = ActionBase.extend([ListMixin, DialogMixin], /** @lends SBIS3.CONTROLS.Action.List.Sum.prototype */{
             $protected: {
                 _options: {
+                    /**
+                     * @cfg {String} Шаблон диалога сохранения .
+                     */
                     template : 'js!SBIS3.CONTROLS.SumDialogTemplate',
                     /**
                      * @cfg {Object} Поля для суммирования
@@ -74,7 +79,18 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
                      * @see setFields
                      * @see getFields
                      */
-                    fields: {}
+                    fields: {},
+                   /**
+                    * @cfg {Object} Фильтр, применяемый для выборки суммируемых элементов.
+                    * @example
+                    * <pre>
+                    * var filter = {};
+                    * // Свойство ВидДерева устанавливают типы записей, по которым производится суммирование
+                    * filter['ВидДерева'] = 'Только узлы'
+                    * filter['ВидДерева'] = 'Только листья'
+                    * </pre>
+                    */
+                    filter: {}
                 }
             },
             _doExecute: function () {
@@ -113,6 +129,7 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
             _sum: function() {
                 var
                     source,
+                    filter,
                     object = this.getLinkedObject(),
                     selectedItems = object.getSelectedItems(),
                     isSelected = selectedItems && selectedItems.getCount();
@@ -121,37 +138,55 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
                     //из-за того, что могут выделить 1000 записей и нам эти 1000 записей придётся отправить на бл.
                     //1000 записей весят примерно 8 мегабайт. Получается не рационально перегонять 8 мб ради лёгкой операции,ъ
                     //которая на клиенте выполняется меньше секунды.
-                    return this._sumField(selectedItems, object.getItems().getFormat());
+                    return this._sumField(selectedItems);
                 } else {
                     source = this.getDataSource();
+                    filter = cMerge(cClone(object.getFilter()), this._options.filter);
                     return this._getSumSource().call('ПоМетоду', {
                         'Поля': Object.keys(this._options.fields),
                         'ИмяМетода': source.getEndpoint().contract + '.' + source.getBinding().query,
-                        'Фильтр': Model.fromObject(object.getFilter(), 'adapter.sbis')
+                        'Фильтр': Model.fromObject(filter, 'adapter.sbis')
                     });
                 }
             },
 
-            _sumField: function(items, format) {
+            _sumField: function(items) {
                 var
-                    i, resultFields = {},
+                    i,
+                    itemsCount = 0,
+                    resultFields = {},
                     fields = Object.keys(this._options.fields),
+                    linkedObject = this.getLinkedObject(),
+                    format = linkedObject.getItems().getFormat(),
                     resultRecord = new Model({
                         adapter: 'adapter.sbis'
-                    });
+                    }),
+                    nodeProperty = cInstance.instanceOfMixin(linkedObject, 'SBIS3.CONTROLS.TreeMixin') ? linkedObject.getNodeProperty() : undefined;
                 for (i = 0; i < fields.length; i++) {
                     resultFields[fields[i]] = 0;
                 }
                 items.each(function(model) {
-                    for (var i = 0; i < fields.length; i++) {
-                        resultFields[fields[i]] += model.get(fields[i]);
+                    if (this._needToSum(model, nodeProperty)) {
+                       for (i = 0; i < fields.length; i++) {
+                          resultFields[fields[i]] += model.get(fields[i]);
+                       }
+                       itemsCount++;
                     }
                 }, this);
-                resultRecord.addField({name: rk('Число записей'), type: 'integer'}, 0, items.getCount());
+                resultRecord.addField({name: rk('Число записей'), type: 'integer'}, 0, itemsCount);
                 for (i = 0; i < fields.length; i++) {
                     resultRecord.addField(format.at(format.getFieldIndex(fields[i])), i + 1, resultFields[fields[i]]);
                 }
                 return Deferred.success(resultRecord);
+            },
+
+            //Методя является костылём, для проверки необходимости суммирования определённого типа записей НА КЛИЕНТЕ.
+            //Когда переведём суммирование полностью на бизнес логику, этот метод не понадобится, как и суммирование на клиенте.
+            _needToSum: function(model, nodeProperty) {
+                var treeState = this._options.filter['ВидДерева'];
+                return !treeState ||
+                       (treeState === 'Только узлы' && model.get(nodeProperty) !== null) ||
+                       (treeState === 'Только листья' && model.get(nodeProperty) === null);
             },
 
             _getSumSource: function() {

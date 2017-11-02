@@ -754,9 +754,13 @@
       webkit = /WebKit/.test(userAgent);
       ie = !webkit && !opera && (/MSIE/gi).test(userAgent) && (/Explorer/gi).test(nav.appName);
       ie = ie && /MSIE (\w+)\./.exec(userAgent)[1];
-      ie11 = userAgent.indexOf('Trident/') != -1 && (userAgent.indexOf('rv:') != -1 || nav.appName.indexOf('Netscape') != -1) ? 11 : false;
+      // Строка userAgent для MSIE11 может и не содержать фрагмента rv:11.0, опираться на него нельзя. Например:
+      //"Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E; rv:11.0) like Gecko"
+      //"Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.1; WOW64; Trident/7.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; .NET4.0C; .NET4.0E)"
+      //См. "Compatibility View" в https://blogs.msdn.microsoft.com/ieinternals/2013/09/21/internet-explorer-11s-many-user-agent-strings/
+      ie11 = /*userAgent.indexOf('Trident/') != -1 && (userAgent.indexOf('rv:') != -1 || nav.appName.indexOf('Netscape') != -1) ? 11 : false*/ +(userAgent.match(/Trident\/([0-9]+)\.[0-9]+/) || [])[1] + 4 || false;
       ie12 = (userAgent.indexOf('Edge/') != -1 && !ie && !ie11) ? 12 : false;
-      ie = ie || ie11 || ie12;
+      ie = /*ie || ie11 || ie12*/ie12 || ie11 || ie;// Может быть и ie, и ieNN не пусты одновременно - нужно идти от большего к меньшему
       gecko = !webkit && !ie11 && /Gecko/.test(userAgent);
       mac = userAgent.indexOf('Mac') != -1;
       iDevice = /(iPad|iPhone)/.test(userAgent);
@@ -9981,7 +9985,7 @@
     * @private
     * @class tinymce.dom.NodeType
     */
-   define("tinymce/dom/NodeType", [], function() {
+   define("tinymce/dom/NodeType", ["tinymce/Env"], function (Env) {
       function isNodeType(type) {
          return function(node) {
             return !!node && node.nodeType == type;
@@ -10048,7 +10052,9 @@
       function hasContentEditableState(value) {
          return function(node) {
             if (isElement(node)) {
-               if (node.contentEditable === value) {
+               // В MSIE элементы как правило имеют contentEditable === 'inherit' и сравнивать с 'true' или 'false' бессмысленно,
+               // поэтому определим нужным элементам значения по умолчанию
+               if (node.contentEditable === value || (Env.ie && node.contentEditable === 'inherit' && {'IMG':'false'}[node.nodeName] === value)) {
                   return true;
                }
 
@@ -17461,7 +17467,16 @@
                      children = node.childNodes;
 
                      if (point[i] > children.length - 1) {
-                        return;
+                        if (i == 1 && point[i] == 0) {
+                           // Если это последний сегмент пути, и он равен 0, то это может быть следствием того, что исходный рэнж
+                           // содержал служебный текстовый нод, который теперь отсутствует, поэтому будем считать нод найденым
+                           // 1174427474 https://online.sbis.ru/opendoc.html?guid=f0a9f6b6-93e4-43f1-92f9-b33bd23eac5e
+                           break;
+                        }
+                        else {
+                           // Иначе это просто корявый путь - не станем его обрабатывать
+                           return;
+                        }
                      }
 
                      node = children[point[i]];
@@ -24193,10 +24208,29 @@
             if (merge) {
                var root = editor.getBody(), elementUtils = new ElementUtils(dom);
 
-               Tools.each(dom.select('*[data-mce-fragment]'), function(node) {
-                  for (var testNode = node.parentNode; testNode && testNode != root; testNode = testNode.parentNode) {
-                     if (textInlineElements[node.nodeName.toLowerCase()] && elementUtils.compare(testNode, node)) {
-                        dom.remove(node, true);
+               Tools.each(dom.select('*[data-mce-fragment]'), function (node) {
+                  if (textInlineElements[node.nodeName.toLowerCase()]) {
+                     for (var ancestor = node.parentNode; ancestor && ancestor != root; ancestor = ancestor.parentNode) {
+                        if (elementUtils.compare(ancestor, node)) {
+                           // Найден выщестоящий элемент, имеющий такой же тип, атрибуты и инлайн-стили, что и проверяемый node. Значит, можно
+                           // удалить node, пересадив его содержимое на его место. Но ТОЛЬКО ЕСЛИ между ancestor и node нет элементов,
+                           // переопределяющих их общий стиль иначе
+                           var hasMiddle;
+                           var style = dom.parseStyle(dom.getAttrib(node, 'style'));
+                           for (var n = node.parentNode; n && n != ancestor; n = n.parentNode) {
+                              var s = dom.parseStyle(dom.getAttrib(n, 'style'));
+                              for (var p in style) {
+                                 if (p in s && s[p] !== style[p]) {
+                                    hasMiddle = true;
+                                    break;
+                                 }
+                              }
+                           }
+                           if (!hasMiddle) {
+                              dom.remove(node, true);
+                              break;
+                           }
+                        }
                      }
                   }
                });
@@ -34595,7 +34629,11 @@
           * editors. This uses a special data:text/mce-internal URL to pass data when drag/drop between editors.
           */
          function ieInternalDragAndDrop() {
+            // Для MSIE тоже вполне доступен drag-n-drop, подключим его
+            // 1174460187 https://online.sbis.ru/opendoc.html?guid=4363b1d3-4bf7-4ef1-b743-4959f5550a84
+            var dragStartRng;
             editor.on('dragstart', function(e) {
+               dragStartRng = selection.getRng();
                setMceInternalContent(e);
             });
 
@@ -34603,10 +34641,17 @@
                if (!isDefaultPrevented(e)) {
                   var internalContent = getMceInternalContent(e);
 
-                  if (internalContent && internalContent.id != editor.id) {
+                  if (internalContent /*&& internalContent.id != editor.id*/) {
                      e.preventDefault();
 
-                     var rng = RangeUtils.getCaretRangeFromPoint(e.x, e.y, editor.getDoc());
+                     var rng = RangeUtils.getCaretRangeFromPoint(e.clientX, e.clientY, editor.getDoc());
+
+                     if (internalContent.id == editor.id && dragStartRng) {
+                        selection.setRng(dragStartRng);
+                        editor.undoManager.transact(dragStartRng.deleteContents.bind(dragStartRng));
+                     }
+                     dragStartRng = null;
+
                      selection.setRng(rng);
                      insertClipboardContents(internalContent.html);
                   }

@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
     *
     * @control
     * @public
-    * @category Inputs
+    * @category Input
     * @initial
     * <component data-component='SBIS3.CONTROLS.NumberTextBox'>
     *     <option name="text">0</option>
@@ -448,7 +448,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
             this._setText('0' + this._getInputValue());
             this._setCaretPosition(1);
          }
-         if (this._CTRL_KEY){
+         if (this._CTRL_KEY || (this._SHIFT_KEY && keyCode === 45) /* insert */){
             return true;
          }
          event.preventDefault();

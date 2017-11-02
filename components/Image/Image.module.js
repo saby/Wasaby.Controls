@@ -82,12 +82,6 @@ define('js!SBIS3.CONTROLS.Image',
              * @event onEndLoad Происходит после загрузки изображения в компоненте.
              * @param {Core/EventObject} eventObject Дескриптор события.
              * @param {Object} response Ответ бизнес-логики.
-             * @example
-             * <pre>
-             *    Image.subscribe('onEndLoad', function(eventObject, response) {
-             *       $ws.helpers.alert('Изображение загружено.');
-             *    });
-             * </pre>
              */
             /**
              * @event onErrorLoad Происходит в случае ошибки при загрузке изображения.
@@ -95,57 +89,23 @@ define('js!SBIS3.CONTROLS.Image',
              * Ошибка может происходит, если сервер не отвечает либо переданы неверные параметры при вызове метода бизнес-логики.
              * @param {Core/EventObject} eventObject Дескриптор события.
              * @param {Object} error Описание ошибки, которое получено от бизнес-логики.
-             * @example
-             * <pre>
-             *    Image.subscribe('onErrorLoad', function(eventObject, error) {
-             *       $ws.helpers.alert('Произошла ошибка при загрузке изображения.');
-             *    });
-             * </pre>
              */
             /**
              * @event onChangeImage Происходит при смене изображения.
              * @param {Core/EventObject} eventObject Дескриптор события.
              * @param {String} image Адрес изображения.
-             * @example
-             * <pre>
-             *    Image.subscribe('onChangeImage', function(eventObject, image) {
-             *       $ws.helpers.alert('Изображение обновлено на ' + image);
-             *    });
-             * </pre>
              */
              /**
              * @event onDataLoaded Происходит при загрузке изображения в компонент.
              * @param {Core/EventObject} eventObject Дескриптор события.
              * @param {String} imageUrl Адрес изображения.
              * @param {Boolean} firstload Первый ли раз прошла загрузка: false - первый, true- не первый.
-             * @example
-             * <pre>
-             *    Image.subscribe('onDataLoaded', function(eventObject, image) {
-             *       $ws.helpers.alert('Изображение обновлено на ' + image);
-             *    });
-             * </pre>
              */
              /**
              * @event onResetImage Происходит при сбросе изображения.
              * @remark
              * Происходит при вызове команды {@link resetImage}.
              * @param {Core/EventObject} eventObject Дескриптор события.
-             * @example
-             * <pre>
-             *    Image.subscribe('onResetImage', function(event) {
-             *       var
-             *          deferred = new Deferred();
-             *       $ws.core.attachInstance('SBIS3.CORE.DialogConfirm', {
-             *          message: 'Действительно удалить изображение?',
-             *          handlers: {
-             *             onConfirm: function(event, result) {
-             *                deferred.callback(result);
-             *             }
-             *          }
-             *       });
-             *       event.setResult(deferred);
-             *    });
-             * </pre>
              * @see resetImage
              */
             /**
@@ -264,7 +224,7 @@ define('js!SBIS3.CONTROLS.Image',
                    * @variant stretch Изображение вытягивается или сужается, чтобы в точности соответствовать размеру контейнера.
                    * @example
                    * <pre>
-                   *     <option name="stretch">true</option>
+                   *     <option name="sizeMode" type="string">stretch</option>
                    * </pre>
                    * @see setSizeMode
                    * @see getSizeMode

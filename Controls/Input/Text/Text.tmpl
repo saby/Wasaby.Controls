@@ -1,0 +1,13 @@
+<ws:Controls.Input.resources.TextRender.TextRender
+   type="text"
+   value="{{_value}}"
+   enabled="{{isEnabled()}}"
+   tagStyle="{{_options.tagStyle}}"
+   placeholder="{{_options.placeholder}}"
+   selectOnClick="{{_options.selectOnClick}}"
+   getInputData="{{_getInputData}}"
+   event:onChangeValue="_inputHandler()"
+   event:onTagHover="_notifyHandler('onTagHover')"
+   event:onTagClick="_notifyHandler('onTagClick')"
+   event:onInputFinish="_notifyHandler('onInputFinish')"
+/>

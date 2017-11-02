@@ -182,7 +182,9 @@ define('js!SBIS3.CONTROLS.MergeDialogTemplate', [
                 data.getAll().each(function(rec) {
                     id = rec.get(idProperty);
                     record = items.getRecordById(id);
-                    if (id !== mergeTo) {
+                    //Приводим типы к одному формату, т.к. прикладной метод бл, может вернуть идентификатор записи как
+                    //строкой так и числом.
+                    if (String(id) !== String(mergeTo)) {
                         isAvailable = rec.get(AVAILABLE_FIELD_NAME);
                         showMergeButton = showMergeButton || isAvailable;
                     }

@@ -151,7 +151,8 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
              * </pre>
              * @see SBIS3.CORE.Control#setActive
              */
-            focusOnActivatedOnMobiles: false
+            focusOnActivatedOnMobiles: false,
+            textAlign: 'left'
          }
       },
 
@@ -261,8 +262,8 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
          IoC.resolve('ILogger').log('setValue()', 'setValue is deprecated. Use setText()');
          this.setText(txt);
       },
-      setEnabled: function(enabled) {
-         TextBoxBase.superclass.setEnabled.apply(this, arguments);
+      _setEnabled: function(enabled) {
+         TextBoxBase.superclass._setEnabled.apply(this, arguments);
          this._toggleState();
       },
       clearMark: function() {
@@ -281,14 +282,16 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
          return this._container;
       },
       _toggleState: function() {
-         var
-              container = this._getStateToggleContainer()[0],
-              active = this.isActive(),
-              enabled = this.isEnabled(),
-              marked = this.isMarked(),
-              stateName = marked ? 'marked' : !enabled ? 'disabled' : active ? 'active' : 'default';
+         var container = this._getStateToggleContainer()[0];
          container.className = container.className.replace(/(^|\s)controls-TextBox__state__\S+/gi, '');
-         this._getStateToggleContainer().addClass('controls-TextBox__state__' + stateName);
+         this._getStateToggleContainer().addClass(this._getToggleState());
+      },
+      _getToggleState: function() {
+         var
+            active = this.isActive(),
+            enabled = this.isEnabled(),
+            marked = this.isMarked();
+         return 'controls-TextBox__state__' + (marked ? 'marked' : !enabled ? 'disabled' : active ? 'active' : 'default');
       }
    });
 

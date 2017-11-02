@@ -1,144 +1,150 @@
+// fixed
 .controls-FieldLink {
    position: relative;
    white-space: nowrap;
-   &__linksWrapper {
-      min-width: 0;
-      overflow:hidden;
-      height: 100%;
-      display: inline-block;
+}
+.controls-FieldLink__linksWrapper {
+   min-width: 0;
+   overflow: hidden;
+   height: 100%;
+   display: inline-block;
+}
+.controls-FieldLink__item {
+   .flex-shrink(0);
+   .inline-flexbox();
+   .align-items(center);
+   .box-sizing();
+   cursor: default;
+   position: relative;
+   height: 100%;
+   padding: 0 0 0 @default-padding;
+}
+.controls-FieldLink__fieldWrapper {
+   .inline-flexbox();
+   .flex-shrink(1);
+   position:relative;
+   height: 100%;
+   width: 100%;
+   text-decoration: inherit;
+   margin-right: 0;
+}
+.controls-FieldLink__itemsCollection {
+   .inline-flexbox();
+   width: 100%;
+   height: 100%;
+}
+// todo: flex-end не работает с переполнением
+// https://codepen.io/anon/pen/JrGQQx
+.controls-FieldLink__itemsCollection-reverseOrder {
+   .flex-direction(row-reverse);
+   .justify-content();
+}
+.controls-FieldLink__beforeFieldWrapper {
+   .flex-grow(1);
+   .flex-direction(row-reverse);
+   max-width: ~'calc(100% - '@fieldLink-linkItem-cross-width~')';
+   overflow: hidden;
+}
+.controls-FieldLink__afterFieldWrapper {
+   .align-items(center);
+   width: auto;
+}
+.controls-FieldLink__button {
+   .icon-size-without-important(@fieldLink-icon-size);
+   cursor: pointer;
+}
+.controls-FieldLink__showSelector-button {
+   color: @fieldLink-showSelector-color;
+   &:hover {
+      color: @fieldLink-showSelector-color-hover;
    }
-   &__item {
-      .flex-shrink(0);
-      .inline-flexbox();
-      .align-items(center);
-      .box-sizing();
-      cursor: default;
-      position: relative;
-      height: 100%;
-      padding: 0 0 0 @default-padding;
-      &-caption {
-         .text-overflow();
-         .flex-shrink();
-         display: inline-block;
-         font-size: @default-text-size;
-      }
-   }
-   &__showSelector.controls-IconButton { // Перебиваем стили .controls-IconButton
-      color: @fieldLink-showSelector-color;
-      padding: @fieldLink-afterField-padding;
-      &:hover {
-         color: @fieldLink-showSelector-color-hover;
-      }
-   }
-   &__itemsEdited {//modifier
-      .controls-FieldLink__item-caption:hover {
-         text-decoration: underline;
-         cursor: pointer;
-      }
-   }
-   &__itemsBold {//modifier
-      .controls-FieldLink__item-caption {
-         font-weight: bold;
-      }
-   }
-   &__hideSelector {//modifier
-      .controls-FieldLink__showSelector {
-         display: none;
-      }
-   }
-   &__big-fontSize {//modifier
-      .controls-FieldLink__item-caption {
-         font-size:@fieldLink-big-fontSize;
-		   font-weight: bold;
-			color: @fieldLink-big-fontSize-color;
-			height: @fieldLink-big-height;
-      }
-   }
-   &__dropAllLinks.controls-IconButton { // Перебиваем стили .controls-IconButton
-      color: @fieldLink-link-color;
-      padding: @fieldLink-afterField-padding;
-      display: none;
-   }
-   &__Link.ws-enabled {
-       .controls-Button__text {
-          text-decoration: underline;
-       }
-       &.controls-Link { //перебиваем стили controls-link
-         color: @fieldLink-link-color;
-         &:hover {
-           color: @fieldLink-link-color-hover;
-         }
-       }
-   }
-   &__showAllLinks.controls-Link { //перебиваем стили controls-link
-      position: relative;
-      line-height: @text-box-line-height;
-      padding-left: @default-padding;
-      display: none;
-      .flex-shrink(0);
-   }
-   &__fieldWrapper {
-	   .inline-flexbox();
-	   .flex-shrink(1);
-	   position:relative;
-	   height: 100%;
-	   width: 100%;
-	   text-decoration: inherit;
-	   margin-right: 0;
-	}
-	&__itemsCollection {
-		.justify-content(flex-end);
-      display: inline-flex;
-      width: 100%;
-      height: 100%;
-   }
-   &__item-cross {
-      cursor: pointer;
-      z-index: 1;
-   }
-   &__beforeFieldWrapper {
-      .flex-grow(1);
-      .flex-direction(row-reverse);
-      max-width: ~'calc(100% - '@fieldLink-linkItem-cross-width~')';
-      overflow: hidden;
-   }
-   &__afterFieldWrapper {
-      .align-items(center);
-      width: auto;
-   }
-   &__picker {
+}
+.controls-FieldLink__picker {
    max-height: @fieldLink-picker-max-height;
    min-height: @fieldLink-picker-min-height;
    border: @fieldLink-border @gray-ccc-color;
+   box-sizing: border-box;
    margin-top: 0;
    overflow: auto;
    padding: @fieldLink-linkContainer-padding;
    border-top: none;
    .flexbox();
    .flex-wrap(wrap);
+}
+.controls-FieldLink__showAllLinks {
+   position: relative;
+   line-height: @text-box-line-height;
+   padding-left: @default-padding;
+   cursor: pointer;
+   color: @link-text-color;
+   .flex-shrink(0);
+   &:hover {
+      text-decoration: underline;
+      color: @link-hover-text-color;
+   }
+}
+.controls-FieldLink__showAllLinks-disabled {
+   top: -@text-box-line-height;
+   background: @default-bg-color;
+   &:after {
+      content: '';
+      position: absolute;
+      right: -@fieldLink-showAll-shadow-width;
+      width: @fieldLink-showAll-shadow-width;
+      top: 0;
+      bottom: 0;
+      .horizontal-gradient(@default-bg-color, rgba(255, 255, 255, 0));
+      background-color: transparent;
+   }
+}
+.controls-FieldLink__dropAllLinks {
+   color: @fieldLink-link-color;
+}
+.controls-FieldLink__dropAllLinks, .controls-FieldLink__showSelector {
+   margin: @fieldLink-afterField-button-margin;
+}
+.controls-FieldLink__item-caption {
+   .text-overflow();
+   .flex-shrink();
+   display: inline-block;
+}
+.controls-FieldLink__item-caption__normal {
+   font-size: @default-text-size;
+}
+.controls-FieldLink__item-caption__underlined:hover {
+   text-decoration: underline;
+   cursor: pointer;
+}
+.controls-FieldLink__item-caption__bold {
+   font-weight: bold;
+}
+.controls-FieldLink__item-caption__big {
+   font-size:@fieldLink-big-fontSize;
+   font-weight: bold;
+   color: @fieldLink-big-fontSize-color;
+   height: @fieldLink-big-height;
+}
 
-   .controls-FieldLink__item {
-      /* Учитываем бордер пикера */
-      width: ~'calc(50% - 2px)';
-      .inline-flexbox();
-      align-items: center;
-      margin: 0;
-      padding: 0;
-      line-height: @fieldLink-linkItem-line-height;
-      height: auto;
-	   &:after {
-         content: none;
-      }
-      
-      }
-      &.ws-disabled .controls-FieldLink__item-caption {
-         margin-right: @default-padding;
+// fixme
+.controls-FieldLink {
+   &__picker {
+      .controls-FieldLink__item {
+         /* Учитываем бордер пикера */
+         width: 50%;
+         .inline-flexbox();
+         align-items: center;
+         margin: 0;
+         padding: 0;
+         line-height: @fieldLink-linkItem-line-height;
+         height: auto;
+         &:after {
+            content: none;
+         }
       }
       &.controls-popup-revert-vertical {
          border-top: @fieldLink-border @gray-ccc-color;
          border-bottom: none;
       }
-      //todo
       &.controls-FieldLink__big-fontSize {
          .controls-FieldLink__item-caption {
             height: auto;
@@ -166,12 +172,6 @@
          max-width: 100%;
       }
    }
-   &__icon {
-      .icon-size(@fieldLink-icon-size);
-   }
-   .controls-FieldLink__Link { //вложенность, чтобы вне поля связи был дефолтный line-height
-      line-height: @text-box-line-height;
-   }
 }
 .ws-disabled {
    .controls-FieldLink{
@@ -183,62 +183,17 @@
          .flex-direction();
          max-width: 100%;
       }
-      &__showAllLinks.controls-Link {
-         top: -@text-box-line-height;
-         background: @default-bg-color;
-         &:after {
-            content: '';
-            position: absolute;
-            right: -@fieldLink-showAll-shadow-width;
-            width: @fieldLink-showAll-shadow-width;
-            top: 0;
-            bottom: 0;
-            .horizontal-gradient(@default-bg-color, rgba(255, 255, 255, 0));
-            background-color: transparent;
-         }
-      }
-      //todo: стили необходимы для ie, flex-end не работает с переполнением
-      //https://codepen.io/anon/pen/JrGQQx
-      //удалить при отказе от ie11, в edge всё работает корректно
-      &__itemsCollection {
-         .flex-direction(row-reverse);
-         .justify-content();
-      }
       &__item-caption {
          max-width:100%;
       }
    }
 }
-//частные случаи
-//todo: есть подозрение что этов ообще не нужно
-.controls-FieldLink__selected-single:not(.controls-FieldLink__multiselect):not(.controls-FieldLink__inputMinWidth) {
-   .controls-TextBox__placeholder {
-      display: none;
-   }
-   .controls-TextBox__field {
-      .hiddenPlaceholder();
-   }
-}
-//должно быть ниже ws-disabled тк вес селктора одинаковый
-.controls-FieldLink__selected-single {
-   .controls-FieldLink__itemsCollection {
-      .justify-content();
-      .flex-direction();
-   }
-}
-.controls-FieldLink__selected-single:not(.controls-FieldLink__multiselect) .controls-TextBox__placeholder {
-   display: none;
-}
-
+// todo заменить на display: none
 .controls-FieldLink__selected:not(.controls-FieldLink__multiselect):not(.controls-FieldLink__inputMinWidth) .controls-FieldLink__fieldWrapper {
    visibility: hidden;
    width: 0;
 }
-.controls-FieldLink__selected:not(.controls-FieldLink__selected-single) {
-   .controls-FieldLink__dropAllLinks, .controls-FieldLink__showAllLinks {
-      display: inline-block;
-   }
-}
+// todo нужно удалить этот модификатор
 .controls-FieldLink__hiddenIfEmpty.ws-disabled:not(.controls-FieldLink__selected) {
    display: none;
 }

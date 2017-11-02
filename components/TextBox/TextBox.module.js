@@ -4,6 +4,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
    'js!SBIS3.CONTROLS.TextBoxBase',
    'tmpl!SBIS3.CONTROLS.TextBox',
    'tmpl!SBIS3.CONTROLS.TextBox/resources/textFieldWrapper',
+   'tmpl!SBIS3.CONTROLS.TextBox/resources/compatiblePlaceholder',
    'js!SBIS3.CONTROLS.Utils.TemplateUtil',
    'js!SBIS3.CONTROLS.TextBoxUtils',
    'js!SBIS3.CONTROLS.Utils.GetTextWidth',
@@ -18,6 +19,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
     TextBoxBase,
     dotTplFn,
     textFieldWrapper,
+    compatiblePlaceholderTemplate,
     TemplateUtil,
     TextBoxUtils,
     getTextWidth,
@@ -63,7 +65,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
     *
     * @control
     * @public
-    * @category Inputs
+    * @category Input
     */
 
    var TextBox = TextBoxBase.extend(/** @lends SBIS3.CONTROLS.TextBox.prototype */ {
@@ -89,6 +91,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
          _textFieldWrapper: null,
          _informationIcon: null,
          _options: {
+            compatiblePlaceholderTemplate: compatiblePlaceholderTemplate,
             textFieldWrapper: textFieldWrapper,
             beforeFieldWrapper: null,
             afterFieldWrapper: null,
@@ -262,10 +265,6 @@ define('js!SBIS3.CONTROLS.TextBox', [
             .on('keypress keydown keyup', this._keyboardDispatcher.bind(this))
             .on('mouseenter', function() { self._applyTooltip(); })
             .on('touchstart', function() { self._fromTouch = true;});
-
-         if (this._options.placeholder && !this._useNativePlaceHolder()) {
-            this._createCompatPlaceholder();
-         }
       },
 
       _modifyOptions: function() {
@@ -302,6 +301,10 @@ define('js!SBIS3.CONTROLS.TextBox', [
             this._informationIcon.subscribe('onActivated', function(){
                self._notify('onInformationIconActivated');
             });
+         }
+         if (this._needShowCompatiblePlaceholder(this._options)) {
+            this._compatPlaceholder = this._container.find('.controls-TextBox__placeholder');
+            this._initPlaceholderEvents(this._compatPlaceholder);
          }
          /* Надо проверить значение input'a, т.к. при дублировании вкладки там уже может быть что-то написано */
          this._checkInputVal();
@@ -390,14 +393,16 @@ define('js!SBIS3.CONTROLS.TextBox', [
          }
       },
 
-      _updateCompatPlaceholderVisibility: function() {
-         if (this._compatPlaceholder) {
-            this._compatPlaceholder.toggleClass('ws-hidden', !!this.getText());
+      _updateCompatiblePlaceholderState: function() {
+         if (!this._needShowCompatiblePlaceholder(this._options)) {
+            this._destroyCompatPlaceholder();
+         } else if (!this._compatPlaceholder && !this._useNativePlaceHolder()) {
+            this._createCompatiblePlaceholder();
          }
       },
 
       _drawText: function(text) {
-         this._updateCompatPlaceholderVisibility();
+         this._updateCompatiblePlaceholderState();
          if (this._getInputValue() != text) {
             this._setInputValue(text || '');
          }
@@ -420,17 +425,19 @@ define('js!SBIS3.CONTROLS.TextBox', [
        * @see placeholder
        */
       setPlaceholder: function(text){
-         this._setPlaceholder(text);
          this._options.placeholder = text;
+         this._setPlaceholder(text);
+      },
+
+      _needShowCompatiblePlaceholder: function(cfg) {
+         return cfg.enabled && !cfg.text;
       },
 
       _setPlaceholder: function(text){
          text = text ? text : text == 0 ? text : '';
-         if (!this._useNativePlaceHolder(text)) {
-            if (!this._compatPlaceholder) {
-               this._createCompatPlaceholder();
-            }
-            this._compatPlaceholder.find('.controls-TextBox__placeholder__overflow').html(text);
+         if (!this._useNativePlaceHolder(text) && this._needShowCompatiblePlaceholder(this._options)) {
+            this._destroyCompatPlaceholder();
+            this._createCompatiblePlaceholder();
          }
          else {
             this._inputField.attr('placeholder', text);
@@ -596,23 +603,23 @@ define('js!SBIS3.CONTROLS.TextBox', [
          }
       },
 
-      _createCompatPlaceholder : function() {
-         var compatPlaceholder = this.getContainer().find('.controls-TextBox__placeholder');
-
-         if(compatPlaceholder.length) {
-            this._compatPlaceholder = compatPlaceholder;
-         } else {
-            this._compatPlaceholder = $('<div class="controls-TextBox__placeholder"><span class="controls-TextBox__placeholder__overflow">' + this._options.placeholder + '</span></div>');
-            this._inputField.after(this._compatPlaceholder);
+      _destroyCompatPlaceholder: function() {
+         if (this._compatPlaceholder) {
+            this._compatPlaceholder.off('*');
+            this._compatPlaceholder.remove();
+            this._compatPlaceholder = undefined;
          }
+      },
 
-         this._updateCompatPlaceholderVisibility();
+      _initPlaceholderEvents: function(placeholder) {
+         placeholder.on('click', this._inputClickHandler.bind(this));
+      },
+
+      _createCompatiblePlaceholder: function() {
          this._inputField.attr('placeholder', '');
-         this._compatPlaceholder.css({
-            'left': (this._inputField.position().left || parseInt(this._inputField.parent().css('padding-left'), 10)) + 1, //отступ 1px под курсор, иначе курсор появляется под подсказкой
-            'right': this._inputField.position().right || parseInt(this._inputField.parent().css('padding-right'), 10)
-         });
-         this._compatPlaceholder.on('click', this._inputClickHandler.bind(this));
+         this._compatPlaceholder = $(compatiblePlaceholderTemplate(this._options));
+         this._inputField.after(this._compatPlaceholder);
+         this._initPlaceholderEvents(this._compatPlaceholder);
       },
 
       _getAfterFieldWrapper: function() {
@@ -634,12 +641,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
          this._beforeFieldWrapper = undefined;
          this._inputField.off('*');
          this._inputField = undefined;
-         
-         if(this._compatPlaceholder) {
-            this._compatPlaceholder.off('*');
-            this._compatPlaceholder = undefined;
-         }
-         
+         this._destroyCompatPlaceholder();
          if(this._informationIcon) {
             this._informationIcon.getContainer().off('*');
             this._informationIcon = undefined;

@@ -1,17 +1,17 @@
 .controls-TextArea {
    .generate-height(@i: 1) when (@i =< 10) {
-      &__field__maxheight-@{i} {
-         max-height: @i * @text-area-field-line-height;
+   &__field__maxheight-@{i} {
+   max-height : @i * @default-line-height;
       }
       &__field__minheight-@{i} {
-         min-height: @i * @text-area-field-line-height;
+         min-height: @i * @default-line-height;
       }
       .generate-height(@i + 1);
    }
    .generate-height();
    &__field {
       position: absolute;
-      line-height: @text-area-field-line-height;
+      line-height:  @default-line-height;
       resize: none;
       display: block;
       &__init {
@@ -22,14 +22,14 @@
    &__view {
       .flex-shrink(0);
       .box-sizing(border-box);
-      line-height: @text-area-field-line-height;
+      line-height:  @default-line-height;
       padding: @text-box-input-padding;
       width:100%;
       overflow-x: hidden;
       overflow-y: auto;
       white-space: pre-wrap;
       word-wrap: break-word;
-      min-height: @text-area-field-line-height;
+      min-height:  @default-line-height;
       max-height: 100%;
       &__empty {
           color: @default-placeholder-color;

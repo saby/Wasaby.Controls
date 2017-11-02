@@ -80,14 +80,20 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
 
       _scrollHandler: function(event, scrollTop) {
          if (!this._freezePaging) {
-            var page = scrollTop / this._viewportHeight;
+            var page = scrollTop / this._viewportHeight,
+                paging = this._options.paging,
+                pagesCount = paging.getPagesCount();
             if (page % 1) {
                page = Math.ceil(page);
             }
             page += 1; //потому что используем нумерацию страниц с 1
             if (this._currentScrollPage !== page) {
                this._currentScrollPage = page;
-               this._options.paging.setSelectedKey(page);
+               /* Текущая страница не может быть больше кол-ва страниц, установленных для paging'a.
+                  Это защита от реестров с картинками, где картинки подгружаются асихнхронно и могут менять высоту view.
+                  Из-за этого может возникать ситуация, когда высота списка на момент скрола стала значительно больше (вплоть до 2х страниц),
+                  чем на момент отрисовки страницы. */
+               paging.setSelectedKey(page > pagesCount ? pagesCount : page);
             }
          }
       },
@@ -162,7 +168,7 @@ define('js!SBIS3.CONTROLS.ScrollPagingController',
             текущее кол-во загруженных страниц + 1, если в метаинформации рекордсета есть данные о том, что на бл есть ещё записи.
             Необходимо для того, чтобы в пэйджинге не моргала кнопка перехода к следующей странице, пока грузятся данные. */
          if (pagingVisibility) {
-            this._options.paging.setPagesCount(pagesCount + (view._hasNextPage(view.getItems().getMetaData().more) ? 1 : 0));
+            this._options.paging.setPagesCount(pagesCount + (view._hasNextPage(view.getItems().getMetaData().more, view._scrollOffset.bottom) ? 1 : 0));
          }
          
          //Если есть страницы - покажем paging

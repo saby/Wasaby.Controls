@@ -7,7 +7,6 @@ define('js!SBIS3.CONTROLS.SelectionDialog', [
    "i18n!SBIS3.CONTROLS.SelectionDialog",
    'css!SBIS3.CONTROLS.SelectionDialog'
 ], function(SelectorController, dotTplFn, FolderTitleTpl) {
-
    var SelectionDialog = SelectorController.extend({
       _dotTplFn: dotTplFn,
 

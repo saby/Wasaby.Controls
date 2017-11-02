@@ -45,6 +45,13 @@
   font-family: @fontFamily !important;
 }
 
+.icon-size-without-important(@size: 16px, @fontFamily: @default-icon-font) {
+  font-size: @size;
+  width: @size;
+  height: @size;
+  font-family: @fontFamily;
+}
+
 .closedHandCursor() {
    cursor: -moz-grabbing !important;
    cursor: -webkit-grabbing !important;
@@ -277,6 +284,7 @@
 
 .inline-flexbox() {
   display: inline-flex;
+  display: -ms-flexbox; // в ie10 нет inline-flex ("https://msdn.microsoft.com/en-us/library/hh673531(v=vs.85).aspx")
   display: -ms-inline-flexbox;
   display: -webkit-inline-flex;
 }
@@ -363,7 +371,6 @@
    -ms-justify-content: @justify;
    justify-content: @justify;
    //ie 10 fix
-   -ms-flex-pack: @justify; //ie 10
    & when (@justify = space-between) {
       -ms-flex-pack: justify;
    }
@@ -372,6 +379,9 @@
    }
    & when (@justify = flex-start) {
       -ms-flex-pack: start;
+   }
+   & when (@justify = center) {
+      -ms-flex-pack: center;
    }
 }
 .align-items(@align: stretch) {

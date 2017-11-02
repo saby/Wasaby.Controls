@@ -1,4 +1,4 @@
-.controls-RichEditor{
+.controls-RichEditor {
    .mce-edit-focus {
       outline: none;
    }
@@ -241,6 +241,12 @@
    .controls-RichEditor__empty {
       .controls-RichEditor__editorFrame.ws-basic-style {
          background-color:rgba(0, 0, 0, 0);
+      }
+   }
+
+   .controls-RichEditor {
+      br[data-mce-bogus] {
+         display: none;
       }
    }
 }

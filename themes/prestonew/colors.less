@@ -32,10 +32,12 @@
 @date-range-choose-caption-background-color:      @date-range-choose-item-bg-color;//todo: mironov
 //grid
 @data-grid-multiselect-notScrolledCell-Color:     @data-grid-row-selected-bg;//todo: gerasimov
+@data-grid-multiselect-notScrolledCell-Color:     @data-grid-partScroll-notScrolledCell-Color;
 //filter-line
 @controls-filterLine-link-hover-color:            @controls-filterLine-link-color;//todo: gerasimov
 //dd-list
 @DropdownList-header-bg:                          #C1D7F0;//todo: krasilnikov
+@DropdownList-footer-hasMore-hover-color:         @DropdownList-picker-menu-item-base-color;
 //suggest-text-box
 @suggest-text-box-bg-show-picker-color:           #F0F5FB;
 @suggest-text-box-bg-show-picker-font-color:      #273B4D;
@@ -124,9 +126,9 @@
 @button-checked-border-color:             rgba(38, 184, 255, 1);
 @button-disabled-text-color:              rgba(255, 255, 255, 0.15);
 //Radio button
-@radio-button-text-color:                 @default-text-color;
+@radio-button-text-color:                 @innacent-color;
 @radio-button-hover-text-color:           @innacent-color;
-@radio-button-checked-text-color:         @radio-button-text-color;
+@radio-button-checked-text-color:         @default-text-color;
 @radio-button-checked-hover-text-color:   @default-text-color;
 @radio-button-disabled-text-color:        @gray-color;
 @radio-button-disabled-hover-text-color:  @gray-color;
@@ -250,7 +252,7 @@
 //Edit at place
 @edit-at-place-editor-overlay-bg:         darken(@secondary-color, 5%) !important;
 //List view
-@list-view-items-toolbar-locked-bg:       @basic-block-bg-color;
+@list-view-items-toolbar-locked-bg:       @controls-editInPlace-editor-bg;
 @list-view-actions-active-bg:             @data-grid-bg;
 @listView-empty-data-color:               @disabled-color;
 //Tree view
@@ -277,6 +279,7 @@
 @DropdownList-linkStyleHoverColor:		     rgb(187, 233, 255);
 @DropdownList-disabled-text:                #37536C;
 @DropdownList-picker-title-type-header-bg:  #26B8FF;
+@DropdownList-picker-title-type-margin-top: -0.3rem;
 @DropdownList-picker-head-color:            #E4E4E4;
 //ProgressBar
 @controls-ProgressBar-first-color:        #26B8FF;
@@ -314,6 +317,7 @@
 @tab-control-background-color:			   transparent;
 @tab-button-checked-inner-color:          rgb(255, 204, 153);
 @tab-button-simple-inner-checked-color:   rgb(255, 204, 153);
+@tab-button-simple-inner-bottom-height:   0.3rem;
 @tab-button-simple-checked-bottomline-color:@primary-color;
 @tab-button-simple-hover-bottomline-color: @innacent-color;
 @tab-button-inner-after-bg-color:         rgba(102,170,221, .2);
@@ -342,7 +346,7 @@
 //sundry
 @controls-filterButton-picker-border-color:@default-border-color-second;
 @bottomStyle-items-toolbar-border-color:  #293A4B;
-@data-grid-row-hover-cell-bg:             #293A4B;
+@data-grid-row-hover-cell-bg:             @data-grid-row-hover-bg;
 @image-bar-bg-color:                      rgba(102,170,221, .5);
 @money-text-box-decimals-color:           @default-text-color;
 @header-color:                            #FC9;
@@ -356,3 +360,6 @@
 @fieldLink-link-color-hover:              @default-hover-color;
 @commands-button-close-icon-color:        @icon-color-primary;
 @controls-SubmitPopup-footer-bg:          inherit;
+//back-button
+@back-arrow-bg-blue:                        @header-color;
+@back-arrow-bg-orange:                      @back-button-text-color;

@@ -9,7 +9,7 @@ define('js!SBIS3.SPEC.input.interface.IValidation', [
 
    /**
     * @name SBIS3.SPEC.input.interface.IValidation#validators
-    * @cfg {Array} список валидаторов.
+    * @cfg {Array} Список валидаторов
     */
 
 });

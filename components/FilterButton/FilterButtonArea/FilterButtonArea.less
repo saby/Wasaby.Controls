@@ -2,7 +2,7 @@
 	background: @controls-filterButton-picker-bg;
 	border: @controls-filterButton-picker-border-width solid @controls-filterButton-picker-border-color;
 	.box-shadow(@menu-shadow);
-	margin-top: -1px;
+	margin-top: -3px; //чтобы совпадала линия кнопки фильтров и вкладок (по стандрату)
 
 	.controls-PopupMixin__closeButton {
 		top: @controls-filterButton-picker-close-top;
@@ -14,12 +14,17 @@
 				color: @darkcyan-color;
 			}
 		}
+		&.controls-DropdownList.ws-enabled {
+			.controls-DropdownList__value:hover {
+				color: @darkcyan-color;
+			}
+		}
 	}
 	.blue-dark-color {
 		&.controls-DropdownList {
 			&.ws-enabled {
 				.controls-DropdownList__selectedItem {
-					.controls-DropdownList__textWrapper {
+					.controls-DropdownList__value {
 						color: @blue-dark-color;
 					}
 				}
@@ -67,7 +72,6 @@
 	cursor: pointer;
 	position: relative;
 	top: 2px;
-	left: -5px;
 }
 
 .controls__filterButton__area-scrollContainer {
@@ -188,11 +192,8 @@
 
 .controls__filterButton__picker .controls-FieldLink__Link.ws-enabled {
 	color: @fieldLink-FilterButton-color;
+	text-decoration: none;
 
-	.controls-Button__text {
-		text-decoration: none;
-	}
-	
 	&.ws-enabled:hover {
 		color: @fieldLink-FilterButton-color-hover;
 		text-decoration: underline;
@@ -207,18 +208,6 @@
 					&.ws-enabled {
 						&:hover {
 							color: @link-text-color;
-						}
-					}
-				}
-			}
-			
-			&.controls-DropdownList {
-				&.ws-enabled {
-					.controls-DropdownList__selectedItem {
-						.controls-DropdownList__textWrapper {
-							&:hover {
-								color: @darkcyan-color;
-							}
 						}
 					}
 				}

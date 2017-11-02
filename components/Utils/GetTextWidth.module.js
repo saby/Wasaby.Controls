@@ -1,14 +1,26 @@
 define('js!SBIS3.CONTROLS.Utils.GetTextWidth', function () {
 
     /**
+     * Модуль, в котором реализована функция <b>getTextWidth(parent, child)</b>.
      * Высчитывает ширину переданного текста в пикселях.
      * Высчитывает по базовым на странице шрифту и размеру, то есть без довеска каких-либо классов.
-     * @param text Переданный текст.
-     * @returns {Number} Ширина переданного текста в пикселях.
-     * @example
+     *
+     * <h2>Параметры функции</h2>
+     * <ul>
+     *    <li>{String} text Переданный текст</li>
+     * </ul>
+     *
+     * <h2>Возвращает</h2>
+     * {Number} Ширина переданного текста в пикселях.
+     *
+     * <h2>Пример использования</h2>
      * <pre>
      *     helpers.getTextWidth("helloWorld")
      * </pre>
+     *
+     * @class SBIS3.CONTROLS.Utils.GetTextWidth
+     * @public
+     * @author Мальцев Алексей Александрович
      */
     return function (text) {
         var hiddenStyle = "left:-10000px;top:-10000px;height:auto;width:auto;position:absolute;";

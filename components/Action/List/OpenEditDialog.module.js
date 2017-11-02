@@ -145,10 +145,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       _openComponent:function(meta, mode) {
          var openUrl = meta.item && meta.item.get(this._options.urlProperty);
 
-         if (this._isExecuting){
-            //Если execute уже был вызван, а панель еще не открылась, игнорируем этот вызов execute, пока не отработает открытие панели из первого вызова.
-         }
-         else if (this._needOpenInNewTab() && openUrl) {
+         if (this._needOpenInNewTab() && openUrl) {
             window.open(openUrl);
          }
          else if (this._isNeedToRedrawDialog()) {
@@ -209,20 +206,20 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
 
       },
 
-      _createComponent: function(config, meta, mode){
+      _createComponent: function(config, meta){
          var initializingWay = config.componentOptions.initializingWay,
              dialogComponent = config.template,
              self = this;
 
          function wayRemote(templateComponent) {
-            return self._remoteWayCallback(config, meta, mode, templateComponent).addCallback(function () {
-               OpenEditDialog.superclass._createComponent.call(self, config, meta, mode);
+            return self._remoteWayCallback(config, meta, templateComponent).addCallback(function () {
+               OpenEditDialog.superclass._createComponent.call(self, config, meta);
             });
          }
 
          function wayDelayedRemove(templateComponent) {
-            var def = self._delayedRemoteWayCallback(config, meta, mode, templateComponent);
-            OpenEditDialog.superclass._createComponent.call(self, config, meta, mode);
+            var def = self._delayedRemoteWayCallback(config, meta, templateComponent);
+            OpenEditDialog.superclass._createComponent.call(self, config, meta);
             return def;
          }
 
@@ -236,10 +233,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
                   def = wayDelayedRemove(templateComponent);
                }
                def.addErrback(function (error) {
-                  //Не показываем ошибку, если было прервано соединение с интернетом. просто скрываем индикатор и оверлей
-                  if (!error._isOfflineMode) {
-                     OpenDialogUtil.errorProcess(error);
-                  }
+                  self._finishExecuteDeferred(error);
                   return error;
                }).addBoth(function (record) {
                   self._hideLoadingIndicator();
@@ -247,11 +241,11 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
                });
             })
          } else {
-            OpenEditDialog.superclass._createComponent.call(this, config, meta, mode)
+            OpenEditDialog.superclass._createComponent.call(this, config, meta)
          }
       },
 
-      _delayedRemoteWayCallback: function(config, meta, mode, templateComponent){
+      _delayedRemoteWayCallback: function(config, meta, templateComponent){
          var deferred = this._getRecordDeferred(config, templateComponent);
          if (deferred){
             config.componentOptions._receiptRecordDeferred = deferred;
@@ -264,7 +258,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          return getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions);
       },
 
-      _remoteWayCallback: function (config, meta, mode, templateComponent) {
+      _remoteWayCallback: function (config, meta, templateComponent) {
          var self = this,
             options,
             isNewRecord = (meta.isNewRecord !== undefined) ? meta.isNewRecord : !config.componentOptions.key,
@@ -318,6 +312,15 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
       _hideLoadingIndicator: function() {
          this._toggleOverlay(false);
          cIndicator.hide();
+      },
+
+      _handleError: function(error) {
+         if (!error.processed) {
+            //Не показываем ошибку, если было прервано соединение с интернетом
+            if (!error._isOfflineMode) {
+               OpenDialogUtil.errorProcess(error);
+            }
+         }
       },
 
       _toggleOverlay: function(show){
@@ -670,6 +673,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
 
       _clearVariables: function() {
          this._isExecuting = false;
+         this._finishExecuteDeferred();
          this._dialog = undefined;
       },
 

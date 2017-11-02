@@ -1,0 +1,11 @@
+<div class="ws-ItemsView">
+   <ws:for data="_getStartEnumerationPosition(); _checkConditionForEnumeration(); _getNextEnumerationPosition();">
+      <ws:partial
+            template="{{_options.itemTemplate}}"
+            item="{{_display.at(_curIndex).getContents()}}"
+            dispItem="{{_display.at(_curIndex)}}"
+            index="{{_curIndex}}"
+            _getPropValue="{{__getPropertyValue}}"
+            _options="{{_options}}"/>
+   </ws:for>
+</div>

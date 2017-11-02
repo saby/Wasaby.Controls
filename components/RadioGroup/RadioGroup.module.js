@@ -3,8 +3,8 @@
  */
 
 define('js!SBIS3.CONTROLS.RadioGroup', ['js!SBIS3.CONTROLS.RadioGroupBase',
-      'html!SBIS3.CONTROLS.RadioGroup',
-      'html!SBIS3.CONTROLS.RadioGroup/resources/ItemTemplate',
+      'tmpl!SBIS3.CONTROLS.RadioGroup',
+      'tmpl!SBIS3.CONTROLS.RadioGroup/resources/ItemTemplate',
       'js!SBIS3.CONTROLS.ITextValue',
       'js!SBIS3.CONTROLS.RadioButton',
       'css!SBIS3.CONTROLS.RadioGroup'
@@ -37,7 +37,7 @@ function(RadioGroupBase, dotTpl, ItemTemplate, ITextValue) {
     *
     * @control
     * @public
-    * @category Inputs
+    * @category Input
     * @initial
     * <component data-component='SBIS3.CONTROLS.RadioGroup'>
     *    <option name="displayProperty">title</option>

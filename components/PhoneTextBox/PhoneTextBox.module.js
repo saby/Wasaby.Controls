@@ -1,4 +1,4 @@
-define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 'html!SBIS3.CONTROLS.PhoneTextBox', 'Core/detection', 'css!SBIS3.CONTROLS.PhoneTextBox'], function(FormattedTextBoxBase, dotTpl, detection) {
+define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 'tmpl!SBIS3.CONTROLS.PhoneTextBox', 'Core/detection', 'css!SBIS3.CONTROLS.PhoneTextBox'], function(FormattedTextBoxBase, dotTpl, detection) {
 
    'use strict';
 
@@ -35,7 +35,7 @@ define('js!SBIS3.CONTROLS.PhoneTextBox', ['js!SBIS3.CONTROLS.FormattedTextBox', 
     *
     * @public
     * @control
-    * @category Buttons
+    * @category Button
     * @initial
     * <component data-component='SBIS3.CONTROLS.PhoneCall'>
     *    <option name='caption' value='Позвонить Гене'></option>
