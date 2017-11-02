@@ -1,9 +1,10 @@
 // TODO: ( ) Проработать правильное сохранение (Пресеты могут быть не только личными)
-// TODO: ( ) Проработать ситуацию без созранённых пресетов и с одним созранённым пресетом
+// TODO: ( ) Проработать ситуацию без сохранённых пресетов и с одним созранённым пресетом
 // TODO: (+) Реализовать использование информации из пресета (колонки и группы)
 // TODO: (+) Проработать правильное сочетание(совмещение) информации из пресетов и прямой информации из опций
 // TODO: ( ) Посмотреть опции по фазам (первичная инициализация и открытие пикера)
 // TODO: ( ) Сортировать ли по группам?
+// TODO: ( ) Предусмотреть возможность работы без кнопки и с FloatArea
 // TODO: ( )
 /**
  * Created by as.avramenko on 24.01.2017.
@@ -13,18 +14,21 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
    [
       'js!SBIS3.CONTROLS.CompoundControl',
       'Core/CommandDispatcher',
+      'Core/core-merge',
       'Core/Deferred',
-      'Core/UserConfig',
+      'Core/ClientsGlobalConfig',
+      /*'Core/UserConfig',*/
       'WS.Data/Collection/RecordSet',
-      'js!SBIS3.CONTROLS.PickerMixin',
-      /*'Core/tmpl/tmplstr', 'js!SBIS3.CONTROLS.Utils.TemplateUtil',*/
+      /*'js!SBIS3.CONTROLS.PickerMixin',*/
+      'js!SBIS3.CORE.FloatArea',
+      /*^^^'Core/tmpl/tmplstr', 'js!SBIS3.CONTROLS.Utils.TemplateUtil',*/
       'tmpl!SBIS3.CONTROLS.ColumnsEditor',
       'css!SBIS3.CONTROLS.ColumnsEditor',
       'js!SBIS3.CONTROLS.IconButton',
       'js!SBIS3.CONTROLS.ColumnsEditorArea'
    ],
 
-   function (CompoundControl, CommandDispatcher, Deferred, UserConfig, RecordSet, PickerMixin, dotTplFn) {
+   function (CompoundControl, CommandDispatcher, coreMerge, Deferred, ClientsGlobalConfig, /*UserConfig,*/ RecordSet, /*PickerMixin,*/ FloatArea, dotTplFn) {
       'use strict';
 
       /**
@@ -35,12 +39,13 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
        * @public
        * @extends SBIS3.CONTROLS.CompoundControl
        *
-       * @mixes SBIS3.CONTROLS.PickerMixin
+       * @mixes SBIS3.CONTROLS.PickerMixin ^^^
        */
-      var ColumnsEditor = CompoundControl.extend([PickerMixin],/** @lends SBIS3.CONTROLS.ColumnsEditor.prototype */ {
+      var ColumnsEditor = CompoundControl.extend([/*PickerMixin*/], /** @lends SBIS3.CONTROLS.ColumnsEditor.prototype */{
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
+               showButton: true/*^^^false*/,
                title: rk('Отображение колонок'),
                moveColumns: false/*^^^true*/,
                targetRegistryName: 'default',
@@ -57,7 +62,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
          },
 
          $constructor: function () {
-            CommandDispatcher.declareCommand(this, 'showEditorArea', this._commandShowColumnsEditor);
+            CommandDispatcher.declareCommand(this, 'showColumnsEditor', this._commandShowColumnsEditor);
             CommandDispatcher.declareCommand(this, 'selectPreset', this._commandSelectPreset);
             CommandDispatcher.declareCommand(this, 'changePreset', this._commandChangePreset);
             CommandDispatcher.declareCommand(this, 'clonePreset', this._commandClonePreset);
@@ -71,34 +76,39 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
             this._options._presets = new RecordSet({rawData:[], idProperty:'title'});
             this._presetDropdown = this.getChildControlByName('controls-ColumnsEditor__preset');
 
-            this.subscribeTo(this._presetDropdown, 'onSelectedItemsChange', function (evtName, selected, changes) {
-               this._setSelectedPreset(selected[0]);
+            ClientsGlobalConfig/*UserConfig*/.getParam(this._userConfigName).addCallback(function (data) {
+               this._onLoadPresets(data);
+               this.subscribeTo(this._presetDropdown, 'onSelectedItemsChange', function (evtName, selected, changes) {
+                  this._setSelectedPreset(selected[0]);
+                  this.sendCommand('showColumnsEditor');
+               }.bind(this));
             }.bind(this));
-
-            UserConfig.getParam(this._userConfigName).addCallback(this._setPresets.bind(this));
          },
 
          _getPresets: function () {
             return this._options._presets;
          },
 
-         _setPresets: function (data) {
+         _onLoadPresets: function (data) {
             var values = data && typeof data === 'string' ? JSON.parse(data) : data || [];
             //////////////////////////////////////////////////
             if (!values.length) {
                values.push({
                   title: 'Пробный шаблон 1',
-                  selectedColumns: [],
-                  expandedGroups: ['1', '3']
+                  selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП'],
+                  expandedGroups: ['1']
                }, {
                   title: 'Пробный шаблон 2',
-                  selectedColumns: [],
-                  expandedGroups: ['1', '3']
+                  selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП'],
+                  expandedGroups: ['2']
                }, {
                   title: 'Пробный шаблон 3',
-                  selectedColumns: [],
-                  expandedGroups: ['1', '3']
+                  selectedColumns: ['Номенклатура.НомНомер', 'ИНН/КПП'],
+                  expandedGroups: ['3']
                });
+            }
+            else {
+               //^^^values = [values[0]];
             }
             //////////////////////////////////////////////////
             var recordset = this._options._presets;
@@ -163,24 +173,37 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
          },
 
          _commandShowColumnsEditor: function () {
+            if (this._areaContainer) {
+               return;
+            }
             this._columnsEditorConfig = this._notify('onColumnsEditorShow');
-            this.showPicker();
-         },
-
-         _setPickerConfig: function () {
-            var cfg = this._columnsEditorConfig;
             //////////////////////////////////////////////////^^^
+            var cfg = this._columnsEditorConfig;
             if (cfg.columns && cfg.columns.getCount()) {
                cfg.columns.each(function (column) {
                   column.set('group', '' + Math.ceil(3*Math.random()));
                });
             }
-            //cfg.selectedColumns
+            //^^^cfg.selectedColumns
             cfg.groupTitleTpl = '{{?it.group == "1"}}Группа: a1{{??it.group == "2"}}Группа: a2{{??it.group == "3"}}Группа: a3{{??}}Группа: a{{=it.group}}{{?}}';//<ws:if data="{{groupId == "1v}}">Группа: a1</ws:if><ws:else data="{{groupId == "2"}}">Группа: a2</ws:else><ws:else data="{{groupId == "3"}}">Группа: a3</ws:else><ws:else>Группа: a{{groupId}}</ws:else>
             cfg.groupTitles = {'1':'Группа: b1', '2':'Группа: b2', '3':'Группа: b3'};
             cfg.expandedGroups = ['2'];
             //////////////////////////////////////////////////
-            return {
+            /*this.showPicker();*/
+            this._areaContainer = new FloatArea(coreMerge({
+               opener: this,
+               direction: 'left',
+               animation: 'slide',
+               //maxWidth: 388 + 2,
+               isStack: true,
+               autoCloseOnHide: true
+            }, this._getAreaOptions()));
+            this._notify('onSizeChange');
+            this.subscribeOnceTo(this._areaContainer, 'onAfterClose', this._notify.bind(this, 'onSizeChange'));
+         },
+
+         /*_setPickerConfig: function () {
+            return coreMerge(this._getAreaOptions(), {
                corner: 'tr',
                horizontalAlign: {
                   side: 'right'
@@ -188,21 +211,38 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                verticalAlign: {
                   side: 'top'
                },
+               target: this.getContainer(),
+               handlers: {
+                  onClose: function () {
+                     // Разрушаем панель при закрытии
+                     if (this._picker) {
+                        this._picker.destroy();
+                        this._picker = null;
+                     }
+                  }.bind(this)
+               }
+            });
+         },*/
+
+         _getAreaOptions: function () {
+            var opts = this._options;
+            var cfg = this._columnsEditorConfig;
+            return {
+               //title: null,
+               parent: this,
                template: 'js!SBIS3.CONTROLS.ColumnsEditorArea',
+               cssClassName: 'controls-ColumnsEditor-area',
                closeByExternalClick: true,
                closeButton: true,
-               parent: this,
-               target: this.getContainer(),
-               cssClassName: 'controls-ColumnsEditorArea-picker',
                componentOptions: {
+                  title: this._options.title,
                   columns: cfg.columns,
-                  groupTitleTpl: cfg.groupTitleTpl && (typeof cfg.groupTitleTpl === 'function' || typeof cfg.groupTitleTpl === 'string') ? cfg.groupTitleTpl : null,
-                  groupTitles: typeof cfg.groupTitles === 'object' ? cfg.groupTitles : null,
+                  groupTitleTpl: opts.groupTitleTpl || cfg.groupTitleTpl || null,
+                  groupTitles: opts.groupTitles || cfg.groupTitles || null,
                   _getPresets: this._getPresets.bind(this),//^^^
                   _getSelectedPreset: this._getSelectedPreset.bind(this),//^^^
                   selectedColumns: cfg.selectedColumns,
-                  expandedGroups: Array.isArray(cfg.expandedGroups) ? cfg.expandedGroups : null,
-                  title: this._options.title,
+                  expandedGroups: cfg.expandedGroups,
                   moveColumns: this._options.moveColumns,
                   handlers: {
                      onComplete/*^^^onSelectedColumnsChange*/: function (evtName, selectedColumns, expandedGroups) {
@@ -231,7 +271,8 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                         if (isAnyChanged) {
                            _save(this);
                         }
-                        this._picker.hide();
+                        /*this._picker.hide();*/
+                        this._areaContainer.close();
                         if (isColumnsChanged) {
                            this._notify('onSelectedColumnsChange', selectedColumns);
                         }
@@ -240,10 +281,9 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                },
                handlers: {
                   onClose: function () {
-                     // Разрушаем панель при закрытии
-                     if (this._picker) {
-                        this._picker.destroy();
-                        this._picker = null;
+                     if (this._areaContainer) {
+                        this._areaContainer.destroy();
+                        this._areaContainer = null;
                      }
                   }.bind(this)
                }
@@ -267,14 +307,17 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
       };
 
       var _updateDropdown = function (self) {
-         self._presetDropdown.setItems(self._options._presets);
+         var dropdown = self._presetDropdown;
+         var presets = self._options._presets;
+         dropdown.setItems(presets);
          var selected = self._options._selectedPreset;
-         self._presetDropdown.setSelectedKeys(selected ? [selected] : []);
+         dropdown.setSelectedKeys(selected ? [selected] : []);
+         dropdown.setEnabled(1 < presets.getCount());
       };
 
       var _save = function (self) {
          var promise = new Deferred();
-         UserConfig.setParam(self._userConfigName, JSON.stringify(self._options._presets.getRawData())).addCallbacks(
+         ClientsGlobalConfig/*UserConfig*/.setParam(self._userConfigName, JSON.stringify(self._options._presets.getRawData())).addCallbacks(
             promise.callback.bind(promise, true),
             function (err) {
                // TODO: Изменение не сохранено - откатится назад если пикер ещё открыт

@@ -40,7 +40,8 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
                columns: undefined,
                selectedColumns: [],
                moveColumns: true,
-               title: ''
+               title: '',
+               applyButtonTitle: rk('Применить')
             },
             _presetView: undefined,
             _fixedView: undefined,
@@ -75,8 +76,8 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
             this._selectableView = this.getChildControlByName('controls-ColumnsEditorArea__SelectableList');
 
             _updatePresetView(this, true);
-            //this._presetView.setItemsHover(false);
-            //this.subscribeTo(this._presetView, 'onChangeHoveredItem', this._presetView.setItemsHover.bind(this._presetView, false));
+            //^^^this._presetView.setItemsHover(false);
+            //^^^this.subscribeTo(this._presetView, 'onChangeHoveredItem', this._presetView.setItemsHover.bind(this._presetView, false));
             this._presetView.setItemsActions(_makeItemsActions(this));
             this.subscribeTo(this._presetView, 'onAfterBeginEdit', this._presetView.setItemsActions.bind(this._presetView, []));
             this.subscribeTo(this._presetView, 'onEndEdit', function (evtName, model, withSaving) {
