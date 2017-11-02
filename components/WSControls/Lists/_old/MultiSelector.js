@@ -1,8 +1,7 @@
 define('js!WSControls/Lists/MultiSelector', [
-   'js!WSControls/Lists/Selector',
-   'js!WSControls/Lists/resources/utils/ItemsUtil',
+   'js!WSControls/Lists/_old/Selector',
    'js!WSControls/Utils/Array'
-], function(Selector, ItemsUtil, ArrayUtil) {
+], function(Selector, ArrayUtil) {
    
    var prepareKeys = function(keys, options) {
       if (keys) {
