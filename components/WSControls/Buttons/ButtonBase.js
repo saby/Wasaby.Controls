@@ -154,6 +154,7 @@ define('js!WSControls/Buttons/ButtonBase', [
             this._container.toggleClass('ws-hidden', !show);
             this._isVisible = show;
             this._setOption('visible', this._isVisible);
+            // кнопка визуально изменилась - нужно вызвать ресайз, потому что эта кнопка могла повлиять на размеры среды, где она находится
             this._notifyOnSizeChanged(true);
             this._notifyOnPropertyChanged('visible');
          }
