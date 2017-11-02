@@ -3881,15 +3881,17 @@ define('js!SBIS3.CONTROLS.ListView',
                      indicator[0].style.top = '';
                   }
                }
-               this._loadingIndicatorTimer = setTimeout(function(){
-                  ajaxLoader.addClass('controls-AjaxLoader__showIndication');
-               }, INDICATOR_DELAY);
+               this._loadingIndicatorTimer = setTimeout(this._showIndicator.bind(this), INDICATOR_DELAY);
             }
             else {
                clearTimeout(this._loadingIndicatorTimer);
                ajaxLoader.addClass('ws-hidden').removeClass('controls-AjaxLoader__showIndication');
             }
          },
+         _showIndicator: function () {
+            this._getAjaxLoaderContainer().addClass('controls-AjaxLoader__showIndication');
+         },
+
          _toggleEmptyData: function(show) {
             show = show && this._options.emptyHTML;
             this._getEmptyDataContainer().toggleClass('ws-hidden', !show);
