@@ -638,8 +638,18 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             this._resizeInner();
          },
 
+         /**
+          * Переключение активности нативного скролла.
+          * @param flag активность нативного скролла.
+          * @private
+          */
          _toggleOverflowHidden: function(flag) {
             this._content.toggleClass('controls-ScrollContainer__content-overflowHidden', flag);
+            /**
+             * Класс controls-ScrollContainer__content-overflowHidden отключает нативный скролл на контенте.
+             * Из-за того что скрытие нативного скролла происходит через смещение контента на ширину скролла,
+             * нужно убирать смещение, если нативный скролл отключен или добавлять его в противном случае.
+             */
             if (flag) {
                this._content.css({
                   marginRight: 0,
