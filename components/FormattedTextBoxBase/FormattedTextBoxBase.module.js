@@ -476,6 +476,7 @@ define(
             i,
             item,
             groupValue,
+            isEmpty = true,
             tempModelValues = [];
 
          for (i = 0; i < this.model.length; i++) {
@@ -484,10 +485,13 @@ define(
                groupValue = this._getValueForGroup(text, item, clearChar);
                text = groupValue.text;
                tempModelValues[i] = groupValue.value;
+               if (groupValue.value.length) {
+                  isEmpty = false;
+               }
             }
          }
 
-         return tempModelValues;
+         return isEmpty ? false : tempModelValues;
       },
 
       //Метод по переданному тексту и маске, возвращает первое вхождение символов, уоторые подходят под маску
