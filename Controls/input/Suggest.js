@@ -1,6 +1,8 @@
 define('js!Controls/Input/Suggest', [
 ], function() {
 
+   /* Не окончательный вариант! Только набросок. */
+
    /**
     * Поле ввода с автодополнением
     * @class Controls/Input/Suggest
