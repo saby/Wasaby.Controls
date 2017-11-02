@@ -148,4 +148,22 @@ body {
       // TODO: выпилить вместе с @basic-block-bg-color
       background-color: #ffffff;
    }
+   // На андроиде между контейнерами на масштабе отличном от 100% всегда есть какая то щель
+   // через которую видно скролируемое содержимое. Стилизация фикса этого бага.
+   // TODO: выпилить после того как перейдем на position: sticky
+   &.ws-is-mobile-android {
+      .ws-sticky-header__block.ws-sticky-header__fixed,
+      .ws-sticky-header__table-header-copy {
+         &:before {
+            background-color: #ffffff;
+         }
+      }
+   }
+}
+
+.controls-Browser__search {
+   margin: 0 0.28572rem 0.28572rem 0.28572rem;
+}
+.controls-Browser__topTemplate {
+   padding: 0 0.28572rem 0.28572rem 0.28572rem;
 }

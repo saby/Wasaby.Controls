@@ -202,8 +202,10 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                   viewFilter[searchParam] = revertedSearchValue;
 
                   /* Чтобы не запускать цепочку кода, которая следует на reload'ом,
-                     просто отдельно выполняем запрос, если контрол поддерживает интерфейс */
-                  if(cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.IItemsControl')) {
+                     просто отдельно выполняем запрос, если контрол поддерживает интерфейс.
+                     При memory источнике тоже необходимо делать запрос без reload'a списка, т.к. запросы будут синхронными,
+                     из-за этого получается путаница с ответами, т.к. код второго запроса отработает быстрее первого. */
+                  if(cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.IItemsControl') || cInstance.instanceOfModule(view.getDataSource(), 'WS.Data/Source/Memory')) {
                      view.setFilter(viewFilter, true);
                      queryUtil(view.getDataSource(), [viewFilter, view.getSorting(), view.getOffset(), view.getPageSize()]).addCallback(function (res) {
                         self._onViewDataLoad(null, res.getAll());

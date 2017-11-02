@@ -15,24 +15,25 @@ define('js!SBIS3.CONTROLS.Action.List.Save', [
     var MAX_RECORDS_COUNT = 20000;
 
     /**
-     * Action для сохранения данных.
+     * Класс, описывающий действие сохранения данных.
      * @class SBIS3.CONTROLS.Action.List.Save
-     * @public
      * @extends SBIS3.CONTROLS.Action.Save
+     * @mixes SBIS3.CONTROLS.Action.List.ListMixin
+     * @public
      * @author Сухоручкин Андрей Сергеевич
      */
     var SaveList = Save.extend([ListMixin], /** @lends SBIS3.CONTROLS.Action.List.Save.prototype */{
         $protected: {
             _options: {
                /**
-                * @cfg {SBIS3.CONTROLS.ISaveStrategy) Стратегия сохранения. Класс, который реализует сохранение записей.
+                * @cfg {SBIS3.CONTROLS.ISaveStrategy) Стратегия сохранения данных.
                 * @see {@link SBIS3.CONTROLS.ISaveStrategy}
                 * @see {@link SBIS3.CONTROLS.SaveStrategy.Base}
                 * @see {@link SBIS3.CONTROLS.SaveStrategy.Sbis}
                 */
                 saveStrategy: 'js!SBIS3.CONTROLS.SaveStrategy.Sbis',
                 /**
-                * @cfg {Array} Колонки которые будут сохраняться.
+                * @cfg {Array} Колонки, которые будут сохраняться.
                 **/
                 columns: undefined,
                 /**
@@ -40,7 +41,7 @@ define('js!SBIS3.CONTROLS.Action.List.Save', [
                 **/
                 fileName: '',
                 /**
-                * @cfg {String} Имя файла с xsl преобразованием.
+                * @cfg {String} Имя файла с XSL-преобразованием.
                 **/
                 xsl: undefined
             }
