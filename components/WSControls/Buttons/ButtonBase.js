@@ -1,8 +1,3 @@
-/**
- * Модуль 'Компонент кнопка'.
- *
- * @description
- */
 define('js!WSControls/Buttons/ButtonBase', [
    'Core/constants',
    'js!SBIS3.CORE.CompoundControl',
@@ -17,7 +12,7 @@ define('js!WSControls/Buttons/ButtonBase', [
    'use strict';
 
    /**
-    * Поведенческий класс, задающий базовое поведение кнопки. Основное предназначение - обрабатывать клик.
+    * Класс, задающий базовое поведение кнопки. Основное предназначение - обрабатывать клик.
     * Все контролы-кнопки должны наследоваться от этого класса.
     * Отображение и вёрстка задаются именно в унаследованных классах.
     * @class WSControls/Buttons/ButtonBase
@@ -30,7 +25,6 @@ define('js!WSControls/Buttons/ButtonBase', [
     * @mixes SBIS3.CONTROLS.IconMixin
     *
     * @author Крайнов Дмитрий Олегович
-    *
     *
     * @ignoreOptions validators independentContext contextRestriction extendedTooltip
     *
@@ -79,8 +73,8 @@ define('js!WSControls/Buttons/ButtonBase', [
               * <pre>
               * myButton.setCaption('<div>Войти</div>');
               * // надпись на кнопке - "<div>Войти</div>"
-              * 2) Когда опция `escapeCaptionHtml=false`
               * </pre>
+              * 2) Когда опция `escapeCaptionHtml=false`
               * <pre>
               * myButton.setCaption('<div>Войти</div>');
               * // надпись на кнопке - "Войти"
@@ -114,9 +108,8 @@ define('js!WSControls/Buttons/ButtonBase', [
       },
 
       /**
-       * Установить текст на кнопке.
-       * Метод установки либо замены текста на кнопке, заданного опцией {@link caption}.
-       * @param {String} captionTxt Текст на кнопке.
+       * Установить надпись на кнопке.
+       * @param {String} captionTxt
        * @example
        * <pre>
        *     var btn = this.getChildControlByName(("myButton");
@@ -138,9 +131,8 @@ define('js!WSControls/Buttons/ButtonBase', [
          return WSButtonBase.superclass.validate.apply(this, arguments) && Control.prototype.validate.apply(this, arguments);
       },
       /**
-       * Получить текст на кнопке.
-       * Метод получения текста, заданного либо опцией {@link caption}, либо методом {@link setCaption}.
-       * @returns {String} Возвращает текст, указанный на кнопке.
+       * Получить надпись, отображаемую на кнопке.
+       * @returns {String}
        * @example
        * <pre>
        *     var btn = this.getChildControlByName("myButton");
