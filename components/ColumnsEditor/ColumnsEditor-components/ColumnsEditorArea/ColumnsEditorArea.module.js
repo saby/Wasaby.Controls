@@ -75,7 +75,10 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
             this._fixedView = this.getChildControlByName('controls-ColumnsEditorArea__FixedList');
             this._selectableView = this.getChildControlByName('controls-ColumnsEditorArea__SelectableList');
 
-            _updatePresetView(this, true);
+            this.subscribeOnceTo(this._presetView, 'onInit', function () {
+               _updatePresetView(this, true);
+            }.bind(this));
+
             //^^^this._presetView.setItemsHover(false);
             //^^^this.subscribeTo(this._presetView, 'onChangeHoveredItem', this._presetView.setItemsHover.bind(this._presetView, false));
             this._presetView.setItemsActions(_makeItemsActions(this));

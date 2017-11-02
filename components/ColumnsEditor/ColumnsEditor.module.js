@@ -1,10 +1,10 @@
-// TODO: ( ) Проработать правильное сохранение (Пресеты могут быть не только личными)
+// TODO: (+) Проработать правильное сохранение (Пресеты могут быть не только личными)
 // TODO: ( ) Проработать ситуацию без сохранённых пресетов и с одним созранённым пресетом
 // TODO: (+) Реализовать использование информации из пресета (колонки и группы)
 // TODO: (+) Проработать правильное сочетание(совмещение) информации из пресетов и прямой информации из опций
-// TODO: ( ) Посмотреть опции по фазам (первичная инициализация и открытие пикера)
+// TODO: (+) Посмотреть опции по фазам (первичная инициализация и открытие пикера)
 // TODO: ( ) Сортировать ли по группам?
-// TODO: ( ) Предусмотреть возможность работы без кнопки и с FloatArea
+// TODO: (+) Предусмотреть возможность работы без кнопки и с FloatArea
 // TODO: ( )
 /**
  * Created by as.avramenko on 24.01.2017.
@@ -53,6 +53,8 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                newPresetTitle: rk('Новый шаблон'),
                autoSaveFirstPreset: true,
                useNumberedTitle: true,
+               groupTitleTpl: null,
+               groupTitles: null,
 
                _presets: null,
                _selectedPreset: null
@@ -67,21 +69,23 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
             CommandDispatcher.declareCommand(this, 'changePreset', this._commandChangePreset);
             CommandDispatcher.declareCommand(this, 'clonePreset', this._commandClonePreset);
             CommandDispatcher.declareCommand(this, 'deletePreset', this._commandDeletePreset);
-            this._publish('onSelectedColumnsChange', 'onColumnsEditorShow');
+            this._publish('onColumnsEditorShow', 'onColumnsEditorComplete', 'onSelectedColumnsChange');
          },
 
          init: function () {
             ColumnsEditor.superclass.init.apply(this, arguments);
             this._userConfigName = 'ColumnsEditor#' + this._options.targetRegistryName;
             this._options._presets = new RecordSet({rawData:[], idProperty:'title'});
-            this._presetDropdown = this.getChildControlByName('controls-ColumnsEditor__preset');
+            this._presetDropdown = this._options.showButton ? this.getChildControlByName('controls-ColumnsEditor__preset') : null;
 
             ClientsGlobalConfig/*UserConfig*/.getParam(this._userConfigName).addCallback(function (data) {
                this._onLoadPresets(data);
-               this.subscribeTo(this._presetDropdown, 'onSelectedItemsChange', function (evtName, selected, changes) {
-                  this._setSelectedPreset(selected[0]);
-                  this.sendCommand('showColumnsEditor');
-               }.bind(this));
+               if (this._presetDropdown) {
+                  this.subscribeTo(this._presetDropdown, 'onSelectedItemsChange', function (evtName, selected, changes) {
+                     this._setSelectedPreset(selected[0]);
+                     this.sendCommand('showColumnsEditor');
+                  }.bind(this));
+               }
             }.bind(this));
          },
 
@@ -134,7 +138,9 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
 
          _commandSelectPreset: function (title) {
             this._setSelectedPreset(title);
-            this._presetDropdown.setSelectedKeys([title]);
+            if (this._presetDropdown) {
+               this._presetDropdown.setSelectedKeys([title]);
+            }
          },
 
          _commandChangePreset: function (title) {
@@ -235,7 +241,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                closeByExternalClick: true,
                closeButton: true,
                componentOptions: {
-                  title: this._options.title,
+                  title: opts.title,
                   columns: cfg.columns,
                   groupTitleTpl: opts.groupTitleTpl || cfg.groupTitleTpl || null,
                   groupTitles: opts.groupTitles || cfg.groupTitles || null,
@@ -243,7 +249,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                   _getSelectedPreset: this._getSelectedPreset.bind(this),//^^^
                   selectedColumns: cfg.selectedColumns,
                   expandedGroups: cfg.expandedGroups,
-                  moveColumns: this._options.moveColumns,
+                  moveColumns: opts.moveColumns,
                   handlers: {
                      onComplete/*^^^onSelectedColumnsChange*/: function (evtName, selectedColumns, expandedGroups) {
                         var recordset = this._options._presets;
@@ -273,9 +279,8 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                         }
                         /*this._picker.hide();*/
                         this._areaContainer.close();
-                        if (isColumnsChanged) {
-                           this._notify('onSelectedColumnsChange', selectedColumns);
-                        }
+                        this._notify('onColumnsEditorComplete', isColumnsChanged ? selectedColumns : null);
+                        this._notify('onSelectedColumnsChange', isColumnsChanged ? selectedColumns : null);// TODO: Нужно это убрать, но провести через браузер
                      }.bind(this)
                   }
                },
@@ -285,6 +290,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                         this._areaContainer.destroy();
                         this._areaContainer = null;
                      }
+                     this._notify('onColumnsEditorComplete', null);
                   }.bind(this)
                }
             };
@@ -308,11 +314,13 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
 
       var _updateDropdown = function (self) {
          var dropdown = self._presetDropdown;
-         var presets = self._options._presets;
-         dropdown.setItems(presets);
-         var selected = self._options._selectedPreset;
-         dropdown.setSelectedKeys(selected ? [selected] : []);
-         dropdown.setEnabled(1 < presets.getCount());
+         if (dropdown) {
+            var presets = self._options._presets;
+            dropdown.setItems(presets);
+            var selected = self._options._selectedPreset;
+            dropdown.setSelectedKeys(selected ? [selected] : []);
+            dropdown.setEnabled(1 < presets.getCount());
+         }
       };
 
       var _save = function (self) {
