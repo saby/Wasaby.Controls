@@ -339,6 +339,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
          },
 
          _drawText: function (text) {
+            $('.controls-EditAtPlace__textField', this.getContainer()).toggleClass('controls-EditAtPlace__placeholder', !text);
             if (this._options.editFieldTpl) {
                text = TemplateUtil.prepareTemplate(this._options.editFieldTpl)({text: text});
             } else if (!text) {

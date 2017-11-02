@@ -7,12 +7,12 @@ define('js!SBIS3.CONTROLS.List.Remove', [
    function (ActionBase, ListMixin, cInstance) {
       'use strict';
       /**
-       * Action удаления записей
+       * Класс, описывающий действие удаления записей.
        * @class SBIS3.CONTROLS.List.Remove
        * @public
        * @extends SBIS3.CONTROLS.Action.Action
        * @mixes SBIS3.CONTROLS.Action.List.ListMixin
-       * @author Крайнов Дмитрий Олегович
+       * @author Ганшин Ярослав Олегович
        * @example
        * Пример использования
        * <pre>
@@ -42,15 +42,16 @@ define('js!SBIS3.CONTROLS.List.Remove', [
        */
       var Remove = ActionBase.extend([ListMixin], /** @lends SBIS3.CONTROLS.List.Remove.prototype */{
          /**
-          * @event onRemove Срабатывает перед удалением
+          * @event onRemove Происходит перед удалением записей.
           * @param {Core/EventObject} eventObject Дескриптор события.
-          * @param {Array} items Массив моделей которые надо удалить
+          * @param {Array} items Массив моделей, которые нужно удалить.
           * @see execute
           */
          $protected: {
             _options: {
                /**
-                * @cfg {string|function} текст показываемый при удалении
+                * @cfg {string|function} Текст отображаемый при удалении записей.
+                * @example
                 * <pre>
                 *    new Remove({
                 *       linkedObject : myListView,

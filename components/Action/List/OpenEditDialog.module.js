@@ -206,20 +206,20 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
 
       },
 
-      _createComponent: function(config, meta, mode){
+      _createComponent: function(config, meta){
          var initializingWay = config.componentOptions.initializingWay,
              dialogComponent = config.template,
              self = this;
 
          function wayRemote(templateComponent) {
-            return self._remoteWayCallback(config, meta, mode, templateComponent).addCallback(function () {
-               OpenEditDialog.superclass._createComponent.call(self, config, meta, mode);
+            return self._remoteWayCallback(config, meta, templateComponent).addCallback(function () {
+               OpenEditDialog.superclass._createComponent.call(self, config, meta);
             });
          }
 
          function wayDelayedRemove(templateComponent) {
-            var def = self._delayedRemoteWayCallback(config, meta, mode, templateComponent);
-            OpenEditDialog.superclass._createComponent.call(self, config, meta, mode);
+            var def = self._delayedRemoteWayCallback(config, meta, templateComponent);
+            OpenEditDialog.superclass._createComponent.call(self, config, meta);
             return def;
          }
 
@@ -241,11 +241,11 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
                });
             })
          } else {
-            OpenEditDialog.superclass._createComponent.call(this, config, meta, mode)
+            OpenEditDialog.superclass._createComponent.call(this, config, meta)
          }
       },
 
-      _delayedRemoteWayCallback: function(config, meta, mode, templateComponent){
+      _delayedRemoteWayCallback: function(config, meta, templateComponent){
          var deferred = this._getRecordDeferred(config, templateComponent);
          if (deferred){
             config.componentOptions._receiptRecordDeferred = deferred;
@@ -258,7 +258,7 @@ define('js!SBIS3.CONTROLS.Action.OpenEditDialog', [
          return getRecordProtoMethod.call(templateComponent.prototype, config.componentOptions);
       },
 
-      _remoteWayCallback: function (config, meta, mode, templateComponent) {
+      _remoteWayCallback: function (config, meta, templateComponent) {
          var self = this,
             options,
             isNewRecord = (meta.isNewRecord !== undefined) ? meta.isNewRecord : !config.componentOptions.key,
