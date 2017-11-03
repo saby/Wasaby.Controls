@@ -4834,10 +4834,15 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _deleteRecordsFromRecordSet: function(idArray) {
-            var items = this.getItems();
+            var
+               item,
+               items = this.getItems();
             items.setEventRaising(false, true);
             for (var i = 0; i < idArray.length; i++) {
-               items.remove(items.getRecordById(idArray[i]));
+               item = items.getRecordById(idArray[i]);
+               if (item) {
+                  items.remove(item);
+               }
             }
             items.setEventRaising(true, true);
             return Deferred.success(true);
