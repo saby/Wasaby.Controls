@@ -53,6 +53,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                newPresetTitle: rk('Новый шаблон'),
                autoSaveFirstPreset: true,
                useNumberedTitle: true,
+               groupField: 'group',
                groupTitleTpl: null,
                groupTitles: null,
 
@@ -186,8 +187,9 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
             //////////////////////////////////////////////////^^^
             var cfg = this._columnsEditorConfig;
             if (cfg.columns && cfg.columns.getCount()) {
+               var groupField = cfg.groupField || this._options.groupField;
                cfg.columns.each(function (column) {
-                  column.set('group', '' + Math.ceil(3*Math.random()));
+                  column.set(groupField, '' + Math.ceil(3*Math.random()));
                });
             }
             //^^^cfg.selectedColumns
@@ -243,8 +245,9 @@ define('js!SBIS3.CONTROLS.ColumnsEditor',
                componentOptions: {
                   title: opts.title,
                   columns: cfg.columns,
-                  groupTitleTpl: opts.groupTitleTpl || cfg.groupTitleTpl || null,
-                  groupTitles: opts.groupTitles || cfg.groupTitles || null,
+                  groupField: cfg.groupField || opts.groupField,
+                  groupTitleTpl: cfg.groupTitleTpl || opts.groupTitleTpl || null,
+                  groupTitles: cfg.groupTitles || opts.groupTitles || null,
                   _getPresets: this._getPresets.bind(this),//^^^
                   _getSelectedPreset: this._getSelectedPreset.bind(this),//^^^
                   selectedColumns: cfg.selectedColumns,

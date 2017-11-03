@@ -37,11 +37,12 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
          _dotTplFn: dotTplFn,
          $protected: {
             _options: {
+               title: '',
+               applyButtonTitle: rk('Применить'),
                columns: undefined,
                selectedColumns: [],
                moveColumns: true,
-               title: '',
-               applyButtonTitle: rk('Применить')
+               groupField: ''
             },
             _presetView: undefined,
             _fixedView: undefined,
@@ -145,6 +146,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
 
       var _prepareChildItemsAndGroups = function (cfg) {
          var
+            groupField = cfg.groupField,
             columns = cfg.columns,
             selectedColumns = _getSelectedColumns(cfg),
             moveColumns = cfg.moveColumns;
@@ -178,7 +180,7 @@ define('js!SBIS3.CONTROLS.ColumnsEditorArea',
                if (selectedColumns.indexOf(columnId) !== -1) {
                   selectable.markedKeys.push(columnId);
                }
-               var group = column.get('group');
+               var group = column.get(groupField);
                if (groups.indexOf(group) === -1) {
                   groups.push(group);
                }
