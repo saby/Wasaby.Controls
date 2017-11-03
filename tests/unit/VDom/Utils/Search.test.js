@@ -87,9 +87,9 @@ define(
                aborted;
                search.search({
                   filter: {
-                     name: 'Sasha'
+                     name: 'Aleksey'
                   },
-                  pageSize: 5
+                  pageSize: 1
                }).addErrback(function(result) {
                   aborted = true;
                   return result;
