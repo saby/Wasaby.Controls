@@ -2,7 +2,7 @@
     <ws:for data="index, item in _options.popupItems">
         <ws:WSControls.Windows.Popup.Popup id="{{item.id}}" __key="{{item.id}}"
             scope="{{item.dialogOptions}}"
-            style="z-index: {{item.zIndex}};"
+            style="z-index: {{10 * ( index + 1 )}};"
         />
     </ws:for>
 </div>

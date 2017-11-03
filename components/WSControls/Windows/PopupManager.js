@@ -2,9 +2,10 @@ define('js!WSControls/Windows/PopupManager',
    [
       'Core/Control',
       'Core/core-merge',
-      'Core/helpers/random-helpers'
+      'Core/helpers/random-helpers',
+      'js!WSControls/Windows/PopupContainer/PopupContainer'
    ],
-   function (Control, coreMerge, random) {
+   function (Control, coreMerge, random, PopupContainer) {
       'use strict';
 
       /**
@@ -27,7 +28,6 @@ define('js!WSControls/Windows/PopupManager',
             options = options || {};
             options.id = random.randomId();
             options.dialogOptions.strategy = strategy;
-            options.zIndex = PopupManager._calculateZIndex();
             PopupManager.popupItems.push(options);
             PopupManager.popupContainer.setPopupItems(PopupManager.popupItems);
          },
@@ -43,14 +43,8 @@ define('js!WSControls/Windows/PopupManager',
 
          },
 
-         removeFromStack: function(){
+         _removeFromStack: function(){
 
-         },
-
-         _calculateZIndex: function(){
-            // TODO правильно считать z-index
-            PopupManager._currentZIndex += 10;
-            return PopupManager.getCurrentZIndex();
          },
 
          getCurrentZIndex: function(){
@@ -62,8 +56,9 @@ define('js!WSControls/Windows/PopupManager',
       PopupManager._popupStack = [];
       PopupManager._currentZIndex = 1000;
 
-      require(['js!WSControls/Windows/PopupContainer/PopupContainer'], function(PopupContainer){
-         PopupManager.popupContainer = PopupContainer;
+      PopupManager.popupContainer = PopupContainer;
+      PopupManager.popupContainer.subscribe('onClosePopup', function(event, popupId){
+         PopupManager.remove(popupId);
       });
 
       return PopupManager;

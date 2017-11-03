@@ -1,10 +1,11 @@
 define('js!WSControls/Windows/PopupContainer/PopupContainer',
    [
       'Core/Control',
+      'Core/CommandDispatcher',
       'tmpl!WSControls/Windows/PopupContainer/PopupContainer',
       'css!WSControls/Windows/PopupContainer/PopupContainer'
    ],
-   function (Control, template) {
+   function (Control, CommandDispatcher, template) {
       'use strict';
 
       /**
@@ -19,6 +20,12 @@ define('js!WSControls/Windows/PopupContainer/PopupContainer',
          _controlName: 'WSControls/Windows/PopupContainer/PopupContainer',
          iWantVDOM: true,
 
+         constructor: function (cfg){
+            PopupContainer.superclass.constructor.call(this, cfg);
+            this._publish('onClosePopup');
+            CommandDispatcher.declareCommand(this, 'closePopup', this.closePopup);
+         },
+
          _beforeMount: function(options){
             if( !options.popupItems ){
                options.popupItems = [];
@@ -27,7 +34,16 @@ define('js!WSControls/Windows/PopupContainer/PopupContainer',
 
          /**
           *
-          * @function WSControls/Windows/PopupContainer/PopupContainer#show
+          * @function WSControls/Windows/PopupContainer/PopupContainer#closePopup
+          * @param popupId
+          */
+         closePopup: function(popupId){
+            this._notify('onClosePopup', popupId);
+         },
+
+         /**
+          *
+          * @function WSControls/Windows/PopupContainer/PopupContainer#setPopupItems
           * @param popupItems
           */
          setPopupItems: function (popupItems) {
