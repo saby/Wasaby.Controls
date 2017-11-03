@@ -228,7 +228,9 @@ define('js!Controls/List/ListControl', [
           * @private
           */
          _scrollLoadMore: function(e, direction) {
-           this.__loadPage(direction);
+            if (this._navigationController && this._navigationController.hasMoreData(direction)) {
+               this.__loadPage(direction);
+            }
          },
 
          __initNavigation: function(options, dataSource) {
