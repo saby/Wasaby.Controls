@@ -279,7 +279,6 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   self._notifyTextChanged = self._notifyTextChanged.debounce(500);
                }
             });
-            this._lastReview = this.isEnabled() ? undefined : this.getText();
             this._fillImages(false);
          },
 
@@ -2295,8 +2294,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
          //Метод обновляющий значение редактора в задизабленом состоянии
          //В данном методе происходит оборачивание ссылок в <a> или их декорирование, если указана декоратор
          _updateDataReview: function(text) {
-            if (this._dataReview && !this.isEnabled() &&  this._lastReview != text) {
-               this._lastReview = text;
+            if (this._dataReview && !this.isEnabled() && (this._lastReview ==/*Не ===*/ null || this._lastReview !== text)) {
+               // _lastReview Можно устанавливать только здесь, когда он реально помещается в DOM, (а не в конструкторе, не в init и не в onInit)
+               // иначе проверку строкой выше не пройти. (И устанавливаем всегда строкой, даже если пришли null или undefined)
+               this._lastReview = text || '';
                this._dataReview.html(this._prepareReviewContent(text));
             }
          },
