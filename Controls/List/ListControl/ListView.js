@@ -24,8 +24,6 @@ define('js!Controls/List/ListControl/ListView', [
 
          constructor: function(options) {
             ListView.superclass.constructor.apply(this, arguments);
-            this._publish('onListTop');
-            this._publish('onListBottom');
          },
 
          _beforeMount: function(newOptions) {
@@ -35,6 +33,7 @@ define('js!Controls/List/ListControl/ListView', [
          },
 
          _afterMount: function() {
+            ListView.superclass._afterMount.apply(this, arguments);
             this._initPageLoadTriggers();
          },
 
@@ -52,6 +51,7 @@ define('js!Controls/List/ListControl/ListView', [
                bottomLoadTriggerClass = 'ws-ListView__bottomLoadTrigger';
 
             // Find DOM elements
+            // TODO: change when access by name is implemented
             for (var i = 0; i < children.length; i++) {
                if (children[i].className === topLoadTriggerClass) {
                   topLoadTrigger = children[i];
