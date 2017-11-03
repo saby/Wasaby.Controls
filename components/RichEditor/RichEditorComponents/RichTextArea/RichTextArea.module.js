@@ -422,7 +422,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   //вставка контента может быть инициирована любым контролом,
                   //необходимо нотифицировать о появлении клавиатуры в любом случае
                   if (cConstants.browser.isMobilePlatform) {
-                     EventBus.globalChannel().notify('MobileInputFocus');
+                     this._notifyMobileInputFocus();
                   }
                }.bind(this));
             }
@@ -484,10 +484,14 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                            $(window).off('resize', resizeHandler);
                         }.bind(this);
                      $(window).on('resize', resizeHandler);
-                  } else if (cConstants.browser.isMobileIOS) {
+                  }
+                  else
+                  if (cConstants.browser.isMobileIOS) {
                      this._scrollTo(this._inputControl[0], 'top');
                   }
-
+                  if (cConstants.browser.isMobilePlatform) {
+                     this._notifyMobileInputFocus();
+                  }
                   RichTextArea.superclass.setActive.apply(this, args);
                }.bind(this));
             } else {
@@ -1749,7 +1753,7 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             });
             editor.on('focusin', function(e) {
                if (self._fromTouch){
-                  EventBus.globalChannel().notify('MobileInputFocus');
+                  self._notifyMobileInputFocus();
                }
             });
             editor.on('focusout', function(e) {
@@ -1761,6 +1765,10 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             editor.on('touchstart', function(e) {
                self._fromTouch = true;
             });
+         },
+
+         _notifyMobileInputFocus: function () {
+            EventBus.globalChannel().notify('MobileInputFocus');
          },
 
          _showImageOptionsPanel: function(target) {
