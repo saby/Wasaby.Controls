@@ -51,6 +51,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
 
       $protected: {
          _keysWeHandle: [
+            constants.key.enter,
             constants.key.del,
             constants.key.backspace,
             constants.key.left,
@@ -159,7 +160,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
 
       $constructor: function() {
          this._publish('onTextChange');
-         
+
          this._options.text = (this._options.text) ? this._options.text.toString() : '';
 
          this.subscribe('onFocusOut', this._focusOutHandler.bind(this));
@@ -249,9 +250,40 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
          }
       },
 
-      _keyboardHover: function(event){
-         event.stopPropagation();
-         return true;
+      _keyboardHover: function(e){
+         var res = true,
+            isLastTextBox = true,
+            parent,
+            next;
+
+         // определяем, последний ли это текстбокс в области.
+         if (e.which === constants.key.enter) {
+            next = this;
+            while(next) {
+               next = next.getNextActiveChildControl();
+               if (next instanceof TextBoxBase) {
+                  isLastTextBox = false;
+                  break;
+               }
+            }
+         }
+
+         // если нажали enter, и текстбокс - последний в области, выполняем действие по умолчанию
+         if (e.which === constants.key.enter && isLastTextBox) {
+            if (!(e.altKey || e.shiftKey || e.ctrlKey || e.metaKey)) {
+               parent = this;
+               while (parent && !parent._defaultAction) {
+                  parent = parent.getParent();
+               }
+               if (parent._defaultAction) {
+                  res = parent._defaultAction(e);
+               }
+            }
+         } else {
+            e.stopPropagation();
+         }
+
+         return res;
       },
 
       getValue : function() {
