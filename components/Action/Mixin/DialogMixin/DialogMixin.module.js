@@ -207,7 +207,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       },
 
       _finishExecuteDeferred: function(error) {
-         if (!this._executeDeferred.isReady()) {
+         if (this._executeDeferred && !this._executeDeferred.isReady()) {
             if (!error) {
                //false - т.к. приходится нотифаить событие onExecuted самому, из-за того, что базовый action
                //не может обработать валидный результат false
