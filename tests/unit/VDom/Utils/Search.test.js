@@ -76,6 +76,39 @@ define(
                
             });
    
+            it('double Search', function(done) {
+               var search = new Search(
+                  {
+                     searchParam: 'name',
+                     dataSource: source,
+                     searchDelay: 50
+                  }
+               ),
+               aborted;
+               search.search({
+                  filter: {
+                     name: 'Sasha'
+                  },
+                  pageSize: 5
+               }).addErrback(function(result) {
+                  aborted = true;
+                  return result;
+               });
+   
+               search.search({
+                  filter: {
+                     name: 'Sasha'
+                  },
+                  pageSize: 5
+               }).addCallback(function(result) {
+                  assert.equal(result.getCount(), 1);
+                  assert.equal(result.at(0).get('name'), 'Sasha');
+                  assert.equal(aborted, true);
+                  done();
+                  return result;
+               });
+            });
+   
             it('check wrong params', function(done) {
                try {
                   new Search({searchParam: 'name'});
