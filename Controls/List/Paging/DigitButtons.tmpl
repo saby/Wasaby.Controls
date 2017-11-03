@@ -1,1 +1,10 @@
-<div>DB</div>
+<div class="ws-DigitButtons">
+<ws:for data="digit in _digits">
+   <ws:if data="{{digit == '...'}}">
+      <span class="ws-DigitButtons__btn ws-DigitButtons__ellipsis">{{digit}}</span>
+   </ws:if>
+   <ws:else>
+      <span event:onclick="__digitClick(digit)" class="ws-DigitButtons__btn ws-DigitButtons__digit{{digit == _options.selectedKey ? ' ws-DigitButtons__digit__selected'}}">{{digit}}</span>
+   </ws:else>
+</ws:for>
+</div>

@@ -10,7 +10,19 @@ define('js!Controls/List/Paging', [
    'use strict';
    var ModuleClass = BaseControl.extend(
       {
-         _template: template
+         _template: template,
+
+         _beforeMount: function(newOptions) {
+            this._selectedKey = newOptions.selectedKey;
+         },
+
+         _beforeUpdate: function(newOptions) {
+
+         },
+
+         __digitClick: function(e, digit) {
+            this._selectedKey = digit;
+         }
       });
    return ModuleClass;
 });

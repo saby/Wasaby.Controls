@@ -3,15 +3,34 @@
  */
 define('js!Controls/List/Paging/DigitButtons', [
    'Core/Control',
-   'tmpl!Controls/List/Paging/DigitButtons'
+   'tmpl!Controls/List/Paging/DigitButtons',
+   'css!Controls/List/Paging/DigitButtons'
 ], function(BaseControl, template) {
    'use strict';
    var SUR_ELEMENTS_STEP = 3;
    var
       ModuleClass = BaseControl.extend({
+         _selectedKey: null,
          _template: template,
+         _digits: null,
+
+         constructor: function(cfg) {
+            ModuleClass.superclass.constructor.apply(this, arguments);
+            this._digits = [];
+         },
+
+         _beforeMount: function(newOptions) {
+            this._digits = this.__getDrawnDigits(newOptions.count, newOptions.selectedKey);
+         },
+
+         _beforeUpdate: function(newOptions) {
+            if (newOptions.count != this._options.count || newOptions.selectedKey != this._options.selectedKey ) {
+               this._digits = this.__getDrawnDigits(newOptions.count, newOptions.selectedKey);
+            }
+         },
+
          //получаем граничные цифры, окружающие выбранный элемент, по условия +-3 в обе стороны (4 5 6 [7] 8 9 10)
-         __calcSurroundElemens: function(digitsCount, currentDigit) {
+         __getSurroundElemens: function(digitsCount, currentDigit) {
             var first, last;
             first = currentDigit - SUR_ELEMENTS_STEP;
             last = currentDigit + SUR_ELEMENTS_STEP;
@@ -28,15 +47,14 @@ define('js!Controls/List/Paging/DigitButtons', [
             }
          },
 
-         __initDrawnDigits: function(digitsCount, currentDigit, full) {
-
+         __getDrawnDigits: function(digitsCount, currentDigit, full) {
             var
                surElements,
                drawnDigits = [];
 
             if (digitsCount) {
 
-               surElements = this.__calcSurroundElemens(digitsCount, currentDigit);
+               surElements = this.__getSurroundElemens(digitsCount, currentDigit);
 
                if (surElements.first > 1) {
                   //если левая граничная цифра больше единицы, то единицу точно рисуем
@@ -67,6 +85,9 @@ define('js!Controls/List/Paging/DigitButtons', [
                }
             }
             return drawnDigits;
+         },
+         __digitClick: function(e, digit) {
+            this._notify('onDigitClick', digit);
          }
 
       });
