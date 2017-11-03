@@ -31,12 +31,11 @@ define(
              });
          
          describe('search', function() {
-            it('Search without kbLayoutRevert', function(done) {
+            it('Search', function(done) {
                var search = new Search(
                   {
                      searchParam: 'name',
                      dataSource: source,
-                     kbLayoutRevert: false,
                      searchDelay: 50
                   }
                );
@@ -46,33 +45,8 @@ define(
                   },
                   pageSize: 5
                }).addCallback(function(result) {
-                  assert.isFalse(result.translated);
-                  assert.equal(result.result.getCount(), 1);
-                  assert.equal(result.result.at(0).get('name'), 'Sasha');
-                  done();
-                  return result;
-               });
-            });
-   
-            it('Search with kbLayoutRevert', function(done) {
-               var search  = new Search(
-                  {
-                     searchParam: 'name',
-                     dataSource: source,
-                     kbLayoutRevert: true,
-                     searchDelay: 50
-                  }
-               );
-               search.search({
-                  filter: {
-                     name: 'Sasha'
-                  },
-                  pageSize: 5
-               }).addCallback(function(result) {
-                  assert.isTrue(result.translated);
-                  assert.equal(result.result.getCount(), 2);
-                  assert.equal(result.result.at(0).get('name'), 'Sasha');
-                  assert.equal(result.result.at(1).get('name'), 'Ыфырф');
+                  assert.equal(result.getCount(), 1);
+                  assert.equal(result.at(0).get('name'), 'Sasha');
                   done();
                   return result;
                });
@@ -100,6 +74,18 @@ define(
                   return err;
                });
                
+            });
+   
+            it('check wrong params', function(done) {
+               try {
+                  new Search({searchParam: 'name'});
+               } catch (e) {
+                  try {
+                     new Search({dataSource: source});
+                  } catch (e) {
+                     done();
+                  }
+               }
             });
          });
       });
