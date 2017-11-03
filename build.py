@@ -1,14 +1,23 @@
+"""SDK modules builder"""
 import shutil
 import os
-import os.path
+import logging
 
 
-def copyReplace(folder): 
-   myPath = os.path.join("SBIS3.CONTROLS", folder)
-   if os.path.exists(myPath):
-      shutil.rmtree(myPath)
-   shutil.copytree(folder, myPath)
+def build():
+    """Build interface modules"""
 
-copyReplace("components")
-copyReplace("themes")
-copyReplace("lang")
+    list_dirs = {'components', 'themes', 'lang'}
+
+    def _copy(source, target):
+        """Copy from 'source' to 'target' with replace"""
+        logging.info('Copy "%s" to "%s"', source, target)
+        if os.path.exists(target):
+            shutil.rmtree(target)
+        shutil.copytree(source, target)
+
+    set(map(lambda x: _copy(x, os.path.join('SBIS3.CONTROLS', x)), list_dirs))
+
+
+if __name__ == '__main__':
+    build()
