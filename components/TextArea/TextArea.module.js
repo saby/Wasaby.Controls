@@ -257,7 +257,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
             this._inputField.removeClass('ws-hidden').removeClass('ws-invisible');
             if (!this._options.text) {
                $('.controls-TextArea__view', this._container.get(0)).empty();
-               $('.controls-TextArea__view', this._container.get(0)).removeClass('controls-__-empty');
+               $('.controls-TextArea__view', this._container.get(0)).removeClass('controls-TextArea__view__empty');
             }
          }
          //нельзя классы, ограничивающие высоту ставить сразу в шаблоне, потому что из-за них некорректно считается высота, т.к. оин сразу добавляют скролл, а считать высоту надо без скролла
