@@ -22,10 +22,63 @@ define('js!Controls/List/ListControl/ListView', [
          _selectedItem: null,
          _selectedIndex: -1,
 
+         constructor: function(options) {
+            ListView.superclass.constructor.apply(this, arguments);
+            this._publish('onListTop');
+            this._publish('onListBottom');
+         },
+
          _beforeMount: function(newOptions) {
             ListView.superclass._beforeMount.apply(this, arguments);
             this._itemTemplate = newOptions.itemTemplate || defaultItemTemplate;
             this.__calcSelectedItem(newOptions);
+         },
+
+         _afterMount: function() {
+            this._initPageLoadTriggers();
+         },
+
+         /**
+          * Sets up IntersectionObserver that will notify
+          * when scroll is at the beginning or the end of the list.
+          *
+          * @private
+          */
+         _initPageLoadTriggers: function () {
+            var
+               children = this._container.children(),
+               topLoadTrigger, bottomLoadTrigger,
+               topLoadTriggerClass = 'ws-ListView__topLoadTrigger',
+               bottomLoadTriggerClass = 'ws-ListView__bottomLoadTrigger';
+
+            // Find DOM elements
+            for (var i = 0; i < children.length; i++) {
+               if (children[i].className === topLoadTriggerClass) {
+                  topLoadTrigger = children[i];
+               }
+               else if (children[i].className === bottomLoadTriggerClass) {
+                  bottomLoadTrigger = children[i];
+               }
+            }
+
+            // Setup intersection observer
+            var self = this,
+               observer = new IntersectionObserver(function(changes) {
+                  for (var i = 0; i < changes.length; i++) {
+                     if (changes[i].isIntersecting) {
+                        switch (changes[i].target.className) {
+                           case topLoadTriggerClass:
+                              self._notify('onListTop');
+                              break;
+                           case bottomLoadTriggerClass:
+                              self._notify('onListBottom');
+                              break;
+                        }
+                     }
+                  }
+               }, {});
+            observer.observe(topLoadTrigger);
+            observer.observe(bottomLoadTrigger);
          },
 
          _beforeUpdate: function(newOptions) {

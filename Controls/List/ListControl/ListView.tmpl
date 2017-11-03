@@ -1,12 +1,16 @@
-<div class="ws-ListView">
-   <ws:for data="_getStartEnumerationPosition(); _checkConditionForEnumeration(); _getNextEnumerationPosition();">
-      <ws:partial
-            template="{{_itemTemplate}}"
-            item="{{_display.at(_curIndex).getContents()}}"
-            dispItem="{{_display.at(_curIndex)}}"
-            index="{{_curIndex}}"
-            _getPropValue="{{__getPropertyValue}}"
-            _options="{{_options}}"
-            selected="{{_display.at(_curIndex) == _selectedItem}}"/>
-   </ws:for>
+<div class="ws-ListView" style="position: relative;">
+   <div class="ws-ListView__topLoadTrigger"></div>
+   <div class="ws-ListView__items">
+      <ws:for data="_getStartEnumerationPosition(); _checkConditionForEnumeration(); _getNextEnumerationPosition();">
+         <ws:partial
+               template="{{_itemTemplate}}"
+               item="{{_display.at(_curIndex).getContents()}}"
+               dispItem="{{_display.at(_curIndex)}}"
+               index="{{_curIndex}}"
+               _getPropValue="{{__getPropertyValue}}"
+               _options="{{_options}}"
+               selected="{{_display.at(_curIndex) == _selectedItem}}"/>
+      </ws:for>
+   </div>
+   <div class="ws-ListView__bottomLoadTrigger"></div>
 </div>
