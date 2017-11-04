@@ -269,7 +269,7 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
          if (e.which === constants.key.enter && isLastTextBox) {
             if (!(e.altKey || e.shiftKey || e.ctrlKey || e.metaKey)) {
                parent = this;
-               while (parent && !parent._defaultAction) {
+               while (!parent._defaultAction) {
                   parent = parent.getParent();
                }
                if (parent._defaultAction) {
