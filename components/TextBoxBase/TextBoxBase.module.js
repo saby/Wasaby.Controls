@@ -255,15 +255,13 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
             parent,
             next;
 
+         next = this;
          // определяем, последний ли это текстбокс в области.
-         if (e.which === constants.key.enter) {
-            next = this;
-            while(next) {
-               next = next.getNextActiveChildControl();
-               if (next instanceof TextBoxBase) {
-                  isLastTextBox = false;
-                  break;
-               }
+         while(next) {
+            next = next.getNextActiveChildControl();
+            if (next instanceof TextBoxBase) {
+               isLastTextBox = false;
+               break;
             }
          }
 
