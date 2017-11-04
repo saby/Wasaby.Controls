@@ -94,7 +94,7 @@ define('js!SBIS3.CONTROLS.DateRangeChoose',[
              *
              * @see updateIcons
              */
-            iconsHandler: null,
+            iconsHandler: null
          },
          _cssDateRangeChoose: {
             selected: 'controls-DateRangeChoose__selected',
