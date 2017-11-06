@@ -3567,7 +3567,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   return this._scrollOffset.bottom + this._limit;
                }
             } else {
-               return this._scrollOffset.top - this._limit;
+               // Math.max из-за того, что страница с записями может быть неполная, и при подгрузке вверх,
+               // вычитая размер страницы можно получить отрицательный offset
+               return Math.max(this._scrollOffset.top - this._limit, 0);
             }
          },
 
