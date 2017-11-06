@@ -209,9 +209,8 @@ define('js!SBIS3.CONTROLS.SuggestView',
              }
 
              e.setResult(this._notify.apply(this, args));
-             /* Необходимо генерировать событие ondrawitems, т.к. событие onDataLoad откладывается до загрузки всех списков,
-                и в случае, когда item'ы списка, который был загружен последним не изменились, событие onDrawItems не стрельнёт и не долетит до контроллера,
-                хотя первый список мог измениться */
+             /* Необходимо генерировать событие ondrawitem's самому когда загрузятся оба списка (если их несколько), 
+                иначе от двух событий некорректно работает контроллер смены раскладки, который ожидает одно событие onDataLoad и одно onDrawItems.  */
              if (e.name === 'ondataload'  && this._syntheticOnDrawItems) {
                 this._notify('ondrawitems');
                 this._syntheticOnDrawItems = false;
