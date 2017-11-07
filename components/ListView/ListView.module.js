@@ -2091,7 +2091,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   .removeClass('controls-ListView__item__selected')
                   .removeClass('controls-ListView__item__selected__withMarker');
                //В случае добавления по месту, добавляемой записи в проекции нет, поэтому будем искать её в вёрстке прямо по id
-               if (this.isAdd()) {
+               if (this.isAdd() && index === -1) {
                   this._addSelectedClasses(undefined, id);
                } else if (this._getItemsProjection()) {
                   var projItem = this._getItemsProjection().at(index);
@@ -2622,7 +2622,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         this._showToolbar(model);
                         this.setSelectedKey(model.getId());
                         if (model.getState() === Record.RecordState.DETACHED) {
-                           this._drawSelectedItem(model.getId());
+                           this._drawSelectedItem(model.getId(), -1);
                         }
                         // Могут быть операции над записью с тулбаром под записью. В таком случае на ListView вешается класс с padding-bottom.
                         // Этот отступ при скроле тоже должен учитываться.
