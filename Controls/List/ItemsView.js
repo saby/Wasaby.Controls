@@ -26,10 +26,12 @@ define('js!Controls/List/ItemsView', [
          _startIndex: 0,
          _stopIndex: 0,
          _curIndex: 0,
+         _tplData: null,
 
          constructor: function (cfg) {
             ItemsRender.superclass.constructor.apply(this, arguments);
             this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
+            this._tplData = {};
          },
 
          _beforeMount: function(newOptions) {
@@ -37,6 +39,7 @@ define('js!Controls/List/ItemsView', [
                this._items = newOptions.items;
                this.__initDisplay(newOptions.items, newOptions);
                this._initIndices();
+               this._initTplData(newOptions);
             }
          },
 
@@ -44,12 +47,22 @@ define('js!Controls/List/ItemsView', [
             if (newOptions.items && (this._items != newOptions.items)) {
                this._items = newOptions.items;
                this.__initDisplay(newOptions.items, newOptions);
+               this._initTplData(newOptions);
             }
          },
 
          _initIndices: function() {
             this._startIndex = 0;
             this._stopIndex = this._display.getCount();
+         },
+
+
+         //
+         _initTplData: function(cfg) {
+            this._itemTplData = {
+               getPropValue: ItemsUtil.getPropertyValue,
+               listConfig: cfg
+            }
          },
 
          _getStartEnumerationPosition: function() {
@@ -62,10 +75,6 @@ define('js!Controls/List/ItemsView', [
 
          _checkConditionForEnumeration: function() {
             return this._curIndex < this._stopIndex;
-         },
-
-         __getPropertyValue: function(itemContents, field) {
-            return ItemsUtil.getPropertyValue(itemContents, field);
          },
 
          __initDisplay: function(items, cfg) {
@@ -81,6 +90,7 @@ define('js!Controls/List/ItemsView', [
 
          _onCollectionChange: function() {
             this._initIndices();
+            this._initTplData(this._options);
             this._forceUpdate();
          },
 
