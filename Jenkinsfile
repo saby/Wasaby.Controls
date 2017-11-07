@@ -1,7 +1,9 @@
 #!groovy
 echo "Задаем параметры сборки"
+def version = "3.17.210"
 properties([
     disableConcurrentBuilds(),
+    def props = readProperties file: "/mnt/win_share_for_build/mount_test-osr-source/${version}/version_application.txt"
     buildDiscarder(
         logRotator(
             artifactDaysToKeepStr: '3',
@@ -22,7 +24,7 @@ properties([
             description: '',
             name: 'branch_engine'),
         string(
-            defaultValue: 'dda/flink-improve',
+            defaultValue: props[atf_co],
             description: '',
             name: 'branch_atf'),
         choice(
@@ -44,7 +46,6 @@ if ( "${env.BUILD_NUMBER}" != "1" && params.run_reg == false && params.run_int =
 
 node('controls') {
     echo "Назначем версию и определяем рабочую директорию"
-    def version = "3.17.210"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
         echo "Чистим рабочую директорию"
