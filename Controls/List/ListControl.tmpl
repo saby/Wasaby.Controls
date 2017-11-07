@@ -6,4 +6,9 @@
          displayProperty="{{_options.displayProperty}}"
          selectedKey="{{_options.selectedKey}}">
    </ws:Controls.List.ListControl.ListView>
+   <div class="ws-ListControl__footer">
+      <ws:if data="{{_options.showPaging}}">
+         <ws:Controls.List.Paging pagesCount="{{15}}" selectedKey="{{7}}"></ws:Controls.List.Paging>
+      </ws:if>
+   </div>
 </div>
