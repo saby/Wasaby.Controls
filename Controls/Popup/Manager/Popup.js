@@ -1,9 +1,9 @@
-define('js!Controls/PopupManager/Popup', [
+define('js!Controls/Popup/Popup', [
 ], function() {
 
    /**
     * Компонент вспывающего окна
-    * @class Controls/PopupManager/Popup
+    * @class Controls/Popup/Popup
     * @control
     * @extends Core/Control
     * @public
@@ -12,7 +12,7 @@ define('js!Controls/PopupManager/Popup', [
 
    /**
     * Закрыть окно
-    * @function Controls/PopupManager/Popup#close
+    * @function Controls/Popup/Popup#close
     */
 
 });
