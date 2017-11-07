@@ -32,7 +32,8 @@ define('js!SBIS3.CONTROLS.SumDialogTemplate', [
          model = options.item;
          format = model.getFormat();
          enumerator = model.getEnumerator();
-         while (field = enumerator.getNext()) {
+         field = enumerator.getNext();
+         while (field) {
             title = options.fields[field] || field;
             index = format.getFieldIndex(field);
             type = format.at(index).getType();
@@ -50,6 +51,7 @@ define('js!SBIS3.CONTROLS.SumDialogTemplate', [
                title: title,
                value: value
             });
+            field = enumerator.getNext();
          }
 
          return options;

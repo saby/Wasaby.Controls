@@ -1,9 +1,0 @@
-<ws:partial template="{{ _defaultGroupItemTemplate }}" scope="{{...}}"></ws:partial>
-<ws:partial
-   scope="{{...}}"
-   template="{{_listItemsTemplate}}"
-   startFnc="{{_getStartEnumerationPositionInGroup}}"
-   condFnc="{{_checkConditionForEnumerationInGroup}}"
-   endFnc="{{_getNextEnumerationPosition}}"
-/>
-<div event:onmousemove="_mouseLeave()">Футер{{item}}</div>

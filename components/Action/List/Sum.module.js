@@ -14,11 +14,11 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
     function ( Deferred,ActionBase, ListMixin, DialogMixin, SbisService, Model, cMerge, cClone, cInstance) {
         'use strict';
         /**
-         * Класс суммирования полей в списке
+         * Класс, описывающий действие суммирования полей в списке.
          * @class SBIS3.CONTROLS.Action.List.Sum
          * @public
          * @extends SBIS3.CONTROLS.Action.Action
-         * @author Крайнов Дмитрий Олегович
+         * @author Сухоручкин Андрей Сергеевич
          *
          * @mixes SBIS3.CONTROLS.Action.List.ListMixin
          * @mixes SBIS3.CONTROLS.Action.DialogMixin
@@ -45,6 +45,9 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
         var Sum = ActionBase.extend([ListMixin, DialogMixin], /** @lends SBIS3.CONTROLS.Action.List.Sum.prototype */{
             $protected: {
                 _options: {
+                    /**
+                     * @cfg {String} Шаблон диалога сохранения .
+                     */
                     template : 'js!SBIS3.CONTROLS.SumDialogTemplate',
                     /**
                      * @cfg {Object} Поля для суммирования
@@ -79,6 +82,13 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
                     fields: {},
                    /**
                     * @cfg {Object} Фильтр, применяемый для выборки суммируемых элементов.
+                    * @example
+                    * <pre>
+                    * var filter = {};
+                    * // Свойство ВидДерева устанавливают типы записей, по которым производится суммирование
+                    * filter['ВидДерева'] = 'Только узлы'
+                    * filter['ВидДерева'] = 'Только листья'
+                    * </pre>
                     */
                     filter: {}
                 }

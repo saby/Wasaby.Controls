@@ -130,7 +130,7 @@ define('js!Controls/Input/resources/TextRender/TextRender',
 
          _notifyHandler: function(event, value) {
             this._notify(value);
-         },
+         }
       });
 
       function updateTargetValue(target, value, position) {

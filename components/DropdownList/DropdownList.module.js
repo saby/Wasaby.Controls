@@ -690,6 +690,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _setFirstItemAsSelected : function() {
             //Перебиваю метод из multeselectable mixin'a. см. коммент у метода _isEnumTypeData
             var items = this.getItems(),
+                keys = this._options.selectedKeys,
                 id;
 
             if (this._isEnumTypeData()){
@@ -703,7 +704,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
 
             if (id !== undefined) {
-               this._options.selectedKeys.push(id);
+               //Попадаем сюда, когда в selectedKeys установлены ключи, которых нет в наборе данных
+               //В этом случае выбираем первый элемент как выбранный.
+               //Нельзя присваивать новый массив с 1 элементом, т.к. собьется ссылка на массив и контексты будут воспринимать значение как новое => использую splice
+               keys.splice(0, keys.length, id);
             }
          },
          _setHasMoreButtonVisibility: function(){
