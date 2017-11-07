@@ -32,17 +32,19 @@
 
 .controls-ItemsToolbar__edit {
    background-color: @list-view-items-toolbar-locked-bg;
-   .controls-ItemActions__item {
-      line-height: @list-view-items-toolbar-line-height !important;
-      &.controls-IconButton__round-border-24 {
-         line-height: @list-view-items-toolbar-line-height !important;
-      }
-   }
    .controls-IconButton.controls-IconButton__round-border-24 {
       line-height: @list-view-items-toolbar-line-height !important;
    }
    .controls-ItemActions__menu-button {
       display: none;
+   }
+}
+.controls-ItemsToolbar__withEditActions {
+   .controls-ItemActions__item {
+      line-height: @list-view-items-toolbar-line-height !important;
+      &.controls-IconButton__round-border-24 {
+         line-height: @list-view-items-toolbar-line-height !important;
+      }
    }
 }
 
@@ -183,10 +185,10 @@
 
    &.controls-ItemsToolbar__edit {
       background-color: @list-view-items-toolbar-locked-bg;
-      right: 0;
+      right: @list-view-items-toolbar-locked-right;
       .controls-ItemActions {
          .controls-ItemActions__itemsContainer {
-            margin-right: 0;
+            margin-right: @list-view-items-toolbar-locked-margin-right;
          }
       }
    }
