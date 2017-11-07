@@ -43,7 +43,11 @@
                border-bottom-color: @data-grid-cell-separator-color;
             }
          }
-         .controls-DataGridView__tr:first-child, .controls-editInPlace:first-child + .controls-DataGridView__tr {
+         /* Т.к. редактирование по месту может в DOM'e занимать первые две строки,
+            хотя визуально никак не отображаться, нам надо их обойти и отобразить у реальной строки */
+         .controls-DataGridView__tr:first-child,
+         .controls-editInPlace:first-child + .controls-DataGridView__tr,
+         .controls-editInPlace:nth-child(2) + .controls-DataGridView__tr{
             .controls-DataGridView__td {
                border-top-color: @data-grid-edge-cell-separator-color;
             }
@@ -224,11 +228,9 @@
 }
 
 .controls-DataGridView__results .controls-DataGridView__td{
-   height: 22px;
+   height: 21px;
    cursor: default;
-   box-sizing: border-box;
-   line-height: 14px;
-   vertical-align: top;
+   padding: @data-grid-results-cell-padding;
 }
 
 .controls-DataGridView__tbody, .controls-DataGridView__thead {

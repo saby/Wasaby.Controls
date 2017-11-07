@@ -34,7 +34,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
    ) {
       'use strict';
 
-      var widthBrowserScrollbar = 0;
+      var widthBrowserScrollbar = null;
 
       /**
        * Класс контрола "Контейнер для контента с тонким скроллом". В качестве тонкого скролла применяется класс контрола {@link SBIS3.CONTROLS.Scrollbar}.
@@ -239,7 +239,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
                this.subscribeTo(EventBus.channel('stickyHeader'), 'onStickyHeadersChanged', this._stickyHeadersChangedHandler.bind(this));
 
-               this._addGradient();
+               this._toggleGradient();
 
                // Что бы до инициализации не было видно никаких скроллов
                this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
@@ -257,7 +257,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          _hideBrowserScrollbar: function(){
             var style;
 
-            if (widthBrowserScrollbar === 0) {
+            if (widthBrowserScrollbar === null) {
                widthBrowserScrollbar = this._getBrowserScrollbarWidth();
             }
 
@@ -316,12 +316,13 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             }
          },
 
-         _addGradient: function() {
+         _toggleGradient: function() {
             // $elem[0].scrollHeight - integer, $elem.height() - float
          	var maxScrollTop = this._getScrollHeight() - Math.round(this._container.height());
 
          	// maxScrollTop > 1 - погрешность округления на различных браузерах.
             this._container.toggleClass('controls-ScrollContainer__bottom-gradient', maxScrollTop > 1 && this._getScrollTop() < maxScrollTop);
+            this._container.toggleClass('controls-ScrollContainer__top-gradient', this._getScrollTop() > 0);
          },
 
          _initScrollbar: function(){
@@ -496,8 +497,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             if (this._paging) {
                this._calcPagingSelectedKey(scrollTop);
             }
-            this.getContainer().toggleClass('controls-ScrollContainer__top-gradient', scrollTop > 0);
-            this.getContainer().toggleClass('controls-ScrollContainer__bottom-gradient', scrollTop < this._getScrollHeight() -  this._container.height());
+            this._toggleGradient();
          },
 
          _onMouseenter: function() {
@@ -638,6 +638,28 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             this._resizeInner();
          },
 
+         /**
+          * Переключение активности нативного скролла.
+          * @param flag активность нативного скролла.
+          * @private
+          */
+         _toggleOverflowHidden: function(flag) {
+            this._content.toggleClass('controls-ScrollContainer__content-overflowHidden', flag);
+            /**
+             * Класс controls-ScrollContainer__content-overflowHidden отключает нативный скролл на контенте.
+             * Из-за того что скрытие нативного скролла происходит через смещение контента на ширину скролла,
+             * нужно убирать смещение, если нативный скролл отключен или добавлять его в противном случае.
+             */
+            if (flag) {
+               this._content.css({
+                  marginRight: 0,
+                  paddingRight: 0
+               });
+            } else {
+               this._hideBrowserScrollbar();
+            }
+         },
+
          _resizeInner: function () {
             if (this._scrollbar){
                this._scrollbar.setContentHeight(this._getScrollHeight());
@@ -646,19 +668,19 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             }
             //ресайз может позваться до инита контейнера
             if (this._content) {
-               this._addGradient();
+               this._toggleGradient();
                /**
                 * В firefox при высоте = 0 на дочерних элементах, нативный скролл не пропадает.
                 * В такой ситуации content имеет высоту скролла, а должен быть равен 0.
                 * Поэтому мы вешаем класс, который убирает нативный скролл, если произойдет такая ситуация.
                 */
                if (cDetection.firefox) {
-                  this._content.toggleClass('controls-ScrollContainer__content-overflowHidden', !this._getChildContentHeight());
+                  this._toggleOverflowHidden(!this._getChildContentHeight());
                }
                if (cDetection.isIE) {
                   // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
                   // 1px для скроллирования.
-                  this._content.toggleClass('controls-ScrollContainer__content-overflowHidden', (this._getScrollHeight() - Math.floor(this._container.height())) === 1);
+                  this._toggleOverflowHidden((this._getScrollHeight() - Math.floor(this._container.height())) === 1);
                }
                if (!this._options.takeScrollbarHidden) {
                   this._subscribeTakeScrollbar();

@@ -66,6 +66,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
          _autoHeightInitialized: false,
          
          _options: {
+            _paddingClass: ' controls-TextBox__paddingLeft',
             textFieldWrapper: inputField,
             wrapUrls: LinkWrap.wrapURLs,
             escapeHtml: escapeHtml,

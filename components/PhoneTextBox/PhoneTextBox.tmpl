@@ -3,7 +3,8 @@
    controls-PhoneTextBox
    controls-TextBox__size__{{size || 'm'}}
    controls-TextBox__state__{{enabled ? 'default' : 'disabled'}}
-   controls-TextBox__text-align-{{ textAlign }}">
+   controls-TextBox__text-align-{{ textAlign }}
+   {{ _paddingClass }}">
    <div class="controls-TextBox__wrapper">
       <div class="js-controls-FormattedTextBox__field controls-TextBox__field{{enabled ? '' : ' ws-hidden'}}" contenteditable="{{enabled}}">{{_maskTemplateFn(_modelForMaskTpl)|sanitize}}</div>
       <a href="tel:{{srcText}}" class="controls-PhoneTextBox__link controls-Link ws-hover-target{{enabled ? ' ws-hidden'}}">{{(text || '&nbsp;')|sanitize}}</a>

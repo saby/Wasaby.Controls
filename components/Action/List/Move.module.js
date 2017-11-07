@@ -9,11 +9,11 @@ define('js!SBIS3.CONTROLS.Action.List.Move', [
    function (ActionBase, ListMixin, Mover, Di, cInstance) {
       'use strict';
       /**
-       * Базовый класс перемещения элементов в списке
+       * Базовый класс действия, которое перемещает элементы в списке.
        * @class SBIS3.CONTROLS.Action.List.Move
        * @public
        * @extends SBIS3.CONTROLS.Action.Action
-       * @author Крайнов Дмитрий Олегович
+       * @author Ганшин Ярослав Олегович
        *
        * @mixes SBIS3.CONTROLS.Action.List.ListMixin
        *

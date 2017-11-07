@@ -162,6 +162,7 @@ define('js!SBIS3.CONTROLS.FieldLink',
              _lastFieldLinkWidth: null,
              _showAllButton: null,
              _options: {
+                _paddingClass: ' controls-TextBox__paddingLeft',
                 /* Служебные шаблоны поля связи (иконка открытия справочника, контейнер для выбранных записей */
                 afterFieldWrapper: afterFieldWrapper,
                 beforeFieldWrapper: beforeFieldWrapper,
@@ -1113,10 +1114,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
              );
           },
 
-          setListFilter: function() {
+          setListFilter: function(listFilter) {
              /* Если единичный выбор в поле связи, но textBox всё равно показывается(включена опция), запрещаем работу suggest'a */
              if(!this._isInputVisible() && this._options.alwaysShowTextBox) {
-                return;
+                FieldLink.superclass.setListFilter.call(this, listFilter, true);
              }
              FieldLink.superclass.setListFilter.apply(this, arguments);
           },

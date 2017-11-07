@@ -14,6 +14,7 @@
 @default-padding-small:        0.25rem;
 //textbox
 @text-box-information-icon-size:                  1rem;
+@text-box-font-size-l:                            @huge-text-size;
 //number-text-box
 @number-text-box-icon-size:                       @default-icon-size-large;
 //combo-box
@@ -27,7 +28,7 @@
 @search-button-wrapper-padding:                   0;
 @search-loop-size:                                2.8571rem;
 @search-form-icon-padding:                        0;
-@search-field-padding:                            0 0 0 @default-padding;
+@search-field-padding:                            0;
 //fieldLink
 @fieldLink-showAll-shadow-width:                  1rem;
 @fieldLink-linkItem-line-height:                  @default-base-line-height;
@@ -394,7 +395,6 @@
 @data-grid-header-cell-sorting-icon-size: 1rem;
 @data-grid-cell-height:                   1.7857rem;
 @data-grid-cell-padding:                  0 .28571rem;
-@data-grid-ms-first-content-cell-padding-left:@data-grid-header-cell-padding-side;
 @data-grid-td-checkbox-width:             1.75rem;
 @data-grid-td-visible-checkbox-width:     1.75rem;
 @data-grid-check-box-top:                 -@default-border-width;
@@ -403,6 +403,7 @@
 @data-grid-partScroll-arrowLeft-top-shift: -0.8571rem;
 @data-grid-partScroll-arrowRight-top-shift:-.857rem;
 @data-grid-partScroll-thumb-margin:       1.78rem;
+@data-grid-results-cell-padding:          @data-grid-cell-padding;
 // PrintDialog
 //По какой-то причине Firefox берёт font-size не из html, а свой, причем только при расчёте этой ширины
 @controls-printdialog-min-width:          27em;
@@ -676,6 +677,3 @@
 //back-button
 @back-arrow-width:                1rem;
 @back-arrow-height:               1rem;
-//engine-browser
-@browser-search-margin:           0.28572rem;
-@browser-top-template-padding:    @browser-search-margin;

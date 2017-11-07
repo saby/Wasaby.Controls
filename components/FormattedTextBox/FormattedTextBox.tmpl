@@ -2,7 +2,8 @@
     controls-TextBox
     controls-TextBox__size__{{!! size ? size : 'm'}}
     controls-TextBox__state__{{ enabled ? 'default': 'disabled'}}
-    controls-TextBox__text-align-{{ textAlign }}">
+    controls-TextBox__text-align-{{ textAlign }}
+    {{ _paddingClass}}">
     <div class="controls-TextBox__wrapper">
         <div contenteditable="{{enabled}}" class="js-controls-FormattedTextBox__field controls-TextBox__field">{{_maskTemplateFn(_modelForMaskTpl)|sanitize}}</div>
     </div>
