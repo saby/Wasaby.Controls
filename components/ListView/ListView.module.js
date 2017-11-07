@@ -3849,10 +3849,6 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._setLoadMoreCaption(this.getItems());
                }
             }
-            this._onMetaDataResultsChange = function(event, data){
-               this._headIsChanged = true;
-               this._redrawResults(true);
-            }.bind(this);
             this._observeResultsRecord(true);
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
             this._needScrollCompensation = false;
@@ -4667,14 +4663,32 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _observeResultsRecord: function(needObserve){
             var methodName = needObserve ? 'subscribeTo' : 'unsubscribeFrom',
-                metaData = this.getItems() && this.getItems().getMetaData(),
-                resultsRecord = metaData && metaData.results;
-            if (this.getItems()) {
-               this[methodName](this.getItems(), 'onPropertyChange', this._onMetaDataResultsChange);
+                metaData;
+
+            //Если нужно отписаться, или подписаться первый раз.
+            //Проверка в связи с тем, что при подгрузке по скроллу рекордсет остается прежним и подписываться еще раз на нем не нужно.
+            //В план на декабрь выписал задачу, чтобы  разобраться с подобными костылями при отрисовке строки итогов.
+            //https://online.sbis.ru/opendoc.html?guid=e1020605-ea32-42e7-aa12-2f3bea86bb1d
+            if (!this._onMetaDataResultsChange) {
+               this._onMetaDataResultsChange = function onMetaDataResultsChange(){
+                  this._headIsChanged = true;
+                  this._redrawResults(true);
+               }.bind(this);
             }
-            if (resultsRecord){
-               this[methodName](resultsRecord, 'onPropertyChange', this._onMetaDataResultsChange);
+            if (!needObserve || !this._isResultObserved()) {
+               if (this.getItems()) {
+                  this[methodName](this.getItems(), 'onPropertyChange', this._onMetaDataResultsChange);
+                  metaData = this.getItems().getMetaData();
+                  if (metaData && metaData.results) {
+                     this[methodName](metaData.results, 'onPropertyChange', this._onMetaDataResultsChange);
+                  }
+               }
             }
+
+         },
+
+         _isResultObserved: function() {
+            return this.getItems() && this.getItems().getEventHandlers('onPropertyChange').indexOf(this._onMetaDataResultsChange) > -1;
          },
 
          _redrawFoot: function() {
