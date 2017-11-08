@@ -5,7 +5,7 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
       'tmpl!SBIS3.CONTROLS.FilterButton.FilterLine',
       'Core/helpers/String/escapeTagsFromStr',
       'Core/Sanitize',
-      'SBIS3.CONTROLS.Clickable'
+      'js!SBIS3.CONTROLS.Clickable'
    ],
    function(CompoundControl, FilterToStringUtil, dotTplFn, escapeTagsFromStr, Sanitize, Clickable) {
 
