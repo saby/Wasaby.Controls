@@ -6,11 +6,11 @@ define('js!SBIS3.CONTROLS.Action.List.ReorderMove',[
    function ( Deferred, ListMove) {
       'use strict';
       /**
-       * Действие перемещения в низ/верх на одну запись
+       * Класс, описывающий действие перемещения вниз/вверх на одну запись.
        * @class SBIS3.CONTROLS.Action.List.ReorderMove
        * @public
        * @extends SBIS3.CONTROLS.Action.List.Move
-       * @author Крайнов Дмитрий Олегович
+       * @author Ганшин Ярослав Олегович
        * @example
        * Пример использования ReorderMove:
        * <pre>
