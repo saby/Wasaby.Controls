@@ -49,6 +49,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
       $protected: {
          _options: {
             textAlign: 'right',
+            _paddingClass: ' controls-TextBox__paddingBoth',
             textFieldWrapper: textFieldWrapper,
             /**
              * @cfg {Number} Количество знаков после запятой
@@ -161,6 +162,25 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
 
          this._notifyOnPropertyChanged('moneyValue');
       },
+
+       /**
+        * Переопределяем метод TextBox.
+        * Потому что в нем сравнивается text и значение, которое возвращает метод _getInputValue,
+        * а в money он возвращает значение без тегов и если вставить одно и то же значние, что и в поле, но как верстку,
+        * то перерисовки не произойдет и вставиться значние из бувера.
+        * Сделано по задаче
+        * https://online.sbis.ru/opendoc.html?guid=6fdfa7d2-963c-4c9d-bdcd-775cd04ac0ad.
+        * Решение является костылем и должно быть переделано по задаче
+        * https://online.sbis.ru/opendoc.html?guid=2709dd59-2240-4761-b0ab-04a013be80d9
+        * @param text
+        * @private
+        */
+       _drawText: function(text) {
+          this._updateCompatPlaceholderVisibility();
+          if (this._inputField[0].innerHTML != text) {
+             this._setInputValue(text || '');
+          }
+       },
 
       _getInputValue: function() {
          var value = this._inputField[0].innerHTML;

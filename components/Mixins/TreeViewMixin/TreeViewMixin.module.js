@@ -252,16 +252,21 @@ define('js!SBIS3.CONTROLS.TreeViewMixin', [
       //********************************//
       //        FolderFooter_End        //
       //********************************//
-      _getLastChildByParent: function(itemsContainer, parent) {
+      _getLastChildByParent: function(itemsContainer, currentItem) {
          var
-             lastContainer,
-             currentContainer;
-         currentContainer = $('.controls-ListView__item[data-hash="' + parent.getHash() + '"]', itemsContainer.get(0));
-         while (currentContainer.length) {
-            lastContainer = currentContainer;
-            currentContainer =  $('.controls-ListView__item[data-parent-hash="' + currentContainer.attr('data-hash') + '"]', itemsContainer.get(0)).last();
+            level = currentItem.getLevel(),
+            enumerator = this._getItemsProjection().getEnumerator();
+         enumerator.setCurrent(currentItem);
+
+         while (enumerator.moveNext()) {
+            if (enumerator.getCurrent().getLevel() <= level) {
+               //Т.к. нам нужно найти последний дочерний элемент, а мы нашли следующий, переместимся на 1 запись назад.
+               enumerator.movePrevious();
+               break;
+            }
          }
-         return lastContainer;
+
+         return $('.controls-ListView__item[data-hash="' + enumerator.getCurrent().getHash() + '"]', itemsContainer.get(0));
       },
       around: {
          _onCollectionRemove: function(parentFunc, items, notCollapsed) {
