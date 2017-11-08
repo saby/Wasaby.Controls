@@ -54,15 +54,18 @@ define('js!Controls/List/Paging', [
          },
 
          __changePage: function(page) {
-            this._selectedKey = page;
-            this.__calcBtnStates(this._selectedKey);
+            if (this._selectedKey != page) {
+               this._selectedKey = page;
+               this.__calcBtnStates(this._selectedKey);
+               this._notify('onSelectedKeyChange');
+            }
          },
 
-         __arrowClick: function(e, btn) {
-            if(this['_state' + btn] == 'normal') {
+         __arrowClick: function(e, btnName) {
+            if(this['_state' + btnName] == 'normal') {
                if (this._options.showDigits) {
                   var targetPage;
-                  switch (btn) {
+                  switch (btnName) {
                      case 'Begin': targetPage = 1; break;
                      case 'End': targetPage = this._options.pagesCount; break;
                      case 'Prev': targetPage = this._selectedKey - 1; break;
@@ -70,6 +73,7 @@ define('js!Controls/List/Paging', [
                   }
                   this.__changePage(targetPage);
                }
+               this._notify('on' + btnName + 'Click')
             }
          }
       });
