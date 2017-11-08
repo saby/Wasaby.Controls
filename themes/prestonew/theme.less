@@ -471,7 +471,15 @@ body {
 
 .controls-FloatArea {
   border: @default-border-width solid @default-border-color-second;
-  background: #2c3e50;
+  background: @basic-block-bg-color;
+}
+.controls-Suggest__picker {
+  .controls-ListView__hoveredItem {
+    background-color:  @suggest-list-hover-color !important;
+    .controls-DataGridView__td {
+      background-color:  @suggest-list-hover-color !important;
+    }
+  }
 }
 
 .controls-ComboBox__picker {
@@ -877,22 +885,6 @@ body {
   border: none !important;
 }
 
-.controls-Suggest__picker {
-    background: #f0f5fb;
-     .controls-DataGridView__columnValue {
-       line-height: 3rem;
-     }
-     .controls-ListView__hoveredItem {
-        background-color:  @suggest-list-hover-color !important;
-         .controls-DataGridView__td {
-             background-color:  @suggest-list-hover-color !important;
-         }
-     }
-  & .ws-moneyDecorator .ws-moneyDecorator__integer__BasicRegistry {
-    color: #273B4D;
-  }
-}
-
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button:hover {
   color: #fff;
 }
@@ -985,11 +977,6 @@ body {
     }
   }
 
-}
-.controls-Suggest__picker {
-  .controls-HtmlDecorators-highlight {
-    background-color: #FFFECE;
-  }
 }
 
 .controls-MergeDialogTemplate .controls-TreeDataGridView__levelPadding {
