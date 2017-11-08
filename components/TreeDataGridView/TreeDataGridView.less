@@ -302,6 +302,10 @@
 
 .controls-TreeView__editArrow-background {
    background-color: @data-grid-row-hover-bg;
+   &:after {
+      .horizontal-gradient(@data-grid-row-hover-bg, @data-grid-row-hover-add-bg, right);
+      .copyArrowGradient();
+   }
 }
 
 .controls-TreeView__searchBreadCrumbs {
