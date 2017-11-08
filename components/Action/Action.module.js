@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.Action.Action',
        * @extends SBIS3.CORE.Control
        * @author Крайнов Дмитрий Олегович
        *
-       * @ignoreOptions validators independentContext contextRestriction extendedTooltip
+       * @ignoreOptions validators independentContext contextRestriction extendedTooltip linkedContext _handlers activableByClick buildMarkupWithContext
        *
        * @ignoreMethods activateFirstControl activateLastControl addPendingOperation applyEmptyState applyState clearMark
        * @ignoreMethods changeControlTabIndex destroyChild detectNextActiveChildControl disableActiveCtrl findParent

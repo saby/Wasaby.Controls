@@ -12,17 +12,17 @@ define('js!Controls/Toggle/Checkbox', [
     */
 
    /**
-    * @name Controls/Button/interface/ITriCheckable#triState
+    * @name Controls/Toggle/Checkbox#triState
     * @cfg {Boolean} Режим трехпозиционного чекбокса
     */
 
    /**
-    * @name Controls/Button/interface/ITriCheckable#checked
+    * @name Controls/Toggle/Checkbox#checked
     * @cfg {Boolean|null} Состояние переключателя
     */
 
    /**
-    * @event Controls/Button/interface/ITriCheckable#checkedChanged Происходит при изменении состояния переключателя
+    * @event Controls/Toggle/Checkbox#checkedChanged Происходит при изменении состояния переключателя
     * @param {Boolean|null} value Новое состояние
     */
 

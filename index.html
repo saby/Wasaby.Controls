@@ -243,6 +243,9 @@
                <li>
                   <div id="VD_VirtualScroll"></div>
                </li>
+               <li>
+                  <div id="VD_WindowManager"></div>
+               </li>
             </ul>
             <h3>Edit in place</h3>
             <ul>
@@ -638,6 +641,13 @@
                element: "VD_VirtualScroll",
                caption: 'Virtual Scroll',
                href: '/pages/VD_VirtualScroll.html'
+            })
+         });
+         require(["js!SBIS3.CONTROLS.Link"], function (r) {
+            new r({
+               element: "VD_WindowManager",
+               caption: 'WindowManager',
+               href: '/pages/VD_WindowManager.html'
             })
          });
          require(["js!SBIS3.CONTROLS.Link"], function (r) {

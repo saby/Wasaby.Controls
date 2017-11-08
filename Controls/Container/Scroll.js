@@ -1,22 +1,17 @@
-/**
- * Created by kraynovdo on 26.10.2017.
- */
-define('js!Controls/Container/Scroll', [
-   'Core/Control',
-   'tmpl!Controls/Container/Scroll',
-   'css!Controls/Container/Scroll'
-], function(Control, ScrollTpl){
-   'use strict';
-   var Scroll = Control.extend({
-      _template: ScrollTpl,
-      _afterMount: function() {
+define('js!Controls/Container/Scroll',
+   [
+      'Core/Control',
+      'tmpl!Controls/Container/Scroll/Scroll',
+      'css!Controls/Container/Scroll/Scroll'
+   ],
+   function(Control, template) {
 
-      },
-      _beforeUpdate: function() {
-      },
-      _afterUpdate: function() {
-         ;
-      }
-   });
-   return Scroll;
-});
+      'use strict';
+
+      var ScrollContainer = Control.extend({
+         _template: template
+      });
+
+      return ScrollContainer;
+   }
+);
