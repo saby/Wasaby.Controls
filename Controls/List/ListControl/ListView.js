@@ -19,18 +19,19 @@ define('js!Controls/List/ListControl/ListView', [
          _controlName: 'Controls/List/ListControl/ListView',
 
          _template: ListViewTpl,
+         _defaultItemTemplate: defaultItemTemplate,
          _selectedItem: null,
          _selectedIndex: -1,
 
          _beforeMount: function(newOptions) {
             ListView.superclass._beforeMount.apply(this, arguments);
-            this._itemTemplate = newOptions.itemTemplate || defaultItemTemplate;
+            this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
             this.__calcSelectedItem(newOptions);
          },
 
          _beforeUpdate: function(newOptions) {
             ListView.superclass._beforeUpdate.apply(this, arguments);
-            this._itemTemplate = newOptions.itemTemplate || defaultItemTemplate;
+            this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
             this.__calcSelectedItem(newOptions);
          },
 
