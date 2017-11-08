@@ -11,7 +11,7 @@
       font-style: normal;
       color: @back-button-text-color;
       text-align: left;
-      max-width: calc(~"100% - 8px");
+      max-width: 100%;
       line-height: normal;
       font-weight: @back-button-text-fontweight;
       font-size: @back-button-font-size;
@@ -145,7 +145,8 @@
          }
       }
       &:hover {
-         .controls-BackButton__caption {
+         //Роман Валера скоро перепишет стили для кнопки назад, пока без таких каскадов никак
+         .controls-BackButton__caption:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover) {
             color: @primary-color;
             &:before {
                color: @primary-color;

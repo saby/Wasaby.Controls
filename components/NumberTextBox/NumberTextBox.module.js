@@ -45,7 +45,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
     *
     * @control
     * @public
-    * @category Inputs
+    * @category Input
     * @initial
     * <component data-component='SBIS3.CONTROLS.NumberTextBox'>
     *     <option name="text">0</option>
@@ -188,6 +188,7 @@ define('js!SBIS3.CONTROLS.NumberTextBox', [
          }
 
 	      options.cssClassName += ' controls-NumberTextBox';
+         options._paddingClass = options.enableArrows ? ' controls-TextBox__paddingLeft' : ' controls-TextBox__paddingBoth';
 
          return options;
       },

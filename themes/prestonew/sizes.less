@@ -30,7 +30,7 @@
 @search-button-wrapper-padding:                   0;
 @search-loop-size:                                2.8571rem;
 @search-form-icon-padding:                        0;
-@search-field-padding:                            0 0 0 @default-padding;
+@search-field-padding:                            0;
 //fieldLink
 @fieldLink-showAll-shadow-width:                  1rem;
 @fieldLink-linkItem-line-height:                  @default-base-line-height;
@@ -396,7 +396,8 @@
 @data-grid-header-cell-icon-size:         1.5rem;
 @data-grid-header-cell-sorting-icon-size: 1rem;
 @data-grid-cell-height:                   1.7857rem;
-@data-grid-cell-padding:                  0 .28571rem;
+@data-grid-cell-padding:                  0 @data-grid-cell-padding-right;
+@data-grid-cell-padding-right:            .28571rem;
 @data-grid-td-checkbox-width:             1.75rem;
 @data-grid-td-visible-checkbox-width:     1.75rem;
 @data-grid-check-box-top:                 -@default-border-width;
@@ -468,7 +469,7 @@
 @controls-filterButton-filterLine-margin: 0;
 //FieldLink
 @fieldLink-linkItem-cross-width:    3rem;
-@fieldLink-afterField-padding:      0;
+@fieldLink-afterField-button-margin:      0;
 @controls-filterButton-area-header-width:    23.92rem;
 //BackButton
 @back-button-font-size:                   1.43rem;
@@ -565,6 +566,7 @@
 @tab-button-checked-inner-font-size:      1.43rem;
 @tab-button-large-inner-max-width:		   100%;
 @tab-button-inner-padding:                0 .857rem 0 .857rem;
+@tab-button-inner-wrapper-height:         100%;
 @tab-button-inner-after-height:           1.928rem;
 @tab-button-inner-after-bottom:           0.821rem;
 @tab-button-inner-after-width:            @default-border-width;
