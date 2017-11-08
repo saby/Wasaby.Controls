@@ -98,7 +98,7 @@ module.exports = function less1by1Task(grunt) {
             complete: '♥',
             incomplete: '_',
             width: 30,
-            total: 135
+            total: 137
         });
         helpers.recurse(rootPath, function(filepath, cb) {
           let relpath = path.relative(rootPath, filepath);

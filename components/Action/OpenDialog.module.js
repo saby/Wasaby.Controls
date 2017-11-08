@@ -40,19 +40,16 @@ define('js!SBIS3.CONTROLS.Action.OpenDialog', [
    var OpenDialog = Action.extend([DialogMixin],/** @lends SBIS3.CONTROLS.Action.OpenDialog.prototype */{
 
       /**
-       * @typedef {Object} ExecuteMetaConfig
-       * @property {String|Number} id Идентификатор записи. Переопределяет значение опции {@link SBIS3.CONTROLS.FormController#key key}.
-       * @property {WS.Data/Entity/Record} item Экземпляр класса записи. Переопределяет значение опции {@link SBIS3.CONTROLS.FormController#record record}.
-       * @property {Object} filter Набор инициализирующих значений, который используется при создании новой записи. Переопределяет значение опции {@link SBIS3.CONTROLS.FormController#initValues initValues}.
-       * @property {Object} readMetaData Набор инициализирующих значений, который используется при чтении записи. Переопределяет значение опции  {@link SBIS3.CONTROLS.FormController#readMetaData readMetaData}.
-       * @property {String} initializingWay переопределяет <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/initializing-way/'>способ инициализации данных диалога</a>.
-       * @property {Object} dialogOptions Объект с пользовательскими опциями, которые передаются в диалог редактирования в <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/oop/#configuration-class-parameters'>секцию _options</a>.
-       * @property {Object} componentOptions Объект с конфигурацией контрола, на основе которого создаётся диалог редактирования (см. {@link mode}).
-       * @property {Boolean} isNewRecord Установив этот флаг, при закрытии диалога будет отображено диалоговое окно для подтверждения действия. Если в диалоге выбран ответ "Нет", то запись будет удалена из БД при выполнении условий: на диалоге открыта новая запись (создана в БД и ей присвоен ID) и для записи не были изменены поля.
-       */
-      /**
        * Производит <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/open/'>открытие диалога редактирования</a>.
-       * @param {ExecuteMetaConfig} meta Параметры, которые переопределяют конфигурацию диалога.
+       * @param {Object} meta Параметры, которые переопределяют конфигурацию диалога.
+       * @param {String|Number} meta.id Идентификатор записи. Переопределяет значение опции {@link SBIS3.CONTROLS.FormController#key key}.
+       * @param {WS.Data/Entity/Record} meta.item Экземпляр класса записи. Переопределяет значение опции {@link SBIS3.CONTROLS.FormController#record record}.
+       * @param {Object} meta.filter Набор инициализирующих значений, который используется при создании новой записи. Переопределяет значение опции {@link SBIS3.CONTROLS.FormController#initValues initValues}.
+       * @param {Object} meta.readMetaData Набор инициализирующих значений, который используется при чтении записи. Переопределяет значение опции  {@link SBIS3.CONTROLS.FormController#readMetaData readMetaData}.
+       * @param {String} meta.initializingWay переопределяет <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/initializing-way/'>способ инициализации данных диалога</a>.
+       * @param {Object} meta.dialogOptions Объект с пользовательскими опциями, которые передаются в диалог редактирования в <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/core/oop/#configuration-class-parameters'>секцию _options</a>.
+       * @param {Object} meta.componentOptions Объект с конфигурацией контрола, на основе которого создаётся диалог редактирования (см. {@link mode}).
+       * @param {Boolean} meta.isNewRecord Установив этот флаг, при закрытии диалога будет отображено диалоговое окно для подтверждения действия. Если в диалоге выбран ответ "Нет", то запись будет удалена из БД при выполнении условий: на диалоге открыта новая запись (создана в БД и ей присвоен ID) и для записи не были изменены поля.
        * @example
        * <pre>
        * // myButton - экземпляр класса кнопки

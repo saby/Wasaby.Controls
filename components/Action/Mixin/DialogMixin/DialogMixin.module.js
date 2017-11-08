@@ -55,7 +55,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
              */
             componentOptions: null,
             /**
-             * @cfg {Object} Объект с конфигурацией контрола, на основе которого создаётся диалог редактирования (см. {@link mode}).
+             * @cfg {Object} Объект с конфигурацией контрола, на основе которого создаётся диалог редактирования (см. {@link mode}). В числе опций также передают и {@link SBIS3.CORE.Control#linkedContext}.
              */
             dialogOptions: null
          },
@@ -207,7 +207,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       },
 
       _finishExecuteDeferred: function(error) {
-         if (!this._executeDeferred.isReady()) {
+         if (this._executeDeferred && !this._executeDeferred.isReady()) {
             if (!error) {
                //false - т.к. приходится нотифаить событие onExecuted самому, из-за того, что базовый action
                //не может обработать валидный результат false

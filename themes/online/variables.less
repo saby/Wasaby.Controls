@@ -546,12 +546,13 @@
 @suggest-loading-width:                         16px;
 @suggest-loading-right:                         3px;
 
-@suggest-picker-border:                         1px solid #cccccc;
+@suggest-picker-border-color:                   @default-border-color-second;
 @suggest-picker-box-shadow:                     0 4px 8px rgba(0, 0, 0, 0.15);
 @suggest-picker-box-shadow-reverted:            0 -4px 8px rgba(0, 0, 0, 0.15);
 @suggest-picker-margin:                         -@default-border-width;
 @suggest-picker-margin-reverted:                @default-border-width;
 @suggest-picker-standard-width:                 500px;
+@suggest-picker-bg-color:                       #ffffff;
 @suggest-picker-color:                          initial;
 @suggest-picker-item-bg:                        @white-color;
 @suggest-list-empty-color:                      @gray-ccc-color;
@@ -865,6 +866,8 @@
 @list-view-items-toolbar-vertical-line-height:       24px;
 @list-view-items-toolbar-bg:                         @data-grid-row-hover-bg;
 @list-view-items-toolbar-locked-bg:                  @default-itemSelected-color;
+@list-view-items-toolbar-locked-right:               0;
+@list-view-items-toolbar-locked-margin-right:        0;
 @list-view-items-toolbar-elements-margin:            0 6px;
 @touch-mode-items-toolbar-icon-margin-top:           -24px;
 @list-view-items-toolbar-right-tile:                 1px;
@@ -1003,7 +1006,7 @@
 @data-grid-row-hover-cell-text-color:           inherit;
 @data-grid-row-hover-cell-bg:                   @data-grid-row-hover-bg;
 @data-grid-header-cell-height:                  14px;
-@data-grid-header-cell-padding:                 4px 6px;
+@data-grid-header-cell-padding:                 4px @data-grid-cell-padding-right;
 @data-grid-header-cell-padding-side:            12px;
 @data-grid-header-cell-font-size:               12px;
 @data-grid-header-cell-icon-size:               @data-grid-header-cell-font-size;
@@ -1014,7 +1017,8 @@
 @data-grid-header-cell-hover-bg:                @data-grid-header-cell-bg;
 @data-grid-cell-height:                         30px;
 @data-grid-cell-line-height:                    20px;
-@data-grid-cell-padding:                        3px 6px;
+@data-grid-cell-padding:                        3px @data-grid-cell-padding-right;
+@data-grid-cell-padding-right:                  6px;
 @data-grid-ms-first-content-cell-padding-left:  0px;
 @data-grid-cell-border-width:                   @default-border-width 0;
 @data-grid-cell-separator-color:                #F5F5F5;
@@ -1030,6 +1034,7 @@
 @data-grid-money-header-cell-padding:           22px;
 @data-grid-money-header-cell-padding-last:      24px;
 @data-grid-results-color:                       @accent-color;
+@data-grid-results-cell-padding:                0 6px;
 // ---------- //
 // PartScroll //
 // ---------- //

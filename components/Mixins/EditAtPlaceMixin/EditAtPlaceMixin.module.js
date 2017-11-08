@@ -5,9 +5,8 @@ define('js!SBIS3.CONTROLS.EditAtPlaceMixin',
    "Core/Deferred",
    "js!SBIS3.CONTROLS.IconButton",
    "js!SBIS3.CORE.Dialog",
-   "js!SBIS3.CONTROLS.ControlHierarchyManager",
    "js!SBIS3.CORE.ModalOverlay"
-], function( cModalOverlay, constants, Deferred,IconButton, Dialog, ControlHierarchyManager, ModalOverlay) {
+], function( cModalOverlay, constants, Deferred,IconButton, Dialog, ModalOverlay) {
       /**
        * @mixin SBIS3.CONTROLS.EditAtPlaceMixin
        * @public
@@ -74,41 +73,26 @@ define('js!SBIS3.CONTROLS.EditAtPlaceMixin',
           * @private
           */
          _openConfirmDialog: function () {
-            var result,
+            var
+               self = this,
                deferred = new Deferred();
-            this._dialogConfirm = new Dialog({
-               parent: this._options.editInPopup ? this._picker : this,
-               opener: this._options.editInPopup ? this._picker : this,
-               template: 'js!SBIS3.CORE.ConfirmRecordActionsDialog',
-               resizable: false,
-               handlers: {
-                  onReady: function () {
-                     var children = this.getChildControls(),
-                        dialog = this,
-                        onActivatedHandler = function () {
-                           dialog.getLinkedContext().setValue('result', this.getName());
-                           dialog.close();
-                        };
-                     for (var i = 0, len = children.length; i < len; i++) {
-                        if (children[i].hasEvent('onActivated')) {
-                           children[i].subscribe('onActivated', onActivatedHandler);
-                        }
-                     }
-                  },
-                  onKeyPressed: function (event, result) {
-                     if (result.keyCode === constants.key.esc) {
-                        this.getLinkedContext().setValue('result', 'cancelButton');
-                     }
-                  },
-                  onAfterClose: function () {
-                     result = this.getLinkedContext().getValue('result');
-                  },
-                  onDestroy: function () {
-                     deferred.callback(result);
-                  }
-               }
+
+            require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager){
+               InformationPopupManager.showConfirmDialog({
+                  message: rk('Сохранить изменения?'),
+                  details: rk('Чтобы продолжить редактирование, нажмите "Отмена".'),
+                  hasCancelButton: true,
+                  parent: self._options.editInPopup ? self._picker : self,
+                  opener: self._options.editInPopup ? self._picker : self
+               }, function(){
+                  deferred.callback('yesButton');
+               }, function(){
+                  deferred.callback('noButton');
+               }, function(){
+                  deferred.callback('cancelButton');
+               });
             });
-            ControlHierarchyManager.setTopWindow(this._dialogConfirm);
+
             return deferred;
          },
 

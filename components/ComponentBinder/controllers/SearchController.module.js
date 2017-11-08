@@ -62,10 +62,12 @@ define('js!SBIS3.CONTROLS.SearchController',
          }
 
          var searchParamName = this._options.searchParamName,
-             filter = cMerge(curFilter, {
+            /* Нельзя модифицировать оригинальный объект фильтра,
+               иначе эти изменения применятся везде, кто использует этот объект по ссылке */
+            filter = cMerge({
                 'Разворот': 'С разворотом',
                 'usePages': 'full'
-             }),
+             }, curFilter, {preferSource: true}),
              view = this._options.view,
              self = this;
 
@@ -154,9 +156,9 @@ define('js!SBIS3.CONTROLS.SearchController',
       _startSearch: function(text) {
          var searchParamName = this._options.searchParamName,
              view = this._options.view,
-             filter = cMerge(view.getFilter(), {
+             filter = cMerge({
                 'usePages': 'full'
-             });
+             }, view.getFilter(), {preferSource: true});
 
          filter[searchParamName] = text;
          view.setHighlightText(text, false);
@@ -218,10 +220,6 @@ define('js!SBIS3.CONTROLS.SearchController',
             //Нужно поменять фильтр и загрузить нужный корень.
             //TODO менять фильтр в контексте, когда появятся data-binding'и
             filter[view.getParentProperty()] = this._lastRoot;
-            //DataGridView._filter = filter;
-            //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
-            //Релоад сделает то же самое, так как он стреляет onSetRoot даже если корень на самом деле не понменялся
-            this._reloadView(view, filter);
             // TODO: Нужно оставить одно поле хранящее путь, сейчас в одно запоминается состояние хлебных крошек
             // перед тем как их сбросить, а в другом весь путь вместе с кнопкой назад
 
@@ -235,7 +233,12 @@ define('js!SBIS3.CONTROLS.SearchController',
                if (self._options.backButton) {
                   self._options.backButton.getContainer().css({'display': ''});
                }
-            })
+            });
+   
+            //DataGridView._filter = filter;
+            //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
+            //Релоад сделает то же самое, так как он стреляет onSetRoot даже если корень на самом деле не понменялся
+            this._reloadView(view, filter);
          } else {
             //Очищаем крошки. TODO переделать, когда появятся привзяки по контексту
             view.setFilter(filter, true);

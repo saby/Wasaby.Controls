@@ -6,10 +6,9 @@
             dispItem="{{dispItem}}"
             index="{{index}}"
             itemData="{{itemData}}"
-            _getPropValue="{{_getPropValue}}"
-            _options="{{_options}}"></ws:partial>
+            itemTplData="{{itemTplData}}"></ws:partial>
       </ws:if>
    <ws:else>
-      <div>{{_getPropValue(item, _options.displayProperty)}}</div>
+      <div>{{itemTplData.getPropValue(item, itemTplData.listConfig.displayProperty)}}</div>
    </ws:else>
 </div>

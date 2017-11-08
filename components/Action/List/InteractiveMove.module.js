@@ -13,13 +13,12 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
    function (ListMove, DialogMixin, strHelpers, Indicator, cMerge, IoC, cInstance, constants, InformationPopupManager) {
       'use strict';
       /**
-       * Действие перемещения по иерархии с выбором места перемещения через диалог.
-       * По умолчанию переносит выделенные записи.
+       * Класс, описывающий действие перемещения записей по иерархии с возможностью выбора позиции перемещения через диалог. По умолчанию переносит выделенные записи.
        * @class SBIS3.CONTROLS.Action.List.InteractiveMove
        * @public
        * @extends SBIS3.CONTROLS.Action.List.Move
        * @mixes SBIS3.CONTROLS.Action.DialogMixin
-       * @author Крайнов Дмитрий Олегович
+       * @author Ганшин Ярослав Олегович
        * @example
        * Пример использования InteractiveMove:
        * <pre>
@@ -103,11 +102,20 @@ define('js!SBIS3.CONTROLS.Action.List.InteractiveMove',[
              * @property {Boolean} partialyReload Устанавливает поведение загрузки дочерних данных для записей типа "Узел" (папка) и "Скрытый узел".
              */
             _options : {
+                /**
+                 * @cfg {String} Шаблон.
+                 */
                template : 'js!SBIS3.CONTROLS.SelectionDialog',
+                /**
+                 * @cfg {String} Устанавливает имя поля иерархии, по которому будут установлены иерархические связи записей списка.
+                 */
                parentProperty: undefined,
+                /**
+                 * @cfg {String} Устанавливает имя поле, в котором хранится признак типа записи в иерархии.
+                 */
                nodeProperty: undefined,
                /**
-                * @cfg {componentOptions} Набор опций для компонента отображающего список.
+                * @cfg {componentOptions} Набор опций, передаваемых в компонент, отображающий список.
                 */
                componentOptions: null
             }

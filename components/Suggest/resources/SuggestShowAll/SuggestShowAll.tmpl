@@ -1,5 +1,5 @@
-<div>
-    <div class="ws-window-titlebar-custom ws-sticky-header__block ws-float-area__close-button-wrapper ws-window-titlebar radius ws-sticky-header__fixed">
+<div class="controls-suggestShowAll">
+    <div class="ws-window-titlebar-custom ws-float-area__close-button-wrapper ws-window-titlebar radius">
         <ws:SBIS3.CONTROLS.Button
            caption="Выбрать"
            primary="{{true}}"
@@ -8,13 +8,15 @@
            className="controls-suggestShowAll__selectButton"
         />
     </div>
-    <div class="controls-suggestShowAll">
-        <ws:SBIS3.CONTROLS.DataGridView
-           pageSize="{{20}}"
-           itemsActions="{{ [] }}"
-           infiniteScroll="{{true}}"
-           name="controls-showAllView"
-           itemsDragNDrop="{{itemsDragNDrop}}"
-        />
-    </div>
+    <ws:SBIS3.CONTROLS.ScrollContainer class="controls-suggestShowAll__scrollContainer">
+        <ws:content>
+            <ws:SBIS3.CONTROLS.DataGridView
+               pageSize="{{20}}"
+               itemsActions="{{ [] }}"
+               infiniteScroll="{{true}}"
+               name="controls-showAllView"
+               itemsDragNDrop="{{itemsDragNDrop}}"
+            />
+        </ws:content>
+    </ws:SBIS3.CONTROLS.ScrollContainer>
 </div>
