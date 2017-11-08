@@ -6,11 +6,13 @@ define('js!Controls/List/ItemsView', [
    'Core/Control',
    'tmpl!Controls/List/ItemsView',
    'js!Controls/List/resources/utils/ItemsUtil',
+   'js!Controls/List/ItemsView/ItemsView_private',
    'WS.Data/Type/descriptor'
 ], function (extend,
              BaseControl,
              ItemsRenderTpl,
              ItemsUtil,
+             _private,
              Types
    ) {
    'use strict';
@@ -37,7 +39,7 @@ define('js!Controls/List/ItemsView', [
          _beforeMount: function(newOptions) {
             if (newOptions.items) {
                this._items = newOptions.items;
-               this.__initDisplay(newOptions.items, newOptions);
+               _private.initDisplay.call(this, newOptions.items, newOptions);
                this._initIndices();
                this._initTplData(newOptions);
             }
@@ -46,7 +48,7 @@ define('js!Controls/List/ItemsView', [
          _beforeUpdate: function(newOptions) {
             if (newOptions.items && (this._items != newOptions.items)) {
                this._items = newOptions.items;
-               this.__initDisplay(newOptions.items, newOptions);
+               _private.initDisplay.call(this, newOptions.items, newOptions);
                this._initTplData(newOptions);
             }
          },
@@ -75,17 +77,6 @@ define('js!Controls/List/ItemsView', [
 
          _checkConditionForEnumeration: function() {
             return this._curIndex < this._stopIndex;
-         },
-
-         __initDisplay: function(items, cfg) {
-            if (this._items) {
-               //TODO убрать дестрой, проверить утечки памяти
-               if (this._display) {
-                  this._display.destroy();
-               }
-               this._display = this._createDefaultDisplay(items, cfg);
-               this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
-            }
          },
 
          _onCollectionChange: function() {

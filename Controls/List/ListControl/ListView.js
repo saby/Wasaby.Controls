@@ -6,11 +6,13 @@ define('js!Controls/List/ListControl/ListView', [
    'tmpl!Controls/List/ListControl/ListView',
    'js!Controls/List/resources/utils/ItemsUtil',
    'tmpl!Controls/List/ListControl/ItemTemplate',
+   'js!Controls/List/ListControl/ListView_private',
    'css!Controls/List/ListControl/ListView'
 ], function (ItemsView,
              ListViewTpl,
              ItemsUtil,
-             defaultItemTemplate
+             defaultItemTemplate,
+             _private
    ) {
    'use strict';
 
@@ -25,34 +27,13 @@ define('js!Controls/List/ListControl/ListView', [
          _beforeMount: function(newOptions) {
             ListView.superclass._beforeMount.apply(this, arguments);
             this._itemTemplate = newOptions.itemTemplate || defaultItemTemplate;
-            this.__calcSelectedItem(newOptions);
+            _private.calcSelectedItem.call(this, newOptions);
          },
 
          _beforeUpdate: function(newOptions) {
             ListView.superclass._beforeUpdate.apply(this, arguments);
             this._itemTemplate = newOptions.itemTemplate || defaultItemTemplate;
-            this.__calcSelectedItem(newOptions);
-         },
-
-         __calcSelectedItem: function(newOptions) {
-            if (newOptions.selectedKey !== undefined) {
-               this._selectedItem = ItemsUtil.getDisplayItemById(this._display, newOptions.selectedKey, newOptions.idProperty);
-            }
-            else {
-               this._selectedItem = null;
-            }
-
-
-            //TODO надо вычислить индекс
-            /*if(!this._selectedItem) {
-               if (!this._selectedIndex) {
-                  this._selectedIndex = 0;//переводим на первый элемент
-               }
-               else {
-                  this._selectedIndex++;//условно ищем ближайший элемент, рядом с удаленным
-               }
-               this._selectedItem = this._display.at(this._selectedIndex);
-            }*/
+            _private.calcSelectedItem.call(this, newOptions);
          },
 
          _onItemClick: function(e, dispItem) {
