@@ -49,6 +49,9 @@ define('js!SBIS3.CONTROLS.FilterButton.FilterLine',
 
             updateContext();
             context.subscribe('onFieldsChanged', updateContext);
+         },
+         _clickHandler: function() {
+            this.sendCommand('show-filter');
          }
       });
 
