@@ -176,10 +176,24 @@ define('js!SBIS3.CONTROLS.SearchController',
       },
 
       _resetGroup: function() {
-         var
-            view = this._options.view,
-            filter = coreClone(view.getFilter()),
-            self = this;
+         var view = this._options.view,
+             filter = coreClone(view.getFilter()),
+             self = this,
+             resetProjectionRoot = function() {
+                view._getItemsProjection().setRoot(self._lastRoot ||  view.getRoot() || null);
+             },
+             resetRoot = function() {
+                view._options.currentRoot = self._lastRoot ||  view.getRoot() || null;
+                //Проекции ещё может не быть при сбросе поиска
+                if(view._getItemsProjection()) {
+                   resetProjectionRoot();
+                } else {
+                   view.once('onItemsReady', function() {
+                      resetProjectionRoot();
+                   });
+                }
+             };
+            
          
          if (this._lastDepth) {
             filter['Разворот'] = this._lastDepth;
@@ -197,8 +211,7 @@ define('js!SBIS3.CONTROLS.SearchController',
              т.к. появлялась ошибка при сценарии: ищем что-то, пока грузится сбрасываем поиск,
              и сразу опять что-то ищем. В фильтре списка оставался неправильный раздел. */
             //view.setCurrentRoot(self._lastRoot || null);
-            view._options.currentRoot = self._lastRoot ||  view.getRoot() || null;
-            view._getItemsProjection().setRoot(self._lastRoot ||  view.getRoot() || null);
+            resetRoot();
          });
          this._searchMode = false;
          if(this._options.hierarchyViewMode) {
