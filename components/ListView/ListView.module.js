@@ -1004,6 +1004,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          init: function () {
+            this._options.virtualScrolling = false;
             // На клиенте для мобильных устройств загружаем контроллеры редактирования сразу, т.к. для правильного функционирования системы фокусов, необходима синхронная логика
             if (cDetection.isMobilePlatform && window) {
                requirejs(['js!SBIS3.CONTROLS.EditInPlaceHoverController', 'js!SBIS3.CONTROLS.EditInPlaceClickController']);
@@ -2135,20 +2136,15 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.setInfiniteScroll('both', true);
                }
             }
-
-            // Reload to first page (for filter and search)
-            if (!this._options.saveReloadPosition && pageNumber === 0) {
-               this.setPage(0, true);
-
-               // Reset virtual scrolling if it's enabled
-               if (this._options.virtualScrolling && this._virtualScrollController) {
-                  this._virtualScrollController.disableScrollHandler(true);
-                  this.scrollToFirstPage();
-                  // Will reset pages after redrawing items
-                  this._resetPaging = true;
-                  this._topWrapper.height(0);
-                  this._bottomWrapper.height(0);
-               }
+            
+            // Reset virtual scrolling if it's enabled
+            if (this._options.virtualScrolling && this._virtualScrollController) {
+               this._virtualScrollController.disableScrollHandler(true);
+               this.scrollToFirstPage();
+               // Will reset pages after redrawing items
+               this._resetPaging = true;
+               this._topWrapper.height(0);
+               this._bottomWrapper.height(0);
             }
 
             this._reloadInfiniteScrollParams();
