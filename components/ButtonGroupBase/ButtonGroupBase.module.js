@@ -41,10 +41,10 @@ define('js!SBIS3.CONTROLS.ButtonGroupBase', [
          this._hasItems = this._container.hasClass('hasItems');
       },
 
-      _drawItemsCallback : function(){
-         var
-            controls = this.getItemsInstances(),
-            self = this;
+      _drawItemsCallbackSync : function(){
+         var controls = this.getItemsInstances(),
+             self = this;
+
          if (!this._activatedHandler) {
             this._activatedHandler = (function(busEvent, event){
                var hash = this.getContainer().data('hash');

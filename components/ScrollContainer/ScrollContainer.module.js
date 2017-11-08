@@ -239,7 +239,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
                this.subscribeTo(EventBus.channel('stickyHeader'), 'onStickyHeadersChanged', this._stickyHeadersChangedHandler.bind(this));
 
-               this._addGradient();
+               this._toggleGradient();
 
                // Что бы до инициализации не было видно никаких скроллов
                this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
@@ -316,12 +316,13 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             }
          },
 
-         _addGradient: function() {
+         _toggleGradient: function() {
             // $elem[0].scrollHeight - integer, $elem.height() - float
          	var maxScrollTop = this._getScrollHeight() - Math.round(this._container.height());
 
          	// maxScrollTop > 1 - погрешность округления на различных браузерах.
             this._container.toggleClass('controls-ScrollContainer__bottom-gradient', maxScrollTop > 1 && this._getScrollTop() < maxScrollTop);
+            this._container.toggleClass('controls-ScrollContainer__top-gradient', this._getScrollTop() > 0);
          },
 
          _initScrollbar: function(){
@@ -496,8 +497,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             if (this._paging) {
                this._calcPagingSelectedKey(scrollTop);
             }
-            this.getContainer().toggleClass('controls-ScrollContainer__top-gradient', scrollTop > 0);
-            this.getContainer().toggleClass('controls-ScrollContainer__bottom-gradient', scrollTop < this._getScrollHeight() -  this._container.height());
+            this._toggleGradient();
          },
 
          _onMouseenter: function() {
@@ -668,7 +668,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             }
             //ресайз может позваться до инита контейнера
             if (this._content) {
-               this._addGradient();
+               this._toggleGradient();
                /**
                 * В firefox при высоте = 0 на дочерних элементах, нативный скролл не пропадает.
                 * В такой ситуации content имеет высоту скролла, а должен быть равен 0.
