@@ -220,10 +220,6 @@ define('js!SBIS3.CONTROLS.SearchController',
             //Нужно поменять фильтр и загрузить нужный корень.
             //TODO менять фильтр в контексте, когда появятся data-binding'и
             filter[view.getParentProperty()] = this._lastRoot;
-            //DataGridView._filter = filter;
-            //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
-            //Релоад сделает то же самое, так как он стреляет onSetRoot даже если корень на самом деле не понменялся
-            this._reloadView(view, filter);
             // TODO: Нужно оставить одно поле хранящее путь, сейчас в одно запоминается состояние хлебных крошек
             // перед тем как их сбросить, а в другом весь путь вместе с кнопкой назад
 
@@ -237,7 +233,12 @@ define('js!SBIS3.CONTROLS.SearchController',
                if (self._options.backButton) {
                   self._options.backButton.getContainer().css({'display': ''});
                }
-            })
+            });
+   
+            //DataGridView._filter = filter;
+            //DataGridView.setCurrentRoot(self._lastRoot); - плохо, потому что ВСЕ крошки на странице получат изменения
+            //Релоад сделает то же самое, так как он стреляет onSetRoot даже если корень на самом деле не понменялся
+            this._reloadView(view, filter);
          } else {
             //Очищаем крошки. TODO переделать, когда появятся привзяки по контексту
             view.setFilter(filter, true);
