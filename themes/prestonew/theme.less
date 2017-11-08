@@ -311,9 +311,15 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
          .align-self(center);
       }
    }
-   .controls__filterButton {
-      margin-top: 8px;
+
+   .controls-Browser__table {
+      .controls-Browser__tableCell-filterButton {
+         .controls__filterButton {
+            margin-top: 10px;
+         }
+      }
    }
+
    .controls-Browser__search {
       width: 21.4285rem;
    }
@@ -1068,7 +1074,7 @@ body {
 }
 
 //Убрать когда проектировщики сделают одинаковые отступы, обсуждали на этом совещании: https://online.sbis.ru/obj/Meeting/e6b722a9-d339-4016-9fd6-82b763c4e241
-.controls-ItemsToolbar.controls-ItemsToolbar__edit {
+.controls-ItemsToolbar.controls-ItemsToolbar__withEditActions {
   bottom: 0.2857rem;
 }
 .controls-Browser__search {

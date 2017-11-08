@@ -473,32 +473,47 @@ define(
        */
       textIsFitToModel: function(text, clearChar) {
          var
-            /*массив со значениями, нужен чтобы не записывать значения до полной проверки соответствия текста маске */
-            tempModelValues = [],
-            curIndex = 0,
-            group,
-            value,
-            character;
-         for (var i = 0; i < this.model.length; i++) {
-            group = this.model[i];
-            value = [];
-            for (var j = 0; j < group.innerMask.length; j++) {
-               character = text.charAt(curIndex);
-               character = (character == clearChar) ? undefined : this.charIsFitToGroup(group, j, character);
-               if (character || (typeof character === 'undefined')) {
-                  value.push(character);
-               } else {
-                  return false;
+            i,
+            item,
+            groupValue,
+            isEmpty = true,
+            tempModelValues = [];
+
+         for (i = 0; i < this.model.length; i++) {
+            item = this.model[i];
+            if (item.isGroup) {
+               groupValue = this._getValueForGroup(text, item, clearChar);
+               text = groupValue.text;
+               tempModelValues[i] = groupValue.value;
+               if (groupValue.value.length) {
+                  isEmpty = false;
                }
-               curIndex++;
             }
-            tempModelValues.push(value);
-         }
-         if (curIndex != text.length) {
-            return false; //текст длиннее маски
          }
 
-         return tempModelValues;
+         return isEmpty ? false : tempModelValues;
+      },
+
+      //Метод по переданному тексту и маске, возвращает первое вхождение символов, уоторые подходят под маску
+      _getValueForGroup: function(text, group, clearChar) {
+         var
+            character,
+            value = [];
+         text = text.split('');
+         for (var i = 0; i < group.innerMask.length; i++) {
+            while (text.length) {
+               character = text.splice(0, 1)[0];
+               character = (character === clearChar) ? undefined : this.charIsFitToGroup(group, i, character);
+               if (character !== false) {
+                  value.push(character);
+                  break;
+               }
+            }
+         }
+         return {
+            value: value,
+            text: text.join('')
+         };
       },
       /**
        * Записать текст в модель
