@@ -221,8 +221,8 @@ define('js!Controls/List/ListControl', [
          },
 
          __initNavigation: function(options, dataSource) {
-            if (options.navigation && options.navigation.type == 'page') {
-               this._navigationController = new PageNavigation(options.navigation.config);
+            if (options.navigation && options.navigation.source == 'page') {
+               this._navigationController = new PageNavigation(options.navigation.sourceConfig);
                this._navigationController.prepareSource(dataSource);
             }
          },
@@ -363,8 +363,10 @@ define('js!Controls/List/ListControl', [
                this._items = list;
             }
             if (this._navigationController) {
-               this._navigationController.calculateState(list)
+               this._navigationController.calculateState(list);
             }
+
+
 
             this._toggleIndicator(false);
             return list;

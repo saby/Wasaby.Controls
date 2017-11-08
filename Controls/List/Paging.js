@@ -30,7 +30,7 @@ define('js!Controls/List/Paging', [
          },
 
          __calcBtnStates: function(selKey) {
-            if (selKey == 1) {
+            if (selKey <= 1) {
                this._stateBegin = 'disabled';
                this._statePrev = 'disabled';
             }
@@ -39,7 +39,7 @@ define('js!Controls/List/Paging', [
                this._statePrev = 'normal';
             }
 
-            if (selKey == this._options.pagesCount) {
+            if (selKey >= this._options.pagesCount) {
                this._stateEnd = 'disabled';
                this._stateNext = 'disabled';
             }
