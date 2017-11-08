@@ -33,6 +33,14 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
             return this.startTime ? new Date().getTime() - this.startTime.getTime() : 0; //startTime может не быть, если memory source
          };
       }
+      
+      function analyzeQueryResult (queryResult, items) {
+         if(queryResult.getCount() < this._options.view.getPageSize()) {
+            items.prepend(queryResult);
+         } else {
+            items.assign(queryResult);
+         }
+      }
 
       /* Обобщение механизма ожидания делается по задаче
        https://inside.tensor.ru/opendoc.html?guid=7ef15c0d-c70e-4956-ba97-7f9e6d0d4f15&des=
@@ -192,6 +200,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                searchParam = this._options.param,
                searchValue = viewFilter[searchParam],
                textBox = this._options.textBox,
+               useCustomQuery = cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.IItemsControl') || cInstance.instanceOfModule(view.getDataSource(), 'WS.Data/Source/Memory'),
                self = this;
 
             function reloadWithRevert() {
@@ -205,7 +214,7 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                      просто отдельно выполняем запрос, если контрол поддерживает интерфейс.
                      При memory источнике тоже необходимо делать запрос без reload'a списка, т.к. запросы будут синхронными,
                      из-за этого получается путаница с ответами, т.к. код второго запроса отработает быстрее первого. */
-                  if(cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.IItemsControl') || cInstance.instanceOfModule(view.getDataSource(), 'WS.Data/Source/Memory')) {
+                  if(useCustomQuery) {
                      view.setFilter(viewFilter, true);
                      queryUtil(view.getDataSource(), [viewFilter, view.getSorting(), view.getOffset(), view.getPageSize()]).addCallback(function (res) {
                         self._onViewDataLoad(null, res.getAll());
@@ -244,19 +253,16 @@ define('js!SBIS3.CONTROLS.Utils.KbLayoutRevertObserver',
                   if(self._options.newStandart) {
                      if (self._itemsBeforeTranslate && self._itemsBeforeTranslate.getCount()) {
                         data.setMetaData(self._itemsBeforeTranslate.getMetaData());
-                        
-                        if(self._itemsBeforeTranslate.getCount() < view.getPageSize()) {
-                           data.prepend(self._itemsBeforeTranslate);
-                        } else {
-                           data.assign(self._itemsBeforeTranslate);
-                        }
-                        
+                        analyzeQueryResult.call(self, self._itemsBeforeTranslate, data);
                         backOldSearchValue();
                         showMissSpellValue(searchValue);
                         self._toggleItemsEventRaising(true);
                      } else {
                         /* Прошлый поиск был не успешен -> отображаем данные и выводим сообщение */
                         showMissSpellValue(searchValue);
+                        if (useCustomQuery) {
+                           analyzeQueryResult.call(self, data, view.getItems());
+                        }
                         //Без анализа изменений, чтобы не вызвать преждевременную отрисовку и не портить очередёность срабатывания событий
                         self._toggleItemsEventRaising(true, false);
                         self._textBeforeTranslate = null;
