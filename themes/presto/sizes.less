@@ -1,23 +1,23 @@
 //default-sizes
-@default-height:               2.7857rem;
-@default-height-big:           2.7857rem;
+@default-height:               round(78px * @multiplier);
+@default-height-big:           round(78px * @multiplier);
 @default-border-width:         1px;
-@default-text-size:            1rem;
-@small-text-size:              .8571rem;
-@large-text-size:              1.1428rem;
-@huge-text-size:               1.4285rem;
-@default-icon-size:            1.1428rem;
-@default-icon-size-medium:     1.5rem;
-@default-icon-size-large:      2rem;
-@default-line-height:          1.5rem; //42px;
-@default-base-line-height:     2rem;//@default-height - 2 * @default-border-width
-@default-padding:              0.5rem;
-@default-padding-small:        0.25rem;
+@default-text-size:            round(28px * @multiplier);
+@small-text-size:              round(24px * @multiplier);
+@large-text-size:              round(32px * @multiplier);
+@huge-text-size:               round(40px * @multiplier);
+@default-icon-size:            round(32px * @multiplier);
+@default-icon-size-medium:     round(42px * @multiplier);
+@default-icon-size-large:      round(56px * @multiplier);
+@default-line-height:          round(42px * @multiplier); //42px;
+@default-base-line-height:     round(56px * @multiplier);//@default-height - 2 * @default-border-width
+@default-padding:              round(14px * @multiplier);
+@default-padding-small:        round(7px * @multiplier);
 //textbox
-@text-box-height-m:               2.0714rem;
+@text-box-height-m:               round(58px * @multiplier);
 @text-box-height-l:               @default-height-big;
-@text-box-font-size-l:            1.4286rem;
-@text-box-input-padding-l:        0.25rem;
+@text-box-font-size-l:            round(40pxpx * @multiplier);
+@text-box-input-padding-l:        round(7px * @multiplier);
 //search-form
 @search-loop-size:             @default-icon-size;
 //button
@@ -28,12 +28,12 @@
 //suggest-text-box
 @suggest-text-box-icon-size:           @default-icon-size-medium;
 @suggest-text-box-icon-cross-padding:  0 0 0 @default-padding-small;
-@suggest-list-footer-height:           2.75rem;
+@suggest-list-footer-height:           round(77px * @multiplier);
 //treeView
 @tree-view-expand-icon-size:   @default-icon-size;
 @tree-view-expand-width:       @default-icon-size;
 //itemsToolbar
-@list-view-items-toolbar-icon-size:       1.32rem;
+@list-view-items-toolbar-icon-size:       round(37px * @multiplier);
 @list-view-items-toolbar-menu-icon-size:  @icon-large-size;
 //fieldlink
 @fieldLink-icon-size:          @default-icon-size-medium;
@@ -45,4 +45,4 @@
 //operationPanel
 @controls-OperationsPanelButton-font-size:  @icon-large-size;
 //grid
-@controls-view-padding-DEFAULT:             .5714rem;
+@controls-view-padding-DEFAULT:             round(16px * @multiplier);

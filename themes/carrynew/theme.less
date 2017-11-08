@@ -9,7 +9,7 @@ body {
   .controls-ListView__bottomStyle > .controls-ItemsToolbar.controls-ItemsToolbar__edit:before {
     background: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDIwMDEwOTA0Ly9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+CjxzdmcgdmVyc2lvbj0iMS4wIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiB3aWR0aD0iMjU1LjAwMDAwMHB4IiBoZWlnaHQ9IjMwMC4wMDAwMDBweCIgdmlld0JveD0iMCAwIDI1NS4wMDAwMDAgMzAwLjAwMDAwMCIKIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwMDAwMCwzMDAuMDAwMDAwKSBzY2FsZSgwLjEwMDAwMCwtMC4xMDAwMDApIgpmaWxsPSIjZjVmNWY1IiBzdHJva2U9Im5vbmUiPgo8cGF0aCBkPSJNMTAgMjk4OSBjMCAtMTEgMTkgLTUxIDI5IC01OSA2IC01IDQ2IC02NCAyMTUgLTMxNSA0NCAtNjYgODMgLTEyMgo4NiAtMTI1IDMgLTMgMzcgLTUyIDc1IC0xMTAgMzkgLTU4IDcyIC0xMDcgNzUgLTExMCA2IC02IDY3IC05NSAyMDQgLTMwMCA1MAotNzQgOTMgLTEzNyA5NiAtMTQwIDMgLTMgMjMgLTMyIDQ1IC02NSAyMiAtMzMgNDIgLTYyIDQ1IC02NSAzIC0zIDQzIC02MSA4OQotMTMwIDQ2IC02OSAxMjEgLTE3OSAxNjYgLTI0NSA0NCAtNjYgMTA2IC0xNTYgMTM1IC0yMDAgMzAgLTQ0IDU3IC04MiA2MCAtODUKNSAtNSA0MSAtNTggMjQ0IC0zNjAgNjEgLTkxIDExMyAtMTY3IDExNiAtMTcwIDMgLTMgMjMgLTMyIDQ1IC02NSA0NyAtNzAgMzgKLTU4IDExNiAtMTY0IDU3IC03NiAxNzkgLTE5MSAyMDMgLTE5MSA2IDAgMjUgLTcgNDEgLTE2IDU4IC0zMiAyODcgLTc0IDQwMAotNzQgbDU1IDAgMCAxNTAwIDAgMTUwMCAtMTI3MCAwIGMtODkyIDAgLTEyNzAgLTMgLTEyNzAgLTExeiIvPgo8L2c+Cjwvc3ZnPgo=') no-repeat 0 0;
     //это должно быть обязательно после backround иначе масштаб уголка слетает.
-    background-size: 3rem 3rem;
+    background-size: round(84px * @multiplier) round(84px * @multiplier);
   }
     //Todo: https://online.sbis.ru/opendoc.html?guid=47bdafa8-88ab-4cb2-9383-89ffd7c9dcdd
     .controls-accent-text {
@@ -35,11 +35,6 @@ body {
          background: @default-bg-color;
       }
   }
-  .ws-float-area-title {
-      font-size: 1.43rem!important;
-      font-weight: normal !important;
-  }
-
 }
 .controls-FloatArea {
   background: #fff;
@@ -68,16 +63,6 @@ body .ws-float-area-nostack-panel-shadow-standart {
 
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateRangeBigChoose__header-rangeDash {
   border-bottom: @default-border-width solid #ccc;
-}
-
-body {
-   // В формулах в темах надо сделать что бы можно было задать нижний отступ отличный от верхнего
-   .controls-DateRangeBigChoose .controls-DateRangeBigChoose__months .controls-DateRangeBigChoose__months-quarterRange .controls-DateRangeBigChoose__months-range-btn-wrapper.controls-DateRangeBigChoose__months-range-btn-wrapper3 {
-       height: 5.9rem;
-   }
-   .controls-DateRangeBigChoose .controls-DateRangeBigChoose__months .controls-DateRangeBigChoose__months-halfyearRange .controls-DateRangeBigChoose__months-range-btn-wrapper.controls-DateRangeBigChoose__months-range-btn-wrapper1 {
-       height: 11rem;
-   }
 }
 
 .ws-is-desktop-platform .controls-DateRangeBigChoose .controls-Button:not(.ws-disabled):not(:active).controls-Button-color__default:hover,
@@ -126,7 +111,6 @@ body .ws-window {
 }
 .controls-Link.controls__filter-button__clear-filter.ws-disabled {
   color: #ccc;
-  font-size: 1.14rem;
 }
 
 .controls-ComboBox__picker .controls-ComboBox__scrollContainer {
@@ -153,11 +137,4 @@ body {
          }
       }
    }
-}
-
-.controls-Browser__search {
-   margin: 0 0.28572rem 0.28572rem 0.28572rem;
-}
-.controls-Browser__topTemplate {
-   padding: 0 0.28572rem 0.28572rem 0.28572rem;
 }
