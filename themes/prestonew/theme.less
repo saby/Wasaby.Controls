@@ -306,14 +306,26 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
 
 //Удалить, как будет темизация для engine.
 .controls-Browser {
+   .controls-Browser__search {
+      margin: 0.28572rem;
+   }
+   .controls-Browser__topTemplate {
+      padding: 0.28572rem;
+   }
    .controls-Browser__tableCell-search {
       .controls-Browser__selectAllCheckBox {
          .align-self(center);
       }
    }
-   .controls__filterButton {
-      margin-top: 8px;
+
+   .controls-Browser__table {
+      .controls-Browser__tableCell-filterButton {
+         .controls__filterButton {
+            margin-top: 10px;
+         }
+      }
    }
+
    .controls-Browser__search {
       width: 21.4285rem;
    }
@@ -402,7 +414,7 @@ body {
 body  .ws-window {
    background-color: #2C3E50;
    border-style: solid;
-   border-color: #00a2ef;
+   border-color: transparent;
    border-width: @default-border-width;
 }
 .ws-window-content {
@@ -1068,12 +1080,6 @@ body {
 }
 
 //Убрать когда проектировщики сделают одинаковые отступы, обсуждали на этом совещании: https://online.sbis.ru/obj/Meeting/e6b722a9-d339-4016-9fd6-82b763c4e241
-.controls-ItemsToolbar.controls-ItemsToolbar__edit {
+.controls-ItemsToolbar.controls-ItemsToolbar__withEditActions {
   bottom: 0.2857rem;
-}
-.controls-Browser__search {
-   margin: 0.28572rem;
-}
-.controls-Browser__topTemplate {
-   padding: 0.28572rem;
 }

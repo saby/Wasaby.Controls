@@ -1031,6 +1031,15 @@ define('js!SBIS3.CONTROLS.ListView',
             this._initLoadMoreButton();
          },
 
+         setItems: function(items) {
+            //Когда используется навигация по курсорам, надо иницировать контроллер навигации данными переданного рекордсета, чтобы следующий запрос за даныыми отправился с правильными параметрами
+            if (items && this._isCursorNavigation() && this._listNavigation) {
+               this._listNavigation.analyzeResponseParams(items);
+            }
+            ListView.superclass.setItems.apply(this, arguments);
+         },
+
+
          _initVirtualScrolling: function(){
             this._virtualScrollController = new VirtualScrollController({
                view: this,
@@ -3558,7 +3567,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   return this._scrollOffset.bottom + this._limit;
                }
             } else {
-               return this._scrollOffset.top - this._limit;
+               // Math.max из-за того, что страница с записями может быть неполная, и при подгрузке вверх,
+               // вычитая размер страницы можно получить отрицательный offset
+               return Math.max(this._scrollOffset.top - this._limit, 0);
             }
          },
 
@@ -3841,6 +3852,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isCursorNavigation()) {
                this._listNavigation.analyzeResponseParams(list);
             }
+            ListView.superclass._onDataLoad.call(this, list);
          },
 
          _dataLoadedCallback: function () {
@@ -3858,10 +3870,6 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._setLoadMoreCaption(this.getItems());
                }
             }
-            this._onMetaDataResultsChange = function(event, data){
-               this._headIsChanged = true;
-               this._redrawResults(true);
-            }.bind(this);
             this._observeResultsRecord(true);
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
             this._needScrollCompensation = false;
@@ -3899,15 +3907,17 @@ define('js!SBIS3.CONTROLS.ListView',
                      indicator[0].style.top = '';
                   }
                }
-               this._loadingIndicatorTimer = setTimeout(function(){
-                  ajaxLoader.addClass('controls-AjaxLoader__showIndication');
-               }, INDICATOR_DELAY);
+               this._loadingIndicatorTimer = setTimeout(this._showIndicator.bind(this), INDICATOR_DELAY);
             }
             else {
                clearTimeout(this._loadingIndicatorTimer);
                ajaxLoader.addClass('ws-hidden').removeClass('controls-AjaxLoader__showIndication');
             }
          },
+         _showIndicator: function () {
+            this._getAjaxLoaderContainer().addClass('controls-AjaxLoader__showIndication');
+         },
+
          _toggleEmptyData: function(show) {
             show = show && this._options.emptyHTML;
             this._getEmptyDataContainer().toggleClass('ws-hidden', !show);
@@ -4674,14 +4684,32 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _observeResultsRecord: function(needObserve){
             var methodName = needObserve ? 'subscribeTo' : 'unsubscribeFrom',
-                metaData = this.getItems() && this.getItems().getMetaData(),
-                resultsRecord = metaData && metaData.results;
-            if (this.getItems()) {
-               this[methodName](this.getItems(), 'onPropertyChange', this._onMetaDataResultsChange);
+                metaData;
+
+            //Если нужно отписаться, или подписаться первый раз.
+            //Проверка в связи с тем, что при подгрузке по скроллу рекордсет остается прежним и подписываться еще раз на нем не нужно.
+            //В план на декабрь выписал задачу, чтобы  разобраться с подобными костылями при отрисовке строки итогов.
+            //https://online.sbis.ru/opendoc.html?guid=e1020605-ea32-42e7-aa12-2f3bea86bb1d
+            if (!this._onMetaDataResultsChange) {
+               this._onMetaDataResultsChange = function onMetaDataResultsChange(){
+                  this._headIsChanged = true;
+                  this._redrawResults(true);
+               }.bind(this);
             }
-            if (resultsRecord){
-               this[methodName](resultsRecord, 'onPropertyChange', this._onMetaDataResultsChange);
+            if (!needObserve || !this._isResultObserved()) {
+               if (this.getItems()) {
+                  this[methodName](this.getItems(), 'onPropertyChange', this._onMetaDataResultsChange);
+                  metaData = this.getItems().getMetaData();
+                  if (metaData && metaData.results) {
+                     this[methodName](metaData.results, 'onPropertyChange', this._onMetaDataResultsChange);
+                  }
+               }
             }
+
+         },
+
+         _isResultObserved: function() {
+            return this.getItems() && this.getItems().getEventHandlers('onPropertyChange').indexOf(this._onMetaDataResultsChange) > -1;
          },
 
          _redrawFoot: function() {
@@ -4822,10 +4850,15 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _deleteRecordsFromRecordSet: function(idArray) {
-            var items = this.getItems();
+            var
+               item,
+               items = this.getItems();
             items.setEventRaising(false, true);
             for (var i = 0; i < idArray.length; i++) {
-               items.remove(items.getRecordById(idArray[i]));
+               item = items.getRecordById(idArray[i]);
+               if (item) {
+                  items.remove(item);
+               }
             }
             items.setEventRaising(true, true);
             return Deferred.success(true);

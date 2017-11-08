@@ -2,7 +2,7 @@
    class="controls-StylesPanel controls-StylesPanelNew{{paletteRenderStyle ? ' controls-StylesPanel__colorPalette'}} controls-FloatArea">
    <ws:if data="{{!paletteRenderStyle}}">
       <div class="controls-StylesPanel__header">
-         <div class="controls-StylesPanel__title" title="Стиль и цвет">{[Стиль и цвет]}</div>
+         <div class="controls-StylesPanel__title" title="{[Стиль и цвет]}">{[Стиль и цвет]}</div>
          <ws:SBIS3.CONTROLS.IconButton
             name="Apply"
             command="saveStylesPanel"
@@ -27,7 +27,7 @@
    <ws:SBIS3.CONTROLS.CheckBox
       name="CheckBox"
       visible="{{allowAutoColor}}"
-      caption="Автоматически (под фон)"
+      caption="{[Автоматически (под фон)]}"
       checked="{{style.color === 'auto'}}"
       className="controls-StylesPanel__checkBox"
    />
