@@ -38053,9 +38053,12 @@
                }
             });
 
-            editor.on('focus', function() {
+            editor.on('focus', function (e) {
                // Make sure we have a proper fake caret on focus
-               Delay.setEditorTimeout(editor, function() {
+               // В MSIE при установке рэнджа формируется событие фокуса, поэтому если рэнж не установить сразу, а отложить, то в этот промежуток
+               // времени может произойти переход фокуса к другому элементу, и отложенная установка рэнжа вернёт фокус обратно, что неправильно.
+               // Пример https://online.sbis.ru/opendoc.html?guid=c8752b67-f0bb-4660-8b00-a551f30d2b46
+               var _onFocus = function() {
                   //Проблема:
                   //          во избежание утечек памяти в destroy selection = null
                   //          перед destroy у редактора может быть вызван focus
@@ -38065,7 +38068,13 @@
                   if(!editor.destroyed) {
                      editor.selection.setRng(renderRangeCaret(editor.selection.getRng()));
                   }
-               }, 0);
+               };
+               if (Env.ie /*&& 'blurredEditor' in e*/) {
+                  _onFocus();
+               }
+               else {
+                  Delay.setEditorTimeout(editor, _onFocus, 0);
+               }
             });
 
             editor.on('copy', function (e) {
