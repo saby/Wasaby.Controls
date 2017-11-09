@@ -1744,6 +1744,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _setNewDataAfterReload: function (list) {
          var meta = list.getMetaData();
+         //TODO временный фикс. Прикладники используют memory source и пихают итоги в изначальный рекордсет.
+         //однако при релоаде списка приходит новый рекордсет из memory в котором нет итогов и прочего
+         //это должно решаться на уровне source в будущем
          if (cInstance.instanceOfModule(this.getDataSource(), 'WS.Data/Source/Memory')) {
             meta = cMerge(this._options._items.getMetaData(), list.getMetaData());
          }
