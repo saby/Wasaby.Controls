@@ -19,6 +19,14 @@ define('js!Controls/List/ListControl', [
    'use strict';
 
    var _private = {
+      //проверка на то, нужно ли создавать новый инстанс рекордсета или же можно положить данные в старый
+      isEqualInstance: function(oldList, newList) {
+         return oldList && cInstance.instanceOfModule(oldList, 'WS.Data/Collection/RecordSet')
+         && (newList.getModel() === oldList.getModel())
+         && (Object.getPrototypeOf(newList).constructor == Object.getPrototypeOf(newList).constructor)
+         && (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor)
+      },
+
       initNavigation: function(navOption, dataSource) {
          var navController;
          if (navOption && navOption.type == 'page') {
@@ -45,7 +53,7 @@ define('js!Controls/List/ListControl', [
          return params;
       },
 
-      reload: function(options) {
+      reload: function() {
          if (this._dataSource) {
             var
                def,
@@ -60,11 +68,19 @@ define('js!Controls/List/ListControl', [
                queryParams.offset = userParams['offset'] || queryParams.offset;
                queryParams.limit = userParams['limit'] || queryParams.limit;
             }
-            //TODO решить с параметрами
+
             def = DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
                .addCallback(fHelpers.forAliveOnly(function (list) {
                   self._notify('onDataLoad', list);
-                  _private.onDSReload.call(this, list, options);
+                  if (_private.isEqualInstance(self._items, list)) {
+                     self._items.setMetaData(list.getMetaData());
+                     self._items.assign(list);
+                  } else {
+                     self._items = list;
+                  }
+                  if (self._navigationController) {
+                     self._navigationController.calculateState(list)
+                  }
                   return list;
                }, self))
                .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
@@ -75,6 +91,7 @@ define('js!Controls/List/ListControl', [
          }
       },
 
+
       loadPage: function(direction) {
          var def, self = this;
          if (this._dataSource) {
@@ -82,7 +99,16 @@ define('js!Controls/List/ListControl', [
             def = DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
                .addCallback(fHelpers.forAliveOnly(function (list) {
                   self._notify('onDataLoad', list, direction);
-                  _private.onLoadPage.call(this, list, direction);
+
+                  if (direction == 'down') {
+                     self._items.append(list);
+                  } else if (direction == 'up') {
+                     self._items.prepend(list);
+                  }
+                  if (self._navigationController) {
+                     self._navigationController.calculateState(list, direction);
+                  }
+
                   return list;
                }, self))
                .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
@@ -91,36 +117,6 @@ define('js!Controls/List/ListControl', [
          else {
             throw new Error('Option dataSource is undefined. Can\'t load page');
          }
-      },
-
-      onLoadPage: function(list, direction) {
-         if (direction == 'down') {
-            this._items.append(list);
-         } else if (direction == 'up') {
-            this._items.prepend(list);
-         }
-         if (this._navigationController) {
-            this._navigationController.calculateState(list, direction);
-         }
-      },
-
-      onDSReload: function(list, options) {
-         if (
-            this._items && cInstance.instanceOfModule(this._items, 'WS.Data/Collection/RecordSet')
-            && (list.getModel() === this._items.getModel())
-            && (Object.getPrototypeOf(list).constructor == Object.getPrototypeOf(list).constructor)
-            && (Object.getPrototypeOf(list.getAdapter()).constructor == Object.getPrototypeOf(this._items.getAdapter()).constructor)
-            ) {
-            this._items.setMetaData(list.getMetaData());
-            this._items.assign(list);
-         } else {
-            this._items = list;
-         }
-         if (this._navigationController) {
-            this._navigationController.calculateState(list)
-         }
-
-         return list;
       }
    };
 
