@@ -90,7 +90,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                /**
                 * @cfg {String} Текст подсказки внутри редактирования
                 * @remark
-                * Данный текст отображается внутри поля до момента получения фокуса 
+                * Данный текст отображается внутри поля до момента получения фокуса
                 * и как текст по нажатию на который начнется редактирование
                 * @example
                 * <pre>
@@ -134,9 +134,9 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                self._clickHandler();
             });
             /*FixMe: придрот, выпилить когда будет номральный CompoundControl*/
-            
-            
-            //TODO: Декораторы не должны разбираться тут (ждем virtualDOM'a) 
+
+
+            //TODO: Декораторы не должны разбираться тут (ждем virtualDOM'a)
             var decorators = this._container.attr('decorators');
             if (decorators && decorators.indexOf('format:') !== -1) {
                decorators = decorators.split('format:');
@@ -182,7 +182,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
          },
 
          /**
-          * Если не прошла валидация - включаем режим отображения редакторов  
+          * Если не прошла валидация - включаем режим отображения редакторов
           */
          validate: function(){
             var result = EditAtPlace.superclass.validate.apply(this, arguments);
@@ -279,7 +279,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
 
          /**
           * Установить режим редактирования по месту
-          * @param {Boolean} inPlace 
+          * @param {Boolean} inPlace
           * true - отображение только редактора
           * false - отображение текста при клике по которому отображается редактор
           * @see displayAsEditor
@@ -307,6 +307,13 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             this._notify('onCancel');
          },
 
+         /**
+          * Отменяет редактирования по месту
+          */
+         cancelEdit: function () {
+            this._cancelEdit();
+         },
+
          _getEditTemplate: function(){
             return this._options.editorTpl;
          },
@@ -326,7 +333,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             }
             this._drawText(this._options.formattedText());
          },
-            
+
          /**
           * Получить текстовое значение контрола
           * @returns {String} Текст - значение поля
