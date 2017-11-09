@@ -86,6 +86,23 @@
    &:not(.controls-ListView__multiselect) .controls-TreeView__folderFooterContainer {
       padding-left: @controls-view-padding-DEFAULT;
    }
+   &.controls-DataGridView__hasSeparator {
+      &.controls-ListView__dataLoaded {
+         .controls-DataGridView__tr {
+            .controls-TreeDataGridView__folderFooter-separator {
+               border-width: @data-grid-cell-border-width;
+               border-style: solid;
+               border-top-color: transparent;
+               border-bottom-color: @data-grid-cell-separator-color;
+            }
+         }
+         .controls-DataGridView__tr:nth-last-child(1) {
+            .controls-TreeDataGridView__folderFooter-separator {
+               border-bottom-color: @data-grid-edge-cell-separator-color;
+            }
+         }
+      }
+   }
 }
 .controls-TreeDataGridView__hideExpandsOnHiddenNodes {
   .controls-ListView__item-type-hidden {

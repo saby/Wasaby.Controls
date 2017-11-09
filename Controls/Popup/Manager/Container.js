@@ -1,9 +1,9 @@
-define('js!Controls/PopupManager/PopupContainer', [
+define('js!Controls/Popup/Container', [
 ], function() {
 
    /**
     * Контенер для отображения окон
-    * @class Controls/PopupManager/PopupContainer
+    * @class Controls/Popup/Container
     * @control
     * @extends Core/Control
     * @public
@@ -13,12 +13,12 @@ define('js!Controls/PopupManager/PopupContainer', [
 
    /**
     * Изменить набор окон
-    * @function Controls/PopupManager/PopupContainer#setPopupItems
+    * @function Controls/Popup/Container#setPopupItems
     * @param popupItems новый набор окон
     */
 
    /**
-    * @event Controls/PopupManager/PopupContainer#closePopup Происходит при закрытии попапа.
+    * @event Controls/Popup/Container#closePopup Происходит при закрытии попапа.
     * @param {Object} inst Инстанс попапа.
     */
 

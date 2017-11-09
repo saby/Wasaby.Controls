@@ -2,6 +2,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'Core/core-clone',
    "Core/Deferred",
    "Core/IoC",
+   "Core/core-merge",
    "WS.Data/Source/Memory",
    "WS.Data/Source/SbisService",
    "WS.Data/Collection/RecordSet",
@@ -31,6 +32,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    coreClone,
    Deferred,
    IoC,
+   cMerge,
    MemorySource,
    SbisService,
    RecordSet,
@@ -116,8 +118,9 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       return result;
    },
 
-   /*TODO метод нужен потому, что Лехина утилита не умеет работать с перечисляемым где contents имеет тип string*/
    getPropertyValue = function(itemContents, field) {
+      //todo Как только в сборку добавят модуль controls, то вместо этого метода нужно использовать
+      //js!Controls/List/resources/utils/ItemsUtil метод getPropertyValue
       if (typeof itemContents == 'string') {
          return itemContents;
       }
@@ -197,7 +200,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       tplOptions.displayField = cfg.displayProperty;
       tplOptions.displayProperty = cfg.displayProperty;
       tplOptions.templateBinding = cfg.templateBinding;
-      tplOptions.getPropertyValue = getPropertyValue;
+      tplOptions.getPropertyValue = cfg._propertyValueGetter;
       
       /* Для логирования */
       if(typeof window === 'undefined') {
@@ -370,11 +373,11 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          _offset: 0,
          _limit: undefined,
          _dataSource: undefined,
-         _propertyValueGetter: getPropertyValue,
          _revivePackageParams: {},
          _options: {
             _groupCollapsing: {},
             _itemsTemplate: ItemsTemplate,
+            _propertyValueGetter: getPropertyValue,
             _canServerRender: false,
             _canServerRenderOther : canServerRenderOther,
             _serverRender: false,
@@ -1740,7 +1743,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       }),
 
       _setNewDataAfterReload: function (list) {
-         this._options._items.setMetaData(list.getMetaData());
+         var meta = list.getMetaData();
+         //TODO временный фикс. Прикладники используют memory source и пихают итоги в изначальный рекордсет.
+         //однако при релоаде списка приходит новый рекордсет из memory в котором нет итогов и прочего
+         //это должно решаться на уровне source в будущем
+         if (cInstance.instanceOfModule(this.getDataSource(), 'WS.Data/Source/Memory')) {
+            meta = cMerge(this._options._items.getMetaData(), list.getMetaData());
+         }
+         this._options._items.setMetaData(meta);
          this._options._items.assign(list);
       },
 
@@ -1768,6 +1778,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _getFilterForReload: function() {
          return this._options.filter;
+      },
+
+      _getPropertyValue: function() {
+         return this._options._propertyValueGetter.apply(this, arguments);
       },
 
       _callQuery: function (filter, sorting, offset, limit, direction) {
