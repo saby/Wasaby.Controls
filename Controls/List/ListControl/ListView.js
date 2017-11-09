@@ -15,14 +15,12 @@ define('js!Controls/List/ListControl/ListView', [
    'use strict';
 
    var _private = {
-      calcSelectedItem: function(newOptions) {
-         if (newOptions.selectedKey !== undefined) {
-            this._selectedItem = ItemsUtil.getDisplayItemById(this._display, newOptions.selectedKey, newOptions.idProperty);
+      calcSelectedItem: function(display, selKey, idProperty) {
+         var selItem = null;
+         if (selKey !== undefined) {
+            selItem = ItemsUtil.getDisplayItemById(display, selKey, idProperty);
          }
-         else {
-            this._selectedItem = null;
-         }
-
+         return selItem;
 
          //TODO надо вычислить индекс
          /*if(!this._selectedItem) {
@@ -35,7 +33,7 @@ define('js!Controls/List/ListControl/ListView', [
           this._selectedItem = this._display.at(this._selectedIndex);
           }*/
       }
-   }
+   };
 
    var ListView = ItemsView.extend(
       {
@@ -48,13 +46,13 @@ define('js!Controls/List/ListControl/ListView', [
          _beforeMount: function(newOptions) {
             ListView.superclass._beforeMount.apply(this, arguments);
             this._itemTemplate = newOptions.itemTemplate || defaultItemTemplate;
-            _private.calcSelectedItem.call(this, newOptions);
+            this._selectedItem = _private.calcSelectedItem(this._display, newOptions.selectedKey, newOptions.idProperty);
          },
 
          _beforeUpdate: function(newOptions) {
             ListView.superclass._beforeUpdate.apply(this, arguments);
             this._itemTemplate = newOptions.itemTemplate || defaultItemTemplate;
-            _private.calcSelectedItem.call(this, newOptions);
+            this._selectedItem = _private.calcSelectedItem(this._display, newOptions.selectedKey, newOptions.idProperty);
          },
 
          _onItemClick: function(e, dispItem) {

@@ -19,11 +19,13 @@ define('js!Controls/List/ListControl', [
    'use strict';
 
    var _private = {
-      initNavigation: function(options, dataSource) {
-         if (options.navigation && options.navigation.type == 'page') {
-            this._navigationController = new PageNavigation(options.navigation.config);
-            this._navigationController.prepareSource(dataSource);
+      initNavigation: function(navOption, dataSource) {
+         var navController;
+         if (navOption && navOption.type == 'page') {
+            navController = new PageNavigation(navOption.config);
+            navController.prepareSource(dataSource);
          }
+         return navController;
       },
 
       prepareQueryParams: function(direction) {
@@ -328,7 +330,7 @@ define('js!Controls/List/ListControl', [
 
             if (newOptions.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
-               _private.initNavigation.call(this, newOptions, this._dataSource);
+               this._navigationController = _private.initNavigation(newOptions.navigation, this._dataSource);
                if (!this._items) {
                   _private.reload.call(this, newOptions);
                }
@@ -342,7 +344,7 @@ define('js!Controls/List/ListControl', [
 
             if (newOptions.dataSource !== this._options.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
-               _private.initNavigation.call(this, newOptions, this._dataSource);
+               this._navigationController = _private.initNavigation(newOptions.navigation, this._dataSource);
                _private.reload.call(this, newOptions);
             }
 
