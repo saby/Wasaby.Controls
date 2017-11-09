@@ -98,7 +98,7 @@ define('js!SBIS3.CONTROLS.CursorListNavigation',
          analyzeResponseParams: function(dataset, scrollDir) {
             var more = dataset.getMetaData().more;
             if (typeof more == 'boolean') {
-               var direction;
+               var direction = this._options.config.direction;
                if (scrollDir == 'up') {
                   direction = 'before';
                }

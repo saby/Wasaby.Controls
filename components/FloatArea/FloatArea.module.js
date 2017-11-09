@@ -12,18 +12,7 @@ define('js!SBIS3.CONTROLS.FloatArea', [
 ], function(CompoundControl, PopupMixin, LikeWindowMixin, dotTpl, TemplateUtil) {
 
    'use strict';
-
-   /**
-    * Класс контрола "Всплывающая панель". Отображает вложенные компоненты в виде диалогового окна.
-    * @class SBIS3.CONTROLS.FloatArea
-    * @extends SBIS3.CORE.CompoundControl
-    * @public
-    *
-    * @mixes SBIS3.CONTROLS.PopupMixin
-    * @mixes SBIS3.CORE.LikeWindowMixin
-    *
-    * @author Крайнов Дмитрий Олегович
-    */
+    
 
    var FloatArea = CompoundControl.extend([PopupMixin, LikeWindowMixin], /** @lends SBIS3.CONTROLS.FloatArea.prototype*/ {
       _dotTplFn : dotTpl,

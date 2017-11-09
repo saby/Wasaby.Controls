@@ -1114,10 +1114,10 @@ define('js!SBIS3.CONTROLS.FieldLink',
              );
           },
 
-          setListFilter: function() {
+          setListFilter: function(listFilter) {
              /* Если единичный выбор в поле связи, но textBox всё равно показывается(включена опция), запрещаем работу suggest'a */
              if(!this._isInputVisible() && this._options.alwaysShowTextBox) {
-                return;
+                FieldLink.superclass.setListFilter.call(this, listFilter, true);
              }
              FieldLink.superclass.setListFilter.apply(this, arguments);
           },

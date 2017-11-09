@@ -195,8 +195,8 @@
             content: '';
             position: absolute;
             bottom: 0;
-            left: 4px;
-            right: 4px;
+            left: @data-grid-cell-padding-right;
+            right: @data-grid-cell-padding-right;
             height: 1px;
             background: @data-grid-edge-cell-separator-color;
          }
@@ -228,7 +228,7 @@
 }
 
 .controls-DataGridView__results .controls-DataGridView__td{
-   height: 22px;
+   height: 21px;
    cursor: default;
    padding: @data-grid-results-cell-padding;
 }
@@ -320,15 +320,13 @@
 /* Отступы для классов .controls-ListView__padding-XS|S|M|L|XL */
 .generate-padding-class-DGV(@i: 1) when (@i =< length(@controls-view-padding-variants)) {
    @val: extract(@controls-view-padding-variants, @i);
-   .controls-DataGridView.controls-ListView__padding-@{val} {
-      .controls-DataGridView__table {
-         .controls-DataGridView__td, .controls-DataGridView__th {
-            &.controls-DataGridView__firstContentCell {
-               padding-left: ~"@{controls-view-padding-@{val}}";
-            }
-            &:last-child {
-               padding-right: ~"@{controls-view-padding-@{val}}";
-            }
+   .controls-ListView__padding-@{val} {
+      .controls-DataGridView__td, .controls-DataGridView__th {
+         &.controls-DataGridView__firstContentCell {
+            padding-left: ~"@{controls-view-padding-@{val}}";
+         }
+         &:last-child {
+            padding-right: ~"@{controls-view-padding-@{val}}";
          }
       }
    }

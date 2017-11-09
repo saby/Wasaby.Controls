@@ -113,7 +113,8 @@ define('js!SBIS3.CONTROLS.TextArea', [
              * </pre>
              */
             newLineMode: 'enter',
-            breakClickBySelect: false
+            breakClickBySelect: false,
+            size: 'auto'
          }
       },
 
@@ -257,13 +258,14 @@ define('js!SBIS3.CONTROLS.TextArea', [
             this._inputField.removeClass('ws-hidden').removeClass('ws-invisible');
             if (!this._options.text) {
                $('.controls-TextArea__view', this._container.get(0)).empty();
-               $('.controls-TextArea__view', this._container.get(0)).removeClass('controls-TextArea__view-empty'); //todo:
+               $('.controls-TextArea__view', this._container.get(0)).removeClass('controls-TextArea__view__empty');
             }
          }
          //нельзя классы, ограничивающие высоту ставить сразу в шаблоне, потому что из-за них некорректно считается высота, т.к. оин сразу добавляют скролл, а считать высоту надо без скролла
          var hClasses = generateClassesName(this._options.minLinesCount, this._options.maxLinesCount);
          modifyHeightClasses(this._inputField.get(0), hClasses);
-         this._container.addClass('controls-TextArea__heightInit');
+         this._container.find('.controls-TextArea__view').addClass('controls-TextArea__view__init');
+         this._container.find('.controls-TextArea__field').addClass('controls-TextArea__field__init');
          this._autoHeightInitialized = true;
       },
 
@@ -301,6 +303,10 @@ define('js!SBIS3.CONTROLS.TextArea', [
             this._disabledWrapper.toggleClass('ws-invisible', state);
          }
          this._updateDisabledWrapper();
+         this._disabledWrapper.toggleClass('controls-TextArea__view__init', this.isEnabled() && this._autoHeightInitialized);
+         this._inputField.toggleClass('controls-TextArea__field__init', this.isEnabled() && this._autoHeightInitialized);
+         this._disabledWrapper.toggleClass('controls-TextArea__view__disabled', !this.isEnabled());
+         this._inputField.toggleClass('controls-TextArea__field__disabled', !this.isEnabled());
       },
 
       setText: function(text){
@@ -324,7 +330,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
             var
                newText = escapeHtml(this.getText());
             this._disabledWrapper.html(LinkWrap.wrapURLs(newText));
-            this._disabledWrapper.toggleClass('controls-TextArea__view-empty', !newText);
+            this._disabledWrapper.toggleClass('controls-TextArea__view__empty', !newText);
          }
       },
 
