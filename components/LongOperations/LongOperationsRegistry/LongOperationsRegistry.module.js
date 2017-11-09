@@ -47,42 +47,6 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
             },
 
             _longOpList: null,
-
-            _data: [{
-               idProperty : 'key',
-               displayProperty: 'title',
-               multiselect : false,
-               parentProperty: 'parent',
-               values:[
-                  {
-                     key: null,
-                     title: FILTER_STATUSES[null]
-                  },
-                  {
-                     key: /*0*/'running',
-                     title: FILTER_STATUSES['running']
-                  },
-                  {
-                     key: /*2*/'ended',
-                     title: FILTER_STATUSES['ended']
-                  },
-                  {
-                     key: /*4*/'success-ended',
-                     title: FILTER_STATUSES['success-ended'],
-                     parent: /*2*/'ended'
-                  },
-                  {
-                     key: /*5*/'error-ended',
-                     title: FILTER_STATUSES['error-ended'],
-                     parent: /*2*/'ended'
-                  },
-                  {
-                     key: /*1*/'suspended',
-                     title: FILTER_STATUSES['suspended']
-                  }
-               ]
-            }],
-
             _previousGroupBy: null
          },
 
@@ -102,7 +66,7 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
             this._longOpList = this.getChildControlByName('operationList');
             var view = this._longOpList.getView();//###this.getChildControlByName('browserView')
 
-            this.getChildControlByName('browserFastDataFilter').setItems(this._data);
+            //this.getChildControlByName('browserFastDataFilter').setItems(this._data);
 
             view.setGroupBy({
                field: 'status',
