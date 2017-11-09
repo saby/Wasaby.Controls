@@ -21,15 +21,17 @@ define('js!Controls/List/ListControl', [
    'use strict';
 
    /*
-   Опции
-   * dragEntity, dragEntityList, enabledMove, itemsDragNDrop - обсудить с Яриком, возможно будет достаточно события dragStart
-   * infiniteScroll, infiniteScrollContainer, infiniteScrollPreloadOffset, showPaging, partialPaging, pageSize - вынести в навигацию
-   * resultsPosition, resultsText, resultsTpl - как настраивать
-   *
-   * Удалил:
-   * allowEmptyMultiSelection, allowEmptySelection, colorField, colorMarkEnabled, highlightEnabled, highlightText, includedTemplates, validateIfDisabled, itemTpl
-   * footerTpl, templateBinding, useSelectAll
-   * */
+    Опции
+    * dragEntity, dragEntityList, enabledMove, itemsDragNDrop - обсудить с Яриком, возможно будет достаточно события dragStart
+    * resultsPosition, resultsText, resultsTpl - как настраивать
+    *
+    * Удалил:
+    * colorField, colorMarkEnabled, highlightEnabled, highlightText, includedTemplates, validateIfDisabled, itemTpl
+    * footerTpl, templateBinding, useSelectAll
+    *
+    * allowEmptyMultiSelection, allowEmptySelection - в интерфейс selectable
+    * */
+
 
    /**
     * List Control
@@ -74,8 +76,51 @@ define('js!Controls/List/ListControl', [
     */
 
    /**
+    * @typedef {String} ListNavigationSource
+    * @variant position Описание
+    * @variant offset Описание
+    * @variant page Описание
+    */
+
+   /**
+    * @typedef {String} ListNavigationView
+    * @variant infinity Описание
+    * @variant pages Описание
+    * @variant demand Описание
+    */
+
+   /**
+    * @typedef {Object} ListNavigationPositionSourceConfig
+    * @property {String} field Описание
+    * @property {String} direction Описание
+    */
+
+   /**
+    * @typedef {Object} ListNavigationOffsetSourceConfig
+    * @property {Number} limit Описание
+    */
+
+   /**
+    * @typedef {Object} ListNavigationInfinityViewConfig
+    * @property {String} pagingMode Описание
+    */
+
+   /**
+    * @typedef {Object} ListNavigationPagesViewConfig
+    * @property {Boolean} pagesCountSelector Описание
+    */
+
+   /**
+    * @typedef {Object} ListNavigation
+    * @property {ListNavigationSource} source Описание
+    * @property {ListNavigationView} view Описание
+    * @property {ListNavigationPositionSourceConfig|ListNavigationOffsetSourceConfig} sourceConfig Описание
+    * @property {ListNavigationInfinityViewConfig|ListNavigationPagesViewConfig} viewConfig Описание
+    */
+
+   /**
     * @name Controls/List/ListControl#navigation
-    * @cfg {Object} Настройки навигации
+    * @property {ListNavigation} Настройки навигации
     */
 
    /**
