@@ -1004,7 +1004,6 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          init: function () {
-            this._options.virtualScrolling = false;
             // На клиенте для мобильных устройств загружаем контроллеры редактирования сразу, т.к. для правильного функционирования системы фокусов, необходима синхронная логика
             if (cDetection.isMobilePlatform && window) {
                requirejs(['js!SBIS3.CONTROLS.EditInPlaceHoverController', 'js!SBIS3.CONTROLS.EditInPlaceClickController']);
@@ -2126,7 +2125,7 @@ define('js!SBIS3.CONTROLS.ListView',
           *    });
           * </pre>
           */
-         reload: function (filter, sorting, pageNumber, pageSize) {
+         reload: function (filter, sorting, offset, limit, deepReload, resetPosition) {
             if (this._scrollBinder && this._options.saveReloadPosition){
                var reloadOffset = this._getReloadOffset();
                this._offset = reloadOffset;
@@ -2136,7 +2135,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   this.setInfiniteScroll('both', true);
                }
             }
-            
+
             // Reset virtual scrolling if it's enabled
             if (this._options.virtualScrolling && this._virtualScrollController) {
                this._virtualScrollController.disableScrollHandler(true);
@@ -3679,7 +3678,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * @param offset
           */
          scrollToFirstPage: function() {
-            if (this._options.infiniteScroll == "down" && this._options.virtualScrolling) {
+            if (this._options.infiniteScroll == "down") {
                this._getScrollWatcher().scrollTo('top');
             }
          },
@@ -3851,7 +3850,11 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass._onDataLoad.call(this, list);
          },
 
-         _dataLoadedCallback: function () {
+         _dataLoadedCallback: function (resetPosition) {
+            if (resetPosition) {
+               this.scrollToFirstPage();
+            }
+
             if (this._options.showPaging) {
                this._processPaging();
                this._updateOffset();

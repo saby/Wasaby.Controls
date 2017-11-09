@@ -1663,7 +1663,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        *    );
        * </pre>
        */
-      reload: propertyUpdateWrapper(function (filter, sorting, offset, limit) {
+      reload: propertyUpdateWrapper(function (filter, sorting, offset, limit, deepReload, resetPosition) {
          var
             def,
             self = this,
@@ -1711,7 +1711,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
                    self._checkIdProperty();
 
-                   this._dataLoadedCallback();
+                   this._dataLoadedCallback(resetPosition);
                    //self._notify('onBeforeRedraw');
                    return list;
                 }, self))
@@ -1856,7 +1856,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._options.filter = filter;
          this._dropPageSave();
          if (this._dataSource && !noLoad) {
-            this.reload(this._options.filter, this.getSorting(), 0, this.getPageSize());
+            this.reload(this._options.filter, this.getSorting(), 0, this.getPageSize(), undefined, true);
          } else {
             this._notifyOnPropertyChanged('filter');
          }

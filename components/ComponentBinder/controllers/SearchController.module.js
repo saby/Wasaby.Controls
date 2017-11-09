@@ -51,7 +51,7 @@ define('js!SBIS3.CONTROLS.SearchController',
        * @private
        */
       _reloadView: function(view, filter) {
-         view.reload(filter, view.getSorting(), 0);
+         view.reload(filter, view.getSorting(), 0, undefined, undefined, true);
       },
 
 
