@@ -3673,9 +3673,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          /**
-          * Scroll to a given offset from the top.
-          *
-          * @param offset
+          * Scroll to the beginning of the list.
           */
          scrollToFirstPage: function() {
             if (this._options.infiniteScroll == "down") {
