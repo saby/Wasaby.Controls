@@ -6,15 +6,36 @@ define('js!Controls/List/ListControl/ListView', [
    'tmpl!Controls/List/ListControl/ListView',
    'js!Controls/List/resources/utils/ItemsUtil',
    'tmpl!Controls/List/ListControl/ItemTemplate',
-   'js!Controls/List/ListControl/ListView_private',
    'css!Controls/List/ListControl/ListView'
 ], function (ItemsView,
              ListViewTpl,
              ItemsUtil,
-             defaultItemTemplate,
-             _private
+             defaultItemTemplate
    ) {
    'use strict';
+
+   var _private = {
+      calcSelectedItem: function(newOptions) {
+         if (newOptions.selectedKey !== undefined) {
+            this._selectedItem = ItemsUtil.getDisplayItemById(this._display, newOptions.selectedKey, newOptions.idProperty);
+         }
+         else {
+            this._selectedItem = null;
+         }
+
+
+         //TODO надо вычислить индекс
+         /*if(!this._selectedItem) {
+          if (!this._selectedIndex) {
+          this._selectedIndex = 0;//переводим на первый элемент
+          }
+          else {
+          this._selectedIndex++;//условно ищем ближайший элемент, рядом с удаленным
+          }
+          this._selectedItem = this._display.at(this._selectedIndex);
+          }*/
+      }
+   }
 
    var ListView = ItemsView.extend(
       {

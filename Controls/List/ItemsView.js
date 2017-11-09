@@ -6,16 +6,27 @@ define('js!Controls/List/ItemsView', [
    'Core/Control',
    'tmpl!Controls/List/ItemsView',
    'js!Controls/List/resources/utils/ItemsUtil',
-   'js!Controls/List/ItemsView/ItemsView_private',
    'WS.Data/Type/descriptor'
 ], function (extend,
              BaseControl,
              ItemsRenderTpl,
              ItemsUtil,
-             _private,
              Types
    ) {
    'use strict';
+
+   var _private = {
+      initDisplay: function(items, cfg) {
+         if (this._items) {
+            //TODO убрать дестрой, проверить утечки памяти
+            if (this._display) {
+               this._display.destroy();
+            }
+            this._display = this._createDefaultDisplay(items, cfg);
+            this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
+         }
+      }
+   };
 
    var ItemsRender = BaseControl.extend(
       {
