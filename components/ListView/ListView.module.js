@@ -2091,7 +2091,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   .removeClass('controls-ListView__item__selected')
                   .removeClass('controls-ListView__item__selected__withMarker');
                //В случае добавления по месту, добавляемой записи в проекции нет, поэтому будем искать её в вёрстке прямо по id
-               if (this.isAdd() && index === -1) {
+               if (this._isAdd() && index === -1) {
                   this._addSelectedClasses(undefined, id);
                } else if (this._getItemsProjection()) {
                   var projItem = this._getItemsProjection().at(index);
@@ -2760,8 +2760,9 @@ define('js!SBIS3.CONTROLS.ListView',
          /**
           * Возвращает признак, по которому можно установить: активно или нет добавление по месту в данный момент.
           * @returns {Boolean} Значение true нужно интерпретировать как "Добавление по месту активно".
+          * @private
           */
-         isAdd: function() {
+         _isAdd: function() {
             var result = false;
             if (this._hasEditInPlace()) {
                this._getEditInPlace().addCallback(function(editInPlace) {
