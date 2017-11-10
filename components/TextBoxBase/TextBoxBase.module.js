@@ -293,6 +293,36 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
       }
    });
 
+
+   TextBoxBase.runDefaultAction = function(event, e) {
+      var control = event.getTarget(),
+         res;
+         if (e.which === constants.key.enter) {
+            if (!(e.altKey || e.shiftKey || e.ctrlKey || e.metaKey)) {
+               parent = control;
+
+               while(true) {
+
+                  while (parent && !parent._defaultAction) {
+                     parent = parent.getParent();
+                  }
+                  if (!parent) {
+                     break;
+                  }
+
+                  if (parent._defaultAction) {
+                     res = parent._defaultAction(e);
+                  }
+                  if (res) {
+                     parent = parent.getParent();
+                  } else {
+                     break;
+                  }
+               }
+         }
+      }
+   };
+
    return TextBoxBase;
 
 });
