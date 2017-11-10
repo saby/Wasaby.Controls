@@ -377,7 +377,7 @@ define('js!SBIS3.CONTROLS.ListView',
           * view.subscribe('onEndMove', function(e, result) {
           *    if (result instanseof Error) {
           *       result.processed = true;//Надо поставить флаг что ошибка обработана;
-          *       require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(){
+          *       require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager) {
           *          InformationPopupManager.showMessageDialog(
           *             {
           *                message: result.message,
