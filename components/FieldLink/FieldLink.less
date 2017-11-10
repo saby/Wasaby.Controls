@@ -174,42 +174,41 @@
       line-height: @text-box-line-height;
    }
 }
-.ws-disabled {
-   .controls-FieldLink{
-      &__linksWrapper {
-         max-width:100%;
-      }
-      &__beforeFieldWrapper {
-         .flex-wrap(wrap);
-         .flex-direction();
-         max-width: 100%;
-      }
-      &__showAllLinks.controls-Link {
-         top: -@text-box-line-height;
-         background: @default-bg-color;
-         &:after {
-            content: '';
-            position: absolute;
-            right: -@fieldLink-showAll-shadow-width;
-            width: @fieldLink-showAll-shadow-width;
-            top: 0;
-            bottom: 0;
-            .horizontal-gradient(@default-bg-color, rgba(255, 255, 255, 0));
-            background-color: transparent;
-         }
-      }
-      //todo: стили необходимы для ie, flex-end не работает с переполнением
-      //https://codepen.io/anon/pen/JrGQQx
-      //удалить при отказе от ie11, в edge всё работает корректно
-      &__itemsCollection {
-         .flex-direction(row-reverse);
-         .justify-content();
-      }
-      &__item-caption {
-         max-width:100%;
+.ws-disabled.controls-FieldLink{
+   &__linksWrapper {
+      max-width:100%;
+   }
+   &__beforeFieldWrapper {
+      .flex-wrap(wrap);
+      .flex-direction();
+      max-width: 100%;
+   }
+   &__showAllLinks.controls-Link {
+      top: -@text-box-line-height;
+      background: @default-bg-color;
+      &:after {
+         content: '';
+         position: absolute;
+         right: -@fieldLink-showAll-shadow-width;
+         width: @fieldLink-showAll-shadow-width;
+         top: 0;
+         bottom: 0;
+         .horizontal-gradient(@default-bg-color, rgba(255, 255, 255, 0));
+         background-color: transparent;
       }
    }
+   //todo: стили необходимы для ie, flex-end не работает с переполнением
+   //https://codepen.io/anon/pen/JrGQQx
+   //удалить при отказе от ie11, в edge всё работает корректно
+   &__itemsCollection {
+      .flex-direction(row-reverse);
+      .justify-content();
+   }
+   &__item-caption {
+      max-width:100%;
+   }
 }
+
 //частные случаи
 //todo: есть подозрение что этов ообще не нужно
 .controls-FieldLink__selected-single:not(.controls-FieldLink__multiselect):not(.controls-FieldLink__inputMinWidth) {
