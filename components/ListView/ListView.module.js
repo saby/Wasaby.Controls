@@ -2071,21 +2071,31 @@ define('js!SBIS3.CONTROLS.ListView',
                $(".controls-ListView__item", this._getItemsContainer())
                   .removeClass('controls-ListView__item__selected')
                   .removeClass('controls-ListView__item__selected__withMarker');
-               if (this._getItemsProjection()) {
+               //В случае добавления по месту, добавляемой записи в проекции нет, поэтому будем искать её в вёрстке прямо по id
+               if (this._isAdd() && index === -1) {
+                  this._addSelectedClasses(undefined, id);
+               } else if (this._getItemsProjection()) {
                   var projItem = this._getItemsProjection().at(index);
                   if (projItem) {
-                     var hash = projItem.getHash(),
-                        curSelected = $('.controls-ListView__item[data-hash="' + hash + '"]', this._container);
-                     curSelected.addClass('controls-ListView__item__selected');
-                     if(this._options.showSelectedMarker) {
-                        curSelected.addClass('controls-ListView__item__selected__withMarker');
-                     }
+                     this._addSelectedClasses(projItem.getHash());
                   }
-
                }
-
             }
          },
+
+         _addSelectedClasses: function(hash, id) {
+            var curSelected;
+            if (hash) {
+               curSelected = $('.controls-ListView__item[data-hash="' + hash + '"]', this._container);
+            } else {
+               curSelected = $('.controls-ListView__item[data-id="' +  (id === undefined ? '' : id) + '"]', this._container);
+            }
+            curSelected.addClass('controls-ListView__item__selected');
+            if (this._options.showSelectedMarker) {
+               curSelected.addClass('controls-ListView__item__selected__withMarker');
+            }
+         },
+
          /**
           * Перезагружает набор записей представления данных с последующим обновлением отображения.
           * @remark
@@ -2588,17 +2598,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         this._showToolbar(model);
                         this.setSelectedKey(model.getId());
                         if (model.getState() === Record.RecordState.DETACHED) {
-                           $(".controls-ListView__item", this._getItemsContainer())
-                              .removeClass('controls-ListView__item__selected')
-                              .removeClass('controls-ListView__item__selected__withMarker');
-                           var curSelected = $('.controls-ListView__item[data-id="' +  (model.getId() === undefined ? '' : model.getId()) + '"]', this._container);
-                           curSelected.addClass('controls-ListView__item__selected');
-                           if(this._options.showSelectedMarker) {
-                              curSelected.addClass('controls-ListView__item__selected__withMarker');
-                           }
-                        }
-                        else {
-                           this.setSelectedKey(model.getId());
+                           this._drawSelectedItem(model.getId(), -1);
                         }
                         // Могут быть операции над записью с тулбаром под записью. В таком случае на ListView вешается класс с padding-bottom.
                         // Этот отступ при скроле тоже должен учитываться.
@@ -2732,6 +2732,22 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             return result;
          },
+
+         /**
+          * Возвращает признак, по которому можно установить: активно или нет добавление по месту в данный момент.
+          * @returns {Boolean} Значение true нужно интерпретировать как "Добавление по месту активно".
+          * @private
+          */
+         _isAdd: function() {
+            var result = false;
+            if (this._hasEditInPlace()) {
+               this._getEditInPlace().addCallback(function(editInPlace) {
+                  result = editInPlace.isAdd();
+               });
+            }
+            return result;
+         },
+
          //********************************//
          //   БЛОК ОПЕРАЦИЙ НАД ЗАПИСЬЮ    //
          //*******************************//
