@@ -2,6 +2,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    'Core/core-clone',
    "Core/Deferred",
    "Core/IoC",
+   "Core/core-merge",
    "WS.Data/Source/Memory",
    "WS.Data/Source/SbisService",
    "WS.Data/Collection/RecordSet",
@@ -31,6 +32,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
    coreClone,
    Deferred,
    IoC,
+   cMerge,
    MemorySource,
    SbisService,
    RecordSet,
@@ -1663,7 +1665,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
        *    );
        * </pre>
        */
-      reload: propertyUpdateWrapper(function (filter, sorting, offset, limit) {
+      reload: propertyUpdateWrapper(function (filter, sorting, offset, limit, deepReload, resetPosition) {
          var
             def,
             self = this,
@@ -1711,7 +1713,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
                    self._checkIdProperty();
 
-                   this._dataLoadedCallback();
+                   this._dataLoadedCallback(resetPosition);
                    //self._notify('onBeforeRedraw');
                    return list;
                 }, self))
@@ -1741,7 +1743,14 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       }),
 
       _setNewDataAfterReload: function (list) {
-         this._options._items.setMetaData(list.getMetaData());
+         var meta = list.getMetaData();
+         //TODO временный фикс. Прикладники используют memory source и пихают итоги в изначальный рекордсет.
+         //однако при релоаде списка приходит новый рекордсет из memory в котором нет итогов и прочего
+         //это должно решаться на уровне source в будущем
+         if (cInstance.instanceOfModule(this.getDataSource(), 'WS.Data/Source/Memory')) {
+            meta = cMerge(this._options._items.getMetaData(), list.getMetaData());
+         }
+         this._options._items.setMetaData(meta);
          this._options._items.assign(list);
       },
 
@@ -1856,7 +1865,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          this._options.filter = filter;
          this._dropPageSave();
          if (this._dataSource && !noLoad) {
-            this.reload(this._options.filter, this.getSorting(), 0, this.getPageSize());
+            this.reload(this._options.filter, this.getSorting(), 0, this.getPageSize(), undefined, true);
          } else {
             this._notifyOnPropertyChanged('filter');
          }
