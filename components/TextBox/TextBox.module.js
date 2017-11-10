@@ -425,6 +425,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _setPlaceholder: function(text){
+         /* В placeholder могут передать шаблон */
          text = typeof text === "function" ? text() : text;
          text = text ? text : text == 0 ? text : '';
          if (!this._useNativePlaceHolder(text)) {
