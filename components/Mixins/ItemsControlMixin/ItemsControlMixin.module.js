@@ -1227,7 +1227,10 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
          if (items.length && cInstance.instanceOfModule(items[0], 'WS.Data/Display/GroupItem')) {
             if (items.length > 1) {
                groupId = items[0].getContents();
-               this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options);
+               //todo Переделать, чтобы группы скрывались функцией пользовательской фильтрации
+               if (groupId !== false) {
+                  this._options._groupItemProcessing(groupId, itemsToAdd, items[1], this._options);
+               }
                items.splice(0, 1);
                itemsToAdd = itemsToAdd.concat(items);
             }
