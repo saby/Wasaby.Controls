@@ -2106,7 +2106,7 @@ define('js!SBIS3.CONTROLS.ListView',
           *    });
           * </pre>
           */
-         reload: function (filter, sorting, pageNumber, pageSize) {
+         reload: function (filter, sorting, offset, limit, deepReload, resetPosition) {
             if (this._scrollBinder && this._options.saveReloadPosition){
                var reloadOffset = this._getReloadOffset();
                this._offset = reloadOffset;
@@ -2117,19 +2117,14 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
 
-            // Reload to first page (for filter and search)
-            if (!this._options.saveReloadPosition && pageNumber === 0) {
-               this.setPage(0, true);
-
-               // Reset virtual scrolling if it's enabled
-               if (this._options.virtualScrolling && this._virtualScrollController) {
-                  this._virtualScrollController.disableScrollHandler(true);
-                  this.scrollToFirstPage();
-                  // Will reset pages after redrawing items
-                  this._resetPaging = true;
-                  this._topWrapper.height(0);
-                  this._bottomWrapper.height(0);
-               }
+            // Reset virtual scrolling if it's enabled
+            if (this._options.virtualScrolling && this._virtualScrollController) {
+               this._virtualScrollController.disableScrollHandler(true);
+               this.scrollToFirstPage();
+               // Will reset pages after redrawing items
+               this._resetPaging = true;
+               this._topWrapper.height(0);
+               this._bottomWrapper.height(0);
             }
 
             this._reloadInfiniteScrollParams();
@@ -3659,12 +3654,10 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          /**
-          * Scroll to a given offset from the top.
-          *
-          * @param offset
+          * Scroll to the beginning of the list.
           */
          scrollToFirstPage: function() {
-            if (this._options.infiniteScroll == "down" && this._options.virtualScrolling) {
+            if (this._options.infiniteScroll == "down") {
                this._getScrollWatcher().scrollTo('top');
             }
          },
@@ -3836,7 +3829,11 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass._onDataLoad.call(this, list);
          },
 
-         _dataLoadedCallback: function () {
+         _dataLoadedCallback: function (resetPosition) {
+            if (resetPosition) {
+               this.scrollToFirstPage();
+            }
+
             if (this._options.showPaging) {
                this._processPaging();
                this._updateOffset();

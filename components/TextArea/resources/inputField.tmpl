@@ -1,7 +1,7 @@
 <div class="controls-TextArea__view__size__{{!! size ? size : 'm'}} controls-TextArea__view {{ heightclassName ? heightclassName }} {{ !text ? 'controls-TextArea__view__empty'}} {{ !enabled ? 'controls-TextArea__field__disabled'}}">{{ (text ? wrapUrls(escapeHtml(text)) : placeholder && enabled ? placeholder)|sanitize }}</div>
 <textarea
    class="controls-TextArea__field__size__{{!! size ? size : 'm'}}
-   controls-TextArea__field controls-TextBox__field js-controls-TextBox__field ws-invisible {{ !enabled ? 'controls-TextArea__view__disabled'}}"
+   controls-TextArea__field controls-TextBox__field js-controls-TextBox__field ws-invisible"
    placeholder="{{ placeholder}}"
    maxLength="{{ maxLength}}"
    rows="{{ minLinesCount ? minLinesCount}}"

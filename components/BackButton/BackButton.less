@@ -47,7 +47,7 @@
    &.controls-BackButton__empty {
       .controls-BackButton__caption {
          padding-left: 0;
-         &:before {
+         &Arrow:before {
             content: '';
             width: 0;
             margin: 0;
@@ -99,7 +99,7 @@
    .controls-BackButton {
       .controls-BackButton__caption {
          margin-left: -4px;
-         &:before {
+         &Arrow:before {
             display: inline-block;
             vertical-align: top;
             float: none;
@@ -116,7 +116,7 @@
    }
 }
 
-.controls-BackButton__caption:before {
+.controls-BackButton__captionArrow:before {
    content: @default-arrow-img;
    &:hover:before {
       color: @back-button-arrow-hover-color;
@@ -139,7 +139,7 @@
          &:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover):hover {
             color: @primary-color;
          }
-         &:before {
+         &Arrow:before {
             content: @orange-arrow-img;
             color: @blue-dark-color;
          }
@@ -153,7 +153,7 @@
          //Роман Валера скоро перепишет стили для кнопки назад, пока без таких каскадов никак
          .controls-BackButton__caption:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover) {
             color: @primary-color;
-            &:before {
+            &Arrow:before {
                color: @primary-color;
             }
          }

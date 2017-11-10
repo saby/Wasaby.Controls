@@ -130,7 +130,12 @@ define('js!SBIS3.CONTROLS.TabControl', [
              * Нужен, например, для того, чтобы однозначно определить корешки вкладок после их фиксации в заголовке страницы.
              */
             tabButtonsExtraClass: '',
-            observeVisibleProperty: false //опция tabButtons
+            observeVisibleProperty: false, //опция tabButtons
+            /**
+             * Опция SwitchableArea - устанавливает произвольный шаблон переключаемой области
+             * Если не задана, используется стандартный SBIS3.CORE.SwitchableArea/SwitchableArea_area
+             */
+            switchableAreaTemplate: undefined
          }
       },
 
