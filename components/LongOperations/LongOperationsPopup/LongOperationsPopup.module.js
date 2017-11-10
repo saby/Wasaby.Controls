@@ -482,6 +482,23 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
          },
 
          /**
+          * Проверить, имеет ли активная операция указанные свойства
+          * @protected
+          * @param {string} tabKey Ключ вкладки операции
+          * @param {string} producer Имя продюсера длительных операций
+          * @param {string} operationId Идентификатор операции
+          * @return {boolean}
+          */
+         _hasActiveOperation: function (tabKey, producer, operationId) {
+            var active = this._activeOperation;
+            if (active && active.get('producer') === producer && active.get('id') === operationId) {
+               var tab = active.get('tabKey');
+               return !tab || !tabKey || tab === tabKey;
+            }
+            return false;
+         },
+
+         /**
           * Обработать событие
           * @protected
           * @param {string} eventType Тип события
@@ -508,12 +525,15 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                         }
                         break;
                      case 'progress':
-                        if (active && active.get('tabKey') === data.tabKey && active.get('producer') === data.producer && active.get('id') === data.operationId) {
+                        if (this._hasActiveOperation(data.tabKey, data.producer, data.operationId)) {
                            this._setProgress(data.progress.value, data.progress.total, false);
                         }
                         break;
                      case 'notification':
-                        if (active && active.get('tabKey') === data.tabKey && active.get('producer') === data.producer && active.get('id') === data.operationId) {
+                        //////////////////////////////////////////////////
+                        console.log('DBG: LO_Popup._hasActiveOperation: CAN=', this._hasActiveOperation(data.tabKey, data.producer, data.operationId), ';');
+                        //////////////////////////////////////////////////
+                        if (this._hasActiveOperation(data.tabKey, data.producer, data.operationId)) {
                            this._setNotification(data.notification);
                         }
                         break;
