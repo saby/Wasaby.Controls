@@ -530,9 +530,6 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                         }
                         break;
                      case 'notification':
-                        //////////////////////////////////////////////////
-                        console.log('DBG: LO_Popup._hasActiveOperation: CAN=', this._hasActiveOperation(data.tabKey, data.producer, data.operationId), ';');
-                        //////////////////////////////////////////////////
                         if (this._hasActiveOperation(data.tabKey, data.producer, data.operationId)) {
                            this._setNotification(data.notification);
                         }
