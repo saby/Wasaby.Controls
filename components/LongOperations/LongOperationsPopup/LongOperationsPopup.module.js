@@ -482,18 +482,25 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
          },
 
          /**
-          * Проверить, имеет ли активная операция указанные свойства
+          * Проверить, соответствует ли активная операция указанным данным
           * @protected
-          * @param {string} tabKey Ключ вкладки операции
-          * @param {string} producer Имя продюсера длительных операций
-          * @param {string} operationId Идентификатор операции
+          * @param {object} data Данные события
           * @return {boolean}
           */
-         _hasActiveOperation: function (tabKey, producer, operationId) {
+         _hasMathActiveOperation: function (data) {
             var active = this._activeOperation;
-            if (active && active.get('producer') === producer && active.get('id') === operationId) {
+            if (active && data && active.get('producer') === data.producer) {
                var tab = active.get('tabKey');
-               return !tab || !tabKey || tab === tabKey;
+               if (!tab || !data.tabKey || tab === data.tabKey) {
+                  if (data.operationId) {
+                     return active.get('id') === data.operationId;
+                  }
+                  else
+                  if (data.workflowId) {
+                     var extra = active.get('extra');
+                     return extra && extra.workflow === data.workflowId;
+                  }
+               }
             }
             return false;
          },
@@ -525,12 +532,12 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                         }
                         break;
                      case 'progress':
-                        if (this._hasActiveOperation(data.tabKey, data.producer, data.operationId)) {
+                        if (this._hasMathActiveOperation(data)) {
                            this._setProgress(data.progress.value, data.progress.total, false);
                         }
                         break;
                      case 'notification':
-                        if (this._hasActiveOperation(data.tabKey, data.producer, data.operationId)) {
+                        if (this._hasMathActiveOperation(data)) {
                            this._setNotification(data.notification);
                         }
                         break;
