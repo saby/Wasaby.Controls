@@ -1222,11 +1222,15 @@ define(
          this._setText(text);
       },
       _setText: function(text){
-         this._getFormatModel().setText(text, this._getMaskReplacer());
+         var model = this._getFormatModel();
+         model.setText(text, this._getMaskReplacer());
          this._updateText();
          this._textChanged = true;
          //обновить html
          this._inputField.html(this._getHtmlMask());
+         if (model.isFilled()) {
+            this._notify('onInputFinished');
+         }
       },
       /**
        * Задает маску в модель и обновляет html.
