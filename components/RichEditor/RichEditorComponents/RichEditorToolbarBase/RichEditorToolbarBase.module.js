@@ -191,7 +191,7 @@ define('js!SBIS3.CONTROLS.RichEditorToolbarBase', [
                      $(this).replaceWith('[' + (smileName ? smileName : rk('смайл')) +']');
                   });
                   stripText = title = escapeHtml($tmpDiv.text());
-                  stripText = stripText.replace('/\n/gi', '');
+                  stripText = stripText.replace('/\n/gi', '').replace(/{/g, '&#123;').replace(/}/g, '&#125;');
                   if (!stripText && value) {
                      stripText = rk('Контент содержит только html-разметку, без текста.');
                   } else if (stripText && stripText.length > 140) { // обрезаем контент, если больше 140 символов

@@ -303,10 +303,7 @@ define('js!SBIS3.CONTROLS.TextArea', [
             this._disabledWrapper.toggleClass('ws-invisible', state);
          }
          this._updateDisabledWrapper();
-         this._disabledWrapper.toggleClass('controls-TextArea__view__init', this.isEnabled() && this._autoHeightInitialized);
-         this._inputField.toggleClass('controls-TextArea__field__init', this.isEnabled() && this._autoHeightInitialized);
-         this._disabledWrapper.toggleClass('controls-TextArea__view__disabled', !this.isEnabled());
-         this._inputField.toggleClass('controls-TextArea__field__disabled', !this.isEnabled());
+         this._disabledWrapper.toggleClass('controls-TextArea__view__disabled', !state);
       },
 
       setText: function(text){

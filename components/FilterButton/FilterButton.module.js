@@ -189,7 +189,6 @@ define('js!SBIS3.CONTROLS.FilterButton',
              declareCmd('change-field-internal', this._changeFieldInternal.bind(this));
 
              this._checkPickerContent = once.call(this._checkPickerContent);
-             this.getContainer().on('click', '.controls__filterButton__filterLine-items, .controls__filterButton-button', showPicker);
           },
 
           showPicker: function() {

@@ -236,8 +236,9 @@ define('js!WSControls/Buttons/Button', [
       },
 
       destroy: function(){
+         this._contentContainer = null;
          this._unregisterDefaultButton();
-          Button.superclass.destroy.apply(this, arguments);
+         Button.superclass.destroy.apply(this, arguments);
       }
       /*TODO конец*/
    });

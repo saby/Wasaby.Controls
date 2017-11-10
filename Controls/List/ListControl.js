@@ -20,7 +20,7 @@ define('js!Controls/List/ListControl', [
 
    var _private = {
       //проверка на то, нужно ли создавать новый инстанс рекордсета или же можно положить данные в старый
-      isEqualInstance: function(oldList, newList) {
+      isEqualRecordset: function(oldList, newList) {
          return oldList && cInstance.instanceOfModule(oldList, 'WS.Data/Collection/RecordSet')
          && (newList.getModel() === oldList.getModel())
          && (Object.getPrototypeOf(newList).constructor == Object.getPrototypeOf(newList).constructor)
@@ -37,42 +37,58 @@ define('js!Controls/List/ListControl', [
       },
 
       prepareQueryParams: function(direction) {
-         var params = {
-            filter: this._filter,
-            sorting: this._sorting,
-            limit: undefined,
-            offset: undefined
-         };
 
          if (this._navigationController) {
             var addParams = this._navigationController.prepareQueryParams(this._display, direction);
             params.limit = addParams.limit;
             params.offset = addParams.offset;
-            //TODO фильтр и сортировка не забыть приделать
+
          }
+         return params;
+      },
+
+      paramsWithNavigation: function(params, navigCtrl, display, direction) {
+         var navigParams = navigCtrl.prepareQueryParams(display, direction);
+         params.limit = navigParams.limit;
+         params.offset = navigParams.offset;
+         //TODO фильтр и сортировка не забыть приделать
+         return params;
+      },
+
+      paramsWithUserEvent: function(params, userParams) {
+         params.filter = userParams['filter'] || queryParams.filter;
+         params.sorting = userParams['sorting'] || queryParams.sorting;
+         params.offset = userParams['offset'] || queryParams.offset;
+         params.limit = userParams['limit'] || queryParams.limit;
          return params;
       },
 
       reload: function() {
          if (this._dataSource) {
-            var
-               def,
+            var def, queryParams,
                self = this;
 
-            var queryParams = _private.prepareQueryParams.call(this);
+            queryParams = {
+               filter: this._filter,
+               sorting: this._sorting,
+               limit: undefined,
+               offset: undefined
+            };
+            //модифицируем параметры через навигацию
+            if (this._navigationController) {
+               queryParams = _private.paramsWithNavigation(queryParams, this._navigationController, this._display);
+            }
 
+            //позволяем модифицировать параметры юзеру
             var userParams = this._notify('onBeforeDataLoad', queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit);
             if (userParams) {
-               queryParams.filter = userParams['filter'] || queryParams.filter;
-               queryParams.sorting = userParams['sorting'] || queryParams.sorting;
-               queryParams.offset = userParams['offset'] || queryParams.offset;
-               queryParams.limit = userParams['limit'] || queryParams.limit;
+               queryParams = _private.paramsWithNavigation(queryParams, this._navigationController, this._display);
             }
 
             def = DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
                .addCallback(fHelpers.forAliveOnly(function (list) {
                   self._notify('onDataLoad', list);
-                  if (_private.isEqualInstance(self._items, list)) {
+                  if (_private.isEqualRecordset(self._items, list)) {
                      self._items.setMetaData(list.getMetaData());
                      self._items.assign(list);
                   } else {
@@ -122,15 +138,17 @@ define('js!Controls/List/ListControl', [
 
 
    /*
-   Опции
-   * dragEntity, dragEntityList, enabledMove, itemsDragNDrop - обсудить с Яриком, возможно будет достаточно события dragStart
-   * infiniteScroll, infiniteScrollContainer, infiniteScrollPreloadOffset, showPaging, partialPaging, pageSize - вынести в навигацию
-   * resultsPosition, resultsText, resultsTpl - как настраивать
-   *
-   * Удалил:
-   * allowEmptyMultiSelection, allowEmptySelection, colorField, colorMarkEnabled, highlightEnabled, highlightText, includedTemplates, validateIfDisabled, itemTpl
-   * footerTpl, templateBinding, useSelectAll
-   * */
+    Опции
+    * dragEntity, dragEntityList, enabledMove, itemsDragNDrop - обсудить с Яриком, возможно будет достаточно события dragStart
+    * resultsPosition, resultsText, resultsTpl - как настраивать
+    *
+    * Удалил:
+    * colorField, colorMarkEnabled, highlightEnabled, highlightText, includedTemplates, validateIfDisabled, itemTpl
+    * footerTpl, templateBinding, useSelectAll
+    *
+    * allowEmptyMultiSelection, allowEmptySelection - в интерфейс selectable
+    * */
+
 
    /**
     * List Control
@@ -175,8 +193,51 @@ define('js!Controls/List/ListControl', [
     */
 
    /**
+    * @typedef {String} ListNavigationSource
+    * @variant position Описание
+    * @variant offset Описание
+    * @variant page Описание
+    */
+
+   /**
+    * @typedef {String} ListNavigationView
+    * @variant infinity Описание
+    * @variant pages Описание
+    * @variant demand Описание
+    */
+
+   /**
+    * @typedef {Object} ListNavigationPositionSourceConfig
+    * @property {String} field Описание
+    * @property {String} direction Описание
+    */
+
+   /**
+    * @typedef {Object} ListNavigationOffsetSourceConfig
+    * @property {Number} limit Описание
+    */
+
+   /**
+    * @typedef {Object} ListNavigationInfinityViewConfig
+    * @property {String} pagingMode Описание
+    */
+
+   /**
+    * @typedef {Object} ListNavigationPagesViewConfig
+    * @property {Boolean} pagesCountSelector Описание
+    */
+
+   /**
+    * @typedef {Object} ListNavigation
+    * @property {ListNavigationSource} source Описание
+    * @property {ListNavigationView} view Описание
+    * @property {ListNavigationPositionSourceConfig|ListNavigationOffsetSourceConfig} sourceConfig Описание
+    * @property {ListNavigationInfinityViewConfig|ListNavigationPagesViewConfig} viewConfig Описание
+    */
+
+   /**
     * @name Controls/List/ListControl#navigation
-    * @cfg {Object} Настройки навигации
+    * @property {ListNavigation} Настройки навигации
     */
 
    /**
