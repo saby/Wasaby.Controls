@@ -463,8 +463,10 @@ define('js!SBIS3.CONTROLS.SuggestTextBoxMixin', [
 
             if(this._options.searchParam) {
                var togglePicker = function() {
-                     if(self._checkPickerState(!self._options.showEmptyList) && !self.getList().isLoading()) {
-                        self.showPicker();
+                     if(self._checkPickerState(!self._options.showEmptyList)) {
+                        if(!self.getList().isLoading()) {
+                           self.showPicker();
+                        }
                      } else {
                         self.hidePicker();
                      }
