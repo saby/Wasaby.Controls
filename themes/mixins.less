@@ -497,16 +497,16 @@
   height: @size;
 }
 
-.checkbox-border-size(@sizeContainer, @sizeContent, @borderWidth) {
+.checkbox-border-size() {
   &:before {
     .box-sizing();
     content: '';
     position: absolute;
-    border-width: @borderWidth;
+    border-width: @default-border-width;
     border-style: solid;
-    width: @sizeContent;
-    height: @sizeContent;
-    margin: (@sizeContainer - @sizeContent) / 2;
+    width: @check-box-icon-box-size;
+    height: @check-box-icon-box-size;
+    margin: (@check-box-icon-size - @check-box-icon-box-size) / 2;
   }
 }
 
