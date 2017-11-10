@@ -482,9 +482,9 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
          },
 
          /**
-          * Проверить, соответствует ли активная операция указанным данным
+          * Проверить, относится ли событие об изменении состояния операции к текущей активной операции
           * @protected
-          * @param {object} data Данные события
+          * @param {object} data Данные события об изменении состояния операции
           * @return {boolean}
           */
          _hasMathActiveOperation: function (data) {
