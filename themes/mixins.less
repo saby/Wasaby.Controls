@@ -499,12 +499,13 @@
 
 .checkbox-border-size(@sizeContainer, @sizeContent, @borderWidth) {
   &:before {
+    .box-sizing();
     content: '';
     position: absolute;
     border-width: @borderWidth;
     border-style: solid;
-    width: calc(@sizeContent ~"-" 2 * @borderWidth);
-    height: calc(@sizeContent ~"-" 2 * @borderWidth);
+    width: @sizeContent;
+    height: @sizeContent;
     margin: (@sizeContainer - @sizeContent) / 2;
   }
 }
