@@ -425,6 +425,7 @@ define('js!SBIS3.CONTROLS.TextBox', [
       },
 
       _setPlaceholder: function(text){
+         text = typeof text === "function" ? text() : text;
          text = text ? text : text == 0 ? text : '';
          if (!this._useNativePlaceHolder(text)) {
             if (!this._compatPlaceholder) {
