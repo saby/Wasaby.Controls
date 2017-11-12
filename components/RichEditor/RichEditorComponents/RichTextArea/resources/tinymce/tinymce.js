@@ -36946,9 +36946,10 @@
       "tinymce/util/Fun",
       "tinymce/util/Delay",
       "tinymce/dom/DOMUtils",
-      "tinymce/dom/MousePosition"
+      "tinymce/dom/MousePosition",
+      "tinymce/Env"
    ], function(
-      NodeType, Arr, Fun, Delay, DOMUtils, MousePosition
+      NodeType, Arr, Fun, Delay, DOMUtils, MousePosition, Env
    ) {
       var isContentEditableFalse = NodeType.isContentEditableFalse,
          isContentEditableTrue = NodeType.isContentEditableTrue;
@@ -36990,6 +36991,7 @@
 
          editor.dom.setStyles(ghostElm, {
             position: 'absolute',
+            zIndex: 1000000,/*16777271 2147483647*/
             opacity: 0.5,
             overflow: 'hidden',
             border: 0,
@@ -37050,7 +37052,7 @@
       var applyRelPos = function (state, position) {
          return {
             pageX: position.pageX - state.relX,
-            pageY: position.pageY + 5
+            pageY: position.pageY - (Env.ie ? state.relY : -5)
          };
       };
 
@@ -37061,7 +37063,7 @@
 
                if (isDraggable(editor.getBody(), ceElm)) {
                   var elmPos = editor.dom.getPos(ceElm);
-                  var bodyElm = editor.getBody();
+                  var bodyElm = Env.ie ? document.body : editor.getBody();
                   var docElm = editor.getDoc().documentElement;
 
                   state.element = ceElm;
@@ -37100,9 +37102,10 @@
             }
 
             if (state.dragging) {
-               var targetPos = applyRelPos(state, MousePosition.calc(editor, e));
+               var geomSrc = Env.ie ? {inline:false, getDoc:function () {return document;}, getBody:function () {return document.body;}} : editor;
+               var targetPos = applyRelPos(state, MousePosition.calc(geomSrc, e));
 
-               appendGhostToBody(state.ghost, editor.getBody());
+               appendGhostToBody(state.ghost, geomSrc.getBody());
                moveGhost(state.ghost, targetPos, state.width, state.height, state.maxX, state.maxY);
 
                throttledPlaceCaretAt(e.clientX, e.clientY);
