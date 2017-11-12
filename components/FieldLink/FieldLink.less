@@ -175,15 +175,15 @@
    }
 }
 .ws-disabled.controls-FieldLink{
-   &__linksWrapper {
+   .controls-FieldLink__linksWrapper {
       max-width:100%;
    }
-   &__beforeFieldWrapper {
+   .controls-FieldLink__beforeFieldWrapper {
       .flex-wrap(wrap);
       .flex-direction();
       max-width: 100%;
    }
-   &__showAllLinks.controls-Link {
+   .controls-FieldLink__showAllLinks.controls-Link {
       top: -@text-box-line-height;
       background: @default-bg-color;
       &:after {
@@ -200,11 +200,11 @@
    //todo: стили необходимы для ie, flex-end не работает с переполнением
    //https://codepen.io/anon/pen/JrGQQx
    //удалить при отказе от ie11, в edge всё работает корректно
-   &__itemsCollection {
+   .controls-FieldLink__itemsCollection {
       .flex-direction(row-reverse);
       .justify-content();
    }
-   &__item-caption {
+   .controls-FieldLink__item-caption {
       max-width:100%;
    }
 }
