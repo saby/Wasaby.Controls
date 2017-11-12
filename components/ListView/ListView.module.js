@@ -4,6 +4,7 @@
 
 define('js!SBIS3.CONTROLS.ListView',
    [
+   'js!SBIS3.CONTROLS.Utils.ConfigByClasses',
    'Core/core-merge',
    'Core/core-clone',
    'Core/helpers/Function/shallowClone',
@@ -69,7 +70,7 @@ define('js!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView',
    'css!SBIS3.CONTROLS.ListView/resources/ItemActionsGroup/ItemActionsGroup'
 ],
-   function (cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
+   function (ConfigByClasses, cMerge, shallowClone, coreClone, CommandDispatcher, constants, Deferred, IoC, CompoundControl, StickyHeaderManager, ItemsControlMixin, MultiSelectable, Query, Record,
     Selectable, DataBindMixin, DecorableMixin, DragNDropMixin, FormWidgetMixin, BreakClickBySelectMixin, ItemsToolbar, dotTplFn, 
     TemplateUtil, CommonHandlers, MassSelectionController, ImitateEvents, LayoutManager, mHelpers,
     Link, ScrollWatcher, IBindCollection, List, groupByTpl, emptyDataTpl, ItemTemplate, ItemContentTemplate, GroupTemplate, InformationPopupManager,
@@ -203,7 +204,7 @@ define('js!SBIS3.CONTROLS.ListView',
            * @param {Core/EventObject} eventObject Дескриптор события.
            * @param {String} id Первичный ключ записи.
            * @param {WS.Data/Entity/Model} data Экземпляр класса записи.
-           * @param {jQuery} target DOM-элемент, на который кликнули. Например, это может быть DOM-элемент ячейки (&lt;td class="controls-DataGridView__td"&gt;...&lt;/td&gt;) или её содержимого (&lt;div class="controls-DataGridView__columnValue"&gt;...&lt;/div&gt;).
+           * @param {Object} target DOM-элемент, на который кликнули. Например, это может быть DOM-элемент ячейки (&lt;td class="controls-DataGridView__td"&gt;...&lt;/td&gt;) или её содержимого (&lt;div class="controls-DataGridView__columnValue"&gt;...&lt;/div&gt;).
            * @param {Object} e Объект события.
            * @param {Object} clickedCell Объект с расширенной информацией о ячейке, по которой произвели клик.
            * @param {jQuery} clickedCell.cellContainer DOM-элемент ячейки.
@@ -374,9 +375,9 @@ define('js!SBIS3.CONTROLS.ListView',
           * Показать ошибку перемещения
           * <pre>
           * view.subscribe('onEndMove', function(e, result) {
-          *    if (result instanseOf Error) {
+          *    if (result instanceof Error) {
           *       result.processed = true;//Надо поставить флаг что ошибка обработана;
-          *       require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(){
+          *       require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager) {
           *          InformationPopupManager.showMessageDialog(
           *             {
           *                message: result.message,
@@ -1086,41 +1087,20 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _addOptionsFromClass: function(opts, attrToMerge) {
-            var className = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || "";
-            var classes = [
-               { class: 'controls-small-ListView', optionName: 'isSmall', value: true, defaultValue: false },
-               { class: 'controls-ListView__disableHover', optionName: 'itemsHover', value: false, defaultValue: true },
-               { class: 'controls-ListView__pagerNoSizePicker', optionName: 'noSizePicker', value: true, defaultValue: false },
-               { class: 'controls-ListView__pagerNoAmount', optionName: 'noPagerAmount', value: true, defaultValue: false },
-               { class: 'controls-ListView__pagerHideEndButton', optionName: 'hideEndButton', value: true, defaultValue: false },
-               { class: 'controls-ListView__orangeMarker', optionName: 'showSelectedMarker', value: true, defaultValue: false },
-               { class: 'controls-ListView__outside-scroll-loader', optionName: 'outsideScroll', value: true, defaultValue: false },
-               { class: 'controls-ListView__showCheckboxes', optionName: 'showCheckboxes', value: true, defaultValue: false },
-               { class: 'controls-ListView__hideCheckboxes', optionName: 'hideCheckboxes', value: true, defaultValue: false}
-            ];
-            function hasClass(fullClass, className) {
-               if(typeof fullClass === 'string') {
-                  var index = fullClass.split(' ')
-                     .filter(function (el) {
-                        return el !== ''
-                     })
-                     .indexOf(className);
-                  return !!~index;
-               } else {
-                  return undefined;
-               }
-            }
-            var el;
-            for(var i = 0; i < classes.length; i++) {
-               el = classes[i];
-               if (hasClass(className, el.class)) {
-                  opts[el.optionName] = el.value;
-               } else {
-                  if (!opts[el.optionName]) {
-                     opts[el.optionName] = el.defaultValue;
-                  }
-               }
-            }
+            var
+               classes = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || '',
+               params = [
+                  { class: 'controls-small-ListView', optionName: 'isSmall', value: true, defaultValue: false },
+                  { class: 'controls-ListView__disableHover', optionName: 'itemsHover', value: false, defaultValue: true },
+                  { class: 'controls-ListView__pagerNoSizePicker', optionName: 'noSizePicker', value: true, defaultValue: false },
+                  { class: 'controls-ListView__pagerNoAmount', optionName: 'noPagerAmount', value: true, defaultValue: false },
+                  { class: 'controls-ListView__pagerHideEndButton', optionName: 'hideEndButton', value: true, defaultValue: false },
+                  { class: 'controls-ListView__orangeMarker', optionName: 'showSelectedMarker', value: true, defaultValue: false },
+                  { class: 'controls-ListView__outside-scroll-loader', optionName: 'outsideScroll', value: true, defaultValue: false },
+                  { class: 'controls-ListView__showCheckboxes', optionName: 'showCheckboxes', value: true, defaultValue: false },
+                  { class: 'controls-ListView__hideCheckboxes', optionName: 'hideCheckboxes', value: true, defaultValue: false}
+               ];
+            ConfigByClasses(opts, params, classes);
          },
 
          _modifyOptions : function(opts, parsedOptions, attrToMerge){
@@ -1824,6 +1804,7 @@ define('js!SBIS3.CONTROLS.ListView',
          setEmptyHTML: function (html) {
             ListView.superclass.setEmptyHTML.apply(this, arguments);
             this._getEmptyDataContainer().empty().html(Sanitize(html, {validNodes: {component: true}, validAttributes : {config: true} }));
+            this._reviveItems();
             this._toggleEmptyData(this._getItemsProjection() && !this._getItemsProjection().getCount());
          },
 
