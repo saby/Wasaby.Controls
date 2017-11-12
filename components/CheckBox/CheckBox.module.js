@@ -49,7 +49,7 @@ define('js!SBIS3.CONTROLS.CheckBox', [
     *
     * @control
     * @public
-    * @category Inputs
+    * @category Input
     * @initial
     * <component data-component='SBIS3.CONTROLS.CheckBox'>
     *     <option name="caption">CheckBox</option>

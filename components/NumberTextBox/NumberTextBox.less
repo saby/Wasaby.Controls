@@ -1,33 +1,22 @@
-.controls-NumberTextBox {
-  &__afterFieldWrapper {
-    .flex-direction(column);
-  }
-  &__arrow {
-    .align-items(center) ;
-    .icon-size(@number-text-box-icon-size, @default-icon-font);
-    cursor: pointer;
-    height: 50%;
-    overflow: hidden; //чтобы клик проходил только по контейнеру, а не по иконке
-  }
-  &__text-align-right{
-    .controls-TextBox__field {
-      text-align: right;
-    }
-  }
-  &.ws-disabled {
-    .controls-NumberTextBox__arrow {
-      visibility: hidden;
-    }
-  }
-  //https://online.sbis.ru/opendoc.html?guid=4795f4da-c0d4-43bf-96ff-a9f45097f373&des=
-  &__mirror.controls-TextBox__field {
-    visibility: hidden;
-    display: inline;
-    font-size: @default-text-size;
-    position: absolute;
-    width: auto;
-    height: auto;
-    top: -9999999px;
-    left: -9999999px;
-  }
+.controls-NumberTextBox__afterFieldWrapper {
+  .flex-direction(column);
+  padding-left: @default-padding;
+}
+.controls-NumberTextBox__arrow {
+  .align-items(center) ;
+  .icon-size(@number-text-box-icon-size, @default-icon-font);
+  cursor: pointer;
+  height: 50%;
+  overflow: hidden; //чтобы клик проходил только по контейнеру, а не по иконке
+}
+//https://online.sbis.ru/opendoc.html?guid=4795f4da-c0d4-43bf-96ff-a9f45097f373&des=
+.controls-NumberTextBox__mirror {
+  visibility: hidden;
+  display: inline;
+  font-size: @default-text-size;
+  position: absolute;
+  width: auto;
+  height: auto;
+  top: -9999999px;
+  left: -9999999px;
 }

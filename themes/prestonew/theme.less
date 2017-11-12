@@ -306,12 +306,6 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
 
 //Удалить, как будет темизация для engine.
 .controls-Browser {
-   .controls-Browser__search {
-      margin: 0.28572rem;
-   }
-   .controls-Browser__topTemplate {
-      padding: 0.28572rem;
-   }
    .controls-Browser__tableCell-search {
       .controls-Browser__selectAllCheckBox {
          .align-self(center);
@@ -477,7 +471,15 @@ body {
 
 .controls-FloatArea {
   border: @default-border-width solid @default-border-color-second;
-  background: #2c3e50;
+  background: @basic-block-bg-color;
+}
+.controls-Suggest__picker {
+  .controls-ListView__hoveredItem {
+    background-color:  @suggest-list-hover-color !important;
+    .controls-DataGridView__td {
+      background-color:  @suggest-list-hover-color !important;
+    }
+  }
 }
 
 .controls-ComboBox__picker {
@@ -868,10 +870,10 @@ body .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-
 
 body {
    // В формулах в темах надо сделать что бы можно было задать нижний отступ отличный от верхнего
-   .controls-DateRangeBigChoose .controls-DateRangeBigChoose__months .controls-DateRangeBigChoose__months-quarterRange .controls-DateRangeBigChoose__months-range-btn-wrapper.controls-DateRangeBigChoose__months-range-btn-wrapper3 {
+   .controls-DateRangeBigChoose__months-quarterRange-btn-wrapper3 {
        height: 5.9rem;
    }
-   .controls-DateRangeBigChoose .controls-DateRangeBigChoose__months .controls-DateRangeBigChoose__months-halfyearRange .controls-DateRangeBigChoose__months-range-btn-wrapper.controls-DateRangeBigChoose__months-range-btn-wrapper1 {
+   .controls-DateRangeBigChoose__months-halfyearRange-btn-wrapper1 {
        height: 11rem;
    }
 }
@@ -883,23 +885,7 @@ body {
   border: none !important;
 }
 
-.controls-Suggest__picker {
-    background: #f0f5fb;
-     .controls-DataGridView__columnValue {
-       line-height: 3rem;
-     }
-     .controls-ListView__hoveredItem {
-        background-color:  @suggest-list-hover-color !important;
-         .controls-DataGridView__td {
-             background-color:  @suggest-list-hover-color !important;
-         }
-     }
-  & .ws-moneyDecorator .ws-moneyDecorator__integer__BasicRegistry {
-    color: #273B4D;
-  }
-}
-
-body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__yearsRange span.controls-Button:hover {
+body .controls-DateRangeBigChoose__years-yearsRange-btn:hover {
   color: #fff;
 }
 
@@ -992,11 +978,6 @@ body {
   }
 
 }
-.controls-Suggest__picker {
-  .controls-HtmlDecorators-highlight {
-    background-color: #FFFECE;
-  }
-}
 
 .controls-MergeDialogTemplate .controls-TreeDataGridView__levelPadding {
    display: none;
@@ -1082,4 +1063,10 @@ body {
 //Убрать когда проектировщики сделают одинаковые отступы, обсуждали на этом совещании: https://online.sbis.ru/obj/Meeting/e6b722a9-d339-4016-9fd6-82b763c4e241
 .controls-ItemsToolbar.controls-ItemsToolbar__withEditActions {
   bottom: 0.2857rem;
+}
+.controls-Browser__search {
+   margin: 0.28572rem;
+}
+.controls-Browser__topTemplate {
+   padding: 0.28572rem;
 }

@@ -37,7 +37,7 @@ define('js!WSControls/Buttons/ToggleButton', ['js!WSControls/Buttons/Button', 'j
     *
     * @public
     * @control
-    * @category Buttons
+    * @category Button
     * @initial
     * <component data-component='WSControls/Buttons/ToggleButton'>
     *    <option name='caption' value='Кнопка с залипанием'></option>

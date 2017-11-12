@@ -30,7 +30,7 @@ define('js!SBIS3.CONTROLS.PasswordTextBox', [
     * @ignoreEvents onReady
     *
     * @public
-    * @category Inputs
+    * @category Input
     * @control
     */
    var PasswordTextBox;
