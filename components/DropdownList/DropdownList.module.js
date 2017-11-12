@@ -650,23 +650,23 @@ define('js!SBIS3.CONTROLS.DropdownList',
             return this._options.emptyValue && this.getSelectedKeys()[0] == null;
          },
          _dataLoadedCallback: function() {
+            var item;
             this._setHeadVariables();
-            DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
             if (this._isEnumTypeData()){
                if (this._options.multiselect){
                   throw new Error('DropdownList: Для типа данных Enum выпадающий список должен работать в режиме одиночного выбора')
                }
-               return;
             }
-            var item = this.getItems().at(0);
-            if (item) {
-               if (!this._options.emptyValue){
+            else {
+               item = this.getItems().at(0);
+               if (item && !this._options.emptyValue) {
                   this._defaultId = item.getId();
                   if (this._picker) {
                      this._getHtmlItemByItem(item).addClass('controls-ListView__defaultItem');
                   }
                }
             }
+            DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
          },
          _checkEmptySelection: function() {
             //Запись "не выбрано" отсутствует в рекордсете, поэтому стандартный метод не поможет
@@ -694,7 +694,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                 id;
 
             if (this._isEnumTypeData()){
-               id = 0; //Берем первую запись из enum, она под индексом 0
+               id = items.get(); //Выбранный ключ для enum'a берем с самого enum'a, тем самым синхронизируемся с опцией selectedKeys
             }
             else if (this._options.emptyValue){ //Записи "Не выбрано" нет в наборе данных
                id = null;

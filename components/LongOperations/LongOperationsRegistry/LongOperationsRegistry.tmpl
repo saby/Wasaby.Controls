@@ -30,7 +30,7 @@
                            'value': userIdValue
                         }
                      ] }}"
-      >
+         >
          <ws:template>
             <ws:SBIS3.CONTROLS.LongOperationsFilter hideStaffFilter="{{hideStaffFilter}}"/>
          </ws:template>
@@ -39,7 +39,7 @@
    <ws:SBIS3.CONTROLS.Browser
       name="longOperationsBrowser"
       className="controls-Browser__view"
-   >
+      >
       <ws:content>
          <div class="controls-Browser__table controls-Browser__table-fullFilterBlock">
             <div class="controls-Browser__tableCell-search">
@@ -67,19 +67,63 @@
                      name="browserFastDataFilter"
                      className="controls-Browser__fastDataFilter"
                      tabindex="0"
-                     items="{{ [
-                        {
-                           'idProperty': 'key'
-                        }
-                     ] }}"
-                  >
+                     >
+                     <ws:items>
+                        <ws:Array>
+                           <ws:Object
+                              idProperty="key"
+                              displayProperty="title"
+                              multiselect="{{false}}"
+                              parentProperty="parent"
+                              values="{{ [
+                                 {
+                                 'key': null,
+                                 'title': rk('В любом состоянии')
+                                 },
+                                 {
+                                 'key': 'running',
+                                 'title': rk('В процессе')
+                                 },
+                                 {
+                                 'key': 'ended',
+                                 'title': rk('Завершенные')
+                                 },
+                                 {
+                                 'key': 'success-ended',
+                                 'title': rk('Успешно'),
+                                 'parent': 'ended'
+                                 },
+                                 {
+                                 'key': 'error-ended',
+                                 'title': rk('С ошибками'),
+                                 'parent': 'ended'
+                                 },
+                                 {
+                                 'key': 'suspended',
+                                 'title': rk('Приостановленные')
+                                 }
+                              ] }}"
+                              >
+                              <!--<ws:values>
+                                 <ws:Array>
+                                    <ws:Object key="{{null}}" title="{[В любом состоянии]}"></ws:Object>
+                                    <ws:Object key="running" title="{[В процессе]}"></ws:Object>
+                                    <ws:Object key="ended" title="{[Завершенные]}"></ws:Object>
+                                    <ws:Object key="success-ended" title="{[Успешно]}" parent="ended"></ws:Object>
+                                    <ws:Object key="error-ended" title="{[С ошибками]}" parent="ended"></ws:Object>
+                                    <ws:Object key="suspended" title="{[Приостановленные]}"></ws:Object>
+                                 </ws:Array>
+                              </ws:values>-->
+                           </ws:Object>
+                        </ws:Array>
+                     </ws:items>
                      <ws:filterStructure>
                         <ws:Array>
                            <ws:Object
                               internalValueField="key"
                               internalCaptionField="title"
                               value="{{'filter/status'|mutable}}"
-                              resetValue="null"
+                              resetValue="{{ [null] }}"
                            />
                         </ws:Array>
                      </ws:filterStructure>

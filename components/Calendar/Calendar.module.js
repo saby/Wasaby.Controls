@@ -4,6 +4,7 @@
 define(
    'js!SBIS3.CONTROLS.Calendar',
    [
+      'Core/constants',
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.ControlHierarchyManager',
       'js!SBIS3.CONTROLS.Utils.DateUtil',
@@ -13,7 +14,7 @@ define(
       'i18n!SBIS3.CONTROLS.Calendar',
       'css!SBIS3.CONTROLS.Calendar'
    ],
-   function (CompoundControl, ControlHierarchyManager, DateUtil, CalendarTableBodyTpl, dotTplFn) {
+   function (constants, CompoundControl, ControlHierarchyManager, DateUtil, CalendarTableBodyTpl, dotTplFn) {
 
       'use strict';
 
@@ -92,6 +93,18 @@ define(
                  */
                 date: undefined
             }
+         },
+
+         _modifyOptions: function() {
+            var opts = Calendar.superclass._modifyOptions.apply(this, arguments),
+               days = constants.Date.days;
+
+            // локализация может поменяться в рантайме, берем актуальный перевод месяцев при каждой инициализации компонента
+            // В массиве дни недели находятся в таком же порядке как возвращаемые значения метода Date.prototype.getDay()
+            // Перемещаем воскресение из начала массива в конец
+            opts._days = days.slice(1);
+            opts._days.push(days[0]);
+            return opts;
          },
 
          $constructor: function () {

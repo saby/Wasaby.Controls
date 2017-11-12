@@ -482,6 +482,30 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
          },
 
          /**
+          * Проверить, относится ли событие об изменении состояния операции к текущей активной операции
+          * @protected
+          * @param {object} data Данные события об изменении состояния операции
+          * @return {boolean}
+          */
+         _hasMathActiveOperation: function (data) {
+            var active = this._activeOperation;
+            if (active && data && active.get('producer') === data.producer) {
+               var tab = active.get('tabKey');
+               if (!tab || !data.tabKey || tab === data.tabKey) {
+                  if (data.operationId) {
+                     return active.get('id') === data.operationId;
+                  }
+                  else
+                  if (data.workflowId) {
+                     var extra = active.get('extra');
+                     return extra && extra.workflow === data.workflowId;
+                  }
+               }
+            }
+            return false;
+         },
+
+         /**
           * Обработать событие
           * @protected
           * @param {string} eventType Тип события
@@ -508,12 +532,12 @@ define('js!SBIS3.CONTROLS.LongOperationsPopup',
                         }
                         break;
                      case 'progress':
-                        if (active && active.get('tabKey') === data.tabKey && active.get('producer') === data.producer && active.get('id') === data.operationId) {
+                        if (this._hasMathActiveOperation(data)) {
                            this._setProgress(data.progress.value, data.progress.total, false);
                         }
                         break;
                      case 'notification':
-                        if (active && active.get('tabKey') === data.tabKey && active.get('producer') === data.producer && active.get('id') === data.operationId) {
+                        if (this._hasMathActiveOperation(data)) {
                            this._setNotification(data.notification);
                         }
                         break;
