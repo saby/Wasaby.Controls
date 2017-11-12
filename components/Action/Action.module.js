@@ -14,7 +14,7 @@ define('js!SBIS3.CONTROLS.Action.Action',
        * @extends SBIS3.CORE.Control
        * @author Крайнов Дмитрий Олегович
        *
-       * @ignoreOptions validators independentContext contextRestriction extendedTooltip
+       * @ignoreOptions validators independentContext contextRestriction extendedTooltip linkedContext _handlers activableByClick buildMarkupWithContext
        *
        * @ignoreMethods activateFirstControl activateLastControl addPendingOperation applyEmptyState applyState clearMark
        * @ignoreMethods changeControlTabIndex destroyChild detectNextActiveChildControl disableActiveCtrl findParent
@@ -34,42 +34,42 @@ define('js!SBIS3.CONTROLS.Action.Action',
       //TODO наследуемся от контрола, чтоб можно было размещать в xhtml
       var Action = Control.Control.extend(/** @lends SBIS3.CONTROLS.Action.Action.prototype */{
          /**
-          * @event onExecute Происходит перед выполнением Действия.
+          * @event onExecute Происходит перед выполнением действия.
           * @remark
-          * В обработчике события вы можете изменить метаданные, с которыми впоследствии будет выполнено Действие, а также запретить его выполнение.
+          * В обработчике события вы можете изменить метаданные, с которыми впоследствии будет выполнено действие, а также запретить его выполнение.
           * Обрабатываемые результаты:
           * <ul>
-          *     <li>Если из обработчика возвращается *false* или строка *custom*, то выполнение Действия прерывается.</li>
-          *     <li>Если возвращается deferred, то Действие выполнится в обработчике callback. Примечание: когда в результаты callback переданы *false* или строка *custom*, выполнение Действия также прерывается.</li>
+          *     <li>Если из обработчика возвращается *false* или строка *custom*, то выполнение действия прерывается.</li>
+          *     <li>Если возвращается deferred, то действие выполнится в обработчике callback. Примечание: когда в результаты callback переданы *false* или строка *custom*, выполнение действия также прерывается.</li>
           * </ul>
           * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {Object} meta Метаданные, переданные при вызове метода {@link execute}.
-          * Они дополняют сведения о контексте выполнения Действия, а также о свойствах сущностей, с которыми происходит взаимодействие.
+          * Они дополняют сведения о контексте выполнения действия, а также о свойствах сущностей, с которыми происходит взаимодействие.
           * Для каждого класса существует собственный набор метаданных.
           * @see execute
           */
          /**
-          * @event onExecuted Происходит после выполнения Действие.
+          * @event onExecuted Происходит после выполнения действия.
           * @param {Core/EventObject} eventObject Дескриптор события.
-          * @param {Object} meta Метаданные, с которыми было выполнено Действия.
-          * Они дополняют сведения о контексте выполнения Действия, а также о свойствах сущностей, с которыми происходит взаимодействие.
+          * @param {Object} meta Метаданные, с которыми было выполнено действие.
+          * Они дополняют сведения о контексте выполнения действия, а также о свойствах сущностей, с которыми происходит взаимодействие.
           * Для каждого класса существует собственный набор метаданных.
-          * @param {*} result Результат, переданный по окончании выполнения Действия. Для каждого класса result может быть различным.
+          * @param {*} result Результат, переданный по окончании выполнения действия. Для каждого класса result может быть различным.
           * Например, для класса {@link SBIS3.CONTROLS.Action.OpenEditDialog} в result приходит экземпляр редактируемой записи.
           * А для класса {@link SBIS3.CONTROLS.Action.OpenDialog} result - это признак того, как был закрыт диалог: нажата кнопка "Да" (значение true) или кнопка "Нет" (значение false).
           * @see execute
           */
           /**
-          * @event onError Происходит, когда выполнение Действия было прервано в результате ошибки.
+          * @event onError Происходит, когда выполнение действия было прервано в результате ошибки.
           * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {Error} error Экземпляр класса Error.
-          * @param {Object} meta Метаданные, с которыми выполнялось Действие.
-          * Они дополняют сведения о контексте выполнения Действия, а также о свойствах сущностей, с которыми происходит взаимодействие.
+          * @param {Object} meta Метаданные, с которыми выполнялось действие.
+          * Они дополняют сведения о контексте выполнения действия, а также о свойствах сущностей, с которыми происходит взаимодействие.
           * Для каждого класса существует собственный набор метаданных.
           * @see execute
           */
           /**
-          * @event onChangeCanExecute Происходит, когда для Действие был изменён признак "Можно выполнять" (см. {@link CanExecute}).
+          * @event onChangeCanExecute Происходит, когда для действия был изменён признак "Можно выполнять" (см. {@link CanExecute}).
           * @param {Core/EventObject} eventObject Дескриптор события.
           * @param {Boolean} canExecute true - действие можно выполнять, false - нельзя выполнять.
           * @see setCanExecute
@@ -77,7 +77,7 @@ define('js!SBIS3.CONTROLS.Action.Action',
           */
          $protected: {
             /**
-             * @var {Boolean} Устанавливает значение признака "Можно выполнять". В значении false Действие не сможет быть выполнено.
+             * @var {Boolean} Устанавливает значение признака "Можно выполнять". В значении false действие не сможет быть выполнено.
              * @see setCanExecute
              * @see isCanExecute
              */
@@ -88,11 +88,11 @@ define('js!SBIS3.CONTROLS.Action.Action',
             this._publish('onChangeCanExecute', 'onExecuted', 'onExecute', 'onError');
          },
          /**
-          * Запускает выполнение Действия.
+          * Запускает выполнение действия.
           * @remark
           * Действие может быть выполнено, когда это не запрещено в опции {@link _canExecute}.
           * Перед выполнением происходит событие {@link onExecute}, после выполнения - {@link onExecuted}, а в случае ошибки - {@link onError}.
-          * @param {Object} meta Метаданные. Дополняют сведения о контексте выполнения Действия, а также о свойствах сущностей, с которыми происходит взаимодействие. Для каждого класса существует собственный набор метаданных.
+          * @param {Object} meta Метаданные. Дополняют сведения о контексте выполнения действия, а также о свойствах сущностей, с которыми происходит взаимодействие. Для каждого класса существует собственный набор метаданных.
           * @returns {Deferred}
           * @example
           * <pre>
@@ -126,8 +126,8 @@ define('js!SBIS3.CONTROLS.Action.Action',
                      return self._notifyOnExecuted(meta, result);
                   }
                }, function (error) {
-                  self._handleError(error, meta);
                   self._notify('onError', error, meta);
+                  self._handleError(error, meta);
                   return error;
                });
             }

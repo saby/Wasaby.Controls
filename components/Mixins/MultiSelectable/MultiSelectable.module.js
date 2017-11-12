@@ -24,8 +24,10 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
                    throw new Error(this._moduleName + ': record key is undefined.')
                 }
 
-                keys.push(key);
-             }.bind(this));
+                if (!ArraySimpleValuesUtil.hasInArray(keys, key)) {
+                   keys.push(key);
+                }
+             }, this);
           }
 
           return keys;
@@ -299,20 +301,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
        * @see toggleItemsSelectionAll
        */
       setSelectedItemsAll : function() {
-         var
-            id,
-            keys = [],
-            items = this.getItems();
-
-         if (items) {
-            items.each(function(rec){
-               id = rec.getId();
-               if (!ArraySimpleValuesUtil.hasInArray(keys, id)) {
-                  keys.push(id)
-               }
-            });
-            this.setSelectedKeys(keys);
-         }
+         this.setSelectedKeys(this._convertToKeys(this.getItems()));
       },
 
       /**
@@ -559,15 +548,7 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
        * @see allowEmptyMultiSelection
        */
       toggleItemsSelectionAll : function() {
-         var items = this.getItems(),
-             keys = [];
-
-         if (items) {
-            items.each(function(rec){
-               keys.push(rec.getId())
-            });
-            this.toggleItemsSelection(keys);
-         }
+         this.toggleItemsSelection(this._convertToKeys(this.getItems()));
       },
 
       /**
@@ -707,9 +688,16 @@ define('js!SBIS3.CONTROLS.MultiSelectable', [
                             }
                             return record;
                          },
-                         function(err) {
-                            IoC.resolve('ILogger').info('MultiSelectable', 'У контрола ' + self.getName() + ' не удалось вычитать запись по ключу ' + loadKeysArr[j]);
-                         }
+                         function(key) {
+                            IoC.resolve('ILogger').info('MultiSelectable', 'У контрола ' + self.getName() + ' не удалось вычитать запись по ключу ' + key);
+                            /* Если запись не удалось вычитать по ключу -> записи с таким ключем нет в источнике,
+                               удаляем такой ключ из набора выбранных.
+                               Делаем пока только для источников которые работают по RPC,
+                               чтобы не ломать людям текущее поведение, если они работют с Memory источником. */
+                            if (cInstance.instanceOfModule(self._dataSource, 'WS.Data/Source/Rpc')) {
+                               self._removeItemsSelection([key]);
+                            }
+                         }.bind(this, loadKeysArr[j])
                      ));
                   }
                }

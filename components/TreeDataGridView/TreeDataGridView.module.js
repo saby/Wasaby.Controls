@@ -23,7 +23,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
 
    var
       DEFAULT_SELECT_CHECKBOX_WIDTH = 24, // Стандартная ширина чекбокса отметки записи.
-      DEFAULT_ROW_SELECT_WIDTH = 8,       // Стандартная ширина полоски выбранной строки.
+      DEFAULT_ROW_SELECT_WIDTH = 12,      // Стандартная ширина полоски выбранной строки.
       DEFAULT_FIELD_PADDING_SIZE = 5,     // Стандартный отступ в полях ввода 4px + border 1px. Используется для расчёта отступа при редактировании по месту.
       DEFAULT_EXPAND_ELEMENT_WIDTH = 26,  // Стандартная ширина стрелки разворота в дереве
       DEFAULT_CELL_PADDING_DIFFERENCE = 1,// Стандартная разница между оступом в ячейке табличного представления и отступом в текстовых полях (6px - 5px = 1px)
@@ -101,7 +101,9 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
    'use strict';
 
    /**
-    * Контрол, отображающий набор данных с иерархической структурой в виде в таблицы с несколькими колонками. Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">Настройка списков</a>.
+    * Класс контрола "Иерархическое табличное представление".
+    * <a href="http://axure.tensor.ru/standarts/v7/%D0%B4%D0%B5%D1%80%D0%B5%D0%B2%D0%BE__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_1_.html">Спецификация</a>
+    * <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">Документация</a>.
     *
     * @class SBIS3.CONTROLS.TreeDataGridView
     * @extends SBIS3.CONTROLS.DataGridView
@@ -114,11 +116,6 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
     * @cssModifier controls-TreeDataGridView__withPhoto-L Устанавливает отступы с учетом расположения в верстке изображения, размера L.
     * @cssModifier controls-TreeView__withoutLevelPadding Устанавливает режим отображения дерева без иерархических отступов.
     * @cssModifier controls-TreeView__hideExpands Устанавливает режим отображения дерева без иконок сворачивания/разворачивания узлов.
-    *
-    * @demo SBIS3.CONTROLS.Demo.MyTreeDataGridView Пример 1. Простое иерархическое представление данных в режиме множественного выбора записей.
-    * @demo SBIS3.DOCS.AutoAddHierarchy Пример 2. Автодобавление записей в иерархическом представлении данных.
-    * Инициировать добавление можно как по нажатию кнопок в футерах, так и по кнопке Enter из режима редактирования последней записи.
-    * Подробное описание конфигурации компонента и футеров вы можете найти в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/records-editing/edit-in-place/add-in-place/"> Добавление по месту</a>.
     *
     * @author Авраменко Алексей Сергеевич
     *
@@ -198,7 +195,12 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
              */
             // Добавил опцию для версии 220
             // с 3.7.5 будет рулиться через пользовательский шаблон
-            foldersColspan: false
+            foldersColspan: false,
+            /**
+             * @cfg {Boolean} Включает режим разворачивания узлов дерева при клике на сам элемент-узел.
+             * Отключив данный режим разворот будет возможнн только при клике на иконку разворота узла.
+             */
+            expandByItemClick: true
          },
          _dragStartHandler: undefined,
          _editArrow: undefined
@@ -522,10 +524,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
       },
 
       _onLeftSwipeHandler: function() {
+         TreeDataGridView.superclass._onLeftSwipeHandler.apply(this, arguments);
          if(this._options.editArrow || this._options.arrowActivatedHandler) {
             this._showEditArrow();
          }
-         TreeDataGridView.superclass._onLeftSwipeHandler.apply(this, arguments);
       },
 
       _onRightSwipeHandler: function() {
@@ -547,7 +549,7 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          var res = TreeDataGridView.superclass._isHoverControl.apply(this, arguments);
 
          if(!res && (this._options.editArrow || this._options.arrowActivatedHandler)) {
-            return contains(this.getEditArrow().getContainer()[0], target[0]);
+            return contains(this.getEditArrow().getContainer()[0], target[0]) || this.getEditArrow().getContainer()[0] === target[0];
          }
          return res;
       },
@@ -625,8 +627,10 @@ define('js!SBIS3.CONTROLS.TreeDataGridView', [
          }
          else {
             if (data.get(this._options.nodeProperty)) {
-               //В режиме "поиска" ветки не надо разворачивать
-               if (!this._options.hierarchyViewMode) {
+               // Нужно разворачивать при клике по элементу в следующих ситуациях:
+               // 1. Не режим поиска (hierarchyViewMode)
+               // 2. Включен разворот по клику на сам элемент
+               if (!this._options.hierarchyViewMode && this._options.expandByItemClick) {
                   this.toggleNode(id);
                }
             }

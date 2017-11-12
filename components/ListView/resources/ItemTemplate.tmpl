@@ -1,4 +1,4 @@
-<div class="controls-ListView__item js-controls-ListView__item
+<div class="controls-ListView__item {{_options.itemsHover ? ' controls-ListView__item__withHover' : ' controls-ListView__item__withoutHover'}} js-controls-ListView__item
     {{selectedKey==item.getId() ? 'controls-ListView__item__selected'}}
     {{ className }}
     {{drawHiddenGroup ? ' ws-hidden' : ''}}"

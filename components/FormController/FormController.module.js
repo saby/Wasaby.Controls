@@ -1,25 +1,25 @@
 define('js!SBIS3.CONTROLS.FormController', [
-   "Core/Context",
-   "Core/core-clone",
-   "Core/core-merge",
-   "Core/CommandDispatcher",
-   "Core/EventBus",
-   "Core/Deferred",
-   "Core/IoC",
-   "Core/core-instance",
+   'Core/Context',
+   'Core/core-clone',
+   'Core/core-merge',
+   'Core/CommandDispatcher',
+   'Core/EventBus',
+   'Core/Deferred',
+   'Core/IoC',
+   'Core/core-instance',
    'Core/helpers/Function/forAliveOnly',
    'Core/helpers/Hcontrol/doAutofocus',
-   "js!SBIS3.CORE.CompoundControl",
-   "js!SBIS3.CORE.LoadingIndicator",
-   "WS.Data/Entity/Record",
-   "WS.Data/Source/SbisService",
-   "js!SBIS3.CONTROLS.Utils.InformationPopupManager",
-   "js!SBIS3.CONTROLS.Utils.OpenDialog",
-   "js!SBIS3.CONTROLS.TitleManager",
-   "i18n!SBIS3.CONTROLS.FormController",
+   'js!SBIS3.CORE.CompoundControl',
+   'Core/Indicator',
+   'WS.Data/Entity/Record',
+   'WS.Data/Source/SbisService',
+   'js!SBIS3.CONTROLS.Utils.InformationPopupManager',
+   'js!SBIS3.CONTROLS.Utils.OpenDialog',
+   'js!SBIS3.CONTROLS.TitleManager',
+   'i18n!SBIS3.CONTROLS.FormController',
    'css!SBIS3.CONTROLS.FormController'
 ],
-   function( cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC, cInstance, forAliveOnly, doAutofocus, CompoundControl, LoadingIndicator, Record, SbisService, InformationPopupManager, OpenDialogUtil, TitleManager) {
+   function( cContext, coreClone, cMerge, CommandDispatcher, EventBus, Deferred, IoC, cInstance, forAliveOnly, doAutofocus, CompoundControl, cIndicator, Record, SbisService, InformationPopupManager, OpenDialogUtil, TitleManager) {
    /**
     * Компонент, на основе которого создают диалог, данные которого инициализируются по записи.
     * В частном случае компонент применяется для создания <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/'>диалогов редактирования записи</a>.
@@ -108,7 +108,6 @@ define('js!SBIS3.CONTROLS.FormController', [
        */
       $protected: {
          _updateDeferred: undefined,
-         _loadingIndicator: undefined,
          _panel: undefined,
          _newRecord: false, //true - если запись создана, но еще не сохранена
          _activateChildControlDeferred: undefined,
@@ -291,7 +290,6 @@ define('js!SBIS3.CONTROLS.FormController', [
          if (!this._getDelayedRemoteWayDeferred()) {
             this._toggleOverlay(false);
          }
-         this._updateIndicatorZIndex();
          this._notifyOnAfterFormLoadEvent();
       },
 
@@ -411,45 +409,19 @@ define('js!SBIS3.CONTROLS.FormController', [
        * Показывает индикатор загрузки
        */
       _showLoadingIndicator: forAliveOnly(function(message){
-         var self = this;
-         message = message !== undefined ? message : this._options.indicatorSavingMessage;
-         this._showedLoading = true;
-         setTimeout(function(){
-            if (self._showedLoading) {
-               if (self._loadingIndicator && !self._loadingIndicator.isDestroyed()) {
-                  self._loadingIndicator.setMessage(message);
-               } else {
-                  self._loadingIndicator = new LoadingIndicator({
-                     parent: self._panel,
-                     showInWindow: true,
-                     modal: true,
-                     message: message,
-                     name: self.getId() + '-LoadingIndicator'
-                  });
-               }
-            }
-         }, 750);
+         cIndicator.setMessage(message || this._options.indicatorSavingMessage, true);
       }),
       /**
        * Скрывает индикатор загрузки
        */
       _hideLoadingIndicator: function(){
-         this._showedLoading = false;
-         if(!this.isDestroyed() && this._loadingIndicator) {
-            this._loadingIndicator.hide();
-         }
+         cIndicator.hide();
       },
-      _updateIndicatorZIndex: function(){
-         var indicatorWindow = this._loadingIndicator && this._loadingIndicator.getWindow();
-         if (indicatorWindow && this._loadingIndicator.isVisible()){
-            indicatorWindow._updateZIndex();
-         }
-      },
-      _processError: function(e) {
+      _processError: function(e, hideErrorDialog, eventName) {
          var
-            eResult = this._notify('onFail', e),
+            eResult = this._notify('onFail', e, eventName),
             eMessage = e && e.message;
-         if(eResult || eResult === undefined) { // string, undefined
+         if(!hideErrorDialog && (eResult || eResult === undefined)) { // string, undefined
             if(typeof eResult == 'string') {
                eMessage = eResult;
             }
@@ -763,10 +735,7 @@ define('js!SBIS3.CONTROLS.FormController', [
             return this._updateRecord(config);
          }
 
-         //Если валидация не прошла
-         if (!config.hideErrorDialog) {
-            this._processError(error);
-         }
+         this._processError(error, config.hideErrorDialog, 'onUpdateModel'); //Если валидация не прошла
          return Deferred.fail(error);
       },
 
@@ -849,8 +818,8 @@ define('js!SBIS3.CONTROLS.FormController', [
             return data;
          }).addErrback(function(err){
                //Не показываем ошибку, если было прервано соединение с интернетом. просто скрываем индикатор и оверлей
-               if (!config.hideErrorDialog && (err instanceof Error) && !err._isOfflineMode){
-                  self._processError(err);
+               if ((err instanceof Error) && !err._isOfflineMode){
+                  self._processError(err, config.hideErrorDialog, config.eventName);
                }
                return err;
          }).addBoth(function(result){
@@ -880,10 +849,16 @@ define('js!SBIS3.CONTROLS.FormController', [
          }
       },
       /**
-       * Производит оповещение о том, что произошло событие диалога. Логика обработки события будет произведена на стороне {@link SBIS3.CONTROLS.OpenDialogAction}, а не в диалоге.
+       * Оповещает экземпляр класса действия (см. {@link SBIS3.CONTROLS.Action.OpenEditDialog}) о произошедшем событии.
        * @remark
-       * Подрообнее об этом вы можете прочитать в разделе <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/#event-processing'>Обработка события диалога редактирования в SBIS3.CONTROLS.OpenDialogAction</a>.
-       * @param {String} eventName Имя события.
+       * Логика обработки такого события, которая по умолчанию предопределена классом SBIS3.CONTROLS.FormController, не будет выполнена.
+       * Например,
+       * <pre>
+       *     // отменяется логика сохранения записи, предустановленная в FormController
+       *     this.sendCommand('notify', 'onUpdateModel', someParams);
+       * </pre>
+       * Логика обработки события должна быть определена разработчиком в SBIS3.CONTROLS.Action.OpenEditDialog, о чем подробнее вы можете прочитать в <a href='https://wi.sbis.ru/doc/platform/developmentapl/interface-development/forms-and-validation/windows/editing-dialog/synchronization/'>этом разделе</a>.
+       * @param {String} eventName Имя события: onUpdateModel, onReadModel,onCreateModel или onDestroyModel.
        * @param {*} additionalData Данные, которые должны быть переданы в качестве аргументов события.
        * @command notify
        * @see read
@@ -892,8 +867,7 @@ define('js!SBIS3.CONTROLS.FormController', [
        * @see destroy
        */
       _actionNotify: function(eventName, additionalData){
-         additionalData = additionalData || {};
-         this._notify(eventName, this._options.record, additionalData);
+         this._notify(eventName, this._options.record, additionalData || {});
       },
       /**
        * Устанавливает фокус на дочерний контрол диалога при окончании чтения/создания записи в источнике данных диалога.

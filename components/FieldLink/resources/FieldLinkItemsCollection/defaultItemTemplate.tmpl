@@ -1,7 +1,7 @@
 <div class="controls-FieldLink__item js-controls-ListView__item controls-ListView__item {{className|orEmpty}}"
      data-hash="{{ projItem.getHash() }}"
      data-id="{{ item.getId() + '' }}"
-     style="order: {{ needSort ? ((itemsCount || 0) - projItem.getOwner().getIndexByInstanceId(projItem.getInstanceId())) : 0 }}">
+     style="{{getItemTemplateData(...).orderStyle}}">
     <span class="controls-FieldLink__item-caption" title="{{ needTitle ? item[displayProperty] }}">
         <ws:partial template="{{itemContent}}" scope="{{...}}"></ws:partial>
     </span>

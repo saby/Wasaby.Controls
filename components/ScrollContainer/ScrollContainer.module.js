@@ -8,6 +8,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
       'tmpl!SBIS3.CONTROLS.ScrollContainer',
       'js!SBIS3.CONTROLS.Scrollbar',
       'Core/detection',
+      'Core/compatibility',
       'js!SBIS3.CORE.FloatAreaManager',
       'js!SBIS3.StickyHeaderManager',
       'Core/constants',
@@ -24,6 +25,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
              template,
              Scrollbar,
              cDetection,
+             compatibility,
              FloatAreaManager,
              StickyHeaderManager,
              constants,
@@ -32,12 +34,14 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
    ) {
       'use strict';
 
+      var widthBrowserScrollbar = null;
+
       /**
        * Класс контрола "Контейнер для контента с тонким скроллом". В качестве тонкого скролла применяется класс контрола {@link SBIS3.CONTROLS.Scrollbar}.
        *
        * @class SBIS3.CONTROLS.ScrollContainer
        * @extends Core/core-extend
-       * @author Зуев Дмитрий Владимирович
+       * @author Журавлев Максим Сергеевич
        *
        * @mixes Core/Abstract.compatible
        * @mixes SBIS3.CORE.Control/Control.compatible
@@ -235,10 +239,12 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
                this.subscribeTo(EventBus.channel('stickyHeader'), 'onStickyHeadersChanged', this._stickyHeadersChangedHandler.bind(this));
 
-               this._addGradient();
+               this._toggleGradient();
 
                // Что бы до инициализации не было видно никаких скроллов
                this._content.removeClass('controls-ScrollContainer__content-overflowHidden');
+               // Скрываем нативный скролл.
+               this._hideBrowserScrollbar();
 
                // task: 1173330288
                // im.dubrovin по ошибке необходимо отключать -webkit-overflow-scrolling:touch у скролл контейнеров под всплывашками
@@ -248,30 +254,89 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             }
          },
 
+         _hideBrowserScrollbar: function(){
+            var style;
+
+            if (widthBrowserScrollbar === null) {
+               widthBrowserScrollbar = this._getBrowserScrollbarWidth();
+            }
+
+            style = {
+               marginRight: -widthBrowserScrollbar
+            };
+
+            // На планшете c OS Windown 10 для скрытия нативного скролла, кроме margin требуется padding.
+            if (compatibility.touch && cDetection.isIE) {
+               style.paddingRight = widthBrowserScrollbar;
+            }
+
+            this._content.css(style);
+         },
+
+         _getBrowserScrollbarWidth: function() {
+            var scrollbarWidth = null, outer, outerStyle;
+
+            /**
+             * В браузерах с поддержкой ::-webkit-scrollbar установлена ширини 0.
+             * Определяем не с помощью Core/detection, потому что в нем считается, что chrome не на WebKit.
+             */
+            if (/AppleWebKit/.test(navigator.userAgent)) {
+               scrollbarWidth = 0;
+            } else {
+               // На Mac ширина всегда 15, за исключением браузеров с поддержкой ::-webkit-scrollbar.
+               if (cDetection.isMac) {
+                  scrollbarWidth = 15;
+               }
+            }
+            if (cDetection.isIE12) {
+               scrollbarWidth = 12;
+            }
+            if (cDetection.isIE10 || cDetection.isIE11) {
+               scrollbarWidth = 17;
+            }
+            if (scrollbarWidth === null) {
+               outer = document.createElement('div');
+               outerStyle = outer.style;
+               outerStyle.position = 'absolute';
+               outerStyle.width = '100px';
+               outerStyle.height = '100px';
+               outerStyle.overflow = 'scroll';
+               outerStyle.top = '-9999px';
+               document.body.appendChild(outer);
+               scrollbarWidth = outer.offsetWidth - outer.clientWidth;
+               document.body.removeChild(outer);
+            }
+
+            return scrollbarWidth;
+         },
+
          _stickyHeadersChangedHandler: function() {
             if (this._scrollbar) {
                this._recalcSizeScrollbar();
             }
          },
 
-         _addGradient: function() {
+         _toggleGradient: function() {
             // $elem[0].scrollHeight - integer, $elem.height() - float
          	var maxScrollTop = this._getScrollHeight() - Math.round(this._container.height());
 
          	// maxScrollTop > 1 - погрешность округления на различных браузерах.
             this._container.toggleClass('controls-ScrollContainer__bottom-gradient', maxScrollTop > 1 && this._getScrollTop() < maxScrollTop);
+            this._container.toggleClass('controls-ScrollContainer__top-gradient', this._getScrollTop() > 0);
          },
 
          _initScrollbar: function(){
             if (!this._scrollbar) {
+               this._scrollbar = {
+                  _container: $('> .controls-ScrollContainer__scrollbar', this._container)
+               };
+               this._recalcSizeScrollbar();
                this._scrollbar = new Scrollbar({
-                  element: $('> .controls-ScrollContainer__scrollbar', this._container),
+                  element: this._scrollbar._container,
                   contentHeight: this._getScrollHeight(),
                   position: this._getScrollTop(),
                   parent: this
                });
-
-               this._recalcSizeScrollbar();
 
                this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
             }
@@ -434,8 +499,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             if (this._paging) {
                this._calcPagingSelectedKey(scrollTop);
             }
-            this.getContainer().toggleClass('controls-ScrollContainer__top-gradient', scrollTop > 0);
-            this.getContainer().toggleClass('controls-ScrollContainer__bottom-gradient', scrollTop < this._getScrollHeight() -  this._container.height());
+            this._toggleGradient();
          },
 
          _onMouseenter: function() {
@@ -576,27 +640,49 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             this._resizeInner();
          },
 
+         /**
+          * Переключение активности нативного скролла.
+          * @param flag активность нативного скролла.
+          * @private
+          */
+         _toggleOverflowHidden: function(flag) {
+            this._content.toggleClass('controls-ScrollContainer__content-overflowHidden', flag);
+            /**
+             * Класс controls-ScrollContainer__content-overflowHidden отключает нативный скролл на контенте.
+             * Из-за того что скрытие нативного скролла происходит через смещение контента на ширину скролла,
+             * нужно убирать смещение, если нативный скролл отключен или добавлять его в противном случае.
+             */
+            if (flag) {
+               this._content.css({
+                  marginRight: 0,
+                  paddingRight: 0
+               });
+            } else {
+               this._hideBrowserScrollbar();
+            }
+         },
+
          _resizeInner: function () {
             if (this._scrollbar){
+               this._recalcSizeScrollbar();
                this._scrollbar.setContentHeight(this._getScrollHeight());
                this._scrollbar.setPosition(this._getScrollTop());
-               this._recalcSizeScrollbar();
             }
             //ресайз может позваться до инита контейнера
             if (this._content) {
-               this._addGradient();
+               this._toggleGradient();
                /**
                 * В firefox при высоте = 0 на дочерних элементах, нативный скролл не пропадает.
                 * В такой ситуации content имеет высоту скролла, а должен быть равен 0.
                 * Поэтому мы вешаем класс, который убирает нативный скролл, если произойдет такая ситуация.
                 */
                if (cDetection.firefox) {
-                  this._content.toggleClass('controls-ScrollContainer__content-overflowHidden', !this._getChildContentHeight());
+                  this._toggleOverflowHidden(!this._getChildContentHeight());
                }
                if (cDetection.isIE) {
                   // Баг в ie. При overflow: scroll, если контент не нуждается в скроллировании, то браузер добавляет
                   // 1px для скроллирования.
-                  this._content.toggleClass('controls-ScrollContainer__content-overflowHidden', (this._getScrollHeight() - Math.floor(this._container.height())) === 1);
+                  this._toggleOverflowHidden((this._getScrollHeight() - Math.floor(this._container.height())) === 1);
                }
                if (!this._options.takeScrollbarHidden) {
                   this._subscribeTakeScrollbar();

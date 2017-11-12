@@ -368,6 +368,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this._options.pickerClassName += ' controls-DropdownList__withoutArrow';
             }
             this._setHeadVariables();
+            this._container.bind('mouseenter' , this._showInfobox.bind(this));
          },
          _modifyOptions: function() {
             var cfg = DropdownList.superclass._modifyOptions.apply(this, arguments);
@@ -649,23 +650,23 @@ define('js!SBIS3.CONTROLS.DropdownList',
             return this._options.emptyValue && this.getSelectedKeys()[0] == null;
          },
          _dataLoadedCallback: function() {
+            var item;
             this._setHeadVariables();
-            DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
             if (this._isEnumTypeData()){
                if (this._options.multiselect){
                   throw new Error('DropdownList: Для типа данных Enum выпадающий список должен работать в режиме одиночного выбора')
                }
-               return;
             }
-            var item = this.getItems().at(0);
-            if (item) {
-               if (!this._options.emptyValue){
+            else {
+               item = this.getItems().at(0);
+               if (item && !this._options.emptyValue) {
                   this._defaultId = item.getId();
                   if (this._picker) {
                      this._getHtmlItemByItem(item).addClass('controls-ListView__defaultItem');
                   }
                }
             }
+            DropdownList.superclass._dataLoadedCallback.apply(this, arguments);
          },
          _checkEmptySelection: function() {
             //Запись "не выбрано" отсутствует в рекордсете, поэтому стандартный метод не поможет
@@ -689,10 +690,11 @@ define('js!SBIS3.CONTROLS.DropdownList',
          _setFirstItemAsSelected : function() {
             //Перебиваю метод из multeselectable mixin'a. см. коммент у метода _isEnumTypeData
             var items = this.getItems(),
+                keys = this._options.selectedKeys,
                 id;
 
             if (this._isEnumTypeData()){
-               id = 0; //Берем первую запись из enum, она под индексом 0
+               id = items.get(); //Выбранный ключ для enum'a берем с самого enum'a, тем самым синхронизируемся с опцией selectedKeys
             }
             else if (this._options.emptyValue){ //Записи "Не выбрано" нет в наборе данных
                id = null;
@@ -702,7 +704,10 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
 
             if (id !== undefined) {
-               this._options.selectedKeys.push(id);
+               //Попадаем сюда, когда в selectedKeys установлены ключи, которых нет в наборе данных
+               //В этом случае выбираем первый элемент как выбранный.
+               //Нельзя присваивать новый массив с 1 элементом, т.к. собьется ссылка на массив и контексты будут воспринимать значение как новое => использую splice
+               keys.splice(0, keys.length, id);
             }
          },
          _setHasMoreButtonVisibility: function(){
@@ -880,12 +885,7 @@ define('js!SBIS3.CONTROLS.DropdownList',
             }
             this._setText(text);
             this._redrawHead(isDefaultIdSelected);
-            this._drawTitle(textValue);
             this._resizeFastDataFilter();
-         },
-         _drawTitle: function(textValue) {
-            var title = this.getSelectedKeys().length > 1 ? textValue.join(', ') : '';
-            this.getContainer()[0].setAttribute('title', title);
          },
          _resizeFastDataFilter: function(){
             var parent = this.getParent();
@@ -912,6 +912,23 @@ define('js!SBIS3.CONTROLS.DropdownList',
                this.getContainer().toggleClass('controls-DropdownList__defaultItem', isDefaultIdSelected);
             }
             this._setHeadVariables();
+         },
+         _showInfobox: function() {
+            var self = this,
+               textValues = [];
+            if (!this.isEnabled() && this.getSelectedKeys().length > 1) {
+               requirejs(['js!SBIS3.CORE.Infobox'], function(Infobox) {
+                  textValues = [];
+                  self.getSelectedItems().each(function(item) {
+                     textValues.push(item.get(self._options.displayProperty));
+                  });
+                  Infobox.show({
+                     control: self.getContainer(),
+                     message: textValues.join(', '),
+                     autoHide: true
+                  })
+               });
+            }
          },
          /**
           * Получить ключ элемента для выбора "по умолчанию"

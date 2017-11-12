@@ -61,7 +61,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
     * @mixes SBIS3.CONTROLS.DataBindMixin
     * @mixes SBIS3.CONTROLS.SearchMixin
     *
-    * @cssModifier controls-ComboBox__ellipsis При нехватке ширины текст в поле ввода оборвётся многоточием.
     * <b>Важно:</b> при добавлении этого класса сломается "Базовая линия".
     *
     * @public
@@ -231,8 +230,6 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             this.subscribe('onReset', this._onResetSearch);
          }
 
-         this._pickerMouseEnter = this._pickerMouseEnterHandler.bind(this);
-
          this._container.click(function (e) {
             var target = $(e.target),
                isArrow = target.hasClass('js-controls-ComboBox__arrowDown');
@@ -246,6 +243,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
                }
             }
          });
+
+         //Если текст уже установлен, проверим, влезает ли он в инпут полностью, и если нет, то добавим затенение.
+         if (this.getText()) {
+            this._toggleShadow();
+         }
       },
 
       _modifyOptions: function(){
@@ -275,6 +277,11 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          }
          if (!cfg.selectedKey) { //todo: ьожет это ндао в условие уровнем повыше
             cfg.cssClassName += ' controls-ComboBox__emptyValue';
+         }
+
+         if (cfg.selectedKey && cfg._items) {
+            var selectedItem = cInstance.instanceOfModule(cfg._items, 'WS.Data/Type/Enum') ? cfg._items.get() : cfg._items.getRecordById(cfg.selectedKey);
+            cfg.text = cfg._propertyValueGetter(selectedItem, cfg.displayProperty) || '';
          }
          return cfg;
       },
@@ -415,17 +422,26 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _drawText: function(text) {
          ComboBox.superclass._drawText.apply(this, arguments);
+         var fieldNotEditableContainer = $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0));
          this._drawNotEditablePlaceholder(text);
-         $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)).text(text || this._options.placeholder || '');
+         fieldNotEditableContainer.text(text || this._options.placeholder || '');
          if (this._options.editable) {
             this._setKeyByText();
          }
+         this._toggleShadow();
+      },
+
+      _toggleShadow: function() {
          // Иногда $(...).width() возвращает не целое число (замечено в MSIE), из-за этого сравнение даёт неверный результат. Так что округляем:
          var width = $('.controls-TextBox__field', this.getContainer()).width(),
-             isTextOverflow = 0 < width && getTextWidth(this.getText()) > Math.round(width),
-             //Если у нас виден инпут, то показываем тень только когда он не в фокусе. иначе в момент ввода появится ненужное затемнение.
-             needShadow = isTextOverflow && (this.isEditable() && !this._inputField.is(':focus') || !this.isEditable());
+            fieldNotEditableContainer = $('.js-controls-ComboBox__fieldNotEditable', this._container.get(0)),
+            isTextOverflow = 0 < width && getTextWidth(this.getText()) > Math.round(width),
+            //Если у нас виден инпут, то показываем тень только когда он не в фокусе. иначе в момент ввода появится ненужное затемнение.
+            needShadow = isTextOverflow && (!this.isEditable() || !this._inputField.is(':focus'));
          this.getContainer().toggleClass('controls-ComboBox__overflow', needShadow);
+         if (needShadow) {
+            fieldNotEditableContainer[0].setAttribute('title', fieldNotEditableContainer[0].textContent);
+         }
       },
 
       _drawNotEditablePlaceholder: function (text) {
@@ -470,7 +486,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       _drawSelectedItemText: function(key, item){
          if (item) {
-            var newText = this._propertyValueGetter(item, this._options.displayProperty);
+            var newText = this._getPropertyValue(item, this._options.displayProperty);
             if (newText != this._options.text) {
                ComboBox.superclass.setText.call(this, newText);
                this._drawNotEditablePlaceholder(newText);
@@ -678,7 +694,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
             self = this;
          items.each(function (item) {
             hasItems = true;
-            if (self._propertyValueGetter(item, self._options.displayProperty) == self._options.text) {
+            if (self._getPropertyValue(item, self._options.displayProperty) == self._options.text) {
                hasFindedKey = true;
                //для рекордов и перечисляемого чуть разный механизм
                if (cInstance.instanceOfModule(item, 'WS.Data/Entity/Model')) {
@@ -816,13 +832,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          //не устанавливаем title на мобильных устройствах:
          //во-первых не нужно, во-вторых на ios из-за установки аттрибута не работает клик
          if (!detection.isMobilePlatform) {
-            var itemContainer = $(event.target).closest('.controls-ComboBox__itemRow');
-            if (itemContainer.length) {
-               var itemTextContainer = $('.controls-ComboBox__item', itemContainer)[0],
-                  itemText = itemTextContainer && itemTextContainer.textContent; //Защита от кастомного шаблона строки
-               if (itemText && getTextWidth(itemText) > itemTextContainer.clientWidth) {
-                  itemContainer[0].setAttribute('title', itemText);
-               }
+            var itemText = this.textContent;
+            if (!this.getAttribute('title') && getTextWidth(itemText) > this.clientWidth) {
+               this.setAttribute('title', itemText);
             }
          }
       },
@@ -837,7 +849,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
          self._picker.subscribe('onKeyPressed', function (eventObject, event) {
             self._keyboardHover(event);
          });
-         $('.controls-ComboBox__list', this._picker.getContainer()).bind('mouseenter', this._pickerMouseEnter);
+         $('.controls-ComboBox__item', this._picker.getContainer()).bind('mouseenter', this._pickerMouseEnterHandler);
          TextBoxUtils.setEqualPickerWidth(this._picker);
       },
 
@@ -872,7 +884,7 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
       destroy: function() {
          if (this._picker) {
-            $('.controls-ComboBox__list', this._picker.getContainer()).unbind('mouseenter', this._pickerMouseEnter);
+            $('.controls-ComboBox__item', this._picker.getContainer()).unbind('mouseenter', this._pickerMouseEnterHandler);
          }
          ComboBox.superclass.destroy.apply(this, arguments);
       },

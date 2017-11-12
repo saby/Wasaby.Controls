@@ -207,34 +207,39 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                if (key === constants.key.esc) {
                   e.stopImmediatePropagation();
                   e.preventDefault();
-                  this.endEdit(false);
+                  this.cancelEdit();
                } else if (key === constants.key.enter || key === constants.key.down || key === constants.key.up) {
                   e.stopImmediatePropagation();
                   e.preventDefault();
                   this.editNextTarget(key === constants.key.down || key === constants.key.enter);
                }
             },
+
             editNextTarget: function(editNextRow) {
-               this._editNextTarget(this._getCurrentTarget(), editNextRow);
-            },
-            _editNextTarget: function (currentTarget, editNextRow) {
                var
                   self = this,
-                  nextTarget = this._getNextTarget(currentTarget, editNextRow);
-               if (nextTarget.length && !this._options.modeSingleEdit) {
-                  this.edit(this._options.items.getRecordById(nextTarget.attr('data-id'))).addCallback(function(result) {
+                  fromAdd = this._isAdd,
+                  nextTarget = this._getNextTarget(this._getCurrentTarget(), editNextRow);
+
+               this.commitEdit(true).addCallback(function() {
+                  self._editNextTarget(nextTarget, editNextRow, fromAdd);
+               });
+            },
+
+            _editNextTarget: function (target, editNextRow, fromAdd) {
+               var self = this;
+               if (target.length && !this._options.modeSingleEdit) {
+                  this.edit(this._options.items.getRecordById(target.attr('data-id'))).addCallback(function(result) {
                      if (!result) {
-                        self._editNextTarget(nextTarget, editNextRow);
+                        self._editNextTarget(self._getNextTarget(target, editNextRow), editNextRow);
                      }
                   });
                // Запускаем добавление если нужно редактировать следующую строку, но строки нет и включен режим автодобавления
                // и выключен режим редактирования единичной записи (или последняя редактируемая запись на самом деле добавляется)
-               } else if (editNextRow && this._options.modeAutoAdd && (!this._options.modeSingleEdit || this._getEditingEip().getEditingRecord().getState() === Record.RecordState.DETACHED)) {
+               } else if (editNextRow && this._options.modeAutoAdd && (!this._options.modeSingleEdit || fromAdd)) {
                   this.add({
                      target: this._lastTargetAdding
                   });
-               } else {
-                  this.endEdit(true);
                }
             },
             _getNextTarget: function(currentTarget, editNextRow) {
@@ -265,7 +270,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                var
                   self = this,
                   reReadModel;
-               return this.endEdit(true).addCallback(function() {
+               return this.commitEdit().addCallback(function() {
                   //TODO: Постепенно нужно отказываться от начала редактирования по моделе, нужно редактировать по ключу(хэшу).
                   //Сейчас возникают ошибки, из-за того, что в метод edit передаётся модель, а затем вызвается endEdit,
                   //в следствии чего может случиться reload и переданная нам модель, станет оторванной от recordSet'а.
@@ -284,7 +289,6 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                             itemProjItem = self._options.itemsProjection.getItemBySourceItem(model);
                         self._getEip().edit(preparedRecord, itemProjItem, withoutActivateFirstControl);
                         editingRecord = self._getEip().getEditingRecord();
-                        self._notify('onAfterBeginEdit', editingRecord);
                         //TODO: необходимо разбивать контроллер редактирования по месту, для плоских и иерархических представлений
                         if (self._options.parentProperty) {
                            parentProjItem = itemProjItem.getParent();
@@ -293,6 +297,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                         if (!self._pendingOperation) {
                            self._subscribeToAddPendingOperation(editingRecord);
                         }
+                        self._notify('onAfterBeginEdit', editingRecord);
                      }
                      return editingRecord;
                   })
@@ -379,16 +384,26 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
              * @private
              */
             _handlePendingOperation: function(withSave) {
-               return this.endEdit(!!withSave);
+               return withSave ? this.commitEdit() : this.cancelEdit();
             },
             /**
-             * Завершить редактирование по месту
-             * @param {Boolean} withSaving Сохранить изменения в items
+             * Завершить редактирование по месту с сохранением
+             * @param {Boolean} commitAdd При добавлении записать добавляемую запись на бл даже если она не была изменена.
              * @private
              */
-            endEdit: function(withSaving) {
+            commitEdit: function(commitAdd) {
+               return this._prepareEndEdit(!!this._pendingOperation || (commitAdd && this._isAdd));
+            },
+            /**
+             * Завершить редактирование по месту без сохранения
+             * @private
+             */
+            cancelEdit: function() {
+               return this._prepareEndEdit(false);
+            },
+
+            _prepareEndEdit: function(withSaving) {
                var
-                  record,
                   endEditResult,
                   self = this,
                   eip = this._getEditingEip();
@@ -398,13 +413,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                //на сохранения записи. Чтобы это предотвратить добавим проверку на то, что сейчас уже идёт сохранение(this._savingDeferred.isReady())
                if (eip && this._savingDeferred.isReady()) {
                   this._savingDeferred = new Deferred();
-                  record = eip.getEditingRecord();
-                  //Если редактирование(не добавление) завершается с сохранением, но запись не изменена, то нет смысл производить сохранение,
-                  //т.к. отправится лишний запрос на бл, который ни чего по сути не сделает
-                  if (withSaving && !this._isAdd && !record.isChanged()) {
-                     withSaving = false;
-                  }
-                  endEditResult = this._notify('onEndEdit', record, withSaving);
+                  endEditResult = this._notify('onEndEdit', eip.getEditingRecord(), withSaving);
                   this._notify('onBeginSave');
                   if (endEditResult instanceof Deferred) {
                      return endEditResult.addBoth(function(result) {
@@ -543,7 +552,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                if (!this._addLock) {
                   this._addLock = true;
                   this._lastTargetAdding = options.target;
-                  return this.endEdit(true).addCallback(function() {
+                  return this.commitEdit().addCallback(function() {
                      return self._prepareAdd(options).addCallback(function (createdModel) {
                         return self._prepareEdit(createdModel).addCallback(function(model) {
                            if (self._options.parentProperty) {
@@ -563,10 +572,10 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                            self._createAddTarget(model, options);
                            self._getEip().edit(model, undefined, withoutActivateFirstControl);
                            editingRecord = self._getEip().getEditingRecord();
-                           self._notify('onAfterBeginEdit', editingRecord);
                            if (!self._pendingOperation) {
                               self._subscribeToAddPendingOperation(editingRecord);
                            }
+                           self._notify('onAfterBeginEdit', editingRecord);
                            return editingRecord;
                         });
                      });
@@ -642,19 +651,13 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             },
             _onChildFocusOut: function (event, destroyed, focusedControl) {
                var
-                  eip,
-                  withSaving,
                   // Если фокус ушел на кнопку закрытия диалога, то редактирование по месту не должно реагировать на это, т.к.
                   // его и так завершат через finishChildPendingOperation (и туда попадет правильный аргумент - с сохранением
                   // или без завершать редактирование по месту)
                   endEdit = !cInstance.instanceOfModule(focusedControl, 'SBIS3.CORE.CloseButton') && !focusedControl ||
                      (this._allowEndEdit(focusedControl) && this._isAnotherTarget(focusedControl, this));
                if (endEdit) {
-                  eip = this._getEditingEip();
-                  if (eip) {
-                     withSaving = eip.getEditingRecord().isChanged();
-                     this.endEdit(withSaving);
-                  }
+                  this.commitEdit();
                }
             },
             _allowEndEdit: function(control) {
@@ -670,11 +673,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
             _isAnotherTarget: function(target, control) {
                return !ControlHierarchyManager.checkInclusion(control, target.getContainer());
             },
-            _isCurrentTarget: function(control) {
-               var currentTarget = this._getEditingEip().getTarget(),
-                   newTarget  = control.getContainer().closest('.js-controls-ListView__item');
-               return currentTarget.attr('data-id') == newTarget.attr('data-id');
-            },
+
             _destroyEip: function() {
                if (this._eip) {
                   this._eip.destroy();
@@ -686,7 +685,7 @@ define('js!SBIS3.CONTROLS.EditInPlaceBaseController',
                }
             },
             destroy: function() {
-               this.endEdit();
+               this.cancelEdit();
                this._destroyEip();
                EditInPlaceBaseController.superclass.destroy.apply(this, arguments);
             }

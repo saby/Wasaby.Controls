@@ -86,6 +86,7 @@ define('js!SBIS3.CONTROLS.ListView',
             tplOptions.selectedKey = cfg.selectedKey;
             tplOptions.selectedKeys = cfg.selectedKeys;
             tplOptions.itemsHover = cfg.itemsHover;
+            tplOptions.alwaysShowCheckboxes = cfg.alwaysShowCheckboxes;
 
             return tplOptions;
          },
@@ -448,6 +449,7 @@ define('js!SBIS3.CONTROLS.ListView',
             _loadId: 0,
             _options: {
                 itemsHover: true,
+                alwaysShowCheckboxes: false,
                _canServerRender: true,
                _buildTplArgs: buildTplArgsLV,
                _getRecordsForRedraw: getRecordsForRedrawLV,
@@ -1029,6 +1031,15 @@ define('js!SBIS3.CONTROLS.ListView',
             this._initLoadMoreButton();
          },
 
+         setItems: function(items) {
+            //Когда используется навигация по курсорам, надо иницировать контроллер навигации данными переданного рекордсета, чтобы следующий запрос за даныыми отправился с правильными параметрами
+            if (items && this._isCursorNavigation() && this._listNavigation) {
+               this._listNavigation.analyzeResponseParams(items);
+            }
+            ListView.superclass.setItems.apply(this, arguments);
+         },
+
+
          _initVirtualScrolling: function(){
             this._virtualScrollController = new VirtualScrollController({
                view: this,
@@ -1083,7 +1094,9 @@ define('js!SBIS3.CONTROLS.ListView',
                { class: 'controls-ListView__pagerNoAmount', optionName: 'noPagerAmount', value: true, defaultValue: false },
                { class: 'controls-ListView__pagerHideEndButton', optionName: 'hideEndButton', value: true, defaultValue: false },
                { class: 'controls-ListView__orangeMarker', optionName: 'showSelectedMarker', value: true, defaultValue: false },
-               { class: 'controls-ListView__outside-scroll-loader', optionName: 'outsideScroll', value: true, defaultValue: false }
+               { class: 'controls-ListView__outside-scroll-loader', optionName: 'outsideScroll', value: true, defaultValue: false },
+               { class: 'controls-ListView__showCheckboxes', optionName: 'showCheckboxes', value: true, defaultValue: false },
+               { class: 'controls-ListView__hideCheckboxes', optionName: 'hideCheckboxes', value: true, defaultValue: false}
             ];
             function hasClass(fullClass, className) {
                if(typeof fullClass === 'string') {
@@ -1100,22 +1113,10 @@ define('js!SBIS3.CONTROLS.ListView',
             var el;
             for(var i = 0; i < classes.length; i++) {
                el = classes[i];
-               ////Прокинуть правильные опции
-               // if(el.isPagerConfig) {
-               //    if(!opts.pagerConfig[el.optionName]) {
-               //       hasClass(opts.className, el.class) ? opts.pagerConfig[el.optionName] = el.value :
-               //          opts.pagerConfig[el.optionName] = el.defaultValue;
-               //    }
-               // } else {
-               //    if(!opts[el.optionName]) {
-               //       hasClass(opts.className, el.class) ? opts[el.optionName] = el.value :
-               //          opts[el.optionName] = el.defaultValue;
-               //    }
-               // }
-               if (!opts[el.optionName]) {
-                  if (hasClass(className, el.class)) {
-                     opts[el.optionName] = el.value;
-                  } else {
+               if (hasClass(className, el.class)) {
+                  opts[el.optionName] = el.value;
+               } else {
+                  if (!opts[el.optionName]) {
                      opts[el.optionName] = el.defaultValue;
                   }
                }
@@ -2089,21 +2090,31 @@ define('js!SBIS3.CONTROLS.ListView',
                $(".controls-ListView__item", this._getItemsContainer())
                   .removeClass('controls-ListView__item__selected')
                   .removeClass('controls-ListView__item__selected__withMarker');
-               if (this._getItemsProjection()) {
+               //В случае добавления по месту, добавляемой записи в проекции нет, поэтому будем искать её в вёрстке прямо по id
+               if (this._isAdd() && index === -1) {
+                  this._addSelectedClasses(undefined, id);
+               } else if (this._getItemsProjection()) {
                   var projItem = this._getItemsProjection().at(index);
                   if (projItem) {
-                     var hash = projItem.getHash(),
-                        curSelected = $('.controls-ListView__item[data-hash="' + hash + '"]', this._container);
-                     curSelected.addClass('controls-ListView__item__selected');
-                     if(this._options.showSelectedMarker) {
-                        curSelected.addClass('controls-ListView__item__selected__withMarker');
-                     }
+                     this._addSelectedClasses(projItem.getHash());
                   }
-
                }
-
             }
          },
+
+         _addSelectedClasses: function(hash, id) {
+            var curSelected;
+            if (hash) {
+               curSelected = $('.controls-ListView__item[data-hash="' + hash + '"]', this._container);
+            } else {
+               curSelected = $('.controls-ListView__item[data-id="' +  (id === undefined ? '' : id) + '"]', this._container);
+            }
+            curSelected.addClass('controls-ListView__item__selected');
+            if (this._options.showSelectedMarker) {
+               curSelected.addClass('controls-ListView__item__selected__withMarker');
+            }
+         },
+
          /**
           * Перезагружает набор записей представления данных с последующим обновлением отображения.
           * @remark
@@ -2124,7 +2135,7 @@ define('js!SBIS3.CONTROLS.ListView',
           *    });
           * </pre>
           */
-         reload: function (filter, sorting, pageNumber, pageSize) {
+         reload: function (filter, sorting, offset, limit, deepReload, resetPosition) {
             if (this._scrollBinder && this._options.saveReloadPosition){
                var reloadOffset = this._getReloadOffset();
                this._offset = reloadOffset;
@@ -2135,19 +2146,14 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
 
-            // Reload to first page (for filter and search)
-            if (!this._options.saveReloadPosition && pageNumber === 0) {
-               this.setPage(0, true);
-
-               // Reset virtual scrolling if it's enabled
-               if (this._options.virtualScrolling && this._virtualScrollController) {
-                  this._virtualScrollController.disableScrollHandler(true);
-                  this.scrollToFirstPage();
-                  // Will reset pages after redrawing items
-                  this._resetPaging = true;
-                  this._topWrapper.height(0);
-                  this._bottomWrapper.height(0);
-               }
+            // Reset virtual scrolling if it's enabled
+            if (this._options.virtualScrolling && this._virtualScrollController) {
+               this._virtualScrollController.disableScrollHandler(true);
+               this.scrollToFirstPage();
+               // Will reset pages after redrawing items
+               this._resetPaging = true;
+               this._topWrapper.height(0);
+               this._bottomWrapper.height(0);
             }
 
             this._reloadInfiniteScrollParams();
@@ -2175,7 +2181,7 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._scrollBinder) {
                var scrollPage, pagesCount, average, commonItemsCount, firstPageElemIndex;
                scrollPage = this._scrollBinder._getScrollPage();
-               pagesCount = this._scrollPager.getPagesCount();
+               pagesCount = this._scrollPager.getPagesCount() || 1;//paging мог ещё не отобразиться и pagesCount будет null
                commonItemsCount = this._getItemsProjection() ? this._getItemsProjection().getCount() : 0;
                average = commonItemsCount / pagesCount;
                firstPageElemIndex = (scrollPage - 1) * average;
@@ -2293,7 +2299,7 @@ define('js!SBIS3.CONTROLS.ListView',
                // b.addCallback(function(){});
                if (this._hasEditInPlace()) {
                   this._getEditInPlace().addCallback(function(editInPlace) {
-                     editInPlace.endEdit(true).addCallback(function() {
+                     editInPlace.commitEdit().addCallback(function() {
                         var
                            handlerRes = handler.apply(self, args);
                         if (handlerRes instanceof Deferred) {
@@ -2552,7 +2558,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _destroyEditInPlace: function() {
             if (this._hasEditInPlace()) {
                this._getEditInPlace().addCallback(function(editInPlace) {  // Перед дестроем нужно обязательно завершить редактирование и отпустить все деферреды.
-                  editInPlace.endEdit();
+                  editInPlace.cancelEdit();
                   editInPlace._destroyEip();
                });
             }
@@ -2611,17 +2617,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         this._showToolbar(model);
                         this.setSelectedKey(model.getId());
                         if (model.getState() === Record.RecordState.DETACHED) {
-                           $(".controls-ListView__item", this._getItemsContainer())
-                              .removeClass('controls-ListView__item__selected')
-                              .removeClass('controls-ListView__item__selected__withMarker');
-                           var curSelected = $('.controls-ListView__item[data-id="' +  (model.getId() === undefined ? '' : model.getId()) + '"]', this._container);
-                           curSelected.addClass('controls-ListView__item__selected');
-                           if(this._options.showSelectedMarker) {
-                              curSelected.addClass('controls-ListView__item__selected__withMarker');
-                           }
-                        }
-                        else {
-                           this.setSelectedKey(model.getId());
+                           this._drawSelectedItem(model.getId(), -1);
                         }
                         // Могут быть операции над записью с тулбаром под записью. В таком случае на ListView вешается класс с padding-bottom.
                         // Этот отступ при скроле тоже должен учитываться.
@@ -2755,6 +2751,22 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             return result;
          },
+
+         /**
+          * Возвращает признак, по которому можно установить: активно или нет добавление по месту в данный момент.
+          * @returns {Boolean} Значение true нужно интерпретировать как "Добавление по месту активно".
+          * @private
+          */
+         _isAdd: function() {
+            var result = false;
+            if (this._hasEditInPlace()) {
+               this._getEditInPlace().addCallback(function(editInPlace) {
+                  result = editInPlace.isAdd();
+               });
+            }
+            return result;
+         },
+
          //********************************//
          //   БЛОК ОПЕРАЦИЙ НАД ЗАПИСЬЮ    //
          //*******************************//
@@ -3566,7 +3578,9 @@ define('js!SBIS3.CONTROLS.ListView',
                   return this._scrollOffset.bottom + this._limit;
                }
             } else {
-               return this._scrollOffset.top - this._limit;
+               // Math.max из-за того, что страница с записями может быть неполная, и при подгрузке вверх,
+               // вычитая размер страницы можно получить отрицательный offset
+               return Math.max(this._scrollOffset.top - this._limit, 0);
             }
          },
 
@@ -3652,7 +3666,7 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
 
-            this._loadMoreButton.setCaption('Еще ' + caption);
+            this._loadMoreButton.setCaption(rk('Еще') + ' ' + caption);
             this._loadMoreButton.setVisible(true);
          },
 
@@ -3675,12 +3689,10 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          /**
-          * Scroll to a given offset from the top.
-          *
-          * @param offset
+          * Scroll to the beginning of the list.
           */
          scrollToFirstPage: function() {
-            if (this._options.infiniteScroll == "down" && this._options.virtualScrolling) {
+            if (this._options.infiniteScroll == "down") {
                this._getScrollWatcher().scrollTo('top');
             }
          },
@@ -3849,9 +3861,14 @@ define('js!SBIS3.CONTROLS.ListView',
             if (this._isCursorNavigation()) {
                this._listNavigation.analyzeResponseParams(list);
             }
+            ListView.superclass._onDataLoad.call(this, list);
          },
 
-         _dataLoadedCallback: function () {
+         _dataLoadedCallback: function (resetPosition) {
+            if (resetPosition) {
+               this.scrollToFirstPage();
+            }
+
             if (this._options.showPaging) {
                this._processPaging();
                this._updateOffset();
@@ -3866,10 +3883,6 @@ define('js!SBIS3.CONTROLS.ListView',
                   this._setLoadMoreCaption(this.getItems());
                }
             }
-            this._onMetaDataResultsChange = function(event, data){
-               this._headIsChanged = true;
-               this._redrawResults(true);
-            }.bind(this);
             this._observeResultsRecord(true);
             ListView.superclass._dataLoadedCallback.apply(this, arguments);
             this._needScrollCompensation = false;
@@ -3907,15 +3920,17 @@ define('js!SBIS3.CONTROLS.ListView',
                      indicator[0].style.top = '';
                   }
                }
-               this._loadingIndicatorTimer = setTimeout(function(){
-                  ajaxLoader.addClass('controls-AjaxLoader__showIndication');
-               }, INDICATOR_DELAY);
+               this._loadingIndicatorTimer = setTimeout(this._showIndicator.bind(this), INDICATOR_DELAY);
             }
             else {
                clearTimeout(this._loadingIndicatorTimer);
                ajaxLoader.addClass('ws-hidden').removeClass('controls-AjaxLoader__showIndication');
             }
          },
+         _showIndicator: function () {
+            this._getAjaxLoaderContainer().addClass('controls-AjaxLoader__showIndication');
+         },
+
          _toggleEmptyData: function(show) {
             show = show && this._options.emptyHTML;
             this._getEmptyDataContainer().toggleClass('ws-hidden', !show);
@@ -4298,7 +4313,7 @@ define('js!SBIS3.CONTROLS.ListView',
          cancelEdit: function() {
             if (this._hasEditInPlace()) {
                return this._getEditInPlace().addCallback(function(editInPlace) {
-                  var res = editInPlace.endEdit();
+                  var res = editInPlace.cancelEdit();
                   // вызываем _notifyOnSizeChanged, потому что при отмене редактирования изменились размеры
                   this._notifyOnSizeChanged(true);
                   return res;
@@ -4328,7 +4343,7 @@ define('js!SBIS3.CONTROLS.ListView',
                eip = this._getEditInPlace();
             eip.addCallback(function(editInPlace) {
                // При сохранении добавляемой записи через галку в тулбаре необходимо автоматически запускать добавление (естественно, если такой режим включен)
-               return checkAutoAdd && editInPlace.isAdd() && self._isModeAutoAdd() ? editInPlace.editNextTarget(true) : editInPlace.endEdit(true);
+               return checkAutoAdd && editInPlace.isAdd() && self._isModeAutoAdd() ? editInPlace.editNextTarget(true) : editInPlace.commitEdit(true);
             });
             return eip;
          },
@@ -4682,14 +4697,32 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _observeResultsRecord: function(needObserve){
             var methodName = needObserve ? 'subscribeTo' : 'unsubscribeFrom',
-                metaData = this.getItems() && this.getItems().getMetaData(),
-                resultsRecord = metaData && metaData.results;
-            if (this.getItems()) {
-               this[methodName](this.getItems(), 'onPropertyChange', this._onMetaDataResultsChange);
+                metaData;
+
+            //Если нужно отписаться, или подписаться первый раз.
+            //Проверка в связи с тем, что при подгрузке по скроллу рекордсет остается прежним и подписываться еще раз на нем не нужно.
+            //В план на декабрь выписал задачу, чтобы  разобраться с подобными костылями при отрисовке строки итогов.
+            //https://online.sbis.ru/opendoc.html?guid=e1020605-ea32-42e7-aa12-2f3bea86bb1d
+            if (!this._onMetaDataResultsChange) {
+               this._onMetaDataResultsChange = function onMetaDataResultsChange(){
+                  this._headIsChanged = true;
+                  this._redrawResults(true);
+               }.bind(this);
             }
-            if (resultsRecord){
-               this[methodName](resultsRecord, 'onPropertyChange', this._onMetaDataResultsChange);
+            if (!needObserve || !this._isResultObserved()) {
+               if (this.getItems()) {
+                  this[methodName](this.getItems(), 'onPropertyChange', this._onMetaDataResultsChange);
+                  metaData = this.getItems().getMetaData();
+                  if (metaData && metaData.results) {
+                     this[methodName](metaData.results, 'onPropertyChange', this._onMetaDataResultsChange);
+                  }
+               }
             }
+
+         },
+
+         _isResultObserved: function() {
+            return this.getItems() && this.getItems().getEventHandlers('onPropertyChange').indexOf(this._onMetaDataResultsChange) > -1;
          },
 
          _redrawFoot: function() {
@@ -4729,7 +4762,7 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass._setNewDataAfterReload.apply(this, arguments);
             /* Если проекция заморожена, то перерисовывать результаты нельзя, т.к. отрисовка всего списка будет отложена,
                перерисуем, как проекция будет разморожена. */
-            if (this._resultsChanged && this._getItemsProjection().isEventRaising()) {
+            if (this._resultsChanged && this._getItemsProjection() && this._getItemsProjection().isEventRaising()) {
                this._redrawResults(true);
             }
          },
@@ -4785,7 +4818,9 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _deleteRecords: function(idArray, beginDeleteResult) {
-            var self = this;
+            var
+               self = this,
+               resultDeferred;
 
             if (beginDeleteResult === false) {
                beginDeleteResult = BeginDeleteResult.CANCEL;
@@ -4797,14 +4832,16 @@ define('js!SBIS3.CONTROLS.ListView',
                this._deleteRecordsFromSource(idArray).addCallback(function (result) {
                   //Если записи удалялись из DataSource, то перезагрузим реест. Если DataSource нет, то удалим записи из items
                   if (self.getDataSource() && beginDeleteResult !== BeginDeleteResult.WITHOUT_RELOAD) {
-                     self._reloadViewAfterDelete(idArray).addCallback(function () {
+                     resultDeferred = self._reloadViewAfterDelete(idArray).addCallback(function () {
                         self.removeItemsSelection(idArray);
+                        return result;
                      });
                   } else {
                      self._deleteRecordsFromRecordSet(idArray);
                      self.removeItemsSelection(idArray);
+                     resultDeferred = Deferred.success(result);
                   }
-                  return result;
+                  return resultDeferred;
                }).addErrback(function (result) {
                   InformationPopupManager.showMessageDialog({
                      message: result.message,
@@ -4826,10 +4863,15 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _deleteRecordsFromRecordSet: function(idArray) {
-            var items = this.getItems();
+            var
+               item,
+               items = this.getItems();
             items.setEventRaising(false, true);
             for (var i = 0; i < idArray.length; i++) {
-               items.remove(items.getRecordById(idArray[i]));
+               item = items.getRecordById(idArray[i]);
+               if (item) {
+                  items.remove(item);
+               }
             }
             items.setEventRaising(true, true);
             return Deferred.success(true);

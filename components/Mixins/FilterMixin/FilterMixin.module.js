@@ -262,7 +262,7 @@ define('js!SBIS3.CONTROLS.FilterMixin', [
             }
          }).call(this);
 
-         this._notify('onResetFilter', !!internalOnly);
+         this._notify('onResetFilter', !!internalOnly, partial);
       },
 
       _getCurrentContext : function(){

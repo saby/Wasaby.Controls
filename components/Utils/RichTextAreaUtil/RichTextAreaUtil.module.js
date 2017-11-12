@@ -17,31 +17,37 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
        * Метод для добавления определяющей метки в контент при копировании/вырезки из БТРа
        * @param {$object}$object - jquery элемент при копировании/вырезке из которого в буффер необходимо добавлять метку БТРа
        */
-      markRichContentOnCopy: function(target){
+      markRichContentOnCopy: function (target) {
          target = target.get(0);
-         //поддерживаем форматное копирование только в chrome
-         if (constants.browser.chrome) {
+         //поддерживаем форматное копирование не во всех браузерах
+         var browser = constants.browser;
+         if (browser.chrome || browser.firefox || browser.isIE) {
             if (target.addEventListener) {
                target.addEventListener('copy', this._markingRichContent, true);
                target.addEventListener('cut', this._markingRichContent, true);
-            } else {
+            }
+            else {
                //on в отличие от attachEvent в приходящем событии позволяет получить таргет
                $(target).on('cut copy', this._markingRichContent);
             }
          }
       },
-      unmarkRichContentOnCopy: function(target){
+
+      unmarkRichContentOnCopy: function (target) {
          target = target.get(0);
-         if (constants.browser.chrome) {
+         var browser = constants.browser;
+         if (browser.chrome || browser.firefox || browser.isIE) {
             //в webkit в бтре идёт подписка на cut и удаляется лишний символ, поэтому нужно подписываться на capture фазе
             if (target.removeEventListener) {
                target.removeEventListener('copy', this._markingRichContent, true);
                target.removeEventListener('cut', this._markingRichContent, true);
-            } else {
+            }
+            else {
                $(target).off('cut copy', this._markingRichContent);
             }
          }
       },
+
       /*Блок приватных методов*/
       _markingRichContent: function (e) {
          var event =  e.originalEvent ? e.originalEvent : e;
@@ -50,18 +56,15 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
          //$.contains(node,node) вернет false, необходимо дополнительно проверить равеноство узлов
          var sel = document.getSelection();
          if (sel && (event.currentTarget === sel.focusNode || $.contains(event.currentTarget, sel.focusNode))) {
-            //orphans = '31415' - метка показывающая что содержимое было скопировано из богатого редактора
             // Обработчик, проставляющий или убирающий метку указщанному узлу если он элемент
+            // Сейчас в качестве метки используется атрибут data-ws-is-rich-text == 'true', раньше - стилевое свойство orphans == '31415'
             var handleNode = function (isForward, node) {
                if (node.nodeType === 1) {
-                  var MARK = '31415';//Pi
                   if (isForward) {
-                     node.setAttribute('data-orphans', node.style.orphans);
-                     node.style.orphans = MARK;
+                     node.setAttribute('data-ws-is-rich-text', 'true');
                   }
                   else {
-                     node.style.orphans = node.getAttribute('data-orphans');
-                     node.removeAttribute('data-orphans');
+                     node.removeAttribute('data-ws-is-rich-text');
                   }
                }
             };
@@ -69,10 +72,34 @@ define('js!SBIS3.CONTROLS.Utils.RichTextAreaUtil',[
             var handleAll = function (isForward, target) {
                handleNode(isForward, target);
                [].slice.call(target.childNodes).forEach(handleNode.bind(null, isForward));
+               if (constants.browser.firefox || constants.browser.isIE) {
+                  if (isForward) {
+                     var $target = $(target);
+                     var backs = [];
+                     ['color', 'fontSize'].forEach(function (property) {
+                        if (!target.style[property]) {
+                           target.style[property] = $target.css(property);
+                           backs.push(property);
+                        }
+                     });
+                     if (backs.length) {
+                        target.addAttribute('data-ws-back-styles', backs.join(','));
+                     }
+                  }
+                  else {
+                     var backs = (target.getAttribute('data-ws-back-styles') || '').split(',');
+                     if (backs.length) {
+                        backs.forEach(function (property) {
+                           target.style[property] = '';
+                        });
+                     }
+                  }
+               }
             };
-            handleAll(true, event.target);
+            var evtTarget = constants.browser.firefox ? (sel.focusNode !== sel.anchorNode ? sel.getRangeAt(0).commonAncestorContainer : (sel.focusNode.nodeType === 3 ? sel.focusNode.parentNode : sel.focusNode)) : event.target;
+            handleAll(true, evtTarget);
             // И вернуть всё взад
-            setTimeout(handleAll.bind(null, false, event.target), 1);
+            setTimeout(handleAll.bind(null, false, evtTarget), 1);
          }
       },
 

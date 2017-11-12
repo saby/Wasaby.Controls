@@ -10,8 +10,10 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
       'tmpl!SBIS3.CONTROLS.FieldLinkItemsCollection/defaultItemContentTemplate',
       'Core/core-instance',
       'Core/helpers/Function/callNext',
+      'Core/detection',
+      'Core/helpers/Hcontrol/getScrollWidth',
       'js!SBIS3.CONTROLS.Utils.ItemsSelection'
-   ], function(CompoundControl, DSMixin, PickerMixin, dotTplFn, defaultItemTemplate, defaultItemContentTemplate, cInstance, callNext, ItemsSelection) {
+   ], function(CompoundControl, DSMixin, PickerMixin, dotTplFn, defaultItemTemplate, defaultItemContentTemplate, cInstance, callNext, detection, getScrollWidth, ItemsSelection) {
 
       'use strict';
 
@@ -35,7 +37,16 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
           в случае прикладного, там может быть вёрстка, и в подсказку её класть нельзя */
          tplOptions.needTitle = !cfg.itemContentTpl;
          tplOptions.getItemTemplateData = function(templateCfg) {
+            var
+               orderStyle = '',
+               order;
+            if (tplOptions.needSort) {
+               order = ((templateCfg.itemsCount || 0) - templateCfg.projItem.getOwner().getIndexByInstanceId(templateCfg.projItem.getInstanceId()));
+               // "-ms-flex-order" для поддержки ie10 (https://msdn.microsoft.com/en-us/library/hh673531(v=vs.85).aspx)
+               orderStyle = 'order: ' + order + '; -ms-flex-order: ' + order + ';';
+            }
             return {
+               orderStyle: orderStyle,
                drawCross: cfg.enabled,
                drawComma: (templateCfg.projItem.getOwner().getIndex(templateCfg.projItem) !== templateCfg.itemsCount - 1) && !cfg._isPickerVisible
             };
@@ -139,6 +150,8 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          },
 
          showPicker: function() {
+            var pickerContainer, pickerWidth;
+            
             /* Чтобы не было перемаргивания в задизейбленом состоянии,
                просто вешаем класс ws-invisible */
             if (this.isEnabled()) {
@@ -150,6 +163,18 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             this._options._isPickerVisible = true;
             this.redraw();
             this._picker.recalcPosition(true);
+            
+            pickerContainer = this._picker.getContainer();
+            pickerWidth = this._parentFieldLink.getContainer()[0].offsetWidth;
+   
+            /* Из-за того, что ie располагает скроллбар не внутри контейнера, а за его пределами,
+               надо учитывать это при расчётах ширины пикера */
+            if ((detection.isIE10 || detection.isIE11) && pickerContainer[0].offsetHeight < pickerContainer[0].scrollHeight) {
+               pickerWidth -= getScrollWidth();
+            }
+   
+            pickerContainer[0].style.maxWidth = pickerWidth + 'px';
+            pickerContainer[0].style.minWidth = pickerWidth + 'px';
          },
 
          _setPickerContent: function () {
@@ -199,14 +224,6 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
                         self.getContainer().removeClass('ws-invisible');
                      }
                      setTimeout(self.redraw.bind(self), 0);
-                  },
-
-                  onShow: function() {
-                     var pickerContainer = self._picker.getContainer(),
-                         pickerWidth = self._parentFieldLink.getContainer()[0].offsetWidth - (pickerContainer.outerWidth() - pickerContainer.width());
-
-                     pickerContainer[0].style.maxWidth = pickerWidth + 'px';
-                     pickerContainer[0].style.minWidth = pickerWidth + 'px';
                   }
                }
             };

@@ -5,13 +5,7 @@
     <table class="controls-MonthView__dayTable">
         <thead class="controls-MonthView__tableHead">
             <tr if="{{showWeekdays}}">
-                <td class="controls-MonthView__tableElement controls-MonthView__tableElementFog">Пн</td>
-                <td class="controls-MonthView__tableElement controls-MonthView__tableElementFog">Вт</td>
-                <td class="controls-MonthView__tableElement controls-MonthView__tableElementFog">Ср</td>
-                <td class="controls-MonthView__tableElement controls-MonthView__tableElementFog">Чт</td>
-                <td class="controls-MonthView__tableElement controls-MonthView__tableElementFog">Пт</td>
-                <td class="controls-MonthView__tableElement controls-MonthView__tableElementFog">Сб</td>
-                <td class="controls-MonthView__tableElement controls-MonthView__tableElementFog">Вс</td>
+                <td for="day in _days" class="controls-MonthView__tableElement controls-MonthView__tableElementFog">{{ day }}</td>
             </tr>
         </thead>
     </table>

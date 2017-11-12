@@ -14,6 +14,9 @@
 @default-padding-small:        0.25rem;
 //textbox
 @text-box-information-icon-size:                  1rem;
+@text-box-font-size-l:                            @huge-text-size;
+//textarea
+@text-area-line-height-l:                         1.8571rem;//52px;
 //number-text-box
 @number-text-box-icon-size:                       @default-icon-size-large;
 //combo-box
@@ -393,8 +396,8 @@
 @data-grid-header-cell-icon-size:         1.5rem;
 @data-grid-header-cell-sorting-icon-size: 1rem;
 @data-grid-cell-height:                   1.7857rem;
-@data-grid-cell-padding:                  0 .28571rem;
-@data-grid-ms-first-content-cell-padding-left:@data-grid-header-cell-padding-side;
+@data-grid-cell-padding:                  0 @data-grid-cell-padding-right;
+@data-grid-cell-padding-right:            .28571rem;
 @data-grid-td-checkbox-width:             1.75rem;
 @data-grid-td-visible-checkbox-width:     1.75rem;
 @data-grid-check-box-top:                 -@default-border-width;
@@ -403,6 +406,7 @@
 @data-grid-partScroll-arrowLeft-top-shift: -0.8571rem;
 @data-grid-partScroll-arrowRight-top-shift:-.857rem;
 @data-grid-partScroll-thumb-margin:       1.78rem;
+@data-grid-results-cell-padding:          @data-grid-cell-padding;
 // PrintDialog
 //По какой-то причине Firefox берёт font-size не из html, а свой, причем только при расчёте этой ширины
 @controls-printdialog-min-width:          27em;
@@ -421,7 +425,7 @@
 @controls-OperationsPanel-actions-align:                                baseline;
 @controls-OperationsPanel-separator-width:                              2px;
 @controls-OperationsPanel-separator-height:                             1.9285rem;
-@controls-OperationsPanel-separator-line-height:                        2.5rem;
+@controls-OperationsMark-separator-line-height:                         2.5rem;
 @controls-OperationsPanel-menu-close-button-right:                      0rem;
 //OperationsPanelButton
 @controls-OperationsPanelButton-width:    0.86rem;
@@ -453,6 +457,7 @@
 @controls-Popup-closeButton-top:          8px;
 @controls-filterButton-picker-close-top:  .29rem;
 @controls-filterButton-button-margin:     0;
+@controls-filterButton-button-verSide-margin: 0px;
 @controls-filterButton-button-margin-right-align:.2857rem 0 .2857rem .2857rem;
 @controls-filterButton-area-text-weight:	normal;
 @controls-filterButton-area-header-padding:.29rem 3rem .29rem .86rem;
@@ -645,6 +650,8 @@
 @bottomStyle-items-toolbar-height:        1.78rem;
 @bottomStyle-items-toolbar-width:         1.5rem;
 @bottomStyle-items-toolbar-margin:        0;
+@list-view-items-toolbar-locked-right:    @list-view-items-toolbar-right;
+@list-view-items-toolbar-locked-margin-right: -4px;
 @bottomStyle-padding-bottom:              1.78rem;
 @bottomStyle-items-toolbar-margin-top:    .28rem;
 @image-bar-height:                        3.57rem;
@@ -669,3 +676,8 @@
 @link-icon-margin:                        -@default-border-width 0 0;
 @radio-button-icon-margin:                0.3rem;
 @back-button-text-fontweight:             @default-font-weight;
+//printDialog
+@printDialog-activate-right:              3.1785rem;
+//back-button
+@back-arrow-width:                1rem;
+@back-arrow-height:               1rem;

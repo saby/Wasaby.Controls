@@ -37,6 +37,7 @@
 @controls-filterLine-link-hover-color:            @controls-filterLine-link-color;//todo: gerasimov
 //dd-list
 @DropdownList-header-bg:                          #C1D7F0;//todo: krasilnikov
+@DropdownList-footer-hasMore-hover-color:         @DropdownList-picker-menu-item-base-color;
 //suggest-text-box
 @suggest-text-box-bg-show-picker-color:           #F0F5FB;
 @suggest-text-box-bg-show-picker-font-color:      #273B4D;
@@ -251,7 +252,7 @@
 //Edit at place
 @edit-at-place-editor-overlay-bg:         darken(@secondary-color, 5%) !important;
 //List view
-@list-view-items-toolbar-locked-bg:       @basic-block-bg-color;
+@list-view-items-toolbar-locked-bg:       @controls-editInPlace-editor-bg;
 @list-view-actions-active-bg:             @data-grid-bg;
 @listView-empty-data-color:               @disabled-color;
 //Tree view
@@ -358,3 +359,8 @@
 @fieldLink-link-color-hover:              @default-hover-color;
 @commands-button-close-icon-color:        @icon-color-primary;
 @controls-SubmitPopup-footer-bg:          inherit;
+//back-button
+@border-arrow-fill-blue:                  transparent;
+@border-arrow-fill-orange:                transparent;
+@arrow-fill-blue:                         @header-color;
+@arrow-fill-orange:                       @back-button-text-color;

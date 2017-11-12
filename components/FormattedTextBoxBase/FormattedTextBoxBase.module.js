@@ -473,32 +473,52 @@ define(
        */
       textIsFitToModel: function(text, clearChar) {
          var
-            /*массив со значениями, нужен чтобы не записывать значения до полной проверки соответствия текста маске */
-            tempModelValues = [],
-            curIndex = 0,
-            group,
-            value,
-            character;
-         for (var i = 0; i < this.model.length; i++) {
-            group = this.model[i];
-            value = [];
-            for (var j = 0; j < group.innerMask.length; j++) {
-               character = text.charAt(curIndex);
-               character = (character == clearChar) ? undefined : this.charIsFitToGroup(group, j, character);
-               if (character || (typeof character === 'undefined')) {
-                  value.push(character);
-               } else {
-                  return false;
+            i,
+            item,
+            groupValue,
+            isEmpty = true,
+            tempModelValues = [];
+
+         for (i = 0; i < this.model.length; i++) {
+            item = this.model[i];
+            if (item.isGroup) {
+               groupValue = this._getValueForGroup(text, item, clearChar);
+               text = groupValue.text;
+               tempModelValues[i] = groupValue.value;
+               if (groupValue.value.length) {
+                  isEmpty = false;
                }
-               curIndex++;
+            } else if (text.indexOf(item.mask) === 0) {
+               //Удаляем разделители при разборе текста, так как они могут содержать символы подходящие по маске.
+               //Например если маска имеет вид +7(ddd) и усановке текста +7(123) мы не должны считывать 7 при
+               //поиске текста подходящего под ddd.
+               text = text.substr(item.mask.length);
             }
-            tempModelValues.push(value);
-         }
-         if (curIndex != text.length) {
-            return false; //текст длиннее маски
          }
 
-         return tempModelValues;
+         return isEmpty ? false : tempModelValues;
+      },
+
+      //Метод по переданному тексту и маске, возвращает первое вхождение символов, уоторые подходят под маску
+      _getValueForGroup: function(text, group, clearChar) {
+         var
+            character,
+            value = [];
+         text = text.split('');
+         for (var i = 0; i < group.innerMask.length; i++) {
+            while (text.length) {
+               character = text.splice(0, 1)[0];
+               character = (character === clearChar) ? undefined : this.charIsFitToGroup(group, i, character);
+               if (character !== false) {
+                  value.push(character);
+                  break;
+               }
+            }
+         }
+         return {
+            value: value,
+            text: text.join('')
+         };
       },
       /**
        * Записать текст в модель
@@ -736,8 +756,10 @@ define(
           2) Событие keydown стреляет послое вставки символа
           3) Из события не возможно понять какая клавиша была нажата, т.к. возвращается keyCode = 229 || 0
           Для таких андроидов обрабатываем ввод символа отдельно
+          ВАЖНО: Прямой проверки на android нет, т.к. в хроме есть режим "Открыть полную версию", который в userAgent'e
+          проставляет значение unix'a, а не андроида. Смотрим только на битый keyCode
           */
-         if (constants.browser.isMobileAndroid && (event.keyCode === 229 || event.keyCode === 0)){
+         if (event.keyCode === 229 || event.keyCode === 0 || !event.keyCode){
             if (!this._asyncAndroid) {
                this._asyncAndroid = true;
                setTimeout(function() {
@@ -1205,11 +1227,15 @@ define(
          this._setText(text);
       },
       _setText: function(text){
-         this._getFormatModel().setText(text, this._getMaskReplacer());
+         var model = this._getFormatModel();
+         model.setText(text, this._getMaskReplacer());
          this._updateText();
          this._textChanged = true;
          //обновить html
          this._inputField.html(this._getHtmlMask());
+         if (model.isFilled()) {
+            this._notify('onInputFinished');
+         }
       },
       /**
        * Задает маску в модель и обновляет html.

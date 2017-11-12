@@ -151,7 +151,8 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
              * </pre>
              * @see SBIS3.CORE.Control#setActive
              */
-            focusOnActivatedOnMobiles: false
+            focusOnActivatedOnMobiles: false,
+            textAlign: 'left'
          }
       },
 
@@ -261,8 +262,8 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
          IoC.resolve('ILogger').log('setValue()', 'setValue is deprecated. Use setText()');
          this.setText(txt);
       },
-      setEnabled: function(enabled) {
-         TextBoxBase.superclass.setEnabled.apply(this, arguments);
+      _setEnabled: function(enabled) {
+         TextBoxBase.superclass._setEnabled.apply(this, arguments);
          this._toggleState();
       },
       clearMark: function() {
@@ -291,6 +292,36 @@ define('js!SBIS3.CONTROLS.TextBoxBase',
          this._getStateToggleContainer().addClass('controls-TextBox__state__' + stateName);
       }
    });
+
+
+   TextBoxBase.runDefaultAction = function(event, e) {
+      var control = event.getTarget(),
+         res;
+         if (e.which === constants.key.enter) {
+            if (!(e.altKey || e.shiftKey || e.ctrlKey || e.metaKey)) {
+               parent = control;
+
+               while(true) {
+
+                  while (parent && !parent._defaultAction) {
+                     parent = parent.getParent();
+                  }
+                  if (!parent) {
+                     break;
+                  }
+
+                  if (parent._defaultAction) {
+                     res = parent._defaultAction(e);
+                  }
+                  if (res) {
+                     parent = parent.getParent();
+                  } else {
+                     break;
+                  }
+               }
+         }
+      }
+   };
 
    return TextBoxBase;
 

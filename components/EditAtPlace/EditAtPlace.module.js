@@ -64,6 +64,10 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
        * @cssModifier controls-EditAtPlace__ellipsis Текстовое поле обрезается троеточием, если не умещается в контейнере
        */
       var EditAtPlace = CompoundControl.extend([PickerMixin, EditAtPlaceMixin, FormWidgetMixin], /** @lends SBIS3.CONTROLS.EditAtPlace.prototype */{
+         /**
+          * @event onApply Срабатывает при успешном завершении редактирования
+          * @param {Core/EventObject} eventObject Дескриптор события.
+          */
          _dotTplFn: dotTplFn,
          _aliasForContent: 'editorTpl',
          $protected: {
@@ -86,7 +90,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                /**
                 * @cfg {String} Текст подсказки внутри редактирования
                 * @remark
-                * Данный текст отображается внутри поля до момента получения фокуса 
+                * Данный текст отображается внутри поля до момента получения фокуса
                 * и как текст по нажатию на который начнется редактирование
                 * @example
                 * <pre>
@@ -130,9 +134,9 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
                self._clickHandler();
             });
             /*FixMe: придрот, выпилить когда будет номральный CompoundControl*/
-            
-            
-            //TODO: Декораторы не должны разбираться тут (ждем virtualDOM'a) 
+
+
+            //TODO: Декораторы не должны разбираться тут (ждем virtualDOM'a)
             var decorators = this._container.attr('decorators');
             if (decorators && decorators.indexOf('format:') !== -1) {
                decorators = decorators.split('format:');
@@ -178,7 +182,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
          },
 
          /**
-          * Если не прошла валидация - включаем режим отображения редакторов  
+          * Если не прошла валидация - включаем режим отображения редакторов
           */
          validate: function(){
             var result = EditAtPlace.superclass.validate.apply(this, arguments);
@@ -275,7 +279,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
 
          /**
           * Установить режим редактирования по месту
-          * @param {Boolean} inPlace 
+          * @param {Boolean} inPlace
           * true - отображение только редактора
           * false - отображение текста при клике по которому отображается редактор
           * @see displayAsEditor
@@ -303,6 +307,13 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             this._notify('onCancel');
          },
 
+         /**
+          * Отменяет редактирования по месту
+          */
+         cancelEdit: function () {
+            this._cancelEdit();
+         },
+
          _getEditTemplate: function(){
             return this._options.editorTpl;
          },
@@ -322,7 +333,7 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
             }
             this._drawText(this._options.formattedText());
          },
-            
+
          /**
           * Получить текстовое значение контрола
           * @returns {String} Текст - значение поля
@@ -335,14 +346,47 @@ define('js!SBIS3.CONTROLS.EditAtPlace',
          },
 
          _drawText: function (text) {
+            $('.controls-EditAtPlace__textField', this.getContainer()).toggleClass('controls-EditAtPlace__placeholder', !text);
             if (this._options.editFieldTpl) {
                text = TemplateUtil.prepareTemplate(this._options.editFieldTpl)({text: text});
             } else if (!text) {
-               text = '<span class="controls-EditAtPlace__placeholder">' + escapeHtml(this._options.placeholder) + '</span>';
+               text = escapeHtml(this._options.placeholder);
             } else {
                text = escapeHtml(text);
             }
             this._textField.html(text || '&nbsp;');
+         },
+         //EditAtPlace должен переключать состояние как TextBox, но т.к. он не наследуется от TextBoxBase, то нужно копипастить его методы
+         _getStateToggleContainer: function(){
+            return this._container;
+         },
+         setEnabled: function(enabled) {
+            EditAtPlace.superclass.setEnabled.apply(this, arguments);
+            this._toggleState();
+         },
+         clearMark: function() {
+            EditAtPlace.superclass.clearMark.apply(this, arguments);
+            this._toggleState();
+         },
+         markControl: function() {
+            EditAtPlace.superclass.markControl.apply(this, arguments);
+            this._toggleState();
+         },
+         _updateActiveStyles: function() {
+            EditAtPlace.superclass._updateActiveStyles.apply(this, arguments);
+            this._toggleState();
+         },
+         _toggleState: function() {
+            var container = this._getStateToggleContainer()[0];
+            container.className = container.className.replace(/(^|\s)controls-TextBox__state__\S+/gi, '');
+            this._getStateToggleContainer().addClass(this._getToggleState());
+         },
+         _getToggleState: function() {
+            var
+               active = this.isActive(),
+               enabled = this.isEnabled(),
+               marked = this.isMarked();
+            return 'controls-TextBox__state__' + (marked ? 'marked' : !enabled ? 'disabled' : active ? 'active' : 'default');
          }
       });
 

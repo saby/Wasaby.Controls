@@ -362,7 +362,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
             }
          };
    /**
-    * Классов контрола "Список с колонками". Подробнее о настройке контрола и его окружения вы можете прочитать в разделе <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">Настройка списков</a>.
+    * Класс контрола "Список с колонками".
+    * <a href="http://axure.tensor.ru/standarts/v7/%D1%82%D0%B0%D0%B1%D0%BB%D0%B8%D1%87%D0%BD%D0%BE%D0%B5_%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D0%B5__%D0%B2%D0%B5%D1%80%D1%81%D0%B8%D1%8F_04_.html">Спецификация</a>.
+    * <a href="https://wi.sbis.ru/doc/platform/developmentapl/interface-development/components/list/list-settings/">Документация</a>.
     *
     * @class SBIS3.CONTROLS.DataGridView
     * @extends SBIS3.CONTROLS.ListView
@@ -702,6 +704,16 @@ define('js!SBIS3.CONTROLS.DataGridView',
          CommandDispatcher.declareCommand(this, 'ColumnSorting', this._setColumnSorting);
          this._updateAjaxLoaderPosition();
       },
+      
+      _onDataLoad: function(list) {
+         /* Если установлен table-layout: auto,
+            то после перезагрузки могут поменться данные и ширина колонок,
+            поэтому надо сбросить частичный скролл. (делаю до отрисовки, самый быстрый способ). */
+         if(this._isPartScrollVisible && this._currentScrollPosition && this.getContainer().hasClass('controls-DataGridView__tableLayout-auto')) {
+            this._setPartScrollShift(0);
+         }
+         DataGridView.superclass._onDataLoad.call(this, list);
+      },
 
       _prepareConfig: function() {
          DataGridView.superclass._prepareConfig.apply(this, arguments);
@@ -785,19 +797,14 @@ define('js!SBIS3.CONTROLS.DataGridView',
       },
    
       _notifyOnItemClick: function(id, data, target, e) {
-         var clickedCell = {},
-             cell;
-         
          /* Для DataGridView дополняем событие клика информацией о колонке и ячейке */
-         if(this._hoveredColumn.columnIndex  !== null) {
-            cell = this._getCellContainerByElement(e.target);
-            clickedCell = {
-               cellContainer: cell,
-               //При клике на touch устройствах не будет hoveredColumn, поэтому ищем по элементу, по котрому кликнули
-               cellIndex: this._hoveredColumn.columnIndex || cell.index()
-            };
-         }
-         
+         var cell = this._getCellContainerByElement(e.target),
+             clickedCell = {
+                cellContainer: cell,
+                //При клике на touch устройствах не будет hoveredColumn, поэтому ищем по элементу, по котрому кликнули
+                cellIndex: this._hoveredColumn.columnIndex || cell.index()
+             };
+      
          return this._notify('onItemClick', id, data, target, e, clickedCell);
       },
 
@@ -836,11 +843,9 @@ define('js!SBIS3.CONTROLS.DataGridView',
          return DataGridView.superclass._itemsReadyCallback.apply(this, arguments);
       },
 
-      _toggleIndicator: function(show){
-         DataGridView.superclass._toggleIndicator.apply(this, arguments);
-         if (show) {
-            this._updateAjaxLoaderPosition();
-         }
+      _showIndicator: function(){
+         this._updateAjaxLoaderPosition();
+         DataGridView.superclass._showIndicator.apply(this, arguments);
       },
 
       _updateAjaxLoaderPosition: function () {
@@ -1398,7 +1403,8 @@ define('js!SBIS3.CONTROLS.DataGridView',
          scrollContainer[0].style.width = containerWidth - correctMargin + 'px';
 
          /* Найдём соотношение, для того чтобы правильно двигать скроллируемый контент относительно ползунка */
-         this._partScrollRatio = (this._getItemsContainer()[0].offsetWidth - containerWidth) / (containerWidth - correctMargin - thumbWidth - arrowsWidth);
+         // !В edge ширина tbody === 0, если нет строк таблицы, надо брать ширину у table или thead
+         this._partScrollRatio = (this._getTableContainer()[0].offsetWidth - containerWidth) / (containerWidth - correctMargin - thumbWidth - arrowsWidth);
          this._stopMovingCords = {
             right: scrollContainer[0].offsetWidth - thumbWidth - arrowsWidth,
             left: correctMargin
