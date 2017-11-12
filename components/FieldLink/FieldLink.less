@@ -197,16 +197,17 @@
          background-color: transparent;
       }
    }
-   //todo: стили необходимы для ie, flex-end не работает с переполнением
-   //https://codepen.io/anon/pen/JrGQQx
-   //удалить при отказе от ie11, в edge всё работает корректно
-   .controls-FieldLink__itemsCollection {
-      .flex-direction(row-reverse);
-      .justify-content();
-   }
    .controls-FieldLink__item-caption {
       max-width:100%;
    }
+}
+
+.ws-disabled .controls-FieldLink__itemsCollection {
+   //todo: стили необходимы для ie, flex-end не работает с переполнением
+   //https://codepen.io/anon/pen/JrGQQx
+   //удалить при отказе от ie11, в edge всё работает корректно
+   .flex-direction(row-reverse);
+   .justify-content();
 }
 
 //частные случаи
