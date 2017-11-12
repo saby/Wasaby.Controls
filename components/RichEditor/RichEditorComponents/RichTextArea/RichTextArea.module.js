@@ -493,7 +493,16 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   }
                   RichTextArea.superclass.setActive.apply(this, args);
                }.bind(this));
-            } else {
+            }
+            else {
+               if (!active) {
+                  var editor = this._tinyEditor;
+                  var manager = editor.editorManager;
+                  // Если компонент должен стать неактивным - нужно сбросить фокусированный редактор (Аналогично обработчику 'focusout' в TinyMCE в строке 40891)
+                  if (manager && manager.focusedEditor === editor) {
+                     manager.focusedEditor = null;
+                  }
+               }
                RichTextArea.superclass.setActive.apply(this, args);
             }
          },
