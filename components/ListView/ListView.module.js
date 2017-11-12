@@ -1086,7 +1086,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _addOptionsFromClass: function(opts, attrToMerge) {
-            var className = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || "";
+            var className = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || opts.className || "";
             var classes = [
                { class: 'controls-small-ListView', optionName: 'isSmall', value: true, defaultValue: false },
                { class: 'controls-ListView__disableHover', optionName: 'itemsHover', value: false, defaultValue: true },
