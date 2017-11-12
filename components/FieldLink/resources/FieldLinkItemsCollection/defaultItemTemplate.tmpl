@@ -2,11 +2,11 @@
      data-hash="{{ projItem.getHash() }}"
      data-id="{{ item.getId() + '' }}"
      style="{{getItemTemplateData(...).orderStyle}}">
-    <span class="controls-FieldLink__item-caption" title="{{ needTitle ? item[displayProperty] }}">
+    <span class="controls-FieldLink__item-caption{{getItemTemplateData(...).additionalItemClasses}}" title="{{ needTitle ? item[displayProperty] }}">
         <ws:partial template="{{itemContent}}" scope="{{...}}"></ws:partial>
     </span>
     <ws:if data="{{getItemTemplateData(...).drawCross}}">
-        <span class="controls-FieldLink__item-cross js-controls__item-cross controls-FieldLink__icon icon-size icon-Close icon-disabled"></span>
+        <span class="controls-FieldLink__item-cross controls-FieldLink__button js-controls__item-cross icon-size icon-Close icon-disabled"></span>
     </ws:if>
     <ws:if data="{{getItemTemplateData(...).drawComma}}">,</ws:if>
 </div>

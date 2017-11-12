@@ -62,7 +62,7 @@ define('js!SBIS3.CONTROLS.Link', [
     *
     * @control
     * @public
-    * @category Buttons
+    * @category Button
     * @initial
     * <component data-component='SBIS3.CONTROLS.Link'>
     *    <option name='caption' value='Ссылка'></option>

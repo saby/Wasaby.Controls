@@ -22,6 +22,10 @@
          font-size: @text-box-font-size-l;
          padding-bottom: @text-box-input-padding-l;
       }
+      &__auto {
+         height: auto;
+         font-size: @text-box-font-size-m;
+      }
    }
    //различные состояния контрола
    &__state {
@@ -83,12 +87,12 @@
       font: inherit;
       width: 100%;
       min-width: 0; //Иначе input во flex контейнере будет сжиматься лишь до своей стандартной ширины
+      text-align: inherit;
       color: inherit;
       border: none;
       outline: none;
       background: transparent;
       text-decoration: inherit;
-      padding: @text-box-input-padding;
       &::-ms-reveal {
          display: none;
       }
@@ -115,11 +119,13 @@
       .align-items(center);
       position: absolute;
       top: 0;
+      left: 0;
+      right: 0;
       height: 100%;
       cursor: text;
       color: @default-placeholder-color;
       font: inherit;
-      padding: @text-box-input-padding;
+      text-align: inherit;
       &__overflow {
          .text-overflow();
          display: inline-block;
@@ -137,6 +143,13 @@
          top: 0;
       }
    }
+}
+.controls-TextBox__paddingBoth {
+   padding: @text-box-input-padding;
+}
+
+.controls-TextBox__paddingLeft {
+   padding: 0 0 0 @default-padding;
 }
 //модификаторы
 .controls-TextBox__field-uppercase {

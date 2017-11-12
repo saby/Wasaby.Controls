@@ -38,7 +38,7 @@ define('js!SBIS3.CONTROLS.ToggleButton', ['js!WSControls/Buttons/ToggleButton', 
     *
     * @public
     * @control
-    * @category Buttons
+    * @category Button
     * @initial
     * <component data-component='SBIS3.CONTROLS.ToggleButton'>
     *    <option name='caption' value='Кнопка с залипанием'></option>

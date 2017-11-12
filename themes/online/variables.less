@@ -3,7 +3,7 @@
 @import "sizes";
 //Переменные с версиями шрифтов
 @tensorFontNormalVer:                     '1.0.1';
-@tensorFontVer:                           '1.0.0';
+@tensorFontVer:                           '1.0.1';
 @emojiFontVer:                            '1.0.0';
 // Кошерные переменные "на выход"
 @default-text-color:                      #000;
@@ -314,6 +314,7 @@
 @tab-button-simple-inner-color:                 #313E78;
 @tab-button-simple-inner-padding:               0 8px 0 8px;
 @tab-button-simple-inner-checked-color:         #0055BB;
+@tab-button-simple-inner-bottom-height:         3px;
 @tab-button-border:                             1px solid transparent;
 @tab-button-ff-inner-height:                    29px;
 @tab-button-hover-background:                   #F0F5FB;
@@ -328,13 +329,14 @@
 @tab-button-checked-inner-border:               1px;
 @tab-button-large-inner-font-size:              18px;
 @tab-button-large-inner-line-height:            28px;
-@tab-button-large-inner-max-width:              614px;
+@tab-button-large-inner-max-width:              606px;
 @tab-button-large-firstAddText-color:           #0055BB;
 @tab-button-large-firstAddText-color-hover:     #313E78;
 @tab-button-large-firstAddText-font-size:       14px;
 @tab-button-large-secondAddText-color:          #999999;
 @tab-button-large-secondAddText-font-size:      12px;
 @tab-button-inner-padding:                      0px 12px;
+@tab-button-inner-wrapper-height:               24px;
 @tab-button-inner-line-height:                  30px;
 @tab-button-inner-height:                       28px;
 @tab-button-inner-after-width:                  @default-border-width;
@@ -544,12 +546,13 @@
 @suggest-loading-width:                         16px;
 @suggest-loading-right:                         3px;
 
-@suggest-picker-border:                         1px solid #cccccc;
+@suggest-picker-border-color:                   @default-border-color-second;
 @suggest-picker-box-shadow:                     0 4px 8px rgba(0, 0, 0, 0.15);
 @suggest-picker-box-shadow-reverted:            0 -4px 8px rgba(0, 0, 0, 0.15);
 @suggest-picker-margin:                         -@default-border-width;
 @suggest-picker-margin-reverted:                @default-border-width;
 @suggest-picker-standard-width:                 500px;
+@suggest-picker-bg-color:                       #ffffff;
 @suggest-picker-color:                          initial;
 @suggest-picker-item-bg:                        @white-color;
 @suggest-list-empty-color:                      @gray-ccc-color;
@@ -1264,7 +1267,7 @@
 @fieldLink-picker-max-height:             500px;
 @fieldLink-picker-min-height:             16px;
 @fieldLink-linkItem-cross-width:          20px;
-@fieldLink-afterField-padding:            0 @default-padding 0 0;
+@fieldLink-afterField-button-margin:      0 @default-padding 0 0;
 @fieldLink-link-color:                    #8991A9;
 @fieldLink-link-color-hover:              #313E78;
 @fieldLink-showSelector-color:            @icon-color-primary;
@@ -1322,10 +1325,7 @@
 @controls-InformationPopup-success-status-border-color:       #72BE44;
 @controls-InformationPopup-error-status-border-color:         #EF463A;
 @controls-InformationPopup-warning-status-border-color:       #FEC63F;
-@controls-InformationPopup-border-top:                        3px solid;
-@controls-InformationPopup-border-bottom:                     none;
-@controls-InformationPopup-border-left:                       none;
-@controls-InformationPopup-border-right:                      none;
+@controls-InformationPopup-border-width:                      3px 0 0 0;
 @controls-InformationPopup-closeButton-top:                   5px;
 @controls-InformationPopup-closeButton-right:                 5px;
 @controls-InformationPopup-closeButton-width:                 24px;
@@ -1341,6 +1341,7 @@
 @controls-NotificationPopup-border-right:                                    @controls-NotificationPopup-border;
 @controls-NotificationPopup-border-bottom:                                   @controls-NotificationPopup-border;
 @controls-NotificationPopup-header-padding:                                  8px;
+@controls-NotificationPopup-header-min-height:                               auto;
 @controls-NotificationPopup-header-padding-with-close-button:                6px 41px 8px 8px;
 @controls-NotificationPopup-header-caption-margin-right:                     12px;
 @controls-NotificationPopup-header-caption-font-size:                        15px;
@@ -1545,6 +1546,7 @@
 @long-operations-popup-header-line-height: normal;
 @long-operations-popup-header-pad-rt: 41px;
 @long-operations-popup-header-icon-size: 24px;
+@long-operations-popup-header-icon-margin-right: 6px;
 @long-operations-popup-header-caption-f-size: 15px;
 @long-operations-popup-header-caption-line-height: inherit;
 @long-operations-popup-header-caption-color: inherit;
@@ -1565,6 +1567,7 @@
 @long-operations-popup-foot-bg: #F3F3F3;
 @long-operations-popup-foot-f-size: 12px;
 @long-operations-popup-foot-but-gap-top: 8px;
+@long-operations-popup-actions-container-margin-right:8px;
 @long-operations-popup-foot-color: #999999;
 @long-operations-popup-foot-accent-color: #333333;
 @long-operations-popup-foot-but-hover-color: #313E78 !important;

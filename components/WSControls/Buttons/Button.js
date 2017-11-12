@@ -56,7 +56,7 @@ define('js!WSControls/Buttons/Button', [
     * @css controls-Button__text Класс для изменения отображения текста на кнопке.
     *
     * @control
-    * @category Buttons
+    * @category Button
     * @public
     * @initial
     * <component data-component='WSControls/Buttons/Button'>

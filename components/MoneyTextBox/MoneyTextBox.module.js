@@ -49,6 +49,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
       $protected: {
          _options: {
             textAlign: 'right',
+            _paddingClass: ' controls-TextBox__paddingBoth',
             textFieldWrapper: textFieldWrapper,
             /**
              * @cfg {Number} Количество знаков после запятой
@@ -189,7 +190,7 @@ define('js!SBIS3.CONTROLS.MoneyTextBox', [
 
       _setInputValue: function(value) {
          var newText = (value === null ||typeof value === 'undefined') ? '' : value + '';
-         this._updateCompatPlaceholderVisibility();
+         this._updateCompatiblePlaceholderState();
          if(!this.isEnabled()) {
             this._inputField[0].innerHTML = this._getIntegerPart(newText) + '<span class="controls-MoneyTextBox__decimals">' + newText.substring(newText.length - 3, newText.length) + '</span>';
          }else{
