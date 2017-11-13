@@ -1,39 +1,35 @@
 & {
-   @margin-col: @spacing-between-blocks / 2;
-   @margin-row: -@margin-col;
+   @margin-block: @spacing-between-blocks / 2;
+   @margin-row: -@margin-block;
    @color-modificator-name: bg, ghostWhite, whiteSnow, whiteSmoke, mintCream, hover;
    @color-modificator-value: @default-bg-color, @ghost-white-color, @white-snow-color, @white-smoke-color, @mint-cream-color, @default-hover-color;
 
-   .ws-areaBlocks__ {
-      &area {
+   .ws-block {
+      &__layout {
          overflow: hidden;
-      }
-      &row {
-         margin-left: @margin-row;
-         margin-right: @margin-row;
-         .flexbox();
-
-         &_topOffset {
-            border-top: @margin-col solid @color-between-blocks;
-         }
-
-         &:first-of-type:not(.ws-areaBlocks__row_topOffset) {
-            margin-top: @margin-row;
-         }
-         &:last-of-type {
-            margin-bottom: @margin-row;
-         }
-
-         &_rebuild {
-            .flex-wrap(wrap);
-            > .ws-areaBlocks__col {
-               .flex-grow(1);
+         & > .ws-block__group {
+            margin-left: @margin-row;
+            margin-right: @margin-row;
+            &:first-of-type:not(.ws-block_topOffset) {
+               margin-top: @margin-row;
+            }
+            &:last-of-type {
+               margin-bottom: @margin-row;
             }
          }
       }
-      &col {
-         border: @margin-col solid @color-between-blocks;
+      &__block {
+         border: @margin-block solid @color-between-blocks;
          .box-sizing();
+      }
+      &_topOffset {
+         border-top: @margin-block solid @color-between-blocks;
+      }
+      &_rebuild {
+         .flex-wrap(wrap);
+         > * {
+            .flex-grow(1);
+         }
       }
    }
    // Модификаторы цвета блоков ws-background_bg, ..., ws-background_hover.
