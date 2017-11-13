@@ -36974,9 +36974,10 @@
       "tinymce/util/Fun",
       "tinymce/util/Delay",
       "tinymce/dom/DOMUtils",
-      "tinymce/dom/MousePosition"
+      "tinymce/dom/MousePosition",
+      "tinymce/Env"
    ], function(
-      NodeType, Arr, Fun, Delay, DOMUtils, MousePosition
+      NodeType, Arr, Fun, Delay, DOMUtils, MousePosition, Env
    ) {
       var isContentEditableFalse = NodeType.isContentEditableFalse,
          isContentEditableTrue = NodeType.isContentEditableTrue;
@@ -37018,6 +37019,7 @@
 
          editor.dom.setStyles(ghostElm, {
             position: 'absolute',
+            zIndex: 1000000,/*16777271 2147483647*/
             opacity: 0.5,
             overflow: 'hidden',
             border: 0,
@@ -37078,7 +37080,7 @@
       var applyRelPos = function (state, position) {
          return {
             pageX: position.pageX - state.relX,
-            pageY: position.pageY + 5
+            pageY: position.pageY - (Env.ie ? state.relY : -5)
          };
       };
 
@@ -37089,7 +37091,7 @@
 
                if (isDraggable(editor.getBody(), ceElm)) {
                   var elmPos = editor.dom.getPos(ceElm);
-                  var bodyElm = editor.getBody();
+                  var bodyElm = Env.ie ? document.body : editor.getBody();
                   var docElm = editor.getDoc().documentElement;
 
                   state.element = ceElm;
@@ -37128,9 +37130,10 @@
             }
 
             if (state.dragging) {
-               var targetPos = applyRelPos(state, MousePosition.calc(editor, e));
+               var geomSrc = Env.ie ? {inline:false, getDoc:function () {return document;}, getBody:function () {return document.body;}} : editor;
+               var targetPos = applyRelPos(state, MousePosition.calc(geomSrc, e));
 
-               appendGhostToBody(state.ghost, editor.getBody());
+               appendGhostToBody(state.ghost, geomSrc.getBody());
                moveGhost(state.ghost, targetPos, state.width, state.height, state.maxX, state.maxY);
 
                throttledPlaceCaretAt(e.clientX, e.clientY);
@@ -38053,7 +38056,7 @@
                }
             });
 
-            editor.on('focus', function() {
+            editor.on('focus', function (e) {
                // Make sure we have a proper fake caret on focus
                Delay.setEditorTimeout(editor, function() {
                   //Проблема:
@@ -38062,7 +38065,10 @@
                   //          обработчик по таймауту приводит к ошибкам
                   //Решение:
                   //          в обработчике проверять редактор на destroyed
-                  if(!editor.destroyed) {
+                  // Если рэнж не установить сразу, а отложить, то в этот промежуток времени может произойти переход фокуса к другому элементу, и
+                  // эта отложенная установка рэнжа вернёт фокус обратно (MSIE), поэтому нужна дополнительная проверка
+                  // Пример https://online.sbis.ru/opendoc.html?guid=c8752b67-f0bb-4660-8b00-a551f30d2b46
+                  if(!editor.destroyed && editor.editorManager && editor.editorManager.focusedEditor === editor) {
                      editor.selection.setRng(renderRangeCaret(editor.selection.getRng()));
                   }
                }, 0);
@@ -55203,10 +55209,6 @@ tinymce.PluginManager.add('noneditable', function(editor) {
       var render = function (editor, theme, args) {
          var panel, resizeHandleCtrl, startSize, settings = editor.settings;
 
-         if (args.skinUiCss) {
-            DOM.styleSheetLoader.load(args.skinUiCss, SkinLoaded.fireSkinLoaded(editor));
-         }
-
          panel = theme.panel = Factory.create({
             type: 'panel',
             role: 'application',
@@ -55411,12 +55413,7 @@ tinymce.PluginManager.add('noneditable', function(editor) {
          settings.content_editable = true;
 
          editor.on('focus', function() {
-            // Render only when the CSS file has been loaded
-            if (args.skinUiCss) {
-               DOM.styleSheetLoader.load(args.skinUiCss, render, render);
-            } else {
-               render();
-            }
+            render();
          });
 
          editor.on('blur hide', hide);
@@ -55428,11 +55425,6 @@ tinymce.PluginManager.add('noneditable', function(editor) {
                panel = null;
             }
          });
-
-         // Preload skin css
-         if (args.skinUiCss) {
-            DOM.styleSheetLoader.load(args.skinUiCss, SkinLoaded.fireSkinLoaded(editor));
-         }
 
          return {};
       };
@@ -55507,16 +55499,6 @@ tinymce.PluginManager.add('noneditable', function(editor) {
                skinUrl = EditorManager.baseURL + '/skins/' + skin;
             }
 
-            // Load special skin for IE7
-            // TODO: Remove this when we drop IE7 support
-            if (Env.documentMode <= 7) {
-               args.skinUiCss = skinUrl + '/skin.ie7.min.css';
-            } else {
-               args.skinUiCss = skinUrl + '/skin.min.css';
-            }
-
-            // Load content.min.css or content.inline.min.css
-            editor.contentCSS.push(skinUrl + '/content' + (editor.inline ? '.inline' : '') + '.min.css');
          }
 
          ProgressState.setup(editor, theme);
@@ -56808,14 +56790,6 @@ tinymce.PluginManager.add('noneditable', function(editor) {
                addedCss = true;
             }
 
-            if (contentCss !== false) {
-               linkElm = editor.dom.create('link', {
-                  rel: 'stylesheet',
-                  href: contentCss ? contentCss : pluginUrl + '/css/prism.css'
-               });
-
-               editor.getDoc().getElementsByTagName('head')[0].appendChild(linkElm);
-            }
          }
 
          editor.on('PreProcess', function(e) {
