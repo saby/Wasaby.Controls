@@ -14,45 +14,46 @@ define('js!Controls/List/ListControl/ListView', [
    ) {
    'use strict';
 
+   var _private = {
+      calcSelectedItem: function(display, selKey, idProperty) {
+         var selItem = null;
+         if (selKey !== undefined) {
+            selItem = ItemsUtil.getDisplayItemById(display, selKey, idProperty);
+         }
+         return selItem;
+
+         //TODO надо вычислить индекс
+         /*if(!this._selectedItem) {
+          if (!this._selectedIndex) {
+          this._selectedIndex = 0;//переводим на первый элемент
+          }
+          else {
+          this._selectedIndex++;//условно ищем ближайший элемент, рядом с удаленным
+          }
+          this._selectedItem = this._display.at(this._selectedIndex);
+          }*/
+      }
+   };
+
    var ListView = ItemsView.extend(
       {
          _controlName: 'Controls/List/ListControl/ListView',
 
          _template: ListViewTpl,
+         _defaultItemTemplate: defaultItemTemplate,
          _selectedItem: null,
          _selectedIndex: -1,
 
          _beforeMount: function(newOptions) {
             ListView.superclass._beforeMount.apply(this, arguments);
-            this._itemTemplate = newOptions.itemTemplate || defaultItemTemplate;
-            this.__calcSelectedItem(newOptions);
+            this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
+            this._selectedItem = _private.calcSelectedItem(this._display, newOptions.selectedKey, newOptions.idProperty);
          },
 
          _beforeUpdate: function(newOptions) {
             ListView.superclass._beforeUpdate.apply(this, arguments);
-            this._itemTemplate = newOptions.itemTemplate || defaultItemTemplate;
-            this.__calcSelectedItem(newOptions);
-         },
-
-         __calcSelectedItem: function(newOptions) {
-            if (newOptions.selectedKey !== undefined) {
-               this._selectedItem = ItemsUtil.getDisplayItemById(this._display, newOptions.selectedKey, newOptions.idProperty);
-            }
-            else {
-               this._selectedItem = null;
-            }
-
-
-            //TODO надо вычислить индекс
-            /*if(!this._selectedItem) {
-               if (!this._selectedIndex) {
-                  this._selectedIndex = 0;//переводим на первый элемент
-               }
-               else {
-                  this._selectedIndex++;//условно ищем ближайший элемент, рядом с удаленным
-               }
-               this._selectedItem = this._display.at(this._selectedIndex);
-            }*/
+            this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
+            this._selectedItem = _private.calcSelectedItem(this._display, newOptions.selectedKey, newOptions.idProperty);
          },
 
          _onItemClick: function(e, dispItem) {

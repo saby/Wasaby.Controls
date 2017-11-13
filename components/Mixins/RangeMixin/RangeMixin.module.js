@@ -8,7 +8,7 @@ define('js!SBIS3.CONTROLS.RangeMixin', [], function() {
    /**
     * Миксин, добавляющий поведение хранения начального и конечного значений диапазона.
     * @mixin SBIS3.CONTROLS.RangeMixin
-    * @author Миронов Александр Юрьевич
+    * @author Миронов А.Ю.
     * @public
     */
    var RangeMixin = /**@lends SBIS3.CONTROLS.RangeMixin.prototype  */{
@@ -78,10 +78,14 @@ define('js!SBIS3.CONTROLS.RangeMixin', [], function() {
       },
 
       /**
+       * @name SBIS3.CONTROLS.RangeMixin#setStartValue
+       * @function
+       * @description
        * Установить начальное значение диапазона.
        * @param {Object} value Начальное значение.
        * @param {Boolean} silent Если True, то события изменения свойства не генерируются.
        * @see startValue
+       * @see getStartValue
        */
       setStartValue: propertySetter('startValue', undefined, '_notifyOnRangeChangedAfterStartValueChanged'),
 
@@ -89,16 +93,21 @@ define('js!SBIS3.CONTROLS.RangeMixin', [], function() {
        * Получить начальное значение диапазона.
        * @return {Object} Начальная дата диапазона.
        * @see startValue
+       * @see setStartValue
        */
       getStartValue: function() {
          return this._options.startValue;
       },
 
       /**
+       * @name SBIS3.CONTROLS.RangeMixin#setEndValue
+       * @function
+       * @description
        * Установить конечное значение диапазона.
        * @param {Object} value Конечное значение диапазона.
        * @param {Boolean} silent Если True, то события изменения свойства не генерируются.
        * @see endValue
+       * @see getEndValue
        */
       setEndValue: propertySetter('endValue', undefined, '_notifyOnRangeChangedAfterEndValueChanged'),
 
@@ -106,17 +115,21 @@ define('js!SBIS3.CONTROLS.RangeMixin', [], function() {
        * Получить конечное значение диапазона.
        * @return {Object} Конечная дата диапазона.
        * @see endValue
+       * @see setEndValue
        */
       getEndValue: function() {
          return this._options.endValue;
       },
 
       /**
+       * @name SBIS3.CONTROLS.RangeMixin#setRange
+       * @function
+       * @description
        * Установить начальное и конечное значение.
        * Необходимо использовать, если надо одновлеменно установить начальное и конечное значение. Если вместо этого
        * использовать setStartValue и setEndValue, то событие onRangeChange будет сгенерировано 2 раза.
-       * @param startValue Начальное значение диапазона.
-       * @param endValue Конечное значение диапазона.
+       * @param {*} startValue Начальное значение диапазона.
+       * @param {*} endValue Конечное значение диапазона.
        */
       setRange: propertyUpdateWrapper(function(startValue, endValue, silent) {
          var changed = false,

@@ -25,7 +25,7 @@
       margin: @controls-filterButton-button-margin-right-align;
    }
    .controls__filterButton__filterLine {
-      margin: @controls-filterButton-button-margin-right-align;
+      margin: @controls-filterButton-line-margin-right-align;
    }
 }
 
@@ -50,7 +50,7 @@
    }
    
    &.ws-hidden + .controls__filterButton-button {
-      margin-left: @controls-filterButton-margin-value;
+      margin-left: @controls-filterButton-button-verSide-margin;
    }
 }
 .controls__filterButton__filterLine-items, .controls__filterButton__filterLine-text {
@@ -67,9 +67,10 @@
    .align-items(center);
 }
 
-.ws-is-desktop-platform {
-   .controls__filterButton__filterLine:not(.ws-disabled):hover {
-      .controls__filterButton__filterLine-items:hover {
+//TODO перейти на Link, реквест https://online.sbis.ru/opendoc.html?guid=a6217bf3-0e69-4e19-8d24-25ad47dfe34a
+.filter-line-accent(@event) {
+   .controls__filterButton__filterLine:not(.ws-disabled):@{event} {
+      .controls__filterButton__filterLine-items:@{event} {
          .controls__filterButton__filterLine-text, .controls__filterButton__filterLine-arrow {
             color: @controls-filterLine-link-hover-color;
          }
@@ -78,6 +79,14 @@
          }
       }
    }
+}
+
+.ws-is-desktop-platform {
+   .filter-line-accent(hover);
+}
+
+.ws-is-mobile-platform {
+   .filter-line-accent(active);
 }
 
 .ws-is-desktop-safari {

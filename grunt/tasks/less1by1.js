@@ -105,7 +105,7 @@ module.exports = function less1by1Task(grunt) {
           if (helpers.validateFile(relpath, [grunt.config.get('changed') || `components/**/${lessName}.less`])
               || helpers.validateFile(relpath, [grunt.config.get('changed') || `themes/**/${lessName}.less`])
                || helpers.validateFile(relpath, [grunt.config.get('changed') || `demo/**/${lessName}.less`])
-           || helpers.validateFile(relpath, [grunt.config.get('changed') || `Controls/**/${lessName}.less`])) {
+               || helpers.validateFile(relpath, [grunt.config.get('changed') || `Controls/**/${lessName}.less`])) {
                 foundFile = true;
                 fs.readFile(filepath, function readFileCb(readFileError, data) {
                   let theme = resolveThemeName(filepath);
