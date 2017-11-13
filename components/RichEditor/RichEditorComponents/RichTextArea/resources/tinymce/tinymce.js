@@ -55492,6 +55492,7 @@ tinymce.PluginManager.add('noneditable', function(editor) {
             } else {
                skinUrl = EditorManager.baseURL + '/skins/' + skin;
             }
+
          }
 
          ProgressState.setup(editor, theme);
@@ -56782,6 +56783,7 @@ tinymce.PluginManager.add('noneditable', function(editor) {
             } else {
                addedCss = true;
             }
+
          }
 
          editor.on('PreProcess', function(e) {
