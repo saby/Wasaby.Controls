@@ -11,7 +11,7 @@
       font-style: normal;
       color: @back-button-text-color;
       text-align: left;
-      max-width: 100%;
+      max-width: calc(~"100% - @{back-button-width-before}");
       line-height: normal;
       font-weight: @back-button-text-fontweight;
       font-size: @back-button-font-size;
@@ -22,6 +22,9 @@
          .controls-BackButton__arrow{
             display: inline-block;
             color: @icon-color-primary !important;
+         }
+         .controls-BackButton__caption.controls-Link {
+            max-width: calc(~"100% - @{back-button-width-before} - @{default-icon-size}");
          }
       }
       &.controls-BackButton__hover-arrow{
