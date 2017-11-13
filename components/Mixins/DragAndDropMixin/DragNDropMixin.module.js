@@ -180,7 +180,7 @@ define('js!SBIS3.CONTROLS.DragNDropMixin', [
           *       if (droppable) {
           *          var items = this.getItems();
           *          dragObject.getSource().each(function(item){
-          *             if ($ws.helpers.instanseOfModule(item, 'SBIS3.CONTROLS.DragEntity.Row')){
+          *             if ($ws.helpers.instanceOfModule(item, 'SBIS3.CONTROLS.DragEntity.Row')){
           *                items.add(item.getModel());
           *             }
           *          },this)

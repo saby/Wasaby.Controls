@@ -174,21 +174,20 @@
       }
    }
 }
-.ws-disabled {
-   .controls-FieldLink{
-      &__linksWrapper {
-         max-width:100%;
-      }
-      &__beforeFieldWrapper {
-         .flex-wrap(wrap);
-         .flex-direction();
-         max-width: 100%;
-      }
-      &__item-caption {
-         max-width:100%;
-      }
+.ws-disabled.controls-FieldLink{
+   &__linksWrapper {
+      max-width:100%;
+   }
+   &__beforeFieldWrapper {
+      .flex-wrap(wrap);
+      .flex-direction();
+      max-width: 100%;
+   }
+   &__item-caption {
+      max-width:100%;
    }
 }
+
 // todo заменить на display: none
 .controls-FieldLink__selected:not(.controls-FieldLink__multiselect):not(.controls-FieldLink__inputMinWidth) .controls-FieldLink__fieldWrapper {
    visibility: hidden;

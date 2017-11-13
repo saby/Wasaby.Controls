@@ -102,14 +102,14 @@ define('js!SBIS3.CONTROLS.DateRangeSliderBase',[
       },
 
       _onPrevBtnClick: function () {
-         if (this.isEnabled()) {
+         if (this.isEnabled() && this.getStartValue() && this.getEndValue()) {
             this.setPrev();
             this._updateValueView();
          }
       },
 
       _onNextBtnClick: function () {
-         if (this.isEnabled()) {
+         if (this.isEnabled() && this.getStartValue() && this.getEndValue()) {
             this.setNext();
             this._updateValueView();
          }
