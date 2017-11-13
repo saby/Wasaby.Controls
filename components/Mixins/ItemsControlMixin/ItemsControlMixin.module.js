@@ -133,7 +133,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
       // todo сильносвязанный код. Если пустой projItem, значит мы сюда попали из onCollectionAdd и единственная добавляемая запись - это сама группа
       // https://online.sbis.ru/opendoc.html?guid=c02d2545-1afa-4ada-8618-7a21eeadc375
       // Если сортировка не задана - то разрешена группировка всех записей - и листьев и узлов
-      return cfg._itemsProjection.getSort().length === 0 || (!isEmpty(cfg.groupBy) && (!projItem || !projItem.isNode || !projItem.isNode()));
+      return !isEmpty(cfg.groupBy) && (cfg._itemsProjection.getSort().length === 0 || !projItem || !projItem.isNode || !projItem.isNode());
    },
 
    groupItemProcessing = function(groupId, records, item, cfg) {
@@ -2527,7 +2527,7 @@ define('js!SBIS3.CONTROLS.ItemsControlMixin', [
 
       _canApplyGrouping: function(projItem) {
          // Если сортировка не задана - то разрешена группировка всех записей - и листьев и узлов
-         return this._options._itemsProjection.getSort().length === 0 || (!isEmpty(this._options.groupBy) && (!projItem.isNode || !projItem.isNode()));
+         return !isEmpty(this._options.groupBy) && (this._options._itemsProjection.getSort().length === 0 || !projItem.isNode || !projItem.isNode());
       },
 
       _getGroupItems: function(groupId) {
