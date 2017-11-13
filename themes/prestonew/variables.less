@@ -4,14 +4,8 @@
 @import "sizes";
 // Default vars
 @closeBigButtonImage:                     url('img/areaBigCloseButton.png') 0 0;
-@closeBigButtonImageHover:                url('img/areaBigCloseButton.png') 0 -3rem;
+@closeBigButtonImageHover:                url('img/areaBigCloseButton.png') 0 round(-84px * @multiplier);
 //Icon Button
-@FilterPanelButtonHoverRightClose:        url('img/FilterPanelButton.svg') 0 0.86rem;
-@FilterPanelButtonHoverLeftClose:         url('img/FilterPanelButton.svg') -1.25rem 0.86rem;
-@FilterPanelButtonHoverRightOpen:         url('img/FilterPanelButton.svg') -2.5rem -0.86rem;
-@FilterPanelButtonHoverLeftOpen:          url('img/FilterPanelButton.svg') -3.75rem -0.86rem;
-@closeButtonImage:                        url('img/areaBigCloseButton.png') 0 0;
-@closeButtonImageHover:                   url('img/areaCloseButton.png') 0 -3rem;
 @button-text-color:                       @white-color;
 @button-text-shadow:                      0px 1px 0px rgba(0, 0, 0, 0.35);
 @button-shadow:                           0px 1px 4px rgba(0, 0, 0, 0.5);
@@ -40,29 +34,26 @@
 @controls-InformationPopup-border-width:                 1px;
 @controls-InformationPopup-closeButton-font-family:      @icon-font;
 //ProgressBar
-@ProgressBar-height:                      1.321rem;
-@ProgressBar-width:                       14.286rem;
+@ProgressBar-height:                      round(37px * @multiplier);
+@ProgressBar-width:                       round(400px * @multiplier);
 @ProgressBar-first-color:                 #26B8FF;
 @ProgressBar-last-color:                  @ProgressBar-first-color;
 @ProgressBar-border-color:                rgba(102, 170, 221, .15);
 @ProgressBar-background-color:            #354B62;
 @ProgressBar-border-radius:               0;
 @ProgressBar-value-color:                 @default-text-color;
-@ProgressBar-value-padding:               0 0.214rem;
-@ProgressBar-value-font-size:             1rem;
-
-@DropdownList-picker-menu-height-ff:      3rem; //Решаю конфликт в 155, за не тот файл для этого кода извени
-
+@ProgressBar-value-padding:               0 round(6px * @multiplier);
+@ProgressBar-value-font-size:             round(28px * @multiplier);
+@DropdownList-picker-menu-height-ff:      round(84px * @multiplier); //Решаю конфликт в 155, за не тот файл для этого кода извени
 //TabButton
-@tab-buttons-border-bottom:               .0357rem solid #293543;
-@tab-button-font:                         @tab-button-font-size 'TensorFont', sans-serif;
+@tab-buttons-border-bottom:               1px solid #293543;
 //sundry
 @list-view-loading-indicator-gradient-bg: url(@list-view-scroll-spritesheet) no-repeat center;
 @list-view-loading-indicator-gradient-bg-up:url(@list-view-scroll-spritesheet) no-repeat center;
-@header-font:                             400 1.43rem escape('/') @header-height @default-font-name;
+@header-font:                             400 round(40px * @multiplier) escape('/') @header-height @default-font-name;
 @combo-box-picker-border:                 @default-border-width solid @default-border-color-second;
-@controls-NotificationPopup-header-padding-with-close-button: @controls-NotificationPopup-header-padding 2.0714rem @controls-NotificationPopup-header-padding 8px;
+@controls-NotificationPopup-header-padding-with-close-button: @controls-NotificationPopup-header-padding round(58px * @multiplier) @controls-NotificationPopup-header-padding 8px;
 //-----------------//
 //  StickyHeader  //
 //----------------//
-@sticky-header-partScroll-padding:        0.428rem;
+@sticky-header-partScroll-padding:        round(12px * @multiplier);

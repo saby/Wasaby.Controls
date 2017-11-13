@@ -488,6 +488,11 @@ define(
                if (groupValue.value.length) {
                   isEmpty = false;
                }
+            } else if (text.indexOf(item.mask) === 0) {
+               //Удаляем разделители при разборе текста, так как они могут содержать символы подходящие по маске.
+               //Например если маска имеет вид +7(ddd) и усановке текста +7(123) мы не должны считывать 7 при
+               //поиске текста подходящего под ddd.
+               text = text.substr(item.mask.length);
             }
          }
 
@@ -1222,11 +1227,15 @@ define(
          this._setText(text);
       },
       _setText: function(text){
-         this._getFormatModel().setText(text, this._getMaskReplacer());
+         var model = this._getFormatModel();
+         model.setText(text, this._getMaskReplacer());
          this._updateText();
          this._textChanged = true;
          //обновить html
          this._inputField.html(this._getHtmlMask());
+         if (model.isFilled()) {
+            this._notify('onInputFinished');
+         }
       },
       /**
        * Задает маску в модель и обновляет html.

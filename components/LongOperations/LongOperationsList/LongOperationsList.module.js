@@ -87,7 +87,9 @@ define('js!SBIS3.CONTROLS.LongOperationsList',
 
          $constructor: function () {
             var context = this.getLinkedContext();
-            context.setValue('filter', {});
+            if (!context.getValue('filter')) {
+               context.setValue('filter', {});
+            }
             if (this._options.userId) {
                context.setValue('filter/UserId', this._options.userId);
             }

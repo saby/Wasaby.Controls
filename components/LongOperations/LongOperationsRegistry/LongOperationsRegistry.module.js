@@ -52,7 +52,7 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
 
          $constructor: function () {
             var context = this.getLinkedContext();
-            context.setValue('filter/status', null);
+            context.setValue('filter', {status:null, period:null, duration:null});
             if ('userId' in this._options) {
                context.setValue('filter/UserId', this._options.userId);
             }
@@ -64,9 +64,7 @@ define('js!SBIS3.CONTROLS.LongOperationsRegistry',
 
             var self = this;
             this._longOpList = this.getChildControlByName('operationList');
-            var view = this._longOpList.getView();//###this.getChildControlByName('browserView')
-
-            //this.getChildControlByName('browserFastDataFilter').setItems(this._data);
+            var view = this._longOpList.getView();
 
             view.setGroupBy({
                field: 'status',
