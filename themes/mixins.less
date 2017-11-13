@@ -497,15 +497,16 @@
   height: @size;
 }
 
-.checkbox-border-size(@sizeContainer, @sizeContent, @borderWidth) {
+.checkbox-border-size() {
   &:before {
+    .box-sizing();
     content: '';
     position: absolute;
-    border-width: @borderWidth;
+    border-width: @default-border-width;
     border-style: solid;
-    width: calc(@sizeContent ~"-" 2 * @borderWidth);
-    height: calc(@sizeContent ~"-" 2 * @borderWidth);
-    margin: (@sizeContainer - @sizeContent) / 2;
+    width: @check-box-icon-box-size;
+    height: @check-box-icon-box-size;
+    margin: (@check-box-icon-size - @check-box-icon-box-size) / 2;
   }
 }
 
