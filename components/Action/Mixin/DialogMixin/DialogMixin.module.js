@@ -188,7 +188,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          cMerge(config, meta.dialogOptions);
          config.componentOptions = this._buildComponentConfig(meta);
          config.handlers = config.handlers || {};
-         cMerge(config.handlers, {
+         var handlers = {
             onAfterClose: function (e, result) {
                self._isExecuting = false;
                self._finishExecuteDeferred();
@@ -196,13 +196,25 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
                self._dialog = undefined;
             },
             onBeforeShow: function () {
-               self._notify('onBeforeShow');
+               self._notify('onBeforeShow', this);
             },
             onAfterShow: function () {
                self._isExecuting = false;
-               self._notify('onAfterShow');
+               self._notify('onAfterShow', this);
             }
-         });
+         };
+         for (var name in handlers) {
+            if (handlers.hasOwnProperty(name)) {
+               if (config.handlers.hasOwnProperty(name) && config.handlers[name] instanceof Array) {
+                  config.handlers[name].push(handlers[name]);
+               } else if(config.handlers.hasOwnProperty(name))  {
+                  config.handlers[name] = [config.handlers[name], handlers[name]]
+               } else {
+                  config.handlers[name] = handlers[name];
+               }
+            }
+         }
+
          return config;
       },
 
