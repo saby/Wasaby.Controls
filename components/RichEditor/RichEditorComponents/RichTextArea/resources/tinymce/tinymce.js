@@ -55203,10 +55203,6 @@ tinymce.PluginManager.add('noneditable', function(editor) {
       var render = function (editor, theme, args) {
          var panel, resizeHandleCtrl, startSize, settings = editor.settings;
 
-         if (args.skinUiCss) {
-            DOM.styleSheetLoader.load(args.skinUiCss, SkinLoaded.fireSkinLoaded(editor));
-         }
-
          panel = theme.panel = Factory.create({
             type: 'panel',
             role: 'application',
@@ -55411,12 +55407,7 @@ tinymce.PluginManager.add('noneditable', function(editor) {
          settings.content_editable = true;
 
          editor.on('focus', function() {
-            // Render only when the CSS file has been loaded
-            if (args.skinUiCss) {
-               DOM.styleSheetLoader.load(args.skinUiCss, render, render);
-            } else {
-               render();
-            }
+            render();
          });
 
          editor.on('blur hide', hide);
@@ -55428,11 +55419,6 @@ tinymce.PluginManager.add('noneditable', function(editor) {
                panel = null;
             }
          });
-
-         // Preload skin css
-         if (args.skinUiCss) {
-            DOM.styleSheetLoader.load(args.skinUiCss, SkinLoaded.fireSkinLoaded(editor));
-         }
 
          return {};
       };
@@ -55506,17 +55492,6 @@ tinymce.PluginManager.add('noneditable', function(editor) {
             } else {
                skinUrl = EditorManager.baseURL + '/skins/' + skin;
             }
-
-            // Load special skin for IE7
-            // TODO: Remove this when we drop IE7 support
-            if (Env.documentMode <= 7) {
-               args.skinUiCss = skinUrl + '/skin.ie7.min.css';
-            } else {
-               args.skinUiCss = skinUrl + '/skin.min.css';
-            }
-
-            // Load content.min.css or content.inline.min.css
-            editor.contentCSS.push(skinUrl + '/content' + (editor.inline ? '.inline' : '') + '.min.css');
          }
 
          ProgressState.setup(editor, theme);
@@ -56806,15 +56781,6 @@ tinymce.PluginManager.add('noneditable', function(editor) {
                addedInlineCss = true;
             } else {
                addedCss = true;
-            }
-
-            if (contentCss !== false) {
-               linkElm = editor.dom.create('link', {
-                  rel: 'stylesheet',
-                  href: contentCss ? contentCss : pluginUrl + '/css/prism.css'
-               });
-
-               editor.getDoc().getElementsByTagName('head')[0].appendChild(linkElm);
             }
          }
 
