@@ -2,8 +2,7 @@ define('js!WSControls/Windows/PopupContainer/PopupContainer',
    [
       'Core/Control',
       'Core/CommandDispatcher',
-      'tmpl!WSControls/Windows/PopupContainer/PopupContainer',
-      'css!WSControls/Windows/PopupContainer/PopupContainer'
+      'tmpl!WSControls/Windows/PopupContainer/PopupContainer'
    ],
    function (Control, CommandDispatcher, template) {
       'use strict';

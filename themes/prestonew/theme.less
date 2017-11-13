@@ -3,8 +3,8 @@
   .align-items(center);
   .justify-content(center);
   color: #8991A9;
-  font-size: 2rem;
-  line-height: 2rem;
+  font-size: round(56px * @multiplier);
+  line-height: round(56px * @multiplier);
   font-family: 'cbuc-icons';
   width: @default-height;
   height: @default-height;
@@ -35,7 +35,7 @@ html {
   color: #e4e4e4;
 }
 body {
-   font-size: 1rem !important;
+   font-size: round(28px * @multiplier) !important;
 }
 body {
     //Todo: сделать @accent-color - #FFCC99  https://online.sbis.ru/opendoc.html?guid=47bdafa8-88ab-4cb2-9383-89ffd7c9dcdd
@@ -47,28 +47,28 @@ body {
    // в онлайне такие кнопки завязаны на жесткие стили controls-IconButton__round-border-24, что неправильно
    // для редизайна нужно перейти на относительные названия
    .controls-MenuIcon__Menu.controls-Menu.controls-Menu__Popup.controls-Menu__hide-menu-header {
-     margin: -.32rem 0 0 -.606rem;
+     margin: round(-9px * @multiplier) 0 0 round(-17px * @multiplier);
    }
    .controls-operationsPanel__itemsMenu_picker.controls-MenuIcon__Menu.controls-Menu.controls-Menu__hide-menu-header {
-     margin: -.32rem 0 0 1.32rem;
+     margin: round(-9px * @multiplier) 0 0 round(40px * @multiplier);
    }
 
   .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
-    width: 3rem !important;
-    height: 3rem !important;
+    width: round(84px * @multiplier) !important;
+    height: round(84px * @multiplier) !important;
   }
 
 
    //TODO: удалить это когда будет нормальный пэйджинг, не из ws-a
    .ws-paging{
       .ws-paging-small{
-         width: 3rem !important;
-         height: 3rem !important;
+         width: round(84px * @multiplier) !important;
+         height: round(84px * @multiplier) !important;
          background: none !important;
          border: @default-border-width solid #8991A9 !important;
-         font-size: 1.714285714285714rem !important;
+         font-size: round(48px * @multiplier) !important;
          background-color: #354B62 !important;
-         line-height:   3rem !important;
+         line-height:   round(84px * @multiplier) !important;
          margin: 0 8px 0 0 !important;
          padding: 0 !important;
          box-sizing: border-box !important;
@@ -89,7 +89,7 @@ body {
             position:relative;
             &:before {
                text-indent: 0 !important;
-               font-size: 3rem;
+               font-size: round(84px * @multiplier);
                position:absolute;
                top:-2px;
                left:-2px;
@@ -129,17 +129,17 @@ body {
     &.controls-ItemsToolbar__edit {
       &:before {
         top: 0;
-        left: -2.7rem;
-        width: 3rem;
-        height: 3rem;
+        left: round(-76px * @multiplier);
+        width: round(84px * @multiplier);
+        height: round(84px * @multiplier);
         background: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDIwMDEwOTA0Ly9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9UUi8yMDAxL1JFQy1TVkctMjAwMTA5MDQvRFREL3N2ZzEwLmR0ZCI+CjxzdmcgdmVyc2lvbj0iMS4wIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiB3aWR0aD0iMjU1LjAwMDAwMHB4IiBoZWlnaHQ9IjMwMC4wMDAwMDBweCIgdmlld0JveD0iMCAwIDI1NS4wMDAwMDAgMzAwLjAwMDAwMCIKIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIG1lZXQiPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgwLjAwMDAwMCwzMDAuMDAwMDAwKSBzY2FsZSgwLjEwMDAwMCwtMC4xMDAwMDApIgpmaWxsPSIjMzU0YjYyIiBzdHJva2U9Im5vbmUiPgo8cGF0aCBkPSJNMTAgMjk4OSBjMCAtMTEgMTkgLTUxIDI5IC01OSA2IC01IDQ2IC02NCAyMTUgLTMxNSA0NCAtNjYgODMgLTEyMgo4NiAtMTI1IDMgLTMgMzcgLTUyIDc1IC0xMTAgMzkgLTU4IDcyIC0xMDcgNzUgLTExMCA2IC02IDY3IC05NSAyMDQgLTMwMCA1MAotNzQgOTMgLTEzNyA5NiAtMTQwIDMgLTMgMjMgLTMyIDQ1IC02NSAyMiAtMzMgNDIgLTYyIDQ1IC02NSAzIC0zIDQzIC02MSA4OQotMTMwIDQ2IC02OSAxMjEgLTE3OSAxNjYgLTI0NSA0NCAtNjYgMTA2IC0xNTYgMTM1IC0yMDAgMzAgLTQ0IDU3IC04MiA2MCAtODUKNSAtNSA0MSAtNTggMjQ0IC0zNjAgNjEgLTkxIDExMyAtMTY3IDExNiAtMTcwIDMgLTMgMjMgLTMyIDQ1IC02NSA0NyAtNzAgMzgKLTU4IDExNiAtMTY0IDU3IC03NiAxNzkgLTE5MSAyMDMgLTE5MSA2IDAgMjUgLTcgNDEgLTE2IDU4IC0zMiAyODcgLTc0IDQwMAotNzQgbDU1IDAgMCAxNTAwIDAgMTUwMCAtMTI3MCAwIGMtODkyIDAgLTEyNzAgLTMgLTEyNzAgLTExeiIvPgo8L2c+Cjwvc3ZnPgo=') no-repeat 0 0;
-        background-size: 3rem 3rem;
+        background-size: round(84px * @multiplier) round(84px * @multiplier);
       }
     }
   }
 
    .engine-BrowserTabs__header {
-      height: 3.57rem;
+      height: round(100px * @multiplier);
    }
 
    .controls-ListView__scrollPager {
@@ -151,9 +151,9 @@ body {
          border-color: @button-bg-color;
         .box-shadow(@button-shadow);
          .controls-Button__icon {
-            height: 3rem!important;
-            width: 3rem!important;
-            line-height: 3rem !important;
+            height: round(84px * @multiplier)!important;
+            width: round(84px * @multiplier)!important;
+            line-height: round(84px * @multiplier) !important;
             position: absolute;
             top: -@default-border-width;
             left: -@default-border-width;
@@ -171,15 +171,15 @@ body {
       }
    }
   .ws-float-area-title-generated {
-      line-height: 3.57rem;
+      line-height: round(100px * @multiplier);
   }
   .ws-float-area-title {
-    padding-left: .857rem;
+    padding-left: round(24px * @multiplier);
   }
 
   .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableRow .controls-MonthView__tableElement {
 
-    font-size: 1.14rem;
+    font-size: round(32px * @multiplier);
 
   }
 
@@ -205,7 +205,7 @@ body {
       background: #2e404f;
     }
     .ws-float-area-title-generated {
-      margin-right: 3rem;
+      margin-right: round(84px * @multiplier);
     }
 
     .controls-Button .controls-Button__icon.icon-32 {
@@ -218,17 +218,17 @@ body {
    .controls-DropdownList {
       .controls-DropdownList__selectedItem {
          .controls-DropdownList__afterCaptionWrapper, .controls-DropdownList__crossIcon {
-            font-size: 3rem !important;
-            height: 3rem !important;
-            width: 3rem !important;
-            line-height: 3rem !important;
+            font-size: round(84px * @multiplier) !important;
+            height: round(84px * @multiplier) !important;
+            width: round(84px * @multiplier) !important;
+            line-height: round(84px * @multiplier) !important;
          }
       }
    }
    .controls-DropdownList__picker {
       .controls-DropdownList__body {
          .controls-DropdownListFooter_select .controls-Button__icon.icon-16{
-            font-size: 2.3rem!important;
+            font-size: round(64px * @multiplier)!important;
          }
       }
    }
@@ -246,50 +246,50 @@ body {
    .controls-DateRangeBigChoose {
       // в онлайне в большом выборе периода иконки разного размера, а тут одинаковые 3rem
       .icon-16, .icon-24 {
-         font-size: 3rem !important;
-         line-height: 3rem !important;
-         width: 3rem;
-         height: 3rem;
+         font-size: round(84px * @multiplier) !important;
+         line-height: round(84px * @multiplier) !important;
+         width: round(84px * @multiplier);
+         height: round(84px * @multiplier);
       }
    }
 
    // Выпилить как будем делать новые темы.
    .controls-DateRangeChoose__bodyWrapper {
-      padding-top: 0.286rem;
+      padding-top: round(8px * @multiplier);
    }
 
    .controls-DateRangeChoose {
       .controls-DateRangeBigChoose__homeBtn .icon-16 {
-         font-size: 3rem !important;
-         line-height: 3rem !important;
-         width: 3rem;
-         height: 3rem;
+         font-size: round(84px * @multiplier) !important;
+         line-height: round(84px * @multiplier) !important;
+         width: round(84px * @multiplier);
+         height: round(84px * @multiplier);
       }
       &.controls-DateRangeChoose__showMonths {
          &.controls-DateRangeChoose__showHalfYears,
          &.controls-DateRangeChoose__showQuarters {
             .controls-DateRangeChoose__home {
-               width: 2rem;
+               width: round(56px * @multiplier);
             }
          }
       }
    }
 
   .ws-float-area-title {
-      font-size: 1.43rem!important;
+      font-size: round(40px * @multiplier)!important;
       font-weight: normal !important;
   }
 
     .controls__filter-button__clear-filter {
-       font-size: 1.14rem;
+       font-size: round(32px * @multiplier);
     }
 
    .controls-ListView__item__selected .controls-DataGridView__td:first-child {
-      background-size: 0.2142rem;
+      background-size: round(5px * @multiplier);
    }
 }
 .ws-float-area-nostack-panel-overflow .ws-float-close.sbisname-window-title-close, .ws-float-close.sbisname-window-title-close {
-   top: .2857rem!important;
+   top: round(8px * @multiplier)!important;
 }
 
 .ws-float-close.sbisname-window-title-close,
@@ -299,8 +299,8 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
 
 // SBIS3.CORE.CloseButton используется в DateRangeSlider. Удалить после того как выпилим SBIS3.CORE.CloseButton
 .controls-DateRangeBigChoose .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled.ws-button-classic {
-   width: 3rem !important;
-   height: 3rem !important;
+   width: round(84px * @multiplier) !important;
+   height: round(84px * @multiplier) !important;
    // Перед тем как править стили для кнопки закрытия прочитай комментарий по .ws-float-close.sbisname-window-title-close
 }
 
@@ -321,10 +321,10 @@ body .ws-field-button.ws-button-classic.sbisname-window-title-close.ws-enabled {
    }
 
    .controls-Browser__search {
-      width: 21.4285rem;
+      width: round(600px * @multiplier);
    }
   &.controls-Browser__search-small .controls-Browser__search {
-    width: 12.5rem;
+    width: round(350px * @multiplier);
   }
 }
 
@@ -399,7 +399,7 @@ body {
       }
    }
    .ws-sticky-header__gradient {
-      height: 0.857rem;
+      height: round(24px * @multiplier);
       box-shadow: none;
       background: linear-gradient(to bottom, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0));
    }
@@ -415,7 +415,7 @@ body  .ws-window {
   background-color: @basic-block-bg-color !important;
 }
 .controls-listView td {
-  font-size: 1rem;
+  font-size: round(28px * @multiplier);
 }
 
 .controls-Button.controls-Button--prestogray {
@@ -423,27 +423,27 @@ body  .ws-window {
   background: #e4e4e4;
 }
 .controls-ListView__scrollPager {
-  height: 3rem !important;
+  height: round(84px * @multiplier) !important;
 }
 .controls-Link.controls__filter-button__clear-filter.ws-disabled {
   color: rgba(102, 170, 221, .2);
-  font-size: 1.14rem;
+  font-size: round(32px * @multiplier);
 }
 
 
 body {
   .engine-Browser__path {
-    max-height: 2rem;
+    max-height: round(56px * @multiplier);
     height: auto !important;
   }
   .ws-window-titlebar {
     color: @default-text-color;
-    line-height: 3.57rem;
-    height: 3.57rem;
+    line-height: round(100px * @multiplier);
+    height: round(100px * @multiplier);
     position: absolute;
     left: 0;
     right: 0;
-    font-size: 1.43rem;
+    font-size: round(40px * @multiplier);
     white-space: nowrap;
     -moz-box-shadow: none!important;
     -webkit-box-shadow: none!important;
@@ -452,7 +452,7 @@ body {
     font-weight: normal;
   }
   .ws-float-area-title {
-      font-size: 1.43rem!important;
+      font-size: round(40px * @multiplier)!important;
       font-weight: normal !important;
   }
    .ws-window-titlebar-action.close {
@@ -460,12 +460,12 @@ body {
    }
    .ws-window-title {
       color: @default-text-color;
-      font-size: 1.43rem;
-      height: 3.57rem;
-      max-height: 3.57rem;
-      line-height: 3.57rem;
+      font-size: round(40px * @multiplier);
+      height: round(100px * @multiplier);
+      max-height: round(100px * @multiplier);
+      line-height: round(100px * @multiplier);
       font-weight: normal;
-      margin: 0 3.2857rem 0 .8571rem;
+      margin: 0 round(92px * @multiplier) 0 round(24px * @multiplier);
    }
 }
 
@@ -494,14 +494,14 @@ body {
 
 body .controls-DropdownList__picker {
    .controls-DropdownList__itemCheckBox{
-      top: 0.6rem;
-      padding-right: 0.2rem;
+      top: round(17px * @multiplier);
+      padding-right: round(6px * @multiplier);
    }
    .controls-DropdownList__multiselect .controls-DropdownList__itemCheckBox {
       visibility: visible;
    }
    .controls-DropdownList__buttonsBlock.controls-DropdownList__multiselect {
-      min-width: 8rem;
+      min-width: round(224px * @multiplier);
       .controls-DropdownListFooter_select {
          border: none;
       }
@@ -523,21 +523,21 @@ body {
       line-height: @default-icon-size-large;
     }
   .ws-float-area-title-generated {
-      line-height: 3.57rem;
+      line-height: round(100px * @multiplier);
   }
   .ws-float-area-title {
-    padding-left: .857rem;
-    width: ~"calc(100% - 3rem)";
+    padding-left: round(24px * @multiplier);
+    width: calc(100% ~'-' round(84px * @multiplier));
   }
    .ws-float-area .ws-window-titlebar.ws-window-titlebar-custom {
-      height: 3.57rem;
+      height: round(100px * @multiplier);
       .ws-float-area-title {
-         line-height: 3.57rem;
+         line-height: round(100px * @multiplier);
       }
    }
   .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__dayTable .controls-MonthView__tableRow .controls-MonthView__tableElement {
 
-    font-size: 1.14rem;
+    font-size: round(32px * @multiplier);
 
   }
 }
@@ -547,11 +547,11 @@ body {
 }
 
 .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header {
-    height: 3rem;
+    height: round(84px * @multiplier);
 }
 
 .controls-IconButton.controls-TreeView__editArrow-container {
-  @offset: .37rem;
+  @offset: round(10px * @multiplier);
   margin-top: calc(~"@{default-border-width} - @{offset}");
   .icon-16 {
     .icon-size(@icon-medium-size, @icon-font);
@@ -576,7 +576,7 @@ body {
 }
 .ws-float-area-stack-scroll-wrapper .ws-float-area-stack-panel-shadow {
    border-left-color: @default-border-color-second;
-   border-left-width: 0.1rem;
+   border-left-width: round(3px * @multiplier);
 }
 .controls-editInPlace .controls-editInPlace__editor {
   background: @controls-editInPlace-editor-bg;
@@ -587,7 +587,7 @@ body {
 //todo: отказаться от данного сомнительного решения
 .controls-FormattedTextBox .controls-TextBox__wrapper .controls-TextBox__field .controls-FormattedTextBox__field-symbol {
 
-    line-height: 2rem;
+    line-height: round(56px * @multiplier);
 
   }
   //TODO: придумать решение лучше, возможно на flex
@@ -599,12 +599,12 @@ body {
   vertical-align: baseline;
 }
 .controls-Paging .control-Paging__btn .controls-Button__icon {
-    line-height: 2rem!important;
-    padding-right: 0.4rem;
+    line-height: round(56px * @multiplier)!important;
+    padding-right: round(11px * @multiplier);
 }
 
 .controls-DropdownList__picker .controls-DropdownList__multiselect.controls-DropdownList__item * {
-    font-size: 1.14rem;
+    font-size: round(32px * @multiplier);
 }
 
 .icon-large {
@@ -630,7 +630,7 @@ body {
 }
 
 .controls__filter-button__apply-filter {
-    margin-right: 0.29rem;
+    margin-right: round(8px * @multiplier);
 }
 .controls__filter-button__clear-filter {
   .controls-Link__field {
@@ -639,7 +639,7 @@ body {
 }
 
 .controls-Link {
-  font-size: 1.14rem;
+  font-size: round(32px * @multiplier);
 }
 .controls-Browser {
    .controls-Browser__topTemplate {
@@ -650,18 +650,18 @@ body {
 .controls-Menu{
   .controls-MenuItem .controls-MenuItem__content .controls-MenuItem__icon {
      &.icon-24 {
-        top: 1rem;
-        left: -0.2rem;
+        top: round(28px * @multiplier);
+        left: round(-6px * @multiplier);
      }
      &.icon-16 {
-         top: 1.15rem;
+         top: round(32px * @multiplier);
      }
   }
 }
 
 .controls-AjaxLoader__LoadingIndicator {
    border-radius: 16px;
-   background-size: 2.64rem;
+   background-size: round(74px * @multiplier);
 }
 body .ws-window.ws-LoadingIndicator__window {
    border-radius: 16px;
@@ -674,8 +674,8 @@ body .ws-window.ws-LoadingIndicator__window {
 
 .ws-LoadingIndicator__window, .ws-loading {
    img, .ws-loadingimg > div:before{
-      width: 2.75rem;
-      height: 2.75rem;
+      width: round(77px * @multiplier);
+      height: round(77px * @multiplier);
    }
 
    img {
@@ -683,8 +683,8 @@ body .ws-window.ws-LoadingIndicator__window {
    }
 
    .ws-loadingimg {
-      left: 0.428rem;
-      top: .4rem;
+      left: round(12px * @multiplier);
+      top: round(11px * @multiplier);
       div:before {
          content: '';
          background-size: contain;
@@ -693,10 +693,10 @@ body .ws-window.ws-LoadingIndicator__window {
       }
    }
    .ws-LoadingIndicator__message__progress-no {
-      margin-left: 2.75rem;
+      margin-left: round(77px * @multiplier);
    }
    .ws-LoadingIndicator__loadingContainer {
-      padding: 1.142rem;
+      padding: round(32px * @multiplier);
    }
 }
 .controls-ComboBox.controls-Picker__show.controls-TextBox.controls-ComboBox__editable-false .controls-TextBox__fieldWrapper .controls-TextBox__field.controls-ComboBox__fieldNotEditable {
@@ -724,7 +724,7 @@ body .ws-window.ws-LoadingIndicator__window {
    box-sizing: border-box;
 }
 .controls-DropdownList__picker .controls-DropdownList__item {
-  line-height: 3.25rem;
+  line-height: round(91px * @multiplier);
 }
 
 .controls-FormattedTextBox .controls-TextBox__wrapper {
@@ -737,13 +737,13 @@ body .controls-image__button {
    }
  }
 .controls-ComboBox.controls-TextBox.controls-TextBox .controls-TextBox__afterFieldWrapper .controls-ComboBox__arrowDown {
-  font-size: 3rem !important;
+  font-size: round(84px * @multiplier) !important;
 }
 body .controls-Browser__filterButton .controls__filterButton__filterLine-text {
-    height: 1.43rem;
+    height: round(40px * @multiplier)
 }
 body .controls-FloatArea.controls__filterButton__picker .controls-PopupMixin__closeButton {
-    top: .29rem;
+    top: round(8px * @multiplier);
 }
 .controls-PopupMixin__closeButton {
   position: absolute;
@@ -760,31 +760,31 @@ body {
       background: @basic-block-bg-color;
       color: @default-text-color;
       border: @button-border;
-      padding: 0.857rem 3rem 0.857rem 0.857rem;
+      padding: round(24px * @multiplier) round(84px * @multiplier) round(24px * @multiplier) round(24px * @multiplier);
       &.ws-infobox-type-error {
-        box-shadow: rgba(0, 0, 0, 0.5) 0 0 0.714rem;
+        box-shadow: rgba(0, 0, 0, 0.5) 0 0 round(20px * @multiplier);
       }
       .ws-infobox-triangle {
-         width: .857rem;
-         height: .857rem;
+         width: round(24px * @multiplier);
+         height: round(24px * @multiplier);
          background: @basic-block-bg-color;
          &.ws-infobox-triangle-bottom {
-            bottom: -.54rem;
+            bottom: round(-15px * @multiplier);
             border-right: @button-border;
             border-bottom: @button-border;
          }
          &.ws-infobox-triangle-top {
-            top: -.53rem;
+            top: round(-15px * @multiplier);
             border-left: @button-border;
             border-top: @button-border;
          }
          &.ws-infobox-triangle-vertical-right {
-            right: -.54rem;
+            right: round(-15px * @multiplier);
             border-right: @button-border;
             border-top: @button-border;
          }
          &.ws-infobox-triangle-vertical-left {
-            left: -.54rem;
+            left: round(-15px * @multiplier);
             border-left: @button-border;
             border-bottom: @button-border;
          }
@@ -792,16 +792,16 @@ body {
 
       .ws-infobox-content {
          color: @default-text-color;
-         font-size: 1rem;
+         font-size: round(28px * @multiplier);
          ul {
-            padding-left: 1rem;
+            padding-left: round(28px * @multiplier);
          }
       }
 
       .ws-infobox-close-button.icon-disabled{
-         font-size: 3rem!important;
-         width: 3rem!important;
-         height: 3rem!important;
+         font-size: round(84px * @multiplier)!important;
+         width: round(84px * @multiplier)!important;
+         height: round(84px * @multiplier)!important;
          right: 0;
          top: 0;
          color: @Infobox-cross-color!important;
@@ -810,19 +810,19 @@ body {
             color: @Infobox-cross-color-hover!important;
          }
          &:before {
-            line-height: 2.7rem!important;
+            line-height: round(76px * @multiplier)!important;
          }
       }
    }
 }
 
 .controls-BreadCrumbs__crumb {
-   top: 0.28rem
+   top: round(8px * @multiplier)
 }
 
 .ws-is-sbis-desktop {
   .controls-BreadCrumbs__crumb {
-    top: -0.03rem
+    top: -1px;
   }
 }
 //todo: удалить это нафиг сделать нормально и не лениться
@@ -841,14 +841,14 @@ body {
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__left,
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__years .controls-DateRangeBigChoose__right {
    .icon-24 {
-       font-size: 3rem !important;
-       height: 3rem !important;
-       width: 3rem !important;
-       line-height: 3rem !important;
+       font-size: round(84px * @multiplier) !important;
+       height: round(84px * @multiplier) !important;
+       width: round(84px * @multiplier) !important;
+       line-height: round(84px * @multiplier) !important;
    }
 }
 .controls-DateRangeBigChoose__years-toggleChooseYearBtn {
-   height: 3rem;
+   height: round(84px * @multiplier);
 }
 
 body .controls-DateRangeBigChoose .controls-DateRangeBigChoose__header .controls-DateBox .controls-TextBox__wrapper {
@@ -865,16 +865,16 @@ body .controls-DateRangeBigChoose__dates-month-btn {
    }
 }
 body .controls-DateRangeBigChoose-DateRangePicker .controls-MonthView .controls-MonthView__caption-text {
-   margin-left: 4.5rem;
+   margin-left: round(126px * @multiplier);
 }
 
 body {
    // В формулах в темах надо сделать что бы можно было задать нижний отступ отличный от верхнего
    .controls-DateRangeBigChoose__months-quarterRange-btn-wrapper3 {
-       height: 5.9rem;
+       height: round(165px * @multiplier);
    }
    .controls-DateRangeBigChoose__months-halfyearRange-btn-wrapper1 {
-       height: 11rem;
+       height: round(308px * @multiplier);
    }
 }
 
@@ -896,18 +896,18 @@ body .controls-DateRangeBigChoose__years-yearsRange-btn:hover {
 body {
    .controls-CommandsButton__picker {
       .controls-MenuItem {
-         padding-right: 2.8rem !important; //38 = 24 (кнопка) + 8(отступ справа у кнопки) +6(отступ слева у кнопки)
+         padding-right: round(78px * @multiplier) !important; //38 = 24 (кнопка) + 8(отступ справа у кнопки) +6(отступ слева у кнопки)
       }
    }
    .controls-DropdownList__picker {
       .controls-DropdownList__close-picker.icon-24 {
-         font-size: 3rem !important;
-         height: 3rem !important;
-         width: 3rem !important;
-         line-height: 3rem !important;
+         font-size: round(84px * @multiplier) !important;
+         height: round(84px * @multiplier) !important;
+         width: round(84px * @multiplier) !important;
+         line-height: round(84px * @multiplier) !important;
       }
       .controls-DropdownList__multiselect .controls-DropdownList__itemCheckBox {
-         width: 2.286rem;
+         width: round(64px * @multiplier);
       }
       .controls-DropdownList__multiselect.controls-ListView__defaultItem, .controls-DropdownList__multiselect.controls-ListView__defaultItem.controls-DropdownList__item__selected {
          font-weight: 400;
@@ -918,26 +918,26 @@ body {
 
 .controls-BreadCrumbs .controls-BreadCrumbs {
    &__home, &__arrow {
-      font-size: 1.785rem!important;
-      line-height: 1rem!important;
-      width: 1.785rem;
-      top:  0.0357rem;
+      font-size: round(50px * @multiplier)!important;
+      line-height: round(28px * @multiplier)!important;
+      width: round(50px * @multiplier);
+      top:  1px;
    }
 }
 
 .ws-is-webkit, .ws-is-mobile-chrome-ios {
    .controls-BreadCrumbs .controls-BreadCrumbs__arrow {
-      top:  0.38rem;
+      top:  round(11px * @multiplier);
    }
 }
 
 .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
-   top: 0.34rem !important;
+   top: round(10px * @multiplier) !important;
 }
 
 .ws-is-sbis-desktop {
   .controls-BreadCrumbs .controls-BreadCrumbs__crumb-home {
-    top: 0.35rem !important;
+    top: round(10px * @multiplier) !important;
   }
 }
 
@@ -985,7 +985,7 @@ body {
 
 .controls-ListView:not(.controls-ListView__bottomStyle) {
   .controls-ListView__ItemsToolbar-container.controls-ItemsToolbar__withEditActions {
-    height: 3rem;
+    height: round(84px * @multiplier);
   }
 }
 
@@ -1017,32 +1017,24 @@ body {
    }
 }
 
-//Rem Line-height Doesn’t Work In Pseudo Elements In IE
-//fallback for ie, will live while there is rem
-.ws-is-ie {
-  .controls-TextBox .controls-TextBox__wrapper:before {
-    line-height: 2.5em; //2.5 = 2.85/1.14 //2.85 - default-line-height, 1.14 - default-font size
-  }
-}
-
 body {
   .ws-errorsReportDialog {
-    min-width: 30rem;
+    min-width: round(840px * @multiplier)m;
 
     .ws-field-string {
-      font-size: 1rem;
-      height: 1.5rem;
+      font-size: round(28px * @multiplier);
+      height: round(42px * @multiplier);
       color: @default-text-color;
     }
 
     .ws-field-button {
-      height: 1.5rem;
-      padding-right: 0.5rem;
+      height: round(42px * @multiplier);
+      padding-right: round(14px * @multiplier);
     }
 
     .ws-errorsReportDialog-caption {
       text-align: left;
-      width: 6rem;
+      width: round(168x * @multiplier);
       color: @default-text-color;
     }
 
@@ -1056,11 +1048,11 @@ body {
 
 //Убрать когда проектировщики сделают одинаковые отступы, обсуждали на этом совещании: https://online.sbis.ru/obj/Meeting/e6b722a9-d339-4016-9fd6-82b763c4e241
 .controls-ItemsToolbar.controls-ItemsToolbar__withEditActions {
-  bottom: 0.2857rem;
+  bottom: round(8px * @multiplier);
 }
 .controls-Browser__search {
-   margin: 0.28572rem;
+   margin: round(8px * @multiplier);
 }
 .controls-Browser__topTemplate {
-   padding: 0.28572rem;
+   padding: round(8px * @multiplier);
 }
