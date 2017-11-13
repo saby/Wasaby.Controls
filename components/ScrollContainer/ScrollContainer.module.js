@@ -327,14 +327,16 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          _initScrollbar: function(){
             if (!this._scrollbar) {
+               this._scrollbar = {
+                  _container: $('> .controls-ScrollContainer__scrollbar', this._container)
+               };
+               this._recalcSizeScrollbar();
                this._scrollbar = new Scrollbar({
-                  element: $('> .controls-ScrollContainer__scrollbar', this._container),
+                  element: this._scrollbar._container,
                   contentHeight: this._getScrollHeight(),
                   position: this._getScrollTop(),
                   parent: this
                });
-
-               this._recalcSizeScrollbar();
 
                this.subscribeTo(this._scrollbar, 'onScrollbarDrag', this._scrollbarDragHandler.bind(this));
             }
@@ -662,9 +664,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          _resizeInner: function () {
             if (this._scrollbar){
+               this._recalcSizeScrollbar();
                this._scrollbar.setContentHeight(this._getScrollHeight());
                this._scrollbar.setPosition(this._getScrollTop());
-               this._recalcSizeScrollbar();
             }
             //ресайз может позваться до инита контейнера
             if (this._content) {

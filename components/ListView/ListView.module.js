@@ -1086,7 +1086,7 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          _addOptionsFromClass: function(opts, attrToMerge) {
-            var className = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || "";
+            var className = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || opts.className || "";
             var classes = [
                { class: 'controls-small-ListView', optionName: 'isSmall', value: true, defaultValue: false },
                { class: 'controls-ListView__disableHover', optionName: 'itemsHover', value: false, defaultValue: true },
@@ -2090,21 +2090,31 @@ define('js!SBIS3.CONTROLS.ListView',
                $(".controls-ListView__item", this._getItemsContainer())
                   .removeClass('controls-ListView__item__selected')
                   .removeClass('controls-ListView__item__selected__withMarker');
-               if (this._getItemsProjection()) {
+               //В случае добавления по месту, добавляемой записи в проекции нет, поэтому будем искать её в вёрстке прямо по id
+               if (this._isAdd() && index === -1) {
+                  this._addSelectedClasses(undefined, id);
+               } else if (this._getItemsProjection()) {
                   var projItem = this._getItemsProjection().at(index);
                   if (projItem) {
-                     var hash = projItem.getHash(),
-                        curSelected = $('.controls-ListView__item[data-hash="' + hash + '"]', this._container);
-                     curSelected.addClass('controls-ListView__item__selected');
-                     if(this._options.showSelectedMarker) {
-                        curSelected.addClass('controls-ListView__item__selected__withMarker');
-                     }
+                     this._addSelectedClasses(projItem.getHash());
                   }
-
                }
-
             }
          },
+
+         _addSelectedClasses: function(hash, id) {
+            var curSelected;
+            if (hash) {
+               curSelected = $('.controls-ListView__item[data-hash="' + hash + '"]', this._container);
+            } else {
+               curSelected = $('.controls-ListView__item[data-id="' +  (id === undefined ? '' : id) + '"]', this._container);
+            }
+            curSelected.addClass('controls-ListView__item__selected');
+            if (this._options.showSelectedMarker) {
+               curSelected.addClass('controls-ListView__item__selected__withMarker');
+            }
+         },
+
          /**
           * Перезагружает набор записей представления данных с последующим обновлением отображения.
           * @remark
@@ -2125,7 +2135,7 @@ define('js!SBIS3.CONTROLS.ListView',
           *    });
           * </pre>
           */
-         reload: function (filter, sorting, pageNumber, pageSize) {
+         reload: function (filter, sorting, offset, limit, deepReload, resetPosition) {
             if (this._scrollBinder && this._options.saveReloadPosition){
                var reloadOffset = this._getReloadOffset();
                this._offset = reloadOffset;
@@ -2136,19 +2146,14 @@ define('js!SBIS3.CONTROLS.ListView',
                }
             }
 
-            // Reload to first page (for filter and search)
-            if (!this._options.saveReloadPosition && pageNumber === 0) {
-               this.setPage(0, true);
-
-               // Reset virtual scrolling if it's enabled
-               if (this._options.virtualScrolling && this._virtualScrollController) {
-                  this._virtualScrollController.disableScrollHandler(true);
-                  this.scrollToFirstPage();
-                  // Will reset pages after redrawing items
-                  this._resetPaging = true;
-                  this._topWrapper.height(0);
-                  this._bottomWrapper.height(0);
-               }
+            // Reset virtual scrolling if it's enabled
+            if (this._options.virtualScrolling && this._virtualScrollController) {
+               this._virtualScrollController.disableScrollHandler(true);
+               this.scrollToFirstPage();
+               // Will reset pages after redrawing items
+               this._resetPaging = true;
+               this._topWrapper.height(0);
+               this._bottomWrapper.height(0);
             }
 
             this._reloadInfiniteScrollParams();
@@ -2612,17 +2617,7 @@ define('js!SBIS3.CONTROLS.ListView',
                         this._showToolbar(model);
                         this.setSelectedKey(model.getId());
                         if (model.getState() === Record.RecordState.DETACHED) {
-                           $(".controls-ListView__item", this._getItemsContainer())
-                              .removeClass('controls-ListView__item__selected')
-                              .removeClass('controls-ListView__item__selected__withMarker');
-                           var curSelected = $('.controls-ListView__item[data-id="' +  (model.getId() === undefined ? '' : model.getId()) + '"]', this._container);
-                           curSelected.addClass('controls-ListView__item__selected');
-                           if(this._options.showSelectedMarker) {
-                              curSelected.addClass('controls-ListView__item__selected__withMarker');
-                           }
-                        }
-                        else {
-                           this.setSelectedKey(model.getId());
+                           this._drawSelectedItem(model.getId(), -1);
                         }
                         // Могут быть операции над записью с тулбаром под записью. В таком случае на ListView вешается класс с padding-bottom.
                         // Этот отступ при скроле тоже должен учитываться.
@@ -2756,6 +2751,22 @@ define('js!SBIS3.CONTROLS.ListView',
             }
             return result;
          },
+
+         /**
+          * Возвращает признак, по которому можно установить: активно или нет добавление по месту в данный момент.
+          * @returns {Boolean} Значение true нужно интерпретировать как "Добавление по месту активно".
+          * @private
+          */
+         _isAdd: function() {
+            var result = false;
+            if (this._hasEditInPlace()) {
+               this._getEditInPlace().addCallback(function(editInPlace) {
+                  result = editInPlace.isAdd();
+               });
+            }
+            return result;
+         },
+
          //********************************//
          //   БЛОК ОПЕРАЦИЙ НАД ЗАПИСЬЮ    //
          //*******************************//
@@ -3678,12 +3689,10 @@ define('js!SBIS3.CONTROLS.ListView',
          },
 
          /**
-          * Scroll to a given offset from the top.
-          *
-          * @param offset
+          * Scroll to the beginning of the list.
           */
          scrollToFirstPage: function() {
-            if (this._options.infiniteScroll == "down" && this._options.virtualScrolling) {
+            if (this._options.infiniteScroll == "down") {
                this._getScrollWatcher().scrollTo('top');
             }
          },
@@ -3855,7 +3864,11 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass._onDataLoad.call(this, list);
          },
 
-         _dataLoadedCallback: function () {
+         _dataLoadedCallback: function (resetPosition) {
+            if (resetPosition) {
+               this.scrollToFirstPage();
+            }
+
             if (this._options.showPaging) {
                this._processPaging();
                this._updateOffset();
@@ -4749,7 +4762,7 @@ define('js!SBIS3.CONTROLS.ListView',
             ListView.superclass._setNewDataAfterReload.apply(this, arguments);
             /* Если проекция заморожена, то перерисовывать результаты нельзя, т.к. отрисовка всего списка будет отложена,
                перерисуем, как проекция будет разморожена. */
-            if (this._resultsChanged && this._getItemsProjection().isEventRaising()) {
+            if (this._resultsChanged && this._getItemsProjection() && this._getItemsProjection().isEventRaising()) {
                this._redrawResults(true);
             }
          },

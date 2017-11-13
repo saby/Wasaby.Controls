@@ -494,6 +494,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   RichTextArea.superclass.setActive.apply(this, args);
                }.bind(this));
             } else {
+               if (cConstants.browser.isMobilePlatform) {
+                  EventBus.globalChannel().notify('MobileInputFocusOut');
+               }
                RichTextArea.superclass.setActive.apply(this, args);
             }
          },
@@ -1750,6 +1753,22 @@ define('js!SBIS3.CONTROLS.RichTextArea',
             editor.on('NodeChange', function(e) {
                self._notify('onNodeChange', e)
             });
+
+            editor.on('focus focusin', function (evt) {
+               var sel = editor.selection;
+               var bookmark = sel.lastFocusBookmark;
+               if (!bookmark && this._tinyLastFocusBookmark) {
+                  sel.lastFocusBookmark = this._tinyLastFocusBookmark;
+               }
+               this._tinyLastFocusBookmark = null;
+            });
+            editor.on('blur focusout', function (evt) {
+               var bookmark = editor.selection.lastFocusBookmark || self._makeTinyRngBookmark();
+               if (bookmark) {
+                  this._tinyLastFocusBookmark = bookmark;
+               }
+            });
+
             editor.on('focusin', function(e) {
                if (self._fromTouch){
                   self._notifyMobileInputFocus();
@@ -1768,6 +1787,18 @@ define('js!SBIS3.CONTROLS.RichTextArea',
 
          _notifyMobileInputFocus: function () {
             EventBus.globalChannel().notify('MobileInputFocus');
+         },
+
+         _makeTinyRngBookmark: function () {
+            var editor = this._tinyEditor;
+            var dom = editor.dom;
+            var rng = editor.selection.getRng();
+            if (rng && rng.startContainer) {
+               var root = dom.getRoot();
+               if (dom.isChildOf(rng.startContainer, root) && dom.isChildOf(rng.endContainer, root)) {
+                  return ['startContainer', 'startOffset', 'endContainer', 'endOffset'].reduce(function (r, v) { r[v] = rng[v]; return r; }, {});
+               }
+            }
          },
 
          _showImageOptionsPanel: function(target) {

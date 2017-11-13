@@ -4,6 +4,7 @@
 
    font-family: @default-font-name;
    font-size: @date-range-slider-font-size;
+   line-height: @date-range-slider-height;
 
    &.ws-enabled {
       .controls-DateRangeSlider__value,
@@ -92,8 +93,7 @@
    min-width: @date-range-slider-value-min-width;
 }
 .controls-DateRangeSlider__yearState {
-   min-width: @date-range-slider-year-state-width;
-   .controls-DateRangeSlider__value-wrapper.controls-DateRangeSlider__value-wrapper-withArrow {
+   .controls-DateRangeSlider__value-wrapper-withArrow {
       min-width: @date-range-slider-year-state-width - @date-range-slider-prev-next-buttons-width*2;
    }
 }
@@ -104,6 +104,5 @@
 
 .controls-DateRangeSlider__value {
    font-weight: @date-range-slider-value-font-weight;
-   line-height: @date-range-slider-height;
    padding-top: @date-range-slider-value-padding;
 }

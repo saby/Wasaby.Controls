@@ -90,6 +90,18 @@ define(
             }
          },
 
+         _modifyOptions: function() {
+            var opts = MonthView.superclass._modifyOptions.apply(this, arguments),
+               days = constants.Date.days;
+
+            // локализация может поменяться в рантайме, берем актуальный перевод месяцев при каждой инициализации компонента
+            // В массиве дни недели находятся в таком же порядке как возвращаемые значения метода Date.prototype.getDay()
+            // Перемещаем воскресение из начала массива в конец
+            opts._days = days.slice(1);
+            opts._days.push(days[0]);
+            return opts;
+         },
+
          $constructor: function () {
             this._publish('onSelectionChange');
             
