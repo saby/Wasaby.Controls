@@ -485,7 +485,7 @@ define(
                textByTimeInterval = this._getTextByTimeInterval(),
                currentText = this._getFormatModel().getText(this._getMaskReplacer());
             if ((needUpdate === true || currentText !== this._getEmptyText()) && currentText !== textByTimeInterval){
-               this._setText(this._getTextByTimeInterval());
+               this._setText(textByTimeInterval);
             }
          },
          /**
