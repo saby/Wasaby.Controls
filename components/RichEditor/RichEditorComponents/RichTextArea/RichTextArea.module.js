@@ -494,6 +494,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                   RichTextArea.superclass.setActive.apply(this, args);
                }.bind(this));
             } else {
+               if (cConstants.browser.isMobilePlatform) {
+                  EventBus.globalChannel().notify('MobileInputFocusOut');
+               }
                RichTextArea.superclass.setActive.apply(this, args);
             }
          },
