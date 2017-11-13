@@ -1,44 +1,30 @@
 .controls-OperationsPanelButton {
+   .inline-flexbox();
+   .align-items(center);
+   .justify-content(center);
+   font-family: @icon-font;
+   font-size: @controls-OperationsPanelButton-font-size;
    color: @controls-OperationsPanelButton-color;
-   cursor: pointer;
-
-   .controls-OperationsPanelButton__icon {
-      font-family: @icon-font;
-      font-size: @controls-OperationsPanelButton-font-size;
-      font-style: normal;
-      position: relative;
-      left: @controls-OperationsPanelButton-icon-left;
-      line-height: @controls-OperationsPanelButton-vert-height;
-   }
-
    width: @controls-OperationsPanelButton-width;
    height: @controls-OperationsPanelButton-vert-height;
-   border-radius: @controls-OperationsPanelButton-vert-border-radius;
-
+   font-style: normal;
+   cursor: pointer;
+   text-align: center;
+   vertical-align: middle;
+   line-height: normal;
+   position: relative;
    &:hover, &.ws-has-focus {
       color: @controls-OperationsPanelButton-active-icon-color;
    }
-
-   &.controls-Checked__checked {
-      .controls-OperationsPanelButton__icon:before {
-         content: @controls-OperationsPanelButton-icon-expand;
-      }
-   }
-   .controls-OperationsPanelButton__icon {
-      top: 0;
-      &:before {
-         content: @controls-OperationsPanelButton-icon;
-      }
-   }
-   &.controls-OperationsPanelButton__showSeparator:before {
-      background: #ccc;
-      width: 1px;
-      height: 24px;
-      content: '\00a0';
-      font-size: 1px;
-      position: absolute;
-      display: inline-block;
-      left: 0;
-      top: 0;
-   }
+}
+.controls-OperationsPanelButton__showSeparator:after {
+   background: #ccc;
+   width: 1px;
+   height: 24px;
+   content: '\00a0';
+   font-size: 1px;
+   position: absolute;
+   display: inline-block;
+   left: 0;
+   top: 0;
 }
