@@ -6,16 +6,26 @@ define('js!Controls/List/ItemsView', [
    'Core/Control',
    'tmpl!Controls/List/ItemsView',
    'js!Controls/List/resources/utils/ItemsUtil',
+   'Core/core-instance',
    'WS.Data/Type/descriptor'
 ], function (extend,
              BaseControl,
              ItemsRenderTpl,
              ItemsUtil,
+             cInstance,
              Types
    ) {
    'use strict';
 
    var _private = {
+      //проверка на то, нужно ли создавать новый инстанс рекордсета или же можно положить данные в старый
+      isEqualRecordset: function(oldList, newList) {
+         return oldList && cInstance.instanceOfModule(oldList, 'WS.Data/Collection/RecordSet')
+            && (newList.getModel() === oldList.getModel())
+            && (Object.getPrototypeOf(newList).constructor == Object.getPrototypeOf(newList).constructor)
+            && (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor)
+      },
+
       initDisplay: function(items, cfg) {
          if (this._items) {
             //TODO убрать дестрой, проверить утечки памяти
@@ -61,6 +71,15 @@ define('js!Controls/List/ItemsView', [
                this._items = newOptions.items;
                _private.initDisplay.call(this, newOptions.items, newOptions);
                this._initTplData(newOptions);
+            }
+         },
+
+         setItems: function(items) {
+            if (_private.isEqualRecordset(this._items, items)) {
+               this._items.setMetaData(items.getMetaData());
+               this._items.assign(items);
+            } else {
+               this._items = items;
             }
          },
 

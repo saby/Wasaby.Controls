@@ -4,29 +4,21 @@ define('js!Controls/List/ListControl', [
    'js!Controls/List/resources/utils/DataSourceUtil',
    'WS.Data/Type/descriptor',
    'WS.Data/Source/ISource',
-   'Core/core-instance',
    'js!Controls/List/Controllers/PageNavigation',
-   'Core/helpers/functional-helpers'
+   'Core/helpers/functional-helpers',
+   'require'
 ], function (Control,
              ListControlTpl,
              DataSourceUtil,
              Types,
              ISource,
-             cInstance,
              PageNavigation,
-             fHelpers
+             fHelpers,
+             require
    ) {
    'use strict';
 
    var _private = {
-      //проверка на то, нужно ли создавать новый инстанс рекордсета или же можно положить данные в старый
-      isEqualRecordset: function(oldList, newList) {
-         return oldList && cInstance.instanceOfModule(oldList, 'WS.Data/Collection/RecordSet')
-         && (newList.getModel() === oldList.getModel())
-         && (Object.getPrototypeOf(newList).constructor == Object.getPrototypeOf(newList).constructor)
-         && (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor)
-      },
-
       initNavigation: function(navOption, dataSource) {
          var navController;
          if (navOption && navOption.source == 'page') {
@@ -88,14 +80,20 @@ define('js!Controls/List/ListControl', [
             def = DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
                .addCallback(fHelpers.forAliveOnly(function (list) {
                   self._notify('onDataLoad', list);
-                  if (_private.isEqualRecordset(self._items, list)) {
-                     self._items.setMetaData(list.getMetaData());
-                     self._items.assign(list);
-                  } else {
+
+                  //TODO обсудить. Стремная проверка на то - это первое создание списка или последующие перезагрузки.
+                  //если это первое создание, то можно просто засунуть в _items и тогда они прокинутся во view
+                  //если второе, то надо отдать items прямо в контрол
+                  if (self._children._ListView) {
+                     self._children._ListView.setItems(list);
+                  }
+                  else {
                      self._items = list;
                   }
+
+
                   if (self._navigationController) {
-                     self._navigationController.calculateState(list)
+                     self._navigationController.calculateState(list);
                   }
                   return list;
                }, self))
@@ -366,6 +364,7 @@ define('js!Controls/List/ListControl', [
          _isActiveByClick: false,
 
          _items: null,
+         _itemsChanged: true,
 
          _dataSource: null,
          _loader: null,
@@ -383,6 +382,9 @@ define('js!Controls/List/ListControl', [
          },
 
          _beforeMount: function(newOptions) {
+
+            //TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
+
             this._filter = newOptions.filter;
 
             if (newOptions.dataSource) {
@@ -395,6 +397,9 @@ define('js!Controls/List/ListControl', [
          },
 
          _beforeUpdate: function(newOptions) {
+
+            //TODO могут задать items как рекордсет, надо сразу обработать тогда навигацию и пэйджинг
+
             if (newOptions.filter != this._options.filter) {
                this._filter = newOptions.filter;
             }
@@ -404,8 +409,33 @@ define('js!Controls/List/ListControl', [
                this._navigationController = _private.initNavigation(newOptions.navigation, this._dataSource);
                _private.reload.call(this, newOptions);
             }
-
             //TODO обработать смену фильтров и т.д. позвать релоад если надо
+         },
+
+         _afterMount: function() {
+            debugger;
+            if (this._options.navigation && this._options.navigation.view == 'infinity') {
+               //TODO кривое обращение к DOM
+               var scrollContainer = this._container.closest('.ws-scrolling-content');
+               if (this._options.navigation.viewConfig && this._options.navigation.viewConfig.pagingMode) {
+                  var self = this;
+                  this._viewHeight = this._children._ListView._container.get(0).scrollHeight;
+                  require(['js!Controls/List/Controllers/ScrollPaging'], function (ScrollPagingController) {
+                     self._scrollPagingCtr = new ScrollPagingController({
+                        scrollContainer: scrollContainer,
+                        viewHeight: self._viewHeight
+                     })
+                  });
+               }
+            }
+
+
+
+
+         },
+
+         _afterUpdate: function() {
+
          },
 
          //<editor-fold desc='DataSourceMethods'>
