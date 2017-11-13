@@ -52,7 +52,7 @@ define('js!WSControls/Buttons/MenuButton', [
     *
     * @control
     * @public
-    * @category Buttons
+    * @category Button
     * @initial
     * <component data-component='WSControls/Buttons/MenuButton'>
     *    <option name='caption' value='Кнопка с меню'></option>

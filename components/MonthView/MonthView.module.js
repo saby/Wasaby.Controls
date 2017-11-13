@@ -8,6 +8,7 @@ define(
       'js!SBIS3.CORE.CompoundControl',
       'js!SBIS3.CONTROLS.ControlHierarchyManager',
       'js!SBIS3.CONTROLS.RangeMixin',
+      'js!SBIS3.CONTROLS.DateRangeMixin',
       'js!SBIS3.CONTROLS.RangeSelectableViewMixin',
       'js!SBIS3.CONTROLS.Utils.DateUtil',
       'tmpl!SBIS3.CONTROLS.MonthView/resources/MonthViewTableBody',
@@ -16,7 +17,7 @@ define(
       'i18n!SBIS3.CONTROLS.Calendar',
       'css!SBIS3.CONTROLS.MonthView'
    ],
-   function (constants, CompoundControl, ControlHierarchyManager, RangeMixin, RangeSelectableViewMixin, DateUtil, MonthViewTableBodyTpl, dotTplFn) {
+   function (constants, CompoundControl, ControlHierarchyManager, RangeMixin, DateRangeMixin, RangeSelectableViewMixin, DateUtil, MonthViewTableBodyTpl, dotTplFn) {
 
       'use strict';
 
@@ -32,12 +33,13 @@ define(
        *
        * @mixes SBIS3.CONTROLS.RangeSelectableViewMixin
        * @mixes SBIS3.CONTROLS.RangeMixin
+       * @mixes SBIS3.CONTROLS.DateRangeMixin
        *
        */
       var selectionTypes = {WEEK: 'week', DAY: 'day'};
 
       // TODO: нужно ли наследование от FormWidgetMixin ??
-      var MonthView = CompoundControl.extend([RangeSelectableViewMixin, RangeMixin], /** @lends SBIS3.CONTROLS.MonthView.prototype */{
+      var MonthView = CompoundControl.extend([RangeSelectableViewMixin, RangeMixin, DateRangeMixin], /** @lends SBIS3.CONTROLS.MonthView.prototype */{
          _dotTplFn: dotTplFn,
          $protected: {
             _monthViewTableBodyTpl: MonthViewTableBodyTpl,

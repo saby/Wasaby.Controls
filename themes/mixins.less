@@ -45,6 +45,13 @@
   font-family: @fontFamily !important;
 }
 
+.icon-size-without-important(@size: 16px, @fontFamily: @default-icon-font) {
+  font-size: @size;
+  width: @size;
+  height: @size;
+  font-family: @fontFamily;
+}
+
 .closedHandCursor() {
    cursor: -moz-grabbing !important;
    cursor: -webkit-grabbing !important;
@@ -490,15 +497,16 @@
   height: @size;
 }
 
-.checkbox-border-size(@sizeContainer, @sizeContent, @borderWidth) {
+.checkbox-border-size() {
   &:before {
+    .box-sizing();
     content: '';
     position: absolute;
-    border-width: @borderWidth;
+    border-width: @default-border-width;
     border-style: solid;
-    width: calc(@sizeContent ~"-" 2 * @borderWidth);
-    height: calc(@sizeContent ~"-" 2 * @borderWidth);
-    margin: (@sizeContainer - @sizeContent) / 2;
+    width: @check-box-icon-box-size;
+    height: @check-box-icon-box-size;
+    margin: (@check-box-icon-size - @check-box-icon-box-size) / 2;
   }
 }
 
