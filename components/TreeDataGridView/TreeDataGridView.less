@@ -360,13 +360,13 @@
    font-size: @small-text-size;
 }
 
-.controls-TreeDataGridView:not(.controls-TreeDataGridView__withPhoto) {
+.controls-TreeDataGridView:not(.controls-TreeDataGridView__withPhoto):not(.controls-ListView__multiselect) {
    .controls-DataGridView__th, .controls-DataGridView__td {
       &.controls-DataGridView__firstContentCell {
          padding-left: @tree-view-padding-left-DEFAULT;
       }
    }
-   &:not(.controls-ListView__multiselect) .controls-TreeView__folderFooterContainer {
+   .controls-TreeView__folderFooterContainer {
       padding-left: @tree-view-padding-left-DEFAULT;
    }
    .controls-ListView__hideCheckBoxes.controls-ListView__multiselect {
