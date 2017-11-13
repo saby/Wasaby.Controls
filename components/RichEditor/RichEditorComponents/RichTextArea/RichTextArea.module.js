@@ -503,6 +503,9 @@ define('js!SBIS3.CONTROLS.RichTextArea',
                      manager.focusedEditor = null;
                   }
                }
+               if (cConstants.browser.isMobilePlatform) {
+                  EventBus.globalChannel().notify('MobileInputFocusOut');
+               }
                RichTextArea.superclass.setActive.apply(this, args);
             }
          },
