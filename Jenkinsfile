@@ -3,6 +3,7 @@ echo "Задаем параметры сборки"
 def version = "3.17.210"
 node(){
     def props = readProperties file: "/home/jenkins/shared_autotest87/settings_210.props"
+    settingsJob.add(string(name: "props", value: props))
 }
 properties([
     disableConcurrentBuilds(),
