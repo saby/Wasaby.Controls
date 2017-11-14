@@ -1078,6 +1078,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
           */
          reloadItem: function(parentFn, id, meta, direction) {
             var
+               self = this,
+               selectedKey = this._options.selectedKey,
                items = this.getItems(),
                item = items.getRecordById(id),
                hierarchyRelation = this._options._getHierarchyRelation(this._options),
@@ -1105,6 +1107,9 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
                            nodeProperty: nodeProperty,
                            updatedItems: updatedItems
                         });
+                        // todo RecordSet.replace(...) вызывает последовательно remove и add, из-за чего сбивается выбранная запись.
+                        // Приходится её восстанавливать. https://online.sbis.ru/opendoc.html?guid=54544dad-51ab-4116-82ba-44510370e599
+                        self.setSelectedKey(selectedKey);
                      });
                } else {
                   return Deferred.success();
