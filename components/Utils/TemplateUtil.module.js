@@ -50,10 +50,12 @@ define('js!SBIS3.CONTROLS.Utils.TemplateUtil', ['Core/js-template-doT'], functio
                         return prevtemplate + nexttemplate.apply(this, fnargs);
                      }, '');
                   };
+               } else {
+                  template = null;
                }
                break;
             default:
-               template = undefined;
+               template = null;
          }
          return template;
       }
