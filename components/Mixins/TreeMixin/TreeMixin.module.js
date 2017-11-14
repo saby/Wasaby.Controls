@@ -799,11 +799,11 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          var item;
          if (hash) {
             item = this._getItemsProjection().getByHash(hash);
-         }
-         else {
+         } else {
             item = this._getItemProjectionByItemId(id);
          }
          if (item) {
+            delete this._options.openedPath[id];
             item.setExpanded(false);
             return Deferred.success();
          } else {
