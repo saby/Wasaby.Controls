@@ -4,13 +4,16 @@
 define('js!SBIS3.CONTROLS.OperationUnload', [
    "Core/constants",
    "Core/core-instance",
+   'Core/Deferred',
+   'Core/deprecated',
    "js!SBIS3.CONTROLS.PrintUnloadBase",
    "js!SBIS3.CONTROLS.Utils.DataProcessor",
    "WS.Data/Entity/Record",
    "WS.Data/Adapter/Sbis",
    "i18n!SBIS3.CONTROLS.OperationUnload"
-], function( constants, cInstance, PrintUnloadBase, Exporter, Record, SbisAdapter) {
+], function( constants, cInstance, Deferred, Deprecated, PrintUnloadBase, Exporter, Record, SbisAdapter) {
    //TODO Идея! нужно просто вызвать у view.export, он в свою очередь поднимает событие onUnload, а событие подхыватит выгрузчик. тогда в кнопке вообще только визуализация будет
+
    /**
     * Контрол для экспорта в Excel, PDF  подготовленных данных
     * @class SBIS3.CONTROLS.OperationUnload
@@ -141,13 +144,15 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
          }
          this.processSelectedPageSize(ds.getCount());
       },
+
       /**
        * Обработка результатов выбора пользователя (после показа диалога выбора количества выгружаемых записей)
        * Если есть возможность, формируем фильтры и выполняем выгрузку на сервере через GET-запрос
        * Если у нас возможно
-       * @param {number} [pageSize] сколько записей нужно выгружать()
+       * @public
+       * @param {number} [pageSize] сколько записей нужно выгружать
        */
-      processSelectedPageSize: function(pageSize){
+      processSelectedPageSize: function (pageSize) {
          var fullFilter,
              exporter,
              pageOrient = this._getPDFPageOrient(),
@@ -156,18 +161,20 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
             OperationUnload.superclass.processSelectedPageSize.apply(this, arguments);
             return;
          }
-
-         exporter = new Exporter(this._prepareExporterConfig());
-         fullFilter = exporter.getFullFilter(pageSize, true);
-         fullFilter['FileName'] = this._getUnloadFileName();
-         if (this._currentItem === 'PDF') {
-            delete fullFilter.HierarchyField;
-         }
-         if (methodName) {
-            fullFilter['MethodName'] = methodName;
-         }
-         exporter.exportList(this._getUnloadFileName(), this._currentItem, fullFilter, pageOrient, undefined, this._getCurrentItem().get('isExcel'));
+         this._gatherExporterConfig().addCallback(function (exporterConfig) {
+            exporter = new Exporter(exporterConfig);
+            fullFilter = exporter.getFullFilter(pageSize, true);
+            fullFilter['FileName'] = this._getUnloadFileName();
+            if (this._currentItem === 'PDF') {
+               delete fullFilter.HierarchyField;
+            }
+            if (methodName) {
+               fullFilter['MethodName'] = methodName;
+            }
+            exporter.exportList(this._getUnloadFileName(), this._currentItem, fullFilter, pageOrient, undefined, this._getCurrentItem().get('isExcel'));
+         }.bind(this));
       },
+
       _getPDFPageOrient: function(){
          var pageOrient;
          if (this._currentItem === 'PDF'){
@@ -175,31 +182,72 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
          }
          return pageOrient
       },
-      /**
-       * @deprecated Переименован в _prepareExporterConfig
-       * @returns {*}
-       * @private
+
+      /*
+       * @deprecated Используйте метод "_gatherExporterConfig"
        */
-      _prepareUnloaderConfig:function(){
-         return this._prepareExporterConfig();
-      },
-      _prepareExporterConfig : function(cfg) {
-         var  view = this._getView(),
-            cfg = {
-               dataSet: cfg ? cfg.dataSet : view.getDataSet(),
-               columns: cfg ? cfg.columns : this._prepareOperationColumns(),
-               dataSource : view.getDataSource(),
-               filter : view.getFilter(),
-               offset: view._offset
-            };
-         if (cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin')) {
-            cfg.hierField = view.getParentProperty();
-            cfg.openedPath = view.getOpenedPath();
-            cfg.root = view.getCurrentRoot();
+      _prepareUnloaderConfig: function () {
+         Deprecated.showInfoLog('Метод "_prepareUnloaderConfig" помечен как deprecated и будет удален. Используйте метод "_gatherExporterConfig"');
+         if (this._options.useColumnsEditor) {
+            throw new Error('При включённой опции "useColumnsEditor" используйте асинхронный метод "_gatherExporterConfig"');
          }
-         return cfg;
+         var result;
+         this._gatherExporterConfig.apply(this, arguments).addCallback(function (arg) { result = arg; });
+         return result;
       },
-      applyOperation: function(cfg){
+
+      /*
+       * @deprecated Используйте метод "_gatherExporterConfig"
+       */
+      _prepareExporterConfig: function (cfg) {
+         Deprecated.showInfoLog('Метод "_prepareExporterConfig" помечен как deprecated и будет удален. Используйте метод "_gatherExporterConfig"');
+         if (this._options.useColumnsEditor) {
+            throw new Error('При включённой опции "useColumnsEditor" используйте асинхронный метод "_gatherExporterConfig"');
+         }
+         var result;
+         this._gatherExporterConfig.apply(this, arguments).addCallback(function (arg) { result = arg; });
+         return result;
+      },
+
+      /**
+       * Собрать данные для конфига экспортёра
+       * @protected
+       * @param {object} cfg Исходный конфиг
+       * @return {Core/Deferred<object>}
+       */
+      _gatherExporterConfig: function (cfg) {
+         var promise = new Deferred();
+         var done = function (columns) {
+            var view = this._getView(),
+               cfg = {
+                  dataSet: cfg ? cfg.dataSet : view.getDataSet(),
+                  columns: columns,
+                  dataSource: view.getDataSource(),
+                  filter: view.getFilter(),
+                  offset: view._offset
+               };
+            if (cInstance.instanceOfMixin(view, 'SBIS3.CONTROLS.TreeMixin')) {
+               cfg.hierField = view.getParentProperty();
+               cfg.openedPath = view.getOpenedPath();
+               cfg.root = view.getCurrentRoot();
+            }
+            promise.callback(cfg);
+         }.bind(this);
+         if (cfg && cfg.columns) {
+            done(cfg.columns)
+         }
+         else {
+            this._gatherColumnsInfo().addCallback(done);
+         }
+         return promise;
+      },
+
+      /**
+       * Выполнить операцию согласно параметрам конфига
+       * @public
+       * @param {object} cfg Параметры выполняемой операции
+       */
+      applyOperation: function (cfg) {
          var
              xsl,
              filter,
@@ -219,38 +267,44 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
             exporter = new Exporter(cfg);
             //TODO что делать, если метод шибко прикладной?
             exporter.exportHTML(this._getUnloadFileName(), this._currentItem, pageOrient, isExcel);
-         } else {
-            exporter = new Exporter(this._prepareExporterConfig(cfg));
-            methodName = this._getSaveMethodName(false);
-            if (methodName) {
-               //Не передаём размер страницы. Если мы попали в данную ветку значит выгрузка будет с помощью обработчки
-               //в прикладном списочном методе параметра selectedIds и размер страницы не понадобится.
-               fullFilter = exporter.getFullFilter(null, true);
-               if (fullFilter['Filter'] instanceof Record) {
-                   filter = fullFilter['Filter'];
-               } else {
-                   filter = new Record({
-                      adapter: new SbisAdapter(),
-                      rawData: fullFilter['Filter']
-                   });
+         }
+         else {
+            this._gatherExporterConfig(cfg).addCallback(function (exporterConfig) {
+               exporter = new Exporter(exporterConfig);
+               methodName = this._getSaveMethodName(false);
+               if (methodName) {
+                  //Не передаём размер страницы. Если мы попали в данную ветку значит выгрузка будет с помощью обработчки
+                  //в прикладном списочном методе параметра selectedIds и размер страницы не понадобится.
+                  fullFilter = exporter.getFullFilter(null, true);
+                  if (fullFilter['Filter'] instanceof Record) {
+                     filter = fullFilter['Filter'];
+                  }
+                  else {
+                     filter = new Record({
+                        adapter: new SbisAdapter(),
+                        rawData: fullFilter['Filter']
+                     });
+                  }
+                  filter.addField({name: 'selectedIds', type: 'array', kind: 'string'});
+                  //Приводим ключи к строковому формату, что на БЛ идентификаторы имеют строковый тип
+                  filter.set('selectedIds', this._getView().getSelectedKeys().map(function(key) {
+                     return String(key);
+                  }));
+                  fullFilter['MethodName'] = methodName;
+                  fullFilter['FileName'] = this._getUnloadFileName();
+                  fullFilter['Filter'] = filter;
+                  if (this._currentItem === 'PDF') {
+                     delete fullFilter.HierarchyField;
+                  }
+                  exporter.exportList(this._getUnloadFileName(), this._currentItem, fullFilter, pageOrient, undefined, isExcel);
                }
-               filter.addField({name: 'selectedIds', type: 'array', kind: 'string'});
-               //Приводим ключи к строковому формату, что на БЛ идентификаторы имеют строковый тип
-               filter.set('selectedIds', this._getView().getSelectedKeys().map(function(key) {
-                  return String(key);
-               }));
-               fullFilter['MethodName'] = methodName;
-               fullFilter['FileName'] = this._getUnloadFileName();
-               fullFilter['Filter'] = filter;
-               if (this._currentItem === 'PDF') {
-                  delete fullFilter.HierarchyField;
+               else {
+                  exporter.exportDataSet(this._getUnloadFileName(), this._currentItem, undefined, pageOrient, undefined, isExcel);
                }
-               exporter.exportList(this._getUnloadFileName(), this._currentItem, fullFilter, pageOrient, undefined, isExcel);
-            } else {
-               exporter.exportDataSet(this._getUnloadFileName(), this._currentItem, undefined, pageOrient, undefined, isExcel);
-            }
+            }.bind(this));
          }
       },
+
       _getSaveMethodName: function(isList) {
          var binding = this._getCurrentItem().get('binding');
          if (binding) {
@@ -270,5 +324,4 @@ define('js!SBIS3.CONTROLS.OperationUnload', [
    });
 
    return OperationUnload;
-
 });

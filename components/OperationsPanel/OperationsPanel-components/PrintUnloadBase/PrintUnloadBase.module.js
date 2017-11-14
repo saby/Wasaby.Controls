@@ -6,6 +6,7 @@
 //Нужно сделать общую точку входа, и ветвление только непосредственно перед вызовом тех или иннных функций бл.
 define('js!SBIS3.CONTROLS.PrintUnloadBase', [
    "Core/Deferred",
+   'Core/deprecated',
    "js!SBIS3.CONTROLS.MenuLink",
    "js!SBIS3.CORE.DialogSelector",
    "WS.Data/Chain",
@@ -13,7 +14,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
    "WS.Data/Adapter/Json",
    "WS.Data/Collection/RecordSet",
    "Core/helpers/fast-control-helpers"
-], function( Deferred,MenuLink, Dialog, Chain, RecordSetFactory, SbisAdapter, RecordSet, fcHelpers) {
+], function(Deferred, Deprecated, MenuLink, Dialog, Chain, RecordSetFactory, SbisAdapter, RecordSet, fcHelpers) {
    //TODO: ограничение на максимальное количество записей, получаемое на клиент для печати/выгрузки.
    //Необходимо т.к. на сервере сейчас невозможно произвести xsl преобразование. Выписана задача:
    //(https://inside.tensor.ru/opendoc.html?guid=f852d5cc-b75e-4957-9635-3401e1832e80&description=)
@@ -65,12 +66,42 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
              * @cfg {String} Имя файла
              */
             fileName : '',
-            allowChangeEnable: false
+            allowChangeEnable: false,
+            /**
+             * @cfg {boolean} Открывать редактор колонок при определении списка колонок
+             */
+            useColumnsEditor: false,
+
+            /**
+             * @cfg {object} Опции редактора колонок
+             */
+            columnsEditorOptions: {
+               showButton: false//,
+               //title: rk('Отображение колонок'),
+               //moveColumns: true,
+               //targetRegistryName: 'default',
+               //defaultPreset: null,
+               //newPresetTitle: rk('Новый шаблон'),
+               //autoSaveFirstPreset: true,
+               //useNumberedTitle: true,
+               //groupField: 'group',
+               //groupTitleTpl: null,
+               //groupTitles: null
+            }
          },
-         _view : undefined
+         _view: undefined,
+         /**
+          * Компонент редактора колонок (только при наличии опции useColumnsEditor === true)
+          * @type {SBIS3.CONTROLS.ColumnsEditor}
+          */
+         _columnsEditor: undefined
       },
 
       $constructor: function() {
+         if (this._options.useColumnsEditor) {
+            // Если будет использоваться редактор колонок - подгрузить его сразу
+            require(['js!SBIS3.CONTROLS.ColumnsEditor'], function () {});
+         }
          this._publish('onApplyOperation', 'onPrepareData');
       },
       /**
@@ -125,8 +156,8 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
                }
             }
          });
-
       },
+
       /**
        * Must be implemented
        * @param columns
@@ -140,12 +171,13 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
       },
 
       _applyOperation : function(dataSet){
-         var
-             self = this;
-         this._prepareData(dataSet).addCallback(function(data) {
-            self.applyOperation({
-               dataSet: data,
-               columns: self._prepareOperationColumns(data)
+         var self = this;
+         this._prepareData(dataSet).addCallback(function (data) {
+            self._gatherColumnsInfo(data).addCallbback(function (columns) {
+               self.applyOperation({
+                  dataSet: data,
+                  columns: columns
+               });
             });
          });
       },
@@ -161,15 +193,77 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
          }
       },
 
-      _prepareOperationColumns: function(data){
-         var columns = this._getView().getColumns(),
-             result;
-         result = this._notifyOnApply(columns, data);
-         if (result instanceof Array) {
-            columns = result;
+      /*
+       * @deprecated Используйте метод "_gatherColumnsInfo"
+       */
+      _prepareOperationColumns: function (data) {
+         Deprecated.showInfoLog('Метод "_prepareOperationColumns" помечен как deprecated и будет удален. Используйте метод "_gatherColumnsInfo"');
+         if (this._options.useColumnsEditor) {
+            throw new Error('При включённой опции "useColumnsEditor" используйте асинхронный метод "_gatherColumnsInfo"');
          }
-         return columns;
+         var result;
+         this._gatherColumnsInfo.apply(this, arguments).addCallback(function (arg) { result = arg; });
+         return result;
       },
+
+      /*
+       * Собрать данные о колонках (асинхронно)
+       * @protected
+       * @param {object} data Дополнительные данные для вычисления колонок
+       * return {Core/Deferred<object[]>}
+       */
+      _gatherColumnsInfo: function (data) {
+         var startColumns = this._getView().getColumns();
+         var columnsInfo = this._notifyOnApply(startColumns, data);
+         if (!(Array.isArray(columnsInfo) && columnsInfo.length)) {
+            columnsInfo = startColumns;
+         }
+         return this._options.useColumnsEditor ? this._openColumnsEditor(columnsInfo) : Deferred.success(columnsInfo);
+      },
+
+      /*
+       * Открыть редактор колонок
+       * @protected
+       * @param {object[]} columnsInfo Начальный список колонок
+       * return {Core/Deferred<object[]>}
+       */
+      _openColumnsEditor: function (columnsInfo) {
+         var promise = new Deferred();
+         require(['js!SBIS3.CONTROLS.ColumnsEditor'], function (ColumnsEditor) {
+            if (!this._columnsEditor) {
+               this._columnsEditor = new ColumnsEditor(this._options.columnsEditorOptions);
+            }
+            this.subscribeOnceTo(this._columnsEditor, 'onColumnsEditorShow', function (evt) {
+               var colList = columnsInfo.map(function (v) {
+                  return {
+                     id: v.field,
+                     title: v.title.replace(/^\s+|\s+$/gi, '') || v.field,
+                     fixed: false,// TODO: Как понимать, что колонка обязательная ?
+                     group: null// TODO: Как назначать группы ?
+                  };
+               });
+               var selectedColumns = colList.map(function (v) { return v.id; });// TODO: Как назначать первично выделенные колонки ?
+               evt.setResult({
+                  columns: new RecordSet({
+                     rawData: colList,
+                     idProperty: 'id',
+                     displayProperty: 'title'
+                  }),
+                  selectedColumns: selectedColumns,
+                  expandedGroups: []// TODO: Как назначать первично распахнутые группы ?
+                  // Далее можно переопределить для этого вызова, если нужно, общие опции
+                  //groupTitleTpl: ...,
+                  //groupTitles: ...,
+               });
+            }.bind(this));
+            this.subscribeOnceTo(this._columnsEditor, 'onColumnsEditorComplete', function (evt, selectedColumns) {
+               promise.callback(selectedColumns && selectedColumns.length ? columnsInfo.filter(function (v) { return selectedColumns.indexOf(v.field) !== -1; }) : columnsInfo);
+            }.bind(this));
+            this._columnsEditor.sendCommand('showColumnsEditor');
+         }.bind(this));
+         return promise;
+      },
+
       /**
        * Обрабатываем выбранные пользователем записи. Здесь подготавливаем dataSet либо подготавливаем
        * фильтр для выгрузки данных полностью на сервере
