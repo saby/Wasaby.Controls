@@ -3,7 +3,22 @@ echo "Задаем параметры сборки"
 def version = "3.17.210"
 properties([
     disableConcurrentBuilds(),
-    def props = readProperties file: "/home/jenkins/shared_autotest87/settings_210.props"
+    [
+        $class: 'EnvInjectJobProperty',
+        info: [
+            loadFilesFromMaster: false,
+            propertiesFilePath: 'qweqweqwe',
+            secureGroovyScript: [
+                classpath: [],
+                sandbox: false,
+                script: ''
+                ]
+            ],
+        keepBuildVariables: true, 
+        keepJenkinsSystemVariables: true, 
+        on: true
+    ],
+    //def props = readProperties file: "/home/jenkins/shared_autotest87/settings_210.props"
     buildDiscarder(
         logRotator(
             artifactDaysToKeepStr: '3',
@@ -24,7 +39,7 @@ properties([
             description: '',
             name: 'branch_engine'),
         string(
-            defaultValue: props[atf_co],
+            defaultValue: atf_co,
             description: '',
             name: 'branch_atf'),
         choice(
@@ -51,7 +66,7 @@ node('controls') {
         echo "Чистим рабочую директорию"
         deleteDir()
         echo "Назначаем переменную"
-        def server_address=props[SERVER_ADDRESS]
+        def server_address=SERVER_ADDRESS
         def ver = version.replaceAll('.','')
         def python_ver = 'python3'
         def SDK = ""
