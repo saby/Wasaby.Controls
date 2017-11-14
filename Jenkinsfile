@@ -27,7 +27,7 @@ properties([
             description: '',
             name: 'branch_engine'),
         string(
-            defaultValue: props["atf_co"],
+            defaultValue: env.props["atf_co"],
             description: '',
             name: 'branch_atf'),
         choice(
