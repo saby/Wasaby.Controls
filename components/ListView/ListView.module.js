@@ -375,9 +375,9 @@ define('js!SBIS3.CONTROLS.ListView',
           * Показать ошибку перемещения
           * <pre>
           * view.subscribe('onEndMove', function(e, result) {
-          *    if (result instanseOf Error) {
+          *    if (result instanceof Error) {
           *       result.processed = true;//Надо поставить флаг что ошибка обработана;
-          *       require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(){
+          *       require(['js!SBIS3.CONTROLS.Utils.InformationPopupManager'], function(InformationPopupManager) {
           *          InformationPopupManager.showMessageDialog(
           *             {
           *                message: result.message,
@@ -1088,7 +1088,7 @@ define('js!SBIS3.CONTROLS.ListView',
 
          _addOptionsFromClass: function(opts, attrToMerge) {
             var
-               classes = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || '',
+               classes = (attrToMerge && attrToMerge.class) || (opts.element && opts.element.className) || opts.className || '',
                params = [
                   { class: 'controls-small-ListView', optionName: 'isSmall', value: true, defaultValue: false },
                   { class: 'controls-ListView__disableHover', optionName: 'itemsHover', value: false, defaultValue: true },
@@ -1101,7 +1101,7 @@ define('js!SBIS3.CONTROLS.ListView',
                   { class: 'controls-ListView__hideCheckboxes', optionName: 'hideCheckboxes', value: true, defaultValue: false}
                ];
             ConfigByClasses(opts, params, classes);
-         },
+},
 
          _modifyOptions : function(opts, parsedOptions, attrToMerge){
             var lvOpts = ListView.superclass._modifyOptions.apply(this, arguments);
@@ -1129,7 +1129,7 @@ define('js!SBIS3.CONTROLS.ListView',
          _getElementToFocus: function() {
             return $('.controls-ListView__fakeFocusElement', this._container).first();
          },
-   
+
          /* Переопределяю метод из Control.compatible.js
             _isAcceptKeyEvents: function(){
                return this.isEnabled();

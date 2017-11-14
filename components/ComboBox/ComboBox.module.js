@@ -281,7 +281,9 @@ define('js!SBIS3.CONTROLS.ComboBox', [
 
          if (cfg.selectedKey && cfg._items) {
             var selectedItem = cInstance.instanceOfModule(cfg._items, 'WS.Data/Type/Enum') ? cfg._items.get() : cfg._items.getRecordById(cfg.selectedKey);
-            cfg.text = cfg._propertyValueGetter(selectedItem, cfg.displayProperty) || '';
+            if (selectedItem) {
+               cfg.text = cfg._propertyValueGetter(selectedItem, cfg.displayProperty) || '';
+            }
          }
          return cfg;
       },

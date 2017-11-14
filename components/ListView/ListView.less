@@ -27,7 +27,7 @@
 
 .controls-ListView__showCheckBoxes {
    .controls-ListView__itemCheckBox {
-      .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+      .checkbox-border-size();
    }
 }
 
@@ -62,12 +62,12 @@
 
 .controls-ListView__item:hover {
    .controls-ListView__itemCheckBox__showByHover {
-      .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+      .checkbox-border-size();
    }
 }
 
 .controls-ListView__itemCheckBox__showAlways {
-   .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+   .checkbox-border-size();
 }
 
 controls-ListView__item__withHover:hover {
@@ -76,13 +76,13 @@ controls-ListView__item__withHover:hover {
 
 .controls-ListView__item__multiSelected:not(.controls-ListView__item__partiallySelected) {
    .controls-ListView__itemCheckBox {
-      .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+      .checkbox-border-size();
       .checkbox-checked-size(@check-box-icon-successful-size, @check-box-icon-successful-left, @check-box-icon-successful-top);
    }
 }
 .controls-ListView__item__partiallySelected {
    .controls-ListView__itemCheckBox {
-      .checkbox-border-size(@check-box-icon-size, @check-box-icon-box-size, @default-border-width);
+      .checkbox-border-size();
       .checkbox-null-size(@check-box-icon-size, @check-box-icon-null-size);
    }
 }
