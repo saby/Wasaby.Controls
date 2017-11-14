@@ -24,7 +24,7 @@ properties([
             description: '',
             name: 'branch_engine'),
         string(
-            defaultValue: props[atf_co],
+            defaultValue: props["atf_co"],
             description: '',
             name: 'branch_atf'),
         choice(
@@ -51,7 +51,7 @@ node('controls') {
         echo "Чистим рабочую директорию"
         deleteDir()
         echo "Назначаем переменную"
-        def server_address=props[SERVER_ADDRESS]
+        def server_address=props["SERVER_ADDRESS"]
         def ver = version.replaceAll('.','')
         def python_ver = 'python3'
         def SDK = ""
