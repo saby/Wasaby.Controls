@@ -112,7 +112,7 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
          if (this._isNeedToRedrawDialog()){
             this._resetComponentOptions();
             //Если поменялся шаблон панели, то надо обновить размеры.
-            resetWidth = this._dialog._options.tempalte !== config.template;
+            resetWidth = this._dialog._options.template !== config.template;
             cMerge(this._dialog._options, config);
             this._dialog.reload(true, resetWidth);
          }
