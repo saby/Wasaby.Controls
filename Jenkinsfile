@@ -3,7 +3,7 @@ echo "Задаем параметры сборки"
 def version = "3.17.210"
 properties([
     disableConcurrentBuilds(),
-    def props = readProperties file: "/mnt/win_share_for_build/mount_test-osr-source/${version}/version_application.txt"
+    def props = readProperties file: "/home/jenkins/shared_autotest87/settings_210.props"
     buildDiscarder(
         logRotator(
             artifactDaysToKeepStr: '3',
@@ -51,6 +51,7 @@ node('controls') {
         echo "Чистим рабочую директорию"
         deleteDir()
         echo "Назначаем переменную"
+        def server_address=props[SERVER_ADDRESS]
         def ver = version.replaceAll('.','')
         def python_ver = 'python3'
         def SDK = ""
@@ -387,7 +388,7 @@ node('controls') {
             HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/
             SERVER = test-autotest-db1
             BASE_VERSION = css_${NODE_NAME}${ver}1
-            server_address = http://10.76.163.98:4380/wd/hub"""
+            server_address = ${server_address}}"""
         if ( "${params.theme}" != "online" ) {
             writeFile file: "./controls/tests/reg/config.ini",
             text:
