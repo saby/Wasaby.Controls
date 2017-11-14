@@ -236,6 +236,8 @@ define('js!SBIS3.CONTROLS.Menu', [
                parentProperty: parentProperty,
                nodeProperty: nodeProperty
             }),
+            iconSizes = ['icon-16', 'icon-24', 'icon-32', 'icon-small', 'icon-medium', 'icon-large', 'icon-size'],
+            iconSize,
             parents = {},
             children,
             child,
@@ -248,7 +250,12 @@ define('js!SBIS3.CONTROLS.Menu', [
             if (icon) {
                pid = item.get(parentProperty);
                if (!parents.hasOwnProperty(pid)) {
-                  parents[pid] = [pid, icon.indexOf('icon-16') === -1 ? 'sprite:icon-24' : 'sprite:icon-16'];
+                  iconSizes.forEach(function(size){
+                     if(icon.indexOf(size) !== -1){
+                         iconSize = size;
+                     }
+                  });
+                  parents[pid] = [pid, iconSize];
                }
             }
          });
