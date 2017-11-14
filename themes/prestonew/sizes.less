@@ -53,7 +53,7 @@
 //date-range
 @date-range-slider-year-state-width:                                  136px;//todo: mironov
 @date-range-slider-value-min-width:                                   124px;//todo: mironov
-@date-range-slider-height:                                            40px;//todo: mironov
+@date-range-slider-height:                                            round(40px * @multiplier);
 @date-range-slider-value-padding:                                     0px;//todo: mironov
 @date-range-slider-prev-next-buttons-font-size:                       @date-range-slider-font-size;//todo: mironov
 @date-range-choose-year-state-width:                                  136px;//todo: mironov
@@ -279,6 +279,7 @@
 @date-range-button-margin:                0;
 @date-range-big-choose-header-date-box-font-size: round(28px * @multiplier);
 //Data Range Slider
+@date-range-slider-margin-top:            round(-32px * @multiplier);
 @date-range-slider-font-size:             round(32px * @multiplier);
 @date-range-slider-value-font-weight:     normal;
 //Date Range Choose
@@ -290,7 +291,7 @@
 @date-range-choose-current-value-font-size:round(32px * @multiplier);
 @date-range-choose-current-value-font-weight:normal;
 @date-range-choose-current-value-height:  round(100px * @multiplier);
-@date-range-choose-current-value-line-height:round(96px * @multiplier);
+@date-range-choose-current-value-line-height:@date-range-choose-current-value-height;;
 @date-range-choose-year-height:           @default-height;
 @date-range-choose-year-font-size:        round(32px * @multiplier);
 @date-range-choose-year-margin-bottom:    round(8px * @multiplier);
