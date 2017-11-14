@@ -803,6 +803,8 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             item = this._getItemProjectionByItemId(id);
          }
          if (item) {
+            // Реакция на сворачивание может настать раньше чем долетит и будет обработано событие onChangeExpanded.
+            // Следовательно, при сворачивании сразу синхронизируем список развернутых узлов.
             delete this._options.openedPath[id];
             item.setExpanded(false);
             return Deferred.success();
