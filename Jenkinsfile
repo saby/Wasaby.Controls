@@ -1,9 +1,9 @@
 #!groovy
 echo "Задаем параметры сборки"
 def version = "3.17.210"
+def props = readProperties file: "/home/jenkins/shared_autotest87/settings_210.props"
 properties([
     disableConcurrentBuilds(),
-    def props = readProperties file: "/home/jenkins/shared_autotest87/settings_210.props"
     buildDiscarder(
         logRotator(
             artifactDaysToKeepStr: '3',
@@ -51,7 +51,7 @@ node('controls') {
         echo "Чистим рабочую директорию"
         deleteDir()
         echo "Назначаем переменную"
-        def server_address=SERVER_ADDRESS
+        def server_address=props[SERVER_ADDRESS]
         def ver = version.replaceAll('.','')
         def python_ver = 'python3'
         def SDK = ""
