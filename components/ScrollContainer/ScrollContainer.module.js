@@ -318,7 +318,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
 
          _toggleGradient: function() {
             // $elem[0].scrollHeight - integer, $elem.height() - float
-         	var maxScrollTop = this._getScrollHeight() - Math.round(this._container.height());
+         	var maxScrollTop = this._getScrollHeight() - this._getContainerHeight();
 
          	// maxScrollTop > 1 - погрешность округления на различных браузерах.
             this._container.toggleClass('controls-ScrollContainer__bottom-gradient', maxScrollTop > 1 && this._getScrollTop() < maxScrollTop);
@@ -467,7 +467,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _subscribeTakeScrollbar: function() {
-            if (this._getScrollHeight() - this._container.height() > 1) {
+            if (this._getScrollHeight() - this._getContainerHeight() > 1) {
                this._subscribeMouseEnterLeave();
             } else {
                this._unsubscribeMouseEnterLeave();
@@ -611,7 +611,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _calcPagingSelectedKey: function(position) {
-            var page = position / this._container.height();
+            var page = position / this._getContainerHeight();
             if (!(page % 1)) {
                page += 1;
             } else {
@@ -695,8 +695,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                 * Если высота стала 0, то менять количество страниц не нужно, потому что определить сколько их нельзя, а
                 * значит и определить на сколько прокручивать при переходе на другую страницу нельзя.
                 */
-               if (this._container.height()) {
-                  this._setPagesCount(Math.ceil(this._getScrollHeight() / this._container.height()));
+               var containerHeight = this._getContainerHeight();
+               if (containerHeight) {
+                  this._setPagesCount(Math.ceil(this._getScrollHeight() / containerHeight));
                }
             }
          },
@@ -743,6 +744,10 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
             return height;
          },
 
+         _getContainerHeight: function() {
+            return this._container.get(0).offsetHeight;
+         },
+
          destroy: function(){
             if (this._content) {
                this._content.off('scroll', this._onScroll);
@@ -785,8 +790,9 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
                      visiblePath: this._options.navigationToolbar,
                      parent: this
                   });
-                  if (this._container.height()) {
-                     this._setPagesCount(Math.ceil(this._getScrollHeight() / this._container.height()));
+                  var containerHeight = this._getContainerHeight();
+                  if (containerHeight) {
+                     this._setPagesCount(Math.ceil(this._getScrollHeight() / containerHeight));
                   }
                   this._paging.subscribe('onSelectedItemChange', this._pageChangeHandler.bind(this));
                   this._page = 1;
@@ -804,7 +810,7 @@ define('js!SBIS3.CONTROLS.ScrollContainer', [
          },
 
          _pageChangeHandler: function(event, nPage) {
-            var scrollTop = this._container.height() * (nPage - 1);
+            var scrollTop = this._getContainerHeight() * (nPage - 1);
             if (this._page !==  nPage) {
                this._page = nPage;
                this._scrollTo(scrollTop);
