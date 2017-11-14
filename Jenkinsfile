@@ -3,22 +3,7 @@ echo "Задаем параметры сборки"
 def version = "3.17.210"
 properties([
     disableConcurrentBuilds(),
-    [
-        $class: 'EnvInjectJobProperty',
-        info: [
-            loadFilesFromMaster: false,
-            propertiesFilePath: '/home/jenkins/shared_autotest87/settings_210.props',
-            secureGroovyScript: [
-                classpath: [],
-                sandbox: false,
-                script: ''
-                ]
-            ],
-        keepBuildVariables: true, 
-        keepJenkinsSystemVariables: true, 
-        on: true
-    ],
-    //def props = readProperties file: "/home/jenkins/shared_autotest87/settings_210.props"
+    def props = readProperties file: "/home/jenkins/shared_autotest87/settings_210.props"
     buildDiscarder(
         logRotator(
             artifactDaysToKeepStr: '3',
@@ -39,7 +24,7 @@ properties([
             description: '',
             name: 'branch_engine'),
         string(
-            defaultValue: atf_co,
+            defaultValue: props[atf_co],
             description: '',
             name: 'branch_atf'),
         choice(
