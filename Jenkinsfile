@@ -1,43 +1,6 @@
 #!groovy
 echo "Задаем параметры сборки"
 def version = "3.17.210"
-properties([
-    disableConcurrentBuilds(),
-    buildDiscarder(
-        logRotator(
-            artifactDaysToKeepStr: '3',
-            artifactNumToKeepStr: '3',
-            daysToKeepStr: '3',
-            numToKeepStr: '3')),
-    parameters([
-        string(
-            defaultValue: 'sdk',
-            description: '',
-            name: 'ws_revision'),
-        string(
-            defaultValue: 'sdk',
-            description: '',
-            name: 'ws_data_revision'),
-        string(
-            defaultValue: 'rc-3.17.210',
-            description: '',
-            name: 'branch_engine'),
-        string(
-            defaultValue: props["atf_co"],
-            description: '',
-            name: 'branch_atf'),
-        choice(
-            choices: "online\npresto\ncarry\ngenie",
-            description: '',
-            name: 'theme'),
-        choice(choices: "chrome\nff", description: '', name: 'browser_type'),
-        booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
-        booleanParam(defaultValue: false, description: "Запуск интеграционных тестов", name: 'run_int'),
-        booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
-        booleanParam(defaultValue: false, description: "Запуск только упавших тестов из предыдущего билда", name: 'RUN_ONLY_FAIL_TEST')
-        ]),
-    pipelineTriggers([])
-])
 if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !params.run_unit) {
         currentBuild.result = 'ABORTED'
         error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
@@ -46,7 +9,43 @@ if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !para
 node('controls') {
     echo "Назначем версию и определяем рабочую директорию"
     def props = readProperties file: "/home/jenkins/shared_autotest87/settings_210.props"
-    settingsJob.add(string(name: "props", value: props))  
+    properties([
+    disableConcurrentBuilds(),
+    buildDiscarder(
+        logRotator(
+            artifactDaysToKeepStr: '3',
+            artifactNumToKeepStr: '3',
+            daysToKeepStr: '3',
+            numToKeepStr: '3')),
+        parameters([
+            string(
+                defaultValue: 'sdk',
+                description: '',
+                name: 'ws_revision'),
+            string(
+                defaultValue: 'sdk',
+                description: '',
+                name: 'ws_data_revision'),
+            string(
+                defaultValue: 'rc-3.17.210',
+                description: '',
+                name: 'branch_engine'),
+            string(
+                defaultValue: props["atf_co"],
+                description: '',
+                name: 'branch_atf'),
+            choice(
+                choices: "online\npresto\ncarry\ngenie",
+                description: '',
+                name: 'theme'),
+            choice(choices: "chrome\nff", description: '', name: 'browser_type'),
+            booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
+            booleanParam(defaultValue: false, description: "Запуск интеграционных тестов", name: 'run_int'),
+            booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
+            booleanParam(defaultValue: false, description: "Запуск только упавших тестов из предыдущего билда", name: 'RUN_ONLY_FAIL_TEST')
+            ]),
+        pipelineTriggers([])
+    ])
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
         echo "Чистим рабочую директорию"
