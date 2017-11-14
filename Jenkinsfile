@@ -7,7 +7,7 @@ properties([
         $class: 'EnvInjectJobProperty',
         info: [
             loadFilesFromMaster: false,
-            propertiesFilePath: 'qweqweqwe',
+            propertiesFilePath: '/home/jenkins/shared_autotest87/settings_210.props',
             secureGroovyScript: [
                 classpath: [],
                 sandbox: false,
