@@ -7,9 +7,7 @@
          displayProperty="{{_options.displayProperty}}"
          selectedKey="{{_options.selectedKey}}">
    </ws:Controls.List.ListControl.ListView>
-   <div class="ws-ListControl__footer">
-      <ws:if data="{{_pagingCfg}}">
-         <ws:Controls.List.Paging pagesCount="{{15}}" selectedKey="{{1}}"></ws:Controls.List.Paging>
-      </ws:if>
-   </div>
+   <ws:if data="{{_pagingCfg}}">
+      <ws:Controls.List.Paging className="ws-ListControl__paging" scope="{{_pagingCfg}}"></ws:Controls.List.Paging>
+   </ws:if>
 </div>

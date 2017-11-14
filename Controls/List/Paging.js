@@ -17,15 +17,27 @@ define('js!Controls/List/Paging', [
          _stateNext: 'normal',
          _statePrev: 'normal',
 
+         constructor: function(cfg) {
+            ModuleClass.superclass.constructor.apply(this, arguments);
+            this._stateBegin = cfg.stateBegin || 'disabled';
+            this._stateEnd = cfg.stateEnd || 'disabled';
+            this._stateNext = cfg.stateNext || 'disabled';
+            this._statePrev = cfg.statePrev || 'disabled';
+         },
+
          _beforeMount: function(newOptions) {
             this._selectedKey = newOptions.selectedKey;
-            this.__calcBtnStates(this._selectedKey);
+            if (newOptions.showDigits) {
+               this.__calcBtnStates(this._selectedKey);
+            }
          },
 
          _beforeUpdate: function(newOptions) {
             if (this._options.selectedKey != newOptions.selectedKey) {
                this._selectedKey = newOptions.selectedKey;
-               this.__calcBtnStates(this._selectedKey);
+               if (newOptions.showDigits) {
+                  this.__calcBtnStates(this._selectedKey);
+               }
             }
          },
 

@@ -6,7 +6,8 @@ define('js!Controls/List/ListControl', [
    'WS.Data/Source/ISource',
    'js!Controls/List/Controllers/PageNavigation',
    'Core/helpers/functional-helpers',
-   'require'
+   'require',
+   'css!Controls/List/ListControl/ListControl'
 ], function (Control,
              ListControlTpl,
              DataSourceUtil,
@@ -413,25 +414,22 @@ define('js!Controls/List/ListControl', [
          },
 
          _afterMount: function() {
-            debugger;
             if (this._options.navigation && this._options.navigation.view == 'infinity') {
                //TODO кривое обращение к DOM
                var scrollContainer = this._container.closest('.ws-scrolling-content');
-               if (this._options.navigation.viewConfig && this._options.navigation.viewConfig.pagingMode) {
+               if (scrollContainer.length && this._options.navigation.viewConfig && this._options.navigation.viewConfig.pagingMode) {
                   var self = this;
-                  this._viewHeight = this._children._ListView._container.get(0).scrollHeight;
                   require(['js!Controls/List/Controllers/ScrollPaging'], function (ScrollPagingController) {
                      self._scrollPagingCtr = new ScrollPagingController({
-                        scrollContainer: scrollContainer,
-                        viewHeight: self._viewHeight
-                     })
+                        scrollContainer: scrollContainer.get(0),
+                        mode: self._options.navigation.viewConfig.pagingMode
+                     });
+
+                     self._pagingCfg = self._scrollPagingCtr.getPagingCfg();
+                     self._forceUpdate();
                   });
                }
             }
-
-
-
-
          },
 
          _afterUpdate: function() {

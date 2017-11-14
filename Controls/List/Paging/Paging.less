@@ -1,5 +1,6 @@
 .ws-Paging__wrapper {
    display: flex;
+   background-color: @default-bg-color;
 }
 .ws-Paging__btn {
    height: 32px;
@@ -17,6 +18,9 @@
 .ws-Paging__arrow__state-normal {
    color: @icon-color-primary;
    cursor: pointer;
+   &:hover {
+      background-color: #F0F5FB;
+   }
 }
 .ws-Paging__arrow__state-disabled {
    color: @icon-color-disabled

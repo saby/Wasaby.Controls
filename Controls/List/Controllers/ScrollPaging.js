@@ -15,14 +15,31 @@ define('js!Controls/List/Controllers/ScrollPaging',
          _selectedPage: null,
 
          constructor: function(cfg) {
+            this._options = cfg;
             Paging.superclass.constructor.apply(this, arguments);
             if (cfg.selectedPage) {
                this._selectedPage = cfg.selectedPage;
             }
+            this._cacheHeights(cfg.scrollContainer);
          },
 
-         getPagingCfg: function(recordset) {
+         getPagingCfg: function() {
+            var pCfg = {};
+            if (this._viewHeight > this._viewportHeight) {
+               if (this._options.mode == 'direct') {
+                  pCfg.stateBegin = 'disabled';
+                  pCfg.statePrev = 'disabled';
+                  pCfg.stateNext = 'normal';
+                  pCfg.stateEnd = 'normal';
+               }
+            }
+            return pCfg;
+         },
 
+
+         _cacheHeights: function(viewportCnt) {
+            this._viewHeight = viewportCnt.scrollHeight;
+            this._viewportHeight = viewportCnt.offsetHeight;
          }
       });
 
