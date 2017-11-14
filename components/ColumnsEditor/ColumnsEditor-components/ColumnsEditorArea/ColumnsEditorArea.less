@@ -1,6 +1,5 @@
 
 @ColumnsEditor-head-title-height: 24px;
-@ColumnsEditor-head-preset-height: 24px;
 @ColumnsEditor-head-gap-top: 8px;
 @ColumnsEditor-head-gap-inner: 12px;
 @ColumnsEditor-head-gap-bottom: 4px;
@@ -38,63 +37,9 @@
    vertical-align: middle;
 }
 
-.controls-ColumnsEditorArea__head-preset {
-   font-size: 15px;
-}
-
-.controls-ColumnsEditorArea__head-preset-label {
-   float: left;
-   padding: 3px 8px 0px 0px;
-   color: rgb(153, 153, 153);
-}
-
-.controls-ColumnsEditorArea__head-preset-editor {
-   height: @ColumnsEditor-head-preset-height;
-
-   .controls-ListView__hoveredItem {
-      /*^^^background-color: transparent;*/
-   }
-
-   .controls-ItemsToolbar {
-      bottom: 0px;
-      background-color: transparent;
-   }
-
-   /*.controls-editInPlace*/ .controls-editInPlace__editor {
-      padding: 0;
-   }
-}
-
-.controls-ColumnsEditorArea__Preset {
-}
-
-.controls-ColumnsEditorArea__Preset-item {
-   box-sizing: border-box;
-   height: @ColumnsEditor-head-preset-height;
-   padding: 0 0 0 6px;
-}
-
-/*.controls-ColumnsEditorArea__Preset-item-text {
-   padding: 3px 0 0 0;
-   color: rgb(0, 85, 187);
-   cursor: pointer;
-}*/
-
-/*.controls-ColumnsEditorArea__Preset-item-text:hover {
-   text-decoration: underline;
-}*/
-
-.controls-ColumnsEditorArea__Preset-item-title {
-   padding: 1px 0 0 0;
-}
-
-.controls-ColumnsEditorArea__Preset-input {
-   width: 100%;
-}
-
 .controls-ColumnsEditorArea__body {
    box-sizing: border-box;
-   height: ~"calc(100% - "(@ColumnsEditor-head-title-height + @ColumnsEditor-head-preset-height + @ColumnsEditor-head-gap-top + @ColumnsEditor-head-gap-inner + @ColumnsEditor-head-gap-bottom)~")";
+   height: ~"calc(100% - "(@ColumnsEditor-head-title-height + @ColumnsEditor-head-gap-top + @ColumnsEditor-head-gap-inner + @ColumnsEditor-head-gap-bottom)~")";
    border-top: 1px solid #CCCCCC;
    padding: 12px 0;
 }

@@ -6,32 +6,6 @@
             <ws:SBIS3.CONTROLS.Button class="controls-ColumnsEditorArea__ApplyColumnsButton" caption="{{ applyButtonTitle }}" command="applyColumns" primary="true" />
          </div>
       </div>
-      <div class="controls-ColumnsEditorArea__head-preset">
-         <div class="controls-ColumnsEditorArea__head-preset-label">{[Шаблон]}</div>
-         <div class="controls-ColumnsEditorArea__head-preset-editor">
-            <ws:SBIS3.CONTROLS.ListView
-               class="controls-ColumnsEditorArea__Preset controls-ListView__disableHover"
-               name="controls-ColumnsEditorArea__Preset"
-               items="{{_optsPreset.items}}"
-               itemsHover="{{false}}"
-               itemsDragNDrop="{{false}}"
-               idProperty="id"
-               displayProperty="title"
-               editMode=""
-               editingTemplate="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/presetEdit"
-               >
-               <!--^^^
-               itemsActions="{{_optsPreset.itemsActions}}"
-               itemContentTpl="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/preset"
-               editMode="click|single"
-               <ws:handlers onItemClick="{{_optsPreset.onItemClick}}"/>
-               -->
-               <ws:itemContentTpl>
-                  <ws:partial template="tmpl!SBIS3.CONTROLS.ColumnsEditorArea/resources/preset" scope="{{itemContentTpl}}" presets="{{_getPresets()}}" />
-               </ws:itemContentTpl>
-            </ws:SBIS3.CONTROLS.ListView>
-         </div>
-      </div>
    </div>
    <ws:SBIS3.CONTROLS.ScrollContainer class="controls-ColumnsEditorArea__body">
       <ws:content type="string">
