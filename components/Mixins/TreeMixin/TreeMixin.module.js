@@ -799,11 +799,13 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
          var item;
          if (hash) {
             item = this._getItemsProjection().getByHash(hash);
-         }
-         else {
+         } else {
             item = this._getItemProjectionByItemId(id);
          }
          if (item) {
+            // Реакция на сворачивание может настать раньше чем долетит и будет обработано событие onChangeExpanded
+            // Следовательно, при сворачивании сразу синхронизируем список развернутых узлов.
+            delete this._options.openedPath[id];
             item.setExpanded(false);
             return Deferred.success();
          } else {
@@ -1033,12 +1035,12 @@ define('js!SBIS3.CONTROLS.TreeMixin', [
             projectionFilter;
          if (itemsProjection) { // Если имеется проекция - то применяем разворот к итемам, иначе он применится после создания проекции
             projectionFilter = resetFilterAndStopEventRaising(itemsProjection, true);
-            this._collapseNodes(this.getOpenedPath());
-            this._options.openedPath = openedPath;
+            this._collapseNodes(this.getOpenedPath(), openedPath);
+            this._options.openedPath = coreClone(openedPath);
             applyExpandToItemsProjection(itemsProjection, this._options);
             restoreFilterAndRunEventRaising(itemsProjection, projectionFilter, true);
          } else {
-            this._options.openedPath = openedPath;
+            this._options.openedPath = coreClone(openedPath);
          }
       },
       _removeFromLoadedRemoteNodes: function(remoteNodes) {
