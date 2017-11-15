@@ -5,7 +5,7 @@
 define('js!SBIS3.CONTROLS.ColumnsEditorArea',
    [
       'js!SBIS3.CONTROLS.CompoundControl',
-      'js!SBIS3.CONTROLS.ColumnsEditorModel',
+      'js!SBIS3.CONTROLS.ColumnsEditorArea/resources/Model',
       'js!SBIS3.CONTROLS.ItemsMoveController',
       'Core/CommandDispatcher',
       'WS.Data/Functor/Compute',

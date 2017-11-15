@@ -2,7 +2,7 @@
  * Created by as.avramenko on 06.07.2017.
  */
 
-define('js!SBIS3.CONTROLS.ColumnsEditorModel',
+define(
    [
       'WS.Data/Entity/Model'
    ],
