@@ -67,13 +67,14 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
              */
             fileName : '',
             allowChangeEnable: false,
+
             /**
              * @cfg {boolean} Открывать редактор колонок при определении списка колонок
              */
             useColumnsEditor: false,
 
             /**
-             * @cfg {object} Опции редактора колонок
+             * @cfg {object} Опции редактора колонок (согласно описанию опций в SBIS3.CONTROLS.ColumnsEditor)
              */
             columnsEditorOptions: {
                showButton: false//,
@@ -173,7 +174,7 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
       _applyOperation : function(dataSet){
          var self = this;
          this._prepareData(dataSet).addCallback(function (data) {
-            self._gatherColumnsInfo(data).addCallbback(function (columns) {
+            self._gatherColumnsInfo(data).addCallback(function (columns) {
                self.applyOperation({
                   dataSet: data,
                   columns: columns
