@@ -223,6 +223,33 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
       },
 
       /*
+       * Сформировать данные о колонках в форме пригодной для редактора колонок
+       * @protected
+       * @param {object[]} columnsInfo Список объектов со свойствами колонок (в форме, используемой SBIS3.CONTROLS.DataGridView)
+       * return {object}
+       */
+      _makeColumnsConfig: function (columnsInfo) {
+         var colList = columnsInfo.map(function (v) {
+            return {
+               id: v.field,
+               title: v.title.replace(/^\s+|\s+$/gi, '') || v.field,
+               fixed: false,// TODO: Как понимать, что колонка обязательная ?
+               group: null// TODO: Как назначать группы ?
+            };
+         });
+         var selectedColumns = colList.map(function (v) { return v.id; });// TODO: Как назначать первично выделенные колонки ?
+         return {
+            columns: new RecordSet({
+               rawData: colList,
+               idProperty: 'id',
+               displayProperty: 'title'
+            }),
+            selectedColumns: selectedColumns,
+            expandedGroups: []// TODO: Как назначать первично распахнутые группы ?
+         };
+      },
+
+      /*
        * Открыть редактор колонок
        * @protected
        * @param {object[]} columnsInfo Начальный список колонок
@@ -235,23 +262,11 @@ define('js!SBIS3.CONTROLS.PrintUnloadBase', [
                this._columnsEditor = new ColumnsEditor(this._options.columnsEditorOptions);
             }
             this.subscribeOnceTo(this._columnsEditor, 'onColumnsEditorShow', function (evt) {
-               var colList = columnsInfo.map(function (v) {
-                  return {
-                     id: v.field,
-                     title: v.title.replace(/^\s+|\s+$/gi, '') || v.field,
-                     fixed: false,// TODO: Как понимать, что колонка обязательная ?
-                     group: null// TODO: Как назначать группы ?
-                  };
-               });
-               var selectedColumns = colList.map(function (v) { return v.id; });// TODO: Как назначать первично выделенные колонки ?
+               var columnsConfig = this._makeColumnsConfig(columnsInfo);
                evt.setResult({
-                  columns: new RecordSet({
-                     rawData: colList,
-                     idProperty: 'id',
-                     displayProperty: 'title'
-                  }),
-                  selectedColumns: selectedColumns,
-                  expandedGroups: []// TODO: Как назначать первично распахнутые группы ?
+                  columns: columnsConfig.columns,
+                  selectedColumns: columnsConfig.selectedColumns,
+                  expandedGroups: columnsConfig.expandedGroups//,
                   // Далее можно переопределить для этого вызова, если нужно, общие опции
                   //groupTitleTpl: ...,
                   //groupTitles: ...,
