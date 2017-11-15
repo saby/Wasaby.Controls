@@ -1,4 +1,8 @@
-<div class="ws-ListView__item {{selected ? 'ws-ListView__item__selected'}}" event:onclick="_onItemClick(dispItem)">
+<div
+        class="ws-ListView__item {{selected ? 'ws-ListView__item__selected'}}"
+        key="{{dispItem.getHash()}}"
+        data-hash="{{dispItem.getHash()}}"
+        event:onclick="_onItemClick(dispItem)">
    <ws:if data="{{contentTemplate}}">
       <ws:partial
             template="{{contentTemplate}}"

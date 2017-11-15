@@ -44,6 +44,12 @@ define('js!Controls/List/ListControl/ListView', [
          _selectedItem: null,
          _selectedIndex: -1,
 
+         constructor: function (cfg) {
+            ListView.superclass.constructor.apply(this, arguments);
+            this._startIndex = cfg.displayedStartIndex;
+            this._stopIndex = cfg.displayedStopIndex;
+         },
+
          _beforeMount: function(newOptions) {
             ListView.superclass._beforeMount.apply(this, arguments);
             this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
@@ -54,6 +60,13 @@ define('js!Controls/List/ListControl/ListView', [
             ListView.superclass._beforeUpdate.apply(this, arguments);
             this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
             this._selectedItem = _private.calcSelectedItem(this._display, newOptions.selectedKey, newOptions.idProperty);
+
+            this._startIndex = newOptions.displayedStartIndex;
+            this._stopIndex = newOptions.displayedStopIndex;
+         },
+
+         _initIndices: function() {
+            console.log('ListView::_initIndices');
          },
 
          _onItemClick: function(e, dispItem) {

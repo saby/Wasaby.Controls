@@ -6,6 +6,7 @@ define('js!Controls/List/ListControl', [
    'WS.Data/Source/ISource',
    'Core/core-instance',
    'js!Controls/List/Controllers/PageNavigation',
+   'js!Controls/List/Controllers/VirtualScroll',
    'Core/helpers/functional-helpers'
 ], function (Control,
              ListControlTpl,
@@ -14,6 +15,7 @@ define('js!Controls/List/ListControl', [
              ISource,
              cInstance,
              PageNavigation,
+             VirtualScroll,
              fHelpers
    ) {
    'use strict';
@@ -62,6 +64,43 @@ define('js!Controls/List/ListControl', [
          params.limit = userParams['limit'] || queryParams.limit;
          return params;
       },
+
+      virtualScroll: {
+         TOP_PLACEHOLDER: 'ws-ListControl__virtualScrollTopPlaceholder',
+         BOTTOM_PLACEHOLDER: 'ws-ListControl__virtualScrollBottomPlaceholder',
+         TOP_TRIGGER: 'ws-ListControl__virtualScrollTopLoadTrigger',
+         BOTTOM_TRIGGER: 'ws-ListControl__virtualScrollBottomLoadTrigger',
+         ITEMS_CONTAINER: 'ws-ListView ',
+
+         pageSize: 20,     //Число записей на 1 вирульной странице
+         visiblePages: 5,  //Количество отображаемых виртуальных страниц
+
+         domElements: {
+            topPlaceholder: undefined,
+            bottomPlaceholder: undefined,
+
+            topLoadTrigger: undefined,
+            bottomLoadTrigger: undefined,
+
+            itemsContainer: undefined,
+            scrollContainer: undefined
+         }
+      },
+
+      initVirtualScroll: function(items, container) {
+         var vsController = new VirtualScroll({
+            itemsLength: items.getCount(),
+            pageSize: _private.virtualScroll.pageSize,
+            visiblePages: _private.virtualScroll.visiblePages,
+
+            heightStrategy: 'fixed',
+            fixedHeightRow: 18
+         });
+
+         vsController.initDomElements(container);
+         return vsController;
+      },
+
 
       reload: function() {
          if (this._dataSource) {
@@ -374,6 +413,18 @@ define('js!Controls/List/ListControl', [
          _filter: undefined,
          _sorting: undefined,
 
+         //для виртуального скролла
+         _virtualScroll: {
+            placeholderSize: {
+               top: 0,
+               bottom: 0
+            },
+            displayedIndex: {
+               start: 0,
+               stop: 0
+            }
+         },
+
          _itemTemplate: null,
 
          constructor: function (cfg) {
@@ -394,6 +445,21 @@ define('js!Controls/List/ListControl', [
             }
          },
 
+         _afterMount: function(newOptions) {
+            ListView.superclass._afterMount.apply(this, arguments);
+            this._virtualScrollController = _private.initVirtualScroll(this._items, this._container);
+
+            this._virtualScrollController.subscribe('onScrollTop', this._onScrollTop.bind(this));
+            this._virtualScrollController.subscribe('onScrollButtom', this._onScrollButtom.bind(this));
+            this._virtualScrollController.subscribe('onUpdateVisibleIndices', this._onUpdateVisibleIndices.bind(this));
+
+            this._virtualScroll.displayedIndex = {
+               start: 0,
+               stop: 100
+            };
+            this._forceUpdate();
+         },
+
          _beforeUpdate: function(newOptions) {
             if (newOptions.filter != this._options.filter) {
                this._filter = newOptions.filter;
@@ -402,6 +468,7 @@ define('js!Controls/List/ListControl', [
             if (newOptions.dataSource !== this._options.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
                this._navigationController = _private.initNavigation(newOptions.navigation, this._dataSource);
+               this._virtualScrollController.changeData(newOptions);
                _private.reload.call(this, newOptions);
             }
 
@@ -411,6 +478,33 @@ define('js!Controls/List/ListControl', [
          //<editor-fold desc='DataSourceMethods'>
          reload: function() {
             _private.reload.call(this, this._options);
+         },
+
+
+
+         _onScrollTop: function(event, data) {
+
+         },
+
+         _onScrollButtom: function(event, data) {
+
+         },
+
+         //обработчик на обновление индексов видимой части списка и распорок
+         _onUpdateVisibleIndices: function(event, data) {
+            console.log(data);
+
+            this._virtualScroll = {
+               placeholderSize: {
+                  top: data.placeholderTop,
+                  bottom: data.placeholderBottom
+               },
+               displayedIndex: {
+                  start: data.startIndex,
+                  stop: data.stopIndex
+               }
+            };
+            this._forceUpdate();
          }
       });
 
