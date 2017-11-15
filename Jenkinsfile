@@ -441,6 +441,11 @@ node('controls') {
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
         stage("Запуск тестов интеграционных и верстки"){
+            tmp_smoke = sh returnStatus:true, script: "${python_ver} smoke_test.py"
+            if ( "${tmp_smoke}" != "0" ) {
+                currentBuild.result = 'ABORTED'
+                error('Стенд неработоспособен (не прошел smoke test).')
+            }
             parallel (
                 int_test: {
                     echo "Запускаем интеграционные тесты"
