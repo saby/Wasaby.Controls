@@ -87,6 +87,9 @@
 
 .controls-TextBox_state_active {
    border-color: @border-color_TextBox_active;
+   &:focus {
+      text-overflow: clip;
+   }
 }
 
 .controls-TextBox_state_disabled {
