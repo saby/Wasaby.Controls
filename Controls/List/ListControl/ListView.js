@@ -44,10 +44,6 @@ define('js!Controls/List/ListControl/ListView', [
          _selectedItem: null,
          _selectedIndex: -1,
 
-         constructor: function(options) {
-            ListView.superclass.constructor.apply(this, arguments);
-         },
-
          _beforeMount: function(newOptions) {
             ListView.superclass._beforeMount.apply(this, arguments);
             this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;

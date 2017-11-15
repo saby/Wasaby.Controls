@@ -391,9 +391,10 @@ define('js!Controls/List/ListControl', [
           */
          _scrollLoadMore: function(e, direction) {
             if (this._navigationController && this._navigationController.hasMoreData(direction)) {
-               this.__loadPage(direction);
+               _private.loadPage.call(this, direction);
             }
          },
+
          _beforeMount: function(newOptions) {
             this._filter = newOptions.filter;
 
