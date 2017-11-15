@@ -386,8 +386,7 @@ node('controls') {
             WAIT_ELEMENT_LOAD = 20
             HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/
             SERVER = test-autotest-db1
-            BASE_VERSION = css_${NODE_NAME}${ver}1
-            server_address = ${server_address}}"""
+            BASE_VERSION = css_${NODE_NAME}${ver}1"""
         if ( "${params.theme}" != "online" ) {
             writeFile file: "./controls/tests/reg/config.ini",
             text:
@@ -453,7 +452,7 @@ node('controls') {
                             dir("./controls/tests/int"){
                                  sh """
                                  source /home/sbis/venv_for_test/bin/activate
-                                 python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail}
+                                 python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS $server_address
                                  deactivate
                                  """
                             }
