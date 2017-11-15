@@ -66,25 +66,8 @@ define('js!Controls/List/ListControl', [
       },
 
       virtualScroll: {
-         TOP_PLACEHOLDER: 'ws-ListControl__virtualScrollTopPlaceholder',
-         BOTTOM_PLACEHOLDER: 'ws-ListControl__virtualScrollBottomPlaceholder',
-         TOP_TRIGGER: 'ws-ListControl__virtualScrollTopLoadTrigger',
-         BOTTOM_TRIGGER: 'ws-ListControl__virtualScrollBottomLoadTrigger',
-         ITEMS_CONTAINER: 'ws-ListView ',
-
-         pageSize: 20,     //Число записей на 1 вирульной странице
-         visiblePages: 5,  //Количество отображаемых виртуальных страниц
-
-         domElements: {
-            topPlaceholder: undefined,
-            bottomPlaceholder: undefined,
-
-            topLoadTrigger: undefined,
-            bottomLoadTrigger: undefined,
-
-            itemsContainer: undefined,
-            scrollContainer: undefined
-         }
+         pageSize: 15,     //Число записей на 1 вирульной странице
+         visiblePages: 5   //Количество отображаемых виртуальных страниц
       },
 
       initVirtualScroll: function(items, container) {
@@ -93,7 +76,8 @@ define('js!Controls/List/ListControl', [
             pageSize: _private.virtualScroll.pageSize,
             visiblePages: _private.virtualScroll.visiblePages,
 
-            heightStrategy: 'fixed',
+            //heightStrategy: 'fixed',
+            heightStrategy: 'calc',
             fixedHeightRow: 18
          });
 
@@ -421,7 +405,7 @@ define('js!Controls/List/ListControl', [
             },
             displayedIndex: {
                start: 0,
-               stop: 0
+               stop: 100      //TODO убрать это, сделать рассчет. Где его делать??
             }
          },
 
@@ -449,15 +433,9 @@ define('js!Controls/List/ListControl', [
             ListView.superclass._afterMount.apply(this, arguments);
             this._virtualScrollController = _private.initVirtualScroll(this._items, this._container);
 
-            this._virtualScrollController.subscribe('onScrollTop', this._onScrollTop.bind(this));
-            this._virtualScrollController.subscribe('onScrollButtom', this._onScrollButtom.bind(this));
+            //this._virtualScrollController.subscribe('onScrollTop', this._onScrollTop.bind(this));
+            //this._virtualScrollController.subscribe('onScrollButtom', this._onScrollButtom.bind(this));
             this._virtualScrollController.subscribe('onUpdateVisibleIndices', this._onUpdateVisibleIndices.bind(this));
-
-            this._virtualScroll.displayedIndex = {
-               start: 0,
-               stop: 100
-            };
-            this._forceUpdate();
          },
 
          _beforeUpdate: function(newOptions) {
@@ -475,19 +453,14 @@ define('js!Controls/List/ListControl', [
             //TODO обработать смену фильтров и т.д. позвать релоад если надо
          },
 
+         _afterUpdate: function(newOptions) {
+            ListView.superclass._afterUpdate.apply(this, arguments);
+            this._virtualScrollController.initHeights(this._container);
+         },
+
          //<editor-fold desc='DataSourceMethods'>
          reload: function() {
             _private.reload.call(this, this._options);
-         },
-
-
-
-         _onScrollTop: function(event, data) {
-
-         },
-
-         _onScrollButtom: function(event, data) {
-
          },
 
          //обработчик на обновление индексов видимой части списка и распорок
@@ -496,8 +469,10 @@ define('js!Controls/List/ListControl', [
 
             this._virtualScroll = {
                placeholderSize: {
-                  top: data.placeholderTop,
-                  bottom: data.placeholderBottom
+                  //top: data.placeholderTop,
+                  //bottom: data.placeholderBottom
+                  top: Math.max(this._virtualScroll.placeholderSize.top + data.placeholderTopChange, 0),
+                  bottom: Math.max(this._virtualScroll.placeholderSize.bottom + data.placeholderBottomChange, 0)
                },
                displayedIndex: {
                   start: data.startIndex,
