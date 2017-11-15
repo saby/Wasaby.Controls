@@ -84,6 +84,12 @@ define('js!SBIS3.CONTROLS.SearchController',
          filter[searchParamName] = text;
          if(self._options.hierarchyViewMode) {
             view._options.hierarchyViewMode = true;
+            // При включении режима поиска - отключаем virtualScrolling (в настоящий момент мы не умеем совмещать
+            // отображение путей до найденных записей и virtualScrolling)
+            if (view._virtualScrollController) {
+               view._virtualScrollController.disableScrollHandler(true);
+               view._options.virtualScrolling = false;
+            }
          } else {
             view.setExpand(true);
          }
@@ -216,6 +222,13 @@ define('js!SBIS3.CONTROLS.SearchController',
          this._searchMode = false;
          if(this._options.hierarchyViewMode) {
             view._options.hierarchyViewMode = false;
+            // При включении режима поиска - отключаем virtualScrolling (в настоящий момент мы не умеем совмещать
+            // отображение путей до найденных записей и virtualScrolling)
+            if (view._virtualScrollController) {
+               view._options.virtualScrolling = true;
+               view._virtualScrollController.updateProjection(view._getItemsProjection());
+               view._virtualScrollController.reset();
+            }
          } else {
             view.setExpand(false);
             /* Закрываем ветки после сброса поиска через опцию,
