@@ -441,8 +441,10 @@ node('controls') {
             step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
         }
         stage("Запуск тестов интеграционных и верстки"){
+            def site = "http://${NODE_NAME}:30001"
+            site.trim()
             dir("./controls/tests/int"){
-                tmp_smoke = sh returnStatus:true, script: "${python_ver} smoke_test.py"
+                tmp_smoke = sh returnStatus:true, script: "${python_ver} smoke_test.py --SERVER_ADDRESS $server_address" 
                 if ( "${tmp_smoke}" != "0" ) {
                     currentBuild.result = 'ABORTED'
                     error('Стенд неработоспособен (не прошел smoke test).')
@@ -453,8 +455,6 @@ node('controls') {
                     echo "Запускаем интеграционные тесты"
                     stage("Инт.тесты"){
                         if ( inte ){
-                            def site = "http://${NODE_NAME}:30001"
-                            site.trim()
                             dir("./controls/tests/int"){
                                  sh """
                                  source /home/sbis/venv_for_test/bin/activate
