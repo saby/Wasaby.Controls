@@ -53,6 +53,12 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
          };
          return tplOptions;
       }
+      
+      function setPickerWidth(width) {
+         var pickerContainer = this.getPicker().getContainer();
+         pickerContainer[0].style.maxWidth = width + 'px';
+         pickerContainer[0].style.minWidth = width + 'px';
+      }
 
       var FieldLinkItemsCollection =  CompoundControl.extend([DSMixin, PickerMixin], {
          _dotTplFn: dotTplFn,
@@ -167,14 +173,14 @@ define('js!SBIS3.CONTROLS.FieldLinkItemsCollection', [
             pickerContainer = this._picker.getContainer();
             pickerWidth = this._parentFieldLink.getContainer()[0].offsetWidth;
    
+            setPickerWidth.call(this, pickerWidth);
+   
             /* Из-за того, что ie располагает скроллбар не внутри контейнера, а за его пределами,
-               надо учитывать это при расчётах ширины пикера */
+             надо учитывать это при расчётах ширины пикера */
             if ((detection.isIE10 || detection.isIE11) && pickerContainer[0].offsetHeight < pickerContainer[0].scrollHeight) {
                pickerWidth -= getScrollWidth();
+               setPickerWidth.call(this, pickerWidth);
             }
-   
-            pickerContainer[0].style.maxWidth = pickerWidth + 'px';
-            pickerContainer[0].style.minWidth = pickerWidth + 'px';
          },
 
          _setPickerContent: function () {
