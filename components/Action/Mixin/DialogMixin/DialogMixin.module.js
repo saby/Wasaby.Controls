@@ -106,11 +106,15 @@ define('js!SBIS3.CONTROLS.Action.DialogMixin', [
       },
 
       _createComponent: function(config, meta) {
-         var componentName = (meta.mode == 'floatArea') ? 'js!SBIS3.CORE.FloatArea' : 'js!SBIS3.CORE.Dialog';
+         var componentName = (meta.mode == 'floatArea') ? 'js!SBIS3.CORE.FloatArea' : 'js!SBIS3.CORE.Dialog',
+             resetWidth;
+         
          if (this._isNeedToRedrawDialog()){
             this._resetComponentOptions();
+            //Если поменялся шаблон панели, то надо обновить размеры.
+            resetWidth = this._dialog._options.template !== config.template;
             cMerge(this._dialog._options, config);
-            this._dialog.reload(true);
+            this._dialog.reload(true, resetWidth);
          }
          else {
             this._isExecuting = true;
