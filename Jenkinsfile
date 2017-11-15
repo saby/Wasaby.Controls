@@ -1,6 +1,14 @@
 #!groovy
 echo "Задаем параметры сборки"
-properties([
+def version = "3.17.210"
+if ( "${env.BUILD_NUMBER}" != "1" && !params.run_reg && !params.run_int && !params.run_unit) {
+        currentBuild.result = 'ABORTED'
+        error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
+    }
+node('controls') {
+    echo "Назначем версию и определяем рабочую директорию"
+    def props = readProperties file: "/home/jenkins/shared_autotest87/settings_${version}.props"
+    properties([
     disableConcurrentBuilds(),
     buildDiscarder(
         logRotator(
@@ -8,48 +16,41 @@ properties([
             artifactNumToKeepStr: '3',
             daysToKeepStr: '3',
             numToKeepStr: '3')),
-    parameters([
-        string(
-            defaultValue: 'sdk',
-            description: '',
-            name: 'ws_revision'),
-        string(
-            defaultValue: 'sdk',
-            description: '',
-            name: 'ws_data_revision'),
-        string(
-            defaultValue: 'rc-3.17.210',
-            description: '',
-            name: 'branch_engine'),
-        string(
-            defaultValue: 'dda/flink-improve',
-            description: '',
-            name: 'branch_atf'),
-        choice(
-            choices: "online\npresto\ncarry\ngenie",
-            description: '',
-            name: 'theme'),
-        choice(choices: "chrome\nff", description: '', name: 'browser_type'),
-        booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
-        booleanParam(defaultValue: false, description: "Запуск интеграционных тестов", name: 'run_int'),
-        booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
-        booleanParam(defaultValue: false, description: "Запуск только упавших тестов из предыдущего билда", name: 'RUN_ONLY_FAIL_TEST')
-        ]),
-    pipelineTriggers([])
-])
-if ( "${env.BUILD_NUMBER}" != "1" && params.run_reg == false && params.run_int == false && params.run_unit == false ) {
-        currentBuild.result = 'ABORTED'
-        error('Ветка запустилась по пушу, либо запуск с некоректными параметрами')
-    }
-
-node('controls') {
-    echo "Назначем версию и определяем рабочую директорию"
-    def version = "3.17.210"
+        parameters([
+            string(
+                defaultValue: 'sdk',
+                description: '',
+                name: 'ws_revision'),
+            string(
+                defaultValue: 'sdk',
+                description: '',
+                name: 'ws_data_revision'),
+            string(
+                defaultValue: 'rc-3.17.210',
+                description: '',
+                name: 'branch_engine'),
+            string(
+                defaultValue: props["atf_co"],
+                description: '',
+                name: 'branch_atf'),
+            choice(
+                choices: "online\npresto\ncarry\ngenie",
+                description: '',
+                name: 'theme'),
+            choice(choices: "chrome\nff", description: '', name: 'browser_type'),
+            booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
+            booleanParam(defaultValue: false, description: "Запуск интеграционных тестов", name: 'run_int'),
+            booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
+            booleanParam(defaultValue: false, description: "Запуск только упавших тестов из предыдущего билда", name: 'RUN_ONLY_FAIL_TEST')
+            ]),
+        pipelineTriggers([])
+    ])
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
         echo "Чистим рабочую директорию"
         deleteDir()
         echo "Назначаем переменную"
+        def server_address=props["SERVER_ADDRESS"]
         def ver = version.replaceAll('.','')
         def python_ver = 'python3'
         def SDK = ""
@@ -451,7 +452,7 @@ node('controls') {
                             dir("./controls/tests/int"){
                                  sh """
                                  source /home/sbis/venv_for_test/bin/activate
-                                 python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS $server_address
+                                 python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} --SERVER_ADDRESS ${server_address}
                                  deactivate
                                  """
                             }
