@@ -26,7 +26,7 @@ node('controls') {
                 description: '',
                 name: 'ws_data_revision'),
             string(
-                defaultValue: "rc-${version}}",
+                defaultValue: "rc-${version}",
                 description: '',
                 name: 'branch_engine'),
             string(
