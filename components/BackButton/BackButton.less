@@ -1,3 +1,5 @@
+@import "../../themes/header";
+
 .controls-BackButton {
    cursor: pointer;
    display: inline-block;
@@ -11,7 +13,6 @@
       font-style: normal;
       color: @back-button-text-color;
       text-align: left;
-      max-width: calc(~"100% - @{back-button-width-before}");
       line-height: normal;
       font-weight: @back-button-text-fontweight;
       font-size: @back-button-font-size;
@@ -87,14 +88,6 @@
    }
 }
 
-.ws-is-mobile-safari, .ws-is-desktop-safari, .ws-is-mobile-chrome-ios{
-   .controls-BackButton {
-      .controls-BackButton__caption {
-         max-width: calc(~"100% - 7px");
-      }
-   }
-}
-
 .back-button-before-fix(){
    .controls-BackButton {
       .controls-BackButton__caption {
@@ -117,7 +110,7 @@
 }
 
 .controls-BackButton__captionArrow:before {
-   content: @default-arrow-img;
+   content: @back-arrow-orange;
    &:hover:before {
       color: @back-button-arrow-hover-color;
    }
@@ -140,7 +133,7 @@
             color: @primary-color;
          }
          &Arrow:before {
-            content: @orange-arrow-img;
+            content: @back-arrow-blue;
             color: @blue-dark-color;
          }
          &.controls-Link.controls-Click__active {
@@ -156,6 +149,102 @@
             &Arrow:before {
                color: @primary-color;
             }
+         }
+      }
+   }
+   &.controls-BackButton_orange-h2 {
+      &:hover {
+         .controls-BackButton__caption:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover) {
+            .ws-header-orange-hover();
+         }
+      }
+      .controls-BackButton__caption {
+         .ws-header_h2();
+         .ws-header_orange();
+         &Arrow:before {
+            .ws-backArrow_blue();
+            .ws-backArrow_20();
+            margin-right: @back-button-arrow-margin-right-1;
+         }
+      }
+   }
+   &.controls-BackButton_blue-h2 {
+      &:hover {
+         .controls-BackButton__caption:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover) {
+            .ws-header-blue-hover();
+         }
+      }
+      .controls-BackButton__caption {
+         .ws-header_h2();
+         .ws-header_blue();
+         &Arrow:before {
+            .ws-backArrow_orange();
+            .ws-backArrow_20();
+            margin-right: @back-button-arrow-margin-right-1;
+         }
+      }
+   }
+   &.controls-BackButton_orange-h3 {
+      &:hover {
+         .controls-BackButton__caption:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover) {
+            .ws-header-orange-hover();
+         }
+      }
+      .controls-BackButton__caption {
+         .ws-header_h3();
+         .ws-header_orange();
+         &Arrow:before {
+            .ws-backArrow_blue();
+            .ws-backArrow_18();
+            margin-right: @back-button-arrow-margin-right-2;
+         }
+      }
+   }
+   &.controls-BackButton_blue-h3 {
+      &:hover {
+         .controls-BackButton__caption:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover) {
+            .ws-header-blue-hover();
+         }
+      }
+      .controls-BackButton__caption {
+         .ws-header_h3();
+         .ws-header_blue();
+         &Arrow:before {
+            .ws-backArrow_orange();
+            .ws-backArrow_18();
+            margin-right: @back-button-arrow-margin-right-2;
+         }
+      }
+   }
+   &.controls-BackButton_orange-h6 {
+      &:hover {
+         .controls-BackButton__caption:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover) {
+            .ws-header-orange-hover();
+         }
+      }
+      .controls-BackButton__caption {
+         .ws-header_h6();
+         .ws-header_orange();
+         &Arrow:before {
+            .ws-backArrow_blue();
+            .ws-backArrow_15();
+            margin-right: @back-button-arrow-margin-right-2;
+         }
+      }
+   }
+   &.controls-BackButton_blue-h6 {
+      &:hover {
+         .controls-BackButton__caption:not(.ws-disabled):not(.controls-Click__active):not(.controls-Link__disabledHover) {
+            .ws-header-blue-hover();
+         }
+      }
+      .controls-BackButton__caption {
+         .ws-header_h6();
+         .ws-header_blue();
+         &Arrow:before {
+            .ws-backArrow_orange();
+            .ws-backArrow_15();
+            margin-right: @back-button-arrow-margin-right-2;
          }
       }
    }

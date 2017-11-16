@@ -1,170 +1,233 @@
+// Новая реализация заголовков //
+.ws-header_h2 {
+   .ws-header-size-mixin(@header-h2-text-size);
+}
+
+.ws-header_h3 {
+   .ws-header-size-mixin(@header-h2-text-size);
+}
+
+.ws-header_h6 {
+   .ws-header-size-mixin(@large-text-size);
+}
+
+.ws-header_h7 {
+   .ws-header-size-mixin(@default-text-size);
+}
+
+.ws-header_blue {
+   color: @accent-color;
+}
+
+.ws-header_orange {
+   color: @header-orange;
+}
+
+.ws-header_blue-hover {
+   &:hover {
+      .ws-header-blue-hover();
+   }
+}
+
+.ws-header_orange-hover {
+   &:hover {
+      .ws-header-orange-hover();
+   }
+}
+
+.ws-header-blue-hover() {
+   color: @darkcyan-color;
+}
+
+.ws-header-orange-hover() {
+   color: @primary-color;
+}
+
+.ws-header_bold {
+   font-weight: 700;
+}
+
+.ws-backArrow_orange {
+   content: @back-arrow-orange;
+}
+
+.ws-backArrow_blue {
+   content: @back-arrow-blue;
+}
+
+//ws-backArrow_20, ws-backArrow_18, ws-backArrow_15
+.for(20 18 15, { .ws-backArrow_@{_item} {
+   .ws-back-arrow-size-mixin(~"@{back-arrow-width-@{_item}}", ~"@{back-arrow-height-@{_item}}");
+} });
+
+// --------------------------- //
 .ws-header, .controls-Link.ws-header {
-  .ws-header-mixin(@header-padding-left, @header-padding-right, @header-font, @header-color, @header-color-hover);
+   .ws-header-mixin(@header-padding-left, @header-padding-right, @header-font, @header-color, @header-color-hover);
 }
 
 .ws-bigHeader {
-  .ws-header-mixin(@header-padding-left, @header-padding-right, @bigHeader-font, @bigHeader-color);
+   .ws-header-mixin(@header-padding-left, @header-padding-right, @bigHeader-font, @bigHeader-color);
 }
 
 .ws-subheader, .controls-Link.ws-subheader {
-  .ws-header-mixin(@header-padding-left, @header-padding-right, @subheader-font, @subheader-color);
+   .ws-header-mixin(@header-padding-left, @header-padding-right, @subheader-font, @subheader-color);
 }
 
 .ws-bigSubheader, .controls-Link.ws-bigSubheader {
-  .ws-header-mixin(@header-padding-left, @header-padding-right, @bigSubheader-font, @bigSubheader-color);
+   .ws-header-mixin(@header-padding-left, @header-padding-right, @bigSubheader-font, @bigSubheader-color);
 }
 
 .ws-splitter {
-  &.ws-linkHeader {
-    padding-right: 0;
-  }
-  &:before {
-  content: '|';
-  float: right;
-  margin: @link-header-separator-margin;
-  color: @link-header-separator-color;
-  }
+   &.ws-linkHeader {
+      padding-right: 0;
+   }
+   &:before {
+      content: '|';
+      float: right;
+      margin: @link-header-separator-margin;
+      color: @link-header-separator-color;
+   }
 }
 
 .ws-linkHeader, .controls-Link.ws-linkHeader {
-  .ws-header-mixin(@link-header-padding-left, @link-header-padding-right, @link-header-font, @link-header-color);
-  text-decoration: @link-header-text-decoration;
+   .ws-header-mixin(@link-header-padding-left, @link-header-padding-right, @link-header-font, @link-header-color);
+   text-decoration: @link-header-text-decoration;
 
-  .controls-Button__wrapper:after {
-    display: inline-block;
-    width: 8px;
-    .ws-header-content-mixin(@link-header-after-content, @link-header-after-font, @link-header-after-color);
-    margin-left: @link-header-after-margin-left;
-  }
+   .controls-Button__wrapper:after {
+      display: inline-block;
+      width: 8px;
+      .ws-header-content-mixin(@link-header-after-content, @link-header-after-font, @link-header-after-color);
+      margin-left: @link-header-after-margin-left;
+   }
 
-  &:hover {
-    color: @link-header-hover-color;
-    &:after {
-      color: @link-header-hover-after-color;
-    }
-  }
+   &:hover {
+      color: @link-header-hover-color;
+      &:after {
+         color: @link-header-hover-after-color;
+      }
+   }
 }
 
 .ws-toggleHeader {
-  & .controls-Button__wrapper:before {
-    display: inline-block;
-    .ws-header-content-mixin(@toggle-header-before-content, @toggle-header-before-font, @toggle-header-before-color);
-    width: @toggle-header-before-width;
-    float: left;
-  }
+   & .controls-Button__wrapper:before {
+      display: inline-block;
+      .ws-header-content-mixin(@toggle-header-before-content, @toggle-header-before-font, @toggle-header-before-color);
+      width: @toggle-header-before-width;
+      float: left;
+   }
 
-  &.controls-ToggleButton__normal.controls-Button-size__default.controls-Checked__checked .controls-Button__wrapper:before {
-    content: @toggle-header-checked-before-content;
-  }
+   &.controls-ToggleButton__normal.controls-Button-size__default.controls-Checked__checked .controls-Button__wrapper:before {
+      content: @toggle-header-checked-before-content;
+   }
 
    &.ws-disabled {
       border: none;
    }
 
-  &, &.controls-Checked__checked:not(.ws-disabled) {
-    .ws-header-mixin(0, @toggle-header-padding-right, @toggle-header-font, @toggle-header-color);
-    border: none;
-    background: none;
-
-    &.controls-Click__active:active {
+   &, &.controls-Checked__checked:not(.ws-disabled) {
+      .ws-header-mixin(0, @toggle-header-padding-right, @toggle-header-font, @toggle-header-color);
       border: none;
       background: none;
-    }
-    &.controls-Click__active.controls-Link {
-      border: none;
-      background: none;
-    }
 
-    &:hover {
-      color: @toggle-header-hover-color;
-      &:before {
-        color: @toggle-header-hover-before-color;
+      &.controls-Click__active:active {
+         border: none;
+         background: none;
       }
-    }
+      &.controls-Click__active.controls-Link {
+         border: none;
+         background: none;
+      }
 
-    .controls-Button__text {
-      display: inline-block;
-      margin: 0;
-    }
-  }
+      &:hover {
+         color: @toggle-header-hover-color;
+         &:before {
+            color: @toggle-header-hover-before-color;
+         }
+      }
+
+      .controls-Button__text {
+         display: inline-block;
+         margin: 0;
+      }
+   }
 }
 
 .controls-ToggleHeader__caption {
-  .ws-headerCounter {
-    display: inline-block;
-    font: @toggle-header-count-font;
-    color: @toggle-header-count-color;
-    margin-right: @toggle-header-count-margin-right;
-  }
-  &:hover .ws-headerCounter {
-    color: @toggle-header-hover-count-color;
-  }
+   .ws-headerCounter {
+      display: inline-block;
+      font: @toggle-header-count-font;
+      color: @toggle-header-count-color;
+      margin-right: @toggle-header-count-margin-right;
+   }
+   &:hover .ws-headerCounter {
+      color: @toggle-header-hover-count-color;
+   }
 }
 
 .ws-is-desktop-platform {
-  .controls-Link:not(.ws-disabled):not(.controls-Click__active) {
-    &.ws-linkHeader, &.ws-header, &.ws-bigSubheader, &.ws-subheader {
-      &:hover .controls-Link-link, &:hover .controls-Link__field {
-        text-decoration: @link-header-text-decoration;
+   .controls-Link:not(.ws-disabled):not(.controls-Click__active) {
+      &.ws-linkHeader, &.ws-header, &.ws-bigSubheader, &.ws-subheader {
+         &:hover .controls-Link-link, &:hover .controls-Link__field {
+            text-decoration: @link-header-text-decoration;
+         }
       }
-    }
-    &.ws-linkHeader:not(.controls-Link__disabledHover) {
-      &:hover {
-        color: @link-header-hover-color;
+      &.ws-linkHeader:not(.controls-Link__disabledHover) {
+         &:hover {
+            color: @link-header-hover-color;
+         }
       }
-    }
-    &.ws-header,  &.ws-bigSubheader, &.ws-subheader {
-      &:not(.controls-Link__disabledHover):hover {
-        color: @link-header-hover-color;
+      &.ws-header, &.ws-bigSubheader, &.ws-subheader {
+         &:not(.controls-Link__disabledHover):hover {
+            color: @link-header-hover-color;
+         }
       }
-    }
-  }
+   }
 
-  .controls-Button:not(.ws-disabled):not(.controls-Click__active):hover.ws-toggleHeader.controls-ToggleButton__normal.controls-Button-size__default {
-    border: none;
-    background: none;
-    font: @toggle-header-font;
-    color: @toggle-header-hover-color;
-  }
-  // сейчас нельзя использовать абстрактную кнопку в новом шаблонизаторе из-за слешей в название компонента
-  // поэтому временно усиливаю селекторыыы
-  .controls-Button:not(.ws-disabled).ws-toggleHeader.controls-ToggleButton__normal.controls-Button-size__default {
-    &, &.controls-Checked__checked {
-      &:hover {
-        border: none;
-        background: none;
-        font: @toggle-header-font;
-      }
-      // TODO избавиться от каскада при переходе на абстрактную кнопку
-      &:hover.controls-Button {
-        color: @toggle-header-hover-color;
-        border: none !important;
-      }
-    }
-  }
-}
-
-.controls-Link {
-  &.ws-linkHeader, &.ws-header, &.ws-bigSubheader, &.ws-subheader {
-    &.controls-Click__active, &.controls-Click__active .controls-Button__text {
-      text-decoration: @link-header-text-decoration;
-      color: @link-header-hover-color;
-    }
-  }
-}
-
-.controls-Button.ws-toggleHeader.controls-ToggleButton__normal.controls-Button-size__default {
-  &, &.controls-Checked__checked:not(.ws-disabled) {
-    &, &.controls-Click__active {
+   .controls-Button:not(.ws-disabled):not(.controls-Click__active):hover.ws-toggleHeader.controls-ToggleButton__normal.controls-Button-size__default {
       border: none;
       background: none;
       font: @toggle-header-font;
-    }
-
-    color: @toggle-header-color;
-
-    &.controls-Click__active {
       color: @toggle-header-hover-color;
-    }
-  }
+   }
+   // сейчас нельзя использовать абстрактную кнопку в новом шаблонизаторе из-за слешей в название компонента
+   // поэтому временно усиливаю селекторыыы
+   .controls-Button:not(.ws-disabled).ws-toggleHeader.controls-ToggleButton__normal.controls-Button-size__default {
+      &, &.controls-Checked__checked {
+         &:hover {
+            border: none;
+            background: none;
+            font: @toggle-header-font;
+         }
+         // TODO избавиться от каскада при переходе на абстрактную кнопку
+         &:hover.controls-Button {
+            color: @toggle-header-hover-color;
+            border: none !important;
+         }
+      }
+   }
+}
+
+.controls-Link {
+   &.ws-linkHeader, &.ws-header, &.ws-bigSubheader, &.ws-subheader {
+      &.controls-Click__active, &.controls-Click__active .controls-Button__text {
+         text-decoration: @link-header-text-decoration;
+         color: @link-header-hover-color;
+      }
+   }
+}
+
+.controls-Button.ws-toggleHeader.controls-ToggleButton__normal.controls-Button-size__default {
+   &, &.controls-Checked__checked:not(.ws-disabled) {
+      &, &.controls-Click__active {
+         border: none;
+         background: none;
+         font: @toggle-header-font;
+      }
+
+      color: @toggle-header-color;
+
+      &.controls-Click__active {
+         color: @toggle-header-hover-color;
+      }
+   }
 }
