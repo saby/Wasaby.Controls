@@ -39,10 +39,17 @@ define('js!Controls/List/ListControl/ItemsViewModel',
          getCurrent: function() {
             var dispItem = this._display.at(this._curIndex);
             return {
+               getPropValue: ItemsUtil.getPropertyValue,
+               idProperty: this._options.idProperty,
+               displayProperty: this._options.displayProperty,
                index : this._curIndex,
                item: dispItem.getContents(),
                dispItem: dispItem
             }
+         },
+
+         getItemById: function(id, idProperty) {
+            return ItemsUtil.getDisplayItemById(this._display, id, idProperty)
          },
 
          _onCollectionChange: function() {

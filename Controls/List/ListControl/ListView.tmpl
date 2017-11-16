@@ -5,11 +5,7 @@
       <ws:for data="_getStartEnumerationPosition(); _checkConditionForEnumeration(); _getNextEnumerationPosition();">
          <ws:partial
                template="{{_itemTemplate}}"
-               item="{{_display.at(_curIndex).getContents()}}"
-               dispItem="{{_display.at(_curIndex)}}"
-               index="{{_curIndex}}"
-               selected="{{_display.at(_curIndex) == _selectedItem}}"
-               itemTplData="{{_itemTplData}}"/>
+               itemData="{{_listModel.getCurrent()}}"/>
       </ws:for>
    </div>
    <div class="ws-ListView__bottomLoadTrigger"></div>

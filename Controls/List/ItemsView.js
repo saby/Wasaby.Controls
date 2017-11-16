@@ -2,45 +2,21 @@
  * Created by kraynovdo on 22.09.2017.
  */
 define('js!Controls/List/ItemsView', [
-   'Core/core-extend',
    'Core/Control',
    'tmpl!Controls/List/ItemsView',
-   'js!Controls/List/resources/utils/ItemsUtil',
    'WS.Data/Type/descriptor',
    'js!Controls/List/ListControl/ItemsViewModel'
-], function (extend,
-             BaseControl,
+], function (BaseControl,
              ItemsRenderTpl,
-             ItemsUtil,
              Types,
              ItemsViewModel
    ) {
    'use strict';
 
-   var _private = {
-      initDisplay: function(items, cfg) {
-         if (this._items) {
-            //TODO убрать дестрой, проверить утечки памяти
-            if (this._display) {
-               this._display.destroy();
-            }
-            this._display = this._createDefaultDisplay(items, cfg);
-            this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
-         }
-      }
-   };
-
    var ItemsRender = BaseControl.extend(
       {
          _controlName: 'Controls/List/ItemsView',
-         iWantVDOM: true,
-         _isActiveByClick: false,
          _template: ItemsRenderTpl,
-         _items: null,
-         _display: null,
-         _startIndex: 0,
-         _stopIndex: 0,
-         _curIndex: 0,
 
          constructor: function (cfg) {
             ItemsRender.superclass.constructor.apply(this, arguments);
@@ -49,18 +25,25 @@ define('js!Controls/List/ItemsView', [
 
          _beforeMount: function(newOptions) {
             if (newOptions.items) {
-               this._listModel = new ItemsViewModel ({items : newOptions.items});
+               this._listModel = new ItemsViewModel ({
+                  items : newOptions.items,
+                  idProperty: newOptions.idProperty,
+                  displayProperty: newOptions.displayProperty
+               });
+               this._listModel.subscribe('onListChange', this._onListChangeFnc);
             }
          },
 
          _beforeUpdate: function(newOptions) {
-            if (newOptions.items && (this._items != newOptions.items)) {
-               this._listModel = new ItemsViewModel ({items : newOptions.items});
+            if (newOptions.items && (this._options.items != newOptions.items)) {
+               this._listModel = new ItemsViewModel ({
+                  items : newOptions.items,
+                  idProperty: newOptions.idProperty,
+                  displayProperty: newOptions.displayProperty
+               });
+               this._listModel.subscribe('onListChange', this._onListChangeFnc);
             }
          },
-
-
-
 
          _getStartEnumerationPosition: function() {
             this._listModel.reset();
@@ -77,7 +60,6 @@ define('js!Controls/List/ItemsView', [
          _onListChange: function() {
             this._forceUpdate();
          },
-
 
          //<editor-fold desc='DataSourceMethods'>
          destroy: function() {
