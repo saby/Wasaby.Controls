@@ -168,7 +168,7 @@ define('js!SBIS3.CONTROLS.Action.List.Sum', [
                 items.each(function(model) {
                     if (this._needToSum(model, nodeProperty)) {
                        for (i = 0; i < fields.length; i++) {
-                          resultFields[fields[i]] += model.get(fields[i]);
+                          resultFields[fields[i]] += model.get(fields[i]) || 0;
                        }
                        itemsCount++;
                     }

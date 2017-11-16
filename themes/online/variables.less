@@ -42,7 +42,6 @@
 @default-disabled-color:                  @gray-ccc-color;
 @primary-color:                           #ff7033;
 @secondary-color:                         transparent;
-@default-border-width:                    1px;
 
 @icon-active-color:                       @blue-dark-color;
 
@@ -306,7 +305,7 @@
 @tab-button-height:                             28px;
 @tab-button-color:                              @blue-dark-color;
 @tab-button-font-size:                          14px;
-@tab-button-font:                               @tab-button-font-size 'TensorFont', sans-serif;
+@tab-button-font:                               'TensorFont', sans-serif;
 @tab-button-main-text-line-height:              27px;
 @tab-button-simple-checked-bottomline-color:    #0055BB;
 @tab-button-simple-hover-bottomline-color:      #E4E4E4;
@@ -509,9 +508,7 @@
 // Text box //
 // -------- //
 //todo
-@text-box-focus-border-color:             #ccc;
-@text-box-focus-bg:                       @text-box-bg;
-@text-box-hover-border-color:             @text-box-focus-border-color;
+@text-box-focus-bg:                       @background-color_TextBox;
 // --------------- //
 // Money text box  //
 // --------------- //
@@ -674,8 +671,8 @@
 @date-range-slider-prev-next-buttons-font-size: 16px;
 @date-range-slider-lock-margin-right:           6px;
 @date-range-slider-error-border-width:          1px;
-@date-range-slider-error-border-color:          @text-box-border-color-error;
-@date-range-slider-error-bg:                    @text-box-bg-error;
+@date-range-slider-error-border-color:          @border-color_TextBox_error;
+@date-range-slider-error-bg:                    @background-color_TextBox_error;
 @date-range-slider-picker-shadow:                  0px 0px 12px 0px rgba(0,0,0,0.25);
 // ----------------- //
 // Date Range Choose //
@@ -1589,6 +1586,7 @@
 @time-header-title-margin-left:                     12px;
 @time-header-margin:                                0 2px;
 @time-header-offset-start-block:                    2px;
+@time-header-container-block-padding:               8px;
 @time-header-toggle-time-margin-left:               @time-header-title-margin-left;
 @time-header-home-button-margin-left:               @time-header-title-margin-left;
 @time-header-background-color:                      @gray-f4f4f4-color;
@@ -1621,9 +1619,9 @@
 
 @clock-picker-tick-hover-background-color:          @default-hover-color;
 
-@clock-picker-outer-tick-radius:                    20px;
+@clock-picker-outer-tick-radius:                    18px;
 
-@clock-picker-inner-tick-radius:                    16px;
+@clock-picker-inner-tick-radius:                    14px;
 @clock-picker-inner-tick-background-color:          #F2F2F2;
 
 @clock-picker-outer-circle-radius:                  125px;

@@ -5,7 +5,9 @@
          itemTemplate="{{_options.itemTemplate}}"
          idProperty="{{_options.idProperty}}"
          displayProperty="{{_options.displayProperty}}"
-         selectedKey="{{_options.selectedKey}}">
+         selectedKey="{{_options.selectedKey}}"
+         event:onListTop="_scrollLoadMore('up')"
+         event:onListBottom="_scrollLoadMore('down')">
    </ws:Controls.List.ListControl.ListView>
    <ws:if data="{{_pagingCfg}}">
       <ws:Controls.List.Paging className="ws-ListControl__paging" scope="{{_pagingCfg}}"></ws:Controls.List.Paging>
