@@ -32,7 +32,7 @@
       </tbody>
       <ws:partial template="{{_footTpl}}" scope="{{...}}" />
    </table>
-   <div class="controls-ListView__EmptyData {{isSmall ? ' controls-ListView__small_EmptyData' : ' controls-ListView__normal__EmptyData'}} {{(!_serverRender || _records.length || !emptyHTML || _hideEmpty) ? 'ws-hidden' : ''}}">
+   <div class="controls-ListView__EmptyData {{isSmall ? ' controls-ListView__small__EmptyData' : ' controls-ListView__normal__EmptyData'}} {{(!_serverRender || _records.length || !emptyHTML || _hideEmpty) ? 'ws-hidden' : ''}}">
       <ws:partial template="{{ _sanitize(emptyHTML) }}"/>
    </div>
    <ws:if data="{{ footerTpl }}">
