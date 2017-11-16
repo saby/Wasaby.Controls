@@ -101,6 +101,18 @@ define('js!Controls/List/ListControl', [
                   if (self._navigationController) {
                      self._navigationController.calculateState(list, direction);
                   }
+
+
+
+                  //TODO это кривой способ заставить пэйджинг пересчитаться. Передалть, когда будут готовы команды от Зуева
+                  window.setTimeout(function(){
+                     if (self._scrollPagingCtr) {
+                        self._scrollPagingCtr.resetHeights();
+                     }
+                  }, 100);
+
+
+
                   return list;
                }, self))
                .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
@@ -415,8 +427,12 @@ define('js!Controls/List/ListControl', [
                         mode: self._options.navigation.viewConfig.pagingMode
                      });
 
-                     self._pagingCfg = self._scrollPagingCtr.getPagingCfg();
-                     self._forceUpdate();
+                     self._scrollPagingCtr.subscribe('onChangePagingCfg', function(e, pCfg){
+                        self._pagingCfg = pCfg;
+                        self._forceUpdate();
+                     });
+
+                     self._scrollPagingCtr.startObserve();
                   });
                }
             }

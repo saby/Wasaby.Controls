@@ -33,12 +33,14 @@ define('js!Controls/List/Paging', [
          },
 
          _beforeUpdate: function(newOptions) {
-            if (this._options.selectedKey != newOptions.selectedKey) {
-               this._selectedKey = newOptions.selectedKey;
-               if (newOptions.showDigits) {
-                  this.__calcBtnStates(this._selectedKey);
-               }
+            this._selectedKey = newOptions.selectedKey;
+            if (newOptions.showDigits) {
+               this.__calcBtnStates(this._selectedKey);
             }
+            this._stateBegin = newOptions.stateBegin || 'disabled';
+            this._stateEnd = newOptions.stateEnd || 'disabled';
+            this._stateNext = newOptions.stateNext || 'disabled';
+            this._statePrev = newOptions.statePrev || 'disabled';
          },
 
          __calcBtnStates: function(selKey) {

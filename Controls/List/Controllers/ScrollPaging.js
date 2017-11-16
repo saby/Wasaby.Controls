@@ -13,6 +13,7 @@ define('js!Controls/List/Controllers/ScrollPaging',
        */
       var Paging = Abstract.extend({
          _selectedPage: null,
+         _onScrollHdl: null,
 
          constructor: function(cfg) {
             this._options = cfg;
@@ -21,26 +22,64 @@ define('js!Controls/List/Controllers/ScrollPaging',
                this._selectedPage = cfg.selectedPage;
             }
             this._cacheHeights(cfg.scrollContainer);
+
+
          },
 
-         getPagingCfg: function() {
-            var pCfg = {};
+         __getDefaultPagingConfig: function() {
+            var config = {};
             if (this._viewHeight > this._viewportHeight) {
-               if (this._options.mode == 'direct') {
-                  pCfg.stateBegin = 'disabled';
-                  pCfg.statePrev = 'disabled';
-                  pCfg.stateNext = 'normal';
-                  pCfg.stateEnd = 'normal';
+               config = {
+                  stateBegin: 'disabled',
+                  statePrev: 'disabled',
+                  stateNext: 'normal',
+                  stateEnd: 'normal'
                }
             }
-            return pCfg;
+            return config;
          },
 
+         _onScroll: function(e) {
+            var pCfg, scrollTop;
+            scrollTop = e.target.scrollTop;
+
+            pCfg = this.__getDefaultPagingConfig();
+            if (scrollTop > 0) {
+               pCfg.stateBegin = 'normal';
+               pCfg.statePrev = 'normal';
+            }
+            if ((scrollTop + this._viewportHeight) >= this._viewHeight) {
+               pCfg.stateNext = 'normal';
+               pCfg.stateEnd = 'normal';
+               pCfg.stateNext = 'disabled';
+               pCfg.stateEnd = 'disabled';
+            }
+
+            this._notify('onChangePagingCfg', pCfg);
+         },
+
+         startObserve: function() {
+            if (!this._onScrollHdl) {
+               this._onScrollHdl = this._onScroll.bind(this);
+            }
+            this._options.scrollContainer.addEventListener('scroll', this._onScrollHdl);
+            this._notify('onChangePagingCfg', this.__getDefaultPagingConfig());
+         },
+
+         stopObserve: function() {
+            this._options.scrollContainer.removeEventListener('scroll', this._onScrollHdl);
+            this._notify('onChangePagingCfg', {});
+         },
+
+         resetHeights: function() {
+            this._cacheHeights(this._options.scrollContainer);
+         },
 
          _cacheHeights: function(viewportCnt) {
             this._viewHeight = viewportCnt.scrollHeight;
             this._viewportHeight = viewportCnt.offsetHeight;
          }
+
       });
 
       return Paging;
