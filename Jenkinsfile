@@ -444,17 +444,17 @@ node('controls') {
         stage("Запуск тестов интеграционных и верстки"){
             def site = "http://${NODE_NAME}:30001"
             site.trim()
-            dir("./controls/tests/int"){
-                tmp_smoke = sh returnStatus:true, script: """
-                    source /home/sbis/venv_for_test/bin/activate
-                    ${python_ver} smoke_test.py --SERVER_ADDRESS ${server_address}
-                    deactivate
-                """
-                if ( "${tmp_smoke}" != "0" ) {
-                    currentBuild.result = 'ABORTED'
-                    error('Стенд неработоспособен (не прошел smoke test).')
-                }
-            }
+            //dir("./controls/tests/int"){
+            //    tmp_smoke = sh returnStatus:true, script: """
+            //        source /home/sbis/venv_for_test/bin/activate
+            //        ${python_ver} smoke_test.py --SERVER_ADDRESS ${server_address}
+            //        deactivate
+            //    """
+            //    if ( "${tmp_smoke}" != "0" ) {
+            //        currentBuild.result = 'ABORTED'
+            //        error('Стенд неработоспособен (не прошел smoke test).')
+            //    }
+            //}
             parallel (
                 int_test: {
                     echo "Запускаем интеграционные тесты"
