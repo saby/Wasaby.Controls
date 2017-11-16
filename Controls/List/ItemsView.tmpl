@@ -2,9 +2,6 @@
    <ws:for data="_getStartEnumerationPosition(); _checkConditionForEnumeration(); _getNextEnumerationPosition();">
       <ws:partial
             template="{{_options.itemTemplate}}"
-            item="{{_display.at(_curIndex).getContents()}}"
-            dispItem="{{_display.at(_curIndex)}}"
-            index="{{_curIndex}}"
-            itemTplData="{{_itemTplData}}"/>
+            itemData="{{_listModel.getCurrent()}}"/>
    </ws:for>
 </div>

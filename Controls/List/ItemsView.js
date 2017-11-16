@@ -6,12 +6,14 @@ define('js!Controls/List/ItemsView', [
    'Core/Control',
    'tmpl!Controls/List/ItemsView',
    'js!Controls/List/resources/utils/ItemsUtil',
-   'WS.Data/Type/descriptor'
+   'WS.Data/Type/descriptor',
+   'js!Controls/List/ListControl/ItemsViewModel'
 ], function (extend,
              BaseControl,
              ItemsRenderTpl,
              ItemsUtil,
-             Types
+             Types,
+             ItemsViewModel
    ) {
    'use strict';
 
@@ -39,73 +41,49 @@ define('js!Controls/List/ItemsView', [
          _startIndex: 0,
          _stopIndex: 0,
          _curIndex: 0,
-         _tplData: null,
 
          constructor: function (cfg) {
             ItemsRender.superclass.constructor.apply(this, arguments);
-            this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
-            this._tplData = {};
+            this._onListChangeFnc = this._onListChange.bind(this);
          },
 
          _beforeMount: function(newOptions) {
             if (newOptions.items) {
-               this._items = newOptions.items;
-               _private.initDisplay.call(this, newOptions.items, newOptions);
-               this._initIndices();
-               this._initTplData(newOptions);
+               this._listModel = new ItemsViewModel ({items : newOptions.items});
             }
          },
 
          _beforeUpdate: function(newOptions) {
             if (newOptions.items && (this._items != newOptions.items)) {
-               this._items = newOptions.items;
-               _private.initDisplay.call(this, newOptions.items, newOptions);
-               this._initTplData(newOptions);
+               this._listModel = new ItemsViewModel ({items : newOptions.items});
             }
          },
 
-         _initIndices: function() {
-            this._startIndex = 0;
-            this._stopIndex = this._display.getCount();
-         },
 
 
-         //
-         _initTplData: function(cfg) {
-            this._itemTplData = {
-               getPropValue: ItemsUtil.getPropertyValue,
-               listConfig: cfg
-            }
-         },
 
          _getStartEnumerationPosition: function() {
-            this._curIndex = this._startIndex;
+            this._listModel.reset();
          },
 
          _getNextEnumerationPosition: function() {
-            this._curIndex++;
+            this._listModel.goToNext();
          },
 
          _checkConditionForEnumeration: function() {
-            return this._curIndex < this._stopIndex;
+            return this._listModel.isEnd();
          },
 
-         _onCollectionChange: function() {
-            this._initIndices();
-            this._initTplData(this._options);
+         _onListChange: function() {
             this._forceUpdate();
          },
 
 
-         _createDefaultDisplay: function(items, cfg) {
-            return ItemsUtil.getDefaultDisplayFlat(items, cfg)
-         },
-
          //<editor-fold desc='DataSourceMethods'>
          destroy: function() {
             ItemsRender.superclass.destroy.apply(this, arguments);
-            if (this._display) {
-               this._display.destroy();
+            if (this._listModel) {
+               this._listModel.destroy();
             }
          }
       });
