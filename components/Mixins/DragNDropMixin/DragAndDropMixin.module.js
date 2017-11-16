@@ -53,7 +53,7 @@ define('js!SBIS3.CONTROLS.DragAndDropMixin', [
                   func.call(this, e);
    
                   /* Чтобы не скролилась страница при пететаскивании  (актуально для планшетов и при работе с телевизором) */
-                  if(e.originalEvent.touches) {
+                  if(e.originalEvent.touches && e.type === 'touchmove') {
                      e.preventDefault();
                   }
                }.bind(this, this[this._eventHandlers[i]]));
