@@ -49,14 +49,14 @@ define('js!Controls/List/ListControl', [
       },
 
       paramsWithUserEvent: function(params, userParams) {
-         params.filter = userParams['filter'] || queryParams.filter;
-         params.sorting = userParams['sorting'] || queryParams.sorting;
-         params.offset = userParams['offset'] || queryParams.offset;
-         params.limit = userParams['limit'] || queryParams.limit;
+         params.filter = userParams['filter'] || params.filter;
+         params.sorting = userParams['sorting'] || params.sorting;
+         params.offset = userParams['offset'] || params.offset;
+         params.limit = userParams['limit'] || params.limit;
          return params;
       },
 
-      reload: function() {
+      load: function(direction) {
          if (this._dataSource) {
             var def, queryParams,
                self = this;
@@ -75,26 +75,31 @@ define('js!Controls/List/ListControl', [
             //позволяем модифицировать параметры юзеру
             var userParams = this._notify('onBeforeDataLoad', queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit);
             if (userParams) {
-               queryParams = _private.paramsWithNavigation(queryParams, this._navigationController, this._display);
+               queryParams = _private.paramsWithUserEvent(queryParams, userParams);
             }
 
             def = DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
                .addCallback(fHelpers.forAliveOnly(function (list) {
                   self._notify('onDataLoad', list);
 
-                  //TODO обсудить. Стремная проверка на то - это первое создание списка или последующие перезагрузки.
-                  //если это первое создание, то можно просто засунуть в _items и тогда они прокинутся во view
-                  //если второе, то надо отдать items прямо в контрол
-                  if (self._children._ListView) {
-                     self._children._ListView.setItems(list);
-                  }
-                  else {
-                     self._items = list;
-                  }
+                  if (direction == 'down') {
+                     self._items.append(list);
+                  } else if (direction == 'up') {
+                     self._items.prepend(list);
+                  } else { //без направления - это перезагрузка
+                     //TODO обсудить. Стремная проверка на то - это первое создание списка или последующие перезагрузки.
+                     //если это первое создание, то можно просто засунуть в _items и тогда они прокинутся во view
+                     //если второе, то надо отдать items прямо в контрол
+                     if (self._children._ListView) {
+                        self._children._ListView.setItems(list);
+                     }
+                     else {
+                        self._items = list;
+                     }
 
-
+                  }
                   if (self._navigationController) {
-                     self._navigationController.calculateState(list);
+                     self._navigationController.calculateState(list, direction);
                   }
                   return list;
                }, self))
@@ -103,34 +108,6 @@ define('js!Controls/List/ListControl', [
          }
          else {
             throw new Error('Option dataSource is undefined. Can\'t reload view');
-         }
-      },
-
-
-      loadPage: function(direction) {
-         var def, self = this;
-         if (this._dataSource) {
-            var queryParams = _private.prepareQueryParams.call(this, direction);
-            def = DataSourceUtil.callQuery(this._dataSource, this._options.idProperty, queryParams.filter, queryParams.sorting, queryParams.offset, queryParams.limit)
-               .addCallback(fHelpers.forAliveOnly(function (list) {
-                  self._notify('onDataLoad', list, direction);
-
-                  if (direction == 'down') {
-                     self._items.append(list);
-                  } else if (direction == 'up') {
-                     self._items.prepend(list);
-                  }
-                  if (self._navigationController) {
-                     self._navigationController.calculateState(list, direction);
-                  }
-
-                  return list;
-               }, self))
-               .addErrback(fHelpers.forAliveOnly(this._loadErrorProcess, self));
-            this._loader = def;
-         }
-         else {
-            throw new Error('Option dataSource is undefined. Can\'t load page');
          }
       }
    };
@@ -391,7 +368,7 @@ define('js!Controls/List/ListControl', [
           */
          _scrollLoadMore: function(e, direction) {
             if (this._navigationController && this._navigationController.hasMoreData(direction)) {
-               _private.loadPage.call(this, direction);
+               _private.load.call(this, direction);
             }
          },
 
@@ -405,7 +382,7 @@ define('js!Controls/List/ListControl', [
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
                this._navigationController = _private.initNavigation(newOptions.navigation, this._dataSource);
                if (!this._items) {
-                  _private.reload.call(this, newOptions);
+                  _private.load.call(this);
                }
             }
          },
@@ -421,7 +398,7 @@ define('js!Controls/List/ListControl', [
             if (newOptions.dataSource !== this._options.dataSource) {
                this._dataSource = DataSourceUtil.prepareSource(newOptions.dataSource);
                this._navigationController = _private.initNavigation(newOptions.navigation, this._dataSource);
-               _private.reload.call(this, newOptions);
+               _private.load.call(this);
             }
             //TODO обработать смену фильтров и т.д. позвать релоад если надо
          },
@@ -449,7 +426,6 @@ define('js!Controls/List/ListControl', [
 
          },
 
-         //<editor-fold desc='DataSourceMethods'>
          reload: function() {
             _private.reload.call(this, this._options);
          }
